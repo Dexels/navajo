@@ -13,7 +13,32 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
 
 public class ScriptInheritance {
 	
+	private static String REPLACE_MESSAGE = "replace";
+	private static String EXTEND_MESSAGE = "extend";
+	
 	private int maxLevel = 0;
+	
+	/**
+	 * Determines whether two elements are considered equal.
+	 * Equality is only supported for elements that have an attribute 'name'.
+	 * 
+	 * @param one
+	 * @param two
+	 * @return
+	 */
+	private boolean equalElements(XMLElement one, XMLElement two) {
+		if ( one.getName().equals(two.getName())) {
+			String nameOne = (String) one.getAttribute("name");
+			String nameTwo = (String) two.getAttribute("name");
+			if ( nameOne != null  && nameTwo != null && nameOne.equals(nameTwo)) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
 	
 	/**
 	 * Replaces a message in tsl on level level and with index targetIndex on that level with insertedMessage.
@@ -24,7 +49,7 @@ public class ScriptInheritance {
 	 * @param tsl
 	 * @param insertedMessage
 	 */
-	private boolean replaceMessagesWithLevel(int level, int leveledIndex, int targetIndex, XMLElement tsl, XMLElement insertedMessage) {
+	private boolean replaceMessagesWithLevel(int level, int leveledIndex, int targetIndex, XMLElement tsl, XMLElement insertedMessage, boolean extend) {
 		
 		Vector<XMLElement> children = tsl.getChildren();
 		for (int i = 0; i < children.size(); i++) {
@@ -37,14 +62,46 @@ public class ScriptInheritance {
 					for (int j = 0; j < allChildrenOfParent.size(); j++) {
 						
 						if ( allChildrenOfParent.get(j).equals(child) ) {
-							allChildrenOfParent.remove(j);
+							
+							if ( !extend ) {
+								allChildrenOfParent.remove(j);
+							}
+							
 							String nameOfInsertedMessage = (String) insertedMessage.getAttribute("name");
 							if ( nameOfInsertedMessage == null ) {
-								nameOfInsertedMessage = (String) insertedMessage.getAttribute("into");
+								nameOfInsertedMessage = (String) insertedMessage.getAttribute(REPLACE_MESSAGE);
+							}
+							if ( nameOfInsertedMessage == null ) {
+								nameOfInsertedMessage = (String) insertedMessage.getAttribute(EXTEND_MESSAGE);
 							}
 							insertedMessage.setAttribute("name", nameOfInsertedMessage);
-							insertedMessage.removeAttribute("into");
-							allChildrenOfParent.add(j, insertedMessage);
+							insertedMessage.removeAttribute(REPLACE_MESSAGE);
+							
+							if ( !extend ) { // simply replace.
+								allChildrenOfParent.add(j, insertedMessage);
+							} else {
+								// Add all children of insertedMessage.
+								XMLElement orig = allChildrenOfParent.get(j);
+								orig.setAttribute("name", nameOfInsertedMessage);
+								Vector<XMLElement> allChildrenOfInsertedMessage = insertedMessage.getChildren();
+								
+								// remove 'overlap' and add 'new'...
+								for (int aci = 0; aci < allChildrenOfInsertedMessage.size(); aci++) {
+									boolean added = false;
+									for (int oci = 0; oci < orig.getChildren().size(); oci++) {
+										if ( equalElements ( orig.getChildren().get(oci), allChildrenOfInsertedMessage.get(aci)) ) {
+											orig.getChildren().remove(oci);
+											orig.getChildren().add(oci, allChildrenOfInsertedMessage.get(aci));
+											oci = orig.getChildren().size() + 1;
+											added = true;
+										}
+									}
+									if (!added) {
+										orig.addChild(allChildrenOfInsertedMessage.get(aci));
+									}
+								}
+								
+							}
 							// Tag parent message 1 level up, such that it is not replaced.
 							if ( level > 0 ) {
 								XMLElement parentMessage = null;
@@ -66,7 +123,7 @@ public class ScriptInheritance {
 					leveledIndex++;		
 				}
 			} else {
-				if ( replaceMessagesWithLevel(level, leveledIndex, targetIndex, child, insertedMessage) ) {
+				if ( replaceMessagesWithLevel(level, leveledIndex, targetIndex, child, insertedMessage, extend) ) {
 					return true;
 				}
 			}
@@ -94,7 +151,9 @@ public class ScriptInheritance {
 		Vector<XMLElement> children = sub.getChildren();
 		for (int i = 0; i < children.size(); i++) {
 			XMLElement child = children.get(i);
-			if ( child.getName().equals("message") &&  child.getAttribute("into") != null && child.getAttribute("into").equals(name) && child.getAttribute("level").equals(level) ) {
+			if ( child.getName().equals("message") &&
+			     ( name.equals(child.getAttribute(REPLACE_MESSAGE)) ||  name.equals(child.getAttribute(EXTEND_MESSAGE)) ) 
+			     && child.getAttribute("level").equals(level) ) {
 				return child;
 			} 
 			XMLElement depthChild = findMessageWithLevel(name, level, child);
@@ -158,7 +217,7 @@ public class ScriptInheritance {
 					String level = (String) childPrev.getAttribute("level");
 					XMLElement found = findMessageWithLevel(messageName, level, subScript);
 					if ( found != null ) {
-						replaceMessagesWithLevel(new Integer(level).intValue(), 0, i, superScript, found);
+						replaceMessagesWithLevel(new Integer(level).intValue(), 0, i, superScript, found, found.getAttribute(EXTEND_MESSAGE) != null);
 					} 
 				}
 			}
