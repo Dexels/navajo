@@ -27,6 +27,8 @@ package navajo;
 /**
  * VERSION HISTORY
  * 
+ * 7.7.1 Implemented extend/replace inheritance semantics.
+ * 
  * 7.7.0 Added support for Script Inheritance via <inject> semantics.
  * 
  * 7.0.4 Minor Changes. Do not persist access objects anymore. Clone access and do not clone indoc and outdoc if
