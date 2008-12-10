@@ -23,7 +23,6 @@ public class ClientTag extends BaseNavajoTag {
 	}
 
 	
-	@Override
 	public int doStartTag() throws JspException {
 //		getPageContext().setAttribute("NavajoContext", new NavajoContext(getPageContext(), server,username,password));
 		NavajoContext nc = (NavajoContext) getPageContext().findAttribute("NavajoContext");

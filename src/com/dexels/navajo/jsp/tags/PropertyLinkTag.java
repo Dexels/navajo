@@ -39,7 +39,6 @@ public class PropertyLinkTag extends BaseNavajoTag {
 		myProperty = property;
 	}
 
-	@Override
 	public int doStartTag() throws JspException {
 		try {
 			getPageContext().getOut().write("<a class='link' href='"+myPage);

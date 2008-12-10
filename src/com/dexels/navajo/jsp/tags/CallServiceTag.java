@@ -24,7 +24,6 @@ public class CallServiceTag extends BaseNavajoTag {
 	}
 
 	
-	@Override
 	public int doStartTag() throws JspException {
 		assertTest();
 		try {

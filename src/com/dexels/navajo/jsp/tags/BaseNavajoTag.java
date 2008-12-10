@@ -10,7 +10,6 @@ public abstract class BaseNavajoTag implements Tag {
 	private PageContext myPageContext = null;
 	private Tag myParent = null;
 
-	@Override
 	public int doEndTag() throws JspException {
 		return 0;
 	}
@@ -20,12 +19,10 @@ public abstract class BaseNavajoTag implements Tag {
 		return (NavajoContext) getPageContext().findAttribute("NavajoContext");
 	}
 	
-	@Override
 	public Tag getParent() {
 		return myParent;
 	}
 
-	@Override
 	public void release() {
 
 	}
@@ -34,13 +31,11 @@ public abstract class BaseNavajoTag implements Tag {
 		return myPageContext;
 	}
 	
-	@Override
 	public void setPageContext(PageContext p) {
 		myPageContext = p;
 		
 	}
 
-	@Override
 	public void setParent(Tag p) {
 		myParent = p;
 	}

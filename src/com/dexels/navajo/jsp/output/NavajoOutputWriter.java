@@ -35,7 +35,6 @@ public class NavajoOutputWriter implements OutputWriter {
 		w.write("</div>");
 	}
 
-	@Override
 	public void writeTableRow(Message m, Writer w) throws IOException {
 		List<Property> pp = m.getAllProperties();
 		w.write("<tr>");
@@ -51,7 +50,6 @@ public class NavajoOutputWriter implements OutputWriter {
 		w.write("</tr>");
 	}
 
-	@Override
 	public void writeMethod(String method, Writer w) throws IOException {
 		w.write("<div class='method'>");
 		w.write("<input type=\"submit\" name=\"command\" value=\"" + method
@@ -59,7 +57,6 @@ public class NavajoOutputWriter implements OutputWriter {
 		w.write("</div>");
 	}
 
-	@Override
 	public void writeProperty(Property p, Writer w) throws IOException {
 		writePropertyDescription(p, w);
 		if (p.getDirection().equals(Property.DIR_IN)) {
@@ -70,7 +67,6 @@ public class NavajoOutputWriter implements OutputWriter {
 
 	}
 
-	@Override
 	public void writePropertyDescription(Property p, Writer w) throws IOException {
 		w.write("<div class='property_label'>");
 		if (p.getDescription() == null || p.getDescription().equals("")) {
@@ -102,7 +98,6 @@ public class NavajoOutputWriter implements OutputWriter {
 			}
 	}
 
-	@Override
 	public void writeService(Navajo service, Writer w) throws IOException {
 		w.write("<div class='wrap'>");
 		w
@@ -123,7 +118,6 @@ public class NavajoOutputWriter implements OutputWriter {
 
 	}
 
-	@Override
 	public void writeTable(Message mm, Writer w) throws IOException {
 		if (!mm.getType().equals(Message.MSG_TYPE_ARRAY)) {
 			throw new IllegalArgumentException(

@@ -23,7 +23,6 @@ public class TableTag extends BaseNavajoTag {
 		myMessage = message;
 	}
 
-	@Override
 	public int doStartTag() throws JspException {
 		try {
 			Navajo n;

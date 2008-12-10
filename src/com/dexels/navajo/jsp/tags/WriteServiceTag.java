@@ -18,7 +18,6 @@ public class WriteServiceTag extends BaseNavajoTag  {
 		myService = service;
 	}
 
-	@Override
 	public int doStartTag() throws JspException {
 		try {
 			Navajo n;

@@ -13,7 +13,6 @@ public class DescriptionTag extends BaseNavajoTag  {
 	private String myProperty;
 	private String myService;
 
-	@Override
 	public int doEndTag() throws JspException {
 		return 0;
 	}
@@ -22,7 +21,6 @@ public class DescriptionTag extends BaseNavajoTag  {
 		myProperty = property;
 	}
 
-	@Override
 	public int doStartTag() throws JspException {
 		try {
 			Navajo n;

@@ -22,7 +22,6 @@ public class MessageTag extends BaseNavajoTag {
 		myMessage = message;
 	}
 
-	@Override
 	public int doStartTag() throws JspException {
 			Navajo n;
 			Message parent = getNavajoContext().getMessage();
