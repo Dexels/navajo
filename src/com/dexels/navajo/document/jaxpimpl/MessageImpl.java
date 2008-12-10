@@ -880,4 +880,18 @@ public Message replaceMessage(Message m) {
 	}	
 }
 
+
+public Map<String,Property> getProperties() {
+	throw new IllegalStateException("JAXP IMPL DOES NOT SUPPORT THIS BEAN OPERATOR!");
+}
+
+public Map<String,Message> getMessages() {
+	throw new IllegalStateException("JAXP IMPL DOES NOT SUPPORT THIS BEAN OPERATOR!");
+}
+
+public List<Message> getElements() {
+	throw new IllegalStateException("JAXP IMPL DOES NOT SUPPORT THIS BEAN OPERATOR!");
+}
+
+
 }

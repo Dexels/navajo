@@ -1229,4 +1229,9 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
 		return this;
 	}
 
+	@Override
+	public Map<String, Message> getMessages() {
+	    throw new UnsupportedOperationException("Can not getMessages expressions in JAXPIMPL");
+		}
+
 }
