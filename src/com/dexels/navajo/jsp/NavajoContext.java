@@ -32,9 +32,15 @@ public class NavajoContext {
 	private final Stack<Object> myElementStack = new Stack<Object>();
 //	private final PageContext myPageContext;
 	private final OutputWriter outputPlugin = new NavajoOutputWriter();
-
+	private Property currentProperty = null;
 	
 
+	public Property getProperty() {
+		return currentProperty;
+	}
+	public void setProperty(Property currentProperty) {
+		this.currentProperty = currentProperty;
+	}
 	public NavajoContext() {
 	}
 	public NavajoContext(PageContext pageContext, String server,
@@ -48,6 +54,10 @@ public class NavajoContext {
 		Navajo n = myClient.doSimpleSend(service);
 		myNavajoMap.put(service, n);
 		myElementStack.push(n);
+	}
+	
+	public Map<String,Navajo> getNavajos() {
+		return myNavajoMap;
 	}
 
 	public void callService(String service, Navajo input)
@@ -198,4 +208,5 @@ public class NavajoContext {
 		}
 		myClient.setServerUrl(server);		
 	}
+	
 }

@@ -4,12 +4,15 @@
   <property name="src" location="src"/>
   <property name="build" location="classes"/>
   <property name="lib" value="lib"/>
-  <property name="archive" value="WEB-INF/lib/${ant.project.name}.jar"/>
+  <property name="archive" value="${ant.project.name}.jar"/>
 
   <target name="archive">
     <jar jarfile="${archive}">
       <fileset dir="${build}"/>
     </jar>
+  	<copy file="${archive}" todir="../GeoJsp/WebContent/WEB-INF/lib">
+		
+  	</copy>
   </target>
 </project>
 <!-- EOF: $RCSfile$ -->

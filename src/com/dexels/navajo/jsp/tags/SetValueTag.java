@@ -34,6 +34,9 @@ public class SetValueTag extends BaseNavajoTag {
 				n = getNavajoContext().getNavajo(myService);
 			}
 			Property p = n.getProperty(myProperty);
+			if(p==null) {
+				throw new IllegalArgumentException("Can't locate property: "+myProperty+" in service: "+myService);
+			}
 			p.setValue(value);
 //			try {
 //				getPageContext().getOut().write(
