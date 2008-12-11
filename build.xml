@@ -64,14 +64,12 @@
 		<delete dir="${NavajoClient.build}" />
 		<delete dir="${build}" />
 	</target>
-	<target name="compile" depends="init,NavajoLogger,NavajoClient">
+	<target name="compile" depends="init,NavajoClient">
 		<javac srcdir="${src}" destdir="${build}">
 			<classpath refid="depend" />
 		</javac>
 	</target>
-	<target name="NavajoLogger" depends="init">
-		<ant dir="${NavajoLogger}" target="compile" inheritAll="false" />
-	</target>
+
 	<target name="NavajoClient" depends="init">
 		<!-- NavajoClient sub-project should build NavajoDocument sub-project if necessary -->
 		<ant dir="${NavajoClient}" target="compile" inheritAll="false">
