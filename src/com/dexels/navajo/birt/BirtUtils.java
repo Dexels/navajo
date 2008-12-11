@@ -532,7 +532,9 @@ public class BirtUtils {
 		report.appendChild(body);
 		body.appendChild(table);
 		addProperty(d, table, "property", "style", "MessageTable");
-
+		 //<property name="pageBreakInterval">99</property>
+		addProperty(d, table, "property", "pageBreakInterval", "0");
+         
 		table.setAttribute("id", "" + idCounter++);
 		addProperty(d, table, "property", "width", "100%");
 		addProperty(d, table, "property", "dataSet", messagePath);
