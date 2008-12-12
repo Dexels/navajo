@@ -114,6 +114,14 @@ NAVAJOIN 	BLOB,
 NAVAJOOUT 	BLOB,
    CONSTRAINT NAVAJOLOG_PK primary key (ACCESS_ID)
                 using index
+      pctfree 10
+       tablespace XXXINDX
+       storage
+       (
+           initial 1024K
+           next 1024K
+           pctincrease 0
+       )
 )
 pctfree 20
 pctused 40
