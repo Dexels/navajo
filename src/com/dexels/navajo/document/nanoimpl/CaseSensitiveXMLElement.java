@@ -9,12 +9,12 @@ import java.util.*;
 public class CaseSensitiveXMLElement extends XMLElement {
 
 	  public CaseSensitiveXMLElement(String name) {
-		    super(new Hashtable<String,char[]>(),true,false);
+		    super(new Hashtable<String,char[]>(),false,false);
 		    setName(name);
 	  }
 	  
 	public CaseSensitiveXMLElement() {
-    super(new Hashtable<String,char[]>(),true,false);
+    super(new Hashtable<String,char[]>(),false,false);
   }
   protected XMLElement createAnotherElement()
   {
