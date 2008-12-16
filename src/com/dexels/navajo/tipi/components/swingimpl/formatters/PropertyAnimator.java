@@ -18,7 +18,7 @@ public class PropertyAnimator {
 
 
 
-	public void animateProperty(Property p, int duration, Object target) {
+	public void animateProperty(Property p, int duration, Object target,final Class animationClass) {
 		myProperty = p;
 		myAnimator = new Animator(duration);
 		myAnimator.setInterpolator(new SplineInterpolator(0f,0.4f,0.8f,1f));
@@ -33,23 +33,34 @@ public class PropertyAnimator {
 	    	}
 
 	    	public void end() {
-	    	}
+	       		interpolate(initial, myTarget, 1,animationClass);
+	       	}
 
 	    	public void repeat() {
 	    	}
 
 	    	public void timingEvent(float e) {
-	    		interpolate(initial, myTarget, e);
+	    		interpolate(initial, myTarget, e,animationClass);
 	    	}});
 	    
 	    myAnimator.start();
 	}
 	
-	public void interpolate(Object start, Object end, float fraction) {
-		Integer s = (Integer)start;
-		Integer e = (Integer)end;
-		int diff = e-s;
-		myProperty.setAnyValue(new Integer((int) (s+diff*fraction)));
+	public void interpolate(Object start, Object end, float fraction, Class animationClass) {
+		if(animationClass.equals(Integer.class)) {
+			Integer s = (Integer)start;
+			Integer e = (Integer)end;
+			int diff = e-s;
+			int res = new Integer((int) (s+diff*fraction));
+			myProperty.setAnyValue(res);
+		}
+		if(animationClass.equals(Double.class)) {
+			Double s = (Double)start;
+			Double e = (Double)end;
+			double diff = e-s;
+			double res = new Double((s+diff*fraction));
+			myProperty.setAnyValue(res);
+		}
 	}
 
 }
