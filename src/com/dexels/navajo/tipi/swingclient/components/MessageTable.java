@@ -861,7 +861,6 @@ private Component myCurrentEditingComponent;
   }
 
   public void setMessage(Message m) {
-	  System.err.println("Setting message");
 	  Message myOldMessage = myMessage;
 	if(myMessage!=null) {
 		myMessage.removePropertyChangeListener(this);
