@@ -99,6 +99,8 @@ public class TslCompiler {
 			  char c = str.charAt(i);
 			  if (c == '"') {
 				  result.append("\\\"");
+			  } else if ( c == '\n') {
+				  result.append(" ");
 			  }
 			  else {
 				  result.append(c);
