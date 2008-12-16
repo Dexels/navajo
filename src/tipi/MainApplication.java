@@ -152,7 +152,8 @@ public class MainApplication {
 //		System.err.println("Openingin definition: " + definition);
 		InputStream tipiResourceStream = context.getTipiResourceStream(definitionPath);
 		if (tipiResourceStream == null) {
-			System.err.println("Error starting up: Can not load tipi");
+			System.err.println("Error starting up: Can not load tipi. Resource not found: "+definitionPath);
+			System.err.println("Codebase: "+context.getTipiResourceLoader());
 		} else {
 			context.parseStream(tipiResourceStream, definition, false);
 		}
