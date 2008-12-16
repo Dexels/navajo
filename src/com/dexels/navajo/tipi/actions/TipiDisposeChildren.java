@@ -40,6 +40,7 @@ public class TipiDisposeChildren extends TipiAction {
 				children.add(tp.getTipiComponent(i));
 			}
 			for (TipiComponent tipiComponent : children) {
+				System.err.println("Disposing child: "+tipiComponent.getPath());
 				myContext.disposeTipiComponent(tipiComponent);
 
 			}

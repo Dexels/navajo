@@ -183,6 +183,13 @@
    <tipiaction name="insertMessage" class="TipiInsertMessage" package="com.dexels.navajo.tipi.actions">
       <param name="message" type="message" required="true" />
    </tipiaction>
+
+   <tipiaction name="insertArrayElement" class="TipiInsertArrayElement" package="com.dexels.navajo.tipi.actions">
+      <param name="message" type="message" required="true" />
+      <param name="element" type="message" required="true" />
+   </tipiaction>
+   
+   
    <tipiaction name="removeMessage" class="TipiRemoveMessage" package="com.dexels.navajo.tipi.actions">
       <param name="message" type="message" required="true" />
       <param name="index" type="integer" required="true" />

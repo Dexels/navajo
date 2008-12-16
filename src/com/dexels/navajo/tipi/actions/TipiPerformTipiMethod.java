@@ -35,6 +35,9 @@ public class TipiPerformTipiMethod extends TipiAction {
 		if (t != null) {
 			t.performMethod(name, this, event);
 		} else {
+			myContext.debugTipiComponentTree(getComponent().getTipiParent(), 4);
+			System.err.println("My parent: "+getComponent().getPath());
+			System.err.println("My parentparent: "+getComponent().getTipiParent().getPath());
 			throw new TipiException("performTipiMethod: Can not locate tipicomponent name: " + path + " method: " + name);
 		}
 	}

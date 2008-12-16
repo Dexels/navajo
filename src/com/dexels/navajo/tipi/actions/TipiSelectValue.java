@@ -108,7 +108,7 @@ public final class TipiSelectValue extends TipiAction {
 				}
 				if (evaluatedName.value instanceof ArrayList) {
 					ArrayList<Selection> l = (ArrayList<Selection>) evaluatedName.value;
-					System.err.println("ArrayList Found");
+//					System.err.println("ArrayList Found");
 					if (l.size() == 0) {
 						// System.err.println("Empty");
 						p.setSelected(new ArrayList<String>());

@@ -159,6 +159,7 @@ public class TipiInstantiateTipi extends TipiAction {
 			if (suppliedId == null) {
 				// using parent here is odd, but it does not really matter
 				id = myContext.generateComponentId(parent, parent);
+				System.err.println("Generated: "+id);
 			} else {
 				proposedId = suppliedId.getValue();
 				id = (String) evaluate(proposedId, event).value;
