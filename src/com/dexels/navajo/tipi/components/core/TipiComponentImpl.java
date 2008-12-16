@@ -752,8 +752,8 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 			}
 			String containerProperty = xx.getStringAttribute("property");
 			if (containerProperty != null) {
-				bind(getContainer(), valueName, containerProperty);
-
+				bind(getActualComponent(), valueName, containerProperty);
+				
 			}
 			attrProp.forcePropertyChange();
 		}
