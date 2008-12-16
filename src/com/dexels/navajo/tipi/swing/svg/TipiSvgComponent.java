@@ -3,7 +3,7 @@ package com.dexels.navajo.tipi.swing.svg;
 import java.net.*;
 import java.util.*;
 
-import org.w3c.dom.svg.SVGDocument;
+import org.w3c.dom.svg.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
@@ -169,6 +169,10 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 			e.printStackTrace();
 		}
 	}
+	
+
+
+	
 
 	public void onAnimationStarted(String animationId, String targetId) {
 		Map<String,Object> m = new HashMap<String,Object>();
