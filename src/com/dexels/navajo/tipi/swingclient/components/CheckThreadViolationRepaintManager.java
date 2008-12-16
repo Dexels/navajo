@@ -27,8 +27,8 @@ public class CheckThreadViolationRepaintManager extends RepaintManager {
     }
 
     private void checkThreadViolations(JComponent c) {
-        if (!SwingUtilities.isEventDispatchThread() && (completeCheck || c.isShowing())) {
-            Exception exception = new Exception();
+        if (!(SwingUtilities.isEventDispatchThread() || Thread.currentThread().getName().indexOf("Image")!=-1) && (completeCheck || c.isShowing())) {
+            Exception exception = new Exception("Invalid thread: "+Thread.currentThread().getName());
             boolean repaint = false;
             boolean fromSwing = false;
             StackTraceElement[] stackTrace = exception.getStackTrace();
