@@ -347,7 +347,6 @@ public class GenericPropertyComponent extends JPanel {
  		if(getLabel().getParent()!=this) {
  			add(getLabel(), new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0,
 					0, 0), 0, 0));
-			System.err.println("Adding label: "+s);
  		} else {
  			System.err.println("Already present!");
  		}
