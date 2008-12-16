@@ -1,9 +1,5 @@
 package com.dexels.navajo.tipi;
 
-import java.beans.*;
-import java.util.*;
-
-import com.dexels.navajo.document.*;
 
 public class PropertyLinkRequest  {
 	private String path;

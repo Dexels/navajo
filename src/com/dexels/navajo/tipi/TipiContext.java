@@ -233,6 +233,7 @@ public abstract class TipiContext {
 		try {
 			TipiExtension tipiExtension = (TipiExtension) Class.forName(extensionName).newInstance();
 			checkExtension(tipiExtension, extensionList);
+			System.err.println("Extension faked succesfully: "+tipiExtension.getDescription());
 			extensionList.add(tipiExtension);
 			tipiExtension.initialize(this);
 		} catch (Exception e) {
@@ -1725,7 +1726,7 @@ public abstract class TipiContext {
 		List<TipiDataComponent> tipiList;
 		tipiList = getTipiInstancesByService(method);
 		if (tipiList == null) {
-			System.err.println("Unregistered");
+			System.err.println("Unregistered method: "+method);
 			fireNavajoReceived(reply, method);
 			return;
 		}
@@ -2335,6 +2336,9 @@ public abstract class TipiContext {
 	public abstract void showQuestion(final String text, final String title, String[] options) throws TipiBreakException;
 
 	public String generateComponentId(TipiComponent parent, TipiComponent component) {
+		if(component==null || component==parent) {
+			return component.getClass().getName() + "@" + Math.random();
+		}
 		return component.getClass().getName() + "@" + component.hashCode();
 
 	}
@@ -2342,28 +2346,36 @@ public abstract class TipiContext {
 	public void setGenericResourceLoader(String resourceCodeBase) throws MalformedURLException {
 		if (resourceCodeBase != null) {
 			if (resourceCodeBase.indexOf("http:/") != -1 || resourceCodeBase.indexOf("file:/") != -1) {
-				setGenericResourceLoader(new HttpResourceLoader(new URL(resourceCodeBase)));
+				setGenericResourceLoader(new HttpResourceLoader(resourceCodeBase));
 			} else {
 				File res = new File(resourceCodeBase);
 				setGenericResourceLoader(new FileResourceLoader(res));
 			}
 		} else {
-			File res = new File("resource");
-			setGenericResourceLoader(new FileResourceLoader(res));
+			// BEWARE: The trailing slash is important!
+			setGenericResourceLoader(createDefaultResourceLoader("resource/"));
 		}
 	}
 
 	public void setTipiResourceLoader(String tipiCodeBase) throws MalformedURLException {
 		if (tipiCodeBase != null) {
 			if (tipiCodeBase.indexOf("http:/") != -1 || tipiCodeBase.indexOf("file:/") != -1) {
-				setTipiResourceLoader(new HttpResourceLoader(new URL(tipiCodeBase)));
+				setTipiResourceLoader(new HttpResourceLoader(tipiCodeBase));
 			} else {
 				setTipiResourceLoader(new FileResourceLoader(new File(tipiCodeBase)));
 			}
 		} else {
 			// nothing supplied. Use a file loader with fallback to classloader.
-			setTipiResourceLoader(new FileResourceLoader(new File("tipi")));
+			// BEWARE: The trailing slash is important!
+			setTipiResourceLoader(createDefaultResourceLoader("tipi/"));
 		}
+	}
+
+	/**
+	 * @return
+	 */
+	protected TipiResourceLoader createDefaultResourceLoader(String loaderType) {
+		return new FileResourceLoader(new File(loaderType));
 	}
 
 	public OutputStream writeTipiResource(String resourceName) throws IOException {

@@ -139,7 +139,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 	}
 
 	public void loadData(Navajo n, String method) throws TipiException, TipiBreakException {
-		System.err.println("Load data: "+method+" on component: "+getPath());
+//		System.err.println("Load data: "+method+" on component: "+getPath());
 		myMethod = method;
 		if (n == null) {
 			throw new TipiException("Loading with null Navajo! ");
@@ -147,7 +147,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 		myNavajo = n;
 		
 		if(true || "true".equals(myContext.getSystemProperty("isNewNavajoLoading"))) {
-			System.err.println("Loading. # of componentS: "+propertyComponentSet.size()+" loading: "+getPath() );
+//			System.err.println("Loading. # of componentS: "+propertyComponentSet.size()+" loading: "+getPath() );
 			for (TipiComponent tc : propertyComponentSet) {
 				tc.loadPropertiesFromNavajo(n);
 			}
@@ -304,7 +304,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 			public void run() {
 				ArrayList<Message> al = m.getAllMessages();
 				try {
-					performTipiEvent("onStart", null, true);
+					performTipiEvent("onBegin", null, true);
 					int index = 0;
 
 					for (Message message : al) {
