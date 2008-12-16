@@ -43,6 +43,7 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 		boolean internal = (getContext() instanceof SwingEmbeddedContext) || ((SwingTipiContext) getContext()).getAppletRoot() != null;
 		TipiHelper th = new TipiSwingHelper();
 		th.initHelper(this);
+		
 		addHelper(th);
 		if (internal) {
 			TipiApplet ta = ((SwingTipiContext) getContext()).getAppletRoot();
@@ -196,7 +197,7 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 				}
 
 				if ("background".equals(name)) {
-					mySuperPanel.setBackground((Color) object);
+					setBackground((Color) object);
 				}
 
 				

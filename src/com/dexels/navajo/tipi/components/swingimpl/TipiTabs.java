@@ -231,10 +231,13 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 					}
 					tb.addPropertyChangeListener(new PropertyChangeListener()  {
 
-						public void propertyChange(PropertyChangeEvent evt) {
+						public void propertyChange(final PropertyChangeEvent evt) {
 							System.err.println("Propertychanged: "+evt.getPropertyName());
 							if(evt.getPropertyName().equals("tabIcon")) {
-								pane.setIconAt(nextIndex, (Icon) evt.getNewValue());
+								runSyncInEventThread(new Runnable(){
+									public void run() {
+										pane.setIconAt(nextIndex, (Icon) evt.getNewValue());
+									}});
 							}
 
 						}});

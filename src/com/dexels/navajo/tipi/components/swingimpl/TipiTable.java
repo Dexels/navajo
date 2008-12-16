@@ -27,7 +27,7 @@ import com.dexels.navajo.tipi.tipixml.*;
 
 public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListener {
 	private String messagePath = "";
-	private MessageTablePanel mm;
+	private  MessageTablePanel mm;
 	private Map<String, ColumnAttribute> columnAttributes = new HashMap<String, ColumnAttribute>();
 
 	private final Map<Integer, Integer> columnSize = new HashMap<Integer, Integer>();
@@ -46,7 +46,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 	private List<XMLElement> columnList = new ArrayList<XMLElement>();
 
 	public Object createContainer() {
-		final TipiMessageTablePanel mm = new TipiMessageTablePanel(myContext,this);
+		 mm = new TipiMessageTablePanel(myContext,this);
 		mm.setShowRowHeaders(false);
 		// Don't register actionPerformed, that is done elsewhere.
 		mm.addListSelectionListener(new ListSelectionListener() {
@@ -137,7 +137,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 	}
 
 	public final void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
-		mm = (MessageTablePanel) getContainer();
+//		mm = (MessageTablePanel) getContainer();
 		mm.removeAllColumns();
 		removeAllAggregate();
 		columnSize.clear();

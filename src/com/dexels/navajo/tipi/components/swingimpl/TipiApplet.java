@@ -15,14 +15,31 @@ public class TipiApplet extends JApplet {
 	public TipiApplet() throws Exception {
  }
 
+	public void stop() {
+		myContext.shutdown();
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		super.stop();
+	}
+	
 	public void destroy() {
 		myContext.shutdown();
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		super.destroy();
 	}
-
+	
 	public void init() {
 		super.init();
 		List<String> arguments = new ArrayList<String>();
+		getContentPane().setBackground(Color.orange);
+
 		String tipiFile=getParameter("tipiFile");
 		List<String> arrrgs = null;
 		String definition = null;
@@ -84,7 +101,9 @@ public class TipiApplet extends JApplet {
 		if (init!=null) {
 			arguments.add(init);
 		} else {
-			throw new IllegalArgumentException("Missing argument: Add 'init' argument to applet.");
+			init="init.xml";
+			arguments.add(init);
+//			throw new IllegalArgumentException("Missing argument: Add 'init' argument to applet.");
 		}
 		try {
 			myContext = MainApplication.initialize(init, null,arguments,this,null);
@@ -95,41 +114,15 @@ public class TipiApplet extends JApplet {
 	}
 	
 	public void reload() {
-//		TipiComponent tc = myContext.getDefaultTopLevel();
-//		if(tc!=null) {
-//			tc.disposeComponent();
-//		}
-//		removeAll();
 		myContext.shutdown();
-//		try {
-//		// TODO: Setup in applet parameter
-//			getAppletContext().showDocument(new URL("http://penelope1.dexels.com/sportlink/club"));
-//		} catch (MalformedURLException e) {
-//			e.printStackTrace();
-//		}
-//		init();
-//		repaint();
 	}
 	
 	 public Point getCenteredPoint(Dimension dlgSize) {
 		 	Point base = getLocationOnScreen();
-//		 Rectangle r = getRootPaneContainer().getRootPane().getBounds();
 		    Dimension frmSize = new Dimension(getWidth(), getHeight());
-//		    Point loc = getRootPaneContainer().getRootPane().getLocation();
 		    int x =  Math.max(0, (frmSize.width - dlgSize.width) / 2 + base.x);
 		    int y = Math.max(0, (frmSize.height - dlgSize.height) / 2+ base.y);
 		    return new Point(x, y);
-
-//
-//		    if (dlgSize.height>(Toolkit.getDefaultToolkit().getScreenSize().height)) {
-//		      dlgSize.height = Toolkit.getDefaultToolkit().getScreenSize().height;
-//		      dlg.setSize(dlgSize);
-//		    }
-//
-//		    if (dlgSize.width>Toolkit.getDefaultToolkit().getScreenSize().width) {
-//		      dlgSize.width = Toolkit.getDefaultToolkit().getScreenSize().width;
-//		      dlg.setSize(dlgSize);
-//		   }
 
 		  }
 	

@@ -16,6 +16,7 @@ import org.jdesktop.animation.transitions.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.animation.*;
+import com.dexels.navajo.tipi.components.swingimpl.cookie.impl.*;
 import com.dexels.navajo.tipi.components.swingimpl.formatters.*;
 import com.dexels.navajo.tipi.components.swingimpl.jnlp.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
@@ -70,14 +71,24 @@ public class SwingTipiContext extends TipiContext {
 		 JFrame.setDefaultLookAndFeelDecorated(true);
 		 JDialog.setDefaultLookAndFeelDecorated(true);
 
-
+		 
+		 if(WebStartProxy.hasJnlpContext()) {
+				try {
+				System.err.println("JNLP DETECTED.");
+				setCookieManager(new JnlpCookieManager());
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		 }
 	//hasJnlpContext(
-		if(false) {
-			appendJnlpCodeBase();
-			createJnlpCookieManager();
-		} else {
-			createTmpCookieManager();
-		}
+//		if(false) {
+//			appendJnlpCodeBase();
+//			createJnlpCookieManager();
+//		} else {
+//			createTmpCookieManager();
+//		}
 		
 //		if(hasJnlpContext()) {
 //			appendJnlpCodeBase();
@@ -89,10 +100,7 @@ public class SwingTipiContext extends TipiContext {
 		
 	}
 
-	private void createJnlpCookieManager() {
-		// TODO Auto-generated method stub
-		
-	}
+
 
 	private void createTmpCookieManager() {
 		CookieManager cm = new TmpFileCookieManager();
@@ -425,7 +433,17 @@ public class SwingTipiContext extends TipiContext {
 		try {
 			System.err.println("Using tipilaf: "+tipiLaf);
 			if (tipiLaf == null) {
-				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+				// try nimbus first:
+				try {
+					Class.forName("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+					UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+
+				} catch (ClassNotFoundException e) {
+					// revert to system
+					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+
+				}
+				
 				// UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 			} else {
 				UIManager.setLookAndFeel(tipiLaf);
@@ -442,26 +460,35 @@ public class SwingTipiContext extends TipiContext {
 		}
 	}
 
-	private void appendJnlpCodeBase() {
+	
+	protected TipiResourceLoader createDefaultResourceLoader(String loaderType) {
 		if(hasJnlpContext()) {
-			WebStartProxy.appendJnlpCodeBase(this);
-			
+			try {
+				return WebStartProxy.createDefaultWebstartLoader(loaderType);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		
 		}
+		return super.createDefaultResourceLoader(loaderType);
 	}
 
+	
 	public boolean hasJnlpContext() {
 		try {
 			Class.forName("javax.jnlp.ServiceManager");
-			return true;
+			return WebStartProxy.hasJnlpContext();
 		} catch (ClassNotFoundException e) {
 			return false;
 		}
 	}
 	
 	public void animateProperty(Property p, int duration, Object target) {
-		if (TipiAnimationManager.isAnimatable(p.getTypedValue(), target)) {
+		Class animatableClass = TipiAnimationManager.isAnimatable(p.getTypedValue(), target);
+		if (animatableClass!=null) {
 			PropertyAnimator pa = new PropertyAnimator();
-			pa.animateProperty(p, duration, target);
+			System.err.println("animating...");
+			pa.animateProperty(p, duration, target,animatableClass);
 		} else {
 			System.err.println("No, not animatable");
 			super.animateProperty(p, duration, target);
