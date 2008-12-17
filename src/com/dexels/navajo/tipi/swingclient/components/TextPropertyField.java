@@ -1,7 +1,13 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Composite;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.*;
 
+import javax.swing.ImageIcon;
 import javax.swing.text.*;
 
 import com.dexels.navajo.document.*;
@@ -17,6 +23,9 @@ import com.dexels.navajo.document.*;
 
 public class TextPropertyField extends PropertyField {
   private BoundedLengthDocument myDocument = new BoundedLengthDocument();
+  private String search = "off";
+  private ImageIcon searchIcon = new ImageIcon(TextPropertyField.class.getResource("view.png"));
+  
   public TextPropertyField() {
     setDocument(myDocument);
     this.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -147,6 +156,28 @@ public void setText(String s) {
   public final String getCapitalizationMode() {
     return myDocument.getCapitalizationMode();
   }
+  
+  public final void setSearchMode(String mode) {
+	    this.search = mode;
+  }
+  
+  public void paintComponent(Graphics g){
+	  super.paintComponent(g);
+	  if ("icon".equals(search)) {
+	      Graphics2D g2 = (Graphics2D) g;	      
+	      Composite old = g2.getComposite();
+	      AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f);
+	      g2.setComposite(ac);
+
+	      if (getHeight() > 16) {
+	    	g2.drawImage(searchIcon.getImage(), 1, 1, searchIcon.getIconWidth(), searchIcon.getIconHeight(), null);	        
+	        g2.setComposite(old);
+	      }
+	      
+	    }
+	  
+  }
+	  
 
 }
 

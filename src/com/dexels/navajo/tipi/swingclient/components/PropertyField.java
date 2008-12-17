@@ -64,6 +64,8 @@ public class PropertyField
 		  }
 	  }
   }
+  
+
 
   
 //public Dimension getMinimumSize() {

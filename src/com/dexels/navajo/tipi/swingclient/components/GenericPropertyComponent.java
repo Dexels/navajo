@@ -86,6 +86,7 @@ public class GenericPropertyComponent extends JPanel {
 	private boolean use_checkbox = false;
 	private JComponent currentPropertyComponent = null;
 	private String myCapitalization = "off";
+	private String mySearch = "off";
 	private boolean setPropFlag = false;
 	private boolean isLabelSet = false;
 	private Property myProperty;
@@ -254,6 +255,11 @@ public class GenericPropertyComponent extends JPanel {
 		String caps = p.getSubType("capitalization");
 		if (caps != null) {
 			setCapitalization(caps);
+		}
+		
+		String search = p.getSubType("search");
+		if (search != null) {
+			setSearch(search);
 		}
 
 		setPropFlag = true;
@@ -1705,9 +1711,21 @@ public class GenericPropertyComponent extends JPanel {
 		}
 
 	}
+	
+	public void setSearch(String mode) {
+		mySearch = mode;
+		if (myField != null) {
+			myField.setSearchMode(mode);
+		}
+
+	}
 
 	public String getCapitalization() {
 		return myCapitalization;
+	}
+	
+	public String getSearch() {
+		return mySearch;
 	}
 
 	public final void setVisibleRows(int count) {
