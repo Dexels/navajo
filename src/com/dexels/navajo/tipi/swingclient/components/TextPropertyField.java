@@ -158,21 +158,22 @@ public void setText(String s) {
   }
   
   public final void setSearchMode(String mode) {
-	  System.err.println(" ---------------------->>  OUWE!@!!!!! Searchmode set: " + mode);
 	    this.search = mode;
   }
   
   public void paintComponent(Graphics g){
 	  super.paintComponent(g);
 	  if ("icon".equals(search)) {
-		  System.err.println("========= Attempting to draw icon in textfield , height: " + getHeight());
 	      Graphics2D g2 = (Graphics2D) g;	      
 	      Composite old = g2.getComposite();
-	      AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f);
+	      AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f);
 	      g2.setComposite(ac);
 
 	      if (getHeight() > 16) {
-	    	g2.drawImage(searchIcon.getImage(), 1, 1, searchIcon.getIconWidth(), searchIcon.getIconHeight(), null);	        
+	    	int iconHeight = searchIcon.getIconHeight();
+	    	int diff = getHeight() - iconHeight;
+	    		    	
+	    	g2.drawImage(searchIcon.getImage(), (getWidth() - searchIcon.getIconWidth() - 2), (int)(diff/2), searchIcon.getIconWidth(), searchIcon.getIconHeight(), null);	        
 	        g2.setComposite(old);
 	      }
 	      
