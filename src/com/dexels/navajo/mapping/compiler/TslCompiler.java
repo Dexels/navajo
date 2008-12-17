@@ -451,11 +451,8 @@ public String optimizeExpresssion(int ident, String clause, String className, St
     		Node child = valueElt.getFirstChild();
     		value = child.getNodeValue();
     	}
-    	value = value.trim();
-    	value = value.replaceAll("\n", " ");
-    	value = XMLutils.XMLUnescape(value);
     }
-
+    
     // Check if operand is given as text node between <expression> tags.
     if (value == null || value.equals("")) {
     	Node child = exprElmnt.getFirstChild();
@@ -472,6 +469,10 @@ public String optimizeExpresssion(int ident, String clause, String className, St
     				(exprElmnt.getParentNode() + "/" + exprElmnt) + ": <expression> node should either contain a value attribute or a text child node: >" +
     				value + "<");
     	}
+    } else {
+    	value = value.trim();
+    	value = value.replaceAll("\n", " ");
+    	value = XMLutils.XMLUnescape(value);
     }
 
         if (!condition.equals("")) {
