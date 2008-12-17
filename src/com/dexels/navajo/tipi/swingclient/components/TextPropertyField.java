@@ -164,6 +164,7 @@ public void setText(String s) {
   public void paintComponent(Graphics g){
 	  super.paintComponent(g);
 	  if ("icon".equals(search)) {
+		  System.err.println("========= Attempting to draw icon in textfield , height: " + getHeight());
 	      Graphics2D g2 = (Graphics2D) g;	      
 	      Composite old = g2.getComposite();
 	      AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f);
