@@ -158,6 +158,7 @@ public void setText(String s) {
   }
   
   public final void setSearchMode(String mode) {
+	  System.err.println("Searchmode set: " + mode);
 	    this.search = mode;
   }
   
