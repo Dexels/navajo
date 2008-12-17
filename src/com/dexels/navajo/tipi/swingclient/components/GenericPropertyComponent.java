@@ -257,10 +257,7 @@ public class GenericPropertyComponent extends JPanel {
 			setCapitalization(caps);
 		}
 		
-		String search = p.getSubType("search");
-		if (search != null) {
-			setSearch(search);
-		}
+		
 
 		setPropFlag = true;
 		String description = p.getDescription();
@@ -282,6 +279,11 @@ public class GenericPropertyComponent extends JPanel {
 		if (currentComponent instanceof PropertyField) {
 			PropertyField pf = (PropertyField) currentComponent;
 			pf.setForcedAlignment(forcedAlignment);
+		}
+		
+		String search = p.getSubType("search");
+		if (search != null) {
+			setSearch(search);
 		}
 
 		setPropFlag = false;
