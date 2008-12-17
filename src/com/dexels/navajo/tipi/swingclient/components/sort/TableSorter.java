@@ -204,6 +204,9 @@ public void setModel(TableModel model) {
   }
 
   public int getRowIndex(int i) {
+	  if(i==-1) {
+		  return -1;
+	  }
     if(i < indexes.length){
       return indexes[i];
     }
