@@ -1714,6 +1714,7 @@ public class GenericPropertyComponent extends JPanel {
 	
 	public void setSearch(String mode) {
 		mySearch = mode;
+		System.err.println("-------->> Generic setSearch, myField: " + myField);
 		if (myField != null) {
 			myField.setSearchMode(mode);
 		}
