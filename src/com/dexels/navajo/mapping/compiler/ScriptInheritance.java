@@ -15,7 +15,7 @@ public class ScriptInheritance {
 	
 	private static String REPLACE_MESSAGE = "replace";
 	private static String EXTEND_MESSAGE = "extend";
-	private static String BLOCK_ELEMENT = "blocked";
+	private static String BLOCK_ELEMENT = "block";
 	
 	private int maxLevel = 0;
 	
@@ -29,8 +29,8 @@ public class ScriptInheritance {
 	 */
 	private boolean equalElements(XMLElement one, XMLElement two) {
 		if ( one.getName().equals(two.getName())) {
-			String nameOne = ( one.getAttribute("name") != null ? (String) one.getAttribute("name") : (String) one.getAttribute("blocked") );
-			String nameTwo = ( two.getAttribute("name") != null ? (String) two.getAttribute("name") : (String) two.getAttribute("blocked") );
+			String nameOne = ( one.getAttribute("name") != null ? (String) one.getAttribute("name") : (String) one.getAttribute(BLOCK_ELEMENT) );
+			String nameTwo = ( two.getAttribute("name") != null ? (String) two.getAttribute("name") : (String) two.getAttribute(BLOCK_ELEMENT) );
 			if ( nameOne != null  && nameTwo != null && nameOne.equals(nameTwo)) {
 				return true;
 			} else {
@@ -364,8 +364,8 @@ public class ScriptInheritance {
 	
 	public static void main(String [] args) throws Exception {
 		
-		System.err.println("hasinject: " + containsInject("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/competition/ProcessQueryFacilityOccupation.xml"));
-		System.err.println("hasinject: " + containsInject("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/PageableService.xml"));
+//		System.err.println("hasinject: " + containsInject("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/competition/ProcessQueryFacilityOccupation.xml"));
+//		System.err.println("hasinject: " + containsInject("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/PageableService.xml"));
 		
 		
 		InputStream is = ScriptInheritance.inherit(
@@ -374,9 +374,9 @@ public class ScriptInheritance {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
 		String line = null;
-//		while ( ( line = br.readLine() ) != null ) {
-//			System.err.println(line);
-//		}
+		while ( ( line = br.readLine() ) != null ) {
+			System.err.println(line);
+		}
 //		StringWriter writer = new StringWriter();
 //			
 //		BufferedReader br2 = new BufferedReader(new FileReader("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/PageableService.xml"));
