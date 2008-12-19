@@ -321,6 +321,32 @@ public class ScriptInheritance {
 		return subScript;
 	}
 	
+	private static boolean hasInject(XMLElement e) {
+		if ( e.getName().equals("inject") ) {
+			return true;
+		}
+		Vector<XMLElement> c = e.getChildren();
+		if ( c != null && c.size() > 0 ) {
+			for (int i = 0; i < c.size(); i++) {
+				boolean b = hasInject(c.get(i));
+				if ( b ) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public static boolean containsInject(String scriptPath) throws Exception {
+		XMLElement e = new CaseSensitiveXMLElement();
+		FileInputStream fis = new FileInputStream(scriptPath);
+		e.parseFromStream(fis);
+		fis.close();
+		
+		return hasInject(e);
+		
+	}
+	
 	public static InputStream inherit(InputStream raw, String scriptPath) throws Exception {
 		
 		ScriptInheritance ti = new ScriptInheritance();
@@ -338,6 +364,8 @@ public class ScriptInheritance {
 	
 	public static void main(String [] args) throws Exception {
 		
+		System.err.println("hasinject: " + containsInject("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/competition/ProcessQueryFacilityOccupation.xml"));
+		System.err.println("hasinject: " + containsInject("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/PageableService.xml"));
 		
 		
 		InputStream is = ScriptInheritance.inherit(
@@ -346,9 +374,9 @@ public class ScriptInheritance {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
 		String line = null;
-		while ( ( line = br.readLine() ) != null ) {
-			System.err.println(line);
-		}
+//		while ( ( line = br.readLine() ) != null ) {
+//			System.err.println(line);
+//		}
 //		StringWriter writer = new StringWriter();
 //			
 //		BufferedReader br2 = new BufferedReader(new FileReader("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/PageableService.xml"));

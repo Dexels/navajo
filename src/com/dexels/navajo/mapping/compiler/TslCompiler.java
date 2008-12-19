@@ -2206,19 +2206,31 @@ public String mapNode(int ident, Element n) throws Exception {
 	      throw new SystemException(-1, "Error while generating Java code for script: " + script + ". Message: " + e.getMessage(), e);
 	    } 
   }
-  
+    
   public void compileScript(String script, String scriptPath, String workingPath, String packagePath) throws SystemException {
 
+	    String fullScriptPath = scriptPath + "/" + packagePath + "/" + script + ".xml";
+	    
 	    try {
 			if (!MapMetaData.isMetaScript(script, scriptPath, packagePath)) {
-				FileInputStream fis = new FileInputStream(scriptPath + "/" + packagePath + "/" + script + ".xml"); 
-				compileScript(ScriptInheritance.inherit(fis, scriptPath), packagePath, script, scriptPath, workingPath);
+				
+				FileInputStream fis = new FileInputStream(fullScriptPath); 
+				if ( ScriptInheritance.containsInject(fullScriptPath)) {
+					// Inheritance preprocessor before compiling.
+					compileScript(ScriptInheritance.inherit(fis, scriptPath), packagePath, script, scriptPath, workingPath);
+				} else {
+					// Use 'default' compilescript. 
+					compileScript(new FileInputStream(fullScriptPath), packagePath, script, scriptPath, workingPath);
+				}
 				fis.close();
+				
 			} else {
+				
 				MapMetaData mmd = MapMetaData.getInstance();
-				String intermed = mmd.parse(scriptPath + "/" + packagePath + "/" + script + ".xml");
+				String intermed = mmd.parse(fullScriptPath);
 				compileScript(ScriptInheritance.inherit(new ByteArrayInputStream(intermed.getBytes()), scriptPath), 
 						     packagePath, script, scriptPath, workingPath );
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
