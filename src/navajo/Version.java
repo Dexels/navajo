@@ -27,6 +27,8 @@ package navajo;
 /**
  * VERSION HISTORY
  * 
+ * 7.7.2 Added support for blocking inherited messages/properties.
+ * 
  * 7.7.1 Implemented extend/replace inheritance semantics.
  * 
  * 7.7.0 Added support for Script Inheritance via <inject> semantics.
@@ -142,10 +144,10 @@ public class Version extends dexels.Version {
 
 	public static final int MAJOR = 7;
 	public static final int MINOR = 7;
-	public static final int PATCHLEVEL = 1;
+	public static final int PATCHLEVEL = 2;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
-	public static final String RELEASEDATE = "2008-12-10";
+	public static final String RELEASEDATE = "2008-12-19";
 	
 //	 Included packages.
 	String [] includes = {"navajodocument.Version"};
