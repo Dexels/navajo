@@ -15,6 +15,7 @@ public class ScriptInheritance {
 	
 	private static String REPLACE_MESSAGE = "replace";
 	private static String EXTEND_MESSAGE = "extend";
+	private static String BLOCK_ELEMENT = "blocked";
 	
 	private int maxLevel = 0;
 	
@@ -28,8 +29,8 @@ public class ScriptInheritance {
 	 */
 	private boolean equalElements(XMLElement one, XMLElement two) {
 		if ( one.getName().equals(two.getName())) {
-			String nameOne = (String) one.getAttribute("name");
-			String nameTwo = (String) two.getAttribute("name");
+			String nameOne = ( one.getAttribute("name") != null ? (String) one.getAttribute("name") : (String) one.getAttribute("blocked") );
+			String nameTwo = ( two.getAttribute("name") != null ? (String) two.getAttribute("name") : (String) two.getAttribute("blocked") );
 			if ( nameOne != null  && nameTwo != null && nameOne.equals(nameTwo)) {
 				return true;
 			} else {
@@ -49,7 +50,8 @@ public class ScriptInheritance {
 	 * @param tsl
 	 * @param insertedMessage
 	 */
-	private boolean replaceMessagesWithLevel(int level, int leveledIndex, int targetIndex, XMLElement tsl, XMLElement insertedMessage, boolean extend) {
+	private boolean replaceMessagesWithLevel(int level, int leveledIndex, int targetIndex, XMLElement tsl, 
+			                                 XMLElement insertedMessage) {
 		
 		Vector<XMLElement> children = tsl.getChildren();
 		for (int i = 0; i < children.size(); i++) {
@@ -62,22 +64,30 @@ public class ScriptInheritance {
 					for (int j = 0; j < allChildrenOfParent.size(); j++) {
 						
 						if ( allChildrenOfParent.get(j).equals(child) ) {
-							
-							if ( !extend ) {
-								allChildrenOfParent.remove(j);
-							}
-							
+						
 							String nameOfInsertedMessage = (String) insertedMessage.getAttribute("name");
+							String operation = "";
 							if ( nameOfInsertedMessage == null ) {
 								nameOfInsertedMessage = (String) insertedMessage.getAttribute(REPLACE_MESSAGE);
+								operation = REPLACE_MESSAGE;
 							}
 							if ( nameOfInsertedMessage == null ) {
 								nameOfInsertedMessage = (String) insertedMessage.getAttribute(EXTEND_MESSAGE);
+								operation = EXTEND_MESSAGE;
 							}
+							if ( nameOfInsertedMessage == null ) {
+								nameOfInsertedMessage = (String) insertedMessage.getAttribute(BLOCK_ELEMENT);
+								operation = BLOCK_ELEMENT;
+							}
+							//System.err.println(operation + "->" + nameOfInsertedMessage);
 							insertedMessage.setAttribute("name", nameOfInsertedMessage);
 							insertedMessage.removeAttribute(REPLACE_MESSAGE);
 							
-							if ( !extend ) { // simply replace.
+							if ( operation.equals(BLOCK_ELEMENT) ) {
+								System.err.println("REMOVING: " + allChildrenOfParent.get(j));
+								allChildrenOfParent.remove(j);
+							} else if ( operation.equals(REPLACE_MESSAGE) ) { // simply replace.
+								allChildrenOfParent.remove(j);
 								allChildrenOfParent.add(j, insertedMessage);
 							} else {
 								// Add all children of insertedMessage.
@@ -85,20 +95,29 @@ public class ScriptInheritance {
 								orig.setAttribute("name", nameOfInsertedMessage);
 								Vector<XMLElement> allChildrenOfInsertedMessage = insertedMessage.getChildren();
 								
-								// remove 'overlap' and add 'new'...
+								// replace 'overlap' with 'new' and delete 'blocked'.
 								for (int aci = 0; aci < allChildrenOfInsertedMessage.size(); aci++) {
 									boolean added = false;
 									for (int oci = 0; oci < orig.getChildren().size(); oci++) {
+										// Remove elements that have a blocked attribute.
+										if ( orig.getChildren().get(oci).getAttribute(BLOCK_ELEMENT) != null ) {
+											orig.getChildren().remove(oci);
+										}
 										if ( equalElements ( orig.getChildren().get(oci), allChildrenOfInsertedMessage.get(aci)) ) {
 											orig.getChildren().remove(oci);
-											orig.getChildren().add(oci, allChildrenOfInsertedMessage.get(aci));
+											if ( allChildrenOfInsertedMessage.get(aci).getAttribute(BLOCK_ELEMENT) == null ) {
+												// Only add if blocked attribute was NOT specified.
+												orig.getChildren().add(oci, allChildrenOfInsertedMessage.get(aci));
+											}
 											oci = orig.getChildren().size() + 1;
 											added = true;
 										}
+									
 									}
 									if (!added) {
 										orig.addChild(allChildrenOfInsertedMessage.get(aci));
 									}
+									
 								}
 								
 							}
@@ -123,7 +142,7 @@ public class ScriptInheritance {
 					leveledIndex++;		
 				}
 			} else {
-				if ( replaceMessagesWithLevel(level, leveledIndex, targetIndex, child, insertedMessage, extend) ) {
+				if ( replaceMessagesWithLevel(level, leveledIndex, targetIndex, child, insertedMessage) ) {
 					return true;
 				}
 			}
@@ -152,7 +171,11 @@ public class ScriptInheritance {
 		for (int i = 0; i < children.size(); i++) {
 			XMLElement child = children.get(i);
 			if ( child.getName().equals("message") &&
-			     ( name.equals(child.getAttribute(REPLACE_MESSAGE)) ||  name.equals(child.getAttribute(EXTEND_MESSAGE)) ) 
+			     ( name.equals(child.getAttribute(REPLACE_MESSAGE)) ||  
+			       name.equals(child.getAttribute(EXTEND_MESSAGE)) ||
+			       name.equals(child.getAttribute(BLOCK_ELEMENT))
+			     ) 
+			       
 			     && child.getAttribute("level").equals(level) ) {
 				return child;
 			} 
@@ -217,7 +240,7 @@ public class ScriptInheritance {
 					String level = (String) childPrev.getAttribute("level");
 					XMLElement found = findMessageWithLevel(messageName, level, subScript);
 					if ( found != null ) {
-						replaceMessagesWithLevel(new Integer(level).intValue(), 0, i, superScript, found, found.getAttribute(EXTEND_MESSAGE) != null);
+						replaceMessagesWithLevel(new Integer(level).intValue(), 0, i, superScript, found);
 					} 
 				}
 			}
