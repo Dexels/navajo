@@ -4,8 +4,6 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import org.jvnet.substance.*;
-
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.*;
@@ -30,7 +28,6 @@ public class TipiSetTheme extends TipiAction {
 						setSubstanceTheme(value);
 					}
 				} catch (Throwable e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -42,19 +39,18 @@ public class TipiSetTheme extends TipiAction {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	private void setSubstanceTheme(String value) {
-		// TODO Auto-generated method stub
-		SubstanceLookAndFeel.setCurrentTheme(value);
+	
+//		SubstanceLookAndFeel.setCurrentTheme(value);
 		Frame[] f = Frame.getFrames();
-		try {
-			UIManager.setLookAndFeel(new SubstanceLookAndFeel());
-		} catch (UnsupportedLookAndFeelException e) {
-			// TODO Auto-generated catch block
+		try {	
+			UIManager.setLookAndFeel("org.jvnet.substance.skin.SubstanceBusinessLookAndFeel");
+//			UIManager.setLookAndFeel(new SubstanceLookAndFeel());
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		if (((SwingTipiContext) myContext).getAppletRoot() != null) {

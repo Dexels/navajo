@@ -2,8 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/NavajoSwingTipi"/>
-	<classpathentry exported="true" kind="lib" path="lib/substance4.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/substance5.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/substance"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

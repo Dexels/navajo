@@ -8,8 +8,7 @@
     </information>  
 
     <resources>
-        <j2se version="1.5+" max-heap-size="256m"/>
-        <jar href="lib/substance.jar" main="false"/>
+         <jar href="lib/substance5_1.jar" main="false"/>
         <jar href="lib/TipiSubstance.jar" main="false"/>
     </resources>
     <component-desc />

@@ -7,6 +7,8 @@
     <tipiaction name="setSkin"  class="TipiSetSkin" package="com.dexels.navajo.tipi.swing.substance">
         <param name="value" type="string"/>
     </tipiaction>
-    
+     <tipiaction name="loadSkins"  class="LoadSkins" package="com.dexels.navajo.tipi.swing.substance">
+        <param name="service" type="string"/>
+    </tipiaction>  
             
 </tid>
