@@ -138,8 +138,7 @@ public class SQLMap implements Mappable, LazyArray {
   // Set autoCommit to true to overide default settings from sqlmap.xml configuration file!
   public boolean autoCommit = true;
   public boolean replaceQueryDoubleQuotes = true;
-  public boolean scrollable = false;
-  
+
   private boolean overideAutoCommit = false;
   public int transactionIsolation = -1;
   public int rowCount = 0;
@@ -1045,11 +1044,7 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
     }
 
     if (query != null) {
-    	if ( isScrollable() ) {
-    		this.statement = con.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-    	} else {
-    		this.statement = con.prepareStatement(query);
-    	}
+      this.statement = con.prepareStatement(query);
     }
     else {
       this.statement = con.prepareStatement(update);
@@ -1059,9 +1054,7 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
 
     if (endIndex != INFINITE) {
       this.statement.setMaxRows(this.endIndex);
-      if ( isScrollable() ) {
-    	  this.statement.setFetchSize( endIndex - startIndex );
-      }
+      //this.statement.setFetchSize(endIndex);
     }
 
     if (debug) { System.err.println("SET MAXROWS DONE..SETTING STATEMENT PARAMETERS"); }
@@ -1076,7 +1069,7 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
       try {
         if (debug) { System.err.println("CALLING EXECUTEQUERY()"); }
         rs = this.statement.executeQuery();
-        
+
         //System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> OPENRESULTSETS: " + openResultSets);
         if (debug) { System.err.println("GOT RESULTSET!!!!!"); }
       }
@@ -1161,16 +1154,6 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
 
       if (rs != null) {
 
-    	  boolean hasMoreRecords = true;
-    	  int index = 1;
-           
-    	  if ( scrollable ) {
-    		  hasMoreRecords = rs.absolute(startIndex);
-    		  index = startIndex;
-    	  } else {
-    		  hasMoreRecords = rs.next();
-    	  }
-    	     
         int columns = 0;
         ResultSetMetaData meta = null;
         try {
@@ -1181,16 +1164,13 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
 
         }
         ArrayList dummy = new ArrayList();
-       
+        int index = 1;
         remainCount = 0;
         rowCount = 0;
 
-      
         try {
 
-        
-          
-          while ( hasMoreRecords ) {
+          while (rs.next()) {
 
             if ( (index >= startIndex) &&
                 ( (endIndex == INFINITE) || (index <= endIndex))) {
@@ -1330,7 +1310,6 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
             //else if (index >= startIndex) {
             //  remainCount++;
             //}
-            hasMoreRecords = rs.next();
             rowCount++;
             index++;
           }
@@ -1808,13 +1787,5 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
    */
   public void setShowHeader(boolean b) {
 	  this.showHeader = b;
-  }
-
-  public boolean isScrollable() {
-	  return scrollable;
-  }
-
-  public void setScrollable(boolean scrollable) {
-	  this.scrollable = scrollable;
   }
 }
