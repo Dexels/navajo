@@ -14,6 +14,7 @@
     <property name="DexelsVersionControl.build" value="${PROJECTHOME}/DexelsVersionControl/classes"/>    
 	<path id="depend">
 		<pathelement location="${NavajoClient.build}" />
+		<pathelement location="${NavajoClient}/lib/jzlib.jar" />
 		<pathelement location="${NavajoDocument.build}" />
 		<pathelement location="${Navajo.build}" />
 		<pathelement location="${DexelsVersionControl.build}" />
@@ -43,16 +44,16 @@
 		<delete dir="${build}" />
 	</target>
 	<target name="Navajo" depends="init">
-		<ant dir="${Navajo}" target="archive" inheritAll="false">
+		<!--<ant dir="${Navajo}" target="archive" inheritAll="false">
 			<property name="PROJECTHOME" value="${PROJECTHOME}" />
-		</ant>
+		</ant> -->
 	</target>
 	<target name="NavajoClient" depends="init">
 		<!-- NavajoSwingClient sub-project should build NavajoDocument, 
          and NavajoClient sub-projects if necessary -->
-		<ant dir="${NavajoClient}" target="archive" inheritAll="false">
+		<!--<ant dir="${NavajoClient}" target="archive" inheritAll="false">
 			<property name="PROJECTHOME" value="${PROJECTHOME}" />
-		</ant>
+		</ant> -->
 	</target>
 	<target name="resource">
 		<copy todir="${build}">
@@ -90,11 +91,9 @@
 	
 	</path>
 	<target name="test" description="Run the JUnit tests" depends="compile,resource">
-		<junit fork="true" dir="${PROJECTHOME}/${ant.project.name}" showoutput="true" printsummary="yes" haltonfailure="yes">
-			
+		<junit fork="true" dir="${PROJECTHOME}/${ant.project.name}" showoutput="true" printsummary="yes" haltonfailure="no">
 			<classpath refid="test.class.path" />
 			<classpath refid="depend" />
-
 			<formatter type="plain" />
 			<test name="AllTests"/>
 		</junit>
