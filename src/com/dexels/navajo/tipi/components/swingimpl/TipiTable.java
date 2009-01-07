@@ -505,6 +505,9 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 		if (name.equals("useScroll")) {
 			mm.setUseScrollBars((Boolean) object);
 		}
+		if (name.equals("border")) {
+			mm.setBorder((Border) object);
+		}
 		super.setComponentValue(name, object);
 	}
 

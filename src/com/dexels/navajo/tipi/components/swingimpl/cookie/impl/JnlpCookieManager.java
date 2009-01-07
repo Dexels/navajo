@@ -30,12 +30,22 @@ public class JnlpCookieManager implements CookieManager {
 	            for (int i = 0; i < muffins.length; i++) {
 		            System.err.println("Muffin: "+muffins[i]);
 				}
-	            ps.create(new URL("brrrr"), 10000);
+//	            ps.create(codebase, 10000);
 	    }
 	}
 	
 	public String getCookie(String key) {
 		// TODO Auto-generated method stub
+//		try {
+//			FileContents ff =  ps.get(new URL(key));
+//			StringWriter sr = new StringWriter();
+//		} catch (MalformedURLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		return null;
 	}
 

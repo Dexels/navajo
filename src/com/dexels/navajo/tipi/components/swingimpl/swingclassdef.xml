@@ -253,7 +253,7 @@
          <value direction="in" name="visible" type="boolean" />
          <value direction="in" name="readOnly" type="boolean" />
          <value direction="in" name="opaque" type="boolean" />
-         <value direction="in" name="border" type="border" property="border" />
+         <value direction="in" name="border" type="border" />
          <value direction="in" name="rowHeight" type="integer" />
          <value direction="out" name="columnCount" type="integer" />
          <value direction="out" name="rowCount" type="integer" />
@@ -2141,8 +2141,11 @@
    <tipi-parser name="border" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.BorderParser" type="javax.swing.border.Border" />
    <tipi-parser name="labelborder" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.BorderParser" type="javax.swing.border.TitledBorder" />
 
-
-   <tipi-parser name="font" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.FontParser" type="java.awt.Font" />
+   <tipi-parser name="font" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.FontParser" type="java.awt.Font" >
+      <description>
+         Een font zit ZO in elkaar vla-vla-vla
+      </description>
+   </tipi-parser>
    <tipi-parser name="color" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.ColorParser" type="java.awt.Color" />
    <tipi-parser name="paint" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.PaintParser" type="java.awt.Paint" />
    <tipi-parser name="cookie" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.CookieParser" type="java.lang.String" />

@@ -62,8 +62,7 @@ public class TipiApplet extends JApplet {
 		String tipiCodeBase = this.getParameter("tipiCodeBase");
 		String resourceCodeBase = this.getParameter("resourceCodeBase");
 		System.err.println("my codebase: "+getCodeBase());
-		
-		String switches = getParameter("switch");
+		String switches = getParameter("args");
 		if(switches!=null) {
 			StringTokenizer st = new StringTokenizer(switches," ");
 			while (st.hasMoreTokens()) {
