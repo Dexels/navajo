@@ -3,7 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/NavajoSwingTipi"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/TipiSvgBatik"/>
-	<classpathentry kind="lib" path="lib/swingx.jar"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/TipiSvgBatik"/>
+	<classpathentry exported="true" kind="lib" path="lib/swingx.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
