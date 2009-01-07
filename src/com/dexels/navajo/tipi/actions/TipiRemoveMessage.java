@@ -31,24 +31,48 @@ import com.dexels.navajo.tipi.internal.*;
 public class TipiRemoveMessage extends TipiAction {
 	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
 		Operand messageOperand = getEvaluatedParameter("message", event);
-		if (messageOperand == null || messageOperand.value == null) {
+		if (messageOperand == null ) {
 			throw new TipiException("Error in insertMessage action: navajo message missing!");
 		}
-
-		Message arrayMessage = (Message) messageOperand.value;
-		if (!Message.MSG_TYPE_ARRAY.equals(arrayMessage.getType())) {
-			throw new TipiException("Error in insertMessage. InsertMessage only works for array messages!");
+		if(messageOperand.value == null) {
+			return;
 		}
+		
+		Message message = (Message) messageOperand.value;
+//		if (!Message.MSG_TYPE_ARRAY.equals(message.getType())) {
+//			throw new TipiException("Error in insertMessage. InsertMessage only works for array messages!");
+//		}
 		Operand index = getEvaluatedParameter("index", event);
-		Integer ii = (Integer) index.value;
+		if(index!=null && index.value!=null) {
+			Integer ii = (Integer) index.value;
 
-		// TODO: Perhaps refactor into NavajoDocument
-		Message mm = arrayMessage.getMessage(ii.intValue());
-		arrayMessage.removeMessage(mm);
-		try {
-			myContext.unlink(mm.getRootDoc(),mm);
-		} catch (NavajoException e) {
-			throw new TipiException("Error unlinking message: " + mm.getFullMessageName(), e);
+			// TODO: Perhaps refactor into NavajoDocument
+			Message mm = message.getMessage(ii.intValue());
+			message.removeMessage(mm);
+			try {
+				myContext.unlink(mm.getRootDoc(),mm);
+			} catch (NavajoException e) {
+				throw new TipiException("Error unlinking message: " + mm.getFullMessageName(), e);
+			}
+		} else {
+			// we are in non array mode now.
+			Message parent = message.getParentMessage();
+			if(parent==null) {
+				// toplevel? Remove from navajo
+				Navajo root = message.getRootDoc();
+				if(root==null) {
+					// yes, well... ByE!
+					return;
+				} else {
+					try {
+						root.removeMessage(message);
+					} catch (NavajoException e) {
+						e.printStackTrace();
+					}
+				}
+			} else {
+				parent.removeMessage(message);
+			}
 		}
 
 	}

@@ -192,7 +192,7 @@
    
    <tipiaction name="removeMessage" class="TipiRemoveMessage" package="com.dexels.navajo.tipi.actions">
       <param name="message" type="message" required="true" />
-      <param name="index" type="integer" required="true" />
+      <param name="index" type="integer" required="false" />
    </tipiaction>
    <tipiaction name="createNavajo" class="TipiCreateNavajo" package="com.dexels.navajo.tipi.actions">
       <param name="name" type="string" required="true" />

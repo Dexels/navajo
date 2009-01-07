@@ -219,6 +219,7 @@ public abstract class TipiContext {
 		fakeExtension(optionalExtensionList, "tipi.TipiFacilityOccupationExtension");
 		fakeExtension(optionalExtensionList, "tipi.TipiJxLayerExtension");
 		fakeExtension(optionalExtensionList, "tipi.TipiMigExtension");
+		fakeExtension(optionalExtensionList, "tipi.TipiJoglExtension");
 
 		fakeExtension(mainExtensionList, "tipi.TipiEchoExtension");
 
@@ -2792,11 +2793,14 @@ public abstract class TipiContext {
 				e.printStackTrace();
 			}
 		}
-
+		if (n.getHeader() != null) {
+			n.removeHeader();
+		}
+		
 		if (n.getHeader() == null) {
 			Header h = NavajoFactory.getInstance().createHeader(n, service, "unknown", "unknown", -1);
 			n.addHeader(h);
-		}
+		} 
 		addNavajo(service, n);
 		loadNavajo(n, service);
 	}
