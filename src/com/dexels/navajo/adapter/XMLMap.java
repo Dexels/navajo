@@ -119,7 +119,7 @@ public class XMLMap extends TagMap implements Mappable {
 
 	private void parseString(String s) throws UserException {
 			
-		XMLElement xe = new CaseSensitiveXMLElement();
+		XMLElement xe = new CaseSensitiveXMLElement(true);
 		try {
 			xe.parseFromReader(new StringReader(s));
 		}

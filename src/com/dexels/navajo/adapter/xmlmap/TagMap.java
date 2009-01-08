@@ -132,7 +132,7 @@ public class TagMap implements Mappable {
 		
 		String insertChild = new String( b.getData() );
 
-		XMLElement xe = new CaseSensitiveXMLElement();
+		XMLElement xe = new CaseSensitiveXMLElement(true);
 		try {
 			xe.parseFromReader( new StringReader( insertChild ) );
 		}
