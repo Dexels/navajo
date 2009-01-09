@@ -1,0 +1,10 @@
+
+Usage:
+------
+
+tail <service>
+tails
+untail <service>
+untail all
+status
+help

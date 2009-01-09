@@ -11,6 +11,7 @@ import javax.servlet.http.*;
 import com.dexels.navajo.client.NavajoClient;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.types.*;
+import com.dexels.navajo.jabber.JabberWorker;
 import com.dexels.navajo.server.*;
 //import com.sun.xml.internal.bind.v2.util.FatalAdapter;
 import com.jcraft.jzlib.JZlib;
@@ -65,6 +66,8 @@ public class TmlHttpServlet extends HttpServlet {
  private static long logfileIndex = 0;
  private static long bytesWritten = 0;
  
+ private JabberWorker jabberWorker;
+ 
  protected final DispatcherInterface initDispatcher() throws NavajoException {
 
 	 if (configurationPath!=null) {
@@ -81,9 +84,15 @@ public class TmlHttpServlet extends HttpServlet {
 
     configurationPath = config.getInitParameter("configuration");
     // Check whether defined bootstrap webservice is present.
+    String bootstrapUrl = config.getInitParameter("bootstrap_url");
     String bootstrapService = config.getInitParameter("bootstrap_service");
     String bootstrapUser = config.getInitParameter("bootstrap_user");
     String bootstrapPassword = config.getInitParameter("bootstrap_password");
+    // Jabber stuff
+    String jabberServer = config.getInitParameter("jabber_server");
+    String jabberPort = config.getInitParameter("jabber_port");
+    String jabberService = config.getInitParameter("jabber_service");
+    System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>> jabberServer = " + jabberServer);
     
     System.setProperty(DOC_IMPL,QDSAX);
     System.err.println("Configuration path: "+configurationPath);
@@ -130,6 +139,10 @@ public class TmlHttpServlet extends HttpServlet {
     } catch (Exception e) {
     	e.printStackTrace(System.err);
     }
+    
+    // Initialize Jabber.
+    jabberWorker =  JabberWorker.getInstance();
+    jabberWorker.configJabber(jabberServer, jabberPort, jabberService, bootstrapUrl);
     
   }
 
