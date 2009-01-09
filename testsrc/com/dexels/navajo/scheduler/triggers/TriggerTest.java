@@ -93,7 +93,7 @@ public class TriggerTest extends TestCase {
 	public void testParseTriggerJabber() throws Exception {
 		Trigger t = Trigger.parseTrigger("jabber:type=[presence(unavailable)|message],from=*");
 		Assert.assertNotNull(t);
-		Assert.assertEquals(t.getClass(), JabberTrigger.class);	
+		Assert.assertEquals(t.getClass(), Class.forName("com.dexels.navajo.jabber.JabberTrigger"));	
 	}
 	
 	public void testParseTriggerServerEvent() throws Exception {
