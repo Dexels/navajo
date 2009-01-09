@@ -331,4 +331,9 @@ public class TestNavajoConfig implements NavajoConfigInterface {
 		
 	}
 
+	public Message getMessage(String msg) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

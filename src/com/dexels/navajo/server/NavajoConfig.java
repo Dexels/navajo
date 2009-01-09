@@ -87,7 +87,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
 	protected Navajo configuration;
     public int maxAccessSetSize = MAX_ACCESS_SET_SIZE;
     
-    private Message jabberMessage;
+    private Message body;
     private boolean jabberStarted = false;
     private boolean statisticsRunnerStarted = false;
     
@@ -160,7 +160,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
     	
     	configuration = NavajoFactory.getInstance().createNavajo(in);
     	
-    	Message body = configuration.getMessage("server-configuration");
+    	body = configuration.getMessage("server-configuration");
     	if (body == null) {
     		throw new SystemException(-1, "Could not read configuration file server.xml");
     	}
@@ -278,8 +278,6 @@ public final class NavajoConfig implements NavajoConfigInterface {
 					}
 				}
 			} 
-			
-			jabberMessage = body.getMessage("jabber");
 					
 			if ( body.getProperty("repository/class") != null ) {
 				repositoryClass = body.getProperty("repository/class").getValue();
@@ -647,28 +645,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
     		return null;
     	}
     }
-
-    /**
-     * Get the Jabber instance.
-     * 
-     * @return
-     */
-    public void startJabber() {
-    	
-    	if( jabberMessage!=null && !jabberStarted ) {
-    		JabberInterface ji = JabberFactory.getInstance();
-    		try {
-				ji.configJabber(jabberMessage);
-				jabberStarted = true;
-			} catch (UserException e) {
-				AuditLog.log("INIT", "WARNING: Jabber not installed, configuration problem: " + e.getMessage());
-				
-			}
-    	} else {
-    		AuditLog.log("INIT", "WARNING: Jabber not installed, jabber configuration missing in server.xml.");
-    	}
-    }
-    
+ 
     /*
      * Start statistics runner.
      */
@@ -1017,6 +994,14 @@ public final class NavajoConfig implements NavajoConfigInterface {
 
 	public void setMaxAccessSetSize(int maxAccessSetSize) {
 		this.maxAccessSetSize = maxAccessSetSize;
+	}
+
+	public Message getMessage(String msg) {
+		if ( body != null ) {
+			return body.getMessage(msg);
+		} else {
+			return null;
+		}
 	}
 	
 }

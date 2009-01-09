@@ -29,6 +29,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
 import java.util.Calendar;
 
 import com.dexels.navajo.scheduler.Listener;
@@ -187,7 +188,9 @@ public abstract class Trigger implements Listener, Serializable {
 				return t;
 			} else if ( s.startsWith(JABBER_TRIGGER + ":") ) {
 				String v = s.substring(JABBER_TRIGGER.length()+1);
-				t = new JabberTrigger(v);
+				Class jt = Class.forName("com.dexels.navajo.jabber.JabberTrigger");
+				Constructor c = jt.getDeclaredConstructor(new Class[]{String.class});
+				t = (Trigger) c.newInstance(v);
 				return t;
 			}
 			else {

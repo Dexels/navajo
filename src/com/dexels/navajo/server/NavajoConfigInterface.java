@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
@@ -81,7 +82,7 @@ public interface NavajoConfigInterface {
 	public boolean isCompileScripts();
 	
 	// Start modules.
-	public void startJabber();
+	public Message getMessage(String msg);
 	public void startTaskRunner();
 	public void startStatisticsRunner();
 	
