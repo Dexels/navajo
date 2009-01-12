@@ -12,6 +12,7 @@ import org.jivesoftware.smackx.muc.*;
 import com.dexels.navajo.document.*;
 
 public class JabberUtils {
+	
 	public static MultiUserChat createRoom(String roomName, String nickName,
 			String conferenceName, XMPPConnection connection)
 			throws XMPPException {
@@ -180,8 +181,7 @@ public class JabberUtils {
 		}
 		System.err.println("Room join: " + conferenceName);
 
-		Collection<HostedRoom> aa = MultiUserChat.getHostedRooms(connection,
-				conferenceName);
+		Collection<HostedRoom> aa = MultiUserChat.getHostedRooms(connection, conferenceName);
 
 		boolean found = false;
 		for (HostedRoom hostedRoom : aa) {
@@ -193,7 +193,7 @@ public class JabberUtils {
 						hostedRoom.getJid());
 				System.err.println("JID: " + hostedRoom.getJid());
 				occupants.clear();
-				registerRoomListeners(nickName, myMultiuserChat, occupants);
+				//registerRoomListeners(nickName, myMultiuserChat, occupants);
 				System.err.println("Joining");
 				System.err.println("Before Join: People in the room: "
 						+ myMultiuserChat.getOccupantsCount());
@@ -228,7 +228,8 @@ public class JabberUtils {
 					conferenceName, connection);
 			occupants.clear();
 
-			registerRoomListeners(nickName, muc, occupants);
+			//registerRoomListeners(nickName, muc, occupants);
+			
 			nickName = join(nickName, muc, 0);
 			return muc;
 		}
