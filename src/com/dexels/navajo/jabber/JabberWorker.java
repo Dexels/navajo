@@ -70,6 +70,10 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 	private final static String myId = "Navajo Jabber Worker";
 	
 	private Access myAccess;
+
+	private String jabberServer;
+	private String jabberPort;
+	private String jabberService;
 	
 	// Registered JabberTriggers..
 	private Set<JabberTrigger> triggers = null;
@@ -84,6 +88,10 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 			AuditLog.log("JABBER", "Jabber not started, not configured.");
 			return;
 		}
+		
+		this.jabberServer= server;
+		this.jabberPort = port;
+		this.jabberService = service;
 		
 		myWaitingQueue = new LinkedBlockingQueue<Runnable>(100);
 		
@@ -391,5 +399,17 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 	
 	public Set<JabberTrigger> getTriggers() {
 		return triggers;
+	}
+
+	public String getJabberServer() {
+		return jabberServer;
+	}
+
+	public String getJabberPort() {
+		return jabberPort;
+	}
+
+	public String getJabberService() {
+		return jabberService;
 	}
 }
