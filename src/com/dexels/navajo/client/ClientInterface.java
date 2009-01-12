@@ -204,5 +204,6 @@ public String getCurrentHost();
 
 public void setCurrentHost(String host);
 
-
+public boolean attemptPushRegistration(String agentId);
+	
 }

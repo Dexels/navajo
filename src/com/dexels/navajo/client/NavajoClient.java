@@ -17,6 +17,7 @@ import java.util.Map.*;
 
 import javax.net.ssl.*;
 
+import com.dexels.navajo.client.push.NavajoPushSession;
 import com.dexels.navajo.client.serverasync.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.types.*;
@@ -63,8 +64,8 @@ public class NavajoClient implements ClientInterface {
   
   private final List<BroadcastListener> broadcastListeners = Collections.synchronizedList(new ArrayList<BroadcastListener>());
   
-  //private long timeStamp = 0;
-  // Standard option: use HTTP protocol.
+  private NavajoPushSession pushSession = null;
+  
   protected int protocol = HTTP_PROTOCOL;
   private boolean useLazyMessaging = true;
   private ErrorResponder myResponder;
@@ -1921,5 +1922,53 @@ public final void switchServer(boolean force) {
 	public void setLoadBalancingMode(int i) {
 		loadBalancingMode = i;
 	}
+	
 
+	public boolean attemptPushRegistration(String agentId) {
+		Navajo init = NavajoFactory.getInstance().createNavajo();
+		try {
+			Message m = NavajoFactory.getInstance().createMessage(init, "Agent");
+			init.addMessage(m);
+			Property p = NavajoFactory.getInstance().createProperty(init, "ApplicationId", Property.STRING_PROPERTY, agentId, 0, "aap", Property.DIR_IN);
+			m.addProperty(p);
+		} catch (NavajoException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		Navajo n = null;
+		try {
+			n = doSimpleSend(init,"navajo/InitClientSession");
+		} catch (ClientException e) {
+			return false;
+		}
+		if(n.getMessage("error")!=null) {
+			return false;
+		}
+		if(n.getMessage("ConditionErrors")!=null) {
+			return false;
+		}
+//		
+//		NavajoPushSession nps 
+		processPushNavajo(n,agentId);
+		return true;
+	}
+
+	private void processPushNavajo(Navajo n,String agentId) {
+		try {
+			n.write(System.err);
+		} catch (NavajoException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		String pushImpl = (String) n.getProperty("SessionParameters/PushbackHandler").getTypedValue();
+		try {
+			Class<? extends NavajoPushSession> c = (Class<? extends NavajoPushSession>) Class.forName(pushImpl);
+			NavajoPushSession nps =  c.newInstance();
+			nps.load(n,agentId);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("Error loading push implementation. Disabling push");
+		}
+		
+	}
 }
