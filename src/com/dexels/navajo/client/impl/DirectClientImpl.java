@@ -656,4 +656,9 @@ public void setLoadBalancingMode(int i) {
 	// TODO Auto-generated method stub
 	
 }
+
+public boolean attemptPushRegistration(String agentId) {
+	// TODO Auto-generated method stub
+	return false;
+}
 }
