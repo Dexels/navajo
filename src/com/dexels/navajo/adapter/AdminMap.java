@@ -1,13 +1,12 @@
 package com.dexels.navajo.adapter;
 
+import com.dexels.navajo.jabber.JabberWorker;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.GenericHandler;
-import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.mapping.MappableException;
@@ -68,6 +67,14 @@ public class AdminMap implements Mappable {
   public int scriptClassInstances;
   public String serverId;
 
+  public String instanceName;
+  public String instanceGroup;
+  public String clientId;
+  
+  public String jabberServer;
+  public String jabberPort;
+  public String jabberService;
+  
   // RequestRate windowSize
   public int requestRateWindowSize;
 
@@ -94,6 +101,19 @@ public class AdminMap implements Mappable {
     
     myConfig = DispatcherFactory.getInstance().getNavajoConfig();
     myAccess = access;
+    
+    instanceName = nc.getInstanceName();
+    instanceGroup = nc.getInstanceGroup();
+    clientId = access.getClientToken();
+    
+    JabberWorker jw = JabberWorker.getInstance();
+    
+    if ( jw != null ) {
+    	jabberServer = jw.getJabberServer();
+    	jabberPort = jw.getJabberPort();
+    	jabberService = jw.getJabberService();
+    }
+    
   }
 
   
@@ -410,4 +430,34 @@ public class AdminMap implements Mappable {
 	  System.gc();
 	  System.err.println("Finished collecting garbage");
   }
+
+
+public String getInstanceName() {
+	return instanceName;
+}
+
+
+public String getInstanceGroup() {
+	return instanceGroup;
+}
+
+
+public String getClientId() {
+	return clientId;
+}
+
+
+public String getJabberServer() {
+	return jabberServer;
+}
+
+
+public String getJabberPort() {
+	return jabberPort;
+}
+
+
+public String getJabberService() {
+	return jabberService;
+}
 }
