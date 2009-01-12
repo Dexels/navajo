@@ -8,6 +8,7 @@ import java.util.Map.*;
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.packet.*;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smackx.muc.MultiUserChat;
 
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
@@ -16,6 +17,9 @@ import com.dexels.navajo.server.*;
 public class NavajoJabberAgent  {
 	
 	private String postmanUrl;
+	private String conferenceName;
+	private String nickName;
+	private String serverGroupName;
 	
 	private final Map<String, List<Chat>> myTailMap = new HashMap<String, List<Chat>>();
 	private final Map<String, List<String>> inverseTailMap = new HashMap<String, List<String>>();
@@ -29,11 +33,32 @@ public class NavajoJabberAgent  {
 		return connection.isConnected();
 	}
 
+	public boolean hasJoinedRoom(String roomName)  {
+		Iterator<String> joinedRooms = MultiUserChat.getJoinedRooms(connection, conferenceName);
+		while ( joinedRooms.hasNext() ) {
+			System.err.println("Checking room: " + roomName);
+			if ( joinedRooms.next().equalsIgnoreCase(roomName)  ) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public MultiUserChat joinRoom(String roomName) throws UserException {
+		
+		try {
+			return JabberUtils.joinRoom(connection, conferenceName, roomName, nickName, new HashSet<String>());
+		} catch (XMPPException e) {
+			throw new UserException(-1, e.getMessage(), e);
+		}
+		
+	}
+	
 	public void initialize(String server, int port, String chatDomain, String postmanUrl) throws XMPPException {
 		// XMPPConnection.DEBUG_ENABLED = true;
 		
 		this.postmanUrl = postmanUrl;
-		
+	
 		if (connection != null) {
 			if (connection.isConnected()) {
 				connection.disconnect();
@@ -44,9 +69,12 @@ public class NavajoJabberAgent  {
 		connection.connect();
 		connection.loginAnonymously();
 		
+		this.conferenceName = chatDomain + "." + connection.getServiceName();
+		this.nickName =  DispatcherFactory.getInstance().getNavajoConfig().getInstanceName();
+		this.serverGroupName = "navajotribe-" + DispatcherFactory.getInstance().getNavajoConfig().getInstanceGroup();
+		
 		//connection.login(username, password, NavajoClientFactory.getClient().getSessionToken());
-		JabberUtils.joinRoom(connection, chatDomain + "." + connection.getServiceName(), DispatcherFactory.getInstance().getNavajoConfig().getInstanceGroup(), 
-				DispatcherFactory.getInstance().getNavajoConfig().getInstanceName(), new HashSet<String>());
+		JabberUtils.joinRoom(connection, conferenceName, serverGroupName, nickName, new HashSet<String>());
 		
 		//System.err.println("Login ok");
 
@@ -136,36 +164,6 @@ public class NavajoJabberAgent  {
 				//}
 			}
 		}, null);
-
-//		connection.getRoster().addRosterListener(new RosterListener() {
-//			public void entriesAdded(Collection<String> arg0) {
-//			}
-//
-//			public void entriesDeleted(Collection<String> arg0) {
-//			}
-//
-//			public void entriesUpdated(Collection<String> arg0) {
-//			}
-//
-//			public void presenceChanged(Presence p) {
-//				System.err.println("Presence: " + p.getFrom() + " status: " + p.getStatus() + " type: " + p.getType());
-//				if (p.getType() == Presence.Type.unavailable) {
-//
-////					debugTailRegistry();
-//					flushTails(p.getFrom());
-//					System.err.println("Flushed: " + p.getFrom());
-////					debugTailRegistry();
-//				}
-//			}
-//		});
-		// Response handling not enabled
-
-		// connection.addPacketListener(new PacketListener(){
-		// public void processPacket(Packet p) {
-		// Message m = (Message)p;
-		// messageReceived(m);
-		// }}, new PacketTypeFilter(Message.class));
-
 	}
 
 	public void sendMessage(String text, String recipient, String navajoType) throws XMPPException {
@@ -464,6 +462,10 @@ public class NavajoJabberAgent  {
 		bin.close();
 		bout.flush();
 		bout.close();
+	}
+
+	public String getConferenceName() {
+		return conferenceName;
 	}
 
 

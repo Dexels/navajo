@@ -30,7 +30,8 @@ import java.util.concurrent.*;
 import java.util.logging.Level;
 
 import org.jivesoftware.smack.*;
-import org.jivesoftware.smackx.muc.*;
+import org.jivesoftware.smackx.muc.MultiUserChat;
+import org.jivesoftware.smackx.muc.ParticipantStatusListener;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.events.*;
@@ -40,6 +41,7 @@ import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.scheduler.*;
 import com.dexels.navajo.scheduler.triggers.AfterWebserviceTrigger;
 import com.dexels.navajo.server.*;
+import com.dexels.navajo.sharedstore.map.SharedTribalMap;
 import com.dexels.navajo.util.*;
 
 /**
@@ -75,8 +77,14 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 	private String jabberPort;
 	private String jabberService;
 	
+	public String joinRoom;
+	public String registerCallback;
+	
 	// Registered JabberTriggers..
 	private Set<JabberTrigger> triggers = null;
+	
+	// Registered Callbacks.
+	SharedTribalMap<String, String> registeredCallbacks;
 	
 	public JabberWorker() {
 		super(myId);
@@ -91,11 +99,12 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 		
 		this.jabberServer= server;
 		this.jabberPort = port;
-		this.jabberService = service;
 		
 		myWaitingQueue = new LinkedBlockingQueue<Runnable>(100);
 		
 		initialize(server, Integer.parseInt(port), service, postmanUrl);
+		
+		this.jabberService = myJabber.getConferenceName();
 	
 	}
 	
@@ -125,6 +134,9 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 			AuditLog.log("Jabber", "Started jabber connection worker $Id$");
 			//<c.chatclient id="jabber" password="'xxxxxx'" server="'talk.google.com'" username="'dexels'" domain="'gmail.com'" password="'xxxxxxx'">
 			
+			instance.registeredCallbacks = new SharedTribalMap("jabber-callbacks");
+			instance.registeredCallbacks = SharedTribalMap.registerMap(instance.registeredCallbacks, false);
+			
 			instance.triggers = new HashSet();
 			instance.setSleepTime(1000);
 			instance.startThread(instance);
@@ -140,40 +152,38 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 
 		// Initialize asynchronously.
 
-		new Thread() {
+
+		try {
+			myJabber.initialize(server, port,domain, postmanUrl);
+			//System.err.println("Initialized");
+		} catch (XMPPException e) {
+			e.printStackTrace();
+			AuditLog.log("JABBER", "Could not initialize Jabber", Level.SEVERE);
+			return;
+		}		
+		
+		AfterWebserviceTrigger afterWebserviceTrigger = new AfterWebserviceTrigger("Jabba");
+		afterWebserviceTrigger.setTask(new Task(){
+
 			public void run() {
-				try {
-					myJabber.initialize(server, port,domain, postmanUrl);
-					//System.err.println("Initialized");
-				} catch (XMPPException e) {
-					e.printStackTrace();
-					AuditLog.log("JABBER", "Could not initialize Jabber", Level.SEVERE);
-					return;
-				}		
-				AfterWebserviceTrigger afterWebserviceTrigger = new AfterWebserviceTrigger("Jabba");
-				afterWebserviceTrigger.setTask(new Task(){
+				Navajo n = getNavajo();
+				if(n==null) {
+					System.err.println("Whoops");
+				} else {
+					//try {
+					//n.write(System.err);
+					performTail(n);
+					//} catch (NavajoException e) {
+					//	e.printStackTrace();
+					//}
+				}
+			}});
 
-					public void run() {
-						Navajo n = getNavajo();
-						if(n==null) {
-							System.err.println("Whoops");
-						} else {
-							//try {
-							//n.write(System.err);
-							performTail(n);
-							//} catch (NavajoException e) {
-							//	e.printStackTrace();
-							//}
-						}
-					}});
+		NavajoEventRegistry.getInstance().addListener(NavajoRequestEvent.class, instance);
+		NavajoEventRegistry.getInstance().addListener(NavajoResponseEvent.class,instance);
 
-				NavajoEventRegistry.getInstance().addListener(NavajoRequestEvent.class, instance);
-				NavajoEventRegistry.getInstance().addListener(NavajoResponseEvent.class,instance);
-				
-				
-				isInstantiated = true;
-			}
-		}.start();
+		isInstantiated = true;
+
 	}
 	
 	protected void performTail(Navajo n) {
@@ -304,87 +314,11 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 
 	}
 
-	private void postRoomMembers(Navajo rootDoc,String roomName) throws XMPPException, NavajoException {
-//	      ServiceDiscoveryManager discoManager = ServiceDiscoveryManager.getInstanceFor(myJabber.connection);
-		long stamp2 = System.currentTimeMillis();
-		Message participants = NavajoFactory.getInstance().createMessage(rootDoc, "Participants", Message.MSG_TYPE_ARRAY);
-		rootDoc.addMessage(participants);
-		List<String> members = new ArrayList<String>();
-		MultiUserChat muc = new MultiUserChat(myJabber.connection, roomName + "@" + "conference.sportlink.com");
-		//System.err.println("Trying to join room " +  roomName + "@" + "conference.sportlink.com AS " + Dispatcher.getInstance().getNavajoConfig().getInstanceName());
-		muc.join( DispatcherFactory.getInstance().getNavajoConfig().getInstanceName() );
-		Collection<Occupant> aa = muc.getParticipants();
-		for (Occupant occupant : aa) {
-			Message m = NavajoFactory.getInstance().createMessage(rootDoc,  "Participants", Message.MSG_TYPE_ARRAY_ELEMENT);
-			participants.addMessage(m);
-			Property jid = NavajoFactory.getInstance().createProperty(rootDoc,"Jid",Property.STRING_PROPERTY,occupant.getJid(),0,"",Property.DIR_OUT);
-			m.addProperty(jid);
-			Property affiliation = NavajoFactory.getInstance().createProperty(rootDoc,"Affiliation",Property.STRING_PROPERTY,occupant.getAffiliation(),0,"",Property.DIR_OUT);
-			m.addProperty(affiliation);
-			Property nickName = NavajoFactory.getInstance().createProperty(rootDoc,"Nickname",Property.STRING_PROPERTY,occupant.getNick(),0,"",Property.DIR_OUT);
-			m.addProperty(nickName);
-			Property role = NavajoFactory.getInstance().createProperty(rootDoc,"Role",Property.STRING_PROPERTY,occupant.getRole(),0,"",Property.DIR_OUT);
-			m.addProperty(role);
-			
-			members.add(occupant.getJid());
-		}
-//		muc.leave();
-		long stamp = System.currentTimeMillis();
-		System.err.println("Time taken: "+(stamp2 - stamp));
-//        DiscoverItems items = discoManager.discoverItems("knvb@conference.sportlink.com");
-//        for (Iterator it = items.getItems(); it.hasNext();) {
-//            DiscoverItems.Item item = (DiscoverItems.Item) it.next();
-//            System.out.println("Room occupant: " + item.getEntityID());
-//        }
-//		System.err.println("Time taken2: "+(stamp - System.currentTimeMillis()));
-
-	}
-
-
-	private void postRooms(String roomName) {
-		try {
-			Navajo n = NavajoFactory.getInstance().createNavajo();
-			com.dexels.navajo.document.Message m = NavajoFactory.getInstance().createMessage(n, "Rooms",
-					com.dexels.navajo.document.Message.MSG_TYPE_ARRAY);
-			n.addMessage(m);
-			Collection<HostedRoom> aa = MultiUserChat.getHostedRooms(myJabber.connection, "conference.sportlink.com");
-			for (HostedRoom hostedRoom : aa) {
-				if(!hostedRoom.getName().equals(roomName)) {
-					continue;
-				}
-				
-				System.err.println("DESCRIPTION: " + hostedRoom.getName() + " # of occupants: " + hostedRoom.getJid());
-				com.dexels.navajo.document.Message e = NavajoFactory.getInstance().createMessage(n, "Rooms",
-						com.dexels.navajo.document.Message.MSG_TYPE_ARRAY_ELEMENT);
-				// NavajoFactory.getInstance().createProperty(n,)
-				Property user = NavajoFactory.getInstance().createProperty(n, "Name", Property.STRING_PROPERTY, hostedRoom.getName(), 0,"", Property.DIR_OUT, null);
-				e.addProperty(user);
-				Property name = NavajoFactory.getInstance().createProperty(n, "Jid", Property.STRING_PROPERTY, hostedRoom.getJid(), 0, "",Property.DIR_OUT, null);
-				e.addProperty(name);
-				m.addMessage(e);
-			}
-			n.write(System.err);
-		} catch (NavajoException e1) {
-			e1.printStackTrace();
-		} catch (XMPPException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
 	public void load(Access access) throws MappableException, UserException {
 		this.myAccess = access;
 	}
 
 	public void store() throws MappableException, UserException {
-		String room = myAccess.getInDoc().getProperty("/Jabber/Chatroom").getValue();
-		try {
-			getInstance().postRoomMembers(myAccess.getOutputDoc(), room);
-		} catch (XMPPException e) {
-			throw new UserException(-1, e.getMessage(), e);
-		} catch (NavajoException e) {
-			throw new UserException(-1, e.getMessage(), e);
-		}
 	}
 	
 	public void addTrigger(JabberTrigger jt) {
@@ -411,5 +345,96 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 
 	public String getJabberService() {
 		return jabberService;
+	}
+
+	/**
+	 * Server joins a room.
+	 * 
+	 * @param joinRoom
+	 * @throws UserException
+	 */
+	public void setJoinRoom(String joinRoom) throws UserException {
+		if ( instance != null && instance.myJabber != null ) {
+			instance.myJabber.joinRoom(joinRoom);
+		}
+	}
+
+	/**
+	 * Register a callback string with the calling client id.
+	 * 
+	 * @param registerCallback
+	 * @throws UserException
+	 */
+	public void setRegisterCallback(String registerCallback) throws UserException {
+		this.registerCallback = registerCallback;
+		if ( instance != null && instance.myJabber != null ) {
+			String nickname = registerCallback.split("@")[0];
+			String roomname = registerCallback.split("@")[1];
+			instance.registeredCallbacks.put(myAccess.getClientToken(), registerCallback);
+
+			if ( !instance.myJabber.hasJoinedRoom(roomname) ) {
+				
+				MultiUserChat muc = instance.myJabber.joinRoom(roomname);
+				muc.addParticipantStatusListener(new ParticipantStatusListener() {
+
+					public void adminGranted(String arg0) {
+					}
+
+					public void adminRevoked(String arg0) {
+					}
+
+					public void banned(String arg0, String arg1, String arg2) {
+					}
+
+					public void joined(String arg0) {
+						System.err.println("THE FOLLOWING PARTICIPANT JOINED:" + arg0);
+					}
+
+					public void kicked(String arg0, String arg1, String arg2) {
+					}
+
+					public void left(String arg0) {
+						System.err.println("THE FOLLOWING PARTICIPANT LEFT:" + arg0);
+						String clientid = arg0.split("/")[1];
+						System.err.println("Clientid: " + clientid);
+						instance.registeredCallbacks.remove(clientid);
+					}
+
+					public void membershipGranted(String arg0) {
+					}
+
+					public void membershipRevoked(String arg0) {
+					}
+
+					public void moderatorGranted(String arg0) {
+					}
+
+					public void moderatorRevoked(String arg0) {
+					}
+
+					public void nicknameChanged(String arg0, String arg1) {
+					}
+
+					public void ownershipGranted(String arg0) {
+					}
+
+					public void ownershipRevoked(String arg0) {
+					}
+
+					public void voiceGranted(String arg0) {
+					}
+
+					public void voiceRevoked(String arg0) {
+					}
+				}
+				);
+			}
+		}
+	}
+	
+	public static void main(String [] args) {
+		String arg0 = "mynavajogroup-dopeapp@conference.dexels.nl/frank|192.168.1.13|frank-lyaruus-macbook-pro.local|1231768833526";
+		String clientid = arg0.split("/")[1];
+		System.err.println(clientid);
 	}
 }
