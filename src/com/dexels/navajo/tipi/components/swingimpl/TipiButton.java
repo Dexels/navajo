@@ -165,13 +165,14 @@ public class TipiButton extends TipiSwingComponentImpl {
 		}
 	}
 
-	private void doFireAction(final TipiSwingButton myButton) {
-			setWaitCursor(true);
+	private void doFireAction(final JComponent myButton) {
+		final JRootPane root = myButton.getRootPane();
+		setWaitCursor(true,root);
 			
 			performTipiEvent("onActionPerformed", null, false
 			, new Runnable(){
 				public void run() {
-					setWaitCursor(false);
+					setWaitCursor(false,root);
 				}});
 	
 	}
