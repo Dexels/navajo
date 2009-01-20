@@ -28,8 +28,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
@@ -51,46 +49,47 @@ public class TagMap implements Mappable {
 	public final String PREFIX_PATTERN   = "^[0-9]+";
 	public final String PREFIX_SEPARATOR = "@";
 	public final int    DEFAULT_INDENT   = 2;
-	
+
 	public String     name = "unknown";
 	public String     text;
 	public String     attributeText;
-	
+
 	public Binary     insert;
 	public TagMap     [] children;
 	public TagMap     child;
-	
+
 	public String     childName = "";
 	public String     attributeName;
 	public String     childText;
-	
+
 	public boolean    exists;
-	
+	public boolean    compact      = false;
+
 	public int          indent     = DEFAULT_INDENT;
-		
+
 	protected HashMap   tags       = null;
 	protected HashMap   attributes = null;
-	
+
 	protected ArrayList tagList    = null;
-	
+
 	protected int tagsIndex = -1;
 	protected int tagListIndex = -1;
 	private TagMap parent = null;
-	
+
 	private static Random rand = new Random(System.currentTimeMillis());
-	
+
 	public TagMap() {
 		// Set random tag name first.
 		name = name + rand.nextInt();
 	}
-	
+
 	public void load(Access access) throws MappableException, UserException {
 	}
 
 	public void setText(String t) {
 		text = XMLutils.XMLEscape( t );
 	}
-	
+
 	public void setAttributeText(String t) throws UserException {
 
 		TagMap child = this.getChild();
@@ -106,14 +105,12 @@ public class TagMap implements Mappable {
 		}
 
 		child.attributes.put( child.attributeName, XMLutils.XMLEscape( t ) );
-
 	}
-	
+
 	public void setName(String s) {
 		// Remove previous name from tags and tagList.
 
 		if ( parent != null ) {
-			//System.err.println("Removing parent references..." + parent.tagListIndex);
 			parent.tagList.remove( parent.tagListIndex + this.PREFIX_SEPARATOR + this.getName() );
 			parent.tags.remove( parent.tagsIndex + this.PREFIX_SEPARATOR + this.getName() );
 		}
@@ -121,43 +118,43 @@ public class TagMap implements Mappable {
 		// Set new name and inser into tags and tagList structures.
 		name = s;
 		if ( parent != null ) {
-			//System.err.println("Adding parent references...");
 			parent.tags.put(parent.tagsIndex + this.PREFIX_SEPARATOR + this.getName(), this);
 			parent.tagList.add( parent.tagListIndex + this.PREFIX_SEPARATOR + this.getName() );
 		}
 	}
-	
+
 	public void setInsert(Binary b) throws UserException {
 		insert = b;
-		
+
 		String insertChild = new String( b.getData() );
 
 		XMLElement xe = new CaseSensitiveXMLElement(true);
+
 		try {
 			xe.parseFromReader( new StringReader( insertChild ) );
 		}
 		catch (IOException ex) {
 			ex.printStackTrace();
 		}
-		
+
 		// get child based on childName set
 		TagMap child = getChild();
-		
-		child.setChild( TagMap.parseXMLElement( xe ) );
+
+		child.setChild( TagMap.parseXMLElement( xe, this.compact ) );
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	public String getText() {
 		return text;
 	}
-	
+
 	public String getAttributeText() {
 		return attributeText;
 	}
-	
+
 	public void setChild(TagMap t) throws UserException {
 		if ( tags == null ) {
 			tags    = new HashMap();
@@ -169,29 +166,27 @@ public class TagMap implements Mappable {
 		tagListIndex = 1 + tagList.size();
 		tagList.add( tagListIndex + this.PREFIX_SEPARATOR + t.getName() );
 	}
-	
+
 	public boolean getExists(String name) {
 		if ( tags != null ) {
 			Iterator keys = tags.keySet().iterator();
-			
+
 			while ( keys.hasNext() ) {
 				String key = (String) keys.next();
-				
+
 				if ( name.equals( key.replaceFirst( this.PREFIX_PATTERN + this.PREFIX_SEPARATOR, "" ) ) ) {
 					return true;
 				}
 			}
-		} else {
-			return false;
 		}
-		
+
 		return false;
 	}
-	
+
 	public void setChildName(String s) {
 		childName = s;
 	}
-	
+
 	public void setAttributeName(String s) throws UserException {
 
 		TagMap child = this.getChild();
@@ -202,19 +197,23 @@ public class TagMap implements Mappable {
 			throw new UserException(-1, "Could not find XML child: " + s);
 		}
 	}
-	
+
 	public void setIndent(int indent) {
 		this.indent = ( indent > 0 ) ? indent : this.DEFAULT_INDENT;
+	}
+
+	public void setCompact(boolean c) {
+		this.compact = c;
 	}
 
 	protected TagMap getChildTag(String s, int index) {
 
 		if ( tags != null ) {
 			Iterator keys = tags.keySet().iterator();
-			
+
 			while ( keys.hasNext() ) {
 				String key = (String) keys.next();
-				
+
 				Pattern pattern = Pattern.compile(s);
 				int count = 0;
 				if (  pattern.matcher(key.replaceFirst( this.PREFIX_PATTERN + this.PREFIX_SEPARATOR, "" )).matches()  && count == index ) {
@@ -223,51 +222,49 @@ public class TagMap implements Mappable {
 					count++;
 				}
 			}
-
-			return null;
-		} else {
-			return null;
 		}
+
+		return null;
 	}
-	
+
 	public void setChildText(String s) throws UserException {
 		TagMap t = getChild();
 		t.setText( XMLutils.XMLEscape( s ) );
 	}
-	
+
 	public String getAttribute(String a) throws UserException {
 		if ( attributes.get(a) != null ) {
 			return (String) attributes.get(a);
 		}
 		return null;
 	}
-	
+
 	public String getChildAttribute(String a) throws UserException {
 		TagMap t = getChild();
 		return t.getAttribute(a);
 	}
-	
+
 	public String getChildAttribute(String child, String a) throws UserException {
 		setChildName(child);
 		TagMap t = getChild();
 		return t.getAttribute(a);
 	}
-	
+
 	public String getChildText() throws UserException {
 		TagMap t = getChild();
 		return t.getText();
 	}
-	
+
 	public String getChildText(String child) throws UserException {
 		setChildName(child);
 		return getChildText();
 	}
-	
+
 	public TagMap getChild() throws UserException {
-		
+
 		StringTokenizer childList = new StringTokenizer(childName, "/");
 		TagMap child = this;
-		
+
 		while (childList.hasMoreTokens()) {
 			String subChildName = childList.nextToken();
 			StringTokenizer indexSpecifier = new StringTokenizer(subChildName, "@");
@@ -286,27 +283,27 @@ public class TagMap implements Mappable {
 				parent.setChild(child);
 			}
 		}
-		
+
 		return child;
 	}
-	
+
 	public TagMap [] getChildren() {
-		
+
 		children = new TagMap[tagList.size()];
-		
+
 		for ( int i = 0; i < tagList.size(); i++) {
 			children[i] = (TagMap) tags.get( tagList.get(i) );
 		}
-		
+
 		return children;
 	}
-	
+
 	public void setChildren(TagMap [] all) throws UserException {
 		for (int i = 0; i < all.length; i++) {
 			setChild(all[i]);
 		}
 	}
-	
+
 	private String getSpaces(int indent) {
 		StringWriter sw = new StringWriter();
 		for (int i = 0; i < indent; i++) {
@@ -314,23 +311,23 @@ public class TagMap implements Mappable {
 		}
 		return sw.toString();
 	}
-	
+
 	public String getString(int indent, int tabsize) {
 		StringWriter sw = new StringWriter();
 		sw.write(getSpaces(indent) + "<" + name);
 
 		if ( attributes != null ) {
 			Iterator attrib_keys = attributes.keySet().iterator();
-			
+
 			while ( attrib_keys.hasNext() ) {
 				String key = (String) attrib_keys.next();
 				String value = (String) attributes.get( key );
 				sw.write( " " + key + "=\"" + value + "\"" );
 			}
 		}
-		
-		sw.write(">\n");
-		
+
+		sw.write(">" + ( ( compact && tags == null && text != null ) ? "" : "\n" ) );
+
 		if ( tags != null ) {
 			for ( int i = 0; i < tagList.size(); i++ ) {
 				TagMap c = (TagMap) tags.get( tagList.get( i ) );
@@ -339,56 +336,59 @@ public class TagMap implements Mappable {
 			}
 		} else {
 			if ( text != null ) {
-				sw.write( getSpaces(indent + tabsize) + text + "\n");
+				sw.write( ( ( compact ) ? "" : getSpaces(indent + tabsize) ) + text + ( ( compact ) ? "" : "\n" ) );
 			}
 		}
-		sw.write(getSpaces(indent) + "</" + name + ">\n");
+
+		sw.write( ( ( compact && text != null ) ? "" : getSpaces(indent) ) + "</" + name + ">\n");
+
 		return sw.toString();
 	}
-	
+
 	protected static TagMap parseXMLElement(XMLElement e) throws UserException {
-		
+		return parseXMLElement( e, false );
+	}
+
+	protected static TagMap parseXMLElement(XMLElement e, boolean compact ) throws UserException {
+
 		TagMap t = new TagMap();
-		
+
 		String startName = e.getName();
-		t.setName(startName);
-		
+		t.setName( startName );
+		t.setCompact( compact );
+
 		// parse attributes
-        Iterator<String> attrib_enum = e.enumerateAttributeNames();
-        while ( attrib_enum.hasNext() ) {
-            String key = attrib_enum.next();
-            String value = e.getStringAttribute(key);
+		Iterator<String> attrib_enum = e.enumerateAttributeNames();
+		while ( attrib_enum.hasNext() ) {
+			String key = attrib_enum.next();
+			String value = e.getStringAttribute(key);
 			if ( t.attributes == null ) {
 				t.attributes = new HashMap ();
 			}
 			t.attributes.put( key, value );
-        }
+		}
 
 		// parse children
 		Vector v = e.getChildren();
 		for (int i = 0; i < v.size(); i++) {
 			XMLElement child = (XMLElement) v.get(i);
-			
-			TagMap childTag = parseXMLElement(child);
-			
+
+			TagMap childTag = parseXMLElement( child, compact );
+
 			t.setChild(childTag);
 		}
-		
+
 		// Check for text node.
 		if ( e.getContent() != null && !e.getContent().equals("")) {
-			//System.err.println("Setting content: " + e.getContent() + " for tag " + t );
 			t.setText(e.getContent());
 		}
-		
+
 		return t;
-		
 	}
-	
+
 	public void store() throws MappableException, UserException {
 	}
 
 	public void kill() {
 	}
-
-	
 }
