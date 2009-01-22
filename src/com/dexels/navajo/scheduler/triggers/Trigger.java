@@ -31,6 +31,8 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import com.dexels.navajo.scheduler.Listener;
 import com.dexels.navajo.scheduler.Task;
@@ -90,6 +92,8 @@ public abstract class Trigger implements Listener, Serializable {
 	public final static String SERVER_EVENT_TRIGGER = "serverevent";
 	public final static String IMMEDIATE_TRIGGER    = "immediate";
 	public final static String JABBER_TRIGGER       = "jabber";
+	
+	private final static HashMap<String,Class<? extends Trigger>> userDefinedTriggers = new HashMap<String, Class<? extends Trigger>>();
 	
 	/**
 	 * IMPORTANT NOTES:
@@ -186,19 +190,35 @@ public abstract class Trigger implements Listener, Serializable {
 			} else if ( s.startsWith(IMMEDIATE_TRIGGER) ) {
 				t = new ImmediateTrigger();
 				return t;
-			} else if ( s.startsWith(JABBER_TRIGGER + ":") ) {
-				String v = s.substring(JABBER_TRIGGER.length()+1);
-				Class jt = Class.forName("com.dexels.navajo.jabber.JabberTrigger");
-				Constructor c = jt.getDeclaredConstructor(new Class[]{String.class});
-				t = (Trigger) c.newInstance(v);
-				return t;
-			}
-			else {
-				throw new IllegalTrigger(s);
-			}
+			} else { // Locate in user defined triggers.
+			  	Iterator<String> urls = userDefinedTriggers.keySet().iterator();
+			  	while ( urls.hasNext() ) {
+			  		String urlPrefix = urls.next();
+			  		if ( s.startsWith(urlPrefix + ":") ) {
+			  			String v = s.substring(urlPrefix.length()+1);
+			  			Class<? extends Trigger> tc = userDefinedTriggers.get(urlPrefix);
+			  			Constructor<? extends Trigger> c = tc.getDeclaredConstructor(new Class[]{String.class});
+			  			t = c.newInstance(v);
+			  			return t;
+			  		}
+			  	}
+			  	throw new IllegalTrigger(s);
+			} 
 		} catch (Exception e) {
 			throw new IllegalTrigger(s);
 		} 
+	}
+	
+	/**
+	 * Register a user defined trigger class and associate it with an urlPrefix.
+	 * An user defined trigger class should ALWAYS have a constructor of the form
+	 * public Trigger(String url).
+	 * 
+	 * @param urlPrefix
+	 * @param className
+	 */
+	public static void registerTrigger(String urlPrefix, Class<? extends Trigger> className) {
+		userDefinedTriggers.put(urlPrefix, className);
 	}
 	
 	/**
@@ -233,10 +253,20 @@ public abstract class Trigger implements Listener, Serializable {
 		myAccess = a;
 	}
 	
+	/**
+	 * Gets the task associated with this trigger.
+	 * 
+	 * @return
+	 */
 	public Task getTask() {
 		return myTask;
 	}
 	
+	/**
+	 * Sets the task associated with this trigger.
+	 * 
+	 * @param t
+	 */
 	public void setTask(Task t) {
 		this.myTask = t;
 	}
