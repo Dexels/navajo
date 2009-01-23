@@ -113,4 +113,20 @@
             <value name="level" type="string" required="false" direction="in"/>
         </values>
     </map>
+    <!-- Code dropdown list -->
+    <map>
+        <tagname>codedropdown</tagname>
+        <object>com.dexels.sportlink.adapters.CodeDropdownList</object>
+        <values>
+            <value name="datasource" type="string" required="false" direction="in"/>
+            <value name="language" type="string" required="true" direction="in"/>
+            <value name="typeOfCode" type="string" required="true" direction="in"/>
+            <value name="name" type="string" required="true" direction="in"/>
+            <value name="description" type="string" required="false" direction="in"/>
+            <value name="orderByDescription" type="string" required="false" direction="in"/>
+            <value name="direction" type="string" required="true" direction="in"/>
+            <value name="emptyOption" type="boolean" required="false" direction="in"/>
+            <value name="selectedValue" type="object" required="false" direction="in"/>
+        </values>
+    </map>
 </adapterdef>
