@@ -382,7 +382,7 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
             ird.accept(visitor);
             if (classPathChanged) {
                 System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Rebuilding stuff");
-                NavajoScriptPluginPlugin.getDefault().refreshNavajoCompiler(getProject());
+//                NavajoScriptPluginPlugin.getDefault().refreshNavajoCompiler(getProject());
                 NavajoScriptPluginPlugin.getDefault().getClassProvider(getProject(), true);
 //                NavajoScriptPluginPlugin.getDefault().showInfo("A classpath change occurred!");
                 NavajoScriptPluginPlugin.getDefault().refreshCompilerClassLoader(getProject());
@@ -534,8 +534,7 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                 
                 
                 ArrayList compiledFiles = new ArrayList();
-                TslCompiler navajoCompiler = NavajoScriptPluginPlugin.getDefault().getNavajoCompiler(getProject());
-                ClassProvider cp = NavajoScriptPluginPlugin.getDefault().getClassProvider(getProject(), false);
+                 ClassProvider cp = NavajoScriptPluginPlugin.getDefault().getClassProvider(getProject(), false);
 //                System.err.println("ClassPro: "+cp.toString());
 //                System.err.println("navavcomp: "+navajoCompiler.toString());
 //                System.err.println("Navacomp cl: "+navajoCompiler.getClass().getClassLoader());
@@ -544,6 +543,8 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                     if (monitor.isCanceled()) {
                         break;
                     }
+                    TslCompiler navajoCompiler = NavajoScriptPluginPlugin.getDefault().getNavajoCompiler(getProject());
+                    
                     NavajoScriptCompilation current = (NavajoScriptCompilation) compilationList.get(i);
                     String javaSrc = current.getCompileDir() + "/" + current.getScript() + ".java";
                        try {
@@ -562,18 +563,13 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                             
 //                            navajoCompiler.compileTsl(current.getScript(), current.getScriptDir(), current.getCompileDir(), current.getScriptPackage(), true);
                       
-                            System.err.println("Script: "+current.getScript());
-                            System.err.println("getScriptDir: "+current.getScriptDir());
-                            System.err.println("getCompileDir: "+current.getCompileDir());
-                            System.err.println("getScriptPackage: "+current.getScriptPackage());
                             String strippedScript = null;
                             if (current.getScript().indexOf("/")!=-1) {
-                                strippedScript = current.getScript().substring(current.getScript().indexOf("/")+1,current.getScript().length());
+                                strippedScript = current.getScript().substring(current.getScript().lastIndexOf("/")+1,current.getScript().length());
 								
 							} else {
 	                            strippedScript = current.getScript();
 							}
-                            System.err.println("strippedScript: "+strippedScript);
                             
                             navajoCompiler.compileScript(strippedScript, current.getScriptDir(), current.getCompileDir(), current.getScriptPackage());
                             totalLines += lines;
@@ -643,6 +639,8 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                 monitor.worked(1);
                 monitor.setTaskName("Compiling "+javaCompilations.size()+" java files...");
               if (javaCompilations.size()>0) {
+            	  TslCompiler navajoCompiler = NavajoScriptPluginPlugin.getDefault().getNavajoCompiler(getProject());
+                  
                     try { 
                         Class cc = Class.forName("org.eclipse.jdt.internal.compiler.batch.Main",true,NavajoScriptPluginPlugin.class.getClassLoader());
                         if (cc!=null) {

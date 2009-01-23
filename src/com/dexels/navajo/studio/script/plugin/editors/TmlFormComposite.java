@@ -1180,30 +1180,64 @@ public class TmlFormComposite extends Composite {
 	protected void createBirt(String service) {
 		// TODO Auto-generated method stub
 		// FileDialog fd = new FileDialog(formComposite.getShell());
-		SaveAsDialog sd = new SaveAsDialog(getShell());
-		// fd.setText("Choose report name");
-		// sd.showClosedProjects(false);
-		// fd.setFileName("NewReport.rptdesign");
-		sd.setOriginalName(service);
-
-		int result = sd.open();
-		if (result == Window.CANCEL) {
-			return;
-		}
-		IPath ip = sd.getResult();
-		IPath ipp = ip.addFileExtension("rptdesign");
-		IFile iff = ResourcesPlugin.getWorkspace().getRoot().getFile(ipp);
-
-		String rez = iff.getLocation().toString();
-		System.err.println("Result: " + rez);
 		BirtUtils b = new BirtUtils();
-		File createdFile = new File(rez);
 		try {
-			InputStream template = getClass().getClassLoader().getResourceAsStream("com/dexels/navajo/birt/blank.rptdesign");
-			System.err.println("Template: "+template);
-			b.createEmptyReport(myCurrentNavajo, createdFile, template);
-			iff.refreshLocal(0, null);
-			IDE.openEditor(NavajoScriptPluginPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage(), iff);
+			IFile birt = getCurrentReport();
+			if (birt==null) {
+				SaveAsDialog sd = new SaveAsDialog(getShell());
+				// fd.setText("Choose report name");
+				// sd.showClosedProjects(false);
+				// fd.setFileName("NewReport.rptdesign");
+				sd.setOriginalName(service);
+
+				int result = sd.open();
+				if (result == Window.CANCEL) {
+					return;
+				}
+				IPath ip = sd.getResult();
+				IPath ipp = ip.addFileExtension("rptdesign");
+				IFile iff = ResourcesPlugin.getWorkspace().getRoot().getFile(ipp);
+
+				String rez = iff.getLocation().toString();
+				System.err.println("Result: " + rez);
+				File createdFile = new File(rez);
+
+				InputStream template = getClass().getClassLoader().getResourceAsStream("com/dexels/navajo/birt/blank.rptdesign");
+				b.createEmptyReport(myCurrentNavajo, createdFile, template);
+				iff.refreshLocal(0, null);
+				IDE.openEditor(NavajoScriptPluginPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage(), iff);
+				
+			} else {
+				boolean dirty = NavajoScriptPluginPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().isDirty();
+				boolean ok = NavajoScriptPluginPlugin.getDefault().showConfirm("Are you sure?","Do you really want to rewrite the datasources of this report?");
+				if(!ok) {
+					return;
+				}
+				if(dirty) {
+					boolean ok2 = NavajoScriptPluginPlugin.getDefault().showConfirm("Are you sure?","Is it ok to discard your unsaved changes?");
+					if(!ok2) {
+						return;
+					}
+				}
+
+				b.rebuildReportDataSource(myCurrentNavajo, new File(birt
+						.getLocation().toOSString()));
+				birt.refreshLocal(0, null);
+				final IEditorPart editor = NavajoScriptPluginPlugin
+						.getDefault().getWorkbench().getActiveWorkbenchWindow()
+						.getActivePage().getActiveEditor();
+				if (editor.getSite().getWorkbenchWindow().getActivePage() != null) {
+					Display.getDefault().syncExec(new Runnable() {
+						public void run() {
+							editor.getSite().getWorkbenchWindow().getActivePage().closeEditor(editor, false);
+						}
+					});
+				}
+				
+				IDE.openEditor(NavajoScriptPluginPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage(), birt);
+				
+
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (NavajoException e) {
@@ -1215,6 +1249,35 @@ public class TmlFormComposite extends Composite {
 		}
 	}
 
+	private IFile getCurrentReport() {
+		IEditorPart part = NavajoScriptPluginPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage()
+		.getActiveEditor();
+		IFile iff = null;
+		
+		if (part != null) {
+			IEditorInput ei = part.getEditorInput();
+			if (ei != null) {
+				iff = ResourceUtil.getFile(ei);
+			}
+		} else {
+			return null;
+		}
+		if (iff != null && iff.getFullPath().toString().endsWith(".rptdesign")) {
+//			InputStream contents;
+//			try {
+//				contents = iff.getContents();
+//				Binary b = new Binary(contents);
+//				return b;
+//			} catch (CoreException e) {
+//				e.printStackTrace();
+//			}
+			return iff;
+			
+			
+		} 
+		return null;
+	}
+	
 	private void runBirtReport(final Combo birtCombo, HyperlinkEvent e) {
 		try {
 			if (myCurrentNavajo == null) {

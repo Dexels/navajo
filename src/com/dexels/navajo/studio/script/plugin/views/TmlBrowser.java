@@ -6,40 +6,57 @@
  */
 package com.dexels.navajo.studio.script.plugin.views;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
 
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
-import org.eclipse.core.runtime.jobs.*;
-import org.eclipse.jface.text.*;
-import org.eclipse.jface.text.contentassist.*;
-import org.eclipse.jface.util.*;
-import org.eclipse.jface.viewers.*;
-import org.eclipse.jface.window.Window;
-import org.eclipse.swt.*;
-import org.eclipse.swt.events.*;
-import org.eclipse.swt.graphics.*;
-import org.eclipse.swt.layout.*;
-import org.eclipse.swt.widgets.*;
-import org.eclipse.ui.*;
-import org.eclipse.ui.dialogs.ContainerSelectionDialog;
-import org.eclipse.ui.dialogs.FileSelectionDialog;
-import org.eclipse.ui.dialogs.ResourceSelectionDialog;
-import org.eclipse.ui.dialogs.SaveAsDialog;
-import org.eclipse.ui.forms.widgets.*;
-import org.eclipse.ui.ide.*;
-import org.eclipse.ui.internal.Workbench;
-import org.eclipse.ui.part.*;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.text.Document;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.TextViewer;
+import org.eclipse.jface.text.contentassist.ContentAssistant;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.widgets.TableWrapData;
+import org.eclipse.ui.forms.widgets.TableWrapLayout;
+import org.eclipse.ui.ide.IDE;
 
-import com.dexels.navajo.birt.BirtUtils;
-import com.dexels.navajo.client.*;
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.client.ClientException;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
-import com.dexels.navajo.studio.eclipse.*;
-import com.dexels.navajo.studio.script.plugin.*;
-import com.dexels.navajo.studio.script.plugin.editors.*;
+import com.dexels.navajo.studio.eclipse.IServerEntryListener;
+import com.dexels.navajo.studio.eclipse.NavajoInput;
+import com.dexels.navajo.studio.eclipse.ScriptContentAssist;
+import com.dexels.navajo.studio.eclipse.ServerEntry;
+import com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin;
+import com.dexels.navajo.studio.script.plugin.editors.INavajoScriptListener;
+import com.dexels.navajo.studio.script.plugin.editors.TmlFormComposite;
 
 public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener, IServerEntryListener {
     private Navajo myCurrentNavajo = null;
@@ -56,9 +73,9 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
 //    private Button createReport;
    private String currentService = null;
     private String lastInit = null;
-   private final Stack historyList = new Stack();
-   private final Stack futureList = new Stack();
-   private final Map scriptMap = new HashMap();
+   private final Stack<String> historyList = new Stack<String>();
+   private final Stack<String> futureList = new Stack<String>();
+   private final Map<String,Navajo> scriptMap = new HashMap<String,Navajo>();
 //    private Composite mainPanel;
 //    int iii= 0;
     /*
@@ -69,14 +86,14 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
 
     private Composite myContainer;
 
-    private Composite myParent;
+//    private Composite myParent;
     
     
   
     public void createPartControl(Composite parent) {
     	
     	
-        myParent = parent;
+//        myParent = parent;
         NavajoScriptPluginPlugin.getDefault().setTmlBrowser(this);
         Control[] c = parent.getChildren();
         for (int i = 0; i < c.length; i++) {
@@ -255,7 +272,7 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
     }
 
     private void refreshFromPrefs() {
-        ArrayList arr = NavajoScriptPluginPlugin.getDefault().getServerEntries();
+        ArrayList<ServerEntry> arr = NavajoScriptPluginPlugin.getDefault().getServerEntries();
         while(selector.getElementAt(0)!=null) {
         	selector.remove(selector.getElementAt(0));
         }
@@ -428,24 +445,17 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
     }
 
     public void callingScript(String name) {
-        // TODO Auto-generated method stub
         futureList.clear();
-//        currentService = name;
-        System.err.println("\n\n CALLING: "+name+"\n\n");
     }
 
     public void gotoScript(String name, Navajo n) {
-        System.err.println("GOING TO: "+name);
         currentService = name;
-//        if (name.equals(currentService)) {
-//            return;
-//        }
         scriptMap.put(name, n);
         if (historyList.isEmpty()) {
             historyList.push(name);
             return;
         }
-        String last = (String)historyList.peek();
+        String last = historyList.peek();
         if (name.equals(last)) {
             return;
         }
@@ -459,7 +469,6 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
        forwardButton.setEnabled(!futureList.isEmpty());        
        backButton.setEnabled(historyList.size()>1);
        reloadButton.setEnabled(myCurrentNavajo!=null);
-//       createReport.setEnabled(myCurrentNavajo!=null);
        sourceButton.setEnabled(myCurrentNavajo!=null);
        }
 

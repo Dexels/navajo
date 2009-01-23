@@ -157,7 +157,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 
     private MetaDataViewer currentMetaDataViewer;
 
-    private ArrayList myServerEntries = null;
+    private ArrayList<ServerEntry> myServerEntries = null;
      private final ArrayList myServerEntryListeners = new ArrayList();
     
     private IPreferenceStore myPreferences  = null;
@@ -167,7 +167,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
     
     private final Map classProviderMap = new HashMap();
 
-    private final Map compilerProviderMap = new HashMap();
+//    private final Map compilerProviderMap = new HashMap();
 
     private boolean questionResult;
 
@@ -1823,17 +1823,17 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         return null;
     }
     
-    public ArrayList getServerEntries() {
+    public ArrayList<ServerEntry> getServerEntries() {
         if (myServerEntries==null) {
             myServerEntries = parseServerEntries();
         }
         return myServerEntries;
     }
   
-    private ArrayList parseServerEntries() {
+    private ArrayList<ServerEntry> parseServerEntries() {
         String entries = getPreferenceStore().getString(NAVAJO_APPLICATION_SERVERS);
         StringTokenizer st = new StringTokenizer(entries,"\n");
-        ArrayList entryList = new ArrayList();
+        ArrayList<ServerEntry> entryList = new ArrayList<ServerEntry>();
         while (st.hasMoreTokens()) {
             String current = st.nextToken();
             ServerEntry se = new ServerEntry(current);
@@ -2074,31 +2074,20 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         return p;
     }
 
-    public void refreshNavajoCompiler(IProject project) {
-        compilerProviderMap.remove(project);
-    }
+//    public void refreshNavajoCompiler(IProject project) {
+//        compilerProviderMap.remove(project);
+//    }
     
     public TslCompiler getNavajoCompiler(IProject project) {
-        TslCompiler p = (TslCompiler)compilerProviderMap.get(project);
-        if (p!=null) {
-//            log("Using existing compiler.");
-            return p;
-        }
-//        log("Create new navajo compiler.");
-        // TODO Check
+        TslCompiler p = null;// (TslCompiler)compilerProviderMap.get(project);
+//        if (p!=null) {
+//            return p;
+//        }
         ClassProvider provider = getClassProvider(project,false);
          provider.initializeJarResources();
-//         try {
-//            Class c = Class.forName("com.dexels.navajo.mapping.compiler.NanoTslCompiler");
-//            Object o = c.newInstance();
-//            p = (NanoTslCompiler) o;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            log("Error instantiating compiler",e);
-//        }
 
          p = new TslCompiler(provider);
-         
+//         System.err.println("Created a new compiler!");
         // ======================= SETUP METADATA HANDLER
         InputStream metaIn = null;
         try {
@@ -2142,7 +2131,8 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
                 if (fold != null && fold.exists()) {
                     cpe.add(fold.getRawLocation().toOSString());
                 } else {
-                    System.err.println("HMMM: WHAT IS THIS: " + element);
+                	// I think these are library entries
+   //                 System.err.println("HMMM: WHAT IS THIS: " + element);
                 }
             }
         }
@@ -2167,7 +2157,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         } catch (NavajoPluginException e) {
             log("Error initializing java compiler. ",e);
         }
-        compilerProviderMap.put(project, p);
+//        compilerProviderMap.put(project, p);
         return p;
     }
 
