@@ -41,6 +41,7 @@ import com.dexels.navajo.server.FatalException;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.enterprise.scheduler.TaskInterface;
 import com.dexels.navajo.sharedstore.SharedStoreLock;
+import com.dexels.navajo.util.AuditLog;
 
 /**
  * Defines the task object that describes among other things, (optionally) the web service
@@ -360,8 +361,8 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 	 */
 	public void run() {
 
-		System.err.println("IN TASK RUN" + getId() + ", TRIGGER: " + getTriggerDescription() + ", WS: " + webservice );
-		//AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, " trigger " + getTriggerDescription() + " activated task: " + getId() );
+		//System.err.println("IN TASK RUN" + getId() + ", TRIGGER: " + getTriggerDescription() + ", WS: " + webservice );
+		//AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, " trigger " + getTriggerDescription() + " activated task: " + getId() + ", WS = " + webservice);
 		
 		Navajo result = null;
 		
@@ -396,7 +397,7 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 				java.util.Date now = new java.util.Date();
 
 				Header h = request.getHeader();
-				System.err.println("HEADER: " + h);
+				//System.err.println("HEADER: " + h);
 				if (h == null) {
 					h = NavajoFactory.getInstance().createHeader(request, webservice, username, password, -1);
 					request.addHeader(h);
@@ -408,8 +409,6 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 				}
 				// Reset request id to prevent integrity worker from kicking in.
 				h.setRequestId(null);
-
-				//Dispatcher.getInstance().setUseAuthorisation(false);
 
 				// Dispatcher is dead, exit.
 				if ( DispatcherFactory.getInstance() == null ) {
