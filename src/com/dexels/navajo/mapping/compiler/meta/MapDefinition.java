@@ -199,13 +199,16 @@ public class MapDefinition {
 					Vector values = child.getChildren();
 					for (int val = 0; val < values.size(); val++) {
 						XMLElement xec = (XMLElement) values.get(val);
+						
+						XMLElement expressionElt = new TSLElement(child, "expression");
 						String valueCondition = (String) xec.getAttribute("condition");
 						XMLElement valueElt = new TSLElement(child, "value");
 						if ( valueCondition != null ) {
-							valueElt.setAttribute("condition", valueCondition);
+							expressionElt.setAttribute("condition", valueCondition);
 						}
 						valueElt.setContent(xec.getContent().trim());
-						fieldElt.addChild(valueElt);
+						expressionElt.addChild(valueElt);
+						fieldElt.addChild(expressionElt);
 					}
 					
 					( map != null ? map : out ).addChild(fieldElt);
