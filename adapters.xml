@@ -1,4 +1,5 @@
 <adapterdef>
+    <!-- Mail adapter -->
     <map>
         <tagname>mailmap</tagname>
         <object>com.dexels.navajo.adapter.MailMap</object>
@@ -22,6 +23,7 @@
             <value name="attachFileContent" type="binary" required="false" direction="in"/>
         </values>
     </map>
+    <!-- Navajo adapter -->
     <map>
         <tagname>navajomap</tagname>
         <object>com.dexels.navajo.adapter.NavajoMap</object>
@@ -56,6 +58,7 @@
         <abstract>false</abstract>
         <object>com.dexels.navajo.adapter.navajomap.MessageMap</object>
     </map>
+    <!-- RSS adapter -->
     <map>
         <tagname>rss</tagname>
         <object>com.dexels.navajo.adapter.RSSMap</object>
@@ -69,6 +72,7 @@
             </method>
         </methods>
     </map>
+    <!-- Navajo listener adapter -->
     <map>
         <tagname>navajolistener</tagname>
         <object>com.dexels.navajo.adapter.NavajoMap</object>
@@ -76,6 +80,7 @@
             <value name="taskId" type="string" required="true" direction="in"/>
         </values>
     </map>
+    <!-- SQL adapter -->
     <map>
         <tagname>sqlquery</tagname>
         <object>com.dexels.navajo.adapter.SQLMap</object>
@@ -95,16 +100,17 @@
         </methods>
     </map>
     <map>
+        <tagname>resultrow</tagname>
+        <abstract>false</abstract>
+        <object>com.dexels.navajo.adapter.ResultSetMap</object>
+    </map>
+    <!-- Audit Log adapter -->
+    <map>
         <tagname>auditlog</tagname>
         <object>com.dexels.navajo.util.AuditLog</object>
         <values>
             <value name="message" type="string" required="true" direction="in"/>
             <value name="level" type="string" required="false" direction="in"/>
         </values>
-    </map>
-    <map>
-        <tagname>resultrow</tagname>
-        <abstract>false</abstract>
-        <object>com.dexels.navajo.adapter.ResultSetMap</object>
     </map>
 </adapterdef>
