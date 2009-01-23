@@ -126,7 +126,7 @@ public class MapDefinition {
 				ValueDefinition pd = auto.next();
 				if ( pd.getRequired().equals("automatic") ) {
 					System.err.println("AUTOMATIC!!!!!!!!!!" + pd.getName());
-					pd.generateCode(in, pd.getValue(), null, map, true, filename);
+					pd.generateCode(in, pd.getValue(), false, null, map, true, filename);
 					//out.addChild(pdx);
 				} else if ( pd.getRequired().equals("true") ) {
 					required.add(pd.getName());
@@ -141,7 +141,7 @@ public class MapDefinition {
 				ValueDefinition vd = getValueDefinition(attribName);
 				//System.err.println("Found vd: " + vd);
 				if ( vd != null ) {
-					vd.generateCode(in, attribValue, null, map, true, filename);
+					vd.generateCode(in, attribValue, false, null, map, true, filename);
 					required.remove(attribName);
 				} else if ( !attribName.equals("condition") ){
 					throw new UnknownMapInitializationParameterException("map."+tagName, attribName, in, filename);
@@ -171,10 +171,9 @@ public class MapDefinition {
 				String filter = (String) child.getAttribute("filter");
 				ValueDefinition vd = getValueDefinition(field);
 				// It is either <field><map ref=""> or <message><map ref=""/> or <property><map ref=""/>
-				//System.err.println("Tag: " + child.getName() + ", field " + field + ", type =" + vd.getType());
 				MapDefinition md = myMetaData.getMapDefinition(vd.getMapType());
 				if ( md != null ) {
-					XMLElement out2 = vd.generateCode(child, field, filter, ( map != null ? map : out ), true, filename );
+					XMLElement out2 = vd.generateCode(child, field, false, filter, ( map != null ? map : out ), true, filename );
 					md.generateCode(child, out2, filename );
 				} else {
 					throw new UnknownAdapterException(child.getName(), child, filename);
@@ -190,16 +189,19 @@ public class MapDefinition {
 				String setterValue = ( child.getAttribute("value") != null ? (String) child.getAttribute("value") : (String) child.getAttribute("ref") );
 				String condition = (String) child.getAttribute("condition");
 				// Maybe value is given as tag content?
+				boolean isTextNode = false;
 				if ( setterValue == null ) {
 					setterValue = child.getContent();
 					if ( setterValue == null || "".equals(setterValue) ) {
 						throw new MetaCompileException(filename, child, "Did not find any value that could be set for setter <" + child.getName() + "/>");
 					}
+					setterValue = setterValue.trim();
+					isTextNode = true;
 				}
 				ValueDefinition vd = getValueDefinition(field);
 					
 				XMLElement remainder = null;
-				remainder = vd.generateCode(child, setterValue, condition, ( map != null ? map : out ), true, filename );
+				remainder = vd.generateCode(child, setterValue, isTextNode, condition, ( map != null ? map : out ), true, filename );
 			
 		    // Case III: a multiple-field aka method construct.		
 			} else if ( child.getName().indexOf(".") != -1 && getMethodDefinition(stripDot(child)) != null ) {

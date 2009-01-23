@@ -12,14 +12,14 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
 public class ValueDefinition {
 
 	protected String name;
-	protected String type;
+	protected String map;
 	protected String value;
 	protected String required;
 	protected String direction;
 	
-	public ValueDefinition(String name, String type, String required, String direction ) {
+	public ValueDefinition(String name, String map, String required, String direction ) {
 		this.name = name;
-		this.type = type;
+		this.map = map;
 		this.required = required;
 		this.direction = direction;
 	}
@@ -56,20 +56,20 @@ public class ValueDefinition {
 		this.required = required;
 	}
 	
-	public String getType() {
-		return type;
+	public String getMap() {
+		return map;
 	}
 	
 	public String getMapType() {
-		if ( type.indexOf(" ") != -1 ) {
-			return type.substring(type.indexOf("map:") + 4, type.indexOf(" "));
+		if ( map != null ) {
+			return map.replace('[', ' ').replace(']', ' ').trim();
 		} else {
-			return type.substring(type.indexOf("map:") + 4);
+			return null;
 		}
 	}
 	
-	public void setType(String type) {
-		this.type = type;
+	public void setMap(String map) {
+		this.map = map;
 	}
 	
 	public static ValueDefinition parseDef(XMLElement e) throws KeywordException {
@@ -79,11 +79,11 @@ public class ValueDefinition {
 			throw new KeywordException("", null, "Illegal parameter specified: " + name);
 		}
 		
-		String type = (String) e.getAttribute("type");
+		String map = (String) e.getAttribute("map");
 		String required = (String) e.getAttribute("required");
 		String direction = (String) e.getAttribute("direction");
 		String value = (String) e.getAttribute("value");
-		ValueDefinition vd = new ValueDefinition(name, type, required, direction);
+		ValueDefinition vd = new ValueDefinition(name, map, required, direction);
 		if ( value != null ) {
 			vd.setValue(value);
 		}
@@ -98,10 +98,10 @@ public class ValueDefinition {
 	 * @param in
 	 * @param out
 	 */
-	public XMLElement generateCode(XMLElement currentIn, String setterValue, String condition, XMLElement out, boolean append, String filename) throws Exception {
+	public XMLElement generateCode(XMLElement currentIn, String setterValue, boolean textNode, String condition, XMLElement out, boolean append, String filename) throws Exception {
 		
 		// Case I: <field><expression/></field> construct.
-		if ( ( direction.equals("in") || direction.equals("automatic") ) && !type.startsWith("map:")) { 
+		if ( ( direction.equals("in") || direction.equals("automatic") ) && map == null) { 
 			XMLElement field = new TSLElement(currentIn, "field");
 			field.setAttribute("name", ( this.getClass().getName().equals("com.dexels.navajo.mapping.compiler.meta.ValueDefinition") ? name : ((ParameterDefinition) this).getField() ) );
 			if ( condition != null && !condition.equals("") ) {
@@ -110,20 +110,21 @@ public class ValueDefinition {
 			XMLElement expression = new TSLElement(currentIn, "expression");
 			field.addChild(expression);
 			expression.setAttribute("xml:space", "preserve");
+			//System.err.println("setterValue = " + setterValue + ", textNode = " + textNode);
 			// Case Ia: stringliteral, create construct <expression>[STRING CONTENT]<expression>
-			if ( type.equals("stringliteral") && !setterValue.startsWith("{") ) {
+			if ( textNode && !setterValue.startsWith("{") ) {
 				expression.setContent(setterValue);
 			} 
 			// Case Ib: other, if string type automatically put quotes (') around string.
 			//                 if string type surrounded by {} or any other type, assume normal expression, 
 			//                      use <expression><value>[EXPRESSION]</value></expression> construct.
 			else {
-				if ( type.equals("string") && !setterValue.startsWith("{") && setterValue.indexOf("'") != -1) {
-					throw new MetaCompileException(filename, currentIn, "Invalid ' character for string type: " + setterValue);
-				}
-				if ( type.equals("string") && !setterValue.startsWith("{") ) {
-					setterValue = "'" + setterValue + "'";
-				}
+				//if ( type.equals("string") && !setterValue.startsWith("{") && setterValue.indexOf("'") != -1) {
+				//	throw new MetaCompileException(filename, currentIn, "Invalid ' character for string type: " + setterValue);
+				//}
+				//if ( type.equals("string") && !setterValue.startsWith("{") ) {
+				//	setterValue = "'" + setterValue + "'";
+				//}
 				if ( setterValue.startsWith("{") ) {  // Force expression.
 					//System.err.println("FOUND ESCAPED EXPRESSION!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 					setterValue = setterValue.replace('{', ' ');
@@ -138,7 +139,7 @@ public class ValueDefinition {
 			}
 			return field;
 	    // Case II: <message><map ref=""/></message> or <property><map ref=""/></property> construct.
-		} else if ( ( currentIn.getParent().getName().equals("message") || currentIn.getParent().getName().equals("property") ) && type.startsWith("map:") ){ // Generate <map ref=""> construction
+		} else if ( ( currentIn.getParent().getName().equals("message") || currentIn.getParent().getName().equals("property") ) && map != null ){ // Generate <map ref=""> construction
 			XMLElement mapref = new TSLElement(currentIn, "map");
 			mapref.setAttribute("ref", setterValue);
 			if ( condition != null && !condition.equals("") ) {
@@ -147,7 +148,7 @@ public class ValueDefinition {
 			out.addChild(mapref);
 			return mapref;
 	    // Case III: <field><map ref=""/></field> construct.
-		} else if ( currentIn.getFirstChild().getName().equals("map") && type.startsWith("map:") ) { // Generate <field name=""><map ref=""></field> construction...
+		} else if ( currentIn.getFirstChild().getName().equals("map") && map != null ) { // Generate <field name=""><map ref=""></field> construction...
 			XMLElement field = new TSLElement(currentIn, "field");
 			field.setAttribute("name", ( this.getClass().getName().equals("com.dexels.navajo.mapping.compiler.meta.ValueDefinition") ? name : ((ParameterDefinition) this).getField() ) );
 			if ( condition != null && !condition.equals("") ) {
@@ -168,7 +169,7 @@ public class ValueDefinition {
 		StringWriter sw = new StringWriter();
 		XMLElement start = new TSLElement(null, "tsl");
 		start.setName("tsl");
-		vd.generateCode(null, "sportlinkkernel", null, start, true, "aap.xml");
+		vd.generateCode(null, "sportlinkkernel", false, null, start, true, "aap.xml");
 		sw = new StringWriter();
 		start.write(sw);
 		System.err.println(sw.toString());
