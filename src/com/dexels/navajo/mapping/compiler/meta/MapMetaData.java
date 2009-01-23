@@ -29,23 +29,21 @@ public class MapMetaData {
 	protected HashMap<String, MapDefinition> maps = new HashMap<String, MapDefinition>();
 	
 	private static MapMetaData instance = null;
+	private String configPath = null;
 	
-	private MapMetaData() {
+	private MapMetaData(String configPath) {
 		// Create empty MapDefinition.
 		MapDefinition empty = new MapDefinition(this);
 		empty.tagName = "__empty__";
 		empty.objectName = "null";
+		this.configPath = configPath;
 		maps.put("__empty__", empty);
 	}
 	
 	private void readConfig() throws Exception {
 		try {
 			
-			BufferedReader br = 
-				( DispatcherFactory.getInstance() != null ) ?
-				new BufferedReader(new FileReader(new File(DispatcherFactory.getInstance().getNavajoConfig().getConfigPath() + "/adapters.xml")))
-			:
-				new BufferedReader(new FileReader("/home/arjen/projecten/Navajo/adapters.xml"));
+			BufferedReader br = new BufferedReader(new FileReader(configPath + "/adapters.xml"));
 				
 			XMLElement config = new CaseSensitiveXMLElement();
 			config.parseFromReader(br);
@@ -62,11 +60,15 @@ public class MapMetaData {
 		}
 	}
 	
-	public static MapMetaData getInstance() throws Exception {
+	public static MapMetaData getInstance() {
+		return instance;
+	}
+	
+	public static MapMetaData getInstance(String c) throws Exception {
 		if ( instance != null ) {
 			return instance;
 		} else {
-			instance = new MapMetaData();
+			instance = new MapMetaData(c);
             // Read map definitions from config file.
 			instance.readConfig();
 		}
@@ -125,10 +127,10 @@ public class MapMetaData {
 	
 	public static void main(String [] args) throws Exception {
 		
-		MapMetaData mmd = MapMetaData.getInstance();
+		MapMetaData mmd = MapMetaData.getInstance("/home/arjen/projecten/Navajo");
 		//System.err.println("is: " + mmd.isMetaScript("ProcessQueryMemberNewStyle", "/home/arjen/projecten/Navajo/", "."));
 		
-		String result = mmd.parse("/home/arjen/projecten/NavajoStandardEdition/scripts/InitMail.xml");
+		String result = mmd.parse("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/teamregistration/InitQueryTeamRegistrations_NEWSTYLE.xml");
 		
 		FileWriter fw = new FileWriter("/home/arjen/@.xml");
 	

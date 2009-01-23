@@ -24,6 +24,7 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.jaxpimpl.xml.*;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.GenericHandler;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.SystemException;
@@ -2207,7 +2208,7 @@ public String mapNode(int ident, Element n) throws Exception {
 	    } 
   }
     
-  public void compileScript(String script, String scriptPath, String workingPath, String packagePath) throws SystemException {
+  public void compileScript(String script, String scriptPath, String workingPath, String packagePath, String configPath) throws SystemException {
 
 	    String fullScriptPath = scriptPath + "/" + packagePath + "/" + script + ".xml";
 	    
@@ -2226,7 +2227,7 @@ public String mapNode(int ident, Element n) throws Exception {
 				
 			} else {
 				
-				MapMetaData mmd = MapMetaData.getInstance();
+				MapMetaData mmd = MapMetaData.getInstance(configPath);
 				String intermed = mmd.parse(fullScriptPath);
 				compileScript(ScriptInheritance.inherit(new ByteArrayInputStream(intermed.getBytes()), scriptPath), 
 						     packagePath, script, scriptPath, workingPath );
@@ -2259,7 +2260,7 @@ public String mapNode(int ident, Element n) throws Exception {
        } else {
          bareScript = script;
        }
-       tslCompiler.compileScript(bareScript, input, output,packagePath);
+       tslCompiler.compileScript(bareScript, input, output,packagePath, DispatcherFactory.getInstance().getNavajoConfig().getConfigPath());
         return javaFile;
      }
      catch (Throwable ex) {
@@ -2291,7 +2292,7 @@ public String mapNode(int ident, Element n) throws Exception {
 
           //System.err.println("About to compile script: "+bareScript);
           //System.err.println("Using package path: "+packagePath);
-          tslCompiler.compileScript(bareScript, input, output,packagePath);
+          tslCompiler.compileScript(bareScript, input, output,packagePath,DispatcherFactory.getInstance().getNavajoConfig().getConfigPath());
           
           ////System.out.println("CREATED JAVA FILE FOR SCRIPT: " + script);
         }
