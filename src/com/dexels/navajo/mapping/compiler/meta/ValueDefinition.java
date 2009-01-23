@@ -98,7 +98,8 @@ public class ValueDefinition {
 	 * @param in
 	 * @param out
 	 */
-	public XMLElement generateCode(XMLElement currentIn, String setterValue, boolean textNode, String condition, XMLElement out, boolean append, String filename) throws Exception {
+	public XMLElement generateCode(XMLElement currentIn, String setterValue, boolean textNode, 
+			                       String condition, XMLElement out, boolean append, String filename) throws Exception {
 		
 		// Case I: <field><expression/></field> construct.
 		if ( ( direction.equals("in") || direction.equals("automatic") ) && map == null) { 
