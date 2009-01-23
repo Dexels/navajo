@@ -225,13 +225,15 @@ public class MapDefinition {
 				} else {
 					throw new UnknownAdapterException(child.getName(), child, filename);
 				}
-			} else if (!( child.getName().equals("message") || 
+			} else if (!( 
+					    child.getName().equals("message") || 
 					    child.getName().equals("property") ||
 					    child.getName().equals("field") ||
 					    child.getName().equals("comment") ||
 					    child.getName().equals("debug") ||
 					    child.getName().equals("param") || 
 					    child.getName().equals("include") ||
+					    child.getName().equals("inject") ||
 					    child.getName().equals("break") ||
 					    child.getName().equals("required") ||
 					    child.getName().equals("request") ||
@@ -239,6 +241,8 @@ public class MapDefinition {
 					    child.getName().equals("running") ||
 					    child.getName().equals("option") ||
 					    child.getName().equals("expression") ||
+					    child.getName().equals("value") ||
+					    child.getName().equals("condition") ||
 					    child.getName().equals("map") ||
 					    child.getName().equals("methods") ||
 					    child.getName().equals("method") ||
