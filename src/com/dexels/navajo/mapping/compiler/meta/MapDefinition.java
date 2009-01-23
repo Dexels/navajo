@@ -186,22 +186,48 @@ public class MapDefinition {
 				}
 				
 				String field = stripDot(child);
-				String setterValue = ( child.getAttribute("value") != null ? (String) child.getAttribute("value") : (String) child.getAttribute("ref") );
 				String condition = (String) child.getAttribute("condition");
-				// Maybe value is given as tag content?
-				boolean isTextNode = false;
-				if ( setterValue == null ) {
-					setterValue = child.getContent();
-					if ( setterValue == null || "".equals(setterValue) ) {
-						throw new MetaCompileException(filename, child, "Did not find any value that could be set for setter <" + child.getName() + "/>");
+				
+				// Check for <map.xyz><value condition=""></value>...<value></value></map.xyz> construction.
+				if ( child.getChildren().size() > 0 && child.getFirstChild().getName().equals("value")) {
+					XMLElement fieldElt = new TSLElement(child, "field");
+					fieldElt.setAttribute("name", field);
+					if ( condition != null && !condition.equals("") ) {
+						fieldElt.setAttribute("condition", condition);
 					}
-					setterValue = setterValue.trim();
-					isTextNode = true;
-				}
-				ValueDefinition vd = getValueDefinition(field);
 					
-				XMLElement remainder = null;
-				remainder = vd.generateCode(child, setterValue, isTextNode, condition, ( map != null ? map : out ), true, filename );
+					Vector values = child.getChildren();
+					for (int val = 0; val < values.size(); val++) {
+						XMLElement xec = (XMLElement) values.get(val);
+						String valueCondition = (String) xec.getAttribute("condition");
+						XMLElement valueElt = new TSLElement(child, "value");
+						if ( valueCondition != null ) {
+							valueElt.setAttribute("condition", valueCondition);
+						}
+						valueElt.setContent(xec.getContent().trim());
+						fieldElt.addChild(valueElt);
+					}
+					
+					( map != null ? map : out ).addChild(fieldElt);
+				} else { // <map.xyz value=""> or <map.xyz>value</map.xyz> construction.
+				
+					String setterValue = ( child.getAttribute("value") != null ? (String) child.getAttribute("value") : (String) child.getAttribute("ref") );
+				
+					// Maybe value is given as tag content?
+					boolean isTextNode = false;
+					if ( setterValue == null ) {
+						setterValue = child.getContent();
+						if ( setterValue == null || "".equals(setterValue) ) {
+							throw new MetaCompileException(filename, child, "Did not find any value that could be set for setter <" + child.getName() + "/>");
+						}
+						setterValue = setterValue.trim();
+						isTextNode = true;
+					}
+					ValueDefinition vd = getValueDefinition(field);
+
+					XMLElement remainder = null;
+					remainder = vd.generateCode(child, setterValue, isTextNode, condition, ( map != null ? map : out ), true, filename );
+				}
 			
 		    // Case III: a multiple-field aka method construct.		
 			} else if ( child.getName().indexOf(".") != -1 && getMethodDefinition(stripDot(child)) != null ) {
