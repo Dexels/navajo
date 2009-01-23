@@ -95,6 +95,14 @@
         </methods>
     </map>
     <map>
+        <tagname>auditlog</tagname>
+        <object>com.dexels.navajo.util.AuditLog</object>
+        <values>
+            <value name="message" type="string" required="true" direction="in"/>
+            <value name="level" type="string" required="false" direction="in"/>
+        </values>
+    </map>
+    <map>
         <tagname>resultrow</tagname>
         <abstract>false</abstract>
         <object>com.dexels.navajo.adapter.ResultSetMap</object>
