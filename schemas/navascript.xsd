@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
-    <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.navajo.nl/schema/xml.xsd"/>
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.navajo.nl/schemas/xml.xsd"/>
     <!-- Top level navascript -->
     <xs:complexType name="TopLevel">
-        <xs:element maxOccurs="1" minOccurs="0" ref="validations"/>
-        <xs:choice maxOccurs="unbounded" minOccurs="0">
-            <xs:element ref="message"/>
-            <xs:element ref="property"/>
-            <xs:element ref="include"/>
-            <xs:element ref="param"/>
-            <xs:element ref="methods"/>
-            <xs:element ref="map"/>
-            <xs:element ref="break"/>
-            <xs:element ref="debug"/>
-        </xs:choice>
+        <xs:sequence>
+            <xs:element maxOccurs="1" minOccurs="0" ref="validations"/>
+            <xs:choice maxOccurs="unbounded" minOccurs="0">
+                <xs:element ref="message"/>
+                <xs:element ref="property"/>
+                <xs:element ref="include"/>
+                <xs:element ref="param"/>
+                <xs:element ref="methods"/>
+                <xs:element ref="map"/>
+                <xs:element ref="break"/>
+                <xs:element ref="debug"/>
+            </xs:choice>
+        </xs:sequence>
         <xs:attribute name="author" type="xs:string"/>
         <xs:attribute name="description" type="xs:string"/>
         <xs:attribute name="repository" type="xs:string"/>
@@ -41,7 +43,7 @@
         </xs:complexType>
     </xs:element>
     <xs:element name="methods">
-       <xs:complexType>
+        <xs:complexType>
             <xs:choice maxOccurs="unbounded" minOccurs="0">
                 <xs:element ref="method"/>
             </xs:choice>
@@ -234,7 +236,7 @@
             <xs:documentation/>
         </xs:annotation>
         <xs:complexType>
-            <xs:attribute name="script" type="xs:string"/>
+            <xs:attribute name="script" type="xs:string" use="required"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="comment">
