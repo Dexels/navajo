@@ -6,15 +6,16 @@
     <xs:element name="tsl">
         <xs:complexType>
             <xs:sequence>
-                <xs:element maxOccurs="1" minOccurs="0" ref="navascript:validations"/>
+                <xs:element maxOccurs="1" minOccurs="0" ref="validations"/>
                 <xs:choice maxOccurs="unbounded" minOccurs="0">
-                    <xs:element ref="navascript:include"/>
-                    <xs:element ref="navascript:param"/>
-                    <xs:element ref="navascript:map"/>
-                    <xs:element ref="navascript:message"/>
-                    <xs:element ref="navascript:methods"/>
-                    <xs:element ref="navascript:comment"/>
-                    <xs:element ref="navascript:debug"/>
+                    <xs:element ref="include"/>
+                    <xs:element ref="param"/>
+                    <xs:element ref="map"/>
+                    <xs:element ref="message"/>
+                    <xs:element ref="methods"/>
+                    <xs:element ref="comment"/>
+                    <xs:element ref="debug"/>
+                    <xs:element ref="break"/>
                 </xs:choice>
             </xs:sequence>
             <xs:attribute name="notes" type="xs:string"/>
@@ -32,7 +33,7 @@
     <xs:element name="validations">
         <xs:complexType>
             <xs:choice>
-                <xs:element maxOccurs="unbounded" ref="navascript:check"/>
+                <xs:element maxOccurs="unbounded" ref="check"/>
             </xs:choice>
         </xs:complexType>
     </xs:element>
@@ -50,14 +51,14 @@
     <xs:element name="message">
         <xs:complexType>
             <xs:choice maxOccurs="unbounded" minOccurs="0">
-                <xs:element ref="navascript:include"/>
-                <xs:element ref="navascript:property"/>
-                <xs:element ref="navascript:map"/>
-                <xs:element ref="navascript:message"/>
-                <xs:element ref="navascript:comment"/>
-                <xs:element ref="navascript:debug"/>
-                <xs:element ref="navascript:param"/>
-                <xs:element ref="navascript:break"/>
+                <xs:element ref="include"/>
+                <xs:element ref="property"/>
+                <xs:element ref="map"/>
+                <xs:element ref="message"/>
+                <xs:element ref="comment"/>
+                <xs:element ref="debug"/>
+                <xs:element ref="param"/>
+                <xs:element ref="break"/>
             </xs:choice>
             <xs:attribute name="name" type="xs:string" use="required"/>
             <xs:attribute default="1" name="count" type="xs:integer"/>
@@ -77,18 +78,18 @@
     <xs:element name="map">
         <xs:complexType>
             <xs:choice maxOccurs="unbounded" minOccurs="0">
-                <xs:element ref="navascript:include"/>
-                <xs:element ref="navascript:param"/>
-                <xs:element ref="navascript:field"/>
-                <xs:element ref="navascript:property"/>
-                <xs:element ref="navascript:message"/>
-                <xs:element ref="navascript:map"/>
-                <xs:element maxOccurs="1" minOccurs="0" ref="navascript:request"/>
-                <xs:element maxOccurs="1" minOccurs="0" ref="navascript:response"/>
-                <xs:element maxOccurs="1" minOccurs="0" ref="navascript:running"/>
-                <xs:element ref="navascript:break"/>
-                <xs:element ref="navascript:comment"/>
-                <xs:element ref="navascript:debug"/>
+                <xs:element ref="include"/>
+                <xs:element ref="param"/>
+                <xs:element ref="field"/>
+                <xs:element ref="property"/>
+                <xs:element ref="message"/>
+                <xs:element ref="map"/>
+                <xs:element maxOccurs="1" minOccurs="0" ref="request"/>
+                <xs:element maxOccurs="1" minOccurs="0" ref="response"/>
+                <xs:element maxOccurs="1" minOccurs="0" ref="running"/>
+                <xs:element ref="break"/>
+                <xs:element ref="comment"/>
+                <xs:element ref="debug"/>
             </xs:choice>
             <xs:attribute name="name" type="xs:string"/>
             <xs:attribute name="object">
@@ -115,12 +116,12 @@
     <xs:element name="property">
         <xs:complexType>
             <xs:choice minOccurs="0">
-                <xs:element ref="navascript:include"/>
-                <xs:element maxOccurs="unbounded" ref="navascript:expression"/>
-                <xs:element ref="navascript:map"/>
-                <xs:element maxOccurs="unbounded" ref="navascript:option"/>
-                <xs:element maxOccurs="unbounded" ref="navascript:comment"/>
-                <xs:element ref="navascript:debug"/>
+                <xs:element ref="include"/>
+                <xs:element maxOccurs="unbounded" ref="expression"/>
+                <xs:element ref="map"/>
+                <xs:element maxOccurs="unbounded" ref="option"/>
+                <xs:element maxOccurs="unbounded" ref="comment"/>
+                <xs:element ref="debug"/>
             </xs:choice>
             <xs:attribute name="comment" type="xs:string"/>
             <xs:attribute name="description" type="xs:string"/>
@@ -158,8 +159,8 @@
     <xs:element name="field">
         <xs:complexType>
             <xs:choice>
-                <xs:element maxOccurs="unbounded" minOccurs="1" ref="navascript:expression"/>
-                <xs:element maxOccurs="1" minOccurs="1" ref="navascript:map"/>
+                <xs:element maxOccurs="unbounded" minOccurs="1" ref="expression"/>
+                <xs:element maxOccurs="1" minOccurs="1" ref="map"/>
             </xs:choice>
             <xs:attribute name="name" type="xs:string" use="required"/>
             <xs:attribute name="condition" type="xs:string"/>
@@ -169,7 +170,7 @@
     <xs:element name="param">
         <xs:complexType>
             <xs:sequence>
-                <xs:element maxOccurs="unbounded" ref="navascript:expression"/>
+                <xs:element maxOccurs="unbounded" ref="expression"/>
             </xs:sequence>
             <xs:attribute name="name" type="xs:string" use="required"/>
             <xs:attribute name="condition" type="xs:string"/>
@@ -216,7 +217,7 @@
     <xs:element name="methods">
         <xs:complexType>
             <xs:choice>
-                <xs:element maxOccurs="unbounded" ref="navascript:method"/>
+                <xs:element maxOccurs="unbounded" ref="method"/>
             </xs:choice>
             <xs:attribute name="condition" type="xs:string" use="optional"/>
         </xs:complexType>
@@ -224,7 +225,7 @@
     <xs:element name="method">
         <xs:complexType>
             <xs:sequence maxOccurs="unbounded" minOccurs="0">
-                <xs:element ref="navascript:required"/>
+                <xs:element ref="required"/>
             </xs:sequence>
             <xs:attribute name="name" type="xs:string" use="required"/>
             <xs:attribute name="description" type="xs:string" use="optional"/>
@@ -254,28 +255,28 @@
     <xs:element name="request">
         <xs:complexType>
             <xs:choice maxOccurs="unbounded" minOccurs="0">
-                <xs:element ref="navascript:include"/>
-                <xs:element ref="navascript:param"/>
-                <xs:element ref="navascript:field"/>
-                <xs:element ref="navascript:property"/>
-                <xs:element ref="navascript:message"/>
-                <xs:element ref="navascript:map"/>
-                <xs:element ref="navascript:comment"/>
-                <xs:element ref="navascript:debug"/>
+                <xs:element ref="include"/>
+                <xs:element ref="param"/>
+                <xs:element ref="field"/>
+                <xs:element ref="property"/>
+                <xs:element ref="message"/>
+                <xs:element ref="map"/>
+                <xs:element ref="comment"/>
+                <xs:element ref="debug"/>
             </xs:choice>
         </xs:complexType>
     </xs:element>
     <xs:element name="response">
         <xs:complexType>
             <xs:choice maxOccurs="unbounded" minOccurs="0">
-                <xs:element ref="navascript:include"/>
-                <xs:element ref="navascript:param"/>
-                <xs:element ref="navascript:field"/>
-                <xs:element ref="navascript:property"/>
-                <xs:element ref="navascript:message"/>
-                <xs:element ref="navascript:map"/>
-                <xs:element ref="navascript:comment"/>
-                <xs:element ref="navascript:debug"/>
+                <xs:element ref="include"/>
+                <xs:element ref="param"/>
+                <xs:element ref="field"/>
+                <xs:element ref="property"/>
+                <xs:element ref="message"/>
+                <xs:element ref="map"/>
+                <xs:element ref="comment"/>
+                <xs:element ref="debug"/>
             </xs:choice>
             <xs:attribute name="while_running" use="required">
                 <xs:simpleType>
@@ -290,14 +291,14 @@
     <xs:element name="running">
         <xs:complexType>
             <xs:choice maxOccurs="unbounded" minOccurs="0">
-                <xs:element ref="navascript:include"/>
-                <xs:element ref="navascript:param"/>
-                <xs:element ref="navascript:field"/>
-                <xs:element ref="navascript:property"/>
-                <xs:element ref="navascript:message"/>
-                <xs:element ref="navascript:map"/>
-                <xs:element ref="navascript:comment"/>
-                <xs:element ref="navascript:debug"/>
+                <xs:element ref="include"/>
+                <xs:element ref="param"/>
+                <xs:element ref="field"/>
+                <xs:element ref="property"/>
+                <xs:element ref="message"/>
+                <xs:element ref="map"/>
+                <xs:element ref="comment"/>
+                <xs:element ref="debug"/>
             </xs:choice>
         </xs:complexType>
     </xs:element>
