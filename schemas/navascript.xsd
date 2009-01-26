@@ -22,6 +22,25 @@
         <xs:attribute name="notes" type="xs:string"/>
         <xs:attribute name="id" type="xs:string"/>
     </xs:complexType>
+    <xs:complexType name="MapType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="message"/>
+            <xs:element ref="property"/>
+            <xs:element ref="param"/>
+            <xs:element ref="map"/>
+            <xs:element ref="field"/>
+            <xs:element ref="break"/>
+            <xs:element ref="debug"/>
+            <xs:element maxOccurs="1" minOccurs="0" ref="request"/>
+            <xs:element maxOccurs="1" minOccurs="0" ref="response"/>
+            <xs:element maxOccurs="1" minOccurs="0" ref="running"/>
+        </xs:choice>
+        <xs:attribute name="object" type="xs:string"/>
+        <xs:attribute name="condition" type="xs:string"/>
+        <xs:attribute name="filter" type="xs:string"/>
+        <xs:attribute name="ref" type="xs:string"/>
+        <xs:attribute name="name" type="xs:string"/>
+    </xs:complexType>    
     <xs:element name="navascript" type="TopLevel"/>
     <xs:element name="tsl" type="TopLevel"/>
     <xs:element name="validations">
@@ -81,30 +100,7 @@
             <xs:attribute name="index" type="xs:integer"/>
         </xs:complexType>
     </xs:element>
-    <xs:element name="map">
-        <xs:annotation>
-            <xs:documentation>A map maps Navajo and Java beans</xs:documentation>
-        </xs:annotation>
-        <xs:complexType>
-            <xs:choice maxOccurs="unbounded" minOccurs="0">
-                <xs:element ref="message"/>
-                <xs:element ref="property"/>
-                <xs:element ref="param"/>
-                <xs:element ref="map"/>
-                <xs:element ref="field"/>
-                <xs:element ref="break"/>
-                <xs:element ref="debug"/>
-                <xs:element maxOccurs="1" minOccurs="0" ref="request"/>
-                <xs:element maxOccurs="1" minOccurs="0" ref="response"/>
-                <xs:element maxOccurs="1" minOccurs="0" ref="running"/>
-            </xs:choice>
-            <xs:attribute name="object" type="xs:string"/>
-            <xs:attribute name="condition" type="xs:string"/>
-            <xs:attribute name="filter" type="xs:string"/>
-            <xs:attribute name="ref" type="xs:string"/>
-            <xs:attribute name="name" type="xs:string"/>
-        </xs:complexType>
-    </xs:element>
+    <xs:element name="map" type="MapType"/>
     <xs:element name="field">
         <xs:annotation>
             <xs:documentation>A field is used a Java bean setter</xs:documentation>
