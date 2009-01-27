@@ -128,6 +128,7 @@
             <xs:choice maxOccurs="unbounded" minOccurs="0">
                 <xs:element ref="option"/>
                 <xs:element ref="expression"/>
+                <xs:element ref="map"/>
             </xs:choice>
             <xs:attribute use="required" name="name" type="xs:string"/>
             <xs:attribute name="type">
@@ -169,7 +170,7 @@
             <xs:documentation>A param is the basic variable element</xs:documentation>
         </xs:annotation>
         <xs:complexType>
-            <xs:choice maxOccurs="unbounded" minOccurs="1">
+            <xs:choice maxOccurs="unbounded" minOccurs="0">
                 <xs:element ref="option"/>
                 <xs:element ref="expression"/>
             </xs:choice>
@@ -232,6 +233,7 @@
         </xs:annotation>
         <xs:complexType mixed="true">
             <xs:attribute name="condition" type="xs:string"/>
+            <xs:attribute ref="xml:space" use="optional"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="include">
@@ -314,6 +316,7 @@
         </xs:choice>
         <xs:attribute name="value" type="xs:string"/>
         <xs:attribute name="condition" type="xs:string"/>
+        <xs:attribute ref="xml:space" use="optional"/>
     </xs:complexType>
     <!--
          Add adapter schema definitions 
@@ -321,7 +324,7 @@
     <!-- sqlquery adapter -->
     <xs:element name="map.sqlquery">
         <xs:complexType>
-            <xs:choice>
+            <xs:choice maxOccurs="unbounded" minOccurs="0">
                 <!-- Inherited elements from map -->
                 <xs:element ref="message"/>
                 <xs:element ref="property"/>
@@ -340,7 +343,8 @@
                 <!-- Generated methods -->
                 <xs:element name="sqlquery.addParameter">
                     <xs:complexType>
-                        <xs:attribute name="value" type="xs:string"/>
+                        <xs:attribute name="value" type="xs:string" use="required"/>
+                        <xs:attribute name="condition" type="xs:string"/>
                     </xs:complexType>
                 </xs:element>
                 <xs:element name="sqlquery.doUpdate"/>
@@ -377,7 +381,8 @@
                 <!-- Generated methods -->
                 <xs:element name="dropdown.addParameter">
                     <xs:complexType>
-                        <xs:attribute name="value" type="xs:string"/>
+                        <xs:attribute name="value" type="xs:string" use="required"/>
+                        <xs:attribute name="condition" type="xs:string"/>
                     </xs:complexType>
                 </xs:element>
             </xs:choice>
@@ -389,10 +394,12 @@
             <!-- Generated optional setters as attributes -->
             <xs:attribute name="query" type="xs:string"/>
             <xs:attribute name="datasource" type="xs:string"/>
+            <xs:attribute name="description" type="xs:string"/>
             <xs:attribute name="emptyOption" type="xs:string"/>
             <xs:attribute name="orderByDescription" type="xs:string"/>
             <xs:attribute name="selectedValue" type="xs:string"/>
             <xs:attribute name="transactionContext" type="xs:string"/>
         </xs:complexType>
     </xs:element>
+    <!-- -->
 </xs:schema>
