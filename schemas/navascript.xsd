@@ -309,7 +309,7 @@
     </xs:element>
     <!-- The Setter type for newstyle adapters -->
     <xs:complexType name="SetterType" mixed="true">
-        <xs:choice>
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
             <xs:element ref="value"/>
         </xs:choice>
         <xs:attribute name="value" type="xs:string"/>
@@ -356,7 +356,7 @@
     <!-- dropdown adapter -->
     <xs:element name="map.dropdown">
         <xs:complexType>
-            <xs:choice>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
                 <!-- Inherited elements from map -->
                 <xs:element ref="message"/>
                 <xs:element ref="property"/>
