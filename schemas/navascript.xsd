@@ -475,7 +475,7 @@
             <xs:attribute name="transactionContext" type="xs:string"/>
         </xs:complexType>
     </xs:element>
-    <!-- codedropdown adapter -->
+    <!-- navajomap adapter -->
     <xs:element name="map.navajomap">
         <xs:complexType>
             <xs:choice minOccurs="0" maxOccurs="unbounded">
