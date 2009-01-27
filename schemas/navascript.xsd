@@ -3,19 +3,17 @@
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.navajo.nl/schemas/xml.xsd"/>
     <!-- Top level navascript -->
     <xs:complexType name="TopLevel">
-        <xs:sequence>
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="message"/>
+            <xs:element ref="property"/>
+            <xs:element ref="include"/>
+            <xs:element ref="param"/>
+            <xs:element ref="methods"/>
+            <xs:element ref="map"/>
+            <xs:element ref="break"/>
+            <xs:element ref="debug"/>
             <xs:element maxOccurs="1" minOccurs="0" ref="validations"/>
-            <xs:choice maxOccurs="unbounded" minOccurs="0">
-                <xs:element ref="message"/>
-                <xs:element ref="property"/>
-                <xs:element ref="include"/>
-                <xs:element ref="param"/>
-                <xs:element ref="methods"/>
-                <xs:element ref="map"/>
-                <xs:element ref="break"/>
-                <xs:element ref="debug"/>
-            </xs:choice>
-        </xs:sequence>
+        </xs:choice>
         <xs:attribute name="author" type="xs:string"/>
         <xs:attribute name="description" type="xs:string"/>
         <xs:attribute name="repository" type="xs:string"/>
@@ -26,11 +24,13 @@
         <xs:choice maxOccurs="unbounded" minOccurs="0">
             <xs:element ref="message"/>
             <xs:element ref="property"/>
+            <xs:element ref="include"/>
             <xs:element ref="param"/>
+            <xs:element ref="methods"/>
             <xs:element ref="map"/>
-            <xs:element ref="field"/>
             <xs:element ref="break"/>
             <xs:element ref="debug"/>
+            <xs:element ref="field"/>
             <xs:element maxOccurs="1" minOccurs="0" ref="request"/>
             <xs:element maxOccurs="1" minOccurs="0" ref="response"/>
             <xs:element maxOccurs="1" minOccurs="0" ref="running"/>
@@ -40,7 +40,23 @@
         <xs:attribute name="filter" type="xs:string"/>
         <xs:attribute name="ref" type="xs:string"/>
         <xs:attribute name="name" type="xs:string"/>
-    </xs:complexType>    
+    </xs:complexType>
+    <xs:complexType name="MessageType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="message"/>
+            <xs:element ref="property"/>
+            <xs:element ref="include"/>
+            <xs:element ref="param"/>
+            <xs:element ref="methods"/>
+            <xs:element ref="map"/>
+            <xs:element ref="break"/>
+            <xs:element ref="debug"/>
+        </xs:choice>
+        <xs:attribute use="required" name="name" type="xs:string"/>
+        <xs:attribute name="type" type="xs:string"/>
+        <xs:attribute name="mode" type="xs:string"/>
+        <xs:attribute name="index" type="xs:integer"/>
+    </xs:complexType>
     <xs:element name="navascript" type="TopLevel"/>
     <xs:element name="tsl" type="TopLevel"/>
     <xs:element name="validations">
@@ -81,25 +97,7 @@
             <xs:attribute name="description" type="xs:string"/>
         </xs:complexType>
     </xs:element>
-    <xs:element name="message">
-        <xs:annotation>
-            <xs:documentation>A message groups properties and other messages</xs:documentation>
-        </xs:annotation>
-        <xs:complexType>
-            <xs:choice maxOccurs="unbounded" minOccurs="0">
-                <xs:element ref="message"/>
-                <xs:element ref="property"/>
-                <xs:element ref="param"/>
-                <xs:element ref="map"/>
-                <xs:element ref="break"/>
-                <xs:element ref="debug"/>
-            </xs:choice>
-            <xs:attribute use="required" name="name" type="xs:string"/>
-            <xs:attribute name="type" type="xs:string"/>
-            <xs:attribute name="mode" type="xs:string"/>
-            <xs:attribute name="index" type="xs:integer"/>
-        </xs:complexType>
-    </xs:element>
+    <xs:element name="message" type="MessageType"/>
     <xs:element name="map" type="MapType"/>
     <xs:element name="field">
         <xs:annotation>
@@ -300,4 +298,5 @@
             </xs:choice>
         </xs:complexType>
     </xs:element>
+    <!-- Add adapter schema definitions -->
 </xs:schema>
