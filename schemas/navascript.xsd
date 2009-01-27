@@ -298,5 +298,91 @@
             </xs:choice>
         </xs:complexType>
     </xs:element>
-    <!-- Add adapter schema definitions -->
+    <!-- The Setter type for newstyle adapters -->
+    <xs:complexType name="SetterType" mixed="true">
+        <xs:choice>
+            <xs:element ref="value"/>
+        </xs:choice>
+        <xs:attribute name="value" type="xs:string"/>
+        <xs:attribute name="condition" type="xs:string"/>
+    </xs:complexType>
+    <!--
+         Add adapter schema definitions 
+    -->
+    <!-- sqlquery adapter -->
+    <xs:element name="map.sqlquery">
+        <xs:complexType>
+            <xs:choice>
+                <!-- Inherited elements from map -->
+                <xs:element ref="message"/>
+                <xs:element ref="property"/>
+                <xs:element ref="include"/>
+                <xs:element ref="param"/>
+                <xs:element ref="methods"/>
+                <xs:element ref="map"/>
+                <xs:element ref="break"/>
+                <xs:element ref="debug"/>
+                <xs:element ref="field"/>
+                <!-- Generated setters -->
+                <xs:element name="sqlquery.query" type="SetterType"/>
+                <xs:element name="sqlquery.update" type="SetterType"/>
+                <xs:element name="sqlquery.transactionContext" type="SetterType"/>
+                <xs:element name="sqlquery.datasource" type="SetterType"/>
+                <!-- Generated methods -->
+                <xs:element name="sqlquery.addParameter">
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:string"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="sqlquery.doUpdate"/>
+            </xs:choice>
+            <!-- Default attributes -->
+            <xs:attribute name="condition" type="xs:string"/>
+            <!-- Generated setters as attributes -->
+            <xs:attribute name="query" type="xs:string"/>
+            <xs:attribute name="datasource" type="xs:string"/>
+            <xs:attribute name="transactionContext" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    <!-- dropdown adapter -->
+    <xs:element name="map.dropdown">
+        <xs:complexType>
+            <xs:choice>
+                <!-- Inherited elements from map -->
+                <xs:element ref="message"/>
+                <xs:element ref="property"/>
+                <xs:element ref="include"/>
+                <xs:element ref="param"/>
+                <xs:element ref="methods"/>
+                <xs:element ref="map"/>
+                <xs:element ref="break"/>
+                <xs:element ref="debug"/>
+                <xs:element ref="field"/>
+                <!-- Generated setters -->
+                <xs:element name="dropdown.query" type="SetterType"/>
+                <xs:element name="dropdown.transactionContext" type="SetterType"/>
+                <xs:element name="dropdown.datasource" type="SetterType"/>
+                <xs:element name="dropdown.selectedValue" type="SetterType"/>
+                <xs:element name="dropdown.orderByDescription" type="SetterType"/>
+                <xs:element name="dropdown.emptyOption" type="SetterType"/>
+                <!-- Generated methods -->
+                <xs:element name="dropdown.addParameter">
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:string"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+            <!-- Default attributes -->
+            <xs:attribute name="condition" type="xs:string"/>
+            <!-- Generated setters as attributes -->
+            <xs:attribute name="name" use="required" type="xs:string"/>
+            <xs:attribute name="direction" use="required" type="xs:string"/>
+            <xs:attribute name="query" type="xs:string"/>
+            <xs:attribute name="datasource" type="xs:string"/>
+            <xs:attribute name="emptyOption" type="xs:string"/>
+            <xs:attribute name="orderByDescription" type="xs:string"/>
+            <xs:attribute name="selectedValue" type="xs:string"/>
+            <xs:attribute name="transactionContext" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
 </xs:schema>
