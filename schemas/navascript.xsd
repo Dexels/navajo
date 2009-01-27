@@ -16,6 +16,8 @@
             <!-- Generated newstyle adapter elements -->
             <xs:element ref="map.sqlquery"/>
             <xs:element ref="map.dropdown"/>
+            <xs:element ref="map.codedropdown"/>
+            <xs:element ref="map.navajomap"/>
         </xs:choice>
         <xs:attribute name="author" type="xs:string"/>
         <xs:attribute name="description" type="xs:string"/>
@@ -40,6 +42,8 @@
             <!-- Generated newstyle adapter elements -->
             <xs:element ref="map.sqlquery"/>
             <xs:element ref="map.dropdown"/>
+            <xs:element ref="map.codedropdown"/>
+            <xs:element ref="map.navajomap"/>
         </xs:choice>
         <xs:attribute name="object" type="xs:string"/>
         <xs:attribute name="condition" type="xs:string"/>
@@ -60,6 +64,8 @@
             <!-- Generated newstyle adapter elements -->
             <xs:element ref="map.sqlquery"/>
             <xs:element ref="map.dropdown"/>
+            <xs:element ref="map.codedropdown"/>
+            <xs:element ref="map.navajomap"/>
         </xs:choice>
         <xs:attribute use="required" name="name" type="xs:string"/>
         <xs:attribute name="type" type="xs:string"/>
@@ -270,6 +276,11 @@
                 <xs:element ref="map"/>
                 <xs:element ref="comment"/>
                 <xs:element ref="debug"/>
+                <!-- Generated newstyle adapter elements -->
+                <xs:element ref="map.sqlquery"/>
+                <xs:element ref="map.dropdown"/>
+                <xs:element ref="map.codedropdown"/>
+                <xs:element ref="map.navajomap"/>
             </xs:choice>
         </xs:complexType>
     </xs:element>
@@ -284,6 +295,11 @@
                 <xs:element ref="map"/>
                 <xs:element ref="comment"/>
                 <xs:element ref="debug"/>
+                <!-- Generated newstyle adapter elements -->
+                <xs:element ref="map.sqlquery"/>
+                <xs:element ref="map.dropdown"/>
+                <xs:element ref="map.codedropdown"/>
+                <xs:element ref="map.navajomap"/>
             </xs:choice>
             <xs:attribute name="while_running" use="required">
                 <xs:simpleType>
@@ -306,6 +322,11 @@
                 <xs:element ref="map"/>
                 <xs:element ref="comment"/>
                 <xs:element ref="debug"/>
+                <!-- Generated newstyle adapter elements -->
+                <xs:element ref="map.sqlquery"/>
+                <xs:element ref="map.dropdown"/>
+                <xs:element ref="map.codedropdown"/>
+                <xs:element ref="map.navajomap"/>
             </xs:choice>
         </xs:complexType>
     </xs:element>
@@ -335,6 +356,11 @@
                 <xs:element ref="break"/>
                 <xs:element ref="debug"/>
                 <xs:element ref="field"/>
+                <!-- Generated newstyle adapter elements -->
+                <xs:element ref="map.sqlquery"/>
+                <xs:element ref="map.dropdown"/>
+                <xs:element ref="map.codedropdown"/>
+                <xs:element ref="map.navajomap"/>
                 <!-- Generated setters -->
                 <xs:element name="sqlquery.query" type="SetterType"/>
                 <xs:element name="sqlquery.update" type="SetterType"/>
@@ -371,6 +397,11 @@
                 <xs:element ref="break"/>
                 <xs:element ref="debug"/>
                 <xs:element ref="field"/>
+                <!-- Generated newstyle adapter elements -->
+                <xs:element ref="map.sqlquery"/>
+                <xs:element ref="map.dropdown"/>
+                <xs:element ref="map.codedropdown"/>
+                <xs:element ref="map.navajomap"/>
                 <!-- Generated optional setters as elements -->
                 <xs:element name="dropdown.query" type="SetterType"/>
                 <xs:element name="dropdown.transactionContext" type="SetterType"/>
@@ -415,6 +446,11 @@
                 <xs:element ref="break"/>
                 <xs:element ref="debug"/>
                 <xs:element ref="field"/>
+                <!-- Generated newstyle adapter elements -->
+                <xs:element ref="map.sqlquery"/>
+                <xs:element ref="map.dropdown"/>
+                <xs:element ref="map.codedropdown"/>
+                <xs:element ref="map.navajomap"/>
                 <!-- Generated optional setters as elements -->
                 <xs:element name="codedropdown.transactionContext" type="SetterType"/>
                 <xs:element name="codedropdown.datasource" type="SetterType"/>
@@ -453,6 +489,11 @@
                 <xs:element ref="break"/>
                 <xs:element ref="debug"/>
                 <xs:element ref="field"/>
+                <!-- Generated newstyle adapter elements -->
+                <xs:element ref="map.sqlquery"/>
+                <xs:element ref="map.dropdown"/>
+                <xs:element ref="map.codedropdown"/>
+                <xs:element ref="map.navajomap"/>
                 <!-- Generated optional setters as elements -->
                 <xs:element name="navajomap.sendThrough" type="SetterType"/>
                 <xs:element name="navajomap.messagePointer" type="SetterType"/>
