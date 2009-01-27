@@ -401,5 +401,89 @@
             <xs:attribute name="transactionContext" type="xs:string"/>
         </xs:complexType>
     </xs:element>
+    <!-- codedropdown adapter -->
+    <xs:element name="map.codedropdown">
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <!-- Inherited elements from map -->
+                <xs:element ref="message"/>
+                <xs:element ref="property"/>
+                <xs:element ref="include"/>
+                <xs:element ref="param"/>
+                <xs:element ref="methods"/>
+                <xs:element ref="map"/>
+                <xs:element ref="break"/>
+                <xs:element ref="debug"/>
+                <xs:element ref="field"/>
+                <!-- Generated optional setters as elements -->
+                <xs:element name="codedropdown.transactionContext" type="SetterType"/>
+                <xs:element name="codedropdown.datasource" type="SetterType"/>
+                <xs:element name="codedropdown.selectedValue" type="SetterType"/>
+                <xs:element name="codedropdown.orderByDescription" type="SetterType"/>
+                <xs:element name="codedropdown.emptyOption" type="SetterType"/>
+            </xs:choice>
+            <!-- Default attributes -->
+            <xs:attribute name="condition" type="xs:string"/>
+            <!-- Generated required setters as attributes -->
+            <xs:attribute name="name" use="required" type="xs:string"/>
+            <xs:attribute name="language" use="required" type="xs:string"/>
+            <xs:attribute name="typeOfCode" use="required" type="xs:string"/>
+            <xs:attribute name="direction" use="required" type="xs:string"/>
+            <!-- Generated optional setters as attributes -->
+            <xs:attribute name="query" type="xs:string"/>
+            <xs:attribute name="datasource" type="xs:string"/>
+            <xs:attribute name="description" type="xs:string"/>
+            <xs:attribute name="emptyOption" type="xs:string"/>
+            <xs:attribute name="orderByDescription" type="xs:string"/>
+            <xs:attribute name="selectedValue" type="xs:string"/>
+            <xs:attribute name="transactionContext" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    <!-- codedropdown adapter -->
+    <xs:element name="map.navajomap">
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <!-- Inherited elements from map -->
+                <xs:element ref="message"/>
+                <xs:element ref="property"/>
+                <xs:element ref="include"/>
+                <xs:element ref="param"/>
+                <xs:element ref="methods"/>
+                <xs:element ref="map"/>
+                <xs:element ref="break"/>
+                <xs:element ref="debug"/>
+                <xs:element ref="field"/>
+                <!-- Generated optional setters as elements -->
+                <xs:element name="navajomap.sendThrough" type="SetterType"/>
+                <xs:element name="navajomap.messagePointer" type="SetterType"/>
+                <!-- Generated methods -->
+                <xs:element name="navajomap.createproperty">
+                    <xs:complexType>
+                        <xs:attribute name="name" type="xs:string" use="required"/>
+                        <xs:attribute name="value" type="xs:string" use="required"/>
+                        <xs:attribute name="condition" type="xs:string"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="navajomap.callwebservice">
+                    <xs:complexType>
+                        <xs:attribute name="name" type="xs:string" use="required"/>
+                        <xs:attribute name="server" type="xs:string"/>
+                        <xs:attribute name="username" type="xs:string"/>
+                        <xs:attribute name="password" type="xs:string"/>
+                        <xs:attribute name="append" type="xs:string"/>
+                        <xs:attribute name="condition" type="xs:string"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+            <!-- Default attributes -->
+            <xs:attribute name="condition" type="xs:string"/>
+            <!-- Generated optional setters as attributes -->
+            <xs:attribute name="sendThrough" type="xs:string"/>
+            <xs:attribute name="server" type="xs:string"/>
+            <xs:attribute name="username" type="xs:string"/>
+            <xs:attribute name="password" type="xs:string"/>
+            <xs:attribute name="useCurrentOutDoc" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
     <!-- -->
 </xs:schema>
