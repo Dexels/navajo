@@ -69,6 +69,7 @@
         </xs:choice>
         <xs:attribute use="required" name="name" type="xs:string"/>
         <xs:attribute name="type" type="xs:string"/>
+        <xs:attribute name="condition" type="xs:string"/>
         <xs:attribute name="mode" type="xs:string"/>
         <xs:attribute name="index" type="xs:integer"/>
     </xs:complexType>
