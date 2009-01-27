@@ -358,7 +358,7 @@
                 <xs:element ref="break"/>
                 <xs:element ref="debug"/>
                 <xs:element ref="field"/>
-                <!-- Generated setters -->
+                <!-- Generated optional setters as elements -->
                 <xs:element name="dropdown.query" type="SetterType"/>
                 <xs:element name="dropdown.transactionContext" type="SetterType"/>
                 <xs:element name="dropdown.datasource" type="SetterType"/>
@@ -374,9 +374,10 @@
             </xs:choice>
             <!-- Default attributes -->
             <xs:attribute name="condition" type="xs:string"/>
-            <!-- Generated setters as attributes -->
+            <!-- Generated required setters as attributes -->
             <xs:attribute name="name" use="required" type="xs:string"/>
             <xs:attribute name="direction" use="required" type="xs:string"/>
+            <!-- Generated optional setters as attributes -->
             <xs:attribute name="query" type="xs:string"/>
             <xs:attribute name="datasource" type="xs:string"/>
             <xs:attribute name="emptyOption" type="xs:string"/>
