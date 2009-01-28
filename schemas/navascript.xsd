@@ -20,6 +20,7 @@
             <xs:element ref="map.navajomap"/>
         </xs:choice>
         <xs:attribute name="author" type="xs:string"/>
+        <xs:attribute name="debug" type="xs:string"/>
         <xs:attribute name="description" type="xs:string"/>
         <xs:attribute name="repository" type="xs:string"/>
         <xs:attribute name="notes" type="xs:string"/>
@@ -211,6 +212,7 @@
         <xs:complexType>
             <xs:attribute use="required" name="name" type="xs:string"/>
             <xs:attribute use="required" name="value" type="xs:string"/>
+            <xs:attribute name="condition" type="xs:string"/>
             <xs:attribute use="required" name="selected">
                 <xs:simpleType>
                     <xs:restriction base="xs:NMTOKEN">
