@@ -56,16 +56,33 @@ public class TimeTrigger extends Trigger implements Serializable, ClockListener 
 	private int monthday = -1;
 	private int hour = -1;
 	private int minute = -1;
+	private int offset = -1;
+	private int offsetField = -1;
 	private ArrayList<String> day = null; /* SAT,SUN.MON,TUE,WED,FRI */
 	private String description = null;
 	private boolean singleEvent = false;
 	private boolean runImmediate = false;
+	private boolean isOffsetTime = false;
 	private long lastRan = -1;
 	//private boolean fired = false;
 	
 	private static final String NOW = "now";
 	
+	public void setNextOffsetTime() {
+		Calendar c = Calendar.getInstance();
+		c.set(year, month-1, monthday, hour, minute);
+		c.add(offsetField, offset);
+		year = c.get(Calendar.YEAR);
+		month = c.get(Calendar.MONTH) + 1;
+		monthday = c.get(Calendar.DAY_OF_MONTH);
+		hour = c.get(Calendar.HOUR_OF_DAY);
+		minute = c.get(Calendar.MINUTE);
+		//description = month + "|" + monthday + "|" + hour + "|" + minute + "|*|" + year;
+	}
+	
 	public TimeTrigger(int i, int field) {
+		this.offset = i;
+		this.offsetField = field;
 		Calendar c = Calendar.getInstance();
 		c.add(field, i);
 		year = c.get(Calendar.YEAR);
@@ -73,8 +90,13 @@ public class TimeTrigger extends Trigger implements Serializable, ClockListener 
 		monthday = c.get(Calendar.DAY_OF_MONTH);
 		hour = c.get(Calendar.HOUR_OF_DAY);
 		minute = c.get(Calendar.MINUTE);
-		description = month + "|" + monthday + "|" + hour + "|" + minute + "|*|" + year;
-		singleEvent = true;
+		switch (field) {
+		case Calendar.MINUTE: description = i + "m";break;
+		case Calendar.HOUR_OF_DAY: description = i + "h";break;
+		case Calendar.DAY_OF_MONTH: description = i + "d";break;
+		}
+		//singleEvent = true;
+		isOffsetTime = true;
 	}
 	
 	public TimeTrigger(String s) {
@@ -165,18 +187,18 @@ public class TimeTrigger extends Trigger implements Serializable, ClockListener 
 	}
 	
 	public String getDescription() {
-		return Trigger.TIME_TRIGGER + ":" + description;
+		return ( isOffsetTime ? Trigger.OFFSETTIME_TRIGGER : Trigger.TIME_TRIGGER ) + ":" + description;
 	}
 	
 	public void removeTrigger() {
 		Clock.getInstance().removeClockListener(this);
 	}
 	
-	public static void main(String [] args) {
-		java.util.Date d =  new java.util.Date();
-		Calendar c = Calendar.getInstance();
-		c.setTime(d);
-		System.err.println("y = " + c.get(Calendar.DAY_OF_MONTH));
+	public static void main(String [] args) throws Exception {
+		TimeTrigger t = (TimeTrigger) Trigger.parseTrigger("offsettime:50m");
+		System.err.println(t.getDescription());
+		t.setNextOffsetTime();
+		System.err.println(t.getDescription());
 	}
 
 	private final boolean checkAlarm(Calendar c) {
@@ -270,6 +292,10 @@ public class TimeTrigger extends Trigger implements Serializable, ClockListener 
 		if ( checkAlarm(c) ) {
 			//fired = true;
 			lastRan = System.currentTimeMillis();
+			// Set next offsettime if offsettime trigger.
+			if ( this.isOffsetTime ) {
+				setNextOffsetTime();
+			}
 			return true;
 		}
 		return false;
@@ -314,4 +340,5 @@ public class TimeTrigger extends Trigger implements Serializable, ClockListener 
 //		}
 		return null;
 	}
+	
 }

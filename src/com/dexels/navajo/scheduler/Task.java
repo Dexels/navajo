@@ -417,8 +417,8 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 				}
 
 				try {
-					// Handle request, skip authorization!!
-					result = DispatcherFactory.getInstance().handle(request, true);
+					// Handle request, skip authorization if task was created by workflow... (??)
+					result = DispatcherFactory.getInstance().handle(request, ( getWorkflowDefinition() != null ));
 					this.setResponse(result);
 				} catch (FatalException e) {
 					e.printStackTrace(System.err);
