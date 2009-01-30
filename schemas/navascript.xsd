@@ -171,6 +171,7 @@
             <xs:attribute name="cardinality" type="xs:string"/>
             <xs:attribute name="description" type="xs:string"/>
             <xs:attribute name="condition" type="xs:string"/>
+            <xs:attribute name="subtype" type="xs:string"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="param">
