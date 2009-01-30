@@ -123,6 +123,7 @@
         <xs:complexType>
             <xs:choice maxOccurs="unbounded" minOccurs="1">
                 <xs:element ref="expression"/>
+                <xs:element ref="map"/>
             </xs:choice>
             <xs:attribute use="required" name="name" type="xs:string"/>
             <xs:attribute name="condition" type="xs:string"/>
