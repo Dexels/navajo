@@ -370,6 +370,7 @@
                 <xs:element name="sqlquery.update" type="SetterType"/>
                 <xs:element name="sqlquery.transactionContext" type="SetterType"/>
                 <xs:element name="sqlquery.datasource" type="SetterType"/>
+                <xs:element name="sqlquery.username" type="SetterType"/>
                 <!-- Generated methods -->
                 <xs:element name="sqlquery.addParameter">
                     <xs:complexType>
@@ -384,6 +385,7 @@
             <!-- Generated setters as attributes -->
             <xs:attribute name="query" type="xs:string"/>
             <xs:attribute name="datasource" type="xs:string"/>
+            <xs:attribute name="username" type="xs:string"/>
             <xs:attribute name="transactionContext" type="xs:string"/>
         </xs:complexType>
     </xs:element>
