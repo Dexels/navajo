@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tid errorhandler="error">
+<!--
+   <tipiclass name="swingcomponent">
+		<description>
+			Standard getters and setters for swing based components.
+		</description>
+   </tipiclass>
+	<tipiclass name="swingbutton">
+		<description> Standard getters and setters for swing based components.
+		</description>
+		<events>
+			<event name="onActionPerformed">
+				<description> 
+					Fired when the button/menuitem/etc gets clicked. The exact moment depends on the item,
+					the platform, and even the Look and Feel.
+				</description>
+			</event>
+		</events>
+	</tipiclass>-->
+
    <tipiaction name="setCookie" class="TipiSetCookie" package="com.dexels.navajo.tipi.components.swingimpl.actions">
       <param name="name" type="string" required="true" />
       <param name="value" type="string" required="true" />
@@ -26,7 +45,7 @@
    </tipiaction>
 
    <tipiaction name="browseBinary" class="TipiBrowseBinary" package="com.dexels.navajo.tipi.components.swingimpl.actions">
-      <param name="value" type="property" />
+      <param name="property" type="property" />
    </tipiaction>
 
    <tipiaction name="createPrintJob" class="TipiCreatePrintJob" package="com.dexels.navajo.tipi.components.swingimpl.actions">
@@ -250,7 +269,7 @@
          <value direction="out" name="lastMessage" type="message" />
          <value direction="out" name="firstMessage" type="message" />
 
-         <value direction="in" name="visible" type="boolean" />
+         <value direction="in" name="visible" type="boolean" property="visible"/>
          <value direction="in" name="readOnly" type="boolean" />
          <value direction="in" name="opaque" type="boolean" />
          <value direction="in" name="border" type="border" />
@@ -278,9 +297,8 @@
          <value direction="out" name="currentPage" type="integer" />
 
          <value direction="in" name="dragValue" type="object" />
-         <value direction="in" name="dragCategory" type="string" />
-         <value direction="in" name="dropCategory" type="string" />
-      </values>
+         <value direction="in" name="dragCategory" type="list" />
+         <value direction="in" name="dropCategory" type="list" />      </values>
       <methods>
          <method name="showEditDialog">
             <description>
@@ -762,15 +780,27 @@
             <param name="id" type="string" />
             <param name="description" type="string" />
          </event>
-         <event name="onBegin" />
+         <event name="onBegin" >
+            <param name="size" type="integer"/>
+            <param name="array" type="message"/>
+         </event>
          <event name="onBeforeElement">
             <param name="index" type="integer"/>
             <param name="message" type="message"/>
+            <param name="size" type="integer"/>
+            <param name="array" type="message"/>
          </event>         
          <event name="onAfterElement">
             <param name="index" type="integer"/>
             <param name="message" type="message"/>
-         </event>         
+            <param name="size" type="integer"/>
+            <param name="array" type="message"/>
+         </event>
+         <event name="onEnd">
+            <param name="size" type="integer"/>
+            <param name="array" type="message"/>
+         </event>
+          
       </events>
       <values>
          <value direction="in" name="messagePath" type="string"/>
@@ -808,7 +838,7 @@
       <events>
          <event name="onInstantiate" />
          <event name="onLoad">
-            <param name="service" type="string" />
+            <param name="message" type="message" />
             <param name="navajo" type="navajo" />
          </event>
          <event name="onGeneratedErrors">
@@ -1308,8 +1338,8 @@
          <value direction="inout" name="mnemonic" type="string" property="stringMnemonic" />
          <value direction="in" name="accelerator" type="string" />
          <value direction="in" name="dragValue" type="object" />
-         <value direction="in" name="dragCategory" type="string" />
-         <value direction="in" name="dropCategory" type="string" />
+         <value direction="in" name="dragCategory" type="list" />
+         <value direction="in" name="dropCategory" type="list" />
            <value direction="in" name="vertical" type="boolean" property="vertical" />
       </values>
       <methods>
@@ -1317,6 +1347,41 @@
       </methods>
    </tipiclass>
 
+<!--  Copied from button, removed dropCategory -->
+   <tipiclass addtocontainer="true" class="TipiDropButton" module="component" name="dropbutton" childcount="0" package="com.dexels.navajo.tipi.components.swingimpl"
+      propertycomponent="false" studio-icon="button.gif" type="component">
+      <events>
+         <!-- TODO: Add onPropertyLoad event -->
+         <event name="onInstantiate" />
+         <event name="onActionPerformed" />
+         <event name="onMouseEntered" />
+         <event name="onMouseExited" />
+         <event name="onBinaryDropped">
+            <param name="value" type="object" />
+            <param name="path" type="string" />
+            <param name="mime" type="string" />
+         </event>
+      </events>
+      <values>
+         <value direction="inout" name="text" type="string" property="text" />
+         <value direction="in" name="icon" type="resource" property="iconUrl" />
+         <value direction="in" name="background" type="color" property="background" />
+         <value direction="in" name="foreground" type="color" property="foreground" />
+         <value direction="in" name="border" type="border" property="border" />
+         <value direction="in" name="font" type="font" property="font" />
+         <value direction="inout" name="tooltip" type="string" property="ToolTipText" />
+         <value direction="in" name="enabled" type="boolean" property="enabled" />
+         <value direction="in" name="visible" type="boolean" property="visible" />
+         <value direction="inout" name="mnemonic" type="string" property="stringMnemonic" />
+         <value direction="in" name="accelerator" type="string" />
+         <value direction="in" name="dragValue" type="object" />
+         <value direction="in" name="dragCategory" type="list" />
+           <value direction="in" name="vertical" type="boolean" property="vertical" />
+      </values>
+      <methods>
+         <method name="fireAction" />
+      </methods>
+   </tipiclass>
 
    <tipiclass addtocontainer="true" class="TipiCheckbox" module="component" name="checkbox" childcount="0" layoutmanager="false" package="com.dexels.navajo.tipi.components.swingimpl"
       propertycomponent="false" studio-icon="button.gif" type="component">
@@ -1522,9 +1587,8 @@
             <option description="Bottom" value="bottom" />
          </value>
          <value direction="in" name="dragValue" type="object" />
-         <value direction="in" name="dragCategory" type="string" />
-         <value direction="in" name="dropCategory" type="string" />
-
+         <value direction="in" name="dragCategory" type="list" />
+         <value direction="in" name="dropCategory" type="list" />
       </values>
       <methods />
    </tipiclass>
@@ -1549,8 +1613,8 @@
          <value direction="in" name="enabled" type="boolean" property="enabled" />
          <value direction="in" name="visible" type="boolean" property="visible" />
          <value direction="in" name="dragValue" type="object" />
-         <value direction="in" name="dragCategory" type="string" />
-         <value direction="in" name="dropCategory" type="string" />
+          <value direction="in" name="dragCategory" type="list" />
+         <value direction="in" name="dropCategory" type="list" />
       </values>
       <methods />
    </tipiclass>
@@ -1562,7 +1626,7 @@
          <event name="onInstantiate" />
       </events>
       <values>
-         <value direction="inout" name="text" type="string" property="text" />
+         <value direction="inout" name="text" type="string"/>
          <value direction="in" name="border" type="border" property="border" />
          <value direction="in" name="font" type="font" property="font" />
          <value direction="inout" name="tooltip" type="string" property="ToolTipText" />
@@ -1643,9 +1707,8 @@
          <value direction="in" name="enabled" type="boolean" />
          <value direction="in" name="visible" type="boolean" />
          <value direction="in" name="dragValue" type="object" />
-         <value direction="in" name="dragCategory" type="string" />
-         <value direction="in" name="dropCategory" type="string" />
-
+             <value direction="in" name="dragCategory" type="list" />
+         <value direction="in" name="dropCategory" type="list" />
       </values>
       <methods>
          <method name="selectAll" />
@@ -1897,9 +1960,8 @@
          <value direction="in" name="forcedAlignment" type="string" />
 
          <value direction="in" name="dragValue" type="object" />
-         <value direction="in" name="dragCategory" type="string" />
-         <value direction="in" name="dropCategory" type="string" />
-
+         <value direction="in" name="dragCategory" type="list" />
+         <value direction="in" name="dropCategory" type="list" />
       </values>
       <methods>
 
@@ -2090,6 +2152,11 @@
             <param name="service" type="string" />
             <param name="navajo" type="navajo" />
          </event>
+         <event name="onMethodFired">
+            <param name="service" type="string" />
+            <param name="input" type="navajo" />
+         </event>
+         
          <event name="onGeneratedErrors" />
       </events>
       <values>
@@ -2115,7 +2182,13 @@
          <value direction="in" name="navajo" type="navajo" />
 
       </values>
-      <methods />
+      <methods>
+          <method name="fireMethod">
+            <param name="methodName" type="string" />
+            <param name="navajo" type="navajo" />
+         </method>
+      </methods>
+ 
    </tipiclass>
 
 

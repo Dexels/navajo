@@ -39,17 +39,12 @@ public abstract class TipiSwingComponentImpl extends TipiComponentImpl implement
 		((JPopupMenu) myPopupMenu.getSwingContainer()).show(getSwingContainer(), e.getX(), e.getY());
 	}
 
-	public void setWaitCursor(final boolean b) {
+	public void setWaitCursor(final boolean b,final JRootPane root) {
 		runSyncInEventThread(new Runnable() {
 
 			public void run() {
-				Container cc = getSwingContainer();
-				if (!(cc instanceof JComponent)) {
-					return;
-				}
-				JComponent jj = (JComponent) cc;
-				if (jj.getRootPane() != null) {
-					jj.getRootPane().setCursor(b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
+				if (root != null) {
+					root.setCursor(b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
 				}
 			}
 		});

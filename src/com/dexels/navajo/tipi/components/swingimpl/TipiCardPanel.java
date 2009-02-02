@@ -38,12 +38,18 @@ public class TipiCardPanel extends TipiSwingDataComponentImpl {
   }
 
 
-  public void addToContainer(Object c, Object constraints) {
-    TipiComponent tc = myComponentMap.get(c);
-    if (tc!=null) {
-      ( (Container) getContainer()).add((Component) c,tc.getId() );
-      doLayout();
-    }
+  public void addToContainer(final Object c, final Object constraints) {
+	  
+	 runSyncInEventThread(new Runnable(){
+
+		public void run() {
+			  TipiComponent tc = myComponentMap.get(c);
+			    if (tc!=null) {
+			      ( (Container) getContainer()).add((Component) c,tc.getId() );
+			      doLayout();
+			    }
+		}});
+  
   }
 
   public void setComponentValue(String name, Object object) {

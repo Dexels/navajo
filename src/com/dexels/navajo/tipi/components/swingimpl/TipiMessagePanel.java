@@ -35,6 +35,9 @@ public class TipiMessagePanel extends TipiSwingDataComponentImpl implements Mess
 				tc.loadPropertiesFromMessage(myMessage);
 			}
 		} else {
+			for (TipiComponent tc : propertyComponentSet) {
+				tc.loadPropertiesFromMessage(myMessage);
+			}
 			loadProperties(n);
 			loadPropertiesFromNavajo(n);
 			loadMessages(n);
@@ -63,7 +66,7 @@ public class TipiMessagePanel extends TipiSwingDataComponentImpl implements Mess
 
 	public void setMessage(Message m) {
 		myMessage = m;
-		loadProperties(getNavajo());
+		loadProperties(m);
 		loadPropertiesFromMessage(myMessage);
 		Map<String,Object> eventParams = new HashMap<String, Object>();
 		eventParams.put("message", m);

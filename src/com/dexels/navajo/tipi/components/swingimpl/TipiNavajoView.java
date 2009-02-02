@@ -12,6 +12,7 @@ import java.util.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.tipixml.*;
 
 public class TipiNavajoView extends TipiPanel {
@@ -87,26 +88,31 @@ public class TipiNavajoView extends TipiPanel {
 
 	private XMLElement createTipiXML(final Navajo n, String navajoName) throws NavajoException {
 		XMLElement root= new CaseSensitiveXMLElement();
-		root.setName("d.tipi");
+		root.setName("d.split");
 		root.setAttribute("border", "{border:/titled-"+navajoName+"}");
 		root.setAttribute("name","NavajoView");
+		root.setAttribute("dividerlocation","200");
+		root.setAttribute("inverted","true");
 		root.setAttribute("service","NavajoView");
 				
-		XMLElement rootlayout = new CaseSensitiveXMLElement();
-		rootlayout.setName("l.border");
-		root.addChild(rootlayout);
+//		XMLElement rootlayout = new CaseSensitiveXMLElement();
+//		rootlayout.setName("l.border");
+//		root.addChild(rootlayout);
 		XMLElement rootScroll= new CaseSensitiveXMLElement();
 		rootScroll.setName("c.scroll");
-		rootlayout.addChild(rootScroll);
+		rootScroll.setAttribute("constraint","top");
+		root.addChild(rootScroll);
 
 		
 
 		XMLElement toolbar = new CaseSensitiveXMLElement();
-		toolbar.setName("c.toolbar");
-		toolbar.setAttribute("constraint","South");
-		rootlayout.addChild(toolbar);
-		
-		appendmethods(toolbar,n);
+		toolbar.setName("c.panel");
+		toolbar.setAttribute("constraint","bottom");
+		root.addChild(toolbar);
+		XMLElement tbFlow = new CaseSensitiveXMLElement();
+		tbFlow.setName("l.flow");
+		toolbar.addChild(tbFlow);
+		appendmethods(tbFlow,n);
 		
 		XMLElement ay = new CaseSensitiveXMLElement();
 		ay.setName("c.tipi");
@@ -132,6 +138,28 @@ public class TipiNavajoView extends TipiPanel {
 		}
 		return root;
 	}
+	
+	
+	
+
+	@Override
+	protected void performComponentMethod(String name,
+			TipiComponentMethod compMeth, TipiEvent event)
+			throws TipiBreakException {
+		super.performComponentMethod(name, compMeth, event);
+		if(name.equals("fireMethod")) {
+			System.err.println("Fire methof!!!");
+			Map<String,Object> eventParam = new HashMap<String,Object>();
+			eventParam.put("service",compMeth.getEvaluatedParameterValue("methodName", event));
+			eventParam.put("input",compMeth.getEvaluatedParameterValue("input", event));
+			
+			try {
+				performTipiEvent("onMethodFired", eventParam, false);
+			} catch (TipiException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 	private XMLElement createInstanceXML() {
 		final XMLElement inst = new CaseSensitiveXMLElement();
@@ -155,29 +183,37 @@ public class TipiNavajoView extends TipiPanel {
 			onActionperformed.setName("onActionPerformed");
 			button.addChild(onActionperformed);
 
-			XMLElement callService = new CaseSensitiveXMLElement();
-			callService.setName("callService");
-			callService.setAttribute("input","{navajo:/"+myName+"}");
-			callService.setAttribute("service","'"+method.getName()+"'");
-			callService.setAttribute("connector","ToString({property:/Extension:Overview/DevelopConnector})");
-			onActionperformed.addChild(callService);
+
+			XMLElement firemethod = new CaseSensitiveXMLElement();
+			firemethod.setName("navajoview.fireMethod");
+			firemethod.setAttribute("methodName","'"+method.getName()+"'");
+			firemethod.setAttribute("input","{navajo:/"+myName+"}");
+			firemethod.setAttribute("path","{component:/../../..}");
+
+			onActionperformed.addChild(firemethod);
+
 			
+			
+//			XMLElement callService = new CaseSensitiveXMLElement();
+//			callService.setName("callService");
+//			callService.setAttribute("input","{navajo:/"+myName+"}");
+//			callService.setAttribute("service","'"+method.getName()+"'");
+//			callService.setAttribute("connector","ToString({property:/Extension:Overview/DevelopConnector})");
+//			onActionperformed.addChild(callService);
+//			
 //			XMLElement setNavajo = new CaseSensitiveXMLElement();
-//			setNavajo.setName("setValue");
-//			setNavajo.setAttribute("from","{navajo:/"+method.getName()+"}");
-//			setNavajo.setAttribute("to","{attributeref:/"+this.getStateMessage().getFullMessageName()+":navajo}");
-			XMLElement setNavajo = new CaseSensitiveXMLElement();
-			setNavajo.setName("performTipiMethod");
-			setNavajo.setAttribute("path","{component://init/tipi/navajoDiv/tipiPanel/navajoList}");
-			setNavajo.setAttribute("name","'selectByValue'");
-			setNavajo.setAttribute("propertyName","'Name'");
-			setNavajo.setAttribute("value","'"+method.getName()+"'");
-			
+//			setNavajo.setName("performTipiMethod");
+//			setNavajo.setAttribute("path","{component://init/tipi/navajoDiv/tipiPanel/navajoList}");
+//			setNavajo.setAttribute("name","'selectByValue'");
+//			setNavajo.setAttribute("propertyName","'Name'");
+//			setNavajo.setAttribute("value","'"+method.getName()+"'");
+//			
 //			+method.getName()+"}");
 //			setNavajo.setAttribute("to","{attributeref:/"+this.getStateMessage().getFullMessageName()+":navajo}");
 
 
-			onActionperformed.addChild(setNavajo);
+		
+//			onActionperformed.addChild(setNavajo);
 			
 			
 		}

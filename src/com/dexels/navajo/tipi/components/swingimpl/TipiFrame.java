@@ -1,14 +1,27 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.awt.*;
-import java.beans.*;
-import java.net.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.LayoutManager;
+import java.awt.Rectangle;
+import java.net.URL;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JApplet;
+import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
+import javax.swing.JMenuBar;
+import javax.swing.JPanel;
+import javax.swing.RootPaneContainer;
 
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.swingimpl.embed.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
+import com.dexels.navajo.tipi.TipiComponentMethod;
+import com.dexels.navajo.tipi.TipiHelper;
+import com.dexels.navajo.tipi.components.swingimpl.embed.SwingEmbeddedContext;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingFrame;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingFrameImpl;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
 
 /**
  * <p>
@@ -110,6 +123,7 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 				}
 			});
 		} else {
+			// FIXME WTF?!!!
 			runSyncInEventThread(new Runnable() {
 				public void run() {
 
@@ -117,7 +131,6 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 						public void run() {
 							mySuperPanel.add((Component) c, constraints);
 //							mySuperPanel.doLayout();
-							System.err.println("Size: "+mySuperPanel.getLayout());
 							
 						}
 					});

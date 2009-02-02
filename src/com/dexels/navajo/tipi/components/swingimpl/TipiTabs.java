@@ -104,14 +104,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 				System.err.println("Top: "+ myContext.getTopLevel());
 				if(myContext.getTopLevel() instanceof TipiApplet) {
 					TipiApplet ta = (TipiApplet)myContext.getTopLevel();
-					System.err.println("Size: "+ta.getSize());
-					System.err.println("CPSize: "+ta.getContentPane().getSize());
 					JPanel component = (JPanel) ta.getContentPane().getComponent(0);
-					System.err.println("Children "+component);
-					System.err.println("Children "+component.getSize());
-					System.err.println("LA "+component);
-					System.err.println("lay: "+component.getLayout());
-					System.err.println("pref: "+component.getPreferredSize());
 
 				}
 			}

@@ -246,4 +246,14 @@ protected void doCallSetter(final Object component, final String propertyName, f
 		}});
 }
 
+@Override
+protected void setComponentValue(final String name, final Object object) {
+	runSyncInEventThread(new Runnable(){
+
+		public void run() {
+			TipiSwingDataComponentImpl.super.setComponentValue(name, object);
+		}});
+}
+
+
 }

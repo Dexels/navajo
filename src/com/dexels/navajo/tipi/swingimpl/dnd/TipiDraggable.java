@@ -1,6 +1,8 @@
 package com.dexels.navajo.tipi.swingimpl.dnd;
 
+import java.util.List;
+
 public interface TipiDraggable {
 	public Object getDragValue();
-	public String getDragCategory();
+	public List<String> getDragCategory();
 }

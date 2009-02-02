@@ -56,7 +56,7 @@ public class WebStartProxy {
 		try {
 			javax.jnlp.BasicService bs = (javax.jnlp.BasicService)javax.jnlp.ServiceManager.lookup("javax.jnlp.BasicService");
 			return bs!=null;
-		} catch (javax.jnlp.UnavailableServiceException e) {
+		} catch (Exception e) {
 			return false;
 		}
 	}

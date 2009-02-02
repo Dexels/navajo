@@ -70,17 +70,18 @@ public class SwingTipiContext extends TipiContext {
 		 JFrame.setDefaultLookAndFeelDecorated(true);
 		 JDialog.setDefaultLookAndFeelDecorated(true);
 
-		 
+			try {
+				 
 		 if(WebStartProxy.hasJnlpContext()) {
-				try {
 				System.err.println("JNLP DETECTED.");
 				setCookieManager(new JnlpCookieManager());
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
+		
+		 } else {
+			 createTmpCookieManager();
+		 }
+			} catch (Throwable e) {
 				e.printStackTrace();
 			}
-		 }
 	//hasJnlpContext(
 //		if(false) {
 //			appendJnlpCodeBase();
@@ -155,6 +156,8 @@ public class SwingTipiContext extends TipiContext {
 		// if (dialogShowing) {
 		// b = false;
 		// }
+//		System.err.println("SETWAITING: "+b+" thread: "+Thread.currentThread().getName());
+//		Thread.dumpStack();
 		if (getAppletRoot() != null) {
 
 			getAppletRoot().setCursor(b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
@@ -214,7 +217,10 @@ public class SwingTipiContext extends TipiContext {
 		threadSet.add(workThread);
 		setActiveThreads(threadSet.size());
 		if (!threadSet.isEmpty()) {
-			setWaiting(true);
+			runAsyncInEventThread(new Runnable(){
+				public void run() {
+					setWaiting(true);
+				}});
 		}
 	}
 
@@ -227,8 +233,11 @@ public class SwingTipiContext extends TipiContext {
 		threadSet.remove(workThread);
 		setActiveThreads(threadSet.size());
 		if (threadSet.isEmpty()) {
-			setWaiting(false);
-		}
+			runAsyncInEventThread(new Runnable(){
+				public void run() {
+					setWaiting(false);
+				}});
+	}
 	}
 
 	public final void updateWaiting() {
@@ -628,11 +637,9 @@ public class SwingTipiContext extends TipiContext {
 
 	public RootPaneContainer getTopDialog() {
 		if(dialogStack.isEmpty()) {
-			System.err.println("No registered dialogs. Returning frame");
 			return (RootPaneContainer) getTopLevel();
 		}
 		JDialog parent = dialogStack.peek();
-		System.err.println("Returning dialog with name: "+parent.getTitle());
 		return parent;
 	}
 	

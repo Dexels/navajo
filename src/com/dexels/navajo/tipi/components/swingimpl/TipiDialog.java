@@ -145,6 +145,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 						if( myRootPaneContainer instanceof JDialog) {
 							JDialog jd = (JDialog)myRootPaneContainer;
 							jd.setTitle(title);
+			
 //							com.sun.awt.AWTUtilities.setWindowOpacity(jd, opacity);
 
 						}
@@ -391,9 +392,8 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 		}
 
 		
+	
 //		com.sun.awt.AWTUtilities.setWindowOpacity(myDialog, opacity);
-
-		// myDialog.setVisible(true);
 		myDialog.getContentPane().setLayout(new BorderLayout());
 		myDialog.getContentPane().add(getSwingContainer(), BorderLayout.CENTER);
 		myDialog.pack();

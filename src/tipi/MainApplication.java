@@ -38,11 +38,15 @@ public class MainApplication {
 	 * @return
 	 */
 	private static boolean checkStudio() {
-		boolean studio;
+		boolean studio = false;
 		try {
 			Class.forName("tipi.TipiDevelopTools");
-			System.err.println("Tipi studio found, but disabled for now");
-			studio = false;
+			String s = System.getProperty("studio");
+			if(s!=null) {
+				studio = s.equals("true");
+			}
+//			System.err.println("Tipi studio found, but disabled for now");
+//			studio = true;
 		} catch (ClassNotFoundException e) {
 			studio = false;
 		}

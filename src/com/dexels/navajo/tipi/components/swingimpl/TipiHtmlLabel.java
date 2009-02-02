@@ -55,7 +55,7 @@ public class TipiHtmlLabel extends TipiSwingDataComponentImpl implements Propert
 
 
 	    myLabel.setEditable(false);
-	    myLabel.setEnabled(false);
+	    myLabel.setEnabled(true);
 	    addHelper(th);
 	     jsp = new JScrollPane(myLabel);
 //	     jsp.getViewport().
@@ -95,6 +95,7 @@ public class TipiHtmlLabel extends TipiSwingDataComponentImpl implements Propert
 				myLabel.setCaretPosition(0);
 			}
 		});
+		
 	}
 
 

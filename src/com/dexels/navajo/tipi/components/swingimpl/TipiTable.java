@@ -312,7 +312,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 			Map<String, Object> tempMap = new HashMap<String, Object>();
 			tempMap.put("selectedIndex", new Integer(mm.getSelectedRow()));
 			tempMap.put("selectedMessage", mm.getSelectedMessage());
-			System.err.println("Row selected: "+mm.getSelectedRow());
+			System.err.println("lzal "+mm.getSelectedRow());
 			performTipiEvent("onSelectionChanged", tempMap, false);
 		} catch (TipiException ex) {
 			ex.printStackTrace();
@@ -418,6 +418,9 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 		if (name.equals("filtersvisible")) {
 			setFiltersVisible(Boolean.valueOf(object.toString()).booleanValue());
 		}
+		if (name.equals("visible")) {
+			mm.setVisible(Boolean.valueOf(object.toString()).booleanValue());
+		}
 		if (name.equals("hideColumn")) {
 			setColumnVisible(object.toString(), false);
 		}
@@ -506,8 +509,9 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 			mm.setUseScrollBars((Boolean) object);
 		}
 		if (name.equals("border")) {
-			mm.setBorder((Border) object);
+			mm.setBorder((Border)object);
 		}
+
 		super.setComponentValue(name, object);
 	}
 

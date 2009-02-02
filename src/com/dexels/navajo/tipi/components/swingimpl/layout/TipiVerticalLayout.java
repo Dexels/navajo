@@ -37,10 +37,14 @@ public class TipiVerticalLayout
     
   }
   
-	public void loadLayout(XMLElement def, TipiComponent t) throws TipiException {
+	public void loadLayout(XMLElement def, final TipiComponent t) throws TipiException {
 		super.loadLayout(def, t);
-		Container c = ((Container)t.getContainer());
-		c.add(new JLabel(""),new TipiSwingGridBagConstraints(0, 999, 1, 1, 0, 1, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+		myContext.runSyncInEventThread(new Runnable(){
+
+			public void run() {
+				Container c = ((Container)t.getContainer());
+				c.add(new JLabel(""),new TipiSwingGridBagConstraints(0, 999, 1, 1, 0, 1, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+			}});
 
 	}
 

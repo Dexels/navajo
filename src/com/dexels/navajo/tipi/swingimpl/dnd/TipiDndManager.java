@@ -31,8 +31,8 @@ public class TipiDndManager implements TipiDraggable, TipiDroppable {
                 		return;
                 	}
                 }
-                String dragCategory = (String) ts.getValue("dragCategory");
-				if(dragCategory!=null && !"".equals(dragCategory)) {
+                List<String> dragCategories = (List<String>) ts.getValue("dragCategory");
+				if(dragCategories!=null && !dragCategories.isEmpty()) {
 					try {
 						try {
 							ts.performTipiEvent("onDrag", null, true);
@@ -51,8 +51,8 @@ public class TipiDndManager implements TipiDraggable, TipiDroppable {
 
 	}
 
-	public String getDragCategory() {
-		String dragCategory = (String) myTipiComponent.getValue("dragCategory");
+	public List<String> getDragCategory() {
+		List<String> dragCategory = (List<String>) myTipiComponent.getValue("dragCategory");
 		return dragCategory;
 	}
 
@@ -60,11 +60,24 @@ public class TipiDndManager implements TipiDraggable, TipiDroppable {
 		return myTipiComponent.getValue("dragValue");
 	}
 
-	public boolean acceptsDropCategory(String category) {
-		String dropCategory = (String) myTipiComponent.getValue("dropCategory");
-		return category.equals(dropCategory);
+	public boolean acceptsDropCategory(List<String> category) {
+		List<String> dropCategory = (List<String>)myTipiComponent.getValue("dropCategory");
+		String negotiated = negotiateCategory(category, dropCategory);
+		return negotiated!=null;
 	}
 
+	public String negotiateCategory(List<String> drags, List<String> drops) {
+		if(drags==null || drops==null) {
+			return null;
+		}
+		for (String string : drops) {
+			if(drags.contains(string)) {
+				return string;
+			}
+		}
+		return null;
+	}
+	
 	public void fireDropEvent(Object o) {
 		Map<String,Object> params = new HashMap<String, Object>();
 		params.put("value", o);

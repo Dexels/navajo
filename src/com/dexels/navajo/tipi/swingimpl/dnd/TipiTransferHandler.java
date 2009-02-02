@@ -58,7 +58,7 @@ public class TipiTransferHandler extends TransferHandler {
 			}
 			return true;
 		} catch (UnsupportedFlavorException e1) {
-			e1.printStackTrace();
+			//e1.printStackTrace();
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		} catch (Throwable t) {
