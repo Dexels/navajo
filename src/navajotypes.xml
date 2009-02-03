@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<navajotypes>
+    <type name="string" type="java.lang.String">
+        <subtype name="capitalization">
+            <value name="upper"/>
+            <value name="lower"/>
+        </subtype>
+    </type>
+    <type name="integer" type="java.lang.Integer"/>
+    <type name="float" type="java.lang.Float"/>
+    <type name="boolean" type="java.lang.Boolean"/>
+    <type name="selection" type="java.lang.String"/>
+    <type name="date" type="java.util.Date"/>
+    <type name="clocktime" type="com.dexels.navajo.document.types.ClockTime"/>
+    <type name="binary" type="com.dexels.navajo.document.types.Binary"/>
+    <type name="money" type="com.dexels.navajo.document.types.Money"/>
+    <type name="memo" type="com.dexels.navajo.document.types.Memo"/>
+    <type name="percentage" type="com.dexels.navajo.document.types.Percentage"/>
+    <type name="stopwatchtime" type="com.dexels.navajo.document.types.StopwatchTime"/>
+</navajotypes>
