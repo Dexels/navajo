@@ -9,7 +9,7 @@
     <type name="integer" type="java.lang.Integer"/>
     <type name="float" type="java.lang.Float"/>
     <type name="boolean" type="java.lang.Boolean"/>
-    <type name="selection" type="java.lang.String"/>
+    <!--<type name="selection" type="java.lang.String"/>-->
     <type name="date" type="java.util.Date"/>
     <type name="clocktime" type="com.dexels.navajo.document.types.ClockTime"/>
     <type name="binary" type="com.dexels.navajo.document.types.Binary"/>
@@ -17,4 +17,6 @@
     <type name="memo" type="com.dexels.navajo.document.types.Memo"/>
     <type name="percentage" type="com.dexels.navajo.document.types.Percentage"/>
     <type name="stopwatchtime" type="com.dexels.navajo.document.types.StopwatchTime"/>
+    <type name="any" type="java.lang.Object"/>
+    <type name="list" type="java.util.List"/>
 </navajotypes>

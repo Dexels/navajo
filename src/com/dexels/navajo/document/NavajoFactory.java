@@ -4,6 +4,8 @@ import java.io.*;
 import java.util.*;
 
 import com.dexels.navajo.document.base.*;
+import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
+import com.dexels.navajo.document.nanoimpl.XMLElement;
 
 
 /**
@@ -26,6 +28,43 @@ public abstract class NavajoFactory {
   private boolean sandboxMode = false;
   
   private static Object semaphore = new Object();
+  
+  private HashMap<String, Class> toJavaType = new HashMap<String, Class>();
+  private HashMap<Class, String> toNavajoType = new HashMap<Class, String>();
+  
+  private void readTypes() throws Exception {
+	  
+	 InputStream is = getClass().getClassLoader().getResourceAsStream("navajotypes.xml");
+	 CaseSensitiveXMLElement types = new CaseSensitiveXMLElement();
+	 types.parseFromStream(is);
+	 is.close();
+	 
+	 Vector<XMLElement> children = types.getChildren();
+	 for (int i = 0; i < children.size(); i++) {
+		 XMLElement child = children.get(i);
+		 String navajotype = (String) child.getAttribute("name");
+		 String javaclass = (String) child.getAttribute("type");
+		 Class c = Class.forName(javaclass);
+		 toJavaType.put(navajotype, c);
+		 toNavajoType.put(c, navajotype);
+	 }
+  }
+  
+  public String getNavajoType(Class c) {
+	  if ( c == null ) {
+		  return "empty";
+	  } else
+	  if ( toNavajoType.containsKey(c) ) {
+		  return toNavajoType.get(c);
+	  } else {
+		  return c.getName();
+	  }
+	  
+  }
+  
+  public Class getJavaType(String p) {
+	  return toJavaType.get(p);
+  }
   
   /**
    * Get the default NavajoFactory implementation.
@@ -60,6 +99,13 @@ public abstract class NavajoFactory {
 					  e.printStackTrace();
 				  }
 			  }
+			  
+			  try {
+				impl.readTypes();
+			} catch (Exception e) {
+				e.printStackTrace(System.err);
+				throw new RuntimeException("Could not instantiate NavajoDocument Factory, problem reading navajotypes.xml: " + e.getMessage());
+			}
 		  }
 	  }
 	  return impl;
