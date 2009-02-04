@@ -21,11 +21,19 @@ public abstract class FunctionInterface {
     
     // Act as if these attributes are final, they can only be set once.
     private static Object semahore = new Object();
-    private static boolean initialized = false;
-    private static Class [][] types = null;
-    private static Class [] returnType = null;
+    private final static HashSet<Class<? extends FunctionInterface>> initialized = new HashSet<Class<? extends FunctionInterface>>();
+    private final static HashMap<Class<? extends FunctionInterface>, Class [][]> types = new HashMap<Class<? extends FunctionInterface>, Class[][]>();
+    private final static HashMap<Class<? extends FunctionInterface>, Class []> returnType = new HashMap<Class<? extends FunctionInterface>, Class[]>();
     
     public abstract String remarks();
+    
+    private final Class [] getMyReturnType() {
+    	return returnType.get(this.getClass());
+    }
+    
+    private final Class [][] getMyInputParameters() {
+    	return types.get(this.getClass());
+    }
     
     private final String genPipedParamMsg(Class [] c) {
     	
@@ -51,12 +59,12 @@ public abstract class FunctionInterface {
     public String usage() {
     	StringBuffer sb = new StringBuffer();
     	
-    	sb.append(genPipedParamMsg(returnType));
+    	sb.append(genPipedParamMsg(getMyReturnType()));
     	sb.append(" " + this.getClass().getSimpleName() + "( ");
-    	if ( types != null ) {
-    		for (int i = 0; i < types.length; i++) {
-    			sb.append(genPipedParamMsg(types[i]));
-    			if ( i < types.length - 1 ) {
+    	if ( getMyInputParameters() != null ) {
+    		for (int i = 0; i < getMyInputParameters().length; i++) {
+    			sb.append(genPipedParamMsg(getMyInputParameters()[i]));
+    			if ( i < getMyInputParameters().length - 1 ) {
     				sb.append(", ");
     			}
     		}
@@ -70,79 +78,85 @@ public abstract class FunctionInterface {
     public FunctionInterface() {
     }
     
-    public final void setTypes(String [][] navajotypes) {
-    	if ( types != null ) {
+    public final void setTypes(String [][] navajotypes, String [] navajoReturnType) {
+    	if ( initialized.contains(this.getClass()) ) {
     		return;
     	}
     	synchronized (semahore) {
 
-    		if ( types != null ) {
+    		if ( initialized.contains(this.getClass()) ) {
         		return;
         	}
     		
     		// Convert navajo types to Java classes.
     		NavajoFactory nf = NavajoFactory.getInstance();
-    		types = new Class[navajotypes.length][];
+    		Class [][] mytypes = new Class[navajotypes.length][];
     		boolean hasEmptyOptions = false;
     		for (int i = 0; i < navajotypes.length; i++) {
-    			types[i] = new Class[navajotypes[i].length];
+    			mytypes[i] = new Class[navajotypes[i].length];
     			boolean emptyOptionSpecified = false;
     			for (int j = 0; j < navajotypes[i].length; j++) {
     				if ( navajotypes[i][j] == null || navajotypes[i][j].equalsIgnoreCase("empty") ) {
-    					types[i][j] = null;
+    					mytypes[i][j] = null;
     					emptyOptionSpecified = true;
     					hasEmptyOptions = true;
     				} else {
-    					types[i][j] = nf.getJavaType(navajotypes[i][j]);
+    					mytypes[i][j] = nf.getJavaType(navajotypes[i][j]);
     				}
     			}
     			if ( hasEmptyOptions && !emptyOptionSpecified ) {
     				throw new IllegalArgumentException("Empty parameter options can only be specified in one sequence of last parameters.");
     			}
     		}
-    		initialized = true;
+    		
+    		// Set returntype.
+    		Class [] myreturnType = new Class[navajoReturnType.length];
+    		for (int i = 0; i < navajoReturnType.length; i++) {
+    			if ( navajoReturnType[i] == null || navajoReturnType[i].equalsIgnoreCase("empty") ) {
+    				myreturnType[i] = null;
+    			} else {
+    				myreturnType[i] = nf.getJavaType(navajoReturnType[i]);
+    			}
+    		}
+    		
+    		initialized.add(this.getClass());
+    		types.put(this.getClass(), mytypes);
+    		returnType.put(this.getClass(), myreturnType);
     	}
     }
        
-	public final void setReturnType(String [] navajoReturnType) {
-		if ( this.returnType != null ) {
-			return;
-		}
-		NavajoFactory nf = NavajoFactory.getInstance();
-		this.returnType = new Class[navajoReturnType.length];
-		for (int i = 0; i < navajoReturnType.length; i++) {
-			if ( navajoReturnType[i] == null || navajoReturnType[i].equalsIgnoreCase("empty") ) {
-				returnType[i] = null;
-			} else {
-				returnType[i] = nf.getJavaType(navajoReturnType[i]);
-			}
-		}
-	}
-         
     private final void checkReturnType(Object o) throws TMLExpressionException  {
-    	if ( returnType == null ) {
+    	
+    	Class [] myreturntype = returnType.get(this.getClass());
+    	
+    	if ( myreturntype == null ) {
     		return;
     	}
+    	
     	boolean correct = false;
-    	for (int i = 0; i < returnType.length; i++) {
-    		if ( o != null && o.getClass().equals(returnType[i])  ) {
+    	
+    	for (int i = 0; i < myreturntype.length; i++) {
+    		if ( o != null && o.getClass().equals(myreturntype[i])  ) {
     			correct = true;
     		}
     	}
     	if ( !correct ) {
     		NavajoFactory nf = NavajoFactory.getInstance();
-    		throw new TMLExpressionException("Expected returntype " + genPipedParamMsg(returnType) + ", got: " + 
+    		throw new TMLExpressionException("Expected returntype " + genPipedParamMsg(myreturntype) + ", got: " + 
     				( o != null ? nf.getNavajoType(o.getClass()) : " empty" ) );
     	}
     }
     
     private final void checkTypes() throws TMLExpressionException {
-    	if ( types != null ) {
+    	
+    	Class [][] mytypes = types.get(this.getClass());
+    	
+    	if ( mytypes != null ) {
     		StringBuffer msg = new StringBuffer();
     		
-    		for (int paramIndex = 0; paramIndex < types.length; paramIndex++) {
+    		for (int paramIndex = 0; paramIndex < mytypes.length; paramIndex++) {
     			
-    			Class [] possibleParameters = types[paramIndex];
+    			Class [] possibleParameters = mytypes[paramIndex];
     			
     			boolean correct = false;
     			Class passedParam = null;
@@ -174,7 +188,7 @@ public abstract class FunctionInterface {
     }
     
     public Class [][] getTypes() {
-    	return types;
+    	return types.get(this.getClass());
     }
    
     public final void reset() {
@@ -214,11 +228,11 @@ public abstract class FunctionInterface {
     }
 	
     public Class [] getReturnType() {
-		return returnType;
+		return returnType.get(this.getClass());
 	}
 
 	public boolean isInitialized() {
-		return initialized;
+		return initialized.contains(this.getClass());
 	}
 	
 }

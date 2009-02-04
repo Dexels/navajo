@@ -1,7 +1,5 @@
 package com.dexels.navajo.functions.util;
 
-import com.dexels.navajo.functions.FormatDate;
-
 public final class FunctionDefinition {
 
 	private final String object;
@@ -45,15 +43,6 @@ public final class FunctionDefinition {
 	}
 
 	public static void main(String [] args) throws Exception {
-		FunctionDefinition fd = new FunctionDefinition("com.dexels.aap","mooie aap", "date,string,string|empty", "string");
-		FormatDate fdate = new FormatDate();
 		
-		fdate.setTypes(fd.getInputParams());
-		fdate.setReturnType(fd.getResultParam());
-		fdate.reset();
-    	fdate.insertOperand(new java.util.Date());
-    	//fdate.insertOperand(new java.lang.String("yyyy-mm-dd"));
-    	Object o = fdate.evaluateWithTypeChecking();
-    	System.err.println(o);
 	}
 }

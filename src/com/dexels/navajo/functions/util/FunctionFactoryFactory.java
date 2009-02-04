@@ -50,33 +50,33 @@ public class FunctionFactoryFactory {
 		
 		long start = System.currentTimeMillis();
 		
-//		for (int i = 0; i < 10000; i++) {
-//			//Abs fi = new Abs(); 
-//			FunctionInterface fi = fii.getInstance(cl, "Abs");
-//			fi.reset();
-//			fi.insertOperand(new Integer(30));
-//			Object o = fi.evaluateWithTypeChecking();
+		for (int i = 0; i < 10000; i++) {
+			//Abs fi = new Abs(); 
+			FunctionInterface fi = fii.getInstance(cl, "Abs");
+			fi.reset();
+			fi.insertOperand(new Integer(30));
+			Object o = fi.evaluateWithTypeChecking();
+		}
+		System.err.println("With type checking, took: " +  ( System.currentTimeMillis() - start ) + " millis.");
+//		
+//		FunctionInterface fi = fii.getInstance(cl, "FormatDate");
+//		fi.reset();
+//		fi.insertOperand(new Float(-40.0));
+//		try {
+//		Object o = fi.evaluateWithTypeChecking();
+//		System.err.println(o);
+//		} catch (Exception e) {
+//			System.err.println(e.getMessage());
 //		}
-//		System.err.println("With type checking, took: " +  ( System.currentTimeMillis() - start ) + " millis.");
-		
-		FunctionInterface fi = fii.getInstance(cl, "Abs");
-		fi.reset();
-		fi.insertOperand(new Float(-40.0));
-		try {
-		Object o = fi.evaluateWithTypeChecking();
-		System.err.println(o);
-		} catch (Exception e) {
-			System.err.println(e.getMessage());
-		}
-		
-		FunctionInterface fi2 = fii.getInstance(cl, "Abs");
-		fi2.reset();
-		fi2.insertOperand(new String("aap"));
-		try {
-		Object o2 = fi2.evaluateWithTypeChecking();
-		} catch (Exception e) {
-			System.err.println(e.getMessage());
-		}
+//		
+//		FunctionInterface fi2 = fii.getInstance(cl, "Abs");
+//		fi2.reset();
+//		fi2.insertOperand(new String("aap"));
+//		try {
+//		Object o2 = fi2.evaluateWithTypeChecking();
+//		} catch (Exception e) {
+//			System.err.println(e.getMessage());
+//		}
 //		FunctionInterface fi = fii.getInstance(cl, "FormatStringList");
 //		fi.reset();
 //		ArrayList aap = new ArrayList();aap.add("noot");aap.add("mies");aap.add("vuur");

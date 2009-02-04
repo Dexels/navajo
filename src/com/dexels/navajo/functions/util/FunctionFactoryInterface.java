@@ -63,8 +63,7 @@ public abstract class FunctionFactoryInterface {
 			// TODO INSTANTIATE FUNCTION USING FACTORY, SETTING TYPE SIGNATURE IN FACTORY!!!
 			FunctionInterface fi = (FunctionInterface) myClass.newInstance();
 			if (!fi.isInitialized()) {
-				fi.setTypes(fd.getInputParams());
-				fi.setReturnType(fd.getResultParam());
+				fi.setTypes(fd.getInputParams(), fd.getResultParam());
 			}
 			return fi;
 		} catch (ClassNotFoundException e) {
