@@ -2,6 +2,7 @@ package com.dexels.navajo.functions.util;
 
 import java.util.HashMap;
 import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.server.UserException;
 
 public abstract class FunctionFactoryInterface {
@@ -19,7 +20,7 @@ public abstract class FunctionFactoryInterface {
 	 * @return
 	 * @throws UserException
 	 */
-	private final FunctionDefinition getDef(String name) throws UserException {
+	private final FunctionDefinition getDef(String name) throws TMLExpressionException {
 		
 		while ( initializing ) {
 			// Wait a bit.
@@ -49,12 +50,12 @@ public abstract class FunctionFactoryInterface {
 			if ( fd != null ) {
 				return fd;
 			} else {
-				throw new UserException(-1, "Could not find function definition: " + name);
+				throw new TMLExpressionException("Could not find function definition: " + name);
 			}
 		}
 	}
 		
-	public final FunctionInterface getInstance(final ClassLoader cl, final String functionName) throws UserException {
+	public final FunctionInterface getInstance(final ClassLoader cl, final String functionName) throws TMLExpressionException {
 		
 		try {
 			FunctionDefinition fd = getDef(functionName);
@@ -67,11 +68,11 @@ public abstract class FunctionFactoryInterface {
 			}
 			return fi;
 		} catch (ClassNotFoundException e) {
-			throw new UserException(-1, "Could find class for function: " + getDef(functionName).getObject());
+			throw new TMLExpressionException("Could find class for function: " + getDef(functionName).getObject());
 		} catch (InstantiationException e) {
-			throw new UserException(-1, "Could not instantiate class: " + getDef(functionName).getObject());
+			throw new TMLExpressionException("Could not instantiate class: " + getDef(functionName).getObject());
 		} catch (IllegalAccessException e) {
-			throw new UserException(-1, "Could not instantiate class: " + getDef(functionName).getObject());
+			throw new TMLExpressionException("Could not instantiate class: " + getDef(functionName).getObject());
 		}
 	}
 

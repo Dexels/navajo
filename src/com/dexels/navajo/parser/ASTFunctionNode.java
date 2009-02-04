@@ -4,6 +4,9 @@ package com.dexels.navajo.parser;
 /**
  * $Id$
  * $Log$
+ * Revision 1.27  2009/02/04 13:48:37  arjen
+ * Several changes for extension mechanism support.
+ *
  * Revision 1.26  2008/09/29 09:48:15  arjen
  * Major changes:
  * 1. Better testability.
@@ -104,6 +107,8 @@ import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.functions.util.FunctionFactoryFactory;
+import com.dexels.navajo.functions.util.FunctionFactoryInterface;
 
 @SuppressWarnings("unchecked")
 public final class ASTFunctionNode extends SimpleNode {
@@ -122,39 +127,32 @@ public final class ASTFunctionNode extends SimpleNode {
 
 	public final Object interpret() throws TMLExpressionException {
 
-		try {
-
-			Class c;
-			if (DispatcherFactory.getInstance()==null) {
-				c = Class.forName("com.dexels.navajo.functions."+functionName);
-			} else {
-				if ( doc != null && doc.getHeader() != null && doc.getHeader().getRPCUser() != null && !doc.getHeader().getRPCUser().endsWith(DispatcherFactory.getInstance().getNavajoConfig().getBetaUser())) {
-					c = DispatcherFactory.getInstance().getNavajoConfig().getClassloader().getClass("com.dexels.navajo.functions."+functionName);
-				} else {
-					c = DispatcherFactory.getInstance().getNavajoConfig().getBetaClassLoader().getClass("com.dexels.navajo.functions."+functionName);
-				}
-			}
-
-			FunctionInterface  f = (FunctionInterface) c.newInstance();
-			f.inMessage = doc;
-			f.currentMessage = parentMsg;
-			f.reset();
-
-			for (int i = 0; i < args; i++) {
-				Object a = (Object) jjtGetChild(i).interpret();
-				f.insertOperand(a);
-			}
-
-			Object result = f.evaluate();
-
-			return result;
-		} catch (ClassNotFoundException cnfe) {
-			throw new TMLExpressionException("Function not implemented: " + functionName,cnfe);
-		} catch (IllegalAccessException iae) {
-			throw new TMLExpressionException(iae.getMessage(),iae);
-		} catch (InstantiationException ie) {
-			throw new TMLExpressionException(ie.getMessage(),ie);
+		ClassLoader cl = null;
+		if ( DispatcherFactory.getInstance() == null ) {
+			cl = getClass().getClassLoader();
+		} else if ( doc != null && doc.getHeader() != null && 
+				doc.getHeader().getRPCUser() != null && 
+				!doc.getHeader().getRPCUser().endsWith(DispatcherFactory.getInstance().getNavajoConfig().getBetaUser())) {
+			cl = DispatcherFactory.getInstance().getNavajoConfig().getClassloader();
+		} else {
+			cl = DispatcherFactory.getInstance().getNavajoConfig().getBetaClassLoader();
 		}
+
+		FunctionFactoryInterface fff = FunctionFactoryFactory.getInstance();
+		FunctionInterface  f = (FunctionInterface) fff.getInstance(cl, functionName);
+		f.inMessage = doc;
+		f.currentMessage = parentMsg;
+		f.reset();
+
+		for (int i = 0; i < args; i++) {
+			Object a = (Object) jjtGetChild(i).interpret();
+			f.insertOperand(a);
+		}
+
+		Object result = f.evaluate();
+
+		return result;
+
 	}
 
 }

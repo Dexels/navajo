@@ -67,8 +67,9 @@ public class JarFunctionFactory extends FunctionFactoryInterface {
 		try {
 			Iterator iter = ServiceRegistry.lookupProviders(Class.forName("navajo.ExtensionDefinition"));
 			while(iter.hasNext()) {
-				
-				readDefinitionFile(fuds, (ExtensionDefinition) iter.next());
+				ExtensionDefinition ed = (ExtensionDefinition) iter.next();
+				System.err.println(ed);
+				readDefinitionFile(fuds, ed);
 			}
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block

@@ -9,6 +9,7 @@
 package com.dexels.navajo.parser;
 
 import java.util.*;
+
 import com.dexels.navajo.document.*;
 //import com.dexels.navajo.util.*;
 import com.dexels.navajo.mapping.*;
@@ -151,12 +152,21 @@ public final class Expression {
     public static void main(String [] args) throws Exception {
 
        Navajo doc = NavajoFactory.getInstance().createNavajo();
-       Message params = NavajoFactory.getInstance().createMessage(doc, "__parms__");
+       Message params = NavajoFactory.getInstance().createMessage(doc, "Test");
        doc.addMessage(params);
-       Property p = NavajoFactory.getInstance().createProperty(doc, "Aap", "integer", "10", 20, "", "out");
+       Property p = NavajoFactory.getInstance().createProperty(doc, "Selection", "+", "", "in");
        params.addProperty(p);
-       String expression = "' werkt dit: | \\' nu ?' + ( 5 + 3)+' \\aap' + [@/Aap]";
-       Operand o = Expression.evaluate(expression, doc);
-       System.err.println("o = " + o.value);
+       p.addSelection(NavajoFactory.getInstance().createSelection(doc, "A", "1", true));
+       p.addSelection(NavajoFactory.getInstance().createSelection(doc, "B", "2", true));
+       p.addSelection(NavajoFactory.getInstance().createSelection(doc, "C", "0", false));
+       
+       String exp = "FormatStringList([/Test/Selection:value], ';')";
+       Operand op = Expression.evaluate(exp, doc);
+       System.err.println("result = " + op.value);
+       
+       StringTokenizer tok = new StringTokenizer("1", ",");
+   	   while ( tok.hasMoreTokens()  ) {
+   		   System.err.println(tok.nextToken());
+   	   }
     }
 }
