@@ -110,7 +110,6 @@ public class CSVMap implements Mappable {
 			char c = line.charAt(i);
 			if (c == sepChar) {
 				if (startindex == -1) {
-					// System.err.println("addnull: "+i);
 					currentLine.add(null);
 					startindex = -1;
 				} else {
@@ -118,14 +117,20 @@ public class CSVMap implements Mappable {
 						currentLine.add(null);
 					} else {
 						String ss = line.substring(startindex, i);
-						// System.err.println("String detected: "+ss);
 						currentLine.add(ss);
 					}
 					startindex = i+1;
 				}
-			} else {
-
 			}
+		}
+		
+		// add the last item on the line, not ended by the separator
+		if ( startindex == line.length() ) {
+			currentLine.add( null );
+		}
+		else {
+			String ss = line.substring( startindex, line.length() );
+			currentLine.add( ss );
 		}
 		CSVEntryMap csvEntry = new CSVEntryMap();
 		csvEntry.entries = new String[currentLine.size()];
