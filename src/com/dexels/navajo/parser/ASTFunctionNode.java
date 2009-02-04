@@ -4,6 +4,9 @@ package com.dexels.navajo.parser;
 /**
  * $Id$
  * $Log$
+ * Revision 1.28  2009/02/04 15:36:21  arjen
+ * Alway evaluate function with type checking enabled.
+ *
  * Revision 1.27  2009/02/04 13:48:37  arjen
  * Several changes for extension mechanism support.
  *
@@ -149,7 +152,7 @@ public final class ASTFunctionNode extends SimpleNode {
 			f.insertOperand(a);
 		}
 
-		Object result = f.evaluate();
+		Object result = f.evaluateWithTypeChecking();
 
 		return result;
 
