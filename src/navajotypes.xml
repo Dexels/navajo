@@ -7,7 +7,7 @@
         </subtype>
     </type>
     <type name="integer" type="java.lang.Integer"/>
-    <type name="float" type="java.lang.Float"/>
+    <type name="float" type="java.lang.Double"/>
     <type name="boolean" type="java.lang.Boolean"/>
     <!--<type name="selection" type="java.lang.String"/>-->
     <type name="date" type="java.util.Date"/>
