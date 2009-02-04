@@ -132,6 +132,7 @@ public class GenerateFunctionDef {
 		
 		Class [] all = getClasses("com.dexels.navajo.functions");
 		for (int i = 0; i < all.length; i++) {
+			System.err.println(all[i]);
 			if (FunctionInterface.class.isAssignableFrom(all[i]) ) {
 				XMLElement def = generateFunctionDefinition(all[i]);
 				functions.addChild(def);
