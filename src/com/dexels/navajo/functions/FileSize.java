@@ -23,10 +23,6 @@ public class FileSize extends FunctionInterface {
 		return new Integer( (int) binaryFile.getLength());
     }
 	
-	public String usage() {
-	    return "FileSize(Binary)";
-	}
-	
 	public String remarks() {
 	    return "Get the filesize of supplied Binary object in bytes.";
 	}

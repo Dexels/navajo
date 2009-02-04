@@ -53,9 +53,5 @@ public class FileString extends FunctionInterface {
     }
   }
 
-  public String usage() {
-     return "FileString(filename)";
-  }
-
 
 }

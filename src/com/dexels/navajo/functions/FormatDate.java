@@ -3,6 +3,8 @@ package com.dexels.navajo.functions;
 
 import com.dexels.navajo.parser.*;
 import java.util.*;
+
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.types.ClockTime;
 
 /**
@@ -16,7 +18,13 @@ import com.dexels.navajo.document.types.ClockTime;
 
 public final class FormatDate extends FunctionInterface {
 
-    public FormatDate() {}
+    public FormatDate() {
+    	
+//    	super(new Class[][]{ {java.util.Date.class}, {java.lang.Integer.class}, {java.lang.String.class,null} });
+//    	setReturnType(new Class[]{java.lang.String.class});
+    	//super(new String[][]{ {"date"}, {"string"}, {"string", null}});
+    	//setReturnType(new String[]{"string"});
+    }
 
     public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 
@@ -62,31 +70,19 @@ public final class FormatDate extends FunctionInterface {
         return formatter.format(date);
     }
 
-    public String usage() {
-        return "FormatDate(date, format[, locale])";
-    }
-
     public String remarks() {
         return "formats a date according to a format string plus an optional locale";
     }
 
-    public static void main(String args[]) {
-        Calendar c = Calendar.getInstance();
-
-        {
-          c.set(1949, 3, 2);
-          java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat(
-              "MM-dd-yyyy");
-
-          System.out.println(formatter.format(c.getTime()));
-        }
-        {
-          c.set(1958, 3, 27);
-          java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat(
-              "dd-MMM-yy", new Locale("nl"));
-
-          System.out.println(formatter.format(c.getTime()));
-        }
-
+    public static void main(String args[]) throws Exception {
+      
+    	NavajoFactory nf = NavajoFactory.getInstance();
+    	
+    	FormatDate fd = new FormatDate();
+    	fd.reset();
+    	fd.insertOperand(new java.util.Date());
+    	fd.insertOperand(new java.lang.String("yyyy-mm-dd"));
+    	Object o = fd.evaluateWithTypeChecking();
+    	System.err.println(o);
     }
 }

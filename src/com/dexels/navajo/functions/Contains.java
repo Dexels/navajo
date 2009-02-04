@@ -17,12 +17,8 @@ import com.dexels.navajo.document.Operand;
 
 public final class Contains extends FunctionInterface {
 
-    public String usage() {
-        return "Contains(list, string)\nContains(list, float)\nContains(list, integer)";
-    }
-
     public String remarks() {
-        return "";
+        return "Checks whether an arraylist contains a certain object";
     }
 
     public final boolean contains(ArrayList list, Object o) throws TMLExpressionException {

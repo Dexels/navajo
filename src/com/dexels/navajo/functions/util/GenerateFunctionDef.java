@@ -6,6 +6,7 @@ import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.util.ArrayList;
 
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.parser.FunctionInterface;
@@ -65,6 +66,62 @@ public class GenerateFunctionDef {
 		XMLElement def = new CaseSensitiveXMLElement("function");
 		def.setAttribute("name", c.getSimpleName());
 		def.setAttribute("class", c.getName());
+		XMLElement description = new CaseSensitiveXMLElement("description");
+		def.addChild(description);
+		try {
+			FunctionInterface fi = (FunctionInterface) c.newInstance();
+			description.setContent(fi.remarks());
+		} catch (Exception e)  {
+
+		}
+		XMLElement input = new CaseSensitiveXMLElement("input");
+		def.addChild(input);
+		try {
+			FunctionInterface fi = (FunctionInterface) c.newInstance();
+			Class [][] inputTypes = fi.getTypes();
+			if ( inputTypes != null ) {
+				NavajoFactory nf = NavajoFactory.getInstance();
+				StringBuffer sb = new StringBuffer();
+				for (int i = 0; i < inputTypes.length; i++) {
+					// list types.
+					for (int j = 0; j < inputTypes[i].length; j++) {
+						sb.append(nf.getNavajoType(inputTypes[i][j]));
+						if ( j < inputTypes[i].length - 1) {
+							sb.append("|");
+						}
+					}
+					if ( i < inputTypes.length - 1 ) {
+						sb.append(",");
+					}
+				}
+				input.setContent(sb.toString());
+			}
+		} catch (Exception e)  {
+			//e.printStackTrace(System.err);
+		}
+		
+		XMLElement result = new CaseSensitiveXMLElement("result");
+		def.addChild(result);
+		try {
+			FunctionInterface fi = (FunctionInterface) c.newInstance();
+			Class [] returnTypes = fi.getReturnType();
+			if ( returnTypes != null ) {
+				NavajoFactory nf = NavajoFactory.getInstance();
+				StringBuffer sb = new StringBuffer();
+				for (int i = 0; i < returnTypes.length; i++) {
+					sb.append(nf.getNavajoType(returnTypes[i]));
+					if ( i < returnTypes.length - 1) {
+						sb.append("|");
+					}
+				}
+				result.setContent(sb.toString());
+			}
+		} catch (Exception e)  {
+			//e.printStackTrace(System.err);
+		}
+		
+		
+		
 		
 		return def;
 	}

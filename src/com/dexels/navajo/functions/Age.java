@@ -60,10 +60,6 @@ public final class Age
     return new Integer(result);
   }
 
-  public String usage() {
-    return "Age( BirthDate [, AsOf Date] )";
-  }
-
   public String remarks() {
     return "calculates the age given a birth date.  The calculation is as of the second date parameter, otherwise, if not provided, will be as of today.";
   }

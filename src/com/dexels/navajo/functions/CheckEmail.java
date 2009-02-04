@@ -57,9 +57,6 @@ public class CheckEmail extends FunctionInterface {
    }
 
   }
-  public String usage() {
-    return "CheckEmail(adress)";
-  }
 
   public static void main(String [] args ) throws TMLExpressionException {
     CheckEmail ce = new CheckEmail();

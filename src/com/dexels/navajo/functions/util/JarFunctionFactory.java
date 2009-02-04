@@ -1,23 +1,26 @@
 package com.dexels.navajo.functions.util;
 
-import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Vector;
+
+import javax.imageio.spi.ServiceRegistry;
 
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.navajo.server.DispatcherFactory;
 
-public class TestFunctionFactory extends FunctionFactoryInterface {
+public class JarFunctionFactory extends FunctionFactoryInterface {
 
-	public void init() {
-		
+	private final void readDefinitionFile(HashMap<String, FunctionDefinition> fuds, navajo.functions.FunctionDefinitions fd) {
 		// Read config file.
 		CaseSensitiveXMLElement xml = new CaseSensitiveXMLElement();
 		try {
-			FileInputStream fis = new FileInputStream("/home/arjen/projecten/NavajoFunctions/functions.xml");
+			InputStream fis = fd.getFunctionDefinitions();
 			xml.parseFromStream(fis);
 			fis.close();
-			HashMap<String, FunctionDefinition> fuds = new HashMap<String, FunctionDefinition>();
+			
 			Vector<XMLElement> children = xml.getChildren();
 			for (int i = 0; i < children.size(); i++) {
 				// Get object, usage and description.
@@ -44,11 +47,37 @@ public class TestFunctionFactory extends FunctionFactoryInterface {
 					fuds.put(name, new FunctionDefinition(object, description, inputParams, resultParam));
 				}
 			}
-			setConfig(fuds);
 			
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+	
+	@Override
+	public void init() {
+		HashMap<String, FunctionDefinition> fuds = new HashMap<String, FunctionDefinition>();
+		ClassLoader myClassLoader = null;
+		if ( DispatcherFactory.getInstance() != null ) {
+			myClassLoader = DispatcherFactory.getInstance().getNavajoConfig().getClassloader();
+		} else {
+			myClassLoader = getClass().getClassLoader();
+		}
+		try {
+			Iterator iter = ServiceRegistry.lookupProviders(Class.forName("navajo.functions.FunctionDefinitions"));
+			while(iter.hasNext()) {
+				readDefinitionFile(fuds, (navajo.functions.FunctionDefinitions) iter.next());
+			}
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		setConfig(fuds);
+	}
+	
+	public static void main(String [] args) throws Exception {
+		
+		JarFunctionFactory jff = new JarFunctionFactory();
+		jff.init();
 	}
 
 }

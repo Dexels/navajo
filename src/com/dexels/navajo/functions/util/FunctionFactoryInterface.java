@@ -19,7 +19,7 @@ public abstract class FunctionFactoryInterface {
 	 * @return
 	 * @throws UserException
 	 */
-	private FunctionDefinition getDef(String name) throws UserException {
+	private final FunctionDefinition getDef(String name) throws UserException {
 		
 		while ( initializing ) {
 			// Wait a bit.
@@ -54,11 +54,18 @@ public abstract class FunctionFactoryInterface {
 		}
 	}
 		
-	public FunctionInterface getInstance(ClassLoader cl, String functionName) throws UserException {
+	public final FunctionInterface getInstance(final ClassLoader cl, final String functionName) throws UserException {
 		
 		try {
-			Class c = Class.forName(getDef(functionName).getObject(), true, cl);
-			return (FunctionInterface) c.newInstance();
+			FunctionDefinition fd = getDef(functionName);
+			Class myClass = Class.forName(fd.getObject(), true, cl);
+			// TODO INSTANTIATE FUNCTION USING FACTORY, SETTING TYPE SIGNATURE IN FACTORY!!!
+			FunctionInterface fi = (FunctionInterface) myClass.newInstance();
+			if (!fi.isInitialized()) {
+				fi.setTypes(fd.getInputParams());
+				fi.setReturnType(fd.getResultParam());
+			}
+			return fi;
 		} catch (ClassNotFoundException e) {
 			throw new UserException(-1, "Could find class for function: " + getDef(functionName).getObject());
 		} catch (InstantiationException e) {

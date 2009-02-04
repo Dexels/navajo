@@ -1,26 +1,59 @@
 package com.dexels.navajo.functions.util;
 
-public class FunctionDefinition {
+import com.dexels.navajo.functions.FormatDate;
 
-	private String object;
-	private String description;
-	private String usage;
+public final class FunctionDefinition {
+
+	private final String object;
+	private final String description;
+	private final String [][] inputParams;
+	private final String [] resultParam;
 	
-	public FunctionDefinition(String object, String description, String usage) {
+	public FunctionDefinition(final String object, final String description, final String inputParams, final String resultParam) {
 		this.object = object;
 		this.description = description;
-		this.usage = usage;
+		if ( inputParams != null ) {
+			String [] params = inputParams.split(",");
+			this.inputParams = new String[params.length][];
+			for (int i = 0; i < params.length; i++) {
+				this.inputParams[i] = params[i].split("\\|");
+			}
+		} else {
+			this.inputParams =  null;
+		}
+		if ( resultParam != null ) {
+			this.resultParam = resultParam.split("\\|");
+		} else {
+			this.resultParam = null;
+		}
 	}
 
-	public String getObject() {
+	public final String getObject() {
 		return object;
 	}
 
-	public String getDescription() {
+	public final String getDescription() {
 		return description;
 	}
 
-	public String getUsage() {
-		return usage;
+	public final String [][] getInputParams() {
+		return inputParams;
+	}
+
+	public final String [] getResultParam() {
+		return resultParam;
+	}
+
+	public static void main(String [] args) throws Exception {
+		FunctionDefinition fd = new FunctionDefinition("com.dexels.aap","mooie aap", "date,string,string|empty", "string");
+		FormatDate fdate = new FormatDate();
+		
+		fdate.setTypes(fd.getInputParams());
+		fdate.setReturnType(fd.getResultParam());
+		fdate.reset();
+    	fdate.insertOperand(new java.util.Date());
+    	//fdate.insertOperand(new java.lang.String("yyyy-mm-dd"));
+    	Object o = fdate.evaluateWithTypeChecking();
+    	System.err.println(o);
 	}
 }
