@@ -7,17 +7,19 @@ import java.util.Vector;
 
 import javax.imageio.spi.ServiceRegistry;
 
+import navajo.ExtensionDefinition;
+
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.server.DispatcherFactory;
 
 public class JarFunctionFactory extends FunctionFactoryInterface {
 
-	private final void readDefinitionFile(HashMap<String, FunctionDefinition> fuds, navajo.functions.FunctionDefinitions fd) {
+	private final void readDefinitionFile(HashMap<String, FunctionDefinition> fuds, ExtensionDefinition fd) {
 		// Read config file.
 		CaseSensitiveXMLElement xml = new CaseSensitiveXMLElement();
 		try {
-			InputStream fis = fd.getFunctionDefinitions();
+			InputStream fis = fd.getDefinitionAsStream();
 			xml.parseFromStream(fis);
 			fis.close();
 			
@@ -63,9 +65,10 @@ public class JarFunctionFactory extends FunctionFactoryInterface {
 			myClassLoader = getClass().getClassLoader();
 		}
 		try {
-			Iterator iter = ServiceRegistry.lookupProviders(Class.forName("navajo.functions.FunctionDefinitions"));
+			Iterator iter = ServiceRegistry.lookupProviders(Class.forName("navajo.ExtensionDefinition"));
 			while(iter.hasNext()) {
-				readDefinitionFile(fuds, (navajo.functions.FunctionDefinitions) iter.next());
+				
+				readDefinitionFile(fuds, (ExtensionDefinition) iter.next());
 			}
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block

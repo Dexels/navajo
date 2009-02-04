@@ -561,7 +561,7 @@
     </function>
     <function name="Abs" class="com.dexels.navajo.functions.Abs">
         <description>Returns absolute value of a number</description>
-        <input>float|integer|empty</input>
-        <result>integer</result>
+        <input>float|integer</input>
+        <result>integer|float</result>
     </function>
 </functiondef>
