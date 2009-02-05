@@ -27,7 +27,9 @@ package navajo;
 /**
  * VERSION HISTORY
  * 
- * 7.7.3 Beta release with support for type checking functions and using functions via Service lookup mechanism.
+ * 7.7.3 Beta release with 
+ *       - support for type checking functions and using functions via Service lookup mechanism.
+ *       - Refactored Jabber support to Navajo Listeners.
  * 
  * 7.7.2 Added support for blocking inherited messages/properties.
  * 
