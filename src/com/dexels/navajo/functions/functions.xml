@@ -1,13 +1,13 @@
 <functiondef>
     <function name="ZipArchive" class="com.dexels.navajo.functions.ZipArchive">
-        <description>Archives an entire directory (including subdirs) as a zip file</description>
-        <input/>
-        <result/>
+        <description>Archives an entire directory (including subdirs) as a zip file.</description>
+        <input>string</input>
+        <result>binary</result>
     </function>
     <function name="Zip" class="com.dexels.navajo.functions.Zip">
-        <description>Zips a binary property</description>
-        <input/>
-        <result/>
+        <description>Zips a binary property. Both binary property as well as filename should be supplied.</description>
+        <input>binary,string</input>
+        <result>binary</result>
     </function>
     <function name="XmlUnescape" class="com.dexels.navajo.functions.XmlUnescape">
         <description>Unescapes the following characters in the characters: &amp;&apos;&lt;&gt;&quot;, using xml escape codes</description>
@@ -26,8 +26,8 @@
     </function>
     <function name="Wait" class="com.dexels.navajo.functions.Wait">
         <description>Wait for specified number of milliseconds</description>
-        <input/>
-        <result/>
+        <input>integer</input>
+        <result>empty</result>
     </function>
     <function name="Unicode" class="com.dexels.navajo.functions.Unicode">
         <description>Parses a number string (can be hex, use 0x... in that case), returns a unicode character</description>
@@ -41,18 +41,18 @@
     </function>
     <function name="Trim" class="com.dexels.navajo.functions.Trim">
         <description>Trims a string</description>
-        <input/>
-        <result/>
+        <input>string</input>
+        <result>string</result>
     </function>
     <function name="ToUpper" class="com.dexels.navajo.functions.ToUpper">
         <description>Get an uppercase representation of given string.</description>
-        <input/>
-        <result/>
+        <input>string</input>
+        <result>string</result>
     </function>
     <function name="ToString" class="com.dexels.navajo.functions.ToString">
         <description>Returns a string representation of the supplied object.</description>
-        <input/>
-        <result/>
+        <input>any</input>
+        <result>string</result>
     </function>
     <function name="ToStopwatchTime" class="com.dexels.navajo.functions.ToStopwatchTime">
         <description>Get a stopwatchtime representation of the supplied integer(in milliseconds) or date.</description>
@@ -66,13 +66,13 @@
     </function>
     <function name="ToPercentage" class="com.dexels.navajo.functions.ToPercentage">
         <description>Cast a string/double/integer to a percentage object</description>
-        <input/>
-        <result/>
+        <input>string|float|integer</input>
+        <result>percentage</result>
     </function>
     <function name="ToMoney" class="com.dexels.navajo.functions.ToMoney">
         <description>Cast a string/double/integer to a money object</description>
-        <input/>
-        <result/>
+        <input>string|float|integer</input>
+        <result>money</result>
     </function>
     <function name="ToMilliseconds" class="com.dexels.navajo.functions.ToMilliseconds">
         <description>Get the supplied time in milliseconds (long).</description>
@@ -81,28 +81,28 @@
     </function>
     <function name="ToMemo" class="com.dexels.navajo.functions.ToMemo">
         <description>Cast a string to a memo object</description>
-        <input/>
-        <result/>
+        <input>string</input>
+        <result>memo</result>
     </function>
     <function name="ToLower" class="com.dexels.navajo.functions.ToLower">
         <description>Returns a lowercase version of the supplied string.</description>
-        <input/>
-        <result/>
+        <input>string</input>
+        <result>string</result>
     </function>
     <function name="ToInteger" class="com.dexels.navajo.functions.ToInteger">
         <description>Get an integer representation of given object.</description>
-        <input/>
-        <result/>
+        <input>any</input>
+        <result>integer</result>
     </function>
     <function name="ToDouble" class="com.dexels.navajo.functions.ToDouble">
         <description>Get a Double version of supplied object. Returns 0.0 if object is null.</description>
-        <input/>
-        <result/>
+        <input>any</input>
+        <result>float</result>
     </function>
     <function name="ToClockTime" class="com.dexels.navajo.functions.ToClockTime">
         <description>Cast an object to a clocktime object</description>
-        <input/>
-        <result/>
+        <input>date|string|clocktime</input>
+        <result>clocktime</result>
     </function>
     <function name="ToBinaryFromUrl" class="com.dexels.navajo.functions.ToBinaryFromUrl">
         <description>Load a binary from a URL</description>
@@ -116,8 +116,8 @@
     </function>
     <function name="ToBinary" class="com.dexels.navajo.functions.ToBinary">
         <description>Cast a string to a binary object</description>
-        <input/>
-        <result/>
+        <input>string|binary</input>
+        <result>binary</result>
     </function>
     <function name="SumProperties" class="com.dexels.navajo.functions.SumProperties">
         <description>Sums all properties in an array message</description>
@@ -136,8 +136,8 @@
     </function>
     <function name="Sum" class="com.dexels.navajo.functions.Sum">
         <description>Get the sum of values in a given list.</description>
-        <input/>
-        <result/>
+        <input>list</input>
+        <result>float|integer|string</result>
     </function>
     <function name="StringPadding" class="com.dexels.navajo.functions.StringPadding">
         <description>This function ads whitespace (spaces) to a string until it has the specified size</description>
