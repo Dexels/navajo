@@ -11,6 +11,7 @@ import navajo.ExtensionDefinition;
 
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.server.DispatcherFactory;
 
 public class JarFunctionFactory extends FunctionFactoryInterface {
@@ -64,8 +65,11 @@ public class JarFunctionFactory extends FunctionFactoryInterface {
 		} else {
 			myClassLoader = getClass().getClassLoader();
 		}
+		
+		
 		try {
-			Iterator iter = ServiceRegistry.lookupProviders(Class.forName("navajo.ExtensionDefinition"));
+			Iterator iter = ServiceRegistry.lookupProviders(Class.forName("navajo.ExtensionDefinition", true, myClassLoader), 
+					                                        myClassLoader);
 			while(iter.hasNext()) {
 				ExtensionDefinition ed = (ExtensionDefinition) iter.next();
 				System.err.println(ed);
