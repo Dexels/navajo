@@ -1,0 +1,157 @@
+<adapterdef>
+    <!-- Mail adapter -->
+    <map>
+        <tagname>mailmap</tagname>
+        <object>com.dexels.navajo.adapter.MailMap</object>
+        <values>
+            <value name="mailServer"  required="true" direction="in"/>
+            <value name="queuedSend"  required="false" direction="in"/>
+            <value name="ignoreFailures"  required="false" direction="in"/>
+            <value name="sender"  required="false" direction="in"/>
+            <value name="subject"  required="false" direction="in"/>
+            <value name="text"  required="false" direction="in"/>
+            <value name="recipients"  required="false" direction="in"/>
+            <value name="attachment" map="attachment" required="false" direction="in"/>
+            <value name="multipleAttachments" map="attachment []" required="false" direction="in"/>
+        </values>
+    </map>
+    <map>
+        <tagname>attachment</tagname>
+        <object>com.dexels.navajo.adapter.AttachmentMap</object>
+        <description></description>
+        <values>
+            <value name="attachFileName"  required="false" direction="in"/>
+            <value name="attachFileContent"  required="false" direction="in"/>
+        </values>
+    </map>
+    <!-- Navajo adapter -->
+    <map>
+        <tagname>navajomap</tagname>
+        <object>com.dexels.navajo.adapter.NavajoMap</object>
+        <description>This adapter can be used to call other Navajo services, either synchronously, asynchronously or scheduled</description>
+        <values>
+            <value name="trigger"  required="false" direction="in"/>
+            <value name="sendThrough"  required="false" direction="in"/>
+            <value name="server"  required="false" direction="in"/>
+            <value name="username"  required="false" direction="in"/>
+            <value name="password"  required="false" direction="in"/>
+            <value name="useCurrentOutDoc"  required="false" direction="in"/>
+            <value name="messagePointer"  required="false" direction="in"/>
+            <value name="message" map="messagemap" required="false" direction="out"/>
+            <value name="messages" map="messagemap []" required="false" direction="out"/>
+        </values>
+        <methods>
+            <method name="createproperty">
+                <param name="name" field="propertyName"  required="true"/>
+                <param name="value" field="property"  required="true"/>
+            </method>
+            <method name="callwebservice">
+                <param name="server" field="server"  required="false"/>
+                <param name="username" field="username"  required="false"/>
+                <param name="password" field="password"  required="false"/>
+                <param name="name" field="doSend"  required="true"/>
+                <param name="append" field="append"  required="false"/>
+            </method>
+        </methods>
+    </map>
+    <map>
+        <tagname>messagemap</tagname>
+        <abstract>false</abstract>
+        <object>com.dexels.navajo.adapter.navajomap.MessageMap</object>
+    </map>
+    <!-- RSS adapter -->
+    <map>
+        <tagname>rss</tagname>
+        <object>com.dexels.navajo.adapter.RSSMap</object>
+        <description>This adapter can be used to parse or generate RSS feeds</description>
+        <values>
+            <value name="rssFeed"  required="false" direction="in"/>
+        </values>
+        <methods>
+            <method name="setTitle">
+                <param name="name" field="title"  required="true"/>
+            </method>
+        </methods>
+    </map>
+    <!-- Navajo listener adapter -->
+    <map>
+        <tagname>navajolistener</tagname>
+        <object>com.dexels.navajo.adapter.NavajoMap</object>
+        <values>
+            <value name="taskId"  required="true" direction="in"/>
+        </values>
+    </map>
+    <!-- SQL adapter -->
+    <map>
+        <tagname>sqlquery</tagname>
+        <object>com.dexels.navajo.adapter.SQLMap</object>
+        <values>
+            <value name="query"  required="false" direction="in"/>
+            <value name="update"  required="false" direction="in"/>
+            <value name="transactionContext"  required="false" direction="in"/>
+            <value name="datasource"  required="false" direction="in"/>
+            <value name="username"  required="false" direction="in"/>
+            <value name="resultSet" map="resultrow []" required="false" direction="out"/>
+        </values>
+        <methods>
+            <method name="addParameter">
+                <param name="value" field="parameter"  required="false"/>
+            </method>
+            <method name="doUpdate">
+                <param name="value" field="doUpdate"  required="automatic" value="true"/>
+            </method>
+        </methods>
+    </map>
+    <map>
+        <tagname>resultrow</tagname>
+        <abstract>false</abstract>
+        <object>com.dexels.navajo.adapter.ResultSetMap</object>
+    </map>
+    <!-- Audit Log adapter -->
+    <map>
+        <tagname>auditlog</tagname>
+        <object>com.dexels.navajo.util.AuditLog</object>
+        <values>
+            <value name="message"  required="true" direction="in"/>
+            <value name="level"  required="false" direction="in"/>
+        </values>
+    </map>
+    <!-- Code dropdown list -->
+    <map>
+        <tagname>codedropdown</tagname>
+        <object>com.dexels.sportlink.adapters.CodeDropdownList</object>
+        <values>
+            <value name="datasource"  required="false" direction="in"/>
+            <value name="transactionContext" required="false" direction="in"/>
+            <value name="language"  required="true" direction="in"/>
+            <value name="typeOfCode"  required="true" direction="in"/>
+            <value name="name"  required="true" direction="in"/>
+            <value name="description"  required="false" direction="in"/>
+            <value name="orderByDescription"  required="false" direction="in"/>
+            <value name="direction"  required="true" direction="in"/>
+            <value name="emptyOption"  required="false" direction="in"/>
+            <value name="selectedValue"  required="false" direction="in"/>
+        </values>
+    </map>
+    <!-- Dropdown list -->
+    <map>
+        <tagname>dropdown</tagname>
+        <object>com.dexels.sportlink.adapters.DropdownList</object>
+        <values>
+            <value name="datasource" required="false" direction="in"/>
+            <value name="transactionContext" required="false" direction="in"/>
+            <value name="name" required="true" direction="in"/>
+            <value name="query" required="false" direction="in"/>
+            <value name="description" required="false" direction="in"/>
+            <value name="orderByDescription"  required="false" direction="in"/>
+            <value name="direction" required="true" direction="in"/>
+            <value name="emptyOption" required="false" direction="in"/>
+            <value name="selectedValue" required="false" direction="in"/>
+        </values>
+        <methods>
+            <method name="addParameter">
+                <param name="value" field="parameter"  required="false"/>
+            </method>
+        </methods>
+    </map>
+</adapterdef>
