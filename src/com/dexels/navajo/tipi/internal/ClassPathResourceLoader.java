@@ -12,7 +12,13 @@ public class ClassPathResourceLoader implements TipiResourceLoader {
 	}
 
 	private URL getClassResourceURL(String location) {
-		return getClass().getClassLoader().getResource(location);
+		ClassLoader classLoader = getClass().getClassLoader();
+		if(classLoader==null) {
+			System.err.println("Null classloader detected!");
+			classLoader = ClassLoader.getSystemClassLoader();
+			
+		}
+		return classLoader.getResource(location);
 	}
 
 	public InputStream getResourceStream(String location) throws IOException {
