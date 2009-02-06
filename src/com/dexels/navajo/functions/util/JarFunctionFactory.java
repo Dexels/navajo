@@ -72,7 +72,7 @@ public class JarFunctionFactory extends FunctionFactoryInterface {
 					                                        myClassLoader);
 			while(iter.hasNext()) {
 				ExtensionDefinition ed = (ExtensionDefinition) iter.next();
-				System.err.println(ed);
+				System.err.println("FOUND FUNCTION EXTENSION: " + ed);
 				readDefinitionFile(fuds, ed);
 			}
 		} catch (ClassNotFoundException e) {
