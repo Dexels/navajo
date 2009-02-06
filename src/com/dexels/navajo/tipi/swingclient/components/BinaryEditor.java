@@ -17,6 +17,8 @@ import com.dexels.navajo.document.types.*;
 
 public class BinaryEditor extends JPanel implements PropertyControlled, PropertyChangeListener, ActionListener {
 
+	
+	private static final long serialVersionUID = -2197427078497022344L;
 	private Property myProperty = null;
 	private JLabel myBinaryLabel = new JLabel();
 
@@ -199,7 +201,6 @@ public class BinaryEditor extends JPanel implements PropertyControlled, Property
 			}
 			setBinary(newValue);
 		}
-
 	}
 
 	public int getMaxImgHeight() {
@@ -228,9 +229,6 @@ public class BinaryEditor extends JPanel implements PropertyControlled, Property
 		chooseFile();
 	}
 
-	/**
-	 * 
-	 */
 	private void chooseFile() {
 		try {
 			currentPath = null;
@@ -238,8 +236,6 @@ public class BinaryEditor extends JPanel implements PropertyControlled, Property
 				File current = new File(pathField.getText());
 				currentPath = current.getParentFile();
 			}
-			
-			
 			JFileChooser jf = new JFileChooser(currentPath);
 			jf.showOpenDialog(myBinaryLabel);
 			File f = jf.getSelectedFile();
@@ -258,7 +254,6 @@ public class BinaryEditor extends JPanel implements PropertyControlled, Property
 	}
 
 	private void setSyncBinary(final Binary b) {
-//		removeAll();
 		if(b!=null) {
 			File file = b.getFile();
 			if(file!=null) {
@@ -270,50 +265,24 @@ public class BinaryEditor extends JPanel implements PropertyControlled, Property
 		}
 		
 		if (b == null || b.getLength() <= 0) {
-			// System.err.println("Null-binary found!");
-//			myBinaryLabel = new JButton();
-//			add(myBinaryLabel, BorderLayout.CENTER);
-//			((JButton) myBinaryLabel).addActionListener(BinaryComponent.this);
 			pathField.setText("");
-
-//			if (myProperty == null) {
-//				myBinaryLabel.setEnabled(false);
-//			} else {
-//				myBinaryLabel.setEnabled(myProperty.isDirIn());
-//			}
 			myBinaryLabel.setIcon(null);
 			myBinaryLabel.setText("");
-			// addPropertyComponent(myBinaryLabel, true);
 			if(myProperty!=null) {
 				myBinaryLabel.setToolTipText(myProperty.getDescription());
 			}
 			revalidate();
 			return;
 		}
-		// System.err.println("Getting binary data!");
-		// byte[] data = b.getData();
 		String mime = b.guessContentType();
 		if (mime.indexOf("image") != -1) {
 			InputStream inp = b.getDataAsStream();
 			BufferedImage mm;
 			try {
 				mm = ImageIO.read(inp);
-				// ImageIcon img = new ImageIcon(mm);
-				System.err.println("WIDTH: " + maxImgWidth + " height: " + maxImgHeight);
-//				myBinaryLabel = new JButton();
-				// ((JButton)myBinaryLabel).setUI(new ButtonUI(){
-				//	            	
-				// });
-				// myBinaryLabel.setBackground(new Color(1.0f,1.0f,1.0f,0.0f));
-//				myBinaryLabel.setOpaque(false);
-//				myBinaryLabel.setBorder(null);
-//				((JButton) myBinaryLabel).addActionListener(BinaryComponent.this);
-
 				myBinaryLabel.setHorizontalAlignment(SwingConstants.CENTER);
 				myBinaryLabel.setVerticalAlignment(SwingConstants.CENTER);
 				myBinaryLabel.setIcon(getScaled(mm, maxImgWidth, maxImgHeight));
-				// ( (BaseLabel) myBinaryLabel).setIcon(img);
-//				add(myBinaryLabel, BorderLayout.CENTER);
 				invalidate();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -321,28 +290,9 @@ public class BinaryEditor extends JPanel implements PropertyControlled, Property
 			 revalidate();
 			return;
 		}
-//		if (mime.indexOf("text") != -1) {
-//			myBinaryLabel = new JTextArea();
-//			((JTextArea) myBinaryLabel).setText(new String(b.getData()));
-//			add(myBinaryLabel, BorderLayout.CENTER);
-//			revalidate();
-//
-//			return;
-//		}
-		// if (mime.indexOf("text") != -1) {
-//		myBinaryLabel = new JButton();
 		myBinaryLabel.setText("?");
-//		((JButton) myBinaryLabel).addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent e) {
-//
-//			}
-//		});
 		revalidate();
-
-//		add(myBinaryLabel, BorderLayout.CENTER);
 		return;
-		// }
-
 	}
 
 }
