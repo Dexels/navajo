@@ -1,20 +1,28 @@
 package com.dexels.navajo.dnd;
 
 import java.awt.Component;
-import java.awt.datatransfer.*;
-import java.awt.event.*;
-import java.io.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.event.InputEvent;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.TransferHandler;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.types.*;
+import com.dexels.navajo.document.types.Binary;
 
 public class BinaryTransferHandler extends TransferHandler {
 
 
+	private static final long serialVersionUID = -7126949648142176528L;
 	private JComponent myBeanComponent = null;
 	
 	public BinaryTransferHandler() {
@@ -60,17 +68,24 @@ public class BinaryTransferHandler extends TransferHandler {
 	@Override
 	public boolean importData(TransferSupport support) {
 		Transferable transferable = support.getTransferable();
+
 		try {
+			Binary b = null;
+//			if(s.isFlavorJavaFileListType()) {
+				
 			List<File> data = (List<File>) transferable.getTransferData(DataFlavor.javaFileListFlavor);
+			if(data==null || data.size()==0)  {
+				System.err.println("Whoops!");
+			}
 			if(data.size()>1) {
 				return false;
 			}
 			File f = data.get(0);
-			Binary b = new Binary(f);
+			b = new Binary(f);
 			JComponent comp = null;
 			if(myBeanComponent!=null) {
 				comp = myBeanComponent;
-			} else {
+			} else {http://www.apple.com/quicktime/qtv/macworld-san-francisco-2009/
 				comp = (JComponent) support.getComponent();
 			}
 
@@ -78,7 +93,49 @@ public class BinaryTransferHandler extends TransferHandler {
 			return true;
 			
 		} catch (UnsupportedFlavorException e) {
-			e.printStackTrace();
+			System.err.println("Try other flavor now:");
+			Object o;
+			try {
+				o = support.getTransferable().getTransferData(DataFlavor.stringFlavor);
+				System.err.println("Result: "+o);
+				try {
+					URL u = new URL((String)o);
+					InputStream is = u.openStream();
+					Binary b = new Binary(is,false);
+					is.close();
+					JComponent comp = null;
+					if(myBeanComponent!=null) {
+						comp = myBeanComponent;
+					} else {
+						comp = (JComponent) support.getComponent();
+					}
+
+					setBinaryToComponent(comp,b);
+					return true;
+				} catch (MalformedURLException e1) {
+					System.err.println("Not a URL, I guess");
+				}
+
+			} catch (UnsupportedFlavorException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException ex) {
+				// TODO Auto-generated catch block
+				ex.printStackTrace();
+			} 
+		
+//			try {
+//				transferable.getTransferDataFlavors();
+		//		Object o = transferable.getTransferData(DataFlavor.);
+			//	System.err.println("Image: "+o.getClass());
+//			} catch (UnsupportedFlavorException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			} catch (IOException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+//			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -100,11 +157,18 @@ public class BinaryTransferHandler extends TransferHandler {
 	public boolean canImport(JComponent comp, DataFlavor[] transferFlavors) {
 		boolean found = false;
 		for (int i = 0; i < transferFlavors.length; i++) {
-			System.err.println("Primary: "+transferFlavors[i].getMimeType());
+			System.err.println("Primary: "+transferFlavors[i].getRepresentationClass().getCanonicalName()+" mim3: "+transferFlavors[i].getMimeType());
+			System.err.println(""+i+"/"+transferFlavors.length+"Class rep: "+transferFlavors[i].getDefaultRepresentationClassAsString());
+//			transferFlavors[i].isMimeTypeEqual(mimeType)
 			if(transferFlavors[i].isFlavorJavaFileListType()) {
-				System.err.println("yes. "+i+"/"+transferFlavors.length);
+				System.err.println("yes. "+i+"/"+transferFlavors.length+"\n\n");
 				found = true;
 			}
+			if(transferFlavors[i].isRepresentationClassInputStream()) {
+				System.err.println("Byting!");
+				found = true;
+				}
+//			if(transferFlavors[i].getDefaultRepresentationClassAsString())
 		}
 		return found;
 	}
