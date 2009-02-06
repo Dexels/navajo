@@ -8,12 +8,12 @@ public class HeadlessTipiContext extends TipiContext {
 
 	StringBuffer infoBuffer = new StringBuffer();
 	Queue<String> infoQueue = new LinkedList<String>();
-	private final Thread myInvokingThread;
+//	private final Thread myInvokingThread;
 
 	
 	public HeadlessTipiContext() {
 		super();
-		myInvokingThread = Thread.currentThread(); 
+//		myInvokingThread = Thread.currentThread(); 
 	}
 	
 	public void exit() {
@@ -51,7 +51,6 @@ public class HeadlessTipiContext extends TipiContext {
 
 	@Override
 	public void setSplashVisible(boolean b) {
-		// TODO Auto-generated method stub
 
 	}
 	@Override
