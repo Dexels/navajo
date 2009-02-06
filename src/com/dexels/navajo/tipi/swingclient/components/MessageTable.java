@@ -2105,7 +2105,6 @@ public void updateTableSize() {
         }
         
         while (!table.isCellEditable(row, column)) {
-          System.err.println("COL: "+column+" row: "+row);
           column -= 1;
           if (column <= -1) {
             column = columnCount - 1;
@@ -2176,7 +2175,6 @@ public void updateTableSize() {
 		int oldRow = getSelectedRow();
 //		getMessageModel().fireTableCellUpdated(oldRow, oldColumn);
 //		getMessageModel().fireTableCellUpdated(row, column);
-		System.err.println("Starting edit at row: "+row+" column: "+column+" old sel: "+oldRow+" oldcol: "+oldColumn);
 		
 		getColumnModel().getSelectionModel().setSelectionInterval(column, column);
 		getSelectionModel().setSelectionInterval(row, row);
@@ -2184,7 +2182,6 @@ public void updateTableSize() {
 		if(!hasFocus()) {
 			grabFocus();
 		}
-		System.err.println("I REPEAT Starting edit at row: "+row+" column: "+column+" old sel: "+oldRow+" oldcol: "+oldColumn);
 		requestFocusInWindow();
 		editCellAt(row, column);
 //		getMessageModel().fireTableCellUpdated(oldRow, oldColumn);
@@ -2204,5 +2201,6 @@ public void updateTableSize() {
 	}
 
 
+	
 
 }
