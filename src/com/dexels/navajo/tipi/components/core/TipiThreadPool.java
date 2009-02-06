@@ -186,9 +186,6 @@ public class TipiThreadPool {
 	public void waitForAllThreads() {
 		myShutdownThread = Thread.currentThread();
 		while(myGroup.activeCount()>1) {
-			System.err.println("Active threads: "+myGroup.activeCount());
-			System.err.println("waiting..");
-			dumpEventStacks();
 			synchronized (this) {
 				try {
 					wait();
