@@ -72,7 +72,7 @@ public class FileLocalStorage implements LocalStorage {
 
 	public URL getURL(String location) throws IOException {
 		File f = new File(baseFile, convertPath(location));
-		return f.toURL();
+		return f.toURI().toURL();
 	}
 
 }

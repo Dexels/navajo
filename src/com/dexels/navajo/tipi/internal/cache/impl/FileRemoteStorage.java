@@ -25,7 +25,7 @@ public class FileRemoteStorage implements RemoteStorage {
 
 	public URL getURL(String location) throws IOException {
 		File u = new File(base, location);
-		return u.toURL();
+		return u.toURI().toURL();
 	}
 
 }
