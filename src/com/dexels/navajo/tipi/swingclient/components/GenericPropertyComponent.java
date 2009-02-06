@@ -1232,6 +1232,13 @@ public class GenericPropertyComponent extends JPanel {
 	private final void createRadioButtonPropertyField(Property p) {
 		if (myRadioButtonField == null) {
 			myRadioButtonField = new PropertyRadioSelection();
+			if (checkboxGroupColumnCount > 0) {
+				myRadioButtonField.setColumnMode(true);
+				myRadioButtonField.setColumns(checkboxGroupColumnCount);
+			} else {
+				myRadioButtonField.setColumnMode(false);
+			}
+
 			myRadioButtonField.addFocusListener(new java.awt.event.FocusAdapter() {
 				public final void focusGained(FocusEvent e) {
 					myRadioButtonField_focusGained(e);

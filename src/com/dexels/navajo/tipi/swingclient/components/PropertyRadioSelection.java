@@ -30,6 +30,8 @@ public final class PropertyRadioSelection extends JPanel
   private static final int HORIZONTAL = 2;
 
   private int direction = VERTICAL;
+private boolean columnMode;
+private int checkboxGroupColumnCount;
 
   public PropertyRadioSelection() {
     setVertical();
@@ -56,7 +58,6 @@ public final class PropertyRadioSelection extends JPanel
 
 
   public final void setProperty(Property p) {
-    removeAll();
     selectionMap.clear();
     buttonList.clear();
     if (p==null) {
@@ -71,14 +72,36 @@ public final class PropertyRadioSelection extends JPanel
       throw new RuntimeException("No single cardinality.");
     }
     try {
+        removeAll();
+        int col = 0;
+        int row = 0;
+
       ArrayList al = p.getAllSelections();
       for (int i = 0; i < al.size(); i++) {
         Selection s = (Selection) al.get(i);
-        if (direction==HORIZONTAL) {
-            add(createButton(s),new GridBagConstraints(i,0,1,1,1,0,GridBagConstraints.NORTHWEST,GridBagConstraints.HORIZONTAL,new Insets(0,0,0,0),0,0));
-        } else {
-            add(createButton(s),new GridBagConstraints(0,i,1,1,1,0,GridBagConstraints.NORTHWEST,GridBagConstraints.HORIZONTAL,new Insets(0,0,0,0),0,0));
-        }
+//        if (direction==HORIZONTAL) {
+//            add(createButton(s),new GridBagConstraints(i,0,1,1,1,0,GridBagConstraints.NORTHWEST,GridBagConstraints.HORIZONTAL,new Insets(0,0,0,0),0,0));
+//        } else {
+//            add(createButton(s),new GridBagConstraints(0,i,1,1,1,0,GridBagConstraints.NORTHWEST,GridBagConstraints.HORIZONTAL,new Insets(0,0,0,0),0,0));
+//        }
+        System.err.println("ColumnMode: "+columnMode+" :: "+checkboxGroupColumnCount+" size: "+al.size());
+        if(columnMode){
+            int req = (int) Math.ceil(al.size() / (float)checkboxGroupColumnCount)-1; // offset with 1 because gridbag starts at 0
+            System.err.println("Req: "+req);
+            if(row+1 > req){
+              add(createButton(s), new GridBagConstraints(col, row, 1, 1, 1.0, 1.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, new Insets(2, 2, 2, 2), 0, 0));
+            }else{
+              add(createButton(s), new GridBagConstraints(col, row, 1, 1, 1.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, new Insets(2, 2, 2, 2), 0, 0));
+            }
+            row++;
+            if(row > req){
+              row = 0;
+              col++;
+            }
+          }else{
+            add(createButton(s), new GridBagConstraints(0, i, 1, 1, 1, 1.0, GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+          }
+
       }
     }
     catch (NavajoException ex) {
@@ -86,6 +109,8 @@ public final class PropertyRadioSelection extends JPanel
     }
 
   }
+  
+  
 
   private final JComponent createButton(Selection s) {
     JRadioButton jr = new JRadioButton();
@@ -164,5 +189,13 @@ public final class PropertyRadioSelection extends JPanel
   public final void removeActionListener(ActionListener al) {
     myActionListeners.remove(al);
   }
+
+public void setColumnMode(boolean b) {
+	columnMode = b;
+}
+
+public void setColumns(int checkboxGroupColumnCount) {
+	this.checkboxGroupColumnCount = checkboxGroupColumnCount;	
+}
 
 }
