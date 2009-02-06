@@ -131,7 +131,7 @@ public abstract class TipiBaseQuestionGroup extends TipiDataComponentImpl {
 			}
 
 		}
-		List<TipiComponent> localprops = getRecursiveProperties();
+		List<PropertyComponent> localprops = getRecursiveProperties();
 		for (int i = 0; i < localprops.size(); i++) {
 			PropertyComponent o = (PropertyComponent) localprops.get(i);
 			Property pp = m.getProperty(o.getPropertyName());

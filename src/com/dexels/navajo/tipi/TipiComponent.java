@@ -225,7 +225,7 @@ public interface TipiComponent extends TipiEventListener, TipiLink {
 	 * gets all the property components under this property, and also under its
 	 * (recursive) children
 	 */
-	public List<TipiComponent> getRecursiveProperties();
+	public List<PropertyComponent> getRecursiveProperties();
 
 	/**
 	 * 

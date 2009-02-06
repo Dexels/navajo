@@ -287,8 +287,8 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 //			}
 		} else {
 			if (!oo.equals(propval)) {
-				System.err.println("Value mismatch detected in: " + getClass() + " attribute: " + name);
-				System.err.println("Component says " + oo + ", property says: " + propval);
+//				System.err.println("Value mismatch detected in: " + getClass() + " attribute: " + name);
+//				System.err.println("Component says " + oo + ", property says: " + propval);
 				getAttributeProperty(name).setAnyValue(oo);
 			}
 		}
@@ -843,7 +843,6 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 	}
 
 	public final TipiComponent getTipiComponent(String s) {
-	
 		return tipiComponentMap.get(s);
 	}
 
@@ -928,8 +927,8 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 
 
 
-	public List<TipiComponent> getRecursiveProperties() {
-		List<TipiComponent> al = new ArrayList<TipiComponent>();
+	public List<PropertyComponent> getRecursiveProperties() {
+		List<PropertyComponent> al = new ArrayList<PropertyComponent>();
 		for (int i = 0; i < getChildCount(); i++) {
 			TipiComponent tc = getTipiComponent(i);
 			al.addAll(tc.getRecursiveProperties());

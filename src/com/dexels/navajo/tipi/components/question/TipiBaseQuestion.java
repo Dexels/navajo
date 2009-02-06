@@ -118,7 +118,7 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 		if (validationConditionProperty != null) {
 			validationCondition = validationConditionProperty.getValue();
 		}
-		List<TipiComponent> propertyList = getRecursiveProperties();
+		List<PropertyComponent> propertyList = getRecursiveProperties();
 		for (int i = 0; i < propertyList.size(); i++) {
 			PropertyComponent o = (PropertyComponent) propertyList.get(i);
 			Property pp = m.getProperty(o.getPropertyName());
