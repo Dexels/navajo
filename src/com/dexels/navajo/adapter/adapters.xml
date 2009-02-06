@@ -162,7 +162,7 @@
         <values>
             <value name="stringContent" type="string" required="false" direction="in"/>
             <value name="indent" type="integer" required="false" direction="in"/>
-            <value name="child" map="tagmap" required="false" direction="in"/>
+            <value name="child" map="tagmap" required="false" direction="out"/>
             <value name="start" type="string" required="false" direction="in"/>
         </values>
         <methods>
@@ -171,8 +171,8 @@
                 <param name="content" field="insert" type="binary" required="true"/>
             </method>
             <method name="setText">
-                <param name="tag" field="childName" type="string" required="true"/>
-                <param name="value" field="childText" type="string" required="true"/>
+                <param name="tag" field="childName" required="true"/>
+                <param name="value" field="childText" required="true"/>
             </method>
             <method name="setAttribute">
                 <param name="tag" field="childName" type="string" required="true"/>
@@ -187,8 +187,8 @@
         <description/>
         <values>
             <value name="child" map="tagmap" required="false" direction="in"/>
-            <value name="name" map="string" required="false" direction="in"/>
-            <value name="text" map="string" required="false" direction="in"/>
+            <value name="name" type="string" required="false" direction="in"/>
+            <value name="text" type="string" required="false" direction="in"/>
         </values>
         <methods>
             <method name="setText">
