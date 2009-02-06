@@ -1,12 +1,19 @@
 package com.dexels.navajo.tipi.internal;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
-import org.omg.CosNaming.*;
-
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.actions.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.TipiExecutable;
+import com.dexels.navajo.tipi.TipiValue;
+import com.dexels.navajo.tipi.actions.TipiActionFactory;
 
 public abstract class TipiAction extends TipiAbstractExecutable  {
 	protected TipiContext myContext;
@@ -21,7 +28,7 @@ public abstract class TipiAction extends TipiAbstractExecutable  {
 
 	protected int counter = 0;
 
-	private TipiStackElement stackElement = null;
+//	private TipiStackElement stackElement = null;
 
 	/**
 	 * Not 'really' supported, gets a bit difficult in the xml to distinguish

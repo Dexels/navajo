@@ -15,6 +15,10 @@ public interface TipiExtension extends Comparable<TipiExtension> {
 	 */
 	public String[] getIncludes();
 
+	
+//	public String[] getFunctionIncludes();
+
+	
 	/**
 	 * Returns the description of this extension
 	 * 
