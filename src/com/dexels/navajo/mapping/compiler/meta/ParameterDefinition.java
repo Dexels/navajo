@@ -5,7 +5,7 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
 public class ParameterDefinition extends ValueDefinition {
 
 	public ParameterDefinition(String name, String field, String type, String required, String direction, int order, String value) {
-		super(name, type, required, direction);
+		super(name, null, required, direction);
 		this.field = field;
 		this.order = order;
 		this.value = value;

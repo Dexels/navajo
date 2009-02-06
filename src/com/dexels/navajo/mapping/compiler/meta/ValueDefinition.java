@@ -102,6 +102,10 @@ public class ValueDefinition {
 			                       String condition, XMLElement out, boolean append, String filename) throws Exception {
 		
 		// Case I: <field><expression/></field> construct.
+//		System.err.println("CurrentIn: " + currentIn.getName());
+//		System.err.println("First child: " + currentIn.getFirstChild());
+//		System.err.println("Map: " + map);
+//		System.err.println("direction: " + direction );
 		if ( ( direction.equals("in") || direction.equals("automatic") ) && map == null) { 
 			XMLElement field = new TSLElement(currentIn, "field");
 			field.setAttribute("name", ( this.getClass().getName().equals("com.dexels.navajo.mapping.compiler.meta.ValueDefinition") ? name : ((ParameterDefinition) this).getField() ) );

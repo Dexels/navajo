@@ -11,7 +11,6 @@ import navajo.ExtensionDefinition;
 
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
-import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.server.DispatcherFactory;
 
 public class JarFunctionFactory extends FunctionFactoryInterface {
@@ -23,6 +22,10 @@ public class JarFunctionFactory extends FunctionFactoryInterface {
 			InputStream fis = fd.getDefinitionAsStream();
 			xml.parseFromStream(fis);
 			fis.close();
+			
+			if (!( xml.getName().equals("functiondef") || xml.getName().equals("tid"))) {
+				return;
+			}
 			
 			Vector<XMLElement> children = xml.getChildren();
 			for (int i = 0; i < children.size(); i++) {

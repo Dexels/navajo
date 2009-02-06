@@ -8,13 +8,20 @@ import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Vector;
 import java.util.logging.Level;
 
+import javax.imageio.spi.ServiceRegistry;
+
+import navajo.ExtensionDefinition;
+
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.navajo.functions.util.FunctionDefinition;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.FileInputStreamReader;
 import com.dexels.navajo.util.AuditLog;
 
 /**
@@ -41,22 +48,46 @@ public class MapMetaData {
 	}
 	
 	private void readConfig() throws Exception {
-		try {
-			
-			BufferedReader br = new BufferedReader(new FileReader(configPath + "/adapters.xml"));
-				
-			XMLElement config = new CaseSensitiveXMLElement();
-			config.parseFromReader(br);
-			br.close();
-			Vector allmaps = config.getElementsByTagName("map");
-			//System.err.println("Found " + allmaps.size() + " map definitions");
-			for ( int i = 0; i < allmaps.size(); i++ ) {
-				XMLElement map = (XMLElement) allmaps.get(i);
-				MapDefinition md = MapDefinition.parseDef(map);
-			    maps.put(md.tagName, md);
+
+		synchronized (instance) {
+
+			ClassLoader myClassLoader = null;
+			if ( DispatcherFactory.getInstance() != null ) {
+				myClassLoader = DispatcherFactory.getInstance().getNavajoConfig().getClassloader();
+			} else {
+				myClassLoader = getClass().getClassLoader();
 			}
-		} catch (Exception e) {
-			e.printStackTrace(System.err);
+			
+			try {
+				Iterator iter = ServiceRegistry.lookupProviders(Class.forName("navajo.ExtensionDefinition", true, myClassLoader), 
+						                                        myClassLoader);
+				while(iter.hasNext()) {
+					ExtensionDefinition ed = (ExtensionDefinition) iter.next();
+					System.err.println("FOUND POSSIBLE ADAPTER EXTENSION: " + ed);
+					
+					BufferedReader br = new BufferedReader(new InputStreamReader(ed.getDefinitionAsStream()));
+
+					XMLElement config = new CaseSensitiveXMLElement();
+					config.parseFromReader(br);
+					br.close();
+					
+				
+					if ( config.getName().equals("adapterdef")) {
+						Vector allmaps = config.getElementsByTagName("map");
+						//System.err.println("Found " + allmaps.size() + " map definitions");
+						for ( int i = 0; i < allmaps.size(); i++ ) {
+							XMLElement map = (XMLElement) allmaps.get(i);
+							MapDefinition md = MapDefinition.parseDef(map);
+							maps.put(md.tagName, md);
+						}
+					}
+					
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	
 		}
 	}
 	
@@ -130,7 +161,7 @@ public class MapMetaData {
 		MapMetaData mmd = MapMetaData.getInstance("/home/arjen/projecten/Navajo");
 		//System.err.println("is: " + mmd.isMetaScript("ProcessQueryMemberNewStyle", "/home/arjen/projecten/Navajo/", "."));
 		
-		String result = mmd.parse("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/teamregistration/ProcessQueryTeamRegistrations_NEWSTYLE.xml");
+		String result = mmd.parse("/home/arjen/projecten/NavajoStandardEdition/scripts/InitTestXML.xml");
 		
 		FileWriter fw = new FileWriter("/home/arjen/@.xml");
 	
