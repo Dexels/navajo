@@ -204,6 +204,36 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 	}
 
 	/**
+	 * Beware, recursive!
+	 * @param m
+	 */
+	protected void loadProperties(Message m) {
+		List<PropertyComponent> plist =  getRecursiveProperties();
+		for (int i = 0; i < plist.size(); i++) {
+			PropertyComponent current = plist.get(i);
+			Property p;
+			if(current.getPropertyName()==null) {
+				System.err.println("Property component found without name: "+current.getClass());
+				continue;
+			}
+			p = m.getProperty(current.getPropertyName());
+			if (p != null) {
+				try {
+					getContext().debugLog("data    ",
+							"delivering property: " + p.getFullPropertyName() + " to tipi: " + ((TipiComponent) current).getId());
+				} catch (NavajoException ex) {
+					ex.printStackTrace();
+				}
+			} else {
+				getContext().debugLog("data    ", "delivering null property to tipi: " + ((TipiComponent) current).getId());
+			}
+			if (p != null) {
+				current.setProperty(p);
+			}
+		}
+	}	
+	
+	/**
 	 * @param n
 	 * @param method
 	 * @throws TipiException
@@ -212,9 +242,9 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 		/** @TODO Maybe it is not a good idea that it is recursive. */
 		if ("true".equals(myContext.getSystemProperty("noCascadedLoading"))) {
 			// new style
-			System.err.println("New school mode, ignoring children.");
+			//System.err.println("New school mode, ignoring children.");
 		} else {
-			System.err.println("Legacy mode, also loading children.");
+			//System.err.println("Legacy mode, also loading children.");
 			for (int i = 0; i < getChildCount(); i++) {
 				TipiComponent tcomp = getTipiComponent(i);
 				if (TipiDataComponent.class.isInstance(tcomp)) {
@@ -281,13 +311,25 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 			return false;
 		}
 	}
+	
+
+	@Override
+	public void addComponent(TipiComponent c, int index, TipiContext context,
+			Object td) {
+		super.addComponent(c, index, context, td);
+	}
+
+	@Override
+	public Object createContainer() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	public void refreshLayout() {
 		// do nothing.
 	}
 
 	public void clearProperties() {
-		System.err.println("Clearingproperty");
 		
 		properties.clear();
 	}
@@ -307,14 +349,27 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 
 			public void run() {
 				ArrayList<Message> al = m.getAllMessages();
+				
+				Map<String, Object> staticParams = new HashMap<String, Object>();
+				staticParams.put("array", m);
+				staticParams.put("size", al.size());
+				
 				try {
-					performTipiEvent("onBegin", null, true);
+					performTipiEvent("onBegin", staticParams, true);
 					int index = 0;
-
+					System.err.println("Mysterymessage:");
+					try {
+						m.write(System.err);
+					} catch (NavajoException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					for (Message message : al) {
 						Map<String, Object> eventParams = new HashMap<String, Object>();
 						eventParams.put("message", message);
+						eventParams.put("array", m);
 						eventParams.put("index", index);
+						eventParams.put("size", al.size());
 						performTipiEvent("onBeforeElement", eventParams, true);
 						TipiComponent child = getTipiComponent(""+index);
 					
@@ -325,7 +380,14 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 						performTipiEvent("onAfterElement", eventParams, true);
 						index++;
 					}
-					performTipiEvent("onEnd", null, true);
+					System.err.println("Children: "+getChildCount());
+					for (int i=0;i<getChildCount();i++) {
+						TipiComponent c = getTipiComponent(i);
+						System.err.println("Child id: "+c.getId());
+					}
+					if(al.size()>0) {
+						performTipiEvent("onEnd", staticParams, true);
+					}
 				
 					
 				} catch (TipiException e) {
