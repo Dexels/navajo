@@ -1,7 +1,57 @@
 <adapterdef>
+    <!-- CSV adapter -->
+    <map>
+        <tagname>csv</tagname>
+        <object>com.dexels.navajo.adapter.CSVMap</object>
+        <values>
+            <value name="fileName" type="string" required="true" direction="in"/>
+            <value name="separator" type="string" required="true" direction="in"/>
+            <value name="update" type="boolean" required="false" direction="in"/>
+            <value name="entries" map="csvline []" required="false" direction="out"/>
+        </values>
+    </map>
+    <map>
+        <tagname>csvline</tagname>
+        <object>com.dexels.navajo.adapter.CSVEntryMap</object>
+        <description/>
+    </map>
+    <!-- HTTP adapter -->
+    <map>
+        <tagname>http</tagname>
+        <object>com.dexels.navajo.adapter.HTTPMap</object>
+        <values>
+            <value name="url" type="string" required="true" direction="in"/>
+            <value name="method" type="string" required="false" direction="in"/>
+            <value name="textContent" type="string" required="false" direction="in"/>
+            <value name="contentType" type="string" required="false" direction="in"/>
+            <value name="content" type="binary" required="false" direction="in"/>
+            <value name="queuedsend" type="boolean" required="false" direction="in"/>
+        </values>
+        <methods>
+            <method name="doSend">
+                <param name="value" field="doSend" type="boolean" required="automatic" value="true"/>
+            </method>
+        </methods>
+    </map>
+    <!-- FTP adapter -->
+    <map>
+        <tagname>ftp</tagname>
+        <object>com.dexels.navajo.adapter.FTPMap</object>
+        <values>
+            <value name="server" type="string" required="true" direction="in"/>
+            <value name="username" type="string" required="true" direction="in"/>
+            <value name="password" type="string" required="true" direction="in"/>
+            <value name="filename" type="string" required="false" direction="in"/>
+            <value name="path" type="string" required="false" direction="in"/>
+            <value name="filename" type="string" required="false" direction="in"/>
+            <value name="content" type="binary" required="false" direction="in"/>
+            <value name="queuedsend" type="boolean" required="false" direction="in"/>
+            <value name="useBinary" type="boolean" required="false" direction="in"/>
+        </values>
+    </map>
     <!-- Mail adapter -->
     <map>
-        <tagname>mailmap</tagname>
+        <tagname>mail</tagname>
         <object>com.dexels.navajo.adapter.MailMap</object>
         <values>
             <value name="mailServer" type="string" required="true" direction="in"/>
@@ -18,10 +68,10 @@
     <map>
         <tagname>attachment</tagname>
         <object>com.dexels.navajo.adapter.AttachmentMap</object>
-        <description></description>
+        <description/>
         <values>
             <value name="attachFileName" type="string" required="false" direction="in"/>
-            <value name="attachFileContent" type="binary"  required="false" direction="in"/>
+            <value name="attachFileContent" type="binary" required="false" direction="in"/>
         </values>
     </map>
     <!-- Navajo adapter -->
@@ -88,6 +138,7 @@
         <values>
             <value name="query" type="string" required="false" direction="in"/>
             <value name="update" type="string" required="false" direction="in"/>
+            <value name="debug" type="boolean" required="false" direction="in"/>
             <value name="transactionContext" type="integer" required="false" direction="in"/>
             <value name="datasource" type="string" required="false" direction="in"/>
             <value name="username" type="string" required="false" direction="in"/>
@@ -112,8 +163,8 @@
         <tagname>auditlog</tagname>
         <object>com.dexels.navajo.util.AuditLog</object>
         <values>
-            <value name="message"  required="true" direction="in"/>
-            <value name="level"  required="false" direction="in"/>
+            <value name="message" required="true" direction="in"/>
+            <value name="level" required="false" direction="in"/>
         </values>
     </map>
     <!-- Code dropdown list -->
