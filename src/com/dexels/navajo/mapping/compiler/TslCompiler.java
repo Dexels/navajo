@@ -1871,6 +1871,7 @@ public String mapNode(int ident, Element n) throws Exception {
     // Construct scriptName:
     // First try if applicationGroup specific script exists.
     String fileName = scriptPath + "/" + script + "_" + GenericHandler.applicationGroup + ".xml";
+    
     Document includeDoc = null;
     File includedFile = new File(fileName);
     
@@ -2016,6 +2017,8 @@ public String mapNode(int ident, Element n) throws Exception {
    StringBuffer codeString = new StringBuffer("codeArray = new String[]{\n");
 
    NodeList list = d.getElementsByTagName("validations");
+   
+   //System.err.println("validations nodes: " + list.getLength());
 //   boolean valid = true;
 //   ArrayList conditions = new ArrayList();
    for (int i = 0; i < list.getLength(); i++) {
@@ -2046,6 +2049,11 @@ public String mapNode(int ident, Element n) throws Exception {
            codeString.append(",\n");
          }
        }
+     }
+     if ( i < list.getLength() - 1) {
+    	   conditionString.append(",\n");
+           ruleString.append(",\n");
+           codeString.append(",\n");
      }
    }
 
