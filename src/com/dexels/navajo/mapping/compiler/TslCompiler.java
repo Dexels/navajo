@@ -2129,6 +2129,20 @@ public String mapNode(int ident, Element n) throws Exception {
 	          " extends CompiledScript {\n\n\n";
 
 	      result.append(classDef);
+
+	      // First resolve includes.
+	      NodeList includes = tslDoc.getElementsByTagName("include");
+	      //System.err.println("FOUND " + includes.getLength() + " INCLUDES");
+	      Node [] includeArray = new Node[includes.getLength()];
+	      for (int i = 0; i < includes.getLength(); i++) {
+	        includeArray[i] = includes.item(i);
+	      }
+	      
+	      for (int i = 0; i < includeArray.length; i++) {
+	        //System.err.println("ABOUT TO RESOLVE INCLUDE: " + includeArray[i]);
+	        includeNode(scriptPath, includeArray[i], tslDoc);
+	      }
+	      
 	      // Generate validation code.
 	      generateValidations(tslDoc, result);
 
@@ -2146,19 +2160,6 @@ public String mapNode(int ident, Element n) throws Exception {
 
 //	      result.append("outDoc = access.getOutputDoc();\n");
 	      result.append("inDoc = access.getInDoc();\n");
-
-	      // First resolve includes.
-	      NodeList includes = tslDoc.getElementsByTagName("include");
-	      //System.err.println("FOUND " + includes.getLength() + " INCLUDES");
-	      Node [] includeArray = new Node[includes.getLength()];
-	      for (int i = 0; i < includes.getLength(); i++) {
-	        includeArray[i] = includes.item(i);
-	      }
-	      
-	      for (int i = 0; i < includeArray.length; i++) {
-	        //System.err.println("ABOUT TO RESOLVE INCLUDE: " + includeArray[i]);
-	        includeNode(scriptPath, includeArray[i], tslDoc);
-	      }
 
 	      // File Rules HashMap
 	      generateRules(tslDoc, result);
