@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.Vector;
 
@@ -37,6 +38,14 @@ public class MethodDefinition {
 		MethodDefinition md = new MethodDefinition(name, params);
 		
 		return md;
+	}
+	
+	public ParameterDefinition getParameterDefinition(String name) {
+		return parameters.get(name);
+	}
+	
+	public Set getParameters() {
+		return parameters.keySet();
 	}
 	
 	private String generateParamName() {

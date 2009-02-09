@@ -3,6 +3,7 @@ package com.dexels.navajo.mapping.compiler.meta;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.Vector;
 
 import com.dexels.navajo.document.nanoimpl.XMLElement;
@@ -30,8 +31,16 @@ public class MapDefinition {
 	protected HashMap<String, ValueDefinition> values = new HashMap<String, ValueDefinition>();
 	protected HashMap<String, MethodDefinition> methods = new HashMap<String, MethodDefinition>();
 	
+	public Set getValueDefinitions() {
+		return values.keySet();
+	}
+	
 	public ValueDefinition getValueDefinition(String name) {
 		return values.get(name);
+	}
+	
+	public Set getMethodDefinitions() {
+		return methods.keySet();
 	}
 	
 	public MethodDefinition getMethodDefinition(String name) {

@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.Vector;
 import java.util.logging.Level;
 
@@ -63,7 +64,7 @@ public class MapMetaData {
 						                                        myClassLoader);
 				while(iter.hasNext()) {
 					ExtensionDefinition ed = (ExtensionDefinition) iter.next();
-					System.err.println("FOUND POSSIBLE ADAPTER EXTENSION: " + ed);
+					//System.err.println("FOUND POSSIBLE ADAPTER EXTENSION: " + ed);
 					
 					BufferedReader br = new BufferedReader(new InputStreamReader(ed.getDefinitionAsStream()));
 
@@ -106,7 +107,15 @@ public class MapMetaData {
 		return instance;
 	}
 	
-	public MapDefinition getMapDefinition(String name) {
+	public Set<String> getMapDefinitions() {
+		return maps.keySet();
+	}
+	
+	public MapDefinition getMapDefinition(String name) throws Exception {
+		if ( !maps.containsKey(name) ) {
+			// Try to re-read config, maybe a new definition?
+			readConfig();
+		}
 		return maps.get(name);
 	}
 	
