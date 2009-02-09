@@ -54,7 +54,7 @@ public abstract class BaseNode implements java.io.Serializable{
 	 if ( this instanceof Message ) {
 		 Message msg = (Message) this;
 		 // Do not serialized message that have mode="ignore" or messages that start with "__" (reserved for internal messages)
-		 if ( Message.MSG_MODE_IGNORE.equals(msg.getMode()) || msg.getName().startsWith("__") ){
+		 if ( Message.MSG_MODE_IGNORE.equals(msg.getMode()) ){
 			 return;
 		 }
 	 }

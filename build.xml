@@ -45,6 +45,7 @@
         <include name="metadata/**/*.class"/>
         <include name="metadata/**/*.txt"/>
         <include name="navajotypes.xml"/>
+        <include name="${document.base}/*.xml"/>
         <include name="org/**/*.class"/>
       </fileset>
           <fileset dir="${build}">
