@@ -33,8 +33,12 @@ public abstract class NavajoFactory {
   private HashMap<Class, String> toNavajoType = new HashMap<Class, String>();
   
   private void readTypes() throws Exception {
-	  
-	 InputStream is = getClass().getClassLoader().getResourceAsStream("navajotypes.xml");
+	  ClassLoader cl = getClass().getClassLoader();
+	  if(cl==null) {
+		  System.err.println("Bootstrap classloader detected!");
+		  cl = ClassLoader.getSystemClassLoader();
+	  }
+	 InputStream is = cl.getResourceAsStream("navajotypes.xml");
 	 CaseSensitiveXMLElement types = new CaseSensitiveXMLElement();
 	 types.parseFromStream(is);
 	 is.close();
