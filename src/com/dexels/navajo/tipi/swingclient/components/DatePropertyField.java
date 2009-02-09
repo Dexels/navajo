@@ -294,8 +294,18 @@ public final void paintComponent(Graphics g) {
       }
       else {
         if (e.getX() > getWidth() - getHeight() && e.getX() < getWidth() && e.getY() > 0 && e.getY() < getHeight()) {
-          CalendarPickerDialog cpd = new CalendarPickerDialog();
-          SwingClient.getUserInterface().addDialog(cpd);
+       //   CalendarPickerDialog cpd = new CalendarPickerDialog();
+          JDialog jj =	SwingClient.getUserInterface().getTopDialog();
+          JFrame ff =	SwingClient.getUserInterface().getMainFrame();
+
+          CalendarPickerDialog cpd;
+          if(jj!=null) {
+             	cpd = new CalendarPickerDialog(jj);
+          } else {
+          	cpd = new CalendarPickerDialog(ff);
+          }
+          cpd.setSize(new Dimension(250, 250));
+  		 SwingClient.getUserInterface().addDialog(cpd);
           if (cpd.isCommitted()) {
             Date d = cpd.getSelectedDate();
             if (d != null) {
