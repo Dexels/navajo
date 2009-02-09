@@ -27,6 +27,10 @@ package navajo;
 /**
  * VERSION HISTORY
  * 
+ * 7.7.4 Release Candidate
+ *       - Now using Service lookup mechanism for adapters as well. Also added utility to generate navascript XSD file.
+ *       - Fixed support for multiple include script that contain validations.
+ * 
  * 7.7.3 Beta release with 
  *       - support for type checking functions and using functions via Service lookup mechanism.
  *       - Refactored Jabber support to Navajo Listeners.
