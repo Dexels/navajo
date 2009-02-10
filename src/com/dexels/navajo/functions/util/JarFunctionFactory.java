@@ -27,6 +27,8 @@ public class JarFunctionFactory extends FunctionFactoryInterface {
 				return;
 			}
 			
+			System.err.println("FOUND FUNCTION EXTENSION: " + fd);
+			
 			Vector<XMLElement> children = xml.getChildren();
 			for (int i = 0; i < children.size(); i++) {
 				// Get object, usage and description.
@@ -75,7 +77,6 @@ public class JarFunctionFactory extends FunctionFactoryInterface {
 					                                        myClassLoader);
 			while(iter.hasNext()) {
 				ExtensionDefinition ed = (ExtensionDefinition) iter.next();
-				System.err.println("FOUND FUNCTION EXTENSION: " + ed);
 				readDefinitionFile(fuds, ed);
 			}
 		} catch (ClassNotFoundException e) {
