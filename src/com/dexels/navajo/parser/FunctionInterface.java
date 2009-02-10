@@ -92,19 +92,31 @@ public abstract class FunctionInterface {
     		NavajoFactory nf = NavajoFactory.getInstance();
     		Class [][] mytypes = new Class[navajotypes.length][];
     		boolean hasEmptyOptions = false;
+    		boolean hasMultipleOptions = false;
     		for (int i = 0; i < navajotypes.length; i++) {
     			mytypes[i] = new Class[navajotypes[i].length];
     			boolean emptyOptionSpecified = false;
+    			boolean multipleOptionsSpecified = false;
     			for (int j = 0; j < navajotypes[i].length; j++) {
-    				if ( navajotypes[i][j] == null || navajotypes[i][j].equalsIgnoreCase("empty") ) {
+    				
+    				if ( navajotypes[i][j] != null && navajotypes[i][j].trim().equals("...") ) {
+    					mytypes[i][j] = Set.class; // Use Set class to denote multiple parameter option.
+     					multipleOptionsSpecified = true;
+    					hasMultipleOptions = true;
+    				} else if ( navajotypes[i][j] == null || navajotypes[i][j].trim().equalsIgnoreCase("empty") ) {
     					mytypes[i][j] = null;
     					emptyOptionSpecified = true;
     					hasEmptyOptions = true;
     				} else {
-    					mytypes[i][j] = nf.getJavaType(navajotypes[i][j]);
+    					mytypes[i][j] = nf.getJavaType(navajotypes[i][j].trim());
     				}
     			}
-    			if ( hasEmptyOptions && !emptyOptionSpecified ) {
+    			
+    			if ( hasMultipleOptions && !multipleOptionsSpecified) {
+    				throw new IllegalArgumentException("Multiple parameter options can only be specified in one sequence of last parameters.");
+    			}
+    			
+    			if ( hasEmptyOptions && !emptyOptionSpecified && !hasMultipleOptions ) {
     				throw new IllegalArgumentException("Empty parameter options can only be specified in one sequence of last parameters.");
     			}
     		}
@@ -169,7 +181,10 @@ public abstract class FunctionInterface {
     				} catch (Exception e) {
     					passedParam = null;
     				}
-    				if ( ( p == null && passedParam == null ) || ( p != null && passedParam != null && p.isAssignableFrom( passedParam ) ) ) {
+    				if ( 
+    					 ( p == null && passedParam == null ) || 
+    					 ( p != null && p.equals(Set.class) ) ||
+    					 ( p != null && passedParam != null && p.isAssignableFrom( passedParam ) ) ) {
     					correct = true;
     				}
     			}
