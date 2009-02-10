@@ -47,17 +47,24 @@ public class FunctionFactoryFactory {
 		//System.setProperty("NavajoFunctionFactory", "com.dexels.navajo.functions.util.JarFunctionFactory");
 		FunctionFactoryInterface fii = FunctionFactoryFactory.getInstance();
 		ClassLoader cl = Thread.currentThread().getContextClassLoader();
+	
+		FunctionInterface fi = fii.getInstance(cl, "SingleValueQuery");
+		fi.reset();
+		fi.insertOperand(new Integer(21210));
+		fi.insertOperand("SELECT * FROM AAP WHERE noot = ?");
+		fi.insertOperand("PIPO");
+		fi.evaluateWithTypeChecking();
 		
-		long start = System.currentTimeMillis();
+//		long start = System.currentTimeMillis();
 		
-		for (int i = 0; i < 10000; i++) {
-			//Abs fi = new Abs(); 
-			FunctionInterface fi = fii.getInstance(cl, "Abs");
-			fi.reset();
-			fi.insertOperand(new Integer(30));
-			Object o = fi.evaluateWithTypeChecking();
-		}
-		System.err.println("With type checking, took: " +  ( System.currentTimeMillis() - start ) + " millis.");
+//		for (int i = 0; i < 10000; i++) {
+//			//Abs fi = new Abs(); 
+//			FunctionInterface fi = fii.getInstance(cl, "Abs");
+//			fi.reset();
+//			fi.insertOperand(new Integer(30));
+//			Object o = fi.evaluateWithTypeChecking();
+//		}
+//		System.err.println("With type checking, took: " +  ( System.currentTimeMillis() - start ) + " millis.");
 //		
 //		FunctionInterface fi = fii.getInstance(cl, "FormatDate");
 //		fi.reset();
