@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiDockable;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingSplitDock;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.javadocking.DockingManager;
 import com.javadocking.dock.*;
@@ -18,13 +19,13 @@ import com.javadocking.util.LookAndFeelUtil;
 
 public class TipiDockingPanel extends TipiPanel {
 	DockModel dockModel;
-	SplitDock myContainer;
+	TipiSwingSplitDock myContainer;
 	@Override
 	
 	public Object createContainer() {
 		Container container = (Container)super.createContainer();
 //		return container;
-		myContainer = new SplitDock();
+		myContainer = new TipiSwingSplitDock(this);
 		return myContainer;
 	}
 

@@ -6,6 +6,7 @@ import javax.swing.ImageIcon;
 
 import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiDockable;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingSplitDock;
 import com.javadocking.dock.Dock;
 import com.javadocking.dock.Position;
 import com.javadocking.dock.SplitDock;
@@ -15,12 +16,12 @@ import com.javadocking.dockable.Dockable;
 import com.javadocking.dockable.DockingMode;
 
 public class TipiSplitDock extends TipiDataComponentImpl {
-	SplitDock mySplitDock;
+	TipiSwingSplitDock mySplitDock;
 
 	public Object createContainer() {
 		runSyncInEventThread(new Runnable() {
 			public void run() {
-				mySplitDock = new SplitDock();
+				mySplitDock = new TipiSwingSplitDock(TipiSplitDock.this);
 			}
 		});
 		return mySplitDock;
