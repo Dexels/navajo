@@ -51,8 +51,10 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 		// Don't register actionPerformed, that is done elsewhere.
 		mm.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
-				messageTableSelectionChanged(e);
-				getAttributeProperty("selectedMessage").setAnyValue(mm.getSelectedMessage());
+				if(!e.getValueIsAdjusting()){
+					messageTableSelectionChanged(e);
+					getAttributeProperty("selectedMessage").setAnyValue(mm.getSelectedMessage());
+				}
 			}
 		});
 		mm.setFocusable(false);
@@ -680,18 +682,22 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 					if ("selectByValue".equals(name)) {
 						Operand name = compMeth.getEvaluatedParameter("propertyName", event);
 						Operand value = compMeth.getEvaluatedParameter("value", event);
+						
 						try {
 							int rowCount = mm.getRowCount();
+							mm.getTable().getSelectionModel().setValueIsAdjusting(true);
+							mm.getTable().getSelectionModel().clearSelection();
+							
 							for (int i = 0; i < rowCount; i++) {
 								Message current = mm.getMessageRow(i);
 								Property p = current.getProperty((String) name.value);
 								if(p!=null) {
-									if(p.getTypedValue().equals(value.value)) {
-										mm.setSelectedRow(i);
-										break;
+									if(p.getTypedValue().equals(value.value)) {										
+										mm.getTable().getSelectionModel().addSelectionInterval(i, i);
 									}
 								}
-							}
+							}	
+							mm.getTable().getSelectionModel().setValueIsAdjusting(false);							
 						} catch (Exception ex1) {
 							ex1.printStackTrace();
 						}

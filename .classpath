@@ -11,5 +11,6 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/TipiSwingClient"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/TimingFramework"/>
 	<classpathentry kind="lib" path="lib/javaws.jar"/>
+	<classpathentry kind="lib" path="lib/javadocking.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
