@@ -88,52 +88,62 @@ public abstract class FunctionInterface {
         		return;
         	}
     		
-    		// Convert navajo types to Java classes.
     		NavajoFactory nf = NavajoFactory.getInstance();
-    		Class [][] mytypes = new Class[navajotypes.length][];
-    		boolean hasEmptyOptions = false;
-    		boolean hasMultipleOptions = false;
-    		for (int i = 0; i < navajotypes.length; i++) {
-    			mytypes[i] = new Class[navajotypes[i].length];
-    			boolean emptyOptionSpecified = false;
-    			boolean multipleOptionsSpecified = false;
-    			for (int j = 0; j < navajotypes[i].length; j++) {
-    				
-    				if ( navajotypes[i][j] != null && navajotypes[i][j].trim().equals("...") ) {
-    					mytypes[i][j] = Set.class; // Use Set class to denote multiple parameter option.
-     					multipleOptionsSpecified = true;
-    					hasMultipleOptions = true;
-    				} else if ( navajotypes[i][j] == null || navajotypes[i][j].trim().equalsIgnoreCase("empty") ) {
-    					mytypes[i][j] = null;
-    					emptyOptionSpecified = true;
-    					hasEmptyOptions = true;
-    				} else {
-    					mytypes[i][j] = nf.getJavaType(navajotypes[i][j].trim());
+    		
+    		if ( navajotypes != null ) {
+    			
+    			// Convert navajo types to Java classes.
+        	
+        		Class [][] mytypes = new Class[navajotypes.length][];
+        		boolean hasEmptyOptions = false;
+        		boolean hasMultipleOptions = false;
+        		
+    			for (int i = 0; i < navajotypes.length; i++) {
+    				mytypes[i] = new Class[navajotypes[i].length];
+    				boolean emptyOptionSpecified = false;
+    				boolean multipleOptionsSpecified = false;
+    				for (int j = 0; j < navajotypes[i].length; j++) {
+
+    					if ( navajotypes[i][j] != null && navajotypes[i][j].trim().equals("...") ) {
+    						mytypes[i][j] = Set.class; // Use Set class to denote multiple parameter option.
+    						multipleOptionsSpecified = true;
+    						hasMultipleOptions = true;
+    					} else if ( navajotypes[i][j] == null || navajotypes[i][j].trim().equalsIgnoreCase("empty") ) {
+    						mytypes[i][j] = null;
+    						emptyOptionSpecified = true;
+    						hasEmptyOptions = true;
+    					} else {
+    						mytypes[i][j] = nf.getJavaType(navajotypes[i][j].trim());
+    					}
+    				}
+
+    				if ( hasMultipleOptions && !multipleOptionsSpecified) {
+    					throw new IllegalArgumentException("Multiple parameter options can only be specified in one sequence of last parameters.");
+    				}
+
+    				if ( hasEmptyOptions && !emptyOptionSpecified && !hasMultipleOptions ) {
+    					throw new IllegalArgumentException("Empty parameter options can only be specified in one sequence of last parameters.");
     				}
     			}
-    			
-    			if ( hasMultipleOptions && !multipleOptionsSpecified) {
-    				throw new IllegalArgumentException("Multiple parameter options can only be specified in one sequence of last parameters.");
-    			}
-    			
-    			if ( hasEmptyOptions && !emptyOptionSpecified && !hasMultipleOptions ) {
-    				throw new IllegalArgumentException("Empty parameter options can only be specified in one sequence of last parameters.");
-    			}
+    			types.put(this.getClass(), mytypes);
     		}
     		
-    		// Set returntype.
-    		Class [] myreturnType = new Class[navajoReturnType.length];
-    		for (int i = 0; i < navajoReturnType.length; i++) {
-    			if ( navajoReturnType[i] == null || navajoReturnType[i].equalsIgnoreCase("empty") ) {
-    				myreturnType[i] = null;
-    			} else {
-    				myreturnType[i] = nf.getJavaType(navajoReturnType[i]);
+    		if ( navajoReturnType != null ) {
+    			// Set returntype.
+    			Class [] myreturnType = new Class[navajoReturnType.length];
+    			for (int i = 0; i < navajoReturnType.length; i++) {
+    				if ( navajoReturnType[i] == null || navajoReturnType[i].equalsIgnoreCase("empty") ) {
+    					myreturnType[i] = null;
+    				} else {
+    					myreturnType[i] = nf.getJavaType(navajoReturnType[i]);
+    				}
     			}
+    			returnType.put(this.getClass(), myreturnType);
     		}
     		
     		initialized.add(this.getClass());
-    		types.put(this.getClass(), mytypes);
-    		returnType.put(this.getClass(), myreturnType);
+    		
+    		
     	}
     }
        
@@ -252,9 +262,5 @@ public abstract class FunctionInterface {
 		return initialized.contains(this.getClass());
 	}
 	
-	public static void main(String [] args) {
-		
-		System.err.println(java.lang.Object.class.isAssignableFrom(java.lang.String.class));
-	}
 	
 }

@@ -10,7 +10,7 @@ public final class FunctionDefinition {
 	public FunctionDefinition(final String object, final String description, final String inputParams, final String resultParam) {
 		this.object = object;
 		this.description = description;
-		if ( inputParams != null ) {
+		if ( inputParams != null && !inputParams.equals("") ) {
 			String [] params = inputParams.split(",");
 			this.inputParams = new String[params.length][];
 			for (int i = 0; i < params.length; i++) {
@@ -19,7 +19,7 @@ public final class FunctionDefinition {
 		} else {
 			this.inputParams =  null;
 		}
-		if ( resultParam != null ) {
+		if ( resultParam != null && !resultParam.equals("") ) {
 			this.resultParam = resultParam.split("\\|");
 		} else {
 			this.resultParam = null;
