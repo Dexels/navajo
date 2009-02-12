@@ -187,16 +187,18 @@ public abstract class FunctionInterface {
     			for (int possParam = 0; possParam < possibleParameters.length; possParam++) {
     				
     				Class p = possibleParameters[possParam];
+    				boolean notpresent = false;
     				
     				try {
     					passedParam = getOperand(paramIndex).getClass();
     				} catch (Exception e) {
     					passedParam = null;
+    					notpresent = true;
     				}
-    				if ( 
-    					 ( p == null && passedParam == null ) || 
-    					 ( p != null && p.equals(Set.class) ) ||
-    					 ( p != null && passedParam != null && p.isAssignableFrom( passedParam ) ) ) {
+    				if ( ( !notpresent && passedParam == null ) || // Passedparam could be present but NULL.
+    					 ( notpresent && p == null && passedParam == null ) ||   // Passedparam could not be present but expected could be empty.
+    					 ( p != null && p.equals(Set.class) ) || // Expected could not be empty and p could be set (=...)
+    					 ( p != null && passedParam != null && p.isAssignableFrom( passedParam ) ) ) { // Expected is assignable from passedparam.
     					correct = true;
     				}
     			}
