@@ -148,7 +148,9 @@ public abstract class FunctionInterface {
     	boolean correct = false;
     	
     	for (int i = 0; i < myreturntype.length; i++) {
-    		if ( o != null && o.getClass().equals(myreturntype[i])  ) {
+    		if ( o != null && myreturntype[i].isAssignableFrom(o.getClass()) ) {
+    			correct = true;
+    		} else if ( o == null ) {
     			correct = true;
     		}
     	}
@@ -248,6 +250,11 @@ public abstract class FunctionInterface {
 
 	public boolean isInitialized() {
 		return initialized.contains(this.getClass());
+	}
+	
+	public static void main(String [] args) {
+		
+		System.err.println(java.lang.Object.class.isAssignableFrom(java.lang.String.class));
 	}
 	
 }
