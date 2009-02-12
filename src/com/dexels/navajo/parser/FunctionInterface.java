@@ -190,7 +190,8 @@ public abstract class FunctionInterface {
     				boolean notpresent = false;
     				
     				try {
-    					passedParam = getOperand(paramIndex).getClass();
+    					Object o = getOperand(paramIndex);
+    					passedParam = ( o != null ? o.getClass() : null);
     				} catch (Exception e) {
     					passedParam = null;
     					notpresent = true;
