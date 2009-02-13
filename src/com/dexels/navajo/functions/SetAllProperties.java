@@ -28,7 +28,7 @@ public class SetAllProperties extends FunctionInterface {
         if (!(a instanceof Message))
             throw new TMLExpressionException("SetAllProperties(Message, String, Object) expected");
         Object b = this.getOperands().get(1);
-       if (!(a instanceof String))
+       if (!(b instanceof String))
             throw new TMLExpressionException("SetAllProperties(Message, String, Object) expected");
        Object c = this.getOperands().get(2);
    
