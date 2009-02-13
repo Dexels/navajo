@@ -27,4 +27,10 @@ public abstract class CachedResourceLoader extends ClassPathResourceLoader {
 		return super.getResourceURL(location);
 	}
 
+	public void flushCache() {
+		CacheManager c = getCacheManager();
+		if(c!=null) {
+			c.flushCache();
+		}
+	}
 }

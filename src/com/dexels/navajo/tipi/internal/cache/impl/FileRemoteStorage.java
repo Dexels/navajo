@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.internal.cache.impl;
 
 import java.io.*;
 import java.net.*;
+import java.util.Map;
 
 import com.dexels.navajo.tipi.internal.cache.*;
 
@@ -12,8 +13,13 @@ public class FileRemoteStorage implements RemoteStorage {
 		this.base = base;
 	}
 
-	public InputStream getContents(String location) throws IOException {
+	public InputStream getContents(String location, Map<String,Object> metadata) throws IOException {
 		File u = new File(base, location);
+		if(!u.exists()) {
+			return null;
+		}
+		metadata.put("length", u.length());
+		
 		FileInputStream fis = new FileInputStream(u);
 		return fis;
 	}

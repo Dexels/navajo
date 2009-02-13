@@ -6,15 +6,23 @@ import java.util.*;
 import com.dexels.navajo.tipi.internal.cookie.*;
 
 public class TmpFileCookieManager implements CookieManager {
-	private final Map<String, String> cookieMap = new HashMap<String, String>();
+	protected final Map<String, String> cookieMap = new HashMap<String, String>();
 
+	private File cookieFile = null;
+	
 	public String getCookie(String key) {
-		return cookieMap.get(key);
+		String cookieValue = cookieMap.get(key);
+		System.err.println("getting cookievalue: "+key+" result: "+cookieValue);
+		System.err.println("Map: "+ cookieMap);
+		return cookieValue;
 	}
 
 	public void setCookie(String key, String value) {
+		System.err.println("setting cookievalue: "+key+" result: "+value);
 		cookieMap.put(key, value);
+		System.err.println("Map: "+ cookieMap);
 		try {
+			System.err.println("Saving the cookies!");
 			saveCookies();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -22,29 +30,61 @@ public class TmpFileCookieManager implements CookieManager {
 	}
 
 	public void saveCookies() throws IOException {
-		File tmp = new File(System.getProperty("java.io.tmpdir"));
-		File f = new File(tmp, "tipi.cookie");
-		PrintWriter fw = new PrintWriter(new FileWriter(f, false));
+		FileOutputStream fis = new FileOutputStream(cookieFile);
+		saveCookieWithStream(fis);
+		fis.close();
+	}
+
+	protected void saveCookieWithStream(OutputStream fos) throws IOException {
+		PrintWriter fw = new PrintWriter( fos);
 		Set<String> ss = cookieMap.keySet();
 		for (String key : ss) {
 			fw.println(key + "|" + cookieMap.get(key));
 		}
 		fw.flush();
-		fw.close();
+	//	fw.close();
 	}
 
 	public void loadCookies() throws IOException {
-		File tmp = new File(System.getProperty("java.io.tmpdir"));
-		File f = new File(tmp, "tipi.cookie");
-		BufferedReader fw = new BufferedReader(new FileReader(f));
+		cookieFile = new File(new File(System.getProperty("java.io.tmpdir")),"tipi.cookie");
+		
+		FileInputStream fis = null;
+		try {
+			fis = new FileInputStream(cookieFile);
+		loadCookieFromStream(fis);
+		} finally {
+			if(fis!=null) {
+				fis.close();
+			}
+		}
+	}
+
+	/**
+	 * Will not close the stream! Remember.
+	 * @param fis
+	 * @throws IOException
+	 */
+	protected void loadCookieFromStream(InputStream fis) throws IOException {
+		BufferedReader fw = new BufferedReader(new InputStreamReader(fis));
 		String line = fw.readLine();
 		while (line != null) {
+			if(line.equals("")) {
+				line = fw.readLine();
+				continue;
+			}
+			System.err.println("Coookie Parsing: "+line);
 			StringTokenizer st = new StringTokenizer(line, "|");
 			String key = st.nextToken();
 			String value = st.nextToken();
 			cookieMap.put(key, value);
 			line = fw.readLine();
 		}
+	}
+
+	public void deleteCookies() throws IOException {
+		cookieFile.delete();
+		cookieMap.clear();
+		System.err.println("Tmp file cookies deleted!");
 	}
 
 }

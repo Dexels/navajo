@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<extension id="TipiCore" requiresMain="" project="NavajoTipi" version="1.1" title="Tipi Core Library" vendor="Dexels" homepage="http://www.dexels.com">
+	<description>
+		Core tipi
+	</description>
+	<includes>
+		<include path="com/dexels/navajo/tipi/classdef.xml"/>
+		<include path="com/dexels/navajo/tipi/actions/actiondef.xml"/>
+		<include path="com/dexels/navajo/functions/functions.xml"/>
+	</includes>
+	<jars>
+		<jar path="NavajoClient.jar"/>
+		<jar path="NavajoDocument.jar"/>
+		<jar path="NavajoRuntime.jar"/>
+		<jar path="NavajoFunctions.jar"/>
+		<jar path="NavajoServer.jar"/>
+		<jar path="NavajoClient.jar"/>
+		<jar path="NanoImpl.jar"/>
+		<jar path="tipipackage.jar"/>
+		<jar path="jzlib.jar"/>
+	</jars>
+	<other>
+		<link href="http://www.navajo.nl"/>
+	</other>
+</extension>

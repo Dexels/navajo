@@ -45,4 +45,9 @@ public interface TipiResourceLoader {
 	public List<File> getAllResources() throws IOException;
 
 	public boolean isReadOnly();
+
+	/**
+	 * Only applies for cached loaders. Will remove local cache
+	 */
+	public void flushCache() throws IOException;
 }

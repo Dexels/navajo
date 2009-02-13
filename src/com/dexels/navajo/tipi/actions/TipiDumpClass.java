@@ -31,7 +31,7 @@ public final class TipiDumpClass extends TipiAction {
 			Navajo n = NavajoFactory.getInstance().createNavajo();
 			Message mm = NavajoFactory.getInstance().createMessage(n, "Class", Message.MSG_TYPE_ARRAY);
 			n.addMessage(mm);
-			Map<String, XMLElement> m = myContext.getTipiClassDefMap();
+			Map<String, XMLElement> m = myContext.getClassManager().getClassMap();
 			for (Iterator<String> iter = m.keySet().iterator(); iter.hasNext();) {
 				String element = iter.next();
 				XMLElement def = m.get(element);

@@ -21,6 +21,11 @@
 
    <tipiaction name="exit" class="TipiExit" package="com.dexels.navajo.tipi.actions" />
 
+   <tipiaction name="registerPush" class="TipiRegisterPush" package="com.dexels.navajo.tipi.actions">
+      <param name="agentId" type="string" default="" />
+    </tipiaction>
+  
+
    <tipiaction name="sleep" class="TipiSleep" package="com.dexels.navajo.tipi.actions">
       <param name="time" type="integer" required="true" />
    </tipiaction>
@@ -267,4 +272,8 @@
       <param name="name" type="string" />
       <param name="value" type="string" />
    </tipiaction>
+   
+      <tipiaction name="deleteCookies" class="TipiDeleteCookies" package="com.dexels.navajo.tipi.actions"/>
+      <tipiaction name="deleteCache" class="TipiDeleteCache" package="com.dexels.navajo.tipi.actions"/>
+
 </tid>

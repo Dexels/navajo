@@ -1,69 +1,24 @@
 package tipi;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.tipixml.XMLParseException;
 
-public class TipiCore extends AbstractTipiExtension  {
+public class TipiCore extends TipiAbstractXMLExtension  {
+
+	public TipiCore() {
+		super("NavajoTipi.xml");
+	}
 
 	public void initialize(TipiContext tc) {
 		// Do nothing
 
 	}
 
-	public String getDescription() {
-		return "Core tipi";
-	}
 
-	public String[] getIncludes() {
 
-		return new String[] { "com/dexels/navajo/tipi/classdef.xml", "com/dexels/navajo/tipi/actions/actiondef.xml" };
-	}
 
-	public boolean isMainImplementation() {
-		return false;
-	}
-
-	public String getId() {
-		return "core";
-	}
-
-	public String requiresMainImplementation() {
-		return null;
-	}
-
-	public List<String> getLibraryJars() {
-		ArrayList<String> jars = new ArrayList<String>();
-		jars.add("NavajoClient.jar");
-		jars.add("NavajoDocument.jar");
-		jars.add("NavajoRuntime.jar");
-		jars.add("NavajoFunctions.jar");
-		jars.add("NavajoServer.jar");
-		jars.add("NavajoClient.jar");
-		return jars;
-	}
-
-	public List<String> getMainJars() {
-		ArrayList<String> jars = new ArrayList<String>();
-		jars.add("tipipackage.jar");
-		return jars;
-	}
-
-	public String getConnectorId() {
-		return "http";
-	}
-
-	public List<String> getRequiredExtensions() {
-		return null;
-	}
-	public String getProjectName() {
-		return "NavajoTipi";
-	}
-
-	public String getDeploymentDescriptor() {
-		return null;
-	}
-	public List<String> getDependingProjectUrls() {
-		return null;
-	}
 }

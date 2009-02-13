@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.internal.cache.impl;
 
 import java.io.*;
 import java.net.*;
+import java.util.Map;
 
 import com.dexels.navajo.tipi.internal.cache.*;
 
@@ -20,7 +21,7 @@ public class FileLocalStorage implements LocalStorage {
 		}
 	}
 
-	public void flushAll(String location) {
+	public void flushAll() {
 		System.err.println("FLUSHALL: todo: Implement");
 	}
 
@@ -46,7 +47,8 @@ public class FileLocalStorage implements LocalStorage {
 		return f.exists();
 	}
 
-	public void storeData(String location, InputStream data) throws IOException {
+	public void storeData(String location, InputStream data, Map<String,Object> metadata) throws IOException {
+		System.err.println("File storage. Storing: "+metadata.get("length")+" bytes.");
 		File f = new File(baseFile, convertPath(location));
 		FileOutputStream fos = new FileOutputStream(f);
 		copyResource(fos, data);

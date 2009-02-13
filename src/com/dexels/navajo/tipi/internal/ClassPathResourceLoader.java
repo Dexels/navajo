@@ -41,4 +41,8 @@ public class ClassPathResourceLoader implements TipiResourceLoader {
 	public boolean isReadOnly() {
 		return true;
 	}
+
+	public void flushCache() {
+		// DO NOTHING
+	}
 }

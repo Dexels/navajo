@@ -13,4 +13,6 @@ public interface CacheManager {
 	public URL getRemoteURL(String location) throws IOException;
 
 	public URL getLocalURL(String location) throws IOException;
+
+	public void flushCache();
 }

@@ -13,7 +13,7 @@ public class TipiValidationManager {
 			childrenValid = childrenValid && validateComponentTree(element);
 		}
 		if(tc instanceof TipiValidatableComponent) {
-			TipiValidatableComponent tvc = (TipiValidatableComponent)tc;
+//			TipiValidatableComponent tvc = (TipiValidatableComponent)tc;
 			
 		}
 		boolean valid = false;

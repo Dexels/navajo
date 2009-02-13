@@ -11,11 +11,12 @@ import tipi.*;
 
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.base.*;
 import com.dexels.navajo.document.types.*;
+import com.dexels.navajo.functions.util.FunctionDefinition;
 import com.dexels.navajo.parser.*;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.tipi.actions.*;
+import com.dexels.navajo.tipi.classdef.ClassManager;
 import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.connectors.*;
 import com.dexels.navajo.tipi.extension.*;
@@ -63,12 +64,11 @@ public abstract class TipiContext {
 	 * Maps component types to their actual class. Could be refactored to be
 	 * done on demand
 	 */
-	protected final Map<String, Class<?>> tipiClassMap = new HashMap<String, Class<?>>();
+	//protected final Map<String, Class<?>> tipiClassMap = new HashMap<String, Class<?>>();
 
 	/*
 	 * Maps component type definitions
 	 */
-	protected final Map<String, XMLElement> tipiClassDefMap = new HashMap<String, XMLElement>();
 	// protected final Map tipiActionDefMap = new HashMap();
 
 	private boolean contextShutdown = false;
@@ -81,7 +81,7 @@ public abstract class TipiContext {
 	protected TipiErrorHandler eHandler;
 	protected String errorHandler;
 
-	
+	protected long parseTime = 0;
 	
 	/**
 	 * Lists the toplevel components in the current implementation
@@ -90,43 +90,26 @@ public abstract class TipiContext {
 	private final TipiActionManager myActionManager = new TipiActionManager();
 
 	protected final List<TipiActivityListener> myActivityListeners = new ArrayList<TipiActivityListener>();
-
 	private final List<TipiNavajoListener> navajoListenerList = new ArrayList<TipiNavajoListener>();
-	// private final List<TipiNavajoListener> eventListenerList = new
-	// ArrayList<TipiNavajoListener>();
 
 	private CookieManager myCookieManager;
 
 	protected final Map<String, Navajo> navajoMap = new HashMap<String, Navajo>();
 
+
+	
 	protected TipiThreadPool myThreadPool;
 	protected TipiComponent topScreen = null;
-	// protected List myThreadsToServer = new ArrayList();
-	// protected int maxToServer = 1;
 	protected int poolSize = 6;
-	// protected boolean singleThread = true;
-	// private String currentDefinition = null;
 	private final Map<String, TipiTypeParser> parserInstanceMap = new HashMap<String, TipiTypeParser>();
-	// private final Map resourceReferenceMap = new HashMap();
-	//
-	// private final List resourceReferenceList = new ArrayList();
-
 	protected TipiStorageManager myStorageManager = null;
-
-	// private final List packageList = new ArrayList();
-	// private final Map packageMap = new HashMap();
-	// private final List packageReferenceList = new ArrayList();
-	// private final Map packageReferenceMap = new HashMap();
-
+	protected final ClassManager classManager = new ClassManager(this);
 	protected final Stack<DescriptionProvider> descriptionProviderStack = new Stack<DescriptionProvider>();
-
 	protected final Map<String, Object> globalMap = new HashMap<String, Object>();
-
 	protected final long startTime = System.currentTimeMillis();
 	private ClassLoader tipiClassLoader = null;
 	private ClassLoader resourceClassLoader = null;
 	private final List<ShutdownListener> shutdownListeners = new ArrayList<ShutdownListener>();
-
 	private TipiResourceLoader tipiResourceLoader;
 	private TipiResourceLoader genericResourceLoader;
 
@@ -147,9 +130,7 @@ public abstract class TipiContext {
 
 	private final Map<String, TipiConnector> tipiConnectorMap = new HashMap<String, TipiConnector>();
 	private TipiConnector defaultConnector;
-
 	private boolean hasDebugger;
-
 	private final Map<String, List<PropertyChangeListener>> propertyBindMap = new HashMap<String, List<PropertyChangeListener>>();
 
 	private TipiContext myParentContext;
@@ -196,6 +177,10 @@ public abstract class TipiContext {
 			hasDebugger = false;
 		}
 
+	}
+	
+	public final ClassManager getClassManager() {
+		return classManager;
 	}
 
 	private void fakeExtensions() {
@@ -287,8 +272,8 @@ public abstract class TipiContext {
 	}
 
 	private void checkExtension(TipiExtension tipiExtension, List<TipiExtension> allExtension) {
-		String main = tipiExtension.requiresMainImplementation();
-		List<String> extensions = tipiExtension.getRequiredExtensions();
+//		String main = tipiExtension.requiresMainImplementation();
+//		List<String> extensions = tipiExtension.getRequiredExtensions();
 	}
 
 	private void appendIncludes(List<TipiExtension> extensionList, List<String> includes) {
@@ -320,9 +305,6 @@ public abstract class TipiContext {
 	protected void clearLogFile() {
 	}
 
-	// public void setResourceClassLoader(ClassLoader c) {
-	// resourceClassLoader = c;
-	// }
 
 	public void getTipiValidationDecorator(TipiValidationDecorator tv) {
 		tipiValidationManager = tv;
@@ -432,7 +414,7 @@ public abstract class TipiContext {
 	}
 
 	public Map<String, XMLElement> getTipiClassDefMap() {
-		return tipiClassDefMap;
+		return getClassManager().getClassMap();
 	}
 
 	// public Map getTipiDefinitionMap() {
@@ -442,8 +424,8 @@ public abstract class TipiContext {
 	protected void clearResources() {
 		tipiInstanceMap.clear();
 		tipiComponentMap.clear();
-		tipiClassMap.clear();
-		tipiClassDefMap.clear();
+//		tipiClassMap.clear();
+		getClassManager().clearClassMap();
 		clearTopScreen();
 		includeList.clear();
 
@@ -589,10 +571,13 @@ public abstract class TipiContext {
 
 	public void parseStream(InputStream in) throws IOException, XMLParseException, TipiException {
 		XMLElement doc = new CaseSensitiveXMLElement();
+		long stamp = System.currentTimeMillis();
+		
 		InputStreamReader isr = new InputStreamReader(in, "UTF-8");
 		doc.parseFromReader(isr);
 		doc.setTitle("Unknown");
-
+		stamp = System.currentTimeMillis() - stamp;
+		
 		isr.close();
 		parseXMLElement(doc);
 	}
@@ -601,9 +586,13 @@ public abstract class TipiContext {
 			XMLParseException, TipiException {
 		XMLElement doc = new CaseSensitiveXMLElement();
 		InputStreamReader isr = new InputStreamReader(in, "UTF-8");
+		long stamp = System.currentTimeMillis();
+		
 		doc.parseFromReader(isr);
 		doc.setTitle(definitionName);
-
+		stamp = System.currentTimeMillis() - stamp;
+		parseTime+= stamp;
+		
 		isr.close();
 		parseXMLElement(doc);
 
@@ -665,7 +654,7 @@ public abstract class TipiContext {
 		}
 
 		if (childName.equals("tipiclass")) {
-			addTipiClassDefinition(child);
+			getClassManager().addTipiClassDefinition(child);
 			return;
 		}
 		if (childName.equals("tipiaction")) {
@@ -721,7 +710,29 @@ public abstract class TipiContext {
 			parseDefinition(child);
 			return;
 		}
+		if (childName.equals("function")) {
+			parseFunction(child);
+			return;
+		}
+
 		throw new TipiException("Wtf? What is this tag: " + childName);
+	}
+
+	private void parseFunction(XMLElement f) {
+//		   <function name="Age" class="com.dexels.navajo.functions.Age">
+//	        <description>calculates the age given a birth date. The calculation is as of the second date parameter, otherwise, if not provided, will be as of today.</description>
+//	        <input>date,date|empty</input>
+//	        <result>integer</result>
+//	    </function>
+		XMLElement description = f.getChildByTagName("description");
+		String desc = description==null?"":description.getContent();
+		XMLElement input = f.getChildByTagName("input");
+		String inp = input==null?"":input.getContent();
+		XMLElement result = f.getChildByTagName("result");
+		String res = result==null?"":result.getContent();
+
+		FunctionDefinition fd = new FunctionDefinition(f.getStringAttribute("class"),desc,inp,res);
+		getClassManager().addFunctionDefinition(f.getStringAttribute("name"),fd);
 	}
 
 	private void parseStorage(XMLElement child) {
@@ -832,6 +843,10 @@ public abstract class TipiContext {
 		if (cl == null) {
 			cl = getClass().getClassLoader();
 		}
+		if(cl==null) {
+//			throw new RuntimeException("WTF?!");
+			return null;
+		}
 		URL u = cl.getResource(location);
 		if (u == null) {
 		} else {
@@ -884,12 +899,7 @@ public abstract class TipiContext {
 						+ " - " + e.getMessage());
 			}
 		}
-		// Thread.dumpStack();
-		// for (Iterator iter = includeList.iterator(); iter.hasNext();) {
-		// String element = (String) iter.next();
-		// // System.err.println("Parsing element: "+element);
-		// parseLibrary(element, false, null, null, false);
-		// }
+		
 	}
 
 	private final void parseLibrary(String location, boolean addToInclude, String definition, boolean isLazy) {
@@ -908,9 +918,12 @@ public abstract class TipiContext {
 				}
 				XMLElement doc = new CaseSensitiveXMLElement();
 				try {
+					long stamp = System.currentTimeMillis();
 					InputStreamReader isr = new InputStreamReader(in, "UTF-8");
 					doc.parseFromReader(isr);
 					doc.setTitle(definition);
+					stamp = System.currentTimeMillis() - stamp;
+					parseTime+= stamp;
 					isr.close();
 				}
 				/** @todo Throw these exceptions */
@@ -983,7 +996,7 @@ public abstract class TipiContext {
 		if (tl == null) {
 			return null;
 		}
-		XMLElement xx = getTipiClassDefMap().get(type);
+		XMLElement xx = getClassManager().getClassMap().get(type);
 		tl.setComponent(cc);
 		tl.setName(type);
 		tl.setClassDef(xx);
@@ -1019,7 +1032,7 @@ public abstract class TipiContext {
 			// tc.setHomeComponent(true);
 			// System.err.println("Instantiating component by definition:
 			// "+clas);
-			XMLElement classDef = tipiClassDefMap.get(clas);
+			XMLElement classDef = getClassManager().getAssembledClassDef(clas);
 
 			/**
 			 * @todo think these two can be removed, because they are invoked in
@@ -1045,7 +1058,7 @@ public abstract class TipiContext {
 		}
 		if (!clas.equals("")) {
 			comp.load(definition, instance, this);
-			XMLElement classDef = tipiClassDefMap.get(clas);
+			XMLElement classDef = getClassManager().getClassDef(clas);
 			comp.loadEventsDefinition(this, definition, classDef);
 			comp.loadMethodDefinitions(this, definition, classDef);
 			comp.loadStartValues(definition, event);
@@ -1161,18 +1174,17 @@ public abstract class TipiContext {
 		fireTipiStructureChanged(parent);
 	}
 
+
 	private Object instantiateClass(String className, String defname, XMLElement instance, TipiComponent parent) throws TipiException {
 
 		XMLElement tipiDefinition = null;
-		Class<?> c = getTipiClass(className);
+		XMLElement classDef = getClassManager().getAssembledClassDef(className);
+		Class<?> c = getClassManager().getTipiClass(classDef);
 		// AAAAAAP
 		if (defname != null) {
 			tipiDefinition = getComponentDefinition(defname);
 		}
-		XMLElement classDef = tipiClassDefMap.get(className);
-		if (classDef == null) {
-			throw new TipiException("Error loading class def: " + className);
-		}
+	
 		String componentType = classDef.getStringAttribute("type");
 		if (c == null) {
 			throw new TipiException("Error retrieving class definition. Looking for class: " + defname + ", classname: " + className);
@@ -1232,45 +1244,39 @@ public abstract class TipiContext {
 		throw new TipiException("INSTANTIATING UNKOWN SORT OF CLASS THING.");
 	}
 
-	public Class<?> getTipiClass(String name) {
-		Class<?> cc = tipiClassMap.get(name);
-		if (cc != null) {
-			return cc;
-		}
-		XMLElement xe = tipiClassDefMap.get(name);
-		if (xe == null) {
-			return null;
-		}
-		String pack = (String) xe.getAttribute("package");
-		String clas = (String) xe.getAttribute("class");
-		String fullDef = pack + "." + clas;
-		try {
-			cc = Class.forName(fullDef, true, getClassLoader());
-			tipiClassMap.put(name, cc);
-		} catch (ClassNotFoundException ex) {
-			System.err.println("Error loading class: " + fullDef);
-			ex.printStackTrace();
-		} catch (SecurityException ex) {
-			System.err.println("Security Error loading class: " + fullDef);
-			ex.printStackTrace();
 
-		}
-		return cc;
-	}
 
-	private final void addTipiClassDefinition(XMLElement xe) {
-		String pack = (String) xe.getAttribute("package");
-		String name = (String) xe.getAttribute("name");
-		String clas = (String) xe.getAttribute("class");
-		String fullDef = pack + "." + clas;
-		setSplashInfo("Adding: " + fullDef);
+//
+//	public Class<?> getTipiClass(String name) {
+//		Class<?> cc = tipiClassMap.get(name);
+//		if (cc != null) {
+//			return cc;
+//		}
+//		XMLElement xe = tipiClassDefMap.get(name);
+//		if (xe == null) {
+//			return null;
+//		}
+//		String pack = (String) xe.getAttribute("package");
+//		String clas = (String) xe.getAttribute("class");
+//		String fullDef = pack + "." + clas;
+//		try {
+//			cc = Class.forName(fullDef, true, getClassLoader());
+//			tipiClassMap.put(name, cc);
+//		} catch (ClassNotFoundException ex) {
+//			System.err.println("Error loading class: " + fullDef);
+//			ex.printStackTrace();
+//		} catch (SecurityException ex) {
+//			System.err.println("Security Error loading class: " + fullDef);
+//			ex.printStackTrace();
+//
+//		}
+//		return cc;
+//	}
 
-		tipiClassDefMap.put(name, xe);
-	}
 
-	public Iterator<String> getTipiClassDefIterator() {
-		return tipiClassDefMap.keySet().iterator();
-	}
+//	public Iterator<String> getTipiClassDefIterator() {
+//		return tipiClassDefMap.keySet().iterator();
+//	}
 
 	public void addActionDefinition(XMLElement xe) throws TipiException {
 		myActionManager.addAction(xe, this);
@@ -1425,8 +1431,8 @@ public abstract class TipiContext {
 	public void closeAll() {
 		tipiComponentMap.clear();
 		tipiInstanceMap.clear();
-		tipiClassMap.clear();
-		tipiClassDefMap.clear();
+//		tipiClassMap.clear();
+		getClassManager().clearClassMap();
 		includeList.clear();
 	}
 
@@ -1657,6 +1663,7 @@ public abstract class TipiContext {
 			throws TipiBreakException {
 		if (reply != null) {
 			// TODO Put this in a more elegant place
+			// TODO No remove completely. Don't like it.
 			if (eHandler == null) {
 				eHandler = new BaseTipiErrorHandler();
 				eHandler.setContext(this);
@@ -1727,7 +1734,6 @@ public abstract class TipiContext {
 		List<TipiDataComponent> tipiList;
 		tipiList = getTipiInstancesByService(method);
 		if (tipiList == null) {
-			System.err.println("Unregistered method: "+method);
 			fireNavajoReceived(reply, method);
 			return;
 		}
@@ -2140,6 +2146,7 @@ public abstract class TipiContext {
 	}
 
 	public void exit() {
+		System.err.println("Parsing took: "+parseTime);
 		System.exit(0);
 	}
 
@@ -2359,6 +2366,7 @@ public abstract class TipiContext {
 	}
 
 	public void setTipiResourceLoader(String tipiCodeBase) throws MalformedURLException {
+		System.err.println("Setting resource loader: "+tipiCodeBase);
 		if (tipiCodeBase != null) {
 			if (tipiCodeBase.indexOf("http:/") != -1 || tipiCodeBase.indexOf("file:/") != -1) {
 				setTipiResourceLoader(new HttpResourceLoader(tipiCodeBase));
@@ -2370,6 +2378,19 @@ public abstract class TipiContext {
 			// BEWARE: The trailing slash is important!
 			setTipiResourceLoader(createDefaultResourceLoader("tipi/"));
 		}
+	}
+
+	private TipiResourceLoader createHttpResourceLoader(String codebase) throws MalformedURLException {
+		if (getCacheDir()==null ) {
+			return new HttpResourceLoader(codebase);
+			
+		} else {
+			return new CachedHttpResourceLoader(getCacheDir(),new URL(codebase));
+		}
+	}
+	
+	private File getCacheDir() {
+		return new File("/Users/frank/tipicache");
 	}
 
 	/**
@@ -2399,6 +2420,7 @@ public abstract class TipiContext {
 		}
 		String tipiCodeBase = properties.get("tipiCodeBase");
 		String resourceCodeBase = properties.get("resourceCodeBase");
+		System.err.println("Tipi codebase: "+tipiCodeBase);
 		setTipiResourceLoader(tipiCodeBase);
 		setGenericResourceLoader(resourceCodeBase);
 
@@ -2465,8 +2487,8 @@ public abstract class TipiContext {
 		Navajo n = NavajoFactory.getInstance().createNavajo();
 		Message tipiClasses = NavajoFactory.getInstance().createMessage(n, "TipiClass", Message.MSG_TYPE_ARRAY);
 		n.addMessage(tipiClasses);
-		for (String s : tipiClassDefMap.keySet()) {
-			XMLElement xx = tipiClassDefMap.get(s);
+		for (String s : getClassManager().getClassNameSet()) {
+			XMLElement xx = getClassManager().getClassDef(s);
 			String type = xx.getStringAttribute("type");
 			if (xx.getName().equals("tipiclass") && ("tipi".equals(type) || "component".equals(type))) {
 				Message element = NavajoFactory.getInstance().createMessage(n, "TipiClass", Message.MSG_TYPE_ARRAY_ELEMENT);
@@ -2572,7 +2594,7 @@ public abstract class TipiContext {
 
 			return;
 		}
-		BasePropertyImpl ppp = (BasePropertyImpl) master;
+//		BasePropertyImpl ppp = (BasePropertyImpl) master;
 
 		String service = rootDoc.getHeader().getRPCName();
 		List<PropertyChangeListener> pref;
@@ -2851,6 +2873,7 @@ public abstract class TipiContext {
 	}
 
 	public final void setCookie(String key, String value) {
+		System.err.println("Setting cookie: "+key+" : "+value);
 		if (myCookieManager == null) {
 			return;
 		}
@@ -2858,6 +2881,7 @@ public abstract class TipiContext {
 	}
 
 	public final String getCookie(String key) {
+		System.err.println("Setting cookie: "+key+" : "+myCookieManager.getCookie(key));
 		if (myCookieManager == null) {
 			return null;
 		}

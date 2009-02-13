@@ -20,11 +20,13 @@ import com.dexels.navajo.tipi.internal.*;
  * @author not attributable
  * @version 1.0
  */
-public class CookieRefParser extends TipiTypeParser {
+
+public class ListParser extends TipiTypeParser {
+	public ListParser() {
+	}
+
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
-		CookieRef cookieRef = new CookieRef(expression, myContext);
-		System.err.println("CookieRef parsed succesfully");
-		return cookieRef;
+		throw new IllegalArgumentException("ListParser not actually used");
 	}
 
 }

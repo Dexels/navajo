@@ -27,7 +27,7 @@ public class ExtensionManager {
 		addProperty("Description", tipiExtension.getDescription(), Property.STRING_PROPERTY, m);
 		addProperty("RequiresMain", tipiExtension.requiresMainImplementation(), Property.STRING_PROPERTY, m);
 		addProperty("IsMain", tipiExtension.isMainImplementation(), Property.BOOLEAN_PROPERTY, m);
-		addProperty("ConnectorId", tipiExtension.getConnectorId(), Property.BOOLEAN_PROPERTY, m);
+		//addProperty("ConnectorId", tipiExtension.getConnectorId(), Property.BOOLEAN_PROPERTY, m);
 		addProperty("IsInstantiated", tc.getConnector(tipiExtension.getConnectorId()) != null, Property.BOOLEAN_PROPERTY, m);
 
 		createIncludes(tipiExtension.getIncludes(), m);
