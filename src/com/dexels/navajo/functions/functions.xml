@@ -121,7 +121,7 @@
     </function>
     <function name="SumProperties" class="com.dexels.navajo.functions.SumProperties">
         <description>Sums all properties in an array message</description>
-        <input>string,string,string</input>
+        <input>string,string,string|empty</input>
         <result>any</result>
     </function>
     <function name="SumMessage" class="com.dexels.navajo.functions.SumMessage">
@@ -131,7 +131,7 @@
     </function>
     <function name="SumExpressions" class="com.dexels.navajo.functions.SumExpressions">
         <description>Sum expressions in a given array message</description>
-        <input>message,string,string</input>
+        <input>string,string,string|empty</input>
         <result>any</result>
     </function>
     <function name="Sum" class="com.dexels.navajo.functions.Sum">
@@ -141,7 +141,7 @@
     </function>
     <function name="StringPadding" class="com.dexels.navajo.functions.StringPadding">
         <description>This function ads whitespace (spaces) to a string until it has the specified size</description>
-        <input>string,integer,string|empty,string|empty</input>
+        <input>string,integer,string|empty,boolean|empty</input>
         <result>string</result>
     </function>
     <function name="StringFunction" class="com.dexels.navajo.functions.StringFunction">
@@ -226,7 +226,7 @@
     </function>
     <function name="OffsetDate" class="com.dexels.navajo.functions.OffsetDate">
         <description>Returns a date with a certain offset.</description>
-        <input>integer,integer,integer,integer,integer,integer</input>
+        <input>date,integer,integer,integer,integer,integer,integer</input>
         <result>date</result>
     </function>
     <function name="Now" class="com.dexels.navajo.functions.Now">
@@ -241,8 +241,8 @@
     </function>
     <function name="Min" class="com.dexels.navajo.functions.Min">
         <description>Return the minimum of to given numbers.</description>
-        <input>integer|double,integer|double</input>
-        <result>integer|double</result>
+        <input>integer|float,integer|float</input>
+        <result>integer|float</result>
     </function>
     <function name="MergeNavajo" class="com.dexels.navajo.functions.MergeNavajo">
         <description>Merges two navajo objects</description>
@@ -251,8 +251,8 @@
     </function>
     <function name="Max" class="com.dexels.navajo.functions.Max">
         <description>Return the maximum of to given numbers.</description>
-        <input>integer|double,integer|double</input>
-        <result>integer|double</result>
+        <input>integer|float,integer|float</input>
+        <result>integer|float</result>
     </function>
     <function name="IsServiceCached" class="com.dexels.navajo.functions.IsServiceCached">
         <description>Function to check whether a service with optionally service key values is cached</description>
@@ -271,7 +271,7 @@
     </function>
     <function name="GetWeekDayDate" class="com.dexels.navajo.functions.GetWeekDayDate">
         <description>This function return the a calendar date of the first given weekday in the past. Optionally a third parameter can be added containing a date. This is the reference date used</description>
-        <input>integer|string,boolean|string,date</input>
+        <input>integer|string,boolean|string,date|empty</input>
         <result>date</result>
     </function>
     <function name="GetVersionInfo" class="com.dexels.navajo.functions.GetVersionInfo">
@@ -386,7 +386,7 @@
     </function>
     <function name="FormatDate" class="com.dexels.navajo.functions.FormatDate">
         <description>formats a date according to a format string plus an optional locale</description>
-        <input>date,string,string|empty</input>
+        <input>date|clocktime,string,string|empty</input>
         <result>string</result>
     </function>
     <function name="ForAll" class="com.dexels.navajo.functions.ForAll">
