@@ -314,7 +314,6 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 			Map<String, Object> tempMap = new HashMap<String, Object>();
 			tempMap.put("selectedIndex", new Integer(mm.getSelectedRow()));
 			tempMap.put("selectedMessage", mm.getSelectedMessage());
-			System.err.println("lzal "+mm.getSelectedRow());
 			performTipiEvent("onSelectionChanged", tempMap, false);
 		} catch (TipiException ex) {
 			ex.printStackTrace();
