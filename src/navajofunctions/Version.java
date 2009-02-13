@@ -27,6 +27,8 @@ package navajofunctions;
 /**
  * VERSION HISTORY
  * 
+ * 2.0.0. Now using function type signatures and XML definitions.
+ * 
  * 1.0.1. Added GetVersionInfo function.
  * 
  * 1.1.0. Added various new functions (GetProperty, FromSeconds, ToSeconds, Base64Encode).
@@ -37,12 +39,12 @@ package navajofunctions;
  */
 public class Version extends dexels.Version {
 
-	public static final int MAJOR = 1;
-	public static final int MINOR = 1;
-	public static final int PATCHLEVEL = 2;
+	public static final int MAJOR = 2;
+	public static final int MINOR = 0;
+	public static final int PATCHLEVEL = 0;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Functions";
-	public static final String RELEASEDATE = "2006-08-23";
+	public static final String RELEASEDATE = "2009-02-13";
 	
 	//Included packages.
 	String [] includes = {"navajodocument.Version", "navajo.Version"};
