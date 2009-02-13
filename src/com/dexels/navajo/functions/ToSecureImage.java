@@ -129,12 +129,12 @@ public class ToSecureImage extends FunctionInterface{
       System.out.println("o = " + o.value);
       System.out.println("type = " + o.type);
 
-      FileOutputStream fos = new FileOutputStream(new java.io.File("/home/aphilip/aepenoot.png"));
+      FileOutputStream fos = new FileOutputStream(new java.io.File("/home/arjen/aepenoot.png"));
       fos.write(b.getData());
       fos.flush();
       fos.close();
 
-      FileOutputStream fs = new FileOutputStream(new java.io.File("/home/aphilip/noteaep.png"));
+      FileOutputStream fs = new FileOutputStream(new java.io.File("/home/arjen/noteaep.png"));
       Binary c = (Binary)o.value;
       fs.write(c.getData());
       fs.flush();
