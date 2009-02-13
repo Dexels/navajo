@@ -27,8 +27,15 @@ public final class WeekDay extends FunctionInterface {
   }
 
   public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
-    Object o = getOperand(0);
 
+	Object o = null;
+	
+	try {
+		o = getOperand(0);
+	} catch (Exception e) {
+		o = new java.util.Date();
+	}
+	
     java.util.Date day = null;
 
     if (o == null ) {
