@@ -264,6 +264,10 @@ public abstract class FunctionInterface {
 	public boolean isInitialized() {
 		return initialized.contains(this.getClass());
 	}
+
+	public void setInMessage(Navajo inMessage) {
+		this.inMessage = inMessage;
+	}
 	
 	
 }
