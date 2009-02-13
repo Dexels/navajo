@@ -67,7 +67,21 @@ public abstract class FunctionFactoryInterface {
 			}
 			return fi;
 		} catch (ClassNotFoundException e) {
-			throw new TMLExpressionException("Could find class for function: " + getDef(functionName).getObject());
+			// Try legacy mode.
+			try {
+				Class myClass = Class.forName("com.dexels.navajo.functions."+functionName, true, cl);
+				FunctionInterface fi = (FunctionInterface) myClass.newInstance();
+				if (!fi.isInitialized()) {
+					fi.setTypes(null, null);
+				}
+				return fi;
+			} catch (ClassNotFoundException e1) {
+				throw new TMLExpressionException("Could find class for function: " + getDef(functionName).getObject());
+			} catch (IllegalAccessException e2) {
+				throw new TMLExpressionException("Could not instantiate class: " + getDef(functionName).getObject());
+			} catch (InstantiationException e3) {
+				throw new TMLExpressionException("Could not instantiate class: " + getDef(functionName).getObject());
+			}
 		} catch (InstantiationException e) {
 			throw new TMLExpressionException("Could not instantiate class: " + getDef(functionName).getObject());
 		} catch (IllegalAccessException e) {
