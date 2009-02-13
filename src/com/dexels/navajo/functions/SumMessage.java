@@ -50,7 +50,7 @@ public class SumMessage extends FunctionInterface {
 		                                       "Wrong number of arguments: " +
 		                                       getOperands().size());
 		    }
-			 if (! (getOperand(0) == null && getOperand(1) == null)) {
+			 if ( getOperand(0) == null || getOperand(1) == null)  {
 			      throw new TMLExpressionException(this,
                           "Null operands! arguments: " +
                           getOperand(0)+" - "+getOperand(1));
