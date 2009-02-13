@@ -26,13 +26,6 @@ public class XmlUnescape extends FunctionInterface {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.dexels.navajo.parser.FunctionInterface#usage()
-	 */
-	public String usage() {
-		return "XmlUnescape(String)";
-	}
-
-	/* (non-Javadoc)
 	 * @see com.dexels.navajo.parser.FunctionInterface#evaluate()
 	 */
 	public Object evaluate() throws TMLExpressionException {

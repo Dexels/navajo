@@ -44,10 +44,6 @@ public final class StringField extends FunctionInterface {
 		return result.trim();
 	}
 
-    public String usage() {
-        return "StringField(string, seperator, index)";
-    }
-
     public String remarks() {
         return "This function returns a specified string field given a seperator and an initial string. Eg. StringField('aap, noot, mies', ',', 2) = 'noot'.";
     }
