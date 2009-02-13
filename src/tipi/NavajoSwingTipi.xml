@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<extension id="TipiSwing" requiresMain="" project="NavajoSwingTipi" version="0" title="Tipi Swing" vendor="Dexels" homepage="http://www.navajo.nl">
+	<description>
+		Standard swing implementation
+	</description>
+	<includes>
+		<!--  needed for runtime, not for JNLP -->
+		<include path="com/dexels/navajo/tipi/components/swingimpl/swingclassdef.xml"/>
+	</includes>
+	<jars>
+		<jar path="TipiSwingClient.jar"/>
+		<jar path="TimingFramework.jar"/>
+		<jar path="AnimatedTransitions.jar"/>
+		<jar path="NavajoSwingTipi.jar" main="tipi.MainApplication"/>
+	</jars>
+	<requires>
+		<require path="NavajoTipi" id="NavajoTipi"/>
+	</requires>
+	
+	<other>
+		<link href="http://java.sun.com"/>
+	</other>
+</extension>

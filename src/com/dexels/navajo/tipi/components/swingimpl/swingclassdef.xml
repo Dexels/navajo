@@ -1,10 +1,80 @@
-<tid errorhandler="error">
-<!--
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<tid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.navajo.nl/classdef_schema.xsd">
+
    <tipiclass name="swingcomponent">
 		<description>
 			Standard getters and setters for swing based components.
 		</description>
+		<values>
+		 <value direction="in" name="background" type="color" property="background">
+		 	<description>
+				Sets the background color for swing components. May be ignored, depending on the Look And Feel.\\
+				For more info about look and feel, check: [[concepts:swing:lnf|Look and Feel in Swing]]\\
+		 	</description>
+		 </value>
+         <value direction="in" name="border" type="border" property="border">
+		 	<description>
+				Sets a swing border around this component. May be ignored, depending on the Look And Feel.\\
+				For more info about look and feel, check: [[concepts:swing:borders|Look and Feel in Swing]]\\
+		 	</description>
+         </value>
+         <value direction="inout" name="tooltip" type="string" property="ToolTipText">
+		 	<description>
+				Sets a pop up tooltip for component. May be ignored, depending on the Look And Feel.\\
+		 	</description>
+         </value>
+         <value direction="in" name="visible" type="boolean" property="visible" >
+			<description>
+				Allows for hiding swing components without disposing them. All components are visible by default.
+			</description>
+		</value>
+		</values>
    </tipiclass>
+   
+   <tipiclass name="dragdrop">
+   <description>
+   		For more info about drag an drop, check: [[concepts:swing:dragdrop|Drag and Drop in Swing]]\\
+   </description>
+	<events>
+		<event name="onDrag">
+			<description>
+				Called when a drag is started. This is your opportunity to set the dragValue attribute of this
+				component. If, after this event terminates, the dragValue is still null, the drag will fail.\\
+				You can use this to do a dynamic check whether dragging is possible at this moment.
+				\\
+				For more info, check: [[concepts:swing:dragdrop|Drag and Drop in Swing]]\\
+			</description>
+		</event>
+		<event name="onDrop">
+			<description>
+				This event gets fired when a object with a matching category has been dropped on this component.	
+				FIXME: Add a category parameter, to indicate which category matched.
+			</description>
+			<param name="value" type="object" />
+		</event>
+	</events>
+	<values>
+		<value direction="in" name="dragValue" type="object" >
+			<description>
+				The actual value to be transported. Remember that no onDrag events will be fired as long as
+				this attribute is null.
+			</description>
+		</value>
+		<value direction="in" name="dragCategory" type="list">
+			<description>
+				Use this to add a list of strings as categories. When the user drags, all categories will be associated
+				with this drag, and when it is dropped, Tipi will try to match it with a dropCategory.\\
+				__Having no dragCategories will disable drags from this component__
+			</description>
+		</value>
+		<value direction="in" name="dropCategory" type="list" >
+			<description>
+			This lists all possible categories it will accept when the user drops.
+			</description>
+		</value>
+	</values>
+</tipiclass>
+   
 	<tipiclass name="swingbutton">
 		<description> Standard getters and setters for swing based components.
 		</description>
@@ -16,56 +86,94 @@
 				</description>
 			</event>
 		</events>
-	</tipiclass>-->
+	</tipiclass>
 
-   <tipiaction name="setCookie" class="TipiSetCookie" package="com.dexels.navajo.tipi.components.swingimpl.actions">
-      <param name="name" type="string" required="true" />
-      <param name="value" type="string" required="true" />
-   </tipiaction>
    <tipiaction name="askValue" class="TipiAskValue" package="com.dexels.navajo.tipi.components.swingimpl.actions">
-      <param name="text" type="string" />
+		<description>
+			Request a string value of the user, using a dialog.
+		</description>
+      <param name="text" type="string">
+		<description>
+			The question text in the dialog
+		</description>
+      </param>
       <param name="value" type="string" required="true" />
-      <param name="initialValue" type="string" />
+      <param name="initialValue" type="string" >
+		<description>
+			The dialog will be prefilled with this string.
+		</description>
+      </param>
    </tipiaction>
    <tipiaction name="askFile" class="TipiAskFile" package="com.dexels.navajo.tipi.components.swingimpl.actions">
       <param name="value" type="string" />
    </tipiaction>
    <tipiaction name="saveValue" class="TipiSaveValue" package="com.dexels.navajo.tipi.components.swingimpl.actions">
-      <param name="value" type="string" />
+		<description>
+			Opens a file save dialog and saves the value.\\
+			Either the value is a binary (which will be saved as such) or the value will be considered a string.
+		</description>
+      <param name="value" type="object" />
+   </tipiaction>
+
+   <tipiaction name="dumpCache" class="TipiInjectJnlpCache" package="com.dexels.navajo.tipi.components.swingimpl.actions">
+		<description>
+			Dumps the jnlp cached muffins to stdout
+		</description>
    </tipiaction>
 
    <!--
       <tipiaction name="saveBinary" class="TipiSaveBinary" package="com.dexels.navajo.tipi.components.swingimpl.actions"> <param name="value" type="property" /> </tipiaction>
    -->
    <tipiaction name="saveBinary" class="TipiSaveBinary" package="com.dexels.navajo.tipi.components.swingimpl.actions">
+		<description>
+			Don't remember this one
+		</description>
       <param name="value" type="binary" required="true" />
       <param name="extension" type="string" />
       <param name="fileName" type="string" />
    </tipiaction>
 
    <tipiaction name="browseBinary" class="TipiBrowseBinary" package="com.dexels.navajo.tipi.components.swingimpl.actions">
-      <param name="property" type="property" />
+		<description>
+			Open a file load dialog, and put the selected value (as a binary) in the supplied property
+		</description>
+      <param name="property" type="property" required="true"/>
    </tipiaction>
 
-   <tipiaction name="createPrintJob" class="TipiCreatePrintJob" package="com.dexels.navajo.tipi.components.swingimpl.actions">
+   <tipiaction name="createPrintJob" class="TipiCreatePrintJob" package="com.dexels.navajo.tipi.components.swingimpl.actions" deprecated="true">
       <param name="value" type="reference" />
    </tipiaction>
 
    <tipiaction name="openBrowser" class="TipiOpenBrowser" package="com.dexels.navajo.tipi.components.swingimpl.actions">
+		<description>
+			Open a native browser with the supplied url.
+		</description>
       <param name="url" type="string" required="true" />
    </tipiaction>
 
    <tipiaction name="playSound" class="TipiPlaySound" package="com.dexels.navajo.tipi.components.swingimpl.actions">
+		<description>
+			Plays a sound, streamed from the supplied url. The supported types depend on the platform.
+		</description>
       <param name="url" type="string" required="true" />
    </tipiaction>
 
    <tipiaction name="openBinary" class="TipiOpenBinary" package="com.dexels.navajo.tipi.components.swingimpl.actions">
+		<description>
+			Attempt to 'open' the binary (similar to double clicking it in the Explorer/Finder etc.)\\
+			The file will probably be residing in the temp directory with an unknown extension.\\
+			Most platform will prefer some known extensions, you can try to explicitly add the extension\\
+			(if you know the type of your binary.)\\
+		</description>
       <param name="value" type="binary" required="true" />
       <param name="extension" type="string" />
       <param name="fileName" type="string" />
    </tipiaction>
 
    <tipiaction name="requestFocus" class="TipiRequestFocus" package="com.dexels.navajo.tipi.components.swingimpl.actions">
+		<description>
+			Request the focus. I don't think it works well
+		</description>
       <param name="component" type="string" required="true" />
    </tipiaction>
 
@@ -76,26 +184,51 @@
 
 
    <tipiaction name="showQuestion" class="TipiShowQuestion" package="com.dexels.navajo.tipi.actions">
+		<description>
+			Show a yes/no style question dialog.
+			If the user clicks no, the action will fire an 'TipiBreakException' and will not continue.
+		</description>
       <param name="text" type="string" required="true" />
    </tipiaction>
 
 
-   <!-- Actually a copy of tipi, with a forced layout, used for echo compatibility -->
-   <tipiclass class="TipiColumn" deprecated="true" name="column" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="false"
+   <!-- Actually a copy of tipi, with a forced layout, used for echo compatibility
+-->
+   <tipiclass class="TipiColumn" implements="basecomponent,datacomponent,dragdrop,swingcomponent" deprecated="true" name="column" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="false"
       addtocontainer="true">
-      <events>
-         <event name="onInstantiate" />
-         <event name="onLoad">
-            <param name="service" type="string" />
-            <param name="navajo" type="navajo" />
-         </event>
-         <event name="onGeneratedErrors" />
-      </events>
+		<description>
+			Deprecated, don't use, use a panel with a verticalboxlayout instead
+		</description>
+
       <values>
-         <value direction="in" name="background" type="color" property="background" />
-         <value direction="in" name="border" type="border" property="border" />
-         <value direction="inout" name="tooltip" type="string" property="ToolTipText" />
-         <value direction="in" name="visible" type="boolean" property="visible" />
+          <value direction="in" name="paint" type="paint" property="paint" />
+
+         <value direction="in" name="image" type="resource" property="imageUrl" />
+         <value direction="in" name="image_alignment" type="selection" property="alignment">
+            <option description="North" value="north" />
+            <option description="East" value="east" />
+            <option description="South" value="south" />
+            <option description="West" value="west" />
+            <option description="Center" value="center" />
+            <option description="NorthEast" value="northeast" />
+            <option description="SouthEast" value="southeast" />
+            <option description="NorthWest" value="northwest" />
+            <option description="SouthWest" value="southwest" />
+         </value>
+      </values>
+      <methods />
+   </tipiclass>
+
+   <!-- Actually a copy of tipi, with a forced layout, used for echo compatibility
+-->
+   <tipiclass class="TipiRow" implements="basecomponent,datacomponent,dragdrop,swingcomponent" deprecated="true" name="row" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="false"
+      addtocontainer="true">
+      
+   		<description>
+			Deprecated, don't use, use a panel with a horizontal box layout instead
+		</description>
+      
+      <values>
          <value direction="in" name="paint" type="paint" property="paint" />
 
          <value direction="in" name="image" type="resource" property="imageUrl" />
@@ -114,56 +247,15 @@
       <methods />
    </tipiclass>
 
-   <!-- Actually a copy of tipi, with a forced layout, used for echo compatibility -->
-   <tipiclass class="TipiRow" deprecated="true" name="row" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="false"
-      addtocontainer="true">
-      <events>
-         <event name="onInstantiate" />
-         <event name="onLoad">
-            <param name="service" type="string" />
-            <param name="navajo" type="navajo" />
-         </event>
-         <event name="onGeneratedErrors" />
-      </events>
-      <values>
-         <value direction="in" name="background" type="color" property="background" />
-         <value direction="in" name="border" type="border" property="border" />
-         <value direction="inout" name="tooltip" type="string" property="ToolTipText" />
-         <value direction="in" name="visible" type="boolean" property="visible" />
-         <value direction="in" name="paint" type="paint" property="paint" />
-
-         <value direction="in" name="image" type="resource" property="imageUrl" />
-         <value direction="in" name="image_alignment" type="selection" property="alignment">
-            <option description="North" value="north" />
-            <option description="East" value="east" />
-            <option description="South" value="south" />
-            <option description="West" value="west" />
-            <option description="Center" value="center" />
-            <option description="NorthEast" value="northeast" />
-            <option description="SouthEast" value="southeast" />
-            <option description="NorthWest" value="northwest" />
-            <option description="SouthWest" value="southwest" />
-         </value>
-      </values>
-      <methods />
-   </tipiclass>
-
-   <tipiclass addtocontainer="true" childcount="*" class="TipiSwitchPanel" layoutmanager="false" module="container" name="switchpanel" package="com.dexels.navajo.tipi.components.swingimpl"
+   <tipiclass addtocontainer="true"  implements="basecomponent,datacomponent,dragdrop,swingcomponent" childcount="*" class="TipiSwitchPanel" layoutmanager="false" module="container" name="switchpanel" package="com.dexels.navajo.tipi.components.swingimpl"
       studio-icon="tabs.gif" type="tipi">
       <description>
          The switchpanel allows you to add multiple components to it. Only one component will be visible at the time
-         It uses the Swing cardlayout, and you can compare it
-         to a tabpane without the tabs.
+         It uses the Swing CardLayout, and you can compare it
+         to a tabpane without the visible tabs.\\
          You can switch between the tabs by setting the selectedId attribute
       </description>
-      <events>
-         <event name="onInstantiate" />
-         <event name="onLoad">
-            <param name="service" type="string" />
-            <param name="navajo" type="navajo" />
-         </event>
-         <event name="onGeneratedErrors" />
-      </events>
+      
       <values>
          <value direction="inout" name="selectedId" type="string">
             <description>
@@ -171,16 +263,10 @@
                a constraint when adding the child.
             </description>
          </value>
-         <value direction="in" name="background" type="color" />
-         <value direction="in" name="border" type="border" />
          <value direction="in" name="width" type="integer" />
          <value direction="in" name="paint" type="paint" property="paint" />
       </values>
-      <methods></methods>
    </tipiclass>
-
-
-
 
    <!-- This is not a tipi component. Need to look into this one. -->
    <tipiclass addtocontainer="true" deprecated="true" childcount="0" class="TipiSwingErrorHandler" layoutmanager="false" module="abstract" name="error"
@@ -188,16 +274,16 @@
       <description>This component is not used in its current form</description>
    </tipiclass>
 
-   <tipiclass addtocontainer="true" childcount="0" class="TipiTable" layoutmanager="false" module="data" name="tipitable" package="com.dexels.navajo.tipi.components.swingimpl"
+   <tipiclass addtocontainer="true" childcount="0" implements="basecomponent,datacomponent,swingcomponent,dragdrop" class="TipiTable" layoutmanager="false" module="data" name="tipitable" package="com.dexels.navajo.tipi.components.swingimpl"
       studio-icon="tipitable.gif" type="tipi" customstructure="true">
       <description>
          A versatile component for displaying arraymessages in a table.
          At the moment this is the only component using a custom component loader.
          Add column tags to
          display columns.
+         For more info: [[tipidoc:core:types:date|date]]
       </description>
       <events>
-         <event name="onInstantiate" />
          <event name="onActionPerformed">
             <description>
                Fired when a table row is double clicked
@@ -211,11 +297,7 @@
             <param name="selectedMessage" type="message" />
             <param name="selectedIndex" type="integer" />
          </event>
-         <event name="onLoad">
-            <param name="service" type="string" />
-            <param name="navajo" type="navajo" />
-         </event>
-         <event name="onValueChanged">
+           <event name="onValueChanged">
             <description>
                Fired when any value has been changed in the table.
                Use the event parameters to filter the exact changes you are interested in.
@@ -238,26 +320,62 @@
             <param name="report" type="binary" />
          </event>
          <event name="onKey">
+         	<description>
+         	Recorded a keystroke. Use the parameters to determine if it is the keystroke you are looking for.
+         	</description>
             <param name="code" type="integer" />
             <param name="key" type="string" />
             <param name="modifiers" type="string" />
             <param name="mode" type="string" />
          </event>
-         <event name="onEnter" />
-         <event name="onDrag" />
-         <event name="onDrop">
-            <param name="value" type="object" />
+          <event name="onEnter">
+			<description>
+				Fired on enter. Slightly deprecated, I prefer onKey with a condition.
+			</description>
          </event>
       </events>
       <values>
-         <value direction="in" name="highColor" type="color" property="highColor" />
-         <value direction="in" name="lowColor" type="color" property="highColor" />
-         <value direction="in" name="selectedColor" type="color" property="highColor" />
-         <value direction="in" name="background" type="color" property="background" />
-         <value direction="inout" name="selectedIndex" type="integer" property="selectedIndex" />
-         <value direction="inout" name="filtersvisible" type="boolean" />
-         <value direction="inout" name="columnsvisible" type="boolean" />
-         <value direction="inout" name="headervisible" type="boolean" />
+         <value direction="in" name="highColor" type="color" property="highColor">
+         	<description>
+				The light color of the zebra	
+    	 	</description>
+         </value>
+         <value direction="in" name="lowColor" type="color" property="lowColor">
+         	<description>
+				The dark color of the zebra	
+    	 	</description>
+         </value>
+         <value direction="in" name="selectedColor" type="color" property="selectedColor" >
+         	<description>
+				The color of a selected row	
+    	 	</description>
+         </value>
+         <value direction="inout" name="selectedIndex" type="integer" property="selectedIndex">
+         	<description>
+				The selected row of the table, or -1 if no row has been selected.\\
+				You can both get and set this value.
+    	 	</description>
+         </value>
+         <value direction="inout" name="filtersvisible" type="boolean">
+           	<description>
+				Set/get whether the filter header is shown (allowing client side filtering)
+		 	</description>
+         </value>
+         
+         <value direction="inout" name="columnsvisible" type="boolean" >
+           	<description>
+				Set/get whether the select column button is visible.\\
+				If this button is visible, the user can choose which columns are visible, and in which order.
+		 	</description>
+         </value>
+         
+         <value direction="inout" name="headervisible" type="boolean">
+          	<description>
+				Set/get whether the select column header buttons are visible.\\
+				If visible, the user can click the column headers to do client side sorting.
+		 	</description>
+         </value>
+         
          <!--            <value direction="inout" name="showColumn" type="string"/>
             <value direction="inout" name="hideColumn" type="string"/>-->
          <value direction="inout" name="messagepath" type="string" />
@@ -268,14 +386,11 @@
          <value direction="out" name="lastMessage" type="message" />
          <value direction="out" name="firstMessage" type="message" />
 
-         <value direction="in" name="visible" type="boolean" property="visible"/>
          <value direction="in" name="readOnly" type="boolean" />
          <value direction="in" name="opaque" type="boolean" />
-         <value direction="in" name="border" type="border" />
          <value direction="in" name="rowHeight" type="integer" />
          <value direction="out" name="columnCount" type="integer" />
          <value direction="out" name="rowCount" type="integer" />
-         <value direction="inout" name="tooltip" type="string" />
          <value direction="in" name="autoresize" type="selection">
             <option description="Resize off" value="off" />
             <option description="Resize last column" value="last" />
@@ -294,20 +409,17 @@
          <value direction="in" name="useScroll" type="boolean" />
 
          <value direction="out" name="currentPage" type="integer" />
-
-         <value direction="in" name="dragValue" type="object" />
-         <value direction="in" name="dragCategory" type="list" />
-         <value direction="in" name="dropCategory" type="list" />      </values>
+            </values>
       <methods>
          <method name="showEditDialog">
             <description>
                Shows a dialog depicting a single row of the table, using regular property components.
             </description>
-            <param name="title" type="string" value="'Edit'" />
-            <description>
-               The title of the dialog
-            </description>
-
+            <param name="title" type="string" value="'Edit'">
+	            <description>
+	               The title of the dialog
+	            </description>
+			</param>
          </method>
          <method name="selectByValue">
             <description>
@@ -441,18 +553,13 @@
       </methods>
    </tipiclass>
 
-   <tipiclass addtocontainer="true" childcount="0" class="TipiMegaTable" layoutmanager="false" module="data" name="tipimegatable"
+   <tipiclass addtocontainer="true"  implements="basecomponent,datacomponent,swingcomponent,dragdrop"  childcount="0" class="TipiMegaTable" layoutmanager="false" module="data" name="tipimegatable"
       package="com.dexels.navajo.tipi.components.swingimpl.tipimegatable" studio-icon="tipitable.gif" type="tipi" customstructure="true">
       <description>
          The mega table is an n-dimensional data grid. It has a custom component loader, defining the layers.
             </description>
 
       <events>
-         <event name="onInstantiate" />
-         <event name="onLoad">
-            <param name="service" type="string" />
-            <param name="navajo" type="navajo" />
-         </event>
          <event name="onActionPerformed">
             <param name="table" type="object" />
             <param name="selected" type="message" />
@@ -510,7 +617,7 @@
       </methods>
    </tipiclass>
    <!-- Deprecated... Use the tipimegatable instead-->
-   <tipiclass addtocontainer="true" childcount="0" class="TipiMultiTable" layoutmanager="false" module="data" name="tipimultitable" package="com.dexels.navajo.tipi.components.swingimpl"
+   <tipiclass deprecated="true" addtocontainer="true" childcount="0" class="TipiMultiTable" layoutmanager="false" module="data" name="tipimultitable" package="com.dexels.navajo.tipi.components.swingimpl"
       studio-icon="tipitable.gif" type="tipi">
       <events>
          <event name="onInstantiate" />
@@ -532,15 +639,13 @@
       </values>
    </tipiclass>
 
-   <tipiclass addtocontainer="true" childcount="*" class="TipiQuestion" layoutmanager="true" module="data" name="tipiquestion" package="com.dexels.navajo.tipi.components.swingimpl"
+   <tipiclass addtocontainer="true" childcount="*"  implements="basecomponent,datacomponent,swingcomponent"  class="TipiQuestion" layoutmanager="true" module="data" name="tipiquestion" package="com.dexels.navajo.tipi.components.swingimpl"
       studio-icon="tipitable.gif" type="tipi">
+      <description>
+      	Part of the question framework. In need of refactoring
+      </description>
       <events>
-         <event name="onInstantiate" />
-         <event name="onLoad">
-            <param name="service" type="string" />
-            <param name="navajo" type="navajo" />
-         </event>
-         <!-- todo: implement -->
+           <!-- todo: implement -->
          <event name="onValueChanged" />
       </events>
       <values>
@@ -554,15 +659,12 @@
       </methods>
    </tipiclass>
 
-   <tipiclass addtocontainer="true" childcount="*" class="TipiQuestionGroup" layoutmanager="true" module="data" name="tipiquestiongroup" package="com.dexels.navajo.tipi.components.swingimpl"
+   <tipiclass addtocontainer="true" childcount="*"  implements="basecomponent,datacomponent,swingcomponent" class="TipiQuestionGroup" layoutmanager="true" module="data" name="tipiquestiongroup" package="com.dexels.navajo.tipi.components.swingimpl"
       studio-icon="tipitable.gif" type="tipi">
-      <events>
-         <event name="onInstantiate" />
-         <event name="onLoad">
-            <param name="service" type="string" />
-            <param name="navajo" type="navajo" />
-         </event>
-      </events>
+      <description>
+      	Part of the question framework. In need of refactoring
+      </description>
+
       <values>
          <value direction="inout" name="messagePath" type="string" />
          <value direction="inout" name="questionDefinitionName" type="string" />
@@ -577,15 +679,12 @@
       </values>
    </tipiclass>
 
-   <tipiclass addtocontainer="true" childcount="*" class="TipiScrollQuestionGroup" layoutmanager="true" module="data" name="tipiscrollquestiongroup" package="com.dexels.navajo.tipi.components.swingimpl"
+   <tipiclass addtocontainer="true" childcount="*" implements="basecomponent,datacomponent,swingcomponent" class="TipiScrollQuestionGroup" layoutmanager="true" module="data" name="tipiscrollquestiongroup" package="com.dexels.navajo.tipi.components.swingimpl"
       studio-icon="tipitable.gif" type="tipi">
-      <events>
-         <event name="onInstantiate" />
-         <event name="onLoad">
-            <param name="service" type="string" />
-            <param name="navajo" type="navajo" />
-         </event>
-      </events>
+      <description>
+      	Part of the question framework. In need of refactoring
+      </description>
+
       <values>
          <value direction="inout" name="messagePath" type="string" />
          <value direction="inout" name="questionDefinitionName" type="string" />
@@ -596,15 +695,13 @@
       </values>
    </tipiclass>
 
-   <tipiclass addtocontainer="true" childcount="*" class="TipiQuestionList" layoutmanager="true" module="data" name="tipiquestionlist" package="com.dexels.navajo.tipi.components.swingimpl"
+   <tipiclass addtocontainer="true" childcount="*" class="TipiQuestionList" implements="basecomponent,datacomponent,swingcomponent" layoutmanager="true" module="data" name="tipiquestionlist" package="com.dexels.navajo.tipi.components.swingimpl"
       studio-icon="tipitable.gif" type="tipi">
+      <description>
+      	Part of the question framework. In need of refactoring
+      </description>
       <events>
-         <event name="onInstantiate" />
-         <event name="onLoad">
-            <param name="service" type="string" />
-            <param name="navajo" type="navajo" />
-         </event>
-         <event name="onValidationChanged">
+        <event name="onValidationChanged">
             <param name="valid" type="boolean" />
          </event>
       </events>
@@ -637,8 +734,11 @@
       </methods>
    </tipiclass>
 
-   <tipiclass addtocontainer="true" childcount="*" class="TipiTabbedQuestionList" layoutmanager="true" module="data" name="tipitabbedquestionlist" package="com.dexels.navajo.tipi.components.swingimpl"
+   <tipiclass addtocontainer="true" childcount="*" implements="basecomponent,datacomponent,swingcomponent" class="TipiTabbedQuestionList" layoutmanager="true" module="data" name="tipitabbedquestionlist" package="com.dexels.navajo.tipi.components.swingimpl"
       studio-icon="tipitable.gif" type="tipi">
+      <description>
+      	Part of the question framework. In need of refactoring
+      </description>
       <events>
          <event name="onInstantiate" />
          <event name="onLoad">
@@ -681,28 +781,14 @@
 
    <!-- Use panel instead -->
    <!-- Identical to panel -->
-   <tipiclass addtocontainer="true" deprecated="true" childcount="*" class="TipiPanel" layoutmanager="true" module="container" name="tipi"
+   <tipiclass addtocontainer="true" implements="basecomponent,datacomponent,swingcomponent" deprecated="true" childcount="*" class="TipiPanel" layoutmanager="true" module="container" name="tipi"
       package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="tipi.gif" type="tipi">
       <description>
          Deprecated, use panel instead. They use the same java class
       </description>
-      <events>
-         <event name="onInstantiate" />
-         <event name="onLoad">
-            <param name="service" type="string" />
-            <param name="navajo" type="navajo" />
-         </event>
-         <event name="onGeneratedErrors">
-            <param name="id" type="string" />
-            <param name="description" type="string" />
-         </event>
-      </events>
+
       <values>
          <value direction="in" name="opaque" type="boolean" property="opaque" />
-         <value direction="in" name="background" type="color" property="background" />
-         <value direction="in" name="border" type="border" property="border" />
-         <value direction="inout" name="tooltip" type="string" property="ToolTipText" />
-         <value direction="in" name="visible" type="boolean" property="visible" />
          <value direction="in" name="paint" type="paint" property="paint" />
 
          <value direction="in" name="image" type="resource" property="imageUrl" />
@@ -722,10 +808,11 @@
    </tipiclass>
 
 
-   <!-- Identical to tipi -->
+   <!-- Identical to tipi, but old school -->
    <tipiclass addtocontainer="true" deprecated="true" childcount="*" class="TipiPanel" layoutmanager="true" module="container" name="panel"
       package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="tipi.gif" type="tipi">
       <description>
+      	Older panel implementation. Use panel instead
       </description>
       <events>
          <event name="onInstantiate" />
@@ -763,22 +850,12 @@
    </tipiclass>
 
 
-   <tipiclass addtocontainer="true" deprecated="true" childcount="*" class="TipiArrayPanel" layoutmanager="true" module="container" name="arraypanel"
+   <tipiclass addtocontainer="true"  implements="basecomponent,datacomponent,swingcomponent,panel" deprecated="false" childcount="*" class="TipiArrayPanel" layoutmanager="true" module="container" name="arraypanel"
       package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="tipi.gif" type="tipi">
       <description>
-   Based on the panel. Added messagePath and some events
+   			Based on the panel. Added messagePath and some events
       </description>
       <events>
-         <event name="onInstantiate" />
-         <event name="onLoad">
-            <param name="service" type="string" />
-            <param name="navajo" type="navajo" />
-            <param name="message" type="message"/>
-         </event>
-         <event name="onGeneratedErrors">
-            <param name="id" type="string" />
-            <param name="description" type="string" />
-         </event>
          <event name="onBegin" >
             <param name="size" type="integer"/>
             <param name="array" type="message"/>
@@ -801,33 +878,11 @@
          </event>
           
       </events>
-      <values>
-         <value direction="in" name="messagePath" type="string"/>
-         <value direction="in" name="opaque" type="boolean" property="opaque" />
-         <value direction="in" name="background" type="color" property="background" />
-         <value direction="in" name="border" type="border" property="border" />
-         <value direction="inout" name="tooltip" type="string" property="ToolTipText" />
-         <value direction="in" name="visible" type="boolean" property="visible" />
-         <value direction="in" name="paint" type="paint" property="paint" />
 
-         <value direction="in" name="image" type="resource" property="imageUrl" />
-         <value direction="in" name="image_alignment" type="selection" property="alignment">
-            <option description="North" value="north" />
-            <option description="East" value="east" />
-            <option description="South" value="south" />
-            <option description="West" value="west" />
-            <option description="Center" value="center" />
-            <option description="NorthEast" value="northeast" />
-            <option description="SouthEast" value="southeast" />
-            <option description="NorthWest" value="northwest" />
-            <option description="SouthWest" value="southwest" />
-         </value>
-      </values>
-      <methods />
    </tipiclass>
    
       <!-- Identical to tipi -->
-   <tipiclass addtocontainer="true" deprecated="true" childcount="*" class="TipiMessagePanel" layoutmanager="true" module="container" name="messagepanel"
+   <tipiclass addtocontainer="true" implements="basecomponent,datacomponent,swingcomponent,panel" deprecated="false" childcount="*" class="TipiMessagePanel" layoutmanager="true" module="container" name="messagepanel"
       package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="tipi.gif" type="tipi">
       <description>
       Based on the panel
@@ -835,50 +890,27 @@
       
       </description>
       <events>
-         <event name="onInstantiate" />
          <event name="onLoad">
             <param name="message" type="message" />
             <param name="navajo" type="navajo" />
-         </event>
-         <event name="onGeneratedErrors">
-            <param name="id" type="string" />
-            <param name="description" type="string" />
          </event>
       </events>
       <values>
          <!-- only addition from panel -->
          <value direction="in" name="messageName" type="string" />
           <value direction="in" name="message" type="message" />
-        
-         <value direction="in" name="opaque" type="boolean" property="opaque" />
-         <value direction="in" name="background" type="color" property="background" />
-         <value direction="in" name="border" type="border" property="border" />
-         <value direction="inout" name="tooltip" type="string" property="ToolTipText" />
-         <value direction="in" name="visible" type="boolean" property="visible" />
-         <value direction="in" name="paint" type="paint" property="paint" />
-
-         <value direction="in" name="image" type="resource" property="imageUrl" />
-         <value direction="in" name="image_alignment" type="selection" property="alignment">
-            <option description="North" value="north" />
-            <option description="East" value="east" />
-            <option description="South" value="south" />
-            <option description="West" value="west" />
-            <option description="Center" value="center" />
-            <option description="NorthEast" value="northeast" />
-            <option description="SouthEast" value="southeast" />
-            <option description="NorthWest" value="northwest" />
-            <option description="SouthWest" value="southwest" />
-         </value>
       </values>
       <methods />
    </tipiclass>
    
    
 
-   <tipiclass addtocontainer="true" deprecated="true" childcount="*" class="TipiOffsetPanel" layoutmanager="true" module="container" name="offsetpanel"
+   <tipiclass addtocontainer="true" implements="basecomponent,datacomponent,swingcomponent,panel" deprecated="true" childcount="*" class="TipiOffsetPanel" layoutmanager="true" module="container" name="offsetpanel"
       package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="tipi.gif" type="tipi">
       <description>
-         Use it for animation purposes
+		 This component is used to so 'shifting transitions.\\
+         It behaves like a scroll panel without the visible scroll controls.
+         
       </description>
       <events>
          <event name="onInstantiate" />
@@ -907,6 +939,9 @@
 
    <tipiclass addtocontainer="false" childcount="0" layoutmanager="false" class="TipiExportDialog" module="dialogs" name="exportdialog" package="com.dexels.navajo.tipi.components.swingimpl"
       studio-icon="exportdialog.gif" toplevel="true" type="tipi">
+      	<description>
+			
+      	</description>
       <events>
          <event name="onLoad">
             <param name="service" type="string" />
@@ -932,18 +967,17 @@
          <method name="dispose" />
       </methods>
    </tipiclass>
-   <tipiclass addtocontainer="true" childcount="*" class="TipiWindow" layoutmanager="true" module="container" name="window" package="com.dexels.navajo.tipi.components.swingimpl"
+   <tipiclass addtocontainer="true" childcount="*" class="TipiWindow" implements="basecomponent,datacomponent,swingcomponent" layoutmanager="true" module="container" name="window" package="com.dexels.navajo.tipi.components.swingimpl"
       studio-icon="window.gif" toplevel="true" type="tipi">
+		<description>
+			Internal window (uses JInternalFrame), should only be placed onto desktops.\\
+			Internally uses a borderlayout as default.\\
+			FIXME: Check if it supports a border
+		</description>
       <events>
-         <event name="onInstantiate" />
          <event name="onWindowClosed" />
-         <event name="onLoad">
-            <param name="service" type="string" />
-            <param name="navajo" type="navajo" />
-         </event>
       </events>
       <values>
-         <!--     <value name="visible" direction="in" type="boolean"/>-->
          <value direction="in" name="icon" type="resource" property="iconUrl" />
          <value direction="inout" name="title" type="string" property="title" />
          <value direction="inout" name="x" type="integer" value="50" property="x" />
@@ -1014,26 +1048,21 @@
    </tipiclass>
 
 
-   <tipiclass addtocontainer="false" childcount="*" class="TipiScreen" layoutmanager="false" module="container" name="screen" package="com.dexels.navajo.tipi.components.swingimpl"
+   <tipiclass addtocontainer="false" implements="basecomponent,datacomponent" childcount="*" class="TipiScreen" layoutmanager="false" module="container" name="screen" package="com.dexels.navajo.tipi.components.swingimpl"
       studio-icon="screen.gif" type="tipi">
-      <events>
-         <event name="onInstantiate" />
-         <event name="onLoad">
-            <param name="service" type="string" />
-            <param name="navajo" type="navajo" />
-         </event>
-      </events>
-      <values />
-      <methods />
+	<description>
+		This component is used as 'virtual toplevel' although multiple frames are not supported yet.
+		You never need to instantiate or access this component.
+	</description>
    </tipiclass>
-   <tipiclass addtocontainer="true" childcount="*" class="TipiDesktop" layoutmanager="false" module="container" name="desktop" package="com.dexels.navajo.tipi.components.swingimpl"
+   
+   <tipiclass addtocontainer="true" implements="basecomponent,datacomponent,swingcomponent"  childcount="*" class="TipiDesktop" layoutmanager="false" module="container" name="desktop" package="com.dexels.navajo.tipi.components.swingimpl"
       studio-icon="desktop.gif" type="tipi">
+      <description>
+		This component corresponds to the 'JDesktop' class in Swing. It is a parent for free floating children, typically windows or undecorated windows.
+		You can place windows in other components, but take care when it uses a layoutmanager, which will cause the windows to behave a bit oddly.
+      </description>
       <events>
-         <event name="onInstantiate" />
-         <event name="onLoad">
-            <param name="service" type="string" />
-            <param name="navajo" type="navajo" />
-         </event>
          <event name="onMouseClicked">
             <param name="x" type="integer" />
             <param name="y" type="integer" />
@@ -1043,10 +1072,6 @@
       </events>
       <values>
          <value direction="in" name="paint" type="paint" property="paint" />
-         <value direction="in" name="background" type="color" property="background" />
-         <value direction="in" name="border" type="border" property="border" />
-         <value direction="inout" name="tooltip" type="string" property="ToolTipText" />
-         <value direction="in" name="visible" type="boolean" property="visible" />
          <value direction="in" name="logo" type="object" property="logoUrl" />
          <value direction="in" name="image_alignment" type="selection" property="alignment">
             <option description="North" value="north" />
@@ -1311,7 +1336,8 @@
    </tipiclass>
 
 
-   <tipiclass addtocontainer="true" class="TipiButton" module="component" name="button" childcount="0" package="com.dexels.navajo.tipi.components.swingimpl"
+      
+   <tipiclass addtocontainer="true" class="TipiButton" implements="dragdrop" module="component" name="button" childcount="0" package="com.dexels.navajo.tipi.components.swingimpl"
       propertycomponent="false" studio-icon="button.gif" type="component">
       <events>
          <!-- TODO: Add onPropertyLoad event -->
@@ -1319,10 +1345,6 @@
          <event name="onActionPerformed" />
          <event name="onMouseEntered" />
          <event name="onMouseExited" />
-         <event name="onDrag" />
-         <event name="onDrop">
-            <param name="value" type="object" />
-         </event>
       </events>
       <values>
          <value direction="inout" name="text" type="string" property="text" />
@@ -1336,10 +1358,7 @@
          <value direction="in" name="visible" type="boolean" property="visible" />
          <value direction="inout" name="mnemonic" type="string" property="stringMnemonic" />
          <value direction="in" name="accelerator" type="string" />
-         <value direction="in" name="dragValue" type="object" />
-         <value direction="in" name="dragCategory" type="list" />
-         <value direction="in" name="dropCategory" type="list" />
-           <value direction="in" name="vertical" type="boolean" property="vertical" />
+         <value direction="in" name="vertical" type="boolean" property="vertical" />
       </values>
       <methods>
          <method name="fireAction" />
@@ -1349,6 +1368,10 @@
 <!--  Copied from button, removed dropCategory -->
    <tipiclass addtocontainer="true" class="TipiDropButton" module="component" name="dropbutton" childcount="0" package="com.dexels.navajo.tipi.components.swingimpl"
       propertycomponent="false" studio-icon="button.gif" type="component">
+      <description>
+      	This component allows you to drop files or URL's onto it.
+      	How and when this exactly works is platform dependent.
+      </description>
       <events>
          <!-- TODO: Add onPropertyLoad event -->
          <event name="onInstantiate" />
@@ -1356,7 +1379,15 @@
          <event name="onMouseEntered" />
          <event name="onMouseExited" />
          <event name="onBinaryDropped">
-            <param name="value" type="object" />
+			<description>
+				Fired when a binary has been dropped.
+				//Note: This button does not allow 'regular' tipi drops. You can use regular tipi drags, though.//
+			</description>
+			
+            <param name="value" type="object">
+				<description>
+				</description>
+            </param>
             <param name="path" type="string" />
             <param name="mime" type="string" />
          </event>
@@ -2104,7 +2135,8 @@
             <param name="service" type="string" />
             <param name="navajo" type="navajo" />
          </event>
-         <!-- When the user edits the combobox, and the combobox needs a refresh -->
+         <!-- When the user edits the combobox, and the combobox needs a refresh
+-->
          <event name="onChange">
             <param name="text" type="string" />
             <param name="selectedValue" type="object" />
@@ -2349,12 +2381,10 @@
 
    <tipi-parser name="font" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.FontParser" type="java.awt.Font" >
       <description>
-         Een font zit ZO in elkaar vla-vla-vla
+         Een font zit ZO in elkaar bla-bla-bla: For example: {font:/serif-1-1}
       </description>
    </tipi-parser>
    <tipi-parser name="color" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.ColorParser" type="java.awt.Color" />
    <tipi-parser name="paint" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.PaintParser" type="java.awt.Paint" />
-   <tipi-parser name="cookie" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.CookieParser" type="java.lang.String" />
-   <tipi-parser name="cookieref" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.CookieRefParser" type="com.dexels.navajo.tipi.internal.TipiReference" />
-
+  
 </tid>

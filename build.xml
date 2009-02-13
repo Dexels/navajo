@@ -38,11 +38,7 @@
 		<pathelement location="${TimingFramework.build}" />
 		<pathelement location="${DexelsVersionControl.build}" />
 	</path>
-	<target name="check-env">
-		<fail unless="PROJECTHOME"> Set the PROJECTHOME environment variable to the top directory of your CVS projects,
-			for example: export PROJECTHOME=C:\PROJECTS declare -x PROJECTHOME=/home/arjen/las-projectas </fail>
-	</target>
-	<target name="init" depends="check-env">
+	<target name="init" >
 		<tstamp />
 		<mkdir dir="${NavajoDocument.build}" />
 		<mkdir dir="${NavajoClient.build}" />
@@ -51,7 +47,7 @@
 		<mkdir dir="${NavajoTipi.build}" />
 		<mkdir dir="${build}" />
 	</target>
-	<target name="clean" depends="check-env">
+	<target name="clean" >
 		<delete file="${archive}" />
 		<delete dir="${NavajoClient.build}" />
 		<delete dir="${NavajoDocument.build}" />
@@ -101,6 +97,7 @@
 			</manifest>
 
 		</jar>
+		<eclipse.refreshLocal resource="${ant.project.name}/${archive}" depth="infinite"/>
 	</target>
 	<target name="proxyarchive" depends="archive">
 		<jar jarfile="${proxyarchive}">

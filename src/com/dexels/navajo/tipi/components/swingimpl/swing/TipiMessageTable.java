@@ -13,14 +13,14 @@ import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.swingclient.components.*;
 import com.dexels.navajo.tipi.swingimpl.dnd.*;
 
-public class TipiMessageTable extends MessageTable implements TipiDndCapable {
+public class TipiMessageTable extends MessageTable  {
 
     final TipiContext myContext;
-	private final TipiDndManager myDndManager;
+	//private final TipiDndManager myDndManager;
     
     public TipiMessageTable(TipiContext tc, TipiComponent component) {
         myContext = tc;
-    	myDndManager = new TipiDndManager(this,component);
+  //  	myDndManager = new TipiDndManager(this,component);
     }
     
     public synchronized void setMessage(Message m) {
@@ -66,8 +66,8 @@ public class TipiMessageTable extends MessageTable implements TipiDndCapable {
         }
     }
 
-	public TipiDndManager getDndManager() {
-		return myDndManager;
-	}
+//	public TipiDndManager getDndManager() {
+//		return myDndManager;
+//	}
 
 }

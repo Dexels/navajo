@@ -39,6 +39,7 @@ public final class TipiWindow
 //	    JLabel label = new JLabel("Monkey");
 //		myWindow.getLayeredPane().add(label, 40000);
 //	    label.setBounds(10,10,50,20);
+	    myWindow.setVisible(true);
 	    myWindow.addInternalFrameListener(new InternalFrameAdapter(){
 
 			public void internalFrameClosed(InternalFrameEvent e) {

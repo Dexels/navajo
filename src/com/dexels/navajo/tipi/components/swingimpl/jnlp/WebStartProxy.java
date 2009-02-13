@@ -1,12 +1,17 @@
 package com.dexels.navajo.tipi.components.swingimpl.jnlp;
 
 import java.io.*;
-import java.net.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import javax.jnlp.PersistenceService;
 
 //import javax.jnlp.*;
 
 import com.dexels.navajo.tipi.components.swingimpl.*;
 import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.internal.cache.impl.CachedHttpJnlpResourceLoader;
+import com.dexels.navajo.tipi.internal.cookie.CookieManager;
 
 public class WebStartProxy {
 
@@ -33,22 +38,34 @@ public class WebStartProxy {
 	}
 
 	
-	public static TipiResourceLoader createDefaultWebstartLoader(String relativePath) throws IOException {
+	public static TipiResourceLoader createDefaultWebstartLoader(
+			String relativePath, boolean useCache, CookieManager manager) throws IOException {
 		javax.jnlp.BasicService bs;
+		try {
+			bs = (javax.jnlp.BasicService) javax.jnlp.ServiceManager
+					.lookup("javax.jnlp.BasicService");
+			System.err.println("BS: " + bs.getCodeBase());
+			URL codeURL = new URL(bs.getCodeBase(), relativePath);
+			System.err.println("Using code url: " + codeURL);
+			if (useCache) {
 				try {
-					bs = (javax.jnlp.BasicService)javax.jnlp.ServiceManager.lookup("javax.jnlp.BasicService");
-					System.err.println("BS: "+bs.getCodeBase());
-					URL codeURL = new URL(bs.getCodeBase(),relativePath);
-					System.err.println("Using code url: "+codeURL);
-					return new HttpResourceLoader(codeURL.toString());
-				} catch (javax.jnlp.UnavailableServiceException e) {
-					
-					e.printStackTrace();
-					throw new IOException("Error loading basic webstartservice: ",e);
-				}
 
-			
-		      
+					return new CachedHttpJnlpResourceLoader(relativePath,codeURL,manager);
+				} catch (javax.jnlp.UnavailableServiceException e) {
+					System.err
+							.println("Cached HTTP/JNLP cacheloader failed. Returning uncached loader.");
+					return new HttpResourceLoader(codeURL.toString());
+				}
+			} else {
+				return new HttpResourceLoader(codeURL.toString());
+
+			}
+		} catch (javax.jnlp.UnavailableServiceException e) {
+
+			e.printStackTrace();
+			throw new IOException("Error loading basic webstartservice: ", e);
+		}
+
 	}
 
 

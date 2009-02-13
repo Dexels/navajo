@@ -7,8 +7,9 @@ import javax.jnlp.*;
 
 import com.dexels.navajo.tipi.internal.cookie.*;
 import com.dexels.navajo.tipi.internal.cookie.CookieManager;
+import com.dexels.navajo.tipi.internal.cookie.impl.TmpFileCookieManager;
 
-public class JnlpCookieManager implements CookieManager {
+public class JnlpCookieManager extends TmpFileCookieManager implements CookieManager {
     PersistenceService ps; 
     BasicService bs; 
 
@@ -23,45 +24,74 @@ public class JnlpCookieManager implements CookieManager {
 	    } 
 
 	    if (ps != null && bs != null) { 
-	            // find all the muffins for our URL
-	            URL codebase = bs.getCodeBase(); 
-	            System.err.println("MY CODEBASE:"+codebase);
-	            String [] muffins = ps.getNames(codebase); 
-	            for (int i = 0; i < muffins.length; i++) {
-		            System.err.println("Muffin: "+muffins[i]);
-				}
-//	            ps.create(codebase, 10000);
+	        loadCookies();
 	    }
 	}
 	
-	public String getCookie(String key) {
-		// TODO Auto-generated method stub
-//		try {
-//			FileContents ff =  ps.get(new URL(key));
-//			StringWriter sr = new StringWriter();
-//		} catch (MalformedURLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		return null;
+	private void loadCookieMuffin(String path) throws MalformedURLException, FileNotFoundException, IOException {
+		FileContents fc = ps.get(new URL(bs.getCodeBase(),path));
+		System.err.println("Muffin found, filled with cookies. Size: "+fc.getLength());
+		InputStream inputStream = fc.getInputStream();
+		loadCookieFromStream(inputStream);
+		inputStream.close();
+		System.err.println("Current cookiemap: "+cookieMap);
 	}
+
 
 	public void loadCookies() throws IOException {
-		// TODO Auto-generated method stub
+		FileContents fc = ps.get(new URL(bs.getCodeBase(),"tipi.cookie"));
+		InputStream inputStream = fc.getInputStream();
+		loadCookieFromStream(inputStream);
+		inputStream.close();		
+	}
+
+	public void saveCookies() throws MalformedURLException, IOException  {
+		System.err.println("Entering JNLP COokiemananger: Saving the cookies!");
+
+		URL cookieURL = new URL(bs.getCodeBase(),"tipi.cookie");
+		System.err.println("Using the url:: "+cookieURL);
+		try {
+			FileContents fc = ps.get(cookieURL);
+			// found, as we did not jump
+//			ps.delete(cookieURL);
+		} catch (FileNotFoundException e) {
+			System.err.println("Cookie not found. Thats fine.");
+			long allowed = ps.create(cookieURL, 10000);
+			System.err.println("New muffin, size granted: "+allowed);
+		}
+//		InputStream inputStream = fc.getInputStream();
+		FileContents  ff= ps.get(cookieURL);
+		OutputStream os = ff.getOutputStream(true);
+		
+		saveCookieWithStream(os);
+		os.flush();
+		os.close();
+		//		loadCookieFromStream(inputStream);
+	//	inputStream.close();
 
 	}
 
-	public void saveCookies() throws IOException {
-		// TODO Auto-generated method stub
-
+	private final void copyResource(OutputStream out, InputStream in) throws IOException {
+		BufferedInputStream bin = new BufferedInputStream(in);
+		BufferedOutputStream bout = new BufferedOutputStream(out);
+		byte[] buffer = new byte[1024];
+		int read;
+		while ((read = bin.read(buffer)) > -1) {
+			bout.write(buffer, 0, read);
+		}
+		bin.close();
+		bout.flush();
+		bout.close();
 	}
 
-	public void setCookie(String key, String value) {
-		// TODO Auto-generated method stub
+	@Override
+	public void deleteCookies() throws IOException {
 
+		URL cookieURL = new URL(bs.getCodeBase(),"tipi.cookie");
+			ps.delete(cookieURL);
+			cookieMap.clear();
+		System.err.println("JNLP Cookie deleted!");
 	}
 
+	
 }

@@ -71,17 +71,20 @@ public class SwingTipiContext extends TipiContext {
 		 JDialog.setDefaultLookAndFeelDecorated(true);
 
 			try {
-				 
-		 if(WebStartProxy.hasJnlpContext()) {
+
+			// commented out!
+			if (WebStartProxy.hasJnlpContext() ) {
 				System.err.println("JNLP DETECTED.");
 				setCookieManager(new JnlpCookieManager());
-		
-		 } else {
-			 createTmpCookieManager();
-		 }
-			} catch (Throwable e) {
-				e.printStackTrace();
+				getCookieManager().loadCookies();
+			} else {
+				createTmpCookieManager();
 			}
+		} catch (Throwable e) {
+			System.err.println("No jnlp found");
+			e.printStackTrace();
+			createTmpCookieManager();
+		}
 	//hasJnlpContext(
 //		if(false) {
 //			appendJnlpCodeBase();
@@ -354,7 +357,8 @@ public class SwingTipiContext extends TipiContext {
 			myAppletRoot.reload();
 		} else {
 			shutdown();
-			System.exit(0);
+			super.exit();
+//			System.exit(0);
 		}
 	}
 
@@ -456,14 +460,8 @@ public class SwingTipiContext extends TipiContext {
 				UIManager.setLookAndFeel(tipiLaf);
 
 			}
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (UnsupportedLookAndFeelException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			System.err.println("Unable to load supplied look and feel: "+tipiLaf+" ("+e.getMessage()+")");
 		}
 	}
 
@@ -471,7 +469,7 @@ public class SwingTipiContext extends TipiContext {
 	protected TipiResourceLoader createDefaultResourceLoader(String loaderType) {
 		if(hasJnlpContext()) {
 			try {
-				return WebStartProxy.createDefaultWebstartLoader(loaderType);
+				return WebStartProxy.createDefaultWebstartLoader(loaderType,true,getCookieManager());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -644,27 +642,19 @@ public class SwingTipiContext extends TipiContext {
 	}
 	
 	public void destroyDialog(JDialog j) {
-		System.err.println("Disposing dialog. Current stack size: "+dialogStack.size());
-		for (JDialog ll: dialogStack) {
-			System.err.println("Stack. Dialog with title:  "+ll.getTitle());
-		}
+		
 		if(dialogStack.isEmpty()) {
-			System.err.println("Already popped?! Whatever...");
 			return;
 		}
 		if(dialogStack.peek() == j) {
-			System.err.println("Disposing dialog: Popping the last ");
 				dialogStack.pop();
 			j.setVisible(false);
 			return;
 		}
 		if(!dialogStack.contains(j)) {
-			System.err.println("Unknown dialog!!!!");
 		} else {
-			System.err.println("Other dialog found on top: "+dialogStack.peek().getTitle());
 			JDialog sss = dialogStack.pop();
 			sss.dispose();
-			System.err.println("Popped, disposed, and recurring!");
 			destroyDialog(j);
 		}
 		

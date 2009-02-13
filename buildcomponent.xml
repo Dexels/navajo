@@ -95,6 +95,7 @@
 		<mkdir dir="${dist}/${lib}" />
 		<copy todir="${dist}/${lib}" file="../NavajoTipi/tipipackage.jar" />
 		<copy todir="${dist}/${lib}" file="../NavajoDocument/NavajoDocument.jar" />
+		<copy todir="${dist}/${lib}" file="../NavajoDocument/NanoImpl.jar" />
 		<copy todir="${dist}/${lib}" file="../NavajoClient/NavajoClient.jar" />
 		<copy todir="${dist}/${lib}" file="../NavajoClient/lib/jzlib.jar" />
 		<copy todir="${dist}/${lib}" file="${proxyarchive}" />
