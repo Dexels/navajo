@@ -67,7 +67,7 @@
 			<classpath refid="depend" />
 		</javac>
 	</target>
-	<target name="archive" depends="test">
+	<target name="archive" depends="compile,resource">
      	<jar jarfile="${archive}">
             <fileset dir="${build}">
                  <exclude name="**/startup.fx"/>
