@@ -20,7 +20,7 @@ public abstract class BaseTipiClientTask extends org.apache.tools.ant.Task {
 	protected String repository = "";
 	protected String extensions = "";
 	
-	public abstract void parseProjectDefinition(URL projectURL, XMLElement result) throws MalformedURLException;
+	public abstract void parseProjectDefinition(URL projectURL, XMLElement result) throws MalformedURLException, IOException;
 
 	
 	public String getExtensions() {
@@ -54,23 +54,42 @@ public abstract class BaseTipiClientTask extends org.apache.tools.ant.Task {
 
 
 	protected XMLElement appendExtension(String project) throws IOException {
-		XMLElement result = new CaseSensitiveXMLElement();
 		try {
 			URL rep = new URL(repository);
 			URL projectURL = new URL(rep,project+"/");
 			URL extensionURL = new URL(projectURL,"definition.xml");
-			InputStream is = extensionURL.openStream();
-			Reader r = new InputStreamReader(is);
-			result.parseFromReader(r);
+
+			XMLElement result = getXMLElement(extensionURL);
+
 			parseProjectDefinition(projectURL, result);
-			r.close();
-			is.close();
+
+			return result;
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return result;
+		return null;
+
 	}
+
+
+protected XMLElement getXMLElement(URL extensionURL)  {
+	try {
+		XMLElement result = new CaseSensitiveXMLElement();
+		InputStream is = extensionURL.openStream();
+		Reader r = new InputStreamReader(is);
+		result.parseFromReader(r);
+		r.close();
+		is.close();
+		return result;
+	} catch (XMLParseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (IOException e) {
+		e.printStackTrace();
+	}
+	return null;
+}
 	
 
 	public void buildJnlp(File inputPath, File outputPath) throws XMLParseException, IOException {
