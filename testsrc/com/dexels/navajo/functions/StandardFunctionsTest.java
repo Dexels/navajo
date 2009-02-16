@@ -64,12 +64,53 @@ public class StandardFunctionsTest extends TestCase {
 	public void testAbs() throws Exception {
 		
 		FunctionInterface fi = fff.getInstance(cl, "Abs");
+		
+		// Test Integer.
 		fi.reset();
 		fi.insertOperand(new Integer(-10));
 		Object o = fi.evaluateWithTypeChecking();
 		assertEquals(o.getClass(), Integer.class);
 		assertEquals(((Integer) o).intValue(), 10);
 		
+		// Test Double.
+		fi.reset();
+		fi.insertOperand(new Double(-10));
+		o = fi.evaluateWithTypeChecking();
+		assertEquals(o.getClass(), Double.class);
+		assertEquals(((Double) o).intValue(), 10);
+		
+		// Test bogus.
+		boolean bogus = false;
+		fi.reset();
+		fi.insertOperand(new String("-10"));
+		try {
+			o = fi.evaluateWithTypeChecking();
+		} catch (TMLExpressionException e) {
+			bogus = true;
+		}
+		assertTrue(bogus);
+		
+		// Test null.
+		fi.reset();
+		fi.insertOperand(null);
+		o = fi.evaluateWithTypeChecking();
+		assertNull(o);
+		
+		// Test empty parameters.
+		boolean empty = false;
+		fi.reset();
+		try {
+			o = fi.evaluateWithTypeChecking();
+		} catch (TMLExpressionException e) {
+			empty = true;
+		}
+		assertTrue(empty);
+	}
+	
+	public static void main(String [] args) throws Exception {
+		StandardFunctionsTest t = new StandardFunctionsTest();
+		t.setUp();
+		t.testAbs();
 	}
 	
 	public void testZipArchive() throws Exception {
