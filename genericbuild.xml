@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- $Id$ -->
+<project default="publish" basedir=".">
+
+	
+	<property name="repository" value="http://spiritus.dexels.nl:34567/Tipi/" />
+	<property name="repositorySsh" value="navajo@spiritus.dexels.nl://var/www/html/Tipi" />
+	<property name="dist" value="dist/${ant.project.name}" />
+
+	<taskdef name="buildExtension" classname="com.dexels.navajo.tipi.ant.extensionbuilder.BuildExtensionTask" classpath="bin" />
+		
+		
+	<target name="grabjars">
+		<mkdir dir="${dist}/lib"/>
+		
+		<!-- TODO Create custom task to only copy the files referenced in the extension definition -->
+		<copy todir="${dist}/lib">
+			<fileset dir="lib">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+		<mkdir dir="${dist}/lib" />
+		<copy todir="${dist}/unsigned">
+			<fileset dir="${dist}/lib">
+				<include name="**" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="buildTipi">
+		<!--  <buildXsd repository="http://www.navajo.nl/Tipi/"/> -->
+		<mkdir dir="${dist}"/>
+		<buildExtension repository="${repository}" destination="${dist}" />
+	<!-- 			<eclipse.refreshLocal resource="${ant.project.name}" depth="infinite" />
+-->
+	</target>
+	<target name="sign" depends="grabjars,buildTipi">
+		<signjar keystore="../TipiBuild/dexels_dummy_key" verbose="false"
+			storepass="dexels" keypass="dexels" alias="java">
+			<fileset dir=".">
+				<include name="${dist}/lib/*.jar" />
+			</fileset>
+		</signjar>
+	</target>
+	<target name="publish" depends="sign">
+		<!--
+			<ant antfile="../TipiBuild/jnlpbuild/antinclude.xml" dir="."
+			inheritall="true" inheritrefs="true" target="publish" />
+		-->
+		<!--
+			If this command does not work: Add de jsch-0.1.36.jar to the ant jars
+		-->
+		<!-- and add the password to the and ant runtime: srv2pw=password -->
+		<!-- Make sure the dir exists... -->
+
+<echo message="${repositorySsh}"></echo>
+		<scp trust="true" sftp="true" verbose="true"
+			todir="${repositorySsh}">
+			<fileset dir="dist">
+				<include name="${ant.project.name}/lib/**" />
+				<include name="${ant.project.name}/unsigned/**" />
+				<include name="${ant.project.name}/**.jnlp" />
+				<include name="${ant.project.name}/definition.xml" />
+				<include name="${ant.project.name}/includes/**" />
+				<include name="${ant.project.name}/index.html" />
+			</fileset>
+		</scp>
+		<scp trust="true" sftp="true" verbose="true"
+			todir="${repositorySsh}">
+			<fileset dir="${dist}">
+				<include name="extensions.xml" />
+			</fileset>
+		</scp>
+	
+	 	<echo message="Tipi deploy completed at repository:"/>
+		<echo message="${repository}"/>
+		<echo message="JNLP deployed at: ${repository}/${ant.project.name}/${ant.project.name}.jnlp"/>
+	</target>
+	
+</project>
