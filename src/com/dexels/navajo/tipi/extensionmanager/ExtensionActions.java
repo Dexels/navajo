@@ -1,92 +1,44 @@
-package com.dexels.navajo.tipi;
+package com.dexels.navajo.tipi.extensionmanager;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Writer;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.tools.ant.BuildException;
+import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
+import com.dexels.navajo.tipi.util.XMLElement;
+import com.dexels.navajo.tipi.util.XMLParseException;
 
+public class ExtensionActions {
 
-public class BuildJnlpTask extends org.apache.tools.ant.Task {
-
-	private String repository;
-	private String destination;
-
-	public String getDestination() {
-		return destination;
-	}
-
-
-	public void setDestination(String destination) {
-		this.destination = destination;
-	}
-
-
-	public String getRepository() {
-		return repository;
-	}
-
-
-	public void setRepository(String repository) {
-		this.repository = repository;
-	}
-
-
-//	public static void main(String[] args) {
-//		BuildJnlpTask buildJnlpTask = new BuildJnlpTask();
-//		File sourceFile = new File("src/tipi/TipiExtension.xml");
-//		File destFile = new File("Aap.xml");
-//		try {
-//			buildJnlpTask.buildJnlp(sourceFile, destFile);
-//		} catch (XMLParseException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}	
-//		}
-
-	
-	@Override
-	public void execute() throws BuildException {
-		File sourceFile = new File(getProject().getBaseDir(),"src/tipi/"+getProject().getProperty("ant.project.name")+".xml");
-		if(!sourceFile.exists()) {
-			throw new BuildException("Tipi project descriptor not found: "+sourceFile.getPath());
-		}
-		File destDir = new File(getProject().getBaseDir(),destination);
-		if(!destDir.exists()) {
-			destDir.mkdirs();
-		}
-		try {
-			build(sourceFile, destDir);
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-	}
-
-
-	public void build(File inputPath, File destDir) throws XMLParseException, IOException {
+	public static void build(String repository, String projectName,File baseDir, File inputPath, File destDir) throws XMLParseException, IOException {
 		FileReader fr = new FileReader(inputPath);
 		XMLElement xe = new CaseSensitiveXMLElement();
 		xe.parseFromReader(fr);
+		
+		String version = xe.getStringAttribute("version");
+		ExtensionManager.registerExtension(projectName, repository, destDir,version);
+
 		copyFile(inputPath,new File(destDir,"definition.xml"));
-		generateJnlp(destDir, xe);
+		
+		
+		generateJnlp(repository,projectName, destDir, xe);
 		generateIndex(destDir, xe);
-		extractIncludes(inputPath, destDir, xe);
+		extractIncludes(baseDir, inputPath, destDir, xe);
 		fr.close();
 	}
 
 
-	private void copyFile(File inputPath, File file) throws IOException {
+	private static void copyFile(File inputPath, File file) throws IOException {
 		FileInputStream fis = new FileInputStream(inputPath);
 		FileOutputStream fos = new FileOutputStream(file);
 		copyResource(fos, fis);
@@ -94,7 +46,7 @@ public class BuildJnlpTask extends org.apache.tools.ant.Task {
 	}
 
 
-	private void extractIncludes(File inputPath, File destDir, XMLElement xe) throws IOException {
+	private static void extractIncludes(File baseDir, File inputPath, File destDir, XMLElement xe) throws IOException {
 		XMLElement includes = xe.getElementByTagName("includes");
 		if(includes==null) {
 			return;
@@ -106,7 +58,7 @@ public class BuildJnlpTask extends org.apache.tools.ant.Task {
 		
 		for (XMLElement element : inList) {
 			String path = element.getStringAttribute("path");
-			File src = new File(getProject().getBaseDir(), "src");
+			File src = new File(baseDir, "src");
 			File p = new File(src, path);
 			System.err.println("Include: "+p.exists()+" ("+p+")");
 			if(!p.exists()) {
@@ -115,39 +67,47 @@ public class BuildJnlpTask extends org.apache.tools.ant.Task {
 			}
 			File includeDir = new File(destDir,"includes");
 			File ccc = new File(includeDir,path);
-			String name = ccc.getName();
 			ccc.getParentFile().mkdirs();
 			copyFile(p, ccc);
 		}
 	}
 
 	
-	private void generateIndex( File destDir, XMLElement xe) throws IOException {
+	private static void generateIndex( File destDir, XMLElement xe) throws IOException {
 		File destFile = new File(destDir,"index.html");
 		List<XMLElement> links = xe.getElementsByTagName("link");
 //		<extension id="TipiCore" requiresMain="" project="NavajoTipi" version="0" title="Tipi Core Library" vendor="Dexels" homepage="http://www.dexels.com">
 		String id = xe.getStringAttribute("id");
 		FileWriter fw = new FileWriter(destFile);
-		fw.write("<html><head><title>Tipi build: "+id+"</title></head><body>");
-		fw.write("<h4>"+"Vendor: "+xe.getStringAttribute("vendor")+" </h4>");
-		fw.write("<h4>"+"Version: "+xe.getStringAttribute("version")+" </h4>");
+		fw.write("<html><head><title>Tipi build: "+id+"</title></head><body>\n");
+		fw.write("<h4>"+"Vendor: "+xe.getStringAttribute("vendor")+" </h4>\n");
+		fw.write("<h4>"+"Version: "+xe.getStringAttribute("version")+" </h4>\n");
 		fw.write("<h4>"+"Homepage: "+"More info <a href='"+xe.getStringAttribute("homepage")+"'>"+xe.getStringAttribute("homepage")+"</a></h4>");
-		fw.write("<h4>"+"Build time: "+new Date()+" </h4>");
+		fw.write("<h4>"+"Build time: "+new Date()+" </h4>\n");
 		
 		fw.write(xe.getStringAttribute("title")+"<br/>");
 		for (XMLElement element : links) {
 			fw.write("More info <a href='"+element.getStringAttribute("href")+"'>here</a><br/>");
 		}
+		
+		String webstart = xe.getStringAttribute("project")+".jnlp";
+		writeLink("Webstart: "+webstart+"<br/>",webstart,fw);
+		writeLink("Definition: definition.xml<br/>","definition.xml",fw);
 		fw.write("</body></html>");
 
 		fw.flush();
 		fw.close();
 	}
 	
-	private void generateJnlp(File destDir, XMLElement xe) throws IOException {
-		File destFile = new File(destDir,getProject().getProperty("ant.project.name")+".jnlp");
+	private static void writeLink(String label, String href,Writer w) throws IOException {
+		w.write("<a href='"+href+"'>"+label+"</a>\n");
+	}
+
+
+	private static void generateJnlp(String repository,String projectName, File destDir, XMLElement xe) throws IOException {
+		File destFile = new File(destDir,projectName+".jnlp");
 		XMLElement output = new CaseSensitiveXMLElement("jnlp");
-		buildJnlp(xe,output);
+		buildJnlp(repository,projectName, xe,output);
 		FileWriter fw = new FileWriter(destFile);
 		output.write(fw);
 		fw.flush();
@@ -156,7 +116,7 @@ public class BuildJnlpTask extends org.apache.tools.ant.Task {
 
 
 
-	private void buildJnlp(XMLElement input, XMLElement output) {
+	private static void buildJnlp(String repository, String projectName, XMLElement input, XMLElement output) {
 		System.err.println("Title: "+input.getStringAttribute("title"));
 		XMLElement information =  output.addTagKeyValue("information", "");
 		information.addTagKeyValue("vendor",input.getStringAttribute("vendor"));
@@ -167,7 +127,7 @@ public class BuildJnlpTask extends org.apache.tools.ant.Task {
 		security.addTagKeyValue("all-permissions", "");
 		
 		output.setAttribute("codebase", repository+"/"+input.getStringAttribute("project"));
-		output.setAttribute("href", getProject().getProperty("ant.project.name")+".jnlp");
+		output.setAttribute("href", projectName+".jnlp");
 
 		XMLElement resources = output.addTagKeyValue("resources", "");
 		XMLElement description = input.getElementByTagName("description");
@@ -178,12 +138,22 @@ public class BuildJnlpTask extends org.apache.tools.ant.Task {
 		XMLElement jars = input.getElementByTagName("jars");
 		if(jars!=null) {
 			for (XMLElement jar : jars.getChildren()) {
-				String path = jar.getStringAttribute("path");
-				String main = jar.getStringAttribute("main");
-				XMLElement resource = new CaseSensitiveXMLElement("jar");
-				resource.setAttribute("href", "lib/"+path);
-				resource.setAttribute("main", main==null?"false":true);
-				resources.addChild(resource);
+				if(jar.getName().equals("jar")) {
+					String path = jar.getStringAttribute("path");
+					String main = jar.getStringAttribute("main");
+					XMLElement resource = new CaseSensitiveXMLElement("jar");
+					resource.setAttribute("href", "lib/"+path);
+					resource.setAttribute("main", main==null?"false":true);
+					resources.addChild(resource);
+				}
+				if(jar.getName().equals("remotejnlp")) {
+					String path = jar.getStringAttribute("path");
+					String name = jar.getStringAttribute("name");
+					XMLElement resource = new CaseSensitiveXMLElement("extension");
+					resource.setAttribute("href", path);
+					resource.setAttribute("name", name);
+					resources.addChild(resource);
+				}
 			}
 		}
 		XMLElement extensions = input.getElementByTagName("extensions");
@@ -203,7 +173,7 @@ public class BuildJnlpTask extends org.apache.tools.ant.Task {
 				String path = require.getStringAttribute("path");
 				XMLElement xe = resources.addTagKeyValue("extension", "");
 				xe.setAttribute("name", id);
-				xe.setAttribute("href", assemblePath(path,id));
+				xe.setAttribute("href", assemblePath(repository, path,id));
 			}
 		}
 		output.addTagKeyValue("component-desc", "");
@@ -211,11 +181,11 @@ public class BuildJnlpTask extends org.apache.tools.ant.Task {
 	}
 
 
-	private String assemblePath(String path, String id) {
+	private static String assemblePath(String repository, String path, String id) {
 		return repository+"/"+path+"/"+id+".jnlp";
 	} 
 
-	private final void copyResource(OutputStream out, InputStream in) throws IOException {
+	private static final void copyResource(OutputStream out, InputStream in) throws IOException {
 		BufferedInputStream bin = new BufferedInputStream(in);
 		BufferedOutputStream bout = new BufferedOutputStream(out);
 		byte[] buffer = new byte[1024];

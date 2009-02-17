@@ -27,7 +27,8 @@
  *****************************************************************************/
 
 
-package com.dexels.navajo.tipi;
+package com.dexels.navajo.tipi.util;
+
 
 
 /**
@@ -48,6 +49,12 @@ public class XMLParseException
 {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 4403704940909646998L;
+
+
+	/**
      * Indicates that no line number has been associated with this exception.
      */
     public static final int NO_LINE = -1;

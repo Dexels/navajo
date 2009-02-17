@@ -1,4 +1,4 @@
-package com.dexels.navajo.tipi;
+package com.dexels.navajo.tipi.util;
 import java.util.*;
 /**
  * 
@@ -8,7 +8,9 @@ import java.util.*;
 
 public class CaseSensitiveXMLElement extends XMLElement {
 
-	  public CaseSensitiveXMLElement(String name) {
+	private static final long serialVersionUID = 1L;
+
+	public CaseSensitiveXMLElement(String name) {
 		    super(new Hashtable<String,char[]>(),false,false);
 		    setName(name);
 	  }

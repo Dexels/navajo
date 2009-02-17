@@ -25,10 +25,13 @@
  *
  *  3. This notice may not be removed or altered from any source distribution.
  *****************************************************************************/
-package com.dexels.navajo.tipi;
+package com.dexels.navajo.tipi.util;
 
 import java.io.*;
 import java.util.*;
+
+import com.dexels.navajo.tipi.util.XMLParseException;
+
 
 
 /**
@@ -2949,4 +2952,13 @@ public class XMLElement implements java.io.Serializable {
 			}
 			return xe;
 		}
+		
+		public void writeToFile(File f) throws IOException {
+			FileWriter fw = new FileWriter(f);
+			write(fw);
+			fw.flush();
+			fw.close();
+		}
+
+
 }

@@ -1,13 +1,94 @@
-package com.dexels.navajo.tipi;
+package com.dexels.navajo.tipi.projectbuilder;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
 
-import com.dexels.navajo.tipi.*;
+import org.apache.tools.ant.BuildException;
 
-public class TipiCreateSchema  {
+import com.dexels.navajo.tipi.ant.projectbuilder.TipiBuildXsd;
+import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
+import com.dexels.navajo.tipi.util.XMLElement;
+import com.dexels.navajo.tipi.util.XMLParseException;
 
+public class XsdBuilder {
+	private final Map<String, XMLElement> allComponents = new HashMap<String, XMLElement>();
+	private final Map<String, XMLElement> allActions = new HashMap<String, XMLElement>();
+	private final Map<String, XMLElement> allEvents = new HashMap<String, XMLElement>();
+	private final Map<String, XMLElement> allValues = new HashMap<String, XMLElement>();
+	private final Map<String, XMLElement> allTypes = new HashMap<String, XMLElement>();
+//	private final Map<String, XMLElement> allFunctions = new HashMap<String, XMLElement>();
+	private final Map<String,List<XMLElement>> tipiParts = new HashMap<String, List<XMLElement>>();
 
+	public void build(String repository, String extensions) {
+		File xsd = new File("tipi/tipi.xsd");
+		xsd.getParentFile().mkdirs();
+		
+		if(extensions==null || "".equals(extensions)) {
+			
+			throw new BuildException("No extensions defined ");
+		}
+		StringTokenizer st = new StringTokenizer(extensions,",");
+		while(st.hasMoreTokens()) {
+			String ext = st.nextToken();
+			try {
+				appendExtension(ext,repository);
+//				appendClassDefElement(xx);
+//				
+//				parseProjectDefinition(project,projectURL, result);
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+//		System.err.println("eleements: "+tipiParts.keySet());
+		try {
+			processMap("aap");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+//		System.err.println("All: "+allComponents);
+		try {
+			createXSD(allComponents, allActions, allEvents, allValues);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	
+	public  XMLElement appendExtension(String project,String repository) throws IOException {
+		try {
+			URL rep = new URL(repository);
+			URL projectURL = new URL(rep,project+"/");
+			URL extensionURL = new URL(projectURL,"definition.xml");
+
+			XMLElement result = ClientActions.getXMLElement(extensionURL);
+
+			parseProjectDefinition(project,projectURL, result);
+
+			return result;
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+
+	}
 	private void createXSD(Map<String, XMLElement> allComponents, Map<String, XMLElement> allActions, Map<String, XMLElement> allEvents,
 			Map<String, XMLElement> allValues) throws IOException {
 		// System.err.println("# of components: "+allComponents.size());
@@ -21,12 +102,9 @@ public class TipiCreateSchema  {
 
 		XMLElement cc = createActions(allActions, allComponents);
 		root.addChild(cc);
-
 // These two, are they necessary?
 		cc = createAllComponents(allComponents);
 		root.addChild(cc);
-// ----
-		
 		XMLElement rootTidElement = addTag("xs:element", root);
 		rootTidElement.setAttribute("name", "tid");
 
@@ -65,16 +143,125 @@ public class TipiCreateSchema  {
 		XMLElement tt = addTag("xs:attribute", cmpl);
 		tt.setAttribute("name", "errorhandler");
 
-	//	OutputStream os = myContext.writeTipiResource("tipi.xsd");
-	//	OutputStreamWriter fw = new OutputStreamWriter(os);
-	//
-	//	root.write(fw);
-//		fw.flush();
-	//	fw.close();
+		File xsd = new File("tipi/tipi.xsd");
+		
+		OutputStream os =new FileOutputStream(xsd);
+		OutputStreamWriter fw = new OutputStreamWriter(os);
+		// FileWriter fw = new FileWriter( new
+		// File(baseTipiDir,"tipi.xsd"));
+		root.write(fw);
+		fw.flush();
+		fw.close();
+		os.close();
 	}
 
+	private void processMap(String extension) throws FileNotFoundException, IOException {
 
+		List<XMLElement> compo = tipiParts.get("tipiclass");
+		for (XMLElement element : compo) {
+			allComponents.put(element.getStringAttribute("name"), element);
+			element.setAttribute("extension", extension);
+			processClass(element, allEvents, allValues);
+		}
+		List<XMLElement> actions = tipiParts.get("tipiaction");
+		for (XMLElement element : actions) {
+			allActions.put(element.getStringAttribute("name"), element);
+			element.setAttribute("extension", extension);
+		}
 
+		List<XMLElement> parsers = tipiParts.get("tipi-parser");
+		for (XMLElement element : parsers) {
+			allTypes.put(element.getStringAttribute("name"), element);
+			element.setAttribute("extension", extension);
+		}
+		
+//		List<XMLElement> c = xe.getChildren();
+//		for (Iterator<XMLElement> iter = c.iterator(); iter.hasNext();) {
+//			XMLElement element = iter.next();
+//			if (element.getName().equals("tipiclass")) {
+//				allComponents.put(element.getStringAttribute("name"), element);
+//				element.setAttribute("extension", extension);
+//				processClass(element, allEvents, allValues);
+//				continue;
+//			}
+//			if (element.getName().equals("tipiaction")) {
+//				allActions.put(element.getStringAttribute("name"), element);
+//				element.setAttribute("extension", extension);
+//				// Process actions
+//				continue;
+//			}
+//			if (element.getName().equals("tipi-include")) {
+//				String location = element.getStringAttribute("location");
+//				throw new RuntimeException("BAM! Cant do includes bro: "+location);
+//			}
+//			if (element.getName().equals("tipi-parser")) {
+//				allTypes.put(element.getStringAttribute("name"), element);
+//				element.setAttribute("extension", extension);
+//				continue;
+//			}
+//
+//			if (element.getName().equals("function")) {
+//				allFunctions.put(element.getStringAttribute("name"), element);
+//				element.setAttribute("extension", extension);
+//				continue;
+//			}
+//		}
+	}
+
+	
+	private static void processClass(XMLElement componentElement, Map<String, XMLElement> allEvents, Map<String, XMLElement> allValues) {
+		List<XMLElement> c = componentElement.getChildren();
+		for (Iterator<XMLElement> iter = c.iterator(); iter.hasNext();) {
+			XMLElement cc = iter.next();
+			if (cc.getName().equals("events")) {
+				List<XMLElement> ccc = cc.getChildren();
+				for (Iterator<XMLElement> iter2 = ccc.iterator(); iter2.hasNext();) {
+					XMLElement eventElement = iter2.next();
+					if (eventElement.getName().equals("event")) {
+						allEvents.put(eventElement.getStringAttribute("name"), eventElement);
+					}
+				}
+			}
+			if (cc.getName().equals("values")) {
+				List<XMLElement> ccc = cc.getChildren();
+				for (Iterator<XMLElement> iter2 = ccc.iterator(); iter2.hasNext();) {
+					XMLElement eventElement = iter2.next();
+					if (eventElement.getName().equals("value")) {
+						allValues.put(eventElement.getStringAttribute("name"), eventElement);
+					}
+				}
+			}
+		}
+	}
+	
+	
+	
+	public void parseProjectDefinition(String project, URL projectURL, XMLElement result) throws MalformedURLException, IOException {
+		List<XMLElement> includes = result.getElementsByTagName("include");
+		for (XMLElement element : includes) {
+			String path = element.getStringAttribute("path");
+			XMLElement xx = ClientActions.getXMLElement(new URL(projectURL,"includes/"+path));
+			// beware of missing function.xml
+			//System.err.println("ELEMENT: "+xx);
+			if(xx!=null) {
+				appendClassDefElement(xx);
+			}
+		}
+	}
+	
+	private void appendClassDefElement(XMLElement xx) {
+		List<XMLElement> cc = xx.getChildren();
+		for (XMLElement element : cc) {
+			List<XMLElement> elts = tipiParts.get(element.getName());
+			if(elts==null) {
+				elts = new LinkedList<XMLElement>();
+				tipiParts.put(element.getName(), elts);
+			}
+			elts.add(element);
+		}
+
+	}
+	
 	private static void appendClientConfigTag(XMLElement choice) {
 		XMLElement tipiInclude = addTag("xs:element", choice);
 		tipiInclude.setAttribute("name", "client-config");
@@ -152,19 +339,19 @@ public class TipiCreateSchema  {
 		return complexType;
 	}
 	
-	private static XMLElement createAllComponentDefinitions(Map<String, XMLElement> allComponents) {
-		XMLElement complexType = new CaseSensitiveXMLElement();
-		complexType.setName("xs:complexType");
-		complexType.setAttribute("name", "allComponentDefinitions");
-		XMLElement choice = addTag("xs:choice", complexType);
-		choice.setAttribute("maxOccurs", "unbounded");
-		choice.setAttribute("minOccurs", "0");
-		for (String current : allComponents.keySet()) {
-			XMLElement bl = addTag("xs:element", choice);
-			bl.setAttribute("ref", "d."+current);
-		}
-		return complexType;
-	}
+//	private static XMLElement createAllComponentDefinitions(Map<String, XMLElement> allComponents) {
+//		XMLElement complexType = new CaseSensitiveXMLElement();
+//		complexType.setName("xs:complexType");
+//		complexType.setAttribute("name", "allComponentDefinitions");
+//		XMLElement choice = addTag("xs:choice", complexType);
+//		choice.setAttribute("maxOccurs", "unbounded");
+//		choice.setAttribute("minOccurs", "0");
+//		for (String current : allComponents.keySet()) {
+//			XMLElement bl = addTag("xs:element", choice);
+//			bl.setAttribute("ref", "d."+current);
+//		}
+//		return complexType;
+//	}
 	
 	private static XMLElement createActions(Map<String, XMLElement> allActions, Map<String, XMLElement> allComponents) {
 		XMLElement complexType = new CaseSensitiveXMLElement();
@@ -551,7 +738,7 @@ public class TipiCreateSchema  {
 			tml.setName("xs:element");
 			tml.setAttribute("ref", "tml");
 			XMLElement tmlX = new CaseSensitiveXMLElement();
-			InputStream in = TipiCreateSchema.class.getResourceAsStream("xtml.xsd");
+			InputStream in = TipiBuildXsd.class.getResourceAsStream("xtml.xsd");
 			tmlX.parseFromReader(new InputStreamReader(in));
 			in.close();
 
