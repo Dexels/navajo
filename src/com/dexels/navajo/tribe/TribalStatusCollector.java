@@ -56,7 +56,7 @@ public class TribalStatusCollector extends GenericThread implements TribalStatus
 
 			instance = new TribalStatusCollector();	
 			instance.myId = id;
-			instance.setSleepTime(5000);
+			instance.setSleepTime(1000);
 			instance.startThread(instance);
 
 			AuditLog.log("Tribal Status Collector", "Started message queue process $Id$");

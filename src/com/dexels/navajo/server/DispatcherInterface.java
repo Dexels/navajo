@@ -82,4 +82,6 @@ public interface DispatcherInterface {
 	public  String getVendor();
 	public  String getProduct();
 	public  String getEdition();
+	
+	
 }

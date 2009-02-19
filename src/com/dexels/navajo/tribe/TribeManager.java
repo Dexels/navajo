@@ -107,7 +107,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 	private volatile static TribeManager instance = null;
 	
 	private final static Object semaphore = new Object();
-	private final static HashMap<String,Integer> counts = new HashMap<String,Integer>();
+	private final static HashMap<String,Long> counts = new HashMap<String,Long>();
 	
 	public TribeMember [] members = null;
 		
@@ -417,13 +417,12 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 	private final void increaseCount(String name) {
 
 		synchronized (counts) {
-			Integer i = counts.get(name);
+			Long i = counts.get(name);
 			//System.err.println("increaseCount(" + name + ") = " + i);
 			if ( i == null ) {
-				counts.put(name, Integer.valueOf(1));
-				return;
+				counts.put(name, Long.valueOf(1));
 			} else {
-				counts.put(name, new Integer(i.intValue() + 1));
+				counts.put(name, new Long(i.longValue() + 1));
 			}
 		}
 	}
@@ -435,7 +434,8 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 		Iterator<String> iter = counts.keySet().iterator();
 		while ( iter.hasNext() ) {
 			String key = iter.next();
-			b.append(key + "=" + counts.get(key).intValue() + "\n");
+			//System.err.println("key = " + key);
+			b.append(key + "=" + counts.get(key).longValue() + "\n");
 		}
 		return b.toString();
 	}
@@ -446,6 +446,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 		
 		if ( msg.getObject() instanceof SmokeSignal ) {
 			SmokeSignal r = (SmokeSignal) msg.getObject();
+			increaseCount("received-smokesignal");
 			r.processMessage();
 		} else if ( msg.getObject() instanceof Request && 
 				    ( !((Request) msg.getObject()).isIgnoreRequestOnSender() || 
@@ -453,7 +454,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 				    )
 		       ) {
 			Request q = (Request) msg.getObject();
-			
+			increaseCount("received-request");
 			Answer a = q.getAnswer();
 			try {
 				if ( q.isBlocking() ) { // Only send answer if it's a blocking request.
@@ -466,6 +467,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 			}
 		} else if ( msg.getObject() instanceof Answer ) {
 			Answer a = (Answer) msg.getObject();
+			increaseCount("received-answer");
 			Request q = getWaitingRequest(a.getMyRequest());
 			if ( q != null ) {
 				q.setPredefinedAnswer(a);
@@ -499,6 +501,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 		}
 		try {
 			channel.send(a, channel.getLocalAddress(), q);
+			increaseCount("send-request-some");
 		} catch (ChannelNotConnectedException e) {
 			e.printStackTrace();
 		} catch (ChannelClosedException e) {
@@ -551,6 +554,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 			if ( myMembership.isChief() ) {
 				return q.getAnswer();
 			}
+			increaseCount("send-request-chief");
 			return askSomebody(q, theChief.getAddress());
 		}
 		
@@ -580,6 +584,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 
 		long start = System.currentTimeMillis();
 		boolean timedout = false;
+		increaseCount("waitforanswer");
 		
 		while (containsWaitingRequest(q) && !timedout ) {
 
@@ -595,13 +600,15 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 
 				}
 			}
-			// Check time-out.
-			if ( q.getTimeout() != -1 ) {
+			// Check time-out if still waiting for answer...
+			if ( q.getTimeout() != -1 && containsWaitingRequest(q) ) {
 
 				if ( ( System.currentTimeMillis() - start ) > q.getTimeout() ) {
 					timedout = true;
+					increaseCount("waitforanswer-timedout");
 					removeWaitingRequest(q);
-					AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "WAITFORANSWER TIMED-OUT: " + q.getClass().getName());
+					AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "WAITFORANSWER TIMED-OUT: " + 
+							     q.getClass().getName() + ", RECIPIENT: " + q.getRecipient());
 				}
 			}
 
@@ -662,6 +669,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 		String origin = in.getHeader().getHeaderAttribute("origin");
 		if ( origin == null || origin.equals("")) { // Set origin attribute to prevent broadcast ping-pong....
 			System.err.println("Going to broadcast service to other members....");
+			increaseCount("broadcast-navajo");
 			in.getHeader().setHeaderAttribute("origin", DispatcherFactory.getInstance().getNavajoConfig().getInstanceName());
 			ServiceRequest sr = new ServiceRequest(in, true);
 			sr.setIgnoreRequestOnSender(true);
@@ -680,6 +688,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 		TribeMember alt =  getClusterState().getLeastBusyTribalMember();
 		if ( alt != null ) {
 			ServiceAnswer sa = (ServiceAnswer) askSomebody(new ServiceRequest(in, false), alt.getAddress());
+			increaseCount("forward-navajo-any");
 			return sa.getResponse();
 		} else {
 			throw new Exception("No available tribe member");
@@ -694,6 +703,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 	 */
 	public Navajo forward(Navajo in, Object address) throws Exception {
 		ServiceAnswer sa = (ServiceAnswer) askSomebody(new ServiceRequest(in, false), address);
+		increaseCount("forward-navajo-some");
 		return sa.getResponse();
 	}
 
@@ -757,6 +767,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 		while ( members.hasNext() ) {
 			TribeMember tm = members.next();
 			Answer pa = TribeManager.getInstance().askSomebody(q, tm.getAddress());
+			increaseCount("send-request-any");
 			if ( pa.acknowledged() ) {
 				return pa;
 			}

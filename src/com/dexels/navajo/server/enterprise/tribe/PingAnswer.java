@@ -43,6 +43,7 @@ public class PingAnswer extends Answer implements Mappable {
 	public long requestCount;
 	public long uptime;
 	public boolean busy = false;
+	public String statistics;
 	
 	public PingAnswer(Request q) {
 		super(q);
@@ -55,6 +56,7 @@ public class PingAnswer extends Answer implements Mappable {
 		requestCount = DispatcherFactory.getInstance().getRequestCount();
 		uptime = DispatcherFactory.getInstance().getUptime();
 		busy = DispatcherFactory.getInstance().isBusy();
+		statistics = TribeManagerFactory.getInstance().getStatistics();
 	}
 	
 	public boolean acknowledged() {
@@ -88,6 +90,10 @@ public class PingAnswer extends Answer implements Mappable {
 
 	public boolean isBusy() {
 		return busy;
+	}
+
+	public String getStatistics() {
+		return statistics;
 	}
 
 }

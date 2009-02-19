@@ -124,4 +124,6 @@ public interface TribeManagerInterface {
 	
     public String getMyName();
     
+    public String getStatistics();
+    
 }

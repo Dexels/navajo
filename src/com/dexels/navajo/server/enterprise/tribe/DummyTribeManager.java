@@ -91,4 +91,9 @@ public class DummyTribeManager implements TribeManagerInterface {
 		return DispatcherFactory.getInstance().getNavajoConfig().getInstanceName();
 	}
 
+	public String getStatistics() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
