@@ -32,48 +32,58 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 
 	@Override
 	public Object createContainer() {
-		myMapKit = new TipiSwingMapImpl();
+		runSyncInEventThread(new Runnable(){
 
-		overlayPanel.setLayout(null);
-		overlayPanel.setOpaque(false);
-		myMapKit.getMainMap().addPropertyChangeListener(new PropertyChangeListener() {
+			public void run() {
+				myMapKit = new TipiSwingMapImpl();
+				overlayPanel.setLayout(null);
+				overlayPanel.setOpaque(false);
+				myMapKit.getMainMap().addPropertyChangeListener(new PropertyChangeListener() {
 
-			public void propertyChange(PropertyChangeEvent p) {
-				if (p.getPropertyName().equals("zoom")) {
-					layoutChildren();
-				}
-				if (p.getPropertyName().equals("centerPosition")) {
-					layoutChildren();
-				}
-			}
-		});
+					public void propertyChange(PropertyChangeEvent p) {
+						if (p.getPropertyName().equals("zoom")) {
+							layoutChildren();
+						}
+						if (p.getPropertyName().equals("centerPosition")) {
+							layoutChildren();
+						}
+					}
+				});
 
-		// crate a WaypointPainter to draw the points
-		// WaypointPainter painter = new WaypointPainter();
-		jp.addComponentListener(new ComponentListener() {
-			public void componentHidden(ComponentEvent arg0) {
-			}
+				// crate a WaypointPainter to draw the points
+				// WaypointPainter painter = new WaypointPainter();
+				jp.addComponentListener(new ComponentListener() {
+					public void componentHidden(ComponentEvent arg0) {
+					}
 
-			public void componentMoved(ComponentEvent arg0) {
-			}
+					public void componentMoved(ComponentEvent arg0) {
+					}
 
-			public void componentResized(ComponentEvent arg0) {
-				myMapKit.setBounds(new Rectangle(new Point(0, 0), jp.getSize()));
-				overlayPanel.setBounds(new Rectangle(new Point(0, 0), jp.getSize()));
-				layoutChildren();
-			}
+					public void componentResized(ComponentEvent arg0) {
+						myMapKit.setBounds(new Rectangle(new Point(0, 0), jp.getSize()));
+						overlayPanel.setBounds(new Rectangle(new Point(0, 0), jp.getSize()));
+						layoutChildren();
+					}
 
-			public void componentShown(ComponentEvent arg0) {
-				myMapKit.setBounds(new Rectangle(new Point(0, 0), jp.getSize()));
-				overlayPanel.setBounds(new Rectangle(new Point(0, 0), jp.getSize()));
-				layoutChildren();
-			}
-		});
-		// myMapKit.getMainMap().setOverlayPainter(painter);
-		// myMapKit.setBounds(new Rectangle(0,0, 100,100));
-		jp.add(myMapKit, new Integer(100));
-		jp.add(overlayPanel, new Integer(101));
+					public void componentShown(ComponentEvent arg0) {
+						myMapKit.setBounds(new Rectangle(new Point(0, 0), jp.getSize()));
+						overlayPanel.setBounds(new Rectangle(new Point(0, 0), jp.getSize()));
+						layoutChildren();
+					}
+				});
+				// myMapKit.getMainMap().setOverlayPainter(painter);
+				// myMapKit.setBounds(new Rectangle(0,0, 100,100));
+				jp.add(myMapKit, new Integer(100));
+				jp.add(overlayPanel, new Integer(101));
 
+				SwingUtilities.invokeLater(new Runnable(){
+
+					public void run() {
+						myMapKit.repaint();
+					}});
+			}});
+		
+	
 		return jp;
 	}
 
