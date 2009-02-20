@@ -14,7 +14,7 @@ public class TipiSwingExtension extends TipiAbstractXMLExtension implements Tipi
 
 	public TipiSwingExtension() throws XMLParseException,
 			IOException {
-		super("NavajoSwingTipi.xml");
+		loadXML();
 	}
 
 	public void initialize(TipiContext tc) {

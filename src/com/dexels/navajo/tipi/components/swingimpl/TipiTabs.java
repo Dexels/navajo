@@ -101,7 +101,6 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 					getAttributeProperty("selectedindex").setAnyValue(jt.getSelectedIndex());
 					lastSelectedTab.doLayout();
 				}
-				System.err.println("Top: "+ myContext.getTopLevel());
 				if(myContext.getTopLevel() instanceof TipiApplet) {
 					TipiApplet ta = (TipiApplet)myContext.getTopLevel();
 					JPanel component = (JPanel) ta.getContentPane().getComponent(0);
@@ -218,14 +217,9 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 						pane.setBackgroundAt(nextIndex, fore);					
 					}
 					tb.setIndex(nextIndex);
-					System.err.println("Addinggggg");
-					if(tabIcon!=null) {
-						System.err.println("icon: "+tabIcon.getIconHeight());
-					}
 					tb.addPropertyChangeListener(new PropertyChangeListener()  {
 
 						public void propertyChange(final PropertyChangeEvent evt) {
-							System.err.println("Propertychanged: "+evt.getPropertyName());
 							if(evt.getPropertyName().equals("tabIcon")) {
 								runSyncInEventThread(new Runnable(){
 									public void run() {

@@ -14,6 +14,8 @@ import javax.swing.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.components.swingimpl.SwingTipiContext;
+import com.dexels.navajo.tipi.components.swingimpl.jnlp.WebStartProxy;
 import com.dexels.navajo.tipi.internal.*;
 
 /**
@@ -39,29 +41,11 @@ public class TipiInjectJnlpCache extends TipiAction {
 	}
 
 	protected void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiBreakException, com.dexels.navajo.tipi.TipiException {
-		try {
-			BasicService bs = (BasicService)ServiceManager.lookup("javax.jnlp.BasicService"); 
-			PersistenceService ps = (PersistenceService)ServiceManager.lookup("javax.jnlp.PersistenceService");
-			try {
-				URL base = bs.getCodeBase();
-				String[] muffins = ps.getNames(base);
-				for (int i = 0; i < muffins.length; i++) {
-					System.err.println("Parsing muffin: "+muffins[i]);
-						
-					FileContents fc = ps.get(new URL(base,muffins[i]));
-					System.err.println("Entry: "+muffins[i]+" readable: "+fc.canRead()+" writable: "+fc.canWrite()+" size: "+fc.getLength()+" maxsize: "+fc.getMaxLength());
-				}
-			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} catch (UnavailableServiceException e) {
-			e.printStackTrace();
-		} 
+		WebStartProxy.injectJnlpCache();
+//		((SwingTipiContext)myContext).
 		
 	}
+
+	
 
 }

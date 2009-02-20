@@ -48,7 +48,6 @@ public class TipiSwingTab extends JPanel implements TipiTabbable {
 	}
 
 	public Icon getTabIcon() {
-		System.err.println("Returing icon: "+tabIcon);
 		return tabIcon;
 	}
 
@@ -59,7 +58,6 @@ public class TipiSwingTab extends JPanel implements TipiTabbable {
 			System.err.println("whoops, identical");
 		}
 		firePropertyChange("tabIcon", old, tabIcon);
-		System.err.println("Tab set!"+tabIcon);
 	}
 
 	public int getIndex() {
@@ -76,19 +74,16 @@ public class TipiSwingTab extends JPanel implements TipiTabbable {
 
 	public void setTabForegroundColor(Color tabForegroundColor) {
 		Color old = this.tabForegroundColor;
-		System.err.println("Setting fg");
 		this.tabForegroundColor = tabForegroundColor;
 		firePropertyChange("tabForegroundColor", old, tabBackgroundColor);
 	}
 
 	public Color getTabBackgroundColor() {
-		System.err.println("GEtting bg: "+tabBackgroundColor);
 		return tabBackgroundColor;
 	}
 
 	public void setTabBackgroundColor(Color c) {
 		Color old = tabBackgroundColor;
-		System.err.println("Setting bg");
 		firePropertyChange("tabBackgroundColor", old, tabBackgroundColor);
 	}
 

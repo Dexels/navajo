@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- $Id$ -->
-<project name="NavajoSwingTipi" default="proxyarchive" basedir=".">
+<project name="TipiSwing" default="proxyarchive" basedir=".">
 	<property name="src" location="src" />
 	<property name="dist" location="dist"/>
 	<property name="build" location="classes" />
 	<property name="lib" value="lib" />
 	<property name="archive" value="${ant.project.name}.jar" />
-	<property name="proxyarchive" value="TipiSwing.jar" />
+	<property name="proxyarchive" value="SwingMain.jar" />
 	<property name="dist" location="dist"/>
 	<property name="NavajoClient" value="${PROJECTHOME}/NavajoClient" />
 	<property name="NavajoClient.build" value="${NavajoClient}/classes" />
@@ -97,20 +97,23 @@
 			</manifest>
 
 		</jar>
-		<eclipse.refreshLocal resource="${ant.project.name}/${archive}" depth="infinite"/>
 	</target>
 	<target name="proxyarchive" depends="archive">
 		<jar jarfile="${proxyarchive}">
 
 			<fileset dir="${build}">
 				<exclude name="com/**" />
+				<include name="tipi/MainApplication.class" />
 			</fileset>
-			<fileset dir="../NavajoTipi/classes">
+<!--			<fileset dir="../NavajoTipi/classes">
 				<exclude name="com/**" />
 				<exclude name="AllTests.class" />
 				<exclude name="tests/**" />
 				<exclude name="tipipackage/**" />
-			</fileset>
+				<exclude name="tipi/**" />
+				
+								
+			</fileset>-->
 
 			<manifest>
 				<attribute name="Built-By" value="Frank" />

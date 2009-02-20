@@ -3,8 +3,14 @@ package com.dexels.navajo.tipi.components.swingimpl.jnlp;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
+import java.util.PropertyResourceBundle;
 
+import javax.jnlp.BasicService;
+import javax.jnlp.FileContents;
 import javax.jnlp.PersistenceService;
+import javax.jnlp.ServiceManager;
+import javax.jnlp.UnavailableServiceException;
 
 //import javax.jnlp.*;
 
@@ -16,25 +22,19 @@ import com.dexels.navajo.tipi.internal.cookie.CookieManager;
 public class WebStartProxy {
 
 	public static void appendJnlpCodeBase(SwingTipiContext myContext, String loaderType) {
-	      try {
-	    	  javax.jnlp.BasicService bs = (javax.jnlp.BasicService)javax.jnlp.ServiceManager.lookup("javax.jnlp.BasicService");
+		try {
+			javax.jnlp.BasicService bs = (javax.jnlp.BasicService) javax.jnlp.ServiceManager.lookup("javax.jnlp.BasicService");
 
-			System.err.println("BS: "+bs.getCodeBase());
-			URL tipiCodeBase = new URL(bs.getCodeBase(),loaderType);
-			System.err.println("TipiBS: "+bs.getCodeBase());
-			URL resourceCodeBase = new URL(bs.getCodeBase(),"resource");
-			
+			URL tipiCodeBase = new URL(bs.getCodeBase(), loaderType);
+			URL resourceCodeBase = new URL(bs.getCodeBase(), "resource");
+
 			myContext.setTipiResourceLoader(tipiCodeBase.toString());
 			myContext.setGenericResourceLoader(resourceCodeBase.toString());
-			System.err.println("WEBSTARTPROXY found: "+tipiCodeBase);
-	      } catch (javax.jnlp.UnavailableServiceException e) {
-			System.err.println("Service unavailable");
-//			e.printStackTrace();
+		} catch (javax.jnlp.UnavailableServiceException e) {
 		} catch (MalformedURLException e) {
-			System.err.println("URL trouble");
 			e.printStackTrace();
-		} 
-	      
+		}
+
 	}
 
 	
@@ -44,9 +44,10 @@ public class WebStartProxy {
 		try {
 			bs = (javax.jnlp.BasicService) javax.jnlp.ServiceManager
 					.lookup("javax.jnlp.BasicService");
-			System.err.println("BS: " + bs.getCodeBase());
 			URL codeURL = new URL(bs.getCodeBase(), relativePath);
-			System.err.println("Using code url: " + codeURL);
+			if(codeURL.getProtocol().equals("file") && useCache) {
+				System.err.println("Using cache on file-based webstart. Not all that efficient.");
+			}
 			if (useCache) {
 				try {
 
@@ -68,13 +69,59 @@ public class WebStartProxy {
 
 	}
 
-
+	public static  void injectJnlpCache() {
+		try {
+			BasicService bs = (BasicService)ServiceManager.lookup("javax.jnlp.BasicService"); 
+			PersistenceService ps = (PersistenceService)ServiceManager.lookup("javax.jnlp.PersistenceService");
+			try {
+				URL base = bs.getCodeBase();
+				String[] muffins = ps.getNames(base);
+				for (int i = 0; i < muffins.length; i++) {
+					System.err.println("Parsing muffin: "+muffins[i]);
+						
+					FileContents fc = ps.get(new URL(base,muffins[i]));
+					System.err.println("Entry: "+muffins[i]+" readable: "+fc.canRead()+" writable: "+fc.canWrite()+" size: "+fc.getLength()+" maxsize: "+fc.getMaxLength());
+				}
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (UnavailableServiceException e) {
+			e.printStackTrace();
+		}
+	}
 	public static boolean hasJnlpContext() {
 		try {
 			javax.jnlp.BasicService bs = (javax.jnlp.BasicService)javax.jnlp.ServiceManager.lookup("javax.jnlp.BasicService");
 			return bs!=null;
 		} catch (Exception e) {
 			return false;
+		}
+	}
+
+
+	public static void appendJnlpProperties(Map<String, String> properties) {
+		try {
+			BasicService bs = (BasicService)ServiceManager.lookup("javax.jnlp.BasicService"); 
+			try {
+				URL base = bs.getCodeBase();
+				URL args = new URL(base,"arguments.properties");
+				InputStream is = args.openStream();
+				PropertyResourceBundle pr = new PropertyResourceBundle(is);
+				is.close();
+				for (String key : pr.keySet()) {
+					properties.put(key, pr.getString(key));
+				}
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				System.err.println("No arguments. Ok. ");
+			}
+		} catch (UnavailableServiceException e) {
+			e.printStackTrace();
 		}
 	}
 }

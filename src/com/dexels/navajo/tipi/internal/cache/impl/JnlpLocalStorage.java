@@ -51,7 +51,6 @@ public class JnlpLocalStorage implements LocalStorage {
 		String line = null;
 		line = br.readLine();
 		do {
-			System.err.println("Parse: "+line);
 			if(line.equals("")) {
 				line = br.readLine();
 				break;
@@ -79,10 +78,8 @@ public class JnlpLocalStorage implements LocalStorage {
 		String fixed = cacheBase+relativePath+location.replaceAll("/", "_");  
 		try {
 			URL url = new URL(getCacheBaseURL(),fixed);
-			System.err.println("Muffin url fabricated: "+url.toString());
 			return url;
 		} catch (MalformedURLException e) {
-			System.err.println("Muffin url storage problem!");
 			e.printStackTrace();
 			return null;
 		}
@@ -120,10 +117,7 @@ public class JnlpLocalStorage implements LocalStorage {
 	}
 
 	public long getLocalModificationDate(String location) throws IOException {
-		System.err.println("Getting moddate for: "+location);
-		System.err.println("Modmap: "+localModificationMap);
 		Long mod = localModificationMap.get(location);
-		System.err.println("Mod: "+mod);
 		if(mod==null) {
 			return -1;
 		}
@@ -132,7 +126,6 @@ public class JnlpLocalStorage implements LocalStorage {
 	}
 
 	public URL getURL(String location) throws IOException {
-		System.err.println("Warning: using getURL is not efficient");
 		File f=File.createTempFile("tipiCache", "");
 		InputStream is = getLocalData(location);
 		OutputStream os = new FileOutputStream(f);
@@ -146,16 +139,16 @@ public class JnlpLocalStorage implements LocalStorage {
 		FileContents fc = null;
 		try {
 			fc = ps.get(createMuffinUrl(location));
-			if(fc!=null) {
-				System.err.println("local entry found: "+fc.getLength()+" at location: "+location);
-			} else {
-				System.err.println("No local entry found at: "+location);
-			}
+//			if(fc!=null) {
+//				System.err.println("local entry found: "+fc.getLength()+" at location: "+location);
+//			} else {
+//				System.err.println("No local entry found at: "+location);
+//			}
 		} catch (MalformedURLException e) {
-			System.err.println("Malformed panic blues!");
-			
+//			System.err.println("Malformed panic blues!");
+			e.printStackTrace();
 		} catch (FileNotFoundException e) {
-			System.err.println("Local file: "+location+" not found!");
+	//		System.err.println("Local file: "+location+" not found!");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -179,14 +172,14 @@ public class JnlpLocalStorage implements LocalStorage {
 	//		if(l )
 			//long length = l==null?DEFAULT_SIZE:l;
 			long length = DEFAULT_SIZE;
-			System.err.println("JNLP storage. Storing: "+length+" bytes.");
+//			System.err.println("JNLP storage. Storing: "+length+" bytes.");
 			
 			try {
 				ff = ps.get(muffinUrl);
 				ff.setMaxLength(length);
 				
 			} catch (FileNotFoundException e) {
-				System.err.println("Not found. fine.");
+		//		System.err.println("Not found. fine.");
 			}
 			if(ff==null) {
 				long res = ps.create(muffinUrl,length);
@@ -197,14 +190,14 @@ public class JnlpLocalStorage implements LocalStorage {
 			copyResource(os, data);
 			if(!location.equals(MODMAP_KEY)) {
 				localModificationMap.put(location,System.currentTimeMillis());
-				System.err.println("Data saved and modentry added, Local modmap size: "+localModificationMap.size());
+				//System.err.println("Data saved and modentry added, Local modmap size: "+localModificationMap.size());
 				saveModMap();				
 			}
 			//			throw new IOException("JNLP Storage not yet implemeented");
 	}
 	
 	private void saveModMap() {
-		System.err.println("Saving modmap: "+localModificationMap);
+//		System.err.println("Saving modmap: "+localModificationMap);
 		Set<Entry<String,Long>> eset = localModificationMap.entrySet();
 		StringBuffer sb = new StringBuffer();
 		for (Entry<String, Long> entry : eset) {
@@ -213,7 +206,7 @@ public class JnlpLocalStorage implements LocalStorage {
 			sb.append(entry.getValue());
 			sb.append("\n");
 		}
-		System.err.println("Modmap: "+sb.toString());
+//		System.err.println("Modmap: "+sb.toString());
 		byte[] bytes = sb.toString().getBytes();
 		ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
 		Map<String,Object> meta = new HashMap<String, Object>();
@@ -234,7 +227,7 @@ public class JnlpLocalStorage implements LocalStorage {
 		byte[] buffer = new byte[1024];
 		int read;
 		while ((read = in.read(buffer)) > -1) {
-			System.err.println("Read: "+read+" bytes from class: "+in);
+//			System.err.println("Read: "+read+" bytes from class: "+in);
 			bout.write(buffer, 0, read);
 		}
 		in.close();

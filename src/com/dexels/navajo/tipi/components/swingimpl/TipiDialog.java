@@ -333,7 +333,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 
 	private final void constructStandardDialog() {
 		Object rootObject = getContext().getTopLevel();
-		System.err.println("Creating dialog with root: "+rootObject);
+//		System.err.println("Creating dialog with root: "+rootObject);
 		RootPaneContainer r = null;
 		// JDialog d = null;
 		JDialog myDialog = (JDialog) getDialogContainer();
@@ -377,7 +377,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 				myDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 			}
 		}
-		System.err.println("Dialog class: "+myDialog);
+//		System.err.println("Dialog class: "+myDialog);
 		// Beware of this one: It messes up with some LnFs:
 //		myDialog.setUndecorated(!decorated);
 //		myDialog.setUndecorated(!decorated);

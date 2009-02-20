@@ -117,7 +117,7 @@
 
    <tipiaction name="dumpCache" class="TipiInjectJnlpCache" package="com.dexels.navajo.tipi.components.swingimpl.actions">
 		<description>
-			Dumps the jnlp cached muffins to stdout
+			Dumps the jnlp cached muffins to stderr
 		</description>
    </tipiaction>
 

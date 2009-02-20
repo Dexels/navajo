@@ -76,13 +76,17 @@ public class SwingTipiContext extends TipiContext {
 			if (WebStartProxy.hasJnlpContext() ) {
 				System.err.println("JNLP DETECTED.");
 				setCookieManager(new JnlpCookieManager());
-				getCookieManager().loadCookies();
+				try {
+					getCookieManager().loadCookies();
+				} catch (FileNotFoundException e) {
+					System.err.println("No cookies (yet). No prob.");
+				}
 			} else {
 				createTmpCookieManager();
 			}
 		} catch (Throwable e) {
 			System.err.println("No jnlp found");
-			e.printStackTrace();
+		//	e.printStackTrace();
 			createTmpCookieManager();
 		}
 	//hasJnlpContext(
@@ -428,7 +432,7 @@ public class SwingTipiContext extends TipiContext {
 
 	
 	public void processProperties(Map<String, String> properties) throws MalformedURLException {
-		// appendJnlpCodeBase(properties);
+		 appendJnlpCodeBase(properties);
 		super.processProperties(properties);
 		String tipiLaf = null;
 
@@ -464,18 +468,29 @@ public class SwingTipiContext extends TipiContext {
 			System.err.println("Unable to load supplied look and feel: "+tipiLaf+" ("+e.getMessage()+")");
 		}
 	}
+	private void appendJnlpCodeBase(Map<String, String> properties) {
+		try {
+			WebStartProxy.appendJnlpProperties(properties);
+		} catch (Throwable e) {
+		}
+	}
 
+
+
+	public boolean useCache() {
+		return "true".equals(getSystemProperty("cache"));
+	}
 	
-	protected TipiResourceLoader createDefaultResourceLoader(String loaderType) {
+	protected TipiResourceLoader createDefaultResourceLoader(String loaderType, boolean useCache) {
 		if(hasJnlpContext()) {
 			try {
-				return WebStartProxy.createDefaultWebstartLoader(loaderType,true,getCookieManager());
+				return WebStartProxy.createDefaultWebstartLoader(loaderType,useCache,getCookieManager());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		
 		}
-		return super.createDefaultResourceLoader(loaderType);
+		return super.createDefaultResourceLoader(loaderType,useCache);
 	}
 
 	
@@ -592,14 +607,12 @@ public class SwingTipiContext extends TipiContext {
 	public JDialog createDialog(String title) {
 		if(dialogStack.isEmpty()) {
 			if(getTopLevel() instanceof JFrame) {
-				System.err.println("Create dialog: Stack empty, attaching to frame");
 				JDialog jd = new JDialog((JFrame)getTopLevel(),title);
 				((JComponent)jd.getContentPane()).setOpaque(false);
 				dialogStack.push(jd);
 				return jd;
 			}
 			if(getAppletRoot()!=null) {
-				System.err.println("Create dialog: Stack empty, attaching to Applet");
 				Frame rootFrame = JOptionPane.getFrameForComponent(getAppletRoot()); 
 				JDialog jd = new JDialog(rootFrame,title);
 				dialogStack.push(jd);
@@ -627,7 +640,6 @@ public class SwingTipiContext extends TipiContext {
 	
 	public void addDialog(JDialog j) {
 		if(dialogStack.contains(j)) {
-			System.err.println("WTF? Double registration of a dialog?");
 			return;
 		} 
 		dialogStack.push(j);

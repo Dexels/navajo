@@ -24,18 +24,22 @@ public class JnlpCookieManager extends TmpFileCookieManager implements CookieMan
 	    } 
 
 	    if (ps != null && bs != null) { 
-	        loadCookies();
+	        try {
+				loadCookies();
+			} catch (IOException e) {
+				System.err.println("No cookies. Probably ok.");
+			}
 	    }
 	}
 	
-	private void loadCookieMuffin(String path) throws MalformedURLException, FileNotFoundException, IOException {
-		FileContents fc = ps.get(new URL(bs.getCodeBase(),path));
-		System.err.println("Muffin found, filled with cookies. Size: "+fc.getLength());
-		InputStream inputStream = fc.getInputStream();
-		loadCookieFromStream(inputStream);
-		inputStream.close();
-		System.err.println("Current cookiemap: "+cookieMap);
-	}
+//	private void loadCookieMuffin(String path) throws MalformedURLException, FileNotFoundException, IOException {
+//		FileContents fc = ps.get(new URL(bs.getCodeBase(),path));
+//		System.err.println("Muffin found, filled with cookies. Size: "+fc.getLength());
+//		InputStream inputStream = fc.getInputStream();
+//		loadCookieFromStream(inputStream);
+//		inputStream.close();
+//		System.err.println("Current cookiemap: "+cookieMap);
+//	}
 
 
 	public void loadCookies() throws IOException {
@@ -46,10 +50,8 @@ public class JnlpCookieManager extends TmpFileCookieManager implements CookieMan
 	}
 
 	public void saveCookies() throws MalformedURLException, IOException  {
-		System.err.println("Entering JNLP COokiemananger: Saving the cookies!");
 
 		URL cookieURL = new URL(bs.getCodeBase(),"tipi.cookie");
-		System.err.println("Using the url:: "+cookieURL);
 		try {
 			FileContents fc = ps.get(cookieURL);
 			// found, as we did not jump
