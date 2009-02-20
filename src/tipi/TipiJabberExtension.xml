@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<extension id="jabber" requiresMain="" project="TipiJabber" version="0.9" title="Tipi Jabber Library" vendor="Dexels" homepage="http://www.dexels.com">
+	<description>
+		Batik extensions
+	</description>
+	<includes>
+		<include path="com/dexels/navajo/tipi/jabber/jabberclassdef.xml"/>
+	</includes>
+	<jars>
+		<jar path="smack.jar"/>
+		<jar path="smackx.jar"/>
+		<jar path="TipiJabber.jar"/>
+	</jars>
+	<other>
+		<link href="http://www.igniterealtime.org/projects/smack/index.jsp"/>
+	</other>
+</extension>

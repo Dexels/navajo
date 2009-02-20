@@ -12,6 +12,7 @@ import org.jivesoftware.smackx.muc.*;
 
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.jabber.JabberUtils;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.connectors.*;
@@ -325,7 +326,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 				String result = (String) o.value;
 				String nick = (String) op.value;
 				try {
-					myMultiUserChat = JabberUtils.joinRoom(connection, myContext, conferenceName, result.toLowerCase(), nick ,roomOccupants);
+					myMultiUserChat = JabberUtils.joinRoom(connection , conferenceName, result.toLowerCase(), nick ,roomOccupants);
 				} catch (XMPPException e) {
 					e.printStackTrace();
 				}
