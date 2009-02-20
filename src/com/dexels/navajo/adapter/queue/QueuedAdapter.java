@@ -49,7 +49,7 @@ public class QueuedAdapter extends Thread implements Mappable {
 	 */
 	public final static String generateLogMessage(Queuable h, String message) {
 		
-		if ( h.getAccess() == null ) {
+		if ( h == null || h.getAccess() == null ) {
 			return "";
 		}
 		String msg = ( h != null ? h.getClass().getName() : "[empty handler]");
