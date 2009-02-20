@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<extension id="swingx" requiresMain="swing" project="TipiSwingX" version="0.9" title="SwingX extended libraries" vendor="Dexels" homepage="http://www.dexels.com">
+	<description>
+		SwingX extended libraries
+	</description>
+	<includes>
+		<include path="com/dexels/navajo/tipi/swingxclassdef.xml"/>
+	</includes>
+	<jars>
+		<jar path="swingx.jar"/>
+		<jar path="TipiSwingX.jar"/>
+	</jars>
+	<other>
+		<link href="https://swingx.dev.java.net/"/>
+	</other>
+</extension>
