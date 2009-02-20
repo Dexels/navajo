@@ -4,7 +4,7 @@
     <property name="src" location="src"/>
     <property name="build" location="classes"/>
     <property name="lib" value="WEB-INF/lib"/>
-    <property name="archive" value="TipiSubstance.jar"/>
+    <property name="archive" value="${ant.project.name}.jar"/>
 	<property name="dist" location="dist"/>
 	   
     <target name="check-env">

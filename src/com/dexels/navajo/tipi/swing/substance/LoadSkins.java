@@ -86,7 +86,7 @@ public class LoadSkins extends TipiAction {
 		myContext.injectNavajo("Skins", n);
 	}
 	
-	public static void main(String[] args) throws NavajoException {
+	public static 			void main(String[] args) throws NavajoException {
 		
 		Navajo n = new LoadSkins().createSkinNavajo();
 		n.write(System.err);

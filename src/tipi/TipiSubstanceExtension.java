@@ -8,7 +8,7 @@ public class TipiSubstanceExtension extends AbstractTipiExtension implements Tip
 
 	public void initialize(TipiContext tc) {
 		// Do nothing
-
+ 
 	}
 
 	public String getDescription() {
