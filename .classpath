@@ -8,5 +8,6 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/DexelsVersionControl"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Navajo"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
+	<classpathentry kind="lib" path="Tipi.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

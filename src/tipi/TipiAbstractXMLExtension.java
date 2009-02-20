@@ -7,14 +7,14 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
+import navajo.ExtensionDefinition;
+
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.tipixml.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 import com.dexels.navajo.tipi.tipixml.XMLParseException;
 
-import navajo.ExtensionDefinition;
-
-public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension implements TipiExtension, ExtensionDefinition {
+public class TipiAbstractXMLExtension extends AbstractTipiExtension implements TipiExtension, ExtensionDefinition {
 
 	private final List<String> thirdPartyList = new ArrayList<String>();
 	private final List<String> includes = new ArrayList<String>();
@@ -24,9 +24,20 @@ public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension imp
 	private String description = null;
 	private String project = null;
 	
-	protected TipiAbstractXMLExtension(String description)  {
+	public TipiAbstractXMLExtension() {
+	}
+	
+	protected void loadXML()  {
+		String xmlName = getClass().getSimpleName()+".xml";
+		loadXML(xmlName);
+	}
+	
+	protected void loadXML(String xmlName)  {
 		try {
-			InputStream is = getClass().getResourceAsStream(description);
+			InputStream is = getClass().getResourceAsStream(xmlName);
+			if(is==null) {
+				throw new IllegalArgumentException("Problem loading extension: "+xmlName);
+			}
 			Reader r = new InputStreamReader(is);
 			XMLElement xx = new CaseSensitiveXMLElement();
 			xx.parseFromReader(r);
@@ -49,7 +60,6 @@ public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension imp
 		}
 		List<XMLElement> includes = xx.getElementsByTagName("includes");
 		if(includes!=null && !includes.isEmpty()) {
-			System.err.println("INCLUDES: "+includes);
 			XMLElement include = includes.get(0);
 			for (XMLElement element : include.getChildren()) {
 				this.includes.add(element.getStringAttribute("path"));
@@ -58,7 +68,6 @@ public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension imp
 		
 		List<XMLElement> requires = xx.getElementsByTagName("requires");
 		if(requires!=null && !requires.isEmpty()) {
-			System.err.println("requires: "+requires);
 			XMLElement require = requires.get(0);
 			for (XMLElement element : require.getChildren()) {
 				this.requires.add(element.getStringAttribute("id"));
@@ -124,6 +133,11 @@ public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension imp
 
 	public final  String requiresMainImplementation() {
 		return requiresMain;
+	}
+
+	public void initialize(TipiContext tc) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

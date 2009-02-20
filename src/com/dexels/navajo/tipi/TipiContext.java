@@ -182,9 +182,13 @@ public abstract class TipiContext {
 	public final ClassManager getClassManager() {
 		return classManager;
 	}
+	
 
+	
 	private void fakeExtensions() {
-		coreExtensionList.add(new TipiCore());
+
+//		fakeExtension(coreExtensionList, "tipi.TipiExtension");
+			coreExtensionList.add(new TipiCoreExtension());
 		fakeExtension(mainExtensionList, "tipi.TipiSwingExtension");
 		fakeExtension(optionalExtensionList, "tipi.TipiDevelopTools");
 		fakeExtension(optionalExtensionList, "tipi.TipiJabberExtension");
@@ -198,12 +202,12 @@ public abstract class TipiContext {
 		fakeExtension(optionalExtensionList, "tipi.TipiFlickrExtension");
 		fakeExtension(optionalExtensionList, "tipi.TipiSwingXExtension");
 		fakeExtension(optionalExtensionList, "tipi.TipiGeoSwingExtension");
-		fakeExtension(optionalExtensionList, "tipi.TipiBatikExtension");
-		fakeExtension(optionalExtensionList, "tipi.NavajoRichTipiExtension");
+		fakeExtension(optionalExtensionList, "tipi.TipiSvgBatikExtension");
+		fakeExtension(optionalExtensionList, "tipi.TipiRichExtension");
 		fakeExtension(optionalExtensionList, "tipi.TipiCalendarExtension");
 		fakeExtension(optionalExtensionList, "tipi.TipiFacilityOccupationExtension");
 		fakeExtension(optionalExtensionList, "tipi.TipiJxLayerExtension");
-		fakeExtension(optionalExtensionList, "tipi.TipiMigExtension");
+		fakeExtension(optionalExtensionList, "tipi.TipiSwingMigExtension");
 		fakeExtension(optionalExtensionList, "tipi.TipiJoglExtension");
 
 		fakeExtension(mainExtensionList, "tipi.TipiEchoExtension");
@@ -1353,21 +1357,22 @@ public abstract class TipiContext {
 		String location = lazyMap.get(componentName);
 		if (location == null) {
 
-			String fullName = null;
-			if (componentName.indexOf(".") != -1) {
-				fullName = componentName.replace(".", "/");
-			} else {
-				fullName = componentName;
-			}
+//			String fullName = null;
+//			if (componentName.indexOf(".") != -1) {
+//				fullName = componentName.replace(".", "/");
+//			} else {
+//				fullName = componentName;
+//			}
 			String total = null;
-			if (fullName.endsWith(".xml")) {
-				total = fullName;
+			if (componentName.endsWith(".xml")) {
+				total = componentName;
 			} else {
-				total = fullName + ".xml";
+				total = componentName + ".xml";
 			}
-			parseLibrary(total, true, componentName, false);
-			xe = getTipiDefinition(componentName);
-			fireDefinitionLoaded(componentName, xe);
+			String actualName = total.substring(total.lastIndexOf('/')+1,total.lastIndexOf('.'));
+			parseLibrary(total, true, actualName, false);
+			xe = getTipiDefinition(actualName);
+			fireDefinitionLoaded(actualName, xe);
 			return xe;
 
 			// return null;
@@ -2361,7 +2366,7 @@ public abstract class TipiContext {
 			}
 		} else {
 			// BEWARE: The trailing slash is important!
-			setGenericResourceLoader(createDefaultResourceLoader("resource/"));
+			setGenericResourceLoader(createDefaultResourceLoader("resource/",useCache()));
 		}
 	}
 
@@ -2376,8 +2381,14 @@ public abstract class TipiContext {
 		} else {
 			// nothing supplied. Use a file loader with fallback to classloader.
 			// BEWARE: The trailing slash is important!
-			setTipiResourceLoader(createDefaultResourceLoader("tipi/"));
+			
+			setTipiResourceLoader(createDefaultResourceLoader("tipi/",useCache()));
 		}
+	}
+	
+	
+	public boolean useCache() {
+		return false;
 	}
 
 	private TipiResourceLoader createHttpResourceLoader(String codebase) throws MalformedURLException {
@@ -2396,7 +2407,7 @@ public abstract class TipiContext {
 	/**
 	 * @return
 	 */
-	protected TipiResourceLoader createDefaultResourceLoader(String loaderType) {
+	protected TipiResourceLoader createDefaultResourceLoader(String loaderType, boolean cache) {
 		return new FileResourceLoader(new File(loaderType));
 	}
 
@@ -2420,7 +2431,6 @@ public abstract class TipiContext {
 		}
 		String tipiCodeBase = properties.get("tipiCodeBase");
 		String resourceCodeBase = properties.get("resourceCodeBase");
-		System.err.println("Tipi codebase: "+tipiCodeBase);
 		setTipiResourceLoader(tipiCodeBase);
 		setGenericResourceLoader(resourceCodeBase);
 
@@ -2873,7 +2883,6 @@ public abstract class TipiContext {
 	}
 
 	public final void setCookie(String key, String value) {
-		System.err.println("Setting cookie: "+key+" : "+value);
 		if (myCookieManager == null) {
 			return;
 		}
@@ -2881,7 +2890,6 @@ public abstract class TipiContext {
 	}
 
 	public final String getCookie(String key) {
-		System.err.println("Setting cookie: "+key+" : "+myCookieManager.getCookie(key));
 		if (myCookieManager == null) {
 			return null;
 		}

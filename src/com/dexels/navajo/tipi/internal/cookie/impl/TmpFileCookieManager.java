@@ -12,15 +12,11 @@ public class TmpFileCookieManager implements CookieManager {
 	
 	public String getCookie(String key) {
 		String cookieValue = cookieMap.get(key);
-		System.err.println("getting cookievalue: "+key+" result: "+cookieValue);
-		System.err.println("Map: "+ cookieMap);
 		return cookieValue;
 	}
 
 	public void setCookie(String key, String value) {
-		System.err.println("setting cookievalue: "+key+" result: "+value);
 		cookieMap.put(key, value);
-		System.err.println("Map: "+ cookieMap);
 		try {
 			System.err.println("Saving the cookies!");
 			saveCookies();
@@ -72,7 +68,6 @@ public class TmpFileCookieManager implements CookieManager {
 				line = fw.readLine();
 				continue;
 			}
-			System.err.println("Coookie Parsing: "+line);
 			StringTokenizer st = new StringTokenizer(line, "|");
 			String key = st.nextToken();
 			String value = st.nextToken();
