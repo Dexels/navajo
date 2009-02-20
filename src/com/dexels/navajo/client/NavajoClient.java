@@ -250,8 +250,13 @@ public class NavajoClient implements ClientInterface {
 //	  System.err.println("Warning: setServerURL is deprecated!");
 	  serverUrls = new String[]{url};
 	  serverLoads = new double[serverUrls.length];
+	// I really don't want the startup to fail if there are problems here
+	  try {
 	  determineServerLoadsAndSetCurrentServer(true);
-  }
+	  } catch(Throwable t) {
+		  t.printStackTrace();
+	  }
+	  }
 
   /**
    * Set the password
