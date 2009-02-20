@@ -10,7 +10,7 @@ public class TipiBuildXsd extends BaseTipiClientTask {
 	public void execute() throws BuildException {
 		try {
 			XsdBuilder xsd = new XsdBuilder();
-			xsd.build(repository, extensions);
+			xsd.build(repository, extensions,getProject().getBaseDir());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

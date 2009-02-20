@@ -28,7 +28,7 @@ public class TipiDownloadJarTask extends BaseTipiClientTask {
 //				URL projectURL = new URL(rep,ext+"/");
 				//URL extensionURL = new URL(projectURL,"definition.xml");
 				//XMLElement result = ClientActions.getXMLElement(extensionURL);
-				ClientActions.downloadExtensionJars(ext,new URL(repository+ext+"/"),ClientActions.getExtensionXml(ext, repository));
+				ClientActions.downloadExtensionJars(ext,new URL(repository+ext+"/"),ClientActions.getExtensionXml(ext, repository),getProject().getBaseDir(),true);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

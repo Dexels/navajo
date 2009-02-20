@@ -10,7 +10,7 @@ public class TipiBuildClasspathTask extends BaseTipiClientTask {
 	public void execute() throws BuildException {
 		try {
 			ClasspathBuilder cb = new ClasspathBuilder();
-			cb.build(repository, extensions);
+			cb.build(repository, extensions,getProject().getBaseDir());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
