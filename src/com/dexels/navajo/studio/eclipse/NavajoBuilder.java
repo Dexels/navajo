@@ -571,7 +571,7 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
 	                            strippedScript = current.getScript();
 							}
                             
-                            navajoCompiler.compileScript(strippedScript, current.getScriptDir(), current.getCompileDir(), current.getScriptPackage());
+                            navajoCompiler.compileScript(strippedScript, current.getScriptDir(), current.getCompileDir(), current.getScriptPackage(),getConfigDir());
                             totalLines += lines;
                             totalNew += (System.currentTimeMillis() - cc);
                                     totalJava += (System.currentTimeMillis() - cc);
@@ -680,7 +680,12 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                 long diff = System.currentTimeMillis() - cc;
     }
 
-    private void addCompilation(ArrayList compilationList, final IFolder scriptDir, final IFolder compileDir, final String scriptPackageName,
+    private String getConfigDir() throws NavajoPluginException {
+        IFolder ff = NavajoScriptPluginPlugin.getDefault().getNavajoConfigFolder(getProject());
+        return ff.getRawLocation().toOSString();
+	}
+
+	private void addCompilation(ArrayList compilationList, final IFolder scriptDir, final IFolder compileDir, final String scriptPackageName,
             final String script) throws CoreException {
         NavajoScriptCompilation nsc = new NavajoScriptCompilation(script, scriptPackageName, scriptDir.getLocation().toString(), compileDir
                 .getLocation().toString());
@@ -714,7 +719,9 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
             this.compileDir = compileDir;
         }
 
-        public String toString() {
+   
+
+		public String toString() {
             return "Script: " + script + " package: " + scriptPackage + " compileDir: " + compileDir + " scriptDir: " + scriptDir;
         }
 
