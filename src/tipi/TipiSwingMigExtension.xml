@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<extension id="mig" requiresMain="swing" project="TipiSwingMig" version="0.9" title="Mig Layout manager for Swing" vendor="Dexels" homepage="http://www.dexels.com">
+	<description>
+		Tipi Swing Mig layout
+	</description>
+	<includes>
+		<include path="com/dexels/navajo/tipi/mig/migclassdef.xml"/>
+	</includes>
+	<jars>
+		<jar path="miglayout-3.6-swing.jar"/>
+		<jar path="TipiSwingMig.jar"/>
+	</jars>
+	<other>
+		<link href="http://www.miglayout.com/"/>
+	</other>
+</extension>
