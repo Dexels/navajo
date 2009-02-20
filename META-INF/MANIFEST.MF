@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: TipiPlugin Plug-in
+Bundle-SymbolicName: TipiPlugin; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Vendor: Dexels
+Require-Bundle: org.eclipse.core.resources,
+ org.eclipse.core.runtime,
+ org.eclipse.ui
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ClassPath: lib/TipiBuildLibrary.jar,
+ .
