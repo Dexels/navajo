@@ -172,6 +172,7 @@ public class MapDefinition {
 			// Case I: a non-primitive map ref construct:
 			// <field><map ref=""> or <message><map ref=""> or <property><map ref="">
 			if ( child.getName().indexOf(".") != -1 && getValueDefinition(stripDot(child)) != null && 
+					getValueDefinition(stripDot(child)).getDirection().equals("out") && 
 				  (	( child.getChildren().size() > 0 && child.getFirstChild().getName().equals("map") ) ||
 				    ( child.getParent().getName().equals("message") || child.getParent().getName().equals("property") ) )
 			   ) {
