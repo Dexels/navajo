@@ -94,6 +94,7 @@ public class TribalStatusCollector extends GenericThread implements TribalStatus
 		return TribeManager.getInstance().getChiefName();
 	}
 
+	
 	public boolean getIsChief() {
 		return TribeManager.getInstance().getIsChief();
 	}
