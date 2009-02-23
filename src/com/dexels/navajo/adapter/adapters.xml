@@ -167,44 +167,6 @@
             <value name="level" required="false" direction="in"/>
         </values>
     </map>
-    <!-- Code dropdown list -->
-    <map>
-        <tagname>codedropdown</tagname>
-        <object>com.dexels.sportlink.adapters.CodeDropdownList</object>
-        <values>
-            <value name="datasource" type="string" required="false" direction="in"/>
-            <value name="transactionContext" type="integer" required="false" direction="in"/>
-            <value name="language" type="string" required="true" direction="in"/>
-            <value name="typeOfCode" type="string" required="true" direction="in"/>
-            <value name="name" type="string" required="true" direction="in"/>
-            <value name="description" type="string" required="false" direction="in"/>
-            <value name="orderByDescription" type="string" required="false" direction="in"/>
-            <value name="direction" type="string" required="true" direction="in"/>
-            <value name="emptyOption" type="boolean" required="false" direction="in"/>
-            <value name="selectedValue" type="any" required="false" direction="in"/>
-        </values>
-    </map>
-    <!-- Dropdown list -->
-    <map>
-        <tagname>dropdown</tagname>
-        <object>com.dexels.sportlink.adapters.DropdownList</object>
-        <values>
-            <value name="datasource" type="string" required="false" direction="in"/>
-            <value name="transactionContext" type="integer" required="false" direction="in"/>
-            <value name="name" type="string" required="true" direction="in"/>
-            <value name="query" type="string" required="false" direction="in"/>
-            <value name="description" type="string" required="false" direction="in"/>
-            <value name="orderByDescription" type="string" required="false" direction="in"/>
-            <value name="direction" type="string" required="true" direction="in"/>
-            <value name="emptyOption" type="boolean" required="false" direction="in"/>
-            <value name="selectedValue" type="string" required="false" direction="in"/>
-        </values>
-        <methods>
-            <method name="addParameter">
-                <param name="value" field="parameter" type="any" required="false"/>
-            </method>
-        </methods>
-    </map>
     <!-- XML adapter -->
     <map>
         <tagname>xmlmap</tagname>
