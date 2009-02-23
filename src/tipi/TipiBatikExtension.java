@@ -1,5 +1,6 @@
 package tipi;
 
+import java.io.InputStream;
 import java.util.*;
 
 import com.dexels.navajo.tipi.*;
@@ -68,5 +69,11 @@ public class TipiBatikExtension implements TipiExtension {
 		l.add("http://xmlgraphics.apache.org/batik/");
 		return l;
 
+	}
+
+	@Override
+	public InputStream getDefinitionAsStream() {
+		Thread.dumpStack();
+		return null;
 	}
 }

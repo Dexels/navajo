@@ -37,4 +37,6 @@ public abstract class SvgBaseComponent extends JPanel {
 	public abstract boolean isExisting(String name);
 	public abstract String getTagName(String name);
 	
+	public abstract void zoom(double factor);
+	
 }

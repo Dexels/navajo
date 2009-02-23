@@ -95,6 +95,7 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 	}
 
 	public void onMouseDown(String targetId) {
+		System.err.println("mouse down!");
 		Map<String,Object> m = new HashMap<String,Object>();
 		m.put("id", targetId);
 		try {
@@ -118,6 +119,7 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 	}
 
 	public void onMouseMove(String targetId) {
+		System.err.println("Sauspan!");
 		Map<String,Object> m = new HashMap<String,Object>();
 		m.put("id", targetId);
 		try {
@@ -148,6 +150,7 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 	}
 
 	public void onMouseUp(String targetId) {
+		System.err.println("mouse up!");
 		Map<String,Object> m = new HashMap<String,Object>();
 		m.put("id", targetId);
 		try {
