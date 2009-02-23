@@ -126,7 +126,6 @@ public class SvgBatikComponent extends SvgBaseComponent {
 			this.amount = amount;
 		}
 
-		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			
 			if (svgCanvas == null) {
@@ -401,10 +400,17 @@ public class SvgBatikComponent extends SvgBaseComponent {
 	}
 
 	public void registerId(String id, SVGDocument doc) {
+
 		if (svgCanvas == null || doc == null) {
 			System.err.println("Can not register id: " + id);
 			Thread.dumpStack();
 			return;
+		}
+		if( doc==null) {
+			System.err.println("Document null Can not register id: "+id);
+			Thread.dumpStack();
+			return;
+			
 		}
 		SVGElement ee = (SVGElement) doc.getElementById(id);
 		if (ee == null) {
