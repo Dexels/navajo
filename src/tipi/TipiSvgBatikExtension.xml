@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<extension id="svg" requiresMain="swing" project="TipiSvgBatik" version="0.9" title="Tipi Batik Library" vendor="Dexels" homepage="http://www.dexels.com">
+	<description>
+		Batik extensions
+	</description>
+	<includes>
+		<include path="com/dexels/navajo/tipi/swing/svgclassdef.xml"/>
+	</includes>
+	<jars>
+	
+		<jar path="xml-apis.jar"/>
+		<jar path="xml-apis-ext.jar"/>
+		<jar path="batik-anim.jar"/>
+		<jar path="batik-awt-util.jar"/>
+		<jar path="batik-bridge.jar"/>
+		<jar path="batik-css.jar"/>
+		<jar path="batik-dom.jar"/>
+		<jar path="batik-ext.jar"/>
+		<jar path="batik-gui-util.jar"/>
+		<jar path="batik-gvt.jar"/>
+		<jar path="batik-parser.jar"/>
+		<jar path="batik-script.jar"/>
+		<jar path="batik-svg-dom.jar"/>
+		<jar path="batik-swing.jar"/>
+		<jar path="batik-util.jar"/>
+		<jar path="batik-xml.jar"/>
+		<jar path="js.jar"/>
+		<jar path="log4j-1_2_4.jar"/>
+		<jar path="TipiSvgBatik.jar"/>
+	</jars>
+	<other>
+		<link href="http://xmlgraphics.apache.org/batik/"/>
+	</other>
+</extension>

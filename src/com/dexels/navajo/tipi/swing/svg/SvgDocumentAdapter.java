@@ -21,8 +21,6 @@ package com.dexels.navajo.tipi.swing.svg;
 /**
  * This interface represents a listener to the SVGDocumentLoaderEvent events.
  *
- * @author <a href="mailto:stephane@hillion.org">Stephane Hillion</a>
- * @version $Id$
  */
 public class SvgDocumentAdapter implements SvgDocumentListener {
 

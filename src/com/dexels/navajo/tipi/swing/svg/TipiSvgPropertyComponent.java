@@ -14,6 +14,62 @@ public class TipiSvgPropertyComponent extends TipiSvgComponent implements Proper
 	private String propertyName = null;
 	private Property myProperty = null;
 	
+	public Object createContainer() {
+		super.createContainer();
+		getSvgComponent().addSvgDocumentListener(new SvgDocumentAdapter(){
+
+
+			public void onDocumentLoadingFinished() {
+				if(myProperty!=null) {
+					try {
+						updateProperty(myProperty);
+					} catch (NavajoException e) {
+						e.printStackTrace();
+					}
+//					myComponent.setRegisteredIds(getSvgComponent());
+
+				}
+			}
+		});
+		getSvgComponent().addSvgMouseListener(new SvgMouseListener(){
+
+			public void onActivate(String targetId) {
+				if(myProperty!=null) {
+					try {
+						Selection ss = myProperty.getSelectionByValue(targetId);
+						if(ss!=null) {
+							myProperty.setSelected(ss, !ss.isSelected());
+						}
+					} catch (NavajoException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+
+			public void onClick(String targetId) {
+			}
+
+			public void onMouseDown(String targetId) {
+				
+			}
+
+			public void onMouseMove(String targetId) {
+			}
+
+			public void onMouseOut(String targetId) {
+			}
+
+			public void onMouseOver(String targetId) {
+				System.err.println("Over: "+targetId);
+				
+			}
+
+			public void onMouseUp(String targetId) {
+				
+			}});
+		return myComponent;
+	}
+	
 	@Override
 	protected void setComponentValue(String name, Object object) {
 		if(name.equals("propertyName")) {
@@ -27,7 +83,7 @@ public class TipiSvgPropertyComponent extends TipiSvgComponent implements Proper
 	}
 
 	public void addTipiEventListener(TipiEventListener listener) {
-		
+//		
 	}
 
 	
@@ -41,6 +97,8 @@ public class TipiSvgPropertyComponent extends TipiSvgComponent implements Proper
 
 	public void setProperty(final Property p) {
 		if(myProperty == p) {
+			System.err.println("Set property.... ");
+			Thread.dumpStack();
 			return;
 		}
 		if(myProperty!=null) {
@@ -50,18 +108,23 @@ public class TipiSvgPropertyComponent extends TipiSvgComponent implements Proper
 		myProperty = p;	
 		List<Selection> selections;
 		try {
-			selections = p.getAllSelectedSelections();
+			selections = p.getAllSelections();
 			StringBuffer sb = new StringBuffer();
 			Iterator<Selection> ss = selections.iterator();
+			System.err.println("ENTERING LOOP");
 			while(ss.hasNext()) {
 				Selection selection = ss.next();
 				sb.append(selection.getValue());
+				System.err.println("Adding registration: "+selection.getValue());
+				getSvgComponent().registerId(selection.getValue(),getSvgComponent().getDocument());
 				if(ss.hasNext()) {
 					sb.append(",");
 				}
 			}
-			myComponent.setRegisteredIds(sb.toString());
-			updateProperty(p.getAllSelections());
+//			registerId(elem, e.getSVGDocument());
+
+	//		myComponent.setRegisteredIds(sb.toString());
+			updateProperty(p);
 			p.addPropertyChangeListener(this);
 			
 		} catch (NavajoException e) {
@@ -74,15 +137,20 @@ public class TipiSvgPropertyComponent extends TipiSvgComponent implements Proper
 
 			public void run() {
 				try {
-					updateProperty(myProperty.getAllSelections());
+					updateProperty(myProperty);
 				} catch (NavajoException e) {
 					e.printStackTrace();
 				}
 			}});
 	}
 	
-	private void updateProperty(List<Selection> ll) {
+	private void updateProperty(Property p) throws NavajoException {
+		System.err.println("Setting property: "+p.getFullPropertyName());
+		System.err.println("SVG NULL? "+(getSvgComponent()==null));
+		System.err.println("Document null? "+getSvgComponent().getDocument()==null);
+		List<Selection> ll = p.getAllSelections();
 		for (Selection selection : ll) {
+			System.err.println("Setting selection: "+selection.getName()+" value: "+selection.getValue()+" selected: "+selection.isSelected());
 			SVGElement s = (SVGElement) getSvgComponent().getDocument().getElementById(selection.getValue());
 			if(s!=null) {
 				s.setAttribute("class", selection.isSelected()?"selectedStyle":"unSelectedStyle");

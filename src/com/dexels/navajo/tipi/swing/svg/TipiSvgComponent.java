@@ -16,7 +16,7 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 
 
 	protected SvgBaseComponent myComponent = null;
-	private String registeredIds;
+	protected String registeredIds;
 
 	@Override
 	protected void performComponentMethod(String name,
