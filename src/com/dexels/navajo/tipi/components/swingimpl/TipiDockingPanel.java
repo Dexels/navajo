@@ -4,6 +4,8 @@ import java.awt.Container;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 
+import javax.swing.SwingUtilities;
+
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiDockable;
@@ -30,41 +32,49 @@ public class TipiDockingPanel extends TipiPanel {
 	}
 
 	@Override
-	public void addToContainer(final Object c, Object constraints) {	
+	public void addToContainer(final Object c, final Object constraints) {	
 		
-		// See if a global docModel is allready set, if so use that
-		dockModel = DockingManager.getDockModel();
-		if(dockModel == null){			
-			dockModel =  new FloatDockModel();
-			dockModel.addOwner("init", (Window)myContext.getTopLevel());
-			DockingManager.setDockModel(dockModel);
-			
-			
-		}
+		// WARNING! <----------------------------------------------------------------------
+		// Putting this inside the invokeLater is needed for the Stadium Design application
+		// Without it the docking panels will fail upon startup.
 		
-		// Check if current dock is not allready in the model
-		if(dockModel.getRootDock(getId()) == null){	
-			dockModel.addRootDock(getId(), myContainer, (Window)myContext.getTopLevel());
-		}
-		
-		int pos = Position.CENTER;
-		
-		if("top".equalsIgnoreCase(constraints.toString())){
-			pos = Position.TOP;
-		} else if("left".equalsIgnoreCase(constraints.toString())){
-			pos = Position.LEFT;
-		} else if("bottom".equalsIgnoreCase(constraints.toString())){
-			pos = Position.BOTTOM;
-		} else if("right".equalsIgnoreCase(constraints.toString())){
-			pos = Position.RIGHT;
-		} else if("center".equalsIgnoreCase(constraints.toString())){
-			pos = Position.CENTER;
-		}  
-		final int position = pos;
-		runSyncInEventThread(new Runnable(){
+		SwingUtilities.invokeLater(new Runnable(){
 			public void run(){
-				System.err.println("--> Adding doc to toplevel");
-				myContainer.addChildDock((Dock)c, new Position(position));
+				// See if a global docModel is allready set, if so use that
+				dockModel = DockingManager.getDockModel();
+				if(dockModel == null){			
+					dockModel =  new FloatDockModel();
+					dockModel.addOwner("init", SwingUtilities.getWindowAncestor(myContainer));
+					DockingManager.setDockModel(dockModel);			
+					
+				}
+				
+				// Check if current dock is not allready in the model
+				if(dockModel.getRootDock(getId()) == null){	
+					dockModel.addRootDock(getId(), myContainer, (Window)myContext.getTopLevel());
+				}
+				
+				int pos = Position.CENTER;
+				
+				if("top".equalsIgnoreCase(constraints.toString())){
+					pos = Position.TOP;
+				} else if("left".equalsIgnoreCase(constraints.toString())){
+					pos = Position.LEFT;
+				} else if("bottom".equalsIgnoreCase(constraints.toString())){
+					pos = Position.BOTTOM;
+				} else if("right".equalsIgnoreCase(constraints.toString())){
+					pos = Position.RIGHT;
+				} else if("center".equalsIgnoreCase(constraints.toString())){
+					pos = Position.CENTER;
+				}  
+				final int position = pos;
+				runSyncInEventThread(new Runnable(){
+					public void run(){
+						System.err.println("--> Adding doc to toplevel");
+						myContainer.addChildDock((Dock)c, new Position(position));
+					}
+				});
+				
 			}
 		});
 		
