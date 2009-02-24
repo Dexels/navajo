@@ -162,13 +162,14 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
         			  if ( currentMsg.getMessage(appendTo).getType().equals(Message.MSG_TYPE_ARRAY )  ) { // For array messages do not overwrite.
         				  currentMsg.getMessage(appendTo).addMessage(clone);
         			  } else {
-        				  currentMsg.getMessage(appendTo).addMessage(clone, true);
+        				  currentMsg.getMessage(appendTo).merge(clone);
         			  }
         		  } else {
         			  throw new UserException(-1, "Unknown appendTo message: " + appendTo);
         		  }
         	  } else {
-        		  currentMsg.addMessage(clone, true);
+        		  // Merge message with existing message.
+        		  currentMsg.merge(clone);
         	  }
           } else {
         	  if ( appendTo != null && !appendTo.equals(Navajo.MESSAGE_SEPARATOR) ) {
@@ -176,13 +177,18 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
         			  if ( currentDoc.getMessage(appendTo).getType().equals(Message.MSG_TYPE_ARRAY )  ) { // For array messages do not overwrite.
         				  currentDoc.getMessage(appendTo).addMessage(clone);
         			  } else {
-        				  currentDoc.getMessage(appendTo).addMessage(clone, true);
+        				  currentDoc.getMessage(appendTo).merge(clone);
         			  }
         		  } else {
         			  throw new UserException(-1, "Unknown appendTo message: " + appendTo);
         		  }
         	  } else {
-        		  currentDoc.addMessage(clone, true);
+        		  // Check if message already exists, if so, merge it with existing message.
+        		  if ( currentDoc.getMessage(clone.getName()) != null ) {
+        			  currentDoc.getMessage(clone.getName()).merge(clone);
+        		  } else {
+        			  currentDoc.addMessage(clone, true);
+        		  }
         	  }
           }
         }
