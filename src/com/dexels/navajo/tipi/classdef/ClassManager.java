@@ -32,12 +32,7 @@ public final class ClassManager {
 	}
 	
 	public XMLElement getAssembledClassDef(String name) throws TipiException {
-	//	System.err.println("ClassDef: "+name);
-		
 		XMLElement classDef = getClassDef(name);
-//		if(true) {
-//			return classDef;
-//		}
 		if (classDef == null) {
 			throw new TipiException("Error loading class def: " + name);
 		}
@@ -48,11 +43,7 @@ public final class ClassManager {
 			result = classDef;
 		} else {
 			interfaces.add(classDef);
-
-
 			result = assembleClassDefs(interfaces,name);
-		
-			
 		}
 		return result;
 	}
@@ -70,15 +61,10 @@ public final class ClassManager {
 	}
 
 	public final void addTipiClassDefinition(XMLElement xe) {
-		//String pack = (String) xe.getAttribute("package");
 		String name = (String) xe.getAttribute("name");
 		String clas = (String) xe.getAttribute("class");
-//		System.err.println("Name: "+name+" class: "+clas);
 		if(clas==null) {
-			// We have an abstract one
-			//System.err.println("Abstract component found.");
 				interfaceMap.put(name,xe);
-	//		return;
 		}
 		String extending = (String) xe.getAttribute("implements");
 		StringTokenizer st = null;
@@ -90,19 +76,15 @@ public final class ClassManager {
 				isExtending.add(st.nextToken());
 			}
 		}
-		//String fullDef = pack + "." + clas;
 		if(isExtending!=null) {
 			unresolvedExtensions.put(name, isExtending);
 		}
-	
-
 		tipiClassDefMap.put(name, xe);
 	}
 
 
 	public Class<?> getTipiClass(XMLElement xe) {
 		Class<?> cc = null;
-		
 		String pack = (String) xe.getAttribute("package");
 		String clas = (String) xe.getAttribute("class");
 		String fullDef = pack + "." + clas;
