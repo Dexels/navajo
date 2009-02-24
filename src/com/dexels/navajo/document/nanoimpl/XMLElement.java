@@ -2935,5 +2935,17 @@ public class XMLElement implements java.io.Serializable {
 			parseFromReader(fw);
 			in.close();
 		}
-	
+		public XMLElement copy() {
+			XMLElement xe = new CaseSensitiveXMLElement();
+			xe.setName(getName());
+			xe.setContent(getContent());
+			for (String s : attributes.keySet()) {
+				xe.setAttribute(s, getAttribute(s));
+			}
+			for (XMLElement child : getChildren()) {
+				XMLElement copy = child.copy();
+				xe.addChild(copy);
+			}
+			return xe;
+		}
 }
