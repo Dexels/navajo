@@ -232,69 +232,55 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 	public final void setAnyValue(Object o) {
 		myBinary = null;
-		
 		if (o == null) {
-//			setType(Property.STRING_PROPERTY);
 			setValue((String) null);
 			return;
 		}
 		if (o instanceof Integer) {
-//			setType(Property.INTEGER_PROPERTY);
 			setValue((Integer) o);
 			return;
 		}
 		if (o instanceof Double) {
-//			setType(Property.FLOAT_PROPERTY);
 			setValue((Double) o);
 			return;
 		}
 		if (o instanceof Float) {
-//			setType(Property.FLOAT_PROPERTY);
 			setValue((Float) o);
 			return;
 		}
 		if (o instanceof Binary) {
-//			setType(Property.BINARY_PROPERTY);
 			setValue((Binary) o);
 			return;
 		}
 		if (o instanceof ClockTime) {
-//			setType(Property.CLOCKTIME_PROPERTY);
 			setValue((ClockTime) o);
 			return;
 		}
 		if (o instanceof StopwatchTime) {
-//			setType(Property.STOPWATCHTIME_PROPERTY);
 			setValue((StopwatchTime) o);
 			return;
 		}
 		if (o instanceof Date) {
-//			setType(Property.DATE_PROPERTY);
 			setValue((Date) o);
 			return;
 		}
 		if (o instanceof Long) {
-//			setType(Property.LONG_PROPERTY);
 			setLongValue(((Long) o).longValue());
 			return;
 		}
 		if (o instanceof Money) {
-//			setType(Property.MONEY_PROPERTY);
 			setValue((Money) o);
 			return;
 		}
 		if (o instanceof Percentage) {
-//			setType(Property.PERCENTAGE_PROPERTY);
 			setValue((Percentage) o);
 			return;
 		}
 		if (o instanceof Boolean) {
-//			setType(Property.BOOLEAN_PROPERTY);
 			setValue((Boolean) o);
 			return;
 		}
 		if (o instanceof ArrayList) {
-			setType(Property.STRING_PROPERTY);
 			setValue((ArrayList) o);
 			return;
 		}		
@@ -311,7 +297,34 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		firePropertyChanged(old, getTypedValue());
 	}
 
-	private void setValue(ArrayList<Selection> list) {
+	private void setValue(ArrayList list){
+		// first, determine content of list.
+		if(list.isEmpty()) {
+			// tricky. Will assume it is a selection property, for backward compatibility.
+			setSelectionList(list);
+			return;
+		}
+		
+		Object first = list.get(0);
+		if(first==null) {
+			System.err.println("Cannot process null values in list or selection");
+			return;
+		}
+		if(first instanceof Selection) {
+			// based on this, I'll assume it is a  selection property
+			setSelectionList(list);
+			return;
+		}
+		setListProperty(list);
+		
+	}
+
+	private void setListProperty(ArrayList list) {
+		tipiProperty = list;
+		setType(Property.LIST_PROPERTY);
+	}
+
+	private void setSelectionList(ArrayList<Selection> list) {
 		ArrayList<String> values = new ArrayList<String>();
 		for (Selection s : list) {
 			values.add(s.getValue());
@@ -323,9 +336,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			e.printStackTrace();
 		}
 		setType(Property.SELECTION_PROPERTY);
-//		setCardinality(values.size()>1?Property.CARDINALITY_MULTIPLE:Property.CARDINALITY_SINGLE);
+	
 	}
-
+	
 	public final Object getEvaluatedValue()  {
 		// System.err.println("Evaluating property: "+getValue());
 		Operand o;
@@ -594,46 +607,14 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			return d;
 		} else if (getType().equals(Property.BINARY_PROPERTY)) {
 			try {
-				// if (myBinary!=null) {
 				return myBinary;
-				// }
-				// if (myValue==null) {
-				// return null;
-				// }
-				// // This is weird, should not happen.
-				// return new Binary(new StringReader(getValue()));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		} else if (getType().equals(Property.SELECTION_PROPERTY)) {
-//			if(Property.CARDINALITY_SINGLE.equals(getCardinality())) {
-//				Selection s = getSelected();
-//				if (s != null) {
-//					return s.getValue();
-//				} else {
-//					return null;
-//				}
-//			}
 			List<Selection> all = getAllSelectedSelections();
-//			if(all.size()==1) {
-//				return all.get(0).getValue();
-//			} 
-//			if(all.size()==0) {
-//				return Selection.DUMMY_ELEMENT;
-//			}
 			return all;
-				
-			//			Selection s = getSelected();
-//			if (s != null) {
-//				if(s.getName().equals(Selection.DUMMY_SELECTION)) {
-//					return null;
-//				}
-//				return s.getValue();
-//			} else {
-//				return null;
-//			}
-
-		} else if (getType().equals(Property.TIPI_PROPERTY)) {
+		} else if (getType().equals(Property.TIPI_PROPERTY) || getType().equals(Property.LIST_PROPERTY) ) {
 			return tipiProperty;
 		}
 

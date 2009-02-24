@@ -40,6 +40,7 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
   public static final String EXPRESSION_PROPERTY = "expression";
   public static final String URL_PROPERTY = "url";
   public static final String SELECTION_PROPERTY = "selection";
+  public static final String LIST_PROPERTY = "list";
   public static final String MEMO_PROPERTY = "memo";
   public static final String BOOLEAN_PROPERTY = "boolean";
   public static final String POINTS_PROPERTY = "points";
@@ -59,7 +60,7 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
       FLOAT_PROPERTY, MONEY_PROPERTY, CLOCKTIME_PROPERTY,
       URL_PROPERTY, MEMO_PROPERTY, BOOLEAN_PROPERTY, POINTS_PROPERTY,
       DATE_PATTERN_PROPERTY, PASSWORD_PROPERTY,
-      TIPI_PROPERTY, BINARY_PROPERTY, EXPRESSION_PROPERTY, PERCENTAGE_PROPERTY, STOPWATCHTIME_PROPERTY
+      TIPI_PROPERTY, BINARY_PROPERTY, EXPRESSION_PROPERTY, PERCENTAGE_PROPERTY, STOPWATCHTIME_PROPERTY, LIST_PROPERTY
   };
 
   //Binary data properties.
