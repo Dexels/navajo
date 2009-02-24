@@ -1429,5 +1429,36 @@ public final Message getParentMessage() {
 				return new ArrayList<Message>(messageList);
 			}
 		}
+
+		public void merge(Message incoming) {
+		
+			// Check if message with incoming name exists.
+			if ( !getName().equals(incoming.getName()) ) {
+				addMessage(incoming, true);
+				return;
+			}
+			
+			ArrayList<Message> subMessages = incoming.getAllMessages();
+			for (int i = 0; i < subMessages.size(); i++) {
+				String newMsgName = subMessages.get(i).getName();
+				Message existing = this.getMessage(newMsgName);
+				if ( existing == null ) {
+					try {
+						Message newMsg = subMessages.get(i).copy();
+						this.addMessage(newMsg);
+					} catch (NavajoException e) {
+					}
+				} else {
+					existing.merge(subMessages.get(i));
+				}
+			}
+			
+			ArrayList<Property> properties = incoming.getAllProperties();
+			for (int i = 0; i < properties.size(); i++) {
+				Property p = (Property) properties.get(i).clone();
+				addProperty(p);
+			}
+			
+		}
 		
 }

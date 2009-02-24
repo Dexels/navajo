@@ -394,6 +394,13 @@ public interface Message
   public void setParent(Message m);
 
   /**
+   * Merge message with incoming message.
+   * 
+   * @param incoming
+   */
+  public void merge(Message incoming);
+  
+  /**
    * Add empty message at index
    * @return Inserted message
    */
