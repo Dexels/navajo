@@ -319,6 +319,7 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 	}
 
 	public void store() throws MappableException, UserException {
+		
 	}
 	
 	public void addTrigger(JabberTrigger jt) {
@@ -336,15 +337,15 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 	}
 
 	public String getJabberServer() {
-		return jabberServer;
+		return instance.jabberServer;
 	}
 
 	public String getJabberPort() {
-		return jabberPort;
+		return instance.jabberPort;
 	}
 
 	public String getJabberService() {
-		return jabberService;
+		return instance.jabberService;
 	}
 
 	/**
@@ -370,7 +371,7 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 		if ( instance != null && instance.myJabber != null ) {
 			String nickname = registerCallback.split("@")[0];
 			String roomname = registerCallback.split("@")[1];
-			instance.registeredCallbacks.put(myAccess.getClientToken(), registerCallback);
+			instance.registeredCallbacks.put(nickname, registerCallback);
 
 			if ( !instance.myJabber.hasJoinedRoom(roomname) ) {
 				
