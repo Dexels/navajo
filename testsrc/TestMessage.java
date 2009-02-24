@@ -157,6 +157,7 @@ public class TestMessage extends TestCase {
     Message m3 = m2.getMessage("../testmessage_sub2");
     Assert.assertEquals("testmessage_sub2", m3.getName());
   }
+  
 
   public void testGetMessages() throws NavajoException {
 
@@ -365,5 +366,74 @@ public class TestMessage extends TestCase {
 	  assertTrue(sw.toString().indexOf("AAPJES") == -1);
 	  assertTrue(sw.toString().indexOf("NOOTJES") == -1);
   }
+  
+  public void testMergeMessage() throws Exception {
+	  
+	  Message m = NavajoFactory.getInstance().createMessage(testDoc, "MyTop");
+	  Property p1 = NavajoFactory.getInstance().createProperty(testDoc, "MyProp1", "string", "AAPJES(1)", 0, "", "in", "");
+	  m.addProperty(p1);
+	  testDoc.addMessage(m);
+	  
+	  Message m3 =  NavajoFactory.getInstance().createMessage(testDoc, "MyTop");
+	  Property p2 = NavajoFactory.getInstance().createProperty(testDoc, "MyProp2", "string", "AAPJES(2)", 0, "", "in", "");
+	  m3.addProperty(p2);
+	  Property p3 = NavajoFactory.getInstance().createProperty(testDoc, "MyProp3", "string", "AAPJES(3)", 0, "", "in", "");
+	  m3.addProperty(p3);
+	  
+	  m.merge(m3);
+	  
+	  assertNotNull(m.getProperty("MyProp3"));
+	  assertEquals(m.getProperty("MyProp3").getValue(), "AAPJES(3)");
+	  
+  }
+  
+  public void testMergeMessage2() throws Exception {
 
+	  Message m = NavajoFactory.getInstance().createMessage(testDoc, "MyTop");
+	  Property p1 = NavajoFactory.getInstance().createProperty(testDoc, "MyProp1", "string", "AAPJES(1)", 0, "", "in", "");
+	  m.addProperty(p1);
+	  testDoc.addMessage(m);
+
+	  Message m3 =  NavajoFactory.getInstance().createMessage(testDoc, "MyTop2");
+	  Property p2 = NavajoFactory.getInstance().createProperty(testDoc, "MyProp2", "string", "AAPJES(2)", 0, "", "in", "");
+	  m3.addProperty(p2);
+	  Property p3 = NavajoFactory.getInstance().createProperty(testDoc, "MyProp3", "string", "AAPJES(3)", 0, "", "in", "");
+	  m3.addProperty(p3);
+
+	  m.merge(m3);
+
+	  assertNull(m.getProperty("MyProp3"));
+	  assertNotNull(m.getMessage("MyTop2"));
+
+  }
+  
+  public void testMergeMessage3() throws Exception {
+
+	  Message m = NavajoFactory.getInstance().createMessage(testDoc, "MyTop");
+	  Property p1 = NavajoFactory.getInstance().createProperty(testDoc, "MyProp1", "string", "AAPJES(1)", 0, "", "in", "");
+	  m.addProperty(p1);
+	  testDoc.addMessage(m);
+
+	  Message m3 =  NavajoFactory.getInstance().createMessage(testDoc, "MyTop");
+	  Property p2 = NavajoFactory.getInstance().createProperty(testDoc, "MyProp2", "string", "AAPJES(2)", 0, "", "in", "");
+	  m3.addProperty(p2);
+	  Property p3 = NavajoFactory.getInstance().createProperty(testDoc, "MyProp3", "string", "AAPJES(3)", 0, "", "in", "");
+	  m3.addProperty(p3);
+	  Message m4 =  NavajoFactory.getInstance().createMessage(testDoc, "MyTopSub");
+	  Property p4 = NavajoFactory.getInstance().createProperty(testDoc, "MyPropSub1", "string", "AAPJES(3)", 0, "", "in", "");
+	  m4.addProperty(p4);
+	  m3.addMessage(m4);
+	  
+	  m.merge(m3);
+
+	  assertNotNull(m.getMessage("MyTopSub"));
+	  assertNotNull(m.getMessage("MyTopSub").getProperty("MyPropSub1"));
+
+  }
+
+  public static void main(String [] args) throws Exception {
+	  TestMessage tm = new TestMessage("aap");
+	  tm.setUp();
+	  tm.testMergeMessage();
+  }
 }
