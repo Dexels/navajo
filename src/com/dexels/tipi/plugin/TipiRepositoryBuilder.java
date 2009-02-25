@@ -5,16 +5,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
 import java.util.StringTokenizer;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
+import org.eclipse.ant.core.AntRunner;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
@@ -28,10 +25,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.views.IViewDescriptor;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.helpers.DefaultHandler;
 
 import tipiplugin.views.TipiHelpView;
 
@@ -87,7 +80,7 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 
 	public static final String BUILDER_ID = "TipiPlugin.tipiRepositoryBuilder";
 
-	private static final String MARKER_TYPE = "TipiPlugin.xmlProblem";
+//	private static final String MARKER_TYPE = "TipiPlugin.xmlProblem";
 
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor)
 			throws CoreException {
@@ -101,15 +94,21 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 				incrementalBuild(delta, monitor);
 			}
 		}
+		
 		return null;
 	}
 
 	void checkTipiProperties(IResource resource,boolean clean,IProgressMonitor monitor) {
 		System.err.println("Entering rebuild.");
-		if (resource instanceof IFile && resource.getName().equals("tipi.properties")) {
+		System.err.println("resource name: "+resource.getName());
+		if(!(resource instanceof IFile)) {
+			System.err.println("No file");
+			return;
+		}
+		if ( resource.getName().equals("tipi.properties") || resource.getName().equals("arguments.properties")) {
 			IFile file = (IFile) resource;
-			IContainer ic = file.getParent();
-			if(ic instanceof IProject) {
+			IContainer ic = file.getProject();
+			//if(ic instanceof IProject) {
 				if(!file.isSynchronized(IResource.DEPTH_INFINITE)) {
 					try {
 						file.refreshLocal(IResource.DEPTH_INFINITE, monitor);
@@ -118,8 +117,8 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 					}
 				}
 				
-				rebuildLocalTipi(file,(IProject)ic,clean,monitor);
-			}
+				rebuildLocalTipi((IProject)ic,clean,monitor);
+			//}
 //			deleteMarkers(file);
 //			XMLErrorHandler reporter = new XMLErrorHandler(file);
 //			try {
@@ -136,9 +135,10 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 		m.setTaskName("Building XSD");
 	}
 
-	private void rebuildLocalTipi(IFile file, final IProject project, boolean clean,IProgressMonitor m) {
+	private void rebuildLocalTipi(final IProject project, boolean clean,IProgressMonitor m) {
 
 		try {
+			IFile file = project.getFile("settings/tipi.properties");
 			InputStream is = file.getContents();
 			PropertyResourceBundle pe = new PropertyResourceBundle(is);
 			is.close();	
@@ -174,41 +174,19 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 				m.worked(1);
 
 			}
-			buildClassPath(project, repository, extensions);
-			project.refreshLocal(IResource.DEPTH_INFINITE, m);
-//			IViewDescriptor icd = PlatformUI.getWorkbench().getViewRegistry().find("tipiplugin.views.TipiHelpView");
-//			System.err.println("DESCR: "+icd);
-//			if(icd!=null) {
-//
-//			}
-//			if(true) {
-//				
-//			}
-//			
 			
-			 IWorkbench wb = PlatformUI.getWorkbench();
-//			   IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
-			   IWorkbenchWindow[] windows = wb.getWorkbenchWindows();
-			   for (int j = 0; j < windows.length; j++) {
-				   IWorkbenchPage[] pages = windows[j].getPages();
-				   for (int i = 0; i < pages.length; i++) {
-						System.err.println("page: "+i);
-//					    IWorkbenchPage page = win.getActivePage();
-						  final TipiHelpView ww = (TipiHelpView) pages[i].findView("tipiplugin.views.TipiHelpView");
-						  if(ww!=null) {
-							  System.err.println("woohoo");
-
-							  	
-							  Display.getDefault().asyncExec(new Runnable(){
-								public void run() {
-									ww.switchToProject(project.getName());
-								}});
-						  }
-
-				   }
-					
+			try {
+				String cp = pe.getString("buildClasspath");
+				if("true".equals(cp)) {
+					buildClassPath(project, repository, extensions);
 				}
-		
+			} catch (MissingResourceException e) {
+			}
+			
+			project.refreshLocal(IResource.DEPTH_INFINITE, m);
+ 	
+			  switchTiProject(project);
+				
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -218,6 +196,27 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 		
 	}
 
+	private void switchTiProject(final IProject project) {
+		Display.getDefault().asyncExec(new Runnable(){
+				public void run() {
+		
+		 IWorkbench wb = PlatformUI.getWorkbench();
+		   IWorkbenchWindow[] windows = wb.getWorkbenchWindows();
+		   for (int j = 0; j < windows.length; j++) {
+			   IWorkbenchPage[] pages = windows[j].getPages();
+			   for (int i = 0; i < pages.length; i++) {
+					  final TipiHelpView ww = (TipiHelpView) pages[i].findView("tipiplugin.views.TipiHelpView");
+					  if(ww!=null) {
+								ww.switchToProject(project.getName());
+					  }
+
+			   }
+				
+			}
+				}});
+	}
+
+	
 private void buildClassPath(IProject project, String repository, String extensions) {	
 	try {
 		ClasspathBuilder cb = new ClasspathBuilder();
@@ -274,12 +273,12 @@ private void buildClassPath(IProject project, String repository, String extensio
 		}
 	}
 	
-	private void deleteMarkers(IFile file) {
-		try {
-			file.deleteMarkers(MARKER_TYPE, false, IResource.DEPTH_ZERO);
-		} catch (CoreException ce) {
-		}
-	}
+//	private void deleteMarkers(IFile file) {
+//		try {
+//			file.deleteMarkers(MARKER_TYPE, false, IResource.DEPTH_ZERO);
+//		} catch (CoreException ce) {
+//		}
+//	}
 
 	protected void fullBuild(final IProgressMonitor monitor)
 			throws CoreException {

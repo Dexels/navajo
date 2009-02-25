@@ -9,7 +9,10 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -97,25 +100,27 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 	           //label.setText(dlg.getValue());
 	         }
 			// Add the nature
-			String[] newNatures = new String[natures.length + 1];
+	        // try this first, so the nature won't be added if it fails
+				createDemoFiles(dlg.getValue(), project,null);
+
+	        String[] newNatures = new String[natures.length + 1];
 			System.arraycopy(natures, 0, newNatures, 0, natures.length);
 			newNatures[natures.length] = TipiNature.NATURE_ID;
+			
 			description.setNatureIds(newNatures);
-			createDemoFiles(dlg.getValue(), project,null);
 			project.setDescription(description, null);
-		} catch (CoreException e) {
+		} catch (Exception e) {
+			System.err.println("Core ex");
+			e.printStackTrace();
+	       Status status = new Status(IStatus.ERROR, "TipiPlugin", 0,e.getMessage(), null);
+	       ErrorDialog.openError(Display.getCurrent().getActiveShell(),"Tipi Repository problem","Error downloading from repository!", status);
 		}
 	}
 
-	private void createDemoFiles(String repository, IProject project, IProgressMonitor monitor) {
-		try {
+	private void createDemoFiles(String repository, IProject project, IProgressMonitor monitor) throws CoreException, IOException {
 			ClientActions.downloadDemoFiles(repository, project.getLocation().toFile());
 			project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
+		
 	}
 
 }

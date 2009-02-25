@@ -42,6 +42,26 @@
          </action>
       </objectContribution>
    </extension>
+   
+      <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            objectClass="org.eclipse.core.resources.IProject"
+            nameFilter="*"
+            id="TipiPlugin.contribution2">
+         <action
+               label="Deploy current Tipi"
+               class="com.dexels.tipi.plugin.DeployAction"
+               menubarPath="additions"
+               enablesFor="+"
+               id="TipiPlugin.deployTipi">
+         </action>
+      </objectContribution>
+   </extension>
+   
+   
+   
    <extension
          id="xmlProblem"
          name="XML Problem"
@@ -108,6 +128,24 @@
       <contexts
             file="contexts.xml">
       </contexts>
+   </extension>
+   <extension
+         point="org.eclipse.ant.core.extraClasspathEntries">
+      <extraClasspathEntry
+            library="lib/TipiAntTask.jar">
+      </extraClasspathEntry>
+   </extension>
+   <extension
+         point="org.eclipse.ant.core.extraClasspathEntries">
+      <extraClasspathEntry
+            library="lib/TipiBuildLibrary.jar">
+      </extraClasspathEntry>
+   </extension>
+   <extension
+         point="org.eclipse.ant.core.extraClasspathEntries">
+      <extraClasspathEntry
+            library="lib/jsch-0.1.39.jar">
+      </extraClasspathEntry>
    </extension>
 
 </plugin>

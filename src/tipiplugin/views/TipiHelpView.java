@@ -58,7 +58,7 @@ public class TipiHelpView extends ViewPart {
 	}
 	
 	public void switchToProject(String projectName) {
-		System.err.println("Switching to project: "+projectName);
+//		System.err.println("Switching to project: "+projectName);
 		IProject p =  ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 		if(p==null) {
 			//huh?
@@ -115,7 +115,6 @@ public class TipiHelpView extends ViewPart {
 				  {
 				    public void widgetSelected(SelectionEvent e)
 				    {
-				      System.out.println("Selection:"+comboBox.getText());
 				      switchToProject(comboBox.getText());
 				    }
 				  });
@@ -168,6 +167,7 @@ public class TipiHelpView extends ViewPart {
 //		browser.setUrl("http://spiritus.dexels.nl:41766346/Tipi/");
 		listProjects();
 		System.err.println("Proj: "+myProjects);
+		parent.redraw();
 	}
 protected void checkupdate() {
 		
@@ -229,11 +229,9 @@ protected void checkupdate() {
 
 		public void initialize(IProject ip) {
 			if(ip==null) {
-				System.err.println(" no project!");
 				return;
 			}
-			System.err.println("Initializing...");
-			IFile metadata = ip.getFile("tipi.metadata");
+			IFile metadata = ip.getFile("settings/tipi.metadata");
 			long localTimeStamp = metadata.getLocalTimeStamp();
 			if(invisibleRoot != null && (lastUpdate > localTimeStamp)) {
 				System.err.println("Still up to date!");
