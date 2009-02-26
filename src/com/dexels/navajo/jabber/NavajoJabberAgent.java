@@ -66,11 +66,12 @@ public class NavajoJabberAgent  {
 		}
 		ConnectionConfiguration config = new ConnectionConfiguration(server, port);
 		connection = new XMPPConnection(config);
+		
 		connection.connect();
 		connection.loginAnonymously();
 		
 		this.conferenceName = chatDomain + "." + connection.getServiceName();
-		this.nickName =  DispatcherFactory.getInstance().getNavajoConfig().getInstanceName();
+		this.nickName =  "server-" + DispatcherFactory.getInstance().getNavajoConfig().getInstanceName();
 		this.serverGroupName = "navajotribe-" + DispatcherFactory.getInstance().getNavajoConfig().getInstanceGroup();
 		
 		//connection.login(username, password, NavajoClientFactory.getClient().getSessionToken());

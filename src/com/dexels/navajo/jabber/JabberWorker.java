@@ -363,6 +363,7 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 	/**
 	 * Register a callback string with the calling client id.
 	 * 
+	 * 
 	 * @param registerCallback
 	 * @throws UserException
 	 */
