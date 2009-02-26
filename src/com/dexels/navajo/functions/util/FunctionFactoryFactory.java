@@ -1,6 +1,8 @@
 package com.dexels.navajo.functions.util;
 
 
+import java.security.AccessControlException;
+
 import com.dexels.navajo.parser.FunctionInterface;
 
 public class FunctionFactoryFactory {
@@ -24,9 +26,17 @@ public class FunctionFactoryFactory {
 				return instance;
 			}
 			
-			if ( System.getProperty("NavajoFunctionFactory") != null ) {
+			String func = null;
+			
+			try {
+				func = System.getProperty("NavajoFunctionFactory");
+			} catch (AccessControlException e1) {
+				// can't read property. Whatever, func remains null.
+			}
+
+			if ( func != null ) {
 				try {
-					Class c = Class.forName(System.getProperty("NavajoFunctionFactory"));
+					Class c = Class.forName(func);
 					instance = (FunctionFactoryInterface) c.newInstance();
 				} catch (Exception e) {
 					throw new RuntimeException(e);
