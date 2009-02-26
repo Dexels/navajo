@@ -12,7 +12,6 @@
 	<target name="customGrabjar" depends="cleandistribution">
 		<copy todir="${dist}/lib" file="../NavajoClient/NavajoClient.jar" />
 		<copy todir="${dist}/lib" file="../NavajoDocument/NavajoDocument.jar" />
-		<copy todir="${dist}/lib" file="../NavajoDocument/NanoImpl.jar" />
 		<copy todir="${dist}/lib" file="../NavajoFunctions/NavajoFunctions.jar" />
 		<copy todir="${dist}/lib" file="../Navajo/NavajoRuntime.jar" />
 		<copy todir="${dist}/lib" file="../Navajo/NavajoServer.jar" />
