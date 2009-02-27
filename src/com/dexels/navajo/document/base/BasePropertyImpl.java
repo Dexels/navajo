@@ -834,7 +834,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	public final void setValue(String value) {
 		String old = getValue();
 		if (BINARY_PROPERTY.equals(getType())) {
-			System.err.println("Warning: Very deprecated. use setValue(Binary) instead");
+			//System.err.println("Warning: Very deprecated. use setValue(Binary) instead");
 			try {
 				if (value != null) {
 					myBinary = new Binary(new StringReader(value));
