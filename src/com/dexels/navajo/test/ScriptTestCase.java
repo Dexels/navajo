@@ -26,14 +26,20 @@ public abstract class ScriptTestCase extends TestCase {
 	
 	@Override
 	protected void setUp() throws Exception {
-		String inputName = getInputName();
 		Navajo input = null;
-		if(inputName==null) {
-			input = NavajoFactory.getInstance().createNavajo();
-		} else {
-			System.err.println("Input found: "+inputName);
-			input = ScriptTestContext.getInstance().getInput(inputName);
+		
+		input = acquireInput();
+		if(input==null) {
+			String inputName = getInputName();
+			if(inputName==null) {
+				input = NavajoFactory.getInstance().createNavajo();
+			} else {
+				System.err.println("Input found: "+inputName);
+				input = ScriptTestContext.getInstance().getInput(inputName);
+			}
 		}
+		
+		prepareInput(input);
 		
 		String scriptName = getScriptName();
 		Navajo result = ScriptTestContext.getInstance().getScriptResult(scriptName);
@@ -42,6 +48,28 @@ public abstract class ScriptTestCase extends TestCase {
 		}
 		
 		super.setUp();
+	}
+
+	/**
+	 * Alternative to named input. For example, you can call another service,
+	 * or construct a Navajo object in another way.
+	 * @return
+	 */
+	protected Navajo acquireInput() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
+	 * All input will be passed through this method before being sent to the server
+	 * If you override acquireInput, it does not matter if you 'prepare' there or
+	 * override this method too.
+	 * 
+	 * @param input
+	 */
+	private void prepareInput(Navajo input) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
@@ -59,6 +87,7 @@ public abstract class ScriptTestCase extends TestCase {
 //		testResult();
 //	}
 
+	
 	public void testError() {
 		Message message = getResultNavajo().getMessage("error");
 		if(message!=null) {
@@ -69,9 +98,12 @@ public abstract class ScriptTestCase extends TestCase {
 				e.printStackTrace();
 			}
 		}
-		assertNull(message);		
+		if(message!=null) {
+			fail("Error message found: "+getPropertyValue("error/message"));		
+		}
+		
 	}
-	private Navajo getResultNavajo() {
+	protected Navajo getResultNavajo() {
 		return ScriptTestContext.getInstance().getScriptResult(getScriptName());
 	}
 
@@ -84,8 +116,12 @@ public abstract class ScriptTestCase extends TestCase {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			for (Message element : message.getAllMessages()) {
+//				super.
+			}
+			fail("Condition error found: "+getPropertyValue("ConditionErrors@0/Description")+"\nFailedExpression: "+getPropertyValue("ConditionErrors@0/FailedExpression")+"\n");
 		}
-		assertNull(message);
+//		assertNull(message);
 	}
 
 	public void testAuthorizationErrors() {
@@ -139,6 +175,17 @@ public abstract class ScriptTestCase extends TestCase {
 		Property m = getResultNavajo().getProperty(propertyName);
 		assertEquals(m.getTypedValue(), value);
 	}
+	
+	public Object getPropertyValue(String path) {
+		Property p = getResultNavajo().getProperty(path);
+		if(p!=null) {
+			return p.getTypedValue();
+		}
+		throw new AssertionError("Property: "+path+" missing from result!");
+	}
 
+	public void dumpResult() throws NavajoException {
+		getResultNavajo().write(System.err);
+	}
 	
 }
