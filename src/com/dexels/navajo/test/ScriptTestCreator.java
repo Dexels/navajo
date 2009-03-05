@@ -44,6 +44,9 @@ public class ScriptTestCreator {
 			destFolder.mkdirs();
 		}
 		File destFile = new File(destFolder,className+".java");
+		if(destFile.exists()) {
+			return;
+		}
 		try {
 			writeJava(destFile, packagee, className);
 		} catch (IOException e) {

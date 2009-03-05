@@ -9,23 +9,35 @@ import com.dexels.navajo.document.Property;
 import junit.framework.TestCase;
 
 public abstract class ScriptTestCase extends TestCase {
+	public boolean skipAllTests;
+	public abstract void testResult();
 
+	public final boolean isSkipAllTests() {
+		return skipAllTests;
+	}
 
-	public String getInputName() {
+	public final void setSkipAllTests(boolean skipAllTests) {
+		this.skipAllTests = skipAllTests;
+	}
+
+	public  String getInputName() {
 		return null;
 	}
 
-	public String getScriptName() {
+	public final String getScriptName() {
 		return getClass().getName().replaceAll("\\.", "/");
 	}
 	
-	public abstract void testResult();
 	
 
 
 	
 	@Override
 	protected void setUp() throws Exception {
+
+		if(skipAllTests) {
+			return;
+		}
 		Navajo input = null;
 		
 		input = acquireInput();
@@ -56,7 +68,6 @@ public abstract class ScriptTestCase extends TestCase {
 	 * @return
 	 */
 	protected Navajo acquireInput() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -67,8 +78,7 @@ public abstract class ScriptTestCase extends TestCase {
 	 * 
 	 * @param input
 	 */
-	private void prepareInput(Navajo input) {
-		// TODO Auto-generated method stub
+	protected void prepareInput(Navajo input) {
 		
 	}
 
@@ -88,13 +98,15 @@ public abstract class ScriptTestCase extends TestCase {
 //	}
 
 	
-	public void testError() {
+	public final void testError() {
+		if(skipAllTests) {
+			return;
+		}
 		Message message = getResultNavajo().getMessage("error");
 		if(message!=null) {
 			try {
 				message.write(System.err);
 			} catch (NavajoException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -103,17 +115,20 @@ public abstract class ScriptTestCase extends TestCase {
 		}
 		
 	}
-	protected Navajo getResultNavajo() {
+	protected final Navajo getResultNavajo() {
 		return ScriptTestContext.getInstance().getScriptResult(getScriptName());
 	}
 
-	public void testConditionErrors() {
+	public final void testConditionErrors() {
+		if(skipAllTests) {
+			return;
+		}
+
 		Message message = getResultNavajo().getMessage("ConditionErrors");
 		if(message!=null) {
 			try {
 				message.write(System.err);
 			} catch (NavajoException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			for (Message element : message.getAllMessages()) {
@@ -124,13 +139,16 @@ public abstract class ScriptTestCase extends TestCase {
 //		assertNull(message);
 	}
 
-	public void testAuthorizationErrors() {
+	public final void testAuthorizationErrors() {
+		if(skipAllTests) {
+			return;
+		}
+
 		Message message = getResultNavajo().getMessage("AuthorizationError");
 		if(message!=null) {
 			try {
 				message.write(System.err);
 			} catch (NavajoException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -143,40 +161,40 @@ public abstract class ScriptTestCase extends TestCase {
 	 * Asserts that a condition is true. If it isn't it throws
 	 * an AssertionFailedError.
 	 */
-	public void assertMessageExists(String messageName) {
+	public final void assertMessageExists(String messageName) {
 		assertTrue(messageExists(messageName));
 	}
 	
-	public void assertMessageNotExists(String messageName) {
+	public final void assertMessageNotExists(String messageName) {
 		assertFalse(messageExists(messageName));
 	}	
 	
-	public boolean messageExists(String messageName) {
+	public final boolean messageExists(String messageName) {
 		Message m = getResultNavajo().getMessage(messageName);
 		return m!=null;
 	}
 
-	public void assertPropertyExists(String propertyName) {
+	public final void assertPropertyExists(String propertyName) {
 		assertTrue(propertyExists(propertyName));
 	}
 
-	public void assertPropertyNotExists(String propertyName) {
+	public final void assertPropertyNotExists(String propertyName) {
 		assertFalse(propertyExists(propertyName));
 	}
 
 	
-	public boolean propertyExists(String propertyName) {
+	public final boolean propertyExists(String propertyName) {
 		Property m = getResultNavajo().getProperty(propertyName);
 		return m!=null;
 	}
 
-	public void assertPropertyValueEquals(String propertyName,Object value) {
+	public final void assertPropertyValueEquals(String propertyName,Object value) {
 		assertPropertyExists(propertyName);
 		Property m = getResultNavajo().getProperty(propertyName);
 		assertEquals(m.getTypedValue(), value);
 	}
 	
-	public Object getPropertyValue(String path) {
+	public final Object getPropertyValue(String path) {
 		Property p = getResultNavajo().getProperty(path);
 		if(p!=null) {
 			return p.getTypedValue();
@@ -184,8 +202,87 @@ public abstract class ScriptTestCase extends TestCase {
 		throw new AssertionError("Property: "+path+" missing from result!");
 	}
 
-	public void dumpResult() throws NavajoException {
-		getResultNavajo().write(System.err);
+	public final void dumpResult()  {
+		try {
+			getResultNavajo().write(System.err);
+		} catch (NavajoException e) {
+			e.printStackTrace();
+		}
 	}
 	
+	protected final Message addMessage(Navajo n, String path) {
+		return addMessage(n,null,path);
+	}
+	
+	protected final Property addProperty(Navajo n, String path, Object value) {
+		if(path.indexOf("/")==-1) {
+			fail("Illegal path: "+path);
+		}
+		String messagePath = path.substring(0, path.lastIndexOf("/"));
+		Message parent = addMessage(n, messagePath);
+		assertNotNull(parent);
+		String propertyName = path.substring(path.lastIndexOf("/")+1,path.length());
+		
+		Property p;
+		try {
+			p = NavajoFactory.getInstance().createProperty(n, propertyName, Property.STRING_PROPERTY,"",99,"",Property.DIR_IN);
+			parent.addProperty(p);
+			p.setAnyValue(value);
+			return p;
+		} catch (NavajoException e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+		return null;
+	}
+	private final Message addMessage(Navajo n, Message parent, String path) {
+		if(path.startsWith("/")) {
+			path = path.substring(1);
+		}
+		Message m = null;
+		if(parent!=null) {
+			m = parent.getMessage(path);
+		} else {
+			m = n.getMessage(path);
+		}
+		if(m!=null) {
+			return m;
+		}
+		if(path.indexOf("/")==-1) {
+			Message mm =  NavajoFactory.getInstance().createMessage(n, path);
+			if(parent==null) {
+				try {
+					n.addMessage(mm);
+				} catch (NavajoException e) {
+					e.printStackTrace();
+				}
+			} else {
+				parent.addMessage(mm);
+			}
+			return mm;
+		}
+		String parentPath = path.substring(0, path.lastIndexOf("/"));
+		String messageName = path.substring(path.lastIndexOf("/")+1,path.length());
+		
+		Message parentResult = addMessage(n, parent, parentPath);
+		
+		if(parentResult==null) {
+			return null;
+		} else {
+			return addMessage(n, parentResult,messageName);
+		}
+		
+	}
+	
+	public final void dump(Navajo n) {
+		try {
+			n.write(System.err);
+		} catch (NavajoException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public final Navajo createNavajo() {
+		return NavajoFactory.getInstance().createNavajo();
+	}
 }

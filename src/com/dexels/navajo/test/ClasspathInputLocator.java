@@ -21,7 +21,12 @@ public class ClasspathInputLocator implements ScriptInputLocator {
 		if(is!=null) {
 			System.err.println("Resource found!");
 		}
-		Navajo result = NavajoFactory.getInstance().createNavajo(is);
+		Navajo result=null;
+		try {
+			result = NavajoFactory.getInstance().createNavajo(is);
+		} catch (Exception e) {
+			throw new IOException("Error loading test input: "+scriptName);
+		}
 		is.close();
 		return result;
 	}	

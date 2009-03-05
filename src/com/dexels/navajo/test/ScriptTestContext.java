@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import com.dexels.navajo.client.ClientException;
@@ -51,7 +52,6 @@ public class ScriptTestContext  {
 	public Navajo callService(String script, Navajo input) throws ClientException {
 		ClientInterface c = NavajoClientFactory.getClient();
 		setupClient(c);
-		System.err.println("Calling service");
 		Navajo result = c.doSimpleSend(input, script);
 		navajoMap.put(script, result);
 		return result;
@@ -60,14 +60,15 @@ public class ScriptTestContext  {
 	private void setupClient(ClientInterface c) {
 		ResourceBundle bb = ResourceBundle.getBundle("testsuite");
 		c.setServerUrl(bb.getString("server"));
-		if (bb.containsKey("username")) {
-			c.setUsername(bb.getString("username"));
-
-		}
-		if (bb.containsKey("password")) {
-			c.setPassword(bb.getString("password"));
-		}
-		
+			try {
+				c.setUsername(bb.getString("username"));
+			} catch (MissingResourceException e) {
+			}
+			try {
+				c.setPassword(bb.getString("password"));
+			} catch (MissingResourceException e) {
+			}
+			
 	}
 
 	public static ScriptTestContext getInstance() {
