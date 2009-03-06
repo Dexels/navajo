@@ -169,7 +169,7 @@ public class ClientActions {
 	 * @param clean
 	 * @throws IOException
 	 */
-	private static void downloadFile(URL remote, String path, File directory, boolean clean, boolean dontOverwrite) throws IOException, WriteAbortedException {
+	public static void downloadFile(URL remote, String path, File directory, boolean clean, boolean dontOverwrite) throws IOException, WriteAbortedException {
 		System.err.println("File: " + directory.getAbsolutePath()+ " url: "+remote);
 		directory.mkdirs();
 		File file = new File(directory, path);

@@ -7,14 +7,9 @@
     <property name="archive" value="${ant.project.name}.jar"/>
     <target name="compile" >
         <javac srcdir="${src}" destdir="${build}">
-            <classpath refid="depend"/>
         </javac>
     </target>
-    <path id="depend">
-        <fileset dir="${lib}">
-            <include name="**/*.jar"/>
-        </fileset>
-    </path>
+
 
     <target name="archive" depends="compile">
      	<jar jarfile="${archive}">
