@@ -3,7 +3,7 @@
 <project default="publish" basedir=".">
 
 	
-	<property name="repository" value="http://spiritus.dexels.nl:34567/Tipi/" />
+	<property name="repository" value="http://spiritus.dexels.nl:41766/Tipi/" />
 	<property name="repositorySsh" value="navajo@spiritus.dexels.nl://var/www/html/Tipi" />
 	<property name="dist" value="dist/${ant.project.name}" />
 
