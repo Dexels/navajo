@@ -22,6 +22,9 @@ public class ServiceTag extends BaseNavajoTag {
 		Navajo m;
 		try {
 			m = getNavajoContext().getNavajo(myService);
+			if(m==null) {
+				throw new IllegalStateException("Can not push navajo on navajo stack. Service: "+myService+" is not found");
+			}
 			getNavajoContext().pushNavajo(m);
 		} catch (ClientException e) {
 			e.printStackTrace();

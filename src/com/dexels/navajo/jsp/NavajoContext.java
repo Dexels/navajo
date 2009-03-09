@@ -2,26 +2,20 @@ package com.dexels.navajo.jsp;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.io.Writer;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.ClientInterface;
-import com.dexels.navajo.client.NavajoClient;
 import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.base.BaseNode;
 import com.dexels.navajo.jsp.output.NavajoOutputWriter;
 import com.dexels.navajo.jsp.output.OutputWriter;
 
@@ -41,14 +35,10 @@ public class NavajoContext {
 	public void setProperty(Property currentProperty) {
 		this.currentProperty = currentProperty;
 	}
+	
 	public NavajoContext() {
 	}
-	public NavajoContext(PageContext pageContext, String server,
-			String username, String password) {
-//		myPageContext = pageContext;
-		setupClient(server, username, password,pageContext);
-//		myPageContext.setAttribute("navajo", myNavajoMap);
-	}
+
 
 	public void callService(String service) throws ClientException {
 		Navajo n = myClient.doSimpleSend(service);
@@ -63,6 +53,7 @@ public class NavajoContext {
 	public void callService(String service, Navajo input)
 			throws ClientException {
 		Navajo n = myClient.doSimpleSend(input, service);
+			n.getHeader().setRPCName(service);
 		myNavajoMap.put(service, n);
 		myElementStack.push(n);
 	}
@@ -100,10 +91,8 @@ public class NavajoContext {
 	}
 
 	public Navajo getNavajo() {
-		System.err.println("Getting!");
 		if (myElementStack.isEmpty()) {
-			throw new IllegalStateException(
-					"No default navajo found. Either supply a name explicitly, or make sure you are within a 'call' tag");
+			throw new IllegalStateException("No default navajo found. Either supply a name explicitly, or make sure you are within a 'call' tag");
 		}		
 		Object top = myElementStack.peek();
 		if(!(top instanceof Navajo)) {
@@ -207,6 +196,10 @@ public class NavajoContext {
 			server = getDefaultPostman(pa);
 		}
 		myClient.setServerUrl(server);		
+	}
+	
+	public void debug() {
+		
 	}
 	
 }

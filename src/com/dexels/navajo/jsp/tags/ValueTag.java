@@ -28,6 +28,7 @@ public class ValueTag extends BaseNavajoTag {
 			Navajo n = getNavajoContext().getNavajo();
 			Message m = getNavajoContext().getMessage();
 			Property p;
+//getPageContext().getRequest().getParameterMap().
 			if (m == null) {
 				p = n.getProperty(myProperty);
 				getPageContext().getOut().write((String)p.getTypedValue());

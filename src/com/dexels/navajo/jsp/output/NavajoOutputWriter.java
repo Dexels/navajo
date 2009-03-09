@@ -135,6 +135,7 @@ public class NavajoOutputWriter implements OutputWriter {
 	private void writeTableHeader(Message mm, Writer w) throws IOException {
 		if(mm.getArraySize()==0) {
 			w.write("Empty table");
+			return;
 		}
 		Message m = mm.getMessage(0);
 		List<Property> pp = m.getAllProperties();

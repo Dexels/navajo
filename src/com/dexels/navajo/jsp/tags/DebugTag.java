@@ -10,7 +10,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 
-public class PropertyValueTag extends BaseNavajoTag {
+public class DebugTag extends BaseNavajoTag {
 
 	private String myProperty;
 
@@ -24,21 +24,8 @@ public class PropertyValueTag extends BaseNavajoTag {
 	}
 
 	public int doStartTag() throws JspException {
-		try {
-			Navajo n = getNavajoContext().getNavajo();
-			Message m = getNavajoContext().getMessage();
-			Property p;
-			if (m == null) {
-				p = n.getProperty(myProperty);
-				getNavajoContext().writeProperty(p, getPageContext());
-			} else {
-				p = m.getProperty(myProperty);
-		
-				getNavajoContext().writeProperty(p, getPageContext());
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		getNavajoContext().debug();
 		return EVAL_BODY_INCLUDE;
-	} 
+	}
+
 }
