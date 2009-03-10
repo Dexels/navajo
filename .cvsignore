@@ -6,8 +6,16 @@ images
 lib
 properties
 work
-CIO Update - Web Services.pdf
-CIO Update - Web Services.ps
+CIO
+Update
+-
+Web
+Services.pdf
+CIO
+Update
+-
+Web
+Services.ps
 DEPENDENCIES.html
 DIFFERENCE_WITH_WINDOWS_VERSION
 Navajo.html
@@ -20,3 +28,8 @@ TODO
 defaultroot
 classes
 log
+target
+NavajoEnterprise.jar
+NavajoRuntime.jar
+NavajoServer.jar
+.settings
