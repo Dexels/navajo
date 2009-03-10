@@ -41,6 +41,9 @@ public class ZipArchive extends FunctionInterface {
 
 			File p = new File(pathName);
 			File [] entries = p.listFiles();
+			if(entries==null) {
+				return null;
+			}
 			for (int i = 0; i < entries.length; i++) {
 				addFiles(zo, "", entries[i]);
 			}
