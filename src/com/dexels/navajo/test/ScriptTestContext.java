@@ -9,11 +9,10 @@ import java.util.ResourceBundle;
 
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.ClientInterface;
+import com.dexels.navajo.client.NavajoClient;
 import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
-
-import junit.framework.TestSuite;
 
 public class ScriptTestContext  {
 
@@ -50,9 +49,15 @@ public class ScriptTestContext  {
 	}
 
 	public Navajo callService(String script, Navajo input) throws ClientException {
+		if(input==null) {
+			input = NavajoFactory.getInstance().createNavajo();
+		}
+		
 		ClientInterface c = NavajoClientFactory.getClient();
-		setupClient(c);
-		Navajo result = c.doSimpleSend(input, script);
+		c.setLoadBalancingMode(NavajoClient.LBMODE_MANUAL);
+		setupClient(c);			  
+	//	Navajo result = c.doSimpleSend(input,"", script,"","",-1,false,false);
+		Navajo result = c.doSimpleSend(input,script);
 		navajoMap.put(script, result);
 		return result;
 	}
