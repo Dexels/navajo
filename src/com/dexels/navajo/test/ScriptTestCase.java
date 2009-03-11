@@ -10,7 +10,7 @@ import junit.framework.TestCase;
 
 public abstract class ScriptTestCase extends TestCase {
 	public boolean skipAllTests;
-	public abstract void testResult();
+	public abstract void testResult() throws Exception;
 
 	public final boolean isSkipAllTests() {
 		return skipAllTests;
@@ -67,7 +67,7 @@ public abstract class ScriptTestCase extends TestCase {
 	 * or construct a Navajo object in another way.
 	 * @return
 	 */
-	protected Navajo acquireInput() {
+	protected Navajo acquireInput() throws Exception {
 		return null;
 	}
 
@@ -98,7 +98,7 @@ public abstract class ScriptTestCase extends TestCase {
 //	}
 
 	
-	public final void testError() {
+	public void testError() {
 		if(skipAllTests) {
 			return;
 		}
@@ -119,7 +119,7 @@ public abstract class ScriptTestCase extends TestCase {
 		return ScriptTestContext.getInstance().getScriptResult(getScriptName());
 	}
 
-	public final void testConditionErrors() {
+	public void testConditionErrors() {
 		if(skipAllTests) {
 			return;
 		}
@@ -139,7 +139,7 @@ public abstract class ScriptTestCase extends TestCase {
 //		assertNull(message);
 	}
 
-	public final void testAuthorizationErrors() {
+	public void testAuthorizationErrors() {
 		if(skipAllTests) {
 			return;
 		}
@@ -165,32 +165,63 @@ public abstract class ScriptTestCase extends TestCase {
 		assertTrue(messageExists(messageName));
 	}
 	
+	public final void assertMessageExists(Navajo input, String messageName) {
+		assertTrue(messageExists(input, messageName));
+	}
+	
 	public final void assertMessageNotExists(String messageName) {
 		assertFalse(messageExists(messageName));
+	}	
+	
+	public final void assertMessageNotExists(Navajo input, String messageName) {
+		assertFalse(messageExists(input, messageName));
 	}	
 	
 	public final boolean messageExists(String messageName) {
 		Message m = getResultNavajo().getMessage(messageName);
 		return m!=null;
 	}
+	
+	public final boolean messageExists(Navajo input, String messageName) {
+		Message m = input.getMessage(messageName);
+		return m!=null;
+	}
 
 	public final void assertPropertyExists(String propertyName) {
 		assertTrue(propertyExists(propertyName));
+	}
+	
+	public final void assertPropertyExists(Navajo input, String propertyName) {
+		assertTrue(propertyExists(input, propertyName));
 	}
 
 	public final void assertPropertyNotExists(String propertyName) {
 		assertFalse(propertyExists(propertyName));
 	}
 
+	public final void assertPropertyNotExists(Navajo input, String propertyName) {
+		assertFalse(propertyExists(input, propertyName));
+	}
 	
 	public final boolean propertyExists(String propertyName) {
 		Property m = getResultNavajo().getProperty(propertyName);
+		return m!=null;
+	}
+	
+	public final boolean propertyExists(Navajo input, String propertyName) {
+		Property m = input.getProperty(propertyName);
 		return m!=null;
 	}
 
 	public final void assertPropertyValueEquals(String propertyName,Object value) {
 		assertPropertyExists(propertyName);
 		Property m = getResultNavajo().getProperty(propertyName);
+		assertEquals(m.getTypedValue(), value);
+	}
+	
+	public final void assertPropertyValueEquals(Navajo input, String propertyName,Object value) {
+		assertPropertyExists(input, propertyName);
+		Property m = input.getProperty(propertyName);
 		assertEquals(m.getTypedValue(), value);
 	}
 	
