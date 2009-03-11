@@ -31,9 +31,9 @@ public class CreateMissingScripts extends org.apache.tools.ant.Task {
 	public void execute() throws BuildException {
 		ScriptTestCreator c = new ScriptTestCreator();
 		File baseDir = getProject().getBaseDir();
-		
-		c.create(new File(baseDir,scriptDir), new File(baseDir,testDir));
 		System.err.println("Project:"+baseDir);
+		System.err.println("testDir: "+testDir);
+		c.create(new File(baseDir,scriptDir), new File(baseDir,testDir));
 		 
 	}
 }
