@@ -57,6 +57,24 @@ public class NavajoOutputWriter implements OutputWriter {
 		w.write("</div>");
 	}
 
+	@Override
+	public void writePropertyValue(Property p, Writer w) throws IOException {
+		if (p.getType().equals(Property.SELECTION_PROPERTY)) {
+		} else {
+			w.write(p.getValue());
+		}
+	}
+	
+	public void writePropertyDescription(Property p, Writer w) throws IOException {
+		//w.write("<div class='property_label'>");
+		if (p.getDescription() != null && !p.getDescription().equals("")) {
+			w.write(p.getDescription());
+		} else {
+			w.write(p.getName());
+		}
+		//w.write("</div>");
+	}
+	
 	public void writeProperty(Property p, Writer w) throws IOException {
 		writePropertyDescription(p, w);
 		if (p.getDirection().equals(Property.DIR_IN)) {
@@ -64,17 +82,6 @@ public class NavajoOutputWriter implements OutputWriter {
 		} else {
 			writeOutProperty(p, w);
 		}
-
-	}
-
-	public void writePropertyDescription(Property p, Writer w) throws IOException {
-		w.write("<div class='property_label'>");
-		if (p.getDescription() == null || p.getDescription().equals("")) {
-			w.write(p.getName());
-		} else {
-			w.write(p.getName() + " (" + p.getDescription() + ")");
-		}
-		w.write("</div>");
 	}
 	
 	private void writeOutProperty(Property p, Writer w) throws IOException {
@@ -90,11 +97,13 @@ public class NavajoOutputWriter implements OutputWriter {
 		if (p.getType().equals(Property.SELECTION_PROPERTY)) {
 		} else {
 			String value = p.getValue();
+			
 			if(value==null) {
 				value = "";
 			}
 			w.write("<input type='"+p.getType()+"' name='" + getFullPropertyName(p)+ "' value='" + value + "'>");
 			w.write("</input>");
+			System.err.println(w.toString());
 			}
 	}
 

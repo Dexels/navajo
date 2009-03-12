@@ -27,14 +27,10 @@ public class PropertyValueTag extends BaseNavajoTag {
 		try {
 			Navajo n = getNavajoContext().getNavajo();
 			Message m = getNavajoContext().getMessage();
-			Property p;
 			if (m == null) {
-				p = n.getProperty(myProperty);
-				getNavajoContext().writeProperty(p, getPageContext());
+				getNavajoContext().writePropertyValue(n.getProperty(myProperty), getPageContext());
 			} else {
-				p = m.getProperty(myProperty);
-		
-				getNavajoContext().writeProperty(p, getPageContext());
+				getNavajoContext().writePropertyValue(m.getProperty(myProperty), getPageContext());
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

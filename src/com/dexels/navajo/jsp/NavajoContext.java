@@ -157,11 +157,23 @@ public class NavajoContext {
 	}
 
 	public void writeProperty(Property property, PageContext pa) throws IOException {
-		pa.getOut().write(property.getValue());
+		//pa.getOut().write(property.getValue()); 
 		pa.getOut().write(" ");
 		outputPlugin.writeProperty(property, pa.getOut());
 	}
 
+	public void writePropertyValue(Property property, PageContext pa) throws IOException {
+		//pa.getOut().write(property.getValue()); 
+		pa.getOut().write(" ");
+		outputPlugin.writePropertyValue(property, pa.getOut());
+	}
+	
+	public void writePropertyDescription(Property property, PageContext pa) throws IOException {
+		//pa.getOut().write(property.getValue()); 
+		pa.getOut().write(" ");
+		outputPlugin.writePropertyDescription(property, pa.getOut());
+	}
+	
 	public String getProperty(Property property) throws IOException {
 		StringWriter sw = new StringWriter();
 		outputPlugin.writeProperty(property, sw);

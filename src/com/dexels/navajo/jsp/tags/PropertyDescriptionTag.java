@@ -7,35 +7,34 @@ import javax.servlet.jsp.JspException;
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 
-public class PropertyTag extends BaseNavajoTag {
+public class PropertyDescriptionTag extends BaseNavajoTag {
 
 	private String myProperty;
 
+	@Override
 	public int doEndTag() throws JspException {
-		getNavajoContext().setProperty(null);
 		return 0;
 	}
 
 	public void setProperty(String property) {
 		myProperty = property;
 	}
-	
+
 	public int doStartTag() throws JspException {
 		try {
 			Navajo n = getNavajoContext().getNavajo();
 			Message m = getNavajoContext().getMessage();
 			if (m == null) {
-				getNavajoContext().writeProperty(n.getProperty(myProperty), getPageContext());
+				getNavajoContext().writePropertyDescription(n.getProperty(myProperty), getPageContext());
 			} else {
-				getNavajoContext().writeProperty(m.getProperty(myProperty), getPageContext());
+				getNavajoContext().writePropertyDescription(m.getProperty(myProperty), getPageContext());
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return EVAL_BODY_INCLUDE;
 	} 
-	
-
 }

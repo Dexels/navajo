@@ -9,6 +9,7 @@ import com.dexels.navajo.document.Property;
 
 public interface OutputWriter {
 	public void writeProperty(Property p,Writer w) throws IOException;
+	public void writePropertyValue(Property p, Writer w) throws IOException;
 	public void writeMessage(Message m,Writer w) throws IOException;
 	public void writeTable(Message m,Writer w) throws IOException;
 	public void writeMethod(String method,Writer w) throws IOException;
