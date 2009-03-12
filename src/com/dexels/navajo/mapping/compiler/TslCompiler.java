@@ -118,7 +118,9 @@ public class TslCompiler {
       if (c == '\n') {
         result.append("\\n");
       }
-      else {
+      else if (c=='\r'){
+    	  // IGNORE CRS
+      } else {
         result.append(c);
       }
     }
