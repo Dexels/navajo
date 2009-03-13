@@ -74,7 +74,7 @@ public class NavajoCompiler
 						mainCp.append(jars[i].getAbsolutePath());
 					}
 				}
-				classPath = mainCp.toString();
+				classPath = mainCp.toString() + sep + jarFolder.getAbsolutePath() + "/../classes";
 			} else {
 				 classPath = config.getClassPath();
 		           
@@ -90,9 +90,10 @@ public class NavajoCompiler
               }
             }
       
+            
             classPath += additional.toString();
 
-//            System.out.println("in NavajoCompiler(): new classPath = " + classPath);
+            //System.err.println("in NavajoCompiler(): new classPath = " + classPath);
             
             SunJavaCompiler compiler = new SunJavaCompiler();
 
