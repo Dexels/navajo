@@ -53,6 +53,7 @@ public class TagMap implements Mappable {
 
 	public String     name = "unknown";
 	public String     text;
+	public String     cdataText;
 	public String     attributeText;
 
 	public Binary     insert;
@@ -91,8 +92,8 @@ public class TagMap implements Mappable {
 		text = XMLutils.XMLEscape( t );
 	}
 	
-	public void setCDATAText(String t) {
-		text = "<![CDATA[" + text + "]]>"; 
+	public void setCdataText(String t) {
+		text = "<![CDATA[ " + t + " ]]>"; 
 	}
 
 	public void setAttributeText(String t) throws UserException {
