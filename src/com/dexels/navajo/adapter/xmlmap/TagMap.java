@@ -92,7 +92,7 @@ public class TagMap implements Mappable {
 	}
 	
 	public void setCDATAText(String t) {
-		text = "<![CDATA[ " + text + " ]]>"; 
+		text = "<![CDATA[" + text + "]]>"; 
 	}
 
 	public void setAttributeText(String t) throws UserException {
