@@ -2,6 +2,8 @@ package com.dexels.navajo.functions;
 
 import com.dexels.navajo.parser.*;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.document.types.Money;
+
 import java.io.StringWriter;
 
 
@@ -50,7 +52,10 @@ public final class ToString extends FunctionInterface {
           }
           return w.toString();
         }
-
+        if(s instanceof Money) {
+        	Money m = (Money)s;
+        	return m.formattedString();
+        }
         if (s != null)
           return s.toString();
         else
