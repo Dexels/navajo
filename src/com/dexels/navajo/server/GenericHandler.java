@@ -100,8 +100,14 @@ public final class GenericHandler extends ServiceHandler {
     		} else if ( a.betaUser ) {
     			serviceName += "_beta";
     		} 
+    		// Check if scriptFile exists.
+			if ( !scriptFile.exists() ) {
+				scriptFile = null;
+			}
     	}
-    	String sourceFileName = DispatcherFactory.getInstance().getNavajoConfig().getCompiledScriptPath() + "/" + pathPrefix + serviceName + ".java";
+    	
+    	String sourceFileName = ( scriptFile != null ? DispatcherFactory.getInstance().getNavajoConfig().getCompiledScriptPath() : DispatcherFactory.getInstance().getNavajoConfig().getScriptPath() )
+    			             + "/" + pathPrefix + serviceName + ".java";
     	String classFileName =  DispatcherFactory.getInstance().getNavajoConfig().getCompiledScriptPath() + "/" + pathPrefix + serviceName + ".class";
     	String className = (pathPrefix.equals("") ? serviceName : MappingUtils.createPackageName(pathPrefix) + "." + serviceName);
     	 
@@ -124,6 +130,9 @@ public final class GenericHandler extends ServiceHandler {
      * @return
      */
     private final static boolean checkScriptRecompile(File scriptFile, File sourceFile) {
+    	if ( scriptFile == null ) {
+    		return false;
+    	}
     	boolean b = (!sourceFile.exists() || (scriptFile.lastModified() > sourceFile.lastModified()) || sourceFile.length() == 0);
     	return b;
     }
@@ -188,8 +197,11 @@ public final class GenericHandler extends ServiceHandler {
         	  
             newLoader = (NavajoClassLoader) loadedClasses.get(className);
          
+            //System.err.println("scriptFile = " + scriptFile);
+            
             if (properties.isCompileScripts()) {
-            	if (scriptFile.exists()) {
+            	
+            	if ( scriptFile != null && scriptFile.exists()) { // We have a script that exists.
 
             		if ( checkScriptRecompile(scriptFile, sourceFile) ) {
 
@@ -215,35 +227,20 @@ public final class GenericHandler extends ServiceHandler {
             			}
             		} // end of sync block.
 
-
-            		if ( checkJavaRecompile(sourceFile, targetFile) ) { // Create class file
-
-            			synchronized(mutex2) {
-
-            				if ( checkJavaRecompile(sourceFile, targetFile) ) {
-
-            					if (newLoader != null) {
-            						loadedClasses.remove(className);
-            						newLoader = null;
-            					}
-
-            					com.dexels.navajo.compiler.NavajoCompiler compiler = new com.dexels.navajo.compiler.NavajoCompiler();
-            					try {
-            						compiler.compile(access, properties, sourceFileName);
-            						compilerErrors = compiler.errors;
-            						NavajoEventRegistry.getInstance().publishEvent(new NavajoCompileScriptEvent(access.rpcName));
-            					}
-            					catch (Throwable t) {
-            						AuditLog.log(AuditLog.AUDIT_MESSAGE_SCRIPTCOMPILER, "Could not run-time compile Java file: " + sourceFileName + " (" + t.getMessage() + "). It may be compiled already", Level.WARNING, access.accessID);
-            					}
-            				}
-            			}
-            		} // end of sync block.
-            		//}
-
+            		// Java recompile.
+            		compilerErrors = recompileJava(compilerErrors, newLoader, sourceFileName, sourceFile, className, targetFile);
+            
             	} else {
-            		AuditLog.log(AuditLog.AUDIT_MESSAGE_SCRIPTCOMPILER, "SCRIPT FILE DOES NOT EXISTS, I WILL TRY TO LOAD THE CLASS FILE ANYWAY....", Level.WARNING, access.accessID);
-            		//System.out.println("SCRIPT FILE DOES NOT EXISTS, I WILL TRY TO LOAD THE CLASS FILE ANYWAY....");
+            		
+            		// Maybe the jave file exists in the script path.
+            		if ( !sourceFile.exists() ) { // There is no java file present.
+            			AuditLog.log(AuditLog.AUDIT_MESSAGE_SCRIPTCOMPILER, "SCRIPT FILE DOES NOT EXISTS, I WILL TRY TO LOAD THE CLASS FILE ANYWAY....", Level.WARNING, access.accessID);
+            			//System.out.println("SCRIPT FILE DOES NOT EXISTS, I WILL TRY TO LOAD THE CLASS FILE ANYWAY....");
+            		} else {
+            			// Compile java file using normal java compiler.
+            			//System.err.println("DOING PLAIN JAVA...");
+            			compilerErrors = recompileJava(compilerErrors, newLoader, sourceFileName, sourceFile, className, targetFile);
+            		}
             	}
             }
             
@@ -261,7 +258,10 @@ public final class GenericHandler extends ServiceHandler {
             }
             
             // Should method getCompiledNavaScript be fully synced???
-            Class cs = newLoader.getCompiledNavaScript(className);
+            Class cs = null;
+            
+            
+            cs = newLoader.getCompiledNavaScript(className);
 
             outDoc = NavajoFactory.getInstance().createNavajo();
             access.setOutputDoc(outDoc);
@@ -290,6 +290,35 @@ public final class GenericHandler extends ServiceHandler {
             }
           }
         }
+
+	private String recompileJava(String compilerErrors,
+			NavajoClassSupplier newLoader, String sourceFileName,
+			File sourceFile, String className, File targetFile) {
+		if ( checkJavaRecompile(sourceFile, targetFile) ) { // Create class file
+
+			synchronized(mutex2) {
+
+				if ( checkJavaRecompile(sourceFile, targetFile) ) {
+
+					if (newLoader != null) {
+						loadedClasses.remove(className);
+						newLoader = null;
+					}
+
+					com.dexels.navajo.compiler.NavajoCompiler compiler = new com.dexels.navajo.compiler.NavajoCompiler();
+					try {
+						compiler.compile(access, properties, sourceFileName);
+						compilerErrors = compiler.errors;
+						NavajoEventRegistry.getInstance().publishEvent(new NavajoCompileScriptEvent(access.rpcName));
+					}
+					catch (Throwable t) {
+						AuditLog.log(AuditLog.AUDIT_MESSAGE_SCRIPTCOMPILER, "Could not run-time compile Java file: " + sourceFileName + " (" + t.getMessage() + "). It may be compiled already", Level.WARNING, access.accessID);
+					}
+				}
+			}
+		} // end of sync block.
+		return compilerErrors;
+	}
     
     /**
      * Return load script class count.
