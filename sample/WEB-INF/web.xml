@@ -21,11 +21,7 @@
             <param-name>use_compression</param-name>
             <param-value>false</param-value>
         </init-param>
-        <!-- Default file:  resource/tml2html.xsl -->
-<!--         <init-param>
-            <param-name>xslFile</param-name>
-            <param-value>/home/matthijs/workspace/NavajoServer/resource/tml2html.xsl</param-value>
-        </init-param> -->
+  
     </servlet>
     <servlet-mapping>
         <servlet-name>Postman</servlet-name>
