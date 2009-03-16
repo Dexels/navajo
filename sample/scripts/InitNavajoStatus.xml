@@ -2,58 +2,7 @@
 <tsl xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.dexels.com/navascript file:/home/arjen/projecten/Navajo/schemas/navascript.xsd">
     <methods>
-        <method name="navajo/ProcessKillAsync">
-            <required message="NavajoStatus"/>
-        </method>
-        <method name="navajo/ProcessKillWebservice">
-            <required message="NavajoStatus"/>
-        </method>
-        <method name="navajo/ProcessGetAccessDetail">
-            <required message="AccessDetail"/>
-        </method>
-        <method name="navajo/ProcessQueryDatasource">
-            <required message="QueryTool"/>
-        </method>
-        <method name="navajo/ProcessDatasourceInfo">
-            <required message="QueryTool"/>
-        </method>
-        <method name="navajo/ProcessNavajoStatus">
-            <required message="NavajoStatus"/>
-        </method>
-        <method name="navajo/ProcessUpdateDocumentClass">
-            <required message="NavajoStatus"/>
-        </method>
-        <method name="navajo/ProcessGetTasks">
-            <required message="NavajoStatus"/>
-        </method>
-        <method name="navajo/ProcessGetSQLMapInfo">
-            <required message="NavajoStatus"/>
-        </method>
-        <method name="navajo/ProcessGetLocks">
-            <required message="NavajoStatus"/>
-        </method>
-        <method name="navajo/ProcessGetStatisticsRunnerInfo">
-            <required message="NavajoStatus"/>
-        </method>
-        <method name="navajo/ProcessGetThreads">
-            <required message="NavajoStatus"/>
-        </method>
-        <method name="navajo/ProcessGetMemoryStatus">
-            <required message="NavajoStatus"/>
-        </method>
-        <method name="navajo/ProcessCleanUpNavajolog">
-            <required message="NavajoStatus"/>
-        </method>
-        <method name="navajo/InitGetAccessLogOverview">
-            <required message="NavajoStatus"/>
-        </method>
-        <method name="navajo/InitBroadcastMessage">
-        </method>    
-        <method name="navajo/ProcessResetAdapters"/>
-        <method name="navajo/ProcessGetWorkFlowInstances"/>
-        <method name="navajo/ProcessGetWorkFlowDefinitions"/>
-        <method name="navajo/ProcessGetQueuedAdapters"/>
-        <method name="navajo/ProcessTribe"/>
+
         </methods>
     <message name="AccessDetail">
         <property name="AccessId" type="string" direction="in" length="50"/>
