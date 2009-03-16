@@ -27,6 +27,8 @@ package navajo;
 /**
  * VERSION HISTORY
  * 
+ * 8.0.0 Added support for Multi Lingual scripts. Added Java support for scripts as first example.
+ * 
  * 7.7.4 Release Candidate
  *       - Now using Service lookup mechanism for adapters as well. Also added utility to generate navascript XSD file.
  *       - Fixed support for multiple include script that contain validations.
@@ -150,12 +152,12 @@ package navajo;
 
 public class Version extends dexels.Version {
 
-	public static final int MAJOR = 7;
-	public static final int MINOR = 7;
-	public static final int PATCHLEVEL = 4;
+	public static final int MAJOR = 8;
+	public static final int MINOR = 0;
+	public static final int PATCHLEVEL = 0;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
-	public static final String RELEASEDATE = "2009-02-09";
+	public static final String RELEASEDATE = "2009-03-16";
 	
 //	 Included packages.
 	String [] includes = {"navajodocument.Version"};
