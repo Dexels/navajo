@@ -70,6 +70,13 @@ public class TriggerTest extends TestCase {
 		Assert.assertEquals(t.getClass(), TimeTrigger.class);		
 	}
 	
+	public void testOffsetTimeTriggerNextValue() throws Exception {
+		TimeTrigger t = (TimeTrigger) Trigger.parseTrigger("offsettime:20m");
+		System.err.println(t.getDescription());
+		t.setNextOffsetTime();
+		System.err.println(t.getDescription());
+	}
+	
 	public void testParseTriggerOffsetTimeTrigger() throws Exception {
 		Trigger t = Trigger.parseTrigger("offsettime:20h");
 		Assert.assertNotNull(t);
