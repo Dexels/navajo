@@ -143,7 +143,10 @@ public class NavajoClassLoader extends MultiClassLoader {
       if ( compiledScriptPath == null ) {
     	  throw new ClassNotFoundException("Script path not set!");
       }
-      
+      File compiledFolder = new File(compiledScriptPath);
+      if(!compiledFolder.exists()) {
+      	compiledFolder.mkdirs();
+      }
       synchronized (mutex1) {
     	
     	  if ( myScriptClass != null ) {
