@@ -2,6 +2,8 @@ package com.dexels.navajo.jsp.output;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.dexels.navajo.document.Message;
@@ -9,6 +11,7 @@ import com.dexels.navajo.document.Method;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
 
 public class NavajoOutputWriter implements OutputWriter {
 
@@ -94,7 +97,30 @@ public class NavajoOutputWriter implements OutputWriter {
 	}
 	
 	private void writeInProperty(Property p, Writer w) throws IOException {
-		if (p.getType().equals(Property.SELECTION_PROPERTY)) {
+		if (p.getType().equals(Property.DATE_PROPERTY)) {
+		} else if (p.getType().equals(Property.BOOLEAN_PROPERTY)) {
+			boolean b = (Boolean)p.getTypedValue();
+			if (b) {
+				w.write("<input type='checkbox' name='"+p.getName()+"' CHECKED/>");
+			} else {
+				w.write("<input type='checkbox' name='"+p.getName()+"'/>");
+			}
+		} else if (p.getType().equals(Property.SELECTION_PROPERTY)) {
+			w.write("<select name='"+p.getName()+"'>");
+			try {
+				ArrayList<Selection> selections = p.getAllSelections();
+				for(Iterator i = selections.iterator(); i.hasNext();) {
+					Selection selection = (Selection) i.next();
+					if (selection.isSelected()) {
+						w.write("<option value='"+selection.getValue()+"' SELECTED>"+selection.getName()+"</option>");
+					} else {
+						w.write("<option value='"+selection.getValue()+"'>"+selection.getName()+"</option>");
+					}
+				}
+			} catch (NavajoException e) {
+				e.printStackTrace();
+			}
+			w.write("</select>");
 		} else {
 			String value = p.getValue();
 			
@@ -104,7 +130,7 @@ public class NavajoOutputWriter implements OutputWriter {
 			w.write("<input type='"+p.getType()+"' name='" + getFullPropertyName(p)+ "' value='" + value + "'>");
 			w.write("</input>");
 			System.err.println(w.toString());
-			}
+		}
 	}
 
 	public void writeService(Navajo service, Writer w) throws IOException {
