@@ -495,6 +495,7 @@ public class SQLMap implements Mappable, LazyArray {
 
   public void setAutoCommit(boolean b) throws UserException {
 	  try {
+		  createConnection();
 		  if ( con != null && ( myConnectionBroker == null || myConnectionBroker.supportsAutocommit ) ) {
 			  if ( !autoCommit ) {
 				  con.commit(); // Commit previous actions.
