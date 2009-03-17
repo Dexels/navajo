@@ -18,6 +18,8 @@ public final class AccessMap implements Mappable {
 
   public String userName;
   public String webService;
+  public String requestId;
+  public String clientToken;
   public java.util.Date created;
   public Access myAccess;
   public MappableTreeNode currentMap;
@@ -207,6 +209,7 @@ public final class AccessMap implements Mappable {
       return null;
     }
   }
+ 
   public final String getWebService() {
     if (myAccess != null) {
       return myAccess.rpcName;
@@ -292,5 +295,20 @@ public final class AccessMap implements Mappable {
    return stackBuffer.toString();
  }
 
+  public String getRequestId() {
+	  if ( myAccess != null ) {
+		  return myAccess.getInDoc().getHeader().getRequestId();
+	  } else {
+		  return null;
+	  }
+  }
+
+  public String getClientToken() {
+	  if ( myAccess != null ) {
+		  return myAccess.getClientToken();
+	  } else {
+		  return null;
+	  }
+  }
 
 }

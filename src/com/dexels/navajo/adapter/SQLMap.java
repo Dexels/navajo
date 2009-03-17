@@ -389,19 +389,32 @@ public class SQLMap implements Mappable, LazyArray {
 	cleanupBinaryStreams();
 	  
     if (autoCommitMap.get(this.datasource) == null) {
+      if ( debug ) {
+    	  System.err.println("Did not find autoCommitMap entry for: " + datasource);
+      }
       return;
     }
 
     try {
       boolean ac = (this.overideAutoCommit) ? autoCommit :
           ( (Boolean) autoCommitMap.get(datasource)).booleanValue();
+      if ( debug ) {
+    	  System.err.println("Autocommit flag for " + datasource + " = " + ac);
+      }
       if (!ac) {
         if (con != null) {
           try {
 			System.err.println("ROLLBACK OF TRANSACTION " + getTransactionContext() + " DUE TO KILL.....");
 		  } catch (UserException e) {	
+			  e.printStackTrace(System.err);
 		  }
+		  if ( debug ) {
+	    	  System.err.print("CALLING TRANSACTION ROLLBACK...");
+	      }
           con.rollback();
+          if ( debug ) {
+	    	  System.err.println("DONE!");
+	      }
         }
       }
       // Set autoCommit mode to default value.
