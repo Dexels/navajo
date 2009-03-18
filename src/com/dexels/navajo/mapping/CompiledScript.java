@@ -26,6 +26,8 @@ package com.dexels.navajo.mapping;
  */
 
 import com.dexels.navajo.loader.NavajoClassSupplier;
+import com.dexels.navajo.mapping.compiler.meta.Dependency;
+import com.dexels.navajo.mapping.compiler.meta.IncludeDependency;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.document.*;
@@ -211,6 +213,16 @@ private boolean keepJMXConnectionAlive = false;
    * Generated code for validations.
    */
   public abstract void setValidations();
+  
+  public void setDependencies() {
+	  // Example:
+	  // dependentObjects.add( new IncludeDependency(IncludeDependency.getScriptTimeStamp("MyScript1"), "MyScript1"));
+	  // dependentObjects.add( new IncludeDependency(IncludeDependency.getScriptTimeStamp("MyScript2"), "MyScript2"));
+  };
+  
+  public ArrayList<Dependency> getDependentObjects() {
+	  return new ArrayList<Dependency>();
+  }
 
   /**
    * Recursively call store() or kill() method on all "open" mappable tree nodes.
@@ -479,6 +491,28 @@ private boolean keepJMXConnectionAlive = false;
   public void store() throws MappableException, UserException {
 	disconnectJMX();
   }
-
-
+ 
+  public boolean hasDirtyDependencies(Access a) {
+	  for (int i = 0; i < getDependentObjects().size(); i++ ) {
+		  Dependency dep = getDependentObjects().get(i);
+		 
+		  if ( dep.needsRecompile() ) {
+			  return true;
+		  }
+		  // Do transitive closure.
+		  if ( dep instanceof IncludeDependency ) {
+			  try {
+				StringBuffer compilerErrors = new StringBuffer();
+				CompiledScript cso = GenericHandler.compileScript(a, dep.getId(), compilerErrors);
+				boolean result = cso.hasDirtyDependencies(a);
+				if ( result ) {
+					return true;
+				}
+			} catch (Exception e) {
+				return true;
+			}
+		  }
+	  }
+	  return false;
+  }
 }
