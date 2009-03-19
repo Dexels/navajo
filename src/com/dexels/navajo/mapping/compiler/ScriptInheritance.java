@@ -6,10 +6,13 @@ import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.navajo.mapping.compiler.meta.InheritDependency;
+import com.dexels.navajo.server.FileInputStreamReader;
 
 public class ScriptInheritance {
 	
@@ -294,7 +297,7 @@ public class ScriptInheritance {
 		return cleaned;
 	}
 	
-	private XMLElement doInject(XMLElement subScript, String scriptPath) throws Exception {
+	private XMLElement doInject(XMLElement subScript, String scriptPath, ArrayList<String> inheritedScripts) throws Exception {
 		// find inject tags.
 		
 		Vector<XMLElement> children = subScript.getChildren();
@@ -305,10 +308,12 @@ public class ScriptInheritance {
 				String script = (String) injectNode.getAttribute("script");
 				XMLElement result = null;
 				if ( script != null ) {
-					BufferedReader br = new BufferedReader(new FileReader(scriptPath + script + ".xml"));
+					// Recursively do inheritance for inherited scripts...
+					BufferedReader br = new BufferedReader(new InputStreamReader(inherit(new FileInputStream(scriptPath + script + ".xml"), scriptPath, inheritedScripts)));
 					XMLElement superScript = new CaseSensitiveXMLElement();
 					superScript.parseFromReader(br);
 					br.close();
+					inheritedScripts.add(script);
 					result = extend(superScript, injectNode);
 				}
 				children.remove(i);
@@ -347,14 +352,14 @@ public class ScriptInheritance {
 		
 	}
 	
-	public static InputStream inherit(InputStream raw, String scriptPath) throws Exception {
+	public static InputStream inherit(InputStream raw, String scriptPath, ArrayList<String> inheritedScripts) throws Exception {
 		
 		ScriptInheritance ti = new ScriptInheritance();
 		
 		XMLElement before = new CaseSensitiveXMLElement();
 		before.parseFromStream(raw);
 		
-		XMLElement after = ti.doInject(before, scriptPath);
+		XMLElement after = ti.doInject(before, scriptPath, inheritedScripts);
 		
 		StringWriter s = new StringWriter();
 		after.write(s);
@@ -370,7 +375,7 @@ public class ScriptInheritance {
 		
 		InputStream is = ScriptInheritance.inherit(
 				new FileInputStream("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/PageableService.xml"),
-				"/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/");
+				"/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/", new ArrayList<String>());
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
 		String line = null;
