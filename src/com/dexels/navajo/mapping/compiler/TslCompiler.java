@@ -460,9 +460,59 @@ public String optimizeExpresssion(int ident, String clause, String className, St
    * @return
    * @throws Exception
    */
-  private String getExpressionValue(Element exprElmnt) throws Exception {
+  private String getExpressionValue(Element exprElmnt, Boolean isStringOperand) throws Exception {
 	  String value = null;
-	  boolean isStringOperand = false;
+	  //boolean isStringOperand = false;
+	  
+	  isStringOperand = Boolean.FALSE;
+	  
+	  Element valueElt = (Element) XMLutils.findNode(exprElmnt, "value");
+	  
+	  if ( valueElt == null ) {
+	    	value = XMLutils.XMLUnescape(exprElmnt.getAttribute("value"));
+	    } else {
+	    	value = getCDATAContent(valueElt);
+	    	if ( value == null ) {
+	    		Node child = valueElt.getFirstChild();
+	    		value = child.getNodeValue();
+	    	}
+	    }
+	    
+	    // Check if operand is given as text node between <expression> tags.
+	    if (value == null || value.equals("")) {
+	    	Node child = exprElmnt.getFirstChild();
+	    	String cdata = getCDATAContent(exprElmnt);
+	    	if ( cdata != null ) {
+	    		isStringOperand = Boolean.TRUE;
+	    		value = cdata;
+	    	} else if (child != null) {
+	    		isStringOperand = Boolean.TRUE;
+	    		value = child.getNodeValue();
+	    	}
+	    	else {
+	    		throw new Exception("Error @" +
+	    				(exprElmnt.getParentNode() + "/" + exprElmnt) + ": <expression> node should either contain a value attribute or a text child node: >" +
+	    				value + "<");
+	    	}
+	    } else {
+	    	value = value.trim();
+	    	value = value.replaceAll("\n", " ");
+	    	value = XMLutils.XMLUnescape(value);
+	    }
+	    
+	    return value;
+  }
+  
+  public String expressionNode(int ident, Element exprElmnt, int leftOver,  String className, String objectName) throws
+      Exception {
+    StringBuffer result = new StringBuffer();
+    boolean isStringOperand = false;
+
+    String condition = exprElmnt.getAttribute("condition");
+   
+    String value = null;
+	  
+	 
 	  Element valueElt = (Element) XMLutils.findNode(exprElmnt, "value");
 	  
 	  if ( valueElt == null ) {
@@ -497,16 +547,6 @@ public String optimizeExpresssion(int ident, String clause, String className, St
 	    	value = XMLutils.XMLUnescape(value);
 	    }
 	    
-	    return value;
-  }
-  
-  public String expressionNode(int ident, Element exprElmnt, int leftOver,  String className, String objectName) throws
-      Exception {
-    StringBuffer result = new StringBuffer();
-    boolean isStringOperand = false;
-
-    String condition = exprElmnt.getAttribute("condition");
-    String value = getExpressionValue(exprElmnt);
   
     if (!condition.equals("")) {
           result.append(printIdent(ident) + "if (Condition.evaluate(" + replaceQuotes(condition) + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg))");
@@ -1251,7 +1291,8 @@ public String fieldNode(int ident, Element n, String className,
       // Has condition;
       if (children.item(i).getNodeName().equals("expression")) {
         result.append(expressionNode(ident + 2, (Element) children.item(i),--exprCount, className, objectName));
-        exprValue = getExpressionValue(((Element) children.item(i)));
+        Boolean b = new Boolean(false);
+        exprValue = getExpressionValue(((Element) children.item(i)), b);
       }
       else if (children.item(i).getNodeName().equals("map")) {
         isMapped = true;
