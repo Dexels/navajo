@@ -414,10 +414,10 @@ public final class Dispatcher implements Mappable, DispatcherMXBean, DispatcherI
 		  
 		  ServiceHandler sh = c.newInstance();
 		  
-		  sh.setInput(in, access, parms, navajoConfig);
+		  sh.setInput(in, access, parms);
 		
 		  // If recompile is needed ALWAYS set expirationInterval to -1.
-		  long expirationInterval = GenericHandler.needsRecompile(access) ? -1 : CacheController.getInstance().getExpirationInterval(access.rpcName);
+		  long expirationInterval = GenericHandler.needsRecompile(access, access.rpcName) ? -1 : CacheController.getInstance().getExpirationInterval(access.rpcName);
 		  
 		  // Remove password from in to create password independend persistenceKey.
 		  in.getHeader().setRPCPassword("");

@@ -22,7 +22,7 @@ public class MaintainanceHandler extends ServiceHandler {
         try {
             Navajo outMessage = null;
 
-            
+            NavajoConfigInterface properties = DispatcherFactory.getInstance().getNavajoConfig();
             MaintainanceRequest maintain = new MaintainanceRequest(properties.getProperties(),
             		DispatcherFactory.getInstance().getNavajoConfig().getRepository());
 

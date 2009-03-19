@@ -32,7 +32,6 @@ public abstract class ServiceHandler implements Constructor {
 
     protected Navajo requestDocument;
     protected Parameters parms;
-    protected NavajoConfigInterface properties;
     protected Access access;
 
     /**
@@ -42,10 +41,9 @@ public abstract class ServiceHandler implements Constructor {
      * @param parms
      * @param properties
      */
-    public final void setInput(Navajo doc, Access access, Parameters parms, NavajoConfigInterface properties) {
+    public final void setInput(Navajo doc, Access access, Parameters parms) {
         this.requestDocument = doc;
         this.parms = parms;
-        this.properties = properties;
         this.access = access;
     }
 
