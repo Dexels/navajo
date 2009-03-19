@@ -495,22 +495,8 @@ private boolean keepJMXConnectionAlive = false;
   public boolean hasDirtyDependencies(Access a) {
 	  for (int i = 0; i < getDependentObjects().size(); i++ ) {
 		  Dependency dep = getDependentObjects().get(i);
-		 
 		  if ( dep.needsRecompile() ) {
 			  return true;
-		  }
-		  // Do transitive closure.
-		  if ( dep instanceof IncludeDependency ) {
-			  try {
-				StringBuffer compilerErrors = new StringBuffer();
-				CompiledScript cso = GenericHandler.compileScript(a, dep.getId(), compilerErrors);
-				boolean result = cso.hasDirtyDependencies(a);
-				if ( result ) {
-					return true;
-				}
-			} catch (Exception e) {
-				return true;
-			}
 		  }
 	  }
 	  return false;
