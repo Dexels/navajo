@@ -23,7 +23,11 @@ package com.dexels.navajo.mapping.compiler;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.jaxpimpl.xml.*;
 import com.dexels.navajo.mapping.*;
+import com.dexels.navajo.mapping.compiler.meta.Dependency;
+import com.dexels.navajo.mapping.compiler.meta.IncludeDependency;
+import com.dexels.navajo.mapping.compiler.meta.InheritDependency;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
+import com.dexels.navajo.mapping.compiler.meta.NavajoDependency;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.GenericHandler;
 import com.dexels.navajo.server.UserException;
@@ -35,6 +39,8 @@ import java.io.*;
 
 import org.w3c.dom.*;
 
+import java.util.Date;
+import java.util.HashSet;
 import java.util.Stack;
 import java.util.StringTokenizer;
 import com.dexels.navajo.parser.Expression;
@@ -62,6 +68,9 @@ public class TslCompiler {
   private int methodCounter = 0;
   private ArrayList<StringBuffer> methodClipboard = new ArrayList<StringBuffer>();
   private ArrayList<String> variableClipboard = new ArrayList<String>();
+  private StringBuffer dependencies = new StringBuffer();
+  private HashSet<String> dependentObjects = new HashSet<String>();
+  
   @SuppressWarnings("unchecked")
   private Stack<Class> contextClassStack = new Stack<Class>();
   @SuppressWarnings("unchecked")
@@ -166,6 +175,13 @@ public class TslCompiler {
     return result.toString();
   }
 
+  private final void addDependency(String code, String id) {
+	  if (!dependentObjects.contains(id)) {
+		  dependencies.append(code);
+		  dependentObjects.add(id);
+	  }
+  }
+  
   /**
    * VERY NASTY METHOD.
    * IT TRIES ALL KINDS OF TRICKS TO TRY TO AVOID CALLING THE EXPRESSION.EVALUATE() METHOD IN THE GENERATED JAVA.
@@ -437,48 +453,62 @@ public String optimizeExpresssion(int ident, String clause, String className, St
 	  return null;
   }
   
+  /**
+   * Extract the value from an expression node.
+   * 
+   * @param exprElmnt
+   * @return
+   * @throws Exception
+   */
+  private String getExpressionValue(Element exprElmnt) throws Exception {
+	  String value = null;
+	  boolean isStringOperand = false;
+	  Element valueElt = (Element) XMLutils.findNode(exprElmnt, "value");
+	  
+	  if ( valueElt == null ) {
+	    	value = XMLutils.XMLUnescape(exprElmnt.getAttribute("value"));
+	    } else {
+	    	value = getCDATAContent(valueElt);
+	    	if ( value == null ) {
+	    		Node child = valueElt.getFirstChild();
+	    		value = child.getNodeValue();
+	    	}
+	    }
+	    
+	    // Check if operand is given as text node between <expression> tags.
+	    if (value == null || value.equals("")) {
+	    	Node child = exprElmnt.getFirstChild();
+	    	String cdata = getCDATAContent(exprElmnt);
+	    	if ( cdata != null ) {
+	    		isStringOperand = true;
+	    		value = cdata;
+	    	} else if (child != null) {
+	    		isStringOperand = true;
+	    		value = child.getNodeValue();
+	    	}
+	    	else {
+	    		throw new Exception("Error @" +
+	    				(exprElmnt.getParentNode() + "/" + exprElmnt) + ": <expression> node should either contain a value attribute or a text child node: >" +
+	    				value + "<");
+	    	}
+	    } else {
+	    	value = value.trim();
+	    	value = value.replaceAll("\n", " ");
+	    	value = XMLutils.XMLUnescape(value);
+	    }
+	    
+	    return value;
+  }
+  
   public String expressionNode(int ident, Element exprElmnt, int leftOver,  String className, String objectName) throws
       Exception {
     StringBuffer result = new StringBuffer();
     boolean isStringOperand = false;
 
     String condition = exprElmnt.getAttribute("condition");
-    String value = null;
-    Element valueElt = (Element) XMLutils.findNode(exprElmnt, "value");
-
-    if ( valueElt == null ) {
-    	value = XMLutils.XMLUnescape(exprElmnt.getAttribute("value"));
-    } else {
-    	value = getCDATAContent(valueElt);
-    	if ( value == null ) {
-    		Node child = valueElt.getFirstChild();
-    		value = child.getNodeValue();
-    	}
-    }
-    
-    // Check if operand is given as text node between <expression> tags.
-    if (value == null || value.equals("")) {
-    	Node child = exprElmnt.getFirstChild();
-    	String cdata = getCDATAContent(exprElmnt);
-    	if ( cdata != null ) {
-    		isStringOperand = true;
-    		value = cdata;
-    	} else if (child != null) {
-    		isStringOperand = true;
-    		value = child.getNodeValue();
-    	}
-    	else {
-    		throw new Exception("Error @" +
-    				(exprElmnt.getParentNode() + "/" + exprElmnt) + ": <expression> node should either contain a value attribute or a text child node: >" +
-    				value + "<");
-    	}
-    } else {
-    	value = value.trim();
-    	value = value.replaceAll("\n", " ");
-    	value = XMLutils.XMLUnescape(value);
-    }
-
-        if (!condition.equals("")) {
+    String value = getExpressionValue(exprElmnt);
+  
+    if (!condition.equals("")) {
           result.append(printIdent(ident) + "if (Condition.evaluate(" + replaceQuotes(condition) + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg))");
         }
 
@@ -597,6 +627,8 @@ public String messageNode(int ident, Element n, String className, String objectN
         nextElt.getAttribute("ref") != null &&
         !nextElt.getAttribute("ref").equals("")) {
           String refOriginal = nextElt.getAttribute("ref");
+          // Remove leading $ (if present).
+          refOriginal = refOriginal.replaceAll("\\$", "");
           
           //System.err.println("refOriginal = " + refOriginal);
           
@@ -612,16 +644,6 @@ public String messageNode(int ident, Element n, String className, String objectN
           elementOffset = nextElt.getAttribute("element_offset");
           startElement = ((startElement == null || startElement.equals("")) ? "" : startElement);
           elementOffset = ((elementOffset == null || elementOffset.equals("")) ? "" : elementOffset);
-          //System.out.println("in MessageNode(), REF = " + ref);
-          ////System.out.println("filter = " + filter);
-          //System.out.println("in MessageNode(), current contextClass = " + contextClass);
-//          if (contextClass==null) {
-//              //System.err.println("NO CONTEXT CLASS (YET)");
-//            } else {
-//                System.err.println("LINE 587: PUSHING CLASS: "+contextClass);
-//                contextClassStack.push(contextClass);
-//           }
-          //Class localContextClass = null;
         
           try {
         	  if (mapPath!=null) {
@@ -633,6 +655,8 @@ public String messageNode(int ident, Element n, String className, String objectN
           } catch (Exception e) {
         	  throw new Exception("Could not find adapter: " + className);
           }
+          
+          addDependency("dependentObjects.add( new JavaDependency( -1, \"" + className + "\"));\n", "JAVA"+className);
           
           //System.out.println("in MessageNode(), new contextClass = " + contextClass);
           
@@ -804,6 +828,8 @@ result.append(printIdent(ident + 4) +
       	contextClass = Class.forName(subClassName, false, loader);
       } catch (Exception e) { throw new Exception("Could not find adapter: " + subClassName); }
 
+      addDependency("dependentObjects.add( new JavaDependency( -1, \"" + subClassName + "\"));\n", "JAVA"+subClassName);
+      
       String subObjectName = "mappableObject" + (objectCounter++);
       result.append(printIdent(ident + 4) + subObjectName +
                     " = (" + subClassName + ") currentMap.myObject;\n");
@@ -842,23 +868,30 @@ result.append(printIdent(ident + 4) +
     }
     else if (isSubMapped) { // Not an array
 
-      result.append(printIdent(ident + 2) + "treeNodeStack.push(currentMap);\n");
-      result.append(printIdent(ident + 2) +
-                    "currentMap = new MappableTreeNode(access, currentMap, ((" +
-                    className + ") currentMap.myObject).get" +
-                    ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) +
-                    "(), false);\n");
+     
+         
+      if ( mapPath == null ) {
+    	  result.append(printIdent(ident + 2) + "treeNodeStack.push(currentMap);\n");
+    	  result.append(printIdent(ident + 2) +
+    			  "currentMap = new MappableTreeNode(access, currentMap, ((" +
+    			  className + ") currentMap.myObject).get" +
+    			  ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) +
+    	  "(), false);\n");
+      } else {
+    	  String localObjectName = "mappableObject" + (objectCounter++);
+    	  result.append(printIdent(ident + 2) + "Object " + localObjectName + " = findMapByPath( \"" + mapPath + "\");\n");
+    	  result.append(printIdent(ident + 2) + "treeNodeStack.push(currentMap);\n");
+    	  result.append(printIdent(ident + 2) +
+    			  "currentMap = new MappableTreeNode(access, currentMap, ((" +
+    			  className + ")" + localObjectName + ").get" + 
+    			  ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) +
+    	  "(), false);\n");  
+      }
+      
+      
       result.append(printIdent(ident + 2) +
                     "if (currentMap.myObject != null) {\n");
-      //result.append(printIdent(ident + 4) +
-      //              "outMsgStack.push(currentOutMsg);\n");
-      //result.append(printIdent(ident + 4) +
-      //              "currentOutMsg = MappingUtils.getMessageObject(\"" +
-      //              messageName +
-      //              "\", currentOutMsg, true, access.getOutputDoc(), false, \"\", -1);\n");
-      //result.append(printIdent(ident + 4) +
-      //              "access.setCurrentOutMessage(currentOutMsg);\n");
-
+    
       contextClassStack.push(contextClass);
       String subClassName = MappingUtils.getFieldType(contextClass, ref);
       contextClass = null;
@@ -866,6 +899,8 @@ result.append(printIdent(ident + 4) +
       	contextClass = Class.forName(subClassName, false, loader);
       } catch (Exception e) { throw new Exception("Could not find adapter " + subClassName); }
 
+      addDependency("dependentObjects.add( new JavaDependency( -1, \"" + subClassName + "\"));\n", "JAVA"+subClassName);
+      
       String subObjectName = "mappableObject" + (objectCounter++);
       result.append(printIdent(ident + 4) + subObjectName +
                     " = (" + subClassName + ") currentMap.myObject;\n");
@@ -1044,6 +1079,9 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
       try {
     	  localContextClass = Class.forName(className, false, loader);
       } catch (Exception e) { throw new Exception("Could not find adapter: " + className); }
+      
+      addDependency("dependentObjects.add( new JavaDependency( -1, \"" + className + "\"));\n", "JAVA"+className);
+      
       String ref = mapNode.getAttribute("ref");
       String filter = mapNode.getAttribute("filter");
       
@@ -1208,11 +1246,12 @@ public String fieldNode(int ident, Element n, String className,
     Element mapNode = null;
 
     int exprCount = countNodes(children, "expression");
+    String exprValue = "";
     for (int i = 0; i < children.getLength(); i++) {
       // Has condition;
       if (children.item(i).getNodeName().equals("expression")) {
-        result.append(expressionNode(ident + 2, (Element) children.item(i),
-                                     --exprCount, className, objectName));
+        result.append(expressionNode(ident + 2, (Element) children.item(i),--exprCount, className, objectName));
+        exprValue = getExpressionValue(((Element) children.item(i)));
       }
       else if (children.item(i).getNodeName().equals("map")) {
         isMapped = true;
@@ -1233,9 +1272,20 @@ public String fieldNode(int ident, Element n, String className,
             }
             
           } catch (Exception e) { e.printStackTrace(System.err);throw new Exception("Could not find adapter: " + className); }
+          
+          addDependency("dependentObjects.add( new JavaDependency( -1, \"" + className + "\"));\n", "JAVA"+className);
+          
+          // NavajoMap Check.
+          
+         
+          // Check for NavajoMap (NOT PRETTY, SINCE IT ASSUMES SOME STUFF ABOUT A NON-LANGUAGE FEATURE....
+          if ( className.equals("com.dexels.navajo.adapter.NavajoMap") && attribute.equals("doSend")) {
+        	  addDependency("dependentObjects.add( new NavajoDependency( -1, \"" + exprValue + "\"));\n", "NAVAJO"+exprValue);
+          }
+          
         String type = null;
         try {
-        	type = MappingUtils.getFieldType(localContextClass, attribute, methodName);
+        	type = MappingUtils.getFieldType(localContextClass, attribute);
         } catch (Exception e) { throw new Exception("Could not find field: " + attribute + " in adapter " + localContextClass.getName()); }
         if (type.equals("java.lang.String")) {
           castedValue = "(String) sValue";
@@ -1302,10 +1352,18 @@ public String fieldNode(int ident, Element n, String className,
     else { // Field with ref: indicates that a message or set of messages is mapped to attribute (either Array Mappable or singular Mappable)
       String ref = mapNode.getAttribute("ref");
       boolean isParam = false;
-      if (ref.startsWith("/@")) {
+      
+      if ( ref.indexOf("[") != -1 ) { // remove square brackets...
+    	  ref = ref.replace('[', ' ');
+    	  ref = ref.replace(']', ' ');
+    	  ref = ref.trim();
+      }
+      
+      if (ref.startsWith("/@")) { // replace @ with __parms__ 'parameter' message indication.
       	ref = ref.replaceAll("@", "__parms__/");
       	isParam = true;
       }
+     
       String filter = mapNode.getAttribute("filter");
       filter = (filter == null) ? "" : filter;
       result.append(printIdent(ident + 2) + "// And by the way, my filter is "+filter+"\n");
@@ -1326,16 +1384,38 @@ public String fieldNode(int ident, Element n, String className,
      
       contextClassStack.push(contextClass);
       
-      String type = MappingUtils.getFieldType(contextClass, attribute, methodName);
-      boolean isArray = MappingUtils.isArrayAttribute(contextClass, attribute);
+      /**
+       * ADDED:
+       */
+      Class localContextClass = null;
+      try {
+    	  if (mapPath!=null) {
+    		  localContextClass = locateContextClass(mapPath);
+    	  } else {
+    		  localContextClass = contextClass;
+    	  }
+
+      } catch (Exception e) { e.printStackTrace(System.err);throw new Exception("Could not find adapter: " + className); }
+      String type = null;
+      try {
+    	  type = MappingUtils.getFieldType(localContextClass, attribute);
+      } catch (Exception e) { throw new Exception("Could not find field: " + attribute + " in adapter " + localContextClass.getName()); }
+     /**
+      * END.
+      */
       
-      //System.out.println("TYPE FOR " + attribute + " IS: " + type + ", ARRAY = " + isArray);
+      //String type = MappingUtils.getFieldType(contextClass, attribute);
+      boolean isArray = MappingUtils.isArrayAttribute(localContextClass, attribute);
+      
+      System.err.println("TYPE FOR " + attribute + " IS: " + type + ", ARRAY = " + isArray);
       
       try {
-      	contextClass = Class.forName(type, false, loader);
+    	  contextClass = Class.forName(type, false, loader);
       } catch (Exception e) {
     	  throw new Exception("Could not find adapter: " + type);
       }
+      
+      addDependency("dependentObjects.add( new JavaDependency( -1, \"" + type + "\"));\n", "JAVA"+type);
       
 //      if (!isArray && !MappingUtils.isMappable(contextClass, attribute,loader)) {
 //      	throw new TslCompileException(-1, "Not a mappable field: " + attribute, 0, 0);
@@ -1424,8 +1504,14 @@ public String fieldNode(int ident, Element n, String className,
         ident -= 4;
         result.append(printIdent(ident + 2) + "}\n} // FOR loop for " +
                       loopCounterName + "\n");
-        result.append(printIdent(ident + 2) + objectName + "." + methodName +
-                      "(" + subObjectsName + ");\n");
+        
+        if ( mapPath == null ) {
+        	result.append(printIdent(ident + 2) + objectName + "." + methodName +
+        			"(" + subObjectsName + ");\n");
+        } else {
+        	result.append(printIdent(ident + 2) + "((" + locateContextClass(mapPath).getName() + ") findMapByPath(\"" + mapPath + "\"))." + methodName +
+        			"(" + subObjectsName + ");\n");
+        }
         
       } else { // Not an array type field, but single Mappable object.
       	
@@ -1490,9 +1576,15 @@ public String fieldNode(int ident, Element n, String className,
         result.append(printIdent(ident) + "currentSelection = null;\n");
         result.append(printIdent(ident) +        
         		"currentMap.setEndtime();\ncurrentMap = (MappableTreeNode) treeNodeStack.pop();\n");
-        result.append(printIdent(ident + 2) + objectName + "." + methodName +
-                "(" + subObjectsName + ");\n");
-      	
+        
+        if ( mapPath == null ) {
+        	result.append(printIdent(ident + 2) + objectName + "." + methodName +
+        			"(" + subObjectsName + ");\n");
+        } else {
+        	result.append(printIdent(ident + 2) + "((" + locateContextClass(mapPath).getName() + ") findMapByPath(\"" + mapPath + "\"))." + methodName +
+        			"(" + subObjectsName + ");\n");
+        }
+        
       }
       contextClass = contextClassStack.pop();
       //System.err.println("JUST POPPED CONTEXTCLASS: " + contextClass);
@@ -1600,10 +1692,12 @@ public String mapNode(int ident, Element n) throws Exception {
     if (contextClass!=null) {
     	contextClassStack.push(contextClass);
     } 
-     try {
-         contextClass = Class.forName(className, false, loader);
-           } catch (Exception e) { throw new Exception("Could not find adapter: " + className); }
+    try {
+    	contextClass = Class.forName(className, false, loader);
+    } catch (Exception e) { throw new Exception("Could not find adapter: " + className); }
 
+    addDependency("dependentObjects.add( new JavaDependency( -1, \"" + className + "\"));\n", "JAVA"+className);
+ 
     if (!name.equals("")) { // We have a potential async mappable object.
       ////System.out.println("POTENTIAL MAPPABLE OBJECT " + className);
     //  Class contextClass = null;
@@ -1867,23 +1961,28 @@ public String mapNode(int ident, Element n) throws Exception {
     if (script == null || script.equals("")) {
       throw new UserException(-1, "No script name found in include tag (missing or empty script attribute): " + n);
     }
-        
+       
   //  System.err.println("INCLUDING SCRIPT " + script + " @ NODE " + n);
 
     // Construct scriptName:
     // First try if applicationGroup specific script exists.
-    String fileName = scriptPath + "/" + script + "_" + GenericHandler.applicationGroup + ".xml";
+    String fileName =  script + "_" + GenericHandler.applicationGroup;
     
     Document includeDoc = null;
-    File includedFile = new File(fileName);
+    File includedFile = new File(scriptPath + "/" + fileName  + ".xml");
     
     if ( includedFile.exists() ) {
     	includeDoc = XMLDocumentUtils.createDocument(new FileInputStream(includedFile), false);
     } else {
-    	includedFile = new File(scriptPath + "/" + script + ".xml");
+    	fileName = script;
+    	includedFile = new File(scriptPath + "/" + fileName  + ".xml");
     	includeDoc = XMLDocumentUtils.createDocument(new FileInputStream(includedFile), false);
     }
     
+    // Add dependency.
+    addDependency("dependentObjects.add( new IncludeDependency( new Long(\"" + 
+    		                 IncludeDependency.getScriptTimeStamp(fileName) + "\"), \"" + script + "\"));\n", "INCLUDE"+script);
+  
     NodeList content = includeDoc.getElementsByTagName("tsl").item(0).getChildNodes();
     Node nextNode = n.getNextSibling();
     while ( nextNode != null && !(nextNode instanceof Element) ) {
@@ -2119,9 +2218,14 @@ public String mapNode(int ident, Element n) throws Exception {
 	          "import java.util.ArrayList;\n" +
 	          "import java.util.HashMap;\n" +
 	          "import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;\n" +
+	          "import com.dexels.navajo.mapping.compiler.meta.IncludeDependency;\n" +
+              "import com.dexels.navajo.mapping.compiler.meta.InheritDependency;\n" +
+              "import com.dexels.navajo.mapping.compiler.meta.JavaDependency;\n" +
+              "import com.dexels.navajo.mapping.compiler.meta.NavajoDependency;\n" +
+              "import com.dexels.navajo.mapping.compiler.meta.Dependency;\n" +
 	          "import java.util.Stack;\n\n\n";
 	      result.append(importDef);
-
+	      
 	      result.append("/**\n");
 	      result.append(" * Generated Java code by TSL compiler.\n");
 	      result.append(" * " + VERSION+"\n");
@@ -2140,6 +2244,18 @@ public String mapNode(int ident, Element n) throws Exception {
 
 	      result.append(classDef);
 
+	      result.append("private volatile static ArrayList<Dependency> dependentObjects = null;\n\n");
+	      
+	      // Add constructor.
+	      String constructorDef = "  public " + script + "() {\n " +
+	                              "        if ( dependentObjects == null ) {\n" +
+	                              "             dependentObjects = new ArrayList<Dependency>();\n" +
+	                              "             setDependencies();\n" +
+	                              "        }\n" +
+	                              "  }\n\n";
+	      
+	      result.append(constructorDef);
+	      
 	      // First resolve includes.
 	      NodeList includes = tslDoc.getElementsByTagName("include");
 	      //System.err.println("FOUND " + includes.getLength() + " INCLUDES");
@@ -2209,6 +2325,16 @@ public String mapNode(int ident, Element n) throws Exception {
 	    	  result.append(variableClipboard.get(i));
 	      }
 
+	      // Add public void setDependencies() {}
+	      if ( !dependencies.toString().equals("") ) {
+	    	  result.append("public void setDependencies() {\n");
+	    	  result.append(dependencies.toString());
+	    	  result.append("}\n\n");
+	    	  result.append("public ArrayList<Dependency> getDependentObjects() {\n");
+	    	  result.append("   return dependentObjects;\n");
+	    	  result.append("}\n");
+	      }
+	      
 	      result.append("}//EOF");
 
 	      fo.write(result.toString());
@@ -2223,26 +2349,35 @@ public String mapNode(int ident, Element n) throws Exception {
 
 	    String fullScriptPath = scriptPath + "/" + packagePath + "/" + script + ".xml";
 	    
+	    ArrayList<String> inheritedScripts = new ArrayList<String>();
 	    try {
+	    	
+	    	InputStream is = null;
 			if (!MapMetaData.isMetaScript(script, scriptPath, packagePath)) {
-				
-				FileInputStream fis = new FileInputStream(fullScriptPath); 
 				if ( ScriptInheritance.containsInject(fullScriptPath)) {
 					// Inheritance preprocessor before compiling.
-					compileScript(ScriptInheritance.inherit(fis, scriptPath), packagePath, script, scriptPath, workingPath);
+					FileInputStream fis = new FileInputStream(fullScriptPath); 
+					is = ScriptInheritance.inherit(fis, scriptPath, inheritedScripts);
+					fis.close();
 				} else {
 					// Use 'default' compilescript. 
-					compileScript(new FileInputStream(fullScriptPath), packagePath, script, scriptPath, workingPath);
+					is = new FileInputStream(fullScriptPath);
 				}
-				fis.close();
-				
 			} else {
-				
 				MapMetaData mmd = MapMetaData.getInstance(configPath);
 				String intermed = mmd.parse(fullScriptPath);
-				compileScript(ScriptInheritance.inherit(new ByteArrayInputStream(intermed.getBytes()), scriptPath), 
-						     packagePath, script, scriptPath, workingPath );
-				
+				is = ScriptInheritance.inherit(new ByteArrayInputStream(intermed.getBytes()), scriptPath, inheritedScripts);
+			}
+			
+			for (int i = 0; i < inheritedScripts.size(); i++) {
+				addDependency("dependentObjects.add( new InheritDependency( new Long(\"" + 
+		                 IncludeDependency.getScriptTimeStamp(inheritedScripts.get(i)) + "\"), \"" + 
+		                 inheritedScripts.get(i) + "\"));\n", "INHERIT"+inheritedScripts.get(i));
+			}
+			compileScript(is, packagePath, script, scriptPath, workingPath);
+			 
+			if ( is != null ) {
+				is.close();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

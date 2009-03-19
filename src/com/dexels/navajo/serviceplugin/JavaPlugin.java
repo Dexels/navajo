@@ -1,11 +1,14 @@
 package com.dexels.navajo.serviceplugin;
 
+import java.util.ArrayList;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.mapping.CompiledScript;
+import com.dexels.navajo.mapping.compiler.meta.Dependency;
 import com.dexels.navajo.server.Access;
 
 public abstract class JavaPlugin extends CompiledScript {
@@ -14,6 +17,12 @@ public abstract class JavaPlugin extends CompiledScript {
 	
 	protected final Message addMessage(Navajo n, String path) {
 		return addMessage(n,null,path);
+	}
+	
+	@Override
+	public ArrayList<Dependency> getDependentObjects() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	protected final Property addProperty(Navajo n, String path, Object value) throws Exception {
