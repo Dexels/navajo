@@ -17,6 +17,6 @@
 	</target>
 
 	<target name="publish" depends="customGrabjar">
-		<ant antfile="../TipiBuild/genericbuild.xml" dir="." inheritall="true" inheritrefs="true" target="publish" />
+		<ant antfile="../TipiBuild/genericbuild.xml" dir="."   inheritall="true" inheritrefs="true" target="publish" />
 	</target>
 </project>
