@@ -120,7 +120,7 @@ import com.dexels.navajo.document.types.Memo;
  *
  */
 
-public class SQLMap implements Mappable, LazyArray {
+public class SQLMap implements Mappable, LazyArray, HasDependentResources {
 
   protected final static int INFINITE = -1;
   protected final String USERPWDDELIMITER = "/";
@@ -1802,4 +1802,13 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
   public void setShowHeader(boolean b) {
 	  this.showHeader = b;
   }
+
+  /**
+   * METADATA INFORMATION.
+   */
+  
+  public DependentResource [] getDependentResourceFields() {
+	  return new DependentResource[]{new GenericDependentResource("database", "datasource")};
+  }
+  
 }

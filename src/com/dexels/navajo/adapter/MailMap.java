@@ -35,7 +35,7 @@ import com.dexels.navajo.datasource.BinaryDataSource;
 /**
  * This business object is used as a mail agent in Navajo Script files.
  */
-public class MailMap implements MailMapInterface, Mappable, com.dexels.navajo.server.enterprise.queue.Queuable {
+public class MailMap implements MailMapInterface, Mappable, HasDependentResources, com.dexels.navajo.server.enterprise.queue.Queuable {
 
     /**
 	 * 
@@ -387,6 +387,10 @@ public class MailMap implements MailMapInterface, Mappable, com.dexels.navajo.se
 
   public void setMaxRunningInstances(int maxRunningInstances) {
 	  this.maxRunningInstances = maxRunningInstances;
+  }
+
+  public DependentResource[] getDependentResourceFields() {
+	  return new DependentResource[]{new GenericDependentResource("mailserver", "mailServer")};
   }
 
 }

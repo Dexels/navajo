@@ -28,7 +28,7 @@ import com.dexels.navajo.document.types.Money;
  * @version $Id$
  */
 
-public class NavajoMap extends AsyncMappable  implements Mappable {
+public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentResources {
 
   public String doSend;
   public Binary navajo;
@@ -931,6 +931,10 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
 		  }
 	  }
 	  inDoc = tm.getMyTask().getResponse();
+  }
+  
+  public DependentResource[] getDependentResourceFields() {
+	  return new DependentResource[]{new GenericDependentResource("script", "doSend"), new GenericDependentResource("navajoserver", "server")};
   }
   
 }
