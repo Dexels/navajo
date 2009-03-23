@@ -85,11 +85,35 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 	
 	// Registered Callbacks.
 	SharedTribalMap<String, String> registeredCallbacks;
+
+
+	private MultiUserChat myMultiUser;
 	
 	public JabberWorker() {
 		super(myId);
 	}
 	
+	public void postTmlToChatroom(Navajo n) {
+		if(myMultiUser==null) {
+			System.err.println("Cant post: Not in room!");
+			return;
+		}
+		try {
+			myMultiUser.sendMessage(createTmlMessage(n));
+		} catch (XMPPException e) {
+			e.printStackTrace();
+			
+		}
+	}
+	
+	private org.jivesoftware.smack.packet.Message createTmlMessage(Navajo n) {
+		
+		org.jivesoftware.smack.packet.Message myMessage = myMultiUser.createMessage();
+		myMessage.setBody(n.toString());
+		myMessage.setProperty("tml", true);
+		return myMessage;
+	}
+
 	public void configJabber(String server, String port, String service, String postmanUrl)   {
 		
 		if ( server == null || server.equals("") ) {
@@ -375,9 +399,10 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 			instance.registeredCallbacks.put(nickname, registerCallback);
 
 			if ( !instance.myJabber.hasJoinedRoom(roomname) ) {
-				
-				MultiUserChat muc = instance.myJabber.joinRoom(roomname);
-				muc.addParticipantStatusListener(new ParticipantStatusListener() {
+				if(myMultiUser==null) {
+					myMultiUser = instance.myJabber.joinRoom(roomname);
+				}
+				myMultiUser.addParticipantStatusListener(new ParticipantStatusListener() {
 
 					public void adminGranted(String arg0) {
 					}
@@ -438,5 +463,10 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 		String arg0 = "mynavajogroup-dopeapp@conference.dexels.nl/frank|192.168.1.13|frank-lyaruus-macbook-pro.local|1231768833526";
 		String clientid = arg0.split("/")[1];
 		System.err.println(clientid);
+	}
+
+	public void setMultiUserChat(MultiUserChat muc) {
+		// TODO Auto-generated method stub
+		this.myMultiUser = muc;
 	}
 }

@@ -75,8 +75,8 @@ public class NavajoJabberAgent  {
 		this.serverGroupName = "navajotribe-" + DispatcherFactory.getInstance().getNavajoConfig().getInstanceGroup();
 		
 		//connection.login(username, password, NavajoClientFactory.getClient().getSessionToken());
-		JabberUtils.joinRoom(connection, conferenceName, serverGroupName, nickName, new HashSet<String>());
-		
+		MultiUserChat muc = JabberUtils.joinRoom(connection, conferenceName, serverGroupName, nickName, new HashSet<String>());
+		JabberWorker.getInstance().setMultiUserChat(muc);
 		//System.err.println("Login ok");
 
 		connection.addPacketListener(new PacketListener() {
