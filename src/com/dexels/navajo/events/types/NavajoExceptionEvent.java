@@ -52,9 +52,9 @@ public class NavajoExceptionEvent implements NavajoEvent {
 					Property.STRING_PROPERTY, getWebservice(), 0, "", Property.DIR_OUT);
 			Property exception = NavajoFactory.getInstance().createProperty(input, "Exception", 
 					Property.STRING_PROPERTY, getException().getMessage(), 0, "", Property.DIR_OUT);
-			Property accessId = NavajoFactory.getInstance().createProperty(input, "Exception", 
+			Property accessId = NavajoFactory.getInstance().createProperty(input, "AccessId", 
 					Property.STRING_PROPERTY, getAccessId(), 0, "", Property.DIR_OUT);
-			Property user = NavajoFactory.getInstance().createProperty(input, "Exception", 
+			Property user = NavajoFactory.getInstance().createProperty(input, "User", 
 					Property.STRING_PROPERTY, getUser(), 0, "", Property.DIR_OUT);
 			event.addProperty(webservice);
 			event.addProperty(exception);
