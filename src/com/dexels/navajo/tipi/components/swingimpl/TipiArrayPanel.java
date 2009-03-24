@@ -39,6 +39,7 @@ public class TipiArrayPanel extends TipiSwingDataComponentImpl {
 
 	@Override
 	public void loadData(Navajo n, String method) throws TipiException, TipiBreakException {
+		System.err.println("Message path loading: "+messagePath);
 		loadArrayData(n, method, messagePath);
 		super.loadData(n, method);
 		doLayout();
@@ -62,7 +63,7 @@ public class TipiArrayPanel extends TipiSwingDataComponentImpl {
 	}
 
 	protected void cascadeLoad(Navajo n, String method) throws TipiException {
-		System.err.println("ArrayPanel: Not cascading");
+	//	System.err.println("ArrayPanell: Not cascading: "+method);
 	}
 	
 }
