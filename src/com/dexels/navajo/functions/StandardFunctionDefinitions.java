@@ -1,7 +1,9 @@
 package com.dexels.navajo.functions;
 
 import java.io.InputStream;
+import java.util.LinkedList;
 import java.util.List;
+
 
 import navajo.ExtensionDefinition;
 
@@ -12,63 +14,57 @@ public class StandardFunctionDefinitions implements ExtensionDefinition {
 	}
 
 	public String getConnectorId() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public List<String> getDependingProjectUrls() {
-		// TODO Auto-generated method stub
+		// list urls to open source projects here
 		return null;
 	}
 
 	public String getDeploymentDescriptor() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return "Standard navajo function library";
 	}
 
 	public String getId() {
-		// TODO Auto-generated method stub
-		return null;
+		return "navajofunction";
 	}
 
 	public String[] getIncludes() {
-		// TODO Auto-generated method stub
-		return null;
+		return new String[]{"com/dexels/navajo/functions/functions.xml"};
 	}
 
 	public List<String> getLibraryJars() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public List<String> getMainJars() {
-		// TODO Auto-generated method stub
-		return null;
+		List<String> jars = new LinkedList<String>();
+		jars.add("NavajoFunctions.jar");
+		return jars;
 	}
 
 	public String getProjectName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "NavajoFunctions";
 	}
 
 	public List<String> getRequiredExtensions() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public boolean isMainImplementation() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public String requiresMainImplementation() {
-		// TODO Auto-generated method stub
+		// any will do
 		return null;
 	}
+
 
 }
