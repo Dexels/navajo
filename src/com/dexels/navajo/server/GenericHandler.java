@@ -92,10 +92,19 @@ public final class GenericHandler extends ServiceHandler {
     private static final boolean hasDirtyDepedencies(Access a, String className) {
     	CompiledScript cso = null;
     	try {
-    		cso = getCompiledScript(a, className);
+    		NavajoClassLoader loader = (NavajoClassLoader) loadedClasses.get(className);
+    		if ( loader == null ) { // Script does not yet exist.
+    			return false;
+    		}
+    		Class cs = loader.getCompiledNavaScript(className);
+        	if ( cs != null ) {
+        		cso = (com.dexels.navajo.mapping.CompiledScript) cs.newInstance();
+        		cso.setClassLoader(loader);
+        	}	
     	} catch (Exception e) {
     		// TODO Auto-generated catch block
     		e.printStackTrace();
+    		return false;
     	}
     	if ( cso != null ) {
     		return cso.hasDirtyDependencies(a);
