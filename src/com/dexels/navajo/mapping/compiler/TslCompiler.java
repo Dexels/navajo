@@ -23,11 +23,8 @@ package com.dexels.navajo.mapping.compiler;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.jaxpimpl.xml.*;
 import com.dexels.navajo.mapping.*;
-import com.dexels.navajo.mapping.compiler.meta.Dependency;
 import com.dexels.navajo.mapping.compiler.meta.IncludeDependency;
-import com.dexels.navajo.mapping.compiler.meta.InheritDependency;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
-import com.dexels.navajo.mapping.compiler.meta.NavajoDependency;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.GenericHandler;
 import com.dexels.navajo.server.UserException;
@@ -39,7 +36,7 @@ import java.io.*;
 
 import org.w3c.dom.*;
 
-import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Stack;
 import java.util.StringTokenizer;
@@ -71,6 +68,11 @@ public class TslCompiler {
   private StringBuffer dependencies = new StringBuffer();
   private HashSet<String> dependentObjects = new HashSet<String>();
   
+  /**
+   * Use this as a placeholder for instantiated adapters (for meta data usage).
+   */
+  private HashMap<Class, DependentResource []> instantiatedAdapters = new HashMap<Class, DependentResource []>();
+  
   @SuppressWarnings("unchecked")
   private Stack<Class> contextClassStack = new Stack<Class>();
   @SuppressWarnings("unchecked")
@@ -79,6 +81,7 @@ public class TslCompiler {
 
   private JavaCompiler compiler;
 
+  private String scriptType = "tsl";
   
   private static String hostname = null;
   
@@ -1234,6 +1237,35 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
 
   }
 
+  private final void checkDependentFieldResource(Class localContextClass, String fieldName, String expressionValue) {
+	  
+	  if ( !(HasDependentResources.class.isAssignableFrom(localContextClass) )) {
+		  return;
+	  }
+	  
+	  DependentResource [] dependentFields = instantiatedAdapters.get(localContextClass);
+	  
+      if ( dependentFields == null && HasDependentResources.class.isAssignableFrom(localContextClass) ) {
+    	  try {
+    		  HasDependentResources hr = (HasDependentResources) localContextClass.newInstance();
+    		  dependentFields = hr.getDependentResourceFields();
+    	  } catch (Throwable t) {}
+    	  instantiatedAdapters.put(localContextClass, dependentFields);
+      }
+     
+	  if ( dependentFields == null ) {
+		  return;
+	  }
+	  
+	  for (int i = 0; i < dependentFields.length; i++) {
+		  if ( fieldName.equals(dependentFields[i].getValue())) {
+			  addDependency("dependentObjects.add( new AdapterFieldDependency(-1, \"" + localContextClass.getName() + "\", \"" + 
+					  dependentFields[i].getType() + "\", \"" +  expressionValue + "\"));\n", 
+					  "FIELD" + localContextClass.getName() + ";" + dependentFields[i].getType() + ";" + fieldName + ";" + expressionValue);
+		  }
+	  }
+  }
+  
   @SuppressWarnings("unchecked")
 public String fieldNode(int ident, Element n, String className,
                           String objectName) throws Exception {
@@ -1316,17 +1348,11 @@ public String fieldNode(int ident, Element n, String className,
           
           addDependency("dependentObjects.add( new JavaDependency( -1, \"" + className + "\"));\n", "JAVA"+className);
           
-          // NavajoMap Check.
-          
          
-          // Check for NavajoMap (NOT PRETTY, SINCE IT ASSUMES SOME STUFF ABOUT A NON-LANGUAGE FEATURE....
-          if ( className.equals("com.dexels.navajo.adapter.NavajoMap") && attribute.equals("doSend")) {
-        	  addDependency("dependentObjects.add( new NavajoDependency( -1, \"" + exprValue + "\"));\n", "NAVAJO"+exprValue);
-          }
-          
         String type = null;
         try {
         	type = MappingUtils.getFieldType(localContextClass, attribute);
+        	checkDependentFieldResource(localContextClass, attribute, exprValue);	
         } catch (Exception e) { throw new Exception("Could not find field: " + attribute + " in adapter " + localContextClass.getName()); }
         if (type.equals("java.lang.String")) {
           castedValue = "(String) sValue";
@@ -2246,6 +2272,8 @@ public String mapNode(int ident, Element n) throws Exception {
 	      String debugLevel = tslElt.getAttribute("debug");
 	      debugInput = (debugLevel.indexOf("request") != -1);
 	      debugOutput = (debugLevel.indexOf("response") != -1);
+	      String description = tslElt.getAttribute("notes");
+	      String author = tslElt.getAttribute("author");
 	      
 	      broadcast = (tslElt.getAttribute("broadcast").indexOf("true") != -1);
 
@@ -2264,6 +2292,7 @@ public String mapNode(int ident, Element n) throws Exception {
               "import com.dexels.navajo.mapping.compiler.meta.JavaDependency;\n" +
               "import com.dexels.navajo.mapping.compiler.meta.NavajoDependency;\n" +
               "import com.dexels.navajo.mapping.compiler.meta.Dependency;\n" +
+              "import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;\n" +
 	          "import java.util.Stack;\n\n\n";
 	      result.append(importDef);
 	      
@@ -2373,8 +2402,25 @@ public String mapNode(int ident, Element n) throws Exception {
 	    	  result.append("}\n\n");
 	    	  result.append("public ArrayList<Dependency> getDependentObjects() {\n");
 	    	  result.append("   return dependentObjects;\n");
-	    	  result.append("}\n");
+	    	  result.append("}\n\n");
 	      }
+	      
+	      // Add getDescription() and getAuthor()
+	      if ( author != null ) {
+	    	  result.append("public String getAuthor() {\n");
+	    	  result.append("   return \"" + author + "\";\n");
+	    	  result.append("}\n\n");
+	      }
+	      
+	      if ( description != null ) {
+	    	  result.append("public String getDescription() {\n");
+	    	  result.append("   return \"" + description + "\";\n");
+	    	  result.append("}\n\n");
+	      }
+	      
+	      result.append("public String getScriptType() {\n");
+	      result.append("   return \"" + scriptType + "\";\n");
+	      result.append("}\n\n");
 	      
 	      result.append("}//EOF");
 
@@ -2405,6 +2451,7 @@ public String mapNode(int ident, Element n) throws Exception {
 					is = new FileInputStream(fullScriptPath);
 				}
 			} else {
+				scriptType = "navascript";
 				MapMetaData mmd = MapMetaData.getInstance(configPath);
 				String intermed = mmd.parse(fullScriptPath);
 				is = ScriptInheritance.inherit(new ByteArrayInputStream(intermed.getBytes()), scriptPath, inheritedScripts);
