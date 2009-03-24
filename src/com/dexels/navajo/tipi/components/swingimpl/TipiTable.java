@@ -335,8 +335,10 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 	}
 
 	@Override
-	public void loadData(final Navajo n, String method) throws TipiException, TipiBreakException {
+	public void loadData(final Navajo n,final String method) throws TipiException, TipiBreakException {
 		// Thread.currentThread().dumpStack();
+		Thread.dumpStack();
+		
 		super.loadData(n, method);
 		runSyncInEventThread(new Runnable() {
 			public void run() {
@@ -357,6 +359,40 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 			if (m != null) {
 				runSyncInEventThread(new Runnable() {
 					public void run() {
+
+
+						// Hardcode it to true. If the component seems to work fine (check the output) set to false for a small (?)
+						// perf. gain.
+						boolean rowLoadEventFound = false;
+						int elementIndex = 0;
+						List<TipiEvent> list = getEventList();
+						for (TipiEvent tipiEvent : list) {
+							System.err.println("NAme: "+ tipiEvent.getEventName());
+							if("onRowLoad".equals( tipiEvent.getEventName())) {
+								rowLoadEventFound = true;
+							}
+						}
+						if(rowLoadEventFound) {
+							for (Message element : myMessage.getAllMessages()) {
+								
+								Map<String, Object> m = new HashMap<String, Object>();
+								m.put("service", method);
+								m.put("index", elementIndex);
+								m.put("message", element);
+								m.put("navajo", n);
+								try {
+									performTipiEvent("onRowLoad", m, true);
+								} catch (TipiBreakException e) {
+									System.err.println("Row break!");
+									break;
+								} catch (TipiException e) {
+									e.printStackTrace();
+									break;
+								}
+								elementIndex++;
+							}
+							
+						}
 						if (columnSize.size() == 0) {
 							mtp.createColumnsFromDef(m);
 						}
@@ -369,6 +405,8 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 						if(selectedIndex<mtp.getRowCount()) {
 							mtp.setSelectedRow(selectedIndex);
 						}
+						
+						
 					}
 				});
 			}

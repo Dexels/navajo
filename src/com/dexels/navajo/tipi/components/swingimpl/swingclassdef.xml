@@ -297,7 +297,18 @@
             <param name="selectedMessage" type="message" />
             <param name="selectedIndex" type="integer" />
          </event>
-           <event name="onValueChanged">
+         <event name="onRowLoad">
+            <description>
+               Fired when a table row loaded, this means that this event is fired for each and every row,
+               BEFORE the onLoad. Here you can fiddle with the data.
+               You can call a 'break' to stop processing the events for this injection.
+            </description>
+            <param name="navajo" type="navajo" />
+            <param name="service" type="string" />
+            <param name="message" type="message" />
+            <param name="index" type="integer" />
+         </event>
+         <event name="onValueChanged">
             <description>
                Fired when any value has been changed in the table.
                Use the event parameters to filter the exact changes you are interested in.
@@ -407,6 +418,7 @@
          <value direction="in" name="sortable" type="boolean" />
          <value direction="in" name="showRowHeaders" type="boolean" />
          <value direction="in" name="useScroll" type="boolean" />
+         <value direction="in" name="border" type="border" />
 
          <value direction="out" name="currentPage" type="integer" />
             </values>
@@ -850,7 +862,7 @@
    </tipiclass>
 
 
-   <tipiclass addtocontainer="true"  implements="basecomponent,datacomponent,swingcomponent,panel" deprecated="false" childcount="*" class="TipiArrayPanel" layoutmanager="true" module="container" name="arraypanel"
+   <tipiclass addtocontainer="true"  implements="basecomponent,datacomponent,messagecomponent,swingcomponent,panel" deprecated="false" childcount="*" class="TipiArrayPanel" layoutmanager="true" module="container" name="arraypanel"
       package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="tipi.gif" type="tipi">
       <description>
    			Based on the panel. Added messagePath and some events
