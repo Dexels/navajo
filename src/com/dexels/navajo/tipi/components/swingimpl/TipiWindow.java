@@ -52,20 +52,26 @@ public final class TipiWindow
 				}
 			}
 
-			public void internalFrameClosing(InternalFrameEvent e) {
-				try {
-					performTipiEvent("onWindowClosed", null, true);
-					((JInternalFrame) e.getSource()).dispose();
-				} catch (TipiException e1) {
-					((JInternalFrame) e.getSource()).dispose();
-					e1.printStackTrace();
-				} catch (TipiBreakException e2) {
-					System.err.println("Breakie breakie");
-					if(e2.getType()==TipiBreakException.COMPONENT_DISPOSED) {
-						// a component disposed event should still close the window
-						((JInternalFrame) e.getSource()).dispose();
-					}
-				}
+			public void internalFrameClosing(final InternalFrameEvent e) {
+					Component cc = ((JInternalFrame) e.getSource()).getFocusOwner();
+					SwingUtilities.invokeLater(new Runnable(){
+
+						public void run() {
+							try {
+							performTipiEvent("onWindowClosed", null, true);
+							((JInternalFrame) e.getSource()).dispose();
+						} catch (TipiException e1) {
+							((JInternalFrame) e.getSource()).dispose();
+							e1.printStackTrace();
+						} catch (TipiBreakException e2) {
+							System.err.println("Breakie breakie");
+							if(e2.getType()==TipiBreakException.COMPONENT_DISPOSED) {
+								// a component disposed event should still close the window
+								((JInternalFrame) e.getSource()).dispose();
+							}
+						}
+							
+						}});
 				
 			}
 
