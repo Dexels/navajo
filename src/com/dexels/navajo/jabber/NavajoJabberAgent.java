@@ -253,7 +253,7 @@ public class NavajoJabberAgent  {
 		}
 		String command = st.nextToken();
 		
-		System.err.println("Received command: " + command);
+//		System.err.println("Received command: " + command);
 		
 		if ("help".equals(command)) {
 			replyHelpMessage(message);
