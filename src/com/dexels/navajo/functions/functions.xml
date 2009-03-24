@@ -1,4 +1,6 @@
-<functiondef>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<functiondef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.navajo.nl/classdef_schema.xsd">
     <function name="ZipArchive" class="com.dexels.navajo.functions.ZipArchive">
         <description>Archives an entire directory (including subdirs) as a zip file.</description>
         <input>string</input>
@@ -71,7 +73,7 @@
     </function>
     <function name="ToMoney" class="com.dexels.navajo.functions.ToMoney">
         <description>Cast a string/double/integer to a money object</description>
-        <input>string|float|integer</input>
+        <input>string|float|integer|money</input>
         <result>money</result>
     </function>
     <function name="ToMilliseconds" class="com.dexels.navajo.functions.ToMilliseconds">
@@ -93,6 +95,11 @@
         <description>Get an integer representation of given object.</description>
         <input>any</input>
         <result>integer</result>
+    </function>
+        <function name="ToLong" class="com.dexels.navajo.functions.ToInteger">
+        <description>Get an long representation of given object.</description>
+        <input>any</input>
+        <result>long</result>
     </function>
     <function name="ToDouble" class="com.dexels.navajo.functions.ToDouble">
         <description>Get a Double version of supplied object. Returns 0.0 if object is null.</description>
@@ -339,6 +346,13 @@
         <input/>
         <result/>
     </function>
+    <function name="GetBinaryPath" class="com.dexels.navajo.functions.GetBinaryPath">
+        <description>Returns the path to a binary</description>
+        <input>binary</input>
+        <result>string</result>
+    </function>
+    
+    
     <function name="GetMessage" class="com.dexels.navajo.functions.GetMessage">
         <description>Gets a message from an array message</description>
         <input/>

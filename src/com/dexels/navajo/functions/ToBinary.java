@@ -28,6 +28,10 @@ public class ToBinary extends FunctionInterface {
    } else if ( o instanceof Binary ) { 	 
    	 return o;
    } else {
+   	if( o instanceof byte[]) {
+   		byte[] b = (byte[])o;
+   		return new Binary(b);
+   	}
      return new Binary(o.toString().getBytes());
    }
   }
