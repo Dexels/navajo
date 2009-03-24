@@ -8,12 +8,10 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-import com.dexels.navajo.client.NavajoClient;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.jabber.JabberWorker;
 import com.dexels.navajo.server.*;
-//import com.sun.xml.internal.bind.v2.util.FatalAdapter;
 import com.jcraft.jzlib.JZlib;
 import com.jcraft.jzlib.ZInputStream;
 import com.jcraft.jzlib.ZOutputStream;
