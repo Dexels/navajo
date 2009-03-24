@@ -6,17 +6,18 @@
  */
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.awt.*;
-import java.lang.reflect.*;
+import java.awt.BorderLayout;
+import java.lang.reflect.InvocationTargetException;
 
-import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.JInternalFrame;
+import javax.swing.SwingUtilities;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.core.*;
-import com.dexels.navajo.tipi.components.swingimpl.embed.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
+import com.dexels.navajo.tipi.TipiEmbedComponent;
+import com.dexels.navajo.tipi.components.core.ShutdownListener;
+import com.dexels.navajo.tipi.components.swingimpl.embed.TipiSwingStandaloneContainer;
+import com.dexels.navajo.tipi.components.swingimpl.swing.EmbeddedTipiFrame;
 
 public class TipiWindowEmbedComponent extends TipiEmbedComponent {
 	private JInternalFrame panel = null;

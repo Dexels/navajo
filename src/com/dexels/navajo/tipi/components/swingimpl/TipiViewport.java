@@ -1,14 +1,19 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.beans.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.LayoutManager;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
-import javax.swing.*;
-import javax.swing.text.*;
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
+import javax.swing.JViewport;
 
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
-import com.dexels.navajo.tipi.tipixml.*;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingViewport;
+import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 /**
  * <p>
