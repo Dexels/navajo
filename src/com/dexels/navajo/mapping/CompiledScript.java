@@ -90,7 +90,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
    * This HashMap is used for user defined expressions in <definitions> section of a script.
    */
   public HashMap userDefinedRules = new HashMap();
-  
+    
   protected boolean kill = false;
 
   private JMXHelper jmx = null;
@@ -501,4 +501,17 @@ private boolean keepJMXConnectionAlive = false;
 	  }
 	  return false;
   }
+
+  public String getDescription() {
+	  return "";
+  }
+
+  public String getAuthor() {
+	  return "";
+  }
+
+  public String getScriptType() {
+	return "tsl";  
+  }
+
 }
