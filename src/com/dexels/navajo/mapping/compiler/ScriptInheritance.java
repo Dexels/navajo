@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Vector;
 
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
@@ -359,8 +361,25 @@ public class ScriptInheritance {
 		XMLElement before = new CaseSensitiveXMLElement();
 		before.parseFromStream(raw);
 		
-		XMLElement after = ti.doInject(before, scriptPath, inheritedScripts);
+		// Remember tsl attributes.
+		HashMap<String,String> tslAttributes = new HashMap<String, String>();
+		Iterator all = before.enumerateAttributeNames();
+		while ( all.hasNext() ) {
+			String name = all.next().toString();
+			String value = before.getAttribute(name)+"";
+			tslAttributes.put(name, value);
+		}
 		
+		
+		XMLElement after = ti.doInject(before, scriptPath, inheritedScripts);
+		// Reinsert tsl attributes.
+		all = tslAttributes.keySet().iterator();
+		while ( all.hasNext() ) {
+			String name = all.next().toString();
+			String value = tslAttributes.get(name);
+			after.setAttribute(name, value);
+		}
+
 		StringWriter s = new StringWriter();
 		after.write(s);
 		

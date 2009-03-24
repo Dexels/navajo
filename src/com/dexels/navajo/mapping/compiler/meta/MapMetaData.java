@@ -137,13 +137,28 @@ public class MapMetaData {
 		in.parseFromReader(br);
 		br.close();
 		
+		// Remember tsl attributes.
+		HashMap<String,String> tslAttributes = new HashMap<String, String>();
+		Iterator all = in.enumerateAttributeNames();
+		while ( all.hasNext() ) {
+			String name = all.next().toString();
+			String value = in.getAttribute(name)+"";
+			tslAttributes.put(name, value);
+		}
+		
 		XMLElement result = new CaseSensitiveXMLElement();
 		result.setName("tsl");
-		if ( in != null && in.getAttribute("debug") != null ) {
-			result.setAttribute("debug", in.getAttribute("debug"));
-		}
+		
 		generateCode(in, result, f.getName());
 
+		// Reinsert tsl attributes.
+		all = tslAttributes.keySet().iterator();
+		while ( all.hasNext() ) {
+			String name = all.next().toString();
+			String value = tslAttributes.get(name);
+			result.setAttribute(name, value);
+		}
+		
 		StringWriter sw = new StringWriter();
 		result.write(sw);
 
