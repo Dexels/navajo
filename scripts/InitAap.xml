@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl debug="request" author="Arjen Schoneveld" notes="Test scriptje">
+  <inject script="InitInheritMe">
+
+  </inject>
+  <map.navajomap>
+     <navajomap.callwebservice name="'CallMe'"/>
+  </map.navajomap>
+  <include script="include/IncludeOracle"/>
+  <message name="This">
+     <map object="com.dexels.test.Apenoot">
+       <field name="noot">
+          <expression value="'First Aepenoot'"/>
+       </field>
+       <map object="com.dexels.navajo.adapter.EmptyMap">
+         <field name="../noot">
+            <expression value="'Harry'"/>
+         </field>
+         <property name="Noot" direction="out">
+            <expression value="$../noot"/>
+         </property>
+         <message name="Apen">
+             <map ref="$../apen">
+                 <debug value="'I AM IN ../getApen()'"/>
+                 <property name="NameOfTheAap" direction="out">
+                    <expression value="'Nice monkey: ' + $apeName"/>
+                 </property>
+             </map>
+         </message>
+         <message name="Aap">
+             <map ref="$../aap">
+                 <debug value="'I AM IN ../getAap()'"/>
+                 <property name="NameOfTheAap" direction="out">
+                    <expression value="'Nice monkey: ' + $apeName"/>
+                 </property>
+             </map>
+         </message>
+         <field name="../aap">
+            <map ref="[/@]">
+              <debug value="'I AM IN ../setAap()'"/>
+              <field name="apeName">
+                 <expression  value="'Arnoud'"/>
+              </field>
+            </map>
+         </field>
+         <param name="Count"><expression value="0"/></param>
+         <field name="../apen">
+            <map ref="[/Apen]">
+              <field name="apeName">
+                 <expression  value="'Arnoud' + [/@Count] + ' ' + [Name]"/>
+              </field>
+              <param name="Count"><expression value="[/@Count] + 1"/></param>
+            </map>
+         </field>
+       </map>
+       <field name="noot">
+          <expression value="'Last Aepenoot'"/>
+       </field>
+       <message name="LastAep">
+         <map ref="$aap">
+              <debug value="'I AM IN LastAep getAap()'"/>
+              <property name="NameOfTheAap" direction="out">
+                  <expression value="'Last monkey: ' + $apeName"/>
+              </property>
+         </map>
+       </message>
+     </map>
+  </message>
+  <methods>
+    <method name="ProcessAap"/>
+    <method name="ProcessQueryAap"/>
+  </methods>
+</tsl>
