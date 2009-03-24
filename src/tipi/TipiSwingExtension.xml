@@ -11,6 +11,7 @@
 		<jar path="TipiSwingClient.jar"/>
 		<jar path="TimingFramework.jar"/>
 		<jar path="AnimatedTransitions.jar"/>
+		<jar path="javadocking.jar"/>
 		<jar path="TipiSwing.jar" main="tipi.MainApplication"/>
 	</jars>
 	<requires>

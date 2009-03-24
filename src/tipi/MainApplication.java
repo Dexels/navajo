@@ -158,6 +158,12 @@ public class MainApplication {
 		if (tipiResourceStream == null) {
 			System.err.println("Error starting up: Can not load tipi. Resource not found: "+definitionPath);
 			System.err.println("Codebase: "+context.getTipiResourceLoader());
+			tipiResourceStream = context.getTipiResourceStream("init.xml");
+			if (tipiResourceStream == null) {
+				System.err.println("Still failed");
+			} else {
+				System.err.println("recovered");
+			}
 		} else {
 			context.parseStream(tipiResourceStream, definition, false);
 		}

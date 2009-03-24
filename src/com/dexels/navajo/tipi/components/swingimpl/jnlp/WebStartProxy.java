@@ -121,7 +121,7 @@ public class WebStartProxy {
 				System.err.println("No arguments. Ok. ");
 			}
 		} catch (UnavailableServiceException e) {
-			e.printStackTrace();
+			System.err.println("No jnlp detected");
 		}
 	}
 }
