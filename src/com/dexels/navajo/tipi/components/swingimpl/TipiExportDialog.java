@@ -36,8 +36,8 @@ public class TipiExportDialog extends TipiDialog {
 	GridBagLayout gridBagLayout1 = new GridBagLayout();
 	JButton proceedButton = new JButton();
 	JButton cancelButton = new JButton();
-	JPanel container;
 	JButton backButton = new JButton();
+	JPanel container;
 	private int current = 0;
 	private Message data;
 
@@ -48,24 +48,23 @@ public class TipiExportDialog extends TipiDialog {
 	}
 
 	public Object createContainer() {
-		Object c = super.createContainer();
-		setContainer(c);
+		final Object c = super.createContainer();
 		runSyncInEventThread(new Runnable() {
 
 			public void run() {
+				setContainer(c);
+				proceedButton = new JButton();
+				cancelButton = new JButton();
+				backButton = new JButton();
 				myBar = new JToolBar();
-				try {
-					jbInit();
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
+				initialize();
 			}
 		});
 
 		return c;
 	}
 
-	private final void jbInit() throws Exception {
+	private final void initialize() {
 		backButton.setEnabled(false);
 		container = new JPanel();
 
@@ -106,7 +105,10 @@ public class TipiExportDialog extends TipiDialog {
 		if ("messagepath".equals(name)) {
 			msgPath = (String) value;
 			data = getNavajo().getMessage(msgPath);
-			sp.setMessage(data);
+			runSyncInEventThread(new Runnable(){
+				public void run() {
+					sp.setMessage(data);
+				}});
 		}
 	}
 

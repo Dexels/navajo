@@ -42,14 +42,21 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 	private boolean forceInternal = false;
 	private float opacity = 1.0f;
 
+	TipiSwingPanel tp;
+
 	public TipiDialog() {
 	}
 
 	public Object createContainer() {
-		TipiSwingPanel tp = new TipiSwingPanel();
-		TipiHelper th = new TipiSwingHelper();
-		th.initHelper(this);
-		addHelper(th);
+		runSyncInEventThread(new Runnable() {
+
+			public void run() {
+				tp = new TipiSwingPanel();
+				TipiHelper th = new TipiSwingHelper();
+				th.initHelper(TipiDialog.this);
+				addHelper(th);
+
+			}});
 		return tp;
 	}
 
