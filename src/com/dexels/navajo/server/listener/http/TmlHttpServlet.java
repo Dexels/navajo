@@ -66,7 +66,7 @@ public class TmlHttpServlet extends HttpServlet {
  private static long logfileIndex = 0;
  private static long bytesWritten = 0;
  
- private JabberWorker jabberWorker;
+ //private JabberWorker jabberWorker;
  
  protected final DispatcherInterface initDispatcher() throws NavajoException {
 
@@ -141,9 +141,8 @@ public class TmlHttpServlet extends HttpServlet {
     }
     
     // Initialize Jabber.
-    jabberWorker =  JabberWorker.getInstance();
-    jabberWorker.configJabber(jabberServer, jabberPort, jabberService, bootstrapUrl);
-    
+   JabberWorker.getInstance().configJabber(jabberServer, jabberPort, jabberService, bootstrapUrl);
+   
   }
 
   public void destroy() {
