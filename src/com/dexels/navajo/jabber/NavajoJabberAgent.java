@@ -225,7 +225,7 @@ public class NavajoJabberAgent  {
 
 	protected void messageReceived(Message message) throws XMPPException {
 		if (message.getProperty("navajoType") != null) {
-			System.err.println("Calling service " + message.getBody() + " from: " + message.getFrom());
+			//System.err.println("Calling service " + message.getBody() + " from: " + message.getFrom());
 			try {
 				Navajo result = NavajoClientFactory.getClient().doSimpleSend(NavajoFactory.getInstance().createNavajo(), message.getBody());
 				StringWriter sw = new StringWriter();
@@ -408,7 +408,7 @@ public class NavajoJabberAgent  {
 		m.setFrom(message.getTo());
 		m.setTo(message.getFrom());
 		m.setSubject("serverResponse");
-		System.err.println(message.toXML());
+		//System.err.println(message.toXML());
 		//System.err.println("threadid: " + c.getThreadID());
 		connection.sendPacket(m);
 	}
