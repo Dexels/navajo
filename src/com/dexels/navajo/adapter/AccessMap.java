@@ -55,13 +55,15 @@ public final class AccessMap implements Mappable {
   }
   
   public void setKilled(boolean b) {
-    if (myAccess.getCompiledScript().currentMap != null) {
-      Mappable myMap = (Mappable) myAccess.getCompiledScript().currentMap.myObject;
-      if (myMap != null && myMap instanceof com.dexels.navajo.adapter.SQLMap) {
-        ((SQLMap) myMap).setKillConnection();
-      }
-    }
-    myAccess.getCompiledScript().setKill(b);
+	  if (myAccess.getCompiledScript().currentMap != null) {
+//		  System.err.println("In setKilled(), myAccess = " + myAccess);
+//		  System.err.println("In setKilled(), myAccess.getCompiledScript() = " + myAccess.getCompiledScript());
+		  Mappable myMap = (Mappable) myAccess.getCompiledScript().currentMap.myObject;
+		  if (myMap != null && myMap instanceof com.dexels.navajo.adapter.SQLMap) {
+			  ((SQLMap) myMap).setKillConnection();
+		  }
+	  }
+	  myAccess.getCompiledScript().setKill(b);
   }
 
   private Message getMessage(Message parent, String name) throws NavajoException {
