@@ -1,10 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>Navajo</groupId>
 	<artifactId>Document</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>Document</name>
 	<url>http://maven.apache.org</url>
 	<dependencies>
@@ -17,7 +16,7 @@
 		<dependency>
 			<groupId>Navajo</groupId>
 			<artifactId>DexelsVersionControl</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.0.2</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -53,6 +52,7 @@
     <connection>scm:cvs:pserver:frank@spiritus.dexels.nl:/home/cvs:${project.name}</connection>
     <developerConnection>scm:cvs:pserver:frank@spiritus.dexels.nl:/home/cvs:${project.name}</developerConnection>
     <url>http://127.0.0.1/websvn/my-project</url>
+    <tag>Document-0_0_1</tag>
   </scm>
 	<distributionManagement>
 		<repository>
