@@ -9,3 +9,5 @@ NavajoDocument.jar
 TEST-NavajoTestSuite.txt
 pom.xml.releaseBackup
 release.properties
+target
+.settings

@@ -49,8 +49,8 @@
 	</build>
 	
 	  <scm>
-    <connection>scm:cvs:pserver:frank@spiritus.dexels.nl:/home/cvs:Document</connection>
-    <developerConnection>scm:cvs:pserver:frank@spiritus.dexels.nl:/home/cvs:Document</developerConnection>
+    <connection>scm:cvs:pserver:frank@spiritus.dexels.nl:/home/cvs:NavajoDocument</connection>
+    <developerConnection>scm:cvs:pserver:frank@spiritus.dexels.nl:/home/cvs:NavajoDocument</developerConnection>
     <url>http://127.0.0.1/websvn/my-project</url>
   </scm>
 	<distributionManagement>
