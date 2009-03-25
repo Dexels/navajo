@@ -1,0 +1,71 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.dexels.Navajo</groupId>
+	<packaging>pom</packaging>
+	<artifactId>Core</artifactId>
+	<version>1</version>
+	<name>Core</name>
+	<url>http://www.navajo.nl</url>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<scriptSourceDirectory>scripts</scriptSourceDirectory>
+		<testSourceDirectory>testsrc</testSourceDirectory>
+		<resources>
+			<resource>
+				<filtering>false</filtering>
+				<directory>src</directory>
+				<includes>
+					<include>**</include>
+				</includes>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.0.2</version>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	
+	
+	<scm>
+		<connection>scm:cvs:pserver:frank@spiritus.dexels.nl:/home/cvs:${project.name}</connection>
+		<developerConnection>scm:cvs:pserver:frank@spiritus.dexels.nl:/home/cvs:${project.name}</developerConnection>
+		<url>http://127.0.0.1/websvn/my-project</url>
+	</scm>
+	<distributionManagement>
+		<repository>
+			<id>Navajo</id>
+			<name>Navajo Nexus</name>
+			<url>scp://navajo@spiritus.dexels.nl:/home/navajo/Dexels</url>
+		</repository>
+  <!-- use the following if you ARE using a snapshot version. -->
+		<snapshotRepository>
+			<id>NavajoSnapshot</id>
+			<name>Navajo Nexus</name>
+			<url>scp://navajo@spiritus.dexels.nl:/home/navajo/DexelsSnapshot</url>
+		</snapshotRepository>
+		<site>
+			<id>NavajoSite</id>
+			<url>scp://navajo@spiritus.dexels.nl:/var/www/html/Site/${project.name}</url>
+		</site>
+	</distributionManagement>
+</project>
