@@ -1,4 +1,4 @@
-<tsl>
+<tsl author="Arjen Schoneveld" notes="Dit is een testwebservice voor de DomainObjectMapper" id="$Id$">
    <map object="com.dexels.navajo.mapping.bean.TestService">
       <field name="testBean">
          <map ref="/Test">
