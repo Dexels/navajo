@@ -21,13 +21,13 @@
 		</dependency>
 	</dependencies>
 	<build>
-	<sourceDirectory>src</sourceDirectory>
-    <scriptSourceDirectory>scripts</scriptSourceDirectory>
-    <testSourceDirectory>testsrc</testSourceDirectory>
+		<sourceDirectory>src</sourceDirectory>
+		<scriptSourceDirectory>scripts</scriptSourceDirectory>
+		<testSourceDirectory>testsrc</testSourceDirectory>
 		<resources>
 			<resource>
 				<filtering>false</filtering>
-				<directory>src/main/java</directory>
+				<directory>src</directory>
 				<includes>
 					<include>**</include>
 				</includes>
@@ -48,4 +48,23 @@
 			</plugin>
 		</plugins>
 	</build>
+	
+	  <scm>
+    <connection>scm:cvs:pserver:frank@spiritus.dexels.nl:/home/cvs:${project.name}</connection>
+    <developerConnection>scm:cvs:pserver:frank@spiritus.dexels.nl:/home/cvs:${project.name}</developerConnection>
+    <url>http://127.0.0.1/websvn/my-project</url>
+  </scm>
+	<distributionManagement>
+		<repository>
+			<id>Navajo</id>
+			<name>Navajo Nexus</name>
+			<url>scp://navajo@spiritus.dexels.nl:/home/navajo/Dexels</url>
+		</repository>
+  <!-- use the following if you ARE using a snapshot version. -->
+		<snapshotRepository>
+			<id>NavajoSnapshot</id>
+			<name>Navajo Nexus</name>
+			<url>scp://navajo@spiritus.dexels.nl:/home/navajo/DexelsSnapshot</url>
+		</snapshotRepository>
+	</distributionManagement>
 </project>

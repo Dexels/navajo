@@ -31,7 +31,16 @@
       <classpath refid="depend"/>
     </javac>
   </target>
-  <target name="base" depends="compile">
+	<target name="resource">
+		<copy todir="${build}">
+			<fileset dir="${src}">
+				<exclude name="**/*.java" />
+				<exclude name="CVS" />
+			</fileset>
+		</copy>
+	</target>
+	
+  <target name="base" depends="compile,resource">
     <jar jarfile="${base.archive}">
       <fileset dir="${build}">
         <include name="${document.base}/*.class"/>
@@ -81,7 +90,7 @@
 	      <fileset dir="${DexelsVersionControl.build}"/>
 	    </jar>
 	  </target>-->
-  <target name="jaxp" depends="compile">
+  <target name="jaxp" depends="compile,resource">
     <jar jarfile="${jaxp.archive}">
       <fileset dir="${build}">
         <include name="${document.base}/jaxpimpl/**/*.class"/>
