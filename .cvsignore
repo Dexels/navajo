@@ -33,3 +33,5 @@ NavajoEnterprise.jar
 NavajoRuntime.jar
 NavajoServer.jar
 .settings
+pom.xml.releaseBackup
+release.properties
