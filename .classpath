@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="testsrc"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/DexelsVersionControl"/>
-	<classpathentry kind="lib" path="lib/junit.jar"/>
-	<classpathentry kind="output" path="classes"/>
+  <classpathentry kind="src" path="src"/>
+  <classpathentry kind="src" path="testsrc" output="target/test-classes"/>
+  <classpathentry kind="output" path="target/classes"/>
+  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+  <classpathentry kind="var" path="M2_REPO/Navajo/DexelsVersionControl/0.0.1-SNAPSHOT/DexelsVersionControl-0.0.1-SNAPSHOT.jar"/>
+  <classpathentry kind="var" path="M2_REPO/junit/junit/3.8.1/junit-3.8.1.jar"/>
 </classpath>
