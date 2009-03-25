@@ -336,8 +336,6 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 
 	@Override
 	public void loadData(final Navajo n,final String method) throws TipiException, TipiBreakException {
-		// Thread.currentThread().dumpStack();
-		Thread.dumpStack();
 		
 		super.loadData(n, method);
 		runSyncInEventThread(new Runnable() {
