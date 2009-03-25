@@ -3,7 +3,7 @@
 	<groupId>Navajo</groupId>
 	<artifactId>Document</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.2</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<name>Document</name>
 	<url>http://maven.apache.org</url>
 	<dependencies>
@@ -52,7 +52,6 @@
     <connection>scm:cvs:pserver:frank@spiritus.dexels.nl:/home/cvs:NavajoDocument</connection>
     <developerConnection>scm:cvs:pserver:frank@spiritus.dexels.nl:/home/cvs:NavajoDocument</developerConnection>
     <url>http://127.0.0.1/websvn/my-project</url>
-    <tag>Document-0_0_2</tag>
   </scm>
 	<distributionManagement>
 		<repository>
