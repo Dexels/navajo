@@ -3,9 +3,9 @@
 	<packaging>jar</packaging>
 	<parent>
 		<groupId>com.dexels.Navajo</groupId>
-		<artifactId>Core</artifactId>
-		<version>1</version>
-		<relativePath>../DexelsVersionControl/superpom.xml</relativePath>
+		<artifactId>NavajoRoot</artifactId>
+		<version>0.0.2-SNAPSHOT</version>
+		<relativePath>../NavajoRoot/pom.xml</relativePath>
 	</parent>
 
 	<artifactId>VersionControl</artifactId>
