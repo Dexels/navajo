@@ -1,0 +1,49 @@
+<tsl>
+   <map object="com.dexels.navajo.mapping.bean.TestService">
+      <field name="testBean">
+         <map ref="/Test">
+             <field name="objectName">
+                <expression value="'com.dexels.navajo.mapping.bean.TestBean'"/>
+             </field>
+             <!--<field name="excludedProperties">
+                <expression value="'LastName'"/>
+             </field>-->
+             <!-- TODO: define bean fields that should NOT BE set automatically -->
+             <field name="lastname">
+                <expression value="'Intercepted: ' + [LastName]"/>
+             </field>
+         </map> 
+      </field>
+      <message name="Test">
+         <map ref="testBean">
+            <field name="inputProperties">
+                <expression value="'Firstname;isvip;dateofbirth'"/>
+            </field>
+            <field name="excludedProperties">
+                <expression value="'isvip'"/>
+             </field>
+            <!-- Create properties that should NOT BE created automatically -->
+            <property name="Lastname" direction="out">
+                <expression value="' Dit is de achternaam: ' + $lastname"/>
+            </property>
+         </map>
+      </message>
+      <message name="Testen">
+         <map ref="testBeans">
+            <property name="Lastname" direction="out">
+                <expression value="'Its not my name: ' + $lastname"/>
+            </property>
+         </map>
+      </message>
+      <field name="testBeans">
+         <map ref="/Tests">
+            <field name="objectName">
+                <expression value="'com.dexels.navajo.mapping.bean.TestBean'"/>
+             </field>
+             <field name="lastname">
+                <expression value="'\\'the dude\\' ' + [LastName]"/>
+             </field>
+         </map>
+      </field>
+   </map>
+</tsl>

@@ -1,0 +1,19 @@
+<tsl>
+   <message name="Test">
+      <property name="LastName" direction="in" type="string" value="Mol"/>
+      <property name="FirstName" direction="in" type="string" value="Sidney"/>
+   </message>
+   <message name="Tests" type="array">
+      <message name="Tests">
+         <property name="LastName" direction="in" type="string" value="Pienink"/>
+         <property name="FirstName" direction="in" type="string" value="Marcel"/>
+      </message>
+      <message name="Tests">
+         <property name="LastName" direction="in" type="string" value="Howeler"/>
+         <property name="FirstName" direction="in" type="string" value="Wiene"/>
+      </message>
+   </message>
+   <methods>
+      <method name="ProcessTestBean"/>
+   </methods>
+</tsl>
