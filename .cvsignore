@@ -4,3 +4,6 @@ doc
 .#NavajoClient.jar.1.14
 NavajoClient.jar
 target
+release.properties
+pom.xml.releaseBackup
+.settings
