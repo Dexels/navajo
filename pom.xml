@@ -1,11 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dexels.Navajo</groupId>
 	<artifactId>Client</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>Client</name>
+	<version>0.0.1</version>
+	<name>NavajoClient</name>
 	<parent>
 		<groupId>com.dexels.Navajo</groupId>
 		<artifactId>NavajoRoot</artifactId>
@@ -18,12 +17,23 @@
 			<artifactId>Document</artifactId>
 			<version>0.0.4</version>
 		</dependency>
+		<dependency>
+			<groupId>jivesoftware</groupId>
+			<artifactId>smack</artifactId>
+			<version>3.0.4</version>
+		</dependency>
+		<dependency>
+			<groupId>jivesoftware</groupId>
+			<artifactId>smackx</artifactId>
+			<version>3.0.4</version>
+		</dependency>
 	</dependencies>
 	
 	  <scm>
-    <connection>scm:cvs:pserver:frank@spiritus.dexels.nl:/home/cvs:NavajoDocument</connection>
-    <developerConnection>scm:cvs:pserver:frank@spiritus.dexels.nl:/home/cvs:NavajoDocument</developerConnection>
+    <connection>scm:cvs:pserver:frank@spiritus.dexels.nl:/home/cvs:${project.name}</connection>
+    <developerConnection>scm:cvs:pserver:frank@spiritus.dexels.nl:/home/cvs:${project.name}</developerConnection>
     <url>http://127.0.0.1/websvn/my-project</url>
+    <tag>Client-0_0_1</tag>
   </scm>
 
 </project>
