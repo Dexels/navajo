@@ -3,7 +3,7 @@
 	<groupId>com.dexels.Tipi</groupId>
 	<artifactId>Tipi</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>Tipi</name>
 	<parent>
 		<groupId>com.dexels.Navajo</groupId>
@@ -25,5 +25,6 @@
 		<connection>scm:cvs:pserver:frank@spiritus.dexels.nl:/home/cvs:NavajoTipi</connection>
 		<developerConnection>scm:cvs:pserver:frank@spiritus.dexels.nl:/home/cvs:NavajoTipi</developerConnection>
 		<url>http://127.0.0.1/websvn/my-project</url>
+    <tag>Tipi-0_0_1</tag>
   </scm>
 </project>
