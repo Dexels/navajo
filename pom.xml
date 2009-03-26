@@ -3,7 +3,7 @@
 	<groupId>com.dexels.Tipi</groupId>
 	<artifactId>TipiSwing</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.1</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>TipiSwing</name>
 	<parent>
 		<groupId>com.dexels.Navajo</groupId>
@@ -51,6 +51,5 @@
 		<connection>scm:cvs:pserver:frank@spiritus.dexels.nl:/home/cvs:NavajoSwingTipi</connection>
 		<developerConnection>scm:cvs:pserver:frank@spiritus.dexels.nl:/home/cvs:NavajoSwingTipi</developerConnection>
 		<url>http://127.0.0.1/websvn/my-project</url>
-	  <tag>TipiSwing-0_0_1</tag>
   </scm>
 </project>
