@@ -3,7 +3,7 @@
 	<groupId>com.dexels.Navajo</groupId>
 	<artifactId>NavajoDocument</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.5</version>
+	<version>0.0.6-SNAPSHOT</version>
 	<name>Document</name>
 	<parent>
 		<groupId>com.dexels.Navajo</groupId>
@@ -23,7 +23,6 @@
     <connection>scm:cvs:pserver:frank@spiritus.dexels.nl:/home/cvs:NavajoDocument</connection>
     <developerConnection>scm:cvs:pserver:frank@spiritus.dexels.nl:/home/cvs:NavajoDocument</developerConnection>
     <url>http://127.0.0.1/websvn/my-project</url>
-    <tag>NavajoDocument-0_0_5</tag>
   </scm>
 
 </project>
