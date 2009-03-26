@@ -18,14 +18,4 @@ package com.dexels.navajo.tipi.components.core;
  * @version 1.0
  */
 public class TipiMessageStoreImpl extends TipiHeadlessDataComponentImpl {
-	// private Object myObject;
-
-	public void setComponentValue(String name, Object object) {
-		// selectedMessage is the only name that occurs, I guess.
-		// myObject = object;
-	}
-
-	public Object getComponentValue(String name) {
-		return super.getComponentValue(name);
-	}
 }
