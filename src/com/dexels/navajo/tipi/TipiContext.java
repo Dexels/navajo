@@ -210,6 +210,8 @@ public abstract class TipiContext {
 		fakeExtension(optionalExtensionList, "tipi.TipiSwingMigExtension");
 		fakeExtension(optionalExtensionList, "tipi.TipiJoglExtension");
 
+		fakeExtension(optionalExtensionList, "tipi.TipiStadiumDesignerExtension");
+
 		fakeExtension(mainExtensionList, "tipi.TipiEchoExtension");
 
 		// initialize again
@@ -2906,6 +2908,10 @@ public abstract class TipiContext {
 
 	public ClientInterface getClient() {
 		return clientInterface;
+	}
+
+	public void showFatalStartupError(String message) {
+		System.err.println("Error starting up: "+message);
 	}
 
 }
