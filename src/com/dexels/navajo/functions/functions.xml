@@ -167,8 +167,8 @@
         <result>integer</result>
     </function>
     <function name="Size" class="com.dexels.navajo.functions.Size">
-        <description>This function return the size of a list argument, or the size of an array message.</description>
-        <input>string|binary|list|message</input>
+        <description>This function return the size of a list argument, the length of an array, or the size of an array message.</description>
+        <input>string|binary|list|message|array</input>
         <result>integer</result>
     </function>
     <function name="SetAllProperties" class="com.dexels.navajo.functions.SetAllProperties">

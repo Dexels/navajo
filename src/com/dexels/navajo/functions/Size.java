@@ -44,7 +44,10 @@ public final class Size extends FunctionInterface {
         else if (arg instanceof Message) {
         	return new Integer( (int) ((Message) arg).getArraySize());
         } 
-        
+        else if (arg instanceof Object[]) {
+          	return new Integer( (int) ((Object[]) arg).length);
+          } 
+          
         else if (!(arg instanceof ArrayList)) {
             throw new TMLExpressionException("Expected list argument for size() function.");
         }
@@ -55,11 +58,11 @@ public final class Size extends FunctionInterface {
     }
 
     public String usage() {
-        return "Size(list | arraymessage)";
+        return "Size(list | arraymessage | array)";
     }
 
     public String remarks() {
-        return "This function return the size of a list argument, or the size of an array message.";
+        return "This function return the size of a list argument, the length of an array, or the size of an array message.";
     }
 
     public static void main(String [] args) throws Exception {
