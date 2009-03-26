@@ -5,10 +5,7 @@
     <property name="build" location="classes"/>
     <property name="lib" value="lib"/>
     <property name="archive" value="TipiSwingClient.jar"/>
-    <target name="check-env">
-        <tstamp/>
-        <fail unless="PROJECTHOME"> Set the PROJECTHOME environment variable to the top directory of your CVS projects, for example: export PROJECTHOME=C:\PROJECTS declare -x PROJECTHOME=/home/arjen/las-projectas </fail>
-    </target>
+  
     <path id="depend">
     <!--    <fileset dir="${lib}">
             <include name="**/*.jar"/>
@@ -16,7 +13,7 @@
     </path>
 
 
-    <target name="init" depends="check-env">
+    <target name="init">
         <mkdir dir="${build}"/>
     </target>
     <target name="clean">
