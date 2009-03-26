@@ -31,32 +31,14 @@
 		<pathelement location="${NavajoLogger.build}"/>
 		<pathelement location="${Navajo.build}"/>
 	</path>
-	<target name="check-env">
-		<tstamp/>
-		<fail unless="PROJECTHOME"> Set the PROJECTHOME environment variable to the top directory of your CVS projects,
-			for example: export PROJECTHOME=C:\PROJECTS declare -x PROJECTHOME=/home/arjen/las-projectas </fail>
-	</target>
-	<target name="checkout.Navajo" depends="check-env" unless="Navajo.present">
-		<cvs package="Navajo" dest="${PROJECTHOME}"/>
-	</target>
-	<target name="checkout.NavajoLogger" depends="check-env" unless="NavajoLogger.present">
-		<cvs package="NavajoLogger" dest="${PROJECTHOME}"/>
-	</target>
-	<target name="checkout.NavajoClient" depends="check-env" unless="NavajoClient.present">
-		<cvs package="NavajoClient" dest="${PROJECTHOME}"/>
-	</target>
-	<target name="checkout.NavajoDocument" depends="check-env" unless="NavajoDocument.present">
-		<cvs package="NavajoDocument" dest="${PROJECTHOME}"/>
-	</target>
-	<target name="checkout" depends="check-env,checkout.NavajoLogger,checkout.NavajoClient,checkout.NavajoDocument"/>
-	<target name="init" depends="checkout">
+	<target name="init" >
 		<mkdir dir="${Navajo.build}"/>
 		<mkdir dir="${NavajoLogger.build}"/>
 		<mkdir dir="${NavajoDocument.build}"/>
 		<mkdir dir="${NavajoClient.build}"/>
 		<mkdir dir="${build}"/>
 	</target>
-	<target name="clean" depends="check-env">
+	<target name="clean" >
 		<delete file="${archive}"/>
 		<delete dir="${Navajo.build}"/>
 		<delete dir="${NavajoLogger.build}"/>
@@ -79,7 +61,17 @@
 			<property name="PROJECTHOME" value="${PROJECTHOME}"/>
 		</ant>
 	</target>
-	<target name="archive" depends="compile">
+	
+		<target name="resource">
+			<copy todir="${build}">
+				<fileset dir="${src}">
+					<exclude name="**/*.java" />
+					<exclude name="CVS" />
+				</fileset>
+			</copy>
+		</target>
+	
+	<target name="archive" depends="compile,resource">
 		<jar jarfile="${archive}">
 			<fileset dir="${build}"/>
 			<fileset dir="${DexelsVersionControl.build}"/>
