@@ -7,6 +7,7 @@
 	<target name="customGrabjar" depends="cleandistribution">
 		<copy todir="${dist}/lib" file="${ant.project.name}.jar" />
 		<copy todir="${dist}/lib" file="./SwingMain.jar" />
+		<copy todir="${dist}/lib" file="lib/javadocking.jar" />
 		<copy todir="${dist}/lib" file="../TipiSwingClient/TipiSwingClient.jar" />
 		<copy todir="${dist}/lib" file="../AnimatedTransitions/AnimatedTransitions.jar" />
 		<copy todir="${dist}/lib" file="../TimingFramework/TimingFramework.jar" />
