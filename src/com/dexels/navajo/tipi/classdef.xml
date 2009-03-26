@@ -66,7 +66,7 @@
          </event>
       </events>
       <values>
-           <value direction="in" name="messageName" type="string" />
+           <value direction="in" name="messagePath" type="string" />
           <value direction="in" name="message" type="message" />
       </values>
    </tipiclass>
