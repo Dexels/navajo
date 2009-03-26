@@ -3,7 +3,7 @@
 	<groupId>com.dexels.Navajo</groupId>
 	<artifactId>NavajoFunctions</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>NavajoFunctions</name>
 	<parent>
 		<groupId>com.dexels.Navajo</groupId>
@@ -22,5 +22,6 @@
 		<connection>scm:cvs:pserver:frank@spiritus.dexels.nl:/home/cvs:NavajoFunctions</connection>
 		<developerConnection>scm:cvs:pserver:frank@spiritus.dexels.nl:/home/cvs:NavajoFunctions</developerConnection>
 		<url>http://127.0.0.1/websvn/my-project</url>
+    <tag>NavajoFunctions-0_0_1</tag>
   </scm>
 </project>
