@@ -41,10 +41,11 @@
 			<version>3.1</version>
 		</dependency>
 		<dependency>
-			<groupId>com.dexels.thirdparty</groupId>
-			<artifactId>retrotranslator-runtime</artifactId>
-			<version>1.2.2</version>
+		  <groupId>net.sf.retrotranslator</groupId>
+		  <artifactId>retrotranslator-runtime</artifactId>
+		  <version>1.2.7</version>
 		</dependency>
+
 	</dependencies>
 	<scm>
 		<connection>scm:cvs:pserver:frank@spiritus.dexels.nl:/home/cvs:Navajo</connection>
