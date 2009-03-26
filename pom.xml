@@ -14,8 +14,8 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.dexels.Navajo</groupId>
-			<artifactId>Document</artifactId>
-			<version>0.0.4</version>
+			<artifactId>NavajoDocument</artifactId>
+			<version>0.0.5</version>
 		</dependency>
 		<dependency>
 			<groupId>jivesoftware</groupId>
