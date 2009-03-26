@@ -6,11 +6,10 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/DexelsVersionControl"/>
 	<classpathentry exported="true" kind="lib" path="lib/saaj-api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/saaj-impl.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/multipartrequest.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/wsdl4j-20021124.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/axis-1_0.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/axis-1_0-ant.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxrpc-1_1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/servlet-2_2.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/NavajoClient"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
