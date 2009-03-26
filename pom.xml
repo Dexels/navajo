@@ -9,12 +9,11 @@
 	</parent>
 
 	<artifactId>DexelsVersionControl</artifactId>
-	<version>0.0.5</version>
+	<version>0.0.6-SNAPSHOT</version>
 	<name>DexelsVersionControl</name>
 	<scm>
 		<connection>scm:cvs:pserver:frank@spiritus.dexels.nl:/home/cvs:DexelsVersionControl</connection>
 		<developerConnection>scm:cvs:pserver:frank@spiritus.dexels.nl:/home/cvs:DexelsVersionControl</developerConnection>
 		<url>http://127.0.0.1/websvn/my-project</url>
-    <tag>DexelsVersionControl-0_0_5</tag>
   </scm>
 </project>
