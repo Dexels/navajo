@@ -309,7 +309,7 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
               }
           }
           
-          System.err.println("Mystery type: "+type);
+        //  System.err.println("Mystery type: "+type);
         if(myPropertyLabel == null) {
         myPropertyLabel = new JLabel();
         }

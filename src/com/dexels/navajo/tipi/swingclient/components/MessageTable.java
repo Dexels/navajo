@@ -1,28 +1,82 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dialog;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.FontMetrics;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.Point;
-import java.awt.datatransfer.*;
-import java.awt.dnd.*;
-import java.awt.event.*;
-import java.beans.*;
-import java.io.*;
-import java.text.*;
-import java.util.*;
+import java.awt.Stroke;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.CellEditor;
+import javax.swing.ImageIcon;
+import javax.swing.InputMap;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JToolBar;
+import javax.swing.JViewport;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.event.CellEditorListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.table.TableColumn;
 
-import com.dexels.navajo.client.*;
-import com.dexels.navajo.dnd.*;
-import com.dexels.navajo.dnd.TestDragTable.*;
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.lazy.*;
-import com.dexels.navajo.document.types.*;
-import com.dexels.navajo.tipi.swingclient.*;
-import com.dexels.navajo.tipi.swingclient.components.sort.*;
+import com.dexels.navajo.client.NavajoClientFactory;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.document.lazy.MessageListener;
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.tipi.swingclient.UserInterface;
+import com.dexels.navajo.tipi.swingclient.components.sort.CustomTableHeaderRenderer;
+import com.dexels.navajo.tipi.swingclient.components.sort.TableSorter;
 
 /**
  * <p>Title: </p>
@@ -134,7 +188,6 @@ private Component myCurrentEditingComponent;
       }
 
 	public void focusGained(FocusEvent e) {
-		System.err.println("TABLE: GAINED FOCUS"+e.getOppositeComponent());
 //		refreshSelectedCell();
 	}
     });
