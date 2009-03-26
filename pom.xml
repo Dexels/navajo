@@ -4,7 +4,7 @@
 	<artifactId>Tipi</artifactId>
 	<packaging>jar</packaging>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Navajo</name>
+	<name>Tipi</name>
 	<parent>
 		<groupId>com.dexels.Navajo</groupId>
 		<artifactId>NavajoRoot</artifactId>
