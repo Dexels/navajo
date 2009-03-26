@@ -158,9 +158,20 @@ public class MainApplication {
 		if (tipiResourceStream == null) {
 			System.err.println("Error starting up: Can not load tipi. Resource not found: "+definitionPath);
 			System.err.println("Codebase: "+context.getTipiResourceLoader());
+			String fatalErrorMsg="No connection allowed to server by security software, check your connection and security settings.";
+			try {
+				String msg = System.getProperty("fatalSystemErrorMessage");
+				if(msg!=null) {
+					fatalErrorMsg = msg;
+				}
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			}
 			tipiResourceStream = context.getTipiResourceStream("init.xml");
 			if (tipiResourceStream == null) {
 				System.err.println("Still failed");
+				context.showFatalStartupError(fatalErrorMsg);
+				context.shutdown();
 			} else {
 				System.err.println("recovered");
 			}

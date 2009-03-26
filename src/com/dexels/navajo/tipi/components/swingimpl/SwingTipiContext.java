@@ -671,4 +671,10 @@ public class SwingTipiContext extends TipiContext {
 		}
 		
 	}
+
+
+	@Override
+	public void showFatalStartupError(String message) {
+		showError(message, "Fatal startup error!");
+	}
 }
