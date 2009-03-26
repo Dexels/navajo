@@ -3,7 +3,7 @@
 	<groupId>com.dexels.Navajo</groupId>
 	<artifactId>NavajoClient</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.5</version>
+	<version>0.0.6-SNAPSHOT</version>
 	<name>NavajoClient</name>
 	<parent>
 		<groupId>com.dexels.Navajo</groupId>
@@ -33,7 +33,6 @@
     <connection>scm:cvs:pserver:frank@spiritus.dexels.nl:/home/cvs:NavajoClient</connection>
     <developerConnection>scm:cvs:pserver:frank@spiritus.dexels.nl:/home/cvs:NavajoClient</developerConnection>
     <url>http://127.0.0.1/websvn/my-project</url>
-    <tag>NavajoClient-0_0_5</tag>
   </scm>
 
 </project>
