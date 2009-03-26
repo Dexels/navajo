@@ -43,7 +43,6 @@ import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.UserException;
-import com.sun.org.apache.xml.internal.security.utils.XMLUtils;
 
 public class TagMap implements Mappable {
 
