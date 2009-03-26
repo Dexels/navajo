@@ -19,7 +19,11 @@
       <param name="condense" type="boolean" default="true" />
    </tipiaction>
 
-   <tipiaction name="exit" class="TipiExit" package="com.dexels.navajo.tipi.actions" />
+   <tipiaction name="exit" class="TipiExit" package="com.dexels.navajo.tipi.actions">
+		<description>
+			Exits the current Tipi application instance. Web based instances will typically destroy the session, while Swing / SWT versions will exit the JVM 
+		</description>
+   </tipiaction>
 
    <tipiaction name="registerPush" class="TipiRegisterPush" package="com.dexels.navajo.tipi.actions">
       <param name="agentId" type="string" default="" />
@@ -27,6 +31,9 @@
   
 
    <tipiaction name="sleep" class="TipiSleep" package="com.dexels.navajo.tipi.actions">
+		<description>
+			Pause the current event for the supplied number of millis.
+		</description>
       <param name="time" type="integer" required="true" />
    </tipiaction>
 
