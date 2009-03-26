@@ -8,7 +8,7 @@
 		<relativePath>../NavajoRoot/pom.xml</relativePath>
 	</parent>
 
-	<artifactId>VersionControl</artifactId>
+	<artifactId>DexelsVersionControl</artifactId>
 	<version>0.0.5-SNAPSHOT</version>
 	<name>DexelsVersionControl</name>
 	<scm>
