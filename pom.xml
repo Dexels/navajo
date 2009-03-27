@@ -17,8 +17,8 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.dexels.Navajo</groupId>
-			<artifactId>Client</artifactId>
-			<version>0.0.3</version>
+			<artifactId>NavajoClient</artifactId>
+			<version>0.0.5</version>
 		</dependency>
 		<dependency>
 			<groupId>com.dexels.thirdparty</groupId>
