@@ -20,8 +20,8 @@ import com.dexels.navajo.server.UserException;
  */
 public class ServiceMapper implements Mappable {
 
-	private String serviceClass;
-	private String serviceMethod;
+	protected String serviceClass;
+	protected String serviceMethod;
 	
 	private ArrayList methodParameters = new ArrayList();
 	private Object result;
@@ -54,7 +54,6 @@ public class ServiceMapper implements Mappable {
 	}
 	
 	private void listAllMethods() throws Exception {
-		System.err.println("In listAllMethods()");
 		Method [] am = getServiceObject().getClass().getMethods();
 		for (int i = 0; i < am.length; i++) {
 			System.err.println(am[i].getName() + ", parameters: " + listParameterTypes(am[i].getParameterTypes()));
@@ -140,7 +139,7 @@ public class ServiceMapper implements Mappable {
 	 * Add a simple (non domain object class) parameter (String, Integer, Float, Double, Date, Boolean, etc.)
 	 */
 	public void setAddParameter(Object o) {
-		System.err.println("addParameter: " + o.getClass());
+		//System.err.println("addParameter: " + o.getClass());
 		methodParameters.add(o);
 	}
 	
