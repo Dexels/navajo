@@ -1,6 +1,8 @@
 package com.dexels.navajo.mapping.bean;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class TestBean {
 
@@ -14,6 +16,25 @@ public class TestBean {
 	
 	public String getLastname() {
 		return lastname;
+	}
+	
+	public SubBean [] getSubBeans() {
+		SubBean [] beans = new SubBean[2]; 
+		beans[0] = new SubBean();
+		beans[1] = new SubBean();
+		System.err.println("GOT " + beans.length + " sub beans");
+		return beans;
+	}
+	
+	public List<SubBean> getSubBeanList() {
+		ArrayList<SubBean> l = new ArrayList<SubBean>();
+		l.add(new SubBean());
+		l.add(new SubBean());
+		return l;
+	}
+	
+	public SubBean getSubBean() {
+		return new SubBean();
 	}
 	
 	public String getAppendedLastname(String noot) {
