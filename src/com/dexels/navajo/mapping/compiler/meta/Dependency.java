@@ -32,4 +32,8 @@ public abstract class Dependency {
 	public String getId() {
 		return id;
 	}
+	
+	public String getType() {
+		return this.getClass().getSimpleName();
+	}
 }
