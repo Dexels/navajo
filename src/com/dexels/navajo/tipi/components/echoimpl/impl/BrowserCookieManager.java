@@ -8,6 +8,7 @@ import nextapp.echo2.app.*;
 import nextapp.echo2.webcontainer.*;
 import nextapp.echo2.webcontainer.command.*;
 
+import com.dexels.navajo.functions.ForAll;
 import com.dexels.navajo.tipi.internal.cookie.*;
 
 public class BrowserCookieManager implements CookieManager {
@@ -60,6 +61,14 @@ public class BrowserCookieManager implements CookieManager {
 
 	public void saveCookies() throws IOException {
 		// nothing
+	}
+
+	@Override
+	public void deleteCookies() throws IOException {
+		ContainerContext containerContext = (ContainerContext) ApplicationInstance.getActive().getContextProperty(
+				ContainerContext.CONTEXT_PROPERTY_NAME);
+		Cookie[] cc = containerContext.getCookies();
+		System.err.println("Warning: Echo cookie deletion not implemented");
 	}
 
 }

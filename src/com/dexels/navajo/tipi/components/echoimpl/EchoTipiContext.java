@@ -301,7 +301,7 @@ public class EchoTipiContext extends TipiContext {
 	public void setTipiResourceLoader(String tipiCodeBase) throws MalformedURLException {
 		if (tipiCodeBase != null) {
 			if (tipiCodeBase.indexOf("http:/") != -1) {
-				setTipiResourceLoader(new HttpResourceLoader(new URL(tipiCodeBase)));
+				setTipiResourceLoader(new HttpResourceLoader(tipiCodeBase));
 			} else {
 				setTipiResourceLoader(new FileResourceLoader(new File(tipiCodeBase)));
 			}
