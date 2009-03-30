@@ -270,7 +270,7 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 	}
 	
 	public Object getDomainObjectAttribute(String name, Object [] parameters) throws Exception {
-		setExcludedProperties(name);
+		//setExcludedProperties(name);
 		Method m = getMethodReference(myObject.getClass(), name, parameters);
 		return m.invoke(myObject, parameters);
 	}
