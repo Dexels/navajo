@@ -31,7 +31,6 @@ public abstract class MultiClassLoader extends NavajoClassSupplier {
 
     // ---------- Fields --------------------------------------
 
-    private static int instances = 0;
     //public Hashtable classes = new Hashtable();
     private char      classNameReplacementChar;
     protected boolean   monitorOn = false;
@@ -40,7 +39,6 @@ public abstract class MultiClassLoader extends NavajoClassSupplier {
 
     public MultiClassLoader(ClassLoader parent) {
     	super(parent);
-    	instances++;
     }
 
     public void clearCache() {
@@ -198,10 +196,6 @@ public abstract class MultiClassLoader extends NavajoClassSupplier {
     protected static void print(String text) {
         System.out.println(text);
     }
-  public static int getInstances() {
-    return instances;
-  }
-
 
 
 } // End class
