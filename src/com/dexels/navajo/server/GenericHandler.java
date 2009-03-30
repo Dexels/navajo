@@ -43,7 +43,7 @@ import com.dexels.navajo.events.types.NavajoCompileScriptEvent;
 public final class GenericHandler extends ServiceHandler {
 
     @SuppressWarnings("unchecked")
-	private static HashMap loadedClasses = null;
+	private static HashMap<String,NavajoClassSupplier> loadedClasses = null;
 
     private static Object mutex1 = new Object();
     private static Object mutex2 = new Object();
@@ -107,7 +107,9 @@ public final class GenericHandler extends ServiceHandler {
     		return false;
     	}
     	if ( cso != null ) {
-    		return cso.hasDirtyDependencies(a);
+    		boolean result = cso.hasDirtyDependencies(a);
+    		//System.err.println(">>>>>>>>>>>>>>>>. hasDirtyDepedencies: " + result);
+    		return result;
     	} else {
     		return false;
     	}
@@ -186,7 +188,7 @@ public final class GenericHandler extends ServiceHandler {
     	return b;
     }
     
-    private static NavajoClassSupplier getScriptLoader(boolean isBetaUser, String className) {
+    private static final NavajoClassSupplier getScriptLoader(boolean isBetaUser, String className) {
     	NavajoClassSupplier newLoader = (NavajoClassLoader) loadedClasses.get(className);
          if (newLoader == null ) {
          	newLoader = new NavajoClassLoader(null, DispatcherFactory.getInstance().getNavajoConfig().getCompiledScriptPath(), 
@@ -209,7 +211,9 @@ public final class GenericHandler extends ServiceHandler {
     	File scriptFile = (File) all[2];
     	File sourceFile = (File) all[4];
     	File targetFile = (File) all[7];
-    	return ( checkScriptRecompile(scriptFile, sourceFile) || checkJavaRecompile(sourceFile, targetFile) );
+    	boolean nr = checkScriptRecompile(scriptFile, sourceFile) || checkJavaRecompile(sourceFile, targetFile);
+    	//System.err.println(">>>>>>>>>>>>>>>>>>>>>>> needsRecompile()... " + nr);
+    	return nr;
     }
     
     public static CompiledScript compileScript(Access a, String rpcName, StringBuffer compilerErrors) throws Exception {
@@ -234,6 +238,7 @@ public final class GenericHandler extends ServiceHandler {
 
     				if ( checkScriptRecompile(scriptFile, sourceFile) || hasDirtyDepedencies(a, className) ) {
 
+    					//System.err.println(">>>> RECOMPILING TSL..........");
     					synchronized (mutex1) { // Check for outdated compiled script Java source.
 
     						if ( checkScriptRecompile(scriptFile, sourceFile) || hasDirtyDepedencies(a, className) ) {
@@ -328,16 +333,25 @@ public final class GenericHandler extends ServiceHandler {
 		
 		String compilerErrors = "";
 		
+		
 		if ( checkJavaRecompile(sourceFile, targetFile) ) { // Create class file
 
 			synchronized(mutex2) {
 
 				if ( checkJavaRecompile(sourceFile, targetFile) ) {
 
-					NavajoClassSupplier newLoader = getScriptLoader(a.betaUser, className);
-					if (newLoader != null) {
+					//System.err.println(">>>> RECOMPILING JAVA..........");
+					
+					NavajoClassSupplier loader = null;
+					if ( ( loader = loadedClasses.get(className) ) != null) {
+						// Get previous version of CompiledScript.
+						try {
+							CompiledScript prev = getCompiledScript(a, className);
+							prev.releaseCompiledScript();
+						} catch (Exception e) {
+						}
 						loadedClasses.remove(className);
-						newLoader = null;
+						loader = null;
 					}
 
 					com.dexels.navajo.compiler.NavajoCompiler compiler = new com.dexels.navajo.compiler.NavajoCompiler();
