@@ -362,7 +362,7 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 		//setExcludedProperties(name);
 		Method m = getMethodReference(myObject.getClass(), name, parameters);
 		Object result = m.invoke(myObject, parameters);
-		if ( List.class.isAssignableFrom(result.getClass()) ) {
+		if ( result != null && List.class.isAssignableFrom(result.getClass()) ) {
 			// Is list, cast to array.
 			List list = (List) result;
 			Object [] pojos = new Object[list.size()];
