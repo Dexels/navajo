@@ -97,6 +97,10 @@ public class NavajoClassLoader extends MultiClassLoader {
         initializeJarResources();
     }
 
+    public static int getInstances() {
+    	return instances;
+    }
+    
     public NavajoClassLoader(String adapterPath, String compiledScriptPath, ClassLoader parent) {
     	
     	super(parent);
