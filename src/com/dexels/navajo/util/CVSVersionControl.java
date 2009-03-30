@@ -71,7 +71,7 @@ public class CVSVersionControl {
 			line = br.readLine();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		}  finally {
 			if ( br != null ) {
 				try {
@@ -118,7 +118,7 @@ public class CVSVersionControl {
 			this.date = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy").parse(tokens[3]);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		}  finally {
 			if ( br != null ) {
 				try {

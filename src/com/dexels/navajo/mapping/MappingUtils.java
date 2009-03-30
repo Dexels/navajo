@@ -576,7 +576,7 @@ public static final boolean isObjectMappable(String className) throws UserExcept
   }
 
   /**
-   * TODO: UITZOEKEN WAAROM methodName zou moeten worden meegegeven.
+   * 
    * @param c
    * @param field
    * @param methodName
@@ -657,7 +657,14 @@ public static final boolean isObjectMappable(String className) throws UserExcept
 
 	  return methodNameBuffer.toString();
   }
- 
+
+ /**
+  * 
+  * @param name
+  * @param c
+  * @return
+  * @throws MappingException
+  */
  private static final String determineTypeForField(String name, Class c) throws MappingException {
 
 	 if ( name.indexOf("(") != -1 ) {

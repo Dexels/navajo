@@ -30,4 +30,9 @@ public class IncludeDependency extends Dependency {
 			return -1;
 		}
 	}
+	
+	public static void main(String [] args) {
+		Long l = new Long("32323232");
+		new IncludeDependency(l, "ssa");
+	}
 }
