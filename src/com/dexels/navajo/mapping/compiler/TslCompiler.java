@@ -316,7 +316,7 @@ public String optimizeExpresssion(int ident, String clause, String className, St
               try {
             	  expressionContextClass = Class.forName(className, false, loader);
               } catch (Exception e) {
-              	throw new Exception("Could not find adapeter: " + className);
+              	throw new Exception("Could not find adapter: " + className);
               }
 
             String attrType = MappingUtils.getFieldType(expressionContextClass, name.toString());
@@ -409,7 +409,7 @@ public String optimizeExpresssion(int ident, String clause, String className, St
       }
       catch (Throwable e) {
         exact = false;
-        System.err.println("Throwable, COULD NOT OPTIMIZE EXPRESSION: " + clause);
+        //System.err.println("Throwable, COULD NOT OPTIMIZE EXPRESSION: " + clause);
       }
     }
 
@@ -664,6 +664,7 @@ public String messageNode(int ident, Element n, String className, String objectN
 
     boolean isArrayAttr = false;
     boolean isSubMapped = false;
+    boolean forceArray = false;
     String mapPath = null;
     
     // Check if <message> is mapped to an object attribute:
@@ -683,6 +684,8 @@ public String messageNode(int ident, Element n, String className, String objectN
         	 ref = refOriginal;
            }
           
+          forceArray = ( nextElt.getAttribute("forcearray") != null && !nextElt.getAttribute("forcearray").equals("") );
+          //System.err.println("forceArray =  " + forceArray);
           filter = nextElt.getAttribute("filter");
           startElement = nextElt.getAttribute("start_element");
           elementOffset = nextElt.getAttribute("element_offset");
@@ -704,30 +707,19 @@ public String messageNode(int ident, Element n, String className, String objectN
           
           //System.out.println("in MessageNode(), new contextClass = " + contextClass);
           
-          isArrayAttr = MappingUtils.isArrayAttribute(contextClass, ref);
-          if (isArrayAttr) {
-            type = Message.MSG_TYPE_ARRAY;
+          if ( DomainObjectMapper.class.isAssignableFrom(contextClass)) {
+        	  //System.err.println("Got a parent DomainObjectMapper...");
+        	  isArrayAttr = forceArray;
+        	  type = Message.MSG_TYPE_ARRAY;
+          } else {
+        	  isArrayAttr = MappingUtils.isArrayAttribute(contextClass, ref);
+        	  if (isArrayAttr) {
+        		  type = Message.MSG_TYPE_ARRAY;
+        	  }
           }
           isSubMapped = true;
     }
     ////System.out.println("isArrayAttr = " + isArrayAttr);
-
-    // Construct Lazy stuff if it's an array message and it has a lazy flag.
-    if (isLazy && isArrayAttr) {
-      result.append(printIdent(ident) + "lm = access.getLazyMessages();\n");
-      result.append(printIdent(ident) + "fullMsgName = \"/\" + ( (currentOutMsg != null ? (currentOutMsg.getFullMessageName() + \"/\") : \"\") + \"" +
-                    messageName + "\");\n");
-      result.append(printIdent(ident) + "if (lm.isLazy(fullMsgName)) {\n");
-      result.append(printIdent(ident + 2) +
-                    "la = (LazyArray) currentMap.myObject;\n");
-      result.append(printIdent(ident + 2) + "la.setEndIndex(\"" + ref +
-                    "\", lm.getEndIndex(fullMsgName));\n");
-      result.append(printIdent(ident + 2) + "la.setStartIndex(\"" + ref +
-                    "\",lm.getStartIndex(fullMsgName));\n");
-      result.append(printIdent(ident + 2) + "la.setTotalElements(\"" + ref +
-                    "\",lm.getTotalElements(fullMsgName));\n");
-      result.append(printIdent(ident) + "}\n");
-    }
 
     // Create the message(s). Multiple messages are created if count > 1.
     result.append(printIdent(ident) + "count = " +
@@ -771,22 +763,6 @@ public String messageNode(int ident, Element n, String className, String objectN
 	    result.append(printIdent(ident + 2) + "currentParamMsg = " + messageList + "[messageCount" + (ident) + "];\n");
     }
 
-    if (isLazy && isArrayAttr) {
-      result.append(printIdent(ident + 2) +
-                    "if (lm != null && lm.isLazy(fullMsgName)) {\n");
-      result.append(printIdent(ident + 4) +
-                    "currentOutMsg.setLazyTotal(la.getTotalElements(\"" + ref +
-                    "\"));\n");
-      result.append(printIdent(ident + 4) +
-                    "currentOutMsg.setLazyRemaining(la.getRemainingElements(\"" +
-                    ref + "\"));\n");
-      result.append(printIdent(ident + 4) +
-                    "currentOutMsg.setArraySize(la.getCurrentElements(\"" + ref +
-                    "\"));\n");
-      result.append(printIdent(ident + 4) + "lm = null; fullMsgName = \"\";\n");
-      result.append(printIdent(ident + 2) + "}\n");
-    }
-
     result.append(printIdent(ident + 2) +
                   "access.setCurrentOutMessage(currentOutMsg);\n");
 
@@ -797,17 +773,63 @@ public String messageNode(int ident, Element n, String className, String objectN
       
       String mappableArrayName = "mappableObject" + (objectCounter++);
       
+      boolean isDomainObjectMapper = false;
       
-      // Extract ref....
-      
+      contextClassStack.push(contextClass);
+      String subClassName = null;
+      NodeList children = nextElt.getChildNodes();
+      //contextClass = null;
+      try {
+    	subClassName = MappingUtils.getFieldType(contextClass, ref);
+      	contextClass = Class.forName(subClassName, false, loader);
+      } catch (Exception e) { 
+    		isDomainObjectMapper = contextClass.isAssignableFrom(DomainObjectMapper.class);
+    		subClassName = "com.dexels.navajo.mapping.bean.DomainObjectMapper";
+    		contextClass = com.dexels.navajo.mapping.bean.DomainObjectMapper.class;
+        	if ( isDomainObjectMapper ) {
+        		type = "java.lang.Object";
+        	} else {
+        		throw new Exception("Could not find adapter: " + subClassName); 
+        	}
+      }
+
+      addDependency("dependentObjects.add( new JavaDependency( -1, \"" + subClassName + "\"));\n", "JAVA"+subClassName);
+
+      // Extract ref.... 
       if ( mapPath == null ) {
-    	  result.append(printIdent(ident + 2) + mappableArrayName +
-    			  " = ((" + className + ") currentMap.myObject).get" +
-    			  ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) + "();\n");
+    	  if ( isDomainObjectMapper ) {
+    		  result.append(printIdent(ident + 2) + "try {\n");
+    		  result.append(printIdent(ident + 2) +
+    				  mappableArrayName + " = com.dexels.navajo.mapping.bean.DomainObjectMapper.createArray( (Object []) ((" + className + ") currentMap.myObject).getDomainObjectAttribute(\"" +
+    				   ref + "\", null) ) ;\n");
+    		  result.append(printIdent(ident + 2) + "} catch (Exception e) {\n");
+    		  result.append(printIdent(ident + 2) + "  String subtype = ((" + className + ") currentMap.myObject).getDomainObjectAttribute(\"" +
+   				   ref + "\", null).getClass().getName();\n");
+    		  result.append(printIdent(ident + 2) + "  throw new Exception(\" Could not cast " + ref + 
+    				  "(type = \" + subtype + \") to an array\");\n");
+    		  result.append(printIdent(ident + 2) + "}\n");
+    	  } else {
+    		  result.append(printIdent(ident + 2) + mappableArrayName +
+    				  " = ((" + className + ") currentMap.myObject).get" +
+    				  ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) + "();\n");
+    	  }
       } else {
-    	  result.append(printIdent(ident + 2) + mappableArrayName +
-    			  " = ((" + className + ") findMapByPath( \"" + mapPath + "\")).get" +
-    			  ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) + "();\n");
+    	  if ( isDomainObjectMapper ) { 
+    		  result.append(printIdent(ident + 2) + "try {\n");
+    		  result.append(printIdent(ident + 2) +
+    				  mappableArrayName + " = com.dexels.navajo.mapping.bean.DomainObjectMapper.createArray( (Object []) ((" + className + ") findMapByPath( \"" + mapPath + "\")).getDomainObjectAttribute(\"" +
+    				   ref + "\", null) ) ;\n");
+    		  result.append(printIdent(ident + 2) + "} catch (Exception e) {\n");
+    		  result.append(printIdent(ident + 2) + "  String subtype = ((" + className + ") findMapByPath( \"" + mapPath + "\")).getDomainObjectAttribute(\"" +
+   				   ref + "\", null).getClass().getName();\n");
+    		  result.append(printIdent(ident + 2) + "  throw new Exception(\" Could not cast " + ref + 
+    				  "(type = \" + subtype + \") to an array\");\n");
+    		  result.append(printIdent(ident + 2) + "}\n");
+    	  } else {
+    		  result.append(printIdent(ident + 2) + mappableArrayName +
+    				  " = ((" + className + ") findMapByPath( \"" + mapPath + "\")).get" +
+    				  ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) + "();\n");
+    	  }
       }
 
       String mappableArrayDefinition = "Object [] " + mappableArrayName + " = null;\n";
@@ -868,17 +890,7 @@ result.append(printIdent(ident + 4) +
       
       result.append(printIdent(ident) +
       "if ( currentMap.myObject instanceof Mappable ) {  ((Mappable) currentMap.myObject).load(access);}\n");
-
-      contextClassStack.push(contextClass);
-      String subClassName = MappingUtils.getFieldType(contextClass, ref);
-      NodeList children = nextElt.getChildNodes();
-      contextClass = null;
-      try {
-      	contextClass = Class.forName(subClassName, false, loader);
-      } catch (Exception e) { throw new Exception("Could not find adapter: " + subClassName); }
-
-      addDependency("dependentObjects.add( new JavaDependency( -1, \"" + subClassName + "\"));\n", "JAVA"+subClassName);
-      
+       
       String subObjectName = "mappableObject" + (objectCounter++);
       result.append(printIdent(ident + 4) + subObjectName +
                     " = (" + subClassName + ") currentMap.myObject;\n");
@@ -921,23 +933,42 @@ result.append(printIdent(ident + 4) +
     else if (isSubMapped) { // Not an array
 
      
-         
-      if ( mapPath == null ) {
+       if ( mapPath == null ) {
     	  result.append(printIdent(ident + 2) + "treeNodeStack.push(currentMap);\n");
-    	  result.append(printIdent(ident + 2) +
-    			  "currentMap = new MappableTreeNode(access, currentMap, ((" +
-    			  className + ") currentMap.myObject).get" +
-    			  ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) +
-    	  "(), false);\n");
+    	  
+    	  if ( className.equals("com.dexels.navajo.mapping.bean.DomainObjectMapper")) {
+    		  
+     
+    		  result.append(printIdent(ident + 2) +
+    				  "currentMap = new MappableTreeNode(access, currentMap, new com.dexels.navajo.mapping.bean.DomainObjectMapper( ((" +
+    				  className + ") currentMap.myObject).getDomainObjectAttribute(\"" +
+    				   ref + "\", null) ), false);\n");
+    		
+    	  } else {
+    		  result.append(printIdent(ident + 2) +
+    				  "currentMap = new MappableTreeNode(access, currentMap, ((" +
+    				  className + ") currentMap.myObject).get" +
+    				  ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) +
+    		  "(), false);\n");
+    	  }
+    	  
       } else {
     	  String localObjectName = "mappableObject" + (objectCounter++);
     	  result.append(printIdent(ident + 2) + "Object " + localObjectName + " = findMapByPath( \"" + mapPath + "\");\n");
     	  result.append(printIdent(ident + 2) + "treeNodeStack.push(currentMap);\n");
-    	  result.append(printIdent(ident + 2) +
-    			  "currentMap = new MappableTreeNode(access, currentMap, ((" +
-    			  className + ")" + localObjectName + ").get" + 
-    			  ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) +
-    	  "(), false);\n");  
+    	  
+    	  if ( className.equals("com.dexels.navajo.mapping.bean.DomainObjectMapper")) {
+    		  result.append(printIdent(ident + 2) +
+    				  "currentMap = new MappableTreeNode(access, currentMap,new com.dexels.navajo.mapping.bean.DomainObjectMapper( ((" +
+    				  className + ")" + localObjectName + ").getDomainObjectAttribute(\"" + 
+    				   ref + "\", null) ), false);\n"); 
+    	  } else {
+    		  result.append(printIdent(ident + 2) +
+    				  "currentMap = new MappableTreeNode(access, currentMap, ((" +
+    				  className + ")" + localObjectName + ").get" + 
+    				  ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) +
+    		  "(), false);\n");  
+    	  }
       }
       
       
@@ -948,12 +979,20 @@ result.append(printIdent(ident + 4) +
       "if ( currentMap.myObject instanceof Mappable ) {  ((Mappable) currentMap.myObject).load(access);}\n");
       
       contextClassStack.push(contextClass);
-      String subClassName = MappingUtils.getFieldType(contextClass, ref);
-      contextClass = null;
-      try {
-      	contextClass = Class.forName(subClassName, false, loader);
-      } catch (Exception e) { throw new Exception("Could not find adapter " + subClassName); }
+      String subClassName = null;
+      
+      if ( DomainObjectMapper.class.isAssignableFrom(contextClass) ) {
+    	  subClassName = "com.dexels.navajo.mapping.bean.DomainObjectMapper";
+    	  contextClass = DomainObjectMapper.class;
+      } else {
+    	  subClassName = MappingUtils.getFieldType(contextClass, ref);
+    	  contextClass = null;
+    	  try {
+    		  contextClass = Class.forName(subClassName, false, loader);
+    	  } catch (Exception e) { throw new Exception("Could not find adapter " + subClassName); }
 
+      }
+   
       addDependency("dependentObjects.add( new JavaDependency( -1, \"" + subClassName + "\"));\n", "JAVA"+subClassName);
       
       String subObjectName = "mappableObject" + (objectCounter++);
@@ -1362,7 +1401,6 @@ public String fieldNode(int ident, Element n, String className,
         } catch (Exception e) { 
         	isDomainObjectMapper = localContextClass.isAssignableFrom(DomainObjectMapper.class);
         	if ( isDomainObjectMapper ) {
-        		System.err.println("Is DomainObjectMapper!");
         		type = "java.lang.Object";
         	} else {
         		throw new Exception("Could not find field: " + attribute + " in adapter " + localContextClass.getName());
@@ -1504,7 +1542,7 @@ public String fieldNode(int ident, Element n, String className,
       //String type = MappingUtils.getFieldType(contextClass, attribute);
       boolean isArray = MappingUtils.isArrayAttribute(localContextClass, attribute);
       
-      System.err.println("TYPE FOR " + attribute + " IS: " + type + ", ARRAY = " + isArray);
+      //System.err.println("TYPE FOR " + attribute + " IS: " + type + ", ARRAY = " + isArray);
       
       try {
     	  contextClass = Class.forName(type, false, loader);
