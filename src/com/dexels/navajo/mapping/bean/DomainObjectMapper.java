@@ -70,6 +70,9 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 	 * @throws Exception
 	 */
 	public final static DomainObjectMapper [] createArray(Object [] pojos) throws Exception {
+		if ( pojos == null || pojos.length == 0 ) {
+			return null;
+		}
 		DomainObjectMapper [] array = new DomainObjectMapper[pojos.length];
 		for (int i = 0; i < pojos.length; i++) {
 			array[i] = new DomainObjectMapper(pojos[i]);
