@@ -204,8 +204,8 @@ private boolean keepJMXConnectionAlive = false;
   }
 
   public void setClassLoader(NavajoClassSupplier loader) {
-    this.classLoader = loader;
-     }
+	  this.classLoader = loader;
+  }
 
   public abstract void finalBlock(Access access) throws Exception;
 
@@ -224,6 +224,15 @@ private boolean keepJMXConnectionAlive = false;
 	  return new ArrayList<Dependency>();
   }
 
+  public Dependency [] getDependencies() {
+	  
+	  Dependency [] all = new Dependency[getDependentObjects().size()];
+	  all = (Dependency []) getDependentObjects().toArray(all);
+	  
+	  return all;
+	  
+  }
+  
   /**
    * Recursively call store() or kill() method on all "open" mappable tree nodes.
    *
@@ -457,19 +466,11 @@ private boolean keepJMXConnectionAlive = false;
 	  return m;
   }
   
-//  private void connectJMX() {
-//	  if (!connected) {
-//		  jmx = new JMXHelper();
-//		  connected = false;
-//		  try {
-//			  jmx.connect();
-//			  connected = true;
-//			  myThread = jmx.getThread(myAccess.getThread());
-//		  } catch (Exception e) {
-//			  e.printStackTrace(System.err);
-//		  } 
-//	  }
-//  }
+
+  public void releaseCompiledScript() {
+	  myAccess = null;
+	  classLoader = null;
+  }
   
   private void disconnectJMX() {
 	  try {
