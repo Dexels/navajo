@@ -7,6 +7,7 @@ import java.util.*;
 
 import com.dexels.navajo.mapping.MappableTreeNode;
 import com.dexels.navajo.mapping.MappingUtils;
+import com.dexels.navajo.mapping.bean.DomainObjectMapper;
 
 @SuppressWarnings("unchecked")
 public final class ASTMappableNode extends SimpleNode {
@@ -44,7 +45,17 @@ public final class ASTMappableNode extends SimpleNode {
         }
 
         try {
-            Object oValue = MappingUtils.getAttributeValue(mapObject, val, parameterArray);
+        	Object oValue = null;
+        	try {
+        		oValue = MappingUtils.getAttributeValue(mapObject, val, parameterArray);
+        	} catch (Exception e2) {
+        		// Maybe domainobjectmapper?
+        		if ( mapObject.myObject instanceof DomainObjectMapper ) {
+        			oValue = ((DomainObjectMapper) mapObject.myObject).getDomainObjectAttribute(val, parameterArray);
+        		} else {
+        			throw new TMLExpressionException(e2.getMessage());
+        		}
+        	}
             if (oValue == null)
                 return null;
             else if (oValue instanceof Float) {

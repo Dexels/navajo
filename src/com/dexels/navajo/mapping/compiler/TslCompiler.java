@@ -23,6 +23,7 @@ package com.dexels.navajo.mapping.compiler;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.jaxpimpl.xml.*;
 import com.dexels.navajo.mapping.*;
+import com.dexels.navajo.mapping.bean.DomainObjectMapper;
 import com.dexels.navajo.mapping.compiler.meta.IncludeDependency;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
 import com.dexels.navajo.server.DispatcherFactory;
@@ -796,6 +797,7 @@ public String messageNode(int ident, Element n, String className, String objectN
       
       String mappableArrayName = "mappableObject" + (objectCounter++);
       
+      
       // Extract ref....
       
       if ( mapPath == null ) {
@@ -836,7 +838,8 @@ public String messageNode(int ident, Element n, String className, String objectN
       result.append(printIdent(ident + 4) + "treeNodeStack.push(currentMap);\n");
       result.append(printIdent(ident + 4) +
                     "currentMap = new MappableTreeNode(access, currentMap, " + mappableArrayName + "[i" + (ident + 2) + "], true);\n");
-
+  
+      
       // If filter is specified, evaluate filter first:
       if (!filter.equals("")) {
         result.append(printIdent(ident + 4) + "if (Condition.evaluate(" +
@@ -862,6 +865,9 @@ result.append(printIdent(ident + 4) +
         MappingUtils.getBaseMessageName(messageName) +
         "\", currentParamMsg, true, access.getInDoc(), false, \"\", " + ((startIndex == -1) ? "-1" : startIndexVar + "++") + ");\n");
       }
+      
+      result.append(printIdent(ident) +
+      "if ( currentMap.myObject instanceof Mappable ) {  ((Mappable) currentMap.myObject).load(access);}\n");
 
       contextClassStack.push(contextClass);
       String subClassName = MappingUtils.getFieldType(contextClass, ref);
@@ -889,6 +895,8 @@ result.append(printIdent(ident + 4) +
       contextClass = (Class) contextClassStack.pop();
       //System.err.println("802: popped: " + contextClass);
       
+      result.append(printIdent(ident + 2) + "MappingUtils.callStoreMethod(currentMap.myObject);\n");
+      
       if (n.getNodeName().equals("message")) {
 	      result.append(printIdent(ident + 2) +
 	                    "currentOutMsg = (Message) outMsgStack.pop();\n");
@@ -905,7 +913,8 @@ result.append(printIdent(ident + 4) +
       }
 
       result.append(printIdent(ident + 2) +
-                    "currentMap.setEndtime();\ncurrentMap = (MappableTreeNode) treeNodeStack.pop();\n");
+                    "currentMap.setEndtime();\n" + 
+                    "currentMap = (MappableTreeNode) treeNodeStack.pop();\n");
       result.append(printIdent(ident + 2) +
                     "}\n} // EOF Array map result from contextMap \n");
     }
@@ -932,9 +941,12 @@ result.append(printIdent(ident + 4) +
       }
       
       
+      
       result.append(printIdent(ident + 2) +
                     "if (currentMap.myObject != null) {\n");
-    
+      result.append(printIdent(ident) +
+      "if ( currentMap.myObject instanceof Mappable ) {  ((Mappable) currentMap.myObject).load(access);}\n");
+      
       contextClassStack.push(contextClass);
       String subClassName = MappingUtils.getFieldType(contextClass, ref);
       contextClass = null;
@@ -957,15 +969,12 @@ result.append(printIdent(ident + 4) +
       }
 
       contextClass = (Class) contextClassStack.pop();
-      //System.err.println("863: popped: " + contextClass);
-      
-      //result.append(printIdent(ident + 4) +
-      //              "currentOutMsg = (Message) outMsgStack.pop();\n");
-      //result.append(printIdent(ident + 4) +
-      //              "access.setCurrentOutMessage(currentOutMsg);\n");
+     
       result.append(printIdent(ident + 2) + "}\n");
       result.append(printIdent(ident + 2) +
-                    "currentMap.setEndtime();\ncurrentMap = (MappableTreeNode) treeNodeStack.pop();\n");
+                    "currentMap.setEndtime();\n" + 
+                    "MappingUtils.callStoreMethod(currentMap.myObject);\n" +
+                    "currentMap = (MappableTreeNode) treeNodeStack.pop();\n");
     }
     else { // Just some new tags under the "message" tag.
       NodeList children = n.getChildNodes();
@@ -992,12 +1001,7 @@ result.append(printIdent(ident + 4) +
       ident -= 2;
       result.append(printIdent(ident) + "} // EOF message condition \n");
     }
-
-//    if (isSubMapped) {
-//      contextClass = (Class) contextClassStack.pop();
-//      System.err.println("901: popped: " + contextClass);
-//    }
-
+    
     return result.toString();
   }
 
@@ -1334,6 +1338,7 @@ public String fieldNode(int ident, Element n, String className,
 
     if (!isMapped) {
       String castedValue = "";
+      boolean isDomainObjectMapper = false;
       try {
         Class localContextClass = null;
     	
@@ -1350,13 +1355,24 @@ public String fieldNode(int ident, Element n, String className,
           
          
         String type = null;
+       
         try {
         	type = MappingUtils.getFieldType(localContextClass, attribute);
         	checkDependentFieldResource(localContextClass, attribute, exprValue);	
-        } catch (Exception e) { throw new Exception("Could not find field: " + attribute + " in adapter " + localContextClass.getName()); }
+        } catch (Exception e) { 
+        	isDomainObjectMapper = localContextClass.isAssignableFrom(DomainObjectMapper.class);
+        	if ( isDomainObjectMapper ) {
+        		System.err.println("Is DomainObjectMapper!");
+        		type = "java.lang.Object";
+        	} else {
+        		throw new Exception("Could not find field: " + attribute + " in adapter " + localContextClass.getName());
+        	}
+        }
+        
         if (type.equals("java.lang.String")) {
           castedValue = "(String) sValue";
-        } else if (type.equals("com.dexels.navajo.document.types.ClockTime")) {
+        } else 
+        if (type.equals("com.dexels.navajo.document.types.ClockTime")) {
           castedValue = "(com.dexels.navajo.document.types.ClockTime) sValue";
         }
         else if (type.equals("int")) {
@@ -1408,11 +1424,25 @@ public String fieldNode(int ident, Element n, String className,
       }
       
       if (mapPath!=null) {
-          result.append(printIdent(ident + 2) + "(("+locateContextClass(mapPath).getName()+")findMapByPath(\""+mapPath+"\"))." + methodName + "(" +
-                  castedValue + ");\n");        
+    	  if ( !isDomainObjectMapper ) {
+    		  result.append(printIdent(ident + 2) + "(("+locateContextClass(mapPath).getName()+")findMapByPath(\""+mapPath+"\"))." + methodName + "(" +
+    				  castedValue + ");\n");    
+    	  } else {
+    		  result.append(printIdent(ident + 2) + 
+    				  "(("+locateContextClass(mapPath).getName()+
+    				  ")findMapByPath(\""+mapPath+"\")).setDomainObjectAttribute(\"" + attribute + "\"," +
+    				  castedValue + ");\n"); 
+    	  }
       } else {
-          result.append(printIdent(ident + 2) + objectName + "." + methodName + "(" +
-                  castedValue + ");\n");        
+    	  if ( !isDomainObjectMapper ) {
+    		  result.append(printIdent(ident + 2) + objectName + "." + methodName + "(" +
+    				  castedValue + ");\n");
+    	  } else {
+    		  // set  attribute in excluded fields.
+    		  // TODO: USE INTROSPECTION METHOD TO CALL METHOD ON PROXIED DOMAIN OBJECT...
+    		  result.append(printIdent(ident + 2) + objectName + ".setDomainObjectAttribute(\"" + attribute + "\"," +
+    				  castedValue + ");\n");
+    	  }
       }
       
     }
