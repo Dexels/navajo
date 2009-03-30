@@ -691,7 +691,7 @@ public static final boolean isObjectMappable(String className) throws UserExcept
 						 return type;
 					 }
 				 }
-				 throw new MappingException("Could not find method in Mappable object: " + constructGetMethod(name));
+				 throw new MappingException("Could not find method " + constructGetMethod(name) + " in Mappable object: " + c.getSimpleName());
 			 }
 		 }
 	 }
