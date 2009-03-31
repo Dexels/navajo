@@ -17,13 +17,21 @@ public class TestService {
 		return tb;
 	}
 	
+	public TestBean mergeBeans(TestBean tb, TestBean tb2, TestBean tb3) {
+		System.err.println("In mergBeans");
+		String lastname = tb.getLastname() + tb2.getLastname() + tb3.getLastname();
+		TestBean tb4 = new TestBean();
+		tb4.setLastname(lastname);
+		return tb4;
+	}
+	
 	public TestBean getABean(String b) {
 		TestBean tb = new TestBean();
 		tb.setLastname(b);
 		return tb;
 	}
 	
-	public String getStupid(int i) {
+	public String getStupid(Integer i) {
 		return "Stupid-"+i;
 	}
 	
