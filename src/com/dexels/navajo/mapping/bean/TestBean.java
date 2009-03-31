@@ -18,6 +18,10 @@ public class TestBean {
 		return lastname;
 	}
 	
+	public SubBean [] getEmptyBeans() {
+		return null;
+	}
+	
 	public SubBean [] getSubBeans() {
 		SubBean [] beans = new SubBean[2]; 
 		beans[0] = new SubBean();
