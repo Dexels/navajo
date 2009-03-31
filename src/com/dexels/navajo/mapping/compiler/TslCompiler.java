@@ -684,7 +684,7 @@ public String messageNode(int ident, Element n, String className, String objectN
         	 ref = refOriginal;
            }
           
-          forceArray = ( nextElt.getAttribute("forcearray") != null && !nextElt.getAttribute("forcearray").equals("") );
+          forceArray = type.equals(Message.MSG_TYPE_ARRAY); //( nextElt.getAttribute("forcearray") != null && !nextElt.getAttribute("forcearray").equals("") );
           //System.err.println("forceArray =  " + forceArray);
           filter = nextElt.getAttribute("filter");
           startElement = nextElt.getAttribute("start_element");
