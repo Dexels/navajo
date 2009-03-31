@@ -6,6 +6,8 @@ import com.dexels.navajo.events.types.AuditLogEventTest;
 import com.dexels.navajo.events.types.NavajoCompileScriptEventTest;
 import com.dexels.navajo.events.types.NavajoEventMapTest;
 import com.dexels.navajo.integrity.WorkerTest;
+import com.dexels.navajo.mapping.bean.DomainObjectMapperTest;
+import com.dexels.navajo.mapping.bean.ServiceMapperTest;
 import com.dexels.navajo.persistence.impl.PersistenceManagerImplTest;
 import com.dexels.navajo.scheduler.ListenerRunnerTest;
 import com.dexels.navajo.scheduler.ListenerStoreTest;
@@ -36,6 +38,8 @@ public class AllUnitTests {
 		suite.addTestSuite(ListenerStoreTest.class);
 		suite.addTestSuite(SharedStoreInterfaceTest.class);
 		suite.addTestSuite(TaskRunnerTest.class);
+		suite.addTestSuite(DomainObjectMapperTest.class);
+		suite.addTestSuite(ServiceMapperTest.class);
 		//suite.addTestSuite(CacheControllerTest.class); THIS ONE IS TESTED IN THE PERSISTENCEMANAGERIMPL...
 		suite.addTestSuite(PersistenceManagerImplTest.class);
 		//$JUnit-END$
