@@ -694,7 +694,7 @@ public String messageNode(int ident, Element n, String className, String objectN
         
           try {
         	  if (mapPath!=null) {
-        		  contextClass = locateContextClass(mapPath);
+        		  contextClass = locateContextClass(mapPath, 0);
         		  className = contextClass.getName();
         	  } else {
         		  contextClass = Class.forName(className, false, loader);
@@ -1383,7 +1383,7 @@ public String fieldNode(int ident, Element n, String className,
     	
 		try {
             if (mapPath!=null) {
-            	localContextClass = locateContextClass(mapPath);
+            	localContextClass = locateContextClass(mapPath, 0);
             } else {
             	localContextClass = Class.forName(className, false, loader);
             }
@@ -1463,11 +1463,11 @@ public String fieldNode(int ident, Element n, String className,
       
       if (mapPath!=null) {
     	  if ( !isDomainObjectMapper ) {
-    		  result.append(printIdent(ident + 2) + "(("+locateContextClass(mapPath).getName()+")findMapByPath(\""+mapPath+"\"))." + methodName + "(" +
+    		  result.append(printIdent(ident + 2) + "(("+locateContextClass(mapPath, 0).getName()+")findMapByPath(\""+mapPath+"\"))." + methodName + "(" +
     				  castedValue + ");\n");    
     	  } else {
     		  result.append(printIdent(ident + 2) + 
-    				  "(("+locateContextClass(mapPath).getName()+
+    				  "(("+locateContextClass(mapPath, 0).getName()+
     				  ")findMapByPath(\""+mapPath+"\")).setDomainObjectAttribute(\"" + attribute + "\"," +
     				  castedValue + ");\n"); 
     	  }
@@ -1517,6 +1517,7 @@ public String fieldNode(int ident, Element n, String className,
          " = MappingUtils.getSelectedItems(currentInMsg, access.getInDoc(), \"" + ref + "\");\n");
 
      
+      
       contextClassStack.push(contextClass);
       
       /**
@@ -1525,16 +1526,18 @@ public String fieldNode(int ident, Element n, String className,
       Class localContextClass = null;
       try {
     	  if (mapPath!=null) {
-    		  localContextClass = locateContextClass(mapPath);
+    		  localContextClass = locateContextClass(mapPath, 1);
     	  } else {
     		  localContextClass = contextClass;
     	  }
 
       } catch (Exception e) { e.printStackTrace(System.err);throw new Exception("Could not find adapter: " + className); }
+     
+  
       String type = null;
       try {
     	  type = MappingUtils.getFieldType(localContextClass, attribute);
-      } catch (Exception e) { throw new Exception("Could not find field: " + attribute + " in adapter " + localContextClass.getName()); }
+      } catch (Exception e) { throw new Exception("Could not find field: " + attribute + " in adapter " + localContextClass.getName() + ", mappath = " + mapPath); }
      /**
       * END.
       */
@@ -1644,7 +1647,7 @@ public String fieldNode(int ident, Element n, String className,
         	result.append(printIdent(ident + 2) + objectName + "." + methodName +
         			"(" + subObjectsName + ");\n");
         } else {
-        	result.append(printIdent(ident + 2) + "((" + locateContextClass(mapPath).getName() + ") findMapByPath(\"" + mapPath + "\"))." + methodName +
+        	result.append(printIdent(ident + 2) + "((" + locateContextClass(mapPath, 1).getName() + ") findMapByPath(\"" + mapPath + "\"))." + methodName +
         			"(" + subObjectsName + ");\n");
         }
         
@@ -1716,7 +1719,7 @@ public String fieldNode(int ident, Element n, String className,
         	result.append(printIdent(ident + 2) + objectName + "." + methodName +
         			"(" + subObjectsName + ");\n");
         } else {
-        	result.append(printIdent(ident + 2) + "((" + locateContextClass(mapPath).getName() + ") findMapByPath(\"" + mapPath + "\"))." + methodName +
+        	result.append(printIdent(ident + 2) + "((" + locateContextClass(mapPath, 1).getName() + ") findMapByPath(\"" + mapPath + "\"))." + methodName +
         			"(" + subObjectsName + ");\n");
         }
         
@@ -1730,12 +1733,17 @@ public String fieldNode(int ident, Element n, String className,
   }
 
   @SuppressWarnings("unchecked")
-  private Class locateContextClass(String mapPath) {
+  /**
+   * Locate a contextclass in the class stack based upon a mappath.
+   * Depending on the way this method is called an additional offset to stack index must be supplied...
+   * 
+   */
+  private Class locateContextClass(String mapPath, int offset) {
 	  
-	//System.err.println("Count element: "+count);
-	  //System.err.println("in locateContextClass(" + mapPath + ")");
-      //System.err.println("STACK: "+contextClassStack);
-      //System.err.println("STACK: "+contextClass);
+	   //System.err.println("Count element: "+count);
+//	  System.err.println("in locateContextClass(" + mapPath + ")");
+//      System.err.println("STACK: "+contextClassStack);
+//      System.err.println("STACK: "+contextClass);
       
 	  StringTokenizer st = new StringTokenizer(mapPath,"/");
       
@@ -1750,10 +1758,10 @@ public String fieldNode(int ident, Element n, String className,
       if (count==0) {
         return contextClass;
     }
-      //System.err.println("Count element: "+count);
-      //System.err.println("STACK: "+contextClassStack);
-      Class m = (Class)contextClassStack.get(contextClassStack.size()-( count ));
-//      System.err.println("Mappable: "+m);
+//      System.err.println("Count element: "+count);
+//      System.err.println("STACK: "+contextClassStack);
+      Class m = (Class)contextClassStack.get(contextClassStack.size()-( count ) - offset);
+      //System.err.println("Mappable: "+m);
       return m;
 }
 
