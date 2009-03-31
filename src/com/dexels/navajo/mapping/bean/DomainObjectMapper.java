@@ -31,15 +31,12 @@ import com.dexels.navajo.server.UserException;
 public class DomainObjectMapper implements Mappable, HasDependentResources {
 
 	private String objectName;
-	private String messageName;
 	private String attributeName;
 	private String excludedProperties;
 	private String inputProperties;
-	private Class myClass;
 	private Object myObject;
 	
-	private Navajo myNavajo;
-	private Message currentMsg = null;
+	private String currentMessageName = null;
 	private Access myAccess = null;
 	
 	private HashMap<String,Method> methods = new HashMap<String,Method>();
@@ -80,6 +77,9 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 		return array;
 	}
 	
+	public final Method getMethod(String name, Class [] parameters) {
+		return methods.get(constructParameterSignature(name, parameters));
+	}
 	
 	 /**
 	  * Gets the appropriate 'setter' for an attribute name with parameters signature.
@@ -90,42 +90,76 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 	  * @return
 	  * @throws MappingException
 	  */
-	 public final Method setMethodReference(Class myClass, String name, Class [] parameters) throws MappingException {
+	public final Method setMethodReference(Class myClass, String name, Class [] parameters) throws MappingException {
 
-         java.lang.reflect.Method m = (Method) methods.get(name+parameters.hashCode());
+		String key = constructParameterSignature(name, parameters);
+		java.lang.reflect.Method m = (Method) methods.get(key);
 
-         if (m == null) {
-               String methodName = "set" + (name.charAt(0) + "").toUpperCase()
-                    + name.substring(1, name.length());
+		if (m == null) {
+			String methodName = "set" + (name.charAt(0) + "").toUpperCase() + name.substring(1, name.length());
+			Class c = this.myObject.getClass();
+			java.lang.reflect.Method[] all = c.getMethods();
+			for (int i = 0; i < all.length; i++) {
+				if (all[i].getName().equalsIgnoreCase(methodName) && 
+					equalsParameterTypes(all[i].getParameterTypes(), parameters)) {
+					m = all[i]; 
+					break;
+				}
+			}
 
-                Class c = this.myObject.getClass();
+			if (m == null) {
+				throw new MappingException("Could not find setter in class " + myClass.getCanonicalName() + " for attribute: " + name);
+			}
+			
+			methods.put(key, m);
+		}
 
-                java.lang.reflect.Method[] all = c.getMethods();
-                for (int i = 0; i < all.length; i++) {
-                  if (all[i].getName().equalsIgnoreCase(methodName)) {
-                    m = all[i];
-                    Class[] inputParameters = m.getParameterTypes();
-                    if (inputParameters.length == parameters.length) {
-                      for (int j = 0; j < inputParameters.length; j++) {
-                        Class myParm = parameters[j];
-                        if (inputParameters[j].isAssignableFrom(myParm)) {
-                          i = all.length + 1;
-                          j = inputParameters.length + 1;
-                          break;
-                        }
-                      }
-                    }
-                  }
-                }
-            if (m == null) {
-            	throw new MappingException("Could not find setter in class " + myClass.getCanonicalName() + " for attribute: " + name);
-            }
-            methods.put(name+parameters.hashCode(), m);
-       }
-
-      return m;
-  }
+		return m;
+	}
 	
+	 private final boolean equalsParameterTypes(Class [] array1, Class [] array2) {
+		 if ( ( array1 == null || array1.length == 0 ) && ( array2 == null || array2.length == 0) ) {
+			 return true;
+		 }
+		 if ( array1 == null || array2 == null ) {
+			 return false;
+		 }
+		 if ( array1.length != array2.length ) {
+			 return false;
+		 }
+		 for ( int i = 0; i < array1.length; i++ ) {
+			if ( !array1[i].isAssignableFrom(array2[i]) ) {
+				return false;
+			}
+		 }
+		 return true;
+	 }
+	 
+	 private String printClassArray(Class [] array) {
+		 if ( array == null ) {
+			 return "";
+		 }
+		 StringBuffer sb = new StringBuffer();
+		 for (int i = 0; i < array.length; i++) {
+			 sb.append(array[i].getSimpleName() + ",");
+		 }
+		 return sb.toString();
+	 }
+	 
+	 private final String constructParameterSignature(String name, Class [] classArray) {
+
+		 StringBuffer key = new StringBuffer();
+		 key.append(name);
+		 // Determine method unique method key:
+		 if ( classArray != null ) {
+			 for (int i = 0; i < classArray.length; i++) {
+				 key.append(classArray[i].getName());
+			 }
+		 }
+
+		 return key.toString();
+	 }
+	 
 	/**
 	 * Returns a method associated with a propertyName getter
 	 * 
@@ -151,7 +185,7 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 				key.append(arguments[i].getClass().getName());
 			}
 		}
-        
+    
 		java.lang.reflect.Method m = (Method) methods.get(key.toString());
 
 		if (m == null) {
@@ -160,7 +194,7 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 			for (int i = 0; i < all.length; i++) {
 				if (all[i].getName().equalsIgnoreCase("get"+propertyName) ) {
 					m = all[i];
-					if ( classArray == null || m.getParameterTypes().equals(classArray)) {
+					if ( equalsParameterTypes(m.getParameterTypes(), classArray) ) {
 						methods.put(key.toString(), m);
 						break;
 					}
@@ -175,11 +209,11 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 	}
 	
 	private Object createObject() throws Exception {
-		if ( objectName == null ) {
-			throw new Exception("DomainObjectMapper failure. No objectName specified.");
-		}
 		if ( myObject == null ) {
-			myClass = Class.forName(objectName);
+			if ( objectName == null ) {
+				throw new Exception("DomainObjectMapper failure. No objectName specified.");
+			}
+			Class myClass = Class.forName(objectName);
 			myObject = myClass.newInstance();
 		}
 		return myObject;
@@ -189,18 +223,15 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 	}
 
 	public void load(Access access) throws MappableException, UserException {
-		myNavajo = access.getInDoc();
-		currentMsg = access.getCompiledScript().currentInMsg;
 		myAccess = access;
 	}
 
 	public void store() throws MappableException, UserException {
 		try {
 			if ( setting ) {
-				mapAllPropertiesToObject();
+				mapAllPropertiesToObject(myObject.getClass());
 			} else {
-				myClass = myObject.getClass();
-				mapObjectToProperties();
+				mapObjectToProperties(myObject.getClass());
 			}
 		} catch (Exception e) {
 			throw new UserException(-1, e.getMessage(), e);
@@ -217,7 +248,7 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 	 *  4. corresponding property is not in exclusion list.
 	 * @throws Exception
 	 */
-	private void mapObjectToProperties() throws Exception {
+	private void mapObjectToProperties(Class myClass) throws Exception {
 		java.lang.reflect.Method[] all = myClass.getMethods();
 
 		Navajo out = myAccess.getOutputDoc();
@@ -234,7 +265,6 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 			     !isAnExcludedProperty(attributeName) ) {
 				
 				Object result = all[i].invoke(myObject, null);
-				
 				if ( result == null || !( result.toString().startsWith("[L") || List.class.isAssignableFrom(result.getClass()) ) ) {
 					Property p = NavajoFactory.getInstance().createProperty(out, attributeName, "string", "", 0, "", "", "");
 					p.setAnyValue(result);
@@ -244,15 +274,12 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 				
 			}
 		}
+		
 	}
 
 	public void setObjectName(String objectName) throws Exception {
 		this.objectName = objectName;
 		createObject();
-	}
-
-	public void setMessageName(String messageName) {
-		this.messageName = messageName;
 	}
 
 	public void setAttributeName(String attribute) {
@@ -265,9 +292,8 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 			throw new UserException(-1, "Set attribute name before setting its value.");
 		}
 		try {
-			myObject = createObject();
-			Method m = setMethodReference(myClass, attributeName, new Class[]{value.getClass()});
-			m.invoke(myObject, value);
+			createObject();
+			setDomainObjectAttribute(attributeName, value);
 		} catch (Exception e) {
 			throw new UserException(-1, e.getMessage(), e);
 		}
@@ -311,26 +337,21 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 	 * 
 	 * @throws Exception
 	 */
-	private void mapAllPropertiesToObject() throws Exception {
+	private void mapAllPropertiesToObject(Class myClass) throws Exception {
 		createObject();
-		Message mapMsg = ( messageName != null ? myNavajo.getMessage(messageName) :  currentMsg );
+		Message mapMsg = ( myAccess.getCompiledScript() != null ? myAccess.getCompiledScript().currentInMsg :  
+			                                                      myAccess.getInDoc().getMessage(currentMessageName));
 		if ( mapMsg == null ) {
-			if ( messageName != null ) {
-				throw new UserException(-1, "Could not find message " + messageName + " in request");
-			} else {
-				throw new UserException(-1, "No mappable message specified.");
-			}
+			throw new UserException(-1, "No mappable message specified.");
 		}
 		
 		try {
-			
 			ArrayList<Property> allProperties = mapMsg.getAllProperties();
 			for ( int i = 0; i < allProperties.size(); i++ ) {
 				Property p = allProperties.get(i);
 				if ( !isAnExcludedProperty(p.getName()) ) {
 					Method m = setMethodReference(myClass, p.getName(), new Class[]{p.getTypedValue().getClass()});
-					m.invoke(myObject, p.getValue());
-					//System.err.println("Invoked method: " + m.getName() + " with value " + p.getValue());
+					m.invoke(myObject, p.getTypedValue());
 				}
 			}
 		} catch (Exception e) {
@@ -347,6 +368,9 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 	 */
 	public void setDomainObjectAttribute(String name, Object value) throws Exception {
 		setExcludedProperties(name);
+		if ( myObject == null ) {
+			throw new Exception("No known object to map to.");
+		}
 		Method m = setMethodReference(myObject.getClass(), name, new Class[]{value.getClass()});
 		m.invoke(myObject, value);
 	}
@@ -414,5 +438,17 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 
 	public DependentResource[] getDependentResourceFields() {
 		return new DependentResource[]{new GenericDependentResource("javaobject", "objectName")};
+	}
+
+	public String getAttributeName() {
+		return attributeName;
+	}
+
+	public String getCurrentMessageName() {
+		return currentMessageName;
+	}
+
+	public void setCurrentMessageName(String currentMessageName) {
+		this.currentMessageName = currentMessageName;
 	}
 }
