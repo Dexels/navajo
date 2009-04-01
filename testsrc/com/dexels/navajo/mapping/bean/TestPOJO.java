@@ -9,6 +9,10 @@ public class TestPOJO {
 	private Relation relation;
 	private Relation [] relations;
 	
+	public Relation getEmptyRelation() {
+		return null;
+	}
+	
 	public String getName(String thisone) {
 		return thisone;
 	}

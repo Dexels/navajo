@@ -68,6 +68,15 @@ public class ServiceMapperTest extends TestCase {
 		assertNotNull(dom);
 		assertEquals(TestBean.class, dom.getMyObject().getClass());
 		assertEquals("123", ((TestBean) dom.getMyObject()).getLastname());
+		
+		// Check with empty domain object.
+		sm = new ServiceMapper();
+		sm.setServiceClass("com.dexels.navajo.mapping.bean.TestPOJO");
+		sm.setServiceMethod("getEmptyRelation");
+		dom = sm.getDomainObjectResult();
+		assertNotNull(dom);
+		assertNotNull(dom.getMyObject());
+		assertEquals(Object.class, dom.getMyObject().getClass());
 	}
 
 	public void testGetDomainObjectResults() throws Exception {
