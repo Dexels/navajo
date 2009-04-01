@@ -25,6 +25,10 @@ public class TestService {
 		return tb4;
 	}
 	
+	public TestBean getEmptyBean() {
+		return null;
+	}
+	
 	public TestBean getABean(String b) {
 		TestBean tb = new TestBean();
 		tb.setLastname(b);

@@ -22,6 +22,10 @@ public class TestBean {
 		return null;
 	}
 	
+	public SubBean getEmptyBean() {
+		return null;
+	}
+	
 	public SubBean [] getSubBeans() {
 		SubBean [] beans = new SubBean[2]; 
 		beans[0] = new SubBean();

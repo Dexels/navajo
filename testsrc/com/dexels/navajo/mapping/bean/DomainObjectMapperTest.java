@@ -146,6 +146,10 @@ public class DomainObjectMapperTest extends TestCase {
 		result = dom.getDomainObjectAttribute("name", new Object[]{new String("soep"), new String("kip")});
 		assertNotNull(result);
 		assertEquals("soepkip", result.toString());
+		
+		// With null domain object.
+		DomainObjectMapper dom2 = new DomainObjectMapper(null);
+		assertNull(dom2.getDomainObjectAttribute("something", null));
 	}
 
 	public void testGetMyObject() throws Exception {
@@ -158,6 +162,66 @@ public class DomainObjectMapperTest extends TestCase {
 	    
 	}
 
+	public void testStore() throws Exception {
+		// With null domain object and null Access object.
+		DomainObjectMapper dom2 = new DomainObjectMapper(null);
+		dom2.store();
+		
+		// With null domain object and an Access object.
+		dom2 = new DomainObjectMapper(null);
+		dom2.load(new Access());
+		boolean exception = false;
+		try {
+			dom2.store();
+		} catch (Exception e) {
+			exception = true;
+		}
+		assertTrue(exception);
+		
+		// With some domain object and an Access object
+		dom2 = new DomainObjectMapper(new Relation());
+		dom2.load(new Access());
+		exception = false;
+		try {
+			dom2.store();
+		} catch (Exception e) {
+			exception = true;
+		}
+		assertTrue(exception);
+		
+		// With some domain object and an Access object and a valid Navajo.
+		dom2 = new DomainObjectMapper(new Relation());
+		Navajo doc = NavajoFactory.getInstance().createNavajo();
+		Message m = NavajoFactory.getInstance().createMessage(doc, "MyMessage");
+		doc.addMessage(m);
+		Access a = new Access();
+		a.setOutputDoc(doc);
+		a.setCurrentOutMessage(m);
+		dom2.load(a);
+		dom2.store();
+		assertNotNull(doc.getProperty("/MyMessage/Id"));
+		
+		// The other way around, with an input Navajo.
+		doc = NavajoFactory.getInstance().createNavajo();
+		m = NavajoFactory.getInstance().createMessage(doc, "MyMessage");
+		doc.addMessage(m);
+		Property p = NavajoFactory.getInstance().createProperty(doc, "Id", "string", "hello", 0, "", "in");
+		m.addProperty(p);
+		a = new Access();
+		a.setInDoc(doc);
+		
+		dom2 = new DomainObjectMapper();
+		dom2.setCurrentMessageName("MyMessage");
+		dom2.load(a);
+		dom2.setObjectName("com.dexels.navajo.mapping.bean.Relation");
+		dom2.store();
+		Object o = dom2.getMyObject();
+		assertNotNull(o);
+		assertEquals(Relation.class, o.getClass());
+		assertEquals("hello", ((Relation) o).getId());
+		
+	}
+	
 	public void testSetExcludedProperties() throws Exception {
 		//TestPOJO tp = new TestPOJO();
 		DomainObjectMapper dom = new DomainObjectMapper();
