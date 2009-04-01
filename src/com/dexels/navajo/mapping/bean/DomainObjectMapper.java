@@ -231,6 +231,9 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 			if ( setting ) {
 				mapAllPropertiesToObject(myObject.getClass());
 			} else {
+				if ( myObject == null ) {
+					myObject = new Object(); // Create dummy.
+				}
 				mapObjectToProperties(myObject.getClass());
 			}
 		} catch (Exception e) {
@@ -251,9 +254,16 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 	private void mapObjectToProperties(Class myClass) throws Exception {
 		java.lang.reflect.Method[] all = myClass.getMethods();
 
+		if ( myAccess == null ) {
+			return;
+		}
 		Navajo out = myAccess.getOutputDoc();
 		Message currentOutMsg = myAccess.getCurrentOutMessage();
 
+		if ( currentOutMsg == null  ) {
+			throw new Exception("No current message for mapping object attributes to properties.");
+		}
+		
 		for ( int i = 0; i < all.length; i++ ) {
 			
 			String attributeName = all[i].getName().substring(3);
@@ -379,6 +389,7 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 	 * Performs a 'getter' on a domainobject attribute. If result is a list, transform it to an array.
 	 * This method does not automatically proxy POJOs as a domain object. 
 	 * This should be done by the calling class (CompiledScript objects).
+	 * If the domain object happens to be null, return null.
 	 * 
 	 * @param name
 	 * @param parameters
@@ -387,6 +398,9 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 	 */
 	public Object getDomainObjectAttribute(String name, Object [] parameters) throws Exception {
 		//setExcludedProperties(name);
+		if ( myObject == null ) {
+			return null;
+		}
 		Method m = getMethodReference(myObject.getClass(), name, parameters);
 		Object result = m.invoke(myObject, parameters);
 		if ( result != null && List.class.isAssignableFrom(result.getClass()) ) {
