@@ -95,12 +95,13 @@ public class ServiceMapper implements Mappable {
 	
 	/**
 	 * Returns a domain object as a result of the service method call.
+	 * If result was null. Return an instance of Object.
 	 * 
 	 * @return
 	 * @throws Exception
 	 */
 	public DomainObjectMapper getDomainObjectResult() throws Exception {
-		return new DomainObjectMapper(result);
+		return new DomainObjectMapper((result != null ? result : new Object()));
 	}
 	
 	/**
