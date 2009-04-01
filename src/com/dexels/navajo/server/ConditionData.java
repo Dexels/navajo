@@ -29,7 +29,7 @@ package com.dexels.navajo.server;
 
 public final class ConditionData {
 
-    public int id;
+    public String id;
     public int serviceId;
     public int userId;
     public String condition;
@@ -37,7 +37,7 @@ public final class ConditionData {
     public String replacedCondition;
 
     public ConditionData() {
-        id = 0;
+        id = "0";
         serviceId = 0;
         userId = 0;
         condition = "empty";

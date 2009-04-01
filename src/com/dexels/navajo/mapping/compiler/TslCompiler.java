@@ -2259,6 +2259,7 @@ public String mapNode(int ident, Element n) throws Exception {
    StringBuffer conditionString = new StringBuffer("conditionArray = new String[]{\n");
    StringBuffer ruleString = new StringBuffer("ruleArray = new String[]{\n");
    StringBuffer codeString = new StringBuffer("codeArray = new String[]{\n");
+   StringBuffer descriptionString = new StringBuffer("descriptionArray = new String[]{\n");
 
    NodeList list = d.getElementsByTagName("validations");
    
@@ -2271,6 +2272,7 @@ public String mapNode(int ident, Element n) throws Exception {
        if (rules.item(j).getNodeName().equals("check")) {
          Element rule = (Element) rules.item(j);
          String code = rule.getAttribute("code");
+         String description = rule.getAttribute("description");
          String value = rule.getAttribute("value");
          String condition = rule.getAttribute("condition");
          if (value.equals("")) {
@@ -2287,10 +2289,12 @@ public String mapNode(int ident, Element n) throws Exception {
          conditionString.append("\""+condition.replace('\n', ' ').trim()+"\"");
          ruleString.append("\""+value.replace('\n', ' ').trim()+"\"");
          codeString.append("\""+code.replace('\n', ' ').trim()+"\"");
+         descriptionString.append("\""+description.replace('\n', ' ').trim()+"\"");
          if (j != ( rules.getLength() - 2 ) ) { // Add ","
            conditionString.append(",\n");
            ruleString.append(",\n");
            codeString.append(",\n");
+           descriptionString.append(",\n");
          }
        }
      }
@@ -2298,18 +2302,21 @@ public String mapNode(int ident, Element n) throws Exception {
     	   conditionString.append(",\n");
            ruleString.append(",\n");
            codeString.append(",\n");
+           descriptionString.append(",\n");
      }
    }
 
    conditionString.append("};\n");
    ruleString.append("};\n");
    codeString.append("};\n");
+   descriptionString.append("};\n");
 
    generatedCode.append("public final void setValidations() {\n");
    if (hasValidations) {
      generatedCode.append(conditionString.toString());
      generatedCode.append(ruleString.toString());
      generatedCode.append(codeString.toString());
+     generatedCode.append(descriptionString.toString());
    }
    generatedCode.append("}\n\n");
 

@@ -85,6 +85,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
   public String[] conditionArray;
   public String[] ruleArray;
   public String[] codeArray;
+  public String[] descriptionArray;
 
   /**
    * This HashMap is used for user defined expressions in <definitions> section of a script.
@@ -410,7 +411,8 @@ private boolean keepJMXConnectionAlive = false;
         //System.err.println("check = " + check);
         if (check) {
           ConditionData cd = new ConditionData();
-          cd.id = Integer.parseInt(codeArray[i]);
+          cd.id = codeArray[i];
+          cd.comment = descriptionArray[i];
           cd.condition = ruleArray[i];
           //System.err.println("id = " + cd.id + ", rule = " + cd.condition);
           conditions.add(cd);
