@@ -27,7 +27,6 @@ package com.dexels.navajo.mapping;
 
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.mapping.compiler.meta.Dependency;
-import com.dexels.navajo.mapping.compiler.meta.IncludeDependency;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.document.*;
