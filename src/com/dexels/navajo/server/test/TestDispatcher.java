@@ -162,4 +162,8 @@ public class TestDispatcher implements DispatcherInterface {
 		
 	}
 
+	public Navajo removeInternalMessages(Navajo doc) {
+		return doc;
+	}
+
 }

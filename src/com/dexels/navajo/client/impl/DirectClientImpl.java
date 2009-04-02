@@ -190,7 +190,7 @@ public final Navajo doSimpleSend(Navajo out, String server, String method, Strin
          System.err.println("Could not add globals, proceeding");
       }
     }
-      reply = dispatcher.handle(out);
+      reply = dispatcher.removeInternalMessages(dispatcher.handle(out));
       if (myErrorResponder != null) {
         myErrorResponder.check(reply);
       }

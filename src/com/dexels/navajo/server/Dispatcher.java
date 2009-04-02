@@ -718,6 +718,26 @@ public final class Dispatcher implements Mappable, DispatcherMXBean, DispatcherI
   }
   
   /**
+   * Method can be used to remove special message before returning Navajo to some client.
+   * 
+   * @param doc
+   * @return
+   */
+  public final Navajo removeInternalMessages(Navajo doc) {
+	  if ( doc != null ) {
+		  try {
+		  //if ( doc.getMessage("__globals__") != null ) {
+			  doc.removeMessage(doc.getMessage("__globals__"));
+		  //}
+		  //if ( doc.getMessage("__parms__") != null ) {
+			  doc.removeMessage("__parms__");
+		  //}
+		  } catch (Exception e) {}
+	  }
+	  return doc;
+  }
+  
+  /**
    * Handle a webservice (without ClientInfo object given).
    *
    * @param inMessage
@@ -739,6 +759,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean, DispatcherI
    */
   public final Navajo handle(Navajo inMessage, boolean skipAuth) throws FatalException {
     return processNavajo(inMessage, null, null, skipAuth);
+   
   }
   
   public final Navajo handle(Navajo inMessage) throws FatalException {

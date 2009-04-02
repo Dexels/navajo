@@ -17,6 +17,14 @@ public interface DispatcherInterface {
 	public Navajo handle(Navajo inMessage) throws FatalException;
 	
 	/**
+	 * Special method to remove internal Server messages.
+	 * 
+	 * @param doc
+	 * @return
+	 */
+	public Navajo removeInternalMessages(Navajo doc);
+	
+	/**
 	 * Create a temp file with the names prefix and suffix in the designated temp path.
 	 * @param prefix
 	 * @param suffix
