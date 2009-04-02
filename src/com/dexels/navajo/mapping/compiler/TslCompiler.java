@@ -2126,10 +2126,12 @@ public String mapNode(int ident, Element n) throws Exception {
     addDependency("dependentObjects.add( new IncludeDependency( new Long(\"" + 
     		                 IncludeDependency.getScriptTimeStamp(fileName) + "\"), \"" + script + "\"));\n", "INCLUDE"+script);
   
-    NodeList content = ( includeDoc.getElementsByTagName("tsl") != null ? 
-    							includeDoc.getElementsByTagName("tsl").item(0).getChildNodes() :
-    							includeDoc.getElementsByTagName("navascript").item(0).getChildNodes()
-    				   );
+    if ( includeDoc.getElementsByTagName("tsl").item(0) == null ) { // Maybe it is navascript??
+    	String tslResult = MapMetaData.getInstance().parse(scriptPath + "/" + fileName  + ".xml");
+    	includeDoc = XMLDocumentUtils.createDocument(new ByteArrayInputStream(tslResult.getBytes()), false);
+    }
+    
+    NodeList content = includeDoc.getElementsByTagName("tsl").item(0).getChildNodes();
     
     Node nextNode = n.getNextSibling();
     while ( nextNode != null && !(nextNode instanceof Element) ) {
@@ -2151,10 +2153,6 @@ public String mapNode(int ident, Element n) throws Exception {
 
     parentNode.removeChild(n);
 
-//    System.err.println("After include");
-//    String result = XMLDocumentUtils.toString(parent);
-//    System.err.println("result:");
-//    System.err.println(result);
   }
 
   public String compile(int ident, Node n, String className, String objectName) throws
