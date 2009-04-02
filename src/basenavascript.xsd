@@ -78,7 +78,7 @@
         <xs:complexType>
             <xs:simpleContent>
                 <xs:extension base="xs:string">
-                    <xs:attribute name="code" type="xs:integer" use="required"/>
+                    <xs:attribute name="code" type="xs:string" use="required"/>
                     <xs:attribute name="condition" type="xs:string" use="optional"/>
                     <xs:attribute ref="xml:space" use="optional"/>
                 </xs:extension>
