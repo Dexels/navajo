@@ -82,10 +82,10 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
   public final Stack inSelectionRefStack = new Stack();
   public int count = 1;
 
-  public String[] conditionArray;
-  public String[] ruleArray;
-  public String[] codeArray;
-  public String[] descriptionArray;
+  public String[] conditionArray = null;
+  public String[] ruleArray = null;
+  public String[] codeArray = null;
+  public String[] descriptionArray = null;
 
   /**
    * This HashMap is used for user defined expressions in <definitions> section of a script.
@@ -412,7 +412,7 @@ private boolean keepJMXConnectionAlive = false;
         if (check) {
           ConditionData cd = new ConditionData();
           cd.id = codeArray[i];
-          cd.comment = descriptionArray[i];
+          cd.comment = ( descriptionArray != null ? descriptionArray[i] : "empty" );
           cd.condition = ruleArray[i];
           //System.err.println("id = " + cd.id + ", rule = " + cd.condition);
           conditions.add(cd);
