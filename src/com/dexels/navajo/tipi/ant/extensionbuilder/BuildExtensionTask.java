@@ -35,19 +35,6 @@ public class BuildExtensionTask extends org.apache.tools.ant.Task {
 	}
 
 
-//	public static void main(String[] args) {
-//		BuildJnlpTask buildJnlpTask = new BuildJnlpTask();
-//		File sourceFile = new File("src/tipi/TipiExtension.xml");
-//		File destFile = new File("Aap.xml");
-//		try {
-//			buildJnlpTask.buildJnlp(sourceFile, destFile);
-//		} catch (XMLParseException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}	
-//		}
-
 	
 	@Override
 	public void execute() throws BuildException {
@@ -60,8 +47,6 @@ public class BuildExtensionTask extends org.apache.tools.ant.Task {
 			destDir.mkdirs();
 		}
 		try {
-//			public static void build(String repository, String projectName,File baseDir, File inputPath, File destDir) throws XMLParseException, IOException {
-				
 			 ExtensionActions.build(repository,getProject().getProperty("ant.project.name"),getProject().getBaseDir(), sourceFile, destDir);
 		} catch (Throwable e) {
 			e.printStackTrace();
