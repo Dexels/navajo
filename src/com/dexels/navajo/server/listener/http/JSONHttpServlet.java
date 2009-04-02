@@ -218,7 +218,7 @@ public class JSONHttpServlet extends TmlHttpServlet {
       tbMessage = constructFromRequest(request);
       Header header = NavajoFactory.getInstance().createHeader(tbMessage,service, username, password,expirationInterval);
       tbMessage.addHeader(header);
-      Navajo resultMessage = dis.handle(tbMessage);
+      Navajo resultMessage = dis.removeInternalMessages(dis.handle(tbMessage));
 //      resultMessage.write(System.err);
       //resultMessage.write(out);
       String dataPath = request.getParameter("dataPath");
@@ -402,11 +402,11 @@ public class JSONHttpServlet extends TmlHttpServlet {
 		  Object certObject = request.getAttribute( "javax.servlet.request.X509Certificate");
 
 		  // Call Dispatcher with parsed TML document as argument.
-		  Navajo outDoc = dis.handle(in, certObject, 
+		  Navajo outDoc = dis.removeInternalMessages(dis.handle(in, certObject, 
 				  new ClientInfo(request.getRemoteAddr(), "unknown",
 						  recvEncoding, pT, ( recvEncoding != null && ( recvEncoding.equals(COMPRESS_GZIP) || recvEncoding.equals(COMPRESS_JZLIB))), 
 						  ( sendEncoding != null && ( sendEncoding.equals(COMPRESS_GZIP) || sendEncoding.equals(COMPRESS_JZLIB))), 
-						  request.getContentLength(), created));
+						  request.getContentLength(), created)));
 		  
 		  response.setContentType("text/xml; charset=UTF-8");
 		  
