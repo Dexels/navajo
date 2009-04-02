@@ -720,6 +720,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean, DispatcherI
   /**
    * Method can be used to remove special message before returning Navajo to some client.
    * 
+   * 
    * @param doc
    * @return
    */
@@ -1122,11 +1123,12 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
     		
     		// Set access to finished state.
     		access.setFinished();
-    		Header h = outMessage.getHeader();
-    		if (h==null) {
-    			h = NavajoFactory.getInstance().createHeader(outMessage,rpcName,rpcUser,rpcPassword,-1);
-    			outMessage.addHeader(h);
-    		}
+//    		Header h = outMessage.getHeader();
+//    		if (h==null) {
+    		// Always create new header.
+    		Header h = NavajoFactory.getInstance().createHeader(outMessage,rpcName,rpcUser,"",-1);
+    		outMessage.addHeader(h);
+//    		}
 
     		// Translate property descriptions.
     		updatePropertyDescriptions(inMessage,outMessage);
