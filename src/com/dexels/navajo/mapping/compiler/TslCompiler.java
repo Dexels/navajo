@@ -2126,7 +2126,11 @@ public String mapNode(int ident, Element n) throws Exception {
     addDependency("dependentObjects.add( new IncludeDependency( new Long(\"" + 
     		                 IncludeDependency.getScriptTimeStamp(fileName) + "\"), \"" + script + "\"));\n", "INCLUDE"+script);
   
-    NodeList content = includeDoc.getElementsByTagName("tsl").item(0).getChildNodes();
+    NodeList content = ( includeDoc.getElementsByTagName("tsl") != null ? 
+    							includeDoc.getElementsByTagName("tsl").item(0).getChildNodes() :
+    							includeDoc.getElementsByTagName("navascript").item(0).getChildNodes()
+    				   );
+    
     Node nextNode = n.getNextSibling();
     while ( nextNode != null && !(nextNode instanceof Element) ) {
       nextNode = nextNode.getNextSibling();
