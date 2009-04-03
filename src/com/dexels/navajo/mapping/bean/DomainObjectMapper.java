@@ -34,6 +34,8 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 	private String attributeName;
 	private String excludedProperties;
 	private String inputProperties;
+	private boolean ignoreNonExistingAttributes = false;
+	private boolean automaticMapping = true;
 	private Object myObject;
 	
 	private String currentMessageName = null;
@@ -227,6 +229,11 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 	}
 
 	public void store() throws MappableException, UserException {
+		
+		if ( !isAutomaticMapping() ) {
+			return;
+		}
+		
 		try {
 			if ( setting ) {
 				mapAllPropertiesToObject(myObject.getClass());
@@ -350,23 +357,41 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 	private void mapAllPropertiesToObject(Class myClass) throws Exception {
 		createObject();
 		Message mapMsg = ( myAccess.getCompiledScript() != null ? myAccess.getCompiledScript().currentInMsg :  
-			                                                      myAccess.getInDoc().getMessage(currentMessageName));
+			myAccess.getInDoc().getMessage(currentMessageName));
 		if ( mapMsg == null ) {
 			throw new UserException(-1, "No mappable message specified.");
 		}
-		
-		try {
-			ArrayList<Property> allProperties = mapMsg.getAllProperties();
-			for ( int i = 0; i < allProperties.size(); i++ ) {
-				Property p = allProperties.get(i);
-				if ( !isAnExcludedProperty(p.getName()) ) {
-					Method m = setMethodReference(myClass, p.getName(), new Class[]{p.getTypedValue().getClass()});
-					m.invoke(myObject, p.getTypedValue());
+
+		ArrayList<Property> allProperties = mapMsg.getAllProperties();
+		for ( int i = 0; i < allProperties.size(); i++ ) {
+			Property p = allProperties.get(i);
+			if ( !isAnExcludedProperty(p.getName()) ) {
+				try {
+					Class [] parameters = null;
+					Object myValue = null;
+					if ( !p.getType().equals(Property.SELECTION_PROPERTY) ) {
+						parameters = new Class[]{p.getTypedValue().getClass()};
+						myValue = p.getTypedValue();
+					} else { // Is selection.
+						parameters = new Class[]{String.class};
+						// Guess cardinality '1'.
+						if ( p.getCardinality().equals("+")) {
+							throw new Exception("Multiple cardinality selections not yet supported in automatic mapping.");
+						}
+						myValue = p.getSelected().getValue();
+					}
+					Method m = setMethodReference(myClass, p.getName(), parameters);
+					m.invoke(myObject, myValue);
+				} catch (Exception e) {
+					if ( !isIgnoreNonExistingAttributes() ) {
+						throw e;
+					} else {
+						// Ignore non existing attribute.
+					}
 				}
 			}
-		} catch (Exception e) {
-			throw new UserException(-1, e.getMessage(), e);
 		}
+
 	}
 
 	/**
@@ -464,5 +489,33 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 
 	public void setCurrentMessageName(String currentMessageName) {
 		this.currentMessageName = currentMessageName;
+	}
+
+	public boolean isIgnoreNonExistingAttributes() {
+		return ignoreNonExistingAttributes;
+	}
+
+	/**
+	 * If set to true properties that do not have a corresponding attribute in the domain object are silently ignored.
+	 * Default is false.
+	 * 
+	 * @param ignoreNonExistingAttributes
+	 */
+	public void setIgnoreNonExistingAttributes(boolean ignoreNonExistingAttributes) {
+		this.ignoreNonExistingAttributes = ignoreNonExistingAttributes;
+	}
+
+	public boolean isAutomaticMapping() {
+		return automaticMapping;
+	}
+
+	/**
+	 * If set to false automatic property<->attribute mapping is NOT performed.
+	 * Default value is true.
+	 * 
+	 * @param automaticMapping
+	 */
+	public void setAutomaticMapping(boolean automaticMapping) {
+		this.automaticMapping = automaticMapping;
 	}
 }
