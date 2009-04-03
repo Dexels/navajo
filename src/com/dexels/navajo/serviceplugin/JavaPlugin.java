@@ -11,6 +11,16 @@ import com.dexels.navajo.mapping.CompiledScript;
 import com.dexels.navajo.mapping.compiler.meta.Dependency;
 import com.dexels.navajo.server.Access;
 
+/**
+ * JavaPlugin can be used to write scripts directly in Java.
+ * Order or precedence is:
+ * 1. Check navascript/tsl .xml file in scripts
+ * 2. Check compiled java/class file in compiled
+ * 3. Check java .java file in scripts
+ * 
+ * @author arjen
+ *
+ */
 public abstract class JavaPlugin extends CompiledScript {
 
 	private Access myAccess;
