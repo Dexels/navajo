@@ -145,14 +145,17 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 		return myTable;
 	}
 
-	public void loadData(final Navajo n, String method) throws TipiException, TipiBreakException {
+	public void loadData(final Navajo n, final String method) throws TipiException, TipiBreakException {
 		super.loadData(n, method);
+		final Message m = n.getMessage(messagePath);
+		if(m==null) {
+			throw new IllegalArgumentException("Error loading TipiTable: "+getPath()+" service: "+method+" does not contain a message with path: "+messagePath);
+		}
 		runAsyncInEventThread(new Runnable() {
 
 			public void run() {
 				MessageTable mm = (MessageTable) getActualComponent();
-				Message m = n.getMessage(messagePath);
-				if (m != null) {
+					if (m != null) {
 					if (!colDefs) {
 						mm.removeAllColumns();
 						ArrayList props = m.getMessage(0).getAllProperties();
@@ -182,22 +185,39 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 		return super.getComponentValue(name);
 	}
 
+	
+	@Override
+	protected void setComponentValue(String name, Object object) {
+		super.setComponentValue(name, object);
+		if(name.equals("rowsPerPage")) {
+			System.err.println("Wonka:"+object);
+//			pageNavigator.set
+		}
+	}
+	
+
 	public void load(final XMLElement elm, final XMLElement instance, final TipiContext context)
 			throws com.dexels.navajo.tipi.TipiException {
 
 		runSyncInEventThread(new Runnable() {
 
 			public void run() {
+				try {
+					TipiTable.super.load(elm, instance, context);
+				} catch (TipiException e) {
+					e.printStackTrace();
+				}
 				MessageTable mm = (MessageTable) getActualComponent();
 
 				boolean editableColumnsFound = false;
 
 				String rowsPerPage = (String) elm.getAttribute("rowsPerPage");
+				System.err.println("Rows per page: "+rowsPerPage);
 				if (rowsPerPage != null) {
 					int rpp = Integer.parseInt(rowsPerPage);
 					MessageTable xmm = (MessageTable) getActualComponent();
 					if (xmm != null) {
-						pageNavigator.setVisible(rpp == 0);
+//						pageNavigator.setVisible(rpp == 0);
 						myPane.setSeparatorPosition(rpp == 0 ? new Extent(0, Extent.PX) : new Extent(25, Extent.PX));
 						if (rpp > 0) {
 							xmm.setRowsPerPage(rpp);
@@ -210,11 +230,7 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 						messagePath = messagePath.substring(1, messagePath.length() - 1);
 					}
 				}
-				try {
-					TipiTable.super.load(elm, instance, context);
-				} catch (TipiException e) {
-					e.printStackTrace();
-				}
+
 				List<XMLElement> children = elm.getChildren();
 				for (int i = 0; i < children.size(); i++) {
 					XMLElement child = children.get(i);

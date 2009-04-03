@@ -291,8 +291,9 @@ public class EchoTipiContext extends TipiContext {
 
 	public void showInfo(String text, String title) {
 		System.err.println("ALERTING: "+text);
-		text = text.replaceAll("\n", " ");
-        ApplicationInstance.getActive().enqueueCommand(new JavaScriptEval("alert('" + text + "')"));
+		text = text.replaceAll("\n", "\\\\n");
+		System.err.println("ALERTING2: "+text);
+		ApplicationInstance.getActive().enqueueCommand(new JavaScriptEval("alert('" + text +"')"));
 	//System.err.println("Show info found: ");
 //	Thread.dumpStack();
 	}
@@ -336,7 +337,10 @@ public class EchoTipiContext extends TipiContext {
 		showInfo("showQuestion not supported", "Warning");
 	}
 
-
+//	public void showWarning(String text, String title) {
+//		String parsed = text.replaceAll("\n", "[newline]\n");
+//		super.showWarning(parsed, title);
+//	}
 	public String createExpressionUrl(String expression) {
 		// TODO Auto-generated method stub
 		Connection con = WebRenderServlet.getActiveConnection();
