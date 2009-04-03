@@ -6,6 +6,7 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.server.Access;
 
 import junit.framework.TestCase;
@@ -220,6 +221,145 @@ public class DomainObjectMapperTest extends TestCase {
 		assertEquals(Relation.class, o.getClass());
 		assertEquals("hello", ((Relation) o).getId());
 		
+		// The other way around, with an input Navajo with property that does have an associated attribute.
+		doc = NavajoFactory.getInstance().createNavajo();
+		m = NavajoFactory.getInstance().createMessage(doc, "MyMessage");
+		doc.addMessage(m);
+		Property p1 = NavajoFactory.getInstance().createProperty(doc, "Id", "string", "hello", 0, "", "in");
+		Property p2 = NavajoFactory.getInstance().createProperty(doc, "NonExisting", "string", "hello", 0, "", "in");
+		m.addProperty(p1);
+		m.addProperty(p2);
+		a = new Access();
+		a.setInDoc(doc);
+		
+		dom2 = new DomainObjectMapper();
+		dom2.setCurrentMessageName("MyMessage");
+		dom2.load(a);
+		dom2.setObjectName("com.dexels.navajo.mapping.bean.Relation");
+		exception = false;
+		try {
+			dom2.store();
+		} catch (Exception e) {
+			exception = true;
+		}
+		// Expect exception because Navajo contains property NonExisting that does not exist in domain object.
+		assertTrue(exception);
+		
+//		o = dom2.getMyObject();
+//		assertNotNull(o);
+//		assertEquals(Relation.class, o.getClass());
+//		assertEquals("hello", ((Relation) o).getId());
+		
+	}
+	
+	public void testStoreWithNonExistingAttributesCheck() throws Exception {
+		
+		// The other way around, with an input Navajo with property that does have an associated attribute.
+		Navajo doc = NavajoFactory.getInstance().createNavajo();
+		Message m = NavajoFactory.getInstance().createMessage(doc, "MyMessage");
+		doc.addMessage(m);
+		Property p1 = NavajoFactory.getInstance().createProperty(doc, "Id", "string", "hello", 0, "", "in");
+		Property p2 = NavajoFactory.getInstance().createProperty(doc, "NonExisting", "string", "hello", 0, "", "in");
+		m.addProperty(p1);
+		m.addProperty(p2);
+		Access a = new Access();
+		a.setInDoc(doc);
+		
+		DomainObjectMapper dom2 = new DomainObjectMapper();
+		dom2.setCurrentMessageName("MyMessage");
+		dom2.load(a);
+		dom2.setObjectName("com.dexels.navajo.mapping.bean.Relation");
+		dom2.setIgnoreNonExistingAttributes(true);
+		boolean exception = false;
+		try {
+			dom2.store();
+		} catch (Exception e) {
+			exception = true;
+		}
+		// DO NOT Expect exception because Navajo contains property NonExisting that does not exist in domain object and setIgnoreNonExistingAttributes is set.
+		assertFalse(exception);
+		
+		Object o = dom2.getMyObject();
+		assertNotNull(o);
+		assertEquals(Relation.class, o.getClass());
+		assertEquals("hello", ((Relation) o).getId());
+	}
+	
+	public void testStoreWithSelectionProperty() throws Exception {
+
+		// The other way around, with an input Navajo with property that does have an associated attribute.
+		Navajo doc = NavajoFactory.getInstance().createNavajo();
+		Message m = NavajoFactory.getInstance().createMessage(doc, "MyMessage");
+		doc.addMessage(m);
+		Property p1 = NavajoFactory.getInstance().createProperty(doc, "Id", "string", "hello", 0, "", "in");
+		Property p2 = NavajoFactory.getInstance().createProperty(doc, "Selection", "1", "", "in");
+		m.addProperty(p1);
+		m.addProperty(p2);
+		// Add selections...
+		Selection s1 = NavajoFactory.getInstance().createSelection(doc, "aap", "AAP", false);
+		Selection s2 = NavajoFactory.getInstance().createSelection(doc, "noot", "NOOT", true);
+		p2.addSelection(s1);
+		p2.addSelection(s2);
+		
+		Access a = new Access();
+		a.setInDoc(doc);
+
+		DomainObjectMapper dom2 = new DomainObjectMapper();
+		dom2.setCurrentMessageName("MyMessage");
+		dom2.load(a);
+		dom2.setObjectName("com.dexels.navajo.mapping.bean.Relation");
+		
+		dom2.store();
+		
+		Object o = dom2.getMyObject();
+		assertNotNull(o);
+		assertEquals(Relation.class, o.getClass());
+		assertEquals("hello", ((Relation) o).getId());
+		assertEquals("NOOT", ((Relation) o).getSelection());
+	}
+	
+	public void testStoreWithMultipleSelectionProperty() throws Exception {
+
+		// The other way around, with an input Navajo with property that does have an associated attribute.
+		Navajo doc = NavajoFactory.getInstance().createNavajo();
+		Message m = NavajoFactory.getInstance().createMessage(doc, "MyMessage");
+		doc.addMessage(m);
+		Property p1 = NavajoFactory.getInstance().createProperty(doc, "Id", "string", "hello", 0, "", "in");
+		Property p2 = NavajoFactory.getInstance().createProperty(doc, "Selection", "+", "", "in");
+		m.addProperty(p1);
+		m.addProperty(p2);
+		// Add selections...
+		Selection s1 = NavajoFactory.getInstance().createSelection(doc, "aap", "AAP", true);
+		Selection s2 = NavajoFactory.getInstance().createSelection(doc, "noot", "NOOT", true);
+		Selection s3 = NavajoFactory.getInstance().createSelection(doc, "mies", "MIES", false);
+		p2.addSelection(s1);
+		p2.addSelection(s2);
+		p2.addSelection(s3);
+		
+		Access a = new Access();
+		a.setInDoc(doc);
+
+		DomainObjectMapper dom2 = new DomainObjectMapper();
+		dom2.setCurrentMessageName("MyMessage");
+		dom2.load(a);
+		dom2.setObjectName("com.dexels.navajo.mapping.bean.Relation");
+		
+		boolean exception = false;
+		
+		try {
+		dom2.store();
+		} catch (Exception e) {
+			exception = true;
+		}
+		
+		// Multiple cardinality is not yet supported, hence exception.
+		assertTrue(exception);
+		
+//		Object o = dom2.getMyObject();
+//		assertNotNull(o);
+//		assertEquals(Relation.class, o.getClass());
+//		assertEquals("hello", ((Relation) o).getId());
+//		assertEquals("NOOT", ((Relation) o).getSelection());
 	}
 	
 	public void testSetExcludedProperties() throws Exception {
