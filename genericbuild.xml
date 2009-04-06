@@ -5,9 +5,11 @@
 	
 	<property name="repository" value="http://spiritus.dexels.nl:41766/Tipi/" />
 	<property name="repositorySsh" value="navajo@spiritus.dexels.nl://var/www/html/Tipi" />
+	<property name="documentationSsh" value="navajo@spiritus.dexels.nl:/var/www/html/Tipi/wiki/data/pages/tipidoc" />
 	<property name="dist" value="dist/${ant.project.name}" />
 
 	<taskdef name="buildExtension" classname="com.dexels.navajo.tipi.ant.extensionbuilder.BuildExtensionTask" classpath="bin" />
+	<taskdef name="buildDocumentation" classname="com.dexels.navajo.tipi.ant.extensionbuilder.BuildExtensionDocumentationTask" classpath="bin" />
 		
 		
 	<target name="grabjars">
@@ -30,6 +32,9 @@
 		<!--  <buildXsd repository="http://www.navajo.nl/Tipi/"/> -->
 		<mkdir dir="${dist}"/>
 		<buildExtension repository="${repository}" destination="${dist}" />
+		<echo message="Building to: ${dist}"/>
+		<buildDocumentation distribution="${dist}" destination="${dist}/wikidoc"/>
+		
 	<!-- 			<eclipse.refreshLocal resource="${ant.project.name}" depth="infinite" />
 -->
 	</target>
@@ -64,6 +69,15 @@
 				<include name="${ant.project.name}/index.html" />
 			</fileset>
 		</scp>
+		<echo message="Deploying documentation to: ${documentationSsh}"/>
+		<scp trust="true" sftp="true" verbose="true"
+			todir="${documentationSsh}" >
+			<fileset dir="./dist/${ant.project.name}/wikidoc">
+				<include name="**" />
+			</fileset>
+		</scp>
+
+		
 		<scp trust="true" sftp="true" verbose="true"
 			todir="${repositorySsh}">
 			<fileset dir="${dist}">
