@@ -10,6 +10,7 @@ import java.util.Vector;
 
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
 import com.dexels.navajo.mapping.compiler.meta.ParameterDefinition;
 import com.dexels.navajo.mapping.compiler.meta.ValueDefinition;
@@ -109,7 +110,7 @@ public class GenerateXSD {
 		}
 	}
 	
-	public void generateXSD() throws Exception {
+	public String generateXSD() throws Exception {
 		
 		CaseSensitiveXMLElement xml = new CaseSensitiveXMLElement();
 
@@ -163,9 +164,19 @@ public class GenerateXSD {
 		
 		StringWriter sb = new StringWriter();
 		xml.write(sb);
-		System.err.println(sb.toString());
+		//System.err.println(sb.toString());
+		return sb.toString();
 	}
 	
+	public Binary getNavajoXSD() throws Exception {
+		
+		GenerateXSD xsd = new GenerateXSD();
+		String result = xsd.generateXSD();
+		Binary b = new Binary(result.getBytes());
+		b.setMimeType("text/tml");
+		return b;
+		
+	}
 	
 	public static void main(String [] args) throws Exception {
 		
@@ -173,7 +184,7 @@ public class GenerateXSD {
 		MapMetaData mmd = MapMetaData.getInstance("navajo");
 		
 		GenerateXSD xsd = new GenerateXSD();
-		xsd.generateXSD();
+		
 		//xsd.createAdapterXSD("sqlquery", new CaseSensitiveXMLElement());
 
 	}
