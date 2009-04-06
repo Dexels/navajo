@@ -19,6 +19,17 @@ import com.dexels.navajo.tipi.util.XMLElement;
 import com.dexels.navajo.tipi.util.XMLParseException;
 
 public class ExtensionManager {
+	/**
+	 * Add the current version of the extension to the repository
+	 * It parses the current extension file.
+	 * It appends the new extension
+	 * It writes back the extension file, ready for upload
+	 * 
+	 * @param extension
+	 * @param repository
+	 * @param path
+	 * @param version
+	 */
 	public static void registerExtension(String extension, String repository, File path,String version) {
 		System.err.println("Registering extension: "+extension+" to repository: "+repository);
 		Map<String,String> extensions = null;

@@ -4,13 +4,18 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Reader;
 import java.io.Writer;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,10 +30,8 @@ import com.dexels.navajo.tipi.util.XMLParseException;
 public class ExtensionActions {
 
 	public static void build(String repository, String projectName,File baseDir, File inputPath, File destDir) throws XMLParseException, IOException {
-		FileReader fr = new FileReader(inputPath);
-		XMLElement xe = new CaseSensitiveXMLElement();
-		xe.parseFromReader(fr);
-		fr.close();
+		System.err.println("Building for repository: "+repository);
+		XMLElement xe = parseXmlFile(inputPath);
 		
 		String version = xe.getStringAttribute("version");
 		ExtensionManager.registerExtension(projectName, repository, destDir,version);
@@ -46,6 +49,120 @@ public class ExtensionActions {
 		}
 		
 		
+	}
+	
+	public static Map<String,List<XMLElement>> getAllClassDefs(URL repository, List<String> projects) throws IOException {
+		List<String> toBeresolved = new LinkedList<String>();
+		List<String> resolved = new LinkedList<String>();
+		toBeresolved.addAll(projects);
+		Map<String,List<XMLElement>> result = new HashMap<String,List<XMLElement>>();
+		extractRemoteClassDefs(repository,resolved, toBeresolved,result);
+		return result;
+	}
+
+
+	public static void main(String[] args) throws IOException {
+
+//		buildDocumentation(new File("../NavajoTipi/dist"),"Tipi",new File("tipidoc"));
+		//		System.err.println(">> "+ss);
+
+	}
+
+	public static void buildDocumentation(URL repository, String project, File destDir) throws IOException {
+		
+		
+		project = project.toLowerCase();
+		
+		
+		
+//
+	buildSingleDocumentation ( repository, project,destDir);
+	}
+	  
+	public static void buildDocumentation(String repository, String projectName,File baseDir, File inputPath, File destDir) throws XMLParseException, IOException {
+		
+	}
+	
+	public static void buildDocumentation(File baseDir, String sourcePath, String project, File destDir) throws IOException {
+		File sourceDir = new File(baseDir,sourcePath);
+		URL u = sourceDir.toURI().toURL();
+		System.err.println("Building documentation::: "+sourceDir+" to: "+destDir);
+		buildDocumentation(u, project, destDir);
+	}	
+	
+	public static void buildSingleDocumentation(URL repository, String project, File destDir) throws IOException {
+		List<String> projects = new ArrayList<String>();
+		projects.add(project);
+		Map<String,List<XMLElement>> ss = getAllClassDefs(repository, projects);
+		TipiCreateWikiDocumentation ecdp = new TipiCreateWikiDocumentation();
+		ecdp.setOutputDir(destDir);
+		ecdp.execute(project,ss);
+		System.err.println("Elements found: "+ss.size());
+	}
+	
+	private static void extractRemoteClassDefs(URL repository, List<String> resolved, List<String> toBeResolved, Map<String,List<XMLElement>> result) throws IOException {
+		if(toBeResolved.isEmpty()) {
+			return;
+		}
+		String project = toBeResolved.get(0);
+		resolved.add(project);
+		toBeResolved.remove(0);
+		XMLElement projectDefinition = downloadDefinition(repository, project);
+		XMLElement requires = projectDefinition.getElementByTagName("requires");
+		if(requires!=null) {
+			List<XMLElement> children = requires.getChildren();
+			for (XMLElement element : children) {
+				String req = element.getStringAttribute("path");
+				// If it hasn't been processed yet, and it also isnt already in the queue
+				if(!resolved.contains(req) && !toBeResolved.contains(req)) {
+					toBeResolved.add(req);
+				}
+			}
+		}
+		
+		XMLElement includes = projectDefinition.getElementByTagName("includes");
+		if(includes!=null) {
+			List<XMLElement> children = includes.getChildren();
+			for (XMLElement element : children) {
+				String path = element.getStringAttribute("path");
+				XMLElement xe = downloadInclude(repository, project, path);
+				List<XMLElement> res = result.get(project);
+				if(res==null) {
+					res = new ArrayList<XMLElement>();
+					result.put(project, res);
+				}
+				res.add(xe);
+			}
+		}
+		extractRemoteClassDefs(repository, resolved, toBeResolved, result);
+	}
+
+	private static XMLElement downloadInclude(URL repository, String project, String path) throws IOException {
+		URL def = new URL(repository,"includes/"+path);
+		return parseXmlFile(def);
+	}
+	
+	private static XMLElement downloadDefinition(URL repository, String project) throws IOException {
+	//	URL base = new URL(repository);
+//		URL def = new URL(repository,project+"/definition.xml");
+		URL def = new URL(repository,"definition.xml");
+		return parseXmlFile(def);
+	}
+
+	private static XMLElement parseXmlFile(File inputPath) throws FileNotFoundException, IOException {
+		FileReader fr = new FileReader(inputPath);
+		XMLElement xe = new CaseSensitiveXMLElement();
+		xe.parseFromReader(fr);
+		fr.close();
+		return xe;
+	}
+
+	private static XMLElement parseXmlFile(URL inputURL) throws FileNotFoundException, IOException {
+		Reader fr = new InputStreamReader(inputURL.openStream());
+		XMLElement xe = new CaseSensitiveXMLElement();
+		xe.parseFromReader(fr);
+		fr.close();
+		return xe;
 	}
 
 
@@ -70,7 +187,36 @@ public class ExtensionActions {
 
 	}
 
-
+//
+//	private static List<XMLElement> extractRecursiveTidList(File baseDir, File inputPath, File destDir, XMLElement definitions, List<XMLElement> locatedIncludes, List<String> toBeresolved) throws IOException {
+//
+//		XMLElement includes = definitions.getElementByTagName("includes");
+//		List<XMLElement> inList = includes.getChildren();
+//		if(inList==null) {
+//			return;
+//		}
+//		
+//		for (XMLElement element : inList) {
+//			String path = element.getStringAttribute("path");
+//			File src = new File(baseDir, "src");
+//			File p = new File(src, path);
+//			XMLElement foundFile = new CaseSensitiveXMLElement();
+//			FileReader fw = new FileReader(p);
+//			foundFile.parseFromReader(fw);
+//			fw.close();
+//			locatedIncludes.add(foundFile);
+//			System.err.println("Include: "+p.exists()+" ("+p+")");
+//			if(!p.exists()) {
+//				System.err.println("Not found");
+//				continue;
+//			}
+//			File includeDir = new File(destDir,"includes");
+//			File ccc = new File(includeDir,path);
+//			ccc.getParentFile().mkdirs();
+//			copyFile(p, ccc);
+//		}
+//	}
+//	
 	private static void extractIncludes(File baseDir, File inputPath, File destDir, XMLElement definitions, List<XMLElement> locatedIncludes) throws IOException {
 		XMLElement includes = definitions.getElementByTagName("includes");
 		if(includes==null) {
@@ -227,5 +373,7 @@ public class ExtensionActions {
 		bout.flush();
 		bout.close();
 	}
+//	 ExtensionActions.build(repository,getProject().getProperty("ant.project.name"),getProject().getBaseDir(), sourceFile, destDir);
+
 
 }
