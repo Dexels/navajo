@@ -92,8 +92,8 @@ public class MapMetaData {
 		}
 	}
 	
-	public static MapMetaData getInstance() {
-		return instance;
+	public static MapMetaData getInstance() throws Exception {
+		return getInstance("aap");
 	}
 	
 	public static MapMetaData getInstance(String c) throws Exception {
