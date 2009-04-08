@@ -1,6 +1,7 @@
 package com.dexels.navajo.adapter;
 
 import com.dexels.navajo.mapping.*;
+import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.adapter.mailmap.AttachementMap;
 import com.dexels.navajo.adapter.mailmap.AttachmentMapInterface;
@@ -390,7 +391,7 @@ public class MailMap implements MailMapInterface, Mappable, HasDependentResource
   }
 
   public DependentResource[] getDependentResourceFields() {
-	  return new DependentResource[]{new GenericDependentResource("mailserver", "mailServer")};
+	  return new DependentResource[]{new GenericDependentResource("mailserver", "mailServer", AdapterFieldDependency.class)};
   }
 
 }

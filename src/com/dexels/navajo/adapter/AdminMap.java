@@ -301,6 +301,9 @@ public class AdminMap implements Mappable {
   public String getRootPath() {
     return rootPath;
   }
+  public double getCPULoad() {
+	  return DispatcherFactory.getInstance().getNavajoConfig().getCurrentCPUload();
+  }
   public boolean getSupportsAsync() {
     return supportsAsync;
   }

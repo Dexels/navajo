@@ -17,6 +17,8 @@ import org.dexels.grus.DbConnectionBroker;
 
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.mapping.*;
+import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
+import com.dexels.navajo.mapping.compiler.meta.SQLFieldDependency;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.util.*;
 import com.dexels.navajo.document.types.ClockTime;
@@ -1808,7 +1810,9 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
    */
   
   public DependentResource [] getDependentResourceFields() {
-	  return new DependentResource[]{new GenericDependentResource("database", "datasource")};
+	  return new DependentResource[]{new GenericDependentResource("database", "datasource", AdapterFieldDependency.class), 
+			                        new GenericMultipleDependentResource("sql", "update", SQLFieldDependency.class), 
+			                        new GenericMultipleDependentResource("sql", "query", SQLFieldDependency.class)};
   }
   
 }

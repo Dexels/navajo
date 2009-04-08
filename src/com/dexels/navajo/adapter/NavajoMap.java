@@ -1,6 +1,7 @@
 package com.dexels.navajo.adapter;
 
 import com.dexels.navajo.mapping.*;
+import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
 import com.dexels.navajo.scheduler.TaskMap;
 import com.dexels.navajo.scheduler.TaskRunnerMap;
 import com.dexels.navajo.server.*;
@@ -934,7 +935,8 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
   }
   
   public DependentResource[] getDependentResourceFields() {
-	  return new DependentResource[]{new GenericDependentResource("script", "doSend"), new GenericDependentResource("navajoserver", "server")};
+	  return new DependentResource[]{new GenericDependentResource("script", "doSend", AdapterFieldDependency.class), 
+			                         new GenericDependentResource("navajoserver", "server", AdapterFieldDependency.class)};
   }
   
 }
