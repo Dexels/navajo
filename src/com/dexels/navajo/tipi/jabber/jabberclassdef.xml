@@ -43,6 +43,7 @@
             <param name="nickName" type="string" />
             <param name="roomName" type="string" />
          </method>
+         <method name="listRooms"/>
       </methods>
    </tipiclass>
 </tid>
