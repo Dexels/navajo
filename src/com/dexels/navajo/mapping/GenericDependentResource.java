@@ -1,13 +1,22 @@
 package com.dexels.navajo.mapping;
 
+/**
+ * This class is used to define fields in adapter that have content which contains dependent 
+ * external resources, like e.g. database tables, views, mail server, urls, etc.
+ * 
+ * @author arjen
+ *
+ */
 public class GenericDependentResource implements DependentResource {
 
 	private String type;
 	private String value;
+	private Class myDependencyClass;
 	
-	public GenericDependentResource(String type, String value) {
+	public GenericDependentResource(String type, String value, Class depClass) {
 		this.type = type;
 		this.value = value;
+		this.myDependencyClass = depClass;
 	}
 	
 	public String getType() {
@@ -16,6 +25,10 @@ public class GenericDependentResource implements DependentResource {
 
 	public String getValue() {
 		return value;
+	}
+
+	public Class getDependencyClass() {
+		return myDependencyClass;
 	}
 
 }

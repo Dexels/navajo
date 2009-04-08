@@ -24,6 +24,7 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.jaxpimpl.xml.*;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.mapping.bean.DomainObjectMapper;
+import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
 import com.dexels.navajo.mapping.compiler.meta.IncludeDependency;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
 import com.dexels.navajo.server.DispatcherFactory;
@@ -43,11 +44,12 @@ import java.util.Stack;
 import java.util.StringTokenizer;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.TMLExpressionException;
+
+import java.lang.reflect.Constructor;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import com.dexels.navajo.loader.*;
-
 
 public class TslCompiler {
 
@@ -94,14 +96,8 @@ public class TslCompiler {
     if (loader == null) {
       this.loader = this.getClass().getClassLoader();
     }
-    //Stack s = new Stack();
-    //o s.pop();
-    //s.push(o);
   }
 
-  //private String className = "";
-
-  // "aap" -> \"aap\"
   private String replaceQuotes(String str) {
 
 	  if ( str.startsWith("#")) {
@@ -464,10 +460,9 @@ public String optimizeExpresssion(int ident, String clause, String className, St
    * @return
    * @throws Exception
    */
-  private String getExpressionValue(Element exprElmnt, Boolean isStringOperand) throws Exception {
+  private Object [] getExpressionValue(Element exprElmnt, Boolean isStringOperand) throws Exception {
 	  String value = null;
-	  //boolean isStringOperand = false;
-	  
+	 
 	  isStringOperand = Boolean.FALSE;
 	  
 	  Element valueElt = (Element) XMLutils.findNode(exprElmnt, "value");
@@ -504,79 +499,46 @@ public String optimizeExpresssion(int ident, String clause, String className, St
 	    	value = XMLutils.XMLUnescape(value);
 	    }
 	    
-	    return value;
+	    return new Object[]{value,isStringOperand};
   }
   
-  public String expressionNode(int ident, Element exprElmnt, int leftOver,  String className, String objectName) throws
-      Exception {
+  public String expressionNode(int ident, Element exprElmnt, int leftOver,  String className, String objectName) throws Exception {
+	  
     StringBuffer result = new StringBuffer();
-    boolean isStringOperand = false;
+    Boolean isStringOperand = false;
 
     String condition = exprElmnt.getAttribute("condition");
-   
-    String value = null;
-	  
-	 
-	  Element valueElt = (Element) XMLutils.findNode(exprElmnt, "value");
-	  
-	  if ( valueElt == null ) {
-	    	value = XMLutils.XMLUnescape(exprElmnt.getAttribute("value"));
-	    } else {
-	    	value = getCDATAContent(valueElt);
-	    	if ( value == null ) {
-	    		Node child = valueElt.getFirstChild();
-	    		value = child.getNodeValue();
-	    	}
-	    }
-	    
-	    // Check if operand is given as text node between <expression> tags.
-	    if (value == null || value.equals("")) {
-	    	Node child = exprElmnt.getFirstChild();
-	    	String cdata = getCDATAContent(exprElmnt);
-	    	if ( cdata != null ) {
-	    		isStringOperand = true;
-	    		value = cdata;
-	    	} else if (child != null) {
-	    		isStringOperand = true;
-	    		value = child.getNodeValue();
-	    	}
-	    	else {
-	    		throw new Exception("Error @" +
-	    				(exprElmnt.getParentNode() + "/" + exprElmnt) + ": <expression> node should either contain a value attribute or a text child node: >" +
-	    				value + "<");
-	    	}
-	    } else {
-	    	value = value.trim();
-	    	value = value.replaceAll("\n", " ");
-	    	value = XMLutils.XMLUnescape(value);
-	    }
-	    
+    
+    Object [] valueResult = getExpressionValue(exprElmnt, isStringOperand);
+	String value = (String) valueResult[0];
+	isStringOperand = (Boolean) valueResult[1];
   
-    if (!condition.equals("")) {
-          result.append(printIdent(ident) + "if (Condition.evaluate(" + replaceQuotes(condition) + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg))");
-        }
+	if (!condition.equals("")) {
+		result.append(printIdent(ident) + "if (Condition.evaluate(" + replaceQuotes(condition) + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg))");
+	}
 
-        result.append(printIdent(ident) + "{\n");
-        ident += 2;
+	result.append(printIdent(ident) + "{\n");
+	ident += 2;
 
-        if (!isStringOperand) {
-          result.append(optimizeExpresssion(ident, value, className, objectName));
-        }
-        else {
-          result.append(printIdent(ident) + "sValue = \"" + removeNewLines(value) + "\";\n");
-          //result.append(printIdent(ident) + "sValue = \"" + value + "\";\n");
-        }
+	if (!isStringOperand) {
+		result.append(optimizeExpresssion(ident, value, className, objectName));
+	}
+	else {
+		result.append(printIdent(ident) + "sValue = \"" + removeNewLines(value) + "\";\n");
+	}
 
-        result.append(printIdent(ident) + "matchingConditions = true;\n");
+	result.append(printIdent(ident) + "matchingConditions = true;\n");
 
-        ident -= 2;
-        result.append(printIdent(ident) + "}\n");
+	ident -= 2;
+	result.append(printIdent(ident) + "}\n");
 
-    if (leftOver > 0) {
-      result.append(printIdent(ident) + " else \n");
+	if (leftOver > 0) {
+		result.append(printIdent(ident) + " else \n");
 
-    }
-    return result.toString();
+	}
+	
+	return result.toString();
+	
   }
 
   public String methodsNode(int ident, Element n) {
@@ -1280,31 +1242,57 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
 
   }
 
-  private final void checkDependentFieldResource(Class localContextClass, String fieldName, String expressionValue) {
+  private final void checkDependentFieldResource(Class localContextClass, String fieldName, ArrayList<String> expressionValues) {
 	  
 	  if ( !(HasDependentResources.class.isAssignableFrom(localContextClass) )) {
 		  return;
 	  }
 	  
-	  DependentResource [] dependentFields = instantiatedAdapters.get(localContextClass);
-	  
-      if ( dependentFields == null && HasDependentResources.class.isAssignableFrom(localContextClass) ) {
-    	  try {
-    		  HasDependentResources hr = (HasDependentResources) localContextClass.newInstance();
-    		  dependentFields = hr.getDependentResourceFields();
-    	  } catch (Throwable t) {}
-    	  instantiatedAdapters.put(localContextClass, dependentFields);
-      }
-     
-	  if ( dependentFields == null ) {
-		  return;
-	  }
-	  
-	  for (int i = 0; i < dependentFields.length; i++) {
-		  if ( fieldName.equals(dependentFields[i].getValue())) {
-			  addDependency("dependentObjects.add( new AdapterFieldDependency(-1, \"" + localContextClass.getName() + "\", \"" + 
-					  dependentFields[i].getType() + "\", \"" +  expressionValue + "\"));\n", 
-					  "FIELD" + localContextClass.getName() + ";" + dependentFields[i].getType() + ";" + fieldName + ";" + expressionValue);
+	  for ( int all = 0; all < expressionValues.size(); all++ ) {
+		  
+		  String expressionValue = expressionValues.get(all);
+		  
+		  DependentResource [] dependentFields = instantiatedAdapters.get(localContextClass);
+
+		  if ( dependentFields == null && HasDependentResources.class.isAssignableFrom(localContextClass) ) {
+			  try {
+				  HasDependentResources hr = (HasDependentResources) localContextClass.newInstance();
+				  dependentFields = hr.getDependentResourceFields();
+			  } catch (Throwable t) {}
+			  instantiatedAdapters.put(localContextClass, dependentFields);
+		  }
+
+		  if ( dependentFields == null ) {
+			  return;
+		  }
+
+		  for (int i = 0; i < dependentFields.length; i++) {
+			  if ( fieldName.equals(dependentFields[i].getValue())) {
+
+				  if ( dependentFields[i] instanceof GenericMultipleDependentResource ) {
+					  Class<? extends AdapterFieldDependency> depClass = dependentFields[i].getDependencyClass();
+					  try {
+						  Constructor c = depClass.getConstructor(new Class[]{long.class, String.class, String.class, String.class});
+						  AdapterFieldDependency afd = (AdapterFieldDependency) c.newInstance(new Object[]{-1, localContextClass.getName(), dependentFields[i].getType(), expressionValue});
+						  AdapterFieldDependency [] allDeps = (AdapterFieldDependency []) afd.getMultipleDependencies();
+						  for ( int a = 0; a < allDeps.length; a++ ) {
+							  addDependency("dependentObjects.add( new " + depClass.getName() + "(-1, \"" + allDeps[a].getJavaClass() + 
+									  "\", \"" + 
+									  allDeps[a].getType() + "\", \"" +  allDeps[a].getId() + "\"));\n", 
+									  "FIELD" + allDeps[a].getJavaClass() + ";" + allDeps[a].getType() + ";" + 
+									  fieldName + ";" + allDeps[a].getId());
+						  }
+					  } catch (Exception e) {
+//						  // TODO Auto-generated catch block
+//						  e.printStackTrace();
+					  } 
+				  } else {
+					  addDependency("dependentObjects.add( new AdapterFieldDependency(-1, \"" + localContextClass.getName() + "\", \"" + 
+							  dependentFields[i].getType() + "\", \"" +  expressionValue + "\"));\n", 
+							  "FIELD" + localContextClass.getName() + ";" + dependentFields[i].getType() + ";" + 
+							  fieldName + ";" + expressionValue);
+				  }
+			  }
 		  }
 	  }
   }
@@ -1361,13 +1349,13 @@ public String fieldNode(int ident, Element n, String className,
     Element mapNode = null;
 
     int exprCount = countNodes(children, "expression");
-    String exprValue = "";
+    ArrayList<String> exprValues = new ArrayList<String>();
     for (int i = 0; i < children.getLength(); i++) {
       // Has condition;
       if (children.item(i).getNodeName().equals("expression")) {
         result.append(expressionNode(ident + 2, (Element) children.item(i),--exprCount, className, objectName));
         Boolean b = new Boolean(false);
-        exprValue = getExpressionValue(((Element) children.item(i)), b);
+        exprValues.add((String) getExpressionValue(((Element) children.item(i)), b)[0]);
       }
       else if (children.item(i).getNodeName().equals("map")) {
         isMapped = true;
@@ -1397,7 +1385,7 @@ public String fieldNode(int ident, Element n, String className,
        
         try {
         	type = MappingUtils.getFieldType(localContextClass, attribute);
-        	checkDependentFieldResource(localContextClass, attribute, exprValue);	
+        	checkDependentFieldResource(localContextClass, attribute, exprValues);	
         } catch (Exception e) { 
         	isDomainObjectMapper = localContextClass.isAssignableFrom(DomainObjectMapper.class);
         	if ( isDomainObjectMapper ) {

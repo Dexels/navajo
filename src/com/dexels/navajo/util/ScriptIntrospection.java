@@ -122,8 +122,9 @@ public class ScriptIntrospection {
 	private final void showDependencies(int indent, ArrayList<Dependency> deps, Class check, Class subCheck)  {
 		for (int i = 0; i < deps.size(); i++) {
 			Dependency dep = deps.get(i);
-			if ( dep.getClass().getName().equals(check.getName()) ) {
-				if ( check.equals(AdapterFieldDependency.class) ) {
+			//System.err.println("check = " + check + ",found = " + dep.getClass() + "->" + check.isAssignableFrom(dep.getClass()));
+			if ( check.isAssignableFrom(dep.getClass()) ) {
+				if ( check.isAssignableFrom(AdapterFieldDependency.class) ) {
 					System.err.println(printIndent(indent) + check.getSimpleName() + ": " + 
 							((AdapterFieldDependency) deps.get(i)).getEvaluatedId() + " (class=" + 
 							((AdapterFieldDependency) deps.get(i)).getJavaClass() + ", type=" + 

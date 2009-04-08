@@ -17,6 +17,7 @@ import com.dexels.navajo.mapping.HasDependentResources;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.mapping.MappingException;
+import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.UserException;
 
@@ -476,7 +477,7 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 	}
 
 	public DependentResource[] getDependentResourceFields() {
-		return new DependentResource[]{new GenericDependentResource("javaobject", "objectName")};
+		return new DependentResource[]{new GenericDependentResource("javaobject", "objectName", AdapterFieldDependency.class)};
 	}
 
 	public String getAttributeName() {

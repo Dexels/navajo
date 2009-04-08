@@ -1,5 +1,7 @@
 package com.dexels.navajo.mapping.compiler.meta;
 
+import java.lang.reflect.Constructor;
+
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.parser.Expression;
@@ -16,6 +18,24 @@ public class AdapterFieldDependency extends Dependency {
 		this.type = type;
 		this.adapterClass = adapterClass;
 		
+	}
+	
+	/**
+	 * Check whether this dependency instance has in fact led to multiple dependencies.
+	 * 
+	 * @return
+	 */
+	public final boolean hasMultipleDependencies() {
+		return ( getMultipleDependencies() != null );
+	}
+	
+	/**
+	 * A single adapterfielddependency could lead to multiple dependencies.
+	 * 
+	 * @return
+	 */
+	public Dependency [] getMultipleDependencies() {
+		return null;
 	}
 	
 	@Override
@@ -49,4 +69,15 @@ public class AdapterFieldDependency extends Dependency {
 		return adapterClass;
 	}
 
+//	public static void main(String [] args) {
+//		  Class<? extends AdapterFieldDependency> depClass = AdapterFieldDependency.class;
+//		  try {
+//			Constructor c = depClass.getConstructor(new Class[]{long.class, String.class, String.class, String.class});
+//			AdapterFieldDependency afd = (AdapterFieldDependency) c.newInstance(new Object[]{-1, "Apenoot", "pipo", "de clown"});
+//			System.err.println(afd.getJavaClass() + ", " + afd.getTimestamp() + ", " + afd.getType());
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} 
+//	}
 }
