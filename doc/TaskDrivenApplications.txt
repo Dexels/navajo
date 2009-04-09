@@ -1,12 +1,12 @@
 Workflow and task-driven user interaction
 
-Service workflows
+1. Service workflows
 
 A workflow is modeled using a finite state machine extended with a global workflow instance state.
 A workflow instance is an 'active' workflow.
-The global workflow instance state contains all the historic navajo request and response documents that have
+The global workflow instance state contains all the historic navajo request and response documents that have been
 received/sended during the lifecycle of the specific workflow instance. Furthermore, the global state
-contains parameters that can be assigned 
+contains parameters that can be assigned at state transitions.
 
 Each state contains transitions and tasks.
 A transitions defines triggers and the next state when the trigger is fired and an optional condition is valid.
@@ -19,8 +19,8 @@ Example workflow:
      <transition trigger="navajo:MySpecialService" nextstate="sendmail"/>  // When service MySpecialService is run go to the sendmail state.
   </state>
   <state id="sendmail">
-     <task service="navajo:SendMail"/> // call service SendMail.
-     <transition trigger="time:now" nextstate="null"/>  // immediately go to state null, null is special state to indicate that workflow should be terminated.
+     <task service="navajo:SendMail"/> // call service SendMail right now (synchronously)
+     <transition trigger="time:now" nextstate="null"/>  // Immediately go to state null (asynchronously), null is special state to indicate that workflow should be terminated.
   </state>
 </workflow>
 
@@ -37,13 +37,13 @@ children.
 - expression. SHOULD contain a value attribute. MAY contain a condition
   attribute. MAY containg a navajo attribute.
 
-Creating user-tasks
+2. Creating user-tasks
 
 Within a workflow a special Navajo service can be scheduled that creates a user-task. A user-task is defined as:
-- A Tipi userinterface definition.
-- An input Navajo.
-- A group or role id (optionally)
-- A username (optionally)
+1. A Tipi userinterface definition.
+2. An input Navajo.
+3. A group or role id (optionally)
+4. A username (optionally)
 
 When a user logs into the system a list of user-tasks will be shown in a user-task inbox. The list only contains
 those tasks for which the role id matches with the current user or the username in the task definition matches
@@ -76,4 +76,5 @@ the user which triggers the workflow to finalize.
   </state>
 </workflow>
 
-A database table is used to persist the user-tasks. 
+A database table is used to persist the user-tasks containing the above
+defined items (1,2,3 and 4).
