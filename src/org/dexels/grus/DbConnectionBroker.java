@@ -19,6 +19,7 @@ public final class DbConnectionBroker extends Object implements Runnable
 	private Thread thread;
 	private boolean dead = false;
 	public  boolean supportsAutocommit = true;
+	private boolean sanityCheck = true;
 	
 	private static int instances = 0;
 	private static long createdInstances = 0;
@@ -150,16 +151,38 @@ public final class DbConnectionBroker extends Object implements Runnable
 		dead = true;
 	}
 	
-	private final boolean testConnection(Connection conn) {
+	private final boolean testConnection(final Connection conn) {
+
+		if ( conn == null ) {
+			return false;
+			
+		}
 		try {
 			if(conn.isClosed()) {
 				return false;
 			}
-		} catch(SQLException e) {
+
+			if ( sanityCheck ) {
+				// Check if it is the proper connection...
+				String metaUsername = conn.getMetaData().getUserName();
+				String metaLocation = conn.getMetaData().getURL();
+				if ( !metaUsername.toLowerCase().equals(this.username.toLowerCase()) ||
+						!metaLocation.toLowerCase().equals(this.location.toLowerCase())) {
+					try {
+						conn.close();
+						System.err.println("FOUND ILLEGAL CONNECTION.");
+						AuditLog.log("GRUS", "Found ILLEGAL connection " + metaLocation+"/"+metaUsername +
+								", EXPECTED: " + this.location + "/" + this.username);
+					} catch (Exception e) {}
+					return false;
+				}
+			}
+		} catch(Exception e) {
 			return false;
 		}
 		return true;
 	}
+
 	
 	public final synchronized Connection getConnection() {
 		//System.err.println("BrokerHash: +"+hashCode()+"+total connections: "+conns.length+" available: "+available+" current: "+current);
