@@ -26,6 +26,7 @@ package com.dexels.navajo.mapping;
  */
 
 import com.dexels.navajo.loader.NavajoClassSupplier;
+import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
 import com.dexels.navajo.mapping.compiler.meta.Dependency;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.server.jmx.JMXHelper;
@@ -224,11 +225,21 @@ private boolean keepJMXConnectionAlive = false;
 	  return new ArrayList<Dependency>();
   }
 
+  /**
+   * Special 'getter' to be used from within scripts.
+   * 
+   * @return
+   */
   public Dependency [] getDependencies() {
 	  
 	  Dependency [] all = new Dependency[getDependentObjects().size()];
 	  all = (Dependency []) getDependentObjects().toArray(all);
-	  
+	  for ( int i = 0; i < all.length; i++ ) {
+		  // Normalize id's
+		  if ( all[i] instanceof AdapterFieldDependency ) {
+			  all[i].setId( ((AdapterFieldDependency) all[i]).getEvaluatedId() );
+		  } 
+	  }
 	  return all;
 	  
   }

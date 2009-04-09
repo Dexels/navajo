@@ -1,12 +1,8 @@
 package com.dexels.navajo.mapping.compiler.meta;
 
-import java.lang.reflect.Constructor;
-
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.parser.Expression;
-import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.server.SystemException;
 
 public class AdapterFieldDependency extends Dependency {
 

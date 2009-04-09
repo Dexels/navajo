@@ -54,7 +54,6 @@ import java.lang.reflect.Method;
 
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 import com.dexels.navajo.persistence.*;
-import com.dexels.navajo.util.AuditLog;
 
 /*
  * The default NavajoConfig class.
@@ -290,14 +289,12 @@ public final class NavajoConfig implements NavajoConfigInterface {
     			store = (navajostore.getProperty("store") != null ? navajostore.getProperty("store").getValue() : null);
     			if (p != null) {
     				dbPort = Integer.parseInt(p);
-    				System.err.println("SETTING DBPORT TO " + dbPort);
     			}
     			auditLevel = ( navajostore.getProperty("auditlevel") != null ? navajostore.getProperty("auditlevel").getValue() : Level.WARNING.getName() );
     			dbProperties.put("auditlevel", auditLevel);
     		}
     		
     		if (dbPort != -1) {
-    			System.err.println("PUTTING PORT = " + dbPort + " IN MAP");
     			dbProperties.put("port", new Integer(dbPort));
     		}
     		
@@ -327,7 +324,6 @@ public final class NavajoConfig implements NavajoConfigInterface {
     		asyncTimeout = 3600 * 1000; // default 1 hour.
     		if (s != null) {
     			asyncTimeout = Float.parseFloat(s.getValue()) * 1000;
-    			System.out.println("SETTING ASYNC TIMEOUT: " + asyncTimeout);
     		}
     		
     		enableAsync = (body.getProperty("parameters/enable_async") == null ||
@@ -345,7 +341,6 @@ public final class NavajoConfig implements NavajoConfigInterface {
 				Property fold = body.getProperty("paths/jar_folder");
 				if (fold!=null) {
 					String ss = fold.getValue();
-					System.err.println("Supplied value: "+ss);
 					if (ss!=null) {
 						if (rootFile!=null) {
 							jarFolder = new File(rootFile,ss);
@@ -374,7 +369,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
     			//System.out.println("No beta user specified");
     			betaUser = "_beta";
     		}
-    		System.err.println("Betauser suffix is: " + betaUser);
+    		//System.err.println("Betauser suffix is: " + betaUser);
     		
     		s = body.getProperty("parameters/compile_scripts");
     		if (s != null) {

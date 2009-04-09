@@ -5,6 +5,17 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+/**
+ * This class is used to store database object dependencies that are hidden in adapter fields.
+ * It finds database objects (stored procedures, views and tables) within a SQL statement.
+ * It implements the getMultipleDependencies() method to indicate that dependencies of this type
+ * are retrieved in two phases: first create an instance of SQLFieldDependency with the appropriate
+ * SQLFieldDependency(...) constructor. The second phase should call getMultipleDependencies() in order
+ * to retrieve the actual adapter field dependencies.
+ * 
+ * @author arjen
+ *
+ */
 public class SQLFieldDependency extends AdapterFieldDependency {
 
 	SQLFieldDependency [] sqlDepArray = null;
@@ -53,6 +64,7 @@ public class SQLFieldDependency extends AdapterFieldDependency {
 		
 		return new int[]{from,length};
 	}
+	
 	private Set<String> findTablesAndViews(String query) {
 		HashSet<String> sps = new HashSet<String>();
 

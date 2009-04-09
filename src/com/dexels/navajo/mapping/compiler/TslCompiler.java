@@ -25,6 +25,8 @@ import com.dexels.navajo.document.jaxpimpl.xml.*;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.mapping.bean.DomainObjectMapper;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
+import com.dexels.navajo.mapping.compiler.meta.Dependency;
+import com.dexels.navajo.mapping.compiler.meta.ExpressionValueDependency;
 import com.dexels.navajo.mapping.compiler.meta.IncludeDependency;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
 import com.dexels.navajo.server.DispatcherFactory;
@@ -527,6 +529,16 @@ public String optimizeExpresssion(int ident, String clause, String className, St
 		result.append(printIdent(ident) + "sValue = \"" + removeNewLines(value) + "\";\n");
 	}
 
+	// Check depenencies.
+	Dependency [] allDeps =  ExpressionValueDependency.getDependencies( ( !isStringOperand ? value : removeNewLines(value) ) );
+	for ( int a = 0; a < allDeps.length; a++ ) {
+		addDependency("dependentObjects.add( new ExpressionValueDependency(-1, \"" + allDeps[a].getId() + 
+				"\", \"" + 
+				allDeps[a].getType() + "\"));\n", 
+				"FIELD" + "ExpressionValueDependency" + ";" + allDeps[a].getType() + ";" + 
+				allDeps[a].getId());
+	}
+	
 	result.append(printIdent(ident) + "matchingConditions = true;\n");
 
 	ident -= 2;
@@ -2361,6 +2373,8 @@ public String mapNode(int ident, Element n) throws Exception {
 	          "import java.util.HashMap;\n" +
 	          "import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;\n" +
 	          "import com.dexels.navajo.mapping.compiler.meta.IncludeDependency;\n" +
+	          "import com.dexels.navajo.mapping.compiler.meta.ExpressionValueDependency;\n" +
+	          "import com.dexels.navajo.mapping.compiler.meta.SQLFieldDependency;\n" +
               "import com.dexels.navajo.mapping.compiler.meta.InheritDependency;\n" +
               "import com.dexels.navajo.mapping.compiler.meta.JavaDependency;\n" +
               "import com.dexels.navajo.mapping.compiler.meta.NavajoDependency;\n" +
@@ -2880,7 +2894,6 @@ public void initJavaCompiler( String outputPath, ArrayList classpath, Class java
     compiler.setCompilerClass(javaCompilerClass);
 
 }
-
 
 @SuppressWarnings("unchecked")
 public void compileAllTslToJava(ArrayList elements)  throws Exception {

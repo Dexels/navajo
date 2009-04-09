@@ -1,11 +1,9 @@
 package com.dexels.navajo.util;
 
-import java.beans.BeanDescriptor;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -14,10 +12,10 @@ import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.mapping.CompiledScript;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
 import com.dexels.navajo.mapping.compiler.meta.Dependency;
+import com.dexels.navajo.mapping.compiler.meta.ExpressionValueDependency;
 import com.dexels.navajo.mapping.compiler.meta.IncludeDependency;
 import com.dexels.navajo.mapping.compiler.meta.InheritDependency;
 import com.dexels.navajo.mapping.compiler.meta.JavaDependency;
-import com.dexels.navajo.mapping.compiler.meta.NavajoDependency;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.GenericHandler;
@@ -93,8 +91,9 @@ public class ScriptIntrospection {
 		showDependencies(indent, dependencies, InheritDependency.class, null);
 		showDependencies(indent, dependencies, IncludeDependency.class, null);
 		showDependencies(indent, dependencies, JavaDependency.class, null);
-		showDependencies(indent, dependencies, NavajoDependency.class, null);
+		//showDependencies(indent, dependencies, NavajoDependency.class, null);
 		showDependencies(indent, dependencies, AdapterFieldDependency.class, null);
+		showDependencies(indent, dependencies, ExpressionValueDependency.class, null);
 		System.err.println("================================================");
 	}
 	
@@ -130,7 +129,7 @@ public class ScriptIntrospection {
 							((AdapterFieldDependency) deps.get(i)).getJavaClass() + ", type=" + 
 							((AdapterFieldDependency) deps.get(i)).getType() +", id=" + deps.get(i).getId() + ")");
 				} else {
-					System.err.println(printIndent(indent) + check.getSimpleName() + ": " + deps.get(i).getId());
+					System.err.println(printIndent(indent) + check.getSimpleName() + ": " + deps.get(i).getId() + " (" + dep.getType() + ")");
 				}
 			}
 		}
