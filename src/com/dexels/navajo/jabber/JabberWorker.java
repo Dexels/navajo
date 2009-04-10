@@ -89,8 +89,12 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 
 	private MultiUserChat myMultiUser;
 	
+	// Dummy constructor.
 	public JabberWorker() {
-		super(myId);
+	}
+	
+	public JabberWorker(String id) {
+		super(id);
 	}
 	
 	public void postTmlToChatroom(Navajo n) {
@@ -152,7 +156,7 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 				return instance;
 			}
 			
-			instance = new JabberWorker();
+			instance = new JabberWorker(myId);
 			instance.myJabber =  new NavajoJabberAgent();
 //			JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
 			AuditLog.log("Jabber", "Started jabber connection worker $Id$");
@@ -459,12 +463,24 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 		}
 	}
 	
-	public static void main(String [] args) {
-		String arg0 = "mynavajogroup-dopeapp@conference.dexels.nl/frank|192.168.1.13|frank-lyaruus-macbook-pro.local|1231768833526";
-		String clientid = arg0.split("/")[1];
-		System.err.println(clientid);
+	/**
+	 * Gets the agentid from the registered callbacks using the nickName.
+	 * e.g. #BBFW06E-arjen|127.0.0.1|localhost.localdomain|1239349139888
+	 *      registered: #BBFW06E-arjen|127.0.0.1|localhost.localdomain|1239349139888@KNVBTest-sportlinkclub
+	 * @param nickName
+	 * @return
+	 */
+	public String getAgentId(String nickName) {
+		String callBack =  (String) instance.registeredCallbacks.get(nickName);
+		String roomName = callBack.split("@")[1];
+		String [] splitup = roomName.split("-");
+		if ( splitup.length > 1 ) {
+			return splitup[1];
+		} else {
+			return "unknownapp";
+		}
 	}
-
+	
 	public void setMultiUserChat(MultiUserChat muc) {
 		// TODO Auto-generated method stub
 		this.myMultiUser = muc;
