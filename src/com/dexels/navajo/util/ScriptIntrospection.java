@@ -28,10 +28,13 @@ public class ScriptIntrospection {
 	
 	// Setters
 	public String script;
+	public String packageName = "";
 	
 	private CompiledScript myCompiledScript;
 	private CVSVersionControl cvs;
 	private String rootPath;
+	private String errors = "";
+	private boolean hasErrors = false;
 	
 	public ScriptIntrospection() {
 		// Empty constructor, can be used from scripts.
@@ -68,13 +71,22 @@ public class ScriptIntrospection {
 
 	}
 	
-	private void initializeScript(String script) throws Exception {
+	private void initializeScript(String script) {
 		GenericHandler gh = new GenericHandler();
 		StringBuffer compilerErrors = new StringBuffer();
-		myCompiledScript = gh.compileScript(new Access(), script, compilerErrors);
-		if ( !compilerErrors.toString().equals("") ) {
-			System.err.println(compilerErrors.toString());
+		String error = "";
+		try {
+			myCompiledScript = gh.compileScript(new Access(), script, compilerErrors);
+		} catch (Throwable t) {
+			errors = compilerErrors.toString();
+			if ( errors.equals("" )) {
+				errors = t.getMessage();
+			}
+			hasErrors = true;
 		}
+//		if ( !compilerErrors.toString().equals("") ) {
+//			System.err.println(compilerErrors.toString());
+//		}
 		// CVS
 		cvs = new CVSVersionControl(new File(DispatcherFactory.getInstance().getNavajoConfig().getScriptPath() + "/" + script + ".xml"));
 	}
@@ -85,6 +97,10 @@ public class ScriptIntrospection {
 	}
 	
 	private final void printAllDependencies(int indent) throws Exception {
+		
+		if ( getCompiledScript() == null ) {
+			return;
+		}
 		ArrayList<Dependency> dependencies = getCompiledScript().getDependentObjects();
 		
 		System.err.println("================ DEPENDENCIES ==================");
@@ -137,6 +153,10 @@ public class ScriptIntrospection {
 	
 	public void getAllScriptDependentScripts(HashSet<String> allScripts) throws Exception {
 		
+		if ( getCompiledScript() == null ) {
+			return;
+		}
+		
 		ArrayList<Dependency> deps = getCompiledScript().getDependentObjects();
 		for (int i = 0; i < deps.size(); i++) {
 			Dependency dep = deps.get(i);
@@ -160,38 +180,61 @@ public class ScriptIntrospection {
 	
 	public static void main(String [] args) throws Exception {
 		
-		String rootPath = args[0] + "/";
-		String script = args[1];
+//		String rootPath = args[0] + "/";
+//		String script = args[1];
+//		
+//		ScriptIntrospection si = new ScriptIntrospection(rootPath, script);
+//		si.printAllDependencies(0);
+//		si.printVersionInfo();		
+//		HashSet<String> allScripts = new HashSet<String>();
+//		si.getAllScriptDependentScripts(allScripts);
+//		System.err.println("================== ALL DEPENDENT SCRIPTS ====================");
+//		Iterator all = allScripts.iterator();
+//		while ( all.hasNext() ) {
+//			System.err.println(all.next());
+//		}
+//		System.err.println("=============================================================");
+//		if ( si.getCompiledScript() != null ) {
+//			System.err.println("Original author    : " + si.getCompiledScript().getAuthor());
+//			System.err.println("Script description : " + si.getCompiledScript().getDescription());
+//			System.err.println("Script type        : " + si.getCompiledScript().getScriptType());
+//		}
+//		System.err.println("Has errors         : " + si.getHasErrors());
+//		if ( si.getHasErrors() ) {
+//			System.err.println("Error message: " + si.getError());
+//		}
+//		System.exit(1);
 		
-		ScriptIntrospection si = new ScriptIntrospection(rootPath, script);
-		si.printAllDependencies(0);
-		si.printVersionInfo();		
-		HashSet<String> allScripts = new HashSet<String>();
-		si.getAllScriptDependentScripts(allScripts);
-		System.err.println("================== ALL DEPENDENT SCRIPTS ====================");
-		Iterator all = allScripts.iterator();
-		while ( all.hasNext() ) {
-			System.err.println(all.next());
+		
+		ScriptIntrospection s = new ScriptIntrospection();
+		File f = new File("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/navajo");
+		ArrayList<ScriptDefinition> all = new ArrayList<ScriptDefinition>();
+		s.getScriptsFromPath("navajo", f, all);
+		for (int i = 0; i < all.size(); i++) {
+			System.err.println(all.get(i).getScriptName());
 		}
-		System.err.println("=============================================================");
-		System.err.println("Original author    : " + si.getCompiledScript().getAuthor());
-		System.err.println("Script description : " + si.getCompiledScript().getDescription());
-		System.err.println("Script type        : " + si.getCompiledScript().getScriptType());
-		
-		
-		System.exit(1);
-		
 	}
 
+	public boolean getHasErrors() {
+		if ( myCompiledScript == null && !hasErrors ) {
+			initializeScript(script);
+		}
+		return hasErrors;
+	}
+	
+	public String getError() {
+		return errors;
+	}
+	
 	public CompiledScript getCompiledScript() throws Exception {
-		if ( myCompiledScript == null ) {
+		if ( myCompiledScript == null && !hasErrors ) {
 			initializeScript(script);
 		}
 		return myCompiledScript;
 	}
 
 	public CVSVersionControl getCvs() throws Exception {
-		if ( myCompiledScript == null ) {
+		if ( myCompiledScript == null && !hasErrors ) {
 			initializeScript(script);
 		}
 		return cvs;
@@ -200,4 +243,43 @@ public class ScriptIntrospection {
 	public void setScript(String script) {
 		this.script = script;
 	}
+	
+	private void getScriptsFromPath(String base, File f, ArrayList<ScriptDefinition> list) {
+
+		File [] files = f.listFiles();
+		for ( int i = 0; i < files.length; i++ ) {
+			if ( files[i].isDirectory() ) {
+				String newBase = ( !"".equals(base) ? base + "/" : "" )  + files[i].getName();
+				getScriptsFromPath(newBase, files[i], list);
+			} else {
+				String name = files[i].getName();
+				if ( name.endsWith(".xml") ) {
+					String scriptName = ( !"".equals(base) ? base + "/" : "" ) + name;
+					scriptName = scriptName.replaceAll("\\.xml", "");
+					list.add(new ScriptDefinition(scriptName));
+				}
+			}
+		}
+	}
+	
+	public ScriptDefinition [] getScripts() {
+		ArrayList<ScriptDefinition> names = new ArrayList<ScriptDefinition>();
+		File parent = new File(DispatcherFactory.getInstance().getNavajoConfig().getScriptPath() +  
+				           ( !"".equals(packageName) ? "/" + packageName : "" ) );
+		getScriptsFromPath(packageName, parent, names);
+		ScriptDefinition [] result = new ScriptDefinition[names.size()];
+		result = (ScriptDefinition []) names.toArray(result);
+		
+		return result;
+	}
+
+	public String getPackageName() {
+		return packageName;
+	}
+
+	public void setPackageName(String packageName) {
+		this.packageName = packageName;
+	}
+	
+	
 }
