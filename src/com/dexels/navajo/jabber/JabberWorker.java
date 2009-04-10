@@ -468,17 +468,27 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 	 * Gets the agentid from the registered callbacks using the nickName.
 	 * e.g. #BBFW06E-arjen|127.0.0.1|localhost.localdomain|1239349139888
 	 *      registered: #BBFW06E-arjen|127.0.0.1|localhost.localdomain|1239349139888@KNVBTest-sportlinkclub
+	 *      
 	 * @param nickName
 	 * @return
 	 */
 	public String getAgentId(String nickName) {
+		
+		if ( nickName == null ) {
+			return "";
+		}
+		
 		String callBack =  (String) instance.registeredCallbacks.get(nickName);
+		
+		if ( callBack == null || callBack.equals("") ) {
+			return "";
+		}
 		String roomName = callBack.split("@")[1];
 		String [] splitup = roomName.split("-");
 		if ( splitup.length > 1 ) {
 			return splitup[1];
 		} else {
-			return "unknownapp";
+			return "";
 		}
 	}
 	
