@@ -403,8 +403,8 @@ public final class Access implements java.io.Serializable, Mappable {
 
 	public String getAgentId() {
 		// First try Jabber.
-		String agentid = JabberWorkerFactory.getInstance().getAgentId(clientToken);
-		if ( !"".equals(agentid) ) {
+		String agentid = JabberWorkerFactory.getInstance().getAgentId(rpcUser + "-" + clientToken);
+		if ( agentid != null && !agentid.equals("") ) {
 			return agentid;
 		} else {
 			// Try using webservice navajo/ProcessGetAgent.
@@ -412,7 +412,8 @@ public final class Access implements java.io.Serializable, Mappable {
 				Navajo doc = NavajoFactory.getInstance().createNavajo();
 				Message m = NavajoFactory.getInstance().createMessage(doc, "Access");
 				doc.addMessage(m);
-				Property p = NavajoFactory.getInstance().createProperty(doc, "AccessId", Property.STRING_PROPERTY, clientToken, 0, "", "out");
+				Property p = NavajoFactory.getInstance().createProperty(doc, "AccessId", Property.STRING_PROPERTY, 
+						rpcUser + "-" + clientToken, 0, "", "out");
 				m.addProperty(p);
 				Header h = NavajoFactory.getInstance().createHeader(doc, "navajo/ProcessGetAgent", "ME", "ME", -1);
 				doc.addHeader(h);
