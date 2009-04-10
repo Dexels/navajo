@@ -8,6 +8,7 @@ import com.dexels.navajo.events.types.NavajoEventMapTest;
 import com.dexels.navajo.integrity.WorkerTest;
 import com.dexels.navajo.mapping.bean.DomainObjectMapperTest;
 import com.dexels.navajo.mapping.bean.ServiceMapperTest;
+import com.dexels.navajo.mapping.compiler.meta.SQLFieldDependencyTest;
 import com.dexels.navajo.persistence.impl.PersistenceManagerImplTest;
 import com.dexels.navajo.scheduler.ListenerRunnerTest;
 import com.dexels.navajo.scheduler.ListenerStoreTest;
@@ -42,6 +43,7 @@ public class AllUnitTests {
 		suite.addTestSuite(ServiceMapperTest.class);
 		//suite.addTestSuite(CacheControllerTest.class); THIS ONE IS TESTED IN THE PERSISTENCEMANAGERIMPL...
 		suite.addTestSuite(PersistenceManagerImplTest.class);
+		suite.addTestSuite(SQLFieldDependencyTest.class);
 		//$JUnit-END$
 		return suite;
 	}

@@ -234,12 +234,12 @@ private boolean keepJMXConnectionAlive = false;
 	  
 	  Dependency [] all = new Dependency[getDependentObjects().size()];
 	  all = (Dependency []) getDependentObjects().toArray(all);
-	  for ( int i = 0; i < all.length; i++ ) {
-		  // Normalize id's
-		  if ( all[i] instanceof AdapterFieldDependency ) {
-			  all[i].setId( ((AdapterFieldDependency) all[i]).getEvaluatedId() );
-		  } 
-	  }
+//	  for ( int i = 0; i < all.length; i++ ) {
+//		  // Normalize id's
+//		  if ( all[i] instanceof AdapterFieldDependency ) {
+//			  all[i].setId( ((AdapterFieldDependency) all[i]).getEvaluatedId() );
+//		  } 
+//	  }
 	  return all;
 	  
   }
