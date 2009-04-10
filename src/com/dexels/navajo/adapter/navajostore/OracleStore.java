@@ -60,8 +60,8 @@ public final class OracleStore implements StoreInterface {
 	private static String existsAccessSQL = "select count(*) AS cnt from navajoaccess where access_id = ?";
 	
 	private static String insertAccessSQL = "insert into navajoaccess " +
-	"(access_id, webservice, username, threadcount, cpuload, totaltime, parsetime, authorisationtime, clienttime, requestsize, requestencoding, compressedrecv, compressedsnd, ip_address, hostname, created, clientid) " +
-	"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	"(access_id, webservice, username, threadcount, cpuload, totaltime, parsetime, authorisationtime, clienttime, requestsize, requestencoding, compressedrecv, compressedsnd, ip_address, hostname, created, clientid, agentid) " +
+	"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	
 	private static String insertAuditLog = "insert into auditlog " + 
 	"(instance, subsystem, message, auditlevel, accessid, lastupdate) values (?, ?, ?, ?, ?, ?)";
@@ -410,6 +410,7 @@ public final class OracleStore implements StoreInterface {
 								ps.setString(++index, hostName);
 								ps.setTimestamp(++index, new java.sql.Timestamp(a.created.getTime()));
 								ps.setString(++index, a.getClientToken());
+								ps.setString(++index, a.getAgentId());
 								ps.executeUpdate();
 							} else {
 								// Update embryo.
