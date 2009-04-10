@@ -41,6 +41,7 @@ import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.scheduler.*;
 import com.dexels.navajo.scheduler.triggers.AfterWebserviceTrigger;
 import com.dexels.navajo.server.*;
+import com.dexels.navajo.server.enterprise.xmpp.JabberWorkerInterface;
 import com.dexels.navajo.sharedstore.map.SharedTribalMap;
 import com.dexels.navajo.util.*;
 
@@ -49,7 +50,7 @@ import com.dexels.navajo.util.*;
  * @author Frank
  *
  */
-public class JabberWorker extends GenericThread implements NavajoListener, Mappable {
+public class JabberWorker extends GenericThread implements NavajoListener, Mappable, JabberWorkerInterface {
 
 	/**
 	 * Public fields (used as getters for mappable).
