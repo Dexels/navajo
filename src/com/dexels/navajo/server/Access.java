@@ -37,6 +37,7 @@ import com.dexels.navajo.mapping.CompiledScript;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.enterprise.statistics.MapStatistics;
+import com.dexels.navajo.server.enterprise.xmpp.JabberWorkerFactory;
 
 /**
  * An Access object is created for each web service access to the Navajo server.
@@ -400,6 +401,31 @@ public final class Access implements java.io.Serializable, Mappable {
 		return piggyBackData;
 	}
 
+	public String getAgentId() {
+		// First try Jabber.
+		String agentid = JabberWorkerFactory.getInstance().getAgentId(clientToken);
+		if ( !"".equals(agentid) ) {
+			return agentid;
+		} else {
+			// Try using webservice navajo/ProcessGetAgent.
+			try {
+				Navajo doc = NavajoFactory.getInstance().createNavajo();
+				Message m = NavajoFactory.getInstance().createMessage(doc, "Access");
+				doc.addMessage(m);
+				Property p = NavajoFactory.getInstance().createProperty(doc, "AccessId", Property.STRING_PROPERTY, clientToken, 0, "", "out");
+				m.addProperty(p);
+				Header h = NavajoFactory.getInstance().createHeader(doc, "navajo/ProcessGetAgent", "ME", "ME", -1);
+				doc.addHeader(h);
+				Navajo result = DispatcherFactory.getInstance().handle(doc, true);
+				if ( result != null ) {
+					return result.getProperty("/Access/AgentId").getValue();
+				}
+			} catch (Throwable t) {
+			}
+		}
+		return "[unknown]";
+	}
+	
 	public String getClientToken() {
 		return clientToken ;
 	}
