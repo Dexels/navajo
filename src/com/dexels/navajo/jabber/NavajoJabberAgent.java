@@ -107,11 +107,11 @@ public class NavajoJabberAgent  {
 					}
 
 					Chat c = connection.getChatManager().getThreadChat(m.getThread());
-					if (c != null) {
-						System.err.println("Chat found");
-					} else {
-						System.err.println("chat not found!");
-					}
+	//					if (c != null) {
+	//						//System.err.println("Chat found");
+	//					} else {
+	//						//System.err.println("chat not found!");
+	//					}
 					try {
 						messageReceived(m);
 					} catch (XMPPException e) {
