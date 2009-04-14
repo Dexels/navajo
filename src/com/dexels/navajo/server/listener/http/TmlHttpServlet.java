@@ -3,6 +3,7 @@ package com.dexels.navajo.server.listener.http;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.rmi.server.ExportException;
 import java.util.*;
 
 
@@ -253,6 +254,10 @@ public class TmlHttpServlet extends HttpServlet {
     return result;
   }
 
+  protected Header constructHeader(Navajo tbMessage, String service, String username, String password, long expirationInterval) {
+	  return NavajoFactory.getInstance().createHeader(tbMessage,service, username, password, expirationInterval);
+  }
+  
   private final void callDirect(HttpServletRequest request,
                                 HttpServletResponse response) throws
       ServletException, IOException {
@@ -332,7 +337,7 @@ public class TmlHttpServlet extends HttpServlet {
 	   dis = initDispatcher();
     		  	  
       tbMessage = constructFromRequest(request);
-      Header header = NavajoFactory.getInstance().createHeader(tbMessage,service, username, password,expirationInterval);
+      Header header =  constructHeader(tbMessage, service, username, password, expirationInterval);
       tbMessage.addHeader(header);
       Navajo resultMessage = dis.removeInternalMessages(dis.handle(tbMessage));
       //System.err.println(resultMessage.toString());
@@ -351,6 +356,9 @@ public class TmlHttpServlet extends HttpServlet {
     		  if ( bin.getTypedValue() instanceof Binary ) {
     			  Binary b = (Binary) bin.getTypedValue();
     			  response.setContentType(b.guessContentType());
+    			  if ( b.getLength() > 0 ) {
+    				  response.setContentLength((int) b.getLength());
+    			  }
     			  copyResource(outputStream, b.getDataAsStream());
     		  } else {
     			 outputStream.write(bin.getValue().getBytes());
