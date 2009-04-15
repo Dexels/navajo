@@ -394,7 +394,8 @@ public interface Message
   public void setParent(Message m);
 
   /**
-   * Merge message with incoming message.
+   * Merge message with incoming message. All properties and submessages of incoming message are merged
+   * with the current message. The name of the incoming message is not relevant.
    * 
    * @param incoming
    */
