@@ -422,8 +422,10 @@ public class TestMessage extends TestCase {
 
 	  m.merge(m3);
 
-	  assertNull(m.getProperty("MyProp3"));
-	  assertNotNull(m.getMessage("MyTop2"));
+	  // MyProp3 should be merged althoug m3 has name "MyTop2" and m has name "MyTop".
+	  assertNotNull(m.getProperty("MyProp3"));
+	  // message "MyTop2" should not exist at all...
+	  assertNull(m.getMessage("MyTop2"));
 
   }
   
