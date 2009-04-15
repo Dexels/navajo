@@ -158,7 +158,27 @@ public class TestMessage extends TestCase {
     Assert.assertEquals("testmessage_sub2", m3.getName());
   }
   
-
+  public void testGetMessageDot() {
+	  Message m = testDoc.getMessage("testmessage");
+	  Message m2 = m.getMessage(".");
+	  Assert.assertNotNull(m2);
+	  Assert.assertEquals("testmessage", m2.getName());
+  }
+  
+  public void testGetMessageDot2() {
+	  Message m = testDoc.getMessage("testmessage");
+	  Message m2 = m.getMessage("./"); // Bogus.
+	  // This should give null.
+	  Assert.assertNull(m2);
+  }
+  
+  public void testGetMessageDot3() {
+	  Message m = testDoc.getMessage("testmessage");
+	  Message m2 = m.getMessage("./testmessage_sub1");
+	  Assert.assertNotNull(m2);
+	  Assert.assertEquals("testmessage_sub1", m2.getName());
+  }
+  
   public void testGetMessages() throws NavajoException {
 
     // Regular expression message name match testing.
