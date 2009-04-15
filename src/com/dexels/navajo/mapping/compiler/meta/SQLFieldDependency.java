@@ -38,7 +38,10 @@ public class SQLFieldDependency extends AdapterFieldDependency {
 		Set<String> sps = findStoredProcs(query);
 		Iterator<String> i = sps.iterator();
 		while ( i.hasNext() ) {
-			SQLFieldDependency sqlD = new SQLFieldDependency(this.getCurrentTimeStamp(), this.getJavaClass(), "storedproc", i.next());
+			String spName = i.next();
+			spName = spName.replace('\n', ' ').trim();
+			SQLFieldDependency sqlD = new SQLFieldDependency(this.getCurrentTimeStamp(), 
+					                                         this.getJavaClass(), "storedproc", spName );
 			sqlDeps.add(sqlD);
 		}
 		
@@ -47,7 +50,10 @@ public class SQLFieldDependency extends AdapterFieldDependency {
 		sps = findTablesAndViews(query);
 		i = sps.iterator();
 		while ( i.hasNext() ) {
-			SQLFieldDependency sqlD = new SQLFieldDependency(this.getCurrentTimeStamp(), this.getJavaClass(), "table", i.next());
+			String tableName = i.next();
+			tableName = tableName.replace('\n', ' ').trim();
+			SQLFieldDependency sqlD = new SQLFieldDependency(this.getCurrentTimeStamp(), 
+					                                         this.getJavaClass(), "table", tableName );
 			sqlDeps.add(sqlD);
 		}
 		
@@ -146,7 +152,6 @@ public class SQLFieldDependency extends AdapterFieldDependency {
 		value = value.replace('\'', ' ');
 		value = value.replace('?', ' ');
 		return value;
-		
 	}
 	
 }
