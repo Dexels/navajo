@@ -16,7 +16,6 @@ public class MethodDefinition {
 	private String name;
 	
 	private HashMap<String, ParameterDefinition> parameters = new HashMap<String, ParameterDefinition>();
-	private TreeMap<Integer, XMLElement> orderedParameters = new TreeMap<Integer, XMLElement>();
 	private final static Random rand = new Random(System.currentTimeMillis());
 	
 	public MethodDefinition(String name, HashMap<String, ParameterDefinition> parameters) {
@@ -54,6 +53,8 @@ public class MethodDefinition {
 	
 	public void generateCode(XMLElement in, XMLElement out, String filename) throws Exception {
 		
+		TreeMap<Integer, XMLElement> orderedParameters = new TreeMap<Integer, XMLElement>();
+		
 		if ( in.getChildren().size() > 0 ) {
 			throw new MetaCompileException(filename, in, "Illegal children tags defined for tag <" + in.getName() + "/>");
 		}
@@ -88,7 +89,6 @@ public class MethodDefinition {
 		while ( attributes.hasNext() ) {
 			String attribName = attributes.next();
 			String attribValue = (String) in.getAttribute(attribName);
-			//System.err.println("Looking up parameterdefinition: " + attribName);
 			ParameterDefinition pd = parameters.get(attribName);
 			if ( pd == null && !attribName.equals("condition")) {
 				throw new UnknownParameterException(getName(), attribName, in, filename );
