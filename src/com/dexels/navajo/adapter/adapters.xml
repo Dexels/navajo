@@ -101,6 +101,7 @@
                 <param name="password" field="password" type="string" required="false"/>
                 <param name="name" field="doSend" type="boolean" required="true"/>
                 <param name="append" field="append" type="string" required="false"/>
+                <param name="appendTo" field="appendTo" type="string" required="false"/>
             </method>
         </methods>
     </map>
