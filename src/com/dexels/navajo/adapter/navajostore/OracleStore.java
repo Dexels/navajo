@@ -1,11 +1,8 @@
 package com.dexels.navajo.adapter.navajostore;
 
 import com.dexels.navajo.mapping.AsyncMappable;
-import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.UserException;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -325,7 +322,8 @@ public final class OracleStore implements StoreInterface {
 		
 		if ( hostName == null ) {
 			try {
-				hostName = InetAddress.getLocalHost().getHostName()+" - "+DispatcherFactory.getInstance().getNavajoConfig().getInstanceName();
+				hostName = InetAddress.getLocalHost().getHostName()+" - "+
+				           DispatcherFactory.getInstance().getNavajoConfig().getInstanceName();
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -342,7 +340,6 @@ public final class OracleStore implements StoreInterface {
 			Connection con = null;
 			try {
 				con = sqlMap.getConnection();
-				System.err.println("In OracleStore, connection is " + con.hashCode() );
 			} catch (SQLException e) {
 				e.printStackTrace(System.err);
 			}
@@ -350,8 +347,7 @@ public final class OracleStore implements StoreInterface {
 			while ( iter.hasNext() ) { 
 				TodoItem ti = (TodoItem) iter.next();
 				Access a = ti.getAccessObject();
-				  //System.err.println("Checking piggyback: "+a.accessID);
-
+				
 				if ( a.getPiggybackData() != null ) {
 					try {
 						updatePiggybackData(a.getPiggybackData(), accessMap, con);
@@ -360,9 +356,7 @@ public final class OracleStore implements StoreInterface {
 					}
 				}
 			}
-			
 		
-			//System.err.println("I got a connection: "+con);
 			if (con != null) {
 				PreparedStatement ps = null;
 				PreparedStatement psUpdate = null;
@@ -458,11 +452,9 @@ public final class OracleStore implements StoreInterface {
 							asyncps.setString(3, am.getClass().getName());
 							asyncps.setInt(4, a.getTotaltime());
 							asyncps.setString(5, ( a.getException() != null ? a.getException().getMessage() : "" ) );
-							//asyncps.setTimestamp(6, new java.sql.Timestamp(a.created.getTime()));
 							asyncps.executeUpdate();
 							
 						}
-						
 						
 					}
 					
@@ -557,6 +549,4 @@ public final class OracleStore implements StoreInterface {
 				
 	}
 	
-
-
 }
