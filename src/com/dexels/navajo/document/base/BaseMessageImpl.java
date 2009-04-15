@@ -1442,8 +1442,9 @@ public final Message getParentMessage() {
 		
 			// Check if message with incoming name exists.
 			if ( !getName().equals(incoming.getName()) ) {
-				addMessage(incoming, true);
-				return;
+//				addMessage(incoming, true);
+//				return;
+				incoming.setName(getName());
 			}
 			
 			ArrayList<Message> subMessages = incoming.getAllMessages();
