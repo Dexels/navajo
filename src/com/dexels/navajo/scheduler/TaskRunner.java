@@ -37,7 +37,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 
 import com.dexels.navajo.document.Message;
@@ -174,7 +173,6 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 			is.close();
 			t.setNavajo(n);
 		} catch (Exception e) {
-			AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Could not find request Navajo for task: " + t.getId(), Level.WARNING);
 			return;
 		}
 	}
