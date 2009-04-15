@@ -424,13 +424,21 @@ public  class BaseMessageImpl extends BaseNode implements Message, Comparable<Me
     }
 
     public Message getMessage(String name) {
-        if (name.startsWith("../")) {
+    	
+    	// Check self reference.
+    	if ( name.equals(".") ) {
+    		return this;
+    	} else
+        if (name.startsWith("../")) { // Check parent reference.
         	if ( getParentMessage() == null ) {
         		return null;
         	} else {
         		return getParentMessage().getMessage(name.substring(3));
         	}
-        }
+        } else // Check starting with self reference.
+        if ( name.startsWith("./") ) {
+        	name = name.substring(2);
+        } 
 
         if (name.startsWith("/")) {
             return getRootDoc().getMessage(name.substring(1));

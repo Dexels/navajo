@@ -502,6 +502,13 @@ public final class MessageImpl implements Message, Comparable<Message> {
      */
     public final Message getMessage(String name) {
 
+    	// Check self reference.
+    	if ( name.equals(".") ) {
+    		return this;
+    	} 
+    	if ( name.startsWith("./") ) {
+    		name = name.substring(2);
+    	} 
         if (name.startsWith(Navajo.MESSAGE_SEPARATOR)) { // We have an absolute offset
             Navajo d = getRootDoc();
             return d.getMessage(name);
