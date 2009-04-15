@@ -150,6 +150,15 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
         	list = inDoc.getMessages(messageOffset);
         }
         	
+        /**
+         * appendTo logic. If appendTo ends with '/' append the entire append message to the defined appendTo message.
+         * If appendTo does not end with '/', merge the append mssage with the defined appendTo message.
+         */
+        boolean appendToComplete = ( appendTo != null && !appendTo.equals(Navajo.MESSAGE_SEPARATOR) && appendTo.endsWith(Navajo.MESSAGE_SEPARATOR) );
+        if ( appendToComplete ) {
+        	// Strip last "/".
+        	appendTo = appendTo.substring(0, appendTo.length() - 1);
+        }
         for (int i = 0; i < list.size(); i++) {
           Message inMsg = (Message) list.get(i);
           // Clone message and append it to currentMsg if it exists, else directly under currentDoc.
@@ -163,14 +172,22 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
         			  if ( currentMsg.getMessage(appendTo).getType().equals(Message.MSG_TYPE_ARRAY )  ) { // For array messages do not overwrite.
         				  currentMsg.getMessage(appendTo).addMessage(clone);
         			  } else {
-        				  currentMsg.getMessage(appendTo).merge(clone);
+        				  if ( appendToComplete ) {
+        					  currentMsg.getMessage(appendTo).addMessage(clone);
+        				  } else {
+        					  currentMsg.getMessage(appendTo).merge(clone);
+        				  }
         			  }
         		  } else {
         			  throw new UserException(-1, "Unknown appendTo message: " + appendTo);
         		  }
         	  } else {
         		  // Merge message with existing message.
-        		  currentMsg.merge(clone);
+        		  if ( clone.getName().equals(currentMsg.getName()) ) {
+        			  currentMsg.merge(clone);
+        		  } else {
+        			  currentMsg.addMessage(clone, true);
+        		  }
         	  }
           } else {
         	  if ( appendTo != null && !appendTo.equals(Navajo.MESSAGE_SEPARATOR) ) {
