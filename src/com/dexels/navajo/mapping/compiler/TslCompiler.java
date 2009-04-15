@@ -2524,25 +2524,27 @@ public String mapNode(int ident, Element n) throws Exception {
 	    String fullScriptPath = scriptPath + "/" + packagePath + "/" + script + ".xml";
 	    
 	    ArrayList<String> inheritedScripts = new ArrayList<String>();
+	    InputStream is = null;
+	    
 	    try {
 	    	
-	    	InputStream is = null;
-			if (!MapMetaData.isMetaScript(script, scriptPath, packagePath)) {
-				if ( ScriptInheritance.containsInject(fullScriptPath)) {
-					// Inheritance preprocessor before compiling.
-					FileInputStream fis = new FileInputStream(fullScriptPath); 
-					is = ScriptInheritance.inherit(fis, scriptPath, inheritedScripts);
-					fis.close();
-				} else {
-					// Use 'default' compilescript. 
-					is = new FileInputStream(fullScriptPath);
-				}
-			} else {
-				scriptType = "navascript";
-				MapMetaData mmd = MapMetaData.getInstance(configPath);
+	    	// Check for metascript.
+	    	if ( MapMetaData.isMetaScript(script, scriptPath, packagePath) ) {
+	    		scriptType = "navascript";
+	    		MapMetaData mmd = MapMetaData.getInstance(configPath);
 				String intermed = mmd.parse(fullScriptPath);
-				is = ScriptInheritance.inherit(new ByteArrayInputStream(intermed.getBytes()), scriptPath, inheritedScripts);
-			}
+				is = new ByteArrayInputStream(intermed.getBytes());
+	    	} else {
+	    		is = new FileInputStream(fullScriptPath);
+	    	}
+	    	
+	    	if ( ScriptInheritance.containsInject(fullScriptPath)) {
+	    		// Inheritance preprocessor before compiling.
+	    		InputStream ais = null;
+	    		ais = ScriptInheritance.inherit(is, scriptPath, inheritedScripts);
+	    		is.close();
+	    		is = ais;
+	    	} 
 			
 			for (int i = 0; i < inheritedScripts.size(); i++) {
 				addDependency("dependentObjects.add( new InheritDependency( new Long(\"" + 
@@ -2550,13 +2552,17 @@ public String mapNode(int ident, Element n) throws Exception {
 		                 inheritedScripts.get(i) + "\"));\n", "INHERIT"+inheritedScripts.get(i));
 			}
 			compileScript(is, packagePath, script, scriptPath, workingPath);
-			 
-			if ( is != null ) {
-				is.close();
-			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new SystemException(-1, "Error while generating Java code for script: " + script + ". Message: " + e.getMessage(), e);
+		} finally {
+			if ( is != null ) {
+				try {
+					is.close();
+				} catch (IOException e) {
+				}
+			}
 		}
     
   }
