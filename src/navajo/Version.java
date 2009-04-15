@@ -27,6 +27,12 @@ package navajo;
 /**
  * VERSION HISTORY
  * 
+ * 8.1.0 Added support for keeping track of Script Dependencies, i.e. dependencies on other scripts (includes, navajomap),
+ *       Dependencies on Adapters, dependencies on specific adapter fields, i.e. server field in MailMap, query field
+ *       in SQLMap. Created specific AdapterField depencency classes, like SQLFieldDependency.
+ *       
+ *       Fixed bug problem in Navascript.
+ * 
  * 8.0.0 Added support for Multi Lingual scripts. Added Java support for scripts as first example.
  * 
  * 7.7.4 Release Candidate
@@ -153,11 +159,11 @@ package navajo;
 public class Version extends dexels.Version {
 
 	public static final int MAJOR = 8;
-	public static final int MINOR = 0;
+	public static final int MINOR = 1;
 	public static final int PATCHLEVEL = 0;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
-	public static final String RELEASEDATE = "2009-03-16";
+	public static final String RELEASEDATE = "2009-04-15";
 	
 //	 Included packages.
 	String [] includes = {"navajodocument.Version"};
