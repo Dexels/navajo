@@ -505,10 +505,20 @@ private boolean keepJMXConnectionAlive = false;
 	disconnectJMX();
   }
  
+  /**
+   * Checks whether this compiled script has any dirty dependencies (i.e. needs recompilation)
+   * 
+   * @param a
+   * @return
+   */
   public boolean hasDirtyDependencies(Access a) {
+	  
+	  if ( getDependentObjects() == null ) {
+		  return false;
+	  }
 	  for (int i = 0; i < getDependentObjects().size(); i++ ) {
 		  Dependency dep = getDependentObjects().get(i);
-		  if ( dep.needsRecompile() ) {
+		  if ( dep != null && dep.needsRecompile() ) {
 			  return true;
 		  }
 	  }
