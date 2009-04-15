@@ -80,7 +80,7 @@ public final class OracleStore implements StoreInterface {
 		"insert into navajolog (access_id, exception, navajoin, navajoout) values (?, ?, ?, ?)";
 	
 	private static String insertAsyncLog =
-		"insert into navajoasync ( access_id, ref_id, asyncmap, totaltime, exception, created ) values (?, ?, ?, ?, ?, ?)";
+		"insert into navajoasync ( access_id, ref_id, asyncmap, totaltime, exception, created ) values (?, ?, ?, ?, ?, sysdate)";
 	
 	private static String insertMapLog = 
 		"insert into navajomap ( access_id, sequence_id, level_id, mapname, array, instancecount, totaltime, created) values " +
