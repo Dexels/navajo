@@ -444,15 +444,21 @@ public final class Access implements java.io.Serializable, Mappable {
 	}
 
 	public void kill() {
-		myScript.kill();
+		if ( myScript != null ) {
+			myScript.kill();
+		}
 	}
 
 	public void load(Access access) throws MappableException, UserException {
-		myScript.load(null);
+		if ( myScript != null ) {
+			myScript.load(null);
+		}
 	}
 
 	public void store() throws MappableException, UserException {
-		myScript.store();
+		if ( myScript != null ) {
+			myScript.store();
+		}
 	}
 
 	public String getRpcUser() {
