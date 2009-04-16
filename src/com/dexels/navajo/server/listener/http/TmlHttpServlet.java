@@ -355,10 +355,10 @@ public class TmlHttpServlet extends HttpServlet {
     	     // Will throw cce when not a binary?
     		  if ( bin.getTypedValue() instanceof Binary ) {
     			  Binary b = (Binary) bin.getTypedValue();
-    			  response.setContentType(b.guessContentType());
+    			  response.setContentType(b.getMimeType());
     			  if ( b.getLength() > 0 ) {
     				  response.setContentLength((int) b.getLength());
-    				  response.setHeader("Accept-Ranges", "none");
+    				  response.setHeader("Accept-Ranges", "bytes");
     				  response.setHeader("Connection", "clone");
     			  }
     			  copyResource(outputStream, b.getDataAsStream());
