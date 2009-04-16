@@ -210,8 +210,11 @@ public final class GenericHandler extends ServiceHandler {
     	Object [] all = getScriptPathServiceNameAndScriptFile(a, rpcName);
     	File scriptFile = (File) all[2];
     	File sourceFile = (File) all[4];
+    	String className = (String) all[5];
     	File targetFile = (File) all[7];
-    	boolean nr = checkScriptRecompile(scriptFile, sourceFile) || checkJavaRecompile(sourceFile, targetFile);
+    	boolean nr = checkScriptRecompile(scriptFile, sourceFile) || 
+    	             checkJavaRecompile(sourceFile, targetFile) ||
+    	             hasDirtyDepedencies(a, className);
     	//System.err.println(">>>>>>>>>>>>>>>>>>>>>>> needsRecompile()... " + nr);
     	return nr;
     }

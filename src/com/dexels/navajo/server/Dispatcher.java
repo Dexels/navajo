@@ -417,7 +417,13 @@ public final class Dispatcher implements Mappable, DispatcherMXBean, DispatcherI
 		  sh.setInput(in, access, parms);
 		
 		  // If recompile is needed ALWAYS set expirationInterval to -1.
-		  long expirationInterval = GenericHandler.needsRecompile(access, access.rpcName) ? -1 : CacheController.getInstance().getExpirationInterval(access.rpcName);
+		  // TODO: IMPLEMENT NEEDS RECOMPILE DIFFERENTLY: I DO NOT WANT GENERICHANDLER DEPENDENCY @ THIS
+		  // POINT... ALSO THE CURRENT NEEDSRECOMPILE DOES NOT CHECK DIRTY DEPENDENCIES!!
+		  // ALSO I DO NOT WANT CACHECONTROLLER DEPENDENCY @ THIS POINT.
+		  long expirationInterval = CacheController.getInstance().getExpirationInterval(access.rpcName);
+		  if ( expirationInterval > 0 && GenericHandler.needsRecompile(access, access.rpcName ) ) {
+			  expirationInterval = -1;
+		  }
 		  
 		  // Remove password from in to create password independend persistenceKey.
 		  in.getHeader().setRPCPassword("");
