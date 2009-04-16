@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
 <functiondef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.navajo.nl/classdef_schema.xsd">
+    <function name="SetMimeType" class="com.dexels.navajo.functions.SetMimeType">
+        <description>Sets mime-type for a binary object</description>
+        <input>binary,string</input>
+        <result>binary</result>
+    </function>
     <function name="ZipArchive" class="com.dexels.navajo.functions.ZipArchive">
         <description>Archives an entire directory (including subdirs) as a zip file.</description>
         <input>string</input>
