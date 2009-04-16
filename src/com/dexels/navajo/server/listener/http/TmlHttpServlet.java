@@ -358,6 +358,8 @@ public class TmlHttpServlet extends HttpServlet {
     			  response.setContentType(b.guessContentType());
     			  if ( b.getLength() > 0 ) {
     				  response.setContentLength((int) b.getLength());
+    				  response.setHeader("Accept-Ranges", "none");
+    				  response.setHeader("Connection", "clone");
     			  }
     			  copyResource(outputStream, b.getDataAsStream());
     		  } else {

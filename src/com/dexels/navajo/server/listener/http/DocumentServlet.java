@@ -45,13 +45,15 @@ public class DocumentServlet extends TmlHttpServlet {
 		
 			String hash = req.getParameter("checksum");
 			if ( hash == null || hash.equals("") )  {
-				 throw new ServletException("Invalid request.");
+				 res.sendError(404, "Could not find document.");
+				 return;
 			}
 			String queryString = req.getQueryString();
 			queryString = queryString.substring(0, queryString.indexOf("checksum")-1);
 			
 			if ( !hash.equals( getChecksum(queryString) )) {
-				throw new ServletException("Invalid checksum.");
+				 res.sendError(404, "Could not find document (invalid checksum).");
+				 return;
 			}
 			super.doGet(req, res);
 			return;
@@ -78,7 +80,8 @@ public class DocumentServlet extends TmlHttpServlet {
 				// Forward to stored URL...
 				res.sendRedirect( redirectURL); 
 			} else {
-				throw new ServletException("Invalid request.");
+				 res.sendError(404, "Could not find document (no short url).");
+				 return;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
