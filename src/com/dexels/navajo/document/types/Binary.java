@@ -37,7 +37,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 	private static final long serialVersionUID = 6392612802747438142L;
 
 	// private byte [] data;
-    private String mimetype = "text/plain";
+    private String mimetype = null; //"text/plain";
 
     private transient File dataFile = null;
     private transient File lazySourceFile = null;
@@ -160,8 +160,10 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 		}
         expectedLength = fileSize;
 
-        this.mimetype = getSubType("mime");
-        this.mimetype = (mimetype == null || mimetype.equals("") ? guessContentType() : mimetype);
+        if ( this.mimetype == null ) {
+        	this.mimetype = getSubType("mime");
+        	this.mimetype = (mimetype == null || mimetype.equals("") ? guessContentType() : mimetype);
+        }
         
     }
 
