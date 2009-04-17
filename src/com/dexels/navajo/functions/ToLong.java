@@ -27,7 +27,7 @@ public final class ToLong extends FunctionInterface {
       	  return (Long)o;
         }
         if (o instanceof Double)
-          return new Integer( (int) ((Double) o).doubleValue() );
+          return new Long( (int) ((Double) o).doubleValue() );
 
 
         return new Long(Long.parseLong(o + ""));
