@@ -515,6 +515,10 @@ public final class SaxHandler implements DocHandler {
             // Preserve the subtype. This will cause the handle to refer to the server
             // handle, not the client side
             currentProperty.setSubType(sub);
+            // Set mime type if specified as subtype.
+            if ( currentProperty.getSubType("mime") != null ) {
+            	b.setMimeType(currentProperty.getSubType("mime"));
+            }
          //  currentProperty.setInitialized();
         } else {
             throw new IllegalArgumentException("uuuh?");
