@@ -864,12 +864,38 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     }
      
     public static void main(String [] args) throws Exception {
-    	Binary b1 = new Binary( new File("/home/arjen/Rankovic.wmv" ), false );
     	
-    System.err.println(b1.guessContentType());
-    System.err.println(b1.getExtension());
+    	Navajo doc = NavajoFactory.getInstance().createNavajo();
+    	Message m = NavajoFactory.getInstance().createMessage(doc, "Test");
+    	doc.addMessage(m);
+    	Property p = NavajoFactory.getInstance().createProperty(doc, "Bin", "binary", "", 0, "", "out");
+    	m.addProperty(p);
+    	Binary b1 = new Binary( new File("/home/arjen/responsetimes_290307.xls" ), false );
+    	b1.setMimeType("application/excel");
+    	p.setValue(b1);
     	
+    	FileOutputStream fos = new FileOutputStream(new File("/home/arjen/a"));
+    	doc.write(fos);
+    	fos.close();
     	
+//    	doc.write(System.err);
+    	
+//    	ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("/home/arjen/a")));
+//    	oos.writeObject(b1);
+//    	oos.close();
+//    	
+//    	ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("/home/arjen/a")));
+//    	Binary b2 = (Binary) ois.readObject();
+//    	ois.close();
+    	
+//    	System.err.println(b2.getMimeType());
+    	
+    	FileInputStream fis = new FileInputStream(new File("/home/arjen/a"));
+    	Navajo doc2 = NavajoFactory.getInstance().createNavajo(fis);
+    	fis.close();
+    	
+    	Binary b2 = (Binary) doc2.getProperty("/Test/Bin").getTypedValue();
+    	System.err.println(b2.getMimeType());
     	
     }
 
