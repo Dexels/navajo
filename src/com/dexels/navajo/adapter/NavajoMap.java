@@ -75,6 +75,7 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
   public String skipProperties = "";
   public boolean isEqual = false;
   public boolean performOrderBy = false;
+  public String suppressProperties = "";
 
   private Navajo inDoc;
   private Navajo outDoc;
@@ -525,8 +526,9 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
     	  return;
       }
       
+      // Suppress properties.
+      processSuppressedProperties(inDoc);
       
-
       if (!compare.equals("")) {
         //isEqual = inMessage.isEqual(inDoc);
 
@@ -949,6 +951,51 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
 		  }
 	  }
 	  inDoc = tm.getMyTask().getResponse();
+  }
+  
+  private void processSuppressedProperties(Navajo n) {
+	  if  ( suppressProperties == null ) {
+		  return;
+	  }
+	  Iterator<Message> list;
+	  try {
+		  list = n.getAllMessages().iterator();
+		  while ( list.hasNext() ) {
+			  processSuppressedProperties(list.next());
+		  }
+	  } catch (NavajoException e) {
+	  }
+	
+  }
+  
+  private final void processSuppressedProperties(Message m) {
+	  Iterator<Property> allProps = m.getAllProperties().iterator();
+	  while ( allProps.hasNext() ) {
+		  Property p = (Property) allProps.next();
+		  if ( isSuppressedProperty(p) ) {
+			  m.removeProperty(p);
+		  }
+	  }
+	  Iterator<Message> subMessages = m.getAllMessages().iterator();
+	  while ( subMessages.hasNext() ) {
+			 processSuppressedProperties(subMessages.next());
+		 }
+  }
+  
+  private final boolean isSuppressedProperty(Property prop) {
+	  if ( suppressProperties == null ) {
+		  return false;
+	  }
+	  String [] propertyList = suppressProperties.split(";");
+	  for (int i = 0; i < propertyList.length; i++) {
+		  try {
+			  if ( propertyList[i].equals(prop.getFullPropertyName()) ) {
+				  return true;
+			  }
+		  } catch (NavajoException e) {
+		  }
+	  }
+	  return false;
   }
   
   public DependentResource[] getDependentResourceFields() {
