@@ -1,4 +1,14 @@
 <adapterdef>
+    <!-- Copy Message adapter -->
+    <map>
+        <tagname>copymessage</tagname>
+        <object>com.dexels.navajo.adapter.CopyMessage</object>
+        <values>
+            <value name="useOutputDoc" type="boolean" required="true" direction="in"/>
+            <value name="copyMessageFrom" type="string" required="true" direction="in"/>
+            <value name="copyMessageTo" type="string" required="true" direction="in"/>
+        </values>
+    </map>
     <!-- CSV adapter -->
     <map>
         <tagname>csv</tagname>
