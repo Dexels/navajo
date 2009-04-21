@@ -76,6 +76,8 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
   public boolean isEqual = false;
   public boolean performOrderBy = false;
   public String suppressProperties = "";
+  public String inputProperties = "";
+  public String outputProperties = "";
 
   private Navajo inDoc;
   private Navajo outDoc;
@@ -528,6 +530,8 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
       
       // Suppress properties.
       processSuppressedProperties(inDoc);
+      // Set property directions.
+      processPropertyDirections(inDoc);
       
       if (!compare.equals("")) {
         //isEqual = inMessage.isEqual(inDoc);
@@ -953,6 +957,17 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
 	  inDoc = tm.getMyTask().getResponse();
   }
   
+  private void processPropertyDirections(Navajo n) {
+	  Iterator<Message> list;
+	  try {
+		  list = n.getAllMessages().iterator();
+		  while ( list.hasNext() ) {
+			  processPropertyDirections(list.next());
+		  }
+	  } catch (NavajoException e) {
+	  }
+  }
+  
   private void processSuppressedProperties(Navajo n) {
 	  if  ( suppressProperties == null ) {
 		  return;
@@ -968,11 +983,28 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
 	
   }
   
-  private final void processSuppressedProperties(Message m) {
+  private final void processPropertyDirections(Message m) {
 	  Iterator<Property> allProps = m.getAllProperties().iterator();
 	  while ( allProps.hasNext() ) {
 		  Property p = (Property) allProps.next();
-		  if ( isSuppressedProperty(p) ) {
+		  if ( isPropertyInList(p, this.outputProperties) ) {
+			  p.setDirection(Property.DIR_OUT);
+		  } else
+			  if ( isPropertyInList(p, this.inputProperties) ) {
+				  p.setDirection(Property.DIR_IN);
+			  }
+	  }
+	  Iterator<Message> subMessages = m.getAllMessages().iterator();
+	  while ( subMessages.hasNext() ) {
+		  processPropertyDirections(subMessages.next());
+	  }
+  }
+  
+  private final void processSuppressedProperties(Message m) {
+	  Iterator<Property> allProps = new ArrayList<Property>(m.getAllProperties()).iterator();
+	  while ( allProps.hasNext() ) {
+		  Property p = (Property) allProps.next();
+		  if ( isPropertyInList(p, this.suppressProperties) ) {
 			  m.removeProperty(p);
 		  }
 	  }
@@ -982,11 +1014,11 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
 		 }
   }
   
-  private final boolean isSuppressedProperty(Property prop) {
-	  if ( suppressProperties == null ) {
+  private final boolean isPropertyInList(Property prop, String propertyStringList) {
+	  if ( propertyStringList == null ) {
 		  return false;
 	  }
-	  String [] propertyList = suppressProperties.split(";");
+	  String [] propertyList = propertyStringList.split(";");
 	  for (int i = 0; i < propertyList.length; i++) {
 		  try {
 			  if ( propertyList[i].equals(prop.getFullPropertyName()) ) {
@@ -1002,5 +1034,21 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
 	  return new DependentResource[]{new GenericDependentResource("script", "doSend", AdapterFieldDependency.class), 
 			                         new GenericDependentResource("navajoserver", "server", AdapterFieldDependency.class)};
   }
-  
+
+  public String getOutputProperties() {
+	  return outputProperties;
+  }
+
+  public void setOutputProperties(String outputProperties) {
+	  this.outputProperties = outputProperties;
+  }
+
+  public void setSuppressProperties(String suppressProperties) {
+	  this.suppressProperties = suppressProperties;
+  }
+
+  public void setInputProperties(String inputProperties) {
+	  this.inputProperties = inputProperties;
+  }
+
 }
