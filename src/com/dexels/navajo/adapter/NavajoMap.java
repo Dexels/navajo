@@ -55,6 +55,8 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
   public Object    property;
 
   public String propertyName;
+  // Property id is used to set 'properties' like direction, show, suppress of a specified property.
+  public String propertyId;
   public MessageMap message;
   public MessageMap [] messages;
   public String messagePointer;
@@ -75,9 +77,10 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
   public String skipProperties = "";
   public boolean isEqual = false;
   public boolean performOrderBy = false;
-  public String suppressProperties = "";
-  public String inputProperties = "";
-  public String outputProperties = "";
+  public String suppressProperties = null;
+  public String showProperties = null;
+  public String inputProperties = null;
+  public String outputProperties = null;
 
   private Navajo inDoc;
   private Navajo outDoc;
@@ -528,10 +531,18 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
     	  return;
       }
       
-      // Suppress properties.
-      processSuppressedProperties(inDoc);
       // Set property directions.
       processPropertyDirections(inDoc);
+      // Suppress properties.
+      processSuppressedProperties(inDoc);
+      // Show properties.
+      processShowProperties(inDoc);
+    
+      // Reset property directives
+      this.suppressProperties = null;
+      this.inputProperties = null;
+      this.outputProperties = null;
+      this.showProperties = null;
       
       if (!compare.equals("")) {
         //isEqual = inMessage.isEqual(inDoc);
@@ -957,7 +968,7 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
 	  inDoc = tm.getMyTask().getResponse();
   }
   
-  private void processPropertyDirections(Navajo n) {
+  private final void processPropertyDirections(Navajo n) {
 	  Iterator<Message> list;
 	  try {
 		  list = n.getAllMessages().iterator();
@@ -968,7 +979,35 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
 	  }
   }
   
-  private void processSuppressedProperties(Navajo n) {
+  private final void processShowProperties(Navajo n) {
+	  if  ( showProperties == null ) {
+		  return;
+	  }
+	  Iterator<Message> list;
+	  try {
+		  list = n.getAllMessages().iterator();
+		  while ( list.hasNext() ) {
+			  processShowProperties(list.next());
+		  }
+	  } catch (NavajoException e) {
+	  }
+  }
+  
+  private final void processShowProperties(Message m) {
+	  Iterator<Property> allProps = new ArrayList<Property>(m.getAllProperties()).iterator();
+	  while ( allProps.hasNext() ) {
+		  Property p = (Property) allProps.next();
+		  if ( !isPropertyInList(p, this.showProperties) ) {
+			  m.removeProperty(p);
+		  }
+	  }
+	  Iterator<Message> subMessages = m.getAllMessages().iterator();
+	  while ( subMessages.hasNext() ) {
+		  processShowProperties(subMessages.next());
+		 }
+  }
+  
+  private final void processSuppressedProperties(Navajo n) {
 	  if  ( suppressProperties == null ) {
 		  return;
 	  }
@@ -1051,4 +1090,43 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
 	  this.inputProperties = inputProperties;
   }
 
+  public void setShowProperties(String showProperties) {
+	  this.showProperties = showProperties;
+  }
+  
+  private final String setProperPropertyDirective(String list, String propertyName) {
+	  if (  list == null ) {
+		  list = propertyName;
+	  } else {
+		  list = list + ";" + propertyName;
+	  }
+	  return list;
+  }
+  
+  /**
+   * Helper setter used by setPropertyDirective.
+   * 
+   * @param s
+   */
+  public void setPropertyId(String s) {
+	  this.propertyId = s;
+  }
+  
+  /**
+   * Sets the directive of a property specified by propertyId.
+   * Supported directives: suppress, show, in, out.
+   * 
+   * @param directive
+   */
+  public void setPropertyDirective(String directive) {
+	  if ( directive.equalsIgnoreCase("suppress") ) {
+		 this.suppressProperties = setProperPropertyDirective(this.suppressProperties, this.propertyId);
+	  } else if ( directive.equalsIgnoreCase("show") ) {
+		 this.showProperties = setProperPropertyDirective(this.showProperties, this.propertyId);
+	  } else if ( directive.equalsIgnoreCase("in") ) {
+		  this.inputProperties = setProperPropertyDirective(this.inputProperties, this.propertyId);
+	  } else if ( directive.equalsIgnoreCase("out") ) {
+		  this.outputProperties = setProperPropertyDirective(this.outputProperties, this.propertyId);
+	  }
+  }
 }

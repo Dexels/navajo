@@ -101,14 +101,31 @@
             <value name="messages" map="messagemap []" required="false" direction="out"/>
         </values>
         <methods>
+            <!-- Creates a new property -->
             <method name="createproperty">
                 <param name="name" field="propertyName" type="string" required="true"/>
                 <param name="value" field="property" type="any" required="true"/>
+            </method>
+            <!-- Suppresses a defined property -->
+            <method name="suppressproperty">
+                <param name="name" field="propertyId" type="string" required="true"/>
+                <param name="directive" field="propertyDirective" type="string" required="automatic" value="'suppress'"/>
+            </method>
+            <!-- Shows a defined property, if show is used all properties will be suppressed by default -->
+            <method name="showproperty">
+                <param name="name" field="propertyId" type="string" required="true"/>
+                <param name="directive" field="propertyDirective" type="string" required="automatic" value="'show'"/>
+            </method>
+            <!-- Sets the direction of a property -->
+            <method name="setdirection">
+                <param name="name" field="propertyId" type="string" required="true"/>
+                <param name="direction" field="propertyDirective" type="string" required="true"/>
             </method>
             <method name="callwebservice">
                 <param name="server" field="server" type="string" required="false"/>
                 <param name="username" field="username" type="string" required="false"/>
                 <param name="password" field="password" type="string" required="false"/>
+                <param name="showProperties" field="suppressProperties" type="string" required="false"/>
                 <param name="suppressProperties" field="suppressProperties" type="string" required="false"/>
                 <param name="inputProperties" field="inputProperties" type="string" required="false"/>
                 <param name="outputProperties" field="outputProperties" type="string" required="false"/>
