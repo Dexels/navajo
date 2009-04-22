@@ -184,6 +184,8 @@ public class GenerateXSD {
 		MapMetaData mmd = MapMetaData.getInstance("navajo");
 		
 		GenerateXSD xsd = new GenerateXSD();
+		String result = xsd.generateXSD();
+		System.out.println(result);
 		
 		//xsd.createAdapterXSD("sqlquery", new CaseSensitiveXMLElement());
 
