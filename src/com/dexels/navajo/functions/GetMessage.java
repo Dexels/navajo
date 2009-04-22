@@ -38,6 +38,10 @@ public class GetMessage extends FunctionInterface {
   }
 
   public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    if (getOperands().size() == 1) {
+   	 System.err.println("One operand found");
+   	 return getMessageFromNavajo((String)getOperand(0));
+    }
     if (getOperands().size() != 2) {
       throw new TMLExpressionException(this, "Invalid function call");
     }
@@ -58,8 +62,22 @@ public class GetMessage extends FunctionInterface {
    Message message = (Message)m;
    return message.getMessage(index.intValue());
   }
-  public String usage() {
-    return "GetMessage(Message,int index). Returns array message element Built for tipi";
+  private Message getMessageFromCurrentMessage(String path) {
+	  Message cur = getCurrentMessage();
+	  if(cur==null) {
+		  System.err.println("No current message!");
+		  return null;
+	  }
+	  return cur.getMessage(path);
+}
+
+  private Message getMessageFromNavajo(String path) {
+	  System.err.println("Looking for message in path: "+path);
+	  return inMessage.getMessage(path);
+}
+
+public String usage() {
+    return "GetMessage(Message,int index). Returns array message element Built for tipi. OR: GetMessage('MessagePath') will retrieve the message from the current navajo (Used for scripts)";
   }
 
 }
