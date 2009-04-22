@@ -114,6 +114,7 @@
             <!-- Shows a defined property, if show is used all properties will be suppressed by default -->
             <method name="showproperty">
                 <param name="name" field="propertyId" type="string" required="true"/>
+                <param name="direction" field="propertyDirective" type="string" required="false"/>
                 <param name="directive" field="propertyDirective" type="string" required="automatic" value="'show'"/>
             </method>
             <!-- Sets the direction of a property -->
