@@ -2,7 +2,6 @@ package com.dexels.navajo.mapping.compiler;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
@@ -13,8 +12,6 @@ import java.util.Vector;
 
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
-import com.dexels.navajo.mapping.compiler.meta.InheritDependency;
-import com.dexels.navajo.server.FileInputStreamReader;
 
 public class ScriptInheritance {
 	
@@ -56,7 +53,7 @@ public class ScriptInheritance {
 	 * @param insertedMessage
 	 */
 	private boolean replaceMessagesWithLevel(int level, int leveledIndex, int targetIndex, XMLElement tsl, 
-			                                 XMLElement insertedMessage) {
+			                                 XMLElement insertedMessage) throws Exception {
 		
 		Vector<XMLElement> children = tsl.getChildren();
 		for (int i = 0; i < children.size(); i++) {
@@ -70,26 +67,33 @@ public class ScriptInheritance {
 						
 						if ( allChildrenOfParent.get(j).equals(child) ) {
 						
-							String nameOfInsertedMessage = (String) insertedMessage.getAttribute("name");
+							String nameOfInsertedMessage = null;
 							String operation = "";
 							if ( nameOfInsertedMessage == null ) {
 								nameOfInsertedMessage = (String) insertedMessage.getAttribute(REPLACE_MESSAGE);
+								insertedMessage.removeAttribute(REPLACE_MESSAGE);
 								operation = REPLACE_MESSAGE;
 							}
 							if ( nameOfInsertedMessage == null ) {
 								nameOfInsertedMessage = (String) insertedMessage.getAttribute(EXTEND_MESSAGE);
+								insertedMessage.removeAttribute(EXTEND_MESSAGE);
 								operation = EXTEND_MESSAGE;
 							}
 							if ( nameOfInsertedMessage == null ) {
 								nameOfInsertedMessage = (String) insertedMessage.getAttribute(BLOCK_ELEMENT);
+								insertedMessage.removeAttribute(BLOCK_ELEMENT);
 								operation = BLOCK_ELEMENT;
+							} 
+							
+							String newName = (String) insertedMessage.getAttribute("name");
+							
+							if ( newName == null && nameOfInsertedMessage == null ) {
+								throw new Exception("Unknown inheritance operation @line: " + insertedMessage.getLineNr());
 							}
-							//System.err.println(operation + "->" + nameOfInsertedMessage);
-							insertedMessage.setAttribute("name", nameOfInsertedMessage);
-							insertedMessage.removeAttribute(REPLACE_MESSAGE);
+							insertedMessage.setAttribute("name", ( newName != null ? newName : nameOfInsertedMessage) );
+							
 							
 							if ( operation.equals(BLOCK_ELEMENT) ) {
-								System.err.println("REMOVING: " + allChildrenOfParent.get(j));
 								allChildrenOfParent.remove(j);
 							} else if ( operation.equals(REPLACE_MESSAGE) ) { // simply replace.
 								allChildrenOfParent.remove(j);
@@ -97,7 +101,7 @@ public class ScriptInheritance {
 							} else {
 								// Add all children of insertedMessage.
 								XMLElement orig = allChildrenOfParent.get(j);
-								orig.setAttribute("name", nameOfInsertedMessage);
+								orig.setAttribute("name", ( newName != null ? newName : nameOfInsertedMessage) );
 								Vector<XMLElement> allChildrenOfInsertedMessage = insertedMessage.getChildren();
 								
 								// replace 'overlap' with 'new' and delete 'blocked'.
@@ -228,7 +232,7 @@ public class ScriptInheritance {
 		
 	}
 	
-	private XMLElement extend(XMLElement superScript, XMLElement subScript) {
+	private XMLElement extend(XMLElement superScript, XMLElement subScript) throws Exception {
 		
 		addMessageLevels(superScript, 0);
 		addMessageLevels(subScript, 0);
@@ -276,33 +280,33 @@ public class ScriptInheritance {
 		
 	}
 	
-	private XMLElement cleanTslFragments(XMLElement raw) {
-		
-		XMLElement cleaned = new CaseSensitiveXMLElement("tsl");
+	private void cleanTslFragments(XMLElement raw) {
 		
 		Vector<XMLElement> children = new Vector<XMLElement>(raw.getChildren());
 		
 		for (int i = 0; i < children.size(); i++ ) {
+			
 			if ( children.get(i).getName().equalsIgnoreCase("tsl")) {
 				XMLElement tsl = children.get(i);
 				Vector<XMLElement> tslChildren = tsl.getChildren();
 				for (int c = 0; c < tslChildren.size(); c++) {
 					XMLElement e = tslChildren.get(c);
-					cleaned.addChild(e);
+					cleanTslFragments(e);
+					raw.addChild( e );
 				}
-				
+				// Remove the tsl.
+				raw.removeChild(tsl);
 			} else {
-				cleaned.addChild(children.get(i));
+				cleanTslFragments( children.get(i) );
 			}
 		}
-		
-		return cleaned;
+	
 	}
 	
-	private XMLElement doInject(XMLElement subScript, String scriptPath, ArrayList<String> inheritedScripts) throws Exception {
+	private void doInject(XMLElement subScript, XMLElement child, String scriptPath, ArrayList<String> inheritedScripts) throws Exception {
 		// find inject tags.
 		
-		Vector<XMLElement> children = subScript.getChildren();
+		Vector<XMLElement> children = ( child == null ? subScript.getChildren() : child.getChildren() );
 		
 		for (int i = 0; i < children.size(); i++) {
 			if (children.get(i).getName().equalsIgnoreCase("inject")) {
@@ -320,12 +324,10 @@ public class ScriptInheritance {
 				}
 				children.remove(i);
 				children.add(i, result);
+			} else {
+				doInject(subScript, children.get(i), scriptPath, inheritedScripts);
 			}
 		}
-		
-		subScript = cleanTslFragments(subScript);
-		
-		return subScript;
 	}
 	
 	private static boolean hasInject(XMLElement e) {
@@ -371,7 +373,14 @@ public class ScriptInheritance {
 		}
 		
 		
-		XMLElement after = ti.doInject(before, scriptPath, inheritedScripts);
+		ti.doInject(before, null, scriptPath, inheritedScripts);
+	
+		StringWriter sw = new StringWriter();
+		before.write(sw);
+		
+		ti.cleanTslFragments(before);
+		XMLElement after = before;
+		
 		// Reinsert tsl attributes.
 		all = tslAttributes.keySet().iterator();
 		while ( all.hasNext() ) {
