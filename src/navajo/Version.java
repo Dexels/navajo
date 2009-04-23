@@ -27,6 +27,11 @@ package navajo;
 /**
  * VERSION HISTORY
  * 
+ * 8.1.1 - Fixes for script inheritance. Now supports 'inject' semantics within other tags.
+ *       - Added support for AgentId. Can be used to monitor requests from specific agents (client applications).
+ *       - Needsrecompile in Dispatcher is only done after it has been established that we are dealing
+ *         with a cached service to avoid double checking.
+ *       
  * 8.1.0 Added support for keeping track of Script Dependencies, i.e. dependencies on other scripts (includes, navajomap),
  *       Dependencies on Adapters, dependencies on specific adapter fields, i.e. server field in MailMap, query field
  *       in SQLMap. Created specific AdapterField depencency classes, like SQLFieldDependency.
@@ -160,10 +165,10 @@ public class Version extends dexels.Version {
 
 	public static final int MAJOR = 8;
 	public static final int MINOR = 1;
-	public static final int PATCHLEVEL = 0;
+	public static final int PATCHLEVEL = 1;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
-	public static final String RELEASEDATE = "2009-04-15";
+	public static final String RELEASEDATE = "2009-04-23";
 	
 //	 Included packages.
 	String [] includes = {"navajodocument.Version"};
