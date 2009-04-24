@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<project name="TipiFlickr" default="publish" basedir=".">
+
+	<ant antfile="../TipiBuild/genericbuild.xml" dir="." inheritall="true" inheritrefs="true" target="prepare" />
+
+	<target name="archive">
+		<ant antfile="build.xml" dir="." inheritall="true" inheritrefs="true" target="archive" />
+	</target>
+	<target name="customGrabjar">
+		<delete dir="${dist}" />
+		
+		<copy todir="${dist}/lib" file="${ant.project.name}.jar" />
+		<copy todir="${dist}/lib" file="lib/flickrapi-1.0b4.jar" />
+	</target>
+	<target name="publish" depends="customGrabjar">
+		<ant antfile="../TipiBuild/genericbuild.xml" dir="." inheritall="true" inheritrefs="true" target="publish" />
+	</target>
+</project>
