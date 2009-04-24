@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<extension id="geo" requiresMain="swing" project="TipiGeoSwing" version="1.1" title="Geographic tipi swing extensions" vendor="Dexels" homepage="http://www.dexels.com">
+<extension id="geo" requiresMain="swing" project="TipiGeoSwing" title="Geographic tipi swing extensions" vendor="Dexels" homepage="http://www.dexels.com">
 	<description>
 		Geographic tipi swing extensions
 	</description>
