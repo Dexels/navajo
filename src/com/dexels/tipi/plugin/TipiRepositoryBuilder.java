@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
@@ -32,6 +33,7 @@ import com.dexels.navajo.tipi.projectbuilder.ClasspathBuilder;
 import com.dexels.navajo.tipi.projectbuilder.ClientActions;
 import com.dexels.navajo.tipi.projectbuilder.LocalJnlpBuilder;
 import com.dexels.navajo.tipi.projectbuilder.RemoteJnlpBuilder;
+import com.dexels.navajo.tipi.projectbuilder.VersionResolver;
 import com.dexels.navajo.tipi.projectbuilder.XsdBuilder;
 import com.dexels.navajo.tipi.util.XMLElement;
 
@@ -130,9 +132,14 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 
 	private void rebuildXsd(String repository, String extensions, File baseDir,IProgressMonitor m) {
 		XsdBuilder b = new XsdBuilder();
-		b.build(repository, extensions, baseDir);
-		System.err.println("XSD rebuilt!");
-		m.setTaskName("Building XSD");
+		try {
+			b.build(repository, extensions, baseDir);
+			System.err.println("XSD rebuilt!");
+			m.setTaskName("Building XSD");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private void rebuildLocalTipi(final IProject project, boolean clean,IProgressMonitor m) {
@@ -227,17 +234,35 @@ private void buildClassPath(IProject project, String repository, String extensio
 }
 
 	private void downloadExtensionJars(File projectPath, String extensions,
-			String repository, boolean onlyProxy, boolean clean) {
+			String repository, boolean onlyProxy, boolean clean) throws IOException {
 		StringTokenizer st = new StringTokenizer(extensions, ",");
+		Map<String,List<String>> repDefinition= ClientActions.getExtensions(repository);
 		while (st.hasMoreTokens()) {
-			String ext = st.nextToken();
+			//String ext = st.nextToken();
+			
 			try {
 //					ClientActions.
 //					URL rep = new URL(repository);
 //					URL projectURL = new URL(rep,ext+"/");
 				//URL extensionURL = new URL(projectURL,"definition.xml");
 				//XMLElement result = ClientActions.getXMLElement(extensionURL);
-				XMLElement extensionXml = ClientActions.getExtensionXml(ext, repository);
+				String token = st.nextToken();
+				VersionResolver vr = new VersionResolver();
+				vr.load(repository);
+				Map<String,String> versionMap = vr.resolveVersion(token);
+				String ext = versionMap.get("extension");
+				String version = versionMap.get("version");
+//				if(token.indexOf("/")!=-1) {
+//					StringTokenizer st2 = new StringTokenizer(token,"/");
+//					ext = st2.nextToken();
+//					version = st2.nextToken();
+//				} else {
+//					ext = token;
+//					List<String> versions = repDefinition.get(token);
+//					version=versions.get(versions.size()-1);
+//				}
+//				
+				XMLElement extensionXml = ClientActions.getExtensionXml(ext, version, repository);
 				if (onlyProxy) {
 					//ClientActions.downloadProxyJars(project, projectURL, result, baseDir)
 					ClientActions.downloadProxyJars(ext,new URL(repository+ext+"/"),extensionXml,projectPath,clean);

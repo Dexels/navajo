@@ -131,27 +131,28 @@ public class DeployAction implements IObjectActionDelegate {
    	//		runner.addBuildLogger("com.dexels.tipi.plugin.TipiBuildLogger");
    			runner.run(monitor);
    			System.err.println("Run completed.");
+      		MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Thank you for deploying using the TipiPlugin!", codebase+"Application.jnlp");
+      		Display.getDefault().asyncExec(new Runnable(){
+   				public void run() {
+   		 
+      		IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
+      		 IWebBrowser browser;
+   			try {
+   				browser = browserSupport.createBrowser(IWorkbenchBrowserSupport.AS_VIEW, null,"Test", "Test");
+   				 URL url = new URL(codebase);
+   	   		 browser.openURL(url);
+   			} catch (Exception e) {
+   				e.printStackTrace();
+   			}
+   				}
+      		});
    		} catch (CoreException e) {
    			System.err.println("Showing error");
    	      ErrorDialog.openError(Display.getCurrent().getActiveShell(),"Tipi Deployment problem","Error building deploy", Status.CANCEL_STATUS);
    			e.printStackTrace();
    			
    		}
-   		MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Thank you for deploying using the TipiPlugin!", codebase+"Application.jnlp");
-   		Display.getDefault().asyncExec(new Runnable(){
-				public void run() {
-		 
-   		IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
-   		 IWebBrowser browser;
-			try {
-				browser = browserSupport.createBrowser(IWorkbenchBrowserSupport.AS_VIEW, null,"Test", "Test");
-				 URL url = new URL(codebase);
-	   		 browser.openURL(url);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-				}
-   		});
+
    		try {
 				f.getProject().refreshLocal(IResource.DEPTH_INFINITE, monitor);
 			} catch (CoreException e) {
