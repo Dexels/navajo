@@ -1,19 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- $Id$ -->
-<project default="publish" basedir=".">
+<project default="publish">
+
+	<taskdef name="buildExtension" classname="com.dexels.navajo.tipi.ant.extensionbuilder.BuildExtensionTask" classpath="bin" />
+	<taskdef name="buildDocumentation" classname="com.dexels.navajo.tipi.ant.extensionbuilder.BuildExtensionDocumentationTask" classpath="bin" />
+	
 
 	
 	<property name="repository" value="http://spiritus.dexels.nl:41766/Tipi/" />
 	<property name="repositorySsh" value="navajo@spiritus.dexels.nl://var/www/html/Tipi" />
 	<property name="documentationSsh" value="navajo@spiritus.dexels.nl:/var/www/html/Tipi/wiki/data/pages/tipidoc" />
-	<property name="dist" value="dist/${ant.project.name}" />
-
-	<taskdef name="buildExtension" classname="com.dexels.navajo.tipi.ant.extensionbuilder.BuildExtensionTask" classpath="bin" />
-	<taskdef name="buildDocumentation" classname="com.dexels.navajo.tipi.ant.extensionbuilder.BuildExtensionDocumentationTask" classpath="bin" />
+	
+	<target name="prepare">
+		<taskdef name="retrieveVersion" classname="com.dexels.navajo.tipi.ant.extensionbuilder.RetrieveVersion"
+		classpath="bin" />
+		<retrieveVersion />
+		<property name="dist" value="dist/${ant.project.name}/${tipiComponentVersion}" />
+		<!--  clean -->
+	</target>
 		
-		
-	<target name="grabjars">
-		<mkdir dir="${dist}/lib"/>
+	<target name="grabjars" depends="prepare">
+			<mkdir dir="${dist}/lib"/>
 		
 		<!-- TODO Create custom task to only copy the files referenced in the extension definition -->
 		<copy todir="${dist}/lib">
@@ -27,13 +34,15 @@
 				<include name="**" />
 			</fileset>
 		</copy>
+		
+		<echo message="AAAAP: ${tipiComponentVersion}"/>
 	</target>
 	<target name="buildTipi">
 		<!--  <buildXsd repository="http://www.navajo.nl/Tipi/"/> -->
 		<mkdir dir="${dist}"/>
-		<buildExtension repository="${repository}" destination="${dist}" />
+		<buildExtension repository="${repository}" destination="${dist}" version="${tipiComponentVersion}"/>
 		<echo message="Building to: ${dist}"/>
-		<buildDocumentation distribution="${dist}" destination="${dist}/wikidoc"/>
+		<buildDocumentation version="${tipiComponentVersion}" distribution="${dist}" destination="${dist}/wikidoc"/>
 		
 	<!-- 			<eclipse.refreshLocal resource="${ant.project.name}" depth="infinite" />
 -->
@@ -47,6 +56,11 @@
 		</signjar>
 	</target>
 	<target name="publish" depends="sign">
+	
+<!--		<eclipse.refreshLocal resource="${ant.project.name}/dist"/>-->
+<!--		-->
+		
+		
 		<!--
 			<ant antfile="../TipiBuild/jnlpbuild/antinclude.xml" dir="."
 			inheritall="true" inheritrefs="true" target="publish" />
@@ -57,31 +71,50 @@
 		<!-- and add the password to the and ant runtime: srv2pw=password -->
 		<!-- Make sure the dir exists... -->
 
-<echo message="${repositorySsh}"></echo>
+		
 		<scp trust="true" sftp="true" verbose="true"
-			todir="${repositorySsh}">
+			todir="${repositorySsh}/">
 			<fileset dir="dist">
-				<include name="${ant.project.name}/lib/**" />
-				<include name="${ant.project.name}/unsigned/**" />
-				<include name="${ant.project.name}/**.jnlp" />
-				<include name="${ant.project.name}/definition.xml" />
-				<include name="${ant.project.name}/includes/**" />
-				<include name="${ant.project.name}/index.html" />
-			</fileset>
-		</scp>
-		<echo message="Deploying documentation to: ${documentationSsh}"/>
-		<scp trust="true" sftp="true" verbose="true"
-			todir="${documentationSsh}" >
-			<fileset dir="./dist/${ant.project.name}/wikidoc">
-				<include name="**" />
+				<include name="${ant.project.name}/${tipiComponentVersion}/lib/**" />
+				<include name="${ant.project.name}/${tipiComponentVersion}/unsigned/**" />
+				<include name="${ant.project.name}/${tipiComponentVersion}/**.jnlp" />
+				<include name="${ant.project.name}/${tipiComponentVersion}/definition.xml" />
+				<include name="${ant.project.name}/${tipiComponentVersion}/includes/**" />
+				<include name="${ant.project.name}/${tipiComponentVersion}/index.html" />
 			</fileset>
 		</scp>
 
+
+
+		<echo message="Re: ${repositorySsh}/${ant.project.name}/${tipiComponentVersion}"/>
+<!--		<scp trust="true" sftp="true" verbose="true"-->
+<!--			todir="${repositorySsh}/${ant.project.name}/${tipiComponentVersion}">-->
+<!--			<fileset dir="dist">-->
+<!--				<include name="${ant.project.name}/lib/**" />-->
+<!--				<include name="${ant.project.name}/unsigned/**" />-->
+<!--				<include name="${ant.project.name}/**.jnlp" />-->
+<!--				<include name="${ant.project.name}/definition.xml" />-->
+<!--				<include name="${ant.project.name}/includes/**" />-->
+<!--				<include name="${ant.project.name}/index.html" />-->
+<!--			</fileset>-->
+<!--		</scp>-->
+		<echo message="Deploying documentation to: ${documentationSsh}"/>
+		<echo message="Deploying documentation from: ./${dist}/wikidoc/"/>
+		<scp trust="true" sftp="true" verbose="false" todir="${documentationSsh}/" file="${dist}/wikidoc/tipi.txt">
+			<fileset dir="dist/${ant.project.name}/${tipiComponentVersion}/wikidoc">
+				<include name="**" />
+				
+			</fileset>  
+		</scp>
+	 	<echo message="Documentation deploy completed at repository:"/>
+	
 		
 		<scp trust="true" sftp="true" verbose="true"
-			todir="${repositorySsh}">
+			todir="${repositorySsh}" >
 			<fileset dir="${dist}">
 				<include name="extensions.xml" />
+				<include name="typemap.xml" />
+				
 			</fileset>
 		</scp>
 	
