@@ -14,6 +14,17 @@ public class BuildExtensionTask extends org.apache.tools.ant.Task {
 
 	private String repository;
 	private String destination;
+	private String version;
+
+	public String getVersion() {
+		return version;
+	}
+
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
 
 	public String getDestination() {
 		return destination;
@@ -47,7 +58,7 @@ public class BuildExtensionTask extends org.apache.tools.ant.Task {
 			destDir.mkdirs();
 		}
 		try {
-			 ExtensionActions.build(repository,getProject().getProperty("ant.project.name"),getProject().getBaseDir(), sourceFile, destDir);
+			 ExtensionActions.build(repository,getProject().getProperty("ant.project.name"),version,getProject().getBaseDir(), sourceFile, destDir);
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}

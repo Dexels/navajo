@@ -16,7 +16,18 @@ public class BuildExtensionDocumentationTask extends org.apache.tools.ant.Task {
 //	private String repository;
 	private String destination;
 	private String distribution;
+	private String version;
 	
+	public String getVersion() {
+		return version;
+	}
+
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+
 	public String getDistribution() {
 		return distribution;
 	}
@@ -49,7 +60,7 @@ public class BuildExtensionDocumentationTask extends org.apache.tools.ant.Task {
 
 	public static void main(String[] args) throws IOException {
 
-		ExtensionActions.buildDocumentation(new File("."),"dist","Tipi",new File("tipidoc"));
+		ExtensionActions.buildDocumentation(new File("."),"dist","dist","Tipi","1.2.3",new File("tipidoc"));
 		//		System.err.println(">> "+ss);
 
 	}
@@ -64,7 +75,7 @@ public class BuildExtensionDocumentationTask extends org.apache.tools.ant.Task {
 		}
 		try {
 			String projectName = getProject().getProperty("ant.project.name");
-			ExtensionActions.buildDocumentation(getProject().getBaseDir(),distribution.toLowerCase(),projectName.toLowerCase(),destDir);
+			ExtensionActions.buildDocumentation(getProject().getBaseDir(),distribution,distribution.toLowerCase(),projectName.toLowerCase(),version,destDir);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 			throw new BuildException("Error building documentation ",e1);

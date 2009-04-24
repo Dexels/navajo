@@ -3,11 +3,13 @@ package com.dexels.navajo.tipi.ant.projectbuilder;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.apache.tools.ant.BuildException;
 
 import com.dexels.navajo.tipi.projectbuilder.ClientActions;
+import com.dexels.navajo.tipi.projectbuilder.VersionResolver;
 
 
 public class TipiDownloadJarTask extends BaseTipiClientTask {
@@ -23,12 +25,11 @@ public class TipiDownloadJarTask extends BaseTipiClientTask {
 		while (st.hasMoreTokens()) {
 			String ext = st.nextToken();
 			try {
-//				ClientActions.
-//				URL rep = new URL(repository);
-//				URL projectURL = new URL(rep,ext+"/");
-				//URL extensionURL = new URL(projectURL,"definition.xml");
-				//XMLElement result = ClientActions.getXMLElement(extensionURL);
-				ClientActions.downloadExtensionJars(ext,new URL(repository+ext+"/"),ClientActions.getExtensionXml(ext, repository),getProject().getBaseDir(),true);
+				VersionResolver vr = new VersionResolver();
+				vr.load(ext);
+				Map<String,String> resolveMap = vr.resolveVersion(ext);
+				String path = vr.resultVersionPath(ext);
+				ClientActions.downloadExtensionJars(ext,new URL(repository+path+"/"),ClientActions.getExtensionXml(resolveMap.get("extension"),resolveMap.get("version") ,repository),getProject().getBaseDir(),true);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
