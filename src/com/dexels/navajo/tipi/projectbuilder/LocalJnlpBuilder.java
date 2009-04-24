@@ -29,10 +29,10 @@ public class LocalJnlpBuilder extends BaseJnlpBuilder {
 
 	@Override
 	protected boolean appendResourceForExtension(XMLElement resources,
-			String repository, String ext) {
+			String repository, String ext,String version) {
 		Map<String,String> mainJar = new HashMap<String,String>();
 		Map<String,String> remoteJar = new HashMap<String,String>();
-		List<String> jars = ExtensionManager.getJars(repository, ext,mainJar,remoteJar);
+		List<String> jars = ExtensionManager.getJars(repository, ext,version,mainJar,remoteJar);
 		System.err.println("Local jars:"+ jars);
 		for (String path : jars) {
 			XMLElement x = new CaseSensitiveXMLElement("jar");

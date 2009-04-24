@@ -34,7 +34,7 @@ public class XsdBuilder {
 
 	private final ClassManager myClassManager = new ClassManager();
 
-	public void build(String repository, String extensions,File baseDir) {
+	public void build(String repository, String extensions,File baseDir) throws IOException {
 		File xsd = new File(baseDir, "tipi/tipi.xsd");
 		xsd.getParentFile().mkdirs();
 		
@@ -43,14 +43,16 @@ public class XsdBuilder {
 			throw new IllegalArgumentException("No extensions defined ");
 		}
 		StringTokenizer st = new StringTokenizer(extensions,",");
+//		Map<String, List<String>> repDefinition = ClientActions.getExtensions( repository);
+		VersionResolver vr = new VersionResolver();
+		vr.load(repository);
 		while(st.hasMoreTokens()) {
-			String ext = st.nextToken();
+			String token = st.nextToken();
+			Map<String,String> versionMap = vr.resolveVersion(token);
+			String ext = versionMap.get("extension");
+			String version = versionMap.get("version");
 			try {
-				appendExtension(ext,repository);
-//				appendClassDefElement(xx);
-//				
-//				parseProjectDefinition(project,projectURL, result);
-
+				appendExtension(ext,version,repository);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -76,15 +78,16 @@ public class XsdBuilder {
 
 
 
-	public  XMLElement appendExtension(String project,String repository) throws IOException {
+	public  XMLElement appendExtension(String project,String version, String repository) throws IOException {
 		try {
 			URL rep = new URL(repository);
 			URL projectURL = new URL(rep,project+"/");
-			URL extensionURL = new URL(projectURL,"definition.xml");
-
+			URL versionURL = new URL(projectURL,version+"/");
+			URL extensionURL = new URL(versionURL,"definition.xml");
+			
 			XMLElement result = ClientActions.getXMLElement(extensionURL);
 
-			parseProjectDefinition(project,projectURL, result);
+			parseProjectDefinition(project,versionURL, result);
 
 			return result;
 		} catch (MalformedURLException e) {
@@ -274,11 +277,11 @@ public class XsdBuilder {
 	
 	
 	
-	public void parseProjectDefinition(String extension, URL projectURL, XMLElement definitionElement) throws MalformedURLException, IOException {
+	public void parseProjectDefinition(String extension, URL versionURL, XMLElement definitionElement) throws MalformedURLException, IOException {
 		List<XMLElement> includes = definitionElement.getElementsByTagName("include");
 		for (XMLElement element : includes) {
 			String path = element.getStringAttribute("path");
-			XMLElement xx = ClientActions.getXMLElement(new URL(projectURL,"includes/"+path));
+			XMLElement xx = ClientActions.getXMLElement(new URL(versionURL,"includes/"+path));
 			// beware of missing function.xml
 			//System.err.println("ELEMENT: "+xx);
 			if(xx!=null) {

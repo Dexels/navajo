@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.PropertyResourceBundle;
 import java.util.StringTokenizer;
 
+import org.omg.CORBA.VersionSpecHelper;
+
 
 import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.util.XMLElement;
@@ -19,13 +21,16 @@ import com.dexels.navajo.tipi.util.XMLElement;
 public abstract class BaseJnlpBuilder {
 
 	
-	protected abstract boolean appendResourceForExtension(XMLElement resources, String repository, String ext);
+	protected abstract boolean appendResourceForExtension(XMLElement resources, String repository, String ext,String version) throws IOException;
 	protected abstract void appendProxyResource(XMLElement resources, String repository, String mainExtension);
 		
-	public String appendResources(XMLElement resources, String repository, List<String> extensions) {
+	protected final VersionResolver myVersionResolver = new VersionResolver();
+	
+	public String appendResources(XMLElement resources, String repository, List<String> extensions) throws IOException {
 		String mainExtension = null;
 		for (String ext : extensions) {
-			boolean isMain = appendResourceForExtension(resources,repository,ext);
+			Map<String,String> versionMap = myVersionResolver.resolveVersion(ext);
+			boolean isMain = appendResourceForExtension(resources,repository,versionMap.get("extension"),versionMap.get("version"));
 			if(isMain) {
 				mainExtension = ext;
 			}
@@ -37,6 +42,7 @@ public abstract class BaseJnlpBuilder {
 	public abstract String getJnlpName();
 	
 	public void build(String repository, String extensions,File baseDir, String codebase, String jarName) throws IOException {
+		myVersionResolver.load(repository);
 		Map<String,String> params = parseParams(baseDir);
 		File jnlpFile = new File(baseDir,jarName);
 		XMLElement output = new CaseSensitiveXMLElement();

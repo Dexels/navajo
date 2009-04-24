@@ -19,10 +19,12 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.PropertyResourceBundle;
 import java.util.StringTokenizer;
+import java.util.TreeMap;
 
 import com.dexels.navajo.tipi.extensionmanager.ExtensionManager;
 import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
@@ -71,11 +73,17 @@ public class ClientActions {
 
 	}
 
+	/**
+	 * TODO Add versioning
+	 * @param repository
+	 * @param extensions
+	 * @return
+	 */
 	
 	public static List<String> checkExtensions(String repository, String extensions) {
 		List<String> missing = new ArrayList<String>();
 		try {
-			Map<String, String> available = ExtensionManager.getExtensions(repository);
+			Map<String, List<String>> available = ExtensionManager.getExtensions(repository);
 			System.err.println("Available extensions: " + available);
 			StringTokenizer st = new StringTokenizer(extensions, ",");
 			while (st.hasMoreTokens()) {
@@ -91,19 +99,32 @@ public class ClientActions {
 		return missing;
 	}
 
-	public static XMLElement getExtensionXml(String extension, String repository) throws IOException {
+	public static XMLElement getExtensionXml(String extension, String version,String repository) throws IOException {
 		try {
 			URL rep = new URL(repository);
 			URL projectURL = new URL(rep, extension + "/");
-			URL extensionURL = new URL(projectURL, "definition.xml");
+			URL versionURL = new URL(projectURL, version + "/");
+			URL extensionURL = new URL(versionURL, "definition.xml");
 			XMLElement result = getXMLElement(extensionURL);
 			return result;
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
 		return null;
-
 	}
+	
+//	public static XMLElement getExtensionXml(String extension,String repository) throws IOException {
+//		try {
+//			URL rep = new URL(repository);
+//			URL projectURL = new URL(rep, extension + "/");
+//			URL extensionURL = new URL(projectURL, "definition.xml");
+//			XMLElement result = getXMLElement(extensionURL);
+//			return result;
+//		} catch (MalformedURLException e) {
+//			e.printStackTrace();
+//		}
+//		return null;
+//	}
 
 	public static void downloadExtensionJars(String project, URL projectURL, XMLElement result, File baseDir, boolean clean)
 			throws MalformedURLException {
@@ -311,4 +332,10 @@ public class ClientActions {
 		bout.close();
 	}
 
+
+	// copied from extensions
+	public static Map<String, List<String>> getExtensions(String repository) throws IOException {
+		return ExtensionManager.getExtensions(repository);
+	
+	}
 }

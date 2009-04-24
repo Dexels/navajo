@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.extensionmanager;
 
 import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -13,8 +14,17 @@ import com.dexels.navajo.tipi.util.XMLElement;
 public abstract class ExtensionClassdefProcessor {
 
 	private File outputDir;
+	private File distributionDir;
 	
 	
+	public File getDistributionDir() {
+		return distributionDir;
+	}
+
+	public void setDistributionDir(File distributionDir) {
+		this.distributionDir = distributionDir;
+	}
+
 	public File getOutputDir() {
 		return outputDir;
 	}
@@ -23,11 +33,11 @@ public abstract class ExtensionClassdefProcessor {
 		this.outputDir = outputDir;
 	}
 
-	protected abstract void processTipiContext(String extension, List<String> extensions, Map<String, XMLElement> allComponents, Map<String, XMLElement> allActions,
+	protected abstract void processTipiContext(URL repository, String extension, String version, List<String> extensions, Map<String, XMLElement> allComponents, Map<String, XMLElement> allActions,
 			Map<String, XMLElement> allEvents, Map<String, XMLElement> allValues, Map<String, XMLElement> allTypes,
 			Map<String, XMLElement> allFunctions) ;
 
-	public void execute(String extension, Map<String,List<XMLElement>> classDefElements) {
+	public void execute(URL repository, String extension, String version, Map<String,List<XMLElement>> classDefElements) {
 		Map<String, XMLElement> allComponents = new HashMap<String, XMLElement>();
 		Map<String, XMLElement> allActions = new HashMap<String, XMLElement>();
 		Map<String, XMLElement> allEvents = new HashMap<String, XMLElement>();
@@ -47,8 +57,9 @@ public abstract class ExtensionClassdefProcessor {
 		
 		
 		System.err.println("For extension: "+extension+" components: "+allComponents.size()+" actions: "+allActions.size()+" events: "+allEvents.size()+" allTypes: "+allTypes.size()+" allF: "+allFunctions.size());
-		System.err.println("TYPES: "+allTypes);
-		processTipiContext(extension, extensions, allComponents, allActions, allEvents, allValues, allTypes, allFunctions);
+	//	System.err.println("TYPES: "+allTypes);
+		processTipiContext(repository, extension, version, extensions, allComponents, allActions, allEvents, allValues, allTypes, allFunctions);
+		
 	}
  
 	private void parseStream(Map<String,List<XMLElement>> classDefElements, Map<String, XMLElement> allComponents,
@@ -57,7 +68,6 @@ public abstract class ExtensionClassdefProcessor {
 			 {
 
 		
-		System.err.println("CLASSDEFELEMENTS: "+classDefElements);
 		for (Entry<String, List<XMLElement>> entry : classDefElements.entrySet()) {
 			String extension = entry.getKey();
 			List<XMLElement> list = entry.getValue();
@@ -82,7 +92,7 @@ public abstract class ExtensionClassdefProcessor {
 				}
 				if (element.getName().equals("tipi-include")) {
 					String location = element.getStringAttribute("location");
-					System.err.println("Ignoring include: " + element);
+					//System.err.println("Ignoring include: " + element);
 
 					continue;
 				}

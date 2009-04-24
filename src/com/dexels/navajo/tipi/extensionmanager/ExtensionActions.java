@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.util.XMLElement;
@@ -29,11 +31,11 @@ import com.dexels.navajo.tipi.util.XMLParseException;
 
 public class ExtensionActions {
 
-	public static void build(String repository, String projectName,File baseDir, File inputPath, File destDir) throws XMLParseException, IOException {
+	public static void build(String repository, String projectName,String version, File baseDir, File inputPath, File destDir) throws XMLParseException, IOException {
 		System.err.println("Building for repository: "+repository);
 		XMLElement xe = parseXmlFile(inputPath);
 		
-		String version = xe.getStringAttribute("version");
+//		String version = xe.getStringAttribute("version");
 		ExtensionManager.registerExtension(projectName, repository, destDir,version);
 
 		copyFile(inputPath,new File(destDir,"definition.xml"));
@@ -48,9 +50,58 @@ public class ExtensionActions {
 			appendClassDefElement(projectName, element, tipiParts);
 		}
 		
+		mergeTypeMap(new URL(repository), destDir, projectName,tipiParts);
 		
 	}
 	
+	private static void mergeTypeMap(URL repository, File destDir, String projectName, Map<String, List<XMLElement>> tipiParts) throws IOException {
+		List<XMLElement> parsers = tipiParts.get("tipi-parser");
+		System.err.println("Parser size: "+tipiParts.size());
+	//	System.err.println("Parserl: "+parsers.size());
+		Map<String,String> parserMap = new TreeMap<String, String>();
+		try {
+			parseParserMap(new URL(repository,"typemap.xml"), parserMap);
+		} catch (Exception e) {
+			System.err.println("Parse failed. Never mind.");
+		}
+		if(parsers!=null) {
+			for (XMLElement element : parsers) {
+				System.err.println("Name: "+element.getStringAttribute("name")+" extension: "+element.getStringAttribute("extension"));
+				parserMap.put(element.getStringAttribute("name"), element.getStringAttribute("extension"));
+			}
+		
+		}
+		writeParserMap(destDir, parserMap);
+	}
+
+	protected static void parseParserMap(URL parserLink, Map<String,String> parserMap) throws IOException {
+		InputStreamReader isr = new InputStreamReader(parserLink.openStream());
+		XMLElement pp = new CaseSensitiveXMLElement();
+		pp.parseFromReader(isr);
+		isr.close();
+		List<XMLElement> cc = pp.getChildren();
+		for (XMLElement element : cc) {
+			parserMap.put(element.getStringAttribute("type"), element.getStringAttribute("extension"));
+		}
+	}	
+	
+	private static void writeParserMap(File destDir, Map<String,String> parsers) throws IOException {
+		XMLElement result = new CaseSensitiveXMLElement();
+		result.setName("typemap");
+		for (Entry<String, String> element : parsers.entrySet()) {
+			System.err.println("Name: "+element.getKey()+" extension: "+element.getValue());
+			XMLElement r = new CaseSensitiveXMLElement("type");
+			r.setAttribute("type", element.getKey());
+			r.setAttribute("extension", element.getValue());
+			result.addChild(r);
+		}
+
+		FileWriter fw = new FileWriter(new File(destDir,"typemap.xml"));
+		result.write(fw);
+		fw.flush();
+		fw.close();
+	}
+
 	public static Map<String,List<XMLElement>> getAllClassDefs(URL repository, List<String> projects) throws IOException {
 		List<String> toBeresolved = new LinkedList<String>();
 		List<String> resolved = new LinkedList<String>();
@@ -68,35 +119,34 @@ public class ExtensionActions {
 
 	}
 
-	public static void buildDocumentation(URL repository, String project, File destDir) throws IOException {
-		
-		
+	public static void buildDocumentation(URL repository,File distributionPath, String project, String version, File destDir) throws IOException {
 		project = project.toLowerCase();
 		
 		
 		
 //
-	buildSingleDocumentation ( repository, project,destDir);
+	buildSingleDocumentation ( repository,distributionPath, project,version, destDir);
 	}
 	  
 	public static void buildDocumentation(String repository, String projectName,File baseDir, File inputPath, File destDir) throws XMLParseException, IOException {
 		
 	}
 	
-	public static void buildDocumentation(File baseDir, String sourcePath, String project, File destDir) throws IOException {
+	public static void buildDocumentation(File baseDir, String distributionPath,String sourcePath, String project, String version, File destDir) throws IOException {
 		File sourceDir = new File(baseDir,sourcePath);
 		URL u = sourceDir.toURI().toURL();
 		System.err.println("Building documentation::: "+sourceDir+" to: "+destDir);
-		buildDocumentation(u, project, destDir);
+		buildDocumentation(u, new File(baseDir,distributionPath), project,version, destDir);
 	}	
 	
-	public static void buildSingleDocumentation(URL repository, String project, File destDir) throws IOException {
+	public static void buildSingleDocumentation(URL repository,File distributionPath, String project, String version, File destDir) throws IOException {
 		List<String> projects = new ArrayList<String>();
 		projects.add(project);
 		Map<String,List<XMLElement>> ss = getAllClassDefs(repository, projects);
 		TipiCreateWikiDocumentation ecdp = new TipiCreateWikiDocumentation();
 		ecdp.setOutputDir(destDir);
-		ecdp.execute(project,ss);
+		ecdp.setDistributionDir(distributionPath);
+		ecdp.execute(repository,project,version,ss);
 		System.err.println("Elements found: "+ss.size());
 	}
 	

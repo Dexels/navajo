@@ -20,16 +20,18 @@ public class RemoteJnlpBuilder extends BaseJnlpBuilder {
 
 	@Override
 	protected boolean appendResourceForExtension(XMLElement resources,
-			String repository, String ext) {
+			String repository, String ext,String version) throws IOException {
 		try {
-			URL rep = new URL(repository + ext + "/" + ext + ".jnlp");
+			VersionResolver vr = new VersionResolver(repository);
+			
+			URL rep = new URL(repository + vr.resultVersionPath(ext) + "/" + ext + ".jnlp");
 			// System.err.println("Repos: "+rep);
 			// resources.addTagKeyValue("extension","").setAttribute("href",
 			// rep);
 			XMLElement xe = new CaseSensitiveXMLElement("extension");
 			resources.addChild(xe);
 			xe.setAttribute("href", rep.toString());
-			return ExtensionManager.isMainExtension(repository, ext);
+			return ExtensionManager.isMainExtension(repository, ext,version);
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -39,8 +41,10 @@ public class RemoteJnlpBuilder extends BaseJnlpBuilder {
 
 	protected void appendProxyResource(XMLElement resources, String repository,
 			String mainExtension) {
+		Map<String,String> versionMap = myVersionResolver.resolveVersion(mainExtension);
+		
 		Map<String, String> mm = ExtensionManager.getMain(repository,
-				mainExtension);
+				versionMap.get("extension"),versionMap.get("version"));
 		XMLElement res = resources.addTagKeyValue("jar", "");
 		res.setAttribute("href", "lib/" + mm.get("href"));
 		res.setAttribute("main", "true");
