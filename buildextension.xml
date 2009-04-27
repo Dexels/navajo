@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project name="TipiSwing" default="publish" basedir=".">
-	<property name="dist" value="dist/${ant.project.name}" />
+
+	<ant antfile="../TipiBuild/genericbuild.xml" dir="." inheritall="true" inheritrefs="true" target="prepare" />
+
 	<target name="archive">
 		<ant antfile="build.xml" dir="." inheritall="true" inheritrefs="true" target="archive" />
 	</target>
-	<target name="customGrabjar" depends="cleandistribution">
+	<target name="customGrabjar">
+		<delete dir="${dist}" />
+		
 		<copy todir="${dist}/lib" file="${ant.project.name}.jar" />
 		<copy todir="${dist}/lib" file="./SwingMain.jar" />
 		<copy todir="${dist}/lib" file="lib/javadocking.jar" />
 		<copy todir="${dist}/lib" file="../TipiSwingClient/TipiSwingClient.jar" />
 		<copy todir="${dist}/lib" file="../AnimatedTransitions/AnimatedTransitions.jar" />
 		<copy todir="${dist}/lib" file="../TimingFramework/TimingFramework.jar" />
-	</target>
-	<target name="cleandistribution" depends="archive">
-		<delete dir="dist" />
 	</target>
 	<target name="publish" depends="customGrabjar">
 		<ant antfile="../TipiBuild/genericbuild.xml" dir="." inheritall="true" inheritrefs="true" target="publish" />
