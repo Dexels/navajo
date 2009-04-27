@@ -106,15 +106,15 @@ public class TipiAbstractXMLExtension extends AbstractTipiExtension implements T
 		return in;
 	}
 
-	@Deprecated
-	public final List<String> getLibraryJars() {
-		return null;
-	}
-
-	@Deprecated
-	public final List<String> getMainJars() {
-		return null;
-	}
+//	@Deprecated
+//	public final List<String> getLibraryJars() {
+//		return null;
+//	}
+//
+//	@Deprecated
+//	public final List<String> getMainJars() {
+//		return null;
+//	}
 
 	public final String getProjectName() {
 		return project;

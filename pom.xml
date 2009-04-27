@@ -3,7 +3,7 @@
 	<groupId>com.dexels.Tipi</groupId>
 	<artifactId>Tipi</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.7</version>
 	<name>Tipi</name>
 	<parent>
 		<groupId>com.dexels.Navajo</groupId>
@@ -18,7 +18,7 @@
 		<dependency>
 			<groupId>com.dexels.Navajo</groupId>
 			<artifactId>Navajo</artifactId>
-			<version>0.0.2</version>
+			<version>0.0.5</version>
 		</dependency>
 	</dependencies>
 	<scm>

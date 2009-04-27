@@ -244,6 +244,7 @@ public abstract class TipiContext {
 		int count = 0;
 		while (tt.hasNext()) {
 			TipiExtension element = tt.next();
+			System.err.println("Found extension: "+element);
 			extensionMap.put(element.getId(), element);
 			count++;
 			if (element.requiresMainImplementation() == null) {

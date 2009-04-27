@@ -313,7 +313,7 @@
 	<description>
 	</description>
    </tipi-parser>
-   <tipi-parser name="date" type="java.util.Date" parser="com.dexels.navajo.tipi.components.core.parsers.DateParser" >
+   <tipi-parser name="date" type="java.util.Date" parser="com.dexels.navajo.tipi.components.core.parsers.StringParser" >
 	<description>
 	</description>
    </tipi-parser>

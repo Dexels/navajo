@@ -1,9 +1,19 @@
 <tid errorhandler="error">
    <tipiaction name="break" class="TipiBreak" package="com.dexels.navajo.tipi.actions">
-      Bla bla bla bla
+	  <description>
+	      Breaks the current block.
+	  </description>
    </tipiaction>
-   <tipiaction name="breakEvent" class="TipiBreakEvent" package="com.dexels.navajo.tipi.actions" />
-   <tipiaction name="clearCache" class="TipiClearCache" package="com.dexels.navajo.tipi.actions" />
+   <tipiaction name="breakEvent" class="TipiBreakEvent" package="com.dexels.navajo.tipi.actions">
+	  <description>
+	      Breaks the current event.
+	  </description>
+   </tipiaction>
+   <tipiaction name="clearCache" class="TipiClearCache" package="com.dexels.navajo.tipi.actions">
+	  <description>
+		Removes the loaded tipi definitions from the in memory cache. Mostly used to commit 
+	  </description>
+   </tipiaction>
    <tipiaction name="performMethod" class="TipiPerformMethod" package="com.dexels.navajo.tipi.actions">
       <param name="tipipath" type="tipi" />
       <param name="method" type="string" required="true" />
@@ -181,6 +191,9 @@
       <param name="value" type="string" />
    </tipiaction>
    <tipiaction name="addProperty" class="TipiAddProperty" package="com.dexels.navajo.tipi.actions">
+   	  <description>
+   	  	Adds a property in a navajo object. Not widely used.
+   	  </description>
       <param name="path" type="string" required="true" />
       <param name="value" type="object" required="true" />
       <param name="navajo" type="navajo" required="true" />
