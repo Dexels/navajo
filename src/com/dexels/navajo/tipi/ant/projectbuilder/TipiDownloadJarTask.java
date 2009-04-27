@@ -26,7 +26,7 @@ public class TipiDownloadJarTask extends BaseTipiClientTask {
 			String ext = st.nextToken();
 			try {
 				VersionResolver vr = new VersionResolver();
-				vr.load(ext);
+				vr.load(repository);
 				Map<String,String> resolveMap = vr.resolveVersion(ext);
 				String path = vr.resultVersionPath(ext);
 				ClientActions.downloadExtensionJars(ext,new URL(repository+path+"/"),ClientActions.getExtensionXml(resolveMap.get("extension"),resolveMap.get("version") ,repository),getProject().getBaseDir(),true);
