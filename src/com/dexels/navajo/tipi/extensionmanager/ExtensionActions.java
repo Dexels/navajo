@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
+import com.dexels.navajo.tipi.projectbuilder.VersionResolver;
 import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.util.XMLElement;
 import com.dexels.navajo.tipi.util.XMLParseException;
@@ -32,7 +33,6 @@ import com.dexels.navajo.tipi.util.XMLParseException;
 public class ExtensionActions {
 
 	public static void build(String repository, String projectName,String version, File baseDir, File inputPath, File destDir) throws XMLParseException, IOException {
-		System.err.println("Building for repository: "+repository);
 		XMLElement xe = parseXmlFile(inputPath);
 		
 //		String version = xe.getStringAttribute("version");
@@ -41,7 +41,7 @@ public class ExtensionActions {
 		copyFile(inputPath,new File(destDir,"definition.xml"));
 		
 		
-		generateJnlp(repository,projectName, destDir, xe);
+		generateJnlp(repository,projectName,version, destDir, xe);
 		generateIndex(destDir, xe);
 		List<XMLElement> locatedIncludes = new ArrayList<XMLElement>();
 		extractIncludes(baseDir, inputPath, destDir, xe,locatedIncludes);
@@ -56,7 +56,6 @@ public class ExtensionActions {
 	
 	private static void mergeTypeMap(URL repository, File destDir, String projectName, Map<String, List<XMLElement>> tipiParts) throws IOException {
 		List<XMLElement> parsers = tipiParts.get("tipi-parser");
-		System.err.println("Parser size: "+tipiParts.size());
 	//	System.err.println("Parserl: "+parsers.size());
 		Map<String,String> parserMap = new TreeMap<String, String>();
 		try {
@@ -66,7 +65,6 @@ public class ExtensionActions {
 		}
 		if(parsers!=null) {
 			for (XMLElement element : parsers) {
-				System.err.println("Name: "+element.getStringAttribute("name")+" extension: "+element.getStringAttribute("extension"));
 				parserMap.put(element.getStringAttribute("name"), element.getStringAttribute("extension"));
 			}
 		
@@ -89,7 +87,6 @@ public class ExtensionActions {
 		XMLElement result = new CaseSensitiveXMLElement();
 		result.setName("typemap");
 		for (Entry<String, String> element : parsers.entrySet()) {
-			System.err.println("Name: "+element.getKey()+" extension: "+element.getValue());
 			XMLElement r = new CaseSensitiveXMLElement("type");
 			r.setAttribute("type", element.getKey());
 			r.setAttribute("extension", element.getValue());
@@ -135,7 +132,6 @@ public class ExtensionActions {
 	public static void buildDocumentation(File baseDir, String distributionPath,String sourcePath, String project, String version, File destDir) throws IOException {
 		File sourceDir = new File(baseDir,sourcePath);
 		URL u = sourceDir.toURI().toURL();
-		System.err.println("Building documentation::: "+sourceDir+" to: "+destDir);
 		buildDocumentation(u, new File(baseDir,distributionPath), project,version, destDir);
 	}	
 	
@@ -147,7 +143,6 @@ public class ExtensionActions {
 		ecdp.setOutputDir(destDir);
 		ecdp.setDistributionDir(distributionPath);
 		ecdp.execute(repository,project,version,ss);
-		System.err.println("Elements found: "+ss.size());
 	}
 	
 	private static void extractRemoteClassDefs(URL repository, List<String> resolved, List<String> toBeResolved, Map<String,List<XMLElement>> result) throws IOException {
@@ -330,10 +325,10 @@ public class ExtensionActions {
 	}
 
 
-	private static void generateJnlp(String repository,String projectName, File destDir, XMLElement xe) throws IOException {
+	private static void generateJnlp(String repository,String projectName, String version, File destDir, XMLElement xe) throws IOException {
 		File destFile = new File(destDir,projectName+".jnlp");
 		XMLElement output = new CaseSensitiveXMLElement("jnlp");
-		buildJnlp(repository,projectName, xe,output);
+		buildJnlp(repository,projectName, version,xe,output);
 		FileWriter fw = new FileWriter(destFile);
 		output.write(fw);
 		fw.flush();
@@ -342,7 +337,8 @@ public class ExtensionActions {
 
 
 
-	private static void buildJnlp(String repository, String projectName, XMLElement input, XMLElement output) {
+	private static void buildJnlp(String repository, String projectName, String version, XMLElement input, XMLElement output) throws IOException {
+		VersionResolver vr = new VersionResolver(repository);
 		System.err.println("Title: "+input.getStringAttribute("title"));
 		XMLElement information =  output.addTagKeyValue("information", "");
 		information.addTagKeyValue("vendor",input.getStringAttribute("vendor"));
@@ -352,7 +348,7 @@ public class ExtensionActions {
 		XMLElement security =  output.addTagKeyValue("security", "");
 		security.addTagKeyValue("all-permissions", "");
 		
-		output.setAttribute("codebase", repository+"/"+input.getStringAttribute("project"));
+		output.setAttribute("codebase", repository+input.getStringAttribute("project")+"/"+version);
 		output.setAttribute("href", projectName+".jnlp");
 
 		XMLElement resources = output.addTagKeyValue("resources", "");
@@ -399,16 +395,19 @@ public class ExtensionActions {
 				String path = require.getStringAttribute("path");
 				XMLElement xe = resources.addTagKeyValue("extension", "");
 				xe.setAttribute("name", id);
-				xe.setAttribute("href", assemblePath(repository, path,id));
+				if(path==null) {
+					throw new IllegalArgumentException("Path attribute missing from 'require' tag in project: "+projectName);
+				}
+				xe.setAttribute("href", assemblePath(repository, vr.resultVersionPath(path),id));
 			}
-		}
+		} 
 		output.addTagKeyValue("component-desc", "");
 		output.setAttribute("spec", "1.0+");
 	}
 
 
 	private static String assemblePath(String repository, String path, String id) {
-		return repository+"/"+path+"/"+id+".jnlp";
+		return repository+path+"/"+id+".jnlp";
 	} 
 
 	private static final void copyResource(OutputStream out, InputStream in) throws IOException {

@@ -220,7 +220,6 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 		
 		for (XMLElement element : filtered.values()) {
 			String id = element.getStringAttribute("name");
-			System.err.println(">>"+extension+">>" +allComponents.get(id));
 			String components = "[[tipidoc:" + id + ":componentlist|Components]]";
 			String actions = "[[tipidoc:" + id + ":actionlist|Actions]]";
 			String functions = "[[tipidoc:" + id + ":functions:list|Functions]]";
@@ -412,7 +411,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 				otherComponents.add(e);
 			}
 		}
-		System.err.println("Real: "+realComponents.size()+" connector: "+connectorComponents.size());
+//		System.err.println("Real: "+realComponents.size()+" connector: "+connectorComponents.size());
 		if (realComponents.size() > 0) {
 			osw.write("=== Components ===\n");
 			for (XMLElement e : realComponents) {
