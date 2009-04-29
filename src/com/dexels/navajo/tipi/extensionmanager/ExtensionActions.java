@@ -116,32 +116,26 @@ public class ExtensionActions {
 
 	}
 
-	public static void buildDocumentation(URL repository,File distributionPath, String project, String version, File destDir) throws IOException {
-		project = project.toLowerCase();
-		
-		
-		
-//
-	buildSingleDocumentation ( repository,distributionPath, project,version, destDir);
+	public static void buildDocumentation(URL repository,File distributionPath, String project, String version, File destDir, String repositoryDeploy) throws IOException {
+	//	project = project.toLowerCase();
+		buildSingleDocumentation ( repository,distributionPath, project,version, destDir, repositoryDeploy);
 	}
-	  
-	public static void buildDocumentation(String repository, String projectName,File baseDir, File inputPath, File destDir) throws XMLParseException, IOException {
-		
-	}
+
 	
-	public static void buildDocumentation(File baseDir, String distributionPath,String sourcePath, String project, String version, File destDir) throws IOException {
+	public static void buildDocumentation(File baseDir, String distributionPath,String sourcePath, String project, String version, File destDir,String repositoryDeploy) throws IOException {
 		File sourceDir = new File(baseDir,sourcePath);
 		URL u = sourceDir.toURI().toURL();
-		buildDocumentation(u, new File(baseDir,distributionPath), project,version, destDir);
+		buildDocumentation(u, new File(baseDir,distributionPath), project,version, destDir,repositoryDeploy);
 	}	
 	
-	public static void buildSingleDocumentation(URL repository,File distributionPath, String project, String version, File destDir) throws IOException {
+	public static void buildSingleDocumentation(URL repository,File distributionPath, String project, String version, File destDir,String repositoryDeploy) throws IOException {
 		List<String> projects = new ArrayList<String>();
 		projects.add(project);
 		Map<String,List<XMLElement>> ss = getAllClassDefs(repository, projects);
 		TipiCreateWikiDocumentation ecdp = new TipiCreateWikiDocumentation();
 		ecdp.setOutputDir(destDir);
 		ecdp.setDistributionDir(distributionPath);
+		ecdp.setDeployRepository(repositoryDeploy);
 		ecdp.execute(repository,project,version,ss);
 	}
 	

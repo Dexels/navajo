@@ -48,7 +48,14 @@ public class XsdBuilder {
 		vr.load(repository);
 		while(st.hasMoreTokens()) {
 			String token = st.nextToken();
-			Map<String,String> versionMap = vr.resolveVersion(token);
+			System.err.println("Processing token: "+token);
+			Map<String,String> versionMap = null;
+			
+			try {
+				versionMap = vr.resolveVersion(token);
+			} catch (IllegalArgumentException e1) {
+				throw new IOException("Extension not found: "+token);
+			}
 			String ext = versionMap.get("extension");
 			String version = versionMap.get("version");
 			try {
@@ -178,6 +185,7 @@ public class XsdBuilder {
 		metadata.addChild(components);
 		metadata.addChild(actions);
 		metadata.addChild(types);
+		VersionResolver vr = new VersionResolver(repository);
 		
 		for (Entry<String,XMLElement> elt : allComponents2.entrySet()) {
 			XMLElement c = new CaseSensitiveXMLElement("element");
@@ -186,7 +194,7 @@ public class XsdBuilder {
 			if(elt.getValue().getAttribute("class")!=null) {
 				XMLElement entry = elt.getValue();
 				c.setAttribute("name",elt.getKey());
-				c.setAttribute("href",createDocLink(repository,entry.getStringAttribute("extension"),elt.getKey(),"component"));
+				c.setAttribute("href",createDocLink(repository,vr,entry.getStringAttribute("extension"),elt.getKey(),"component"));
 				components.addChild(c);
 				
 			}
@@ -195,17 +203,17 @@ public class XsdBuilder {
 			XMLElement c = new CaseSensitiveXMLElement("element");
 			XMLElement entry = elt.getValue();
 			c.setAttribute("name",elt.getKey());
-			c.setAttribute("href",createDocLink(repository,entry.getStringAttribute("extension"),elt.getKey(),"action"));
+			c.setAttribute("href",createDocLink(repository,vr,entry.getStringAttribute("extension"),elt.getKey(),"action"));
 			actions.addChild(c);
 		}
 		for (Entry<String,XMLElement> elt : allTypes.entrySet()) {
 			XMLElement c = new CaseSensitiveXMLElement("element");
 			XMLElement entry = elt.getValue();
 			c.setAttribute("name",elt.getKey());
-			c.setAttribute("href",createDocLink(repository,entry.getStringAttribute("extension"),elt.getKey(),"type"));
+			c.setAttribute("href",createDocLink(repository,vr,entry.getStringAttribute("extension"),elt.getKey(),"type"));
 			types.addChild(c);
 		}
-		File settings = new File(baseDir,"settings");
+		File settings = new File(baseDir,".tipiproject");
 		settings.mkdirs();
 		File metada = new File(settings,"tipi.metadata");
 		FileWriter fw = new FileWriter(metada);
@@ -214,13 +222,18 @@ public class XsdBuilder {
 		fw.close();
 	}
 	
-	private String createDocLink(String repository, String extension, String name, String elementType) {
+	// DOcumentation is unversioned for now
+	
+	private String createDocLink(String repository,VersionResolver vr, String extension, String name, String elementType) {
 		if(elementType.equals("type")) {
 			return repository+"wiki/doku.php?id=tipidoc:"+extension.toLowerCase()+":types:"+name;
 			
-		} else {
-			return repository+"wiki/doku.php?id=tipidoc:"+extension.toLowerCase()+":"+("component".equals(elementType)?"c.":"")+name;			
+		} else if(elementType.equals("component")) {
+			return repository+"wiki/doku.php?id=tipidoc:"+extension.toLowerCase()+":components:"+("component".equals(elementType)?"c.":"")+name;			
+		} else if(elementType.equals("action")) {
+		return repository+"wiki/doku.php?id=tipidoc:"+extension.toLowerCase()+":actions:"+("component".equals(elementType)?"c.":"")+name;			
 		}
+		return "huh?";
 	}
 
 
@@ -367,44 +380,10 @@ public class XsdBuilder {
 		return block;
 	}
 
-//	private static XMLElement createAllComponents(Map<String, XMLElement> allComponents) {
-//		XMLElement complexType = new CaseSensitiveXMLElement();
-//		complexType.setName("xs:complexType");
-//		complexType.setAttribute("name", "allComponents");
-//		XMLElement choice = addTag("xs:choice", complexType);
-//		choice.setAttribute("maxOccurs", "unbounded");
-//		choice.setAttribute("minOccurs", "0");
-//		for (String current : allComponents.keySet()) {
-//			XMLElement bl = addTag("xs:element", choice);
-//			bl.setAttribute("ref", "c."+current);
-//		}
-//		return complexType;
-//	}
-	
-//	private static XMLElement createAllComponentDefinitions(Map<String, XMLElement> allComponents) {
-//		XMLElement complexType = new CaseSensitiveXMLElement();
-//		complexType.setName("xs:complexType");
-//		complexType.setAttribute("name", "allComponentDefinitions");
-//		XMLElement choice = addTag("xs:choice", complexType);
-//		choice.setAttribute("maxOccurs", "unbounded");
-//		choice.setAttribute("minOccurs", "0");
-//		for (String current : allComponents.keySet()) {
-//			XMLElement bl = addTag("xs:element", choice);
-//			bl.setAttribute("ref", "d."+current);
-//		}
-//		return complexType;
-//	}
-	
 	private XMLElement createActions(Map<String, XMLElement> allActions, Map<String, XMLElement> allComponents) {
 		XMLElement complexType = new CaseSensitiveXMLElement();
 		complexType.setName("xs:complexType");
 		complexType.setAttribute("name", "allActions");
-//	      <xs:attribute  name="condition" type="xs:string"/>
-		
-//		XMLElement condition = addTag("xs:attribute", complexType);
-//		condition.setAttribute("name", "condition");
-//		condition.setAttribute("type", "xs:string");
-//		
 		
 		XMLElement choice = addTag("xs:choice", complexType);
 		choice.setAttribute("maxOccurs", "unbounded");

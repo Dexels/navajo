@@ -20,6 +20,7 @@ public class XMLExtension  {
 	private final List<String> thirdPartyList = new ArrayList<String>();
 	private final List<String> includes = new ArrayList<String>();
 	private final List<String> requires = new ArrayList<String>();
+	private final List<String> jars = new ArrayList<String>();
 	private String id = null;
 	private String requiresMain = null;
 	private String description = null;
@@ -69,6 +70,21 @@ public class XMLExtension  {
 				this.requires.add(element.getStringAttribute("id"));
 			}
 		}
+		List<XMLElement> deps = xx.getElementsByTagName("other");
+		if(deps!=null && !deps.isEmpty()) {
+			XMLElement dep = deps.get(0);
+			for (XMLElement element : dep.getChildren()) {
+				this.thirdPartyList.add(element.getStringAttribute("href"));
+			}
+		}
+		
+		List<XMLElement> jarList = xx.getElementsByTagName("jars");
+		if(requires!=null && !jarList.isEmpty()) {
+			XMLElement jarr = jarList.get(0);
+			for (XMLElement element : jarr.getChildren()) {
+				this.jars.add(element.getStringAttribute("path"));
+			}
+		}
 	}
 
 
@@ -102,14 +118,9 @@ public class XMLExtension  {
 		return in;
 	}
 
-	@Deprecated
-	public final List<String> getLibraryJars() {
-		return null;
-	}
 
-	@Deprecated
-	public final List<String> getMainJars() {
-		return null;
+	public final List<String> getJars() {
+		return jars;
 	}
 
 	public final String getProjectName() {

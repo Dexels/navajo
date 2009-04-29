@@ -66,9 +66,11 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 	}
 
 
-	protected void processTipiContext(URL repository, String currentExtension, String version, List<String> extensions, Map<String, XMLElement> allComponents, Map<String, XMLElement> allActions,
+	protected void processTipiContext(URL repository, String originalExtension, String version, List<String> extensions, Map<String, XMLElement> allComponents, Map<String, XMLElement> allActions,
 			Map<String, XMLElement> allEvents, Map<String, XMLElement> allValues, Map<String, XMLElement> allTypes,
 			Map<String, XMLElement> allFunctions) {
+		
+		String currentExtension = originalExtension.toLowerCase();
 		
 		try {
 			parseParserMap(new URL(repository,"typemap.xml"));
@@ -85,7 +87,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 		Map<String, List<XMLElement>> extensionFunctionMap = createExtensionMapFromList(allFunctions);
 		
 		
-		System.err.println("Processing extensions: "+extensions+" current: "+currentExtension);
+		System.err.println("Processing extensions: "+extensions+" current: "+originalExtension);
 	//	System.err.println("Actions: "+extensionActionMap.keySet());
 	//	System.err.println("Functions: "+extensionFunctionMap.keySet());
 			try {
@@ -108,7 +110,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 				processFunctionHeaders(currentExtension,version,extensionFunctionMap.get(extension));
 			}
 			
-			mergeIndex(currentExtension, version, repository,allComponents,allActions,allFunctions,allTypes);
+			mergeIndex(originalExtension, version, repository,allComponents,allActions,allFunctions,allTypes);
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -188,7 +190,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 	 */
 
 	public void mergeIndex(String extension, String version, URL repository, Map<String, XMLElement> allComponents, Map<String, XMLElement> allActions, Map<String, XMLElement> allFunctions, Map<String, XMLElement> allTypes) throws IOException {
-		System.err.println("Merging from repository: "+repository);
+		System.err.println("Merging from repository: "+repository+" extension: "+extension);
 		File extensionFile = new File(getDistributionDir(),"extensions.xml");
 		OutputStream os = writeResource("tipi.txt");
 		OutputStreamWriter osw = new OutputStreamWriter(os);
@@ -230,7 +232,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 		// TODO DISABLED FOR NOW
 //		System.err.println("Extensiojn lost"+extension);
 //		for (String ext : extension) {
-			createExtensionDetails(new File(getOutputDir().getParentFile(),"definition.xml"),extension);
+			createExtensionDetails(repository, new File(getOutputDir().getParentFile(),"definition.xml"),extension,version);
 			
 //		}
 //		for (TipiExtension e : extension) {
@@ -249,28 +251,28 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 
 	
 	
-	private void createExtensionDetails(File inputFile, String extension) throws IOException {
+	private void createExtensionDetails(URL repository, File inputFile, String extension,String version) throws IOException {
 
 		OutputStream os = writeResource(extension + "/details.txt");
 		OutputStreamWriter osw = new OutputStreamWriter(os);
-		osw.write("==== Tipi extension: " + extension + " (project: " +"unknown" + " ) ====\n");
+		osw.write("==== Tipi extension: " + extension + " ====\n");
 
 		XMLExtension te = new XMLExtension();
 		te.loadXML(inputFile);
 		// TODO DISABLED FOR NOW		
-		osw.write("=== " + te.getDescription() + " ===\n");
+		osw.write("=== " + te.getDescription().trim() + " ===\n");
 		if (te.getDeploymentDescriptor() != null) {
 			osw.write("Main repository deployment: [[http://www.navajo.nl/Tipi/" + te.getProjectName() + "/"
 					+ te.getDeploymentDescriptor() + "|" + "http://www.navajo.nl/Tipi/" + te.getProjectName() + "/"
 					+ te.getDeploymentDescriptor() + "]]\n\n");
 		} else {
-			osw.write("Main repository deployment: [not applicable]\n");
+			osw.write("Main repository deployment: [not applicable]\n\n");
 		}
 		if (te.requiresMainImplementation() != null) {
 			osw.write("Needs main implementation: [[tipidoc:" + te.requiresMainImplementation() + ":details|"
 					+ te.requiresMainImplementation() + "]]\n");
 		} else {
-			osw.write("Needs main implementation: [any]\n");
+			osw.write("This extension can be used in any frontend configuration\n\n");
 		}
 		if (te.getDependingProjectUrls() != null) {
 			osw.write("=== Open source dependencies: ===\n");
@@ -289,20 +291,27 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 				osw.write("Needs: [[tipidoc:" + ex + ":details|" + ex + "]]\n");
 			}
 		}
-		osw.write("^ Main jars: ^ Id: ^\n");
-		if (te.getMainJars() != null) {
-			for (String ex : te.getMainJars()) {
-				osw.write("| Main jar required: |" + ex + "|\n");
-			}
-		}
-		osw.write("\n----\n");
+//		osw.write("^ Main jars: ^ Id: ^\n");
+//		if (te.getMainJars() != null) {
+//			for (String ex : te.getMainJars()) {
+//				osw.write("| Main jar required: |" + ex + "|\n");
+//			}
+//		}
+//		osw.write("\n----\n");
+		URL jnlp = new URL(getDeployRepository()+extension+"/"+version+"/"+extension+".jnlp");
+		
+		osw.write("Deployment descriptor: [[" + jnlp.toString() + "| "+extension+".jnlp ]]\n\nClick to preload extension into Webstart cache.\n\n");
+		
 
-		osw.write("^ Lib jars: ^ Id: ^\n");
+		osw.write("^ Signed: ^ Unsigned: ^\n");
 
-		if (te.getLibraryJars() != null) {
+		if (te.getJars() != null) {
 
-			for (String ex : te.getLibraryJars()) {
-				osw.write("| Lib jar required: |" + ex + "|\n");
+			for (String ex : te.getJars()) {
+				
+				URL u = new URL(getDeployRepository()+extension+"/"+version+"/lib/"+ex);
+				URL uns = new URL(getDeployRepository()+extension+"/"+version+"/unsigned/"+ex);
+				osw.write("| [[" + u.toString() + "|"+ex+"]] | [[" + uns.toString() + "|"+ex+"]] | \n");
 			}
 		}
 		osw.write("\n\n");
@@ -476,8 +485,22 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 	}
 
 	private void processActions(String extension, String version, List<XMLElement> allActions) throws IOException {
-
+		
+		OutputStream os = writeResource(extension + "/actionlist.txt");
+		OutputStreamWriter osw = new OutputStreamWriter(os);
+		if (allActions.size() > 0) {
+			osw.write("=== Actions ===\n");
 			for (XMLElement e : allActions) {
+
+				writeActionHeader(extension,e, osw);
+//				writeAction(extension,e);
+			}
+		}
+		osw.flush();
+		os.flush();
+		os.close();
+
+		for (XMLElement e : allActions) {
 			writeAction(extension,version,e);
 		}
 	}
@@ -505,7 +528,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 		OutputStreamWriter w = new OutputStreamWriter(os);
 
 
-		w.write("=== " + component.getStringAttribute("name") + " "+ version+ " ===\n");
+		w.write("=== " + component.getStringAttribute("name") + " ===\n");
 		
 		List<XMLElement> ll = component.getElementsByTagName("description");
 		appendDescriptorTags(w, ll);
@@ -533,14 +556,19 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 
 			appendDescriptorTag(w, element.getChildByTagName("description"));
 		}
-		w.write("------\n[[tipiremarks:"+extension+":" + component.getStringAttribute("name") + "|Remarks]]\n");
-
+//		w.write("------\n\n[[tipiremarks:"+extension+":" + component.getStringAttribute("name") + "|Remarks]]\n");
+		writeRemarksLink(w, extension, component.getStringAttribute("name"));
 		w.flush();
 		os.flush();
 		os.close();
 
 	}
 
+	private void writeRemarksLink(Writer w, String extension, String name) throws IOException {
+		w.write("\n------\n\n[[tipiremarks:"+extension+":" + name + "|Remarks & demo code for "+name+"]]\n");
+
+	}
+	
 	private void writeComponentHeader(String extension,XMLElement component, Writer w) throws IOException {
 		if ("true".equals(component.getAttribute("deprecated"))) {
 			w.write("  * <del>Component: [[tipidoc:"+extension+":components:c." + component.getStringAttribute("name") + "|"+ component.getStringAttribute("name") + "]]</del>\n");

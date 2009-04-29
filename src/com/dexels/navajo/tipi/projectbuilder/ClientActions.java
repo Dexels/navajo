@@ -42,13 +42,13 @@ public class ClientActions {
 		resources.mkdirs();
 		tipi.mkdirs();
 		URL baseUrl = new URL(repository);
-		URL defProject = new URL(baseUrl,"DefaultProjects/");
+		URL defProject = new URL(baseUrl,"TemplateProject/");
 		URL resource = new URL(defProject,"resource/");
 		URL settings = new URL(defProject,"settings/");
 		URL tipiUrl = new URL(defProject,"tipi/");
 		
-		downloadFile(new URL(resource,"dexels.png"), "dexels.png", resources, false,true);
-		downloadFile(new URL(resource,"splash.png"), "splash.png", resources, false,true);
+		downloadFile(new URL(resource,"icon.png"), "icon.png", resources, false,true);
+		downloadFile(new URL(resource,"splash.jpg"), "splash.png", resources, false,true);
 		downloadFile(new URL(tipiUrl,"init.xml"), "init.xml", tipi, false,true);
 		downloadFile(new URL(settings,"arguments.properties"), "arguments.properties", settingsDir, false,true);
 		downloadFile(new URL(settings,"deploy.properties"), "deploy.properties", settingsDir, false,true);
@@ -60,7 +60,6 @@ public class ClientActions {
 		copyResource(baos, is);
 		String str = new String(baos.toByteArray());
 		String aa = str.replaceAll("#repository#", repository);
-		System.err.println("AA: "+aa);
 		ByteArrayInputStream bais = new ByteArrayInputStream(aa.getBytes());
 		FileOutputStream fos = new FileOutputStream(new File(settingsDir,"tipi.properties"));
 		copyResource(fos, bais);

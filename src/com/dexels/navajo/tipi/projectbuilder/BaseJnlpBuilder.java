@@ -66,10 +66,11 @@ public abstract class BaseJnlpBuilder {
 		System.err.println("Parsing: "+jarName);
 		
 		if(params.get("splash")!= null) {
-			XMLElement splash = information.addTagKeyValue("icon","");
+			XMLElement splash = new CaseSensitiveXMLElement();
+			splash.setName("icon");
+			information.addChild(splash);
 			splash.setAttribute("href", codebase+params.get("splash"));
 			splash.setAttribute("kind", "splash");
-			
 		}
 //		List<String> missing = ClientActions.checkExtensions(repository,extensions);
 //		if(!missing.isEmpty()) {
@@ -108,6 +109,7 @@ public abstract class BaseJnlpBuilder {
 //			new HashMap<String,String>();
 		
 		appendArguments(app,java, arguments);
+		appendArguments(app,java, params);
 
 		try {
 			FileWriter fw1 = new FileWriter(jnlpFile);

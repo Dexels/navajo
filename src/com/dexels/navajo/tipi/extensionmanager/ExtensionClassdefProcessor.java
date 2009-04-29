@@ -15,8 +15,16 @@ public abstract class ExtensionClassdefProcessor {
 
 	private File outputDir;
 	private File distributionDir;
+	private String deployRepository;
 	
-	
+	public String getDeployRepository() {
+		return deployRepository;
+	}
+
+	public void setDeployRepository(String deployRepository) {
+		this.deployRepository = deployRepository;
+	}
+
 	public File getDistributionDir() {
 		return distributionDir;
 	}
@@ -37,7 +45,9 @@ public abstract class ExtensionClassdefProcessor {
 			Map<String, XMLElement> allEvents, Map<String, XMLElement> allValues, Map<String, XMLElement> allTypes,
 			Map<String, XMLElement> allFunctions) ;
 
-	public void execute(URL repository, String extension, String version, Map<String,List<XMLElement>> classDefElements) {
+	public void execute(URL repository, String originalExtension, String version, Map<String,List<XMLElement>> classDefElements) {
+//		String extension = 
+		//String extension = originalExtension.toLowerCase();
 		Map<String, XMLElement> allComponents = new HashMap<String, XMLElement>();
 		Map<String, XMLElement> allActions = new HashMap<String, XMLElement>();
 		Map<String, XMLElement> allEvents = new HashMap<String, XMLElement>();
@@ -55,10 +65,7 @@ public abstract class ExtensionClassdefProcessor {
 
 		parseStream(classDefElements, allComponents, allActions, allEvents, allValues, allTypes, allFunctions);
 		
-		
-		System.err.println("For extension: "+extension+" components: "+allComponents.size()+" actions: "+allActions.size()+" events: "+allEvents.size()+" allTypes: "+allTypes.size()+" allF: "+allFunctions.size());
-	//	System.err.println("TYPES: "+allTypes);
-		processTipiContext(repository, extension, version, extensions, allComponents, allActions, allEvents, allValues, allTypes, allFunctions);
+		processTipiContext(repository, originalExtension, version, extensions, allComponents, allActions, allEvents, allValues, allTypes, allFunctions);
 		
 	}
  

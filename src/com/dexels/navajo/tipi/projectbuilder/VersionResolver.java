@@ -30,6 +30,9 @@ public class VersionResolver {
 		} else {
 			ext = token;
 			List<String> versions = repDefinition.get(token);
+			if(versions==null) {
+				throw new IllegalArgumentException("Error building extension: No version found. Repository definition: "+repDefinition);
+			}
 			version=versions.get(versions.size()-1);
 		}
 		Map<String, String> m = new HashMap<String, String>();
