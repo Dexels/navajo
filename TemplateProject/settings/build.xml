@@ -16,7 +16,7 @@
 	<property name="archive" value="${projectName}.jar" />
 	<target name="deployment">
 		<delete dir="deploy/current" />
-		<buildDeployJnlp codebase="${codebase}" baseDir="${baseDir}" deployPath="${deployPath}" />
+		<buildDeployJnlp codebase="${deployRoot}" baseDir="${baseDir}" deployPath="${deployPath}" />
 
 		<mkdir dir="deploy" />
 		<mkdir dir="deploy/current" />
@@ -31,25 +31,31 @@
 				<include name="lib/**" />
 			</fileset>
 		</copy>
-		<copy file="settings/template.html" tofile="deploy/current/index.html" />
+		<copy file=".tipiproject/template.html" tofile="deploy/current/index.html" />
 		<replace file="deploy/current/index.html" token="@@APPNAME@@" value="${projectName}" />
-		<replace file="deploy/current/index.html" token="@@APPLINK@@" value="${codebase}/Application.jnlp"/>
+		<replace file="deploy/current/index.html" token="@@TITLE@@" value="${title}" />
+		<replace file="deploy/current/index.html" token="@@VENDOR@@" value="${vendor}" />
+		<replace file="deploy/current/index.html" token="@@HOMEPAGE@@" value="${homepage}" />
+		<replace file="deploy/current/index.html" token="@@ICON@@" value="${icon}" />
+		<replace file="deploy/current/index.html" token="@@SPLASH@@" value="${splash}" />
+		<replace file="deploy/current/index.html" token="@@APPLINK@@" value="${deployRoot}/Application.jnlp"/>
 		<replace file="deploy/current/index.html" token="@@TIMESTAMP@@" value="${build.timestamp}"  />
 		
 		<zip destfile="${baseDir}/deploy/archived/${projectName}_${build.timestamp}.zip" basedir="${baseDir}/deploy/current"/>
 		<eclipse.refreshLocal resource="${ant.project.name}" />
-		<scp trust="true" sftp="true" verbose="true" todir="${deployRootSsh}" password="${deployPassword}">
-			<fileset dir="deploy/current">
-				<include name="**" />
-			</fileset>
-		</scp>
-		
+		<condition property="deployRootSsh">
+			<scp trust="true" sftp="true" verbose="true" todir="${deployRootSsh}" password="${deployRootSshPassword}">
+				<fileset dir="deploy/current">
+					<include name="**" />
+				</fileset>
+			</scp>
+		</condition>
 	</target>
 
 	<target name="clean">
 		<delete dir="lib"/>
+		<delete dir=".tipiproject"/>
 		<delete file="tipi/tipi.xsd"/>
-		<delete file="settings/tipi.metadata"/>
 		<delete file="Local.jnlp"/>
 		<delete file="Remote.jnlp"/>		
 		<eclipse.refreshLocal resource="${projectName}" />
