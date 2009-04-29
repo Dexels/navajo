@@ -31,7 +31,7 @@
 				<include name="lib/**" />
 			</fileset>
 		</copy>
-		<copy file=".tipiproject/template.html" tofile="deploy/current/index.html" />
+		<copy file="settings/template.html" tofile="deploy/current/index.html" />
 		<replace file="deploy/current/index.html" token="@@APPNAME@@" value="${projectName}" />
 		<replace file="deploy/current/index.html" token="@@TITLE@@" value="${title}" />
 		<replace file="deploy/current/index.html" token="@@VENDOR@@" value="${vendor}" />
@@ -43,13 +43,11 @@
 		
 		<zip destfile="${baseDir}/deploy/archived/${projectName}_${build.timestamp}.zip" basedir="${baseDir}/deploy/current"/>
 		<eclipse.refreshLocal resource="${ant.project.name}" />
-		<condition property="deployRootSsh">
 			<scp trust="true" sftp="true" verbose="true" todir="${deployRootSsh}" password="${deployRootSshPassword}">
 				<fileset dir="deploy/current">
 					<include name="**" />
 				</fileset>
 			</scp>
-		</condition>
 	</target>
 
 	<target name="clean">

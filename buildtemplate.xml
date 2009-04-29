@@ -11,8 +11,7 @@
 	<property name="repositorySsh" value="navajo@spiritus.dexels.nl://var/www/html/Tipi" />
 
 	<target name="upload">
-		<scp trust="true" sftp="true" verbose="true"
-			todir="${repositorySsh}/">
+		<scp trust="true" sftp="true" verbose="true" todir="${repositorySsh}/">
 			<fileset dir=".">
 				<include name="TemplateProject/**" />
 			</fileset>
