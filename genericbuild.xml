@@ -11,6 +11,7 @@
 	<property name="repositorySsh" value="navajo@spiritus.dexels.nl://var/www/html/Tipi" />
 	<property name="documentationSsh" value="navajo@spiritus.dexels.nl:/var/www/html/Tipi/wiki/data/pages/tipidoc" />
 	
+	
 	<target name="prepare">
 		<taskdef name="retrieveVersion" classname="com.dexels.navajo.tipi.ant.extensionbuilder.RetrieveVersion"
 		classpath="bin" />
@@ -42,7 +43,7 @@
 		<mkdir dir="${dist}"/>
 		<buildExtension repository="${repository}" destination="${dist}" version="${tipiComponentVersion}"/>
 		<echo message="Building to: ${dist}"/>
-		<buildDocumentation version="${tipiComponentVersion}" distribution="${dist}" destination="${dist}/wikidoc"/>
+		<buildDocumentation version="${tipiComponentVersion}" distribution="${dist}" destination="${dist}/wikidoc" repository="${repository}"/>
 		
 	<!-- 			<eclipse.refreshLocal resource="${ant.project.name}" depth="infinite" />
 -->

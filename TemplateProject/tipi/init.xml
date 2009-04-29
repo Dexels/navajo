@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<tid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="tipi.xsd">
+   <d.frame name="init" background="{color:/#000000}">
+      <l.border>
+                <c.desktopbutton foreground="{color:/#ff0000}" text="'Welcome to Tipi'" tooltiptext="'Version 3.0'">
+                  <onActionPerformed>
+                  		<showInfo text="'Hi Bob!'"/>
+                  </onActionPerformed>
+               </c.desktopbutton>
+      
+      </l.border>
+   </d.frame>
+</tid>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- $Id$ -->
+
+
+<!-- When changing this file for another project:
+		1. Change the project name here:
+		2. That's it!
+	-->
+<project name="UploadTemplate" default="upload" basedir=".">
+	<property name="repository" value="http://spiritus.dexels.nl:41766/Tipi/" />
+	<property name="repositorySsh" value="navajo@spiritus.dexels.nl://var/www/html/Tipi" />
+
+	<target name="upload">
+		<scp trust="true" sftp="true" verbose="true"
+			todir="${repositorySsh}/">
+			<fileset dir=".">
+				<include name="TemplateProject/**" />
+			</fileset>
+		</scp>
+
+	</target>
+</project>
