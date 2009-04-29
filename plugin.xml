@@ -60,6 +60,44 @@
       </objectContribution>
    </extension>
    
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            objectClass="org.eclipse.core.resources.IProject"
+            nameFilter="*"
+            id="TipiPlugin.rebuild">
+         <action
+               label="Rebuild current Tipi"
+               class="com.dexels.tipi.plugin.RebuildAction"
+               menubarPath="additions"
+               enablesFor="+"
+               id="TipiPlugin.rebuildTipi">
+         </action>
+      </objectContribution>
+   </extension>
+   
+   
+      <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            objectClass="org.eclipse.core.resources.IProject"
+            nameFilter="*"
+            id="TipiPlugin.clean">
+         <action
+               label="Clean current Tipi"
+               class="com.dexels.tipi.plugin.CleanAction"
+               menubarPath="additions"
+               enablesFor="+"
+               id="TipiPlugin.cleanTipi">
+         </action>
+      </objectContribution>
+   </extension>
+   
+   
+   
+   
    
    
    <extension

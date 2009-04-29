@@ -263,11 +263,12 @@ private void buildClassPath(IProject project, String repository, String extensio
 //				}
 //				
 				XMLElement extensionXml = ClientActions.getExtensionXml(ext, version, repository);
+		//		VersionResolver vr = new VersionResolver(repository);
 				if (onlyProxy) {
 					//ClientActions.downloadProxyJars(project, projectURL, result, baseDir)
 					ClientActions.downloadProxyJars(ext,new URL(repository+ext+"/"),extensionXml,projectPath,clean);
 				} else {
-					ClientActions.downloadExtensionJars(ext,new URL(repository+ext+"/"),extensionXml,projectPath,clean);
+					ClientActions.downloadExtensionJars(ext,new URL(repository+vr.resultVersionPath(token)+"/"),extensionXml,projectPath,clean);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();

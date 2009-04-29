@@ -2,6 +2,7 @@ package com.dexels.tipi.plugin;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.ResourceBundle;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -94,7 +95,7 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 				}
 			}
 
-	       InputDialog dlg = new InputDialog(Display.getCurrent().getActiveShell(),"Tipi Repository", "Choose your repository", "http://spiritus.dexels.nl:34567/Tipi/",null);			
+	       InputDialog dlg = new InputDialog(Display.getCurrent().getActiveShell(),"Tipi Repository", "Choose your repository", getDefaultRepository(),null);			
 	        if (dlg.open() == Window.OK) {
 	           // User clicked OK; update the label with the input
 	           //label.setText(dlg.getValue());
@@ -115,6 +116,11 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 	       Status status = new Status(IStatus.ERROR, "TipiPlugin", 0,e.getMessage(), null);
 	       ErrorDialog.openError(Display.getCurrent().getActiveShell(),"Tipi Repository problem","Error downloading from repository!", status);
 		}
+	}
+
+	private String getDefaultRepository() {
+		ResourceBundle b = ResourceBundle.getBundle("tipiplugin");
+		return b.getString("defaultRepository");
 	}
 
 	private void createDemoFiles(String repository, IProject project, IProgressMonitor monitor) throws CoreException, IOException {

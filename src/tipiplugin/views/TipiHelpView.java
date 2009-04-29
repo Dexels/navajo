@@ -231,7 +231,7 @@ protected void checkupdate() {
 			if(ip==null) {
 				return;
 			}
-			IFile metadata = ip.getFile("settings/tipi.metadata");
+			IFile metadata = ip.getFile(".tipiproject/tipi.metadata");
 			long localTimeStamp = metadata.getLocalTimeStamp();
 			if(invisibleRoot != null && (lastUpdate > localTimeStamp)) {
 				System.err.println("Still up to date!");
