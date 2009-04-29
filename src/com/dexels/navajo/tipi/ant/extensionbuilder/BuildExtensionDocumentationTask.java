@@ -13,7 +13,7 @@ import com.dexels.navajo.tipi.util.XMLElement;
 
 public class BuildExtensionDocumentationTask extends org.apache.tools.ant.Task {
 
-//	private String repository;
+	private String repository;
 	private String destination;
 	private String distribution;
 	private String version;
@@ -48,19 +48,19 @@ public class BuildExtensionDocumentationTask extends org.apache.tools.ant.Task {
 	}
 
 //
-//	public String getRepository() {
-//		return repository;
-//	}
-//
-//
-//	public void setRepository(String repository) {
-//		this.repository = repository;
-//	}
+	public String getRepository() {
+		return repository;
+	}
+
+
+	public void setRepository(String repository) {
+		this.repository = repository;
+	}
 
 
 	public static void main(String[] args) throws IOException {
 
-		ExtensionActions.buildDocumentation(new File("."),"dist","dist","Tipi","1.2.3",new File("tipidoc"));
+//		ExtensionActions.buildDocumentation(new File("."),"dist","dist","Tipi","1.2.3",new File("tipidoc"));
 		//		System.err.println(">> "+ss);
 
 	}
@@ -75,7 +75,7 @@ public class BuildExtensionDocumentationTask extends org.apache.tools.ant.Task {
 		}
 		try {
 			String projectName = getProject().getProperty("ant.project.name");
-			ExtensionActions.buildDocumentation(getProject().getBaseDir(),distribution,distribution.toLowerCase(),projectName.toLowerCase(),version,destDir);
+			ExtensionActions.buildDocumentation(getProject().getBaseDir(),distribution,distribution.toLowerCase(),projectName,version,destDir,repository);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 			throw new BuildException("Error building documentation ",e1);
