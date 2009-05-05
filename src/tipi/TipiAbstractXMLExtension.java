@@ -19,6 +19,7 @@ public class TipiAbstractXMLExtension extends AbstractTipiExtension implements T
 	private final List<String> thirdPartyList = new ArrayList<String>();
 	private final List<String> includes = new ArrayList<String>();
 	private final List<String> requires = new ArrayList<String>();
+//	private final List<String> jars = new ArrayList<String>();
 	private String id = null;
 	private String requiresMain = null;
 	private String description = null;
@@ -112,9 +113,9 @@ public class TipiAbstractXMLExtension extends AbstractTipiExtension implements T
 //	}
 //
 //	@Deprecated
-//	public final List<String> getMainJars() {
-//		return null;
-//	}
+	public final List<String> getJars() {
+		return null;
+	}
 
 	public final String getProjectName() {
 		return project;

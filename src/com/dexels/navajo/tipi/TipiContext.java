@@ -150,9 +150,15 @@ public abstract class TipiContext {
 	// I didn't really understand the warning
 	@SuppressWarnings("unchecked")
 	public TipiContext() {
-		Iterator<TipiExtension> tt = ServiceRegistry.lookupProviders(TipiExtension.class);
-		initializeExtensions(tt);
-
+		initializeExtensions(ServiceRegistry.lookupProviders(TipiExtension.class));
+		
+		try {
+			initializeExtensions(ServiceRegistry.lookupProviders(TipiExtension.class,ClassLoader.getSystemClassLoader()));
+		} catch (SecurityException e1) {
+			System.err.println("Can't reach the system class loader. Bugger. Security issues.");
+		}
+		
+		
 		clientInterface = NavajoClientFactory.createDefaultClient();
 		
 		if (myThreadPool == null) {
@@ -161,9 +167,12 @@ public abstract class TipiContext {
 
 		if (coreExtensionList.isEmpty()) {
 			System.err.println("Beware: no extensions. Running without jars? Entering fake mode...");
-			fakeJars = true;
-			fakeExtensions();
+//			fakeJars = true;
+	//		fakeExtensions();
 		}
+		System.err.println("Warning: Fake mode forced!");
+			fakeExtensions();
+		
 		NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
 		tipiResourceLoader = new ClassPathResourceLoader();
 		setStorageManager(new TipiNullStorageManager());
@@ -190,13 +199,12 @@ public abstract class TipiContext {
 //		fakeExtension(coreExtensionList, "tipi.TipiExtension");
 			coreExtensionList.add(new TipiCoreExtension());
 		fakeExtension(mainExtensionList, "tipi.TipiSwingExtension");
-		fakeExtension(optionalExtensionList, "tipi.TipiDevelopTools");
 		fakeExtension(optionalExtensionList, "tipi.TipiJabberExtension");
 		fakeExtension(optionalExtensionList, "tipi.TipiRssExtension");
 		fakeExtension(optionalExtensionList, "tipi.TipiMailExtension");
 		fakeExtension(optionalExtensionList, "tipi.TipiNativeSwingExtension");
 		fakeExtension(optionalExtensionList, "tipi.TipiSubstanceExtension");
-		fakeExtension(optionalExtensionList, "tipi.TipiDevelopTools");
+		fakeExtension(optionalExtensionList, "tipi.TipiToolsExtension");
 		fakeExtension(optionalExtensionList, "tipi.TipiGoogleExtension");
 		fakeExtension(optionalExtensionList, "tipi.TipiYoutubeExtension");
 		fakeExtension(optionalExtensionList, "tipi.TipiFlickrExtension");
@@ -285,14 +293,15 @@ public abstract class TipiContext {
 
 	private void appendIncludes(List<TipiExtension> extensionList, List<String> includes) {
 		for (TipiExtension tipiExtension : extensionList) {
-			if (tipiExtension.getIncludes() == null) {
-				System.err.println("Warning: extension: " + tipiExtension.getId() + " - " + tipiExtension.getDescription()
+			String[] ss = tipiExtension.getIncludes();
+			if (ss == null || ss.length==0) {
+				System.err.println("Warning: e dxtension: " + tipiExtension.getId() + " - " + tipiExtension.getDescription()
 						+ " has no includes!");
 				return;
 			}
-			String[] ss = tipiExtension.getIncludes();
 			for (int i = 0; i < ss.length; i++) {
 				includes.add(ss[i]);
+				System.err.println("Adding include: "+ss[i]);
 			}
 		}
 
@@ -825,6 +834,7 @@ public abstract class TipiContext {
 			try {
 				URL resourceURL = genericResourceLoader.getResourceURL(location);
 				if (resourceURL != null) {
+					System.err.println("Found: "+resourceURL);
 					return resourceURL;
 				}
 			} catch (IOException e) {

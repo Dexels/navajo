@@ -1036,7 +1036,7 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 			addedToParent();
 			} else {
 		}
-		c.addedToParentContainer(getActualComponent(), c.getContainer(), td);
+		c.addedToParentContainer(this, getActualComponent(), c.getContainer(), td);
 	if (c.isPropertyComponent() && c instanceof PropertyComponent) {
 			properties.add((PropertyComponent) c);
 //			System.err.println("prop: "+c.getClass());
@@ -1068,7 +1068,7 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 		}
 	}
 	
-	public void addedToParentContainer(Object parentContainer, Object container, Object constriants) {
+	public void addedToParentContainer(TipiComponent parentTipiComponent, Object parentContainer, Object container, Object constriants) {
 		
 	}
 
