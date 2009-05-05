@@ -74,7 +74,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 			Map<String, XMLElement> allFunctions) {
 		
 		String currentExtension = originalExtension.toLowerCase();
-		System.err.println("All: "+allComponents.keySet());
+//		System.err.println("All: "+allComponents.keySet());
 		try {
 			parseParserMap(new URL(repository,"typemap.xml"));
 		} catch (MalformedURLException e1) {
@@ -91,9 +91,9 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 		Map<String, List<XMLElement>> extensionTypeMap = createExtensionMapFromList(allTypes);
 		Map<String, List<XMLElement>> extensionFunctionMap = createExtensionMapFromList(allFunctions);
 		
-		System.err.println("# of Components  unfiltered: "+allComponentsOfAllExtensions.size()+" filtered: "+allComponents.size());
-
-		System.err.println("Processing extensions: "+extensions+" current: "+originalExtension);
+//		System.err.println("# of Components  unfiltered: "+allComponentsOfAllExtensions.size()+" filtered: "+allComponents.size());
+//
+//		System.err.println("Processing extensions: "+extensions+" current: "+originalExtension);
 	//	System.err.println("Actions: "+extensionActionMap.keySet());
 	//	System.err.println("Functions: "+extensionFunctionMap.keySet());
 			try {
@@ -196,7 +196,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 	 */
 
 	public void mergeIndex(String extension, String version, URL repository, Map<String, XMLElement> allComponents, Map<String, XMLElement> allActions, Map<String, XMLElement> allFunctions, Map<String, XMLElement> allTypes) throws IOException {
-		System.err.println("Merging from repository: "+repository+" extension: "+extension);
+//		System.err.println("Merging from repository: "+repository+" extension: "+extension);
 		File extensionFile = new File(getDistributionDir(),"extensions.xml");
 		OutputStream os = writeResource("tipi.txt");
 		OutputStreamWriter osw = new OutputStreamWriter(os);
@@ -406,7 +406,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 			}
 		});
 		
-		System.err.println("# of Components from this extension: "+componentsOfThisExtension.size()+" total: "+allComponents.size());
+//		System.err.println("# of Components from this extension: "+componentsOfThisExtension.size()+" total: "+allComponents.size());
 //		Map<String,XMLElement> allComponentMap = new HashMap<String, XMLElement>();
 //		for (XMLElement element : componentsOfThisExtension) {
 //			allComponentMap.put(element.getStringAttribute("name"), element);
@@ -497,7 +497,6 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 		os2.close();
 		
 		String classdefName = extensionId + "/components/classdef" + element.getStringAttribute("name") + ".txt";
-		System.err.println("Writing: "+classdefName);
 		os2 = writeResource(classdefName);
 		osw2 = new OutputStreamWriter(os2);
 		osw2.write("<code xml>\n");

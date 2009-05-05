@@ -36,6 +36,10 @@ public class ClassModel {
 	}
 	
 	public void addDefinition(XMLElement input) {
+		if(name.equals("window")) {
+			System.err.println("Adding def to window:\n"+input+"\n end of def");
+			Thread.dumpStack();
+		}
 		XMLElement element = input.copy();
 		definitionStack.push(element);
 		
