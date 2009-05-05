@@ -41,9 +41,9 @@ public interface ExtensionDefinition {
 	 */
 	public String requiresMainImplementation();
 
-	public List<String> getMainJars();
-
-	public List<String> getLibraryJars();
+//	public List<String> getMainJars();
+//
+//	public List<String> getLibraryJars();
 
 	public List<String> getRequiredExtensions();
 
