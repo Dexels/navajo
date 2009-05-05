@@ -78,13 +78,18 @@ public class ExtensionManager {
 	private static XMLElement downloadExtensions(String repository) throws IOException {
 		URL rep = new URL(repository);
 		URL u = new URL(rep, "extensions.xml");
-		InputStream is = u.openStream();
-		Reader r = new InputStreamReader(is);
-		XMLElement xe = new CaseSensitiveXMLElement();
-		xe.parseFromReader(r);
-		is.close();
+		XMLElement xe = getXMLElement(u);
 		return xe;
 	}
+
+//	private static XMLElement downloadUrl(URL u) throws IOException {
+//		InputStream is = u.openStream();
+//		Reader r = new InputStreamReader(is);
+//		XMLElement xe = new CaseSensitiveXMLElement();
+//		xe.parseFromReader(r);
+//		is.close();
+//		return xe;
+//	}
 
 	public static Map<String, List<String>> getExtensions(String repository) throws IOException {
 		XMLElement xe = downloadExtensions(repository);
@@ -178,12 +183,13 @@ public class ExtensionManager {
 
 	public static XMLElement getXMLElement(URL extensionURL) {
 		try {
+			System.err.println("Downloading: "+extensionURL);
 			XMLElement result = new CaseSensitiveXMLElement();
 			InputStream is = extensionURL.openStream();
 			Reader r = new InputStreamReader(is);
 			result.parseFromReader(r);
-			r.close();
 			is.close();
+			r.close();
 			return result;
 		} catch (XMLParseException e) {
 			e.printStackTrace();

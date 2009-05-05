@@ -131,9 +131,6 @@ public class ClassModel {
 //		System.err.println("ADDING EVENT: "+event);
 		String name = event.getStringAttribute("name");
 		XMLElement old = events.get(name);
-		if(old!=null) {
-			System.err.println("Need to join event: "+old+" with new: "+event);
-		}
 		
 		XMLElement desc =  event.getChildByTagName("description");
 		

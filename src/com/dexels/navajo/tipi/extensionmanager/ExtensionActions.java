@@ -99,12 +99,23 @@ public class ExtensionActions {
 		fw.close();
 	}
 
-	public static Map<String,List<XMLElement>> getAllClassDefs(URL repository, List<String> projects) throws IOException {
+/**
+ * Current project is needed, because only the current project is resolved locally
+ * the rest is resolved from the remote repository	
+ * @param currentProject
+ * @param remoteRepository
+ * @param repository
+ * @param projects
+ * @return
+ * @throws IOException
+ */
+
+	public static Map<String,List<XMLElement>> getAllClassDefs(String currentProject, String remoteRepository, URL repository, List<String> projects) throws IOException {
 		List<String> toBeresolved = new LinkedList<String>();
 		List<String> resolved = new LinkedList<String>();
 		toBeresolved.addAll(projects);
 		Map<String,List<XMLElement>> result = new HashMap<String,List<XMLElement>>();
-		extractRemoteClassDefs(repository,resolved, toBeresolved,result);
+		extractRemoteClassDefs(currentProject, remoteRepository,repository,resolved, toBeresolved,result);
 		return result;
 	}
 
@@ -131,22 +142,31 @@ public class ExtensionActions {
 	public static void buildSingleDocumentation(URL repository,File distributionPath, String project, String version, File destDir,String repositoryDeploy) throws IOException {
 		List<String> projects = new ArrayList<String>();
 		projects.add(project);
-		Map<String,List<XMLElement>> ss = getAllClassDefs(repository, projects);
+		Map<String,List<XMLElement>> ss = getAllClassDefs(project, repositoryDeploy, repository, projects);
+		
+		for (Entry<String, List<XMLElement>> item : ss.entrySet()) {
+			System.err.println("KEY: "+item.getKey()+" count: "+item.getValue().size());
+		}
+		
 		TipiCreateWikiDocumentation ecdp = new TipiCreateWikiDocumentation();
 		ecdp.setOutputDir(destDir);
 		ecdp.setDistributionDir(distributionPath);
 		ecdp.setDeployRepository(repositoryDeploy);
-		ecdp.execute(repository,project,version,ss);
+		ecdp.execute(repository,project,version,ss,repositoryDeploy);
 	}
 	
-	private static void extractRemoteClassDefs(URL repository, List<String> resolved, List<String> toBeResolved, Map<String,List<XMLElement>> result) throws IOException {
+	private static void extractRemoteClassDefs(String currentProject, String remoteRepository,URL repository, List<String> resolved, List<String> toBeResolved, Map<String,List<XMLElement>> result) throws IOException {
+		System.err.println("Resolved: "+resolved);
+		System.err.println("to be resolved: "+toBeResolved);
 		if(toBeResolved.isEmpty()) {
 			return;
 		}
 		String project = toBeResolved.get(0);
 		resolved.add(project);
 		toBeResolved.remove(0);
-		XMLElement projectDefinition = downloadDefinition(repository, project);
+		
+		XMLElement projectDefinition = downloadDefinition(currentProject,remoteRepository,  repository, project);
+		System.err.println("Downloading: "+project);
 		XMLElement requires = projectDefinition.getElementByTagName("requires");
 		if(requires!=null) {
 			List<XMLElement> children = requires.getChildren();
@@ -164,7 +184,8 @@ public class ExtensionActions {
 			List<XMLElement> children = includes.getChildren();
 			for (XMLElement element : children) {
 				String path = element.getStringAttribute("path");
-				XMLElement xe = downloadInclude(repository, project, path);
+				XMLElement xe = downloadInclude(currentProject,remoteRepository, repository, project, path);
+				System.err.println("Downloadinginclude: "+path);
 				List<XMLElement> res = result.get(project);
 				if(res==null) {
 					res = new ArrayList<XMLElement>();
@@ -173,19 +194,51 @@ public class ExtensionActions {
 				res.add(xe);
 			}
 		}
-		extractRemoteClassDefs(repository, resolved, toBeResolved, result);
+		extractRemoteClassDefs(currentProject, remoteRepository, repository, resolved, toBeResolved, result);
 	}
 
-	private static XMLElement downloadInclude(URL repository, String project, String path) throws IOException {
-		URL def = new URL(repository,"includes/"+path);
-		return parseXmlFile(def);
+	private static XMLElement downloadInclude(String currentProject, String remoteRepository, URL repository, String project, String path) throws IOException {
+			if (currentProject.equals(project)) {
+				URL def = new URL(repository,"includes/"+path);
+				return parseXmlFile(def);
+				
+
+		} else {
+				URL base = new URL(remoteRepository);
+			VersionResolver vr = new VersionResolver(remoteRepository);
+			String pathtt =  vr.resultVersionPath(project);
+			System.err.println("PathResult: "+pathtt);
+		   URL pathUrl = new URL(base,pathtt+"/includes"+"/"+path);
+		   System.err.println("Pathurl: "+pathUrl);
+//			URL def = new URL(pathUrl,path);
+		  // System.err.println("def: "+def);
+		   
+			return parseXmlFile(pathUrl);
+
+		}
 	}
 	
-	private static XMLElement downloadDefinition(URL repository, String project) throws IOException {
-	//	URL base = new URL(repository);
-//		URL def = new URL(repository,project+"/definition.xml");
-		URL def = new URL(repository,"definition.xml");
-		return parseXmlFile(def);
+	private static XMLElement downloadDefinition(String currentProject, String remoteRepository, URL localRepository, String project) throws IOException {
+		
+		if (currentProject.equals(project)) {
+			System.err.println("Local rep: "+localRepository);
+			URL def = new URL(localRepository,"definition.xml");
+			System.err.println("Resuult: "+def);
+			return parseXmlFile(def);
+
+		} else {
+				URL base = new URL(remoteRepository);
+			VersionResolver vr = new VersionResolver(remoteRepository);
+			String path =  vr.resultVersionPath(project);
+			System.err.println("PathResult: "+path);
+		   URL pathUrl = new URL(base,path+"/");
+		   System.err.println("Pathurl: "+pathUrl);
+			URL def = new URL(pathUrl,"definition.xml");
+		   System.err.println("def: "+def);
+		   
+			return parseXmlFile(def);
+
+		}
 	}
 
 	private static XMLElement parseXmlFile(File inputPath) throws FileNotFoundException, IOException {
@@ -197,10 +250,11 @@ public class ExtensionActions {
 	}
 
 	private static XMLElement parseXmlFile(URL inputURL) throws FileNotFoundException, IOException {
-		Reader fr = new InputStreamReader(inputURL.openStream());
+		InputStream openStream = inputURL.openStream();
+		Reader fr = new InputStreamReader(openStream);
 		XMLElement xe = new CaseSensitiveXMLElement();
 		xe.parseFromReader(fr);
-		fr.close();
+		openStream.close();
 		return xe;
 	}
 

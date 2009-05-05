@@ -45,7 +45,7 @@ public abstract class ExtensionClassdefProcessor {
 			Map<String, XMLElement> allEvents, Map<String, XMLElement> allValues, Map<String, XMLElement> allTypes,
 			Map<String, XMLElement> allFunctions) ;
 
-	public void execute(URL repository, String originalExtension, String version, Map<String,List<XMLElement>> classDefElements) {
+	public void execute(URL repository, String originalExtension, String version, Map<String,List<XMLElement>> classDefElements, String repositoryDeploy) {
 //		String extension = 
 		//String extension = originalExtension.toLowerCase();
 		Map<String, XMLElement> allComponents = new HashMap<String, XMLElement>();
@@ -64,7 +64,7 @@ public abstract class ExtensionClassdefProcessor {
 //		Map<String, XMLElement> allComponentsResult = new HashMap<String, XMLElement>();
 
 		parseStream(classDefElements, allComponents, allActions, allEvents, allValues, allTypes, allFunctions);
-		
+	//	System.err.println("Allcomponentsssss: "+allComponents);
 		processTipiContext(repository, originalExtension, version, extensions, allComponents, allActions, allEvents, allValues, allTypes, allFunctions);
 		
 	}

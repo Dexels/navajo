@@ -130,7 +130,7 @@ public class ClientActions {
 		System.err.println("PRoject dir: " + projectURL);
 		URL unsigned = new URL(projectURL, "lib/");
 
-		List<XMLElement> jars = result.getElementsByTagName("jar");
+		List<XMLElement> jars = result.getAllElementsByTagName("jar");
 		File f = new File(baseDir, "lib");
 		if (f.exists()) {
 			f.delete();

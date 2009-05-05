@@ -56,6 +56,7 @@
             <xs:attribute name="name" type="xs:string" use="required"/>
             <xs:attribute name="type" use="required">
                 <xs:simpleType>
+                	<!-- To do: Build from types! -->
                     <xs:restriction base="xs:NMTOKEN">
                         <xs:enumeration value="boolean"/>
                         <xs:enumeration value="integer"/>
@@ -69,6 +70,7 @@
                         <xs:enumeration value="stopwatchtime"/>
                         <xs:enumeration value="percentage"/>
                         <xs:enumeration value="expression"/>
+                        <xs:enumeration value="memo"/>
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>

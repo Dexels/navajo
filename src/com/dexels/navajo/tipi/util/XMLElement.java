@@ -2796,7 +2796,7 @@ public class XMLElement implements java.io.Serializable {
 			if (tag.equals(element.getName())) {
 				al.add(element);
 			}
-			al.addAll(element.getElementsByTagName(tag));
+			//al.addAll(element.getElementsByTagName(tag));
 		}
 		return al;
 	}
@@ -2910,6 +2910,18 @@ public class XMLElement implements java.io.Serializable {
 	        }
 	        return al.get(0);
 	    }
+	  
+		public Vector<XMLElement> getAllElementsByTagName(String tag) {
+			Vector<XMLElement> al = new Vector<XMLElement>();
+			for (Iterator<XMLElement> iter = children.iterator(); iter.hasNext();) {
+				XMLElement element = iter.next();
+				if (tag.equals(element.getName())) {
+					al.add(element);
+				}
+				al.addAll(element.getAllElementsByTagName(tag));
+			}
+			return al;
+		}
 
 		public XMLElement addTagKeyValue(String key, String value) {
 			XMLElement keyValue = getElementByTagName(key);

@@ -242,22 +242,28 @@ public class XsdBuilder {
 	private void processMap() throws FileNotFoundException, IOException {
 
 		List<XMLElement> compo = tipiParts.get("tipiclass");
-		for (XMLElement element : compo) {
-			allComponents.put(element.getStringAttribute("name"), element);
-	//		element.setAttribute("extension", extension);
-			myClassManager.addTipiClassDefinition(element);
-			processClass(element, allEvents, allValues);
+		if(compo!=null) {
+			for (XMLElement element : compo) {
+				allComponents.put(element.getStringAttribute("name"), element);
+		//		element.setAttribute("extension", extension);
+				myClassManager.addTipiClassDefinition(element);
+				processClass(element, allEvents, allValues);
+			}
 		}
 		List<XMLElement> actions = tipiParts.get("tipiaction");
-		for (XMLElement element : actions) {
-			allActions.put(element.getStringAttribute("name"), element);
-	//		element.setAttribute("extension", extension);
+		if(actions!=null) {
+			for (XMLElement element : actions) {
+				allActions.put(element.getStringAttribute("name"), element);
+		//		element.setAttribute("extension", extension);
+			}
 		}
 
 		List<XMLElement> parsers = tipiParts.get("tipi-parser");
-		for (XMLElement element : parsers) {
-			allTypes.put(element.getStringAttribute("name"), element);
-		//	element.setAttribute("extension", extension);
+		if(parsers!=null) {
+			for (XMLElement element : parsers) {
+				allTypes.put(element.getStringAttribute("name"), element);
+			//	element.setAttribute("extension", extension);
+			}
 		}
 
 	}
@@ -291,7 +297,7 @@ public class XsdBuilder {
 	
 	
 	public void parseProjectDefinition(String extension, URL versionURL, XMLElement definitionElement) throws MalformedURLException, IOException {
-		List<XMLElement> includes = definitionElement.getElementsByTagName("include");
+		List<XMLElement> includes = definitionElement.getAllElementsByTagName("include");
 		for (XMLElement element : includes) {
 			String path = element.getStringAttribute("path");
 			XMLElement xx = ClientActions.getXMLElement(new URL(versionURL,"includes/"+path));
@@ -375,7 +381,7 @@ public class XsdBuilder {
 		xxx = addTag("xs:attribute", extension);
 		xxx.setAttribute("name", "condition");
 		xxx.setAttribute("type", "xs:string");
-		xxx.setAttribute("use", "required");
+		//xxx.setAttribute("use", "required");
 
 		return block;
 	}
@@ -583,12 +589,17 @@ public class XsdBuilder {
 		return complexType;
 	}
 
+
+	
 	private static XMLElement createTipiComponent(String current, boolean isDefinition, XMLElement element,
-			Map<String, XMLElement> allComponents, XMLElement root) {
+			Map<String, XMLElement> allComponents, XMLElement root) throws IOException {
 		XMLElement result = new CaseSensitiveXMLElement();
 		result.setName("xs:element");
+		System.err.println("Element before: "+element);
+		
+		element = ComponentMerger.getAssembledClassDef (allComponents, element,element.getStringAttribute("name"));
+		System.err.println("Element after: "+element);
 		String type = element.getStringAttribute("type");
-
 		if (type.equals("tipi") || type.equals("component")|| type.equals("connector")) {
 			result.setAttribute("name", (isDefinition ? "d." : "c.") + current);
 		}
@@ -721,8 +732,13 @@ public class XsdBuilder {
 
 	}
 
+
+
+
+
+
 	private static XMLElement createTipiClassElement(String current, boolean isDefinition, XMLElement element,
-			Map<String, XMLElement> allComponents, XMLElement root) {
+			Map<String, XMLElement> allComponents, XMLElement root) throws IOException {
 		// component / c.window etc /definition
 		// System.err.println("element: " + element.getName() + " current: " +
 		// current);
@@ -734,7 +750,7 @@ public class XsdBuilder {
 	}
 
 	private static XMLElement createTipiLayout(String current, boolean isDefinition, XMLElement element,
-			Map<String, XMLElement> allComponents, XMLElement root) {
+			Map<String, XMLElement> allComponents, XMLElement root) throws IOException {
 		// component / c.window etc /definition
 
 		if ("layout".equals(element.getStringAttribute("type"))) {
