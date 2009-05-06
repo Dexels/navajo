@@ -27,9 +27,9 @@ package com.dexels.navajo.server.enterprise.tribe;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.server.enterprise.xmpp.JabberWorkerFactory;
 
 public class PingAnswer extends Answer implements Mappable {
 
@@ -44,6 +44,7 @@ public class PingAnswer extends Answer implements Mappable {
 	public long uptime;
 	public boolean busy = false;
 	public String statistics;
+	public String postmanURL;
 	
 	public PingAnswer(Request q) {
 		super(q);
@@ -57,6 +58,7 @@ public class PingAnswer extends Answer implements Mappable {
 		uptime = DispatcherFactory.getInstance().getUptime();
 		busy = DispatcherFactory.getInstance().isBusy();
 		statistics = TribeManagerFactory.getInstance().getStatistics();
+		postmanURL = JabberWorkerFactory.getInstance().getPostmanURL();
 	}
 	
 	public boolean acknowledged() {
@@ -94,6 +96,10 @@ public class PingAnswer extends Answer implements Mappable {
 
 	public String getStatistics() {
 		return statistics;
+	}
+	
+	public String getPostmanURL() {
+		return postmanURL;
 	}
 
 }

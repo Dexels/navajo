@@ -45,13 +45,11 @@ public class TribeMember implements Serializable, Mappable, TribeMemberInterface
 	public boolean isChief;
 	public Date joinDate;
 	public PingAnswer status;
-	private String postmanURL;
 	
-	public TribeMember(String s, Address a, String url) {
+	public TribeMember(String s, Address a) {
 		this.memberName = s;
 		this.address = a;
 		this.joinDate = new Date();
-		this.postmanURL = url;
 	}
 	
 	public String getMemberName() {
@@ -80,10 +78,6 @@ public class TribeMember implements Serializable, Mappable, TribeMemberInterface
 
 	public PingAnswer getStatus() {
 		return status;
-	}
-
-	public String getPostmanURL() {
-		return postmanURL;
 	}
 	
 	public void setStatus(PingAnswer status) {

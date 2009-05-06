@@ -162,7 +162,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 
 		// Broadcast alive status and get registered web services from the chief (TODO)
 		IpAddress ip = (IpAddress) channel.getLocalAddress();
-		TribeMember candidate = new TribeMember(myName, ip, JabberWorkerFactory.getInstance().getPostmanURL());
+		TribeMember candidate = new TribeMember(myName, ip);
 		myMembership = candidate;
 		broadcast(new MembershipSmokeSignal(myName, MembershipSmokeSignal.INTRODUCTION, candidate));
 		initializing = false;
