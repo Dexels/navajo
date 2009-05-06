@@ -29,6 +29,7 @@ package navajo;
  * VERSION HISTORY
  * 
  * 8.1.3 - Fixed problem with carriage return under Windows with expression between <value> tags.
+ *       - Added printwriter console to Access object for debugging purposes.
  *  
  * 8.1.2 - Fixes for script inheritance, fixed 'order' problem with scripts using inheritance.
  *       - Exposing postmanURL via TribeMember class.
@@ -77,7 +78,7 @@ package navajo;
  *       Created testsrc structure and started working on unit tests, especially focusing on threading issues.
  *       Fixed problem with NavajoEventTrigger being evaluated each Tribal Member in case of workflow initialization.
  *       Added NavajoExceptionEvent 
- *       Publish AuditLog Event in case of Authentication/Autorization exception. 
+ *       Publish AuditLog Event in case of Authentication/Authorization exception. 
  *       
  * 6.5.6 Some restructuring of Dispatcher/NavajoConfig. Better deadlock prevention for waiting for the chief in TribeManager.
  * 
@@ -159,7 +160,7 @@ package navajo;
  * 
  * 5.6.0 Restructured Navajo Classloader.
  * 
- * 5.6.1 Removed some possibly harmfull synchronized waiting blocks
+ * 5.6.1 Removed some possibly harmful synchronized waiting blocks
  * 
  * 5.6.2 Added support for <value> tag
  * 
