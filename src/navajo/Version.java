@@ -28,6 +28,8 @@ package navajo;
  * 
  * VERSION HISTORY
  * 
+ * 8.1.3 - Fixed problem with carriage return under Windows with expression between <value> tags.
+ *  
  * 8.1.2 - Fixes for script inheritance, fixed 'order' problem with scripts using inheritance.
  *       - Exposing postmanURL via TribeMember class.
  *       
@@ -170,6 +172,8 @@ public class Version extends dexels.Version {
 	public static final int MAJOR = 8;
 	public static final int MINOR = 1;
 	public static final int PATCHLEVEL = 2;
+	public static final String SPECIAL_VERSION = "Patchlevel 3 Candidate";
+	
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
 	public static final String RELEASEDATE = "2009-05-05";
@@ -180,7 +184,7 @@ public class Version extends dexels.Version {
 	public Version() {
 		addIncludes(includes);
 		setReleaseDate(RELEASEDATE);
-		setSpecialVersion("Release Candidate");
+		setSpecialVersion(SPECIAL_VERSION);
 	}
 	
 	public int getMajor() {
