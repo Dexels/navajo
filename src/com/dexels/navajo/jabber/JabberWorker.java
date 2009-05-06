@@ -496,4 +496,11 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 		// TODO Auto-generated method stub
 		this.myMultiUser = muc;
 	}
+
+	public String getPostmanURL() {
+		if ( myJabber != null ) {
+			return myJabber.getPostmanUrl();
+		} 
+		return null;
+	}
 }

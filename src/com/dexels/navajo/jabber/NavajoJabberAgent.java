@@ -469,5 +469,13 @@ public class NavajoJabberAgent  {
 		return conferenceName;
 	}
 
+	public String getPostmanUrl() {
+		return postmanUrl;
+	}
+
+	public String getServerGroupName() {
+		return serverGroupName;
+	}
+
 
 }
