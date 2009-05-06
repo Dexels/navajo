@@ -228,10 +228,6 @@ public class ScriptInheritance {
 	
 	}
 	
-	private void mergeRemainder() {
-		
-	}
-	
 	private XMLElement extend(XMLElement superScript, XMLElement subScript) throws Exception {
 		
 		addMessageLevels(superScript, 0);
@@ -254,27 +250,6 @@ public class ScriptInheritance {
 				}
 			}
 		}
-		
-  		// Find additonal children.
-//		for (int levelindex = maxLevel; levelindex >= 0; levelindex--) {
-//			Vector<XMLElement> subMessages = new Vector<XMLElement>();
-//			findMessagesWithLevel(levelindex, subScript, subMessages);
-//			for (int i = 0; i < subMessages.size(); i++) {
-//				XMLElement childNew = subMessages.elementAt(i);
-//				if ( childNew.getName().equals("message") ) {
-//					boolean checkNew = true;
-//					String messageName = (String) childNew.getAttribute("name");
-//					String level = (String) childNew.getAttribute("level");
-//					XMLElement found = findMessageWithLevel(messageName, level, superScript);
-//					if ( found != null ) {
-//						checkNew = false;
-//					}
-//					if ( checkNew ) {
-//						superScript.addChild(childNew);
-//					}
-//				}
-//			}
-//		}
 		
 		return superScript;
 		
