@@ -280,25 +280,28 @@ public class ScriptInheritance {
 		
 	}
 	
+	private void removeTslTag(int indx, XMLElement tsl) {
+		
+		if ( tsl.getName().equalsIgnoreCase("tsl") || tsl.getName().equalsIgnoreCase("navascript")) {
+			
+			Vector<XMLElement> tslChildren = tsl.getChildren();
+			for ( int c = 0; c < tslChildren.size(); c++ ) {
+				tslChildren.get(c).setParent(tsl);
+				removeTslTag( c, tslChildren.get(c) );
+			}
+			
+			tsl.getParent().getChildren().addAll(indx, tslChildren);
+			tsl.getParent().removeChild(tsl);
+		}
+	}
+	
 	private void cleanTslFragments(XMLElement raw) {
 		
 		Vector<XMLElement> children = new Vector<XMLElement>(raw.getChildren());
 		
 		for (int i = 0; i < children.size(); i++ ) {
-			
-			if ( children.get(i).getName().equalsIgnoreCase("tsl")) {
-				XMLElement tsl = children.get(i);
-				Vector<XMLElement> tslChildren = tsl.getChildren();
-				for (int c = 0; c < tslChildren.size(); c++) {
-					XMLElement e = tslChildren.get(c);
-					cleanTslFragments(e);
-					raw.addChild( e );
-				}
-				// Remove the tsl.
-				raw.removeChild(tsl);
-			} else {
-				cleanTslFragments( children.get(i) );
-			}
+			children.get(i).setParent(raw);
+			removeTslTag(i, children.get(i));
 		}
 	
 	}
@@ -402,7 +405,7 @@ public class ScriptInheritance {
 		
 		
 		InputStream is = ScriptInheritance.inherit(
-				new FileInputStream("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/PageableService.xml"),
+				new FileInputStream("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/vla/accounting/journaltransactions/ProcessSearchTransactionItemsAccounting.xml"),
 				"/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/", new ArrayList<String>());
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
