@@ -225,7 +225,7 @@ public class SPMap extends SQLMap {
               else if (param instanceof Binary) {
                 // Following code is copied from SQLMap
                 if (debug) {
-                  System.err.println("TRYING TO INSERT A BLOB....");
+                   myAccess.writeToConsole("TRYING TO INSERT A BLOB....\n");
                 }
                
                 if ( param != null ) {
@@ -239,7 +239,7 @@ public class SPMap extends SQLMap {
                 	  ( (Binary) param).write( os );
                 	  os.close();
                   } catch (Exception e) {
-                	  e.printStackTrace(System.err);
+                	  e.printStackTrace(myAccess.getConsoleWriter());
                   }        
                   blob.close();
                   callStatement.setBlob(i + 1, blob);
@@ -247,7 +247,7 @@ public class SPMap extends SQLMap {
                   //java.io.ByteArrayInputStream bis = new java.io.ByteArrayInputStream(data);
                   //statement.setBinaryStream(i + 1, bis, data.length);
                   if (debug) {
-                    System.err.println("ADDED BLOB");
+                	  myAccess.writeToConsole("ADDED BLOB\n");
                   }
                 }
                 else {
@@ -388,7 +388,7 @@ public class SPMap extends SQLMap {
     	 if (rs != null) {
        	  try {
        	   rs.close();
-       	  } catch (Exception e) { e.printStackTrace(System.err); }
+       	  } catch (Exception e) { e.printStackTrace(myAccess.getConsoleWriter()); }
        	  rs = null;
          }
          this.resetAll();
@@ -425,7 +425,7 @@ public class SPMap extends SQLMap {
       		callStatement = null;
       		openCallStatements--;
       	}
-      } catch (Exception e) { e.printStackTrace(System.err); }
+      } catch (Exception e) { e.printStackTrace(myAccess.getConsoleWriter()); }
     super.setUpdate(newUpdate);
     parameterTypes = new ArrayList();
   }

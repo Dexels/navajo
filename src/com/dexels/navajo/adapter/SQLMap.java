@@ -203,7 +203,7 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
     String dataSourceName = body.getName();
 
     if (debug) {
-      System.err.println("Creating new datasource: " + dataSourceName);
+      myAccess.writeToConsole("Creating new datasource: " + dataSourceName + "\n");
     }
     
     if (autoCommitMap==null) {
@@ -237,12 +237,11 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
       transactionContext = -1;
       con = null;
       if (debug) {
-        System.err.println("Killing previous version of broker (" +
-                           dataSourceName + ":" + username + ")...");
+        myAccess.writeToConsole("Killing previous version of broker (" + dataSourceName + ":" + username + ")...\n");
       }
       fixedBroker.destroy(dataSourceName, username);
       if (debug) {
-        System.err.println("Done!");
+    	  myAccess.writeToConsole("Done!\n");
       }
     }
     try {
@@ -285,7 +284,7 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
 	  
 	  //synchronized ( semaphore ) {
 		  if (debug) {
-			  System.out.println("SQLMAP setReload(" + datasourceName + ") called!");
+			  myAccess.writeToConsole("SQLMAP setReload(" + datasourceName + ") called!\n");
 		  }
 		  
 		  try {
@@ -338,18 +337,18 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
 			  rowCount = 0;
 		  }
 		  catch (NavajoException ne) {
-			  ne.printStackTrace(System.err);
+			  ne.printStackTrace(myAccess.getConsoleWriter());
 			  AuditLog.log("SQLMap", ne.getMessage(), Level.SEVERE, myAccess.accessID);
 			  throw new MappableException(ne.getMessage());
 		  }
 		  catch (java.io.IOException fnfe) {
-			  fnfe.printStackTrace(System.err);
+			  fnfe.printStackTrace(myAccess.getConsoleWriter());
 			  AuditLog.log("SQLMap", fnfe.getMessage(), Level.SEVERE, myAccess.accessID);
 			  throw new MappableException(
 					  "Could not load configuration file for SQLMap object: " +
 					  fnfe.getMessage());
 		  } catch (Throwable t) {
-			  t.printStackTrace(System.err);
+			  t.printStackTrace(myAccess.getConsoleWriter());
 			  AuditLog.log("SQLMap", t.getMessage(), Level.SEVERE, myAccess.accessID);
 			  throw new MappableException(t.getMessage());
 		  }
@@ -366,7 +365,7 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
 		try {
 			is.close();
 		} catch (Throwable e) {
-			e.printStackTrace();
+			e.printStackTrace(myAccess.getConsoleWriter());
 		}
 	}
 	  binaryStreamList.clear();
@@ -378,7 +377,7 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
     myAccess = access;
     setReload("");
     if (debug) {
-      System.err.println("LEAVING SQLMAP load()...");
+      myAccess.writeToConsole("LEAVING SQLMAP load()...");
     }
   }
 
@@ -392,7 +391,7 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
 	  
     if (autoCommitMap.get(this.datasource) == null) {
       if ( debug ) {
-    	  System.err.println("Did not find autoCommitMap entry for: " + datasource);
+    	  myAccess.writeToConsole("Did not find autoCommitMap entry for: " + datasource + "\n");
       }
       return;
     }
@@ -401,21 +400,21 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
       boolean ac = (this.overideAutoCommit) ? autoCommit :
           ( (Boolean) autoCommitMap.get(datasource)).booleanValue();
       if ( debug ) {
-    	  System.err.println("Autocommit flag for " + datasource + " = " + ac);
+    	  myAccess.writeToConsole("Autocommit flag for " + datasource + " = " + ac + "\n");
       }
       if (!ac) {
         if (con != null) {
           try {
-			System.err.println("ROLLBACK OF TRANSACTION " + getTransactionContext() + " DUE TO KILL.....");
+        	  myAccess.writeToConsole("ROLLBACK OF TRANSACTION " + getTransactionContext() + " DUE TO KILL.....\n");
 		  } catch (UserException e) {	
-			  e.printStackTrace(System.err);
+			  e.printStackTrace(myAccess.getConsoleWriter());
 		  }
 		  if ( debug ) {
-	    	  System.err.print("CALLING TRANSACTION ROLLBACK...");
+			  myAccess.writeToConsole("CALLING TRANSACTION ROLLBACK...\n");
 	      }
           con.rollback();
           if ( debug ) {
-	    	  System.err.println("DONE!");
+        	  myAccess.writeToConsole("DONE!\n");
 	      }
         }
       }
@@ -441,7 +440,7 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
     }
     catch (SQLException sqle) {
     	AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, myAccess.accessID);
-    	sqle.printStackTrace();
+    	sqle.printStackTrace(myAccess.getConsoleWriter());
     }
   }
 
@@ -516,7 +515,7 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
   public void setTransactionContext(int i) throws UserException {
 
     if (debug) {
-      System.err.println("IN SETTRANSACTIONCONTEX(), I = " + i);
+      myAccess.writeToConsole("IN SETTRANSACTIONCONTEX(), I = " + i + "\n");
     }
     this.transactionContext = i;
     // Get a shared connection from the transactionContextMap.
@@ -524,9 +523,9 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
     con = (Connection)transactionContextMap.get(i + "");
 
     if (debug) {
-      System.err.println("CON = " + con);
-
+    	myAccess.writeToConsole("CON = " + con + "\n");
     }
+    
     if (con == null) {
     	AuditLog.log("SQLMap", "Invalid transaction context: " + i, Level.SEVERE,myAccess.accessID);
       throw new UserException( -1, "Invalid transaction context set");
@@ -569,16 +568,16 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
 
   public int getRemainingElements(String s) throws UserException {
     if (debug) {
-      System.err.println("in getRemainingElements(" + s + ")");
+    	myAccess.writeToConsole("in getRemainingElements(" + s + ")\n");
     }
     getTotalElements(s);
     if (debug) {
-      System.err.println("in getRemainingElements()");
-      System.err.println("startIndex = " + startIndex);
-      System.err.println("endIndex = " + endIndex);
-      System.err.println("shownElements = " + viewCount);
-      System.err.println("totalElements = " + lazyTotal);
-      System.err.println("remainingElements = " + (lazyTotal - endIndex));
+    	myAccess.writeToConsole("in getRemainingElements()\n");
+    	myAccess.writeToConsole("startIndex = " + startIndex + "\n");
+    	myAccess.writeToConsole("endIndex = " + endIndex + "\n");
+    	myAccess.writeToConsole("shownElements = " + viewCount + "\n");
+    	myAccess.writeToConsole("totalElements = " + lazyTotal + "\n");
+    	myAccess.writeToConsole("remainingElements = " + (lazyTotal - endIndex) + "\n");
     }
     int remaining = (lazyTotal - endIndex);
     return (remaining > 0 ? remaining : 0);
@@ -678,7 +677,7 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
 	
     query = newQuery.replace('"', ( this.replaceQueryDoubleQuotes ) ? '\'' : '\"');
     if (debug) {
-      System.err.println("SQLMap(): query = " + query);
+    	myAccess.writeToConsole("SQLMap(): query = " + query + "\n");
     }
     this.savedQuery = query;
     this.resultSet = null;
@@ -693,9 +692,9 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
    */
   public final void setMultipleParameters(final Object param) {
     if (debug) {
-      System.err.println("in setParameters(), param = " + param + " (" +
+    	myAccess.writeToConsole("in setParameters(), param = " + param + " (" +
                          ( (param != null) ? param.getClass().getName() : "") +
-                         ")");
+                         ")\n");
     }
     if (parameters == null) {
       parameters = new ArrayList();
@@ -721,9 +720,9 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
    */
   public void setParameter(final Object param) {
     if (debug) {
-      System.err.println("in setParameter(), param = " + param + " (" +
+    	myAccess.writeToConsole("in setParameter(), param = " + param + " (" +
                          ( (param != null) ? param.getClass().getName() : "") +
-                         ")");
+                         ")\n");
     }
     if (parameters == null) {
       parameters = new ArrayList();
@@ -840,7 +839,7 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
         //System.err.println("... Done!");
       }
       catch (Throwable ex) {
-        ex.printStackTrace(System.err);
+        ex.printStackTrace(myAccess.getConsoleWriter());
       }
     }
   }
@@ -848,13 +847,13 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
   protected final void createConnection() throws SQLException, UserException {
 
     if (this.debug) {
-      System.out.println(this.getClass() + ": in createConnection()");
+    	myAccess.writeToConsole(this.getClass() + ": in createConnection()\n");
     }
 
     if (con == null) { // Create connection if it does not yet exist.
 
       if (this.debug) {
-        System.err.println("in createConnection() for datasource " + datasource +" and username " + username);
+    	  myAccess.writeToConsole("in createConnection() for datasource " + datasource +" and username " + username + "\n");
       }
 
       if (fixedBroker == null || fixedBroker.get(this.datasource, this.username, this.password) == null) {
@@ -895,8 +894,8 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
       }
       else {
         if (this.debug) {
-          System.out.println(this.getClass() +
-              ": returned a good connection from the broker manager");
+        	myAccess.writeToConsole(this.getClass() +
+              ": returned a good connection from the broker manager\n");
         }
       }
       if (con != null && ( myConnectionBroker == null || myConnectionBroker.supportsAutocommit ) ) {
@@ -917,8 +916,8 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
       this.connectionId = con.hashCode();
       transactionContextMap.put(connectionId + "", con);
       if (this.debug) {
-        System.out.println(this.getClass() + ": put connection no. " +
-                           this.connectionId + " into the connection map");
+    	  myAccess.writeToConsole(this.getClass() + ": put connection no. " +
+                           this.connectionId + " into the connection map\n");
       }
     }
   }
@@ -928,11 +927,11 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
       createConnection();
     }
     catch (SQLException sqle) {
-      sqle.printStackTrace();
+      sqle.printStackTrace(myAccess.getConsoleWriter());
       throw new UserException( -1, sqle.getMessage());
     }
     if (debug) {
-      System.err.println("IN GETTRANSACTIONCONTEXT(), CONNECTIONID = " +connectionId);
+    	myAccess.writeToConsole("IN GETTRANSACTIONCONTEXT(), CONNECTIONID = " +connectionId + "\n");
     }
     return (this.connectionId);
   }
@@ -983,7 +982,7 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
           Binary b = (Binary)param;
           setBlob(statement, i, b);
           if (debug) {
-            System.err.println("ADDED BLOB");
+        	  myAccess.writeToConsole("ADDED BLOB\n");
           }
         } else {
         	throw new SQLException("Unknown type encountered in SQLMap.setStatementParameters(): " + param);
@@ -1029,7 +1028,7 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
     }
 
     if (debug) {
-      System.err.println("SQLMAP, GOT CONNECTION, STARTING QUERY");
+    	myAccess.writeToConsole("SQLMAP, GOT CONNECTION, STARTING QUERY\n");
     }
 
     // batch mode?
@@ -1038,8 +1037,8 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
         (this.update.indexOf(SQLBatchUpdateHelper.DELIMITER) > 0);
     if (this.batchMode) {
       if (this.debug) {
-        System.out.println(this.getClass() +
-                           ": detected batch mode, trying a batch update");
+    	  myAccess.writeToConsole(this.getClass() +
+                           ": detected batch mode, trying a batch update\n");
       }
       this.helper = new SQLBatchUpdateHelper(this.update,
                                              this.con, this.parameters,
@@ -1049,7 +1048,7 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
       return (this.helper.getResultSet());
     }
 
-    if (debug) { System.err.println("BEFORE PREPARESTATEMENT()"); }
+    if (debug) { myAccess.writeToConsole("BEFORE PREPARESTATEMENT()\n"); }
     
     // Check for open statement.
     if (this.statement != null) {
@@ -1066,14 +1065,14 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
       this.statement = con.prepareStatement(update);
     }
     openResultSets++;
-    if (debug) { System.err.println("AFTER PREPARESTATEMENT(), SETTING MAXROWS..."); }
+    if (debug) { myAccess.writeToConsole("AFTER PREPARESTATEMENT(), SETTING MAXROWS...\n"); }
 
     if (endIndex != INFINITE) {
       this.statement.setMaxRows(this.endIndex);
       //this.statement.setFetchSize(endIndex);
     }
 
-    if (debug) { System.err.println("SET MAXROWS DONE..SETTING STATEMENT PARAMETERS"); }
+    if (debug) { myAccess.writeToConsole("SET MAXROWS DONE..SETTING STATEMENT PARAMETERS\n"); }
     setStatementParameters(statement);
 
     ResultSet rs = null;
@@ -1083,11 +1082,10 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
     }
     else {
       try {
-        if (debug) { System.err.println("CALLING EXECUTEQUERY()"); }
+        if (debug) { myAccess.writeToConsole("CALLING EXECUTEQUERY()\n"); }
         rs = this.statement.executeQuery();
 
-        //System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> OPENRESULTSETS: " + openResultSets);
-        if (debug) { System.err.println("GOT RESULTSET!!!!!"); }
+        if (debug) { myAccess.writeToConsole("GOT RESULTSET!!!!!\n"); }
       }
       catch (SQLException e) {
     	  if (rs != null) {
@@ -1100,7 +1098,7 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
        
         // For Sybase compatibility: sybase does not like to be called using executeQuery() if query does not return a resultset.
         if (e.getMessage().indexOf("JZ0R2") == -1) {
-          e.printStackTrace();
+          e.printStackTrace(myAccess.getConsoleWriter());
           throw e;
         }
       }
@@ -1112,8 +1110,7 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
     if (debug) {
       SQLWarning warning = this.statement.getWarnings();
       while (warning != null) {
-        System.out.println("SQL warning: " +
-                           warning.getMessage());
+    	  myAccess.writeToConsole("SQL warning: " + warning.getMessage() + "\n");
         warning = warning.getNextWarning();
       }
     }
@@ -1131,7 +1128,7 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
       return this.con;
     }
     catch (com.dexels.navajo.server.UserException ue) {
-    	ue.printStackTrace();
+    	ue.printStackTrace(myAccess.getConsoleWriter());
       return null;
     }
   }
@@ -1164,8 +1161,8 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
       }
 
       if (debug) {
-        System.err.println(
-            "SQLMAP, QUERY HAS BEEN EXECUTED, RETRIEVING RESULTSET");
+    	  myAccess.writeToConsole(
+            "SQLMAP, QUERY HAS BEEN EXECUTED, RETRIEVING RESULTSET\n");
       }
 
       if (rs != null) {
@@ -1196,9 +1193,7 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
                 String param = meta.getColumnLabel(i);
                 int type = meta.getColumnType(i);
 
-//                if (debug) {
-//                  System.err.println("i = " + i + ", type = " + type + "(BLOB = " + Types.BLOB + ")" + " getType() = " + getType(type));
-//                }
+
                 
                 Object value = null;
                 final String strVal = rs.getString(i);
@@ -1340,9 +1335,9 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
            *************************************************/
 
           if (debug) {
-            System.out.println(
-                "batch mode did not provide a fully baked result set, sorry.");
-            System.out.println("SQL exception is '" + e.toString() + "'");
+        	  myAccess.writeToConsole(
+                "batch mode did not provide a fully baked result set, sorry.\n");
+        	  myAccess.writeToConsole("SQL exception is '" + e.toString() + "'\n");
           }
           if (rs != null) {
         	  rs.close();
@@ -1352,14 +1347,14 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
 
         }
         if (debug) {
-          System.err.println("GOT RESULTSET");
+        	myAccess.writeToConsole("GOT RESULTSET\n");
         }
         resultSet = new ResultSetMap[dummy.size()];
         resultSet = (ResultSetMap[]) dummy.toArray(resultSet);
       }
     }
     catch (SQLException sqle) {
-      sqle.printStackTrace();
+      sqle.printStackTrace(myAccess.getConsoleWriter());
       AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, myAccess.accessID);
       throw new UserException( -1, sqle.getMessage());
     }
@@ -1367,7 +1362,7 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
       if (rs != null) {
     	  try {
     	   rs.close();
-    	  } catch (Exception e) { e.printStackTrace(System.err); }
+    	  } catch (Exception e) { e.printStackTrace(myAccess.getConsoleWriter()); }
     	  rs = null;
       }
       this.resetAll();
@@ -1518,15 +1513,15 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
     }
     this.username = tokenizer.nextToken().trim();
     if (this.debug) {
-      System.out.println(this.getClass() + ": set database user name to '" +
-                         this.username + "'");
+    	myAccess.writeToConsole(this.getClass() + ": set database user name to '" +
+                         this.username + "'\n");
     }
     if (tokenizer.hasMoreTokens()) {
       this.password = tokenizer.nextToken().trim();
       if (this.debug) {
-        System.out.println(this.getClass() +
+    	  myAccess.writeToConsole(this.getClass() +
                            ": set database user password to '" + this.password +
-                           "'");
+                           "'\n");
       }
     }
 
@@ -1558,8 +1553,7 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
       AuditLog.log("SQLMap", msg, Level.WARNING, myAccess.accessID);
      
       if (debug) {
-        System.err.println(this.getClass() + ": " + msg);
-        //throw new UserException(-1, "in SQLMap. Could not create default broker [driver = " + driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']");
+    	  myAccess.writeToConsole(this.getClass() + ": " + msg + "\n");
       }
     }
   }
@@ -1572,7 +1566,7 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
   public final int getTotalRows() {
 
     //savedQuery = savedQuery.toUpperCase();
-    if (debug) { System.err.println("savedQuery is " + savedQuery); }
+    if (debug) { myAccess.writeToConsole("savedQuery is " + savedQuery + "\n"); }
 
     savedQuery = savedQuery.replaceAll("[fF][rR][oO][Mm]", "FROM");
     savedQuery = savedQuery.replaceAll("[Oo][rR][dD][eE][rR]", "ORDER");
@@ -1590,7 +1584,7 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
     try {
       createConnection();
 
-      if (debug) { System.err.println("Executing count query: " + countQuery + "......"); }
+      if (debug) { myAccess.writeToConsole("Executing count query: " + countQuery + "......\n"); }
       count = con.prepareStatement(countQuery);
       this.setStatementParameters(count);
       rs = count.executeQuery();
@@ -1599,11 +1593,11 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
       if (rs.next()) {
         total = rs.getInt(1);
       }
-      if (debug) { System.err.println("Result = " + total); }
+      if (debug) { myAccess.writeToConsole("Result = " + total + "\n"); }
 
     }
     catch (Exception e) {
-      e.printStackTrace(System.err);
+      e.printStackTrace(myAccess.getConsoleWriter());
     }
     finally {
       try {
@@ -1615,7 +1609,7 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
         }
       }
       catch (SQLException sqle) {
-        sqle.printStackTrace(System.err);
+        sqle.printStackTrace(myAccess.getConsoleWriter());
       }
     }
 
@@ -1741,7 +1735,7 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
 			  }
 		  }
 		  catch (Exception e) {
-			  e.printStackTrace(System.err);
+			  e.printStackTrace(myAccess.getConsoleWriter());
 		  }
 
 		  while ( rs.next() ) {
@@ -1775,14 +1769,14 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
 				  resetAll();
 			  } catch (SQLException e) {
 				  // TODO Auto-generated catch block
-				  e.printStackTrace();
+				  e.printStackTrace(myAccess.getConsoleWriter());
 			  }
 		  }
 		  if ( tempFile != null ) {
 			  try {
 				  tempFile.delete();
 			  } catch (Exception ioe2 ) {
-				  ioe2.printStackTrace();
+				  ioe2.printStackTrace(myAccess.getConsoleWriter());
 			  }
 		  }
 	  }

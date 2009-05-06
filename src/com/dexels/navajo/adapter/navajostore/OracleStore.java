@@ -74,7 +74,7 @@ public final class OracleStore implements StoreInterface {
 	private static String insertEmbryoAccessSQL = "insert into navajoaccess " + "(access_id, clienttime, webservice, created) values (?, ?, ?, ?)";
 	
 	private static String insertLog =
-		"insert into navajolog (access_id, exception, navajoin, navajoout) values (?, ?, ?, ?)";
+		"insert into navajolog (access_id, exception, navajoin, navajoout, console) values (?, ?, ?, ?, ?)";
 	
 	private static String insertAsyncLog =
 		"insert into navajoasync ( access_id, ref_id, asyncmap, totaltime, exception, created ) values (?, ?, ?, ?, ?, sysdate)";
@@ -197,6 +197,7 @@ public final class OracleStore implements StoreInterface {
 			java.io.ByteArrayOutputStream bosOut = new java.io.ByteArrayOutputStream();
 			Navajo inDoc = (a.getInDoc() != null ? a.getInDoc() : null);
 			Navajo outDoc = a.getOutputDoc();
+			String consoleOutput = a.getConsoleOutput();
 			if (inDoc != null) {
 				inDoc.write(bosIn);
 				bosIn.close();
@@ -207,6 +208,7 @@ public final class OracleStore implements StoreInterface {
 			}
 			ps.setBytes(3, (bosIn != null ? bosIn.toByteArray() : null));
 			ps.setBytes(4, (bosOut != null ? bosOut.toByteArray() : null));
+			ps.setBytes(5, (consoleOutput != null ? consoleOutput.getBytes() : null ));
 			ps.executeUpdate();
 			ps.close();
 			ps = null;

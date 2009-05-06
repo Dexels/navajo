@@ -275,8 +275,8 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
         //System.out.println("FOUND EXISTING PROPERTY: " + fullName);
       }
     } catch (Exception e) {
-      e.printStackTrace();
-      throw new UserException(-1, e.getMessage());
+    	e.printStackTrace(access.getConsoleWriter());
+    	throw new UserException(-1, e.getMessage());
     }
   }
 
@@ -436,7 +436,7 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
 			outDoc.addMessage(globals);
 		} catch (NavajoException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e.printStackTrace(access.getConsoleWriter());
 		}
 	  }
       
@@ -501,7 +501,7 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
 				errorCode = Integer.parseInt(errCode);
 			} catch (NumberFormatException e) {
 				
-				e.printStackTrace();
+				e.printStackTrace(access.getConsoleWriter());
 			}
           throw new UserException(errorCode, errMsg);
       }
@@ -566,10 +566,10 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
       //    throw new UserException(-1, "ERROR while accessing webservice: " + method + ":: " + inDoc.getMessage("error").getProperty("message").getValue());
       //}
    } catch (com.dexels.navajo.client.ClientException e) {
-      e.printStackTrace();
+      e.printStackTrace(access.getConsoleWriter());
       throw new SystemException(-1, e.getMessage());
    } catch (FatalException fe) {
-      fe.printStackTrace();
+      fe.printStackTrace(access.getConsoleWriter());
       throw new SystemException(-1, fe.getMessage());
    }
   }
@@ -932,7 +932,7 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
 	    try {
 	      inDoc = DispatcherFactory.getInstance().handle(outDoc, true);
 	    } catch (Exception e) {
-	      e.printStackTrace();
+	      e.printStackTrace(access.getConsoleWriter());
 	      throw new UserException(-1, e.getMessage());
 	    } finally {
 	    	//System.err.println("Setting set is finished.");
