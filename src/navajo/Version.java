@@ -28,6 +28,9 @@ package navajo;
  * 
  * VERSION HISTORY
  * 
+ * 8.1.2 - Fixes for script inheritance, fixed 'order' problem with scripts using inheritance.
+ *       - Exposing postmanURL via TribeMember class.
+ *       
  * 8.1.1 - Fixes for script inheritance. Now supports 'inject' semantics within other tags.
  *       - Added support for AgentId. Can be used to monitor requests from specific agents (client applications).
  *       - Needsrecompile in Dispatcher is only done after it has been established that we are dealing
@@ -166,10 +169,10 @@ public class Version extends dexels.Version {
 
 	public static final int MAJOR = 8;
 	public static final int MINOR = 1;
-	public static final int PATCHLEVEL = 1;
+	public static final int PATCHLEVEL = 2;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
-	public static final String RELEASEDATE = "2009-04-23";
+	public static final String RELEASEDATE = "2009-05-05";
 	
 //	 Included packages.
 	String [] includes = {"navajodocument.Version"};
