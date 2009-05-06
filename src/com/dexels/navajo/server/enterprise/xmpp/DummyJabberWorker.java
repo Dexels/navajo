@@ -6,4 +6,8 @@ public class DummyJabberWorker implements JabberWorkerInterface {
 		return "unknownapp";
 	}
 
+	public String getPostmanURL() {
+		return "";
+	}
+
 }

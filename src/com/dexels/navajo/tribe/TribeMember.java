@@ -35,6 +35,7 @@ import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.enterprise.tribe.PingAnswer;
 import com.dexels.navajo.server.enterprise.tribe.TribeMemberInterface;
+import com.dexels.navajo.server.enterprise.xmpp.JabberWorkerFactory;
 
 public class TribeMember implements Serializable, Mappable, TribeMemberInterface {
 
@@ -80,6 +81,10 @@ public class TribeMember implements Serializable, Mappable, TribeMemberInterface
 		return status;
 	}
 
+	public String getPostmanURL() {
+		return JabberWorkerFactory.getInstance().getPostmanURL();
+	}
+	
 	public void setStatus(PingAnswer status) {
 		this.status = status;
 	}
