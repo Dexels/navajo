@@ -43,7 +43,7 @@
 		
 		<zip destfile="${baseDir}/deploy/archived/${projectName}_${build.timestamp}.zip" basedir="${baseDir}/deploy/current"/>
 		<eclipse.refreshLocal resource="${ant.project.name}" />
-			<scp trust="true" sftp="true" verbose="true" todir="${deployRootSsh}" password="${deployRootSshPassword}">
+			<scp trust="true" sftp="true" verbose="true" todir="${deployRootSsh}">
 				<fileset dir="deploy/current">
 					<include name="**" />
 				</fileset>
