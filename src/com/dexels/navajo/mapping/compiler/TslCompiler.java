@@ -501,7 +501,7 @@ public String optimizeExpresssion(int ident, String clause, String className, St
 	    	value = XMLutils.XMLUnescape(value);
 	    }
 	    
-	    return new Object[]{value,isStringOperand};
+	    return new Object[]{ removeNewLines( value ),isStringOperand};
   }
   
   public String expressionNode(int ident, Element exprElmnt, int leftOver,  String className, String objectName) throws Exception {
@@ -526,11 +526,11 @@ public String optimizeExpresssion(int ident, String clause, String className, St
 		result.append(optimizeExpresssion(ident, value, className, objectName));
 	}
 	else {
-		result.append(printIdent(ident) + "sValue = \"" + removeNewLines(value) + "\";\n");
+		result.append(printIdent(ident) + "sValue = \"" + value + "\";\n");
 	}
 
-	// Check depenencies.
-	Dependency [] allDeps =  ExpressionValueDependency.getDependencies( ( !isStringOperand ? value : removeNewLines(value) ) );
+	// Check dependencies.
+	Dependency [] allDeps =  ExpressionValueDependency.getDependencies( value );
 	for ( int a = 0; a < allDeps.length; a++ ) {
 		addDependency("dependentObjects.add( new ExpressionValueDependency(-1, \"" + allDeps[a].getId() + 
 				"\", \"" + 
