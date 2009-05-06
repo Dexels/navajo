@@ -3,7 +3,7 @@
 	<tstamp>
 		<format property="build.timestamp" pattern="dd_MMM_yy_HH_mm_ss" />
 	</tstamp> 
-
+	
 	<fail message="This ant file is supposed to be run from the eclipse plugin">
 		<condition>
 			<not>
@@ -12,15 +12,17 @@
 		</condition>
 	</fail>
 	<taskdef name="buildDeployJnlp" classname="com.dexels.navajo.tipi.ant.projectbuilder.TipiBuildDeployJnlp" />
+	<taskdef name="buildWikiSource" classname="com.dexels.navajo.tipi.ant.projectbuilder.TipiBuildWikiSource" />
 
 	<property name="archive" value="${projectName}.jar" />
 	<target name="deployment">
 		<delete dir="deploy/current" />
-		<buildDeployJnlp codebase="${deployRoot}" baseDir="${baseDir}" deployPath="${deployPath}" />
+		<buildDeployJnlp codebase="${tipiAppServer}${projectName}" baseDir="${baseDir}" deployPath="${deployPath}" />
 
 		<mkdir dir="deploy" />
 		<mkdir dir="deploy/current" />
 		<mkdir dir="deploy/archived" />
+		<buildWikiSource sourceDir="tipi/" docDir="deploy/current/source/" baseDir="${baseDir}" name="${projectName}"/>
 
 		<echo message="Deployroot: %{deployRoot}">
 		</echo>
@@ -38,16 +40,30 @@
 		<replace file="deploy/current/index.html" token="@@HOMEPAGE@@" value="${homepage}" />
 		<replace file="deploy/current/index.html" token="@@ICON@@" value="${icon}" />
 		<replace file="deploy/current/index.html" token="@@SPLASH@@" value="${splash}" />
-		<replace file="deploy/current/index.html" token="@@APPLINK@@" value="${deployRoot}/Application.jnlp"/>
+		<replace file="deploy/current/index.html" token="@@APPLINK@@" value="${tipiAppServer}${projectName}/Application.jnlp"/>
 		<replace file="deploy/current/index.html" token="@@TIMESTAMP@@" value="${build.timestamp}"  />
+		<replace file="deploy/current/index.html" token="@@SOURCELINK@@" value="${tipiDoc}:${projectName}:info"  />
+		
 		
 		<zip destfile="${baseDir}/deploy/archived/${projectName}_${build.timestamp}.zip" basedir="${baseDir}/deploy/current"/>
 		<eclipse.refreshLocal resource="${ant.project.name}" />
-			<scp trust="true" sftp="true" verbose="true" todir="${deployRootSsh}">
-				<fileset dir="deploy/current">
+		<scp trust="true" sftp="true" verbose="true" todir="${tipiAppServerSsh}${projectName}">
+			<fileset dir="deploy/current">
+				<include name="*.jnlp" />
+				<include name="lib/**" />
+				<include name="tipi/**" />
+				<include name="resource/**" />
+				<include name="index.html" />
+			</fileset>
+		</scp>
+
+			<scp trust="true" sftp="true" verbose="true" todir="${tipiDocSsh}${projectName}">
+				<fileset dir="deploy/current/source">
 					<include name="**" />
 				</fileset>
 			</scp>
+
+		
 	</target>
 
 	<target name="clean">
