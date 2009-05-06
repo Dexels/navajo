@@ -28,6 +28,9 @@ package navajoadapters;
 /**
  * VERSION HISTORY
  *
+ * 2.2.8 Use Acces object private Console writer instead of System.err for logging. Used in SQLMap and SPMap.
+ *       OracleStore now writes additional console value into navajolog table.
+ *       
  * 2.1.0 Added generic property support to NavajoMap. You can now use $property('xyz') and field name="property" inside
  * scripts instead of its typed counter parts.
  *
@@ -60,10 +63,10 @@ public class Version extends dexels.Version {
 
 	public static final int    MAJOR       = 2;
 	public static final int    MINOR       = 2;
-	public static final int    PATCHLEVEL  = 7;
+	public static final int    PATCHLEVEL  = 8;
 	public static final String VENDOR      = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Adapter Library";
-	public static final String RELEASEDATE = "2006-08-14";
+	public static final String RELEASEDATE = "2008-05-06";
 
 	//	Included packages.
 	String [] includes = {"navajodocument.Version", "navajo.Version", "navajoclient.Version", "navajofunctions.Version"};
