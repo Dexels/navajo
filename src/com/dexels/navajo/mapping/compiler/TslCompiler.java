@@ -1790,7 +1790,7 @@ public String fieldNode(int ident, Element n, String className,
     result.append(printIdent(ident) + "op = Expression.evaluate(" +
                   replaceQuotes(value) +
                   ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null);\n");
-    result.append(printIdent(ident) + "System.err.println(\"in PROCESSING SCRIPT: \" + access.rpcName + \" DEBUG INFO: \" + op.value);\n");
+    result.append(printIdent(ident) + "access.writeToConsole(\"in PROCESSING SCRIPT: \" + access.rpcName + \" DEBUG INFO: \" + op.value + \"\\n\");\n");
     return result.toString();
   }
 

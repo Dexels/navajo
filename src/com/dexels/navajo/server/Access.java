@@ -26,6 +26,8 @@
 package com.dexels.navajo.server;
 
 import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -96,6 +98,13 @@ public final class Access implements java.io.Serializable, Mappable {
 	private static Object mutex = new Object();
 	private Set<Map<?,?>> piggyBackData = null;
 	private String clientToken = null;
+	
+	/**
+	 * Create a private logging console for this access object.
+	 * TODO: Maybe restrict maximum size of console... or use Binary...
+	 */
+	private transient StringWriter consoleContent = new StringWriter();
+	private transient PrintWriter consoleOutput = new PrintWriter(consoleContent);
 
 	private String waitingForPreviousRequest = null;
 	private transient Thread myThread = null;
@@ -306,6 +315,8 @@ public final class Access implements java.io.Serializable, Mappable {
 		a.piggyBackData = this.piggyBackData;
 		a.myException = this.myException;
 		a.mapStatistics = this.mapStatistics;
+		a.consoleOutput = this.consoleOutput;
+		a.consoleContent = this.consoleContent;
 		
 		return a;
 	}
@@ -528,5 +539,42 @@ public final class Access implements java.io.Serializable, Mappable {
 		}
 		return b;
 	}
+
+	/**
+	 * Gets the current console buffer.
+	 * 
+	 * @return
+	 */
+	public String getConsoleOutput() {
+		return consoleContent.toString();
+	}
+
+	/**
+	 * Writes a string to the access' object private console.
+	 * 
+	 * @param s
+	 */
+	public void writeToConsole(String s) {
+		consoleOutput.write(s);
+	}
 	
+	/**
+	 * Returns the access' object private console writer.
+	 * 
+	 * @return
+	 */
+	public PrintWriter getConsoleWriter() {
+		return consoleOutput;
+	}
+	
+	public static void main(String [] args) {
+		Access a = new Access();
+		a.writeToConsole("Started.\n");
+		new Throwable().printStackTrace(a.getConsoleWriter());
+		a.writeToConsole("Finished.\n");
+		System.err.println(a.getConsoleOutput());
+		
+		Access b = a.cloneWithoutNavajos();
+		System.err.println(b.getConsoleOutput());
+	}
 }
