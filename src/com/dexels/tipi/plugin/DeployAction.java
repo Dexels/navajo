@@ -1,5 +1,6 @@
 package com.dexels.tipi.plugin;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -9,6 +10,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.Map.Entry;
@@ -75,17 +77,7 @@ public class DeployAction implements IObjectActionDelegate {
 	private void deployProject(IProject project) {
 		try {
 			if(project.hasNature(TipiNature.NATURE_ID)) {
-				IFile deploy = project.getFile("settings/deploy.properties");
-				if(deploy.exists()) {
-					System.err.println("Deploy settings: "+deploy.getLocation().toString());
-					InputStream is = deploy.getContents();
-					PropertyResourceBundle prp = new PropertyResourceBundle(is);
-					is.close();
-					String deployRoot = prp.getString("deployRoot");
-					String deployRootSsh = prp.getString("deployRootSsh");
-					runDeployScript(project, deployRoot, deployRootSsh);
-					
-				}
+					runDeployScript(project);
 			}
 		} catch (CoreException e) {
 			e.printStackTrace();
@@ -94,10 +86,8 @@ public class DeployAction implements IObjectActionDelegate {
 		}
 	}
 
-	private void runDeployScript(IProject project,String deployRoot, String deployRootSsh) throws CoreException {
-		System.err.println("Root: "+deployRoot+" ssh: "+deployRootSsh);
-		IFile buildDeploy = project.getFile("settings/build.xml");
-		runBuild(buildDeploy,null,deployRoot,deployRootSsh);
+	private void runDeployScript(IProject project) throws CoreException, IOException {
+			runBuild(project.getFile("settings/build.xml"),null);
 	}
 
 	/*
@@ -120,30 +110,35 @@ public class DeployAction implements IObjectActionDelegate {
 	}
 
 	
-	public void runBuild(IFile f, IProgressMonitor monitor,final String codebase, final String deployRootSsh)  {
+	public void runBuild(IFile f, IProgressMonitor monitor) throws IOException  {
 		if(!f.exists()) {
 			System.err.println("File not found!");
 			return;
 		}
   //    InputDialog dlg = new InputDialog(Display.getCurrent().getActiveShell(),"SSH Login", "Deployment ssh password", "",null);			
    //   if (dlg.open() == Window.OK) {
+		IProject myProject = f.getProject();
+		final Map<String,String> properties =	retrieveProperties(myProject,"settings/tipi.properties");
+		
    		try {
 //   			String sshPw = dlg.getValue();
    			
 //   			runner.set
-   			IProject myProject = f.getProject();
-				Map<String,String> deployProperties =	retrieveProperties(myProject,"settings/deploy.properties");
+   			Map<String,String> deployProperties =	retrieveProperties(myProject,"settings/deploy.properties");
+				String projectName = f.getProject().getName().toLowerCase();
 
+   			String profileLinkList = createProfileLinkList(myProject);
    			
-				Map<String,String> properties =	retrieveProperties(myProject,"settings/tipi.properties");
 				properties.putAll(deployProperties);
-				properties.put("projectName", f.getProject().getName());
-				properties.put("codebase", f.getProject().getName());
+				properties.put("projectName", projectName);
+				properties.put("profileLinkList", profileLinkList);
+//				properties.put("codebase", f.getProject().getName());
 				properties.put("message", "building tipi application...");
 				properties.put("deployPath", "deploy/current");
 				properties.put("baseDir", f.getProject().getLocation().toString());
    			System.err.println("Properties: "+properties);
    			
+   			properties.putAll(deployProperties);
 				
 				AntRunner runner = new AntRunner();
    			runner.setBuildFileLocation(f.getLocation().toString());
@@ -155,7 +150,7 @@ public class DeployAction implements IObjectActionDelegate {
    	//		runner.addBuildLogger("com.dexels.tipi.plugin.TipiBuildLogger");
    			runner.run(monitor);
    			System.err.println("Run completed.");
-      		MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Thank you for deploying using the TipiPlugin!", codebase+"Application.jnlp");
+//      		MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Thank you for deploying using the TipiPlugin!", properties.get("codebase")+"Application.jnlp");
       		Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
 					IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
@@ -163,7 +158,7 @@ public class DeployAction implements IObjectActionDelegate {
 					try {
 						
 						browser = browserSupport.createBrowser(IWorkbenchBrowserSupport.AS_VIEW, null, "Test", "Test");
-						URL url = new URL(codebase);
+						URL url = new URL(properties.get("tipiAppServer")+properties.get("projectName"));
 						browser.openURL(url);
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -177,7 +172,7 @@ public class DeployAction implements IObjectActionDelegate {
 
 //   					ErrorDialog.openError(Display.getCurrent().getActiveShell(),"Tipi Deployment problem","Error building deploy", Status.CANCEL_STATUS);
    					Status status = new Status(IStatus.ERROR, "TipiPlugin", 0,
-   			            "Error deploying to: "+deployRootSsh, null);
+   			            "Error deploying to: "+properties.get("deployRootSsh"), null);
 
    			        // Display the dialog
    			        ErrorDialog.openError(Display.getCurrent().getActiveShell(),
@@ -196,6 +191,19 @@ public class DeployAction implements IObjectActionDelegate {
       }
 		
 
+	}
+
+	private String createProfileLinkList(IProject myProject) {
+		StringBuffer sb = new StringBuffer();
+		File dir = myProject.getLocation().toFile();
+		for (File f : dir.listFiles()) {
+			if(f.getName().endsWith(".jnlp")) {
+				String snip = "<a href='"+f.getName()+"'><br/>[[Start "+f.getName()+"]]</a><br/>";
+				sb.append(snip);
+			}
+		}
+		sb.append("<hr/>");
+		return sb.toString();
 	}
 
 	private String createArguments(Map<String, String> properties) {

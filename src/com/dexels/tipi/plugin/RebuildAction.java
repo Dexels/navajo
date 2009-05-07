@@ -6,6 +6,10 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -34,12 +38,19 @@ public class RebuildAction implements IObjectActionDelegate {
 							.getAdapter(IProject.class);
 				}
 				if (project != null) {
-					IFile settings = project.getFile("settings/tipi.properties");
-					try {
-						settings.touch(null);
-					} catch (CoreException e) {
-						e.printStackTrace();
-					}
+					final IFile settings = project.getFile("settings/tipi.properties");
+					Job job = new Job("Manual Rebuild task") {
+					     protected IStatus run(IProgressMonitor monitor) {
+					   	  try {
+									settings.touch(monitor);
+								} catch (CoreException e) {
+									e.printStackTrace();
+								}
+								return Status.OK_STATUS;
+					        }
+					     };
+					  job.setPriority(Job.SHORT);
+					  job.schedule(); // start as soon as possible
 				}
 			}
 		}

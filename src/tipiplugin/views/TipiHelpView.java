@@ -189,7 +189,7 @@ protected void checkupdate() {
 		private XMLElement invisibleRoot;
 
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
-				System.err.println("AAAAAP");
+//				System.err.println("AAAAAP");
 		}
 
 		public void dispose() {
