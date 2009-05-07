@@ -22,7 +22,7 @@
 		<mkdir dir="deploy" />
 		<mkdir dir="deploy/current" />
 		<mkdir dir="deploy/archived" />
-		<buildWikiSource sourceDir="tipi/" docDir="deploy/current/source/" baseDir="${baseDir}" name="${projectName}"/>
+		<buildWikiSource sourceDir="tipi/" resourceDir="resource/" appCodebase="${tipiAppServer}${projectName}/resource/" docDir="deploy/current/source/" baseDir="${baseDir}" name="${projectName}"/>
 
 		<echo message="Deployroot: %{deployRoot}">
 		</echo>
@@ -38,15 +38,33 @@
 		<replace file="deploy/current/index.html" token="@@TITLE@@" value="${title}" />
 		<replace file="deploy/current/index.html" token="@@VENDOR@@" value="${vendor}" />
 		<replace file="deploy/current/index.html" token="@@HOMEPAGE@@" value="${homepage}" />
-		<replace file="deploy/current/index.html" token="@@ICON@@" value="${icon}" />
 		<replace file="deploy/current/index.html" token="@@SPLASH@@" value="${splash}" />
-		<replace file="deploy/current/index.html" token="@@APPLINK@@" value="${tipiAppServer}${projectName}/Application.jnlp"/>
+		<replace file="deploy/current/index.html" token="@@PROFILELINKLIST@@" value="${profileLinkList}" />
+				<replace file="deploy/current/index.html" token="@@APPLINK@@" value="${tipiAppServer}${projectName}/Application.jnlp"/>
 		<replace file="deploy/current/index.html" token="@@TIMESTAMP@@" value="${build.timestamp}"  />
 		<replace file="deploy/current/index.html" token="@@SOURCELINK@@" value="${tipiDoc}:${projectName}:info"  />
-		
+		<replace file="deploy/current/index.html" token="@@ICON@@" value="${icon}" />
+				
 		
 		<zip destfile="${baseDir}/deploy/archived/${projectName}_${build.timestamp}.zip" basedir="${baseDir}/deploy/current"/>
+		<mkdir dir="${projectName}"/>
+		<copy todir="${projectName}">
+			<fileset dir=".">
+				<include name=".project"/>
+			</fileset>
+		</copy>
 		<eclipse.refreshLocal resource="${ant.project.name}" />
+		<scp trust="true" sftp="true" verbose="true" todir="${tipiAppServerSsh}">
+			<fileset dir=".">
+				<include name="${projectName}/**" />
+			</fileset>
+		</scp>
+		<scp trust="true" sftp="true" verbose="true" todir="${tipiDocSsh}">
+			<fileset dir=".">
+				<include name="${projectName}/**" />
+			</fileset>
+		</scp>
+		<delete dir="${projectName}"></delete>
 		<scp trust="true" sftp="true" verbose="true" todir="${tipiAppServerSsh}${projectName}">
 			<fileset dir="deploy/current">
 				<include name="*.jnlp" />
