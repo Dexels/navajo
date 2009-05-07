@@ -24,6 +24,7 @@ public class NavajoEventMap {
 	public static final String AUDITLOG_EVENT = "auditlog";
 	public static final String QUEUABLE_FINISHED_EVENT = "queuablefinished";
 	public static final String QUEUABLE_FAILURE_EVENT = "queuablefailure";
+	public static final String FULL_ACCESS_LOG_STATISTICS = "accesslog";
 	
 	
 	static {
@@ -40,6 +41,7 @@ public class NavajoEventMap {
 		navajoEvents.put(AUDITLOG_EVENT, AuditLogEvent.class);
 		navajoEvents.put(QUEUABLE_FINISHED_EVENT, QueuableFinishedEvent.class);
 		navajoEvents.put(QUEUABLE_FAILURE_EVENT, QueuableFailureEvent.class);
+		navajoEvents.put(FULL_ACCESS_LOG_STATISTICS, AccessLogEvent.class);
 		
 	}
 	

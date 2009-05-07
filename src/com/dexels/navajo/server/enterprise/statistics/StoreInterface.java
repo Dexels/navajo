@@ -41,10 +41,11 @@ public interface StoreInterface {
   
   /**
    * Method to store multiple access objects in the (persistent) Navajo store.
+   * Returns number of written full access logs.
    *
    * @param a
    */
-  public void storeAccess(final Map accessMap);
+  public int storeAccess(final Map accessMap);
   
   /**
    * Method to store multiple access objects in the (persistent) Navajo store.

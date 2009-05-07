@@ -2,6 +2,7 @@ package com.dexels.navajo.server.statistics;
 
 import com.dexels.navajo.events.NavajoEvent;
 import com.dexels.navajo.events.NavajoEventRegistry;
+import com.dexels.navajo.events.types.AccessLogEvent;
 import com.dexels.navajo.events.types.AuditLogEvent;
 import com.dexels.navajo.events.types.ChangeNotificationEvent;
 import com.dexels.navajo.events.types.NavajoRequestEvent;
@@ -19,6 +20,7 @@ import com.dexels.navajo.util.AuditLog;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -160,6 +162,7 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
 
 	  HashMap copyOfTodo = null;
 	  HashSet copyOfAuditLogs = null;
+	 
 	  synchronized ( semaphore ) {
 		  if ( todo.size() == 0 ) {
 			  return;
@@ -174,10 +177,15 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
 		  todo.clear();
 		  auditlogs.clear();
 	  }
-	  myStore.storeAccess(copyOfTodo);
+	  int accessLogCount = myStore.storeAccess(copyOfTodo);
+	  if ( accessLogCount > 0 ) {
+		  NavajoEventRegistry.getInstance().publishEvent(new AccessLogEvent(accessLogCount));
+	  }
 	  myStore.storeAuditLogs(copyOfAuditLogs);
 	  copyOfTodo.clear();
 	  copyOfAuditLogs.clear();
+	  
+	  // Publish exception event...
 	
   }
 
