@@ -54,21 +54,19 @@ public class TipiBuildDeployJnlp  extends org.apache.tools.ant.Task {
 			JnlpDeployer jd = new JnlpDeployer();
 			
 			File baseDir = new File(getBaseDir());
-//			File output = new File("/Users/frank/output.txt");
-//			FileWriter fw = new FileWriter(output);
 			File deployDir = new File(baseDir,deployPath);
 			if(!deployDir.exists()) {
 				deployDir.mkdirs();
 			}
-			File destination = new File(deployDir,"Application.jnlp");
-//			fw.write("Basedir: "+baseDir);
-//			fw.write("deployDir: "+deployDir);
-//			fw.write("destination: "+destination);
-//			fw.flush();
-//			fw.close();
-			System.err.println("Deploying to destination: "+destination);
-			//throw new BuildException("BAM!");
-			jd.deploy(new File(baseDir,"Local.jnlp"), destination, codebase);
+			File[] rootFiles = baseDir.listFiles();
+			for (File file : rootFiles) {
+				if(file.isFile() && file.getName().endsWith(".jnlp")) {
+					File destination = new File(deployDir,file.getName());
+					System.err.println("Deploying to destination: "+destination);
+					jd.deploy(file, destination, codebase);
+				}
+			}
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
