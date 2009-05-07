@@ -554,7 +554,7 @@ public final class Access implements java.io.Serializable, Mappable {
 	 * 
 	 * @param s
 	 */
-	public void writeToConsole(String s) {
+	private final void writeToConsole(String s) {
 		consoleOutput.write(s);
 	}
 	
@@ -563,18 +563,38 @@ public final class Access implements java.io.Serializable, Mappable {
 	 * 
 	 * @return
 	 */
-	public PrintWriter getConsoleWriter() {
+	private final PrintWriter getConsoleWriter() {
 		return consoleOutput;
 	}
 	
-	public static void main(String [] args) {
-		Access a = new Access();
-		a.writeToConsole("Started.\n");
-		new Throwable().printStackTrace(a.getConsoleWriter());
-		a.writeToConsole("Finished.\n");
-		System.err.println(a.getConsoleOutput());
-		
-		Access b = a.cloneWithoutNavajos();
-		System.err.println(b.getConsoleOutput());
+	/**
+	 * Static method that does not check for existence of Access object.
+	 * If Access is null, the output is written to System.err
+	 * 
+	 * @param a
+	 * @param s
+	 */
+	public final static void writeToConsole(final Access a, final String s) {
+		if ( a != null ) {
+			a.writeToConsole(s);
+		} else {
+			System.err.println(s);
+		}
 	}
+	
+	/**
+	 * Static method that checks for existence of Access object.
+	 * If Access is null, the output is written to System.err
+	 * 
+	 * @param a
+	 * @return
+	 */
+	public final static PrintWriter getConsoleWriter(final Access a) {
+		if ( a != null ) {
+			return a.getConsoleWriter();
+		} else {
+			return new PrintWriter(System.err);
+		}
+	}
+	
 }
