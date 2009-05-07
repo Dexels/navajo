@@ -30,6 +30,7 @@ package navajo;
  * 
  * 8.1.3 - Fixed problem with carriage return under Windows with expression between <value> tags.
  *       - Added printwriter console to Access object for debugging purposes.
+ *       - Added support for firing AccessLogEvent to notify of 1 or more written full access logs.
  *  
  * 8.1.2 - Fixes for script inheritance, fixed 'order' problem with scripts using inheritance.
  *       - Exposing postmanURL via TribeMember class.
