@@ -23,7 +23,7 @@ public class VersionResolver {
 	public Map<String,String> resolveVersion(String token) {
 		String ext = null;
 		String version = null;
-		System.err.println("repppp: "+repDefinition+" token: "+token);
+	//	System.err.println("repppp: "+repDefinition+" token: "+token);
 		if(token.indexOf("/")!=-1) {
 			StringTokenizer st2 = new StringTokenizer(token,"/");
 			ext = st2.nextToken();

@@ -127,7 +127,7 @@ public class ClientActions {
 
 	public static void downloadExtensionJars(String project, URL projectURL, XMLElement result, File baseDir, boolean clean)
 			throws MalformedURLException {
-		System.err.println("PRoject dir: " + projectURL);
+//		System.err.println("PRoject dir: " + projectURL);
 		URL unsigned = new URL(projectURL, "lib/");
 
 		List<XMLElement> jars = result.getAllElementsByTagName("jar");
@@ -139,7 +139,7 @@ public class ClientActions {
 		for (XMLElement element : jars) {
 			String path = element.getStringAttribute("path");
 			URL jar = new URL(unsigned, path);
-			System.err.println("URL: " + jar);
+//			System.err.println("URL: " + jar);
 			try {
 				downloadFile(jar, path, f,clean,false);
 			} catch (IOException e) {
@@ -190,11 +190,12 @@ public class ClientActions {
 	 * @throws IOException
 	 */
 	public static void downloadFile(URL remote, String path, File directory, boolean clean, boolean dontOverwrite) throws IOException, WriteAbortedException {
-		System.err.println("File: " + directory.getAbsolutePath()+ " url: "+remote);
+		//System.err.println("File: " + directory.getAbsolutePath()+ " url: "+remote);
 		directory.mkdirs();
 		File file = new File(directory, path);
 		if(dontOverwrite && file.exists()) {
 			System.err.println("Not overwriting existing file: "+file.getAbsolutePath());
+			return;
 		}
 		InputStream iss = checkNeedsUpdate(file, remote,clean);
 		if(iss == null) {
@@ -215,13 +216,13 @@ public class ClientActions {
 		if(remote > local || clean) {
 			return uc.getInputStream();
 		}
-		System.err.println("Skipping: "+jar);
+//		System.err.println("Skipping: "+jar);
 		
 		return null;
 	}
 
 	public static XMLElement getXMLElement(URL extensionURL) {
-		System.err.println("Getting url: "+extensionURL);
+//		System.err.println("Getting url: "+extensionURL);
 		try {
 			XMLElement result = new CaseSensitiveXMLElement();
 			InputStream is = extensionURL.openStream();
@@ -295,7 +296,7 @@ public class ClientActions {
 				// "http://download.java.net/media/jogl/builds/archive/jsr-231-webstart-current/jogl.jnlp"
 				// />
 				// <extension name="jogl" href="http://www.jogl.com"/>
-				System.err.println("Copying: " + extension);
+//				System.err.println("Copying: " + extension);
 				resources.addChild(extension.copy());
 			}
 		}

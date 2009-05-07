@@ -33,7 +33,7 @@ public class LocalJnlpBuilder extends BaseJnlpBuilder {
 		Map<String,String> mainJar = new HashMap<String,String>();
 		Map<String,String> remoteJar = new HashMap<String,String>();
 		List<String> jars = ExtensionManager.getJars(repository, ext,version,mainJar,remoteJar);
-		System.err.println("Local jars:"+ jars);
+//		System.err.println("Local jars:"+ jars);
 		for (String path : jars) {
 			XMLElement x = new CaseSensitiveXMLElement("jar");
 			resources.addChild(x);

@@ -155,9 +155,7 @@ public class XsdBuilder {
 
 			if (e != null) {
 				choice.addChild(e);
-				System.err.println(" adding: "+current);
 			} else {
-				System.err.println("NOT adding: "+current);
 			}
 		}
 		XMLElement tt = addTag("xs:attribute", cmpl);
@@ -595,10 +593,10 @@ public class XsdBuilder {
 			Map<String, XMLElement> allComponents, XMLElement root) throws IOException {
 		XMLElement result = new CaseSensitiveXMLElement();
 		result.setName("xs:element");
-		System.err.println("Element before: "+element);
+//		System.err.println("Element before: "+element);
 		
 		element = ComponentMerger.getAssembledClassDef (allComponents, element,element.getStringAttribute("name"));
-		System.err.println("Element after: "+element);
+//		System.err.println("Element after: "+element);
 		String type = element.getStringAttribute("type");
 		if (type.equals("tipi") || type.equals("component")|| type.equals("connector")) {
 			result.setAttribute("name", (isDefinition ? "d." : "c.") + current);
