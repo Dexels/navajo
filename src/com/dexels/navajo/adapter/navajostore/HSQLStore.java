@@ -280,14 +280,13 @@ public final class HSQLStore implements StoreInterface {
     addAccess(a, am);
   }
 
-public void storeAccess(Map accessMap) {
-	// TODO Auto-generated method stub
-	
-}
+  public int storeAccess(Map accessMap) {
+	  return 0;
+  }
 
-public void storeAuditLogs(Set auditLogSet) {
-	// TODO Auto-generated method stub
-	
-}
+  public void storeAuditLogs(Set auditLogSet) {
+	  // TODO Auto-generated method stub
+
+  }
 
 }

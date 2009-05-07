@@ -315,11 +315,12 @@ public final class OracleStore implements StoreInterface {
 		
 	}
 
-	public void storeAccess(Map accessMap) {
+	public int storeAccess(Map accessMap) {
 	
+		int fullAccessLogCount = 0;
 		
 		if ( accessMap == null || accessMap.isEmpty() ) {
-			return;
+			return 0;
 		}
 		
 		if ( hostName == null ) {
@@ -437,6 +438,7 @@ public final class OracleStore implements StoreInterface {
 //							 Only log details if exception occured or if full accesslog monitoring is enabled.
 							if (a.getException() != null || DispatcherFactory.getInstance().getNavajoConfig().needsFullAccessLog(a) ) {
 								addLog(con, a);
+								fullAccessLogCount++;
 							}
 							
 							a = null;
@@ -499,6 +501,8 @@ public final class OracleStore implements StoreInterface {
 				}
 			}
 		}
+		
+		return fullAccessLogCount;
 	}
 
 	public void storeAuditLogs(Set auditLogSet) {
