@@ -26,7 +26,6 @@ package com.dexels.navajo.mapping;
  */
 
 import com.dexels.navajo.loader.NavajoClassSupplier;
-import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
 import com.dexels.navajo.mapping.compiler.meta.Dependency;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.server.jmx.JMXHelper;
@@ -55,6 +54,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
   public String lockName;
   public String lockOwner;
   public String lockClass;
+  public boolean debugAll = false;
   
   public MappableTreeNode currentMap = null;
   public final Stack treeNodeStack = new Stack();
@@ -535,6 +535,14 @@ private boolean keepJMXConnectionAlive = false;
 
   public String getScriptType() {
 	return "tsl";  
+  }
+
+  public boolean isDebugAll() {
+	  return debugAll;
+  }
+
+  public void setDebugAll(boolean debugAll) {
+	  this.debugAll = debugAll;
   }
 
 }
