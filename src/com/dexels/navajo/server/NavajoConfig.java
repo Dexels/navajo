@@ -804,8 +804,8 @@ public final class NavajoConfig implements NavajoConfigInterface {
      */
     public final boolean needsFullAccessLog(Access a) {
     	
-      // Check whether compiledscript has debugAll set.
-      if ( a.getCompiledScript() != null && a.getCompiledScript().isDebugAll() ) {
+      // Check whether compiledscript has debugAll set or whether access object has debug all set.
+      if ( a.isDebugAll() || ( a.getCompiledScript() != null && a.getCompiledScript().isDebugAll() ) ) {
     	  return true;
       }
       

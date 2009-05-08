@@ -87,7 +87,7 @@ public final class Access implements java.io.Serializable, Mappable {
 	public int contentLength;
 	public Binary requestNavajo;
 	public Binary responseNavajo;
-	
+	public boolean debugAll;
 
 	private Throwable myException;
 	private Navajo outputDoc;
@@ -595,6 +595,24 @@ public final class Access implements java.io.Serializable, Mappable {
 		} else {
 			return new PrintWriter(System.err);
 		}
+	}
+
+	/**
+	 * Checks whether this Access objects needs full debug.
+	 * 
+	 * @return
+	 */
+	public boolean isDebugAll() {
+		return debugAll;
+	}
+
+	/**
+	 * Setter to indicate whether this Access object needs full debug.
+	 * 
+	 * @param debugAll
+	 */
+	public void setDebugAll(boolean debugAll) {
+		this.debugAll = debugAll;
 	}
 	
 }
