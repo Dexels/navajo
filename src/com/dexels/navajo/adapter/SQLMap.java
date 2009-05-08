@@ -36,6 +36,8 @@ import java.util.Collections;
 import java.util.logging.Level;
 
 import com.dexels.navajo.document.types.Memo;
+import com.dexels.navajo.events.NavajoEventRegistry;
+import com.dexels.navajo.events.types.AuditLogEvent;
 
 /**
  * Title:        Navajopa
@@ -129,6 +131,8 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
   protected final String DEFAULTSRCNAME = "default";
 
   public boolean debug = false;
+  public int timeAlert = -1;
+  
   public String driver;
   public String url;
   public String username;
@@ -1150,7 +1154,7 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
     ResultSet rs = null;
 
     long start = 0;
-    if (debug) {
+    if ( debug || timeAlert > 0) {
       start = System.currentTimeMillis();
     }
 
@@ -1367,9 +1371,14 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
       this.resetAll();
     }
 
-    if (debug) {
+    if ( debug || timeAlert > 0 ) {
       long end = System.currentTimeMillis();
       double total = (end - start) / 1000.0;
+      if ( (int) (end - start) > timeAlert ) {
+    	  NavajoEventRegistry.getInstance().publishEvent(
+    			  new AuditLogEvent("SQLMAPTIMEALERT", "Query took " + (end-start) + " millis.", Level.WARNING));
+      }
+      // Log total if needed....
       // totaltiming += total;
     }
     return resultSet;
@@ -1807,5 +1816,13 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
 			                        new GenericMultipleDependentResource("sql", "update", SQLFieldDependency.class), 
 			                        new GenericMultipleDependentResource("sql", "query", SQLFieldDependency.class)};
   }
+
+public int getTimeAlert() {
+	return timeAlert;
+}
+
+public void setTimeAlert(int timeAlert) {
+	this.timeAlert = timeAlert;
+}
   
 }
