@@ -35,9 +35,9 @@ public class GrayScaleTransform {
 
 	public static void main(String[] argh) {
 		try {
-			BufferedImage source = ImageIO.read(new File("/home/aphilip/Desktop/ai-scaled.jpg"));
+			BufferedImage source = ImageIO.read(new File("c:/test.png"));
 			for (float f = 0.0f; f < 1.1; f += 0.1f) {
-				ImageIO.write(GrayScaleTransform.getFadedImage(source, f), "png", new File("/home/aphilip/Desktop/fade" + (int) (10 * f)
+				ImageIO.write(GrayScaleTransform.getFadedImage(source, f), "png", new File("c:/fade" + (int) (10 * f)
 						+ ".png"));
 			}
 		} catch (Exception e) {

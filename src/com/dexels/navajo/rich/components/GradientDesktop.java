@@ -75,7 +75,7 @@ public class GradientDesktop extends JDesktopPane {
 			System.err.println("At r=" + pot + ", cutoff[f]=" + freq);
 		}
 		try {
-			ImageIO.write(apenoot, "jpg", new File("/home/aphilip/Desktop/apenoot.jpg"));
+			ImageIO.write(apenoot, "jpg", new File("c:/apenoot.jpg"));
 		} catch (Exception e) {
 		}
 

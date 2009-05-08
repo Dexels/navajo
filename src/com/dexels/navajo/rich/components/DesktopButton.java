@@ -12,7 +12,7 @@ import org.jdesktop.animation.timing.interpolation.*;
 
 public class DesktopButton extends JButton {
 	private ImageIcon myIcon;
-	private int reflectionSize = 20;
+	private int reflectionSize = 12;
 	private boolean mouseover = false;
 	private boolean animating = false;
 	private int text_offset_x = 5;
@@ -21,9 +21,13 @@ public class DesktopButton extends JButton {
 	private int icon_offset_x = 15;
 	private int fontsize_a = 17;
 	private int fontsize_b = 12;
-	private float glow = 0.6f;
+	private Font textFont = new Font(Font.DIALOG, Font.BOLD, fontsize_a);
+	private Font subTextFont = new Font(Font.DIALOG, Font.PLAIN, fontsize_b);
+	private float glow = 0.7f;
+	private float max_opacity = .7f;
 	private String toolTip = "";
 	private boolean showSpring = true;
+	int animation_speed = 250;
 
 	public DesktopButton(URL imagepath, String text) {
 		this(imagepath);
@@ -39,13 +43,26 @@ public class DesktopButton extends JButton {
 		myIcon = new ImageIcon(iconpath);
 	}
 
-	public void setToolTipText(String text) {
+	public void setSubText(String text) {
 		this.toolTip = text;
+	}
+		
+	public void setTextFont(Font f){
+		this.textFont = f;		
+	}
+	
+	public void setSubTextFont(Font f){
+		this.subTextFont = f;		
 	}
 
 	public DesktopButton(URL imagepath) {
 		this();
 		setIconUrl(imagepath);
+	}
+	
+	public void setEnabled(boolean enabled){
+		super.setEnabled(enabled);
+		setShowSpring(enabled);		
 	}
 
 	public DesktopButton() {
@@ -56,14 +73,14 @@ public class DesktopButton extends JButton {
 		this.addMouseListener(new MouseAdapter() {
 			public void mouseEntered(MouseEvent e) {
 				mouseover = true;
-				if (!animating) {
+				if (!animating && isEnabled()) {
 					animate(true);
 				}
 			}
 
 			public void mouseExited(MouseEvent e) {
 				mouseover = false;
-				if (!animating) {
+				if (!animating && isEnabled()) {
 					animate(false);
 				}
 			}
@@ -77,10 +94,9 @@ public class DesktopButton extends JButton {
 	}
 
 	public Dimension getPreferredSize() {
-		Font fA = new Font(Font.DIALOG, Font.BOLD, fontsize_a);
-		Font fB = new Font(Font.DIALOG, Font.PLAIN, fontsize_b);
-		FontMetrics mA = getFontMetrics(fA);
-		FontMetrics mB = getFontMetrics(fB);
+			
+		FontMetrics mA = getFontMetrics(textFont);
+		FontMetrics mB = getFontMetrics(subTextFont);
 
 		// Determine WIDTH
 		int width = icon_offset_x + text_offset_x;
@@ -123,38 +139,40 @@ public class DesktopButton extends JButton {
 		BufferedImage buffer = new BufferedImage(bounds.width, bounds.height - reflectionSize, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D gBuf = buffer.createGraphics();
 
-		Font fA = new Font(Font.DIALOG, Font.BOLD, fontsize_a);
-		Font fB = new Font(Font.DIALOG, Font.PLAIN, fontsize_b);
-
 		buffer = new BufferedImage(bounds.width, bounds.height - reflectionSize, BufferedImage.TYPE_INT_ARGB);
 		gBuf = buffer.createGraphics();
 
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g2.setColor(getForeground());
-		g2.setFont(fA);
+		g2.setColor(isEnabled()? getForeground(): Color.lightGray);
+		g2.setFont(textFont);
 		g2.setComposite(AlphaComposite.SrcOver.derive(Math.min(1.0f, 1.05f * glow)));
 
-		g2.drawString(getText(), (myIcon != null ? myIcon.getIconWidth() : 0) + icon_offset_x + text_offset_x, text_offset_y + fontsize_a);
-		g2.setFont(fB);
+		g2.drawString(getText(), (myIcon != null ? myIcon.getIconWidth() : 0) + icon_offset_x + text_offset_x, text_offset_y + textFont.getSize());
+		g2.setFont(subTextFont);
 
 		if (toolTip != null && !"".equals(toolTip)) {
 			g2.drawString(toolTip, (myIcon != null ? myIcon.getIconWidth() : 0) + icon_offset_x + text_offset_x, text_offset_y
-					+ text_b_offset_y + 2 * fontsize_a);
+					+ text_b_offset_y + 2 * textFont.getSize());
 		}
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-		gBuf.setComposite(AlphaComposite.SrcOver.derive(glow));
 		if (myIcon != null) {
 			gBuf.drawImage(myIcon.getImage(), icon_offset_x, 0, null);
 		}
-
-		g2.drawImage(createReflection(buffer), 0, 0, buffer.getWidth(), buffer.getHeight() + reflectionSize, null);
+	
+		if(!isEnabled()){
+			BufferedImage gray = GrayScaleTransform.getFadedImage(buffer, 1f);			
+			g2.drawImage(createReflection(gray), 0, 0, gray.getWidth(), gray.getHeight() + reflectionSize, null);			
+		}else{
+			g2.drawImage(createReflection(buffer), 0, 0, buffer.getWidth(), buffer.getHeight() + reflectionSize, null);
+		}
+		
 
 	}
 
 	private void animate(boolean direction) {
 		if (direction) {
-			Animator animator = PropertySetter.createAnimator(250, this, "glow", 0.6f, 1.0f);
+			Animator animator = PropertySetter.createAnimator(animation_speed, this, "glow", max_opacity, 1.0f);
 			animator.addTarget(new TimingTargetAdapter() {
 				public void end() {
 					animating = false;
@@ -168,7 +186,7 @@ public class DesktopButton extends JButton {
 			animator.start();
 			animating = true;
 		} else {
-			Animator animator = PropertySetter.createAnimator(250, this, "glow", 1.0f, 0.6f);
+			Animator animator = PropertySetter.createAnimator(animation_speed, this, "glow", 1.0f, max_opacity);
 			animator.addTarget(new TimingTargetAdapter() {
 				public void end() {
 					animating = false;
@@ -191,6 +209,15 @@ public class DesktopButton extends JButton {
 
 	public float getGlow() {
 		return this.glow;
+	}
+	
+	public void setSpeed(int speed){
+		animation_speed = speed;
+	}
+	
+	public void setOpacity(float opacity){
+		this.max_opacity = opacity;
+		this.glow = opacity;
 	}
 
 	public void fireSpring() {
