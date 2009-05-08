@@ -5,8 +5,12 @@ import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.types.AccessLogEvent;
 import com.dexels.navajo.events.types.AuditLogEvent;
 import com.dexels.navajo.events.types.ChangeNotificationEvent;
+import com.dexels.navajo.events.types.NavajoHealthCheckEvent;
 import com.dexels.navajo.events.types.NavajoRequestEvent;
 import com.dexels.navajo.events.types.NavajoResponseEvent;
+import com.dexels.navajo.events.types.QueuableFailureEvent;
+import com.dexels.navajo.events.types.ServerTooBusyEvent;
+import com.dexels.navajo.events.types.TribeMemberDownEvent;
 import com.dexels.navajo.mapping.AsyncMappable;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
@@ -20,7 +24,6 @@ import com.dexels.navajo.util.AuditLog;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -133,6 +136,10 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
 			  NavajoEventRegistry.getInstance().addListener(NavajoRequestEvent.class, instance);
 			  NavajoEventRegistry.getInstance().addListener(NavajoResponseEvent.class, instance);
 			  NavajoEventRegistry.getInstance().addListener(AuditLogEvent.class, instance);
+			  NavajoEventRegistry.getInstance().addListener(NavajoHealthCheckEvent.class, instance);
+			  NavajoEventRegistry.getInstance().addListener(ServerTooBusyEvent.class, instance);
+			  NavajoEventRegistry.getInstance().addListener(QueuableFailureEvent.class, instance);
+			  NavajoEventRegistry.getInstance().addListener(TribeMemberDownEvent.class, instance);
 			  
 			  System.err.println("Started StatisticsRunner version $Id$ using store: " + instance.myStore.getClass().getName());
 		  }
@@ -331,7 +338,7 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
   /**
    * Handle Navajo Events: request, response and auditlog events.
    */
-  public void onNavajoEvent(NavajoEvent ne) {
+  public final void onNavajoEvent(final NavajoEvent ne) {
 
 	  if ( ne instanceof NavajoResponseEvent ) {
 		  NavajoResponseEvent nre = (NavajoResponseEvent) ne;
@@ -344,6 +351,15 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
 		  }
 	  } else if ( ne instanceof NavajoRequestEvent ) {
 		  NavajoRequestEvent nre = (NavajoRequestEvent) ne;
+		  // Do nothing...
+	  } else if ( ne instanceof NavajoHealthCheckEvent ) {
+		  addAuditLog(new AuditLogEvent((NavajoHealthCheckEvent) ne));
+	  } else if ( ne instanceof ServerTooBusyEvent )  {
+		  addAuditLog(new AuditLogEvent((ServerTooBusyEvent) ne));
+	  } else if ( ne instanceof TribeMemberDownEvent ) {
+		  addAuditLog(new AuditLogEvent((TribeMemberDownEvent) ne));
+	  } else if ( ne instanceof QueuableFailureEvent ) {
+		  addAuditLog(new AuditLogEvent((QueuableFailureEvent) ne));
 	  }
   }
 

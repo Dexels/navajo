@@ -25,6 +25,23 @@ public class AuditLogEvent implements NavajoEvent, LevelEvent {
 	private String accessId;
 	private Date created;
 	
+	public AuditLogEvent(QueuableFailureEvent qfe) {
+		this("QUEUABLEFAILURE", 
+		     ( qfe.getMyQueable() != null ? qfe.getMyQueable().getClass().getName() : "unknown"), Level.SEVERE);
+	}
+	
+	public AuditLogEvent(TribeMemberDownEvent tde) {
+		this("TRIBEMEMBERDOWN", tde.getTm().getMemberName(), Level.SEVERE);
+	}
+	
+	public AuditLogEvent(NavajoHealthCheckEvent nhc) {
+		this("HEALTHCHECK", nhc.getMessage(), nhc.getLevel());
+	}
+	
+	public AuditLogEvent(ServerTooBusyEvent nhc) {
+		this("SERVERTOOBUSY", "Number of simulatenously running service is", Level.SEVERE);
+	}
+	
 	public AuditLogEvent(String subSystem, String msg, Level level) {
 		message = msg;
 		this.subSystem = subSystem;
