@@ -112,10 +112,17 @@
          <value direction="in" name="foreground" type="color" property="foreground"/>
          <value direction="in" name="border" type="border"/>
          <value direction="in" name="text" type="string" property="text"/>
-         <value direction="in" name="tooltiptext" type="string" property="toolTipText"/>
+         <value direction="in" name="subtext" type="string" property="subText"/>
          <value direction="in" name="icon" type="url" property="iconUrl"/>
          <value direction="in" name="opaque" type="boolean" property="opaque"/>
          <value direction="in" name="showSpring" type="boolean" property="showSpring"/>
+         <value direction="in" name="enabled" type="boolean" property="enabled"/>
+         <value direction="in" name="tooltip" type="string" property="toolTipText"/>
+         <value direction="in" name="textfont" type="resource" property="textFont"/>
+         <value direction="in" name="subtextfont" type="resource" property="subTextFont"/>
+         <value direction="in" name="visible" type="boolean" property="visible"/>
+         <value direction="in" name="opacity" type="float" property="opacity"/>
+         <value direction="in" name="speed" type="integer" property="speed"/>
       </values>
       <methods>
          <method name="flip"/>
