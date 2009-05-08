@@ -1375,7 +1375,8 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
       long end = System.currentTimeMillis();
       double total = (end - start) / 1000.0;
       if ( timeAlert > 0 && (int) (end - start) > timeAlert ) {
-    	  AuditLogEvent ale =  new AuditLogEvent("SQLMAPTIMEALERT", "Query took " + (end-start) + " millis.", Level.WARNING);
+    	  AuditLogEvent ale =  new AuditLogEvent("SQLMAPTIMEALERT", "Query took " + (end-start) + " millis:\n" +
+    			                                 (query != null ? query : update ), Level.WARNING);
     	  ale.setAccessId(myAccess.accessID);
     	  NavajoEventRegistry.getInstance().publishEvent(ale);
       }
