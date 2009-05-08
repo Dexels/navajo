@@ -32,6 +32,7 @@ package navajo;
  *       - Added printwriter console to Access object for debugging purposes.
  *       - Added support for firing AccessLogEvent to notify of 1 or more written full access logs.
  *       - Log ServerTooBusyEvent, HealthCheckEvent, QueuableFailureEvent and TribeMemberDownEvent to auditlog table. 
+ *       - Added support for debugAll in CompiledScript. debugAll triggers a full access log.
  *  
  * 8.1.2 - Fixes for script inheritance, fixed 'order' problem with scripts using inheritance.
  *       - Exposing postmanURL via TribeMember class.
