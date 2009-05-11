@@ -1,6 +1,9 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.*;
 import java.io.*;
 import java.net.*;
@@ -19,9 +22,21 @@ public class TipiSwingButton extends JButton implements TipiDndCapable {
 	private final TipiDndManager myDndManager;
 	
 	private boolean isVertical = false;
+	private boolean tipiBorderPainted = true;
 
 	public TipiSwingButton(TipiComponent component) {
 		myDndManager = new TipiDndManager(this, component);
+		addMouseListener(new MouseAdapter(){
+
+			public void mouseEntered(MouseEvent e) {
+				TipiSwingButton.this.setBorderPainted(true);
+			}
+			public void mouseExited(MouseEvent e) {
+				TipiSwingButton.this.setBorderPainted(tipiBorderPainted);
+			}
+		}
+		);
+	
 	}
 
 	public void setVertical(boolean isVertical) {
@@ -54,6 +69,18 @@ public class TipiSwingButton extends JButton implements TipiDndCapable {
 				return super.getText();
 			}
 		}
+		
+		
+		
+		
+		public void setBorderVisible(boolean b) {
+			boolean old = isBorderPainted();
+			setBorderPainted(b);
+			setContentAreaFilled(b);
+			tipiBorderPainted = b;
+			firePropertyChange("BorderVisible", old, b);
+	}
+
 	public void createVerticalImage (String caption, boolean clockwise) {
 	        System.err.println("Creating vertical image");
 	        Font f = getFont ();
