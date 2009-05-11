@@ -88,9 +88,9 @@ private int checkboxGroupColumnCount;
             int req = (int) Math.ceil(al.size() / (float)checkboxGroupColumnCount)-1; // offset with 1 because gridbag starts at 0
             System.err.println("Req: "+req);
             if(row+1 > req){
-              add(createButton(s), new GridBagConstraints(col, row, 1, 1, 1.0, 1.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, new Insets(2, 2, 2, 2), 0, 0));
+              add(createButton(s), new GridBagConstraints(col, row, 1, 1, 1.0, 1.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
             }else{
-              add(createButton(s), new GridBagConstraints(col, row, 1, 1, 1.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, new Insets(2, 2, 2, 2), 0, 0));
+              add(createButton(s), new GridBagConstraints(col, row, 1, 1, 1.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
             }
             row++;
             if(row > req){

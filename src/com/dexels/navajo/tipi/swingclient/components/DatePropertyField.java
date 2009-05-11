@@ -26,9 +26,6 @@ public final class DatePropertyField
     extends PropertyField
     implements PropertyControlled {
 
-  ResourceBundle myResource;
-  private String tooltip = null;
-
   private static SimpleDateFormat displayDateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
   private static SimpleDateFormat inputFormat1 = new SimpleDateFormat("dd-MM-yy");
   private static SimpleDateFormat inputFormat2 = new SimpleDateFormat("dd/MM/yy");
@@ -42,14 +39,7 @@ public final class DatePropertyField
 
   public DatePropertyField() {
 	  setColumns(10);
-	  try {
-      if (System.getProperty("com.dexels.navajo.propertyMap") != null) {
-        myResource = ResourceBundle.getBundle(System.getProperty("com.dexels.navajo.propertyMap"));
-      }
-    }
-    catch (Exception e) {
-//      System.err.println("Whoops could not find propertyMap in DatePropertyField");
-    }
+	
     try {
 
       this.addMouseMotionListener(new MouseMotionAdapter() {
@@ -89,8 +79,6 @@ public final void setProperty(Property p) {
     catch (Exception e) {
       e.printStackTrace();
     }
-    setDescription();
-     tooltip = getToolTipText();
      super.setProperty(p);
   }
 
@@ -236,7 +224,6 @@ public final void paintComponent(Graphics g) {
           setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
         else {
-          setToolTipText(tooltip);
           setCursor(Cursor.getDefaultCursor());
         }
       }
@@ -246,7 +233,6 @@ public final void paintComponent(Graphics g) {
           setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
         else {
-          setToolTipText(tooltip);
           setCursor(Cursor.getDefaultCursor());
         }
       }

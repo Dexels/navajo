@@ -197,7 +197,6 @@ public static BufferedImage scale(int width, int height, boolean keepAspect, Buf
 		  }
 		  ( (JButton) myBinaryLabel).setText("<html>-</html>"); 
 		  //addPropertyComponent(myBinaryLabel, true);
-		  myBinaryLabel.setToolTipText(myProperty.getDescription());
 		  return;
 		}
  //   System.err.println("Getting binary data!");

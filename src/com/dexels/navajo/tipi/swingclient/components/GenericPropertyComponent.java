@@ -50,13 +50,14 @@ public class GenericPropertyComponent extends JPanel {
 
 	// BorderLayout borderLayout = new BorderLayout();
 	// private Map failedPropertyIdMap = null;
-	private ResourceBundle res = null;
 	private final List<FocusListener> focusListeners = new ArrayList<FocusListener>();
 	private int checkboxGroupColumnCount = 0;
 	private int memoColumnCount = 0;
 	private int memoRowCount = 0;
 	private String forcedAlignment = null;
 
+	private String toolTipText;
+	
 	MultipleSelectionPropertyCheckboxGroup myMultiple = null;
 	MultipleSelectionPropertyList myMultipleList = null;
 	TextPropertyField myField = null;
@@ -112,18 +113,7 @@ public class GenericPropertyComponent extends JPanel {
 	private Component valueStrut = null;
 
 	public GenericPropertyComponent() {
-		try {
-			if (System.getProperty("com.dexels.navajo.propertyMap") != null) {
-				res = ResourceBundle.getBundle(System.getProperty("com.dexels.navajo.propertyMap"));
-			}
-			// this.setPreferredSize(new
-			// Dimension(4,ComponentConstants.PREFERRED_HEIGHT));
-			// setBackground(Color.pink);
-		} catch (MissingResourceException ex) {
-			// System.err.println("No resourcemap found.");
-		} catch (Exception e) {
-			// System.err.println("No access to find propertyMap");
-		}
+
 		try {
 			jbInit();
 		} catch (Exception e) {
@@ -211,11 +201,7 @@ public class GenericPropertyComponent extends JPanel {
 		}
 	}
 
-	// public void setHardEnabled(boolean b) {
-	// myEnableState = b;
-	// hardEnabled = true;
-	// setEnabled(myEnableState);
-	// }
+
 
 	public final Property getProperty() {
 		return myProperty;
@@ -285,7 +271,11 @@ public class GenericPropertyComponent extends JPanel {
 		if (search != null) {
 			setSearch(search);
 		}
-
+		if(currentComponent!=null) {
+			if(toolTipText!=null) {
+				currentComponent.setToolTipText(toolTipText);
+			}
+		}
 		setPropFlag = false;
 	}
 
@@ -468,30 +458,7 @@ public class GenericPropertyComponent extends JPanel {
 		}
 	}
 
-	public final String getToolTipText(Property p) {
-		String toolTip = "";
-		if (p != null) {
-			try {
-				if (res != null) {
-					toolTip = res.getString(p.getName());
-					return toolTip;
-				} else {
-					toolTip = "unknown";
-				}
-			} catch (MissingResourceException e) {
-				toolTip = p.getDescription();
-				if (toolTip != null && !toolTip.equals("")) {
-					return toolTip;
-				} else {
-					toolTip = p.getName();
-					return toolTip;
-				}
-			}
-		} else {
-			toolTip = "unknown";
-		}
-		return toolTip;
-	}
+
 
 	public void setLabelIndent(final int lindent) {
 		labelWidth = lindent;
@@ -1362,6 +1329,9 @@ public class GenericPropertyComponent extends JPanel {
 		memoFieldScrollPane.setVerticalScrollBarPolicy(verticalScrolls ? JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED
 				: JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		myMemoField.setProperty(p);
+		if(toolTipText!=null) {
+			myMemoField.setToolTipText(toolTipText);
+		}
 		addPropertyComponent(memoFieldScrollPane, true);
 	}
 
@@ -1995,6 +1965,19 @@ public class GenericPropertyComponent extends JPanel {
 				0, 0, 0), propertyWidth, 0));
 		currentComponent.setMaximumSize(new Dimension(propertyWidth, Integer.MAX_VALUE));
 		valueStrut.setMaximumSize(new Dimension(propertyWidth, Integer.MAX_VALUE));
+	}
+
+	public String getToolTipText() {
+		return toolTipText;
+	}
+
+	public void setToolTipText(String toolTipText) {
+		System.err.println("Setting tooltiptext: "+toolTipText);
+		this.toolTipText = toolTipText;
+		super.setToolTipText(toolTipText);
+		if(currentComponent!=null) {
+				currentComponent.setToolTipText(toolTipText);
+		}
 	}
 
 }

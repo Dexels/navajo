@@ -48,7 +48,7 @@ public final void focusLost(FocusEvent e) {
       ClockTime ct = new ClockTime(getText());
       ClockTime oldTime = (ClockTime)getProperty().getTypedValue();
       if (!ct.equals(oldTime)) {
-        getProperty().setValue(ct);
+        getProperty().setAnyValue(ct);
       }
       setText(ct.toString());
     }catch(Exception ex){

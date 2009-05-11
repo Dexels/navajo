@@ -11,7 +11,6 @@ import com.dexels.navajo.document.*;
 public class PropertyTextArea extends JTextArea implements PropertyControlled   {
   private String textValue;
   private Property initProperty = null;
-  private String toolTipText = "";
  
   private BoundedLengthDocument myDocument = new BoundedLengthDocument();
 
@@ -25,12 +24,7 @@ public class PropertyTextArea extends JTextArea implements PropertyControlled   
   }
 
 private void updateText(Property p, String currentText) {
-      if((toolTipText = p.getDescription()) != null){
-        setToolTipText(toolTipText);
-      }else{
-        toolTipText = p.getName();
-        setToolTipText(toolTipText);
-      }
+
 
     setEditable(p.isDirIn());
     if(!currentText.equals(textValue)) {
@@ -75,6 +69,7 @@ private void updateText(Property p, String currentText) {
     }
     textValue = getText();
     if(textValue != null){
+   	 System.err.println("Setting ptopert: "+textValue);
       initProperty.setValue(textValue);
     }
   }

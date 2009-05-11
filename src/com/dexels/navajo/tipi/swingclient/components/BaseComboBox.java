@@ -15,7 +15,7 @@ public abstract class BaseComboBox
   DefaultComboBoxModel defaultComboBoxModel = new DefaultComboBoxModel();
 
   public BaseComboBox() {
-	    this.setPreferredSize(new Dimension(125, ComponentConstants.PREFERRED_HEIGHT));
+//	    this.setPreferredSize(new Dimension(125, ComponentConstants.PREFERRED_HEIGHT));
 	    this.setModel(defaultComboBoxModel);
 	    // Install the custom key selection manager
 	    this.setKeySelectionManager(new MyKeySelectionManager());

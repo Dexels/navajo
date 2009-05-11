@@ -26,9 +26,6 @@ public class PropertyField
   
   public PropertyField() {
 	  this.addFocusListener(this);
-//	  this.setPreferredSize(new Dimension(4, ComponentConstants.PREFERRED_HEIGHT));
-//	  setBackground(Color.green);
-//	  setOpaque(false);
   }
   
   public boolean isManagingFocus(){
@@ -66,41 +63,14 @@ public class PropertyField
   }
   
 
-
-  
-//public Dimension getMinimumSize() {
-//      return getPreferredSize();
-//  }
   public void setProperty(Property p) {
     if (p == null) {
       return;
     }
     initProperty = p;
-      setDescription();
     setEditable(p.isDirIn());
   }
   
-//	public boolean isOpaque() {
-//		return true;
-//	}
-	
-  protected void setDescription() {
-
-    if (initProperty == null) {
-      return;
-    }
-
-      String desc = initProperty.getDescription();
-      String name = initProperty.getName();
-      if (desc != null && !desc.equals("")) {
-        setToolTipText(desc);
-      }
-      else {
-        setToolTipText(name);
-      }
-    }
-
-
   public void focusLost(FocusEvent e) {
     textValue = getText();
     if (initProperty != null && !initProperty.getType().equals(Property.EXPRESSION_PROPERTY)) {
@@ -109,9 +79,6 @@ public class PropertyField
   }
 
   public void focusGained(FocusEvent e) {
-    if (isEditable()) {
-      setDescription();
-    }
     selectAll();
   }
 

@@ -19,7 +19,7 @@ import com.dexels.navajo.document.*;
 public class MultiSelectPropertyBox extends BaseComboBox
     implements PropertyControlled {
 
-  ResourceBundle myResource;
+//  ResourceBundle myResource;
 
    private Property myProperty = null;
    private Property myValueProperty = null;
@@ -28,22 +28,14 @@ public class MultiSelectPropertyBox extends BaseComboBox
 
 
    public MultiSelectPropertyBox() {
-     try {
-       try {
-		if(System.getProperty("com.dexels.navajo.propertyMap") != null){
-		     myResource = ResourceBundle.getBundle(System.getProperty("com.dexels.navajo.propertyMap"));
-		   }
-	} catch (SecurityException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-       jbInit();
+        this.setRenderer(new PropertyCellRenderer());
+        this.addItemListener(new java.awt.event.ItemListener() {
+          public void itemStateChanged(ItemEvent e) {
+//            this_itemStateChanged(e);
+          }
+        });
        setEditable(false);
        this.setRenderer(new MultiSelectBoxRenderer());
-     }
-     catch(Exception e) {
-       e.printStackTrace();
-     }
    }
 
    public void gainFocus(){
@@ -64,44 +56,14 @@ public class MultiSelectPropertyBox extends BaseComboBox
    public final void loadProperty(Property p) {
      if (p.getType().equals(Property.SELECTION_PROPERTY)) {
        myProperty = p;
-       try{
-         ArrayList all = p.getAllSelectedSelections();
-         for(int i=0;i<all.size();i++){
-           Selection s = (Selection) all.get(i);
-         }
-       }catch(Exception e){
-         e.printStackTrace();
-       }
 
        loadCombobox(p);
      } else {
        System.err.println("Attempting to load property box from non-selection property");
      }
      setEnabled(p.isDirIn());
-//     if(p.isDirOut()){
-//       setForeground(Color.darkGray);
-//       setBackground(SystemColor.control);
-//     }
-//    updateUI();
-    String toolTipText;
-     try{
-       if (myResource!=null) {
-         toolTipText = myResource.getString(p.getName());
-         setToolTipText(toolTipText);
-       }
-       else {
-         toolTipText = p.getName();
-         setToolTipText(toolTipText);
-       }
 
-     }catch(MissingResourceException e){
-       if((toolTipText = p.getDescription()) != null){
-         setToolTipText(toolTipText);
-       }else{
-         toolTipText = p.getName();
-         setToolTipText(toolTipText);
-       }
-     }
+
    }
 
    @Override
@@ -137,23 +99,11 @@ public final void setEditable(boolean b) {
          setToKey((p.getValue()).trim());
        }
        setEnabled(p.isDirIn());
-//       if(p.isDirOut()){
-//         setForeground(Color.black);
-//         setBackground(SystemColor.control);
-//       }
-//      updateUI();
-//      setEditable(p.isDirIn());
+
      }
    }
 
-   private final void jbInit() throws Exception {
-     this.setRenderer(new PropertyCellRenderer());
-     this.addItemListener(new java.awt.event.ItemListener() {
-       public void itemStateChanged(ItemEvent e) {
-//         this_itemStateChanged(e);
-       }
-     });
-   }
+
 
    private final void setSelectionProperty() {
      Selection s = (Selection)getSelectedItem();

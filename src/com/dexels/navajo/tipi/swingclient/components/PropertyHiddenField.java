@@ -29,14 +29,7 @@ public void setProperty(Property p) {
     setEnabled(false);
     setEditable(false);
 
-      if ( (toolTipText = p.getDescription()) != null) {
-        setToolTipText(toolTipText);
-      }
-      else {
-        toolTipText = p.getName();
-        setToolTipText(toolTipText);
-      }
-
+   
     }
 
 }

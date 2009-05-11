@@ -77,14 +77,6 @@ public final void setProperty(Property p) {
     else {
     }
     setText("" + val);
-    String toolTipText = "";
-    setEditable(p.isDirIn());
-        toolTipText = p.getDescription();
-		if (toolTipText != null && !toolTipText.equals("")) {
-			this.setToolTipText(toolTipText);
-		} else {
-			this.setToolTipText(p.getName());
-		}
   }
 
 

@@ -268,9 +268,6 @@ public class BinaryEditor extends JPanel implements PropertyControlled, Property
 			pathField.setText("");
 			myBinaryLabel.setIcon(null);
 			myBinaryLabel.setText("");
-			if(myProperty!=null) {
-				myBinaryLabel.setToolTipText(myProperty.getDescription());
-			}
 			revalidate();
 			return;
 		}

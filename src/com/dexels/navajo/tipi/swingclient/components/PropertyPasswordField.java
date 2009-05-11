@@ -30,13 +30,12 @@ public class PropertyPasswordField extends JPasswordField implements PropertyCon
 	public String textValue;
 	public Property initProperty = null;
 	// public ResourceBundle localResource;
-	public String toolTipText = "";
 
 	// ConditionErrorParser cep = new ConditionErrorParser();
 
 	public PropertyPasswordField() {
 
-		this.setMinimumSize(new Dimension(4, ComponentConstants.PREFERRED_HEIGHT));
+//		this.setMinimumSize(new Dimension(4, ComponentConstants.PREFERRED_HEIGHT));
 		this.addFocusListener(new java.awt.event.FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
@@ -80,12 +79,7 @@ public class PropertyPasswordField extends JPasswordField implements PropertyCon
 		setText(textValue);
 		setEnabled(p.isDirIn());
 		setEditable(p.isDirIn());
-		if ((toolTipText = p.getDescription()) != null) {
-			setToolTipText(toolTipText);
-		} else {
-			toolTipText = p.getName();
-			setToolTipText(toolTipText);
-		}
+	
 	}
 
 

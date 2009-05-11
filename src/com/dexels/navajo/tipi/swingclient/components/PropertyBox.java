@@ -8,26 +8,13 @@ import java.util.*;
 import com.dexels.navajo.document.*;
 
 public class PropertyBox extends BaseComboBox implements PropertyControlled, PropertyChangeListener {
-	ResourceBundle myResource;
 
 	private Property myProperty = null;
 
 	private Object lastSelection;
 
 	public PropertyBox() {
-		try {
-			String prop = null;
-			try {
-				prop = System.getProperty("com.dexels.navajo.propertyMap");
-			} catch (SecurityException e) {
-			}
-			if (prop != null) {
-				myResource = ResourceBundle.getBundle(prop);
-			}
-		} catch (Exception e) {
-			// e.printStackTrace();
-		}
-		
+
 //		PropertyCellRenderer renderer2 = new PropertyCellRenderer();
 //		this.setRenderer(renderer2);
 		this.addItemListener(new java.awt.event.ItemListener() {
@@ -67,28 +54,7 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled, Pro
 			e1.printStackTrace();
 		}
 		setEnabled(p.isDirIn());
-		if (p.isDirOut()) {
-			// remove, don't mess with colors
-//			setForeground(Color.darkGray);
-		}
-		String toolTipText;
-		try {
-			if (myResource != null) {
-				toolTipText = myResource.getString(p.getName());
-				setToolTipText(toolTipText);
-			} else {
-				toolTipText = p.getName();
-				setToolTipText(toolTipText);
-			}
 
-		} catch (MissingResourceException e) {
-			if ((toolTipText = p.getDescription()) != null) {
-				setToolTipText(toolTipText);
-			} else {
-				toolTipText = p.getName();
-				setToolTipText(toolTipText);
-			}
-		}
 	}
 
 	@Override
@@ -100,9 +66,6 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled, Pro
 		super.setEditable(b);
 	}
 
-	// public void paint(Graphics g) {
-	//
-	// }
 
 	public final void setProperty(Property p) {
 		if(myProperty!=null) {
