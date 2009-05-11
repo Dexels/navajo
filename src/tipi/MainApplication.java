@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import javax.imageio.spi.ServiceRegistry;
 import javax.swing.*;
 
 import com.dexels.navajo.tipi.components.swingimpl.*;
@@ -13,6 +14,14 @@ import com.dexels.navajo.tipi.swingclient.components.*;
 public class MainApplication {
 
 	static public void main(String[] args) throws Exception {
+		Iterator<TipiExtension> lookupProviders = ServiceRegistry.lookupProviders(TipiExtension.class);
+//		System.err.println("Boot class extensions: ");
+//		while (lookupProviders.hasNext()) {
+//			TipiExtension tipiExtension = (TipiExtension) lookupProviders.next();
+//			System.err.println("Extension : "+tipiExtension);
+//		}
+//		System.err.println("end of boot");;
+		System.err.println("Shake it!");
 		String definition = null;
 		List<String> arrrgs = new ArrayList<String>();
 		if(args.length>1 && "-open".equals(args[0])) {
@@ -23,14 +32,20 @@ public class MainApplication {
 				definition = arrrgs.get(arrrgs.size()-1);
 		} else {
 
-			if(args.length>0) {
-				definition = args[args.length - 1];
-			}
 			for (int i = 0; i < args.length; i++) {
 				arrrgs.add(args[i]);
 			}
-			
+			System.err.println("Args: "+arrrgs);
+			System.err.println("final arg: "+args[args.length-1].endsWith(".xml"));
+			if(args.length>0 ) {
+				System.err.println("# of args: "+args.length);
+				if(args[args.length-1].endsWith(".xml")) {
+					definition = args[args.length - 1];
+					
+				}
+			}
 		}
+		System.err.println("Initializing with def: "+definition);
 		initialize(checkStudio(), arrrgs, definition);
 	}
 
@@ -40,7 +55,7 @@ public class MainApplication {
 	private static boolean checkStudio() {
 		boolean studio = false;
 		try {
-			Class.forName("tipi.TipiDevelopTools");
+			Class.forName("tipi.TipiToolsExtension");
 			String s = System.getProperty("studio");
 			if(s!=null) {
 				studio = s.equals("true");
