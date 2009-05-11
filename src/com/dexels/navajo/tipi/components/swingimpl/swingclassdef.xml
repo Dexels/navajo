@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <tid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.navajo.nl/classdef_schema.xsd">
 
-   <tipiclass name="swingcomponent">
+   <tipiclass name="swingcomponent" implements="basecomponent">
+		
 		<description>
 			Standard getters and setters for swing based components.
 		</description>
 		<values>
 		 <value direction="in" name="background" type="color" property="background">
+		 	<description>
+				Sets the background color for swing components. May be ignored, depending on the Look And Feel.\\
+				For more info about look and feel, check: [[concepts:swing:lnf|Look and Feel in Swing]]\\
+		 	</description>
+		 </value>
+		 <value direction="in" name="foreground" type="color" property="foreground">
 		 	<description>
 				Sets the background color for swing components. May be ignored, depending on the Look And Feel.\\
 				For more info about look and feel, check: [[concepts:swing:lnf|Look and Feel in Swing]]\\
@@ -86,6 +93,16 @@
 				</description>
 			</event>
 		</events>
+		<methods>
+         <method name="fireAction">
+			<description>
+				Programmatically fires the 'onActionPerformed' event. You can use this to reduce code duplication.
+				If for example, you want to link the onActionPerformed event of this button also to another event,
+				just call a fireAction method from there. 
+			</description>
+         </method>
+      </methods>
+  
 	</tipiclass>
 
    <tipiaction name="askValue" class="TipiAskValue" package="com.dexels.navajo.tipi.components.swingimpl.actions">
@@ -862,7 +879,7 @@
    </tipiclass>
 
 
-   <tipiclass addtocontainer="true"  implements="basecomponent,datacomponent,messagecomponent,swingcomponent,panel" deprecated="false" childcount="*" class="TipiArrayPanel" layoutmanager="true" module="container" name="arraypanel"
+   <tipiclass addtocontainer="true"  implements="basecomponent,datacomponent,messagecomponent,panel" deprecated="false" childcount="*" class="TipiArrayPanel" layoutmanager="true" module="container" name="arraypanel"
       package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="tipi.gif" type="tipi">
       <description>
    			Based on the panel. Added messagePath and some events
@@ -1001,12 +1018,7 @@
          <value direction="inout" name="maximizable" type="boolean" value="true" property="maximizable" />
          <value direction="inout" name="resizable" type="boolean" value="true" property="resizable" />
          <value direction="inout" name="enabled" type="boolean" value="true" property="enabled" />
-         <value direction="inout" name="visible" type="boolean" value="false" property="visible" />
          <value direction="inout" name="selected" type="boolean" value="false" property="selected" />
-         <!-- <value direction="in" name="menubar" type="resource" /> -->
-         <value direction="inout" name="background" type="color" />
-         <value direction="inout" name="tooltip" type="string" />
-         <value direction="in" name="layout" type="string" />
       </values>
       <methods>
          <method name="iconify" />
@@ -1349,53 +1361,38 @@
 
 
       
-   <tipiclass addtocontainer="true" class="TipiButton" implements="dragdrop" module="component" name="button" childcount="0" package="com.dexels.navajo.tipi.components.swingimpl"
+   <tipiclass addtocontainer="true" class="TipiButton" implements="dragdrop,swingcomponent,swingbutton" module="component" name="button" childcount="0" package="com.dexels.navajo.tipi.components.swingimpl"
       propertycomponent="false" studio-icon="button.gif" type="component">
-      <events>
-         <!-- TODO: Add onPropertyLoad event -->
-         <event name="onInstantiate" />
-         <event name="onActionPerformed" />
-         <event name="onMouseEntered" />
-         <event name="onMouseExited" />
-      </events>
       <values>
          <value direction="inout" name="text" type="string" property="text" />
          <value direction="in" name="icon" type="resource" property="iconUrl" />
-         <value direction="in" name="background" type="color" property="background" />
-         <value direction="in" name="foreground" type="color" property="foreground" />
-         <value direction="in" name="border" type="border" property="border" />
-         <value direction="in" name="font" type="font" property="font" />
-         <value direction="inout" name="tooltip" type="string" property="ToolTipText" />
+
+         <value direction="in" name="borderVisible" type="boolean" property="borderVisible">
+			<description>
+				Indicates if the border will be drawn (default true). Setting it to false, will put the button in
+				'toolbar style'
+			</description>
+         </value>
          <value direction="in" name="enabled" type="boolean" property="enabled" />
-         <value direction="in" name="visible" type="boolean" property="visible" />
          <value direction="inout" name="mnemonic" type="string" property="stringMnemonic" />
          <value direction="in" name="accelerator" type="string" />
-         <value direction="in" name="vertical" type="boolean" property="vertical" />
       </values>
-      <methods>
-         <method name="fireAction" />
-      </methods>
+ 
    </tipiclass>
 
 <!--  Copied from button, removed dropCategory -->
-   <tipiclass addtocontainer="true" class="TipiDropButton" module="component" name="dropbutton" childcount="0" package="com.dexels.navajo.tipi.components.swingimpl"
+   <tipiclass addtocontainer="true" class="TipiDropButton" module="component" implements="basecomponent,swingcomponent,swingbutton" name="dropbutton" childcount="0" package="com.dexels.navajo.tipi.components.swingimpl"
       propertycomponent="false" studio-icon="button.gif" type="component">
       <description>
       	This component allows you to drop files or URL's onto it.
       	How and when this exactly works is platform dependent.
       </description>
       <events>
-         <!-- TODO: Add onPropertyLoad event -->
-         <event name="onInstantiate" />
-         <event name="onActionPerformed" />
-         <event name="onMouseEntered" />
-         <event name="onMouseExited" />
          <event name="onBinaryDropped">
 			<description>
 				Fired when a binary has been dropped.
 				//Note: This button does not allow 'regular' tipi drops. You can use regular tipi drags, though.//
 			</description>
-			
             <param name="value" type="object">
 				<description>
 				</description>
@@ -1407,120 +1404,68 @@
       <values>
          <value direction="inout" name="text" type="string" property="text" />
          <value direction="in" name="icon" type="resource" property="iconUrl" />
-         <value direction="in" name="background" type="color" property="background" />
          <value direction="in" name="foreground" type="color" property="foreground" />
-         <value direction="in" name="border" type="border" property="border" />
-         <value direction="in" name="font" type="font" property="font" />
-         <value direction="inout" name="tooltip" type="string" property="ToolTipText" />
          <value direction="in" name="enabled" type="boolean" property="enabled" />
-         <value direction="in" name="visible" type="boolean" property="visible" />
          <value direction="inout" name="mnemonic" type="string" property="stringMnemonic" />
          <value direction="in" name="accelerator" type="string" />
          <value direction="in" name="dragValue" type="object" />
          <value direction="in" name="dragCategory" type="list" />
-           <value direction="in" name="vertical" type="boolean" property="vertical" />
       </values>
       <methods>
          <method name="fireAction" />
       </methods>
    </tipiclass>
 
-   <tipiclass addtocontainer="true" class="TipiCheckbox" module="component" name="checkbox" childcount="0" layoutmanager="false" package="com.dexels.navajo.tipi.components.swingimpl"
+   <tipiclass addtocontainer="true" class="TipiCheckbox" module="component" implements="swingbutton,swingcomponent" name="checkbox" childcount="0" layoutmanager="false" package="com.dexels.navajo.tipi.components.swingimpl"
       propertycomponent="false" studio-icon="button.gif" type="component">
-      <events>
-         <event name="onInstantiate" />
-         <event name="onActionPerformed" />
-         <event name="onMouseEntered" />
-         <event name="onMouseExited" />
-      </events>
+    
       <values>
          <value direction="inout" name="selected" type="string" property="selected" />
          <value direction="inout" name="text" type="string" property="text" />
          <value direction="in" name="icon" type="resource" property="iconUrl" />
-         <value direction="in" name="background" type="color" property="background" />
-         <value direction="in" name="foreground" type="color" property="foreground" />
-         <value direction="in" name="border" type="border" property="border" />
-         <value direction="in" name="font" type="font" property="font" />
-         <value direction="inout" name="tooltip" type="string" property="ToolTipText" />
          <value direction="in" name="enabled" type="boolean" property="enabled" />
-         <value direction="in" name="visible" type="boolean" property="visible" />
          <value direction="in" name="accelerator" type="string" property="accelerator" />
          <value direction="inout" name="mnemonic" type="string" property="stringMnemonic" />
-
       </values>
       <methods />
    </tipiclass>
-   <tipiclass addtocontainer="true" class="TipiToggleButton" module="component" name="togglebutton" childcount="0" layoutmanager="false"
+   <tipiclass addtocontainer="true" class="TipiToggleButton" module="component" implements="basecomponent,swingbutton,swingcomponent" name="togglebutton" childcount="0" layoutmanager="false"
       package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" studio-icon="button.gif" type="component">
-      <events>
-         <event name="onInstantiate" />
-         <event name="onActionPerformed" />
-         <event name="onMouseEntered" />
-         <event name="onMouseExited" />
-      </events>
+
       <values>
          <value direction="inout" name="selected" type="string" property="selected" />
          <value direction="inout" name="text" type="string" property="text" />
          <value direction="in" name="icon" type="resource" property="iconUrl" />
-         <value direction="in" name="background" type="color" property="background" />
          <value direction="in" name="foreground" type="color" property="foreground" />
-         <value direction="in" name="border" type="border" property="border" />
-         <value direction="in" name="font" type="font" property="font" />
-         <value direction="inout" name="tooltip" type="string" property="ToolTipText" />
          <value direction="in" name="enabled" type="boolean" property="enabled" />
-         <value direction="in" name="visible" type="boolean" property="visible" />
          <value direction="in" name="accelerator" type="string" property="accelerator" />
          <value direction="inout" name="mnemonic" type="string" property="stringMnemonic" />
          <value direction="inout" name="buttongroup" type="component" />
       </values>
       <methods />
    </tipiclass>
-   <tipiclass addtocontainer="false" class="TipiButtonGroup" module="component" name="buttongroup" childcount="0" layoutmanager="false"
+   <tipiclass addtocontainer="false" class="TipiButtonGroup" implements="basecomponent" module="component" name="buttongroup" childcount="0" layoutmanager="false"
       package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" studio-icon="button.gif" type="component">
       <events>
-         <event name="onInstantiate" />
          <event name="onActionPerformed" />
       </events>
-      <values />
-      <methods />
    </tipiclass>
-   <tipiclass addtocontainer="true" class="TipiMenubar" module="menu" childcount="*" name="menubar" package="com.dexels.navajo.tipi.components.swingimpl"
+   <tipiclass addtocontainer="true" implements="swingcomponent,basecomponent" class="TipiMenubar" module="menu" childcount="*" name="menubar" package="com.dexels.navajo.tipi.components.swingimpl"
       propertycomponent="false" studio-icon="menubar.gif" layoutmanager="false" type="component">
-      <events>
-         <event name="onInstantiate" />
-         <event name="onActionPerformed" />
-         <event name="onMouseEntered" />
-         <event name="onMouseExited" />
-      </events>
       <values>
-         <value direction="in" name="background" type="color" property="background" />
-         <value direction="in" name="foreground" type="color" property="foreground" />
-         <value direction="in" name="border" type="border" property="border" />
-         <value direction="in" name="font" type="font" property="font" />
-         <value direction="inout" name="tooltip" type="string" property="ToolTipText" />
          <value direction="in" name="enabled" type="boolean" property="enabled" />
-         <value direction="in" name="visible" type="boolean" property="visible" />
       </values>
       <methods />
    </tipiclass>
 
-   <tipiclass addtocontainer="true" class="TipiMenu" module="menu" childcount="*" name="menu" package="com.dexels.navajo.tipi.components.swingimpl" layoutmanager="false"
+   <tipiclass addtocontainer="true" implements="swingcomponent"  class="TipiMenu" module="menu" childcount="*" name="menu" package="com.dexels.navajo.tipi.components.swingimpl" layoutmanager="false"
       propertycomponent="false" studio-icon="menu.gif" type="component">
       <events>
-         <event name="onInstantiate" />
-         <event name="onActionPerformed" />
-         <event name="onMouseEntered" />
-         <event name="onMouseExited" />
       </events>
       <values>
          <value direction="inout" name="text" type="string" property="text" />
          <value direction="in" name="icon" type="resource" property="iconUrl" />
-         <value direction="in" name="background" type="color" property="background" />
-         <value direction="in" name="foreground" type="color" property="foreground" />
-         <value direction="in" name="font" type="font" property="font" />
-         <value direction="inout" name="tooltip" type="string" property="ToolTipText" />
          <value direction="in" name="enabled" type="boolean" property="enabled" />
-         <value direction="in" name="visible" type="boolean" property="visible" />
          <value direction="in" name="accelerator" type="string" property="accelerator" />
          <value direction="inout" name="mnemonic" type="string" property="stringMnemonic" />
       </values>
@@ -1880,10 +1825,7 @@
 
    <tipiclass addtocontainer="true" class="TipiLabel" module="component" name="hidden" layoutmanager="false" package="com.dexels.navajo.tipi.components.swingimpl"
       studio-icon="hidden.gif" type="component" childcount="0" />
-  <tipiclass addtocontainer="true" class="TipiProperty" module="component" name="property" layoutmanager="false" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="true" studio-icon="property.gif" type="component" childcount="0">
-
-    </tipiclass>
-    
+     
    <tipiclass addtocontainer="true" class="TipiProperty" module="component" name="property" layoutmanager="false" package="com.dexels.navajo.tipi.components.swingimpl"
       propertycomponent="true" studio-icon="property.gif" type="component" childcount="0">
       <events>
@@ -1945,7 +1887,7 @@
          <value direction="in" name="foreground" type="color" property="foreground" />
          <value direction="in" name="border" type="border" property="border" />
          <value direction="in" name="font" type="font" property="font" />
-         <value direction="inout" name="tooltip" type="string" property="ToolTipText" />
+         <value direction="inout" name="tooltip" type="string" property="toolTipText" />
          <value direction="in" name="enabled" type="boolean" property="enabled" />
          <value direction="in" name="visible" type="boolean" property="visible" />
          <value direction="inout" name="mnemonic" type="string" property="stringMnemonic" />

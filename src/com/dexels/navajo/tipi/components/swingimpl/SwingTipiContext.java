@@ -444,7 +444,7 @@ public class SwingTipiContext extends TipiContext {
 		if (tipiLaf == null) {
 			tipiLaf = properties.get("tipilaf");
 		}
-
+		System.err.println("Properties: "+properties);
 		try {
 			System.err.println("Using tipilaf: "+tipiLaf);
 			if (tipiLaf == null) {

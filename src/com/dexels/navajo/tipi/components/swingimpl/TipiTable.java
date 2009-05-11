@@ -9,6 +9,7 @@ package com.dexels.navajo.tipi.components.swingimpl;
  * @version 1.0();
  */
 import java.awt.*;
+import java.awt.Point;
 import java.awt.event.*;
 import java.util.*;
 import java.util.List;
@@ -136,6 +137,23 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 		    });
 		mm.doLayout();
 		return mm;
+	}
+
+	@Override
+	public void showPopup(MouseEvent e) {
+		Point p = e.getPoint();
+		 System.err.println("TablePopup: "+p);
+		// get the row index that contains that coordinate
+		int rowNumber = mm.getTable().rowAtPoint( p );
+		mm.setSelectedRow(rowNumber);
+		// Get the ListSelectionModel of the JTable
+//		ListSelectionModel model = table.getSelectionModel();
+
+		// set the selected interval of rows. Using the "rowNumber"
+		// variable for the beginning and end selects only that one row.
+	//	model.setSelectionInterval( rowNumber, rowNumber );
+
+		super.showPopup(e);
 	}
 
 	public final void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {

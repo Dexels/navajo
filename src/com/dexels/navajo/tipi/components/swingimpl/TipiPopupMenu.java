@@ -13,6 +13,8 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
+import com.dexels.navajo.tipi.TipiComponent;
+
 
 public class TipiPopupMenu
     extends TipiSwingDataComponentImpl {
@@ -49,20 +51,22 @@ public class TipiPopupMenu
 		 
 	}
 
-  
-public void	addedToParentContainer(Object parentContainer, Object container, Object constraint) {
+  @Override
+public void	addedToParentContainer(TipiComponent parentTipiComponent, Object parentContainer, Object container, Object constraint) {
 	if(parentContainer instanceof Component) {
 		Component c = (Component)parentContainer;
 		c.addMouseListener(new MouseAdapter(){
 
 			public void mousePressed(MouseEvent e) {
 				if(e.isPopupTrigger()) {
+					System.err.println("Showing popup for component: "+this);
 					showPopup(e);
 				}
 			}
 
 			public void mouseReleased(MouseEvent e) {
 				if(e.isPopupTrigger()) {
+					System.err.println("Showing popup for component: "+this);
 					showPopup(e);
 				}
 			}});
