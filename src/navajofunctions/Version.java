@@ -41,10 +41,10 @@ public class Version extends dexels.Version {
 
 	public static final int MAJOR = 2;
 	public static final int MINOR = 0;
-	public static final int PATCHLEVEL = 0;
+	public static final int PATCHLEVEL = 1;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Functions";
-	public static final String RELEASEDATE = "2009-02-13";
+	public static final String RELEASEDATE = "2009-05-12";
 	
 	//Included packages.
 	String [] includes = {"navajodocument.Version", "navajo.Version"};
