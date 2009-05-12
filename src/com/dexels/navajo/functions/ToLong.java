@@ -26,6 +26,9 @@ public final class ToLong extends FunctionInterface {
         if(o instanceof Long) {
       	  return (Long)o;
         }
+        if(o instanceof java.util.Date) {
+        	  return new Long(((java.util.Date)o).getTime());
+          }
         if (o instanceof Double)
           return new Long( (int) ((Double) o).doubleValue() );
 
