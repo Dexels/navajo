@@ -98,6 +98,7 @@ public final class Access implements java.io.Serializable, Mappable {
 	private static Object mutex = new Object();
 	private Set<Map<?,?>> piggyBackData = null;
 	private String clientToken = null;
+	private String clientInfo = null;
 	
 	/**
 	 * Create a private logging console for this access object.
@@ -311,6 +312,7 @@ public final class Access implements java.io.Serializable, Mappable {
 		a.isFinished = this.isFinished;
 		a.contentLength = this.contentLength;
 		a.clientToken = this.clientToken;
+		a.clientInfo = this.clientInfo;
 		a.userCertificate = this.userCertificate;
 		a.piggyBackData = this.piggyBackData;
 		a.myException = this.myException;
@@ -413,12 +415,7 @@ public final class Access implements java.io.Serializable, Mappable {
 	}
 
 	public String getClientInfo() {
-		if ( inDoc != null ) {
-			Header h = inDoc.getHeader();
-			String info = h.getHeaderAttribute("clientInfo");
-			return info;
-		}
-		return null;
+		return this.clientInfo;
 	}
 	
 	public String getAgentId() {
@@ -622,6 +619,10 @@ public final class Access implements java.io.Serializable, Mappable {
 	 */
 	public void setDebugAll(boolean debugAll) {
 		this.debugAll = debugAll;
+	}
+
+	public void setClientInfo(String clientInfo) {
+		this.clientInfo = clientInfo;
 	}
 	
 }

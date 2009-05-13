@@ -364,6 +364,11 @@ public final class Dispatcher implements Mappable, DispatcherMXBean, DispatcherI
 			if (clientToken!=null) {
 				access.setClientToken(clientToken);
 			}
+			// Process client info:
+			String clientInfo = h.getHeaderAttribute("clientInfo");
+			if (clientInfo!=null) {
+				access.setClientInfo(clientInfo);
+			}
 			
 			// Process piggyback data:
 			Set<Map<String,String>> s = h.getPiggybackData();

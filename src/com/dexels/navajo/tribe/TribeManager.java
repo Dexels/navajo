@@ -477,6 +477,11 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 					q.notify();
 				}
 			}
+		} else if ( msg.getObject() instanceof org.jgroups.Message ) {
+			org.jgroups.Message m = (org.jgroups.Message) msg;
+			if ( m.getBuffer() != null ) {
+				System.err.println("JGROUPS MESSAGE RECEIVED: " + new String(m.getBuffer()));
+			}
 		} else {
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "Received unknown or irrelevant message: " + msg.getClass().getName() + ". Content = " + msg);
 		}
