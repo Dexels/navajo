@@ -57,7 +57,7 @@ public final class OracleStore implements StoreInterface {
 	private static String existsAccessSQL = "select count(*) AS cnt from navajoaccess where access_id = ?";
 	
 	private static String insertAccessSQL = "insert into navajoaccess " +
-	"(access_id, webservice, username, threadcount, cpuload, totaltime, parsetime, authorisationtime, clienttime, requestsize, requestencoding, compressedrecv, compressedsnd, ip_address, hostname, created, clientid, agentid) " +
+	"(access_id, webservice, username, threadcount, cpuload, totaltime, parsetime, authorisationtime, clienttime, requestsize, requestencoding, compressedrecv, compressedsnd, ip_address, hostname, created, clientid, clientinfo, agentid) " +
 	"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	
 	private static String insertAuditLog = "insert into auditlog " + 
@@ -67,7 +67,7 @@ public final class OracleStore implements StoreInterface {
 	"set webservice = ?, username = ?, threadcount = ?, cpuload = ?, totaltime = ?, parsetime = ?, " + 
 	"authorisationtime = ?, requestsize = ?, requestencoding = ?, " + 
 	"compressedrecv = ?, compressedsnd = ?, ip_address = ?, hostname = ?, " + 
-	"created = ?, clientid = ? where access_id = ?";
+	"created = ?, clientid = ?, clientinfo = ?, agentid = ? where access_id = ?";
 	
 	private static String updateAccessSQL = "update navajoaccess set clienttime = ? where access_id = ?";
 	
@@ -407,6 +407,7 @@ public final class OracleStore implements StoreInterface {
 								ps.setString(++index, hostName);
 								ps.setTimestamp(++index, new java.sql.Timestamp(a.created.getTime()));
 								ps.setString(++index, a.getClientToken());
+								ps.setString(++index, a.getClientInfo());
 								ps.setString(++index, a.getAgentId());
 								ps.executeUpdate();
 							} else {
@@ -427,6 +428,8 @@ public final class OracleStore implements StoreInterface {
 								psUpdate.setString(++index, hostName);
 								psUpdate.setTimestamp(++index, new java.sql.Timestamp(a.created.getTime()));
 								psUpdate.setString(++index, a.getClientToken());
+								psUpdate.setString(++index, a.getClientInfo());
+								psUpdate.setString(++index, a.getAgentId());
 								psUpdate.setString(++index, a.accessID);
 								int x = psUpdate.executeUpdate();
 							}
