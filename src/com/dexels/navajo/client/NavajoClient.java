@@ -786,7 +786,7 @@ public class NavajoClient implements ClientInterface {
     // ALWAY SET REQUEST ID AT THIS POINT.
     header.setRequestId( Guid.create() );
     header.setHeaderAttribute("clientToken", getSessionToken());
-    header.setHeaderAttribute("systeminfo", SystemInfo.getSystemInfo().toString());
+    header.setHeaderAttribute("clientInfo", SystemInfo.getSystemInfo().toString());
     // ========= Adding globalMessages
     Iterator<Entry<String,Message>> entries = globalMessages.entrySet().iterator();
     while (entries.hasNext()) {
