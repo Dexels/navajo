@@ -595,7 +595,7 @@ public final class Access implements java.io.Serializable, Mappable {
 	 * @return
 	 */
 	public final static PrintWriter getConsoleWriter(final Access a) {
-		if ( DispatcherFactory.getInstance().getNavajoConfig().getStatisticsRunner().isEnabled() && a != null ) {
+		if ( DispatcherFactory.getInstance().getNavajoConfig().isEnableStatisticsRunner() && a != null ) {
 			return a.getConsoleWriter();
 		} else {
 			return new PrintWriter(System.err);
