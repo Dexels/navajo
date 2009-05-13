@@ -412,6 +412,15 @@ public final class Access implements java.io.Serializable, Mappable {
 		return piggyBackData;
 	}
 
+	public String getClientInfo() {
+		if ( inDoc != null ) {
+			Header h = inDoc.getHeader();
+			String info = h.getHeaderAttribute("clientInfo");
+			return info;
+		}
+		return null;
+	}
+	
 	public String getAgentId() {
 		// First try Jabber.
 		String agentid = JabberWorkerFactory.getInstance().getAgentId(rpcUser + "-" + clientToken);
