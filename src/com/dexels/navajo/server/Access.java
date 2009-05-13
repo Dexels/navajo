@@ -583,9 +583,8 @@ public final class Access implements java.io.Serializable, Mappable {
 	public final static void writeToConsole(final Access a, final String s) {
 		if ( a != null ) {
 			a.writeToConsole(s);
-		} else {
-			System.err.println(s);
-		}
+		} 
+		System.err.println(s);
 	}
 	
 	/**
@@ -596,7 +595,7 @@ public final class Access implements java.io.Serializable, Mappable {
 	 * @return
 	 */
 	public final static PrintWriter getConsoleWriter(final Access a) {
-		if ( a != null ) {
+		if ( DispatcherFactory.getInstance().getNavajoConfig().getStatisticsRunner().isEnabled() && a != null ) {
 			return a.getConsoleWriter();
 		} else {
 			return new PrintWriter(System.err);
