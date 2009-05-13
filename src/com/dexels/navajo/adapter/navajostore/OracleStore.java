@@ -58,7 +58,7 @@ public final class OracleStore implements StoreInterface {
 	
 	private static String insertAccessSQL = "insert into navajoaccess " +
 	"(access_id, webservice, username, threadcount, cpuload, totaltime, parsetime, authorisationtime, clienttime, requestsize, requestencoding, compressedrecv, compressedsnd, ip_address, hostname, created, clientid, clientinfo, agentid) " +
-	"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	
 	private static String insertAuditLog = "insert into auditlog " + 
 	"(instance, subsystem, message, auditlevel, accessid, lastupdate) values (?, ?, ?, ?, ?, ?)";
