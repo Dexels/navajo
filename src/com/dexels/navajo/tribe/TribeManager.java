@@ -445,11 +445,11 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 		
 		//increaseCount(msg.getObject().getClass().getName());
 		
-		if ( msg.getObject() instanceof SmokeSignal ) {
+		if ( SmokeSignal.class.isAssignableFrom(msg.getObject().getClass() ) ) {
 			SmokeSignal r = (SmokeSignal) msg.getObject();
 			increaseCount("received-smokesignal");
 			r.processMessage();
-		} else if ( msg.getObject() instanceof Request && 
+		} else if ( Request.class.isAssignableFrom(msg.getObject().getClass()) && 
 				    ( !((Request) msg.getObject()).isIgnoreRequestOnSender() || 
 				      !channel.getLocalAddress().equals(msg.getSrc())
 				    )
@@ -466,7 +466,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 			} catch (ChannelClosedException e) {
 				e.printStackTrace();
 			}
-		} else if ( msg.getObject() instanceof Answer ) {
+		} else if ( Answer.class.isAssignableFrom(msg.getObject().getClass()) ) {
 			Answer a = (Answer) msg.getObject();
 			increaseCount("received-answer");
 			Request q = getWaitingRequest(a.getMyRequest());
@@ -483,7 +483,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 				System.err.println("JGROUPS MESSAGE RECEIVED: " + new String(m.getBuffer()));
 			}
 		} else {
-			AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "Received unknown or irrelevant message: " + msg.getClass().getName() + ". Content = " + msg);
+			AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "Received unknown or irrelevant message: " + msg.getObject().getClass().getName() + ". Content = " + msg);
 		}
 		
 	}
@@ -657,13 +657,6 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 		return members.clone();
 	}
 	
-	public static void main(String [] args) throws Exception {
-		System.err.println("Determining IP address...");
-		System.setProperty("java.net.preferIPv4Stack", "true");
-	  System.err.println("ip address = " + Inet4Address.getLocalHost().getHostAddress());
-	  
-	}
-
 	/**
 	 * Broadcasts a Navajo service to other servers. Do NOT wait for the response.
 	 * 
@@ -781,4 +774,14 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 		return null;
 	}
 
+	public static void main(String [] args) throws Exception {
+		System.err.println("Determining IP address...");
+		System.setProperty("java.net.preferIPv4Stack", "true");
+		System.err.println("ip address = " + Inet4Address.getLocalHost().getHostAddress());
+	  
+//		ServiceRequest s = new ServiceRequest();
+//		if ( Request.class.isAssignableFrom(s.getClass()) ) {
+//			System.err.println("Yes.");
+//		}
+	}
 }
