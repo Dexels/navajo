@@ -37,7 +37,7 @@ public class JabberPostAdapter implements Mappable {
 	Navajo myNavajo = null;
 	
 	public void load(Access access) throws MappableException, UserException {
-		myNavajo = access.getInDoc();
+		myNavajo = access.getOutputDoc();
 	}
 
 	public void store() throws MappableException, UserException {
