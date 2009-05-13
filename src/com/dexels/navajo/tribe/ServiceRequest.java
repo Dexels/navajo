@@ -25,7 +25,6 @@
 package com.dexels.navajo.tribe;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.enterprise.tribe.Answer;
 import com.dexels.navajo.server.enterprise.tribe.Request;
