@@ -23,7 +23,7 @@ public class Clock extends GenericThread implements ClockMXBean, ClockInterface 
 	private static String id = "Navajo Clock";
 	public static final String VERSION = "$Id$";
 	
-	private static final int CLOCK_RESOLUTION = 1000;
+	private static final int CLOCK_RESOLUTION = 500;
 	
 	public Clock() {
 		super(id);
@@ -42,7 +42,9 @@ public class Clock extends GenericThread implements ClockMXBean, ClockInterface 
 			}
 
 			instance = new Clock();	
+			try {
 			JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, "Clock");
+			} catch (Throwable t) {}
 			instance.startThread(instance);
 
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Started clock process $Id$");
@@ -95,9 +97,9 @@ public class Clock extends GenericThread implements ClockMXBean, ClockInterface 
 	}
 
 	public int getListeners() {
-		return 0;//listeners.size();
+		return 0;
 	}
-
+	
 	public String getId() {
 		return id;
 	}

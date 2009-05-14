@@ -32,7 +32,14 @@ import java.util.StringTokenizer;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.scheduler.Clock;
 import com.dexels.navajo.scheduler.ClockListener;
+import com.dexels.navajo.scheduler.Listener;
+import com.dexels.navajo.scheduler.ListenerRunner;
+import com.dexels.navajo.scheduler.Task;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.GenericThread;
+import com.dexels.navajo.server.test.TestDispatcher;
+import com.dexels.navajo.server.test.TestNavajoConfig;
+import com.sun.xml.internal.bind.v2.runtime.reflect.Lister;
 
 public class TimeTrigger extends Trigger implements Serializable, ClockListener {
 
@@ -64,38 +71,29 @@ public class TimeTrigger extends Trigger implements Serializable, ClockListener 
 	private boolean runImmediate = false;
 	private boolean isOffsetTime = false;
 	private long lastRan = -1;
+	private Calendar nextOffsetTime;
+	
 	//private boolean fired = false;
 	
 	private static final String NOW = "now";
 	
 	public void setNextOffsetTime() {
-		Calendar c = Calendar.getInstance();
-		c.set(year, month-1, monthday, hour, minute);
-		c.add(offsetField, offset);
-		year = c.get(Calendar.YEAR);
-		month = c.get(Calendar.MONTH) + 1;
-		monthday = c.get(Calendar.DAY_OF_MONTH);
-		hour = c.get(Calendar.HOUR_OF_DAY);
-		minute = c.get(Calendar.MINUTE);
-		//description = month + "|" + monthday + "|" + hour + "|" + minute + "|*|" + year;
+		nextOffsetTime  = Calendar.getInstance();
+		//nextOffsetTime.set(year, month-1, monthday, hour, minute);
+		nextOffsetTime.add(offsetField, offset);
 	}
 	
 	public TimeTrigger(int i, int field) {
 		this.offset = i;
 		this.offsetField = field;
-		Calendar c = Calendar.getInstance();
-		c.add(field, i);
-		year = c.get(Calendar.YEAR);
-		month = c.get(Calendar.MONTH) + 1;
-		monthday = c.get(Calendar.DAY_OF_MONTH);
-		hour = c.get(Calendar.HOUR_OF_DAY);
-		minute = c.get(Calendar.MINUTE);
+		nextOffsetTime = Calendar.getInstance();
+		nextOffsetTime.add(field, i);
 		switch (field) {
+		case Calendar.SECOND: description = i + "s";break;
 		case Calendar.MINUTE: description = i + "m";break;
 		case Calendar.HOUR_OF_DAY: description = i + "h";break;
 		case Calendar.DAY_OF_MONTH: description = i + "d";break;
 		}
-		//singleEvent = true;
 		isOffsetTime = true;
 	}
 	
@@ -195,16 +193,38 @@ public class TimeTrigger extends Trigger implements Serializable, ClockListener 
 	}
 	
 	public static void main(String [] args) throws Exception {
-		TimeTrigger t = (TimeTrigger) Trigger.parseTrigger("offsettime:50m");
-		System.err.println(t.getDescription());
-		t.setNextOffsetTime();
-		System.err.println(t.getDescription());
+		DispatcherFactory df = new DispatcherFactory(new TestDispatcher(new TestNavajoConfig()));
+		Clock c = Clock.getInstance();
+		
+		
+		//c.startThread(c);
+		
+		//System.err.println("2. >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LISTENERS: " + c.getListeners());
+//		ListenerRunner runner = ListenerRunner.getInstance();
+//		runner.startThread(runner);
+		
+		Trigger t = Trigger.parseTrigger("offsettime:5s");
+		c.addClockListener( (TimeTrigger) t);
+		
+		//System.err.println("3. >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LISTENERS: " + c.getListeners());
+		while ( true ) {
+			Thread.sleep(1000);
+		}
 	}
 
 	private final boolean checkAlarm(Calendar c) {
 		
 		if ( runImmediate ) {
 			return true;
+		}
+		
+		if ( isOffsetTime ) {
+			//System.err.println("Is offsettime, c = " + c.getTime() + ", nextoffsettime = " + nextOffsetTime.getTime());
+			if ( c.after(nextOffsetTime)) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 		
 		/**
@@ -291,6 +311,7 @@ public class TimeTrigger extends Trigger implements Serializable, ClockListener 
 	public boolean timetick(final Calendar c) {
 		if ( checkAlarm(c) ) {
 			//fired = true;
+			//System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Alarm goes off!!" + c.getTime());
 			lastRan = System.currentTimeMillis();
 			// Set next offsettime if offsettime trigger.
 			if ( this.isOffsetTime ) {

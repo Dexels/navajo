@@ -160,6 +160,9 @@ public abstract class Trigger implements Listener, Serializable {
 				String v = s.substring(OFFSETTIME_TRIGGER.length()+1);
 				String field = v.substring(v.length() - 1);
 				String offset = v.substring(0, v.length() - 1);
+				if ( field.equals("s")) {
+					t = new TimeTrigger(Integer.parseInt(offset), Calendar.SECOND);
+				}
 				if ( field.equals("m")) {
 					t = new TimeTrigger(Integer.parseInt(offset), Calendar.MINUTE);
 				}
