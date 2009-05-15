@@ -846,6 +846,9 @@ public class NavajoClient implements ClientInterface {
           generateConnectionError(n, 55555, "No route to host: " + uhe.getMessage());
         }
         catch (java.net.SocketException uhe) {
+          if ( retryAttempts == 0 ) {
+        	  throw uhe;
+          }
           Navajo n2 = NavajoFactory.getInstance().createNavajo();
           n = retryTransaction(server, out, useCompression, allowPreparseProxy, retryAttempts, retryInterval, n2); // lees uit resource
           if (n != null) {
@@ -859,6 +862,9 @@ public class NavajoClient implements ClientInterface {
         catch (IOException uhe) {
         	//uhe.printStackTrace();
         	//readErrorStream(myCon);
+          if ( retryAttempts == 0 ) {
+        	  throw uhe;
+          }
           System.err.println("Generic IOException: "+uhe.getMessage()+". Retrying without compression...");
           Navajo n2 = NavajoFactory.getInstance().createNavajo();
           n = retryTransaction(server, out, false, allowPreparseProxy, retryAttempts, retryInterval, n2); // lees uit resourc
