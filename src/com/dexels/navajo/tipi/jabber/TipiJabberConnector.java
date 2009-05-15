@@ -387,8 +387,8 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 
 					if (n.getHeader().getRPCName().equals("ProcessExceptionToRoom")) {
 						injectNavajo("JabberException", n);
-					} else {
-						injectNavajo("JabberService", n);
+					} else {						
+						injectNavajo(n.getHeader().getRPCName(), n);
 					}
 				}
 			} catch (Exception e) {
@@ -537,7 +537,9 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 
 		myMultiUserChat.addParticipantListener(new PacketListener() {
 			public void processPacket(Packet p) {
+				System.err.println("Participant event...");
 				if (p instanceof Message) {
+					System.err.println("It is a message too :)");
 					Message m = (Message) p;
 					messageReceived(m);
 				}
