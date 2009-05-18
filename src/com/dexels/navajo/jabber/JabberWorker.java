@@ -102,9 +102,7 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 		if(myMultiUser==null) {
 			System.err.println("Cant post: Not in room!");
 			return;
-		} else {
-			System.err.println("JabberWorker("+hashCode()+"), postTmlToChatroom.");
-		}
+		} 
 		try {
 			myMultiUser.sendMessage(createTmlMessage(n));
 		} catch (XMPPException e) {
