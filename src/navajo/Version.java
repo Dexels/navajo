@@ -34,6 +34,7 @@ package navajo;
  *       - Log ServerTooBusyEvent, HealthCheckEvent, QueuableFailureEvent and TribeMemberDownEvent to auditlog table. 
  *       - Added support for debugAll in CompiledScript and Access objects. debugAll triggers a full access log.
  *       - Added support for second resolution offsettime trigger. Clock now has default resolution of 500millis.
+ *       - Explicit check on maintenance services instead of using 'navajo' prefix check.
  *  
  * 8.1.2 - Fixes for script inheritance, fixed 'order' problem with scripts using inheritance.
  *       - Exposing postmanURL via TribeMember class.
