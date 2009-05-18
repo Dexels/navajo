@@ -1055,7 +1055,11 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
     			}
         	}
         	else {
-        		if (rpcName.startsWith(MaintainanceRequest.METHOD_NAVAJO))  
+        		if (rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_HELLO) ||
+        			rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_LOGON) ||
+        			rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_LOGON_SEND) ||
+        			rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_TEST) ||
+        			rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_PING) ) 
         	    {
         			outMessage = dispatch(defaultNavajoDispatcher, inMessage, access, parms);
         		}
