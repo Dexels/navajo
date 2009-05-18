@@ -102,6 +102,8 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 		if(myMultiUser==null) {
 			System.err.println("Cant post: Not in room!");
 			return;
+		} else {
+			System.err.println("JabberWorker("+hashCode()+"), postTmlToChatroom.");
 		}
 		try {
 			myMultiUser.sendMessage(createTmlMessage(n));
@@ -233,9 +235,12 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 			return;
 		}
 
-
 		Runnable r;
 		try {
+			// Workaround for "memory-leak" in myMultiUser.
+			while( myMultiUser.pollMessage() != null ) {
+				myMultiUser.nextMessage();
+			}
 			r = myWaitingQueue.take();
 			r.run();
 		} catch (InterruptedException e) {
