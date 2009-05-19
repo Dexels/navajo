@@ -1139,11 +1139,16 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
     		// Set access to finished state.
     		access.setFinished();
 
-    		// Always create new header.
-    		Header h = NavajoFactory.getInstance().createHeader(outMessage,rpcName,rpcUser,"",-1);
-    		outMessage.addHeader(h);
-
-
+    		// Always make sure header contains original rpcName and rpcUser.
+    		Header h = outMessage.getHeader();
+    		if (h==null) {
+    			h = NavajoFactory.getInstance().createHeader(outMessage,rpcName,rpcUser,rpcPassword,-1);
+    			outMessage.addHeader(h);
+    		} else {
+    			h.setRPCName(rpcName);
+    			h.setRPCUser(rpcUser);		
+    		}
+    	
     		// Translate property descriptions.
     		updatePropertyDescriptions(inMessage,outMessage);
     	    access.storeStatistics(h);
