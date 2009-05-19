@@ -297,6 +297,7 @@ public abstract class Trigger implements Listener, Serializable {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			ObjectOutputStream oos = new ObjectOutputStream(bos);
 			oos.writeObject(this);
+			oos.reset();
 			oos.close();
 			bos.close();
 			ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bos.toByteArray()));
@@ -307,4 +308,5 @@ public abstract class Trigger implements Listener, Serializable {
 			return null;
 		}
 	}
+	
 }
