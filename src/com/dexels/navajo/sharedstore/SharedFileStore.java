@@ -40,8 +40,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 
-
-import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.util.AuditLog;
@@ -194,7 +193,7 @@ public class SharedFileStore implements SharedStoreInterface {
 			try {
 				if (!f.createNewFile()) {
 					throw new SharedStoreException("Could not write lock in shared store: " + ssl.toString());
-				}
+				} 
 			} catch (IOException e) {
 				throw new SharedStoreException("Could not write lock in shared store: " + ssl.toString() + ", message: " + e.getMessage());
 			}
@@ -246,13 +245,25 @@ public class SharedFileStore implements SharedStoreInterface {
 	public Object get(String parent, String name) throws SharedStoreException {
 		File f = new File(sharedStore, parent + "/" + name);
 		ObjectInputStream ois = null;
+		FileInputStream fis = null;
 		try {
-			ois = new ObjectInputStream(new FileInputStream(f));
+			fis = new FileInputStream(f);
+			ois = new ObjectInputStream(fis);
 			Object o = ois.readObject();
-			ois.close();
 			return o;
 		} catch (Exception e) {
 			throw new SharedStoreException(e.getMessage());
+		} finally {
+			if ( ois != null ) {
+				try {
+				ois.close();
+				} catch (Exception e) {}
+			}
+			if ( fis != null ) {
+				try {
+				fis.close();
+				} catch (Exception e) {}
+			}
 		}
 	}
 
@@ -316,7 +327,6 @@ public class SharedFileStore implements SharedStoreInterface {
 					new GetLockRequest( parent, name, lockType, block));
 			return la.mySsl;
 		} else {
-			System.err.println("ABOUT TO LOCK: (" + parent + "," + name + "," + lockType + ")");
 			SharedStoreLock ssl = new SharedStoreLock(name, parent);
 			ssl.lockType = lockType;
 			ssl.owner = owner;
@@ -394,18 +404,34 @@ public class SharedFileStore implements SharedStoreInterface {
 			File p = new File(sharedStore, parent);
 			if (!p.exists()) {
 				p.mkdirs();
-				System.err.println("CREATED PARENT");
 			}
 			File f = new File(p, name);
+			FileOutputStream fos = null;
+			ObjectOutputStream oos = null;
 			try {
-				ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(f, append));
+				fos = new FileOutputStream(f, append);
+				oos = new ObjectOutputStream(fos);
 				oos.writeObject(o);
-				oos.close();
+				oos.reset();
 			} catch (Exception e) {
 				e.printStackTrace(System.err);
 				// TODO: Log exception!!
 				if ( f != null ) {
 					f.delete();
+				}
+			} finally {
+			if ( oos != null ) {
+					try {
+					oos.close();
+					} catch (IOException e) {}
+				}
+				if ( fos != null ) {
+					try {
+						fos.close();
+					} catch (IOException e) {}
+				}
+				if ( ssl != null ) {
+					release(ssl);
 				}
 			}
 			f.setLastModified(System.currentTimeMillis());
@@ -473,16 +499,29 @@ public class SharedFileStore implements SharedStoreInterface {
 				p.mkdirs();
 			}
 			File f = new File(p, name);
+			FileOutputStream fos = null;
+			OutputStreamWriter sw = null;
 			try {
-				OutputStreamWriter sw = new OutputStreamWriter(new FileOutputStream(f, append));
+				fos = new FileOutputStream(f, append);
+				sw = new OutputStreamWriter(fos);
 				sw.write(str);
-				sw.close();
 			} catch (Exception e) {
 				e.printStackTrace(System.err);
 				if ( f != null ) {
 					f.delete();
 				}
 				// TODO: Log exception.
+			} finally {
+				if ( sw != null ) {
+					try {
+						sw.close();
+					} catch (Exception e) {}
+				}
+				if ( fos != null )  {
+					try {
+						fos.close();
+					} catch (Exception e) {}
+				}
 			}
 			f.setLastModified(System.currentTimeMillis());
 		} finally {
@@ -537,7 +576,14 @@ public class SharedFileStore implements SharedStoreInterface {
 	
 	public static void main (String [] args) throws Exception {
 		SharedFileStore sfs = new SharedFileStore();
-		sfs.test("/home/arjen/Pictures");
+		for (int i = 0; i < 1500*1000; i++) {
+		sfs.store("aap", "noot", new Access(), false, false);
+		if ( i % 10000 == 0 ) {
+			System.err.println("10000 done.");
+		}
+		}
+		String s = (String) sfs.get("aap", "noot");
+		System.err.println("result = " + s);
 	}
 
 	public void removeAll(String parent) {
@@ -553,8 +599,9 @@ public class SharedFileStore implements SharedStoreInterface {
 		if ( !f.exists() ) {
 			throw new FileNotFoundException(f.getAbsolutePath());
 		}
-		System.err.println(f.getAbsolutePath() + ", lastmodified:" + l);
+		//System.err.println(f.getAbsolutePath() + ", lastmodified:" + l);
 		f.setLastModified(l);
 	}
+	
 
 }
