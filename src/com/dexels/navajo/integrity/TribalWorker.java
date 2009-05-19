@@ -144,6 +144,7 @@ public class TribalWorker extends GenericThread  implements WorkerInterface {
 		
 		SharedStoreObject sso = null;
 
+		java.io.OutputStream os = null;
 		try {
 
 			if ( integrityCache.containsKey(id) ) {
@@ -160,7 +161,9 @@ public class TribalWorker extends GenericThread  implements WorkerInterface {
 				return;
 			}
 
-			response.write(sso.getOutputStream());
+			os = sso.getOutputStream();
+			
+			response.write(os);
 
 			integrityCache.put(id, sso );
 
@@ -174,6 +177,11 @@ public class TribalWorker extends GenericThread  implements WorkerInterface {
 			integrityCache.remove(id);
 			e.printStackTrace();
 		} finally {
+			if ( os != null ) {
+				try {
+				os.close();
+				} catch (Exception e) {}
+			}
 			notWrittenReponses.remove( id );
 		}
 	}
