@@ -192,25 +192,25 @@ public class TimeTrigger extends Trigger implements Serializable, ClockListener 
 		Clock.getInstance().removeClockListener(this);
 	}
 	
-	public static void main(String [] args) throws Exception {
-		DispatcherFactory df = new DispatcherFactory(new TestDispatcher(new TestNavajoConfig()));
-		Clock c = Clock.getInstance();
-		
-		
-		//c.startThread(c);
-		
-		//System.err.println("2. >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LISTENERS: " + c.getListeners());
-//		ListenerRunner runner = ListenerRunner.getInstance();
-//		runner.startThread(runner);
-		
-		Trigger t = Trigger.parseTrigger("offsettime:5s");
-		c.addClockListener( (TimeTrigger) t);
-		
-		//System.err.println("3. >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LISTENERS: " + c.getListeners());
-		while ( true ) {
-			Thread.sleep(1000);
-		}
-	}
+//	public static void main(String [] args) throws Exception {
+//		DispatcherFactory df = new DispatcherFactory(new TestDispatcher(new TestNavajoConfig()));
+//		Clock c = Clock.getInstance();
+//		
+//		
+//		//c.startThread(c);
+//		
+//		//System.err.println("2. >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LISTENERS: " + c.getListeners());
+////		ListenerRunner runner = ListenerRunner.getInstance();
+////		runner.startThread(runner);
+//		
+//		Trigger t = Trigger.parseTrigger("offsettime:5s");
+//		c.addClockListener( (TimeTrigger) t);
+//		
+//		//System.err.println("3. >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LISTENERS: " + c.getListeners());
+//		while ( true ) {
+//			Thread.sleep(1000);
+//		}
+//	}
 
 	private final boolean checkAlarm(Calendar c) {
 		
