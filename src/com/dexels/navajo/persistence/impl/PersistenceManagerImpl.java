@@ -218,18 +218,24 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
      */
     public final boolean write(Persistable document, String key, String service) {
 
+    	OutputStream os = null;
     	try {
         	memoryOperation(key, service, document, -1, false);
             
-        	OutputStream os = sharedPersistenceStore.getOutputStream(CACHE_PATH, key, false);
+        	os = sharedPersistenceStore.getOutputStream(CACHE_PATH, key, false);
         	((Navajo) document).write(os);
-        	os.close();
         	
             fileWrites++;
             return true;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        } finally {
+        	if ( os != null ) {
+				try {
+				os.close();
+				} catch (Exception e) {}
+			}
         }
     }
 

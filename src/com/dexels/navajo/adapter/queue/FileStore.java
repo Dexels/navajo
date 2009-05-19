@@ -1,12 +1,11 @@
 package com.dexels.navajo.adapter.queue;
 
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.logging.Level;
 
-import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.enterprise.queue.Queuable;
 import com.dexels.navajo.sharedstore.SharedStoreException;
 import com.dexels.navajo.sharedstore.SharedStoreFactory;
@@ -75,17 +74,29 @@ public class FileStore implements MessageStore {
 			String [] files = ssi.getObjects(path);
 
 			for (int i = 0; i < files.length; i++) {
-					NavajoObjectInputStream ois;
+					NavajoObjectInputStream ois = null;
+					InputStream is = null;
 					try {
-						ois = new NavajoObjectInputStream(ssi.getStream(path, files[i]), DispatcherFactory.getInstance().getNavajoConfig().getClassloader());
+						is = ssi.getStream(path, files[i]);
+						ois = new NavajoObjectInputStream(is, DispatcherFactory.getInstance().getNavajoConfig().getClassloader());
 						Queuable q = (Queuable) ois.readObject();
-						ois.close();
 						QueuedAdapter qa = new QueuedAdapter(q);
 						qa.ref = files[i];
 						queuedAdapters.add(qa);
 					} catch (Exception e) {
 						AuditLog.log(AuditLog.AUDIT_MESSAGE_QUEUEDADAPTERS, e.getMessage(), Level.SEVERE);
 						e.printStackTrace();
+					} finally {
+						if ( ois != null ) {
+							try {
+							ois.close();
+							} catch (Exception e) {}
+						}
+						if ( is != null ) {
+							try {
+							is.close();
+							} catch (Exception e) {}
+						}
 					}
 				
 			}
@@ -114,10 +125,12 @@ public class FileStore implements MessageStore {
 		Queuable q = null;
 		String f = objectPointer.next();
 		SharedStoreInterface ssi = SharedStoreFactory.getInstance();
+		InputStream is = null;
+		NavajoObjectInputStream ois = null;
 		try {
-			NavajoObjectInputStream ois = new NavajoObjectInputStream(ssi.getStream(path, f), DispatcherFactory.getInstance().getNavajoConfig().getClassloader());
+			is = ssi.getStream(path, f);
+			ois = new NavajoObjectInputStream(is, DispatcherFactory.getInstance().getNavajoConfig().getClassloader());
 			q = (Queuable) ois.readObject();
-			ois.close();
 			// Only return object if it is not sleeping
 			if ( q.getWaitUntil() < System.currentTimeMillis() ) {
 				ssi.remove(path, f);
@@ -130,7 +143,18 @@ public class FileStore implements MessageStore {
 			// Remove files that could not be read.
 			// ssi.remove(path, f);
 			//e.printStackTrace();
-		} 
+		} finally {
+			if ( ois != null ) {
+				try {
+				ois.close();
+				} catch (Exception e) {}
+			}
+			if ( is != null ) {
+				try {
+				is.close();
+				} catch (Exception e) {}
+			}
+		}
 
 		return getNext();
 	}
@@ -197,17 +221,29 @@ public class FileStore implements MessageStore {
 			String [] files = ssi.getObjects(deadQueue);
 
 			for (int i = 0; i < files.length; i++) {
-					NavajoObjectInputStream ois;
+					NavajoObjectInputStream ois = null;
+					InputStream is = null;
 					try {
-						ois = new NavajoObjectInputStream(ssi.getStream(deadQueue, files[i]), DispatcherFactory.getInstance().getNavajoConfig().getClassloader());
+						is = ssi.getStream(deadQueue, files[i]);
+						ois = new NavajoObjectInputStream(is, DispatcherFactory.getInstance().getNavajoConfig().getClassloader());
 						Queuable q = (Queuable) ois.readObject();
-						ois.close();
 						QueuedAdapter qa = new QueuedAdapter(q);
 						qa.ref = files[i];
 						deadQueueAdapters.add(qa);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
+					} finally {
+						if ( ois != null ) {
+							try {
+							ois.close();
+							} catch (Exception e) {}
+						}
+						if ( is != null ) {
+							try {
+							is.close();
+							} catch (Exception e) {}
+						}
 					}
 				
 			}
