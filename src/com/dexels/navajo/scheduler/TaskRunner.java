@@ -115,14 +115,20 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		if ( t.getNavajo() == null ) {
 			return;
 		}
+		OutputStream os = null;
 		try {
 			SharedStoreInterface si = SharedStoreFactory.getInstance();
-			OutputStream os = si.getOutputStream(TASK_INPUT_DIR, t.getId() + "_request.xml", false);
+			os = si.getOutputStream(TASK_INPUT_DIR, t.getId() + "_request.xml", false);
 			t.getNavajo().write(os);
-			os.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			if ( os != null ) {
+				try {
+				os.close();
+				} catch (Exception e) {}
+			}
 		}
 	}
 
@@ -135,28 +141,39 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		if ( t.getResponse() == null ) {
 			return;
 		}
+		OutputStream os = null;
 		try {
 			SharedStoreInterface si = SharedStoreFactory.getInstance();
 			String name = ( !singleEvent ? t.getId() + "_" + timeStamp + "_response.xml" : t.getId() + "_response.xml" );
-			OutputStream os = si.getOutputStream(TASK_INPUT_DIR, name, false);
+			os = si.getOutputStream(TASK_INPUT_DIR, name, false);
 			t.getResponse().write(os);
-			os.close();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
+		} finally {
+			if ( os != null ) {
+				try {
+				os.close();
+				} catch (Exception e2) {}
+			}
 		}
 	}
 	
 	protected static Navajo getTaskOutput(String id) {
+		InputStream is = null;
 		try {
 			SharedStoreInterface si = SharedStoreFactory.getInstance();
-			InputStream is = si.getStream(TASK_INPUT_DIR, id + "_response.xml");
+			is = si.getStream(TASK_INPUT_DIR, id + "_response.xml");
 			Navajo n = NavajoFactory.getInstance().createNavajo(is);
-			is.close();
 			return n;
 		} catch (Exception e) {
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Could not find response Navajo for task: " + id, Level.WARNING);
 			return null;
+		} finally {
+			if ( is != null ) {
+				try {
+				is.close();
+				} catch (Exception e) {}
+			}
 		}
 	}
 	
@@ -166,14 +183,20 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	 * @param t
 	 */
 	private void readTaskInput(Task t) {
+		InputStream is = null;
 		try {
 			SharedStoreInterface si = SharedStoreFactory.getInstance();
-			InputStream is = si.getStream(TASK_INPUT_DIR, t.getId() + "_request.xml");
+			is = si.getStream(TASK_INPUT_DIR, t.getId() + "_request.xml");
 			Navajo n = NavajoFactory.getInstance().createNavajo(is);
-			is.close();
 			t.setNavajo(n);
 		} catch (Exception e) {
 			return;
+		} finally {
+			if ( is != null ) {
+				try {
+				is.close();
+				} catch (Exception e) {}
+			}
 		}
 	}
 	
@@ -439,8 +462,11 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		
 		ArrayList<Task> result = new ArrayList<Task>();
 		BufferedReader fr = null;
+		InputStream is = null;
 		try {
-			fr = new BufferedReader( new InputStreamReader(si.getStream("log", TASK_LOG_FILE) ) ) ;
+			
+			is = si.getStream("log", TASK_LOG_FILE);
+			fr = new BufferedReader( new InputStreamReader( is ) ) ;
 			String line = null;
 			while ( ( line = fr.readLine() ) != null ) {
 				String [] tokens = line.split(";");
@@ -492,6 +518,12 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
+			if ( is != null ) {
+				try {
+					is.close();
+				} catch (IOException e) {
+				}
+			}
 			if ( fr != null ) {
 				try {
 					fr.close();
