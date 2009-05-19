@@ -81,8 +81,7 @@ public class SharedStoreInterfaceTest extends TestCase {
 		df.getInstance().setUseAuthorisation(false);
 		SharedStoreInterfaceTest t = new SharedStoreInterfaceTest();
 		t.setUp();
-		t.testStoreWithLock();
-		t.tearDown();
+		t.testLockStringStringStringIntBoolean();
 	}
 	
 	

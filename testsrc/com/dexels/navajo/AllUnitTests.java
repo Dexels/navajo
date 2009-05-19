@@ -16,6 +16,7 @@ import com.dexels.navajo.scheduler.TaskRunnerTest;
 import com.dexels.navajo.scheduler.TaskTest;
 import com.dexels.navajo.scheduler.triggers.TriggerTest;
 import com.dexels.navajo.server.CacheControllerTest;
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.sharedstore.SharedStoreInterfaceTest;
 
 import junit.framework.Test;
@@ -25,6 +26,7 @@ import junit.framework.TestSuite;
 public class AllUnitTests {
 
 	public static Test suite() {
+		TribeManagerFactory.useTestVersion();
 		TestSuite suite = new TestSuite("Tests for Navajo Kernel");
 		//$JUnit-BEGIN$
 		suite.addTestSuite(RequestResponseQueueTest.class);

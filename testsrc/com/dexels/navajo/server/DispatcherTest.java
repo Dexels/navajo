@@ -4,6 +4,7 @@ import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.server.test.TestNavajoConfig;
 
 import junit.framework.Assert;
@@ -13,6 +14,7 @@ public class DispatcherTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
+		TribeManagerFactory.useTestVersion();
 		DispatcherFactory df = new DispatcherFactory(new Dispatcher(new TestNavajoConfig()));
 	}
 

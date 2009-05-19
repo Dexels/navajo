@@ -190,4 +190,10 @@ public class BasicNavajoServerTests extends BasicTest implements ServerAsyncList
 		
 	}
 
+	public static void main(String [] args) throws Exception {
+		BasicNavajoServerTests b = new BasicNavajoServerTests();
+		b.setUp();
+		b.testAsyncService();
+		
+	}
 }
