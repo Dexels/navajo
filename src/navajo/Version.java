@@ -35,6 +35,8 @@ package navajo;
  *       - Added support for debugAll in CompiledScript and Access objects. debugAll triggers a full access log.
  *       - Added support for second resolution offsettime trigger. Clock now has default resolution of 500millis.
  *       - Explicit check on maintenance services instead of using 'navajo' prefix check.
+ *       - Fixed problem with async webservices being broken due to change in Dispatcher (8.1.2). 
+ *       - Explicitly closing fileinput-/outpustreams in final blocks in SharedFileStore, RequestResponseQueue and TaskRunnner.
  *  
  * 8.1.2 - Fixes for script inheritance, fixed 'order' problem with scripts using inheritance.
  *       - Exposing postmanURL via TribeMember class.
