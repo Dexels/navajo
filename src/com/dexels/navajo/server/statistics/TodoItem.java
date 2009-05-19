@@ -24,16 +24,10 @@
  */
 package com.dexels.navajo.server.statistics;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 
 import com.dexels.navajo.mapping.AsyncMappable;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.DispatcherFactory;
 
 public final class TodoItem {
 	
@@ -41,11 +35,6 @@ public final class TodoItem {
 	
 	public TodoItem(final Access a, final AsyncMappable am) throws IOException {
 		asyncobject = am;
-//		File f = DispatcherFactory.getInstance().createTempFile(a.accessID, "log-todoitem");
-//		persistedFileName = f.getAbsolutePath();
-//		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(f));
-//		oos.writeObject(a);
-//		oos.close();
 		myAccess = a;
 	}
 	
