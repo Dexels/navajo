@@ -28,9 +28,7 @@ package navajo;
  * 
  * VERSION HISTORY
  * 
- * 8.1.3.1 - Respect <definitions/> tag in navascript.
- * 
- * 8.1.3.0 - Fixed problem with carriage return under Windows with expression between <value> tags.
+ * 8.1.3 - Fixed problem with carriage return under Windows with expression between <value> tags.
  *       - Added printwriter console to Access object for debugging purposes.
  *       - Added support for firing AccessLogEvent to notify of 1 or more written full access logs.
  *       - Log ServerTooBusyEvent, HealthCheckEvent, QueuableFailureEvent and TribeMemberDownEvent to auditlog table. 
@@ -39,6 +37,7 @@ package navajo;
  *       - Explicit check on maintenance services instead of using 'navajo' prefix check.
  *       - Fixed problem with async webservices being broken due to change in Dispatcher (8.1.2). 
  *       - Explicitly closing fileinput-/outpustreams in final blocks in SharedFileStore, RequestResponseQueue and TaskRunnner.
+ *       - Respect <definitions/> tag in navascript.
  *  
  * 8.1.2 - Fixes for script inheritance, fixed 'order' problem with scripts using inheritance.
  *       - Exposing postmanURL via TribeMember class.
@@ -182,7 +181,7 @@ public class Version extends dexels.Version {
 	public static final int MAJOR = 8;
 	public static final int MINOR = 1;
 	public static final int PATCHLEVEL = 3;
-	public static final String SPECIAL_VERSION = "Patchlevel 3 Candidate";
+	public static final String SPECIAL_VERSION = "Patchlevel 3 Candidate Release 1";
 	
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
@@ -218,7 +217,7 @@ public class Version extends dexels.Version {
 	}
 	
 	public static String getDescription() {
-		return MAJOR + "." + MINOR + "." + PATCHLEVEL;
+		return MAJOR + "." + MINOR + "." + PATCHLEVEL + " (" + SPECIAL_VERSION + ")";
 	}
 	
 	public static void main(String [] args) {
