@@ -266,6 +266,8 @@ public class MapDefinition {
 				}
 			} else if (!( 
 					    child.getName().equals("message") || 
+					    child.getName().equals("definitions") || 
+					    child.getName().equals("definition") || 
 					    child.getName().equals("property") ||
 					    child.getName().equals("field") ||
 					    child.getName().equals("comment") ||
