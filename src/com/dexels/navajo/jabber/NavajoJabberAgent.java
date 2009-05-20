@@ -33,21 +33,24 @@ public class NavajoJabberAgent  {
 		return connection.isConnected();
 	}
 
-	public boolean hasJoinedRoom(String roomName)  {
-		Iterator<String> joinedRooms = MultiUserChat.getJoinedRooms(connection, conferenceName);
-		while ( joinedRooms.hasNext() ) {
-			System.err.println("Checking room: " + roomName);
-			if ( joinedRooms.next().equalsIgnoreCase(roomName)  ) {
-				return true;
-			}
-		}
-		return false;
-	}
+//	public boolean hasJoinedRoom(String roomName)  {
+//		Iterator<String> joinedRooms = MultiUserChat.getJoinedRooms(connection, conferenceName);
+//		System.err.println("hasJoinedRoom(" + roomName + ")");
+//		while ( joinedRooms.hasNext() ) {
+//			String joinedRoom = joinedRooms.next();
+//			System.err.println("Checking room: " + roomName + ", joinedRoom: " + joinedRoom);
+//			if ( joinedRoom.equalsIgnoreCase(roomName)  ) {
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
 	
 	public MultiUserChat joinRoom(String roomName) throws UserException {
-		
+
 		try {
-			return JabberUtils.joinRoom(connection, conferenceName, roomName, nickName, new HashSet<String>());
+			MultiUserChat muc = JabberUtils.joinRoom(connection, conferenceName, roomName, nickName, new HashSet<String>());
+			return muc;
 		} catch (XMPPException e) {
 			throw new UserException(-1, e.getMessage(), e);
 		}
@@ -76,21 +79,27 @@ public class NavajoJabberAgent  {
 		
 		//connection.login(username, password, NavajoClientFactory.getClient().getSessionToken());
 		MultiUserChat muc = JabberUtils.joinRoom(connection, conferenceName, serverGroupName, nickName, new HashSet<String>());
-		JabberWorker.getInstance().setMultiUserChat(muc);
+		JabberWorker.getInstance().setMultiUserChat("server", muc);
 		//System.err.println("Login ok");
 
-		connection.addPacketListener(new PacketListener() {
+		muc.addMessageListener(new PacketListener() {
 			public void processPacket(Packet p) {
 				
 				if ( p instanceof Message ) {
+					
 					Message m = (Message) p;
+					
+					if ( m.getProperty("itisi") != null && m.getProperty("itisi").equals("leclerck") ) {
+						//System.err.println("The madonna with the big boobies.");
+						return;
+					} 
 					//System.err.println("Incoming packet from: "+m.getFrom()+" to: "+m.getTo()+" about: "+m.getSubject());
 //					System.err.println("------ INCOMING CHAT MESSAGE ----");
-//					System.err.println("FROM: " + m.getFrom());
-//					System.err.println("TO  : " + m.getTo());
-//					System.err.println("SUBJECT: " + m.getSubject());
+					System.err.println("FROM: " + m.getFrom());
+					System.err.println("TO  : " + m.getTo());
+					System.err.println("SUBJECT: " + m.getSubject());
 
-					//System.err.println("BODY: "+m.getBody());
+					//System.err.println("BODY: "+m.toXML());
 					if(m.getFrom().equals(m.getTo())) {
 						System.err.println("Circular shit!");
 						return;
@@ -164,7 +173,7 @@ public class NavajoJabberAgent  {
 					}
 				//}
 			}
-		}, null);
+		});
 	}
 
 	public void sendMessage(String text, String recipient, String navajoType) throws XMPPException {
@@ -253,7 +262,7 @@ public class NavajoJabberAgent  {
 		}
 		String command = st.nextToken();
 		
-//		System.err.println("Received command: " + command);
+		System.err.println("Received command: " + command);
 		
 		if ("help".equals(command)) {
 			replyHelpMessage(message);

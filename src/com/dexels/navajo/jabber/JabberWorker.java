@@ -41,7 +41,9 @@ import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.scheduler.*;
 import com.dexels.navajo.scheduler.triggers.AfterWebserviceTrigger;
 import com.dexels.navajo.server.*;
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.server.enterprise.xmpp.JabberWorkerInterface;
+import com.dexels.navajo.server.test.TestNavajoConfig;
 import com.dexels.navajo.sharedstore.map.SharedTribalMap;
 import com.dexels.navajo.util.*;
 
@@ -79,7 +81,7 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 	private String jabberService;
 	
 	public String joinRoom;
-	public String registerCallback;
+	//public String registerCallback;
 	
 	// Registered JabberTriggers..
 	private Set<JabberTrigger> triggers = null;
@@ -87,8 +89,7 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 	// Registered Callbacks.
 	SharedTribalMap<String, String> registeredCallbacks;
 
-
-	private MultiUserChat myMultiUser;
+	private HashMap<String,MultiUserChat> myMultiUserChats = new HashMap<String, MultiUserChat>();
 	
 	// Dummy constructor.
 	public JabberWorker() {
@@ -99,23 +100,29 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 	}
 	
 	public void postTmlToChatroom(Navajo n) {
+		postTmlToChatroom("server", n);
+	}
+	
+	public void postTmlToChatroom(String roomName, Navajo n) {
+		MultiUserChat myMultiUser = myMultiUserChats.get(roomName);
 		if(myMultiUser==null) {
 			System.err.println("Cant post: Not in room!");
 			return;
 		} 
 		try {
-			myMultiUser.sendMessage(createTmlMessage(n));
+			myMultiUser.sendMessage( createTmlMessage(myMultiUser, n));
 		} catch (XMPPException e) {
 			e.printStackTrace();
 			
 		}
 	}
 	
-	private org.jivesoftware.smack.packet.Message createTmlMessage(Navajo n) {
+	private org.jivesoftware.smack.packet.Message createTmlMessage(MultiUserChat myMultiUser, Navajo n) {
 		
 		org.jivesoftware.smack.packet.Message myMessage = myMultiUser.createMessage();
 		myMessage.setBody(n.toString());
 		myMessage.setProperty("tml", true);
+		myMessage.setProperty("itisi", "leclerck");
 		return myMessage;
 	}
 
@@ -229,6 +236,8 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 	}
 
 	public final void worker() {
+		
+		//System.err.println("In worker...");
 		if(!isInstantiated()) {
 			return;
 		}
@@ -236,11 +245,21 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 		Runnable r;
 		try {
 			// Workaround for "memory-leak" in myMultiUser.
-			while( myMultiUser.pollMessage() != null ) {
-				myMultiUser.nextMessage();
+			Iterator<MultiUserChat> allJoinedRooms = myMultiUserChats.values().iterator();
+			int count = 0;
+			while ( allJoinedRooms.hasNext() ) {
+				MultiUserChat myMultiUser = allJoinedRooms.next();
+				while( myMultiUser.pollMessage() != null ) {
+					myMultiUser.nextMessage();
+					count++;
+				}
 			}
-			r = myWaitingQueue.take();
-			r.run();
+			//System.err.println("Worker consumed " + count + " messages.");
+			r = myWaitingQueue.poll(100, TimeUnit.MILLISECONDS);
+			if ( r != null ) {
+				//System.err.println("Processsing r");
+				r.run();
+			} 
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -250,6 +269,7 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 	public void fireTail(final String service,final  Navajo n) {
 		
 		if ( !myJabber.isRegisteredAsTail(service) ) {
+			//System.err.println("Unregistered service: " + service);
 			return;
 		}
 		
@@ -355,12 +375,12 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 	}
 	
 	public void addTrigger(JabberTrigger jt) {
-		System.err.println("In addTrigger: " + jt);
+		//System.err.println("In addTrigger: " + jt);
 		triggers.add(jt);
 	}
 	
 	public void removeTrigger(JabberTrigger jt) {
-		System.err.println("In removeTrigger: " + jt);
+		//System.err.println("In removeTrigger: " + jt);
 		triggers.remove(jt);
 	}
 	
@@ -400,16 +420,25 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 	 * @throws UserException
 	 */
 	public void setRegisterCallback(String registerCallback) throws UserException {
-		this.registerCallback = registerCallback;
+		
+		
 		if ( instance != null && instance.myJabber != null ) {
 			String nickname = registerCallback.split("@")[0];
 			String roomname = registerCallback.split("@")[1];
+			//System.err.println("In setRegisterCallback(" + registerCallback + ")");
+			
+			
 			instance.registeredCallbacks.put(nickname, registerCallback);
 
-			if ( !instance.myJabber.hasJoinedRoom(roomname) ) {
+			MultiUserChat myMultiUser = myMultiUserChats.get(roomname);
+			
+			if ( myMultiUser == null ) {
+				
 				if(myMultiUser==null) {
 					myMultiUser = instance.myJabber.joinRoom(roomname);
+					myMultiUserChats.put(roomname, myMultiUser);
 				}
+				
 				myMultiUser.addParticipantStatusListener(new ParticipantStatusListener() {
 
 					public void adminGranted(String arg0) {
@@ -495,9 +524,11 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 		}
 	}
 	
-	public void setMultiUserChat(MultiUserChat muc) {
+	public void setMultiUserChat(String roomName, MultiUserChat muc) {
 		// TODO Auto-generated method stub
-		this.myMultiUser = muc;
+		if ( myMultiUserChats.get(roomName) == null ) {
+			myMultiUserChats.put(roomName, muc);
+		}
 	}
 
 	public String getPostmanURL() {
@@ -505,5 +536,26 @@ public class JabberWorker extends GenericThread implements NavajoListener, Mappa
 			return myJabber.getPostmanUrl();
 		} 
 		return null;
+	}
+	
+	public static void main(String [] args) throws Exception {
+		TribeManagerFactory.useTestVersion();
+		DispatcherFactory df = new DispatcherFactory(new Dispatcher(new TestNavajoConfig()));
+		JabberWorker.getInstance().configJabber("10.10.10.148", "5222", "test", "localhost");
+		
+		System.err.println("\n\n\n\n");
+		int count = 0;
+		while ( true ) {
+			JabberWorker.getInstance().setRegisterCallback("aap@testgroup-noot");
+			Thread.sleep(100);
+			JabberWorker.getInstance().postTmlToChatroom(NavajoFactory.getInstance().createNavajo());
+			Navajo n = NavajoFactory.getInstance().createNavajo();
+			Message m = NavajoFactory.getInstance().createMessage(n, "Mujahedin" + (count++));
+			n.addMessage(m);
+			JabberWorker.getInstance().postTmlToChatroom("testgroup-noot", n );
+//			if ( count % 10 == 0 ) {
+//				JabberWorker.getInstance().fireTail("InitAap", n);
+//			}
+		}
 	}
 }
