@@ -82,7 +82,9 @@ public class NavajoJabberAgent  {
 		JabberWorker.getInstance().setMultiUserChat("server", muc);
 		//System.err.println("Login ok");
 
-		muc.addMessageListener(new PacketListener() {
+		// TODO: REFACTOR THIS TO 	muc.addMessageListener(listener)...
+	
+		connection.addPacketListener(new PacketListener() {
 			public void processPacket(Packet p) {
 				
 				if ( p instanceof Message ) {
@@ -173,7 +175,7 @@ public class NavajoJabberAgent  {
 					}
 				//}
 			}
-		});
+		}, null);
 	}
 
 	public void sendMessage(String text, String recipient, String navajoType) throws XMPPException {
