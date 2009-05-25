@@ -545,6 +545,8 @@ public class TmlHttpServlet extends HttpServlet {
 						  request.getContentLength(), created)));
 		  
 		  response.setContentType("text/xml; charset=UTF-8");
+		  response.setHeader("Accept-Ranges", "none");
+		  response.setHeader("Connection", "close");
 		  
 		  if ( recvEncoding != null && recvEncoding.equals(COMPRESS_JZLIB)) {		
 			  response.setHeader("Content-Encoding", COMPRESS_JZLIB);
