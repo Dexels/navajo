@@ -39,7 +39,7 @@ public class NavajoClient implements ClientInterface {
 
   public static final int DIRECT_PROTOCOL = 0;
   public static final int HTTP_PROTOCOL = 1;
-  public static final int CONNECT_TIMEOUT = 2500;
+  public static final int CONNECT_TIMEOUT = 5000;
   
 //  private String host = null;
   private int loadBalancingMode = LBMODE_STATIC_MINLOAD;
