@@ -13,7 +13,7 @@ import com.dexels.navajo.document.*;
 
 public class JabberUtils {
 	
-	public static MultiUserChat createRoom(String roomName, String nickName,
+	private static MultiUserChat createRoom(String roomName, String nickName,
 			String conferenceName, XMPPConnection connection)
 			throws XMPPException {
 		String roomJid = roomName + "@" + conferenceName;
