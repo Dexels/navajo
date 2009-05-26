@@ -25,7 +25,7 @@ public class NavajoEventMap {
 	public static final String QUEUABLE_FINISHED_EVENT = "queuablefinished";
 	public static final String QUEUABLE_FAILURE_EVENT = "queuablefailure";
 	public static final String FULL_ACCESS_LOG_STATISTICS = "accesslog";
-	public static final String CLEARCACHE_EVENT = "clearcache";
+	public static final String CACHEEXPIRY_EVENT = "cacheexpire";
 	
 	
 	static {
@@ -43,7 +43,7 @@ public class NavajoEventMap {
 		navajoEvents.put(QUEUABLE_FINISHED_EVENT, QueuableFinishedEvent.class);
 		navajoEvents.put(QUEUABLE_FAILURE_EVENT, QueuableFailureEvent.class);
 		navajoEvents.put(FULL_ACCESS_LOG_STATISTICS, AccessLogEvent.class);
-		navajoEvents.put(CLEARCACHE_EVENT, ClearCacheEvent.class);
+		navajoEvents.put(CACHEEXPIRY_EVENT, CacheExpiryEvent.class);
 		
 	}
 	

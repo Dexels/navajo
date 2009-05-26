@@ -38,6 +38,7 @@ package navajo;
  *       - Fixed problem with async webservices being broken due to change in Dispatcher (8.1.2). 
  *       - Explicitly closing fileinput-/outpustreams in final blocks in SharedFileStore, RequestResponseQueue and TaskRunnner.
  *       - Respect <defines/> tag in navascript.
+ *       - ClearCacheEvent added, published by PersistenceManager in case of cache expiry.
  *  
  * 8.1.2 - Fixes for script inheritance, fixed 'order' problem with scripts using inheritance.
  *       - Exposing postmanURL via TribeMember class.

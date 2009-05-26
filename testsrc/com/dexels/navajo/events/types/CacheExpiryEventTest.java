@@ -3,7 +3,7 @@ package com.dexels.navajo.events.types;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-public class ClearCacheEventTest extends TestCase {
+public class CacheExpiryEventTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -14,7 +14,7 @@ public class ClearCacheEventTest extends TestCase {
 	}
 	
 	public void test() {
-		ClearCacheEvent ncse = new ClearCacheEvent("webservice", "apenoot");
+		CacheExpiryEvent ncse = new CacheExpiryEvent("webservice", "apenoot");
 		assertEquals("webservice", ncse.getWebservice());
 		assertEquals("apenoot", ncse.getKey());
 		assertNotNull(ncse.getEventNavajo());

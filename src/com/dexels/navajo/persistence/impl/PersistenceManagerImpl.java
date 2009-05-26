@@ -13,7 +13,7 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.events.NavajoEvent;
 import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.NavajoListener;
-import com.dexels.navajo.events.types.ClearCacheEvent;
+import com.dexels.navajo.events.types.CacheExpiryEvent;
 import com.dexels.navajo.events.types.NavajoCompileScriptEvent;
 import com.dexels.navajo.persistence.*;
 import com.dexels.navajo.server.CacheController;
@@ -260,7 +260,7 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
                 	System.err.println("REMOVING EXPIRED FILE CACHE ENTRY: " + key);
                 	sharedPersistenceStore.remove(CACHE_PATH, key);
                 	// TODO:  Construct ClearCacheEvent....
-                	NavajoEventRegistry.getInstance().publishEvent(new ClearCacheEvent(service, key));
+                	NavajoEventRegistry.getInstance().publishEvent(new CacheExpiryEvent(service, key));
                     return null;
                 }
                 
