@@ -172,8 +172,8 @@ public abstract class NavajoFactory {
         m.put(key, value);
       }
       else {
-        System.err.println("--> WARNING: found '" + next +
-            "' subtype, this does not appear to be a key=value pair");
+//        System.err.println("--> WARNING: found '" + next +
+//            "' subtype, this does not appear to be a key=value pair");
       }
     }
     return m;
