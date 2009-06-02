@@ -186,7 +186,7 @@ public boolean hasChanged() {
     final int col = messageTable.getColumnModel().getColumnIndexAtX(e.getX());
     if (messageTable.isCellEditable(0, col)) {
       Object o = messageTable.getValueAt(0, col);
-      if (!Property.class.isInstance(o)) {
+      if (!Property.class.isInstance(o) && showColumnEditDialog) {
         // we're in a propertyless column
       	JPopupMenu pop = new JPopupMenu();
         JMenuItem sel1 = new JMenuItem("Kolominstellingen wijzigen");
