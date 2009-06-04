@@ -78,7 +78,7 @@ public class Zip extends FunctionInterface {
 			//byte [] result = baos.toByteArray();
 			fos.close();
 			
-			Binary b = new Binary( tempFile );
+			Binary b = new Binary( tempFile, false );
 			
 			
 			return b;
