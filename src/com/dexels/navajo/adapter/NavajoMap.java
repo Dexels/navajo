@@ -882,6 +882,10 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
 			  Message params = inMessage.getMessage("__parms__").copy(outDoc);
 			  outDoc.addMessage(params);
 		  }
+		  if ( inMessage.getMessage("__globals__") != null ) {
+			  Message globals = inMessage.getMessage("__globals__").copy(outDoc);
+			  outDoc.addMessage(globals);
+		  }
 	  }
   }
   
