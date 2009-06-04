@@ -192,7 +192,7 @@ public final class OracleStore implements StoreInterface {
 				PrintWriter pw = new PrintWriter(w);
 				a.getException().printStackTrace(pw);
 			}
-			ps.setString(2, (w != null && w.toString().length() > 1 ? w.toString() : "No Exception"));
+			ps.setBytes(2, (w != null && w.toString().length() > 1 ? w.toString().getBytes() : "No Exception".getBytes()));
 			java.io.ByteArrayOutputStream bosIn = new java.io.ByteArrayOutputStream();
 			java.io.ByteArrayOutputStream bosOut = new java.io.ByteArrayOutputStream();
 			Navajo inDoc = (a.getInDoc() != null ? a.getInDoc() : null);
