@@ -92,6 +92,10 @@
 					the platform, and even the Look and Feel.
 				</description>
 			</event>
+			<event name="onMouseEntered">
+			</event>
+			<event name="onMouseExited">
+			</event>
 		</events>
 		<methods>
          <method name="fireAction">
@@ -401,6 +405,11 @@
           	<description>
 				Set/get whether the select column header buttons are visible.\\
 				If visible, the user can click the column headers to do client side sorting.
+		 	</description>
+         </value>
+         <value direction="in" name="ignoreList" type="list">
+          	<description>
+				List the columns that will not be visible, even in the column selection dialog
 		 	</description>
          </value>
          

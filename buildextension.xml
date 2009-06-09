@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project name="TipiSwing" default="publish" basedir=".">
-
-	<ant antfile="../TipiBuild/genericbuild.xml" dir="." inheritall="true" inheritrefs="true" target="prepare" />
-
+	<taskdef name="retrieveVersion" classname="com.dexels.navajo.tipi.ant.extensionbuilder.RetrieveVersion"
+		classpath="bin" />
+	<retrieveVersion />
+	<property name="dist" value="dist/${ant.project.name}/${tipiComponentVersion}" />
 	<target name="archive">
-		<ant antfile="build.xml" dir="." inheritall="true" inheritrefs="true" target="archive" />
+		<ant antfile="build.xml" dir="." inheritall="true" inheritrefs="true" />
 	</target>
-	<target name="customGrabjar">
+	<target name="customGrabjar" depends="archive">
 		<delete dir="${dist}" />
-		
 		<copy todir="${dist}/lib" file="${ant.project.name}.jar" />
 		<copy todir="${dist}/lib" file="./SwingMain.jar" />
 		<copy todir="${dist}/lib" file="lib/javadocking.jar" />
 		<copy todir="${dist}/lib" file="../TipiSwingClient/TipiSwingClient.jar" />
-		<!-- <copy todir="${dist}/lib" file="../AnimatedTransitions/AnimatedTransitions.jar" />
-		<copy todir="${dist}/lib" file="../TimingFramework/TimingFramework.jar" /> -->
+		<!--
+			<copy todir="${dist}/lib" file="../AnimatedTransitions/AnimatedTransitions.jar" /> <copy todir="${dist}/lib"
+			file="../TimingFramework/TimingFramework.jar" />
+		-->
 	</target>
 	<target name="publish" depends="customGrabjar">
 		<ant antfile="../TipiBuild/genericbuild.xml" dir="." inheritall="true" inheritrefs="true" target="publish" />

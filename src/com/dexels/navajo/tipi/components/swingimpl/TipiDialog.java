@@ -2,7 +2,8 @@ package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -10,6 +11,7 @@ import javax.swing.event.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 /**
  * <p>
@@ -58,6 +60,39 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 
 			}});
 		return tp;
+	}
+	
+	public void instantiateComponent(XMLElement instance, XMLElement classdef) throws TipiException {
+		super.instantiateComponent(instance, classdef);
+		getAttributeProperty("h").addPropertyChangeListener(new PropertyChangeListener(){
+			public void propertyChange(final PropertyChangeEvent evt) {
+				runSyncInEventThread(new Runnable(){
+					public void run() {
+						setComponentValue("h", evt.getNewValue());
+					}});
+			}});
+		getAttributeProperty("w").addPropertyChangeListener(new PropertyChangeListener(){
+			public void propertyChange(final PropertyChangeEvent evt) {
+				runSyncInEventThread(new Runnable(){
+					public void run() {
+						setComponentValue("w", evt.getNewValue());
+					}});
+			}});
+		getAttributeProperty("x").addPropertyChangeListener(new PropertyChangeListener(){
+			public void propertyChange(final PropertyChangeEvent evt) {
+				runSyncInEventThread(new Runnable(){
+					public void run() {
+						setComponentValue("x", evt.getNewValue());
+					}});
+			}});
+		getAttributeProperty("y").addPropertyChangeListener(new PropertyChangeListener(){
+			public void propertyChange(final PropertyChangeEvent evt) {
+				runSyncInEventThread(new Runnable(){
+					public void run() {
+						setComponentValue("y", evt.getNewValue());
+					}});
+			}});
+
 	}
 
 	// }
@@ -175,18 +210,23 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 				}
 				if (name.equals("x")) {
 					myBounds.x = ((Integer) object).intValue();
+					resetDialogBounds();
 					return;
 				}
 				if (name.equals("y")) {
 					myBounds.y = ((Integer) object).intValue();
+					resetDialogBounds();
 					return;
 				}
 				if (name.equals("w")) {
 					myBounds.width = ((Integer) object).intValue();
+					resetDialogBounds();
 					return;
 				}
 				if (name.equals("h")) {
 					myBounds.height = ((Integer) object).intValue();
+					System.err.println("Setting height: "+myBounds.height);
+					resetDialogBounds();
 					return;
 				}
 			}
@@ -347,23 +387,22 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 		ignoreClose = false;
 		if (rootObject == null) {
 			System.err.println("Null root. Bad, bad, bad.");
-			myDialog = ((SwingTipiContext)myContext).createDialog(title);
+			myDialog = ((SwingTipiContext)myContext).createDialog(this,title);
 			myDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-
 		} else {
 			if (rootObject instanceof RootPaneContainer) {
 				r = (RootPaneContainer) rootObject;
-				if (Frame.class.isInstance(r)) {
+				if (JFrame.class.isInstance(r)) {
 					// System.err.println("Creating with frame root");
-					myDialog = new JDialog((Frame) r);
-					myDialog = ((SwingTipiContext)myContext).createDialog(title);
+					myDialog = new TipiSwingDialog((JFrame) r,this);
+					myDialog = ((SwingTipiContext)myContext).createDialog(this,title);
 					myDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 					//					myDialog.setUndecorated(true);
 					myRootPaneContainer = myDialog;
 				} else {
 					if (rootObject instanceof TipiApplet) {
 						JApplet jap = (JApplet) rootObject;
-						myDialog = ((SwingTipiContext)myContext).createDialog(title);
+						myDialog = ((SwingTipiContext)myContext).createDialog(this,title);
 						// System.err.println("Root bounds: " +
 						// jap.getBounds());
 						
@@ -373,14 +412,14 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 						myOffset = jap.getLocationOnScreen();
 						myDialog.setLocation(jap.getLocationOnScreen());
 					} else if (rootObject instanceof JInternalFrame) {
-						myDialog = new JDialog((Dialog) r);
+						myDialog = new TipiSwingDialog((JFrame)((JInternalFrame) rootObject).getTopLevelAncestor() ,this);
 						myDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 						myRootPaneContainer = myDialog;
 					}
 				}
 			} else {
 				System.err.println("R is strange... a: " + rootObject.getClass());
-				myDialog = ((SwingTipiContext)myContext).createDialog(title);
+				myDialog = ((SwingTipiContext)myContext).createDialog(this,title);
 				myDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 			}
 		}
@@ -577,6 +616,8 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 								j.dispose();
 							}
 						}
+						myRootPaneContainer = null;
+
 
 					}
 					// huh?
@@ -588,23 +629,18 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 		}
 	}
 
-	//
-	// private void centerDialog(JDialog dlg, JFrame toplevel) {
-	// Dimension dlgSize = dlg.getPreferredSize();
-	// Rectangle r = toplevel.getBounds();
-	// Dimension frmSize = new Dimension(r.width, r.height);
-	// Point loc = toplevel.`getLocation();
-	// int x_loc = (frmSize.width - dlgSize.width) / 2 + loc.x + r.x;
-	// int y_loc = (frmSize.height - dlgSize.height) / 2 + loc.y + r.y;
-	// System.err.println("Adding at: " + x_loc + ", " + y_loc);
-	// if(y_loc < 0) {
-	// y_loc = 0;
-	// }
-	// dlg.setLocation(x_loc, y_loc);
-	// dlg.setModal(true);
-	// dlg.show();
-	// }
-
+	private void resetDialogBounds() {
+		if(getDialogContainer()!=null) {
+			if (getDialogContainer() instanceof JDialog) {
+				JDialog g = (JDialog) getDialogContainer();
+				g.setBounds(getDialogBounds());
+			}
+			if (getDialogContainer() instanceof JInternalFrame) {
+				JInternalFrame g = (JInternalFrame) getDialogContainer();
+				g.setBounds(getDialogBounds());
+			}
+		}
+	}
 	// public void setContainerVisible(boolean b) {
 	// }
 	public void reUse() {

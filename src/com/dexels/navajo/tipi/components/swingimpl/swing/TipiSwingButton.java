@@ -24,15 +24,29 @@ public class TipiSwingButton extends JButton implements TipiDndCapable {
 	private boolean isVertical = false;
 	private boolean tipiBorderPainted = true;
 
-	public TipiSwingButton(TipiComponent component) {
+	public TipiSwingButton(final TipiComponent component) {
 		myDndManager = new TipiDndManager(this, component);
 		addMouseListener(new MouseAdapter(){
 
 			public void mouseEntered(MouseEvent e) {
 				TipiSwingButton.this.setBorderPainted(true);
+				try {
+					component.performTipiEvent("onMouseEntered", null, false);
+				} catch (TipiBreakException e1) {
+					e1.printStackTrace();
+				} catch (TipiException e1) {
+					e1.printStackTrace();
+				}
 			}
 			public void mouseExited(MouseEvent e) {
 				TipiSwingButton.this.setBorderPainted(tipiBorderPainted);
+				try {
+					component.performTipiEvent("onMouseExited", null, false);
+				} catch (TipiBreakException e1) {
+					e1.printStackTrace();
+				} catch (TipiException e1) {
+					e1.printStackTrace();
+				}
 			}
 		}
 		);

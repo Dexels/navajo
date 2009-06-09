@@ -507,7 +507,7 @@ public class SwingTipiContext extends TipiContext {
 		Class animatableClass = TipiAnimationManager.isAnimatable(p.getTypedValue(), target);
 		if (animatableClass!=null) {
 			PropertyAnimator pa = new PropertyAnimator();
-			System.err.println("animating...");
+			System.err.println("animating...: "+animatableClass);
 			pa.animateProperty(p, duration, target,animatableClass);
 		} else {
 			System.err.println("No, not animatable");
@@ -604,28 +604,34 @@ public class SwingTipiContext extends TipiContext {
 		}
 	}
 
-	public JDialog createDialog(String title) {
+	public JDialog createDialog(TipiDialog d, String title) {
 		if(dialogStack.isEmpty()) {
 			if(getTopLevel() instanceof JFrame) {
-				JDialog jd = new JDialog((JFrame)getTopLevel(),title);
+//				JDialog jd = new JDialog((JFrame)getTopLevel(),title);
+				JDialog jd = new TipiSwingDialog((JFrame)getTopDialog(),d);
+				jd.setTitle(title);
+
 				((JComponent)jd.getContentPane()).setOpaque(false);
 				dialogStack.push(jd);
 				return jd;
 			}
 			if(getAppletRoot()!=null) {
-				Frame rootFrame = JOptionPane.getFrameForComponent(getAppletRoot()); 
-				JDialog jd = new JDialog(rootFrame,title);
+				JFrame rootFrame = (JFrame) JOptionPane.getFrameForComponent(getAppletRoot()); 
+				JDialog jd = new TipiSwingDialog(rootFrame,d);
+				jd.setTitle(title);
 				dialogStack.push(jd);
 				return jd;
 			}
 			if( getTopLevel() instanceof JPanel) {
-					Frame rootFrame = JOptionPane.getFrameForComponent( (JPanel)getTopLevel()); 
-					JDialog jd = new JDialog(rootFrame,title);
+					JFrame rootFrame = (JFrame)JOptionPane.getFrameForComponent( (JPanel)getTopLevel()); 
+					JDialog jd = new TipiSwingDialog(rootFrame,d);
+					jd.setTitle(title);
 					dialogStack.push(jd);
 					return jd;
 			}
 			System.err.println("Trouble creating dialog");
-			JDialog jd = new JDialog((Frame)null,title);
+			JDialog jd = new TipiSwingDialog( (JFrame)null,d);
+			jd.setTitle(title);
 			dialogStack.push(jd);
 			return jd;
 		}

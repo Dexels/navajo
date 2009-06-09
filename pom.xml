@@ -3,7 +3,7 @@
 	<groupId>com.dexels.Tipi</groupId>
 	<artifactId>TipiSwing</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.0.5</version>
 	<name>TipiSwing</name>
 	<parent>
 		<groupId>com.dexels.Navajo</groupId>

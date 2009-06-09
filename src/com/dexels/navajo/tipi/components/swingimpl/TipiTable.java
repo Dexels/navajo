@@ -491,6 +491,10 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 		if (name.equals("headervisible")) {
 			setHeaderVisible(Boolean.valueOf(object.toString()).booleanValue());
 		}
+		if (name.equals("ignoreList")) {
+			setIgnoreList((List)object);
+		}
+		
 		if (name.equals("readOnly")) {
 			mm.setReadOnly(Boolean.valueOf(object.toString()).booleanValue());
 		}
@@ -568,6 +572,15 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 		}
 
 		super.setComponentValue(name, object);
+	}
+
+	private void setIgnoreList(List<String> value) {
+		String[] l = new String[value.size()];
+		int i = 0;
+		for (String string : value) {
+			l[i++] = string;
+		}
+		mm.setIgnoreList(l);
 	}
 
 	/**
