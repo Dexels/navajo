@@ -169,7 +169,7 @@ public class SwingTipiContext extends TipiContext {
 
 			getAppletRoot().setCursor(b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
 		}
-		for (int i = 0; i < rootPaneList.size(); i++) {
+//		for (int i = 0; i < rootPaneList.size(); i++) {
 //			Object obj = rootPaneList.get(i);
 			// if (TipiSwingComponent.class.isInstance(obj)) {
 			// TipiSwingComponent tc = (TipiSwingComponent) obj;
@@ -179,7 +179,7 @@ public class SwingTipiContext extends TipiContext {
 			// Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) :
 			// Cursor.getDefaultCursor());
 			// }
-		}
+//		}
 		for (TipiActivityListener ta : myActivityListeners) {
 			ta.setActive(b);
 		}
@@ -269,11 +269,11 @@ public class SwingTipiContext extends TipiContext {
 	}
 
 	public void addTopLevel(Object toplevel) {
-		rootPaneList.add(toplevel);
+//		rootPaneList.add(toplevel);
 	}
 
 	public void removeTopLevel(Object toplevel) {
-		rootPaneList.remove(toplevel);
+//		rootPaneList.remove(toplevel);
 	}
 
 	protected void clearLogFile() {
@@ -660,13 +660,16 @@ public class SwingTipiContext extends TipiContext {
 	}
 	
 	public void destroyDialog(JDialog j) {
-		
+		System.err.println("Before: "+dialogStack);
 		if(dialogStack.isEmpty()) {
+			System.err.println("Already empty");
 			return;
 		}
 		if(dialogStack.peek() == j) {
 				dialogStack.pop();
 			j.setVisible(false);
+			System.err.println("After: "+dialogStack);
+
 			return;
 		}
 		if(!dialogStack.contains(j)) {
@@ -675,7 +678,7 @@ public class SwingTipiContext extends TipiContext {
 			sss.dispose();
 			destroyDialog(j);
 		}
-		
+		System.err.println("After: "+dialogStack);
 	}
 
 
