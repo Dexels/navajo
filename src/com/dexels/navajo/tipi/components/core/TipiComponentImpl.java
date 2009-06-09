@@ -508,7 +508,7 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 		return isToplevel;
 	}
 
-	public final void instantiateComponent(XMLElement instance, XMLElement classdef) throws TipiException {
+	public void instantiateComponent(XMLElement instance, XMLElement classdef) throws TipiException {
 		String id = (String) instance.getAttribute("id");
 		String defname = (String) instance.getAttribute("name");
 		isVisibleElement = classdef.getStringAttribute("addtocontainer", "false").equals("true");
