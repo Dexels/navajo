@@ -86,7 +86,7 @@ public abstract class TipiContext {
 	/**
 	 * Lists the toplevel components in the current implementation
 	 */
-	protected final ArrayList<Object> rootPaneList = new ArrayList<Object>();
+//	protected final ArrayList<Object> rootPaneList = new ArrayList<Object>();
 	private final TipiActionManager myActionManager = new TipiActionManager();
 
 	protected final List<TipiActivityListener> myActivityListeners = new ArrayList<TipiActivityListener>();
@@ -447,7 +447,7 @@ public abstract class TipiContext {
 
 		eHandler = null;
 		errorHandler = null;
-		rootPaneList.clear();
+//		rootPaneList.clear();
 		Runtime runtimeObject = Runtime.getRuntime();
 		runtimeObject.traceInstructions(false);
 		runtimeObject.traceMethodCalls(false);
@@ -553,7 +553,7 @@ public abstract class TipiContext {
 			getClient().setPassword(navajoPassword);
 
 		} else {
-			NavajoClientFactory.resetClient();
+//			NavajoClientFactory.resetClient();
 			// deprecated
 			throw new UnsupportedOperationException("Sorry, I deprecated the direct client for tipi usage");
 			// NavajoClientFactory.createClient(
@@ -1556,18 +1556,17 @@ public abstract class TipiContext {
 		try {
 			if (hosturl != null && !"".equals(hosturl)) {
 				if ("direct".equals(getClient().getClientName())) {
-					ClientInterface ci = NavajoClientFactory.createDefaultClient();
-					ci.setServerUrl(hosturl);
+					clientInterface.setServerUrl(hosturl);
 					// System.err.println("Specifically sending to: "+hosturl);
-					ci.setUsername(username);
-					ci.setPassword(password);
+					clientInterface.setUsername(username);
+					clientInterface.setPassword(password);
 					if (keystore != null && keypass != null && !"".equals(keystore)) {
 						// System.err.println("Setting secure. Keystore:
 						// "+keystore+" keypass: "+keypass);
-						ci.setSecure(keystore, keypass, true);
+						clientInterface.setSecure(keystore, keypass, true);
 					}
 
-					reply = ci.doSimpleSend(n, service, ch, expirtationInterval);
+					reply = clientInterface.doSimpleSend(n, service, ch, expirtationInterval);
 					debugLog("data", "simpleSend to host (diverted from directclient): " + hosturl + " username: " + username
 							+ " password: " + password + " method: " + service);
 				} else {
@@ -1708,6 +1707,7 @@ public abstract class TipiContext {
 					}
 				}
 				if (!hasUserDefinedErrorHandler) {
+					System.err.println("Delivering usererror: \n"+errorMessage);
 					showWarning(errorMessage, "Invoerfout");
 				}
 				if (breakOnError) {
