@@ -1160,6 +1160,13 @@ public void doChooseColumns() {
 	}
 }
 
+public void setIgnoreList(String[] ignoreList) {
+	if (filterPanel!=null) {
+		filterPanel.setIgnoreList(ignoreList);
+	}
+	
+}
+
 public Binary getTableReport(String format, String orientation, int[] margins) throws NavajoException {
 	return messageTable.getTableReport(format,orientation, margins);
 }
