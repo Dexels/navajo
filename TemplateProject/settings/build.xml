@@ -40,7 +40,7 @@
 		<replace file="deploy/current/index.html" token="@@HOMEPAGE@@" value="${homepage}" />
 		<replace file="deploy/current/index.html" token="@@SPLASH@@" value="${splash}" />
 		<replace file="deploy/current/index.html" token="@@PROFILELINKLIST@@" value="${profileLinkList}" />
-				<replace file="deploy/current/index.html" token="@@APPLINK@@" value="${tipiAppServer}${projectName}/Application.jnlp"/>
+				<replace file="deploy/current/index.html" token="@@APPLINK@@" value="${tipiAppServer}${projectName}/DefaultLocal.jnlp"/>
 		<replace file="deploy/current/index.html" token="@@TIMESTAMP@@" value="${build.timestamp}"  />
 		<replace file="deploy/current/index.html" token="@@SOURCELINK@@" value="${tipiDoc}:${projectName}:info"  />
 		<replace file="deploy/current/index.html" token="@@ICON@@" value="${icon}" />
