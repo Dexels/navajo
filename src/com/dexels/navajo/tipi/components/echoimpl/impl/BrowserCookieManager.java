@@ -63,7 +63,6 @@ public class BrowserCookieManager implements CookieManager {
 		// nothing
 	}
 
-	@Override
 	public void deleteCookies() throws IOException {
 		ContainerContext containerContext = (ContainerContext) ApplicationInstance.getActive().getContextProperty(
 				ContainerContext.CONTEXT_PROPERTY_NAME);
