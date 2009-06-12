@@ -584,7 +584,7 @@ public final class Access implements java.io.Serializable, Mappable {
 		if ( a != null ) {
 			a.writeToConsole(s);
 		} 
-		System.err.println(s);
+		System.err.print(s);
 	}
 	
 	/**
