@@ -88,7 +88,7 @@ public class SingleValueQuery extends FunctionInterface {
 	  } catch (Exception e) {
 		  sql.kill();
 		  e.printStackTrace();
-		  throw new TMLExpressionException(this, "Fatal error: " + e.getMessage());
+		  throw new TMLExpressionException(this, "Fatal error: " + e.getMessage() + ", query = " + query);
 	  } 
 
 	  return sql;
