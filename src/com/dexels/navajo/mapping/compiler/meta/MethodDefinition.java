@@ -55,9 +55,9 @@ public class MethodDefinition {
 		
 		TreeMap<Integer, XMLElement> orderedParameters = new TreeMap<Integer, XMLElement>();
 		
-		if ( in.getChildren().size() > 0 ) {
-			throw new MetaCompileException(filename, in, "Illegal children tags defined for tag <" + in.getName() + "/>");
-		}
+//		if ( in.getChildren().size() > 0 ) {
+//			throw new MetaCompileException(filename, in, "Illegal children tags defined for tag <" + in.getName() + "/>");
+//		}
 		
 		String condition = (String) in.getAttribute("condition");
 		boolean hasCondition = false;

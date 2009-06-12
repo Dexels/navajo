@@ -20,6 +20,8 @@ import navajo.ExtensionDefinition;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.test.TestDispatcher;
+import com.dexels.navajo.server.test.TestNavajoConfig;
 import com.dexels.navajo.util.AuditLog;
 
 /**
@@ -179,10 +181,11 @@ public class MapMetaData {
 	
 	public static void main(String [] args) throws Exception {
 		
+		DispatcherFactory df = new DispatcherFactory(new TestDispatcher(new TestNavajoConfig()));
 		MapMetaData mmd = MapMetaData.getInstance("/home/arjen/projecten/Navajo");
 		//System.err.println("is: " + mmd.isMetaScript("ProcessQueryMemberNewStyle", "/home/arjen/projecten/Navajo/", "."));
 		
-		String result = mmd.parse("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/matchform/ProcessGetMatchFeedbackOverview.xml");
+		String result = mmd.parse("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/matchform/Test.xml");
 		
 		FileWriter fw = new FileWriter("/home/arjen/@.xml");
 	

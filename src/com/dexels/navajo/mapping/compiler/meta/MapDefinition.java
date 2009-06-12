@@ -103,6 +103,79 @@ public class MapDefinition {
 		return md;
 	}
 
+	private void generateFieldCode(XMLElement child, XMLElement mout, String filename, boolean isMethod) throws Exception {
+		// First process children...
+		if ( child.getChildren().size() > 0 && !child.getFirstChild().getName().equals("value") ) {
+			Vector<XMLElement> vc = child.getChildren();
+			for (int vci = 0; vci < vc.size(); vci++) {
+				if ( child.getName().indexOf(".") != -1 ) {
+					String name = vc.get(vci).getName();
+					if ( name.indexOf(".") == -1 ) { // Construct dummy prefix if prefix not present..
+						vc.get(vci).setName("dummy." + name);
+					}
+					generateFieldCode(vc.get(vci), mout, filename, getMethodDefinition(stripDot(vc.get(vci))) != null );
+				} else {
+					throw new MetaCompileException(filename, child, "Illegal children tags defined for tag <" + child.getName() + "/>");
+				}
+			}
+		}
+
+		if ( isMethod ) {
+			String method = stripDot(child);
+			MethodDefinition md = getMethodDefinition(method);
+			md.generateCode(child, mout, filename );
+		} else {
+
+			String field = stripDot(child);
+			String condition = (String) child.getAttribute("condition");
+
+			// Check for <map.xyz><value condition=""></value>...<value></value></map.xyz> construction.
+			if ( child.getChildren().size() > 0 && child.getFirstChild().getName().equals("value")) {
+				XMLElement fieldElt = new TSLElement(child, "field");
+				fieldElt.setAttribute("name", field);
+				if ( condition != null && !condition.equals("") ) {
+					fieldElt.setAttribute("condition", condition);
+				}
+
+				Vector values = child.getChildren();
+				for (int val = 0; val < values.size(); val++) {
+					XMLElement xec = (XMLElement) values.get(val);
+
+					XMLElement expressionElt = new TSLElement(child, "expression");
+					String valueCondition = (String) xec.getAttribute("condition");
+					XMLElement valueElt = new TSLElement(child, "value");
+					if ( valueCondition != null ) {
+						expressionElt.setAttribute("condition", valueCondition);
+					}
+					valueElt.setContent(xec.getContent().trim());
+					expressionElt.addChild(valueElt);
+					fieldElt.addChild(expressionElt);
+				}
+
+				mout.addChild(fieldElt);
+			} else { // <map.xyz value=""> or <map.xyz>value</map.xyz> construction.
+
+				String setterValue = ( child.getAttribute("value") != null ? (String) child.getAttribute("value") : (String) child.getAttribute("ref") );
+
+				// Maybe value is given as tag content?
+				boolean isTextNode = false;
+				if ( setterValue == null ) {
+					setterValue = child.getContent();
+					if ( setterValue == null || "".equals(setterValue) ) {
+						throw new MetaCompileException(filename, child, "Did not find any value that could be set for setter <" + child.getName() + "/>");
+					}
+					setterValue = setterValue.trim();
+					isTextNode = true;
+				}
+
+				ValueDefinition vd = getValueDefinition(field);
+				XMLElement remainder = null;
+				remainder = vd.generateCode(child, setterValue, isTextNode, condition, mout, true, filename );
+
+			}
+		}
+	}
+	
 	/**
 	 * in: <map:sqlquery datasource=\"sportlinkkernel\"/>
 	 * out: <map object="com.dexels.navajo.adapter.SQLMap">
@@ -134,7 +207,7 @@ public class MapDefinition {
 			while ( auto.hasNext() )  {
 				ValueDefinition pd = auto.next();
 				if ( pd.getRequired().equals("automatic") ) {
-					System.err.println("AUTOMATIC!!!!!!!!!!" + pd.getName());
+					//System.err.println("AUTOMATIC!!!!!!!!!!" + pd.getName());
 					pd.generateCode(in, pd.getValue(), false, null, map, true, filename);
 					//out.addChild(pdx);
 				} else if ( pd.getRequired().equals("true") ) {
@@ -191,62 +264,13 @@ public class MapDefinition {
 	        // Case II: a simple field construct.
 			} else if ( child.getName().indexOf(".") != -1 && getValueDefinition(stripDot(child)) != null ) {
 				
-				if ( child.getChildren().size() > 0 && !child.getFirstChild().getName().equals("value") ) {
-					throw new MetaCompileException(filename, child, "Illegal children tags defined for tag <" + child.getName() + "/>");
-				}
-				
-				String field = stripDot(child);
-				String condition = (String) child.getAttribute("condition");
-				
-				// Check for <map.xyz><value condition=""></value>...<value></value></map.xyz> construction.
-				if ( child.getChildren().size() > 0 && child.getFirstChild().getName().equals("value")) {
-					XMLElement fieldElt = new TSLElement(child, "field");
-					fieldElt.setAttribute("name", field);
-					if ( condition != null && !condition.equals("") ) {
-						fieldElt.setAttribute("condition", condition);
-					}
-					
-					Vector values = child.getChildren();
-					for (int val = 0; val < values.size(); val++) {
-						XMLElement xec = (XMLElement) values.get(val);
-						
-						XMLElement expressionElt = new TSLElement(child, "expression");
-						String valueCondition = (String) xec.getAttribute("condition");
-						XMLElement valueElt = new TSLElement(child, "value");
-						if ( valueCondition != null ) {
-							expressionElt.setAttribute("condition", valueCondition);
-						}
-						valueElt.setContent(xec.getContent().trim());
-						expressionElt.addChild(valueElt);
-						fieldElt.addChild(expressionElt);
-					}
-					
-					( map != null ? map : out ).addChild(fieldElt);
-				} else { // <map.xyz value=""> or <map.xyz>value</map.xyz> construction.
-				
-					String setterValue = ( child.getAttribute("value") != null ? (String) child.getAttribute("value") : (String) child.getAttribute("ref") );
-				
-					// Maybe value is given as tag content?
-					boolean isTextNode = false;
-					if ( setterValue == null ) {
-						setterValue = child.getContent();
-						if ( setterValue == null || "".equals(setterValue) ) {
-							throw new MetaCompileException(filename, child, "Did not find any value that could be set for setter <" + child.getName() + "/>");
-						}
-						setterValue = setterValue.trim();
-						isTextNode = true;
-					}
-					ValueDefinition vd = getValueDefinition(field);
-
-					XMLElement remainder = null;
-					remainder = vd.generateCode(child, setterValue, isTextNode, condition, ( map != null ? map : out ), true, filename );
-				}
+				generateFieldCode(child, ( map != null ? map : out ), filename, false);
 			
 		    // Case III: a multiple-field aka method construct.		
 			} else if ( child.getName().indexOf(".") != -1 && getMethodDefinition(stripDot(child)) != null ) {
-				String method = stripDot(child);
-				MethodDefinition md = getMethodDefinition(method);
-				md.generateCode(child, ( map != null ? map : out ), filename );
+				
+				generateFieldCode(child, ( map != null ? map : out ), filename, true);
+				
 		    // Case IV: ?
 //			} else if ( child.getName().equals("map." + tagName ) ) {
 //				generateCode(child, ( map != null ? map : out ), filename );
