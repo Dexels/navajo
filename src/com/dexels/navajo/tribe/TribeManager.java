@@ -664,7 +664,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 
 		String origin = in.getHeader().getHeaderAttribute("origin");
 		if ( origin == null || origin.equals("")) { // Set origin attribute to prevent broadcast ping-pong....
-			System.err.println("Going to broadcast service to other members....");
+			//System.err.println("Going to broadcast service to other members....");
 			increaseCount("broadcast-navajo");
 			in.getHeader().setHeaderAttribute("origin", DispatcherFactory.getInstance().getNavajoConfig().getInstanceName());
 			ServiceRequest sr = new ServiceRequest(in, true);
