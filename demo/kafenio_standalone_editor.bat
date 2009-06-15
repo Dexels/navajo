@@ -1,0 +1,1 @@
+java -cp kafenio.jar;kafenio-config.jar;kafenio-icons.jar;gnu-regexp-1.1.4.jar de.xeinfach.kafenio.Kafenio

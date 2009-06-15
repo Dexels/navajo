@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="TipiSwingEditor" default="archive" basedir=".">
+	<property name="src" location="src" />
+	<property name="build" location="classes" />
+	<property name="archive" value="${ant.project.name}.jar" />
+
+	<property name="NavajoClient" value="${PROJECTHOME}/NavajoClient" />
+	<property name="NavajoClient.build" value="${NavajoClient}/classes" />
+	<property name="NavajoDocument" value="${PROJECTHOME}/NavajoDocument" />
+	<property name="NavajoDocument.build" value="${NavajoDocument}/classes" />
+	<property name="Navajo" value="${PROJECTHOME}/Navajo" />
+	<property name="Navajo.build" value="${Navajo}/classes" />
+    <property name="DexelsVersionControl" value="${PROJECTHOME}/DexelsVersionControl"/>
+    <property name="DexelsVersionControl.build" value="${PROJECTHOME}/DexelsVersionControl/classes"/>    
+	<path id="depend">
+		<pathelement location="${NavajoClient.build}" />
+		<pathelement location="${NavajoClient}/lib/jzlib.jar" />
+		<pathelement location="${NavajoDocument.build}" />
+		<pathelement location="${Navajo.build}" />
+		<pathelement location="${DexelsVersionControl.build}" />
+	</path>
+	<target name="check-env">
+		<fail unless="PROJECTHOME">  
+      Set the PROJECTHOME environment variable to the top directory of
+      your CVS projects, for example:
+
+      export PROJECTHOME=C:\PROJECTS
+
+      declare -x PROJECTHOME=/home/arjen/las-projectas 
+    </fail>
+	</target>
+	<target name="init" depends="check-env">
+		<tstamp />
+		<mkdir dir="${build}" />
+		<mkdir dir="${NavajoDocument.build}" />
+		<mkdir dir="${NavajoClient.build}" />
+		<mkdir dir="${Navajo.build}" />
+	</target>
+	<target name="clean" depends="check-env">
+		<delete file="${archive}" />
+		<delete dir="${NavajoClient.build}" />
+		<delete dir="${NavajoDocument.build}" />
+		<delete dir="${Navajo.build}" />
+		<delete dir="${build}" />
+	</target>
+
+	<target name="resource">
+		<copy todir="${build}">
+			<fileset dir="${src}">
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="compile">
+		<javac srcdir="${src}" destdir="${build}">
+			<classpath refid="depend" />
+		</javac>
+	</target>
+	<target name="archive" depends="compile,resource">
+     	<jar jarfile="${archive}">
+            <fileset dir="${build}">
+                 <exclude name="**/startup.fx"/>
+                 <exclude name="**/*.java"/>
+                 <exclude name="**/*.properties"/>
+                 <exclude name="**/*.html"/>
+                 <exclude name="**/*.stylesheet"/>
+                 <exclude name="**/*.txt"/>
+               </fileset>
+    			<service type="tipi.TipiExtension">
+    				<provider classname="tipi.TipiCoreExtension" />
+    			</service>
+    			<manifest>
+    				<attribute name="Built-By" value="Frank Lyaruu" />
+    			</manifest>
+
+    		</jar>    	
+	</target>
+	<path id="test.class.path">
+		<pathelement path="${build}" />
+	
+	</path>
+
+</project>
+<!-- EOF: $RCSfile$ -->
