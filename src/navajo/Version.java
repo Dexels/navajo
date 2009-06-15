@@ -39,6 +39,7 @@ package navajo;
  *       - Explicitly closing fileinput-/outpustreams in final blocks in SharedFileStore, RequestResponseQueue and TaskRunnner.
  *       - Respect <defines/> tag in navascript.
  *       - ClearCacheEvent added, published by PersistenceManager in case of cache expiry.
+ *       - Now possible to 'nest' navascript method tags to improve readability.
  *  
  * 8.1.2 - Fixes for script inheritance, fixed 'order' problem with scripts using inheritance.
  *       - Exposing postmanURL via TribeMember class.
