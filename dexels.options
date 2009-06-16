@@ -543,7 +543,7 @@ ctx.retain_conflicting_attic_files = False
 #Tools: TipiPlugin, TipiPluginFeature,TipiBuild, TipiBuildLibrary, TipiAntBuild
 
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/DexelsVersionControl',
+    r'/home/test/cvsroot/TipiPlugin',
     trunk_path='Tools/Eclipse/TipiPlugin/trunk',
     branches_path='Tools/Eclipse/TipiPlugin/branches',
     tags_path='Tools/Eclipse/TipiPlugin/tags',
@@ -558,7 +558,7 @@ run_options.add_project(
     )
 
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/TipiPluginFeature',
+    r'/home/test/cvsroot/TipiPluginFeature',
     trunk_path='Tools/Eclipse/TipiPluginFeature/trunk',
     branches_path='Tools/Eclipse/TipiPluginFeature/branches',
     tags_path='Tools/Eclipse/TipiPluginFeature/tags',
@@ -573,7 +573,7 @@ run_options.add_project(
     )
 
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/TipiBuild',
+    r'/home/test/cvsroot/TipiBuild',
     trunk_path='Tools/TipiBuild/trunk',
     branches_path='Tools/TipiBuild/branches',
     tags_path='Tools/TipiBuild/tags',
@@ -588,7 +588,7 @@ run_options.add_project(
     )
 
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/TipiBuildLibrary',
+    r'/home/test/cvsroot/TipiBuildLibrary',
     trunk_path='Tools/TipiBuildLibrary/trunk',
     branches_path='Tools/TipiBuildLibrary/branches',
     tags_path='Tools/TipiBuildLibrary/tags',
@@ -603,7 +603,7 @@ run_options.add_project(
     )
 
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/TipiAntBuild',
+    r'/home/test/cvsroot/TipiAntBuild',
     trunk_path='Tools/TipiAntBuild/trunk',
     branches_path='Tools/TipiAntBuild/branches',
     tags_path='Tools/TipiAntBuild/tags',
@@ -622,7 +622,7 @@ run_options.add_project(
     
 
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/NavajoPluginLibraries',
+    r'/home/test/cvsroot/NavajoPluginLibraries',
     trunk_path='Tools/Eclipse/NavajoLibrariesPlugin/trunk',
     branches_path='Tools/Eclipse/NavajoLibrariesPlugin/branches',
     tags_path='Tools/Eclipse/NavajoLibrariesPlugin/tags',
@@ -637,7 +637,7 @@ run_options.add_project(
     )
 
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/NavajoScriptPlugin',
+    r'/home/test/cvsroot/NavajoScriptPlugin',
     trunk_path='Tools/Eclipse/NavajoScriptPlugin/trunk',
     branches_path='Tools/Eclipse/NavajoScriptPlugin/branches',
     tags_path='Tools/Eclipse/NavajoScriptPlugin/tags',
@@ -652,7 +652,7 @@ run_options.add_project(
     )
 
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/NavajoLibrariesFeature',
+    r'/home/test/cvsroot/NavajoLibrariesFeature',
     trunk_path='Tools/Eclipse/NavajoLibrariesFeature/trunk',
     branches_path='Tools/Eclipse/NavajoLibrariesFeature/branches',
     tags_path='Tools/Eclipse/NavajoLibrariesFeature/tags',
@@ -667,7 +667,7 @@ run_options.add_project(
     )
  
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/NavajoScriptFeature',
+    r'/home/test/cvsroot/NavajoScriptFeature',
     trunk_path='Tools/Eclipse/NavajoScriptFeature/trunk',
     branches_path='Tools/Eclipse/NavajoScriptFeature/branches',
     tags_path='Tools/Eclipse/NavajoScriptFeature/tags',
@@ -682,7 +682,7 @@ run_options.add_project(
     )
 
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/NavajoScriptPluginUpdateSite',
+    r'/home/test/cvsroot/NavajoScriptPluginUpdateSite',
     trunk_path='Tools/Eclipse/NavajoScriptPluginUpdateSite/trunk',
     branches_path='Tools/Eclipse/NavajoScriptPluginUpdateSite/branches',
     tags_path='Tools/Eclipse/NavajoScriptPluginUpdateSite/tags',
@@ -699,7 +699,7 @@ run_options.add_project(
 
 
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/AnimatedTransitions',
+    r'/home/test/cvsroot/AnimatedTransitions',
     trunk_path='ThirdParty/AnimatedTransitions/trunk',
     branches_path='ThirdParty/AnimatedTransitions/branches',
     tags_path='ThirdParty/AnimatedTransitions//tags',
@@ -715,7 +715,7 @@ run_options.add_project(
 
 
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/TimingFramework',
+    r'/home/test/cvsroot/TimingFramework',
     trunk_path='ThirdParty/TimingFramework/trunk',
     branches_path='ThirdParty/TimingFramework/branches',
     tags_path='ThirdParty/TimingFramework//tags',
@@ -746,7 +746,7 @@ run_options.add_project(
 # Core starting here
 
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/DexelsVersionControl',
+    r'/home/test/cvsroot/DexelsVersionControl',
     trunk_path='Navajo/DexelsVersionControl/trunk',
     branches_path='Navajo/DexelsVersionControl/branches',
     tags_path='Navajo/DexelsVersionControl/tags',
@@ -763,7 +763,7 @@ run_options.add_project(
 
 
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/NavajoDocument',
+    r'/home/test/cvsroot/NavajoDocument',
     trunk_path='Navajo/NavajoDocument/trunk',
     branches_path='Navajo/NavajoDocument/branches',
     tags_path='Navajo/NavajoDocument/tags',
@@ -778,7 +778,7 @@ run_options.add_project(
     )
     
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/NavajoClient',
+    r'/home/test/cvsroot/NavajoClient',
     trunk_path='Navajo/NavajoClient/trunk',
     branches_path='Navajo/NavajoClient/branches',
     tags_path='Navajo/NavajoClient/tags',
@@ -793,7 +793,7 @@ run_options.add_project(
     )
     
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/Navajo',
+    r'/home/test/cvsroot/Navajo',
     trunk_path='Navajo/Navajo/trunk',
     branches_path='Navajo/Navajo/branches',
     tags_path='Navajo/Navajo/tags',
@@ -808,7 +808,7 @@ run_options.add_project(
     )
 
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/NavajoFunctions',
+    r'/home/test/cvsroot/NavajoFunctions',
     trunk_path='Navajo/NavajoFunctions/trunk',
     branches_path='Navajo/NavajoFunctions/branches',
     tags_path='Navajo/NavajoFunctions/tags',
@@ -823,7 +823,7 @@ run_options.add_project(
     )
 
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/NavajoAdapters',
+    r'/home/test/cvsroot/NavajoAdapters',
     trunk_path='Navajo/NavajoAdapters/trunk',
     branches_path='Navajo/NavajoAdapters/branches',
     tags_path='Navajo/NavajoAdapters/tags',
@@ -838,7 +838,7 @@ run_options.add_project(
     )
     
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/NavajoListeners',
+    r'/home/test/cvsroot/NavajoListeners',
     trunk_path='Navajo/NavajoListeners/trunk',
     branches_path='Navajo/NavajoListeners/branches',
     tags_path='Navajo/NavajoListeners/tags',
@@ -853,7 +853,7 @@ run_options.add_project(
     )
 
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/NavajoTipi',
+    r'/home/test/cvsroot/NavajoTipi',
     trunk_path='Tipi/Tipi/trunk',
     branches_path='Tipi/Tipi/branches',
     tags_path='Tipi/Tipi/tags',
@@ -869,7 +869,7 @@ run_options.add_project(
     )
 
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/NavajoSwingTipi',
+    r'/home/test/cvsroot/NavajoSwingTipi',
     trunk_path='Tipi/TipiSwing/trunk',
     branches_path='Tipi/TipiSwing/branches',
     tags_path='Tipi/TipiSwing/tags',
@@ -886,7 +886,7 @@ run_options.add_project(
 
 
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/TipiSwingClient',
+    r'/home/test/cvsroot/TipiSwingClient',
     trunk_path='Tipi/TipiSwingClient/trunk',
     branches_path='Tipi/TipiSwingClient/branches',
     tags_path='Tipi/TipiSwingClient/tags',
@@ -901,7 +901,7 @@ run_options.add_project(
     )
 
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/NavajoRichClient',
+    r'/home/test/cvsroot/NavajoRichClient',
     trunk_path='Tipi/TipiRichClient/trunk',
     branches_path='Tipi/TipiRichClient/branches',
     tags_path='Tipi/TipiRichClient/tags',
@@ -916,7 +916,7 @@ run_options.add_project(
     )
 
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/NavajoRichTipi',
+    r'/home/test/cvsroot/NavajoRichTipi',
     trunk_path='Tipi/TipiRich/trunk',
     branches_path='Tipi/TipiRich/branches',
     tags_path='Tipi/TipiRich/tags',
@@ -932,7 +932,7 @@ run_options.add_project(
     )
 
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/Tipi3d',
+    r'/home/test/cvsroot/Tipi3d',
     trunk_path='Tipi/TipiJogl/trunk',
     branches_path='Tipi/TipiJogl/branches',
     tags_path='Tipi/TipiJogl/tags',
@@ -950,7 +950,7 @@ run_options.add_project(
 
 
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/TipiFlickr',
+    r'/home/test/cvsroot/TipiFlickr',
     trunk_path='Tipi/TipiFlickr/trunk',
     branches_path='Tipi/TipiFlickr/branches',
     tags_path='Tipi/TipiFlickr/tags',
@@ -969,7 +969,7 @@ run_options.add_project(
 
 
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/TipiGeoSwing',
+    r'/home/test/cvsroot/TipiGeoSwing',
     trunk_path='Tipi/TipiGeoSwing/trunk',
     branches_path='Tipi/TipiGeoSwing/branches',
     tags_path='Tipi/TipiGeoSwing/tags',
@@ -986,7 +986,7 @@ run_options.add_project(
     
 
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/TipiJabber',
+    r'/home/test/cvsroot/TipiJabber',
     trunk_path='Tipi/TipiJabber/trunk',
     branches_path='Tipi/TipiJabber/branches',
     tags_path='Tipi/TipiJabber/tags',
@@ -1002,7 +1002,7 @@ run_options.add_project(
     )
     
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/TipiJxLayer',
+    r'/home/test/cvsroot/TipiJxLayer',
     trunk_path='Tipi/TipiJxLayer/trunk',
     branches_path='Tipi/TipiJxLayer/branches',
     tags_path='Tipi/TipiJxLayer/tags',
@@ -1018,7 +1018,7 @@ run_options.add_project(
     )
     
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/TipiMail',
+    r'/home/test/cvsroot/TipiMail',
     trunk_path='Tipi/TipiMail/trunk',
     branches_path='Tipi/TipiMail/branches',
     tags_path='Tipi/TipiMail/tags',
@@ -1034,7 +1034,7 @@ run_options.add_project(
     )
     
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/TipiRss',
+    r'/home/test/cvsroot/TipiRss',
     trunk_path='Tipi/TipiRss/trunk',
     branches_path='Tipi/TipiRss/branches',
     tags_path='Tipi/TipiRss/tags',
@@ -1050,7 +1050,7 @@ run_options.add_project(
     )
     
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/TipiSubstance',
+    r'/home/test/cvsroot/TipiSubstance',
     trunk_path='Tipi/TipiSubstance/trunk',
     branches_path='Tipi/TipiSubstance/branches',
     tags_path='Tipi/TipiSubstance/tags',
@@ -1072,7 +1072,7 @@ run_options.add_project(
 
 
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/TipiSvgBatik',
+    r'/home/test/cvsroot/TipiSvgBatik',
     trunk_path='Tipi/TipiSvgBatik/trunk',
     branches_path='Tipi/TipiSvgBatik/branches',
     tags_path='Tipi/TipiSvgBatik/tags',
@@ -1089,7 +1089,7 @@ run_options.add_project(
     
 
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/TipiSwingMig',
+    r'/home/test/cvsroot/TipiSwingMig',
     trunk_path='Tipi/TipiSwingMig/trunk',
     branches_path='Tipi/TipiSwingMig/branches',
     tags_path='Tipi/TipiSwingMig/tags',
@@ -1105,7 +1105,7 @@ run_options.add_project(
     )
     
 run_options.add_project(
-    r'/root/cvsroot_copy/cvs/TipiSwingX',
+    r'/home/test/cvsroot/TipiSwingX',
     trunk_path='Tipi/TipiSwingX/trunk',
     branches_path='Tipi/TipiSwingX/branches',
     tags_path='Tipi/TipiSwingX/tags',
