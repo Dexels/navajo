@@ -3,13 +3,14 @@ package com.dexels.navajo.util;
 import java.util.ArrayList;
 
 public class RemoteSourceDefinition {
-
-private String sourceLocation;
+	private String path;
+	private String fileName;
+	private String sourceLocation;
 	private ArrayList<ScriptDefinition> callList = new ArrayList<ScriptDefinition>();
 	private ArrayList<ScriptDefinition> readList = new ArrayList<ScriptDefinition>();
 	
-	public RemoteSourceDefinition(String path) {
-		sourceLocation = path;
+	public RemoteSourceDefinition(String path, String fileName) {
+		sourceLocation = path + "/" + fileName;
 	}
 	
 	public void addCallService(String serviceName){
@@ -41,7 +42,7 @@ private String sourceLocation;
 	}
 	
 	public String getName(){
-		return sourceLocation.substring(sourceLocation.lastIndexOf("/") + 1, sourceLocation.lastIndexOf("."));
+		return fileName.substring(fileName.lastIndexOf("/") + 1, fileName.lastIndexOf("."));
 	}
 	
 	public ScriptDefinition[] getCallServices(){

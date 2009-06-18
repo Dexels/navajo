@@ -51,7 +51,7 @@ public class RemoteSourceIntrospection {
 				}
 				String file = line.substring(line.lastIndexOf(" ") + 1);
 				if(file.endsWith(extention)){
-					RemoteSourceDefinition rsd = new RemoteSourceDefinition(currentPath + "/" + file);
+					RemoteSourceDefinition rsd = new RemoteSourceDefinition(currentPath, file);
 					names.add(rsd);
 				}
 			}
