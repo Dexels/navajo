@@ -10,7 +10,9 @@ public class RemoteSourceDefinition {
 	private ArrayList<ScriptDefinition> readList = new ArrayList<ScriptDefinition>();
 	
 	public RemoteSourceDefinition(String path, String fileName) {
-		sourceLocation = path + "/" + fileName;
+		this.path = path;
+		this.fileName = fileName;
+		sourceLocation = path + fileName;
 	}
 	
 	public void addCallService(String serviceName){
@@ -42,7 +44,11 @@ public class RemoteSourceDefinition {
 	}
 	
 	public String getName(){
-		return fileName.substring(fileName.lastIndexOf("/") + 1, fileName.lastIndexOf("."));
+		int start = 0;
+		if(fileName.startsWith("/")){
+			start = 1;
+		}
+		return fileName.substring(start, fileName.lastIndexOf("."));
 	}
 	
 	public ScriptDefinition[] getCallServices(){

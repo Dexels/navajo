@@ -41,17 +41,20 @@ public class RemoteSourceIntrospection {
 			BufferedReader br = new BufferedReader(new InputStreamReader(stdout));
 //			System.err.println("Retrieving file information..");
 			String currentPath = path;
+			String subPath = "";
 			while (true) {
 				String line = br.readLine();
 				if (line == null)
 					break;
-
+				
 				if(line.startsWith("./")){
+					subPath = line.substring(1, line.indexOf(":"));
 					currentPath = path + line.substring(1, line.indexOf(":"));
 				}
 				String file = line.substring(line.lastIndexOf(" ") + 1);
 				if(file.endsWith(extention)){
-					RemoteSourceDefinition rsd = new RemoteSourceDefinition(currentPath, file);
+					System.err.println("Path: " + path + ", subPath: " + subPath + ", file: " + file);
+					RemoteSourceDefinition rsd = new RemoteSourceDefinition(path, subPath + "/" + file);
 					names.add(rsd);
 				}
 			}
@@ -191,7 +194,8 @@ public class RemoteSourceIntrospection {
 
 		RemoteSourceDefinition[] rsd = rsi.getFiles();
 		for(int i=0;i<rsd.length;i++){
-			System.err.println("File: " + rsd[i].getPath());
+			System.err.println("Filepath: " + rsd[i].getPath());
+			System.err.println("Filename: " + rsd[i].getName());
 			ScriptDefinition[] services = rsd[i].getReadServices();
 			for(int j=0;j<services.length;j++){
 				System.err.println("      Reads: " + services[j].getScriptName());
