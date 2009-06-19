@@ -1756,7 +1756,6 @@ public class StandardFunctionsTest extends TestCase {
 	public void testAge() throws Exception {
 
 		FunctionInterface fi = fff.getInstance(cl, "Age");
-		
 		fi.reset();
 		fi.setInMessage(createTestNavajo());
 		fi.insertOperand(new java.util.Date());
@@ -1765,6 +1764,67 @@ public class StandardFunctionsTest extends TestCase {
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(Integer.class, o.getClass());
+	}	
+	
+	public void testIsEmpty() throws Exception {
+
+		FunctionInterface fi = fff.getInstance(cl, "IsEmpty");
+		
+		// Empty String.
+		fi.reset();
+		fi.insertOperand(new String(""));
+		Object o = fi.evaluateWithTypeChecking();
+		assertNotNull(o);
+		assertEquals(Boolean.TRUE, (Boolean) o);
+		
+		// Non Empty String.
+		fi.reset();
+		fi.insertOperand(new String("aap"));
+		o = fi.evaluateWithTypeChecking();
+		assertNotNull(o);
+		assertEquals(Boolean.FALSE, (Boolean) o);
+		
+		// Null value.
+		fi.reset();
+		fi.insertOperand(null);
+		o = fi.evaluateWithTypeChecking();
+		assertNotNull(o);
+		assertEquals(Boolean.TRUE, (Boolean) o);
+		
+		// Empty list
+		fi.reset();
+		fi.insertOperand(new ArrayList());
+		o = fi.evaluateWithTypeChecking();
+		assertNotNull(o);
+		assertEquals(Boolean.TRUE, (Boolean) o);
+		
+		// Non Empty list.
+		fi.reset();
+		fi.insertOperand(new ArrayList().add(new String("noot")));
+		o = fi.evaluateWithTypeChecking();
+		assertNotNull(o);
+		assertEquals(Boolean.FALSE, (Boolean) o);
+		
+		// Empty Binary.
+		fi.reset();
+		fi.insertOperand(new Binary());
+		o = fi.evaluateWithTypeChecking();
+		assertNotNull(o);
+		assertEquals(Boolean.TRUE, (Boolean) o);
+		
+		// Non Empty Binary.
+		fi.reset();
+		fi.insertOperand(new Binary("aap".getBytes()));
+		o = fi.evaluateWithTypeChecking();
+		assertNotNull(o);
+		assertEquals(Boolean.FALSE, (Boolean) o);
+		
+		// Non empty Clocktime.
+		fi.reset();
+		fi.insertOperand(new ClockTime(new java.util.Date()));
+		o = fi.evaluateWithTypeChecking();
+		assertNotNull(o);
+		assertEquals(Boolean.FALSE, (Boolean) o);
 	}	
 	
 }
