@@ -88,6 +88,11 @@ public class MailMap implements MailMapInterface, Mappable, HasDependentResource
 		myAccess = access;
     }
 
+    public Binary[] getAttachments(){
+    	Binary[] bins = new Binary[attachments.size()];
+    	bins = (Binary[])attachments.toArray(bins);
+    	return bins;
+    }
 
     public void store() throws MappableException, UserException {
     	if ( !queuedSend ) {
