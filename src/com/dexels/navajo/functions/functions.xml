@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
-<functiondef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.navajo.nl/classdef_schema.xsd">
+<functiondef>
+    <function name="IsEmpty" class="com.dexels.navajo.functions.IsEmpty">
+        <description>Determines whether a given object is null or empty</description>
+        <input>string|binary|list|message|array|integer|boolean|date|clocktime|memo|money|percentage|stopwatchtime|float|selection</input>
+        <result>boolean</result>
+    </function>
     <function name="SetMimeType" class="com.dexels.navajo.functions.SetMimeType">
         <description>Sets mime-type for a binary object</description>
         <input>binary,string</input>
