@@ -467,9 +467,7 @@ public final class Access implements java.io.Serializable, Mappable {
 	}
 
 	public void load(Access access) throws MappableException, UserException {
-		if ( myScript != null ) {
-			myScript.load(null);
-		}
+		
 	}
 
 	public void store() throws MappableException, UserException {

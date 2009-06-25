@@ -1330,7 +1330,7 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
 
   public Access getAccessObject(String id) {
 
-	  Iterator<Access> iter = accessSet.iterator();
+	  Iterator<Access> iter =  accessSet.iterator();
 	  boolean found = false;
 	  Access a = null;
 	  while (iter.hasNext() && !found) {

@@ -28,7 +28,6 @@ package com.dexels.navajo.mapping;
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.mapping.compiler.meta.Dependency;
 import com.dexels.navajo.server.*;
-import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.document.*;
 
 import java.lang.management.ThreadInfo;
@@ -94,13 +93,10 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
     
   protected boolean kill = false;
 
-  private JMXHelper jmx = null;
-  private boolean connected = false;
   @SuppressWarnings("unused")
-private ThreadInfo myThread = null;
+  private ThreadInfo myThread = null;
   @SuppressWarnings("unused")
-private boolean keepJMXConnectionAlive = false;
-  
+
   public String getScriptName() {
 	  return getClass().getName();
   }
@@ -123,56 +119,18 @@ private boolean keepJMXConnectionAlive = false;
   
   public boolean getWaiting() {
 	  return false;
-//	  try {
-//		  connectJMX();
-//		  LockInfo [] monitors = myThread.getLockedSynchronizers();
-//		  return monitors.length != 0;
-//	  } finally {
-//		  if (!keepJMXConnectionAlive) {
-//			  disconnectJMX();
-//		  }
-//	  }
   }
   
   public String getLockName() {
 	  return "";
-//	  try {
-//		  connectJMX();
-//		  return myThread.getLockName();
-//	  } finally {
-//		  if (!keepJMXConnectionAlive) {
-//			  disconnectJMX();
-//		  }
-//	  }
   }
   
   public String getLockOwner() {
 	  return "";
-//	  try {
-//		  connectJMX();
-//		  return myThread.getLockOwnerName();
-//	  } finally {
-//		  if (!keepJMXConnectionAlive) {
-//			  disconnectJMX();
-//		  }
-//	  }
   }
   
   public String getLockClass() {
 	  return "";
-//	  try {
-//		  connectJMX();
-//		  LockInfo lockInfo = myThread.getLockInfo();
-//		  if ( lockInfo != null ) {
-//			  return lockInfo.getClassName();
-//		  } else {
-//			  return null;
-//		  }
-//	  } finally {
-//		  if (!keepJMXConnectionAlive) {
-//			  disconnectJMX();
-//		  }
-//	  }
   }
   
   public String getStackTrace() {
@@ -192,7 +150,6 @@ private boolean keepJMXConnectionAlive = false;
   public void kill() {
 	  System.err.println("Calling kill from JMX");
 	  myAccess.getCompiledScript().setKill(true);
-	  disconnectJMX();
   }
   
   public void setKill(boolean b) {
@@ -458,7 +415,6 @@ private boolean keepJMXConnectionAlive = false;
 
   protected void finalize() {
 	  functions.clear();
-	  disconnectJMX();
   }
   
   public final Object findMapByPath(String path) {
@@ -484,25 +440,10 @@ private boolean keepJMXConnectionAlive = false;
 	  classLoader = null;
   }
   
-  private void disconnectJMX() {
-	  try {
-		  if ( connected && jmx != null ) {
-			  jmx.disconnect();
-		  }
-	  } finally {
-		  keepJMXConnectionAlive = false;
-		  jmx = null;
-		  connected = false;
-	  }
-  }
-  
   public void load(Access access) throws MappableException, UserException {
-	  keepJMXConnectionAlive = true;
-	  //connectJMX();
   }
 
   public void store() throws MappableException, UserException {
-	disconnectJMX();
   }
  
   /**
