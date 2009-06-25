@@ -231,23 +231,16 @@ public class AdminMap implements Mappable {
    }
 
    public AccessMap [] getUsers() {
-      Set all = new HashSet(com.dexels.navajo.server.DispatcherFactory.getInstance().getAccessSet());
-      Iterator iter = all.iterator();
-      ArrayList d = new ArrayList();
-      while (iter.hasNext()) {
-        Access a = (Access) iter.next();
-        AccessMap am = new AccessMap();
-        try {
-          am.load(a);
-          d.add(am);
-        }
-        catch (Exception ex) {
-          ex.printStackTrace(System.err);
-        }
-      }
-      AccessMap [] ams = new AccessMap[d.size()];
-
-      return (AccessMap []) d.toArray(ams);
+	   Set all = new HashSet(com.dexels.navajo.server.DispatcherFactory.getInstance().getAccessSet());
+	   Iterator iter = all.iterator();
+	   ArrayList d = new ArrayList();
+	   while (iter.hasNext()) {
+		   Access a = (Access) iter.next();
+		   System.err.println("Found webservice: " + a.getRpcName() + " with accessid: " + a.getAccessID());
+		   d.add(new AccessMap(a));
+	   }
+	   AccessMap [] ams = new AccessMap[d.size()];
+	   return (AccessMap []) d.toArray(ams);
    }
 
    public void store() throws MappableException, UserException {

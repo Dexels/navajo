@@ -21,7 +21,8 @@ public final class AccessMap implements Mappable {
   public String requestId;
   public String clientToken;
   public java.util.Date created;
-  public Access myAccess;
+  public Access myAccess; // myAccess contains the 'wrapped' access object.
+  public Access callingAccess; // callingAccess is for the webservice that uses the AccessMap to introspect.
   public MappableTreeNode currentMap;
   public String accessId;
   public String requestNavajo = null;
@@ -33,21 +34,14 @@ public final class AccessMap implements Mappable {
   
   /* Private vars */
   private boolean showDetails = false;
-  private Access thisAccess = null;
   private boolean isAsync = false;
   
-  /**
-   * TODO Show all different available stacks in CompiledScript.
-   *
-   */
+  public AccessMap() {
+  }
   
-  public void load(Access access) throws MappableException, UserException {
-	  this.myAccess = access;
-	  this.myScript = myAccess.getCompiledScript();
-	  if ( this.myScript != null) {
-		  myScript.load(access);
-	  }
-	  thisAccess = access;
+  public AccessMap(Access a) {
+	  this.myAccess = a;
+	  this.myScript = a.getCompiledScript();
   }
 
   public CompiledScript getMyScript() {
@@ -56,8 +50,6 @@ public final class AccessMap implements Mappable {
   
   public void setKilled(boolean b) {
 	  if (myAccess.getCompiledScript().currentMap != null) {
-//		  System.err.println("In setKilled(), myAccess = " + myAccess);
-//		  System.err.println("In setKilled(), myAccess.getCompiledScript() = " + myAccess.getCompiledScript());
 		  Mappable myMap = (Mappable) myAccess.getCompiledScript().currentMap.myObject;
 		  if (myMap != null && myMap instanceof com.dexels.navajo.adapter.SQLMap) {
 			  ((SQLMap) myMap).setKillConnection();
@@ -68,18 +60,18 @@ public final class AccessMap implements Mappable {
 
   private Message getMessage(Message parent, String name) throws NavajoException {
     Message m = null;
-    m = NavajoFactory.getInstance().createMessage(thisAccess.getOutputDoc(), name);
+    m = NavajoFactory.getInstance().createMessage(callingAccess.getOutputDoc(), name);
     if (parent != null) {
       parent.addMessage(m);
     } else {
-      thisAccess.getOutputDoc().addMessage(m);
+    	callingAccess.getOutputDoc().addMessage(m);
     }
     return m;
   }
 
   private void addProperty(Message m, String name, Object value, String type, int length) throws NavajoException, MappingException {
     MappingUtils.setProperty(false, m, name, value, type, null, Property.DIR_OUT, "", length,
-                             thisAccess.getOutputDoc(), thisAccess.getCompiledScript().inDoc, false);
+    		callingAccess.getOutputDoc(), callingAccess.getCompiledScript().inDoc, false);
   }
 
   private void showMapDetails(Message parent, MappableTreeNode m) throws NavajoException, MappingException, UserException {
@@ -113,11 +105,8 @@ public final class AccessMap implements Mappable {
 
   public void store() throws MappableException, UserException {
 
-	  if ( myScript != null ) {
-		  myScript.store();
-	  }
-	  
     if (showDetails) {
+    	
       try {
         Message user = getMessage(null, "User");
         addProperty(user, "Starttime", getCreated(), Property.DATE_PROPERTY, 10);
@@ -132,9 +121,7 @@ public final class AccessMap implements Mappable {
         MappableTreeNode currentNode = getCurrentMap();
         if (currentNode != null) {
           showMapDetails(currentMap, currentNode);
-        } else {
-          System.err.println("......................................... NO CURRENT MAP PRESENT!!!!!!!!!!!!!!!!!....................");
-        }
+        } 
         Message requestNavajo = getMessage(user, "RequestNavajo");
         addProperty(requestNavajo, "Document", getRequestNavajo(), Property.STRING_PROPERTY, -1);
         Message responseNavajo = getMessage(user, "ResponseNavajo");
@@ -143,6 +130,8 @@ public final class AccessMap implements Mappable {
         addProperty(outMessagStack, "Stack", getOutMessageStack(), Property.STRING_PROPERTY, -1);
         Message mapStack = getMessage(user, "MapObjectStack");
         addProperty(mapStack, "Stack", getMapStack(), Property.STRING_PROPERTY, -1);
+        
+        
       } catch (Exception ne) {
         ne.printStackTrace(System.err);
       }
@@ -157,7 +146,6 @@ public final class AccessMap implements Mappable {
 
   public void setAccessId(String id) throws UserException {
 
-    System.err.println("in setAccessId("+id+")");
     this.accessId = id;
     if (accessId == null) {
       throw new UserException(-1, "Set accessId first");
@@ -167,15 +155,12 @@ public final class AccessMap implements Mappable {
     while (iter.hasNext()) {
       Access a = (Access) iter.next();
       if (a.accessID.equals(accessId)) {
-        System.err.println("FOUND ACCESS OBJECT!!!");
         this.myAccess = a;
         showDetails = true;
       }
     }
     if (showDetails == false) { //Try async store
-      System.err.println("Did NOT FIND ACCESS OBJECT IN ACCESS MAP, TRYING ASYNC STORE...");
       myAccess = (Access) com.dexels.navajo.mapping.AsyncStore.getInstance().accessStore.get(id);
-      System.err.println("FOUND ACCESS IN ASYNCSTORE: " + myAccess);
       if (myAccess != null) {
         showDetails = true;
         isAsync = true;
@@ -239,26 +224,29 @@ public final class AccessMap implements Mappable {
   }
 
   private String getResponseNavajo() {
-    if (responseNavajo == null) {
+	  if (responseNavajo == null) {
 
-        // CHANGED (FRANK) Don't know if its correct! was myAccess.getCompiledScript().outDoc
-        Navajo in = myAccess.getOutputDoc();
-      
-      java.io.StringWriter sw = new java.io.StringWriter();
-      try {
-        in.write(sw);
-      }
-      catch (NavajoException ex) {
-        ex.printStackTrace();
-      }
-      responseNavajo = sw.toString();
-    }
-    return responseNavajo;
+		  Navajo in = myAccess.getOutputDoc().copy();
+		  in.removeMessage("__globals__");
+	      in.removeMessage("__parms__");
+	      
+		  java.io.StringWriter sw = new java.io.StringWriter();
+		  try {
+			  in.write(sw);
+		  }
+		  catch (NavajoException ex) {
+			  ex.printStackTrace();
+		  }
+		  responseNavajo = sw.toString();
+	  }
+	  return responseNavajo;
   }
 
   private String getRequestNavajo() {
     if (requestNavajo == null) {
-      Navajo in = myAccess.getCompiledScript().inDoc;
+      Navajo in = myAccess.getCompiledScript().inDoc.copy();
+      in.removeMessage("__globals__");
+      in.removeMessage("__parms__");
       java.io.StringWriter sw = new java.io.StringWriter();
       try {
         in.write(sw);
@@ -311,6 +299,10 @@ public final class AccessMap implements Mappable {
 	  } else {
 		  return null;
 	  }
+  }
+
+  public void load(Access access) throws MappableException, UserException {
+	  callingAccess = access;
   }
 
 }
