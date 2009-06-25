@@ -123,6 +123,8 @@
                 <param name="direction" field="propertyDirective" type="string" required="true"/>
             </method>
             <method name="callwebservice">
+                <param name="breakOnConditionError" field="breakOnConditionError" type="boolean" required="false"/>
+                <param name="breakOnException" field="breakOnException" type="boolean" required="false"/>
                 <param name="server" field="server" type="string" required="false"/>
                 <param name="username" field="username" type="string" required="false"/>
                 <param name="password" field="password" type="string" required="false"/>

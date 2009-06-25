@@ -71,6 +71,7 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
    */
   public boolean useCurrentOutDoc;
   public boolean breakOnConditionError = true;
+  public boolean breakOnException = true;
   public String keyStore;
   public String keyPassword;
   public String compare = "";
@@ -493,7 +494,7 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
       }
       
       Message error = inDoc.getMessage("error");
-      if (error != null) {
+      if (error != null && breakOnException ) {
           String errMsg = error.getProperty("message").getValue();
           String errCode = error.getProperty("code").getValue();
           int errorCode = -1;
@@ -504,6 +505,9 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
 				e.printStackTrace(Access.getConsoleWriter(access));
 			}
           throw new UserException(errorCode, errMsg);
+      } else if ( error != null ) {
+    	  AuditLog.log("NavajoMap", "EXCEPTIONERROR OCCURED, BUT WAS EXCEPTION HANDLING WAS SET TO FALSE, RETURNING....", Level.INFO, access.accessID);
+    	  return;
       }
 
       boolean authenticationError = false;
@@ -571,7 +575,8 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
    } catch (FatalException fe) {
       fe.printStackTrace(Access.getConsoleWriter(access));
       throw new SystemException(-1, fe.getMessage());
-   }
+   } 
+   
   }
 
   private Message getMessage(String fullName) throws UserException {
@@ -1133,4 +1138,8 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
 		  this.outputProperties = setProperPropertyDirective(this.outputProperties, this.propertyId);
 	  }
   }
+
+public void setBreakOnException(boolean breakOnException) {
+	this.breakOnException = breakOnException;
+}
 }
