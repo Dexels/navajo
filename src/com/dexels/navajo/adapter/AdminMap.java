@@ -236,7 +236,6 @@ public class AdminMap implements Mappable {
 	   ArrayList d = new ArrayList();
 	   while (iter.hasNext()) {
 		   Access a = (Access) iter.next();
-		   System.err.println("Found webservice: " + a.getRpcName() + " with accessid: " + a.getAccessID());
 		   d.add(new AccessMap(a));
 	   }
 	   AccessMap [] ams = new AccessMap[d.size()];
