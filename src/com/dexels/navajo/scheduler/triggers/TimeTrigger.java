@@ -72,8 +72,6 @@ public class TimeTrigger extends Trigger implements Serializable, ClockListener 
 	
 	public void setNextOffsetTime() {
 		nextOffsetTime  = Calendar.getInstance();
-		//nextOffsetTime.set(year, month-1, monthday, hour, minute);
-		System.err.println("offsetField = " + offsetField + ", offset = " + offset);
 		nextOffsetTime.add(offsetField, offset);
 	}
 	
