@@ -157,22 +157,7 @@ public abstract class Trigger implements Listener, Serializable {
 				t = new TimeTrigger(v);
 				return t;
 			} else if (s.startsWith(OFFSETTIME_TRIGGER + ":")) {
-				String v = s.substring(OFFSETTIME_TRIGGER.length()+1);
-				String field = v.substring(v.length() - 1);
-				String offset = v.substring(0, v.length() - 1);
-				if ( field.equals("s")) {
-					t = new TimeTrigger(Integer.parseInt(offset), Calendar.SECOND);
-				}
-				if ( field.equals("m")) {
-					t = new TimeTrigger(Integer.parseInt(offset), Calendar.MINUTE);
-				}
-				if ( field.equals("h")) {
-					t = new TimeTrigger(Integer.parseInt(offset), Calendar.HOUR_OF_DAY);
-				}
-				if ( field.equals("d")) {
-					t = new TimeTrigger(Integer.parseInt(offset), Calendar.DAY_OF_MONTH);
-				}
-				return t;
+				return TimeTrigger.createOffsetTimeTrigger(s);
 			}  
 			else if (s.startsWith(WS_TRIGGER + ":")) {
 				String v = s.substring(WS_TRIGGER.length()+1);

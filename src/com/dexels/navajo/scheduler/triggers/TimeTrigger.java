@@ -80,7 +80,34 @@ public class TimeTrigger extends Trigger implements Serializable, ClockListener 
 	public void setNextOffsetTime() {
 		nextOffsetTime  = Calendar.getInstance();
 		//nextOffsetTime.set(year, month-1, monthday, hour, minute);
+		System.err.println("offsetField = " + offsetField + ", offset = " + offset);
 		nextOffsetTime.add(offsetField, offset);
+	}
+	
+	public static TimeTrigger createOffsetTimeTrigger(String description) {
+		
+		String v = ( description.indexOf(OFFSETTIME_TRIGGER) != -1 ? 
+				                  description.substring(OFFSETTIME_TRIGGER.length() + 1) : description );
+		
+		String field = v.substring(v.length() - 1);
+		String offset = v.substring(0, v.length() - 1);
+		
+		TimeTrigger t = null;
+		
+		if ( field.equals("s")) {
+			t = new TimeTrigger(Integer.parseInt(offset), Calendar.SECOND);
+		}
+		if ( field.equals("m")) {
+			t = new TimeTrigger(Integer.parseInt(offset), Calendar.MINUTE);
+		}
+		if ( field.equals("h")) {
+			t = new TimeTrigger(Integer.parseInt(offset), Calendar.HOUR_OF_DAY);
+		}
+		if ( field.equals("d")) {
+			t = new TimeTrigger(Integer.parseInt(offset), Calendar.DAY_OF_MONTH);
+		}
+		
+		return t;
 	}
 	
 	public TimeTrigger(int i, int field) {
@@ -360,6 +387,10 @@ public class TimeTrigger extends Trigger implements Serializable, ClockListener 
 	//		fired = false;
 //		}
 		return null;
+	}
+
+	public Calendar getNextOffsetTime() {
+		return nextOffsetTime;
 	}
 	
 }
