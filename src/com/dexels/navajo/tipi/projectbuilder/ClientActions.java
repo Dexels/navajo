@@ -19,12 +19,16 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.PropertyResourceBundle;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
 
 import com.dexels.navajo.tipi.extensionmanager.ExtensionManager;
 import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
@@ -33,16 +37,25 @@ import com.dexels.navajo.tipi.util.XMLParseException;
 
 public class ClientActions {
 	
-	//public static final String DEFAULT_REPOSITORY = "http://spiritus.dexels.nl:34567/Tipi/";
+	public static void downloadZippedDemoFiles(String repository, File projectDir, String templateName) throws IOException {
+		URL baseUrl = new URL(repository);
+		URL zipFile = new URL(baseUrl,templateName+".zip");
+		downloadFile(zipFile, "template.zip", projectDir, false,false);
+		System.err.println("Downloaded zip file: "+zipFile);
+		File archive = new File(projectDir,"template.zip");
+		unzip(archive, projectDir);
+		System.err.println("should delete zipfile now!");
+	}
 	
-	public static void downloadDemoFiles(String repository, File projectDir) throws IOException {
+	public static void downloadDemoFiles(String repository, File projectDir, String templateName) throws IOException {
+		
 		File resources = new File(projectDir,"resource");
 		File tipi = new File(projectDir,"tipi");
 		File settingsDir = new File(projectDir,"settings");
 		resources.mkdirs();
 		tipi.mkdirs();
 		URL baseUrl = new URL(repository);
-		URL defProject = new URL(baseUrl,"TemplateProject/");
+		URL defProject = new URL(baseUrl,templateName+"/");
 		URL resource = new URL(defProject,"resource/");
 		URL settings = new URL(defProject,"settings/");
 		URL tipiUrl = new URL(defProject,"tipi/");
@@ -112,87 +125,99 @@ public class ClientActions {
 		return null;
 	}
 	
-//	public static XMLElement getExtensionXml(String extension,String repository) throws IOException {
-//		try {
-//			URL rep = new URL(repository);
-//			URL projectURL = new URL(rep, extension + "/");
-//			URL extensionURL = new URL(projectURL, "definition.xml");
-//			XMLElement result = getXMLElement(extensionURL);
-//			return result;
-//		} catch (MalformedURLException e) {
-//			e.printStackTrace();
+
+//	public static void downloadExtensionJars(String project, URL projectURL, XMLElement result, File baseDir, boolean clean)
+//			throws MalformedURLException {
+//		URL unsigned = new URL(projectURL, "lib/");
+//
+//		List<XMLElement> jars = result.getAllElementsByTagName("jar");
+//		File f = new File(baseDir, "lib");
+//		if (f.exists()) {
+//			f.delete();
 //		}
-//		return null;
+//		f.mkdirs();
+//		for (XMLElement element : jars) {
+//			String path = element.getStringAttribute("path");
+//			URL jar = new URL(unsigned, path);
+//			try {
+//				downloadFile(jar, path, f,clean,false);
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//		XMLElement main = result.getElementByTagName("main");
+//		if (main != null) {
+//			String path = main.getStringAttribute("proxyjar");
+//			URL jar = new URL(unsigned, path);
+//			try {
+//				downloadFile(jar, path, f,clean,false);
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
 //	}
 
-	public static void downloadExtensionJars(String project, URL projectURL, XMLElement result, File baseDir, boolean clean)
-			throws MalformedURLException {
+//
+//	public static void downloadWebJars(String project, URL projectURL, XMLElement result, File baseDir, boolean clean)
+//			throws MalformedURLException {
+//		URL unsigned = new URL(projectURL, "lib/");
+//		File webInf = new File(baseDir,"WEB-INF");
+//		if(!webInf.exists()) {
+//			webInf.mkdirs();
+//		}
+//		File webInfLib = new File(webInf,"lib");
+//		if(webInfLib.exists()) {
+//			webInfLib.delete();
+//		}
+//		webInfLib.mkdirs();
+//		List<XMLElement> jars = result.getAllElementsByTagName("jar");
+//
+//		for (XMLElement element : jars) {
+//			String path = element.getStringAttribute("path");
+//			URL jar = new URL(unsigned, path);
+//			try {
+//				downloadFile(jar, path, webInfLib, clean, false);
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//	}
+	
+//	public static void downloadProxyJars(String project, URL projectURL, XMLElement result, File baseDir,boolean clean) throws MalformedURLException {
 //		System.err.println("PRoject dir: " + projectURL);
-		URL unsigned = new URL(projectURL, "lib/");
+//		URL unsigned = new URL(projectURL, "lib/");
+//
+//		File f = new File(baseDir, "lib");
+//		if (f.exists()) {
+//			f.delete();
+//		}
+//		f.mkdirs();
+//
+//		XMLElement main = result.getElementByTagName("main");
+//		if (main != null) {
+//			String path = main.getStringAttribute("proxyjar");
+//			URL jar = new URL(unsigned, path);
+//			try {
+//				downloadFile(jar, path, f,clean,false);
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//	}
 
-		List<XMLElement> jars = result.getAllElementsByTagName("jar");
-		File f = new File(baseDir, "lib");
-		if (f.exists()) {
-			f.delete();
-		}
-		f.mkdirs();
-		for (XMLElement element : jars) {
-			String path = element.getStringAttribute("path");
-			URL jar = new URL(unsigned, path);
-//			System.err.println("URL: " + jar);
-			try {
-				downloadFile(jar, path, f,clean,false);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		XMLElement main = result.getElementByTagName("main");
-		if (main != null) {
-			String path = main.getStringAttribute("proxyjar");
-			URL jar = new URL(unsigned, path);
-			try {
-				downloadFile(jar, path, f,clean,false);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-//	ClientActions.downloadProxyJars(ext,new URL(repository+ext+"/"),extensionXml,projectPath);
-	public static void downloadProxyJars(String project, URL projectURL, XMLElement result, File baseDir,boolean clean) throws MalformedURLException {
-		System.err.println("PRoject dir: " + projectURL);
-		URL unsigned = new URL(projectURL, "lib/");
-
-		File f = new File(baseDir, "lib");
-		if (f.exists()) {
-			f.delete();
-		}
-		f.mkdirs();
-
-		XMLElement main = result.getElementByTagName("main");
-		if (main != null) {
-			String path = main.getStringAttribute("proxyjar");
-			URL jar = new URL(unsigned, path);
-			try {
-				downloadFile(jar, path, f,clean,false);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
+	
+	
 	/**
 	 * If clean = false, don't cache, download everything
 	 * @param remote
-	 * @param path
+	 * @param localPath
 	 * @param directory
 	 * @param clean
 	 * @throws IOException
 	 */
-	public static void downloadFile(URL remote, String path, File directory, boolean clean, boolean dontOverwrite) throws IOException, WriteAbortedException {
-		//System.err.println("File: " + directory.getAbsolutePath()+ " url: "+remote);
+	public static void downloadFile(URL remote, String localPath, File directory, boolean clean, boolean dontOverwrite) throws IOException, WriteAbortedException {
 		directory.mkdirs();
-		File file = new File(directory, path);
+		File file = new File(directory, localPath);
 		if(dontOverwrite && file.exists()) {
 			System.err.println("Not overwriting existing file: "+file.getAbsolutePath());
 			return;
@@ -336,6 +361,52 @@ public class ClientActions {
 	// copied from extensions
 	public static Map<String, List<String>> getExtensions(String repository) throws IOException {
 		return ExtensionManager.getExtensions(repository);
-	
+
 	}
-}
+	
+	
+	
+	public static final void copyInputStream(InputStream in, OutputStream out)
+	  throws IOException
+	  {
+	    byte[] buffer = new byte[1024];
+	    int len;
+
+	    while((len = in.read(buffer)) >= 0)
+	      out.write(buffer, 0, len);
+
+	    in.close();
+	    out.close();
+	  }
+
+	// Unzip utilities
+	
+	
+	  public static final void unzip(File archive, File destination) throws ZipException, IOException {
+	    Enumeration<? extends ZipEntry> entries;
+	    ZipFile zipFile;
+
+	      zipFile = new ZipFile(archive);
+
+	      entries = zipFile.entries();
+
+	      while(entries.hasMoreElements()) {
+	        ZipEntry entry = entries.nextElement();
+	        if(entry.isDirectory()) {
+	          // Assume directories are stored parents first then children.
+	          System.err.println("Extracting directory: " + entry.getName());
+	          // This is not robust, just for demonstration purposes.
+	          (new File(destination, entry.getName())).mkdir();
+	          continue;
+	        }
+	        System.err.println("Extracting file: " + entry.getName());
+	        copyInputStream(zipFile.getInputStream(entry),
+	           new BufferedOutputStream(new FileOutputStream(new File(destination, entry.getName()))));
+	      }
+
+	      zipFile.close();
+	 
+	  }
+
+	}
+

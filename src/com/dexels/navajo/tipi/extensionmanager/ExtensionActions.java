@@ -32,16 +32,16 @@ import com.dexels.navajo.tipi.util.XMLParseException;
 
 public class ExtensionActions {
 
-	public static void build(String repository, String projectName,String version, File baseDir, File inputPath, File destDir) throws XMLParseException, IOException {
+	public static void build(String baseRepository, String projectName,String version, File baseDir, File inputPath, File destDir) throws XMLParseException, IOException {
 		XMLElement xe = parseXmlFile(inputPath);
-		
+		String extensionRepository = getExtensionRepository(baseRepository);
 //		String version = xe.getStringAttribute("version");
-		ExtensionManager.registerExtension(projectName, repository, destDir,version);
+		ExtensionManager.registerExtension(projectName, extensionRepository, destDir,version);
 
 		copyFile(inputPath,new File(destDir,"definition.xml"));
 		
 		
-		generateJnlp(repository,projectName,version, destDir, xe);
+		generateJnlp(extensionRepository,projectName,version, destDir, xe);
 		generateIndex(destDir, xe);
 		List<XMLElement> locatedIncludes = new ArrayList<XMLElement>();
 		extractIncludes(baseDir, inputPath, destDir, xe,locatedIncludes);
@@ -50,8 +50,12 @@ public class ExtensionActions {
 			appendClassDefElement(projectName, element, tipiParts);
 		}
 		
-		mergeTypeMap(new URL(repository), destDir, projectName,tipiParts);
+		mergeTypeMap(new URL(extensionRepository), destDir, projectName,tipiParts);
 		
+	}
+	
+	public static String getExtensionRepository(String repository) {
+		return repository+"Extensions/";
 	}
 	
 	private static void mergeTypeMap(URL repository, File destDir, String projectName, Map<String, List<XMLElement>> tipiParts) throws IOException {
@@ -111,6 +115,7 @@ public class ExtensionActions {
  */
 
 	public static Map<String,List<XMLElement>> getAllClassDefs(String currentProject, String remoteRepository, URL repository, List<String> projects) throws IOException {
+		System.err.println("Getting classdefs from rep: "+repository);
 		List<String> toBeresolved = new LinkedList<String>();
 		List<String> resolved = new LinkedList<String>();
 		toBeresolved.addAll(projects);
@@ -219,7 +224,6 @@ public class ExtensionActions {
 	}
 	
 	private static XMLElement downloadDefinition(String currentProject, String remoteRepository, URL localRepository, String project) throws IOException {
-		
 		if (currentProject.equals(project)) {
 			System.err.println("Local rep: "+localRepository);
 			URL def = new URL(localRepository,"definition.xml");
@@ -356,12 +360,12 @@ public class ExtensionActions {
 		
 		fw.write(xe.getStringAttribute("title")+"<br/>");
 		for (XMLElement element : links) {
-			fw.write("More info <a href='"+element.getStringAttribute("href")+"'>here</a><br/>");
+			fw.write("More info <a href='"+element.getStringAttribute("href")+"'>here</a><br/>\n");
 		}
 		
 		String webstart = xe.getStringAttribute("project")+".jnlp";
-		writeLink("Webstart: "+webstart+"<br/>",webstart,fw);
-		writeLink("Definition: definition.xml<br/>","definition.xml",fw);
+		writeLink("Webstart: "+webstart+"<br/>\n",webstart,fw);
+		writeLink("Definition: definition.xml<br/>\n","definition.xml",fw);
 		fw.write("</body></html>");
 
 		fw.flush();

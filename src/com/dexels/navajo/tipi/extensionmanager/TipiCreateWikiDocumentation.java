@@ -607,9 +607,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 	}
 	private void writeComponent(XMLElement component,Map<String,XMLElement> allComponents, Writer w) throws IOException {
 		
-		if(component.getStringAttribute("name").equals("window")) {
-			System.err.println("Window found:\n"+component);
-		}
+		
 		ComponentMerger.getAssembledClassDef(allComponents, component, component.getStringAttribute("name"));
 		w.write("==== Component: " + component.getStringAttribute("name") + " (type: " + component.getStringAttribute("type")
 				+ ") ====\n [[..componentlist|(Back to componentlist)]]\n");
@@ -628,6 +626,9 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 			String name = element.getStringAttribute("name");
 			String type = element.getStringAttribute("type");
 			String direction = element.getStringAttribute("direction");
+			if(type==null) {
+				throw new IllegalArgumentException("Null type in value tag: "+element+" in component name: "+component.getStringAttribute("name"));
+			}
 			boolean writable = ("in".equals(direction)) || ("inout".equals(direction));
 			if (writable) {
 		//		w.write("  *[[..:"+getExtensionOfDataType(type)+":types:" + type + " : " + name + " (writable) \n");

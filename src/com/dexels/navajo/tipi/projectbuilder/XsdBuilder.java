@@ -184,7 +184,8 @@ public class XsdBuilder {
 		metadata.addChild(actions);
 		metadata.addChild(types);
 		VersionResolver vr = new VersionResolver(repository);
-		
+		String docPrefix = repository+"wiki/doku.php?id=tipidoc:";
+
 		for (Entry<String,XMLElement> elt : allComponents2.entrySet()) {
 			XMLElement c = new CaseSensitiveXMLElement("element");
 			// skip abstract classes
@@ -222,14 +223,16 @@ public class XsdBuilder {
 	
 	// DOcumentation is unversioned for now
 	
-	private String createDocLink(String repository,VersionResolver vr, String extension, String name, String elementType) {
+	private String createDocLink(String docPrefix,VersionResolver vr, String extension, String name, String elementType) {
+		String docPrefixWithExtension = docPrefix+extension.toLowerCase();
+
 		if(elementType.equals("type")) {
-			return repository+"wiki/doku.php?id=tipidoc:"+extension.toLowerCase()+":types:"+name;
+			return docPrefixWithExtension + ":types:" + name;
 			
 		} else if(elementType.equals("component")) {
-			return repository+"wiki/doku.php?id=tipidoc:"+extension.toLowerCase()+":components:"+("component".equals(elementType)?"c.":"")+name;			
+			return docPrefixWithExtension + ":components:" + ("component".equals(elementType)?"c.":"") + name;			
 		} else if(elementType.equals("action")) {
-		return repository+"wiki/doku.php?id=tipidoc:"+extension.toLowerCase()+":actions:"+("component".equals(elementType)?"c.":"")+name;			
+		return docPrefixWithExtension + ":actions:" + ("component".equals(elementType)?"c.":"") + name;			
 		}
 		return "huh?";
 	}

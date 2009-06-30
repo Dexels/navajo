@@ -17,14 +17,13 @@ import org.omg.CORBA.VersionSpecHelper;
 import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.util.XMLElement;
 
-public abstract class BaseJnlpBuilder {
+public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 
 	protected abstract boolean appendResourceForExtension(XMLElement resources, String repository, String ext, String version)
 			throws IOException;
 
 	protected abstract void appendProxyResource(XMLElement resources, String repository, String mainExtension);
 
-	protected final VersionResolver myVersionResolver = new VersionResolver();
 
 	public String appendResources(XMLElement resources, String repository, List<String> extensions) throws IOException {
 		String mainExtension = null;
@@ -41,11 +40,11 @@ public abstract class BaseJnlpBuilder {
 
 	public abstract String getJnlpName();
 
-	public void build(String repository, String extensions, File baseDir, String codebase, String jnlpName, String profile)
+	public void build(String repository, String developmentRepository, String extensions, File baseDir, String codebase, String fileName, String profile)
 			throws IOException {
 		myVersionResolver.load(repository);
 		Map<String, String> params = parseParams(baseDir);
-		File jnlpFile = new File(baseDir, jnlpName);
+		File jnlpFile = new File(baseDir, fileName);
 		XMLElement output = new CaseSensitiveXMLElement();
 		if (!codebase.endsWith("/")) {
 			codebase = codebase + "/";
@@ -55,7 +54,7 @@ public abstract class BaseJnlpBuilder {
 		output.setAttribute("version", "1");
 		output.setAttribute("spec", "1.0+");
 		output.setAttribute("codebase", codebase);
-		output.setAttribute("href", jnlpName);
+		output.setAttribute("href", fileName);
 
 		XMLElement information = output.addTagKeyValue("information", "");
 		information.addTagKeyValue("title", params.get("title"));
@@ -63,7 +62,7 @@ public abstract class BaseJnlpBuilder {
 		information.addTagKeyValue("homepage", params.get("homepage"));
 		information.addTagKeyValue("icon", "").setAttribute("href", params.get("icon"));
 
-		System.err.println("Parsing: " + jnlpName);
+		System.err.println("Parsing: " + fileName);
 
 		if (params.get("splash") != null) {
 			XMLElement splash = new CaseSensitiveXMLElement();
@@ -161,52 +160,5 @@ public abstract class BaseJnlpBuilder {
 
 	}
 
-	public Map<String, String> parseParams(File baseDir) throws IOException {
-		File path = new File(baseDir, "settings/tipi.properties");
-		Map<String, String> params = new HashMap<String, String>();
-		FileInputStream fr = new FileInputStream(path);
 
-		PropertyResourceBundle p = new PropertyResourceBundle(fr);
-		fr.close();
-		Enumeration<String> eb = p.getKeys();
-		while (eb.hasMoreElements()) {
-			String string = (String) eb.nextElement();
-			params.put(string, p.getString(string));
-		}
-		System.err.println("params: " + params);
-		return params;
-	}
-
-	public Map<String, String> parseArguments(File baseDir, String profile) throws IOException {
-
-		File path = null;
-		Map<String, String> params = new HashMap<String, String>();
-		File basePath = new File(baseDir, "settings/arguments.properties");
-		FileInputStream fr = new FileInputStream(basePath);
-
-		PropertyResourceBundle p = new PropertyResourceBundle(fr);
-		fr.close();
-		Enumeration<String> eb = p.getKeys();
-		while (eb.hasMoreElements()) {
-			String string = (String) eb.nextElement();
-			params.put(string, p.getString(string));
-		}
-
-		if (profile != null) {
-			path = new File(baseDir, "settings/profiles/" + profile + ".properties");
-			 fr = new FileInputStream(path);
-
-			 p = new PropertyResourceBundle(fr);
-			fr.close();
-			 eb = p.getKeys();
-			while (eb.hasMoreElements()) {
-				String string = (String) eb.nextElement();
-				params.put(string, p.getString(string));
-			}
-
-		}
-
-		System.err.println("params: " + params);
-		return params;
-	}
 }
