@@ -62,7 +62,10 @@ public class AfterWebserviceTrigger extends WebserviceTrigger implements Seriali
 				String key = t2.nextToken();
 				String value = t2.nextToken();
 				commands.put(key, value);
-				if ( key.equals("doc") && value.equals("out") ) {
+				if ( 
+					  (	key.equals("doc") && value.equals("out") ) ||
+					  ( key.equals("input") && value.equals("response") ) 
+				   ) {
 					//System.err.println("Swapping request/response");
 					setSwapInOut(true);
 				}
