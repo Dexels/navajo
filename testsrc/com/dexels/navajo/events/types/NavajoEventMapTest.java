@@ -14,7 +14,7 @@ public class NavajoEventMapTest extends TestCase {
 	}
 	
 	public void test() {
-		Assert.assertEquals(NavajoEventMap.navajoEvents.size(), 11);
+		Assert.assertEquals(NavajoEventMap.navajoEvents.size(), 12);
 		Assert.assertEquals(NavajoEventMap.getEventClass(NavajoEventMap.AUDITLOG_EVENT), AuditLogEvent.class);
 		Assert.assertEquals(NavajoEventMap.getEventClass(NavajoEventMap.COMPILESCRIPT_EVENT), NavajoCompileScriptEvent.class);
 		Assert.assertEquals(NavajoEventMap.getEventClass(NavajoEventMap.HEALTH_CHECK_EVENT), NavajoHealthCheckEvent.class);

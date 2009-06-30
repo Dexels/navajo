@@ -1,5 +1,7 @@
 package com.dexels.navajo.scheduler.triggers;
 
+import java.util.Calendar;
+
 import com.dexels.navajo.scheduler.Task;
 import com.dexels.navajo.server.Access;
 
@@ -71,10 +73,16 @@ public class TriggerTest extends TestCase {
 	}
 	
 	public void testOffsetTimeTriggerNextValue() throws Exception {
+		
 		TimeTrigger t = (TimeTrigger) Trigger.parseTrigger("offsettime:20m");
-		System.err.println(t.getDescription());
+		//System.err.println(t.getDescription());
+		Calendar currentTime = Calendar.getInstance();
+		//System.err.println(currentTime.getTime());
 		t.setNextOffsetTime();
-		System.err.println(t.getDescription());
+		Calendar currentOffsetTime = t.getNextOffsetTime();
+		//System.err.println(currentOffsetTime.getTime());
+		long difference =  ( currentOffsetTime.getTimeInMillis() - currentTime.getTimeInMillis() ) / 1000 / 60;
+		Assert.assertEquals((long) 20, difference);
 	}
 	
 	public void testParseTriggerOffsetTimeTrigger() throws Exception {
