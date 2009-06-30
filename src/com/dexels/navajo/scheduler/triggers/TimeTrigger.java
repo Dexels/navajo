@@ -212,26 +212,6 @@ public class TimeTrigger extends Trigger implements Serializable, ClockListener 
 		Clock.getInstance().removeClockListener(this);
 	}
 	
-//	public static void main(String [] args) throws Exception {
-//		DispatcherFactory df = new DispatcherFactory(new TestDispatcher(new TestNavajoConfig()));
-//		Clock c = Clock.getInstance();
-//		
-//		
-//		//c.startThread(c);
-//		
-//		//System.err.println("2. >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LISTENERS: " + c.getListeners());
-////		ListenerRunner runner = ListenerRunner.getInstance();
-////		runner.startThread(runner);
-//		
-//		Trigger t = Trigger.parseTrigger("offsettime:5s");
-//		c.addClockListener( (TimeTrigger) t);
-//		
-//		//System.err.println("3. >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LISTENERS: " + c.getListeners());
-//		while ( true ) {
-//			Thread.sleep(1000);
-//		}
-//	}
-
 	private final boolean checkAlarm(Calendar c) {
 		
 		if ( runImmediate ) {
@@ -239,7 +219,6 @@ public class TimeTrigger extends Trigger implements Serializable, ClockListener 
 		}
 		
 		if ( isOffsetTime ) {
-			//System.err.println("Is offsettime, c = " + c.getTime() + ", nextoffsettime = " + nextOffsetTime.getTime());
 			if ( c.after(nextOffsetTime)) {
 				return true;
 			} else {
@@ -330,8 +309,6 @@ public class TimeTrigger extends Trigger implements Serializable, ClockListener 
 	
 	public boolean timetick(final Calendar c) {
 		if ( checkAlarm(c) ) {
-			//fired = true;
-			//System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Alarm goes off!!" + c.getTime());
 			lastRan = System.currentTimeMillis();
 			// Set next offsettime if offsettime trigger.
 			if ( this.isOffsetTime ) {
@@ -346,39 +323,33 @@ public class TimeTrigger extends Trigger implements Serializable, ClockListener 
 		Clock.getInstance().addClockListener(this);
 	}
 
-//	public boolean isFired() {
-//		return fired;
-//	}
-
 	public Navajo perform() {
 		// Spawn thread.
-		//if ( fired ) {
-			//System.err.println("LOCK TIMETRIGGER, ABOUT TO PERFORM: " + getTask().getId());
-			GenericThread taskThread = new GenericThread("task:" + getTask().getId()) {
 
-				public void run() {
-					try {
-						worker();
-					} catch (Throwable t) {
-						t.printStackTrace(System.err);
-						//System.err.println("REALLY COULD NOT PEFORM: " + getListenerId() );
-					} finally {
-						finishThread();
-					}
-				}
+		GenericThread taskThread = new GenericThread("task:" + getTask().getId()) {
 
-				public final void worker() {
-					getTask().run();
-				}
+			public void run() {
+				try {
+					worker();
+				} catch (Throwable t) {
+					t.printStackTrace(System.err);
 
-				@Override
-				public void terminate() {
-					// Nothing special.
+				} finally {
+					finishThread();
 				}
-			};
-			taskThread.startThread(taskThread);
-	//		fired = false;
-//		}
+			}
+
+			public final void worker() {
+				getTask().run();
+			}
+
+			@Override
+			public void terminate() {
+				// Nothing special.
+			}
+		};
+		taskThread.startThread(taskThread);
+
 		return null;
 	}
 
