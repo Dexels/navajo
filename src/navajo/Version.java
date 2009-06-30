@@ -40,6 +40,8 @@ package navajo;
  *       - Respect <defines/> tag in navascript.
  *       - ClearCacheEvent added, published by PersistenceManager in case of cache expiry.
  *       - Now possible to 'nest' navascript method tags to improve readability.
+ *       - Possible to use ?input=response in Navajo Trigger definition to specify using the response of a Webservice
+ *         as input for the task (webservice that will be called as a result of the trigger).
  *  
  * 8.1.2 - Fixes for script inheritance, fixed 'order' problem with scripts using inheritance.
  *       - Exposing postmanURL via TribeMember class.
@@ -183,11 +185,11 @@ public class Version extends dexels.Version {
 	public static final int MAJOR = 8;
 	public static final int MINOR = 2;
 	public static final int PATCHLEVEL = 3;
-	public static final String SPECIAL_VERSION = "Patchlevel 2 Candidate Release 1";
+	public static final String SPECIAL_VERSION = "Patchlevel 3 Candidate Release 1";
 	
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
-	public static final String RELEASEDATE = "2009-06-15";
+	public static final String RELEASEDATE = "2009-06-30";
 	
 //	 Included packages.
 	String [] includes = {"navajodocument.Version"};

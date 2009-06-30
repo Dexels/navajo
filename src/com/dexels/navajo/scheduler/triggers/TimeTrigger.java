@@ -32,14 +32,7 @@ import java.util.StringTokenizer;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.scheduler.Clock;
 import com.dexels.navajo.scheduler.ClockListener;
-import com.dexels.navajo.scheduler.Listener;
-import com.dexels.navajo.scheduler.ListenerRunner;
-import com.dexels.navajo.scheduler.Task;
-import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.GenericThread;
-import com.dexels.navajo.server.test.TestDispatcher;
-import com.dexels.navajo.server.test.TestNavajoConfig;
-import com.sun.xml.internal.bind.v2.runtime.reflect.Lister;
 
 public class TimeTrigger extends Trigger implements Serializable, ClockListener {
 
