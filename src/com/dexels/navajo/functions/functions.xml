@@ -343,8 +343,8 @@
     </function>
     <function name="GetPropertySubType" class="com.dexels.navajo.functions.GetPropertySubType">
         <description>Gets the subtype of property as a string</description>
-        <input/>
-        <result/>
+        <input>property|string,string</input>
+        <result>string</result>
     </function>
     <function name="GetProperty" class="com.dexels.navajo.functions.GetProperty">
         <description>Gets a property from a string</description>
