@@ -126,36 +126,36 @@ public class ClientActions {
 	}
 	
 
-//	public static void downloadExtensionJars(String project, URL projectURL, XMLElement result, File baseDir, boolean clean)
-//			throws MalformedURLException {
-//		URL unsigned = new URL(projectURL, "lib/");
-//
-//		List<XMLElement> jars = result.getAllElementsByTagName("jar");
-//		File f = new File(baseDir, "lib");
-//		if (f.exists()) {
-//			f.delete();
-//		}
-//		f.mkdirs();
-//		for (XMLElement element : jars) {
-//			String path = element.getStringAttribute("path");
-//			URL jar = new URL(unsigned, path);
-//			try {
-//				downloadFile(jar, path, f,clean,false);
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//		XMLElement main = result.getElementByTagName("main");
-//		if (main != null) {
-//			String path = main.getStringAttribute("proxyjar");
-//			URL jar = new URL(unsigned, path);
-//			try {
-//				downloadFile(jar, path, f,clean,false);
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//	}
+	public static void downloadExtensionJars(String project, URL projectURL, XMLElement result, File baseDir, boolean clean)
+			throws MalformedURLException {
+		URL unsigned = new URL(projectURL, "lib/");
+
+		List<XMLElement> jars = result.getAllElementsByTagName("jar");
+		File f = new File(baseDir, "lib");
+		if (f.exists()) {
+			f.delete();
+		}
+		f.mkdirs();
+		for (XMLElement element : jars) {
+			String path = element.getStringAttribute("path");
+			URL jar = new URL(unsigned, path);
+			try {
+				downloadFile(jar, path, f,clean,false);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		XMLElement main = result.getElementByTagName("main");
+		if (main != null) {
+			String path = main.getStringAttribute("proxyjar");
+			URL jar = new URL(unsigned, path);
+			try {
+				downloadFile(jar, path, f,clean,false);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 //
 //	public static void downloadWebJars(String project, URL projectURL, XMLElement result, File baseDir, boolean clean)
@@ -183,27 +183,27 @@ public class ClientActions {
 //		}
 //	}
 	
-//	public static void downloadProxyJars(String project, URL projectURL, XMLElement result, File baseDir,boolean clean) throws MalformedURLException {
-//		System.err.println("PRoject dir: " + projectURL);
-//		URL unsigned = new URL(projectURL, "lib/");
-//
-//		File f = new File(baseDir, "lib");
-//		if (f.exists()) {
-//			f.delete();
-//		}
-//		f.mkdirs();
-//
-//		XMLElement main = result.getElementByTagName("main");
-//		if (main != null) {
-//			String path = main.getStringAttribute("proxyjar");
-//			URL jar = new URL(unsigned, path);
-//			try {
-//				downloadFile(jar, path, f,clean,false);
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//	}
+	public static void downloadProxyJars(String project, URL projectURL, XMLElement result, File baseDir,boolean clean) throws MalformedURLException {
+		System.err.println("PRoject dir: " + projectURL);
+		URL unsigned = new URL(projectURL, "lib/");
+
+		File f = new File(baseDir, "lib");
+		if (f.exists()) {
+			f.delete();
+		}
+		f.mkdirs();
+
+		XMLElement main = result.getElementByTagName("main");
+		if (main != null) {
+			String path = main.getStringAttribute("proxyjar");
+			URL jar = new URL(unsigned, path);
+			try {
+				downloadFile(jar, path, f,clean,false);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 	
 	

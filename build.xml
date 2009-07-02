@@ -20,13 +20,13 @@
     </target>
 
     <target name="publish" depends="archive">
-		<copy todir="../TipiPlugin/lib">
+		<copy todir="../TipiServer/WebContent/WEB-INF/lib">
 			<fileset dir=".">
 				<include  name="${archive}"/>
 			</fileset>
 		</copy>
 		<eclipse.refreshLocal resource="${ant.project.name}/${archive}"/>
-		<eclipse.refreshLocal resource="../TipiPlugin"/>
+		<eclipse.refreshLocal resource="../TipiServer/WebContent/WEB-INF/lib"/>
    </target>
 </project>
 <!-- EOF: $RCSfile$ -->

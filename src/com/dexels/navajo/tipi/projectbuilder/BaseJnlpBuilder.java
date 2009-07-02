@@ -40,11 +40,24 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 
 	public abstract String getJnlpName();
 
-	public void build(String repository, String developmentRepository, String extensions, File baseDir, String codebase, String fileName, String profile)
-			throws IOException {
+	public void build(String repository, String developRepository, String extensions, File baseDir, String codebase, String fileName, String profile) {
+		File jnlpFile = new File(baseDir, fileName);
+		
+		try {
+			FileWriter fw1 = new FileWriter(jnlpFile);
+			fw1.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+			XMLElement output = buildElement(repository, extensions, baseDir, codebase, fileName, profile);
+			output.write(fw1);
+			fw1.flush();
+			fw1.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+}
+	public XMLElement buildElement(String generalRepository, String extensions, File baseDir, String codebase, String fileName, String profile) throws IOException {
+		String repository = generalRepository+"Extensions/";
 		myVersionResolver.load(repository);
 		Map<String, String> params = parseParams(baseDir);
-		File jnlpFile = new File(baseDir, fileName);
 		XMLElement output = new CaseSensitiveXMLElement();
 		if (!codebase.endsWith("/")) {
 			codebase = codebase + "/";
@@ -119,16 +132,7 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 			zz.setContent("start.xml");
 			app.addChild(zz);
 		}
-		
-		try {
-			FileWriter fw1 = new FileWriter(jnlpFile);
-			fw1.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-			output.write(fw1);
-			fw1.flush();
-			fw1.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		return output;
 	}
 
 	private void appendArguments(XMLElement app, XMLElement java, Map<String, String> elements) {
