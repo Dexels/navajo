@@ -25,7 +25,15 @@
 				<include  name="${archive}"/>
 			</fileset>
 		</copy>
-		<eclipse.refreshLocal resource="${ant.project.name}/${archive}"/>
+		<copy todir="../TipiBuild">
+			<fileset dir=".">
+				<include  name="${archive}"/>
+			</fileset>
+		</copy>
+
+    	<eclipse.refreshLocal resource="${ant.project.name}/${archive}"/>
+		<eclipse.refreshLocal resource="../TipiPlugin"/>
+		<eclipse.refreshLocal resource="../TipiBuild"/>
 		<eclipse.refreshLocal resource="../TipiServer/WebContent/WEB-INF/lib"/>
    </target>
 </project>
