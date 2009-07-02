@@ -1,5 +1,7 @@
 package com.dexels.tipi.plugin;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.ResourceBundle;
@@ -15,9 +17,15 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
@@ -27,7 +35,9 @@ import com.dexels.navajo.tipi.projectbuilder.ClientActions;
 public class ToggleNatureAction implements IObjectActionDelegate {
 
 	private ISelection selection;
+	private Combo templateCombo = null;
 
+	private String selectedTemplate = null;
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -95,15 +105,52 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 				}
 			}
 
-	       InputDialog dlg = new InputDialog(Display.getCurrent().getActiveShell(),"Tipi Repository", "Choose your repository", getDefaultRepository(),null);			
-	        if (dlg.open() == Window.OK) {
-	           // User clicked OK; update the label with the input
-	           //label.setText(dlg.getValue());
-	         }
-			// Add the nature
-	        // try this first, so the nature won't be added if it fails
-				createDemoFiles(dlg.getValue(), project,null);
+	      InputDialog repositoryDialog = new InputDialog(Display.getCurrent().getActiveShell(), "Tipi Repository","Choose your repository", getDefaultRepository(), null);
+			String repository = null;
+			if (repositoryDialog.open() == Window.OK) {
+				repository = repositoryDialog.getValue();
+			} else {
+				System.err.println("No rep??! ");
+				return;
+			}
+				
+	        
+			
+			TitleAreaDialog dlg = new TitleAreaDialog(Display.getCurrent().getActiveShell()) {
+				public Composite createDialogArea(Composite parent) {
+					Composite composite = (Composite) super.createDialogArea(parent);
+					templateCombo = new Combo(parent, SWT.READ_ONLY);
+					String[] retrieveTemplates = new String[] { "TemplateJnlpProject", "TemplateEchoProject"};
 
+					templateCombo.setItems(retrieveTemplates);
+					templateCombo.setSize(200, 200);
+					// add controls to composite as necessary
+					templateCombo.addSelectionListener(new SelectionListener(){
+
+						public void widgetDefaultSelected(SelectionEvent e) {
+							
+						}
+
+						public void widgetSelected(SelectionEvent e) {
+							 selectedTemplate = templateCombo.getItems()[templateCombo.getSelectionIndex()];
+						}});
+					templateCombo.select(0);
+					return composite;
+				}
+
+			};
+			
+//			String selectedTemplate = null;
+			if (dlg.open() == Window.OK) {
+//				 selectedTemplate = templateCombo.getItems()[templateCombo.getSelectionIndex()];
+			} else {
+				System.err.println("No templ??! ");
+				return;
+			}
+				
+			downloadZippedDemoFiles(repository,repository+"Development/", project,selectedTemplate,null);
+				
+				System.err.println("Download completed");
 	        String[] newNatures = new String[natures.length + 1];
 			System.arraycopy(natures, 0, newNatures, 0, natures.length);
 			newNatures[natures.length] = TipiNature.NATURE_ID;
@@ -123,10 +170,23 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 		return b.getString("defaultRepository");
 	}
 
-	private void createDemoFiles(String repository, IProject project, IProgressMonitor monitor) throws CoreException, IOException {
-			ClientActions.downloadDemoFiles(repository, project.getLocation().toFile());
+	private void downloadZippedDemoFiles(String repository,String developmentRepository, IProject project, String templateName,IProgressMonitor monitor) throws IOException, CoreException {
+		ClientActions.downloadZippedDemoFiles(developmentRepository, project.getLocation().toFile(),templateName);
+		File f = new File(project.getLocation().toFile(),"settings/tipi.properties");
+		FileWriter fw = new FileWriter(f,true);
+		fw.write("repository="+repository+"\n");
+		fw.flush();
+		fw.close();
+		project.refreshLocal(IResource.DEPTH_INFINITE, monitor);	}	
+	
+	private void createDemoFiles(String repository,String developmentRepository, IProject project, String templateName,IProgressMonitor monitor) throws CoreException, IOException {
+			ClientActions.downloadDemoFiles(developmentRepository, project.getLocation().toFile(),templateName);
+			File f = new File(project.getLocation().toFile(),"settings/tipi.properties");
+			FileWriter fw = new FileWriter(f,true);
+			fw.write("repository="+repository+"\n");
+			fw.flush();
+			fw.close();
 			project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
-		
 	}
 
 }

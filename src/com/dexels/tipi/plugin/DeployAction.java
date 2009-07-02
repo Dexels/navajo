@@ -120,6 +120,12 @@ public class DeployAction implements IObjectActionDelegate {
 		IProject myProject = f.getProject();
 		final Map<String,String> properties =	retrieveProperties(myProject,"settings/tipi.properties");
 		
+		String target = "deployJnlp";
+		String buildType = properties.get("build");
+		if("web".equals(buildType)) {
+			target = "deployEcho";
+		}
+		
    		try {
 //   			String sshPw = dlg.getValue();
    			
@@ -127,10 +133,11 @@ public class DeployAction implements IObjectActionDelegate {
    			Map<String,String> deployProperties =	retrieveProperties(myProject,"settings/deploy.properties");
 				String projectName = f.getProject().getName().toLowerCase();
 
-   			String profileLinkList = createProfileLinkList(myProject);
+   			String profileLinkList = createProfileLinkList(myProject,projectName,buildType,deployProperties);
    			
 				properties.putAll(deployProperties);
 				properties.put("projectName", projectName);
+				properties.put("buildType", buildType);
 				properties.put("profileLinkList", profileLinkList);
 //				properties.put("codebase", f.getProject().getName());
 				properties.put("message", "building tipi application...");
@@ -142,6 +149,8 @@ public class DeployAction implements IObjectActionDelegate {
 				
 				AntRunner runner = new AntRunner();
    			runner.setBuildFileLocation(f.getLocation().toString());
+   			runner.setExecutionTargets(new String[]{target});
+   			
    	//		runner.setArguments("-DprojectName="+f.getProject().getName()+" -Dmessage=Building -Dcodebase="+codebase+" -DdeployRootSsh="+deployRootSsh+" -DbaseDir="+f.getProject().getLocation().toString()+" -DdeployPath="+"deploy/current");
    			runner.setArguments(createArguments(properties));
    			//		runner.addUserProperties(properties);
@@ -149,7 +158,8 @@ public class DeployAction implements IObjectActionDelegate {
    			
    	//		runner.addBuildLogger("com.dexels.tipi.plugin.TipiBuildLogger");
    			runner.run(monitor);
-   			System.err.println("Run completed.");
+   			System.err.println("Run completed: "+target);
+   			
 //      		MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Thank you for deploying using the TipiPlugin!", properties.get("codebase")+"Application.jnlp");
       		Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
@@ -158,7 +168,7 @@ public class DeployAction implements IObjectActionDelegate {
 					try {
 						
 						browser = browserSupport.createBrowser(IWorkbenchBrowserSupport.AS_VIEW, null, "Test", "Test");
-						URL url = new URL(properties.get("tipiAppServer")+properties.get("projectName"));
+						URL url = new URL(properties.get("tipiAppStore")+properties.get("projectName"));
 						browser.openURL(url);
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -181,21 +191,22 @@ public class DeployAction implements IObjectActionDelegate {
        		});
    	      e.printStackTrace();
  		//	}
-
+      }
    		try {
 				f.getProject().refreshLocal(IResource.DEPTH_INFINITE, monitor);
 			} catch (CoreException er) {
 				er.printStackTrace();
 			}
-   		//   		Display.getCurrent().getActiveShell().
-      }
-		
 
 	}
 
-	private String createProfileLinkList(IProject myProject) {
+	private String createProfileLinkList(IProject myProject, String projectName, String buildType, Map<String, String> deployProperties) {
 		StringBuffer sb = new StringBuffer();
 		File dir = myProject.getLocation().toFile();
+		// No profile support in echo:
+		if("web".equals(buildType)) {
+			return "<a href='"+deployProperties.get("tipiTomcatServer")+projectName+"/app'>Start App</a>";
+		}
 		for (File f : dir.listFiles()) {
 			if(f.getName().endsWith(".jnlp")) {
 				String snip = "<a href='"+f.getName()+"'><br/>[[Start "+f.getName()+"]]</a><br/>";
