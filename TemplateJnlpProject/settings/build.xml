@@ -101,6 +101,7 @@
 			<fileset dir=".">
 				<include name="tipi/**" />
 				<include name="resource/**" />
+				<include name="settings/**" />
 				<include name="lib/**" />
 			</fileset>
 		</copy>
