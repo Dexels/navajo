@@ -30,6 +30,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
+
 import com.dexels.navajo.tipi.extensionmanager.ExtensionManager;
 import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.util.XMLElement;
@@ -37,16 +38,28 @@ import com.dexels.navajo.tipi.util.XMLParseException;
 
 public class ClientActions {
 	
-	public static void downloadZippedDemoFiles(String repository, File projectDir, String templateName) throws IOException {
-		URL baseUrl = new URL(repository);
+	public static void downloadZippedDemoFiles(String developmentRepository, String repository, File projectDir, String templateName) throws IOException {
+		URL baseUrl = new URL(developmentRepository);
 		URL zipFile = new URL(baseUrl,templateName+".zip");
+		if(!projectDir.exists()) {
+			projectDir.mkdirs();
+		}
 		downloadFile(zipFile, "template.zip", projectDir, false,false);
 		System.err.println("Downloaded zip file: "+zipFile);
 		File archive = new File(projectDir,"template.zip");
 		unzip(archive, projectDir);
 		System.err.println("should delete zipfile now!");
+		archive.delete();
+		File f = new File(projectDir,"settings/tipi.properties");
+		FileWriter fw = new FileWriter(f,true);
+		fw.write("repository="+repository+"\n");
+		fw.flush();
+		fw.close();
 	}
-	
+//	private void downloadZippedDemoFiles(String repository,String developmentRepository, File projectDir, String templateName) throws IOException {
+//		ClientActions.downloadZippedDemoFiles(developmentRepository, projectDir,templateName);
+//	}	
+//	
 	public static void downloadDemoFiles(String repository, File projectDir, String templateName) throws IOException {
 		
 		File resources = new File(projectDir,"resource");

@@ -77,13 +77,7 @@ public class ComponentMerger {
 			// maybe copy?
 			return interfaces.get(0);
 		}
-		if(name.equals("window")) {
-			System.err.println("DEBUGGING CIRCUS:");
-			for (XMLElement element : interfaces) {
-				System.err.println("ELEMENT:\n"+element);
-			}
-		}
-//		System.err.println("");
+	
 		
 		ClassModel cl = new ClassModel(name);
 		for (XMLElement element : interfaces) {

@@ -23,35 +23,9 @@ import com.dexels.navajo.tipi.projectbuilder.impl.TipiWebProjectBuilder;
 import com.dexels.navajo.tipi.util.XMLElement;
 
 public class ProjectBuilder {
-//	private static void buildProfileJnlp(String profile,  boolean clean,  File projectPath, String projectUrl, String extensions,
-//			String repository, String developmentRepository, String buildType) throws IOException {
-//		
-//		
-//		String profileName = profile==null?"Default":profile;
-//		if("remote".equals(buildType) ) {
-//			deleteLocalTipiBuild(projectPath,profile);
-//		}
-//		if("local".equals(buildType) ) {
-//			deleteRemoteTipiBuild(projectPath,profile);
-//		}
-//		if("remote".equals(buildType) || "both".equals(buildType)) {
-//			RemoteJnlpBuilder r = new RemoteJnlpBuilder();
-//			downloadExtensionJars(projectPath, extensions, repository,true,clean);
-////			public void build(String repository, String developmentRepository, String extensions, File baseDir, String codebase, String fileName, String profile) {
-//
-//			r.build(repository,developmentRepository, extensions,projectPath, projectUrl,profileName+"Remote.jnlp",profile);
-//		}
-//		if("local".equals(buildType) || "both".equals(buildType)) {
-//			downloadExtensionJars(projectPath, extensions, repository,false,clean);
-//			LocalJnlpBuilder l = new LocalJnlpBuilder();
-//			l.build(repository, developmentRepository,extensions,projectPath, projectUrl,profileName+"Local.jnlp",profile);
-//		}
-//	}
-	
 	private static void buildProfileJnlp(String profile,  boolean clean, File projectPath, String projectUrl, String extensions,
-			String repository,String developmentRepository, String buildType) throws IOException {
-		
-		
+			String extensionRepository,String developmentRepository, String buildType) throws IOException {
+		System.err.println("Building jnlp for extensionrep:"+extensionRepository);
 		String profileName = profile==null?"Default":profile;
 		if("remote".equals(buildType) ) {
 			deleteLocalTipiBuild(projectPath,profile);
@@ -61,13 +35,13 @@ public class ProjectBuilder {
 		}
 		if("remote".equals(buildType) || "both".equals(buildType)) {
 			RemoteJnlpBuilder r = new RemoteJnlpBuilder();
-			downloadExtensionJars(projectPath, extensions, repository,true,clean,buildType);
-			r.build(repository,developmentRepository, extensions,projectPath, projectUrl,profileName+"Remote.jnlp",profile);
+			downloadExtensionJars(projectPath, extensions, extensionRepository,true,clean,buildType);
+			r.build(extensionRepository,developmentRepository, extensions,projectPath, projectUrl,profileName+"Remote.jnlp",profile);
 		}
 		if("local".equals(buildType) || "both".equals(buildType)) {
-			downloadExtensionJars(projectPath, extensions, repository,false,clean,buildType);
+			downloadExtensionJars(projectPath, extensions, extensionRepository,false,clean,buildType);
 			LocalJnlpBuilder l = new LocalJnlpBuilder();
-			l.build(repository,developmentRepository, extensions,projectPath, projectUrl,profileName+"Local.jnlp",profile);
+			l.build(extensionRepository,developmentRepository, extensions,projectPath, projectUrl,profileName+"Local.jnlp",profile);
 		}
 	}	
 	
@@ -160,7 +134,7 @@ public class ProjectBuilder {
 	}
 	
 	public static void buildTipiProject(File projectPath, String projectUrl,
-			InputStream is, boolean clean) throws IOException {
+			InputStream is, boolean clean, boolean skipXsd) throws IOException {
 		PropertyResourceBundle pe = new PropertyResourceBundle(is);
 		is.close();	
 		String extensions = pe.getString("extensions").trim();
@@ -186,7 +160,10 @@ public class ProjectBuilder {
 
 		String buildType = pe.getString("build").trim();
 
-		rebuildXsd(repository,extensions,projectPath);
+		if(!skipXsd) {
+			rebuildXsd(extensionRepository,extensions,projectPath);
+			
+		}
 		if(buildType==null) {
 			buildType = "remote";
 		}
@@ -208,12 +185,12 @@ public class ProjectBuilder {
 		}
 		
 		if(profiles==null || profiles.isEmpty()) {
-			buildProfileJnlp(null,clean,  projectPath, projectUrl, extensions, repository,repository+"Development/", buildType);
+			buildProfileJnlp(null,clean,  projectPath, projectUrl, extensions, extensionRepository,developmentRepository, buildType);
 
 		} else {
 			for (String profile : profiles) {
 				System.err.println("Building profile: "+profile);
-				buildProfileJnlp(profile,clean, projectPath, projectUrl, extensions, repository, repository+"Development/",buildType);
+				buildProfileJnlp(profile,clean, projectPath, projectUrl, extensions , extensionRepository, developmentRepository,buildType);
 				
 			}
 		}

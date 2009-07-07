@@ -75,8 +75,8 @@ public class ExtensionManager {
 		return result;
 	}
 
-	private static XMLElement downloadExtensions(String repository) throws IOException {
-		URL rep = new URL(repository);
+	private static XMLElement downloadExtensions(String extensionRepository) throws IOException {
+		URL rep = new URL(extensionRepository);
 		URL u = new URL(rep, "extensions.xml");
 		XMLElement xe = getXMLElement(u);
 		return xe;
@@ -91,8 +91,9 @@ public class ExtensionManager {
 //		return xe;
 //	}
 
-	public static Map<String, List<String>> getExtensions(String repository) throws IOException {
-		XMLElement xe = downloadExtensions(repository);
+	public static Map<String, List<String>> getExtensions(String extensionRepository) throws IOException {
+		System.err.println("Getting extensions from repository: "+extensionRepository);
+		XMLElement xe = downloadExtensions(extensionRepository);
 		List<XMLElement> children = xe.getChildren();
 		Map<String, List<String>> result = new TreeMap<String, List<String>>();
 		for (XMLElement element : children) {

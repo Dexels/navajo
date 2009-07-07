@@ -54,8 +54,8 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 			e.printStackTrace();
 		}
 }
-	public XMLElement buildElement(String generalRepository, String extensions, File baseDir, String codebase, String fileName, String profile) throws IOException {
-		String repository = generalRepository+"Extensions/";
+	public XMLElement buildElement(String repository, String extensions, File baseDir, String codebase, String fileName, String profile) throws IOException {
+		//String repository = generalRepository+"Extensions/";
 		myVersionResolver.load(repository);
 		Map<String, String> params = parseParams(baseDir);
 		XMLElement output = new CaseSensitiveXMLElement();
