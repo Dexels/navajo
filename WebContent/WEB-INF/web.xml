@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  <display-name>TipiServer</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+  
+     <context-param>
+      <description></description>
+      <param-name>repository</param-name>
+      <param-value>http://spiritus.dexels.nl:41766/Tipi/</param-value>
+    </context-param>
+    <context-param>
+      <description></description>
+      <param-name>developmentRepository</param-name>
+      <param-value>http://spiritus.dexels.nl:41766/Tipi/Development/</param-value>
+    </context-param>
+    <context-param>
+      <description></description>
+      <param-name>defaultTemplate</param-name>
+      <param-value>TemplateJnlpProject</param-value>
+    </context-param>
+    <context-param>
+      <description></description>
+      <param-name>appFolder</param-name>
+      <param-value>/usr/local/apache-tomcat-6.0.18/webapps/TipiServer</param-value>
+    </context-param>
+    <context-param>
+      <description></description>
+      <param-name>appUrl</param-name>
+      <param-value>/AppStore</param-value>
+    </context-param>
+
+  
+  <servlet>
+    <description></description>
+    <display-name>TipiServlet</display-name>
+    <servlet-name>TipiServlet</servlet-name>
+    <servlet-class>com.dexels.navajo.tipi.TipiServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>TipiServlet</servlet-name>
+    <url-pattern>*.jnlp</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>TipiCreateServlet</display-name>
+    <servlet-name>TipiCreateServlet</servlet-name>
+    <servlet-class>com.dexels.navajo.tipi.TipiCreateServlet</servlet-class>
+
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>TipiCreateServlet</servlet-name>
+    <url-pattern>/TipiCreateServlet</url-pattern>
+  </servlet-mapping>
+</web-app>
