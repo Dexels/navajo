@@ -148,8 +148,10 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 				return;
 			}
 				
-			downloadZippedDemoFiles(repository,repository+"Development/", project,selectedTemplate,null);
-				
+	//		downloadZippedDemoFiles(repository,repository+"Development/", project.getLocation().toFile(),selectedTemplate,null);
+			ClientActions.downloadZippedDemoFiles(repository+"Development/",repository, project.getLocation().toFile(),selectedTemplate);
+
+			project.refreshLocal(IResource.DEPTH_INFINITE, null);	
 				System.err.println("Download completed");
 	        String[] newNatures = new String[natures.length + 1];
 			System.arraycopy(natures, 0, newNatures, 0, natures.length);
@@ -170,14 +172,14 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 		return b.getString("defaultRepository");
 	}
 
-	private void downloadZippedDemoFiles(String repository,String developmentRepository, IProject project, String templateName,IProgressMonitor monitor) throws IOException, CoreException {
-		ClientActions.downloadZippedDemoFiles(developmentRepository, project.getLocation().toFile(),templateName);
-		File f = new File(project.getLocation().toFile(),"settings/tipi.properties");
-		FileWriter fw = new FileWriter(f,true);
-		fw.write("repository="+repository+"\n");
-		fw.flush();
-		fw.close();
-		project.refreshLocal(IResource.DEPTH_INFINITE, monitor);	}	
+//	private void downloadZippedDemoFiles(String repository,String developmentRepository, File projectDir, String templateName,IProgressMonitor monitor) throws IOException {
+//		ClientActions.downloadZippedDemoFiles(developmentRepository, projectDir,templateName);
+//		File f = new File(projectDir,"settings/tipi.properties");
+//		FileWriter fw = new FileWriter(f,true);
+//		fw.write("repository="+repository+"\n");
+//		fw.flush();
+//		fw.close();
+//	}	
 	
 	private void createDemoFiles(String repository,String developmentRepository, IProject project, String templateName,IProgressMonitor monitor) throws CoreException, IOException {
 			ClientActions.downloadDemoFiles(developmentRepository, project.getLocation().toFile(),templateName);
