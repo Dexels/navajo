@@ -60,7 +60,6 @@ public class NavajoOutputWriter implements OutputWriter {
 		w.write("</div>");
 	}
 
-	@Override
 	public void writePropertyValue(Property p, Writer w) throws IOException {
 		if (p.getType().equals(Property.SELECTION_PROPERTY)) {
 		} else {
