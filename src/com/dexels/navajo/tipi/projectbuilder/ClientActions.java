@@ -405,16 +405,20 @@ public class ClientActions {
 
 	      while(entries.hasMoreElements()) {
 	        ZipEntry entry = entries.nextElement();
-	        if(entry.isDirectory()) {
+	        File destinationFile = new File(destination, entry.getName());
+			if(entry.isDirectory()) {
 	          // Assume directories are stored parents first then children.
 	          System.err.println("Extracting directory: " + entry.getName());
 	          // This is not robust, just for demonstration purposes.
-	          (new File(destination, entry.getName())).mkdir();
+	          destinationFile.mkdir();
 	          continue;
 	        }
 	        System.err.println("Extracting file: " + entry.getName());
+	        if(destinationFile.exists()) {
+	      	  continue;
+	        }
 	        copyInputStream(zipFile.getInputStream(entry),
-	           new BufferedOutputStream(new FileOutputStream(new File(destination, entry.getName()))));
+	           new BufferedOutputStream(new FileOutputStream(destinationFile)));
 	      }
 
 	      zipFile.close();

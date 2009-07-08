@@ -47,18 +47,18 @@ public abstract class BaseDeploymentBuilder {
 
 		if (profile != null) {
 			path = new File(baseDir, "settings/profiles/" + profile + ".properties");
-			 fr = new FileInputStream(path);
-
-			 p = new PropertyResourceBundle(fr);
-			fr.close();
-			 eb = p.getKeys();
-			while (eb.hasMoreElements()) {
-				String string = (String) eb.nextElement();
-				params.put(string, p.getString(string));
+			if(path.exists()) {
+				fr = new FileInputStream(path);
+				p = new PropertyResourceBundle(fr);
+				System.err.println("Appending profile: "+profile);
+				fr.close();
+				eb = p.getKeys();
+				while (eb.hasMoreElements()) {
+					String string = (String) eb.nextElement();
+					params.put(string, p.getString(string));
+				}
 			}
-
 		}
-
 		System.err.println("params: " + params);
 		return params;
 	}

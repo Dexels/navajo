@@ -19,18 +19,18 @@ import com.dexels.navajo.tipi.util.XMLElement;
 
 public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 
-	protected abstract boolean appendResourceForExtension(XMLElement resources, String repository, String ext, String version)
+	protected abstract boolean appendResourceForExtension(XMLElement resources, String repository, String ext, String version,String resourceBase)
 			throws IOException;
 
-	protected abstract void appendProxyResource(XMLElement resources, String repository, String mainExtension);
+	protected abstract void appendProxyResource(XMLElement resources, String repository, String mainExtension) throws IOException;
 
 
-	public String appendResources(XMLElement resources, String repository, List<String> extensions) throws IOException {
+	public String appendResources(XMLElement resources, String repository, List<String> extensions,String resourceBase) throws IOException {
 		String mainExtension = null;
 		for (String ext : extensions) {
 			Map<String, String> versionMap = myVersionResolver.resolveVersion(ext);
 			boolean isMain = appendResourceForExtension(resources, repository, versionMap.get("extension"), versionMap
-					.get("version"));
+					.get("version"),resourceBase);
 			if (isMain) {
 				mainExtension = ext;
 			}
@@ -46,7 +46,7 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 		try {
 			FileWriter fw1 = new FileWriter(jnlpFile);
 			fw1.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-			XMLElement output = buildElement(repository, extensions, baseDir, codebase, fileName, profile);
+			XMLElement output = buildElement(repository, extensions, baseDir, codebase,"", fileName, profile);
 			output.write(fw1);
 			fw1.flush();
 			fw1.close();
@@ -54,7 +54,7 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 			e.printStackTrace();
 		}
 }
-	public XMLElement buildElement(String repository, String extensions, File baseDir, String codebase, String fileName, String profile) throws IOException {
+	public XMLElement buildElement(String repository, String extensions, File baseDir, String codebase, String resourceBase, String fileName, String profile) throws IOException {
 		//String repository = generalRepository+"Extensions/";
 		myVersionResolver.load(repository);
 		Map<String, String> params = parseParams(baseDir);
@@ -73,7 +73,7 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 		information.addTagKeyValue("title", params.get("title"));
 		information.addTagKeyValue("vendor", params.get("vendor"));
 		information.addTagKeyValue("homepage", params.get("homepage"));
-		information.addTagKeyValue("icon", "").setAttribute("href", params.get("icon"));
+		information.addTagKeyValue("icon", "").setAttribute("href", resourceBase+"/"+params.get("icon"));
 
 		System.err.println("Parsing: " + fileName);
 
@@ -81,16 +81,9 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 			XMLElement splash = new CaseSensitiveXMLElement();
 			splash.setName("icon");
 			information.addChild(splash);
-			splash.setAttribute("href", codebase + params.get("splash"));
+			splash.setAttribute("href", resourceBase+"/" + params.get("splash"));
 			splash.setAttribute("kind", "splash");
 		}
-		// List<String> missing =
-		// ClientActions.checkExtensions(repository,extensions);
-		// if(!missing.isEmpty()) {
-		// throw new
-		// BuildException("Requested extension(s) not available on repository: "
-		// +missing);
-		// }
 
 		StringTokenizer st = new StringTokenizer(extensions, ",");
 		List<String> exts = new ArrayList<String>();
@@ -98,16 +91,14 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 			exts.add(st.nextToken());
 		}
 
+//		XMLElement update = output.addTagKeyValue("update", "");
+//		update.setAttribute("check", "always");
+//		update.setAttribute("policy", "prompt-update");
 		XMLElement resources = output.addTagKeyValue("resources", "");
-		// <j2se version="1.6+" max-heap-size="192m"/>
 		XMLElement java = resources.addTagKeyValue("j2se", "");
 		java.setAttribute("version", "1.6+");
-		// MAX HEAP SIZE?
-		// java.setAttribute("version","1.6+");
-		// <j2se version="1.6+" java-vm-args="-ea -Xmx512M"/>
-
 		appendSecurity(output, params.get("permissions"));
-		String mainExtension = appendResources(resources, repository, exts);
+		String mainExtension = appendResources(resources, repository, exts,resourceBase);
 		appendProxyResource(resources, repository, mainExtension);
 
 		XMLElement app = output.addTagKeyValue("application-desc", "");
@@ -121,8 +112,8 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 			arguments = new HashMap<String, String>();
 		}
 
-		// new HashMap<String,String>();
-
+		arguments.put("tipiCodeBase", resourceBase+"/tipi/");
+		arguments.put("resourceCodeBase", resourceBase+"/resource/");
 		appendArguments(app, java, arguments);
 		appendArguments(app, java, params);
 
@@ -145,7 +136,6 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 				XMLElement zz = new CaseSensitiveXMLElement("argument");
 				zz.setContent(elt + "=" + elements.get(elt));
 				app.addChild(zz);
-				// app.addTagKeyValue("argument", elt +"="+elements.get(elt));
 			}
 		}
 	}
@@ -160,7 +150,6 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 			XMLElement sec = output.addTagKeyValue("security", "");
 			sec.addTagKeyValue("j2ee-application-client-permissions", "");
 		}
-		// <j2ee-application-client-permissions/>
 
 	}
 

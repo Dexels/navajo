@@ -93,7 +93,13 @@ public class ExtensionManager {
 
 	public static Map<String, List<String>> getExtensions(String extensionRepository) throws IOException {
 		System.err.println("Getting extensions from repository: "+extensionRepository);
-		XMLElement xe = downloadExtensions(extensionRepository);
+		XMLElement xe;
+		try {
+			xe = downloadExtensions(extensionRepository);
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new IOException("Error downloading from repository: "+extensionRepository);
+		}
 		List<XMLElement> children = xe.getChildren();
 		Map<String, List<String>> result = new TreeMap<String, List<String>>();
 		for (XMLElement element : children) {
@@ -112,7 +118,7 @@ public class ExtensionManager {
 		return result;
 	}
 
-	public static Map<String, String> getMain(String repository, String mainExtension,String version) {
+	public static Map<String, String> getMain(String repository, String mainExtension,String version) throws IOException {
 		Map<String, String> result = new HashMap<String, String>();
 		try {
 			URL rep = new URL(repository + mainExtension +"/"+version+ "/definition.xml");
@@ -129,7 +135,7 @@ public class ExtensionManager {
 		return result;
 	}
 
-	public static boolean isMainExtension(String repository, String ext,String version) {
+	public static boolean isMainExtension(String repository, String ext,String version) throws IOException {
 		try {
 			URL rep = new URL(repository + ext + "/"+version+"/definition.xml");
 			XMLElement xe = getXMLElement(rep);
@@ -152,9 +158,10 @@ public class ExtensionManager {
 	 * @param ext
 	 * @param mainJarList
 	 * @return
+	 * @throws IOException 
 	 */
 	public static List<String> getJars(String repository, String ext, String version, Map<String, String> mainJarList,
-			Map<String, String> extensionMap) {
+			Map<String, String> extensionMap) throws IOException {
 		List<String> result = new ArrayList<String>();
 		try {
 			URL rep = new URL(repository + ext +"/"+version+ "/definition.xml");
@@ -182,7 +189,7 @@ public class ExtensionManager {
 		return result;
 	}
 
-	public static XMLElement getXMLElement(URL extensionURL) {
+	public static XMLElement getXMLElement(URL extensionURL) throws IOException {
 		try {
 			System.err.println("Downloading: "+extensionURL);
 			XMLElement result = new CaseSensitiveXMLElement();
@@ -194,9 +201,7 @@ public class ExtensionManager {
 			return result;
 		} catch (XMLParseException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		} 
 		return null;
 	}
 

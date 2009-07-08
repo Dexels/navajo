@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.projectbuilder;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -133,8 +134,8 @@ public class ProjectBuilder {
 		}
 	}
 	
-	public static void buildTipiProject(File projectPath, String projectUrl,
-			InputStream is, boolean clean, boolean skipXsd) throws IOException {
+	public static void buildTipiProject(File projectPath) throws IOException {
+		FileInputStream is = new FileInputStream(new File(projectPath,"settings/tipi.properties"));
 		PropertyResourceBundle pe = new PropertyResourceBundle(is);
 		is.close();	
 		String extensions = pe.getString("extensions").trim();
@@ -144,38 +145,39 @@ public class ProjectBuilder {
 		String developmentRepository = repository+"Development/";
 
 		List<String> profiles = new LinkedList<String>();
-		File profileFolder = new File(projectPath,"settings/profiles");
-		if(profileFolder.exists() && profileFolder.isDirectory()) {
-			File[] profileCandidates = profileFolder.listFiles();
-			for (File candidate : profileCandidates) {
-				if(candidate.getName().endsWith(".properties") && candidate.isFile()) {
-					// ewwwww
-					String currentProfileName = candidate.getName().substring(0,candidate.getName().length()-".properties".length());
-					
-					profiles.add(currentProfileName);
-					System.err.println("Adding profile: "+currentProfileName);
-				}
-			}
-		}
+//		File profileFolder = new File(projectPath,"settings/profile/"+profile+".properties");
+//		
+//		if(profileFolder.exists() && profileFolder.isDirectory()) {
+//			File[] profileCandidates = profileFolder.listFiles();
+//			for (File candidate : profileCandidates) {
+//				if(candidate.getName().endsWith(".properties") && candidate.isFile()) {
+//					// ewwwww
+//					String currentProfileName = candidate.getName().substring(0,candidate.getName().length()-".properties".length());
+//					
+//					profiles.add(currentProfileName);
+//					System.err.println("Adding profile: "+currentProfileName);
+//				}
+//			}
+//		}
 
 		String buildType = pe.getString("build").trim();
 
-		if(!skipXsd) {
-			rebuildXsd(extensionRepository,extensions,projectPath);
-			
-		}
+//		if(clean) {
+//			File libDir = new File(projectPath,"lib");
+//			libDir.delete();		
+//		}
+		
+//		if(!skipXsd) {
+//			rebuildXsd(extensionRepository,extensions,projectPath);
+//			
+//		}
 		if(buildType==null) {
 			buildType = "remote";
 		}
 		
 
-//		if("remote".equals(buildType) || "both".equals(buildType)) {
-//			downloadExtensionJars(projectPath, extensions, repository,true,clean);
-//		}
-//		if("local".equals(buildType) || "both".equals(buildType)) {
-//			downloadExtensionJars(projectPath, extensions, repository,false,clean);
-//		}
-//		
+			downloadExtensionJars(projectPath, extensions, repository,false,false,buildType);
+		
 
 		File[] cc = projectPath.listFiles();
 		for (int i = 0; i < cc.length; i++) {
@@ -184,24 +186,24 @@ public class ProjectBuilder {
 			}
 		}
 		
-		if(profiles==null || profiles.isEmpty()) {
-			buildProfileJnlp(null,clean,  projectPath, projectUrl, extensions, extensionRepository,developmentRepository, buildType);
+//		if(profiles==null || profiles.isEmpty()) {
+//	//		buildProfileJnlp(null,clean,  projectPath, projectUrl, extensions, extensionRepository,developmentRepository, buildType);
 
-		} else {
-			for (String profile : profiles) {
-				System.err.println("Building profile: "+profile);
-				buildProfileJnlp(profile,clean, projectPath, projectUrl, extensions , extensionRepository, developmentRepository,buildType);
-				
-			}
-		}
+//		} else {
+//			for (String profile : profiles) {
+//				System.err.println("Building profile: "+profile);
+//				buildProfileJnlp(profile,clean, projectPath, projectUrl, extensions , extensionRepository, developmentRepository,buildType);
+//				
+//			}
+//		}
 
 		
-		try {
-			String cp = pe.getString("buildClasspath");
-			if("true".equals(cp)) {
-				buildClassPath(projectPath, repository, extensions);
-			}
-		} catch (MissingResourceException e) {
-		}
+//		try {
+//			String cp = pe.getString("buildClasspath");
+//			if("true".equals(cp)) {
+//				buildClassPath(projectPath, repository, extensions);
+//			}
+//		} catch (MissingResourceException e) {
+//		}
 	}
 }

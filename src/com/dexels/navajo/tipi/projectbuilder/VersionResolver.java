@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 public class VersionResolver {
 	
 	private Map<String,List<String>> repDefinition;
+	String currentToken = null;
 	public VersionResolver(String repository) throws IOException {
 		load(repository);
 	}
@@ -46,4 +47,14 @@ public class VersionResolver {
 		Map<String,String> m = resolveVersion(token);
 		return m.get("extension")+"/"+m.get("version");
 	}
+
+	// Bean accessors for JSP:
+	public String getVersionToken() {
+		return currentToken;
+	}
+	
+	public void setVersionToken(String token) {
+		currentToken = resultVersionPath(token);
+	}
+
 }
