@@ -24,15 +24,20 @@
 		</jar>    	
     </target>
 	
-	
     <target name="publish" depends="archive">
 		<copy todir="../TipiPlugin/lib">
 			<fileset dir=".">
 				<include  name="${archive}"/>
 			</fileset>
 		</copy>
-		<eclipse.refreshLocal resource="${ant.project.name}/${archive}"/>
+		<copy todir="../TipiBuild">
+			<fileset dir=".">
+				<include  name="${archive}"/>
+			</fileset>
+		</copy>
+    	<eclipse.refreshLocal resource="${ant.project.name}/${archive}"/>
 		<eclipse.refreshLocal resource="../TipiPlugin"/>
+		<eclipse.refreshLocal resource="../TipiBuild"/>
 	</target>
 </project>
 <!-- EOF: $RCSfile$ -->

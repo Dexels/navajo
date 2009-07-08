@@ -29,7 +29,7 @@ public class TipiDownloadJarTask extends BaseTipiClientTask {
 				vr.load(repository);
 				Map<String,String> resolveMap = vr.resolveVersion(ext);
 				String path = vr.resultVersionPath(ext);
-				ClientActions.downloadExtensionJars(ext,new URL(repository+path+"/"),ClientActions.getExtensionXml(resolveMap.get("extension"),resolveMap.get("version") ,repository),getProject().getBaseDir(),true);
+//				ClientActions.downloadExtensionJars(ext,new URL(repository+path+"/"),ClientActions.getExtensionXml(resolveMap.get("extension"),resolveMap.get("version") ,repository),getProject().getBaseDir(),true);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

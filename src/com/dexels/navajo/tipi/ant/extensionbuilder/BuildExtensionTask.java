@@ -15,6 +15,17 @@ public class BuildExtensionTask extends org.apache.tools.ant.Task {
 	private String repository;
 	private String destination;
 	private String version;
+	private String svnUrl;
+
+	public String getSvnUrl() {
+		return svnUrl;
+	}
+
+
+	public void setSvnUrl(String svnUrl) {
+		this.svnUrl = svnUrl;
+	}
+
 
 	public String getVersion() {
 		return version;
