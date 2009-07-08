@@ -33,7 +33,7 @@
             objectClass="org.eclipse.core.resources.IProject"
             nameFilter="*"
             id="TipiPlugin.contribution1">
-         <action
+	         <action
                label="Add/Remove Tipi Nature"
                class="com.dexels.tipi.plugin.ToggleNatureAction"
                menubarPath="additions"
@@ -50,6 +50,11 @@
             objectClass="org.eclipse.core.resources.IProject"
             nameFilter="*"
             id="TipiPlugin.contribution2">
+                      <filter
+             name="projectNature"
+             value="TipiPlugin.tipiNature">
+         </filter>
+            
          <action
                label="Deploy current Tipi"
                class="com.dexels.tipi.plugin.DeployAction"
@@ -67,6 +72,11 @@
             objectClass="org.eclipse.core.resources.IProject"
             nameFilter="*"
             id="TipiPlugin.rebuild">
+                      <filter
+             name="projectNature"
+             value="TipiPlugin.tipiNature">
+         </filter>
+            
          <action
                label="Rebuild current Tipi"
                class="com.dexels.tipi.plugin.RebuildAction"
@@ -85,6 +95,11 @@
             objectClass="org.eclipse.core.resources.IProject"
             nameFilter="*"
             id="TipiPlugin.clean">
+                      <filter
+             name="projectNature"
+             value="TipiPlugin.tipiNature">
+         </filter>
+            
          <action
                label="Clean current Tipi"
                class="com.dexels.tipi.plugin.CleanAction"
