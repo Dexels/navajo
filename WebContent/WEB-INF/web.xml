@@ -15,6 +15,17 @@
       <param-name>repository</param-name>
       <param-value>http://spiritus.dexels.nl:41766/Tipi/</param-value>
     </context-param>
+     <context-param>
+      <description></description>
+      <param-name>extensionRepository</param-name>
+      <param-value>http://spiritus.dexels.nl:41766/Tipi/Extensions/</param-value>
+    </context-param>
+         <context-param>
+      <description></description>
+      <param-name>documentationRepository</param-name>
+      <param-value>http://spiritus.dexels.nl:41766/Tipi/wiki/doku.php</param-value>
+    </context-param>
+
     <context-param>
       <description></description>
       <param-name>developmentRepository</param-name>
@@ -28,14 +39,13 @@
     <context-param>
       <description></description>
       <param-name>appFolder</param-name>
-      <param-value>/usr/local/apache-tomcat-6.0.18/webapps/TipiServer</param-value>
+      <param-value>/var/www/html/Tipi/AppStore/</param-value>
     </context-param>
     <context-param>
       <description></description>
       <param-name>appUrl</param-name>
-      <param-value>/AppStore</param-value>
+      <param-value>http://spiritus.dexels.nl:41766/Tipi/AppStore/</param-value>
     </context-param>
-
   
   <servlet>
     <description></description>
@@ -43,10 +53,31 @@
     <servlet-name>TipiServlet</servlet-name>
     <servlet-class>com.dexels.navajo.tipi.TipiServlet</servlet-class>
   </servlet>
+  <servlet>
+    <description></description>
+    <display-name>TipiAdminServlet</display-name>
+    <servlet-name>TipiAdminServlet</servlet-name>
+    <servlet-class>com.dexels.navajo.tipi.TipiAdminServlet</servlet-class>
+  </servlet>
+  
+  
+    <servlet-mapping>
+    <servlet-name>TipiAdminServlet</servlet-name>
+    <url-pattern>/TipiAdminServlet</url-pattern>
+  </servlet-mapping>  
+  
   <servlet-mapping>
     <servlet-name>TipiServlet</servlet-name>
     <url-pattern>*.jnlp</url-pattern>
-  </servlet-mapping>
+  </servlet-mapping>  
+  
+<!--  -->
+<!--  -->
+<!--  <servlet-mapping>-->
+<!--    <servlet-name>TipiRedirectServlet</servlet-name>-->
+<!--    <url-pattern>/</url-pattern>-->
+<!--  </servlet-mapping>-->
+<!--  -->
   <servlet>
     <description></description>
     <display-name>TipiCreateServlet</display-name>
@@ -58,4 +89,57 @@
     <servlet-name>TipiCreateServlet</servlet-name>
     <url-pattern>/TipiCreateServlet</url-pattern>
   </servlet-mapping>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <!-- Define reference to the user database for looking up roles -->
+  <resource-env-ref>
+    <description>
+      Link to the UserDatabase instance from which we request lists of
+      defined role names.  Typically, this will be connected to the global
+      user database with a ResourceLink element in server.xml or the context
+      configuration file for the Manager web application.
+    </description>
+    <resource-env-ref-name>users</resource-env-ref-name>
+    <resource-env-ref-type>
+      org.apache.catalina.UserDatabase
+    </resource-env-ref-type>
+  </resource-env-ref>
+
+  <!-- Define a Security Constraint on this Application -->
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>HTMLManger and Manager command</web-resource-name>
+      <url-pattern>/TipiAdminServlet</url-pattern>
+      <url-pattern>*.jsp</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+       <!-- NOTE:  This role is not present in the default users file -->
+       <role-name>manager</role-name>
+    </auth-constraint>
+  </security-constraint>
+
+  <!-- Define the Login Configuration for this Application -->
+  <login-config>
+    <auth-method>BASIC</auth-method>
+    <realm-name>Tipi Manager Application</realm-name>
+  </login-config>
+
+  <!-- Security roles referenced by this web application -->
+  <security-role>
+    <description>
+      The role that is required to log in to the Manager Application
+    </description>
+    <role-name>manager</role-name>
+  </security-role>
+  
+  
+  
+  
 </web-app>

@@ -41,6 +41,7 @@ public class TipiServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//super.doGet(request, response);
 //		String clear = 
+		long st = System.currentTimeMillis();
 		boolean build = false;
 		boolean clean = false;
 		if("true".equals(request.getParameter("create"))) {
@@ -57,6 +58,7 @@ public class TipiServlet extends HttpServlet {
 //		ClientActions.
 		if(!clean) {
 			boolean isOk = doSanityCheck(request, jnlpElement);
+//			isOk = true;
 			if(!isOk) {
 				// force clean build:
 				clean = true;
@@ -72,7 +74,7 @@ public class TipiServlet extends HttpServlet {
 		jnlpElement.write(outWriter);
 		outWriter.flush();
 		outWriter.close();
-
+		System.err.println("Time taken: "+(System.currentTimeMillis() - st));
 	}
 
 	
@@ -81,6 +83,10 @@ public class TipiServlet extends HttpServlet {
 	}
 
 	private boolean doSanityCheck(HttpServletRequest request, XMLElement jnlpElement) {
+		if(true) {
+			System.err.println("Sanity check disabled!!");
+			return true;
+		}
 		XMLElement xx = jnlpElement.getElementByTagName("resources");
 		Vector<XMLElement> ll = xx.getChildren();
 		String servletPath = request.getServletPath();
@@ -103,32 +109,41 @@ public class TipiServlet extends HttpServlet {
 
 	private XMLElement doCreateJnlp(HttpServletRequest request, boolean build, boolean clean) throws IOException {
 		String servletPath = request.getServletPath();
-		
-		
-		
-		
-		File projectPath = new File(getServletContext().getRealPath("."));
-
-		
-		
+		String appStoreUrl = getServletContext().getInitParameter("appUrl");
+		String appFolder = getServletContext().getInitParameter("appFolder");
 		String applicationPath = servletPath.substring(1,servletPath.lastIndexOf('/'));
-		File applicationDir = new File(projectPath,applicationPath);
+		String myAppPath = appFolder+applicationPath;
+		String myAppUrl = appStoreUrl+applicationPath;
+		File applicationDir = new File(myAppPath);
+
+		System.err.println("Resolved app path: "+myAppPath);
+		System.err.println("Resolved app url: "+myAppUrl);
+
 		String profile = servletPath.substring(servletPath.lastIndexOf('/')+1,servletPath.lastIndexOf('.'));
-		String propertypath = getServletContext().getRealPath(applicationPath+"/settings/tipi.properties");
-		File prop = new File(propertypath);
+	//	String propertypath = getServletContext().getRealPath(myAppPath+"/settings/tipi.properties");
+		System.err.println("Using profile: "+profile);
+		File prop = new File(myAppPath+"/settings/tipi.properties");
 		FileInputStream fis = new FileInputStream(prop);
 		PropertyResourceBundle prb = new PropertyResourceBundle(fis);
+
 		fis.close();
 		BaseJnlpBuilder l = new LocalJnlpBuilder();
 		String codebase = "http://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/"+applicationPath;
 		String repository = prb.getString("repository");
-		
-		if(build) {
-			fis = new FileInputStream(prop);
-			ProjectBuilder.buildTipiProject(applicationDir,codebase, fis, clean,true);
-			fis.close();
+
+		File profileSettings = new File(myAppPath+"/settings/profiles/"+profile+".properties");
+		if(profileSettings.exists()) {
+			System.err.println("Profile actually found!");
+		} else {
+			profile = null;
 		}
-		XMLElement jnlp = l.buildElement(repository+"Extensions/", prb.getString("extensions"),applicationDir, codebase, profile+".jnlp",null);
+		
+//		if(build) {
+//			fis = new FileInputStream(prop);
+//			ProjectBuilder.buildTipiProject(applicationDir,myAppUrl, fis, clean,true,profile);
+//			fis.close();
+//		}
+		XMLElement jnlp = l.buildElement(repository, prb.getString("extensions"),applicationDir, codebase,myAppUrl, profile+".jnlp",profile);
 		return jnlp;
 
 	}

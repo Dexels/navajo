@@ -15,8 +15,16 @@
 <title>Tipi applications deployed here:</title>
 </head>
 <body>
+<%
+String res = request.getParameter("result");
+if(res!=null) {
+	out.write("<div class='servermessage'>Result: "+URLDecoder.decode(res,"UTF-8")+"</div>");
+}
+
+%>
 <h3>Tipi App Store</h3>
 <%
+
 	manager.setContext(getServletContext());
 	String appFolder = getServletContext().getInitParameter("appFolder"); 
 	if(appFolder==null) {
@@ -25,15 +33,18 @@
 	manager.setAppsFolder(new File(appFolder));
 %>
 
-<table>
+<ul>
 	<c:forEach var="app" items="${manager.applications}">
-		<tr>
-			<td>${app.applicationName}</td>
-				<td><a href="${app.applicationLink}">Start</a></td>
-				<td><a href="${app.applicationLink}?build=true&amp;clean=true">Clean &amp; Start</a></td>
-		</tr>
+		<li bgcolor="#faa">
+			${app.applicationName}  ${app.profiles}
+				<a href="TipiAdminServlet?app=${app.applicationName}&amp;cmd=clean">Clean</a>
+				<a href="TipiAdminServlet?app=${app.applicationName}&amp;cmd=build">Build</a>
+				<c:forEach var="profile" items="${app.profiles}">
+					<a href="${app.applicationName}/${profile}.jnlp">${profile}</a>
+				</c:forEach>
+		</li>
 	</c:forEach>
-</table>
-
+<ul>
 </body>
-</html>
+
+<%@page import="java.net.URLDecoder"%></html>

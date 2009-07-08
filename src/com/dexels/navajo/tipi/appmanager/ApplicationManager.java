@@ -11,7 +11,30 @@ public class ApplicationManager {
 	
 	private File appsFolder;
 	List<ApplicationStatus> applications;
+	private String currentApplication;
+	private String documentationRepository;
+	
 
+	public String getDocumentationRepository() {
+		return documentationRepository;
+	}
+
+	public void setCurrentApplication(String currentApplication) {
+		this.currentApplication = currentApplication;
+	}
+
+	public String getCurrentApplication() {
+		return currentApplication;
+	}
+
+	public ApplicationStatus getApplication() {
+		for (ApplicationStatus a : applications) {
+			if(a.getApplicationName().equals(currentApplication)) {
+				return a;
+			}
+		}
+		return null;
+	}
 private ServletContext context = null;
 	
 	public ServletContext getContext() {
@@ -20,6 +43,7 @@ private ServletContext context = null;
 
 	public void setContext(ServletContext context) {
 		this.context = context;
+		documentationRepository = context.getInitParameter("documentationRepository");
 	}
 	
 	public void setApplications(List<ApplicationStatus> applications) {

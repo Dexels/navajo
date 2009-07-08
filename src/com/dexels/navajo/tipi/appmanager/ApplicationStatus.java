@@ -17,7 +17,29 @@ public class ApplicationStatus {
 	//private String name;
 	private Date builtAt;
 	private boolean exists = false;
+
 	private ApplicationManager manager;
+	private List<String> profiles;
+	private List<ExtensionEntry> extensions;
+	private String applicationName;
+	private File appFolder;
+	private String extensionRepository;
+	
+	public String getRepository() {
+		return extensionRepository;
+	}
+
+//	public void setRepository(String extensionRepository) {
+//		this.extensionRepository = extensionRepository;
+//	}
+
+	public List<String> getProfiles() {
+		return profiles;
+	}
+
+	public void setProfiles(List<String> profiles) {
+		this.profiles = profiles;
+	}
 
 	public ApplicationManager getManager() {
 		return manager;
@@ -43,11 +65,11 @@ public class ApplicationStatus {
 		this.builtAt = builtAt;
 	}
 
-	public List<String> getExtensions() {
+	public List<ExtensionEntry> getExtensions() {
 		return extensions;
 	}
 
-	public void setExtensions(List<String> extensions) {
+	public void setExtensions(List<ExtensionEntry> extensions) {
 		this.extensions = extensions;
 	}
 
@@ -59,19 +81,19 @@ public class ApplicationStatus {
 		this.applicationName = applicationName;
 	}
 
-	public String getApplicationLink() {
-		return getApplicationName()+"/Application.jnlp";
-	}
+//	public List<String> getApplicationLink() {
+//		return getApplicationName()+"/Application.jnlp";
+//	}
 	
-	private List<String> extensions;
-	private String applicationName;
+
 	
 	public void load(File appDir ) throws IOException {
+		this.appFolder = appDir;
 		File tipiSettings = new File(appDir,"settings/tipi.properties");
 		if(!tipiSettings.exists()) {
 			setApplicationName(appDir.getName());
 				String template = (String) getManager().getContext().getInitParameter("defaultTemplate");
-			String repository =  (String) getManager().getContext().getInitParameter("repository");
+			String repository =  (String) getManager().getContext().getInitParameter("extensionRepository");
 			String developmentRepository =  (String) getManager().getContext().getInitParameter("developmentRepository");
 
 			//String name = request.getParameter("name");
@@ -82,13 +104,44 @@ public class ApplicationStatus {
 		FileInputStream fis = new FileInputStream(tipiSettings);
 		PropertyResourceBundle settings = new PropertyResourceBundle(fis);
 		fis.close();
-		extensions = new LinkedList<String>();
-		StringTokenizer st = new StringTokenizer(settings.getString("extensions"));
+		extensionRepository = settings.getString("repository");
+		extensions = new LinkedList<ExtensionEntry>();
+		StringTokenizer st = new StringTokenizer(settings.getString("extensions"),",");
 	    while (st.hasMoreElements()) {
 			String element = (String) st.nextElement();
-			extensions.add(element);
-		}
+			extensions.add(new ExtensionEntry(element));
+				
+			}
 	    setExists(true);
 	    applicationName = appDir.getName();
+	    processProfiles(appDir);
+	    
+	}
+
+	private void processProfiles(File appDir) {
+		List<String> pro = new LinkedList<String>();
+		File profilesDir = new File(appDir,"settings/profiles");
+		if(!profilesDir.exists()) {
+			pro.add("Default");
+			setProfiles(pro);
+			return;
+		}
+		for (File file : profilesDir.listFiles()) {
+			//pro.add(file.getName());
+			if(file.canRead() && file.isFile() && file.getName().endsWith(".properties")) {
+				String profileName = file.getName().substring(0,file.getName().length()-".properties".length());
+				System.err.println("Profilename: "+profileName);
+				pro.add(profileName);
+			}
+		}
+		if(pro.isEmpty()) {
+			pro.add("Default");
+		}
+		setProfiles(pro);
+	}
+
+	public boolean isValid() {
+		File tipiJar = new File(appFolder,"lib/Tipi.jar");
+		return tipiJar.exists();
 	}
 }
