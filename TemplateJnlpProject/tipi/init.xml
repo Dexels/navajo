@@ -2,7 +2,7 @@
 <tid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="tipi.xsd">
    <d.frame name="init" >
       <l.flow>
-                <c.button  text="'Welcome to Tipi'" tooltiptext="'Version 3.0'">
+                <c.button  text="'Welcome to Tipi'" tooltiptext="'Version 3.0'" >
                   <onActionPerformed>
                   		<showInfo text="'Welcome to Tipi!'"/>
                   </onActionPerformed>

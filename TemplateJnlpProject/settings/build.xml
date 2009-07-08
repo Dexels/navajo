@@ -65,14 +65,15 @@
 		<deploy url="${tipiTomcatManager}" update="true" username="${tipiTomcatUsername}" password="${tipiTomcatPassword}" path="/${projectName}" war="${baseDir}/deploy/${projectName}.war"/>
 	</target>
 	<target name="deployEcho">
-		<antcall target="deployAll"></antcall>	
+		<antcall target="deployAll" ></antcall>	
 		<antcall target="copyEchoLibs"></antcall>	
 		<antcall target="createEchoTemplate"></antcall>	
 		<antcall target="createWar"></antcall>
 		<antcall target="deployUpload"></antcall>	
 	</target>
 	<target name="deployJnlp">
-		<antcall target="deployAll"></antcall>	
+
+		<antcall target="deployToTipiServer"></antcall>	
 		<antcall target="createJnlpTemplate"></antcall>	
 		<antcall target="deployUpload"></antcall>	
 	</target>
@@ -101,14 +102,32 @@
 			<fileset dir=".">
 				<include name="tipi/**" />
 				<include name="resource/**" />
-				<include name="settings/**" />
+		<!--		<include name="settings/**" />-->
 				<include name="lib/**" />
+				
 			</fileset>
 		</copy>
 		<copy file="settings/template.html" tofile="deploy/current/index.html" />
-		
-
-
+		<zip destfile="${baseDir}/deploy/archived/${projectName}_${build.timestamp}.zip" basedir="${baseDir}/deploy/current" />
+</target>
+	
+	
+	<target name="deployToTipiServer" depends="baseDeploy">
+		<echo message="Goin in!"/>
+		<delete dir="deploy/current" />
+		<mkdir dir="deploy" />
+		<mkdir dir="deploy/current" />
+		<mkdir dir="deploy/archived" />
+		<buildWikiSource sourceDir="tipi/" resourceDir="resource/" appCodebase="${tipiAppStore}${projectName}/resource/" docDir="deploy/current/source/" baseDir="${baseDir}" name="${projectName}" />
+		<copy todir="deploy/current">
+			<fileset dir=".">
+				<include name="tipi/**" />
+				<include name="resource/**" />
+				<include name="settings/**" />
+				
+			</fileset>
+		</copy>
+		<copy file="settings/template.html" tofile="deploy/current/index.html" />
 		<zip destfile="${baseDir}/deploy/archived/${projectName}_${build.timestamp}.zip" basedir="${baseDir}/deploy/current" />
 </target>
 	
@@ -139,6 +158,7 @@
 				<include name="lib/**" />
 				<include name="tipi/**" />
 				<include name="resource/**" />
+				<include name="settings/**" />
 				<include name="index.html" />
 			</fileset>
 		</scp>
