@@ -92,12 +92,6 @@ public class ApplicationStatus {
 		File tipiSettings = new File(appDir,"settings/tipi.properties");
 		if(!tipiSettings.exists()) {
 			setApplicationName(appDir.getName());
-				String template = (String) getManager().getContext().getInitParameter("defaultTemplate");
-			String repository =  (String) getManager().getContext().getInitParameter("extensionRepository");
-			String developmentRepository =  (String) getManager().getContext().getInitParameter("developmentRepository");
-
-			//String name = request.getParameter("name");
-			ClientActions.downloadZippedDemoFiles(developmentRepository,repository, appDir,template);
 
 			return;
 		}

@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi;
 
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -11,6 +12,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -19,11 +21,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.tomcat.util.http.fileupload.MultipartStream;
+
+import com.dexels.navajo.tipi.projectbuilder.ClientActions;
 import com.dexels.navajo.tipi.projectbuilder.ProjectBuilder;
 import com.dexels.navajo.tipi.projectbuilder.TipiProjectBuilder;
+import com.oreilly.servlet.MultipartRequest;
 
 public class TipiAdminServlet extends HttpServlet {
 
+	private File applicationFolder = null;
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		this.doGet(request, response);
 	}
@@ -32,7 +39,7 @@ public class TipiAdminServlet extends HttpServlet {
 		String appFolder = getServletContext().getInitParameter("appFolder");
 
 		String application = request.getParameter("app");
-
+		applicationFolder = new File(appFolder);
 		// String servletPath = request.getServletPath();
 		String myAppPath = appFolder + application;
 		String myAppUrl = appStoreUrl + application;
@@ -75,12 +82,59 @@ public class TipiAdminServlet extends HttpServlet {
 
 	private String upload(String application, File appDir, HttpServletRequest request) {
 		// TODO Auto-generated method stub
-		return "Upload not yet implemented!";
+		try {
+			InputStream is =  request.getInputStream();
+//			File apppp = new File(applicationFolder);
+			MultipartRequest mr = new MultipartRequest(request, System.getProperty("java.io.tmpdir"),20000000);
+			Enumeration e =  mr.getFileNames();
+			String appName = mr.getParameter("appName");
+			if(appName==null) {
+				appName = "NewApplication";
+			}
+			while (e.hasMoreElements()) {
+				String object = (String) e.nextElement();
+				File f = mr.getFile(object);
+				System.err.println("Filename returned: "+f.getAbsolutePath());
+				createApp(f,appName);
+				f.delete();
+				System.err.println("File detected: "+object);
+			}
+//			File tmp = File.createTempFile("testUpload",".zip");
+//			FileOutputStream fos = new FileOutputStream(tmp);
+//			copyResource(fos, is);
+//			tmp.deleteOnExit();
+		//	createApp(tmp);
+			
+			return "File dumped @";// + tmp.getAbsolutePath();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return "Problem: "+e.getMessage();
+		}
+	}
+	private void createApp(File tmp , String appName) {
+		File dest = new File(applicationFolder,appName);
+		dest.mkdirs();
+		System.err.println("File: "+tmp.getAbsolutePath()+" exists? "+tmp.exists()+" size: "+tmp.length());
+		ZipUtils.unzip(tmp, dest);
+		
 	}
 	private String create(String application, File appDir) {
 		File newApp = new File(appDir,application);
 		boolean result = newApp.mkdirs();
-		return result?application+" created!":"Could not create application: "+application;
+		String appStoreUrl = getServletContext().getInitParameter("appUrl");
+		String appFolder = getServletContext().getInitParameter("appFolder");
+
+		String template = getServletContext().getInitParameter("defaultTemplate");
+		String repository =  getServletContext().getInitParameter("extensionRepository");
+		String developmentRepository =  getServletContext().getInitParameter("developmentRepository");
+		try {
+			ClientActions.downloadZippedDemoFiles(developmentRepository,repository, appDir,template);
+			return result?application+" created!":"Could not create application: "+application;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return "Error creating and downloading new application: "+e.getMessage();
+		}
+
 	}
 
 	private void download(String application, File appDir, HttpServletResponse response) throws IOException {
@@ -143,7 +197,7 @@ public class TipiAdminServlet extends HttpServlet {
 		File tmp = File.createTempFile("tmpDownload", ".zip");
 		System.err.println("Zipping in folder: " + appStoreFolder.getAbsolutePath() + " adding directory: " + appName + "/"
 				+ " to file: " + tmp.getAbsolutePath());
-		zipAll(appStoreFolder, appName , tmp);
+		ZipUtils.zipAll(appStoreFolder, appName , tmp);
 		tmp.deleteOnExit();
 		FileInputStream fis = new FileInputStream(tmp);
 		return fis;
@@ -179,52 +233,6 @@ public class TipiAdminServlet extends HttpServlet {
 
 	
 	
-	
-	
-	private  void zipAll(File here, String dirsStartingWith, File zipFile) throws IOException {
-	    //create a ZipOutputStream to zip the data to 
-	    ZipOutputStream zos = new 
-	           ZipOutputStream(new FileOutputStream(zipFile)); 
-	    //assuming that there is a directory named inFolder (If there 
-	    //isn't create one) in the same directory as the one the code 
-	    //call the zipDir method 
-	    File dir = new File(here,dirsStartingWith);
-	    zipDir(dir, zos); 
-	    //close the stream 
-	    zos.close(); 
-	
-	}
-	//here is the code for the method 
-	private void zipDir(File zipDir, ZipOutputStream zos) throws IOException 
-	{ 
-	        String[] dirList = zipDir.list(); 
-	        byte[] readBuffer = new byte[2156]; 
-	        int bytesIn = 0; 
-	        //loop through dirList, and zip the files 
-	        for(int i=0; i<dirList.length; i++) 
-	        { 
-	            File f = new File(zipDir, dirList[i]); 
-	        if(f.isDirectory()) 
-	        { 
-	                //if the File object is a directory, call this 
-	                //function again to add its content recursively 
-//	            String filePath = f.getPath(); 
-	            zipDir(f, zos); 
-	                //loop again 
-	            continue; 
-	        } 
-	            FileInputStream fis = new FileInputStream(f); 
-	        ZipEntry anEntry = new ZipEntry(f.getPath()); 
-	        zos.putNextEntry(anEntry); 
-	            //now write the content of the file to the ZipOutputStream 
-	            while((bytesIn = fis.read(readBuffer)) != -1) 
-	            { 
-	                zos.write(readBuffer, 0, bytesIn); 
-	            } 
-	           //close the Stream 
-	           fis.close(); 
-	    } 
-	} 
 
 	
 }
