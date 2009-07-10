@@ -13,14 +13,14 @@ import junit.framework.TestSuite;
 public class TestAllScripts extends TestSuite {
 
 	public static junit.framework.Test suite() {
-		TestSuite ts = new TestSuite();
+		TestSuite ts = new TestSuite("AllScripts");
 		InputStream is = TestAllScripts.class.getClassLoader().getResourceAsStream("test.txt");
 		loadAllTests(ts, is);
 
 		return ts;
 	}
 
-	private static void loadAllTests(TestSuite ts, InputStream is) {
+	public static void loadAllTests(TestSuite ts, InputStream is) {
 		try {
 
 			// ScriptTestContext dd = ScriptTestContext.getInstance();
