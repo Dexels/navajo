@@ -187,7 +187,7 @@
 
   tbody tr:hover th[scope="row"],
   tbody tr:hover tbody th.sub { background: #f0e8e8; }
-  tbody tr:hover td { background: #fff8f8; }
+  tbody tr:hover td { background: #f0f0d0; }
 
  /**
   * ------------------------------------------------------------------------------------------------- #

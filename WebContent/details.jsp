@@ -100,12 +100,23 @@ if(res!=null) {
 			</div>
 			<div class="important">
 				<h4>Extensions</h4>
+				<table>
+				
 				<c:forEach var="ext" items="${app.extensions}">
+					<tr>
 					<c:set target="${versionResolver}" property="versionToken" value="${ext.name}"/>
-					<a href="${app.repository}${versionResolver.versionToken}">${ext.name} (${ext.version})</a><br/>
+						<td>					
+							<a href="${app.repository}${versionResolver.versionToken}">${ext.name} (${ext.version})</a>
+						</td>
+						<td>					
+							<a href="${manager.documentationRepository}?id=tipidoc:${ext.name}:details">Documentation</a><br/>
+						</td>
+					</tr>
 				</c:forEach>
+				</table>
 		</div>
 		<div class="important">
+				<h4>Application source / resources</h4>
 			<iframe name="" src="${manager.documentationRepository}?id=apps:${manager.currentApplication}:info" frameborder="0" scrolling="auto" width="100%" height="280" marginwidth="5" marginheight="5" ></iframe>
 		</div>
 	

@@ -60,7 +60,8 @@ if(res!=null) {
           <div id="col1_content" class="clearfix">
             <h3>Usage</h3>
 			<div class="info">
-				This is an overview of all deployed Tipi applications on this server.
+				This is an overview of all deployed Tipi applications on this server. It is a view on the file system on the server. 
+				Feel free to edit the files on the server, or upload zipped applications, either created manually or by the TipiPlugin in Eclipse
 				
 			</div>
             <h3>Create a blank application</h3>
