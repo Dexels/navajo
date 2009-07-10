@@ -48,32 +48,49 @@ public class ScriptTestContext  {
 
 	}
 
+
+	public Navajo callService(String script) throws ClientException {
+		return callService(script, null, null);
+	}
+	
 	public Navajo callService(String script, Navajo input) throws ClientException {
+		return callService(script, input, null);
+	}
+	
+	public Navajo callService(String script, Navajo input, String altProfile) throws ClientException {
 		if(input==null) {
 			input = NavajoFactory.getInstance().createNavajo();
 		}
 		
 		ClientInterface c = NavajoClientFactory.getClient();
 		c.setLoadBalancingMode(NavajoClient.LBMODE_MANUAL);
-		setupClient(c);			  
+		setupClient(c, altProfile);			  
 	//	Navajo result = c.doSimpleSend(input,"", script,"","",-1,false,false);
 		Navajo result = c.doSimpleSend(input,script);
 		navajoMap.put(script, result);
 		return result;
 	}
 
-	private void setupClient(ClientInterface c) {
+	private void setupClient(ClientInterface c, String altProfile) {
 		ResourceBundle bb = ResourceBundle.getBundle("testsuite");
 		c.setServerUrl(bb.getString("server"));
-			try {
+		try {
+			if ( altProfile != null ) {
+				c.setUsername(bb.getString("username_" + altProfile));
+			} else {
 				c.setUsername(bb.getString("username"));
-			} catch (MissingResourceException e) {
 			}
-			try {
+		} catch (MissingResourceException e) {
+		}
+		try {
+			if ( altProfile != null ) {
+				c.setPassword(bb.getString("password_" + altProfile));
+			} else {
 				c.setPassword(bb.getString("password"));
-			} catch (MissingResourceException e) {
 			}
-			
+		} catch (MissingResourceException e) {
+		}
+
 	}
 
 	public static ScriptTestContext getInstance() {
