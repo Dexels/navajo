@@ -1599,13 +1599,15 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 	public Map<String,String> getAttributes() {
 		Map<String,String> m = new HashMap<String,String>();
-		if (cardinality != null) {
+		
+		if (cardinality != null && Property.SELECTION_PROPERTY.equals(getType())) {
 			m.put("cardinality", cardinality);
 		}
 		if (direction != null) {
 			m.put("direction", direction);
 		}
-		if (description != null) {
+		
+		if (description != null && !description.equals("") ) {
 			m.put("description", description);
 		}
 		if (myBinary != null) {
@@ -1613,9 +1615,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		} else {
 			if (length > 0) {
 				m.put("length", "" + length);
-			} else {
-				m.put("length", "");
-			}
+			} //else {
+//				m.put("length", "");
+//			}
 		}
 		if (myName != null) {
 			m.put("name", myName);
@@ -1626,7 +1628,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		if (type != null) {
 			m.put("type", type);
 		}
-		if (subType != null) {
+		if (subType != null && !subType.equals("") ) {
 			m.put("subtype", subType);
 		}
 		return m;
