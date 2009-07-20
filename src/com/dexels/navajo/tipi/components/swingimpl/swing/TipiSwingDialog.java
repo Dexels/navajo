@@ -1,13 +1,18 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.WindowListener;
+import java.io.IOException;
+import java.net.URL;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.components.swingimpl.TipiDialog;
 
 /**
@@ -53,5 +58,37 @@ public class TipiSwingDialog extends JDialog{
 public TipiSwingDialog(JRootPane rootPane, TipiDialog comp) {
 	// TODO Auto-generated constructor stub
 }
+
+public void setIconUrl(URL u) {
+	setIconImage(new ImageIcon(u).getImage());
+	System.err.println("Dialog icon set!");
+}
+
+public void setIconUrl(Object u) {
+	setIconImage(getIcon(u).getImage());
+	System.err.println("Dialog icon set!");
+}
+
+ protected ImageIcon getIcon(Object u) {
+	 if(u==null) {
+		 return null;
+	 }
+	 if(u instanceof URL) {
+		   return new ImageIcon((URL) u);
+	 }
+	 if(u instanceof Binary) {
+		 Image i;
+		try {
+			i = ImageIO.read(((Binary) u).getDataAsStream());
+			 ImageIcon ii = new ImageIcon(i);
+			 return ii;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	 }
+	 return null;
+  }
+
+
 
 }

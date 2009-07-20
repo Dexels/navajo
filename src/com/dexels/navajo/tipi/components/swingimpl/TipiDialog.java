@@ -68,6 +68,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 			public void propertyChange(final PropertyChangeEvent evt) {
 				runSyncInEventThread(new Runnable(){
 					public void run() {
+						System.err.println("Height change: "+evt.getOldValue()+" to: "+evt.getNewValue());
 						setComponentValue("h", evt.getNewValue());
 					}});
 			}});
@@ -210,23 +211,23 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 				}
 				if (name.equals("x")) {
 					myBounds.x = ((Integer) object).intValue();
-					resetDialogBounds();
+//					resetDialogBounds();
 					return;
 				}
 				if (name.equals("y")) {
 					myBounds.y = ((Integer) object).intValue();
-					resetDialogBounds();
+//					resetDialogBounds();
 					return;
 				}
 				if (name.equals("w")) {
 					myBounds.width = ((Integer) object).intValue();
-					resetDialogBounds();
+//					resetDialogBounds();
 					return;
 				}
 				if (name.equals("h")) {
 					myBounds.height = ((Integer) object).intValue();
-					System.err.println("Setting height: "+myBounds.height);
-					resetDialogBounds();
+//					System.err.println("Setting height: "+myBounds.height);
+//					resetDialogBounds();
 					return;
 				}
 			}

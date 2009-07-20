@@ -12,6 +12,7 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.components.swingimpl.parsers.*;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingDesktop;
 import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.tipi.tipixml.*;
 
@@ -66,6 +67,11 @@ public abstract class TipiSwingDataComponentImpl
 
 			public void run() {
 				getSwingContainer().add( (Component) c, constraints);
+			//	System.err.println("Added to container: "+Thread.currentThread().getName());
+				//System.err.println("Adding component: "+c+" to: "+getSwingContainer()+" with constraint: "+constraints);
+				// TODO ADDED 7/7/2009 I don't know about the performance hit.	
+				((JComponent)getSwingContainer()).revalidate();
+			//	getSwingContainer().reva();
 			}});
 		} catch (Throwable e) {
 		throw new RuntimeException("Illegal constraint while adding object: "+c+" to component: "+
@@ -255,5 +261,22 @@ protected void setComponentValue(final String name, final Object object) {
 		}});
 }
 
+//protected void addedToParent() {
+////	System.err.println("Boioioiooiinggggg!");
+//	if(getContainer() instanceof JComponent) {
+//   runAsyncInEventThread(new Runnable() {
+//     public void run() {
+//   	  Component p = getSwingContainer().getParent();
+//   	  if(p instanceof JComponent) {
+//   		  System.err.println("RAAAAAHHHH!!!");
+//   		  JComponent jc = (JComponent)p;
+//   		  jc.revalidate();
+//   	  }
+//     }
+//   });
+//	}
+////   ( (TipiSwingDesktop) getContainer()).paintImmediately(0, 0, 100, 100);
+//   super.addedToParent();
+// }
 
 }

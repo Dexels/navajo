@@ -13,40 +13,25 @@ import com.dexels.navajo.tipi.swingclient.components.*;
 
 public class MainApplication {
 
-	static public void main(String[] args) throws Exception {
-		Iterator<TipiExtension> lookupProviders = ServiceRegistry.lookupProviders(TipiExtension.class);
-//		System.err.println("Boot class extensions: ");
-//		while (lookupProviders.hasNext()) {
-//			TipiExtension tipiExtension = (TipiExtension) lookupProviders.next();
-//			System.err.println("Extension : "+tipiExtension);
-//		}
-//		System.err.println("end of boot");;
-		System.err.println("Shake it!");
-		String definition = null;
-		List<String> arrrgs = new ArrayList<String>();
-		if(args.length>1 && "-open".equals(args[0])) {
-				String path = args[1];
-				File f = new File(path);
-				System.setProperty("user.dir", f.getParent());
-				arrrgs = parseBundleFile(path);
-				definition = arrrgs.get(arrrgs.size()-1);
-		} else {
+	private static SwingTipiApplicationInstance myApplication = null;
 
-			for (int i = 0; i < args.length; i++) {
+	static public void main(String[] args) throws Exception {
+		List<String> arrrgs = new ArrayList<String>();
+
+		String definition = null;
+		for (int i = 0; i < args.length; i++) {
 				arrrgs.add(args[i]);
-			}
-			System.err.println("Args: "+arrrgs);
-			System.err.println("final arg: "+args[args.length-1].endsWith(".xml"));
-			if(args.length>0 ) {
+		}
+		if(args.length>0 ) {
+				System.err.println("final arg: "+args[args.length-1].endsWith(".xml"));
 				System.err.println("# of args: "+args.length);
 				if(args[args.length-1].endsWith(".xml")) {
 					definition = args[args.length - 1];
 					
 				}
 			}
-		}
-		System.err.println("Initializing with def: "+definition);
-		initialize(checkStudio(), arrrgs, definition);
+//		}
+		initializeSwingApplication(checkStudio(), arrrgs, definition,null,null);
 	}
 
 	/**
@@ -73,25 +58,34 @@ public class MainApplication {
 	 * @param arrrgs
 	 * @param def
 	 */
-	private static void initialize(final boolean studioMode, final List<String> arrrgs, final String def) {
+	public static SwingTipiApplicationInstance initializeSwingApplication(final boolean studioMode, final List<String> arrrgs, final String def, final TipiApplet appletRoot, final RootPaneContainer otherRoot) {
+		System.err.println("ARRRGS: "+arrrgs);
 		RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager());
 		SwingUtilities.invokeLater(new Runnable() {
 
 			public void run() {
 				try {
 					if (studioMode) {
-						SwingTipiContext s = initialize("develop", "tipi/develop.xml", arrrgs, null, null);
-						s.injectApplication(def, arrrgs, "/init/tipi/sandbox");
+						myApplication = new SwingTipiApplicationInstance("develop", "tipi/develop.xml", arrrgs, appletRoot, otherRoot);
+//						SwingTipiContext s = initialize("develop", "tipi/develop.xml", arrrgs, null, null);
+						
 					} else {
 						if (def == null) {
-							initialize("init", "init.xml", arrrgs, null, null);
+							myApplication = new SwingTipiApplicationInstance("init", "init.xml", arrrgs, appletRoot, otherRoot);
 						} else {
 							if (def.endsWith(".xml")) {
-								initialize("init", def, arrrgs, null, null);
+								myApplication = new SwingTipiApplicationInstance("init", def, arrrgs, appletRoot, otherRoot);
 							} else {
-								initialize(def, "start.xml", arrrgs, null, null);
+								myApplication = new SwingTipiApplicationInstance(def, "start.xml", arrrgs, appletRoot, otherRoot);
 							}
 						}
+					}
+
+					if(myApplication!=null) {
+							myApplication.startup();
+							if(studioMode) {
+								((SwingTipiContext)myApplication.getCurrentContext()).injectApplication(def, arrrgs, "/init/tipi/sandbox");
+							}
 					}
 
 				} catch (Exception e) {
@@ -100,6 +94,8 @@ public class MainApplication {
 
 			}
 		});
+		
+		return myApplication;
 	}
 
 	public static List<String> parseBundleFile(String path) throws IOException {
@@ -137,100 +133,17 @@ public class MainApplication {
 		return result;
 	}
 
-	/**
-	 * Definitionpath allows a non standard definition path
-	 * 
-	 * @param definition
-	 * @param definitionPath
-	 * @param args
-	 * @param appletRoot
-	 * @param otherRoot
-	 * @return
-	 * @throws Exception
-	 */
-	public static SwingTipiContext initialize(String definition, String definitionPath, List<String> args, TipiApplet appletRoot,
-			RootPaneContainer otherRoot) throws Exception {
-		Map<String, String> properties = parseProperties(args);
 
-		if (definitionPath == null) {
-			definitionPath = definition;
-		}
-		SwingTipiContext context = null;
-		context = new SwingTipiContext(null);
-		context.setAppletRoot(appletRoot);
-		context.setOtherRoot(otherRoot);
-		SwingTipiUserInterface stui = new SwingTipiUserInterface(context);
-		SwingClient.setUserInterface(stui);
-		context.setDefaultTopLevel(new TipiScreen());
-		context.getDefaultTopLevel().setContext(context);
-		// context.parseRequiredIncludes();
-		// context.processRequiredIncludes();
 
-		context.processProperties(properties);
+//	public static Map<String, String> parseProperties(String gsargs) {
+//		StringTokenizer st = new StringTokenizer(gsargs);
+//		ArrayList<String> a = new ArrayList<String>();
+//		while (st.hasMoreTokens()) {
+//			String next = st.nextToken();
+//			a.add(next);
+//		}
+//		return parseProperties(a);
+//	}
 
-//		System.err.println("Openingin definition: " + definition);
-		InputStream tipiResourceStream = context.getTipiResourceStream(definitionPath);
-		if (tipiResourceStream == null) {
-			System.err.println("Error starting up: Can not load tipi. Resource not found: "+definitionPath);
-			System.err.println("Codebase: "+context.getTipiResourceLoader());
-			String fatalErrorMsg="No connection allowed to server by security software, check your connection and security settings.";
-			try {
-				String msg = System.getProperty("fatalSystemErrorMessage");
-				if(msg!=null) {
-					fatalErrorMsg = msg;
-				}
-			} catch (SecurityException e) {
-				e.printStackTrace();
-			}
-			tipiResourceStream = context.getTipiResourceStream("init.xml");
-			if (tipiResourceStream == null) {
-				System.err.println("Still failed");
-				context.showFatalStartupError(fatalErrorMsg);
-				context.shutdown();
-			} else {
-				System.err.println("recovered");
-			}
-		} else {
-			context.parseStream(tipiResourceStream, definition, false);
-		}
-		return context;
-	}
 
-	public static Map<String, String> parseProperties(String gsargs) {
-		StringTokenizer st = new StringTokenizer(gsargs);
-		ArrayList<String> a = new ArrayList<String>();
-		while (st.hasMoreTokens()) {
-			String next = st.nextToken();
-			a.add(next);
-		}
-		return parseProperties(a);
-	}
-
-	public static Map<String, String> parseProperties(List<String> args) {
-		Map<String, String> result = new HashMap<String, String>();
-		for (String current : args) {
-			if (current.indexOf("=")!=-1) {
-				String prop = current;
-				try {
-					StringTokenizer st = new StringTokenizer(prop, "=");
-					String name = st.nextToken();
-					String value = st.nextToken();
-					result.put(name, value);
-					// try {
-					// System.setProperty(name, value);
-					// } catch (SecurityException e) {
-					// System.err.println("Setting property failed due to
-					// security. No problem: "+e.getMessage());
-					// }
-				} catch (NoSuchElementException ex) {
-					System.err.println("Error parsing system property");
-				} catch (SecurityException se) {
-					System.err.println("Security exception: " + se.getMessage());
-					se.printStackTrace();
-				}
-			}
-		}
-
-		return result;
-	}
 }

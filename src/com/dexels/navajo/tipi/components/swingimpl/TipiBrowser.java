@@ -33,6 +33,13 @@ public class TipiBrowser
 				e.printStackTrace();
 			}
 		}
+		if(name.equals("url")) {
+			try {
+				myItem.setPage((String)object);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		super.setComponentValue(name, object);
 		
 	}

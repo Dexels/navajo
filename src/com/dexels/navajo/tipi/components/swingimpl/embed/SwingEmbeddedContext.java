@@ -3,6 +3,8 @@ package com.dexels.navajo.tipi.components.swingimpl.embed;
 import java.io.*;
 import java.util.*;
 
+import tipi.SwingTipiApplicationInstance;
+
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.*;
 import com.dexels.navajo.tipi.swingclient.*;
@@ -29,8 +31,8 @@ import com.dexels.navajo.tipi.tipixml.*;
 public class SwingEmbeddedContext extends SwingTipiContext {
 	TipiSwingStandaloneToplevel top = new TipiSwingStandaloneToplevel();
 	
-	public SwingEmbeddedContext(SwingTipiContext parentContext) {
-		super(parentContext);
+	public SwingEmbeddedContext(SwingTipiApplicationInstance instance, SwingTipiContext parentContext) {
+		super(instance, parentContext);
 		if (SwingClient.getUserInterface() == null) {
 			SwingTipiUserInterface stui = new SwingTipiUserInterface(this);
 			SwingClient.setUserInterface(stui);
@@ -43,9 +45,9 @@ public class SwingEmbeddedContext extends SwingTipiContext {
 	
 	}
 
-	public SwingEmbeddedContext(SwingTipiContext parentContext,String tipiDefinition[], boolean debugMode, String[] definitionName, List<String> libraries, String resourceBaseDirectory)
+	public SwingEmbeddedContext(SwingTipiApplicationInstance instance,SwingTipiContext parentContext,String tipiDefinition[], boolean debugMode, String[] definitionName, List<String> libraries, String resourceBaseDirectory)
 			throws TipiException, IOException {
-		this(parentContext);
+		this(instance,parentContext);
 		for (int i = 0; i < definitionName.length; i++) {
 			loadDefinition(tipiDefinition[i], definitionName[i]);
 		}

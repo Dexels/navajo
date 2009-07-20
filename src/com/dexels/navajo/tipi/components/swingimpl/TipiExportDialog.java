@@ -33,10 +33,10 @@ public class TipiExportDialog extends TipiDialog {
 	TipiSwingExportSortingPanel sp;
 	TipiSwingExportSeparatorPanel sep;
 	private String msgPath;
-	GridBagLayout gridBagLayout1 = new GridBagLayout();
-	JButton proceedButton = new JButton();
-	JButton cancelButton = new JButton();
-	JButton backButton = new JButton();
+	GridBagLayout gridBagLayout1 = null;
+	JButton proceedButton = null;
+	JButton cancelButton = null;
+	JButton backButton = null;
 	JPanel container;
 	private int current = 0;
 	private Message data;
@@ -52,6 +52,7 @@ public class TipiExportDialog extends TipiDialog {
 		runSyncInEventThread(new Runnable() {
 
 			public void run() {
+				gridBagLayout1 = new GridBagLayout();
 				setContainer(c);
 				proceedButton = new JButton();
 				cancelButton = new JButton();

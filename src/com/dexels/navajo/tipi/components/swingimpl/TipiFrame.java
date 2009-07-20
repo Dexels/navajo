@@ -144,7 +144,7 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 		// final TipiSwingFrame myFrame = (TipiSwingFrame) getContainer();
 		runSyncInEventThread(new Runnable() {
 			public void run() {
-				System.err.println("Beware! not working well");
+			//	System.err.println("Beware! not working well");
 				myToplevel.getContentPane().remove((Component) c);
 			}
 		});

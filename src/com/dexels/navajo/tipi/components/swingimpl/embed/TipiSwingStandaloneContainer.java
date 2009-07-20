@@ -3,6 +3,8 @@ package com.dexels.navajo.tipi.components.swingimpl.embed;
 import java.io.*;
 import java.util.*;
 
+import tipi.SwingTipiApplicationInstance;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.*;
@@ -23,8 +25,8 @@ public class TipiSwingStandaloneContainer implements TipiStandaloneToplevelConta
   private final List<String> libraries = new ArrayList<String>();
   private UserInterface ui = null;
 
-  public TipiSwingStandaloneContainer(SwingTipiContext parentContext) {
-		embeddedContext = new SwingEmbeddedContext(parentContext);
+  public TipiSwingStandaloneContainer(SwingTipiApplicationInstance instance, SwingTipiContext parentContext) {
+		embeddedContext = new SwingEmbeddedContext(instance, parentContext);
 
  }
 
@@ -38,7 +40,7 @@ public class TipiSwingStandaloneContainer implements TipiStandaloneToplevelConta
 
   public void loadDefinition(String tipiPath, String definitionName,String resourceBaseDirectory) throws IOException, TipiException {
 	 // System.err.println("Loading def: "+definitionName+" tipipath: "+tipiPath+" resbase: "+resourceBaseDirectory);
-	  embeddedContext = new SwingEmbeddedContext((SwingTipiContext) getContext(), new String[]{tipiPath},false,new String[]{definitionName},libraries,resourceBaseDirectory);
+	  embeddedContext = new SwingEmbeddedContext((SwingTipiApplicationInstance) getContext().getApplicationInstance(), (SwingTipiContext) getContext(), new String[]{tipiPath},false,new String[]{definitionName},libraries,resourceBaseDirectory);
     if (ui!=null) {
       embeddedContext.setUserInterface(ui);
     }

@@ -1341,6 +1341,7 @@
          <value direction="inout" name="tooltip" type="string" />
          <value direction="in" name="layout" type="string" />
          <value direction="in" name="opacity" type="float" />
+         <value direction="in" name="icon" type="resource" property="iconUrl"/>
       </values>
       <methods>
          <method name="show" />
@@ -1805,6 +1806,7 @@
       </events>
       <values>
          <value direction="in" name="binary" type="resource" property="binary" />
+         <value direction="in" name="url" type="string"/>
 
       </values>
       <methods />
@@ -1822,7 +1824,7 @@
             <option description="Horizontal" value="horizontal" />
             <option description="Vertical" value="vertical" />
          </value>
-         <value direction="in" name="background" type="color" />
+         <value direction="in" name="background" type="color" property="background"/>
          <value direction="inout" name="floatable" type="boolean" />
          <value direction="inout" name="tooltip" type="string" />
          <value direction="in" name="visible" type="boolean" property="visible" />

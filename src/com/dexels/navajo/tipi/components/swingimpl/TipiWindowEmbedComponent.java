@@ -14,6 +14,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 
+import tipi.SwingTipiApplicationInstance;
+
 import com.dexels.navajo.tipi.TipiEmbedComponent;
 import com.dexels.navajo.tipi.components.core.ShutdownListener;
 import com.dexels.navajo.tipi.components.swingimpl.embed.TipiSwingStandaloneContainer;
@@ -34,7 +36,7 @@ public class TipiWindowEmbedComponent extends TipiEmbedComponent {
 				panel.setLayout(new BorderLayout());
 				panel.setVisible(true);
 				panel.setSize(500, 300);
-				stc = new TipiSwingStandaloneContainer((SwingTipiContext) getContext());
+				stc = new TipiSwingStandaloneContainer((SwingTipiApplicationInstance) getContext().getApplicationInstance(), (SwingTipiContext) getContext());
 				((SwingTipiContext)stc.getContext()).setOtherRoot(panel);
 //				stc.getContext().setDefaultTopLevel(TipiWindowEmbedComponent.this);
 				panel.addInternalFrameListener(new InternalFrameAdapter(){

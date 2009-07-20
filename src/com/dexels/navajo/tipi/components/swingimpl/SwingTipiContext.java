@@ -13,6 +13,8 @@ import javax.swing.*;
 import org.jdesktop.animation.timing.*;
 import org.jdesktop.animation.transitions.*;
 
+import tipi.SwingTipiApplicationInstance;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.animation.*;
@@ -60,8 +62,8 @@ public class SwingTipiContext extends TipiContext {
 
 	private RootPaneContainer myOtherRoot;
 
-	public SwingTipiContext(SwingTipiContext parentContext) {
-		super(parentContext);
+	public SwingTipiContext(SwingTipiApplicationInstance instance, SwingTipiContext parentContext) {
+		super(instance, parentContext);
 		// Don't think it is right here
 		try {
 			Locale.setDefault(new Locale("nl", "NL"));
@@ -361,6 +363,7 @@ public class SwingTipiContext extends TipiContext {
 			myAppletRoot.reload();
 		} else {
 			shutdown();
+			
 			super.exit();
 //			System.exit(0);
 		}

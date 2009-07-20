@@ -470,11 +470,13 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 	}
 
 	public void setComponentValue(final String name, final Object object) {
+		runSyncInEventThread(new Runnable() {
+			public void run() {
 		if (name.equals("filtersvisible")) {
 			setFiltersVisible(Boolean.valueOf(object.toString()).booleanValue());
 		}
 		if (name.equals("visible")) {
-			mm.setVisible(Boolean.valueOf(object.toString()).booleanValue());
+				mm.setVisible(Boolean.valueOf(object.toString()).booleanValue());
 		}
 		if (name.equals("hideColumn")) {
 			setColumnVisible(object.toString(), false);
@@ -499,26 +501,17 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 			mm.setReadOnly(Boolean.valueOf(object.toString()).booleanValue());
 		}
 		if (name.equals("selectedIndex")) {
-			selectedMessageIndex = ((Integer) object).intValue();
-			runSyncInEventThread(new Runnable() {
-				public void run() {
+					selectedMessageIndex = ((Integer) object).intValue();
 					mm.setSelectedRow(selectedMessageIndex);
-				}
-			});
 			// setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
 		}
 		if (name.equals("selectedMessage")) {
-			final Message m = ((Message) object);
-			runSyncInEventThread(new Runnable() {
-				public void run() {
+					final Message m = ((Message) object);
 					mm.setSelectedMessage(m);
-				}
-			});
 			// setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
 		}
 		if (name.equals("rowHeight")) {
 			mm.setRowHeight(((Integer) object).intValue());
-			// setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
 		}
 		if (name.equals("showRowHeaders")) {
 			mm.setShowRowHeaders(((Boolean) object).booleanValue());
@@ -542,12 +535,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 			}
 		}
 		if (name.equals("columnDefinitionSavePath")) {
-
-			runSyncInEventThread(new Runnable() {
-				public void run() {
 					setColumnDefinitionSavePath(object.toString());
-				}
-			});
 		}
 		if (name.equals("filtermode")) {
 			mm.setFilterMode("" + object);
@@ -570,6 +558,8 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 		if (name.equals("border")) {
 			mm.setBorder((Border)object);
 		}
+			}
+		});
 
 		super.setComponentValue(name, object);
 	}

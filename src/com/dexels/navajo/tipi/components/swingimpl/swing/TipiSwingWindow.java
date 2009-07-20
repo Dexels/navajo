@@ -79,10 +79,7 @@ public class TipiSwingWindow extends JInternalFrame {
 		firePropertyChange("title", old, title);
 	}
 
-	public void setIconUrl(URL u) {
-		setFrameIcon(new ImageIcon(u));
-	}
-
+	
 	public void setX(int x) {
 		Rectangle r = getBounds();
 		int oldX = r.x;
@@ -115,6 +112,9 @@ public class TipiSwingWindow extends JInternalFrame {
 		firePropertyChange("w", oldW, w);
 	}
 		
+	public void setIconUrl(URL u) {
+		setFrameIcon(new ImageIcon(u));
+	}
 
 	public void setIconUrl(Object u) {
 		setFrameIcon(getIcon(u));
