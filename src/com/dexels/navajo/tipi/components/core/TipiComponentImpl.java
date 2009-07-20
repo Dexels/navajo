@@ -447,36 +447,36 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 	public void setId(String id) {
 		// System.err.println("CHANGING ID. FROM: "+myId+" to: "+id+".........
 		// VERIFYING PARENT. ");
-		if (getTipiParent() != null) {
-			getTipiParent().updateId(this, myId, id);
-		}
+//		if (getTipiParent() != null) {
+//			getTipiParent().updateId(this, myId, id);
+//		}
 		myId = id;
 	}
 
-	public void updateId(TipiComponent tc, String oldId, String id) {
-		if (!tipiComponentMap.containsValue(tc)) {
-			System.err.println("!!!!!!   Can not update id: Component not found.");
-		}
-		if (!tipiComponentList.contains(tc)) {
-			System.err.println("!!!!!!   Can not update id: Component not found in list.");
-		}
-		if (!tipiComponentMap.containsKey(oldId)) {
-			System.err.println("!!!!!!   Can not update id: Component not found in map.");
-		}
-		tipiComponentMap.remove(oldId);
-		tipiComponentMap.put(id, tc);
-
-	}
+//	public void updateId(TipiComponent tc, String oldId, String id) {
+//		if (!tipiComponentMap.containsValue(tc)) {
+//			System.err.println("!!!!!!   Can not update id: Component not found.");
+//		}
+//		if (!tipiComponentList.contains(tc)) {
+//			System.err.println("!!!!!!   Can not update id: Component not found in list.");
+//		}
+//		if (!tipiComponentMap.containsKey(oldId)) {
+//			System.err.println("!!!!!!   Can not update id: Component not found in map.");
+//		}
+//		tipiComponentMap.remove(oldId);
+//		tipiComponentMap.put(id, tc);
+//
+//	}
 
 	private final void removeChildComponent(TipiComponent tc) {
 		if (!tipiComponentMap.containsValue(tc)) {
-			System.err.println("!!!!!!   Can not update id: Component not found.");
+			System.err.println("!!!!!!   Can not removeChildComponent: Component not found.");
 		}
 		if (!tipiComponentList.contains(tc)) {
-			System.err.println("!!!!!!   Can not update id: Component not found in list.");
+			System.err.println("!!!!!!   Can not removeChildComponent : Component not found in list.");
 		}
 		if (!tipiComponentMap.containsKey(tc.getId())) {
-			System.err.println("!!!!!!   Can not update id: Component not found in map.");
+			System.err.println("!!!!!!   Can not removeChildComponent: Component not found in map.");
 		}
 		tipiComponentList.remove(tc);
 		tipiComponentMap.remove(tc.getId());
@@ -1352,11 +1352,11 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 	public TipiComponent addComponentInstance(TipiContext context, XMLElement inst, Object constraints) throws TipiException {
 		// TODO add TipiEvent as parameter
 		TipiComponent ti = (context.instantiateComponent(inst, null, null,this));
-		ti.setParent(this);
-		ti.setConstraints(constraints);
 		if (ti.getId() == null) {
 			ti.setId(myContext.generateComponentId(this, ti));
 		}
+		ti.setParent(this);
+		ti.setConstraints(constraints);
 		addComponent(ti, context, constraints);
 
 		return ti;
@@ -1436,6 +1436,25 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 
 	public void runAsyncInEventThread(Runnable r) {
 		myContext.runAsyncInEventThread(r);
+	}
+	
+	public TipiComponent findTipiComponentById(String id) {
+		System.err.println("Component: "+getId()+" - "+getClass()+" looking for: "+id);
+		for (int i = 0; i < getChildCount(); i++) {
+			TipiComponent tc = getTipiComponent(i);
+			if(id.equals(tc.getId())) {
+				System.err.println("Target found!");
+				return tc;
+			}
+		}
+		for (int i = 0; i < getChildCount(); i++) {
+			TipiComponent tc = getTipiComponent(i);
+			TipiComponent tt = tc.findTipiComponentById(id);
+			if(tt!=null) {
+				return tt;
+			}
+		}
+		return null;
 	}
 
 }

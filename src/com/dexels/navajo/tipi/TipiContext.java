@@ -1,11 +1,13 @@
 package com.dexels.navajo.tipi;
 
+import java.awt.Window;
 import java.beans.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
 
 import javax.imageio.spi.*;
+import javax.swing.RootPaneContainer;
 
 import tipi.*;
 
@@ -142,21 +144,20 @@ public abstract class TipiContext {
 	// TODO, fix and remove
 	protected final ClientInterface clientInterface;
 
-	public TipiContext(TipiContext parent) {
-		this();
-		myParentContext = parent;
-	}
+	protected final TipiApplicationInstance myApplication;
 
-	// I didn't really understand the warning
-	@SuppressWarnings("unchecked")
-	public TipiContext() {
+
+	public TipiContext(TipiApplicationInstance myApplication, TipiContext parent) {
+//		this();
+		myParentContext = parent;
+		this.myApplication = myApplication;
 		initializeExtensions(ServiceRegistry.lookupProviders(TipiExtension.class));
 		
-		try {
-			initializeExtensions(ServiceRegistry.lookupProviders(TipiExtension.class,ClassLoader.getSystemClassLoader()));
-		} catch (SecurityException e1) {
-			System.err.println("Can't reach the system class loader. Bugger. Security issues.");
-		}
+//		try {
+//			initializeExtensions(ServiceRegistry.lookupProviders(TipiExtension.class,ClassLoader.getSystemClassLoader()));
+//		} catch (SecurityException e1) {
+//			System.err.println("Can't reach the system class loader. Bugger. Security issues.");
+//		}
 		
 		
 		clientInterface = NavajoClientFactory.createDefaultClient();
@@ -170,8 +171,8 @@ public abstract class TipiContext {
 //			fakeJars = true;
 	//		fakeExtensions();
 		}
-		System.err.println("Warning: Fake mode forced!");
-			fakeExtensions();
+//		System.err.println("Warning: Fake mode forced!");
+//			fakeExtensions();
 		
 		NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
 		tipiResourceLoader = new ClassPathResourceLoader();
@@ -185,7 +186,11 @@ public abstract class TipiContext {
 		} catch (Throwable e) {
 			hasDebugger = false;
 		}
+	}
 
+
+	public TipiApplicationInstance getApplicationInstance() {
+		return myApplication;
 	}
 	
 	public final ClassManager getClassManager() {
@@ -1114,7 +1119,7 @@ public abstract class TipiContext {
 			// irrelevant.
 			tc = (TipiComponent) instantiateClass(clas, null, instance,parent);
 		}
-		tc.setParent(parent);
+	//	tc.setParent(parent);
 		
 		if (t == null) {
 			tc.loadStartValues(instance, event);
@@ -1126,7 +1131,7 @@ public abstract class TipiContext {
 					continue;
 				}
 				Object o = t.getEvaluatedParameterValue(param, event);
-				if (param.equals("constraint")) {
+				if (param.equals("constraint") || param.equals("constraints")) {
 					tc.setConstraints(o);
 				} else {
 					tc.setValue(param, o);
@@ -2165,7 +2170,7 @@ public abstract class TipiContext {
 
 	public void exit() {
 		System.err.println("Parsing took: "+parseTime);
-		System.exit(0);
+//		System.exit(0);
 	}
 
 	public void addShutdownListener(ShutdownListener sl) {
@@ -2180,6 +2185,16 @@ public abstract class TipiContext {
 		// prevent multishutdown
 		if (contextShutdown) {
 			return;
+		}
+		
+		
+		RootPaneContainer rpc =  (RootPaneContainer) getTopLevel();
+		System.err.println("Doing allright!");
+		if(rpc instanceof Window) {
+			Window w = (Window)rpc;
+			w.setVisible(false);
+			w.dispose();
+			System.err.println("Ciao!");
 		}
 		if (myThreadPool != null) {
 			myThreadPool.shutdown();

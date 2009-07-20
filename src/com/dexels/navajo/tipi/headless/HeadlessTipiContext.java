@@ -12,7 +12,7 @@ public class HeadlessTipiContext extends TipiContext {
 
 	
 	public HeadlessTipiContext() {
-		super();
+		super(null,null);
 //		myInvokingThread = Thread.currentThread(); 
 	}
 	

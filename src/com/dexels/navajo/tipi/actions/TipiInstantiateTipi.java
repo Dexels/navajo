@@ -102,6 +102,7 @@ public class TipiInstantiateTipi extends TipiAction {
 		TipiComponent inst = context.instantiateComponent(xe, event, this,parent);
 		inst.setHomeComponent(true);
 		inst.setId(id);
+		System.err.println("Adding component with id: "+id+" constraints: "+constraints);
 		parent.addComponent(inst, context, constraints);
 
 		context.fireTipiStructureChanged(inst);
@@ -136,7 +137,6 @@ public class TipiInstantiateTipi extends TipiAction {
 			constraints = getEvaluatedParameter("constraint", event);
 			if (constraints != null) {
 				constraints = ((Operand) constraints).value;
-				System.err.println("Constraints::::::: "+constraints);
 			}
 			// TODO Do extra type checking
 //			Operand expectTypeOperand = getEvaluatedParameter("expectType", event);
@@ -147,7 +147,6 @@ public class TipiInstantiateTipi extends TipiAction {
 
 			Object o = evaluate((getParameter("location").getValue()), null).value;
 			if (String.class.isInstance(o)) {
-				System.err.println("Location evaluated to a string, trying to get Tipi from that string (" + o.toString() + ")");
 				o = evaluate("{" + o.toString() + "}", null).value;
 			}
 			parent = (TipiComponent) o;

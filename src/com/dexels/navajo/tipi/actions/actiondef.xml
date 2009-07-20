@@ -35,6 +35,12 @@
 		</description>
    </tipiaction>
 
+   <tipiaction name="reboot" class="TipiReboot" package="com.dexels.navajo.tipi.actions">
+		<description>
+			Exits the current Tipi application instance. Restarts the current tipi application with the same startup. The context will be rebuilt, only the vm will remain. 
+		</description>
+   </tipiaction>
+
    <tipiaction name="registerPush" class="TipiRegisterPush" package="com.dexels.navajo.tipi.actions">
       <param name="agentId" type="string" default="" />
     </tipiaction>
@@ -162,7 +168,7 @@
       <param name="constraint" type="string" required="false" />
    </tipiaction>
    <tipiaction name="dispose" class="TipiDispose" package="com.dexels.navajo.tipi.actions">
-      <param name="path" type="tipi" required="true" />
+      <param name="path" type="component" required="true" />
    </tipiaction>
    <tipiaction name="disposeChildren" class="TipiDisposeChildren" package="com.dexels.navajo.tipi.actions">
       <param name="path" type="tipi" required="true" />

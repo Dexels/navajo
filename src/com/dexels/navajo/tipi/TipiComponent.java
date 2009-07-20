@@ -193,7 +193,7 @@ public interface TipiComponent extends TipiEventListener, TipiLink {
 
 	public void setCurrentEvent(TipiEvent event);
 
-	public void updateId(TipiComponent tc, String oldId, String id);
+//	public void updateId(TipiComponent tc, String oldId, String id);
 
 	/**
 	 * This returns the 'real' ui-component of this Tipi component.
@@ -244,6 +244,8 @@ public interface TipiComponent extends TipiEventListener, TipiLink {
 
 	public void runAsyncInEventThread(Runnable r);
 	public void addedToParentContainer(TipiComponent parentTipiComponent, Object parentContainer, Object container, Object constriants);
+
+	public TipiComponent findTipiComponentById(String id);
 
 
 }
