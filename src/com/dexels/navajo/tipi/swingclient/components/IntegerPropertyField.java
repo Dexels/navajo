@@ -70,6 +70,9 @@ public final void setProperty(Property p) {
 
       //Toolkit.getDefaultToolkit().beep();
     }
+    if(p.getLength()>0) {
+   	 myDocument.setMaxLength(p.getLength());
+    }
     Object val = p.getTypedValue();
     if (val == null) {
       setText("");
@@ -140,8 +143,9 @@ public final void update() {
 }
 
 final class WholeNumberDocument
-    extends PlainDocument {
+    extends BoundedLengthDocument {
   @Override
+  
 public final void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
     char[] source = str.toCharArray();
     char[] result = new char[source.length];
@@ -151,6 +155,7 @@ public final void insertString(int offs, String str, AttributeSet a) throws BadL
         result[j++] = source[i];
       }
     }
+//    System.err.println("Aap: "+new String(result));
     super.insertString(offs, new String(result, 0, j), a);
   }
 }

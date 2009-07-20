@@ -15,33 +15,40 @@ import com.dexels.navajo.document.*;
 
 
 class BoundedLengthDocument extends PlainDocument {
-  private Property myProperty = null;
+//  private Property myProperty = null;
   private String myCapitalizationMode = "off";
   private boolean check = true;
 
-  public void setProperty(Property p) {
-    myProperty = p;
-  }
+  private int maxLength = -1;
+  
+  public int getMaxLength() {
+	return maxLength;
+}
+
+public void setMaxLength(int maxLength) {
+	this.maxLength = maxLength;
+}
+
+
 
   @Override
 public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
 //    getLength()
 //    System.err.println("Insert");
-    if (myProperty != null) {
-      int length = myProperty.getLength();
+//      int maxlength = myProperty.getLength();
       // Check the length, on output properties length is often not specified, this way the text will still be visible
-      if(length <= 0){
-        length = 255;
+      if( getMaxLength() <= 0){
+        setMaxLength( 255);
       }
       if (str == null) {
         return;
       }
-      if (getLength() < length) {
+      if (getLength() < getMaxLength()) {
         char[] source = str.toCharArray();
         char[] result = new char[source.length];
         int j = 0;
         for (int i = 0; i < result.length; i++) {
-          if (getLength() + i < length) {
+          if (getLength() + i < getMaxLength()) {
             result[j++] = source[i];
           }
           else {
@@ -52,7 +59,6 @@ public void insertString(int offs, String str, AttributeSet a) throws BadLocatio
         super.insertString(offs, new String(result, 0, j), a);
         updateCapitalization();
       }
-    }
   }
   @Override
 protected void postRemoveUpdate(DefaultDocumentEvent chng) {

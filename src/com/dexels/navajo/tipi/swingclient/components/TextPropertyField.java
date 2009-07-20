@@ -77,7 +77,7 @@ public final void update() {
 
   @Override
 public void setProperty(Property p) {
-    myDocument.setProperty(p);
+    myDocument.setMaxLength(p.getLength());
     if(p != null){
       if (!(p.getType().equals(Property.STRING_PROPERTY) || p.getType().equals(Property.EXPRESSION_PROPERTY) || p.getType().equals(Property.MEMO_PROPERTY)|| p.getType().equals(Property.TIPI_PROPERTY))) {
         //Toolkit.getDefaultToolkit().beep();

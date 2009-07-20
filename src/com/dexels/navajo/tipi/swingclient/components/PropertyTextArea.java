@@ -16,7 +16,7 @@ public class PropertyTextArea extends JTextArea implements PropertyControlled   
 
 
   public void setProperty(Property p){
-    myDocument.setProperty(p);
+    myDocument.setMaxLength(p.getLength());
     initProperty = p;
     textValue = (String)p.getTypedValue();
     String currentText = getText();
