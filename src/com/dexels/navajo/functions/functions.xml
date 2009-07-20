@@ -106,7 +106,7 @@
         <input>any</input>
         <result>integer</result>
     </function>
-        <function name="ToLong" class="com.dexels.navajo.functions.ToInteger">
+        <function name="ToLong" class="com.dexels.navajo.functions.ToLong">
         <description>Get an long representation of given object.</description>
         <input>any</input>
         <result>long</result>
@@ -364,7 +364,7 @@
     
     
     <function name="GetMessage" class="com.dexels.navajo.functions.GetMessage">
-        <description>Gets a message from an array message</description>
+        <description>Gets a message from an array message. Or: GetMessage('MessagePath') will retrieve the message from the current navajo (Used for scripts)</description>
         <input/>
         <result/>
     </function>
