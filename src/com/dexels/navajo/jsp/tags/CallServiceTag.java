@@ -1,5 +1,6 @@
 package com.dexels.navajo.jsp.tags;
 
+import java.io.IOException;
 import java.io.StringWriter;
 
 import javax.servlet.jsp.JspException;
@@ -31,23 +32,33 @@ public class CallServiceTag extends BaseNavajoTag {
 	
 	public int doStartTag() throws JspException {
 		assertTest();
+		if(myService==null || "".equals(myService)) {
+			throw new JspException("Error calling service: No service supplied!");
+		}
 		try {
 			if (myNavajo==null) {
 				getNavajoContext().callService(myService);
 			} else {
-				getNavajoContext().callService(myService, getNavajoContext().getNavajo(myNavajo));
+				Navajo navajo = getNavajoContext().getNavajo(myNavajo);
+				try {
+					getPageContext().getOut().write("InputNavajo Detected!");
+					navajo.write(getPageContext().getOut());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (NavajoException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				getNavajoContext().callService(myService, navajo);
 			}
 		} catch (ClientException e) {
 			e.printStackTrace();
 			throw new JspException("Navajo service error while calling service: "+myService,e);
 		}
 		Navajo nn = null;
-		try {
 			nn = getNavajoContext().getNavajo(myService);
-		} catch (ClientException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		if(nn==null) {
 			throw new JspException("Unknown Navajo service error while calling service: "+myService);
 		}

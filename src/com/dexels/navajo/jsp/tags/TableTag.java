@@ -33,13 +33,10 @@ public class TableTag extends BaseNavajoTag {
 			}
 		
 			Message m = n.getMessage(myMessage);
-			getNavajoContext().getOutputWriter().writeTable(m, getPageContext().getOut());
+			getNavajoContext().getOutputWriter().writeTable(m, getPageContext().getOut(),true);
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (ClientException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			}
 		return EVAL_BODY_INCLUDE;
 	}
 

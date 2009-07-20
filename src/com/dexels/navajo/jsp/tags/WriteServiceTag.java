@@ -13,6 +13,15 @@ import com.dexels.navajo.document.NavajoException;
 public class WriteServiceTag extends BaseNavajoTag  {
 
 	private String myService;
+	private boolean includeProperties = false;
+
+	public boolean isIncludeProperties() {
+		return includeProperties;
+	}
+
+	public void setIncludeProperties(boolean includeProperties) {
+		this.includeProperties = includeProperties;
+	}
 
 	public void setService(String service) {
 		myService = service;
@@ -26,9 +35,7 @@ public class WriteServiceTag extends BaseNavajoTag  {
 			} else {
 				n = getNavajoContext().getNavajo(myService);
 			}
-			getNavajoContext().writeService(n,getPageContext());
-		} catch (ClientException e) {
-			e.printStackTrace();
+			getNavajoContext().writeService(n,getPageContext(),isIncludeProperties());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

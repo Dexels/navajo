@@ -10,7 +10,16 @@ import com.dexels.navajo.document.Navajo;
 
 public class MessageTag extends BaseNavajoTag {
 
-	private String myMessage;
+	private String messsageName;
+	private Message message;
+
+	public Message getMessage() {
+		return message;
+	}
+
+	public void setMessage(Message message) {
+		this.message = message;
+	}
 
 	@Override
 	public int doEndTag() throws JspException {
@@ -18,22 +27,31 @@ public class MessageTag extends BaseNavajoTag {
 		return 0;
 	}
 
-	public void setMessage(String message) {
-		myMessage = message;
+	public void setMessageName(String messageName) {
+		messsageName = messageName;
 	}
 
 	public int doStartTag() throws JspException {
 			Navajo n;
 			Message parent = getNavajoContext().getMessage();
-			if(parent!=null) {
-				Message mmm = parent.getMessage(myMessage);
-//				getNavajoContext().writeMessage(mmm, getPageContext());
-				getNavajoContext().pushMessage(mmm);
+			if(message==null) {
+				if(parent!=null) {
+					message = parent.getMessage(messsageName);
+				} else {
+					n = getNavajoContext().getNavajo();
+					message = n.getMessage(messsageName);
+				}
 			}
-			n = getNavajoContext().getNavajo();
-			Message mmm = n.getMessage(myMessage);
-			getNavajoContext().pushMessage(mmm);
-//			getNavajoContext().writeMessage(mmm, getPageContext());
+			getNavajoContext().pushMessage(message);
+			
 		return EVAL_BODY_INCLUDE;
 	}
+
+	@Override
+	public void release() {
+		message = null; 
+		messsageName = null;
+		super.release();
+	}
+	
 }

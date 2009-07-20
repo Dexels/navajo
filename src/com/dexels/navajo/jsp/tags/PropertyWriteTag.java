@@ -5,44 +5,37 @@ import java.io.IOException;
 import javax.servlet.jsp.JspException;
 
 import com.dexels.navajo.client.ClientException;
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
 
-public class DescriptionTag extends BaseNavajoTag  {
+public class PropertyWriteTag extends BaseNavajoTag {
 
 	private String myProperty;
-	private String myService;
 
 	public int doEndTag() throws JspException {
+//		getNavajoContext().setProperty(null);
 		return 0;
 	}
-	
+
 	public void setProperty(String property) {
 		myProperty = property;
 	}
-
+	
 	public int doStartTag() throws JspException {
 		try {
-			Navajo n;
-			if(myService==null) {
-				n = getNavajoContext().getNavajo();
+			Navajo n = getNavajoContext().getNavajo();
+			Message m = getNavajoContext().getMessage();
+			if (m == null) {
+				getNavajoContext().writeProperty(n.getProperty(myProperty), getPageContext());
 			} else {
-				n = getNavajoContext().getNavajo(myService);
+				getNavajoContext().writeProperty(m.getProperty(myProperty), getPageContext());
 			}
-			Property p = n.getProperty(myProperty);
-			getPageContext().getOut().write(p.getDescription());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return EVAL_BODY_INCLUDE;
-	}
-
-	public void setService(String service) {
-		myService = service;
-	}
-
+	} 
 	
-
-
 
 }

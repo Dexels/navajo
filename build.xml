@@ -7,12 +7,11 @@
   <property name="archive" value="${ant.project.name}.jar"/>
 
   <target name="archive">
+  	<echo message="Staring build"/>
     <jar jarfile="${archive}">
       <fileset dir="${build}"/>
     </jar>
-  	<copy file="${archive}" todir="../GeoJsp/WebContent/WEB-INF/lib">
-		
-  	</copy>
+  	<copy file="${archive}" todir="../GeoJsp/WebContent/WEB-INF/lib"/>
   </target>
 </project>
 <!-- EOF: $RCSfile$ -->

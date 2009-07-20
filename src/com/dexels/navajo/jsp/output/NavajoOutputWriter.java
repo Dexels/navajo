@@ -12,33 +12,48 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.jsp.NavajoContext;
 
 public class NavajoOutputWriter implements OutputWriter {
 
-	public void writeMessage(Message mm, Writer w) throws IOException {
-		w.write("<div class='message'>");
+	private final NavajoContext myContext;
+	public NavajoOutputWriter(NavajoContext c) {
+		myContext = c;
+	}
+	public void writeMessage(Message mm, Writer w, boolean includeProperties) throws IOException {
+		if(includeProperties) {
+//				w.write("<a name='"+getContext().createMessagePath(mm)+"'/>\n");
+		}
+		w.write("<div class='"+(includeProperties?"important":"messagetree")+"'>\n");
 
 		String name = mm.getName();
 		if (mm.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT)) {
 			name = name + " (" + mm.getIndex() + ")";
 		}
-		w.write("MESSAGE TYPE: "+mm.getType());
 		if(mm.getType().equals(Message.MSG_TYPE_ARRAY)) {
 			
 			writeTableHeader(mm, w);
 			w.write("<hr/>");
 		}
-		w.write("<h3>" + name + "</h3>");
-		for (Message m : mm.getAllMessages()) {
-			writeMessage(m, w);
+		if(!includeProperties) {
+//			w.write("<a href='#"+getContext().createMessagePath(mm) +"'>" + name + "</a>\n");
+			
+		} else {
+			w.write("<h3>" + name + "</h3>");
+
 		}
-		for (Property m : mm.getAllProperties()) {
-			writeProperty(m, w);
+		for (Message m : mm.getAllMessages()) {
+			writeMessage(m, w,includeProperties);
+		}
+		if(includeProperties) {
+			for (Property m : mm.getAllProperties()) {
+				writeProperty(m, w);
+			}
 		}
 		w.write("</div>");
 	}
 
-	public void writeTableRow(Message m, Writer w) throws IOException {
+	public void writeTableRow(Message m, Writer w,boolean includeProperties) throws IOException {
 		List<Property> pp = m.getAllProperties();
 		w.write("<tr>");
 		for (Property property : pp) {
@@ -68,22 +83,25 @@ public class NavajoOutputWriter implements OutputWriter {
 	}
 	
 	public void writePropertyDescription(Property p, Writer w) throws IOException {
-		//w.write("<div class='property_label'>");
+		w.write("<div class='float_right'>");
 		if (p.getDescription() != null && !p.getDescription().equals("")) {
 			w.write(p.getDescription());
 		} else {
 			w.write(p.getName());
 		}
-		//w.write("</div>");
+		w.write("</div>");
 	}
 	
 	public void writeProperty(Property p, Writer w) throws IOException {
+		w.write("<div class='info'>");
 		writePropertyDescription(p, w);
 		if (p.getDirection().equals(Property.DIR_IN)) {
 			writeInProperty(p,w);
 		} else {
 			writeOutProperty(p, w);
 		}
+		w.write("</div>");
+	
 	}
 	
 	private void writeOutProperty(Property p, Writer w) throws IOException {
@@ -130,17 +148,17 @@ public class NavajoOutputWriter implements OutputWriter {
 			w.write("</input>");
 			System.err.println(w.toString());
 		}
+
 	}
 
-	public void writeService(Navajo service, Writer w) throws IOException {
+	public void writeService(Navajo service, Writer w, boolean includeProperties) throws IOException {
 		w.write("<div class='wrap'>");
-		w
-				.write("<a href='./NavajoTester'><img src='resource/logo-dexels.gif' border='0' alt='Back to the Navajo Tester'/></a>");
+//		w.write("<a href='./NavajoTester'><img src='resource/logo-dexels.gif' border='0' alt='Back to the Navajo Tester'/></a>");
 
-		w.write("<h1>" + service.getHeader().getRPCName() + "</h1>");
+		w.write("<h2>" + service.getHeader().getRPCName() + "</h2>");
 		try {
 			for (Message m : service.getAllMessages()) {
-				writeMessage(m, w);
+				writeMessage(m, w,includeProperties);
 			}
 			for (Method m : service.getAllMethods()) {
 				writeMethod(m.getName(), w);
@@ -152,7 +170,7 @@ public class NavajoOutputWriter implements OutputWriter {
 
 	}
 
-	public void writeTable(Message mm, Writer w) throws IOException {
+	public void writeTable(Message mm, Writer w, boolean includeProperties) throws IOException {
 		if (!mm.getType().equals(Message.MSG_TYPE_ARRAY)) {
 			throw new IllegalArgumentException(
 					"Can not call writeTable on a non-array message");
@@ -160,7 +178,7 @@ public class NavajoOutputWriter implements OutputWriter {
 		w.write("<table> ");
 		writeTableHeader(mm,w);
 		for (Message m : mm.getAllMessages()) {
-			writeTableRow(m, w);
+			writeTableRow(m, w,includeProperties);
 		}
 		w.write("</table> ");
 
@@ -189,6 +207,10 @@ public class NavajoOutputWriter implements OutputWriter {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public NavajoContext getContext() {
+		return myContext;
 	}
 
 }

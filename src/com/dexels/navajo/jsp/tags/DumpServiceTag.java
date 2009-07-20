@@ -19,11 +19,7 @@ public class DumpServiceTag extends BaseNavajoTag  {
 	public int doStartTag() throws JspException {
 		Navajo n = null;
 		if(myService!=null) {
-			try {
 				n = getNavajoContext().getNavajo(myService);
-			} catch (ClientException e) {
-				throw new JspException("Error dumping service. Service: "+myService+" specified, but not found.",e);
-			}
 		} else {
 			n = getNavajoContext().getNavajo();
 			myService = n.getHeader().getRPCName();
@@ -39,8 +35,6 @@ public class DumpServiceTag extends BaseNavajoTag  {
 			}
 			getPageContext().getOut().write("Dumped: " + myService);
 		} catch (NavajoException e) {
-			e.printStackTrace();
-		} catch (ClientException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

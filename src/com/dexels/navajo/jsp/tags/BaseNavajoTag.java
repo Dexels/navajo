@@ -16,7 +16,7 @@ public abstract class BaseNavajoTag implements Tag {
 
 
 	protected NavajoContext getNavajoContext() {
-		return (NavajoContext) getPageContext().findAttribute("NavajoContext");
+		return (NavajoContext) getPageContext().findAttribute("navajoContext");
 	}
 	
 	public Tag getParent() {

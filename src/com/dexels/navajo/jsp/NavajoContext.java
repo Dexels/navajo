@@ -23,26 +23,36 @@ public class NavajoContext {
 
 	private ClientInterface myClient;
 	private final Map<String, Navajo> myNavajoMap = new HashMap<String, Navajo>();
+	private final Map<Navajo, String> myInverseNavajoMap = new HashMap<Navajo, String>();
 	private final Stack<Object> myElementStack = new Stack<Object>();
 //	private final PageContext myPageContext;
-	private final OutputWriter outputPlugin = new NavajoOutputWriter();
-	private Property currentProperty = null;
-	
-
-	public Property getProperty() {
-		return currentProperty;
-	}
-	public void setProperty(Property currentProperty) {
-		this.currentProperty = currentProperty;
-	}
-	
+	private final OutputWriter outputPlugin = new NavajoOutputWriter(this);
+//	private Property currentProperty = null;
+//	
+//
+//	
+//	
+//	public Property getProperty() {
+//		return currentProperty;
+//	}
+//	public void setProperty(Property currentProperty) {
+//		this.currentProperty = currentProperty;
+//	}
+//	
 	public NavajoContext() {
 	}
 
 
+	public void reset() {
+		myNavajoMap.clear();
+		myInverseNavajoMap.clear();
+		myElementStack.clear();
+	}
+	
 	public void callService(String service) throws ClientException {
 		Navajo n = myClient.doSimpleSend(service);
 		myNavajoMap.put(service, n);
+		myInverseNavajoMap.put(n, service);
 		myElementStack.push(n);
 	}
 	
@@ -50,11 +60,16 @@ public class NavajoContext {
 		return myNavajoMap;
 	}
 
+	public String getServiceName(Navajo n) {
+		return myInverseNavajoMap.get(n);
+	}
+	
 	public void callService(String service, Navajo input)
 			throws ClientException {
 		Navajo n = myClient.doSimpleSend(input, service);
 			n.getHeader().setRPCName(service);
 		myNavajoMap.put(service, n);
+		myInverseNavajoMap.put(n, service);
 		myElementStack.push(n);
 	}
 
@@ -64,32 +79,39 @@ public class NavajoContext {
 
 
 	
-	public Navajo getNavajo(String name) throws ClientException {
+	public Navajo getNavajo(String name) {
 
 		Navajo navajo = myNavajoMap.get(name);
 		if (navajo == null) {
-			throw new ClientException(1, 1, "Unknown service: " + name);
+			throw new IllegalStateException( "Unknown service: " + name+" known services: "+myNavajoMap.keySet());
 		}
 		return navajo;
 	}
 
 	public Property getProperty(String service, String path)
-			throws ClientException {
+			{
 		Navajo n = getNavajo(service);
 		Property p = n.getProperty(path);
 		if (p == null) {
-			throw new ClientException(1, 1, "Unknown property: " + path
+			throw new IllegalStateException( "Unknown property: " + path
 					+ " in service " + service);
 		}
 		return p;
 	}
 
 	public Object getPropertyValue(String service, String path)
-			throws ClientException {
+		 {
 		Property p = getProperty(service, path);
 		return p.getTypedValue();
 	}
 
+	public String getNavajoName() {
+		Navajo n = getNavajo();
+		if(n==null) {
+			return null;
+		}
+		return myInverseNavajoMap.get(n);
+	}
 	public Navajo getNavajo() {
 		if (myElementStack.isEmpty()) {
 			throw new IllegalStateException("No default navajo found. Either supply a name explicitly, or make sure you are within a 'call' tag");
@@ -120,6 +142,18 @@ public class NavajoContext {
 		}
 		return (Message) top;
 	}
+	
+	public Property getProperty() {
+		if (myElementStack.isEmpty()) {
+			throw new IllegalStateException(
+					"No default myMessageStack found. Either supply a name explicitly, or make sure you are within a 'message' tag");
+		}
+		Object top = myElementStack.peek();
+		if(!(top instanceof Property)) {
+			return null;
+		}
+		return (Property) top;
+	}
 
 	public void popMessage() {
 		myElementStack.pop();
@@ -129,48 +163,46 @@ public class NavajoContext {
 		myElementStack.push(m);
 	}
 	
+	public void pushProperty(Property property) {
+		myElementStack.push(property);
+		
+	}
 	public OutputWriter getOutputWriter() {
 		return outputPlugin;
 	}
 	
-	public void writeService(Navajo service, PageContext pa) throws IOException {
-		outputPlugin.writeService(service, pa.getOut());
+	public void writeService(Navajo service, PageContext pa, boolean includeProperties) throws IOException {
+		outputPlugin.writeService(service, pa.getOut(),includeProperties);
 	}
 	
-	public void writeMessage(Message message, PageContext pa) throws IOException {
+	public void writeMessage(Message message, PageContext pa, boolean includeProperties) throws IOException {
 
-		outputPlugin.writeMessage(message, pa.getOut());
+		outputPlugin.writeMessage(message, pa.getOut(),includeProperties);
 	}
 
-	private void writeMessageTable(Message message, PageContext pa) throws IOException {
-		outputPlugin.writeTable(message, pa.getOut());
+	private void writeMessageTable(Message message, PageContext pa, boolean includeProperties) throws IOException {
+		outputPlugin.writeTable(message, pa.getOut(),includeProperties);
 	}
 
-	public void writeMessageRow(Message message, PageContext pa) throws IOException {
-		outputPlugin.writeTableRow(message, pa.getOut());
+	public void writeMessageRow(Message message, PageContext pa, boolean includeProperties) throws IOException {
+		outputPlugin.writeTableRow(message, pa.getOut(),includeProperties);
 	}
 
-	public String getMessageRow(Message message, PageContext pa) throws IOException {
+	public String getMessageRow(Message message, PageContext pa, boolean includeProperties) throws IOException {
 		StringWriter sw = new StringWriter();
-		outputPlugin.writeTableRow(message, pa.getOut());
+		outputPlugin.writeTableRow(message, pa.getOut(),includeProperties);
 		return sw.toString();
 	}
 
 	public void writeProperty(Property property, PageContext pa) throws IOException {
-		//pa.getOut().write(property.getValue()); 
-		pa.getOut().write(" ");
 		outputPlugin.writeProperty(property, pa.getOut());
 	}
 
 	public void writePropertyValue(Property property, PageContext pa) throws IOException {
-		//pa.getOut().write(property.getValue()); 
-		pa.getOut().write(" ");
 		outputPlugin.writePropertyValue(property, pa.getOut());
 	}
 	
 	public void writePropertyDescription(Property property, PageContext pa) throws IOException {
-		//pa.getOut().write(property.getValue()); 
-		pa.getOut().write(" ");
 		outputPlugin.writePropertyDescription(property, pa.getOut());
 	}
 	
@@ -212,6 +244,78 @@ public class NavajoContext {
 	
 	public void debug() {
 		
+	}
+	
+
+	public String getMessagePath() {
+		Message m = getMessage();
+		if(m==null) {
+			return null;
+		}
+		return createMessagePath(m);
+	}
+	public String getPropertyPath() {
+		Property p = getProperty();
+		if(p==null) {
+			return null;
+		}
+		return createPropertyPath(p);
+	}
+	
+	private String createMessagePath(Message m) {
+		String navajoName = getServiceName(m.getRootDoc());
+		String msg = m.getFullMessageName();
+		return navajoName+"|"+msg;
+	}
+
+	
+	private String createPropertyPath(Property p) {
+		String navajoName = getServiceName(p.getRootDoc());
+		String prop;
+		try {
+			prop = p.getFullPropertyName();
+			return navajoName+":"+prop;
+		} catch (NavajoException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+
+	public Property parsePropertyPath(String path) {
+		System.err.println("parsing: "+path);
+		if(path.indexOf(":")==-1) {
+			Navajo n = getNavajo();
+			if(n!=null) {
+				return n.getProperty(path);
+			}
+			
+		} else {
+			String[] elts = path.split(":");
+			System.err.println("Getting:"+elts[1]+" from "+elts[0]);
+			Navajo n = getNavajo(elts[0]);
+			return n.getProperty(elts[1]);
+		}
+		return null;
+	}
+	
+	public Map<String,Property> getPropertyElement() {
+		return new PropertyAccessMap(this);
+	}
+
+
+	public void resolvePost(String name, String value) {
+		System.err.println("Resolving: "+name +" value: "+value);
+		if(name.indexOf(":")==-1) {
+			return;
+		}
+		String[] keyVal = name.split(":");
+		String navajo = keyVal[0];
+		String path = keyVal[1];
+		Navajo n = getNavajo(navajo);
+		Property p = n.getProperty(path);
+		p.setValue(value);
 	}
 	
 }
