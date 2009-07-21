@@ -6,20 +6,20 @@ import java.util.Calendar;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
-public final class sysdate extends FunctionInterface {
+public final class Sysdate extends FunctionInterface {
 
   public String remarks() {
-    return "sysdate() returns the current date, with time";
+    return "Sysdate() returns the current date, with time";
   }
   public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {	 
     return new Date();
   }
   public String usage() {
-    return "sysdate()";
+    return "Sysdate()";
   }
 
   public static void main(String [] args) throws Exception {
-    sysdate n = new sysdate();
+    Sysdate n = new Sysdate();
     n.reset();
     Date result = (Date) n.evaluate();
     System.err.println("result = " + result);

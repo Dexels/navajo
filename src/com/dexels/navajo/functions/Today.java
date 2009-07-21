@@ -6,10 +6,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
-public final class today extends FunctionInterface {
+public final class Today extends FunctionInterface {
 
   public String remarks() {
-    return "today() returns the current date, with time at 00:00";
+    return "Today() returns the current date, with time at 00:00";
   }
   public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     Calendar c = Calendar.getInstance();
@@ -19,11 +19,11 @@ public final class today extends FunctionInterface {
     return c.getTime();
   }
   public String usage() {
-    return "today()";
+    return "Today()";
   }
 
   public static void main(String [] args) throws Exception {
-    today n = new today();
+    Today n = new Today();
     n.reset();
     Date result = (Date) n.evaluate();
     System.err.println("result = " + result);
