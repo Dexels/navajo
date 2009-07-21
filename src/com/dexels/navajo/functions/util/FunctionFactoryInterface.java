@@ -39,19 +39,19 @@ public abstract class FunctionFactoryInterface {
 			return fd;
 		} else {
 			// Try with fresh config.
-			synchronized (semaphore) {
-				setInitializing(true);
-				System.err.println("Reread function config, maybe new definition found: " + name);
-				init();
-				setInitializing(false);
-				semaphore.notify();
-			}
-			fd = config.get(name);
-			if ( fd != null ) {
-				return fd;
-			} else {
+//			synchronized (semaphore) {
+//				setInitializing(true);
+//				System.err.println("Reread function config, maybe new definition found: " + name);
+//				init();
+//				setInitializing(false);
+//				semaphore.notify();
+//			}
+//			fd = config.get(name);
+//			if ( fd != null ) {
+//				return fd;
+//			} else {
 				throw new TMLExpressionException("Could not find function definition: " + name);
-			}
+//			}
 		}
 	}
 		
