@@ -38,7 +38,12 @@ public class LocalJnlpBuilder extends BaseJnlpBuilder {
 		for (String path : jars) {
 			XMLElement x = new CaseSensitiveXMLElement("jar");
 			resources.addChild(x);
-			x.setAttribute("href", resourceBase+"/lib/"+path);
+			if (resourceBase==null || "".equals(resourceBase)) {
+				x.setAttribute("href", "lib/"+path);
+				
+			} else {
+				x.setAttribute("href", resourceBase+"/lib/"+path);
+			}
 			String main = mainJar.get(path); 
 			x.setAttribute("main", main==null?"false":"true");
 		}

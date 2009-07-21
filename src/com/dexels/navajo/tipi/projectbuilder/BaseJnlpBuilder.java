@@ -118,8 +118,14 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 			arguments = new HashMap<String, String>();
 		}
 
-		arguments.put("tipiCodeBase", resourceBase+"/tipi/");
-		arguments.put("resourceCodeBase", resourceBase+"/resource/");
+		if (resourceBase==null || "".equals(resourceBase)) {
+//			arguments.put("tipiCodeBase", "tipi");
+//			arguments.put("resourceCodeBase", "resource");
+		} else {
+			arguments.put("tipiCodeBase", resourceBase+"/tipi/");
+			arguments.put("resourceCodeBase", resourceBase+"/resource/");
+		}
+
 		appendArguments(app, java, arguments);
 		appendArguments(app, java, params);
 
