@@ -27,7 +27,7 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 public class TipiPanel extends TipiSwingDataComponentImpl {
 
 	public Object createContainer() {
-		JPanel myPanel = new JPanel();
+		JPanel myPanel = new TipiSwingPanel();
 		TipiHelper th = new TipiSwingHelper();
 		th.initHelper(this);
 		addHelper(th);
