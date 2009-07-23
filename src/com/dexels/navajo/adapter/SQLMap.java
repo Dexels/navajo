@@ -131,6 +131,7 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
   protected final String DEFAULTSRCNAME = "default";
 
   public boolean debug = false;
+  public boolean kill = false;
   public int timeAlert = -1;
   
   public String driver;
@@ -389,6 +390,17 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
     datasource = s;
   }
 
+  /**
+   * Possibility to explictly rollback transactions, by calling kill setKill.
+   * 
+   * @param b
+   */
+  public void setKill(boolean b) {
+	  if ( b ) {
+		  kill();
+	  }
+  }
+  
   public void kill() {
 	  
 	cleanupBinaryStreams();
