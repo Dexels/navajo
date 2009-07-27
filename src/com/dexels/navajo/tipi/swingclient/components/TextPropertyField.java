@@ -22,7 +22,7 @@ import com.dexels.navajo.document.*;
  */
 
 public class TextPropertyField extends PropertyField {
-  private BoundedLengthDocument myDocument = new BoundedLengthDocument();
+  private final BoundedLengthDocument myDocument = new BoundedLengthDocument();
   private String search = "off";
   private ImageIcon searchIcon = new ImageIcon(TextPropertyField.class.getResource("view.png"));
   
@@ -77,9 +77,9 @@ public final void update() {
 
   @Override
 public void setProperty(Property p) {
-    myDocument.setMaxLength(p.getLength());
     if(p != null){
-      if (!(p.getType().equals(Property.STRING_PROPERTY) || p.getType().equals(Property.EXPRESSION_PROPERTY) || p.getType().equals(Property.MEMO_PROPERTY)|| p.getType().equals(Property.TIPI_PROPERTY))) {
+   	 myDocument.setMaxLength(p.getLength());
+        if (!(p.getType().equals(Property.STRING_PROPERTY) || p.getType().equals(Property.EXPRESSION_PROPERTY) || p.getType().equals(Property.MEMO_PROPERTY)|| p.getType().equals(Property.TIPI_PROPERTY))) {
         //Toolkit.getDefaultToolkit().beep();
         try {
           System.err.println("PROPERTY: " + p.getFullPropertyName() + " is not of string type! Value: "+p.getValue()+"");
@@ -131,6 +131,8 @@ public void setProperty(Property p) {
         setCapitalizationMode(caps);
       }
 
+    } else {
+   	 myDocument.setMaxLength(-1);
     }
     super.setProperty(p);
 //    update();
