@@ -36,11 +36,14 @@
 
 package jnlp.sample.servlet;
 
-import javax.xml.parsers.*;
 import java.util.ArrayList;
 import java.util.List;
-import org.xml.sax.*;
-import org.w3c.dom.*;
+
+import org.w3c.dom.Attr;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.Text;
 
 /** Contains handy methods for looking up information
  *  stored in XMLNodes.

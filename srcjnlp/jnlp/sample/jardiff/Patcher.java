@@ -38,7 +38,6 @@ package jnlp.sample.jardiff;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URL;
 
 /**
  * Patcher describes the necessary method to apply and create deltas.

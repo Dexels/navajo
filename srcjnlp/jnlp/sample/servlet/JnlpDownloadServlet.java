@@ -36,11 +36,14 @@
 
 package jnlp.sample.servlet;
 
-import java.io.*;
-import java.util.*;
-import java.net.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.io.IOException;
+import java.util.ResourceBundle;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * This Servlet class is an implementation of JNLP Specification's

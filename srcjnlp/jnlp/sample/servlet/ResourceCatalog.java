@@ -35,17 +35,21 @@
  */
 
 package jnlp.sample.servlet;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
-import java.io.File;
-import java.io.BufferedInputStream;
+
 import javax.servlet.ServletContext;
-import javax.xml.parsers.*;
-import org.xml.sax.*;
-import org.w3c.dom.*;
-import jnlp.sample.util.VersionString;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import jnlp.sample.util.VersionID;
+import jnlp.sample.util.VersionString;
+
+import org.w3c.dom.Document;
+import org.xml.sax.SAXParseException;
 
 public class ResourceCatalog {
     public static final String VERSION_XML_FILENAME = "version.xml";

@@ -35,10 +35,15 @@
  */
 
 package jnlp.sample.servlet;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.MessageFormat;
-import java.util.*;
-import java.io.*;
-import javax.servlet.*;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 
 /* A loging object used by the servlets */
 public class Logger {

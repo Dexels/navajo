@@ -35,13 +35,20 @@
  */
 
 package jnlp.sample.servlet;
-import java.io.*;
-import java.util.*;
-import jnlp.sample.jardiff.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import jnlp.sample.util.VersionString;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.StringTokenizer;
+
+import javax.servlet.ServletContext;
+
+import jnlp.sample.jardiff.JarDiff;
+import jnlp.sample.util.VersionString;
 /*
  * A class that generates and caches information about JarDiff files
  *

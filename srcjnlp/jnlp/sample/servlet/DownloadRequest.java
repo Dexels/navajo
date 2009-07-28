@@ -37,8 +37,9 @@
 package jnlp.sample.servlet;
 import java.io.File;
 import java.util.ArrayList;
-import javax.servlet.*;
-import javax.servlet.http.*;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 
 /** 
  * The DownloadRequest incapsulates all the data in a request
