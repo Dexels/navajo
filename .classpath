@@ -4,5 +4,8 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/ant.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/TipiBuildLibrary"/>
+	<classpathentry kind="lib" path="lib/cos.jar"/>
+	<classpathentry kind="lib" path="lib/commons-fileupload-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/ant-launcher.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

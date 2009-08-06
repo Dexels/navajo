@@ -14,7 +14,7 @@ public class TipiBuildLocalJnlp extends BaseTipiClientTask {
 	public void execute() throws BuildException {
 		try {
 			LocalJnlpBuilder l = new LocalJnlpBuilder();
-			l.build(repository,developmentRepository, extensions, getProject().getBaseDir(),getProject().getBaseDir().toURI().toURL().toString(),"Local.jnlp",null);
+			l.build(repository,developmentRepository, extensions, getProject().getBaseDir(),getProject().getBaseDir().toURI().toURL().toString(),"Local.jnlp",null,false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

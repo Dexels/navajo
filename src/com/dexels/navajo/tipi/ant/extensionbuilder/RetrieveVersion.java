@@ -46,8 +46,11 @@ public class RetrieveVersion extends org.apache.tools.ant.Task {
 		File pomFile = new File(getProject().getBaseDir(),"pom.xml");
 		if(!pomFile.exists()) {
 				System.err.println("No version found.");
-				getProject().setProperty("tipiComponentVersion", "unknown");
-				return;
+				pomFile = new File(getProject().getBaseDir(),"version.xml");
+				if(!pomFile.exists()) {
+					getProject().setProperty("tipiComponentVersion", "unknown");
+					return;
+				}
 		}
 		XMLElement pomXml = new CaseSensitiveXMLElement();
 		try {

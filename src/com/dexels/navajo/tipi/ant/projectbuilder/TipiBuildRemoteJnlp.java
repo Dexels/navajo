@@ -15,7 +15,7 @@ public class TipiBuildRemoteJnlp extends BaseTipiClientTask {
 	public void execute() throws BuildException {
 		try {
 			RemoteJnlpBuilder l = new RemoteJnlpBuilder();
-			l.build(repository, developmentRepository,extensions, getProject().getBaseDir(),getProject().getBaseDir().toURI().toURL().toString(),"Remote.jnlp",null);
+			l.build(repository, developmentRepository,extensions, getProject().getBaseDir(),getProject().getBaseDir().toURI().toURL().toString(),"Remote.jnlp",null,false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
