@@ -53,6 +53,11 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 		
 		private final boolean clean;
 		private final IProgressMonitor myMonitor;
+		private boolean needRebuild = false;
+		public boolean isNeedRebuild() {
+			return needRebuild;
+		}
+
 		public TipiResourceProjectVisitor(boolean clean, IProgressMonitor prm) {
 			this.clean = clean;
 			myMonitor = prm; 
@@ -63,14 +68,16 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 			switch (delta.getKind()) {
 			case IResourceDelta.ADDED:
 				// handle added resource
-				checkTipiProperties(resource,clean,myMonitor);
+				boolean b = checkTipiProperties(resource,clean,myMonitor);
+				needRebuild = b || needRebuild;
 				break;
 			case IResourceDelta.REMOVED:
 				// handle removed resource
 				break;
 			case IResourceDelta.CHANGED:
 				// handle changed resource
-				checkTipiProperties(resource,clean,myMonitor);
+				boolean c = checkTipiProperties(resource,clean,myMonitor);
+				needRebuild = c || needRebuild;
 				break;
 			}
 			//return true to continue visiting children.
@@ -110,12 +117,12 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 		return null;
 	}
 
-	void checkTipiProperties(IResource resource,boolean clean,IProgressMonitor monitor) {
+	boolean checkTipiProperties(IResource resource,boolean clean,IProgressMonitor monitor) {
 //		System.err.println("Entering rebuild.");
 //		System.err.println("resource name: "+resource.getName());
 		monitor.setTaskName("Rebuilding tipi project");
 		if(!(resource instanceof IFile)) {
-			return;
+			return false;
 		}
 		IProject myProject = resource.getProject();
 		IFolder profilesFolder = myProject.getFolder("settings/profiles");
@@ -132,8 +139,8 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 					}
 				}
 				monitor.worked(5);
-				
-				rebuildLocalTipi((IProject)ic,clean,monitor);
+				return true;
+//				rebuildLocalTipi((IProject)ic,clean,monitor);
 			//}
 //			deleteMarkers(file);
 //			XMLErrorHandler reporter = new XMLErrorHandler(file);
@@ -142,12 +149,13 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 //			} catch (Exception e1) {
 //			}
 		}
+		return false;
 	}
 
-	private void rebuildXsd(String repository, String extensions, File baseDir,IProgressMonitor m) {
+	private void rebuildXsd(String repository, String extensionRepository, String extensions, File baseDir,IProgressMonitor m) {
 		XsdBuilder b = new XsdBuilder();
-		try {
-			b.build(repository, extensions, baseDir);
+		try { 
+			b.build(repository,extensionRepository, extensions, baseDir);
 			System.err.println("XSD rebuilt!");
 			m.setTaskName("Building XSD");
 		} catch (IOException e) {
@@ -170,6 +178,14 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 
 			String extensionRepository = repository+"Extensions/";
 			String developmentRepository = repository+"Development/";
+
+			boolean useVersioning = false;
+			
+			try {
+				useVersioning = "true".equals(pe.getString("useJnlpVersioning"));
+			} catch (MissingResourceException e1) {
+				// whatever
+			}
 			
 			List<String> profiles = new LinkedList<String>();
 			File profileFolder = new File(projectPath,"settings/profiles");
@@ -188,7 +204,7 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 	
 			String buildType = pe.getString("build").trim();
 		
-			rebuildXsd(extensionRepository,extensions,projectPath,m);
+			rebuildXsd(repository, extensionRepository,extensions,projectPath,m);
 			if(buildType==null) {
 				buildType = "remote";
 			}
@@ -196,15 +212,15 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 		
 			m.worked(5);
 			if("remote".equals(buildType) || "both".equals(buildType)) {
-				downloadExtensionJars(projectPath, extensions, extensionRepository,true,clean,buildType);
+				downloadExtensionJars(projectPath, extensions, extensionRepository,true,clean,buildType,useVersioning);
 				m.worked(10);
 			}
 			if("local".equals(buildType) || "both".equals(buildType)) {
-				downloadExtensionJars(projectPath, extensions, extensionRepository,false,clean,buildType);
+				downloadExtensionJars(projectPath, extensions, extensionRepository,false,clean,buildType,useVersioning);
 				m.worked(10);
 			}
 			if("web".equals(buildType)) {
-				downloadExtensionJars(projectPath, extensions, extensionRepository,false,clean,buildType);
+				downloadExtensionJars(projectPath, extensions, extensionRepository,false,clean,buildType,useVersioning);
 				m.worked(10);
 			}
 
@@ -233,12 +249,12 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 			
 			} else {
 				if(profiles==null || profiles.isEmpty()) {
-					buildProfileJnlp(null,clean, m, projectPath, projectUrl, extensions, extensionRepository,developmentRepository, buildType);
+					buildProfileJnlp(null,clean, m, projectPath, projectUrl, extensions, extensionRepository,developmentRepository, buildType,useVersioning);
 
 				} else {
 					for (String profile : profiles) {
 						System.err.println("Building profile: "+profile);
-						buildProfileJnlp(profile,clean, m, projectPath, projectUrl, extensions, extensionRepository,developmentRepository, buildType);
+						buildProfileJnlp(profile,clean, m, projectPath, projectUrl, extensions, extensionRepository,developmentRepository, buildType,useVersioning);
 						
 					}
 				}
@@ -274,12 +290,12 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 	private void buildWebXml(String profile,  boolean clean, IProgressMonitor m, File projectPath, String projectUrl, String extensions,String repository, String buildType, String developmentRepository) throws IOException {
 		m.worked(10);
 		WebDescriptorBuilder wdb = new WebDescriptorBuilder();
-		wdb.build(repository, developmentRepository,extensions, projectPath, null, null, profile);
+		wdb.build(repository, developmentRepository,extensions, projectPath, null, null, profile,false);
 
 	}
 
 	private void buildProfileJnlp(String profile,  boolean clean, IProgressMonitor m, File projectPath, String projectUrl, String extensions,
-			String repository,String developmentRepository, String buildType) throws IOException {
+			String repository,String developmentRepository, String buildType, boolean useVersioning) throws IOException {
 		
 		
 		String profileName = profile==null?"Default":profile;
@@ -292,16 +308,15 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 		m.worked(5);
 		if("remote".equals(buildType) || "both".equals(buildType)) {
 			RemoteJnlpBuilder r = new RemoteJnlpBuilder();
-			downloadExtensionJars(projectPath, extensions, repository,true,clean,buildType);
-			m.setTaskName("Downloading jars...");
+			downloadExtensionJars(projectPath, extensions, repository,true,clean,buildType,useVersioning);
 			m.worked(10);
-			r.build(repository,developmentRepository, extensions,projectPath, projectUrl,profileName+"Remote.jnlp",profile);
+			r.build(repository,developmentRepository, extensions,projectPath, projectUrl,profileName+".jnlp",profile,useVersioning);
 		}
 		if("local".equals(buildType) || "both".equals(buildType)) {
-			downloadExtensionJars(projectPath, extensions, repository,false,clean,buildType);
+			downloadExtensionJars(projectPath, extensions, repository,false,clean,buildType,useVersioning);
 			LocalJnlpBuilder l = new LocalJnlpBuilder();
 			m.worked(10);
-			l.build(repository,developmentRepository, extensions,projectPath, projectUrl,profileName+"Local.jnlp",profile);
+			l.build(repository,developmentRepository, extensions,projectPath, projectUrl,profileName+".jnlp",profile,useVersioning);
 		}
 	}
 
@@ -335,7 +350,7 @@ private void buildClassPath(IProject project, String repository, String extensio
 	}
 }
 
-	private void downloadExtensionJars(File projectPath, String extensions,String repository, boolean onlyProxy, boolean clean, String buildType) throws IOException {
+	private void downloadExtensionJars(File projectPath, String extensions,String repository, boolean onlyProxy, boolean clean, String buildType, boolean useVersioning) throws IOException {
 		StringTokenizer st = new StringTokenizer(extensions, ",");
 		Map<String,List<String>> repDefinition= ClientActions.getExtensions(repository);
 		while (st.hasMoreTokens()) {
@@ -348,7 +363,6 @@ private void buildClassPath(IProject project, String repository, String extensio
 				String version = versionMap.get("version");
 				XMLElement extensionXml = ClientActions.getExtensionXml(ext, version, repository);
 				TipiProjectBuilder tpb = null;
-				
 				if("web".equals(buildType)) {
 					tpb = new TipiWebProjectBuilder();
 				} else {
@@ -359,7 +373,8 @@ private void buildClassPath(IProject project, String repository, String extensio
 					}
 					
 				}
-				tpb.downloadExtensionJars(ext, new URL(repository+vr.resultVersionPath(token)+"/"), extensionXml, projectPath, clean);
+				tpb.setUseVersioning(useVersioning);
+				tpb.downloadExtensionJars(ext, version, new URL(repository+vr.resultVersionPath(token)+"/"), extensionXml, projectPath, clean,false);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -431,7 +446,11 @@ private void buildClassPath(IProject project, String repository, String extensio
 			IProgressMonitor monitor) throws CoreException {
 		// the visitor does the work.
 		monitor.beginTask("Tipi rebuild", 100);
-		delta.accept(new TipiResourceProjectVisitor(false,monitor));
+		TipiResourceProjectVisitor tipiResourceProjectVisitor = new TipiResourceProjectVisitor(false,monitor);
+		delta.accept(tipiResourceProjectVisitor);
+		if(tipiResourceProjectVisitor.isNeedRebuild()) {
+			rebuildLocalTipi(getProject(),false,monitor);
+		}
 		monitor.done();
 	}
 }

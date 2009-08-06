@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: TipiPlugin Plug-in
 Bundle-SymbolicName: TipiPlugin; singleton:=true
-Bundle-Version: 1.0.6
+Bundle-Version: 1.0.11
 Bundle-Vendor: Dexels
 Require-Bundle: org.eclipse.core.resources,
  org.eclipse.core.runtime,
@@ -14,4 +14,7 @@ Bundle-ClassPath: lib/TipiBuildLibrary.jar,
  lib/jsch-0.1.39.jar,
  lib/TipiAntTask.jar,
  lib/catalina-ant.jar,
+ lib/p200ant.jar,
  .
+Bundle-Activator: com.dexels.tipi.plugin.TipiPluginActivator
+Bundle-ActivationPolicy: lazy

@@ -116,38 +116,36 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 				
 	        
 			
-			TitleAreaDialog dlg = new TitleAreaDialog(Display.getCurrent().getActiveShell()) {
-				public Composite createDialogArea(Composite parent) {
-					Composite composite = (Composite) super.createDialogArea(parent);
-					templateCombo = new Combo(parent, SWT.READ_ONLY);
-					String[] retrieveTemplates = new String[] { "TemplateJnlpProject", "TemplateEchoProject"};
-
-					templateCombo.setItems(retrieveTemplates);
-					templateCombo.setSize(200, 200);
-					// add controls to composite as necessary
-					templateCombo.addSelectionListener(new SelectionListener(){
-
-						public void widgetDefaultSelected(SelectionEvent e) {
-							
-						}
-
-						public void widgetSelected(SelectionEvent e) {
-							 selectedTemplate = templateCombo.getItems()[templateCombo.getSelectionIndex()];
-						}});
-					templateCombo.select(0);
-					return composite;
-				}
-
-			};
-			
-//			String selectedTemplate = null;
-			if (dlg.open() == Window.OK) {
-//				 selectedTemplate = templateCombo.getItems()[templateCombo.getSelectionIndex()];
-			} else {
-				System.err.println("No templ??! ");
-				return;
-			}
+//			TitleAreaDialog dlg = new TitleAreaDialog(Display.getCurrent().getActiveShell()) {
+//				public Composite createDialogArea(Composite parent) {
+//					Composite composite = (Composite) super.createDialogArea(parent);
+//					templateCombo = new Combo(parent, SWT.READ_ONLY);
+//					String[] retrieveTemplates = new String[] { "TemplateJnlpProject", "TemplateEchoProject"};
+//
+//					templateCombo.setItems(retrieveTemplates);
+//					templateCombo.setSize(200, 200);
+//					// add controls to composite as necessary
+//					templateCombo.addSelectionListener(new SelectionListener(){
+//
+//						public void widgetDefaultSelected(SelectionEvent e) {
+//							
+//						}
+//
+//						public void widgetSelected(SelectionEvent e) {
+//							 selectedTemplate = templateCombo.getItems()[templateCombo.getSelectionIndex()];
+//						}});
+//					templateCombo.select(0);
+//					return composite;
+//				}
+//			};
+//			
+//			if (dlg.open() == Window.OK) {
+//			} else {
+//				System.err.println("No templ??! ");
+//				return;
+//			}
 				
+			selectedTemplate = "TemplateJnlpProject";
 	//		downloadZippedDemoFiles(repository,repository+"Development/", project.getLocation().toFile(),selectedTemplate,null);
 			ClientActions.downloadZippedDemoFiles(repository+"Development/",repository, project.getLocation().toFile(),selectedTemplate);
 

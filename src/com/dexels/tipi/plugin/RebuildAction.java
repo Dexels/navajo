@@ -49,7 +49,7 @@ public class RebuildAction implements IObjectActionDelegate {
 								return Status.OK_STATUS;
 					        }
 					     };
-					  job.setPriority(Job.SHORT);
+					  job.setPriority(Job.LONG);
 					  job.schedule(); // start as soon as possible
 				}
 			}

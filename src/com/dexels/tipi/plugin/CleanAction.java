@@ -46,6 +46,7 @@ public class CleanAction implements IObjectActionDelegate {
 	 */
 	public void run(IAction action) {
 		if (selection instanceof IStructuredSelection) {
+			ClientActions.flushCache();
 			for (Iterator it = ((IStructuredSelection) selection).iterator(); it
 					.hasNext();) {
 				Object element = it.next();

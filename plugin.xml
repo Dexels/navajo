@@ -42,6 +42,9 @@
          </action>
       </objectContribution>
    </extension>
+
+  
+   
    
       <extension
          point="org.eclipse.ui.popupMenus">
@@ -58,6 +61,28 @@
          <action
                label="Deploy current Tipi"
                class="com.dexels.tipi.plugin.DeployAction"
+               menubarPath="additions"
+               enablesFor="+"
+               id="TipiPlugin.deployTipi">
+         </action>
+      </objectContribution>
+   </extension>
+   
+    <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            objectClass="org.eclipse.core.resources.IProject"
+            nameFilter="*"
+            id="TipiPlugin.contribution3">
+                      <filter
+             name="projectNature"
+             value="TipiPlugin.tipiNature">
+         </filter>
+            
+         <action
+               label="Deploy to appstores"
+               class="com.dexels.tipi.plugin.DeployAppStoreAction"
                menubarPath="additions"
                enablesFor="+"
                id="TipiPlugin.deployTipi">
@@ -182,6 +207,14 @@
             file="contexts.xml">
       </contexts>
    </extension>
+   
+   <extension point="org.eclipse.ant.core.antTasks">
+      <antTask name="deploy" class="com.dexels.navajo.tipi.ant.projectbuilder.DeployTask" library="lib/TipiAntTask.jar"/>
+   </extension> 
+   <extension point="org.eclipse.ant.core.antTasks">
+      <antTask name="build" class="com.dexels.navajo.tipi.ant.projectbuilder.BuildTask" library="lib/TipiAntTask.jar"/>
+   </extension> 
+      
    <extension
          point="org.eclipse.ant.core.extraClasspathEntries">
       <extraClasspathEntry
@@ -199,6 +232,9 @@
       <extraClasspathEntry
             library="lib/jsch-0.1.39.jar">
       </extraClasspathEntry>
+   </extension>
+   <extension
+         point="org.eclipse.ant.core.antTasks">
    </extension>
 
 </plugin>
