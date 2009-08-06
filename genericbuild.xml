@@ -4,6 +4,7 @@
 
 	<taskdef name="buildExtension" classname="com.dexels.navajo.tipi.ant.extensionbuilder.BuildExtensionTask" classpath="bin" />
 	<taskdef name="buildDocumentation" classname="com.dexels.navajo.tipi.ant.extensionbuilder.BuildExtensionDocumentationTask" classpath="bin" />
+	<taskdef name="p200ant" classname="de.matthiasmann.p200ant.P200AntTask" classpath="p200ant.jar"/>
 
 	<property name="tipiSvnUrl" value="http://spiritus.dexels.nl:41766/svn/repos" />
 	<property name="repository" value="http://spiritus.dexels.nl:41766/Tipi/" />
@@ -48,14 +49,38 @@
 		<echo message="Rep to: ${repository}Extensions/" />
 		<buildDocumentation version="${tipiComponentVersion}" distribution="${dist}" destination="${dist}/wikidoc" repository="${repository}Extensions/" />
 	</target>
-	<target name="sign" depends="grabjars,buildTipi">
+	<target name="repackJars" depends="buildTipi">
+
+		<p200ant repack="true" keepModificationTime="false" singleSegment="true" ver>
+		<fileset dir=".">
+			<include name="${dist}/lib/*.jar" />
+		</fileset>
+	</p200ant>
+	</target>
+	<target name="sign" depends="grabjars,repackJars">
 		<signjar keystore="../TipiBuild/dexels_dummy_key" verbose="false" storepass="dexels" keypass="dexels" alias="java">
 			<fileset dir=".">
 				<include name="${dist}/lib/*.jar" />
 			</fileset>
 		</signjar>
 	</target>
-	<target name="publish" depends="sign">
+	<target name="packJars" depends="sign">
+
+	    <p200ant  singleSegment="true">
+			<fileset dir=".">
+				<include name="${dist}/lib/*.jar" />
+			</fileset>
+	    </p200ant>
+	</target>
+	<target name="signPacked" depends="packJars">
+		<signjar keystore="../TipiBuild/dexels_dummy_key" verbose="false" storepass="dexels" keypass="dexels" alias="java">
+			<fileset dir=".">
+				<include name="${dist}/lib/*.jar.pack.gz" />
+			</fileset>
+		</signjar>
+	</target>
+		
+	<target name="publish" depends="packJars">
 
 		<scp trust="true" sftp="true" verbose="true" todir="${repositorySsh}Extensions/">
 			<fileset dir="dist">
@@ -68,7 +93,6 @@
 				<include name="${ant.project.name}/${tipiComponentVersion}/index.html" />
 			</fileset>
 		</scp>
-
 
 
 		<echo message="Re: ${repositorySsh}Extensions/${ant.project.name}/${tipiComponentVersion}" />
