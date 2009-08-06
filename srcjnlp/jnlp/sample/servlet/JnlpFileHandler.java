@@ -124,7 +124,7 @@ public class JnlpFileHandler {
 	
 	// Read information from WAR file
 	long timeStamp = lastModified;
-	String mimeType = _servletContext.getMimeType(path);
+	String mimeType = ((ResourceResolver)_servletContext.getAttribute("resourceResolver")).getMimeType(path);
 	if (mimeType == null) mimeType = JNLP_MIME_TYPE;
 	
 	StringBuffer jnlpFileTemplate = new StringBuffer();
@@ -191,7 +191,7 @@ public class JnlpFileHandler {
         
         // Read information from WAR file
         long timeStamp = lastModified;
-        String mimeType = _servletContext.getMimeType(path);
+        String mimeType = ((ResourceResolver)_servletContext.getAttribute("resourceResolver")).getMimeType(path);
         if (mimeType == null) mimeType = JNLP_MIME_TYPE;
         
         StringBuffer jnlpFileTemplate = new StringBuffer();
@@ -294,10 +294,16 @@ public class JnlpFileHandler {
         int idx = respath.lastIndexOf('/'); //
         String name = respath.substring(idx + 1);    // Exclude /
         String codebase = respath.substring(0, idx + 1); // Include /
+        while(codebase.charAt(codebase.length()-1)=='/') {
+      	  codebase = codebase.substring(0, codebase.length()-1);
+        }
         jnlpTemplate = substitute(jnlpTemplate, "$$name",  name);
 	// fix for 5039951: Add $$hostname macro
 	jnlpTemplate = substitute(jnlpTemplate, "$$hostname",
 				  request.getServerName());
+	
+		System.err.println("Codebase "+urlprefix + request.getContextPath() + codebase);
+		System.err.println("context "+urlprefix + request.getContextPath());
         jnlpTemplate = substitute(jnlpTemplate, "$$codebase",  urlprefix + request.getContextPath() + codebase);
         jnlpTemplate = substitute(jnlpTemplate, "$$context", urlprefix + request.getContextPath());
         // fix for 6256326: add $$site macro to sample jnlp servlet

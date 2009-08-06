@@ -133,7 +133,7 @@ public class JnlpResource {
 	try {
 	    String orig_path = path.trim();
 	    String search_path = orig_path;
-	    _resource = context.getResource(orig_path);	
+	    _resource = ((ResourceResolver)context.getAttribute("resourceResolver")).getResource(orig_path);	
 	    _mimeType = getMimeType(context, orig_path);
 	    if (_resource != null) {
 	
@@ -143,7 +143,7 @@ public class JnlpResource {
 		    (_mimeType.compareTo(JAR_MIME_TYPE) == 0 || _mimeType.compareTo(JAR_MIME_TYPE_NEW) == 0) &&
 		    encoding.toLowerCase().indexOf(DownloadResponse.PACK200_GZIP_ENCODING) > -1){
 		    search_path = orig_path + ".pack.gz";
-		    _resource = context.getResource(search_path);
+		    _resource = ((ResourceResolver)context.getAttribute("resourceResolver")).getResource(search_path);
 		    // Get last modified time
 		    if (_resource != null) {
 			_lastModified = getLastModified(context, _resource, search_path);
@@ -160,7 +160,7 @@ public class JnlpResource {
 		if (found == false && encoding != null &&
 		    encoding.toLowerCase().indexOf(DownloadResponse.GZIP_ENCODING) > -1){
 		    search_path = orig_path + ".gz";
-		    _resource = context.getResource(search_path);
+		    _resource = ((ResourceResolver)context.getAttribute("resourceResolver")).getResource(search_path);
 		    // Get last modified time
 		    if (_resource != null) {
 			_lastModified = getLastModified(context, _resource, search_path);
@@ -176,7 +176,7 @@ public class JnlpResource {
 		if (found == false) {
 		    // no compression
 		    search_path = orig_path;
-		    _resource = context.getResource(search_path);
+		    _resource = ((ResourceResolver)context.getAttribute("resourceResolver")).getResource(search_path);
 		    // Get last modified time
 		    if (_resource != null) {
 			_lastModified = getLastModified(context, _resource, search_path);
@@ -195,7 +195,13 @@ public class JnlpResource {
     }
 
     long getLastModified(ServletContext context, URL resource, String path) {
+   	 
 	long lastModified = 0;
+	
+   lastModified = ((ResourceResolver)context.getAttribute("resourceResolver")).getLastModified(path);
+	if(lastModified>0) {
+		return lastModified;
+	}
 	URLConnection conn;
 	try {
 	    // Get last modified time
@@ -208,6 +214,7 @@ public class JnlpResource {
 	if (lastModified == 0) {
 	    // Arguably a bug in the JRE will not set the lastModified for file URLs, and
 	    // always return 0. This is a workaround for that problem.
+		System.err.println("RAAAR!!!!");
 	    String filepath = context.getRealPath(path); 
 	    if (filepath != null) {
 		File f = new File(filepath);	    
@@ -237,7 +244,7 @@ public class JnlpResource {
     public String   getReturnVersionId() { return _returnVersionId; }
 
     private String getMimeType(ServletContext context, String path) {	
-	String mimeType = context.getMimeType(path);
+	String mimeType = ((ResourceResolver)context.getAttribute("resourceResolver")).getMimeType(path);
 	if (mimeType != null) return mimeType;	
 	if (path.endsWith(_jnlpExtension)) return JNLP_MIME_TYPE;
 	if (path.endsWith(_jarExtension)) return JAR_MIME_TYPE;

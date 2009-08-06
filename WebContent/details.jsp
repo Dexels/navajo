@@ -13,7 +13,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-<title>Tipi Application Store</title>
+<title>Tipi Application Store - <%= getServletContext().getInitParameter("serverTitle") %>  ( <%= getServletContext().getContextPath() %>) </title>
 <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 <!-- add your meta tags here -->
 
@@ -37,16 +37,11 @@ if(res!=null) {
 %>
 
 <%
+		manager.setContext(getServletContext());
+		manager.setCurrentApplication(request.getParameter("application"));
+		ApplicationStatus aa = manager.getApplication();
+		versionResolver.load(aa.getRepository());
 
-	manager.setContext(getServletContext());
-	String appFolder = getServletContext().getInitParameter("appFolder"); 
-	if(appFolder==null) {
-		appFolder = config.getServletContext().getRealPath(".");
-	}
-	manager.setAppsFolder(new File(appFolder));
-	manager.setCurrentApplication(request.getParameter("application"));
-	
-	versionResolver.load(manager.getApplication().getRepository());
 %>
         </div>
         <h2>Tipi App Store</h2>
@@ -84,18 +79,23 @@ if(res!=null) {
 					<a href="TipiAdminServlet?app=${app.applicationName}&amp;cmd=download&amp;destination=/details.jsp">Download</a>
 					<a href="index.jsp" onclick="if(confirm('Delete application: ${app.applicationName}?')) location.href = 'TipiAdminServlet?app=${app.applicationName}&amp;cmd=delete&amp;destination=/details.jsp'; ">Delete</a>
 				</div>
+				<table>
 				<c:if test="${app.valid}">
-				<c:forEach var="profile" items="${app.profiles}">
-					<a href="${app.applicationName}/${profile}.jnlp">${profile}</a><br/>
-				</c:forEach>
+					<c:forEach var="profile" items="${app.profiles}">
+						<tr><td><a href="Apps/${app.applicationName}/${profile}.jnlp">${profile}</a></td><td>	<a href="editor.jsp?application=${app.applicationName}&amp;filePath=settings/profiles/${profile}.properties">Edit profile</a></td></tr>
+					</c:forEach>
 				</c:if>
 				<c:if test="${!app.valid}">
-				<c:forEach var="profile" items="${app.profiles}">
-					<div>
-					${profile}<br/>
-					</div>
-				</c:forEach>
+					<c:forEach var="profile" items="${app.profiles}">
+						<tr><td>${profile} (needs rebuild)</td><td>	<a href="editor.jsp?application=${app.applicationName}&amp;filePath=settings/profiles/${profile}.properties">Edit profile</a></td></tr>
+					</c:forEach>
 				</c:if>
+				</table>
+			</div>
+			<div class="important">
+			<h4>Settings</h4>
+					<a href="editor.jsp?application=${app.applicationName}&amp;filePath=settings/tipi.properties">Edit tipi.properties</a>
+					<a href="editor.jsp?application=${app.applicationName}&amp;filePath=settings/arguments.properties">Edit arguments.properties</a>
 			
 			</div>
 			<div class="important">

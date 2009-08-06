@@ -10,7 +10,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-<title>Tipi Application Store</title>
+<title>Tipi Application Store - <%= getServletContext().getInitParameter("serverTitle") %>  ( <%= getServletContext().getContextPath() %>) </title>
 <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 <!-- add your meta tags here -->
 
@@ -31,16 +31,11 @@ if(res!=null) {
 	out.write("<div class='warning'>"+URLDecoder.decode(res,"UTF-8")+"</div>");
 }
 %>
-
 <%
-
+//getServletContext().
 	manager.setContext(getServletContext());
-	String appFolder = getServletContext().getInitParameter("appFolder"); 
-	if(appFolder==null) {
-		appFolder = config.getServletContext().getRealPath(".");
-	}
-	manager.setAppsFolder(new File(appFolder));
 %>
+
         </div>
         <h2>Tipi App Store</h2>
       </div>
@@ -75,15 +70,15 @@ if(res!=null) {
             <h3>Upload a zipped application</h3>
 			<div class="info">
 				<form name="input" action="TipiAdminServlet?cmd=upload&amp;app=unknown" method="post" enctype="multipart/form-data">Application name: 
-					<input type="text" name="appName" /><br/>
+					<input type="text" name="app" /><br/>
 					Choose file:<br/>
 					<input type="file" name="zippedFile" /> 
 					<input type="hidden" name="cmd" value="upload" /> 
+					<input type="hidden" name="destination" value="#" /> 
 					<input type="submit" value="Upload" />
 				</form>
 			</div>
-
-</div>
+		</div>
         </div>
         <div id="col3">
           <div id="col3_content" class="clearfix">
@@ -92,26 +87,26 @@ if(res!=null) {
 			<h4><a href="details.jsp?application=${app.applicationName}">${app.applicationName}</a></h4>
 				
 				<div class="float_right">
-					<a href="TipiAdminServlet?app=${app.applicationName}&amp;cmd=clean">Clean</a>
-					<a href="TipiAdminServlet?app=${app.applicationName}&amp;cmd=build">Build</a>
+					<a href="TipiAdminServlet?app=${app.applicationName}&amp;cmd=clean&amp;destination=#">Clean</a>
+					<a href="TipiAdminServlet?app=${app.applicationName}&amp;cmd=build&amp;destination=#">Build</a>
 					<a href="TipiAdminServlet?app=${app.applicationName}&amp;cmd=download">Download</a>
-					<a href="index.jsp" onclick="if(confirm('Delete application: ${app.applicationName}?')) location.href = 'TipiAdminServlet?app=${app.applicationName}&amp;cmd=delete'; ">Delete</a>
+					<a  onclick="if(confirm('Delete application: ${app.applicationName}?')) location.href = 'TipiAdminServlet?app=${app.applicationName}&amp;cmd=delete&amp;destination=#'; ">Delete</a>
 				</div>
 				<c:if test="${app.valid}">
-				<c:forEach var="profile" items="${app.profiles}">
-					<a href="${app.applicationName}/${profile}.jnlp">${profile}</a><br/>
-				</c:forEach>
-				</c:if>
-				<c:if test="${!app.valid}">
-				<c:forEach var="profile" items="${app.profiles}">
-					<div>
-					${profile}<br/>
-					</div>
-				</c:forEach>
-				</c:if>
-			
-			</div>
+					<c:forEach var="profile" items="${app.profiles}">
+						<c:set var="profileName" value="${profile}"/>
+						<a href="Apps/${app.applicationName}/${profile}.jnlp">${profile} needs build: ${app.rebuildMap[profileName]}</a> <br/>
 
+					</c:forEach>
+				</c:if> 
+				<c:if test="${!app.valid}">
+					<c:forEach var="profile" items="${app.profiles}">
+						<div>
+						${profile}<br/>
+						</div>
+					</c:forEach>
+				</c:if>
+			</div>
 	</c:forEach>
 
      </div>

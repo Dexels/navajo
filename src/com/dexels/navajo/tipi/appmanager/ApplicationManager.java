@@ -41,9 +41,24 @@ private ServletContext context = null;
 		return context;
 	}
 
-	public void setContext(ServletContext context) {
+	public void setContext(ServletContext context) throws IOException {
 		this.context = context;
 		documentationRepository = context.getInitParameter("documentationRepository");
+		String appFolder = context.getInitParameter("appFolder"); 
+		File ff = null;
+		if(appFolder==null) {
+			File contextFolder = new File(context.getRealPath("."));
+			ff = new File(contextFolder, "DefaultApps");
+		} else {
+			File suppliedFolder = new File(appFolder);
+			if(suppliedFolder.isAbsolute()) {
+				ff = suppliedFolder;
+			} else {
+				ff = new File(context.getRealPath(appFolder));
+			}
+		}
+		setAppsFolder(ff);
+
 	}
 	
 	public void setApplications(List<ApplicationStatus> applications) {
@@ -55,9 +70,14 @@ private ServletContext context = null;
 	}
 
 	public void setAppsFolder(File appsFolder) throws IOException {
+		
 		this.appsFolder = appsFolder;
 		File[] apps = appsFolder.listFiles();
 		List<ApplicationStatus> appStats = new LinkedList<ApplicationStatus>();
+		this.applications = appStats;
+		if(apps==null) {
+			return;
+		}
 		for (File file : apps) {
 			if(file.getName().equals("WEB-INF")) {
 				continue;
@@ -73,7 +93,6 @@ private ServletContext context = null;
 			appStatus.load(file);
 			appStats.add(appStatus);
 		}
-		this.applications = appStats;
 	}
 
 	public  List<ApplicationStatus> getApplications() throws IOException {

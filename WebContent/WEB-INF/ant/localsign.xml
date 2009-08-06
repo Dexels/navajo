@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project default="signall">
+
+	<target name="signall" >
+		<signjar keystore="certificate/sportlink_key" storepass="sportlink"  alias="mykey">
+			<fileset dir=".">
+				<include name="lib/*.jar" />
+			</fileset>
+		</signjar>
+	</target>
+	
+</project>

@@ -36,7 +36,9 @@
 
 package jnlp.sample.servlet;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.servlet.ServletConfig;
@@ -44,6 +46,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import jnlp.sample.servlet.impl.FileSystemResourceResolver;
 
 /**
  * This Servlet class is an implementation of JNLP Specification's
@@ -87,7 +91,9 @@ public class JnlpDownloadServlet extends HttpServlet {
 	// Setup logging
 	_log = new Logger(config, getResourceBundle());
 	_log.addDebug("Initializing");
-	
+//	String appFolder = (String) config.getServletContext().getInitParameter("appFolder");
+	File baseDir = getAppFolder();
+	config.getServletContext().setAttribute("resourceResolver", new FileSystemResourceResolver(baseDir));
 	// Get extension from Servlet configuration, or use default	
 	JnlpResource.setDefaultExtensions(
 	    config.getInitParameter(PARAM_JNLP_EXTENSION), 
@@ -106,6 +112,25 @@ public class JnlpDownloadServlet extends HttpServlet {
     }
     
     
+ 	private File getAppFolder() {
+		String appFolder = getServletContext().getInitParameter("appFolder"); 
+		File ff = null;
+		if(appFolder==null) {
+			ff = new File(getServletConfig().getServletContext().getRealPath("DefaultApps"));
+
+		} else {
+			File suppliedFolder = new File(appFolder);
+			if(suppliedFolder.isAbsolute()) {
+				ff = suppliedFolder;
+			} else {
+				ff = new File(getServletConfig().getServletContext().getRealPath(appFolder));
+			}
+			//ff = new File(appFolder);
+		}
+		return ff;
+	}
+    
+    
     public void doHead(HttpServletRequest request, HttpServletResponse response) 
         throws ServletException, IOException {
         handleRequest(request, response, true);
@@ -119,8 +144,21 @@ public class JnlpDownloadServlet extends HttpServlet {
     private void handleRequest(HttpServletRequest request, 
             HttpServletResponse response, boolean isHead) throws IOException {
 	String requestStr = request.getRequestURI();
+	_log.addDebug("Reqeuest: "+request.getRequestURI()+" query: "+request.getQueryString());
+	Map en = request.getParameterMap();
+	for (Object key : en.keySet()) {
+		Object value = en.get(key);
+		if(value instanceof Object[]) {
+			Object[] vals = (Object[])value;
+			for (Object object : vals) {
+				System.err.println("Value element: "+object);
+			}
+		} else {
+		_log.addDebug("Param: "+key+" value: "+en.get(key));
+		}
+	}
 	if (request.getQueryString() != null) requestStr += "?" + request.getQueryString().trim();
-	
+		
 	// Parse HTTP request
 	DownloadRequest dreq = new DownloadRequest(getServletContext(), request);		
 	if (_log.isInformationalLevel()) {

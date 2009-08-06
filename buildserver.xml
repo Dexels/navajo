@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- $Id$ -->
+<project name="TipiServer" default="publish" basedir=".">
+	
+	<taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask" />
+	<taskdef name="undeploy" classname="org.apache.catalina.ant.UndeployTask" />
+	<taskdef name="start" classname="org.apache.catalina.ant.StartTask" />
+	<taskdef name="stopApplication" classname="org.apache.catalina.ant.StopTask" />
+
+<!--
+    <property name="tipiTomcatServer" value="http://spiritus.dexels.nl:8080/"/>
+    <property name="tipiTomcatManager" value="http://spiritus.dexels.nl:8080/manager"/>
+-->
+	
+    <property name="tipiTomcatServer" value="http://localhost:8080/"/>
+    <property name="tipiTomcatManager" value="http://localhost:8080/manager"/>
+    <property name="tipiTomcatUsername" value="ad"/>
+    <property name="tipiTomcatPassword" value="pw"/>
+
+	<!--
+
+-->
+	
+	<property name="src" location="src"/>
+    <property name="build" location="build/classes"/>
+    <property name="lib" value="lib"/>
+    <property name="archive" value="${ant.project.name}.jar"/>
+    <target name="clean">
+		<delete file="${ant.project.name}.war"/>
+    	<delete file="${ant.project.name}.jar"/>
+    </target>
+	<target name="compile" depends="clean">
+        <javac srcdir="${src}" destdir="${build}">
+			<sourcepath>
+				<fileset dir="${src}">
+				</fileset>
+				<fileset dir="srcjnlp">
+				</fileset>
+			</sourcepath>
+        </javac>
+    </target>
+
+
+    <target name="archive" depends="compile">
+		<ant antfile="../TipiBuildLibrary/build.xml" target="archive"/>
+
+    	<jar jarfile="${archive}">
+            <fileset dir="${build}">
+                 <exclude name="**/*.xml"/>
+               </fileset>
+		</jar>    	
+    </target>
+    <target name="jspdepend">
+		
+    </target>
+
+    <target name="publish" depends="jspdepend,archive">
+    	<ant antfile="../NavajoJsp/build.xml"  target="archive" dir="../NavajoJsp"/>
+    	<copy todir="../TipiServer/WebContent/WEB-INF/lib">
+        			<fileset dir="../NavajoJsp">
+        				<include  name="NavajoJsp.jar"/>
+        			</fileset>
+        		</copy> 
+    	<copy todir="WebContent/WEB-INF/tags">
+        			<fileset dir="../NavajoJsp/WEB-INF/tags">
+        				<include  name="navajo.tld"/>
+        			</fileset>
+        		</copy> 
+    	
+    	<echo message="JSP built!"/>
+    	 <copy todir="../TipiServer/WebContent/WEB-INF/lib">
+			<fileset dir=".">
+				<include  name="${archive}"/>
+			</fileset>
+		</copy>
+    	<zip  destfile="testswing.zip">
+    		<fileset dir="testswing/">
+    			<include name="**"/>
+    		</fileset>
+    	</zip>
+    	
+    	<eclipse.refreshLocal resource="/${ant.project.name}"/>
+    	<war basedir="${basedir}/WebContent" destfile="${ant.project.name}.war">
+			<fileset dir="WebContent">
+				<include  name="**"/>
+			</fileset>
+		</war>
+    	
+		<deploy  url="${tipiTomcatManager}" update="true" username="${tipiTomcatUsername}" password="${tipiTomcatPassword}" path="/${ant.project.name}" war="${basedir}/${ant.project.name}.war"/>
+    <!--	<scp file="TipiServer.jar" todir="sportlink:sp0rtl1nk@hermes1.dexels.com:/usr/local/apache-tomcat-6.0.20/webapps/TipiAppStore/WEB-INF/lib"></scp>
+    	  <scp file="WebContent/WEB-INF/lib/TipiServer.jar" todir="sportlink:sp0rtl1nk@hermes1.dexels.com:/usr/local/apache-tomcat-6.0.20/webapps/TipiAppStore/WEB-INF/lib"></scp>
+  	  <scp todir="sportlink:sp0rtl1nk@hermes1.dexels.com:/usr/local/apache-tomcat-6.0.20/webapps/TipiAppStore/">
+  	  	<fileset dir="WebContent">
+  	  		<include name="*.jsp"/>
+  	  	</fileset>
+  	  </scp>-->	
+	<!-- for now -->
+<!--		<stopApplication />-->
+    </target>
+</project>
+<!-- EOF: $RCSfile$ -->

@@ -3,16 +3,26 @@ package com.dexels.navajo.tipi;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.Writer;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.MissingResourceException;
+import java.util.PropertyResourceBundle;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -23,45 +33,142 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.tomcat.util.http.fileupload.MultipartStream;
 
+import com.dexels.navajo.tipi.projectbuilder.BaseJnlpBuilder;
 import com.dexels.navajo.tipi.projectbuilder.ClientActions;
+import com.dexels.navajo.tipi.projectbuilder.LocalJnlpBuilder;
 import com.dexels.navajo.tipi.projectbuilder.ProjectBuilder;
 import com.dexels.navajo.tipi.projectbuilder.TipiProjectBuilder;
+import com.dexels.navajo.tipi.util.XMLElement;
 import com.oreilly.servlet.MultipartRequest;
 
 public class TipiAdminServlet extends HttpServlet {
 
-	private File applicationFolder = null;
+//	private File applicationFolder = null;
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		this.doGet(request, response);
 	}
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String appStoreUrl = getServletContext().getInitParameter("appUrl");
-		String appFolder = getServletContext().getInitParameter("appFolder");
-
+		if(appStoreUrl==null) {
+			appStoreUrl = 		request.getRequestURL().toString();
+		}
 		String application = request.getParameter("app");
-		applicationFolder = new File(appFolder);
-		// String servletPath = request.getServletPath();
-		String myAppPath = appFolder + application;
-		String myAppUrl = appStoreUrl + application;
-		File applicationDir = new File(myAppPath);
-
 		String commando = request.getParameter("cmd");
-		if (commando.equals("download")) {
-			download(application, new File(appFolder + "/"), response);
+		
+		if(application==null || commando == null) {
+			response.sendRedirect(getServletContext().getContextPath()  +"/index.jsp?result=" + URLEncoder.encode("Huh?", "UTF-8"));
 			return;
 		}
 
-		String resultMessage = performCommando(commando, application, applicationDir, new URL(myAppUrl),request);
+		//		applicationFolder = ff; // new File(appFolder);
+		// String servletPath = request.getServletPath();
+		//String myAppPath = appFolder + application;
+		String myAppUrl = appStoreUrl + application;
+		File ff = getAppFolder();
+		File applicationDir = new File(ff, application);
 
-		String destination = request.getParameter("destination");
-		if(destination==null) {
-			destination = "";
+		if (commando.equals("download")) {
+			download(application, ff, response);
+			return;
 		}
-		response.sendRedirect(getServletContext().getContextPath() + destination +"?result=" + URLEncoder.encode(resultMessage, "UTF-8")+"&application="+URLEncoder.encode(application, "UTF-8"));
+		if (commando.equals("uploaddirect")) {
+			String result = upload(application,request);
+			response.getWriter().write(result+"\n");
+			return;
+		}
+		String resultMessage;
+		String destination;
+		resultMessage = performCommando(commando, application, applicationDir, new URL(myAppUrl),request);
+		destination = request.getParameter("destination");
+		// filthy hack
+		if(commando.equals("upload")) {
+			destination="#";
+		}
+		if (destination==null) {
+			response.getWriter().write(resultMessage+"\n");
+		} else {
+
+			if(destination==null) {
+				destination = "";
+			}
+			response.sendRedirect(getServletContext().getContextPath() + destination +"?result=" + URLEncoder.encode(resultMessage, "UTF-8")+"&application="+URLEncoder.encode(application, "UTF-8"));
+		}
+		
 		return;
 	}
+	private File getAppFolder() {
+		String appFolder = getServletContext().getInitParameter("appFolder"); 
+		File ff = null;
+		if(appFolder==null) {
+			ff = new File(getServletConfig().getServletContext().getRealPath("DefaultApps"));
 
-	private String performCommando(String commando, String application, File appDir, URL appUrl, HttpServletRequest request) {
+		} else {
+			File suppliedFolder = new File(appFolder);
+			if(suppliedFolder.isAbsolute()) {
+				ff = suppliedFolder;
+			} else {
+				ff = new File(getServletConfig().getServletContext().getRealPath(appFolder));
+			}
+			//ff = new File(appFolder);
+		}
+		return ff;
+	}
+
+	
+	private XMLElement doCreateJnlp(HttpServletRequest request, boolean build, boolean clean) throws IOException {
+		String servletPath = request.getServletPath();
+		String appStoreUrl = getServletContext().getInitParameter("appUrl");
+		String appFolder = getServletContext().getInitParameter("appFolder");
+		String applicationPath = servletPath.substring(1,servletPath.lastIndexOf('/'));
+		String myAppPath = appFolder+applicationPath;
+		String myAppUrl = appStoreUrl+applicationPath;
+		File applicationDir = new File(myAppPath);
+
+		System.err.println("Resolved app path: "+myAppPath);
+		System.err.println("Resolved app url: "+myAppUrl);
+
+		String profile = servletPath.substring(servletPath.lastIndexOf('/')+1,servletPath.lastIndexOf('.'));
+	//	String propertypath = getServletContext().getRealPath(myAppPath+"/settings/tipi.properties");
+		System.err.println("Using profile: "+profile);
+		File prop = new File(myAppPath+"/settings/tipi.properties");
+		FileInputStream fis = new FileInputStream(prop);
+		PropertyResourceBundle prb = new PropertyResourceBundle(fis);
+
+		fis.close();
+		BaseJnlpBuilder l = new LocalJnlpBuilder();
+//		String codebase = "http://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/"+applicationPath;
+		String repository = prb.getString("repository");
+
+		File profileSettings = new File(myAppPath+"/settings/profiles/"+profile+".properties");
+		if(profileSettings.exists()) {
+			System.err.println("Profile actually found!");
+		} else {
+			profile = null;
+		}
+		
+		
+		boolean useVersioning = false;
+		
+		try {
+			useVersioning = prb.getString("useJnlpVersioning").equals("true");
+		} catch (MissingResourceException e) {
+		}
+		XMLElement jnlp = l.buildElement(repository, prb.getString("extensions"),applicationDir, "$$codebase",myAppUrl, profile+".jnlp",profile,useVersioning);
+		return jnlp;
+
+	}
+	/**
+	 * Throws interupted to prevent redirections
+	 * @param commando
+	 * @param application
+	 * @param appDir
+	 * @param appUrl
+	 * @param request
+	 * @return
+	 * @throws ServletException 
+	 * @throws InterruptedException
+	 */
+	private String performCommando(String commando, String application, File appDir, URL appUrl, HttpServletRequest request) throws ServletException {
 		if (commando.equals("build")) {
 			return build(application, appDir);
 		}
@@ -75,49 +182,89 @@ public class TipiAdminServlet extends HttpServlet {
 			return create(application, appDir);
 		}
 		if (commando.equals("upload")) {
-			return upload(application, appDir,request);
+			return uploadMultipart(application,request);
 		}
+		if (commando.equals("saveConfig")) {
+			return saveConfig(application, appDir,request);
+		}
+	
 		return "Unknown commando!";
 	}
 
-	private String upload(String application, File appDir, HttpServletRequest request) {
-		// TODO Auto-generated method stub
+
+	private String saveConfig(String application, File appDir, HttpServletRequest request) throws ServletException {
+//		File currentAppDir = new File(appDir,application);
+		String filePath = request.getParameter("filePath");
+			if(filePath.indexOf("..")!=-1) {
+  				throw new ServletException("Illegal path: "+filePath);
+  			}
+		File currentFilePath = new File(appDir,filePath);
+
+		String content = request.getParameter("content");
+		try {
+			FileWriter fw = new FileWriter(currentFilePath);
+			StringReader sr = new StringReader(content);
+			copyResource(fw, sr);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return "Error saving: "+filePath+" problem: "+e.getMessage();
+		}
+		build(application, appDir);
+		return "Configuration saved";
+	}
+	private String upload(String application, HttpServletRequest request)  {
+		try {
+			InputStream is =  request.getInputStream();
+  			File tmp = File.createTempFile("testUpload",".zip");
+			FileOutputStream fos = new FileOutputStream(tmp);
+			copyResource(fos, is);
+			tmp.deleteOnExit();
+			createApp(tmp,application);
+
+			return "OK - "+application+" uploaded\n";
+//			return "File dumped @"+ tmp.getAbsolutePath();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return "ERROR -  "+e.getMessage();
+		}}
+	private String uploadMultipart(String application, HttpServletRequest request) {
+		System.err.println(">>" +request.getParameterMap());
 		try {
 			InputStream is =  request.getInputStream();
 //			File apppp = new File(applicationFolder);
 			MultipartRequest mr = new MultipartRequest(request, System.getProperty("java.io.tmpdir"),20000000);
 			Enumeration e =  mr.getFileNames();
-			String appName = mr.getParameter("appName");
-			if(appName==null) {
-				appName = "NewApplication";
-			}
+	
 			while (e.hasMoreElements()) {
 				String object = (String) e.nextElement();
 				File f = mr.getFile(object);
 				System.err.println("Filename returned: "+f.getAbsolutePath());
-				createApp(f,appName);
+				createApp(f,application);
 				f.delete();
 				System.err.println("File detected: "+object);
 			}
-//			File tmp = File.createTempFile("testUpload",".zip");
-//			FileOutputStream fos = new FileOutputStream(tmp);
-//			copyResource(fos, is);
-//			tmp.deleteOnExit();
-		//	createApp(tmp);
+			File tmp = File.createTempFile("testUpload",".zip");
+			FileOutputStream fos = new FileOutputStream(tmp);
+			copyResource(fos, is);
+			tmp.deleteOnExit();	
+			createApp(tmp,application);
+			// fnished!
 			
-			return "File dumped @";// + tmp.getAbsolutePath();
+			return "File dumped @"+ tmp.getAbsolutePath();
 		} catch (IOException e) {
 			e.printStackTrace();
 			return "Problem: "+e.getMessage();
 		}
 	}
+	
 	private void createApp(File tmp , String appName) {
-		File dest = new File(applicationFolder,appName);
+		File dest = new File(getAppFolder(),appName);
 		dest.mkdirs();
-		System.err.println("File: "+tmp.getAbsolutePath()+" exists? "+tmp.exists()+" size: "+tmp.length());
+		System.err.println("Deploying app: "+appName+" to: "+dest.getAbsolutePath());
+//		System.err.println("File: "+tmp.getAbsolutePath()+" exists? "+tmp.exists()+" size: "+tmp.length());
 		ZipUtils.unzip(tmp, dest);
-		
 	}
+
 	private String create(String application, File appDir) {
 		File newApp = new File(appDir,application);
 		boolean result = newApp.mkdirs();
@@ -142,9 +289,28 @@ public class TipiAdminServlet extends HttpServlet {
 		// application/x-zip-compressed
 		response.setContentType("application/x-zip-compressed");
 		response.setHeader("Content-Disposition", "attachment; filename=\"" + application + ".zip" + "\"");
-
-		InputStream is = getZippedDir(appDir, application);
-		copyResource(response.getOutputStream(), is);
+		
+		Map<String,String> userProperties = new HashMap<String,String>();
+			String path = getServletContext().getRealPath("WEB-INF/ant/zipoutput.xml");
+			try {
+				userProperties.put("application", application);
+				File actualAppFolder = new File(appDir, application);
+				userProperties.put("zipDir", actualAppFolder.getAbsolutePath());
+				String result = AntRun.callAnt(new File(path), actualAppFolder, userProperties);
+				System.err.println("Result: "+result);
+				File output = new File(actualAppFolder,application+".zip");
+				FileInputStream fis = new FileInputStream(output);
+				OutputStream os = response.getOutputStream();
+				copyResource(os, fis);
+				os.flush();
+				output.delete();
+			} catch (IOException e) {
+				e.printStackTrace();
+				System.err.println("Error building " + application + ": " + e.getMessage());
+				response.getWriter().write("Error building " + application + ": " + e.getMessage());
+				response.getWriter().flush();
+				
+	}		
 	}
 
 	private String delete(String application, File appDir) {
@@ -152,7 +318,7 @@ public class TipiAdminServlet extends HttpServlet {
 		String appPath = appDir.getAbsolutePath();
 //		File ff = new File(ap)
 		deleteDirectory(appDir);
-		return appPath + " deleted!";
+		return "OK - "+appPath + " deleted!";
 	}
 
 	private String clean(String application, File appDir) {
@@ -164,19 +330,53 @@ public class TipiAdminServlet extends HttpServlet {
 			}
 		}
 		libDir.delete();
-		return libDir.getAbsolutePath() + " cleaned!";
+		return "OK - "+libDir.getAbsolutePath() + " cleaned!";
 	}
 
 	private String build(String application, File appDir) {
 		// TipiProjectBuilder
+		String codebase = getServletContext().getInitParameter("appUrl");
+		if(codebase!=null) {
+			codebase = codebase+application+"/";
+		}
 		try {
-			ProjectBuilder.buildTipiProject(appDir);
+			ProjectBuilder.buildTipiProject(appDir,codebase);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return "Error building " + application + ": " + e.getMessage();
 		}
-		return application + " built!";
+		boolean localSign = false;
+		
+		PropertyResourceBundle pe;
+		try {
+			FileInputStream is = new FileInputStream(new File(appDir,"settings/tipi.properties"));
+			pe = new PropertyResourceBundle(is);
+			String keystore = pe.getString("keystore");
+			is.close();
+			if(keystore!=null) {
+				localSign = true;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	catch (MissingResourceException me) {
+			System.err.println("No keystore found");
+		}
 
+		if(localSign) {
+			Map<String,String> userProperties = new HashMap<String,String>();
+			String path = getServletContext().getRealPath("WEB-INF/ant/localsign.xml");
+			try {
+				String result = AntRun.callAnt(new File(path), appDir, userProperties);
+				System.err.println("Result: "+result);
+				return result;
+			} catch (IOException e) {
+				e.printStackTrace();
+				return "Error building " + application + ": " + e.getMessage();
+			}
+		}
+		
+		return "OK - "+application + " built!";
+ 
 	}
 
 	public boolean deleteDirectory(File path) {
@@ -204,19 +404,16 @@ public class TipiAdminServlet extends HttpServlet {
 	}
 
 	
-	private final void copyResource(OutputStream out, InputStream in) {
+	private final void copyResource(OutputStream out, InputStream in) throws IOException {
 		BufferedInputStream bin = new BufferedInputStream(in);
 		BufferedOutputStream bout = new BufferedOutputStream(out);
 		byte[] buffer = new byte[1024];
 		int read = -1;
 		boolean ready = false;
 		while (!ready) {
-			try {
-				read = bin.read(buffer);
-				if (read > -1) {
-					bout.write(buffer, 0, read);
-				}
-			} catch (IOException e) {
+			read = bin.read(buffer);
+			if (read > -1) {
+				bout.write(buffer, 0, read);
 			}
 			if (read <= -1) {
 				ready = true;
@@ -229,10 +426,36 @@ public class TipiAdminServlet extends HttpServlet {
 		} catch (IOException e) {
 
 		}
+	
+	
 	}
 
 	
 	
+	/**
+	 * Same as the stream edition. Does not close streams!
+	 * @param out
+	 * @param in
+	 * @throws IOException
+	 */
+	private final void copyResource(Writer out, Reader in) throws IOException {
+		BufferedReader bin = new BufferedReader(in);
+		BufferedWriter bout = new BufferedWriter(out);
+		char[] buffer = new char[1024];
+		int read = -1;
+		boolean ready = false;
+		while (!ready) {
+				read = bin.read(buffer);
+				if (read > -1) {
+					bout.write(buffer, 0, read);
+				}
+			if (read <= -1) {
+				ready = true;
+			}
+		}
+		bout.flush();
+	
+	}
 
 	
 }

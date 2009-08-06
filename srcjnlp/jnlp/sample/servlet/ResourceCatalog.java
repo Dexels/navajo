@@ -99,6 +99,7 @@ public class ResourceCatalog {
     public JnlpResource lookupResource(DownloadRequest dreq) throws ErrorResponseException {
 	// Split request up into path and name
 	String path = dreq.getPath();
+	_log.addDebug("Looking up: "+dreq.getPath());
 	String name = null;
 	String dir  = null;
 	int idx = path.lastIndexOf('/');
@@ -122,7 +123,7 @@ public class ResourceCatalog {
 	    pentries = new PathEntries(versionList, dirList, platformList, xmlVersionResPath.getLastModified());
 	    _entries.put(dir, pentries);
 	}
-	
+	System.err.println("ENTRIES: "+_entries);
 	// Search for a match
 	JnlpResource[] result = new JnlpResource[1];
 	
@@ -136,6 +137,7 @@ public class ResourceCatalog {
 	    int sts1 = findMatch(pentries.getVersionXmlList(), name, dreq, result);
 	    if (sts1 != DownloadResponse.STS_00_OK) {
 		// Then lookup in directory
+	   	 _log.addDebug("Looking up directoryList...");
 		int sts2 = findMatch(pentries.getDirectoryList(), name, dreq, result);	
 		if (sts2 != DownloadResponse.STS_00_OK) {
 
@@ -310,10 +312,14 @@ public class ResourceCatalog {
 	ArrayList list = new ArrayList();
 
 	// fix for 4474021
-	if (_servletContext.getRealPath(dirPath) == null) {
+	File dir = ((ResourceResolver)_servletContext.getAttribute("resourceResolver")).getDir(dirPath);
+	_log.addDebug("Dir resolved to: "+dir);
+	if (!dir.exists()) {
 	    String path = jnlpGetPath(dreq);	 
+	 	_log.addDebug("Dir PATH: "+path);
 	  
 	    String name = dreq.getPath().substring(path.lastIndexOf("/") + 1);
+		 	_log.addDebug("Dir NAME: "+name);
 	
 	    JnlpResource jnlpres = new JnlpResource(_servletContext, name, dreq.getVersion(), dreq.getOS(), dreq.getArch(), dreq.getLocale(), path, dreq.getVersion());	   
 
@@ -323,7 +329,7 @@ public class ResourceCatalog {
 	    list.add(jnlpres);
 	    return list;
 	}
-	File dir = new File(_servletContext.getRealPath(dirPath));
+//	File dir = new File(_servletContext.getRealPath(dirPath));
 	_log.addDebug("File directory: " + dir);
 	if (dir.exists() && dir.isDirectory()) {
 	    File[] entries = dir.listFiles();
@@ -336,11 +342,15 @@ public class ResourceCatalog {
 		    list.add(jnlpres);
 		}
 	    }
+	} else {
+		_log.addDebug("WTF? NOT File directory: " + dir);
+		
 	}
 	return list;
     }
     
     private JnlpResource parseFileEntry(String dir, String filename) {
+   	 _log.addDebug("Cheching dir: "+dir+" with file: "+filename);
 	int idx = filename .indexOf("__");
 	if (idx == -1) return null;
 	
@@ -355,35 +365,45 @@ public class ResourceCatalog {
 	    extension = rest.substring(idx);
 	    rest = rest .substring(0, idx);
 	}
-	
+ 	 _log.addDebug("name "+name+" == "+rest+" == "+extension);
 	// Parse options
 	String versionId = null;
 	ArrayList osList = new ArrayList();
 	ArrayList archList = new ArrayList();
 	ArrayList localeList = new ArrayList();
-	while(rest.length() > 0) {
-	    /* Must start with __ at this point */
-	    if (!rest.startsWith("__")) return null;
-	    rest = rest.substring(2);
-	    // Get option and argument
-	    char option = rest.charAt(0);
-	    idx = rest.indexOf("__");
-	    String arg = null;
-	    if (idx == -1) {
-		arg = rest.substring(1);
-		rest = "";
-	    } else {
-		arg = rest.substring(1, idx);
-		rest = rest.substring(idx);
-	    }
-	    switch(option) {
-		case 'V': versionId = arg; break;
-		case 'O': osList.add(arg); break;
-		case 'A': archList.add(arg); break;
-		case 'L': localeList.add(arg); break;
-		default: return null; // error
-	    }
-	}
+	while (rest.length() > 0) {
+			/* Must start with __ at this point */
+			if (!rest.startsWith("__"))
+				return null;
+			rest = rest.substring(2);
+			// Get option and argument
+			char option = rest.charAt(0);
+			idx = rest.indexOf("__");
+			String arg = null;
+			if (idx == -1) {
+				arg = rest.substring(1);
+				rest = "";
+			} else {
+				arg = rest.substring(1, idx);
+				rest = rest.substring(idx);
+			}
+			switch (option) {
+			case 'V':
+				versionId = arg;
+				break;
+			case 'O':
+				osList.add(arg);
+				break;
+			case 'A':
+				archList.add(arg);
+				break;
+			case 'L':
+				localeList.add(arg);
+				break;
+			default:
+				return null; // error
+			}
+		}
 	
 	return new JnlpResource(_servletContext,
 				name + extension, /* Resource name in URL request */

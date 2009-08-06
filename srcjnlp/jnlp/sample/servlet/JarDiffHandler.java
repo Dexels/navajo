@@ -291,7 +291,7 @@ public class JarDiffHandler {
     // so it can be used to generate jardiff
     private String getRealPath(String path) throws IOException{
 
-	URL fileURL =  _servletContext.getResource(path);
+	URL fileURL =  ((ResourceResolver)_servletContext.getAttribute("resourceResolver")).getResource(path);
 	
 	File tempDir  = (File)_servletContext.getAttribute("javax.servlet.context.tempdir");
 
@@ -314,16 +314,23 @@ public class JarDiffHandler {
 	// Lookup up file for request version
 	DownloadRequest fromDreq = dreq.getFromDownloadRequest();
 	try {
+		 _log.addDebug("Request::: "+fromDreq.toString());
+		   
 	    JnlpResource fromRes = catalog.lookupResource(fromDreq);
 	    
 	    /* Get file locations */
-	    String newFilePath = _servletContext.getRealPath(res.getPath());
-	    String oldFilePath = _servletContext.getRealPath(fromRes.getPath());	    	    	   
+	    _log.addDebug("Old skool: "+fromRes.getPath());
+	    _log.addDebug("New skool: "+res.getPath());
+	    File resolvedOld =  ((ResourceResolver)_servletContext.getAttribute("resourceResolver")).getDir(fromRes.getPath());
+	    File resolvedNew =  ((ResourceResolver)_servletContext.getAttribute("resourceResolver")).getDir(res.getPath());
+	    _log.addDebug("New situation: "+resolvedOld.getAbsolutePath()+" to new: "+resolvedNew.getAbsolutePath());
+	    String newFilePath =  resolvedNew.getAbsolutePath(); //_servletContext.getRealPath(res.getPath());
+	    String oldFilePath = resolvedOld.getAbsolutePath(); //_servletContext.getRealPath(fromRes.getPath());	    	    	   
 	    	    	    
 	    // fix for 4720897
 	    if (newFilePath == null) {
-		newFilePath = getRealPath(res.getPath());
-		if (newFilePath != null) del_new = true;
+	   	 newFilePath = getRealPath(res.getPath());
+	   if (newFilePath != null) del_new = true;
 	    }
 
 	    if (oldFilePath == null) {
@@ -337,7 +344,7 @@ public class JarDiffHandler {
 	    
 	    // Create temp. file to store JarDiff file in
 	    File tempDir  = (File)_servletContext.getAttribute("javax.servlet.context.tempdir");
-
+	    
 	    // fix for 4653036: JarDiffHandler() should use javax.servlet.context.tempdir to store the jardiff	  
 	    File outputFile = File.createTempFile("jnlp", ".jardiff", tempDir);
 	   	  
@@ -384,10 +391,12 @@ public class JarDiffHandler {
 		}
 	    }	  
 	} catch(IOException ioe) {
-	    _log.addDebug("Failed to genereate jardiff", ioe);
+		ioe.printStackTrace();
+	    _log.addDebug("(IOException) Failed to genereate jardiff", ioe);
 	    return null;	    	    
 	} catch(ErrorResponseException ere) {
-	    _log.addDebug("Failed to genereate jardiff", ere);
+		ere.printStackTrace();
+	    _log.addDebug("(ErrorResponseException) Failed to genereate jardiff", ere);
 	    return null;	    
 	}		
     }                        

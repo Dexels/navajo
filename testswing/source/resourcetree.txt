@@ -1,0 +1,3 @@
+  * resource
+    * [[http://spiritus.dexels.nl:41766/Tipi/apps/testswingeditor/resource//icon.png|icon.png]]
+    * [[http://spiritus.dexels.nl:41766/Tipi/apps/testswingeditor/resource//splash.png|splash.png]]
