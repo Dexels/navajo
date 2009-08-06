@@ -12,8 +12,8 @@ import com.dexels.navajo.tipi.util.XMLElement;
 
 public class TipiWebProjectBuilder extends TipiProjectBuilder {
 
-	public void downloadExtensionJars(String projectName, URL remoteExtensionUrl, XMLElement extensionElement, File baseDir,
-			boolean clean) throws MalformedURLException, IOException {
+	public void downloadExtensionJars(String projectName, String version, URL remoteExtensionUrl, XMLElement extensionElement,
+			File baseDir, boolean clean, boolean localSign) throws MalformedURLException, IOException {
 		URL unsigned = new URL(remoteExtensionUrl, "lib/");
 		File webInf = new File(baseDir,"WEB-INF");
 		if(!webInf.exists()) {

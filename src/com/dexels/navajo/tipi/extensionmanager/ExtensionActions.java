@@ -171,7 +171,7 @@ public class ExtensionActions {
 		toBeResolved.remove(0);
 		
 		XMLElement projectDefinition = downloadDefinition(currentProject,remoteRepository,  repository, project);
-		System.err.println("Downloading: "+project);
+		System.err.println("Downloading (EA): "+project);
 		XMLElement requires = projectDefinition.getElementByTagName("requires");
 		if(requires!=null) {
 			List<XMLElement> children = requires.getChildren();

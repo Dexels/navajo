@@ -8,9 +8,19 @@ import java.net.URL;
 import com.dexels.navajo.tipi.util.XMLElement;
 
 public abstract class TipiProjectBuilder {
-	public abstract void downloadExtensionJars(String projectName, URL remoteExtensionUrl, XMLElement extensionElement, File baseDir, boolean clean) throws MalformedURLException, IOException;
+	private boolean useVersioning;
+	public abstract void downloadExtensionJars(String extensionName, String version, URL remoteExtensionUrl, XMLElement extensionElement, File baseDir, boolean clean, boolean localSign) throws MalformedURLException, IOException;
 
-	public void downloadProjectInclude(String projectName, URL remoteExtensionUrl, XMLElement extensionElement, File baseDir, boolean clean) throws MalformedURLException, IOException {
+	
+	public void setUseVersioning(boolean b) {
+		useVersioning = b;
+	}
+	
+	protected boolean useJnlpVersioning() {
+		return useVersioning;
+	}
+	
+	public void downloadProjectInclude(String extensionName, URL remoteExtensionUrl, XMLElement extensionElement, File baseDir, boolean clean) throws MalformedURLException, IOException {
 		URL projectInclude = new URL(remoteExtensionUrl,"projectinclude.zip");
 	   try {
 			ClientActions.downloadFile(projectInclude, "projectinclude.zip", baseDir, clean, false);

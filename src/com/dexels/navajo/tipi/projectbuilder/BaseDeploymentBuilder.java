@@ -11,7 +11,7 @@ import java.util.PropertyResourceBundle;
 public abstract class BaseDeploymentBuilder {
 	protected final VersionResolver myVersionResolver = new VersionResolver();
 
-	public abstract void build(String repository, String developmentRepository, String extensions, File baseDir, String codebase, String fileName, String profile) throws IOException;
+	public abstract void build(String repository, String developmentRepository, String extensions, File baseDir, String codebase, String fileName, String profile, boolean useVersioning) throws IOException;
 
 	
 	public Map<String, String> parseParams(File baseDir) throws IOException {

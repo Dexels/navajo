@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
+import com.dexels.navajo.tipi.projectbuilder.ClientActions;
 import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.util.XMLElement;
 import com.dexels.navajo.tipi.util.XMLParseException;
@@ -191,9 +192,10 @@ public class ExtensionManager {
 
 	public static XMLElement getXMLElement(URL extensionURL) throws IOException {
 		try {
-			System.err.println("Downloading: "+extensionURL);
+			System.err.println("Downloading (EM): "+extensionURL);
+			InputStream is = ClientActions.getUrlStream(extensionURL);
 			XMLElement result = new CaseSensitiveXMLElement();
-			InputStream is = extensionURL.openStream();
+//			InputStream is = extensionURL.openStream();
 			Reader r = new InputStreamReader(is);
 			result.parseFromReader(r);
 			is.close();

@@ -14,47 +14,94 @@ import java.util.StringTokenizer;
 
 import org.omg.CORBA.VersionSpecHelper;
 
+import com.dexels.navajo.tipi.extensionmanager.ExtensionManager;
 import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.util.XMLElement;
 
 public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 
-	protected abstract boolean appendResourceForExtension(XMLElement resources, String repository, String ext, String version,String resourceBase)
+	protected abstract boolean appendResourceForExtension(XMLElement resources, String repository, String ext, String version,String resourceBase, boolean useVersioning)
 			throws IOException;
 
-	protected abstract void appendProxyResource(XMLElement resources, String repository, String mainExtension) throws IOException;
+	protected abstract void appendProxyResource(XMLElement resources, String repository, String mainExtension, boolean useVersioning) throws IOException;
 
 
-	public String appendResources(XMLElement resources, String repository, List<String> extensions,String resourceBase) throws IOException {
+	public String appendResources(File baseDir, XMLElement resources, String repository, List<String> extensions,String resourceBase, boolean useVersioning) throws IOException {
 		String mainExtension = null;
 		for (String ext : extensions) {
 			Map<String, String> versionMap = myVersionResolver.resolveVersion(ext);
 			boolean isMain = appendResourceForExtension(resources, repository, versionMap.get("extension"), versionMap
-					.get("version"),resourceBase);
+					.get("version"),resourceBase, useVersioning);
 			if (isMain) {
 				mainExtension = ext;
 			}
 		}
+		if(useVersioning) {
+//			buildVersionFile(baseDir,repository, extensions);
+		}
 		return mainExtension;
+	}
+
+	private void buildVersionFile(File baseDir,String repository, List<String> extensions) throws IOException {
+		// TODO Auto-generated method stub
+		XMLElement jnlpVersions = new CaseSensitiveXMLElement("jnlp-versions");
+		for (String ext : extensions) {
+			Map<String, String> versionMap = myVersionResolver.resolveVersion(ext);
+			String version = versionMap.get("version");
+			List<String> jars = ExtensionManager.getJars(repository, versionMap.get("extension"),version,new HashMap<String,String>(),new HashMap<String,String>());
+			appendExtensionToVersions(jnlpVersions, ext,version,jars);
+		}
+		System.err.println("Versions: "+jnlpVersions.toString());
+		FileWriter fw = new FileWriter(new File(baseDir,"versions.xml"));
+		fw.write("<?xml version=\"1.0\"?>\n");
+		jnlpVersions.write(fw);
+		fw.flush();
+		fw.close();
+	}
+
+//	<?xml version="1.0"?>
+//	<jnlp-versions>
+//	<resource>
+//	<pattern>
+//	<name>lib.jar</name>
+//	<version-id>1.1</version-id>
+//	</pattern>
+//	<file>lib.jar</file>
+//	</resource>
+//	</jnlp-versions>
+	
+	
+	private void appendExtensionToVersions(XMLElement jnlpVersions, String ext, String version, List<String> jars) {
+		for (String currentResource : jars) {
+			XMLElement resource = new CaseSensitiveXMLElement("resource");
+			jnlpVersions.addChild(resource);
+			XMLElement pattern = new CaseSensitiveXMLElement("pattern");
+			resource.addChild(pattern);
+			pattern.addTagKeyValue("name", currentResource);
+			pattern.addTagKeyValue("version-id", version);
+//			resource.addTagKeyValue("file", currentResource.substring(0,currentResource.length()-4)+"__V"+version+".jar");
+			resource.addTagKeyValue("file", "lib/"+currentResource);
+		}
+		
 	}
 
 	public abstract String getJnlpName();
 
-	public void build(String repository, String developRepository, String extensions, File baseDir, String codebase, String fileName, String profile) {
-		File jnlpFile = new File(baseDir, fileName);
-		
+	public void build(String repository, String developRepository, String extensions, File baseDir, String codebase, String fileName, String profile, boolean useVersioning) {
+		File jnlpFile = new File(baseDir, fileName+".jnlp");
+		System.err.println("Writing jnlp: "+jnlpFile.getAbsolutePath());
 		try {
 			FileWriter fw1 = new FileWriter(jnlpFile);
 			fw1.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-			XMLElement output = buildElement(repository, extensions, baseDir, codebase,"", fileName, profile);
+			XMLElement output = buildElement(repository, extensions, baseDir, codebase,"", "$$name", profile,useVersioning);
 			output.write(fw1);
 			fw1.flush();
 			fw1.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-}
-	public XMLElement buildElement(String repository, String extensions, File baseDir, String codebase, String resourceBase, String fileName, String profile) throws IOException {
+} 
+	public XMLElement buildElement(String repository, String extensions, File baseDir, String codebase, String resourceBase, String fileName, String profile, boolean useVersioning) throws IOException {
 		//String repository = generalRepository+"Extensions/";
 		if(!repository.endsWith("/")) {
 			repository = repository+"/";
@@ -104,8 +151,8 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 		XMLElement java = resources.addTagKeyValue("j2se", "");
 		java.setAttribute("version", "1.6+");
 		appendSecurity(output, params.get("permissions"));
-		String mainExtension = appendResources(resources, repository, exts,resourceBase);
-		appendProxyResource(resources, repository, mainExtension);
+		String mainExtension = appendResources(baseDir, resources, repository, exts,resourceBase,useVersioning);
+		appendProxyResource(resources, repository, mainExtension,useVersioning);
 
 		XMLElement app = output.addTagKeyValue("application-desc", "");
 		app.setAttribute("main-class", "tipi.MainApplication");

@@ -20,7 +20,7 @@ public class RemoteJnlpBuilder extends BaseJnlpBuilder {
 
 	@Override
 	protected boolean appendResourceForExtension(XMLElement resources,
-			String repository, String ext,String version,String resourceBase) throws IOException {
+			String repository, String ext,String version,String resourceBase, boolean useVersioning) throws IOException {
 		try {
 			VersionResolver vr = new VersionResolver(repository);
 			
@@ -40,7 +40,7 @@ public class RemoteJnlpBuilder extends BaseJnlpBuilder {
 	}
 
 	protected void appendProxyResource(XMLElement resources, String repository,
-			String mainExtension) throws IOException {
+			String mainExtension, boolean useVersioning) throws IOException {
 		Map<String,String> versionMap = myVersionResolver.resolveVersion(mainExtension);
 		
 		Map<String, String> mm = ExtensionManager.getMain(repository,

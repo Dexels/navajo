@@ -32,11 +32,14 @@ import java.util.zip.ZipFile;
 
 
 import com.dexels.navajo.tipi.extensionmanager.ExtensionManager;
+import com.dexels.navajo.tipi.projectbuilder.impl.InMemoryUrlCache;
 import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.util.XMLElement;
 import com.dexels.navajo.tipi.util.XMLParseException;
 
 public class ClientActions {
+	
+	private static final URLCache clientCache = new InMemoryUrlCache();
 	
 	public static void downloadZippedDemoFiles(String developmentRepository, String repository, File projectDir, String templateName) throws IOException {
 		URL baseUrl = new URL(developmentRepository);
@@ -60,6 +63,15 @@ public class ClientActions {
 //		ClientActions.downloadZippedDemoFiles(developmentRepository, projectDir,templateName);
 //	}	
 //	
+	
+	public static void flushCache() {
+		clientCache.flush();
+	}
+	
+	public static InputStream getUrlStream(URL u) throws IOException {
+		return clientCache.getStream(u);
+	}
+	
 	public static void downloadDemoFiles(String repository, File projectDir, String templateName) throws IOException {
 		
 		File resources = new File(projectDir,"resource");
@@ -229,25 +241,29 @@ public class ClientActions {
 	 * @throws IOException
 	 */
 	public static void downloadFile(URL remote, String localPath, File directory, boolean clean, boolean dontOverwrite) throws IOException, WriteAbortedException {
+		System.err.println("Downloading: "+localPath+" from url: "+remote+" directory: "+localPath);
 		directory.mkdirs();
 		File file = new File(directory, localPath);
 		if(dontOverwrite && file.exists()) {
 			System.err.println("Not overwriting existing file: "+file.getAbsolutePath());
 			return;
 		}
-		InputStream iss = checkNeedsUpdate(file, remote,clean);
-		if(iss == null) {
-			return;
-		}
+		InputStream cacheStream = clientCache.getStream(remote);
+
+//		InputStream iss = checkNeedsUpdate(file, remote,clean);
+//		if(iss == null) {
+//			return;
+//		}
 		FileOutputStream fos = new FileOutputStream(file);
-		InputStream is = remote.openStream();
-		copyResource(fos, is);
+//		InputStream is = remote.openStream();
+		copyResource(fos, cacheStream);
 	}
 
 	private static InputStream checkNeedsUpdate(File f, URL jar, boolean clean) throws IOException {
 		if(!f.exists()) {
 			return jar.openStream();
 		}
+
 		long local = f.lastModified();
 		URLConnection uc = jar.openConnection();
 		long remote = uc.getLastModified();

@@ -12,38 +12,57 @@ import com.dexels.navajo.tipi.util.XMLElement;
 
 public class TipiLocalJnlpProjectBuilder extends TipiProjectBuilder{
 
-	public void downloadExtensionJars(String projectName, URL remoteExtensionUrl, XMLElement extensionElement, File baseDir,
-			boolean clean) throws MalformedURLException, IOException {
-		URL signed = new URL(remoteExtensionUrl, "lib/");
+	public void downloadExtensionJars(String extensionName, String version, URL remoteExtensionUrl, XMLElement extensionElement,
+			File baseDir, boolean clean, boolean localSign) throws MalformedURLException, IOException {
+		
+		URL jarFolder = null;
+		if (localSign) {
+			jarFolder = new URL(remoteExtensionUrl, "unsigned/");
+		} else {
+			jarFolder = new URL(remoteExtensionUrl, "lib/");
+		}
 
 		List<XMLElement> jars = extensionElement.getAllElementsByTagName("jar");
 		File f = new File(baseDir, "lib");
 		if (f.exists()) {
 			f.delete();
-		}
+		} 
 		f.mkdirs();
 		for (XMLElement element : jars) {
 			String path = element.getStringAttribute("path");
-			URL jar = new URL(signed, path);
-//			System.err.println("URL: " + jar);
-			try {
-				ClientActions.downloadFile(jar, path, f,clean,false);
-			} catch (IOException e) {
-				e.printStackTrace();
+			URL jar = new URL(jarFolder, path);
+			if (useJnlpVersioning()) {
+				String packPath = path.substring(0, path.length() - 4) + "__V" + version + ".jar.pack.gz";
+				URL packedJar = new URL(jarFolder, path + ".pack.gz");
+				path = path.substring(0, path.length() - 4) + "__V" + version + ".jar";
+
+				ClientActions.downloadFile(jar, path, f, clean, useJnlpVersioning());
+				if(!localSign) {
+					ClientActions.downloadFile(packedJar, packPath, f, clean, useJnlpVersioning());
+				}
+			} else {
+				// path = path.substring(0, path.length() - 4) + "__V" + version +
+				// ".jar";
+				ClientActions.downloadFile(jar, path, f, clean, useJnlpVersioning());
+
 			}
+			// System.err.println("URL: " + jar);
 		}
 		XMLElement main = extensionElement.getElementByTagName("main");
 		if (main != null) {
 			String path = main.getStringAttribute("proxyjar");
-			URL jar = new URL(signed, path);
+			URL jar = new URL(jarFolder, path);
+			if(useJnlpVersioning()) {
+				path = path.substring(0,path.length()-4)+"__V"+version+".jar";
+			}
 			try {
-				ClientActions.downloadFile(jar, path, f,clean,false);
+				ClientActions.downloadFile(jar, path, f,clean,useJnlpVersioning());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}	
 		
-		downloadProjectInclude(projectName, remoteExtensionUrl, extensionElement, baseDir, clean);
+//		downloadProjectInclude(extensionName, remoteExtensionUrl, extensionElement, baseDir, clean);
 	}
 
 }

@@ -3,7 +3,6 @@ package com.dexels.navajo.tipi.projectbuilder;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,78 +11,26 @@ import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
 import java.util.StringTokenizer;
 
-import com.dexels.navajo.tipi.projectbuilder.ClasspathBuilder;
-import com.dexels.navajo.tipi.projectbuilder.ClientActions;
-import com.dexels.navajo.tipi.projectbuilder.LocalJnlpBuilder;
-import com.dexels.navajo.tipi.projectbuilder.RemoteJnlpBuilder;
-import com.dexels.navajo.tipi.projectbuilder.VersionResolver;
-import com.dexels.navajo.tipi.projectbuilder.XsdBuilder;
 import com.dexels.navajo.tipi.projectbuilder.impl.TipiLocalJnlpProjectBuilder;
 import com.dexels.navajo.tipi.projectbuilder.impl.TipiRemoteJnlpProjectBuilder;
 import com.dexels.navajo.tipi.projectbuilder.impl.TipiWebProjectBuilder;
 import com.dexels.navajo.tipi.util.XMLElement;
 
 public class ProjectBuilder {
-	private static void buildProfileJnlp(String profile,  boolean clean, File projectPath, String projectUrl, String extensions,
-			String extensionRepository,String developmentRepository, String buildType) throws IOException {
-		System.err.println("Building jnlp for extensionrep:"+extensionRepository);
-		String profileName = profile==null?"Default":profile;
-		if("remote".equals(buildType) ) {
-			deleteLocalTipiBuild(projectPath,profile);
-		}
-		if("local".equals(buildType) ) {
-			deleteRemoteTipiBuild(projectPath,profile);
-		}
-		if("remote".equals(buildType) || "both".equals(buildType)) {
-			RemoteJnlpBuilder r = new RemoteJnlpBuilder();
-			downloadExtensionJars(projectPath, extensions, extensionRepository,true,clean,buildType);
-			r.build(extensionRepository,developmentRepository, extensions,projectPath, projectUrl,profileName+"Remote.jnlp",profile);
-		}
-		if("local".equals(buildType) || "both".equals(buildType)) {
-			downloadExtensionJars(projectPath, extensions, extensionRepository,false,clean,buildType);
-			LocalJnlpBuilder l = new LocalJnlpBuilder();
-			l.build(extensionRepository,developmentRepository, extensions,projectPath, projectUrl,profileName+"Local.jnlp",profile);
-		}
-	}	
 	
-//	private static void downloadExtensionJars(File projectPath, String extensions,
-//			String repository, boolean onlyProxy, boolean clean) throws IOException {
-//		StringTokenizer st = new StringTokenizer(extensions, ",");
-//		Map<String,List<String>> repDefinition= ClientActions.getExtensions(repository);
-//		while (st.hasMoreTokens()) {
-//			try {
-//				String token = st.nextToken();
-//				VersionResolver vr = new VersionResolver();
-//				vr.load(repository);
-//				Map<String,String> versionMap = vr.resolveVersion(token);
-//				String ext = versionMap.get("extension");
-//				String version = versionMap.get("version");
-//				XMLElement extensionXml = ClientActions.getExtensionXml(ext, version, repository);
-//				if (onlyProxy) {
-//					ClientActions.downloadProxyJars(ext,new URL(repository+ext+"/"),extensionXml,projectPath,clean);
-//				} else {
-//					ClientActions.downloadExtensionJars(ext,new URL(repository+vr.resultVersionPath(token)+"/"),extensionXml,projectPath,clean);
-//				}
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//	}
-
-	private static void downloadExtensionJars(File projectPath, String extensions,String repository, boolean onlyProxy, boolean clean, String buildType) throws IOException {
+	
+	private static void downloadExtensionJars(File projectPath, String extensions,String extensionRepository, boolean onlyProxy, boolean clean, String buildType, boolean useVersioning, boolean localSign) throws IOException {
 		StringTokenizer st = new StringTokenizer(extensions, ",");
-		Map<String,List<String>> repDefinition= ClientActions.getExtensions(repository);
+		Map<String,List<String>> repDefinition= ClientActions.getExtensions(extensionRepository);
 		while (st.hasMoreTokens()) {
-			try {
 				String token = st.nextToken();
 				VersionResolver vr = new VersionResolver();
-				vr.load(repository);
+				vr.load(extensionRepository);
 				Map<String,String> versionMap = vr.resolveVersion(token);
 				String ext = versionMap.get("extension");
 				String version = versionMap.get("version");
-				XMLElement extensionXml = ClientActions.getExtensionXml(ext, version, repository);
+				XMLElement extensionXml = ClientActions.getExtensionXml(ext, version, extensionRepository);
 				TipiProjectBuilder tpb = null;
-				
 				if("web".equals(buildType)) {
 					tpb = new TipiWebProjectBuilder();
 				} else {
@@ -94,78 +41,64 @@ public class ProjectBuilder {
 					}
 					
 				}
-				tpb.downloadExtensionJars(ext, new URL(repository+vr.resultVersionPath(token)+"/"), extensionXml, projectPath, clean);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	public static void deleteLocalTipiBuild(File baseDir, String profile) {
-		File lib = new File(baseDir,"lib");
-
-		if(lib.exists()) {
-			File[] cc = lib.listFiles();
-			for (int i = 0; i < cc.length; i++) {
-				cc[i].delete();
-			}
-			lib.delete();
-		}
-	}
-	// to be refactored:
-	public static void deleteRemoteTipiBuild(File baseDir, String profile) {
-
-	}
-	private static void buildClassPath(File projectDir, String repository, String extensions) {	
-		try {
-			ClasspathBuilder cb = new ClasspathBuilder();
-			cb.build(repository, extensions,projectDir);
-		} catch (Exception e) {
-			e.printStackTrace();
+				tpb.setUseVersioning(useVersioning);
+				tpb.downloadExtensionJars(ext, version, new URL(extensionRepository+vr.resultVersionPath(token)+"/"), extensionXml, projectPath, clean, localSign);
+			
 		}
 	}
 	
-	private static void rebuildXsd(String repository, String extensions, File baseDir) {
-		XsdBuilder b = new XsdBuilder();
-		try {
-			b.build(repository, extensions, baseDir);
-			System.err.println("XSD rebuilt!");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+//	public static void deleteLocalTipiBuild(File baseDir) {
+//		File lib = new File(baseDir,"lib");
+//
+//		if(lib.exists()) {
+//			File[] cc = lib.listFiles();
+//			for (int i = 0; i < cc.length; i++) {
+//				cc[i].delete();
+//			}
+//			lib.delete();
+//		}
+//	}
+//	// to be refactored:
+//	public static void deleteRemoteTipiBuild(File baseDir, String profile) {
+//
+//	}
+
+	// Used for server side appstore building
 	
-	public static void buildTipiProject(File projectPath) throws IOException {
+	public static void buildTipiProject(File projectPath, String codebase) throws IOException {
+		System.err.println("Project patH: "+projectPath.getAbsoluteFile());
 		FileInputStream is = new FileInputStream(new File(projectPath,"settings/tipi.properties"));
 		PropertyResourceBundle pe = new PropertyResourceBundle(is);
 		is.close();	
 		String extensions = pe.getString("extensions").trim();
 		String repository = pe.getString("repository").trim();
 
-		String extensionRepository = repository+"Extensions/";
+		String extensionRepository = repository; //+"Extensions/";
 		String developmentRepository = repository+"Development/";
 
 		List<String> profiles = new LinkedList<String>();
-//		File profileFolder = new File(projectPath,"settings/profile/"+profile+".properties");
-//		
-//		if(profileFolder.exists() && profileFolder.isDirectory()) {
-//			File[] profileCandidates = profileFolder.listFiles();
-//			for (File candidate : profileCandidates) {
-//				if(candidate.getName().endsWith(".properties") && candidate.isFile()) {
-//					// ewwwww
-//					String currentProfileName = candidate.getName().substring(0,candidate.getName().length()-".properties".length());
-//					
-//					profiles.add(currentProfileName);
-//					System.err.println("Adding profile: "+currentProfileName);
-//				}
-//			}
-//		}
+		File profileFolder = new File(projectPath,"settings/profiles/");
+		System.err.println("Profile folder detected: "+profileFolder.getAbsolutePath());
+		if(profileFolder.exists() && profileFolder.isDirectory()) {
+			File[] profileCandidates = profileFolder.listFiles();
+			for (File candidate : profileCandidates) {
+				System.err.println("Current: "+candidate.getName());
+				if(candidate.getName().endsWith(".properties") && candidate.isFile()) {
+					// ewwwww
+					String currentProfileName = candidate.getName().substring(0,candidate.getName().length()-".properties".length());
+					
+					profiles.add(currentProfileName);
+					System.err.println("     : "+currentProfileName);
+				}
+			}
+		}
 
 		String buildType = pe.getString("build").trim();
 
 //		if(clean) {
 //			File libDir = new File(projectPath,"lib");
 //			libDir.delete();		
-//		}
+//		}http://spiritus.dexels.nl:8080/TipiServer/editor.jsp?application=SportlinkClub&filePath=settings/tipi.properties
 		
 //		if(!skipXsd) {
 //			rebuildXsd(extensionRepository,extensions,projectPath);
@@ -176,26 +109,37 @@ public class ProjectBuilder {
 		}
 		
 
-			downloadExtensionJars(projectPath, extensions, repository,false,false,buildType);
+		//	downloadExtensionJars(projectPath, extensions, extensionRepository,false,false,buildType,true);
 		
 
 		File[] cc = projectPath.listFiles();
-		for (int i = 0; i < cc.length; i++) {
-			if(cc[i].getName().endsWith(".jnlp")) {
-				cc[i].delete();
-			}
-		}
-		
-//		if(profiles==null || profiles.isEmpty()) {
-//	//		buildProfileJnlp(null,clean,  projectPath, projectUrl, extensions, extensionRepository,developmentRepository, buildType);
-
-//		} else {
-//			for (String profile : profiles) {
-//				System.err.println("Building profile: "+profile);
-//				buildProfileJnlp(profile,clean, projectPath, projectUrl, extensions , extensionRepository, developmentRepository,buildType);
-//				
+//		for (int i = 0; i < cc.length; i++) {
+//			if(cc[i].getName().endsWith(".jnlp")) {
+//				cc[i].delete();
 //			}
 //		}
+		boolean clean = false;
+		if(codebase==null) {
+			codebase = "$$codebase";
+		}
+		System.err.println("PRofiles: "+profiles);
+		String keystore = null;
+		try {
+			keystore = pe.getString("keystore");
+		} catch (MissingResourceException e) {
+			System.err.println("No resource found");
+		}
+		boolean resign = keystore!=null;
+		downloadExtensionJars(projectPath, extensions, extensionRepository,false,clean,buildType,true,resign);
+		if(profiles==null || profiles.isEmpty()) {
+			buildProfileJnlp(null,clean,  projectPath, codebase, extensions, extensionRepository,developmentRepository, buildType,true);
+		} else {
+			for (String profile : profiles) {
+				System.err.println("Building profile: "+profile);
+				buildProfileJnlp(profile,clean, projectPath, codebase, extensions , extensionRepository, developmentRepository,buildType,true);
+				
+			}
+		}
 
 		
 //		try {
@@ -206,4 +150,32 @@ public class ProjectBuilder {
 //		} catch (MissingResourceException e) {
 //		}
 	}
+
+
+
+	private static void buildProfileJnlp(String profile,  boolean clean, File projectPath, String projectUrl, String extensions,
+			String repository,String developmentRepository, String buildType, boolean useVersioning) throws IOException {
+		
+		System.err.println("Writing in: "+projectPath.getAbsolutePath());
+		// TODO: Don't think we need this one!
+		downloadExtensionJars(projectPath, extensions, repository,false,clean,buildType,useVersioning,false);
+
+		String profileName = profile==null?"Default":profile;
+//		if("remote".equals(buildType) ) {
+//			deleteLocalTipiBuild(projectPath,profile);
+//		}
+//		if("local".equals(buildType) ) {
+//			deleteRemoteTipiBuild(projectPath,profile);
+//		}
+		if("remote".equals(buildType)) {
+			RemoteJnlpBuilder r = new RemoteJnlpBuilder();
+			downloadExtensionJars(projectPath, extensions, repository,true,clean,buildType,useVersioning,false);
+			r.build(repository,developmentRepository, extensions,projectPath, projectUrl,profileName,profile,useVersioning);
+		}
+		if("local".equals(buildType) ) {
+			LocalJnlpBuilder l = new LocalJnlpBuilder();
+			l.build(repository,developmentRepository, extensions,projectPath, projectUrl,profileName,profile,useVersioning);
+		}
+	}
+
 }

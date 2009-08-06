@@ -34,7 +34,7 @@ public class XsdBuilder {
 
 	private final ClassManager myClassManager = new ClassManager();
 
-	public void build(String repository, String extensions,File baseDir) throws IOException {
+	public void build(String repository, String extensionRepository, String extensions,File baseDir) throws IOException {
 		File xsd = new File(baseDir, "tipi/tipi.xsd");
 		xsd.getParentFile().mkdirs();
 		
@@ -45,7 +45,7 @@ public class XsdBuilder {
 		StringTokenizer st = new StringTokenizer(extensions,",");
 //		Map<String, List<String>> repDefinition = ClientActions.getExtensions( repository);
 		VersionResolver vr = new VersionResolver();
-		vr.load(repository);
+		vr.load(extensionRepository);
 		while(st.hasMoreTokens()) {
 			String token = st.nextToken();
 			System.err.println("Processing token: "+token);
@@ -59,7 +59,7 @@ public class XsdBuilder {
 			String ext = versionMap.get("extension");
 			String version = versionMap.get("version");
 			try {
-				appendExtension(ext,version,repository);
+				appendExtension(ext,version,extensionRepository);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -75,7 +75,7 @@ public class XsdBuilder {
 //		System.err.println("All: "+allComponents);
 		try {
 			createXSD(baseDir, allComponents, allActions, allEvents, allValues);
-			createMetadata(repository, baseDir, allComponents, allActions, allTypes);
+			createMetadata(repository,extensionRepository, baseDir, allComponents, allActions, allTypes);
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -174,7 +174,7 @@ public class XsdBuilder {
 	}
 
 	
-	private void createMetadata(String repository, File baseDir, Map<String, XMLElement> allComponents2, Map<String, XMLElement> allActions2,
+	private void createMetadata(String repository,String extensionRepository, File baseDir, Map<String, XMLElement> allComponents2, Map<String, XMLElement> allActions2,
 			Map<String, XMLElement> allTypes) throws IOException {
 		XMLElement metadata = new CaseSensitiveXMLElement("metadata");
 		XMLElement components = new CaseSensitiveXMLElement("components");
@@ -183,7 +183,7 @@ public class XsdBuilder {
 		metadata.addChild(components);
 		metadata.addChild(actions);
 		metadata.addChild(types);
-		VersionResolver vr = new VersionResolver(repository);
+		VersionResolver vr = new VersionResolver(extensionRepository);
 		String docPrefix = repository+"wiki/doku.php?id=tipidoc:";
 
 		for (Entry<String,XMLElement> elt : allComponents2.entrySet()) {
@@ -193,7 +193,7 @@ public class XsdBuilder {
 			if(elt.getValue().getAttribute("class")!=null) {
 				XMLElement entry = elt.getValue();
 				c.setAttribute("name",elt.getKey());
-				c.setAttribute("href",createDocLink(repository,vr,entry.getStringAttribute("extension"),elt.getKey(),"component"));
+				c.setAttribute("href",createDocLink(docPrefix,vr,entry.getStringAttribute("extension"),elt.getKey(),"component"));
 				components.addChild(c);
 				
 			}
@@ -202,14 +202,14 @@ public class XsdBuilder {
 			XMLElement c = new CaseSensitiveXMLElement("element");
 			XMLElement entry = elt.getValue();
 			c.setAttribute("name",elt.getKey());
-			c.setAttribute("href",createDocLink(repository,vr,entry.getStringAttribute("extension"),elt.getKey(),"action"));
+			c.setAttribute("href",createDocLink(docPrefix,vr,entry.getStringAttribute("extension"),elt.getKey(),"action"));
 			actions.addChild(c);
 		}
 		for (Entry<String,XMLElement> elt : allTypes.entrySet()) {
 			XMLElement c = new CaseSensitiveXMLElement("element");
 			XMLElement entry = elt.getValue();
 			c.setAttribute("name",elt.getKey());
-			c.setAttribute("href",createDocLink(repository,vr,entry.getStringAttribute("extension"),elt.getKey(),"type"));
+			c.setAttribute("href",createDocLink(docPrefix,vr,entry.getStringAttribute("extension"),elt.getKey(),"type"));
 			types.addChild(c);
 		}
 		File settings = new File(baseDir,".tipiproject");

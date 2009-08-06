@@ -23,24 +23,27 @@ public class LocalJnlpBuilder extends BaseJnlpBuilder {
 
 	@Override
 	protected void appendProxyResource(XMLElement resources, String repository,
-			String mainExtension) {
+			String mainExtension, boolean useVersioning) {
 		// do nothing
 		
 	}
 
 	@Override
 	protected boolean appendResourceForExtension(XMLElement resources,
-			String repository, String ext,String version,String resourceBase) throws IOException {
+			String repository, String ext,String version,String resourceBase, boolean useVersioning) throws IOException {
 		Map<String,String> mainJar = new HashMap<String,String>();
 		Map<String,String> remoteJar = new HashMap<String,String>();
 		List<String> jars = ExtensionManager.getJars(repository, ext,version,mainJar,remoteJar);
-//		System.err.println("Local jars:"+ jars);
+		System.err.println("Local jars:"+ jars+" resbase: "+resourceBase);
 		for (String path : jars) {
+			
 			XMLElement x = new CaseSensitiveXMLElement("jar");
 			resources.addChild(x);
-			if (resourceBase==null || "".equals(resourceBase)) {
+			if(useVersioning) {
+				x.setAttribute("version", version);
+			}
+			if (useVersioning || resourceBase==null || "".equals(resourceBase)) {
 				x.setAttribute("href", "lib/"+path);
-				
 			} else {
 				x.setAttribute("href", resourceBase+"/lib/"+path);
 			}

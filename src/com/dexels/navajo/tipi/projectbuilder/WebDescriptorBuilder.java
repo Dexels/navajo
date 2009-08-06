@@ -17,7 +17,7 @@ import com.dexels.navajo.tipi.util.XMLElement;
 public class WebDescriptorBuilder extends BaseDeploymentBuilder {
 
 	@Override
-	public void build(String repository, String developmentRepository, String extensions, File baseDir, String codebase, String fileName, String profile)
+	public void build(String repository, String developmentRepository, String extensions, File baseDir, String codebase, String fileName, String profile, boolean useVersioning)
 			throws IOException {
 		
 //		ClientActions.downloadFile(new URL(developmentRepository+"TemplateEchoProject/web.xml"), "WEB-INF/web.xml", baseDir, false, true);
