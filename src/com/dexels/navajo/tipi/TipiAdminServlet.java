@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.tomcat.util.http.fileupload.MultipartStream;
 
+import com.dexels.navajo.tipi.appmanager.ApplicationStatus;
 import com.dexels.navajo.tipi.projectbuilder.BaseJnlpBuilder;
 import com.dexels.navajo.tipi.projectbuilder.ClientActions;
 import com.dexels.navajo.tipi.projectbuilder.LocalJnlpBuilder;
@@ -115,48 +116,35 @@ public class TipiAdminServlet extends HttpServlet {
 	}
 
 	
-	private XMLElement doCreateJnlp(HttpServletRequest request, boolean build, boolean clean) throws IOException {
-		String servletPath = request.getServletPath();
-		String appStoreUrl = getServletContext().getInitParameter("appUrl");
-		String appFolder = getServletContext().getInitParameter("appFolder");
-		String applicationPath = servletPath.substring(1,servletPath.lastIndexOf('/'));
-		String myAppPath = appFolder+applicationPath;
-		String myAppUrl = appStoreUrl+applicationPath;
-		File applicationDir = new File(myAppPath);
-
-		System.err.println("Resolved app path: "+myAppPath);
-		System.err.println("Resolved app url: "+myAppUrl);
-
-		String profile = servletPath.substring(servletPath.lastIndexOf('/')+1,servletPath.lastIndexOf('.'));
-	//	String propertypath = getServletContext().getRealPath(myAppPath+"/settings/tipi.properties");
-		System.err.println("Using profile: "+profile);
-		File prop = new File(myAppPath+"/settings/tipi.properties");
-		FileInputStream fis = new FileInputStream(prop);
-		PropertyResourceBundle prb = new PropertyResourceBundle(fis);
-
-		fis.close();
-		BaseJnlpBuilder l = new LocalJnlpBuilder();
-//		String codebase = "http://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/"+applicationPath;
-		String repository = prb.getString("repository");
-
-		File profileSettings = new File(myAppPath+"/settings/profiles/"+profile+".properties");
-		if(profileSettings.exists()) {
-			System.err.println("Profile actually found!");
-		} else {
-			profile = null;
-		}
-		
-		
-		boolean useVersioning = false;
-		
-		try {
-			useVersioning = prb.getString("useJnlpVersioning").equals("true");
-		} catch (MissingResourceException e) {
-		}
-		XMLElement jnlp = l.buildElement(repository, prb.getString("extensions"),applicationDir, "$$codebase",myAppUrl, profile+".jnlp",profile,useVersioning);
-		return jnlp;
-
-	}
+//	private XMLElement doCreateJnlp(HttpServletRequest request, boolean build, boolean clean) throws IOException {
+//		String servletPath = request.getServletPath();
+//		String appStoreUrl = getServletContext().getInitParameter("appUrl");
+//		String appFolder = getServletContext().getInitParameter("appFolder");
+//		String applicationPath = servletPath.substring(1,servletPath.lastIndexOf('/'));
+//		String myAppPath = appFolder+applicationPath;
+//		String myAppUrl = appStoreUrl+applicationPath;
+//		File applicationDir = new File(myAppPath);
+//		String profile = servletPath.substring(servletPath.lastIndexOf('/')+1,servletPath.lastIndexOf('.'));
+//		File prop = new File(myAppPath+"/settings/tipi.properties");
+//		FileInputStream fis = new FileInputStream(prop);
+//		PropertyResourceBundle prb = new PropertyResourceBundle(fis);
+//		fis.close();
+//		BaseJnlpBuilder l = new LocalJnlpBuilder();
+//		String repository = prb.getString("repository");
+//		File profileSettings = new File(myAppPath+"/settings/profiles/"+profile+".properties");
+//		if(profileSettings.exists()) {
+//			System.err.println("Profile actually found!");
+//		} else {
+//			profile = null;
+//		}
+//		boolean useVersioning = false;
+//		try {
+//			useVersioning = prb.getString("useJnlpVersioning").equals("true");
+//		} catch (MissingResourceException e) {
+//		}
+//		XMLElement jnlp = l.buildElement(repository, prb.getString("extensions"),applicationDir, "$$codebase",myAppUrl, profile+".jnlp",profile,useVersioning);
+//		return jnlp;
+//	}
 	/**
 	 * Throws interupted to prevent redirections
 	 * @param commando
@@ -282,6 +270,37 @@ public class TipiAdminServlet extends HttpServlet {
 			return "Error creating and downloading new application: "+e.getMessage();
 		}
 
+	}
+	public static void buildIfNecessary(HttpServletRequest request, File appDir) {
+		final String appsTag = "Apps/";
+		String requestString = request.getServletPath();
+		System.err.println("Request: "+request.toString());
+		String requestURI = request.getRequestURI();
+		System.err.println("getServletPath: "+requestURI);
+		int ind =  requestURI.indexOf(appsTag);
+		if(ind==-1) {
+			System.err.println("Not relevant.");
+			return;
+		}
+		int jnlpUnd =  requestURI.indexOf(".jnlp");
+		if(jnlpUnd==-1) {
+			System.err.println("Only for jnlpfiles");
+			return;
+		}
+		String appName = requestURI.substring(ind+appsTag.length(),requestURI.lastIndexOf('/'));
+		System.err.println("AppName: "+appName );
+		String profileName = requestURI.substring(requestURI.lastIndexOf('/')+1,jnlpUnd);
+		System.err.println("Profile: "+profileName);
+		File currentAppDir = new File(appDir,appName);
+		ApplicationStatus as = new ApplicationStatus();
+		try {
+			as.load(currentAppDir);
+			boolean res = as.getRebuildMap().get(profileName);
+			System.err.println("Profile needs rebuild? "+res);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private void download(String application, File appDir, HttpServletResponse response) throws IOException {
