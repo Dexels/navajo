@@ -19,7 +19,6 @@
 		<copy todir="${dist}/lib" file="../NavajoFunctions/NavajoFunctions.jar" />
 		<copy todir="${dist}/lib" file="../Navajo/NavajoRuntime.jar" />
 		<copy todir="${dist}/lib" file="../Navajo/NavajoServer.jar" />
-		<copy todir="${dist}/lib" file="../NavajoClient/NavajoClient.jar" />
 		<copy todir="${dist}/lib" file="../NavajoClient/lib/jzlib.jar" />
 		<copy todir="${dist}/lib" file="Tipi.jar" />
 	</target>
