@@ -51,10 +51,6 @@
     			<manifest>
     				<attribute name="Built-By" value="Frank Lyaruu" />
     			</manifest>
-				<service type="tipi.TipiExtension">
-					<provider classname="tipi.NavajoRichTipiExtension" />
-				</service>
-
     		</jar>    	
     	
     </target>
