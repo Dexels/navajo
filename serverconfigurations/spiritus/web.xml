@@ -45,18 +45,7 @@
 		<param-value>/var/www/html/Tipi/AppStore/</param-value>
 	</context-param>
 
-<!-- 	<context-param>
-		<description></description>
-		<param-name>appUrl</param-name>
-		<param-value>http://spiritus.dexels.nl:41766/Tipi/AppStore/</param-value>
-	</context-param>
- -->
-<!-- 	<servlet>
-		<description></description>
-		<display-name>TipiServlet</display-name>
-		<servlet-name>TipiServlet</servlet-name>
-		<servlet-class>com.dexels.navajo.tipi.TipiServlet</servlet-class>
-	</servlet>-->
+
 	
 	<context-param>
 		<description></description>
@@ -91,33 +80,6 @@
 		</init-param>
 	</servlet>
 	
-	
-	<servlet>
-      <servlet-name>ConnectorServlet</servlet-name>
-        <servlet-class>
-          net.fckeditor.connector.ConnectorServlet
-      </servlet-class>
-      <load-on-startup>1</load-on-startup>
-    </servlet>
-	<servlet>
-      <servlet-name>TestPost</servlet-name>
-        <servlet-class>
-          com.dexels.test.TestPost
-      </servlet-class>
-    </servlet>
-    <servlet-mapping>
-    
-      <servlet-name>TestPost</servlet-name>
-      <url-pattern>/TestPost</url-pattern>
-    </servlet-mapping>
-	
-
-    <servlet-mapping>
-    
-      <servlet-name>ConnectorServlet</servlet-name>
-      <url-pattern>/fckeditor/editor/filemanager/browser/default/Connector</url-pattern>
-    </servlet-mapping>
-	
 	<servlet-mapping>
 		<servlet-name>TipiAdminServlet</servlet-name>
 		<url-pattern>/TipiAdminServlet</url-pattern>
@@ -126,13 +88,6 @@
 		<servlet-name>JnlpDownloadServlet</servlet-name>
 		<url-pattern>/Apps/*</url-pattern>
 	</servlet-mapping>
-
-
-
-
-
-
-
 	<!-- Define reference to the user database for looking up roles -->
 	<resource-env-ref>
 		<description>

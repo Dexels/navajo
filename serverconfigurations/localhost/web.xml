@@ -71,11 +71,6 @@
 		<servlet-name>TipiAdminServlet</servlet-name>
 		<servlet-class>com.dexels.navajo.tipi.TipiAdminServlet</servlet-class>
 	</servlet>
-
-
-
-
-
 	<servlet>
 		<description></description>
 		<display-name>JnlpDownloadServlet</display-name>
@@ -83,7 +78,7 @@
 		<servlet-class>jnlp.sample.servlet.JnlpDownloadServlet</servlet-class>
 		<init-param>
 			<param-name>logLevel</param-name>
-			<param-value>DEBUG</param-value>
+			<param-value>SEVERE</param-value>
 		</init-param>
 		<init-param>
 			<param-name>logPath</param-name>
@@ -92,31 +87,6 @@
 	</servlet>
 	
 	
-	<servlet>
-      <servlet-name>ConnectorServlet</servlet-name>
-        <servlet-class>
-          net.fckeditor.connector.ConnectorServlet
-      </servlet-class>
-      <load-on-startup>1</load-on-startup>
-    </servlet>
-	<servlet>
-      <servlet-name>TestPost</servlet-name>
-        <servlet-class>
-          com.dexels.test.TestPost
-      </servlet-class>
-    </servlet>
-    <servlet-mapping>
-    
-      <servlet-name>TestPost</servlet-name>
-      <url-pattern>/TestPost</url-pattern>
-    </servlet-mapping>
-	
-
-    <servlet-mapping>
-    
-      <servlet-name>ConnectorServlet</servlet-name>
-      <url-pattern>/fckeditor/editor/filemanager/browser/default/Connector</url-pattern>
-    </servlet-mapping>
 	
 	<servlet-mapping>
 		<servlet-name>TipiAdminServlet</servlet-name>
