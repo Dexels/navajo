@@ -73,11 +73,12 @@
 				<include  name="${archive}"/>
 			</fileset>
 		</copy>
+		<!--
     	<zip  destfile="testswing.zip">
     		<fileset dir="testswing/">
     			<include name="**"/>
     		</fileset>
-    	</zip>
+    	</zip>-->
     	
     	<eclipse.refreshLocal resource="/${ant.project.name}"/>
     	<war basedir="${basedir}/WebContent" destfile="${ant.project.name}.war">
