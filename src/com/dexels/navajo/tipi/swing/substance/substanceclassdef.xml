@@ -2,7 +2,7 @@
 <tid errorhandler="error">
 	<tipiaction name="setTheme" class="TipiSetTheme" package="com.dexels.navajo.tipi.swing.substance"
 		deprecated="true">
-		<description> Deprecated, used to set Substance 4.3 themes</description>
+		<description> Deprecated, used to set Substance 4.3 themes. Use setSkin to utilize skins</description>
 		<param name="value" type="string" />
 	</tipiaction>
 	<tipiaction name="setSkin" class="TipiSetSkin" package="com.dexels.navajo.tipi.swing.substance">
