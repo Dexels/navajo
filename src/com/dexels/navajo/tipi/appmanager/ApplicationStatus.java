@@ -144,19 +144,21 @@ public class ApplicationStatus {
 	private void processProfiles(File appDir) {
 		List<String> pro = new LinkedList<String>();
 		File profilesDir = new File(appDir,"settings/profiles");
-		if(!profilesDir.exists()) {
-			pro.add("Default");
-			setProfiles(pro);
-			return;
-		}
-		for (File file : profilesDir.listFiles()) {
-			//pro.add(file.getName());
-			if(file.canRead() && file.isFile() && file.getName().endsWith(".properties")) {
-				String profileName = file.getName().substring(0,file.getName().length()-".properties".length());
-				System.err.println("Profilename: "+profileName);
-				boolean b = profileNeedsRebuild(file,profileName, appDir);
-				pro.add(profileName);
-				profileNeedsRebuild.put (profileName,b);
+//		if(!profilesDir.exists() || profilesDir.listFiles().length ==0) {
+//			pro.add("Default");
+//			setProfiles(pro);
+	//		return;
+//		}
+		if(profilesDir.exists()) {
+			for (File file : profilesDir.listFiles()) {
+				//pro.add(file.getName());
+				if(file.canRead() && file.isFile() && file.getName().endsWith(".properties")) {
+					String profileName = file.getName().substring(0,file.getName().length()-".properties".length());
+//					System.err.println("Profilename: "+profileName);
+					boolean b = profileNeedsRebuild(file,profileName, appDir);
+					pro.add(profileName);
+					profileNeedsRebuild.put (profileName,b);
+				}
 			}
 		}
 		if(pro.isEmpty()) {

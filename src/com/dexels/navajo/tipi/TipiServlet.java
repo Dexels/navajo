@@ -70,12 +70,12 @@ public class TipiServlet extends HttpServlet {
 //			}
 		}
 		response.setContentType("application/x-java-jnlp-file");
-		System.err.println(jnlpElement);
+//		System.err.println(jnlpElement);
 		Writer outWriter = response.getWriter();
 		jnlpElement.write(outWriter);
 		outWriter.flush();
 		outWriter.close();
-		System.err.println("Time taken: "+(System.currentTimeMillis() - st));
+//		System.err.println("Time taken: "+(System.currentTimeMillis() - st));
 	}
 
 	
@@ -134,7 +134,6 @@ public class TipiServlet extends HttpServlet {
 
 		File profileSettings = new File(myAppPath+"/settings/profiles/"+profile+".properties");
 		if(profileSettings.exists()) {
-			System.err.println("Profile actually found!");
 		} else {
 			profile = null;
 		}

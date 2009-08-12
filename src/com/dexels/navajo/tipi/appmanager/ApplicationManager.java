@@ -96,7 +96,7 @@ private ServletContext context = null;
 	}
 
 	public  List<ApplicationStatus> getApplications() throws IOException {
-		System.err.println("Getting applications: "+applications);
+//		System.err.println("Getting applications: "+applications);
 		return applications;
 	}
 	
@@ -104,6 +104,6 @@ private ServletContext context = null;
 		ApplicationManager m = new ApplicationManager();
 		m.setAppsFolder(new File("WebContent"));
 		List<ApplicationStatus> apps = m.getApplications();
-		System.err.println("Appcount: "+apps.size());
+//		System.err.println("Appcount: "+apps.size());
 	}
 }

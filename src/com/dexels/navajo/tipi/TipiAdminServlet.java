@@ -26,12 +26,13 @@ import java.util.PropertyResourceBundle;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.tomcat.util.http.fileupload.MultipartStream;
+//import org.apache.tomcat.util.http.fileupload.MultipartStream;
 
 import com.dexels.navajo.tipi.appmanager.ApplicationStatus;
 import com.dexels.navajo.tipi.projectbuilder.BaseJnlpBuilder;
@@ -158,7 +159,7 @@ public class TipiAdminServlet extends HttpServlet {
 	 */
 	private String performCommando(String commando, String application, File appDir, URL appUrl, HttpServletRequest request) throws ServletException {
 		if (commando.equals("build")) {
-			return build(application, appDir);
+			return build(application, appDir,getServletContext());
 		}
 		if (commando.equals("clean")) {
 			return clean(application, appDir);
@@ -197,7 +198,7 @@ public class TipiAdminServlet extends HttpServlet {
 			e.printStackTrace();
 			return "Error saving: "+filePath+" problem: "+e.getMessage();
 		}
-		build(application, appDir);
+		build(application, appDir,getServletContext());
 		return "Configuration saved";
 	}
 	private String upload(String application, HttpServletRequest request)  {
@@ -216,7 +217,7 @@ public class TipiAdminServlet extends HttpServlet {
 			return "ERROR -  "+e.getMessage();
 		}}
 	private String uploadMultipart(String application, HttpServletRequest request) {
-		System.err.println(">>" +request.getParameterMap());
+//		System.err.println(">>" +request.getParameterMap());
 		try {
 			InputStream is =  request.getInputStream();
 //			File apppp = new File(applicationFolder);
@@ -226,10 +227,10 @@ public class TipiAdminServlet extends HttpServlet {
 			while (e.hasMoreElements()) {
 				String object = (String) e.nextElement();
 				File f = mr.getFile(object);
-				System.err.println("Filename returned: "+f.getAbsolutePath());
+//				System.err.println("Filename returned: "+f.getAbsolutePath());
 				createApp(f,application);
 				f.delete();
-				System.err.println("File detected: "+object);
+//				System.err.println("File detected: "+object);
 			}
 			File tmp = File.createTempFile("testUpload",".zip");
 			FileOutputStream fos = new FileOutputStream(tmp);
@@ -248,7 +249,7 @@ public class TipiAdminServlet extends HttpServlet {
 	private void createApp(File tmp , String appName) {
 		File dest = new File(getAppFolder(),appName);
 		dest.mkdirs();
-		System.err.println("Deploying app: "+appName+" to: "+dest.getAbsolutePath());
+//		System.err.println("Deploying app: "+appName+" to: "+dest.getAbsolutePath());
 //		System.err.println("File: "+tmp.getAbsolutePath()+" exists? "+tmp.exists()+" size: "+tmp.length());
 		ZipUtils.unzip(tmp, dest);
 	}
@@ -271,32 +272,28 @@ public class TipiAdminServlet extends HttpServlet {
 		}
 
 	}
-	public static void buildIfNecessary(HttpServletRequest request, File appDir) {
+	public static void buildIfNecessary(HttpServletRequest request, File appDir, ServletContext context) {
 		final String appsTag = "Apps/";
 		String requestString = request.getServletPath();
-		System.err.println("Request: "+request.toString());
 		String requestURI = request.getRequestURI();
-		System.err.println("getServletPath: "+requestURI);
 		int ind =  requestURI.indexOf(appsTag);
 		if(ind==-1) {
-			System.err.println("Not relevant.");
 			return;
 		}
 		int jnlpUnd =  requestURI.indexOf(".jnlp");
 		if(jnlpUnd==-1) {
-			System.err.println("Only for jnlpfiles");
 			return;
 		}
 		String appName = requestURI.substring(ind+appsTag.length(),requestURI.lastIndexOf('/'));
-		System.err.println("AppName: "+appName );
 		String profileName = requestURI.substring(requestURI.lastIndexOf('/')+1,jnlpUnd);
-		System.err.println("Profile: "+profileName);
 		File currentAppDir = new File(appDir,appName);
 		ApplicationStatus as = new ApplicationStatus();
 		try {
 			as.load(currentAppDir);
 			boolean res = as.getRebuildMap().get(profileName);
-			System.err.println("Profile needs rebuild? "+res);
+			if(res) {
+				build(appName, currentAppDir, context);
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -316,7 +313,7 @@ public class TipiAdminServlet extends HttpServlet {
 				File actualAppFolder = new File(appDir, application);
 				userProperties.put("zipDir", actualAppFolder.getAbsolutePath());
 				String result = AntRun.callAnt(new File(path), actualAppFolder, userProperties);
-				System.err.println("Result: "+result);
+//				System.err.println("Result: "+result);
 				File output = new File(actualAppFolder,application+".zip");
 				FileInputStream fis = new FileInputStream(output);
 				OutputStream os = response.getOutputStream();
@@ -352,9 +349,9 @@ public class TipiAdminServlet extends HttpServlet {
 		return "OK - "+libDir.getAbsolutePath() + " cleaned!";
 	}
 
-	private String build(String application, File appDir) {
+	public static String build(String application, File appDir, ServletContext context) {
 		// TipiProjectBuilder
-		String codebase = getServletContext().getInitParameter("appUrl");
+		String codebase = context.getInitParameter("appUrl");
 		if(codebase!=null) {
 			codebase = codebase+application+"/";
 		}
@@ -367,13 +364,31 @@ public class TipiAdminServlet extends HttpServlet {
 		boolean localSign = false;
 		
 		PropertyResourceBundle pe;
+		Map<String,String> userProperties = new HashMap<String,String>();
 		try {
 			FileInputStream is = new FileInputStream(new File(appDir,"settings/tipi.properties"));
 			pe = new PropertyResourceBundle(is);
+			Enumeration<String> keys = pe.getKeys();
+			while (keys.hasMoreElements()) {
+				String key = keys.nextElement();
+
+			}
+			userProperties.put("keystore", pe.getString("keystore"));
+			userProperties.put("alias", pe.getString("alias"));
+			userProperties.put("storepass", pe.getString("storepass"));
 			String keystore = pe.getString("keystore");
 			is.close();
 			if(keystore!=null) {
-				localSign = true;
+				String path = context.getRealPath("WEB-INF/ant/localsign.xml");
+				try {
+					System.err.println("Calling ant with: "+userProperties+" in folder: "+appDir);
+					String result = AntRun.callAnt(new File(path), appDir, userProperties);
+					System.err.println("Result: "+result);
+					return "OK - Local signing succeeded. I think.";
+				} catch (IOException e) {
+					e.printStackTrace();
+					return "Error building " + application + ": " + e.getMessage();
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -381,18 +396,7 @@ public class TipiAdminServlet extends HttpServlet {
 			System.err.println("No keystore found");
 		}
 
-		if(localSign) {
-			Map<String,String> userProperties = new HashMap<String,String>();
-			String path = getServletContext().getRealPath("WEB-INF/ant/localsign.xml");
-			try {
-				String result = AntRun.callAnt(new File(path), appDir, userProperties);
-				System.err.println("Result: "+result);
-				return result;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return "Error building " + application + ": " + e.getMessage();
-			}
-		}
+		
 		
 		return "OK - "+application + " built!";
  

@@ -24,7 +24,7 @@ public class ZipUtils {
 	}
 	
 	public static final void unzip(File f, File destination) {
-		System.err.println("Unzipping file: " + f.getAbsolutePath() + " into dir: " + destination.getAbsolutePath());
+//		System.err.println("Unzipping file: " + f.getAbsolutePath() + " into dir: " + destination.getAbsolutePath());
 		try {
 			FileInputStream fis = new FileInputStream(f);
 			// ZipFile zipFile = new ZipFile(f);
@@ -38,11 +38,11 @@ public class ZipUtils {
 				if (entry == null) {
 					break;
 				}
-				System.err.println("Enztru: " + entry.getName());
+//				System.err.println("Enztru: " + entry.getName());
 				File file = new File(destination, entry.getName());
 				if (entry.isDirectory()) {
 					// Assume directories are stored parents first then children.
-					System.err.println("Extracting directory: " + entry.getName());
+//					System.err.println("Extracting directory: " + entry.getName());
 					// This is not robust, just for demonstration purposes.
 					file.mkdir();
 					continue;
@@ -51,12 +51,12 @@ public class ZipUtils {
 				if(!parentDir.exists()) {
 					parentDir.mkdirs();
 				}
-				System.err.println("Extracting file: " + entry.getName());
+//				System.err.println("Extracting file: " + entry.getName());
 				copyInputStream(zis, new BufferedOutputStream(new FileOutputStream(file)));
 			}
 			zis.close();
 		} catch (IOException ioe) {
-			System.err.println("Unhandled exception:");
+//			System.err.println("Unhandled exception:");
 			ioe.printStackTrace();
 			return;
 		}

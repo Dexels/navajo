@@ -41,11 +41,14 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.dexels.navajo.tipi.TipiAdminServlet;
 
 import jnlp.sample.servlet.impl.FileSystemResourceResolver;
 
@@ -145,14 +148,17 @@ public class JnlpDownloadServlet extends HttpServlet {
             HttpServletResponse response, boolean isHead) throws IOException {
 	String requestStr = request.getRequestURI();
 	_log.addDebug("Reqeuest: "+request.getRequestURI()+" query: "+request.getQueryString());
+	//System.err.println("Request: "+request.getRequestURI()+" query: "+request.getQueryString());
+
+	TipiAdminServlet.buildIfNecessary(request,getAppFolder(),getServletContext());
 	Map en = request.getParameterMap();
 	for (Object key : en.keySet()) {
 		Object value = en.get(key);
 		if(value instanceof Object[]) {
 			Object[] vals = (Object[])value;
-			for (Object object : vals) {
-				System.err.println("Value element: "+object);
-			}
+//			for (Object object : vals) {
+//				System.err.println("Value element: "+object);
+//			}
 		} else {
 		_log.addDebug("Param: "+key+" value: "+en.get(key));
 		}

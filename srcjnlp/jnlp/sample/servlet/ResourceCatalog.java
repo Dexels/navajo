@@ -123,7 +123,6 @@ public class ResourceCatalog {
 	    pentries = new PathEntries(versionList, dirList, platformList, xmlVersionResPath.getLastModified());
 	    _entries.put(dir, pentries);
 	}
-	System.err.println("ENTRIES: "+_entries);
 	// Search for a match
 	JnlpResource[] result = new JnlpResource[1];
 	

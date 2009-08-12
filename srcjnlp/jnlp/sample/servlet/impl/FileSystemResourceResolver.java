@@ -32,22 +32,22 @@ public class FileSystemResourceResolver implements ResourceResolver {
 	}
 
 	public URL getResource(String path) throws IOException {
-		System.err.println("Looking for path in: "+path);
 		String realPath = path.substring("Apps/".length(),path.length());
-		System.err.println("Looking for real path in: "+realPath);
+//		Thread.dumpStack();
 		File result = new File(baseDir,realPath);
 		return result.toURI().toURL();
 //		return null;
 	}
-	@Override
 	public File getDir(String dirPath) {
 		String realPath = dirPath.substring("Apps/".length(),dirPath.length());
 		return new File(baseDir,realPath);
 	}
-	@Override
 	public long getLastModified(String path) {
 		String realPath = path.substring("Apps/".length(),path.length());
 		File result = new File(baseDir,realPath);
+		if(!result.exists()) {
+	//		System.err.println("File with path: "+path+" resolved to: "+result.getAbsolutePath()+" does not seem to exist!");
+		}
 		return result.lastModified();
 //		return 0;
 	}

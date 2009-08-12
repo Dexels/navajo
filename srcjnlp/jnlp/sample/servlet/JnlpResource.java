@@ -214,7 +214,6 @@ public class JnlpResource {
 	if (lastModified == 0) {
 	    // Arguably a bug in the JRE will not set the lastModified for file URLs, and
 	    // always return 0. This is a workaround for that problem.
-		System.err.println("RAAAR!!!!");
 	    String filepath = context.getRealPath(path); 
 	    if (filepath != null) {
 		File f = new File(filepath);	    
