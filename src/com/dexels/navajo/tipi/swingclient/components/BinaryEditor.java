@@ -75,8 +75,10 @@ public class BinaryEditor extends JPanel implements PropertyControlled, Property
 
 			public void actionPerformed(ActionEvent e) {
 				if(myProperty!=null) {
+					System.err.println("Clearing property!");
 					myProperty.setAnyValue((Binary)null);
 				} else {
+					System.err.println("No property set!");
 					setBinary(null);
 					
 				}
@@ -191,14 +193,15 @@ public class BinaryEditor extends JPanel implements PropertyControlled, Property
 	}
 
 	public void propertyChange(PropertyChangeEvent e) {
+//		System.err.println("Property change detected: "+e.getPropertyName()+" old: "+e.getOldValue()+" new: "+e.getNewValue());
 		if ("value".equals(e.getPropertyName())) {
 			Binary old = (Binary) e.getOldValue();
 			Binary newValue = (Binary) e.getNewValue();
-			if (old != null && newValue != null) {
-				System.err.println("Old size: " + old.getLength() + " new size: " + newValue.getLength());
-			} else {
-				System.err.println("Null detected!");
-			}
+//			if (old != null && newValue != null) {
+//				System.err.println("Old size: " + old.getLength() + " new size: " + newValue.getLength());
+//			} else {
+//				System.err.println("Null detected!");
+//			}
 			setBinary(newValue);
 		}
 	}
@@ -209,9 +212,9 @@ public class BinaryEditor extends JPanel implements PropertyControlled, Property
 
 	public void setMaxImgHeight(int maxImgHeight) {
 		this.maxImgHeight = maxImgHeight;
-		if (myProperty != null) {
-			setProperty(myProperty);
-		}
+//		if (myProperty != null) {
+//			setProperty(myProperty);
+//		}
 	}
 
 	public int getMaxImgWidth() {
@@ -220,9 +223,9 @@ public class BinaryEditor extends JPanel implements PropertyControlled, Property
 
 	public void setMaxImgWidth(int maxImgWidth) {
 		this.maxImgWidth = maxImgWidth;
-		if (myProperty != null) {
-			setProperty(myProperty);
-		}
+//		if (myProperty != null) {
+//			setProperty(myProperty);
+//		}
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
@@ -243,7 +246,7 @@ public class BinaryEditor extends JPanel implements PropertyControlled, Property
 				Binary b = new Binary(f);
 				if(myProperty!=null) {
 					myProperty.setAnyValue(b);
-					setProperty(myProperty);	
+//					setProperty(myProperty);	
 				}
 
 
@@ -263,6 +266,9 @@ public class BinaryEditor extends JPanel implements PropertyControlled, Property
 				pathField.setText("-");
 			}
 		}
+
+		
+		
 		
 		if (b == null || b.getLength() <= 0) {
 			pathField.setText("");
