@@ -37,7 +37,12 @@ public class TipiMessageTable extends MessageTable {
         		 System.err.println("Table detected right click!");
         			Point p = e.getPoint();
         			int rowNumber = rowAtPoint( p );
-               int keyMask = InputEvent.CTRL_MASK |InputEvent.SHIFT_MASK ;
+        			if(getSelectionModel().isSelectedIndex(rowNumber)) {
+        				// current row is already selected. Skippit.
+        				return;
+        			}
+               
+        			int keyMask = InputEvent.CTRL_MASK |InputEvent.SHIFT_MASK ;
 					int mask = e.getModifiers() & keyMask;
         			System.err.println("Modifiers: "+e.getModifiers()+" mask:  "+mask+" keyMask: "+keyMask);
 					if  (mask  != 0) {

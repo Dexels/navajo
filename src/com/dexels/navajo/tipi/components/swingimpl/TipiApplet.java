@@ -58,10 +58,10 @@ public class TipiApplet extends JApplet {
 		String init = this.getParameter("init");
 	//		System.err.println("LocationOnScreen: "+getLocationOnScreen());
 		String laf = this.getParameter("tipilaf");
-		System.err.println("Applet init laf: "+laf);
+//		System.err.println("Applet init laf: "+laf);
 		String tipiCodeBase = this.getParameter("tipiCodeBase");
 		String resourceCodeBase = this.getParameter("resourceCodeBase");
-		System.err.println("my codebase: "+getCodeBase());
+//		System.err.println("my codebase: "+getCodeBase());
 		String switches = getParameter("args");
 		if(switches!=null) {
 			StringTokenizer st = new StringTokenizer(switches," ");

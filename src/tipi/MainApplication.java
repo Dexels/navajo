@@ -23,8 +23,7 @@ public class MainApplication {
 				arrrgs.add(args[i]);
 		}
 		if(args.length>0 ) {
-				System.err.println("final arg: "+args[args.length-1].endsWith(".xml"));
-				System.err.println("# of args: "+args.length);
+//				System.err.println("final arg: "+args[args.length-1].endsWith(".xml"));
 				if(args[args.length-1].endsWith(".xml")) {
 					definition = args[args.length - 1];
 					
@@ -59,7 +58,6 @@ public class MainApplication {
 	 * @param def
 	 */
 	public static SwingTipiApplicationInstance initializeSwingApplication(final boolean studioMode, final List<String> arrrgs, final String def, final TipiApplet appletRoot, final RootPaneContainer otherRoot) {
-		System.err.println("ARRRGS: "+arrrgs);
 		RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager());
 		SwingUtilities.invokeLater(new Runnable() {
 

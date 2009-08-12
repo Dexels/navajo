@@ -118,10 +118,10 @@ public class WebStartProxy {
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
-				System.err.println("No arguments. Ok. ");
+//				System.err.println("No arguments. Ok. ");
 			}
 		} catch (UnavailableServiceException e) {
-			System.err.println("No jnlp detected");
+//			System.err.println("No jnlp detected");
 		}
 	}
 }

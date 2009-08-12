@@ -31,6 +31,16 @@ public class SwingTipiApplicationInstance extends TipiApplicationInstance {
 		this.appletRoot = appletRoot;
 		this.otherRoot = otherRoot;
 	}
+	
+	
+
+	@Override
+	protected void dispose(TipiContext t) {
+		super.dispose(t);
+		System.exit(0);
+	}
+
+
 
 	@Override
 	public TipiContext createContext() throws IOException {
@@ -53,8 +63,6 @@ public class SwingTipiApplicationInstance extends TipiApplicationInstance {
 		// context.processRequiredIncludes();
 
 		context.processProperties(properties);
-
-		System.err.println("Openingin definition: " + definition+" resolve to url: "+context.getTipiResourceURL("definitionPath")+"");
 		InputStream tipiResourceStream = context.getTipiResourceStream(definitionPath);
 		if (tipiResourceStream == null) {
 			System.err.println("Error starting up: Can not load tipi. Resource not found: "+definitionPath);

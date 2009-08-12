@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.components.swingimpl.tipimegatable;
 
 import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 import javax.swing.*;
@@ -67,7 +68,8 @@ public class TipiScrollLayer
     newStack.addAll(layerStack);
     final TipiTableBaseLayer nextLayer = newStack.pop();
     final Message msg = nextMessage;
-    myTable.runSyncInEventThread(new Runnable() {
+    Runnable rr = new Runnable() {
+   	
       public void run() {
         JPanel jt = new JPanel();
         BoxLayout myLayout = new BoxLayout(jt, direction);
@@ -115,7 +117,20 @@ public class TipiScrollLayer
           nextLayer.loadData(n, cc, newStack, newPanel);
         }
       }
-    });
+    };
+    
+    if(SwingUtilities.isEventDispatchThread()) {
+   	 rr.run();
+    } else {
+   	 try {
+			SwingUtilities.invokeAndWait(rr);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
   }
 
   public XMLElement store() {

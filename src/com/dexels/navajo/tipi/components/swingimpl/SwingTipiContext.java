@@ -76,18 +76,18 @@ public class SwingTipiContext extends TipiContext {
 
 			// commented out!
 			if (WebStartProxy.hasJnlpContext() ) {
-				System.err.println("JNLP DETECTED.");
+//				System.err.println("JNLP DETECTED.");
 				setCookieManager(new JnlpCookieManager());
 				try {
 					getCookieManager().loadCookies();
 				} catch (FileNotFoundException e) {
-					System.err.println("No cookies (yet). No prob.");
+//					System.err.println("No cookies (yet). No prob.");
 				}
 			} else {
 				createTmpCookieManager();
 			}
 		} catch (Throwable e) {
-			System.err.println("No jnlp found");
+//			System.err.println("No jnlp found");
 		//	e.printStackTrace();
 			createTmpCookieManager();
 		}
@@ -447,9 +447,7 @@ public class SwingTipiContext extends TipiContext {
 		if (tipiLaf == null) {
 			tipiLaf = properties.get("tipilaf");
 		}
-		System.err.println("Properties: "+properties);
 		try {
-			System.err.println("Using tipilaf: "+tipiLaf);
 			if (tipiLaf == null) {
 				// try nimbus first:
 				try {

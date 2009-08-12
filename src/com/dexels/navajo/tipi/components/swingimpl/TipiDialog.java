@@ -111,15 +111,15 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 	protected void createWindowListener(final JDialog d) {
 		d.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				System.err.println("Dialog closing");
-				System.err.println("Defaultop: "+d.getDefaultCloseOperation()+" : "+JDialog.DO_NOTHING_ON_CLOSE+" :: "+JDialog.DISPOSE_ON_CLOSE+" ::: "+JDialog.HIDE_ON_CLOSE);
+//				System.err.println("Dialog closing");
+//				System.err.println("Defaultop: "+d.getDefaultCloseOperation()+" : "+JDialog.DO_NOTHING_ON_CLOSE+" :: "+JDialog.DISPOSE_ON_CLOSE+" ::: "+JDialog.HIDE_ON_CLOSE);
 				try {
 					dialog_windowClosing();
 					((SwingTipiContext) myContext).destroyDialog(d);
 					myRootPaneContainer = null;
 					
 				} catch (TipiBreakException e1) {
-					System.err.println("Break in window listener");
+//					System.err.println("Break in window listener");
 //					e1.printStackTrace();
 					if(e1.getType()==TipiBreakException.COMPONENT_DISPOSED) {
 						// if the break is because the component is disposing 
@@ -131,7 +131,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 			}
 
 			public void windowClosed(WindowEvent e) {
-				System.err.println("Dialog closed");
+//				System.err.println("Dialog closed");
 			//	dialog_windowClosing();
 			//	((SwingTipiContext)myContext).destroyDialog(d);
 			}
@@ -143,13 +143,13 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 		d.addInternalFrameListener(new InternalFrameAdapter() {
 		
 			public void internalFrameClosing(InternalFrameEvent e) {
-				System.err.println("Dialog closing");
+//				System.err.println("Dialog closing");
 				try {
 					dialog_windowClosing();
 					d.dispose();
 					
 				} catch (TipiBreakException e1) {
-					System.err.println("Break in window listener");
+//					System.err.println("Break in window listener");
 					e1.printStackTrace();
 					if(e1.getType()==TipiBreakException.COMPONENT_DISPOSED) {
 						// if the break is because the component is disposing 
@@ -225,7 +225,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 				}
 				if (name.equals("h")) {
 					myBounds.height = ((Integer) object).intValue();
-					System.err.println("Setting height: "+myBounds.height);
+//					System.err.println("Setting height: "+myBounds.height);
 					resetDialogBounds();
 					return;
 				}
@@ -261,9 +261,9 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 	}
 
 	public void disposeComponent() {
-		System.err.println("DISPOSING DIALOG");
+//		System.err.println("DISPOSING DIALOG");
 		if (getDialogContainer() != null) {
-			System.err.println("Dialogcontainer non-null");
+//			System.err.println("Dialogcontainer non-null");
 			if (getDialogContainer() instanceof JDialog) {
 //				((JDialog) getDialogContainer()).setVisible(false);
 				((SwingTipiContext)myContext).destroyDialog(((JDialog) getDialogContainer()));
@@ -307,7 +307,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 
 	private void constructAppletDialog() {
 		if (mySwingTipiContext.getDefaultDesktop() == null) {
-			System.err.println("No default desktop found. Reverting to normal.");
+//			System.err.println("No default desktop found. Reverting to normal.");
 			constructStandardDialog();
 			return;
 		}
@@ -338,7 +338,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 	}
 
 	private JInternalFrame createInternalFrame(boolean isModal, JDesktopPane desktop, Dimension size) {
-		System.err.println("Creating modal: "+isModal);
+//		System.err.println("Creating modal: "+isModal);
 		System.err.println("HACKED TO NONMODAL!");
 		isModal = false;
 		JRootPane myRootPane = null;
@@ -358,7 +358,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 			myRootPaneContainer = jif;
 
 			mySwingTipiContext.getDefaultDesktop().add(jif);
-			System.err.println("Adding: "+jif+" to "+mySwingTipiContext.getDefaultDesktop());
+//			System.err.println("Adding: "+jif+" to "+mySwingTipiContext.getDefaultDesktop());
 			return jif;
 		} else {
 			TipiModalInternalFrame tmif = new TipiModalInternalFrame("", myRootPane, desktop, getSwingContainer(), size);
