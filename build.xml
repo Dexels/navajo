@@ -63,9 +63,6 @@
                  <exclude name="**/*.stylesheet"/>
                  <exclude name="**/*.txt"/>
                </fileset>
-    			<service type="tipi.TipiExtension">
-    				<provider classname="tipi.TipiSubstanceExtension" />
-    			</service>
     			<manifest>
     				<attribute name="Built-By" value="Frank Lyaruu" />
     			</manifest>
