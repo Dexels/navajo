@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi.internal;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.zip.GZIPInputStream;
 
 public class HttpResourceLoader extends ClassPathResourceLoader {
 
@@ -18,24 +19,31 @@ public class HttpResourceLoader extends ClassPathResourceLoader {
 
 	public URL getResourceURL(String location) throws MalformedURLException {
 		URL u = new URL(baseURL, location);
+//		System.err.println("Getting resource!");
 		return u;
 	}
 
 	public InputStream getResourceStream(String location) throws IOException {
 		URL u = getResourceURL(location);
 		InputStream is = null;
+		URLConnection uc = u.openConnection();
+		uc.addRequestProperty("Accept-Encoding", "gzip");
 		try {
-			is = u.openStream();
+			is = uc.getInputStream();
 		} catch (IOException e) {
-			// e.printStackTrace();
+			 e.printStackTrace();
 		}
 		if (is != null) {
-			return is;
+			if("gzip".equals(uc.getContentEncoding())) {
+				return new GZIPInputStream(is);
+			}
+
+		return is;
 		}
 		InputStream classLoaderInputStream =  super.getResourceStream(location);
-		if(classLoaderInputStream==null) {
-			System.err.println("HttpResourceLoader failed. Looking in classpath: " + location + " base: " + baseURL+" resolvedurl: "+u);
-		}
+//		if(classLoaderInputStream==null) {
+//			System.err.println("HttpResourceLoader failed. Looking in classpath: " + location + " base: " + baseURL+" resolvedurl: "+u);
+//		}
 	
 		return classLoaderInputStream;
 	}
