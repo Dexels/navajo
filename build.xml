@@ -86,14 +86,11 @@
 
 			<fileset dir="${build}" />
 			<fileset dir="${DexelsVersionControl.build}" />
-			<service type="tipi.TipiExtension">
-				<provider classname="tipi.TipiSwingExtension" />
-			</service>
+
 			<manifest>
 
 				<attribute name="Built-By" value="Frank" />
-<!--				<attribute name="Class-Path" value="NavajoSwingTipi.jar,tipipackage.jar,NavajoRuntime.jar,NavajoSwingClient.jar,NavajoLogger.jar,NavajoDocument.jar" />
--->				<attribute name="Main-Class" value="tipi.MainApplication" />
+			<attribute name="Main-Class" value="tipi.MainApplication" />
 			</manifest>
 
 		</jar>
