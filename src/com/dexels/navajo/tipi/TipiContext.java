@@ -166,11 +166,11 @@ public abstract class TipiContext {
 			myThreadPool = new TipiThreadPool(this, getPoolSize());
 		}
 
-		if (coreExtensionList.isEmpty()) {
-			System.err.println("Beware: no extensions. Running without jars? Entering fake mode...");
+//		if (coreExtensionList.isEmpty()) {
+//			System.err.println("Beware: no extensions. Running without jars? Entering fake mode...");
 //			fakeJars = true;
 	//		fakeExtensions();
-		}
+//		}
 //		System.err.println("Warning: Fake mode forced!");
 //			fakeExtensions();
 		
@@ -223,7 +223,7 @@ public abstract class TipiContext {
 		fakeExtension(optionalExtensionList, "tipi.TipiSwingMigExtension");
 		fakeExtension(optionalExtensionList, "tipi.TipiJoglExtension");
 
-		fakeExtension(optionalExtensionList, "tipi.TipiStadiumDesignerExtension");
+//		fakeExtension(optionalExtensionList, "tipi.TipiStadiumDesignerExtension");
 
 		fakeExtension(mainExtensionList, "tipi.TipiEchoExtension");
 
@@ -257,7 +257,7 @@ public abstract class TipiContext {
 		int count = 0;
 		while (tt.hasNext()) {
 			TipiExtension element = tt.next();
-			System.err.println("Found extension: "+element);
+//			System.err.println("Found extension: "+element);
 			extensionMap.put(element.getId(), element);
 			count++;
 			if (element.requiresMainImplementation() == null) {
@@ -839,7 +839,6 @@ public abstract class TipiContext {
 			try {
 				URL resourceURL = genericResourceLoader.getResourceURL(location);
 				if (resourceURL != null) {
-					System.err.println("Found: "+resourceURL);
 					return resourceURL;
 				}
 			} catch (IOException e) {
@@ -966,6 +965,11 @@ public abstract class TipiContext {
 
 	private InputStream resolveInclude(String location) {
 		// first, try to resolve the include by checking the classpath:
+		InputStream iss = getClass().getClassLoader().getResourceAsStream(location);
+		if(iss!=null) {
+//			System.err.println("Classpath entry detected!");
+			return iss;
+		}
 		try {
 			InputStream in = getTipiResourceStream(location);
 			return in;
@@ -2399,7 +2403,6 @@ public abstract class TipiContext {
 	}
 
 	public void setTipiResourceLoader(String tipiCodeBase) throws MalformedURLException {
-		System.err.println("Setting resource loader: "+tipiCodeBase);
 		if (tipiCodeBase != null) {
 			if (tipiCodeBase.indexOf("http:/") != -1 || tipiCodeBase.indexOf("file:/") != -1) {
 				setTipiResourceLoader(new HttpResourceLoader(tipiCodeBase));

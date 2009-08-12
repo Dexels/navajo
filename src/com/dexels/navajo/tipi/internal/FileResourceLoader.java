@@ -78,7 +78,6 @@ public class FileResourceLoader extends ClassPathResourceLoader {
 		if (is != null) {
 			return is;
 		}
-		System.err.println("FileResourceLoader failed. Looking in classpath: " + location + " base: " + baseFile);
 		return super.getResourceStream(location);
 	}
 

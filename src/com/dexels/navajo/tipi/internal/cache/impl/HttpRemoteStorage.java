@@ -21,9 +21,12 @@ public class HttpRemoteStorage implements RemoteStorage {
 		try {
 			System.err.println("Opening location: "+u);
 			URLConnection uc = u.openConnection();
+			uc.addRequestProperty("Accept-Encoding", "gzip");
 			metadata.put("length", uc.getContentLength());
 			metadata.put("encoding", uc.getContentEncoding());
 			metadata.put("type", uc.getContentType());
+			// Should't I check the encoding and gunzip if necessary?
+			// Or is that taken care of further downstream?
 			is =  uc.getInputStream();
 			
 		} catch (FileNotFoundException e) {
