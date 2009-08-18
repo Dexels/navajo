@@ -220,7 +220,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	public final String getValue() {
 		if (myBinary != null) {
 			System.err.println("Do you REALLY want this binary as a string? You really shouldn't..");
-//			Thread.dumpStack();
+			Thread.dumpStack();
 			return myBinary.getBase64();
 		}
 		return myValue;
@@ -230,10 +230,20 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		return evaluatedValue;
 	}
 
+	public final void clearValue() {
+		//setValue((String) null);
+		Object o  = getTypedValue();
+		
+		// Similar to setAnyValue, only here the type will be determined based on the current type,
+		// not on the new type.
+		// This is still important for firing update events
+		myValue = null;
+		firePropertyChanged(o, null);
+	}
 	public final void setAnyValue(Object o) {
-		myBinary = null;
+//		myBinary = null;
 		if (o == null) {
-			setValue((String) null);
+			clearValue();
 			return;
 		}
 		if (o instanceof Integer) {
@@ -621,9 +631,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		return getValue();
 	}
 
-	public final void clearValue() {
-		myValue = null;
-	}
+//	public final void clearValue() {
+//		myValue = null;
+//	}
 
 	public final void setValue(InputStream is) {
 		throw new UnsupportedOperationException("Unsupported method. Please use setValue(Binary)");
@@ -919,6 +929,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		return null;
 
 	}
+	public final Map<String,String> getSubTypes() {
+		return new HashMap<String, String>(subtypeMap);
+	}	
 
 	private String serializeSubtypes() {
 		if (subtypeMap == null) {

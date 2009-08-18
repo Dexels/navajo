@@ -225,6 +225,14 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
    */
   public String getSubType(String key);
 
+	/**
+	 * Gets all subtypes in a map
+	 * This map is a copy, so there is no point in modifying.
+	 * 
+	 * @return
+	 */
+  public Map<String,String> getSubTypes();
+	
   /**
    * Also gets the type of a property (see PROPERTY_* constants).
    * However, this type is based on the type returned by the expression.

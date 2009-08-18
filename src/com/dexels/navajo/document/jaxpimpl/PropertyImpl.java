@@ -1233,4 +1233,8 @@ public void forcePropertyChange() {
 	// TODO Auto-generated method stub
 	
 }
+
+public final Map<String,String> getSubTypes() {
+	return new HashMap<String, String>(subtypeMap);
+}	
 }
