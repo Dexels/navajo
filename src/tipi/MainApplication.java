@@ -16,6 +16,13 @@ public class MainApplication {
 	private static SwingTipiApplicationInstance myApplication = null;
 
 	static public void main(String[] args) throws Exception {
+		// TODO Refactor Formatters in NavajoFactory, so this can be done later.
+		try {
+			Locale.setDefault(new Locale("nl", "NL"));
+		} catch (SecurityException se) {
+			System.err.println("Sandbox. Using default locale");
+		}
+		
 		List<String> arrrgs = new ArrayList<String>();
 
 		String definition = null;
