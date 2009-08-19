@@ -73,9 +73,7 @@ private Object myOldValue;
 	  if(doGetEditor instanceof PropertyField) {
 		  PropertyField t = (PropertyField)doGetEditor;
 		  t.selectAll();
-		  System.err.println("TEXT: "+t.getText());
 	  } else {
-		  System.err.println("NOOOOOOOT: "+doGetEditor.getClass());
 	  }
 	  myTable.setCurrentEditingComponent(doGetEditor);
 	  return doGetEditor;
@@ -209,7 +207,7 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
           myPropertyCheckBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 //              stopCellEditing();
-              System.err.println("CHECKBOX FIRED TOWARDS EDITOR");
+//              System.err.println("CHECKBOX FIRED TOWARDS EDITOR");
               
               try {
 				myTable.fireChangeEvents(getProperty(), !myPropertyCheckBox.isSelected(), myPropertyCheckBox.isSelected());

@@ -120,7 +120,7 @@ public final class MultipleSelectionPropertyCheckboxGroup extends BasePanel impl
 
   public static void main(String args[]){
     int req = (int) Math.ceil(4 / 2);
-    System.err.println("Req: " +req);
+//    System.err.println("Req: " +req);
  }
 
 

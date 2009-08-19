@@ -127,7 +127,7 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
 		}
 
 		if (value == null) {
-			System.err.println("Row: "+row+" column: "+column);
+//			System.err.println("Row: "+row+" column: "+column);
 			setComponentColor(l, isSelected, row, column, false, tm.getRowCount(), disabled);
 			// myPanel.add(l,new
 			// GridBagConstraints(0,0,1,1,1,1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,new
