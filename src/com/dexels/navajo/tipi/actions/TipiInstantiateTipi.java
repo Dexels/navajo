@@ -102,7 +102,7 @@ public class TipiInstantiateTipi extends TipiAction {
 		TipiComponent inst = context.instantiateComponent(xe, event, this,parent);
 		inst.setHomeComponent(true);
 		inst.setId(id);
-		System.err.println("Adding component with id: "+id+" constraints: "+constraints);
+//		System.err.println("Adding component with id: "+id+" constraints: "+constraints);
 		parent.addComponent(inst, context, constraints);
 
 		context.fireTipiStructureChanged(inst);

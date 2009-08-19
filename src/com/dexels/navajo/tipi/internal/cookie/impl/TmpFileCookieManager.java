@@ -18,7 +18,7 @@ public class TmpFileCookieManager implements CookieManager {
 	public void setCookie(String key, String value) {
 		cookieMap.put(key, value);
 		try {
-			System.err.println("Saving the cookies!");
+//			System.err.println("Saving the cookies!");
 			saveCookies();
 		} catch (IOException e) {
 			e.printStackTrace();
