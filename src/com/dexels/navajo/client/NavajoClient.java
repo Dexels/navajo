@@ -254,7 +254,8 @@ public class NavajoClient implements ClientInterface {
 	  try {
 	  determineServerLoadsAndSetCurrentServer(true);
 	  } catch(Throwable t) {
-		  t.printStackTrace();
+//		  t.printStackTrace();
+		  System.err.println("Determining server loads fails. Ignoring.");
 	  }
 	  }
 
