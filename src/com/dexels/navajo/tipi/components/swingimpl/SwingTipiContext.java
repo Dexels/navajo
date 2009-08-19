@@ -573,7 +573,7 @@ public class SwingTipiContext extends TipiContext {
 		animator.addTarget(new TimingTargetAdapter() {
 			public void end() {
 				transition.dispose();
-			}
+			}  
 
 		});
 		animator.setAcceleration(.1f); // Accelerate for first 20%
@@ -661,7 +661,7 @@ public class SwingTipiContext extends TipiContext {
 	}
 	
 	public void destroyDialog(JDialog j) {
-		System.err.println("Before: "+dialogStack);
+//		System.err.println("Before: "+dialogStack);
 		if(dialogStack.isEmpty()) {
 			System.err.println("Already empty");
 			return;
@@ -669,7 +669,7 @@ public class SwingTipiContext extends TipiContext {
 		if(dialogStack.peek() == j) {
 				dialogStack.pop();
 			j.setVisible(false);
-			System.err.println("After: "+dialogStack);
+//			System.err.println("After: "+dialogStack);
 
 			return;
 		}
@@ -679,7 +679,7 @@ public class SwingTipiContext extends TipiContext {
 			sss.dispose();
 			destroyDialog(j);
 		}
-		System.err.println("After: "+dialogStack);
+//		System.err.println("After: "+dialogStack);
 	}
 
 

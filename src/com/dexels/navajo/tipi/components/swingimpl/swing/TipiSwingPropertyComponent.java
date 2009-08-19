@@ -238,7 +238,7 @@ public class TipiSwingPropertyComponent extends GenericPropertyComponent impleme
 	
 	public void setEnabled(boolean b) {
 		//super.setEnabled(b);
-		System.err.println("IN SETENABLED. IGNORING");
+//		System.err.println("IN SETENABLED. IGNORING");
 //		Thread.dumpStack();
 	}
 

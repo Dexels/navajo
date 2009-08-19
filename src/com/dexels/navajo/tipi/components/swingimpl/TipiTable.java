@@ -781,11 +781,6 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 					for (int i = 0; i < al.size(); i++) {
 						Message current = al.get(i);
 						Property cp = current.getProperty("" + propertyName.value);
-						try {
-							System.err.println("Property: " + cp.getFullPropertyName());
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
 						cp.setAnyValue(value.value);
 					}
 				}
