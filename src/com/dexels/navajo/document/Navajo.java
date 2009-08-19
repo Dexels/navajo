@@ -168,7 +168,10 @@ public interface Navajo
   public Method copyMethod(Method method, Navajo newDocument);
 
   /**
-   * Recursively copies a Navajo document. For now, only implemented in nanoimpl
+   * Recursively copies a Navajo document. For now, only implemented in nanoimpl.
+   * It does have some side effects to the original, and using definition messages may cause 
+   * some performance problems.
+   * 
    */
 
   public Navajo copy();

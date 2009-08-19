@@ -434,6 +434,7 @@ public final class SaxHandler implements DocHandler {
         if (currentMessage==null) {
             return;
         }
+        // TODO: Shouldn't this be getArrayParentMessage?
         Message parentMessage = currentMessage.getParentMessage();
         if (parentMessage==null) {
             return;

@@ -56,6 +56,27 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
 //    myHeader.setExpirationInterval(i);
   }
 
+//  public Navajo copyFlat() throws NavajoException {
+//	  try {
+//		  
+//	  File tmp = File.createTempFile("navajoCopy", ".xml");
+//	  Writer fw = new FileWriter(tmp);
+//	  write(fw);
+//	  fw.flush();
+//	  fw.close();
+//	  Reader fr = new FileReader(tmp);
+//	  Navajo n = NavajoFactory.getInstance().createNavajo(fr);
+//	  fr.close();
+//	  tmp.delete();
+//	  return n;
+//	  } catch(IOException oe) {
+//		  oe.printStackTrace();
+//		  throw new NavajoExceptionImpl(oe);
+//	  }
+//	  
+//	  }
+//  
+
   public Navajo copy() {
     Navajo ni = NavajoFactory.getInstance().createNavajo();
     BaseNavajoImpl n = (BaseNavajoImpl)ni;

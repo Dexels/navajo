@@ -390,7 +390,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 					System.err.println("Exception while evaluating property: " + getFullPropertyName() + " expression: " + getValue());
 
 					// throw(e);
-					// e.printStackTrace();
+					 //e.printStackTrace();
 					return null;
 				}
 
@@ -1241,8 +1241,12 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 				cp = (BasePropertyImpl) NavajoFactory.getInstance().createProperty(n, getName(), getType(), null, getLength(),
 						getDescription(), getDirection(), getSubType());
-				Object value = getTypedValue();
-				cp.setAnyValue(value);
+				if(EXPRESSION_PROPERTY.equals(getType())) {
+					cp.setType(EXPRESSION_PROPERTY);
+				} else {
+					Object value = getTypedValue();
+					cp.setAnyValue(value);
+				}
 				cp.setType(getType());
 			}
 		} catch (NavajoException ex) {
@@ -1256,6 +1260,8 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			BaseSelectionImpl cc = (BaseSelectionImpl) current.copy(n);
 			cp.addSelection(cc);
 		}
+		
+
 		return cp;
 	}
 
