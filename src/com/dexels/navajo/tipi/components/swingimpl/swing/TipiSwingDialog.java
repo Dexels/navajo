@@ -41,7 +41,7 @@ public class TipiSwingDialog extends JDialog{
 
 		public void componentResized(ComponentEvent e) {
 			Rectangle r = getBounds();
-			System.err.println("Dialog resize: "+r);
+//			System.err.println("Dialog resize: "+r);
 			comp.getAttributeProperty("h").setAnyValue(r.height);
 			comp.getAttributeProperty("w").setAnyValue(r.width);
 			comp.getAttributeProperty("x").setAnyValue(r.x);

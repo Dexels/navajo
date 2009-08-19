@@ -333,8 +333,6 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 					Integer iii = l.get(j);
 					if (iii.intValue() != -1) {
 						element.setCurrentSelection(iii.intValue());
-					} else {
-						System.err.println("Not really a selection, ignoring");
 					}
 					j++;
 				}
@@ -353,8 +351,6 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 		tmtl.loadData(n, null, currentLayers, myPanel);
 		super.loadData(n, method);
 		processSelectionList(selectionList);
-		System.err.println("Megatable bounds: "+myPanel.getBounds());
-		System.err.println("Pref: "+myPanel.getPreferredSize());
 	}
 
 	public static void main(String[] args) {

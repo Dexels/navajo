@@ -152,7 +152,6 @@ public class TipiScrollLayer
   }
 
 public int getCurrentSelection() {
-    System.err.println("getSelection in scrolllayer: Nothing selectable.");
 
     return -1;
 }

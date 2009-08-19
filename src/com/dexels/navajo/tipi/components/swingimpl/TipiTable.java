@@ -383,7 +383,6 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 						int elementIndex = 0;
 						List<TipiEvent> list = getEventList();
 						for (TipiEvent tipiEvent : list) {
-							System.err.println("NAme: "+ tipiEvent.getEventName());
 							if("onRowLoad".equals( tipiEvent.getEventName())) {
 								rowLoadEventFound = true;
 							}
