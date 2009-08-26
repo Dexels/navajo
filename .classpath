@@ -4,6 +4,6 @@
 	<classpathentry kind="src" path="testsrc"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/DexelsVersionControl"/>
-	<classpathentry kind="lib" path="lib/junit.jar"/>
+	<classpathentry kind="lib" path="compilelib/junit.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

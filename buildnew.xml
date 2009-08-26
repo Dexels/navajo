@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- $Id$ -->
+<project name="NavajoDocument" default="archive" basedir=".">
+
+	<property name="nojavadoc" value="" />
+	<property name="clean" value=""/>
+	<!--<property name="notests" value="true" />
+	-->
+	<property name="dependencies" value="DexelsVersionControl" />
+
+	<import file="../DexelsVersionControl/ant/navajobuild.xml" />
+
+</project>
+<!-- EOF: $RCSfile$ -->
