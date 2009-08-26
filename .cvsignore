@@ -3,3 +3,5 @@ target
 .settings
 pom.xml.releaseBackup
 release.properties
+DexelsVersionControl.jar
+dist
