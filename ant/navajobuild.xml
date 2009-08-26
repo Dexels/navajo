@@ -106,7 +106,7 @@
 	<target name="resolveDependencies">
 		<for list="${dependencies}" delimiter="," param="currentdep">
 			<sequential>
-				<ant target="resolveDependency">
+				<ant target="resolveDependency" antfile="../DexelsVersionControl/ant/navajobuild.xml" >
 					<property name="currentdep" value="@{currentdep}" />
 				</ant>
 			</sequential>
@@ -164,7 +164,7 @@
 	<target name="testgeneral" description="Run the JUnit tests" if="testfound">
 		<antcall target="compiletest"/>
 		<echo message="Testing project: ${ant.project.name}"/>
-		<junit showoutput="false" printsummary="yes" haltonfailure="yes" >
+		<junit showoutput="true" printsummary="yes" haltonfailure="no" >
 			<classpath refid="test.class.path" />
 			<classpath path="${junitjar}"></classpath>
 			<classpath refid="depend" />
