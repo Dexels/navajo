@@ -279,7 +279,7 @@ public class JSONObject {
                         key = key.substring(0, 1).toLowerCase() +
                             key.substring(1);
                     }
-                    this.put(key, method.invoke(bean, null));
+                    this.put(key, method.invoke(bean,(Object[]) null));
                 }
             } catch (Exception e) {
                 /* forget about it */
