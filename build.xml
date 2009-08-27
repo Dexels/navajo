@@ -1,106 +1,84 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- $Id$ -->
 <project name="NavajoDocument" default="archive" basedir=".">
-  <property name="src" location="src"/>
-  <property name="build" location="classes"/>
-  <property name="lib" value="lib"/>
-  <property name="base.archive" value="NavajoDocument.jar"/>
-  <!--<property name="nano.archive" value="NanoImpl.jar"/>-->
-  <property name="jaxp.archive" value="jaxpimpl.jar"/>
-  <property name="navajo.base" value="com/dexels/navajo"/>
-  <property name="document.base" value="${navajo.base}/document"/>
-  <property name="persistence.base" value="${navajo.base}/persistence"/>
-  <property name="DexelsVersionControl" value="${PROJECTHOME}/DexelsVersionControl"/>
-  <property name="DexelsVersionControl.build" value="${PROJECTHOME}/DexelsVersionControl/classes"/>
-  <fileset/>
-  <path id="depend">
- <!--   <fileset dir="${lib}">
-      <include name="**/*.jar"/>
-    </fileset>-->
-  </path>
-   
-  <target name="init">
-    <tstamp/>
-    <mkdir dir="${build}"/>
-  </target>
-  <target name="clean">
-    <delete dir="${build}"/>
-  </target>
-  <target name="compile" depends="init">
-    <javac srcdir="${src}" destdir="${build}">
-      <classpath refid="depend"/>
-    </javac>
-  </target>
-	<target name="resource">
-		<copy todir="${build}">
-			<fileset dir="${src}">
-				<exclude name="**/*.java" />
-				<exclude name="CVS" />
-			</fileset>
-		</copy>
-	</target>
+
+	<!--
+	This file is suitable for copying / pasting to other projects.
+	Make sure you update the project name above, otherwise it might overwrite existing files on the server
+	-->
 	
-  <target name="base" depends="compile,resource">
-    <jar jarfile="${base.archive}">
-      <fileset dir="${build}">
-        <include name="${document.base}/*.class"/>
-        <include name="${document.base}/lazy/**/*.class"/>
-        <include name="${document.base}/typecheck/**/*.class"/>
-        <include name="${document.base}/types/**/*.class"/>
-        <include name="${document.base}/databinding/**/*.class"/>
-        <include name="${document.base}/base/**/*.class"/>
-        <include name="${document.base}/saximpl/**/*.class"/>
-        <include name="${document.base}/filter/**/*.class"/>
-        <include name="${document.base}/nanoimpl/**/*.class"/>
-        <include name="metadata/**/*.class"/>
-        <include name="metadata/**/*.txt"/>
-        <include name="navajotypes.xml"/>
-        <include name="basenavascript.xsd"/>
-        <include name="org/**/*.class"/>
-      </fileset>
-          <fileset dir="${build}">
-        <include name="${persistence.base}/**/*.class"/>
-      </fileset>
-      <fileset dir="${build}">
-        <include name="navajodocument/*.class"/>
-      </fileset>
-      <fileset dir="${DexelsVersionControl.build}"/>
-    </jar>
-  </target>
-   <path id="test.class.path">
-       <pathelement path="${build}"/>
-       </path>
-    <target name="test" description="Run the JUnit tests">
-        <junit showoutput="true" printsummary="yes" haltonfailure="yes">
-            <classpath refid="test.class.path"/>
-            <formatter type="plain"/>
-<!--            <test name="NavajoTestSuite" outfile="result"
-                todir="/home/arjen"/>-->
-            <test name="NavajoTestSuite"/>
-        </junit>
-    </target>  
-	<!-- <target name="nano" depends="compile">
-	    <jar jarfile="${nano.archive}">
-	      <fileset dir="${build}">
-	        <include name="${document.base}/nanoimpl/**/*.class"/>
-	     </fileset>
-	      <fileset dir="${build}">
-	        <include name="navajodocument/*.class"/>
-	      </fileset>
-	      <fileset dir="${DexelsVersionControl.build}"/>
-	    </jar>
-	  </target>-->
-  <target name="jaxp" depends="compile,resource">
-    <jar jarfile="${jaxp.archive}">
-      <fileset dir="${build}">
-        <include name="${document.base}/jaxpimpl/**/*.class"/>
-     </fileset>
-      <fileset dir="${build}">
-        <include name="navajodocument/*.class"/>
-      </fileset>
-      <fileset dir="${DexelsVersionControl.build}"/>
-    </jar>
-  </target>
-  <target name="archive" depends="test,base,jaxp"/>
+	
+	<!-- Skip all unit tests. -->
+	<property name="notests" value="true" />
+
+	<!-- Abort the build if any tests fail. -->
+	<property name="haltontestfailure" value="true" />
+
+	<!--
+	Calls clean before every build. May be a bit slower (everything will be recompiled..)
+	-->
+	<property name="clean" value="true"/>
+
+	<!--
+	Set to true to call the build scripts on all dependencies too.
+	Not very efficient, but thorough.
+	-->
+	<property name="recursivebuild" value="false"/>
+
+	<!--
+	Create a zip-file of the binary jar, and all its dependencies.
+	-->
+
+	<property name="createbinaryzip" value="true"/>
+	<!--
+	Create a zip-file of the source and the test source
+	-->
+	<property name="createsourcezip" value="true"/>
+
+	<!--
+	Upload all distribution files to a repository (using SCP)
+	Edit the build.properties file in DexelsVersionControl for locations / credentials.
+	-->
+	<property name="uploaddownloads" value="false"/>
+	
+	<!--
+	Build javadoc files of this project. Not all that useful, as it will not 'link' to other project's javadoc.
+	TODO: Build a centrally built javadoc repository at spiritus
+	-->
+	<property name="buildjavadoc" value="false"/>
+
+	<!--
+	Upload javadoc files of this project. This may take a while
+	-->
+	<property name="deployjavadocs" value="false"/>
+	
+	
+	<!--
+	Cleans up dependencies after building. They can safely be discarded, but they can prove useful
+	for debugging building problems
+	-->
+	<property name="cleanupdependencies" value="true"/>
+	
+	<!--
+	A comma separated list of Navajo project (e.g. DexelsVersionControl,NavajoDocument,NavajoClient)
+	You need to specify all of them, it will not include the dependencies of your dependencies (and so on..)
+	Make sure that the dependencies have been built properly (or set 'recursivebuild' to true)	
+	If there are no dependencies, supply an empty string.
+	
+	
+	The java compiler will use the following in its classpath:
+	1) The jar file in the root of the dependency
+	2) All jars in the 'libs' folder
+	3) All jars in the 'compilelibs' folder
+	Note: The difference between 'libs' and 'compilelibs' is that the libs will also be included in deploys
+	(for example WAR-files), and compilelibs will not. 
+	Examples of compilelibs: junit.jar, ant.jar, servlet-api.jar etc.
+	-->
+
+	<property name="dependencies" value="DexelsVersionControl" />
+
+	<import file="../DexelsVersionControl/ant/navajobuild.xml" />
+
 </project>
 <!-- EOF: $RCSfile$ -->
+
