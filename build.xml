@@ -45,12 +45,12 @@
 	Build javadoc files of this project. Not all that useful, as it will not 'link' to other project's javadoc.
 	TODO: Build a centrally built javadoc repository at spiritus
 	-->
-	<property name="buildjavadoc" value="true"/>
+	<property name="buildjavadoc" value="false"/>
 
 	<!--
 	Upload javadoc files of this project. This may take a while
 	-->
-	<property name="deployjavadocs" value="true"/>
+	<property name="deployjavadocs" value="false"/>
 	
 	
 	<!--
