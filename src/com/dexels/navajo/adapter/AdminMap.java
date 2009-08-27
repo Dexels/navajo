@@ -1,6 +1,5 @@
 package com.dexels.navajo.adapter;
 
-import com.dexels.navajo.jabber.JabberWorker;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.document.NavajoFactory;
@@ -9,6 +8,8 @@ import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.GenericHandler;
 import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.server.enterprise.xmpp.JabberWorkerFactory;
+import com.dexels.navajo.server.enterprise.xmpp.JabberWorkerInterface;
 import com.dexels.navajo.mapping.MappableException;
 
 
@@ -106,7 +107,7 @@ public class AdminMap implements Mappable {
     instanceGroup = nc.getInstanceGroup();
     clientId = access.getClientToken();
     
-    JabberWorker jw = JabberWorker.getInstance();
+    JabberWorkerInterface jw = JabberWorkerFactory.getInstance();
     
     if ( jw != null ) {
     	jabberServer = jw.getJabberServer();

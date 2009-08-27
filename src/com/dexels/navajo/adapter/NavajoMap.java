@@ -2,8 +2,6 @@ package com.dexels.navajo.adapter;
 
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
-import com.dexels.navajo.scheduler.TaskMap;
-import com.dexels.navajo.scheduler.TaskRunnerMap;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.document.*;
@@ -959,22 +957,23 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
   }
   
   public void setTaskId(String t) {
-	  taskId = t;
-	  // Get response from TaskRunnerMap.
-	  TaskRunnerMap trm = new TaskRunnerMap();
-	  trm.setId(taskId);
-	  TaskMap tm = null; 
-	  while ( tm == null ) {
-		  tm = trm.getFinishedTask();
-		  if ( tm == null) {
-			  //System.err.println("Waiting for task to finish....");
-			  try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-			}
-		  }
-	  }
-	  inDoc = tm.getMyTask().getResponse();
+//	  taskId = t;
+//	  // Get response from TaskRunnerMap.
+//	  TaskRunnerMap trm = new TaskRunnerMap();
+//	  trm.setId(taskId);
+//	  TaskMap tm = null; 
+//	  while ( tm == null ) {
+//		  tm = trm.getFinishedTask();
+//		  if ( tm == null) {
+//			  //System.err.println("Waiting for task to finish....");
+//			  try {
+//				Thread.sleep(1000);
+//			} catch (InterruptedException e) {
+//			}
+//		  }
+//	  }
+//	  inDoc = tm.getMyTask().getResponse();
+	  throw new IllegalStateException("Sorry! I broke setTaskId");
   }
   
   private final void processPropertyDirections(Navajo n) {

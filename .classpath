@@ -1,24 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="src" path="/NavajoClient"/>
-	<classpathentry exported="true" kind="src" path="/NavajoDocument"/>
-	<classpathentry exported="true" kind="src" path="/Navajo"/>
 	<classpathentry excluding="**/CVS/*" kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/DexelsVersionControl"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/NavajoListeners"/>
-	<classpathentry kind="lib" path="lib/edtftpj.jar"/>
-	<classpathentry kind="lib" path="lib/Grus.jar"/>
-	<classpathentry kind="lib" path="lib/hsqldb.jar"/>
-	<classpathentry kind="lib" path="lib/ibatis-2.3.0.677.jar"/>
-	<classpathentry kind="lib" path="lib/ical4j.jar"/>
-	<classpathentry kind="lib" path="lib/jakarta-poi-1.9.0-dev-20021227.jar"/>
-	<classpathentry kind="lib" path="lib/mail.jar"/>
-	<classpathentry kind="lib" path="lib/ojdbc14.jar"/>
-	<classpathentry kind="lib" path="lib/rssutils.jar"/>
-	<classpathentry kind="lib" path="lib/saaj-1_1.jar"/>
-	<classpathentry kind="lib" path="lib/saaj-api.jar"/>
-	<classpathentry kind="lib" path="lib/saaj-impl.jar"/>
-	<classpathentry kind="lib" path="lib/Tidy.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
