@@ -7,3 +7,4 @@ target
 release.properties
 pom.xml.releaseBackup
 .settings
+distribution
