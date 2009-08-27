@@ -271,7 +271,12 @@
 			</then>
 		</if>
 		<antcall target="cleanup"></antcall>
-		<antcall target="upload"></antcall>
+		<if>
+			<equals arg1="${uploaddownloads}" arg2="true"/>
+			<then>
+				<antcall target="upload"></antcall>
+			</then>
+		</if>
 	</target>
 	
 	<target name="cleanup" if="cleanupdependencies">
