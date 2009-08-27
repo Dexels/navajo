@@ -35,3 +35,4 @@ NavajoServer.jar
 .settings
 pom.xml.releaseBackup
 release.properties
+distribution
