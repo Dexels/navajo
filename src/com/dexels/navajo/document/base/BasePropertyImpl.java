@@ -242,6 +242,13 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 	public final void setAnyValue(Object o) {
 //		myBinary = null;
+		if(myBinary!=null) {
+			if(o instanceof Binary) {
+				setValue((Binary)o);
+			} else {
+				myBinary = null;
+			}
+		}
 		if (o == null) {
 			clearValue();
 			return;

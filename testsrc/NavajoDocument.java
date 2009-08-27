@@ -1,9 +1,9 @@
 
 import junit.framework.*;
 
-public class NavajoTestSuite extends TestCase {
+public class NavajoDocument extends TestCase {
 
-  public NavajoTestSuite(String s) {
+  public NavajoDocument(String s) {
     super(s);
   }
 
