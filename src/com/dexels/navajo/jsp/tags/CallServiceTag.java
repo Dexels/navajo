@@ -1,14 +1,18 @@
 package com.dexels.navajo.jsp.tags;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 
+import javax.servlet.ServletException;
 import javax.servlet.jsp.JspException;
 
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
+import com.uwyn.jhighlight.renderer.XhtmlRendererFactory;
+import com.uwyn.jhighlight.tools.FileUtils;
 
 public class CallServiceTag extends BaseNavajoTag {
 
@@ -17,7 +21,7 @@ public class CallServiceTag extends BaseNavajoTag {
 
 	@Override
 	public int doEndTag() throws JspException {
-		getNavajoContext().popNavajo();
+//		getNavajoContext().popNavajo();
 		return EVAL_BODY_INCLUDE;
 	}
 	
@@ -71,6 +75,15 @@ public class CallServiceTag extends BaseNavajoTag {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+//			getNavajoContext().pushMessage(error);
+//			try {
+//				getPageContext().include("tml/writemessage.jsp");
+//			} catch (ServletException e) {
+//				e.printStackTrace();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//			getNavajoContext()
 			throw new JspException("Server-side service error while calling service: "+myService+"\nProblem: "+sw);
 		}
 		error = nn.getMessage("ConditionErrors");
@@ -89,7 +102,6 @@ public class CallServiceTag extends BaseNavajoTag {
 
 	
 
-	
 
 
 

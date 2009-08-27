@@ -1,5 +1,7 @@
 package com.dexels.navajo.jsp.tags;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 
 import com.dexels.navajo.jsp.NavajoContext;
@@ -27,6 +29,15 @@ public class ClientTag extends BaseNavajoTag {
 
 		NavajoContext nc = (NavajoContext) getPageContext().findAttribute("navajoContext");
 //		getPageContext().findAttribute("NavajoContext");
+		System.err.println("Starting client tag: "+server);
+		if(server==null) {
+			HttpServletRequest rr =  (HttpServletRequest) getPageContext().getRequest();
+			StringBuffer sb = new StringBuffer();
+			sb.append(rr.getServerName()+":");
+			sb.append(rr.getServerPort());
+			sb.append(rr.getContextPath());
+			server = sb.toString()+"/Postman";
+		}
 		nc.setupClient(server,username,password,getPageContext());
 		//		getPageContext().setAttribute("Aap", "Noot");
 		return EVAL_BODY_INCLUDE;

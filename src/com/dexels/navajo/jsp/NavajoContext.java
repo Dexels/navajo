@@ -1,8 +1,10 @@
 package com.dexels.navajo.jsp;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
@@ -76,6 +78,7 @@ public class NavajoContext {
 	public boolean hasNavajo(String name) {
 		return myNavajoMap.containsKey(name);
 	}
+
 
 
 	

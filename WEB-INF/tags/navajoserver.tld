@@ -10,18 +10,13 @@
    <info>Navajo Tags Library</info>
 
    <tag>
-      <name>call</name>
-      <tagclass>com.dexels.navajo.jsp.tags.CallServiceTag</tagclass>
+      <name>formattedFile</name>
+      <tagclass>com.dexels.navajo.jsp.server.FormattedFileTag</tagclass>
       <bodycontent>JSP</bodycontent>
-      <info>Calls a webservice</info>
+      <info>writes a file</info>
       <attribute>
-         <name>service</name>
+         <name>filePath</name>
          <required>true</required>
-	      <rtexprvalue>true</rtexprvalue>
-      </attribute>
-      <attribute>
-         <name>navajo</name>
-         <required>false</required>
 	      <rtexprvalue>true</rtexprvalue>
       </attribute>
    </tag>
@@ -48,18 +43,6 @@
       <name>dump</name>
       <tagclass>com.dexels.navajo.jsp.tags.DumpServiceTag</tagclass>
       <info>Dumps a webservice</info>
-      <attribute>
-         <name>service</name>
-         <required>false</required>
-         <rtexprvalue>true</rtexprvalue>
-      </attribute>
-   </tag>
-
-
-   <tag>
-      <name>formattml</name>
-      <tagclass>com.dexels.navajo.jsp.tags.DumpFormattedTmlTag</tagclass>
-      <info>Dumps a webservice formatted in XHTML.</info>
       <attribute>
          <name>service</name>
          <required>false</required>

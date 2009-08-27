@@ -4,7 +4,8 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/NavajoClient"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/NavajoDocument"/>
-	<classpathentry kind="lib" path="/Users/frank/Desktop/stuff/eclipse/plugins/javax.servlet_2.5.0.v200806031605.jar"/>
-	<classpathentry kind="lib" path="/Users/frank/Desktop/stuff/eclipse/plugins/javax.servlet.jsp_2.0.0.v200806031607.jar"/>
+	<classpathentry kind="lib" path="lib/jhighlight-1.0.jar"/>
+	<classpathentry kind="lib" path="compilelib/jsp-api.jar"/>
+	<classpathentry kind="lib" path="compilelib/servlet-api.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
