@@ -10,4 +10,21 @@ public class DummyJabberWorker implements JabberWorkerInterface {
 		return "";
 	}
 
+	public void configJabber(String jabberServer, String jabberPort, String jabberService, String bootstrapUrl) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public String getJabberPort() {
+		return "-1";
+	}
+
+	public String getJabberServer() {
+		return "Server not available";
+	}
+
+	public String getJabberService() {
+		return "Service not available";
+	}
+
 }

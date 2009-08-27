@@ -398,7 +398,7 @@ public class SharedFileStore implements SharedStoreInterface {
 		SharedStoreLock ssl = null;
 		try {
 			if (requireLock) {
-				System.err.println("Waiting for lock....");
+//				System.err.println("Waiting for lock....");
 				ssl = lock(parent, name, SharedFileStore.READ_WRITE_LOCK, true);
 			}
 			File p = new File(sharedStore, parent);
