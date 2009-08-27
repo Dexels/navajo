@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="testsrc"/>
+	
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="src" path="/Navajo"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/DexelsVersionControl"/>
-	<classpathentry exported="true" kind="lib" path="lib/saaj-api.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/saaj-impl.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/wsdl4j-20021124.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/axis-1_0.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jaxrpc-1_1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/servlet-2_2.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/NavajoClient"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/NavajoClient"/>
+	<classpathentry exported="true" kind="lib" path="compilelib/servlet-2_2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/mail.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

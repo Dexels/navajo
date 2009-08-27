@@ -11,8 +11,9 @@ import javax.servlet.http.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.types.*;
-import com.dexels.navajo.jabber.JabberWorker;
 import com.dexels.navajo.server.*;
+import com.dexels.navajo.server.enterprise.xmpp.JabberWorkerFactory;
+import com.dexels.navajo.server.enterprise.xmpp.JabberWorkerInterface;
 import com.jcraft.jzlib.JZlib;
 import com.jcraft.jzlib.ZInputStream;
 import com.jcraft.jzlib.ZOutputStream;
@@ -87,11 +88,6 @@ public class TmlHttpServlet extends HttpServlet {
     String bootstrapService = config.getInitParameter("bootstrap_service");
     String bootstrapUser = config.getInitParameter("bootstrap_user");
     String bootstrapPassword = config.getInitParameter("bootstrap_password");
-    // Jabber stuff
-    String jabberServer = config.getInitParameter("jabber_server");
-    String jabberPort = config.getInitParameter("jabber_port");
-    String jabberService = config.getInitParameter("jabber_service");
-    System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>> jabberServer = " + jabberServer);
     
     System.setProperty(DOC_IMPL,QDSAX);
     System.err.println("Configuration path: "+configurationPath);
@@ -140,9 +136,21 @@ public class TmlHttpServlet extends HttpServlet {
     }
     
     // Initialize Jabber.
-   JabberWorker.getInstance().configJabber(jabberServer, jabberPort, jabberService, bootstrapUrl);
-   
+    // Jabber stuff
+    initializeJabber(config, bootstrapUrl);
+    
   }
+
+private void initializeJabber(ServletConfig config, String bootstrapUrl) {
+	String jabberServer = config.getInitParameter("jabber_server");
+    String jabberPort = config.getInitParameter("jabber_port");
+    String jabberService = config.getInitParameter("jabber_service");
+    System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>> jabberServer = " + jabberServer);
+    JabberWorkerInterface jwi = JabberWorkerFactory.getInstance();
+    if(jwi!=null) {
+       jwi.configJabber(jabberServer, jabberPort, jabberService, bootstrapUrl);
+    }
+}
 
   public void destroy() {
     System.err.println("In TmlHttpServlet destroy()");
