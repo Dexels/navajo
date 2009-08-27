@@ -6,12 +6,11 @@
 	Make sure you update the project name above, otherwise it might overwrite existing files on the server
 	-->
 	
-	
 	<!-- Skip all unit tests. -->
-	<property name="notests" value="true" />
+	<property name="notests" value="false" />
 
 	<!-- Abort the build if any tests fail. -->
-	<property name="haltontestfailure" value="true" />
+	<property name="haltontestfailure" value="false" />
 
 	<!--
 	Calls clean before every build. May be a bit slower (everything will be recompiled..)
