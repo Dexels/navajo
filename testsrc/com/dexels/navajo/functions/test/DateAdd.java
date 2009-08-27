@@ -1,7 +1,8 @@
+package com.dexels.navajo.functions.test;
+
 
 import java.util.Date;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 /**

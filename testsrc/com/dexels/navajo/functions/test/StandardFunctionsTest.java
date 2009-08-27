@@ -1,15 +1,16 @@
-package com.dexels.navajo.functions;
+package com.dexels.navajo.functions.test;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import junit.framework.TestCase;
 
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Memo;
@@ -23,8 +24,6 @@ import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.test.TestDispatcher;
 import com.dexels.navajo.server.test.TestNavajoConfig;
-
-import junit.framework.TestCase;
 
 
 public class StandardFunctionsTest extends TestCase {

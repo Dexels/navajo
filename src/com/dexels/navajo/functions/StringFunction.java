@@ -76,7 +76,7 @@ public final class StringFunction extends FunctionInterface {
       if (parameters.size() > 0)
         returnValue = m.invoke(object, (Object []) parameters.toArray());
       else
-        returnValue = m.invoke(object, null);
+        returnValue = m.invoke(object, (Object [])null);
 
     } catch (Exception e) {
       e.printStackTrace();
