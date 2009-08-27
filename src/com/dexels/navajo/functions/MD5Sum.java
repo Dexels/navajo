@@ -4,7 +4,6 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import org.jgroups.util.Util;
 
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.document.types.*;
