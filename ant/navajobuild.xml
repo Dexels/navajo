@@ -277,6 +277,10 @@
 				<antcall target="upload"></antcall>
 			</then>
 		</if>
+		<antcall target="afterdeploy"/>
+	</target>
+	
+	<target name="afterdeploy">
 	</target>
 	
 	<target name="cleanup" if="cleanupdependencies">
