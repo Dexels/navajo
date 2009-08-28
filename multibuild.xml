@@ -11,7 +11,7 @@
 	
 	
 	<!-- Skip all unit tests. -->
-	<property name="notests" value="true" />
+	<property name="notests" value="false" />
 
 	<!-- Abort the build if any tests fail. -->
 	<property name="haltontestfailure" value="false" />
@@ -83,6 +83,8 @@
 	<target name="multibuild">
 		<for list="${projects}" delimiter="," param="project">
 			<sequential>
+				<if>
+				</if>
 				<ant antfile="../@{project}/build.xml" inheritall="true" dir="../@{project}">
 				</ant>
 			</sequential>
