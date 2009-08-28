@@ -291,7 +291,7 @@
 
 	<target name="upload" >
 
-		<scp trust="true" sftp="true" verbose="true" password="${navajoScpPassword}" todir="${deployRoot}">
+		<scp trust="true"  sftp="true" verbose="true" password="${navajoScpPassword}" todir="${deployRoot}">
 			<fileset dir="${distribution}">
 				<include name="**" />
 			</fileset>
@@ -311,6 +311,7 @@
 		<mkdir dir="${work}/tmp"/>
 		<mkdir dir="${work}/tmp/${ant.project.name}"/>
 		<mkdir dir="${distribution}"/>
+		<mkdir dir="${distribution}/${ant.project.name}"/>
     	 <copy todir="${work}/tmp/${ant.project.name}">
 			<fileset dir=".">
 				<include name="src/**"/>
@@ -318,7 +319,7 @@
 				<include name="compilelib/**"/>
 			</fileset>
     	 </copy>
-		<zip zipfile="${distribution}/${ant.project.name}Source.zip" basedir="${work}/tmp">
+		<zip zipfile="${distribution}/${ant.project.name}/${ant.project.name}Source.zip" basedir="${work}/tmp">
 			</zip>
 	</target>
 	
@@ -326,7 +327,7 @@
 		<delete dir="${work}/tmp"/>
 		<mkdir dir="${work}/tmp"/>
 		<mkdir dir="${work}/tmp/${ant.project.name}"/>
-		<mkdir dir="${distribution}"/>
+		<mkdir dir="${distribution}/${ant.project.name}"/>
 		<copy todir="${work}/tmp/${ant.project.name}">
 			<fileset dir=".">
 				<include name="${ant.project.name}.jar"/>
@@ -336,7 +337,7 @@
 				<include name="compilelib/**"/>
 			</fileset>
 		</copy>
-		<zip zipfile="${distribution}/${ant.project.name}Binary.zip" basedir="${work}/tmp">
+		<zip zipfile="${distribution}/${ant.project.name}/${ant.project.name}Binary.zip" basedir="${work}/tmp">
 		</zip>
 	</target>
 </project>

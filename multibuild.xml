@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- $Id$ -->
-<project name="DexelsVersionControl" default="archive" basedir=".">
-
+<project default="multibuild" basedir=".">
+	<taskdef name="for" classname="net.sf.antcontrib.logic.ForTask" onerror="ignore" />
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+		
 	<!--
 	This file is suitable for copying / pasting to other projects.
 	Make sure you update the project name above, otherwise it might overwrite existing files on the server
@@ -9,7 +11,7 @@
 	
 	
 	<!-- Skip all unit tests. -->
-	<property name="notests" value="false" />
+	<property name="notests" value="true" />
 
 	<!-- Abort the build if any tests fail. -->
 	<property name="haltontestfailure" value="false" />
@@ -74,9 +76,18 @@
 	(for example WAR-files), and compilelibs will not. 
 	Examples of compilelibs: junit.jar, ant.jar, servlet-api.jar etc.
 	-->
-	<property name="dependencies" value="" />
+	<property name="projects" value="DexelsVersionControl,NavajoDocument,NavajoClient,Navajo,NavajoListeners,NavajoAdapters,NavajoEnterprise,NavajoEnterpriseListeners,NavajoEnterpriseAdapters,NavajoJsp"/>
 
-	<import file="../DexelsVersionControl/ant/navajobuild.xml" />
 
+	
+	<target name="multibuild">
+		<for list="${projects}" delimiter="," param="project">
+			<sequential>
+				<ant antfile="../@{project}/build.xml" inheritall="true" dir="../@{project}">
+				</ant>
+			</sequential>
+		</for>
+	</target>
+	
 </project>
 <!-- EOF: $RCSfile$ -->
