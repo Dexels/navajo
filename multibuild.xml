@@ -83,8 +83,7 @@
 	<target name="multibuild">
 		<for list="${projects}" delimiter="," param="project">
 			<sequential>
-				<if>
-				</if>
+			
 				<ant antfile="../@{project}/build.xml" inheritall="true" dir="../@{project}">
 				</ant>
 			</sequential>
