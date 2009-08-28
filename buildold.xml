@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- $Id$ -->
+
+<project name="NavajoServer" default="all" basedir=".">
+	<property file="build.properties" />
+	<taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask" />
+	<taskdef name="undeploy" classname="org.apache.catalina.ant.UndeployTask" />
+	<taskdef name="start" classname="org.apache.catalina.ant.StartTask" />
+
+	<property name="workPath" value="work"/>
+	<property name="downloadPath" value="${workPath}/downloads"/>
+	<property name="libraryStore" value="${workPath}/libraryStore"/>
+	<property name="localSource" value="${workPath}/source"/>
+	<property name="classes" value="${workPath}/classes" />
+	<property name="dist.dir" value="${workPath}/distribution" />
+
+	<property name="binaryLibraryPath" value="${workPath}/binaryLibraries"/>
+
+
+	<property name="navajoTomcatServerManager" value="${navajoTomcatServer}/manager" />
+	
+	
+	<property name="enterprisetar.archive" value="NavajoEnterprise.tgz" />
+	<property name="enterprisezip.archive" value="NavajoEnterprise.zip" />
+	<property name="enterprisewar.archive" value="NavajoEnterprise.war" />
+
+	<property name="enterprisedist.dir" value="enterprisedist" />
+
+	<property name="deployRoot" value="${navajoScpUser}@${navajoScpServer}:${navajoScpPath}" />
+	<target name="clean">
+		<delete dir="WEB-INF/lib">
+			<include name="*.jar" />
+		</delete>
+		<delete dir="${dist.dir}" />
+		<delete dir="${libraryStore}" />
+		<delete dir="${classes}"/>
+		<delete dir="${localSource}/" />
+		<delete dir="${binaryLibraryPath}/" />
+		<delete dir="${downloadPath}"/>
+		<delete dir="${workPath}" />
+	</target>
+
+	<target name="prepareDeployment">
+		<mkdir dir="${classes}/${deployment}"/>
+		<mkdir dir="${classes}/${deployment}/all"/>
+		<mkdir dir="${localSource}/${deployment}"/>
+		<mkdir dir="${downloadPath}/${deployment}"/>
+		<mkdir dir="${downloadPath}/${deployment}/source"/>
+		<mkdir dir="${downloadPath}/${deployment}/binaries"/>
+		<mkdir dir="${libraryStore}/${deployment}"/>
+	</target>
+	
+	<target name="copysource">
+		<mkdir dir="${localSource}/${deployment}/${subproject}"/>
+		<copy todir="${localSource}/${deployment}/${subproject}" includeemptydirs="true">
+			<fileset dir="../${subproject}/src">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="compile" depends="clean">
+		<mkdir dir="${workPath}"/>
+		<mkdir dir="${libraryStore}"/>
+		<mkdir dir="${downloadPath}"/>
+		<mkdir dir="${localSource}"/>
+				
+		<mkdir dir="${binaryLibraryPath}"/>
+		<mkdir dir="${classes}"/>
+		<mkdir dir="${classes}/all"/>
+		<ant target="compilecore" antfile="build.xml">
+			<property name="deployment" value="Core"/>
+		</ant>
+		<ant target="compileserver" antfile="build.xml">
+			<property name="deployment" value="Server"/>
+		</ant>
+		<ant target="compiledevtools" antfile="build.xml">
+			<property name="deployment" value="Development"/>
+		</ant>
+
+		<ant target="compileenterprise" antfile="build.xml">
+			<property name="deployment" value="Enterprise"/>
+		</ant>
+		<ant target="compiletipi" antfile="build.xml">
+			<property name="deployment" value="Tipi"/>
+		</ant>
+	</target>
+
+	<target name="compilecore">
+		<ant target="prepareDeployment" antfile="build.xml"/>
+		<ant target="buildsubproject" antfile="build.xml">
+			<property name="subproject" value="DexelsVersionControl"/>
+		</ant>
+		<ant target="buildsubproject" antfile="build.xml">
+			<property  name="subproject" value="NavajoDocument"/>
+		</ant>
+		<ant target="buildsubproject" antfile="build.xml">
+			<property  name="subproject" value="NavajoClient"/>
+		</ant>
+		<ant target="buildsubproject" antfile="build.xml">
+			<property  name="subproject" value="Navajo"/>
+		</ant>
+		<ant target="buildsubproject" antfile="build.xml">
+			<property  name="subproject" value="NavajoFunctions"/>
+		</ant>
+	</target>
+	<target name="compileserver">
+		<ant target="prepareDeployment" antfile="build.xml"/>
+		<copy todir="${libraryStore}/${deployment}/">
+			<fileset dir="${libraryStore}/Core">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+		<copy todir="${classes}/${deployment}/all/">
+			<fileset dir="${classes}/Core/all">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+		<ant target="buildsubproject" antfile="build.xml">
+			<property  name="subproject" value="NavajoListeners"/>
+		</ant>
+		<ant target="buildsubproject" antfile="build.xml">
+			<property  name="subproject" value="NavajoAdapters"/>
+		</ant>
+		<ant target="buildsubproject" antfile="build.xml">
+			<property  name="subproject" value="NavajoFunctions"/>
+		</ant>
+	</target>
+	
+	
+	<target name="compiledevtools">
+		<ant target="prepareDeployment" antfile="build.xml"/>
+		<copy todir="${classes}/${deployment}/all/">
+			<fileset dir="${classes}/Core/all">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+
+		<ant target="buildsubproject" antfile="build.xml">
+			<property  name="subproject" value="NavajoUtilities"/>
+		</ant>
+		<ant target="buildsubproject" antfile="build.xml">
+			<property  name="subproject" value="TipiBuildLibrary"/>
+		</ant>
+		<ant target="buildsubproject" antfile="build.xml">
+			<property  name="subproject" value="TipiAntBuild"/>
+		</ant>
+	</target>
+		
+	<target name="compileenterprise">
+		<ant target="prepareDeployment" antfile="build.xml"/>
+		<copy todir="${libraryStore}/${deployment}/">
+			<fileset dir="${libraryStore}/Core">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+		<copy todir="${libraryStore}/${deployment}/">
+			<fileset dir="${libraryStore}/Server">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+		<copy todir="${classes}/${deployment}/all/">
+			<fileset dir="${classes}/Core/all">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+		<copy todir="${classes}/${deployment}/all/">
+			<fileset dir="${classes}/Server/all">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+
+		<copy todir="${libraryStore}/${deployment}/">
+			<fileset dir="${libraryStore}/Core">
+				<include name="**/*"/>
+			</fileset>
+			<fileset dir="${libraryStore}/Server">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+		<ant target="buildsubproject" antfile="build.xml">
+			<property name="subproject" value="NavajoEnterprise"/>
+		</ant>
+		<ant target="buildsubproject" antfile="build.xml">
+			<property  name="subproject" value="NavajoEnterpriseListeners"/>
+		</ant>
+		<ant target="buildsubproject" antfile="build.xml">
+			<property  name="subproject" value="NavajoEnterpriseAdapters"/>
+		</ant>
+	</target>
+	
+	<target name="compiletipi">
+		<ant target="prepareDeployment" antfile="build.xml"/>
+		<copy todir="${libraryStore}/${deployment}/">
+			<fileset dir="${libraryStore}/Core">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+		<copy todir="${classes}/${deployment}/all/">
+			<fileset dir="${classes}/Core/all">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+
+		
+
+		<ant target="buildsubproject" antfile="build.xml">
+			<property name="subproject" value="NavajoTipi"/>
+		</ant>
+		<ant target="buildsubproject" antfile="build.xml">
+			<property  name="subproject" value="TipiSwingClient"/>
+		</ant>
+		<ant target="buildsubproject" antfile="build.xml">
+			<property  name="subproject" value="NavajoSwingTipi"/>
+		</ant>
+		<ant target="buildsubproject" antfile="build.xml">
+			<property  name="subproject" value="NavajoRichClient"/>
+		</ant>
+		<ant target="buildsubproject" antfile="build.xml">
+			<property  name="subproject" value="NavajoRichTipi"/>
+		</ant>
+		<ant target="buildsubproject" antfile="build.xml">
+			<property  name="subproject" value="TipiSwingX"/>
+		</ant>
+		<ant target="buildsubproject" antfile="build.xml">
+			<property  name="subproject" value="TipiGeoSwing"/>
+		</ant>
+		<ant target="buildsubproject" antfile="build.xml">
+			<property  name="subproject" value="TipiJxLayer"/>
+		</ant>
+		<ant target="buildsubproject" antfile="build.xml">
+			<property  name="subproject" value="TipiSwingMig"/>
+		</ant>
+		<ant target="buildsubproject" antfile="build.xml">
+			<property  name="subproject" value="TipiSwingEditor"/>
+		</ant>
+		<ant target="buildsubproject" antfile="build.xml">
+			<property  name="subproject" value="TipiSubstance"/>
+		</ant>
+		<ant target="buildsubproject" antfile="build.xml">
+			<property  name="subproject" value="TipiJabber"/>
+		</ant>
+		<ant target="buildsubproject" antfile="build.xml">
+			<property  name="subproject" value="NavajoEchoClient"/>
+		</ant>
+		<ant target="buildsubproject" antfile="build.xml">
+			<property  name="subproject" value="NavajoEchoTipi"/>
+		</ant>
+	</target>
+	
+	<target name="compilesubproject">
+		<mkdir  dir="${classes}/${deployment}/${subproject}"/>
+		<copy todir="${classes}/${deployment}/${subproject}">
+			<fileset dir="${localSource}/${deployment}/${subproject}">
+				<exclude name="**/*.java" />
+				<exclude name="CVS" />
+			</fileset>
+		</copy>
+		<javac destdir="${classes}/${deployment}/${subproject}" nowarn="true" failonerror="true" debug="true">
+			<src path="${localSource}/${deployment}/${subproject}" />
+			<classpath>
+				<fileset dir="${binaryLibraryPath}/${deployment}/${subproject}/lib">
+					<include name="*.jar" />
+				</fileset>
+				<fileset dir="${binaryLibraryPath}/${deployment}/${subproject}/compilelib">
+					<include name="*.jar" />
+				</fileset>
+				<fileset dir="${libraryStore}/${deployment}/lib">
+					<include name="*.jar" />
+				</fileset>
+				<fileset dir="${libraryStore}/${deployment}/compilelib">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+			<classpath path="${classes}/${deployment}/all">
+			</classpath>
+		</javac>
+		<copy todir="${classes}/${deployment}/all">
+			<fileset dir="${classes}/${deployment}/${subproject}">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+		
+		<jar destfile="${downloadPath}/${deployment}/binaries/${subproject}.jar">
+			<fileset dir="${classes}/${deployment}/${subproject}">
+				<include name="**/*"/>
+			</fileset>
+		</jar>
+		
+	<!--	<tar tarfile="${downloadPath}/${deployment}/${localSource}/${subproject}_source.tgz" compression="gzip" basedir="${localSource}/${deployment}/${subproject}"/>-->
+		<ant antfile="build.xml" target="createSourceZip"></ant>
+		<ant antfile="build.xml" target="createBinaryZip"></ant>
+	</target>
+
+	<target name="createSourceZip">
+		<delete dir="${workPath}/tmp"/>
+		<mkdir dir="${workPath}/tmp"/>
+		<mkdir dir="${workPath}/tmp/${deployment}"/>
+		<mkdir dir="${workPath}/tmp/${deployment}/${subproject}"/>
+		<mkdir dir="${workPath}/tmp/${deployment}/${subproject}/src"/>
+    	 <copy todir="${workPath}/tmp/${deployment}/${subproject}/src">
+			<fileset dir="${localSource}/${deployment}/${subproject}">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+		<copy todir="${workPath}/tmp/${deployment}/${subproject}">
+			<fileset dir="${binaryLibraryPath}/${deployment}/${subproject}">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+		<zip zipfile="${downloadPath}/${deployment}/source/${subproject}.zip" basedir="${workPath}/tmp/${deployment}">
+			
+		</zip>
+	</target>
+	
+	<target name="createBinaryZip">
+		<delete dir="${workPath}/tmp"/>
+		<mkdir dir="${workPath}/tmp"/>
+		<mkdir dir="${workPath}/tmp/${deployment}"/>
+		<mkdir dir="${workPath}/tmp/${deployment}/${subproject}"/>
+	
+		<copy todir="${workPath}/tmp/${deployment}/${subproject}">
+
+			<fileset dir="${downloadPath}/${deployment}/binaries">
+				<include name="${subproject}.jar"/>
+			</fileset>
+			<fileset dir="../${subproject}">
+				<include name="lib/**"/>
+				<include name="compilelib/**"/>
+			</fileset>
+
+		</copy>
+		<zip zipfile="${downloadPath}/${deployment}/binaries/${subproject}.zip" basedir="${workPath}/tmp/${deployment}">
+		</zip>
+	</target>
+	
+	<target name="copylibs">
+		<mkdir dir="${binaryLibraryPath}/${deployment}"/>
+		<mkdir dir="${binaryLibraryPath}/${deployment}/${subproject}"/>
+		<mkdir dir="${binaryLibraryPath}/${deployment}/${subproject}/lib"/>
+		<mkdir dir="${binaryLibraryPath}/${deployment}/${subproject}/compilelib"/>
+		<copy todir="${binaryLibraryPath}/${deployment}/${subproject}" includeemptydirs="true">
+			<fileset dir="../${subproject}">
+				<include name="lib/*.jar"/>
+			</fileset>
+			<fileset dir="../${subproject}">
+				<include name="compilelib/*.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="${binaryLibraryPath}/${deployment}/${subproject}" includeemptydirs="true">
+			<fileset dir="../${subproject}">
+				<include name="compilelib/*.jar"/>
+			</fileset>
+		</copy>
+		<mkdir dir="${libraryStore}/${deployment}/lib"/>
+		<copy todir="${libraryStore}/${deployment}/lib" includeemptydirs="true">
+			<fileset dir="${binaryLibraryPath}/${deployment}/${subproject}/lib">
+				<include name="*.jar"/>
+			</fileset>
+		</copy>
+		<mkdir dir="${libraryStore}/${deployment}/compilelib"/>
+		<copy todir="${libraryStore}/${deployment}/compilelib" includeemptydirs="true">
+			<fileset dir="${binaryLibraryPath}/${deployment}/${subproject}/compilelib">
+				<include name="*.jar"/>
+			</fileset>
+		</copy>
+
+	</target>
+	
+	
+	<target name="buildsubproject">
+		<echo message="Building: ${subproject}"/>
+		<ant target="copylibs" antfile="build.xml"/>
+		<ant target="copysource" antfile="build.xml"/>
+		<ant target="compilesubproject"  antfile="build.xml"/>
+	</target>
+	
+	<target name="createwebapp">
+		<mkdir dir="${dist.dir}" />
+		<ant target="createdeploymentwebapp" antfile="build.xml">
+			<property name="deployment" value="Server"/>
+		</ant>
+<!--		<delete dir="${dist.dir}" />
+		<mkdir dir="${dist.dir}" />
+		<ant target="createdeploymentwebapp" antfile="build.xml">
+			<property name="deployment" value="Enterprise"/>
+		</ant>
+-->		<!-- Create extra deployment for Echo Tipi instances -->
+	</target>
+ 
+	<target name="createdeploymentwebapp" >
+			<mkdir dir="${dist.dir}/${deployment}"/>
+			<mkdir dir="${dist.dir}/${deployment}/WEB-INF"/>
+			<mkdir dir="${dist.dir}/${deployment}/WEB-INF/lib"/>
+
+			<copy todir="${dist.dir}/${deployment}/WEB-INF/lib">
+					<fileset dir="${downloadPath}/${deployment}/binaries">
+						<include name="*.jar"/>
+					</fileset>
+					<fileset dir="${libraryStore}/${deployment}/lib">
+						<include name="*.jar"/>
+					</fileset>
+			</copy>
+
+			<copy todir="${dist.dir}/${deployment}/WEB-INF">
+				<fileset file="sample/${deployment}/WEB-INF/web.xml" />
+			</copy>
+			<copy todir="${dist.dir}/${deployment}/config">
+				<fileset file="sample/${deployment}/config/**" />
+			</copy>
+			<copy todir="${dist.dir}/${deployment}/adapters">
+				<fileset file="sample/${deployment}/adapters/*.jar" />
+			</copy>
+			<copy todir="${dist.dir}/${deployment}/scripts">
+				<fileset file="sample/${deployment}/scripts/**" />
+			</copy>
+			<copy todir="${dist.dir}/${deployment}/resource">
+				<fileset file="sample/${deployment}/resource/**" />
+			</copy>
+			<copy todir="${dist.dir}/${deployment}/">
+				<fileset file="sample/${deployment}/index.html" />
+				<fileset file="sample/${deployment}/logo-dexels.gif" />
+			</copy>
+		
+			<war destfile="${downloadPath}/${deployment}/${deployment}.war">
+			 	<fileset dir="${dist.dir}/${deployment}">
+					<include name="**/*"/>
+			 	</fileset>
+			</war>
+			<echo message="${downloadPath}/${deployment}/${deployment}.war"/>
+		</target>
+
+	<!--<target name="compile" depends="grab">
+		<mkdir dir="${dist.dir}" />
+		<mkdir dir="${dist.dir}/WEB-INF" />
+		<mkdir dir="${dist.dir}/WEB-INF/lib" />
+		<ant antfile="sourcebuild.xml" dir="." />
+		<ant antfile="enterprisebuild.xml" dir="." />
+	</target>
+	-->
+	
+	
+
+	<target name="publish" depends="createwebapp">
+		<echo message="${deployRoot}" />
+		<scp trust="true" sftp="true" verbose="true" password="${navajoScpPassword}" todir="${deployRoot}">
+			<fileset dir="${downloadPath}">
+				<include name="**" />
+			</fileset>
+		</scp>
+	</target>
+	<target name="deploy" depends="createwebapp">
+		<echo message="${navajoTomcatServer}${navajoTomcatContext}${navajoServletPath}${navajoTesterCommand}"/>
+		<get dest="${classes}/temp" src="${navajoTomcatServer}${navajoTomcatContext}${navajoServletPath}${navajoTesterCommand}"/>
+
+		<scp trust="true" sftp="true" verbose="true" password="${navajoScpPassword}" todir="${deployRoot}">
+			<fileset dir="${downloadPath}/">
+				<include name="**/*" />
+			</fileset>
+		</scp>
+
+	</target> 
+	
+
+<!--	<target name="deployenterprise" depends="createenterprisewebapp">
+	<deploy url="${navajoTomcatServerManager}" update="true" username="${navajoTomcatUser}" password="${navajoTomcatPassword}" path="${navajoTomcatEnterpriseContext}" war="${publish.dir}/${enterprisewar.archive}" />
+	<get dest="${classes}/temp" src="${navajoTomcatServer}${navajoTomcatEnterpriseContext}${navajoServletPath}${navajoTesterCommand}"/>
+	</target> 
+-->
+	<target name="all" depends="compile, deploy" />
+
+</project>
+<!-- EOF: $RCSfile$ -->
