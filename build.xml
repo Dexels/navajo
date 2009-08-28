@@ -17,8 +17,12 @@
 	<property name="worktemp" value="${work}/temp"/>
 	<property name="distribution" value="distribution"/>
 	
-	<target name="init">
+	<target name="clean">
 		<delete dir="${work}"/>
+	</target>
+	
+	
+	<target name="init">
 		<mkdir dir="${work}"/>
 		<mkdir dir="${work}/temp"/>
 		<mkdir dir="${distribution}"/>
