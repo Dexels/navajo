@@ -1346,21 +1346,6 @@ public class StandardFunctionsTest extends TestCase {
 		
 	}	
 	
-	public void testExistsWorkflow() throws Exception {
-
-		FunctionInterface fi = fff.getInstance(cl, "ExistsWorkflow");
-		fi.reset();
-		fi.insertOperand("aap");
-		fi.insertOperand("noot");
-		fi.insertOperand("noot");
-		
-		try {
-		Object o = fi.evaluateWithTypeChecking();
-		} catch (NullPointerException n) 
-		{}
-		
-	}	
-	
 	public void testExistsProperty() throws Exception {
 
 		FunctionInterface fi = fff.getInstance(cl, "ExistsProperty");
