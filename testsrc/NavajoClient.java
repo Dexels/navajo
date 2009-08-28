@@ -11,10 +11,10 @@ public class NavajoClient {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Integration tests for com.dexels.navajo");
 		//$JUnit-BEGIN$
-		
-		suite.addTestSuite(NavajoScriptingTests.class);
-//		suite.addTestSuite(testClass)
-		suite.addTestSuite(BasicNavajoServerTests.class);
+
+		System.err.println("Disabled, TOO SLOW!");
+//		suite.addTestSuite(NavajoScriptingTests.class);
+//		suite.addTestSuite(BasicNavajoServerTests.class);
 		
 		//$JUnit-END$
 		return suite;
