@@ -360,7 +360,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 	}
 
 	protected void messageReceived(Message message) {
-		// System.err.println("Message received: "+ message.getBody());
+//		 System.err.println("Message received: "+ message.getBody());
 
 		// String type = (String) message.getProperty("navajoType");
 		// String tml = (String) message.getProperty("tml");
