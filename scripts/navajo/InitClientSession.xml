@@ -1,0 +1,33 @@
+<tsl>
+  <methods>
+    <method name="navajo/ProcessClientSession"/>
+  </methods>
+  <map object="com.dexels.navajo.adapter.AdminMap">
+    <message name="SessionParameters">
+       <property name="ChatServer" direction="out">
+          <expression value="$jabberServer"/>
+       </property>
+       <property name="ChatPort" direction="out">
+          <expression value="ToInteger($jabberPort)"/>
+       </property>
+       <property name="ChatService" direction="out">
+          <expression value="$jabberService"/>
+       </property>
+       <map object="com.dexels.navajo.adapter.AccessMap">
+          <property name="ChatNickname" direction="out">
+             <expression value="$userName + '-' + $../clientId"/>
+          </property>
+       </map>
+       <param name="ChatRoom">
+          <expression condition="!?[/Agent/ApplicationId]" value="$instanceGroup + '-UnknownApp'"/>
+          <expression value="$instanceGroup + '-' + [/Agent/ApplicationId]"/>
+       </param>
+       <property name="ChatRoom" direction="out">
+          <expression value="[/@ChatRoom]"/>
+       </property>
+       <property name="PushbackHandler" direction="out">
+          <expression value="'com.dexels.navajo.client.push.jabber.NavajoJabberSession'"/>
+       </property>
+    </message>
+  </map>
+</tsl>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl>
+    <message name="WorkFlowInstance">
+        <property name="Id" direction="in" type="string" length="100"/>
+        <property name="PostmanURL" direction="in" type="string" length="256"/>
+    </message>
+    <map object="com.dexels.navajo.workflow.WorkFlowManager">
+        <field name="workflowDef" condition="?[/WorkFlowDefinition/Name]">
+            <expression value="[/WorkFlowDefinition/Name]"/>
+        </field>
+        <message name="WorkFlowInstances">
+            <map ref="workflows">
+                <property name="Definition" direction="out">
+                    <expression value="$definition"/>
+                </property>
+                <property name="Id" direction="out" length="100">
+                    <expression value="$myId"/>
+                </property>
+                <property name="TribeMember" direction="out">
+                    <expression condition="?[/Tribe/MemberName]" value="[/Tribe/MemberName]" />
+                    <expression condition="" value="''" />
+                </property>
+                <property name="PostmanURL" direction="out">
+                    <expression condition="?[/Tribe/PostmanURL]" value="[/Tribe/PostmanURL]" />
+                    <expression condition="" value="''" />
+                </property>
+            </map>
+        </message>
+    </map>
+    <methods>
+        <method name="navajo/ProcessGetWorkFlowDetail"/>
+    </methods>
+</tsl>

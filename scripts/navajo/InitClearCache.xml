@@ -1,0 +1,8 @@
+<tsl>
+  <message name="Service22">
+    <property name="ServiceName" type="string" direction="in" length="100"/>
+  </message>
+  <methods>
+    <method name="navajo/ProcessClearCache"/>
+  </methods>
+</tsl>

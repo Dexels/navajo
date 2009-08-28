@@ -1,0 +1,13 @@
+<tsl>
+    <message name="MyAction">
+        <property name="MyProperty" type="string">
+            <expression value="[/MyMessage/MyProperty]"/>
+        </property>
+    </message>
+    <debug value="'*** in ProcessInputData : ' + [/MyMessage/MyProperty]"/>
+    <message name="Result">
+        <property name="Status" type="string" direction="in">
+            <expression value="'done'"/>
+        </property>
+    </message>
+</tsl>
