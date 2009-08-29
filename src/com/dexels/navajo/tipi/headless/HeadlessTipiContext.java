@@ -1,8 +1,10 @@
 package com.dexels.navajo.tipi.headless;
 
+import java.net.MalformedURLException;
 import java.util.*;
 
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.internal.BaseTipiErrorHandler;
 
 public class HeadlessTipiContext extends TipiContext {
 
@@ -15,6 +17,22 @@ public class HeadlessTipiContext extends TipiContext {
 		super(null,null);
 //		myInvokingThread = Thread.currentThread(); 
 	}
+	
+	public void processProperties(Map<String, String> properties) throws MalformedURLException {
+		for (Iterator<String> iter = properties.keySet().iterator(); iter.hasNext();) {
+			String element = iter.next();
+			String value = properties.get(element);
+			if (element.startsWith("-D")) {
+				element = element.substring(2);
+			}
+			setSystemProperty(element, value);
+		}
+		eHandler = new BaseTipiErrorHandler();
+		eHandler.setContext(this);
+		eHandler.initResource();
+
+	}	
+	
 	
 	public void exit() {
 		shutdown();

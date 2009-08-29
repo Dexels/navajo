@@ -48,7 +48,7 @@ public class FileResourceLoader extends ClassPathResourceLoader {
 		} else {
 			f = new File(baseFile, location);
 		}
-		// System.err.println("Created basefile link: "+f.getAbsolutePath());
+		
 		if (!f.exists()) {
 			return super.getResourceURL(location);
 		}

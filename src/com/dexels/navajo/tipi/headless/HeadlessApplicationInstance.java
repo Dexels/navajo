@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.*;
 
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.internal.FileResourceLoader;
 
 
 public class HeadlessApplicationInstance {
@@ -34,7 +35,8 @@ public class HeadlessApplicationInstance {
 		TipiContext context = null;
 //		System.setProperty("com.dexels.navajo.tipi.maxthreads","0");
 		context = new HeadlessTipiContext();
-//		context.setSystemProperty("com.dexels.navajo.tipi.maxthreads","0");
+		FileResourceLoader frl = new FileResourceLoader(tipiDir);
+		context.setTipiResourceLoader(frl);
 		context.setDefaultTopLevel(new TipiScreen(context));
 		context.processProperties(properties);
 		InputStream tipiResourceStream = context.getTipiResourceStream(definitionPath);
