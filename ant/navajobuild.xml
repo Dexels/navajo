@@ -5,6 +5,7 @@
 	<property name="testsrc" value="testsrc" />
 	<property name="work" value="work"/>
 	<property name="build" value="${work}/classes" />
+	<property name="eclipseclasses" value="classes" />
 	<property name="testbase" value="test" />
 	<property name="testbuild" value="test/classes" />
 	<property name="testreports" value="test/reports" />
@@ -172,6 +173,12 @@
 		<mkdir dir="${testbase}"/>
 		<mkdir dir="${testbuild}"/>
 		<mkdir dir="${testreports}"/>
+		<copy todir="${eclipseclasses}}">
+			<fileset dir="${testsrc}">
+				<exclude name="**/*.java" />
+				<exclude name="CVS" />
+			</fileset>
+		</copy>
 		<javac srcdir="${testsrc}" destdir="${testbuild}" debug="true" debuglevel="lines,vars,source">
 			<classpath refid="projectlibs" />
 			<classpath refid="dependencylibs" />
@@ -183,7 +190,7 @@
 		<if>
 			<equals arg1="${createbinaryzip}" arg2="true"/>
 			<then>
-		<jar destfile="${distribution}/${ant.project.name}Tests.jar">
+		<jar destfile="${distribution}/${ant.project.name}/${ant.project.name}Tests.jar">
 			<fileset dir="${testbuild}">
 				<include name="*/**" />
 			</fileset>
@@ -194,7 +201,7 @@
 		<if>
 			<equals arg1="${createsourcezip}" arg2="true"/>
 			<then>
-				<zip destfile="${distribution}/${ant.project.name}TestSource.zip">
+				<zip destfile="${distribution}/${ant.project.name}/${ant.project.name}TestSource.zip">
 					<fileset dir="${testsrc}">
 						<include name="*/**" />
 					</fileset>
@@ -205,6 +212,13 @@
 	
 	<target name="resource">
 		<copy todir="${build}">
+			<fileset dir="${src}">
+				<exclude name="**/*.java" />
+				<exclude name="CVS" />
+			</fileset>
+		</copy>
+		<!-- Only part where I touch the eclipse class dir:-->
+		<copy todir="${eclipseclasses}">
 			<fileset dir="${src}">
 				<exclude name="**/*.java" />
 				<exclude name="CVS" />
@@ -270,6 +284,7 @@
 				<antcall target="createSourceZip"></antcall>
 			</then>
 		</if>
+		<antcall target="afterdeploy"/>
 		<antcall target="cleanup"></antcall>
 		<if>
 			<equals arg1="${uploaddownloads}" arg2="true"/>
@@ -282,7 +297,8 @@
 	
 	<target name="afterdeploy">
 	</target>
-	
+	<target name="aftercleanup">
+	</target>	
 	<target name="cleanup" if="cleanupdependencies">
 		<if>
 			<equals arg1="${cleanupdependencies}" arg2="true"/>
