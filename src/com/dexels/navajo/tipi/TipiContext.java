@@ -144,10 +144,10 @@ public abstract class TipiContext {
 	// TODO, fix and remove
 	protected final ClientInterface clientInterface;
 
-	protected final TipiApplicationInstance myApplication;
+	protected final BaseTipiApplicationInstance myApplication;
 
 
-	public TipiContext(TipiApplicationInstance myApplication, TipiContext parent) {
+	public TipiContext(BaseTipiApplicationInstance myApplication, TipiContext parent) {
 //		this();
 		myParentContext = parent;
 		this.myApplication = myApplication;
@@ -189,7 +189,7 @@ public abstract class TipiContext {
 	}
 
 
-	public TipiApplicationInstance getApplicationInstance() {
+	public BaseTipiApplicationInstance getApplicationInstance() {
 		return myApplication;
 	}
 	
@@ -2191,7 +2191,7 @@ public abstract class TipiContext {
 			return;
 		}
 		
-		
+		// TODO: Move this to swingtipi or something
 		RootPaneContainer rpc =  (RootPaneContainer) getTopLevel();
 		System.err.println("Doing allright!");
 		if(rpc instanceof Window) {
