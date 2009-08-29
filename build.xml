@@ -16,7 +16,8 @@
 	<property name="webInfLib" value="${work}/WEB-INF/lib"/>
 	<property name="worktemp" value="${work}/temp"/>
 	<property name="distribution" value="distribution"/>
-	
+	<property name="deployRoot" value="${navajoScpUser}@${navajoScpServer}:${navajoScpPath}" />
+
 	<target name="clean">
 		<delete dir="${work}"/>
 	</target>
