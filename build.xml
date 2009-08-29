@@ -86,12 +86,17 @@
 		<ant antfile="build.xml" target="assemble">
 			<property name="deployname" value="Standard"/>
 		</ant>
-<!--		<ant antfile="build.xml" target="assemble">
-			<property name="deployname" value="Enterprise"/>
-		</ant>-->
 	</target>
+	<target name="upload" depends="deploy">
+		<scp trust="true"  sftp="true" verbose="true" password="${navajoScpPassword}" todir="${deployRoot}">
+			<fileset dir="${distribution}">
+				<include name="${deployname}.war" />
+			</fileset>
+		</scp>
+	</target>
+
 	
-	<target name="publish" depends="deploy">
+	<target name="publish" depends="deploy,upload">
 			
 	</target>
 </project>
