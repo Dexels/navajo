@@ -12,16 +12,18 @@ public class CoreTipi extends AbstractTipiTest {
 	
 	protected void setUp() throws Exception {
 		super.setUp();
-		setContext("tests/core/init", new File("testsrc/tests/core"));
+		setContext("init", new File("testsrc/tests/core"));
+		System.err.println("Setup complete");
 	}
 
 	public void testTipi() {
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-		}
+//		try {
+//			Thread.sleep(100);
+//		} catch (InterruptedException e) {
+//		}
+		getContext().shutdown();
 		String xx = getContext().getInfoBuffer();
-		assertEquals(xx, "event1\nevent2\n0.99\n");
+		assertEquals("event1\nevent2\n0.99\n",xx);
 
 	}
 

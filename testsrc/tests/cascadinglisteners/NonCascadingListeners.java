@@ -14,12 +14,12 @@ public class NonCascadingListeners extends AbstractTipiTest {
 		super.setUp();
 		//new String[]{"-DcascadingLoading=aap"}
 		
-		setContext("tests/cascadinglisteners/init", new File("testsrc/tests/cascadinglisteners"),new String[]{"-DnoCascadedLoading=true"});
+		setContext("init", new File("testsrc/tests/cascadinglisteners"),new String[]{"-DnoCascadedLoading=true"});
 	}
 
 	public void testTipi() {
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(100);
 		} catch (InterruptedException e) {
 		}
 		String xx = getContext().getInfoBuffer();

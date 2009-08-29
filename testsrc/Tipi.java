@@ -1,11 +1,12 @@
-import junit.framework.*;
-import tests.cascadinglisteners.*;
-import tests.core.*;
-import tests.eventinject.*;
-import tests.instantiateDispose.*;
+import tests.cascadinglisteners.CascadingListeners;
+import tests.cascadinglisteners.NonCascadingListeners;
+import tests.core.CoreTipi;
+import tests.eventinject.EventInjectTipi;
+import tests.instantiateDispose.InstantiateDisposeTipi;
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
-
-public class AllTests {
+public class Tipi {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("All tipi tests");

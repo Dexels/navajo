@@ -12,17 +12,17 @@ public class CascadingListeners extends AbstractTipiTest {
 	
 	protected void setUp() throws Exception {
 		super.setUp();
-		setContext("tests/cascadinglisteners/init", new File("testsrc/tests/cascadinglisteners"));
+		setContext("init", new File("testsrc/tests/cascadinglisteners"));
 	}
 
 	public void testTipi() {
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			Thread.sleep(100);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
 		String xx = getContext().getInfoBuffer();
-		assertEquals(xx, "loaded\n");
+		assertEquals( "loaded\n",xx);
 
 	}
 

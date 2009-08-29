@@ -9,6 +9,7 @@
                <showInfo text="'event1'"/>
                <headlessbutton.instantiate location="{component:/..}" id="'hbuttonid'" name="'hbutton'"/>
                <headlessbutton.fireAction path="{component:/../hbuttonid}"/>
+				<sleep time="100"/>
                <headlessbutton.instantiate location="{component:/..}" id="'hbuttonid2'" name="'hbutton2'"/>
                <headlessbutton.fireAction path="{component:/../hbuttonid2}"/>
             </onActionPerformed>

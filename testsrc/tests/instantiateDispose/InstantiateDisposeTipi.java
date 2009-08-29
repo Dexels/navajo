@@ -12,14 +12,13 @@ public class InstantiateDisposeTipi extends AbstractTipiTest {
 	
 	protected void setUp() throws Exception {
 		super.setUp();
-		setContext("tests/instantiateDispose/init", new File("testsrc/tests/instantiateDispose"));
+		setContext("init", new File("testsrc/tests/instantiateDispose"));
 	}
 
 	
 	public void testTipi() throws InterruptedException{
-		Thread.sleep(500);
 		String xx = getContext().getInfoBuffer();
-		assertEquals(xx, "instantiateOk\n");
+		assertEquals("instantiateOk\n",xx);
 
 	}
 }

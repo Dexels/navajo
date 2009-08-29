@@ -13,7 +13,7 @@ public class EventInjectTipi extends AbstractTipiTest {
 	
 	protected void setUp() throws Exception {
 		super.setUp();
-		setContext("tests/eventinject/init", new File("testsrc/tests/eventinject"));
+		setContext("init", new File("testsrc/tests/eventinject"));
 	}
 
 	public void testTipi() throws  TipiBreakException, TipiException{
@@ -21,19 +21,19 @@ public class EventInjectTipi extends AbstractTipiTest {
 		System.err.println("USERDIR: "+System.getProperty("user.dir"));
 		injectEvent("/init/button", "onActionPerformed");
 		try {
-			Thread.sleep(500);
+			Thread.sleep(300);
 		} catch (InterruptedException e1) {
 		}
 		
-		assertEquals("event1", getContext().expect());
-		assertEquals("event2", getContext().expect());
-		assertEquals("event3", getContext().expect());
-		assertEquals("event2", getContext().expect());
-		assertEquals("event3", getContext().expect());
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-		}
+		assertEquals(getContext().expect(),"event1");
+		assertEquals(getContext().expect(),"event2");
+		assertEquals(getContext().expect(),"event3");
+		assertEquals(getContext().expect(),"event2" );
+		assertEquals(getContext().expect(),"event3");
+//		try {
+//			Thread.sleep(1000);
+//		} catch (InterruptedException e) {
+//		}
 		injectEvent("/init/hbuttonid2", "onActionPerformed");
 
 		assertEquals("event3", getContext().expect());
