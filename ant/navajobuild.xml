@@ -173,6 +173,7 @@
 		<mkdir dir="${testbase}"/>
 		<mkdir dir="${testbuild}"/>
 		<mkdir dir="${testreports}"/>
+		<mkdir dir="${distribution}/${ant.project.name}"/>
 		<copy todir="${eclipseclasses}}">
 			<fileset dir="${testsrc}">
 				<exclude name="**/*.java" />
@@ -190,12 +191,12 @@
 		<if>
 			<equals arg1="${createbinaryzip}" arg2="true"/>
 			<then>
-		<jar destfile="${distribution}/${ant.project.name}/${ant.project.name}Tests.jar">
-			<fileset dir="${testbuild}">
-				<include name="*/**" />
-			</fileset>
-		</jar>
-				</then>
+				<jar destfile="${distribution}/${ant.project.name}/${ant.project.name}Tests.jar">
+					<fileset dir="${testbuild}">
+						<include name="*/**" />
+					</fileset>
+				</jar>
+			</then>
 			</if>
 		
 		<if>
