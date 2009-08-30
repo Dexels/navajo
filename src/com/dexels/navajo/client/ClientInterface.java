@@ -52,12 +52,39 @@ public interface ClientInterface {
 
   public Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v) throws ClientException;
 
+
+  
   public Navajo doScheduledSend(Navajo out, String method, String schedule, String description, String clientId) throws ClientException;
 
+  /**
+   * @deprecated
+   * @param in
+   * @param method
+   * @param response
+   * @param responseId
+   * @throws ClientException
+   */
   public void doAsyncSend(Navajo in, String method, ResponseListener response, String responseId) throws ClientException;
 
+  /**
+   * @deprecated
+   * @param in
+   * @param method
+   * @param response
+   * @param v
+   * @throws ClientException
+   */
   public void doAsyncSend(Navajo in, String method, ResponseListener response, ConditionErrorHandler v) throws ClientException;
 
+  /**
+   * @deprecated
+   * @param in
+   * @param method
+   * @param response
+   * @param responseId
+   * @param v
+   * @throws ClientException
+   */
   public void doAsyncSend(Navajo in, String method, ResponseListener response, String responseId, ConditionErrorHandler v) throws ClientException;
   public String getSessionToken();
   /*
@@ -108,16 +135,6 @@ public void init(URL config) throws ClientException;
   public boolean removeGlobalMessage(Message m);
 
   public int getPending();
-
-  public LazyMessage doLazySend(Message request, String service, String responseMsgName, int startIndex, int endIndex, int total) throws ClientException;
-
-  public LazyMessage doLazySend(Navajo request, String service, String responseMsgName, int startIndex, int endIndex, int total) throws ClientException;
-
-  public LazyMessage doLazySend(Navajo request, String service, String responseMsgName, int startIndex, int endIndex, int total, ConditionErrorHandler v) throws ClientException;
-
-  public Navajo createLazyNavajo(Navajo request, String service, String lazyPath, int startIndex, int endIndex) throws ClientException;
-
-  public Navajo performLazyUpdate(Navajo request, int startIndex, int endIndex) throws ClientException;
 
   public void setClientProperty(String key, Object value);
 
