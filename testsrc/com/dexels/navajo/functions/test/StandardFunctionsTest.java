@@ -1,8 +1,11 @@
 package com.dexels.navajo.functions.test;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+
+import org.dexels.utils.Base64;
 
 import junit.framework.TestCase;
 
@@ -59,7 +62,7 @@ public class StandardFunctionsTest extends TestCase {
 		
 		return doc;
 	}
-	
+
 	public void testAbs() throws Exception {
 		
 		FunctionInterface fi = fff.getInstance(cl, "Abs");
@@ -989,20 +992,7 @@ public class StandardFunctionsTest extends TestCase {
 		assertEquals(java.util.Date.class, o.getClass());
 		
 	}	
-	
-	public void testGetVersionInfo() throws Exception {
 
-		FunctionInterface fi = fff.getInstance(cl, "GetVersionInfo");
-		fi.reset();
-		fi.insertOperand("NavajoFunctions");
-		
-		try {
-		Object o = fi.evaluateWithTypeChecking();
-		} catch (TMLExpressionException e) 
-		{}
-	
-		
-	}	
 	
 	public void testGetUrlTime() throws Exception {
 
@@ -1295,19 +1285,7 @@ public class StandardFunctionsTest extends TestCase {
 		assertNotNull(o);
 		
 	}	
-	
-	public void testFileString() throws Exception {
 
-		FunctionInterface fi = fff.getInstance(cl, "FileString");
-		fi.reset();
-		
-		fi.insertOperand(null);
-		
-		Object o = fi.evaluateWithTypeChecking();
-		
-		assertNull(o);
-		
-	}	
 	
 	public void testFileSize() throws Exception {
 
@@ -1697,13 +1675,16 @@ public class StandardFunctionsTest extends TestCase {
 	public void testBase64Encode() throws Exception {
 
 		FunctionInterface fi = fff.getInstance(cl, "Base64Encode");
-		
+		byte[] bytes = "tralala".getBytes();
+		String b = Base64.encode(bytes);
 		fi.reset();
 		
-		fi.insertOperand("dsdsds");
+		fi.insertOperand(b);
 		
 		Object o = fi.evaluateWithTypeChecking();
-	
+		Binary oo = (Binary)o;
+		byte[] returned = oo.getData();
+		assertTrue(Arrays.equals(returned, bytes));
 	}	
 	
 	public void testArraySelection() throws Exception {

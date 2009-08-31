@@ -16,6 +16,7 @@ import com.dexels.navajo.document.types.Binary;
  * <p>Company: Dexels BV</p>
  * @author Arjen Schoneveld
  * @version $Id$
+ * @deprecated But still used for the financial forms, I think
  */
 
 public class ExecuteScript extends FunctionInterface {
