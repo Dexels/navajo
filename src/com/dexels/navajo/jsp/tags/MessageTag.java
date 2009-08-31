@@ -7,10 +7,11 @@ import javax.servlet.jsp.JspException;
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
 
 public class MessageTag extends BaseNavajoTag {
 
-	private String messsageName;
+	private String messageName;
 	private Message message;
 
 	public Message getMessage() {
@@ -28,29 +29,40 @@ public class MessageTag extends BaseNavajoTag {
 	}
 
 	public void setMessageName(String messageName) {
-		messsageName = messageName;
+		this.messageName = messageName;
 	}
 
 	public int doStartTag() throws JspException {
-			Navajo n;
-			Message parent = getNavajoContext().getMessage();
-			if(message==null) {
-				if(parent!=null) {
-					message = parent.getMessage(messsageName);
-				} else {
-					n = getNavajoContext().getNavajo();
-					message = n.getMessage(messsageName);
-				}
+		Navajo n;
+		Message parent = getNavajoContext().getMessage();
+		if(messageName==null) {
+			try {
+				getPageContext().getOut().write("Message without name!");
+				parent.write(System.err);
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (NavajoException e) {
+				e.printStackTrace();
 			}
-			getNavajoContext().pushMessage(message);
-			
+		} else {
+		if (message == null) {
+			if (parent != null) {
+				message = parent.getMessage(messageName);
+			} else {
+				n = getNavajoContext().getNavajo();
+				message = n.getMessage(messageName);
+			}
+		}
+		}
+		getNavajoContext().pushMessage(message);
+
 		return EVAL_BODY_INCLUDE;
 	}
 
 	@Override
 	public void release() {
 		message = null; 
-		messsageName = null;
+		messageName = null;
 		super.release();
 	}
 	
