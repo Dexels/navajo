@@ -174,7 +174,7 @@
 		<mkdir dir="${testbuild}"/>
 		<mkdir dir="${testreports}"/>
 		<mkdir dir="${distribution}/${ant.project.name}"/>
-		<copy todir="${eclipseclasses}}">
+		<copy todir="${eclipseclasses}">
 			<fileset dir="${testsrc}">
 				<exclude name="**/*.java" />
 				<exclude name="CVS" />
@@ -243,6 +243,9 @@
 			<classpath path="${dependencyclasses}"/>
 			<formatter type="plain" />
 			<test name="${ant.project.name}" outfile="result" todir="./${testreports}"/>
+			<sysproperty key="integrationServers" value="${integrationServers}"/>
+			<sysproperty key="integrationServerUser" value="${integrationServerUser}"/>
+			<sysproperty key="integrationServerPassword" value="${integrationServerPassword}"/>
 		</junit>
 	</target>
 	<target name="test" description="Run the JUnit tests">
