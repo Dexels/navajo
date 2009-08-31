@@ -7,7 +7,7 @@
 	<taskdef name="undeploy" classname="org.apache.catalina.ant.UndeployTask" />
 
 	<property file="build.properties" />
-	<property name="basicdeploy" value="DexelsVersionControl,NavajoDocument,NavajoClient,Navajo,NavajoListeners,NavajoAdapters,NavajoJsp" />
+	<property name="basicdeploy" value="DexelsVersionControl,NavajoDocument,NavajoClient,Navajo,NavajoListeners,NavajoAdapters,NavajoJsp,NavajoFunctions" />
 	<property name="enterprisedeploy" value="NavajoEnterprise,NavajoEnterpriseAdapters,NavajoEnterpriseListeners" />
 
 	
@@ -80,6 +80,7 @@
 		 	</fileset>
 		</war>
 		<deploy url="${navajoTomcatServerManager}" update="true" username="${navajoTomcatUser}" password="${navajoTomcatPassword}" path="/${deployname}" war="${distribution}/${deployname}.war" />
+		<deploy url="${navajoTomcatServerManager}" update="true" username="${navajoTomcatUser}" password="${navajoTomcatPassword}" path="/${deployname}2" war="${distribution}/${deployname}.war" />
 
 	</target>
 
