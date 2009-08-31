@@ -34,6 +34,8 @@ import java.lang.management.ThreadInfo;
 import java.util.*;
 
 import com.dexels.navajo.parser.Condition;
+import com.dexels.navajo.parser.Expression;
+
 import java.util.ArrayList;
 
 @SuppressWarnings("unchecked")
@@ -337,9 +339,18 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
     	  Property prop0 = NavajoFactory.getInstance().createProperty(outMessage,
     			  "Id", Property.STRING_PROPERTY,
     			  condition.id + "", 0, "", Property.DIR_OUT);
+    	  
+    	  // Evaluate comment as expression.
+    	  String description = "";
+    	  try {
+    		  Operand o = Expression.evaluate(condition.comment, inMessage);
+    		  description = o.value + "";
+    	  } catch (Exception e) {
+    		  description = condition.comment;
+    	  }
     	  Property prop1 = NavajoFactory.getInstance().createProperty(outMessage,
     			  "Description", Property.STRING_PROPERTY,
-    			  condition.comment, 0, "", Property.DIR_OUT);
+    			  description, 0, "", Property.DIR_OUT);
     	  Property prop2 = NavajoFactory.getInstance().createProperty(outMessage,
     			  "FailedExpression", Property.STRING_PROPERTY,
     			  condition.condition, 0, "", Property.DIR_OUT);

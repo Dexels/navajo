@@ -28,6 +28,9 @@ package navajo;
  * 
  * VERSION HISTORY
  * 
+ * 8.2.4 - Refactored Navajo Internal Structure
+ *       - Possible to define expression in description attribute of validation check
+ *       
  * 8.2.3 - Fixed problem with carriage return under Windows with expression between <value> tags.
  *       - Added printwriter console to Access object for debugging purposes.
  *       - Added support for firing AccessLogEvent to notify of 1 or more written full access logs.
@@ -184,12 +187,12 @@ public class Version extends dexels.Version {
 
 	public static final int MAJOR = 8;
 	public static final int MINOR = 2;
-	public static final int PATCHLEVEL = 3;
+	public static final int PATCHLEVEL = 4;
 	public static final String SPECIAL_VERSION = "Final";
 	
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
-	public static final String RELEASEDATE = "2009-07-21";
+	public static final String RELEASEDATE = "2009-09-01";
 	
 //	 Included packages.
 	String [] includes = {"navajodocument.Version"};
