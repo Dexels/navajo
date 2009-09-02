@@ -304,6 +304,32 @@ public class BIRTMap implements Mappable {
     birtDataSources.put("kernel", access.getInDoc().getMessage("__globals__").getProperty("BIRTKernelDatasourceUrl").getValue());
     birtDataSources.put("club", access.getInDoc().getMessage("__globals__").getProperty("BIRTClubDatasourceUrl").getValue());
     
+    /**
+     * Due to performance problems with Oracle, an additional Oracle database was needed.
+     * Therefore the datasource for each club MUST be dynamically defined; hence no fixed
+     * database assumption is valid anymore. The datasource name for each Club is expected
+     * to be present in an DbDatasource param.
+     */
+    if ( access.getInDoc().getProperty("/__parms__/DbDatasource") != null && 
+         access.getInDoc().getProperty("/__parms__/DbSchema") != null &&
+    	 access.getInDoc().getProperty("/__parms__/DbPassword") != null ) {
+    	String datasource = access.getInDoc().getProperty("/__parms__/DbDatasource").getValue();
+    	String username = access.getInDoc().getProperty("/__parms__/DbSchema").getValue();
+    	String password = access.getInDoc().getProperty("/__parms__/DbPassword").getValue();
+    	SQLMap s = new SQLMap();
+    	try {
+    		s.load(access);
+    		s.setDatasource(datasource);
+    		s.setUsername(username + "/" + password);
+    		String url = s.getDatasourceUrl(datasource, username);
+    		birtDataSources.put("club", url);
+    		System.err.println("Setting alternative CLUB DB URL: " + url);
+    	} finally {
+    		if ( s != null ) {
+    			s.store();
+    		}
+    	}
+    }
     System.err.println("BIRTReportDir: " + reportDir);
     System.err.println("BIRTEngineDir: " + engineDir);
   }
