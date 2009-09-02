@@ -127,6 +127,15 @@ public class ConnectionBrokerManager extends Object {
 	  }
   }
 
+  public final String getDatasourceUrl(String datasource, String username) {
+	  SQLMapBroker b = (SQLMapBroker) brokerMap.get(datasource + this.SRCUSERDELIMITER + username);
+	  if ( b != null ) {
+		  return b.getUrl();
+	  } else {
+		  return null;
+	  }
+  }
+  
   public final void put(final String datasource, final String username, final String password) throws
   UserException,
   ClassNotFoundException {
@@ -373,7 +382,8 @@ public class ConnectionBrokerManager extends Object {
     public String datasource;
     public String driver;
     public String url;
-    public String username;
+    
+	public String username;
     public String password;
     public int minconnections;
     public int maxconnections;
@@ -438,6 +448,10 @@ public class ConnectionBrokerManager extends Object {
           this.maxconnections, this.logFile, this.refresh, this.autocommit);
       return (y);
     }
+
+    public String getUrl() {
+		return url;
+	}
 
   }
 

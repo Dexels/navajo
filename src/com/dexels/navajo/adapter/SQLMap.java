@@ -124,6 +124,12 @@ import com.dexels.navajo.events.types.AuditLogEvent;
  *
  */
 
+class Kip {
+	  public String toString() {
+		  return "Kip";
+	  }
+}
+
 public class SQLMap implements Mappable, LazyArray, HasDependentResources {
 
   protected final static int INFINITE = -1;
@@ -543,8 +549,10 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
     }
     
     if (con == null) {
-    	AuditLog.log("SQLMap", "Invalid transaction context: " + i, Level.SEVERE,myAccess.accessID);
-      throw new UserException( -1, "Invalid transaction context set");
+
+    	boolean exists = transactionContextMap.containsKey(i + "");
+    	AuditLog.log("SQLMap", "Invalid transaction context: " + i, Level.SEVERE,myAccess.accessID + " (exists=" + exists + ")");
+    	throw new UserException( -1, "Invalid transaction context set (exists=" + exists + ")");
     }
   }
 
@@ -1643,6 +1651,8 @@ protected void setBlob(PreparedStatement statement, int i, Binary b) throws SQLE
     return total;
   }
 
+
+  
   public static void main(String[] args) throws Exception {
 
     String query =
@@ -1677,6 +1687,13 @@ protected void setBlob(PreparedStatement statement, int i, Binary b) throws SQLE
                                                   query.length()));
 
     System.err.println(query);
+    
+    HashMap hm = new HashMap();
+    Object aap = new Kip();
+    hm.put("1", aap);
+    aap = new String("noot");
+    Object o = hm.get("1");
+    System.err.println("o = " + o + ", contains = " + hm.containsKey("1"));
   }
 
   public String getQuery() {
@@ -1826,6 +1843,14 @@ protected void setBlob(PreparedStatement statement, int i, Binary b) throws SQLE
 	  this.showHeader = b;
   }
 
+  public String getDatasourceUrl(String datasource, String username) {
+	  if ( fixedBroker != null ) {
+		  return fixedBroker.getDatasourceUrl(datasource, username);
+	  } else {
+		  return null;
+	  }
+  }
+  
   /**
    * METADATA INFORMATION.
    */
@@ -1836,12 +1861,13 @@ protected void setBlob(PreparedStatement statement, int i, Binary b) throws SQLE
 			                        new GenericMultipleDependentResource("sql", "query", SQLFieldDependency.class)};
   }
 
-public int getTimeAlert() {
-	return timeAlert;
-}
+  public int getTimeAlert() {
+	  return timeAlert;
+  }
 
-public void setTimeAlert(int timeAlert) {
-	this.timeAlert = timeAlert;
-}
+  public void setTimeAlert(int timeAlert) {
+	  this.timeAlert = timeAlert;
+  }
   
+
 }

@@ -117,7 +117,7 @@ public final class DbConnectionBroker extends Object implements Runnable
 					for (int i = 0; i < conns.length; i++) {
 						if (conns[i] != null && !usedmap[i] && created[i] < maxAge) {
 							try {
-								log("Closing idle connection.");
+								log("Closing idle connection: " + conns[i].hashCode());
 								conns[i].close();
 								idle++;
 							} catch (SQLException e) {
@@ -216,6 +216,7 @@ public final class DbConnectionBroker extends Object implements Runnable
 					usedmap[i] = true;
 					return conns[i];
 				} else {
+					log("Invalid connection, did not pass test: " + conns[i].hashCode());
 					--current;
 					conns[i] = null;
 					usedmap[i] = false;
@@ -300,6 +301,7 @@ public final class DbConnectionBroker extends Object implements Runnable
 			try {
 				if(conns[i] != null) {
 					conns[i].close();
+					log("Closed connection due to destroy: " + conns[i].hashCode());
 					conns[i] = null;
 					usedmap[i] = false;
 					//System.err.println(">>>>>> Closed connection.");
