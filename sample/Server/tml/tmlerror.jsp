@@ -27,7 +27,8 @@
           <!-- start: skip link navigation -->
 
         </div>
-        <h2>Problems!</h2>
+        <h2>Navajo Error <a href="index.jsp">[[Restart]]</a></h2>
+        
       </div>
       <div id="nav">
         <!-- skiplink anchor: navigation -->

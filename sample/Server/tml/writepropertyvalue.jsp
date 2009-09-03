@@ -58,7 +58,7 @@
 						</select>
 					</c:when>
 					<c:otherwise>
-						<input type="text" value="${navajoContext.property.value}" name="${navajoContext.propertyPath}"/>
+						<input type="text" size="70" value="${navajoContext.property.value}" name="${navajoContext.propertyPath}"/>
 					</c:otherwise>
 				</c:choose>
 			</c:otherwise>

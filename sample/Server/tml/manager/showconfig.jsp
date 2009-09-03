@@ -4,20 +4,10 @@
 <%@page import="java.util.*"%>
 <%@ taglib prefix="c" uri="/WEB-INF/tags/c.tld"%>
 <%@ taglib prefix="nav" uri="/WEB-INF/tags/navajo.tld"%>
+<%@ taglib prefix="navserver" uri="/WEB-INF/tags/navajoserver.tld"%>
 <%@ page import="com.dexels.navajo.jsp.NavajoContext"%>
 <jsp:useBean id="navajoContext" class="com.dexels.navajo.jsp.NavajoContext" scope="session" />
+<jsp:useBean id="serverContext" class="com.dexels.navajo.jsp.server.NavajoServerContext" scope="session" />
+<jsp:setProperty property="pageContext" name="serverContext" value="${pageContext}"/>
 
-<div class="messagetree">
-<table>
-<tr>
-<nav:message message="${msg}" messageIndex="0">
-		<c:import url="tml/writearrayheader.jsp"/>
-</nav:message>
-</tr>
-<c:forEach var="msg" items="${navajoContext.message.allMessages}">
-	<nav:message message="${msg}">
-		<c:import url="tml/writearrayelement.jsp"/>
-	</nav:message>
-</c:forEach>
-</table>
-</div>
+<navserver:formattedFile filePath="config/${param['configfile']}.xml"></navserver:formattedFile>

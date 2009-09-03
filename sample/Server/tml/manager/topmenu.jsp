@@ -2,13 +2,20 @@
 <%@page import="java.io.*"%>
 <%@page import="java.net.*"%>
 <%@page import="java.util.*"%>
-<%@ taglib prefix="c" uri="../WEB-INF/tags/c.tld"%>
-<%@ taglib prefix="nav" uri="../WEB-INF/tags/navajo.tld"%>
+<%@ taglib prefix="c" uri="/WEB-INF/tags/c.tld"%>
+<%@ taglib prefix="nav" uri="/WEB-INF/tags/navajo.tld"%>
 <%@ page import="com.dexels.navajo.jsp.NavajoContext"%>
 <jsp:useBean id="navajoContext" class="com.dexels.navajo.jsp.NavajoContext" scope="session" />	        
 
-	<c:choose>
-          		<c:when test="${param['view']=='editor' || param['view']==null}">
+			<c:choose>
+          		<c:when test="${param['view']=='home' || param['view']==null}">
+		            <li class="active"><strong>Home</strong></li>
+          		</c:when>
+          		<c:otherwise>
+		            <li><a href="${pageContext.request.requestURI}?view=home&amp;service=${param['service']}">Home</a></li>
+          		</c:otherwise>
+          	</c:choose>			<c:choose>
+          		<c:when test="${param['view']=='editor' }">
 		            <li class="active"><strong>Editor</strong></li>
           		</c:when>
           		<c:otherwise>

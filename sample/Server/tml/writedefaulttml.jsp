@@ -6,10 +6,12 @@
 <%@ taglib prefix="nav" uri="../WEB-INF/tags/navajo.tld"%>
 <%@ page import="com.dexels.navajo.jsp.NavajoContext"%>
 <jsp:useBean id="navajoContext" class="com.dexels.navajo.jsp.NavajoContext" scope="session" />
-<h2> ${navajoContext.navajoName}</h2>
-<c:forEach var="msg" items="${navajoContext.navajo.allMessages}">
-	<nav:message message="${msg}">
-		<c:import url="tml/writemessage.jsp"/>
-	</nav:message>
-</c:forEach>
-	
+<c:if test="${param['service'] != null && param['service']!=''}">
+	<h2> ${navajoContext.navajoName}</h2>
+					
+	<c:forEach var="msg" items="${navajoContext.navajo.allMessages}">
+		<nav:message message="${msg}">
+			<c:import url="tml/writemessage.jsp"/>
+		</nav:message>
+	</c:forEach>
+</c:if>	

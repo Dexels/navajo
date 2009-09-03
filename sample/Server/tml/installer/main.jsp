@@ -1,20 +1,20 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<%@page errorPage="tml/tmlerror.jsp" language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@page import="java.io.*"%>
 <%@page import="java.net.*"%>
 <%@page import="java.util.*"%>
-<%@ taglib prefix="c" uri="WEB-INF/tags/c.tld"%>
-<%@ taglib prefix="nav" uri="WEB-INF/tags/navajo.tld"%>
-<%@ taglib prefix="navserver" uri="WEB-INF/tags/navajoserver.tld"%>
+<%@ taglib prefix="c" uri="/WEB-INF/tags/c.tld"%>
+<%@ taglib prefix="nav" uri="/WEB-INF/tags/navajo.tld"%>
+<%@ taglib prefix="navserver" uri="/WEB-INF/tags/navajoserver.tld"%>
 <%@ page import="com.dexels.navajo.jsp.NavajoContext"%>
 <jsp:useBean id="navajoContext" class="com.dexels.navajo.jsp.NavajoContext" scope="session" />
 <jsp:useBean id="serverContext" class="com.dexels.navajo.jsp.server.NavajoServerContext" scope="session" />
+<jsp:useBean id="installerContext" class="com.dexels.navajo.jsp.server.InstallerContext" scope="session" />
 <jsp:setProperty property="pageContext" name="serverContext" value="${pageContext}"/>
+<jsp:setProperty property="pageContext" name="installerContext" value="${pageContext}"/>
 
 <nav:postHandler/>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-<title>Navajo Tester 2.0</title>
+<title>Navajo Installer 2.0</title>
 <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 <!-- add your meta tags here -->
 
@@ -22,30 +22,8 @@
 <!--[if lte IE 7]>
 <link href="css/patches/patch_my_layout.css" rel="stylesheet" type="text/css" />
 <![endif]-->
-<c:import url="tml/manager/extrastylesheets.jsp"></c:import>
 
 </head>
-	<nav:client username="ROOT" password="R20T"  />
-<!--server="penelope1.dexels.com/sportlink/knvb/servlet/Postman"	-->
-
-		<c:if test="${param['service']!= null }">
-			<c:if test="${param[param['service']]==true}">
-				<c:choose>
-					<c:when test="${param.inputNavajo!=null}">
-							<nav:call service="${param['service']}" navajo="${param['inputNavajo']}"/>
-					</c:when>
-					<c:otherwise>
-						<nav:call service="${param.service}"/>
-					</c:otherwise>
-				</c:choose>
-			</c:if>
-		</c:if>
-
-	<c:choose >
-		<c:when test="${param['command']=='setFolder'}">
-			<c:set target="${serverContext}" property="path" value="${param['folder']}"/>
-		</c:when>
-	</c:choose>
 
 <body>
 <form action="index.jsp" method="post" >
@@ -59,7 +37,7 @@
           <!-- start: skip link navigation -->
 
         </div>
-        <h2><a href="index.jsp">Navajo Tester 2.0</a></h2>
+        <h2><a href="index.jsp">Navajo Installer 2.0</a></h2>
       </div>
       <div id="nav">
         <!-- skiplink anchor: navigation -->
@@ -68,17 +46,33 @@
   
           <!-- main navigation: horizontal list -->
           <ul>
-          			<c:import url="tml/manager/topmenu.jsp"/>
+		            <li class="active"><strong>Home</strong></li>
           </ul>
         </div>
       </div>
       <div id="main">
         <div id="col1">
-			<c:import url="tml/manager/leftmenu.jsp"/>
        </div>
         <div id="col3">
           <div id="col3_content" class="clearfix" style="overflow:auto">
-			 <c:import url="tml/manager/content.jsp"/>
+				<h3>No installation found.</h3>
+				<p>While it is completely possible to run a navajo installation in-place, I strongly recommend
+				installing the actual files elsewhere.
+				</p>
+				<p>
+				Current server context: ${serverContext.contextName}
+				</p>
+				<p>
+				
+				Choose an installation path for context: ${serverContext.contextName}:
+				</p>
+				<a href="tml/installer/doinstall.jsp?selectedPath=${installerContext.suggestedPath}">install</a>
+				<form target="tml/installer/doinstall.jsp" method="post">
+					<input type="selectedPath" value="${installerContext.suggestedPath}"/>
+					<input type="submit">
+				</form>
+				
+				</p>
 		    </div>
           <!-- IE Column Clearing -->
           <div id="ie_clearing"> &#160; </div>

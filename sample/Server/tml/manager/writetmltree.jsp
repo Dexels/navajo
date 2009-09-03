@@ -6,18 +6,10 @@
 <%@ taglib prefix="nav" uri="/WEB-INF/tags/navajo.tld"%>
 <%@ page import="com.dexels.navajo.jsp.NavajoContext"%>
 <jsp:useBean id="navajoContext" class="com.dexels.navajo.jsp.NavajoContext" scope="session" />
-
-<div class="messagetree">
-<table>
-<tr>
-<nav:message message="${msg}" messageIndex="0">
-		<c:import url="tml/writearrayheader.jsp"/>
-</nav:message>
-</tr>
-<c:forEach var="msg" items="${navajoContext.message.allMessages}">
+<h4> ${navajoContext.navajoName}</h4>
+<c:forEach var="msg" items="${navajoContext.navajo.allMessages}">
 	<nav:message message="${msg}">
-		<c:import url="tml/writearrayelement.jsp"/>
+		<c:import url="tml/manager/writemessagetree.jsp"/>
 	</nav:message>
 </c:forEach>
-</table>
-</div>
+	
