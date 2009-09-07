@@ -40,12 +40,26 @@ public class SystemInfo {
 		
 	}
 	
+	private SystemInfo (int failed) {
+		javaVersion = "unknown";
+		os = "[Failed to get runtime]";
+		osVersion = "unknown";
+		osArch = "unknown";
+		maxMem = -1;
+		cpuCount = 1;
+		setCompactInfo();
+	}
+	
 	public static SystemInfo getSystemInfo() {
-		
+
 		if ( instance == null ) {
-			instance = new SystemInfo();
+			try {
+				instance = new SystemInfo();
+			} catch (Throwable t) { // Could not get runtime
+				instance = new SystemInfo(-1);
+			}
 		}
-		
+
 		return instance;
 	}
 
