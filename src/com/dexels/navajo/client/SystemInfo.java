@@ -9,7 +9,7 @@ public class SystemInfo {
 	String javaVersion;
 	String osArch;
 	
-	String compactInfo;
+	String compactInfo = "[not initialized]";
 	
 	private volatile static SystemInfo instance = null;
 	
@@ -40,8 +40,8 @@ public class SystemInfo {
 		
 	}
 	
-	private SystemInfo (int failed) {
-		javaVersion = "unknown";
+	private SystemInfo (int failed, String msg) {
+		javaVersion = msg;
 		os = "[Failed to get runtime]";
 		osVersion = "unknown";
 		osArch = "unknown";
@@ -50,13 +50,13 @@ public class SystemInfo {
 		setCompactInfo();
 	}
 	
-	public static SystemInfo getSystemInfo() {
+	public synchronized static SystemInfo getSystemInfo() {
 
 		if ( instance == null ) {
 			try {
 				instance = new SystemInfo();
 			} catch (Throwable t) { // Could not get runtime
-				instance = new SystemInfo(-1);
+				instance = new SystemInfo(-1, t.getMessage());
 			}
 		}
 
