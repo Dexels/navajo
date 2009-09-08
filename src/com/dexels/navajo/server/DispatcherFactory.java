@@ -26,6 +26,7 @@ public class DispatcherFactory {
 		return instance;
 	}
 	
+	
 	/**
 	 * Only use this getInstance to get a reference to the real Dispatcher.
 	 * 
@@ -35,7 +36,43 @@ public class DispatcherFactory {
 	 * @return
 	 * @throws NavajoException
 	 */
-	public static DispatcherInterface getInstance(String rootPath, String serverXmlPath, InputStreamReader fileInputStreamReader) throws NavajoException {
+	public static DispatcherInterface getInstance(File rootPath, String serverXmlPath, InputStreamReader fileInputStreamReader, String servletContextRootPath) throws NavajoException {
+		if (instance != null) {
+			return instance;
+		}
+		URL configurationUrl;
+		System.err.println("Extremeskool configuration detected.");
+		String absRootPath = rootPath.getAbsolutePath();
+		if(!absRootPath.endsWith("/")) {
+			absRootPath = absRootPath+ "/";
+		}
+		System.err.println("Rootpath: "+absRootPath);
+		System.err.println("ServerXML: "+serverXmlPath);
+		
+		try {
+//			URL rootUrl = rootPath.toURI().toURL();
+			File serverXMLFile = new File(rootPath,serverXmlPath);
+			configurationUrl = serverXMLFile.toURI().toURL();
+//			configurationUrl = new URL(rootUrl, serverXmlPath);
+		} catch (MalformedURLException e) {
+			throw NavajoFactory.getInstance().createNavajoException(e);
+		}
+
+		
+		createInstance(absRootPath, fileInputStreamReader, configurationUrl,servletContextRootPath);
+		return instance;
+	}
+	
+	/**
+	 * Only use this getInstance to get a reference to the real Dispatcher.
+	 * 
+	 * @param rootPath
+	 * @param serverXmlPath
+	 * @param fileInputStreamReader
+	 * @return
+	 * @throws NavajoException
+	 */
+	public static DispatcherInterface getInstance(String rootPath, String serverXmlPath, InputStreamReader fileInputStreamReader, String servletContextRootPath) throws NavajoException {
 
 		if (instance != null) {
 			return instance;
@@ -66,7 +103,18 @@ public class DispatcherFactory {
 			}
 
 		}
+		
+		if(!rootPath.endsWith("/")) {
+			rootPath = rootPath+ "/";
+		}
 
+		createInstance(rootPath, fileInputStreamReader, configurationUrl,servletContextRootPath);
+
+		return instance;
+	}
+
+	private static void createInstance(String rootPath, InputStreamReader fileInputStreamReader, URL configurationUrl,String servletContextRootPath)
+			throws NavajoException {
 		synchronized (semaphore) {
 			if (instance == null) {
 				
@@ -76,7 +124,7 @@ public class DispatcherFactory {
 				  try {
 					  // Read configuration file.
 					  is = configurationUrl.openStream();
-					  nc = new NavajoConfig(fileInputStreamReader, null, is, rootPath); 
+					  nc = new NavajoConfig(fileInputStreamReader, null, is, rootPath,servletContextRootPath); 
 				  }
 				  catch (Exception se) {
 					  se.printStackTrace(System.err);
@@ -98,8 +146,6 @@ public class DispatcherFactory {
 				
 			}
 		}
-
-		return instance;
 	}
 	
 }
