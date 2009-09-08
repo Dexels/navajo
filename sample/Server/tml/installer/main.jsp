@@ -26,7 +26,6 @@
 </head>
 
 <body>
-<form action="index.jsp" method="post" >
 
 
   <input type="hidden" name="inputNavajo" value="${param['service']}"/>
@@ -67,12 +66,13 @@
 				Choose an installation path for context: ${serverContext.contextName}:
 				</p>
 				<a href="tml/installer/doinstall.jsp?selectedPath=${installerContext.suggestedPath}">install</a>
-				<form target="tml/installer/doinstall.jsp" method="post">
-					<input type="selectedPath" value="${installerContext.suggestedPath}"/>
-					<input type="submit">
+				<form action="tml/installer/doinstall.jsp" method="post">
+					<input type="text" name="selectedPath" value="${installerContext.suggestedPath}"/><br/>
+					Delete files in web-app? <input type="checkbox" name="deleteLocal" value="true"/><br/>
+					<input type="submit" value="Create default installation">
+
 				</form>
 				
-				</p>
 		    </div>
           <!-- IE Column Clearing -->
           <div id="ie_clearing"> &#160; </div>
@@ -83,7 +83,6 @@
       </div>
     </div>
   </div>
-  </form>
 </body>
 </html>
 

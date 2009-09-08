@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl>
+    <param name="UpdateCount">
+        <expression value="0"/>
+    </param>
+    <map object="com.dexels.navajo.adapter.SQLMap">
+        <field name="datasource">
+            <expression value="'default'"/>
+        </field>
+        <field name="query">
+            <expression xml:space="preserve">DROP TABLE person</expression>
+        </field>
+  
+            <property name="Result" type="string" direction="in" description="Result">
+                <expression value="$rowCount"/>
+            </property>
+
+        <!-- for the photo get person id -->
+       
+    </map>
+   
+</tsl>

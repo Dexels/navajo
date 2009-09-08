@@ -12,9 +12,7 @@
 	</a>
 	<c:choose>
 		<c:when test="${navajoContext.message.type == 'array'}">
-			<c:if test="false">
 				<c:import url="tml/writearraymessage.jsp"/>
-			</c:if>
 		</c:when>
 		<c:otherwise>
 			<c:forEach var="msg" items="${navajoContext.message.allMessages}">

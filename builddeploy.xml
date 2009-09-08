@@ -83,13 +83,13 @@
 
 	
 	<target name="assemble" depends="prepare">
-		<ant antfile="build.xml" target="gatherlocal">
+		<ant antfile="builddeploy.xml" target="download">
 			<property name="currentdeploy" value="${basicdeploy}"/>
 		</ant>
 		<if>
 			<equals arg1="${deployname}" arg2="Enterprise"/>
 			<then>
-				<ant antfile="build.xml" target="gatherlocal">
+				<ant antfile="builddeploy.xml" target="download">
 					<property name="currentdeploy" value="${enterprisedeploy}"/>
 				</ant>
 			</then>
@@ -101,22 +101,24 @@
 		 	</fileset>
 		</war>
 		<deploy url="${navajoTomcatServerManager}" update="true" username="${navajoTomcatUser}" password="${navajoTomcatPassword}" path="/${deployname}" war="${distribution}/${deployname}.war" />
+		<deploy url="${navajoTomcatServerManager}" update="true" username="${navajoTomcatUser}" password="${navajoTomcatPassword}" path="/${deployname}2" war="${distribution}/${deployname}.war" />
 
 	</target>
 
-	
 	<target name="deploy" >
-		<ant antfile="build.xml" target="assemble">
-			<property name="deployname" value="StandardFrank"/>
+		<ant antfile="builddeploy.xml" target="assemble">
+			<property name="deployname" value="Standard"/>
 		</ant>
-
+		<ant antfile="builddeploy.xml" target="assemble">
+			<property name="deployname" value="Enterprise"/>
+		</ant>
 	</target>
 	<target name="upload" depends="deploy">
 		<scp trust="true"  sftp="true" verbose="true" password="${navajoScpPassword}" todir="${deployRoot}">
 			<fileset dir="${distribution}">
 				<include name="${deployname}.war" />
 			</fileset>
-		</scp>	
+		</scp>
 	</target>
 
 	

@@ -6,10 +6,8 @@
 <%@ taglib prefix="nav" uri="../WEB-INF/tags/navajo.tld"%>
 <%@ page import="com.dexels.navajo.jsp.NavajoContext"%>
 <jsp:useBean id="navajoContext" class="com.dexels.navajo.jsp.NavajoContext" scope="session" />
-Element:
 <tr>
 <c:forEach var="prop" items="${navajoContext.message.allProperties}">
-	prop.
 				<th>
 				<nav:property property="${prop}">
 					<c:import url="tml/writepropertydescription.jsp"/>

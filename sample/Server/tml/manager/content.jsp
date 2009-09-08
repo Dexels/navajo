@@ -23,7 +23,7 @@
 		</c:if>
 	</c:when>
 	<c:when test="${param['view']=='tsl'}">
-		<navserver:formattedFile filePath="scripts/${param['service']}.xml"></navserver:formattedFile>
+		<navserver:formattedFile serverContext="${serverContext}" filePath="scripts/${param['service']}.xml"></navserver:formattedFile>
 	</c:when>
 	<c:when test="${param['view']=='tml'}">
 		<c:if test="${param['service'] != null && param['service']!=''}">
@@ -34,7 +34,7 @@
 	</c:when>
 	<c:when test="${param['view']=='javasource'}">
 		<c:if test="${param['service'] != null && param['service']!=''}">
-			<navserver:formattedFile filePath="classes/${param['service']}.java"></navserver:formattedFile>
+			<navserver:formattedFile serverContext="${serverContext}" filePath="classes/${param['service']}.java"></navserver:formattedFile>
 		</c:if>
 	</c:when>
 

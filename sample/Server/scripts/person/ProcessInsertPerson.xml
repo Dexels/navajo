@@ -10,8 +10,7 @@
         <field name="update">
             <expression xml:space="preserve">
                 INSERT INTO person (  
-                       id
-                ,      lastname
+                       lastname
                 ,      infix
                 ,      initials
                 ,      firstname
@@ -27,12 +26,9 @@
                 ,      telephonenumber
                 ,      mobilenumber
                 ,      emailaddress )
-                VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+                VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?,
                          ?, ?, ?, ?, ?, ?, ? )
             </expression>
-        </field>
-        <field name="parameter">
-            <expression value="null"/>
         </field>
         <field name="parameter">
             <expression value="[/Person/LastName]"/>

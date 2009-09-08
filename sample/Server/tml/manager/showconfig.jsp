@@ -10,4 +10,4 @@
 <jsp:useBean id="serverContext" class="com.dexels.navajo.jsp.server.NavajoServerContext" scope="session" />
 <jsp:setProperty property="pageContext" name="serverContext" value="${pageContext}"/>
 
-<navserver:formattedFile filePath="config/${param['configfile']}.xml"></navserver:formattedFile>
+<navserver:formattedFile serverContext="${serverContext}" filePath="config/${param['configfile']}.xml"></navserver:formattedFile>

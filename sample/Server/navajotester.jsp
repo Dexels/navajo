@@ -7,7 +7,6 @@
 <%@ taglib prefix="nav" uri="WEB-INF/tags/navajo.tld"%>
 <%@ taglib prefix="navserver" uri="WEB-INF/tags/navajoserver.tld"%>
 <%@ page import="com.dexels.navajo.jsp.NavajoContext"%>
-<jsp:useBean id="navajoContext" class="com.dexels.navajo.jsp.NavajoContext" scope="session" />
 <jsp:useBean id="serverContext" class="com.dexels.navajo.jsp.server.NavajoServerContext" scope="session" />
 <jsp:setProperty property="pageContext" name="serverContext" value="${pageContext}"/>
 
@@ -52,6 +51,7 @@
 
 
   <input type="hidden" name="inputNavajo" value="${param['service']}"/>
+  <input type="hidden" name="view" value="editor"/>
   <div class="page_margins">
     <div class="page">
       <div id="header">
@@ -86,6 +86,7 @@
       </div>
       <!-- begin: #footer -->
       <div id="footer">Powered by <a href="http://www.navajo.nl/">Navajo</a>
+      	<c:import url="tml/manager/installwarning.jsp"></c:import>
       </div>
     </div>
   </div>

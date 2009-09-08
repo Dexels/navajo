@@ -22,6 +22,12 @@
 	
 	String result = NavajoInstaller.callAnt(new File(application.getRealPath( "WEB-INF/ant/install.xml")),new File(path),params);
 	System.err.println("Result:"+result);
+
+	String deleteLocal = request.getParameter("deleteLocal");
+	if(deleteLocal!=null) {
+		//String result2 = NavajoInstaller.callAnt(new File(application.getRealPath( "WEB-INF/ant/deleteLocal.xml")),new File(path),params);
+		//System.err.println("Result:"+result2);
+	}
 	
 	
 	File home = new File(System.getProperty("user.home"));

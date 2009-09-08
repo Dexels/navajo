@@ -10,6 +10,7 @@
 <jsp:useBean id="serverContext" class="com.dexels.navajo.jsp.server.NavajoServerContext" scope="session" />
 <jsp:setProperty property="pageContext" name="serverContext" value="${pageContext}"/>
 <ul>
+
 	<c:forEach var="folder" items="${serverContext.folders}">
 		<li>
 		<a href="index.jsp?view=editor&command=setFolder&folder=${folder.name}&service=${param.service}">${folder.name }</a>

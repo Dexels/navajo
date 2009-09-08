@@ -2,15 +2,13 @@
 <!-- $Id$ -->
 <project default="createDefaultInstall" >
 	<target name="createDefaultInstall">
-		<echo message="Creating default: ${basedir} selected: ${selectedPath}"/>
-		<mkdir dir="${selectedPath}"/>
-		<copy todir="${selectedPath}">
+		<echo message="Deleting local stuff: ${basedir} "/>
+		<delete>
 			<fileset dir=".">
 				<include name="adapters/**"/>
 				<include name="config/**"/>
 				<include name="scripts/**"/>
 			</fileset>
-		</copy>
-	
+		</delete>
 	</target>
 </project>
