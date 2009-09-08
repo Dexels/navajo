@@ -47,6 +47,8 @@ public class TmlHttpServlet extends HttpServlet {
 	protected String configurationPath = "";
 	protected String rootPath = null;
 
+	private boolean extremeEdition = false;
+
   public TmlHttpServlet() {}
 
   public  static final String DOC_IMPL = "com.dexels.navajo.DocumentImplementation";
@@ -69,20 +71,43 @@ public class TmlHttpServlet extends HttpServlet {
  //private JabberWorker jabberWorker;
  
  protected final DispatcherInterface initDispatcher() throws NavajoException {
-
+	 
+	 String servletContextRootPath = getServletContext().getRealPath("");
 	 if (configurationPath!=null) {
 		 // Old SKOOL. Path provided, notify the dispatcher by passing a null DEFAULT_SERVER_XML
-		 return DispatcherFactory.getInstance(configurationPath, null, new com.dexels.navajo.server.FileInputStreamReader());
+		 if(extremeEdition) {
+			 return DispatcherFactory.getInstance(new File(configurationPath), DEFAULT_SERVER_XML, new com.dexels.navajo.server.FileInputStreamReader(),servletContextRootPath);
+		 } else {
+			 return DispatcherFactory.getInstance(configurationPath, null, new com.dexels.navajo.server.FileInputStreamReader(),servletContextRootPath);
+			 
+		 }
+		 //return DispatcherFactory.getInstance(configurationPath, null, new com.dexels.navajo.server.FileInputStreamReader());
 	 } else {
-		 return DispatcherFactory.getInstance(rootPath, DEFAULT_SERVER_XML, new com.dexels.navajo.server.FileInputStreamReader());
+		 return DispatcherFactory.getInstance(rootPath, DEFAULT_SERVER_XML, new com.dexels.navajo.server.FileInputStreamReader(),servletContextRootPath);
 	 }
 
  }
  
   public void init(ServletConfig config) throws ServletException {
     super.init(config);
+    extremeEdition = config.getInitParameter("extremeEdition")!=null;
 
     configurationPath = config.getInitParameter("configuration");
+    
+    if(extremeEdition) {
+   	 String path;
+		try {
+			path = setupConfigurationPath(config);
+		} catch (IOException e) {
+			path = null;
+			e.printStackTrace();
+		}
+   	 if(path!=null) {
+   		 System.err.println("Path found. Using: "+path);
+   		 File f = new File(path);
+		  	 configurationPath = path;
+   	 }
+    }
     // Check whether defined bootstrap webservice is present.
     String bootstrapUrl = config.getInitParameter("bootstrap_url");
     String bootstrapService = config.getInitParameter("bootstrap_service");
@@ -140,6 +165,34 @@ public class TmlHttpServlet extends HttpServlet {
     initializeJabber(config, bootstrapUrl);
     
   }
+
+private String setupConfigurationPath(ServletConfig config) throws IOException {
+	String contextName =  config.getServletContext().getContextPath().substring(1);
+	String navajoPath = getSystemPath(contextName);
+	return navajoPath;
+}
+
+
+private String getSystemPath(String name) throws IOException {
+	Map<String,String> systemContexts = new HashMap<String, String>();
+	File home = new File(System.getProperty("user.home"));
+	File navajo = new File(home,"navajo.properties");
+	if(!navajo.exists()) {
+		return null;
+	}
+	BufferedReader br = new BufferedReader(new FileReader(navajo));
+	while(true) {
+		String line = br.readLine();
+		if(line==null) {
+			break;
+		}
+		String[] r = line.split("=");
+		systemContexts.put(r[0], r[1]);
+	}
+	br.close();
+	System.err.println("Maps: "+systemContexts);
+	return systemContexts.get(name);
+}
 
 private void initializeJabber(ServletConfig config, String bootstrapUrl) {
 	String jabberServer = config.getInitParameter("jabber_server");

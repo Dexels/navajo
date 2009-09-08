@@ -94,7 +94,10 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 
 			String serviceName = header.getRPCName();
 			// Create dispatcher object.
-			dis = DispatcherFactory.getInstance(configurationPath,null, new com.dexels.navajo.server.FileInputStreamReader());
+			// TODO I don't really understand what's happening here
+			dis = DispatcherFactory.getInstance(configurationPath,null, new com.dexels.navajo.server.FileInputStreamReader(),null);
+			
+			 String servletContextRootPath = getServletContext().getRealPath("");
 
 			// Check for certificate.
 			Object certObject = request.getAttribute("javax.servlet.request.X509Certificate");
