@@ -61,10 +61,12 @@ public class ScriptIntrospection {
 			} catch (MalformedURLException e) {
 				throw NavajoFactory.getInstance().createNavajoException(e);
 			}
+			
+			//TODO Warning, added rootPath as servletContainer root, don't think it is a problem, but didn't know how to check
 
 			NavajoConfig nc = new NavajoConfig(new com.dexels.navajo.server.FileInputStreamReader(), 
 					(NavajoClassSupplier) null,
-					configurationUrl.openStream(), rootPath); 
+					configurationUrl.openStream(), rootPath,rootPath); 
 			TestDispatcher td = new TestDispatcher(nc);
 			new DispatcherFactory(td);
 		}
