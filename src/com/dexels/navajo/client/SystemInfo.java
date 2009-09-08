@@ -17,7 +17,11 @@ public class SystemInfo {
 		compactInfo = javaVersion + "," + os + "," + osVersion + "," + osArch + "," + maxMem + "," + cpuCount;
 	}
 	
-	private SystemInfo () {
+	private SystemInfo() {
+		
+	}
+	
+	private final void init () {
 		Runtime rt = java.lang.Runtime.getRuntime();
 		cpuCount = rt.availableProcessors();
 		maxMem = ( rt.maxMemory() / 1024 );
@@ -55,6 +59,7 @@ public class SystemInfo {
 		if ( instance == null ) {
 			try {
 				instance = new SystemInfo();
+				instance.init();
 			} catch (Throwable t) { // Could not get runtime
 				instance = new SystemInfo(-1, t.getMessage());
 			}
