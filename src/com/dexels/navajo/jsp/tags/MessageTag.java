@@ -13,6 +13,15 @@ public class MessageTag extends BaseNavajoTag {
 
 	private String messageName;
 	private Message message;
+	private int messageIndex = -1;
+	
+	public int getMessageIndex() {
+		return messageIndex;
+	}
+
+	public void setMessageIndex(int index) {
+		this.messageIndex = index;
+	}
 
 	public Message getMessage() {
 		return message;
@@ -35,24 +44,26 @@ public class MessageTag extends BaseNavajoTag {
 	public int doStartTag() throws JspException {
 		Navajo n;
 		Message parent = getNavajoContext().getMessage();
-		if(messageName==null) {
-			try {
-				getPageContext().getOut().write("Message without name!");
-				parent.write(System.err);
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (NavajoException e) {
-				e.printStackTrace();
+		if(messageName!=null) {
+			if(messageIndex>-1) {
+				throw new JspException("Either set messageName or index, not both");
 			}
-		} else {
-		if (message == null) {
-			if (parent != null) {
-				message = parent.getMessage(messageName);
+			if (message == null) {
+				if (parent != null) {
+					message = parent.getMessage(messageName);
+				} else {
+					n = getNavajoContext().getNavajo();
+					message = n.getMessage(messageName);
+				}
 			} else {
-				n = getNavajoContext().getNavajo();
-				message = n.getMessage(messageName);
+				
+			}
+			if(message==null) {
+				System.err.println("Warning, no message found at: "+messageName);
 			}
 		}
+		if(messageIndex>-1) {
+			message = parent.getMessage(messageIndex);
 		}
 		getNavajoContext().pushMessage(message);
 

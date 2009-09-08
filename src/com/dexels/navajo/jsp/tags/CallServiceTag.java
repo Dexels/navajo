@@ -84,7 +84,7 @@ public class CallServiceTag extends BaseNavajoTag {
 //				e.printStackTrace();
 //			}
 //			getNavajoContext()
-			throw new JspException("Server-side service error while calling service: "+myService+"\nProblem: "+sw);
+//			throw new JspException("Server-side service error while calling service: "+myService+"\nProblem: "+sw);
 		}
 		error = nn.getMessage("ConditionErrors");
 		if(error!=null) {
@@ -95,7 +95,7 @@ public class CallServiceTag extends BaseNavajoTag {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			throw new JspException("Server-side service condition while calling service: "+myService+"\nProblem: "+sw);
+//			throw new JspException("Server-side service condition while calling service: "+myService+"\nProblem: "+sw);
 		}
 		return EVAL_BODY_INCLUDE ;
 	}

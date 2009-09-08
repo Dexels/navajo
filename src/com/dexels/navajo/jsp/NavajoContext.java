@@ -1,10 +1,6 @@
 package com.dexels.navajo.jsp;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
@@ -18,8 +14,7 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.jsp.output.NavajoOutputWriter;
-import com.dexels.navajo.jsp.output.OutputWriter;
+
 
 public class NavajoContext {
 
@@ -27,20 +22,7 @@ public class NavajoContext {
 	private final Map<String, Navajo> myNavajoMap = new HashMap<String, Navajo>();
 	private final Map<Navajo, String> myInverseNavajoMap = new HashMap<Navajo, String>();
 	private final Stack<Object> myElementStack = new Stack<Object>();
-//	private final PageContext myPageContext;
-	private final OutputWriter outputPlugin = new NavajoOutputWriter(this);
-//	private Property currentProperty = null;
-//	
-//
-//	
-//	
-//	public Property getProperty() {
-//		return currentProperty;
-//	}
-//	public void setProperty(Property currentProperty) {
-//		this.currentProperty = currentProperty;
-//	}
-//	
+
 	public NavajoContext() {
 	}
 
@@ -85,9 +67,9 @@ public class NavajoContext {
 	public Navajo getNavajo(String name) {
 
 		Navajo navajo = myNavajoMap.get(name);
-		if (navajo == null) {
-			throw new IllegalStateException( "Unknown service: " + name+" known services: "+myNavajoMap.keySet());
-		}
+//		if (navajo == null) {
+//			throw new IllegalStateException( "Unknown service: " + name+" known services: "+myNavajoMap.keySet());
+//		}
 		return navajo;
 	}
 
@@ -143,6 +125,7 @@ public class NavajoContext {
 		if(!(top instanceof Message)) {
 			return null;
 		}
+		Message m;
 		return (Message) top;
 	}
 	
@@ -163,57 +146,17 @@ public class NavajoContext {
 	}
 
 	public void pushMessage(Message m) {
-		myElementStack.push(m);
+		if(m!=null) {
+			System.err.println("Pushinh message: "+m.getFullMessageName());
+			myElementStack.push(m);			
+		}
 	}
 	
 	public void pushProperty(Property property) {
 		myElementStack.push(property);
 		
 	}
-	public OutputWriter getOutputWriter() {
-		return outputPlugin;
-	}
 	
-	public void writeService(Navajo service, PageContext pa, boolean includeProperties) throws IOException {
-		outputPlugin.writeService(service, pa.getOut(),includeProperties);
-	}
-	
-	public void writeMessage(Message message, PageContext pa, boolean includeProperties) throws IOException {
-
-		outputPlugin.writeMessage(message, pa.getOut(),includeProperties);
-	}
-
-	private void writeMessageTable(Message message, PageContext pa, boolean includeProperties) throws IOException {
-		outputPlugin.writeTable(message, pa.getOut(),includeProperties);
-	}
-
-	public void writeMessageRow(Message message, PageContext pa, boolean includeProperties) throws IOException {
-		outputPlugin.writeTableRow(message, pa.getOut(),includeProperties);
-	}
-
-	public String getMessageRow(Message message, PageContext pa, boolean includeProperties) throws IOException {
-		StringWriter sw = new StringWriter();
-		outputPlugin.writeTableRow(message, pa.getOut(),includeProperties);
-		return sw.toString();
-	}
-
-	public void writeProperty(Property property, PageContext pa) throws IOException {
-		outputPlugin.writeProperty(property, pa.getOut());
-	}
-
-	public void writePropertyValue(Property property, PageContext pa) throws IOException {
-		outputPlugin.writePropertyValue(property, pa.getOut());
-	}
-	
-	public void writePropertyDescription(Property property, PageContext pa) throws IOException {
-		outputPlugin.writePropertyDescription(property, pa.getOut());
-	}
-	
-	public String getProperty(Property property) throws IOException {
-		StringWriter sw = new StringWriter();
-		outputPlugin.writeProperty(property, sw);
-		return sw.toString();
-	}
 
 	public String getDefaultPostman(PageContext pa) {
 		HttpServletRequest request = (HttpServletRequest) pa
@@ -264,6 +207,8 @@ public class NavajoContext {
 		}
 		return createPropertyPath(p);
 	}
+	
+	
 	
 	private String createMessagePath(Message m) {
 		String navajoName = getServiceName(m.getRootDoc());

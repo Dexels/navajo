@@ -83,6 +83,11 @@
 	<target name="afterdeploy">
 	  	<copy file="${archive}" todir="../GeoJsp/WebContent/WEB-INF/lib"/>
 	  	<copy file="${archive}" todir="../NavajoServerContext/WebContent/WEB-INF/lib"/>
+		<copy todir="../NavajoServer/sample/Server/WEB-INF/tags/">
+			<fileset dir="WEB-INF/tags">
+				<include name="*.tld"/>
+			</fileset>
+		</copy>
 	</target>
 	
 	

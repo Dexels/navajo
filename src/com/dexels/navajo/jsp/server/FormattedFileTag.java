@@ -8,8 +8,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
-import javax.servlet.jsp.tagext.Tag;
 
 import com.dexels.navajo.jsp.tags.BaseNavajoTag;
 import com.uwyn.jhighlight.renderer.XhtmlRendererFactory;
@@ -17,7 +15,16 @@ import com.uwyn.jhighlight.tools.FileUtils;
 
 public class FormattedFileTag  extends BaseNavajoTag {
 	private String filePath;
+	private NavajoServerContext serverContext;
 	
+	public NavajoServerContext getServerContext() {
+		return serverContext;
+	}
+
+	public void setServerContext(NavajoServerContext serverContext) {
+		this.serverContext = serverContext;
+	}
+
 	public String getFilePath() {
 		return filePath;
 	}
@@ -27,7 +34,6 @@ public class FormattedFileTag  extends BaseNavajoTag {
 	}
 
 	public int doEndTag() throws JspException {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 	public static void highlightFile(String name, InputStream in, OutputStream out, String encoding) throws IOException {
@@ -36,25 +42,31 @@ public class FormattedFileTag  extends BaseNavajoTag {
 	}
 
 	public int doStartTag() throws JspException {
-		String realPath =  resolveScriptPath(filePath);
-		File f = new File (realPath);
 		try {
+			String realPath =  resolveScriptPath(filePath);
+			File f = new File (realPath);
 			FileInputStream fis = new FileInputStream(f);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			highlightFile(f.getName(), fis, baos, "UTF-8");
 			String result = new String(baos.toByteArray(),"UTF-8");
 			getPageContext().getOut().write(result);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new JspException(e);
 		}
 		return 0;
 	}
 
 
 
-	public String resolveScriptPath(String path) {
-		 return getPageContext().getServletContext().getRealPath(path);
+	public String resolveScriptPath(String path) throws IOException {
+		if(serverContext==null) {
+			 return getPageContext().getServletContext().getRealPath(path);
+		} else {
+			File root = getServerContext().getNavajoRoot();
+			String absolutePath = new File(root,path).getAbsolutePath();
+			System.err.println("FormatFile: Resolved path: "+absolutePath);
+			return absolutePath;
+		}
 	}
 
 }
