@@ -508,20 +508,21 @@ private void initializeJabber(ServletConfig config, String bootstrapUrl) {
 				  r.close();
 				  r = null;
 			  } catch (Throwable t) {
-				  // Write request to file.
-				  File f = new File(getServletContext().getRealPath("tmp"));
-				  if ( !f.exists() ) {
-					  f.mkdirs();
+				  // Write request to temp file.
+				  File f = DispatcherFactory.getInstance().getTempDir();
+				  
+				  if ( f != null ) {
+					  bytesWritten += bytes.length;
+					  logfileIndex++;
+					  FileOutputStream fos = new FileOutputStream(new File(f, "request-" + logfileIndex));
+					  copyResource(fos, new ByteArrayInputStream(bytes));
+					  fos.close();
+					  PrintWriter fw = new PrintWriter(new FileWriter(new File(f, "exception-" + logfileIndex)));
+					  t.printStackTrace(fw);
+					  fw.flush();
+					  fw.close();
 				  }
-				  bytesWritten += bytes.length;
-				  logfileIndex++;
-				  FileOutputStream fos = new FileOutputStream(new File(f, "request-" + logfileIndex));
-				  copyResource(fos, new ByteArrayInputStream(bytes));
-				  fos.close();
-				  PrintWriter fw = new PrintWriter(new FileWriter(new File(f, "exception-" + logfileIndex)));
-				  t.printStackTrace(fw);
-				  fw.flush();
-				  fw.close();
+				  
 				  dumHttp(request, logfileIndex, f);
 				  throw new ServletException(t);
 			  }
