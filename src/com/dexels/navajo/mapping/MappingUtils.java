@@ -678,7 +678,7 @@ public static final boolean isObjectMappable(String className) throws UserExcept
 			 return c.getDeclaredField(name).getType().getName();
 		 } catch (Exception e2) {
 			 try {
-				 Method m = c.getMethod(constructGetMethod(name), null);
+				 Method m = c.getMethod(constructGetMethod(name), (Class[])null);
 				 return m.getReturnType().getName();
 			 } catch (NoSuchMethodException nsme) {
 				 // Try set method.

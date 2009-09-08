@@ -28,8 +28,8 @@ public class TribeManagerFactory {
 					try {
 						Class c = Class.forName("com.dexels.navajo.tribe.TribeManager");
 						TribeManagerInterface dummy = (TribeManagerInterface) c.newInstance();
-						Method m = c.getMethod("getInstance", null);
-						instance = (TribeManagerInterface) m.invoke(dummy, null);
+						Method m = c.getMethod("getInstance", (Class[]) null);
+						instance = (TribeManagerInterface) m.invoke(dummy, (Object[])null);
 						tribeManagerFound = true;
 					} catch (Throwable e) {
 						//e.printStackTrace(System.err);
@@ -50,8 +50,8 @@ public class TribeManagerFactory {
 			try {
 				Class<?> c = (Class<?>) Class.forName("com.dexels.navajo.tribe.TribalStatusCollector");
 				Object dummy = c.newInstance();
-				Method m = c.getMethod("getInstance", null);
-				m.invoke(dummy, null);
+				Method m = c.getMethod("getInstance",(Class[]) null);
+				m.invoke(dummy, (Object[])null);
 			} catch (Throwable e) {
 				//e.printStackTrace(System.err);
 				AuditLog.log("INIT", "WARNING: Tribe Status Collector not available", Level.WARNING);

@@ -25,8 +25,8 @@ public class RequestResponseQueueFactory {
 						
 						Class c = Class.forName("com.dexels.navajo.adapter.queue.RequestResponseQueue");
 						RequestResponseQueueInterface dummy = (RequestResponseQueueInterface) c.newInstance();
-						Method m = c.getMethod("getInstance", null);
-						instance = (RequestResponseQueueInterface) m.invoke(dummy, null);
+						Method m = c.getMethod("getInstance", (Class[])null);
+						instance = (RequestResponseQueueInterface) m.invoke(dummy,(Object[]) null);
 					} catch (Exception e) {
 						e.printStackTrace(System.err);
 						AuditLog.log("INIT", "Queueable adapters not available", Level.WARNING);

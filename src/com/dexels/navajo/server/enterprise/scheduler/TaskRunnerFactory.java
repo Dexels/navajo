@@ -28,8 +28,8 @@ public class TaskRunnerFactory {
 				try {
 					Class c = Class.forName("com.dexels.navajo.scheduler.Clock");
 					ClockInterface dummy = (ClockInterface) c.newInstance();
-					Method m = c.getMethod("getInstance", null);
-					ClockInterface myClock = (ClockInterface) m.invoke(dummy, null);
+					Method m = c.getMethod("getInstance",(Class[])null);
+					ClockInterface myClock = (ClockInterface) m.invoke(dummy, (Object[])null);
 				} catch (Exception e) {
 					//e.printStackTrace(System.err);
 					AuditLog.log("INIT", "WARNING: Clock not available", Level.WARNING);
@@ -37,8 +37,8 @@ public class TaskRunnerFactory {
 				try {
 					Class c = Class.forName("com.dexels.navajo.scheduler.TaskRunner");
 					TaskRunnerInterface dummy = (TaskRunnerInterface) c.newInstance();
-					Method m = c.getMethod("getInstance", null);
-					instance = (TaskRunnerInterface) m.invoke(dummy, null);
+					Method m = c.getMethod("getInstance",(Class[]) null);
+					instance = (TaskRunnerInterface) m.invoke(dummy, (Object[])null);
 				} catch (Exception e) {
 					//e.printStackTrace(System.err);
 					AuditLog.log("INIT", "WARNING: Scheduler not available", Level.WARNING);
@@ -47,8 +47,8 @@ public class TaskRunnerFactory {
 				try {
 					Class c = Class.forName("com.dexels.navajo.workflow.WorkFlowManager");
 					Object dummy = c.newInstance();
-					Method m = c.getMethod("getInstance", null);
-					m.invoke(dummy, null);
+					Method m = c.getMethod("getInstance", (Class[])null);
+					m.invoke(dummy, (Object[])null);
 				} catch (Exception e) {
 					//e.printStackTrace(System.err);
 					AuditLog.log("INIT", "WARNING: Workflow not available", Level.WARNING);
@@ -56,8 +56,8 @@ public class TaskRunnerFactory {
 				try {
 					Class c = Class.forName("com.dexels.navajo.scheduler.ListenerRunner");
 					Object dummy = c.newInstance();
-					Method m = c.getMethod("getInstance", null);
-					m.invoke(dummy, null);
+					Method m = c.getMethod("getInstance", (Class[])null);
+					m.invoke(dummy, (Object[])null);
 				} catch (Exception e) {
 					//e.printStackTrace(System.err);
 					AuditLog.log("INIT", "WARNING: Listener Runner not available", Level.WARNING);

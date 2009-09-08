@@ -28,8 +28,8 @@ public class WorkerFactory {
 					try {
 						Class c = Class.forName("com.dexels.navajo.integrity.Worker");
 						WorkerInterface dummy = (WorkerInterface) c.newInstance();
-						Method m = c.getMethod("getInstance", null);
-						instance = (WorkerInterface) m.invoke(dummy, null);
+						Method m = c.getMethod("getInstance", (Class[])null);
+						instance = (WorkerInterface) m.invoke(dummy, (Object[])null);
 					} catch (Exception e) {
 						AuditLog.log("INIT", "WARNING: Integrity Worker not available", Level.WARNING);
 						instance = new DummyWorker();

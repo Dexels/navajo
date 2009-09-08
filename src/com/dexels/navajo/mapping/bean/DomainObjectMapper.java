@@ -282,7 +282,7 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 			     currentOutMsg.getProperty(attributeName) == null &&
 			     !isAnExcludedProperty(attributeName) ) {
 				
-				Object result = all[i].invoke(myObject, null);
+				Object result = all[i].invoke(myObject, (Object[])null);
 				if ( result == null || !( result.toString().startsWith("[L") || List.class.isAssignableFrom(result.getClass()) ) ) {
 					Property p = NavajoFactory.getInstance().createProperty(out, attributeName, "string", "", 0, "", "", "");
 					p.setAnyValue(result);

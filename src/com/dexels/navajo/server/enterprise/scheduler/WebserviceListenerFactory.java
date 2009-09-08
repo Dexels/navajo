@@ -22,8 +22,8 @@ public class WebserviceListenerFactory {
 					try {
 						Class c = Class.forName("com.dexels.navajo.scheduler.WebserviceListenerRegistry");
 						WebserviceListenerRegistryInterface dummy = (WebserviceListenerRegistryInterface) c.newInstance();
-						Method m = c.getMethod("getInstance", null);
-						instance = (WebserviceListenerRegistryInterface) m.invoke(dummy, null);
+						Method m = c.getMethod("getInstance", (Class[])null);
+						instance = (WebserviceListenerRegistryInterface) m.invoke(dummy, (Object[])null);
 					} catch (Exception e) {
 						AuditLog.log("INIT", "WARNING: WebserviceListener not available", Level.WARNING);
 						instance = new DummyWebserviceListener();

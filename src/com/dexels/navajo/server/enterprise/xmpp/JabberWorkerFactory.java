@@ -22,8 +22,8 @@ public class JabberWorkerFactory {
 					try {
 						Class c = Class.forName("com.dexels.navajo.jabber.JabberWorker");
 						JabberWorkerInterface dummy = (JabberWorkerInterface) c.newInstance();
-						Method m = c.getMethod("getInstance", null);
-						instance = (JabberWorkerInterface) m.invoke(dummy, null);
+						Method m = c.getMethod("getInstance", (Class[])null);
+						instance = (JabberWorkerInterface) m.invoke(dummy, (Object[])null);
 					} catch (Throwable e) {
 						//e.printStackTrace(System.err);
 						AuditLog.log("INIT", "WARNING: Jabber Worker not available", Level.WARNING);
