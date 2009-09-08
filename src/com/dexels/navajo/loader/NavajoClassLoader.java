@@ -28,14 +28,23 @@ package com.dexels.navajo.loader;
  * ====================================================================
  */
 
-import org.dexels.utils.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Iterator;
+
+import org.dexels.utils.JarResources;
+import org.dexels.utils.MultiClassLoader;
+
+import com.dexels.navajo.server.NavajoConfig;
 
 import sun.misc.CompoundEnumeration;
-
-import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.*;
 
 /**
  * This class implements the Navajo Class Loader. It is used to implement re-loadable and hot-loadable Navajo adapter classes
@@ -192,7 +201,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     			  Class c = getClass(className);
     			  return c;
     		  } catch (Exception e2) {
-    			  throw new ClassNotFoundException("Could not find script: " + script);
+    			  throw new ClassNotFoundException("Could not find script: " + script,e2);
     		  }
     	  } finally {
     		  if ( fis != null ) {
@@ -239,6 +248,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     private final void initializeJarResources() {
 
     	if ( adapterPath == null || !new File(adapterPath).exists() ) {
+    		System.err.println("No adapters found!");
     		return;
     	}
     	
