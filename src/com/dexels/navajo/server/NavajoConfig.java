@@ -130,7 +130,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
 	 * 
 	 * @throws SystemException
 	 */
-	public NavajoConfig(InputStreamReader inputStreamReader, NavajoClassSupplier ncs, InputStream in, String externalRootPath)  throws SystemException {
+	public NavajoConfig(InputStreamReader inputStreamReader, NavajoClassSupplier ncs, InputStream in, String externalRootPath, String servletContextRootPath)  throws SystemException {
 
 		this.inputStreamReader = inputStreamReader;
 		classPath = System.getProperty("java.class.path");
@@ -138,7 +138,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
 		// BIG NOTE: instance SHOULD be set at this point since instance needs to be known by classes
 		// called during loadConfig()!!
 		instance = this;
-		loadConfig(in, externalRootPath);
+		loadConfig(in, externalRootPath,servletContextRootPath);
 		myOs = ManagementFactory.getOperatingSystemMXBean();
 		
 	}
@@ -154,7 +154,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
     }
       
     @SuppressWarnings("unchecked")
-	private void loadConfig(InputStream in, String externalRootPath)  throws SystemException{
+	private void loadConfig(InputStream in, String externalRootPath, String servletContextPath)  throws SystemException{
     	
     	configuration = NavajoFactory.getInstance().createNavajo(in);
     	
@@ -174,7 +174,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
     			}
     			rootPath = properDir(r);
     		} else {
-    			System.err.println("New skool configuration (rootPath found), path:"+rootPath);
+    			System.err.println("New skool configuration (rootPath found), path:"+externalRootPath);
     			rootPath = externalRootPath;
     			
     		}
@@ -353,8 +353,10 @@ public final class NavajoConfig implements NavajoConfigInterface {
 				}
 			} else {
 				System.err.println("No jar path found");
-	    		jarFolder = null;				
-			}
+				File root = new File(servletContextPath);
+				jarFolder = new File(root,"WEB-INF/lib/");				
+				System.err.println("New jarfolder: "+jarFolder.getAbsolutePath());
+			}	
 		    					
     		maxAccessSetSize = (body.getProperty("parameters/max_webservices") == null ? MAX_ACCESS_SET_SIZE :
     			                   Integer.parseInt(body.getProperty("parameters/max_webservices").getValue()) );
@@ -964,7 +966,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
 	
 
 	public static void main(String[] args) throws SystemException {
-		NavajoConfig nc = new NavajoConfig(null,null,null,null);
+		NavajoConfig nc = new NavajoConfig(null,null,null,null,null);
 		System.err.println(":: "+nc.getCurrentCPUload());
 	}
 
