@@ -2,7 +2,6 @@ package com.dexels.navajo.tipi.swingimpl.dnd;
 
 import java.awt.datatransfer.*;
 import java.io.*;
-import org.jgroups.tests.CustomProtocolTest.*;
 
 public class TipiTransferable implements Transferable {
 

@@ -16,7 +16,7 @@ import com.dexels.navajo.tipi.components.swingimpl.TipiScreen;
 import com.dexels.navajo.tipi.swingclient.SwingClient;
 import com.dexels.navajo.tipi.tipixml.XMLParseException;
 
-public class SwingTipiApplicationInstance extends TipiApplicationInstance {
+public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance {
 
 	private String definition;
 	private String definitionPath;
@@ -34,8 +34,7 @@ public class SwingTipiApplicationInstance extends TipiApplicationInstance {
 	
 	
 
-	@Override
-	protected void dispose(TipiContext t) {
+	public void dispose(TipiContext t) {
 		super.dispose(t);
 		System.exit(0);
 	}
