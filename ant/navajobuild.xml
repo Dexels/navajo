@@ -293,6 +293,7 @@
 			</then>
 		</if>
 		<antcall target="afterdeploy"/>
+		<antcall target="tipiExtensionProcessing"/>
 		<antcall target="cleanup"></antcall>
 		<if>
 			<equals arg1="${uploaddownloads}" arg2="true"/>
@@ -300,9 +301,17 @@
 				<antcall target="upload"></antcall>
 			</then>
 		</if>
-		<antcall target="afterdeploy"/>
 	</target>
 	
+	<target name="tipiExtensionProcessing">
+		<if>
+			<equals arg1="${tipiExtension}" arg2="true"/>
+			<then>
+				<ant antfile="../TipiBuild/genericbuild.xml" dir="." inheritall="true" inheritrefs="true" target="publish" />
+			</then>
+		</if>
+	</target>
+
 	<target name="afterdeploy">
 	</target>
 	<target name="aftercleanup">
@@ -348,7 +357,7 @@
 			</fileset>
     	 </copy>
 		<zip zipfile="${distribution}/${ant.project.name}/${ant.project.name}Source.zip" basedir="${work}/tmp">
-			</zip>
+		</zip>
 	</target>
 	
 	<target name="createBinaryZip">
