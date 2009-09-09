@@ -317,7 +317,7 @@ public final class DbConnectionBroker extends Object implements Runnable
 	}
 	
 	public void destroy() {
-		try { destroy(10000); } catch(SQLException e) { }
+		try { destroy(0); } catch(SQLException e) { }
 	}
 	
 	public final int getUseCount() {
