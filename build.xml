@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- $Id$ -->
-<project name="TipiSwing" default="archive" basedir=".">
+<project name="TipiSwing" default="archive" basedir="../NavajoSwingTipi">
 
 	<!--
 	This file is suitable for copying / pasting to other projects.
