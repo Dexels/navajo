@@ -1010,13 +1010,13 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
   
   protected void setBlob(PreparedStatement statement, int i, Binary b) throws SQLException {
 
-	  if ( b != null && b.getDataAsStream() != null ) {
-		  
-		  InputStream os = b.getDataAsStream();
-		  statement.setBinaryStream(i+1,os,(int)b.getLength());
+	  InputStream os = b.getDataAsStream();
 
+	  if ( os != null ) {
+		  statement.setBinaryStream(i+1,os,(int)b.getLength());
 		  // All streams in this list will be closed on kill() or store()
 		  binaryStreamList.add(os);
+
 	  } else {
 		  statement.setNull(i + 1, Types.BLOB );
 	  }
