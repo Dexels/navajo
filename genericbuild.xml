@@ -5,13 +5,15 @@
 	<taskdef name="buildExtension" classname="com.dexels.navajo.tipi.ant.extensionbuilder.BuildExtensionTask" classpath="bin" />
 	<taskdef name="buildDocumentation" classname="com.dexels.navajo.tipi.ant.extensionbuilder.BuildExtensionDocumentationTask" classpath="bin" />
 	<taskdef name="p200ant" classname="de.matthiasmann.p200ant.P200AntTask" classpath="p200ant.jar"/>
-
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+	<taskdef name="for" classname="net.sf.antcontrib.logic.ForTask" onerror="ignore" />
 	<property name="tipiSvnUrl" value="http://spiritus.dexels.nl:41766/svn/repos" />
 	<property name="repository" value="http://spiritus.dexels.nl:41766/Tipi/" />
 	<property name="repositorySsh" value="navajo@spiritus.dexels.nl://var/www/html/Tipi/" />
 	<property name="documentationSsh" value="navajo@spiritus.dexels.nl:/var/www/html/Tipi/wiki/data/pages/tipidoc" />
 	
 	<target name="prepare">
+		<echo message="Java version: ${java.version}"/>
 		<taskdef name="retrieveVersion" classname="com.dexels.navajo.tipi.ant.extensionbuilder.RetrieveVersion" classpath="bin" />
 		<retrieveVersion />
 		<property name="dist" value="dist/${ant.project.name}/${tipiComponentVersion}" />
@@ -20,28 +22,40 @@
 
 	<target name="grabjars" depends="prepare">
 		<mkdir dir="${dist}/lib" />
-
+		<echo message="Extra deployment jars: ${tipiDeployedDependencyJars}"/>
 		<!-- TODO Create custom task to only copy the files referenced in the extension definition -->
 		<copy todir="${dist}/lib">
 			<fileset dir="lib">
 				<include name="*.jar" />
 			</fileset>
 		</copy>
-		<mkdir dir="${dist}/lib" />
+		<mkdir dir="${dist}/unsigned" />
 		<copy todir="${dist}/unsigned">
 			<fileset dir="${dist}/lib">
 				<include name="**" />
 			</fileset>
 		</copy>
+				<for list="${tipiDeployedDependencyJars}" delimiter="," param="currentjar">
+					<sequential>
+						<echo message="Current dep: @{currentjar}"/>
 
-<!--		<zip zipfile="${dist}/projectinclude.zip" >
-			<fileset dir="projectinclude" >
-				<include name="**" />
-			</fileset>
-		</zip>
--->
+						<copy todir="${dist}/unsigned">
+							<fileset dir="work/dependency/lib">
+								<include name="@{currentjar}"/>
+							</fileset>
+						</copy>
+						<copy todir="${dist}/unsigned">
+							<fileset dir="${dist}/lib">
+								<include name="@{currentjar}"/>
+							</fileset>
+						</copy>
+					</sequential>
+				</for>
+			
+		
+
 	</target>
-	<target name="buildTipi">
+	<target name="buildTipi" depends="grabjars">
 		<!--  <buildXsd repository="http://www.navajo.nl/Tipi/"/> -->
 		<mkdir dir="${dist}" />
 		<buildExtension  repository="${repository}" destination="${dist}" version="${tipiComponentVersion}" />
@@ -51,13 +65,13 @@
 	</target>
 	<target name="repackJars" depends="buildTipi">
 
-		<p200ant repack="true" keepModificationTime="false" singleSegment="true" ver>
+		<p200ant repack="true" keepModificationTime="false" singleSegment="true">
 		<fileset dir=".">
 			<include name="${dist}/lib/*.jar" />
 		</fileset>
 	</p200ant>
 	</target>
-	<target name="sign" depends="grabjars,repackJars">
+	<target name="sign" depends="repackJars">
 		<signjar keystore="../TipiBuild/dexels_dummy_key" verbose="false" storepass="dexels" keypass="dexels" alias="java">
 			<fileset dir=".">
 				<include name="${dist}/lib/*.jar" />
@@ -65,7 +79,7 @@
 		</signjar>
 	</target>
 	<target name="packJars" depends="sign">
-
+	<!-- Don't pack the unsigned jars, for now. -->
 	    <p200ant  singleSegment="true">
 			<fileset dir=".">
 				<include name="${dist}/lib/*.jar" />
@@ -118,7 +132,7 @@
 		<echo message="Documentation deploy completed at repository: ${repositorySsh}Extensions/" />
 		<echo message="from: ${dist}" />
 
-		<scp trust="true" sftp="true" verbose="true" todir="${repositorySsh}Extensions/">
+		<scp trust="true" sftp="true" todir="${repositorySsh}Extensions/">
 			<fileset dir="${dist}">
 				<include name="extensions.xml" />
 				<include name="typemap.xml" />
