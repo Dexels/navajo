@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.navajo.nl/classdef_schema.xsd">
+   <tipiclass addtocontainer="true" childcount="0" implements="basecomponent,swingcomponent" class="TipiSwingEditor" layoutmanager="false" module="container" name="swingeditor" package="com.dexels.navajo.tipi.swingeditor"
+      studio-icon="tabs.gif" type="component">
+      <description>
+	   	WYSYWYG editor
+	  
+      </description>
+	<values>
+		<value direction="inout" name="text" type="string" >
+			<description>
+				The editor contents. Formatted using html.
+			</description>
+		</value>
+	</values>
+   </tipiclass>
+</tid>
