@@ -110,7 +110,11 @@
 		<antcall target="recursiveBuild">
 		</antcall>
 		<echo message="Current dependency: ${currentdep}" />
-		<copy todir="${dependencylib}" failonerror="false" file="../${currentdep}/${currentdep}.jar"/>
+		<copy todir="${dependencylib}" failonerror="false">
+			<fileset dir="../${currentdep}">
+				<include name="*.jar"/>
+			</fileset>
+		</copy>
 		<copy todir="${dependencycompilelib}" failonerror="false">
 			<fileset dir="../${currentdep}/compilelib" />
 		</copy>
