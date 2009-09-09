@@ -13,3 +13,4 @@ target
 .settings
 dist
 distribution
+test
