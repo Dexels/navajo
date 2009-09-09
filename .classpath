@@ -4,9 +4,9 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/TipiSwingClient"/>
-	<classpathentry kind="lib" path="compile_lib/javaws.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/javadocking.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/AnimatedTransitions.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/TimingFramework.jar"/>
+	<classpathentry kind="lib" path="compilelib/javaws.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
