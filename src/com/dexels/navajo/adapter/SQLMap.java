@@ -191,8 +191,8 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
   protected static int requestCount = 0;
 
   private static Navajo configFile = null;
-  private static final Map transactionContextMap = Collections.synchronizedMap(new HashMap());
-  private static Map autoCommitMap = null;
+  protected static final Map transactionContextMap = Collections.synchronizedMap(new HashMap());
+  protected static final Map autoCommitMap = Collections.synchronizedMap(new HashMap());
 
   private int connectionId = -1;
 
@@ -217,10 +217,6 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
       Access.writeToConsole(myAccess, "Creating new datasource: " + dataSourceName + "\n");
     }
     
-    if (autoCommitMap==null) {
-		autoCommitMap = Collections.synchronizedMap(new HashMap());
-	}
-
     driver = body.getProperty("driver").getValue(); //NavajoUtils.getPropertyValue(body, "driver", true);
     url =  body.getProperty("url").getValue(); // NavajoUtils.getPropertyValue(body, "url", true);
 
@@ -300,22 +296,6 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
 		  
 		  try {
 			  
-//			  if (transactionContextMap == null || !datasourceName.equals("")) {
-//				  synchronized ( semaphore ) {
-//					  if ( transactionContextMap == null ) {
-//						  transactionContextMap = Collections.synchronizedMap(new HashMap());
-//					  }
-//				  }
-//			  }
-			  
-			  if (autoCommitMap == null || !datasourceName.equals("")) {
-				  synchronized ( semaphore ) {
-					  if ( transactionContextMap == null ) {
-						  autoCommitMap = Collections.synchronizedMap(new HashMap());
-					  }
-				  }
-			  }
-			  
 			  if (configFile == null || !datasourceName.equals("")) {
 
 				  synchronized ( semaphore ) {
@@ -338,8 +318,7 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
 							  }
 						  }
 						  else {
-							  createDataSource(configFile.getMessage("/datasources/" +
-									  datasourceName), navajoConfig);
+							  createDataSource(configFile.getMessage("/datasources/" + datasourceName), navajoConfig);
 						  }
 						  this.checkDefaultDatasource();
 					  }

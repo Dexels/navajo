@@ -25,8 +25,10 @@ public class SQLMaintenanceMap implements Mappable {
   private Navajo sqlMapConfigFile;
   public SQLMapDatasourceMap [] datasources;
   public SQLMapDatasourceMap [] deleteDatasources;
+  public int transactionContextCount;
 
-  private boolean dirty = false;
+
+private boolean dirty = false;
 
   private Parameters parms;
   private Navajo inMessage;
@@ -184,6 +186,15 @@ public class SQLMaintenanceMap implements Mappable {
     }
   }
 
+  
+  public int getTransactionContextCount() {
+	  if ( SQLMap.transactionContextMap != null ) {
+		  return SQLMap.transactionContextMap.size();
+	  } else {
+		  return 0;
+	  }
+  }
+  
   public void kill() {
     noAccess = false;
   }
