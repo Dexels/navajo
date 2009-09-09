@@ -191,7 +191,7 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
   protected static int requestCount = 0;
 
   private static Navajo configFile = null;
-  private static Map transactionContextMap = null;
+  private static final Map transactionContextMap = Collections.synchronizedMap(new HashMap());
   private static Map autoCommitMap = null;
 
   private int connectionId = -1;
@@ -244,7 +244,7 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
     autoCommitMap.put(dataSourceName, new Boolean(ac));
 
     if (fixedBroker.get(dataSourceName, username, password) != null) {
-      transactionContextMap = Collections.synchronizedMap(new HashMap());
+      //transactionContextMap = Collections.synchronizedMap(new HashMap());
       transactionContext = -1;
       con = null;
       if (debug) {
@@ -300,13 +300,13 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
 		  
 		  try {
 			  
-			  if (transactionContextMap == null || !datasourceName.equals("")) {
-				  synchronized ( semaphore ) {
-					  if ( transactionContextMap == null ) {
-						  transactionContextMap = Collections.synchronizedMap(new HashMap());
-					  }
-				  }
-			  }
+//			  if (transactionContextMap == null || !datasourceName.equals("")) {
+//				  synchronized ( semaphore ) {
+//					  if ( transactionContextMap == null ) {
+//						  transactionContextMap = Collections.synchronizedMap(new HashMap());
+//					  }
+//				  }
+//			  }
 			  
 			  if (autoCommitMap == null || !datasourceName.equals("")) {
 				  synchronized ( semaphore ) {
