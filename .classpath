@@ -3,8 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NavajoSwingTipi"/>
-	<classpathentry kind="lib" path="lib/gnu-regexp-1.1.4.jar"/>
-	<classpathentry kind="lib" path="lib/kafenio-config.jar"/>
-	<classpathentry kind="lib" path="lib/kafenio-icons.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/NavajoSwingEditor"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
