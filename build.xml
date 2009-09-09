@@ -1,77 +1,85 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- $Id$ -->
-<project name="TipiCharting" default="proxyarchive" basedir=".">
-	<property name="src" location="src" />
-	<property name="dist" location="dist"/>
-	<property name="build" location="classes" />
-	<property name="lib" value="lib" />
-	<property name="archive" value="${ant.project.name}.jar" />
-	<property name="proxyarchive" value="SwingMain.jar" />
-	<property name="NavajoTipi" value="${PROJECTHOME}/NavajoTipi" />
-	<property name="NavajoTipi.build" value="${NavajoTipi}/classes" />
-	<property name="DexelsVersionControl" value="${PROJECTHOME}/DexelsVersionControl" />
-	<property name="DexelsVersionControl.build" value="${PROJECTHOME}/DexelsVersionControl/classes" />
-	<path id="depend">
-		<!-- NavajoSwingTipi needs the libraries from the NavajoTipi project, OK? -->
-		<!--<fileset dir="${NavajoTipi}/lib">
-			<include name="**/*.jar"/>
-		</fileset>-->
-		<pathelement location="${NavajoTipi.build}" />
-		<pathelement location="${DexelsVersionControl.build}" />
-	</path>
-	<target name="init" >
-		<tstamp />
-		<mkdir dir="${NavajoTipi.build}" />
-		<mkdir dir="${build}" />
-	</target>
-	<target name="clean" >
-		<delete file="${archive}" />
-		<delete dir="${NavajoTipi.build}" />
-		<delete dir="${build}" />
-	    <delete dir="${dist}"/>
-	</target>
-	<target name="NavajoTipi" depends="init">		
-	</target>
-	<target name="resource">
-		<copy todir="${build}">
-			<fileset dir="${src}">
-				<exclude name="**/*.java" />
-				<exclude name="CVS" />
-			</fileset>
-		</copy>
-	</target>
-	<target name="compile" depends="NavajoTipi">
-		<javac srcdir="${src}" destdir="${build}">
-			<classpath refid="depend" />
-		</javac>
-	</target>
-	<target name="archive" depends="compile,resource">
-		<jar jarfile="${archive}">
+<project name="TipiCharting" default="archive" basedir=".">
 
-			<fileset dir="${build}" />
-			<fileset dir="${DexelsVersionControl.build}" />
-			<service type="tipi.TipiExtension">
-				<provider classname="tipi.TipiSwingExtension" />
-			</service>
-			<manifest>
-				<attribute name="Built-By" value="Frank" />
-<!--				<attribute name="Class-Path" value="NavajoSwingTipi.jar,tipipackage.jar,NavajoRuntime.jar,NavajoSwingClient.jar,NavajoLogger.jar,NavajoDocument.jar" />
--->				<attribute name="Main-Class" value="tipi.MainApplication" />
-			</manifest>
+	<!--
+	This file is suitable for copying / pasting to other projects.
+	Make sure you update the project name above, otherwise it might overwrite existing files on the server
+	-->
 
-		</jar>
-	</target>
-	<target name="proxyarchive" depends="archive">
-		<jar jarfile="${proxyarchive}">
-			<fileset dir="${build}">
-				<exclude name="com/**" />
-				<include name="tipi/MainApplication.class" />
-			</fileset>
-			<manifest>
-				<attribute name="Built-By" value="Frank" />
-				<attribute name="Main-Class" value="tipi.MainApplication" />
-			</manifest>
-		</jar>
-	</target>
+	<!-- Use tipi extension post processing. -->
+	<property name="tipiExtension" value="true" />
+	<property name="tipiDeployedDependencyJars" value="DexelsVersionControl.jar,NavajoDocument.jar,NavajoClient.jar,NavajoFunctions.jar,Navajo.jar,jzlib.jar" />
+
+	
+	<!-- Skip all unit tests. -->
+	<property name="notests" value="false" />
+
+	<!-- Abort the build if any tests fail. -->
+	<property name="haltontestfailure" value="false" />
+
+	<!--
+	Calls clean before every build. May be a bit slower (everything will be recompiled..)
+	-->
+	<property name="clean" value="true"/>
+
+	<!--
+	Set to true to call the build scripts on all dependencies too.
+	Not very efficient, but thorough.
+	-->
+	<property name="recursivebuild" value="false"/>
+
+	<!--
+	Create a zip-file of the binary jar, and all its dependencies.
+	-->
+
+	<property name="createbinaryzip" value="true"/>
+	<!--
+	Create a zip-file of the source and the test source
+	-->
+	<property name="createsourcezip" value="true"/>
+
+	<!--
+	Upload all distribution files to a repository (using SCP)
+	Edit the build.properties file in DexelsVersionControl for locations / credentials.
+	-->
+	<property name="uploaddownloads" value="false"/>
+	
+	<!--
+	Build javadoc files of this project. Not all that useful, as it will not 'link' to other project's javadoc.
+	TODO: Build a centrally built javadoc repository at spiritus
+	-->
+	<property name="buildjavadoc" value="false"/>
+
+	<!--
+	Upload javadoc files of this project. This may take a while
+	-->
+	<property name="deployjavadocs" value="false"/>
+	
+	
+	<!--
+	Cleans up dependencies after building. They can safely be discarded, but they can prove useful
+	for debugging building problems
+	-->
+	<property name="cleanupdependencies" value="false"/>
+	
+	<!--
+	A comma separated list of Navajo project (e.g. DexelsVersionControl,NavajoDocument,NavajoClient)
+	You need to specify all of them, it will not include the dependencies of your dependencies (and so on..)
+	Make sure that the dependencies have been built properly (or set 'recursivebuild' to true)	
+	If there are no dependencies, supply an empty string.
+	
+	
+	The java compiler will use the following in its classpath:
+	1) The jar file in the root of the dependency
+	2) All jars in the 'libs' folder
+	3) All jars in the 'compilelibs' folder
+	Note: The difference between 'libs' and 'compilelibs' is that the libs will also be included in deploys
+	(for example WAR-files), and compilelibs will not. 
+	Examples of compilelibs: junit.jar, ant.jar, servlet-api.jar etc.
+	-->	<property name="dependencies" value="DexelsVersionControl,NavajoDocument,Navajo,NavajoClient,NavajoFunctions,NavajoTipi,NavajoSwingTipi" />
+
+	<import file="../DexelsVersionControl/ant/navajobuild.xml" />
+
 </project>
 <!-- EOF: $RCSfile$ -->
