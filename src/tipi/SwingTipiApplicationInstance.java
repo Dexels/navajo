@@ -41,7 +41,6 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance {
 
 
 
-	@Override
 	public TipiContext createContext() throws IOException {
 		JFrame.setDefaultLookAndFeelDecorated(true);
 		JDialog.setDefaultLookAndFeelDecorated(true);
