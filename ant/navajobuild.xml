@@ -17,6 +17,7 @@
 	<property name="dependencyclasses" value="${dependencybase}/classes" />
 	<property name="dependencysrc" value="${dependencybase}/src" />
 	<property name="dependencylib" value="${dependencybase}/lib" />
+	<property name="deploydependencylib" value="${dependencybase}/deploylib" />
 	<property name="dependencycompilelib" value="${dependencybase}/compilelib" />
 	<property name="archive" value="${ant.project.name}.jar" />
 	<property name="junitjar" value="../DexelsVersionControl/compilelib/junit.jar" />
@@ -54,6 +55,8 @@
 		<mkdir dir="${dependencybase}" />
 		<mkdir dir="${dependencyclasses}" />
 		<mkdir dir="${dependencylib}" />
+		<mkdir dir="${deploydependencylib}" />
+		
 		<mkdir dir="${dependencycompilelib}" />
 		<mkdir dir="${distribution}"/>
 
@@ -132,6 +135,17 @@
 				</ant>
 			</sequential>
 		</for>
+		<for list="${deployedDependencyJars}" delimiter="," param="currentjar">
+			<sequential>
+				<echo message="Current dep: @{currentjar}"/>
+
+				<copy todir="${deploydependencylib}">
+					<fileset dir="${dependencylib}">
+						<include name="@{currentjar}"/>
+					</fileset>
+				</copy>
+			</sequential>
+		</for>		
 	</target>
 	
 	
@@ -280,6 +294,7 @@
 				<include name="*/**" />
 			</fileset>
 		</jar>
+		<antcall target="tipiExtensionProcessing"/>
 		<if>
 			<equals arg1="${createbinaryzip}" arg2="true"/>
 			<then>
@@ -293,7 +308,6 @@
 			</then>
 		</if>
 		<antcall target="afterdeploy"/>
-		<antcall target="tipiExtensionProcessing"/>
 		<antcall target="cleanup"></antcall>
 		<if>
 			<equals arg1="${uploaddownloads}" arg2="true"/>
@@ -356,7 +370,12 @@
 				<include name="compilelib/**"/>
 			</fileset>
     	 </copy>
-		<zip zipfile="${distribution}/${ant.project.name}/${ant.project.name}Source.zip" basedir="${work}/tmp">
+       	 <copy todir="${work}/tmp/${ant.project.name}/lib">
+			<fileset dir="${deploydependencylib}">
+				<include name="*.jar"/>
+			</fileset>
+		</copy>
+    	 <zip zipfile="${distribution}/${ant.project.name}/${ant.project.name}Source.zip" basedir="${work}/tmp">
 		</zip>
 	</target>
 	
@@ -371,9 +390,15 @@
 			</fileset>
 			<fileset dir=".">
 				<include name="lib/**"/>
-				<include name="compilelib/**"/>
+			<!-- Should not need this	<include name="compilelib/**"/>-->
 			</fileset>
 		</copy>
+      	 <copy todir="${work}/tmp/${ant.project.name}/lib">
+			<fileset dir="${deploydependencylib}">
+				<include name="*.jar"/>
+			</fileset>
+		</copy>
+
 		<zip zipfile="${distribution}/${ant.project.name}/${ant.project.name}Binary.zip" basedir="${work}/tmp">
 		</zip>
 	</target>
