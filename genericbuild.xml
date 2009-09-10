@@ -35,7 +35,7 @@
 				<include name="**" />
 			</fileset>
 		</copy>
-				<for list="${tipiDeployedDependencyJars}" delimiter="," param="currentjar">
+				<for list="${deployedDependencyJars}" delimiter="," param="currentjar">
 					<sequential>
 						<echo message="Current dep: @{currentjar}"/>
 
