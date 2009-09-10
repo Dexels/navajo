@@ -225,41 +225,16 @@ public class SPMap extends SQLMap {
               else if (param instanceof Binary) {
                 // Following code is copied from SQLMap
                 if (debug) {
-                   Access.writeToConsole(myAccess, "TRYING TO INSERT A BLOB....\n");
-                }
-               
-                if ( param != null ) {
-                  // NOTE: THIS IS ORACLE SPECIFIC!!!!!!!!!!!!!!!!!!
-                  // TODO REFACTOR INTO STREAMING VERSION
-                  oracle.sql.BLOB blob = oracle.sql.BLOB.createTemporary(this.
-                      con, false, oracle.sql.BLOB.DURATION_SESSION);
-                  blob.open(oracle.sql.BLOB.MODE_READWRITE);
-                  OutputStream os = blob.getBinaryOutputStream();
-                  try {
-                	  ( (Binary) param).write( os );
-                	  os.close();
-                  } catch (Exception e) {
-                	  e.printStackTrace(Access.getConsoleWriter(myAccess));
-                  }        
-                  blob.close();
-                  callStatement.setBlob(i + 1, blob);
-                  //statement.setBytes(i+1, data);
-                  //java.io.ByteArrayInputStream bis = new java.io.ByteArrayInputStream(data);
-                  //statement.setBinaryStream(i + 1, bis, data.length);
-                  if (debug) {
-                	  Access.writeToConsole(myAccess, "ADDED BLOB\n");
-                  }
-                }
-                else {
-                  callStatement.setNull(i + 1, Types.BLOB );
-                }
+                   Access.writeToConsole(myAccess, "TRYING TO INSERT A BLOB (NEW STYLE)....\n");
+                } 
+                setBlob(callStatement, i,(Binary) param);
               }
             }
             else {
               int sqlType = ( (Integer) lookupTable.get( (String) param)).
                   intValue();
               callStatement.registerOutParameter(i + 1, sqlType);
-              // System.out.println("\nregistered output parameter");
+              
             }
           }
         }
