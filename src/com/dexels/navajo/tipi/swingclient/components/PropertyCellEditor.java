@@ -230,7 +230,7 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
         myPropertyCheckBox.setEnabled(myProperty.isDirIn());
         lastComponent = myPropertyCheckBox;
         setComponentColor(myPropertyCheckBox, isSelected, row, column);
-        System.err.println("RETURNING BOOLEAN EDITOR");
+//        System.err.println("RETURNING BOOLEAN EDITOR");
         myPropertyCheckBox.setBorder(b);
         myPropertyCheckBox.requestFocusInWindow();
         return myPropertyCheckBox;
