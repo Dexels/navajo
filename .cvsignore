@@ -1,16 +1,6 @@
 bak
 classes
-NavajoClient.jpx.local
-NavajoClient.jpx.local~
-NavajoClient.jpx~
-jaxpimpl.jar
-NanoImpl.jar
 NavajoDocument.jar
-TEST-NavajoTestSuite.txt
-pom.xml.releaseBackup
-release.properties
-target
-.settings
 dist
 distribution
 test
