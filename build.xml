@@ -18,8 +18,7 @@
 	<property name="distribution" value="distribution"/>
 	<property name="deployRoot" value="${navajoScpUser}@${navajoScpServer}:${navajoScpPath}" />
 
-	<property name="buildSource" value="download"/>
-
+	
 	<target name="clean">
 		<delete dir="${work}"/>
 	</target>
