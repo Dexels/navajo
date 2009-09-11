@@ -91,7 +91,7 @@
 				</ant>
 			</then>
 			<else>
-				<ant antfile="builddeploy.xml" target="download">
+				<ant antfile="build.xml" target="download">
 					<property name="currentdeploy" value="${basicdeploy}"/>
 				</ant>
 			</else>
