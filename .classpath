@@ -5,5 +5,5 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/NavajoSwingTipi"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/TipiSvgBatik"/>
 	<classpathentry exported="true" kind="lib" path="lib/swingx.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="output" path="classes"/>
 </classpath>
