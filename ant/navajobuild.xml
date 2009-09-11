@@ -321,7 +321,17 @@
 		<if>
 			<equals arg1="${tipiExtension}" arg2="true"/>
 			<then>
-				<ant antfile="../TipiBuild/genericbuild.xml" dir="." inheritall="true" inheritrefs="true" target="publish" />
+				<echo message="Tipi Extension found. Checking tipi"/>
+				<if>
+					<equals arg1="${doUploadTipi}" arg2="true"/>
+					<then>
+						<ant antfile="../TipiBuild/genericbuild.xml" dir="." inheritall="true" inheritrefs="true" target="publish" />
+					</then>
+					<else>
+						<ant antfile="../TipiBuild/genericbuild.xml" dir="." inheritall="true" inheritrefs="true" target="buildTipi" />
+					</else>
+				</if>
+
 			</then>
 		</if>
 	</target>
