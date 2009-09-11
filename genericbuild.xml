@@ -17,12 +17,26 @@
 		<taskdef name="retrieveVersion" classname="com.dexels.navajo.tipi.ant.extensionbuilder.RetrieveVersion" classpath="bin" />
 		<retrieveVersion />
 		<property name="dist" value="dist/${ant.project.name}/${tipiComponentVersion}" />
+		<if>
+			<equals arg1="${doTagCvs}" arg2="true"/>
+			<then>
+				<echo file="cvsversion.properties" message="cvsVersion=${tipiComponentVersion}"/>
+				
+				<replace file="cvsversion.properties">
+					<replacefilter token="." value="_"/>
+				</replace>
+				<property file="cvsversion.properties"/>
+				<cvs command="tag -F ${ant.project.name}_${cvsVersion}"/>
+				<delete file="cvsversion.properties"/>
+			</then>
+		</if>
+
 		<!--  clean -->
 	</target>
 
 	<target name="grabjars" depends="prepare">
 		<mkdir dir="${dist}/lib" />
-		<echo message="Extra deployment jars: ${tipiDeployedDependencyJars}"/>
+		<echo message="Extra deployment jars: ${deployedDependencyJars}"/>
 		<!-- TODO Create custom task to only copy the files referenced in the extension definition -->
 		<copy todir="${dist}/lib">
 			<fileset dir="lib">
