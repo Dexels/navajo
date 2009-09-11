@@ -12,7 +12,7 @@ public class TipiRssExtension extends AbstractTipiExtension implements TipiExten
 	}
 
 	public String getDescription() {
-		return "Rss connector";
+		return "Rss connector. Supplies an rss connector";
 	}
 
 	public String[] getIncludes() {
