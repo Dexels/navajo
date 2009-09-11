@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- $Id$ -->
-<project default="publish" basedir=".">
+<project default="publish" >
 	<taskdef name="for" classname="net.sf.antcontrib.logic.ForTask" onerror="ignore" />
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
 	<taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask" />
@@ -18,7 +18,7 @@
 	<property name="distribution" value="distribution"/>
 	<property name="deployRoot" value="${navajoScpUser}@${navajoScpServer}:${navajoScpPath}" />
 
-	<property name="buildSource" value="local"/>
+	<property name="buildSource" value="download"/>
 
 	<target name="clean">
 		<delete dir="${work}"/>
