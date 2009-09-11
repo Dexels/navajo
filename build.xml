@@ -18,12 +18,14 @@
 	<property name="distribution" value="distribution"/>
 	<property name="deployRoot" value="${navajoScpUser}@${navajoScpServer}:${navajoScpPath}" />
 
+	<property name="buildSource" value="local"/>
+
 	<target name="clean">
 		<delete dir="${work}"/>
 	</target>
 	
 	
-	<target name="init">
+	<target name="init" depends="clean">
 		<mkdir dir="${work}"/>
 		<mkdir dir="${work}/temp"/>
 		<mkdir dir="${distribution}"/>
@@ -81,15 +83,30 @@
 		<delete dir="${worktemp}" />
 	</target>
 
+	<target name="gatherBinaries" depends="prepare">
+		<if>
+			<equals arg1="${buildSource}" arg2="local"/>
+			<then>
+				<ant antfile="build.xml" target="gatherlocal">
+					<property name="currentdeploy" value="${basicdeploy}"/>
+				</ant>
+			</then>
+			<else>
+				<ant antfile="builddeploy.xml" target="download">
+					<property name="currentdeploy" value="${basicdeploy}"/>
+				</ant>
+			</else>
+		</if>
+	</target>
 	
 	<target name="assemble" depends="prepare">
-		<ant antfile="build.xml" target="gatherlocal">
+		<ant antfile="build.xml" target="gatherBinaries">
 			<property name="currentdeploy" value="${basicdeploy}"/>
 		</ant>
 		<if>
 			<equals arg1="${deployname}" arg2="Enterprise"/>
 			<then>
-				<ant antfile="build.xml" target="gatherlocal">
+				<ant antfile="build.xml" target="gatherBinaries">
 					<property name="currentdeploy" value="${enterprisedeploy}"/>
 				</ant>
 			</then>
@@ -106,17 +123,14 @@
 
 	
 	<target name="deploy" >
-		<ant antfile="build.xml" target="assemble">
-			<property name="deployname" value="StandardFrank"/>
-		</ant>
-
+		<ant antfile="build.xml" target="assemble"/>
 	</target>
 	<target name="upload" depends="deploy">
 		<scp trust="true"  sftp="true" verbose="true" password="${navajoScpPassword}" todir="${deployRoot}">
 			<fileset dir="${distribution}">
 				<include name="${deployname}.war" />
 			</fileset>
-		</scp>	
+		</scp>
 	</target>
 
 	
