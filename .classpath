@@ -21,5 +21,5 @@
 	<classpathentry exported="true" kind="lib" path="lib/batik-xml.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/js.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1_2_4.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="output" path="classes"/>
 </classpath>
