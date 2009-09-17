@@ -468,7 +468,7 @@
         <input/>
         <result/>
     </function>
-    <function name="EvaluateParameters" class="com.dexels.navajo.functions.EvaluateExpression">
+    <function name="EvaluateParameters" class="com.dexels.navajo.functions.EvaluateParameters">
         <description>Fill in parameter properties, like EvaluateExpression, but lightweight and for properties of the currentMessage only</description>
         <input>string</input>
         <result>string</result>

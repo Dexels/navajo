@@ -4,7 +4,9 @@ import java.util.StringTokenizer;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
@@ -13,6 +15,7 @@ public class EvaluateParameters extends FunctionInterface {
 
 	@Override
 	public Object evaluate() throws TMLExpressionException {
+		System.err.println("Noot");
 		if (getOperands().size() != 1) {
 			throw new TMLExpressionException("Wrong number of arguments");
 		}
@@ -20,6 +23,7 @@ public class EvaluateParameters extends FunctionInterface {
 		Message currentMessage = this.getCurrentMessage();
 		String expression = (String) getOperand(0);
 
+		System.err.println("input: " + expression);
 		String result = "";
 		StringTokenizer tok = new StringTokenizer(expression, "[");
 		while (tok.hasMoreTokens()) {
@@ -32,6 +36,10 @@ public class EvaluateParameters extends FunctionInterface {
 				if (currentMessage != null) {
 					if(currentMessage.getProperty(property) != null){
 						value = currentMessage.getProperty(property).getValue();
+					}
+				}else{
+					if(inMessage.getProperty(property) != null){
+						value = inMessage.getProperty(property).getValue();
 					}
 				}
 				result += value;
@@ -51,13 +59,32 @@ public class EvaluateParameters extends FunctionInterface {
 	}
 
 	public static void main(String[] args) throws Exception {
-		String expression = "Hallo [ActivityId] Hoe is het nou? ' met [Lastname]";
+//		Navajo n = NavajoFactory.getInstance().createNavajo();
+//		Message noot = NavajoFactory.getInstance().createMessage(n, "Noot");
+//		
+//		n.addMessage(noot);
+//		noot.addProperty(ai);
+		
+		String expression = "test [/mies/ActivityId]";
+		Navajo m = NavajoFactory.getInstance().createNavajo();
+		Message mies = NavajoFactory.getInstance().createMessage(m, "mies");
+		Property ai = NavajoFactory.getInstance().createProperty(m,	"ActivityId", "string", "4792834", 10 , "Ac", "in");
+		mies.addProperty(ai);
+	    Property p = NavajoFactory.getInstance().createProperty(m,	"exp", "string", expression, 10 , "Ac", "in");
+		
+		m.addMessage(mies);
+		mies.addProperty(p);		
+		
+		System.err.println(Expression.evaluate("EvaluateParameters([/mies/exp])", m).value);
+		
+		/*
 		EvaluateParameters ce = new EvaluateParameters();
 		ce.reset();
-		ce.insertOperand(expression);
+		ce.currentMessage = noot;	
+		ce.insertOperand(Expression.evaluate("[/mies/exp]", m).value);
 		String result = (String) ce.evaluate();
 		System.err.println("result:");
-		System.err.println(result);
+		System.err.println(result);*/
 	}
 
 }
