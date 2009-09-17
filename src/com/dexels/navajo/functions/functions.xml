@@ -468,6 +468,11 @@
         <input/>
         <result/>
     </function>
+    <function name="EvaluateParameters" class="com.dexels.navajo.functions.EvaluateExpression">
+        <description>Fill in parameter properties, like EvaluateExpression, but lightweight and for properties of the currentMessage only</description>
+        <input>string</input>
+        <result>string</result>
+    </function>
     <function name="Euro" class="com.dexels.navajo.functions.Euro">
         <description>Will return a euro sign.</description>
         <input/>
