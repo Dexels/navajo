@@ -10,6 +10,8 @@ package com.dexels.navajo.functions;
  * @version $Id$
  */
 
+import java.util.Locale;
+
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.parser.*;
 
@@ -23,6 +25,9 @@ public final class ToDouble extends FunctionInterface {
         if (o==null) {
           return new Double(0);
         }
+        if(o instanceof Money) {
+      	  return ((Money)o).doubleValue();
+        }
         return new Double(o+"");
     }
 
@@ -35,6 +40,7 @@ public final class ToDouble extends FunctionInterface {
     }
     
     public static void main(String [] args) throws Exception {
+   	 Locale.setDefault(Locale.GERMAN);
     	Money m = new Money(5.0);
     	ToDouble td = new ToDouble();
     	td.reset();
