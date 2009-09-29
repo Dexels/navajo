@@ -4,27 +4,25 @@ import java.sql.*;
 
 import com.dexels.navajo.util.AuditLog;
 
-public final class DbConnectionBroker extends Object implements Runnable
+public final class DbConnectionBroker extends Object
 {
-	private String location, username, password;
-	private String dbIdentifier;
-	private Connection[] conns;
-	private boolean[] usedmap;
-	private long[] created;
+	protected String location, username, password;
+	protected String dbIdentifier;
+	protected Connection[] conns;
+	protected boolean[] usedmap;
+	protected long[] created;
 	//private int minimum;    // Minimum number of connections (unused)
-	private int current;    // Current number of open connections
-	private int available;  // Number of available connections
-	private double timeoutDays;
-	private boolean closed; // Whether closed for business
-	private Thread thread;
-	private boolean dead = false;
+	protected int current;    // Current number of open connections
+	protected int available;  // Number of available connections
+	protected double timeoutDays;
+	protected boolean closed; // Whether closed for business
+	protected boolean dead = false;
 	public  boolean supportsAutocommit = true;
-	private boolean sanityCheck = true;
+	protected boolean sanityCheck = true;
 	
 	private static int instances = 0;
-	private static long createdInstances = 0;
 	
-	private final void log(String message) {
+	protected final void log(String message) {
 		AuditLog.log("GRUS", Thread.currentThread().getName() + ": (url = " + location + ", user = " + username + ")" + message);
 	}
 	
@@ -86,69 +84,12 @@ public final class DbConnectionBroker extends Object implements Runnable
 		
 		if ( timeoutDays > 0 ) {
 			
-			thread = new Thread(this, "Grus broker-" + ++createdInstances + ":" + dbServer + "/" + dbLogin );
-			
-			/** Set this thread to Deamon mode. If there are only deamon threads active, the vm will close.
-			 *  Otherwise the vm will never close. Changed for the eclipse plugin*/
-			thread.setDaemon(true);
-			thread.start();
 			Connection con = getConnection();
 			freeConnection(con);
+			GrusManager.getInstance().addBroker(this);
+			
             log("Started new connectionbroker thread for: " + dbDriver + "/" + dbServer + "/" + dbLogin + ", refresh = " + timeoutDays);
 		}
-	}
-	
-	public void run() {
-		long maxAge;
-		instances++;
-
-		try {
-			while (!closed) {
-				
-				synchronized (this) {
-					wait(10000);
-					//System.err.println(Thread.currentThread().getName() + ": CHECKING IDLE CONNECTIONS");
-					
-					maxAge = (long) (System.currentTimeMillis() - timeoutDays * 86400000L);
-					int idle = 0;
-					int currentCount = current;
-					//System.err.println(Thread.currentThread().getName() + ": MAXAGE IS: " + maxAge);
-					// Check IDLE time, created[i] contains timestamp of last use.
-					for (int i = 0; i < conns.length; i++) {
-						if (conns[i] != null && !usedmap[i] && created[i] < maxAge) {
-							try {
-								log("Closing idle connection: " + conns[i].hashCode());
-								conns[i].close();
-								idle++;
-							} catch (SQLException e) {
-								//e.printStackTrace(System.err);
-							}
-							conns[i] = null;
-							usedmap[i] = false;
-							--available;
-							--current;
-							// System.err.println("Checking timeout for
-							// connections, current count is " + current);
-						}
-					}
-					//System.err.println(Thread.currentThread().getName() + ": IDLE COUNT: " + idle + ", currentCount = " + currentCount);
-					if (idle == currentCount) {
-						log("Nobody interested anymore, about to kill thread ( idle = " + idle + ", currentCount = " + currentCount + ")");
-						// Nobody interested anymore.
-						closed = true;
-						dead = true;
-					}
-				}
-			}
-		} catch (InterruptedException ie) {
-			//
-		}
-		finally { 
-			instances--;
-		}
-	    log("Killing thread.");
-		closed = true;
-		dead = true;
 	}
 	
 	private final boolean testConnection(final Connection conn) {
@@ -293,10 +234,9 @@ public final class DbConnectionBroker extends Object implements Runnable
 		log("In destroy, millis: " + millis);
 		closed = true;
 		dead = true;
-		if ( timeoutDays > 0 ) {
-			thread.interrupt();
-			try { wait(millis); } catch(InterruptedException e) { }
-		}
+		
+		GrusManager.getInstance().removeBroker(this);
+		
 		for(int i=0; i<conns.length; i++) {
 			try {
 				if(conns[i] != null) {
@@ -340,7 +280,11 @@ public final class DbConnectionBroker extends Object implements Runnable
 		return dead;
 	}
 	
+	public void finalize() {
+		destroy();
+	}
+	
 	public final static int getInstances() {
-		return instances;
+		return GrusManager.getInstance().getInstances();
 	}
 }

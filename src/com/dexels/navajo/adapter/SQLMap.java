@@ -855,9 +855,9 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
 
   protected final void createConnection() throws SQLException, UserException {
 
-    if (this.debug) {
-    	Access.writeToConsole(myAccess, this.getClass() + ": in createConnection()\n");
-    }
+	  if (this.debug) {
+		  Access.writeToConsole(myAccess, this.getClass() + ": in createConnection()\n");
+	  }
 
     if (con == null) { // Create connection if it does not yet exist.
 
@@ -865,14 +865,18 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
     	  Access.writeToConsole(myAccess, "in createConnection() for datasource " + datasource +" and username " + username + "\n");
       }
 
-      if (fixedBroker == null || fixedBroker.get(this.datasource, this.username, this.password) == null) {
+      myConnectionBroker = null;
+      if ( fixedBroker != null ) {
+    	  myConnectionBroker = fixedBroker.get(this.datasource, this.username, this.password);
+      }
+      
+      if ( myConnectionBroker == null ) {
         throw new UserException( -1,
                                 "Could not create connection to datasource " +
                                 this.datasource + ", using username " +
                                 this.username);
       }
 
-      myConnectionBroker = fixedBroker.get(this.datasource, this.username, this.password);
       con = myConnectionBroker.getConnection();
 
       if (con == null) {
@@ -1154,7 +1158,7 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
 
   public ResultSetMap[] getResultSet() throws UserException {
 
-    if (resultSet == null) {
+	if (resultSet == null) {
       return getResultSet(false);
     }
     else {

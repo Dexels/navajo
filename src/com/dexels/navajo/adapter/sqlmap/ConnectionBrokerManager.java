@@ -71,6 +71,7 @@ public class ConnectionBrokerManager extends Object {
 	  
 	  SQLMapBroker broker = null;
 	  
+	  //System.err.println("in ConnectionBrokerManager.put(" + dsrc + "," + drv + ", ...)");
 	  synchronized ( semaphore ) {
 		
 		  
@@ -114,6 +115,9 @@ public class ConnectionBrokerManager extends Object {
 		  final String key = dsrc + this.SRCUSERDELIMITER + usr;
 		  
 		  this.brokerMap.put(key, broker);
+		  // Also put datasource in map with only the datasource specified.
+		  this.brokerMap.put(dsrc, broker);
+		  
 		  if (this.debug) {
 			  System.out.println(this.getClass() +
 					  ": putting new broker with identifier '" +
@@ -161,6 +165,7 @@ public class ConnectionBrokerManager extends Object {
 		  newbroker.password = password;
 		  newbroker.createBroker();
 		  final String key = datasource + this.SRCUSERDELIMITER + username;
+		  this.brokerMap.put(datasource, newbroker);
 		  this.brokerMap.put(key, newbroker);
 		  if (this.debug) {
 			  System.out.println(this.getClass() + ": created a new broker '" + key +
@@ -169,6 +174,7 @@ public class ConnectionBrokerManager extends Object {
 	  }
   }
 
+ 
   public final DatabaseInfo getMetaData(final String dsrc, final String usr, final String pwd) {
     SQLMapBroker broker;
     if (usr == null) {
@@ -201,6 +207,7 @@ public class ConnectionBrokerManager extends Object {
 
   public final DbConnectionBroker get(final String dsrc, final String usr, final String pwd) {
     SQLMapBroker broker;
+    //System.err.println("In ConnectionBrokerManager.get(" + dsrc + "," + usr + "," + pwd + ")");
     if (usr == null) {
       if (this.debug) {
         System.out.println(this.getClass() +
@@ -258,6 +265,7 @@ public class ConnectionBrokerManager extends Object {
 				  broker.broker = null;
 			  }
 			  final String key = dsrc + this.SRCUSERDELIMITER + usr;
+			  this.brokerMap.remove(dsrc);
 			  this.brokerMap.remove(key);
 			  if (this.debug) {
 				  System.out.println(this.getClass() + ": destroyed broker '" + key + "'");
@@ -282,26 +290,31 @@ public class ConnectionBrokerManager extends Object {
   // ----------------------------------------------------------- private methods
 
   private final SQLMapBroker haveExistingBroker(final String datasource, final String usr) {
-	  
+
+	  //System.err.println("In ConnectionBrokerManager.haveExistingBroker(" + datasource + "," + usr + ")");
+
+	  final String target = datasource + this.SRCUSERDELIMITER + usr;
+	  SQLMapBroker broker = ( (SQLMapBroker)this.brokerMap.get(target));
+
+	  if (! ( ( broker != null && broker.refresh == 0 ) || ( broker != null && broker.broker.isDead() ) ) ) {
+		  return broker;
+	  }
+
 	  synchronized ( semaphore ) {
-		  final String target = datasource + this.SRCUSERDELIMITER + usr;
-		  
-		  SQLMapBroker broker = ( (SQLMapBroker)this.brokerMap.get(target));
-		  
-		  if ( ( broker != null && broker.refresh == 0 ) || ( broker != null && broker.broker.isDead() ) ) {
-			  //System.err.println("Detected dead broker, removing it and creating new one");
-			  brokerMap.remove(target);
-			  // Create new broker.
-			  try { 
-				  this.put(broker.datasource, broker.driver, broker.url, broker.username, broker.password,
-						  broker.minconnections, broker.maxconnections, broker.logFile,
-						  broker.refresh, broker.autocommit, true);
-				  broker = ( (SQLMapBroker)this.brokerMap.get(target));
-			  } catch (Exception e) {
-				  e.printStackTrace(System.err);
-				  return null;
-			  }
-		  } 
+
+		  //System.err.println("Detected dead broker, removing it and creating new one");
+		  brokerMap.remove(datasource);
+		  brokerMap.remove(target);
+		  // Create new broker.
+		  try { 
+			  this.put(broker.datasource, broker.driver, broker.url, broker.username, broker.password,
+					  broker.minconnections, broker.maxconnections, broker.logFile,
+					  broker.refresh, broker.autocommit, true);
+			  broker = ( (SQLMapBroker)this.brokerMap.get(target));
+		  } catch (Exception e) {
+			  e.printStackTrace(System.err);
+			  return null;
+		  }
 		  return broker;
 	  }
   }
@@ -315,22 +328,33 @@ public class ConnectionBrokerManager extends Object {
    */
   private final SQLMapBroker seekSimilarBroker(final String datasource, boolean donotremove) {
 	  
+	  //System.err.println("In ConnectionBrokerManager.seekSimilarBroker(" + datasource + "," + donotremove + ")");
+	  
+	  SQLMapBroker broker = (SQLMapBroker) brokerMap.get( datasource );
+	  if ( !( !donotremove && ( broker.refresh == 0 || ( broker != null && broker.broker.isDead()) ) ) ) {
+		  //System.err.println("Returning similarBroker immediately...");
+		  return broker;
+	  }
+	  
 	  synchronized ( semaphore ) {
 		  
 		  final Set keys = new HashSet(this.brokerMap.keySet());
 		  final Iterator iter = keys.iterator();
+		  int index = 0;
 		  while (iter.hasNext()) {
 			  final String key = (String) iter.next();
-			  SQLMapBroker broker = (SQLMapBroker)this.brokerMap.get(key);
+			  broker = (SQLMapBroker)this.brokerMap.get(key);
 			
 			  if (broker.datasource.equals(datasource)) {
-				  if (debug) {
-					System.err.println(" Found a broker with the same datasource");
-				}
+				  
+				 if (debug) {
+					System.err.println(" Found a broker with the same datasource: " + key);
+				 }
 				  //return (broker);
 				  if ( !donotremove && ( broker.refresh == 0 || ( broker != null && broker.broker.isDead()) ) ) {
 					  //System.err.println("Detected dead broker, removing it and creating new one");
 					  brokerMap.remove(key);
+					  brokerMap.remove(datasource);
 					  // Create new broker.
 					  try { 
 						  this.put(broker.datasource, broker.driver, broker.url, broker.username, broker.password,
@@ -342,8 +366,10 @@ public class ConnectionBrokerManager extends Object {
 						  return null;
 					  }
 				  } 
+				  
 				  return broker;    	
 			  }
+			  index++;
 		  }
 		  return (null);
 	  }
@@ -360,8 +386,8 @@ public class ConnectionBrokerManager extends Object {
           broker.broker.destroy();
           broker.broker = null;
         }
-        final String bkey = datasource + this.SRCUSERDELIMITER +
-            broker.username;
+        final String bkey = datasource + this.SRCUSERDELIMITER + broker.username;
+        this.brokerMap.remove(datasource);
         this.brokerMap.remove(bkey);
         if (this.debug) {
           System.out.println(this.getClass() + ": destroyed broker '" + bkey +
@@ -423,12 +449,9 @@ public class ConnectionBrokerManager extends Object {
     		Connection c = this.broker.getConnection();
     		if (c != null) {
     			try {
-    				//System.err.print("GETTING METADATA FOR " + url + "...");
     				DatabaseMetaData dbmd = c.getMetaData();
     				broker.supportsAutocommit = dbmd.supportsTransactions();
-    				System.err.println("supportsAutocommit = " + broker.supportsAutocommit);
     				dbInfo = new DatabaseInfo(dbmd, this.datasource);
-    				//System.err.println("...GOT IT!");
     			}
     			catch (SQLException ex) {
     				ex.printStackTrace(System.err);
