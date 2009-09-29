@@ -38,7 +38,8 @@ public class GrusManager implements Runnable {
 			try {
 
 				Thread.sleep(10000);
-				Iterator<DbConnectionBroker> allBrokers = registeredBrokers.iterator();
+				// Make copy to avoid concurrent modification exception.
+				Iterator<DbConnectionBroker> allBrokers = new HashSet<DbConnectionBroker>(registeredBrokers).iterator();
 
 				int index = 0;
 				while ( allBrokers.hasNext() ) {
