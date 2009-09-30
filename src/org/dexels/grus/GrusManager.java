@@ -38,7 +38,7 @@ public class GrusManager implements Runnable {
 			try {
 
 				Thread.sleep(10000);
-				// Make copy to avoid concurrent modification exception.
+				// Make copy to avoid concurrent modification exception.com
 				Iterator<DbConnectionBroker> allBrokers = new HashSet<DbConnectionBroker>(registeredBrokers).iterator();
 
 				int index = 0;
@@ -72,7 +72,7 @@ public class GrusManager implements Runnable {
 						}
 					}
 					
-					System.err.println( (++index) + ": " + inspectedBroker.location + "/" + inspectedBroker.username + ": IDLE COUNT: " + idle + ", currentCount = " + currentCount);
+					//System.err.println( (++index) + ": " + inspectedBroker.location + "/" + inspectedBroker.username + ": IDLE COUNT: " + idle + ", currentCount = " + currentCount);
 					if (idle == currentCount) {
 						inspectedBroker.log("Nobody interested anymore, about to kill thread ( idle = " + idle + ", currentCount = " + currentCount + ")");
 						// Nobody interested anymore.
