@@ -28,6 +28,9 @@ package navajoadapters;
 /**
  * VERSION HISTORY
  *
+ * 3.0.0 Introduced Grus Manager as a Single Threaded Broker solution.
+ * 		 Removed unnecessary synchronized blocks in ConnectionBrokerManager.
+ * 
  * 2.2.8 Use Acces object private Console writer instead of System.err for logging. Used in SQLMap and SPMap.
  *       OracleStore now writes additional console value into navajolog table.
  *       
@@ -61,12 +64,12 @@ package navajoadapters;
  */
 public class Version extends dexels.Version {
 
-	public static final int    MAJOR       = 2;
-	public static final int    MINOR       = 2;
-	public static final int    PATCHLEVEL  = 8;
+	public static final int    MAJOR       = 3;
+	public static final int    MINOR       = 0;
+	public static final int    PATCHLEVEL  = 0;
 	public static final String VENDOR      = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Adapter Library";
-	public static final String RELEASEDATE = "2008-05-06";
+	public static final String RELEASEDATE = "2009-09-30";
 
 	//	Included packages.
 	String [] includes = {"navajodocument.Version", "navajo.Version", "navajoclient.Version", "navajofunctions.Version"};
