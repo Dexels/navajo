@@ -1,0 +1,294 @@
+package com.dexels.navajo.adapter;
+
+import java.util.ArrayList;
+
+import com.dexels.navajo.adapter.messagemap.ResultMessage;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.UserException;
+
+/**
+ * MessageMap is used to manipulate/join Messages.
+ * 
+ * <map>
+ *   <field name="joinMessage1"><expression value="'Message1'"/></field>
+ *   <field name="joinMessage2"><expression value="'Message2'"/></field>
+ *   <field name="joinProperties"><expression value="'Property1,Property2'"/></field>
+ *   <message name="ResultMessage">
+ *      <map ref="joinedMessage" filter="[some filter conditions]"/>
+ *   </message>
+ * </map>
+ * 
+ * new style:
+ * 
+ * <map.joinmap>
+ *   <joinmap.join joinType="[inner|outer]" message1="Message1" message2="Message2" joinCondition="'Property1,Property2'" removeMessageSources="true"/>
+ *   <message name="ResultMessage">
+ *      <map ref="joinedMessage" filter="[some filter conditions]"/>
+ *   </message>
+ * </map.joinmap>
+ * 
+ * @author arjen
+ *
+ */
+class JoinCondition {
+	
+	public String property1;
+	public String property2;
+	
+}
+
+public class MessageMap implements Mappable {
+
+	private static String INNER_JOIN = "inner";
+	private static String OUTER_JOIN = "outer";
+	
+	private ResultMessage [] resultMessage;
+	private String joinMessage1;
+	private String joinMessage2;
+	private ArrayList<JoinCondition> joinConditions = new ArrayList<JoinCondition>();
+	private boolean removeSource = false;
+	private String joinType = INNER_JOIN;
+	
+	private Access myAccess;
+	private Message msg1;
+	private Message msg2;
+	
+	public void kill() {
+	}
+
+	private void clearPropertyValues(Message m) throws UserException {
+		ArrayList<Property> properties = m.getAllProperties();
+		for ( int i = 0; i < properties.size(); i++ ) {
+			properties.get(i).setAnyValue(null);
+		}
+		ArrayList<Message> subMessages = m.getAllMessages();
+		for ( int i = 0; i < subMessages.size(); i++ ) {
+			clearPropertyValues(subMessages.get(i));
+		}
+	}
+	
+	private Message checkMessage(String m) throws UserException {
+		Message msg = myAccess.getOutputDoc().getMessage(m);
+		if ( msg == null ) {
+			throw new UserException(-1, "Exception joining message " + m + ": does not exist.");
+		}
+		if ( msg.getType() != Message.MSG_TYPE_ARRAY ) {
+			throw new UserException(-1, "Exception joining message " + m + ": not an array message.");
+		}
+		return msg;
+	}
+	
+	public void setJoinType(String t) {
+		this.joinType = t;
+	}
+	
+	public void setRemoveSource(boolean b) {
+		this.removeSource = b;
+	}
+	
+	public void setJoinMessage1(String m) throws UserException {
+		this.msg1 = checkMessage(m);
+		this.joinMessage1 = m;
+	}
+	
+	public void setJoinMessage2(String m) throws UserException {
+		this.msg2 = checkMessage(m);
+		this.joinMessage2 = m;
+	}
+
+	public void setJoinCondition(String c) throws UserException {
+		String [] conditions = c.split(",");
+		for (int i = 0; i < conditions.length; i++) {
+			if ( conditions[i].split("=").length != 2 ) {
+				throw new UserException(-1, "Exception joining messages " + joinMessage1 + " and " + joinMessage2 + ": invalid join condition: " + c);
+			}
+			String prop1 = conditions[i].split("=")[0];
+			String prop2 = conditions[i].split("=")[1];
+			JoinCondition jc = new JoinCondition();
+			jc.property1 = prop1;
+			jc.property2 = prop2;
+			joinConditions.add(jc);
+		}
+	}
+		
+	public ResultMessage [] getResultMessage() throws UserException, NavajoException {
+		
+		
+		ArrayList<ResultMessage> resultingMessage = new ArrayList<ResultMessage>();
+		
+		ArrayList<Message> children = this.msg1.getAllMessages();
+		
+		for (int i = 0; i < children.size(); i++) {
+			Message c1 = children.get(i);
+			Object [] joinValues1 = new Object[joinConditions.size()];
+			for (int p = 0; p < joinConditions.size(); p++ ) {
+				JoinCondition jc = joinConditions.get(p);
+				Property prop = c1.getProperty(jc.property1);
+				if ( prop == null ) {
+					throw new UserException(-1, "Exception joining messages " + joinMessage1 + " and " + joinMessage2 + ": property not found: " + jc.property1);
+				}
+				joinValues1[p] = prop.getValue();
+			}
+			ArrayList<Message> children2 = this.msg2.getAllMessages();
+			// Find c2;
+			Message c2 = null;
+			boolean foundJoinMessage = false;
+			
+			for (int j = 0; j < children2.size(); j++) {
+				c2 = children2.get(j);
+				
+				Object [] joinValues2 = new Object[joinConditions.size()];
+				for (int p = 0; p < joinConditions.size(); p++ ) {
+					JoinCondition jc = joinConditions.get(p);
+					Property prop = c2.getProperty(jc.property2);
+					if ( prop == null ) {
+						throw new UserException(-1, "Exception joining messages " + joinMessage1 + " and " + joinMessage2 + ": property not found: " + jc.property2);
+					}
+					joinValues2[p] = prop.getValue();
+				}
+				// Compare joinValues...
+				boolean equal = true;
+				for (int jv = 0; jv < joinConditions.size(); jv++) {
+					//System.err.println("Checking join values: " + joinValues1[jv] + " and " + joinValues2[jv]  );
+					if ( !joinValues1[jv].equals(joinValues2[jv])) {
+						equal = false;
+					}
+				}
+				
+				if ( equal ) {
+					Message newMsg = NavajoFactory.getInstance().createMessage(myAccess.getOutputDoc(), "tmp");
+					newMsg.merge(c1);
+					newMsg.merge(c2);
+					ResultMessage rm = new ResultMessage();
+					rm.setMessage(newMsg);
+					resultingMessage.add(rm);
+					foundJoinMessage = true;
+				}
+			}
+			
+			if ( !foundJoinMessage && joinType.equals(OUTER_JOIN) ) {
+				// Append dummy message with empty property values in case no join condition match...
+				if ( c2 != null ) {
+					Message newMsg = NavajoFactory.getInstance().createMessage(myAccess.getOutputDoc(), "tmp");
+					newMsg.merge(c1);
+					Message c2c = c2.copy();
+					clearPropertyValues(c2c);
+					newMsg.merge(c2c);
+					ResultMessage rm = new ResultMessage();
+					rm.setMessage(newMsg);
+					resultingMessage.add(rm);
+				}
+			}
+		}
+		
+		this.resultMessage = new ResultMessage[resultingMessage.size()];
+		this.resultMessage = (ResultMessage []) resultingMessage.toArray(resultMessage);
+		return this.resultMessage;
+	}
+	
+	public void load(Access access) throws MappableException, UserException {
+		this.myAccess = access;
+	}
+
+	public void store() throws MappableException, UserException {
+		if ( removeSource ) {
+			if ( myAccess.getCurrentOutMessage() == null ) {
+				try {
+				myAccess.getOutputDoc().removeMessage(msg1);
+				myAccess.getOutputDoc().removeMessage(msg2);
+				} catch (NavajoException ne) {}
+			} else {
+				myAccess.getCurrentOutMessage().removeMessage(msg1);
+				myAccess.getCurrentOutMessage().removeMessage(msg2);
+			}
+		}
+	}
+
+	public static void main(String [] args) throws Exception {
+		Navajo out = NavajoFactory.getInstance().createNavajo();
+		Message msg1 = NavajoFactory.getInstance().createMessage(out, "message1");
+		msg1.setType("array");
+		Message msg2 = NavajoFactory.getInstance().createMessage(out, "message2");
+		msg2.setType("array");
+		out.addMessage(msg1);
+		out.addMessage(msg2);
+		
+		for (int i = 0; i < 4; i++) {
+			Message m1 = NavajoFactory.getInstance().createMessage(out, "message1");
+			Message m2 = NavajoFactory.getInstance().createMessage(out, "message2");
+			msg1.addMessage(m1);
+			msg2.addMessage(m2);
+			
+			Property p;
+			
+			p = NavajoFactory.getInstance().createProperty(out, "propje1", Property.STRING_PROPERTY, ""+3*i, 0, "", "");
+			m1.addProperty(p);
+			p = NavajoFactory.getInstance().createProperty(out, "propje2", Property.STRING_PROPERTY, ""+8*i, 0, "", "");
+			m1.addProperty(p);
+			p = NavajoFactory.getInstance().createProperty(out, "propje3", Property.STRING_PROPERTY, "propjes"+23*i, 0, "", "");
+			m1.addProperty(p);
+			
+			p = NavajoFactory.getInstance().createProperty(out, "blieblab", Property.STRING_PROPERTY, ""+3*i, 0, "", "");
+			m2.addProperty(p);
+			p = NavajoFactory.getInstance().createProperty(out, "apenoot2", Property.STRING_PROPERTY, "apenoot"+8*i, 0, "", "");
+			m2.addProperty(p);
+			p = NavajoFactory.getInstance().createProperty(out, "apfelkorn", Property.STRING_PROPERTY, "apfelkorn"+23*i, 0, "", "");
+			m2.addProperty(p);
+			
+		}
+		
+		Property p;
+		Message m1 = NavajoFactory.getInstance().createMessage(out, "message1");
+		msg1.addMessage(m1);
+		p = NavajoFactory.getInstance().createProperty(out, "propje1", Property.STRING_PROPERTY, "343", 0, "", "");
+		m1.addProperty(p);
+		p = NavajoFactory.getInstance().createProperty(out, "propje2", Property.STRING_PROPERTY, "12321", 0, "", "");
+		m1.addProperty(p);
+		p = NavajoFactory.getInstance().createProperty(out, "propje3", Property.STRING_PROPERTY, "propjes2321", 0, "", "");
+		m1.addProperty(p);
+		
+		// Additional m2.
+		Message m2 = NavajoFactory.getInstance().createMessage(out, "message2");
+		msg2.addMessage(m2);
+		p = NavajoFactory.getInstance().createProperty(out, "blieblab", Property.STRING_PROPERTY, "0", 0, "", "");
+		m2.addProperty(p);
+		p = NavajoFactory.getInstance().createProperty(out, "apenoot2", Property.STRING_PROPERTY, "12321", 0, "", "");
+		m2.addProperty(p);
+		p = NavajoFactory.getInstance().createProperty(out, "apfelkorn", Property.STRING_PROPERTY, "propjes2321", 0, "", "");
+		m2.addProperty(p);
+		
+		Access a = new Access();
+		a.setOutputDoc(out);
+		
+		MessageMap mm = new MessageMap();
+		mm.load(a);
+		mm.setJoinMessage1("message1");
+		mm.setJoinMessage2("message2");
+		mm.setJoinCondition("propje1=blieblab");
+		mm.setJoinType("outer");
+		//mm.setRemoveSource(true);
+		
+		Message resultMessage = NavajoFactory.getInstance().createMessage(out, "ResultingMessage");
+		resultMessage.setType("array");
+		out.addMessage(resultMessage);
+		
+		a.setCurrentOutMessage(resultMessage);
+		
+		ResultMessage [] result = mm.getResultMessage();
+		for (int i = 0; i < result.length; i++) {
+			result[i].load(a);
+			result[i].store();
+		}
+		a.setCurrentOutMessage(null);
+		mm.store();
+		
+		out.write(System.err);
+	}
+}
