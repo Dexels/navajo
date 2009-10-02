@@ -157,15 +157,19 @@ public class MessageMap implements Mappable {
 				boolean equal = true;
 				for (int jv = 0; jv < joinConditions.size(); jv++) {
 					//System.err.println("Checking join values: " + joinValues1[jv] + " and " + joinValues2[jv]  );
-					if ( !joinValues1[jv].equals(joinValues2[jv])) {
+					if ( joinValues1[jv] != null && joinValues2[jv] != null && !joinValues1[jv].equals(joinValues2[jv])) {
+						equal = false;
+					} else if ( joinValues1[jv] == null && joinValues2[jv] != null ) {
+						equal = false;
+					} else if ( joinValues1[jv] != null && joinValues2[jv] == null ) {
 						equal = false;
 					}
 				}
 				
 				if ( equal ) {
 					Message newMsg = NavajoFactory.getInstance().createMessage(myAccess.getOutputDoc(), "tmp");
-					newMsg.merge(c1);
 					newMsg.merge(c2);
+					newMsg.merge(c1);
 					ResultMessage rm = new ResultMessage();
 					rm.setMessage(newMsg);
 					resultingMessage.add(rm);
@@ -177,10 +181,10 @@ public class MessageMap implements Mappable {
 				// Append dummy message with empty property values in case no join condition match...
 				if ( c2 != null ) {
 					Message newMsg = NavajoFactory.getInstance().createMessage(myAccess.getOutputDoc(), "tmp");
-					newMsg.merge(c1);
 					Message c2c = c2.copy();
 					clearPropertyValues(c2c);
 					newMsg.merge(c2c);
+					newMsg.merge(c1);
 					ResultMessage rm = new ResultMessage();
 					rm.setMessage(newMsg);
 					resultingMessage.add(rm);

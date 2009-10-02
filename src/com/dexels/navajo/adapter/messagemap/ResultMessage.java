@@ -23,11 +23,19 @@ public class ResultMessage implements Mappable {
 	public void load(Access access) throws MappableException, UserException {
 		this.parentMsg = access.getCurrentOutMessage();
 		this.myNavajo = access.getOutputDoc();
+		Message copy = msg.copy(myNavajo);
+		parentMsg.merge(copy);
 	}
 
+	public Object getPropertyValue(String s) throws UserException {
+		if ( msg.getProperty(s) != null ) {
+			return msg.getProperty(s).getTypedValue();
+		} else {
+			throw new UserException(-1, "Exception in getting propertyValue for property: " + s);
+		}
+	}
+	
 	public void store() throws MappableException, UserException {
-		Message copy = msg.copy(myNavajo);
-		parentMsg.addMessage(copy);
 	}
 
 }

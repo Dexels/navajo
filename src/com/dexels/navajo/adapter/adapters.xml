@@ -3,13 +3,15 @@
     <map>
         <tagname>joinmessage</tagname>
         <object>com.dexels.navajo.adapter.MessageMap</object>
-        <method name="join">
-            <param name="message1" field="joinMessage1" type="string" required="true"/>
-            <param name="message2" field="joinMessage2" type="string" required="true"/>
-            <param name="joinCondition" field="joinCondition" type="string" required="true"/>
-            <param name="type" field="joinType" type="string" required="false"/>
-            <param name="removeSource" field="removeSource" type="boolean" required="false"/>
-        </method>
+        <methods>
+            <method name="join">
+                <param name="message1" field="joinMessage1" type="string" required="true"/>
+                <param name="message2" field="joinMessage2" type="string" required="true"/>
+                <param name="joinCondition" field="joinCondition" type="string" required="true"/>
+                <param name="type" field="joinType" type="string" required="false"/>
+                <param name="ignoreSource" field="removeSource" type="boolean" required="false"/>
+            </method>
+        </methods>
     </map>
     <!-- Copy Message adapter -->
     <map>
