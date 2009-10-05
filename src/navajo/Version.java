@@ -28,6 +28,8 @@ package navajo;
  * 
  * VERSION HISTORY
  * 
+ * 8.2.5 - Implemented Debugable Interface.
+ * 
  * 8.2.4 - Refactored Navajo Internal Structure
  *       - Possible to define expression in description attribute of validation check
  *       
@@ -187,12 +189,12 @@ public class Version extends dexels.Version {
 
 	public static final int MAJOR = 8;
 	public static final int MINOR = 2;
-	public static final int PATCHLEVEL = 4;
+	public static final int PATCHLEVEL = 5;
 	public static final String SPECIAL_VERSION = "Final";
 	
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
-	public static final String RELEASEDATE = "2009-09-01";
+	public static final String RELEASEDATE = "2009-10-05";
 	
 //	 Included packages.
 	String [] includes = {"navajodocument.Version"};
