@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.io.Serializable;
 import java.lang.reflect.*;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.enterprise.statistics.MapStatistics;
 
@@ -77,7 +78,7 @@ public final class MappableTreeNode implements Mappable, Serializable {
             	myStatistics = a.createStatistics();
             }
             // Call setDebug automatically if object class implements Debugable interface and full debug is set for webservice.
-            if ( a != null && a.getCompiledScript().isDebugAll() && Debugable.class.isInstance(o) ) {
+            if ( a != null && DispatcherFactory.getInstance().getNavajoConfig().needsFullAccessLog(a) && Debugable.class.isInstance(o) ) {
             	( (Debugable) o).setDebug(true);
             }
         }
