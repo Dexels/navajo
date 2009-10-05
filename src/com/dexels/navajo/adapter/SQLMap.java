@@ -131,7 +131,7 @@ class Kip {
 	  }
 }
 
-public class SQLMap implements Mappable, LazyArray, HasDependentResources {
+public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debugable {
 
   protected final static int INFINITE = -1;
   protected final String USERPWDDELIMITER = "/";
@@ -1823,6 +1823,10 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources {
 
   public void setTimeAlert(int timeAlert) {
 	  this.timeAlert = timeAlert;
+  }
+
+  public boolean getDebug() {
+	  return this.debug;
   }
   
  
