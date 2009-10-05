@@ -12,9 +12,11 @@
 <ul>
 
 	<c:forEach var="folder" items="${serverContext.folders}">
-		<li>
-		<a href="index.jsp?view=editor&command=setFolder&folder=${folder.name}&service=${param.service}">${folder.name }</a>
-		</li>
+		<c:if test="${folder.name != 'CVS'}">
+			<li>
+			<a href="index.jsp?view=editor&command=setFolder&folder=${folder.name}&service=${param.service}">${folder.name }</a>
+			</li>
+		</c:if>
 	</c:forEach>
 	<c:forEach var="script" items="${serverContext.scripts}">
 		<li>

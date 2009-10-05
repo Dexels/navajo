@@ -11,7 +11,7 @@
 <a href="#${navajoContext.messagePath}">${navajoContext.message.name}</a>
 <c:forEach var="msg" items="${navajoContext.message.allMessages}">
 	<nav:message message="${msg}">
-		<c:import url="tml/writemessagetree.jsp"/>
+		<c:import url="tml/manager/writemessagetree.jsp"/>
 	</nav:message>
 </c:forEach>
 </div>
