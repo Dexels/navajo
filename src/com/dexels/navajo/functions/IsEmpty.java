@@ -23,7 +23,7 @@ public class IsEmpty extends FunctionInterface {
 		}
 		
 		if ( arg instanceof String) {
-			return (arg.equals(""));
+			return (((String) arg).trim().equals(""));
 		}
 		
 		if ( arg instanceof List ) {
