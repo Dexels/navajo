@@ -28,6 +28,9 @@ package navajoadapters;
 /**
  * VERSION HISTORY
  *
+ * 3.1.0 Now using ALTER Session to set default schema instead of using different connection brokers per username 
+ *       (NOTE THAT THIS SOLUTION IS ORACLE SPECIFIC)
+ *       
  * 3.0.0 Introduced Grus Manager as a Single Threaded Broker solution.
  * 		 Removed unnecessary synchronized blocks in ConnectionBrokerManager.
  * 
@@ -65,7 +68,7 @@ package navajoadapters;
 public class Version extends dexels.Version {
 
 	public static final int    MAJOR       = 3;
-	public static final int    MINOR       = 0;
+	public static final int    MINOR       = 1;
 	public static final int    PATCHLEVEL  = 0;
 	public static final String VENDOR      = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Adapter Library";
