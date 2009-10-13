@@ -136,45 +136,49 @@ public class MessageMap implements Mappable {
 				}
 				joinValues1[p] = prop.getValue();
 			}
-			ArrayList<Message> children2 = this.msg2.getAllMessages();
+			
 			// Find c2;
 			Message c2 = null;
 			boolean foundJoinMessage = false;
 			
-			for (int j = 0; j < children2.size(); j++) {
-				c2 = children2.get(j);
-				
-				Object [] joinValues2 = new Object[joinConditions.size()];
-				for (int p = 0; p < joinConditions.size(); p++ ) {
-					JoinCondition jc = joinConditions.get(p);
-					Property prop = c2.getProperty(jc.property2);
-					if ( prop == null ) {
-						throw new UserException(-1, "Exception joining messages " + joinMessage1 + " and " + joinMessage2 + ": property not found: " + jc.property2);
+			if ( this.msg2 != null ) {
+				ArrayList<Message> children2 = this.msg2.getAllMessages();
+
+				for (int j = 0; j < children2.size(); j++) {
+					c2 = children2.get(j);
+
+					Object [] joinValues2 = new Object[joinConditions.size()];
+					for (int p = 0; p < joinConditions.size(); p++ ) {
+						JoinCondition jc = joinConditions.get(p);
+						Property prop = c2.getProperty(jc.property2);
+						if ( prop == null ) {
+							throw new UserException(-1, "Exception joining messages " + joinMessage1 + " and " + joinMessage2 + ": property not found: " + jc.property2);
+						}
+						joinValues2[p] = prop.getValue();
 					}
-					joinValues2[p] = prop.getValue();
-				}
-				// Compare joinValues...
-				boolean equal = true;
-				for (int jv = 0; jv < joinConditions.size(); jv++) {
-					//System.err.println("Checking join values: " + joinValues1[jv] + " and " + joinValues2[jv]  );
-					if ( joinValues1[jv] != null && joinValues2[jv] != null && !joinValues1[jv].equals(joinValues2[jv])) {
-						equal = false;
-					} else if ( joinValues1[jv] == null && joinValues2[jv] != null ) {
-						equal = false;
-					} else if ( joinValues1[jv] != null && joinValues2[jv] == null ) {
-						equal = false;
+					// Compare joinValues...
+					boolean equal = true;
+					for (int jv = 0; jv < joinConditions.size(); jv++) {
+						//System.err.println("Checking join values: " + joinValues1[jv] + " and " + joinValues2[jv]  );
+						if ( joinValues1[jv] != null && joinValues2[jv] != null && !joinValues1[jv].equals(joinValues2[jv])) {
+							equal = false;
+						} else if ( joinValues1[jv] == null && joinValues2[jv] != null ) {
+							equal = false;
+						} else if ( joinValues1[jv] != null && joinValues2[jv] == null ) {
+							equal = false;
+						}
 					}
-				}
-				
-				if ( equal ) {
-					Message newMsg = NavajoFactory.getInstance().createMessage(myAccess.getOutputDoc(), "tmp");
-					newMsg.merge(c2);
-					newMsg.merge(c1);
-					ResultMessage rm = new ResultMessage();
-					rm.setMessage(newMsg);
-					resultingMessage.add(rm);
-					foundJoinMessage = true;
-				}
+
+					if ( equal ) {
+						Message newMsg = NavajoFactory.getInstance().createMessage(myAccess.getOutputDoc(), "tmp");
+						newMsg.merge(c2);
+						newMsg.merge(c1);
+						ResultMessage rm = new ResultMessage();
+						rm.setMessage(newMsg);
+						resultingMessage.add(rm);
+						foundJoinMessage = true;
+					}
+				} // end for
 			}
 			
 			if ( !foundJoinMessage && joinType.equals(OUTER_JOIN) ) {
@@ -188,12 +192,20 @@ public class MessageMap implements Mappable {
 					ResultMessage rm = new ResultMessage();
 					rm.setMessage(newMsg);
 					resultingMessage.add(rm);
+				} else {
+					// Assume empty second array message
+					Message c1c = c1.copy();
+					ResultMessage rm = new ResultMessage();
+					rm.setMessage(c1c);
+					System.err.println("ADDING MESSAGE: " + c1c.getName());
+					resultingMessage.add(rm);
 				}
 			}
 		}
 		
 		this.resultMessage = new ResultMessage[resultingMessage.size()];
 		this.resultMessage = (ResultMessage []) resultingMessage.toArray(resultMessage);
+		System.err.println("ResultMessage size: " + this.resultMessage.length);
 		return this.resultMessage;
 	}
 	
@@ -276,7 +288,7 @@ public class MessageMap implements Mappable {
 		mm.setJoinMessage1("message1");
 		mm.setJoinMessage2("message2");
 		mm.setJoinCondition("propje1=blieblab");
-		mm.setJoinType("outer");
+		mm.setJoinType("inner");
 		//mm.setRemoveSource(true);
 		
 		Message resultMessage = NavajoFactory.getInstance().createMessage(out, "ResultingMessage");
