@@ -247,7 +247,7 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
       if (debug) {
     	  Access.writeToConsole(myAccess, "Killing previous version of broker (" + dataSourceName + ":" + username + ")...\n");
       }
-      fixedBroker.destroy(dataSourceName, username);
+      fixedBroker.destroy(dataSourceName);
       if (debug) {
     	  Access.writeToConsole(myAccess, "Done!\n");
       }
@@ -280,7 +280,7 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
       MappableException, UserException {
    
     if (fixedBroker != null) {
-      fixedBroker.destroy(datasourceName, this.username);
+      fixedBroker.destroy(datasourceName);
     }
   }
 
@@ -867,7 +867,7 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
 
       myConnectionBroker = null;
       if ( fixedBroker != null ) {
-    	  myConnectionBroker = fixedBroker.get(this.datasource, this.username, this.password);
+    	  myConnectionBroker = fixedBroker.get(this.datasource, null, null);
       }
       
       if ( myConnectionBroker == null ) {
@@ -881,29 +881,29 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
 
       if (con == null) {
     	  AuditLog.log("SQLMap", "Could not connect to database: " + datasource +  ", one more try with fresh broker....", Level.WARNING, myAccess.accessID);
-        
-        Message msg = configFile.getMessage("/datasources/" + datasource);
-        try {
-          createDataSource(msg, navajoConfig);
-        }
-        catch (NavajoException ne) {
-        	 AuditLog.log("SQLMap", ne.getMessage(), Level.SEVERE);
-          throw new UserException( -1, ne.getMessage());
-        } catch (Throwable t) {
-        	AuditLog.log("SQLMap", t.getMessage(), Level.SEVERE);
-          throw new UserException( -1, t.getMessage());
-        }
-        myConnectionBroker = fixedBroker.get(this.datasource, this.username, this.password);
-        con = myConnectionBroker.getConnection();
-        if (con == null) {
-        	AuditLog.log("SQLMap",  "Could (still) not connect to database: " + datasource + " (" + this.username + ")" +
-                    ", check your connection", Level.SEVERE);
-         
-          throw new UserException( -1,
-                                  "Could not connect to database: " +
-                                  datasource + " (" + this.username + ")" +
-                                  ", check your connection");
-        }
+
+    	  Message msg = configFile.getMessage("/datasources/" + datasource);
+    	  try {
+    		  createDataSource(msg, navajoConfig);
+    	  }
+    	  catch (NavajoException ne) {
+    		  AuditLog.log("SQLMap", ne.getMessage(), Level.SEVERE);
+    		  throw new UserException( -1, ne.getMessage());
+    	  } catch (Throwable t) {
+    		  AuditLog.log("SQLMap", t.getMessage(), Level.SEVERE);
+    		  throw new UserException( -1, t.getMessage());
+    	  }
+    	  myConnectionBroker = fixedBroker.get(this.datasource, null, null);
+    	  con = myConnectionBroker.getConnection();
+    	  if (con == null) {
+    		  AuditLog.log("SQLMap",  "Could (still) not connect to database: " + datasource + " (" + this.username + ")" +
+    				  ", check your connection", Level.SEVERE);
+
+    		  throw new UserException( -1,
+    				  "Could not connect to database: " +
+    				  datasource + " (" + this.username + ")" +
+    		  ", check your connection");
+    	  }
       }
       else {
         if (this.debug) {
@@ -911,6 +911,25 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
               ": returned a good connection from the broker manager\n");
         }
       }
+      
+      // Set current schema if username was specified...
+      if ( this.username != null ) { // Only works for Oracle...
+    	  PreparedStatement stmt = null;
+    	  try {
+    		  stmt =  con.prepareStatement("ALTER SESSION SET CURRENT_SCHEMA = " + this.username);
+    		  stmt.executeUpdate();
+    		  if ( debug ) {
+    			  Access.writeToConsole(myAccess, "SET CURRENT_SCHEMA TO: " + this.username);
+    		  }
+    	  } catch (Exception e) {
+    		  System.err.println(e.getMessage());
+    	  } finally {
+    		  if ( stmt != null ) {
+    			  stmt.close();
+    		  }
+    	  }
+      }
+	  
       if (con != null && ( myConnectionBroker == null || myConnectionBroker.supportsAutocommit ) ) {
         boolean ac = (this.overideAutoCommit) ? autoCommit : ( (Boolean) autoCommitMap.get(datasource)).booleanValue();
         if ( !ac ) {
@@ -1451,7 +1470,7 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
                               this.datasource + ", using username " +
                               this.username);
     }
-    return fixedBroker.getMetaData(this.datasource, this.username, this.password);
+    return fixedBroker.getMetaData(this.datasource, null, null);
   }
 
   public DatabaseInfo getDatabaseInfo() throws UserException {
@@ -1554,14 +1573,6 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
       }
     }
 
-    try {
-      fixedBroker.put(this.datasource, this.username, this.password);
-    }
-    catch (ClassNotFoundException e) {
-      throw new UserException( -1, e.toString());
-    }
-    myConnectionBroker = fixedBroker.get(this.datasource, this.username, password);
-    this.con = myConnectionBroker.getConnection();
   }
 
   public String getUsername() {
@@ -1801,7 +1812,7 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
 
   public String getDatasourceUrl(String datasource, String username) {
 	  if ( fixedBroker != null ) {
-		  return fixedBroker.getDatasourceUrl(datasource, username);
+		  return fixedBroker.getDatasourceUrl(datasource, null);
 	  } else {
 		  return null;
 	  }

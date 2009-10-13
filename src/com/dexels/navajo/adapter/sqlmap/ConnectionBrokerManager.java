@@ -28,8 +28,6 @@ import java.sql.*;
 
 public class ConnectionBrokerManager extends Object {
 
-  public final String SRCUSERDELIMITER = ":";
-
   private Map brokerMap = Collections.synchronizedMap(new HashMap());
   private boolean debug = true;
 
@@ -112,16 +110,14 @@ public class ConnectionBrokerManager extends Object {
 		  
 		  // Create a new broker.
 		  broker.createBroker();
-		  final String key = dsrc + this.SRCUSERDELIMITER + usr;
 		  
-		  this.brokerMap.put(key, broker);
 		  // Also put datasource in map with only the datasource specified.
 		  this.brokerMap.put(dsrc, broker);
 		  
 		  if (this.debug) {
 			  System.out.println(this.getClass() +
 					  ": putting new broker with identifier '" +
-					  key + "'");
+					  dsrc + "'");
 		  }
 		  
 	  }
@@ -132,7 +128,7 @@ public class ConnectionBrokerManager extends Object {
   }
 
   public final String getDatasourceUrl(String datasource, String username) {
-	  SQLMapBroker b = (SQLMapBroker) brokerMap.get(datasource + this.SRCUSERDELIMITER + username);
+	  SQLMapBroker b = (SQLMapBroker) brokerMap.get(datasource);
 	  if ( b != null ) {
 		  return b.getUrl();
 	  } else {
@@ -164,11 +160,9 @@ public class ConnectionBrokerManager extends Object {
 		  newbroker.username = username;
 		  newbroker.password = password;
 		  newbroker.createBroker();
-		  final String key = datasource + this.SRCUSERDELIMITER + username;
 		  this.brokerMap.put(datasource, newbroker);
-		  this.brokerMap.put(key, newbroker);
 		  if (this.debug) {
-			  System.out.println(this.getClass() + ": created a new broker '" + key +
+			  System.out.println(this.getClass() + ": created a new broker '" + datasource +
 			  "' using a clone");
 		  }
 	  }
@@ -254,27 +248,10 @@ public class ConnectionBrokerManager extends Object {
     }
   }
 
-  public final void destroy(final String dsrc, final String usr) {
+  public final void destroy(final String dsrc) {
 	  
 	  synchronized ( semaphore ) {
-		  
-		  if (usr != null || usr.length() > 0) {
-			  final SQLMapBroker broker = this.haveExistingBroker(dsrc, usr);
-			  if (broker.broker != null) {
-				  broker.broker.destroy();
-				  broker.broker = null;
-			  }
-			  final String key = dsrc + this.SRCUSERDELIMITER + usr;
-			  this.brokerMap.remove(dsrc);
-			  this.brokerMap.remove(key);
-			  if (this.debug) {
-				  System.out.println(this.getClass() + ": destroyed broker '" + key + "'");
-			  }
-		  }
-		  else {
-			  this.destroySimilarBroker(dsrc);
-		  }
-		  
+		this.destroySimilarBroker(dsrc);
 	  }
   }
 
@@ -293,8 +270,7 @@ public class ConnectionBrokerManager extends Object {
 
 	  //System.err.println("In ConnectionBrokerManager.haveExistingBroker(" + datasource + "," + usr + ")");
 
-	  final String target = datasource + this.SRCUSERDELIMITER + usr;
-	  SQLMapBroker broker = ( (SQLMapBroker)this.brokerMap.get(target));
+	  SQLMapBroker broker = ( (SQLMapBroker)this.brokerMap.get(datasource));
 
 	  if (! ( ( broker != null && broker.refresh == 0 ) || ( broker != null && broker.broker.isDead() ) ) ) {
 		  return broker;
@@ -304,13 +280,12 @@ public class ConnectionBrokerManager extends Object {
 
 		  //System.err.println("Detected dead broker, removing it and creating new one");
 		  brokerMap.remove(datasource);
-		  brokerMap.remove(target);
 		  // Create new broker.
 		  try { 
 			  this.put(broker.datasource, broker.driver, broker.url, broker.username, broker.password,
 					  broker.minconnections, broker.maxconnections, broker.logFile,
 					  broker.refresh, broker.autocommit, true);
-			  broker = ( (SQLMapBroker)this.brokerMap.get(target));
+			  broker = ( (SQLMapBroker)this.brokerMap.get(datasource));
 		  } catch (Exception e) {
 			  e.printStackTrace(System.err);
 			  return null;
@@ -327,75 +302,44 @@ public class ConnectionBrokerManager extends Object {
    * @return
    */
   private final SQLMapBroker seekSimilarBroker(final String datasource, boolean donotremove) {
-	  
-	  //System.err.println("In ConnectionBrokerManager.seekSimilarBroker(" + datasource + "," + donotremove + ")");
-	  
+
+
 	  SQLMapBroker broker = (SQLMapBroker) brokerMap.get( datasource );
 	  if ( !( !donotremove && ( broker.refresh == 0 || ( broker != null && broker.broker.isDead()) ) ) ) {
-		  //System.err.println("Returning similarBroker immediately...");
 		  return broker;
-	  }
+	  } 
 	  
 	  synchronized ( semaphore ) {
-		  
-		  final Set keys = new HashSet(this.brokerMap.keySet());
-		  final Iterator iter = keys.iterator();
-		  int index = 0;
-		  while (iter.hasNext()) {
-			  final String key = (String) iter.next();
-			  broker = (SQLMapBroker)this.brokerMap.get(key);
-			
-			  if (broker.datasource.equals(datasource)) {
-				  
-				 if (debug) {
-					System.err.println(" Found a broker with the same datasource: " + key);
-				 }
-				  //return (broker);
-				  if ( !donotremove && ( broker.refresh == 0 || ( broker != null && broker.broker.isDead()) ) ) {
-					  //System.err.println("Detected dead broker, removing it and creating new one");
-					  brokerMap.remove(key);
-					  brokerMap.remove(datasource);
-					  // Create new broker.
-					  try { 
-						  this.put(broker.datasource, broker.driver, broker.url, broker.username, broker.password,
-								  broker.minconnections, broker.maxconnections, broker.logFile,
-								  broker.refresh, broker.autocommit, true);
-						  broker = ( (SQLMapBroker)this.brokerMap.get(key));
-					  } catch (Exception e) {
-						  e.printStackTrace(System.err);
-						  return null;
-					  }
-				  } 
-				  
-				  return broker;    	
+		  if ( broker != null ) {
+			  brokerMap.remove(datasource);
+			  // Create new broker.
+			  try { 
+				  this.put(broker.datasource, broker.driver, broker.url, broker.username, broker.password,
+						   broker.minconnections, broker.maxconnections, broker.logFile,
+						   broker.refresh, broker.autocommit, true);
+				  broker = ( (SQLMapBroker)this.brokerMap.get(datasource));
+			  } catch (Exception e) {
+				  e.printStackTrace(System.err);
+				  return null;
 			  }
-			  index++;
-		  }
-		  return (null);
+		  } 
+		  return broker;    	
 	  }
   }
 
   private final void destroySimilarBroker(final String datasource) {
-    final Set keys = new HashSet(this.brokerMap.keySet());
-    final Iterator iter = keys.iterator();
-    while (iter.hasNext()) {
-      final String key = (String) iter.next();
-      final SQLMapBroker broker = (SQLMapBroker)this.brokerMap.get(key);
-      if (broker.datasource.equals(datasource)) {
+   
+      final SQLMapBroker broker = (SQLMapBroker)this.brokerMap.get(datasource);
+      if (broker != null ) {
         if (broker.broker != null) {
           broker.broker.destroy();
           broker.broker = null;
         }
-        final String bkey = datasource + this.SRCUSERDELIMITER + broker.username;
         this.brokerMap.remove(datasource);
-        this.brokerMap.remove(bkey);
         if (this.debug) {
-          System.out.println(this.getClass() + ": destroyed broker '" + bkey +
-                             "'");
+          System.out.println(this.getClass() + ": destroyed broker '" + datasource + "'");
         }
-        return;
       }
-    }
   }
 
   public static int getInstances() {
