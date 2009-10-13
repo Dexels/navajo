@@ -914,7 +914,7 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
 
       long startAuth = System.currentTimeMillis();
 
-      if ( ( useAuthorisation && !skipAuth) && !(isSpecialwebservice(rpcName) && rpcUser.equals("NAVAJO") ) ) {
+      if ( useAuthorisation && !skipAuth ) {
         try {
         	
           if ( navajoConfig == null ) {
