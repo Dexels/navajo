@@ -57,8 +57,8 @@ public class MessageMap implements Mappable {
 	private String joinType = INNER_JOIN;
 	
 	private Access myAccess;
-	private Message msg1;
-	private Message msg2;
+	private Message msg1 = null;
+	private Message msg2 = null;
 	
 	public void kill() {
 	}
@@ -218,11 +218,15 @@ public class MessageMap implements Mappable {
 			if ( myAccess.getCurrentOutMessage() == null ) {
 				try {
 				myAccess.getOutputDoc().removeMessage(msg1);
-				myAccess.getOutputDoc().removeMessage(msg2);
+				if ( msg2 != null ) {
+					myAccess.getOutputDoc().removeMessage(msg2);
+				}
 				} catch (NavajoException ne) {}
 			} else {
 				myAccess.getCurrentOutMessage().removeMessage(msg1);
-				myAccess.getCurrentOutMessage().removeMessage(msg2);
+				if ( msg2 != null ) {
+					myAccess.getCurrentOutMessage().removeMessage(msg2);
+				}
 			}
 		}
 	}
