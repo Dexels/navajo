@@ -197,7 +197,6 @@ public class MessageMap implements Mappable {
 					Message c1c = c1.copy();
 					ResultMessage rm = new ResultMessage();
 					rm.setMessage(c1c);
-					System.err.println("ADDING MESSAGE: " + c1c.getName());
 					resultingMessage.add(rm);
 				}
 			}
