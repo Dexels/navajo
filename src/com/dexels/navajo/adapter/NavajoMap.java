@@ -142,28 +142,45 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
     try {
         Navajo currentDoc = access.getOutputDoc();
         Message currentMsg = access.getCurrentOutMessage();
-        ArrayList list = null;
+        List<Message> list = null;
         // If append message equals '/'.
         if ( messageOffset.equals(Navajo.MESSAGE_SEPARATOR) ) {
         	list = inDoc.getAllMessages();
         } else if ( inDoc.getMessage(messageOffset) == null ) {
         	return;
         } else if ( !inDoc.getMessage(messageOffset).getType().equals(Message.MSG_TYPE_ARRAY) ) {
-        	list = new ArrayList();
+        	list = new ArrayList<Message>();
         	list.add( inDoc.getMessage(messageOffset) );
         } else { // For array messages...
-        	list = inDoc.getMessages(messageOffset);
+        	list = new ArrayList<Message>();
+        	list.add(inDoc.getMessage(messageOffset));
+        	//list = inDoc.getMessages(messageOffset);
         }
         	
         /**
          * appendTo logic. If appendTo ends with '/' append the entire append message to the defined appendTo message.
-         * If appendTo does not end with '/', merge the append mssage with the defined appendTo message.
+         * If appendTo does not end with '/', merge the append message with the defined appendTo message.
          */
         boolean appendToComplete = ( appendTo != null && !appendTo.equals(Navajo.MESSAGE_SEPARATOR) && appendTo.endsWith(Navajo.MESSAGE_SEPARATOR) );
         if ( appendToComplete ) {
         	// Strip last "/".
         	appendTo = appendTo.substring(0, appendTo.length() - 1);
         }
+        
+        // Check whether incoming array message needs to be expanded: if not appendToComplete and if appendTo is defined and
+        // appendTo is array message.
+        if ( !appendToComplete && appendTo != null && 
+             list != null && 
+             list.get(0) != null && 
+             list.get(0).getType().equals(Message.MSG_TYPE_ARRAY) &&
+             currentMsg != null &&   
+             currentMsg.getMessage(appendTo) != null && 
+             currentMsg.getMessage(appendTo).getType().equals(Message.MSG_TYPE_ARRAY )
+           ) {
+        	// Expand list if it contains an array message.
+        	list = list.get(0).getAllMessages();
+        }
+        
         for (int i = 0; i < list.size(); i++) {
           Message inMsg = (Message) list.get(i);
           // Clone message and append it to currentMsg if it exists, else directly under currentDoc.
@@ -1005,7 +1022,7 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
 	  Iterator<Property> allProps = new ArrayList<Property>(m.getAllProperties()).iterator();
 	  while ( allProps.hasNext() ) {
 		  Property p = (Property) allProps.next();
-		  if ( !isPropertyInList(p, this.showProperties) ) {
+		  if ( !isPropertyInList(p, this.showProperties, m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT)) ) {
 			  m.removeProperty(p);
 		  }
 	  }
@@ -1034,10 +1051,10 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
 	  Iterator<Property> allProps = m.getAllProperties().iterator();
 	  while ( allProps.hasNext() ) {
 		  Property p = (Property) allProps.next();
-		  if ( isPropertyInList(p, this.outputProperties) ) {
+		  if ( isPropertyInList(p, this.outputProperties, m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT)) ) {
 			  p.setDirection(Property.DIR_OUT);
 		  } else
-			  if ( isPropertyInList(p, this.inputProperties) ) {
+			  if ( isPropertyInList(p, this.inputProperties, m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT)) ) {
 				  p.setDirection(Property.DIR_IN);
 			  }
 	  }
@@ -1051,24 +1068,26 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
 	  Iterator<Property> allProps = new ArrayList<Property>(m.getAllProperties()).iterator();
 	  while ( allProps.hasNext() ) {
 		  Property p = (Property) allProps.next();
-		  if ( isPropertyInList(p, this.suppressProperties) ) {
+		  if ( isPropertyInList(p, this.suppressProperties, m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT)) ) {
 			  m.removeProperty(p);
 		  }
 	  }
 	  Iterator<Message> subMessages = m.getAllMessages().iterator();
 	  while ( subMessages.hasNext() ) {
-			 processSuppressedProperties(subMessages.next());
-		 }
+		  processSuppressedProperties(subMessages.next());
+	  }
   }
   
-  private final boolean isPropertyInList(Property prop, String propertyStringList) {
+  private final boolean isPropertyInList(Property prop, String propertyStringList, boolean isArrayMessageElement) {
 	  if ( propertyStringList == null ) {
 		  return false;
 	  }
 	  String [] propertyList = propertyStringList.split(";");
 	  for (int i = 0; i < propertyList.length; i++) {
 		  try {
-			  if ( propertyList[i].equals(prop.getFullPropertyName()) ) {
+			  if ( !isArrayMessageElement && propertyList[i].equals(prop.getFullPropertyName()) ) {
+				  return true;
+			  } else if ( isArrayMessageElement && propertyList[i].equals(prop.getName())) {
 				  return true;
 			  }
 		  } catch (NavajoException e) {
