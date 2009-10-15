@@ -1,6 +1,8 @@
 package com.dexels.navajo.util;
 
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -17,52 +19,9 @@ import com.dexels.navajo.mapping.compiler.meta.ValueDefinition;
 
 public class GenerateXSD {
 
-	private String [] inherited = new String[]{"message", "property", "include", "param", "methods", "map", "break", "debug", "field"};
+	private String [] inherited = new String[]{"property", "include", "param", "methods", "map", "break", "debug", "field"};
 	
-	private XMLElement createAdapterXSD(String adapterName) throws Exception {
-		
-		CaseSensitiveXMLElement basic = new CaseSensitiveXMLElement("xs:element");
-		basic.setAttribute("name", "map." + adapterName);
-		CaseSensitiveXMLElement type = new CaseSensitiveXMLElement("xs:complexType");
-		basic.addChild(type);
-		
-		CaseSensitiveXMLElement choice = new CaseSensitiveXMLElement("xs:choice");
-		choice.setAttribute("minOccurs", "0");
-		choice.setAttribute("maxOccurs", "unbounded");
-		type.addChild(choice);
-		// Add inherited elements
-		for (int i = 0; i < inherited.length; i++) {
-			CaseSensitiveXMLElement x = new CaseSensitiveXMLElement("xs:element");
-			x.setAttribute("ref", inherited[i]);
-			choice.addChild(x);
-		}
-		// Add adapters:insertedadapters
-		CaseSensitiveXMLElement insertedadapters = new CaseSensitiveXMLElement("adapters:insertedadapters");
-		choice.addChild(insertedadapters);
-		
-		// Generate setters.
-		Iterator setters = MapMetaData.getInstance().getMapDefinition(adapterName).getValueDefinitions().iterator();
-		while ( setters.hasNext() ) {
-			CaseSensitiveXMLElement x = new CaseSensitiveXMLElement("xs:element");
-			ValueDefinition vd = (ValueDefinition) MapMetaData.getInstance().getMapDefinition(adapterName).getValueDefinition((String) setters.next());
-			x.setAttribute("type", "SetterType");
-			x.setAttribute("name", adapterName + "." + vd.getName());
-			choice.addChild(x);
-			
-			CaseSensitiveXMLElement xa = new CaseSensitiveXMLElement("xs:attribute");
-			xa.setAttribute("name", vd.getName());
-			xa.setAttribute("type", "xs:string");
-			if ( vd.getRequired().equals("true") ) {
-				xa.setAttribute("use", "required");
-			}
-			type.addChild(xa);
-		}
-		
-		CaseSensitiveXMLElement conditionAttr = new CaseSensitiveXMLElement("xs:attribute");
-		conditionAttr.setAttribute("name", "condition");
-		conditionAttr.setAttribute("type", "xs:string");
-		type.addChild(conditionAttr);
-		
+	private void generateMethods(XMLElement choice, String adapterName) throws Exception {
 		// Generate methods.
 		Iterator methods = MapMetaData.getInstance().getMapDefinition(adapterName).getMethodDefinitions().iterator();
 		while ( methods.hasNext() ) {
@@ -93,7 +52,125 @@ public class GenerateXSD {
 				x.removeChild(typex);
 			}
 		}
+	}
+	
+	private void generateSetters(XMLElement type, XMLElement choice, String adapterName, boolean addAsAttribute) throws Exception {
+		// Generate setters.
+		Iterator setters = MapMetaData.getInstance().getMapDefinition(adapterName).getValueDefinitions().iterator();
+		while ( setters.hasNext() ) {
+			CaseSensitiveXMLElement x = new CaseSensitiveXMLElement("xs:element");
+			ValueDefinition vd = (ValueDefinition) MapMetaData.getInstance().getMapDefinition(adapterName).getValueDefinition((String) setters.next());
+			x.setAttribute("type", "SetterType");
+			x.setAttribute("name", adapterName + "." + vd.getName());
+			choice.addChild(x);
+			
+			if ( addAsAttribute ) {
+				CaseSensitiveXMLElement xa = new CaseSensitiveXMLElement("xs:attribute");
+				xa.setAttribute("name", vd.getName());
+				xa.setAttribute("type", "xs:string");
+				if ( vd.getRequired().equals("true") ) {
+					xa.setAttribute("use", "required");
+				}
+				type.addChild(xa);
+			}
+			
+		}
+	}
+	
+	private CaseSensitiveXMLElement createSpecialMessageType(String specialMessageTypeName, String adapterName) throws Exception {
+		CaseSensitiveXMLElement messageType = new CaseSensitiveXMLElement();
+		messageType.setName("xs:complexType");
+		messageType.setAttribute("name", specialMessageTypeName);
+		CaseSensitiveXMLElement choice2 = new CaseSensitiveXMLElement("xs:choice");
+		choice2.setAttribute("minOccurs", "0");
+		choice2.setAttribute("maxOccurs", "unbounded");
+		messageType.addChild(choice2);
+		// Add inherited elements
+		for (int i = 0; i < inherited.length; i++) {
+			CaseSensitiveXMLElement x = new CaseSensitiveXMLElement("xs:element");
+			x.setAttribute("ref", inherited[i]);
+			choice2.addChild(x);
+		}
+		CaseSensitiveXMLElement m = new CaseSensitiveXMLElement("xs:element");
+		m.setAttribute("name", "message");
+		m.setAttribute("type", specialMessageTypeName);
+		choice2.addChild(m);
+		CaseSensitiveXMLElement attr = new CaseSensitiveXMLElement();
+		attr.setName("xs:attribute");
+		attr.setAttribute("use", "required");
+		attr.setAttribute("name", "name");
+		attr.setAttribute("type", "xs:string");
+		messageType.addChild(attr);
+		attr = new CaseSensitiveXMLElement();
+		attr.setName("xs:attribute");
+		attr.setAttribute("name", "type");
+		attr.setAttribute("type", "xs:string");
+		messageType.addChild(attr);
+		attr = new CaseSensitiveXMLElement();
+		attr.setName("xs:attribute");
+		attr.setAttribute("name", "condition");
+		attr.setAttribute("type", "xs:string");
+		messageType.addChild(attr);
+		attr = new CaseSensitiveXMLElement();
+		attr.setName("xs:attribute");
+		attr.setAttribute("name", "mode");
+		attr.setAttribute("type", "xs:string");
+		messageType.addChild(attr);
+		attr = new CaseSensitiveXMLElement();
+		attr.setName("xs:attribute");
+		attr.setAttribute("name", "index");
+		attr.setAttribute("type", "xs:string");
+		messageType.addChild(attr);
+		CaseSensitiveXMLElement insertedadapters = new CaseSensitiveXMLElement("adapters:insertedadapters");
+		choice2.addChild(insertedadapters);
 		
+		generateSetters(messageType, choice2, adapterName, false);
+		generateMethods(choice2, adapterName);
+		
+		return messageType;
+	}
+	
+	private XMLElement createAdapterXSD(String adapterName, CaseSensitiveXMLElement parent) throws Exception {
+		
+		String specialMessageTypeName = adapterName + "MessageType";
+		
+		CaseSensitiveXMLElement basic = new CaseSensitiveXMLElement("xs:element");
+		basic.setAttribute("name", "map." + adapterName);
+		CaseSensitiveXMLElement type = new CaseSensitiveXMLElement("xs:complexType");
+		basic.addChild(type);
+		
+		CaseSensitiveXMLElement choice = new CaseSensitiveXMLElement("xs:choice");
+		choice.setAttribute("minOccurs", "0");
+		choice.setAttribute("maxOccurs", "unbounded");
+		type.addChild(choice);
+		// Add inherited elements
+		for (int i = 0; i < inherited.length; i++) {
+			CaseSensitiveXMLElement x = new CaseSensitiveXMLElement("xs:element");
+			x.setAttribute("ref", inherited[i]);
+			choice.addChild(x);
+		}
+		// Add Special message type reference.
+		CaseSensitiveXMLElement m = new CaseSensitiveXMLElement("xs:element");
+		m.setAttribute("name", "message");
+		m.setAttribute("type", specialMessageTypeName);
+		choice.addChild(m);
+		
+		CaseSensitiveXMLElement specialMessage = createSpecialMessageType(specialMessageTypeName, adapterName);
+		parent.addChild(specialMessage);
+		
+		// Add adapters:insertedadapters
+		CaseSensitiveXMLElement insertedadapters = new CaseSensitiveXMLElement("adapters:insertedadapters");
+		choice.addChild(insertedadapters);
+		
+		generateSetters(type, choice, adapterName, true);
+				
+		CaseSensitiveXMLElement conditionAttr = new CaseSensitiveXMLElement("xs:attribute");
+		conditionAttr.setAttribute("name", "condition");
+		conditionAttr.setAttribute("type", "xs:string");
+		type.addChild(conditionAttr);
+		
+		generateMethods(choice, adapterName);
+				
 		return basic;
 		
 	}
@@ -127,7 +204,7 @@ public class GenerateXSD {
 			
 			String mappie = (String) all.next();
 			if ( !mappie.equals("__empty__")) {
-				XMLElement x = createAdapterXSD(mappie);
+				XMLElement x = createAdapterXSD(mappie, xml);
 				xml.addChild(x);
 			}
 			
@@ -185,7 +262,10 @@ public class GenerateXSD {
 		
 		GenerateXSD xsd = new GenerateXSD();
 		String result = xsd.generateXSD();
-		System.out.println(result);
+		
+		BufferedWriter fw = new BufferedWriter(  new FileWriter("/home/arjen/@.xsd") );
+		fw.write(result);
+		fw.close();
 		
 		//xsd.createAdapterXSD("sqlquery", new CaseSensitiveXMLElement());
 
