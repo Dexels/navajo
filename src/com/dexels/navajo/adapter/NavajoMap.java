@@ -169,13 +169,20 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
         
         // Check whether incoming array message needs to be expanded: if not appendToComplete and if appendTo is defined and
         // appendTo is array message.
+        
+        boolean appendToIsArray = false;
+        if ( appendTo != null && currentMsg != null &&   currentMsg.getMessage(appendTo) != null && currentMsg.getMessage(appendTo).getType().equals(Message.MSG_TYPE_ARRAY )) {
+        	appendToIsArray = true;
+        }
+        
+        if ( appendTo != null && currentDoc.getMessage(appendTo) != null && currentDoc.getMessage(appendTo).getType().equals(Message.MSG_TYPE_ARRAY) ) {
+        	appendToIsArray = true;
+        }
         if ( !appendToComplete && appendTo != null && 
              list != null && 
              list.get(0) != null && 
              list.get(0).getType().equals(Message.MSG_TYPE_ARRAY) &&
-             currentMsg != null &&   
-             currentMsg.getMessage(appendTo) != null && 
-             currentMsg.getMessage(appendTo).getType().equals(Message.MSG_TYPE_ARRAY )
+             appendToIsArray
            ) {
         	// Expand list if it contains an array message.
         	list = list.get(0).getAllMessages();
@@ -212,23 +219,24 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
         		  }
         	  }
           } else {
-        	  if ( appendTo != null && !appendTo.equals(Navajo.MESSAGE_SEPARATOR) ) {
-        		  if ( currentDoc.getMessage(appendTo) != null ) {
+        	  if ( appendTo != null ) {
+        		  if ( appendTo.equals(Navajo.MESSAGE_SEPARATOR)) {
+        			  currentDoc.addMessage(clone, true);
+        		  } else if ( currentDoc.getMessage(appendTo) != null ) {
         			  if ( currentDoc.getMessage(appendTo).getType().equals(Message.MSG_TYPE_ARRAY )  ) { // For array messages do not overwrite.
         				  currentDoc.getMessage(appendTo).addMessage(clone);
         			  } else {
-        				  currentDoc.getMessage(appendTo).merge(clone);
+        				  if ( appendToComplete ) {
+        					  currentDoc.getMessage(appendTo).addMessage(clone);
+        				  } else {
+        					  currentDoc.getMessage(appendTo).merge(clone);
+        				  }
         			  }
         		  } else {
         			  throw new UserException(-1, "Unknown appendTo message: " + appendTo);
         		  }
         	  } else {
-        		  // Check if message already exists, if so, merge it with existing message.
-        		  if ( currentDoc.getMessage(clone.getName()) != null ) {
-        			  currentDoc.getMessage(clone.getName()).merge(clone);
-        		  } else {
-        			  currentDoc.addMessage(clone, true);
-        		  }
+        		  currentDoc.addMessage(clone, true);
         	  }
           }
         }
