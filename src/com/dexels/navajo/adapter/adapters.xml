@@ -1,4 +1,16 @@
 <adapterdef>
+    <!-- Array Message manipulation map -->
+    <map>
+        <tagname>arraymessage</tagname>
+        <object>com.dexels.navajo.mapping.MultipleEmptyMap</object>
+        <values>
+            <value name="loop" map="arrayelement []" required="false" direction="in"/>
+        </values>
+    </map>
+    <map>
+        <tagname>arrayelement</tagname>
+        <object>com.dexels.navajo.mapping.EmptyMap</object>
+    </map>
     <!-- Array Message Join adapter -->
     <map>
         <tagname>joinmessage</tagname>
