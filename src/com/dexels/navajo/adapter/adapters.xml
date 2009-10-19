@@ -2,7 +2,7 @@
     <!-- Array Message manipulation map -->
     <map>
         <tagname>arraymessage</tagname>
-        <object>com.dexels.navajo.mapping.MultipleEmptyMap</object>
+        <object>com.dexels.navajo.adapter.MultipleEmptyMap</object>
         <values>
             <value name="loop" map="arrayelement []" required="false" direction="in"/>
         </values>
