@@ -90,17 +90,40 @@ public class MessageMap implements Mappable {
 		this.joinType = t;
 	}
 	
-	public void setRemoveSource(boolean b) {
+	public void setRemoveSource(boolean b) throws UserException {
 		this.removeSource = b;
+		Message m1 = null;
+		Message m2 = null;
+		if ( this.joinMessage1 != null ) {
+			m1 = checkMessage(joinMessage1);
+		}
+		if ( this.joinMessage2 != null )  {
+			m2 = checkMessage(joinMessage2);
+		}
+		if ( removeSource ) {
+			if ( myAccess.getCurrentOutMessage() == null ) {
+				try {
+				myAccess.getOutputDoc().removeMessage(m1);
+				if ( m2 != null ) {
+					myAccess.getOutputDoc().removeMessage(m2);
+				}
+				} catch (NavajoException ne) {}
+			} else {
+				myAccess.getCurrentOutMessage().removeMessage(m1);
+				if ( m2 != null ) {
+					myAccess.getCurrentOutMessage().removeMessage(m2);
+				}
+			}
+		}
 	}
 	
-	public void setJoinMessage1(String m) throws UserException {
-		this.msg1 = checkMessage(m);
+	public void setJoinMessage1(String m) throws UserException, NavajoException {
+		this.msg1 = checkMessage(m).copy();
 		this.joinMessage1 = m;
 	}
 	
-	public void setJoinMessage2(String m) throws UserException {
-		this.msg2 = checkMessage(m);
+	public void setJoinMessage2(String m) throws UserException, NavajoException {
+		this.msg2 = checkMessage(m).copy();
 		this.joinMessage2 = m;
 	}
 
@@ -214,21 +237,7 @@ public class MessageMap implements Mappable {
 	}
 
 	public void store() throws MappableException, UserException {
-		if ( removeSource ) {
-			if ( myAccess.getCurrentOutMessage() == null ) {
-				try {
-				myAccess.getOutputDoc().removeMessage(msg1);
-				if ( msg2 != null ) {
-					myAccess.getOutputDoc().removeMessage(msg2);
-				}
-				} catch (NavajoException ne) {}
-			} else {
-				myAccess.getCurrentOutMessage().removeMessage(msg1);
-				if ( msg2 != null ) {
-					myAccess.getCurrentOutMessage().removeMessage(msg2);
-				}
-			}
-		}
+		
 	}
 
 	public static void main(String [] args) throws Exception {
