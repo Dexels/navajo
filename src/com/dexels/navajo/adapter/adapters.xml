@@ -9,7 +9,7 @@
     </map>
     <map>
         <tagname>arrayelement</tagname>
-        <object>com.dexels.navajo.mapping.EmptyMap</object>
+        <object>com.dexels.navajo.adapter.EmptyMap</object>
     </map>
     <!-- Array Message Join adapter -->
     <map>
