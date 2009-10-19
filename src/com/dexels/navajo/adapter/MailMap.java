@@ -58,15 +58,12 @@ public class MailMap implements MailMapInterface, Mappable, HasDependentResource
     public boolean ignoreFailures = false;
 
     public boolean relatedMultipart = false;
-
     private ArrayList attachments = null;
-
     private String[] recipientArray = null;
     private String[] ccArray = null;
     private String[] bccArray = null;
     private Navajo doc = null;
     private String failure = "";
-
     private static Object semaphore = new Object();
     
     public int retries = 0;
@@ -202,8 +199,8 @@ public class MailMap implements MailMapInterface, Mappable, HasDependentResource
     						String userFileName = am.getAttachFileName();
     						Binary content = am.getAttachFileContent();
     						String encoding = am.getEncoding();
-    						BodyPart bp = new MimeBodyPart();
-
+    						MimeBodyPart bp = new MimeBodyPart();
+    						
     						if (file != null) {
     							if ( userFileName  == null ) {
     								userFileName = file;
@@ -220,19 +217,20 @@ public class MailMap implements MailMapInterface, Mappable, HasDependentResource
     								bp.setHeader("Content-Transfer-Encoding", encoding);
     								encoding = null;
     							}
-
     						}
 
     						bp.setFileName(userFileName);
     						if (relatedMultipart) {
     							bp.setHeader("Content-ID", "<attach-nr-"+i+">");
     						}
-    						multipart.addBodyPart(bp);
+    						
+    						// iPhone headers
+    						bp.setDisposition("attachment");    					
+    						
+    						multipart.addBodyPart(bp);    						
     					}
     				}
-
     				msg.setContent(multipart);
-
     			}
     			Transport.send(msg);
 
@@ -246,8 +244,7 @@ public class MailMap implements MailMapInterface, Mappable, HasDependentResource
     				//e.printStackTrace();
     				throw new UserException( -1, e.getMessage());
     			}
-    		}
-    	
+    		}    	
     }
 
     public String getFailure(){
