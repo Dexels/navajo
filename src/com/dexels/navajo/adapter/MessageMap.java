@@ -75,7 +75,8 @@ public class MessageMap implements Mappable {
 	}
 	
 	private Message checkMessage(String m) throws UserException {
-		Message msg = myAccess.getOutputDoc().getMessage(m);
+		Message msg = ( myAccess.getCurrentOutMessage() == null ? 
+				myAccess.getOutputDoc().getMessage(m) : myAccess.getCurrentOutMessage().getMessage(m) );
 		if ( msg == null ) {
 			throw new UserException(-1, "Exception joining message " + m + ": does not exist.");
 		}

@@ -27,6 +27,10 @@ public class ResultMessage implements Mappable {
 		parentMsg.merge(copy);
 	}
 
+	public Object getProperty(String s) throws UserException {
+		return getPropertyValue(s);
+	}
+	
 	public Object getPropertyValue(String s) throws UserException {
 		if ( msg.getProperty(s) != null ) {
 			return msg.getProperty(s).getTypedValue();
