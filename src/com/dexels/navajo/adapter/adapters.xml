@@ -22,6 +22,7 @@
                 <param name="joinCondition" field="joinCondition" type="string" required="false"/>
                 <param name="type" field="joinType" type="string" required="false"/>
                 <param name="ignoreSource" field="removeSource" type="boolean" required="false"/>
+                <param name="suppressProperties" field="suppressProperties" type="string" required="false"/>
             </method>
         </methods>
     </map>

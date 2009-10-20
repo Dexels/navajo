@@ -1,6 +1,7 @@
 package com.dexels.navajo.adapter;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import com.dexels.navajo.adapter.messagemap.ResultMessage;
 import com.dexels.navajo.document.Message;
@@ -55,6 +56,7 @@ public class MessageMap implements Mappable {
 	private ArrayList<JoinCondition> joinConditions = new ArrayList<JoinCondition>();
 	private boolean removeSource = false;
 	private String joinType = INNER_JOIN;
+	private String suppressProperties = null;
 	
 	private Access myAccess;
 	private Message msg1 = null;
@@ -141,7 +143,7 @@ public class MessageMap implements Mappable {
 			joinConditions.add(jc);
 		}
 	}
-		
+	
 	public ResultMessage [] getResultMessage() throws UserException, NavajoException {
 		
 		
@@ -198,7 +200,7 @@ public class MessageMap implements Mappable {
 						newMsg.merge(c2);
 						newMsg.merge(c1);
 						ResultMessage rm = new ResultMessage();
-						rm.setMessage(newMsg);
+						rm.setMessage(newMsg, this.suppressProperties);
 						resultingMessage.add(rm);
 						foundJoinMessage = true;
 					}
@@ -214,13 +216,13 @@ public class MessageMap implements Mappable {
 					newMsg.merge(c2c);
 					newMsg.merge(c1);
 					ResultMessage rm = new ResultMessage();
-					rm.setMessage(newMsg);
+					rm.setMessage(newMsg, this.suppressProperties);
 					resultingMessage.add(rm);
 				} else {
 					// Assume empty second array message
 					Message c1c = c1.copy();
 					ResultMessage rm = new ResultMessage();
-					rm.setMessage(c1c);
+					rm.setMessage(c1c, this.suppressProperties);
 					resultingMessage.add(rm);
 				}
 			}
@@ -237,7 +239,6 @@ public class MessageMap implements Mappable {
 	}
 
 	public void store() throws MappableException, UserException {
-		
 	}
 
 	public static void main(String [] args) throws Exception {
@@ -320,4 +321,9 @@ public class MessageMap implements Mappable {
 		
 		out.write(System.err);
 	}
+	
+	public void setSuppressProperties(String suppressProperties) {
+		this.suppressProperties = suppressProperties;
+	}
+
 }
