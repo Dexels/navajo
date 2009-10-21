@@ -11,6 +11,8 @@
 	<property name="repository" value="http://spiritus.dexels.nl:41766/Tipi/" />
 	<property name="repositorySsh" value="navajo@spiritus.dexels.nl://var/www/html/Tipi/" />
 	<property name="documentationSsh" value="navajo@spiritus.dexels.nl:/var/www/html/Tipi/wiki/data/pages/tipidoc" />
+	<property file="../TipiBuild/sign.properties" />
+
 	
 	<target name="prepare">
 		<echo message="Java version: ${java.version}"/>
@@ -86,7 +88,20 @@
 	</p200ant>
 	</target>
 	<target name="sign" depends="repackJars">
-		<signjar keystore="../TipiBuild/dexels_dummy_key" verbose="false" storepass="dexels" keypass="dexels" alias="java">
+		<!--
+		alias=sportlink
+		storepass=sp0rtl1nk
+		keystore=../TipiBuild/sportlink.ks
+		keypass=
+		-->
+		<!--
+		alias=dexels
+		storepass=dexels
+		keystore=../TipiBuild/dexels_dummy_key
+		keypass=dexels
+		-->
+		<echo message="Key stats: ${keystore} - ${storepass} - ${keypass} - ${alias}"/> 
+		<signjar keystore="${keystore}" verbose="false" storepass="${storepass}" keypass="${keypass}" alias="${alias}">
 			<fileset dir=".">
 				<include name="${dist}/lib/*.jar" />
 			</fileset>
