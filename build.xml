@@ -32,7 +32,7 @@
 
 	<target name="prepare" depends="init">
 		<copy todir="${work}">
-			<fileset dir="sample/Server"></fileset>
+			<fileset dir="sample/Server" defaultexcludes="true"></fileset>
 		</copy>
 	</target>
 
