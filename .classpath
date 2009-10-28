@@ -2,11 +2,10 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="testsrc"/>
-	
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="src" path="/Navajo"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/NavajoClient"/>
-	<classpathentry exported="true" kind="lib" path="compilelib/servlet-2_2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/mail.jar"/>
+	<classpathentry kind="lib" path="compilelib/servlet-api.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
