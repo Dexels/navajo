@@ -236,7 +236,12 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
         			  throw new UserException(-1, "Unknown appendTo message: " + appendTo);
         		  }
         	  } else {
-        		  currentDoc.addMessage(clone, true);
+        		  // Check if message already exists, if so, merge it with existing message.
+        		  if ( currentDoc.getMessage(clone.getName()) != null ) {
+        			  currentDoc.getMessage(clone.getName()).merge(clone);
+        		  } else {
+        			  currentDoc.addMessage(clone, true);
+        		  }
         	  }
           }
         }
