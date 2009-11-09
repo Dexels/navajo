@@ -104,7 +104,7 @@ public class DispatcherFactory {
 
 		}
 		
-		if(!rootPath.endsWith("/")) {
+		if(rootPath != null && !rootPath.endsWith("/")) {
 			rootPath = rootPath+ "/";
 		}
 
