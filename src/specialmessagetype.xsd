@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:complexType name="[NAME]">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element name="message" type="[NAME]"/>            
+            <xs:element ref="property"/>
+            <xs:element ref="include"/>
+            <xs:element ref="param"/>
+            <xs:element ref="methods"/>
+            <xs:element ref="map"/>
+            <xs:element ref="break"/>
+            <xs:element ref="debug"/>
+            <adapters:insertedadapters/>
+        </xs:choice>
+        <xs:attribute use="required" name="name" type="xs:string"/>
+        <xs:attribute name="type" type="xs:string"/>
+        <xs:attribute name="condition" type="xs:string"/>
+        <xs:attribute name="mode" type="xs:string"/>
+        <xs:attribute name="index" type="xs:integer"/>
+    </xs:complexType>
+</xs:schema>
