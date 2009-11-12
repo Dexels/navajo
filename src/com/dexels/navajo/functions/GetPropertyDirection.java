@@ -22,22 +22,22 @@ import com.dexels.navajo.document.Property;
  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, ORGetPropertyDirection
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
  */
 
-public class GetPropertyType extends GetPropertyAttribute {
-	
-	public GetPropertyType() {
+public class GetPropertyDirection extends GetPropertyAttribute {
+
+	public GetPropertyDirection() {
 	}
-	
+
 	public String remarks() {
 		return "Gets the type of property as a string";
 	}
-	
+
 	public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 		if (getOperands().size() != 1) {
 			throw new TMLExpressionException(this, "Invalid function call");
@@ -48,11 +48,11 @@ public class GetPropertyType extends GetPropertyAttribute {
 		}
 		String propertyName = (String) o;
 
-		return getAttribute(propertyName, "type");
+		return getAttribute(propertyName, "direction");
 	}
-	
+
 	public String usage() {
-		return "GetPropertyType(property name)";
+		return "GetPropertyDirection(property name)";
 	}
 
 }

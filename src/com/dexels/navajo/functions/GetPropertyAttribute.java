@@ -1,6 +1,7 @@
 package com.dexels.navajo.functions;
 
 import com.dexels.navajo.parser.*;
+import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 
 
@@ -29,30 +30,57 @@ import com.dexels.navajo.document.Property;
  * ====================================================================
  */
 
-public class GetPropertyType extends GetPropertyAttribute {
-	
-	public GetPropertyType() {
+public class GetPropertyAttribute extends FunctionInterface {
+
+
+	public GetPropertyAttribute() {
 	}
-	
+
 	public String remarks() {
 		return "Gets the type of property as a string";
 	}
-	
+
+	public Object getAttribute(String propertyName, String attribute) throws com.dexels.navajo.parser.TMLExpressionException {
+
+
+		Property p = (currentMessage != null ? currentMessage.getProperty(propertyName) : this.getNavajo().getProperty(propertyName));
+		if (p == null) {
+			throw new TMLExpressionException(this, "Property " + propertyName + " not found");
+		}
+		if ( attribute.equals("direction") ) {
+			return p.getDirection();
+		} 
+		if ( attribute.equals("type") ) {
+			return p.getType();
+		} 
+		try {
+			throw new TMLExpressionException(this, "attribute " + attribute + " not found for property " + p.getFullPropertyName());
+		} catch (NavajoException e) {
+			throw new TMLExpressionException(this, "attribute " + attribute + " not found for unknown property ");
+		}
+	}
+
 	public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
-		if (getOperands().size() != 1) {
+		if (getOperands().size() != 2) {
 			throw new TMLExpressionException(this, "Invalid function call");
 		}
 		Object o = getOperand(0);
 		if (!(o instanceof String)) {
 			throw new TMLExpressionException(this, "String argument expected");
 		}
-		String propertyName = (String) o;
+		Object o2 = getOperand(1);
+		if (!(o2 instanceof String)) {
+			throw new TMLExpressionException(this, "String argument expected");
+		}
 
-		return getAttribute(propertyName, "type");
+		String propertyName = (String) o;
+		String attribute = (String) o2;
+
+		return getAttribute(propertyName, attribute);
 	}
-	
+
 	public String usage() {
-		return "GetPropertyType(property name)";
+		return "GetPropertyAttribute(property name, attribute name)";
 	}
 
 }
