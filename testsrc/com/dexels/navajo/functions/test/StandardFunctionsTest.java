@@ -54,11 +54,16 @@ public class StandardFunctionsTest extends TestCase {
 		Property p = NavajoFactory.getInstance().createProperty(doc, "Noot", Property.INTEGER_PROPERTY, "10", 10, "", "in");
 		array1.addProperty(p);
 		
+		
+		
+		
 		Message single = NavajoFactory.getInstance().createMessage(doc, "Single");
 		doc.addMessage(single);
 		Property p2 = NavajoFactory.getInstance().createProperty(doc, "Selectie", "1", "", "in");
 		p2.addSelection(NavajoFactory.getInstance().createSelection(doc, "key", "value", true));
 		single.addProperty(p2);
+		Property p3 = NavajoFactory.getInstance().createProperty(doc, "Vuur", Property.INTEGER_PROPERTY, "10", 10, "", "out");
+		single.addProperty(p3);
 		
 		return doc;
 	}
@@ -1083,6 +1088,72 @@ public class StandardFunctionsTest extends TestCase {
 		
 		assertNotNull(o);
 		assertEquals("selection", o.toString());
+	}	
+	
+	public void testGetPropertyDirection1() throws Exception {
+
+		FunctionInterface fi = fff.getInstance(cl, "GetPropertyDirection");
+		fi.reset();
+		fi.setInMessage(createTestNavajo());
+		Navajo doc = createTestNavajo();
+		fi.insertOperand("/Single/Selectie");
+		
+		Object o = fi.evaluateWithTypeChecking();
+		
+		assertNotNull(o);
+		assertEquals("in", o.toString());
+		
+		
+	}	
+	
+	public void testGetPropertyDirection2() throws Exception {
+
+		FunctionInterface fi = fff.getInstance(cl, "GetPropertyDirection");
+		fi.reset();
+		fi.setInMessage(createTestNavajo());
+		Navajo doc = createTestNavajo();
+		fi.insertOperand("/Single/Vuur");
+		
+		Object o = fi.evaluateWithTypeChecking();
+		
+		assertNotNull(o);
+		assertEquals("out", o.toString());
+		
+		
+	}	
+	
+	public void testGetPropertyAttribute1() throws Exception {
+
+		FunctionInterface fi = fff.getInstance(cl, "GetPropertyAttribute");
+		fi.reset();
+		fi.setInMessage(createTestNavajo());
+		Navajo doc = createTestNavajo();
+		fi.insertOperand("/Single/Vuur");
+		fi.insertOperand("direction");
+		
+		Object o = fi.evaluateWithTypeChecking();
+		
+		assertNotNull(o);
+		assertEquals("out", o.toString());
+		
+		
+	}	
+	
+	public void testGetPropertyAttribute2() throws Exception {
+
+		FunctionInterface fi = fff.getInstance(cl, "GetPropertyAttribute");
+		fi.reset();
+		fi.setInMessage(createTestNavajo());
+		Navajo doc = createTestNavajo();
+		fi.insertOperand("/Single/Vuur");
+		fi.insertOperand("type");
+		
+		Object o = fi.evaluateWithTypeChecking();
+		
+		assertNotNull(o);
+		assertEquals("integer", o.toString());
+		
+		
 	}	
 	
 	public void testGetPropertySubType() throws Exception {

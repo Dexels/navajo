@@ -346,6 +346,11 @@
         <input/>
         <result/>
     </function>
+    <function name="GetPropertyDirection" class="com.dexels.navajo.functions.GetPropertyDirection">
+        <description>Gets the direction of property as a string</description>
+        <input/>
+        <result/>
+    </function>
     <function name="GetPropertySubType" class="com.dexels.navajo.functions.GetPropertySubType">
         <description>Gets the subtype of property as a string</description>
         <input>property|string,string</input>
