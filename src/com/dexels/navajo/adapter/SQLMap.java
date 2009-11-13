@@ -750,29 +750,6 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
     /*}**/
   }
 
-  protected final static synchronized DbConnectionBroker createConnectionBroker(
-      String driver, String url, String username, String password,
-      int min, int max, String logFile, double refreshRate) throws
-      UserException {
-    DbConnectionBroker db = null;
-
-    try {
-      db = new DbConnectionBroker(driver, url, username, password, min, max,
-                                  logFile, refreshRate);
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-      AuditLog.log("SQLMap", e.getMessage(), Level.SEVERE);
-      throw new UserException( -1,
-                              "Could not create connectiobroker: " +
-                              "[driver = " +
-                              driver + ", url = " + url + ", username = '" +
-                              username + "', password = '" + password + "']:" +
-                              e.getMessage());
-    }
-    return db;
-  }
-
   protected final String getType(int i) {
     switch (i) {
       case java.sql.Types.DOUBLE:
