@@ -50,7 +50,8 @@ public class ScaleImageMin extends FunctionInterface {
             return res;
         } catch (IOException e) {
            e.printStackTrace();
-           throw new TMLExpressionException(this, "Error scaling image!");
+//           throw new TMLExpressionException(this, "Error scaling image!");
+           return null;
         }
       
 	}

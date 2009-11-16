@@ -49,8 +49,9 @@ public class ScaleImageMax extends FunctionInterface {
             Binary res =ImageScaler.scaleToMax(b, width.intValue(), height.intValue(), DEFAULT_COMPRESSION);
             return res;
         } catch (IOException e) {
-           e.printStackTrace();
-           throw new TMLExpressionException(this, "Error scaling image!");
+   //        e.printStackTrace();
+  //         throw new TMLExpressionException(this, "Error scaling image!");
+      	  return null;
         }
       
 	}
