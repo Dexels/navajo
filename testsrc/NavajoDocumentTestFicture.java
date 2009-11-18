@@ -17,9 +17,9 @@ public class NavajoDocumentTestFicture extends java.lang.Object {
       msg.addProperty(prop);
       Property prop2 = NavajoFactory.getInstance().createProperty(testDoc, "stringprop", Property.STRING_PROPERTY, "navajo", 10, "", Property.DIR_OUT);
       msg.addProperty(prop2);
-      Property prop3 = NavajoFactory.getInstance().createProperty(testDoc, "integerprop", Property.INTEGER_PROPERTY, "navajo", 10, "", Property.DIR_OUT);
+      Property prop3 = NavajoFactory.getInstance().createProperty(testDoc, "integerprop", Property.INTEGER_PROPERTY, "2", 10, "", Property.DIR_OUT);
       msg.addProperty(prop3);
-      Property prop4 = NavajoFactory.getInstance().createProperty(testDoc, "propfloat", Property.FLOAT_PROPERTY, "navajo", 10, "", Property.DIR_OUT);
+      Property prop4 = NavajoFactory.getInstance().createProperty(testDoc, "propfloat", Property.FLOAT_PROPERTY, "5.0", 10, "", Property.DIR_OUT);
       msg.addProperty(prop4);
 
       testDoc.addMessage(msg);

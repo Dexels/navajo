@@ -453,6 +453,21 @@ public class TestMessage extends TestCase {
 
   }
 
+  public void testIsEqual() throws Exception {
+
+	  Navajo n2 = NavajoFactory.getInstance().createNavajo();
+	  Message msg1 = testDoc.getMessage("testmessage");
+	  Message msg2 = msg1.copy(n2);
+	  n2.addMessage(msg2);
+	   
+	  assertTrue(msg1.isEqual(msg2, ""));
+	  
+	  msg2.getProperty("stringprop").setValue("ietsanders");
+	  
+	  assertFalse(msg1.isEqual(msg2, ""));
+	  
+  }
+  
   public static void main(String [] args) throws Exception {
 	  TestMessage tm = new TestMessage("aap");
 	  tm.setUp();
