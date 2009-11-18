@@ -1459,10 +1459,8 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
 	public List<Message> getElements() {
 		if (messageList == null) {
-			System.err.println("RETURNING NULL ELEMENTS = EMPTY LIST");
 			return new ArrayList<Message>();
 		} else {
-			System.err.println("RETURNING NONNULL ELEMENTS = LIST SZIE: " + messageList.size());
 			return new ArrayList<Message>(messageList);
 		}
 	}
