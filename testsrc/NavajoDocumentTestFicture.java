@@ -1,5 +1,6 @@
 
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.types.Binary;
 
 public class NavajoDocumentTestFicture extends java.lang.Object {
 
@@ -13,15 +14,31 @@ public class NavajoDocumentTestFicture extends java.lang.Object {
       testDoc = NavajoFactory.getInstance().createNavajo();
 
       Message msg = NavajoFactory.getInstance().createMessage(testDoc, "testmessage");
+      
       Property prop = NavajoFactory.getInstance().createProperty(testDoc, "testprop1", "+", "", Property.DIR_IN);
       msg.addProperty(prop);
+      
       Property prop2 = NavajoFactory.getInstance().createProperty(testDoc, "stringprop", Property.STRING_PROPERTY, "navajo", 10, "", Property.DIR_OUT);
       msg.addProperty(prop2);
+      
       Property prop3 = NavajoFactory.getInstance().createProperty(testDoc, "integerprop", Property.INTEGER_PROPERTY, "2", 10, "", Property.DIR_OUT);
       msg.addProperty(prop3);
+      
       Property prop4 = NavajoFactory.getInstance().createProperty(testDoc, "propfloat", Property.FLOAT_PROPERTY, "5.0", 10, "", Property.DIR_OUT);
       msg.addProperty(prop4);
-
+      
+      Property prop6 = NavajoFactory.getInstance().createProperty(testDoc, "selectietje", "1", "", "in");
+      prop6.addSelection(NavajoFactory.getInstance().createSelection(testDoc, "-", "-1", false));
+      //prop6.addSelection(NavajoFactory.getInstance().createSelection(testDoc, "aap", "aap", false));
+      //prop6.addSelection(NavajoFactory.getInstance().createSelection(testDoc, "noot", "noot", false));
+      msg.addProperty(prop6);
+      
+      String binaryString = new String("ASSUMETHISISABINARY");
+      Binary b = new Binary(binaryString.getBytes());
+      Property prop7 = NavajoFactory.getInstance().createProperty(testDoc, "propbinary", Property.BINARY_PROPERTY, "", 10, "", Property.DIR_OUT);
+      prop7.setAnyValue(b);
+      msg.addProperty(prop7);
+      
       testDoc.addMessage(msg);
       Message submsg1 =  NavajoFactory.getInstance().createMessage(testDoc, "testmessage_sub1");
       msg.addMessage(submsg1);

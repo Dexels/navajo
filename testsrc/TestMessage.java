@@ -133,7 +133,7 @@ public class TestMessage extends TestCase {
   public void testGetAllProperties() {
     Message m = testDoc.getMessage("testmessage");
     ArrayList all = m.getAllProperties();
-    Assert.assertEquals(4, all.size());
+    Assert.assertEquals(6, all.size());
     Assert.assertEquals("testprop1", ((Property) all.get(0)).getName());
     Assert.assertEquals("stringprop", ((Property) all.get(1)).getName());
     Assert.assertEquals("integerprop", ((Property) all.get(2)).getName());
@@ -456,15 +456,19 @@ public class TestMessage extends TestCase {
   public void testIsEqual() throws Exception {
 
 	  Navajo n2 = NavajoFactory.getInstance().createNavajo();
-	  Message msg1 = testDoc.getMessage("testmessage");
-	  Message msg2 = msg1.copy(n2);
-	  n2.addMessage(msg2);
+	  n2 = testDoc.copy();
 	   
-	  assertTrue(msg1.isEqual(msg2, ""));
+	  System.err.println("THIS IS N2");
+	  n2.write(System.err);
 	  
-	  msg2.getProperty("stringprop").setValue("ietsanders");
+	  Message m1 = testDoc.getMessage("testmessage");
+	  Message m2 = n2.getMessage("testmessage");
 	  
-	  assertFalse(msg1.isEqual(msg2, ""));
+	  assertTrue(m1.isEqual(m2));
+	  
+	  m2.getProperty("stringprop").setValue("ietsanders");
+	  
+	  assertFalse(m1.isEqual(m2));
 	  
   }
   
