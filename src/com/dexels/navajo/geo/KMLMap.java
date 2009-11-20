@@ -23,7 +23,8 @@ public class KMLMap extends AbstractKMLMap implements Mappable {
 	Binary mySvgData = null;
 	Binary myBitmapData = null;
 
-
+	public boolean pointFile = false;
+	public String messagePath = null;
 
 	public void load( Access access) {
 		this.inMessage = access.getInDoc();
@@ -98,15 +99,27 @@ public class KMLMap extends AbstractKMLMap implements Mappable {
  */
 	public Binary getKmlData() {
 		try {
-			File kmz = createKmlFile(inMessage,colorizer);
-			myKmzData = new Binary(kmz, false);
-			kmz.delete();
-			FormatDescription fd = new FormatDescription();
-			fd.addFileExtension("kmz");
-			fd.addMimeType("application/vnd.google-earth.kmz");
-			myKmzData.setMimeType("application/vnd.google-earth.kmz");
-			myKmzData.setFormatDescriptor(fd);
-			return myKmzData;
+			if ( !isPointFile() ) {
+				File kmz = createKmlFile(inMessage,colorizer);
+				myKmzData = new Binary(kmz, false);
+				kmz.delete();
+				FormatDescription fd = new FormatDescription();
+				fd.addFileExtension("kmz");
+				fd.addMimeType("application/vnd.google-earth.kmz");
+				myKmzData.setMimeType("application/vnd.google-earth.kmz");
+				myKmzData.setFormatDescriptor(fd);
+				return myKmzData;
+			} else {
+				File kml = createPointKmlFile(inMessage, messagePath);
+				myKmzData = new Binary(kml, false);
+				kml.delete();
+				FormatDescription fd = new FormatDescription();
+				fd.addFileExtension("kml");
+				fd.addMimeType("application/vnd.google-earth.kml");
+				myKmzData.setMimeType("application/vnd.google-earth.kml");
+				myKmzData.setFormatDescriptor(fd);
+				return myKmzData;
+			}
 		} catch (XMLParseException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -187,14 +200,14 @@ public class KMLMap extends AbstractKMLMap implements Mappable {
 			fis.close();
 			hm.inMessage = n;
 			
-			XMLElement xxx = hm.createPointKmlFile(hm.inMessage, "Clubs");
-
-			File res = new File("clubs.kml");
-			FileWriter fw = new FileWriter(res);
-			xxx.write(fw);
-			fw.flush();
-			fw.close();
-			System.err.println("KML Run finished...: "+res); 
+//			XMLElement xxx = hm.createPointKmlFile(hm.inMessage, "Clubs");
+//
+//			File res = new File("clubs.kml");
+//			FileWriter fw = new FileWriter(res);
+//			xxx.write(fw);
+//			fw.flush();
+//			fw.close();
+			//System.err.println("KML Run finished...: "+res); 
 			
 			} catch (XMLParseException e) {
 			e.printStackTrace();
@@ -231,6 +244,21 @@ public class KMLMap extends AbstractKMLMap implements Mappable {
 
 
 	public void kill() {
+	}
+
+
+	public boolean isPointFile() {
+		return pointFile;
+	}
+
+
+	public void setPointFile(boolean pointFile) {
+		this.pointFile = pointFile;
+	}
+
+
+	public String getMessagePath() {
+		return messagePath;
 	}
 
 
