@@ -17,7 +17,7 @@ public abstract class AbstractKMLMap {
 	protected GeoColorizer myColorizer = null;
 
 
-
+	
 	protected String title = "";
 	protected String colorizer = "redblue";
 	protected boolean useLegend = true;
@@ -41,6 +41,7 @@ public abstract class AbstractKMLMap {
 
 	protected String mapPath = "com/dexels/navajo/geo/nederland.kml";
 
+	public boolean useLOD = false;
 
 //
 //	protected double min = 0;
@@ -143,25 +144,34 @@ public abstract class AbstractKMLMap {
 		polyStyle.addTagKeyValue("color", createColor);
 	}
 
-	public XMLElement createPointKmlFile(Navajo n, String messagePath) throws XMLParseException {
+	public File createPointKmlFile(Navajo n, String messagePath) throws XMLParseException, IOException {
 		Message m = n.getMessage(messagePath);
 		List<Message> ll = m.getAllMessages();
 		XMLElement kml = new CaseSensitiveXMLElement("kml");
 		XMLElement document = new CaseSensitiveXMLElement("Document");
 		kml.addChild(document);
 
-		XMLElement style = new CaseSensitiveXMLElement("Style");
-		XMLElement iconStyle = new CaseSensitiveXMLElement("IconStyle");
-		document.addChild(style);
-		style.setAttribute("id", "clubStyle");
-		style.addChild(iconStyle);
-		
-		iconStyle.addTagKeyValue("colorMode", "random");
-
-		XMLElement icon = new CaseSensitiveXMLElement("Icon");
-		iconStyle.addChild(icon);
-		icon.addTagKeyValue("href","http://maps.google.com/mapfiles/kml/shapes/play.png");
-		document.addChild(style);
+		Message c = n.getMessage("Styles");
+		List<Message> colors = c.getAllMessages();
+		for (Message message : colors) {
+			XMLElement style = new CaseSensitiveXMLElement("Style");
+			XMLElement iconStyle = new CaseSensitiveXMLElement("IconStyle");
+			
+			style.setAttribute("id", message.getProperty("StyleRef").getTypedValue());
+			style.addChild(iconStyle);
+			
+			if ( message.getProperty("IconColor") != null ) {
+				iconStyle.addTagKeyValue("color", "ff" + message.getProperty("IconColor").getTypedValue()+"");
+			} else {
+				iconStyle.addTagKeyValue("colorMode", "random");
+			}
+			
+			XMLElement icon = new CaseSensitiveXMLElement("Icon");
+			iconStyle.addChild(icon);
+			icon.addTagKeyValue("href","http://maps.google.com/mapfiles/kml/shapes/play.png");
+			
+			document.addChild(style);
+		}
 		
 		
 		for (Message message : ll) {
@@ -170,24 +180,21 @@ public abstract class AbstractKMLMap {
 				document.addChild(placemark);
 			}
 		}
-		return kml;
+		
+		File res = File.createTempFile("pointData", ".kml");
+		FileWriter fw = new FileWriter(res);
+		kml.write(fw);
+		fw.flush();
+		fw.close();
+		
+		return res;
 	}
 	
-	
-//    <message index="0" name="Clubs" type="array_element">
-//    <property description="" direction="out" name="OrganizationId" value="BBBG72T" length="" type="string" cardinality="1"/>
-//    <property description="" direction="out" name="Name" value="De Griffioen" length="" type="string" cardinality="1"/>
-//    <property description="" direction="out" name="StreetName" value="Kuipenstreek" length="" type="string" cardinality="1"/>
-//    <property description="" direction="out" name="HouseNumber" value="13" length="" type="string" cardinality="1"/>
-//    <property description="" direction="out" name="City" value="OOSTERWOLDE FR" length="" type="string" cardinality="1"/>
-//    <property description="" direction="out" name="ZipCode" value="8431NH" length="" type="string" cardinality="1"/>
-//    <property description="" direction="out" name="Latitude" value="52.9970846763942" length="" type="float" cardinality="1"/>
-//    <property description="" direction="out" name="Longitude" value="6.29860034500982" length="" type="float" cardinality="1"/>
-//    <property description="" direction="" name="MemberCount" value="316" length="" type="integer" cardinality="1"/>
-// </message>	
 	private XMLElement createPointPlaceMark(Message message) {
 		XMLElement placemark = new CaseSensitiveXMLElement("Placemark");
-		placemark.setAttribute("id", message.getProperty("OrganizationId").getTypedValue());
+		placemark.setAttribute("id", message.getProperty("Id").getTypedValue());
+		placemark.addTagKeyValue("name", message.getProperty("Name").getValue());
+		
 		XMLElement point = new CaseSensitiveXMLElement("Point");
 		placemark.addChild(point);
 		String lon = message.getProperty("Longitude").getValue();
@@ -196,23 +203,28 @@ public abstract class AbstractKMLMap {
 			return null;
 		}
 		point.addTagKeyValue("coordinates", lon+","+lat);
-		placemark.addTagKeyValue("name", message.getProperty("Name").getValue());
+		
+		// Introspect other properties.
 		StringBuffer descr = new StringBuffer();
-		descr.append(message.getProperty("Name").getValue()+"<br/>");
-		descr.append(message.getProperty("StreetName").getValue()+" ");
-		descr.append(message.getProperty("HouseNumber").getValue()+"<br/>");
-		descr.append(message.getProperty("ZipCode").getValue()+" ");
-		descr.append(message.getProperty("City").getValue()+"<br/>");
-		descr.append("Members: ");
-		descr.append(message.getProperty("MemberCount").getValue()+"<br/>");
-		descr.append("Women: ");
-		descr.append(message.getProperty("WomenMemberCount").getValue()+"<br/>");
-
+		ArrayList<Property> properties = message.getAllProperties();
+		for (Iterator iterator = properties.iterator(); iterator.hasNext();) {
+			Property property = (Property) iterator.next();
+			if ( !( property.getName().equals("Longitude") || 
+					property.getName().equals("Latitude") ||
+					property.getName().equals("Id") ||
+					property.getName().equals("Name")
+			   ) ) {
+				descr.append(property.getDescription() + ": " + property.getValue()+"<br/>");
+			}
+		}
+		
 		placemark.addTagKeyValue("description", descr.toString());
 		System.err.println("descr: "+descr);
 		
 		XMLElement region = new CaseSensitiveXMLElement("Region");
-		placemark.addChild(region);
+		if ( useLOD ) {
+			placemark.addChild(region);
+		}
 		XMLElement latLonAltBox = new CaseSensitiveXMLElement("LatLonAltBox");
 		region.addChild(latLonAltBox);
 		latLonAltBox.addTagKeyValue("north", lat);
@@ -227,7 +239,7 @@ public abstract class AbstractKMLMap {
 		lod.addTagKeyValue("maxFadeExtent", "428");
 		region.addChild(lod);
 		
-		placemark.addTagKeyValue("styleUrl","#clubStyle");
+		placemark.addTagKeyValue("styleUrl","#" + message.getProperty("StyleRef").getTypedValue());
 		
 		
 		
@@ -337,6 +349,16 @@ public abstract class AbstractKMLMap {
 		}
 		bin.close();
 		bout.flush();
+	}
+
+
+	public boolean isUseLOD() {
+		return useLOD;
+	}
+
+
+	public void setUseLOD(boolean useLOD) {
+		this.useLOD = useLOD;
 	}
 
 
