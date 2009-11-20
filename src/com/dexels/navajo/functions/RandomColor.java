@@ -35,6 +35,12 @@ public class RandomColor extends FunctionInterface {
 		"99BAF7", "A1C34F" 
 	};
 	
+	private static String [] colors2 = new String[]{
+		"e75b42", "37e91c", "f83f99", "a9b593", "fee6c0",
+		"b08484", "47d655", "c3d018", "f48128", "6395ed",
+		"a1f3ce", "90c94b", "b7febc", "fac922", "39ac09",
+		"87ba91", "c58b12", "b66d41", "d9eb8e", "c25d01"
+	};
 	public RandomColor() {
 	}
 	
@@ -81,11 +87,11 @@ public class RandomColor extends FunctionInterface {
 		if ( getOperands().size() > 0 ) {
 			Integer seed = (Integer) getOperand(0);
 			java.util.Random r2 = new java.util.Random(seed.longValue());
-			rnd = Math.abs(r2.nextInt()) % 128;
+			rnd = Math.abs(r2.nextInt()) % 20;
 		} else {
-			rnd = Math.abs(r.nextInt()) % 128;
+			rnd = Math.abs(r.nextInt()) % 20;
 		}
-		return toGoogleColor(colors[rnd]);
+		return toGoogleColor(colors2[rnd]);
 
 	}
 	
