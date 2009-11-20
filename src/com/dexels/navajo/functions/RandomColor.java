@@ -25,7 +25,14 @@ public class RandomColor extends FunctionInterface {
 		"A27ACC", "C6B444", "BF9BBA", "7B2D5A", "D40F5A", "A1AA99", "B4A0BE", "86B92E", "EBD6F2", 
 		"3324D2", "BE6B0C", "4E5BDE", "7EC6F9", "32A70C", "3715B5", "A9D0F2", "C7CFF5", "432FEA", 
 		"FB7999", "ABE30E", "38AD6F", "958B80", "3B63CF", "3A98A3", "C66197", "75D04C", "06EF0C", 
-		"CDC98F" 	
+		"CDC98F", "926DC5", "458FCC", "D4ACF4", "D52BB6", "E47E20", "F25E92", "095154", "DB8800", 
+		"0334F4", "A72ED7", "573480", "DF00A8", "CB2919", "38548C", "4014F0", "BE942B", "25A834", 
+		"590396", "A22BF3", "1B0CCF", "32ECE3", "422BAA", "CE5671", "CF58B0", "8DBA64", "4A5513", 
+		"D89505", "7279E0", "D7A268", "005241", "47E8F4", "367052", "99BB3C", "E02763", "D413D5", 
+		"E3806F", "C912EB", "1623CB", "5F4756", "4C5806", "F0968B", "588676", "B8510E", "D94A70", 
+		"4DDC46", "749C66", "7436BA", "AA46A5", "DB6664", "80BA39", "67DDD9", "E2B517", "B1C8F0", 
+		"4501A2", "F3C7FB", "8DDD01", "89751A", "E35024", "D657C5", "CCFE1C", "F86703", "4051C6", 
+		"99BAF7", "A1C34F" 
 	};
 	
 	public RandomColor() {
@@ -74,9 +81,9 @@ public class RandomColor extends FunctionInterface {
 		if ( getOperands().size() > 0 ) {
 			Integer seed = (Integer) getOperand(0);
 			java.util.Random r2 = new java.util.Random(seed.longValue());
-			rnd = Math.abs(r2.nextInt()) % 64;
+			rnd = Math.abs(r2.nextInt()) % 128;
 		} else {
-			rnd = Math.abs(r.nextInt()) % 64;
+			rnd = Math.abs(r.nextInt()) % 128;
 		}
 		return toGoogleColor(colors[rnd]);
 
