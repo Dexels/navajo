@@ -38,7 +38,7 @@ public class RandomColor extends FunctionInterface {
 	private static String [] colors2 = new String[]{
 		"e75b42", "37e91c", "f83f99", "a9b593", "fee6c0",
 		"b08484", "47d655", "c3d018", "f48128", "6395ed",
-		"a1f3ce", "90c94b", "b7febc", "fac922", "39ac09",
+		"b6e56a", "90c94b", "d4ca3e", "fac922", "39ac09",
 		"87ba91", "c58b12", "b66d41", "d9eb8e", "c25d01"
 	};
 	public RandomColor() {
