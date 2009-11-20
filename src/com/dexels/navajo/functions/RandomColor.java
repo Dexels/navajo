@@ -29,13 +29,26 @@ public class RandomColor extends FunctionInterface {
 		ArrayList operands = this.getOperands();
 		Integer seed = (Integer) this.getOperand(0);
 		
-		r = new java.util.Random((long) seed.intValue());
-		StringBuffer result = new StringBuffer();
+		int seedInt = seed.intValue();
+		r = new java.util.Random((long) seedInt);
+		
+		int channel = seedInt % 3;
+		int extra = seedInt % 6;
+		
+		char [] c = new char[6];
 		for (int i = 0; i < 6; i++) {
 			int rnd = Math.abs(r.nextInt()) % 15;
-			result.append(Integer.toHexString(rnd));
+			c[i] = Integer.toHexString(rnd).charAt(0);
 		}
-		return result.toString();
+		
+		StringBuffer r = new StringBuffer();
+		switch (channel) {
+		case 0: c[0] = '0';c[1] = '0';c[extra] = '0';r.append(c);break;
+		case 1: c[2] = '0';c[3] = '0';c[extra] = '0';r.append(c);break;
+		case 2: c[4] = '0';c[5] = '0';c[extra] = '0';r.append(c);break;
+		default: break;
+		}
+		return r.toString();
 	}
 	
 	public String usage() {
@@ -55,6 +68,10 @@ public class RandomColor extends FunctionInterface {
 		
 		r.reset();
 		r.insertOperand(new Integer(190590));
+		System.err.println("Aap: "+r.evaluate());
+		
+		r.reset();
+		r.insertOperand(new Integer(190592));
 		System.err.println("Aap: "+r.evaluate());
 		
 	}
