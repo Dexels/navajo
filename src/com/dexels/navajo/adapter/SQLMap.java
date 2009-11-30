@@ -144,6 +144,7 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
   public String driver;
   public String url;
   public String username;
+  public String defaultUsername;
   public String password;
   public String update;
   public String query;
@@ -398,51 +399,63 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
       return;
     }
 
+    PreparedStatement stmt = null;
     try {
-      boolean ac = (this.overideAutoCommit) ? autoCommit :
-          ( (Boolean) autoCommitMap.get(datasource)).booleanValue();
-      if ( debug ) {
-    	  Access.writeToConsole(myAccess, "Autocommit flag for " + datasource + " = " + ac + "\n");
-      }
-      if (!ac) {
-        if (con != null) {
-          try {
-        	  Access.writeToConsole(myAccess, "ROLLBACK OF TRANSACTION " + getTransactionContext() + " DUE TO KILL.....\n");
-		  } catch (UserException e) {	
-			  e.printStackTrace(Access.getConsoleWriter(myAccess));
-		  }
-		  if ( debug ) {
-			  Access.writeToConsole(myAccess, "CALLING TRANSACTION ROLLBACK...\n");
-	      }
-          con.rollback();
-          if ( debug ) {
-        	  Access.writeToConsole(myAccess, "DONE!\n");
-	      }
-        }
-      }
-      // Set autoCommit mode to default value.
-      if ( con != null ) {
-    	  if (transactionContext == -1) {
-    		  if (con != null) {
-    			  transactionContextMap.remove(connectionId + "");
-    			  try {
-    				  SessionIdentification.clearSessionId( (getMetaData() != null ? getMetaData().getVendor() : "" ), con);
-    			  }
-    			  catch (UserException ex) {
-    			  }
-    			  // Free connection.
-    			  if ( myConnectionBroker.supportsAutocommit ) {
-    				  con.setAutoCommit(true);
-    			  }
-    			  myConnectionBroker.freeConnection(con);
-    			  con = null;
-    		  }
-    	  }
-      }
+    	
+    	boolean ac = (this.overideAutoCommit) ? autoCommit :
+    		( (Boolean) autoCommitMap.get(datasource)).booleanValue();
+    	if ( debug ) {
+    		Access.writeToConsole(myAccess, "Autocommit flag for " + datasource + " = " + ac + "\n");
+    	}
+    	if (!ac) {
+    		if (con != null) {
+    			try {
+    				Access.writeToConsole(myAccess, "ROLLBACK OF TRANSACTION " + getTransactionContext() + " DUE TO KILL.....\n");
+    			} catch (UserException e) {	
+    				e.printStackTrace(Access.getConsoleWriter(myAccess));
+    			}
+    			if ( debug ) {
+    				Access.writeToConsole(myAccess, "CALLING TRANSACTION ROLLBACK...\n");
+    			}
+    			con.rollback();
+    			if ( debug ) {
+    				Access.writeToConsole(myAccess, "DONE!\n");
+    			}
+    		}
+    	}
+    	// Set autoCommit mode to default value.
+    	if ( con != null ) {
+    		if (transactionContext == -1) {
+    			if (con != null) {
+    				// if defaultUsername was set, set it back.
+
+    				if ( this.defaultUsername != null ) {
+    					stmt =  con.prepareStatement("ALTER SESSION SET CURRENT_SCHEMA = " + this.defaultUsername);
+    					stmt.executeUpdate();
+    				}
+    				transactionContextMap.remove(connectionId + "");
+    				try {
+    					SessionIdentification.clearSessionId( (getMetaData() != null ? getMetaData().getVendor() : "" ), con);
+    				}
+    				catch (UserException ex) {
+    				}
+    				// Free connection.
+    				if ( myConnectionBroker.supportsAutocommit ) {
+    					con.setAutoCommit(true);
+    				}
+    				myConnectionBroker.freeConnection(con);
+    				con = null;
+    			}
+    		}
+    	}
     }
     catch (SQLException sqle) {
     	AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, myAccess.accessID);
     	sqle.printStackTrace(Access.getConsoleWriter(myAccess));
+    } finally {
+    	if ( stmt != null ) {
+    		try { stmt.close(); } catch (Exception e ) {}
+    	}
     }
   }
 
@@ -459,7 +472,13 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
 	  }
 	  if (transactionContext == -1) {
 		  if (con != null && !isClosed ) {
+			  PreparedStatement stmt = null;
 			  try {
+				  // if defaultUsername was set, set it back.
+				  if ( this.defaultUsername != null ) {
+					  stmt =  con.prepareStatement("ALTER SESSION SET CURRENT_SCHEMA = " + this.defaultUsername);
+					  stmt.executeUpdate();
+				  }
 				  // Determine autocommit value
 				  if ( myConnectionBroker == null || myConnectionBroker.supportsAutocommit ) {
 					  boolean ac = (this.overideAutoCommit) ? autoCommit :  ( (Boolean) autoCommitMap.get(datasource)).booleanValue();
@@ -475,6 +494,12 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
 			  catch (SQLException sqle) {
 				  AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, myAccess.accessID);
 				  throw new UserException( -1, sqle.getMessage(), sqle);
+			  } finally {
+				  if ( stmt != null ) {
+					  try {
+					  stmt.close();
+					  } catch (Exception e) {}
+				  }
 			  }
 			  if (transactionContextMap != null) {
 				  transactionContextMap.remove(connectionId + "");
@@ -893,6 +918,14 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
       if ( this.username != null ) { // Only works for Oracle...
     	  PreparedStatement stmt = null;
     	  try {
+    		  stmt =  con.prepareStatement("SELECT sys_context('USERENV', 'CURRENT_SCHEMA') AS schemaname FROM dual");
+    		  ResultSet rs = stmt.executeQuery();
+    		  rs.next();
+    		  this.defaultUsername = rs.getString("schemaname");
+    		  if ( debug ) {
+    			  Access.writeToConsole(myAccess, "DEFAULT SCHEMA IS: " + this.defaultUsername);
+    		  }
+    		  rs.close();
     		  stmt =  con.prepareStatement("ALTER SESSION SET CURRENT_SCHEMA = " + this.username);
     		  stmt.executeUpdate();
     		  if ( debug ) {
