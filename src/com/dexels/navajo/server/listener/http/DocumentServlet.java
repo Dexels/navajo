@@ -24,7 +24,7 @@ public class DocumentServlet extends TmlHttpServlet {
 	String anonymousPassword;
 	
 	public void init(ServletConfig config) throws ServletException {
-		super.init();
+		super.init(config);
 		anonymousUser = config.getInitParameter("anonymous_user");
 		anonymousPassword  = config.getInitParameter("anonymous_passwd");
 	}
