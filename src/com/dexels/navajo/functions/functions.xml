@@ -146,6 +146,11 @@
         <input>string|binary</input>
         <result>binary</result>
     </function>
+    <function name="Trunc" class="com.dexels.navajo.functions.Trunc">
+        <description>Removes time from Date object</description>
+        <input>date</input>
+        <result>date</result>
+    </function>
     <function name="SumProperties" class="com.dexels.navajo.functions.SumProperties">
         <description>Sums all properties in an array message</description>
         <input>string,string,string|empty</input>
