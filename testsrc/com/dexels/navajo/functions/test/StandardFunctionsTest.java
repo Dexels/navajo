@@ -3,6 +3,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.dexels.utils.Base64;
@@ -1801,6 +1802,24 @@ public class StandardFunctionsTest extends TestCase {
 		assertNotNull(o);
 		assertEquals(Integer.class, o.getClass());
 	}	
+	
+	public void testTrunc() throws Exception {
+		
+		FunctionInterface fi = fff.getInstance(cl, "Trunc");
+		fi.reset();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		Date d1 = sdf.parse("2009-12-01 12:34");
+		Date d2 = sdf.parse("2009-12-01 14:54");
+		fi.insertOperand(d1);
+		Date d3 = (Date) fi.evaluate();
+		
+		fi.reset();
+		fi.insertOperand(d2);
+		Date d4 = (Date) fi.evaluate();
+		
+		assertEquals(sdf.format(d3), sdf.format(d4));
+		
+	}
 	
 	public void testIsEmpty() throws Exception {
 
