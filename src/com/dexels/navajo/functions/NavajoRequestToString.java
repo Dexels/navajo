@@ -2,6 +2,7 @@ package com.dexels.navajo.functions;
 
 import java.io.StringWriter;
 
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.parser.FunctionInterface;
@@ -11,7 +12,12 @@ public class NavajoRequestToString extends FunctionInterface {
 
 	@Override
 	public Object evaluate() throws TMLExpressionException {
-		Navajo in = getNavajo();
+		Navajo in = getNavajo().copy();
+		in.removeHeader();
+		Message m = in.getMessage("__globals__");
+		if ( m != null ) {
+			in.removeMessage("__globals__");
+		}
 		StringWriter ws = new StringWriter();
 		try {
 			in.write(ws);
@@ -25,5 +31,6 @@ public class NavajoRequestToString extends FunctionInterface {
 	public String remarks() {
 		return "Serializes a Navajo request to a string";
 	}
+	
 
 }
