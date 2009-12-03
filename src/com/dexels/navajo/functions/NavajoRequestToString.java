@@ -18,6 +18,10 @@ public class NavajoRequestToString extends FunctionInterface {
 		if ( m != null ) {
 			in.removeMessage("__globals__");
 		}
+		m = in.getMessage("__parms__");
+		if ( m != null ) {
+			in.removeMessage("__parms__");
+		}
 		StringWriter ws = new StringWriter();
 		try {
 			in.write(ws);
