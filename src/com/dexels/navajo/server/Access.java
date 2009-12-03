@@ -88,10 +88,24 @@ public final class Access implements java.io.Serializable, Mappable {
 	public Binary requestNavajo;
 	public Binary responseNavajo;
 	public boolean debugAll;
+	// Flag to indicate that during the execution of the webservice, break was called.
+	private boolean breakWasSet = false;
+	
+	public boolean isBreakWasSet() {
+		return breakWasSet;
+	}
+
+	public void setBreakWasSet(boolean breakWasSet) {
+		this.breakWasSet = breakWasSet;
+	}
 
 	private Throwable myException;
 	private Navajo outputDoc;
 	private Navajo inDoc;
+	// The mergedDoc can be used to merge a previously set Navajo with the outputDoc.
+	// If the mergeDoc is not empty, it will ALWAYS be merged when setOutputDoc is called.
+	private Navajo mergedDoc;
+
 	private LazyMessageImpl lazyMap;
 	private Message currentOutMessage;
 	private Object userCertificate;
@@ -134,7 +148,55 @@ public final class Access implements java.io.Serializable, Mappable {
 	}
 
 	/**
-	 * Return the Navajo response (being) created.
+	 * Gets the Navajo that is associated with the so called merged document.
+	 * A merged document will ALWAYS be merged with the Navajo outputDoc. If the current mergedDoc is null, 
+	 * a new Navajo will be returned.
+	 * 
+	 * @return
+	 */
+	public Navajo getMergedDoc() {
+		if ( mergedDoc != null ) {
+			return mergedDoc;
+		} else {
+			mergedDoc = NavajoFactory.getInstance().createNavajo();
+			return mergedDoc;
+		}
+	}
+
+	/**
+	 * Sets the Navajo that is going to be used as a merged document, i.e. a Navajo document
+	 * that will be merged with the outDoc Navajo.
+	 * 
+	 * @param mergedDoc
+	 */
+	public void setMergedDoc(Navajo mergedDoc) {
+		
+		if ( this.outputDoc != null ) {
+			try {this.outputDoc.appendDocBuffer(mergedDoc);} catch (Exception e) {}
+			return;
+		}
+		if ( mergedDoc == null ) {
+			this.mergedDoc = null;
+			return;
+		}
+		if ( this.mergedDoc == null ) {
+			this.mergedDoc = mergedDoc;
+		} else {
+			try {
+				if ( mergedDoc != null ) {
+					this.mergedDoc.appendDocBuffer(mergedDoc);
+				} else {
+					this.mergedDoc = null;
+				}
+			} catch (NavajoException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	/**
+	 * Return the Navajo response (being) created. Return empty Navajo if no current output doc is present yet.
 	 * @return
 	 */
 	public Navajo getOutputDoc() {
@@ -154,7 +216,19 @@ public final class Access implements java.io.Serializable, Mappable {
 	 * @param n
 	 */
 	public void setOutputDoc(Navajo n) {
-		outputDoc = n;
+		if ( this.mergedDoc != null ) {
+			try {
+				if ( n != null ) {
+					this.mergedDoc.appendDocBuffer(n);
+				}
+				outputDoc = this.mergedDoc;
+			} catch (NavajoException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			outputDoc = n;
+		}
 	}
 
 	/**

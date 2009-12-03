@@ -1084,7 +1084,11 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
         	//}
         }
         
-        return outMessage;
+        if ( access != null ) {
+        	return access.getOutputDoc();
+        } else {
+        	return outMessage;
+        }
       }
     }
     catch (AuthorizationException aee) {

@@ -298,6 +298,17 @@ public final class GenericHandler extends ServiceHandler {
     @SuppressWarnings("unchecked")
 	public final Navajo doService() throws NavajoException, UserException, SystemException, AuthorizationException {
 
+    	// Check whether break-was-set for access from 'the-outside'. If so, do NOT perform service and return
+    	// current value of outputdoc.
+    	
+    	if ( access.isBreakWasSet() ) {
+    		if ( access.getOutputDoc() == null ) {
+    			Navajo outDoc = NavajoFactory.getInstance().createNavajo();
+    			access.setOutputDoc(outDoc);
+    		}
+    		return access.getOutputDoc();
+    	}
+    	
         Navajo outDoc = null;
     	StringBuffer compilerErrors = new StringBuffer();
     	
@@ -312,6 +323,10 @@ public final class GenericHandler extends ServiceHandler {
             return access.getOutputDoc();
           } catch (Throwable e) {
             if (e instanceof com.dexels.navajo.mapping.BreakEvent) {
+              // Create dummy header to set breakwasset attribute.
+              Header h = NavajoFactory.getInstance().createHeader(outDoc, "", "", "", -1);
+              outDoc.addHeader(h);
+              outDoc.getHeader().setHeaderAttribute("breakwasset", "true");
               return outDoc;
             }
             else if (e instanceof com.dexels.navajo.server.ConditionErrorException) {
