@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
 <functiondef>
+    <function name="NavajoRequestToString" class="com.dexels.navajo.functions.NavajoRequestToString">
+        <description>Serializes a Navajo request to a string</description>
+        <input>empty</input>
+        <result>string</result>
+    </function>
     <function name="RandomColor" class="com.dexels.navajo.functions.RandomColor">
         <description>Generates a random hex color given an integer seed</description>
         <input>integer|empty</input>
