@@ -1821,6 +1821,15 @@ public class StandardFunctionsTest extends TestCase {
 		
 	}
 	
+	public void testNavajoRequestToString() throws Exception {
+		Navajo n = createTestNavajo();
+		FunctionInterface fi = fff.getInstance(cl, "NavajoRequestToString");
+		fi.setInMessage(n);
+		fi.reset();
+		Object o = fi.evaluate();
+		assertTrue(((String) o).indexOf("Aap") != -1);
+	}
+	
 	public void testIsEmpty() throws Exception {
 
 		FunctionInterface fi = fff.getInstance(cl, "IsEmpty");
