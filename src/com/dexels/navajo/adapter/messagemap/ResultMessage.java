@@ -22,6 +22,7 @@ public class ResultMessage implements Mappable {
 	public void setMessage(Message m, String suppressProperties) {
 		this.msg = m;
 		this.suppressProperties = suppressProperties;
+		processSuppressedProperties(this.msg);
 	}
 	
 	private final boolean isPropertyInList(Property prop, String propertyStringList, boolean isArrayMessageElement) {
