@@ -914,7 +914,8 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
 
       long startAuth = System.currentTimeMillis();
 
-      if ( useAuthorisation && !skipAuth ) {
+      // If web service is ping webservice, skip authentication.
+      if ( useAuthorisation && !skipAuth && !rpcName.equals("navajo_ping") ) {
         try {
         	
           if ( navajoConfig == null ) {
