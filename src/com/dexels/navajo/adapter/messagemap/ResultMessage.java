@@ -22,7 +22,7 @@ public class ResultMessage implements Mappable {
 	public void setMessage(Message m, String suppressProperties) {
 		this.msg = m;
 		this.suppressProperties = suppressProperties;
-		processSuppressedProperties(this.msg);
+		processSuppressedProperties(this.msg); 
 	}
 	
 	private final boolean isPropertyInList(Property prop, String propertyStringList, boolean isArrayMessageElement) {
@@ -31,13 +31,8 @@ public class ResultMessage implements Mappable {
 		}
 		String [] propertyList = propertyStringList.split(";");
 		for (int i = 0; i < propertyList.length; i++) {
-			try {
-				if ( !isArrayMessageElement && propertyList[i].equals(prop.getFullPropertyName()) ) {
-					return true;
-				} else if ( isArrayMessageElement && propertyList[i].equals(prop.getName())) {
-					return true;
-				}
-			} catch (NavajoException e) {
+			if ( propertyList[i].equals(prop.getName())) {
+				return true;
 			}
 		}
 		return false;
