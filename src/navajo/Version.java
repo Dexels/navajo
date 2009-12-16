@@ -28,6 +28,14 @@ package navajo;
  * 
  * VERSION HISTORY
  * 
+ * 8.2.6 - Selected attribute in option tag now supports expressions (either boolean or integer outcome supported)
+ *       - navajo_ping bypasses authentication, for the rest: removed check on isSpecialWebservice for bypassing authorization
+ *       - Added Xtra defensive server.xml parsing
+ *       - Fix for old-skool configuration in DispatcherFactory
+ *       - Fix for full debug of scripts (debug=true in tsl/navascript tag)
+ *       - Possible to use child tags in navascript 'method' tags to improve script readability.
+ *       - Added support for merging Navajo's in Access class
+ * 
  * 8.2.5 - Implemented Debugable Interface.
  * 
  * 8.2.4 - Refactored Navajo Internal Structure
@@ -189,12 +197,12 @@ public class Version extends dexels.Version {
 
 	public static final int MAJOR = 8;
 	public static final int MINOR = 2;
-	public static final int PATCHLEVEL = 5;
+	public static final int PATCHLEVEL = 6;
 	public static final String SPECIAL_VERSION = "Final";
 	
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
-	public static final String RELEASEDATE = "2009-10-05";
+	public static final String RELEASEDATE = "2009-12-16";
 	
 //	 Included packages.
 	String [] includes = {"navajodocument.Version"};
