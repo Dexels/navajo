@@ -159,6 +159,16 @@ public final class NavajoFactoryImpl extends NavajoFactory {
 	    SelectionImpl si = new SelectionImpl(tb,name,value,( selected > 0 ) );
 	    return si;
 	  }
+  public Selection createSelection(Navajo tb, String name, String value, Object selected) {
+	  SelectionImpl si = null;
+	  
+	  if ( selected instanceof Boolean ) {
+		si =   new SelectionImpl(tb,name,value, (Boolean) selected );
+	  } else {
+	    si = new SelectionImpl(tb,name,value, Integer.parseInt(selected+"") > 0 );
+	  }
+	    return si;
+	  }
   public Method createMethod(Navajo tb, String name, String server) {
     MethodImpl mi = new MethodImpl(tb,name);
     mi.setServer(server);

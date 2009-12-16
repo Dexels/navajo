@@ -126,6 +126,16 @@ public BaseNavajoFactoryImpl() {
 	    BaseSelectionImpl si = new BaseSelectionImpl(tb,name,value, ( selected > 0 ) );
 	    return si;
 	  }
+  public Selection createSelection(Navajo tb, String name, String value, Object selected) {
+	  
+	  BaseSelectionImpl si = null;
+	    if (selected instanceof Boolean ) {
+	    	 si = new BaseSelectionImpl(tb,name,value, (Boolean) selected );
+	    } else {
+	     si = new BaseSelectionImpl(tb,name,value, Integer.parseInt(selected+"") > 0 );
+	    }
+	    return si;
+	  }
   public Method createMethod(Navajo tb, String name, String server) {
     BaseMethodImpl mi = new BaseMethodImpl(tb,name);
     mi.setServer(server);

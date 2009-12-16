@@ -89,4 +89,30 @@ public class TestSelection extends TestCase {
 		selectionRet.setValue("1");
 		Assert.assertTrue(selectionRet.isSelected());
 	}
+	
+	public void testIsSelectedWithObject0() {
+		Selection selectionRet = NavajoFactory.getInstance().createSelection(testDoc, "firstselection", "0", new Integer(1));
+		selectionRet.setValue("1");
+		Assert.assertTrue(selectionRet.isSelected());
+	}
+	public void testIsSelectedWithObject1() {
+		Selection selectionRet = NavajoFactory.getInstance().createSelection(testDoc, "firstselection", "0", new Integer(0));
+		selectionRet.setValue("1");
+		Assert.assertTrue(!selectionRet.isSelected());
+	}
+	public void testIsSelectedWithObject2() {
+		Selection selectionRet = NavajoFactory.getInstance().createSelection(testDoc, "firstselection", "0", new Integer(11));
+		selectionRet.setValue("1");
+		Assert.assertTrue(selectionRet.isSelected());
+	}
+	public void testIsSelectedWithObject3() {
+		Selection selectionRet = NavajoFactory.getInstance().createSelection(testDoc, "firstselection", "0", new Boolean(true));
+		selectionRet.setValue("1");
+		Assert.assertTrue(selectionRet.isSelected());
+	}
+	public void testIsSelectedWithObject4() {
+		Selection selectionRet = NavajoFactory.getInstance().createSelection(testDoc, "firstselection", "0", new Boolean(false));
+		selectionRet.setValue("1");
+		Assert.assertTrue(!selectionRet.isSelected());
+	}
 }

@@ -527,6 +527,17 @@ public abstract class NavajoFactory {
                                             String value, int selected);
   
   /**
+   * Create a Selection object
+   * @param tb Navajo
+   * @param name String
+   * @param value String
+   * @param selected int, if selected is boolean and true, set selected, if false unset, if selected is integer > 0  then selected value is set to true.
+   * @return Selection
+   */
+  public abstract Selection createSelection(Navajo tb, String name,
+                                            String value, Object selected);
+  
+  /**
    * Create a DUMMY Selection object
    * @return Selection
    */
