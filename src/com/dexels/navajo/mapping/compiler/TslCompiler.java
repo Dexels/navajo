@@ -2202,6 +2202,10 @@ public String mapNode(int ident, Element n) throws Exception {
 
       methodClipboard.add(methodBuffer);
       //
+    } else if (n.getNodeName().equals("antimessage")) {
+    	  String messageName = ((Element) n).getAttribute("name");
+    	  result.append(printIdent(ident) + "if (access.getOutputDoc().getMessage(\"" + messageName + "\") != null) \n");
+    	  result.append(printIdent(ident+2) + "access.getOutputDoc().removeMessage(\"" + messageName + "\");\n");   	  
     }
     else if (n.getNodeName().equals("methods")) {
       result.append(methodsNode(ident, (Element) n));
