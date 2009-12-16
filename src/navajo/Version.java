@@ -35,6 +35,7 @@ package navajo;
  *       - Fix for full debug of scripts (debug=true in tsl/navascript tag)
  *       - Possible to use child tags in navascript 'method' tags to improve script readability.
  *       - Added support for merging Navajo's in Access class
+ *       - Support for antimessage in scripts.
  * 
  * 8.2.5 - Implemented Debugable Interface.
  * 
