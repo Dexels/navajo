@@ -1076,8 +1076,16 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
         String optionName = ( (Element) children.item(i)).getAttribute("name");
         String optionValue = ( (Element) children.item(i)).getAttribute("value");
         String selectedValue = ( (Element) children.item(i)).getAttribute("selected");
-        boolean selected = (selectedValue.equals("1"));
+
         type = "selection";
+        
+        String selected = selectedValue;
+        if ( ! (selected.equals("0") || selected.equals("1"))) {
+        	selected = "Expression.evaluate(" +
+                  replaceQuotes(selectedValue) +
+                  ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null).value";
+        }
+        
         // Created condition statement if condition is given!
         String conditional = (optionCondition != null && !optionCondition.equals("")) ?
                              "if (Condition.evaluate(" + replaceQuotes(optionCondition) + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg))\n" : "";
