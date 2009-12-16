@@ -67,6 +67,9 @@ public final class NavajoFactoryImpl extends NavajoFactory {
   public  Selection createSelection(NavajoImpl n, String name, String value, boolean isSelected) {
     return new SelectionImpl(n,name, value, isSelected);
   }
+  public  Selection createSelection(NavajoImpl n, String name, String value, int isSelected) {
+	    return new SelectionImpl(n,name, value, isSelected);
+	  }
   public  Selection createSelection(NavajoImpl n) {
     return new SelectionImpl(n);
   }
@@ -152,6 +155,10 @@ public final class NavajoFactoryImpl extends NavajoFactory {
     SelectionImpl si = new SelectionImpl(tb,name,value,selected);
     return si;
   }
+  public Selection createSelection(Navajo tb, String name, String value, int selected) {
+	    SelectionImpl si = new SelectionImpl(tb,name,value,( selected > 0 ) );
+	    return si;
+	  }
   public Method createMethod(Navajo tb, String name, String server) {
     MethodImpl mi = new MethodImpl(tb,name);
     mi.setServer(server);

@@ -22,6 +22,9 @@ public final class SelectionImpl extends BaseSelectionImpl implements Selection,
    public SelectionImpl(Navajo n, String name, String value, boolean isSelected) {
        super(n,name,value,isSelected);
   }
+   public SelectionImpl(Navajo n, String name, String value, int isSelected) {
+       super(n,name,value, ( isSelected > 0 ));
+  }
   public SelectionImpl(Navajo n) {
     super(n);
   }

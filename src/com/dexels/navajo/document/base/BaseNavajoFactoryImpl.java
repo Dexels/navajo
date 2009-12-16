@@ -75,6 +75,10 @@ public BaseNavajoFactoryImpl() {
   public  Selection createSelection(BaseNavajoImpl n, String name, String value, boolean isSelected) {
     return new BaseSelectionImpl(n,name, value, isSelected);
   }
+  
+  public  Selection createSelection(BaseNavajoImpl n, String name, String value, int isSelected) {
+	    return new BaseSelectionImpl(n,name, value, ( isSelected > 0 ) );
+	  }
   public  Selection createSelection(BaseNavajoImpl n) {
     return new BaseSelectionImpl(n);
   }
@@ -118,6 +122,10 @@ public BaseNavajoFactoryImpl() {
     BaseSelectionImpl si = new BaseSelectionImpl(tb,name,value,selected);
     return si;
   }
+  public Selection createSelection(Navajo tb, String name, String value, int selected) {
+	    BaseSelectionImpl si = new BaseSelectionImpl(tb,name,value, ( selected > 0 ) );
+	    return si;
+	  }
   public Method createMethod(Navajo tb, String name, String server) {
     BaseMethodImpl mi = new BaseMethodImpl(tb,name);
     mi.setServer(server);

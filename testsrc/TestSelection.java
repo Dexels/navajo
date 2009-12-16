@@ -74,4 +74,19 @@ public class TestSelection extends TestCase {
 		selectionRet.setValue("1");
 		Assert.assertEquals(selectionRet.getValue(), "1");
 	}
+	public void testIsSelectedWithInteger0() {
+		Selection selectionRet = NavajoFactory.getInstance().createSelection(testDoc, "firstselection", "0", 1);
+		selectionRet.setValue("1");
+		Assert.assertTrue(selectionRet.isSelected());
+	}
+	public void testIsSelectedWithInteger1() {
+		Selection selectionRet = NavajoFactory.getInstance().createSelection(testDoc, "firstselection", "0", 0);
+		selectionRet.setValue("1");
+		Assert.assertTrue(!selectionRet.isSelected());
+	}
+	public void testIsSelectedWithInteger2() {
+		Selection selectionRet = NavajoFactory.getInstance().createSelection(testDoc, "firstselection", "0", 11);
+		selectionRet.setValue("1");
+		Assert.assertTrue(selectionRet.isSelected());
+	}
 }
