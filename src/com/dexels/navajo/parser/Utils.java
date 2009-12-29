@@ -200,7 +200,8 @@ public final class Utils extends Exception {
         }
 
         if (a instanceof Date && b instanceof Date) {
-            return new Integer((int) ((((Date) a).getTime() - ((Date) b).getTime())/(double) MILLIS_IN_DAY));
+        	// use rounding because of intervals containing changes of daylight savings time
+            return new Integer( (int) Math.round( (((Date) a).getTime() - ((Date) b).getTime())/(double) MILLIS_IN_DAY ) );
         }
         
         if ((a instanceof DatePattern || a instanceof Date)
