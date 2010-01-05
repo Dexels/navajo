@@ -200,8 +200,16 @@ public final class Utils extends Exception {
         }
 
         if (a instanceof Date && b instanceof Date) {
-        	// use rounding because of intervals containing changes of daylight savings time
-            return new Integer( (int) Math.round( (((Date) a).getTime() - ((Date) b).getTime())/(double) MILLIS_IN_DAY ) );
+        	// Correct dates for daylight savings time.
+        	Calendar ca = Calendar.getInstance();
+        	ca.setTime((Date) a);
+        	ca.add(Calendar.MILLISECOND, ca.get(Calendar.DST_OFFSET));
+        	
+        	Calendar cb = Calendar.getInstance();
+        	cb.setTime((Date) b);
+        	cb.add(Calendar.MILLISECOND, cb.get(Calendar.DST_OFFSET));
+        	
+        	return new Integer( (int) ( ( ca.getTimeInMillis() - cb.getTimeInMillis() )  / (double) MILLIS_IN_DAY ) );
         }
         
         if ((a instanceof DatePattern || a instanceof Date)
@@ -393,6 +401,10 @@ public final class Utils extends Exception {
     public static void main(String [] args) throws Exception {
     	StopwatchTime sw1 = new StopwatchTime("00:10:00:000");
     	StopwatchTime sw2 = new StopwatchTime("00:07:00:000");
+    	Calendar c = Calendar.getInstance();
+    	c.add(Calendar.MONTH, 6);
+    	int a = c.get(Calendar.DST_OFFSET);
+    	System.err.println("DST = " + a);
     	Object o = Utils.subtract(sw1, sw2);
     	System.err.println("o = " + o);
     }
