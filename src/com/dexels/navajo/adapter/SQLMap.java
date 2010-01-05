@@ -399,8 +399,7 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
       return;
     }
 
-    PreparedStatement stmt = null;
-    try {
+   try {
     	
     	boolean ac = (this.overideAutoCommit) ? autoCommit :
     		( (Boolean) autoCommitMap.get(datasource)).booleanValue();
@@ -430,8 +429,9 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
     				// if defaultUsername was set, set it back.
 
     				if ( this.defaultUsername != null ) {
-    					stmt =  con.prepareStatement("ALTER SESSION SET CURRENT_SCHEMA = " + this.defaultUsername);
+    					PreparedStatement stmt =  con.prepareStatement("ALTER SESSION SET CURRENT_SCHEMA = " + this.defaultUsername);
     					stmt.executeUpdate();
+    					stmt.close();
     				}
     				transactionContextMap.remove(connectionId + "");
     				try {
@@ -452,11 +452,7 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
     catch (SQLException sqle) {
     	AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, myAccess.accessID);
     	sqle.printStackTrace(Access.getConsoleWriter(myAccess));
-    } finally {
-    	if ( stmt != null ) {
-    		try { stmt.close(); } catch (Exception e ) {}
-    	}
-    }
+    } 
   }
 
   public void store() throws MappableException, UserException {
@@ -472,12 +468,12 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
 	  }
 	  if (transactionContext == -1) {
 		  if (con != null && !isClosed ) {
-			  PreparedStatement stmt = null;
 			  try {
 				  // if defaultUsername was set, set it back.
 				  if ( this.defaultUsername != null ) {
-					  stmt =  con.prepareStatement("ALTER SESSION SET CURRENT_SCHEMA = " + this.defaultUsername);
+					  PreparedStatement stmt =  con.prepareStatement("ALTER SESSION SET CURRENT_SCHEMA = " + this.defaultUsername);
 					  stmt.executeUpdate();
+					  stmt.close();
 				  }
 				  // Determine autocommit value
 				  if ( myConnectionBroker == null || myConnectionBroker.supportsAutocommit ) {
@@ -494,13 +490,7 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
 			  catch (SQLException sqle) {
 				  AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, myAccess.accessID);
 				  throw new UserException( -1, sqle.getMessage(), sqle);
-			  } finally {
-				  if ( stmt != null ) {
-					  try {
-					  stmt.close();
-					  } catch (Exception e) {}
-				  }
-			  }
+			  } 
 			  if (transactionContextMap != null) {
 				  transactionContextMap.remove(connectionId + "");
 			  }
@@ -916,9 +906,8 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
       
       // Set current schema if username was specified...
       if ( this.username != null ) { // Only works for Oracle...
-    	  PreparedStatement stmt = null;
     	  try {
-    		  stmt =  con.prepareStatement("SELECT sys_context('USERENV', 'CURRENT_SCHEMA') AS schemaname FROM dual");
+    		  PreparedStatement stmt =  con.prepareStatement("SELECT sys_context('USERENV', 'CURRENT_SCHEMA') AS schemaname FROM dual");
     		  ResultSet rs = stmt.executeQuery();
     		  rs.next();
     		  this.defaultUsername = rs.getString("schemaname");
@@ -926,18 +915,17 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
     			  Access.writeToConsole(myAccess, "DEFAULT SCHEMA IS: " + this.defaultUsername);
     		  }
     		  rs.close();
+    		  stmt.close();
+    		  // Now set current_schema...
     		  stmt =  con.prepareStatement("ALTER SESSION SET CURRENT_SCHEMA = " + this.username);
     		  stmt.executeUpdate();
+    		  stmt.close();
     		  if ( debug ) {
     			  Access.writeToConsole(myAccess, "SET CURRENT_SCHEMA TO: " + this.username);
     		  }
     	  } catch (Exception e) {
     		  System.err.println(e.getMessage());
-    	  } finally {
-    		  if ( stmt != null ) {
-    			  stmt.close();
-    		  }
-    	  }
+    	  } 
       }
 	  
       if (con != null && ( myConnectionBroker == null || myConnectionBroker.supportsAutocommit ) ) {
