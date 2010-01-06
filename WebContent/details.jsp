@@ -98,6 +98,15 @@ if(res!=null) {
 					<a href="editor.jsp?application=${app.applicationName}&amp;filePath=settings/arguments.properties">Edit arguments.properties</a>
 			
 			</div>
+			
+			<div class="important">
+			
+								<c:if test="${app.buildType=='web'}">
+			<h4>Run Echo App</h4>
+						Echo app: <a href="${app.liveUrl}${app.applicationName}">Start application</a><br/>
+			</div>
+
+					</c:if>
 			<div class="important">
 				<h4>Extensions</h4>
 				<table>

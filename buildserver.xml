@@ -22,40 +22,66 @@
 -->
 	
 	<property name="src" location="src"/>
-    <property name="build" location="build/classes"/>
     <property name="lib" value="lib"/>
     <property name="archive" value="${ant.project.name}.jar"/>
     <target name="clean">
 		<delete file="${ant.project.name}.war"/>
     	<delete file="${ant.project.name}.jar"/>
     </target>
+	
+	
+	
 	<target name="compile" depends="clean">
-        <javac srcdir="${src}" destdir="${build}">
-			<sourcepath>
-				<fileset dir="${src}">
-				</fileset>
-				<fileset dir="srcjnlp">
-				</fileset>
-			</sourcepath>
+		<delete file="WebContent/WEB-INF/lib/TipiServer.jar"/>
+    	<path id="tipiserverdepend">
+    		<fileset dir="WebContent/WEB-INF/lib">
+    			<include name="**/*.jar"/>
+    		</fileset>
+    		<fileset dir="compilelib">
+    			<include name="**/*.jar"/>
+    		</fileset>
+    		<fileset dir="lib">
+    			<include name="**/*.jar"/>
+    		</fileset>
+    	</path>
+
+		<delete dir="classes"/>
+		<mkdir dir="classes"/>
+				
+		<javac debug="true" srcdir="${src}" destdir="classes">
+        	<classpath refid="tipiserverdepend" />
+        </javac>
+		<javac debug="true" srcdir="srcjnlp" destdir="classes">
+        	<classpath refid="tipiserverdepend" />
         </javac>
     </target>
 
-
-    <target name="archive" depends="compile">
-		<ant antfile="../TipiBuildLibrary/build.xml" target="archive"/>
-
+	<target name="resource" depends="compile">
+		<copy todir="classes">
+			<fileset dir="${src}">
+				<exclude name="**/*.java" />
+			</fileset>
+			<fileset dir="srcjnlp">
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+    <target name="archive" depends="resource">
+<!--		<ant antfile="../TipiBuildLibrary/build.xml" target="archive"/>
+-->
     	<jar jarfile="${archive}">
-            <fileset dir="${build}">
+            <fileset dir="classes">
                  <exclude name="**/*.xml"/>
                </fileset>
 		</jar>    	
     </target>
+
+	
     <target name="jspdepend">
 		
     </target>
 
-    <target name="publish" depends="jspdepend,archive">
-    	<ant antfile="../NavajoJsp/build.xml"  target="archive" dir="../NavajoJsp"/>
+    <target name="deploy" depends="jspdepend,archive">
     	<copy todir="../TipiServer/WebContent/WEB-INF/lib">
         			<fileset dir="../NavajoJsp">
         				<include  name="NavajoJsp.jar"/>
@@ -66,29 +92,32 @@
         				<include  name="navajo.tld"/>
         			</fileset>
         		</copy> 
+    	<copy todir="WebContent/WEB-INF/lib">
+        			<fileset dir="../NavajoJsp/lib">
+        				<include  name="*.jar"/>
+        			</fileset>
+        		</copy> 
     	
     	<echo message="JSP built!"/>
     	 <copy todir="../TipiServer/WebContent/WEB-INF/lib">
 			<fileset dir=".">
 				<include  name="${archive}"/>
 			</fileset>
+			<fileset dir="./lib">
+				<include  name="*.jar"/>
+			</fileset>
 		</copy>
-		<!--
-    	<zip  destfile="testswing.zip">
-    		<fileset dir="testswing/">
-    			<include name="**"/>
-    		</fileset>
-    	</zip>-->
     	
     	<eclipse.refreshLocal resource="/${ant.project.name}"/>
     	<war basedir="${basedir}/WebContent" destfile="${ant.project.name}.war">
 			<fileset dir="WebContent">
 				<include  name="**"/>
+				
 			</fileset>
 		</war>
+    	<echo message="WAR Complete!"/>
     	
-		<deploy  url="${tipiTomcatManager}" update="true" username="${tipiTomcatUsername}" password="${tipiTomcatPassword}" path="/${ant.project.name}" war="${basedir}/${ant.project.name}.war"/>
-    <!--	<scp file="TipiServer.jar" todir="sportlink:sp0rtl1nk@hermes1.dexels.com:/usr/local/apache-tomcat-6.0.20/webapps/TipiAppStore/WEB-INF/lib"></scp>
+   <!--	<scp file="TipiServer.jar" todir="sportlink:sp0rtl1nk@hermes1.dexels.com:/usr/local/apache-tomcat-6.0.20/webapps/TipiAppStore/WEB-INF/lib"></scp>
     	  <scp file="WebContent/WEB-INF/lib/TipiServer.jar" todir="sportlink:sp0rtl1nk@hermes1.dexels.com:/usr/local/apache-tomcat-6.0.20/webapps/TipiAppStore/WEB-INF/lib"></scp>
   	  <scp todir="sportlink:sp0rtl1nk@hermes1.dexels.com:/usr/local/apache-tomcat-6.0.20/webapps/TipiAppStore/">
   	  	<fileset dir="WebContent">
@@ -98,5 +127,11 @@
 	<!-- for now -->
 <!--		<stopApplication />-->
     </target>
+	<target name="publish" depends="deploy">
+		<deploy  url="${tipiTomcatManager}" update="true" username="${tipiTomcatUsername}" password="${tipiTomcatPassword}" path="/${ant.project.name}" war="${basedir}/${ant.project.name}.war"/>
+ 
+	</target>
+	    
+
 </project>
 <!-- EOF: $RCSfile$ -->

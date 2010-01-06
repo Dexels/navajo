@@ -36,7 +36,53 @@ public class ApplicationStatus {
 	private String applicationName;
 	private File appFolder;
 	private String extensionRepository;
+	private boolean localSign;
+	private String buildType = null;
+	private String liveUrl = null;
 	
+	public String getLiveUrl() {
+		return liveUrl;
+	}
+
+	public void setLiveUrl(String liveUrl) {
+		this.liveUrl = liveUrl;
+	}
+
+	public String getBuildType() {
+		return buildType;
+	}
+
+	public void setBuildType(String buildType) {
+		this.buildType = buildType;
+	}
+
+	public String getCvsModule() {
+		return cvsModule;
+	}
+
+	public void setCvsModule(String cvsModule) {
+		this.cvsModule = cvsModule;
+	}
+
+	public String getCvsRevision() {
+		return cvsRevision;
+	}
+
+	public void setCvsRevision(String cvsRevision) {
+		this.cvsRevision = cvsRevision;
+	}
+
+	private String cvsModule;
+	private String cvsRevision;
+	
+	public boolean isLocalSign() {
+		return localSign;
+	}
+
+	public void setLocalSign(boolean localSign) {
+		this.localSign = localSign;
+	}
+
 	private Map<String,Boolean> profileNeedsRebuild = new HashMap<String, Boolean>();	
 	public String getRepository() {
 		return extensionRepository;
@@ -66,6 +112,12 @@ public class ApplicationStatus {
 		return exists;
 	}
 
+	public boolean isCVS() {
+		File cvsDir = new File(appFolder,"CVS");
+		return cvsDir.exists();
+	}
+
+	
 	public void setExists(boolean exists) {
 		this.exists = exists;
 	}
@@ -118,9 +170,36 @@ public class ApplicationStatus {
 			extensions.add(new ExtensionEntry(element));
 				
 			}
+	    if(settings.containsKey("keystore")) {
+	   	 setLocalSign(true);
+	    }
+	    if(settings.containsKey("build")) {
+	   	 setBuildType(settings.getString("build"));
+	    }
+	    if(settings.containsKey("liveUrl")) {
+	   	 setLiveUrl(settings.getString("liveUrl"));
+	    }
+	    
 	    setExists(true);
 	    applicationName = appDir.getName();
 	    processProfiles(appDir);
+	    
+	    File cvsDir = new File(appDir,"CVS");
+	    if(cvsDir.exists()) {
+	   	 File repository = new File(cvsDir,"Repository");
+	   	 BufferedReader fr = new BufferedReader(new FileReader(repository));
+	   	 setCvsModule(fr.readLine());
+	   	 fr.close();
+	   	 File tag = new File(cvsDir,"Tag");
+	   	 if (tag.exists()) {
+		   	 fr = new BufferedReader(new FileReader(tag));
+		   	 setCvsRevision(fr.readLine().substring(1));
+		   	 fr.close();
+			} else {
+				 setCvsRevision("HEAD");
+			}
+
+	    }
 	    
 	}
 	

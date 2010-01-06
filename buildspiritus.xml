@@ -5,14 +5,13 @@
     <property name="tipiTomcatManager" value="http://spiritus.dexels.nl:8080/manager"/>
     <property name="tipiTomcatUsername" value="ad"/>
     <property name="tipiTomcatPassword" value="pw"/>
-
 	<target name="setuptarget">
-		
 		<copy overwrite="true" todir="WebContent/WEB-INF/" file="serverconfigurations/spiritus/web.xml"/>
 	</target>
-	
-	<target name="dobuild" depends="setuptarget">		<ant antfile="buildserver.xml" target="publish"></ant>
+	<target name="dobuild" depends="setuptarget">		
+		<ant antfile="buildserver.xml" target="publish"/>
 	</target>
-	
 </project>
+
 <!-- EOF: $RCSfile$ -->
+

@@ -6,9 +6,6 @@
 <%@page import="java.net.*"%>
 <%@page import="java.util.*"%>
 <%@ taglib prefix="c" uri="WEB-INF/tags/c.tld"%>
-<%@ taglib uri="http://java.fckeditor.net" prefix="FCK" %>
-<%@ page import="com.dexels.navajo.jsp.NavajoContext"%>
-<jsp:useBean id="NavajoContext" class="com.dexels.navajo.jsp.NavajoContext" scope="page" />
 <jsp:useBean id="manager" class="com.dexels.navajo.tipi.appmanager.ApplicationManager" scope="page" />
 <jsp:useBean id="versionResolver" class="com.dexels.navajo.tipi.projectbuilder.VersionResolver" scope="page" />
 

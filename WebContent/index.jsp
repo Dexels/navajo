@@ -64,6 +64,18 @@ if(res!=null) {
 				<form name="input" action="TipiAdminServlet" method="get">Create new application: 
 					<input type="text" name="app" /> 
 					<input type="hidden" name="cmd" value="create" /> 
+					<input type="hidden" name="destination" value="#" /> 
+					<input type="submit" value="Create" />
+				</form>
+			</div>
+			<h3>Checkout an application</h3>
+			<div class="info">
+				<form name="input" action="TipiAdminServlet" method="get">
+					Application name:<input type="text" name="app" /><br/>
+					Branch: <input type="text" name="branch" /> <br/>
+					Module: <input type="text" name="module" /> <br/>
+					<input type="hidden" name="cmd" value="cvscheckout" /> 
+					<input type="hidden" name="destination" value="/message.jsp" /> 
 					<input type="submit" value="Create" />
 				</form>
 			</div>
@@ -74,7 +86,7 @@ if(res!=null) {
 					Choose file:<br/>
 					<input type="file" name="zippedFile" /> 
 					<input type="hidden" name="cmd" value="upload" /> 
-					<input type="hidden" name="destination" value="#" /> 
+					<input type="hidden" name="destination" value="/message.jsp" /> 
 					<input type="submit" value="Upload" />
 				</form>
 			</div>
@@ -84,19 +96,20 @@ if(res!=null) {
           <div id="col3_content" class="clearfix">
 	<c:forEach var="app" items="${manager.applications}">
 			<div class="important">
-			<h4><a href="details.jsp?application=${app.applicationName}">${app.applicationName}</a></h4>
-				
-				<div class="float_right">
-					<a href="TipiAdminServlet?app=${app.applicationName}&amp;cmd=clean&amp;destination=#">Clean</a>
-					<a href="TipiAdminServlet?app=${app.applicationName}&amp;cmd=build&amp;destination=#">Build</a>
-					<a href="TipiAdminServlet?app=${app.applicationName}&amp;cmd=download">Download</a>
-					<a  onclick="if(confirm('Delete application: ${app.applicationName}?')) location.href = 'TipiAdminServlet?app=${app.applicationName}&amp;cmd=delete&amp;destination=#'; ">Delete</a>
-				</div>
+		<table width="100%">
+			<tr>
+				<td>
+			<h4>
+				<a href="details.jsp?application=${app.applicationName}">${app.applicationName}</a>
+				<c:if test="${app.CVS}">
+					${app.cvsModule} [ ${app.cvsRevision} ];
+				</c:if>
+			</h4>
 				<c:if test="${app.valid}">
 					<c:forEach var="profile" items="${app.profiles}">
 						<c:set var="profileName" value="${profile}"/>
-						<a href="Apps/${app.applicationName}/${profile}.jnlp">${profile} needs build: ${app.rebuildMap[profileName]}</a> <br/>
-
+						<a href="Apps/${app.applicationName}/${profile}.jnlp">${profile}</a> <br/>
+			
 					</c:forEach>
 				</c:if> 
 				<c:if test="${!app.valid}">
@@ -106,7 +119,36 @@ if(res!=null) {
 						</div>
 					</c:forEach>
 				</c:if>
+				
+				</td>
+				<td>
+				<div class="float_right">
+					<c:if test="${app.CVS}">
+						<a href="TipiAdminServlet?app=${app.applicationName}&amp;cmd=cvsupdate&amp;destination=/message.jsp">CVS update</a>
+							<form name="input" action="TipiAdminServlet" method="get">Tag version
+								<input type="text" name="tag" /> 
+								<input type="hidden" name="cmd" value="tag" /> 
+								<input type="hidden" name="app" value="${app.applicationName}" /> 
+								<input type="hidden" name="destination" value="/message.jsp" /> 
+								<input type="submit" value="Tag cvs" />
+							</form>
+					</c:if>
+					<c:if test="${app.localSign}">
+						Locally signed.
+					</c:if>
+					<c:if test="${app.buildType=='web'}">
+						Echo app: <a href="${app.liveUrl}${app.applicationName}">Start application</a><br/>
+					</c:if>
+					<a href="TipiAdminServlet?app=${app.applicationName}&amp;cmd=clean&amp;destination=#">Clean</a>
+					<a href="TipiAdminServlet?app=${app.applicationName}&amp;cmd=build&amp;destination=#">Build</a>
+					<a href="TipiAdminServlet?app=${app.applicationName}&amp;cmd=download">Download</a>
+					<a  onclick="if(confirm('Delete application: ${app.applicationName}?')) location.href = 'TipiAdminServlet?app=${app.applicationName}&amp;cmd=delete&amp;destination=#'; ">Delete</a>
+				</div>
+							</td>
+			</tr>
+		</table>
 			</div>
+			
 	</c:forEach>
 
      </div>

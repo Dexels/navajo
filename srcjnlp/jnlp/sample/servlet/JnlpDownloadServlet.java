@@ -150,7 +150,7 @@ public class JnlpDownloadServlet extends HttpServlet {
 	_log.addDebug("Reqeuest: "+request.getRequestURI()+" query: "+request.getQueryString());
 	//System.err.println("Request: "+request.getRequestURI()+" query: "+request.getQueryString());
 
-	TipiAdminServlet.buildIfNecessary(request,getAppFolder(),getServletContext());
+	//TipiAdminServlet.buildIfNecessary(request,getAppFolder(),getServletContext());
 	Map en = request.getParameterMap();
 	for (Object key : en.keySet()) {
 		Object value = en.get(key);

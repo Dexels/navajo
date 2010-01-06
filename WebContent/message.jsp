@@ -10,7 +10,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-<title>Navajo Tester</title>
+<title>Tipi App Store</title>
 <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 <!-- add your meta tags here -->
 
@@ -35,7 +35,7 @@
         <div class="hlist">
           <!-- main navigation: horizontal list -->
           <ul>
-            <li class="active"><strong>Application Overview</strong></li>
+            <li class="active"><strong>Command output</strong></li>
            
           </ul>
         </div>
@@ -43,18 +43,19 @@
       <div id="main">
         <div id="col1">
           <div id="col1_content" class="clearfix">
-            <h3>Usage</h3>
-			<div class="info">
-				This is an overview of all deployed Tipi applications on this server. It is a view on the file system on the server. 
-				Feel free to edit the files on the server, or upload zipped applications, either created manually or by the TipiPlugin in Eclipse
-				
+			<h3><a href="index.jsp">Back to Overview</a></h3>
+				<%
+				String ppp = request.getParameter("result");
+				String formatted =  ppp.replaceAll("\n","<br/>");
+				out.println(formatted);
+				%>
 			</div>
-</div>
+			<a href="index.jsp">Back to Overview</a>
         </div>
         <div id="col3">
           <div id="col3_content" class="clearfix">
-	
-     </div>
+			
+	     </div>
           <!-- IE Column Clearing -->
           <div id="ie_clearing"> &#160; </div>
         </div>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- $Id$ -->
-<project name="TipiServer" default="dobuild" basedir=".">
+<project name="TipiServerTest" default="dobuild" basedir=".">
     <property name="tipiTomcatServer" value="http://hermes1.dexels.com:8080/"/>
     <property name="tipiTomcatManager" value="http://hermes1.dexels.com:8080/manager"/>
     <property name="tipiTomcatUsername" value="navajo"/>

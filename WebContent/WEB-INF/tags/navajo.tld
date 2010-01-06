@@ -55,6 +55,18 @@
       </attribute>
    </tag>
 
+
+   <tag>
+      <name>formattml</name>
+      <tagclass>com.dexels.navajo.jsp.tags.DumpFormattedTmlTag</tagclass>
+      <info>Dumps a webservice formatted in XHTML.</info>
+      <attribute>
+         <name>service</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+      </attribute>
+   </tag>
+
    <tag>
       <name>write</name>
       <tagclass>com.dexels.navajo.jsp.tags.WriteServiceTag</tagclass>
@@ -119,6 +131,11 @@
       </attribute>
       <attribute>
          <name>messageName</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+         <name>messageIndex</name>
          <required>false</required>
          <rtexprvalue>true</rtexprvalue>
       </attribute>

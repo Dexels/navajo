@@ -40,6 +40,7 @@ import com.dexels.navajo.tipi.projectbuilder.ClientActions;
 import com.dexels.navajo.tipi.projectbuilder.LocalJnlpBuilder;
 import com.dexels.navajo.tipi.projectbuilder.ProjectBuilder;
 import com.dexels.navajo.tipi.projectbuilder.TipiProjectBuilder;
+import com.dexels.navajo.tipi.projectbuilder.VersionResolver;
 import com.dexels.navajo.tipi.util.XMLElement;
 import com.oreilly.servlet.MultipartRequest;
 
@@ -78,6 +79,7 @@ public class TipiAdminServlet extends HttpServlet {
 			response.getWriter().write(result+"\n");
 			return;
 		}
+
 		String resultMessage;
 		String destination;
 		resultMessage = performCommando(commando, application, applicationDir, new URL(myAppUrl),request);
@@ -176,7 +178,30 @@ public class TipiAdminServlet extends HttpServlet {
 		if (commando.equals("saveConfig")) {
 			return saveConfig(application, appDir,request);
 		}
-	
+		if (commando.equals("cvsupdate")) {
+			try {
+				return updateApp(appDir,application);
+			} catch (IOException e) {
+				e.printStackTrace();
+				throw new ServletException("Error updating CVS: ",e);
+			}
+		}
+		if (commando.equals("cvscheckout")) {
+			try {
+				return checkoutApp(getAppFolder(),application,request.getParameter("branch"),request.getParameter("module"));
+			} catch (IOException e) {
+				e.printStackTrace();
+				throw new ServletException("Error updating CVS: ",e);
+			}
+		}
+		if (commando.equals("tag")) {
+			try {
+				return tagApp(appDir,application,request.getParameter("tag"));
+			} catch (IOException e) {
+				e.printStackTrace();
+				throw new ServletException("Error updating CVS: ",e);
+			}
+		}
 		return "Unknown commando!";
 	}
 
@@ -246,6 +271,55 @@ public class TipiAdminServlet extends HttpServlet {
 		}
 	}
 	
+	private String updateApp(File fileDir, String appName) throws IOException {
+//		public static String callAnt(File buildFile, File baseDir, Map<String,String> userProperties) throws IOException {
+		File currentAppFolder = new File(getAppFolder(),appName);
+		String path = getServletContext().getRealPath("WEB-INF/ant/cvsupdateproject.xml");
+		Map<String,String> userProperties = new HashMap<String, String>();
+		userProperties.put("appDir", currentAppFolder.getAbsolutePath());
+		return AntRun.callAnt(new File(path), currentAppFolder, userProperties,null);
+	}
+	
+	
+	private String tagApp(File appDir, String application,String tag) throws IOException {
+		File currentAppFolder = new File(getAppFolder(),application);
+
+		String path = getServletContext().getRealPath("WEB-INF/ant/cvstagproject.xml");
+		Map<String,String> userProperties = new HashMap<String, String>();
+		userProperties.put("appDir",currentAppFolder.getAbsolutePath());
+		userProperties.put("tag", tag);
+		return AntRun.callAnt(new File(path), currentAppFolder, userProperties,null);
+
+	}
+	
+
+	private String checkoutApp(File appDir, String application, String branch, String module) throws IOException {
+		File currentAppFolder = new File(getAppFolder(),application);
+//		if(!currentAppFolder.exists()) {
+//			currentAppFolder.mkdir();
+//		}
+		String path = getServletContext().getRealPath("WEB-INF/ant/cvscheckoutproject.xml");
+		Map<String,String> userProperties = new HashMap<String, String>();
+		userProperties.put("appDir",getAppFolder().getAbsolutePath());
+		if(application==null || "".equals(application)) {
+			application = module;
+		}
+		userProperties.put("application", application);
+		userProperties.put("module", module);
+		userProperties.put("cvsRoot", ":pserver:frank@spiritus.dexels.nl:/home/cvs");
+
+		
+		if(branch!=null) {
+			userProperties.put("branch", branch);
+			
+		}
+		if(branch==null || branch.equals("")) {
+			return AntRun.callAnt(new File(path), getAppFolder(), userProperties,"checkout");
+		} else {
+			return AntRun.callAnt(new File(path), getAppFolder(), userProperties,"checkoutbranch");
+			
+		}
+	}
 	private void createApp(File tmp , String appName) {
 		File dest = new File(getAppFolder(),appName);
 		dest.mkdirs();
@@ -312,7 +386,7 @@ public class TipiAdminServlet extends HttpServlet {
 				userProperties.put("application", application);
 				File actualAppFolder = new File(appDir, application);
 				userProperties.put("zipDir", actualAppFolder.getAbsolutePath());
-				String result = AntRun.callAnt(new File(path), actualAppFolder, userProperties);
+				String result = AntRun.callAnt(new File(path), actualAppFolder, userProperties,null);
 //				System.err.println("Result: "+result);
 				File output = new File(actualAppFolder,application+".zip");
 				FileInputStream fis = new FileInputStream(output);
@@ -346,33 +420,66 @@ public class TipiAdminServlet extends HttpServlet {
 			}
 		}
 		libDir.delete();
+		File buildResults = new File(appDir,"settings/buildresults.properties");
+		if(buildResults.exists()) {
+			buildResults.delete();
+		}
 		return "OK - "+libDir.getAbsolutePath() + " cleaned!";
 	}
 
+	
+	private static void writeBuildResult(File appDir, String extensions) throws IOException {
+		File result = new File(appDir,"settings/buildresults.properties");
+		FileWriter fw = new FileWriter(result);
+		fw.write("extensions="+extensions+"\n");
+		fw.write("timestamp="+System.currentTimeMillis()+"\n");
+		fw.flush();
+		fw.close();
+	}
 	public static String build(String application, File appDir, ServletContext context) {
 		// TipiProjectBuilder
 		String codebase = context.getInitParameter("appUrl");
 		if(codebase!=null) {
 			codebase = codebase+application+"/";
 		}
+		String postProcessAnt = null;
 		try {
-			ProjectBuilder.buildTipiProject(appDir,codebase);
+			postProcessAnt = ProjectBuilder.buildTipiProject(appDir,codebase);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return "Error building " + application + ": " + e.getMessage();
 		}
-		boolean localSign = false;
+		
+
+		
+		if(postProcessAnt!=null) {
+
+			String path = context.getRealPath(postProcessAnt);
+			
+			String result;
+			try {
+				Map<String,String> props = new HashMap<String, String>();
+				FileInputStream is = new FileInputStream(new File(appDir,"settings/tipi.properties"));
+				PropertyResourceBundle pe = new PropertyResourceBundle(is);
+				props.put("managerUrl", pe.getString("managerUrl"));
+				props.put("managerUsername", pe.getString("managerUsername"));
+				props.put("managerPassword", pe.getString("managerPassword"));
+				is.close();
+
+				props.put("application", application);
+				result = AntRun.callAnt(new File(path), appDir, props,null);
+				System.err.println("Result: "+result);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+		}
 		
 		PropertyResourceBundle pe;
 		Map<String,String> userProperties = new HashMap<String,String>();
 		try {
 			FileInputStream is = new FileInputStream(new File(appDir,"settings/tipi.properties"));
 			pe = new PropertyResourceBundle(is);
-			Enumeration<String> keys = pe.getKeys();
-			while (keys.hasMoreElements()) {
-				String key = keys.nextElement();
-
-			}
 			userProperties.put("keystore", pe.getString("keystore"));
 			userProperties.put("alias", pe.getString("alias"));
 			userProperties.put("storepass", pe.getString("storepass"));
@@ -382,24 +489,24 @@ public class TipiAdminServlet extends HttpServlet {
 				String path = context.getRealPath("WEB-INF/ant/localsign.xml");
 				try {
 					System.err.println("Calling ant with: "+userProperties+" in folder: "+appDir);
-					String result = AntRun.callAnt(new File(path), appDir, userProperties);
+					String result = AntRun.callAnt(new File(path), appDir, userProperties,null);
 					System.err.println("Result: "+result);
+					writeBuildResult(appDir,pe.getString("extensions"));
+
 					return "OK - Local signing succeeded. I think.";
 				} catch (IOException e) {
 					e.printStackTrace();
 					return "Error building " + application + ": " + e.getMessage();
 				}
 			}
+			// Regular build succeeded
+			writeBuildResult(appDir,pe.getString("extensions"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	catch (MissingResourceException me) {
 			System.err.println("No keystore found");
 		}
-
-		
-		
 		return "OK - "+application + " built!";
- 
 	}
 
 	public boolean deleteDirectory(File path) {
@@ -453,8 +560,7 @@ public class TipiAdminServlet extends HttpServlet {
 	
 	}
 
-	
-	
+
 	/**
 	 * Same as the stream edition. Does not close streams!
 	 * @param out
