@@ -7,17 +7,38 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.UserException;
 
 public class TmlToXmlMap implements Mappable {
-	XMLMap content = new XMLMap();
+	public XMLMap content = new XMLMap();
 	Access access = null;
-	String rootPath = null;
+	public String rootPath = null;
 	Navajo document = null;
+	public String attributePath = "";
+	public String attributeName = "";
+	public String attributeValue = "";
+	public boolean buildContent, dumpObject;
+	
 	ArrayList<String[]> attributes = new ArrayList<String[]>();
+
+	public void setAttributePath(String path) {
+		this.attributePath = path;
+	}
+
+	public void setAttributeName(String name) {
+		this.attributeName = name;
+	}
+
+	public void setAttributeValue(String value) {
+		this.attributeValue = value;
+		if (!"".equals(attributeName) && !"".equals(attributePath) && !"".equals(value)) {
+			addAttribute(attributePath, attributeName, attributeValue);
+		}
+	}
 
 	public void addAttribute(String messagePath, String name, String value) {
 		String[] attr = new String[] { messagePath, name, value };
@@ -36,39 +57,49 @@ public class TmlToXmlMap implements Mappable {
 	@Override
 	public void kill() {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void load(Access access) throws MappableException, UserException {
 		this.access = access;
-		buildContent();
 	}
 
 	@Override
 	public void store() throws MappableException, UserException {
 		// TODO Auto-generated method stub
-
 	}
 
-	public void buildContent() throws UserException {
+	public void setBuildContent(boolean b) throws UserException {
 		try {
-			if (document == null) {
-				document = access.getOutputDoc();
-			}
-			Message root = document.getMessage(rootPath);
-			content.setStart(root.getName());
+			if (b) {
+				if (document == null) {
+					document = access.getOutputDoc();
+				}
+				content.setCompact(true);
+				Message root = document.getMessage(rootPath);
+				content.setStart(root.getName());
 
-			// Watch it, we assume the root has no properies
-			ArrayList<Message> allMessages = root.getAllMessages();
-			for (int i = 0; i < allMessages.size(); i++) {
-				appendMessages(allMessages.get(i), content);
-			}
+				// Watch it, we assume the root has no properies
+				ArrayList<Message> allMessages = root.getAllMessages();
+				for (int i = 0; i < allMessages.size(); i++) {
+					appendMessages(allMessages.get(i), content);
+				}
 
-			appendAttributes();
+				appendAttributes();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new UserException(392, e.getMessage());
+		}
+	}
+
+	public void setDumpObject(boolean b) {
+		try {
+			if (b) {
+				getContent().write(System.err);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -91,6 +122,7 @@ public class TmlToXmlMap implements Mappable {
 			TagMap child;
 			if (!m.getType().equals(Message.MSG_TYPE_ARRAY)) {
 				child = new TagMap();
+				child.setCompact(true);
 				child.setName(m.getName());
 				parent.setChild(child);
 			} else {
@@ -111,13 +143,14 @@ public class TmlToXmlMap implements Mappable {
 
 	private final void appendProperty(Property p, TagMap parent) throws UserException {
 		TagMap property = new TagMap();
+		property.setCompact(true);
 		property.setName(p.getName());
 		property.setText(p.getValue());
 		parent.setChild(property);
 	}
 
-	public XMLMap getContent() {
-		return content;
+	public Binary getContent() {
+		return content.getContent();
 	}
 
 	public static void main(String[] args) {
@@ -125,8 +158,11 @@ public class TmlToXmlMap implements Mappable {
 			TmlToXmlMap t2x = new TmlToXmlMap();
 
 			Navajo n = NavajoFactory.getInstance().createNavajo();
+			Message apenootWrapepr = NavajoFactory.getInstance().createMessage(n, "Apenoot", Message.MSG_TYPE_SIMPLE);
+			
 			Message cms = NavajoFactory.getInstance().createMessage(n, "nam:cmsRequest", Message.MSG_TYPE_SIMPLE);
 			Message sporttaal = NavajoFactory.getInstance().createMessage(n, "nam:Sporttaal", Message.MSG_TYPE_SIMPLE);
+			apenootWrapepr.addMessage(cms);
 			
 			// Array test
 			Message input = NavajoFactory.getInstance().createMessage(n, "nam:Input", Message.MSG_TYPE_ARRAY);
@@ -135,28 +171,25 @@ public class TmlToXmlMap implements Mappable {
 			input.addElement(one);
 			input.addElement(two);
 			sporttaal.addMessage(input);
-			
+
 			// Ignore mode ignore messages
 			Message bogus = NavajoFactory.getInstance().createMessage(n, "nam:TotallyBogus", Message.MSG_TYPE_SIMPLE);
 			bogus.setMode(Message.MSG_MODE_IGNORE);
 			sporttaal.addMessage(bogus);
-			
-			
+
 			Property sender = NavajoFactory.getInstance().createProperty(n, "nam:Sender", "string", "Arnoud", 10, "", Property.DIR_OUT);
-			n.addMessage(cms);
+			n.addMessage(apenootWrapepr);
 			cms.addMessage(sporttaal);
 			sporttaal.addProperty(sender);
 
-			t2x.setRootPath("nam:cmsRequest");
+			t2x.setRootPath("Apenoot/nam:cmsRequest");
 			t2x.setDocument(n);
 			t2x.addAttribute("nam:Sporttaal", "nsp:schemaLocation", "http://nationalesportpas.nl/namespace NSP_v1.1.1.1.xsd");
 			t2x.addAttribute("nam:Sporttaal", "xmlns", "http://nationalesportpas.nl/namespace");
 			t2x.addAttribute("nam:Sporttaal", "xmlns:nsp", "http://www.w3.org/2001/XMLSchema-instance");
 
-			
-			t2x.buildContent();
-			XMLMap c = t2x.getContent();
-			c.getContent().write(System.err);
+			t2x.setBuildContent(true);
+			t2x.setDumpObject(true);
 
 		} catch (Exception e) {
 			e.printStackTrace();
