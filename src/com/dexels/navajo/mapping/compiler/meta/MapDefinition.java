@@ -290,6 +290,7 @@ public class MapDefinition {
 				}
 			} else if (!( 
 					    child.getName().equals("message") || 
+					    child.getName().equals("antimessage") || 
 					    child.getName().equals("defines") || 
 					    child.getName().equals("define") || 
 					    child.getName().equals("property") ||
