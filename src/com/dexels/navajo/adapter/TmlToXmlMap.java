@@ -54,17 +54,14 @@ public class TmlToXmlMap implements Mappable {
 		this.rootPath = rootPath;
 	}
 
-	@Override
 	public void kill() {
 		// TODO Auto-generated method stub
 	}
 
-	@Override
 	public void load(Access access) throws MappableException, UserException {
 		this.access = access;
 	}
 
-	@Override
 	public void store() throws MappableException, UserException {
 		// TODO Auto-generated method stub
 	}
