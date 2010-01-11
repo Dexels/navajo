@@ -11,6 +11,7 @@ public final class DbConnectionBroker extends Object
 	protected Connection[] conns;
 	protected boolean[] usedmap;
 	protected long[] created;
+	protected boolean[] aged;
 	//private int minimum;    // Minimum number of connections (unused)
 	protected int current;    // Current number of open connections
 	protected int available;  // Number of available connections
@@ -75,9 +76,11 @@ public final class DbConnectionBroker extends Object
 		conns   = new Connection[maxConns];
 		usedmap = new boolean[maxConns];
 		created = new long[maxConns];
+		aged    = new boolean[maxConns];
 		for(int i=0; i<conns.length; i++) {
 			conns[i]    = null;
 			usedmap[i]  = false;
+			aged[i]     = false;
 			created[i]  = 0;
 		}
 		closed = false;
@@ -151,9 +154,8 @@ public final class DbConnectionBroker extends Object
 		for(int i=0; i<conns.length; i++) {
 			if(conns[i] != null && usedmap[i] == false) {
 				--available;
-				if(testConnection(conns[i])) {
-					// Reset created time(!)
-					created[i] = System.currentTimeMillis();
+				// Test connection and check whether connection has not yet aged.
+				if(testConnection(conns[i]) && !aged[i]) {
 					usedmap[i] = true;
 					return conns[i];
 				} else {
@@ -180,6 +182,7 @@ public final class DbConnectionBroker extends Object
 					return null;
 				}
 				usedmap[i] = true;
+				aged[i] = false;
 				created[i] = System.currentTimeMillis();
 				++current;
 				return conns[i];
@@ -217,14 +220,6 @@ public final class DbConnectionBroker extends Object
 			if(conns[i] == conn)
 				return i;
 		return -1;
-	}
-	
-	public final long getIdleTime(Connection conn) {
-		int id = idOfConnection(conn);
-		if(id >= 0) {
-			return System.currentTimeMillis() - created[id];
-		}
-		return 0;
 	}
 	
 	private final synchronized void destroy(int millis) throws SQLException

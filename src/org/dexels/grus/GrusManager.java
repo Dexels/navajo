@@ -56,7 +56,7 @@ public class GrusManager implements Runnable {
 						for (int i = 0; i < inspectedBroker.conns.length; i++) {
 							if (inspectedBroker.conns[i] != null && !inspectedBroker.usedmap[i] && inspectedBroker.created[i] < maxAge) {
 								try {
-									inspectedBroker.log("Closing idle connection: " + inspectedBroker.conns[i].hashCode());
+									inspectedBroker.log("Closing idle and aged connection: " + inspectedBroker.conns[i].hashCode());
 									inspectedBroker.conns[i].close();
 									idle++;
 								} catch (SQLException e) {
@@ -68,6 +68,10 @@ public class GrusManager implements Runnable {
 								--inspectedBroker.current;
 								// System.err.println("Checking timeout for
 								// connections, current count is " + current);
+							} else if ( inspectedBroker.created[i] < maxAge ) {
+								// If connection was in use, but als aged, mark it as aged, such that it can
+								// be destroyed upon 
+								inspectedBroker.aged[i] = true;
 							}
 						}
 					}
