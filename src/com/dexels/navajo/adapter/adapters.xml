@@ -102,6 +102,23 @@
             <value name="multipleAttachments" map="attachment []" required="false" direction="in"/>
         </values>
     </map>
+    <!--Alternative mail adapter -->
+    <map>
+        <tagname>mailalternative</tagname>
+        <object>com.dexels.navajo.adapter.MailMapAlternative</object>
+        <values>
+            <value name="mailServer" type="string" required="true" direction="in"/>
+            <value name="queuedSend" type="boolean" required="false" direction="in"/>
+            <value name="ignoreFailures" type="boolean" required="false" direction="in"/>
+            <value name="sender" type="string" required="false" direction="in"/>
+            <value name="subject" type="string" required="false" direction="in"/>
+            <value name="text" type="string" required="false" direction="in"/>
+            <value name="recipients" type="string" required="false" direction="in"/>
+            <value name="attachment" map="attachment" required="false" direction="in"/>
+            <value name="relatedBodyPart" map="attachment" required="false" direction="in"/>
+            <value name="multipleAttachments" map="attachment []" required="false" direction="in"/>
+        </values>
+    </map>
     <map>
         <tagname>attachment</tagname>
         <object>com.dexels.navajo.adapter.AttachmentMap</object>
@@ -315,6 +332,50 @@
         <methods>
             <method name="invoke">
                 <param name="value" field="invoke" type="boolean" required="automatic" value="true"/>
+            </method>
+        </methods>
+    </map>
+    <!-- SOAP adapter -->
+    <map>
+        <tagname>soap</tagname>
+        <object>com.dexels.navajo.adapter.SOAPMap</object>
+        <values>
+            <value name="soapAction" type="string" required="false" direction="in"/>
+            <value name="url" type="string" required="false" direction="in"/>            
+        </values>
+        <methods>
+            <method name="addNamespace">
+                <param name="value" field="namespace" type="string" required="true"/>
+            </method>
+            <method name="responseBody">
+                <param name="value" field="responseBody" type="binary" required="false"/>
+            </method>
+            <method name="requestBody">
+                <param name="value" field="requestBody" type="binary" required="true"/>
+            </method>
+            <method name="doSend">
+                <param name="value" field="doSend" type="boolean" required="automatic" value="true"/>
+            </method>
+        </methods>
+    </map>
+    <!-- TmlToXml adapter -->
+    <map>
+        <tagname>tml2xml</tagname>
+        <object>com.dexels.navajo.adapter.TmlToXmlMap</object>
+        <values>
+            <value name="rootPath" type="string" required="true" direction="in"/>          
+        </values>
+        <methods>
+            <method name="addAttribute">                
+                <param name="path" field="attributePath" type="string" required="true"/>
+                <param name="name" field="attributeName" type="string" required="true"/>
+                <param name="value" field="attributeValue" type="string" required="true"/>
+            </method>
+            <method name="dumpObject">
+                <param name="value" field="dumpObject" type="boolean" required="automatic" value="true"/>
+            </method>
+            <method name="buildContent">
+                <param name="value" field="buildContent" type="boolean" required="automatic" value="true"/>
             </method>
         </methods>
     </map>

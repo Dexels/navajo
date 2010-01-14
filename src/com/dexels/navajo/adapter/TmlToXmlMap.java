@@ -43,6 +43,7 @@ public class TmlToXmlMap implements Mappable {
 	public void addAttribute(String messagePath, String name, String value) {
 		String[] attr = new String[] { messagePath, name, value };
 		attributes.add(attr);
+		
 	}
 
 	// This function is for testing only
