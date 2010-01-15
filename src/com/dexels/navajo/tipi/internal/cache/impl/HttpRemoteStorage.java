@@ -1,12 +1,14 @@
 package com.dexels.navajo.tipi.internal.cache.impl;
 
-import java.io.*;
-import java.net.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Map;
 
-import sun.net.www.protocol.file.FileURLConnection;
-
-import com.dexels.navajo.tipi.internal.cache.*;
+import com.dexels.navajo.tipi.internal.cache.RemoteStorage;
 
 public class HttpRemoteStorage implements RemoteStorage {
 	private URL baseUrl = null;
