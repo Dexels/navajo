@@ -64,6 +64,7 @@
         <xs:attribute name="condition" type="xs:string"/>
         <xs:attribute name="mode" type="xs:string"/>
         <xs:attribute name="index" type="xs:integer"/>
+        <xs:attribute name="count" type="xs:integer"/>
     </xs:complexType>
     <xs:element name="navascript" type="TopLevel"/>
     <xs:element name="tsl" type="TopLevel"/>
@@ -150,7 +151,7 @@
                 </xs:simpleType>
             </xs:attribute>
             <xs:attribute name="value" type="xs:string"/>
-            <xs:attribute use="required" name="direction">
+            <xs:attribute name="direction">
                 <xs:simpleType>
                     <xs:restriction base="xs:NMTOKEN">
                         <xs:enumeration value="in"/>
