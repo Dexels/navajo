@@ -60,10 +60,10 @@ public class GenerateXSD {
 		while ( setters.hasNext() ) {
 			CaseSensitiveXMLElement x = new CaseSensitiveXMLElement("xs:element");
 			ValueDefinition vd = (ValueDefinition) MapMetaData.getInstance().getMapDefinition(adapterName).getValueDefinition((String) setters.next());
-			x.setAttribute("type", "SetterType");
+			x.setAttribute("type", ( vd.getDirection().equals("out") ? "MapType": "SetterType") );
 			x.setAttribute("name", adapterName + "." + vd.getName());
 			choice.addChild(x);
-			
+
 			if ( addAsAttribute ) {
 				CaseSensitiveXMLElement xa = new CaseSensitiveXMLElement("xs:attribute");
 				xa.setAttribute("name", vd.getName());
@@ -73,7 +73,8 @@ public class GenerateXSD {
 				}
 				type.addChild(xa);
 			}
-			
+
+
 		}
 	}
 	
