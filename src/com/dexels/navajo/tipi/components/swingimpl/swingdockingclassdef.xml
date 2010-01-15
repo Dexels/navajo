@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<tid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.navajo.nl/classdef_schema.xsd">
+
+   <tipiclass addtocontainer="true" deprecated="true" childcount="*" class="TipiDockingPanel" layoutmanager="false" module="container" name="dockingtipi"
+      package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="tipi.gif" type="tipi">
+      <description>
+      </description>
+      <events>
+         <event name="onInstantiate" />
+         <event name="onLoad">
+            <param name="service" type="string" />
+            <param name="navajo" type="navajo" />
+         </event>
+         <event name="onGeneratedErrors">
+            <param name="id" type="string" />
+            <param name="description" type="string" />
+         </event>
+      </events>
+      <values>
+         <value direction="in" name="opaque" type="boolean" property="opaque" />
+         <value direction="in" name="background" type="color" property="background" />
+         <value direction="in" name="border" type="border" property="border" />
+         <value direction="inout" name="tooltip" type="string" property="ToolTipText" />
+         <value direction="in" name="visible" type="boolean" property="visible" />
+         <value direction="in" name="paint" type="paint" property="paint" />
+         <value direction="inout" name="width" type="integer" property="width" />
+         <value direction="inout" name="dividerLocation" type="integer" property="dividerLocation" />
+      </values>
+      <methods>
+         <method name="openDockable">
+            <param name="dockingpanel" type="component" />
+         </method>
+         <method name="closeDockable">
+            <param name="dockingpanel" type="component" />
+         </method>
+      </methods>
+   </tipiclass>
+   
+   <tipiclass addtocontainer="true" deprecated="true" childcount="*" class="TipiTabDock" layoutmanager="false" module="container" name="tabdock"
+      package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="tipi.gif" type="tipi">
+      <description>
+         Deprecated, use panel instead. They use the same java class
+      </description>
+      <events>
+         <event name="onInstantiate" />
+         <event name="onLoad">
+            <param name="service" type="string" />
+            <param name="navajo" type="navajo" />
+         </event>
+         <event name="onGeneratedErrors">
+            <param name="id" type="string" />
+            <param name="description" type="string" />
+         </event>
+      </events>
+      <values>
+         <value direction="in" name="opaque" type="boolean" property="opaque" />
+         <value direction="in" name="background" type="color" property="background" />
+         <value direction="in" name="border" type="border" property="border" />
+         <value direction="inout" name="tooltip" type="string" property="ToolTipText" />
+         <value direction="in" name="visible" type="boolean" property="visible" />
+         <value direction="in" name="paint" type="paint" property="paint" />
+      </values>
+      <methods />
+   </tipiclass>
+   
+   <tipiclass addtocontainer="true" deprecated="true" childcount="*" class="TipiSplitDock" layoutmanager="false" module="container" name="splitdock"
+      package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="tipi.gif" type="tipi">
+      <description>
+         Deprecated, use panel instead. They use the same java class
+      </description>
+      <events>
+         <event name="onInstantiate" />
+         <event name="onLoad">
+            <param name="service" type="string" />
+            <param name="navajo" type="navajo" />
+         </event>
+         <event name="onGeneratedErrors">
+            <param name="id" type="string" />
+            <param name="description" type="string" />
+         </event>
+      </events>
+      <values>
+         <value direction="in" name="opaque" type="boolean" property="opaque" />
+         <value direction="in" name="background" type="color" property="background" />
+         <value direction="in" name="border" type="border" property="border" />
+         <value direction="inout" name="tooltip" type="string" property="ToolTipText" />
+         <value direction="in" name="visible" type="boolean" property="visible" />
+         <value direction="in" name="paint" type="paint" property="paint" />
+         <value direction="inout" name="dividerLocation" type="integer" property="dividerLocation" />
+      </values>
+      <methods />
+   </tipiclass>
+   
+   <tipiclass addtocontainer="true" deprecated="true" childcount="*" class="TipiDockablePanel" layoutmanager="true" module="container" name="dockingpanel"
+      package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="tipi.gif" type="tipi">
+      <description>
+      </description>
+      <events>
+         <event name="onInstantiate" />
+         <event name="onLoad">
+            <param name="service" type="string" />
+            <param name="navajo" type="navajo" />
+         </event>
+         <event name="onGeneratedErrors">
+            <param name="id" type="string" />
+            <param name="description" type="string" />
+         </event>
+      </events>
+      <values>
+         <value direction="in" name="opaque" type="boolean" property="opaque" />
+         <value direction="in" name="background" type="color" property="background" />
+         <value direction="in" name="border" type="border" property="border" />
+         <value direction="inout" name="tooltip" type="string" property="ToolTipText" />
+         <value direction="inout" name="title" type="string" property="title"/>
+         <value direction="inout" name="description" type="string" property="description"/>
+         <value direction="inout" name="icon" type="resource" property="icon"/>
+         <value direction="in" name="closeable" type="boolean" property="closeable"/>
+         <value direction="in" name="visible" type="boolean" property="visible" />
+         <value direction="in" name="paint" type="paint" property="paint" />
+         
+         <value direction="in" name="image" type="resource" property="imageUrl" />
+         <value direction="in" name="image_alignment" type="selection" property="alignment">
+            <option description="North" value="north" />
+            <option description="East" value="east" />
+            <option description="South" value="south" />
+            <option description="West" value="west" />
+            <option description="Center" value="center" />
+            <option description="NorthEast" value="northeast" />
+            <option description="SouthEast" value="southeast" />
+            <option description="NorthWest" value="northwest" />
+            <option description="SouthWest" value="southwest" />
+         </value>
+      </values>
+      <methods />
+   </tipiclass>
+</tid>
