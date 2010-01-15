@@ -23,7 +23,10 @@ public class TipiShowQuestion extends TipiAction {
 			myContext.showInternalError("showQuestion requires 'text' param");
 			return;
 		}
-		final String title = "Vraag";
+		String title = (String) getEvaluatedParameterValue("title", event);
+		if(title==null) {
+			title = "Vraag";
+		}
 		myContext.showQuestion((String) o.value, title, options);
 	}
 }
