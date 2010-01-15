@@ -144,10 +144,10 @@ public abstract class TipiContext {
 	// TODO, fix and remove
 	protected final ClientInterface clientInterface;
 
-	protected final BaseTipiApplicationInstance myApplication;
+	protected final TipiApplicationInstance myApplication;
 
 
-	public TipiContext(BaseTipiApplicationInstance myApplication, TipiContext parent) {
+	public TipiContext(TipiApplicationInstance myApplication, TipiContext parent) {
 //		this();
 		myParentContext = parent;
 		this.myApplication = myApplication;
@@ -189,7 +189,7 @@ public abstract class TipiContext {
 	}
 
 
-	public BaseTipiApplicationInstance getApplicationInstance() {
+	public TipiApplicationInstance getApplicationInstance() {
 		return myApplication;
 	}
 	
@@ -257,7 +257,12 @@ public abstract class TipiContext {
 		int count = 0;
 		while (tt.hasNext()) {
 			TipiExtension element = tt.next();
-//			System.err.println("Found extension: "+element);
+			System.err.println("Found extension: "+element);
+			String[] incls = element.getIncludes();
+			System.err.println("Size: "+incls.length);
+			for (String string : incls) {
+				System.err.println("Include: "+string);
+			}
 			extensionMap.put(element.getId(), element);
 			count++;
 			if (element.requiresMainImplementation() == null) {
@@ -479,6 +484,7 @@ public abstract class TipiContext {
 	public abstract void clearTopScreen();
 
 	protected final void setSystemProperty(String name, String value, boolean overwrite) {
+		System.err.println("Setting: "+name+" to: "+value+" overwrite: "+overwrite);
 		systemPropertyMap.put(name, value);
 
 		try {
@@ -549,6 +555,8 @@ public abstract class TipiContext {
 		navajoPassword = (String) attemptGenericEvaluate(config.getStringAttribute("password", ""));
 		setSystemProperty("tipi.client.password", navajoPassword, false);
 
+		
+		System.err.println("Connecting to server: "+navajoServer);
 		if (!impl.equals("direct")) {
 			if (impl.equals("socket")) {
 				throw new UnsupportedOperationException("Sorry, I deprecated the direct client for tipi usage");
@@ -1631,6 +1639,8 @@ public abstract class TipiContext {
 			throws TipiBreakException {
 
 		fireNavajoSent(n, method);
+		String ress = getSystemProperty("navajo.globals.CoreSysPostmanURI");
+		System.err.println("Result: "+ress);
 		Navajo reply = doSimpleSend(n, method, null, expirationInterval, hosturl, username, password, keystore, keypass, breakOnError);
 		fireNavajoReceived(reply, method);
 
@@ -2455,6 +2465,7 @@ public abstract class TipiContext {
 		for (Iterator<String> iter = properties.keySet().iterator(); iter.hasNext();) {
 			String element = iter.next();
 			String value = properties.get(element);
+			
 			if (element.startsWith("-D")) {
 				element = element.substring(2);
 			}
