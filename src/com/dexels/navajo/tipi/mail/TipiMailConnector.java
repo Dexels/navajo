@@ -5,6 +5,7 @@ import java.util.*;
 
 import javax.mail.*;
 import javax.mail.event.*;
+import javax.mail.internet.MimeMultipart;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.Message;
@@ -14,9 +15,9 @@ import com.dexels.navajo.tipi.connectors.*;
 import com.dexels.navajo.tipi.internal.*;
 
 public class TipiMailConnector extends TipiBaseConnector implements TipiConnector {
-	private String host = "85.92.144.24";
-	private String username = "flyaruu@dexels.com";
-	private String password = "xxxxxxxx";
+	private String host = "";
+	private String username = "";
+	private String password = "";
 	private Session session;
 	private ConnectionListener myConnectionListener = null;
 	private Store store = null;
@@ -96,18 +97,18 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 
 	private Navajo createGetMessage(Navajo n) throws TipiException {
 		String name = null;
-		try {
-			n.write(System.err);
-		} catch (NavajoException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			n.write(System.err);
+//		} catch (NavajoException e) {
+//			e.printStackTrace();
+//		}
 		name = (String) n.getProperty("/Folder/Name").getTypedValue();
 
 		if ("POP3".equalsIgnoreCase(mailMode)) {
 			name = "INBOX";
 		}
 		int messageNumber = (Integer) n.getProperty("/Folder/MessageNumber").getTypedValue();
-		System.err.println("Getting message: " + name + " nr. " + messageNumber);
+//		System.err.println("Getting message: " + name + " nr. " + messageNumber);
 		return createSingleMessageNavajo(name, messageNumber);
 	}
 
@@ -128,14 +129,46 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 			Navajo myNavajo = NavajoFactory.getInstance().createNavajo();
 			Message mm = addMessageProperties(m, myNavajo);
 			myNavajo.addMessage(mm);
+			Object content = m.getContent();
+			if(content instanceof MimeMultipart) {
+				System.err.println("Multipart found");
+				Message parts = NavajoFactory.getInstance().createMessage(myNavajo, "Parts", Message.MSG_TYPE_ARRAY);
+				mm.addMessage(parts);
+				MimeMultipart r = (MimeMultipart)content;
+				for (int i = 0; i < r.getCount(); i++) {
+					Message part = NavajoFactory.getInstance().createMessage(myNavajo, "Parts", Message.MSG_TYPE_ARRAY_ELEMENT);
+					parts.addMessage(part);
+					BodyPart bp = r.getBodyPart(i);
+					addProperty(part, "ContentType", bp.getContentType(), "string");
+					addProperty(part, "Description", bp.getDescription(), "string");
+					addProperty(part, "FileName", bp.getFileName(), "string");
+					addProperty(part, "Disposition", bp.getDisposition(), "string");
+
+					Binary b = new Binary(bp.getInputStream(), false);
+					fixCidLinks(b);
+					addProperty(part, "Content", b, "binary");
+//					if(bp.getDisposition()==null) {
+//						System.err.println("Mail content: "+bp.getContent());
+//					}
+//					System.err.println("Part: "+i+":\n"+r.getBodyPart(i).getContent());
+				}
+			} else {
+				Binary b = new Binary(m.getInputStream(), false);
+				addProperty(mm, "Content", b, name);
+				addProperty(mm, "ContentType", m.getContentType(), "string");
+				addProperty(mm, "Description", m.getDescription(), "string");
+				addProperty(mm, "FileName", m.getFileName(), "string");
+				addProperty(mm, "Disposition", m.getDisposition(), "string");
+				addProperty(mm, "Content", b, "binary");
+			}
 			//System.err.println("Content class: "+m.getInputStream().getClass()
 			// );
-			Binary b = new Binary(m.getInputStream(), false);
-			addProperty(mm, "Content", b, name);
 			// addProperty(current, "ContentType",
 			// currentImapMessage.getContentType(), Property.STRING_PROPERTY);
-			myNavajo.write(System.err);
+		//	myNavajo.write(System.err);
 			fff.close(false);
+			
+			
 			return myNavajo;
 		} catch (MessagingException e) {
 			throw new TipiException("Error getting message: " + messageNumber + " from box: " + name, e);
@@ -144,6 +177,12 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		} catch (IOException e) {
 			throw new TipiException("Error getting message: " + messageNumber + " from box: " + name, e);
 		}
+	}
+
+	private void fixCidLinks(Binary b) {
+		String s = new String(b.getData());
+		
+		
 	}
 
 	private Navajo createMessagesNavajo(Navajo n) throws TipiException {
@@ -240,7 +279,6 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 
 	public void connect() throws MessagingException {
 		Properties props = new Properties();
-
 		session = Session.getDefaultInstance(props, null);
 		store = session.getStore(mailMode);
 		store.connect(host, username, password);
@@ -345,6 +383,10 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 	}
 
 	public void testMessage() throws MessagingException, TipiBreakException, TipiException {
+		host="hermes1.dexels.com";
+		username = "Secretaris-BBFW63X";
+		password="vvmoc06";
+		mailMode="pop3"; 
 		connect();
 		doTransaction("InitGetFolders");
 		doTransaction("InitGetDefaultMessages");
@@ -355,6 +397,9 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 
 	private void addFolderToNavajo(Folder f, Navajo myNavajo, String folderName, Navajo inputNavajo) throws TipiException {
 		try {
+			if(inputNavajo==null) {
+				
+			}
 			Message folderMessage = NavajoFactory.getInstance().createMessage(myNavajo, folderName);
 			f.open(Folder.READ_ONLY);
 			myNavajo.addMessage(folderMessage);
@@ -362,9 +407,13 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 			javax.mail.Message message[] = f.getMessages();
 			Message mailMessages = NavajoFactory.getInstance().createMessage(myNavajo, "Mail", Message.MSG_TYPE_ARRAY);
 			folderMessage.addMessage(mailMessages);
-			inputNavajo.write(System.err);
-			Integer start = (Integer) inputNavajo.getProperty("Folder/Start").getTypedValue();
-			Integer end = (Integer) inputNavajo.getProperty("Folder/End").getTypedValue();
+			Integer start = null;
+			Integer end = null;
+			if(inputNavajo!=null) {
+				inputNavajo.write(System.err);
+				start = (Integer) inputNavajo.getProperty("MailBox/Start").getTypedValue();
+				end = (Integer) inputNavajo.getProperty("MailBox/End").getTypedValue();
+			}
 			int startInt = 0;
 			if (start != null) {
 				startInt = start;
