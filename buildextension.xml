@@ -9,7 +9,7 @@
 			
 		
 	<target name="archive">
-		<ant antfile="build.xml" dir="." inheritall="true" inheritrefs="true" target="archive" />
+<!--		<ant antfile="build.xml" dir="." inheritall="true" inheritrefs="true" target="archive" />-->
 	</target>
 		
 	<target name="customGrabjar" depends="cleandistribution">
@@ -17,9 +17,9 @@
 		<copy todir="${dist}/lib" file="../NavajoClient/NavajoClient.jar" />
 		<copy todir="${dist}/lib" file="../NavajoDocument/NavajoDocument.jar" />
 		<copy todir="${dist}/lib" file="../NavajoFunctions/NavajoFunctions.jar" />
-		<copy todir="${dist}/lib" file="../Navajo/NavajoRuntime.jar" />
-		<copy todir="${dist}/lib" file="../Navajo/NavajoServer.jar" />
+		<copy todir="${dist}/lib" file="../Navajo/Navajo.jar" />
 		<copy todir="${dist}/lib" file="../NavajoClient/lib/jzlib.jar" />
+		<copy todir="${dist}/lib" file="../DexelsVersionControl/DexelsVersionControl.jar" />
 		<copy todir="${dist}/lib" file="Tipi.jar" />
 	</target>
 	<target name="cleandistribution" depends="archive">
