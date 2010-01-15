@@ -225,6 +225,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 
 	private synchronized void reloadColumns() throws NavajoException {
 		mm.removeAllColumns();
+		columnCondition.clear();
 		List<Message> ss = columnMessage.getAllMessages();
 		for (Message message : ss) {
 			columnMessage.removeMessage(message);

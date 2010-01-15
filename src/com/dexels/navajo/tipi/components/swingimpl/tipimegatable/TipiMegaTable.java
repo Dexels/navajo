@@ -234,6 +234,11 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 		// print((PrinterJob)(printJob.value));
 		// }
 		//
+		if ("stopCellEditing".equals(name)) {
+			for (MessageTablePanel t : tableInstances) {
+				t.stopCellEditing();
+			}
+		}
 		super.performComponentMethod(name, compMeth, event);
 	}
 

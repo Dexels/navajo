@@ -210,6 +210,7 @@
 			If the user clicks no, the action will fire an 'TipiBreakException' and will not continue.
 		</description>
       <param name="text" type="string" required="true" />
+      <param name="title" type="string" required="false" />
    </tipiaction>
 
 
@@ -651,6 +652,11 @@
          <method name="export">
             <param name="filename" type="string" />
             <param name="delimiter" type="string" />
+         </method>
+         <method name="stopCellEditing">
+            <description>
+               Forces any editing table to commit its current value.
+            </description>
          </method>
       </methods>
    </tipiclass>

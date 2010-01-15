@@ -11,6 +11,7 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: </p>
  * @author not attributable
+@deprecated Use the Cobra browser. It has much better js and css support
  * @version 1.0
  */
 public class TipiBrowser
@@ -19,7 +20,7 @@ public class TipiBrowser
 
   public Object createContainer() {
     myItem = new TipiEditorPane();
-  
+    myItem.setEditable(false);
     return myItem;
   }
 
