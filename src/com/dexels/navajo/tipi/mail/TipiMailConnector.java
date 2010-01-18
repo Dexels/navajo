@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.*;
 
 import javax.mail.*;
+import javax.mail.Flags.Flag;
 import javax.mail.event.*;
 import javax.mail.internet.MimeMultipart;
 
@@ -52,6 +53,10 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		if (service.equals("GetMessage")) {
 			injectNavajo(service, createGetMessage(n));
 		}
+		if (service.equals("DeleteMessage")) {
+			deleteMessage(n);
+			// not responding
+		}
 	}
 
 	public String getDefaultEntryPoint() {
@@ -97,11 +102,11 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 
 	private Navajo createGetMessage(Navajo n) throws TipiException {
 		String name = null;
-//		try {
-//			n.write(System.err);
-//		} catch (NavajoException e) {
-//			e.printStackTrace();
-//		}
+		try {
+			n.write(System.err);
+		} catch (NavajoException e) {
+			e.printStackTrace();
+		}
 		name = (String) n.getProperty("/Folder/Name").getTypedValue();
 
 		if ("POP3".equalsIgnoreCase(mailMode)) {
@@ -112,6 +117,36 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		return createSingleMessageNavajo(name, messageNumber);
 	}
 
+	private boolean deleteMessage(Navajo n) throws TipiException {
+		String name = (String) n.getProperty("/Folder/Name").getTypedValue();
+		int messageNumber = (Integer) n.getProperty("/Folder/MessageNumber").getTypedValue();
+		System.err.println("Attempting to delete message: "+messageNumber);
+
+		if ("POP3".equalsIgnoreCase(mailMode)) {
+			name = "INBOX";
+		}
+		Folder fff;
+		try {
+			fff = store.getFolder(name);
+
+		} catch (MessagingException e) {
+			throw new TipiException("Error opening mailbox: " + name, e);
+		}
+		if (fff == null) {
+			throw new TipiException("Mailbox not found: " + name);
+		}
+		try {
+			fff.open(Folder.READ_WRITE);
+			javax.mail.Message m= fff.getMessage(messageNumber);
+			m.setFlag(Flag.DELETED, true);	
+			fff.close(true);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+			throw new TipiException("Error deleting message# "+messageNumber+" from folder: " + name,e);
+		}
+		return true;
+	}
+	
 	private Navajo createSingleMessageNavajo(String name, int messageNumber) throws TipiException {
 		Folder fff;
 		try {
