@@ -8,7 +8,12 @@
             <param name="message" type="string"/>
             <param name="exception" type="string"/>
          </event>
-         <event name="onConnectionCreated" />
+         <event name="onConnectionCreated"/>
+         <event name="onFolderOpened">
+    	     <param name="messageCount" type="integer" />
+	         <param name="unreadMessageCount" type="integer" />
+         </event>
+
          <event name="onConnectionLost" />
          <event name="onConnectionClosed" />
                   
@@ -18,6 +23,10 @@
          <value direction="in" name="username" type="string" />
          <value direction="in" name="password" type="string" />
          <value direction="in" name="mailMode" type="string" />
+         <value direction="out" name="messageCount" type="integer" />
+         <value direction="out" name="recentMessageCount" type="integer" />
+         <value direction="in" name="recentAfter" type="date" />
+
       </values>
       <methods>
          <method name="connect"/>
