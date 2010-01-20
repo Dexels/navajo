@@ -134,8 +134,7 @@ public class GenericFieldMap implements Mappable {
 	
 	public void setParameterValue(Object paramValue){
 		this.parameterValue = paramValue;
-		updateParameters.add(new Object[]{parameterName, parameterValue});
-		System.err.println("Named parameter added: " + parameterName +", " + parameterValue);
+		updateParameters.add(new Object[]{parameterName, parameterValue});		
 	}
 	
 	public void setDoUpdate(boolean b) throws UserException{
@@ -168,13 +167,10 @@ public class GenericFieldMap implements Mappable {
 					}
 					
 					if("update".equals(operation)){
-						System.err.println("Do UPDATE!!");
 						String updateQuery = "UPDATE " + table + " SET " + valueColumn + " = ? WHERE " + primaryKey + " = ?";
 						for(int k=0;k<updateParameters.size();k++){
 							updateQuery = updateQuery + " AND " + updateParameters.get(k)[0].toString() + " = ?";
 						}
-						
-						System.err.println("UpdateQuery: " + updateQuery);
 						sql.setUpdate(updateQuery);
 						sql.setParameter(allProps.get(i).getTypedValue());
 						sql.setParameter(strVal);					
@@ -183,8 +179,7 @@ public class GenericFieldMap implements Mappable {
 						}
 						sql.setDoUpdate(true);	
 						
-					}else{
-						System.err.println("Do INSERT!!");
+					}else{					
 						String insertQuery = "INSERT INTO " + table + " ( " + primaryKey + ", " + valueColumn;
 						for(int k=0;k<updateParameters.size();k++){
 							insertQuery = insertQuery + ", " + updateParameters.get(k)[0].toString();
@@ -194,8 +189,6 @@ public class GenericFieldMap implements Mappable {
 							insertQuery = insertQuery + ", ?";
 						}
 						insertQuery = insertQuery + ")";
-						
-						System.err.println("InsertQuery: " + insertQuery);
 						sql.setUpdate(insertQuery);
 						sql.setParameter(strVal);		
 						sql.setParameter(allProps.get(i).getTypedValue());
