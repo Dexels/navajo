@@ -65,15 +65,17 @@ package navajodocument;
  * 
  * 9.1.1 Order by of messages now support java comparator functions
  * 
+ * 9.2.0 Changed Navajo merged semantics.
+ * 
  */
 public class Version extends dexels.Version {
 
 	public static final int MAJOR          = 9;
-	public static final int MINOR          = 1;
-	public static final int PATCHLEVEL     = 1;
+	public static final int MINOR          = 2;
+	public static final int PATCHLEVEL     = 0;
 	public static final String VENDOR      = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Document";
-	private static final String REL = "2007-01-23";
+	private static final String REL = "2010-01-21";
 
 	// Included packages.
 
