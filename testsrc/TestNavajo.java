@@ -58,6 +58,42 @@ public class TestNavajo extends TestCase {
     Assert.assertEquals("appendedmessage", result.getName());
   }
 
+  public void testMerge() throws NavajoException {
+	  // testmessage
+	  Navajo extra = NavajoFactory.getInstance().createNavajo();
+	  Message m = NavajoFactory.getInstance().createMessage(extra, "testmessage");
+	  Property p = NavajoFactory.getInstance().createProperty(extra, "extrapropje", Property.STRING_PROPERTY, "", 0, "", "");
+	  Property p2 = NavajoFactory.getInstance().createProperty(extra, "stringprop", Property.STRING_PROPERTY, "SUPERNAVAJO", 0, "", "");
+	  m.addProperty(p);
+	  m.addProperty(p2);
+	  extra.addMessage(m);
+	  
+	  Message m2 = NavajoFactory.getInstance().createMessage(extra, "testmessage_sub2");
+	  m.addMessage(m2);
+	  p = NavajoFactory.getInstance().createProperty(extra, "nogeenextrapropje", Property.STRING_PROPERTY, "", 0, "", "");
+	  m2.addProperty(p);
+	  
+	  m = NavajoFactory.getInstance().createMessage(extra, "testmessage_extra");
+	  p = NavajoFactory.getInstance().createProperty(extra, "extrapropje", Property.STRING_PROPERTY, "", 0, "", "");
+	  m.addProperty(p);
+	  extra.addMessage(m);
+	  
+	  // Before merge assert value of stringprop.
+	  Assert.assertEquals("navajo", testDoc.getProperty("/testmessage/stringprop").getValue());
+	  
+	  testDoc.merge(extra);
+	
+	  Property assertprop = testDoc.getProperty("/testmessage/extrapropje");
+	  Assert.assertNotNull(assertprop);
+	  
+	  assertprop = testDoc.getProperty("/testmessage/integerprop");
+	  Assert.assertNotNull(assertprop);
+	  
+	  // After merge assert value of stringprop.
+	  Assert.assertEquals("SUPERNAVAJO", testDoc.getProperty("/testmessage/stringprop").getValue());
+	    
+  }
+  
   public void testClearAllSelections() throws NavajoException {
     Property sel1 = NavajoFactory.getInstance().createProperty(testDoc, "sel1", "+", "", Property.DIR_IN);
     Property sel2 = NavajoFactory.getInstance().createProperty(testDoc, "sel2", "+", "", Property.DIR_IN);
