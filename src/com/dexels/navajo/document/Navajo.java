@@ -209,7 +209,7 @@ public interface Navajo
    * Replaces a message to the Navajo document. If original does not exist, do nothing and return null.
    * 
    */
-  public Message replaceMessage(Message newMsg) throws
+  public Message mergeMessage(Message newMsg) throws
       NavajoException;
 
   /**

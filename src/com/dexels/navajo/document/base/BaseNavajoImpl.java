@@ -251,8 +251,8 @@ public LazyMessagePath getLazyMessagePath(String path) {
     return rootMessage.addMessage(m,b);
   }
   
-  public Message replaceMessage(Message m) {
-	    return rootMessage.replaceMessage(m);
+  public Message mergeMessage(Message m) {
+	    return rootMessage.mergeMessage(m);
 	  }
 
   public Message copyMessage(String s, Navajo n) {
@@ -659,7 +659,7 @@ public Navajo merge(Navajo with) throws NavajoException {
 			if ( superMsg.getName().equals(subMsg.getName()) ) {
 				// Found duplicate!
 				Message newMsg = subMsg.copy(this);
-				this.replaceMessage(newMsg);
+				this.mergeMessage(newMsg);
 			}
 		}
 	}

@@ -219,7 +219,7 @@ public interface Message
    * 
    * @return Message
    */
-  public Message replaceMessage(Message m);
+  public Message mergeMessage(Message m);
 
   /**
    * Adds a message to an array message at a specific location in the array

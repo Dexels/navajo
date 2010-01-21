@@ -1010,7 +1010,7 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
     /**
      * Add a message to the Navajo document. If the message name already exists, replace the old one.
      */
-    public Message replaceMessage(Message newMsg) throws NavajoException {
+    public Message mergeMessage(Message newMsg) throws NavajoException {
 
 
         Node body = XMLutils.findNode(docBuffer, myBodyDefinition);
@@ -1222,7 +1222,7 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
 				if ( superMsg.getName().equals(subMsg.getName()) ) {
 					// Found duplicate!
 					Message newMsg = subMsg.copy(superMsg.getRootDoc());
-					this.replaceMessage(newMsg);
+					this.mergeMessage(newMsg);
 				}
 			}
 		}

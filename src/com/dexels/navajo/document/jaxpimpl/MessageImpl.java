@@ -872,7 +872,7 @@ public void removePropertyChangeListener(PropertyChangeListener p) {
 	
 }
 
-public Message replaceMessage(Message m) {
+public Message mergeMessage(Message m) {
 	if (m == null) {
 		return null;
 
