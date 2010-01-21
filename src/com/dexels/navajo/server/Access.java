@@ -168,11 +168,20 @@ public final class Access implements java.io.Serializable, Mappable {
 	 * that will be merged with the outDoc Navajo.
 	 * 
 	 * @param mergedDoc
+	 * @param append, if set to true Navajo mergedDoc is appended, messages of original are overwritten.
+	 *                if set to false Navajo mergedDoc is merged, messages of original are merged with mergedDoc, properties
+	 *                of mergedDoc have precedence over original.
 	 */
-	public void setMergedDoc(Navajo mergedDoc) {
+	public void setMergedDoc(Navajo mergedDoc, boolean append) {
 		
 		if ( this.outputDoc != null ) {
-			try {this.outputDoc.appendDocBuffer(mergedDoc);} catch (Exception e) {}
+			try {
+				if ( append ) {
+					this.outputDoc.appendDocBuffer(mergedDoc);
+				} else {
+					this.outputDoc.merge(mergedDoc);
+				}
+		    } catch (Exception e) {}
 			return;
 		}
 		if ( mergedDoc == null ) {
@@ -184,7 +193,11 @@ public final class Access implements java.io.Serializable, Mappable {
 		} else {
 			try {
 				if ( mergedDoc != null ) {
-					this.mergedDoc.appendDocBuffer(mergedDoc);
+					if ( append ) {
+						this.mergedDoc.appendDocBuffer(mergedDoc);
+					} else {
+						this.mergedDoc.merge(mergedDoc);
+					}
 				} else {
 					this.mergedDoc = null;
 				}
