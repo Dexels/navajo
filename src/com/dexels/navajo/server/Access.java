@@ -462,8 +462,17 @@ public final class Access implements java.io.Serializable, Mappable {
 		return inDoc;
 	}
 
-	public void setInDoc(Navajo inDoc) {
-		this.inDoc = inDoc;
+	public void setInDoc(Navajo in) {
+		this.inDoc = in;
+		// Check if __parms__ exists.
+		Message msg = inDoc.getMessage("__parms__");
+		if (msg == null) {
+			msg = NavajoFactory.getInstance().createMessage(inDoc, "__parms__");
+			try {
+				inDoc.addMessage(msg);
+			} catch (NavajoException e) {
+			}
+		}
 	}
 
 	public int getThreadCount() {
