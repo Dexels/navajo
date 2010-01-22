@@ -169,6 +169,9 @@ public class MapDefinition {
 				}
 
 				ValueDefinition vd = getValueDefinition(field);
+				if ( vd == null ) {
+					throw new MetaCompileException(filename, child, "Could not find definition for setter: " + field);
+				}
 				XMLElement remainder = null;
 				remainder = vd.generateCode(child, setterValue, isTextNode, condition, mout, true, filename );
 
