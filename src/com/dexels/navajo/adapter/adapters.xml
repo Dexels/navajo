@@ -251,6 +251,9 @@
             <method name="addParameter">
                 <param name="value" field="parameter" type="any" required="false"/>
             </method>
+            <method name="addOutputParameter">
+                <param name="type" field="outputParameterType" type="any" required="false"/>
+            </method>
             <method name="doUpdate">
                 <param name="value" field="doUpdate" type="boolean" required="automatic" value="true"/>
             </method>
