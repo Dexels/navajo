@@ -67,6 +67,8 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
   public final Stack paramMsgStack = new Stack();
   public Message currentParamMsg = null;
   public Message currentInMsg = null;
+  
+
   public Selection currentSelection = null;
   public final Stack inMsgStack = new Stack();
   public Object sValue = null;
@@ -495,6 +497,26 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
 
   public void setDebugAll(boolean debugAll) {
 	  this.debugAll = debugAll;
+  }
+  
+  public MappableTreeNode getCurrentMap() {
+	  return currentMap;
+  }
+
+  public Message getCurrentOutMsg() {
+	  return currentOutMsg;
+  }
+
+  public Message getCurrentParamMsg() {
+	  return currentParamMsg;
+  }
+
+  public Message getCurrentInMsg() {
+	  return currentInMsg;
+  }
+
+  public Selection getCurrentSelection() {
+	  return currentSelection;
   }
 
 }
