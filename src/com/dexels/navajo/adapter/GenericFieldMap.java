@@ -36,13 +36,10 @@ public class GenericFieldMap implements Mappable {
 	private Navajo inDoc;
 	
 		
-	@Override
-	public void kill() {
+	public void kill() {	
 		sql.kill();
-
 	}
 
-	@Override
 	public void load(Access access) throws MappableException, UserException {
 		// TODO Auto-generated method stub
 		currentOutputMessage = access.getCurrentOutMessage();
@@ -51,7 +48,6 @@ public class GenericFieldMap implements Mappable {
 		sql.load(access);
 	}
 
-	@Override
 	public void store() throws MappableException, UserException {
 		// TODO Auto-generated method stub		
 		sql.store();
