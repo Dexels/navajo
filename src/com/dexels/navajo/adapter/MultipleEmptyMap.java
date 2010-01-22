@@ -24,6 +24,10 @@ public class MultipleEmptyMap implements Mappable {
 
   public void kill() {
   }
+  
+  public void setLoop(com.dexels.navajo.adapter.EmptyMap [] emptyMaps) {
+	  this.emptyMaps = emptyMaps;
+  }
 
   public void setEmptyMaps(com.dexels.navajo.adapter.EmptyMap [] emptyMaps) {
     this.emptyMaps = emptyMaps;
