@@ -1350,7 +1350,7 @@ public class StandardFunctionsTest extends TestCase {
 		fi.reset();
 		fi.setInMessage(createTestNavajo());
 		fi.insertOperand("/Aap");
-		fi.insertOperand("Noot != 20");
+		fi.insertOperand("[Noot] != 20");
 		
 		Object o = fi.evaluateWithTypeChecking();
 		
