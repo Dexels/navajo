@@ -1,3 +1,6 @@
+DROP TABLE auditlog
+/
+
 CREATE TABLE auditlog (
    instance VARCHAR2(255),
    subsystem VARCHAR2(255),
