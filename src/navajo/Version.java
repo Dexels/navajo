@@ -28,6 +28,8 @@ package navajo;
  * 
  * VERSION HISTORY
  * 
+ * 8.2.7 - Refactored Dispatcher. Indoc is not passed as separate parameter anymore. Access object is always used instead.
+ * 
  * 8.2.6 - Selected attribute in option tag now supports expressions (either boolean or integer outcome supported)
  *       - navajo_ping bypasses authentication, for the rest: removed check on isSpecialWebservice for bypassing authorization
  *       - Added Xtra defensive server.xml parsing
@@ -198,12 +200,12 @@ public class Version extends dexels.Version {
 
 	public static final int MAJOR = 8;
 	public static final int MINOR = 2;
-	public static final int PATCHLEVEL = 6;
+	public static final int PATCHLEVEL = 7;
 	public static final String SPECIAL_VERSION = "Final";
 	
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
-	public static final String RELEASEDATE = "2009-12-16";
+	public static final String RELEASEDATE = "2010-01-22";
 	
 //	 Included packages.
 	String [] includes = {"navajodocument.Version"};
