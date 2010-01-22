@@ -30,20 +30,15 @@ import com.dexels.navajo.persistence.*;
 
 public abstract class ServiceHandler implements Constructor {
 
-    protected Navajo requestDocument;
-    protected Parameters parms;
     protected Access access;
 
     /**
      *
-     * @param doc
      * @param access
      * @param parms
      * @param properties
      */
-    public final void setInput(Navajo doc, Access access, Parameters parms) {
-        this.requestDocument = doc;
-        this.parms = parms;
+    public final void setInput(Access access) {
         this.access = access;
     }
 

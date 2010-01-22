@@ -27,10 +27,15 @@ public class MaintainanceRequest extends Request {
         this.repository = repository;
     }
 
-    public void addServicesToMessage(Access access, Parameters parms, Navajo inMessage, boolean multiple) 
+    public void addServicesToMessage(Access access, boolean multiple) 
          throws SystemException, UserException, java.io.IOException, NavajoException {
 
+    	Navajo inMessage = access.getInDoc();
         Message services = inMessage.getMessage("services");
+//        if ( services == null ) {
+//        	services = NavajoFactory.getInstance().createMessage(inMessage, "services");
+//        	inMessage.addMessage(services);
+//        }
 
         String all[] = repository.getServices(access);
 
@@ -52,11 +57,12 @@ public class MaintainanceRequest extends Request {
         }
     }
 
-    public Navajo logonSend(Access access, Parameters parms, Navajo inMessage)
+    public Navajo logonSend(Access access)
             throws SystemException, UserException, NavajoException {
     	
         Navajo outMessage = null;
-
+        Navajo inMessage = access.getInDoc();
+        
         Message identification = inMessage.getMessage("identification");
         String username = identification.getProperty("username").getValue();
         String password = identification.getProperty("password").getValue();

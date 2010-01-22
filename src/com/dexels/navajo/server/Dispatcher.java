@@ -345,7 +345,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean, DispatcherI
    * @throws Exception
    */
   @SuppressWarnings("unchecked")
-  private final Navajo dispatch(String handler, Navajo in, Access access, Parameters parms) throws Exception {
+  private final Navajo dispatch(String handler, Access access) throws Exception {
 	  
 	  WorkerInterface integ = null;
 	  Navajo out = null;
@@ -354,7 +354,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean, DispatcherI
 		  return null;
 	  }
 	  
-	  access.setInDoc(in);
+	  Navajo in = access.getInDoc();
 	  
 	  if (in!=null) {
 		Header h = in.getHeader();
@@ -419,14 +419,14 @@ public final class Dispatcher implements Mappable, DispatcherMXBean, DispatcherI
 		  
 		  ServiceHandler sh = c.newInstance();
 		  
-		  sh.setInput(in, access, parms);
+		  sh.setInput(access);
 		
 		  // If recompile is needed ALWAYS set expirationInterval to -1.
 		  // TODO: IMPLEMENT NEEDS RECOMPILE DIFFERENTLY: I DO NOT WANT GENERICHANDLER DEPENDENCY @ THIS
 		  // POINT... ALSO THE CURRENT NEEDSRECOMPILE DOES NOT CHECK DIRTY DEPENDENCIES!!
 		  // ALSO I DO NOT WANT CACHECONTROLLER DEPENDENCY @ THIS POINT.
 		  long expirationInterval = CacheController.getInstance().getExpirationInterval(access.rpcName);
-		  if ( expirationInterval > 0 && GenericHandler.needsRecompile(access, access.rpcName ) ) {
+		  if ( expirationInterval > 0 && GenericHandler.needsRecompile(access ) ) {
 			  expirationInterval = -1;
 		  }
 		  
@@ -466,19 +466,6 @@ public final class Dispatcher implements Mappable, DispatcherMXBean, DispatcherI
 			  integ.removeFromRunningRequestsList(in);
 		  }
 	  }
-  }
-
-  @SuppressWarnings("unchecked")
-  @Deprecated
-  private final void addParameters(Navajo doc, Parameters parms) throws
-  NavajoException {
-
-	  Message msg = doc.getMessage("__parms__");
-	  if (msg == null) {
-		  msg = NavajoFactory.getInstance().createMessage(doc, "__parms__");
-		  doc.addMessage(msg);
-	  }
-	  
   }
 
   public  final boolean doMatchCN() {
@@ -990,21 +977,6 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
         	accessSet.add(access);
         }
             
-        // Check for lazy message control.
-        access.setLazyMessages(header.getLazyMessages());
-
-        Parameters parms = null;
-
-        /**
-         * Phase IV: Get application specific parameters for user.
-         */
-       
-        Parameter[] pl = navajoConfig.getRepository().getParameters(access);
-
-        parms = evaluateParameters(pl, inMessage);
-        // Add parameters to __parms__ message.
-        addParameters(inMessage, parms);
-
         /**
          * Phase VIa: Check if scheduled webservice
          */
@@ -1049,7 +1021,7 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
 			
 			if (useAuthorisation) {
     			if ( useProxy == null ) {
-    				outMessage = dispatch(navajoConfig.getRepository().getServlet(access), inMessage, access, parms);
+    				outMessage = dispatch(navajoConfig.getRepository().getServlet(access), access);
     			} else {
     				rpcName = access.rpcName;
     				outMessage = useProxy;
@@ -1062,12 +1034,12 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
         			rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_TEST) ||
         			rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_PING) ) 
         	    {
-        			outMessage = dispatch(defaultNavajoDispatcher, inMessage, access, parms);
+        			outMessage = dispatch(defaultNavajoDispatcher, access);
         		}
         		else {
         			if ( useProxy == null ) {
         				// Actually do something.
-        				outMessage = dispatch(defaultDispatcher, inMessage, access, parms);
+        				outMessage = dispatch(defaultDispatcher, access);
         			} else {
         				rpcName = access.rpcName;
         				outMessage = useProxy;
@@ -1078,7 +1050,8 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
        
         // Call after web service event...
         if ( access != null && !scheduledWebservice ) {
-        	access.setInDoc(inMessage);
+        	
+        	//access.setInDoc(inMessage);
         	//if (!isSpecialwebservice(rpcName)  ) {
         	// Register webservice call to WebserviceListener if it was not a scheduled webservice.
         	afterWebServiceActivated = WebserviceListenerFactory.getInstance().afterWebservice(rpcName, access);

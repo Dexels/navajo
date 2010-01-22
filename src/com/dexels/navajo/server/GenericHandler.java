@@ -116,25 +116,25 @@ public final class GenericHandler extends ServiceHandler {
 
     }
     
-    private static final Object[] getScriptPathServiceNameAndScriptFile(Access a, String rpcName) {
+    private static final Object[] getScriptPathServiceNameAndScriptFile(Access a) {
     	String scriptPath = DispatcherFactory.getInstance().getNavajoConfig().getScriptPath();
     	
-    	int strip = rpcName.lastIndexOf("/");
+    	int strip = a.rpcName.lastIndexOf("/");
         String pathPrefix = "";
-        String serviceName = rpcName;
+        String serviceName = a.rpcName;
         if (strip != -1) {
-          serviceName = rpcName.substring(strip+1);
-          pathPrefix = rpcName.substring(0, strip) + "/";
+          serviceName = a.rpcName.substring(strip+1);
+          pathPrefix = a.rpcName.substring(0, strip) + "/";
         }
         
-    	File scriptFile = new File(scriptPath + "/" + rpcName + "_" + applicationGroup + ".xml");
+    	File scriptFile = new File(scriptPath + "/" + a.rpcName + "_" + applicationGroup + ".xml");
     	if (scriptFile.exists()) {
     		serviceName += "_" + applicationGroup;
     	} else {
-    		scriptFile = new File(scriptPath + "/" + rpcName + ( a.betaUser ? "_beta" : "" ) + ".xml" );
+    		scriptFile = new File(scriptPath + "/" + a.rpcName + ( a.betaUser ? "_beta" : "" ) + ".xml" );
     		if ( a.betaUser && !scriptFile.exists() ) {
     			// Try normal webservice.
-    			scriptFile = new File(scriptPath + "/" + rpcName + ".xml" );
+    			scriptFile = new File(scriptPath + "/" + a.rpcName + ".xml" );
     		} else if ( a.betaUser ) {
     			serviceName += "_beta";
     		} 
@@ -148,15 +148,7 @@ public final class GenericHandler extends ServiceHandler {
     			             + "/" + pathPrefix + serviceName + ".java";
     	String classFileName =  DispatcherFactory.getInstance().getNavajoConfig().getCompiledScriptPath() + "/" + pathPrefix + serviceName + ".class";
     	String className = (pathPrefix.equals("") ? serviceName : MappingUtils.createPackageName(pathPrefix) + "." + serviceName);
-    	 
-//    	System.err.println("in getScriptPathServiceNameAndScriptFile()");
-//    	System.err.println("pathPrefix = " + pathPrefix);
-//    	System.err.println("serviceName = " + serviceName);
-//    	System.err.println("scriptFile = " + scriptFile.getName());
-//    	System.err.println("sourceFileName = " + sourceFileName);
-//    	System.err.println("classFileName = " + classFileName);
-//    	System.err.println("className = " + className);
-    	
+    	     	
     	return new Object[]{pathPrefix,serviceName,scriptFile,sourceFileName,new File(sourceFileName),className,classFileName,new File(classFileName)};
     }
     
@@ -206,8 +198,8 @@ public final class GenericHandler extends ServiceHandler {
      * @param a
      * @return
      */
-    public final static boolean needsRecompile(Access a, String rpcName) {
-    	Object [] all = getScriptPathServiceNameAndScriptFile(a, rpcName);
+    public final static boolean needsRecompile(Access a) {
+    	Object [] all = getScriptPathServiceNameAndScriptFile(a);
     	File scriptFile = (File) all[2];
     	File sourceFile = (File) all[4];
     	String className = (String) all[5];
@@ -225,7 +217,7 @@ public final class GenericHandler extends ServiceHandler {
     	
     	String scriptPath = properties.getScriptPath();
     	
-    		Object [] all = getScriptPathServiceNameAndScriptFile(a, rpcName);
+    		Object [] all = getScriptPathServiceNameAndScriptFile(a);
     		String pathPrefix = (String) all[0];
     		String serviceName = (String) all[1];
     		File scriptFile = (File) all[2];

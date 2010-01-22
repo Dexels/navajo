@@ -52,10 +52,11 @@ public class MaintainanceHandler extends ServiceHandler {
             } else if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_LOGON)) {
 
                 outMessage = maintain.getInitialNavajoMesssage(access.rpcName);
-                maintain.addServicesToMessage(access, parms, outMessage, false);
+                access.setInDoc(outMessage);
+                maintain.addServicesToMessage(access, false);
 
             } else if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_LOGON_SEND)) {
-                outMessage = maintain.logonSend(access, parms, requestDocument);
+                outMessage = maintain.logonSend(access);
             } else {
                 throw new SystemException(SystemException.UNKNOWN_RPC_NAME, "", new Exception());
             }
