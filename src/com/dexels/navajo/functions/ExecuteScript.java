@@ -31,7 +31,7 @@ public class ExecuteScript extends FunctionInterface {
     Access access = new Access(1, 1, 1, "ANONYMOUS", script, "", "", "", false, null);
     access.setInDoc(inMessage);
     inMessage.getHeader().setRequestId("");
-    gh.setInput(this.inMessage, access, null);
+    gh.setInput(access);
     Navajo result = null;
     try {
       result = gh.doService();
