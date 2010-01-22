@@ -441,6 +441,22 @@ public final class Access implements java.io.Serializable, Mappable {
 		return currentOutMessage;
 	}
 
+	public final Message getCurrentInMessage() {
+		if ( myScript != null ) {
+			return myScript.getCurrentInMsg();
+		} else {
+			return null;
+		}
+	}
+	
+	public final Selection getCurrentInSelection() {
+		if ( myScript != null ) {
+			return myScript.getCurrentSelection();
+		} else {
+			return null;
+		}
+	}
+	
 	public final void setCurrentOutMessage(Message currentOutMessage) {
 		this.currentOutMessage = currentOutMessage;
 	}
