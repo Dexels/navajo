@@ -26,7 +26,6 @@ import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.Percentage;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -124,12 +123,6 @@ import com.dexels.navajo.events.types.AuditLogEvent;
         at com.evermind._bt.run(.:62)
  *
  */
-
-class Kip {
-	  public String toString() {
-		  return "Kip";
-	  }
-}
 
 public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debugable {
 
@@ -418,19 +411,12 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
   }
 
   public void store() throws MappableException, UserException {
-	  
+
 	  cleanupBinaryStreams();
-	  // Kill temporary broker.
-	  // If part of transaction context, do not free connection or commit changes yet.
-	  boolean isClosed = false;
-	  try {
-		  isClosed = (con != null) ? con.isClosed() : true;
-	  }
-	  catch (SQLException sqle2) {
-	  }
+	 
 	  if (transactionContext == -1) {
-		  if (con != null && !isClosed ) {
-			  try {
+		  try {
+			  if (con != null && !con.isClosed() ) {
 				  // if defaultUsername was set, set it back.
 				  if ( this.alternativeUsername != null ) {
 					  PreparedStatement stmt =  con.prepareStatement("ALTER SESSION SET CURRENT_SCHEMA = " + this.username);
@@ -446,21 +432,19 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
 					  con.setAutoCommit(true);
 				  }
 			  }
-			  catch (SQLException sqle) {
-				  AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, myAccess.accessID);
-				  throw new UserException( -1, sqle.getMessage(), sqle);
-			  } 
+		  }
+		  catch (SQLException sqle) {
+			  AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, myAccess.accessID);
+			  throw new UserException( -1, sqle.getMessage(), sqle);
+		  } finally {
+			  if ( fixedBroker != null && con != null && myConnectionBroker != null ) {
+				  // Free connection.
+				  myConnectionBroker.freeConnection(con);
+				  con = null;
+			  }
 			  if (transactionContextMap != null) {
 				  transactionContextMap.remove(connectionId + "");
 			  }
-			  if (fixedBroker != null) {
-				  SessionIdentification.clearSessionId(getMetaData() != null ? getMetaData().getVendor() : "", con);
-			  }
-		  }
-		  if ( fixedBroker != null && con != null && myConnectionBroker != null ) {
-			  // Free connection.
-			  myConnectionBroker.freeConnection(con);
-			  con = null;
 		  }
 	  }
 	  con = null;
