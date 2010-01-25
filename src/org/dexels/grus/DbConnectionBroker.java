@@ -7,6 +7,8 @@ import com.dexels.navajo.util.AuditLog;
 public final class DbConnectionBroker extends Object
 {
 	protected String location, username, password;
+
+
 	protected String dbIdentifier;
 	protected Connection[] conns;
 	protected boolean[] usedmap;
@@ -277,6 +279,10 @@ public final class DbConnectionBroker extends Object
 	
 	public void finalize() {
 		destroy();
+	}
+	
+	public String getUsername() {
+		return username;
 	}
 	
 	public final static int getInstances() {

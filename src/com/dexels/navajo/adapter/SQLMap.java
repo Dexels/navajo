@@ -265,7 +265,7 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
         "Minimum connections = " + min + "\n" +
         "Maximum connections = " + max + "\n" +
         "Autocommit = " + ac + "\n";
-
+    
   }
 
   public int getInstances() {
@@ -415,11 +415,16 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
 	  cleanupBinaryStreams();
 	 
 	  if (transactionContext == -1) {
+		  
+		  String resetSession = null;
+		  if ( myConnectionBroker != null && this.alternativeUsername != null ) {
+			  resetSession = "ALTER SESSION SET CURRENT_SCHEMA = " + myConnectionBroker.getUsername();
+		  }
 		  try {
 			  if (con != null && !con.isClosed() ) {
 				  // if defaultUsername was set, set it back.
-				  if ( this.alternativeUsername != null ) {
-					  PreparedStatement stmt =  con.prepareStatement("ALTER SESSION SET CURRENT_SCHEMA = " + this.username);
+				  if ( resetSession != null ) {
+					  PreparedStatement stmt =  con.prepareStatement(resetSession);
 					  stmt.executeUpdate();
 					  stmt.close();
 				  }
@@ -434,6 +439,8 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
 			  }
 		  }
 		  catch (SQLException sqle) {
+			  System.err.println("COULD NOT RESET SCHEMA");
+			  System.err.println(resetSession);
 			  AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, myAccess.accessID);
 			  throw new UserException( -1, sqle.getMessage(), sqle);
 		  } finally {
