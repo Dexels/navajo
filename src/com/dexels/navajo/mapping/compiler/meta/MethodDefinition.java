@@ -54,12 +54,12 @@ public class MethodDefinition {
 	public void generateCode(XMLElement in, XMLElement out, String filename) throws Exception {
 		
 		TreeMap<Integer, XMLElement> orderedParameters = new TreeMap<Integer, XMLElement>();
-		
-//		if ( in.getChildren().size() > 0 ) {
-//			throw new MetaCompileException(filename, in, "Illegal children tags defined for tag <" + in.getName() + "/>");
-//		}
-		
+	
 		String condition = (String) in.getAttribute("condition");
+		// Create condition that always evaluates to true if an empty condition is specified.
+		if ( condition == null || condition.trim().equals("") ) {
+			condition = "true";
+		}
 		boolean hasCondition = false;
 		String tempParamName = null;
 		if ( condition != null && !condition.equals("condition")) {
