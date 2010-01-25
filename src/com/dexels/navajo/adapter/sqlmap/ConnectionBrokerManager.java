@@ -127,7 +127,7 @@ public class ConnectionBrokerManager extends Object {
 	  }
   }
 
-  public final String getDatasourceUrl(String datasource, String username) {
+  public final String getDatasourceUrl(String datasource) {
 	  SQLMapBroker b = (SQLMapBroker) brokerMap.get(datasource);
 	  if ( b != null ) {
 		  return b.getUrl();
