@@ -143,9 +143,13 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
   
   public String driver;
   public String url;
+  
+  public String alternativeUsername;
+  public String alternativePassword;
+  
   public String username;
-  public String defaultUsername;
   public String password;
+  
   public String update;
   public String query;
   public String savedQuery;
@@ -222,10 +226,8 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
     driver = body.getProperty("driver").getValue(); //NavajoUtils.getPropertyValue(body, "driver", true);
     url =  body.getProperty("url").getValue(); // NavajoUtils.getPropertyValue(body, "url", true);
 
-    final String username = (this.username != null) ? this.username :
-    	body.getProperty("username").getValue();
-    final String password = (this.password != null) ? this.password :
-    	body.getProperty("password").getValue();
+    final String username = (this.username != null) ? this.username : body.getProperty("username").getValue();
+    final String password = (this.password != null) ? this.password : body.getProperty("password").getValue();
 
     String logFile = config.getRootPath() + "/log/"
         + body.getProperty("logfile").getValue();
@@ -390,69 +392,29 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
   
   public void kill() {
 	  
-	cleanupBinaryStreams();
-	  
-    if (autoCommitMap.get(this.datasource) == null) {
-      if ( debug ) {
-    	  Access.writeToConsole(myAccess, "Did not find autoCommitMap entry for: " + datasource + "\n");
-      }
-      return;
-    }
-
-   try {
-    	
-    	boolean ac = (this.overideAutoCommit) ? autoCommit :
-    		( (Boolean) autoCommitMap.get(datasource)).booleanValue();
-    	if ( debug ) {
-    		Access.writeToConsole(myAccess, "Autocommit flag for " + datasource + " = " + ac + "\n");
-    	}
-    	if (!ac) {
-    		if (con != null) {
-    			try {
-    				Access.writeToConsole(myAccess, "ROLLBACK OF TRANSACTION " + getTransactionContext() + " DUE TO KILL.....\n");
-    			} catch (UserException e) {	
-    				e.printStackTrace(Access.getConsoleWriter(myAccess));
-    			}
-    			if ( debug ) {
-    				Access.writeToConsole(myAccess, "CALLING TRANSACTION ROLLBACK...\n");
-    			}
-    			con.rollback();
-    			if ( debug ) {
-    				Access.writeToConsole(myAccess, "DONE!\n");
-    			}
-    		}
-    	}
-    	// Set autoCommit mode to default value.
-    	if ( con != null ) {
-    		if (transactionContext == -1) {
-    			if (con != null) {
-    				// if defaultUsername was set, set it back.
-
-    				if ( this.defaultUsername != null ) {
-    					PreparedStatement stmt =  con.prepareStatement("ALTER SESSION SET CURRENT_SCHEMA = " + this.defaultUsername);
-    					stmt.executeUpdate();
-    					stmt.close();
-    				}
-    				transactionContextMap.remove(connectionId + "");
-    				try {
-    					SessionIdentification.clearSessionId( (getMetaData() != null ? getMetaData().getVendor() : "" ), con);
-    				}
-    				catch (UserException ex) {
-    				}
-    				// Free connection.
-    				if ( myConnectionBroker.supportsAutocommit ) {
-    					con.setAutoCommit(true);
-    				}
-    				myConnectionBroker.freeConnection(con);
-    				con = null;
-    			}
-    		}
-    	}
-    }
-    catch (SQLException sqle) {
-    	AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, myAccess.accessID);
-    	sqle.printStackTrace(Access.getConsoleWriter(myAccess));
-    } 
+	  try {
+		  if (autoCommitMap.get(this.datasource) == null) {
+			  return;
+		  }
+		  boolean ac = (this.overideAutoCommit) ? autoCommit :
+			  ( (Boolean) autoCommitMap.get(datasource)).booleanValue();
+		  if (!ac) {
+			  if (con != null) {
+				  kill = true;
+				  con.rollback();
+			  }
+		  }
+	  }
+	  catch (SQLException sqle) {
+		  AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, myAccess.accessID);
+		  sqle.printStackTrace(Access.getConsoleWriter(myAccess));
+	  } finally {
+		  try {
+			store();
+		} catch (MappableException e) {
+		} catch (UserException e) {
+		}
+	  }
   }
 
   public void store() throws MappableException, UserException {
@@ -470,22 +432,19 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
 		  if (con != null && !isClosed ) {
 			  try {
 				  // if defaultUsername was set, set it back.
-				  if ( this.defaultUsername != null ) {
-					  PreparedStatement stmt =  con.prepareStatement("ALTER SESSION SET CURRENT_SCHEMA = " + this.defaultUsername);
+				  if ( this.alternativeUsername != null ) {
+					  PreparedStatement stmt =  con.prepareStatement("ALTER SESSION SET CURRENT_SCHEMA = " + this.username);
 					  stmt.executeUpdate();
 					  stmt.close();
 				  }
 				  // Determine autocommit value
 				  if ( myConnectionBroker == null || myConnectionBroker.supportsAutocommit ) {
 					  boolean ac = (this.overideAutoCommit) ? autoCommit :  ( (Boolean) autoCommitMap.get(datasource)).booleanValue();
-					  if (!ac) {
+					  if (!ac && !kill) { // Only commit if kill (rollback) was not called. 
 						  con.commit();
-						  //System.err.println("SQLMAP, CALLING COMMIT() FOR AUTOCOMMIT = FALSE CONNECTION");
-						  // Set autoCommit mode to default value.
 					  }
 					  con.setAutoCommit(true);
 				  }
-				  //System.err.println("SQLMAP, SETTING AUTOCOMMIT TO TRUE AGAIN");
 			  }
 			  catch (SQLException sqle) {
 				  AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, myAccess.accessID);
@@ -905,24 +864,12 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
       }
       
       // Set current schema if username was specified...
-      if ( this.username != null ) { // Only works for Oracle...
+      if ( this.alternativeUsername != null ) { // Only works for Oracle...
     	  try {
-    		  PreparedStatement stmt =  con.prepareStatement("SELECT sys_context('USERENV', 'CURRENT_SCHEMA') AS schemaname FROM dual");
-    		  ResultSet rs = stmt.executeQuery();
-    		  rs.next();
-    		  this.defaultUsername = rs.getString("schemaname");
-    		  if ( debug ) {
-    			  Access.writeToConsole(myAccess, "DEFAULT SCHEMA IS: " + this.defaultUsername);
-    		  }
-    		  rs.close();
-    		  stmt.close();
     		  // Now set current_schema...
-    		  stmt =  con.prepareStatement("ALTER SESSION SET CURRENT_SCHEMA = " + this.username);
+    		  PreparedStatement stmt =  con.prepareStatement("ALTER SESSION SET CURRENT_SCHEMA = " + this.alternativeUsername);
     		  stmt.executeUpdate();
     		  stmt.close();
-    		  if ( debug ) {
-    			  Access.writeToConsole(myAccess, "SET CURRENT_SCHEMA TO: " + this.username);
-    		  }
     	  } catch (Exception e) {
     		  System.err.println(e.getMessage());
     	  } 
@@ -1557,16 +1504,16 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
     if (!tokenizer.hasMoreTokens()) {
       throw new UserException( -1, "tried to set an empty database user name");
     }
-    this.username = tokenizer.nextToken().trim();
+    this.alternativeUsername = tokenizer.nextToken().trim();
     if (this.debug) {
     	Access.writeToConsole(myAccess, this.getClass() + ": set database user name to '" +
-                         this.username + "'\n");
+                         this.alternativeUsername + "'\n");
     }
     if (tokenizer.hasMoreTokens()) {
-      this.password = tokenizer.nextToken().trim();
+      this.alternativePassword = tokenizer.nextToken().trim();
       if (this.debug) {
     	  Access.writeToConsole(myAccess, this.getClass() +
-                           ": set database user password to '" + this.password +
+                           ": set database user password to '" + this.alternativePassword +
                            "'\n");
       }
     }
@@ -1574,10 +1521,16 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
   }
 
   public String getUsername() {
+	if ( this.alternativeUsername != null ) {
+		return this.alternativeUsername;
+	}
     return (this.username);
   }
 
   public String getPassword() {
+	  if ( this.alternativePassword != null ) {
+			return this.alternativePassword;
+		}
     return (this.password);
   }
 
@@ -1810,7 +1763,7 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
 
   public String getDatasourceUrl(String datasource, String username) {
 	  if ( fixedBroker != null ) {
-		  return fixedBroker.getDatasourceUrl(datasource, null);
+		  return fixedBroker.getDatasourceUrl(datasource);
 	  } else {
 		  return null;
 	  }
