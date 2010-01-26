@@ -285,6 +285,16 @@ public final class DbConnectionBroker extends Object
 		return username;
 	}
 	
+	/**
+	 * Age all connections, forcing creation of new connection.
+	 * 
+	 */
+	public void setCloseAll() {
+		for (int i = 0; i < aged.length; i++) {
+			aged[i] = true;
+		}
+	}
+
 	public final static int getInstances() {
 		return GrusManager.getInstance().getInstances();
 	}

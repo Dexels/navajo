@@ -10,7 +10,7 @@ public class GrusManager implements Runnable {
 	private Thread myThread;
 	private final static HashSet<DbConnectionBroker> registeredBrokers = new HashSet<DbConnectionBroker>();
 	
-	static {
+	static  {
 		GrusManager myGrus = new GrusManager();
 		myGrus.myThread = new Thread(myGrus, "Grus DbConnection Manager");
 		myGrus.myThread.setDaemon(true);

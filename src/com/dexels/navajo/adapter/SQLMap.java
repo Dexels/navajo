@@ -124,7 +124,7 @@ import com.dexels.navajo.events.types.AuditLogEvent;
  *
  */
 
-public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debugable {
+public class SQLMap implements Mappable, HasDependentResources, Debugable {
 
   protected final static int INFINITE = -1;
   protected final String USERPWDDELIMITER = "/";
@@ -219,8 +219,8 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
     driver = body.getProperty("driver").getValue(); //NavajoUtils.getPropertyValue(body, "driver", true);
     url =  body.getProperty("url").getValue(); // NavajoUtils.getPropertyValue(body, "url", true);
 
-    final String username = (this.username != null) ? this.username : body.getProperty("username").getValue();
-    final String password = (this.password != null) ? this.password : body.getProperty("password").getValue();
+    username = body.getProperty("username").getValue();
+    password = body.getProperty("password").getValue();
 
     String logFile = config.getRootPath() + "/log/"
         + body.getProperty("logfile").getValue();
@@ -363,9 +363,6 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
     navajoConfig = DispatcherFactory.getInstance().getNavajoConfig();
     myAccess = access;
     setReload("");
-    if (debug) {
-    	Access.writeToConsole(myAccess, "LEAVING SQLMAP load()...");
-    }
   }
 
   public void setDatasource(String s) {
@@ -499,57 +496,6 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
     	AuditLog.log("SQLMap", "Invalid transaction context: " + i, Level.SEVERE,myAccess.accessID + " (exists=" + exists + ")");
     	throw new UserException( -1, "Invalid transaction context set (exists=" + exists + ")");
     }
-  }
-
-  /**
-   * Set the total elements in a lazy array (as a result from a previous operation), to prevent recalculation.
-   * @throws UserException
-   */
-  public void setTotalElements(String name, int t) throws UserException {
-    this.lazyTotal = t;
-  }
-
-  public int getTotalElements() throws UserException {
-    return getTotalElements("");
-  }
-
-  public int getTotalElements(String s) throws UserException {
-    //System.err.println("in getTotalElements(" + s+ ")");
-    if (resultSet == null) {
-      getResultSet();
-    }
-    // If endIndex is set, determine row count first.
-    //System.err.println("CALCULATE ROWCOUNT...........................................................................");
-    if (lazyTotal == 0) { // lazyTotal has not been set from outside.
-      if (viewCount <= (getEndIndex(s) - getStartIndex(s))) {
-        lazyTotal = viewCount;
-      }
-      else {
-        lazyTotal = getTotalRows();
-      }
-    }
-    return this.lazyTotal;
-  }
-
-  public int getCurrentElements(String s) {
-    return this.viewCount;
-  }
-
-  public int getRemainingElements(String s) throws UserException {
-    if (debug) {
-    	Access.writeToConsole(myAccess, "in getRemainingElements(" + s + ")\n");
-    }
-    getTotalElements(s);
-    if (debug) {
-    	Access.writeToConsole(myAccess, "in getRemainingElements()\n");
-    	Access.writeToConsole(myAccess, "startIndex = " + startIndex + "\n");
-    	Access.writeToConsole(myAccess, "endIndex = " + endIndex + "\n");
-    	Access.writeToConsole(myAccess, "shownElements = " + viewCount + "\n");
-    	Access.writeToConsole(myAccess, "totalElements = " + lazyTotal + "\n");
-    	Access.writeToConsole(myAccess, "remainingElements = " + (lazyTotal - endIndex) + "\n");
-    }
-    int remaining = (lazyTotal - endIndex);
-    return (remaining > 0 ? remaining : 0);
   }
 
   public void setRowCount(int i) {
@@ -701,18 +647,7 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
     if (parameters == null) {
       parameters = new ArrayList();
     }
-    /**
-         if ( (param != null) && (param instanceof String)
-        && ( ( (String) param).indexOf(";") != -1)) {
-         java.util.StringTokenizer tokens = new java.util.StringTokenizer( (String)
-          param, ";");
-      while (tokens.hasMoreTokens()) {
-        parameters.add(tokens.nextToken());
-      }
-         }
-         else {**/
     parameters.add(param);
-    /*}**/
   }
 
   protected final String getType(int i) {
@@ -783,16 +718,16 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
   }
 
   public void setKillConnection() {
-    if (con != null) {
-      try {
-        System.err.println("Trying to close connection .... (NOT YET IMPLEMENTED!)");
-        //con.close();
-        //System.err.println("... Done!");
-      }
-      catch (Throwable ex) {
-        ex.printStackTrace(Access.getConsoleWriter(myAccess));
-      }
-    }
+	  if (con != null) {
+		  try {
+			  if ( myConnectionBroker != null ) {
+				  myConnectionBroker.setCloseAll();
+			  }
+		  }
+		  catch (Throwable ex) {
+			  ex.printStackTrace(Access.getConsoleWriter(myAccess));
+		  }
+	  }
   }
 
   protected final void createConnection() throws SQLException, UserException {
@@ -1538,71 +1473,6 @@ public class SQLMap implements Mappable, LazyArray, HasDependentResources, Debug
     	  Access.writeToConsole(myAccess, this.getClass() + ": " + msg + "\n");
       }
     }
-  }
-
-  /**
-   * Get the total number of rows for the defined query.
-   *
-   * @return
-   */
-  public final int getTotalRows() {
-
-    //savedQuery = savedQuery.toUpperCase();
-    if (debug) { Access.writeToConsole(myAccess, "savedQuery is " + savedQuery + "\n"); }
-
-    savedQuery = savedQuery.replaceAll("[fF][rR][oO][Mm]", "FROM");
-    savedQuery = savedQuery.replaceAll("[Oo][rR][dD][eE][rR]", "ORDER");
-
-    String countQuery = "SELECT count(*) " +
-        savedQuery.substring(savedQuery.lastIndexOf("FROM"),
-                             (savedQuery.indexOf("ORDER") != -1 ?
-                              savedQuery.lastIndexOf("ORDER") :
-                              savedQuery.length()));
-
-    PreparedStatement count = null;
-    ResultSet rs = null;
-    int total = 0;
-
-    try {
-      createConnection();
-
-      if (debug) { Access.writeToConsole(myAccess, "Executing count query: " + countQuery + "......\n"); }
-      count = con.prepareStatement(countQuery);
-      this.setStatementParameters(count);
-      rs = count.executeQuery();
-
-      total = 0;
-      if (rs.next()) {
-        total = rs.getInt(1);
-      }
-      if (debug) { Access.writeToConsole(myAccess, "Result = " + total + "\n"); }
-
-    }
-    catch (Exception e) {
-      e.printStackTrace(Access.getConsoleWriter(myAccess));
-    }
-    finally {
-      try {
-        if (rs != null) {
-          rs.close();
-        }
-        if (count != null) {
-          count.close();
-        }
-      }
-      catch (SQLException sqle) {
-        sqle.printStackTrace(Access.getConsoleWriter(myAccess));
-      }
-    }
-
-    return total;
-  }
-
-
-  
-  public static void main(String[] args) throws Exception {
-
-	  
   }
 
   public String getQuery() {
