@@ -27,10 +27,21 @@
          <value direction="out" name="recentMessageCount" type="integer" />
          <value direction="in" name="recentAfter" type="date" />
 
+         <value direction="inout" name="currentPage" type="integer" />
+         <value direction="inout" name="pageSize" type="integer" />
+         <value direction="out" name="pageCount" type="integer" />
+         
+         <value direction="out" name="messageCount" type="integer" />
+
       </values>
       <methods>
          <method name="connect"/>
          <method name="disconnect" />
+         <method name="nextPage"/>
+         <method name="previousPage"/>
+         <method name="firstPage"/>
+         <method name="lastPage"/>
+
       </methods>  
 </tipiclass>
 </tid>
