@@ -254,7 +254,7 @@
             <event name="onInstantiate"/>
             <event name="onLoad"/>
         </events>
-        <value/>
+        <values/>
           <methods/>
     </tipiclass>
     

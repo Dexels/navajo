@@ -51,7 +51,10 @@ public class EchoTipiContext extends TipiContext {
     
     private final TipiEchoInstance myInstance;
     public EchoTipiContext(TipiEchoInstance t, EchoTipiContext parentContext) {
-    	super(parentContext);
+     	super(t, parentContext);
+//   	 if(1==1) {
+//      	 throw new RuntimeException("Echo implementation broken, refactor TipiEchoInstance");
+//   	 }
     	instanceCount++;
     	myInstance = t;
 		ContainerContext context =(ContainerContext) t.getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);

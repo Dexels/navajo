@@ -1,6 +1,5 @@
 package com.dexels.navajo.functions;
 
-import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.tipi.components.echoimpl.EchoTipiContext;
@@ -21,8 +20,6 @@ public class CreateEchoUrl extends FunctionInterface {
 		String result = ee.createExpressionUrl(expression);
 		System.err.println("Result: "+result);
 		return result;
-		//throw new TMLExpressionException("CreateEchoUrl needs a context and an expression");
-
 	}
 
 	@Override

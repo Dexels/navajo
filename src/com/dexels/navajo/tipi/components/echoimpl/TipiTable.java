@@ -75,7 +75,10 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 		ContentPane cp = new ContentPane();
 		myTransitionPane.add(cp);
 		cp.add(myTable);
-		myPane.add(pageNavigator);
+		ContentPane topPane = new ContentPane();
+		myPane.add(topPane);
+		
+		topPane.add(pageNavigator);
 		myPane.add(myTransitionPane);
 		// myTransitionPane.add(myTable);
 		Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(MessageTable.class, "Default");
@@ -193,6 +196,12 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 			System.err.println("Wonka:"+object);
 //			pageNavigator.set
 		}
+		if(name.equals("headervisible")) {
+			boolean b = (Boolean)object;
+			myPane.setSeparatorPosition(new Extent(b?25:0, Extent.PX));
+			pageNavigator.setVisible(b);
+		}
+			
 	}
 	
 

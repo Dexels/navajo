@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.sound.midi.SysexMessage;
 
+import tipi.TipiApplicationInstance;
+
 import nextapp.echo2.app.*;
 import nextapp.echo2.webcontainer.ContainerContext;
 import nextapp.echo2.webcontainer.command.BrowserRedirectCommand;
@@ -40,7 +42,7 @@ import com.dexels.navajo.tipi.components.echoimpl.impl.*;
  * @version 1.0
  */
 
-public class TipiEchoInstance extends ApplicationInstance {
+public class TipiEchoInstance extends ApplicationInstance implements TipiApplicationInstance {
 	private TipiContext context;
 
 	private String tipiDef = null;
@@ -89,95 +91,37 @@ public class TipiEchoInstance extends ApplicationInstance {
 		enqueueCommand(new BrowserRedirectCommand(getLogoutUrl().toString()));
 		ContainerContext containerContext = (ContainerContext) getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
 		final HttpSession session = containerContext.getSession();
-		// Invalidate session in a different thread
-		// Thread thread = new Thread(new Runnable() {
-		// public void run() {
-		// try {
-		// Thread.currentThread().sleep(200);
-		// if (session != null)
-		// session.invalidate();
-		// } catch (Throwable t) {
-		// t.printStackTrace();
-		// }
-		// }
-		// });
-		// thread.start();
 	}
 
-	private void startup() {
-		String stylePath = myServletContext.getRealPath("Default.stylesheet");
-		System.err.println("StylePath: "+stylePath);
-		try {
-			FileInputStream fis = new FileInputStream(stylePath);
-			Styles.loadStyleSheet(fis);
-			fis.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		if (Styles.DEFAULT_STYLE_SHEET != null) {
-			setStyleSheet(Styles.DEFAULT_STYLE_SHEET);
-			Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(WindowPane.class, "Default");
-			System.err.println(">>> " + ss);
-		}
-		System.err.println("REAL PATH: " + myServletContext.getRealPath("/"));
-		
-		// Title.Sub
-		context = new EchoTipiContext(this,null);
-		ServletContextResourceLoader servletContextTipiLoader = new ServletContextResourceLoader(myServletContext,"tipi");
-		context.setTipiResourceLoader(servletContextTipiLoader);
-		ServletContextResourceLoader servletContextResourceLoader = new ServletContextResourceLoader(myServletContext,"resource");
-		context.setGenericResourceLoader(servletContextResourceLoader);
-	//	context.setResourceBaseDirectory(new File(myServletContext.getRealPath("/") + "resource/tipi/"));
-		
-		getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
-		TipiScreen es = new TipiScreen();
-		context.parseRequiredIncludes();
-		context.processRequiredIncludes();
-		es.setContext(context);
-		es.createContainer();
-		context.setDefaultTopLevel(es);
-		try {
-			initServlet(myServletConfig.getInitParameterNames());
-		} catch (Throwable ex) {
-			ex.printStackTrace();
-		}
+	public final void startup() throws IOException {
+		setCurrentContext(createContext());
 	}
+
+
 
 //	public void loadTipi(URL tipidef) throws IOException, TipiException {
 //		context.parseURL(tipidef, false);
 //	}
 
-	public void loadTipi(String fileName) throws IOException, TipiException {
-		InputStream in = context.getTipiResourceStream(fileName);
+	public void loadTipi(TipiContext newContext, String fileName) throws IOException, TipiException {
+		System.err.println("Context: "+newContext+" filename: "+fileName);
+		InputStream in = newContext.getTipiResourceStream(fileName);
 
 		if(in!=null) {
-			context.parseStream(in, "startup", false);
+			newContext.parseStream(in, "startup", false);
 			in.close();
 			 
 		} else {
 			throw new TipiException("Error loading tipi: "+fileName);
 		}
-//		File rootDir = new File(myServletContext.getRealPath("/"));
-//		File dir = null;
-//		if (tipiDir == null) {
-//			dir = rootDir;
-//		} else {
-//			dir = new File(rootDir, tipiDir);
-//		}
-//		File f = new File(dir, fileName);
-//		URL resourceURL = getClass().getClassLoader().getResource(fileName);
-//		// context.parseFile(f, false, tipiDir);
-//		if(resourceURL!=null) {
-//		InputStream in = resourceURL.openStream();
-//		} else {
-//			System.err.println("Error loading: tipi: "+fileName);
-//		}
-//		
-		}
+	}
 
 	public Window init() {
-		startup();
+		try {
+			startup();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 //		System.err.println("Startup finished");
 		TipiScreen echo = (TipiScreen) context.getDefaultTopLevel();
 //		System.err.println("echo: " + echo.store());
@@ -190,9 +134,9 @@ public class TipiEchoInstance extends ApplicationInstance {
 		return w.getWindow();
 	}
 
-	private void initServlet(Enumeration args) throws Exception {
+	private void initServlet(TipiContext newContext, Enumeration args) throws Exception {
 		checkForProperties(args);
-		loadTipi(tipiDef);
+		loadTipi(newContext, tipiDef);
 	}
 
 	private Map checkForProperties(Enumeration e) {
@@ -230,4 +174,69 @@ public class TipiEchoInstance extends ApplicationInstance {
 	public TipiContext getTipiContext() {
 		return context;
 	}
+
+	public TipiContext createContext() throws IOException {
+
+		String stylePath = myServletContext.getRealPath("Default.stylesheet");
+		System.err.println("StylePath: "+stylePath);
+		try {
+			FileInputStream fis = new FileInputStream(stylePath);
+			Styles.loadStyleSheet(fis);
+			fis.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		if (Styles.DEFAULT_STYLE_SHEET != null) {
+			setStyleSheet(Styles.DEFAULT_STYLE_SHEET);
+			Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(WindowPane.class, "Default");
+			System.err.println(">>> " + ss);
+		}
+		System.err.println("REAL PATH: " + myServletContext.getRealPath("/"));
+		
+		// Title.Sub
+		EchoTipiContext newContext = new EchoTipiContext(this,null);
+		ServletContextResourceLoader servletContextTipiLoader = new ServletContextResourceLoader(myServletContext,"tipi");
+		newContext.setTipiResourceLoader(servletContextTipiLoader);
+		ServletContextResourceLoader servletContextResourceLoader = new ServletContextResourceLoader(myServletContext,"resource");
+		newContext.setGenericResourceLoader(servletContextResourceLoader);
+	//	context.setResourceBaseDirectory(new File(myServletContext.getRealPath("/") + "resource/tipi/"));
+		
+		getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
+		TipiScreen es = new TipiScreen();
+		newContext.parseRequiredIncludes();
+		newContext.processRequiredIncludes();
+		es.setContext(newContext);
+		es.createContainer();
+		newContext.setDefaultTopLevel(es);
+		try {
+			System.err.println("Context created: "+newContext.hashCode());
+
+			initServlet(newContext, myServletConfig.getInitParameterNames());
+		} catch (Throwable ex) {
+			ex.printStackTrace();
+		}
+		return newContext;
+	}
+
+	public void dispose(TipiContext t) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public TipiContext getCurrentContext() {
+		// TODO Auto-generated method stub
+		return context;
+	}
+
+	public void reboot() throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setCurrentContext(TipiContext currentContext) {
+		context = currentContext;
+		
+	}
+
 }
