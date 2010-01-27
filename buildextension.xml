@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="TipiEcho" default="publish" basedir=".">
+	<taskdef name="retrieveVersion" classname="com.dexels.navajo.tipi.ant.extensionbuilder.RetrieveVersion"
+		classpath="bin" />
+	<retrieveVersion />
+	<property name="dist" value="dist/${ant.project.name}/${tipiComponentVersion}" />
+	<target name="archive">
+		<ant antfile="build.xml" dir="." inheritall="true" inheritrefs="true" />
+	</target>
+	<target name="customGrabjar" depends="archive">
+		<delete dir="${dist}" />
+		<copy todir="${dist}/lib" file="TipiEcho.jar" />
+		<copy todir="${dist}/lib" file="lib/iText.jar" />
+		<copy todir="${dist}/lib" file="lib/Tidy.jar" />
+		<copy todir="${dist}/lib" file="../NavajoEchoClient/TipiEchoClient.jar" />
+		<copy todir="${dist}/lib" file="../NavajoEchoClient/lib/commons-fileupload-1.0.jar" />
+		<copy todir="${dist}/lib" file="../NavajoEchoClient/lib/Echo2_App.jar" />
+		<copy todir="${dist}/lib" file="../NavajoEchoClient/lib/Echo2_Extras_App.jar" />
+		<copy todir="${dist}/lib" file="../NavajoEchoClient/lib/Echo2_Extras_WebContainer.jar" />
+		<copy todir="${dist}/lib" file="../NavajoEchoClient/lib/Echo2_FileTransfer_App.jar" />
+		<copy todir="${dist}/lib" file="../NavajoEchoClient/lib/Echo2_FileTransfer_WebContainer.jar" />
+		<copy todir="${dist}/lib" file="../NavajoEchoClient/lib/Echo2_WebContainer.jar" />
+		<copy todir="${dist}/lib" file="../NavajoEchoClient/lib/echopointng-2.1.0rc5.jar" />
+		<copy todir="${dist}/lib" file="../NavajoEchoClient/lib/Echo2_WebRender.jar" />
+		<copy todir="${dist}/lib" file="../NavajoEchoClient/lib/jcommon-1.0.0.jar" />
+		<copy todir="${dist}/compilelib" file="../NavajoEchoClient/compilelib/servlet-api.jar" />
+		<copy todir="${dist}/lib" file="../NavajoEchoClient/lib/tucana-20060720.jar" />
+
+
+		<!--
+			<copy todir="${dist}/lib" file="../AnimatedTransitions/AnimatedTransitions.jar" /> <copy todir="${dist}/lib"
+			file="../TimingFramework/TimingFramework.jar" />
+		-->
+	</target>
+	<target name="publish" depends="customGrabjar">
+		<ant antfile="../TipiBuild/genericbuild.xml" dir="." inheritall="true" inheritrefs="true" target="publish" />
+	</target>
+</project>
