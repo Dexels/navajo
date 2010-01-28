@@ -2,8 +2,10 @@
 <!-- $Id$ -->
 <project default="publish">
 
+	<taskdef name="retrieveVersion" classname="com.dexels.navajo.tipi.ant.extensionbuilder.RetrieveVersion" classpath="bin" />
 	<taskdef name="buildExtension" classname="com.dexels.navajo.tipi.ant.extensionbuilder.BuildExtensionTask" classpath="bin" />
 	<taskdef name="buildDocumentation" classname="com.dexels.navajo.tipi.ant.extensionbuilder.BuildExtensionDocumentationTask" classpath="bin" />
+	<taskdef name="buildTipiBeans" classname="com.dexels.navajo.tipi.ant.extensionbuilder.BuildTipiBeansTask" classpath="bin" />
 	<taskdef name="p200ant" classname="de.matthiasmann.p200ant.P200AntTask" classpath="p200ant.jar"/>
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
 	<taskdef name="for" classname="net.sf.antcontrib.logic.ForTask" onerror="ignore" />
@@ -13,11 +15,28 @@
 	<property name="documentationSsh" value="navajo@spiritus.dexels.nl:/var/www/html/Tipi/wiki/data/pages/tipidoc" />
 	<property file="../TipiBuild/sign.properties" />
 
+	<path id="projectlibs">
+	   <fileset dir="${lib}">
+	      <include name="**/*.jar"/>
+ 	   </fileset>
+	   <fileset dir="${compilelib}" >
+	      <include name="**/*.jar"/>
+ 	   </fileset>
+	</path>
+	<path id="dependencylibs">
+	   <fileset dir="${dependencylib}">
+	      <include name="**/*.jar"/>
+ 	   </fileset>
+	   <fileset dir="${dependencycompilelib}" >
+	      <include name="**/*.jar"/>
+ 	   </fileset>
+	</path>
 	
 	<target name="prepare">
-		<echo message="Java version: ${java.version}"/>
-		<taskdef name="retrieveVersion" classname="com.dexels.navajo.tipi.ant.extensionbuilder.RetrieveVersion" classpath="bin" />
-		<retrieveVersion />
+		<retrieveVersion/>
+		<echo message="Java version: ${java.version} "/>
+	
+		<!--		<fail unless="${ant.project.name}" message="Can't run without project. You didn't run genericbuild.xml by itself, did you?"/>-->
 		<property name="dist" value="dist/${ant.project.name}/${tipiComponentVersion}" />
 		<if>
 			<equals arg1="${doTagCvs}" arg2="true"/>
@@ -38,7 +57,9 @@
 
 	<target name="grabjars" depends="prepare">
 		<mkdir dir="${dist}/lib" />
+
 		<echo message="Extra deployment jars: ${deployedDependencyJars}"/>
+		<echo message="Copying to ${dist}/lib "/>
 		<!-- TODO Create custom task to only copy the files referenced in the extension definition -->
 		<copy todir="${dist}/lib">
 			<fileset dir="lib">
@@ -51,11 +72,11 @@
 				<include name="**" />
 			</fileset>
 		</copy>
-				<for list="${deployedDependencyJars}" delimiter="," param="currentjar">
+				<for list="${tipiDeployedDependencyJars}" delimiter="," param="currentjar">
 					<sequential>
 						<echo message="Current dep: @{currentjar}"/>
 
-						<copy todir="${dist}/unsigned">
+						<copy todir="${dist}/lib">
 							<fileset dir="work/dependency/lib">
 								<include name="@{currentjar}"/>
 							</fileset>
@@ -71,6 +92,8 @@
 		
 
 	</target>
+	
+	
 	<target name="buildTipi" depends="grabjars">
 		<!--  <buildXsd repository="http://www.navajo.nl/Tipi/"/> -->
 		<mkdir dir="${dist}" />
@@ -78,8 +101,41 @@
 		<echo message="Building to: ${dist}" />
 		<echo message="Rep to: ${repository}Extensions/" />
 		<buildDocumentation version="${tipiComponentVersion}" distribution="${dist}" destination="${dist}/wikidoc" repository="${repository}Extensions/" />
+		<buildTipiBeans version="${tipiComponentVersion}" distribution="${dist}" destination="${dist}/beans" repository="${repository}Extensions/" />
 	</target>
-	<target name="repackJars" depends="buildTipi">
+	
+	<target name="compileBeans" depends="buildTipi">
+		<mkdir dir="${dist}/beansclasses"/>
+		<javac srcdir="${dist}/beans/javafiles" destdir="${dist}/beansclasses" debug="true" debuglevel="lines,vars,source">
+			<classpath refid="projectlibs" />
+			<classpath refid="dependencylibs" />
+			<classpath path="${dependencyclasses}"/>
+			<classpath path="${build}"/>
+		</javac>
+		<mkdir dir="${dist}/javadoc"/>
+	</target>
+	<target name="beansJavaDoc" depends="compileBeans">
+		<javadoc failonerror="false" verbose="false" destdir="${dist}/javadoc" author="true"  version="true" use="true"  windowtitle="Navajo API docs">
+		    <fileset dir="${dist}/beans/javafiles" defaultexcludes="yes">
+		    </fileset>
+
+		    <doctitle><![CDATA[<h1>Tipi Framework</h1>]]></doctitle>
+		    <bottom><![CDATA[<i>Copyright &#169; 2010 Dexels BV. All Rights Reserved.</i>]]></bottom>
+		    <tag name="todo" scope="all" description="To do:"/>
+		    <link offline="true" href="http://java.sun.com/j2se/1.5.0/docs/api/" packagelistLoc="C:\tmp"/>
+		    <link href="http://developer.java.sun.com/developer/products/xml/docs/api/"/>
+		  </javadoc>
+	</target>
+
+	<!-- add dep to beansJavaDoc to reactivate. Disabled for now, because it can not handle empty source dir -->
+	<target name="archiveBeans" depends="compileBeans">
+		<jar destfile="${dist}/lib/${ant.project.name}Beans.jar">
+			<fileset dir="${dist}/beansclasses"/>
+		</jar>
+		<copy file="${dist}/lib/${ant.project.name}Beans.jar" todir="${dist}/unsigned"/>
+	</target>
+	
+	<target name="repackJars" depends="archiveBeans">
 
 		<p200ant repack="true" keepModificationTime="false" singleSegment="true">
 		<fileset dir=".">
@@ -100,7 +156,6 @@
 		keystore=../TipiBuild/dexels_dummy_key
 		keypass=dexels
 		-->
-		<echo message="Key stats: ${keystore} - ${storepass} - ${keypass} - ${alias}"/> 
 		<signjar keystore="${keystore}" verbose="false" storepass="${storepass}" keypass="${keypass}" alias="${alias}">
 			<fileset dir=".">
 				<include name="${dist}/lib/*.jar" />
