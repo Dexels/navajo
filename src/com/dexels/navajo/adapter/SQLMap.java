@@ -498,6 +498,57 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
     }
   }
 
+  /**
+   * Set the total elements in a lazy array (as a result from a previous operation), to prevent recalculation.
+   * @throws UserException
+   */
+  public void setTotalElements(String name, int t) throws UserException {
+    this.lazyTotal = t;
+  }
+
+  public int getTotalElements() throws UserException {
+    return getTotalElements("");
+  }
+
+  public int getTotalElements(String s) throws UserException {
+    //System.err.println("in getTotalElements(" + s+ ")");
+    if (resultSet == null) {
+      getResultSet();
+    }
+    // If endIndex is set, determine row count first.
+    //System.err.println("CALCULATE ROWCOUNT...........................................................................");
+    if (lazyTotal == 0) { // lazyTotal has not been set from outside.
+      if (viewCount <= (getEndIndex(s) - getStartIndex(s))) {
+        lazyTotal = viewCount;
+      }
+      else {
+        lazyTotal = getTotalRows();
+      }
+    }
+    return this.lazyTotal;
+  }
+
+  public int getCurrentElements(String s) {
+    return this.viewCount;
+  }
+
+  public int getRemainingElements(String s) throws UserException {
+    if (debug) {
+    	Access.writeToConsole(myAccess, "in getRemainingElements(" + s + ")\n");
+    }
+    getTotalElements(s);
+    if (debug) {
+    	Access.writeToConsole(myAccess, "in getRemainingElements()\n");
+    	Access.writeToConsole(myAccess, "startIndex = " + startIndex + "\n");
+    	Access.writeToConsole(myAccess, "endIndex = " + endIndex + "\n");
+    	Access.writeToConsole(myAccess, "shownElements = " + viewCount + "\n");
+    	Access.writeToConsole(myAccess, "totalElements = " + lazyTotal + "\n");
+    	Access.writeToConsole(myAccess, "remainingElements = " + (lazyTotal - endIndex) + "\n");
+    }
+    int remaining = (lazyTotal - endIndex);
+    return (remaining > 0 ? remaining : 0);
+  }
+
   public void setRowCount(int i) {
     this.rowCount = i;
   }
@@ -1473,6 +1524,71 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
     	  Access.writeToConsole(myAccess, this.getClass() + ": " + msg + "\n");
       }
     }
+  }
+
+  /**
+   * Get the total number of rows for the defined query.
+   *
+   * @return
+   */
+  public final int getTotalRows() {
+
+    //savedQuery = savedQuery.toUpperCase();
+    if (debug) { Access.writeToConsole(myAccess, "savedQuery is " + savedQuery + "\n"); }
+
+    savedQuery = savedQuery.replaceAll("[fF][rR][oO][Mm]", "FROM");
+    savedQuery = savedQuery.replaceAll("[Oo][rR][dD][eE][rR]", "ORDER");
+
+    String countQuery = "SELECT count(*) " +
+        savedQuery.substring(savedQuery.lastIndexOf("FROM"),
+                             (savedQuery.indexOf("ORDER") != -1 ?
+                              savedQuery.lastIndexOf("ORDER") :
+                              savedQuery.length()));
+
+    PreparedStatement count = null;
+    ResultSet rs = null;
+    int total = 0;
+
+    try {
+      createConnection();
+
+      if (debug) { Access.writeToConsole(myAccess, "Executing count query: " + countQuery + "......\n"); }
+      count = con.prepareStatement(countQuery);
+      this.setStatementParameters(count);
+      rs = count.executeQuery();
+
+      total = 0;
+      if (rs.next()) {
+        total = rs.getInt(1);
+      }
+      if (debug) { Access.writeToConsole(myAccess, "Result = " + total + "\n"); }
+
+    }
+    catch (Exception e) {
+      e.printStackTrace(Access.getConsoleWriter(myAccess));
+    }
+    finally {
+      try {
+        if (rs != null) {
+          rs.close();
+        }
+        if (count != null) {
+          count.close();
+        }
+      }
+      catch (SQLException sqle) {
+        sqle.printStackTrace(Access.getConsoleWriter(myAccess));
+      }
+    }
+
+    return total;
+  }
+
+
+  
+  public static void main(String[] args) throws Exception {
+
+	  
   }
 
   public String getQuery() {
