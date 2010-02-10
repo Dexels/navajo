@@ -15,16 +15,6 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 
 	private final Map<String,String> typeExtension = new HashMap<String,String>();
 
-	private OutputStream writeResource(String path) throws FileNotFoundException {
-//		System.err.println("Userdir: "+System.getProperty("user.dir"));
-		//File buildDir = new File()"build/");
-		getOutputDir().mkdirs();
-		File pathFile = new File(getOutputDir(),path);
-		pathFile.getParentFile().mkdirs();
-		//System.err.println("Writing resource: "+path+" abs: "+pathFile.getAbsolutePath());
-		FileOutputStream fos = new FileOutputStream(pathFile);
-		return fos;
-	}
 	
 	protected void parseParserMap(URL parserLink) throws IOException {
 		InputStream openStream = parserLink.openStream();
@@ -91,12 +81,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 		Map<String, List<XMLElement>> extensionTypeMap = createExtensionMapFromList(allTypes);
 		Map<String, List<XMLElement>> extensionFunctionMap = createExtensionMapFromList(allFunctions);
 		
-//		System.err.println("# of Components  unfiltered: "+allComponentsOfAllExtensions.size()+" filtered: "+allComponents.size());
-//
-//		System.err.println("Processing extensions: "+extensions+" current: "+originalExtension);
-	//	System.err.println("Actions: "+extensionActionMap.keySet());
-	//	System.err.println("Functions: "+extensionFunctionMap.keySet());
-			try {
+		try {
 			for (String extension : extensionTypeMap.keySet()) {
 				List<XMLElement> typeList = extensionTypeMap.get(extension);
 				if(typeList!=null) {

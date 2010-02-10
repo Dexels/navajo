@@ -1,9 +1,12 @@
 package com.dexels.navajo.tipi.projectbuilder;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.PropertyResourceBundle;
+import java.util.StringTokenizer;
 
 import com.dexels.navajo.tipi.util.XMLElement;
 
@@ -30,6 +33,33 @@ public abstract class TipiProjectBuilder {
 			System.err.println("No project include found!");
 		}
 
+	}
+
+	// Will return a version label for a certain extension, based on the previous build, or null when things are amiss.
+	protected String getCurrentExtensionVersion(File baseDir, String extensionName) throws IOException {
+		File previousBuild = new File(baseDir,"settings/buildresults.properties");
+		if(!previousBuild.exists()) {
+			return null;
+		}
+		FileInputStream is = new FileInputStream(previousBuild);
+		PropertyResourceBundle pe = new PropertyResourceBundle(is);
+		String extensions = pe.getString("extensions");
+		StringTokenizer st = new StringTokenizer(extensions,",");
+		while(st.hasMoreTokens()) {
+			String current = st.nextToken();
+			if(current.indexOf("/")==-1 ) {
+				System.err.println("No version in version result: "+extensions+" currently checking: "+current);
+				return null;
+			}
+			StringTokenizer st2 = new StringTokenizer(current,"/");
+			String name = st2.nextToken();
+			if(!name.equals(extensionName)) {
+				continue;
+			}
+			String version = st2.nextToken();
+			return version;
+		}
+		return null;
 	}
 
 }

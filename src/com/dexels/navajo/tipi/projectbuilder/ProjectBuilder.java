@@ -65,7 +65,7 @@ public class ProjectBuilder {
 
 	// Used for server side appstore building
 	
-	public static void buildTipiProject(File projectPath, String codebase) throws IOException {
+	public static String buildTipiProject(File projectPath, String codebase) throws IOException {
 		System.err.println("Project patH: "+projectPath.getAbsoluteFile());
 		FileInputStream is = new FileInputStream(new File(projectPath,"settings/tipi.properties"));
 		PropertyResourceBundle pe = new PropertyResourceBundle(is);
@@ -112,7 +112,7 @@ public class ProjectBuilder {
 		//	downloadExtensionJars(projectPath, extensions, extensionRepository,false,false,buildType,true);
 		
 
-		File[] cc = projectPath.listFiles();
+//		File[] cc = projectPath.listFiles();
 //		for (int i = 0; i < cc.length; i++) {
 //			if(cc[i].getName().endsWith(".jnlp")) {
 //				cc[i].delete();
@@ -130,18 +130,20 @@ public class ProjectBuilder {
 			System.err.println("No resource found");
 		}
 		boolean resign = keystore!=null;
-		downloadExtensionJars(projectPath, extensions, extensionRepository,false,clean,buildType,true,resign);
+		downloadExtensionJars(projectPath, extensions, extensionRepository,false,clean,buildType,false,resign);
+		
+		String postProcessAnt = null;
 		if(profiles==null || profiles.isEmpty()) {
-			buildProfileJnlp(null,clean,  projectPath, codebase, extensions, extensionRepository,developmentRepository, buildType,true);
+			postProcessAnt = buildProfileJnlp(null,clean,  projectPath, codebase, extensions, extensionRepository,developmentRepository, buildType,true);
 		} else {
 			for (String profile : profiles) {
+				// TODO: Beware, multiple profiles in Echo / Web will not work
 				System.err.println("Building profile: "+profile);
-				buildProfileJnlp(profile,clean, projectPath, codebase, extensions , extensionRepository, developmentRepository,buildType,true);
-				
+				postProcessAnt = buildProfileJnlp(profile,clean, projectPath, codebase, extensions , extensionRepository, developmentRepository,buildType,true);
 			}
 		}
 
-		
+		return postProcessAnt;
 //		try {
 //			String cp = pe.getString("buildClasspath");
 //			if("true".equals(cp)) {
@@ -153,7 +155,7 @@ public class ProjectBuilder {
 
 
 
-	private static void buildProfileJnlp(String profile,  boolean clean, File projectPath, String projectUrl, String extensions,
+	private static String buildProfileJnlp(String profile,  boolean clean, File projectPath, String projectUrl, String extensions,
 			String repository,String developmentRepository, String buildType, boolean useVersioning) throws IOException {
 		
 		System.err.println("Writing in: "+projectPath.getAbsolutePath());
@@ -161,21 +163,22 @@ public class ProjectBuilder {
 		downloadExtensionJars(projectPath, extensions, repository,false,clean,buildType,useVersioning,false);
 
 		String profileName = profile==null?"Default":profile;
-//		if("remote".equals(buildType) ) {
-//			deleteLocalTipiBuild(projectPath,profile);
-//		}
-//		if("local".equals(buildType) ) {
-//			deleteRemoteTipiBuild(projectPath,profile);
-//		}
+		String postProcessAnt = null;
 		if("remote".equals(buildType)) {
-			RemoteJnlpBuilder r = new RemoteJnlpBuilder();
+			BaseDeploymentBuilder r = new RemoteJnlpBuilder();
 			downloadExtensionJars(projectPath, extensions, repository,true,clean,buildType,useVersioning,false);
-			r.build(repository,developmentRepository, extensions,projectPath, projectUrl,profileName,profile,useVersioning);
+			postProcessAnt = r.build(repository,developmentRepository, extensions,projectPath, projectUrl,profileName,profile,useVersioning);
 		}
 		if("local".equals(buildType) ) {
 			LocalJnlpBuilder l = new LocalJnlpBuilder();
-			l.build(repository,developmentRepository, extensions,projectPath, projectUrl,profileName,profile,useVersioning);
+			postProcessAnt = l.build(repository,developmentRepository, extensions,projectPath, projectUrl,profileName,profile,useVersioning);
 		}
+		if("web".equals(buildType)) {
+			BaseDeploymentBuilder l = new WebDescriptorBuilder();
+			postProcessAnt = l.build(repository,developmentRepository, extensions,projectPath, projectUrl,profileName,profile,useVersioning);
+		}
+		
+		return postProcessAnt;
 	}
 
 }

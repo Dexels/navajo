@@ -141,28 +141,67 @@ public class ExtensionActions {
 	public static void buildDocumentation(File baseDir, String distributionPath,String sourcePath, String project, String version, File destDir,String repositoryDeploy) throws IOException {
 		File sourceDir = new File(baseDir,sourcePath);
 		URL u = sourceDir.toURI().toURL();
+		System.err.println("Building documentation. Url: "+u.toString()+"from source dir: "+sourceDir);
+		if(!u.toString().endsWith("/")) {
+			System.err.println("Strange. No slash. Replacing");
+			u = new URL(u.toString()+"/");
+			System.err.println("New version: "+u.toString());
+		} 
 		buildDocumentation(u, new File(baseDir,distributionPath), project,version, destDir,repositoryDeploy);
 	}	
+	
 	
 	public static void buildSingleDocumentation(URL repository,File distributionPath, String project, String version, File destDir,String repositoryDeploy) throws IOException {
 		List<String> projects = new ArrayList<String>();
 		projects.add(project);
 		Map<String,List<XMLElement>> ss = getAllClassDefs(project, repositoryDeploy, repository, projects);
 		
-		for (Entry<String, List<XMLElement>> item : ss.entrySet()) {
-			System.err.println("KEY: "+item.getKey()+" count: "+item.getValue().size());
-		}
-		
+//		for (Entry<String, List<XMLElement>> item : ss.entrySet()) {
+//			System.err.println("KEY: "+item.getKey()+" count: "+item.getValue().size());
+//		}
+//		
 		TipiCreateWikiDocumentation ecdp = new TipiCreateWikiDocumentation();
 		ecdp.setOutputDir(destDir);
 		ecdp.setDistributionDir(distributionPath);
 		ecdp.setDeployRepository(repositoryDeploy);
 		ecdp.execute(repository,project,version,ss,repositoryDeploy);
+//
+//		TipiCreateComponentInterfaces tcci = new TipiCreateComponentInterfaces();
+//		tcci.setOutputDir(destDir);
+//		tcci.setDistributionDir(distributionPath);
+//		tcci.setDeployRepository(repositoryDeploy);
+//		tcci.execute(repository,project,version,ss,repositoryDeploy);
+//		
+	}
+	public static void buildTipiBeans(File baseDir, String distributionPath,String sourcePath, String project, String version, File destDir,String repositoryDeploy) throws IOException {
+		File sourceDir = new File(baseDir,sourcePath);
+		URL u = sourceDir.toURI().toURL();
+		System.err.println("Building documentation. Url: "+u.toString()+"from source dir: "+sourceDir);
+		if(!u.toString().endsWith("/")) {
+			System.err.println("Strange. No slash. Replacing");
+			u = new URL(u.toString()+"/");
+			System.err.println("New version: "+u.toString());
+		} 
+		buildTipiBeans(u, new File(baseDir,distributionPath), project,version, destDir,repositoryDeploy);
+	}	
+	private static void buildTipiBeans(URL repository,File distributionPath, String project, String version, File destDir,String repositoryDeploy) throws IOException {
+		List<String> projects = new ArrayList<String>();
+		projects.add(project);
+		Map<String,List<XMLElement>> ss = getAllClassDefs(project, repositoryDeploy, repository, projects);
+		
+
+		TipiCreateTipiBeans tcci = new TipiCreateTipiBeans();
+		tcci.setOutputDir(destDir);
+		tcci.setDistributionDir(distributionPath);
+		tcci.setDeployRepository(repositoryDeploy);
+		tcci.execute(repository,project,version,ss,repositoryDeploy);
+		
 	}
 	
 	private static void extractRemoteClassDefs(String currentProject, String remoteRepository,URL repository, List<String> resolved, List<String> toBeResolved, Map<String,List<XMLElement>> result) throws IOException {
 		System.err.println("Resolved: "+resolved);
 		System.err.println("to be resolved: "+toBeResolved);
+		System.err.println("Current project: "+currentProject+" remoteRep:  "+remoteRepository);
 		if(toBeResolved.isEmpty()) {
 			return;
 		}

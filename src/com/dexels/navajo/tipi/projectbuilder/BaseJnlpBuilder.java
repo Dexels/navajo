@@ -87,19 +87,20 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 
 	public abstract String getJnlpName();
 
-	public void build(String repository, String developRepository, String extensions, File baseDir, String codebase, String fileName, String profile, boolean useVersioning) {
+	public String build(String repository, String developRepository, String extensions, File baseDir, String codebase, String fileName, String profile, boolean useVersioning) {
 		File jnlpFile = new File(baseDir, fileName+".jnlp");
 		System.err.println("Writing jnlp: "+jnlpFile.getAbsolutePath());
 		try {
 			FileWriter fw1 = new FileWriter(jnlpFile);
 			fw1.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-			XMLElement output = buildElement(repository, extensions, baseDir, codebase,"", "$$name", profile,useVersioning);
+			XMLElement output = buildElement(repository, extensions, baseDir, codebase,"", fileName+".jnlp", profile,useVersioning);
 			output.write(fw1);
 			fw1.flush();
 			fw1.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return null;
 } 
 	public XMLElement buildElement(String repository, String extensions, File baseDir, String codebase, String resourceBase, String fileName, String profile, boolean useVersioning) throws IOException {
 		//String repository = generalRepository+"Extensions/";

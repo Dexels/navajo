@@ -17,7 +17,7 @@ import com.dexels.navajo.tipi.util.XMLElement;
 public class WebDescriptorBuilder extends BaseDeploymentBuilder {
 
 	@Override
-	public void build(String repository, String developmentRepository, String extensions, File baseDir, String codebase, String fileName, String profile, boolean useVersioning)
+	public String build(String repository, String developmentRepository, String extensions, File baseDir, String codebase, String fileName, String profile, boolean useVersioning)
 			throws IOException {
 		
 //		ClientActions.downloadFile(new URL(developmentRepository+"TemplateEchoProject/web.xml"), "WEB-INF/web.xml", baseDir, false, true);
@@ -54,8 +54,15 @@ public class WebDescriptorBuilder extends BaseDeploymentBuilder {
 			servlet.addChild(init);
 		}
 
-		XMLElement session = web.getElementByTagName("session-timeout");
-		session.setContent(arguments.get("sessionTimeout"));
+		XMLElement sessionConf = web.getChildByTagName("session-config");
+		XMLElement session = sessionConf.getChildByTagName("session-timeout");
+		String sessionTimeout = arguments.get("sessionTimeout");
+		if(sessionTimeout==null) {
+			sessionTimeout = "60";
+		}
+		if(session!=null) {
+			session.setContent(sessionTimeout);
+		}
 		XMLElement description = web.getElementByTagName("description");
 		description.setContent(params.get("title"));
 		System.err.println("Web xml: "+web);
@@ -63,6 +70,8 @@ public class WebDescriptorBuilder extends BaseDeploymentBuilder {
 		web.write(writer);
 		writer.flush();
 		writer.close();
+		
+		return "WEB-INF/ant/deployechodir.xml";
 	}
 
 	private void createBlankWebXml(String developmentRepository, File webDir) throws WriteAbortedException, MalformedURLException, IOException {

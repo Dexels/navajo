@@ -1,6 +1,9 @@
 package com.dexels.navajo.tipi.extensionmanager;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,8 +49,6 @@ public abstract class ExtensionClassdefProcessor {
 			Map<String, XMLElement> allFunctions) ;
 
 	public void execute(URL repository, String originalExtension, String version, Map<String,List<XMLElement>> classDefElements, String repositoryDeploy) {
-//		String extension = 
-		//String extension = originalExtension.toLowerCase();
 		Map<String, XMLElement> allComponents = new HashMap<String, XMLElement>();
 		Map<String, XMLElement> allActions = new HashMap<String, XMLElement>();
 		Map<String, XMLElement> allEvents = new HashMap<String, XMLElement>();
@@ -58,13 +59,7 @@ public abstract class ExtensionClassdefProcessor {
 	
 		List<String> extensions = new ArrayList<String>();
 		extensions.addAll(classDefElements.keySet());
-		
-//		parseStream(classDefElements, allComponents, allActions, allEvents,	allValues, allTypes, allFunctions);
-
-//		Map<String, XMLElement> allComponentsResult = new HashMap<String, XMLElement>();
-
 		parseStream(classDefElements, allComponents, allActions, allEvents, allValues, allTypes, allFunctions);
-	//	System.err.println("Allcomponentsssss: "+allComponents);
 		processTipiContext(repository, originalExtension, version, extensions, allComponents, allActions, allEvents, allValues, allTypes, allFunctions);
 		
 	}
@@ -148,4 +143,13 @@ public abstract class ExtensionClassdefProcessor {
 			}
 		}
 	}
+	
+	protected OutputStream writeResource(String path) throws FileNotFoundException {
+		getOutputDir().mkdirs();
+		File pathFile = new File(getOutputDir(),path);
+		pathFile.getParentFile().mkdirs();
+		FileOutputStream fos = new FileOutputStream(pathFile);
+		return fos;
+	}
+
 }
