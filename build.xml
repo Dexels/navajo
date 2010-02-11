@@ -13,6 +13,7 @@
 
 	<!-- Abort the build if any tests fail. -->
 	<property name="haltontestfailure" value="false" />
+	<property name="deployedDependencyJars" value="" />
 
 	<!--
 	Calls clean before every build. May be a bit slower (everything will be recompiled..)
@@ -73,7 +74,8 @@
 	Note: The difference between 'libs' and 'compilelibs' is that the libs will also be included in deploys
 	(for example WAR-files), and compilelibs will not. 
 	Examples of compilelibs: junit.jar, ant.jar, servlet-api.jar etc.
-	-->	<property name="dependencies" value="DexelsVersionControl,NavajoDocument" />
+	-->
+		<property name="dependencies" value="DexelsVersionControl,NavajoDocument,Navajo,NavajoClient,NavajoTipi,NavajoSwingTipi" />
 
 	<import file="../DexelsVersionControl/ant/navajobuild.xml" />
 
