@@ -19,7 +19,12 @@
 		            <li class="active"><strong>Editor</strong></li>
           		</c:when>
           		<c:otherwise>
-		            <li><a href="${pageContext.request.requestURI}?view=editor&amp;service=${param['service']}">Editor</a></li>
+          			<c:choose>
+          				<c:when test="${param['service']!=''}">
+	      				</c:when>
+          			</c:choose>
+   		            <li><a href="${pageContext.request.requestURI}?view=editor&amp;service=${param['service']}">Editor</a></li>
+    
           		</c:otherwise>
           	</c:choose>
           	<c:choose>
@@ -27,7 +32,10 @@
 		            <li class="active"><strong>Tml</strong></li>
           		</c:when>
           		<c:otherwise>
-		            <li><a href="${pageContext.request.requestURI}?view=tml&amp;service=${param['service']}">Tml</a></li>
+       				<c:if test="${param['service']!=null && param['service']!=''}">
+	            		<li><a href="${pageContext.request.requestURI}?view=tml&amp;service=${param['service']}">Tml</a></li>
+    				</c:if>
+
           		</c:otherwise>
           	</c:choose>
           	<c:choose>
@@ -35,15 +43,19 @@
 		            <li class="active"><strong>Tsl</strong></li>
           		</c:when>
           		<c:otherwise>
+       				<c:if test="${param['service']!=null && param['service']!=''}">
 		            <li><a href="${pageContext.request.requestURI}?view=tsl&amp;service=${param['service']}">Tsl</a></li>
-          		</c:otherwise>
+    				</c:if>
+        		</c:otherwise>
           	</c:choose>
           	<c:choose>
           		<c:when test="${param['view']=='javasource'}">
 		            <li class="active"><strong>Compiled</strong></li>
           		</c:when>
           		<c:otherwise>
-		            <li><a href="${pageContext.request.requestURI}?view=javasource&amp;service=${param['service']}">Compiled</a></li>
+       				<c:if test="${param['service']!=null && param['service']!=''}">
+			            <li><a href="${pageContext.request.requestURI}?view=javasource&amp;service=${param['service']}">Compiled</a></li>
+    				</c:if>
           		</c:otherwise>
           	</c:choose>
            

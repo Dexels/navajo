@@ -10,24 +10,30 @@
 <jsp:useBean id="serverContext" class="com.dexels.navajo.jsp.server.NavajoServerContext" scope="session" />
 <jsp:useBean id="installerContext" class="com.dexels.navajo.jsp.server.InstallerContext" scope="session" />
 <jsp:setProperty property="pageContext" name="serverContext" value="${pageContext}"/>
-<jsp:setProperty property="pageContext" name="installerContext" value="${pageContext} "/>
+<jsp:setProperty property="pageContext" name="installerContext" value="${pageContext}"/>
+
 <%
+
 	System.err.println("In doinstall...");
 	String path = application.getRealPath("");
 	String selectedPath = request.getParameter("selectedPath");
+	String cvsRoot = request.getParameter("cvsRoot");
+	String cvsPassword = request.getParameter("cvsPassword");
+	String cvsModule = request.getParameter("cvsModule");
+	String cvsRevision = request.getParameter("cvsRevision");
+	
 	Map<String,String> params = new HashMap<String,String>();
 	params.put("selectedPath",selectedPath);
+	params.put("cvsRoot",cvsRoot);
+	params.put("cvsPassword",cvsPassword);
+	params.put("cvsModule",cvsModule);
+	params.put("cvsRevision",cvsRevision);
+
 	System.err.println("Result:"+params);
 	
-	String result = NavajoInstaller.callAnt(new File(application.getRealPath( "WEB-INF/ant/install.xml")),new File(path),params);
+	String result = NavajoInstaller.callAnt(new File(application.getRealPath( "WEB-INF/ant/checkout.xml")),new File(path),params);
 	System.err.println("Result:"+result);
 
-	String deleteLocal = request.getParameter("deleteLocal");
-	if(deleteLocal!=null) {
-		//String result2 = NavajoInstaller.callAnt(new File(application.getRealPath( "WEB-INF/ant/deleteLocal.xml")),new File(path),params);
-		//System.err.println("Result:"+result2);
-	}
-	
 	
 	File home = new File(System.getProperty("user.home"));
 	File navajo = new File(home,"navajo.properties");

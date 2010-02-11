@@ -14,7 +14,7 @@
 	<c:forEach var="folder" items="${serverContext.folders}">
 		<c:if test="${folder.name != 'CVS'}">
 			<li>
-				<a href="index.jsp?view=editor&command=setFolder&folder=${folder.name}&service=${param.service}">${folder.name }</a>
+				<a href="index.jsp?view=editor&cmd=setFolder&path=${folder.name}&service=${param.service}">${folder.name }</a>
 			</li>
 		</c:if>
 	</c:forEach>
@@ -25,11 +25,12 @@
 		<c:choose>
 			<c:when test="${navajoContext.navajos[script]!=null}">
 				<a href="index.jsp?view=editor&service=${serverContext.path}${script}">${script} ${serverContext.cvsInfo[fileName].revision }</a>
-				<a href="index.jsp?view=editor&cmd=cvsUpdate&path=script/${script}">[[Update]]</a>
+				<a href="index.jsp?view=editor&cmd=cvsUpdate&path=scripts/${serverContext.path}${script}.xml">[[Update]]</a>
 				<a href="index.jsp?view=editor&service=${serverContext.path}${script}&${serverContext.path}${script}=true">[[Reload]]</a>
 			</c:when>
 			<c:otherwise>
 				<a href="index.jsp?view=editor&service=${serverContext.path}${script}&${serverContext.path}${script}=true">${script} ${serverContext.cvsInfo[fileName].revision }</a>
+				<a href="index.jsp?view=editor&cmd=cvsUpdate&path=scripts/${serverContext.path}${script}.xml">[[Update]]</a>
 			</c:otherwise>
 		</c:choose>
 		<!-- Note the weird variable name/value reversing trick -->

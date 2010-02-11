@@ -27,7 +27,7 @@
           <!-- start: skip link navigation -->
 
         </div>
-        <h2>Navajo Error <a href="index.jsp">[[Restart]]</a></h2>
+        <h2>Navajo Error <a href="index.jsp">[[Restart]]</a> <a href="tml/reset.jsp">[[Destroy Session]]</a> </h2>
         
       </div>
       <div id="nav">
@@ -57,7 +57,8 @@
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
 		exception.printStackTrace(pw);
-		out.print(sw);
+	String sw2 = sw.toString().replaceAll(" ","&nbsp;");
+		out.print(sw2);
 		sw.close();
 		pw.close();
 		out.println("</code></div>");

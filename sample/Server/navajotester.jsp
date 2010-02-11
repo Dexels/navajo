@@ -1,4 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <%@page errorPage="tml/tmlerror.jsp" language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@page import="java.io.*"%>
 <%@page import="java.net.*"%>
@@ -8,10 +7,9 @@
 <%@ taglib prefix="navserver" uri="WEB-INF/tags/navajoserver.tld"%>
 <%@ page import="com.dexels.navajo.jsp.NavajoContext"%>
 <jsp:useBean id="serverContext" class="com.dexels.navajo.jsp.server.NavajoServerContext" scope="session" />
-<jsp:setProperty property="pageContext" name="serverContext" value="${pageContext}"/>
-
+ 		
 <nav:postHandler/>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<html>
 <head>
 <title>Navajo Tester 2.0</title>
 <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
@@ -27,6 +25,7 @@
 	<nav:client username="ROOT" password="R20T"  />
 <!--server="penelope1.dexels.com/sportlink/knvb/servlet/Postman"	-->
 
+
 		<c:if test="${param['service']!= null }">
 			<c:if test="${param[param['service']]==true}">
 				<c:choose>
@@ -40,12 +39,13 @@
 			</c:if>
 		</c:if>
 
-	<c:choose >
-		<c:when test="${param['command']=='setFolder'}">
-			<c:set target="${serverContext}" property="path" value="${param['folder']}"/>
-		</c:when>
-	</c:choose>
 
+ 	<c:if test="${param['cmd'] != null}">
+ 				<c:set target="${serverContext}" property="command" value="${param['cmd']}"/>
+ 		
+ 	
+	</c:if> 
+		
 <body>
 <form action="index.jsp" method="post" >
 

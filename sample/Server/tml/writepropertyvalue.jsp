@@ -41,7 +41,14 @@
 			<c:otherwise>
 				<c:choose>
 					<c:when test="${navajoContext.property.type == 'boolean'}">
-						<input type="checkbox" name="${navajoContext.propertyPath}"/>
+						<c:choose>
+							<c:when test="${navajoContext.property.value!='true'}">
+								<input type="checkbox" name="${navajoContext.propertyPath}" checked="checked"/>
+							</c:when>
+							<c:otherwise>
+								<input type="checkbox" name="${navajoContext.propertyPath} checked="checked""/>
+							</c:otherwise>
+						</c:choose>
 					</c:when>
 					<c:when test="${navajoContext.property.type == 'selection'}">
 						<select name="${navajoContext.propertyPath}">
@@ -57,6 +64,10 @@
 							</c:forEach>
 						</select>
 					</c:when>
+					<c:when test="${navajoContext.property.type == 'binary'}">
+							<a href="tml/editbinaryform.jsp?path=${navajoContext.propertyPath}">Edit property</a>
+					</c:when>
+					
 					<c:otherwise>
 						<input type="text" size="30" value="${navajoContext.property.value}" name="${navajoContext.propertyPath}"/>
 					</c:otherwise>

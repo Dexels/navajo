@@ -8,4 +8,8 @@
 	<%
 	  NavajoContext xx = (NavajoContext) pageContext.findAttribute("navajoContext");
 	  xx.reset();
+	  session.invalidate();
 	%>
+<html><head>
+  <meta http-equiv="Refresh" content="0; url=../index.jsp">
+</head></html>
