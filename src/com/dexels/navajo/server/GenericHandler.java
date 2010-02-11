@@ -4,8 +4,10 @@ import java.util.*;
 import java.util.logging.Level;
 
 import java.io.File;
+import java.io.FilenameFilter;
 
 import com.dexels.navajo.mapping.*;
+import com.dexels.navajo.server.scriptengine.GenericScriptEngine;
 import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
@@ -78,14 +80,21 @@ public final class GenericHandler extends ServiceHandler {
        loadedClasses = new HashMap();
     }
 
-    public final static CompiledScript getCompiledScript(Access a, String className) throws Exception {
+    private final static CompiledScript getCompiledScript(Access a, String className,File scriptFile,String scriptName) throws Exception {
     	NavajoClassSupplier loader = getScriptLoader(a.betaUser, className);
     	Class cs = loader.getCompiledNavaScript(className);
     	if ( cs != null ) {
     		com.dexels.navajo.mapping.CompiledScript cso = (com.dexels.navajo.mapping.CompiledScript) cs.newInstance();
+    		if(cso instanceof GenericScriptEngine) {
+    			GenericScriptEngine gse = (GenericScriptEngine)cso;
+    			gse.setScriptFile(scriptFile);
+    			gse.setScriptName(scriptName);
+    			gse.setAccess(a);
+    			
+    		}
     		cso.setClassLoader(loader);
     		return cso;
-    	}	
+    	}
     	return null;
     }
     
@@ -140,16 +149,66 @@ public final class GenericHandler extends ServiceHandler {
     		} 
     		// Check if scriptFile exists.
 			if ( !scriptFile.exists() ) {
-				scriptFile = null;
+//				scriptFile = null;
 			}
     	}
     	
-    	String sourceFileName = ( scriptFile != null ? DispatcherFactory.getInstance().getNavajoConfig().getCompiledScriptPath() : DispatcherFactory.getInstance().getNavajoConfig().getScriptPath() )
-    			             + "/" + pathPrefix + serviceName + ".java";
-    	String classFileName =  DispatcherFactory.getInstance().getNavajoConfig().getCompiledScriptPath() + "/" + pathPrefix + serviceName + ".class";
-    	String className = (pathPrefix.equals("") ? serviceName : MappingUtils.createPackageName(pathPrefix) + "." + serviceName);
-    	     	
-    	return new Object[]{pathPrefix,serviceName,scriptFile,sourceFileName,new File(sourceFileName),className,classFileName,new File(classFileName)};
+    	String sourceFileName = null;
+    	if(scriptFile.exists()) {
+    		sourceFileName = DispatcherFactory.getInstance().getNavajoConfig().getCompiledScriptPath()+ "/" + pathPrefix + serviceName + ".java";;
+    		// regular scriptfile, 
+    	} else {
+    		// pure java scriptfile
+    		String temp =DispatcherFactory.getInstance().getNavajoConfig().getScriptPath()+ "/" + pathPrefix + serviceName + ".java";
+    		File javaScriptfile = new File(temp);
+    		if(javaScriptfile.exists()) {
+       		sourceFileName = temp;    			    			
+			}
+		}
+    	// set when either normal script or pure java, will skip if its neither (-> a jsr223 script)
+		if (sourceFileName != null) {
+			String classFileName = DispatcherFactory.getInstance().getNavajoConfig().getCompiledScriptPath() + "/" + pathPrefix
+					+ serviceName + ".class";
+			String className = (pathPrefix.equals("") ? serviceName : MappingUtils.createPackageName(pathPrefix) + "."
+					+ serviceName);
+			return new Object[] { pathPrefix, serviceName, scriptFile, sourceFileName, new File(sourceFileName), className,
+					classFileName, new File(classFileName),true };
+		}
+    	
+    	
+   	System.err.println("Found JSR223 based script!");
+		// jsr 223 script.
+		File currentScriptDir = new File(DispatcherFactory.getInstance().getNavajoConfig().getScriptPath() + "/" + pathPrefix);
+		final String servName = serviceName;
+		File[] scripts = currentScriptDir.listFiles(new FilenameFilter() {
+			public boolean accept(File dir, String name) {
+				return name.startsWith(servName);
+			}
+		});
+		for (File file : scripts) {
+			System.err.println("Script: " + file.getName());
+		}
+		if (scripts.length > 1) {
+			System.err.println("Warning, multiple candidates. Assuming the first: " + scripts[0].getName());
+		}
+		if(scripts.length==0) {
+			System.err.println("Not found. dir: "+currentScriptDir.getAbsolutePath());
+		}
+		String classFileName = null;
+		String className = "com.dexels.navajo.server.scriptengine.GenericScriptEngine";
+    	//    	sourceFileName = ( scriptFile != null ? DispatcherFactory.getInstance().getNavajoConfig().getCompiledScriptPath() : DispatcherFactory.getInstance().getNavajoConfig().getScriptPath() )
+//    			             + "/" + pathPrefix + serviceName + ".java";
+    	System.err.println("in getScriptPathServiceNameAndScriptFile()");
+    	System.err.println("pathPrefix = " + pathPrefix);
+    	System.err.println("serviceName = " + serviceName);
+    	System.err.println("scriptFile = " + scripts[0]);
+    	System.err.println("sourceFileName = " + scripts[0].getName());
+    	System.err.println("classFileName = " + classFileName);
+    	System.err.println("className = " + className);
+    	
+    	
+    	return new Object[]{pathPrefix,serviceName,scriptFile,sourceFileName,scripts[0],className,classFileName,null,false};
+
     }
     
     /**
@@ -204,9 +263,11 @@ public final class GenericHandler extends ServiceHandler {
     	File sourceFile = (File) all[4];
     	String className = (String) all[5];
     	File targetFile = (File) all[7];
-    	boolean nr = checkScriptRecompile(scriptFile, sourceFile) || 
+    	boolean isCompilable = (Boolean)all[8];
+
+    	boolean nr = isCompilable && (checkScriptRecompile(scriptFile, sourceFile) || 
     	             checkJavaRecompile(sourceFile, targetFile) ||
-    	             hasDirtyDepedencies(a, className);
+    	             hasDirtyDepedencies(a, className));
     	//System.err.println(">>>>>>>>>>>>>>>>>>>>>>> needsRecompile()... " + nr);
     	return nr;
     }
@@ -257,7 +318,7 @@ public final class GenericHandler extends ServiceHandler {
     				} // end of sync block.
 
     				// Java recompile.
-    				compilerErrors.append(recompileJava(a, sourceFileName, sourceFile, className, targetFile));
+    				compilerErrors.append(recompileJava(a, sourceFileName, sourceFile, className, targetFile,serviceName));
 
     			} else {
 
@@ -268,12 +329,16 @@ public final class GenericHandler extends ServiceHandler {
     				} else {
     					// Compile java file using normal java compiler.
     					//System.err.println("DOING PLAIN JAVA...");
-    					compilerErrors.append(recompileJava(a, sourceFileName, sourceFile, className, targetFile));
+    					if(sourceFile.getName().endsWith("java")) {
+       					compilerErrors.append(recompileJava(a, sourceFileName, sourceFile, className, targetFile,serviceName));
+    					} else {
+    						// interpreted script. Nothing to do
+    					}
     				}
     			}
     		}
     
-    	    com.dexels.navajo.mapping.CompiledScript cso = getCompiledScript(a, className);
+    	    com.dexels.navajo.mapping.CompiledScript cso = getCompiledScript(a, className,sourceFile,serviceName);
     	    
     	    return cso;
     }
@@ -339,7 +404,7 @@ public final class GenericHandler extends ServiceHandler {
 	private static String recompileJava(
 			Access a,
 			String sourceFileName,
-			File sourceFile, String className, File targetFile) {
+			File sourceFile, String className, File targetFile,String scriptName) {
 		
 		String compilerErrors = "";
 		
@@ -356,7 +421,7 @@ public final class GenericHandler extends ServiceHandler {
 					if ( ( loader = loadedClasses.get(className) ) != null) {
 						// Get previous version of CompiledScript.
 						try {
-							CompiledScript prev = getCompiledScript(a, className);
+							CompiledScript prev = getCompiledScript(a, className,sourceFile,scriptName);
 							prev.releaseCompiledScript();
 						} catch (Exception e) {
 						}
