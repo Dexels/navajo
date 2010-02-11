@@ -128,17 +128,20 @@
 	</target>
 
 	<target name="resolveDependencies">
+		<echo message="Resolving dependencies: ${tipiDeployedDependencyJars}"/>
 		<for list="${dependencies}" delimiter="," param="currentdep">
 			<sequential>
-				<ant target="resolveDependency" antfile="../DexelsVersionControl/ant/navajobuild.xml" >
+				<echo message="Current dependency: @{currentdep}"></echo>
+				<ant target="resolveDependency" antfile="../DexelsVersionControl/ant/navajobuild.xml" inheritall="true">
 					<property name="currentdep" value="@{currentdep}" />
 				</ant>
 			</sequential>
 		</for>
+
 		<for list="${deployedDependencyJars}" delimiter="," param="currentjar">
 			<sequential>
 				<echo message="Current dep: @{currentjar}"/>
-
+	
 				<copy todir="${deploydependencylib}">
 					<fileset dir="${dependencylib}">
 						<include name="@{currentjar}"/>
@@ -146,6 +149,17 @@
 				</copy>
 			</sequential>
 		</for>		
+		<!-- <for list="${tipiDeployedDependencyJars}" delimiter="," param="currentjar">
+			<sequential>
+				<echo message="Current tipi dep: @{currentjar}"/>
+	
+				<copy todir="${dist}/lib">
+					<fileset dir="${dependencylib}">
+						<include name="@{currentjar}"/>
+					</fileset>
+				</copy>
+			</sequential>
+		</for>		 -->
 	</target>
 	
 	
@@ -321,7 +335,7 @@
 		<if>
 			<equals arg1="${tipiExtension}" arg2="true"/>
 			<then>
-				<echo message="Tipi Extension found. Checking tipi"/>
+				<echo message="Tipi Extension found. Checking tipi. Project: ${ant.project.name}"/>
 				<if>
 					<equals arg1="${doUploadTipi}" arg2="true"/>
 					<then>
