@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.script.ScriptEngineManager;
+
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.server.jmx.JMXHelper;
@@ -14,6 +16,7 @@ public class DispatcherFactory {
 
 	private static volatile DispatcherInterface instance;
 	private static Object semaphore = new Object();
+	private static ScriptEngineManager scriptEngineFactory = null;
 	
 	public DispatcherFactory() {	
 	}
@@ -61,6 +64,13 @@ public class DispatcherFactory {
 		
 		createInstance(absRootPath, fileInputStreamReader, configurationUrl,servletContextRootPath);
 		return instance;
+	}
+	
+	public static ScriptEngineManager getScriptEngineManager() {
+		if(scriptEngineFactory==null) {
+			scriptEngineFactory = new javax.script.ScriptEngineManager();
+		}
+		return scriptEngineFactory;
 	}
 	
 	/**
