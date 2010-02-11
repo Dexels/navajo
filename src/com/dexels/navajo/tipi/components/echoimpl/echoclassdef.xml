@@ -175,7 +175,6 @@
             <value direction="in" name="messagePath" type="string"/>
             <value direction="in" name="questionDefinitionName" type="string"/>
             <value direction="in" name="questionGroupDefinitionName" type="string"/>
-            <value direction="in" name="questionGroupDefinitionName" type="string"/>
             <value direction="in" name="valid" type="boolean"/>
             <value direction="out" name="currentPage" type="integer"/>
     	    <value direction="in" name="background" type="color"/>
@@ -217,7 +216,6 @@
         <values>
             <value direction="in" name="messagePath" type="string"/>
             <value direction="in" name="questionDefinitionName" type="string"/>
-            <value direction="in" name="questionGroupDefinitionName" type="string"/>
             <value direction="in" name="questionGroupDefinitionName" type="string"/>
             <value direction="in" name="valid" type="boolean"/>
             <value direction="out" name="currentPage" type="integer"/>
@@ -921,8 +919,6 @@
             <value direction="in" name="w" type="integer"/>
             <value direction="in" name="modal" type="boolean"/>
             <value direction="in" name="background" type="color"/>
-            <value direction="in" name="closable" type="boolean"/>
-            <value direction="in" name="resizable" type="boolean"/>
             <value direction="inout" name="tooltip" type="string"/>
             <value direction="in" name="closable" type="boolean"/>
             <value direction="in" name="resizable" type="boolean"/>
