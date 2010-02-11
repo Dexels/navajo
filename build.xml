@@ -10,7 +10,7 @@
 	<property name="notests" value="false" />
 
 	<!-- Abort the build if any tests fail. -->
-	<property name="haltontestfailure" value="true" />
+	<property name="haltontestfailure" value="false" />
 
 	<!--
 	Calls clean before every build. May be a bit slower (everything will be recompiled..)
