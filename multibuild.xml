@@ -76,7 +76,14 @@
 	(for example WAR-files), and compilelibs will not. 
 	Examples of compilelibs: junit.jar, ant.jar, servlet-api.jar etc.
 	-->
-	<property name="projects" value="DexelsVersionControl,NavajoDocument,NavajoClient,Navajo,NavajoFunctions,TipiSwingClient,NavajoSwingEditor,NavajoTipi,NavajoSwingTipi,TipiCharting,TipiSubstance,TipiSwingMig,TipiSwingEditor,TipiSvgBatik,TipiSwingX,TipiGeoSwing,TipiJxLayer,TipiRss"/>
+<!-- 	<property name="projects" value="DexelsVersionControl,NavajoDocument,NavajoClient,Navajo,NavajoFunctions,TipiSwingClient,NavajoSwingEditor,NavajoTipi,NavajoSwingTipi,TipiCharting,TipiEcho,TipiFlickr,TipiJOGLDashboard,TipiJogl,TipiJabber,TipiMail,TipiMonkey,TipiRich,TipiRuby,TipiSwingDocking,TipiSubstance,TipiSwingMig,TipiSwingEditor,TipiSvgBatik,TipiSwingX,TipiGeoSwing,TipiJxLayer,TipiRss"/>
+ -->
+<!-- 
+TipiJOGLDashboard, Tipi3d,TipiMonkey
+ -->
+ 
+ <!-- Add  -->
+	<property name="projects" value="NavajoRichClient,NavajoRichTipi,TipiRuby,TipiSwingDocking,TipiSubstance,TipiSwingMig,TipiSwingEditor,TipiSvgBatik,TipiSwingX,TipiGeoSwing,TipiJxLayer,TipiRss"/>
 	
 	<target name="multibuild">
 		<for list="${projects}" delimiter="," param="project">

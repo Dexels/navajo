@@ -101,6 +101,7 @@
 		<echo message="Building to: ${dist}" />
 		<echo message="Rep to: ${repository}Extensions/" />
 		<buildDocumentation version="${tipiComponentVersion}" distribution="${dist}" destination="${dist}/wikidoc" repository="${repository}Extensions/" />
+		<delete dir="${dist}/beans"/>
 		<buildTipiBeans version="${tipiComponentVersion}" distribution="${dist}" destination="${dist}/beans" repository="${repository}Extensions/" />
 	</target>
 	
@@ -112,6 +113,10 @@
 			<classpath path="${dependencyclasses}"/>
 			<classpath path="${build}"/>
 		</javac>
+		<copy todir="classes"> 
+			<fileset dir="${dist}/beansclasses">
+			</fileset>	
+		</copy>
 		<mkdir dir="${dist}/javadoc"/>
 	</target>
 	<target name="beansJavaDoc" depends="compileBeans">
@@ -128,7 +133,7 @@
 	</target>
 
 	<!-- add dep to beansJavaDoc to reactivate. Disabled for now, because it can not handle empty source dir -->
-	<target name="archiveBeans" depends="compileBeans">
+	<target name="archiveBeans" depends="compileBeans,beansJavaDoc">
 		<jar destfile="${dist}/lib/${ant.project.name}Beans.jar">
 			<fileset dir="${dist}/beansclasses"/>
 		</jar>
@@ -189,6 +194,7 @@
 				<include name="${ant.project.name}/${tipiComponentVersion}/projectinclude.zip" />
 				<include name="${ant.project.name}/${tipiComponentVersion}/includes/**" />
 				<include name="${ant.project.name}/${tipiComponentVersion}/index.html" />
+				<include name="${ant.project.name}/${tipiComponentVersion}/javadoc/**" />
 			</fileset>
 		</scp>
 
