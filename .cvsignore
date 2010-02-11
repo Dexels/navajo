@@ -6,3 +6,4 @@ target
 .settings
 NavajoListeners.jar
 distribution
+test
