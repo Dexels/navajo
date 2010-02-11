@@ -35,6 +35,7 @@
 				<include  name="${archive}"/>
 			</fileset>
 		</copy>
+    	
     	<eclipse.refreshLocal resource="${ant.project.name}/${archive}"/>
 		<eclipse.refreshLocal resource="../TipiPlugin"/>
 		<eclipse.refreshLocal resource="../TipiBuild"/>

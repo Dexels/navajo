@@ -1,18 +1,12 @@
 package com.dexels.navajo.tipi.ant.extensionbuilder;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.apache.tools.ant.BuildException;
 
-import com.dexels.navajo.tipi.extensionmanager.ExtensionActions;
 import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.util.XMLElement;
-import com.dexels.navajo.tipi.util.XMLParseException;
 
 
 public class RetrieveVersion extends org.apache.tools.ant.Task {
@@ -43,14 +37,16 @@ public class RetrieveVersion extends org.apache.tools.ant.Task {
 	
 	@Override
 	public void execute() throws BuildException {
-		File pomFile = new File(getProject().getBaseDir(),"pom.xml");
-		if(!pomFile.exists()) {
-				System.err.println("No version found.");
-				pomFile = new File(getProject().getBaseDir(),"version.xml");
+//		File pomFile = new File(getProject().getBaseDir(),"pom.xml");
+//		if(!pomFile.exists()) {
+		System.err.println("Getting version....");
+
+		System.err.println("Loading version in project: "+getProject().getBaseDir().getAbsolutePath() );
+				File pomFile = new File(getProject().getBaseDir(),"version.xml");
 				if(!pomFile.exists()) {
 					getProject().setProperty("tipiComponentVersion", "unknown");
 					return;
-				}
+//				}
 		}
 		XMLElement pomXml = new CaseSensitiveXMLElement();
 		try {

@@ -12,7 +12,7 @@ import com.dexels.navajo.tipi.extensionmanager.ExtensionActions;
 import com.dexels.navajo.tipi.util.XMLElement;
 
 
-public class BuildExtensionDocumentationTask extends org.apache.tools.ant.Task {
+public class BuildTipiBeansTask extends org.apache.tools.ant.Task {
 
 	private String repository;
 	private String destination;
@@ -73,7 +73,7 @@ public class BuildExtensionDocumentationTask extends org.apache.tools.ant.Task {
 		}
 		try {
 			String projectName = getProject().getProperty("ant.project.name");
-			ExtensionActions.buildDocumentation(getProject().getBaseDir(),distribution,distribution,projectName,version,destDir,repository);
+			ExtensionActions.buildTipiBeans(getProject().getBaseDir(),distribution,distribution,projectName,version,destDir,repository);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 			throw new BuildException("Error building documentation ",e1);
