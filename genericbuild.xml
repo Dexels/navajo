@@ -111,7 +111,7 @@
 			<classpath refid="projectlibs" />
 			<classpath refid="dependencylibs" />
 			<classpath path="${dependencyclasses}"/>
-			<classpath path="${build}"/>
+			<classpath path="${work}/classes"/>
 		</javac>
 		<copy todir="classes"> 
 			<fileset dir="${dist}/beansclasses">
