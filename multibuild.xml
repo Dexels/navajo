@@ -88,7 +88,7 @@ TipiJOGLDashboard, Tipi3d,TipiMonkey
 	<target name="multibuild">
 		<for list="${projects}" delimiter="," param="project">
 			<sequential>
-			
+				<echo message="Multi build. Calling project: @{project}"></echo>
 				<ant antfile="../@{project}/build.xml" inheritall="true" dir="../@{project}">
 				</ant>
 			</sequential>
