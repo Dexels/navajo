@@ -14,7 +14,7 @@ import javax.swing.*;
  */
 public class TipiSwingToolBar extends JToolBar {
 
-  public TipiSwingToolBar() {
+public TipiSwingToolBar() {
     setAlignmentX(0);
     setLayout(new FlowLayout(FlowLayout.LEFT));
   }
@@ -43,5 +43,12 @@ public class TipiSwingToolBar extends JToolBar {
   public Dimension getMinimumSize() {
       return getPreferredSize();
   }
+
+  @Override
+	public void setOpaque(boolean isOpaque) {
+	  System.err.println("Setting opaque. Thread: "+Thread.currentThread().getName());
+	  super.setOpaque(isOpaque);
+	}
+
 
 }
