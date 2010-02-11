@@ -25,11 +25,9 @@ public class InstallerContext {
 			e.printStackTrace();
 		}
 
-		System.err.println("Is valid: "+currentContext);
 		if(currentContext==null) {
 			return false;
 		}
-		System.err.println("Path: "+currentContext);
 		File f = new File(currentContext);
 		System.err.println("File exists: "+f.getAbsolutePath()+" : "+f.exists());
 		if(!f.exists()) {
@@ -71,7 +69,6 @@ public class InstallerContext {
 			if(line==null) {
 				break;
 			}
-			System.err.println("Line: "+line);
 			String[] r = line.split("=");
 			systemContexts.put(r[0], r[1]);
 		}

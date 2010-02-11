@@ -44,16 +44,6 @@ public class CallServiceTag extends BaseNavajoTag {
 				getNavajoContext().callService(myService);
 			} else {
 				Navajo navajo = getNavajoContext().getNavajo(myNavajo);
-				try {
-					getPageContext().getOut().write("InputNavajo Detected!");
-					navajo.write(getPageContext().getOut());
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (NavajoException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 				getNavajoContext().callService(myService, navajo);
 			}
 		} catch (ClientException e) {
