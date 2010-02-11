@@ -83,6 +83,7 @@
 	</target>
 
 	<target name="gatherBinaries" depends="prepare">
+		<echo message="Current build type: ${buildSource}"/>
 		<if>
 			<equals arg1="${buildSource}" arg2="local"/>
 			<then>
