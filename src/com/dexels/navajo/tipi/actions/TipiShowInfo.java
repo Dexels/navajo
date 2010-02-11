@@ -15,11 +15,13 @@ import com.dexels.navajo.tipi.internal.*;
 /** @todo Refactor, move to NavajoSwingTipi */
 public class TipiShowInfo extends TipiAction {
 	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
-		final Operand op = getEvaluatedParameter("text", event);
-		Object oo = op.value;
+		Object oo = getEvaluatedParameterValue("text", event);
 		String result = "";
 		if (oo == null) {
-			result = "Null value!";
+			result = getText();
+			if(result==null) {
+				result = "Null value!";
+			}
 		} else {
 			result = oo.toString();
 		}

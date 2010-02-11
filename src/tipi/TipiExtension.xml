@@ -8,7 +8,7 @@
 	
 		<include path="com/dexels/navajo/tipi/actions/actiondef.xml"/>
 		<include path="com/dexels/navajo/tipi/classdef.xml"/>
-		<!-- <include path="com/dexels/navajo/functions/functions.xml"/> -->
+		<include path="com/dexels/navajo/functions/functions.xml"/>
 	</includes>
 	<jars>
 		<jar path="DexelsVersionControl.jar"/>

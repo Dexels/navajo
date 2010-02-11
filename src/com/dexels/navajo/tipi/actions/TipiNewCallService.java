@@ -78,15 +78,7 @@ public class TipiNewCallService extends TipiAction {
 				throw new IllegalStateException("No default tipi connector found!");
 			}
 			defaultConnector.doTransaction(input, service);
-			// long transaction = System.currentTimeMillis() - timeStamp;
-			// System.err.println("Transaction: "+service+" in connector: "+
-			// defaultConnector
-			// .getConnectorId()+" took: "+transaction+" millis.");
 		} else {
-			// System.err.println("Retrieving connector: "+(String)
-			// connector.value);
-			// long timeStamp = System.currentTimeMillis();
-			//			
 			TipiConnector ttt = myContext.getConnector((String) connector.value);
 			if (ttt == null) {
 				System.err.println("Warning: connector: " + (String) connector.value + " not found, reverting to default connector");

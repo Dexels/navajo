@@ -308,4 +308,9 @@
       <tipiaction name="deleteCookies" class="TipiDeleteCookies" package="com.dexels.navajo.tipi.actions"/>
       <tipiaction name="deleteCache" class="TipiDeleteCache" package="com.dexels.navajo.tipi.actions"/>
 
+   <tipiaction name="run" class="TipiRunScript" package="com.dexels.navajo.tipi.actions">
+      <param name="engine" type="string" required="true" />
+      <param name="script" type="resource" required="true" />
+   </tipiaction>
+
 </tid>

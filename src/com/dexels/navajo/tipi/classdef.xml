@@ -150,6 +150,7 @@
             </event>
       </events>
       <values>
+         <value direction="in" name="enabled" type="boolean" />
       </values>
       <methods >
        <method name="fireAction">
@@ -167,23 +168,7 @@
 		Invisible component, has the capability to listen to services
 	</description>
    </tipiclass>
-   <tipiclass studio-icon="messagestore.gif" module="abstract" class="TipiConditionChecker" name="conditionchecker" package="com.dexels.navajo.tipi.components.core"
-      type="tipi" childcount="0" layoutmanager="false" addtocontainer="false">
-      <events>
-         <event name="onGeneratedErrors">
-            <param name="id" type="string" />
-            <param name="description" type="string" />
-         </event>
-         <event name="onInstantiate" />
-         <event name="onLoad">
-            <param name="service" type="string" />
-         </event>
-      </events>
-      <values>
-         <value direction="out" name="messagePath" type="string" />
-      </values>
-      <methods />
-   </tipiclass>
+
    
    
    <tipiclass studio-icon="messagestore.gif" deprecated="true" module="abstract" class="TipiTimerImpl" name="timer" package="com.dexels.navajo.tipi.components.core" type="tipi"

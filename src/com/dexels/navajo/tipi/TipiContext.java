@@ -7,6 +7,8 @@ import java.net.*;
 import java.util.*;
 
 import javax.imageio.spi.*;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import javax.swing.RootPaneContainer;
 
 import tipi.*;
@@ -76,7 +78,7 @@ public abstract class TipiContext {
 	private boolean contextShutdown = false;
 	protected boolean fakeJars = false;
 	protected final Map<String, String> lazyMap = new HashMap<String, String>();
-	protected final List<String> includeList = new ArrayList<String>();
+	//protected final List<String> includeList = new ArrayList<String>();
 
 	protected final List<ThreadActivityListener> threadStateListenerList = new ArrayList<ThreadActivityListener>();
 
@@ -145,6 +147,8 @@ public abstract class TipiContext {
 	protected final ClientInterface clientInterface;
 
 	protected final TipiApplicationInstance myApplication;
+
+	private ScriptEngineManager scriptManager;
 
 
 	public TipiContext(TipiApplicationInstance myApplication, TipiContext parent) {
@@ -228,10 +232,9 @@ public abstract class TipiContext {
 		fakeExtension(mainExtensionList, "tipi.TipiEchoExtension");
 
 		// initialize again
-		appendIncludes(coreExtensionList, includeList);
-		appendIncludes(mainExtensionList, includeList);
-		appendIncludes(optionalExtensionList, includeList);
-		processRequiredIncludes();
+		appendIncludes(coreExtensionList);
+		appendIncludes(mainExtensionList);
+		appendIncludes(optionalExtensionList);
 	}
 
 	private void fakeExtension(List<TipiExtension> extensionList, String extensionName) {
@@ -282,11 +285,10 @@ public abstract class TipiContext {
 		allExtensions.addAll(optionalExtensionList);
 		checkExtensions(allExtensions);
 
-		appendIncludes(coreExtensionList, includeList);
-		appendIncludes(mainExtensionList, includeList);
-		appendIncludes(optionalExtensionList, includeList);
-	
-		processRequiredIncludes();
+		appendIncludes(coreExtensionList);
+		appendIncludes(mainExtensionList);
+		appendIncludes(optionalExtensionList);
+
 
 	}
 
@@ -301,20 +303,11 @@ public abstract class TipiContext {
 //		List<String> extensions = tipiExtension.getRequiredExtensions();
 	}
 
-	private void appendIncludes(List<TipiExtension> extensionList, List<String> includes) {
+	private void appendIncludes(List<TipiExtension> extensionList) {
 		for (TipiExtension tipiExtension : extensionList) {
-			String[] ss = tipiExtension.getIncludes();
-			if (ss == null || ss.length==0) {
-				System.err.println("Warning: e dxtension: " + tipiExtension.getId() + " - " + tipiExtension.getDescription()
-						+ " has no includes!");
-				return;
-			}
-			for (int i = 0; i < ss.length; i++) {
-				includes.add(ss[i]);
-				System.err.println("Adding include: "+ss[i]);
-			}
-		}
+			processRequiredIncludes(tipiExtension);
 
+		}
 	}
 
 	public List<TipiExtension> getExtensions() {
@@ -415,6 +408,10 @@ public abstract class TipiContext {
 		globalMap.put(name, value);
 	}
 
+//	public Map<String,Object> getGlobalMap() {
+//		return new HashMap<String, Object>(globalMap);
+//	}
+	
 	public abstract void setSplash(Object s);
 
 	// public void setToplevel(RootPaneContainer tl) {
@@ -453,7 +450,6 @@ public abstract class TipiContext {
 //		tipiClassMap.clear();
 		getClassManager().clearClassMap();
 		clearTopScreen();
-		includeList.clear();
 
 		eHandler = null;
 		errorHandler = null;
@@ -645,15 +641,16 @@ public abstract class TipiContext {
 
 	protected void parseXMLElement(XMLElement elm) throws TipiException {
 		String elmName = elm.getName();
+		String extension = elm.getStringAttribute("extension");
 		setSplashInfo("Loading user interface");
-		if (!elmName.equals("tid")) {
+		if (!elmName.equals("tid") && !elmName.equals("functiondef")) {
 			throw new TipiException("TID Rootnode not found!, found " + elmName + " instead.");
 		}
 		errorHandler = (String) elm.getAttribute("errorhandler", null);
 		List<XMLElement> children = elm.getChildren();
 		for (int i = 0; i < children.size(); i++) {
 			XMLElement child = children.get(i);
-			parseChild(child);
+			parseChild(child,extension);
 		}
 	}
 
@@ -664,7 +661,7 @@ public abstract class TipiContext {
 	 * @param dir
 	 * @throws TipiException
 	 */
-	protected void parseChild(XMLElement child) throws TipiException {
+	protected void parseChild(XMLElement child, String extension) throws TipiException {
 
 		String childName = child.getName();
 		if (childName.equals("client-config")) {
@@ -684,6 +681,10 @@ public abstract class TipiContext {
 
 		if (childName.equals("tipiclass")) {
 			getClassManager().addTipiClassDefinition(child);
+			System.err.println("Parsing component: "+child.getStringAttribute("name")+" for extension: "+extension);
+			if(extension!=null) {
+				child.setAttribute("extension", extension);
+			}
 			return;
 		}
 		if (childName.equals("tipiaction")) {
@@ -898,9 +899,9 @@ public abstract class TipiContext {
 		return null;
 	}
 
-	public final void parseLibraryFromClassPath(String location) {
-		parseLibrary(location, false, null, false);
-	}
+//	public final void parseLibraryFromClassPath(String location) {
+//		parseLibrary(location, false, null, false);
+//	}
 
 	private final void parseLibrary(XMLElement lib) throws TipiException {
 
@@ -916,13 +917,25 @@ public abstract class TipiContext {
 			System.err.println("Not reparsing lazy: " + componentName);
 			return;
 		}
-		parseLibrary(location, true, componentName, isLazy);
+		parseLibrary(location, true, componentName, isLazy,null);
 	}
 
-	public void processRequiredIncludes() {
-		for (String element : includeList) {
+	public void processRequiredIncludes(TipiExtension tipiExtension) {
+		List<String> includes = new LinkedList<String>();
+		String[] ss = tipiExtension.getIncludes();
+		if (ss == null || ss.length==0) {
+			System.err.println("Warning: extension: " + tipiExtension.getId() + " - " + tipiExtension.getDescription()
+					+ " has no includes!");
+			return;
+		}
+		for (int i = 0; i < ss.length; i++) {
+			includes.add(ss[i]);
+			System.err.println("Adding include: "+ss[i]);
+		}
+		
+		for (String element : includes) {
 			try {
-				parseLibrary(element, false, element, false);
+				parseLibrary(element, false, element, false,tipiExtension.getProjectName().toLowerCase());
 			} catch (UnsupportedClassVersionError e) {
 				throw new UnsupportedClassVersionError("Error parsing extension: " + element + " wrong java version! " + e.getCause()
 						+ " - " + e.getMessage());
@@ -931,7 +944,7 @@ public abstract class TipiContext {
 		
 	}
 
-	private final void parseLibrary(String location, boolean addToInclude, String definition, boolean isLazy) {
+	private final void parseLibrary(String location, boolean addToInclude, String definition, boolean isLazy, String extension) {
 		if (isLazy) {
 			if (definition == null) {
 				throw new IllegalArgumentException("Lazy include, but no definition found. Location: " + location);
@@ -963,6 +976,9 @@ public abstract class TipiContext {
 				} catch (IOException ex) {
 					ex.printStackTrace();
 					return;
+				}
+				if(extension!=null) {
+					doc.setAttribute("extension", extension);
 				}
 				parseXMLElement(doc);
 			}
@@ -1400,14 +1416,14 @@ public abstract class TipiContext {
 				total = componentName + ".xml";
 			}
 			String actualName = total.substring(total.lastIndexOf('/')+1,total.lastIndexOf('.'));
-			parseLibrary(total, true, actualName, false);
+			parseLibrary(total, true, actualName, false,null);
 			xe = getTipiDefinition(actualName);
 			fireDefinitionLoaded(actualName, xe);
 			return xe;
 
 			// return null;
 		} else {
-			parseLibrary(location, true, componentName, false);
+			parseLibrary(location, true, componentName, false,null);
 			xe = getTipiDefinition(componentName);
 			fireDefinitionLoaded(componentName, xe);
 			return xe;
@@ -1468,7 +1484,6 @@ public abstract class TipiContext {
 		tipiInstanceMap.clear();
 //		tipiClassMap.clear();
 		getClassManager().clearClassMap();
-		includeList.clear();
 	}
 
 	public void switchToDefinition(String name) throws TipiException {
@@ -2003,16 +2018,16 @@ public abstract class TipiContext {
 			root.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
 			root.setAttribute("xsi:noNamespaceSchemaLocation", "tipiscript.xsd");
 			root.setAttribute("errorhandler", "error");
-			Set<String> s = new TreeSet<String>(includeList);
-			Iterator<String> iter = s.iterator();
-			while (iter.hasNext()) {
-				// for (int j = 0; j < s.size(); j++) {
-				String location = iter.next();
-				XMLElement inc = new CaseSensitiveXMLElement();
-				inc.setName("tipi-include");
-				inc.setAttribute("location", location);
-				root.addChild(inc);
-			}
+//			Set<String> s = new TreeSet<String>(includeList);
+//			Iterator<String> iter = s.iterator();
+//			while (iter.hasNext()) {
+//				// for (int j = 0; j < s.size(); j++) {
+//				String location = iter.next();
+//				XMLElement inc = new CaseSensitiveXMLElement();
+//				inc.setName("tipi-include");
+//				inc.setAttribute("location", location);
+//				root.addChild(inc);
+//			}
 			// if (clientConfig != null) {
 			// root.addChild(clientConfig);
 			// }
@@ -2120,10 +2135,12 @@ public abstract class TipiContext {
 	/**
 	 * slightly redundant
 	 */
-	public void parseRequiredIncludes() {
+	public List<String> parseRequiredIncludes() {
+		List<String> includeList = new LinkedList<String>();
 		for (String s : getRequiredIncludes()) {
 			includeList.add(s);
 		}
+		return includeList;
 	}
 
 	public void enqueueExecutable(TipiExecutable te) throws TipiException, TipiBreakException {
@@ -2201,15 +2218,6 @@ public abstract class TipiContext {
 			return;
 		}
 		
-		// TODO: Move this to swingtipi or something
-		RootPaneContainer rpc =  (RootPaneContainer) getTopLevel();
-		System.err.println("Doing allright!");
-		if(rpc instanceof Window) {
-			Window w = (Window)rpc;
-			w.setVisible(false);
-			w.dispose();
-			System.err.println("Ciao!");
-		}
 		if (myThreadPool != null) {
 			myThreadPool.shutdown();
 		}
@@ -2223,6 +2231,22 @@ public abstract class TipiContext {
 			}
 		};
 		shutdownThread.start();
+
+		// TODO: Move this to swingtipi or something
+		if(getTopLevel() instanceof RootPaneContainer) {
+			RootPaneContainer rpc =  (RootPaneContainer) getTopLevel();
+			System.err.println("Doing allright!");
+			if(rpc instanceof Window) {
+				Window w = (Window)rpc;
+				w.setVisible(false);
+				w.dispose();
+				System.err.println("Ciao!");
+			}
+			
+		} else {
+			System.err.println("NEED REFACTOR in TIPICONTEXT, around line 2230.");
+		}
+
 	}
 
 	public DescriptionProvider getDescriptionProvider() {
@@ -2952,6 +2976,13 @@ public abstract class TipiContext {
 
 	public void showFatalStartupError(String message) {
 		System.err.println("Error starting up: "+message);
+	}
+
+	public ScriptEngine getScriptingEngine(String engine) {
+		if(scriptManager == null) {
+			scriptManager = new javax.script.ScriptEngineManager();
+		}
+		return scriptManager.getEngineByName(engine);
 	}
 
 }

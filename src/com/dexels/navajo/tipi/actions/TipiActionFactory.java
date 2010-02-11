@@ -74,21 +74,13 @@ public class TipiActionFactory {
 	public TipiAction instantateAction(XMLElement instance, TipiComponent tc, TipiExecutable parentExe) throws TipiException {
 		// todo:
 		// Instantiate the class.
-		// System.err.println("INSTANTIATING ACTION:\n"+instance.toString());
-		TipiAction newAction = null;
-		try {
-			newAction = (TipiAction) myActionClass.newInstance();
-		} catch (IllegalAccessException ex) {
-			throw new TipiException("Can not instantiate actionclass: " + newAction + " problem: " + ex.getMessage());
-		} catch (InstantiationException ex) {
-			throw new TipiException("Can not instantiate actionclass: " + newAction + " problem: " + ex.getMessage());
+		TipiAction newAction;
+		newAction = createAction(tc);
+
+		if(instance.getContent()!=null) {
+			newAction.setText(instance.getContent());
 		}
-
-		newAction.setContext(myContext);
-		newAction.setComponent(tc);
-		newAction.setType(myName);
-
-		String condition = instance.getStringAttribute("condition");
+			String condition = instance.getStringAttribute("condition");
 		if(condition!=null) {
 			newAction.setExpression(condition);
 		}
@@ -133,7 +125,6 @@ public class TipiActionFactory {
 			// }
 			newAction.addParameter(instanceValue);
 		}
-
 		// Enumeration ee = instance.enumerateAttributeNames();
 
 		// }
@@ -185,6 +176,22 @@ public class TipiActionFactory {
 		// }
 		// }
 		// }
+		return newAction;
+	}
+
+	public TipiAction createAction(TipiComponent tc) throws TipiException {
+		TipiAction newAction;
+		try {
+			newAction = (TipiAction) myActionClass.newInstance();
+		} catch (IllegalAccessException ex) {
+			throw new TipiException("Can not instantiate actionclass. "  + " problem: " + ex.getMessage());
+		} catch (InstantiationException ex) {
+			throw new TipiException("Can not instantiate actionclass. " + " problem: " + ex.getMessage());
+		}
+
+		newAction.setContext(myContext);
+		newAction.setComponent(tc);
+		newAction.setType(myName);
 		return newAction;
 	}
 

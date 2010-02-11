@@ -29,6 +29,7 @@ public class TipiComponentMethod {
 	private TipiAction myTipiAction = null;
 	private final TipiComponent myComponent;
 
+	private Map<String, Object> parameters;
 	public TipiComponentMethod(TipiComponent c) {
 		myComponent = c;
 	}
@@ -59,10 +60,17 @@ public class TipiComponentMethod {
 	}
 
 	public TipiValue getParameter(String name) {
+		System.err.println("My action: "+myTipiAction);
 		return myTipiAction.getParameter(name);
 	}
 
 	public Operand getEvaluatedParameter(String name, TipiEvent event) {
+		if(parameters!=null) {
+			Object o = parameters.get(name);
+			// need to set the type?
+			Operand op = new Operand(o, null, null);
+			return op;
+		}
 		TipiValue tv = getParameter(name);
 		if (tv != null) {
 			return myTipiAction.evaluate(tv.getValue(), event);
@@ -85,5 +93,21 @@ public class TipiComponentMethod {
 			return null;
 		}
 		return o.value;
+	}
+
+	public void loadParams(Map<String, Object> params) {
+		if(parameters==null) {
+			parameters = new HashMap<String, Object>();
+		}
+		parameters.putAll(params);
+		System.err.println("Myarhs: "+myArgs);
+		System.err.println("Parameters: "+parameters);
+		System.err.println("Params: "+params);
+		for (Map.Entry<String, Object> element : parameters.entrySet()) {
+			TipiValue parameter = getParameter(element.getKey());
+			if(parameter!=null) {
+				parameter.setValue(element.getValue());
+			}
+		}
 	}
 }

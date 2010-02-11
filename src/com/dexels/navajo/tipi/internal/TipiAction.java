@@ -23,9 +23,14 @@ public abstract class TipiAction extends TipiAbstractExecutable  {
 	// protected TipiEvent myEvent;
 
 	protected String myType;
+	protected String myTextNode;
 
 	protected Map<String, TipiValue> parameterMap = new HashMap<String, TipiValue>();
 
+	// if present, will intercept all parameter evaluations
+	protected Map<String, Object> evaluatedMap = null; // = new HashMap<String, TipiValue>();
+
+	
 	protected int counter = 0;
 
 //	private TipiStackElement stackElement = null;
@@ -38,6 +43,13 @@ public abstract class TipiAction extends TipiAbstractExecutable  {
 		return null;
 	}
 
+	public void loadParameters(Map<String,Object> params) {
+		evaluatedMap = new HashMap<String, Object>();
+		if(params!=null) {
+			evaluatedMap.putAll(params);			
+		}
+	}
+	
 	// protected TipiCondition myCondition;
 	protected abstract void execute(TipiEvent event) throws TipiBreakException, TipiException;
 
@@ -51,7 +63,7 @@ public abstract class TipiAction extends TipiAbstractExecutable  {
 		parameterMap.put(tv.getName(), tv);
 	}
 
-	public void setThreadState(String state) {
+	protected void setThreadState(String state) {
 		myContext.setThreadState(state);
 	}
 
@@ -104,13 +116,20 @@ public abstract class TipiAction extends TipiAbstractExecutable  {
 	}
 
 	public TipiValue getParameter(String name) {
+		if(evaluatedMap!=null) {
+			Object o = evaluatedMap.get(name);
+			TipiValue result = new TipiValue(getComponent());
+			result.setName(name);
+			result.setValue(o);
+			return result;
+		}
 		return parameterMap.get(name);
 	}
 
-	public ArrayList<TipiValue> getParams() {
-		ArrayList<TipiValue> parms = new ArrayList<TipiValue>(parameterMap.values());
-		return parms;
-	}
+//	public ArrayList<TipiValue> getParams() {
+//		ArrayList<TipiValue> parms = new ArrayList<TipiValue>(parameterMap.values());
+//		return parms;
+//	}
 
 	public Set<String> getParameterNames() {
 		return parameterMap.keySet();
@@ -128,6 +147,11 @@ public abstract class TipiAction extends TipiAbstractExecutable  {
 	}
 
 	public Operand getEvaluatedParameter(String name, TipiEvent event) {
+		if(evaluatedMap!=null) {
+			Operand result = new Operand(evaluatedMap.get(name),"Object",null);
+			return result;
+		}
+
 		TipiValue t = getParameter(name);
 		if (t == null) {
 			return null;
@@ -136,6 +160,9 @@ public abstract class TipiAction extends TipiAbstractExecutable  {
 	}
 
 	public Object getEvaluatedParameterValue(String name, TipiEvent event) {
+		if(evaluatedMap!=null) {
+			return evaluatedMap.get(name);
+		}
 		Operand o = getEvaluatedParameter(name, event);
 		if (o != null) {
 			return o.value;
@@ -144,7 +171,16 @@ public abstract class TipiAction extends TipiAbstractExecutable  {
 	}
 
 	public void setContext(TipiContext tc) {
+		System.err.println("ACTION setting context to: "+tc);
 		myContext = tc;
+	}
+
+	public void setText(String content) {
+		myTextNode = content;
+	}
+
+	public String getText() {
+		return myTextNode;
 	}
 
 

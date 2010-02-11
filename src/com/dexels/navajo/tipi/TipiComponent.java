@@ -80,6 +80,9 @@ public interface TipiComponent extends TipiEventListener, TipiLink {
 
 	public void performMethod(String methodName, TipiAction invocation, TipiEvent event) throws TipiBreakException;
 
+	public void performMethod(String methodName, Map<String,Object> params,  TipiAction invocation, TipiEvent event);
+		
+		
 	public TipiComponentMethod getTipiComponentMethod(String methodName);
 
 	public TipiComponent getTipiComponentByPath(String path);

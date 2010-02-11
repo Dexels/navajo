@@ -5,8 +5,11 @@ import java.lang.reflect.*;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import javax.sound.midi.SysexMessage;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.components.core.adapter.BaseAdapter;
 import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.tipi.tipixml.*;
 
@@ -69,6 +72,20 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 	protected Message stateMessage = null;
 	private final List<PropertyChangeListener> myContainerListeners = new LinkedList<PropertyChangeListener>();
 	private final Map<String, PropertyChangeListener> myDataListeners = new HashMap<String, PropertyChangeListener>();
+	private String extension;
+	private String componentType;
+
+	public String getComponentType() {
+		return componentType;
+	}
+
+	public void setComponentType(String componentType) {
+		this.componentType = componentType;
+	}
+
+	public String getExtension() {
+		return extension;
+	}
 
 	public void removeFromContainer(Object c) {
 		System.err.println("REMOVE FROM CONTAINER IGNORED: NOT IMPLEMENTED. CLASS: " + getClass());
@@ -521,7 +538,8 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 			// }
 			id = myContext.generateComponentId(null, this);
 		}
-
+		setExtension(classdef.getStringAttribute("extension"));
+		setComponentType(classdef.getStringAttribute("name"));
 		// stateMessage = getStateMessage();//
 		// NavajoFactory.getInstance().createMessage(myContext.getStateNavajo(),
 		// id!=null?id:"Unknown");
@@ -546,6 +564,10 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 			}
 		}
 
+	}
+
+	private void setExtension(String extension) {
+		this.extension = extension;
 	}
 
 	/**
@@ -778,6 +800,17 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 		return stateMessage;
 	}
 
+	public final void performMethod(String methodName, Map<String,Object> params,  TipiAction invocation, TipiEvent event)  {
+		TipiComponentMethod tcm = componentMethods.get(methodName);
+		if (tcm == null) {
+			System.err.println("Could not find component method: " + methodName + " component: " + getPath() + " class: " + getClass());
+		} else {
+			tcm.loadInstance(invocation);
+			tcm.loadParams(params);
+			performComponentMethod(methodName, tcm, event);
+		}
+	}
+	
 	public final void performMethod(String methodName, TipiAction invocation, TipiEvent event) throws TipiBreakException {
 		TipiComponentMethod tcm = componentMethods.get(methodName);
 		if (tcm == null) {
@@ -817,6 +850,7 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 			path = path.substring(1);
 		}
 		int s = path.indexOf("/");
+		// HUH?
 		if (s == -1) {
 			if (path.equals("")) {
 				return myContext.getDefaultTopLevel();
@@ -1439,6 +1473,7 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 	}
 	
 	public TipiComponent findTipiComponentById(String id) {
+		
 		System.err.println("Component: "+getId()+" - "+getClass()+" looking for: "+id);
 		for (int i = 0; i < getChildCount(); i++) {
 			TipiComponent tc = getTipiComponent(i);
@@ -1457,4 +1492,27 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 		return null;
 	}
 
+	public BaseAdapter createAdapter(TipiAction action, TipiEvent event)  {
+		String nameCap = getComponentType().substring(0,1).toUpperCase()+getComponentType().substring(1,getComponentType().length());
+		if(getExtension()==null) {
+			System.err.println("Can not create adapter for component: "+nameCap+". Extension unknown");
+		}
+		String adapterName = getExtension().toLowerCase()+"."+nameCap;
+
+		try {
+			Class c = Class.forName(adapterName);
+			BaseAdapter b =  (BaseAdapter)c.newInstance();
+			b.setComponent(this);
+			b.setEvent(event);
+			b.setInvocation(action);
+			return b;
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

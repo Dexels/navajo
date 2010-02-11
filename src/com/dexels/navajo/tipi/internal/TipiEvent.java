@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.internal;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.tipixml.*;
@@ -69,6 +70,13 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable 
 		return eventParameterMap.keySet();
 	}
 	
+	public Map<String,Object> getEvaluatedParameters() {
+		Map<String,Object> result = new HashMap<String, Object>();
+		for (Entry<String, TipiValue> e : eventParameterMap.entrySet()) {
+			result.put(e.getKey(), e.getValue().getRawValue());
+		}
+		return result;
+	}
 
 	/**
 	 * Initializes the eventtype from the classdef.
