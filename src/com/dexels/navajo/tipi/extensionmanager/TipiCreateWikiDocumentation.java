@@ -186,7 +186,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 		OutputStream os = writeResource("tipi.txt");
 		OutputStreamWriter osw = new OutputStreamWriter(os);
 		osw.write("==== Tipi Extensions ====\n");
-		osw.write("^ Extension ^ Version ^ Components ^ Actions ^ Functions ^ Types ^\n");
+		osw.write("^ Extension ^ Version ^ Components ^ Actions ^ Functions ^ Types ^ JavaDoc ^\n");
 	//	osw.write("Extension:"+extension+" version: "+version+"\n");
 
 		System.err.println("Output: "+getOutputDir().getAbsolutePath());
@@ -213,11 +213,13 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 		
 		for (XMLElement element : filtered.values()) {
 			String id = element.getStringAttribute("name");
+			String currentVersion = element.getStringAttribute("version");
 			String components = "[[tipidoc:" + id + ":componentlist|Components]]";
 			String actions = "[[tipidoc:" + id + ":actionlist|Actions]]";
 			String functions = "[[tipidoc:" + id + ":functions:list|Functions]]";
 			String types = "[[tipidoc:" + id + ":types:list|Types]]";
-			osw.write("| [[tipidoc:" + id + ":details|" + id + "]] |  version: " + element.getStringAttribute("version") + " | " + components + " | " + actions + " | " + functions + " | " + types + " |\n");
+			String javadoc ="[[this>../Extensions/"+id+"/"+currentVersion+"/javadoc|JavaDoc]]";
+			osw.write("| [[tipidoc:" + id + ":details|" + id + "]] |  version: " + currentVersion + " | " + components + " | " + actions + " | " + functions + " | " + types +" | " + javadoc +  "  |\n");
 			
 		}
 		// TODO DISABLED FOR NOW

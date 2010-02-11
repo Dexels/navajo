@@ -73,10 +73,12 @@ public class TipiCreateTipiBeans extends ExtensionClassdefProcessor {
 		}
 		try {
 			createActionClass(extension, javaDir, allActions);
-		} catch (IOException e) {
+			createFunctionClass(extension, javaDir, allFunctions);
+		} catch (Throwable e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+//		System.err.println("All functions: "+allFunctions);
 	}
 	
 private void createActionClass(String extension, File javaDir, Map<String, XMLElement> allActions) throws IOException {
@@ -91,8 +93,25 @@ private void createActionClass(String extension, File javaDir, Map<String, XMLEl
 	pp.addAll(allActions.values());
 	createActions(extension, writer, pp, adapterFile);
 
+
 		
 }
+private void createFunctionClass(String extension, File javaDir, Map<String, XMLElement> allFunctions) throws IOException {
+	File packageDir = new File(javaDir, extension.toLowerCase());
+	packageDir.mkdirs();
+	File javaFile = new File(packageDir, extension+"Functions.java");
+	URL adapterFile = getClass().getResource("Functions.template");
+	FileWriter writer = new FileWriter(javaFile);
+	
+	List<XMLElement> pp = new ArrayList<XMLElement>();
+	
+	pp.addAll(allFunctions.values());
+	createFunctions(extension, writer, pp, adapterFile);
+
+
+		
+}
+
 
 //<tipiaction name="saveValue" class="TipiSaveValue" package="com.dexels.navajo.tipi.components.swingimpl.actions">
 //<description>
@@ -138,6 +157,107 @@ private void createActions(String extension, Writer writer, List<XMLElement> all
 	writer.write(ss);
 	writer.flush();
 	writer.close();
+}
+
+
+private void createFunctions(String extension, Writer writer, List<XMLElement> allFunctions, URL adapterFile) throws IOException {
+	ByteArrayOutputStream ba = new ByteArrayOutputStream();
+	InputStream is = adapterFile.openStream();
+	copyResource(ba, is);
+	is.close();
+	String ss = new String(ba.toByteArray());
+	StringBuffer content = new StringBuffer();
+	
+	for (XMLElement xmlElement : allFunctions) {
+		appendMethodComment(xmlElement, content);
+		String name = xmlElement.getStringAttribute("name");
+		String className = xmlElement.getStringAttribute("class");
+		XMLElement descTag = xmlElement.getChildByTagName("description");
+		
+		String description = descTag!=null?descTag.getContent():"";
+		System.err.println("XML: "+xmlElement);
+		
+		String input = xmlElement.getChildByTagName("input").getContent();
+		String result = xmlElement.getChildByTagName("result").getContent();
+
+		name = mapMethodName(name);
+		String nameCap = name.substring(0,1).toUpperCase()+name.substring(1,name.length());
+	//	result = determineFunctionResult(result);
+		writePossibleFunctions(content,className,nameCap,result,description,input);
+		System.err.println("Function: "+className);
+		//content.append("/** "+description+"*/");
+		
+		
+	}
+	ss = ss.replaceAll("\\|Content\\|", content.toString());
+	ss = ss.replaceAll("\\|ClassName\\|", extension+"Functions");
+	writer.write(ss);
+	writer.flush();
+	writer.close();
+}
+
+
+	private void writePossibleFunctions(StringBuffer content,String className, String nameCap, String result, String description, String input) {
+		String[] inputPossibilities = input.split("\\|");
+		String mappedResult = determineFunctionResult(result);
+		for (String current : inputPossibilities) {
+			writeFunction(content,className,nameCap,mappedResult,description,current);
+		}
+}
+
+	private void writeFunction(StringBuffer content,String className, String nameCap, String result, String description, String input) {
+		content.append("/**\n"+description+"\n*/\n");
+		String params = writeFunctionParams(input);
+		
+		content.append("public "+result+" "+nameCap+"("+params+") throws TMLExpressionException {\n");
+		content.append("  FunctionInterface fi =instantiateFunction(\""+className+"\");\n");
+		content.append(writeFunctionParamInserts(input));
+		content.append("  return ("+result+")fi.evaluate();\n");
+		content.append("}\n\n");
+		
+		//		FunctionInterface fi =instantiateFunction("com.dexels.navajo.functions.RandomColor");
+//		return (String) fi.evaluate();
+
+		
+	}
+
+	private String writeFunctionParams(String input) {
+		if("empty".equals(input) || "".equals(input)) {
+			return "";
+		}
+		String[] params = input.split(",");
+		int i = 0;
+		StringBuffer abb = new StringBuffer();
+		for (String param : params) {
+			if(i!=0) {
+				abb.append(", ");
+			}
+			String mapp = mapType(param, true);
+			abb.append(mapp+" "+"param"+i);
+			i++;
+		}
+		return abb.toString();
+	}
+	
+	private String writeFunctionParamInserts(String input) {
+		if("empty".equals(input) || "".equals(input)) {
+			return "";
+		}
+		String[] params = input.split(",");
+		int i = 0;
+		StringBuffer abb = new StringBuffer();
+		for (String param : params) {
+			abb.append("  fi.insertOperand(param"+i+");\n");
+			i++;
+		}
+		return abb.toString();
+	}
+
+	private String determineFunctionResult(String result) {
+		if(result.indexOf("|")!=-1) {
+			return "Object";
+		}
+		return mapType(result, true);
 }
 
 	private void createJava(Writer writer, XMLElement value, URL adapterFile, String className, String packageName) throws IOException {
@@ -248,6 +368,8 @@ private String mapMethodName(String name) {
 }
 
 private String mapType(String type, boolean useObjectForCast) {
+   //string|binary|list|message|array|integer|boolean|date|clocktime|memo|money|percentage|stopwatchtime|float|selection</input>
+   
 	if(type.equals("integer")) {
 		return useObjectForCast?"Integer":"int";
 	}
@@ -259,6 +381,28 @@ private String mapType(String type, boolean useObjectForCast) {
 	}
 	if(type.equals("boolean")) {
 		return useObjectForCast?"Boolean":"boolean";
+	}
+	if(type.equals("memo")) {
+		return "com.dexels.navajo.document.types.Memo";
+	}
+	if(type.equals("money")) {
+		return "com.dexels.navajo.document.types.Money";
+	}
+	if(type.equals("percentage")) {
+		return "com.dexels.navajo.document.types.Percentage";
+	}
+	if(type.equals("date")) {
+		return "java.util.Date";
+	}
+	if(type.equals("any")) {
+		return "java.util.Map";
+	}
+	
+	if(type.equals("list")) {
+		return "java.util.List";
+	}
+	if(type.equals("binary")) {
+		return "com.dexels.navajo.document.types.Binary";
 	}
 
 	if(type.equals("navajo")) {
@@ -280,6 +424,15 @@ private String mapType(String type, boolean useObjectForCast) {
 		return "java.net.URL";
 	}
 
+	if(type.equals("stopwatchtime")) {
+		return "com.dexels.navajo.document.types.StopwatchTime";
+	}
+	if(type.equals("clocktime")) {
+		return "com.dexels.navajo.document.types.ClockTime";
+	}
+	
+	
+	
 	return "Object";
 
 }
@@ -309,14 +462,9 @@ private void appendValue(XMLElement value, StringBuffer content) {
 
 public static void main(String[] args) throws IOException {
 
-	String aa = "aap-noot";
-	System.err.println(aa.replaceAll("-", "_"));
-	if(true) {
-		return;
-	}
 	URL adapterFile = TipiCreateTipiBeans.class.getResource("Adapter.template");
 	URL actionsFile = TipiCreateTipiBeans.class.getResource("Actions.template");
-	URL template = TipiCreateTipiBeans.class.getResource("examplecomponent.xml");
+	URL template = TipiCreateTipiBeans.class.getResource("functions.xml");
 	InputStreamReader isr = new InputStreamReader(template.openStream());
 	XMLElement xe = new CaseSensitiveXMLElement();
 	xe.parseFromReader(isr);
@@ -324,13 +472,9 @@ public static void main(String[] args) throws IOException {
 	TipiCreateTipiBeans tcci = new TipiCreateTipiBeans();
 	StringWriter sw = new StringWriter();
 	List<XMLElement> ll =  xe.getAllElementsByTagName("tipiclass");
-//	for (XMLElement xmlElement : ll) {
-//		tcci.createJava(sw, xmlElement, adapterFile);
-//		
-//	}
 
-	ll =  xe.getAllElementsByTagName("tipiaction");
-	tcci.createActions("Tipi",sw, ll, actionsFile);
+	ll =  xe.getAllElementsByTagName("function");
+	tcci.createFunctions("Tipi",sw, ll, actionsFile);
 
 	for (XMLElement xmlElement : ll) {
 		
@@ -341,6 +485,7 @@ public static void main(String[] args) throws IOException {
 //	public void execute(URL repository, String originalExtension, String version, Map<String,List<XMLElement>> classDefElements, String repositoryDeploy) {
 //public static Map<String,List<XMLElement>> getAllClassDefs(String currentProject, String remoteRepository, URL repository, List<String> projects) throws IOException {
 		
+
 
 	private File createPackageStructure(File currentDir, String packagePath) {
 		if(packagePath.indexOf(".")==-1) {
