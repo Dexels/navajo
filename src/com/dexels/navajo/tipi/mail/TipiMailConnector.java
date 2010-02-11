@@ -6,6 +6,8 @@ import java.util.*;
 import javax.mail.*;
 import javax.mail.Flags.Flag;
 import javax.mail.event.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 import com.dexels.navajo.document.*;
@@ -30,10 +32,9 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 	private int unreadMessageCount;
 	private Folder fff;
 	private Date recentAfter;
-	
+
 	private int pageSize = 0;
 	private int currentPage = 1;
-	
 
 	public void doTransaction(Navajo n, String service, String destination) throws TipiBreakException, TipiException {
 		if (service == null) {
@@ -44,7 +45,6 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		}
 		if (service.equals("InitGetFolders")) {
 			injectNavajo(service, createFolderNavajo());
-
 		}
 		if (service.equals("InitGetMessages")) {
 			injectNavajo(service, createInitGetMessages());
@@ -53,29 +53,37 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		if (service.equals("GetInboxMessages")) {
 			injectNavajo(service, createMessagesNavajo());
 		}
-//		if (service.equals("GetMessages")) {
-//			injectNavajo(service, createMessagesNavajo(n));
-//		}
-//		if (service.equals("InitGetDefaultMessages")) {
-//			injectNavajo(service, createMessagesNavajo(n));
-//		}
+		// if (service.equals("GetMessages")) {
+		// injectNavajo(service, createMessagesNavajo(n));
+		// }
+		// if (service.equals("InitGetDefaultMessages")) {
+		// injectNavajo(service, createMessagesNavajo(n));
+		// }
 		if (service.equals("GetMessage")) {
 			injectNavajo(service, createGetMessage(n));
 		}
 		if (service.equals("DeleteMessage")) {
-			setMessageFlag(n,Flag.DELETED,true);
+			setMessageFlag(n, Flag.DELETED, true);
 		}
 		if (service.equals("SeenMessage")) {
-			setMessageFlag(n,Flag.SEEN,true);
+			setMessageFlag(n, Flag.SEEN, true);
 		}
 		if (service.equals("RecentMessage")) {
-			setMessageFlag(n,Flag.RECENT,true);
-			setMessageFlag(n,Flag.SEEN,false);
+			setMessageFlag(n, Flag.RECENT, true);
+			setMessageFlag(n, Flag.SEEN, false);
 		}
 		if (service.equals("UnRecentMessage")) {
-			setMessageFlag(n,Flag.RECENT,false);
-			setMessageFlag(n,Flag.SEEN,false);
+			setMessageFlag(n, Flag.RECENT, false);
+			setMessageFlag(n, Flag.SEEN, false);
 		}
+		if (service.equals("SendMessage")) {
+			sendMessage(n);
+		}
+	}
+
+	private void sendMessage(Navajo n) {
+		// TODO Auto-generated method stub
+		// se
 	}
 
 	public String getDefaultEntryPoint() {
@@ -91,13 +99,15 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 			Property p = NavajoFactory.getInstance().createProperty(n, "Name", Property.STRING_PROPERTY, "", 0, "", Property.DIR_IN);
 			m.addProperty(p);
 
-			Property start = NavajoFactory.getInstance().createProperty(n, "Start", Property.INTEGER_PROPERTY, "0", 0, "", Property.DIR_IN);
+			Property start = NavajoFactory.getInstance().createProperty(n, "Start", Property.INTEGER_PROPERTY, "0", 0, "",
+					Property.DIR_IN);
 			m.addProperty(start);
-			Property end = NavajoFactory.getInstance().createProperty(n, "End", Property.INTEGER_PROPERTY, ""+messageCount, 0, "", Property.DIR_IN);
+			Property end = NavajoFactory.getInstance().createProperty(n, "End", Property.INTEGER_PROPERTY, "" + messageCount, 0, "",
+					Property.DIR_IN);
 			m.addProperty(end);
 
-			Property q = NavajoFactory.getInstance().createProperty(n, "MessageNumber", Property.INTEGER_PROPERTY, ""+messageCount, 0, "",
-					Property.DIR_OUT);
+			Property q = NavajoFactory.getInstance().createProperty(n, "MessageNumber", Property.INTEGER_PROPERTY,
+					"" + messageCount, 0, "", Property.DIR_OUT);
 			m.addProperty(q);
 			n.addMethod(NavajoFactory.getInstance().createMethod(n, "GetMessages", null));
 			return n;
@@ -132,51 +142,55 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 			name = "INBOX";
 		}
 		int messageNumber = (Integer) n.getProperty("/Folder/MessageNumber").getTypedValue();
-//		System.err.println("Getting message: " + name + " nr. " + messageNumber);
+		// System.err.println("Getting message: " + name + " nr. " +
+		// messageNumber);
 		return createSingleMessageNavajo(name, messageNumber);
 	}
 
-	private boolean setMessageFlag(Navajo n,Flag flag, boolean value) throws TipiException {
+	private boolean setMessageFlag(Navajo n, Flag flag, boolean value) throws TipiException {
 		String name = (String) n.getProperty("/Folder/Name").getTypedValue();
 		int messageNumber = (Integer) n.getProperty("/Folder/MessageNumber").getTypedValue();
-		System.err.println("Attempting to delete message: "+messageNumber);
-		
+		System.err.println("Attempting to delete message: " + messageNumber);
+
 		if ("POP3".equalsIgnoreCase(mailMode)) {
 			name = "INBOX";
 		}
-//		Folder fff;
-//		if(fff==null || !fff.isOpen()) {
-//			try {
-//				fff = store.getFolder(name);
-//				fff.open(Folder.READ_WRITE);
-//			} catch (MessagingException e) {
-//				throw new TipiException("Error opening mailbox: " + name, e);
-//			}
-//		}
+		// Folder fff;
+		// if(fff==null || !fff.isOpen()) {
+		// try {
+		// fff = store.getFolder(name);
+		// fff.open(Folder.READ_WRITE);
+		// } catch (MessagingException e) {
+		// throw new TipiException("Error opening mailbox: " + name, e);
+		// }
+		// }
 		try {
-			javax.mail.Message m= fff.getMessage(messageNumber);
-			m.setFlag(flag, true);	
-//			m.getFlags().
+			javax.mail.Message m = fff.getMessage(messageNumber);
+			m.setFlag(flag, true);
+			// m.getFlags().
 		} catch (MessagingException e) {
 			e.printStackTrace();
-			throw new TipiException("Error deleting message# "+messageNumber+" from folder: " + name,e);
+			throw new TipiException("Error deleting message# " + messageNumber + " from folder: " + name, e);
 		}
 		return true;
 	}
-	
+
 	private Navajo createSingleMessageNavajo(String name, int messageNumber) throws TipiException {
-			try {
+		try {
+			if(!fff.isOpen()) {
+				connect();
+			}
 			javax.mail.Message m = fff.getMessage(messageNumber);
 			m.setFlag(Flag.SEEN, true);
 			Navajo myNavajo = NavajoFactory.getInstance().createNavajo();
 			Message mm = addMessageProperties(m, myNavajo);
 			myNavajo.addMessage(mm);
 			Object content = m.getContent();
-			if(content instanceof MimeMultipart) {
+			if (content instanceof MimeMultipart) {
 				System.err.println("Multipart found");
 				Message parts = NavajoFactory.getInstance().createMessage(myNavajo, "Parts", Message.MSG_TYPE_ARRAY);
 				mm.addMessage(parts);
-				MimeMultipart r = (MimeMultipart)content;
+				MimeMultipart r = (MimeMultipart) content;
 				for (int i = 0; i < r.getCount(); i++) {
 					Message part = NavajoFactory.getInstance().createMessage(myNavajo, "Parts", Message.MSG_TYPE_ARRAY_ELEMENT);
 					parts.addMessage(part);
@@ -187,10 +201,10 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 					addProperty(part, "Disposition", bp.getDisposition(), "string");
 					Binary b = new Binary(bp.getInputStream(), false);
 					addProperty(part, "Content", b, "binary");
-//					if(bp.getDisposition()==null) {
-//						System.err.println("Mail content: "+bp.getContent());
-//					}
-//					System.err.println("Part: "+i+":\n"+r.getBodyPart(i).getContent());
+					// if(bp.getDisposition()==null) {
+					// System.err.println("Mail content: "+bp.getContent());
+					// }
+					// System.err.println("Part: "+i+":\n"+r.getBodyPart(i).getContent());
 				}
 			} else {
 				Binary b = new Binary(m.getInputStream(), false);
@@ -201,14 +215,13 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 				addProperty(mm, "Disposition", m.getDisposition(), "string");
 				addProperty(mm, "Content", b, "binary");
 			}
-			//System.err.println("Content class: "+m.getInputStream().getClass()
+			// System.err.println("Content class: "+m.getInputStream().getClass()
 			// );
 			// addProperty(current, "ContentType",
 			// currentImapMessage.getContentType(), Property.STRING_PROPERTY);
-		//	myNavajo.write(System.err);
-//			fff.close(false);
-			
-			
+			// myNavajo.write(System.err);
+			// fff.close(false);
+
 			return myNavajo;
 		} catch (MessagingException e) {
 			throw new TipiException("Error getting message: " + messageNumber + " from box: " + name, e);
@@ -220,37 +233,39 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 	}
 
 	private Navajo createMessagesNavajo() throws TipiException {
-//		String name = null;
-//
-//		if (n == null) {
-//			name = "INBOX";
-//		} else {
-//			name = (String) n.getProperty("/Folder/Name").getTypedValue();
-//		}
-//
-//		if ("POP3".equalsIgnoreCase(mailMode)) {
-//			name = "INBOX";
-//		}
+		// String name = null;
+		//
+		// if (n == null) {
+		// name = "INBOX";
+		// } else {
+		// name = (String) n.getProperty("/Folder/Name").getTypedValue();
+		// }
+		//
+		// if ("POP3".equalsIgnoreCase(mailMode)) {
+		// name = "INBOX";
+		// }
 		Navajo myNavajo = NavajoFactory.getInstance().createNavajo();
 
-//		if (store == null) {
-//			try {
-//				connect();
-//			} catch (MessagingException e) {
-//				throw new TipiException("WTF? " + e.getMessage(), e);
-//			}
-//		}
+		// if (store == null) {
+		// try {
+		// connect();
+		// } catch (MessagingException e) {
+		// throw new TipiException("WTF? " + e.getMessage(), e);
+		// }
+		// }
 		try {
 			Message m = NavajoFactory.getInstance().createMessage(myNavajo, "Page");
 			myNavajo.addMessage(m);
-			Property p = NavajoFactory.getInstance().createProperty(myNavajo, "CurrentPage", Property.INTEGER_PROPERTY, ""+currentPage, 0, "", Property.DIR_IN);
+			Property p = NavajoFactory.getInstance().createProperty(myNavajo, "CurrentPage", Property.INTEGER_PROPERTY,
+					"" + currentPage, 0, "", Property.DIR_IN);
 			m.addProperty(p);
-			p = NavajoFactory.getInstance().createProperty(myNavajo, "PageCount", Property.INTEGER_PROPERTY, ""+getPageCount(), 0, "", Property.DIR_OUT);
+			p = NavajoFactory.getInstance().createProperty(myNavajo, "PageCount", Property.INTEGER_PROPERTY, "" + getPageCount(), 0,
+					"", Property.DIR_OUT);
 			m.addProperty(p);
-			p = NavajoFactory.getInstance().createProperty(myNavajo, "PageSize", Property.INTEGER_PROPERTY, ""+pageSize, 0, "", Property.DIR_OUT);
+			p = NavajoFactory.getInstance().createProperty(myNavajo, "PageSize", Property.INTEGER_PROPERTY, "" + pageSize, 0, "",
+					Property.DIR_OUT);
 			m.addProperty(p);
 
-			
 		} catch (NavajoException e) {
 			e.printStackTrace();
 		}
@@ -276,23 +291,21 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 			recentAfter = (Date) object;
 		}
 		if (name.equals("pageSize")) {
-			pageSize = (Integer)object;
+			pageSize = (Integer) object;
 		}
 		if (name.equals("currentPage")) {
-			setCurrentPage((Integer)object);
+			setCurrentPage((Integer) object);
 		}
 
-		
 		super.setComponentValue(name, object);
 	}
 
-	
 	@Override
 	protected Object getComponentValue(String name) {
-		if(name.equals("messageCount")) {
+		if (name.equals("messageCount")) {
 			return messageCount;
 		}
-		if(name.equals("pageCount")) {
+		if (name.equals("pageCount")) {
 			return getPageCount();
 		}
 		if (name.equals("currentPage")) {
@@ -303,11 +316,12 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 	}
 
 	private int getPageCount() {
-		if(pageSize==0) {
+		if (pageSize == 0) {
 			return 1;
 		} else {
-			System.err.println("# messages: "+messageCount+" pagesize: "+pageSize+" pageCount: " + ((int)(messageCount / pageSize)));
-			return (int) Math.ceil((double)messageCount / pageSize);
+			System.err.println("# messages: " + messageCount + " pagesize: " + pageSize + " pageCount: "
+					+ ((int) (messageCount / pageSize)));
+			return (int) Math.ceil((double) messageCount / pageSize);
 		}
 	}
 
@@ -349,10 +363,10 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 			}
 		}
 		if (name.equals("nextPage")) {
-			setCurrentPage(currentPage+1);
+			setCurrentPage(currentPage + 1);
 		}
 		if (name.equals("previousPage")) {
-			setCurrentPage(currentPage-1);
+			setCurrentPage(currentPage - 1);
 		}
 		if (name.equals("firstPage")) {
 			setCurrentPage(1);
@@ -365,7 +379,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 	}
 
 	private void setCurrentPage(int p) throws TipiBreakException {
-		if(p<1 || p > getPageCount() || p==currentPage) {
+		if (p < 1 || p > getPageCount() || p == currentPage) {
 			return;
 		}
 		currentPage = p;
@@ -401,9 +415,9 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 
 			public void opened(ConnectionEvent arg0) {
 				try {
-					Map<String,Object> params = new HashMap<String, Object>();
-//					params.put("messageCount", messageCount);
-//					params.put("unreadMessageCount", unreadMessageCount);
+					Map<String, Object> params = new HashMap<String, Object>();
+					// params.put("messageCount", messageCount);
+					// params.put("unreadMessageCount", unreadMessageCount);
 					performTipiEvent("onConnectionCreated", params, false);
 					System.err.println("Connection created event!");
 				} catch (TipiException e1) {
@@ -434,7 +448,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 			}
 		};
 		store.addStoreListener(myStoreListener);
-
+		System.err.println("Connecting to: "+host+" username: "+username);
 		store.connect(host, username, password);
 		if ("POP3".equalsIgnoreCase(mailMode)) {
 			fff = store.getFolder("INBOX");
@@ -442,14 +456,13 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 			fff = store.getDefaultFolder();
 		}
 		fff.open(Folder.READ_WRITE);
-		System.err.println("Folder open?: "+fff.isOpen());
+		System.err.println("Folder open?: " + fff.isOpen());
 
-		
 		messageCount = fff.getMessageCount();
-		//unreadMessageCount = fff.getUnreadMessageCount();
-	//	unreadMessageCount = determineRecentMessages();
+		// unreadMessageCount = fff.getUnreadMessageCount();
+		// unreadMessageCount = determineRecentMessages();
 		try {
-			Map<String,Object> params = new HashMap<String, Object>();
+			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("messageCount", messageCount);
 			params.put("unreadMessageCount", unreadMessageCount);
 			performTipiEvent("onFolderOpened", params, false);
@@ -469,14 +482,14 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 	}
 
 	private int determineRecentMessages() throws MessagingException {
-		javax.mail.Message[] m =  fff.getMessages();
+		javax.mail.Message[] m = fff.getMessages();
 		int result = 0;
 		for (javax.mail.Message message : m) {
 			Date d = message.getSentDate();
-			System.err.println("Datebefore: "+recentAfter);
-			System.err.println("sent: "+message.getSentDate());
-			System.err.println("received: "+message.getReceivedDate());
-			if(d.after(recentAfter)) {
+			System.err.println("Datebefore: " + recentAfter);
+			System.err.println("sent: " + message.getSentDate());
+			System.err.println("received: " + message.getReceivedDate());
+			if (d.after(recentAfter)) {
 				result++;
 			}
 		}
@@ -522,16 +535,17 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 	}
 
 	private void addFolderMessage(Message folderMessage, Folder folder) throws NavajoException, MessagingException {
-		Message element = NavajoFactory.getInstance().createMessage(folderMessage.getRootDoc(), "Folders", Message.MSG_TYPE_ARRAY_ELEMENT);
+		Message element = NavajoFactory.getInstance().createMessage(folderMessage.getRootDoc(), "Folders",
+				Message.MSG_TYPE_ARRAY_ELEMENT);
 		folderMessage.addMessage(element);
 		addFolderToMessage(element, folder);
 	}
 
 	public void testMessage() throws MessagingException, TipiBreakException, TipiException {
-		host="hermes1.dexels.com";
+		host = "hermes1.dexels.com";
 		username = "Secretaris-BBFW63X";
-		password="vvmoc06";
-		mailMode="pop3"; 
+		password = "vvmoc06";
+		mailMode = "pop3";
 		connect();
 		doTransaction("InitGetFolders");
 		doTransaction("InitGetDefaultMessages");
@@ -542,7 +556,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 
 	private void addFolderToNavajo(Folder f, Navajo myNavajo, String folderName, Navajo inputNavajo) throws TipiException {
 		try {
-			if(inputNavajo==null) {
+			if (inputNavajo == null) {
 				System.err.println("No inputNavajo");
 			}
 			Message folderMessage = NavajoFactory.getInstance().createMessage(myNavajo, folderName);
@@ -554,8 +568,8 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 			Integer start = null;
 			Integer end = null;
 
-			if(pageSize!=0) {
-				start = pageSize * (currentPage-1);
+			if (pageSize != 0) {
+				start = pageSize * (currentPage - 1);
 				end = (pageSize * currentPage);
 			} else {
 				start = 0;
@@ -563,19 +577,19 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 			}
 
 			for (int i = start; i < end; i++) {
-				if(i>= message.length) {
+				if (i >= message.length) {
 					break;
 				}
-				if(message[i].getFlags().contains(Flag.DELETED)) {
+				if (message[messageCount - i - 1].getFlags().contains(Flag.DELETED)) {
 					System.err.println("Deleted message, deleting");
 					// keep on looping until the right number of messages is present.
 					end++;
 					continue;
 				}
-				addMessages(mailMessages, message[i]);
+				addMessages(mailMessages, message[messageCount - i - 1]);
 			}
 			System.err.println("Start: " + start + " end: " + end);
-//			f.close(false);
+			// f.close(false);
 		} catch (Exception e) {
 			throw new TipiException("Error getting messages from folder: " + folderName + " problem: " + e.getMessage(), e);
 		}
@@ -609,7 +623,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		addProperty(current, "IsFlagged", mail.isSet(Flag.FLAGGED), Property.BOOLEAN_PROPERTY);
 		addProperty(current, "IsRecent", mail.isSet(Flag.RECENT), Property.BOOLEAN_PROPERTY);
 		addProperty(current, "IsSeen", mail.isSet(Flag.SEEN), Property.BOOLEAN_PROPERTY);
-		
+
 		return current;
 	}
 
@@ -647,13 +661,59 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 	}
 
 	public static void main(String[] args) throws MessagingException, TipiBreakException, TipiException {
+
 		TipiMailConnector ttt = new TipiMailConnector();
-		ttt.testMessage();
-		ttt.messageCount = 5;
-		ttt.pageSize = 20;
-		
-		System.err.println("# messages: "+ttt.messageCount+" pagesize: "+ttt.pageSize+" pageCount: " +(double)ttt.messageCount / ttt.pageSize +" ---- "+ (int)(Math.ceil((double)ttt.messageCount / ttt.pageSize)));
-		
+		ttt.sendMail(new InternetAddress("flyaruu@gmail.com"),new InternetAddress("frank@lindyhop.nl"), "ter info", "tralallaal");
+		// ttt.testMessage();
+		// ttt.messageCount = 5;
+		// ttt.pageSize = 20;
+		//		
+		// System.err.println("# messages: "+ttt.messageCount+" pagesize: "+ttt.pageSize+" pageCount: "
+		// +(double)ttt.messageCount / ttt.pageSize +" ---- "+
+		// (int)(Math.ceil((double)ttt.messageCount / ttt.pageSize)));
+
+	}
+
+	public void sendMail(Address from,Address to, String subject, String body) throws MessagingException {
+		System.out.println("sendMail()...");
+		Properties props = new Properties();
+//		props.put("mail.smtp.host", "smtp.gmail.com");
+//		props.put("mail.smtp.port", "465");
+		props.put("mail.smtp.auth", "true");
+
+	     props.put("mail.transport.protocol", "smtps");
+        props.put("mail.smtps.host", "smtp.gmail.com");
+        props.put("mail.smtps.auth", "true");
+//        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.socketFactory.fallback", "false");
+//		Session session = Session.getDefaultInstance(props, null);
+//        Authenticator auth = new SMTPAuthenticator();
+//        Session session = Session.getDefaultInstance(props, auth);
+
+		Session session = Session.getDefaultInstance(props);		
+ 
+		session.setDebug(true);
+		MimeMessage message = new MimeMessage(session);
+		message.setFrom(from);
+		message.addRecipient(javax.mail.Message.RecipientType.TO, to);
+		System.out.println("sendMail() 2...");
+
+		message.setSubject(subject);
+		message.setContent(body, "text/plain");
+
+		Transport transport = session.getTransport("smtps");
+
+		// ***** GET STUCK HERE!!! ******
+//		transport.connect("smtp.gmail.com", 465,"flyaruu@gmail.com", "xxxxxxxxx");
+		transport.connect("flyaruu", "xxxxxxxxxx");
+		System.out.println("sendMail() 3...");
+		message.setSentDate(new Date());
+		message.saveChanges();
+		Transport.send(message);
+
+		System.out.println("sendMail() 4...");
+
 	}
 
 	public Set<String> getEntryPoints() {
@@ -661,4 +721,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		s.add("InitMail");
 		return s;
 	}
+	
+
+
 }
