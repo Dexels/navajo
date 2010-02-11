@@ -34,7 +34,7 @@ public class EchoEmbeddedContext extends EchoTipiContext {
 		setDefaultTopLevel(top);
 		getDefaultTopLevel().setContext(this);
 		parseRequiredIncludes();
-		processRequiredIncludes();
+//		processRequiredIncludes();
 
 	
 	}

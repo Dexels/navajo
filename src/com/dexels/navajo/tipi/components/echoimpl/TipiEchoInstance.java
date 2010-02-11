@@ -205,7 +205,7 @@ public class TipiEchoInstance extends ApplicationInstance implements TipiApplica
 		getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
 		TipiScreen es = new TipiScreen();
 		newContext.parseRequiredIncludes();
-		newContext.processRequiredIncludes();
+//		newContext.processRequiredIncludes();
 		es.setContext(newContext);
 		es.createContainer();
 		newContext.setDefaultTopLevel(es);
