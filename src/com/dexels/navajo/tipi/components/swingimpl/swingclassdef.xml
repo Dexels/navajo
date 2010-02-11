@@ -118,10 +118,15 @@
 			The question text in the dialog
 		</description>
       </param>
-      <param name="value" type="string" required="true" />
+      <param name="value" type="string" required="true">
+		<description>
+			The name of the global property to store the result in.
+			For example, if I supply 'myvalue' here I could retrieve it with {global:/myvalue}
+		</description>
+      </param>
       <param name="initialValue" type="string" >
 		<description>
-			The dialog will be prefilled with this string.
+			The dialog will be pre-filled with this string.
 		</description>
       </param>
    </tipiaction>
@@ -176,7 +181,7 @@
 		<description>
 			Plays a sound, streamed from the supplied url. The supported types depend on the platform.
 		</description>
-      <param name="url" type="string" required="true" />
+      <param name="url" type="resource" required="true" />
    </tipiaction>
 
    <tipiaction name="openBinary" class="TipiOpenBinary" package="com.dexels.navajo.tipi.components.swingimpl.actions">
@@ -589,6 +594,13 @@
             <param name="index" type="integer" required="true" />
             <param name="ascending" type="boolean" />
          </method>
+         <method name="selectMessages">
+            <description>
+				Select all messages in the supplied list (.. of messages)
+            </description>
+            <param name="messages" type="list" required="true" />
+         </method>
+         
       </methods>
    </tipiclass>
 

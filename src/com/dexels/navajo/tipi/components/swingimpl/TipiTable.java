@@ -725,6 +725,25 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 					if ("selectLast".equals(name)) {
 						mm.setSelectedRow(count - 1);
 					}
+					if ("selectMessages".equals(name)) {
+						List<Message> list = (List<Message>) compMeth.getEvaluatedParameterValue("messages", event);
+						ListSelectionModel lsm = mm.getTable().getSelectionModel();
+						int cnt = 0;
+						mm.getTable().getSelectionModel().setValueIsAdjusting(true);
+						lsm.clearSelection();
+						int rows = mm.getTable().getRowCount();
+						for (int i=0; i<rows; i++) {
+							for (Message message : list) {
+								if(mm.getTable().getMessageRow(i).hashCode() == message.hashCode()) {
+									lsm.addSelectionInterval(i, i);
+									
+								}
+							}
+						}
+						mm.getTable().getSelectionModel().setValueIsAdjusting(false);
+						
+					}
+					
 					if ("showEditDialog".equals(name)) {
 						Operand title = compMeth.getEvaluatedParameter("title", event);
 						try {
