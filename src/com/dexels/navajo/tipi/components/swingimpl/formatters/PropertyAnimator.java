@@ -47,18 +47,19 @@ public class PropertyAnimator {
 	}
 	
 	public void interpolate(Object start, Object end, float fraction, Class animationClass) {
+		Number startN = (Number)start;
+		Number endN = (Number)end;
 		if(animationClass.equals(Integer.class)) {
-			Integer s = (Integer)start;
-			Integer e = (Integer)end;
-			int diff = e-s;
-			int res = new Integer((int) (s+diff*fraction));
+//			Integer s = (Integer)start;
+//			Integer e = (Integer)end;
+			//int diff = e-s;
+			double diff = endN.doubleValue()-startN.doubleValue();
+			int res = new Integer((int) (startN.doubleValue()+diff*fraction));
 			myProperty.setAnyValue(res);
 		}
 		if(animationClass.equals(Double.class)) {
-			Double s = (Double)start;
-			Double e = (Double)end;
-			double diff = e-s;
-			double res = new Double((s+diff*fraction));
+			double diff = endN.doubleValue()-startN.doubleValue();
+			double res = new Double((startN.doubleValue()+diff*fraction));
 			myProperty.setAnyValue(res);
 		}
 	}
