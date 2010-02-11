@@ -214,21 +214,59 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 				}
 
 				
-				if (name.equals("x")) {
-					x = ((Integer) object).intValue();
-				}
-				if (name.equals("y")) {
-					y = ((Integer) object).intValue();
-				}
-				if (name.equals("w")) {
-					w = ((Integer) object).intValue();
-				}
-				if (name.equals("h")) {
-					h = ((Integer) object).intValue();
-				}
+
+
 			}
 		});
+		
+		if (name.equals("x")) {
+			runAsyncInEventThread(new Runnable(){
 
+				public void run() {
+					Rectangle bounds = getBounds();
+					x = ((Integer) object).intValue();
+					bounds.x = x;						
+					setBounds(bounds);
+					
+				}});
+		}
+		if (name.equals("y")) {
+			runAsyncInEventThread(new Runnable(){
+
+				public void run() {
+					Rectangle bounds = getBounds();
+					y = ((Integer) object).intValue();
+					bounds.y = y;						
+					setBounds(bounds);
+					
+				}});
+			y = ((Integer) object).intValue();
+		}
+		if (name.equals("h")) {
+			runAsyncInEventThread(new Runnable(){
+
+				public void run() {
+					Rectangle bounds = getBounds();
+					h = ((Integer) object).intValue();
+					bounds.height = h;						
+				setBounds(bounds);
+					
+				}});
+		}
+		if (name.equals("w")) {
+			runAsyncInEventThread(new Runnable(){
+
+				public void run() {
+					Rectangle bounds = getBounds();
+					w = ((Integer) object).intValue();						
+					bounds.width = w;						
+				setBounds(bounds);
+					
+				}});
+			
+		}
+
+		
 		super.setComponentValue(name, object);
 	}
 
