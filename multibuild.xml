@@ -83,7 +83,7 @@ TipiJOGLDashboard, Tipi3d,TipiMonkey
  
  <!-- Add  -->
 	<!-- <property name="projects" value="NavajoRichClient,NavajoRichTipi,TipiRuby,TipiSwingDocking,TipiSubstance,TipiSwingMig,TipiSwingEditor,TipiSvgBatik,TipiSwingX,TipiGeoSwing,TipiJxLayer,TipiRss"/> -->
-	<property name="projects" value="DexelsVersionControl,NavajoDocument,NavajoClient,Navajo,NavajoFunctions,TipiSwingClient,NavajoSwingEditor,NavajoTipi,NavajoSwingTipi,TipiCharting,TipiEcho,TipiFlickr,TipiJabber,TipiMail,TipiRich,TipiRuby,TipiSwingDocking,TipiSubstance,TipiSwingMig,TipiSwingEditor,TipiSvgBatik,TipiSwingX,TipiGeoSwing,TipiJxLayer,TipiRss,NavajoRichClient,NavajoRichTipi"/>
+	<property name="projects" value="DexelsVersionControl,NavajoDocument,NavajoClient,Navajo,NavajoFunctions,TipiSwingClient,NavajoSwingEditor,NavajoTipi,NavajoSwingTipi,TipiCharting,NavajoEchoClient,NavajoEchoTipi,TipiFlickr,TipiJabber,TipiMail,TipiRich,TipiRuby,TipiSwingDocking,TipiSubstance,TipiSwingMig,TipiSwingEditor,TipiSvgBatik,TipiSwingX,TipiGeoSwing,TipiJxLayer,TipiRss,NavajoRichClient,NavajoRichTipi"/>
 	
 	<target name="multibuild">
 		<for list="${projects}" delimiter="," param="project">
