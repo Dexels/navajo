@@ -20,6 +20,7 @@
 	<target name="init">
 		<mkdir dir="com/dexels/navajo/functions/"/>
 		<copy file="../NavajoFunctions/src/com/dexels/navajo/functions/functions.xml" todir="src/com/dexels/navajo/functions/"/>
+		<ant target="init" antfile="../DexelsVersionControl/ant/navajobuild.xml"></ant>
 	</target>
 	
 	<!-- Skip all unit tests. -->
@@ -85,6 +86,5 @@
 	<property name="dependencies" value="DexelsVersionControl,NavajoDocument,Navajo,NavajoClient,NavajoFunctions" />
 
 	<import file="../DexelsVersionControl/ant/navajobuild.xml" />
-
 </project>
 	<!-- EOF: $RCSfile$ -->
