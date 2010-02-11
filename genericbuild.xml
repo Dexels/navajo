@@ -107,6 +107,7 @@
 	
 	<target name="compileBeans" depends="buildTipi">
 		<mkdir dir="${dist}/beansclasses"/>
+		<echo message="Classpath: ${work}/classes  AND ${dependencyclasses}"></echo>
 		<javac srcdir="${dist}/beans/javafiles" destdir="${dist}/beansclasses" debug="true" debuglevel="lines,vars,source">
 			<classpath refid="projectlibs" />
 			<classpath refid="dependencylibs" />
