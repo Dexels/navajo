@@ -39,8 +39,11 @@ public class SwingEmbeddedContext extends SwingTipiContext {
 		}
 		setDefaultTopLevel(top);
 		getDefaultTopLevel().setContext(this);
-		parseRequiredIncludes();
-		processRequiredIncludes();
+//		parseRequiredIncludes();
+//		processRequiredIncludes();
+//		appendIncludes(coreExtensionList);
+//		appendIncludes(mainExtensionList);
+//		appendIncludes(optionalExtensionList);
 
 	
 	}
