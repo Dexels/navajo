@@ -163,6 +163,12 @@ public final class DbConnectionBroker extends Object
 				} else {
 					log("Invalid connection, did not pass test: " + conns[i].hashCode());
 					--current;
+					try {
+						if ( conns[i] != null ) {
+							conns[i].close();
+						}
+					} catch (Throwable e) {
+					}
 					conns[i] = null;
 					usedmap[i] = false;
 				}
