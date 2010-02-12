@@ -77,7 +77,9 @@ public class DocumentServlet extends TmlHttpServlet {
 			Navajo n = DispatcherFactory.getInstance().handle(out); //NavajoClientFactory.getClient().doSimpleSend(out, "lucene/ProcessGetDocumentURL");
 			Property urlProp = n.getProperty("/Document/URL");
 			if ( urlProp != null ) {
-				String redirectURL = req.getRequestURI() + "?"+urlProp.getValue() + "&checksum=" + getChecksum(urlProp.getValue());
+				String replacedUrlProp = urlProp.getValue().replaceAll("/", "%2F");
+				String redirectURL = req.getRequestURI() + "?"+ replacedUrlProp + "&checksum=" + getChecksum(replacedUrlProp);
+				
 				// Forward to stored URL...
 				res.sendRedirect( redirectURL); 
 			} else {
