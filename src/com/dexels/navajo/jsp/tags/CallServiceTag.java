@@ -35,6 +35,8 @@ public class CallServiceTag extends BaseNavajoTag {
 
 	
 	public int doStartTag() throws JspException {
+		System.err.println("Service calling: "+myService);
+		
 		assertTest();
 		if(myService==null || "".equals(myService)) {
 			throw new JspException("Error calling service: No service supplied!");
@@ -56,6 +58,7 @@ public class CallServiceTag extends BaseNavajoTag {
 		if(nn==null) {
 			throw new JspException("Unknown Navajo service error while calling service: "+myService);
 		}
+		System.err.println("Service called: "+myService);
 		Message error = nn.getMessage("error");
 		if(error!=null) {
 			StringWriter sw = new StringWriter();
@@ -89,10 +92,4 @@ public class CallServiceTag extends BaseNavajoTag {
 		}
 		return EVAL_BODY_INCLUDE ;
 	}
-
-	
-
-
-
-
-}
+	}
