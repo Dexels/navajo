@@ -24,6 +24,7 @@ public class NavajoContext {
 	private final Stack<Object> myElementStack = new Stack<Object>();
 
 	public NavajoContext() {
+		//System.err.println("New navajo context");
 	}
 
 
@@ -38,6 +39,7 @@ public class NavajoContext {
 		myNavajoMap.put(service, n);
 		myInverseNavajoMap.put(n, service);
 		myElementStack.push(n);
+//		System.err.println("initcall... stack size: "+myElementStack.size());
 	}
 	
 	public Map<String,Navajo> getNavajos() {
@@ -50,11 +52,17 @@ public class NavajoContext {
 	
 	public void callService(String service, Navajo input)
 			throws ClientException {
+		if(input==null) {
+			callService(service);
+			return;
+		}
 		Navajo n = myClient.doSimpleSend(input, service);
 			n.getHeader().setRPCName(service);
 		myNavajoMap.put(service, n);
 		myInverseNavajoMap.put(n, service);
 		myElementStack.push(n);
+//		System.err.println("call... stack size: "+myElementStack.size());
+
 	}
 
 	public boolean hasNavajo(String name) {
@@ -110,10 +118,14 @@ public class NavajoContext {
 
 	public void popNavajo() {
 		myElementStack.pop();
+		System.err.println("... stack size: "+myElementStack.size());
+
 	}
 
 	public void pushNavajo(Navajo m) {
 		myElementStack.push(m);
+		System.err.println("... stack size: "+myElementStack.size());
+
 	}
 
 	public Message getMessage() {
@@ -143,13 +155,16 @@ public class NavajoContext {
 
 	public void popMessage() {
 		myElementStack.pop();
+		System.err.println("... stack size: "+myElementStack.size());
+
 	}
 
 	public void pushMessage(Message m) {
 		if(m!=null) {
-			System.err.println("Pushinh message: "+m.getFullMessageName());
+			System.err.println("Pushing message: "+m.getFullMessageName());
 			myElementStack.push(m);			
 		}
+		System.err.println("... stack size: "+myElementStack.size());
 	}
 	
 	public void pushProperty(Property property) {

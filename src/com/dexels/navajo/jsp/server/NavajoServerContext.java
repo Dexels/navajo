@@ -2,17 +2,14 @@ package com.dexels.navajo.jsp.server;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletRequest;
-import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 
 public class NavajoServerContext {
@@ -80,9 +77,7 @@ public class NavajoServerContext {
 	
 	private Map<String,Map<String,String>> currentFolderCvsInfo() throws IOException {
 		File f = new File(getCurrentFolder(),"CVS/Entries");
-		System.err.println("CVS entries: "+f.getAbsolutePath());
 		if(!f.exists()) {
-			System.err.println("No entries: "+f.getAbsolutePath());
 			return null;
 		}
 		Map<String,Map<String,String>> result = new HashMap<String, Map<String,String>>();
@@ -92,11 +87,8 @@ public class NavajoServerContext {
 			if(line==null) {
 				break;
 			}
-			System.err.println("Parsing: "+line);
 			String[] info = line.split("/");
-			for (String string : info) {
-				System.err.println("LINE: "+string);
-			}
+		
 			if(info.length<4) {
 				continue;
 			}
@@ -107,14 +99,12 @@ public class NavajoServerContext {
 			result.put(name, infoMap);
 			
 		}
-		System.err.println("Result: "+result);
 		return result;
 	}
 
 	public void setCurrentFolder(File currentFolder) throws IOException {
 		// Ignore navigation to non existing folders
 		if(!currentFolder.exists()) {
-			System.err.println("Ifnoring: "+currentFolder.getAbsolutePath());
 			return;
 		}
 		this.currentFolder = currentFolder;
@@ -142,9 +132,7 @@ public class NavajoServerContext {
 	public String getPath() {
 		try {
 			String rootPath = getScriptRoot().getCanonicalPath();
-			System.err.println("Scriptroot: "+rootPath);
 			String currentPath = getCurrentFolder().getCanonicalPath();
-			System.err.println("currentPath: "+currentPath);
 			if(rootPath.equals(currentPath)) {
 				return "";
 			}
@@ -159,7 +147,6 @@ public class NavajoServerContext {
 
 	public void setPath(String path) {
 		File newCurrent = new File(getCurrentFolder(),path);
-		System.err.println("Navicating to: "+newCurrent);
 		try {
 			// Check if we aren't navigating outside the script folder
 			if(newCurrent.getCanonicalPath().startsWith(getScriptRoot().getCanonicalPath())) {

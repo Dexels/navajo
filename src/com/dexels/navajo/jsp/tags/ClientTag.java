@@ -28,7 +28,7 @@ public class ClientTag extends BaseNavajoTag {
 
 		NavajoContext nc = (NavajoContext) getPageContext().findAttribute("navajoContext");
 //		getPageContext().findAttribute("NavajoContext");
-		System.err.println("Starting__ client tag: "+server);
+		System.err.println(">>>>>>> Starting__ client tag: "+server);
 		if(server==null) {
 			HttpServletRequest rr =  (HttpServletRequest) getPageContext().getRequest();
 			StringBuffer sb = new StringBuffer();

@@ -1,18 +1,13 @@
 package com.dexels.navajo.jsp.tags;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.StringWriter;
 
-import javax.servlet.ServletException;
 import javax.servlet.jsp.JspException;
 
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
-import com.uwyn.jhighlight.renderer.XhtmlRendererFactory;
-import com.uwyn.jhighlight.tools.FileUtils;
 
 public class CallServiceTag extends BaseNavajoTag {
 
@@ -21,7 +16,7 @@ public class CallServiceTag extends BaseNavajoTag {
 
 	@Override
 	public int doEndTag() throws JspException {
-//		getNavajoContext().popNavajo();
+		getNavajoContext().popNavajo();
 		return EVAL_BODY_INCLUDE;
 	}
 	
@@ -35,7 +30,7 @@ public class CallServiceTag extends BaseNavajoTag {
 
 	
 	public int doStartTag() throws JspException {
-		System.err.println("Service calling: "+myService);
+		System.err.println(">!@#>!@#$>!@#Œ calling: "+myService);
 		
 		assertTest();
 		if(myService==null || "".equals(myService)) {
@@ -46,6 +41,14 @@ public class CallServiceTag extends BaseNavajoTag {
 				getNavajoContext().callService(myService);
 			} else {
 				Navajo navajo = getNavajoContext().getNavajo(myNavajo);
+				System.err.println("Calling with navajo:");
+				if(navajo!=null) {
+					try {
+						navajo.write(System.err);
+					} catch (NavajoException e) {
+						e.printStackTrace();
+					}
+				}
 				getNavajoContext().callService(myService, navajo);
 			}
 		} catch (ClientException e) {

@@ -45,6 +45,10 @@ public class FormattedFileTag  extends BaseNavajoTag {
 		try {
 			String realPath =  resolveScriptPath(filePath);
 			File f = new File (realPath);
+			if(!f.exists()) {
+				getPageContext().getOut().write("File: "+realPath+" not found!");
+				return -1;
+			}
 			FileInputStream fis = new FileInputStream(f);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			highlightFile(f.getName(), fis, baos, "UTF-8");

@@ -5,11 +5,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.Map.Entry;
 
 import javax.servlet.jsp.PageContext;
@@ -34,9 +31,7 @@ public class InstallerContext {
 			return false;
 		}
 		File adapters = new File(f,"adapters");
-		System.err.println("adapters exists: "+adapters.exists());
 		File scripts = new File(f,"scripts");
-		System.err.println("scripts exists: "+scripts.exists());
 		if(!scripts.exists()) {
 			return false;
 		}
@@ -44,16 +39,14 @@ public class InstallerContext {
 		if(!config.exists()) {
 			return false;
 		}
-		System.err.println("config exists: "+config.exists());
 		return config!=null;
 	}
 	
 	private void initialize() throws IOException {
 		loadSystemContexts();
 		String contextPath = getContextName().substring(1);
-		System.err.println("Context path: "+contextPath+" contexts: "+systemContexts);
+//		System.err.println("Context path: "+contextPath+" contexts: "+systemContexts);
 		currentContext = systemContexts.get(contextPath);
-		System.err.println("CurrentContext: "+currentContext);
 		saveSystemContexts();
 	}
 
@@ -79,7 +72,6 @@ public class InstallerContext {
 		File home = new File(System.getProperty("user.home"));
 		File navajo = new File(home,"navajo.properties");
 		FileWriter fw = new FileWriter(navajo);
-		System.err.println("Saving:");
 		for (Entry<String,String> e: systemContexts.entrySet()) {
 			fw.write(e.getKey()+"="+e.getValue()+"\n");
 		}
