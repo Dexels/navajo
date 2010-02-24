@@ -9,5 +9,7 @@
 	<classpathentry exported="true" kind="lib" path="compilelib/servlet-api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ant-launcher.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ant.jar"/>
+	<classpathentry kind="lib" path="lib/jstl.jar"/>
+	<classpathentry kind="lib" path="lib/standard.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
