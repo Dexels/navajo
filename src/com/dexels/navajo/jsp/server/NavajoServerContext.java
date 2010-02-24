@@ -12,13 +12,20 @@ import java.util.Map;
 import javax.servlet.ServletRequest;
 import javax.servlet.jsp.PageContext;
 
+import com.dexels.navajo.jsp.server.impl.ScriptStatusImpl;
+
 public class NavajoServerContext {
 	private PageContext pageContext;
 	private File currentFolder;
 	private Map<String,Map<String,String>> cvsInfo = null;
 	private ServletRequest request;
+	private File customNavajoRoot;
 	
 	
+	public void setCustomNavajoRoot(File customNavajoRoot) {
+		this.customNavajoRoot = customNavajoRoot;
+	}
+
 	public ServletRequest getRequest() {
 		return request;
 	}
@@ -174,7 +181,11 @@ public class NavajoServerContext {
 	}
 	
 	public File getNavajoRoot() throws IOException {
+		if(getPageContext()==null) {
+			return customNavajoRoot;
+		}
 		String installedContext = InstallerContext.getNavajoRoot(getPageContext().getServletContext().getContextPath().substring(1));
+
 		if(installedContext==null) {
 			String real = pageContext.getServletContext().getRealPath("");
 			return new File(real);			
@@ -191,16 +202,38 @@ public class NavajoServerContext {
 		List<String> all = new ArrayList<String>();
 		File[] filelist = getCurrentFolder().listFiles();
 		for (File file : filelist) {
-//			if(file.isFile() && file.getName().endsWith("xml")) {
 			int ii = file.getName().lastIndexOf('.');
 			if(ii>=0 && !file.isDirectory()) {
 				all.add(file.getName().substring(0,ii));
 			}
-//			}
 		}
 		return all;
 	}
 	
+
+	public List<ScriptStatus> getScriptList() throws IOException {
+		List<ScriptStatus> all = new ArrayList<ScriptStatus>();
+		File[] filelist = getCurrentFolder().listFiles();
+		for (File file : filelist) {
+			int ii = file.getName().lastIndexOf('.');
+			if(ii>=0 && !file.isDirectory()) {
+				ScriptStatus s = new ScriptStatusImpl(this,getScriptRoot(), file, getCompiledRoot());
+				all.add(s);
+			}
+		}
+		return all;
+	}
+
+
+	public File getContextRoot() {
+		return new File(getContextPath());
+	}
+	
+	private File getCompiledRoot() throws IOException {
+		
+		return new File(getNavajoRoot(),"classes");
+	}
+
 	public List<File> getFolders() throws IOException {
 		List<File> all = new ArrayList<File>();
 		System.err.println("Current Folder: "+getCurrentFolder().getAbsolutePath());
@@ -216,4 +249,25 @@ public class NavajoServerContext {
 		return all;
 	}
 
+	
+	public static void main(String[] args) throws IOException {
+//		/Users/frank/Documents/Spiritus/NavajoServer/sample/Server
+		NavajoServerContext nsc = new NavajoServerContext();
+		nsc.setCustomNavajoRoot(new File("/Users/frank/Documents/Spiritus/NavajoJsp/testContext/Server"));
+		nsc.setCurrentFolder(nsc.getScriptRoot());
+		List<ScriptStatus> ss = nsc.getScriptList();
+		for (ScriptStatus scr : ss) {
+			System.err.println(scr.toString());
+		}
+		List<File> ff = nsc.getFolders();
+		File f = nsc.getCurrentFolder();
+		for (File file : ff) {
+			nsc.setCurrentFolder(file);
+			List<ScriptStatus> sss = nsc.getScriptList();
+			for (ScriptStatus scr : sss) {
+				System.err.println(scr.toString());
+			}
+		}
+		nsc.setCurrentFolder(f);
+	}
 }
