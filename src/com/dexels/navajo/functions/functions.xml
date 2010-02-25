@@ -460,9 +460,17 @@
     </function>
     <function name="File" class="com.dexels.navajo.functions.File">
         <description>Reads a file</description>
-        <input/>
+        <input>string</input>
         <result/>
     </function>
+
+    <function name="GetReportFile" class="com.dexels.navajo.functions.GetReportFile">
+        <description>Reads a report file from the script folder to a binary</description>
+        <input>string</input>
+        <result>binary</result>
+    </function>
+
+    
     <function name="ExistsWorkflow" class="com.dexels.navajo.functions.ExistsWorkflow">
         <description>Check whether a workflow with specified name and given global state exists</description>
         <input/>
