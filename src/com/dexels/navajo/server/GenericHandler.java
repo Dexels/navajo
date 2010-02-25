@@ -185,6 +185,7 @@ public final class GenericHandler extends ServiceHandler {
 				return name.startsWith(servName);
 			}
 		});
+		// TODO beware, scripts can be null
 		for (File file : scripts) {
 			System.err.println("Script: " + file.getName());
 		}

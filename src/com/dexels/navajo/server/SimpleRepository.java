@@ -9,6 +9,8 @@ package com.dexels.navajo.server;
  * @version $Id$
  */
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -42,55 +44,66 @@ public class SimpleRepository implements Repository {
 	 * @throws NavajoException
 	 */
 	public void initGlobals(String method, String username, Navajo inMessage, Map<String,String> extraParams) throws NavajoException {
+//		config.getRootPath();
 
 		try {
-			
 			ResourceBundle rb = ResourceBundle.getBundle("application");
-			Message msg = inMessage.getMessage(GLOBALSMSGNAME);
+			parseBundle(method, username, inMessage, extraParams, rb);
 
-			Message paramMsg = null;
-			if (msg!=null) {
-				paramMsg = msg;
-			} else {
-				paramMsg = NavajoFactory.getInstance().createMessage(inMessage, GLOBALSMSGNAME);
-				inMessage.addMessage(paramMsg);
+		} catch (MissingResourceException e) {
+			System.err.println("Can not open resource bundle. No big deal, I guess");
+			try {
+				InputStream stream = config.getResourceBundle("application");
+				PropertyResourceBundle prb = new PropertyResourceBundle(stream);
+				parseBundle(method, username, inMessage, extraParams, prb);
+
+			} catch (IOException e1) {
+				System.err.println("Still can not open resource bundle. Also no big deal, I guess");
+				e1.printStackTrace();
 			}
+			
+		}
 
+	}
 
+	private void parseBundle(String method, String username, Navajo inMessage, Map<String, String> extraParams, ResourceBundle rb)
+			throws NavajoException {
+		Message msg = inMessage.getMessage(GLOBALSMSGNAME);
 
-			Property nu = NavajoFactory.getInstance().createProperty(inMessage, "NavajoUser", Property.STRING_PROPERTY, username, 50, "", Property.DIR_OUT);
-			paramMsg.addProperty(nu);
-			Property nm = NavajoFactory.getInstance().createProperty(inMessage, "NavajoMethod", Property.STRING_PROPERTY, method, 50, "", Property.DIR_OUT);
-			paramMsg.addProperty(nm);
+		Message paramMsg = null;
+		if (msg!=null) {
+			paramMsg = msg;
+		} else {
+			paramMsg = NavajoFactory.getInstance().createMessage(inMessage, GLOBALSMSGNAME);
+			inMessage.addMessage(paramMsg);
+		}
+		Property nu = NavajoFactory.getInstance().createProperty(inMessage, "NavajoUser", Property.STRING_PROPERTY, username, 50, "", Property.DIR_OUT);
+		paramMsg.addProperty(nu);
+		Property nm = NavajoFactory.getInstance().createProperty(inMessage, "NavajoMethod", Property.STRING_PROPERTY, method, 50, "", Property.DIR_OUT);
+		paramMsg.addProperty(nm);
 
-			// Add application instance, i.e. "Bond" specific parameters from
-			// application.properties file.
-			Enumeration<String> all = rb.getKeys();
-			while (all.hasMoreElements()) {
-				String key = all.nextElement();
+		// Add application instance, i.e. "Bond" specific parameters from
+		// application.properties file.
+		Enumeration<String> all = rb.getKeys();
+		while (all.hasMoreElements()) {
+			String key = all.nextElement();
+			Property p2 = NavajoFactory.getInstance().createProperty(inMessage, key, Property.STRING_PROPERTY,
+					rb.getString(key), 10, "",
+					Property.DIR_OUT);
+			paramMsg.addProperty(p2);
+		}
+		if (extraParams!=null) {
+			for (Iterator<Entry<String,String>> iter = extraParams.entrySet().iterator(); iter.hasNext();) {
+				Entry<String,String> e = iter.next();
+				String key = e.getKey();
+				String value = e.getValue();
 				Property p2 = NavajoFactory.getInstance().createProperty(inMessage, key, Property.STRING_PROPERTY,
-						rb.getString(key), 10, "",
+						value, 10, "",
 						Property.DIR_OUT);
 				paramMsg.addProperty(p2);
 			}
-			if (extraParams!=null) {
-				for (Iterator<Entry<String,String>> iter = extraParams.entrySet().iterator(); iter.hasNext();) {
-					Entry<String,String> e = iter.next();
-					String key = e.getKey();
-					String value = e.getValue();
-					Property p2 = NavajoFactory.getInstance().createProperty(inMessage, key, Property.STRING_PROPERTY,
-							value, 10, "",
-							Property.DIR_OUT);
-					paramMsg.addProperty(p2);
-				}
 
-			}
-
-		} catch (MissingResourceException e) {
-//			e.printStackTrace();
-			System.err.println("Can not open resource bundle. No big deal, I guess");
 		}
-
 	}
 
 	public Parameter[] getParameters(Access access) throws SystemException {

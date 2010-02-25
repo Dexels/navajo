@@ -174,7 +174,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
     			}
     			rootPath = properDir(r);
     		} else {
-    			System.err.println("New skool configuration (rootPath found), path:"+externalRootPath);
+    		//	System.err.println("New skool configuration (rootPath found), path:"+externalRootPath);
     			rootPath = externalRootPath;
     			
     		}
@@ -531,6 +531,20 @@ public final class NavajoConfig implements NavajoConfigInterface {
         return properties;
     }
 
+    /**
+     * Opens a stream to the named bundle. (this method will add the .properties extension)
+     * Don't forget to close the stream when done.
+     * @param name
+     * @return
+     * @throws IOException
+     */
+    public InputStream getResourceBundle(String name) throws IOException {
+   	File adPath = new File(getAdapterPath());
+		File bundleFile = new File(adPath,name);
+		System.err.println("File based resource path. Using: "+bundleFile);
+		FileInputStream fix = new FileInputStream(bundleFile+".properties");
+		return fix;
+    }
     /*
      * Gets the configuration path to the Navajo Instance.
      */

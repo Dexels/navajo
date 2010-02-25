@@ -23,7 +23,8 @@ public interface NavajoConfigInterface {
 	public void writeConfig(String name, Navajo conf) throws IOException;
 	public String getConfigPath();
 	public String getRootPath();
-	
+   public InputStream getResourceBundle(String name) throws IOException;
+
 	// Indentity methods.
 	public String getInstanceName();
 	public String getInstanceGroup();

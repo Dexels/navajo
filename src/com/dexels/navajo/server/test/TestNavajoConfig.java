@@ -336,4 +336,9 @@ public class TestNavajoConfig implements NavajoConfigInterface {
 		return null;
 	}
 
+	public InputStream getResourceBundle(String name) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
