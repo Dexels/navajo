@@ -1,6 +1,7 @@
 package com.dexels.navajo.server.listener.http;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -34,7 +35,7 @@ public class DocumentServlet extends TmlHttpServlet {
 	}
 
 	private final String getChecksum(String s) {
-		return (s+"_44P!E_"+new java.util.Date()).hashCode()+"";
+		return (s+"_44P!E_"+new SimpleDateFormat("dd-MM-yyyy").format( new java.util.Date() )).hashCode()+"";
 	}
 	
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException  {
@@ -97,5 +98,9 @@ public class DocumentServlet extends TmlHttpServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse res) {
 		// Not supported
 		return;
+	}
+	
+	public static void main(String [] args) {
+		System.err.println(new SimpleDateFormat("dd-MM-yyyy").format( new java.util.Date() ));
 	}
 }
