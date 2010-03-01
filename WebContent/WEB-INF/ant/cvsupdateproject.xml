@@ -2,7 +2,7 @@
 <project default="update">
 
 	<target name="update">
-		<cvs command="update" dest="${appDir}" ></cvs>
+		<cvs  command="update -d" dest="${appDir}" ></cvs>
 	</target>
 	
 </project>

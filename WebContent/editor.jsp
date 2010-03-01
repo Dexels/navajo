@@ -67,7 +67,7 @@
 		  <textarea rows="10" cols="80" name="content"><% 
 				    String path2 = request.getParameter("filePath");
 		  			if(path2.indexOf("..")!=-1) {
-		  				throw new JspException("Illegal path: "+path2);
+		  				throw new  Exception("Illegal path: "+path2);
 		  			}
 					manager.getApplication().writeFile(path2,out);
 		%></textarea>
@@ -77,7 +77,7 @@
 			<input type="hidden" name="destination" value="/details.jsp?app=${app.applicationName}" /> 
 			<br/>
 			
-			<input type="submit" value="Save &amp; Build" /><input type=button value="Cancel" onClick="history.go(-1)">
+			<input type="submit" value="Save &amp; Build" /><input type=button value="Cancel" onclick="history.go(-1)"/>
 			
 		  </form>
      </div>
