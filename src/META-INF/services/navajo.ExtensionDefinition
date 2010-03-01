@@ -1,0 +1,2 @@
+# File: META-INF/services/navajo.ExtensionDefinition
+com.dexels.twitter.TwitterAdapterLibrary

@@ -1,0 +1,15 @@
+<adapterdef>
+    <map>
+        <tagname>twitter</tagname>
+        <object>com.dexels.twitter.TwitterAdapter</object>
+        <values>
+            <value name="username" type="string" required="true" direction="in"/>
+            <value name="password" type="string" required="true" direction="in"/>            
+        </values>
+        <methods>
+            <method name="tweet">
+                <param name="text" field="status" type="string" required="true"/>
+            </method>            
+        </methods>
+    </map>
+</adapterdef>
