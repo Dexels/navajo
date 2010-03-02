@@ -65,6 +65,7 @@ public final class Access implements java.io.Serializable, Mappable {
 	public int threadCount = 0;
 	public double cpuload = -1.0;
 	public String accessID = "";
+	public String parentAccessId = "";
 	public int userID;
 	public int serviceID;
 	public String rpcName = "";
@@ -406,6 +407,7 @@ public final class Access implements java.io.Serializable, Mappable {
 		a.mapStatistics = this.mapStatistics;
 		a.consoleOutput = this.consoleOutput;
 		a.consoleContent = this.consoleContent;
+		a.parentAccessId = this.parentAccessId;
 		
 		return a;
 	}
@@ -480,6 +482,13 @@ public final class Access implements java.io.Serializable, Mappable {
 
 	public void setInDoc(Navajo in) {
 		this.inDoc = in;
+		if ( in.getHeader() != null ) {
+			// Check for parent access id header.
+			String s = in.getHeader().getHeaderAttribute("parentaccessid");
+			if ( s != null && !s.equals("") ) {
+				setParentAccessId(s);
+			}
+		}
 		// Check if __parms__ exists.
 		Message msg = inDoc.getMessage("__parms__");
 		if (msg == null) {
@@ -732,6 +741,14 @@ public final class Access implements java.io.Serializable, Mappable {
 
 	public void setClientInfo(String clientInfo) {
 		this.clientInfo = clientInfo;
+	}
+	
+	public String getParentAccessId() {
+		return parentAccessId;
+	}
+
+	public void setParentAccessId(String parentAccessId) {
+		this.parentAccessId = parentAccessId;
 	}
 	
 }
