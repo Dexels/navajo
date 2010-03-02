@@ -495,6 +495,8 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
     		  // Clear request id.
     		  h.setRequestId(null);
     	  }
+    	  // Set parent access id as header attribute.
+    	  h.setHeaderAttribute("parentaccessid", this.access.accessID);
     	  if ( trigger != null ) {
     		  h.setSchedule(trigger);
     		  h.setHeaderAttribute("keeprequestresponse", "true");
