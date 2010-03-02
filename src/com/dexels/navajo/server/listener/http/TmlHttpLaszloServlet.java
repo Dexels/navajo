@@ -7,15 +7,10 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
-import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 import com.dexels.navajo.server.*;
 
@@ -105,10 +100,17 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 			// Call Dispatcher with parsed TML document as argument.
 //			System.err.println("Dispatching now!");
 			Header h = in .getHeader();
-			h.write(System.err);
+			//h.write(System.err);
 			
 			Navajo outDoc = dis.handle(in, certObject, new ClientInfo(request.getRemoteAddr(), "unknown", recvEncoding, pT, useRecvCompression, useSendCompression, request.getContentLength(), created));
 //			outDoc.write(System.err);
+			
+			if ( h != null && outDoc != null && outDoc.getHeader() != null && !Dispatcher.isSpecialwebservice(in.getHeader().getRPCName())) {
+				System.err.println("LASZLOSERVLET: (" + dis.getApplicationId() + "): " + new java.util.Date() + ": " + outDoc.getHeader().getHeaderAttribute("accessId") + ":" + in.getHeader().getRPCName() + "(" + in.getHeader().getRPCUser() + "):" + ( System.currentTimeMillis() - start ) + " ms. (st=" + 
+						( outDoc.getHeader().getHeaderAttribute("serverTime") + ",rpt=" + outDoc.getHeader().getHeaderAttribute("requestParseTime") + ",at=" + outDoc.getHeader().getHeaderAttribute("authorisationTime") + ",pt=" + 
+								outDoc.getHeader().getHeaderAttribute("processingTime") + ",tc=" + outDoc.getHeader().getHeaderAttribute("threadCount") + ",cpu=" + outDoc.getHeader().getHeaderAttribute("cpuload") +  ")" + " (" + sendEncoding + "/" + recvEncoding + ")" ));
+			}
+			  
 	        long sendStart = System.currentTimeMillis();
 			if (useSendCompression) {
 				response.setContentType("text/xml; charset=UTF-8");
