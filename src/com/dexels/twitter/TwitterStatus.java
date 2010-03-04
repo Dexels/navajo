@@ -6,26 +6,32 @@ import java.util.List;
 import winterwell.jtwitter.Twitter.Status;
 
 public class TwitterStatus {
-	private Status myStatus;
+	private Date 			createdAt;
+	private String 			text;
+	private TwitterUser 	user;
+	private List<String> 	mentions;
+	
 	
 	public TwitterStatus(Status s){
-		myStatus = s;
+		this.createdAt 	= s.getCreatedAt();
+		this.text 		= s.getText();
+		this.user 		= new TwitterUser(s.getUser());
+		this.mentions 	= s.getMentions();
 	}
 	
 	public String getText(){
-		return myStatus.getText();
+		return text;
 	}
 	
 	public Date getCreatedAt(){
-		return myStatus.getCreatedAt();
+		return createdAt;
 	}
 	
 	public TwitterUser getUser(){
-		return new TwitterUser(myStatus.getUser());
+		return user;
 	}
 	
-	// This might nog work properly
 	public List<String> getMentions(){
-		return myStatus.getMentions();
+		return mentions;
 	}
 }

@@ -5,30 +5,39 @@ import java.util.Date;
 import winterwell.jtwitter.Twitter.Message;
 
 public class TwitterMessage {
-	private Message myMessage;
+	private Date 			createdAt;
+	private TwitterUser 	recipient;
+	private TwitterUser 	sender;
+	private String 			text;
+	private TwitterUser 	user;
+	
 	
 	public TwitterMessage(Message m){
-		myMessage = m;
+		this.createdAt 	= m.getCreatedAt();
+		this.recipient	= new TwitterUser(m.getRecipient());
+		this.text 		= m.getText();
+		this.user 		= new TwitterUser(m.getUser());
+		this.sender 	= new TwitterUser(m.getSender());
 	}
 	
 	public Date getCreatedAt(){
-		return myMessage.getCreatedAt();
+		return createdAt;
 	}
 	
 	public TwitterUser getRecipient(){
-		return new TwitterUser(myMessage.getRecipient());
+		return recipient;
 	}
 	
 	public TwitterUser getSender(){
-		return new TwitterUser(myMessage.getSender());
+		return sender;
 	}
 	
 	public String getText(){
-		return myMessage.getText();
+		return text;
 	}
 	
 	public TwitterUser getUser(){
-		return new TwitterUser(myMessage.getUser());
+		return user;
 	}
 	
 }

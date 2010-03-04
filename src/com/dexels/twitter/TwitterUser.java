@@ -5,74 +5,102 @@ import java.net.URI;
 import winterwell.jtwitter.Twitter.User;
 
 public class TwitterUser {
-	private User myUser;
+	private String 			screenName;
+	private String 			createdAt;
+	private String 			description;
+	private int 			favoritesCount;
+	private int 			followersCount;
+	private int 			friendsCount;
+	private String 			location;
+	private String 			name;
+	private URI 			profileImageUrl;
+	private boolean 		protectedUser;
+	private TwitterStatus 	status;
+	private int 			statusesCount;
+	private String 			timezone;
+	private int 			timezoneOffset;
+	private URI 			websiteUrl;
 	
 	public TwitterUser(User u){
-		myUser = u;
+		this.screenName			= u.getScreenName();
+		this.createdAt			= u.getCreatedAt();
+		this.description		= u.getDescription();
+		this.favoritesCount		= u.getFavoritesCount();
+		this.followersCount		= u.getFollowersCount();
+		this.friendsCount		= u.getFriendsCount();
+		this.location			= u.getLocation();
+		this.name				= u.getName();
+		this.profileImageUrl	= u.getProfileImageUrl();
+		this.protectedUser		= u.getProtectedUser();
+		this.status				= new TwitterStatus(u.getStatus());
+		this.statusesCount		= u.getStatusesCount();
+		this.timezone			= u.getTimezone();
+		this.timezoneOffset		= u.getTimezoneOffSet();
+		this.websiteUrl			= u.getWebsite();
 	}
 
 	public TwitterStatus getStatus(){
-		return new TwitterStatus(myUser.getStatus());
+		return status;
 	}
 	
 	public String getScreenName(){
-		return myUser.getScreenName();
+		return screenName;
 	}
 	
 	public String getCreatedAt(){
-		return myUser.getCreatedAt();
+		return createdAt;
 	}
 	
 	public String getDescription(){
-		return myUser.getDescription();
+		return description;
 	}
 	
 	public int getFavoritesCount(){
-		return myUser.getFavoritesCount();
+		return favoritesCount;
 	}
 	
 	public int getFollowersCount(){
-		return myUser.getFollowersCount();
+		return followersCount;
 	}
 	
-	public int getFriedsCount(){
-		return myUser.getFriendsCount();
+	public int getFriendsCount(){
+		return friendsCount;
 	}
 	
 	public String getLocation(){
-		return myUser.getLocation();
+		return location;
 	}
 	
 	public String getName(){
-		return myUser.getName();
+		return name;
 	}
 	
 	public String getProfileImageUrl(){
-		if(myUser.getProfileImageUrl() != null){
-			return myUser.getProfileImageUrl().toString();
+		if(profileImageUrl != null){
+			return profileImageUrl.toString();
 		}
 		return null;
 	}
 	
 	public boolean getProtectedUser(){
-		return myUser.getProtectedUser();
+		return protectedUser;
 	}
 	
 	public int getStatusesCount(){
-		return myUser.getStatusesCount();
+		return statusesCount;
 	}
 	
 	public String getTimezone(){
-		return myUser.getTimezone();
+		return timezone;
 	}
 	
 	public int getTimezoneOffset(){
-		return myUser.getTimezoneOffSet();
+		return timezoneOffset;
 	}
 	
 	public String getWebsiteUrl(){
-		if(myUser.getWebsite() != null){
-			return myUser.getWebsite().toString();
+		if(websiteUrl != null){
+			return websiteUrl.toString();
 		}
 		return null;
 	}

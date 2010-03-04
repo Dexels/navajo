@@ -15,10 +15,16 @@ public class TwitterAdapter {
 
 	public void setUsername(String username) {
 		this.username = username;
+		if(password != null){
+			twit = new Twitter(username, password);
+		}
 	}
 
 	public void setPassword(String password) {
 		this.password = password;
+		if(username != null){
+			twit = new Twitter(username, password);
+		}
 	}
 	
 	public void setCurrentUser(String userName){
@@ -45,9 +51,6 @@ public class TwitterAdapter {
 			String statusText = status;
 			if (statusText.length() > 140) {
 				statusText = statusText.substring(0, 140);
-			}
-			if (twit == null) {
-				twit = new Twitter(username, password);
 			}
 			twit.setSource("Navajo Integrator");
 			twit.updateStatus(statusText);
