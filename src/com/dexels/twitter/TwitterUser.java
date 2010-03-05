@@ -22,6 +22,14 @@ public class TwitterUser {
 	private URI 			websiteUrl;
 	
 	public TwitterUser(User u){
+		setProperties(u, null);
+	}
+
+	public TwitterUser(User u, TwitterStatus s){
+		setProperties(u, s);
+	}
+	
+	private void setProperties(User u, TwitterStatus s){
 		this.screenName			= u.getScreenName();
 		this.createdAt			= u.getCreatedAt();
 		this.description		= u.getDescription();
@@ -32,13 +40,17 @@ public class TwitterUser {
 		this.name				= u.getName();
 		this.profileImageUrl	= u.getProfileImageUrl();
 		this.protectedUser		= u.getProtectedUser();
-		this.status				= new TwitterStatus(u.getStatus());
+		if(s == null && u.getStatus() != null){
+			this.status				= new TwitterStatus(u.getStatus(), this);
+		} else {
+			this.status = s;
+		}
 		this.statusesCount		= u.getStatusesCount();
 		this.timezone			= u.getTimezone();
 		this.timezoneOffset		= u.getTimezoneOffSet();
 		this.websiteUrl			= u.getWebsite();
 	}
-
+	
 	public TwitterStatus getStatus(){
 		return status;
 	}

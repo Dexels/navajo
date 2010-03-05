@@ -13,9 +13,21 @@ public class TwitterStatus {
 	
 	
 	public TwitterStatus(Status s){
+		setProperties(s, null);
+	}
+	
+	public TwitterStatus(Status s, TwitterUser u){
+		setProperties(s, u);
+	}
+	
+	private void setProperties(Status s, TwitterUser u){
 		this.createdAt 	= s.getCreatedAt();
 		this.text 		= s.getText();
-		this.user 		= new TwitterUser(s.getUser());
+		if(u == null && s.getUser() != null){
+			this.user 		= new TwitterUser(s.getUser(), this);
+		} else {
+			this.user = u;
+		}
 		this.mentions 	= s.getMentions();
 	}
 	

@@ -10,7 +10,7 @@ import winterwell.jtwitter.Twitter.User;
 
 public class TwitterAdapter {
 	private Twitter twit;
-	private String username, password;
+	private String username, password, status;
 	private String currentUser;
 
 	public void setUsername(String username) {
@@ -54,6 +54,14 @@ public class TwitterAdapter {
 			}
 			twit.setSource("Navajo Integrator");
 			twit.updateStatus(statusText);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void setStatus(Object status) {
+		try {
+			setStatus(status.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
