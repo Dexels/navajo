@@ -1616,10 +1616,11 @@ public void setServers(String[] servers) {
 		currentServerIndex = randomize.nextInt(servers.length);
 		System.err.println("Starting at server # "+currentServerIndex);
 	}
-	if ( loadBalancingMode != LBMODE_MANUAL ) {
-		determineServerLoadsAndSetCurrentServer(true);
-		ping();
-	}
+	System.err.println("servers = " + servers + ", loadBalancingMode = " + loadBalancingMode);
+//	if ( loadBalancingMode != LBMODE_MANUAL ) {
+//		determineServerLoadsAndSetCurrentServer(true);
+//		ping();
+//	}
 }
 
 public String getCurrentHost() {
