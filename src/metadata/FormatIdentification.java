@@ -128,4 +128,14 @@ public class FormatIdentification implements Serializable
 		}
 	}
 
+	
+	public static void main(String[] args) {
+		FormatIdentification.init();
+		FormatDescription sd = FormatIdentification.identify(new File("birtreport.xml"));
+		System.err.println("Result: "+sd);
+		 sd = FormatIdentification.identify(new File("aap.xml"));
+		System.err.println("Result: "+sd);
+		 sd = FormatIdentification.identify(new File("birtexcel.xml"));
+			System.err.println("Result: "+sd);
+	}
 }
