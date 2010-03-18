@@ -643,7 +643,8 @@ public class NavajoClient implements ClientInterface {
     	BufferedWriter os = null;
     	try {
     		os = new BufferedWriter(new OutputStreamWriter(con.getOutputStream(), "UTF-8"));
-    		d.write(os, condensed, d.getHeader().getRPCName());    	
+    		os.write("apenootjes");
+    		//d.write(os, condensed, d.getHeader().getRPCName());    	
     	} finally {
     		if ( os != null ) {
     			try {
@@ -743,204 +744,209 @@ public class NavajoClient implements ClientInterface {
 
     // ============ compared services ===================
 
-    if (!hasComparedServiceChanged(method, out)) {
-      try {
-        System.err.println("-------------------------------------------------->> Ignoring incoming request! <------------------------");
-        NavajoFactory nf = NavajoFactory.getInstance();
-        Navajo n = nf.createNavajo();
-        Message m = nf.createMessage(n, "Info");
-        Property p = nf.createProperty(n, "Message", "string", "Ignored unchanged input", 50, "", "out");
-        m.addProperty(p);
-        n.addMessage(m);
-        return n;
-      }
-      catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
+	  /**
+	   * Make sure that same Navajo is not used simultaneously.
+	   */
+	  synchronized (out) {
+		  if (!hasComparedServiceChanged(method, out)) {
+			  try {
+				  System.err.println("-------------------------------------------------->> Ignoring incoming request! <------------------------");
+				  NavajoFactory nf = NavajoFactory.getInstance();
+				  Navajo n = nf.createNavajo();
+				  Message m = nf.createMessage(n, "Info");
+				  Property p = nf.createProperty(n, "Message", "string", "Ignored unchanged input", 50, "", "out");
+				  m.addProperty(p);
+				  n.addMessage(m);
+				  return n;
+			  }
+			  catch (Exception e) {
+				  e.printStackTrace();
+			  }
+		  }
 
-    //====================================================
+		  //====================================================
 
-    String cacheKey = "";
+		  String cacheKey = "";
 
-    if (cachedServiceNameMap.contains(method)) {
-      cacheKey = method + out.persistenceKey();
-      if (serviceCache.get(cacheKey) != null) {
-        //System.err.println("---------------------------------------------> Returning cached WS");
-        Navajo cached = serviceCache.get(cacheKey);
-        return cached.copy();
-      }
-    }
-    fireActivityChanged(true, method, getQueueSize(), getActiveThreads(), 0);
-    Header header = out.getHeader();
-    String callingService = null;
-    if (header == null) {
-      header = NavajoFactory.getInstance().createHeader(out, method, user, password, expirationInterval );
-      out.addHeader(header);
-    } else {
-      callingService = header.getRPCName();
-      header.setRPCName(method);
-      header.setRPCUser(user);
-      header.setRPCPassword(password);
-      header.setExpirationInterval(expirationInterval);
-    }
-    // ALWAY SET REQUEST ID AT THIS POINT.
-    header.setRequestId( Guid.create() );
-    header.setHeaderAttribute("clientToken", getSessionToken());
-    header.setHeaderAttribute("clientInfo", SystemInfo.getSystemInfo().toString());
-    // ========= Adding globalMessages
-    Iterator<Entry<String,Message>> entries = globalMessages.entrySet().iterator();
-    while (entries.hasNext()) {
-    	Entry<String,Message> entry = entries.next();
-      Message global = entry.getValue();
-      try {
-        out.addMessage(global);
-      }
-      catch (Exception e) {
-        e.printStackTrace();
-        System.err.println("Could not add globals, proceeding");
-      }
-    }
+		  if (cachedServiceNameMap.contains(method)) {
+			  cacheKey = method + out.persistenceKey();
+			  if (serviceCache.get(cacheKey) != null) {
+				  //System.err.println("---------------------------------------------> Returning cached WS");
+				  Navajo cached = serviceCache.get(cacheKey);
+				  return cached.copy();
+			  }
+		  }
+		  fireActivityChanged(true, method, getQueueSize(), getActiveThreads(), 0);
+		  Header header = out.getHeader();
+		  String callingService = null;
+		  if (header == null) {
+			  header = NavajoFactory.getInstance().createHeader(out, method, user, password, expirationInterval );
+			  out.addHeader(header);
+		  } else {
+			  callingService = header.getRPCName();
+			  header.setRPCName(method);
+			  header.setRPCUser(user);
+			  header.setRPCPassword(password);
+			  header.setExpirationInterval(expirationInterval);
+		  }
+		  // ALWAY SET REQUEST ID AT THIS POINT.
+		  header.setRequestId( Guid.create() );
+		  header.setHeaderAttribute("clientToken", getSessionToken());
+		  header.setHeaderAttribute("clientInfo", SystemInfo.getSystemInfo().toString());
+		  // ========= Adding globalMessages
+		  Iterator<Entry<String,Message>> entries = globalMessages.entrySet().iterator();
+		  while (entries.hasNext()) {
+			  Entry<String,Message> entry = entries.next();
+			  Message global = entry.getValue();
+			  try {
+				  out.addMessage(global);
+			  }
+			  catch (Exception e) {
+				  e.printStackTrace();
+				  System.err.println("Could not add globals, proceeding");
+			  }
+		  }
 
-    long clientTime = 0;
-    try {
+		  long clientTime = 0;
+		  try {
 
-      if (protocol == HTTP_PROTOCOL) {
-         if (out.getHeader()!=null) {
-			processPiggybackData(out.getHeader());
-		}
-    
-        //==================================================================
-    	// set the locale
-    	// ==============================================
-    	 if (localeCode!=null) {
-        	 out.getHeader().setHeaderAttribute("locale", localeCode);
-		}
-         //==================================================================
-     	// set the sublocale
-     	// ==============================================
-     	 if (subLocale!=null) {
-         	 out.getHeader().setHeaderAttribute("sublocale", subLocale);
- 		}
-     	 
-    	 
-        Navajo n = null;
-       
-        long timeStamp = System.currentTimeMillis();
-        
-        try {	
-        	n = doTransaction(server, out, useCompression, allowPreparseProxy);
-        	if ( n == null ) {
-        		throw new Exception("Empty Navajo received");
-        	}
-        }
-        catch (javax.net.ssl.SSLException ex) {
-          n = NavajoFactory.getInstance().createNavajo();
-          generateConnectionError(n, 666666, "Wrong certificate or ssl connection problem: " + ex.getMessage());
-        }
-        catch (java.net.UnknownHostException uhe) {
-          n = NavajoFactory.getInstance().createNavajo();
-          generateConnectionError(n, 7777777, "Unknown host: " + uhe.getMessage());
-        }
-        catch (java.net.NoRouteToHostException uhe) {
-          n = NavajoFactory.getInstance().createNavajo();
-          generateConnectionError(n, 55555, "No route to host: " + uhe.getMessage());
-        }
-        catch (java.net.SocketException uhe) {
-          if ( retryAttempts == 0 ) {
-        	  throw uhe;
-          }
-          Navajo n2 = NavajoFactory.getInstance().createNavajo();
-          n = retryTransaction(server, out, useCompression, allowPreparseProxy, retryAttempts, retryInterval, n2); // lees uit resource
-          if (n != null) {
-             
-              //System.err.println("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getHeaderAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
-              n.getHeader().setHeaderAttribute("sourceScript", callingService);
-          } else {
-        	  n = n2;
-          }
-        }
-        catch (IOException uhe) {
-        	//uhe.printStackTrace();
-        	//readErrorStream(myCon);
-          if ( retryAttempts == 0 ) {
-        	  throw uhe;
-          }
-          System.err.println("Generic IOException: "+uhe.getMessage()+". Retrying without compression...");
-          Navajo n2 = NavajoFactory.getInstance().createNavajo();
-          n = retryTransaction(server, out, false, allowPreparseProxy, retryAttempts, retryInterval, n2); // lees uit resourc
-          if (n != null) {
-              //System.err.println("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getHeaderAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
-              n.getHeader().setHeaderAttribute("sourceScript", callingService);
-          } else {
-        	  n = n2;
-          }
-        } catch(Throwable r) {
-        	r.printStackTrace();
-        }
-        finally {
-        	 if ( n != null && n.getHeader()!=null) {
-                 n.getHeader().setHeaderAttribute("sourceScript", callingService);
-                 clientTime = (System.currentTimeMillis()-timeStamp);
-                 n.getHeader().setHeaderAttribute("clientTime", ""+clientTime);
-                 String tot = n.getHeader().getHeaderAttribute("serverTime");
-                 String loadStr = n.getHeader().getHeaderAttribute("cpuload");
-                 double load = -1.0;
-                 if ( loadStr != null ) {
-                	 try {
-                		 load = Double.parseDouble(loadStr);
-                		 for (int x = 0; x < serverUrls.length; x++) {
-                			 if ( serverUrls[x].equals(server) ) {
-                				 serverLoads[x] = load;
-                				 x = serverUrls.length + 1;
-                			 }
-                		 }
-                	 } catch (Throwable t) {}
-                 }
-                 long totalTime = -1;
-                 if (tot!=null&& !"".equals(tot)) {
-                 	totalTime = Long.parseLong(tot);
-                 	n.getHeader().setHeaderAttribute("transferTime",""+(clientTime-totalTime));
- 				} 
-                 Map<String,String> headerAttributes = n.getHeader().getHeaderAttributes();
-                 Map<String,String> pbd = new HashMap<String,String>(headerAttributes);
-                 pbd.put("type","performanceStats");
-                 pbd.put("service",method);
-                 synchronized (piggyBackData) {
-                 	piggyBackData.add(pbd);
-					}
-//                 System.err.println(method+": totaltime = " + ( clientTime / 1000.0 )+ ", servertime = " + ( totalTime / 1000.0 )+" transfertime = "+((clientTime-totalTime)/1000)+" piggybackdata: "+piggyBackData.size()); 
-				} else {
-					System.err.println("Null header in input message");
-				}
-        }
+			  if (protocol == HTTP_PROTOCOL) {
+				  if (out.getHeader()!=null) {
+					  processPiggybackData(out.getHeader());
+				  }
 
-        if (myResponder != null) {
-          myResponder.check(n);
-          myResponder.checkForAuthentication(n);
-          myResponder.checkForAuthorization(n);
-        }
-        fireActivityChanged(false, method, getQueueSize(), getActiveThreads(), 0);
+				  //==================================================================
+				  // set the locale
+				  // ==============================================
+				  if (localeCode!=null) {
+					  out.getHeader().setHeaderAttribute("locale", localeCode);
+				  }
+				  //==================================================================
+				  // set the sublocale
+				  // ==============================================
+				  if (subLocale!=null) {
+					  out.getHeader().setHeaderAttribute("sublocale", subLocale);
+				  }
 
-        if (cachedServiceNameMap.contains(method)) {
-          serviceCache.put(cacheKey, n);
-        }
-        checkForComparedServices(method, n);
-        
-        // Process broadcasts
-        fireBroadcastEvents(n);
-            
-        return n;
-      }
-      else {
-        throw new ClientException( -1, -1, "Unknown protocol: " + protocol);
-      }
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-      fireActivityChanged(false, method, getQueueSize(), getActiveThreads(), 0);
-      throw new ClientException( -1, -1, e.getMessage());
-    }
+
+				  Navajo n = null;
+
+				  long timeStamp = System.currentTimeMillis();
+
+				  try {	
+					  n = doTransaction(server, out, useCompression, allowPreparseProxy);
+					  if ( n == null ) {
+						  throw new Exception("Empty Navajo received");
+					  }
+				  }
+				  catch (javax.net.ssl.SSLException ex) {
+					  n = NavajoFactory.getInstance().createNavajo();
+					  generateConnectionError(n, 666666, "Wrong certificate or ssl connection problem: " + ex.getMessage());
+				  }
+				  catch (java.net.UnknownHostException uhe) {
+					  n = NavajoFactory.getInstance().createNavajo();
+					  generateConnectionError(n, 7777777, "Unknown host: " + uhe.getMessage());
+				  }
+				  catch (java.net.NoRouteToHostException uhe) {
+					  n = NavajoFactory.getInstance().createNavajo();
+					  generateConnectionError(n, 55555, "No route to host: " + uhe.getMessage());
+				  }
+				  catch (java.net.SocketException uhe) {
+					  if ( retryAttempts == 0 ) {
+						  throw uhe;
+					  }
+					  Navajo n2 = NavajoFactory.getInstance().createNavajo();
+					  n = retryTransaction(server, out, useCompression, allowPreparseProxy, retryAttempts, retryInterval, n2); // lees uit resource
+					  if (n != null) {
+
+						  //System.err.println("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getHeaderAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
+						  n.getHeader().setHeaderAttribute("sourceScript", callingService);
+					  } else {
+						  n = n2;
+					  }
+				  }
+				  catch (IOException uhe) {
+					  //uhe.printStackTrace();
+					  //readErrorStream(myCon);
+					  if ( retryAttempts == 0 ) {
+						  throw uhe;
+					  }
+					  System.err.println("Generic IOException: "+uhe.getMessage()+". Retrying without compression...");
+					  Navajo n2 = NavajoFactory.getInstance().createNavajo();
+					  n = retryTransaction(server, out, false, allowPreparseProxy, retryAttempts, retryInterval, n2); // lees uit resourc
+					  if (n != null) {
+						  //System.err.println("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getHeaderAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
+						  n.getHeader().setHeaderAttribute("sourceScript", callingService);
+					  } else {
+						  n = n2;
+					  }
+				  } catch(Throwable r) {
+					  r.printStackTrace();
+				  }
+				  finally {
+					  if ( n != null && n.getHeader()!=null) {
+						  n.getHeader().setHeaderAttribute("sourceScript", callingService);
+						  clientTime = (System.currentTimeMillis()-timeStamp);
+						  n.getHeader().setHeaderAttribute("clientTime", ""+clientTime);
+						  String tot = n.getHeader().getHeaderAttribute("serverTime");
+						  String loadStr = n.getHeader().getHeaderAttribute("cpuload");
+						  double load = -1.0;
+						  if ( loadStr != null ) {
+							  try {
+								  load = Double.parseDouble(loadStr);
+								  for (int x = 0; x < serverUrls.length; x++) {
+									  if ( serverUrls[x].equals(server) ) {
+										  serverLoads[x] = load;
+										  x = serverUrls.length + 1;
+									  }
+								  }
+							  } catch (Throwable t) {}
+						  }
+						  long totalTime = -1;
+						  if (tot!=null&& !"".equals(tot)) {
+							  totalTime = Long.parseLong(tot);
+							  n.getHeader().setHeaderAttribute("transferTime",""+(clientTime-totalTime));
+						  } 
+						  Map<String,String> headerAttributes = n.getHeader().getHeaderAttributes();
+						  Map<String,String> pbd = new HashMap<String,String>(headerAttributes);
+						  pbd.put("type","performanceStats");
+						  pbd.put("service",method);
+						  synchronized (piggyBackData) {
+							  piggyBackData.add(pbd);
+						  }
+						  //                 System.err.println(method+": totaltime = " + ( clientTime / 1000.0 )+ ", servertime = " + ( totalTime / 1000.0 )+" transfertime = "+((clientTime-totalTime)/1000)+" piggybackdata: "+piggyBackData.size()); 
+					  } else {
+						  System.err.println("Null header in input message");
+					  }
+				  }
+
+				  if (myResponder != null) {
+					  myResponder.check(n);
+					  myResponder.checkForAuthentication(n);
+					  myResponder.checkForAuthorization(n);
+				  }
+				  fireActivityChanged(false, method, getQueueSize(), getActiveThreads(), 0);
+
+				  if (cachedServiceNameMap.contains(method)) {
+					  serviceCache.put(cacheKey, n);
+				  }
+				  checkForComparedServices(method, n);
+
+				  // Process broadcasts
+				  fireBroadcastEvents(n);
+
+				  return n;
+			  }
+			  else {
+				  throw new ClientException( -1, -1, "Unknown protocol: " + protocol);
+			  }
+		  }
+		  catch (Exception e) {
+			  e.printStackTrace();
+			  fireActivityChanged(false, method, getQueueSize(), getActiveThreads(), 0);
+			  throw new ClientException( -1, -1, e.getMessage());
+		  }
+	  }
   }
 
   protected boolean shouldOutputStreamClose() {
@@ -1543,10 +1549,7 @@ private final Navajo retryTransaction(String server, Navajo out, boolean useComp
 				+ (System.currentTimeMillis());
 	}
   
-  public static void main(String[] args) throws Exception {
-	  
-	
-  }
+ 
 
 public void destroy() {
 		
@@ -1982,6 +1985,13 @@ public final void switchServer(boolean force) {
 			e.printStackTrace();
 			System.err.println("Error loading push implementation. Disabling push");
 		}
+		
+	}
+	
+	public static void main(String [] args) throws Exception {
+		NavajoClient nc = new NavajoClient();
+		nc.setServerUrl("penelope1.dexels.com/sportlink/knvb/servlet/Postman");
+		nc.doTransaction("penelope1.dexels.com/sportlink/knvb/servlet/Postman", NavajoFactory.getInstance().createNavajo(), false, false);
 		
 	}
 }
