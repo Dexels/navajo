@@ -8,6 +8,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
@@ -21,6 +22,7 @@ public class GenericFieldMap implements Mappable {
 	public String valueColumn = "fieldvalue";
 	public Object singleValue;
 	public String table;
+	public String codeTable;
 	public Object parameter;
 	public String parameterName;
 	public Object parameterValue;
@@ -88,6 +90,10 @@ public class GenericFieldMap implements Mappable {
 	
 	public void setTable(String table){
 		this.table = table;
+	}
+	
+	public void setCodeTable(String codeTable){
+		this.codeTable = codeTable;
 	}
 	
 	public void setTransactionContext(int context) throws UserException{
@@ -198,16 +204,51 @@ public class GenericFieldMap implements Mappable {
 		}
 	}
 	
-	private void appendProperty(String id, String name, Object value, String type) throws UserException{
+	private void appendProperty(String id, String name, Object value, String storedType) throws UserException{
 		try{
+			String type = storedType.toLowerCase();
 			String sVal = "";
 			if(value != null){
 				sVal = value.toString();
 			}
-			Property p = NavajoFactory.getInstance().createProperty(currentOutputMessage.getRootDoc(), "GF_" + id, type, sVal, 1024, name, Property.DIR_IN);
-			currentOutputMessage.addProperty(p);
+			
+			// Correct to true/false if sVal 1/0
+			if("boolean".equalsIgnoreCase(type) && ("1".equals(sVal) || "0".equals(sVal))){
+				sVal = ("1".equals(sVal)? "true":"false");
+			}
+			
+			// if selection, the value is the selected option, get the rest opf the options too.
+			if("selection".equalsIgnoreCase(type)){
+				Property p = constructSelectionProperty(id, name, sVal);
+				currentOutputMessage.addProperty(p);
+			}else{
+				Property p = NavajoFactory.getInstance().createProperty(currentOutputMessage.getRootDoc(), "GF_" + id, type, sVal, 1024, name, Property.DIR_IN);
+				currentOutputMessage.addProperty(p);
+			}			
 		}catch(NavajoException e){
 			throw new UserException(1200, e.getMessage());
 		}		
+	}
+	
+	private Property constructSelectionProperty(String id, String name, String selectedValue) throws UserException{		
+		try{
+			Property p = NavajoFactory.getInstance().createProperty(currentOutputMessage.getRootDoc(), "GF_" + id, "1", name, Property.DIR_IN);
+			
+			String query = "SELECT code, description FROM " + codeTable + " WHERE fieldid = ?";
+			sql.setQuery(query);		
+			sql.setParameter(id);
+			ResultSetMap[] result = sql.getResultSet();
+			for(int i=0;i<result.length;i++){
+				ResultSetMap m = result[i];
+				String selectionValue = (String) m.getColumnValue("code"); 
+				String selectionName =  (String) m.getColumnValue("description");
+				boolean selected = selectedValue.equals(selectionValue);
+				Selection sel = NavajoFactory.getInstance().createSelection(currentOutputMessage.getRootDoc(), selectionName, selectionValue, selected);
+				p.addSelection(sel);				
+			}
+			return p;		
+		}catch(Exception e){
+			throw new UserException(1200, e.getMessage());
+		}
 	}
 }
