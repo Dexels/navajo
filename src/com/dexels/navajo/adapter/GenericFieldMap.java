@@ -1,5 +1,6 @@
 package com.dexels.navajo.adapter;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
@@ -37,6 +38,7 @@ public class GenericFieldMap implements Mappable {
 	public String currentInputMessage;
 	private ArrayList<Object[]> updateParameters = new ArrayList<Object[]>();
 	private Navajo inDoc;
+	private SimpleDateFormat navajoDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 	public void kill() {
 		sql.kill();
@@ -183,6 +185,9 @@ public class GenericFieldMap implements Mappable {
 							} catch (NavajoException e) {
 								throw new UserException(1200, e.getMessage());
 							}
+						} else if(allProps.get(i).getType().equals("date")){
+							String dateString = navajoDateFormat.format(allProps.get(i).getTypedValue());
+							sql.setParameter(dateString);
 						} else {
 							sql.setParameter(allProps.get(i).getTypedValue());
 						}
@@ -207,13 +212,20 @@ public class GenericFieldMap implements Mappable {
 
 						// clocktime bypass
 						if (allProps.get(i).getType().equals("clocktime")) {
-							sql.setParameter(allProps.get(i).getTypedValue().toString());
+							if(allProps.get(i).getTypedValue() != null){
+								sql.setParameter(allProps.get(i).getTypedValue().toString());
+							}else{
+								sql.setParameter(null);
+							}
 						} else if (allProps.get(i).getType().equals("selection")) {
 							try {
 								sql.setParameter(allProps.get(i).getSelected().getValue());
 							} catch (NavajoException e) {
 								throw new UserException(1200, e.getMessage());
 							}
+						} else if(allProps.get(i).getType().equals("date")){
+							String dateString = navajoDateFormat.format(allProps.get(i).getTypedValue());
+							sql.setParameter(dateString);
 						} else {
 							sql.setParameter(allProps.get(i).getTypedValue());
 						}
