@@ -9,6 +9,7 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
@@ -36,9 +37,8 @@ public class GenericFieldMap implements Mappable {
 	public String currentInputMessage;
 	private ArrayList<Object[]> updateParameters = new ArrayList<Object[]>();
 	private Navajo inDoc;
-	
-		
-	public void kill() {	
+
+	public void kill() {
 		sql.kill();
 	}
 
@@ -51,204 +51,226 @@ public class GenericFieldMap implements Mappable {
 	}
 
 	public void store() throws MappableException, UserException {
-		// TODO Auto-generated method stub		
+		// TODO Auto-generated method stub
 		sql.store();
 	}
-	
+
 	// The result must hold four columns: id, name, value, type
-	public void setQuery(String query) throws UserException{
+	public void setQuery(String query) throws UserException {
 		this.query = query;
 		sql.setQuery(query);
 	}
-	
-	public void setUpdate(String update) throws UserException{
-		this.update = update;	
+
+	public void setUpdate(String update) throws UserException {
+		this.update = update;
 		sql.setUpdate(update);
 	}
-	
-	public void setPrimaryKey(String primaryKey){
+
+	public void setPrimaryKey(String primaryKey) {
 		this.primaryKey = primaryKey;
 	}
-	
-	public void setValueColumn(String valueColumn){
+
+	public void setValueColumn(String valueColumn) {
 		this.valueColumn = valueColumn;
 	}
-	
-	public void setPropertyPrefix(String propertyPrefix){
+
+	public void setPropertyPrefix(String propertyPrefix) {
 		this.propertyPrefix = propertyPrefix;
 	}
-	
-	public void setParameter(Object parameter) throws UserException{
-		this.parameter=  parameter;
+
+	public void setParameter(Object parameter) throws UserException {
+		this.parameter = parameter;
 		sql.setParameter(parameter);
-	}	
-	
-	public void setDatasource(String datasource){
+	}
+
+	public void setDatasource(String datasource) {
 		this.datasource = datasource;
 		sql.setDatasource(datasource);
 	}
-	
-	public void setTable(String table){
+
+	public void setTable(String table) {
 		this.table = table;
 	}
-	
-	public void setCodeTable(String codeTable){
+
+	public void setCodeTable(String codeTable) {
 		this.codeTable = codeTable;
 	}
-	
-	public void setTransactionContext(int context) throws UserException{
+
+	public void setTransactionContext(int context) throws UserException {
 		sql.setTransactionContext(context);
 	}
-	
-	public void setCurrentInputMessage(String path){
+
+	public void setCurrentInputMessage(String path) {
 		this.currentInputMessage = path;
 		inputMessage = inDoc.getMessage(path);
 	}
-	
-	public void setDoQuery(boolean b) throws UserException{
-		if(b){
+
+	public void setDoQuery(boolean b) throws UserException {
+		if (b) {
 			ResultSetMap[] result = sql.getResultSet();
-			if(result.length > 0){
-				for(int i=0;i<result.length;i++){
+			if (result.length > 0) {
+				for (int i = 0; i < result.length; i++) {
 					Object id = result[i].getColumnValue("id");
 					Object name = result[i].getColumnValue("name");
 					Object value = result[i].getColumnValue("value");
 					Object type = result[i].getColumnValue("type");
 					appendProperty(id.toString(), name.toString(), value, type.toString());
-				}				
-			}			
-		}		
+				}
+			}
+		}
 	}
-	
-	public Object getSingleValue() throws UserException{
-		if(query != null){
+
+	public Object getSingleValue() throws UserException {
+		if (query != null) {
 			ResultSetMap[] result = sql.getResultSet();
-			if(result.length > 0){
+			if (result.length > 0) {
 				return result[0].getColumnValue(0);
 			}
 		}
 		return null;
 	}
 
-	public void setParameterName(String paramName){
+	public void setParameterName(String paramName) {
 		this.parameterName = paramName;
 	}
-	
-	public void setParameterValue(Object paramValue){
+
+	public void setParameterValue(Object paramValue) {
 		this.parameterValue = paramValue;
-		updateParameters.add(new Object[]{parameterName, parameterValue});		
+		updateParameters.add(new Object[] { parameterName, parameterValue });
 	}
-	
-	public void setDoUpdate(boolean b) throws UserException{
-		if(currentInputMessage != null && table != null){		
-			
+
+	public void setDoUpdate(boolean b) throws UserException {
+		if (currentInputMessage != null && table != null) {
+
 			String checkQuery = "SELECT COUNT(" + primaryKey + ") FROM " + table + " WHERE " + primaryKey + " = ?";
-			for(int i=0;i<updateParameters.size();i++){
+			for (int i = 0; i < updateParameters.size(); i++) {
 				checkQuery = checkQuery + " AND " + updateParameters.get(i)[0].toString() + " = ?";
-			}			
-			
+			}
+
 			ArrayList<Property> allProps = inputMessage.getAllProperties();
-			for(int i=0;i<allProps.size();i++){
-				if(allProps.get(i).getName().startsWith(propertyPrefix)){
+			for (int i = 0; i < allProps.size(); i++) {
+				if (allProps.get(i).getName().startsWith(propertyPrefix)) {
 					String operation = "update";
 					String propName = allProps.get(i).getName();
 					String strVal = propName.substring(propertyPrefix.length());
-					
+
 					sql.setQuery(checkQuery);
-					
-					sql.setParameter(strVal);					
-					for(int j=0;j<updateParameters.size();j++){
+
+					sql.setParameter(strVal);
+					for (int j = 0; j < updateParameters.size(); j++) {
 						sql.setParameter(updateParameters.get(j)[1]);
 					}
-					
+
 					Object result = getSingleValue();
-					if(result != null && result instanceof Integer){
-						if(((Integer)result).intValue() == 0){
+					if (result != null && result instanceof Integer) {
+						if (((Integer) result).intValue() == 0) {
 							operation = "insert";
 						}
 					}
-					
-					if("update".equals(operation)){
+
+					if ("update".equals(operation)) {
 						String updateQuery = "UPDATE " + table + " SET " + valueColumn + " = ? WHERE " + primaryKey + " = ?";
-						for(int k=0;k<updateParameters.size();k++){
+						for (int k = 0; k < updateParameters.size(); k++) {
 							updateQuery = updateQuery + " AND " + updateParameters.get(k)[0].toString() + " = ?";
 						}
 						sql.setUpdate(updateQuery);
-						sql.setParameter(allProps.get(i).getTypedValue());
-						sql.setParameter(strVal);					
-						for(int j=0;j<updateParameters.size();j++){
+						if (allProps.get(i).getType().equals("clocktime")) {
+							sql.setParameter(allProps.get(i).getTypedValue().toString());
+						} else{
+							sql.setParameter(allProps.get(i).getTypedValue());
+						}
+						sql.setParameter(strVal);
+						for (int j = 0; j < updateParameters.size(); j++) {
 							sql.setParameter(updateParameters.get(j)[1]);
 						}
-						sql.setDoUpdate(true);	
-						
-					}else{					
+						sql.setDoUpdate(true);
+
+					} else {
 						String insertQuery = "INSERT INTO " + table + " ( " + primaryKey + ", " + valueColumn;
-						for(int k=0;k<updateParameters.size();k++){
+						for (int k = 0; k < updateParameters.size(); k++) {
 							insertQuery = insertQuery + ", " + updateParameters.get(k)[0].toString();
 						}
 						insertQuery = insertQuery + ") VALUES (?, ?";
-						for(int k=0;k<updateParameters.size();k++){
+						for (int k = 0; k < updateParameters.size(); k++) {
 							insertQuery = insertQuery + ", ?";
 						}
 						insertQuery = insertQuery + ")";
 						sql.setUpdate(insertQuery);
-						sql.setParameter(strVal);		
-						sql.setParameter(allProps.get(i).getTypedValue());
-						for(int j=0;j<updateParameters.size();j++){
+						sql.setParameter(strVal);
+						
+						// clocktime bypass
+						if (allProps.get(i).getType().equals("clocktime")) {
+							sql.setParameter(allProps.get(i).getTypedValue().toString());
+						} else{
+							sql.setParameter(allProps.get(i).getTypedValue());
+						}
+						for (int j = 0; j < updateParameters.size(); j++) {
 							sql.setParameter(updateParameters.get(j)[1]);
 						}
-						sql.setDoUpdate(true);	
+						sql.setDoUpdate(true);
 					}
 				}
 			}
 		}
 	}
-	
-	private void appendProperty(String id, String name, Object value, String storedType) throws UserException{
-		try{
+
+	private void appendProperty(String id, String name, Object value, String storedType) throws UserException {
+		try {
 			String type = storedType.toLowerCase();
 			String sVal = "";
-			if(value != null){
+			if (value != null) {
 				sVal = value.toString();
 			}
-			
+
 			// Correct to true/false if sVal 1/0
-			if("boolean".equalsIgnoreCase(type) && ("1".equals(sVal) || "0".equals(sVal))){
-				sVal = ("1".equals(sVal)? "true":"false");
+			if ("boolean".equalsIgnoreCase(type) && ("1".equals(sVal) || "0".equals(sVal))) {
+				sVal = ("1".equals(sVal) ? "true" : "false");
 			}
-			
-			// if selection, the value is the selected option, get the rest opf the options too.
-			if("selection".equalsIgnoreCase(type)){
+
+			// if selection, the value is the selected option, get the rest opf
+			// the options too.
+			if ("selection".equalsIgnoreCase(type)) {
 				Property p = constructSelectionProperty(id, name, sVal);
 				currentOutputMessage.addProperty(p);
-			}else{
+			} else {
 				Property p = NavajoFactory.getInstance().createProperty(currentOutputMessage.getRootDoc(), "GF_" + id, type, sVal, 1024, name, Property.DIR_IN);
 				currentOutputMessage.addProperty(p);
-			}			
-		}catch(NavajoException e){
+			}
+		} catch (NavajoException e) {
 			throw new UserException(1200, e.getMessage());
-		}		
+		}
 	}
-	
-	private Property constructSelectionProperty(String id, String name, String selectedValue) throws UserException{		
-		try{
+
+	private Property constructSelectionProperty(String id, String name, String selectedValue) throws UserException {
+		try {
 			Property p = NavajoFactory.getInstance().createProperty(currentOutputMessage.getRootDoc(), "GF_" + id, "1", name, Property.DIR_IN);
-			
+
 			String query = "SELECT code, description FROM " + codeTable + " WHERE fieldid = ?";
-			sql.setQuery(query);		
+			sql.setQuery(query);
 			sql.setParameter(id);
 			ResultSetMap[] result = sql.getResultSet();
-			for(int i=0;i<result.length;i++){
+			for (int i = 0; i < result.length; i++) {
 				ResultSetMap m = result[i];
-				String selectionValue = (String) m.getColumnValue("code"); 
-				String selectionName =  (String) m.getColumnValue("description");
+				String selectionValue = (String) m.getColumnValue("code");
+				String selectionName = (String) m.getColumnValue("description");
 				boolean selected = selectedValue.equals(selectionValue);
 				Selection sel = NavajoFactory.getInstance().createSelection(currentOutputMessage.getRootDoc(), selectionName, selectionValue, selected);
-				p.addSelection(sel);				
+				p.addSelection(sel);
 			}
-			return p;		
-		}catch(Exception e){
+			return p;
+		} catch (Exception e) {
 			throw new UserException(1200, e.getMessage());
+		}
+	}
+
+	public static void main(String[] args) {
+		try {
+			ClockTime c = new ClockTime("12:00");
+			Property p = NavajoFactory.getInstance().createProperty(NavajoFactory.getInstance().createNavajo(), "test", "clocktime", "12:00", 12, "tijd", "out");
+
+			System.err.println("Clocktime: " + c.toString() + ", through property: " + p.getTypedValue());
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }
