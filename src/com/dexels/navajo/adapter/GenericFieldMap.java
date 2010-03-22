@@ -59,6 +59,7 @@ public class GenericFieldMap implements Mappable {
 	public void setQuery(String query) throws UserException {
 		this.query = query;
 		sql.setQuery(query);
+		System.err.println("Query: " + query);
 	}
 
 	public void setUpdate(String update) throws UserException {
@@ -176,7 +177,13 @@ public class GenericFieldMap implements Mappable {
 						sql.setUpdate(updateQuery);
 						if (allProps.get(i).getType().equals("clocktime")) {
 							sql.setParameter(allProps.get(i).getTypedValue().toString());
-						} else{
+						} else if (allProps.get(i).getType().equals("selection")) {
+							try {
+								sql.setParameter(allProps.get(i).getSelected().getValue());
+							} catch (NavajoException e) {
+								throw new UserException(1200, e.getMessage());
+							}
+						} else {
 							sql.setParameter(allProps.get(i).getTypedValue());
 						}
 						sql.setParameter(strVal);
@@ -197,11 +204,17 @@ public class GenericFieldMap implements Mappable {
 						insertQuery = insertQuery + ")";
 						sql.setUpdate(insertQuery);
 						sql.setParameter(strVal);
-						
+
 						// clocktime bypass
 						if (allProps.get(i).getType().equals("clocktime")) {
 							sql.setParameter(allProps.get(i).getTypedValue().toString());
-						} else{
+						} else if (allProps.get(i).getType().equals("selection")) {
+							try {
+								sql.setParameter(allProps.get(i).getSelected().getValue());
+							} catch (NavajoException e) {
+								throw new UserException(1200, e.getMessage());
+							}
+						} else {
 							sql.setParameter(allProps.get(i).getTypedValue());
 						}
 						for (int j = 0; j < updateParameters.size(); j++) {
