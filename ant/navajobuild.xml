@@ -417,6 +417,7 @@
 			<!-- Should not need this	<include name="compilelib/**"/>-->
 			</fileset>
 		</copy>
+		
       	 <copy todir="${work}/tmp/${ant.project.name}/lib">
 			<fileset dir="${deploydependencylib}">
 				<include name="*.jar"/>
