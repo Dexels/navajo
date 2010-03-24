@@ -65,6 +65,9 @@
 			<fileset dir="lib">
 				<include name="*.jar" />
 			</fileset>
+			<fileset dir=".">
+				<include name="${ant.project.name}.jar"/>
+			</fileset>
 		</copy>
 		<mkdir dir="${dist}/unsigned" />
 		<copy todir="${dist}/unsigned" verbose="true">
@@ -72,7 +75,7 @@
 				<include name="**" />
 			</fileset>
 		</copy>
-				<for list="${tipiDeployedDependencyJars}" delimiter="," param="currentjar">
+				<for list="${deployedDependencyJars}" delimiter="," param="currentjar">
 					<sequential>
 						<echo message="Current dep: @{currentjar}"/>
 
