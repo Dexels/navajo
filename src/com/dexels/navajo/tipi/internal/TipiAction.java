@@ -16,7 +16,7 @@ import com.dexels.navajo.tipi.TipiValue;
 import com.dexels.navajo.tipi.actions.TipiActionFactory;
 
 public abstract class TipiAction extends TipiAbstractExecutable  {
-	protected TipiContext myContext;
+//	protected TipiContext myContext;
 
 	protected TipiActionFactory myActionFactory;
 

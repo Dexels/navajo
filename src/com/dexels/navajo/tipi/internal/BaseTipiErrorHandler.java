@@ -65,8 +65,11 @@ public class BaseTipiErrorHandler implements TipiErrorHandler {
 					// current.getProperty("FailedExpression").getValue();
 					String id = current.getProperty("Id").getValue();
 					errorMessage = errorMessage + getConditionErrorDescription(id, current) + "\n";
-					// current.write(System.err);
-
+					try {
+						conditions.write(System.err);
+					} catch (NavajoException e) {
+						e.printStackTrace();
+					}
 				}
 				// System.err.println("Message: "+errorMessage);
 				// Thread.dumpStack();

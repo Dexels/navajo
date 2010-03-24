@@ -10,7 +10,7 @@ import com.dexels.navajo.tipi.tipixml.*;
 public abstract class TipiAbstractExecutable implements TipiExecutable {
 	private TipiEvent myEvent = null;
 	private TipiComponent myComponent;
-	private TipiContext myContext;
+	protected TipiContext myContext;
 	private TipiStackElement stackElement = null;
 	private String myCondition = "";
 	
@@ -36,9 +36,7 @@ public abstract class TipiAbstractExecutable implements TipiExecutable {
 		myExecutables.remove(a);
 	}
 
-	public TipiContext getContext() {
-		return myContext;
-	}
+
 
 	public void setContext(TipiContext tc) {
 		myContext = tc;
@@ -191,5 +189,7 @@ public abstract class TipiAbstractExecutable implements TipiExecutable {
 	public TipiExecutable getExecutableChild(int index) {
 		return myExecutables.get(index);
 	}
-
+	public TipiContext getContext() {
+		return myContext;
+	}
 }
