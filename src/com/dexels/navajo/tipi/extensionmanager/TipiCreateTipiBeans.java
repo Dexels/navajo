@@ -175,7 +175,6 @@ private void createFunctions(String extension, Writer writer, List<XMLElement> a
 		XMLElement descTag = xmlElement.getChildByTagName("description");
 		
 		String description = descTag!=null?descTag.getContent():"";
-		System.err.println("XML: "+xmlElement);
 		
 		String input = xmlElement.getChildByTagName("input").getContent();
 		String result = xmlElement.getChildByTagName("result").getContent();
@@ -184,7 +183,6 @@ private void createFunctions(String extension, Writer writer, List<XMLElement> a
 		String nameCap = name.substring(0,1).toUpperCase()+name.substring(1,name.length());
 	//	result = determineFunctionResult(result);
 		writePossibleFunctions(content,className,nameCap,result,description,input);
-		System.err.println("Function: "+className);
 		//content.append("/** "+description+"*/");
 		
 		

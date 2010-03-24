@@ -20,6 +20,9 @@ public class ProjectBuilder {
 	
 	
 	private static void downloadExtensionJars(File projectPath, String extensions,String extensionRepository, boolean onlyProxy, boolean clean, String buildType, boolean useVersioning, boolean localSign) throws IOException {
+		if(!extensionRepository.endsWith("Extensions/")) {
+			extensionRepository = extensionRepository+ "Extensions/";
+		}
 		StringTokenizer st = new StringTokenizer(extensions, ",");
 		Map<String,List<String>> repDefinition= ClientActions.getExtensions(extensionRepository);
 		while (st.hasMoreTokens()) {

@@ -141,7 +141,7 @@ public class ExtensionActions {
 	public static void buildDocumentation(File baseDir, String distributionPath,String sourcePath, String project, String version, File destDir,String repositoryDeploy) throws IOException {
 		File sourceDir = new File(baseDir,sourcePath);
 		URL u = sourceDir.toURI().toURL();
-		System.err.println("Building documentation. Url: "+u.toString()+"from source dir: "+sourceDir);
+//		System.err.println("Building documentation. Url: "+u.toString()+"from source dir: "+sourceDir);
 		if(!u.toString().endsWith("/")) {
 			System.err.println("Strange. No slash. Replacing");
 			u = new URL(u.toString()+"/");
@@ -155,23 +155,11 @@ public class ExtensionActions {
 		List<String> projects = new ArrayList<String>();
 		projects.add(project);
 		Map<String,List<XMLElement>> ss = getAllClassDefs(project, repositoryDeploy, repository, projects);
-		
-//		for (Entry<String, List<XMLElement>> item : ss.entrySet()) {
-//			System.err.println("KEY: "+item.getKey()+" count: "+item.getValue().size());
-//		}
-//		
 		TipiCreateWikiDocumentation ecdp = new TipiCreateWikiDocumentation();
 		ecdp.setOutputDir(destDir);
 		ecdp.setDistributionDir(distributionPath);
 		ecdp.setDeployRepository(repositoryDeploy);
 		ecdp.execute(repository,project,version,ss,repositoryDeploy);
-//
-//		TipiCreateComponentInterfaces tcci = new TipiCreateComponentInterfaces();
-//		tcci.setOutputDir(destDir);
-//		tcci.setDistributionDir(distributionPath);
-//		tcci.setDeployRepository(repositoryDeploy);
-//		tcci.execute(repository,project,version,ss,repositoryDeploy);
-//		
 	}
 	public static void buildTipiBeans(File baseDir, String distributionPath,String sourcePath, String project, String version, File destDir,String repositoryDeploy) throws IOException {
 		File sourceDir = new File(baseDir,sourcePath);
