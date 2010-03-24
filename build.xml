@@ -9,7 +9,7 @@
 
 	<!-- Use tipi extension post processing. -->
 	<property name="tipiExtension" value="false" />
-	<property name="deployedDependencyJars" value="TipiEchoClient.jar" />
+	<property name="deployedDependencyJars" value="TipiEchoClient.jar,Echo2_App.jar,Echo2_Extras_App.jar,Echo2_Extras_WebContainer.jar,Echo2_FileTransfer_App.jar,Echo2_FileTransfer_WebContainer.jar,Echo2_WebContainer.jar,Echo2_WebRender.jar,commons-fileupload-1.0.jar,echopointng-2.1.0rc5.jar,jcommon-1.0.0.jar,tucana-20060720.jar" />
 	
 	
 	<!-- Skip all unit tests. -->
