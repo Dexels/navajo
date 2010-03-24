@@ -606,14 +606,15 @@ public class NavajoClient implements ClientInterface {
     if ( forcePreparseProxy ) {
     	con.setRequestProperty("Navajo-Preparse", "true");
     }
-    try {
-    	java.lang.reflect.Method chunked = con.getClass().getMethod("setChunkedStreamingMode", new Class[]{int.class});
-    	chunked.invoke( con, new Object[]{new Integer(1024)});
-    	con.setRequestProperty("Transfer-Encoding", "chunked" );
-    } catch (SecurityException e) {
-    } catch (Throwable e) {
-     	System.err.println("setChunkedStreamingMode does not exist, upgrade to java 1.5+");
-    }
+//    try {
+//    	java.lang.reflect.Method chunked = con.getClass().getMethod("setChunkedStreamingMode", new Class[]{int.class});
+//    	chunked.invoke( con, new Object[]{new Integer(1024)});
+//    	con.setRequestProperty("Transfer-Encoding", "chunked" );
+//    } catch (SecurityException e) {
+//    } catch (Throwable e) {
+//     	System.err.println("setChunkedStreamingMode does not exist, upgrade to java 1.5+");
+//    }
+    
     //con.setReadTimeout(500);
     
     // Send message
