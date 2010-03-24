@@ -61,13 +61,13 @@
 		<echo message="Extra deployment jars: ${deployedDependencyJars}"/>
 		<echo message="Copying to ${dist}/lib "/>
 		<!-- TODO Create custom task to only copy the files referenced in the extension definition -->
-		<copy todir="${dist}/lib">
+		<copy todir="${dist}/lib" verbose="true">
 			<fileset dir="lib">
 				<include name="*.jar" />
 			</fileset>
 		</copy>
 		<mkdir dir="${dist}/unsigned" />
-		<copy todir="${dist}/unsigned">
+		<copy todir="${dist}/unsigned" verbose="true">
 			<fileset dir="${dist}/lib">
 				<include name="**" />
 			</fileset>
