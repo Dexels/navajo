@@ -176,7 +176,7 @@ public final class GenericHandler extends ServiceHandler {
 		}
     	
     	
-   	System.err.println("Found JSR223 based script!");
+   	System.err.println("Found JSR223 based script!"); // Or a non existing script
 		// jsr 223 script.
 		File currentScriptDir = new File(DispatcherFactory.getInstance().getNavajoConfig().getScriptPath() + "/" + pathPrefix);
 		final String servName = serviceName;
@@ -185,6 +185,12 @@ public final class GenericHandler extends ServiceHandler {
 				return name.startsWith(servName);
 			}
 		});
+		if(scripts==null) {
+			return null;
+		}
+		
+		
+		
 		// TODO beware, scripts can be null
 		for (File file : scripts) {
 			System.err.println("Script: " + file.getName());
