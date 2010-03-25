@@ -40,25 +40,12 @@ public class GenericScriptEngine extends JavaPlugin {
 
 	@Override
 	public Navajo process(Navajo in) throws Exception {
-		
-//		List<ScriptEngineFactory> scriptFactories = DispatcherFactory.getScriptEngineManager().getEngineFactories();
-//		for (ScriptEngineFactory factory : scriptFactories) {
-//			String langName = factory.getLanguageName();
-//			String langVersion = factory.getLanguageVersion();
-//			System.err.println("Languages: " + langName + " version: " + langVersion + " extension: " + factory.getExtensions()
-//					+ " engine: " + factory.getEngineName());
-////
-////			if (factory.getScriptEngine() instanceof Invocable) {
-////				System.err.println("Yes, invocable");
-////			}
-//		}
-//		
 		if(scriptFile.getName().indexOf('.')==-1) {
 			throw new IllegalArgumentException("No extension found, unable to determine script engine type");
 		}
       int dotPos = scriptFile.getName().lastIndexOf(".");
       String extension = scriptFile.getName().substring(dotPos+1);
-      System.err.println("Scriptfile: "+scriptFile.getName()+"ext: "+extension);
+//      System.err.println("Scriptfile: "+scriptFile.getName()+"ext: "+extension);
       
       ScriptEngineManager sem = new ScriptEngineManager(); //DispatcherFactory.getScriptEngineManager();
       
@@ -71,26 +58,19 @@ public class GenericScriptEngine extends JavaPlugin {
 		se.put("scriptFile", scriptFile);
 		se.put("access", access);
 		se.put("output", result);
+		se.put("navajoConfig", DispatcherFactory.getInstance().getNavajoConfig());
 		
 		if(se==null) {
 			System.err.println("Warning: No scriptengine found");
 		}
 		String adapterPath = DispatcherFactory.getInstance().getNavajoConfig().getAdapterPath();
 		String includePath = adapterPath + se.getFactory().getLanguageName()+"/include";
-		// engine dependent, should be moved. (this is JRuby)
-		se.eval("$LOAD_PATH.push('"+includePath+"');" +
-				"$LOAD_PATH.push('"+DispatcherFactory.getInstance().getNavajoConfig().getScriptPath()+"');");
-		System.err.println("Added include path: "+includePath);
-	
-		
-//		if(se instanceof Invocable) {
-//			System.err.println("Yes, invocable");
-			FileReader fr = new FileReader(scriptFile);
-			se.eval(fr);
-			fr.close();
-//			Invocable invocableEngine = (Invocable)se;
-//			invocableEngine.invokeFunction("process", in, result);
-//		}
+		Class<? extends IncludeManager> manager = (Class<? extends IncludeManager>) Class.forName("com.dexels.navajo.server.scriptengine.include."+se.getFactory().getLanguageName());
+		IncludeManager incl = manager.newInstance();
+		incl.loadIncludes(se, includePath);
+		FileReader fr = new FileReader(scriptFile);
+		se.eval(fr);
+		fr.close();
 		return result;
 	}
 
