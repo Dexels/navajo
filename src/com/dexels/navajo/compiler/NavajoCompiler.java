@@ -33,6 +33,8 @@ import com.dexels.navajo.server.NavajoConfigInterface;
 import org.apache.jasper.compiler.*;
 
 import java.io.*;
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
 
 public class NavajoCompiler
 {
@@ -67,11 +69,16 @@ public class NavajoCompiler
 				for (int i = 0; i < jars.length; i++) {
 					if (!jars[i].exists()) {
 						System.err.println("JAR: "+jars[i]+" does not exist!");
+					
 					} else {
-						if (i!=0) {
-							mainCp.append(sep);
+						boolean valid = isValidZip(jars[i]);
+						if(valid) {
+							if (mainCp.length()>0) {
+								mainCp.append(sep);
+							}
+							mainCp.append(jars[i].getAbsolutePath());
+							
 						}
-						mainCp.append(jars[i].getAbsolutePath());
 					}
 				}
 				classPath = mainCp.toString() + sep + jarFolder.getAbsolutePath() + "/../classes";
@@ -107,5 +114,25 @@ public class NavajoCompiler
             bos.close();
             errors = bos.toString();
         }
+        
+        private boolean isValidZip(final File file) {
+      	    ZipFile zipfile = null;
+      	    try {
+      	        zipfile = new ZipFile(file);
+      	        return true;
+      	    } catch (ZipException e) {
+      	        return false;
+      	    } catch (IOException e) {
+      	        return false;
+      	    } finally {
+      	        try {
+      	            if (zipfile != null) {
+      	                zipfile.close();
+      	                zipfile = null;
+      	            }
+      	        } catch (IOException e) {
+      	        }
+      	    }
+      	}
 
 }

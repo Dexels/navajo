@@ -38,6 +38,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.zip.ZipException;
 
 import org.dexels.utils.JarResources;
 import org.dexels.utils.MultiClassLoader;
@@ -266,8 +267,14 @@ public class NavajoClassLoader extends MultiClassLoader {
     			if (jarResources == null) {
     				jarResources = new HashSet<JarResources>();
     				for (int i = 0; i < files.length; i++) {
-    					JarResources d = new JarResources(files[i]);
-    					jarResources.add(d);
+    					try {
+    						System.err.println("Checking file: "+files[i].getAbsolutePath());
+							JarResources d = new JarResources(files[i]);
+							jarResources.add(d);
+						} catch (Throwable e) {
+							System.err.println("Error opening zip file in adapters. Continuing with others");
+							e.printStackTrace();
+						}
     				}
     			}
     			
@@ -285,8 +292,13 @@ public class NavajoClassLoader extends MultiClassLoader {
     			if (betaJarResources == null) {
     				betaJarResources = new HashSet<JarResources>();
     				for (int i = 0; i < files.length; i++) {
-    					JarResources d = new JarResources(files[i]);
-    					betaJarResources.add(d);
+    					try { 
+							JarResources d = new JarResources(files[i]);
+	    					betaJarResources.add(d);
+						} catch (Throwable e) {
+							System.err.println("Error opening zip file in adapters. Continuing with others");
+							e.printStackTrace();
+						}
     				}
     			}
     		}
