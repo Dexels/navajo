@@ -31,8 +31,10 @@ public final class JarResources {
      * 
      * @param jarFileName
      *            a jar or zip file
+    * @throws IOException 
+    * @throws ZipException 
      */
-    public JarResources(File jarFile) {
+    public JarResources(File jarFile) throws ZipException, IOException {
         this.jarFile = jarFile;
         init();
     }
@@ -111,8 +113,10 @@ public final class JarResources {
 
     /**
      * initializes internal hash tables with Jar file resources.
+    * @throws IOException 
+    * @throws ZipException 
      */
-    private final void init() {
+    private final void init() throws ZipException, IOException {
         // extracts just sizes only.
         ZipFile zf = null;
         try {
@@ -125,8 +129,6 @@ public final class JarResources {
                 // System.out.println(ze.getName());
                 htSizes.put(ze.getName(), new Integer((int) ze.getSize()));
             }
-        } catch (IOException io) {
-            io.printStackTrace();
 
         } finally {
             if (zf != null) {
@@ -176,14 +178,6 @@ public final class JarResources {
                 htJarContents.put(ze.getName(), b);
 
             }
-
-        } catch (NullPointerException en) {
-            en.printStackTrace(System.err);
-            // System.out.println("done.");
-        } catch (FileNotFoundException enn) {
-            enn.printStackTrace(System.err);
-        } catch (IOException ennn) {
-            ennn.printStackTrace(System.err);
         } finally {
             if (fis != null) {
                 try {
