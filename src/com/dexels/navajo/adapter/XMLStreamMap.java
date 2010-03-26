@@ -130,7 +130,7 @@ public class XMLStreamMap implements Mappable {
 		
 		map.setStartElement("TOP");
 		map.setNewline(true);
-		for(int i=0;i<500;i++){
+		for(int i=0;i<10000000;i++){
 			map.setStartElement("LEVEL_ONE");
 			map.setAttribute("code", ""+i);
 			
