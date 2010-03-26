@@ -75,6 +75,13 @@ public class TmlToXmlMap implements Mappable {
 				}
 				content.setCompact(true);
 				Message root = document.getMessage(rootPath);
+				
+				if(root == null){
+					System.err.println("ERROR! Could not find message: " + rootPath);
+					System.err.println("In document: ");
+					document.write(System.err);
+					throw new UserException(1200, "Root message not found for TML2XML map");
+				}
 				content.setStart(root.getName());
 
 				// Watch it, we assume the root has no properies

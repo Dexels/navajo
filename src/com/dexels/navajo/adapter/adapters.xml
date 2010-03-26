@@ -276,7 +276,32 @@
             <value name="level" required="false" direction="in"/>
         </values>
     </map>
-    <!-- XML adapter -->
+    <!-- Streaming XML adapter for large XML files-->
+    <map>
+        <tagname>xml</tagname>
+        <object>com.dexels.navajo.adapter.XMLStreamMap</object>
+        <description>This adapter can be used to create large XML documents (well over 1GB )</description>
+        <values>
+            <value name="content" type="binary" required="false" direction="out"/>
+            <value name="indent" type="integer" required="false" direction="in"/>
+        </values>
+        <methods>
+            <method name="startElement">
+                <param name="name" field="startElement" type="string" required="true"/>
+            </method>
+            <method name="endElement">
+                <param name="name" field="endElement" type="boolean" required="automatic" value="true" />
+            </method>
+            <method name="newline">
+                <param name="name" field="newline" type="boolean" required="automatic" value="true" />
+            </method>
+            <method name="setAttribute">
+                <param name="name" field="attributeName" type="string" required="true"/>
+                <param name="value" field="attributeValue" type="string" required="true"/>
+            </method>
+        </methods>
+    </map>
+    <!-- XML adapter oldstyle, memory inefficient-->
     <map>
         <tagname>xmlmap</tagname>
         <object>com.dexels.navajo.adapter.XMLMap</object>
@@ -408,6 +433,9 @@
             </method>
             <method name="setTable">
                 <param name="value" field="table" type="string" required="true"/>
+            </method>
+            <method name="setCodeTable">
+                <param name="value" field="codeTable" type="string" required="true"/>
             </method>
             <method name="setCurrentInputMessage">
                 <param name="value" field="currentInputMessage" type="string" required="true"/>
