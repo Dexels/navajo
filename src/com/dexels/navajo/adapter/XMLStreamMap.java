@@ -22,12 +22,12 @@ public class XMLStreamMap implements Mappable {
 	public Binary content = null;
 	private boolean newLineFlag = false;  // flag if we're on a new line
 
-	@Override
+	// @Override
 	public void kill() {
 		// TODO Auto-generated method stub
 	}
 
-	@Override
+	// @Override
 	public void load(Access access) throws MappableException, UserException {
 		try {
 			content = new Binary();
@@ -106,7 +106,7 @@ public class XMLStreamMap implements Mappable {
 		}
 	}
 
-	@Override
+	// @Override
 	public void store() throws MappableException, UserException {
 		// TODO Auto-generated method stub
 
