@@ -32,11 +32,12 @@ public class FileMap implements Mappable {
 	public FileLineMap[] lines;
 
 	public boolean persist = true;
-	public boolean exists = false;
+	public boolean exists  = false;
+	public boolean dosMode = false;
 
 	public Binary content;
 
-	private ArrayList lineArray = null;
+	private ArrayList<FileLineMap> lineArray = null;
 
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.mapping.Mappable#load(com.dexels.navajo.server.Parameters, com.dexels.navajo.document.Navajo, com.dexels.navajo.server.Access, com.dexels.navajo.server.NavajoConfig)
@@ -46,10 +47,14 @@ public class FileMap implements Mappable {
 
 	private byte[] getBytes() throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
 		for (int i = 0; i < lineArray.size(); i++) {
 			FileLineMap flm = (FileLineMap) lineArray.get(i);
+
 			if (flm.getLine() != null) {
-				baos.write( ( charsetName == null ) ? flm.getLine().getBytes() : flm.getLine().getBytes( charsetName ) );
+				String nextLine = handleLineEnds( flm.getLine() );
+
+				baos.write( ( charsetName == null ) ? nextLine.getBytes() : nextLine.getBytes( charsetName ) );
 			}
 		}
 		baos.close();
@@ -103,7 +108,7 @@ public class FileMap implements Mappable {
 
 	public void setLines(FileLineMap[] l) {
 		if (lineArray == null) {
-			lineArray = new ArrayList();
+			lineArray = new ArrayList<FileLineMap>();
 		}
 		for (int i = 0; i < l.length; i++) {
 			lineArray.add(l[i]);
@@ -112,7 +117,7 @@ public class FileMap implements Mappable {
 
 	public void setLine(FileLineMap l) {
 		if (lineArray == null) {
-			lineArray = new ArrayList();
+			lineArray = new ArrayList<FileLineMap>();
 		}
 		lineArray.add(l);
 	}
@@ -123,6 +128,10 @@ public class FileMap implements Mappable {
 
 	public void setCharsetName(String charset) {
 		this.charsetName = charset;
+	}
+
+	public void setDosMode( boolean mode ) {
+		this.dosMode = mode;
 	}
 
 	public void setContent(Binary b) throws UserException {
@@ -155,6 +164,13 @@ public class FileMap implements Mappable {
 
 	public boolean getExists() {
 		return new File(fileName).exists();
+	}
+
+	private String handleLineEnds( String input ) {
+		if ( ! this.dosMode || input == null || input.endsWith( "\r\n" ) || ! input.endsWith( "\n" ) )
+			return input;
+
+		return input.substring( 0, input.length() - 1 ) + "\r\n";
 	}
 
 	public static void main(String[] args) throws Exception {
