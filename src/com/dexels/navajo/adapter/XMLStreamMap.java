@@ -81,7 +81,9 @@ public class XMLStreamMap implements Mappable {
 	
 	private void setAttribute(String name, String value) throws UserException{
 		try{
-			xtw.writeAttribute(name, value);
+			if(name != null && !"".equals(name) && value != null){
+				xtw.writeAttribute(name, value);
+			}
 		}catch(Exception e){
 			throw new UserException(454, e.getMessage());
 		}
