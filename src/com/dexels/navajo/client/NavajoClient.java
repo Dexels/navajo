@@ -644,7 +644,7 @@ public class NavajoClient implements ClientInterface {
     	BufferedWriter os = null;
     	try {
     		os = new BufferedWriter(new OutputStreamWriter(con.getOutputStream(), "UTF-8"));
-    		os.write("apenootjes");
+//    		os.write("apenootjes");
     		//d.write(os, condensed, d.getHeader().getRPCName());    	
     	} finally {
     		if ( os != null ) {
