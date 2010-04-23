@@ -213,7 +213,11 @@ private void initializeJabber(ServletConfig config, String bootstrapUrl) {
 
   protected void finalize() {
     System.err.println("In TmlHttpServlet finalize(), thread = " + Thread.currentThread().hashCode());
-    //logger.log(Priority.INFO, "In TmlHttpServlet finalize()");
+    try {
+		super.finalize();
+	} catch (Throwable e) {
+		e.printStackTrace();
+	}
   }
 
   protected final void dumHttp(HttpServletRequest request, long index, File dir) {
@@ -327,7 +331,7 @@ private void initializeJabber(ServletConfig config, String bootstrapUrl) {
     String username = request.getParameter("username");
     String password = request.getParameter("password");
 
-    System.err.println("in callDirect(): service = " + service + ", username = " + username);
+//    System.err.println(">in callDirect(): service = " + service + ", username = " + username+" class: "+getClass().getName());
 
     if (service == null) {
       
@@ -357,9 +361,6 @@ private void initializeJabber(ServletConfig config, String bootstrapUrl) {
     if (username == null) {
     	username = "empty";
     	password = "";
-      //logger.log(Priority.FATAL, "Empty service specified, request originating from " + request.getRemoteHost());
-      //System.err.println("Empty service specified, request originating from " + request.getRemoteHost());
-//      return;
     }
 
     if ( (type == null) || (type.equals(""))) {
@@ -408,7 +409,7 @@ private void initializeJabber(ServletConfig config, String bootstrapUrl) {
     	  if(bin==null ) {
         	  java.io.OutputStreamWriter out = new java.io.OutputStreamWriter(outputStream,"UTF-8");
         	  response.setContentType("text/xml; charset=UTF-8");
-        	  resultMessage.write(out);
+        	  writeOutput(resultMessage, out,service);
         	  out.flush();
         	  out.close();
     	  } else {
@@ -430,7 +431,7 @@ private void initializeJabber(ServletConfig config, String bootstrapUrl) {
       } else {
     	  java.io.OutputStreamWriter out = new java.io.OutputStreamWriter(outputStream,"UTF-8");
     	  response.setContentType("text/xml; charset=UTF-8");
-    	  resultMessage.write(out);
+    	  writeOutput(resultMessage, out,service);
     	  out.flush();
     	  out.close();
      }
@@ -448,6 +449,10 @@ private void initializeJabber(ServletConfig config, String bootstrapUrl) {
   
   }
 
+protected void writeOutput(Navajo resultMessage, java.io.OutputStreamWriter out, String serviceName) throws NavajoException {
+	resultMessage.write(out);
+}
+
   /**
    * URL based webservice requests.
    *
@@ -457,7 +462,7 @@ private void initializeJabber(ServletConfig config, String bootstrapUrl) {
    * @throws ServletException
    */
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-
+	  System.err.println("GET?");
 	  // Check for streamingmode toggle.
 	  if ( request.getParameter("streaming") != null && request.getParameter("streaming").equals("no")) {
 		  streamingMode = false;
@@ -510,7 +515,10 @@ private void initializeJabber(ServletConfig config, String bootstrapUrl) {
    * @throws ServletException
    */
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-
+	  System.err.println("Ik, NavajoListeners, ben herbakken!");
+//	  if(true) {
+//		  throw new IllegalAccessError();
+//	  }
 	  Date created = new java.util.Date();
 	  long start = created.getTime();
 

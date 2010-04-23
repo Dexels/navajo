@@ -1,18 +1,31 @@
 package com.dexels.navajo.server.listener.http;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.StringWriter;
+import java.util.Date;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.w3c.dom.Document;
 
 import com.dexels.navajo.client.NavajoClientFactory;
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Header;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.NavajoLaszloConverter;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
-import com.dexels.navajo.server.*;
+import com.dexels.navajo.server.ClientInfo;
+import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.DispatcherInterface;
 
 /**
  * Title:        Navajo
@@ -37,6 +50,32 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 
 	public TmlHttpLaszloServlet() {
 	}
+	
+	
+	
+
+	@Override
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		super.doGet(request, response);
+	}
+	
+	@Override
+
+	protected void writeOutput(Navajo resultMessage, java.io.OutputStreamWriter out, String serviceName) throws NavajoException {
+//		resultMessage.write(out);
+
+		Document laszlo = NavajoLaszloConverter.createLaszloFromNavajo(resultMessage,serviceName);
+		StringWriter sw = new StringWriter();
+		XMLDocumentUtils.write(laszlo,sw,false);
+		System.err.println("Laszlo created: "+sw.toString());
+		try {
+			out.write(sw.toString());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+//		XMLDocumentUtils.write(laszlo,out,false);
+	}
+
 
 	/**
 	 * Handle a request.
