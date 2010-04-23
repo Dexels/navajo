@@ -1,18 +1,39 @@
 package com.dexels.navajo.server.listener.http;
 
-import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.StringTokenizer;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import com.dexels.navajo.client.NavajoClient;
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.types.*;
-import com.dexels.navajo.server.*;
-//import com.sun.xml.internal.bind.v2.util.FatalAdapter;
+import com.dexels.navajo.document.Header;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.server.ClientInfo;
+import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.DispatcherInterface;
+import com.dexels.navajo.server.FatalException;
 import com.jcraft.jzlib.JZlib;
 import com.jcraft.jzlib.ZInputStream;
 import com.jcraft.jzlib.ZOutputStream;
@@ -147,7 +168,7 @@ public class JSONHttpServlet extends TmlHttpServlet {
     String password = request.getParameter("password");
     String callback = request.getParameter("callback");
     
-    System.err.println("in callDirect(): service = " + service + ", username = " + username);
+    System.err.println("in (JSON) callDirect(): service = " + service + ", username = " + username);
 
     if (service == null) {
       
