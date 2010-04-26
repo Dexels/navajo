@@ -840,14 +840,18 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
     int accessSetSize = accessSet.size();
     setRequestRate(clientInfo, accessSetSize);
      
-    boolean useComet = "true".equals(inMessage.getHeader().getHeaderAttribute("useComet"));
+    boolean ignoreServerTooBusy = ( 
+    		             "true".equals(inMessage.getHeader().getHeaderAttribute("useComet")) || 
+    		             "true".equals(inMessage.getHeader().getHeaderAttribute("internalService"))
+    		           );
+    		             
     // Check whether service is  disabled (FORCED). Only accept special web services.
     if ( disabled && !isSpecialwebservice(inMessage.getHeader().getRPCName()) ) {
     	throw new FatalException("500");
     }
     
     // Check whether server is too busy...
-    if (!useComet && isBusy() && !isSpecialwebservice(inMessage.getHeader().getRPCName()) && !inMessage.getHeader().hasCallBackPointers() ) {
+    if (!ignoreServerTooBusy && isBusy() && !isSpecialwebservice(inMessage.getHeader().getRPCName()) && !inMessage.getHeader().hasCallBackPointers() ) {
     	try {
     		Navajo result = TribeManagerFactory.getInstance().forward(inMessage);
     		return result;
