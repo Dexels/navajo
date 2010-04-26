@@ -28,6 +28,10 @@ package navajo;
  * 
  * VERSION HISTORY
  * 
+ * 9.0.0 - Added support for Non-Blocking I/O Listener (Tomcat Comet implementation).
+ *       - Added pluggable support for non-native scripting engines (Ruby implementation included).
+ *       - Some changes in cache implementation, now using script package name for cache path.
+ *       
  * 8.2.7 - Refactored Dispatcher. Indoc is not passed as separate parameter anymore. Access object is always used instead.
  * 
  * 8.2.6 - Selected attribute in option tag now supports expressions (either boolean or integer outcome supported)
@@ -198,14 +202,14 @@ package navajo;
 
 public class Version extends dexels.Version {
 
-	public static final int MAJOR = 8;
-	public static final int MINOR = 2;
-	public static final int PATCHLEVEL = 7;
-	public static final String SPECIAL_VERSION = "Final";
+	public static final int MAJOR = 9;
+	public static final int MINOR = 0;
+	public static final int PATCHLEVEL = 0;
+	public static final String SPECIAL_VERSION = "Navajo 9 Release Candidate";
 	
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
-	public static final String RELEASEDATE = "2010-01-22";
+	public static final String RELEASEDATE = "2010-04-26";
 	
 //	 Included packages.
 	String [] includes = {"navajodocument.Version"};
