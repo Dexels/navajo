@@ -542,6 +542,10 @@ public final class Dispatcher implements Mappable, DispatcherMXBean, DispatcherI
 
     try {
       Navajo outMessage = NavajoFactory.getInstance().createNavajo();
+      // Make sure empty Header is constructed
+      Header h = NavajoFactory.getInstance().createHeader(outMessage, "", "", "", -1);
+      outMessage.addHeader(h);
+      
       Message errorMessage = NavajoFactory.getInstance().createMessage(
           outMessage, (ae.isNotAuthorized() ?
                        AuthorizationException.AUTHORIZATION_ERROR_MESSAGE :
@@ -593,6 +597,10 @@ public final class Dispatcher implements Mappable, DispatcherMXBean, DispatcherI
     try {
       Navajo outMessage = NavajoFactory.getInstance().createNavajo();
 
+      // Make sure empty Header is constructed
+      Header h = NavajoFactory.getInstance().createHeader(outMessage, "", "", "", -1);
+      outMessage.addHeader(h);
+      
       Message errorMessage = NavajoFactory.getInstance().createMessage(
           outMessage, Constants.ERROR_MESSAGE);
 
