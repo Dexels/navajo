@@ -840,7 +840,7 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
     int accessSetSize = accessSet.size();
     setRequestRate(clientInfo, accessSetSize);
      
-    boolean useComet = true; //"true".equals(inMessage.getHeader().getHeaderAttribute("useComet"));
+    boolean useComet = "true".equals(inMessage.getHeader().getHeaderAttribute("useComet"));
     // Check whether service is  disabled (FORCED). Only accept special web services.
     if ( disabled && !isSpecialwebservice(inMessage.getHeader().getRPCName()) ) {
     	throw new FatalException("500");
