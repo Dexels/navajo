@@ -42,7 +42,7 @@ public class NavajoClient implements ClientInterface {
   public static final int CONNECT_TIMEOUT = 5000;
   
 //  private String host = null;
-  private int loadBalancingMode = LBMODE_STATIC_MINLOAD;
+  private int loadBalancingMode = LBMODE_MANUAL;
   private String username = null;
   private String password = null;
   protected boolean condensed = true;
@@ -598,23 +598,26 @@ public class NavajoClient implements ClientInterface {
      	System.err.println("setConnectTimeout does not exist, upgrade to java 1.5+");
     }
     
+    appendHeaderToHttp(con,d.getHeader());
+    
     con.setDoOutput(true);
     con.setDoInput(true);
     con.setUseCaches(false);
     //con.setRequestProperty("Connection", "keep-alive");
     con.setRequestProperty("Content-type", "text/xml; charset=UTF-8");
+
+    con.setRequestProperty("Host", "localhost");
     if ( forcePreparseProxy ) {
     	con.setRequestProperty("Navajo-Preparse", "true");
     }
-//    try {
-//    	java.lang.reflect.Method chunked = con.getClass().getMethod("setChunkedStreamingMode", new Class[]{int.class});
-//    	chunked.invoke( con, new Object[]{new Integer(1024)});
-//    	con.setRequestProperty("Transfer-Encoding", "chunked" );
-//    } catch (SecurityException e) {
-//    } catch (Throwable e) {
-//     	System.err.println("setChunkedStreamingMode does not exist, upgrade to java 1.5+");
-//    }
-    
+    try {
+    	java.lang.reflect.Method chunked = con.getClass().getMethod("setChunkedStreamingMode", new Class[]{int.class});
+    	chunked.invoke( con, new Object[]{new Integer(1024)});
+    	con.setRequestProperty("Transfer-Encoding", "chunked" );
+    } catch (SecurityException e) {
+    } catch (Throwable e) {
+     	System.err.println("setChunkedStreamingMode does not exist, upgrade to java 1.5+");
+    }
     //con.setReadTimeout(500);
     
     // Send message
@@ -685,7 +688,17 @@ public class NavajoClient implements ClientInterface {
 	return n;
   }
 
-  /**
+  private void appendHeaderToHttp(HttpURLConnection con, Header header) {
+	  con.addRequestProperty("rpcName",header.getRPCName());
+	  con.addRequestProperty("rpcPass",header.getRPCPassword());
+	  con.addRequestProperty("rpcUser",header.getRPCUser());
+	  Map<String,String> attrs = header.getHeaderAttributes();
+	  for (Entry<String,String> element : attrs.entrySet()) {
+		  con.addRequestProperty(element.getKey(),element.getValue());
+	}
+  }
+
+/**
    * Perform a synchronous webservice call
    * @param out Navajo
    * @param server String
@@ -956,6 +969,12 @@ public class NavajoClient implements ClientInterface {
 
 
   private final void fireBroadcastEvents(final Navajo n) {
+	  
+	  if (n==null) {
+			// no navajo, don't know why. So no broadcasting.
+		  return;
+	  }
+
 	  Header h = n.getHeader();
 	  
 	  
@@ -1558,12 +1577,12 @@ public void destroy() {
 
 private final void determineServerLoadsAndSetCurrentServer(boolean init) {
 
-	System.err.println("Started ping thread.");
+//	System.err.println("Started ping thread.");
 	Navajo out = NavajoFactory.getInstance().createNavajo();
 	Header outHeader = NavajoFactory.getInstance().createHeader(out, "navajo_ping", "NAVAJO", "", -1);
 	out.addHeader(outHeader);
 
-	System.err.println("servers: " + serverUrls.length);
+//	System.err.println("servers: " + serverUrls.length);
 	boolean disabledServer = false;
 	for (int i = 0; i < serverUrls.length; i++) {
 		try {
@@ -1572,7 +1591,7 @@ private final void determineServerLoadsAndSetCurrentServer(boolean init) {
 				Header h = n.getHeader();
 				String load =  h.getHeaderAttribute("cpuload");
 				serverLoads[i] = Double.parseDouble(load);
-				System.err.println(serverUrls[i] + "=" + serverLoads[i]);
+//				System.err.println(serverUrls[i] + "=" + serverLoads[i]);
 				// If I got an answer from this server, and it was on the disabled server list, remove it.
 				if ( disabledServers.containsKey(serverUrls[i]) ) {
 					disabledServers.remove(serverUrls[i]);
@@ -1615,9 +1634,9 @@ public void setServers(String[] servers) {
 	serverLoads = new double[serverUrls.length];
 	if (servers.length>0) {
 		currentServerIndex = randomize.nextInt(servers.length);
-		System.err.println("Starting at server # "+currentServerIndex);
+//		System.err.println("Starting at server # "+currentServerIndex);
 	}
-	System.err.println("servers = " + servers + ", loadBalancingMode = " + loadBalancingMode);
+//	System.err.println("servers = " + servers[0] + ", loadBalancingMode = " + loadBalancingMode);
 //	if ( loadBalancingMode != LBMODE_MANUAL ) {
 //		determineServerLoadsAndSetCurrentServer(true);
 //		ping();
