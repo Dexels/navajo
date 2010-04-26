@@ -29,7 +29,8 @@ package navajo;
  * VERSION HISTORY
  * 
  * 9.0.1 - Added internalService header attribute as an indication for the Dispatcher to ignore the server too busy check.
- * 
+ *       - Make sure that header is always added for response Navajo.
+ *       
  * 9.0.0 - Added support for Non-Blocking I/O Listener (Tomcat Comet implementation).
  *       - Added pluggable support for non-native scripting engines (Ruby implementation included).
  *       - Some changes in cache implementation, now using script package name for cache path.
