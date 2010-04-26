@@ -160,6 +160,10 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 
     private final String constructServiceKeyValues(String serviceKeys, Navajo in) throws Exception {
     	
+    	if ( serviceKeys == null ) {
+    		return "";
+    	}
+    	
     	String [] properties = serviceKeys.split(",");
     	StringBuffer result = new StringBuffer();
     	
@@ -213,6 +217,16 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 
     }
 
+    private String getServicePath(String key) {
+
+    	int lastIndex = key.lastIndexOf(".");
+    	if ( lastIndex != -1 ) {
+    		String path = key.substring( 0, lastIndex );
+    		return path.replaceAll("\\.", "/");
+    	} else {
+    		return "";
+    	}
+    }
 
     /**
      * Note that write() is a critical section since multiple requests using the same key can be expected!
@@ -223,7 +237,7 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
     	try {
         	memoryOperation(key, service, document, -1, false);
             
-        	os = sharedPersistenceStore.getOutputStream(CACHE_PATH, key, false);
+        	os = sharedPersistenceStore.getOutputStream(CACHE_PATH + "/" + getServicePath(key), key, false);
         	((Navajo) document).write(os);
         	
             fileWrites++;
@@ -253,19 +267,21 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 
         try {
           
-            if ( sharedPersistenceStore.exists(CACHE_PATH, key) ) {
+        	String path = CACHE_PATH + "/" + getServicePath(key);
+        	
+            if ( sharedPersistenceStore.exists(path, key) ) {
             	
             	System.err.println("FOUND " + key + " IN PERSISTENT STORE...");
-                if (isExpired(sharedPersistenceStore.lastModified(CACHE_PATH, key), expirationInterval)) {
+                if (isExpired(sharedPersistenceStore.lastModified(path, key), expirationInterval)) {
                 	System.err.println("REMOVING EXPIRED FILE CACHE ENTRY: " + key);
-                	sharedPersistenceStore.remove(CACHE_PATH, key);
+                	sharedPersistenceStore.remove(path, key);
                 	// TODO:  Construct ClearCacheEvent....
                 	NavajoEventRegistry.getInstance().publishEvent(new CacheExpiryEvent(service, key));
                     return null;
                 }
                 
                 long start = System.currentTimeMillis();
-                InputStream is = sharedPersistenceStore.getStream(CACHE_PATH, key);
+                InputStream is = sharedPersistenceStore.getStream(path, key);
                 if ( is != null ) {
                 	pc = NavajoFactory.getInstance().createNavajo(is);
                 	is.close();
@@ -315,6 +331,22 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 		return false;
 	}
 	
+	private void removeCachedObjects(PersistenceManagerImpl pm, String parent, String myKey) {
+		String [] all = pm.sharedPersistenceStore.getObjects(parent);
+		System.err.println("IN removeCachedObjects, parent = " + parent + ", key = " + myKey + ", FOUND: " + all.length);
+		for ( int i = 0; i < all.length; i++ ) {
+			if ( all[i].startsWith(myKey) ) {
+				System.err.println("REMOVE KEY: " + all[i]);
+				pm.sharedPersistenceStore.remove(parent, all[i]);
+			}
+		}	
+		// Recurse into parents.
+		String [] allParents = pm.sharedPersistenceStore.getParentObjects(parent);
+		for ( int i = 0; i < allParents.length; i++ ) {
+			removeCachedObjects(pm, parent + "/" + allParents[i], myKey);
+		}
+	}
+	
 	public void setDoClear(boolean doClear) {
 		PersistenceManagerImpl pm = (PersistenceManagerImpl) DispatcherFactory.getInstance().getNavajoConfig().getPersistenceManager();
 
@@ -323,14 +355,16 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 			Iterator iter = keys.iterator();
 			while ( iter.hasNext() ) {
 				String cacheKey = (String) iter.next();
+	        	String path = CACHE_PATH + "/" + getServicePath(cacheKey);
+	        	
 				if ( cacheKey.startsWith(key ) && this.serviceKeyValues == null ) {
 					pm.inMemoryCache.remove(cacheKey);
-					pm.sharedPersistenceStore.remove(CACHE_PATH, cacheKey);
+					pm.sharedPersistenceStore.remove(path, cacheKey);
 				} else if ( cacheKey.startsWith(key ) && this.serviceKeyValues != null ) {
 					PersistentEntry pe = (PersistentEntry) pm.inMemoryCache.get(cacheKey);
 					if ( pe != null && pe.getKeyValues().equals(serviceKeyValues) ) {
 						pm.inMemoryCache.remove(cacheKey);
-						pm.sharedPersistenceStore.remove(CACHE_PATH, cacheKey);
+						pm.sharedPersistenceStore.remove(path, cacheKey);
 					}
 				}
 			}
@@ -338,12 +372,9 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 			// loading of invalidated cache entries. This is rather brute force since in the current
 			// implementation we do not store PersistentEntry objects but entire Navajo documents, hence
 			// we can not check the serviceKeyValues....
-			String [] all = pm.sharedPersistenceStore.getObjects(CACHE_PATH);
-			for ( int i = 0; i < all.length; i++ ) {
-				if ( all[i].startsWith(key) ) {
-					pm.sharedPersistenceStore.remove(CACHE_PATH, all[i]);
-				}
-			}		
+			
+			removeCachedObjects(pm, CACHE_PATH, key);
+			
 		}
 	}
 
@@ -357,9 +388,13 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 		this.serviceKeyValues = serviceKeyValues;
 	}
 	
-	public static void main ( String [] args ) {
-		String [] aap = "aap,noot".split(",");
-		System.err.println(aap[1]);
+	public static void main ( String [] args ) throws Exception {
+		
+		String service = "vla.competition.ProcessGetCompetitionWeek";
+		PersistenceManagerImpl pi = new PersistenceManagerImpl();
+		
+		System.err.println(pi.getServicePath(service));
+		
 	}
 
 	public Persistable get(Constructor c, String key, long expirationInterval,
@@ -387,6 +422,6 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 			}
 			
 		}
-		
 	}
+	
 }
