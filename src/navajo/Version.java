@@ -28,6 +28,8 @@ package navajo;
  * 
  * VERSION HISTORY
  * 
+ * 9.0.1 - Added internalService header attribute as an indication for the Dispatcher to ignore the server too busy check.
+ * 
  * 9.0.0 - Added support for Non-Blocking I/O Listener (Tomcat Comet implementation).
  *       - Added pluggable support for non-native scripting engines (Ruby implementation included).
  *       - Some changes in cache implementation, now using script package name for cache path.
@@ -204,7 +206,7 @@ public class Version extends dexels.Version {
 
 	public static final int MAJOR = 9;
 	public static final int MINOR = 0;
-	public static final int PATCHLEVEL = 0;
+	public static final int PATCHLEVEL = 1;
 	public static final String SPECIAL_VERSION = "Navajo 9 Release Candidate";
 	
 	public static final String VENDOR = "Dexels";
