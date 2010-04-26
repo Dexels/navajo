@@ -185,4 +185,12 @@ public interface SharedStoreInterface {
 	 */
 	public String [] getObjects(String parent);
 	
+	/**
+	 * Returns all parent object names from parent sub.
+	 * 
+	 * @param parent
+	 * @return
+	 */
+	public String [] getParentObjects(String parent);
+	
 }

@@ -282,7 +282,33 @@ public class SharedFileStore implements SharedStoreInterface {
 	}
 
 	/**
-	 * Gets the names of all objects in the shared file store sorted by 'oldest' object first.
+	 * Gets the names of all parent objects in a given the shared file store parent.
+	 * @param parent
+	 * @return
+	 */
+	public String [] getParentObjects(String parent) {
+		
+		ArrayList<String> names = new ArrayList<String>();
+		File p = new File(sharedStore, parent);
+		File [] fs = p.listFiles(); 
+		// Sort files on last modification date
+		if ( fs != null) {
+			Arrays.sort(fs, new FileComparator());
+			if ( fs != null ) {
+				for (int i = 0; i < fs.length; i++) {
+					if ( fs[i].isDirectory()) {
+						names.add(fs[i].getName());
+					}
+				}
+			}
+		}
+		String [] result = new String[names.size()];
+		result = (String []) names.toArray(result);
+
+		return result;
+	}
+	/**
+	 * Gets the names of all non-parent (files) objects in the shared file store sorted by 'oldest' object first.
 	 */
 	public String [] getObjects(String parent) {
 		ArrayList<String> names = new ArrayList<String>();
@@ -591,6 +617,11 @@ public class SharedFileStore implements SharedStoreInterface {
 		String [] s  = getObjects(parent);
 		for ( int i = 0; i < s.length; i++ ) {
 			remove(parent, s[i]);
+		}
+		// Recurse into parents.
+		String [] p = getParentObjects(parent);
+		for ( int i = 0; i < p.length; i++ ) {
+			removeAll(parent + "/" + p[i]);
 		}
 	}
 
