@@ -118,14 +118,10 @@ public class NavajoContext {
 
 	public void popNavajo() {
 		myElementStack.pop();
-		System.err.println("... stack size: "+myElementStack.size());
-
 	}
 
 	public void pushNavajo(Navajo m) {
 		myElementStack.push(m);
-		System.err.println("... stack size: "+myElementStack.size());
-
 	}
 
 	public Message getMessage() {
@@ -155,16 +151,12 @@ public class NavajoContext {
 
 	public void popMessage() {
 		myElementStack.pop();
-		System.err.println("... stack size: "+myElementStack.size());
-
 	}
 
 	public void pushMessage(Message m) {
 		if(m!=null) {
-			System.err.println("Pushing message: "+m.getFullMessageName());
 			myElementStack.push(m);			
 		}
-		System.err.println("... stack size: "+myElementStack.size());
 	}
 	
 	public void pushProperty(Property property) {
