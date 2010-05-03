@@ -20,6 +20,7 @@ import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
 import com.dexels.navajo.mapping.compiler.meta.SQLFieldDependency;
 import com.dexels.navajo.server.*;
+import com.dexels.navajo.server.resource.ResourceManager;
 import com.dexels.navajo.util.*;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
@@ -1752,10 +1753,17 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
   
   public DependentResource [] getDependentResourceFields() {
 	  return new DependentResource[]{new GenericDependentResource("database", "datasource", AdapterFieldDependency.class), 
-			                        new GenericMultipleDependentResource("sql", "update", SQLFieldDependency.class), 
-			                        new GenericMultipleDependentResource("sql", "query", SQLFieldDependency.class)};
+			                         new GenericMultipleDependentResource("sql", "update", SQLFieldDependency.class), 
+			                         new GenericMultipleDependentResource("sql", "query", SQLFieldDependency.class)};
   }
-
+  
+  public static ResourceManager getResourceManager(String resourceType) {
+	  if ( resourceType.equals("database") ) {
+		  return fixedBroker;
+	  }
+	  return null;
+  }
+  
   public int getTimeAlert() {
 	  return timeAlert;
   }
