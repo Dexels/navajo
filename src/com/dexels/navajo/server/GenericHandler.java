@@ -125,26 +125,26 @@ public final class GenericHandler extends ServiceHandler {
 
     }
     
-    private static final Object[] getScriptPathServiceNameAndScriptFile(Access a) {
+    private static final Object[] getScriptPathServiceNameAndScriptFile(String rpcName, boolean betaUser) {
     	String scriptPath = DispatcherFactory.getInstance().getNavajoConfig().getScriptPath();
     	
-    	int strip = a.rpcName.lastIndexOf("/");
+    	int strip = rpcName.lastIndexOf("/");
         String pathPrefix = "";
-        String serviceName = a.rpcName;
+        String serviceName = rpcName;
         if (strip != -1) {
-          serviceName = a.rpcName.substring(strip+1);
-          pathPrefix = a.rpcName.substring(0, strip) + "/";
+          serviceName = rpcName.substring(strip+1);
+          pathPrefix = rpcName.substring(0, strip) + "/";
         }
         
-    	File scriptFile = new File(scriptPath + "/" + a.rpcName + "_" + applicationGroup + ".xml");
+    	File scriptFile = new File(scriptPath + "/" + rpcName + "_" + applicationGroup + ".xml");
     	if (scriptFile.exists()) {
     		serviceName += "_" + applicationGroup;
     	} else {
-    		scriptFile = new File(scriptPath + "/" + a.rpcName + ( a.betaUser ? "_beta" : "" ) + ".xml" );
-    		if ( a.betaUser && !scriptFile.exists() ) {
+    		scriptFile = new File(scriptPath + "/" + rpcName + ( betaUser ? "_beta" : "" ) + ".xml" );
+    		if ( betaUser && !scriptFile.exists() ) {
     			// Try normal webservice.
-    			scriptFile = new File(scriptPath + "/" + a.rpcName + ".xml" );
-    		} else if ( a.betaUser ) {
+    			scriptFile = new File(scriptPath + "/" + rpcName + ".xml" );
+    		} else if ( betaUser ) {
     			serviceName += "_beta";
     		} 
     		// Check if scriptFile exists.
@@ -176,7 +176,7 @@ public final class GenericHandler extends ServiceHandler {
 		}
     	
     	
-   	System.err.println("Found JSR223 based script!"); // Or a non existing script
+   	System.err.println("Found JSR223 based script! (" + rpcName + ")" ); // Or a non existing script
 		// jsr 223 script.
 		File currentScriptDir = new File(DispatcherFactory.getInstance().getNavajoConfig().getScriptPath() + "/" + pathPrefix);
 		final String servName = serviceName;
@@ -192,9 +192,9 @@ public final class GenericHandler extends ServiceHandler {
 		
 		
 		// TODO beware, scripts can be null
-		for (File file : scripts) {
-			System.err.println("Script: " + file.getName());
-		}
+//		for (File file : scripts) {
+//			System.err.println("Script: " + file.getName());
+//		}
 		if (scripts.length > 1) {
 			System.err.println("Warning, multiple candidates. Assuming the first: " + scripts[0].getName());
 		}
@@ -265,7 +265,7 @@ public final class GenericHandler extends ServiceHandler {
      * @return
      */
     public final static boolean needsRecompile(Access a) {
-    	Object [] all = getScriptPathServiceNameAndScriptFile(a);
+    	Object [] all = getScriptPathServiceNameAndScriptFile(a.rpcName, a.betaUser);
     	File scriptFile = (File) all[2];
     	File sourceFile = (File) all[4];
     	String className = (String) all[5];
@@ -279,13 +279,13 @@ public final class GenericHandler extends ServiceHandler {
     	return nr;
     }
     
-    public static CompiledScript compileScript(Access a, String rpcName, StringBuffer compilerErrors) throws Exception {
+    public static CompiledScript compileScript(Access a, StringBuffer compilerErrors) throws Exception {
     	
     	NavajoConfigInterface properties = DispatcherFactory.getInstance().getNavajoConfig();
     	
     	String scriptPath = properties.getScriptPath();
     	
-    		Object [] all = getScriptPathServiceNameAndScriptFile(a);
+    		Object [] all = getScriptPathServiceNameAndScriptFile(a.rpcName, a.betaUser);
     		String pathPrefix = (String) all[0];
     		String serviceName = (String) all[1];
     		File scriptFile = (File) all[2];
@@ -378,7 +378,7 @@ public final class GenericHandler extends ServiceHandler {
     	
         try {
             // Should method getCompiledNavaScript be fully synced???
-        	CompiledScript cso = compileScript(access, access.rpcName, compilerErrors);
+        	CompiledScript cso = compileScript(access, compilerErrors);
             outDoc = NavajoFactory.getInstance().createNavajo();
             access.setOutputDoc(outDoc);
             access.setCompiledScript(cso);
