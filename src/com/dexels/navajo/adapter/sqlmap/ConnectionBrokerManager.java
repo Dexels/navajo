@@ -391,7 +391,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager {
   }
 
   public boolean isAvailable(String datasource) {
-	  
+
 	  // Make sure to strip "'".
 	  SQLMapBroker broker = ( (SQLMapBroker)this.brokerMap.get(datasource.replaceAll("'", "")));
 	  if ( broker == null ) {
@@ -400,18 +400,28 @@ public class ConnectionBrokerManager extends Object implements ResourceManager {
 	  }
 	  int useCount = broker.broker.getUseCount();
 	  int totalCount = broker.broker.getMaxCount();
+
+	  boolean available = ( totalCount > useCount );
+	  if ( available ) { // Reset currentWaitingTime if resource is available.
+		  currentWaitingTime = 0;
+	  }
 	  
-	  return ( totalCount > useCount );
+	  System.err.println("IN CONNECTIONBROKER MANAGER: " + useCount + "/" + totalCount + ", current waiting time: " + currentWaitingTime);
 	  
+	  return available;
   }
 
-/**
- * Return waiting time for unavailable resource in millis.
- * 
- */
-public int getWaitingTime(String resourceId) {
-	return 500;
-}
+  /**
+   * Return waiting time for unavailable resource in millis.
+   * 
+   */
+
+  private int currentWaitingTime = 0;
+  
+  public int getWaitingTime(String resourceId) {
+	  currentWaitingTime += 500; // Offset current waiting time...
+	  return currentWaitingTime;
+  }
 
 } // public class ConnectionBrokerManager
 // EOF: $RCSfile$ //
