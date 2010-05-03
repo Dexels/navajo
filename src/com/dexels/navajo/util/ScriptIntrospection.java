@@ -78,7 +78,9 @@ public class ScriptIntrospection {
 		StringBuffer compilerErrors = new StringBuffer();
 		String error = "";
 		try {
-			myCompiledScript = gh.compileScript(new Access(), script, compilerErrors);
+			Access a = new Access();
+			a.rpcName = script;
+			myCompiledScript = gh.compileScript(a, compilerErrors);
 		} catch (Throwable t) {
 			errors = compilerErrors.toString();
 			if ( errors.equals("" )) {
