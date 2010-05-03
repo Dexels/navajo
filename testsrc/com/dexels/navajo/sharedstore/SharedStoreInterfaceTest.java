@@ -37,7 +37,7 @@ class SerializableObject implements Serializable {
 	
 	private void writeObject(ObjectOutputStream aStream) throws IOException {
     	aStream.defaultWriteObject();
-    	System.err.println("IN WRITEOBJECT(): " + this.hashCode() + ", field " + field);
+    	//System.err.println("IN WRITEOBJECT(): " + this.hashCode() + ", field " + field);
     }
 	
 }
@@ -215,7 +215,18 @@ public class SharedStoreInterfaceTest extends TestCase {
 		Assert.assertFalse(new File("/tmp/sharedstore/myparent/mystoredobject3").exists());
 	}
 
-	
+	public void testRemoveAllRecursive() throws Exception {
+		si.store("myparent/child1", "mystoredobject1", new SerializableObject(), false, false);
+		si.store("myparent/child2", "mystoredobject2", new SerializableObject(), false, false);
+		si.store("myparent/child3", "mystoredobject3", new SerializableObject(), false, false);
+		Assert.assertTrue(new File("/tmp/sharedstore/myparent/child1/mystoredobject1").exists());
+		Assert.assertTrue(new File("/tmp/sharedstore/myparent/child2/mystoredobject2").exists());
+		Assert.assertTrue(new File("/tmp/sharedstore/myparent/child3/mystoredobject3").exists());
+		si.removeAll("myparent");
+		Assert.assertFalse(new File("/tmp/sharedstore/myparent/child1/mystoredobject1").exists());
+		Assert.assertFalse(new File("/tmp/sharedstore/myparent/child2/mystoredobject2").exists());
+		Assert.assertFalse(new File("/tmp/sharedstore/myparent/child3/mystoredobject3").exists());
+	}
 	
 	public void testStoreText() throws Exception {
 		si.storeText("myparent", "mytextobject", "text", false, false);
@@ -516,6 +527,27 @@ public class SharedStoreInterfaceTest extends TestCase {
 		Assert.assertEquals(s, is.readLine());
 	}
 
+	public void testGetParentObjects() throws Exception {
+		
+		SerializableObject s1 = new SerializableObject();s1.setField("ONE");
+		SerializableObject s2 = new SerializableObject();s2.setField("TWO");
+		SerializableObject s3 = new SerializableObject();s3.setField("THREE");
+		si.store("myparent/child1", "myobject1", s1, false, false);
+		si.store("myparent/child2", "myobject2", s2, false, false);
+		si.store("myparent/child3", "myobject3", s3, false, false);
+		String [] obs = si.getObjects("myparent");
+		Assert.assertEquals(0, obs.length);
+			
+		obs = si.getObjects("myparent/child1");
+		Assert.assertEquals(1, obs.length);
+		
+		obs = si.getObjects("myparent/child2");
+		Assert.assertEquals(1, obs.length);
+		
+		obs = si.getObjects("myparent/child3");
+		Assert.assertEquals(1, obs.length);
+		
+	}
 	
 	public void testGetObjects() throws Exception {
 		SerializableObject s1 = new SerializableObject();s1.setField("ONE");
