@@ -15,18 +15,21 @@ public class ResourceCheckerTest extends TestCase {
 	public void testAvailable() throws Exception {
 		ResourceChecker rc = new ResourceChecker();
 		rc.init(new CompiledTestScript());
-		assertFalse(rc.isAvailable());
+		assertNotNull(rc.getServiceAvailability());
+		assertFalse(rc.getServiceAvailability().isAvailable());
 	}
 	
 	public void testWaitingTime() throws Exception {
 		ResourceChecker rc = new ResourceChecker();
 		rc.init(new CompiledTestScript());
-		assertEquals(2000, rc.getWaitingTime());
+		assertNotNull(rc.getServiceAvailability());
+		assertEquals(2000, rc.getServiceAvailability().getWaitingTime());
 	}
 
 	public void testAvailable2() throws Exception {
 		ResourceChecker rc = new ResourceChecker();
 		rc.init(new CompiledTestScript2());
-		assertTrue(rc.isAvailable());
+		assertNotNull(rc.getServiceAvailability());
+		assertTrue(rc.getServiceAvailability().isAvailable());
 	}
 }

@@ -2,6 +2,7 @@ package com.dexels.navajo.server.resource;
 
 import java.util.HashMap;
 
+import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.events.NavajoEvent;
 import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.NavajoListener;
@@ -35,11 +36,12 @@ public class ResourceCheckerManager implements NavajoListener {
 	 * @param webservice
 	 * @return
 	 */
-	public synchronized ResourceChecker getResourceChecker(String webservice) {
+	public synchronized ResourceChecker getResourceChecker(String webservice, Navajo inMessage) {
 		ResourceChecker rc = checkedService.get(webservice);
 		if ( rc == null ) {
 			rc = new ResourceChecker(webservice);
-			checkedService.put(webservice, rc);
+			rc.setInMessage(inMessage);
+			//checkedService.put(webservice, rc);
 		}
 		return rc;
 	}
