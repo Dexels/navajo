@@ -271,6 +271,10 @@ public final class DbConnectionBroker extends Object
 		return current;
 	}
 	
+	public final int getMaxCount() {
+		return conns.length;
+	}
+	
 	public final String getDbIdentifier() {
 		return dbIdentifier;
 	}
