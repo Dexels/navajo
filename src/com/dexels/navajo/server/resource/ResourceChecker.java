@@ -24,13 +24,16 @@ import com.dexels.navajo.server.GenericHandler;
  */
 public class ResourceChecker {
 
-	HashMap<AdapterFieldDependency,ResourceManager> managedResources = new HashMap<AdapterFieldDependency,ResourceManager>();
+	HashMap<AdapterFieldDependency,Method> managedResources = new HashMap<AdapterFieldDependency,Method>();
 	
 	private Navajo inMessage = null;
 	private boolean initialized = false;
+	private CompiledScript myCompiledScript = null;
 	
-	public ResourceChecker() {
+	public ResourceChecker(CompiledScript s) {
 		// For unit tests.
+		this.myCompiledScript = s;
+		init();
 	}
 	
 	protected ResourceChecker(String webservice) {
@@ -40,18 +43,18 @@ public class ResourceChecker {
 		try {
 			Access a = new Access();
 			a.rpcName = webservice;
-			CompiledScript myCompiledScript = gh.compileScript(a, compilerErrors);
+			this.myCompiledScript = gh.compileScript(a, compilerErrors);
 			if ( myCompiledScript == null ) {
 				System.err.println("ResourceChecker: Could not find compiledscript for: " + webservice);
 			} else {
-				init(myCompiledScript);
+				init();
 			}
 		} catch (Throwable t) {
 			t.printStackTrace(System.err);
 		}
 	}
 	
-	public final void init(CompiledScript myCompiledScript) {
+	public final void init() {
 
 		if ( myCompiledScript.getDependentObjects() == null ) {
 			System.err.println("ResourceChecker: Could not find dependent objects for: " + myCompiledScript.getClass());
@@ -66,16 +69,13 @@ public class ResourceChecker {
 					Class c = Class.forName(afd.getJavaClass(), true, myCompiledScript.getClass().getClassLoader());
 					Method m = c.getMethod("getResourceManager", new Class[]{String.class});
 					if ( m != null ) {
-						Object o = m.invoke(null, new Object[]{afd.getType()});
-						if ( o != null ) {
-							ResourceManager rm = (ResourceManager) o;
-							managedResources.put(afd, rm);
-						} 
+						//System.err.println("Found method getResourceManager() for " + afd.getJavaClass());
+						managedResources.put(afd, m);
 					}
 				} catch (Throwable e) {  }
 			}
 		}
-		
+
 		initialized = true;
 	}
 	
@@ -115,20 +115,28 @@ public class ResourceChecker {
 		boolean available = true;
 		int maxWaitingTime = 0;
 
-		for (Entry <AdapterFieldDependency,ResourceManager> e : managedResources.entrySet()) {
+		for (Entry <AdapterFieldDependency,Method> e : managedResources.entrySet()) {
 			AdapterFieldDependency afd = e.getKey();
-			ResourceManager rm = e.getValue();
-			String resourceId = evaluateResourceId(afd.getId());
-			synchronized (rm) {
-				System.err.println("Checking availability of resource: " + resourceId);
-				if ( rm.isAvailable(resourceId) == false ) {
-					available = false;
-					int wt = rm.getWaitingTime(resourceId);
-					if ( wt > maxWaitingTime ) {
-						maxWaitingTime = wt;
+			Method m = e.getValue();
+			try {
+				Object o = m.invoke(null, new Object[]{afd.getType()});
+				if ( o != null ) {
+					ResourceManager rm = (ResourceManager) o;
+					String resourceId = evaluateResourceId(afd.getId());
+					synchronized (rm) {
+						System.err.println("Checking availability of resource: " + resourceId);
+						if ( rm.isAvailable(resourceId) == false ) {
+							available = false;
+							int wt = rm.getWaitingTime(resourceId);
+							if ( wt > maxWaitingTime ) {
+								maxWaitingTime = wt;
+							}
+							unavailableIds.add(resourceId);
+						}
 					}
-					unavailableIds.add(resourceId);
 				}
+			} catch (Exception e1) { 
+				//System.err.println("Could not check avail of: " + afd.getType() + ", msg: " + e1.getMessage()); 
 			}
 		}
 

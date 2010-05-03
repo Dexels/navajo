@@ -13,23 +13,24 @@ public class ResourceCheckerTest extends TestCase {
 	}
 	
 	public void testAvailable() throws Exception {
-		ResourceChecker rc = new ResourceChecker();
-		rc.init(new CompiledTestScript());
+		ResourceChecker rc = new ResourceChecker(new CompiledTestScript());
 		assertNotNull(rc.getServiceAvailability());
 		assertFalse(rc.getServiceAvailability().isAvailable());
 	}
 	
 	public void testWaitingTime() throws Exception {
-		ResourceChecker rc = new ResourceChecker();
-		rc.init(new CompiledTestScript());
+		ResourceChecker rc = new ResourceChecker(new CompiledTestScript());
 		assertNotNull(rc.getServiceAvailability());
 		assertEquals(2000, rc.getServiceAvailability().getWaitingTime());
 	}
 
 	public void testAvailable2() throws Exception {
-		ResourceChecker rc = new ResourceChecker();
-		rc.init(new CompiledTestScript2());
+		ResourceChecker rc = new ResourceChecker(new CompiledTestScript2());
 		assertNotNull(rc.getServiceAvailability());
 		assertTrue(rc.getServiceAvailability().isAvailable());
+	}
+	
+	public void testManager() throws Exception {
+		
 	}
 }

@@ -40,9 +40,9 @@ public class ResourceCheckerManager implements NavajoListener {
 		ResourceChecker rc = checkedService.get(webservice);
 		if ( rc == null ) {
 			rc = new ResourceChecker(webservice);
-			rc.setInMessage(inMessage);
-			//checkedService.put(webservice, rc);
+			checkedService.put(webservice, rc);
 		}
+		rc.setInMessage(inMessage);
 		return rc;
 	}
 	
