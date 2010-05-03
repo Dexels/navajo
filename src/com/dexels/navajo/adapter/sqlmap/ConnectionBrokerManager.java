@@ -22,11 +22,12 @@ import java.util.Map;
 import java.util.HashMap;
 
 import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.server.resource.ResourceManager;
 
 import org.dexels.grus.DbConnectionBroker;
 import java.sql.*;
 
-public class ConnectionBrokerManager extends Object {
+public class ConnectionBrokerManager extends Object implements ResourceManager {
 
   private Map brokerMap = Collections.synchronizedMap(new HashMap());
   private boolean debug = true;
@@ -388,6 +389,29 @@ public class ConnectionBrokerManager extends Object {
 	}
 
   }
+
+  public boolean isAvailable(String datasource) {
+	  
+	  // Make sure to strip "'".
+	  SQLMapBroker broker = ( (SQLMapBroker)this.brokerMap.get(datasource.replaceAll("'", "")));
+	  if ( broker == null ) {
+		  System.err.println("Could not determine availability of resource: " + datasource);
+		  return true;
+	  }
+	  int useCount = broker.broker.getUseCount();
+	  int totalCount = broker.broker.getMaxCount();
+	  
+	  return ( totalCount > useCount );
+	  
+  }
+
+/**
+ * Return waiting time for unavailable resource in millis.
+ * 
+ */
+public int getWaitingTime(String resourceId) {
+	return 500;
+}
 
 } // public class ConnectionBrokerManager
 // EOF: $RCSfile$ //
