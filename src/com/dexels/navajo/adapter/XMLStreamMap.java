@@ -33,9 +33,9 @@ public class XMLStreamMap implements Mappable {
 			content = new Binary();
 			OutputStream ob = content.getOutputStream();
 			XMLOutputFactory xof = XMLOutputFactory.newInstance();
-			OutputStreamWriter out = new OutputStreamWriter(ob, "utf-8");
+			OutputStreamWriter out = new OutputStreamWriter(ob, "UTF8");
 			xtw = xof.createXMLStreamWriter(out);
-			xtw.writeStartDocument("utf-8", "1.0");
+			xtw.writeStartDocument("UTF-8", "1.0");
 			xtw.setPrefix("", docSpecUrl);
 			xtw.writeCharacters("\n");
 		} catch (Exception e) {
