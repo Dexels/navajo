@@ -535,10 +535,10 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
                 
             }
         }
-        out.flush();
+        //out.flush();
 
         in.close();
-        out.flush();
+        //out.flush();
         } finally {
             NavajoFactory.getInstance().fireBinaryFinished("Finished", totalSize);
         }
@@ -860,7 +860,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     	} else if ( lazySourceFile != null ) {
     		copyResource("", aStream, new FileInputStream(lazySourceFile), 0);
     	}
-    	
+    	aStream.flush();
     }
      
     public static void main(String [] args) throws Exception {
