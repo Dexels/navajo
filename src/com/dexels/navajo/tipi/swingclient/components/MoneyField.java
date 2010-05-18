@@ -5,6 +5,7 @@ import java.text.*;
 
 import javax.swing.*;
 
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.*;
 
 public class MoneyField extends AbstractPropertyField implements PropertyControlled {
@@ -46,6 +47,18 @@ public class MoneyField extends AbstractPropertyField implements PropertyControl
 	}
 
 	
+	
+	
+	@Override
+	// override setProperty to force update
+	public void setProperty(Property p) {
+		super.setProperty(p);
+		
+		if(p!=null) {
+			updateColor((Money) p.getTypedValue());
+		}
+	}
+
 	@Override
 	protected String getPresentationFormat(Object newValue) {
 		if(newValue instanceof Money) {
