@@ -10,6 +10,7 @@ import java.rmi.registry.Registry;
 
 
 import javax.management.InstanceAlreadyExistsException;
+import javax.management.InstanceNotFoundException;
 import javax.management.MBeanRegistrationException;
 import javax.management.MBeanServer;
 import javax.management.MBeanServerConnection;
@@ -160,6 +161,16 @@ public final class JMXHelper  {
 				mbs.registerMBean(o, name);
 			} catch (InstanceAlreadyExistsException e) {
 				System.err.println("WARNING: InstanceAlreadyExistsException, Could not register MXBean for domain " + domain + ": " + e.getMessage());
+				try {
+					mbs.unregisterMBean(name);
+					mbs.registerMBean(o, name);
+				} catch (MBeanRegistrationException e1) {
+					e1.printStackTrace();
+				} catch (InstanceNotFoundException e1) {
+					e1.printStackTrace();
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
 				//e.printStackTrace(System.err);
 			} catch (MBeanRegistrationException e) {
 				System.err.println("WARNING: MBeanRegistrationException, Could not register MXBean for domain " + domain + ": " + e.getMessage());
