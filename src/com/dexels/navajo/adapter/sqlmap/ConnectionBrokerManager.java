@@ -20,26 +20,33 @@ import java.util.Set;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.server.resource.ResourceManager;
+import com.dexels.navajo.server.resource.ServiceAvailability;
 
 import org.dexels.grus.DbConnectionBroker;
 import java.sql.*;
 
-public class ConnectionBrokerManager extends Object implements ResourceManager {
+
+public class ConnectionBrokerManager extends Object implements ResourceManager, ConnectionBrokerManagerMBean {
 
   private Map brokerMap = Collections.synchronizedMap(new HashMap());
+ 
   private boolean debug = true;
 
   private static Object semaphore = new Object();
   
   public ConnectionBrokerManager() {
     super();
+    JMXHelper.registerMXBean(this, JMXHelper.NAVAJO_DOMAIN, "ConnectionBrokerManager");
   }
 
   public ConnectionBrokerManager(final boolean b) {
     super();
+    JMXHelper.registerMXBean(this, JMXHelper.NAVAJO_DOMAIN, "ConnectionBrokerManager");
     this.debug = b;
   }
 
@@ -128,10 +135,52 @@ public class ConnectionBrokerManager extends Object implements ResourceManager {
 	  }
   }
 
+  /**
+   * Gets set of all brokers identified by given url.
+   * 
+   * @param url
+   * @return
+   */
+  public final Set<SQLMapBroker> getBrokersByUrl(String url) {
+	  Iterator<Entry> allDatasources = brokerMap.entrySet().iterator();
+	  HashSet<SQLMapBroker> all = new HashSet<SQLMapBroker>();
+	  while ( allDatasources.hasNext() ) {
+		  Entry entry = allDatasources.next();
+		  String datasource = (String) entry.getKey();
+		  SQLMapBroker b = (SQLMapBroker) entry.getValue();
+		  if ( b.getUrl().equals(url) ) {
+			  all.add(b);
+		  }
+	  }
+	  return all;
+  }
+  
   public final String getDatasourceUrl(String datasource) {
 	  SQLMapBroker b = (SQLMapBroker) brokerMap.get(datasource);
 	  if ( b != null ) {
 		  return b.getUrl();
+	  } else {
+		  return null;
+	  }
+  }
+  
+  public int getMaxConnectionsByDatasource(String datasource) {
+	  SQLMapBroker b = (SQLMapBroker) brokerMap.get(datasource);
+	  if ( b != null && b.broker != null ) {
+		  return b.broker.getMaxCount();
+	  } else {
+		  return -1;
+	  }
+  }
+  
+  public synchronized void setMaxConnectionsByDatasource(String datasource) {
+	  // NOT YET SUPPORTED.
+  }
+  
+  public final String getDatasourceUsername(String datasource) {
+	  SQLMapBroker b = (SQLMapBroker) brokerMap.get(datasource);
+	  if ( b != null ) {
+		  return b.username;
 	  } else {
 		  return null;
 	  }
@@ -273,7 +322,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager {
 
 
 	  SQLMapBroker broker = (SQLMapBroker) brokerMap.get( datasource );
-	  if ( !( !donotremove && ( broker.refresh == 0 || ( broker != null && broker.broker.isDead()) ) ) ) {
+	  if ( !( !donotremove && broker != null && ( broker.refresh == 0 || broker.broker.isDead() ) ) ) {
 		  return broker;
 	  } 
 	  
@@ -314,6 +363,136 @@ public class ConnectionBrokerManager extends Object implements ResourceManager {
 	  return DbConnectionBroker.getInstances();
   }
   
+  public int getDatasourceCount() {
+	  return brokerMap.size();
+  }
+  
+  public int getActiveConnections() {
+	  Iterator<SQLMapBroker> all = brokerMap.values().iterator();
+	  int total = 0;
+	  while ( all.hasNext() ) {
+		  SQLMapBroker b = all.next();
+		  if ( b.broker != null ) {
+			  total += b.broker.getUseCount();
+		  }
+	  }
+	  return total;
+  }
+  
+  public void setHealthByUrl(String url, int health) {
+	  Set<SQLMapBroker> brokers = getBrokersByUrl(url);
+	  if ( brokers.size() > 0 ) {
+		 Iterator<SQLMapBroker> i = brokers.iterator();
+		 while ( i.hasNext() ) {
+			 SQLMapBroker b = i.next();
+			 b.health = health;
+		 }
+	  } else {
+		  System.err.println("Could not find datasource associated with url: " + url);
+	  }
+  }
+  
+  public int getActiveConnectionsByUrl(String url) {
+	  Set<SQLMapBroker> brokers = getBrokersByUrl(url);
+	  int total = 0;
+	  if ( brokers.size() > 0 ) {
+		  Iterator<SQLMapBroker> i = brokers.iterator();
+			 while ( i.hasNext() ) {
+				 SQLMapBroker b = i.next();
+				 total++;
+			 }
+	  } 
+	  return total;
+  }
+
+  public int getActiveConnectionsByDatasource(String datasource) {
+	  SQLMapBroker broker = (SQLMapBroker) brokerMap.get(datasource);
+	  if ( broker != null && broker.broker != null ) {
+		  return broker.broker.getUseCount();
+	  }
+	  return -1;
+  }
+  
+  public String getDefinedDatasources() {
+	  Iterator<SQLMapBroker> all = brokerMap.values().iterator();
+	  StringBuffer sb = new StringBuffer();
+	  while ( all.hasNext() ) {
+		  sb.append(all.next().datasource + ",");
+	  }
+	  if ( sb.length() > 0 ) {
+		  return sb.substring(0, sb.length() - 1);
+	  } else {
+		  return "";
+	  }
+  }
+  
+  public int getHealthByUrl(String url) {
+	  
+	  int maxHealth = 0;
+	  Set<SQLMapBroker> brokers = getBrokersByUrl(url);
+	  if ( brokers.size() > 0 ) {
+		 Iterator<SQLMapBroker> i = brokers.iterator();
+		 while ( i.hasNext() ) {
+			 SQLMapBroker b = i.next();
+			 if ( b.health > maxHealth ) {
+				 maxHealth = b.health;
+			 }
+		 }
+	  } else {
+		  System.err.println("Could not find datasource associated with url: " + url);
+		  return 0;
+	  }
+	  return maxHealth;
+  }
+	
+  public int getHealth(String datasource) {
+	  SQLMapBroker broker = ( (SQLMapBroker)this.brokerMap.get(datasource.replaceAll("'", "")));
+	  if ( broker == null ) {
+		  System.err.println("Could not determine health of resource: " + datasource);
+		  return ServiceAvailability.STATUS_OK;
+	  }
+	  return broker.health;
+	}
+  
+  /**
+   * This function checks whether the resource is available (true) or temporarily unavailable.
+   * 
+   */
+  public boolean isAvailable(String datasource) {
+
+	  // Make sure to strip "'".
+	  SQLMapBroker broker = ( (SQLMapBroker)this.brokerMap.get(datasource.replaceAll("'", "")));
+	  if ( broker == null ) {
+		  System.err.println("Could not determine availability of resource: " + datasource);
+		  return true;
+	  }
+	  int useCount = broker.broker.getUseCount();
+	  int totalCount = broker.broker.getMaxCount();
+
+	  boolean available = ( totalCount > useCount );
+	  if ( available ) { // Reset currentWaitingTime if resource is available.
+		  currentWaitingTime = 0;
+	  }
+	  
+	  broker.available = available;
+	  
+	  System.err.println("IN CONNECTIONBROKER MANAGER: " + useCount + "/" + totalCount + ", current waiting time: " + currentWaitingTime);
+	  
+	  return available;
+  }
+
+  /**
+   * Return waiting time for unavailable resource in millis.
+   * 
+   */
+
+  private int currentWaitingTime = 0;
+  
+  public int getWaitingTime(String resourceId) {
+	  currentWaitingTime += 500; // Offset current waiting time...
+	  return currentWaitingTime;
+  }
+  
   private class SQLMapBroker
       extends Object
       implements Cloneable {
@@ -330,6 +509,9 @@ public class ConnectionBrokerManager extends Object implements ResourceManager {
     public Boolean autocommit;
     public DbConnectionBroker broker;
     public DatabaseInfo dbInfo = null;
+    
+    public boolean available = true;
+    public int health;
 
     public SQLMapBroker(final String dsrc, final String drv, final String url,
                         final String usr,
@@ -388,39 +570,6 @@ public class ConnectionBrokerManager extends Object implements ResourceManager {
 		return url;
 	}
 
-  }
-
-  public boolean isAvailable(String datasource) {
-
-	  // Make sure to strip "'".
-	  SQLMapBroker broker = ( (SQLMapBroker)this.brokerMap.get(datasource.replaceAll("'", "")));
-	  if ( broker == null ) {
-		  System.err.println("Could not determine availability of resource: " + datasource);
-		  return true;
-	  }
-	  int useCount = broker.broker.getUseCount();
-	  int totalCount = broker.broker.getMaxCount();
-
-	  boolean available = ( totalCount > useCount );
-	  if ( available ) { // Reset currentWaitingTime if resource is available.
-		  currentWaitingTime = 0;
-	  }
-	  
-	  System.err.println("IN CONNECTIONBROKER MANAGER: " + useCount + "/" + totalCount + ", current waiting time: " + currentWaitingTime);
-	  
-	  return available;
-  }
-
-  /**
-   * Return waiting time for unavailable resource in millis.
-   * 
-   */
-
-  private int currentWaitingTime = 0;
-  
-  public int getWaitingTime(String resourceId) {
-	  currentWaitingTime += 500; // Offset current waiting time...
-	  return currentWaitingTime;
   }
 
 } // public class ConnectionBrokerManager
