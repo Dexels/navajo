@@ -29,6 +29,7 @@ public class ResourceChecker {
 	private Navajo inMessage = null;
 	private boolean initialized = false;
 	private CompiledScript myCompiledScript = null;
+	private String webservice;
 	
 	public ResourceChecker(CompiledScript s) {
 		// For unit tests.
@@ -38,6 +39,7 @@ public class ResourceChecker {
 	
 	protected ResourceChecker(String webservice) {
 
+		this.webservice = webservice;
 		GenericHandler gh = new GenericHandler();
 		StringBuffer compilerErrors = new StringBuffer();
 		try {
@@ -114,7 +116,8 @@ public class ResourceChecker {
 
 		boolean available = true;
 		int maxWaitingTime = 0;
-
+		int finalHealth = 0;
+		
 		for (Entry <AdapterFieldDependency,Method> e : managedResources.entrySet()) {
 			AdapterFieldDependency afd = e.getKey();
 			Method m = e.getValue();
@@ -124,8 +127,13 @@ public class ResourceChecker {
 					ResourceManager rm = (ResourceManager) o;
 					String resourceId = evaluateResourceId(afd.getId());
 					synchronized (rm) {
-						System.err.println("Checking availability of resource: " + resourceId);
-						if ( rm.isAvailable(resourceId) == false ) {
+						
+						int health = rm.getHealth(resourceId);
+						if ( health > finalHealth ) {
+							finalHealth = health;
+						}
+						System.err.println("Checking availability of resource: " + resourceId + ", health: " + health);
+						if ( rm.isAvailable(resourceId) == false || health == ServiceAvailability.STATUS_DEAD ) {
 							available = false;
 							int wt = rm.getWaitingTime(resourceId);
 							if ( wt > maxWaitingTime ) {
@@ -142,7 +150,7 @@ public class ResourceChecker {
 
 		String [] ids = new String[unavailableIds.size()];
 		ids = unavailableIds.toArray(ids);
-		ServiceAvailability sa = new ServiceAvailability(available, maxWaitingTime, ids);
+		ServiceAvailability sa = new ServiceAvailability(webservice, available, finalHealth, maxWaitingTime, ids);
 
 		return sa;
 

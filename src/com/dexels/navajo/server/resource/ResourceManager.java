@@ -4,4 +4,6 @@ public interface ResourceManager {
 
 	public boolean isAvailable(String resourceId);
 	public int getWaitingTime(String resourceId);
+	public int getHealth(String resourceId);
+	
 }
