@@ -58,7 +58,8 @@ public class JnlpCookieManager extends TmpFileCookieManager implements CookieMan
 //			ps.delete(cookieURL);
 		} catch (FileNotFoundException e) {
 			System.err.println("Cookie not found. Thats fine.");
-			long allowed = ps.create(cookieURL, 10000);
+			// allow for a bit bigger cookie
+			long allowed = ps.create(cookieURL, 100000);
 			System.err.println("New muffin, size granted: "+allowed);
 		}
 //		InputStream inputStream = fc.getInputStream();
