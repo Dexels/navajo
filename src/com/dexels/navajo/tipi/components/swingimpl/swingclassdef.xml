@@ -1277,7 +1277,7 @@
          </event>
       </events>
       <values>
-         <value direction="in" name="dividerlocation" type="integer" property="dividerLocation" />
+         <value direction="inout" name="dividerlocation" type="integer" property="dividerLocation" />
          <value direction="in" name="dividersize" type="integer" />
          <value direction="in" name="onetouchexpandable" type="boolean" />
          <value direction="in" name="inverted" type="boolean" />

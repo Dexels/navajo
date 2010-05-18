@@ -121,6 +121,16 @@ public class TipiSplitPane extends TipiSwingDataComponentImpl {
 
 	}
 
+	
+	
+	@Override
+	protected Object getComponentValue(String name) {
+		if (name.equals("dividerlocation")) {
+			((TipiSwingSplitPane) getContainer()).getDividerLocation();
+		}
+			return super.getComponentValue(name);
+	}
+
 	private void updateDividerLocation() {
 		if (!inverse_oriented) {
 			((TipiSwingSplitPane) getContainer()).setDividerLocation(dividerlocation);
