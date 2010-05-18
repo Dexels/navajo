@@ -52,7 +52,7 @@ public class ResourceChecker {
 				init();
 			}
 		} catch (Throwable t) {
-			t.printStackTrace(System.err);
+			System.err.println("ResourceChecker: Could not find compiledscript for: " + webservice + " (" + t.getMessage() + ")");
 		}
 	}
 	
