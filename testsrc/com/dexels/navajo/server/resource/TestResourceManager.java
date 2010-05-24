@@ -20,4 +20,10 @@ public class TestResourceManager implements ResourceManager {
 		}
 	}
 
+	@Override
+	public int getHealth(String resourceId) {
+		
+		return 3;
+	}
+
 }
