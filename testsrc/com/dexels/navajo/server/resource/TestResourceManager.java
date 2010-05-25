@@ -20,10 +20,8 @@ public class TestResourceManager implements ResourceManager {
 		}
 	}
 
-	@Override
-	public int getHealth(String resourceId) {
-		
-		return 3;
+    public int getHealth(String resourceId) {
+		return ServiceAvailability.STATUS_BUSY;
 	}
-
+    
 }
