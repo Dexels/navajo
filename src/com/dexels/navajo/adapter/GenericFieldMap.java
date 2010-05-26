@@ -117,7 +117,8 @@ public class GenericFieldMap implements Mappable {
 					Object name = result[i].getColumnValue("name");
 					Object value = result[i].getColumnValue("value");
 					Object type = result[i].getColumnValue("type");
-					appendProperty(id.toString(), name.toString(), value, type.toString());
+					Object required = result[i].getColumnValue("required");
+					appendProperty(id.toString(), name.toString(), value, type.toString(), required.toString());
 				}
 			}
 		}
@@ -239,7 +240,7 @@ public class GenericFieldMap implements Mappable {
 		}
 	}
 
-	private void appendProperty(String id, String name, Object value, String storedType) throws UserException {
+	private void appendProperty(String id, String name, Object value, String storedType, String required) throws UserException {
 		try {
 			String type = storedType.toLowerCase();
 			String sVal = "";
@@ -251,14 +252,21 @@ public class GenericFieldMap implements Mappable {
 			if ("boolean".equalsIgnoreCase(type) && ("1".equals(sVal) || "0".equals(sVal))) {
 				sVal = ("1".equals(sVal) ? "true" : "false");
 			}
+			
+			String subType = "";
+			if("1".equals(required)){
+				subType = "required=true";
+			}
 
 			// if selection, the value is the selected option, get the rest opf
 			// the options too.
 			if ("selection".equalsIgnoreCase(type)) {
 				Property p = constructSelectionProperty(id, name, sVal);
+				p.setSubType(subType);
 				currentOutputMessage.addProperty(p);
 			} else {
 				Property p = NavajoFactory.getInstance().createProperty(currentOutputMessage.getRootDoc(), "GF_" + id, type, sVal, 1024, name, Property.DIR_IN);
+				p.setSubType(subType);
 				currentOutputMessage.addProperty(p);
 			}
 		} catch (NavajoException e) {
