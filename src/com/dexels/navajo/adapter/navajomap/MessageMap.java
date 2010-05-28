@@ -84,14 +84,21 @@ public class MessageMap implements Mappable {
       return -1;
   }
 
-   public Object getProperty(String fullName) throws Exception {
+   public Object getProperty(String fullName) throws NavajoException, UserException {
 	   Property p = msg.getProperty(fullName);
-	   if (p != null) {
-	        return p.getTypedValue();
-	    } else {
-	      propertDoesNotExistException(fullName);
-	      return "";
-	    }
+		  if ( p == null ) {
+			  propertDoesNotExistException(fullName);
+			  return "";
+		  }
+		  if ( p.getType().equals(Property.SELECTION_PROPERTY )) {
+			  if ( p.getSelected() != null ) {
+				  return p.getSelected().getValue();
+			  } else {
+				  return null;
+			  }
+		  } else {
+			  return p.getValue();
+		  }
    }
    
   /**
@@ -115,14 +122,8 @@ public class MessageMap implements Mappable {
     }
   }
 
-  public String getStringProperty(String fullName) throws UserException {
-    Property p = msg.getProperty(fullName);
-    if (p != null) {
-        return p.getValue();
-    } else {
-      propertDoesNotExistException(fullName);
-      return "";
-    }
+  public String getStringProperty(String fullName) throws UserException, NavajoException {
+	 return (String) getProperty(fullName);
   }
 
   public Date getDateProperty(String fullName) throws UserException {
