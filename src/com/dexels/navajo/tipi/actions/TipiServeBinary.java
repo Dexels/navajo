@@ -44,11 +44,17 @@ public class TipiServeBinary extends TipiAction {
 	}
 
 	public void execute(TipiEvent e) {
-		Operand binary = getEvaluatedParameter("binary", e);
 		String expression = (String) getEvaluatedParameterValue("expression", e);
-		try {
+		
+		Operand newWindow = getEvaluatedParameter("newWindow", e);
+		boolean newWin = false;
+		if(newWindow!=null && newWindow.value!=null) {
+			Boolean b = (Boolean) newWindow.value;
+			newWin = b.booleanValue();
+		}
+			try {
 			if (expression != null) {
-				openBinary(expression);
+				openBinary(expression,newWin);
 
 			} else {
 				legacyOpenBinary(e);
@@ -127,20 +133,23 @@ public class TipiServeBinary extends TipiAction {
 		}
 	}
 
-	protected void openBinary(String expression) throws TipiBreakException, TipiException {
+	protected void openBinary(String expression, boolean newWin) throws TipiBreakException, TipiException {
 		System.err.println("My context: "+getContext()+" my context: "+myContext);
 		EchoTipiContext ee = (EchoTipiContext) getContext();
 		String result = ee.createExpressionUrl(expression);
-		openBrowser(result);
+	
+		openBrowser(result,newWin);
+
 	}
 
-	protected void openBrowser(String url) throws TipiBreakException, TipiException {
-
-		Command brc = new BrowserOpenWindowCommand(
-				url,
-				"",
-				"directories=no,location=yes,menubar=yes,personalbar=yes,resizable=yes,scrollbars=yes,status=yes,titlebar=yes,toolbar=yes, width=640,height=480");
-		ApplicationInstance.getActive().enqueueCommand(brc);
+	protected void openBrowser(String url, boolean newWin) throws TipiBreakException, TipiException {
+		if(newWin) {
+			Command brc = new BrowserOpenWindowCommand(url,"","directories=no,location=yes,menubar=yes,personalbar=yes,resizable=yes,scrollbars=yes,status=yes,titlebar=yes,toolbar=yes, width=640,height=480");
+	        ApplicationInstance.getActive().enqueueCommand(brc);
+		} else {
+			Command brc = new BrowserRedirectCommand(url);
+	        ApplicationInstance.getActive().enqueueCommand(brc);
+		}
 
 	}
 	
