@@ -171,7 +171,6 @@ public abstract class TipiAction extends TipiAbstractExecutable  {
 	}
 
 	public void setContext(TipiContext tc) {
-		System.err.println("ACTION setting context to: "+tc);
 		myContext = tc;
 	}
 
