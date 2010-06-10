@@ -89,9 +89,13 @@ public class TipiServlet extends WebContainerServlet {
 			} else {
 				if(o.value instanceof Binary) {
 					Binary b = (Binary)o.value;
-					response.setContentType(b.guessContentType());
+					String contentType = b.guessContentType();
+					response.setContentType(contentType);
 					response.setContentLength((int) b.getLength());
 					ServletOutputStream outputStream = response.getOutputStream();
+					if(contentType!=null && contentType.indexOf("html")==-1)	{
+						response.setHeader("Content-Disposition", "attachment; filename=file."+b.getExtension());						
+					}
 					b.write(outputStream);
 					outputStream.flush();
 				return;
