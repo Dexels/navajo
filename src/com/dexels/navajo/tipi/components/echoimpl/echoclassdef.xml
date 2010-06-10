@@ -79,11 +79,17 @@
     </description>
    <param name="binary" type="string"/>
    <param name="expression" type="string"/>
+   		<param name="newWindow" type="boolean"/>
+   
   </tipiaction>
   
     <tipiaction name="openBinary"  class="TipiServeBinary" package="com.dexels.navajo.tipi.actions">
+   <description>Either serves a binary directly (by writing it in a local file...) (This is the old school way), or by supplying an expression yielding a binary. This expression (a string) should be quoted. It will be encoded in a URL, which will evaluate this expression. 
+   Make sure this expression is context insensitive.
+    </description>
         <param name="binary" type="string"/>
         <param name="string" type="baseUrl"/>
+		<param name="newWindow" type="boolean"/>
     </tipiaction>
     
 
