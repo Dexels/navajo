@@ -85,6 +85,14 @@ public class EchoTipiContext extends TipiContext {
     	setCookieManager(new BrowserCookieManager());
     }
 
+    public void setSystemProperty(String name, String value) {
+   	 super.setGlobalValue(name, value);
+   	 
+    }
+    
+ 	public  String getSystemProperty(String name) {
+ 		return (String) getGlobalValue(name);
+ 	}
    
     public ApplicationInstance getInstance() {
     	return myInstance;

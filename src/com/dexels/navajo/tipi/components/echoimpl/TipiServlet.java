@@ -1,18 +1,19 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-
-import com.dexels.navajo.document.Operand;
-import com.dexels.navajo.document.types.Binary;
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import nextapp.echo2.app.ApplicationInstance;
 import nextapp.echo2.webcontainer.WebContainerServlet;
 import nextapp.echo2.webrender.WebRenderServlet;
-import nextapp.echo2.webrender.service.SessionExpiredService;
+
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.types.Binary;
 
 /**
  * <p>

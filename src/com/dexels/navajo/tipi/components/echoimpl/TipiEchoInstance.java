@@ -68,21 +68,14 @@ public class TipiEchoInstance extends ApplicationInstance implements TipiApplica
 
 		URL u = new URL(url);
 		String contextname = con.getRequest().getContextPath();
-		// deprecated the init. The context path should work
-		System.err.println("CONTEXTNAME: "+contextname);
 		String host = con.getServlet().getInitParameter("host");
-//		if (base == null) {
-//			base = contextname;
-//		}
+
 		if(host==null) {
 			host = u.getHost();
 		}
 
 		URL rootURL = null;
-
 		rootURL = new URL(u.getProtocol(),host, u.getPort(), contextname + "/logout?destination=" + u.getPath());
-		
-		System.err.println("ROOTURL: "+rootURL);
 		return rootURL;
 
 	}
@@ -122,9 +115,7 @@ public class TipiEchoInstance extends ApplicationInstance implements TipiApplica
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-//		System.err.println("Startup finished");
 		TipiScreen echo = (TipiScreen) context.getDefaultTopLevel();
-//		System.err.println("echo: " + echo.store());
  
 		TipiFrame w = (TipiFrame) echo.getTipiComponent("init");
 		if (w == null) {
@@ -135,11 +126,11 @@ public class TipiEchoInstance extends ApplicationInstance implements TipiApplica
 	}
 
 	private void initServlet(TipiContext newContext, Enumeration args) throws Exception {
-		checkForProperties(args);
+		checkForProperties(newContext, args);
 		loadTipi(newContext, tipiDef);
 	}
 
-	private Map checkForProperties(Enumeration e) {
+	private Map checkForProperties(TipiContext context, Enumeration e) {
 		Map result = new HashMap();
 		while (e.hasMoreElements()) {
 			String current = (String) e.nextElement();
@@ -160,7 +151,7 @@ public class TipiEchoInstance extends ApplicationInstance implements TipiApplica
 				System.err.println("Startup def: "+tipiDef);
 				continue;
 			}
-			System.setProperty(current, myServletConfig.getInitParameter(current));
+			context.setSystemProperty(current, myServletConfig.getInitParameter(current));
 		}
 		return result;
 	}
@@ -211,7 +202,6 @@ public class TipiEchoInstance extends ApplicationInstance implements TipiApplica
 		newContext.setDefaultTopLevel(es);
 		try {
 			System.err.println("Context created: "+newContext.hashCode());
-
 			initServlet(newContext, myServletConfig.getInitParameterNames());
 		} catch (Throwable ex) {
 			ex.printStackTrace();
