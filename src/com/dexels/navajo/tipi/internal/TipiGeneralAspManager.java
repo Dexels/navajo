@@ -20,14 +20,12 @@ public class TipiGeneralAspManager implements TipiStorageManager {
 	public final String scriptPrefix;
 	// public final String authorId;
 	private String instanceId;
-	private final TipiContext myContext;
-
+	private  TipiContext myContext;
+	
 	public static final String TYPE_SETTING = "TIPI_SETTING";
 
-	public TipiGeneralAspManager(TipiContext tc, String scriptPrefix, String instanceId) {
-		this.myContext = tc;
+	public TipiGeneralAspManager(String scriptPrefix) {
 		this.scriptPrefix = scriptPrefix;
-		this.instanceId = instanceId;
 	}
 
 	public Navajo getStorageDocument(String id) throws TipiException {
@@ -147,6 +145,11 @@ public class TipiGeneralAspManager implements TipiStorageManager {
 	public void setInstanceId(String id) {
 		System.err.println("Setting sublocale to: " + id);
 		instanceId = id;
+	}
+
+	public void setContext(TipiContext tc) {
+		this.myContext = tc;
+		
 	}
 
 }

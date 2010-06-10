@@ -117,4 +117,9 @@ public class TipiFileStorageManager implements TipiStorageManager {
 		instanceId = id;
 	}
 
+	public void setContext(TipiContext tc) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
