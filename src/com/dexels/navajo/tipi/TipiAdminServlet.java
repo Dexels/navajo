@@ -7,7 +7,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -23,8 +22,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -32,16 +29,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-//import org.apache.tomcat.util.http.fileupload.MultipartStream;
-
 import com.dexels.navajo.tipi.appmanager.ApplicationStatus;
-import com.dexels.navajo.tipi.projectbuilder.BaseJnlpBuilder;
 import com.dexels.navajo.tipi.projectbuilder.ClientActions;
-import com.dexels.navajo.tipi.projectbuilder.LocalJnlpBuilder;
 import com.dexels.navajo.tipi.projectbuilder.ProjectBuilder;
-import com.dexels.navajo.tipi.projectbuilder.TipiProjectBuilder;
-import com.dexels.navajo.tipi.projectbuilder.VersionResolver;
-import com.dexels.navajo.tipi.util.XMLElement;
 import com.oreilly.servlet.MultipartRequest;
 
 public class TipiAdminServlet extends HttpServlet {
@@ -247,7 +237,7 @@ public class TipiAdminServlet extends HttpServlet {
 			InputStream is =  request.getInputStream();
 //			File apppp = new File(applicationFolder);
 			MultipartRequest mr = new MultipartRequest(request, System.getProperty("java.io.tmpdir"),20000000);
-			Enumeration e =  mr.getFileNames();
+			Enumeration<String> e =  mr.getFileNames();
 	
 			while (e.hasMoreElements()) {
 				String object = (String) e.nextElement();
@@ -294,7 +284,7 @@ public class TipiAdminServlet extends HttpServlet {
 	
 
 	private String checkoutApp(File appDir, String application, String branch, String module) throws IOException {
-		File currentAppFolder = new File(getAppFolder(),application);
+//		File currentAppFolder = new File(getAppFolder(),application);
 //		if(!currentAppFolder.exists()) {
 //			currentAppFolder.mkdir();
 //		}
@@ -331,8 +321,8 @@ public class TipiAdminServlet extends HttpServlet {
 	private String create(String application, File appDir) {
 		File newApp = new File(appDir,application);
 		boolean result = newApp.mkdirs();
-		String appStoreUrl = getServletContext().getInitParameter("appUrl");
-		String appFolder = getServletContext().getInitParameter("appFolder");
+//		String appStoreUrl = getServletContext().getInitParameter("appUrl");
+//		String appFolder = getServletContext().getInitParameter("appFolder");
 
 		String template = getServletContext().getInitParameter("defaultTemplate");
 		String repository =  getServletContext().getInitParameter("extensionRepository");
@@ -348,7 +338,7 @@ public class TipiAdminServlet extends HttpServlet {
 	}
 	public static void buildIfNecessary(HttpServletRequest request, File appDir, ServletContext context) {
 		final String appsTag = "Apps/";
-		String requestString = request.getServletPath();
+//		String requestString = request.getServletPath();
 		String requestURI = request.getRequestURI();
 		int ind =  requestURI.indexOf(appsTag);
 		if(ind==-1) {
@@ -386,7 +376,7 @@ public class TipiAdminServlet extends HttpServlet {
 				userProperties.put("application", application);
 				File actualAppFolder = new File(appDir, application);
 				userProperties.put("zipDir", actualAppFolder.getAbsolutePath());
-				String result = AntRun.callAnt(new File(path), actualAppFolder, userProperties,null);
+				AntRun.callAnt(new File(path), actualAppFolder, userProperties,null);
 //				System.err.println("Result: "+result);
 				File output = new File(actualAppFolder,application+".zip");
 				FileInputStream fis = new FileInputStream(output);
@@ -523,15 +513,14 @@ public class TipiAdminServlet extends HttpServlet {
 		return (path.delete());
 	}
 
-	private  InputStream getZippedDir(File appStoreFolder, String appName) throws IOException {
-		File tmp = File.createTempFile("tmpDownload", ".zip");
-		System.err.println("Zipping in folder: " + appStoreFolder.getAbsolutePath() + " adding directory: " + appName + "/"
-				+ " to file: " + tmp.getAbsolutePath());
-		ZipUtils.zipAll(appStoreFolder, appName , tmp);
-		tmp.deleteOnExit();
-		FileInputStream fis = new FileInputStream(tmp);
-		return fis;
-	}
+//	private  InputStream getZippedDir(File appStoreFolder, String appName) throws IOException {
+//		File tmp = File.createTempFile("tmpDownload", ".zip");
+//		System.err.println("Zipping in folder: " + appStoreFolder.getAbsolutePath() + " adding directory: " + appName + "/"	+ " to file: " + tmp.getAbsolutePath());
+//		ZipUtils.zipAll(appStoreFolder, appName , tmp);
+//		tmp.deleteOnExit();
+//		FileInputStream fis = new FileInputStream(tmp);
+//		return fis;
+//	}
 
 	
 	private final void copyResource(OutputStream out, InputStream in) throws IOException {

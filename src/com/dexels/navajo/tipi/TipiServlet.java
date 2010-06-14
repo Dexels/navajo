@@ -4,11 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Writer;
-import java.net.URL;
 import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
-import java.util.ResourceBundle;
-import java.util.Vector;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,10 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.dexels.navajo.tipi.projectbuilder.BaseJnlpBuilder;
-import com.dexels.navajo.tipi.projectbuilder.ClientActions;
 import com.dexels.navajo.tipi.projectbuilder.LocalJnlpBuilder;
-import com.dexels.navajo.tipi.projectbuilder.ProjectBuilder;
-import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.util.XMLElement;
 
 /**
@@ -33,7 +27,6 @@ public class TipiServlet extends HttpServlet {
      */
     public TipiServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -42,7 +35,7 @@ public class TipiServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//super.doGet(request, response);
 //		String clear = 
-		long st = System.currentTimeMillis();
+//		long st = System.currentTimeMillis();
 		boolean build = false;
 		boolean clean = false;
 		if("true".equals(request.getParameter("create"))) {
