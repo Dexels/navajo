@@ -96,6 +96,7 @@ public class AsyncClient {
 		// Optionally set the HTTP method
 		 
 		System.out.println("Exchange sent");
+		// I suspect the http thread pool has daemon threads, so the vm will shut down if there are no 'real' threads.
 		Thread.sleep(10000);
 	}
 
