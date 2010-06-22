@@ -1,7 +1,6 @@
 package com.dexels.navajo.adapter;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import com.dexels.navajo.adapter.messagemap.ResultMessage;
 import com.dexels.navajo.document.Message;
@@ -82,8 +81,8 @@ public class MessageMap implements Mappable {
 		if ( msg == null ) {
 			throw new UserException(-1, "Exception joining message " + m + ": does not exist.");
 		}
-		if ( msg.getType() != Message.MSG_TYPE_ARRAY ) {
-			throw new UserException(-1, "Exception joining message " + m + ": not an array message.");
+		if ( !Message.MSG_TYPE_ARRAY.equals( msg.getType())  ) {
+			throw new UserException(-1, "Exception joining message " + m + ": not an array message, but a: "+msg.getType());
 		}
 		return msg;
 	}
