@@ -31,7 +31,7 @@ public class BasicScriptCompiler implements ScriptCompiler {
 		process(x,os);
 	}
 
-	public void compileTsl(InputStream is, OutputStream os) throws IOException {
+	public void compileTsl(InputStream is, OutputStream os, StringBuffer compilerErrors) throws IOException {
 		Writer w = new OutputStreamWriter(os);
 		compileTsl(new InputStreamReader(is), new IndentWriter(w));
 	}	
