@@ -1,0 +1,59 @@
+<tml documentImplementation="SAXP">
+   <message name="message1" type="array">
+      <message index="0" name="message1" type="array_element">
+         <property direction="" name="propje1" value="0" type="string"/>
+         <property direction="" name="propje2" value="0" type="string"/>
+         <property direction="" name="propje3" value="propjes0" type="string"/>
+      </message>
+      <message index="1" name="message1" type="array_element">
+         <property direction="" name="propje1" value="3" type="string"/>
+         <property direction="" name="propje2" value="8" type="string"/>
+         <property direction="" name="propje3" value="propjes23" type="string"/>
+      </message>
+      <message index="2" name="message1" type="array_element">
+         <property direction="" name="propje1" value="6" type="string"/>
+         <property direction="" name="propje2" value="16" type="string"/>
+         <property direction="" name="propje3" value="propjes46" type="string"/>
+      </message>
+      <message index="3" name="message1" type="array_element">
+         <property direction="" name="propje1" value="9" type="string"/>
+         <property direction="" name="propje2" value="24" type="string"/>
+         <property direction="" name="propje3" value="propjes69" type="string"/>
+      </message>
+      <message index="4" name="message1" type="array_element">
+         <property direction="" name="propje1" value="343" type="string"/>
+         <property direction="" name="propje2" value="12321" type="string"/>
+         <property direction="" name="propje3" value="propjes2321" type="string"/>
+      </message>
+   </message>
+   <message name="message2" type="array">
+      <message index="0" name="message2" type="array_element">
+         <property direction="" name="blieblab" value="0" type="string"/>
+         <property direction="" name="apenoot2" value="apenoot0" type="string"/>
+         <property direction="" name="apfelkorn" value="apfelkorn0" type="string"/>
+      </message>
+      <message index="1" name="message2" type="array_element">
+         <property direction="" name="blieblab" value="3" type="string"/>
+         <property direction="" name="apenoot2" value="apenoot8" type="string"/>
+         <property direction="" name="apfelkorn" value="apfelkorn23" type="string"/>
+      </message>
+      <message index="2" name="message2" type="array_element">
+         <property direction="" name="blieblab" value="6" type="string"/>
+         <property direction="" name="apenoot2" value="apenoot16" type="string"/>
+         <property direction="" name="apfelkorn" value="apfelkorn46" type="string"/>
+      </message>
+      <message index="3" name="message2" type="array_element">
+         <property direction="" name="blieblab" value="9" type="string"/>
+         <property direction="" name="apenoot2" value="apenoot24" type="string"/>
+         <property direction="" name="apfelkorn" value="apfelkorn69" type="string"/>
+      </message>
+      <message index="4" name="message2" type="array_element">
+         <property direction="" name="blieblab" value="0" type="string"/>
+         <property direction="" name="apenoot2" value="12321" type="string"/>
+         <property direction="" name="apfelkorn" value="propjes2321" type="string"/>
+      </message>
+   </message>
+   <message name="ResultingMessage" type="array">
+   </message>
+   <methods/>
+</tml>
