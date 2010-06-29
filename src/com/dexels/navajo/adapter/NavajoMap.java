@@ -96,7 +96,18 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
 
   public String method;
   
-  private Object waitForResult = new Object();
+  // If block is set, the web service calls blocks until a result is received.
+  public boolean block = false;
+  
+  public boolean isBlock() {
+	  return block;
+  }
+
+  public void setBlock(boolean block) {
+	  this.block = block;
+  }
+
+private Object waitForResult = new Object();
   
   public void load(Access access) throws MappableException, UserException {
     this.access = access;
@@ -509,6 +520,9 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
 			  try {
 				  inDoc = null;
 				  SchedulerRegistry.getScheduler().submit(this, true);
+				  if ( block ) {
+					  waitForResult();
+				  }
 			  } catch (IOException e) {
 				  e.printStackTrace();
 			  }
