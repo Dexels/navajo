@@ -326,12 +326,12 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
 		  }
 		  catch (NavajoException ne) {
 			  ne.printStackTrace(Access.getConsoleWriter(myAccess));
-			  AuditLog.log("SQLMap", ne.getMessage(), Level.SEVERE, myAccess.accessID);
+			  AuditLog.log("SQLMap", ne.getMessage(), Level.SEVERE, (myAccess != null ? myAccess.accessID : "unknown access") );
 			  throw new MappableException(ne.getMessage());
 		  }
 		  catch (java.io.IOException fnfe) {
 			  fnfe.printStackTrace(Access.getConsoleWriter(myAccess));
-			  AuditLog.log("SQLMap", fnfe.getMessage(), Level.SEVERE, myAccess.accessID);
+			  AuditLog.log("SQLMap", fnfe.getMessage(), Level.SEVERE, (myAccess != null ? myAccess.accessID : "unknown access"));
 			  throw new MappableException(
 					  "Could not load configuration file for SQLMap object: " +
 					  fnfe.getMessage());
@@ -397,7 +397,7 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
 		  }
 	  }
 	  catch (SQLException sqle) {
-		  AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, myAccess.accessID);
+		  AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, (myAccess != null ? myAccess.accessID : "unknown access") );
 		  sqle.printStackTrace(Access.getConsoleWriter(myAccess));
 	  } finally {
 		  try {
@@ -439,7 +439,7 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
 		  catch (SQLException sqle) {
 			  System.err.println("COULD NOT RESET SCHEMA");
 			  System.err.println(resetSession);
-			  AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, myAccess.accessID);
+			  AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, (myAccess != null ? myAccess.accessID : "unknown access") );
 			  throw new UserException( -1, sqle.getMessage(), sqle);
 		  } finally {
 			  if ( fixedBroker != null && con != null && myConnectionBroker != null ) {
@@ -471,7 +471,7 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
 		  }
 	  }
 	  catch (SQLException sqle) {
-		  AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, myAccess.accessID);
+		  AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, (myAccess != null ? myAccess.accessID : "unknown access") );
 		  throw new UserException( -1, sqle.getMessage(), sqle);
 	  }
 	  overideAutoCommit = true;
@@ -494,7 +494,7 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
     if (con == null) {
 
     	boolean exists = transactionContextMap.containsKey(i + "");
-    	AuditLog.log("SQLMap", "Invalid transaction context: " + i, Level.SEVERE,myAccess.accessID + " (exists=" + exists + ")");
+    	AuditLog.log("SQLMap", "Invalid transaction context: " + i, Level.SEVERE,(myAccess != null ? myAccess.accessID : "unknown access") + " (exists=" + exists + ")");
     	throw new UserException( -1, "Invalid transaction context set (exists=" + exists + ")");
     }
   }
@@ -809,7 +809,7 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
       con = myConnectionBroker.getConnection();
 
       if (con == null) {
-    	  AuditLog.log("SQLMap", "Could not connect to database: " + datasource +  ", one more try with fresh broker....", Level.WARNING, myAccess.accessID);
+    	  AuditLog.log("SQLMap", "Could not connect to database: " + datasource +  ", one more try with fresh broker....", Level.WARNING, (myAccess != null ? myAccess.accessID : "unknown access"));
 
     	  Message msg = configFile.getMessage("/datasources/" + datasource);
     	  try {
@@ -984,7 +984,7 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
 
     if (con == null) {
     	AuditLog.log("SQLMap",   "Could not connect to database: " + datasource +
-                ", check your connection", Level.SEVERE, myAccess.accessID);
+                ", check your connection", Level.SEVERE, (myAccess != null ? myAccess.accessID : "unknown access") );
     
       throw new UserException( -1,
           "in SQLMap. Could not open database connection [driver = " + driver +
@@ -1319,7 +1319,7 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
     }
     catch (SQLException sqle) {
       sqle.printStackTrace(Access.getConsoleWriter(myAccess));
-      AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, (myAccess != null ? myAccess.accessID : "unknown access") );
+      AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, (myAccess != null ? (myAccess != null ? myAccess.accessID : "unknown access") : "unknown access") );
       throw new UserException( -1, sqle.getMessage());
     }
     finally {
@@ -1367,7 +1367,7 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
 
     }
     catch (Exception e) {
-    	AuditLog.log("SQLMap", e.getMessage(), Level.SEVERE, myAccess.accessID);
+    	AuditLog.log("SQLMap", e.getMessage(), Level.SEVERE, (myAccess != null ? myAccess.accessID : "unknown access") );
       throw new UserException( -1, e.getMessage());
     }
     //System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> OPEN RESULT SETS: " + openResultSets);
@@ -1519,7 +1519,7 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
           ", url = " + url + ", username = '" + username +
           "', password = '" + password + "']";
 
-      AuditLog.log("SQLMap", msg, Level.WARNING, myAccess.accessID);
+      AuditLog.log("SQLMap", msg, Level.WARNING, (myAccess != null ? myAccess.accessID : "unknown access") );
      
       if (debug) {
     	  Access.writeToConsole(myAccess, this.getClass() + ": " + msg + "\n");
