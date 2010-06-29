@@ -229,7 +229,6 @@ public class MessageMap implements Mappable {
 		
 		this.resultMessage = new ResultMessage[resultingMessage.size()];
 		this.resultMessage = (ResultMessage []) resultingMessage.toArray(resultMessage);
-		System.err.println("ResultMessage size: " + this.resultMessage.length);
 		return this.resultMessage;
 	}
 	

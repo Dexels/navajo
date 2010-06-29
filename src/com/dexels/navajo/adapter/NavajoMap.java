@@ -853,8 +853,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
   }
   
   public void setMethod(String name) {
-	  System.out.println("NavajoMap: in setMethod(), name = " + name);
-	  this.method = name;
+	 this.method = name;
   }
   
   public void setPerformOrderBy(boolean b) {
@@ -862,25 +861,20 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
   }
 
   public void afterRequest() throws UserException {
-	  System.out.println("NavajoMap: in afterRequest()");
 	  if (method == null)
 		  throw new UserException(-1, "AsyncProxyMap: specify a method");
   }
 
   public void afterResponse() {
-	  System.out.println("NavajoMap: in afterResponse()");
 	  access.setOutputDoc(inDoc);
   }
 
   public int getPercReady() {
-	  System.out.println("NavajoMap: in getPercReady()");
 	  return 0;
   }
 
   public void beforeResponse(Access access) {
 	  access.setOutputDoc(inDoc);
-	  System.out.println("NavajoMap: in beforeResponse()");
-	  System.out.println("INDOC = " + access.getOutputDoc());
   }
 
   public void continueAfterRun() {
