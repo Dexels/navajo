@@ -97,7 +97,7 @@ public class MessageMap implements Mappable {
 				  return null;
 			  }
 		  } else {
-			  return p.getValue();
+			  return p.getTypedValue();
 		  }
    }
    

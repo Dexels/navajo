@@ -125,7 +125,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
 	  appendTo = messageOffset;
   }
   
-  private synchronized void waitForResult() {
+  private final synchronized void waitForResult() {
 	  if ( inDoc == null ) {
 		  // Wait for result.
 		  synchronized (waitForResult) {
@@ -153,121 +153,121 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
   public final void setAppend(String messageOffset) throws UserException {
 
 	  waitForResult();
-	
-    if (messageOffset.equals("")) {
-       access.setOutputDoc(inDoc);
-       return;
-    }
 
-    try {
-        Navajo currentDoc = access.getOutputDoc();
-        Message currentMsg = access.getCurrentOutMessage();
-        List<Message> list = null;
-        // If append message equals '/'.
-        if ( messageOffset.equals(Navajo.MESSAGE_SEPARATOR) ) {
-        	list = inDoc.getAllMessages();
-        } else if ( inDoc.getMessage(messageOffset) == null ) {
-        	return;
-        } else if ( !inDoc.getMessage(messageOffset).getType().equals(Message.MSG_TYPE_ARRAY) ) {
-        	list = new ArrayList<Message>();
-        	list.add( inDoc.getMessage(messageOffset) );
-        } else { // For array messages...
-        	list = new ArrayList<Message>();
-        	list.add(inDoc.getMessage(messageOffset));
-        	//list = inDoc.getMessages(messageOffset);
-        }
-        	
-        /**
-         * appendTo logic. If appendTo ends with '/' append the entire append message to the defined appendTo message.
-         * If appendTo does not end with '/', merge the append message with the defined appendTo message.
-         */
-        boolean appendToComplete = ( appendTo != null && !appendTo.equals(Navajo.MESSAGE_SEPARATOR) && appendTo.endsWith(Navajo.MESSAGE_SEPARATOR) );
-        if ( appendToComplete ) {
-        	// Strip last "/".
-        	appendTo = appendTo.substring(0, appendTo.length() - 1);
-        }
-        
-        // Check whether incoming array message needs to be expanded: if not appendToComplete and if appendTo is defined and
-        // appendTo is array message.
-        
-        boolean appendToIsArray = false;
-        if ( appendTo != null && currentMsg != null &&   currentMsg.getMessage(appendTo) != null && currentMsg.getMessage(appendTo).getType().equals(Message.MSG_TYPE_ARRAY )) {
-        	appendToIsArray = true;
-        }
-        
-        if ( appendTo != null && currentDoc.getMessage(appendTo) != null && currentDoc.getMessage(appendTo).getType().equals(Message.MSG_TYPE_ARRAY) ) {
-        	appendToIsArray = true;
-        }
-        if ( !appendToComplete && appendTo != null && 
-             list != null && 
-             list.get(0) != null && 
-             list.get(0).getType().equals(Message.MSG_TYPE_ARRAY) &&
-             appendToIsArray
-           ) {
-        	// Expand list if it contains an array message.
-        	list = list.get(0).getAllMessages();
-        }
-        
-        for (int i = 0; i < list.size(); i++) {
-          Message inMsg = (Message) list.get(i);
-          // Clone message and append it to currentMsg if it exists, else directly under currentDoc.
-          //currentDoc.importMessage(inMsg);
-          Message clone = inDoc.copyMessage(inMsg, currentDoc);
-          if (currentMsg != null) {
-        	  if ( appendTo != null ) {
-        		  if ( appendTo.equals(Navajo.MESSAGE_SEPARATOR)) {
-        			  currentDoc.addMessage(clone, true);
-        		  } else if ( currentMsg.getMessage(appendTo) != null ) {
-        			  if ( currentMsg.getMessage(appendTo).getType().equals(Message.MSG_TYPE_ARRAY )  ) { // For array messages do not overwrite.
-        				  currentMsg.getMessage(appendTo).addMessage(clone);
-        			  } else {
-        				  if ( appendToComplete ) {
-        					  currentMsg.getMessage(appendTo).addMessage(clone);
-        				  } else {
-        					  currentMsg.getMessage(appendTo).merge(clone);
-        				  }
-        			  }
-        		  } else {
-        			  throw new UserException(-1, "Unknown appendTo message: " + appendTo);
-        		  }
-        	  } else {
-        		  // Merge message with existing message.
-        		  if ( clone.getName().equals(currentMsg.getName()) ) {
-        			  currentMsg.merge(clone);
-        		  } else {
-        			  currentMsg.addMessage(clone, true);
-        		  }
-        	  }
-          } else {
-        	  if ( appendTo != null ) {
-        		  if ( appendTo.equals(Navajo.MESSAGE_SEPARATOR)) {
-        			  currentDoc.addMessage(clone, true);
-        		  } else if ( currentDoc.getMessage(appendTo) != null ) {
-        			  if ( currentDoc.getMessage(appendTo).getType().equals(Message.MSG_TYPE_ARRAY )  ) { // For array messages do not overwrite.
-        				  currentDoc.getMessage(appendTo).addMessage(clone);
-        			  } else {
-        				  if ( appendToComplete ) {
-        					  currentDoc.getMessage(appendTo).addMessage(clone);
-        				  } else {
-        					  currentDoc.getMessage(appendTo).merge(clone);
-        				  }
-        			  }
-        		  } else {
-        			  throw new UserException(-1, "Unknown appendTo message: " + appendTo);
-        		  }
-        	  } else {
-        		  // Check if message already exists, if so, merge it with existing message.
-        		  if ( currentDoc.getMessage(clone.getName()) != null ) {
-        			  currentDoc.getMessage(clone.getName()).merge(clone);
-        		  } else {
-        			  currentDoc.addMessage(clone, true);
-        		  }
-        	  }
-          }
-        }
-    } catch (NavajoException ne) {
-      throw new UserException(-1, ne.getMessage());
-    }
+	  if (messageOffset.equals("")) {
+		  access.setOutputDoc(inDoc);
+		  return;
+	  }
+
+	  try {
+		  Navajo currentDoc = access.getOutputDoc();
+		  Message currentMsg = access.getCurrentOutMessage();
+		  List<Message> list = null;
+		  // If append message equals '/'.
+		  if ( messageOffset.equals(Navajo.MESSAGE_SEPARATOR) ) {
+			  list = inDoc.getAllMessages();
+		  } else if ( inDoc.getMessage(messageOffset) == null ) {
+			  return;
+		  } else if ( !inDoc.getMessage(messageOffset).getType().equals(Message.MSG_TYPE_ARRAY) ) {
+			  list = new ArrayList<Message>();
+			  list.add( inDoc.getMessage(messageOffset) );
+		  } else { // For array messages...
+			  list = new ArrayList<Message>();
+			  list.add(inDoc.getMessage(messageOffset));
+			  //list = inDoc.getMessages(messageOffset);
+		  }
+
+		  /**
+		   * appendTo logic. If appendTo ends with '/' append the entire append message to the defined appendTo message.
+		   * If appendTo does not end with '/', merge the append message with the defined appendTo message.
+		   */
+		  boolean appendToComplete = ( appendTo != null && !appendTo.equals(Navajo.MESSAGE_SEPARATOR) && appendTo.endsWith(Navajo.MESSAGE_SEPARATOR) );
+		  if ( appendToComplete ) {
+			  // Strip last "/".
+			  appendTo = appendTo.substring(0, appendTo.length() - 1);
+		  }
+
+		  // Check whether incoming array message needs to be expanded: if not appendToComplete and if appendTo is defined and
+		  // appendTo is array message.
+
+		  boolean appendToIsArray = false;
+		  if ( appendTo != null && currentMsg != null &&   currentMsg.getMessage(appendTo) != null && currentMsg.getMessage(appendTo).getType().equals(Message.MSG_TYPE_ARRAY )) {
+			  appendToIsArray = true;
+		  }
+
+		  if ( appendTo != null && currentDoc.getMessage(appendTo) != null && currentDoc.getMessage(appendTo).getType().equals(Message.MSG_TYPE_ARRAY) ) {
+			  appendToIsArray = true;
+		  }
+		  if ( !appendToComplete && appendTo != null && 
+				  list != null && 
+				  list.get(0) != null && 
+				  list.get(0).getType().equals(Message.MSG_TYPE_ARRAY) &&
+				  appendToIsArray
+		  ) {
+			  // Expand list if it contains an array message.
+			  list = list.get(0).getAllMessages();
+		  }
+
+		  for (int i = 0; i < list.size(); i++) {
+			  Message inMsg = (Message) list.get(i);
+			  // Clone message and append it to currentMsg if it exists, else directly under currentDoc.
+			  //currentDoc.importMessage(inMsg);
+			  Message clone = inDoc.copyMessage(inMsg, currentDoc);
+			  if (currentMsg != null) {
+				  if ( appendTo != null ) {
+					  if ( appendTo.equals(Navajo.MESSAGE_SEPARATOR)) {
+						  currentDoc.addMessage(clone, true);
+					  } else if ( currentMsg.getMessage(appendTo) != null ) {
+						  if ( currentMsg.getMessage(appendTo).getType().equals(Message.MSG_TYPE_ARRAY )  ) { // For array messages do not overwrite.
+							  currentMsg.getMessage(appendTo).addMessage(clone);
+						  } else {
+							  if ( appendToComplete ) {
+								  currentMsg.getMessage(appendTo).addMessage(clone);
+							  } else {
+								  currentMsg.getMessage(appendTo).merge(clone);
+							  }
+						  }
+					  } else {
+						  throw new UserException(-1, "Unknown appendTo message: " + appendTo);
+					  }
+				  } else {
+					  // Merge message with existing message.
+					  if ( clone.getName().equals(currentMsg.getName()) ) {
+						  currentMsg.merge(clone);
+					  } else {
+						  currentMsg.addMessage(clone, true);
+					  }
+				  }
+			  } else {
+				  if ( appendTo != null ) {
+					  if ( appendTo.equals(Navajo.MESSAGE_SEPARATOR)) {
+						  currentDoc.addMessage(clone, true);
+					  } else if ( currentDoc.getMessage(appendTo) != null ) {
+						  if ( currentDoc.getMessage(appendTo).getType().equals(Message.MSG_TYPE_ARRAY )  ) { // For array messages do not overwrite.
+							  currentDoc.getMessage(appendTo).addMessage(clone);
+						  } else {
+							  if ( appendToComplete ) {
+								  currentDoc.getMessage(appendTo).addMessage(clone);
+							  } else {
+								  currentDoc.getMessage(appendTo).merge(clone);
+							  }
+						  }
+					  } else {
+						  throw new UserException(-1, "Unknown appendTo message: " + appendTo);
+					  }
+				  } else {
+					  // Check if message already exists, if so, merge it with existing message.
+					  if ( currentDoc.getMessage(clone.getName()) != null ) {
+						  currentDoc.getMessage(clone.getName()).merge(clone);
+					  } else {
+						  currentDoc.addMessage(clone, true);
+					  }
+				  }
+			  }
+		  }
+	  } catch (NavajoException ne) {
+		  throw new UserException(-1, ne.getMessage());
+	  }
   }
   
   /**
@@ -280,35 +280,35 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
   public final void setAppendParms(String messageOffset) throws UserException {
 
 	  waitForResult();
-	  
-    try {
-    	Message parm = ( access.getCompiledScript().currentParamMsg == null ? 
-    			         access.getInDoc().getMessage("__parms__") :
-    			        	 access.getCompiledScript().currentParamMsg);
-    			        	
-        ArrayList list = null;
-        // If append message equals '/'.
-        if ( messageOffset.equals(Navajo.MESSAGE_SEPARATOR) ) {
-        	list = inDoc.getAllMessages();
-        } else if ( inDoc.getMessage(messageOffset) == null ) {
-        	return;
-        } else if ( inDoc.getMessage(messageOffset).getType().equals(Message.MSG_TYPE_ARRAY) ) {
-        	list = new ArrayList();
-        	list.add( inDoc.getMessage(messageOffset) );
-        } else {
-        	list = inDoc.getMessages(messageOffset);
-        }
-        	
-        for (int i = 0; i < list.size(); i++) {
-          Message inMsg = (Message) list.get(i);
-          // Clone message and append it to currentMsg if it exists, else directly under currentDoc.
-          //currentDoc.importMessage(inMsg);
-          Message clone = inDoc.copyMessage(inMsg, parm.getRootDoc());
-          parm.addMessage(clone, true);
-        }
-    } catch (NavajoException ne) {
-      throw new UserException(-1, ne.getMessage());
-    }
+
+	  try {
+		  Message parm = ( access.getCompiledScript().currentParamMsg == null ? 
+				  access.getInDoc().getMessage("__parms__") :
+					  access.getCompiledScript().currentParamMsg);
+
+		  ArrayList list = null;
+		  // If append message equals '/'.
+		  if ( messageOffset.equals(Navajo.MESSAGE_SEPARATOR) ) {
+			  list = inDoc.getAllMessages();
+		  } else if ( inDoc.getMessage(messageOffset) == null ) {
+			  return;
+		  } else if ( inDoc.getMessage(messageOffset).getType().equals(Message.MSG_TYPE_ARRAY) ) {
+			  list = new ArrayList();
+			  list.add( inDoc.getMessage(messageOffset) );
+		  } else {
+			  list = inDoc.getMessages(messageOffset);
+		  }
+
+		  for (int i = 0; i < list.size(); i++) {
+			  Message inMsg = (Message) list.get(i);
+			  // Clone message and append it to currentMsg if it exists, else directly under currentDoc.
+			  //currentDoc.importMessage(inMsg);
+			  Message clone = inDoc.copyMessage(inMsg, parm.getRootDoc());
+			  parm.addMessage(clone, true);
+		  }
+	  } catch (NavajoException ne) {
+		  throw new UserException(-1, ne.getMessage());
+	  }
   }
 
   public final void setPropertyName(String fullName) throws UserException {
@@ -522,12 +522,8 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
   }
 
   private Message getMessage(String fullName) throws UserException {
-	  
-	  if ( inDoc == null ) {
-		  waitForResult();
-	  }
-		 
-    Message msg = null;
+	waitForResult();
+	Message msg = null;
     if (msgPointer != null)
       msg = msgPointer.getMessage(fullName);
     else
@@ -539,7 +535,6 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
 
   public final Object getProperty(String fullName) throws Exception {
 	  
-	 
 	  Property p = getPropertyObject(fullName);
 	  if ( p.getType().equals(Property.SELECTION_PROPERTY )) {
 		  if ( p.getSelected() != null ) {
@@ -553,19 +548,17 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
   }
   
   private Property getPropertyObject(String fullName) throws UserException {
-	  if ( inDoc == null ) {
-		  waitForResult();
+	  waitForResult();
+
+	  Property p = null;
+	  if (msgPointer != null) {
+		  p = msgPointer.getProperty(fullName);
+	  } else {
+		  p = inDoc.getProperty(fullName);
 	  }
-		 
-    Property p = null;
-    if (msgPointer != null) {
-      p = msgPointer.getProperty(fullName);
-    } else {
-      p = inDoc.getProperty(fullName);
-    }
-    if (p == null)
-      throw new UserException(-1, "Property " + fullName + " does not exists in response document");
-    return p;
+	  if (p == null)
+		  throw new UserException(-1, "Property " + fullName + " does not exists in response document");
+	  return p;
   }
 
    public boolean getBooleanProperty(String fullName) throws UserException {
@@ -700,27 +693,20 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
    */
   public void setMessagePointer(String m) throws UserException {
 
-	  if ( inDoc == null ) {
-		  waitForResult();
-	  }
-		 
-		
-    this.messagePointer = m;
-    if (m.equals("")) {
-      msgPointer = null;
-      return;
-    }
-    msgPointer = (msgPointer == null ? inDoc.getMessage(messagePointer) : msgPointer.getMessage(messagePointer));
+	  waitForResult();
 
-    //if (msgPointer == null)
-    //   throw new UserException(-1, "Could not find message: " + messagePointer + " in response document");
+	  this.messagePointer = m;
+	  if (m.equals("")) {
+		  msgPointer = null;
+		  return;
+	  }
+	  msgPointer = (msgPointer == null ? inDoc.getMessage(messagePointer) : msgPointer.getMessage(messagePointer));
+
   }
 
   public MessageMap getMessage() throws UserException {
 
-	  if ( inDoc == null ) {
-		  waitForResult();
-	  }
+	  waitForResult();
 		 
       if (msgPointer == null)
         return null;
@@ -738,28 +724,26 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
    */
   public MessageMap [] getMessages() throws UserException {
 
-	  if ( inDoc == null ) {
-		  waitForResult();
+	  waitForResult();
+
+	  if (msgPointer == null)
+		  return null;
+	  if (!msgPointer.isArrayMessage())
+		  throw new UserException(-1, "getMessages can only be used for array messages");
+	  try {
+		  ArrayList all = msgPointer.getAllMessages(); //inDoc.getMessages(messagePointer);
+		  if ((all == null))
+			  throw new UserException(-1, "Could not find messages: " + messagePointer + " in response document");
+		  messages = new MessageMap[all.size()];
+		  for (int i = 0; i < all.size(); i++) {
+			  MessageMap msg = new MessageMap();
+			  msg.setMsg((Message) all.get(i));
+			  messages[i] = msg;
+		  }
+		  return messages;
+	  } catch (Exception e) {
+		  throw new UserException(-1, e.getMessage());
 	  }
-		 
-    if (msgPointer == null)
-        return null;
-    if (!msgPointer.isArrayMessage())
-        throw new UserException(-1, "getMessages can only be used for array messages");
-    try {
-      ArrayList all = msgPointer.getAllMessages(); //inDoc.getMessages(messagePointer);
-      if ((all == null))
-        throw new UserException(-1, "Could not find messages: " + messagePointer + " in response document");
-      messages = new MessageMap[all.size()];
-      for (int i = 0; i < all.size(); i++) {
-        MessageMap msg = new MessageMap();
-        msg.setMsg((Message) all.get(i));
-        messages[i] = msg;
-      }
-      return messages;
-    } catch (Exception e) {
-      throw new UserException(-1, e.getMessage());
-    }
   }
 
   /**
