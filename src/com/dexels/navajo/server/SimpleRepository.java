@@ -120,8 +120,8 @@ public class SimpleRepository implements Repository {
 
 	public String getServlet(Access access) throws SystemException {
 		if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_LOGON) || 
-				access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_LOGON_SEND) ||
-				access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_PING)  
+			access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_LOGON_SEND) ||
+			access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_PING)  
 		)
 			return "com.dexels.navajo.server.MaintainanceHandler";
 		else
