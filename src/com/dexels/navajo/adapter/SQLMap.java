@@ -337,7 +337,7 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
 					  fnfe.getMessage());
 		  } catch (Throwable t) {
 			  t.printStackTrace(Access.getConsoleWriter(myAccess));
-			  AuditLog.log("SQLMap", t.getMessage(), Level.SEVERE, myAccess.accessID);
+			  AuditLog.log("SQLMap", t.getMessage(), Level.SEVERE, ( myAccess != null ? myAccess.accessID : "" ));
 			  throw new MappableException(t.getMessage());
 		  }
 	  //}
