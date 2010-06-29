@@ -56,7 +56,7 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 			readConfig();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 	
