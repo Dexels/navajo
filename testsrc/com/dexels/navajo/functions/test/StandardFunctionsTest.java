@@ -428,7 +428,7 @@ public class StandardFunctionsTest extends TestCase {
 
 		FunctionInterface fi = fff.getInstance(cl, "ToBinaryFromUrl");
 		fi.reset();
-		fi.insertOperand("http://www.dexels.com/images/stories/duke-logo.png");
+		fi.insertOperand("http://www.google.com/google.jpg");
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(Binary.class, o.getClass());
