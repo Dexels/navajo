@@ -1,5 +1,8 @@
 package com.dexels.navajo.adapter;
 
+import com.dexels.navajo.listeners.Scheduler;
+import com.dexels.navajo.listeners.SchedulerRegistry;
+import com.dexels.navajo.listeners.TmlRunnable;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
 import com.dexels.navajo.server.*;
@@ -27,7 +30,7 @@ import com.dexels.navajo.document.types.Money;
  * @version $Id$
  */
 
-public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentResources {
+public class NavajoMap extends AsyncMappable implements Mappable, HasDependentResources, TmlRunnable {
 
   public String doSend;
   public Binary navajo;
@@ -93,6 +96,8 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
 
   public String method;
   
+  private Object waitForResult = new Object();
+  
   public void load(Access access) throws MappableException, UserException {
     this.access = access;
     this.config = DispatcherFactory.getInstance().getNavajoConfig();
@@ -120,6 +125,19 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
 	  appendTo = messageOffset;
   }
   
+  private synchronized void waitForResult() {
+	  if ( inDoc == null ) {
+		  // Wait for result.
+		  synchronized (waitForResult) {
+			  try {
+				  waitForResult.wait();
+			  } catch (InterruptedException e) {
+				  e.printStackTrace();
+			  }
+		  }
+	  }
+  }
+  
   /**
    * Set this to a valid message path if the result of the webservices needs to be appended.
    * If messageOffset = "/" the entire result will be appended to the current output message pointer.
@@ -134,6 +152,8 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
    */
   public final void setAppend(String messageOffset) throws UserException {
 
+	  waitForResult();
+	
     if (messageOffset.equals("")) {
        access.setOutputDoc(inDoc);
        return;
@@ -259,6 +279,8 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
    */
   public final void setAppendParms(String messageOffset) throws UserException {
 
+	  waitForResult();
+	  
     try {
     	Message parm = ( access.getCompiledScript().currentParamMsg == null ? 
     			         access.getInDoc().getMessage("__parms__") :
@@ -423,6 +445,8 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
    * @throws UserException
    */
   public Binary getNavajo() throws UserException {
+	  
+	  
 	  Binary b = new Binary();
 	  OutputStream is = b.getOutputStream();
 	  try {
@@ -447,169 +471,62 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
    */
   public void setDoSend(String method) throws UserException, ConditionErrorException, SystemException, AuthorizationException {
 
-    //System.err.println("IN NAVAJOMAP, SETDOSEND(), METHOD = " + method);
-	 
-	// Reset current msgPointer when performing new doSend.
+	  // Reset current msgPointer when performing new doSend.
 	  msgPointer = null;
-    try {
-      username = (username == null) ? this.access.rpcUser : username;
-      password = (password == null) ? this.access.rpcPwd : password;
+	  setMethod(method);
+	  
+	  try {
+		  username = (username == null) ? this.access.rpcUser : username;
+		  password = (password == null) ? this.access.rpcPwd : password;
 
-      if (password == null)
-        password = "";
+		  if (password == null)
+			  password = "";
 
-      // Always copy globals.
-      if ( inMessage.getMessage("__globals__") != null ) {
-		  Message globals = inMessage.getMessage("__globals__").copy(outDoc);
-		  try {
-			outDoc.addMessage(globals);
-		} catch (NavajoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace(Access.getConsoleWriter(access));
-		}
-	  }
-      
-     
-      
-      if (server != null) {
-    	  NavajoClient nc = new NavajoClient();
-    	  if (keyStore != null) {
-    		  nc.setSecure(keyStore, keyPassword, true);
-    	  }
-    	  if ( trigger == null ) {
-    		  inDoc = nc.doSimpleSend(outDoc, server, method, username, password, -1, true, false);
-    	  } else {
-    		  inDoc = nc.doScheduledSend(outDoc, method, "now", "", "");
-    	  }
-      }
-      else {
-    	  Header h = outDoc.getHeader();
-    	  if (h == null) {
-    		  h = NavajoFactory.getInstance().createHeader(outDoc, method, username, password, -1);
-    		  outDoc.addHeader(h);
-    	  } else {
-    		  h.setRPCName(method);
-    		  h.setRPCPassword(password);
-    		  h.setRPCUser(username);
-    		  h.setExpirationInterval(-1);
-    		  // Clear request id.
-    		  h.setRequestId(null);
-    	  }
-    	  // Set parent access id as header attribute.
-    	  h.setHeaderAttribute("parentaccessid", this.access.accessID);
-    	  if ( trigger != null ) {
-    		  h.setSchedule(trigger);
-    		  h.setHeaderAttribute("keeprequestresponse", "true");
-    	  }
-    	  inDoc = DispatcherFactory.getInstance().handle(outDoc, true);
-      }
+		  // Always copy globals.
+		  if ( inMessage.getMessage("__globals__") != null ) {
+			  Message globals = inMessage.getMessage("__globals__").copy(outDoc);
+			  try {
+				  outDoc.addMessage(globals);
+			  } catch (NavajoException e) {
+				  // TODO Auto-generated catch block
+				  e.printStackTrace(Access.getConsoleWriter(access));
+			  }
+		  }
 
-      // Get task if if trigger was specified.
-      if ( trigger != null ) {
-    	  taskId = inDoc.getHeader().getSchedule();
-    	  System.err.println("************************************************* TASKID: " + taskId);
-      }
-      
-      // Call sorted.
-      if ( performOrderBy ) {
-    	  OutputStream os = new OutputStream(){
-    		  public void write(int b) throws IOException {
-    			  // do nothing
-    		  } 
-    	  };
-    	  try {
-    		  inDoc.write(os);
-    	  } catch (NavajoException e) {
-    	  }
-      }
-      
-      Message error = inDoc.getMessage("error");
-      if (error != null && breakOnException ) {
-          String errMsg = error.getProperty("message").getValue();
-          String errCode = error.getProperty("code").getValue();
-          int errorCode = -1;
-	          try {
-				errorCode = Integer.parseInt(errCode);
-			} catch (NumberFormatException e) {
-				
-				e.printStackTrace(Access.getConsoleWriter(access));
-			}
-          throw new UserException(errorCode, errMsg);
-      } else if ( error != null ) {
-    	  AuditLog.log("NavajoMap", "EXCEPTIONERROR OCCURED, BUT WAS EXCEPTION HANDLING WAS SET TO FALSE, RETURNING....", Level.INFO, access.accessID);
-    	  return;
-      }
+		  if (server != null) { // External request.
+			  NavajoClient nc = new NavajoClient();
+			  if (keyStore != null) {
+				  nc.setSecure(keyStore, keyPassword, true);
+			  }
+			  if ( trigger == null ) {
+				  inDoc = nc.doSimpleSend(outDoc, server, method, username, password, -1, true, false);
+			  } else {
+				  inDoc = nc.doScheduledSend(outDoc, method, "now", "", "");
+			  }
+			  continueAfterRun();
+		  } // Internal request.
+		  else {
+			  try {
+				  inDoc = null;
+				  SchedulerRegistry.getScheduler().submit(this, true);
+			  } catch (IOException e) {
+				  e.printStackTrace();
+			  }
+		  }
 
-      boolean authenticationError = false;
-      Message aaaError = inDoc.getMessage(AuthorizationException.AUTHENTICATION_ERROR_MESSAGE);
-      if (aaaError == null) {
-        aaaError = inDoc.getMessage(AuthorizationException.AUTHORIZATION_ERROR_MESSAGE);
-      } else {
-        authenticationError = true;
-      }
-      if (aaaError != null) {
-    	AuditLog.log("NavajoMap", "THROWING AUTHORIZATIONEXCEPTION IN NAVAJOMAP" + aaaError.getProperty("User").getValue(), Level.WARNING, access.accessID);
-        //System.err.println("THROWING AUTHORIZATIONEXCEPTION IN NAVAJOMAP....");
-        throw new AuthorizationException(authenticationError, !authenticationError,
-                                         aaaError.getProperty("User").getValue(),
-                                         aaaError.getProperty("Message").getValue());
-      }
+	  } catch (com.dexels.navajo.client.ClientException e) {
+		  e.printStackTrace(Access.getConsoleWriter(access));
+		  throw new SystemException(-1, e.getMessage());
+	  } 
 
-      if (breakOnConditionError && inDoc.getMessage("ConditionErrors") != null) {
-    	  AuditLog.log("NavajoMap", "BREAKONCONDITIONERROR WAS SET TO TRUE, RETURNING CONDITION ERROR", Level.INFO, access.accessID);
-    	  //System.err.println("BREAKONCONDITIONERROR WAS SET TO TRUE, RETURNING CONDITION ERROR");
-          throw new ConditionErrorException(inDoc);
-      } else if (inDoc.getMessage("ConditionErrors") != null) {
-    	  AuditLog.log("NavajoMap", "BREAKONCONDITIONERROR WAS SET TO FALSE, RETURNING....", Level.INFO, access.accessID);
-    	  //System.err.println("");
-    	  return;
-      }
-      
-      // Set property directions.
-      processPropertyDirections(inDoc);
-      // Suppress properties.
-      processSuppressedProperties(inDoc);
-      // Show properties.
-      processShowProperties(inDoc);
-    
-      // Reset property directives
-      this.suppressProperties = null;
-      this.inputProperties = null;
-      this.outputProperties = null;
-      this.showProperties = null;
-      
-      if (!compare.equals("")) {
-        //isEqual = inMessage.isEqual(inDoc);
-
-        Message other = inMessage.getMessage(compare);
-        Message rec = inDoc.getMessage(compare);
-
-        //System.err.println("other = " + other);
-        //System.err.println("rec = " + rec);
-        //System.err.println("skipProperties = " + skipProperties);
-        if (other == null || rec == null)
-          isEqual = false;
-        else
-          isEqual = other.isEqual(rec, this.skipProperties);
-
-        //System.err.println("IN NAVAJOMAP(), ISEQUAL = " + isEqual);
-      } else {
-        outDoc = inDoc;
-      }
-//if (inDoc.getMessage("error") != null) {
-      //    throw new UserException(-1, "ERROR while accessing webservice: " + method + ":: " + inDoc.getMessage("error").getProperty("message").getValue());
-      //}
-   } catch (com.dexels.navajo.client.ClientException e) {
-      e.printStackTrace(Access.getConsoleWriter(access));
-      throw new SystemException(-1, e.getMessage());
-   } catch (FatalException fe) {
-      fe.printStackTrace(Access.getConsoleWriter(access));
-      throw new SystemException(-1, fe.getMessage());
-   } 
-   
   }
 
   private Message getMessage(String fullName) throws UserException {
+	  
+	  if ( inDoc == null ) {
+		  waitForResult();
+	  }
+		 
     Message msg = null;
     if (msgPointer != null)
       msg = msgPointer.getMessage(fullName);
@@ -621,6 +538,8 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
   }
 
   public final Object getProperty(String fullName) throws Exception {
+	  
+	 
 	  Property p = getPropertyObject(fullName);
 	  if ( p.getType().equals(Property.SELECTION_PROPERTY )) {
 		  if ( p.getSelected() != null ) {
@@ -634,6 +553,10 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
   }
   
   private Property getPropertyObject(String fullName) throws UserException {
+	  if ( inDoc == null ) {
+		  waitForResult();
+	  }
+		 
     Property p = null;
     if (msgPointer != null) {
       p = msgPointer.getProperty(fullName);
@@ -777,6 +700,11 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
    */
   public void setMessagePointer(String m) throws UserException {
 
+	  if ( inDoc == null ) {
+		  waitForResult();
+	  }
+		 
+		
     this.messagePointer = m;
     if (m.equals("")) {
       msgPointer = null;
@@ -790,6 +718,10 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
 
   public MessageMap getMessage() throws UserException {
 
+	  if ( inDoc == null ) {
+		  waitForResult();
+	  }
+		 
       if (msgPointer == null)
         return null;
       MessageMap mm = new MessageMap();
@@ -806,6 +738,10 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
    */
   public MessageMap [] getMessages() throws UserException {
 
+	  if ( inDoc == null ) {
+		  waitForResult();
+	  }
+		 
     if (msgPointer == null)
         return null;
     if (!msgPointer.isArrayMessage())
@@ -963,30 +899,138 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
 	  System.out.println("INDOC = " + access.getOutputDoc());
   }
 
-  public void run() throws com.dexels.navajo.server.UserException {
-	  
-	     Header h = outDoc.getHeader();
-	     if (h == null) {
-	          h = NavajoFactory.getInstance().createHeader(outDoc, method, access.rpcUser, access.rpcPwd, -1);
-	          outDoc.addHeader(h);
-	     } else {
-	          h.setRPCName(method);
-	          h.setRPCPassword(access.rpcPwd);
-	          h.setRPCUser(access.rpcUser);
-	    }
-	    // Clear request id.
-	    h.setRequestId(null);
-	    try {
-	      inDoc = DispatcherFactory.getInstance().handle(outDoc, true);
-	    } catch (Exception e) {
-	      e.printStackTrace(Access.getConsoleWriter(access));
-	      throw new UserException(-1, e.getMessage());
-	    } finally {
-	    	//System.err.println("Setting set is finished.");
-	    	setIsFinished();
-	    }
+  public void continueAfterRun() {
+	  try {
+		  // Get task if if trigger was specified.
+	      if ( trigger != null ) {
+	    	  taskId = inDoc.getHeader().getSchedule();
+	    	  System.err.println("************************************************* TASKID: " + taskId);
+	      }
+	      
+	      // Call sorted.
+	      if ( performOrderBy ) {
+	    	  OutputStream os = new OutputStream(){
+	    		  public void write(int b) throws IOException {
+	    			  // do nothing
+	    		  } 
+	    	  };
+	    	  try {
+	    		  inDoc.write(os);
+	    	  } catch (NavajoException e) {
+	    	  }
+	      }
+	      
+	      Message error = inDoc.getMessage("error");
+	      if (error != null && breakOnException ) {
+	          String errMsg = error.getProperty("message").getValue();
+	          String errCode = error.getProperty("code").getValue();
+	          int errorCode = -1;
+		          try {
+					errorCode = Integer.parseInt(errCode);
+				} catch (NumberFormatException e) {
+					
+					e.printStackTrace(Access.getConsoleWriter(access));
+				}
+	          throw new UserException(errorCode, errMsg);
+	      } else if ( error != null ) {
+	    	  AuditLog.log("NavajoMap", "EXCEPTIONERROR OCCURED, BUT WAS EXCEPTION HANDLING WAS SET TO FALSE, RETURNING....", Level.INFO, access.accessID);
+	    	  return;
+	      }
+
+	      boolean authenticationError = false;
+	      Message aaaError = inDoc.getMessage(AuthorizationException.AUTHENTICATION_ERROR_MESSAGE);
+	      if (aaaError == null) {
+	        aaaError = inDoc.getMessage(AuthorizationException.AUTHORIZATION_ERROR_MESSAGE);
+	      } else {
+	        authenticationError = true;
+	      }
+	      if (aaaError != null) {
+	    	AuditLog.log("NavajoMap", "THROWING AUTHORIZATIONEXCEPTION IN NAVAJOMAP" + aaaError.getProperty("User").getValue(), Level.WARNING, access.accessID);
+	        //System.err.println("THROWING AUTHORIZATIONEXCEPTION IN NAVAJOMAP....");
+	        throw new AuthorizationException(authenticationError, !authenticationError,
+	                                         aaaError.getProperty("User").getValue(),
+	                                         aaaError.getProperty("Message").getValue());
+	      }
+
+	      if (breakOnConditionError && inDoc.getMessage("ConditionErrors") != null) {
+	    	  AuditLog.log("NavajoMap", "BREAKONCONDITIONERROR WAS SET TO TRUE, RETURNING CONDITION ERROR", Level.INFO, access.accessID);
+	    	  //System.err.println("BREAKONCONDITIONERROR WAS SET TO TRUE, RETURNING CONDITION ERROR");
+	          throw new ConditionErrorException(inDoc);
+	      } else if (inDoc.getMessage("ConditionErrors") != null) {
+	    	  AuditLog.log("NavajoMap", "BREAKONCONDITIONERROR WAS SET TO FALSE, RETURNING....", Level.INFO, access.accessID);
+	    	  //System.err.println("");
+	    	  return;
+	      }
+	      
+	      // Set property directions.
+	      processPropertyDirections(inDoc);
+	      // Suppress properties.
+	      processSuppressedProperties(inDoc);
+	      // Show properties.
+	      processShowProperties(inDoc);
 	    
+	      // Reset property directives
+	      this.suppressProperties = null;
+	      this.inputProperties = null;
+	      this.outputProperties = null;
+	      this.showProperties = null;
+	      
+	      if (!compare.equals("")) {
+	        //isEqual = inMessage.isEqual(inDoc);
+
+	        Message other = inMessage.getMessage(compare);
+	        Message rec = inDoc.getMessage(compare);
+
+	        //System.err.println("other = " + other);
+	        //System.err.println("rec = " + rec);
+	        //System.err.println("skipProperties = " + skipProperties);
+	        if (other == null || rec == null)
+	          isEqual = false;
+	        else
+	          isEqual = other.isEqual(rec, this.skipProperties);
+
+	        //System.err.println("IN NAVAJOMAP(), ISEQUAL = " + isEqual);
+	      } else {
+	        outDoc = inDoc;
+	      }
+		  
+		  
+	  } catch (Exception e) {
+		  e.printStackTrace(Access.getConsoleWriter(access));
+		  //throw new UserException(-1, e.getMessage());
+	  } finally {
+		  synchronized (waitForResult) {
+			  waitForResult.notify();
+		  }
+	  }  
+	 
+  }
+  
+  public void run()  {
+
+	  Header h = outDoc.getHeader();
+	  if (h == null) {
+		  h = NavajoFactory.getInstance().createHeader(outDoc, method, access.rpcUser, access.rpcPwd, -1);
+		  outDoc.addHeader(h);
+	  } else {
+		  h.setRPCName(method);
+		  h.setRPCPassword(access.rpcPwd);
+		  h.setRPCUser(access.rpcUser);
 	  }
+	  // Clear request id.
+	  h.setRequestId(null);
+
+	  try {
+		  inDoc = DispatcherFactory.getInstance().handle(outDoc.copy(), true);
+		  continueAfterRun();
+	  } catch (Exception e) {
+		  // TODO Auto-generated catch block
+		  e.printStackTrace();
+	  } finally {
+		  setIsFinished();
+	  }
+
+  }
 
   public void setTrigger(String trigger) {
 	  this.trigger = trigger;
@@ -1180,7 +1224,62 @@ public class NavajoMap extends AsyncMappable  implements Mappable, HasDependentR
 	  }
   }
 
-public void setBreakOnException(boolean breakOnException) {
-	this.breakOnException = breakOnException;
-}
+  public void setBreakOnException(boolean breakOnException) {
+	  this.breakOnException = breakOnException;
+  }
+
+  public void onResponse(Navajo response) {
+	  // TODO Auto-generated method stub
+
+  }
+
+  public void abort() {
+	  // TODO Auto-generated method stub
+
+  }
+
+  public void endTransaction() throws IOException {
+	  // TODO Auto-generated method stub
+
+  }
+
+  public Navajo getInputNavajo() throws IOException {
+	  // TODO Auto-generated method stub
+	  return null;
+  }
+
+  public Scheduler getTmlScheduler() {
+	  // TODO Auto-generated method stub
+	  return null;
+  }
+
+  public boolean isAborted() {
+	  // TODO Auto-generated method stub
+	  return false;
+  }
+
+  public boolean isCommitted() {
+	  // TODO Auto-generated method stub
+	  return false;
+  }
+
+  public void setCommitted(boolean b) {
+	  // TODO Auto-generated method stub
+
+  }
+
+  public void setException(Exception e) {
+	  // TODO Auto-generated method stub
+
+  }
+
+  public void setScheduledAt(long currentTimeMillis) {
+	  // TODO Auto-generated method stub
+
+  }
+
+  public void setTmlScheduler(Scheduler schedule) {
+	  // TODO Auto-generated method stub
+
+  }
 }

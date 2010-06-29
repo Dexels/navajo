@@ -220,6 +220,7 @@
             <value name="transactionContext" type="integer" required="false" direction="in"/>
             <value name="datasource" type="string" required="false" direction="in"/>
             <value name="username" type="string" required="false" direction="in"/>
+            <value name="parameter" type="any" required="false" direction="in" cardinality="+"/>
             <value name="resultSet" map="resultrow []" required="false" direction="out"/>
         </values>
         <methods>
