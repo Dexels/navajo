@@ -188,6 +188,11 @@ public final class MappingUtils {
     if (parameter) {
       if (msg == null) {
         msg = tmlDoc.getMessage("__parms__");
+        if ( msg == null ) {
+        	// Create __parms__ message.
+        	msg = NavajoFactory.getInstance().createMessage(tmlDoc, "__parms__");
+        	tmlDoc.addMessage(msg);
+        }
       }
       ref = getMessageObject(name, msg, false, tmlDoc, false, "", -1);
     }

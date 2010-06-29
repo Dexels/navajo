@@ -27,4 +27,39 @@ public class DummyTask implements TaskInterface {
 	public void setPersisted(boolean b) {
 	}
 
+	public void run() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public String getTriggerDescription() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getWebservice() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public boolean isActive() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean isRunning() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public void runTask() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
