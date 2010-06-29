@@ -303,10 +303,7 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 	 * @throws ServletException
 	 */
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		System.err.println("Ik, NavajoListeners, ben herbakken!");
-		//	  if(true) {
-		//		  throw new IllegalAccessError();
-		//	  }
+		
 		Date created = new java.util.Date();
 		long start = created.getTime();
 
