@@ -86,7 +86,7 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
   public long startTime = System.currentTimeMillis();
   public long lastAccess = System.currentTimeMillis();
   public String name;
-  public String pointer;
+  public String pointer = null; // Pointer for async web service access.
   public java.util.Date startDate;
   public boolean kill = false;
   public int percReady = 0;
@@ -397,6 +397,10 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
    *
    */
   protected void setIsFinished() {
+	  
+	  if ( pointer == null ) {  // Check if pointer was set, if not, it was not an async web service.
+		  return;
+	  }
 	  isFinished = true;
 	  percReady = 100;
 	  // Check whether killOnFinnish flag is set. If so, kill thread.
