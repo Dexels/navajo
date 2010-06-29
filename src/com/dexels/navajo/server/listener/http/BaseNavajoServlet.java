@@ -215,12 +215,12 @@ public abstract class BaseNavajoServlet extends HttpServlet {
 	}
 
 	private void initializeJabber(ServletConfig config, String bootstrapUrl) {
-		String jabberServer = config.getInitParameter("jabber_server");
-		String jabberPort = config.getInitParameter("jabber_port");
-		String jabberService = config.getInitParameter("jabber_service");
-		System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>> jabberServer = " + jabberServer);
 		JabberWorkerInterface jwi = JabberWorkerFactory.getInstance();
 		if(jwi!=null) {
+			String jabberServer = config.getInitParameter("jabber_server");
+			String jabberPort = config.getInitParameter("jabber_port");
+			String jabberService = config.getInitParameter("jabber_service");
+			System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>> jabberServer = " + jabberServer);
 			jwi.configJabber(jabberServer, jabberPort, jabberService, bootstrapUrl);
 		}
 	}
