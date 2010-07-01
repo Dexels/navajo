@@ -261,19 +261,22 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 	}
 
 	public void disposeComponent() {
-//		System.err.println("DISPOSING DIALOG");
-		if (getDialogContainer() != null) {
-//			System.err.println("Dialogcontainer non-null");
-			if (getDialogContainer() instanceof JDialog) {
-//				((JDialog) getDialogContainer()).setVisible(false);
-				((SwingTipiContext)myContext).destroyDialog(((JDialog) getDialogContainer()));
+
+		runSyncInEventThread(new Runnable(){
+			public void run(){
+				if (getDialogContainer() != null) {
+					if (getDialogContainer() instanceof JDialog) {
+						((SwingTipiContext)myContext).destroyDialog(((JDialog) getDialogContainer()));
+					}
+					if (getDialogContainer() instanceof JInternalFrame) {
+						((JInternalFrame) getDialogContainer()).setVisible(false);
+					}
+				}
+				myRootPaneContainer = null;
+				TipiDialog.super.disposeComponent();
 			}
-			if (getDialogContainer() instanceof JInternalFrame) {
-				((JInternalFrame) getDialogContainer()).setVisible(false);
-			}
-		}
-		myRootPaneContainer = null;
-		super.disposeComponent();
+		});
+		
 	}
 
 	private RootPaneContainer getDialogContainer() {
