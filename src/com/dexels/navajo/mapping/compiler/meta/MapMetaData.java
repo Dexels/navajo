@@ -6,7 +6,9 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -126,15 +128,25 @@ public class MapMetaData {
 		//System.err.println(">>>>>>>>> e = " + e.getFirstChild());
 		return (String) e.getFirstChild().getAttribute("filename");
 	}
-	
+
 	public String parse(String fileName) throws Exception {
 		File f = new File(fileName);
 		BufferedReader br = new BufferedReader(new FileReader(f));
+		StringWriter sw = new StringWriter();
+		parse(br, f.getName(),sw);
+		return sw.toString();
+	}
+	
+	public void parse(Reader br, String scriptName, Writer sw) throws Exception {
 		XMLElement in = new CaseSensitiveXMLElement();
-		
 		
 		in.parseFromReader(br);
 		br.close();
+		parse(in,scriptName,sw);
+	}		
+	
+	public void parse(XMLElement in, String scriptName, Writer sw) throws Exception {
+		
 		
 		// Remember tsl attributes.
 		HashMap<String,String> tslAttributes = new HashMap<String, String>();
@@ -148,7 +160,7 @@ public class MapMetaData {
 		XMLElement result = new CaseSensitiveXMLElement();
 		result.setName("tsl");
 		
-		generateCode(in, result, f.getName());
+		generateCode(in, result,scriptName);
 
 		// Reinsert tsl attributes.
 		all = tslAttributes.keySet().iterator();
@@ -158,10 +170,7 @@ public class MapMetaData {
 			result.setAttribute(name, value);
 		}
 		
-		StringWriter sw = new StringWriter();
 		result.write(sw);
-
-		return sw.toString();
 	}
 	
 	public static boolean isMetaScript(String script, String scriptPath, String packagePath) {
