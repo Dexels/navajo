@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.Vector;
 
+import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 
 @SuppressWarnings("unchecked")
@@ -62,11 +63,11 @@ public class MethodDefinition {
 		}
 		boolean hasCondition = false;
 		String tempParamName = null;
-		if ( condition != null && !condition.equals("condition")) {
+		if ( condition != null && !condition.equals("true")) {
 			// Generate a temp. param to evaluate the condition expression.
 			XMLElement c = new TSLElement(in, "param");
 			tempParamName = generateParamName();
-			c.setAttribute("name", tempParamName);
+			c.setAttribute("name", Navajo.MESSAGE_SEPARATOR + tempParamName); // Force absolute param name.
 			XMLElement exp = new TSLElement(in, "expression");
 			exp.setAttribute("value", condition);
 			c.addChild(exp);

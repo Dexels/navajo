@@ -186,7 +186,7 @@ public final class MappingUtils {
     Message ref = null;
 
     if (parameter) {
-      if (msg == null) {
+      if ( msg == null ) { 
         msg = tmlDoc.getMessage("__parms__");
         if ( msg == null ) {
         	// Create __parms__ message.
@@ -195,6 +195,9 @@ public final class MappingUtils {
         }
       }
       ref = getMessageObject(name, msg, false, tmlDoc, false, "", -1);
+      if ( ref == null ) { // Can be null due to absolute param name (starting with '/'). In this case use __parms__ as parent.
+    	  ref = tmlDoc.getMessage("__parms__");
+      }
     }
     else {
       ref = getMessageObject(name, msg, false, outputDoc, false, "", -1);
