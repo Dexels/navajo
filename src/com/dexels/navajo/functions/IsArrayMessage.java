@@ -1,6 +1,7 @@
 package com.dexels.navajo.functions;
 
 import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 
@@ -16,15 +17,18 @@ public class IsArrayMessage extends FunctionInterface {
 
 	public Object evaluate() throws TMLExpressionException {
 		if (this.getOperands().size() != 1)
-			throw new TMLExpressionException("IsArrayMessage( Message ) expected");
+			throw new TMLExpressionException("IsArrayMessage( Message name ) expected");
 
 		Object a = this.getOperands().get(0);
 
-		if (!(a instanceof Message)) {
-			throw new TMLExpressionException("IsArrayMessage( Message ) expected");
+		if (!(a instanceof String)) {
+			throw new TMLExpressionException("IsArrayMessage( Message name ) expected");
 		}
 
-		Message message = (Message) a;
+		String messageName = (String) a;
+
+	    Navajo doc      = getNavajo();
+	    Message message = doc.getMessage( messageName );
 
 		return Boolean.valueOf(message.isArrayMessage());
 	}
