@@ -178,25 +178,43 @@ public class GenericFieldMap implements Mappable {
 							updateQuery = updateQuery + " AND " + updateParameters.get(k)[0].toString() + " = ?";
 						}
 						sql.setUpdate(updateQuery);
-						if (allProps.get(i).getType().equals("clocktime")) {
+						
+						boolean empty_value = false;
+						
+						
+						if (allProps.get(i).getType().equals("clocktime")) {							
 							sql.setParameter(allProps.get(i).getTypedValue().toString());
+							if(allProps.get(i).getValue() == null){
+								empty_value = true;
+							}
 						} else if (allProps.get(i).getType().equals("selection")) {
 							try {
+								if(allProps.get(i).getSelected().getValue() == null){
+									empty_value = true;
+								}
 								sql.setParameter(allProps.get(i).getSelected().getValue());
 							} catch (NavajoException e) {
 								throw new UserException(1200, e.getMessage());
 							}
 						} else if(allProps.get(i).getType().equals("date")){
+							if(allProps.get(i).getValue() == null){
+								empty_value = true;
+							}
 							String dateString = navajoDateFormat.format(allProps.get(i).getTypedValue());
 							sql.setParameter(dateString);
 						} else {
+							if(allProps.get(i).getValue() == null){
+								empty_value = true;
+							}
 							sql.setParameter(allProps.get(i).getTypedValue());
 						}
 						sql.setParameter(strVal);
 						for (int j = 0; j < updateParameters.size(); j++) {
 							sql.setParameter(updateParameters.get(j)[1]);
 						}
-						sql.setDoUpdate(true);
+						if(!empty_value){
+							sql.setDoUpdate(true);
+						}
 
 					} else {
 						String insertQuery = "INSERT INTO " + table + " ( " + primaryKey + ", " + valueColumn;
@@ -210,30 +228,43 @@ public class GenericFieldMap implements Mappable {
 						insertQuery = insertQuery + ")";
 						sql.setUpdate(insertQuery);
 						sql.setParameter(strVal);
+						boolean empty_value = false;
 
 						// clocktime bypass
 						if (allProps.get(i).getType().equals("clocktime")) {
 							if(allProps.get(i).getTypedValue() != null){
 								sql.setParameter(allProps.get(i).getTypedValue().toString());
 							}else{
+								empty_value = true;
 								sql.setParameter(null);
 							}
 						} else if (allProps.get(i).getType().equals("selection")) {
 							try {
+								if(allProps.get(i).getSelected().getValue() == null){
+									empty_value = true;
+								}
 								sql.setParameter(allProps.get(i).getSelected().getValue());
 							} catch (NavajoException e) {
 								throw new UserException(1200, e.getMessage());
 							}
 						} else if(allProps.get(i).getType().equals("date")){
+							if(allProps.get(i).getValue() == null){
+								empty_value = true;
+							}
 							String dateString = navajoDateFormat.format(allProps.get(i).getTypedValue());
 							sql.setParameter(dateString);
 						} else {
+							if(allProps.get(i).getValue() == null){
+								empty_value = true;
+							}
 							sql.setParameter(allProps.get(i).getTypedValue());
 						}
 						for (int j = 0; j < updateParameters.size(); j++) {
 							sql.setParameter(updateParameters.get(j)[1]);
 						}
-						sql.setDoUpdate(true);
+						if(!empty_value){
+							sql.setDoUpdate(true);
+						}
 					}
 				}
 			}
