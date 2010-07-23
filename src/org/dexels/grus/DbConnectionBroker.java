@@ -1,6 +1,9 @@
 package org.dexels.grus;
 
 import java.sql.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.dexels.navajo.util.AuditLog;
 
@@ -24,6 +27,8 @@ public final class DbConnectionBroker extends Object
 	protected boolean sanityCheck = true;
 	
 	private static int instances = 0;
+	
+	protected static final Map<Integer,DbConnectionBroker> transactionContextBrokerMap = Collections.synchronizedMap(new HashMap<Integer,DbConnectionBroker>());
 	
 	protected final void log(String message) {
 		AuditLog.log("GRUS", Thread.currentThread().getName() + ": (url = " + location + ", user = " + username + ")" + message);
@@ -62,7 +67,7 @@ public final class DbConnectionBroker extends Object
 	{
 		Class.forName(dbDriver);
 		
-		//System.err.println("in DBCONNECTIONBROKER(), FOUND JDBC DRIVER CLASS: " + dbDriver + ", LOCATION = " + dbServer);
+		System.err.println("in DBCONNECTIONBROKER(), FOUND JDBC DRIVER CLASS: " + dbDriver + ", LOCATION = " + dbServer);
 		location  = dbServer;
 		username  = dbLogin;
 		password  = dbPassword;
@@ -129,6 +134,33 @@ public final class DbConnectionBroker extends Object
 		return true;
 	}
 
+	/**
+	 * This method return a Connection object based on a connection id (connection hashcode).
+	 * 
+	 * @param connectionId
+	 * @return
+	 */
+	public static synchronized  Connection getConnection(int connectionId) {
+		
+		// Fetch proper broker.
+		DbConnectionBroker broker = transactionContextBrokerMap.get(connectionId);
+		if ( broker == null ) {
+			System.err.println("COULD NOT FIND BROKER FOR CONNECTION ID: " + connectionId);
+			return null;
+		}
+		for ( int i = 0; i < broker.conns.length; i++ ) {
+			if ( broker.conns[i] != null && broker.conns[i].hashCode() == connectionId ) {
+				if ( broker.usedmap[i] )  {
+					return broker.conns[i];
+				} else {
+					System.err.println("Trying to get unused connection: " + connectionId);
+					return null;
+				}
+			}
+		}
+		System.err.println("Could not find connectionid: " + connectionId);
+		return null;
+	}
 	
 	public final synchronized Connection getConnection() {
 		//System.err.println("BrokerHash: +"+hashCode()+"+total connections: "+conns.length+" available: "+available+" current: "+current);
@@ -142,7 +174,7 @@ public final class DbConnectionBroker extends Object
 		while(timeoutDays > 0 && available == 0 && current == conns.length ) {
 			try {
 				log("Waiting for connection " + username + "@" + location + " to become available. current = " + current);
-				wait(10000);
+				wait(60000);
 			} catch(InterruptedException e) {
 				// dunno.
 			}
@@ -193,12 +225,14 @@ public final class DbConnectionBroker extends Object
 				aged[i] = false;
 				created[i] = System.currentTimeMillis();
 				++current;
+				transactionContextBrokerMap.put(conns[i].hashCode(), this);
 				return conns[i];
 			}
 		}
 		// TODO PUT REQUEST IN WAITING LIST!
-        log("Assertion failure: no connections, retrying...");
-		return getConnection();
+//        log("Assertion failure: no connections, retrying...");
+//		return getConnection();
+		return null;
 	}
 	
 	public final synchronized String freeConnection(Connection conn) {
@@ -217,7 +251,7 @@ public final class DbConnectionBroker extends Object
 			usedmap[id] = false;
 			++available;
 			//System.err.println("In Free: available: "+available);
-			notifyAll();
+			notify();
 		}
 		
 		return null; // Duh?
@@ -244,6 +278,7 @@ public final class DbConnectionBroker extends Object
 			try {
 				if(conns[i] != null) {
 					conns[i].close();
+					transactionContextBrokerMap.remove(conns[i].hashCode());
 					log("Closed connection due to destroy: " + conns[i].hashCode());
 					conns[i] = null;
 					usedmap[i] = false;

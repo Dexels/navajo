@@ -62,6 +62,7 @@ public class GrusManager implements Runnable {
 								} catch (SQLException e) {
 									//e.printStackTrace(System.err);
 								}
+								inspectedBroker.transactionContextBrokerMap.remove(inspectedBroker.conns[i].hashCode());
 								inspectedBroker.conns[i] = null;
 								inspectedBroker.usedmap[i] = false;
 								--inspectedBroker.available;
@@ -82,7 +83,7 @@ public class GrusManager implements Runnable {
 						// Nobody interested anymore.
 						inspectedBroker.closed = true;
 						inspectedBroker.dead = true;
-						removeBroker(inspectedBroker);
+						inspectedBroker.destroy();
 					}
 				}
 			} catch (Throwable t) {
