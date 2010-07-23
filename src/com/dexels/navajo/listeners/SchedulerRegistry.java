@@ -8,13 +8,18 @@ package com.dexels.navajo.listeners;
  */
 public class SchedulerRegistry {
 
-	private static Scheduler myScheduler;
-	
+	private static volatile Scheduler myScheduler;
+
 	public static void setScheduler(Scheduler s) {
 		myScheduler = s;
 	}
-	
+
 	public static Scheduler getScheduler() {
+		if ( myScheduler != null ) {
+			return myScheduler;
+		} else {
+			myScheduler = new SimpleScheduler();
+		}
 		return myScheduler;
 	}
 }
