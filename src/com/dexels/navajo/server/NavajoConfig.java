@@ -960,18 +960,9 @@ public final class NavajoConfig implements NavajoConfigInterface {
 	
 	public double getCurrentCPUload() {
 		if ( myOs != null ) {
-			try {
-				// Refactored to use reflection. 
-				Method m = myOs.getClass().getMethod("getSystemLoadAverage", new Class[]{});
-				Double d = (Double) m.invoke(myOs, new Object[]{});
-				return d;
-			} catch (Throwable t) {
-				System.err.println("Upgrade to Java 1.6 for supporting cpu load statistics");
-				return -1.0;
-			}
-		} else {
-			return -1.0;
+			return ( myOs.getSystemLoadAverage() / myOs.getAvailableProcessors() );
 		}
+		else return 1.0;
 	}
 
 	public String getInstanceGroup() {
