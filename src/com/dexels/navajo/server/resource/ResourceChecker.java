@@ -77,7 +77,14 @@ public class ResourceChecker {
 				} catch (Throwable e) {  }
 			}
 		}
-
+		// Also add my CPU as a resource.
+		try {
+			managedResources.put(new AdapterFieldDependency(-1, "com.dexels.navajo.server.Dispatcher", "dispatcher", "dispatcher"), 
+				com.dexels.navajo.server.Dispatcher.class.getMethod("getResourceManager", new Class[]{String.class}));
+		} catch (Throwable e) {  
+			e.printStackTrace(System.err);
+		}
+		
 		initialized = true;
 	}
 	
@@ -132,7 +139,6 @@ public class ResourceChecker {
 						if ( health > finalHealth ) {
 							finalHealth = health;
 						}
-						System.err.println("Checking availability of resource: " + resourceId + ", health: " + health);
 						if ( rm.isAvailable(resourceId) == false || health == ServiceAvailability.STATUS_DEAD ) {
 							available = false;
 							int wt = rm.getWaitingTime(resourceId);
@@ -144,7 +150,7 @@ public class ResourceChecker {
 					}
 				}
 			} catch (Exception e1) { 
-				//System.err.println("Could not check avail of: " + afd.getType() + ", msg: " + e1.getMessage()); 
+				System.err.println("Could not check avail of: " + afd.getType() + ", msg: " + e1.getMessage()); 
 			}
 		}
 

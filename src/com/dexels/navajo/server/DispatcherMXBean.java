@@ -2,7 +2,9 @@ package com.dexels.navajo.server;
 
 import java.util.Date;
 
-public interface DispatcherMXBean {
+import com.dexels.navajo.server.resource.ResourceManager;
+
+public interface DispatcherMXBean extends ResourceManager {
 
 	/**
 	 * Gets the server hostname. 
@@ -45,7 +47,13 @@ public interface DispatcherMXBean {
 	public Date getStarttime();
 	
 	/**
-	 * Return the current request rate (webservices/second).
+	 * Gets the (normalized) CPU load.
+	 * @return
+	 */
+	public double getCPULoad();
+	
+	/**
+	 * Return the current request rate (web services/second).
 	 */
 	public float getRequestRate();
 	
