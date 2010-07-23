@@ -8,6 +8,36 @@ import com.dexels.navajo.parser.TMLExpressionException;
 public class Switch extends AbstractFunction {
 
 	
+	public void testSingleSimpleHit() throws Exception {
+		FunctionInterface fi = fff.getInstance(cl, "Switch");
+		fi.reset();
+	
+		fi.insertOperand(10);
+		fi.insertOperand(10);
+		fi.insertOperand(-10);
+		fi.insertOperand(0);
+		Object result = fi.evaluate();
+		assertNotNull(result);
+		assertEquals(result.getClass(), Integer.class);
+		assertEquals(new Integer(-10), (Integer) result);
+		
+	}
+	
+	public void testSingleSimpleMiss() throws Exception {
+		FunctionInterface fi = fff.getInstance(cl, "Switch");
+		fi.reset();
+	
+		fi.insertOperand(Expression.evaluate("20", null).value);
+		fi.insertOperand(Expression.evaluate("10", null).value);
+		fi.insertOperand(Expression.evaluate("-10", null).value);
+		fi.insertOperand(Expression.evaluate("0", null).value);
+		Object result = fi.evaluate();
+		assertNotNull(result);
+		assertEquals(result.getClass(), Integer.class);
+		assertEquals(new Integer(0), (Integer) result);
+		
+	}
+	
 	public void testIntegerSingleHit() throws Exception {
 		FunctionInterface fi = fff.getInstance(cl, "Switch");
 		fi.reset();
