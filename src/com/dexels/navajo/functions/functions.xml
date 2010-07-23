@@ -626,4 +626,9 @@
         <input>float|integer</input>
         <result>integer|float</result>
     </function>
+    <function name="Switch" class="com.dexels.navajo.functions.Switch">
+        <description>Switch(target, when, then, when, then, when, then, ..., else)</description>
+        <input>any,any,any,any,...</input>
+        <result>any</result>
+    </function>
 </functiondef>
