@@ -78,7 +78,7 @@ public interface ConnectionBrokerManagerMBean {
 	 * 
 	 * @param datasource
 	 */
-	public void setMaxConnectionsByDatasource(String datasource);
+	public void setMaxConnectionsByDatasource(String datasource, int connections);
 	
 	/**
 	 * Returns the number of all defined datasources.

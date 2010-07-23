@@ -188,11 +188,8 @@ private boolean dirty = false;
 
   
   public int getTransactionContextCount() {
-	  if ( SQLMap.transactionContextMap != null ) {
-		  return SQLMap.transactionContextMap.size();
-	  } else {
-		  return 0;
-	  }
+	  return 0;
+	
   }
   
   public void kill() {
