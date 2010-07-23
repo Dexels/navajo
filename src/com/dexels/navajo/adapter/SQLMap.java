@@ -191,9 +191,10 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
   protected static int requestCount = 0;
 
   private static Navajo configFile = null;
-  protected static final Map transactionContextMap = Collections.synchronizedMap(new HashMap());
   protected static final Map autoCommitMap = Collections.synchronizedMap(new HashMap());
 
+  
+  
   private int connectionId = -1;
 
   protected NavajoConfigInterface navajoConfig = null;
@@ -208,6 +209,7 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
   public int instances;
   
   private static Object semaphore = new Object();
+  private static boolean initialized = false;
   
   private void createDataSource(Message body, NavajoConfigInterface config) throws Throwable {
 
@@ -216,6 +218,8 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
     if (debug) {
       Access.writeToConsole(myAccess, "Creating new datasource: " + dataSourceName + "\n");
     }
+    
+    System.err.println("Creating new datasource: " + dataSourceName);
     
     driver = body.getProperty("driver").getValue(); //NavajoUtils.getPropertyValue(body, "driver", true);
     url =  body.getProperty("url").getValue(); // NavajoUtils.getPropertyValue(body, "url", true);
@@ -293,10 +297,9 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
 		  }
 		  
 		  try {
-			  
-			  if (configFile == null || !datasourceName.equals("")) {
 
-				  synchronized ( semaphore ) {
+			  synchronized ( semaphore ) {
+				  if ( !initialized || !datasourceName.equals("")) {
 
 					  if ( configFile == null ) {
 						  configFile = navajoConfig.readConfig("sqlmap.xml");
@@ -320,8 +323,11 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
 						  }
 						  this.checkDefaultDatasource();
 					  }
+					  initialized = true;
 				  }
+
 			  }
+
 			  rowCount = 0;
 		  }
 		  catch (NavajoException ne) {
@@ -445,14 +451,10 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
 			  if ( fixedBroker != null && con != null && myConnectionBroker != null ) {
 				  // Free connection.
 				  myConnectionBroker.freeConnection(con);
-				  con = null;
-			  }
-			  if (transactionContextMap != null) {
-				  transactionContextMap.remove(connectionId + "");
 			  }
 		  }
 	  }
-	  con = null;
+	  
   }
 
   public void setTransactionIsolationLevel(int j) {
@@ -483,20 +485,7 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
     	Access.writeToConsole(myAccess, "IN SETTRANSACTIONCONTEX(), I = " + i + "\n");
     }
     this.transactionContext = i;
-    // Get a shared connection from the transactionContextMap.
-    // System.err.println("in setTransactionContex(), id = " + i);
-    con = (Connection)transactionContextMap.get(i + "");
-
-    if (debug) {
-    	Access.writeToConsole(myAccess, "CON = " + con + "\n");
-    }
-    
-    if (con == null) {
-
-    	boolean exists = transactionContextMap.containsKey(i + "");
-    	AuditLog.log("SQLMap", "Invalid transaction context: " + i, Level.SEVERE,(myAccess != null ? myAccess.accessID : "unknown access") + " (exists=" + exists + ")");
-    	throw new UserException( -1, "Invalid transaction context set (exists=" + exists + ")");
-    }
+ 
   }
 
   /**
@@ -788,6 +777,14 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
 		  Access.writeToConsole(myAccess, this.getClass() + ": in createConnection()\n");
 	  }
 
+	  if ( transactionContext != -1 ) {
+		 
+    	  con = DbConnectionBroker.getConnection(transactionContext);
+    	   if (con == null) {
+    	    	throw new UserException( -1, "Invalid transaction context set: " + transactionContext);
+    	    }
+      }
+	  
     if (con == null) { // Create connection if it does not yet exist.
 
       if (this.debug) {
@@ -803,28 +800,31 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
         throw new UserException( -1,
                                 "Could not create connection to datasource " +
                                 this.datasource + ", using username " +
-                                this.username);
+                                this.username + ", fixedBroker = " + fixedBroker);
       }
 
-      con = myConnectionBroker.getConnection();
-
-      if (con == null) {
-    	  AuditLog.log("SQLMap", "Could not connect to database: " + datasource +  ", one more try with fresh broker....", Level.WARNING, (myAccess != null ? myAccess.accessID : "unknown access"));
-
-    	  Message msg = configFile.getMessage("/datasources/" + datasource);
-    	  try {
-    		  createDataSource(msg, navajoConfig);
-    	  }
-    	  catch (NavajoException ne) {
-    		  AuditLog.log("SQLMap", ne.getMessage(), Level.SEVERE);
-    		  throw new UserException( -1, ne.getMessage());
-    	  } catch (Throwable t) {
-    		  AuditLog.log("SQLMap", t.getMessage(), Level.SEVERE);
-    		  throw new UserException( -1, t.getMessage());
-    	  }
-    	  myConnectionBroker = fixedBroker.get(this.datasource, null, null);
+      
+      
     	  con = myConnectionBroker.getConnection();
-    	  if (con == null) {
+     
+      
+      if (con == null) {
+//    	  AuditLog.log("SQLMap", "Could not connect to database: " + datasource +  ", one more try with fresh broker....", Level.WARNING, (myAccess != null ? myAccess.accessID : "unknown access"));
+//
+//    	  Message msg = configFile.getMessage("/datasources/" + datasource);
+//    	  try {
+//    		  createDataSource(msg, navajoConfig);
+//    	  }
+//    	  catch (NavajoException ne) {
+//    		  AuditLog.log("SQLMap", ne.getMessage(), Level.SEVERE);
+//    		  throw new UserException( -1, ne.getMessage());
+//    	  } catch (Throwable t) {
+//    		  AuditLog.log("SQLMap", t.getMessage(), Level.SEVERE);
+//    		  throw new UserException( -1, t.getMessage());
+//    	  }
+//    	  myConnectionBroker = fixedBroker.get(this.datasource, null, null);
+//    	  con = myConnectionBroker.getConnection();
+//    	  if (con == null) {
     		  AuditLog.log("SQLMap",  "Could (still) not connect to database: " + datasource + " (" + this.username + ")" +
     				  ", check your connection", Level.SEVERE);
 
@@ -832,7 +832,7 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
     				  "Could not connect to database: " +
     				  datasource + " (" + this.username + ")" +
     		  ", check your connection");
-    	  }
+    //	  }
       }
       else {
         if (this.debug) {
@@ -866,15 +866,16 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
         // Set session identification.
         SessionIdentification.setSessionId(this.getMetaData() != null ? this.getMetaData().getVendor() : "Unknown", con, this.myAccess);
       }
+      
+      if ( this.con != null) {
+          this.connectionId = con.hashCode();
+          if (this.debug) {
+        	  Access.writeToConsole(myAccess, this.getClass() + ": put connection no. " +
+                               this.connectionId + " into the connection map\n");
+          }
+        }
     }
-    if ( (this.con != null) && (this.connectionId == -1)) {
-      this.connectionId = con.hashCode();
-      transactionContextMap.put(connectionId + "", con);
-      if (this.debug) {
-    	  Access.writeToConsole(myAccess, this.getClass() + ": put connection no. " +
-                           this.connectionId + " into the connection map\n");
-      }
-    }
+    
   }
 
   public final int getTransactionContext() throws UserException {
