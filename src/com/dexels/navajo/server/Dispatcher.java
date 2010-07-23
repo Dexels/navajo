@@ -696,30 +696,6 @@ public final class Dispatcher implements Mappable, DispatcherMXBean, DispatcherI
 	  }
   }
   
-  /**
-   * Evaluate user specific parameters.
-   *
-   * @param parameters
-   * @param message
-   * @return
-   * @throws SystemException
-   */
-  private final Parameters evaluateParameters(Parameter[] parameters,
-                                              Navajo message) throws
-      SystemException {
-    if (parameters == null) {
-      return null;
-    }
-
-    Parameters params = new Parameters();
-
-    for (int i = 0; i < parameters.length; i++) {
-      Parameter p = (Parameter) parameters[i];
-      params.store(p.name, p.expression, p.type, p.condition, message);
-    }
-    return params;
-  }
-
   public final void setUseAuthorisation(boolean a) {
     useAuthorisation = a;
   }
@@ -780,7 +756,6 @@ public final class Dispatcher implements Mappable, DispatcherMXBean, DispatcherI
   
   public final boolean isBusy() {
 	  return  ( accessSet.size() > navajoConfig.getMaxAccessSetSize() );
-	  //return ( !TribeManager.getInstance().getIsChief() );
   }
 
   private void setRequestRate(ClientInfo clientInfo, int accessSetSize) {
@@ -848,28 +823,10 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
     
     int accessSetSize = accessSet.size();
     setRequestRate(clientInfo, accessSetSize);
-     
-    boolean ignoreServerTooBusy = ( 
-    		             "true".equals(inMessage.getHeader().getHeaderAttribute("useComet")) || 
-    		             "true".equals(inMessage.getHeader().getHeaderAttribute("internalService"))
-    		           );
-    		             
+     	             
     // Check whether service is  disabled (FORCED). Only accept special web services.
     if ( disabled && !isSpecialwebservice(inMessage.getHeader().getRPCName()) ) {
     	throw new FatalException("500");
-    }
-    
-    // Check whether server is too busy...
-    if (!ignoreServerTooBusy && isBusy() && !isSpecialwebservice(inMessage.getHeader().getRPCName()) && !inMessage.getHeader().hasCallBackPointers() ) {
-    	try {
-    		Navajo result = TribeManagerFactory.getInstance().forward(inMessage);
-    		return result;
-    	} catch (Exception e) {
-    		// Server too busy!
-    		NavajoEventRegistry.getInstance().publishEvent(new ServerTooBusyEvent());
-    		System.err.println(">> SERVER TOO BUSY!!!!!");
-    		throw new FatalException("500.13");
-    	}
     }
     
     // Check whether server is disabled...

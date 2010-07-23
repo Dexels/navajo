@@ -28,6 +28,8 @@ package navajo;
  * 
  * VERSION HISTORY
  * 
+ * 9.0.2 - Extended Resource mechanism to Dispatcher (is also a resource that can have a certain health.
+ * 
  * 9.0.1 - Added internalService header attribute as an indication for the Dispatcher to ignore the server too busy check.
  *       - Make sure that header is always added for response Navajo.
  *       
@@ -207,12 +209,12 @@ public class Version extends dexels.Version {
 
 	public static final int MAJOR = 9;
 	public static final int MINOR = 0;
-	public static final int PATCHLEVEL = 1;
-	public static final String SPECIAL_VERSION = "Navajo 9 Release Candidate";
+	public static final int PATCHLEVEL = 2;
+	public static final String SPECIAL_VERSION = "Navajo 9.1 Release Candidate II";
 	
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
-	public static final String RELEASEDATE = "2010-04-26";
+	public static final String RELEASEDATE = "2010-07-23";
 	
 //	 Included packages.
 	String [] includes = {"navajodocument.Version"};
