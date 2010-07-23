@@ -97,7 +97,9 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
   public String method;
   
   // If block is set, the web service calls blocks until a result is received.
-  public boolean block = false;
+  // Default value is TRUE.
+  public boolean block = true;
+  private boolean serviceCalled = false;
   
   public boolean isBlock() {
 	  return block;
@@ -136,7 +138,10 @@ private Object waitForResult = new Object();
 	  appendTo = messageOffset;
   }
   
-  private final synchronized void waitForResult() {
+  private final synchronized void waitForResult() throws UserException {
+	  if (!serviceCalled) {
+		  throw new UserException(-1, "Call webservice before retrieving result.");
+	  }
 	  if ( inDoc == null ) {
 		  // Wait for result.
 		  synchronized (waitForResult) {
@@ -514,12 +519,14 @@ private Object waitForResult = new Object();
 			  } else {
 				  inDoc = nc.doScheduledSend(outDoc, method, "now", "", "");
 			  }
+			  serviceCalled = true;
 			  continueAfterRun();
 		  } // Internal request.
 		  else {
 			  try {
 				  inDoc = null;
 				  SchedulerRegistry.getScheduler().submit(this, true);
+				  serviceCalled = true;
 				  if ( block ) {
 					  waitForResult();
 				  }
@@ -853,7 +860,7 @@ private Object waitForResult = new Object();
   public void setUseCurrentOutDoc(boolean b) throws NavajoException {
 	  if (b) {
 		  this.useCurrentOutDoc = b;
-		  this.outDoc = access.getOutputDoc();
+		  this.outDoc = access.getOutputDoc().copy();
 		  // Copy param messages.
 		  if ( inMessage.getMessage("__parms__") != null ) {
 			  Message params = inMessage.getMessage("__parms__").copy(outDoc);
@@ -1013,7 +1020,7 @@ private Object waitForResult = new Object();
 	  h.setRequestId(null);
 
 	  try {
-		  inDoc = DispatcherFactory.getInstance().handle(outDoc.copy(), true);
+		  inDoc = DispatcherFactory.getInstance().handle(outDoc, true);
 		  continueAfterRun();
 	  } catch (Exception e) {
 		  // TODO Auto-generated catch block
