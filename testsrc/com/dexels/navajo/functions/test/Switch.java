@@ -69,7 +69,6 @@ public class Switch extends AbstractFunction {
 		fi.reset();
 		Navajo n = createTestNavajo();
 		fi.setInMessage(n);
-		fi.setCurrentMessage(n.getMessage("Aap").getElements().get(0));
 		
 		fi.insertOperand(Expression.evaluate("[Noot]", n, null, n.getMessage("Aap").getElements().get(0)).value);
 		fi.insertOperand(20);
@@ -89,7 +88,6 @@ public class Switch extends AbstractFunction {
 		fi.reset();
 		Navajo n = createTestNavajo();
 		fi.setInMessage(n);
-		fi.setCurrentMessage(n.getMessage("Aap").getElements().get(0));
 		
 		fi.insertOperand(Expression.evaluate("[Noot]", n, null, n.getMessage("Aap").getElements().get(0)).value);
 		fi.insertOperand(20);

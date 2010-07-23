@@ -9,7 +9,7 @@ import com.dexels.navajo.functions.util.FunctionFactoryInterface;
 
 import junit.framework.TestCase;
 
-public class AbstractFunction extends TestCase {
+public abstract class AbstractFunction extends TestCase {
 
 	protected FunctionFactoryInterface fff;
 	protected ClassLoader cl;
