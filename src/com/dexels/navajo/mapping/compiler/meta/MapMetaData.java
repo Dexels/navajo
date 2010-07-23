@@ -194,7 +194,7 @@ public class MapMetaData {
 		MapMetaData mmd = MapMetaData.getInstance("/home/arjen/projecten/Navajo");
 		//System.err.println("is: " + mmd.isMetaScript("ProcessQueryMemberNewStyle", "/home/arjen/projecten/Navajo/", "."));
 		
-		String result = mmd.parse("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/matchform/Test.xml");
+		String result = mmd.parse("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/InitTest.xml");
 		
 		FileWriter fw = new FileWriter("/home/arjen/@.xml");
 	

@@ -23,5 +23,10 @@ public class TestResourceManager implements ResourceManager {
     public int getHealth(String resourceId) {
 		return ServiceAvailability.STATUS_BUSY;
 	}
+
+	public void setHealth(String resourceId, int h) {
+		// TODO Auto-generated method stub
+		
+	}
     
 }

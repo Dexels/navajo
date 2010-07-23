@@ -26,8 +26,8 @@ public class ResourceCheckerTest extends TestCase {
 
 	public void testAvailable2() throws Exception {
 		ResourceChecker rc = new ResourceChecker(new CompiledTestScript2());
-		assertNull(rc);
-		//assertTrue(rc.getServiceAvailability().isAvailable());
+		assertNotNull(rc);
+		assertTrue(rc.getServiceAvailability().isAvailable());
 	}
 	
 	public void testManager() throws Exception {

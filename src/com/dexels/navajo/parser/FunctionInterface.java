@@ -19,7 +19,11 @@ public abstract class FunctionInterface {
     protected Navajo inMessage = null;
     protected Message currentMessage = null;
     
-    // Act as if these attributes are final, they can only be set once.
+    public void setCurrentMessage(Message currentMessage) {
+		this.currentMessage = currentMessage;
+	}
+
+	// Act as if these attributes are final, they can only be set once.
     private static Object semahore = new Object();
     private final static HashSet<Class<? extends FunctionInterface>> initialized = new HashSet<Class<? extends FunctionInterface>>();
     private final static HashMap<Class<? extends FunctionInterface>, Class [][]> types = new HashMap<Class<? extends FunctionInterface>, Class[][]>();

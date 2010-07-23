@@ -143,8 +143,10 @@ public class ValueDefinition {
 				out.addChild(field);
 			}
 			return field;
-	    // Case II: <message><map ref=""/></message> or <property><map ref=""/></property> construct.
-		} else if ( ( currentIn.getParent().getName().equals("message") || currentIn.getParent().getName().equals("property") ) && map != null ){ // Generate <map ref=""> construction
+	    // Case II: <message><map ref=""/></message> or <property><map ref=""/></property> construct or <param type="array"><map ref="">
+		} else if ( ( currentIn.getParent().getName().equals("message") || 
+				      currentIn.getParent().getName().equals("property") ||
+				      currentIn.getParent().getName().equals("param") ) && map != null ){ // Generate <map ref=""> construction
 			XMLElement mapref = new TSLElement(currentIn, "map");
 			mapref.setAttribute("ref", setterValue);
 			if ( condition != null && !condition.equals("") ) {
