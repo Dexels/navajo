@@ -49,6 +49,7 @@ import com.dexels.navajo.events.types.NavajoResponseEvent;
 import com.dexels.navajo.events.types.ServerTooBusyEvent;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.server.jmx.SNMPManager;
+import com.dexels.navajo.server.resource.ResourceManager;
 import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
@@ -1613,4 +1614,32 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
   public int getRateWindowSize() {
 	  return rateWindowSize;
   }
+
+  public double getCPULoad() {
+	 return getNavajoConfig().getCurrentCPUload();
+  }
+
+  private int health;
+  
+  public int getHealth(String resourceId) {
+	  return health;
+  }
+
+  public int getWaitingTime(String resourceId) {
+	  return 0;
+  }
+
+  public boolean isAvailable(String resourceId) {
+	 return ( !shutdown );
+  }
+
+  public void setHealth(String resourceId, int h) {
+	  System.err.println("Dispatcher.setHealth(" + resourceId + "," + h + ")");
+	  health = h;
+  }
+  
+  public static ResourceManager getResourceManager(String id) {
+	  return DispatcherFactory.getInstance();
+  }
+  
 }

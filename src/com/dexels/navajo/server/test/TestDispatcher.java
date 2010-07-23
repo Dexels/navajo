@@ -166,4 +166,24 @@ public class TestDispatcher implements DispatcherInterface {
 		return doc;
 	}
 
+	public int getHealth(String resourceId) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public int getWaitingTime(String resourceId) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public boolean isAvailable(String resourceId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public void setHealth(String resourceId, int h) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
