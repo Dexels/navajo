@@ -6,9 +6,11 @@ import com.dexels.navajo.listeners.TmlRunnable;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
 import com.dexels.navajo.server.*;
+import com.dexels.navajo.server.resource.ResourceManager;
 import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.adapter.navajomap.MessageMap;
+import com.dexels.navajo.adapter.navajomap.NavajoMapManager;
 import com.dexels.navajo.client.*;
 
 import java.io.IOException;
@@ -1163,10 +1165,17 @@ private Object waitForResult = new Object();
   }
   
   public DependentResource[] getDependentResourceFields() {
-	  return new DependentResource[]{new GenericDependentResource("script", "doSend", AdapterFieldDependency.class), 
+	  return new DependentResource[]{new GenericDependentResource(GenericDependentResource.SERVICE_DEPENDENCY, "doSend", AdapterFieldDependency.class), 
 			                         new GenericDependentResource("navajoserver", "server", AdapterFieldDependency.class)};
   }
 
+  public static ResourceManager getResourceManager(String resourceType) {
+	  if ( resourceType.equals("navajoserver") ) {
+		  return NavajoMapManager.getInstance();
+	  }
+	  return null;
+  }
+  
   public String getOutputProperties() {
 	  return outputProperties;
   }
