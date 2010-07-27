@@ -3,6 +3,7 @@ package com.dexels.navajo.server.resource;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
@@ -25,6 +26,7 @@ import com.dexels.navajo.server.GenericHandler;
 public class ResourceChecker {
 
 	HashMap<AdapterFieldDependency,Method> managedResources = new HashMap<AdapterFieldDependency,Method>();
+	HashSet<String> scriptDependencies = new HashSet<String>();
 	
 	private Navajo inMessage = null;
 	private boolean initialized = false;
@@ -34,6 +36,7 @@ public class ResourceChecker {
 	public ResourceChecker(CompiledScript s) {
 		// For unit tests.
 		this.myCompiledScript = s;
+		this.webservice = s.getClass().getSimpleName();
 		init();
 	}
 	
@@ -67,14 +70,19 @@ public class ResourceChecker {
 			Dependency dep = dependencies.next();
 			if ( AdapterFieldDependency.class.isAssignableFrom(dep.getClass()) ) {
 				AdapterFieldDependency afd = (AdapterFieldDependency) dep;
-				try {
-					Class c = Class.forName(afd.getJavaClass(), true, myCompiledScript.getClass().getClassLoader());
-					Method m = c.getMethod("getResourceManager", new Class[]{String.class});
-					if ( m != null ) {
-						//System.err.println("Found method getResourceManager() for " + afd.getJavaClass());
-						managedResources.put(afd, m);
-					}
-				} catch (Throwable e) {  }
+				if ( !afd.getType().equals("script") ) {
+					try {
+						Class c = Class.forName(afd.getJavaClass(), true, myCompiledScript.getClass().getClassLoader());
+						Method m = c.getMethod("getResourceManager", new Class[]{String.class});
+						if ( m != null ) {
+							//System.err.println("Found method getResourceManager() for " + afd.getJavaClass());
+							managedResources.put(afd, m);
+						}
+					} catch (Throwable e) {  }
+				} else {
+					// Script dependency
+					scriptDependencies.add(evaluateResourceId(afd.getId()));
+				}
 			}
 		}
 		// Also add my CPU as a resource.
@@ -117,7 +125,34 @@ public class ResourceChecker {
 		return result;
 	}
 	
+	private ServiceAvailability checkScriptDependencies(HashSet<String> checkedServices) {
+		Iterator<String> deps = scriptDependencies.iterator();
+		int finalHealth = -1;
+		ServiceAvailability finalAvailability = null;
+		while ( deps.hasNext() ) {
+			String service = deps.next();
+			if ( !checkedServices.contains(service) ) {
+				ServiceAvailability sa = ResourceCheckerManager.getInstance().getResourceChecker(service, inMessage).getServiceAvailability(checkedServices);
+				if ( sa.getHealth() > finalHealth || !sa.isAvailable() ) {
+					finalAvailability = sa;
+				}
+			}
+		}
+		return finalAvailability;
+	}
+	
 	public ServiceAvailability getServiceAvailability() {
+		return getServiceAvailability(new HashSet<String>());
+	}
+	
+	/**
+	 * 
+	 * @param checkedServices, contains set of services that have already been checked to prevent infinite loop due
+	 * to (wrong) circular dependencies.
+	 * 
+	 * @return
+	 */
+	private ServiceAvailability getServiceAvailability(HashSet<String> checkedServices) {
 
 		ArrayList<String> unavailableIds = new ArrayList<String>();
 
@@ -157,8 +192,19 @@ public class ResourceChecker {
 		String [] ids = new String[unavailableIds.size()];
 		ids = unavailableIds.toArray(ids);
 		ServiceAvailability sa = new ServiceAvailability(webservice, available, finalHealth, maxWaitingTime, ids);
-
-		return sa;
+		//System.err.println("First order health of " + webservice + " is: " + finalHealth);
+		checkedServices.add(webservice);
+		
+		// Check dependecies
+		ServiceAvailability dependencyHealth = checkScriptDependencies(checkedServices);
+//		if ( dependencyHealth != null ) {
+//			System.err.println("Found child dep with health: " + dependencyHealth.getHealth());
+//		}
+		if ( dependencyHealth != null && ( dependencyHealth.getHealth() > sa.getHealth() || !dependencyHealth.isAvailable() ) ) {
+			return dependencyHealth;
+		} else {
+			return sa;
+		}
 
 	}
 	

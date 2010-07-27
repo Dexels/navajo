@@ -47,6 +47,16 @@ public class ResourceCheckerManager implements NavajoListener {
 	}
 	
 	/**
+	 * For unit testing purposes.
+	 * 
+	 * @param webservice
+	 * @param c
+	 */
+	public static void addCheckedService(String webservice, ResourceChecker c) {
+		myResourceCheckerMngr.checkedService.put(webservice, c);
+	}
+	
+	/**
  	 * Make sure that when compile script events comes along, corresponding script is removed from the checkedService cache.
 	 */
 	public void onNavajoEvent(NavajoEvent ne) {
