@@ -21,7 +21,11 @@ public class TestResourceManager implements ResourceManager {
 	}
 
     public int getHealth(String resourceId) {
+    	if ( resourceId.equals("id5") ) {
+    		return ServiceAvailability.STATUS_DEAD;
+    	} else {
 		return ServiceAvailability.STATUS_BUSY;
+    	}
 	}
 
 	public void setHealth(String resourceId, int h) {
