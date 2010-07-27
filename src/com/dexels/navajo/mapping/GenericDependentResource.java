@@ -13,6 +13,8 @@ public class GenericDependentResource implements DependentResource {
 	private String value;
 	private Class myDependencyClass;
 	
+	public static final String SERVICE_DEPENDENCY = "script";
+	
 	public GenericDependentResource(String type, String value, Class depClass) {
 		this.type = type;
 		this.value = value;

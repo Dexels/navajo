@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.mapping.CompiledScript;
+import com.dexels.navajo.mapping.GenericDependentResource;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
 import com.dexels.navajo.mapping.compiler.meta.Dependency;
 import com.dexels.navajo.parser.Expression;
@@ -70,7 +71,7 @@ public class ResourceChecker {
 			Dependency dep = dependencies.next();
 			if ( AdapterFieldDependency.class.isAssignableFrom(dep.getClass()) ) {
 				AdapterFieldDependency afd = (AdapterFieldDependency) dep;
-				if ( !afd.getType().equals("script") ) {
+				if ( !afd.getType().equals(GenericDependentResource.SERVICE_DEPENDENCY) ) {
 					try {
 						Class c = Class.forName(afd.getJavaClass(), true, myCompiledScript.getClass().getClassLoader());
 						Method m = c.getMethod("getResourceManager", new Class[]{String.class});
