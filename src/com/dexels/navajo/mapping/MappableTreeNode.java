@@ -217,7 +217,7 @@ public final class MappableTreeNode implements Mappable, Serializable {
                   m = c.getMethod(methodName, classArray);
                   methods.put(key.toString(), m);
                 } catch (NoSuchMethodException nsme) {
-                      throw new MappingException("Could not find method in Mappable object: " + methodName);
+                      throw new MappingException("Could not find method in Mappable object: " + methodName+" in object: "+getMyMap());
               }
           }
 
