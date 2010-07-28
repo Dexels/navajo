@@ -59,11 +59,11 @@ public final class ASTTmlNode extends SimpleNode {
             }
         }
 
-        if (!exists) 
+        if (!exists) {
             val = val.substring(1, val.length());
-        else
+        }  else {
             val = val.substring(2, val.length());
-        
+        }
         if (val.startsWith("@")) { // relative param property.
         	isParam = true;
         	val = val.substring(1);
@@ -87,14 +87,16 @@ public final class ASTTmlNode extends SimpleNode {
                     if (match.size() > 1)
                       singleMatch = false;
                 }
-                else
-                    throw new TMLExpressionException("No parent message present for property: " + val);
+                else {
+                   throw new TMLExpressionException("No parent message present for property: " + val);
+                }
             } else if (parentParamMsg == null && isParam) {
             	parentParamMsg = doc.getMessage("__parms__");
             	 if (val.indexOf(Navajo.MESSAGE_SEPARATOR) != -1) {
                     match = doc.getProperties(val);
-                    if (match.size() > 1)
-                      singleMatch = false;
+                    if (match.size() > 1) {
+                       singleMatch = false;
+                    }  
                 }
                 else
                     throw new TMLExpressionException("No parent message present for param: " + val);
