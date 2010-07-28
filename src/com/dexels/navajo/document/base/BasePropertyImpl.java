@@ -133,10 +133,27 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 	}
 
+	/**
+	 * Alternative (different case), to ease the mapping onto the tsl
+	 * @param subType
+	 */
+	public void setSubtype(String subType) {
+		setSubType(subType);
+	}
+
+	/**
+	 * Alternative (different case), to ease the mapping onto the tsl
+	 */
+	public String getSubtype() {
+		return getSubType();
+	}
+
+	
 	public void setSubType(String subType) {
 		this.subType = subType;
 		subtypeMap = NavajoFactory.getInstance().parseSubTypes(subType);
 	}
+	
 
 	private void addSubType(String extra) {
 		if (subtypeMap == null) {
