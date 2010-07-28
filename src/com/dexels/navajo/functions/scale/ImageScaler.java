@@ -36,7 +36,6 @@ import com.dexels.navajo.document.types.*;
  * Class to demonstrate a way to scale an image without the
  * requirement of a graphical environment and without enabling
  * the headless support available since Java 1.4
- * @author Torsten R�er
  * @author www.luniks.net
  */
 public class ImageScaler {

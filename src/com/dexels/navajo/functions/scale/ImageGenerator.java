@@ -32,7 +32,7 @@ import java.util.Hashtable;
  * @author Justin Couch
  * @version $Revision$
  *
- * Torsten Römer, 2003-05-22: Made some slight modifications so that this
+ * Torsten Rï¿½mer, 2003-05-22: Made some slight modifications so that this
  * useful class works for me as well   
  */
 public class ImageGenerator implements ImageConsumer
@@ -67,7 +67,6 @@ public class ImageGenerator implements ImageConsumer
      *
      * @param status The status of the completion
      *
-     * Torsten Römer: Ignore the status to make sure the process "finishes".
      * Consuming of a single jpg image returns for example SINGLEFRAMEDONE.
      */
     public void imageComplete(int status)
@@ -194,7 +193,7 @@ public class ImageGenerator implements ImageConsumer
      * Fetch the image. This image is not necessarily completely rendered
      * although we do try to guarantee it.
      *
-     * Torsten Römer: Changed to public
+     * Torsten Rï¿½mer: Changed to public
      *
      * @return The image that has been created for the current input
      */
@@ -223,7 +222,7 @@ public class ImageGenerator implements ImageConsumer
      * the necessary information is given, and once created, will not overwrite
      * the current image.
      *
-     * Torsten Römer: Use another constructor of BufferedImage. With the one used
+     * Torsten Rï¿½mer: Use another constructor of BufferedImage. With the one used
      * here the resulting jpg was extremely blueish.
      */
     private void createImage()
