@@ -35,19 +35,22 @@ public final class DefaultExpressionEvaluator
     lastTime = newTime;
   }
 
+  public final Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent) throws NavajoException {
+	  return evaluate(clause, inMessage, mappableTreeNode, parent, null);
+  }
+  
   public final Operand evaluate(String clause, Navajo inMessage,
-                                Object mappableTreeNode, Message parent) throws
+                                Object mappableTreeNode, Message parent, Message currentParam) throws
       NavajoException {
-//    System.err.println("Evaluating: "+clause);
     if (parent != null) {
 //      System.err.println("Inmessage info: "+parent.getIndex()+" type: "+parent.getType()+" name: "+parent.getName());
 
     }
     try {
-      return Expression.evaluate(clause, inMessage,
-                                 (MappableTreeNode) mappableTreeNode, parent);
+      return Expression.evaluate(clause, inMessage,(MappableTreeNode) mappableTreeNode,parent,currentParam);
     }
     catch (Throwable ex) {
+   	 ex.printStackTrace();
       throw NavajoFactory.getInstance().createNavajoException("Parse error: " +
           ex.getMessage() + "\n while parsing: " + clause);
     }
