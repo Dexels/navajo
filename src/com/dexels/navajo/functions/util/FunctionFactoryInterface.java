@@ -76,11 +76,11 @@ public abstract class FunctionFactoryInterface {
 				}
 				return fi;
 			} catch (ClassNotFoundException e1) {
-				throw new TMLExpressionException("Could find class for function: " + getDef(functionName).getObject());
+				throw new TMLExpressionException("Could find class for function: " + getDef(functionName).getObject(),e1);
 			} catch (IllegalAccessException e2) {
-				throw new TMLExpressionException("Could not instantiate class: " + getDef(functionName).getObject());
+				throw new TMLExpressionException("Could not instantiate class: " + getDef(functionName).getObject(),e2);
 			} catch (InstantiationException e3) {
-				throw new TMLExpressionException("Could not instantiate class: " + getDef(functionName).getObject());
+				throw new TMLExpressionException("Could not instantiate class: " + getDef(functionName).getObject(),e3);
 			}
 //		} catch (InstantiationException e) {
 //			throw new TMLExpressionException("Could not instantiate class: " + getDef(functionName).getObject());
