@@ -74,7 +74,8 @@ public interface NavajoConfigInterface {
 	public String getDbPath();
 	public void doClearCache();
 	public void doClearScriptCache();
-	
+	public String getCompilationLanguage();
+
 	public boolean isAsyncEnabled();
 	public boolean isIntegrityWorkerEnabled();
 	public boolean isLockManagerEnabled();

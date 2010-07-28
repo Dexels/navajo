@@ -119,6 +119,8 @@ public final class NavajoConfig implements NavajoConfigInterface {
 	private String instanceGroup;
 	
 	private OperatingSystemMXBean myOs = null;
+
+	private String compilationLanguage;
     
 	/**
 	 * Creates a fresh NavajoConfig object.
@@ -381,6 +383,11 @@ public final class NavajoConfig implements NavajoConfigInterface {
     		else {
     			compileScripts = false;
     		}
+
+    		// Get compilation class.
+    		compilationLanguage = ( body.getProperty("parameters/compilation_language") != null ? body.getProperty("parameters/compilation_language").getValue() : null );
+
+    		
     		// Get document class implementation.
     		String documentClass = ( body.getProperty("documentClass") != null ? 
     				body.getProperty("documentClass").getValue() : null );
@@ -1009,6 +1016,10 @@ public final class NavajoConfig implements NavajoConfigInterface {
 		} else {
 			return null;
 		}
+	}
+
+	public String getCompilationLanguage() {
+		return compilationLanguage;
 	}
 	
 }
