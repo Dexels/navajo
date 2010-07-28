@@ -37,6 +37,7 @@ public class TestNavajoConfig implements NavajoConfigInterface {
 	private StatisticsRunnerInterface myStatisticsRunner;
 	
 	public TestNavajoConfig() {
+		setClassloader( new NavajoClassLoader(this.getClass().getClassLoader()));
 	}
 	
 	private File getTempFile(String name) {
@@ -104,7 +105,7 @@ public class TestNavajoConfig implements NavajoConfigInterface {
 	}
 
 	public NavajoClassSupplier getClassloader() {
-		return new NavajoClassLoader(this.getClass().getClassLoader());
+		return myClassloader;
 	}
 
 	public void setClassloader(NavajoClassSupplier classloader) {
@@ -135,8 +136,7 @@ public class TestNavajoConfig implements NavajoConfigInterface {
 	}
 
 	public NavajoClassLoader getBetaClassLoader() {
-		// TODO Auto-generated method stub
-		return null;
+		return (NavajoClassLoader) getClassloader();
 	}
 
 	public String getBetaUser() {
@@ -339,6 +339,11 @@ public class TestNavajoConfig implements NavajoConfigInterface {
 	public InputStream getResourceBundle(String name) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public String getCompilationLanguage() {
+		// TODO Auto-generated method stub
+		return "javascript";
 	}
 
 }
