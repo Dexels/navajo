@@ -19,7 +19,7 @@
             <property name="class" value="com.dexels.navajo.persistence.impl.PersistenceManagerImpl"/>
         </message>
         <message name="repository">
-            <property name="class" type="string" length="0" value="com.dexels.navajo.server.SimpleRepository" direction="in"/>
+            <property name="class" type="string" length="0" value="com.dexels.navajo.rhino.RhinoRepository" direction="in"/>
         </message>
         <message name="parameters">
             <property name="use_compression" value="true"/>

@@ -11,12 +11,98 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
             <param-name>extremeEdition</param-name>
             <param-value>true</param-value>
         </init-param>
-
+        <load-on-startup>-1</load-on-startup>	
 	</servlet>
+	
+	
+	<!-- Not DRY, would prefer a proper client -->
+	<servlet>
+		<servlet-name>Rest</servlet-name>
+		<servlet-class>com.dexels.navajo.server.listener.http.RestTmlServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>Comet</servlet-name>
+		<servlet-class>com.dexels.navajo.server.listener.http.comet.TmlCometServlet</servlet-class>
+        <init-param>
+            <param-name>schedulerClass</param-name>
+            <param-value>com.dexels.navajo.server.listener.http.schedulers.priority.PriorityThreadPoolScheduler</param-value>
+        </init-param>
+        <init-param>
+            <param-name>priorityPoolSize</param-name>
+            <param-value>5</param-value>
+        </init-param>
+        <init-param>
+            <param-name>normalPoolSize</param-name>
+            <param-value>100</param-value>
+        </init-param>
+        <init-param>
+            <param-name>systemPoolSize</param-name>
+            <param-value>5</param-value>
+        </init-param>
+	</servlet>
+	<servlet>
+		<servlet-name>PostmanNew</servlet-name>
+		<servlet-class>com.dexels.navajo.server.listener.http.standard.TmlStandardServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>NavaDoc</servlet-name>
+		<servlet-class>com.dexels.navajo.util.navadoc.servlet.DocumentWebService</servlet-class>
+	</servlet>
+
+
+	<servlet-mapping>
+		<servlet-name>Comet</servlet-name>
+		<url-pattern>/Comet</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>PostmanNew</servlet-name>
+		<url-pattern>/PostmanNew</url-pattern>
+	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>Postman</servlet-name>
 		<url-pattern>/Postman</url-pattern>
 	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Rest</servlet-name>
+		<url-pattern>/Rest</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>NavaDoc</servlet-name>
+		<url-pattern>/NavaDoc</url-pattern>
+	</servlet-mapping>
+		<!-- Define a Security Constraint on this Application -->
+	<!-- 
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>HTMLManger and Manager command</web-resource-name>
+			<url-pattern>/NavaDoc</url-pattern>
+			<url-pattern>*.jsp</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>manager</role-name>
+		</auth-constraint>
+	</security-constraint>
+-->
+	<!-- Define the Login Configuration for this Application -->
+	<!-- 
+
+	<login-config>
+		<auth-method>BASIC</auth-method>
+		<realm-name>Tipi Manager Application</realm-name>
+	</login-config>
+-->
+	<!-- Security roles referenced by this web application -->
+	<!-- 
+	<security-role>
+		<description>
+      The role that is required to log in to the Manager Application
+    </description>
+		<role-name>manager</role-name>
+	</security-role>
+-->
+	
 	
 </web-app>

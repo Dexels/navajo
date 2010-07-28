@@ -16,9 +16,16 @@
       <info>writes a file</info>
       <attribute>
          <name>filePath</name>
-         <required>true</required>
+         <required>false</required>
 	      <rtexprvalue>true</rtexprvalue>
       </attribute>
+      <attribute>
+         <name>absoluteFilePath</name>
+         <required>false</required>
+	      <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      
+      
      <attribute>
          <name>serverContext</name>
          <required>true</required>
@@ -27,6 +34,16 @@
 
    </tag>
 
+   <tag>
+      <name>formattml</name>
+      <tagclass>com.dexels.navajo.jsp.server.DumpFormattedTmlTag</tagclass>
+      <info>Dumps a webservice formatted in XHTML.</info>
+      <attribute>
+         <name>service</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+      </attribute>
+   </tag>
      <tag>
       <name>postHandler</name>
       <tagclass>com.dexels.navajo.jsp.tags.PostHandlerTag</tagclass>

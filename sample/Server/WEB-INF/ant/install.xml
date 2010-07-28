@@ -5,10 +5,11 @@
 		<echo message="Creating default: ${basedir} selected: ${selectedPath}"/>
 		<mkdir dir="${selectedPath}"/>
 		<copy todir="${selectedPath}">
-			<fileset dir=".">
+			<fileset dir="." defaultexcludes="true">
 				<include name="adapters/**"/>
 				<include name="config/**"/>
 				<include name="scripts/**"/>
+				<exclude name="CVS/**"/>
 			</fileset>
 		</copy>
 	
