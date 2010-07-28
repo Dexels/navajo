@@ -18,7 +18,7 @@ public class SetValueTag extends BaseNavajoTag {
 
 	@Override
 	public int doEndTag() throws JspException {
-		return 0;
+		return EVAL_PAGE;
 	}
 
 	public void setProperty(String property) {
@@ -27,17 +27,16 @@ public class SetValueTag extends BaseNavajoTag {
 
 	public int doStartTag() throws JspException {
 		Navajo n;
-			if (myService==null) {
-				n = getNavajoContext().getNavajo();
-			} else {
-				n = getNavajoContext().getNavajo(myService);
-			}
-			Property p = n.getProperty(myProperty);
-			if(p==null) {
-				throw new IllegalArgumentException("Can't locate property: "+myProperty+" in service: "+myService);
-			}
-			p.setValue(value);
-
+		if (myService==null) {
+			n = getNavajoContext().getNavajo();
+		} else {
+			n = getNavajoContext().getNavajo(myService);
+		}
+		Property p = n.getProperty(myProperty);
+		if(p==null) {
+			throw new IllegalArgumentException("Can't locate property: "+myProperty+" in service: "+myService);
+		}
+		p.setValue(value);
 		return 0;
 	}
 

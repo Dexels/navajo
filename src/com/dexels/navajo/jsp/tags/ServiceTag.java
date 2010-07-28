@@ -8,10 +8,9 @@ import com.dexels.navajo.document.Navajo;
 public class ServiceTag extends BaseNavajoTag {
 
 	private String myService;
-
 	public int doEndTag() throws JspException {
 		getNavajoContext().popNavajo();
-		return 0;
+		return EVAL_PAGE;
 	}
 
 	public void setService(String service) {

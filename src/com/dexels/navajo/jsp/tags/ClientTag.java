@@ -25,10 +25,8 @@ public class ClientTag extends BaseNavajoTag {
 
 	
 	public int doStartTag() throws JspException {
-
 		NavajoContext nc = (NavajoContext) getPageContext().findAttribute("navajoContext");
 //		getPageContext().findAttribute("NavajoContext");
-		System.err.println(">>>>>>> Starting__ client tag: "+server);
 		if(server==null) {
 			HttpServletRequest rr =  (HttpServletRequest) getPageContext().getRequest();
 			StringBuffer sb = new StringBuffer();
@@ -37,12 +35,11 @@ public class ClientTag extends BaseNavajoTag {
 			sb.append(rr.getContextPath());
 			server = sb.toString()+"/Postman";
 		}
+		if(nc==null) {
+			throw new JspException("No navajo context found!");
+		}
 		nc.setupClient(server,username,password,getPageContext());
 		//		getPageContext().setAttribute("Aap", "Noot");
 		return EVAL_BODY_INCLUDE;
 	}
-
-
-
-
 }

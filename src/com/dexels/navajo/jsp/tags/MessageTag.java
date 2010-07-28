@@ -15,6 +15,7 @@ public class MessageTag extends BaseNavajoTag {
 	private Message message;
 	private int messageIndex = -1;
 	
+	
 	public int getMessageIndex() {
 		return messageIndex;
 	}
@@ -33,8 +34,10 @@ public class MessageTag extends BaseNavajoTag {
 
 	@Override
 	public int doEndTag() throws JspException {
-		getNavajoContext().popMessage();
-		return 0;
+		if(message!=null) {
+			getNavajoContext().popMessage();
+		}
+		return EVAL_PAGE;
 	}
 
 	public void setMessageName(String messageName) {
@@ -42,24 +45,29 @@ public class MessageTag extends BaseNavajoTag {
 	}
 
 	public int doStartTag() throws JspException {
-		Navajo n;
-		Message parent = getNavajoContext().getMessage();
+		Navajo n = null;
+		Message parent = null;
+		
+		Object top = getNavajoContext().peek();
+		if(top instanceof Message) {
+			parent = (Message)top;
+		} else {
+			n = (Navajo)top;
+		}
+//		parent = getNavajoContext().getMessage();
 		if(messageName!=null) {
 			if(messageIndex>-1) {
 				throw new JspException("Either set messageName or index, not both");
 			}
-//			if (message == null) {
-				System.err.println("No message");
 				if (parent != null) {
 					message = parent.getMessage(messageName);
 				} else {
-					n = getNavajoContext().getNavajo();
+//					n = getNavajoContext().getNavajo();
 					message = n.getMessage(messageName);
 				}
-//			} else {
-//			}
 			if(message==null) {
 				System.err.println("Warning, no message found at: "+messageName);
+				return EVAL_BODY_INCLUDE;
 			}
 		}
 		if(messageIndex>-1) {

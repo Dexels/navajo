@@ -38,8 +38,10 @@ public class NavajoContext {
 		Navajo n = myClient.doSimpleSend(service);
 		myNavajoMap.put(service, n);
 		myInverseNavajoMap.put(n, service);
-		myElementStack.push(n);
-//		System.err.println("initcall... stack size: "+myElementStack.size());
+		// let the tags handle the pushing themselves!
+		//		myElementStack.push(n);
+		System.err.println("Pushed navajo");
+		//		System.err.println("initcall... stack size: "+myElementStack.size());
 	}
 	
 	public Map<String,Navajo> getNavajos() {
@@ -60,7 +62,8 @@ public class NavajoContext {
 			n.getHeader().setRPCName(service);
 		myNavajoMap.put(service, n);
 		myInverseNavajoMap.put(n, service);
-		myElementStack.push(n);
+		// let the tags handle the pushing themselves!
+//		myElementStack.push(n);
 //		System.err.println("call... stack size: "+myElementStack.size());
 
 	}
@@ -69,8 +72,41 @@ public class NavajoContext {
 		return myNavajoMap.containsKey(name);
 	}
 
+	public int getStackSize() {
+		return myElementStack.size();
+	}
 
 
+	public void dumpTopElement() {
+		Object o = myElementStack.peek();
+		if(o instanceof Navajo) {
+			Navajo n = (Navajo)o;
+			System.err.println("Navajo on top:");
+			try {
+				n.write(System.err);
+			} catch (NavajoException e) {
+				e.printStackTrace();
+			}
+		} else
+		if(o instanceof Message) {
+			System.err.println("Message on top: "+((Message)o).getFullMessageName());
+		} else
+		if(o instanceof Property) {
+			try {
+				System.err.println("Property on top: "+((Property)o).getFullPropertyName());
+			} catch (NavajoException e) {
+				e.printStackTrace();
+			}
+			
+		} else {
+			if(o!=null) {
+				System.err.println("Other object:" + o.getClass());
+			} else {
+				System.err.println("Null object on stack!");
+			}
+		}
+		
+	}
 	
 	public Navajo getNavajo(String name) {
 
@@ -109,15 +145,13 @@ public class NavajoContext {
 		if (myElementStack.isEmpty()) {
 			throw new IllegalStateException("No default navajo found. Either supply a name explicitly, or make sure you are within a 'call' tag");
 		}		
-		Object top = myElementStack.peek();
-		if(!(top instanceof Navajo)) {
-			return null;
-		}
-		return (Navajo) top;
+		return (Navajo) getTopmostElement(Navajo.class);
+
 	}
 
 	public void popNavajo() {
 		myElementStack.pop();
+
 	}
 
 	public void pushNavajo(Navajo m) {
@@ -129,39 +163,56 @@ public class NavajoContext {
 			throw new IllegalStateException(
 					"No default myMessageStack found. Either supply a name explicitly, or make sure you are within a 'message' tag");
 		}
-		Object top = myElementStack.peek();
-		if(!(top instanceof Message)) {
-			return null;
-		}
-		Message m;
-		return (Message) top;
+		return (Message) getTopmostElement(Message.class);
 	}
 	
+
+	public Object peek() {
+		if (myElementStack.isEmpty()) {
+			throw new IllegalStateException(
+					"No default myMessageStack found. Either supply a name explicitly, or make sure you are within a 'message' tag");
+		}
+		return myElementStack.peek();
+	}
+
 	public Property getProperty() {
 		if (myElementStack.isEmpty()) {
 			throw new IllegalStateException(
 					"No default myMessageStack found. Either supply a name explicitly, or make sure you are within a 'message' tag");
 		}
-		Object top = myElementStack.peek();
-		if(!(top instanceof Property)) {
-			return null;
+
+		return (Property) getTopmostElement(Property.class);
+	}
+
+
+	private Object getTopmostElement(Class cls) {
+		for (int i = myElementStack.size()-1; i>=0; i--) {
+			Object e  = myElementStack.get(i); 
+			if(cls.isAssignableFrom(e.getClass()) ) {
+				return e;
+			}
 		}
-		return (Property) top;
+		return null;
 	}
 
 	public void popMessage() {
 		myElementStack.pop();
+
 	}
 
 	public void pushMessage(Message m) {
 		if(m!=null) {
 			myElementStack.push(m);			
+
 		}
 	}
 	
 	public void pushProperty(Property property) {
-		myElementStack.push(property);
-		
+		if(property!=null) {
+			myElementStack.push(property);
+		} else {
+			System.err.println("Warning, attempted to push null property!");
+		}
 	}
 	
 
@@ -179,7 +230,8 @@ public class NavajoContext {
 		return requestBuffer.toString();
 	}
 	public void setupClient(String server, String username, String password, PageContext pa) {
-		
+			NavajoClientFactory.resetClient();
+//			NavajoClientFactory.createDefaultClient()
 		 myClient = NavajoClientFactory.getClient();
 		if (username == null) {
 			username = "demo";
@@ -193,6 +245,7 @@ public class NavajoContext {
 			server = getDefaultPostman(pa);
 		}
 		myClient.setServerUrl(server);		
+		myClient.setRetryAttempts(0);
 	}
 	
 	public void debug() {
@@ -239,7 +292,6 @@ public class NavajoContext {
 
 
 	public Property parsePropertyPath(String path) {
-		System.err.println("parsing: "+path);
 		if(path.indexOf(":")==-1) {
 			Navajo n = getNavajo();
 			if(n!=null) {
@@ -248,7 +300,6 @@ public class NavajoContext {
 			
 		} else {
 			String[] elts = path.split(":");
-			System.err.println("Getting:"+elts[1]+" from "+elts[0]);
 			Navajo n = getNavajo(elts[0]);
 			return n.getProperty(elts[1]);
 		}
@@ -261,7 +312,6 @@ public class NavajoContext {
 
 
 	public void resolvePost(String name, String value) {
-		System.err.println("Resolving: "+name +" value: "+value);
 		if(name.indexOf(":")==-1) {
 			return;
 		}
@@ -271,6 +321,21 @@ public class NavajoContext {
 		Navajo n = getNavajo(navajo);
 		Property p = n.getProperty(path);
 		p.setValue(value);
+	}
+
+
+	public String dumpStack() {
+		StringBuffer sb = new StringBuffer();
+		for ( Object a : myElementStack) {
+			sb.append("Current object: "+a.getClass()+"\n");
+		}
+		return sb.toString();
+	}
+
+
+	public void popProperty() {
+		myElementStack.pop();
+		
 	}
 	
 }

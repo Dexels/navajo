@@ -16,7 +16,7 @@ public class ValueTag extends BaseNavajoTag {
 
 	@Override
 	public int doEndTag() throws JspException {
-		return 0;
+		return EVAL_PAGE;
 	}
 
 	public void setProperty(String property) {

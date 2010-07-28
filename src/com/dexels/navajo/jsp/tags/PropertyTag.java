@@ -7,6 +7,7 @@ import javax.servlet.jsp.JspException;
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 
 public class PropertyTag extends BaseNavajoTag {
@@ -24,8 +25,8 @@ public class PropertyTag extends BaseNavajoTag {
 
 	@Override
 	public int doEndTag() throws JspException {
-		getNavajoContext().popMessage();
-		return 0;
+		getNavajoContext().popProperty();
+		return EVAL_PAGE;
 	}
 
 	public void setPropertyName(String propertyName) {
@@ -33,10 +34,18 @@ public class PropertyTag extends BaseNavajoTag {
 	}
 
 	public int doStartTag() throws JspException {
+		
 			Navajo n;
-			Message parent = getNavajoContext().getMessage();
 			if(property==null) {
+				Message parent = getNavajoContext().getMessage();
 				if(parent!=null) {
+					System.err.println("Getting property: "+propertyName+" from parent: "+parent.getFullMessageName());
+					try {
+						parent.write(System.err);
+					} catch (NavajoException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					property = parent.getProperty(propertyName);
 				} else {
 					n = getNavajoContext().getNavajo();

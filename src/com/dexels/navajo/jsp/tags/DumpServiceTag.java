@@ -11,6 +11,15 @@ import com.dexels.navajo.document.NavajoException;
 public class DumpServiceTag extends BaseNavajoTag  {
 
 	private String myService;
+	private boolean log;
+	
+	public boolean isLog() {
+		return log;
+	}
+
+	public void setLog(boolean log) {
+		this.log = log;
+	}
 
 	public void setService(String service) {
 		myService = service;
@@ -27,11 +36,19 @@ public class DumpServiceTag extends BaseNavajoTag  {
 
 		getNavajoContext().getNavajo();
 		try {
-			if (myService == null) {
-				getNavajoContext().getNavajo().write(getPageContext().getOut());
+			if (log) {
+				if (myService == null) {
+					getNavajoContext().getNavajo().write(System.err);
+				} else {
+					getNavajoContext().getNavajo(myService).write(System.err);
+				}
 			} else {
-				getNavajoContext().getNavajo(myService).write(
-						getPageContext().getOut());
+				if (myService == null) {
+					getNavajoContext().getNavajo().write(getPageContext().getOut());
+				} else {
+					getNavajoContext().getNavajo(myService).write(
+							getPageContext().getOut());
+				}
 			}
 			getPageContext().getOut().write("Dumped: " + myService);
 		} catch (NavajoException e) {
