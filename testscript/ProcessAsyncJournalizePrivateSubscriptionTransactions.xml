@@ -1,0 +1,17 @@
+<tsl>
+    <map name="async" object="com.dexels.navajo.adapter.AsyncProxyMap">
+        <request>
+            <field name="killOnFinnish" comment="' we dont want people from Finland'">
+                <expression value="true"/>
+            </field>
+            <field name="method">
+                <expression value="'financial/ProcessJournalizePrivateSubscriptionTransactions'"/>
+            </field>
+            <message name="StartedJournalizingProcess"/>
+        </request>
+        <response while_running="false"/>
+        <running>
+            <message name="Running"/>
+        </running>
+    </map>
+</tsl>

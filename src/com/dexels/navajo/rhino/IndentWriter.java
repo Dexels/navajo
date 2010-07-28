@@ -6,29 +6,7 @@ import java.io.Writer;
 public class IndentWriter {
 	
 	private static final int INDENT = 3;
-	private final Writer myWriter;
-
-	public IndentWriter(Writer w) {
-		myWriter = w;
-	}
-
-	public void writeln(String line) throws IOException {
-		write(line);
-		myWriter.write('\n');
-	}
-
-	/**
-	 * Will write indent + the line, but no newline
-	 * @param line
-	 * @throws IOException
-	 */
-	public void write(String line) throws IOException {
-		for (int i = 0; i < indent; i++) {
-			myWriter.write(' ');
-		}
-		myWriter.write(line);
-	}
-
+	private final StringBuilder myWriter;
 	private int indent = 0;
 
 	public int getIndent() {
@@ -38,6 +16,28 @@ public class IndentWriter {
 	public void setIndent(int indent) {
 		this.indent = indent;
 	}
+
+	public IndentWriter(StringBuilder w) {
+		myWriter = w;
+	}
+
+	public void writeln(String line) throws IOException {
+		write(line);
+		myWriter.append('\n');
+	}
+
+	/**
+	 * Will write indent + the line, but no newline
+	 * @param line
+	 * @throws IOException
+	 */
+	public void write(String line) throws IOException {
+		for (int i = 0; i < indent; i++) {
+			myWriter.append(' ');
+		}
+		myWriter.append(line);
+	}
+
 	
 	public void in() {
 		indent += INDENT;

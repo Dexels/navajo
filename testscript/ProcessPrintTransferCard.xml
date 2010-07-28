@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.navajo.nl/schemas/navascript.xsd">
+    <include script="vla/include/ClubMessageInclude" />
+        <validations>
+        <check code="999" xml:space="preserve" condition="[/__globals__/ApplicationInstance] != 'NHV'">
+            ?[/QueryUpdateMember/PersonId] AND ?[/Club/ClubIdentifier]
+        </check>
+        <check code="40074" xml:space="preserve" condition="[/__globals__/ApplicationInstance] == 'NHV'">
+            SingleValueQuery('sportlinkkernel:SELECT COUNT(*) FROM vw_player WHERE organizationid = ? AND personid = ?', [/Club/ClubIdentifier], [/QueryUpdateMember/PersonId]) == 0
+        </check>
+    </validations>
+    <map object="com.dexels.navajo.adapter.SQLMap">
+        <field name="datasource">
+            <expression value="[/@DbDatasource]" />
+        </field>
+        <field name="username">
+            <expression value="[/@DbSchema] + '/' + [/@DbPassword]" />
+        </field>
+        <field name="query">
+            <expression xml:space="preserve">
+            SELECT DISTINCT
+                o.externalid AS clubidentifier,
+                o.name, 
+                p.personid,
+                p.externalid as personidentifier,
+                p.lastname,
+                p.infix,
+                p.middlename,
+                p.maidenlastname,
+                p.initials,
+                p.firstname,
+                p.dateofbirth,
+                p.birthplace,
+                p.birthcountrycode,
+                p.gender,
+                p.language,
+                p.nationality,
+                p.disciplinestatus,
+                p.activeentity,
+                a.streetname,
+                a.housenumber,
+                a.numberappendix,
+                a.city,
+                a.zipcode,
+                a.countrycode,
+                a.remarks AS addressremarks,
+                a.faxnumber,
+                a.telephonenumber,
+                a.mobilenumber,
+                a.emailaddress,
+                b.accountno,
+                b.accounttype,
+                b.ascription,
+                b.ascriptionplace,
+                p.updatestatus,
+                m.roleid,
+                m.relationend 
+            FROM
+                person p
+            LEFT OUTER JOIN bankaccount b
+            ON
+                (
+                    b.objectid = p.personid
+                AND b.objecttype = 'PERSON'
+                )
+                ,
+                organizationmember m,
+                organization o,
+                address a,
+                personaddress d
+            WHERE
+                p.personid = m.personid
+            AND a.addressid = d.addressid
+            AND d.personid = p.personid
+            AND m.organizationid = o.organizationid
+            AND m.roleid IN ('MEMBER','RELATION')
+            AND m.functionid IN ('MEMBER','RELATION')
+            AND o.externalid = ? 
+            AND p.personid = ?            
+            </expression>
+        </field>
+        <field name="parameter">
+            <expression value="[/Club/ClubIdentifier]" />
+<!--                <expression value="'BBKY84H'" />-->
+        </field>
+        <field name="parameter">
+        <expression value="[/QueryUpdateMember/PersonId]" />
+<!--            <expression value="192" />-->
+        </field>
+        <message name="MemberData" condition="$rowCount &gt; 0">             
+            <property name="ClubIdentifier" type="string" direction="out" description="Clubcode">
+                <expression value="$columnValue('clubidentifier')" />
+            </property>
+            <property name="ClubName" type="string" direction="out" description="Clubnaam">
+                <expression value="$columnValue('name')" />
+            </property>
+            <property name="PersonId" type="string" direction="out" description="Persoonscode">
+                <expression value="$columnValue('personId')" />
+            </property>
+            <property name="PersonIdentifier" type="string" direction="out" description="Persoonsidentificatie">
+                <expression value="$columnValue('personidentifier')" />
+            </property>
+            <param name="FullName">
+                <expression condition="$columnValue('infix') != null AND $columnValue('infix') != ''" value="$columnValue('infix') + ' ' + $columnValue('lastname')" />
+                <expression value="$columnValue('lastname')" />
+            </param>
+            <param name="FullName">
+                <expression condition="$columnValue('firstname') != null AND $columnValue('firstname') != ''" value="$columnValue('firstname') + ' ' + [/@FullName]" />
+                <expression value="$columnValue('initials') + ' ' + [/@FullName]" />
+            </param>
+            <property name="FullName" type="string" direction="out" description="Volledige naam">
+                <expression value="[/@FullName]" />
+            </property>
+            <property name="LastName" type="string" direction="out" description="Achtername">
+                <expression value="$columnValue('lastname')" />
+            </property>
+            <property name="Infix" type="string" direction="out" description="Tussenvoegsel">
+                <expression value="$columnValue('infix')" />
+            </property>
+            <property name="MiddleName" type="string" direction="out" description="middennaam">
+                <expression value="$columnValue('middlename')" />
+            </property>
+            <property name="Initials" type="string" direction="out" description="Initialen">
+                <expression value="$columnValue('initials')" />
+            </property>
+            <property name="FirstName" type="string" direction="out" description="Voornaam">
+                <expression value="$columnValue('firstname')" />
+            </property>
+            <property name="DateOfBirth" type="date" direction="out" description="Geboortedatum">
+                <expression value="FormatDate($columnValue('dateofbirth'), 'dd-MM-yyyy')" />
+            </property>
+            <property name="BirthPlace" type="string" direction="out" description="GeboortePlaats">
+                <expression value="$columnValue('birthplace')" />
+            </property>
+            <property name="BirthCountryCode" type="string" direction="out" description="GeboorteLandCode">
+                <expression value="$columnValue('birthcountrycode')" />
+            </property>
+            <property name="Gender" type="string" direction="out" description="Sexe">
+                <expression value="$columnValue('gender')" />
+            </property>
+            <property name="Nationality" type="string" direction="out" description="Nationaliteit">
+                <expression value="$columnValue('nationality')" />
+            </property>
+            <property name="DisciplineStatus" type="string" direction="out" description="TuchtStatus">
+                <expression value="$columnValue('disciplinestatus')" />
+            </property>
+            <property name="ActiveEntity" type="string" direction="out" description="ActiviteitEntiteit">
+                <expression value="$columnValue('activeentity')" />
+            </property>
+            <property name="StreetName" type="string" direction="out" description="StraatNaam">
+                <expression value="$columnValue('streetname')" />
+            </property>
+            <property name="HouseNumber" type="string" direction="out" description="HuisNummer">
+                <expression value="$columnValue('housenumber')" />
+            </property>
+            <property name="NumberAppendix" type="string" direction="out" description="NummerToevoeging">
+                <expression value="$columnValue('numberappendix')" />
+            </property>
+            <property name="City" type="string" direction="out" description="Stad">
+                <expression value="$columnValue('city')" />
+            </property>
+            <property name="ZipCode" type="string" direction="out" description="Postcode">
+                <expression value="$columnValue('zipcode')" />
+            </property>
+            <property name="CountryCode" type="string" direction="out" description="LandCode">
+                <expression value="$columnValue('countrycode')" />
+            </property>
+            <property name="AddressRemarks" type="string" direction="out" description="AdresOpmerkingen">
+                <expression value="$columnValue('addressremarks')" />
+            </property>
+            <property name="FaxNumber" type="string" direction="out" description="FaxNumber">
+                <expression value="$columnValue('faxnumber')" />
+            </property>
+            <property name="TelephoneNumber" type="string" direction="out" description="Telefoonnummer">
+                <expression value="$columnValue('telephonenumber')" />
+            </property>
+            <property name="MobileNumber" type="string" direction="out" description="Mobiel">
+                <expression value="$columnValue('mobilenumber')" />
+            </property>
+            <property name="EmailAddress" type="string" direction="out" description="Emailadres">
+                <expression value="$columnValue('emailaddress')" />
+            </property>
+            <property name="RelationEnd" type="string" direction="out" description="Afmelddatum">
+                <expression value="FormatDate($columnValue('relationend'), 'dd-MM-yyyy')" />
+            </property>
+        </message>
+    </map>
+    <message name="Report">
+        <property name="ReportName" type="string" direction="in">
+            <expression value="'vla/ProcessPrintTransferCard'" />
+        </property>
+        <property name="OutputFormat" type="string" direction="in">
+            <expression value="'pdf'" />
+        </property>
+    </message>
+  
+      
+</tsl>

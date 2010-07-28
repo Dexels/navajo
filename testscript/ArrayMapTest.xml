@@ -1,0 +1,21 @@
+<tsl>
+   <validations>
+      <check code="5046" xml:space="preserve">
+		1 == 1
+      </check>
+    </validations>
+    <debug>
+    	<expression>Aaaap('blaa')</expression>
+    </debug>
+	<message name="Monkey" type="array">
+		<map object="com.dexels.navajo.testmap.OuterMap">
+			<map ref="inner">
+				<property name="Name">
+					<expression>
+						$someName
+					</expression>
+				</property>
+			</map>
+		</map>
+	</message>
+</tsl>

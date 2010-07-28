@@ -10,47 +10,46 @@ import com.dexels.navajo.server.Access;
 
 public class RhinoCompiledScript extends CompiledScript {
 
-	File script = null;
 
-	public File getScript() {
-		return script;
-	}
+	  private File script = null;
 
-	public void setScript(File script) {
-		this.script = script;
-	}
-
-
-	 static public String getContents(File aFile) {
-		    StringBuilder contents = new StringBuilder();
-		    try {
-		      BufferedReader input =  new BufferedReader(new FileReader(aFile));
-		      try {
-		        String line = null; 
-		        while (( line = input.readLine()) != null){
-		          contents.append(line);
-		          contents.append(System.getProperty("line.separator"));
-		        }
-		      }
-		      finally {
-		        input.close();
-		      }
-		    }
-		    catch (IOException ex){
-		      ex.printStackTrace();
-		    }
-		    return contents.toString();
-		  }
+//	 static public String getContents(File aFile) {
+//		    StringBuilder contents = new StringBuilder();
+//		    try {
+//		      BufferedReader input =  new BufferedReader(new FileReader(aFile));
+//		      try {
+//		        String line = null; 
+//		        while (( line = input.readLine()) != null){
+//		          contents.append(line);
+//		          contents.append(System.getProperty("line.separator"));
+//		        }
+//		      }
+//		      finally {
+//		        input.close();
+//		      }
+//		    }
+//		    catch (IOException ex){
+//		      ex.printStackTrace();
+//		    }
+//		    return contents.toString();
+//		  }
 	 
 	@Override
 	public void execute(Access access) throws Exception {
 		// TODO: Reuse this bugger
 		RhinoRunner rh = new RhinoRunner();
-		
 		rh.run(access);
-		
 	}
 
+	
+	public void setScript(File script) {
+		this.script = script;
+	}
+
+	public File getScript() {
+		return script;
+	}
+  
 	
 	
 	@Override

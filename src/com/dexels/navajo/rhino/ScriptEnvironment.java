@@ -9,11 +9,12 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.Map;
+import java.util.Stack;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContinuationPending;
 import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.ScriptableObject;
 
 import com.dexels.navajo.client.AsyncClient;
 import com.dexels.navajo.client.AsyncClientFactory;
@@ -24,8 +25,13 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.mapping.MappableTreeNode;
+import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.mapping.CompiledScript;
+import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.UserException;
 
 public class ScriptEnvironment implements Serializable {
 	
@@ -38,8 +44,12 @@ public class ScriptEnvironment implements Serializable {
 	private Access access;
 
 	private boolean holdScript;
-
 	private ScriptFinishHandler onFinishHandler;
+	protected final Stack<Message> inputMessageStack = new Stack<Message>();
+	protected final Stack<Message> paramMessageStack = new Stack<Message>();
+
+	private Context currentContext;
+	
 	
 	public Access getAccess() {
 		return access;
@@ -50,7 +60,22 @@ public class ScriptEnvironment implements Serializable {
 		this.access = access;
 	}
 
-
+	public void pushInputMessage(Message m) {
+		inputMessageStack.push(m);
+	}
+	
+	public Message popInputMessage() {
+		return inputMessageStack.pop();
+	}
+	
+	public void pushParamMessage(Message m) {
+		paramMessageStack.push(m);
+	}
+	
+	public Message popParamMessage() {
+		return paramMessageStack.pop();
+	}
+	
 	public boolean isAsync() {
 		return async;
 	}
@@ -70,6 +95,12 @@ public class ScriptEnvironment implements Serializable {
 		return AsyncClientFactory.getInstance();
 	}
 
+	// TODO Add length
+	public Property createProperty(String name, Object value, Map<String,String> attributes, Navajo rootDoc) throws NavajoException {
+		Property result = NavajoFactory.getInstance().createProperty(rootDoc, name, attributes.get("type"), "", 0, attributes.get("description"), attributes.get("direction"));
+		result.setAnyValue(value);
+		return result;
+	}
 
 	public Navajo createNavajo() {
 		return NavajoFactory.getInstance().createNavajo();
@@ -115,33 +146,90 @@ public class ScriptEnvironment implements Serializable {
 		p.setAnyValue(value);
 	}
 
+	public Context getCurrentContext() {
+		return currentContext;
+	}
+
+
+	public void setCurrentContext(Context currentContext) {
+		this.currentContext = currentContext;
+	}
+
+
 	public Message addMessage(Navajo n, String name) throws NavajoException {
+		Message old = n.getMessage(name);
+		
+		if(old!=null) {
+				getAccess().setCurrentOutMessage(old);
+				return old;
+		}
 		Message m = NavajoFactory.getInstance().createMessage(n, name);
 		n.addMessage(m);
+		getAccess().setCurrentOutMessage(m);
+		
 		return m;
 	}
 	public Message addArrayMessage(Navajo n, String name) throws NavajoException {
+		Message old = n.getMessage(name);
+		if(old!=null) {
+			old.setType(Message.MSG_TYPE_ARRAY);
+			getAccess().setCurrentOutMessage(old);
+			return old;
+		}
 		Message m = NavajoFactory.getInstance().createMessage(n, name,Message.MSG_TYPE_ARRAY);
 		n.addMessage(m);
+		getAccess().setCurrentOutMessage(m);
 		return m;
 	}
 
 	
 	public Message addMessage(Message parent, String name) throws NavajoException {
+		Message old = parent.getMessage(name);
+		if(old!=null) {
+			getAccess().setCurrentOutMessage(old);
+			return old;
+		}
 		Message m = NavajoFactory.getInstance().createMessage(parent.getRootDoc(), name);
 		parent.addMessage(m);
+		getAccess().setCurrentOutMessage(m);
+		
 		return m;
 	}
 	
+	public Selection addSelection(Property p, String name, Object value, Integer selected) throws NavajoException {
+		Selection s = NavajoFactory.getInstance().createSelection(getAccess().getOutputDoc(), name, ""+value, selected);
+		p.addSelection(s);
+		if(p.getCardinality()==null) {
+			p.setCardinality(Property.CARDINALITY_SINGLE);
+		}
+		return s;
+	}
+
+	
 	public Message addArrayMessage(Message parent, String name) throws NavajoException {
+		Message old = parent.getMessage(name);
+		if(old!=null) {
+				getAccess().setCurrentOutMessage(old);
+				old.setType(Message.MSG_TYPE_ARRAY);
+
+				return old;
+		}
 		Message m = NavajoFactory.getInstance().createMessage(parent.getRootDoc(), name,Message.MSG_TYPE_ARRAY);
 		parent.addMessage(m);
+		getAccess().setCurrentOutMessage(m);
+		
 		return m;
 	}
 	
 	public Message addElement(Message parent) throws NavajoException {
-		Message m = NavajoFactory.getInstance().createMessage(parent.getRootDoc(), parent.getName(),Message.MSG_TYPE_ARRAY_ELEMENT);
+		String parentType = parent.getType();
+		if(!Message.MSG_TYPE_ARRAY.equals(parentType)) {
+			parent.setType(Message.MSG_TYPE_ARRAY);
+		}
+ 		Message m = NavajoFactory.getInstance().createMessage(parent.getRootDoc(), parent.getName(),Message.MSG_TYPE_ARRAY_ELEMENT);
 		parent.addMessage(m,parent.getArraySize());
+		getAccess().setCurrentOutMessage(m);
+		
 		return m;
 	}
 	public Property addProperty(Message parent, String name, Object value) throws NavajoException {
@@ -151,6 +239,12 @@ public class ScriptEnvironment implements Serializable {
 		return p;
 	}
 	
+//	public Property addSelectionProperty(Message parent, String name, Object value) throws NavajoException {
+//		Property p = NavajoFactory.getInstance().createProperty(parent.getRootDoc(), name, Property.STRING_PROPERTY, "", 0, "", Property.DIR_INOUT);
+//		p.setAnyValue(value);
+//		parent.addProperty(p);
+//		return p;
+//	}
 
 	
 	public Object navajoEvaluate(String expression, Navajo n) throws NavajoException {
@@ -172,6 +266,20 @@ public class ScriptEnvironment implements Serializable {
 		return o.value;
 	}
 	
+	public void storeMap(Object map) throws MappableException, UserException {
+		if(map instanceof Mappable) {
+			((Mappable)map).store();
+		}
+	}
+
+	
+	public void loadMap(Object map) throws MappableException, UserException {
+		if(map instanceof Mappable) {
+			((Mappable)map).load(getAccess());
+		}
+	}
+	
+
 	
 	public void callService(final String service, Navajo n) throws IOException, NavajoException,ContinuationPending {
 		
@@ -197,12 +305,14 @@ public class ScriptEnvironment implements Serializable {
 		}
 	}
 	
+	/*
+	 * Note that the ch runner will be called BEFORE the continuation!
+	 */
 	public void trapContinuation(Object localFunctionResult, ContinuationHandler ch) {
 		try {
 			Context context = Context.enter();
 			final ContinuationPending cp = context.captureContinuation();
 			final Object c = cp.getContinuation();
-			
 			final Object continuation = c;// = reserialize(c);
 			ch.setContinuation(continuation);
 			ch.setFunctionResult(localFunctionResult);
@@ -233,10 +343,7 @@ public class ScriptEnvironment implements Serializable {
 //		new Thread() {
 //			public void run() {
 				try {
-//					callStack.push("noot");
 					Context context = Context.enter();
-					
-//					System.err.println("Resuming");
 				 	  context.resumeContinuation(pending, globalScope, functionResult);
 			      } catch (ContinuationPending e) {
 			    	  return;
@@ -282,11 +389,11 @@ public class ScriptEnvironment implements Serializable {
 	
 	protected void finishRun() {
 		Navajo response = getResponse();
-		  try {
-			response.write(System.err);
-		} catch (NavajoException e) {
-			e.printStackTrace();
-		}
+//		  try {
+//			response.write(System.err);
+//		} catch (NavajoException e) {
+//			e.printStackTrace();
+//		}
 		if(onFinishHandler!=null) {
 			onFinishHandler.run();
 		}
@@ -298,10 +405,9 @@ public class ScriptEnvironment implements Serializable {
 
 
 	public Navajo getResponse() {
-		Navajo response = (Navajo) Context.jsToJava( ScriptableObject.getProperty(globalScope, "output"),Navajo.class);
-		return response;
+		return getAccess().getOutputDoc();
 	}
-	
+		
 	
 	public void log(String s) {
 		System.err.println("Log: "+s);
@@ -322,4 +428,34 @@ public class ScriptEnvironment implements Serializable {
 		this.onFinishHandler = onFinish;
 	}
 
+	@SuppressWarnings("unchecked")
+	public Object createMappable(String className, Navajo input, Navajo output, Message currentOutMessage) {
+		try {
+
+	    	ClassLoader cl = DispatcherFactory.getInstance().getNavajoConfig().getClassloader();
+	    	Class mclass = Class.forName(className, true, cl);
+
+//			Class<? extends Mappable> mclass = (Class<? extends Mappable>) Class.forName(className);
+			Object obj = mclass.newInstance();
+//			Access ac = new Access();
+//			ac.setInDoc(input);
+//			ac.setOutputDoc(output);
+//			ac.setCurrentOutMessage(currentOutMessage);
+//			obj.load(ac);
+			return obj;
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+//		} catch (MappableException e) {
+//			e.printStackTrace();
+//		} catch (UserException e) {
+//			e.printStackTrace();
+		}
+		return null;
+	}
+
+	
 }

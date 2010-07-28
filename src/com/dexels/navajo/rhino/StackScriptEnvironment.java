@@ -1,12 +1,13 @@
 package com.dexels.navajo.rhino;
 
 
-import java.io.File;
+import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-
+import com.dexels.navajo.document.ExpressionEvaluator;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Method;
 import com.dexels.navajo.document.Navajo;
@@ -14,7 +15,9 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.mapping.MappableTreeNode;
+import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 import com.dexels.navajo.server.Access;
 
 
@@ -29,21 +32,237 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 	private final Stack<Object> myElementStack = new Stack<Object>();
 	private final Stack<MappableTreeNode> treeNodeStack = new Stack<MappableTreeNode>();
 
+	private Message currentParamMessage = null;
+	
 	public StackScriptEnvironment() {
 		//System.err.println("New navajo context");
+		if(NavajoFactory.getInstance().getExpressionEvaluator()==null) {
+			NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
+		}
 	}
 
+	public void blockDebug() {
+		System.err.println("So something insignificant");
+	}
+	
 	public Object navajoEvaluate(String expression) throws NavajoException {
-		
-		Operand o = NavajoFactory.getInstance().getExpressionEvaluator().evaluate(expression, getAccess().getInDoc(),getCurrentTreeNode(), getMessage());
+//		if (getCurrentTreeNode()==null) {
+//			System.err.println("Evaluating navajo: "+expression+" without tree");
+//		} else {
+//			System.err.println("Evaluating navajo: "+expression+" with top: "+getCurrentTreeNode().getMyMap().getClass());
+//
+//		}
+		Operand o = null;
+		Navajo inDoc = getAccess().getInDoc();
+		Message top = null;
+		if(!inputMessageStack.isEmpty()) {
+			top = inputMessageStack.peek();
+		}
+		try {
+			ExpressionEvaluator expressionEvaluator = NavajoFactory.getInstance().getExpressionEvaluator();
+//			getAccess().getInDoc().write(System.err);
+//			System.err.println("Expression: "+expression+" paramPath: "+getTopParamStackMessage());
+			o = expressionEvaluator.evaluate(expression, inDoc,getCurrentTreeNode(), top, getTopParamStackMessage());
+		} catch (Throwable e) {
+			log("Error evaluating expression: "+expression);
+			e.printStackTrace(getLogger());
+//			log("IN DOC: \n");
+//			inDoc.write(System.err);
+		}
 		if(o==null) {
 			return null;
 		}
-		System.err.println(":: "+expression+" evaluated to: "+o.value);
+		//System.err.println(":: "+expression+" evaluated to: "+o.value);
 		return o.value;
 	}
 
+	private Message getTopParamStackMessage() throws NavajoException {
+		if(paramMessageStack.isEmpty()) {
+			return getTopParamMessage();
+		}
+		return paramMessageStack.peek();
+	}
 	
+	private Message getTopParamMessage() throws NavajoException {
+		for (int i = myElementStack.size()-1 ; i>=0; i--) {
+			Object o = myElementStack.get(i);
+			if(o instanceof Message) {
+				if(isParamMessage((Message)o)) {
+					return (Message)o;
+				}
+				
+			}
+		}
+		return getParamMessage();
+	}
+
+	private boolean isParamMessage(Message m) {
+		Message c = m;
+		Message paramRoot = getAccess().getInDoc().getMessage(Message.MSG_PARAMETERS_BLOCK);
+		do {
+			c = c.getParentMessage();
+			if(c == paramRoot) {
+				log("PARAM ROOT FOUD!!!!");
+				return true;
+			}
+		} while(c!=null);
+		return false;
+	}
+
+	@SuppressWarnings("unchecked")
+	public void addField(String fieldName, Object value) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+		MappableTreeNode treeTop = treeNodeStack.peek();
+		if(treeTop==null) {
+			log("Can not set field, no map detected");
+			return;
+		}
+		Object map = treeTop.getMyMap();
+		String fieldSetter = "set"+fieldName.substring(0,1).toUpperCase()+fieldName.substring(1);
+		//System.err.println("Assumming setter name: "+fieldSetter);
+		Class<? extends Object> mapClass = map.getClass();
+		Class[] mapClassList = mapClass.getClasses();
+
+		Class t = mapClass;
+		
+		int emergencyCounter = 0;
+		while(t!=null && !t.equals(Object.class) && emergencyCounter < 10) {
+			//System.err.println("Attempting class: "+t);
+			boolean found = setValueForClass(value, map, fieldSetter, t);
+			if(found) {
+				return;
+			}
+			
+			t = mapClass.getSuperclass();
+			emergencyCounter++;
+		}
+//		for (Class t : mapClassList) {
+//		}
+
+		log("WARNING SETTER FOR FIELD: "+fieldName+" failed");
+	}
+
+	private boolean setValueForClass(Object value, Object map, String fieldSetter, Class<? extends Object> mapClass)	throws IllegalAccessException, InvocationTargetException {
+		java.lang.reflect.Method[] methods = mapClass.getMethods();
+		for (java.lang.reflect.Method method : methods) {
+			if(method.getName().equals(fieldSetter)) {
+//				log("found qualified setter (based on name");
+				Class[] params = method.getParameterTypes();
+				if(params.length==1) {
+//					log("Single parameter. Looking good.");
+//					method.invoke(map, value);
+					Class prm = params[0];
+					if(value==null) {
+						// no further detective work possible
+						method.invoke(map, value);
+						return true;
+					} else {
+						
+//						org.mozilla.javascript.BaseFunction c;
+					//	log("Candidate found.");
+						boolean a = prm.isAssignableFrom(value.getClass());
+//						System.err.println("Assignment ok? "+a);
+						Object v;
+						if(prm.equals(Float.class) ) {
+							System.err.println("Float conversion performed");
+							v = Float.valueOf(value.toString());
+						} else if(prm.equals(float.class)) {
+							v = Float.valueOf(value.toString()).floatValue();
+						} else {
+							v = value;
+						}
+//						if(a) {
+//							method.invoke(map, v);
+//							return true;
+//						} else {
+					//		System.err.println("Warning type difference: found: "+prm+" encountered: "+v.getClass()+" invoking anyway.");
+							method.invoke(map, v);
+							return true;
+//						}
+					}
+//					System.err.println("Detected type: "+prm+" supplied object type: "+value.getClass());
+				} else {
+					log("Ignoring multiparam setter");
+				}
+			}
+		}
+		return false;
+	}
+	
+	public void pushMapReference(String fieldName) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+		MappableTreeNode treeTop = treeNodeStack.peek();
+		if(treeTop==null) {
+			log("Can not set field, no map detected");
+			return;
+		}
+		//Object map = treeTop.getMyMap();
+		
+		Object map = createMapRef(fieldName);
+		pushMappableTreeNode(map);
+	}
+	
+	
+	public boolean isArrayMapRef(String fieldName) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+		String fieldGetter = "get"+fieldName.substring(0,1).toUpperCase()+fieldName.substring(1);
+		Object map = getCurrentTreeNode().getMyMap();
+		System.err.println("Getting field: "+fieldGetter+" from object type: "+map.getClass().getName());
+		//debugTreeNodeStack();
+		java.lang.reflect.Method[] methods = map.getClass().getMethods();
+		for (java.lang.reflect.Method method : methods) {
+//			System.err.println("Examining method: "+method.toString()+" in class: "+map.getClass());
+			if(method.getName().equals(fieldGetter)) {
+//				log("found qualified getter");
+				int paramCount = method.getParameterTypes().length;
+//				log("Params in ref: "+paramCount);
+				return method.getReturnType().isArray();
+			}
+		}
+		throw new NoSuchMethodException(fieldGetter+"in object: "+map);
+	}
+	
+	public void debugTreeNodeStack(String message) {
+		log("DEBUG TREE: "+message);
+		if(treeNodeStack.isEmpty()) {
+			log(">>> EMPTY");
+		} else {
+			for (MappableTreeNode m : treeNodeStack) {
+				System.err.println("M: "+m.getMapName());
+			}
+		}
+	}
+
+	// includes a stack push!
+	public Object createMapRef(String fieldName) throws IllegalAccessException, InvocationTargetException {
+		String fieldGetter = "get"+fieldName.substring(0,1).toUpperCase()+fieldName.substring(1);
+		Object map = getCurrentTreeNode().getMyMap();
+		java.lang.reflect.Method[] methods = map.getClass().getMethods();
+		for (java.lang.reflect.Method method : methods) {
+			if(method.getName().equals(fieldGetter)) {
+				int paramCount = method.getParameterTypes().length;
+				boolean isArray = method.getReturnType().isArray();
+				Object mapref = method.invoke(map, new Object[]{});
+				if(isArray) {
+//					log("Element# "+  ((Object[])mapref).length);
+				}
+				pushMappableTreeNode(mapref, isArray);
+				return mapref;
+			}
+		}
+		log("No getter found?!");
+		return null;
+	}
+	
+	
+	
+	
+	
+	public void popMapReference() {
+		popMappableTreeNode();
+	}
+	
+	private PrintStream getLogger() {
+		return System.err;
+	}
+
 	public void setAccess(Access access) {
 		super.setAccess(access);
 		myElementStack.push(access.getOutputDoc());
@@ -51,17 +270,35 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 	}
 
 	public void pushMappableTreeNode(Object o) {
+		pushMappableTreeNode(o, false);
+	}
+	
+	public Object pushMappableTreeNode(Object o, boolean isArray) {
+		//log("pushMappable>>> "+o);
 		MappableTreeNode top = null;
 		if(!treeNodeStack.isEmpty()) {
 			top = treeNodeStack .peek();
-
 		}
 		// TODO Add support for arrays!
-		MappableTreeNode mtn = new MappableTreeNode(getAccess(), top, o, false);
+		MappableTreeNode mtn = new MappableTreeNode(getAccess(), top, o, isArray);
 		treeNodeStack.push(mtn);
+		return mtn.getMyMap();
 	}
 
 
+	public Message getParamMessage(String name) {
+		Navajo n = super.getAccess().getOutputDoc();
+		log("PARAMMESSAGE::::: "+name);
+		if(name.startsWith("/@")) {
+			name = name.substring(2);
+		}
+		Message params = n.getMessage(Message.MSG_PARAMETERS_BLOCK);
+		if(params==null) {
+			return null;
+		}
+		return params.getMessage(name);
+	}
+	
 	public MappableTreeNode getCurrentTreeNode() {
 		if(!treeNodeStack.isEmpty()) {
 			return treeNodeStack .peek();
@@ -93,6 +330,7 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		myNavajoMap.put(service, n);
 		myInverseNavajoMap.put(n, service);
 		myElementStack.push(n);
+
 		System.err.println("Call finished");
 	}
 
@@ -179,16 +417,21 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 	}
 
 	public void popNavajo() {
+		System.err.println("navajo");
+
 		myElementStack.pop();
 
 	}
 
 	public void pushNavajo(Navajo m) {
+		System.err.println("pushnavajo");
+
 		myElementStack.push(m);
 	}
 
 	public Message getMessage() {
 		if (myElementStack.isEmpty()) {
+			System.err.println("Empty stack!");
 			return null;
 		}
 		return (Message) getTopmostElement(Message.class);
@@ -225,31 +468,52 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		return null;
 	}
 	
-	@SuppressWarnings("unchecked")
-	private Object getTopmostElement(Class cls) {
+	private Object getTopmostElement(@SuppressWarnings("rawtypes") Class cls) {
 		return getTopmostElement(new Class[]{cls});
 	}
 
 
 	public void popMessage() {
 		myElementStack.pop();
+//		System.err.println("top after pop message: "+getMessage().getFullMessageName());
 
 	}
 
+	// no stack activity
+	public Message getInputMessage(String path) throws NavajoException {
+		String mode = "";
+		String path2 = path.replaceAll("@", Message.MSG_PARAMETERS_BLOCK+"/");
+
+		Message result = getAccess().getInDoc().getMessage(path2);
+		//		Message ref = MappingUtils.getMessageObject(path2, getTopParamMessage(), true, getAccess().getInDoc(), isArray, mode, -1);
+		result.write(System.err);
+		return result;
+	}
+	
 	public void pushMessage(Message m) {
 		if(m!=null) {
-			myElementStack.push(m);			
-
+			pushElement(m);
 		}
 	}
 	
-	public void pushProperty(Property property) {
-		if(property!=null) {
-			myElementStack.push(property);
-		} else {
-			System.err.println("Warning, attempted to push null property!");
+	private void pushElement(Object item) {
+//		System.err.println(">>>>>>>>>> PUSHING: "+item.getClass()+" size before: "+myElementStack.size());
+		if(item instanceof Message) {
+			Message mm = (Message)item;
+//			System.err.println(">>>>>>>>MESSAGE: "+mm.getFullMessageName());
 		}
+		myElementStack.push(item);
 	}
+//	
+//	public void pushProperty(Property property) {
+//		if(property!=null) {
+//			System.err.println("push property");
+//
+//			myElementStack.push(property);
+//		} else {
+//			System.err.println("Warning, attempted to push null property!");
+//		}
+//	}
 	
 	public void debug() {
 	}
@@ -330,6 +594,11 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 
 	public String dumpStack() {
 		StringBuffer sb = new StringBuffer();
+		if(myElementStack.isEmpty()) {
+			sb.append("Empty element stack!");
+		} else {
+			sb.append("Stacksize: "+myElementStack.size());
+		}
 		for ( Object a : myElementStack) {
 			sb.append("Current object: "+a.getClass()+"\n");
 		}
@@ -338,6 +607,7 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 
 
 	public void popProperty() {
+		System.err.println("pop");
 		myElementStack.pop();
 		
 	}
@@ -362,59 +632,178 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 	public Message addMessage(String name) throws NavajoException {
 		Object oo = getTopmostElement(new Class[]{Message.class,Navajo.class});
 		if(Message.class.isAssignableFrom(oo.getClass())) {
-			
-			return super.addMessage((Message)oo, name);
+			Message parent = (Message)oo;
+			if(parent.isArrayMessage()) {
+				return addElement();
+			}
+			Message m = super.addMessage(parent, name);
+			pushMessage(m);
+			return m;
 		}
 		if(Navajo.class.isAssignableFrom(oo.getClass())) {
-			System.err.println("Navajo detected");
-			return super.addMessage((Navajo)oo, name);
+			Message m = super.addMessage((Navajo)oo, name);
+			pushMessage(m);
+			return m;
 
 		}
+
 		return null;
 	}
 	public Message addArrayMessage(String name) throws NavajoException {
 		Object oo = getTopmostElement(new Class[]{Message.class,Navajo.class});
 		if(Message.class.isAssignableFrom(oo.getClass())) {
-			return super.addArrayMessage((Message)oo, name);
+			Message m = super.addArrayMessage((Message)oo, name);
+			pushMessage(m);
+			return m;
 		}
 		if(Navajo.class.isAssignableFrom(oo.getClass())) {
-			return super.addArrayMessage((Navajo)oo, name);
+			Message m = super.addArrayMessage((Navajo)oo, name);
+			pushMessage(m);
+			return m;
 
 		}
 		return null;
 	}
 	
+	public Message addParamArrayMessage(String name) throws NavajoException {
+		Navajo out = getAccess().getOutputDoc();
+		Message params = getTopParamMessage();
+//		if(params==null) {
+//			params = out.getMessage(Message.MSG_PARAMETERS_BLOCK);
+//		}
+//		if(params==null) {
+//			params = NavajoFactory.getInstance().createMessage(out, Message.MSG_PARAMETERS_BLOCK);
+//			getAccess().getInDoc().addMessage(params);
+//		}
+		Message result = NavajoFactory.getInstance().createMessage(out, name, Message.MSG_TYPE_ARRAY);
+		params.addMessage(result);
+		
+		System.err.println(">>>>>>>>>>>>>>>>>>>>>>>\n");
+		result.write(System.err);
+		currentParamMessage = result;
+		pushMessage(result);
+		return result;
+	}
+	
+
+	
 	public Message addElement() throws NavajoException {
-		return super.addElement(getMessage());
+//		System.err.println("######## TOPMOST: "+getMessage().getFullMessageName());
+//		getMessage().write(System.err);
+		Message e = super.addElement(getMessage());
+	//	System.err.println("Element added: "+getMessage().getFullMessageName());
+		//getMessage().write(System.err);
+		pushElement(e);
+		return e;
 	}
 	
 	public Property addProperty(String name, Object value) throws NavajoException {
-		return super.addProperty(getMessage(), name, value);
+//		System.err.println("Adding property: "+name+" to message: "+getMessage().getName());
+		if(getMessage()==null) {
+			log("No message, can not add property!");
+			log(dumpStack());
+		}
+		Property p = super.addProperty(getMessage(), name, value);
+//		pushProperty(p);
+		return p;
 	}
 
+	
+	
+	public Property addParam(String name, Object value, Map<String,String> attributes) throws NavajoException {
+//		Property p = super.addProperty(getParamMessage(), name, value);
+//		pushProperty(p);
+		int length = 0;
+		String str = attributes.get("length");
+		if(str!=null) {
+			length = Integer.valueOf(str);
+		}
+		
+		String type = attributes.get("type");
+		if(type==null) {
+			type = Property.STRING_PROPERTY;
+		}
+		try {
+			Message param = getTopParamStackMessage();
+//			System.err.println("Param: "+param.getFullMessageName());
+//			if(param==null) {
+//				param = getParamMessage();
+//			}
+			Property pp = getParam(name,param);
+			if(pp==null) {
+				pp = createProperty(name, value, attributes, getAccess().getInDoc());
+				param.addProperty(pp);
+			} else {
+				pp.setAnyValue(value);
+			}
+//			System.err.println("/////////////////////////////////: "+name+" > "+value);
+//			param.write(System.err);
+//			System.err.println("/////////////////////////////////");
+//			Property pp = MappingUtils.setProperty(true, param, name, value,type, attributes.get("subtype"), attributes.get("direction") , attributes.get("description"), length, getAccess().getOutputDoc(), getAccess().getInDoc(), false);
+//			pp.setAnyValue(value);
+//			System.err.println("/////////////////////////////////: AFTER CAAHNIE");
+//			param.write(System.err);
+//			System.err.println("/////////////////////////////////");
+
+			return pp;
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+		//return p;
+		return null;
+	}
+
+	
+	private Property getParam(String name, Message param) throws NavajoException {
+		if(param == null) {
+			param = getParamMessage();
+		}
+		Property pp = param.getProperty(name);
+		
+		return pp;
+	}
+
+	private Message getParamMessage() throws NavajoException {
+		Message par = currentParamMessage;
+//		if(par!=null) {
+//			return par;
+//		}
+		par = getAccess().getInDoc().getMessage(Message.MSG_PARAMETERS_BLOCK);
+		if(par==null) {
+			par = NavajoFactory.getInstance().createMessage(getAccess().getInDoc(), Message.MSG_PARAMETERS_BLOCK, Message.MSG_TYPE_SIMPLE);
+			getAccess().getInDoc().addMessage(par);
+		}
+		return par;
+	}
+
+	
+	public Selection addSelection(String name, String value, int selected) throws NavajoException {
+		return super.addSelection(getProperty(), name, value, selected);
+	}
+	
 	public Method addMethod(String name) throws NavajoException {
 //		return super.addProperty(getMessage(), name, value);
 		Method m = NavajoFactory.getInstance().createMethod(getAccess().getOutputDoc(), name,null );
 		getAccess().getOutputDoc().addMethod(m);
-		System.err.println("Adding method with name: "+name);
-		trapContinuation(m, new ContinuationHandler() {
-			
-			@Override
-			public void run() {
-				
-				System.err.println("Finished sleeping.");
-				new Thread(){
-					public void run() {
-						try {
-							Thread.sleep(5000);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-						resumeScript();
-					}
-				}.start();
-			}
-		});
+//		System.err.println("Adding method with name: "+name);
+//		trapContinuation(m, new ContinuationHandler() {
+//			
+//			@Override
+//			public void run() {
+//				
+//				System.err.println("Finished sleeping.");
+//				new Thread(){
+//					public void run() {
+//						try {
+//							Thread.sleep(5000);
+//						} catch (InterruptedException e) {
+//							e.printStackTrace();
+//						}
+//						resumeScript();
+//					}
+//				}.start();
+//			}
+//		});
 		return m;
 	}
 

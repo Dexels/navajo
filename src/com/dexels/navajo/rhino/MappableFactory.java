@@ -7,6 +7,7 @@ import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.UserException;
 
+@Deprecated
 public class MappableFactory {
 	@SuppressWarnings("unchecked")
 	public Mappable createMappable(String className, Navajo input, Navajo output, Message currentOutMessage) {

@@ -1,11 +1,11 @@
 package com.dexels.navajo.rhino;
 
 import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public interface ScriptCompiler {
 
-	public void compileTsl(Reader is, IndentWriter os) throws IOException;
-
+	public void compileTsl(String scriptName, InputStream is, OutputStream os, StringBuffer compilerErrors) throws IOException;
+		
 }
