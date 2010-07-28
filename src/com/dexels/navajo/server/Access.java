@@ -92,6 +92,9 @@ public final class Access implements java.io.Serializable, Mappable {
 	// Flag to indicate that during the execution of the webservice, break was called.
 	private boolean breakWasSet = false;
 	
+	private Object scriptEnvironment = null;
+	
+
 	public boolean isBreakWasSet() {
 		return breakWasSet;
 	}
@@ -749,6 +752,15 @@ public final class Access implements java.io.Serializable, Mappable {
 
 	public void setParentAccessId(String parentAccessId) {
 		this.parentAccessId = parentAccessId;
+	}
+	
+	public void setScriptEnvironment(Object scriptEnvironment) {
+		this.scriptEnvironment = scriptEnvironment;
+	}
+
+
+	public Object getScriptEnvironment() {
+		return this.scriptEnvironment;
 	}
 	
 }
