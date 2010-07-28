@@ -49,6 +49,7 @@ public final class ASTMappableNode extends SimpleNode {
         	try {
         		oValue = MappingUtils.getAttributeValue(mapObject, val, parameterArray);
         	} catch (Exception e2) {
+        		e2.printStackTrace();
         		// Maybe domainobjectmapper?
         		if ( mapObject.myObject instanceof DomainObjectMapper ) {
         			oValue = ((DomainObjectMapper) mapObject.myObject).getDomainObjectAttribute(val, parameterArray);
