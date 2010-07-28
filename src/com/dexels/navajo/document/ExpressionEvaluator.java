@@ -13,6 +13,7 @@ import java.util.*;
 
 public interface ExpressionEvaluator {
   public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent) throws NavajoException;
+  public Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent, Message currentParam) throws NavajoException;
   public Operand evaluate(String clause, Navajo inMessage) throws NavajoException;
   public Message match(String matchString, Navajo inMessage, Object mappableTreeNode, Message parent) throws NavajoException;
   public Map createDependencyMap(Navajo n) throws NavajoException;
