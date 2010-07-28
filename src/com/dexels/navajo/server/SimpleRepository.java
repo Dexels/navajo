@@ -119,6 +119,12 @@ public class SimpleRepository implements Repository {
 	}
 
 	public String getServlet(Access access) throws SystemException {
+		String compLanguage = DispatcherFactory.getInstance().getNavajoConfig().getCompilationLanguage();
+//		System.err.println("=================================\nGetting compilation language from navajoconfig: "+compLanguage);
+//		System.err.println("=================================");
+		if("javascript".equals(compLanguage)) {
+			return "com.dexels.navajo.rhino.RhinoHandler";
+		}
 		if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_LOGON) || 
 			access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_LOGON_SEND) ||
 			access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_PING)  
