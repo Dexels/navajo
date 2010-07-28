@@ -2,16 +2,32 @@
 <%@page import="java.io.*"%>
 <%@page import="java.net.*"%>
 <%@page import="java.util.*"%>
+<%@ page trimDirectiveWhitespaces="true" %>
+
 <%@ taglib prefix="c" uri="WEB-INF/tags/c.tld"%>
 <%@ taglib prefix="nav" uri="WEB-INF/tags/navajo.tld"%>
 <%@ taglib prefix="navserver" uri="WEB-INF/tags/navajoserver.tld"%>
 <%@ page import="com.dexels.navajo.jsp.NavajoContext"%>
+<%@ page import="com.dexels.navajo.jsp.server.NavajoServerContext"%>
+
+<jsp:useBean id="navajoContext" class="com.dexels.navajo.jsp.NavajoContext" scope="session" />
 <jsp:useBean id="serverContext" class="com.dexels.navajo.jsp.server.NavajoServerContext" scope="session" />
- 		
 <nav:postHandler/>
 <html>
 <head>
-<title>Navajo Tester 2.0</title>
+<c:if test="${param['service']!= null }">
+	<jsp:setProperty property="script" name="serverContext" value="${param['service']}"/>
+</c:if>	
+<title>
+<c:choose>
+	<c:when test="${serverContext.scriptStatus!=null}">
+		${serverContext.scriptStatus.name}	
+	</c:when>
+	<c:otherwise>
+		Navajo Tester 2.0
+	</c:otherwise>
+</c:choose>
+</title>
 <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 <!-- add your meta tags here -->
 
@@ -22,31 +38,21 @@
 <c:import url="tml/manager/extrastylesheets.jsp"></c:import>
 
 </head>
-	<nav:client username="ROOT" password="R20T"  />
+	<nav:client username="ROOT" password="ROOT"  />
 <!--server="penelope1.dexels.com/sportlink/knvb/servlet/Postman"	-->
 
 
-		<c:if test="${param['service']!= null }">
-			<c:if test="${param[param['service']]==true}">
-				<c:choose>
-					<c:when test="${param.inputNavajo!=null}">
-							<nav:call service="${param['service']}" navajo="${param['inputNavajo']}"/>
-					</c:when>
-					<c:otherwise>
-						<nav:call service="${param.service}"/>
-					</c:otherwise>
-				</c:choose>
-			</c:if>
+	<c:if test="${param['service']!= null }">
+		<c:if test="${param[param['service']]==true}">
+				<nav:call service="${param['service']}" navajo="${param['inputNavajo']}"/>
 		</c:if>
-
-
+	</c:if>
  	<c:if test="${param['cmd'] != null}">
- 				<c:set target="${serverContext}" property="command" value="${param['cmd']}"/>
- 		
- 	
+ 		<c:set target="${serverContext}" property="command" value="${param['cmd']}"/>
 	</c:if> 
 		
 <body>
+
 <form action="index.jsp" method="post" >
 
 
@@ -60,6 +66,15 @@
 
         </div>
         <h2><a href="index.jsp">Navajo Tester 2.0</a></h2>
+        <%
+       	try {
+				Class.forName("com.sun.tools.javac.Main");
+			} catch (ClassNotFoundException e) {
+				System.err.println("No sun compiler.");
+				out.write("<p class=\"warning\">No compiler found! Add a tools.jar (from a JDK) to the webapp, or to the Tomcat/lib folder (recommended)</p>");
+			}
+
+        %>
       </div>
       <div id="nav">
         <!-- skiplink anchor: navigation -->
@@ -68,7 +83,7 @@
   
           <!-- main navigation: horizontal list -->
           <ul>
-          			<c:import url="tml/manager/topmenu.jsp"/>
+          	<c:import url="tml/manager/topmenu.jsp"/>
           </ul>
         </div>
       </div>
@@ -78,7 +93,12 @@
        </div>
         <div id="col3">
           <div id="col3_content" class="clearfix" style="overflow:auto">
-			 <c:import url="tml/manager/content.jsp"/>
+			<c:catch var="signal">
+				<c:import url="tml/manager/content.jsp"/>
+			</c:catch>
+			<c:if test="${signal}">
+				${signal}
+			</c:if>		
 		    </div>
           <!-- IE Column Clearing -->
           <div id="ie_clearing"> &#160; </div>

@@ -5,13 +5,20 @@
 <%@ taglib prefix="nav" uri="/WEB-INF/tags/navajo.tld"%>
 <%@ taglib prefix="navserver" uri="/WEB-INF/tags/navajoserver.tld"%>
 <%@ page import="com.dexels.navajo.jsp.NavajoContext"%>
-
-<%@page import="com.dexels.navajo.installer.NavajoInstaller"%><jsp:useBean id="navajoContext" class="com.dexels.navajo.jsp.NavajoContext" scope="session" />
+<%@ page trimDirectiveWhitespaces="true" %>
+<%@page import="com.dexels.navajo.installer.NavajoInstaller"%>
+<jsp:useBean id="navajoContext" class="com.dexels.navajo.jsp.NavajoContext" scope="session" />
 <jsp:useBean id="serverContext" class="com.dexels.navajo.jsp.server.NavajoServerContext" scope="session" />
 <jsp:useBean id="installerContext" class="com.dexels.navajo.jsp.server.InstallerContext" scope="session" />
-<jsp:setProperty property="pageContext" name="serverContext" value="${pageContext}"/>
-<jsp:setProperty property="pageContext" name="installerContext" value="${pageContext} "/>
+
+
+
+
+
+
 <%
+	serverContext.setPageContext(pageContext);
+	installerContext.setPageContext(pageContext);
 	System.err.println("In doinstall...");
 	String path = application.getRealPath("");
 	String selectedPath = request.getParameter("selectedPath");

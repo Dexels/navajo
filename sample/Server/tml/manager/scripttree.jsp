@@ -6,6 +6,7 @@
 <%@ taglib prefix="nav" uri="/WEB-INF/tags/navajo.tld"%>
 <%@ taglib prefix="navserver" uri="/WEB-INF/tags/navajoserver.tld"%>
 <%@ page import="com.dexels.navajo.jsp.NavajoContext"%>
+<%@ page trimDirectiveWhitespaces="true" %>
 <jsp:useBean id="navajoContext" class="com.dexels.navajo.jsp.NavajoContext" scope="session" />	  
 <jsp:useBean id="serverContext" class="com.dexels.navajo.jsp.server.NavajoServerContext" scope="session" />
 <jsp:setProperty property="pageContext" name="serverContext" value="${pageContext}"/>
@@ -14,14 +15,12 @@
 	<c:forEach var="folder" items="${serverContext.folders}">
 		<c:if test="${folder.name != 'CVS'}">
 			<li>
-				<a href="index.jsp?view=editor&cmd=setFolder&path=${folder.name}&service=${param.service}">${folder.name }</a>
+				<a href="index.jsp?view=editor&cmd=setFolder&path=${folder.name}/&service=${param.service}">${folder.name }</a>
 			</li>
 		</c:if>
 	</c:forEach>
 	<c:forEach var="script" items="${serverContext.scripts}">
-		<li>
-		 
-		<c:set var="fileName" value="${script}.xml"/>
+		<li><c:set var="fileName" value="${script}.xml"/>
 		<c:choose>
 			<c:when test="${navajoContext.navajos[script]!=null}">
 				<a href="index.jsp?view=editor&service=${serverContext.path}${script}">${script} ${serverContext.cvsInfo[fileName].revision }</a>
@@ -29,12 +28,12 @@
 				<a href="index.jsp?view=editor&service=${serverContext.path}${script}&${serverContext.path}${script}=true">[[Reload]]</a>
 			</c:when>
 			<c:otherwise>
-				<a href="index.jsp?view=editor&service=${serverContext.path}${script}&${serverContext.path}${script}=true">${script} ${serverContext.cvsInfo[fileName].revision }</a>
-				<a href="index.jsp?view=editor&cmd=cvsUpdate&path=scripts/${serverContext.path}${script}.xml">[[Update]]</a>
+				<a href="index.jsp?view=tsl&service=${serverContext.path}${script}">${script} ${serverContext.cvsInfo[fileName].revision }</a>
+				<c:if test="${serverContext.cvsInfo[fileName].revision !=null}">
+					<a href="index.jsp?view=tsl&cmd=cvsUpdate&path=scripts/${serverContext.path}${script}.xml">[[Update]]</a>
+				</c:if>
 			</c:otherwise>
-		</c:choose>
-		<!-- Note the weird variable name/value reversing trick -->
-		</li>
+		</c:choose></li>
 	</c:forEach>
 
 </ul>

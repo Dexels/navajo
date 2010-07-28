@@ -7,10 +7,20 @@
 <%@ page import="com.dexels.navajo.jsp.NavajoContext"%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <jsp:useBean id="navajoContext" class="com.dexels.navajo.jsp.NavajoContext" scope="session" />
-<h4> ${navajoContext.navajoName}</h4>
-<c:forEach var="msg" items="${navajoContext.navajo.allMessages}">
-	<nav:message message="${msg}">
-		<c:import url="tml/manager/writemessagetree.jsp"/>
-	</nav:message>
-</c:forEach>
-	
+
+<div class="messagetree">
+	<ul>
+		<c:forEach var="msg" items="${navajoContext.navajos}">
+			<li>
+			<c:choose>
+				<c:when test="${param['service']==msg.key}">
+					${msg.key}
+				</c:when>
+				<c:otherwise>
+				<a href="index.jsp?view=editor&service=${msg.key}">${msg.key}</a>
+				</c:otherwise>		
+			</c:choose>
+			</li>
+		</c:forEach>
+	</ul>
+</div>

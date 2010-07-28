@@ -5,6 +5,7 @@
 <%@ page import="com.dexels.navajo.jsp.NavajoContext"%>
 <%@ taglib prefix="c" uri="/WEB-INF/tags/c.tld"%>
 <%@ taglib prefix="nav" uri="/WEB-INF/tags/navajo.tld"%>
+<%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="navserver" uri="/WEB-INF/tags/navajoserver.tld"%>
 <jsp:useBean id="navajoContext" class="com.dexels.navajo.jsp.NavajoContext" scope="session" />
 <jsp:useBean id="serverContext" class="com.dexels.navajo.jsp.server.NavajoServerContext" scope="session" />

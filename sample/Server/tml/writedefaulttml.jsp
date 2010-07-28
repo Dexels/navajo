@@ -5,6 +5,7 @@
 <%@ taglib prefix="c" uri="../WEB-INF/tags/c.tld"%>
 <%@ taglib prefix="nav" uri="../WEB-INF/tags/navajo.tld"%>
 <%@ page import="com.dexels.navajo.jsp.NavajoContext"%>
+<%@ page trimDirectiveWhitespaces="true" %>
 <jsp:useBean id="navajoContext" class="com.dexels.navajo.jsp.NavajoContext" scope="session" />
 <c:if test="${param['service'] != null && param['service']!=''}">
 	<h2> ${navajoContext.navajoName}</h2>

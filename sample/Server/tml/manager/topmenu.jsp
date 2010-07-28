@@ -5,6 +5,7 @@
 <%@ taglib prefix="c" uri="/WEB-INF/tags/c.tld"%>
 <%@ taglib prefix="nav" uri="/WEB-INF/tags/navajo.tld"%>
 <%@ page import="com.dexels.navajo.jsp.NavajoContext"%>
+<%@ page trimDirectiveWhitespaces="true" %>
 <jsp:useBean id="navajoContext" class="com.dexels.navajo.jsp.NavajoContext" scope="session" />	        
 
 			<c:choose>
@@ -14,48 +15,70 @@
           		<c:otherwise>
 		            <li><a href="${pageContext.request.requestURI}?view=home&amp;service=${param['service']}">Home</a></li>
           		</c:otherwise>
-          	</c:choose>			<c:choose>
-          		<c:when test="${param['view']=='editor' }">
-		            <li class="active"><strong>Editor</strong></li>
-          		</c:when>
-          		<c:otherwise>
-          			<c:choose>
-          				<c:when test="${param['service']!=''}">
-	      				</c:when>
-          			</c:choose>
-   		            <li><a href="${pageContext.request.requestURI}?view=editor&amp;service=${param['service']}">Editor</a></li>
-    
-          		</c:otherwise>
-          	</c:choose>
-          	<c:choose>
-          		<c:when test="${param['view']=='tml'}">
-		            <li class="active"><strong>Tml</strong></li>
-          		</c:when>
-          		<c:otherwise>
-       				<c:if test="${param['service']!=null && param['service']!=''}">
-	            		<li><a href="${pageContext.request.requestURI}?view=tml&amp;service=${param['service']}">Tml</a></li>
-    				</c:if>
-
-          		</c:otherwise>
-          	</c:choose>
-          	<c:choose>
-          		<c:when test="${param['view']=='tsl'}">
-		            <li class="active"><strong>Tsl</strong></li>
-          		</c:when>
-          		<c:otherwise>
-       				<c:if test="${param['service']!=null && param['service']!=''}">
-		            <li><a href="${pageContext.request.requestURI}?view=tsl&amp;service=${param['service']}">Tsl</a></li>
-    				</c:if>
-        		</c:otherwise>
-          	</c:choose>
-          	<c:choose>
-          		<c:when test="${param['view']=='javasource'}">
-		            <li class="active"><strong>Compiled</strong></li>
-          		</c:when>
-          		<c:otherwise>
-       				<c:if test="${param['service']!=null && param['service']!=''}">
-			            <li><a href="${pageContext.request.requestURI}?view=javasource&amp;service=${param['service']}">Compiled</a></li>
-    				</c:if>
-          		</c:otherwise>
-          	</c:choose>
-           
+          	</c:choose>			
+       		<c:if test="${param['service']!=null && param['service']!='' && navajoContext.navajos[param['service']]!=null}">
+	          	<c:choose>
+	          		<c:when test="${param['view']=='editor' }">
+			            <li class="active"><strong>Editor</strong></li>
+	          		</c:when>
+	          		<c:otherwise>
+	          			<c:choose>
+	          				<c:when test="${param['service']!=''}">
+		      				</c:when>
+	          			</c:choose>
+	   		            <li><a href="${pageContext.request.requestURI}?view=editor&amp;service=${param['service']}">Editor</a></li>
+	    
+	          		</c:otherwise>
+	          	</c:choose>
+        	</c:if>
+ 
+       		
+       		<c:if test="${param['service']!=null && param['service']!='' && navajoContext.navajos[param['service']]!=null}">
+	          	<c:choose>
+	          		<c:when test="${param['view']=='tml'}">
+			            <li class="active"><strong>Tml Source</strong></li>
+	          		</c:when>
+	          		<c:otherwise>
+		            		<li><a href="${pageContext.request.requestURI}?view=tml&amp;service=${param['service']}">Tml</a></li>
+	
+	          		</c:otherwise>
+	          	</c:choose>
+   			</c:if>
+      
+		   <c:if test="${param['service']!=null && param['service']!=''}">
+	         	<c:choose>
+	         <c:when test="${param['view']=='tsl'}">
+	            <li class="active"><strong>${serverContext.scriptStatus.language}</strong></li>
+         	</c:when>
+         	<c:otherwise>
+	            <li><a href="${pageContext.request.requestURI}?view=tsl&amp;service=${param['service']}">${serverContext.scriptStatus.language}</a></li>
+       		</c:otherwise>
+       		</c:choose>
+  			</c:if>
+  			
+       		<c:if test="${serverContext.scriptStatus.compiled}">
+	          	<c:choose>
+	          		<c:when test="${param['view']=='javasource'}">
+			            <li class="active"><strong>Compiled</strong></li>
+	          		</c:when>
+	          		<c:otherwise>
+	       				<c:if test="${param['service']!=null && param['service']!=''}">
+				            <li><a href="${pageContext.request.requestURI}?view=javasource&amp;service=${param['service']}">Compiled</a></li>
+	    				</c:if>
+	          		</c:otherwise>
+	          	</c:choose>
+          	</c:if>
+          	<c:if test="${serverContext.scriptStatus.documented}">
+		       	<c:choose>
+	          		<c:when test="${param['view']=='navadoc'}">
+			            <li class="active"><strong>NavaDoc</strong></li>
+	          		</c:when>
+	          		<c:otherwise>
+	       				<c:if test="${param['service']!=null && param['service']!=''}">
+				            <li><a href="${pageContext.request.requestURI}?view=navadoc&amp;service=${param['service']}">NavaDoc</a></li>
+	    				</c:if>
+	          		</c:otherwise>
+	          	</c:choose> 
+	         </c:if>
+         	    				
+          	          

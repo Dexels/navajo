@@ -5,39 +5,47 @@
 <%@page import="java.util.*"%>
 <%@ taglib prefix="c" uri="/WEB-INF/tags/c.tld"%>
 <%@ taglib prefix="nav" uri="/WEB-INF/tags/navajo.tld"%>
+<%@ page trimDirectiveWhitespaces="true" %>
 <%@ page import="com.dexels.navajo.jsp.NavajoContext"%>
 <jsp:useBean id="navajoContext" class="com.dexels.navajo.jsp.NavajoContext" scope="session" />	  
 <jsp:useBean id="serverContext" class="com.dexels.navajo.jsp.server.NavajoServerContext" scope="session" />
 <jsp:setProperty property="pageContext" name="serverContext" value="${pageContext}"/>
+
+<c:if test="${param['service']!= null && param['service']!=''}">
+	<h3>Run script</h3>
+	<div class="info">
+	<a href="index.jsp?view=editor&service=${ param['service']}&${ param['service']}=true">${ param['service']}</a>
+	</div>
+</c:if>
 <c:choose>
 	<c:when test="${param['view']!=null && param['view']!='home'}">
-		<c:choose>
-			<c:when test="${param['service']!=null && param['service']!=''}">
-				<c:if test="${param['view']=='editor'}">
-					<nav:service service="${param['service']}">
-						<h3>Message structure</h3>
-						<div class="info"><c:import url="/tml/manager/writetmltree.jsp" /></div>
-					</nav:service>
-				</c:if>
-			
-				
-				
-				<h3>Methods</h3>
-				<div class="info">
-					<c:import url="/tml/manager/writemethodlist.jsp" />
-				</div>
-			</c:when>
-			<c:otherwise>
-			
-			</c:otherwise>
-		</c:choose>
-		<h3>Folders and Scripts</h3>
-		<div class="info"><c:import url="/tml/manager/scripttree.jsp" />
+		<h3>Methods</h3>
+		<div class="info">
+		    <c:if test="${param['service']!= null && param['service']!='' && navajoContext.navajos[param['service']]!=null}">
+         		  <nav:service service="${param['service']}">
+				<c:import url="/tml/manager/writemethodlist.jsp" />
+			  </nav:service>
+			</c:if>
 		</div>
-		
 	</c:when>
 	<c:otherwise>
 		<c:import url="tml/manager/configtree.jsp" />
 	</c:otherwise>
 </c:choose>
+		<c:if test="${param['view']=='editor'}">
+			<h3>Loaded scripts</h3>
+				<c:import url="/tml/manager/writeloadedscripts.jsp"/>
+				<h3>Message structure</h3>
+		<div class="info">
+			    <c:if test="${param['service']!= null && param['service']!='' && navajoContext.navajos[param['service']]!=null}">
+          		  <nav:service service="${param['service']}">
+					<div class="info"><c:import url="/tml/manager/writetmltree.jsp" /></div>
+				  </nav:service>
+				</c:if>
+			</div>
+		</c:if>
+			
+		<h3>Folders and Scripts</h3>
+		<div class="info"><c:import url="/tml/manager/scripttree.jsp" />
+		</div>
 

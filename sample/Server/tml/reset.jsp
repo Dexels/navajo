@@ -4,12 +4,13 @@
 <%@page import="java.util.*"%>
 <%@ taglib prefix="c" uri="../WEB-INF/tags/c.tld"%>
 <%@ taglib prefix="nav" uri="../WEB-INF/tags/navajo.tld"%>
+<%@ page trimDirectiveWhitespaces="true" %>
 <%@ page import="com.dexels.navajo.jsp.NavajoContext"%>
 	<%
 	  NavajoContext xx = (NavajoContext) pageContext.findAttribute("navajoContext");
 	  xx.reset();
-	  session.invalidate();
 	%>
-<html><head>
+	<html><head>
   <meta http-equiv="Refresh" content="0; url=../index.jsp">
 </head></html>
+	
