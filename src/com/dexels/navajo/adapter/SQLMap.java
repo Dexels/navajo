@@ -1321,7 +1321,7 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
     catch (SQLException sqle) {
       sqle.printStackTrace(Access.getConsoleWriter(myAccess));
       AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, (myAccess != null ? (myAccess != null ? myAccess.accessID : "unknown access") : "unknown access") );
-      throw new UserException( -1, sqle.getMessage());
+      throw new UserException( -1, sqle.getMessage(),sqle);
     }
     finally {
       if (rs != null) {
