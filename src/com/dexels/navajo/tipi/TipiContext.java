@@ -260,11 +260,8 @@ public abstract class TipiContext {
 		int count = 0;
 		while (tt.hasNext()) {
 			TipiExtension element = tt.next();
-			System.err.println("Found extension: "+element);
 			String[] incls = element.getIncludes();
-			System.err.println("Size: "+incls.length);
 			for (String string : incls) {
-				System.err.println("Include: "+string);
 			}
 			extensionMap.put(element.getId(), element);
 			count++;
@@ -501,11 +498,11 @@ public abstract class TipiContext {
 		System.err.println("Local properties for context: " + getClass() + " hash: " + hashCode() + " map: " + systemPropertyMap);
 	}
 
-	public final void setSystemProperty(String name, String value) {
+	public void setSystemProperty(String name, String value) {
 		setSystemProperty(name, value, true);
 	}
 
-	public final String getSystemProperty(String name) {
+	public String getSystemProperty(String name) {
 
 		String value = systemPropertyMap.get(name);
 		String sysVal = null;
@@ -681,7 +678,6 @@ public abstract class TipiContext {
 
 		if (childName.equals("tipiclass")) {
 			getClassManager().addTipiClassDefinition(child);
-			System.err.println("Parsing component: "+child.getStringAttribute("name")+" for extension: "+extension);
 			if(extension!=null) {
 				child.setAttribute("extension", extension);
 			}
@@ -770,7 +766,11 @@ public abstract class TipiContext {
 		if ("asp".equals(type)) {
 			String instanceId = child.getStringAttribute("instanceId");
 			String scriptPrefix = child.getStringAttribute("scriptPrefix");
-			setStorageManager(new TipiGeneralAspManager(this, scriptPrefix, instanceId));
+			TipiGeneralAspManager tsm = new TipiGeneralAspManager(scriptPrefix);
+			tsm.setInstanceId(instanceId);
+			tsm.setContext(this);
+			setStorageManager(tsm);
+			return;
 		}
 		if ("file".equals(type)) {
 			String basePath = child.getStringAttribute("dir");
@@ -784,11 +784,24 @@ public abstract class TipiContext {
 				}
 			}
 			setStorageManager(new TipiFileStorageManager(baseDir));
+			return;
 		}
 		if ("null".equals(type)) {
 			setStorageManager(new TipiNullStorageManager());
+			return;
 		}
-
+		try {
+			Class<? extends TipiStorageManager> c = (Class<? extends TipiStorageManager>) Class.forName(type);
+			TipiStorageManager tsm = c.newInstance();
+			setStorageManager(tsm);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	public void parseDefinition(XMLElement child) {
@@ -930,7 +943,6 @@ public abstract class TipiContext {
 		}
 		for (int i = 0; i < ss.length; i++) {
 			includes.add(ss[i]);
-			System.err.println("Adding include: "+ss[i]);
 		}
 		
 		for (String element : includes) {
@@ -2157,6 +2169,7 @@ public abstract class TipiContext {
 			throw new IllegalArgumentException("setStorageManager: Can not be null");
 		}
 		myStorageManager = tsm;
+		myStorageManager.setContext(this);
 	}
 
 	public Navajo retrieveDocument(String id) {
