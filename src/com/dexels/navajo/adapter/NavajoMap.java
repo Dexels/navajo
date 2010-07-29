@@ -87,7 +87,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
   public String outputProperties = null;
 
   private Navajo inDoc;
-  private Navajo outDoc;
+  protected Navajo outDoc;
   //private NavajoClient nc;
   private Property currentProperty;
   private String currentFullName;
