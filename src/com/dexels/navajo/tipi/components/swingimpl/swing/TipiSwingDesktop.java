@@ -55,6 +55,16 @@ public class TipiSwingDesktop extends JDesktopPane {
 			myImage = imageIcon.getImage();
 		}
 	}
+	
+	public int getHeight() {
+		return super.getHeight();
+	}
+
+	public int getWidth() {
+		return super.getWidth();
+	}
+
+	
 	protected ImageIcon getIcon(Object u) {
 		 if(u==null) {
 			 return null;

@@ -1123,6 +1123,8 @@
       </events>
       <values>
          <value direction="in" name="paint" type="paint" property="paint" />
+         <value direction="out" name="height" type="integer"  />
+         <value direction="out" name="width" type="integer" />
          <value direction="in" name="logo" type="object" property="logoUrl" />
          <value direction="in" name="image_alignment" type="selection" property="alignment">
             <option description="North" value="north" />

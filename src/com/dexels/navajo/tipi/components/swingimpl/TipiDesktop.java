@@ -22,6 +22,7 @@ public class TipiDesktop
     SwingTipiContext c = (SwingTipiContext)myContext;
 	// register as default desktop, to create modal dialogs as modal internalframes
     c.setDefaultDesktop(jp);
+   
     jp.setDesktopManager(new DefaultDesktopManager());
     jp.setDragMode(TipiSwingDesktop.LIVE_DRAG_MODE);
     TipiHelper th = new TipiSwingHelper();
@@ -31,7 +32,14 @@ public class TipiDesktop
   }
 
 
-  
+	public int getHeight() {
+		return  getSwingContainer().getHeight();
+	}
+
+	public int getWidth() {
+		return  getSwingContainer().getWidth();
+	}
+
   public void addToContainer(final Object c, final Object constraints) {
     runSyncInEventThread(new Runnable() {
       public void run() {
