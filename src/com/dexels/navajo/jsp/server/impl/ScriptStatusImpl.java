@@ -16,6 +16,8 @@ public class ScriptStatusImpl implements ScriptStatus {
 	private final String path;
 	private final String extension;
 	private final NavajoServerContext navajoServerContext;
+
+	public final String[] acceptedCompileCode = new String[]{"java","js"};
 	
 	public ScriptStatusImpl(NavajoServerContext nsc, File scriptRoot, File currentFile, File compileRoot) {
 		this.navajoServerContext = nsc;
@@ -32,6 +34,7 @@ public class ScriptStatusImpl implements ScriptStatus {
 		ii = pp.lastIndexOf('.');
 		this.path = pp.substring(0,ii);
 		// relative == "stuff/xyz.dat"
+		System.err.println("PATH: "+this.path);
 	}
 	
 	public ScriptStatusImpl(NavajoServerContext nsc, File scriptRoot, File compileRoot, String servicePath) {
@@ -39,24 +42,27 @@ public class ScriptStatusImpl implements ScriptStatus {
 		this.scriptRoot = scriptRoot;
 		this.compileRoot = compileRoot;
 		// determine working dir:
+		System.err.println("ServicePath: "+servicePath);
 		if(servicePath.indexOf('/')==-1) {
 			this.currentFile = getSource(scriptRoot, servicePath);
 		} else {
-			String[] spl = servicePath.split("/");
-			String path = spl[0];
+//			String[] spl = servicePath.split("/");
+			int lastIndex = servicePath.lastIndexOf('/');
+			String path = servicePath.substring(0,lastIndex);
+			String serviceName = servicePath.substring(lastIndex+1,servicePath.length());
+			System.err.println("Fabricated: "+serviceName);
 			File currentPath = new File(scriptRoot,path);
-			this.currentFile = getSource(currentPath,spl[1]);
+			System.err.println("Current path: "+currentPath.getAbsolutePath());
+			this.currentFile = getSource(currentPath,serviceName);
 		}
+		System.err.println("Current file: "+this.currentFile.getAbsolutePath());
 		String[] paths = currentFile.getPath().split("\\.");
 		this.name=paths[0];
 		String pp = scriptRoot.toURI().relativize(currentFile.toURI()).getPath();
 		int ii = pp.lastIndexOf('.');
+		System.err.println("RELATIVIZE: "+pp+" lastindex: "+ii);
 		this.path = pp.substring(0,ii);
 		this.extension=paths[1];
-		System.err.println("Create::: "+path);
-		System.err.println("Compileroot::: "+compileRoot);
-		System.err.println("Compilepath: "+new File(this.compileRoot,path).getPath()+"");
-		System.err.println("CompilepathAbs: "+new File(this.compileRoot,path).getAbsolutePath()+"");
 	}
 
 	private File getSource(File sourceDir, final String serviceName) {
@@ -68,6 +74,7 @@ public class ScriptStatusImpl implements ScriptStatus {
 			}
 		});
 		if(files.length==0) {
+			System.err.println("No qualifying script found in folder: "+sourceDir.getAbsolutePath()+" with name like: "+serviceName+".*");
 			return null;
 		}
 		if(files.length>1) {
@@ -95,6 +102,57 @@ public class ScriptStatusImpl implements ScriptStatus {
 		return new File(this.compileRoot,path);
 	}
 
+	public File getCompiledUnit() {
+		System.err.println("DEBUG: \n"+this.toString());
+		System.err.println("Compileroot: "+compileRoot+" - "+path);
+		 // fictional file, will never exist.
+		final File ff = new File(this.compileRoot,path);
+		System.err.println("assuming dir: "+ff.getParentFile().getAbsolutePath()	);
+		File[] list = ff.getParentFile().listFiles(new FileFilter() {
+			
+			public boolean accept(File pathname) {
+				String name = ScriptStatusImpl.this.path.substring(ScriptStatusImpl.this.path.lastIndexOf('/')+1);
+				if(!pathname.getName().startsWith(name)) {
+					return false;
+				}
+				for (String suffix : acceptedCompileCode) {
+//					String proposed = name+"."+suffix;
+//					System.err.println("Examining: "+proposed);
+//					File p = new File(ff.getParentFile(), proposed);
+//					System.err.println("Examining: "+p.getAbsolutePath());
+					if(pathname.getName().endsWith(suffix)) {
+						return true;
+					}
+				}
+				return false;
+			}
+		});
+
+		if(list==null) {
+			return null;
+		}
+		if(list.length==0) {
+			return null;
+		}
+		System.err.println("FIOLLLL: "+list[0].getAbsolutePath());
+		return list[0];
+	}
+
+
+	
+//	new FilenameFilter() {
+//		
+//		public boolean accept(File dir, String name) {
+//			for (String suffix : acceptedCompileCode) {
+//				String proposed = name+"."+suffix;
+//				File p = new File(dir, proposed);
+//				return 
+//			}
+//			return false;
+//		}
+//	}
+	
+	
 	public String getLanguage() {
 		if(extension.equals("rb")) {
 			return "Ruby";
@@ -160,6 +218,14 @@ public class ScriptStatusImpl implements ScriptStatus {
 
 	public boolean isLoaded() {
 		return false;
+	}
+
+	@Override
+	public int compareTo(ScriptStatus o) {
+		if(o==null || getName()==null) {
+			return 0;
+		}
+		return getName().compareTo(o.getName());
 	}
 
 }

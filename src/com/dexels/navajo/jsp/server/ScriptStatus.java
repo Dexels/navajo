@@ -2,7 +2,7 @@ package com.dexels.navajo.jsp.server;
 
 import java.io.File;
 
-public interface ScriptStatus {
+public interface ScriptStatus extends Comparable<ScriptStatus> {
 	public boolean isCompiled();
 	public boolean isDocumented();
 	public File getSource();

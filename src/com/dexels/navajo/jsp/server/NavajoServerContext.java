@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +54,7 @@ public class NavajoServerContext {
 		return cvsInfo;
 	}
 
-	public boolean isCVS() {
+	public boolean isCVS() throws IOException {
 		File cvsFolder = new File(getCurrentFolder(),"CVS");
 		return cvsFolder.exists();
 	}
@@ -83,9 +84,9 @@ public class NavajoServerContext {
 			File contextFile = new File(pageContext.getServletContext().getRealPath(""));
 			File buildFile = new File(contextFile,antFile);
 			File navajoRoot = getNavajoRoot();
-			System.err.println("Running ant: "+buildFile.getAbsolutePath()+" baseDir: "+navajoRoot.getAbsolutePath());
+	//		System.err.println("Running ant: "+buildFile.getAbsolutePath()+" baseDir: "+navajoRoot.getAbsolutePath());
 			String result = AntRun.callAnt(buildFile, navajoRoot, params, null);
-			System.err.println("Result: \n"+result);
+//			System.err.println("Result: \n"+result);
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -93,7 +94,10 @@ public class NavajoServerContext {
 	}
 	
 	
-	public File getCurrentFolder() {
+	public File getCurrentFolder() throws IOException {
+		if(currentFolder==null) {
+			return getScriptRoot();
+		}
 		return currentFolder;
 	}
 	
@@ -170,7 +174,7 @@ public class NavajoServerContext {
 		return null;
 	}
 
-	public void setPath(String path) {
+	public void setPath(String path) throws IOException {
 		File newCurrent = new File(getCurrentFolder(),path);
 		try {
 			// Check if we aren't navigating outside the script folder
@@ -185,12 +189,9 @@ public class NavajoServerContext {
 	}
 
 	public void setPageContext(PageContext pageContext) throws IOException {
-		
-		if(this.pageContext==null) {
-			this.pageContext = pageContext;
+		this.pageContext = pageContext;
+		if(getCurrentFolder()==null) {
 			setCurrentFolder(getScriptRoot());
-		} else {
-			this.pageContext = pageContext;
 		}
 	}
 
@@ -216,7 +217,7 @@ public class NavajoServerContext {
 		return new File(getNavajoRoot(),"scripts/");
 	}
 
-	public List<String> getScripts() {
+	public List<String> getScripts() throws IOException {
 		List<String> all = new ArrayList<String>();
 		File[] filelist = getCurrentFolder().listFiles();
 		for (File file : filelist) {
@@ -239,6 +240,7 @@ public class NavajoServerContext {
 				all.add(s);
 			}
 		}
+		Collections.sort(all);
 		return all;
 	}
 
@@ -248,8 +250,13 @@ public class NavajoServerContext {
 	}
 	
 	private File getCompiledRoot() throws IOException {
-		
-		return new File(getNavajoRoot(),"compiled");
+		// TODO fix this monstrosity. Read it from the server.xml
+		File file = new File(getNavajoRoot(),"compiled");
+		if(file.exists()) {
+			return file;
+		}
+		file = new File(getNavajoRoot(),"classes");
+		return file;
 	}
 
 	public List<File> getFolders() throws IOException {
@@ -264,6 +271,8 @@ public class NavajoServerContext {
 				all.add(file);
 			}
 		}
+		
+		Collections.sort(all);
 		return all;
 	}
 
@@ -306,10 +315,12 @@ public class NavajoServerContext {
 		}
 		try {
 			ScriptStatus s = new ScriptStatusImpl(this,getScriptRoot(), getCompiledRoot(), path);
+			System.err.println("returning script status:"+s);
 			return s;
-		} catch (IOException e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 		}
+		System.err.println("Fail?");
 		return null;
 	}
 	
