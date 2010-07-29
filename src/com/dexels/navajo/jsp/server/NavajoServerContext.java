@@ -2,6 +2,7 @@ package com.dexels.navajo.jsp.server;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,8 +10,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 
 import com.dexels.navajo.document.Property;
@@ -93,6 +97,22 @@ public class NavajoServerContext {
 		
 	}
 	
+	public void setupClient() throws IOException {
+		HttpServletRequest rr =  (HttpServletRequest) getPageContext().getRequest();
+		StringBuffer sb = new StringBuffer();
+		sb.append(rr.getServerName()+":");
+		sb.append(rr.getServerPort());
+		sb.append(rr.getContextPath());
+		String server = sb.toString()+"/Postman";
+		ResourceBundle client = getClientSettings();
+		String username = "guest";
+		String password = "guest";
+		if(client!=null) {
+			username = client.getString("username");
+			password = client.getString("password");
+		}
+		getNavajoContext().setupClient(server, username, password, pageContext);
+	}
 	
 	public File getCurrentFolder() throws IOException {
 		if(currentFolder==null) {
@@ -217,6 +237,25 @@ public class NavajoServerContext {
 		return new File(getNavajoRoot(),"scripts/");
 	}
 
+
+	public File getConfigRoot() throws IOException {
+		return new File(getNavajoRoot(),"config/");
+	}
+	
+	public ResourceBundle getClientSettings() throws IOException {
+		File props = new File(getConfigRoot(),"client.properties");
+		if(!props.exists()) {
+			return null;
+		}
+		FileReader fr = null;
+		try {
+		fr = new FileReader(props);
+			PropertyResourceBundle b = new PropertyResourceBundle(fr);
+			return b;
+		} finally {
+			fr.close();
+		}
+	}
 	public List<String> getScripts() throws IOException {
 		List<String> all = new ArrayList<String>();
 		File[] filelist = getCurrentFolder().listFiles();
@@ -275,34 +314,6 @@ public class NavajoServerContext {
 		Collections.sort(all);
 		return all;
 	}
-
-	
-	public static void main(String[] args) throws IOException {
-//		/Users/frank/Documents/Spiritus/NavajoServer/sample/Server
-		NavajoServerContext nsc = new NavajoServerContext();
-		nsc.setCustomNavajoRoot(new File("/Users/frank/Documents/Spiritus/NavajoJspServer/testContext/Server"));
-		nsc.setCurrentFolder(nsc.getScriptRoot());
-		List<ScriptStatus> ss = nsc.getScriptList();
-		for (ScriptStatus scr : ss) {
-			System.err.println(scr.toString());
-		}
-		List<File> ff = nsc.getFolders();
-		File f = nsc.getCurrentFolder();
-		for (File file : ff) {
-			nsc.setCurrentFolder(file);
-			List<ScriptStatus> sss = nsc.getScriptList();
-			for (ScriptStatus scr : sss) {
-				System.err.println(scr.toString());
-			}
-		}
-		nsc.setCurrentFolder(f);
-		ScriptStatus xxxx =  nsc.getScriptInfo("location/InitInsertLocation");
-		System.err.println("x: "+xxxx);
-		ScriptStatus yyyy =  nsc.getScriptInfoMap().get("location/InitInsertLocation");
-		System.err.println("x: "+yyyy);
-		
-	}
-
 	
 	public ScriptInfoAccessMap getScriptInfoMap()  {
 		return new ScriptInfoAccessMap(this);
