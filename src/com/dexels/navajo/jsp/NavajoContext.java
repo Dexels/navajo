@@ -230,7 +230,9 @@ public class NavajoContext {
 		return requestBuffer.toString();
 	}
 	public void setupClient(String server, String username, String password, PageContext pa) {
-			NavajoClientFactory.resetClient();
+		Thread.dumpStack();
+		System.err.println("Setupclient: "+server+" user: "+username+" pass: "+password);
+		NavajoClientFactory.resetClient();
 //			NavajoClientFactory.createDefaultClient()
 		 myClient = NavajoClientFactory.getClient();
 		if (username == null) {
@@ -306,10 +308,28 @@ public class NavajoContext {
 		return null;
 	}
 	
+	public Message parseMessagePath(String path) {
+		if(path.indexOf(":")==-1) {
+			Navajo n = getNavajo();
+			if(n!=null) {
+				return n.getMessage(path);
+			}
+		} else {
+			String[] elts = path.split(":");
+			Navajo n = getNavajo(elts[0]);
+			return n.getMessage(elts[1]);
+		}
+		return null;
+	}
+	
+	
 	public Map<String,Property> getPropertyElement() {
 		return new PropertyAccessMap(this);
 	}
 
+	public Map<String,Message> getMessageElement() {
+		return new MessageAccessMap(this);
+	}
 
 	public void resolvePost(String name, String value) {
 		if(name.indexOf(":")==-1) {
@@ -337,5 +357,7 @@ public class NavajoContext {
 		myElementStack.pop();
 		
 	}
+
+
 	
 }
