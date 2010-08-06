@@ -14,6 +14,7 @@ import java.security.*;
 import java.text.*;
 import java.util.*;
 import java.util.Map.*;
+import java.util.zip.GZIPInputStream;
 
 import javax.net.ssl.*;
 
@@ -72,8 +73,8 @@ public class NavajoClient implements ClientInterface {
   private boolean setSecure = false;
   private SSLSocketFactory sslFactory = null;
   //private String keystore, passphrase;
-  private long retryInterval = 500; // default retry interval is 1000 milliseconds
-  private int retryAttempts = 10; // default three retry attempts
+  private long retryInterval = 500; // default retry interval is 500 milliseconds
+  private int retryAttempts = 10; // default ten retry attempts
   private int switchServerAfterRetries = 3; /** If same as retry attempts, never switch between servers, while in retry attempt. FOR NOW
   THIS IS A SAFE VALUE CAUSE INTEGRITY WORKER DOES NOT YET WORKER OVER MULTIPLE SERVER INSTANCES!!! */
   
@@ -195,6 +196,9 @@ public class NavajoClient implements ClientInterface {
 
   
   public final String getSessionToken() {
+	  if(mySessionToken==null) {
+		  return "";
+	  }
 		  return mySessionToken;
   }
   
@@ -247,16 +251,10 @@ public class NavajoClient implements ClientInterface {
    */
   public final void setServerUrl(String url) {
 //    host = url;
-//	  System.err.println("Warning: setServerURL is deprecated!");
+//	  System.err.println("Warning: setServerURL is deprecated! DON'T USE IT!");
+//	  Thread.dumpStack();
 	  serverUrls = new String[]{url};
-	  serverLoads = new double[serverUrls.length];
-	// I really don't want the startup to fail if there are problems here
-	  try {
-	  determineServerLoadsAndSetCurrentServer(true);
-	  } catch(Throwable t) {
-//		  t.printStackTrace();
-		  System.err.println("Determining server loads fails. Ignoring.");
-	  }
+	  setServers(serverUrls);
 	  }
 
   /**
@@ -598,13 +596,16 @@ public class NavajoClient implements ClientInterface {
      	System.err.println("setConnectTimeout does not exist, upgrade to java 1.5+");
     }
     
-    appendHeaderToHttp(con,d.getHeader());
-    
+    // Omit fancy http stuff for now
     con.setDoOutput(true);
+
+    
+    
     con.setDoInput(true);
     con.setUseCaches(false);
-    //con.setRequestProperty("Connection", "keep-alive");
     con.setRequestProperty("Content-type", "text/xml; charset=UTF-8");
+    appendHeaderToHttp(con,d.getHeader());    
+    
 
     con.setRequestProperty("Host", "localhost");
     if ( forcePreparseProxy ) {
@@ -618,9 +619,7 @@ public class NavajoClient implements ClientInterface {
     } catch (Throwable e) {
      	System.err.println("setChunkedStreamingMode does not exist, upgrade to java 1.5+");
     }
-    //con.setReadTimeout(500);
     
-    // Send message
     if (useCompression) {
     	con.setRequestProperty("Accept-Encoding", "jzlib");
     	con.setRequestProperty("Content-Encoding", "jzlib");
@@ -643,9 +642,10 @@ public class NavajoClient implements ClientInterface {
     }
     else {
     	//con.connect();
-    	   
+    	   con.setRequestProperty("noCompression", "true");
     	BufferedWriter os = null;
     	try {
+//    		System.err.println("Using no compression!");
     		os = new BufferedWriter(new OutputStreamWriter(con.getOutputStream(), "UTF-8"));
 //    		os.write("apenootjes");
     		//d.write(os, condensed, d.getHeader().getRPCName());    	
@@ -661,6 +661,10 @@ public class NavajoClient implements ClientInterface {
     	}
     }
 
+    String contentEncoding = con.getContentEncoding();
+    //System.err.println("Content encoding: "+contentEncoding);
+
+    
     // Check for errors.
     InputStream in = null;
     Navajo n = null;
@@ -689,12 +693,14 @@ public class NavajoClient implements ClientInterface {
   }
 
   private void appendHeaderToHttp(HttpURLConnection con, Header header) {
-	  con.addRequestProperty("rpcName",header.getRPCName());
-	  con.addRequestProperty("rpcPass",header.getRPCPassword());
-	  con.addRequestProperty("rpcUser",header.getRPCUser());
+	  con.setRequestProperty("rpcName",header.getRPCName());
+	  con.setRequestProperty("rpcPass",header.getRPCPassword());
+	  con.setRequestProperty("rpcUser",header.getRPCUser());
 	  Map<String,String> attrs = header.getHeaderAttributes();
 	  for (Entry<String,String> element : attrs.entrySet()) {
-		  con.addRequestProperty(element.getKey(),element.getValue());
+		  if(element.getValue()!=null) {
+			  con.setRequestProperty(element.getKey(),element.getValue());
+		  }
 	}
   }
 
@@ -805,7 +811,8 @@ public class NavajoClient implements ClientInterface {
 		  }
 		  // ALWAY SET REQUEST ID AT THIS POINT.
 		  header.setRequestId( Guid.create() );
-		  header.setHeaderAttribute("clientToken", getSessionToken());
+		  String sessionToken = getSessionToken();
+		header.setHeaderAttribute("clientToken", sessionToken);
 		  header.setHeaderAttribute("clientInfo", SystemInfo.getSystemInfo().toString());
 		  // ========= Adding globalMessages
 		  Iterator<Entry<String,Message>> entries = globalMessages.entrySet().iterator();
@@ -874,7 +881,9 @@ public class NavajoClient implements ClientInterface {
 					  if (n != null) {
 
 						  //System.err.println("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getHeaderAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
-						  n.getHeader().setHeaderAttribute("sourceScript", callingService);
+						  if(callingService!=null) {
+							  n.getHeader().setHeaderAttribute("sourceScript", callingService);							  
+						  }
 					  } else {
 						  n = n2;
 					  }
@@ -890,7 +899,9 @@ public class NavajoClient implements ClientInterface {
 					  n = retryTransaction(server, out, false, allowPreparseProxy, retryAttempts, retryInterval, n2); // lees uit resourc
 					  if (n != null) {
 						  //System.err.println("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getHeaderAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
-						  n.getHeader().setHeaderAttribute("sourceScript", callingService);
+						  if(callingService!=null) {
+							  n.getHeader().setHeaderAttribute("sourceScript", callingService);
+						  }
 					  } else {
 						  n = n2;
 					  }
@@ -1556,6 +1567,8 @@ private final Navajo retryTransaction(String server, Navajo out, boolean useComp
     condensed = b;
   }
 
+  
+  // Ultra defensive for app engines.
   public static String createSessionToken() throws UnknownHostException {
 		String userName = null;
 		try {
@@ -1564,9 +1577,18 @@ private final Navajo retryTransaction(String server, Navajo out, boolean useComp
 			userName = "UnknownUser";
 		}
 
-		return userName + "|" + (InetAddress.getLocalHost().getHostAddress())
-				+ "|" + (InetAddress.getLocalHost().getHostName()) + "|"
-				+ (System.currentTimeMillis());
+		String fabricatedToken = null;
+		
+		try {
+			fabricatedToken = userName + "|" + (InetAddress.getLocalHost().getHostAddress())
+					+ "|" + (InetAddress.getLocalHost().getHostName()) + "|"
+					+ (System.currentTimeMillis());
+		} catch (Throwable e) {
+//			e.printStackTrace();
+			System.err.println("Session failed!");
+			fabricatedToken="unknown session";
+		}
+		return fabricatedToken;
 	}
   
  
@@ -1575,59 +1597,7 @@ public void destroy() {
 		
 }
 
-private final void determineServerLoadsAndSetCurrentServer(boolean init) {
 
-//	System.err.println("Started ping thread.");
-	Navajo out = NavajoFactory.getInstance().createNavajo();
-	Header outHeader = NavajoFactory.getInstance().createHeader(out, "navajo_ping", "NAVAJO", "", -1);
-	out.addHeader(outHeader);
-
-//	System.err.println("servers: " + serverUrls.length);
-	boolean disabledServer = false;
-	for (int i = 0; i < serverUrls.length; i++) {
-		try {
-			Navajo n  = doTransaction(serverUrls[i], out, false, false);
-			if ( n != null ) {
-				Header h = n.getHeader();
-				String load =  h.getHeaderAttribute("cpuload");
-				serverLoads[i] = Double.parseDouble(load);
-//				System.err.println(serverUrls[i] + "=" + serverLoads[i]);
-				// If I got an answer from this server, and it was on the disabled server list, remove it.
-				if ( disabledServers.containsKey(serverUrls[i]) ) {
-					disabledServers.remove(serverUrls[i]);
-				}
-			} else {
-				disabledServers.put(serverUrls[i], new Long(120000));
-				disabledServer = true;
-			}
-		} catch (Throwable e) {
-			//e.printStackTrace(System.err);
-			disabledServers.put(serverUrls[i], new Long(120000));
-			disabledServer = true;
-		}
-
-	}
-	// ROUND ROBIN FOR NOW:
-	switchServer(disabledServer || ( init && loadBalancingMode != LBMODE_MANUAL ) );
-}
-
-private final void ping() {
-	// Start thread to periodically check servers.
-	if ( !pingStarted) {
-		new Thread() {
-			public void run() {
-				while (!killed) {
-					determineServerLoadsAndSetCurrentServer(false);
-					try {
-						Thread.sleep(60000);
-					} catch (InterruptedException e) {
-					}
-				}
-			}
-		}.start();
-		pingStarted = true;
-	}
-}
 
 public void setServers(String[] servers) {
 	serverUrls = servers;
