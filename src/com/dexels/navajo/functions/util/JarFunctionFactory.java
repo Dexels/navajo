@@ -27,7 +27,6 @@ public class JarFunctionFactory extends FunctionFactoryInterface {
 				return;
 			}
 			
-			System.err.println("FOUND FUNCTION EXTENSION: " + fd);
 			
 			Vector<XMLElement> children = xml.getChildren();
 			for (int i = 0; i < children.size(); i++) {
