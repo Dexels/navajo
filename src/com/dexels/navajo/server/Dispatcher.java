@@ -40,6 +40,7 @@ import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerFactory;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
 
+import com.dexels.navajo.adapter.navajomap.NavajoMapManager;
 import com.dexels.navajo.broadcast.BroadcastMessage;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.events.NavajoEventRegistry;
@@ -172,6 +173,9 @@ public final class Dispatcher implements Mappable, DispatcherMXBean, DispatcherI
 	  
 	  // Bootstrap integrity worker.
 	  navajoConfig.getIntegrityWorker();
+	
+	  // Start NavajoMapManager to register health of foreign (non-tribal) Navajo Server instances.
+	  NavajoMapManager.getInstance();
 	  
 	  // Startup tribal status collector.
 	  TribeManagerFactory.startStatusCollector();
