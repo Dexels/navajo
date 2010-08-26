@@ -28,6 +28,8 @@ package navajo;
  * 
  * VERSION HISTORY
  * 
+ * 9.2.0 - Started adding support for javascript compiled scripts.
+ * 
  * 9.0.2 - Extended Resource mechanism to Dispatcher (is also a resource that can have a certain health.
  * 
  * 9.0.1 - Added internalService header attribute as an indication for the Dispatcher to ignore the server too busy check.
@@ -208,13 +210,13 @@ package navajo;
 public class Version extends dexels.Version {
 
 	public static final int MAJOR = 9;
-	public static final int MINOR = 0;
-	public static final int PATCHLEVEL = 2;
-	public static final String SPECIAL_VERSION = "Navajo 9.1 Release Candidate II";
+	public static final int MINOR = 2;
+	public static final int PATCHLEVEL = 0;
+	public static final String SPECIAL_VERSION = "Navajo 9.2 Release Candidate I";
 	
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
-	public static final String RELEASEDATE = "2010-07-23";
+	public static final String RELEASEDATE = "2010-08-26";
 	
 //	 Included packages.
 	String [] includes = {"navajodocument.Version"};
