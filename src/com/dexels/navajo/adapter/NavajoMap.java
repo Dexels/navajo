@@ -511,6 +511,20 @@ private Object waitForResult = new Object();
 			  }
 		  }
 
+		  // If currentOutDoc flag was set, make sure to copy outdoc.
+		  if ( this.useCurrentOutDoc ) {
+			  this.outDoc = access.getOutputDoc().copy();
+			  // Copy param messages.
+			  if ( inMessage.getMessage("__parms__") != null ) {
+				  Message params = inMessage.getMessage("__parms__").copy(outDoc);
+				  try {
+					outDoc.addMessage(params);
+				} catch (NavajoException e) {
+					e.printStackTrace(Access.getConsoleWriter(access));
+				}
+			  }
+		  }
+		  
 		  if (server != null) { // External request.
 			  NavajoClient nc = new NavajoClient();
 			  if (keyStore != null) {
@@ -862,16 +876,6 @@ private Object waitForResult = new Object();
   public void setUseCurrentOutDoc(boolean b) throws NavajoException {
 	  if (b) {
 		  this.useCurrentOutDoc = b;
-		  this.outDoc = access.getOutputDoc().copy();
-		  // Copy param messages.
-		  if ( inMessage.getMessage("__parms__") != null ) {
-			  Message params = inMessage.getMessage("__parms__").copy(outDoc);
-			  outDoc.addMessage(params);
-		  }
-		  if ( inMessage.getMessage("__globals__") != null ) {
-			  Message globals = inMessage.getMessage("__globals__").copy(outDoc);
-			  outDoc.addMessage(globals);
-		  }
 	  }
   }
   
@@ -1008,7 +1012,7 @@ private Object waitForResult = new Object();
   }
   
   public void run()  {
-
+ 
 	  Header h = outDoc.getHeader();
 	  if (h == null) {
 		  h = NavajoFactory.getInstance().createHeader(outDoc, method, access.rpcUser, access.rpcPwd, -1);
