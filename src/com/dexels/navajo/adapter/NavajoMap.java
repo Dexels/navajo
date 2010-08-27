@@ -500,17 +500,6 @@ private Object waitForResult = new Object();
 		  if (password == null)
 			  password = "";
 
-		  // Always copy globals.
-		  if ( inMessage.getMessage("__globals__") != null ) {
-			  Message globals = inMessage.getMessage("__globals__").copy(outDoc);
-			  try {
-				  outDoc.addMessage(globals);
-			  } catch (NavajoException e) {
-				  // TODO Auto-generated catch block
-				  e.printStackTrace(Access.getConsoleWriter(access));
-			  }
-		  }
-
 		  // If currentOutDoc flag was set, make sure to copy outdoc.
 		  if ( this.useCurrentOutDoc ) {
 			  this.outDoc = access.getOutputDoc().copy();
@@ -522,6 +511,17 @@ private Object waitForResult = new Object();
 				} catch (NavajoException e) {
 					e.printStackTrace(Access.getConsoleWriter(access));
 				}
+			  }
+		  }
+		  
+		  // Always copy globals.
+		  if ( inMessage.getMessage("__globals__") != null ) {
+			  Message globals = inMessage.getMessage("__globals__").copy(outDoc);
+			  try {
+				  outDoc.addMessage(globals);
+			  } catch (NavajoException e) {
+				  // TODO Auto-generated catch block
+				  e.printStackTrace(Access.getConsoleWriter(access));
 			  }
 		  }
 		  
