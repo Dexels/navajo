@@ -102,6 +102,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
   // Default value is TRUE.
   public boolean block = true;
   private boolean serviceCalled = false;
+  private boolean serviceFinished = false;
   
   public boolean isBlock() {
 	  return block;
@@ -144,8 +145,10 @@ private Object waitForResult = new Object();
 	  if (!serviceCalled) {
 		  throw new UserException(-1, "Call webservice before retrieving result.");
 	  }
-	  if ( inDoc == null ) {
+	  if ( !serviceFinished ) {
 		  // Wait for result.
+		  //
+		  //
 		  synchronized (waitForResult) {
 			  try {
 				  waitForResult.wait();
@@ -541,11 +544,14 @@ private Object waitForResult = new Object();
 		  else {
 			  try {
 				  inDoc = null;
-				  SchedulerRegistry.getScheduler().submit(this, true);
-				  serviceCalled = true;
+				  isFinished = false;
+				  serviceFinished = false;
 				  if ( block ) {
-					  waitForResult();
+					  this.run();
+				  } else {
+					  SchedulerRegistry.getScheduler().submit(this, true);
 				  }
+				  serviceCalled = true;
 			  } catch (IOException e) {
 				  e.printStackTrace();
 			  }
@@ -1012,26 +1018,27 @@ private Object waitForResult = new Object();
   }
   
   public void run()  {
- 
-	  Header h = outDoc.getHeader();
-	  if (h == null) {
-		  h = NavajoFactory.getInstance().createHeader(outDoc, method, access.rpcUser, access.rpcPwd, -1);
-		  outDoc.addHeader(h);
-	  } else {
-		  h.setRPCName(method);
-		  h.setRPCPassword(access.rpcPwd);
-		  h.setRPCUser(access.rpcUser);
-	  }
-	  // Clear request id.
-	  h.setRequestId(null);
 
 	  try {
+		  Header h = outDoc.getHeader();
+		  if (h == null) {
+			  h = NavajoFactory.getInstance().createHeader(outDoc, method, access.rpcUser, access.rpcPwd, -1);
+			  outDoc.addHeader(h);
+		  } else {
+			  h.setRPCName(method);
+			  h.setRPCPassword(access.rpcPwd);
+			  h.setRPCUser(access.rpcUser);
+		  }
+		  // Clear request id.
+		  h.setRequestId(null);
+
 		  inDoc = DispatcherFactory.getInstance().handle(outDoc, true);
 		  continueAfterRun();
 	  } catch (Exception e) {
 		  // TODO Auto-generated catch block
 		  e.printStackTrace();
 	  } finally {
+		  serviceFinished = true;
 		  setIsFinished();
 	  }
 
