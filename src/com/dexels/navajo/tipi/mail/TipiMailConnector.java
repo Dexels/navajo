@@ -595,10 +595,16 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		}
 	}
 
-	private void addMessages(Message imapFolder, javax.mail.Message currentImapMessage) throws NavajoException, MessagingException {
+	private void addMessages(Message imapFolder, javax.mail.Message currentImapMessage) throws NavajoException {
 		Navajo n = imapFolder.getRootDoc();
-		Message current = addMessageProperties(currentImapMessage, n);
-		imapFolder.addMessage(current);
+		try {
+			Message current;
+			current = addMessageProperties(currentImapMessage, n);
+			imapFolder.addMessage(current);
+		} catch (MessagingException e) {
+			System.err.println("Bad message content. Ignoring.");
+			e.printStackTrace();
+		}
 	}
 
 	private Message addMessageProperties(javax.mail.Message mail, Navajo n) throws NavajoException, MessagingException {
