@@ -8,6 +8,7 @@ package com.dexels.navajo.server.resource;
  */
 public class ServiceAvailability {
 
+	public final static int STATUS_UNKNOWN = -1;
 	public final static int STATUS_OK = 0;
 	public final static int STATUS_BUSY = 1;
 	public final static int STATUS_VERYBUSY = 2;
