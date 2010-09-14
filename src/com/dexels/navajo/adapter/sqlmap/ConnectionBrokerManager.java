@@ -452,12 +452,12 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 		  try {
 			  new SQLMap().setReload(datasource);
 		  } catch (Throwable e) {
-			  return ServiceAvailability.STATUS_VERYBUSY; // Be careful.
+			  return ServiceAvailability.STATUS_UNKNOWN; // Be careful.
 		  } 
 		  broker = ( (SQLMapBroker)this.brokerMap.get(datasource.replaceAll("'", "")));
 		  if ( broker == null ) {
-			  System.err.println("Could not determine health of resource: " + datasource);
-			  return ServiceAvailability.STATUS_VERYBUSY;
+			  //System.err.println("Could not determine health of resource: " + datasource);
+			  return ServiceAvailability.STATUS_UNKNOWN;
 		  }
 	  }
 	  return broker.health;
@@ -494,7 +494,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 	  // Make sure to strip "'". 
 	  SQLMapBroker broker = ( (SQLMapBroker)this.brokerMap.get(datasource.replaceAll("'", "")));
 	  if ( broker == null ) {
-		  System.err.println("Could not determine availability of resource: " + datasource);
+		  //System.err.println("Could not determine availability of resource: " + datasource);
 		  return true; // Try it to prevent deadlocking on changed web service that can never be reached due to former unavailability.
 	  }
 	  
