@@ -159,7 +159,7 @@ public class ResourceChecker {
 
 		boolean available = true;
 		int maxWaitingTime = 0;
-		int finalHealth = 0;
+		int finalHealth = -1;
 		
 		for (Entry <AdapterFieldDependency,Method> e : managedResources.entrySet()) {
 			AdapterFieldDependency afd = e.getKey();
