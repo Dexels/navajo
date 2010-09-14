@@ -158,8 +158,9 @@ public class ResourceChecker {
 		ArrayList<String> unavailableIds = new ArrayList<String>();
 
 		boolean available = true;
+		boolean unknown   = false;
 		int maxWaitingTime = 0;
-		int finalHealth = -1;
+		int finalHealth = 0;
 		
 		for (Entry <AdapterFieldDependency,Method> e : managedResources.entrySet()) {
 			AdapterFieldDependency afd = e.getKey();
@@ -172,6 +173,7 @@ public class ResourceChecker {
 					synchronized (rm) {
 						
 						int health = rm.getHealth(resourceId);
+						unknown = ( unknown || health == ServiceAvailability.STATUS_UNKNOWN );
 						if ( health > finalHealth ) {
 							finalHealth = health;
 						}
@@ -190,6 +192,10 @@ public class ResourceChecker {
 			}
 		}
 
+		if ( unknown ) {
+			finalHealth = ServiceAvailability.STATUS_UNKNOWN;
+		}
+		
 		String [] ids = new String[unavailableIds.size()];
 		ids = unavailableIds.toArray(ids);
 		ServiceAvailability sa = new ServiceAvailability(webservice, available, finalHealth, maxWaitingTime, ids);
