@@ -538,6 +538,7 @@ private Object waitForResult = new Object();
 			  } else {
 				  inDoc = nc.doScheduledSend(outDoc, method, "now", "", "");
 			  }
+			  serviceFinished = true;
 			  serviceCalled = true;
 			  continueAfterRun();
 		  } // Internal request.
