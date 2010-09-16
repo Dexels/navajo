@@ -1865,14 +1865,18 @@ public abstract class TipiContext {
 			return null;
 		}
 		try {
-			synchronized (tc) {
+			Object sync = event;
+			if(sync==null) {
+				sync = tc;
+			}
+//			synchronized (sync) {
 				tc.setCurrentEvent(event);
 				o = Expression.evaluate(expr, n, null, currentMessage, null, tc);
 				if (o == null) {
 					System.err.println("Expression evaluated to null operand!");
 					return null;
 				}
-			}
+//			}
 		} catch (Exception ex) {
 			System.err.println("Not happy while evaluating expression: " + expr + " message: " + ex.getMessage());
 			ex.printStackTrace();

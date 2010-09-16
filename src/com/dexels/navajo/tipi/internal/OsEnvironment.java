@@ -80,7 +80,7 @@ public class OsEnvironment {
 			}
 		} catch (java.io.IOException e) {
 			e.printStackTrace();
-			System.err.println("Ï could not determine the OS. Perhaps a security issue?");
+			System.err.println("Could not determine the OS. Perhaps a security issue?");
 			return null;
 		}
 		java.io.BufferedReader br = new java.io.BufferedReader(new java.io.InputStreamReader(p.getInputStream()));
