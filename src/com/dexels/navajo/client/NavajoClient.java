@@ -73,9 +73,9 @@ public class NavajoClient implements ClientInterface {
   private boolean setSecure = false;
   private SSLSocketFactory sslFactory = null;
   //private String keystore, passphrase;
-  private long retryInterval = 500; // default retry interval is 500 milliseconds
-  private int retryAttempts = 10; // default ten retry attempts
-  private int switchServerAfterRetries = 3; /** If same as retry attempts, never switch between servers, while in retry attempt. FOR NOW
+  private long retryInterval = 1000; // default retry interval is 500 milliseconds
+  private int retryAttempts = 4; // default four retry attempts
+  private int switchServerAfterRetries = 10; /** If same as retry attempts, never switch between servers, while in retry attempt. FOR NOW
   THIS IS A SAFE VALUE CAUSE INTEGRITY WORKER DOES NOT YET WORKER OVER MULTIPLE SERVER INSTANCES!!! */
   
   private int currentServerIndex;
@@ -873,7 +873,7 @@ public class NavajoClient implements ClientInterface {
 					  generateConnectionError(n, 55555, "No route to host: " + uhe.getMessage());
 				  }
 				  catch (java.net.SocketException uhe) {
-					  if ( retryAttempts == 0 ) {
+					  if ( retryAttempts <= 0 ) {
 						  throw uhe;
 					  }
 					  Navajo n2 = NavajoFactory.getInstance().createNavajo();
@@ -891,7 +891,7 @@ public class NavajoClient implements ClientInterface {
 				  catch (IOException uhe) {
 					  //uhe.printStackTrace();
 					  //readErrorStream(myCon);
-					  if ( retryAttempts == 0 ) {
+					  if ( retryAttempts <= 0 ) {
 						  throw uhe;
 					  }
 					  System.err.println("Generic IOException: "+uhe.getMessage()+". Retrying without compression...");
@@ -1068,7 +1068,7 @@ private final Navajo retryTransaction(String server, Navajo out, boolean useComp
     }
     catch (java.net.SocketException uhe) {
     	attemptsLeft--;
-    	if (attemptsLeft == 0) {
+    	if (attemptsLeft <= 0) {
     		disabledServers.put(getCurrentHost(), new Long(System.currentTimeMillis()));
     		System.err.println("Disabled server: "+getCurrentHost()+" for "+serverDisableTimeout+" millis." );
     		switchServer(true);
@@ -1081,7 +1081,7 @@ private final Navajo retryTransaction(String server, Navajo out, boolean useComp
     catch (IOException uhe) {
     	//readErrorStream(myCon);
     	System.err.println(uhe.getMessage());
-    	if (attemptsLeft == 0) {
+    	if (attemptsLeft <= 0) {
     		disabledServers.put(getCurrentHost(), new Long(System.currentTimeMillis()));
     		System.err.println("Disabled server: "+getCurrentHost()+" for "+serverDisableTimeout+" millis." );
     		switchServer(true);
