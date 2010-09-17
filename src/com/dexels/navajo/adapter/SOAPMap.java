@@ -13,6 +13,7 @@ import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPConnection;
 import javax.xml.soap.SOAPConnectionFactory;
+import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.SOAPPart;
 import javax.xml.transform.Source;
@@ -99,13 +100,16 @@ public class SOAPMap implements Mappable {
 	}
 	
 	public void setDoSend(boolean b) throws UserException {
+		
+		SOAPConnection connection = null;
+		
 		if ( b ) {
 			URL endpoint;
 			try {
 				endpoint = new URL(url);
 
 				SOAPConnectionFactory scf = SOAPConnectionFactory.newInstance();
-				SOAPConnection connection = scf.createConnection();
+				connection = scf.createConnection();
 
 				MessageFactory mf = MessageFactory.newInstance();
 
@@ -151,12 +155,22 @@ public class SOAPMap implements Mappable {
 				transformer.transform(src, result);
 				responseBody = new Binary(sw.toString().getBytes());
 				
+				connection.close();
+				
 			}
 
 			catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace(System.err);
 				throw new UserException(-1, e.getMessage(), e);
+			} finally {
+				if ( connection != null ) {
+					try {
+						connection.close();
+					} catch (SOAPException e) {
+						//e.printStackTrace();
+					}
+				}
 			}
 		}
 	}
