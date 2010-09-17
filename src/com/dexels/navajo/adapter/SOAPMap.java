@@ -29,6 +29,7 @@ import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.util.AuditLog;
 
 public class SOAPMap implements Mappable {
 
@@ -129,9 +130,13 @@ public class SOAPMap implements Mappable {
 				// attachments
 				if ( requestAttachments.size() > 0 ) {
 					for ( int i = 0; i < requestAttachments.size(); i++ ) {
-						AttachmentPart attachment = msg.createAttachmentPart();
-						attachment.setRawContent(requestAttachments.get(i).getContent().getDataAsStream(), requestAttachments.get(i).getMimeType() );
-						msg.addAttachmentPart(attachment);
+						if ( requestAttachments.get(i) != null && requestAttachments.get(i).getContent() != null ) {
+							AttachmentPart attachment = msg.createAttachmentPart();
+							attachment.setRawContent(requestAttachments.get(i).getContent().getDataAsStream(), requestAttachments.get(i).getMimeType() );
+							msg.addAttachmentPart(attachment);
+						} else {
+							AuditLog.log("SOAPMAP", "Could not add empty attachment.");
+						}
 					}
 				}
 				
