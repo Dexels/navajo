@@ -130,7 +130,7 @@ public class SOAPMap implements Mappable {
 				if ( requestAttachments.size() > 0 ) {
 					for ( int i = 0; i < requestAttachments.size(); i++ ) {
 						AttachmentPart attachment = msg.createAttachmentPart();
-						attachment.setRawContent(requestAttachments.get(i).getContent().getDataAsStream(), "text/plain");
+						attachment.setRawContent(requestAttachments.get(i).getContent().getDataAsStream(), requestAttachments.get(i).getMimeType() );
 						msg.addAttachmentPart(attachment);
 					}
 				}
