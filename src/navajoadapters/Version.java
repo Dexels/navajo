@@ -28,6 +28,8 @@ package navajoadapters;
 /**
  * VERSION HISTORY
  *
+ * 3.1.1 Added support for SOAP attachments
+ * 
  * 3.1.0 Now using ALTER Session to set default schema instead of using different connection brokers per username 
  *       (NOTE THAT THIS SOLUTION IS ORACLE SPECIFIC)
  *       
@@ -69,10 +71,10 @@ public class Version extends dexels.Version {
 
 	public static final int    MAJOR       = 3;
 	public static final int    MINOR       = 1;
-	public static final int    PATCHLEVEL  = 0;
+	public static final int    PATCHLEVEL  = 1;
 	public static final String VENDOR      = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Adapter Library";
-	public static final String RELEASEDATE = "2009-10-13";
+	public static final String RELEASEDATE = "2010-09-17";
 
 	//	Included packages.
 	String [] includes = {"navajodocument.Version", "navajo.Version", "navajoclient.Version", "navajofunctions.Version"};

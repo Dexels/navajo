@@ -155,8 +155,6 @@ public class SOAPMap implements Mappable {
 				transformer.transform(src, result);
 				responseBody = new Binary(sw.toString().getBytes());
 				
-				connection.close();
-				
 			}
 
 			catch (Exception e) {
