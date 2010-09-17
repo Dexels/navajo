@@ -26,9 +26,13 @@ import com.dexels.navajo.tipi.components.swingimpl.TipiDialog;
 
 public class TipiSwingDialog extends JDialog{
 
-  public TipiSwingDialog(JFrame f, final TipiDialog comp) {
+  private  ComponentAdapter componentListener;
+  private final JFrame myRootParent;
+public TipiSwingDialog(JFrame f, final TipiDialog comp) {
     super(f);
-    addComponentListener(new ComponentAdapter(){
+ 	myRootParent = f;
+ 	setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+ 	componentListener = new ComponentAdapter(){
 
 		public void componentHidden(ComponentEvent e) {
 		}
@@ -50,13 +54,23 @@ public class TipiSwingDialog extends JDialog{
 		}
 
 		public void componentShown(ComponentEvent e) {
-		}});
+		}};
+	addComponentListener(componentListener);
     
 //    addWindowListener(new WindowListener(){})
   }
 
-public TipiSwingDialog(JRootPane rootPane, TipiDialog comp) {
-	// TODO Auto-generated constructor stub
+  
+@Override
+public void dispose() {
+	System.err.println("DISPOSING TIPISWINGDIALOG");
+	removeComponentListener(componentListener);
+	if(myRootParent!=null) {
+		myRootParent.removeComponentListener(componentListener);
+		myRootParent.getRootPane().removeComponentListener(componentListener);
+	}
+	componentListener = null;
+	super.dispose();
 }
 
 public void setIconUrl(URL u) {

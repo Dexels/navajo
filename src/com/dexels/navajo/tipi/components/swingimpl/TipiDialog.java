@@ -391,15 +391,15 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 		if (rootObject == null) {
 			System.err.println("Null root. Bad, bad, bad.");
 			myDialog = ((SwingTipiContext)myContext).createDialog(this,title);
-			myDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+//			myDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		} else {
 			if (rootObject instanceof RootPaneContainer) {
 				r = (RootPaneContainer) rootObject;
 				if (JFrame.class.isInstance(r)) {
 					// System.err.println("Creating with frame root");
-					myDialog = new TipiSwingDialog((JFrame) r,this);
+					//myDialog = new TipiSwingDialog((JFrame) r,this);
 					myDialog = ((SwingTipiContext)myContext).createDialog(this,title);
-					myDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+//					myDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 					//					myDialog.setUndecorated(true);
 					myRootPaneContainer = myDialog;
 				} else {
@@ -411,19 +411,19 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 						
 						
 						//TODO All use the dialog factory in the SwingTipiContext
-						myDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+//						myDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 						myOffset = jap.getLocationOnScreen();
 						myDialog.setLocation(jap.getLocationOnScreen());
 					} else if (rootObject instanceof JInternalFrame) {
 						myDialog = new TipiSwingDialog((JFrame)((JInternalFrame) rootObject).getTopLevelAncestor() ,this);
-						myDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+//						myDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 						myRootPaneContainer = myDialog;
 					}
 				}
 			} else {
 				System.err.println("R is strange... a: " + rootObject.getClass());
 				myDialog = ((SwingTipiContext)myContext).createDialog(this,title);
-				myDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+//				myDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 			}
 		}
 //		System.err.println("Dialog class: "+myDialog);
