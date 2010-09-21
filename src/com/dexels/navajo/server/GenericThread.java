@@ -83,7 +83,11 @@ public class GenericThread implements Runnable, Mappable {
 		thread = new Thread(instance,myId);
 		thread.setDaemon(true);
 		thread.start();
-		threadPool.put(instance.myId, instance);
+		if ( !threadPool.containsKey(instance.myId) ) {
+			threadPool.put(instance.myId, instance);
+		} else {
+			throw new RuntimeException("Could not start service " + instance.myId + ": already started");
+		}
 	
 	}
 	

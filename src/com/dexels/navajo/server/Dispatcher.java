@@ -161,6 +161,9 @@ public final class Dispatcher implements Mappable, DispatcherMXBean, DispatcherI
 	  
 	  // Startup Jabber.
 	  // navajoConfig.startJabber();
+	
+	  // Startup user defined services.
+	  UserDaemon.startup();
 	  
 	  // Startup task runner.
 	  navajoConfig.startTaskRunner();

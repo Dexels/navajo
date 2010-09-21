@@ -31,7 +31,6 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -40,6 +39,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 
+import com.dexels.navajo.server.NavajoObjectInputStream;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
@@ -244,11 +244,11 @@ public class SharedFileStore implements SharedStoreInterface {
 	 */
 	public Object get(String parent, String name) throws SharedStoreException {
 		File f = new File(sharedStore, parent + "/" + name);
-		ObjectInputStream ois = null;
+		NavajoObjectInputStream ois = null;
 		FileInputStream fis = null;
 		try {
 			fis = new FileInputStream(f);
-			ois = new ObjectInputStream(fis);
+			ois = new NavajoObjectInputStream(fis, DispatcherFactory.getInstance().getNavajoConfig().getClassloader());
 			Object o = ois.readObject();
 			return o;
 		} catch (Exception e) {
