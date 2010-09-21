@@ -52,28 +52,34 @@ public class UserDaemon extends GenericThread {
 		//System.err.println("************************************************************************************************\n\n");
 		try {
 			Navajo services = DispatcherFactory.getInstance().getNavajoConfig().readConfig("daemons.xml");
-			List<Message> serviceList = services.getMessage("daemons").getElements();
-			for ( int i = 0; i < serviceList.size(); i++ ) {
-				Message m = serviceList.get(i);
-				Property className = m.getProperty("ClassName");
-				Property sleepTime = m.getProperty("SleepTime");
-				// Make sure to intialize instance!
-				ClassLoader cl = DispatcherFactory.getInstance().getNavajoConfig().getClassloader();
-				try {
-					Class c = Class.forName(className.getValue(), true,cl);
-					UserDaemon ud = (UserDaemon) c.newInstance();
-					ud.setSleepTime(Integer.parseInt(sleepTime.getValue()));
-					startService(ud);
-				} catch (Exception e) {
-					AuditLog.log("USERDAEMON", "Could not instantiate user daemon class: " + className.getValue() + ", reason: " + e.getMessage());
-				} 
-				
+			if ( services != null && services.getMessage("daemons") != null ) {
+				List<Message> serviceList = services.getMessage("daemons").getElements();
+				for ( int i = 0; i < serviceList.size(); i++ ) {
+					Message m = serviceList.get(i);
+					Property className = m.getProperty("ClassName");
+					Property sleepTime = m.getProperty("SleepTime");
+					if ( className == null ) {
+						throw new RuntimeException("Property ClassName missing in daemons.xml");
+					}
+					if ( sleepTime == null ) {
+						throw new RuntimeException("Property SleepTime missing in daemons.xml");
+					}
+					// Make sure to intialize instance!
+					ClassLoader cl = DispatcherFactory.getInstance().getNavajoConfig().getClassloader();
+					try {
+						Class c = Class.forName(className.getValue(), true,cl);
+						UserDaemon ud = (UserDaemon) c.newInstance();
+						ud.setSleepTime(Integer.parseInt(sleepTime.getValue()));
+						startService(ud);
+					} catch (Exception e) {
+						AuditLog.log("USERDAEMON", "Could not instantiate user daemon class: " + className.getValue() + ", reason: " + e.getMessage());
+					} 
+				}
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 	
 	public UserDaemon(String id) {
