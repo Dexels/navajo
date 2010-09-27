@@ -115,16 +115,27 @@ public final class DbConnectionBroker extends Object
 
 			if ( sanityCheck ) {
 				// Check if it is the proper connection...
+
 				String metaUsername = conn.getMetaData().getUserName();
+//				System.err.println("Meta username: "+metaUsername);
+				
+				// MySql fix: My sql will add @localhost after the username, which confuses this test.
+				// It won't reuse connections because this test always fails.
+				if(metaUsername.indexOf("@")!=-1) {
+					metaUsername = metaUsername.split("@")[0];
+				}
+//				System.err.println("Meta username now: "+metaUsername);
 				String metaLocation = conn.getMetaData().getURL();
 				if ( !metaUsername.toLowerCase().equals(this.username.toLowerCase()) ||
 						!metaLocation.toLowerCase().equals(this.location.toLowerCase())) {
 					try {
 						conn.close();
-						System.err.println("FOUND ILLEGAL CONNECTION.");
+						System.err.println("FOUND ILLEGAL CONNECTION: ");
 						AuditLog.log("GRUS", "Found ILLEGAL connection " + metaLocation+"/"+metaUsername +
 								", EXPECTED: " + this.location + "/" + this.username);
-					} catch (Exception e) {}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 					return false;
 				}
 			}
