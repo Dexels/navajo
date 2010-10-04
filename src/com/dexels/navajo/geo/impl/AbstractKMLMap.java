@@ -246,8 +246,9 @@ public abstract class AbstractKMLMap {
 		lod.addTagKeyValue("maxFadeExtent", "428");
 		region.addChild(lod);
 		
-		placemark.addTagKeyValue("styleUrl","#" + message.getProperty("StyleRef").getTypedValue());
-		
+		if ( message.getProperty("StyleRef") != null ) {
+			placemark.addTagKeyValue("styleUrl","#" + message.getProperty("StyleRef").getTypedValue());
+		}
 		
 		
 		return placemark;
