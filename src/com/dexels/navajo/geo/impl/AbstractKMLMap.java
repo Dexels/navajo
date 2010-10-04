@@ -152,25 +152,32 @@ public abstract class AbstractKMLMap {
 		kml.addChild(document);
 
 		Message c = n.getMessage("Styles");
-		List<Message> colors = c.getAllMessages();
-		for (Message message : colors) {
-			XMLElement style = new CaseSensitiveXMLElement("Style");
-			XMLElement iconStyle = new CaseSensitiveXMLElement("IconStyle");
-			
-			style.setAttribute("id", message.getProperty("StyleRef").getTypedValue());
-			style.addChild(iconStyle);
-			
-			if ( message.getProperty("IconColor") != null ) {
-				iconStyle.addTagKeyValue("color", "ff" + message.getProperty("IconColor").getTypedValue()+"");
-			} else {
-				iconStyle.addTagKeyValue("colorMode", "random");
+		
+		if ( c != null ) {
+			List<Message> colors = c.getAllMessages();
+			for (Message message : colors) {
+				XMLElement style = new CaseSensitiveXMLElement("Style");
+				XMLElement iconStyle = new CaseSensitiveXMLElement("IconStyle");
+
+				style.setAttribute("id", message.getProperty("StyleRef").getTypedValue());
+				style.addChild(iconStyle);
+
+				if ( message.getProperty("IconColor") != null ) {
+					iconStyle.addTagKeyValue("color", "ff" + message.getProperty("IconColor").getTypedValue()+"");
+				} else {
+					iconStyle.addTagKeyValue("colorMode", "random");
+				}
+
+				XMLElement icon = new CaseSensitiveXMLElement("Icon");
+				iconStyle.addChild(icon);
+				String iconShape = "http://maps.google.com/mapfiles/kml/shapes/play.png";
+				if ( message.getProperty("Icon") != null ) {
+					iconShape = "http://maps.google.com/mapfiles/kml/" + message.getProperty("Icon").getTypedValue();
+				}
+				icon.addTagKeyValue("href", iconShape);
+
+				document.addChild(style);
 			}
-			
-			XMLElement icon = new CaseSensitiveXMLElement("Icon");
-			iconStyle.addChild(icon);
-			icon.addTagKeyValue("href","http://maps.google.com/mapfiles/kml/shapes/play.png");
-			
-			document.addChild(style);
 		}
 		
 		
