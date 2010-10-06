@@ -121,6 +121,8 @@ public final class NavajoConfig implements NavajoConfigInterface {
 	private OperatingSystemMXBean myOs = null;
 
 	private String compilationLanguage;
+
+	private File contextRoot;
     
 	/**
 	 * Creates a fresh NavajoConfig object.
@@ -158,6 +160,9 @@ public final class NavajoConfig implements NavajoConfigInterface {
     @SuppressWarnings("unchecked")
 	private void loadConfig(InputStream in, String externalRootPath, String servletContextPath)  throws SystemException{
     	
+   	 
+		contextRoot = new File(servletContextPath);
+
     	configuration = NavajoFactory.getInstance().createNavajo(in);
     	
     	body = configuration.getMessage("server-configuration");
@@ -355,8 +360,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
 				}
 			} else {
 				System.err.println("No jar path found");
-				File root = new File(servletContextPath);
-				jarFolder = new File(root,"WEB-INF/lib/");				
+				jarFolder = new File(contextRoot,"WEB-INF/lib/");				
 				System.err.println("New jarfolder: "+jarFolder.getAbsolutePath());
 			}	
 		    					
@@ -548,6 +552,9 @@ public final class NavajoConfig implements NavajoConfigInterface {
     public InputStream getResourceBundle(String name) throws IOException {
    	File adPath = new File(getAdapterPath());
 		File bundleFile = new File(adPath,name);
+		if(!bundleFile.exists()) {
+			return null;
+		}
 		System.err.println("File based resource path. Using: "+bundleFile);
 		FileInputStream fix = new FileInputStream(bundleFile+".properties");
 		return fix;
