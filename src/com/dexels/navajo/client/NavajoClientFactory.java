@@ -2,12 +2,17 @@ package com.dexels.navajo.client;
 
 import java.util.*;
 
+import com.dexels.navajo.client.impl.BaseNavajoClientLogger;
+import com.dexels.navajo.client.logger.ClientLogger;
+
 /**
  * Use the NavajoClientFactory for instantiating NavajoClients. The factory keeps track of all instances
  */
 
 public class NavajoClientFactory {
   private static ClientInterface myClient = null;
+
+  private static ClientLogger clientLoggerInstance;
 
   private static final Map<String,ClientInterface> clientMap = new HashMap<String,ClientInterface>();
 
@@ -152,4 +157,10 @@ public class NavajoClientFactory {
   }
   
 
+  public static ClientLogger getClientLogger() {
+	  if(clientLoggerInstance==null) {
+		  clientLoggerInstance = new BaseNavajoClientLogger();
+	  }
+	  return clientLoggerInstance;
+  }
 }

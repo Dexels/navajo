@@ -206,4 +206,5 @@ public void setCurrentHost(String host);
 
 public boolean attemptPushRegistration(String agentId);
 	
+public void setAllowCompression(boolean allowCompression);
 }

@@ -1,5 +1,5 @@
 /**
- * Title:        Navajo<p>
+  * Title:        Navajo<p>
  * Description:  <p>
  * Copyright:    Copyright (c) Arjen Schoneveld<p>
  * Company:      Dexels<p>
@@ -95,11 +95,12 @@ public class NavajoClient implements ClientInterface {
 	private int globalRetryCounter = 0;
 	private String localeCode = null;
 	private String subLocale;
-	private static boolean silent = true;
-	  
-  private boolean killed = false;
-  private boolean pingStarted = false;
-  
+	private boolean allowCompression = true;
+//	private static boolean silent = true;
+//	  
+//  private boolean killed = false;
+//  private boolean pingStarted = false;
+//  
   // Disable for one minute. Bit short, should be maybe an hour, but better for debugging.
   private static final long serverDisableTimeout = 60000;
   
@@ -250,9 +251,6 @@ public class NavajoClient implements ClientInterface {
    * USE SET SERVERURLS
    */
   public final void setServerUrl(String url) {
-//    host = url;
-//	  System.err.println("Warning: setServerURL is deprecated! DON'T USE IT!");
-//	  Thread.dumpStack();
 	  serverUrls = new String[]{url};
 	  setServers(serverUrls);
 	  }
@@ -414,7 +412,7 @@ public class NavajoClient implements ClientInterface {
     if (getCurrentHost() == null) {
       throw new ClientException(1, 1, "No host set!");
     }
-    return doSimpleSend(out, getCurrentHost(), method, username, password, expirationInterval, true, false);
+    return doSimpleSend(out, getCurrentHost(), method, username, password, expirationInterval, allowCompression , false);
   }
 
   /**
@@ -570,7 +568,7 @@ public class NavajoClient implements ClientInterface {
     else {
       url = new URL("http://" + name );
     }
-
+    System.err.println("Opening connection to url: "+url.toString());
     HttpURLConnection con = null;
     if (sslFactory == null) {
       con = (HttpURLConnection) url.openConnection();
@@ -606,6 +604,7 @@ public class NavajoClient implements ClientInterface {
     con.setRequestProperty("Content-type", "text/xml; charset=UTF-8");
     appendHeaderToHttp(con,d.getHeader());    
     
+    con.setRequestProperty("Connection", "Keep-Alive");
 
     con.setRequestProperty("Host", "localhost");
     if ( forcePreparseProxy ) {
@@ -619,7 +618,7 @@ public class NavajoClient implements ClientInterface {
     } catch (Throwable e) {
      	System.err.println("setChunkedStreamingMode does not exist, upgrade to java 1.5+");
     }
-    
+    System.err.println("Headers complete");
     if (useCompression) {
     	con.setRequestProperty("Accept-Encoding", "jzlib");
     	con.setRequestProperty("Content-Encoding", "jzlib");
@@ -639,16 +638,15 @@ public class NavajoClient implements ClientInterface {
 				}
     		}
     	}
-    }
-    else {
+    } else {
     	//con.connect();
-    	   con.setRequestProperty("noCompression", "true");
+    	con.setRequestProperty("noCompression", "true");
     	BufferedWriter os = null;
     	try {
 //    		System.err.println("Using no compression!");
     		os = new BufferedWriter(new OutputStreamWriter(con.getOutputStream(), "UTF-8"));
 //    		os.write("apenootjes");
-    		//d.write(os, condensed, d.getHeader().getRPCName());    	
+    		d.write(os, condensed, d.getHeader().getRPCName());    	
     	} finally {
     		if ( os != null ) {
     			try {
@@ -716,7 +714,7 @@ public class NavajoClient implements ClientInterface {
    * @return Navajo
    */
   public final Navajo doSimpleSend(Navajo out, String server, String method, String user, String password, long expirationInterval) throws ClientException {
-    return doSimpleSend(out, server, method, user, password, expirationInterval, true, false);
+    return doSimpleSend(out, server, method, user, password, expirationInterval, allowCompression, false);
   }
 
   //   navajo://frank:aap@192.0.0.1/InitUpdateMember
@@ -1758,7 +1756,7 @@ public final void switchServer(boolean force) {
 //			    catch (NavajoException ex) {
 //			      ex.printStackTrace();
 //			    }
-			    return doSimpleSend(out, getCurrentHost(serverIndex), method, username, password, -1, true, true);
+			    return doSimpleSend(out, getCurrentHost(serverIndex), method, username, password, -1, allowCompression, true);
 		}
 
 	public int getAsyncServerIndex() {
@@ -1828,11 +1826,11 @@ public final void switchServer(boolean force) {
 	}
 	
 	public void finalize() {
-		killed = true;
+//		killed = true;
 	}
 	
 	public void dispose() {
-		killed = true;
+//		killed = true;
 	}
 	
 	public void init(String rootPath, String serverXmlPath) throws ClientException {
@@ -1979,10 +1977,22 @@ public final void switchServer(boolean force) {
 		
 	}
 	
+	public boolean isAllowCompression() {
+		return allowCompression;
+	}
+
+	public void setAllowCompression(boolean allowCompression) {
+		this.allowCompression = allowCompression;
+	}
+
 	public static void main(String [] args) throws Exception {
 		NavajoClient nc = new NavajoClient();
-		nc.setServerUrl("penelope1.dexels.com/sportlink/knvb/servlet/Postman");
-		nc.doTransaction("penelope1.dexels.com/sportlink/knvb/servlet/Postman", NavajoFactory.getInstance().createNavajo(), false, false);
-		
+//		nc.setServerUrl("penelope1.dexels.com/sportlink/knvb/servlet/Postman");
+//		nc.doTransaction("penelope1.dexels.com/sportlink/knvb/servlet/Postman", NavajoFactory.getInstance().createNavajo(), false, false);
+		nc.setUsername("ROOT");
+		nc.setPassword("ROOT");
+		nc.setServerUrl("spiritus.dexels.nl:9080/JsSportlink/Comet");
+		Navajo res = nc.doSimpleSend(NavajoFactory.getInstance().createNavajo(), "tests/InitNavajoMapTest3");
+		res.write(System.err);
 	}
 }
