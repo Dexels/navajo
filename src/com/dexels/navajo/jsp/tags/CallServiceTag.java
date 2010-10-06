@@ -36,21 +36,22 @@ public class CallServiceTag extends BaseNavajoTag {
 		if(myService==null || "".equals(myService)) {
 			throw new JspException("Error calling service: No service supplied!");
 		}
+		System.err.println("Calling service: "+myService);
 		try {
 			if (myNavajo==null) {
 				getNavajoContext().callService(myService);
 			} else {
 				Navajo navajo = getNavajoContext().getNavajo(myNavajo);
-				if(navajo!=null) {
-					System.err.println("Using input:");
-					try {
-						navajo.write(System.err);
-					} catch (NavajoException e) {
-						e.printStackTrace();
-					}
-				} else {
-					System.err.println("Input requested: "+myNavajo+" but not found in context!!");
-				}
+//				if(navajo!=null) {
+//					System.err.println("Using input:");
+//					try {
+//						navajo.write(System.err);
+//					} catch (NavajoException e) {
+//						e.printStackTrace();
+//					}
+//				} else {
+//					System.err.println("Input requested: "+myNavajo+" but not found in context!!");
+//				}
 				getNavajoContext().callService(myService, navajo);
 			}
 		} catch (ClientException e) {
@@ -72,7 +73,7 @@ public class CallServiceTag extends BaseNavajoTag {
 				e.printStackTrace();
 			}
 			// reset
-			resultNavajo = null;
+		//	resultNavajo = null;
 
 //			getNavajoContext().pushMessage(error);
 //			try {
@@ -86,7 +87,7 @@ public class CallServiceTag extends BaseNavajoTag {
 //			throw new JspException("Server-side service error while calling service: "+myService+"\nProblem: "+sw);
 		}
 		error = resultNavajo.getMessage("ConditionErrors");
-		if(error!=null) {
+		if(error!=null) { 
 			StringWriter sw = new StringWriter();
 			try {
 				error.write(sw);

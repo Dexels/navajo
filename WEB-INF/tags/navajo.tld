@@ -56,6 +56,18 @@
 	      <rtexprvalue>true</rtexprvalue>
       </attribute>
    </tag>
+   
+   <tag>
+      <name>tml</name>
+      <tagclass>com.dexels.navajo.jsp.tags.TmlTag</tagclass>
+      <info>Parses TML, and pushes it on the stack as navajo object. Accepts Strings and Binaries</info>
+      <attribute>
+         <name>content</name>
+         <required>true</required>
+	     <rtexprvalue>true</rtexprvalue>
+      </attribute>
+   </tag>
+   
 
    <tag>
       <name>dump</name>

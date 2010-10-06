@@ -73,11 +73,12 @@ public class MessageTag extends BaseNavajoTag {
 		if(messageIndex>-1) {
 			message = parent.getMessage(messageIndex);
 		}
-		System.err.println("Pushing message:");
-		try {
-			message.write(System.err);
-		} catch (NavajoException e) {
-			e.printStackTrace();
+		if(message!=null) {
+			try {
+				message.write(System.err);
+			} catch (NavajoException e) {
+				e.printStackTrace();
+			}
 		}
 		getNavajoContext().pushMessage(message);
 		return EVAL_BODY_INCLUDE;

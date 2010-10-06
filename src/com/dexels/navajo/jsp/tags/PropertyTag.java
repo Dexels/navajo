@@ -26,6 +26,8 @@ public class PropertyTag extends BaseNavajoTag {
 	@Override
 	public int doEndTag() throws JspException {
 		getNavajoContext().popProperty();
+		property = null;
+		propertyName = null;
 		return EVAL_PAGE;
 	}
 
@@ -39,19 +41,13 @@ public class PropertyTag extends BaseNavajoTag {
 			if(property==null) {
 				Message parent = getNavajoContext().getMessage();
 				if(parent!=null) {
-					System.err.println("Getting property: "+propertyName+" from parent: "+parent.getFullMessageName());
-					try {
-						parent.write(System.err);
-					} catch (NavajoException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
 					property = parent.getProperty(propertyName);
 				} else {
 					n = getNavajoContext().getNavajo();
 					property = n.getProperty(propertyName);
 				}
 			}
+		
 			getNavajoContext().pushProperty(property);
 			
 		return EVAL_BODY_INCLUDE;

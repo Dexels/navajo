@@ -10,9 +10,11 @@ import javax.servlet.jsp.PageContext;
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.client.NavajoClientFactory;
+import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 
 
@@ -22,6 +24,7 @@ public class NavajoContext {
 	private final Map<String, Navajo> myNavajoMap = new HashMap<String, Navajo>();
 	private final Map<Navajo, String> myInverseNavajoMap = new HashMap<Navajo, String>();
 	private final Stack<Object> myElementStack = new Stack<Object>();
+	private boolean debugAll;
 
 	public NavajoContext() {
 		//System.err.println("New navajo context");
@@ -35,13 +38,7 @@ public class NavajoContext {
 	}
 	
 	public void callService(String service) throws ClientException {
-		Navajo n = myClient.doSimpleSend(service);
-		myNavajoMap.put(service, n);
-		myInverseNavajoMap.put(n, service);
-		// let the tags handle the pushing themselves!
-		//		myElementStack.push(n);
-		System.err.println("Pushed navajo");
-		//		System.err.println("initcall... stack size: "+myElementStack.size());
+		callService(service,null);
 	}
 	
 	public Map<String,Navajo> getNavajos() {
@@ -54,23 +51,38 @@ public class NavajoContext {
 	
 	public void callService(String service, Navajo input)
 			throws ClientException {
-		if(input==null) {
-			callService(service);
-			return;
+		if(myClient==null) {
+			throw new ClientException(1,-1,"No client has been set up!");
 		}
+		System.err.println("Calling to server: "+myClient.getServerUrl()+" username: "+myClient.getUsername()+" pass: "+myClient.getPassword()+" hash: "+myClient.hashCode());
+		if(input==null) {
+			input = NavajoFactory.getInstance().createNavajo();
+		}
+		Header outHeader = input.getHeader();
+		if(outHeader==null) {
+			outHeader = NavajoFactory.getInstance().createHeader(input, service, null,null, -1);
+			input.addHeader(outHeader);
+		}
+		if(debugAll) {
+			outHeader.setHeaderAttribute("fullLog", "true");
+		}
+		
+		long time = System.currentTimeMillis();
 		Navajo n = myClient.doSimpleSend(input, service);
-			n.getHeader().setRPCName(service);
+		System.err.println("Send complete!");
+		n.getHeader().setRPCName(service);
 		myNavajoMap.put(service, n);
 		myInverseNavajoMap.put(n, service);
-		// let the tags handle the pushing themselves!
-//		myElementStack.push(n);
-//		System.err.println("call... stack size: "+myElementStack.size());
-
+		long time2 = System.currentTimeMillis() - time;
+		System.err.println("Call took: "+time2+" millis!");
 	}
 
 	public boolean hasNavajo(String name) {
 		return myNavajoMap.containsKey(name);
 	}
+	
+	
+	
 
 	public int getStackSize() {
 		return myElementStack.size();
@@ -230,12 +242,17 @@ public class NavajoContext {
 		return requestBuffer.toString();
 	}
 	public void setupClient(String server, String username, String password, PageContext pa) {
-		Thread.dumpStack();
-		System.err.println("Setupclient: "+server+" user: "+username+" pass: "+password);
+		setupClient(server, username, password, pa,false);
+	}
+	
+	public void setupClient(String server, String username, String password, PageContext pa, boolean debugAll) {
+//		Thread.dumpStack();
+//		System.err.println("Setupclient: "+server+" user: "+username+" pass: "+password);
 		NavajoClientFactory.resetClient();
 //			NavajoClientFactory.createDefaultClient()
 		 myClient = NavajoClientFactory.getClient();
-		if (username == null) {
+		 myClient.setAllowCompression(false);
+		 if (username == null) {
 			username = "demo";
 		}
 		myClient.setUsername(username);
@@ -248,6 +265,7 @@ public class NavajoContext {
 		}
 		myClient.setServerUrl(server);		
 		myClient.setRetryAttempts(0);
+		this.debugAll = debugAll;
 	}
 	
 	public void debug() {
@@ -357,6 +375,8 @@ public class NavajoContext {
 		myElementStack.pop();
 		
 	}
+
+
 
 
 	
