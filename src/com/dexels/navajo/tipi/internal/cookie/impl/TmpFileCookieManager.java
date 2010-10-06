@@ -68,11 +68,13 @@ public class TmpFileCookieManager implements CookieManager {
 				line = fw.readLine();
 				continue;
 			}
-			StringTokenizer st = new StringTokenizer(line, "|");
-			String key = st.nextToken();
-			String value = st.nextToken();
-			cookieMap.put(key, value);
-			line = fw.readLine();
+			if(line.indexOf('|')!=-1) {
+				StringTokenizer st = new StringTokenizer(line, "|");
+				String key = st.nextToken();
+				String value = st.nextToken();
+				cookieMap.put(key, value);
+				line = fw.readLine();
+			}
 		}
 	}
 
