@@ -7,6 +7,7 @@ package com.dexels.navajo.adapter;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class DirMap implements Mappable {
 
 	public final List<FileEntryMap> fileEntry = new ArrayList<FileEntryMap>();
 	public String path;
+	public String extension;
 	private File currentPath = null;
 
 	public synchronized String getPath() {
@@ -48,7 +50,6 @@ public class DirMap implements Mappable {
 	public synchronized void setPath(String path) {
 		this.path = path;
 		currentPath = new File(path);
-		
 		File[] aaa = currentPath.listFiles();
 		for (File file : aaa) {
 			if(file.isFile()) {
@@ -98,7 +99,7 @@ public class DirMap implements Mappable {
 			System.err.println("file name: "+f.getName()+" age: "+f.getMimeType()+" age: "+f.getFileAge()+" size: "+f.getSize());
 			if(f.getName().equals("aap.txt")) {
 				System.err.println("Aap detected!");
-				f.setDoDelete(true);
+				f.setDelete(true);
 			}
 		}
 

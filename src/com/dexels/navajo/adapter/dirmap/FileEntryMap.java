@@ -14,28 +14,46 @@ public class FileEntryMap {
 	public void setAbsolutePath(String path) throws IOException {
 		setFile(new File(path));
 	}
-	
+
+	public String getAbsolutePath() {
+		return file.getAbsolutePath();
+	}
 	public void setFile(File file) throws IOException {
 		this.file = file;
+		createBinary(file);
+	}
+
+	protected Binary createBinary(File file) throws IOException {
 		contents = new Binary(file);
+		return contents;
 	}
 
 	public int getFileAge() {
-		return (int) (System.currentTimeMillis() - file.lastModified());
+		long age = System.currentTimeMillis() - file.lastModified();
+		if(age > Integer.MAX_VALUE) {
+			return Integer.MAX_VALUE;
+		}
+		return (int) age;
 	}
 	public int getSize() {
 		return (int) file.length();
 	}
 
-	public String getMimeType() {
+	public String getMimeType() throws IOException {
+		if(contents==null) {
+			createBinary(file);
+		}
 		return contents.getMimeType();
 	}
 
 	public Binary getContents() throws IOException {
+		if(contents==null) {
+			createBinary(file);
+		}
 		return contents;
 	}
 	
-	public void setDoDelete(boolean b) {
+	public void setDelete(boolean b) {
 		file.delete();
 	}
 
