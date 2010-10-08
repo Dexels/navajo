@@ -356,6 +356,12 @@
         <input/>
         <result/>
     </function>
+    <function name="GetValue" class="com.dexels.navajo.functions.GetValue">
+        <description>Gets a property from a string</description>
+        <input/>
+        <result/>
+    </function>
+    
     <function name="GetPropertyType" class="com.dexels.navajo.functions.GetPropertyType">
         <description>Gets the type of property as a string</description>
         <input/>
