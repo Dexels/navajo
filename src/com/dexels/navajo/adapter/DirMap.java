@@ -19,7 +19,6 @@ import com.dexels.navajo.adapter.filemap.*;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.UserException;
-import com.sun.tools.javac.code.Type.ForAll;
 
 /**
  * @author arjen
