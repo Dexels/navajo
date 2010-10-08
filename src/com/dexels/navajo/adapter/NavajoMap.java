@@ -591,7 +591,7 @@ private Object waitForResult = new Object();
 	  }
   }
   
-  private Property getPropertyObject(String fullName) throws UserException {
+  public Property getPropertyObject(String fullName) throws UserException {
 	  waitForResult();
 
 	  Property p = null;
