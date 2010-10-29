@@ -7,17 +7,22 @@ public class Field {
 	private LatLon center;
 	private double bearing;
 	private String id;
+	private boolean isHalfField = false;
 	
 	public Field(LatLon center, double bearing) {
 		this.bearing = bearing;
 		this.center = center;
-		LatLon topL = center.moveTo(LENGTH/2, bearing).moveTo(WIDTH / 2, bearing-90);
+		LatLon topL = center.moveTo(LENGTH/2, bearing).moveTo(WIDTH / 2, bearing-90);		
 		LatLon topR = topL.moveTo(WIDTH, bearing+90);
 		LatLon bottomR = topR.moveTo(LENGTH, bearing+180);
 		LatLon bottomL = bottomR.moveTo(WIDTH, bearing-90);
 		corners = new LatLon[]{topL,topR,bottomR,bottomL};
 	}
 
+	public void setIsHalfField(boolean b){
+		this.isHalfField = b;
+	}
+	
 	public LatLon[] getCorners() {
 		return corners;
 	}
@@ -39,10 +44,20 @@ public class Field {
 	}
 	
 	public LatLon getRotationPoint() {
-		return center.moveTo(LENGTH, bearing);
+		//return corners[0];
+		int divider = 2;
+		if(isHalfField){
+			divider = 4;
+		}
+		double lengthpos = LENGTH/divider;
+		return center.moveTo(lengthpos, bearing);
 	}	
 	
 	public LatLon getOppositeCorner() {
 		return center.moveTo(LENGTH, bearing).moveTo(LENGTH, bearing+90);
+	}
+	
+	public void setBearing(double bearing){
+		this.bearing = bearing;
 	}
 }

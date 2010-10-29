@@ -32,6 +32,13 @@ public class FacilityMarker {
 		this.distance = distance;
 	}
 
+	public void setHalffield(boolean b){
+		if(currentField != null){
+			currentField.setIsHalfField(b);
+			System.err.println("Half field set: "  + currentField.getId());
+		}
+	}
+	
 	public int getIndex() {
 		return index;
 	}
@@ -42,11 +49,24 @@ public class FacilityMarker {
 		currentSubfacility = current.moveTo( getDistance(), bearing);
 		currentField = new Field(currentSubfacility,bearing);
 		currentField.setId(getId()+"/"+index);
+		System.err.println("Set index: " + index + " pos: " + currentSubfacility.getCoordinates());
 	}
 
 
 	public void setCurrentPosition(String coordinates) {
-		current = new LatLon(coordinates);		
+		if(coordinates != null && coordinates.trim().length() > 1){
+			current = new LatLon(coordinates);		
+			currentField = new Field(current,0);
+			currentField.setId(getId()+"/"+index);
+			System.err.println("Field:  " + currentField.getId() + " pos: " + current.getCoordinates());
+		}
+	}
+	
+	public void setBearing(String bearing){
+		if(bearing != null && !"".equals(bearing) && currentField != null){
+			currentField.setBearing(Double.parseDouble(bearing));
+			System.err.println("Bearing set: "  + bearing);
+		}
 	}
 
 	// account for message, if present.
