@@ -10,6 +10,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import sun.tools.tree.DoStatement;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.types.*;
@@ -19,6 +21,7 @@ import com.dexels.navajo.tipi.internal.*;
 import com.sun.mail.imap.protocol.MailboxInfo;
 
 public class TipiMailConnector extends TipiBaseConnector implements TipiConnector {
+	private long disconnectTimeout = 20000;
 	private String host = "";
 	private String username = "";
 	private String password = "";
@@ -35,8 +38,18 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 
 	private int pageSize = 0;
 	private int currentPage = 1;
+	
+	private Timer disconnectTimer = new Timer("DisconnectTimer",true);
+	
 
 	public void doTransaction(Navajo n, String service, String destination) throws TipiBreakException, TipiException {
+		try {
+			ensureOpenConnection();
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+
+		activity();
 		if (service == null) {
 			service = "InitMail";
 		}
@@ -78,6 +91,38 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		}
 		if (service.equals("SendMessage")) {
 			sendMessage(n);
+		}
+	}
+
+	private void activity() {
+		// something happened. Reset disconnect imeout
+		if(disconnectTimer==null) {
+			return;
+		}
+		if(disconnectTimeout > 0) {
+			disconnectTimer.cancel();
+			disconnectTimer = new Timer("DisconnectTimer",true);
+			disconnectTimer.schedule(new TimerTask(){
+
+				@Override
+				public void run() {
+					synchronized(this) {
+						System.err.println("Timing out!");
+						try {
+							disconnect();
+							performTipiEvent("onTimeout", null, false);
+						} catch (MessagingException e) {
+							e.printStackTrace();
+						} catch (TipiBreakException e) {
+							e.printStackTrace();
+						} catch (TipiException e) {
+							e.printStackTrace();
+						}
+						if(disconnectTimer!=null) {
+							disconnectTimer.cancel();
+						}
+					}
+				}}, disconnectTimeout);
 		}
 	}
 
@@ -131,11 +176,6 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 
 	private Navajo createGetMessage(Navajo n) throws TipiException {
 		String name = null;
-		try {
-			n.write(System.err);
-		} catch (NavajoException e) {
-			e.printStackTrace();
-		}
 		name = (String) n.getProperty("/Folder/Name").getTypedValue();
 
 		if ("POP3".equalsIgnoreCase(mailMode)) {
@@ -175,11 +215,9 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		return true;
 	}
 
-	private Navajo createSingleMessageNavajo(String name, int messageNumber) throws TipiException {
+	private synchronized Navajo createSingleMessageNavajo(String name, int messageNumber) throws TipiException {
 		try {
-			if(!fff.isOpen()) {
-				connect();
-			}
+			ensureOpenConnection();
 			javax.mail.Message m = fff.getMessage(messageNumber);
 			m.setFlag(Flag.SEEN, true);
 			Navajo myNavajo = NavajoFactory.getInstance().createNavajo();
@@ -187,7 +225,6 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 			myNavajo.addMessage(mm);
 			Object content = m.getContent();
 			if (content instanceof MimeMultipart) {
-				System.err.println("Multipart found");
 				Message parts = NavajoFactory.getInstance().createMessage(myNavajo, "Parts", Message.MSG_TYPE_ARRAY);
 				mm.addMessage(parts);
 				MimeMultipart r = (MimeMultipart) content;
@@ -201,10 +238,6 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 					addProperty(part, "Disposition", bp.getDisposition(), "string");
 					Binary b = new Binary(bp.getInputStream(), false);
 					addProperty(part, "Content", b, "binary");
-					// if(bp.getDisposition()==null) {
-					// System.err.println("Mail content: "+bp.getContent());
-					// }
-					// System.err.println("Part: "+i+":\n"+r.getBodyPart(i).getContent());
 				}
 			} else {
 				Binary b = new Binary(m.getInputStream(), false);
@@ -215,13 +248,6 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 				addProperty(mm, "Disposition", m.getDisposition(), "string");
 				addProperty(mm, "Content", b, "binary");
 			}
-			// System.err.println("Content class: "+m.getInputStream().getClass()
-			// );
-			// addProperty(current, "ContentType",
-			// currentImapMessage.getContentType(), Property.STRING_PROPERTY);
-			// myNavajo.write(System.err);
-			// fff.close(false);
-
 			return myNavajo;
 		} catch (MessagingException e) {
 			throw new TipiException("Error getting message: " + messageNumber + " from box: " + name, e);
@@ -229,6 +255,17 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 			throw new TipiException("Error getting message: " + messageNumber + " from box: " + name, e);
 		} catch (IOException e) {
 			throw new TipiException("Error getting message: " + messageNumber + " from box: " + name, e);
+		}
+	}
+
+	protected void ensureOpenConnection() throws MessagingException {
+		if(store==null) {
+			connect();
+			return;
+		}
+		if(fff==null || !fff.isOpen()) {
+			connect();
+			return;
 		}
 	}
 
@@ -296,6 +333,9 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		if (name.equals("currentPage")) {
 			setCurrentPage((Integer) object);
 		}
+		if (name.equals("disconnectTimeout")) {
+			disconnectTimeout = (Integer)object;
+		}
 
 		super.setComponentValue(name, object);
 	}
@@ -311,6 +351,9 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		if (name.equals("currentPage")) {
 			return currentPage;
 		}
+		if (name.equals("disconnectTimeout")) {
+			return disconnectTimeout;
+		}
 
 		return super.getComponentValue(name);
 	}
@@ -319,8 +362,8 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		if (pageSize == 0) {
 			return 1;
 		} else {
-			System.err.println("# messages: " + messageCount + " pagesize: " + pageSize + " pageCount: "
-					+ ((int) (messageCount / pageSize)));
+//			System.err.println("# messages: " + messageCount + " pagesize: " + pageSize + " pageCount: "
+//					+ ((int) (messageCount / pageSize)));
 			return (int) Math.ceil((double) messageCount / pageSize);
 		}
 	}
@@ -347,7 +390,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 			}
 		}
 		if (name.equals("disconnect")) {
-			System.err.println("Disconnecting mail");
+//			System.err.println("Disconnecting mail");
 			try {
 				fff.close(true);
 				disconnect();
@@ -379,6 +422,12 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 	}
 
 	private void setCurrentPage(int p) throws TipiBreakException {
+		try {
+			ensureOpenConnection();
+		} catch (MessagingException e1) {
+			e1.printStackTrace();
+		}
+
 		if (p < 1 || p > getPageCount() || p == currentPage) {
 			return;
 		}
@@ -390,7 +439,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		}
 	}
 
-	public void connect() throws MessagingException {
+	public synchronized void connect() throws MessagingException {
 		Properties props = new Properties();
 		session = Session.getDefaultInstance(props, null);
 		store = session.getStore(mailMode);
@@ -419,7 +468,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 					// params.put("messageCount", messageCount);
 					// params.put("unreadMessageCount", unreadMessageCount);
 					performTipiEvent("onConnectionCreated", params, false);
-					System.err.println("Connection created event!");
+//					System.err.println("Connection created event!");
 				} catch (TipiException e1) {
 					e1.printStackTrace();
 				}
@@ -448,7 +497,6 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 			}
 		};
 		store.addStoreListener(myStoreListener);
-		System.err.println("Connecting to: "+host+" username: "+username);
 		store.connect(host, username, password);
 		if ("POP3".equalsIgnoreCase(mailMode)) {
 			fff = store.getFolder("INBOX");
@@ -456,11 +504,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 			fff = store.getDefaultFolder();
 		}
 		fff.open(Folder.READ_WRITE);
-		System.err.println("Folder open?: " + fff.isOpen());
-
 		messageCount = fff.getMessageCount();
-		// unreadMessageCount = fff.getUnreadMessageCount();
-		// unreadMessageCount = determineRecentMessages();
 		try {
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("messageCount", messageCount);
@@ -471,7 +515,6 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		} catch (TipiException e1) {
 			e1.printStackTrace();
 		}
-		System.err.println("Connection created event!");
 		try {
 			injectNavajo("InitGetMessages", createInitGetMessages());
 		} catch (TipiBreakException e1) {
@@ -496,13 +539,13 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		return result;
 	}
 
-	public void disconnect() throws MessagingException {
+	public synchronized void disconnect() throws MessagingException {
 		if (store != null) {
 			store.removeConnectionListener(myConnectionListener);
 			store.removeFolderListener(myFolderListener);
 			store.removeStoreListener(myStoreListener);
 			// Close connection
-			// folder.close(false);
+			 fff.close(true);
 			store.close();
 			store = null;
 		}
@@ -543,15 +586,28 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 
 	public void testMessage() throws MessagingException, TipiBreakException, TipiException {
 		host = "hermes1.dexels.com";
-		username = "Secretaris-BBFW63X";
-		password = "vvmoc06";
+		username = "Secretaris-BBKY84H";
+		password = "wachtwoord";
 		mailMode = "pop3";
 		connect();
-		doTransaction("InitGetFolders");
-		doTransaction("InitGetDefaultMessages");
+		Navajo init = createInitGetMessages();
+		doTransaction(init,"GetInboxMessages");
 
+		init.getProperty("Folder/MessageNumber").setAnyValue(3);
+
+		doTransaction(getNavajo(), "InitGetMessages");
+				
+		System.err.println("Sleeping....");		
+		try {
+			Thread.sleep(14000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		System.err.println("End of sleep...");
+				
+		doTransaction(init, "GetMessage");
 		disconnect();
-
+		
 	}
 
 	private void addFolderToNavajo(Folder f, Navajo myNavajo, String folderName, Navajo inputNavajo) throws TipiException {
@@ -588,7 +644,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 				}
 				addMessages(mailMessages, message[messageCount - i - 1]);
 			}
-			System.err.println("Start: " + start + " end: " + end);
+//			System.err.println("Start: " + start + " end: " + end);
 			// f.close(false);
 		} catch (Exception e) {
 			throw new TipiException("Error getting messages from folder: " + folderName + " problem: " + e.getMessage(), e);
@@ -669,14 +725,17 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 	public static void main(String[] args) throws MessagingException, TipiBreakException, TipiException {
 
 		TipiMailConnector ttt = new TipiMailConnector();
-		ttt.sendMail(new InternetAddress("flyaruu@gmail.com"),new InternetAddress("frank@lindyhop.nl"), "ter info", "tralallaal");
-		// ttt.testMessage();
-		// ttt.messageCount = 5;
-		// ttt.pageSize = 20;
-		//		
-		// System.err.println("# messages: "+ttt.messageCount+" pagesize: "+ttt.pageSize+" pageCount: "
-		// +(double)ttt.messageCount / ttt.pageSize +" ---- "+
-		// (int)(Math.ceil((double)ttt.messageCount / ttt.pageSize)));
+//		ttt.sendMail(new InternetAddress("flyaruu@gmail.com"),new InternetAddress("frank@lindyhop.nl"), "ter info", "tralallaal");
+		 ttt.messageCount = 5;
+		 ttt.pageSize = 20;
+//		 ttt.useTimeout = true;
+
+		 ttt.testMessage();
+				
+		 System.err.println("# messages: "+ttt.messageCount+" pagesize: "+ttt.pageSize+" pageCount: "
+		 +(double)ttt.messageCount / ttt.pageSize +" ---- "+
+		 (int)(Math.ceil((double)ttt.messageCount / ttt.pageSize)));
+		 
 
 	}
 
@@ -711,7 +770,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		Transport transport = session.getTransport("smtps");
 
 		// ***** GET STUCK HERE!!! ******
-//		transport.connect("smtp.gmail.com", 465,"flyaruu@gmail.com", "xxxxxxxxx");
+//		transport.connect("smtp.gmail.com", 465,"flyaruu@gmail.com", "");
 		transport.connect("flyaruu", "xxxxxxxxxx");
 		System.out.println("sendMail() 3...");
 		message.setSentDate(new Date());
