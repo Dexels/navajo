@@ -309,10 +309,14 @@ public class GenericFieldMap implements Mappable {
 		try {
 			Property p = NavajoFactory.getInstance().createProperty(currentOutputMessage.getRootDoc(), "GF_" + id, "1", name, Property.DIR_IN);
 
+			Selection emptyOption = NavajoFactory.getInstance().createSelection(currentOutputMessage.getRootDoc(), "-", "-1", true);
+			p.addSelection(emptyOption);
+			
 			String query = "SELECT code, description FROM " + codeTable + " WHERE fieldid = ?";
 			sql.setQuery(query);
 			sql.setParameter(id);
 			ResultSetMap[] result = sql.getResultSet();
+			
 			for (int i = 0; i < result.length; i++) {
 				ResultSetMap m = result[i];
 				String selectionValue = (String) m.getColumnValue("code");
