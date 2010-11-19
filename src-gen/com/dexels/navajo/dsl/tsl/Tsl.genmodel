@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/com.dexels.navajo.dsl.tsl/src-gen"
+    editDirectory="/com.dexels.navajo.dsl.tsl.edit/src" editorDirectory="/com.dexels.navajo.dsl.tsl.editor/src"
+    modelPluginID="com.dexels.navajo.dsl.tsl" forceOverwrite="true" modelName="Tsl"
+    updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    complianceLevel="5.0" copyrightFields="false" editPluginID="com.dexels.navajo.dsl.tsl.edit"
+    editorPluginID="com.dexels.navajo.dsl.tsl.editor" usedGenPackages="classpath:/com/dexels/navajo/dsl/expression/NavajoExpression.genmodel#//navajoExpression">
+  <genPackages prefix="Tsl" basePackage="com.dexels.navajo.dsl.tsl" disposableProviderFactory="true"
+      ecorePackage="Tsl.ecore#/">
+    <genClasses ecoreClass="Tsl.ecore#//Tml">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Tsl.ecore#//Tml/attributes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Tsl.ecore#//Tml/messages"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Tsl.ecore#//Tml/maps"/>
+    </genClasses>
+    <genClasses ecoreClass="Tsl.ecore#//PossibleExpression">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Tsl.ecore#//PossibleExpression/key"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Tsl.ecore#//PossibleExpression/expressionValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Tsl.ecore#//PossibleExpression/value"/>
+    </genClasses>
+    <genClasses ecoreClass="Tsl.ecore#//Message">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Tsl.ecore#//Message/attributes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Tsl.ecore#//Message/messages"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Tsl.ecore#//Message/properties"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Tsl.ecore#//Message/maps"/>
+    </genClasses>
+    <genClasses ecoreClass="Tsl.ecore#//Map">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Tsl.ecore#//Map/mapName"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Tsl.ecore#//Map/attributes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Tsl.ecore#//Map/messages"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Tsl.ecore#//Map/properties"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Tsl.ecore#//Map/maps"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Tsl.ecore#//Map/mapClosingName"/>
+    </genClasses>
+    <genClasses ecoreClass="Tsl.ecore#//Property">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Tsl.ecore#//Property/attributes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Tsl.ecore#//Property/expressionValue"/>
+    </genClasses>
+    <genClasses ecoreClass="Tsl.ecore#//ExpressionTag">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Tsl.ecore#//ExpressionTag/value"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

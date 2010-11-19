@@ -1,0 +1,31 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: com.dexels.navajo.dsl.tsl
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0
+Bundle-SymbolicName: com.dexels.navajo.dsl.tsl; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.xtext,
+ org.eclipse.xtext.generator;resolution:=optional,
+ org.apache.commons.logging;resolution:=optional,
+ org.eclipse.emf.codegen.ecore;resolution:=optional,
+ org.eclipse.emf.mwe.utils;resolution:=optional,
+ org.eclipse.emf.mwe2.launch;resolution:=optional,
+ com.ibm.icu;resolution:=optional,
+ org.eclipse.xtext.xtend;resolution:=optional,
+ org.eclipse.xtext.util,
+ org.eclipse.emf.ecore,
+ org.eclipse.emf.common,
+ org.antlr.runtime,
+ com.dexels.navajo.dsl.expression;bundle-version="1.0.0"
+Import-Package: org.apache.log4j
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Export-Package: com.dexels.navajo.dsl.tsl,
+ com.dexels.navajo.dsl.tsl.services,
+ com.dexels.navajo.dsl.tsl.parseTreeConstruction,
+ com.dexels.navajo.dsl.tsl.parser.antlr,
+ com.dexels.navajo.dsl.tsl.parser.antlr.internal,
+ com.dexels.navajo.dsl.tsl.validation,
+ com.dexels.navajo.dsl.tsl.tsl,
+ com.dexels.navajo.dsl.tsl.tsl.impl,
+ com.dexels.navajo.dsl.tsl.tsl.util

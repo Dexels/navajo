@@ -1,0 +1,110 @@
+/**
+ * <copyright>
+ * </copyright>
+ *
+ */
+package com.dexels.navajo.dsl.tsl.tsl;
+
+import com.dexels.navajo.dsl.expression.navajoExpression.TopLevel;
+
+import org.eclipse.emf.ecore.EObject;
+
+/**
+ * <!-- begin-user-doc -->
+ * A representation of the model object '<em><b>Possible Expression</b></em>'.
+ * <!-- end-user-doc -->
+ *
+ * <p>
+ * The following features are supported:
+ * <ul>
+ *   <li>{@link com.dexels.navajo.dsl.tsl.tsl.PossibleExpression#getKey <em>Key</em>}</li>
+ *   <li>{@link com.dexels.navajo.dsl.tsl.tsl.PossibleExpression#getExpressionValue <em>Expression Value</em>}</li>
+ *   <li>{@link com.dexels.navajo.dsl.tsl.tsl.PossibleExpression#getValue <em>Value</em>}</li>
+ * </ul>
+ * </p>
+ *
+ * @see com.dexels.navajo.dsl.tsl.tsl.TslPackage#getPossibleExpression()
+ * @model
+ * @generated
+ */
+public interface PossibleExpression extends EObject
+{
+  /**
+   * Returns the value of the '<em><b>Key</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Key</em>' attribute isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Key</em>' attribute.
+   * @see #setKey(String)
+   * @see com.dexels.navajo.dsl.tsl.tsl.TslPackage#getPossibleExpression_Key()
+   * @model
+   * @generated
+   */
+  String getKey();
+
+  /**
+   * Sets the value of the '{@link com.dexels.navajo.dsl.tsl.tsl.PossibleExpression#getKey <em>Key</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Key</em>' attribute.
+   * @see #getKey()
+   * @generated
+   */
+  void setKey(String value);
+
+  /**
+   * Returns the value of the '<em><b>Expression Value</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Expression Value</em>' containment reference isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Expression Value</em>' containment reference.
+   * @see #setExpressionValue(TopLevel)
+   * @see com.dexels.navajo.dsl.tsl.tsl.TslPackage#getPossibleExpression_ExpressionValue()
+   * @model containment="true"
+   * @generated
+   */
+  TopLevel getExpressionValue();
+
+  /**
+   * Sets the value of the '{@link com.dexels.navajo.dsl.tsl.tsl.PossibleExpression#getExpressionValue <em>Expression Value</em>}' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Expression Value</em>' containment reference.
+   * @see #getExpressionValue()
+   * @generated
+   */
+  void setExpressionValue(TopLevel value);
+
+  /**
+   * Returns the value of the '<em><b>Value</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Value</em>' attribute isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Value</em>' attribute.
+   * @see #setValue(String)
+   * @see com.dexels.navajo.dsl.tsl.tsl.TslPackage#getPossibleExpression_Value()
+   * @model
+   * @generated
+   */
+  String getValue();
+
+  /**
+   * Sets the value of the '{@link com.dexels.navajo.dsl.tsl.tsl.PossibleExpression#getValue <em>Value</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Value</em>' attribute.
+   * @see #getValue()
+   * @generated
+   */
+  void setValue(String value);
+
+} // PossibleExpression

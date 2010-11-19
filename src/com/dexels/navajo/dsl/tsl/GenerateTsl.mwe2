@@ -1,0 +1,106 @@
+module com.dexels.navajo.dsl.tsl.Tsl
+
+import org.eclipse.emf.mwe.utils.*
+import org.eclipse.xtext.generator.*
+import org.eclipse.xtext.ui.generator.*
+
+var grammarURI = "classpath:/com/dexels/navajo/dsl/tsl/NavajoTsl.xtext"
+var file.extensions = "tsl"
+var projectName = "com.dexels.navajo.dsl.tsl"
+var runtimeProject = "../${projectName}"
+
+Workflow {
+    bean = StandaloneSetup {
+		platformUri = "${runtimeProject}/.."
+	}
+
+	component = DirectoryCleaner {
+		directory = "${runtimeProject}/src-gen"
+	}
+
+	component = DirectoryCleaner {
+		directory = "${runtimeProject}.ui/src-gen"
+	}
+
+	component = Generator {
+		pathRtProject = runtimeProject
+		pathUiProject = "${runtimeProject}.ui"
+		projectNameRt = projectName
+		projectNameUi = "${projectName}.ui"
+		language = {
+			uri = grammarURI
+			fileExtensions = file.extensions
+
+			// Java API to access grammar elements (required by several other fragments)
+			fragment = grammarAccess.GrammarAccessFragment {}
+
+			// generates Java API for the generated EPackages 
+			fragment = ecore.EcoreGeneratorFragment {
+			// referencedGenModels = "uri to genmodel, uri to next genmodel"
+//				 referencedGenModels="platform:/resource/com/dexels/navajo/dsl/expression/src-gen/com/dexels/navajo/dsl/expression/NavajoExpression.genmodel"
+ 				referencedGenModels="classpath:/com/dexels/navajo/dsl/expression/NavajoExpression.genmodel"
+			}
+//fragment = org.eclipse.xtext.generator.ecore.EcoreGeneratorFragment {
+//  genModels =
+//    "platform:/resource/my.project/src/my/pack/SecretCompartments.genmodel"
+//}
+
+			// the serialization component
+			fragment = parseTreeConstructor.ParseTreeConstructorFragment {}
+
+			// a custom ResourceFactory for use with EMF 
+			fragment = resourceFactory.ResourceFactoryFragment {
+				fileExtensions = file.extensions
+			}
+
+			// The antlr parser generator fragment.
+			fragment = parser.antlr.XtextAntlrGeneratorFragment {
+			//  options = {
+			//		backtrack = true
+			//	}
+			}
+
+			// java-based API for validation 
+			fragment = validation.JavaValidatorFragment {
+				composedCheck = "org.eclipse.xtext.validation.ImportUriValidator"
+				//composedCheck = "org.eclipse.xtext.validation.NamesAreUniqueValidator"
+				// registerForImportedPackages = true
+			}
+
+			// scoping and exporting API
+			// fragment = scoping.ImportURIScopingFragment {}
+			// fragment = exporting.SimpleNamesFragment {}
+
+			// scoping and exporting API 
+			fragment = scoping.ImportNamespacesScopingFragment {}
+			fragment = exporting.QualifiedNamesFragment {}
+			fragment = builder.BuilderIntegrationFragment {}
+
+			// formatter API 
+			fragment = formatting.FormatterFragment {}
+
+			// labeling API 
+			fragment = labeling.LabelProviderFragment {}
+
+			// outline API 
+			fragment = outline.TransformerFragment {}
+			fragment = outline.OutlineNodeAdapterFactoryFragment {}
+			fragment = outline.QuickOutlineFragment {}
+
+			// quickfix API 
+			fragment = quickfix.QuickfixProviderFragment {}
+
+			// content assist API  
+			fragment = contentAssist.JavaBasedContentAssistFragment {}
+
+			// generates a more lightweight Antlr parser and lexer tailored for content assist  
+			fragment = parser.antlr.XtextAntlrUiGeneratorFragment {}
+
+			// project wizard (optional) 
+			// fragment = projectWizard.SimpleProjectWizardFragment {
+			// 		generatorProjectName = "${projectName}.generator" 
+			//		modelFileExtension = file.extensions
+			// }
+		}
+	}
+}

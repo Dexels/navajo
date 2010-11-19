@@ -1,0 +1,96 @@
+//grammar com.dexels.navajo.dsl.tsl.Tsl with org.eclipse.xtext.common.Terminals //with com.dexels.navajo.dsl.expression.NavajoExpression
+grammar com.dexels.navajo.dsl.tsl.Tsl with com.dexels.navajo.dsl.expression.NavajoExpression
+
+import "http://www.dexels.com/navajo/dsl/expression/NavajoExpression"
+//import "platform:/resource/com.dexels.navajo.dsl.expression/src-gen/com/dexels/navajo/dsl/expression/NavajoExpression.ecore"
+//com.dexels.navajo.dsl.expression/src-gen/com/dexels.navajo/dsl/expression/NavajoExpression.ecore"
+generate tsl "http://www.dexels.com/navajo/dsl/tsl/NavajoTsl"
+
+
+
+
+Tml :
+	'<navascript' {Tml} (attributes+=PossibleExpression)* 
+	(
+		('>'
+			((messages+=Message) | (maps+=Map))*
+		'</navascript>'
+		)
+	|	(
+		'/>'
+		)
+	);
+
+//terminal QUOT: '"';	
+terminal ATTRIBUTESTRING	: 
+			('"' !('=') ( '\\' ('b'|'t'|'n'|'f'|'r'|'"'|"'"|'\\') | !('\\'|'"') )* !(';') '"') | '""' | ('"' !('"') '"')
+	;	
+
+
+
+PossibleExpression:
+	key=ID '='
+	(
+		 '"=' expressionValue=Expression ';"'
+		| value=ATTRIBUTESTRING
+	)
+	;
+
+
+Message:
+	'<message' {Message}  (attributes+=PossibleExpression)* 
+	
+	(('>'
+		((messages+=Message) | (properties+=Property) | (maps+=Map))*
+	'</message>'
+	)
+	|
+	'/>'
+	)
+	;
+
+
+Map:
+	'<map.' mapName=ID (attributes+=PossibleExpression)
+	( '/>'
+	| ('>'
+		((messages+=Message) | (properties+=Property) | (maps+=Map))*
+		'</map.' mapClosingName=ID '>'
+	))
+	;
+
+
+// doesn't seem to work. All are optional
+	
+//Modifier: static?='static'? & final?='final'? & visibility=Visibility;
+
+// ToDo Add ALL types!
+
+// this fails. All these possibilities will be tokens/keywords, so it will break other stuff.
+
+//PropertyTypes: STRING_PROPERTY='string' | INTEGER_PROPERTY='integer' | LONG_PROPERTY='long' | DATE_PROPERTY = "date" | FLOAT_PROPERTY = "float";
+//MessageTypes: MSG_TYPE_SIMPLE='simple' |  MSG_TYPE_ARRAY = "array" | MSG_TYPE_TABLE = "table";
+//MessageModes: MSG_MODE = "mode" | MSG_MODE_LAZY = "lazy" | MSG_MODE_IGNORE = "ignore" | MSG_MODE_OVERWRITE = "overwrite";
+
+// The direction 'inout' has been deprecated, so I've left that one out.
+//PropertyDirection: DIR_IN = "in" | DIR_OUT = "out";
+
+// '1' this makes 1 a keyword
+//PropertyCardinalities: CARDINALITY_SINGLE = "1" | CARDINALITY_MULTIPLE = "+";
+	
+	
+Property:
+	'<property' {Property} (attributes+=PossibleExpression)* 
+	(
+		('/>')
+	|
+		( '>' 	
+			(expressionValue = ExpressionTag)?
+		'</property>'
+		)
+	);
+
+ExpressionTag:
+	'<expression>' value=Expression '</expression>'
+	;	
+	
