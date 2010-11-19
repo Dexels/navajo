@@ -1,0 +1,109 @@
+grammar com.dexels.navajo.dsl.expression.NavajoExpression  hidden(WS, ML_COMMENT, SL_COMMENT)
+
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
+generate navajoExpression "http://www.dexels.com/navajo/dsl/expression/NavajoExpression"
+
+Expression returns TopLevel: 
+	expression=OrExpression;
+
+
+terminal ID  		: '^'?('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
+terminal INT returns ecore::EInt: ('0'..'9')+;
+terminal ML_COMMENT	: '/*' -> '*/';
+terminal SL_COMMENT 	: '//' !('\n'|'\r')* ('\r'? '\n')?;
+
+terminal WS			: (' '|'\t'|'\r'|'\n')+;
+	
+terminal ANY_OTHER: .;
+
+ 
+
+
+
+
+
+//terminal LITERALSTRING	: 
+//			"'" ( '\\' ('b'|'t'|'n'|'f'|'r'|'"'|"'"|'\\') | !('\\'|"'") )* "'"
+//	;
+
+// skipped url, image, points, datepattern, password
+
+	
+
+//terminal PATH_ELEMENT: ('.'|'..'|("a".. "z"| "A" .. "Z"|"_")("a".. "z"| "A" .. "Z"|"0" .. "9"|"_")*);
+ 	
+PathElement returns ecore::EString:
+	(ID|"."|"..")
+	;
+	
+PathSequence returns ecore::EString:
+	'[' '/'? PathElement ('/' PathElement)* ']'
+;
+	
+TmlExpression returns ecore::EString:
+	 PathSequence 
+;
+
+ExistsTmlExpression returns ecore::EString:
+	'?' TmlExpression 
+;
+	   
+   
+OrExpression returns Expression:
+    {Expression} operands+=AndExpression (op="OR" operands+=AndExpression )*;
+    
+AndExpression returns Expression:
+     {Expression}  operands+=EqualityExpression (op="AND" operands+=EqualityExpression )*
+     ;  
+
+EqualityExpression returns Expression: 
+     {Expression} operands+=AdditiveExpression ((op='==' operands+=AdditiveExpression) | (op='!=' operands+=AdditiveExpression))?
+;     
+  
+// Skipped for now. Trouble with overloaded '<' stuff  
+//RelationalExpression returns Expression: 
+//   {Expression} operands+=AdditiveExpression ((op='&lt;' operands+=AdditiveExpression)|(op='&gt;' operands+=AdditiveExpression)|(op='&lt;=' operands+=AdditiveExpression)|(op='&gt;=' operands+=AdditiveExpression))?
+//    ;
+AdditiveExpression returns Expression:
+     {Expression} operands+=MultiplicativeExpression (('+' operands+=MultiplicativeExpression ) | ('-' operands+=MultiplicativeExpression))*
+	;
+	
+MultiplicativeExpression returns Expression: 
+     {Expression} operands+=UnaryExpression ((op='*' operands+=UnaryExpression ) |  (op='/' operands+=UnaryExpression ))*
+	;
+	
+UnaryExpression returns Expression:
+	{Expression} op="!" operands+=PrimaryExpression
+	| PrimaryExpression;	
+
+PrimaryExpression returns Expression:
+	
+   	{Expression} operands+=Literal
+	| '(' OrExpression ')'
+;	
+
+FunctionName:
+	ID;
+
+FunctionOperands returns Expression:
+	 {Expression}(operands+=OrExpression)? (',' operands+=OrExpression)*
+	;
+FunctionCall returns Expression:
+	op=FunctionName '(' functionoperands=FunctionOperands ')'
+;
+Literal returns Expression:
+  {Expression} literal=INT
+//  | {Expression} literalstring=LITERALSTRING
+  | FunctionCall
+  | {Expression} name=ExistsTmlExpression 
+  | {Expression} name=TmlExpression 
+//  | {Expression} op='FORALL' '(' literalstring=LITERALSTRING ',' operands+=OrExpression ')'
+  | {Expression} op='{' (operands+=OrExpression)?  (',' operands+=OrExpression)* '}'
+  // TODO Add float
+  | {Expression} op="NULL" 
+  | {Expression} op="TODAY" 
+  | {Expression} op="TRUE" 
+  | {Expression} op="FALSE" 
+ 
+;
