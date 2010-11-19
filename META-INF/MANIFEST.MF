@@ -1,0 +1,27 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: com.dexels.navajo.dsl.expression.ui
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0
+Bundle-SymbolicName: com.dexels.navajo.dsl.expression.ui; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: com.dexels.navajo.dsl.expression;visibility:=reexport,
+ org.eclipse.xtext.ui,
+ org.eclipse.ui.editors;bundle-version="3.5.0",
+ org.eclipse.ui.ide;bundle-version="3.5.0",
+ org.eclipse.xtext.ui.shared,
+ org.eclipse.ui,
+ org.eclipse.xtext.builder,
+ org.antlr.runtime
+Import-Package: org.apache.log4j
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Export-Package: com.dexels.navajo.dsl.expression.ui,
+ com.dexels.navajo.dsl.expression.ui.contentassist,
+ com.dexels.navajo.dsl.expression.ui.contentassist.antlr,
+ com.dexels.navajo.dsl.expression.ui.contentassist.antlr.internal,
+ com.dexels.navajo.dsl.expression.ui.contentassist.impl,
+ com.dexels.navajo.dsl.expression.ui.internal,
+ com.dexels.navajo.dsl.expression.ui.labeling,
+ com.dexels.navajo.dsl.expression.ui.outline,
+ com.dexels.navajo.dsl.expression.ui.quickfix
+Bundle-Activator: com.dexels.navajo.dsl.expression.ui.internal.NavajoExpressionActivator
