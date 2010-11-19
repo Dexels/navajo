@@ -1,0 +1,222 @@
+<tsl> 
+    <message name="InProperties">
+       <property name="StringProperty" type="string" direction="in">
+          <expression value="'Hello!'"/>
+       </property>
+       <property name="DateProperty" type="date" direction="in">
+          <expression value="Date('2000-2-2')"/>
+       </property>
+       <property name="ClockTimeProperty" type="clocktime" direction="in">
+          <expression value="ToClockTime('12:30')"/>
+       </property>
+       <property name="StopwatchProperty" type="stopwatchtime" direction="in">
+          <expression value="ToStopwatchTime(5452)"/>
+       </property>
+       <property name="PercentageProperty" type="percentage" direction="in">
+          <expression value="ToPercentage(95)"/>
+       </property>
+       <property name="MoneyProperty" type="money" direction="in">
+          <expression value="ToMoney(100)"/>
+       </property>
+       <property name="IntegerProperty" type="integer" direction="in">
+          <expression value="101"/>
+       </property>
+       <property name="FloatProperty" type="float" direction="in">
+          <expression value="100.5"/>
+       </property>
+       <property name="LongProperty" type="long" direction="in">
+          <expression value="123456789"/>
+       </property>
+       <property name="PasswordProperty" type="password" direction="in" value="secret"/>
+       <property name="BooleanProperty" type="boolean" direction="in">
+          <expression value="true"/>
+       </property>
+       <property name="MemoProperty" type="memo" direction="in" value="blah blah blah blah blah blah blah blah blah"/>
+       <property name="SingleSelectionProperty" type="selection" cardinality="1" direction="in">
+           <option name="Aap" value="1" selected="0"/>
+           <option name="Noot" value="2" selected="0"/>
+           <option name="Mies" value="3" selected="0"/>
+           <option name="Wim" value="4" selected="0"/>
+       </property>
+       <property name="MultiSelectionProperty" type="selection" cardinality="+" direction="in">
+           <option name="Aap" value="1" selected="0"/>
+           <option name="Noot" value="2" selected="0"/>
+           <option name="Mies" value="3" selected="0"/>
+           <option name="Wim" value="4" selected="0"/>
+       </property>
+    </message>
+    <message name="OutProperties">
+       <property name="StringProperty" type="string" direction="out">
+          <expression value="'Hello!'"/>
+       </property>
+       <property name="DateProperty" type="date" direction="out">
+         <expression value="Date('2000-2-2')"/>
+       </property>
+       <property name="ClockTimeProperty" type="clocktime" direction="out">
+          <expression value="ToClockTime('12:30')"/>
+       </property>
+       <property name="StopwatchProperty" type="stopwatchtime" direction="out">
+          <expression value="ToStopwatchTime(5452)"/>
+       </property>
+       <property name="PercentageProperty" type="percentage" direction="out">
+          <expression value="ToPercentage(95)"/>
+       </property>
+       <property name="MoneyProperty" type="money" direction="out">
+          <expression value="ToMoney(100)"/>
+       </property>
+       <property name="IntegerProperty" type="integer" direction="out">
+          <expression value="101"/>
+       </property>
+       <property name="FloatProperty" type="float" direction="out">
+          <expression value="100.5"/>
+       </property>
+       <property name="MemoProperty" type="memo" direction="out" value="blah blah blah blah blah blah blah blah blah"/>
+       <property name="LongProperty" type="long" direction="out">
+          <expression value="123456789"/>
+       </property>
+       <property name="PasswordProperty" type="password" direction="out" value="secret"/>
+       <property name="BooleanProperty" type="boolean" direction="out">
+          <expression value="true"/>
+       </property>
+       <property name="SingleSelectionProperty" type="selection" cardinality="1" direction="out">
+           <option name="Aap" value="1" selected="0"/>
+           <option name="Noot" value="2" selected="0"/>
+           <option name="Mies" value="3" selected="0"/>
+           <option name="Wim" value="4" selected="0"/>
+       </property>
+       <property name="MultiSelectionProperty" type="selection" cardinality="+" direction="out">
+           <option name="Aap" value="1" selected="0"/>
+           <option name="Noot" value="2" selected="0"/>
+           <option name="Mies" value="3" selected="0"/>
+           <option name="Wim" value="4" selected="0"/>
+       </property>
+   </message>
+   <message name="TableProperties" type="array">
+       <message name="TableProperties" index="0">
+       <property name="StringProperty" type="string" direction="in">
+          <expression value="'Hello!'"/>
+       </property>
+       <property name="DateProperty" type="date" direction="in">
+         <expression value="Date('2000-2-2')"/>
+       </property>
+       <property name="ClockTimeProperty" type="clocktime" direction="in">
+          <expression value="ToClockTime('12:30')"/>
+       </property>
+       <property name="StopwatchProperty" type="stopwatchtime" direction="in">
+          <expression value="ToStopwatchTime(5452)"/>
+       </property>
+       <property name="PercentageProperty" type="percentage" direction="in">
+          <expression value="ToPercentage(95)"/>
+       </property>
+       <property name="MoneyProperty" type="money" direction="in">
+          <expression value="ToMoney(100)"/>
+       </property>
+       <property name="IntegerProperty" type="integer" direction="in">
+          <expression value="101"/>
+       </property>
+       <property name="FloatProperty" type="float" direction="in">
+          <expression value="100.5"/>
+       </property>
+       <property name="MemoProperty" type="memo" direction="in" value="blah blah blah blah blah blah blah blah blah"/>
+       <property name="LongProperty" type="long" direction="in">
+          <expression value="123456789"/>
+       </property>
+       <property name="PasswordProperty" type="password" direction="in" value="secret"/>
+       <property name="BooleanProperty" type="boolean" direction="in">
+          <expression value="true"/>
+       </property>
+       <property name="SingleSelectionProperty" type="selection" cardinality="1" direction="in">
+           <option name="Aap" value="1" selected="0"/>
+           <option name="Noot" value="2" selected="0"/>
+           <option name="Mies" value="3" selected="0"/>
+           <option name="Wim" value="4" selected="0"/>
+       </property>
+       <property name="MultiSelectionProperty" type="selection" cardinality="+" direction="in">
+           <option name="Aap" value="1" selected="0"/>
+           <option name="Noot" value="2" selected="0"/>
+           <option name="Mies" value="3" selected="0"/>
+           <option name="Wim" value="4" selected="0"/>
+       </property>
+    </message>
+    <message name="TableProperties" index="1">
+       <property name="StringProperty" type="string" direction="out">
+          <expression value="'Hello!'"/>
+       </property>
+       <property name="DateProperty" type="date" direction="out">
+         <expression value="Date('2000-2-2')"/>
+       </property>
+       <property name="ClockTimeProperty" type="clocktime" direction="out">
+          <expression value="ToClockTime('12:30')"/>
+       </property>
+       <property name="StopwatchProperty" type="stopwatchtime" direction="out">
+          <expression value="ToStopwatchTime(5452)"/>
+       </property>
+       <property name="PercentageProperty" type="percentage" direction="out">
+          <expression value="ToPercentage(95)"/>
+       </property>
+       <property name="MoneyProperty" type="money" direction="out">
+          <expression value="ToMoney(100)"/>
+       </property>
+       <property name="IntegerProperty" type="integer" direction="out">
+          <expression value="101"/>
+       </property>
+       <property name="FloatProperty" type="float" direction="out">
+          <expression value="100.5"/>
+       </property>
+       <property name="MemoProperty" type="memo" direction="out" value="blah blah blah blah blah blah blah blah blah"/>
+       <property name="LongProperty" type="long" direction="out">
+          <expression value="123456789"/>
+       </property>
+       <property name="PasswordProperty" type="password" direction="out" value="secret"/>
+       <property name="BooleanProperty" type="boolean" direction="out">
+          <expression value="true"/>
+       </property>       
+       <property name="SingleSelectionProperty" type="selection" cardinality="1" direction="out">
+           <option name="Aap" value="1" selected="0"/>
+           <option name="Noot" value="2" selected="0"/>
+           <option name="Mies" value="3" selected="0"/>
+           <option name="Wim" value="4" selected="0"/>
+       </property>
+       <property name="MultiSelectionProperty" type="selection" cardinality="+" direction="out">
+           <option name="Aap" value="1" selected="0"/>
+           <option name="Noot" value="2" selected="0"/>
+           <option name="Mies" value="3" selected="0"/>
+           <option name="Wim" value="4" selected="0"/>
+       </property>
+    </message>   
+  </message>
+   <message name="TestTable" type="array">
+     <message name="TestTable" index="0">
+       <property name="StringProperty" type="string" direction="out">
+          <expression value="'One'"/>
+       </property>
+       <property name="DateProperty" type="date" direction="out">
+          <expression value="Date('2005-1-1')"/>
+       </property>
+    </message>   
+     <message name="TestTable" index="1">
+       <property name="StringProperty" type="string" direction="out">
+          <expression value="'Two'"/>
+       </property>
+       <property name="DateProperty" type="date" direction="out">
+          <expression value="Date('2004-1-1')"/>
+       </property>
+    </message>   
+     <message name="TestTable" index="2">
+       <property name="StringProperty" type="string" direction="out">
+          <expression value="'Three'"/>
+       </property>
+       <property name="DateProperty" type="date" direction="out">
+          <expression value="Date('2003-1-1')"/>
+       </property>
+    </message>   
+     <message name="TestTable" index="3">
+       <property name="StringProperty" type="string" direction="out">
+          <expression value="'Four'"/>
+       </property>
+       <property name="DateProperty" type="date" direction="out">
+          <expression value="Date('2005-3-1')"/>
+       </property>
+    </message>   
+  </message>
+</tsl>
