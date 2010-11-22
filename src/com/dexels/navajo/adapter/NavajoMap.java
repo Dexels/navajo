@@ -505,7 +505,12 @@ private Object waitForResult = new Object();
 
 		  // If currentOutDoc flag was set, make sure to copy outdoc.
 		  if ( this.useCurrentOutDoc ) {
-			  this.outDoc = access.getOutputDoc().copy();
+			  if ( this.outDoc != null ) {
+				 this.outDoc.merge(access.getOutputDoc().copy()) ;
+			  } else {
+				  this.outDoc = access.getOutputDoc().copy();
+			  }
+			  
 			  // Copy param messages.
 			  if ( inMessage.getMessage("__parms__") != null ) {
 				  Message params = inMessage.getMessage("__parms__").copy(outDoc);
@@ -559,9 +564,10 @@ private Object waitForResult = new Object();
 		  }
 
 	  } catch (com.dexels.navajo.client.ClientException e) {
-		  e.printStackTrace(Access.getConsoleWriter(access));
 		  throw new SystemException(-1, e.getMessage());
-	  } 
+	  } catch (NavajoException e) {
+		  throw new SystemException(-1, e.getMessage());
+	} 
 
   }
 
