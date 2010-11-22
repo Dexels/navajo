@@ -783,6 +783,8 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
     	   if (con == null) {
     	    	throw new UserException( -1, "Invalid transaction context set: " + transactionContext);
     	    }
+    	   // Make sure to set connection id.  
+    	   this.connectionId = transactionContext;
       }
 	  
     if (con == null) { // Create connection if it does not yet exist.
