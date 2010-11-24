@@ -1,0 +1,28 @@
+«IMPORT com::dexels::navajo::dsl::tsl::ui::wizard»
+
+«DEFINE main FOR TslProjectInfo»
+«EXPAND model FOR this»
+«EXPAND workflow FOR this»
+«ENDDEFINE»
+
+«DEFINE model FOR TslProjectInfo»
+«FILE "src/model/Model.tsl"-»
+/*
+ * This is an example model
+ */
+Hello Xtext!
+«ENDFILE»
+«ENDDEFINE»
+
+«DEFINE workflow FOR TslProjectInfo»
+«FILE "src/Generator.mwe2"-»
+module Generator
+
+var targetDir = "src-gen"
+var modelPath = "src/model"
+
+Workflow {
+	component = @workflow.TslGenerator auto-inject {}
+}
+«ENDFILE»
+«ENDDEFINE»

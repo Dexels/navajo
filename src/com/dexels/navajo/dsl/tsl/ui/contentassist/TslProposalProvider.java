@@ -12,7 +12,6 @@ import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
 
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.dsl.expression.ui.contentassist.AdapterProposal;
 import com.dexels.navajo.dsl.expression.ui.contentassist.FunctionProposal;
 import com.dexels.navajo.dsl.expression.ui.contentassist.InputTmlProposal;
@@ -64,7 +63,7 @@ public class TslProposalProvider extends AbstractTslProposalProvider {
 			System.err.println("Function: " + f.getProposalDescription());
 		}
 
-		Navajo input = npp.getNavajoResourceFinder().getInputNavajo();
+		npp.getNavajoResourceFinder().getInputNavajo();
 		List<InputTmlProposal> l =  npp.listPropertyPaths(npp.getNavajoResourceFinder().getInputNavajo());
 		for (InputTmlProposal tmlProposal : l) {
 			System.err.println("Proposal: "+tmlProposal.getProposal()+" ---- "+tmlProposal.getProposalDescription());
