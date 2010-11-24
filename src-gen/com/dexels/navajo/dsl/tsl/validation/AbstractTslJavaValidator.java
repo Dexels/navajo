@@ -13,7 +13,6 @@ public class AbstractTslJavaValidator extends AbstractDeclarativeValidator {
 @Override
 	protected List<EPackage> getEPackages() {
 	    List<EPackage> result = new ArrayList<EPackage>();
-	    result.add(com.dexels.navajo.dsl.tsl.tsl.TslPackage.eINSTANCE);
 		return result;
 	}
 

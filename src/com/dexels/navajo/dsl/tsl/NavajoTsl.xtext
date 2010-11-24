@@ -1,10 +1,13 @@
 //grammar com.dexels.navajo.dsl.tsl.Tsl with org.eclipse.xtext.common.Terminals //with com.dexels.navajo.dsl.expression.NavajoExpression
 grammar com.dexels.navajo.dsl.tsl.Tsl with com.dexels.navajo.dsl.expression.NavajoExpression
 
-import "http://www.dexels.com/navajo/dsl/expression/NavajoExpression"
-//import "platform:/resource/com.dexels.navajo.dsl.expression/src-gen/com/dexels/navajo/dsl/expression/NavajoExpression.ecore"
+//import "platform:/resource/com.dexels.navajo.dsl.expression/src/com/dexels/navajo/dsl/expression/Navajo.ecore" as ncore
+//import "http://www.dexels.com/navajo/dsl/expression/NavajoExpression" as nexpr
+import "platform:/resource/com.dexels.navajo.dsl.expression.model/model/Expression.ecore" as nexpr
+import "platform:/resource/com.dexels.navajo.dsl.tsl.model/model/NavaScript.ecore" 
+
 //com.dexels.navajo.dsl.expression/src-gen/com/dexels.navajo/dsl/expression/NavajoExpression.ecore"
-generate tsl "http://www.dexels.com/navajo/dsl/tsl/NavajoTsl"
+//generate tsl "http://www.dexels.com/navajo/dsl/tsl/NavajoTsl"
 
 
 
@@ -12,8 +15,8 @@ generate tsl "http://www.dexels.com/navajo/dsl/tsl/NavajoTsl"
 Tml :
 	'<navascript' {Tml} (attributes+=PossibleExpression)* 
 	(
-		('>'
-			((messages+=Message) | (maps+=Map))*
+		('>' 
+			((children+=Message) | (children+=Map))*
 		'</navascript>'
 		)
 	|	(
@@ -31,7 +34,7 @@ terminal ATTRIBUTESTRING	:
 PossibleExpression:
 	key=ID '='
 	(
-		 '"=' expressionValue=Expression ';"'
+		 '"=' expressionValue=TopLevel ';"'
 		| value=ATTRIBUTESTRING
 	)
 	;
@@ -41,7 +44,7 @@ Message:
 	'<message' {Message}  (attributes+=PossibleExpression)* 
 	
 	(('>'
-		((messages+=Message) | (properties+=Property) | (maps+=Map))*
+		((children+=Message) | (children+=Property) | (children+=Map))*
 	'</message>'
 	)
 	|
@@ -51,10 +54,10 @@ Message:
 
 
 Map:
-	'<map.' mapName=ID (attributes+=PossibleExpression)
+	{Map} '<map.' mapName=ID (attributes+=PossibleExpression)
 	( '/>'
 	| ('>'
-		((messages+=Message) | (properties+=Property) | (maps+=Map))*
+		((children+=Message) | (children+=Property) | (children+=Map))*
 		'</map.' mapClosingName=ID '>'
 	))
 	;
@@ -91,6 +94,6 @@ Property:
 	);
 
 ExpressionTag:
-	'<expression>' value=Expression '</expression>'
+	'<expression>' value=TopLevel '</expression>'
 	;	
 	

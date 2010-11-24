@@ -3,14 +3,6 @@
 
 <plugin>
 
-  <extension point="org.eclipse.emf.ecore.generated_package">
-    <package 
-       uri = "http://www.dexels.com/navajo/dsl/tsl/NavajoTsl" 
-       class = "com.dexels.navajo.dsl.tsl.tsl.TslPackage"
-       genModel = "com/dexels/navajo/dsl/tsl/Tsl.genmodel" /> 
-	
-  </extension>
-
 
 
 

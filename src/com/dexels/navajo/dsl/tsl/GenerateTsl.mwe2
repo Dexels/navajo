@@ -37,8 +37,9 @@ Workflow {
 			// generates Java API for the generated EPackages 
 			fragment = ecore.EcoreGeneratorFragment {
 			// referencedGenModels = "uri to genmodel, uri to next genmodel"
-//				 referencedGenModels="platform:/resource/com/dexels/navajo/dsl/expression/src-gen/com/dexels/navajo/dsl/expression/NavajoExpression.genmodel"
- 				referencedGenModels="classpath:/com/dexels/navajo/dsl/expression/NavajoExpression.genmodel"
+				 referencedGenModels="platform:/resource/com.dexels.navajo.dsl.expression.model/model/Expression.genmodel"
+// 				referencedGenModels="classpath:/com/dexels/navajo/dsl/expression/NavajoExpression.genmodel"
+
 			}
 //fragment = org.eclipse.xtext.generator.ecore.EcoreGeneratorFragment {
 //  genModels =
@@ -97,10 +98,10 @@ Workflow {
 			fragment = parser.antlr.XtextAntlrUiGeneratorFragment {}
 
 			// project wizard (optional) 
-			// fragment = projectWizard.SimpleProjectWizardFragment {
-			// 		generatorProjectName = "${projectName}.generator" 
-			//		modelFileExtension = file.extensions
-			// }
+			 fragment = projectWizard.SimpleProjectWizardFragment {
+			 		generatorProjectName = "${projectName}.generator" 
+					modelFileExtension = file.extensions
+			 }
 		}
 	}
 }

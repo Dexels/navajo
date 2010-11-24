@@ -6,9 +6,9 @@ import java.util.Map;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtext.validation.Check;
 
-import com.dexels.navajo.dsl.tsl.tsl.PossibleExpression;
-import com.dexels.navajo.dsl.tsl.tsl.Property;
-import com.dexels.navajo.dsl.tsl.tsl.TslPackage;
+import com.dexels.navajo.dsl.model.tsl.PossibleExpression;
+import com.dexels.navajo.dsl.model.tsl.Property;
+import com.dexels.navajo.dsl.model.tsl.TslPackage;
  
 
 public class TslJavaValidator extends AbstractTslJavaValidator {

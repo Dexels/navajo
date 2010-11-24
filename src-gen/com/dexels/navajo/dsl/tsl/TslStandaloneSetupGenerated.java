@@ -27,9 +27,6 @@ public class TslStandaloneSetupGenerated implements ISetup {
 	}
 	
 	public void register(Injector injector) {
-	if (!EPackage.Registry.INSTANCE.containsKey("http://www.dexels.com/navajo/dsl/tsl/NavajoTsl")) {
-		EPackage.Registry.INSTANCE.put("http://www.dexels.com/navajo/dsl/tsl/NavajoTsl", com.dexels.navajo.dsl.tsl.tsl.TslPackage.eINSTANCE);
-	}
 
 		org.eclipse.xtext.resource.IResourceFactory resourceFactory = injector.getInstance(org.eclipse.xtext.resource.IResourceFactory.class);
 		org.eclipse.xtext.resource.IResourceServiceProvider serviceProvider = injector.getInstance(org.eclipse.xtext.resource.IResourceServiceProvider.class);

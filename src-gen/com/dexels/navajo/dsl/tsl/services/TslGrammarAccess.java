@@ -28,18 +28,20 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup_3_0 = (Group)cAlternatives_3.eContents().get(0);
 		private final Keyword cGreaterThanSignKeyword_3_0_0 = (Keyword)cGroup_3_0.eContents().get(0);
 		private final Alternatives cAlternatives_3_0_1 = (Alternatives)cGroup_3_0.eContents().get(1);
-		private final Assignment cMessagesAssignment_3_0_1_0 = (Assignment)cAlternatives_3_0_1.eContents().get(0);
-		private final RuleCall cMessagesMessageParserRuleCall_3_0_1_0_0 = (RuleCall)cMessagesAssignment_3_0_1_0.eContents().get(0);
-		private final Assignment cMapsAssignment_3_0_1_1 = (Assignment)cAlternatives_3_0_1.eContents().get(1);
-		private final RuleCall cMapsMapParserRuleCall_3_0_1_1_0 = (RuleCall)cMapsAssignment_3_0_1_1.eContents().get(0);
+		private final Assignment cChildrenAssignment_3_0_1_0 = (Assignment)cAlternatives_3_0_1.eContents().get(0);
+		private final RuleCall cChildrenMessageParserRuleCall_3_0_1_0_0 = (RuleCall)cChildrenAssignment_3_0_1_0.eContents().get(0);
+		private final Assignment cChildrenAssignment_3_0_1_1 = (Assignment)cAlternatives_3_0_1.eContents().get(1);
+		private final RuleCall cChildrenMapParserRuleCall_3_0_1_1_0 = (RuleCall)cChildrenAssignment_3_0_1_1.eContents().get(0);
 		private final Keyword cNavascriptKeyword_3_0_2 = (Keyword)cGroup_3_0.eContents().get(2);
 		private final Keyword cSolidusGreaterThanSignKeyword_3_1 = (Keyword)cAlternatives_3.eContents().get(1);
 		
+		////com.dexels.navajo.dsl.expression/src-gen/com/dexels.navajo/dsl/expression/NavajoExpression.ecore"
+		////generate tsl "http://www.dexels.com/navajo/dsl/tsl/NavajoTsl"
 		//Tml:
-		//	"<navascript" {Tml} attributes+=PossibleExpression* (">" (messages+=Message | maps+=Map)* "</navascript>" | "/>");
+		//	"<navascript" {Tml} attributes+=PossibleExpression* (">" (children+=Message | children+=Map)* "</navascript>" | "/>");
 		public ParserRule getRule() { return rule; }
 
-		//"<navascript" {Tml} attributes+=PossibleExpression* (">" (messages+=Message | maps+=Map)* "</navascript>" | "/>")
+		//"<navascript" {Tml} attributes+=PossibleExpression* (">" (children+=Message | children+=Map)* "</navascript>" | "/>")
 		public Group getGroup() { return cGroup; }
 
 		//"<navascript"
@@ -54,29 +56,29 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		//PossibleExpression
 		public RuleCall getAttributesPossibleExpressionParserRuleCall_2_0() { return cAttributesPossibleExpressionParserRuleCall_2_0; }
 
-		//">" (messages+=Message | maps+=Map)* "</navascript>" | "/>"
+		//">" (children+=Message | children+=Map)* "</navascript>" | "/>"
 		public Alternatives getAlternatives_3() { return cAlternatives_3; }
 
-		//">" (messages+=Message | maps+=Map)* "</navascript>"
+		//">" (children+=Message | children+=Map)* "</navascript>"
 		public Group getGroup_3_0() { return cGroup_3_0; }
 
 		//">"
 		public Keyword getGreaterThanSignKeyword_3_0_0() { return cGreaterThanSignKeyword_3_0_0; }
 
-		//(messages+=Message | maps+=Map)*
+		//(children+=Message | children+=Map)*
 		public Alternatives getAlternatives_3_0_1() { return cAlternatives_3_0_1; }
 
-		//messages+=Message
-		public Assignment getMessagesAssignment_3_0_1_0() { return cMessagesAssignment_3_0_1_0; }
+		//children+=Message
+		public Assignment getChildrenAssignment_3_0_1_0() { return cChildrenAssignment_3_0_1_0; }
 
 		//Message
-		public RuleCall getMessagesMessageParserRuleCall_3_0_1_0_0() { return cMessagesMessageParserRuleCall_3_0_1_0_0; }
+		public RuleCall getChildrenMessageParserRuleCall_3_0_1_0_0() { return cChildrenMessageParserRuleCall_3_0_1_0_0; }
 
-		//maps+=Map
-		public Assignment getMapsAssignment_3_0_1_1() { return cMapsAssignment_3_0_1_1; }
+		//children+=Map
+		public Assignment getChildrenAssignment_3_0_1_1() { return cChildrenAssignment_3_0_1_1; }
 
 		//Map
-		public RuleCall getMapsMapParserRuleCall_3_0_1_1_0() { return cMapsMapParserRuleCall_3_0_1_1_0; }
+		public RuleCall getChildrenMapParserRuleCall_3_0_1_1_0() { return cChildrenMapParserRuleCall_3_0_1_1_0; }
 
 		//"</navascript>"
 		public Keyword getNavascriptKeyword_3_0_2() { return cNavascriptKeyword_3_0_2; }
@@ -95,16 +97,16 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup_2_0 = (Group)cAlternatives_2.eContents().get(0);
 		private final Keyword cQuotationMarkEqualsSignKeyword_2_0_0 = (Keyword)cGroup_2_0.eContents().get(0);
 		private final Assignment cExpressionValueAssignment_2_0_1 = (Assignment)cGroup_2_0.eContents().get(1);
-		private final RuleCall cExpressionValueExpressionParserRuleCall_2_0_1_0 = (RuleCall)cExpressionValueAssignment_2_0_1.eContents().get(0);
+		private final RuleCall cExpressionValueTopLevelParserRuleCall_2_0_1_0 = (RuleCall)cExpressionValueAssignment_2_0_1.eContents().get(0);
 		private final Keyword cSemicolonQuotationMarkKeyword_2_0_2 = (Keyword)cGroup_2_0.eContents().get(2);
 		private final Assignment cValueAssignment_2_1 = (Assignment)cAlternatives_2.eContents().get(1);
 		private final RuleCall cValueATTRIBUTESTRINGTerminalRuleCall_2_1_0 = (RuleCall)cValueAssignment_2_1.eContents().get(0);
 		
 		//PossibleExpression:
-		//	key=ID "=" ("\"=" expressionValue=Expression ";\"" | value=ATTRIBUTESTRING);
+		//	key=ID "=" ("\"=" expressionValue=TopLevel ";\"" | value=ATTRIBUTESTRING);
 		public ParserRule getRule() { return rule; }
 
-		//key=ID "=" ("\"=" expressionValue=Expression ";\"" | value=ATTRIBUTESTRING)
+		//key=ID "=" ("\"=" expressionValue=TopLevel ";\"" | value=ATTRIBUTESTRING)
 		public Group getGroup() { return cGroup; }
 
 		//key=ID
@@ -116,20 +118,20 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		//"="
 		public Keyword getEqualsSignKeyword_1() { return cEqualsSignKeyword_1; }
 
-		//"\"=" expressionValue=Expression ";\"" | value=ATTRIBUTESTRING
+		//"\"=" expressionValue=TopLevel ";\"" | value=ATTRIBUTESTRING
 		public Alternatives getAlternatives_2() { return cAlternatives_2; }
 
-		//"\"=" expressionValue=Expression ";\""
+		//"\"=" expressionValue=TopLevel ";\""
 		public Group getGroup_2_0() { return cGroup_2_0; }
 
 		//"\"="
 		public Keyword getQuotationMarkEqualsSignKeyword_2_0_0() { return cQuotationMarkEqualsSignKeyword_2_0_0; }
 
-		//expressionValue=Expression
+		//expressionValue=TopLevel
 		public Assignment getExpressionValueAssignment_2_0_1() { return cExpressionValueAssignment_2_0_1; }
 
-		//Expression
-		public RuleCall getExpressionValueExpressionParserRuleCall_2_0_1_0() { return cExpressionValueExpressionParserRuleCall_2_0_1_0; }
+		//TopLevel
+		public RuleCall getExpressionValueTopLevelParserRuleCall_2_0_1_0() { return cExpressionValueTopLevelParserRuleCall_2_0_1_0; }
 
 		//";\""
 		public Keyword getSemicolonQuotationMarkKeyword_2_0_2() { return cSemicolonQuotationMarkKeyword_2_0_2; }
@@ -152,21 +154,21 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup_3_0 = (Group)cAlternatives_3.eContents().get(0);
 		private final Keyword cGreaterThanSignKeyword_3_0_0 = (Keyword)cGroup_3_0.eContents().get(0);
 		private final Alternatives cAlternatives_3_0_1 = (Alternatives)cGroup_3_0.eContents().get(1);
-		private final Assignment cMessagesAssignment_3_0_1_0 = (Assignment)cAlternatives_3_0_1.eContents().get(0);
-		private final RuleCall cMessagesMessageParserRuleCall_3_0_1_0_0 = (RuleCall)cMessagesAssignment_3_0_1_0.eContents().get(0);
-		private final Assignment cPropertiesAssignment_3_0_1_1 = (Assignment)cAlternatives_3_0_1.eContents().get(1);
-		private final RuleCall cPropertiesPropertyParserRuleCall_3_0_1_1_0 = (RuleCall)cPropertiesAssignment_3_0_1_1.eContents().get(0);
-		private final Assignment cMapsAssignment_3_0_1_2 = (Assignment)cAlternatives_3_0_1.eContents().get(2);
-		private final RuleCall cMapsMapParserRuleCall_3_0_1_2_0 = (RuleCall)cMapsAssignment_3_0_1_2.eContents().get(0);
+		private final Assignment cChildrenAssignment_3_0_1_0 = (Assignment)cAlternatives_3_0_1.eContents().get(0);
+		private final RuleCall cChildrenMessageParserRuleCall_3_0_1_0_0 = (RuleCall)cChildrenAssignment_3_0_1_0.eContents().get(0);
+		private final Assignment cChildrenAssignment_3_0_1_1 = (Assignment)cAlternatives_3_0_1.eContents().get(1);
+		private final RuleCall cChildrenPropertyParserRuleCall_3_0_1_1_0 = (RuleCall)cChildrenAssignment_3_0_1_1.eContents().get(0);
+		private final Assignment cChildrenAssignment_3_0_1_2 = (Assignment)cAlternatives_3_0_1.eContents().get(2);
+		private final RuleCall cChildrenMapParserRuleCall_3_0_1_2_0 = (RuleCall)cChildrenAssignment_3_0_1_2.eContents().get(0);
 		private final Keyword cMessageKeyword_3_0_2 = (Keyword)cGroup_3_0.eContents().get(2);
 		private final Keyword cSolidusGreaterThanSignKeyword_3_1 = (Keyword)cAlternatives_3.eContents().get(1);
 		
 		//Message:
-		//	"<message" {Message} attributes+=PossibleExpression* (">" (messages+=Message | properties+=Property | maps+=Map)*
+		//	"<message" {Message} attributes+=PossibleExpression* (">" (children+=Message | children+=Property | children+=Map)*
 		//	"</message>" | "/>");
 		public ParserRule getRule() { return rule; }
 
-		//"<message" {Message} attributes+=PossibleExpression* (">" (messages+=Message | properties+=Property | maps+=Map)*
+		//"<message" {Message} attributes+=PossibleExpression* (">" (children+=Message | children+=Property | children+=Map)*
 		//"</message>" | "/>")
 		public Group getGroup() { return cGroup; }
 
@@ -182,35 +184,35 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		//PossibleExpression
 		public RuleCall getAttributesPossibleExpressionParserRuleCall_2_0() { return cAttributesPossibleExpressionParserRuleCall_2_0; }
 
-		//">" (messages+=Message | properties+=Property | maps+=Map)* "</message>" | "/>"
+		//">" (children+=Message | children+=Property | children+=Map)* "</message>" | "/>"
 		public Alternatives getAlternatives_3() { return cAlternatives_3; }
 
-		//">" (messages+=Message | properties+=Property | maps+=Map)* "</message>"
+		//">" (children+=Message | children+=Property | children+=Map)* "</message>"
 		public Group getGroup_3_0() { return cGroup_3_0; }
 
 		//">"
 		public Keyword getGreaterThanSignKeyword_3_0_0() { return cGreaterThanSignKeyword_3_0_0; }
 
-		//(messages+=Message | properties+=Property | maps+=Map)*
+		//(children+=Message | children+=Property | children+=Map)*
 		public Alternatives getAlternatives_3_0_1() { return cAlternatives_3_0_1; }
 
-		//messages+=Message
-		public Assignment getMessagesAssignment_3_0_1_0() { return cMessagesAssignment_3_0_1_0; }
+		//children+=Message
+		public Assignment getChildrenAssignment_3_0_1_0() { return cChildrenAssignment_3_0_1_0; }
 
 		//Message
-		public RuleCall getMessagesMessageParserRuleCall_3_0_1_0_0() { return cMessagesMessageParserRuleCall_3_0_1_0_0; }
+		public RuleCall getChildrenMessageParserRuleCall_3_0_1_0_0() { return cChildrenMessageParserRuleCall_3_0_1_0_0; }
 
-		//properties+=Property
-		public Assignment getPropertiesAssignment_3_0_1_1() { return cPropertiesAssignment_3_0_1_1; }
+		//children+=Property
+		public Assignment getChildrenAssignment_3_0_1_1() { return cChildrenAssignment_3_0_1_1; }
 
 		//Property
-		public RuleCall getPropertiesPropertyParserRuleCall_3_0_1_1_0() { return cPropertiesPropertyParserRuleCall_3_0_1_1_0; }
+		public RuleCall getChildrenPropertyParserRuleCall_3_0_1_1_0() { return cChildrenPropertyParserRuleCall_3_0_1_1_0; }
 
-		//maps+=Map
-		public Assignment getMapsAssignment_3_0_1_2() { return cMapsAssignment_3_0_1_2; }
+		//children+=Map
+		public Assignment getChildrenAssignment_3_0_1_2() { return cChildrenAssignment_3_0_1_2; }
 
 		//Map
-		public RuleCall getMapsMapParserRuleCall_3_0_1_2_0() { return cMapsMapParserRuleCall_3_0_1_2_0; }
+		public RuleCall getChildrenMapParserRuleCall_3_0_1_2_0() { return cChildrenMapParserRuleCall_3_0_1_2_0; }
 
 		//"</message>"
 		public Keyword getMessageKeyword_3_0_2() { return cMessageKeyword_3_0_2; }
@@ -222,95 +224,99 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 	public class MapElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "Map");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Keyword cMapKeyword_0 = (Keyword)cGroup.eContents().get(0);
-		private final Assignment cMapNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cMapNameIDTerminalRuleCall_1_0 = (RuleCall)cMapNameAssignment_1.eContents().get(0);
-		private final Assignment cAttributesAssignment_2 = (Assignment)cGroup.eContents().get(2);
-		private final RuleCall cAttributesPossibleExpressionParserRuleCall_2_0 = (RuleCall)cAttributesAssignment_2.eContents().get(0);
-		private final Alternatives cAlternatives_3 = (Alternatives)cGroup.eContents().get(3);
-		private final Keyword cSolidusGreaterThanSignKeyword_3_0 = (Keyword)cAlternatives_3.eContents().get(0);
-		private final Group cGroup_3_1 = (Group)cAlternatives_3.eContents().get(1);
-		private final Keyword cGreaterThanSignKeyword_3_1_0 = (Keyword)cGroup_3_1.eContents().get(0);
-		private final Alternatives cAlternatives_3_1_1 = (Alternatives)cGroup_3_1.eContents().get(1);
-		private final Assignment cMessagesAssignment_3_1_1_0 = (Assignment)cAlternatives_3_1_1.eContents().get(0);
-		private final RuleCall cMessagesMessageParserRuleCall_3_1_1_0_0 = (RuleCall)cMessagesAssignment_3_1_1_0.eContents().get(0);
-		private final Assignment cPropertiesAssignment_3_1_1_1 = (Assignment)cAlternatives_3_1_1.eContents().get(1);
-		private final RuleCall cPropertiesPropertyParserRuleCall_3_1_1_1_0 = (RuleCall)cPropertiesAssignment_3_1_1_1.eContents().get(0);
-		private final Assignment cMapsAssignment_3_1_1_2 = (Assignment)cAlternatives_3_1_1.eContents().get(2);
-		private final RuleCall cMapsMapParserRuleCall_3_1_1_2_0 = (RuleCall)cMapsAssignment_3_1_1_2.eContents().get(0);
-		private final Keyword cMapKeyword_3_1_2 = (Keyword)cGroup_3_1.eContents().get(2);
-		private final Assignment cMapClosingNameAssignment_3_1_3 = (Assignment)cGroup_3_1.eContents().get(3);
-		private final RuleCall cMapClosingNameIDTerminalRuleCall_3_1_3_0 = (RuleCall)cMapClosingNameAssignment_3_1_3.eContents().get(0);
-		private final Keyword cGreaterThanSignKeyword_3_1_4 = (Keyword)cGroup_3_1.eContents().get(4);
+		private final Action cMapAction_0 = (Action)cGroup.eContents().get(0);
+		private final Keyword cMapKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final Assignment cMapNameAssignment_2 = (Assignment)cGroup.eContents().get(2);
+		private final RuleCall cMapNameIDTerminalRuleCall_2_0 = (RuleCall)cMapNameAssignment_2.eContents().get(0);
+		private final Assignment cAttributesAssignment_3 = (Assignment)cGroup.eContents().get(3);
+		private final RuleCall cAttributesPossibleExpressionParserRuleCall_3_0 = (RuleCall)cAttributesAssignment_3.eContents().get(0);
+		private final Alternatives cAlternatives_4 = (Alternatives)cGroup.eContents().get(4);
+		private final Keyword cSolidusGreaterThanSignKeyword_4_0 = (Keyword)cAlternatives_4.eContents().get(0);
+		private final Group cGroup_4_1 = (Group)cAlternatives_4.eContents().get(1);
+		private final Keyword cGreaterThanSignKeyword_4_1_0 = (Keyword)cGroup_4_1.eContents().get(0);
+		private final Alternatives cAlternatives_4_1_1 = (Alternatives)cGroup_4_1.eContents().get(1);
+		private final Assignment cChildrenAssignment_4_1_1_0 = (Assignment)cAlternatives_4_1_1.eContents().get(0);
+		private final RuleCall cChildrenMessageParserRuleCall_4_1_1_0_0 = (RuleCall)cChildrenAssignment_4_1_1_0.eContents().get(0);
+		private final Assignment cChildrenAssignment_4_1_1_1 = (Assignment)cAlternatives_4_1_1.eContents().get(1);
+		private final RuleCall cChildrenPropertyParserRuleCall_4_1_1_1_0 = (RuleCall)cChildrenAssignment_4_1_1_1.eContents().get(0);
+		private final Assignment cChildrenAssignment_4_1_1_2 = (Assignment)cAlternatives_4_1_1.eContents().get(2);
+		private final RuleCall cChildrenMapParserRuleCall_4_1_1_2_0 = (RuleCall)cChildrenAssignment_4_1_1_2.eContents().get(0);
+		private final Keyword cMapKeyword_4_1_2 = (Keyword)cGroup_4_1.eContents().get(2);
+		private final Assignment cMapClosingNameAssignment_4_1_3 = (Assignment)cGroup_4_1.eContents().get(3);
+		private final RuleCall cMapClosingNameIDTerminalRuleCall_4_1_3_0 = (RuleCall)cMapClosingNameAssignment_4_1_3.eContents().get(0);
+		private final Keyword cGreaterThanSignKeyword_4_1_4 = (Keyword)cGroup_4_1.eContents().get(4);
 		
 		//Map:
-		//	"<map." mapName=ID attributes+=PossibleExpression ("/>" | ">" (messages+=Message | properties+=Property | maps+=Map)*
-		//	"</map." mapClosingName=ID ">");
+		//	{Map} "<map." mapName=ID attributes+=PossibleExpression ("/>" | ">" (children+=Message | children+=Property |
+		//	children+=Map)* "</map." mapClosingName=ID ">");
 		public ParserRule getRule() { return rule; }
 
-		//"<map." mapName=ID attributes+=PossibleExpression ("/>" | ">" (messages+=Message | properties+=Property | maps+=Map)*
-		//"</map." mapClosingName=ID ">")
+		//{Map} "<map." mapName=ID attributes+=PossibleExpression ("/>" | ">" (children+=Message | children+=Property |
+		//children+=Map)* "</map." mapClosingName=ID ">")
 		public Group getGroup() { return cGroup; }
 
+		//{Map}
+		public Action getMapAction_0() { return cMapAction_0; }
+
 		//"<map."
-		public Keyword getMapKeyword_0() { return cMapKeyword_0; }
+		public Keyword getMapKeyword_1() { return cMapKeyword_1; }
 
 		//mapName=ID
-		public Assignment getMapNameAssignment_1() { return cMapNameAssignment_1; }
+		public Assignment getMapNameAssignment_2() { return cMapNameAssignment_2; }
 
 		//ID
-		public RuleCall getMapNameIDTerminalRuleCall_1_0() { return cMapNameIDTerminalRuleCall_1_0; }
+		public RuleCall getMapNameIDTerminalRuleCall_2_0() { return cMapNameIDTerminalRuleCall_2_0; }
 
 		//attributes+=PossibleExpression
-		public Assignment getAttributesAssignment_2() { return cAttributesAssignment_2; }
+		public Assignment getAttributesAssignment_3() { return cAttributesAssignment_3; }
 
 		//PossibleExpression
-		public RuleCall getAttributesPossibleExpressionParserRuleCall_2_0() { return cAttributesPossibleExpressionParserRuleCall_2_0; }
+		public RuleCall getAttributesPossibleExpressionParserRuleCall_3_0() { return cAttributesPossibleExpressionParserRuleCall_3_0; }
 
-		//"/>" | ">" (messages+=Message | properties+=Property | maps+=Map)* "</map." mapClosingName=ID ">"
-		public Alternatives getAlternatives_3() { return cAlternatives_3; }
+		//"/>" | ">" (children+=Message | children+=Property | children+=Map)* "</map." mapClosingName=ID ">"
+		public Alternatives getAlternatives_4() { return cAlternatives_4; }
 
 		//"/>"
-		public Keyword getSolidusGreaterThanSignKeyword_3_0() { return cSolidusGreaterThanSignKeyword_3_0; }
+		public Keyword getSolidusGreaterThanSignKeyword_4_0() { return cSolidusGreaterThanSignKeyword_4_0; }
 
-		//">" (messages+=Message | properties+=Property | maps+=Map)* "</map." mapClosingName=ID ">"
-		public Group getGroup_3_1() { return cGroup_3_1; }
+		//">" (children+=Message | children+=Property | children+=Map)* "</map." mapClosingName=ID ">"
+		public Group getGroup_4_1() { return cGroup_4_1; }
 
 		//">"
-		public Keyword getGreaterThanSignKeyword_3_1_0() { return cGreaterThanSignKeyword_3_1_0; }
+		public Keyword getGreaterThanSignKeyword_4_1_0() { return cGreaterThanSignKeyword_4_1_0; }
 
-		//(messages+=Message | properties+=Property | maps+=Map)*
-		public Alternatives getAlternatives_3_1_1() { return cAlternatives_3_1_1; }
+		//(children+=Message | children+=Property | children+=Map)*
+		public Alternatives getAlternatives_4_1_1() { return cAlternatives_4_1_1; }
 
-		//messages+=Message
-		public Assignment getMessagesAssignment_3_1_1_0() { return cMessagesAssignment_3_1_1_0; }
+		//children+=Message
+		public Assignment getChildrenAssignment_4_1_1_0() { return cChildrenAssignment_4_1_1_0; }
 
 		//Message
-		public RuleCall getMessagesMessageParserRuleCall_3_1_1_0_0() { return cMessagesMessageParserRuleCall_3_1_1_0_0; }
+		public RuleCall getChildrenMessageParserRuleCall_4_1_1_0_0() { return cChildrenMessageParserRuleCall_4_1_1_0_0; }
 
-		//properties+=Property
-		public Assignment getPropertiesAssignment_3_1_1_1() { return cPropertiesAssignment_3_1_1_1; }
+		//children+=Property
+		public Assignment getChildrenAssignment_4_1_1_1() { return cChildrenAssignment_4_1_1_1; }
 
 		//Property
-		public RuleCall getPropertiesPropertyParserRuleCall_3_1_1_1_0() { return cPropertiesPropertyParserRuleCall_3_1_1_1_0; }
+		public RuleCall getChildrenPropertyParserRuleCall_4_1_1_1_0() { return cChildrenPropertyParserRuleCall_4_1_1_1_0; }
 
-		//maps+=Map
-		public Assignment getMapsAssignment_3_1_1_2() { return cMapsAssignment_3_1_1_2; }
+		//children+=Map
+		public Assignment getChildrenAssignment_4_1_1_2() { return cChildrenAssignment_4_1_1_2; }
 
 		//Map
-		public RuleCall getMapsMapParserRuleCall_3_1_1_2_0() { return cMapsMapParserRuleCall_3_1_1_2_0; }
+		public RuleCall getChildrenMapParserRuleCall_4_1_1_2_0() { return cChildrenMapParserRuleCall_4_1_1_2_0; }
 
 		//"</map."
-		public Keyword getMapKeyword_3_1_2() { return cMapKeyword_3_1_2; }
+		public Keyword getMapKeyword_4_1_2() { return cMapKeyword_4_1_2; }
 
 		//mapClosingName=ID
-		public Assignment getMapClosingNameAssignment_3_1_3() { return cMapClosingNameAssignment_3_1_3; }
+		public Assignment getMapClosingNameAssignment_4_1_3() { return cMapClosingNameAssignment_4_1_3; }
 
 		//ID
-		public RuleCall getMapClosingNameIDTerminalRuleCall_3_1_3_0() { return cMapClosingNameIDTerminalRuleCall_3_1_3_0; }
+		public RuleCall getMapClosingNameIDTerminalRuleCall_4_1_3_0() { return cMapClosingNameIDTerminalRuleCall_4_1_3_0; }
 
 		//">"
-		public Keyword getGreaterThanSignKeyword_3_1_4() { return cGreaterThanSignKeyword_3_1_4; }
+		public Keyword getGreaterThanSignKeyword_4_1_4() { return cGreaterThanSignKeyword_4_1_4; }
 	}
 
 	public class PropertyElements extends AbstractParserRuleElementFinder {
@@ -385,24 +391,24 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Keyword cExpressionKeyword_0 = (Keyword)cGroup.eContents().get(0);
 		private final Assignment cValueAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cValueExpressionParserRuleCall_1_0 = (RuleCall)cValueAssignment_1.eContents().get(0);
+		private final RuleCall cValueTopLevelParserRuleCall_1_0 = (RuleCall)cValueAssignment_1.eContents().get(0);
 		private final Keyword cExpressionKeyword_2 = (Keyword)cGroup.eContents().get(2);
 		
 		//ExpressionTag:
-		//	"<expression>" value=Expression "</expression>";
+		//	"<expression>" value=TopLevel "</expression>";
 		public ParserRule getRule() { return rule; }
 
-		//"<expression>" value=Expression "</expression>"
+		//"<expression>" value=TopLevel "</expression>"
 		public Group getGroup() { return cGroup; }
 
 		//"<expression>"
 		public Keyword getExpressionKeyword_0() { return cExpressionKeyword_0; }
 
-		//value=Expression
+		//value=TopLevel
 		public Assignment getValueAssignment_1() { return cValueAssignment_1; }
 
-		//Expression
-		public RuleCall getValueExpressionParserRuleCall_1_0() { return cValueExpressionParserRuleCall_1_0; }
+		//TopLevel
+		public RuleCall getValueTopLevelParserRuleCall_1_0() { return cValueTopLevelParserRuleCall_1_0; }
 
 		//"</expression>"
 		public Keyword getExpressionKeyword_2() { return cExpressionKeyword_2; }
@@ -438,8 +444,10 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	
+	////com.dexels.navajo.dsl.expression/src-gen/com/dexels.navajo/dsl/expression/NavajoExpression.ecore"
+	////generate tsl "http://www.dexels.com/navajo/dsl/tsl/NavajoTsl"
 	//Tml:
-	//	"<navascript" {Tml} attributes+=PossibleExpression* (">" (messages+=Message | maps+=Map)* "</navascript>" | "/>");
+	//	"<navascript" {Tml} attributes+=PossibleExpression* (">" (children+=Message | children+=Map)* "</navascript>" | "/>");
 	public TmlElements getTmlAccess() {
 		return (pTml != null) ? pTml : (pTml = new TmlElements());
 	}
@@ -457,7 +465,7 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 	} 
 
 	//PossibleExpression:
-	//	key=ID "=" ("\"=" expressionValue=Expression ";\"" | value=ATTRIBUTESTRING);
+	//	key=ID "=" ("\"=" expressionValue=TopLevel ";\"" | value=ATTRIBUTESTRING);
 	public PossibleExpressionElements getPossibleExpressionAccess() {
 		return (pPossibleExpression != null) ? pPossibleExpression : (pPossibleExpression = new PossibleExpressionElements());
 	}
@@ -467,7 +475,7 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//Message:
-	//	"<message" {Message} attributes+=PossibleExpression* (">" (messages+=Message | properties+=Property | maps+=Map)*
+	//	"<message" {Message} attributes+=PossibleExpression* (">" (children+=Message | children+=Property | children+=Map)*
 	//	"</message>" | "/>");
 	public MessageElements getMessageAccess() {
 		return (pMessage != null) ? pMessage : (pMessage = new MessageElements());
@@ -478,8 +486,8 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//Map:
-	//	"<map." mapName=ID attributes+=PossibleExpression ("/>" | ">" (messages+=Message | properties+=Property | maps+=Map)*
-	//	"</map." mapClosingName=ID ">");
+	//	{Map} "<map." mapName=ID attributes+=PossibleExpression ("/>" | ">" (children+=Message | children+=Property |
+	//	children+=Map)* "</map." mapClosingName=ID ">");
 	public MapElements getMapAccess() {
 		return (pMap != null) ? pMap : (pMap = new MapElements());
 	}
@@ -510,7 +518,7 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//ExpressionTag:
-	//	"<expression>" value=Expression "</expression>";
+	//	"<expression>" value=TopLevel "</expression>";
 	public ExpressionTagElements getExpressionTagAccess() {
 		return (pExpressionTag != null) ? pExpressionTag : (pExpressionTag = new ExpressionTagElements());
 	}
@@ -519,23 +527,22 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		return getExpressionTagAccess().getRule();
 	}
 
-	//Expression returns TopLevel:
-	//	expression=OrExpression;
-	public NavajoExpressionGrammarAccess.ExpressionElements getExpressionAccess() {
-		return gaNavajoExpression.getExpressionAccess();
+	////import "classpath:/com/dexels/navajo/dsl/expression/Navajo.ecore"
+	////import "file:///Users/frank/Documents/workspace-xtext/com.dexels.navajo.dsl.expression/src/com/dexels/navajo/dsl/expression/Navajo.ecore" as ncore
+	////import "http://www.dexels.com/navajo/dsl/expression/NavajoCore" as ncore
+	////generate navajoExpression "http://www.dexels.com/navajo/dsl/expression/NavajoExpression"
+	////terminal ID  		: '^'?('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
+	//TopLevel: //	 toplevelExpression =OrExpression
+	//	{TopLevel} toplevelExpression=OrExpression;
+	public NavajoExpressionGrammarAccess.TopLevelElements getTopLevelAccess() {
+		return gaNavajoExpression.getTopLevelAccess();
 	}
 	
-	public ParserRule getExpressionRule() {
-		return getExpressionAccess().getRule();
+	public ParserRule getTopLevelRule() {
+		return getTopLevelAccess().getRule();
 	}
 
-	//terminal ID:
-	//	"^"? ("a".."z" | "A".."Z" | "_") ("a".."z" | "A".."Z" | "_" | "0".."9")*;
-	public TerminalRule getIDRule() {
-		return gaNavajoExpression.getIDRule();
-	} 
-
-	//terminal INT returns ecore::EInt:
+	//terminal INT:
 	//	"0".."9"+;
 	public TerminalRule getINTRule() {
 		return gaNavajoExpression.getINTRule();
@@ -559,15 +566,18 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		return gaNavajoExpression.getWSRule();
 	} 
 
-	//terminal ANY_OTHER:
-	//	.;
-	public TerminalRule getANY_OTHERRule() {
-		return gaNavajoExpression.getANY_OTHERRule();
+	//terminal ID:
+	//	"^"? ("a".."z" | "A".."Z" | "_") ("a".."z" | "A".."Z" | "_" | "0".."9")*;
+	public TerminalRule getIDRule() {
+		return gaNavajoExpression.getIDRule();
 	} 
 
-	////terminal LITERALSTRING	: 
-	////			"'" ( '\\' ('b'|'t'|'n'|'f'|'r'|'"'|"'"|'\\') | !('\\'|"'") )* "'"
-	////	;
+	//terminal LITERALSTRING:
+	//	"\'" ("\\" ("b" | "t" | "n" | "f" | "r" | "\"" | "\'" | "\\") | !("\\" | "\'"))* "\'";
+	public TerminalRule getLITERALSTRINGRule() {
+		return gaNavajoExpression.getLITERALSTRINGRule();
+	} 
+
 	//// skipped url, image, points, datepattern, password
 	////terminal PATH_ELEMENT: ('.'|'..'|("a".. "z"| "A" .. "Z"|"_")("a".. "z"| "A" .. "Z"|"0" .. "9"|"_")*);
 	//PathElement returns ecore::EString:
@@ -611,7 +621,7 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//OrExpression returns Expression:
-	//	{Expression} operands+=AndExpression (op="OR" operands+=AndExpression)*;
+	//	{Expression} parameters+=AndExpression (operations+="OR" parameters+=AndExpression)*;
 	public NavajoExpressionGrammarAccess.OrExpressionElements getOrExpressionAccess() {
 		return gaNavajoExpression.getOrExpressionAccess();
 	}
@@ -621,7 +631,7 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//AndExpression returns Expression:
-	//	{Expression} operands+=EqualityExpression (op="AND" operands+=EqualityExpression)*;
+	//	{Expression} parameters+=EqualityExpression (operations+="AND" parameters+=EqualityExpression)*;
 	public NavajoExpressionGrammarAccess.AndExpressionElements getAndExpressionAccess() {
 		return gaNavajoExpression.getAndExpressionAccess();
 	}
@@ -631,8 +641,8 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//EqualityExpression returns Expression:
-	//	{Expression} operands+=AdditiveExpression (op="==" operands+=AdditiveExpression | op="!="
-	//	operands+=AdditiveExpression)?;
+	//	{Expression} parameters+=AdditiveExpression (operations+="==" parameters+=AdditiveExpression | operations+="!="
+	//	parameters+=AdditiveExpression)?;
 	public NavajoExpressionGrammarAccess.EqualityExpressionElements getEqualityExpressionAccess() {
 		return gaNavajoExpression.getEqualityExpressionAccess();
 	}
@@ -646,8 +656,8 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 	////   {Expression} operands+=AdditiveExpression ((op='&lt;' operands+=AdditiveExpression)|(op='&gt;' operands+=AdditiveExpression)|(op='&lt;=' operands+=AdditiveExpression)|(op='&gt;=' operands+=AdditiveExpression))?
 	////    ;
 	//AdditiveExpression returns Expression:
-	//	{Expression} operands+=MultiplicativeExpression ("+" operands+=MultiplicativeExpression | "-"
-	//	operands+=MultiplicativeExpression)*;
+	//	{Expression} parameters+=MultiplicativeExpression ("+" parameters+=MultiplicativeExpression | "-"
+	//	parameters+=MultiplicativeExpression)*;
 	public NavajoExpressionGrammarAccess.AdditiveExpressionElements getAdditiveExpressionAccess() {
 		return gaNavajoExpression.getAdditiveExpressionAccess();
 	}
@@ -657,7 +667,8 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//MultiplicativeExpression returns Expression:
-	//	{Expression} operands+=UnaryExpression (op="*" operands+=UnaryExpression | op="/" operands+=UnaryExpression)*;
+	//	{Expression} parameters+=UnaryExpression (operations+="*" parameters+=UnaryExpression | operations+="/"
+	//	parameters+=UnaryExpression)*;
 	public NavajoExpressionGrammarAccess.MultiplicativeExpressionElements getMultiplicativeExpressionAccess() {
 		return gaNavajoExpression.getMultiplicativeExpressionAccess();
 	}
@@ -667,7 +678,7 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//UnaryExpression returns Expression:
-	//	{Expression} op="!" operands+=PrimaryExpression | PrimaryExpression;
+	//	{Expression} operations+="!" parameters+=PrimaryExpression | PrimaryExpression;
 	public NavajoExpressionGrammarAccess.UnaryExpressionElements getUnaryExpressionAccess() {
 		return gaNavajoExpression.getUnaryExpressionAccess();
 	}
@@ -677,7 +688,7 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//PrimaryExpression returns Expression:
-	//	{Expression} operands+=Literal | "(" OrExpression ")";
+	//	{Expression} parameters+=Literal | "(" parameters+=OrExpression ")";
 	public NavajoExpressionGrammarAccess.PrimaryExpressionElements getPrimaryExpressionAccess() {
 		return gaNavajoExpression.getPrimaryExpressionAccess();
 	}
@@ -686,28 +697,11 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		return getPrimaryExpressionAccess().getRule();
 	}
 
-	//FunctionName returns ecore::EString:
-	//	ID;
-	public NavajoExpressionGrammarAccess.FunctionNameElements getFunctionNameAccess() {
-		return gaNavajoExpression.getFunctionNameAccess();
-	}
-	
-	public ParserRule getFunctionNameRule() {
-		return getFunctionNameAccess().getRule();
-	}
-
-	//FunctionOperands returns Expression:
-	//	{Expression} operands+=OrExpression? ("," operands+=OrExpression)*;
-	public NavajoExpressionGrammarAccess.FunctionOperandsElements getFunctionOperandsAccess() {
-		return gaNavajoExpression.getFunctionOperandsAccess();
-	}
-	
-	public ParserRule getFunctionOperandsRule() {
-		return getFunctionOperandsAccess().getRule();
-	}
-
-	//FunctionCall returns Expression:
-	//	op=FunctionName "(" functionoperands=FunctionOperands ")";
+	////
+	////FunctionName:
+	////	ID;
+	//FunctionCall:
+	//	name=ID "(" operands=[FunctionOperands] ")";
 	public NavajoExpressionGrammarAccess.FunctionCallElements getFunctionCallAccess() {
 		return gaNavajoExpression.getFunctionCallAccess();
 	}
@@ -716,13 +710,25 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		return getFunctionCallAccess().getRule();
 	}
 
+	//FunctionOperands:
+	//	{FunctionOperands} parameters+=OrExpression? ("," parameters+=OrExpression)*;
+	public NavajoExpressionGrammarAccess.FunctionOperandsElements getFunctionOperandsAccess() {
+		return gaNavajoExpression.getFunctionOperandsAccess();
+	}
+	
+	public ParserRule getFunctionOperandsRule() {
+		return getFunctionOperandsAccess().getRule();
+	}
+
+	////Expression returns Expression:
+	////	Literal | FunctionCall | FunctionOperands ;
 	//Literal returns Expression:
-	//	{Expression} literal=INT //  | {Expression} literalstring=LITERALSTRING
-	//	//  | {Expression} op='FORALL' '(' literalstring=LITERALSTRING ',' operands+=OrExpression ')'
-	//	// TODO Add float
-	//	| FunctionCall | {Expression} name=ExistsTmlExpression | {Expression} name=TmlExpression | {Expression} op="{"
-	//	operands+=OrExpression? ("," operands+=OrExpression)* "}" | {Expression} op="NULL" | {Expression} op="TODAY" |
-	//	{Expression} op="TRUE" | {Expression} op="FALSE";
+	//	{Expression} valueString=INT // TODO Add float
+	//	| {Expression} valueString=LITERALSTRING | {Expression} operations+="FORALL" "(" valueString=LITERALSTRING ","
+	//	parameters+=OrExpression ")" | FunctionCall | {Expression} elements+=ExistsTmlExpression | {Expression}
+	//	elements+=TmlExpression | {Expression} expressionType="{" parameters+=OrExpression? ("," parameters+=OrExpression)*
+	//	"}" | {Expression} elements+="NULL" | {Expression} elements+="TODAY" | {Expression} elements+="TRUE" | {Expression}
+	//	elements+="FALSE";
 	public NavajoExpressionGrammarAccess.LiteralElements getLiteralAccess() {
 		return gaNavajoExpression.getLiteralAccess();
 	}
