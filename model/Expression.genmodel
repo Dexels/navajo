@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/com.dexels.navajo.dsl.expression.model/src"
+    modelPluginID="com.dexels.navajo.dsl.expression.model" modelName="Expression"
+    testsDirectory="/com.dexels.navajo.dsl.expression.model.tests/testsrc" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="6.0" copyrightFields="false">
+  <foreignModel>Expression.ecore</foreignModel>
+  <genPackages prefix="Expression" basePackage="com.dexels.navajo.dsl.model" disposableProviderFactory="true"
+      ecorePackage="Expression.ecore#/">
+    <genClasses ecoreClass="Expression.ecore#//TopLevel">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Expression.ecore#//TopLevel/toplevelExpression"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="Expression.ecore#//Expression">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Expression.ecore#//Expression/toplevelParent"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Expression.ecore#//Expression/parent"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expression.ecore#//Expression/parameters"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Expression.ecore#//Expression/operations"/>
+    </genClasses>
+    <genClasses ecoreClass="Expression.ecore#//LiteralSymbol">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Expression.ecore#//LiteralSymbol/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expression.ecore#//LiteralSymbol/subliteral"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Expression.ecore#//LiteralSymbol/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Expression.ecore#//LiteralSymbol/elements"/>
+    </genClasses>
+    <genClasses ecoreClass="Expression.ecore#//FunctionCall">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Expression.ecore#//FunctionCall/name"/>
+    </genClasses>
+    <genClasses ecoreClass="Expression.ecore#//Operation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Expression.ecore#//Operation/type"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>
