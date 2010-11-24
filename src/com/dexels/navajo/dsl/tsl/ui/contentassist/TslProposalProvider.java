@@ -18,7 +18,7 @@ import com.dexels.navajo.dsl.expression.ui.contentassist.FunctionProposal;
 import com.dexels.navajo.dsl.expression.ui.contentassist.InputTmlProposal;
 import com.dexels.navajo.dsl.expression.ui.contentassist.NavajoExpressionProposalProvider;
 import com.dexels.navajo.dsl.expression.ui.contentassist.impl.TestNavajoResourceFinder;
-import com.dexels.navajo.dsl.tsl.tsl.Map;
+import com.dexels.navajo.dsl.model.tsl.Map;
 import com.dexels.navajo.dsl.tsl.ui.contentassist.AbstractTslProposalProvider;
 /**
  * see http://www.eclipse.org/Xtext/documentation/latest/xtext.html#contentAssist on how to customize content assistant
