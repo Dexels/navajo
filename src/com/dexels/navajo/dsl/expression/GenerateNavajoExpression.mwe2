@@ -10,8 +10,10 @@ var projectName = "com.dexels.navajo.dsl.expression"
 var runtimeProject = "../${projectName}"
 
 Workflow {
+
     bean = StandaloneSetup {
 		platformUri = "${runtimeProject}/.."
+		registerGeneratedEPackage="com.dexels.navajo.dsl.model.expression.ExpressionPackage"
 	}
 
 	component = DirectoryCleaner {
@@ -35,11 +37,12 @@ Workflow {
 			fragment = grammarAccess.GrammarAccessFragment {}
 
 			// generates Java API for the generated EPackages 
-			fragment = ecore.EcoreGeneratorFragment {
-			// referencedGenModels = "uri to genmodel, uri to next genmodel"
-
+			fragment =org.eclipse.xtext.generator.ecore.EcoreGeneratorFragment {
+		      genModels="platform:/resource/com.dexels.navajo.dsl.expression.model/model/Expression.genmodel"
+				
 			}
-
+      
+      
 			// the serialization component
 			fragment = parseTreeConstructor.ParseTreeConstructorFragment {}
 

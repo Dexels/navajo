@@ -1,0 +1,125 @@
+grammar com.dexels.navajo.dsl.expression.NavajoExpression  hidden(WS, ML_COMMENT, SL_COMMENT)
+
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+//import "platform:/resource/com.dexels.navajo.dsl.expression/src/com/dexels/navajo/dsl/expression/Navajo.ecore" as ncore
+import "platform:/resource/com.dexels.navajo.dsl.expression.model/model/Expression.ecore" as ncore
+
+
+//import "classpath:/com/dexels/navajo/dsl/expression/Navajo.ecore"
+//import "file:///Users/frank/Documents/workspace-xtext/com.dexels.navajo.dsl.expression/src/com/dexels/navajo/dsl/expression/Navajo.ecore" as ncore
+
+//import "http://www.dexels.com/navajo/dsl/expression/NavajoCore" as ncore
+ 
+
+//generate navajoExpression "http://www.dexels.com/navajo/dsl/expression/NavajoExpression"
+
+TopLevel returns ncore::TopLevel: 
+//	 toplevelExpression =OrExpression
+		toplevelExpression+=OrExpression
+	;
+
+
+terminal ID  		: '^'?('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
+terminal INT returns ecore::EString: ('0'..'9')+;
+terminal ML_COMMENT	: '/*' -> '*/';
+terminal SL_COMMENT 	: '//' !('\n'|'\r')* ('\r'? '\n')?;
+
+terminal WS			: (' '|'\t'|'\r'|'\n')+;
+	
+terminal ANY_OTHER: .;
+
+ 
+
+
+
+
+
+//terminal LITERALSTRING	: 
+//			"'" ( '\\' ('b'|'t'|'n'|'f'|'r'|'"'|"'"|'\\') | !('\\'|"'") )* "'"
+//	;
+
+// skipped url, image, points, datepattern, password
+
+	
+
+//terminal PATH_ELEMENT: ('.'|'..'|("a".. "z"| "A" .. "Z"|"_")("a".. "z"| "A" .. "Z"|"0" .. "9"|"_")*);
+ 	
+PathElement returns ecore::EString:
+	(ID|"."|"..")
+	;
+	
+PathSequence returns ncore::LiteralSymbol:
+	'[' '/'? elements+=PathElement ('/' elements+=PathElement)* ']'
+;
+	
+TmlExpression returns ncore::LiteralSymbol:
+	 PathSequence 
+;
+
+ExistsTmlExpression returns ncore::LiteralSymbol:
+	'?' {ncore::LiteralSymbol} //subliteral+=TmlExpression 
+;
+	   
+   
+OrExpression returns ncore::Expression:
+    {ncore::Expression} parameters+=AndExpression (operations+="OR" parameters+=AndExpression )*;
+    
+AndExpression returns ncore::Expression:
+     {ncore::Expression}  parameters+=EqualityExpression (operations+="AND" parameters+=EqualityExpression )*
+     ;  
+
+EqualityExpression returns ncore::Expression: 
+     {ncore::Expression} parameters+=AdditiveExpression ((operations+='==' parameters+=AdditiveExpression) | (operations+='!=' parameters+=AdditiveExpression))?
+;     
+  
+// Skipped for now. Trouble with overloaded '<' stuff  
+//RelationalExpression returns Expression: 
+//   {Expression} operands+=AdditiveExpression ((op='&lt;' operands+=AdditiveExpression)|(op='&gt;' operands+=AdditiveExpression)|(op='&lt;=' operands+=AdditiveExpression)|(op='&gt;=' operands+=AdditiveExpression))?
+//    ;
+AdditiveExpression returns ncore::Expression:
+     {ncore::Expression} parameters+=MultiplicativeExpression (('+' parameters+=MultiplicativeExpression ) | ('-' parameters+=MultiplicativeExpression))*
+	;
+	
+MultiplicativeExpression returns ncore::Expression: 
+     {ncore::Expression} parameters+=UnaryExpression ((operations+='*' parameters+=UnaryExpression ) |  (operations+='/' parameters+=UnaryExpression ))*
+	;
+	
+UnaryExpression returns ncore::Expression:
+	{ncore::Expression} operations+="!" parameters+=PrimaryExpression
+	| PrimaryExpression;	
+
+PrimaryExpression returns ncore::Expression:
+   	{ncore::Expression} parameters+=Literal
+	| '(' parameters+=OrExpression ')'
+;	
+
+FunctionName:
+	ID;
+
+//
+//FunctionCall returns ncore::FunctionCall:
+//	name=FunctionName '(' operands=FunctionOperands  ')'
+//;
+//
+//
+//FunctionOperands returns ncore::FunctionOperands:
+//	 (paramList+=OrExpression)? (',' paramList+=OrExpression)*
+//	;
+
+
+Literal returns ncore::Expression:
+  {ncore::LiteralSymbol} value=INT
+//  | {Expression} literalstring=LITERALSTRING
+//  | {Expression} op='FORALL' '(' literalstring=LITERALSTRING ',' operands+=OrExpression ')'
+  // TODO Add float
+//  | FunctionCall
+  | {ncore::LiteralSymbol} //subliteral=ExistsTmlExpression 
+  | {ncore::LiteralSymbol} //subliteral=TmlExpression 
+  | {ncore::LiteralSymbol} type='{' (parameters+=OrExpression)?  (',' parameters+=OrExpression)* '}'
+  | {ncore::LiteralSymbol} elements+="NULL" 
+  | {ncore::LiteralSymbol} elements+="TODAY" 
+  | {ncore::LiteralSymbol} elements+="TRUE" 
+  | {ncore::LiteralSymbol} elements+="FALSE" 
+
+;
+
