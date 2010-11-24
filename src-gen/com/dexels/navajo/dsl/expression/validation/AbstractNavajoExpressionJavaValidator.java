@@ -13,7 +13,6 @@ public class AbstractNavajoExpressionJavaValidator extends AbstractDeclarativeVa
 @Override
 	protected List<EPackage> getEPackages() {
 	    List<EPackage> result = new ArrayList<EPackage>();
-	    result.add(com.dexels.navajo.dsl.expression.navajoExpression.NavajoExpressionPackage.eINSTANCE);
 		return result;
 	}
 

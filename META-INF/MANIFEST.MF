@@ -16,7 +16,8 @@ Require-Bundle: org.eclipse.xtext,
  org.eclipse.xtext.util,
  org.eclipse.emf.ecore,
  org.eclipse.emf.common,
- org.antlr.runtime
+ org.antlr.runtime,
+ com.dexels.navajo.dsl.expression.model;bundle-version="1.0.0"
 Import-Package: org.apache.log4j
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: com.dexels.navajo.document,
@@ -34,9 +35,6 @@ Export-Package: com.dexels.navajo.document,
  com.dexels.navajo.document.types,
  com.dexels.navajo.dsl.expression,
  com.dexels.navajo.dsl.expression.formatting,
- com.dexels.navajo.dsl.expression.navajoExpression,
- com.dexels.navajo.dsl.expression.navajoExpression.impl,
- com.dexels.navajo.dsl.expression.navajoExpression.util,
  com.dexels.navajo.dsl.expression.parseTreeConstruction,
  com.dexels.navajo.dsl.expression.parser.antlr,
  com.dexels.navajo.dsl.expression.parser.antlr.internal,
@@ -47,7 +45,6 @@ Export-Package: com.dexels.navajo.document,
  dexels,
  metadata,
  navajodocument,
- org.dexels.utils
-Bundle-ClassPath: lib/DexelsVersionControl.jar,
- lib/NavajoDocument.jar,
- .
+ org.dexels.utils,
+ com.dexels.navajo.dsl.expression
+Bundle-ClassPath: lib/DexelsVersionControl.jar,lib/NavajoDocument.jar,.

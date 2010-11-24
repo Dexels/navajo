@@ -1,7 +1,6 @@
 
 package com.dexels.navajo.dsl.expression;
 
-import com.google.inject.Injector;
 
 /**
  * Initialization support for running Xtext languages 
@@ -10,7 +9,7 @@ import com.google.inject.Injector;
 public class NavajoExpressionStandaloneSetup extends NavajoExpressionStandaloneSetupGenerated{
 
 	public static void doSetup() {
-		Injector i = new NavajoExpressionStandaloneSetup().createInjectorAndDoEMFRegistration();
+		new NavajoExpressionStandaloneSetup().createInjectorAndDoEMFRegistration();
 	}
 	
 	public static void main(String args[]) {

@@ -3,14 +3,6 @@
 
 <plugin>
 
-  <extension point="org.eclipse.emf.ecore.generated_package">
-    <package 
-       uri = "http://www.dexels.com/navajo/dsl/expression/NavajoExpression" 
-       class = "com.dexels.navajo.dsl.expression.navajoExpression.NavajoExpressionPackage"
-       genModel = "com/dexels/navajo/dsl/expression/NavajoExpression.genmodel" /> 
-	
-  </extension>
-
 
 
 

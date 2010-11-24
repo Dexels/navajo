@@ -35,9 +35,6 @@ public class NavajoExpressionStandaloneSetupGenerated implements ISetup {
 	}
 	
 	public void register(Injector injector) {
-	if (!EPackage.Registry.INSTANCE.containsKey("http://www.dexels.com/navajo/dsl/expression/NavajoExpression")) {
-		EPackage.Registry.INSTANCE.put("http://www.dexels.com/navajo/dsl/expression/NavajoExpression", com.dexels.navajo.dsl.expression.navajoExpression.NavajoExpressionPackage.eINSTANCE);
-	}
 
 		org.eclipse.xtext.resource.IResourceFactory resourceFactory = injector.getInstance(org.eclipse.xtext.resource.IResourceFactory.class);
 		org.eclipse.xtext.resource.IResourceServiceProvider serviceProvider = injector.getInstance(org.eclipse.xtext.resource.IResourceServiceProvider.class);

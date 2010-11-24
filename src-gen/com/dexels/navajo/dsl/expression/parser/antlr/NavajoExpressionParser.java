@@ -42,7 +42,7 @@ public class NavajoExpressionParser extends org.eclipse.xtext.parser.antlr.Abstr
 	
 	@Override 
 	protected String getDefaultRuleName() {
-		return "Expression";
+		return "TopLevel";
 	}
 	
 	public NavajoExpressionGrammarAccess getGrammarAccess() {
