@@ -25,10 +25,10 @@ import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLParseException;
-import com.dexels.navajo.dsl.expression.navajoExpression.Expression;
 import com.dexels.navajo.dsl.expression.ui.contentassist.AbstractNavajoExpressionProposalProvider;
 import com.dexels.navajo.dsl.expression.ui.contentassist.impl.NavajoResourceFinder;
 import com.dexels.navajo.dsl.expression.ui.contentassist.impl.TestNavajoResourceFinder;
+import com.dexels.navajo.dsl.model.expression.Expression;
 /**
  * see http://www.eclipse.org/Xtext/documentation/latest/xtext.html#contentAssist on how to customize content assistant
  */
@@ -316,22 +316,20 @@ public class NavajoExpressionProposalProvider extends AbstractNavajoExpressionPr
 		// and terminal token conflicts
 	}
 
-	@Override
-	public void completeFunctionOperands_Operands(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
-//		super.completeFunctionOperands_Operands(model, assignment, context, acceptor);
-		System.err.println("CLASSSS: "+model.getClass());
-		Expression e = (Expression) model;
-		String functionName = e.getOp();
-		List<FunctionProposal> fd = findFunctionByName(functionName);
-		System.err.println("FD count: "+fd.size());
-		for (FunctionProposal f : fd) {
-			System.err.println("name: "+f.getName()+" op: "+f.getOperandProposal(true));
-			ICompletionProposal completionProposal = createCompletionProposal(f.getOperandProposal(true), f.getProposalDescription(), null, context);
-			acceptor.accept(completionProposal);
-		}
-
-	}
-	
+//	@Override
+//	public void completeFunctionOperands_Operands(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+//		System.err.println("CLASSSS: "+model.getClass());
+//		Expression e = (Expression) model;
+//		String functionName = e.getOperations().get(0);
+//		List<FunctionProposal> fd = findFunctionByName(functionName);
+//		System.err.println("FD count: "+fd.size());
+//		for (FunctionProposal f : fd) {
+//			System.err.println("name: "+f.getName()+" op: "+f.getOperandProposal(true));
+//			ICompletionProposal completionProposal = createCompletionProposal(f.getOperandProposal(true), f.getProposalDescription(), null, context);
+//			acceptor.accept(completionProposal);
+//		}
+//	}
+//	
 //	public void complete_PathSequence(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
 //		super.complete_PathSequence(model, ruleCall, context, acceptor);
 //		System.err.println("Paaaaaaa");
