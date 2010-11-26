@@ -16,14 +16,14 @@ import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 
 TopLevel returns TopLevel: 
 //	 toplevelExpression =OrExpression
-		{TopLevel} 
 		toplevelExpression=OrExpression
  	;
 
 
  
+//terminal INT returns ecore::EString: ('0'..'9')+;
 
-terminal INT returns ecore::EString: ('0'..'9')+;
+terminal INT returns ecore::EInt: ('0'..'9')+;
 terminal ML_COMMENT	: '/*' -> '*/';
 terminal SL_COMMENT 	: '//' !('\n'|'\r')* ('\r'? '\n')?;
 
@@ -48,28 +48,28 @@ PathElement returns ecore::EString:
 	(ID|"."|"..")
 	;
 	
-PathSequence returns ecore::EString:
-	'[' '/'? PathElement ('/' PathElement)* ']'
-;
 	
-TmlExpression returns ecore::EString:
-	 PathSequence
+TmlExpression returns TmlReference:
+	'[' (absolute?='/')? elements+=PathElement ('/' elements+=PathElement)* ']'
 ;
 
-ExistsTmlExpression returns ecore::EString:
-	'?' TmlExpression 
+ExistsTmlExpression returns ExistsTmlReference: 
+	'?' '[' (absolute?='/')? elements+=PathElement ('/' elements+=PathElement)* ']'
 ;
-	   
+
+MapGetReference returns MapGetReference: 
+	operations+='$' elements+=PathElement ('/' elements+=PathElement)* 
+;
    
 OrExpression returns Expression:
-    {Expression} parameters+=AndExpression (operations+="OR" parameters+=AndExpression )*;
+    parameters+=AndExpression (operations+="OR" parameters+=AndExpression )*;
     
 AndExpression returns Expression:
-     {Expression}  parameters+=EqualityExpression (operations+="AND" parameters+=EqualityExpression )*
+     parameters+=EqualityExpression (operations+="AND" parameters+=EqualityExpression )*
      ;  
 
 EqualityExpression returns Expression: 
-     {Expression} parameters+=AdditiveExpression ((operations+='==' parameters+=AdditiveExpression) | (operations+='!=' parameters+=AdditiveExpression))?
+     parameters+=AdditiveExpression ((operations+='==' parameters+=AdditiveExpression) | (operations+='!=' parameters+=AdditiveExpression))?
 ;     
   
 // Skipped for now. Trouble with overloaded '<' stuff  
@@ -77,51 +77,52 @@ EqualityExpression returns Expression:
 //   {Expression} operands+=AdditiveExpression ((op='&lt;' operands+=AdditiveExpression)|(op='&gt;' operands+=AdditiveExpression)|(op='&lt;=' operands+=AdditiveExpression)|(op='&gt;=' operands+=AdditiveExpression))?
 //    ;
 AdditiveExpression returns Expression:
-     {Expression} parameters+=MultiplicativeExpression (('+' parameters+=MultiplicativeExpression ) | ('-' parameters+=MultiplicativeExpression))*
+      parameters+=MultiplicativeExpression (('+' parameters+=MultiplicativeExpression ) | ('-' parameters+=MultiplicativeExpression))*
 	;
 	
 MultiplicativeExpression returns Expression: 
-     {Expression} parameters+=UnaryExpression ((operations+='*' parameters+=UnaryExpression ) |  (operations+='/' parameters+=UnaryExpression ))*
+      parameters+=UnaryExpression ((operations+='*' parameters+=UnaryExpression ) |  (operations+='/' parameters+=UnaryExpression ))*
 	;
 	
 UnaryExpression returns Expression:
-	{Expression} operations+="!" parameters+=PrimaryExpression
+	operations+="!" parameters+=PrimaryExpression
 	| PrimaryExpression;	
 
 PrimaryExpression returns Expression:
-   	{Expression} parameters+=Literal
+   	parameters+=Literal
 	| '(' parameters+=OrExpression ')'
 ;	
-//
-//FunctionName:
-//	ID;
+
+
+// Keep this one in place so it will create a node for the code completion
+FunctionName:
+	ID;
 
 
 FunctionCall returns FunctionCall:
-	name=ID '(' operands=[FunctionOperands]  ')'
+	name=FunctionName '('(parameters+=OrExpression)? (',' parameters+=OrExpression)*  ')'
 ;
 
 
-FunctionOperands returns FunctionOperands:
-	  {FunctionOperands}(parameters+=OrExpression)? (',' parameters+=OrExpression)*
-	;
 //Expression returns Expression:
 //	Literal | FunctionCall | FunctionOperands ;
 
 
 Literal returns Expression:
-  {Expression} valueString=INT
-  | {Expression} valueString= LITERALSTRING
-  | {Expression} operations+='FORALL' '(' valueString=LITERALSTRING ',' parameters+=OrExpression ')'
+  {Expression}INT
+  | valueString= LITERALSTRING
+  | operations+='FORALL' '(' valueString=LITERALSTRING ',' parameters+=OrExpression ')'
   // TODO Add float
   | FunctionCall
-  | {Expression} elements+=ExistsTmlExpression 
-  | {Expression} elements+=TmlExpression 
-  | {Expression} expressionType='{' (parameters+=OrExpression)?  (',' parameters+=OrExpression)* '}'
-  | {Expression} elements+="NULL" 
-  | {Expression} elements+="TODAY" 
-  | {Expression} elements+="TRUE" 
-  | {Expression} elements+="FALSE" 
-
-;
+//  | {Expression} elements+=ExistsTmlExpression 
+//  | {Expression} elements+=TmlExpression 
+  | expressionType='{' (parameters+=OrExpression)?  (',' parameters+=OrExpression)* '}'
+  | elements+="NULL" 
+  | elements+="TODAY" 
+  | elements+="TRUE" 
+  | elements+="FALSE"
+  | parameters+=TmlExpression
+  | parameters+=ExistsTmlExpression
+  | parameters+=MapGetReference
+  ;
 

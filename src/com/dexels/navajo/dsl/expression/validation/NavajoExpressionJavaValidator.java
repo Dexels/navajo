@@ -9,5 +9,5 @@ public class NavajoExpressionJavaValidator extends AbstractNavajoExpressionJavaV
 //			warning("Name should start with a capital", MyDslPackage.GREETING__NAME);
 //		}
 //	}
-
+	
 }

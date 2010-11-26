@@ -10,20 +10,13 @@
     <type metamodel="//@metamodelDeclarations.0">
       <classifier xsi:type="ecore:EClass" href="http://www.dexels.com/expression/1.0#//TopLevel"/>
     </type>
-    <alternatives xsi:type="xtext:Group">
-      <elements xsi:type="xtext:Action">
-        <type metamodel="//@metamodelDeclarations.0">
-          <classifier xsi:type="ecore:EClass" href="http://www.dexels.com/expression/1.0#//TopLevel"/>
-        </type>
-      </elements>
-      <elements xsi:type="xtext:Assignment" feature="toplevelExpression" operator="=">
-        <terminal xsi:type="xtext:RuleCall" rule="//@rules.11"/>
-      </elements>
+    <alternatives xsi:type="xtext:Assignment" feature="toplevelExpression" operator="=">
+      <terminal xsi:type="xtext:RuleCall" rule="//@rules.11"/>
     </alternatives>
   </rules>
   <rules xsi:type="xtext:TerminalRule" name="INT">
     <type metamodel="//@metamodelDeclarations.1">
-      <classifier xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <classifier xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     </type>
     <alternatives xsi:type="xtext:CharacterRange" cardinality="+">
       <left value="0"/>
@@ -144,34 +137,66 @@
       <elements xsi:type="xtext:Keyword" value=".."/>
     </alternatives>
   </rules>
-  <rules xsi:type="xtext:ParserRule" name="PathSequence">
-    <type metamodel="//@metamodelDeclarations.1">
-      <classifier xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  <rules xsi:type="xtext:ParserRule" name="TmlExpression">
+    <type metamodel="//@metamodelDeclarations.0">
+      <classifier xsi:type="ecore:EClass" href="http://www.dexels.com/expression/1.0#//TmlReference"/>
     </type>
     <alternatives xsi:type="xtext:Group">
       <elements xsi:type="xtext:Keyword" value="["/>
-      <elements xsi:type="xtext:Keyword" cardinality="?" value="/"/>
-      <elements xsi:type="xtext:RuleCall" rule="//@rules.7"/>
+      <elements xsi:type="xtext:Assignment" cardinality="?" feature="absolute" operator="?=">
+        <terminal xsi:type="xtext:Keyword" value="/"/>
+      </elements>
+      <elements xsi:type="xtext:Assignment" feature="elements" operator="+=">
+        <terminal xsi:type="xtext:RuleCall" rule="//@rules.7"/>
+      </elements>
       <elements xsi:type="xtext:Group" cardinality="*">
         <elements xsi:type="xtext:Keyword" value="/"/>
-        <elements xsi:type="xtext:RuleCall" rule="//@rules.7"/>
+        <elements xsi:type="xtext:Assignment" feature="elements" operator="+=">
+          <terminal xsi:type="xtext:RuleCall" rule="//@rules.7"/>
+        </elements>
       </elements>
       <elements xsi:type="xtext:Keyword" value="]"/>
     </alternatives>
   </rules>
-  <rules xsi:type="xtext:ParserRule" name="TmlExpression">
-    <type metamodel="//@metamodelDeclarations.1">
-      <classifier xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </type>
-    <alternatives xsi:type="xtext:RuleCall" rule="//@rules.8"/>
-  </rules>
   <rules xsi:type="xtext:ParserRule" name="ExistsTmlExpression">
-    <type metamodel="//@metamodelDeclarations.1">
-      <classifier xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <type metamodel="//@metamodelDeclarations.0">
+      <classifier xsi:type="ecore:EClass" href="http://www.dexels.com/expression/1.0#//ExistsTmlReference"/>
     </type>
     <alternatives xsi:type="xtext:Group">
       <elements xsi:type="xtext:Keyword" value="?"/>
-      <elements xsi:type="xtext:RuleCall" rule="//@rules.9"/>
+      <elements xsi:type="xtext:Keyword" value="["/>
+      <elements xsi:type="xtext:Assignment" cardinality="?" feature="absolute" operator="?=">
+        <terminal xsi:type="xtext:Keyword" value="/"/>
+      </elements>
+      <elements xsi:type="xtext:Assignment" feature="elements" operator="+=">
+        <terminal xsi:type="xtext:RuleCall" rule="//@rules.7"/>
+      </elements>
+      <elements xsi:type="xtext:Group" cardinality="*">
+        <elements xsi:type="xtext:Keyword" value="/"/>
+        <elements xsi:type="xtext:Assignment" feature="elements" operator="+=">
+          <terminal xsi:type="xtext:RuleCall" rule="//@rules.7"/>
+        </elements>
+      </elements>
+      <elements xsi:type="xtext:Keyword" value="]"/>
+    </alternatives>
+  </rules>
+  <rules xsi:type="xtext:ParserRule" name="MapGetReference">
+    <type metamodel="//@metamodelDeclarations.0">
+      <classifier xsi:type="ecore:EClass" href="http://www.dexels.com/expression/1.0#//MapGetReference"/>
+    </type>
+    <alternatives xsi:type="xtext:Group">
+      <elements xsi:type="xtext:Assignment" feature="operations" operator="+=">
+        <terminal xsi:type="xtext:Keyword" value="$"/>
+      </elements>
+      <elements xsi:type="xtext:Assignment" feature="elements" operator="+=">
+        <terminal xsi:type="xtext:RuleCall" rule="//@rules.7"/>
+      </elements>
+      <elements xsi:type="xtext:Group" cardinality="*">
+        <elements xsi:type="xtext:Keyword" value="/"/>
+        <elements xsi:type="xtext:Assignment" feature="elements" operator="+=">
+          <terminal xsi:type="xtext:RuleCall" rule="//@rules.7"/>
+        </elements>
+      </elements>
     </alternatives>
   </rules>
   <rules xsi:type="xtext:ParserRule" name="OrExpression">
@@ -179,11 +204,6 @@
       <classifier xsi:type="ecore:EClass" href="http://www.dexels.com/expression/1.0#//Expression"/>
     </type>
     <alternatives xsi:type="xtext:Group">
-      <elements xsi:type="xtext:Action">
-        <type metamodel="//@metamodelDeclarations.0">
-          <classifier xsi:type="ecore:EClass" href="http://www.dexels.com/expression/1.0#//Expression"/>
-        </type>
-      </elements>
       <elements xsi:type="xtext:Assignment" feature="parameters" operator="+=">
         <terminal xsi:type="xtext:RuleCall" rule="//@rules.12"/>
       </elements>
@@ -202,11 +222,6 @@
       <classifier xsi:type="ecore:EClass" href="http://www.dexels.com/expression/1.0#//Expression"/>
     </type>
     <alternatives xsi:type="xtext:Group">
-      <elements xsi:type="xtext:Action">
-        <type metamodel="//@metamodelDeclarations.0">
-          <classifier xsi:type="ecore:EClass" href="http://www.dexels.com/expression/1.0#//Expression"/>
-        </type>
-      </elements>
       <elements xsi:type="xtext:Assignment" feature="parameters" operator="+=">
         <terminal xsi:type="xtext:RuleCall" rule="//@rules.13"/>
       </elements>
@@ -225,11 +240,6 @@
       <classifier xsi:type="ecore:EClass" href="http://www.dexels.com/expression/1.0#//Expression"/>
     </type>
     <alternatives xsi:type="xtext:Group">
-      <elements xsi:type="xtext:Action">
-        <type metamodel="//@metamodelDeclarations.0">
-          <classifier xsi:type="ecore:EClass" href="http://www.dexels.com/expression/1.0#//Expression"/>
-        </type>
-      </elements>
       <elements xsi:type="xtext:Assignment" feature="parameters" operator="+=">
         <terminal xsi:type="xtext:RuleCall" rule="//@rules.14"/>
       </elements>
@@ -258,11 +268,6 @@
       <classifier xsi:type="ecore:EClass" href="http://www.dexels.com/expression/1.0#//Expression"/>
     </type>
     <alternatives xsi:type="xtext:Group">
-      <elements xsi:type="xtext:Action">
-        <type metamodel="//@metamodelDeclarations.0">
-          <classifier xsi:type="ecore:EClass" href="http://www.dexels.com/expression/1.0#//Expression"/>
-        </type>
-      </elements>
       <elements xsi:type="xtext:Assignment" feature="parameters" operator="+=">
         <terminal xsi:type="xtext:RuleCall" rule="//@rules.15"/>
       </elements>
@@ -287,11 +292,6 @@
       <classifier xsi:type="ecore:EClass" href="http://www.dexels.com/expression/1.0#//Expression"/>
     </type>
     <alternatives xsi:type="xtext:Group">
-      <elements xsi:type="xtext:Action">
-        <type metamodel="//@metamodelDeclarations.0">
-          <classifier xsi:type="ecore:EClass" href="http://www.dexels.com/expression/1.0#//Expression"/>
-        </type>
-      </elements>
       <elements xsi:type="xtext:Assignment" feature="parameters" operator="+=">
         <terminal xsi:type="xtext:RuleCall" rule="//@rules.16"/>
       </elements>
@@ -321,11 +321,6 @@
     </type>
     <alternatives xsi:type="xtext:Alternatives">
       <elements xsi:type="xtext:Group">
-        <elements xsi:type="xtext:Action">
-          <type metamodel="//@metamodelDeclarations.0">
-            <classifier xsi:type="ecore:EClass" href="http://www.dexels.com/expression/1.0#//Expression"/>
-          </type>
-        </elements>
         <elements xsi:type="xtext:Assignment" feature="operations" operator="+=">
           <terminal xsi:type="xtext:Keyword" value="!"/>
         </elements>
@@ -341,15 +336,8 @@
       <classifier xsi:type="ecore:EClass" href="http://www.dexels.com/expression/1.0#//Expression"/>
     </type>
     <alternatives xsi:type="xtext:Alternatives">
-      <elements xsi:type="xtext:Group">
-        <elements xsi:type="xtext:Action">
-          <type metamodel="//@metamodelDeclarations.0">
-            <classifier xsi:type="ecore:EClass" href="http://www.dexels.com/expression/1.0#//Expression"/>
-          </type>
-        </elements>
-        <elements xsi:type="xtext:Assignment" feature="parameters" operator="+=">
-          <terminal xsi:type="xtext:RuleCall" rule="//@rules.20"/>
-        </elements>
+      <elements xsi:type="xtext:Assignment" feature="parameters" operator="+=">
+        <terminal xsi:type="xtext:RuleCall" rule="//@rules.20"/>
       </elements>
       <elements xsi:type="xtext:Group">
         <elements xsi:type="xtext:Keyword" value="("/>
@@ -360,36 +348,21 @@
       </elements>
     </alternatives>
   </rules>
+  <rules xsi:type="xtext:ParserRule" name="FunctionName">
+    <type metamodel="//@metamodelDeclarations.1">
+      <classifier xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </type>
+    <alternatives xsi:type="xtext:RuleCall" rule="//@rules.5"/>
+  </rules>
   <rules xsi:type="xtext:ParserRule" name="FunctionCall">
     <type metamodel="//@metamodelDeclarations.0">
       <classifier xsi:type="ecore:EClass" href="http://www.dexels.com/expression/1.0#//FunctionCall"/>
     </type>
     <alternatives xsi:type="xtext:Group">
       <elements xsi:type="xtext:Assignment" feature="name" operator="=">
-        <terminal xsi:type="xtext:RuleCall" rule="//@rules.5"/>
+        <terminal xsi:type="xtext:RuleCall" rule="//@rules.18"/>
       </elements>
       <elements xsi:type="xtext:Keyword" value="("/>
-      <elements xsi:type="xtext:Assignment" feature="operands" operator="=">
-        <terminal xsi:type="xtext:CrossReference">
-          <type metamodel="//@metamodelDeclarations.0">
-            <classifier xsi:type="ecore:EClass" href="http://www.dexels.com/expression/1.0#//FunctionOperands"/>
-          </type>
-          <terminal xsi:type="xtext:RuleCall" rule="//@rules.5"/>
-        </terminal>
-      </elements>
-      <elements xsi:type="xtext:Keyword" value=")"/>
-    </alternatives>
-  </rules>
-  <rules xsi:type="xtext:ParserRule" name="FunctionOperands">
-    <type metamodel="//@metamodelDeclarations.0">
-      <classifier xsi:type="ecore:EClass" href="http://www.dexels.com/expression/1.0#//FunctionOperands"/>
-    </type>
-    <alternatives xsi:type="xtext:Group">
-      <elements xsi:type="xtext:Action">
-        <type metamodel="//@metamodelDeclarations.0">
-          <classifier xsi:type="ecore:EClass" href="http://www.dexels.com/expression/1.0#//FunctionOperands"/>
-        </type>
-      </elements>
       <elements xsi:type="xtext:Assignment" cardinality="?" feature="parameters" operator="+=">
         <terminal xsi:type="xtext:RuleCall" rule="//@rules.11"/>
       </elements>
@@ -399,6 +372,7 @@
           <terminal xsi:type="xtext:RuleCall" rule="//@rules.11"/>
         </elements>
       </elements>
+      <elements xsi:type="xtext:Keyword" value=")"/>
     </alternatives>
   </rules>
   <rules xsi:type="xtext:ParserRule" name="Literal">
@@ -412,26 +386,12 @@
             <classifier xsi:type="ecore:EClass" href="http://www.dexels.com/expression/1.0#//Expression"/>
           </type>
         </elements>
-        <elements xsi:type="xtext:Assignment" feature="valueString" operator="=">
-          <terminal xsi:type="xtext:RuleCall" rule="//@rules.1"/>
-        </elements>
+        <elements xsi:type="xtext:RuleCall" rule="//@rules.1"/>
+      </elements>
+      <elements xsi:type="xtext:Assignment" feature="valueString" operator="=">
+        <terminal xsi:type="xtext:RuleCall" rule="//@rules.6"/>
       </elements>
       <elements xsi:type="xtext:Group">
-        <elements xsi:type="xtext:Action">
-          <type metamodel="//@metamodelDeclarations.0">
-            <classifier xsi:type="ecore:EClass" href="http://www.dexels.com/expression/1.0#//Expression"/>
-          </type>
-        </elements>
-        <elements xsi:type="xtext:Assignment" feature="valueString" operator="=">
-          <terminal xsi:type="xtext:RuleCall" rule="//@rules.6"/>
-        </elements>
-      </elements>
-      <elements xsi:type="xtext:Group">
-        <elements xsi:type="xtext:Action">
-          <type metamodel="//@metamodelDeclarations.0">
-            <classifier xsi:type="ecore:EClass" href="http://www.dexels.com/expression/1.0#//Expression"/>
-          </type>
-        </elements>
         <elements xsi:type="xtext:Assignment" feature="operations" operator="+=">
           <terminal xsi:type="xtext:Keyword" value="FORALL"/>
         </elements>
@@ -445,33 +405,8 @@
         </elements>
         <elements xsi:type="xtext:Keyword" value=")"/>
       </elements>
-      <elements xsi:type="xtext:RuleCall" rule="//@rules.18"/>
+      <elements xsi:type="xtext:RuleCall" rule="//@rules.19"/>
       <elements xsi:type="xtext:Group">
-        <elements xsi:type="xtext:Action">
-          <type metamodel="//@metamodelDeclarations.0">
-            <classifier xsi:type="ecore:EClass" href="http://www.dexels.com/expression/1.0#//Expression"/>
-          </type>
-        </elements>
-        <elements xsi:type="xtext:Assignment" feature="elements" operator="+=">
-          <terminal xsi:type="xtext:RuleCall" rule="//@rules.10"/>
-        </elements>
-      </elements>
-      <elements xsi:type="xtext:Group">
-        <elements xsi:type="xtext:Action">
-          <type metamodel="//@metamodelDeclarations.0">
-            <classifier xsi:type="ecore:EClass" href="http://www.dexels.com/expression/1.0#//Expression"/>
-          </type>
-        </elements>
-        <elements xsi:type="xtext:Assignment" feature="elements" operator="+=">
-          <terminal xsi:type="xtext:RuleCall" rule="//@rules.9"/>
-        </elements>
-      </elements>
-      <elements xsi:type="xtext:Group">
-        <elements xsi:type="xtext:Action">
-          <type metamodel="//@metamodelDeclarations.0">
-            <classifier xsi:type="ecore:EClass" href="http://www.dexels.com/expression/1.0#//Expression"/>
-          </type>
-        </elements>
         <elements xsi:type="xtext:Assignment" feature="expressionType" operator="=">
           <terminal xsi:type="xtext:Keyword" value="{"/>
         </elements>
@@ -486,45 +421,26 @@
         </elements>
         <elements xsi:type="xtext:Keyword" value="}"/>
       </elements>
-      <elements xsi:type="xtext:Group">
-        <elements xsi:type="xtext:Action">
-          <type metamodel="//@metamodelDeclarations.0">
-            <classifier xsi:type="ecore:EClass" href="http://www.dexels.com/expression/1.0#//Expression"/>
-          </type>
-        </elements>
-        <elements xsi:type="xtext:Assignment" feature="elements" operator="+=">
-          <terminal xsi:type="xtext:Keyword" value="NULL"/>
-        </elements>
+      <elements xsi:type="xtext:Assignment" feature="elements" operator="+=">
+        <terminal xsi:type="xtext:Keyword" value="NULL"/>
       </elements>
-      <elements xsi:type="xtext:Group">
-        <elements xsi:type="xtext:Action">
-          <type metamodel="//@metamodelDeclarations.0">
-            <classifier xsi:type="ecore:EClass" href="http://www.dexels.com/expression/1.0#//Expression"/>
-          </type>
-        </elements>
-        <elements xsi:type="xtext:Assignment" feature="elements" operator="+=">
-          <terminal xsi:type="xtext:Keyword" value="TODAY"/>
-        </elements>
+      <elements xsi:type="xtext:Assignment" feature="elements" operator="+=">
+        <terminal xsi:type="xtext:Keyword" value="TODAY"/>
       </elements>
-      <elements xsi:type="xtext:Group">
-        <elements xsi:type="xtext:Action">
-          <type metamodel="//@metamodelDeclarations.0">
-            <classifier xsi:type="ecore:EClass" href="http://www.dexels.com/expression/1.0#//Expression"/>
-          </type>
-        </elements>
-        <elements xsi:type="xtext:Assignment" feature="elements" operator="+=">
-          <terminal xsi:type="xtext:Keyword" value="TRUE"/>
-        </elements>
+      <elements xsi:type="xtext:Assignment" feature="elements" operator="+=">
+        <terminal xsi:type="xtext:Keyword" value="TRUE"/>
       </elements>
-      <elements xsi:type="xtext:Group">
-        <elements xsi:type="xtext:Action">
-          <type metamodel="//@metamodelDeclarations.0">
-            <classifier xsi:type="ecore:EClass" href="http://www.dexels.com/expression/1.0#//Expression"/>
-          </type>
-        </elements>
-        <elements xsi:type="xtext:Assignment" feature="elements" operator="+=">
-          <terminal xsi:type="xtext:Keyword" value="FALSE"/>
-        </elements>
+      <elements xsi:type="xtext:Assignment" feature="elements" operator="+=">
+        <terminal xsi:type="xtext:Keyword" value="FALSE"/>
+      </elements>
+      <elements xsi:type="xtext:Assignment" feature="parameters" operator="+=">
+        <terminal xsi:type="xtext:RuleCall" rule="//@rules.8"/>
+      </elements>
+      <elements xsi:type="xtext:Assignment" feature="parameters" operator="+=">
+        <terminal xsi:type="xtext:RuleCall" rule="//@rules.9"/>
+      </elements>
+      <elements xsi:type="xtext:Assignment" feature="parameters" operator="+=">
+        <terminal xsi:type="xtext:RuleCall" rule="//@rules.10"/>
       </elements>
     </alternatives>
   </rules>
