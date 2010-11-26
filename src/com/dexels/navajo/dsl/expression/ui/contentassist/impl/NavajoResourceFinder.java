@@ -78,7 +78,10 @@ public class NavajoResourceFinder implements INavajoResourceFinder{
 			return null;
 		}
 		IEditorPart editor = activePage.getActiveEditor();
-		  IEditorInput input =  editor.getEditorInput();
+		if(editor==null) {
+			return null;
+		}
+		IEditorInput input =  editor.getEditorInput();
 		  IFile file = null;
 		  if(input instanceof IFileEditorInput){
 		   file = ((IFileEditorInput)input).getFile();

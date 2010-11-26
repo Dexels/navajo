@@ -4,6 +4,7 @@
 package com.dexels.navajo.dsl.expression.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingHelper;
 
 /**
  * Use this class to register components to be used within the IDE.
@@ -13,4 +14,14 @@ public class NavajoExpressionUiModule extends com.dexels.navajo.dsl.expression.u
 		super(plugin);
 		System.err.println("Registering UI module!");
 	}
+
+	@Override
+	public Class<? extends IHighlightingHelper> bindIHighlightingHelper() {
+		// TODO Auto-generated method stub
+		return super.bindIHighlightingHelper();
+	}
+
+
+	
+	
 }

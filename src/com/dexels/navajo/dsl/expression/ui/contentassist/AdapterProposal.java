@@ -36,7 +36,36 @@ public class AdapterProposal implements Comparable<AdapterProposal>{
 
 	}
 
+	public List<String> getSetters() {
+		List<String> result = new ArrayList<String>();
+		for (AdapterValueEntry w : values) {
+			if(w.getDirection().equals("in")) {
+				result.add(w.getName());
+			}
+		}
+		return result;
+	}
+
+	public List<String> getGetters() {
+		List<String> result = new ArrayList<String>();
+		for (AdapterValueEntry w : values) {
+			if(w.getDirection().equals("out")) {
+				result.add(w.getName());
+			}
+		}
+		return result;
+	}
+	
+	public String getTypeOfValue(String value) {
+		for (AdapterValueEntry w : values) {
+			if(w.getName().equals(value)) {
+				return w.getType();
+			}
+		}
+		return null;
+	}
+
 	public String getFullProposal() {
-		return getTagName()+" "+getRequiredSetters()+">\n</map."+getTagName()+">";
+		return "<map."+getTagName()+" "+getRequiredSetters()+">\n</map."+getTagName()+">";
 	}
 }

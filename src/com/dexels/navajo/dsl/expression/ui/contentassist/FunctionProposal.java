@@ -43,7 +43,7 @@ public class FunctionProposal implements Comparable<FunctionProposal> {
 
 	private String instantiateDataType(String e) {
 		if(e.equals("string")) {
-			return "\"\"";
+			return "''";
 		}
 		if(e.equals("integer")) {
 			return "0";

@@ -6,11 +6,13 @@ package com.dexels.navajo.dsl.expression.ui.contentassist;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.ui.IEditorInput;
@@ -22,13 +24,19 @@ import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLParseException;
 import com.dexels.navajo.dsl.expression.ui.contentassist.AbstractNavajoExpressionProposalProvider;
 import com.dexels.navajo.dsl.expression.ui.contentassist.impl.NavajoResourceFinder;
 import com.dexels.navajo.dsl.expression.ui.contentassist.impl.TestNavajoResourceFinder;
 import com.dexels.navajo.dsl.model.expression.Expression;
+import com.dexels.navajo.dsl.model.expression.MapGetReference;
+import com.dexels.navajo.dsl.model.tsl.ExpressionTag;
+import com.dexels.navajo.dsl.model.tsl.Map;
 /**
  * see http://www.eclipse.org/Xtext/documentation/latest/xtext.html#contentAssist on how to customize content assistant
  */
@@ -37,29 +45,37 @@ public class NavajoExpressionProposalProvider extends AbstractNavajoExpressionPr
 
 	protected List<FunctionProposal> functions = new ArrayList<FunctionProposal>();
 	protected List<AdapterProposal> adapters = new ArrayList<AdapterProposal>();
+	protected java.util.Map<String, AdapterProposal> adapterMap = new HashMap<String, AdapterProposal>();
 	protected List<InputTmlProposal> tmlProposal = new ArrayList<InputTmlProposal>();
 	private INavajoResourceFinder navajoResourceFinder= null;
 	
 	
 	public NavajoExpressionProposalProvider() {
-		this(new NavajoResourceFinder());
+		if(System.getProperty("testmode")!=null) {
+			try {
+				initialize(new TestNavajoResourceFinder());
+			} catch (CoreException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			try {
+				initialize(new NavajoResourceFinder());
+			} catch (CoreException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}	
 
 
-	public NavajoExpressionProposalProvider(INavajoResourceFinder navajoResourceFinder) {
-		setNavajoResourceFinder(navajoResourceFinder);
-		try {
-			initialize(navajoResourceFinder);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (XMLParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+
 	public List<FunctionProposal> getFunctions() {
 		return functions;
 	}
@@ -75,12 +91,14 @@ public class NavajoExpressionProposalProvider extends AbstractNavajoExpressionPr
 	}
 
 
-	private void initialize(INavajoResourceFinder navajoResourceFinder)
+	protected void initialize(INavajoResourceFinder navajoResourceFinder)
 			throws CoreException, IOException {
 		//InputStream is = this.getClass().getClassLoader().getResource("com/dexels/navajo/dsl/ui/functions.xml").openStream();
+		setNavajoResourceFinder(navajoResourceFinder);
 		initializeFunctions(navajoResourceFinder);
 		initializeAdapters(navajoResourceFinder);
 		initializeInput(navajoResourceFinder);
+		System.err.println("Initialization complete. functions: "+functions.size()+" adapters: "+adapters.size()+" tml: "+tmlProposal.size());
 	}
 
 
@@ -117,12 +135,17 @@ public class NavajoExpressionProposalProvider extends AbstractNavajoExpressionPr
 				}
 			}
 			adapters.add(fr);
+			adapterMap.put(fr.getTagName(), fr);
 		}
 		Collections.sort(adapters);
 	}
 	
 	protected List<AdapterProposal> getAdapterProposals() {
 		return adapters;
+	}
+	
+	protected AdapterProposal getAdapter(String name) {
+		return adapterMap.get(name);
 	}
 
 	private void initializeFunctions(INavajoResourceFinder navajoResourceFinder)
@@ -277,8 +300,8 @@ public class NavajoExpressionProposalProvider extends AbstractNavajoExpressionPr
 	}
 
 	public static void main(String[] args) throws Exception {
-
-		NavajoExpressionProposalProvider npp = new NavajoExpressionProposalProvider(new TestNavajoResourceFinder());
+		System.setProperty("testmode", "true");
+		NavajoExpressionProposalProvider npp = new NavajoExpressionProposalProvider();
 		System.err.println("Parse test of: string,integer,string|empty,boolean|empty");
 		System.err.println("result: " + npp.parseAlternatives("string,integer,string|empty,boolean|empty"));
 		System.err.println("Function count: " + npp.functions.size());
@@ -294,11 +317,20 @@ public class NavajoExpressionProposalProvider extends AbstractNavajoExpressionPr
 		for (AdapterProposal f : npp.adapters) {
 			System.err.println("Adapter: " + f.getTagName());
 		}
+		List<String> stack = new ArrayList<String>();
+		stack.add("ftp");
+		stack.add("sqlquery");
 		
+		List<String> proposals = new ArrayList<String>();
+		StringBuffer prefixBuffer = new StringBuffer();
+		npp.processGetters(stack, proposals, prefixBuffer);		
+		for (String string : proposals) {
+			System.err.println("Proposal: "+string);
+		}
 	}
 	
 	
-	
+
 
 	public void complete_FunctionCall(EObject model, RuleCall ruleCall,
 			ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
@@ -352,9 +384,93 @@ public class NavajoExpressionProposalProvider extends AbstractNavajoExpressionPr
 //		System.err.println("Pooooooooo!");
 	}
 
+	@Override
 	public void complete_PathElement(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
 		super.complete_PathElement(model, ruleCall, context, acceptor);
+		System.err.println("Completing path element!");
+		debugExpression((Expression) model);
 	}
+	
+	@Override
+	public void complete_MapGetReference(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		System.err.println("Completing map reference!");
+		System.err.println("Map Stack: "+getMapStack(model));
+		Expression mfr = null;
+		List<String> proposals = new ArrayList<String>();
+		processGetters(getMapStack(model), proposals, new StringBuffer());
+		
+		if(model instanceof ExpressionTag) {
+			ExpressionTag et = (ExpressionTag)model;
+			mfr = et.getExpression().getToplevelExpression();
+		}
+		if(model instanceof Expression) {
+			mfr = (Expression)model;
+		}
+		debugExpression(mfr);
+		
+		if(mfr!=null) {
+			EList<String> elts = mfr.getElements();
+			for (String e : elts) {
+				System.err.println("Path element: "+e);
+			}
+
+			
+		}
+		for (String prop : proposals) {
+			ICompletionProposal completionProposal = createCompletionProposal(prop,prop, null, context);
+			acceptor.accept(completionProposal);
+		}
+	}
+	
+	
+	
+	
+	private List<String> getMapStack(EObject modelNode) {
+		List<String> result = new ArrayList<String>();
+		EObject current = modelNode;
+		while(current!=null) {
+			if(current instanceof Map) {
+				Map m = (Map)current;
+				System.err.println("Map tag: "+m.getMapName());
+				result.add(m.getMapName());
+			}
+			current = current.eContainer();
+		}
+		return result;
+	}
+	
+	private void processGetters(List<String> mapStack,List<String> proposals, StringBuffer prefix ) {
+		if(mapStack.isEmpty()) {
+			return;
+		}
+		String mapName = mapStack.get(0);
+		AdapterProposal ap = adapterMap.get(mapName);
+		if(ap==null) {
+			System.err.println("Warning: map: "+mapName+" not found!");
+		}
+		List<String> apGetters = ap.getGetters();
+		for (String getter : apGetters) {
+			proposals.add("$"+prefix.toString()+getter);
+		}
+		mapStack.remove(0);
+		prefix.append("../");
+		processGetters(mapStack, proposals, prefix);
+	}
+	
+	private void debugExpression(Expression e) {
+		if(e==null) {
+			return;
+		}
+		Expression c = e;
+		while(c.getParent()!=null) {
+			System.err.println("Parent:: "+c.getParent().getClass()+" getParams: "+c.getParameters()+" >> "+c.getElements());
+			c = c.getParent();
+		}
+		System.err.println("== finished debugexpression ==");
+	}
+
+	
+	@Override
 	public void complete_ExistsTmlExpression(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
 		// subclasses may override
 		super.complete_ExistsTmlExpression(model, ruleCall, context, acceptor);
@@ -383,26 +499,26 @@ public class NavajoExpressionProposalProvider extends AbstractNavajoExpressionPr
 		  if(input instanceof IFileEditorInput){
 		   file = ((IFileEditorInput)input).getFile();
 		  }
-		  if(file==null)
-		   return null;
-
-		    IProject project = file.getProject();
+		  if(file==null) {
+			  return null;
+		  }
+		  IProject project = file.getProject();
 		  return project;
 
 		 }
 
 	
-//	@Override
-//	public void complete_FunctionName(EObject model, RuleCall ruleCall,
-//			ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
-//		String proposal = "BROAOAOAOPO";
-//
-//		proposal = getValueConverter().toString(proposal, "ID");
-//		System.err.println("Propposing");
-//		ICompletionProposal completionProposal = createCompletionProposal(
-//				proposal, context);
-//		// register the proposal, the acceptor handles null-values gracefully
-//		acceptor.accept(completionProposal);
-//	}
+	@Override
+	public void complete_FunctionName(EObject model, RuleCall ruleCall,
+			ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		String proposal = "BROAOAOAOPO";
+
+		proposal = getValueConverter().toString(proposal, "ID");
+		System.err.println("Propposing");
+		ICompletionProposal completionProposal = createCompletionProposal(
+				proposal, context);
+		// register the proposal, the acceptor handles null-values gracefully
+		acceptor.accept(completionProposal);
+	}
 
 }
