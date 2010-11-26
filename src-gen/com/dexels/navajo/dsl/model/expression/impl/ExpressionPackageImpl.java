@@ -6,13 +6,16 @@
  */
 package com.dexels.navajo.dsl.model.expression.impl;
 
+import com.dexels.navajo.dsl.model.expression.ExistsTmlReference;
 import com.dexels.navajo.dsl.model.expression.Expression;
 import com.dexels.navajo.dsl.model.expression.ExpressionFactory;
 import com.dexels.navajo.dsl.model.expression.ExpressionPackage;
 import com.dexels.navajo.dsl.model.expression.FunctionCall;
 import com.dexels.navajo.dsl.model.expression.FunctionOperands;
+import com.dexels.navajo.dsl.model.expression.MapGetReference;
 import com.dexels.navajo.dsl.model.expression.Operation;
 import com.dexels.navajo.dsl.model.expression.PathSequence;
+import com.dexels.navajo.dsl.model.expression.TmlReference;
 import com.dexels.navajo.dsl.model.expression.TopLevel;
 
 import org.eclipse.emf.ecore.EAttribute;
@@ -49,6 +52,27 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 	 * @generated
 	 */
 	private EClass functionCallEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass mapGetReferenceEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass tmlReferenceEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass existsTmlReferenceEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -272,6 +296,78 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getMapGetReference() {
+		return mapGetReferenceEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getMapGetReference_PathElements() {
+		return (EAttribute)mapGetReferenceEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getTmlReference() {
+		return tmlReferenceEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTmlReference_PathElements() {
+		return (EAttribute)tmlReferenceEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTmlReference_Absolute() {
+		return (EAttribute)tmlReferenceEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getExistsTmlReference() {
+		return existsTmlReferenceEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getExistsTmlReference_PathElements() {
+		return (EAttribute)existsTmlReferenceEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getExistsTmlReference_Absolute() {
+		return (EAttribute)existsTmlReferenceEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getFunctionOperands() {
 		return functionOperandsEClass;
 	}
@@ -367,6 +463,17 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 		createEAttribute(functionCallEClass, FUNCTION_CALL__NAME);
 		createEReference(functionCallEClass, FUNCTION_CALL__OPERANDS);
 
+		mapGetReferenceEClass = createEClass(MAP_GET_REFERENCE);
+		createEAttribute(mapGetReferenceEClass, MAP_GET_REFERENCE__PATH_ELEMENTS);
+
+		tmlReferenceEClass = createEClass(TML_REFERENCE);
+		createEAttribute(tmlReferenceEClass, TML_REFERENCE__PATH_ELEMENTS);
+		createEAttribute(tmlReferenceEClass, TML_REFERENCE__ABSOLUTE);
+
+		existsTmlReferenceEClass = createEClass(EXISTS_TML_REFERENCE);
+		createEAttribute(existsTmlReferenceEClass, EXISTS_TML_REFERENCE__PATH_ELEMENTS);
+		createEAttribute(existsTmlReferenceEClass, EXISTS_TML_REFERENCE__ABSOLUTE);
+
 		functionOperandsEClass = createEClass(FUNCTION_OPERANDS);
 		createEReference(functionOperandsEClass, FUNCTION_OPERANDS__PARAM_LIST);
 
@@ -406,6 +513,9 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 
 		// Add supertypes to classes
 		functionCallEClass.getESuperTypes().add(this.getExpression());
+		mapGetReferenceEClass.getESuperTypes().add(this.getExpression());
+		tmlReferenceEClass.getESuperTypes().add(this.getExpression());
+		existsTmlReferenceEClass.getESuperTypes().add(this.getExpression());
 		functionOperandsEClass.getESuperTypes().add(this.getExpression());
 		operationEClass.getESuperTypes().add(this.getExpression());
 
@@ -413,7 +523,7 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 		initEClass(topLevelEClass, TopLevel.class, "TopLevel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getTopLevel_ToplevelExpression(), this.getExpression(), null, "toplevelExpression", null, 0, 1, TopLevel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(expressionEClass, Expression.class, "Expression", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(expressionEClass, Expression.class, "Expression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getExpression_Parent(), this.getExpression(), this.getExpression_Parameters(), "parent", null, 0, 1, Expression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getExpression_Parameters(), this.getExpression(), this.getExpression_Parent(), "parameters", null, 0, -1, Expression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getExpression_Operations(), ecorePackage.getEString(), "operations", null, 0, -1, Expression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -428,6 +538,17 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 		initEAttribute(getFunctionCall_Name(), ecorePackage.getEString(), "name", null, 0, 1, FunctionCall.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFunctionCall_Operands(), this.getFunctionOperands(), null, "operands", null, 0, 1, FunctionCall.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		initEClass(mapGetReferenceEClass, MapGetReference.class, "MapGetReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getMapGetReference_PathElements(), ecorePackage.getEString(), "pathElements", null, 0, -1, MapGetReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(tmlReferenceEClass, TmlReference.class, "TmlReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getTmlReference_PathElements(), ecorePackage.getEString(), "pathElements", null, 0, -1, TmlReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTmlReference_Absolute(), ecorePackage.getEBoolean(), "absolute", null, 0, 1, TmlReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(existsTmlReferenceEClass, ExistsTmlReference.class, "ExistsTmlReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getExistsTmlReference_PathElements(), ecorePackage.getEString(), "pathElements", null, 0, -1, ExistsTmlReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getExistsTmlReference_Absolute(), ecorePackage.getEBoolean(), "absolute", null, 0, 1, ExistsTmlReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
 		initEClass(functionOperandsEClass, FunctionOperands.class, "FunctionOperands", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getFunctionOperands_ParamList(), this.getExpression(), null, "paramList", null, 0, -1, FunctionOperands.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -435,7 +556,7 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 		initEAttribute(getOperation_Type(), ecorePackage.getEString(), "type", null, 0, 1, Operation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(pathSequenceEClass, PathSequence.class, "PathSequence", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getPathSequence_PathElements(), ecorePackage.getEString(), "pathElements", null, 0, 1, PathSequence.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPathSequence_PathElements(), ecorePackage.getEString(), "pathElements", null, 0, -1, PathSequence.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

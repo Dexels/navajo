@@ -8,8 +8,8 @@ package com.dexels.navajo.dsl.model.expression.impl;
 
 import com.dexels.navajo.dsl.model.expression.Expression;
 import com.dexels.navajo.dsl.model.expression.ExpressionPackage;
-
 import com.dexels.navajo.dsl.model.expression.PathSequence;
+
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -50,7 +50,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public abstract class ExpressionImpl extends EObjectImpl implements Expression {
+public class ExpressionImpl extends EObjectImpl implements Expression {
 	/**
 	 * The cached value of the '{@link #getParameters() <em>Parameters</em>}' containment reference list.
 	 * <!-- begin-user-doc -->

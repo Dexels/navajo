@@ -31,7 +31,7 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  *
  * @see com.dexels.navajo.dsl.model.expression.ExpressionPackage#getExpression()
- * @model abstract="true"
+ * @model
  * @generated
  */
 public interface Expression extends EObject {

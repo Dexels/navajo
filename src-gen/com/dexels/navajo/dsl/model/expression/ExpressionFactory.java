@@ -35,6 +35,15 @@ public interface ExpressionFactory extends EFactory {
 	TopLevel createTopLevel();
 
 	/**
+	 * Returns a new object of class '<em>Expression</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Expression</em>'.
+	 * @generated
+	 */
+	Expression createExpression();
+
+	/**
 	 * Returns a new object of class '<em>Function Call</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -42,6 +51,33 @@ public interface ExpressionFactory extends EFactory {
 	 * @generated
 	 */
 	FunctionCall createFunctionCall();
+
+	/**
+	 * Returns a new object of class '<em>Map Get Reference</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Map Get Reference</em>'.
+	 * @generated
+	 */
+	MapGetReference createMapGetReference();
+
+	/**
+	 * Returns a new object of class '<em>Tml Reference</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Tml Reference</em>'.
+	 * @generated
+	 */
+	TmlReference createTmlReference();
+
+	/**
+	 * Returns a new object of class '<em>Exists Tml Reference</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Exists Tml Reference</em>'.
+	 * @generated
+	 */
+	ExistsTmlReference createExistsTmlReference();
 
 	/**
 	 * Returns a new object of class '<em>Function Operands</em>'.

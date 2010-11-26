@@ -84,6 +84,18 @@ public class ExpressionAdapterFactory extends AdapterFactoryImpl {
 				return createFunctionCallAdapter();
 			}
 			@Override
+			public Adapter caseMapGetReference(MapGetReference object) {
+				return createMapGetReferenceAdapter();
+			}
+			@Override
+			public Adapter caseTmlReference(TmlReference object) {
+				return createTmlReferenceAdapter();
+			}
+			@Override
+			public Adapter caseExistsTmlReference(ExistsTmlReference object) {
+				return createExistsTmlReferenceAdapter();
+			}
+			@Override
 			public Adapter caseFunctionOperands(FunctionOperands object) {
 				return createFunctionOperandsAdapter();
 			}
@@ -154,6 +166,48 @@ public class ExpressionAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createFunctionCallAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link com.dexels.navajo.dsl.model.expression.MapGetReference <em>Map Get Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see com.dexels.navajo.dsl.model.expression.MapGetReference
+	 * @generated
+	 */
+	public Adapter createMapGetReferenceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link com.dexels.navajo.dsl.model.expression.TmlReference <em>Tml Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see com.dexels.navajo.dsl.model.expression.TmlReference
+	 * @generated
+	 */
+	public Adapter createTmlReferenceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link com.dexels.navajo.dsl.model.expression.ExistsTmlReference <em>Exists Tml Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see com.dexels.navajo.dsl.model.expression.ExistsTmlReference
+	 * @generated
+	 */
+	public Adapter createExistsTmlReferenceAdapter() {
 		return null;
 	}
 

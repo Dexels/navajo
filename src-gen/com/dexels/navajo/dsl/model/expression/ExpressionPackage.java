@@ -306,6 +306,351 @@ public interface ExpressionPackage extends EPackage {
 	int FUNCTION_CALL_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
 
 	/**
+	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.expression.impl.MapGetReferenceImpl <em>Map Get Reference</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see com.dexels.navajo.dsl.model.expression.impl.MapGetReferenceImpl
+	 * @see com.dexels.navajo.dsl.model.expression.impl.ExpressionPackageImpl#getMapGetReference()
+	 * @generated
+	 */
+	int MAP_GET_REFERENCE = 3;
+
+	/**
+	 * The feature id for the '<em><b>Parent</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAP_GET_REFERENCE__PARENT = EXPRESSION__PARENT;
+
+	/**
+	 * The feature id for the '<em><b>Parameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAP_GET_REFERENCE__PARAMETERS = EXPRESSION__PARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>Operations</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAP_GET_REFERENCE__OPERATIONS = EXPRESSION__OPERATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Elements</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAP_GET_REFERENCE__ELEMENTS = EXPRESSION__ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Subliteral</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAP_GET_REFERENCE__SUBLITERAL = EXPRESSION__SUBLITERAL;
+
+	/**
+	 * The feature id for the '<em><b>Value String</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAP_GET_REFERENCE__VALUE_STRING = EXPRESSION__VALUE_STRING;
+
+	/**
+	 * The feature id for the '<em><b>Expression Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAP_GET_REFERENCE__EXPRESSION_TYPE = EXPRESSION__EXPRESSION_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Path Sequence</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAP_GET_REFERENCE__PATH_SEQUENCE = EXPRESSION__PATH_SEQUENCE;
+
+	/**
+	 * The feature id for the '<em><b>Exists Path Sequence</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAP_GET_REFERENCE__EXISTS_PATH_SEQUENCE = EXPRESSION__EXISTS_PATH_SEQUENCE;
+
+	/**
+	 * The feature id for the '<em><b>Path Elements</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAP_GET_REFERENCE__PATH_ELEMENTS = EXPRESSION_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Map Get Reference</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAP_GET_REFERENCE_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.expression.impl.TmlReferenceImpl <em>Tml Reference</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see com.dexels.navajo.dsl.model.expression.impl.TmlReferenceImpl
+	 * @see com.dexels.navajo.dsl.model.expression.impl.ExpressionPackageImpl#getTmlReference()
+	 * @generated
+	 */
+	int TML_REFERENCE = 4;
+
+	/**
+	 * The feature id for the '<em><b>Parent</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TML_REFERENCE__PARENT = EXPRESSION__PARENT;
+
+	/**
+	 * The feature id for the '<em><b>Parameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TML_REFERENCE__PARAMETERS = EXPRESSION__PARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>Operations</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TML_REFERENCE__OPERATIONS = EXPRESSION__OPERATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Elements</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TML_REFERENCE__ELEMENTS = EXPRESSION__ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Subliteral</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TML_REFERENCE__SUBLITERAL = EXPRESSION__SUBLITERAL;
+
+	/**
+	 * The feature id for the '<em><b>Value String</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TML_REFERENCE__VALUE_STRING = EXPRESSION__VALUE_STRING;
+
+	/**
+	 * The feature id for the '<em><b>Expression Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TML_REFERENCE__EXPRESSION_TYPE = EXPRESSION__EXPRESSION_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Path Sequence</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TML_REFERENCE__PATH_SEQUENCE = EXPRESSION__PATH_SEQUENCE;
+
+	/**
+	 * The feature id for the '<em><b>Exists Path Sequence</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TML_REFERENCE__EXISTS_PATH_SEQUENCE = EXPRESSION__EXISTS_PATH_SEQUENCE;
+
+	/**
+	 * The feature id for the '<em><b>Path Elements</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TML_REFERENCE__PATH_ELEMENTS = EXPRESSION_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Absolute</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TML_REFERENCE__ABSOLUTE = EXPRESSION_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Tml Reference</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TML_REFERENCE_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
+
+	/**
+	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.expression.impl.ExistsTmlReferenceImpl <em>Exists Tml Reference</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see com.dexels.navajo.dsl.model.expression.impl.ExistsTmlReferenceImpl
+	 * @see com.dexels.navajo.dsl.model.expression.impl.ExpressionPackageImpl#getExistsTmlReference()
+	 * @generated
+	 */
+	int EXISTS_TML_REFERENCE = 5;
+
+	/**
+	 * The feature id for the '<em><b>Parent</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXISTS_TML_REFERENCE__PARENT = EXPRESSION__PARENT;
+
+	/**
+	 * The feature id for the '<em><b>Parameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXISTS_TML_REFERENCE__PARAMETERS = EXPRESSION__PARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>Operations</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXISTS_TML_REFERENCE__OPERATIONS = EXPRESSION__OPERATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Elements</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXISTS_TML_REFERENCE__ELEMENTS = EXPRESSION__ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Subliteral</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXISTS_TML_REFERENCE__SUBLITERAL = EXPRESSION__SUBLITERAL;
+
+	/**
+	 * The feature id for the '<em><b>Value String</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXISTS_TML_REFERENCE__VALUE_STRING = EXPRESSION__VALUE_STRING;
+
+	/**
+	 * The feature id for the '<em><b>Expression Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXISTS_TML_REFERENCE__EXPRESSION_TYPE = EXPRESSION__EXPRESSION_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Path Sequence</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXISTS_TML_REFERENCE__PATH_SEQUENCE = EXPRESSION__PATH_SEQUENCE;
+
+	/**
+	 * The feature id for the '<em><b>Exists Path Sequence</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXISTS_TML_REFERENCE__EXISTS_PATH_SEQUENCE = EXPRESSION__EXISTS_PATH_SEQUENCE;
+
+	/**
+	 * The feature id for the '<em><b>Path Elements</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXISTS_TML_REFERENCE__PATH_ELEMENTS = EXPRESSION_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Absolute</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXISTS_TML_REFERENCE__ABSOLUTE = EXPRESSION_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Exists Tml Reference</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXISTS_TML_REFERENCE_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
+
+	/**
 	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.expression.impl.FunctionOperandsImpl <em>Function Operands</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -313,7 +658,7 @@ public interface ExpressionPackage extends EPackage {
 	 * @see com.dexels.navajo.dsl.model.expression.impl.ExpressionPackageImpl#getFunctionOperands()
 	 * @generated
 	 */
-	int FUNCTION_OPERANDS = 3;
+	int FUNCTION_OPERANDS = 6;
 
 	/**
 	 * The feature id for the '<em><b>Parent</b></em>' container reference.
@@ -422,7 +767,7 @@ public interface ExpressionPackage extends EPackage {
 	 * @see com.dexels.navajo.dsl.model.expression.impl.ExpressionPackageImpl#getOperation()
 	 * @generated
 	 */
-	int OPERATION = 4;
+	int OPERATION = 7;
 
 	/**
 	 * The feature id for the '<em><b>Parent</b></em>' container reference.
@@ -523,7 +868,6 @@ public interface ExpressionPackage extends EPackage {
 	 */
 	int OPERATION_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 1;
 
-
 	/**
 	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.expression.impl.PathSequenceImpl <em>Path Sequence</em>}' class.
 	 * <!-- begin-user-doc -->
@@ -532,10 +876,10 @@ public interface ExpressionPackage extends EPackage {
 	 * @see com.dexels.navajo.dsl.model.expression.impl.ExpressionPackageImpl#getPathSequence()
 	 * @generated
 	 */
-	int PATH_SEQUENCE = 5;
+	int PATH_SEQUENCE = 8;
 
 	/**
-	 * The feature id for the '<em><b>Path Elements</b></em>' attribute.
+	 * The feature id for the '<em><b>Path Elements</b></em>' attribute list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -716,6 +1060,91 @@ public interface ExpressionPackage extends EPackage {
 	EReference getFunctionCall_Operands();
 
 	/**
+	 * Returns the meta object for class '{@link com.dexels.navajo.dsl.model.expression.MapGetReference <em>Map Get Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Map Get Reference</em>'.
+	 * @see com.dexels.navajo.dsl.model.expression.MapGetReference
+	 * @generated
+	 */
+	EClass getMapGetReference();
+
+	/**
+	 * Returns the meta object for the attribute list '{@link com.dexels.navajo.dsl.model.expression.MapGetReference#getPathElements <em>Path Elements</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute list '<em>Path Elements</em>'.
+	 * @see com.dexels.navajo.dsl.model.expression.MapGetReference#getPathElements()
+	 * @see #getMapGetReference()
+	 * @generated
+	 */
+	EAttribute getMapGetReference_PathElements();
+
+	/**
+	 * Returns the meta object for class '{@link com.dexels.navajo.dsl.model.expression.TmlReference <em>Tml Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Tml Reference</em>'.
+	 * @see com.dexels.navajo.dsl.model.expression.TmlReference
+	 * @generated
+	 */
+	EClass getTmlReference();
+
+	/**
+	 * Returns the meta object for the attribute list '{@link com.dexels.navajo.dsl.model.expression.TmlReference#getPathElements <em>Path Elements</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute list '<em>Path Elements</em>'.
+	 * @see com.dexels.navajo.dsl.model.expression.TmlReference#getPathElements()
+	 * @see #getTmlReference()
+	 * @generated
+	 */
+	EAttribute getTmlReference_PathElements();
+
+	/**
+	 * Returns the meta object for the attribute '{@link com.dexels.navajo.dsl.model.expression.TmlReference#isAbsolute <em>Absolute</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Absolute</em>'.
+	 * @see com.dexels.navajo.dsl.model.expression.TmlReference#isAbsolute()
+	 * @see #getTmlReference()
+	 * @generated
+	 */
+	EAttribute getTmlReference_Absolute();
+
+	/**
+	 * Returns the meta object for class '{@link com.dexels.navajo.dsl.model.expression.ExistsTmlReference <em>Exists Tml Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Exists Tml Reference</em>'.
+	 * @see com.dexels.navajo.dsl.model.expression.ExistsTmlReference
+	 * @generated
+	 */
+	EClass getExistsTmlReference();
+
+	/**
+	 * Returns the meta object for the attribute list '{@link com.dexels.navajo.dsl.model.expression.ExistsTmlReference#getPathElements <em>Path Elements</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute list '<em>Path Elements</em>'.
+	 * @see com.dexels.navajo.dsl.model.expression.ExistsTmlReference#getPathElements()
+	 * @see #getExistsTmlReference()
+	 * @generated
+	 */
+	EAttribute getExistsTmlReference_PathElements();
+
+	/**
+	 * Returns the meta object for the attribute '{@link com.dexels.navajo.dsl.model.expression.ExistsTmlReference#isAbsolute <em>Absolute</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Absolute</em>'.
+	 * @see com.dexels.navajo.dsl.model.expression.ExistsTmlReference#isAbsolute()
+	 * @see #getExistsTmlReference()
+	 * @generated
+	 */
+	EAttribute getExistsTmlReference_Absolute();
+
+	/**
 	 * Returns the meta object for class '{@link com.dexels.navajo.dsl.model.expression.FunctionOperands <em>Function Operands</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -768,10 +1197,10 @@ public interface ExpressionPackage extends EPackage {
 	EClass getPathSequence();
 
 	/**
-	 * Returns the meta object for the attribute '{@link com.dexels.navajo.dsl.model.expression.PathSequence#getPathElements <em>Path Elements</em>}'.
+	 * Returns the meta object for the attribute list '{@link com.dexels.navajo.dsl.model.expression.PathSequence#getPathElements <em>Path Elements</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Path Elements</em>'.
+	 * @return the meta object for the attribute list '<em>Path Elements</em>'.
 	 * @see com.dexels.navajo.dsl.model.expression.PathSequence#getPathElements()
 	 * @see #getPathSequence()
 	 * @generated
@@ -927,6 +1356,76 @@ public interface ExpressionPackage extends EPackage {
 		EReference FUNCTION_CALL__OPERANDS = eINSTANCE.getFunctionCall_Operands();
 
 		/**
+		 * The meta object literal for the '{@link com.dexels.navajo.dsl.model.expression.impl.MapGetReferenceImpl <em>Map Get Reference</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see com.dexels.navajo.dsl.model.expression.impl.MapGetReferenceImpl
+		 * @see com.dexels.navajo.dsl.model.expression.impl.ExpressionPackageImpl#getMapGetReference()
+		 * @generated
+		 */
+		EClass MAP_GET_REFERENCE = eINSTANCE.getMapGetReference();
+
+		/**
+		 * The meta object literal for the '<em><b>Path Elements</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute MAP_GET_REFERENCE__PATH_ELEMENTS = eINSTANCE.getMapGetReference_PathElements();
+
+		/**
+		 * The meta object literal for the '{@link com.dexels.navajo.dsl.model.expression.impl.TmlReferenceImpl <em>Tml Reference</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see com.dexels.navajo.dsl.model.expression.impl.TmlReferenceImpl
+		 * @see com.dexels.navajo.dsl.model.expression.impl.ExpressionPackageImpl#getTmlReference()
+		 * @generated
+		 */
+		EClass TML_REFERENCE = eINSTANCE.getTmlReference();
+
+		/**
+		 * The meta object literal for the '<em><b>Path Elements</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TML_REFERENCE__PATH_ELEMENTS = eINSTANCE.getTmlReference_PathElements();
+
+		/**
+		 * The meta object literal for the '<em><b>Absolute</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TML_REFERENCE__ABSOLUTE = eINSTANCE.getTmlReference_Absolute();
+
+		/**
+		 * The meta object literal for the '{@link com.dexels.navajo.dsl.model.expression.impl.ExistsTmlReferenceImpl <em>Exists Tml Reference</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see com.dexels.navajo.dsl.model.expression.impl.ExistsTmlReferenceImpl
+		 * @see com.dexels.navajo.dsl.model.expression.impl.ExpressionPackageImpl#getExistsTmlReference()
+		 * @generated
+		 */
+		EClass EXISTS_TML_REFERENCE = eINSTANCE.getExistsTmlReference();
+
+		/**
+		 * The meta object literal for the '<em><b>Path Elements</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EXISTS_TML_REFERENCE__PATH_ELEMENTS = eINSTANCE.getExistsTmlReference_PathElements();
+
+		/**
+		 * The meta object literal for the '<em><b>Absolute</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EXISTS_TML_REFERENCE__ABSOLUTE = eINSTANCE.getExistsTmlReference_Absolute();
+
+		/**
 		 * The meta object literal for the '{@link com.dexels.navajo.dsl.model.expression.impl.FunctionOperandsImpl <em>Function Operands</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -973,7 +1472,7 @@ public interface ExpressionPackage extends EPackage {
 		EClass PATH_SEQUENCE = eINSTANCE.getPathSequence();
 
 		/**
-		 * The meta object literal for the '<em><b>Path Elements</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Path Elements</b></em>' attribute list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated

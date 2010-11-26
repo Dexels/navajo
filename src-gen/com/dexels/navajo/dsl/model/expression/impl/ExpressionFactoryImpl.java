@@ -61,7 +61,11 @@ public class ExpressionFactoryImpl extends EFactoryImpl implements ExpressionFac
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case ExpressionPackage.TOP_LEVEL: return createTopLevel();
+			case ExpressionPackage.EXPRESSION: return createExpression();
 			case ExpressionPackage.FUNCTION_CALL: return createFunctionCall();
+			case ExpressionPackage.MAP_GET_REFERENCE: return createMapGetReference();
+			case ExpressionPackage.TML_REFERENCE: return createTmlReference();
+			case ExpressionPackage.EXISTS_TML_REFERENCE: return createExistsTmlReference();
 			case ExpressionPackage.FUNCTION_OPERANDS: return createFunctionOperands();
 			case ExpressionPackage.OPERATION: return createOperation();
 			case ExpressionPackage.PATH_SEQUENCE: return createPathSequence();
@@ -85,9 +89,49 @@ public class ExpressionFactoryImpl extends EFactoryImpl implements ExpressionFac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public Expression createExpression() {
+		ExpressionImpl expression = new ExpressionImpl();
+		return expression;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public FunctionCall createFunctionCall() {
 		FunctionCallImpl functionCall = new FunctionCallImpl();
 		return functionCall;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public MapGetReference createMapGetReference() {
+		MapGetReferenceImpl mapGetReference = new MapGetReferenceImpl();
+		return mapGetReference;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public TmlReference createTmlReference() {
+		TmlReferenceImpl tmlReference = new TmlReferenceImpl();
+		return tmlReference;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ExistsTmlReference createExistsTmlReference() {
+		ExistsTmlReferenceImpl existsTmlReference = new ExistsTmlReferenceImpl();
+		return existsTmlReference;
 	}
 
 	/**

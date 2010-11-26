@@ -106,6 +106,27 @@ public class ExpressionSwitch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ExpressionPackage.MAP_GET_REFERENCE: {
+				MapGetReference mapGetReference = (MapGetReference)theEObject;
+				T result = caseMapGetReference(mapGetReference);
+				if (result == null) result = caseExpression(mapGetReference);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ExpressionPackage.TML_REFERENCE: {
+				TmlReference tmlReference = (TmlReference)theEObject;
+				T result = caseTmlReference(tmlReference);
+				if (result == null) result = caseExpression(tmlReference);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ExpressionPackage.EXISTS_TML_REFERENCE: {
+				ExistsTmlReference existsTmlReference = (ExistsTmlReference)theEObject;
+				T result = caseExistsTmlReference(existsTmlReference);
+				if (result == null) result = caseExpression(existsTmlReference);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ExpressionPackage.FUNCTION_OPERANDS: {
 				FunctionOperands functionOperands = (FunctionOperands)theEObject;
 				T result = caseFunctionOperands(functionOperands);
@@ -172,6 +193,51 @@ public class ExpressionSwitch<T> {
 	 * @generated
 	 */
 	public T caseFunctionCall(FunctionCall object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Map Get Reference</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Map Get Reference</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseMapGetReference(MapGetReference object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Tml Reference</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Tml Reference</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseTmlReference(TmlReference object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Exists Tml Reference</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Exists Tml Reference</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseExistsTmlReference(ExistsTmlReference object) {
 		return null;
 	}
 
