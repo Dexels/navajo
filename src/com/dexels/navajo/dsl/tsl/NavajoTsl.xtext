@@ -24,9 +24,23 @@ Tml :
 		)
 	);
 
-//terminal QUOT: '"';	
+terminal QUOTEQ: '"=';	
+
+//
+//terminal ATTSTRING	: 
+//	  '"' '"' 
+//	  |
+//	  ('"' !('"') '"')
+//	  |
+//	  ('"' !('='|'"')  ( '\\' ('b'|'t'|'n'|'f'|'r'|"'"|'\\') | !('\\'|'"') )*  !(';'|'"') '"')
+//	;	
+
+terminal EMPTYSTRING:
+		'""'
+		;
+
 terminal ATTRIBUTESTRING	: 
-			('"' !('=') ( '\\' ('b'|'t'|'n'|'f'|'r'|'"'|"'"|'\\') | !('\\'|'"') )* !(';') '"') | '""' | ('"' !('"') '"')
+			(   '"' !('='|'"')* '"')
 	;	
 
 
@@ -34,8 +48,9 @@ terminal ATTRIBUTESTRING	:
 PossibleExpression:
 	key=ID '='
 	(
-		 '"=' expressionValue=TopLevel ';"'
+		 QUOTEQ expressionValue=TopLevel ';"'
 		| value=ATTRIBUTESTRING
+		| EMPTYSTRING
 	)
 	;
 
@@ -54,13 +69,18 @@ Message:
 
 
 Map:
-	{Map} '<map.' mapName=ID (attributes+=PossibleExpression)
+	MapStart
 	( '/>'
 	| ('>'
 		((children+=Message) | (children+=Property) | (children+=Map))*
 		'</map.' mapClosingName=ID '>'
 	))
 	;
+
+MapStart returns Map:
+	{Map} '<map.' mapName=ID (attributes+=PossibleExpression)*
+;
+
 
 
 // doesn't seem to work. All are optional
@@ -93,7 +113,7 @@ Property:
 		)
 	);
 
-ExpressionTag:
-	'<expression>' value=TopLevel '</expression>'
+ExpressionTag returns ExpressionTag:
+	'<expression>' expression=TopLevel '</expression>'
 	;	
 	
