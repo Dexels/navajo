@@ -159,15 +159,6 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getTml_Attributes() {
-		return (EReference)tmlEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getPossibleExpression() {
 		return possibleExpressionEClass;
 	}
@@ -231,8 +222,8 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getMessage() {
-		return messageEClass;
+	public EReference getElement_Attributes() {
+		return (EReference)elementEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -240,8 +231,8 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getMessage_Attributes() {
-		return (EReference)messageEClass.getEStructuralFeatures().get(0);
+	public EClass getMessage() {
+		return messageEClass;
 	}
 
 	/**
@@ -267,17 +258,8 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getMap_Attributes() {
-		return (EReference)mapEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EAttribute getMap_MapClosingName() {
-		return (EAttribute)mapEClass.getEStructuralFeatures().get(2);
+		return (EAttribute)mapEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -294,17 +276,8 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getProperty_Attributes() {
-		return (EReference)propertyEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EReference getProperty_ExpressionValue() {
-		return (EReference)propertyEClass.getEStructuralFeatures().get(1);
+		return (EReference)propertyEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -321,7 +294,7 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getExpressionTag_Value() {
+	public EReference getExpressionTag_Expression() {
 		return (EReference)expressionTagEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -354,7 +327,6 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 
 		// Create classes and their features
 		tmlEClass = createEClass(TML);
-		createEReference(tmlEClass, TML__ATTRIBUTES);
 
 		possibleExpressionEClass = createEClass(POSSIBLE_EXPRESSION);
 		createEAttribute(possibleExpressionEClass, POSSIBLE_EXPRESSION__KEY);
@@ -364,21 +336,19 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 		elementEClass = createEClass(ELEMENT);
 		createEReference(elementEClass, ELEMENT__CHILDREN);
 		createEReference(elementEClass, ELEMENT__PARENT);
+		createEReference(elementEClass, ELEMENT__ATTRIBUTES);
 
 		messageEClass = createEClass(MESSAGE);
-		createEReference(messageEClass, MESSAGE__ATTRIBUTES);
 
 		mapEClass = createEClass(MAP);
 		createEAttribute(mapEClass, MAP__MAP_NAME);
-		createEReference(mapEClass, MAP__ATTRIBUTES);
 		createEAttribute(mapEClass, MAP__MAP_CLOSING_NAME);
 
 		propertyEClass = createEClass(PROPERTY);
-		createEReference(propertyEClass, PROPERTY__ATTRIBUTES);
 		createEReference(propertyEClass, PROPERTY__EXPRESSION_VALUE);
 
 		expressionTagEClass = createEClass(EXPRESSION_TAG);
-		createEReference(expressionTagEClass, EXPRESSION_TAG__VALUE);
+		createEReference(expressionTagEClass, EXPRESSION_TAG__EXPRESSION);
 	}
 
 	/**
@@ -420,7 +390,6 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(tmlEClass, Tml.class, "Tml", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getTml_Attributes(), this.getPossibleExpression(), null, "attributes", null, 0, -1, Tml.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(possibleExpressionEClass, PossibleExpression.class, "PossibleExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getPossibleExpression_Key(), ecorePackage.getEString(), "key", null, 0, 1, PossibleExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -430,21 +399,19 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 		initEClass(elementEClass, Element.class, "Element", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getElement_Children(), this.getElement(), this.getElement_Parent(), "children", null, 0, -1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getElement_Parent(), this.getElement(), this.getElement_Children(), "parent", null, 0, 1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getElement_Attributes(), this.getPossibleExpression(), null, "attributes", null, 0, -1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(messageEClass, Message.class, "Message", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getMessage_Attributes(), this.getPossibleExpression(), null, "attributes", null, 0, -1, Message.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(mapEClass, Map.class, "Map", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getMap_MapName(), ecorePackage.getEString(), "mapName", null, 0, 1, Map.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getMap_Attributes(), this.getPossibleExpression(), null, "attributes", null, 0, -1, Map.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getMap_MapClosingName(), ecorePackage.getEString(), "mapClosingName", null, 0, 1, Map.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(propertyEClass, Property.class, "Property", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getProperty_Attributes(), this.getPossibleExpression(), null, "attributes", null, 0, -1, Property.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getProperty_ExpressionValue(), this.getExpressionTag(), null, "expressionValue", null, 0, 1, Property.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(expressionTagEClass, ExpressionTag.class, "ExpressionTag", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getExpressionTag_Value(), theExpressionPackage.getTopLevel(), null, "value", null, 0, 1, ExpressionTag.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getExpressionTag_Expression(), theExpressionPackage.getTopLevel(), null, "expression", null, 0, 1, ExpressionTag.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

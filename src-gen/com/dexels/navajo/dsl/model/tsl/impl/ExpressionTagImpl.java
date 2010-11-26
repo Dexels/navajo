@@ -26,7 +26,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.dexels.navajo.dsl.model.tsl.impl.ExpressionTagImpl#getValue <em>Value</em>}</li>
+ *   <li>{@link com.dexels.navajo.dsl.model.tsl.impl.ExpressionTagImpl#getExpression <em>Expression</em>}</li>
  * </ul>
  * </p>
  *
@@ -34,15 +34,14 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  */
 public class ExpressionTagImpl extends ElementImpl implements ExpressionTag {
 	/**
-	 * The cached value of the '{@link #getValue() <em>Value</em>}' containment reference.
+	 * The cached value of the '{@link #getExpression() <em>Expression</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getValue()
+	 * @see #getExpression()
 	 * @generated
 	 * @ordered
 	 */
-	protected TopLevel value;
-
+	protected TopLevel expression;
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -67,8 +66,8 @@ public class ExpressionTagImpl extends ElementImpl implements ExpressionTag {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public TopLevel getValue() {
-		return value;
+	public TopLevel getExpression() {
+		return expression;
 	}
 
 	/**
@@ -76,11 +75,11 @@ public class ExpressionTagImpl extends ElementImpl implements ExpressionTag {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetValue(TopLevel newValue, NotificationChain msgs) {
-		TopLevel oldValue = value;
-		value = newValue;
+	public NotificationChain basicSetExpression(TopLevel newExpression, NotificationChain msgs) {
+		TopLevel oldExpression = expression;
+		expression = newExpression;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, TslPackage.EXPRESSION_TAG__VALUE, oldValue, newValue);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, TslPackage.EXPRESSION_TAG__EXPRESSION, oldExpression, newExpression);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
@@ -91,18 +90,18 @@ public class ExpressionTagImpl extends ElementImpl implements ExpressionTag {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setValue(TopLevel newValue) {
-		if (newValue != value) {
+	public void setExpression(TopLevel newExpression) {
+		if (newExpression != expression) {
 			NotificationChain msgs = null;
-			if (value != null)
-				msgs = ((InternalEObject)value).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - TslPackage.EXPRESSION_TAG__VALUE, null, msgs);
-			if (newValue != null)
-				msgs = ((InternalEObject)newValue).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - TslPackage.EXPRESSION_TAG__VALUE, null, msgs);
-			msgs = basicSetValue(newValue, msgs);
+			if (expression != null)
+				msgs = ((InternalEObject)expression).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - TslPackage.EXPRESSION_TAG__EXPRESSION, null, msgs);
+			if (newExpression != null)
+				msgs = ((InternalEObject)newExpression).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - TslPackage.EXPRESSION_TAG__EXPRESSION, null, msgs);
+			msgs = basicSetExpression(newExpression, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TslPackage.EXPRESSION_TAG__VALUE, newValue, newValue));
+			eNotify(new ENotificationImpl(this, Notification.SET, TslPackage.EXPRESSION_TAG__EXPRESSION, newExpression, newExpression));
 	}
 
 	/**
@@ -113,8 +112,8 @@ public class ExpressionTagImpl extends ElementImpl implements ExpressionTag {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case TslPackage.EXPRESSION_TAG__VALUE:
-				return basicSetValue(null, msgs);
+			case TslPackage.EXPRESSION_TAG__EXPRESSION:
+				return basicSetExpression(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -127,8 +126,8 @@ public class ExpressionTagImpl extends ElementImpl implements ExpressionTag {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case TslPackage.EXPRESSION_TAG__VALUE:
-				return getValue();
+			case TslPackage.EXPRESSION_TAG__EXPRESSION:
+				return getExpression();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -141,8 +140,8 @@ public class ExpressionTagImpl extends ElementImpl implements ExpressionTag {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case TslPackage.EXPRESSION_TAG__VALUE:
-				setValue((TopLevel)newValue);
+			case TslPackage.EXPRESSION_TAG__EXPRESSION:
+				setExpression((TopLevel)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -156,8 +155,8 @@ public class ExpressionTagImpl extends ElementImpl implements ExpressionTag {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case TslPackage.EXPRESSION_TAG__VALUE:
-				setValue((TopLevel)null);
+			case TslPackage.EXPRESSION_TAG__EXPRESSION:
+				setExpression((TopLevel)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -171,8 +170,8 @@ public class ExpressionTagImpl extends ElementImpl implements ExpressionTag {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case TslPackage.EXPRESSION_TAG__VALUE:
-				return value != null;
+			case TslPackage.EXPRESSION_TAG__EXPRESSION:
+				return expression != null;
 		}
 		return super.eIsSet(featureID);
 	}

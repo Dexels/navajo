@@ -33,7 +33,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.dexels.navajo.dsl.model.tsl.impl.PropertyImpl#getAttributes <em>Attributes</em>}</li>
  *   <li>{@link com.dexels.navajo.dsl.model.tsl.impl.PropertyImpl#getExpressionValue <em>Expression Value</em>}</li>
  * </ul>
  * </p>
@@ -41,16 +40,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * @generated
  */
 public class PropertyImpl extends ElementImpl implements Property {
-	/**
-	 * The cached value of the '{@link #getAttributes() <em>Attributes</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getAttributes()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<PossibleExpression> attributes;
-
 	/**
 	 * The cached value of the '{@link #getExpressionValue() <em>Expression Value</em>}' containment reference.
 	 * <!-- begin-user-doc -->
@@ -78,18 +67,6 @@ public class PropertyImpl extends ElementImpl implements Property {
 	@Override
 	protected EClass eStaticClass() {
 		return TslPackage.Literals.PROPERTY;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EList<PossibleExpression> getAttributes() {
-		if (attributes == null) {
-			attributes = new EObjectContainmentEList<PossibleExpression>(PossibleExpression.class, this, TslPackage.PROPERTY__ATTRIBUTES);
-		}
-		return attributes;
 	}
 
 	/**
@@ -143,8 +120,6 @@ public class PropertyImpl extends ElementImpl implements Property {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case TslPackage.PROPERTY__ATTRIBUTES:
-				return ((InternalEList<?>)getAttributes()).basicRemove(otherEnd, msgs);
 			case TslPackage.PROPERTY__EXPRESSION_VALUE:
 				return basicSetExpressionValue(null, msgs);
 		}
@@ -159,8 +134,6 @@ public class PropertyImpl extends ElementImpl implements Property {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case TslPackage.PROPERTY__ATTRIBUTES:
-				return getAttributes();
 			case TslPackage.PROPERTY__EXPRESSION_VALUE:
 				return getExpressionValue();
 		}
@@ -176,10 +149,6 @@ public class PropertyImpl extends ElementImpl implements Property {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case TslPackage.PROPERTY__ATTRIBUTES:
-				getAttributes().clear();
-				getAttributes().addAll((Collection<? extends PossibleExpression>)newValue);
-				return;
 			case TslPackage.PROPERTY__EXPRESSION_VALUE:
 				setExpressionValue((ExpressionTag)newValue);
 				return;
@@ -195,9 +164,6 @@ public class PropertyImpl extends ElementImpl implements Property {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case TslPackage.PROPERTY__ATTRIBUTES:
-				getAttributes().clear();
-				return;
 			case TslPackage.PROPERTY__EXPRESSION_VALUE:
 				setExpressionValue((ExpressionTag)null);
 				return;
@@ -213,8 +179,6 @@ public class PropertyImpl extends ElementImpl implements Property {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case TslPackage.PROPERTY__ATTRIBUTES:
-				return attributes != null && !attributes.isEmpty();
 			case TslPackage.PROPERTY__EXPRESSION_VALUE:
 				return expressionValue != null;
 		}

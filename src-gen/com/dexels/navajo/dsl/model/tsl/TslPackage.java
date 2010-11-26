@@ -88,13 +88,22 @@ public interface TslPackage extends EPackage {
 	int ELEMENT__PARENT = 1;
 
 	/**
+	 * The feature id for the '<em><b>Attributes</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ELEMENT__ATTRIBUTES = 2;
+
+	/**
 	 * The number of structural features of the '<em>Element</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT_FEATURE_COUNT = 2;
+	int ELEMENT_FEATURE_COUNT = 3;
 
 	/**
 	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.tsl.impl.TmlImpl <em>Tml</em>}' class.
@@ -131,7 +140,7 @@ public interface TslPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TML__ATTRIBUTES = ELEMENT_FEATURE_COUNT + 0;
+	int TML__ATTRIBUTES = ELEMENT__ATTRIBUTES;
 
 	/**
 	 * The number of structural features of the '<em>Tml</em>' class.
@@ -140,7 +149,7 @@ public interface TslPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TML_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 1;
+	int TML_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.tsl.impl.PossibleExpressionImpl <em>Possible Expression</em>}' class.
@@ -223,7 +232,7 @@ public interface TslPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MESSAGE__ATTRIBUTES = ELEMENT_FEATURE_COUNT + 0;
+	int MESSAGE__ATTRIBUTES = ELEMENT__ATTRIBUTES;
 
 	/**
 	 * The number of structural features of the '<em>Message</em>' class.
@@ -232,7 +241,7 @@ public interface TslPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MESSAGE_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 1;
+	int MESSAGE_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.tsl.impl.MapImpl <em>Map</em>}' class.
@@ -263,6 +272,15 @@ public interface TslPackage extends EPackage {
 	int MAP__PARENT = ELEMENT__PARENT;
 
 	/**
+	 * The feature id for the '<em><b>Attributes</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAP__ATTRIBUTES = ELEMENT__ATTRIBUTES;
+
+	/**
 	 * The feature id for the '<em><b>Map Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -272,22 +290,13 @@ public interface TslPackage extends EPackage {
 	int MAP__MAP_NAME = ELEMENT_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Attributes</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MAP__ATTRIBUTES = ELEMENT_FEATURE_COUNT + 1;
-
-	/**
 	 * The feature id for the '<em><b>Map Closing Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MAP__MAP_CLOSING_NAME = ELEMENT_FEATURE_COUNT + 2;
+	int MAP__MAP_CLOSING_NAME = ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Map</em>' class.
@@ -296,7 +305,7 @@ public interface TslPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MAP_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 3;
+	int MAP_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.tsl.impl.PropertyImpl <em>Property</em>}' class.
@@ -333,7 +342,7 @@ public interface TslPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY__ATTRIBUTES = ELEMENT_FEATURE_COUNT + 0;
+	int PROPERTY__ATTRIBUTES = ELEMENT__ATTRIBUTES;
 
 	/**
 	 * The feature id for the '<em><b>Expression Value</b></em>' containment reference.
@@ -342,7 +351,7 @@ public interface TslPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY__EXPRESSION_VALUE = ELEMENT_FEATURE_COUNT + 1;
+	int PROPERTY__EXPRESSION_VALUE = ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Property</em>' class.
@@ -351,7 +360,7 @@ public interface TslPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 2;
+	int PROPERTY_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.tsl.impl.ExpressionTagImpl <em>Expression Tag</em>}' class.
@@ -382,13 +391,22 @@ public interface TslPackage extends EPackage {
 	int EXPRESSION_TAG__PARENT = ELEMENT__PARENT;
 
 	/**
-	 * The feature id for the '<em><b>Value</b></em>' containment reference.
+	 * The feature id for the '<em><b>Attributes</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXPRESSION_TAG__VALUE = ELEMENT_FEATURE_COUNT + 0;
+	int EXPRESSION_TAG__ATTRIBUTES = ELEMENT__ATTRIBUTES;
+
+	/**
+	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPRESSION_TAG__EXPRESSION = ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Expression Tag</em>' class.
@@ -409,17 +427,6 @@ public interface TslPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getTml();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link com.dexels.navajo.dsl.model.tsl.Tml#getAttributes <em>Attributes</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Attributes</em>'.
-	 * @see com.dexels.navajo.dsl.model.tsl.Tml#getAttributes()
-	 * @see #getTml()
-	 * @generated
-	 */
-	EReference getTml_Attributes();
 
 	/**
 	 * Returns the meta object for class '{@link com.dexels.navajo.dsl.model.tsl.PossibleExpression <em>Possible Expression</em>}'.
@@ -497,6 +504,17 @@ public interface TslPackage extends EPackage {
 	EReference getElement_Parent();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link com.dexels.navajo.dsl.model.tsl.Element#getAttributes <em>Attributes</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Attributes</em>'.
+	 * @see com.dexels.navajo.dsl.model.tsl.Element#getAttributes()
+	 * @see #getElement()
+	 * @generated
+	 */
+	EReference getElement_Attributes();
+
+	/**
 	 * Returns the meta object for class '{@link com.dexels.navajo.dsl.model.tsl.Message <em>Message</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -505,17 +523,6 @@ public interface TslPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getMessage();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link com.dexels.navajo.dsl.model.tsl.Message#getAttributes <em>Attributes</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Attributes</em>'.
-	 * @see com.dexels.navajo.dsl.model.tsl.Message#getAttributes()
-	 * @see #getMessage()
-	 * @generated
-	 */
-	EReference getMessage_Attributes();
 
 	/**
 	 * Returns the meta object for class '{@link com.dexels.navajo.dsl.model.tsl.Map <em>Map</em>}'.
@@ -539,17 +546,6 @@ public interface TslPackage extends EPackage {
 	EAttribute getMap_MapName();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link com.dexels.navajo.dsl.model.tsl.Map#getAttributes <em>Attributes</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Attributes</em>'.
-	 * @see com.dexels.navajo.dsl.model.tsl.Map#getAttributes()
-	 * @see #getMap()
-	 * @generated
-	 */
-	EReference getMap_Attributes();
-
-	/**
 	 * Returns the meta object for the attribute '{@link com.dexels.navajo.dsl.model.tsl.Map#getMapClosingName <em>Map Closing Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -569,17 +565,6 @@ public interface TslPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getProperty();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link com.dexels.navajo.dsl.model.tsl.Property#getAttributes <em>Attributes</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Attributes</em>'.
-	 * @see com.dexels.navajo.dsl.model.tsl.Property#getAttributes()
-	 * @see #getProperty()
-	 * @generated
-	 */
-	EReference getProperty_Attributes();
 
 	/**
 	 * Returns the meta object for the containment reference '{@link com.dexels.navajo.dsl.model.tsl.Property#getExpressionValue <em>Expression Value</em>}'.
@@ -603,15 +588,15 @@ public interface TslPackage extends EPackage {
 	EClass getExpressionTag();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link com.dexels.navajo.dsl.model.tsl.ExpressionTag#getValue <em>Value</em>}'.
+	 * Returns the meta object for the containment reference '{@link com.dexels.navajo.dsl.model.tsl.ExpressionTag#getExpression <em>Expression</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Value</em>'.
-	 * @see com.dexels.navajo.dsl.model.tsl.ExpressionTag#getValue()
+	 * @return the meta object for the containment reference '<em>Expression</em>'.
+	 * @see com.dexels.navajo.dsl.model.tsl.ExpressionTag#getExpression()
 	 * @see #getExpressionTag()
 	 * @generated
 	 */
-	EReference getExpressionTag_Value();
+	EReference getExpressionTag_Expression();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -644,14 +629,6 @@ public interface TslPackage extends EPackage {
 		 * @generated
 		 */
 		EClass TML = eINSTANCE.getTml();
-
-		/**
-		 * The meta object literal for the '<em><b>Attributes</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference TML__ATTRIBUTES = eINSTANCE.getTml_Attributes();
 
 		/**
 		 * The meta object literal for the '{@link com.dexels.navajo.dsl.model.tsl.impl.PossibleExpressionImpl <em>Possible Expression</em>}' class.
@@ -714,6 +691,14 @@ public interface TslPackage extends EPackage {
 		EReference ELEMENT__PARENT = eINSTANCE.getElement_Parent();
 
 		/**
+		 * The meta object literal for the '<em><b>Attributes</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ELEMENT__ATTRIBUTES = eINSTANCE.getElement_Attributes();
+
+		/**
 		 * The meta object literal for the '{@link com.dexels.navajo.dsl.model.tsl.impl.MessageImpl <em>Message</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -722,14 +707,6 @@ public interface TslPackage extends EPackage {
 		 * @generated
 		 */
 		EClass MESSAGE = eINSTANCE.getMessage();
-
-		/**
-		 * The meta object literal for the '<em><b>Attributes</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference MESSAGE__ATTRIBUTES = eINSTANCE.getMessage_Attributes();
 
 		/**
 		 * The meta object literal for the '{@link com.dexels.navajo.dsl.model.tsl.impl.MapImpl <em>Map</em>}' class.
@@ -750,14 +727,6 @@ public interface TslPackage extends EPackage {
 		EAttribute MAP__MAP_NAME = eINSTANCE.getMap_MapName();
 
 		/**
-		 * The meta object literal for the '<em><b>Attributes</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference MAP__ATTRIBUTES = eINSTANCE.getMap_Attributes();
-
-		/**
 		 * The meta object literal for the '<em><b>Map Closing Name</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -774,14 +743,6 @@ public interface TslPackage extends EPackage {
 		 * @generated
 		 */
 		EClass PROPERTY = eINSTANCE.getProperty();
-
-		/**
-		 * The meta object literal for the '<em><b>Attributes</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PROPERTY__ATTRIBUTES = eINSTANCE.getProperty_Attributes();
 
 		/**
 		 * The meta object literal for the '<em><b>Expression Value</b></em>' containment reference feature.
@@ -802,12 +763,12 @@ public interface TslPackage extends EPackage {
 		EClass EXPRESSION_TAG = eINSTANCE.getExpressionTag();
 
 		/**
-		 * The meta object literal for the '<em><b>Value</b></em>' containment reference feature.
+		 * The meta object literal for the '<em><b>Expression</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference EXPRESSION_TAG__VALUE = eINSTANCE.getExpressionTag_Value();
+		EReference EXPRESSION_TAG__EXPRESSION = eINSTANCE.getExpressionTag_Expression();
 
 	}
 

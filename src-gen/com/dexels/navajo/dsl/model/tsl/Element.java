@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link com.dexels.navajo.dsl.model.tsl.Element#getChildren <em>Children</em>}</li>
  *   <li>{@link com.dexels.navajo.dsl.model.tsl.Element#getParent <em>Parent</em>}</li>
+ *   <li>{@link com.dexels.navajo.dsl.model.tsl.Element#getAttributes <em>Attributes</em>}</li>
  * </ul>
  * </p>
  *
@@ -73,5 +74,21 @@ public interface Element extends EObject {
 	 * @generated
 	 */
 	void setParent(Element value);
+
+	/**
+	 * Returns the value of the '<em><b>Attributes</b></em>' containment reference list.
+	 * The list contents are of type {@link com.dexels.navajo.dsl.model.tsl.PossibleExpression}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Attributes</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Attributes</em>' containment reference list.
+	 * @see com.dexels.navajo.dsl.model.tsl.TslPackage#getElement_Attributes()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<PossibleExpression> getAttributes();
 
 } // Element

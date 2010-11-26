@@ -17,7 +17,6 @@ import org.eclipse.emf.common.util.EList;
  * The following features are supported:
  * <ul>
  *   <li>{@link com.dexels.navajo.dsl.model.tsl.Map#getMapName <em>Map Name</em>}</li>
- *   <li>{@link com.dexels.navajo.dsl.model.tsl.Map#getAttributes <em>Attributes</em>}</li>
  *   <li>{@link com.dexels.navajo.dsl.model.tsl.Map#getMapClosingName <em>Map Closing Name</em>}</li>
  * </ul>
  * </p>
@@ -52,22 +51,6 @@ public interface Map extends Element {
 	 * @generated
 	 */
 	void setMapName(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Attributes</b></em>' containment reference list.
-	 * The list contents are of type {@link com.dexels.navajo.dsl.model.tsl.PossibleExpression}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Attributes</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Attributes</em>' containment reference list.
-	 * @see com.dexels.navajo.dsl.model.tsl.TslPackage#getMap_Attributes()
-	 * @model containment="true"
-	 * @generated
-	 */
-	EList<PossibleExpression> getAttributes();
 
 	/**
 	 * Returns the value of the '<em><b>Map Closing Name</b></em>' attribute.

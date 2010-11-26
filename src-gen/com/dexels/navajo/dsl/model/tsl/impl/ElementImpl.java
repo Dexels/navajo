@@ -7,6 +7,7 @@
 package com.dexels.navajo.dsl.model.tsl.impl;
 
 import com.dexels.navajo.dsl.model.tsl.Element;
+import com.dexels.navajo.dsl.model.tsl.PossibleExpression;
 import com.dexels.navajo.dsl.model.tsl.TslPackage;
 
 import java.util.Collection;
@@ -22,6 +23,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
@@ -35,6 +37,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <ul>
  *   <li>{@link com.dexels.navajo.dsl.model.tsl.impl.ElementImpl#getChildren <em>Children</em>}</li>
  *   <li>{@link com.dexels.navajo.dsl.model.tsl.impl.ElementImpl#getParent <em>Parent</em>}</li>
+ *   <li>{@link com.dexels.navajo.dsl.model.tsl.impl.ElementImpl#getAttributes <em>Attributes</em>}</li>
  * </ul>
  * </p>
  *
@@ -50,6 +53,16 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 * @ordered
 	 */
 	protected EList<Element> children;
+
+	/**
+	 * The cached value of the '{@link #getAttributes() <em>Attributes</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getAttributes()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<PossibleExpression> attributes;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -128,6 +141,18 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<PossibleExpression> getAttributes() {
+		if (attributes == null) {
+			attributes = new EObjectContainmentEList<PossibleExpression>(PossibleExpression.class, this, TslPackage.ELEMENT__ATTRIBUTES);
+		}
+		return attributes;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
@@ -154,6 +179,8 @@ public class ElementImpl extends EObjectImpl implements Element {
 				return ((InternalEList<?>)getChildren()).basicRemove(otherEnd, msgs);
 			case TslPackage.ELEMENT__PARENT:
 				return basicSetParent(null, msgs);
+			case TslPackage.ELEMENT__ATTRIBUTES:
+				return ((InternalEList<?>)getAttributes()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -184,6 +211,8 @@ public class ElementImpl extends EObjectImpl implements Element {
 				return getChildren();
 			case TslPackage.ELEMENT__PARENT:
 				return getParent();
+			case TslPackage.ELEMENT__ATTRIBUTES:
+				return getAttributes();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -204,6 +233,10 @@ public class ElementImpl extends EObjectImpl implements Element {
 			case TslPackage.ELEMENT__PARENT:
 				setParent((Element)newValue);
 				return;
+			case TslPackage.ELEMENT__ATTRIBUTES:
+				getAttributes().clear();
+				getAttributes().addAll((Collection<? extends PossibleExpression>)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -222,6 +255,9 @@ public class ElementImpl extends EObjectImpl implements Element {
 			case TslPackage.ELEMENT__PARENT:
 				setParent((Element)null);
 				return;
+			case TslPackage.ELEMENT__ATTRIBUTES:
+				getAttributes().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -238,6 +274,8 @@ public class ElementImpl extends EObjectImpl implements Element {
 				return children != null && !children.isEmpty();
 			case TslPackage.ELEMENT__PARENT:
 				return getParent() != null;
+			case TslPackage.ELEMENT__ATTRIBUTES:
+				return attributes != null && !attributes.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

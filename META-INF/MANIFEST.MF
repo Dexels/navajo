@@ -12,3 +12,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
  com.dexels.navajo.dsl.expression.model;visibility:=reexport
 Bundle-ActivationPolicy: lazy
+Bundle-Activator: com.dexels.navajo.dsl.model.tsl.TslModelActivator

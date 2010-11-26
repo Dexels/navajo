@@ -33,7 +33,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * The following features are implemented:
  * <ul>
  *   <li>{@link com.dexels.navajo.dsl.model.tsl.impl.MapImpl#getMapName <em>Map Name</em>}</li>
- *   <li>{@link com.dexels.navajo.dsl.model.tsl.impl.MapImpl#getAttributes <em>Attributes</em>}</li>
  *   <li>{@link com.dexels.navajo.dsl.model.tsl.impl.MapImpl#getMapClosingName <em>Map Closing Name</em>}</li>
  * </ul>
  * </p>
@@ -60,16 +59,6 @@ public class MapImpl extends ElementImpl implements Map {
 	 * @ordered
 	 */
 	protected String mapName = MAP_NAME_EDEFAULT;
-
-	/**
-	 * The cached value of the '{@link #getAttributes() <em>Attributes</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getAttributes()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<PossibleExpression> attributes;
 
 	/**
 	 * The default value of the '{@link #getMapClosingName() <em>Map Closing Name</em>}' attribute.
@@ -136,18 +125,6 @@ public class MapImpl extends ElementImpl implements Map {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<PossibleExpression> getAttributes() {
-		if (attributes == null) {
-			attributes = new EObjectContainmentEList<PossibleExpression>(PossibleExpression.class, this, TslPackage.MAP__ATTRIBUTES);
-		}
-		return attributes;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public String getMapClosingName() {
 		return mapClosingName;
 	}
@@ -170,26 +147,10 @@ public class MapImpl extends ElementImpl implements Map {
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case TslPackage.MAP__ATTRIBUTES:
-				return ((InternalEList<?>)getAttributes()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case TslPackage.MAP__MAP_NAME:
 				return getMapName();
-			case TslPackage.MAP__ATTRIBUTES:
-				return getAttributes();
 			case TslPackage.MAP__MAP_CLOSING_NAME:
 				return getMapClosingName();
 		}
@@ -207,10 +168,6 @@ public class MapImpl extends ElementImpl implements Map {
 		switch (featureID) {
 			case TslPackage.MAP__MAP_NAME:
 				setMapName((String)newValue);
-				return;
-			case TslPackage.MAP__ATTRIBUTES:
-				getAttributes().clear();
-				getAttributes().addAll((Collection<? extends PossibleExpression>)newValue);
 				return;
 			case TslPackage.MAP__MAP_CLOSING_NAME:
 				setMapClosingName((String)newValue);
@@ -230,9 +187,6 @@ public class MapImpl extends ElementImpl implements Map {
 			case TslPackage.MAP__MAP_NAME:
 				setMapName(MAP_NAME_EDEFAULT);
 				return;
-			case TslPackage.MAP__ATTRIBUTES:
-				getAttributes().clear();
-				return;
 			case TslPackage.MAP__MAP_CLOSING_NAME:
 				setMapClosingName(MAP_CLOSING_NAME_EDEFAULT);
 				return;
@@ -250,8 +204,6 @@ public class MapImpl extends ElementImpl implements Map {
 		switch (featureID) {
 			case TslPackage.MAP__MAP_NAME:
 				return MAP_NAME_EDEFAULT == null ? mapName != null : !MAP_NAME_EDEFAULT.equals(mapName);
-			case TslPackage.MAP__ATTRIBUTES:
-				return attributes != null && !attributes.isEmpty();
 			case TslPackage.MAP__MAP_CLOSING_NAME:
 				return MAP_CLOSING_NAME_EDEFAULT == null ? mapClosingName != null : !MAP_CLOSING_NAME_EDEFAULT.equals(mapClosingName);
 		}
