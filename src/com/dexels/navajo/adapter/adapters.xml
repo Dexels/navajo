@@ -409,49 +409,4 @@
             </method>
         </methods>
     </map>
-    <!-- GenericFieldMap adapter -->
-    <map>
-        <tagname>genericfield</tagname>
-        <object>com.dexels.navajo.adapter.GenericFieldMap</object>
-        <values>
-            <value name="datasource" type="string" required="false" direction="in"/>          
-            <value name="transactionContext" type="integer" required="false" direction="in"/>
-            <value name="query" type="string" required="false" direction="in"/>
-            <value name="update" type="string" required="false" direction="in"/>
-            <value name="singleValue" type="object" required="false" direction="in"/>            
-        </values>
-        <methods>
-            <method name="addParameter">
-                <param name="value" field="parameter" type="any" required="true"/>
-            </method>
-            <method name="setPropertyPrefix">
-                <param name="value" field="propertyPrefix" type="string" required="true"/>
-            </method>
-            <method name="setPrimaryKey">
-                <param name="value" field="primaryKey" type="string" required="true"/>
-            </method>
-            <method name="setValueColumn">
-                <param name="value" field="valueColumn" type="string" required="true"/>
-            </method>
-            <method name="setTable">
-                <param name="value" field="table" type="string" required="true"/>
-            </method>
-            <method name="setCodeTable">
-                <param name="value" field="codeTable" type="string" required="true"/>
-            </method>
-            <method name="setCurrentInputMessage">
-                <param name="value" field="currentInputMessage" type="string" required="true"/>
-            </method>
-            <method name="addNamedParameter">
-                <param name="name" field="parameterName" type="string" required="true"/>
-                <param name="value" field="parameterValue" type="any" required="true"/>
-            </method>
-            <method name="doUpdate">
-                <param name="value" field="doUpdate" type="boolean" required="automatic" value="true"/>
-            </method>
-            <method name="doQuery">
-                <param name="value" field="doQuery" type="boolean" required="automatic" value="true"/>
-            </method>
-        </methods>
-    </map>
 </adapterdef>
