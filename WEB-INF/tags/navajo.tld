@@ -85,7 +85,11 @@
       </attribute>
    </tag>
 
-
+   <tag>
+      <name>reset</name>
+      <tagclass>com.dexels.navajo.jsp.tags.ResetTag</tagclass>
+      <info>Reset message stack</info>      
+   </tag>
 
    <tag>
       <name>log</name>
