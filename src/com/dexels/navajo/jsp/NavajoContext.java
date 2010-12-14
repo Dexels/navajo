@@ -4,9 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.PageContext;
-
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.client.NavajoClientFactory;
@@ -63,7 +60,10 @@ public class NavajoContext {
 			outHeader = NavajoFactory.getInstance().createHeader(input, service, null,null, -1);
 			input.addHeader(outHeader);
 		}
-		if(debugAll) {
+		
+		// TODO Warning should use debugAll
+		System.err.println("BTW: debugAll = "+debugAll);
+		if(true) {
 			outHeader.setHeaderAttribute("fullLog", "true");
 		}
 		
@@ -228,25 +228,25 @@ public class NavajoContext {
 	}
 	
 
-	public String getDefaultPostman(PageContext pa) {
-		HttpServletRequest request = (HttpServletRequest) pa
-				.getRequest();
+	public String getDefaultPostman(String serverName, int serverPort,String contextPath) {
 		StringBuffer requestBuffer = new StringBuffer();
-		requestBuffer.append(request.getServerName());
-		if (request.getServerPort() > 0) {
+		requestBuffer.append(serverName);
+		if (serverPort > 0) {
 			requestBuffer.append(":");
-			requestBuffer.append(request.getServerPort());
+			requestBuffer.append(serverPort);
 		}
-		requestBuffer.append(request.getContextPath());
+		requestBuffer.append(contextPath);
 		requestBuffer.append("/Postman");
 		return requestBuffer.toString();
 	}
-	public void setupClient(String server, String username, String password, PageContext pa) {
-		setupClient(server, username, password, pa,false);
+	public void setupClient(String server, String username, String password,String requestServerName,int requestServerPort, String requestContextPath) {
+
+		setupClient(server, username, password,requestServerName,requestServerPort,requestContextPath, false);
 	}
 	
-	public void setupClient(String server, String username, String password, PageContext pa, boolean debugAll) {
-//		Thread.dumpStack();
+	public void setupClient(String server, String username, String password,String requestServerName,int requestServerPort, String requestContextPath,boolean debugAll) {
+
+		//		Thread.dumpStack();
 //		System.err.println("Setupclient: "+server+" user: "+username+" pass: "+password);
 		NavajoClientFactory.resetClient();
 //			NavajoClientFactory.createDefaultClient()
@@ -261,7 +261,8 @@ public class NavajoContext {
 		}
 		myClient.setPassword(password);
 		if (server == null) {
-			server = getDefaultPostman(pa);
+			
+			server = getDefaultPostman(requestServerName,requestServerPort,requestContextPath);
 		}
 		myClient.setServerUrl(server);		
 		myClient.setRetryAttempts(0);

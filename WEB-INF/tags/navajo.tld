@@ -52,9 +52,20 @@
       <info>Pushes a service on the stack</info>
       <attribute>
          <name>service</name>
-         <required>true</required>
+         <required>false</required>
 	      <rtexprvalue>true</rtexprvalue>
       </attribute>
+      <attribute>
+         <name>serviceBinary</name>
+         <required>false</required>
+	      <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+         <name>serviceString</name>
+         <required>false</required>
+	      <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      
    </tag>
    
    <tag>

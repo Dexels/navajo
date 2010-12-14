@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.Property;
 
 public class MessageAccessMap implements Map<String, Message> {
 

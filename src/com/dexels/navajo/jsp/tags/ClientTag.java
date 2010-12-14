@@ -38,7 +38,12 @@ public class ClientTag extends BaseNavajoTag {
 		if(nc==null) {
 			throw new JspException("No navajo context found!");
 		}
-		nc.setupClient(server,username,password,getPageContext());
+		HttpServletRequest request = (HttpServletRequest) getPageContext().getRequest();
+		String requestServerName = request.getServerName();
+		int requestServerPort = request.getServerPort();
+		String requestContextPath = request.getContextPath();
+
+		nc.setupClient(server,username,password,requestServerName,requestServerPort,requestContextPath);
 		//		getPageContext().setAttribute("Aap", "Noot");
 		return EVAL_BODY_INCLUDE;
 	}
