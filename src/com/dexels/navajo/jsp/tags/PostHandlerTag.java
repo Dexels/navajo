@@ -5,7 +5,7 @@ import java.util.Enumeration;
 import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 
-import com.dexels.navajo.jsp.NavajoContext;
+import com.dexels.navajo.client.context.NavajoContext;
 
 public class PostHandlerTag extends BaseNavajoTag {
 

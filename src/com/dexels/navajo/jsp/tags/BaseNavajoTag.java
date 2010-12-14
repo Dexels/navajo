@@ -4,7 +4,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
 
-import com.dexels.navajo.jsp.NavajoContext;
+import com.dexels.navajo.client.context.NavajoContext;
 
 public abstract class BaseNavajoTag implements Tag {
 	private PageContext myPageContext = null;

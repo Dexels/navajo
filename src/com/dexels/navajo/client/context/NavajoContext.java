@@ -1,4 +1,4 @@
-package com.dexels.navajo.jsp;
+package com.dexels.navajo.client.context;
 
 import java.util.HashMap;
 import java.util.Map;

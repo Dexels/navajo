@@ -1,17 +1,17 @@
-package com.dexels.navajo.jsp;
+package com.dexels.navajo.client.context;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Property;
 
-public class MessageAccessMap implements Map<String, Message> {
+public class PropertyAccessMap implements Map<String, Property> {
 
 	
 	private final NavajoContext context;
 
-	public MessageAccessMap(NavajoContext n) {
+	public PropertyAccessMap(NavajoContext n) {
 		this.context = n;
 	}
 	public void clear() {
@@ -20,7 +20,7 @@ public class MessageAccessMap implements Map<String, Message> {
 	}
 
 	public boolean containsKey(Object key) {
-		Message o = get(key);
+		Property o = get(key);
 		return o==null;
 	}
 
@@ -28,13 +28,13 @@ public class MessageAccessMap implements Map<String, Message> {
 		return false;
 	}
 
-	public Set<java.util.Map.Entry<String, Message>> entrySet() {
+	public Set<java.util.Map.Entry<String, Property>> entrySet() {
 		return null;
 	}
 
-	public Message get(Object key) {
+	public Property get(Object key) {
 		String path = (String)key;
-		return context.parseMessagePath(path);
+		return context.parsePropertyPath(path);
 	}
 
 	public boolean isEmpty() {
@@ -45,7 +45,7 @@ public class MessageAccessMap implements Map<String, Message> {
 		return null;
 	}
 
-	public Message put(String key, Message value) {
+	public Property put(String key, Property value) {
 		return null;
 	}
 
@@ -55,15 +55,15 @@ public class MessageAccessMap implements Map<String, Message> {
 		return 1;
 	}
 
-	public Collection<Message> values() {
+	public Collection<Property> values() {
 		return null;
 	}
 
-	public void putAll(Map<? extends String, ? extends Message> m) {
+	public void putAll(Map<? extends String, ? extends Property> m) {
 		
 	}
 
-	public Message remove(Object key) {
+	public Property remove(Object key) {
 		return null;
 	}
 

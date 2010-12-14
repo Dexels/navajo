@@ -3,7 +3,7 @@ package com.dexels.navajo.jsp.tags;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 
-import com.dexels.navajo.jsp.NavajoContext;
+import com.dexels.navajo.client.context.NavajoContext;
 
 public class ClientTag extends BaseNavajoTag {
 
