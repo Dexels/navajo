@@ -197,6 +197,7 @@ public class NavajoContext {
 	}
 
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private Object getTopmostElement(Class cls) {
 		for (int i = myElementStack.size()-1; i>=0; i--) {
 			Object e  = myElementStack.get(i); 

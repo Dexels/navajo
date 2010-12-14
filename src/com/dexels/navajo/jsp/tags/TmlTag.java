@@ -4,7 +4,6 @@ import java.io.StringReader;
 
 import javax.servlet.jsp.JspException;
 
-import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.types.Binary;
