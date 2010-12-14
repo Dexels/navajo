@@ -7,7 +7,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/ant.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/derby.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jhighlight-1.0.jar"/>
-	<classpathentry kind="lib" path="lib/jstl.jar"/>
 	<classpathentry kind="lib" path="lib/standard.jar"/>
 	<classpathentry kind="lib" path="compilelib/jsp-api.jar"/>
 	<classpathentry kind="lib" path="compilelib/servlet-api.jar"/>

@@ -2,7 +2,6 @@ package com.dexels.navajo.jsp.server;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,8 +16,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 
-import com.dexels.navajo.document.Property;
-import com.dexels.navajo.jsp.NavajoContext;
+import com.dexels.navajo.client.context.NavajoContext;
 import com.dexels.navajo.jsp.server.impl.ScriptStatusImpl;
 
 public class NavajoServerContext {
@@ -29,7 +27,18 @@ public class NavajoServerContext {
 	private File customNavajoRoot;
 	private NavajoContext navajoContext;
 	private ScriptStatus scriptStatus;
+	private InstallerContext installerContext;
 	
+	public InstallerContext getInstallerContext() {
+		return installerContext;
+	}
+
+	public void setInstallerContext(InstallerContext installerContext) throws IOException {
+		System.err.println("Connected installer to server!");
+		this.installerContext = installerContext;
+
+	}
+
 	public ScriptStatus getScriptStatus() {
 		return scriptStatus;
 	}
@@ -42,6 +51,10 @@ public class NavajoServerContext {
 		this.navajoContext = navajoContext;
 	}
 
+	/**
+	 * I think this one is not used. Should remove it
+	 * @param customNavajoRoot
+	 */
 	public void setCustomNavajoRoot(File customNavajoRoot) {
 		this.customNavajoRoot = customNavajoRoot;
 	}
@@ -89,7 +102,7 @@ public class NavajoServerContext {
 			File buildFile = new File(contextFile,antFile);
 			File navajoRoot = getNavajoRoot();
 	//		System.err.println("Running ant: "+buildFile.getAbsolutePath()+" baseDir: "+navajoRoot.getAbsolutePath());
-			String result = AntRun.callAnt(buildFile, navajoRoot, params, null);
+			AntRun.callAnt(buildFile, navajoRoot, params, null);
 //			System.err.println("Result: \n"+result);
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -103,20 +116,34 @@ public class NavajoServerContext {
 		sb.append(rr.getServerName()+":");
 		sb.append(rr.getServerPort());
 		sb.append(rr.getContextPath());
-		String server = sb.toString()+"/Postman";
+		String server = sb.toString()+"/Comet";
 		ResourceBundle client = getClientSettings();
 		String username = "guest";
 		String password = "guest";
 		if(client!=null) {
 			username = client.getString("username");
 			password = client.getString("password");
+			if(client.containsKey("servlet")) {
+				String serv = client.getString("servlet");
+				if(serv!=null) {
+					server = sb.toString()+serv;
+				}
+			}
+
 		}
-		getNavajoContext().setupClient(server, username, password, pageContext);
+		HttpServletRequest request = (HttpServletRequest) getPageContext().getRequest();
+		String requestServerName = request.getServerName();
+		int requestServerPort = request.getServerPort();
+		String requestContextPath = request.getContextPath();
+
+		
+		getNavajoContext().setupClient(server, username, password, requestServerName,requestServerPort,requestContextPath,true);
+		
 	}
 	
 	public File getCurrentFolder() throws IOException {
 		if(currentFolder==null) {
-			return getScriptRoot();
+			currentFolder = getScriptRoot();
 		}
 		return currentFolder;
 	}
@@ -210,9 +237,6 @@ public class NavajoServerContext {
 
 	public void setPageContext(PageContext pageContext) throws IOException {
 		this.pageContext = pageContext;
-		if(getCurrentFolder()==null) {
-			setCurrentFolder(getScriptRoot());
-		}
 	}
 
 	public PageContext getPageContext() {
@@ -221,9 +245,11 @@ public class NavajoServerContext {
 	
 	public File getNavajoRoot() throws IOException {
 		if(getPageContext()==null) {
+			System.err.println("Returning custom root. Don't know what this implies...");
 			return customNavajoRoot;
 		}
-		String installedContext = InstallerContext.getNavajoRoot(getPageContext().getServletContext().getContextPath().substring(1));
+		
+		String installedContext = getInstallerContext().getNavajoRoot(getContextPath().substring(1));
 
 		if(installedContext==null) {
 			String real = pageContext.getServletContext().getRealPath("");
@@ -245,6 +271,7 @@ public class NavajoServerContext {
 	public ResourceBundle getClientSettings() throws IOException {
 		File props = new File(getConfigRoot(),"client.properties");
 		if(!props.exists()) {
+			System.err.println("Not found.");
 			return null;
 		}
 		FileReader fr = null;
@@ -265,6 +292,16 @@ public class NavajoServerContext {
 				all.add(file.getName().substring(0,ii));
 			}
 		}
+		File scripts  = new File(getContextRoot(),"scripts");
+		File navajo  = new File(scripts,"navajo");
+		filelist = navajo.listFiles();
+		for (File file : filelist) {
+			int ii = file.getName().lastIndexOf('.');
+			if(ii>=0 && !file.isDirectory()) {
+				all.add("navajo/"+file.getName().substring(0,ii));
+			}
+		}
+		Collections.sort(all);
 		return all;
 	}
 	
@@ -300,7 +337,7 @@ public class NavajoServerContext {
 
 	public List<File> getFolders() throws IOException {
 		List<File> all = new ArrayList<File>();
-		System.err.println("Current Folder: "+getCurrentFolder().getAbsolutePath());
+//		System.err.println("Current Folder: "+getCurrentFolder().getAbsolutePath());
 		File[] filelist = getCurrentFolder().listFiles();
 		if(!getCurrentFolder().equals(getScriptRoot())) {
 			all.add(new File(getCurrentFolder(),".."));
@@ -320,13 +357,11 @@ public class NavajoServerContext {
 	}
 
 	public ScriptStatus getScriptInfo(String path)  {
-		System.err.println("Getting info: "+path);
 		if(path==null || "".equals(path)) {
 			return null;
 		}
 		try {
 			ScriptStatus s = new ScriptStatusImpl(this,getScriptRoot(), getCompiledRoot(), path);
-			System.err.println("returning script status:"+s);
 			return s;
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -338,7 +373,5 @@ public class NavajoServerContext {
 	public void setScript(String script) {
 //
 		scriptStatus = getScriptInfo(script);
-		System.err.println("Script set done.");
-	//	System.err.println("Scirpt: "+scriptStatus.getName());
 	}
 }

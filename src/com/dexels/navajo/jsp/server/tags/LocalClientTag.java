@@ -1,7 +1,5 @@
 package com.dexels.navajo.jsp.server.tags;
 
-import java.io.IOException;
-
 import javax.servlet.jsp.JspException;
 
 import com.dexels.navajo.jsp.server.NavajoServerContext;

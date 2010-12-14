@@ -4,8 +4,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-import com.dexels.navajo.document.Property;
-
 public class ScriptInfoAccessMap implements Map<String, ScriptStatus> {
 
 	

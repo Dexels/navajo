@@ -3,6 +3,7 @@ package com.dexels.navajo.jsp.server.impl;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FilenameFilter;
+import java.io.IOException;
 
 import com.dexels.navajo.jsp.server.NavajoServerContext;
 import com.dexels.navajo.jsp.server.ScriptStatus;
@@ -10,17 +11,17 @@ import com.dexels.navajo.jsp.server.ScriptStatus;
 public class ScriptStatusImpl implements ScriptStatus {
 
 	private final File scriptRoot;
-	private final File currentFile;
+	private  File currentFile;
 	private final File compileRoot;
 	private final String name;
 	private final String path;
 	private final String extension;
-	private final NavajoServerContext navajoServerContext;
+//	private final NavajoServerContext navajoServerContext;
 
 	public final String[] acceptedCompileCode = new String[]{"java","js"};
 	
-	public ScriptStatusImpl(NavajoServerContext nsc, File scriptRoot, File currentFile, File compileRoot) {
-		this.navajoServerContext = nsc;
+	public ScriptStatusImpl(NavajoServerContext nsc, File scriptRoot, File currentFile, File compileRoot) throws IOException {
+//		this.navajoServerContext = nsc;
 		this.scriptRoot = scriptRoot;
 		this.currentFile = currentFile;
 		this.compileRoot = compileRoot;
@@ -34,15 +35,47 @@ public class ScriptStatusImpl implements ScriptStatus {
 		ii = pp.lastIndexOf('.');
 		this.path = pp.substring(0,ii);
 		// relative == "stuff/xyz.dat"
-		System.err.println("PATH: "+this.path);
+		currentFile = currentFile.getCanonicalFile();
+
 	}
 	
-	public ScriptStatusImpl(NavajoServerContext nsc, File scriptRoot, File compileRoot, String servicePath) {
-		this.navajoServerContext = nsc;
+	public ScriptStatusImpl(NavajoServerContext nsc, File scriptRoot, File compileRoot, String servicePath) throws IOException {
+//		this.navajoServerContext = nsc;
 		this.scriptRoot = scriptRoot;
 		this.compileRoot = compileRoot;
 		// determine working dir:
-		System.err.println("ServicePath: "+servicePath);
+		resolveScriptPath(scriptRoot, servicePath);
+		if(this.currentFile==null || !this.currentFile.exists()) {
+			// fall back to the context root
+			File scriptContextRoot = new File(nsc.getContextRoot(),"scripts");
+			resolveScriptPath(scriptContextRoot, servicePath);
+		}
+		
+		if(this.currentFile==null) {
+			this.path = "unknown";
+			this.name = "unknown";
+			this.extension = "unknown";
+			return;
+		}
+		currentFile = currentFile.getCanonicalFile();
+		String[] paths = currentFile.getPath().split("\\.");
+		this.name=paths[0];
+		String pp = scriptRoot.toURI().relativize(currentFile.toURI()).getPath();
+		int ii = pp.lastIndexOf('.');
+		this.path = pp.substring(0,ii);
+		this.extension=currentFile.getPath().substring(currentFile.getPath().lastIndexOf(".")+1);
+	}
+	
+	
+	public static void main(String[] aa) {
+		String a = "/Users/frank/Documents/Spiritus/NavajoExampleProject/scripts/InitNavajoDemo.xml";
+		String v =a.substring(a.lastIndexOf(".")+1);
+		System.err.println("Extension::: "+v);
+		
+	}
+	
+
+	protected void resolveScriptPath(File scriptRoot, String servicePath) {
 		if(servicePath.indexOf('/')==-1) {
 			this.currentFile = getSource(scriptRoot, servicePath);
 		} else {
@@ -50,21 +83,17 @@ public class ScriptStatusImpl implements ScriptStatus {
 			int lastIndex = servicePath.lastIndexOf('/');
 			String path = servicePath.substring(0,lastIndex);
 			String serviceName = servicePath.substring(lastIndex+1,servicePath.length());
-			System.err.println("Fabricated: "+serviceName);
 			File currentPath = new File(scriptRoot,path);
-			System.err.println("Current path: "+currentPath.getAbsolutePath());
 			this.currentFile = getSource(currentPath,serviceName);
 		}
-		System.err.println("Current file: "+this.currentFile.getAbsolutePath());
-		String[] paths = currentFile.getPath().split("\\.");
-		this.name=paths[0];
-		String pp = scriptRoot.toURI().relativize(currentFile.toURI()).getPath();
-		int ii = pp.lastIndexOf('.');
-		System.err.println("RELATIVIZE: "+pp+" lastindex: "+ii);
-		this.path = pp.substring(0,ii);
-		this.extension=paths[1];
 	}
 
+	/**
+	 * Might return null in some circumstances
+	 * @param sourceDir
+	 * @param serviceName
+	 * @return
+	 */
 	private File getSource(File sourceDir, final String serviceName) {
 		File[] files = sourceDir.listFiles(new FilenameFilter() {
 			
@@ -73,7 +102,7 @@ public class ScriptStatusImpl implements ScriptStatus {
 				return name.startsWith(serviceName);
 			}
 		});
-		if(files.length==0) {
+		if(files==null || files.length==0) {
 			System.err.println("No qualifying script found in folder: "+sourceDir.getAbsolutePath()+" with name like: "+serviceName+".*");
 			return null;
 		}
@@ -103,11 +132,11 @@ public class ScriptStatusImpl implements ScriptStatus {
 	}
 
 	public File getCompiledUnit() {
-		System.err.println("DEBUG: \n"+this.toString());
-		System.err.println("Compileroot: "+compileRoot+" - "+path);
+//		System.err.println("DEBUG: \n"+this.toString());
+//		System.err.println("Compileroot: "+compileRoot+" - "+path);
 		 // fictional file, will never exist.
 		final File ff = new File(this.compileRoot,path);
-		System.err.println("assuming dir: "+ff.getParentFile().getAbsolutePath()	);
+//		System.err.println("assuming dir: "+ff.getParentFile().getAbsolutePath()	);
 		File[] list = ff.getParentFile().listFiles(new FileFilter() {
 			
 			public boolean accept(File pathname) {
@@ -134,7 +163,7 @@ public class ScriptStatusImpl implements ScriptStatus {
 		if(list.length==0) {
 			return null;
 		}
-		System.err.println("FIOLLLL: "+list[0].getAbsolutePath());
+//		System.err.println("FIOLLLL: "+list[0].getAbsolutePath());
 		return list[0];
 	}
 

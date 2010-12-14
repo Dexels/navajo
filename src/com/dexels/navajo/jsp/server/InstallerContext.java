@@ -3,11 +3,9 @@ package com.dexels.navajo.jsp.server;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.servlet.jsp.PageContext;
 
@@ -16,21 +14,19 @@ public class InstallerContext {
 	private Map<String,String> systemContexts = new HashMap<String, String>();
 	private String currentContext;
 	public boolean isValidInstallation() {
-		try {
-			loadSystemContexts();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		
+		getNavajoRootPath();
+		
 
 		if(currentContext==null) {
 			return false;
 		}
 		File f = new File(currentContext);
-		System.err.println("File exists: "+f.getAbsolutePath()+" : "+f.exists());
+//		System.err.println("Proposed root path seems to exist: "+f.getAbsolutePath()+" : "+f.exists());
 		if(!f.exists()) {
 			return false;
 		}
-		File adapters = new File(f,"adapters");
+//		File adapters = new File(f,"adapters");
 		File scripts = new File(f,"scripts");
 		if(!scripts.exists()) {
 			return false;
@@ -41,13 +37,32 @@ public class InstallerContext {
 		}
 		return config!=null;
 	}
+
+	protected String getNavajoRootPath() {
+		if(pageContext==null) {
+			System.err.println("Whoops");
+			Thread.dumpStack();
+		}
+		String force = pageContext.getServletContext().getInitParameter("forcedNavajoPath");
+		if(force!=null) {
+//			System.err.println("Using the force! navajo.properties will be ignored!");
+			currentContext = force;
+		} else {
+			try {
+				loadSystemContexts();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return currentContext;
+	}
 	
 	private void initialize() throws IOException {
 		loadSystemContexts();
 		String contextPath = getContextName().substring(1);
 //		System.err.println("Context path: "+contextPath+" contexts: "+systemContexts);
 		currentContext = systemContexts.get(contextPath);
-		saveSystemContexts();
+//		saveSystemContexts();
 	}
 
 	private void loadSystemContexts() throws IOException {
@@ -68,22 +83,22 @@ public class InstallerContext {
 		br.close();
 	}
 	
-	private void saveSystemContexts() throws IOException {
-		File home = new File(System.getProperty("user.home"));
-		File navajo = new File(home,"navajo.properties");
-		FileWriter fw = new FileWriter(navajo);
-		for (Entry<String,String> e: systemContexts.entrySet()) {
-			fw.write(e.getKey()+"="+e.getValue()+"\n");
-		}
-		fw.flush();
-		fw.close();
-	}
+//	private void saveSystemContexts() throws IOException {
+//		File home = new File(System.getProperty("user.home"));
+//		File navajo = new File(home,"navajo.properties");
+//		FileWriter fw = new FileWriter(navajo);
+//		for (Entry<String,String> e: systemContexts.entrySet()) {
+//			fw.write(e.getKey()+"="+e.getValue()+"\n");
+//		}
+//		fw.flush();
+//		fw.close();
+//	}
 	
-	public static String getNavajoRoot(String serverContext) throws IOException {
-		InstallerContext ic = new InstallerContext();
-		ic.loadSystemContexts();
-		
-		return ic.systemContexts.get(serverContext);
+	public String getNavajoRoot(String serverContext) throws IOException {
+		return getNavajoRootPath();
+//		ic.loadSystemContexts();
+//		
+//		return ic.systemContexts.get(serverContext);
 	}
 	
 	public String getSuggestedPath() {
@@ -102,7 +117,7 @@ public class InstallerContext {
 	}
 
 	public String getServerInfo() {
-		return "Aap: "+getPageContext().getServletConfig().getServletContext().getServerInfo();
+		return "Server: "+getPageContext().getServletConfig().getServletContext().getServerInfo();
 	}
 
 	public void setPageContext(PageContext pageContext) {
@@ -110,13 +125,12 @@ public class InstallerContext {
 			this.pageContext = pageContext;
 			try {
 				initialize();
-				System.err.println("InstallerContext initialized");
+//				System.err.println("InstallerContext initialized");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		} else {
 			this.pageContext = pageContext;
-			
 		}
 	}
 
