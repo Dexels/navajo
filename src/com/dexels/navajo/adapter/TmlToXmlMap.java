@@ -23,6 +23,8 @@ public class TmlToXmlMap implements Mappable {
 	public String attributeValue = "";
 	public boolean buildContent, dumpObject;
 	
+	private boolean hasBeenBuild = false;
+	
 	ArrayList<String[]> attributes = new ArrayList<String[]>();
 
 	public void setAttributePath(String path) {
@@ -91,6 +93,7 @@ public class TmlToXmlMap implements Mappable {
 				}
 
 				appendAttributes();
+				hasBeenBuild = true;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -154,7 +157,10 @@ public class TmlToXmlMap implements Mappable {
 		parent.setChild(property);
 	}
 
-	public Binary getContent() {
+	public Binary getContent() throws UserException {
+		if ( !hasBeenBuild ) {
+			setBuildContent(true);
+		}
 		return content.getContent();
 	}
 

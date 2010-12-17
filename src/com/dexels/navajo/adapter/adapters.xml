@@ -377,11 +377,9 @@
             <method name="addNamespace">
                 <param name="value" field="namespace" type="string" required="true"/>
             </method>
-            <method name="responseBody">
-                <param name="value" field="responseBody" type="binary" required="false"/>
-            </method>
             <method name="requestBody">
                 <param name="value" field="requestBody" type="binary" required="true"/>
+                <param name="header" field="requestHeader" type="binary" required="false"/>
             </method>
             <method name="doSend">
                 <param name="value" field="doSend" type="boolean" required="automatic" value="true"/>

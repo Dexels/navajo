@@ -36,7 +36,9 @@ public class SOAPMap implements Mappable {
 	public String url;
 	public String soapAction;
 	public XMLMap xmlRequest;
-	public Binary requestBody;
+	public Binary requestBody = null;
+	public Binary requestHeader = null;
+
 	public boolean doSend;
 	public Binary responseBody;
 	public XMLMap xmlReponse;
@@ -78,6 +80,14 @@ public class SOAPMap implements Mappable {
 		return this.responseBody;
 	}
 	
+	public void setRequestHeader(Binary requestHeader) {
+		this.requestHeader = requestHeader;
+	}
+
+	public void setRequestBody(Binary b) {
+		setRequestBody(b, false);
+	}
+	
 	public void setRequestBody(Binary b, boolean containsSoapBody) {
 		//System.err.println("Constructing envelope, I have " + namespaces.size() + " extra namespaces" );
 		StringBuffer sb = new StringBuffer();
@@ -87,7 +97,11 @@ public class SOAPMap implements Mappable {
 			sb.append(namespaces.get(i));
 		}
 		sb.append(">\n");
-		sb.append("<SOAP-ENV:Header/>\n");
+		sb.append("<SOAP-ENV:Header>\n");
+		if ( requestHeader != null ) {
+			sb.append(new String(requestHeader.getData()));
+		}
+		sb.append("</SOAP-ENV:Header>\n");
 		
 		if ( !containsSoapBody ) {
 			sb.append("<SOAP-ENV:Body>\n");
@@ -127,6 +141,7 @@ public class SOAPMap implements Mappable {
 				soapPart.setContent( ss );
 				msg.setContentDescription("text/xml");
 				
+				System.err.println(new String(requestBody.getData()));
 				// attachments
 				if ( requestAttachments.size() > 0 ) {
 					for ( int i = 0; i < requestAttachments.size(); i++ ) {
@@ -182,44 +197,57 @@ public class SOAPMap implements Mappable {
 		return soapReply;
 	}
 
+	/*
+	 * POST /Test/Sportlink.asmx HTTP/1.1
+Host: sportlink.rfxweb.nl
+Content-Type: text/xml; charset=utf-8
+Content-Length: length
+SOAPAction: "https://sportlink.rfxweb.nl/GetClub"
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Header>
+    <rfxws_header xmlns="https://sportlink.rfxweb.nl/">
+      <Bondskey>string</Bondskey>
+      <UserId>string</UserId>
+      <UserPassword>string</UserPassword>
+    </rfxws_header>
+  </soap:Header>
+  <soap:Body>
+    <GetClub xmlns="https://sportlink.rfxweb.nl/">
+      <ClubId>string</ClubId>
+    </GetClub>
+  </soap:Body>
+</soap:Envelope>
+	 */
 	public static void main(String [] args) throws Exception {
 		
 		SOAPMap sm = new SOAPMap();
 		//sm.setUrl("http://10.0.0.132:8080/corvus/httpd/ebms/sender");
-		sm.setUrl("http://10.0.0.132:8080/corvus/httpd/ebms/receiver");
+		sm.setUrl("https://sportlink.rfxweb.nl/Test/Sportlink.asmx");
 		//sm.setUrl("http://10.0.0.132:8080/corvus/httpd/ebms/receiver_list");
-		sm.setSoapAction("sender");
-		String aap = 
-		 "<SOAP-ENV:Body>" + 
-		 "<cpaId>1</cpaId>" +
-         "<service>http://10.0.0.132:8080/corvus/httpd/ebms/inbound</service> " +
-         "<action>Dexels_to_SeeMe</action> " +
-         "<convId>My Conversation</convId>" +
-         "<fromPartyId>Dexels</fromPartyId>" +
-         "<fromPartyType>Aap</fromPartyType>" +
-         "<toPartyId>SeeMe</toPartyId>" +
-         "<toPartyType>Noot</toPartyType>" +
-         "<refToMessageId>Jazeker</refToMessageId>" +
-         //"<numOfMessages>2</numOfMessages>" +
-		 "</SOAP-ENV:Body>";
-         
+		sm.setSoapAction("https://sportlink.rfxweb.nl/GetClub");
+		String body = 
+		"<GetClub xmlns=\"https://sportlink.rfxweb.nl/\">" +
+        "<ClubId>V0001101</ClubId>" +
+        "</GetClub>";
+        
+		String header =
+			"<rfxws_header xmlns=\"https://sportlink.rfxweb.nl/\">" +
+	      "<Bondskey>P8-raj3t&amp;as!ast</Bondskey>" +
+	      "<UserId>SLC</UserId>" +
+	      "<UserPassword>#9eza5UHa#at5U?</UserPassword>" +
+	    "</rfxws_header>";
   
-		// 20100916-132828-45801@10.0.0.132
-		String receive = 
-			"<SOAP-ENV:Body>" +
-			 "<messageId>20100916-132828-45801@10.0.0.132</messageId>" + 
-			"</SOAP-ENV:Body>";
-			
-		XMLMap xm = new XMLMap();
-	
-		xm.setContent(new Binary ( receive.getBytes() ));
+		
 //		xm.setStart("geocode");
 //		xm.setChildName("location");
 //		xm.setChildText("1600 Pennsylvania Av, Washington, DC");
 		
-		sm.setXmlRequest(xm);
+		sm.setRequestHeader(new Binary(header.getBytes()));
+		sm.setRequestBody(new Binary(body.getBytes()));
 		//sm.setRequestBody(new Binary(aap.getBytes()));
-  	    sm.setRequestAttachment(new Binary(new FileInputStream(new File("/home/arjen/ebms.txt"))));
+  	  //  sm.setRequestAttachment(new Binary(new FileInputStream(new File("/home/arjen/ebms.txt"))));
 //		sm.setAddAttachment(new Binary(new FileInputStream(new File("/home/arjen/wedstrijden.csv"))));
 		sm.setDoSend(true);
 		
