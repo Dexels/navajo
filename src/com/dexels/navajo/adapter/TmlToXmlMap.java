@@ -86,6 +86,11 @@ public class TmlToXmlMap implements Mappable {
 				}
 				content.setStart(root.getName());
 
+				ArrayList<Property> allProperties = root.getAllProperties();
+				for (int i = 0; i < allProperties.size(); i++) {
+					appendProperty(allProperties.get(i), content);
+				}
+				
 				// Watch it, we assume the root has no properies
 				ArrayList<Message> allMessages = root.getAllMessages();
 				for (int i = 0; i < allMessages.size(); i++) {
@@ -114,9 +119,10 @@ public class TmlToXmlMap implements Mappable {
 	private final void appendAttributes() throws UserException {
 		for (int i = 0; i < attributes.size(); i++) {
 			String[] attr = attributes.get(i);
-			content.setChildName(attr[0]);
+			if ( !attr[0].equals(content.getName())) {
+				content.setChildName(attr[0]);
+			}
 			// TagMap child = content.getChild();
-
 			// if(child != null){
 			content.setAttributeName(attr[1]);
 			content.setAttributeText(attr[2]);

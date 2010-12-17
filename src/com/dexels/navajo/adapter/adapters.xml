@@ -379,7 +379,10 @@
             </method>
             <method name="requestBody">
                 <param name="value" field="requestBody" type="binary" required="true"/>
+            </method>
+            <method name="request">
                 <param name="header" field="requestHeader" type="binary" required="false"/>
+                <param name="value" field="requestBody" type="binary" required="true"/>
             </method>
             <method name="doSend">
                 <param name="value" field="doSend" type="boolean" required="automatic" value="true"/>
