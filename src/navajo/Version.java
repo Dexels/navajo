@@ -1,4 +1,9 @@
 package navajo;
+
+import org.osgi.framework.BundleContext;
+
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
 /**
  * <p>Title: Navajo Product Project</p>
  * <p>Description: This is the official source for the Navajo server</p>
@@ -218,39 +223,22 @@ public class Version extends dexels.Version {
 	public static final String PRODUCTNAME = "Navajo Kernel";
 	public static final String RELEASEDATE = "2010-08-26";
 	
-//	 Included packages.
-	String [] includes = {"navajodocument.Version"};
-	
-	public Version() {
-		addIncludes(includes);
-		setReleaseDate(RELEASEDATE);
-		setSpecialVersion(SPECIAL_VERSION);
-	}
-	
-	public int getMajor() {
-		return MAJOR;
-	}
-
-	public int getMinor() {
-		return MINOR;
-	}
-
-	public int getPatchLevel() {
-		return PATCHLEVEL;
-	}
-
-	public String getVendor() {
-		return VENDOR;
-	}
-
-	public String getProductName() {
-		return PRODUCTNAME;
-	}
 	
 	public static String getDescription() {
 		return MAJOR + "." + MINOR + "." + PATCHLEVEL + " (" + SPECIAL_VERSION + ")";
 	}
 	
+	
+	
+	@Override
+	public void start(BundleContext bc) throws Exception {
+		super.start(bc);
+		Navajo n = NavajoFactory.getInstance().createNavajo();
+		n.write(System.err);
+	}
+
+
+
 	public static void main(String [] args) {
 		Version v = new Version();
 		System.err.println(v.toString());
