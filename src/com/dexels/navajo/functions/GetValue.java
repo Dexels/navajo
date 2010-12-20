@@ -61,7 +61,7 @@ public class GetValue extends FunctionInterface {
 		}
 		if (!(o instanceof Property)) {
 			throw new TMLExpressionException(this,
-					"Invalid function call in GetValue: Not a  property");
+					"Invalid function call in GetValue: Not a  property, this is a: "+o.getClass()+" and it goes like this:  "+o);
 
 		}
 		Property p = (Property)o;

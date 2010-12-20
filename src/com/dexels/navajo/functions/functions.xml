@@ -357,7 +357,7 @@
         <result/>
     </function>
     <function name="GetValue" class="com.dexels.navajo.functions.GetValue">
-        <description>Gets a property from a string</description>
+        <description>Gets a typed value from a property object</description>
         <input/>
         <result/>
     </function>
@@ -587,6 +587,15 @@
         <input/>
         <result/>
     </function>
+    <function name="GetContextResource" class="com.dexels.navajo.functions.GetContextResource">
+        <description>GetContextResource gets the contents of a file in the servletcontext/resources folder</description>
+        <input/>
+        <result/>
+    </function>
+    
+        
+    
+    
     <function name="CheckInteger" class="com.dexels.navajo.functions.CheckInteger">
         <description>CheckInteger checks whether argument is valid integer</description>
         <input>any</input>
@@ -637,4 +646,5 @@
         <input>any,any,any,any,...</input>
         <result>any</result>
     </function>
+    
 </functiondef>
