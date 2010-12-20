@@ -1,21 +1,22 @@
 package com.dexels.navajo.document;
 
-import java.io.*;
-import java.text.*;
-import java.util.*;
+import java.io.BufferedInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
-import org.w3c.dom.*;
-
-import com.dexels.navajo.document.jaxpimpl.xml.*;
-import com.dexels.navajo.document.types.*;
-import com.sun.org.apache.xml.internal.security.utils.XMLUtils;
+import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
+import com.dexels.navajo.document.types.ClockTime;
 
 public class NavajoLaszloConverter {
 	public static Navajo createNavajoFromLaszlo(BufferedInputStream is) {
