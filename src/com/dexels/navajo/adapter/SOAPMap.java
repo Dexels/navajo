@@ -1,8 +1,6 @@
 package com.dexels.navajo.adapter;
 
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.StringWriter;
 import java.net.URL;
 import java.util.ArrayList;
@@ -23,7 +21,6 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import com.dexels.navajo.adapter.soapmap.SoapAttachment;
-import com.dexels.navajo.adapter.xmlmap.TagMap;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
@@ -259,6 +256,14 @@ SOAPAction: "https://sportlink.rfxweb.nl/GetClub"
 		for ( int i = 0; i < sa.length; i++ ) {
 			System.err.println("type: " + sa[i].getMimeType() + ", content:\n" +  new String(sa[i].getContent().getData()));
 		}
+		
+		XMLMap response = sm.getXmlResponse();
+		
+		response.setChildName("soap:Body/soap:Fault/faultstring");
+		
+		System.err.println("Value: " + response.getChildExists());
+		
+		
 		//System.err.println(response.getChildText("SOAP-ENV:Body/geocodeResponse/.*/item/lat"));
 		
 		
