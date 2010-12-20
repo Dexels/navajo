@@ -4,10 +4,18 @@ import java.io.*;
 import java.text.*;
 import java.util.*;
 
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import org.w3c.dom.*;
 
 import com.dexels.navajo.document.jaxpimpl.xml.*;
 import com.dexels.navajo.document.types.*;
+import com.sun.org.apache.xml.internal.security.utils.XMLUtils;
 
 public class NavajoLaszloConverter {
 	public static Navajo createNavajoFromLaszlo(BufferedInputStream is) {
@@ -49,6 +57,28 @@ public class NavajoLaszloConverter {
 		return createLaszloFromNavajo(in, "navajoDataSource");
 	}
 
+	public static void writeBirtXml(Message m, Writer w) {
+		Document d = createLaszloFromNavajo(m, false, null);
+		XMLDocumentUtils.write(d, w, false);
+//		
+//		  TransformerFactory tFactory =
+//			    TransformerFactory.newInstance();
+//			  Transformer transformer;
+//			try {
+//				transformer = tFactory.newTransformer();
+//				  DOMSource source = new DOMSource(d);
+//				  StreamResult result = new StreamResult(System.out);
+//				  transformer.transform(source, result); 
+//			} catch (TransformerConfigurationException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			} catch (TransformerException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+
+	}
+
 	
 	public static Document createLaszloFromNavajo(Navajo in, String serviceName) {
 		return createLaszloFromNavajo(in, false, serviceName);
@@ -82,6 +112,26 @@ public class NavajoLaszloConverter {
 		return doc;
 	}
 
+	public static Document createLaszloFromNavajo(Message in, boolean includeSelections,  String serviceName) {
+		Document doc = XMLDocumentUtils.createDocument();
+		Element root = doc.createElement("navajoDataSource");
+		doc.appendChild(root);
+		Element tml = doc.createElement("tml");
+		root.appendChild(tml);
+
+		try {
+			ArrayList<Message> l = in.getAllMessages();
+			for (int i = 0; i < l.size(); i++) {
+				appendMessage(l.get(i), tml, doc, includeSelections);
+				System.err.println("Message added!");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return doc;
+	}
+
+	
 	private static void appendMessage(Message m, Element e, Document d, boolean includeSelections) {
 		try {
 			if (m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT)) {
