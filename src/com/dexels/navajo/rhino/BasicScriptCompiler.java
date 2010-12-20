@@ -15,7 +15,6 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -120,9 +119,17 @@ public class BasicScriptCompiler implements ScriptCompiler {
 		// TML is a subset, valid tml means valid tsl
 		if(current.getName().equals("tsl") || current.getName().equals("tml")) {
 			os.writeln("// -- Compiled code. Edit at your own peril.\n");
+			String debug = current.getStringAttribute("debug");
+			if(debug!=null && debug.indexOf("request")!=-1) {
+				os.writeln("env.dumpRequest();\n");
+			}
 			for (XMLElement c : current.getChildren()) {
 				process(c,os);
 			}
+			if(debug!=null && debug.indexOf("response")!=-1) {
+				os.writeln("env.dumpResponse();\n");
+			}
+
 			long time = System.currentTimeMillis() - compileStart;
 			os.writeln("// compiletime: "+time+"\n");
 			return;

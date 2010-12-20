@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+import com.dexels.navajo.listeners.NavajoDoneException;
 import com.dexels.navajo.mapping.CompiledScript;
 import com.dexels.navajo.server.Access;
 
@@ -35,7 +36,7 @@ public class RhinoCompiledScript extends CompiledScript {
 //		  }
 	 
 	@Override
-	public void execute(Access access) throws Exception {
+	public void execute(Access access) throws Exception, NavajoDoneException {
 		// TODO: Reuse this bugger
 		RhinoRunner rh = new RhinoRunner();
 		rh.run(access);

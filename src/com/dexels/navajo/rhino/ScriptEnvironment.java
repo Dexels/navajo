@@ -14,7 +14,10 @@ import java.util.Stack;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContinuationPending;
+import org.mozilla.javascript.Function;
+import org.mozilla.javascript.IdScriptableObject;
 import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
 
 import com.dexels.navajo.client.AsyncClient;
 import com.dexels.navajo.client.AsyncClientFactory;
@@ -26,6 +29,8 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.listeners.Scheduler;
+import com.dexels.navajo.listeners.TmlRunnable;
 import com.dexels.navajo.mapping.CompiledScript;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
@@ -33,7 +38,7 @@ import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.UserException;
 
-public class ScriptEnvironment implements Serializable {
+public abstract class ScriptEnvironment implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
@@ -43,18 +48,22 @@ public class ScriptEnvironment implements Serializable {
 
 	private Access access;
 
-	private boolean holdScript;
 	private ScriptFinishHandler onFinishHandler;
 	protected final Stack<Message> inputMessageStack = new Stack<Message>();
 	protected final Stack<Message> paramMessageStack = new Stack<Message>();
-
-	private Context currentContext;
+	private transient Context currentContext;
 	
 	
 	public Access getAccess() {
 		return access;
 	}
 
+	public void dumpRequest() throws NavajoException {
+		getAccess().getInDoc().write(System.err);
+	}
+	public void dumpResponse() throws NavajoException {
+		getAccess().getOutputDoc().write(System.err);
+	}
 
 	public void setAccess(Access access) {
 		this.access = access;
@@ -88,6 +97,10 @@ public class ScriptEnvironment implements Serializable {
 
 	public void setGlobalScope(Scriptable globalScope) {
 		this.globalScope = globalScope;
+	}
+
+	public Scriptable getGlobalScope() {
+		return globalScope;
 	}
 
 
@@ -292,11 +305,17 @@ public class ScriptEnvironment implements Serializable {
 			NavajoResponseHandler nrh = new NavajoResponseHandler() {
 				@Override
 				public void onResponse(Navajo n) {
-//					System.err.println("Result received");
+					System.err.println("Result received");
 					callFinished(service,n);
 					continueScript(continuation, n);
 				}
+
+				@Override
+				public void onFail(Throwable t) throws IOException {
+					throw new IOException("Navajo failed.",t);
+				}
 			};
+			System.err.println("Calling server: "+getClient().getServer());
 			getClient().callService(n, service, nrh);
 //			System.err.println("Freezing!");
 			throw (cp);
@@ -337,11 +356,12 @@ public class ScriptEnvironment implements Serializable {
 		
 	}
 
+//	public TmlRunnable createContinueRunnable(final Object pending) {
+//		
+//		return new ContinuationRunnable(this, pending);
+//	}
 
 	public void continueScript(final Object pending, final Object functionResult) {
-//		Thread.dumpStack();
-//		new Thread() {
-//			public void run() {
 				try {
 					Context context = Context.enter();
 				 	  context.resumeContinuation(pending, globalScope, functionResult);
@@ -350,17 +370,11 @@ public class ScriptEnvironment implements Serializable {
 			      } finally {
 					Context.exit();
 			      }
-//			      System.err.println("Finishing script run!");
-//			      System.err.println("Stack: "+callStack);
 			      finishRun();
-//, Context.javaToJS(new ScriptEnvironment(), globalScope)			  	  
-			 //     globalScope.get
-//			}
-//		}.start();
 	}
 
 
-	private Object reserialize(Object c) {
+	public Object reserialize(Object c) {
 		try {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			ObjectOutputStream oos = new ObjectOutputStream(out);
@@ -410,7 +424,7 @@ public class ScriptEnvironment implements Serializable {
 		
 	
 	public void log(String s) {
-		System.err.println("Log: "+s);
+		System.err.println("Threadname: "+ Thread.currentThread().getName()+" Log: "+s);
 	}
 
 	public Navajo getTml(String path) throws FileNotFoundException {
@@ -456,6 +470,26 @@ public class ScriptEnvironment implements Serializable {
 		}
 		return null;
 	}
+	
+	
+	public void scheduleCallback(Function f) {
+		System.err.println("Schedulecallback!!!!!");
 
+		f.call(getCurrentContext(), createSubScope(globalScope), null, new Object[]{});
+	}
+
+	public Scriptable createSubScope(Scriptable parentScope) {
+		Scriptable s = new ScriptableObject() {
+			@Override
+			public String getClassName() {
+				return "Aap";
+			}
+		};
+		s.setParentScope(parentScope);
+		ScriptEnvironment subEnvironment = createEnvironment();
+		ScriptableObject.putProperty(s, "env", Context.javaToJS(subEnvironment, s));
+		return s;
+	}
+	public abstract ScriptEnvironment createEnvironment();
 	
 }

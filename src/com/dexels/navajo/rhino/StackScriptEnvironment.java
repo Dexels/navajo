@@ -41,6 +41,14 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		}
 	}
 
+	public StackScriptEnvironment(StackScriptEnvironment original) {
+		myNavajoMap.putAll(original.myNavajoMap);
+		myInverseNavajoMap.putAll(original.myInverseNavajoMap);
+		myElementStack.addAll(original.myElementStack);
+		treeNodeStack.addAll(original.treeNodeStack);
+		currentParamMessage = original.currentParamMessage;
+	}
+	
 	public void blockDebug() {
 		System.err.println("So something insignificant");
 	}
@@ -102,7 +110,6 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		do {
 			c = c.getParentMessage();
 			if(c == paramRoot) {
-				log("PARAM ROOT FOUD!!!!");
 				return true;
 			}
 		} while(c!=null);
@@ -288,7 +295,6 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 
 	public Message getParamMessage(String name) {
 		Navajo n = super.getAccess().getOutputDoc();
-		log("PARAMMESSAGE::::: "+name);
 		if(name.startsWith("/@")) {
 			name = name.substring(2);
 		}
@@ -483,8 +489,15 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 	public Message getInputMessage(String path) throws NavajoException {
 		String mode = "";
 		String path2 = path.replaceAll("@", Message.MSG_PARAMETERS_BLOCK+"/");
-
 		Message result = getAccess().getInDoc().getMessage(path2);
+		if(result==null) {
+			System.err.println("Can't find message: "+path2);
+			System.err.println("In doc:");
+			getAccess().getInDoc().write(System.err);
+
+			System.err.println("Out doc would be: ");
+			getAccess().getOutputDoc().write(System.err);
+		}
 		//		Message ref = MappingUtils.getMessageObject(path2, getTopParamMessage(), true, getAccess().getInDoc(), isArray, mode, -1);
 		result.write(System.err);
 		return result;
@@ -807,5 +820,11 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		return m;
 	}
 
+
+	public ScriptEnvironment createEnvironment() {
+		return new StackScriptEnvironment(this);
+	}
+
+	
 }
 

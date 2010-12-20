@@ -8,21 +8,21 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.Reader;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContinuationPending;
 import org.mozilla.javascript.JavaScriptException;
-import org.mozilla.javascript.NativeJavaObject;
 import org.mozilla.javascript.Script;
+import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.parser.ConditionException;
+import com.dexels.navajo.listeners.NavajoDoneException;
+import com.dexels.navajo.listeners.SchedulerRegistry;
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 import com.dexels.navajo.rhino.flow.BreakError;
 import com.dexels.navajo.rhino.flow.ConditionError;
@@ -41,8 +41,10 @@ public class RhinoRunner {
 
 	private boolean localMode = false;
 
+	private static Scriptable globalScriptScope = null;
+	
 	public static void main(String[] args) throws IOException, InterruptedException, NavajoException, UserException,
-			SystemException, AuthorizationException, ClassNotFoundException {
+			SystemException, AuthorizationException, ClassNotFoundException, NavajoDoneException {
 		// System.err.println("Version: " + System.getProperty("java.version"));
 		//
 		// com.dexels.navajo.functions.SingleValueQuery s;
@@ -59,20 +61,24 @@ public class RhinoRunner {
 		
 		
 		
-		Navajo n = runScript("initproperties", input, false);
-		System.err.println("\n\nENTEREING CHECKFIELDS........\n\n");
+		
+		Navajo n = runScript("sleepmap", input, false);
+//		System.err.println("\n\nENTEREING CHECKFIELDS........\n\n");
 //		Navajo o = runScript("checkparam", n, false);
 //		Navajo o = runScript("checksimpleparam", n, false);
-		Navajo o = runScript("TestFields", n, true);
+//		Navajo o = runScript("TestFields", n, true);
 
-		n.write(System.err);
-		o.write(System.err);
+//		SchedulerRegistry.getScheduler()
+	//	n.write(System.err);
+//		o.write(System.err);
 //		Thread.sleep(2000);
+		
+		SchedulerRegistry.getScheduler().shutdownScheduler();
 
 	}
 
 	private static Navajo runScript(String scriptName, Navajo input, boolean compile) throws FileNotFoundException, IOException,
-			NavajoException {
+			NavajoException, NavajoDoneException {
 		RhinoRunner t = new RhinoRunner();
 		t.localMode = true;
 		Access a = new Access();
@@ -92,27 +98,47 @@ public class RhinoRunner {
 		}
 		Navajo output = NavajoFactory.getInstance().createNavajo();
 		a.setOutputDoc(output);
-		Navajo n = t.runBlockingScript(new FileInputStream(new File(a.getRpcName() + ".js")), a);
-		System.err.println("Main finished");
-		return n;
+		Navajo n;
+		try {
+			n = t.runBlockingScript(new FileInputStream(new File(a.getRpcName() + ".js")), a);
+			System.err.println("Main finished");
+			return n;
+		} catch (NavajoDoneException e) {
+//			e.printStackTrace();
+			System.err.println("Continuation happened... I'll just wait for a while...");
+			try {
+				Thread.sleep(10000);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			return null;
+		}
 	}
 
-	public Navajo runBlockingScript(InputStream script, final Access a) throws IOException, NavajoException {
+	public Navajo runBlockingScript(InputStream script, final Access a) throws IOException, NavajoException, NavajoDoneException {
 
-		try {
-			final ScriptEnvironment se = runScript(script, a, new ScriptFinishHandler() {
+			ScriptEnvironment se;
+			try {
+				se = runScript(script, a, new ScriptFinishHandler() {
 
-				public void run() {
-					// response = getScriptEnvironment().getResponse();
-					// a.setOutputDoc(response);
-					if (getScriptEnvironment().isAsync()) {
-						synchronized (getScriptEnvironment()) {
-							System.err.println("Notifying for scriptFinished");
-							getScriptEnvironment().notify();
+					public void run() {
+						// response = getScriptEnvironment().getResponse();
+						// a.setOutputDoc(response);
+						if (getScriptEnvironment().isAsync()) {
+							synchronized (getScriptEnvironment()) {
+								// TODO do I need to skip this if the thread has been freed? There is no point notifying, but I _think_ it is harmless.
+								System.err.println("Notifying for scriptFinished");
+								getScriptEnvironment().notify();
+							}
 						}
 					}
-				}
-			});
+				});
+			} catch (NavajoDoneException e1) {
+				System.err.println("Thread indicates it is freed. The navajo is still running, but it doesn't need this thread.");
+				// so no point in waiting.
+				throw e1;
+			}
 
 			// if the script is not 'async' (meaning no continuations or something
 			// happened)
@@ -128,26 +154,17 @@ public class RhinoRunner {
 				}
 			}
 			return a.getOutputDoc();
-		} catch (ContinuationPending e1) {
-			ContinuationHandler ch = (ContinuationHandler) e1.getApplicationState();
-			System.err.println("This really should not have happened. I am disappointed.");
-
-		}
-		System.err.println("Blocking script failed because of continuation?");
-		return null;
+	
 
 	}
 
-	public ScriptEnvironment runScript(InputStream script, Access a, ScriptFinishHandler onFinish) throws IOException {
-		// Navajo output = null;
-		// if(a.getOutputDoc()!=null) {
-		// output = a.getOutputDoc();
-		// } else {
-		// output = NavajoFactory.getInstance().createNavajo();
-		// a.setOutputDoc(output);
-		// }
-		//
-
+//	public static Scriptable getGlobalScope() {
+//		if (globalScriptScope == null) {
+//			globalScriptScope = Context.
+//		}
+//	}
+	
+	public ScriptEnvironment runScript(InputStream script, Access a, ScriptFinishHandler onFinish) throws IOException, NavajoDoneException {
 		Reader fileReader = new InputStreamReader(script);
 		Reader includeReader = getIncludeReader("include.js");
 		Reader includeCompiledReader = getIncludeReader("includeCompiled.js");
@@ -155,34 +172,44 @@ public class RhinoRunner {
 		Header h = a.getOutputDoc().getHeader();
 		if (h == null) {
 			h = NavajoFactory.getInstance().createHeader(a.getOutputDoc(), a.getRpcName(), a.getRpcUser(), "", -1);
-			h.setHeaderAttribute("language", "js vesion:" + cx.getLanguageVersion());
 			a.getOutputDoc().addHeader(h);
 		}
+		h.setHeaderAttribute("language", "js version:" + cx.getImplementationVersion());
+    	h.setHeaderAttribute("threadName",Thread.currentThread().getName());		
+
 		ScriptEnvironment scriptEnvironment = new StackScriptEnvironment();
 		a.setScriptEnvironment(scriptEnvironment);
 		scriptEnvironment.setCurrentContext(cx);
 		onFinish.setScriptEnvironment(scriptEnvironment);
 		scriptEnvironment.setFinishClosure(onFinish);
+		ScriptableObject globalScope = null;
 		try {
-			ScriptableObject globalScope = cx.initStandardObjects();
+			globalScope = (ScriptableObject) NavajoScopeManager.getInstance().getScope();
+//			ScriptableObject globalScope = cx.initStandardObjects();
+//			ScriptableObject localScope = new ScriptableObject() {
+//				
+//				@Override
+//				public String getClassName() {
+//					return null;
+//				}
+//			};
+			
 			a.setInDoc(a.getInDoc());
 			scriptEnvironment.setAccess(a);
 			scriptEnvironment.setGlobalScope(globalScope);
+
 			ScriptableObject.putProperty(globalScope, "input", Context.javaToJS(a.getInDoc(), globalScope));
 			ScriptableObject.putProperty(globalScope, "output", Context.javaToJS(a.getOutputDoc(), globalScope));
-			ScriptableObject.putProperty(globalScope, "env", Context.javaToJS(scriptEnvironment, globalScope));
-			// ScriptableObject.putProperty(globalScope, "map",
-			// Context.javaToJS(new MappableFactory(), globalScope));
 			ScriptableObject.putProperty(globalScope, "access", Context.javaToJS(a, globalScope));
+			ScriptableObject.putProperty(globalScope, "env", Context.javaToJS(scriptEnvironment, globalScope));
 			cx.setOptimizationLevel(-1); // must use interpreter mode
 			Script includeCompiledRun = cx.compileReader(includeCompiledReader, "includeCompiled.js", 1, null);
 			Script includeRun = cx.compileReader(includeReader, "include.js", 1, null);
 			Script scriptrun = cx.compileReader(fileReader, a.getRpcName() + ".js", 1, null);
+
 			cx.executeScriptWithContinuations(includeRun, globalScope);
 			cx.executeScriptWithContinuations(includeCompiledRun, globalScope);
 
-//			com.dexels.navajo.functions.ToBinary b;
-			//			System.err.println("Taking off!");
 			try {
 				cx.executeScriptWithContinuations(scriptrun, globalScope);
 			} catch (JavaScriptException e) {
@@ -201,26 +228,37 @@ public class RhinoRunner {
 			// continuations.
 			System.err.println("End of run, should only happen if no continuations happened!");
 			scriptEnvironment.finishRun();
+			NavajoScopeManager.getInstance().releaseScope(globalScope);
+
 			// onFinish.run();
 			return scriptEnvironment;
 		} catch (ContinuationPending pending) {
 			// continueScript(pending);
-			Object o = pending.getApplicationState();
+			System.err.println("Continuation thrown. That's cool. Rethrowing NavajoDoneException");
+			Object o = pending.getContinuation();
 			if (o == null) {
 				scriptEnvironment.setAsync(true);
 				return scriptEnvironment;
 			}
+			//SchedulerRegistry.getScheduler().submit(new ContinuationRunnable(scriptEnvironment, o), false);
+			System.err.println("Scheduled continuation");
+			throw new NavajoDoneException(pending);
+//			throw pending;
+		} catch (NavajoDoneException pending) {
+			// do NOT free the scope!
 			throw pending;
-
 		} catch (ConditionError e) {
 			System.err.println("Condition Error detected!");
+			NavajoScopeManager.getInstance().releaseScope(globalScope);
 			a.setOutputDoc(e.getConditionErrors());
 			return scriptEnvironment;
 		} catch (BreakError e) {
 			System.err.println("Break Error detected!");
+			NavajoScopeManager.getInstance().releaseScope(globalScope);
 			return scriptEnvironment;
 		} catch (Exception e) {
 			System.err.println("Very unknown error. Should create error message!");
+			NavajoScopeManager.getInstance().releaseScope(globalScope);
 			e.printStackTrace();
 			return scriptEnvironment;
 		} finally {
@@ -266,30 +304,22 @@ public class RhinoRunner {
 		}
 	}
 
-	public void run(Access access) throws NavajoException, SystemException {
+	public void run(Access access) throws NavajoException, SystemException, NavajoDoneException {
 		InputStream is = null;
 		try {
-			// Thread.dumpStack();
 			if (access.getOutputDoc() == null) {
-				System.err.println("No out doc found. Setting to blank");
-				Thread.dumpStack();
 				access.setOutputDoc(NavajoFactory.getInstance().createNavajo());
 			}
 			is = getScriptStream(access.getRpcName());
-			runBlockingScript(is, access);
-			System.err.println("Ending blocking run.");
+			runScript(is, access,new ScriptFinishHandler(){
+				@Override
+				public void run() {
+					System.err.println("Script run complete.");
+					
+				}} );
 		} catch (IOException e) {
 			e.printStackTrace();
-
 			throw new SystemException(-1, "Error running rhino: ", e);
-		} finally {
-			if (is != null) {
-				try {
-					is.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
 		}
 	}
 

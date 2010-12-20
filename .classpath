@@ -7,5 +7,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/NavajoDocument"/>
 	<classpathentry kind="src" path="/NavajoAsyncClient"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NavajoAdapters"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/NavajoFunctions"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
