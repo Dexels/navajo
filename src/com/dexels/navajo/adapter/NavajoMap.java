@@ -13,9 +13,11 @@ import com.dexels.navajo.adapter.navajomap.MessageMap;
 import com.dexels.navajo.adapter.navajomap.NavajoMapManager;
 import com.dexels.navajo.client.*;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 import java.util.logging.Level;
 
@@ -1300,4 +1302,32 @@ private Object waitForResult = new Object();
 	  // TODO Auto-generated method stub
 
   }
+
+  public void setResponseNavajo(Navajo n)  {
+		System.err.println("Set input navajo in NavajoMap... Isn't this odd?");	
+		inDoc = n;
+	}
+@Override
+public String getUrl() {
+	return this.access.getRequestUrl();
+}
+
+@Override
+public Access getAccess() {
+	// TODO Auto-generated method stub
+	return access;
+}
+
+@Override
+public void setAccess(Access access) {
+	// TODO Auto-generated method stub
+	
+}
+
+@Override
+public void writeOutput(Navajo inDoc, Navajo outDoc) throws IOException, FileNotFoundException, UnsupportedEncodingException,
+		NavajoException {
+	// TODO Auto-generated method stub
+	
+}
 }
