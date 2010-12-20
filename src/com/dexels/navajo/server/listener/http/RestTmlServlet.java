@@ -27,6 +27,10 @@ import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.FatalException;
 
+@Deprecated
+/**
+ * Replaced by NqlServlet
+ */
 public class RestTmlServlet extends HttpServlet implements Servlet {
 
 	@Override
@@ -101,6 +105,7 @@ public class RestTmlServlet extends HttpServlet implements Servlet {
 
 	protected void writeOutput(Navajo resultMessage, java.io.OutputStreamWriter out, String serviceName) throws NavajoException {
 		Document laszlo = NavajoLaszloConverter.createLaszloFromNavajo(resultMessage,"navajoDataSource");
+		
 		XMLDocumentUtils.write(laszlo,out,false);
 	}
 
