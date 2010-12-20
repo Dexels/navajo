@@ -12,7 +12,6 @@ public class AdapterProposal implements Comparable<AdapterProposal>{
 	}
 
 	public void setTagName(String tagName) {
-		System.err.println("tag: "+tagName);
 		this.tagName = tagName;
 	}
 
