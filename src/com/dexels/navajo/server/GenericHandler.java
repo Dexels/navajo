@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.logging.Level;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 
 import com.dexels.navajo.mapping.*;
@@ -127,7 +128,7 @@ public final class GenericHandler extends ServiceHandler {
     
     private static final Object[] getScriptPathServiceNameAndScriptFile(String rpcName, boolean betaUser) {
     	String scriptPath = DispatcherFactory.getInstance().getNavajoConfig().getScriptPath();
-    	
+    	System.err.println("Looking for script: "+rpcName);
     	int strip = rpcName.lastIndexOf("/");
         String pathPrefix = "";
         String serviceName = rpcName;
@@ -152,6 +153,35 @@ public final class GenericHandler extends ServiceHandler {
 //				scriptFile = null;
 			}
     	}
+    	
+    	if(!scriptFile.exists()) {
+       	//-------------------------------
+       	// Now, check the context folder:
+       	//-------------------------------
+       	String sp = "scripts/";
+       	File scrPath = new File(DispatcherFactory.getInstance().getNavajoConfig().getContextRoot(),sp);
+       	System.err.println("Proposed script path: "+scrPath.getAbsolutePath()+" exists? "+scrPath.exists());
+       	scriptFile = new File(scrPath + rpcName + "_" + applicationGroup + ".xml");
+       	if (scriptFile.exists()) {
+       		serviceName += "_" + applicationGroup;
+       	} else {
+       		scriptFile = new File(scrPath, rpcName + ( betaUser ? "_beta" : "" ) + ".xml" );
+       		if ( betaUser && !scriptFile.exists() ) {
+       			// Try normal webservice.
+       			scriptFile = new File(scrPath, rpcName + ".xml" );
+       		} else if ( betaUser ) {
+       			serviceName += "_beta";
+       		} 
+       		// Check if scriptFile exists.
+   			if ( !scriptFile.exists() ) {
+//   				scriptFile = null;
+   			}
+       	}
+
+    	}
+    	
+    	
+    	
     	
     	String sourceFileName = null;
     	if(scriptFile.exists()) {
@@ -200,6 +230,7 @@ public final class GenericHandler extends ServiceHandler {
 		}
 		if(scripts.length==0) {
 			System.err.println("Not found. dir: "+currentScriptDir.getAbsolutePath());
+			return null;
 		}
 		String classFileName = null;
 		String className = "com.dexels.navajo.server.scriptengine.GenericScriptEngine";
@@ -266,6 +297,10 @@ public final class GenericHandler extends ServiceHandler {
      */
     public final static boolean needsRecompile(Access a) {
     	Object [] all = getScriptPathServiceNameAndScriptFile(a.rpcName, a.betaUser);
+ 		if(all==null) {
+ 			return false;
+ 		}
+
     	File scriptFile = (File) all[2];
     	File sourceFile = (File) all[4];
     	String className = (String) all[5];
@@ -286,6 +321,9 @@ public final class GenericHandler extends ServiceHandler {
     	String scriptPath = properties.getScriptPath();
     	
     		Object [] all = getScriptPathServiceNameAndScriptFile(a.rpcName, a.betaUser);
+    		if(all==null) {
+    			throw new FileNotFoundException("No script found for: "+a.rpcName);
+    		}
     		String pathPrefix = (String) all[0];
     		String serviceName = (String) all[1];
     		File scriptFile = (File) all[2];
