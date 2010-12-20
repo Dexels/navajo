@@ -1,13 +1,13 @@
 package com.dexels.navajo.functions;
 
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.parser.*;
-import com.dexels.navajo.document.types.*;
 import javax.imageio.*;
 import java.io.*;
 import java.awt.*;
 import java.awt.geom.*;
 import java.awt.image.*;
-import com.dexels.navajo.document.*;
 import java.util.Random;
 
 /**

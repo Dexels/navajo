@@ -39,40 +39,13 @@ package navajofunctions;
  */
 public class Version extends dexels.Version {
 
-	public static final int MAJOR = 2;
-	public static final int MINOR = 0;
-	public static final int PATCHLEVEL = 1;
-	public static final String VENDOR = "Dexels";
-	public static final String PRODUCTNAME = "Navajo Functions";
-	public static final String RELEASEDATE = "2009-05-12";
-	
+
 	//Included packages.
-	String [] includes = {"navajodocument.Version", "navajo.Version"};
 	
 	public Version() {
-		addIncludes(includes);
 		setReleaseDate(RELEASEDATE);
 	}
 	
-	public int getMajor() {
-		return MAJOR;
-	}
-
-	public int getMinor() {
-		return MINOR;
-	}
-
-	public int getPatchLevel() {
-		return PATCHLEVEL;
-	}
-
-	public String getVendor() {
-		return VENDOR;
-	}
-
-	public String getProductName() {
-		return PRODUCTNAME;
-	}
 
 	public static void main(String [] args) {
 		Version v = new Version();

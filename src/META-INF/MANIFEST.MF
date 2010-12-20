@@ -1,0 +1,14 @@
+Bundle-Name: Navajo Listeners
+Bundle-SymbolicName: com.dexels.navajo.function
+Bundle-Description: A Hello World bundle
+Bundle-ManifestVersion: 2
+Bundle-Version: 2.0.1
+Bundle-Activator: navajofunctions.Version
+Export-Package: com.dexels.navajo.functions,
+ dexels
+Import-Package: junit.framework;version="3.8.2",
+ org.osgi.framework;version="1.3.0"
+Bundle-Vendor: Dexels
+Require-Bundle: com.dexels.navajo.document;visibility:=reexport,
+ com.dexels.navajo.core,
+ com.dexels.navajo.version
