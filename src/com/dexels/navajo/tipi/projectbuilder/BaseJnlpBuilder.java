@@ -87,22 +87,25 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 
 	public abstract String getJnlpName();
 
-	public String build(String repository, String developRepository, String extensions, File baseDir, String codebase, String fileName, String profile, boolean useVersioning) {
-		File jnlpFile = new File(baseDir, fileName+".jnlp");
-		System.err.println("Writing jnlp: "+jnlpFile.getAbsolutePath());
-		try {
-			FileWriter fw1 = new FileWriter(jnlpFile);
-			fw1.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-			XMLElement output = buildElement(repository, extensions, baseDir, codebase,"", fileName+".jnlp", profile,useVersioning);
-			output.write(fw1);
-			fw1.flush();
-			fw1.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+	@Override
+	public String build(String repository, String developRepository, String extensions, Map<String,String> tipiProperties, String deployment,  File baseDir, String codebase, List<String> profiles, boolean useVersioning) {
+		for (String fileName : profiles) {
+			File jnlpFile = new File(baseDir, fileName+".jnlp");
+			System.err.println("Writing jnlp: "+jnlpFile.getAbsolutePath());
+			try {
+				FileWriter fw1 = new FileWriter(jnlpFile);
+				fw1.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+				XMLElement output = buildElement(repository, extensions,tipiProperties, deployment,baseDir, codebase,"", fileName+".jnlp", fileName,useVersioning);
+				output.write(fw1);
+				fw1.flush();
+				fw1.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		return null;
 } 
-	public XMLElement buildElement(String repository, String extensions, File baseDir, String codebase, String resourceBase, String fileName, String profile, boolean useVersioning) throws IOException {
+	public XMLElement buildElement(String repository, String extensions,Map<String, String> params,String deployment, File baseDir, String codebase, String resourceBase, String fileName, String profile, boolean useVersioning) throws IOException {
 		//String repository = generalRepository+"Extensions/";
 		if(!repository.endsWith("/")) {
 			repository = repository+"/";
@@ -111,7 +114,7 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 			repository = repository+ "Extensions/";
 		}
 		myVersionResolver.load(repository);
-		Map<String, String> params = parseParams(baseDir);
+		
 		XMLElement output = new CaseSensitiveXMLElement();
 		if (!codebase.endsWith("/")) {
 			codebase = codebase + "/";
@@ -160,7 +163,7 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 
 		Map<String, String> arguments;
 		try {
-			arguments = parseArguments(baseDir, profile);
+			arguments = parseArguments(baseDir, profile,deployment);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 			arguments = new HashMap<String, String>();

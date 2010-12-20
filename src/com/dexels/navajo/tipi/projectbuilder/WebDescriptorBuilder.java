@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.WriteAbortedException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 import java.util.Map.Entry;
@@ -17,7 +18,7 @@ import com.dexels.navajo.tipi.util.XMLElement;
 public class WebDescriptorBuilder extends BaseDeploymentBuilder {
 
 	@Override
-	public String build(String repository, String developmentRepository, String extensions, File baseDir, String codebase, String fileName, String profile, boolean useVersioning)
+	public String build(String repository, String developmentRepository, String extensions, Map<String,String> tipiProperties, String deployment, File baseDir, String codebase, List<String> profiles, boolean useVersioning)
 			throws IOException {
 		
 //		ClientActions.downloadFile(new URL(developmentRepository+"TemplateEchoProject/web.xml"), "WEB-INF/web.xml", baseDir, false, true);
@@ -26,37 +27,52 @@ public class WebDescriptorBuilder extends BaseDeploymentBuilder {
 			webInf.mkdirs();
 		}
 		File webXml = new File(webInf,"web.xml");
-		if(!webXml.exists()) {
+		webXml.delete();
+//		if(!webXml.exists()) {
 			createBlankWebXml(developmentRepository,webInf);
-		}
+//		}
 		
 		XMLElement web = new CaseSensitiveXMLElement();
 		FileReader reader = new FileReader(webXml);
 		web.parseFromReader(reader);
 		reader.close();
 		
-		XMLElement servlet =  web.getElementByTagName("servlet");
-		Map<String,String> params = parseParams(baseDir);
-		Map<String,String> arguments = parseArguments(baseDir, profile);
-		Vector<XMLElement> existing = servlet.getAllElementsByTagName("init-param");
-		
-		for (Entry<String, String> e : arguments.entrySet()) {
-			for (XMLElement element : existing) {
-			 	String currentParamName = element.getElementByTagName("param-name").getContent();
-			 	if(e.getKey().equals(currentParamName)) {
-			 		servlet.removeChild(element);
-			 	}
-			}
 
-			XMLElement init = new CaseSensitiveXMLElement("init-param");
-			init.addTagKeyValue("param-name", e.getKey());
-			init.addTagKeyValue("param-value", e.getValue());
-			servlet.addChild(init);
+		
+		for (String  profile : profiles) {
+//			XMLElement servlet =  web.getElementByTagName("servlet");
+			Map<String,String> arguments = parseArguments(baseDir, profile,deployment);
+//			Vector<XMLElement> existing = servlet.getAllElementsByTagName("init-param");
+	
+			XMLElement servlet = new CaseSensitiveXMLElement("servlet");
+			web.addChild(servlet);
+			servlet.addTagKeyValue("servlet-name", profile);
+			servlet.addTagKeyValue("servlet-class", "com.dexels.navajo.tipi.components.echoimpl.TipiServlet");
+			
+			for (Entry<String, String> e : arguments.entrySet()) {
+//				for (XMLElement element : existing) {
+//				 	String currentParamName = element.getElementByTagName("param-name").getContent();
+//				 	if(e.getKey().equals(currentParamName)) {
+//				 		servlet.removeChild(element);
+//				 	}
+//				}
+
+				XMLElement init = new CaseSensitiveXMLElement("init-param");
+				init.addTagKeyValue("param-name", e.getKey());
+				init.addTagKeyValue("param-value", e.getValue());
+				servlet.addChild(init);
+			}
+			XMLElement servletMapping = new CaseSensitiveXMLElement("servlet-mapping");
+			web.addChild(servletMapping);
+			servletMapping.addTagKeyValue("servlet-name", profile);
+			servletMapping.addTagKeyValue("url-pattern", "/"+profile+"/*");
+
 		}
 
+		
 		XMLElement sessionConf = web.getChildByTagName("session-config");
 		XMLElement session = sessionConf.getChildByTagName("session-timeout");
-		String sessionTimeout = arguments.get("sessionTimeout");
+		String sessionTimeout = tipiProperties.get("sessionTimeout");
 		if(sessionTimeout==null) {
 			sessionTimeout = "60";
 		}
@@ -64,7 +80,7 @@ public class WebDescriptorBuilder extends BaseDeploymentBuilder {
 			session.setContent(sessionTimeout);
 		}
 		XMLElement description = web.getElementByTagName("description");
-		description.setContent(params.get("title"));
+		description.setContent(tipiProperties.get("title"));
 		System.err.println("Web xml: "+web);
 		FileWriter writer = new FileWriter(new File(baseDir,"WEB-INF/web.xml"));
 		web.write(writer);

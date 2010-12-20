@@ -2,13 +2,18 @@ package com.dexels.navajo.tipi.projectbuilder;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import com.dexels.navajo.tipi.projectbuilder.impl.TipiLocalJnlpProjectBuilder;
@@ -67,18 +72,110 @@ public class ProjectBuilder {
 //	}
 
 	// Used for server side appstore building
-	
-	public static String buildTipiProject(File projectPath, String codebase) throws IOException {
-		System.err.println("Project patH: "+projectPath.getAbsoluteFile());
-		FileInputStream is = new FileInputStream(new File(projectPath,"settings/tipi.properties"));
-		PropertyResourceBundle pe = new PropertyResourceBundle(is);
-		is.close();	
-		String extensions = pe.getString("extensions").trim();
-		String repository = pe.getString("repository").trim();
 
+
+	public static String getCurrentDeploy(File projectPath) throws IOException {
+		File path = new File(projectPath, "settings/tipi.properties");
+		Map<String,String> map = parsePropertyFile(path);
+		return map.get("deploy");
+	}
+	
+	public static Map<String,String> assembleTipi(File projectPath) throws IOException {
+		System.err.println("Project patH: "+projectPath.getAbsoluteFile());
+//		FileInputStream is = new FileInputStream(new File(projectPath,"settings/tipi.properties"));
+//		PropertyResourceBundle tipiProperties = new PropertyResourceBundle(is);		
+//		is.close();	
+		File path = new File(projectPath, "settings/tipi.properties");
+		Map<String,String> tipiPropertyMap = parsePropertyFile(path);
+
+
+		
+
+
+		File deploymentFolder = new File(projectPath,"settings/deploy/");
+		Set<String> deployments = new HashSet<String>();
+
+		System.err.println("Deployment folder detected: "+deploymentFolder.getAbsolutePath());
+		if(deploymentFolder.exists() && deploymentFolder.isDirectory()) {
+			File[] deployCandidates = deploymentFolder.listFiles();
+			String selectedDeploy = tipiPropertyMap.get("deploy");
+			if(selectedDeploy!=null) {
+				for (File candidate : deployCandidates) {
+					System.err.println("Current: "+candidate.getName());
+					if(candidate.getName().endsWith(".properties") && candidate.isFile()) {
+						String currentDeploymentName = candidate.getName().substring(0,candidate.getName().length()-".properties".length());
+						deployments.add(currentDeploymentName);
+						System.err.println("     : "+currentDeploymentName);
+						if(currentDeploymentName.equals(selectedDeploy)) {
+							System.err.println("Deployment found!");
+							Map<String,String> res = parsePropertyFile(candidate);
+							tipiPropertyMap.putAll(res);
+						}
+					}
+				}
+			}
+		}	
+		return tipiPropertyMap;
+		
+	}
+	
+	public static String buildTipiProject(File projectPath, String codebase, String deployment) throws IOException {
+		
+		Map<String,String> tipiPropertyMap = assembleTipi(projectPath);
+		
+		String extensions = tipiPropertyMap.get("extensions").trim();
+		String repository = tipiPropertyMap.get("repository").trim();
 		String extensionRepository = repository; //+"Extensions/";
 		String developmentRepository = repository+"Development/";
 
+		
+		List<String> profiles = getProfiles(projectPath);
+		
+		String buildType = tipiPropertyMap.get("build");
+		if(buildType==null) {
+			buildType = "remote";
+		} else {
+			buildType = buildType.trim();
+		}
+		
+		boolean clean = false;
+		if(codebase==null) {
+			codebase = "$$codebase";
+		}
+		System.err.println("PRofiles: "+profiles);
+		String keystore = null;
+		keystore = tipiPropertyMap.get("keystore");
+		boolean resign = keystore!=null;
+		downloadExtensionJars(projectPath, extensions, extensionRepository,false,clean,buildType,false,resign);
+		
+		if(deployment==null) {
+			deployment = tipiPropertyMap.get("deploy");			
+		}
+
+	
+		
+		String postProcessAnt = null;
+		if(profiles==null || profiles.isEmpty()) {
+			postProcessAnt = buildProfileDescriptor(null,clean,  tipiPropertyMap,deployment,projectPath, codebase, extensions, extensionRepository,developmentRepository, buildType,true);
+		} else {
+			postProcessAnt = buildProfileDescriptor(profiles,clean,tipiPropertyMap,deployment, projectPath, codebase, extensions , extensionRepository, developmentRepository,buildType,true);
+//			for (String profile : profiles) {
+//				// TODO: Beware, multiple profiles in Echo / Web will not work
+//				System.err.println("Building profile: "+profile);
+//			}
+		}
+
+		return postProcessAnt;
+//		try {
+//			String cp = pe.getString("buildClasspath");
+//			if("true".equals(cp)) {
+//				buildClassPath(projectPath, repository, extensions);
+//			}
+//		} catch (MissingResourceException e) {
+//		}
+	}
+
+	public static List<String> getProfiles(File projectPath) {
 		List<String> profiles = new LinkedList<String>();
 		File profileFolder = new File(projectPath,"settings/profiles/");
 		System.err.println("Profile folder detected: "+profileFolder.getAbsolutePath());
@@ -95,93 +192,59 @@ public class ProjectBuilder {
 				}
 			}
 		}
-
-		String buildType = pe.getString("build").trim();
-
-//		if(clean) {
-//			File libDir = new File(projectPath,"lib");
-//			libDir.delete();		
-//		}http://spiritus.dexels.nl:8080/TipiServer/editor.jsp?application=SportlinkClub&filePath=settings/tipi.properties
-		
-//		if(!skipXsd) {
-//			rebuildXsd(extensionRepository,extensions,projectPath);
-//			
-//		}
-		if(buildType==null) {
-			buildType = "remote";
-		}
-		
-
-		//	downloadExtensionJars(projectPath, extensions, extensionRepository,false,false,buildType,true);
-		
-
-//		File[] cc = projectPath.listFiles();
-//		for (int i = 0; i < cc.length; i++) {
-//			if(cc[i].getName().endsWith(".jnlp")) {
-//				cc[i].delete();
-//			}
-//		}
-		boolean clean = false;
-		if(codebase==null) {
-			codebase = "$$codebase";
-		}
-		System.err.println("PRofiles: "+profiles);
-		String keystore = null;
-		try {
-			keystore = pe.getString("keystore");
-		} catch (MissingResourceException e) {
-			System.err.println("No resource found");
-		}
-		boolean resign = keystore!=null;
-		downloadExtensionJars(projectPath, extensions, extensionRepository,false,clean,buildType,false,resign);
-		
-		String postProcessAnt = null;
-		if(profiles==null || profiles.isEmpty()) {
-			postProcessAnt = buildProfileJnlp(null,clean,  projectPath, codebase, extensions, extensionRepository,developmentRepository, buildType,true);
-		} else {
-			for (String profile : profiles) {
-				// TODO: Beware, multiple profiles in Echo / Web will not work
-				System.err.println("Building profile: "+profile);
-				postProcessAnt = buildProfileJnlp(profile,clean, projectPath, codebase, extensions , extensionRepository, developmentRepository,buildType,true);
-			}
-		}
-
-		return postProcessAnt;
-//		try {
-//			String cp = pe.getString("buildClasspath");
-//			if("true".equals(cp)) {
-//				buildClassPath(projectPath, repository, extensions);
-//			}
-//		} catch (MissingResourceException e) {
-//		}
+		return profiles;
 	}
 
 
+	private static Map<String, String> parsePropertyFile(File path) throws FileNotFoundException, IOException {
+		Map<String, String> params = new HashMap<String, String>();
+		FileInputStream fr = new FileInputStream(path);
 
-	private static String buildProfileJnlp(String profile,  boolean clean, File projectPath, String projectUrl, String extensions,
+		PropertyResourceBundle p = new PropertyResourceBundle(fr);
+		fr.close();
+		Enumeration<String> eb = p.getKeys();
+		while (eb.hasMoreElements()) {
+			String string = (String) eb.nextElement();
+			params.put(string, p.getString(string));
+		}
+		System.err.println("params: " + params);
+		return params;
+	}
+
+	private static String buildProfileDescriptor(List<String> profiles,  boolean clean,Map<String,String> tipiProperties, String deployment, File projectPath, String projectUrl, String extensions,
 			String repository,String developmentRepository, String buildType, boolean useVersioning) throws IOException {
 		
 		System.err.println("Writing in: "+projectPath.getAbsolutePath());
 		// TODO: Don't think we need this one!
 		downloadExtensionJars(projectPath, extensions, repository,false,clean,buildType,useVersioning,false);
 
-		String profileName = profile==null?"Default":profile;
+//		String profileName = null;
+//		if(profiles==null || profiles.isEmpty()) {
+//			profileName = "Default";
+//		} 
+//		profiles==null?"Default":profiles;
+
 		String postProcessAnt = null;
 		if("remote".equals(buildType)) {
 			BaseDeploymentBuilder r = new RemoteJnlpBuilder();
 			downloadExtensionJars(projectPath, extensions, repository,true,clean,buildType,useVersioning,false);
-			postProcessAnt = r.build(repository,developmentRepository, extensions,projectPath, projectUrl,profileName,profile,useVersioning);
+			postProcessAnt = r.build(repository,developmentRepository, extensions,tipiProperties,deployment,projectPath, projectUrl,profiles,useVersioning);
 		}
 		if("local".equals(buildType) ) {
 			LocalJnlpBuilder l = new LocalJnlpBuilder();
-			postProcessAnt = l.build(repository,developmentRepository, extensions,projectPath, projectUrl,profileName,profile,useVersioning);
+			postProcessAnt = l.build(repository,developmentRepository, extensions,tipiProperties,deployment,projectPath, projectUrl,profiles,useVersioning);
 		}
 		if("web".equals(buildType)) {
 			BaseDeploymentBuilder l = new WebDescriptorBuilder();
-			postProcessAnt = l.build(repository,developmentRepository, extensions,projectPath, projectUrl,profileName,profile,useVersioning);
+			postProcessAnt = l.build(repository,developmentRepository, extensions,tipiProperties,deployment,projectPath, projectUrl,profiles,useVersioning);
 		}
 		
 		return postProcessAnt;
+	}
+
+	
+	public static void main(String[] args) throws IOException {
+		ProjectBuilder.buildTipiProject(new File("/Users/frank/Documents/Spiritus/SportlinkOfficialPortal"), "aap","somedeploy");
 	}
 
 }

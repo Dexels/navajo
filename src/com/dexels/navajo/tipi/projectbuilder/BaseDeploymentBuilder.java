@@ -5,32 +5,19 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.PropertyResourceBundle;
 
 public abstract class BaseDeploymentBuilder {
 	protected final VersionResolver myVersionResolver = new VersionResolver();
 
-	public abstract String build(String repository, String developmentRepository, String extensions, File baseDir, String codebase, String fileName, String profile, boolean useVersioning) throws IOException;
+	public abstract String build(String repository, String developmentRepository, String extensions, Map<String,String> tipiProperties, String deployment, File baseDir, String codebase, List<String> profiles, boolean useVersioning) throws IOException;
 
 	
-	public Map<String, String> parseParams(File baseDir) throws IOException {
-		File path = new File(baseDir, "settings/tipi.properties");
-		Map<String, String> params = new HashMap<String, String>();
-		FileInputStream fr = new FileInputStream(path);
 
-		PropertyResourceBundle p = new PropertyResourceBundle(fr);
-		fr.close();
-		Enumeration<String> eb = p.getKeys();
-		while (eb.hasMoreElements()) {
-			String string = (String) eb.nextElement();
-			params.put(string, p.getString(string));
-		}
-		System.err.println("params: " + params);
-		return params;
-	}
 
-	public Map<String, String> parseArguments(File baseDir, String profile) throws IOException {
+	public Map<String, String> parseArguments(File baseDir, String profile, String deployment) throws IOException {
 
 		File path = null;
 		Map<String, String> params = new HashMap<String, String>();
@@ -60,6 +47,30 @@ public abstract class BaseDeploymentBuilder {
 			}
 		}
 		System.err.println("params: " + params);
-		return params;
+		if(deployment==null) {
+			System.err.println("No deployment supplied, so not postprocessing");
+			return params;
+		}
+		System.err.println("Processing: "+params);
+		System.err.println("Ok, now gonna post process the params!");
+		Map<String,String> result = new HashMap<String, String>();
+		for (Map.Entry<String, String> element : params.entrySet()) {
+			if(element.getKey().indexOf("/")==-1) {
+				result.put(element.getKey(), element.getValue());
+				continue;
+			}
+			String[] elts = element.getKey().split("/");
+			if(elts.length!=2) {
+				throw new IllegalArgumentException("Strange key in args: "+element.getKey()+" with value: "+element.getValue());
+			}
+			if(elts[0].equals(deployment)) {
+				System.err.println("Adding: "+elts[1]+" "+ element.getValue());
+				result.put(elts[1], element.getValue());
+			} else {
+				// ignore this setting, it's for another deployment
+			}
+		}
+		System.err.println("Result: "+result);
+		return result;
 	}
 }
