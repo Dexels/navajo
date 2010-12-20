@@ -6,3 +6,4 @@ release.properties
 DexelsVersionControl.jar
 dist
 distribution
+osgi_run
