@@ -61,15 +61,7 @@ public final class SaxHandler implements DocHandler {
                 parseProperty(h);
 				
 			}
-//            for (Iterator iter = h.keySet().iterator(); iter.hasNext();) {
-//    			String key = (String) iter.next();
-//    			String value = (String) h.get(key);
-//    			value = BaseNode.XMLUnescape(value);
-//    			h2.put(key, value);
-//    		}
-//            h = h2;
-        	
-            return;
+         return;
         }
         if (tag.equals("option")) {
             String val = h.get("value");
@@ -503,8 +495,6 @@ public final class SaxHandler implements DocHandler {
 
     public final void text(Reader r) throws Exception {
         if (currentProperty==null) {
-            System.err.println("Huh?");
-            Thread.dumpStack();
             return;
 //            throw new IllegalArgumentException("Huh?");
         }
