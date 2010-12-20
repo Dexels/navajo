@@ -43,7 +43,7 @@ import com.dexels.navajo.server.DispatcherInterface;
  * This servlet handles HTTP POST requests. The HTTP POST body is assumed to
  * contain a TML document. The TML document is processed by the dispatcher the
  * resulting TML document is send back as a reply.
- * 
+ * @slightly deprecated 
  */
 
 public final class TmlHttpLaszloServlet extends TmlHttpServlet {
@@ -176,19 +176,19 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 	public static void main(String[] args) {
 		System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.base.BaseNavajoFactoryImpl");
 		NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
-		NavajoClientFactory.getClient().setServerUrl("ficus:3000/sportlink/knvb/servlet/Postman");
+		NavajoClientFactory.getClient().setServerUrl("penelope1.dexels.com/sportlink/knvb1_test/servlet/Postman");
 		NavajoClientFactory.getClient().setUsername("ROOT");
-		NavajoClientFactory.getClient().setPassword("");
+		NavajoClientFactory.getClient().setPassword("R20T");
 		try {
 			Message init = NavajoClientFactory.getClient().doSimpleSend("club/InitSearchClubs", "ClubSearch");
 			init.getProperty("ClubName").setValue("veld");
 			Navajo n = NavajoClientFactory.getClient().doSimpleSend(init.getRootDoc(), "club/ProcessSearchClubs");
-			NavajoLaszloConverter.dumpNavajoLaszloStyle(n,"c:/aap.xml","club/ProcessSearchClubs");
+			NavajoLaszloConverter.dumpNavajoLaszloStyle(n,"aap.xml","club/ProcessSearchClubs");
 			
 			init = NavajoClientFactory.getClient().doSimpleSend("club/InitUpdateClub", "Club");
 			init.getProperty("ClubIdentifier").setValue("BBFW63X");
 			n = NavajoClientFactory.getClient().doSimpleSend(init.getRootDoc(), "club/ProcessQueryClub");
-			NavajoLaszloConverter.dumpNavajoLaszloStyle(n,"c:/noot.xml","club/ProcessQueryClub");
+			NavajoLaszloConverter.dumpNavajoLaszloStyle(n,"noot.xml","club/ProcessQueryClub");
 
 			// ----------------------------------------------
 
