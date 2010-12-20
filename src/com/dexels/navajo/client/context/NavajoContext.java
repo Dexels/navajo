@@ -244,11 +244,25 @@ public class NavajoContext {
 
 		setupClient(server, username, password,requestServerName,requestServerPort,requestContextPath, false);
 	}
+
+	public void setupClient(String server, String username, String password) {
+		setupClient(server,username,password,null,-1,null);
+	}
 	
+	/**
+	 * All request* params are only used when server is not supplied.
+	 * @param server
+	 * @param username
+	 * @param password
+	 * @param requestServerName
+	 * @param requestServerPort
+	 * @param requestContextPath
+	 * @param debugAll
+	 */
 	public void setupClient(String server, String username, String password,String requestServerName,int requestServerPort, String requestContextPath,boolean debugAll) {
 
 		//		Thread.dumpStack();
-//		System.err.println("Setupclient: "+server+" user: "+username+" pass: "+password);
+		System.err.println("Setupclient: "+server+" user: "+username+" pass: "+password);
 		NavajoClientFactory.resetClient();
 //			NavajoClientFactory.createDefaultClient()
 		 myClient = NavajoClientFactory.getClient();
@@ -262,8 +276,8 @@ public class NavajoContext {
 		}
 		myClient.setPassword(password);
 		if (server == null) {
-			
 			server = getDefaultPostman(requestServerName,requestServerPort,requestContextPath);
+			System.err.println("No server supplied. Creating default server url: "+server);
 		}
 		myClient.setServerUrl(server);		
 		myClient.setRetryAttempts(0);
