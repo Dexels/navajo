@@ -26,29 +26,19 @@ import org.eclipse.emf.common.util.EList;
  */
 public interface Property extends Element {
 	/**
-	 * Returns the value of the '<em><b>Expression Value</b></em>' containment reference.
+	 * Returns the value of the '<em><b>Expression Value</b></em>' containment reference list.
+	 * The list contents are of type {@link com.dexels.navajo.dsl.model.tsl.ExpressionTag}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Expression Value</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Expression Value</em>' containment reference.
-	 * @see #setExpressionValue(ExpressionTag)
+	 * @return the value of the '<em>Expression Value</em>' containment reference list.
 	 * @see com.dexels.navajo.dsl.model.tsl.TslPackage#getProperty_ExpressionValue()
 	 * @model containment="true"
 	 * @generated
 	 */
-	ExpressionTag getExpressionValue();
-
-	/**
-	 * Sets the value of the '{@link com.dexels.navajo.dsl.model.tsl.Property#getExpressionValue <em>Expression Value</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Expression Value</em>' containment reference.
-	 * @see #getExpressionValue()
-	 * @generated
-	 */
-	void setExpressionValue(ExpressionTag value);
+	EList<ExpressionTag> getExpressionValue();
 
 } // Property

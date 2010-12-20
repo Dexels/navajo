@@ -61,12 +61,17 @@ public class TslFactoryImpl extends EFactoryImpl implements TslFactory {
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case TslPackage.TML: return createTml();
+			case TslPackage.METHODS: return createMethods();
+			case TslPackage.METHOD: return createMethod();
 			case TslPackage.POSSIBLE_EXPRESSION: return createPossibleExpression();
 			case TslPackage.ELEMENT: return createElement();
 			case TslPackage.MESSAGE: return createMessage();
 			case TslPackage.MAP: return createMap();
 			case TslPackage.PROPERTY: return createProperty();
+			case TslPackage.PARAM: return createParam();
 			case TslPackage.EXPRESSION_TAG: return createExpressionTag();
+			case TslPackage.DEBUG_TAG: return createDebugTag();
+			case TslPackage.MAP_METHOD: return createMapMethod();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -80,6 +85,26 @@ public class TslFactoryImpl extends EFactoryImpl implements TslFactory {
 	public Tml createTml() {
 		TmlImpl tml = new TmlImpl();
 		return tml;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Methods createMethods() {
+		MethodsImpl methods = new MethodsImpl();
+		return methods;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Method createMethod() {
+		MethodImpl method = new MethodImpl();
+		return method;
 	}
 
 	/**
@@ -137,9 +162,39 @@ public class TslFactoryImpl extends EFactoryImpl implements TslFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public Param createParam() {
+		ParamImpl param = new ParamImpl();
+		return param;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ExpressionTag createExpressionTag() {
 		ExpressionTagImpl expressionTag = new ExpressionTagImpl();
 		return expressionTag;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public DebugTag createDebugTag() {
+		DebugTagImpl debugTag = new DebugTagImpl();
+		return debugTag;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public MapMethod createMapMethod() {
+		MapMethodImpl mapMethod = new MapMethodImpl();
+		return mapMethod;
 	}
 
 	/**

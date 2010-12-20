@@ -76,6 +76,14 @@ public class TslAdapterFactory extends AdapterFactoryImpl {
 				return createTmlAdapter();
 			}
 			@Override
+			public Adapter caseMethods(Methods object) {
+				return createMethodsAdapter();
+			}
+			@Override
+			public Adapter caseMethod(Method object) {
+				return createMethodAdapter();
+			}
+			@Override
 			public Adapter casePossibleExpression(PossibleExpression object) {
 				return createPossibleExpressionAdapter();
 			}
@@ -96,8 +104,20 @@ public class TslAdapterFactory extends AdapterFactoryImpl {
 				return createPropertyAdapter();
 			}
 			@Override
+			public Adapter caseParam(Param object) {
+				return createParamAdapter();
+			}
+			@Override
 			public Adapter caseExpressionTag(ExpressionTag object) {
 				return createExpressionTagAdapter();
+			}
+			@Override
+			public Adapter caseDebugTag(DebugTag object) {
+				return createDebugTagAdapter();
+			}
+			@Override
+			public Adapter caseMapMethod(MapMethod object) {
+				return createMapMethodAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -130,6 +150,34 @@ public class TslAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createTmlAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link com.dexels.navajo.dsl.model.tsl.Methods <em>Methods</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see com.dexels.navajo.dsl.model.tsl.Methods
+	 * @generated
+	 */
+	public Adapter createMethodsAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link com.dexels.navajo.dsl.model.tsl.Method <em>Method</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see com.dexels.navajo.dsl.model.tsl.Method
+	 * @generated
+	 */
+	public Adapter createMethodAdapter() {
 		return null;
 	}
 
@@ -204,6 +252,20 @@ public class TslAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link com.dexels.navajo.dsl.model.tsl.Param <em>Param</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see com.dexels.navajo.dsl.model.tsl.Param
+	 * @generated
+	 */
+	public Adapter createParamAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link com.dexels.navajo.dsl.model.tsl.ExpressionTag <em>Expression Tag</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -214,6 +276,34 @@ public class TslAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createExpressionTagAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link com.dexels.navajo.dsl.model.tsl.DebugTag <em>Debug Tag</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see com.dexels.navajo.dsl.model.tsl.DebugTag
+	 * @generated
+	 */
+	public Adapter createDebugTagAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link com.dexels.navajo.dsl.model.tsl.MapMethod <em>Map Method</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see com.dexels.navajo.dsl.model.tsl.MapMethod
+	 * @generated
+	 */
+	public Adapter createMapMethodAdapter() {
 		return null;
 	}
 

@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link com.dexels.navajo.dsl.model.tsl.PossibleExpression#getKey <em>Key</em>}</li>
  *   <li>{@link com.dexels.navajo.dsl.model.tsl.PossibleExpression#getExpressionValue <em>Expression Value</em>}</li>
  *   <li>{@link com.dexels.navajo.dsl.model.tsl.PossibleExpression#getValue <em>Value</em>}</li>
+ *   <li>{@link com.dexels.navajo.dsl.model.tsl.PossibleExpression#getNamespace <em>Namespace</em>}</li>
  * </ul>
  * </p>
  *
@@ -106,5 +107,31 @@ public interface PossibleExpression extends EObject {
 	 * @generated
 	 */
 	void setValue(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Namespace</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Namespace</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Namespace</em>' attribute.
+	 * @see #setNamespace(String)
+	 * @see com.dexels.navajo.dsl.model.tsl.TslPackage#getPossibleExpression_Namespace()
+	 * @model
+	 * @generated
+	 */
+	String getNamespace();
+
+	/**
+	 * Sets the value of the '{@link com.dexels.navajo.dsl.model.tsl.PossibleExpression#getNamespace <em>Namespace</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Namespace</em>' attribute.
+	 * @see #getNamespace()
+	 * @generated
+	 */
+	void setNamespace(String value);
 
 } // PossibleExpression

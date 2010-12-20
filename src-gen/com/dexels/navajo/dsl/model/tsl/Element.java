@@ -91,4 +91,12 @@ public interface Element extends EObject {
 	 */
 	EList<PossibleExpression> getAttributes();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	int calculateDepth();
+
 } // Element

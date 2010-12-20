@@ -94,6 +94,19 @@ public class TslSwitch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case TslPackage.METHODS: {
+				Methods methods = (Methods)theEObject;
+				T result = caseMethods(methods);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case TslPackage.METHOD: {
+				Method method = (Method)theEObject;
+				T result = caseMethod(method);
+				if (result == null) result = caseElement(method);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case TslPackage.POSSIBLE_EXPRESSION: {
 				PossibleExpression possibleExpression = (PossibleExpression)theEObject;
 				T result = casePossibleExpression(possibleExpression);
@@ -127,10 +140,32 @@ public class TslSwitch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case TslPackage.PARAM: {
+				Param param = (Param)theEObject;
+				T result = caseParam(param);
+				if (result == null) result = caseProperty(param);
+				if (result == null) result = caseElement(param);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case TslPackage.EXPRESSION_TAG: {
 				ExpressionTag expressionTag = (ExpressionTag)theEObject;
 				T result = caseExpressionTag(expressionTag);
 				if (result == null) result = caseElement(expressionTag);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case TslPackage.DEBUG_TAG: {
+				DebugTag debugTag = (DebugTag)theEObject;
+				T result = caseDebugTag(debugTag);
+				if (result == null) result = caseElement(debugTag);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case TslPackage.MAP_METHOD: {
+				MapMethod mapMethod = (MapMethod)theEObject;
+				T result = caseMapMethod(mapMethod);
+				if (result == null) result = caseElement(mapMethod);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -150,6 +185,36 @@ public class TslSwitch<T> {
 	 * @generated
 	 */
 	public T caseTml(Tml object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Methods</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Methods</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseMethods(Methods object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Method</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Method</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseMethod(Method object) {
 		return null;
 	}
 
@@ -229,6 +294,21 @@ public class TslSwitch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Param</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Param</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseParam(Param object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Expression Tag</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -240,6 +320,36 @@ public class TslSwitch<T> {
 	 * @generated
 	 */
 	public T caseExpressionTag(ExpressionTag object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Debug Tag</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Debug Tag</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseDebugTag(DebugTag object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Map Method</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Map Method</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseMapMethod(MapMethod object) {
 		return null;
 	}
 

@@ -6,55 +6,56 @@
  */
 package com.dexels.navajo.dsl.model.tsl.impl;
 
-import com.dexels.navajo.dsl.model.tsl.Methods;
-import com.dexels.navajo.dsl.model.tsl.PossibleExpression;
-import com.dexels.navajo.dsl.model.tsl.Tml;
+import com.dexels.navajo.dsl.model.tsl.Method;
 import com.dexels.navajo.dsl.model.tsl.TslPackage;
 
 import org.eclipse.emf.common.notify.Notification;
-import java.util.Collection;
-
-import org.eclipse.emf.common.notify.NotificationChain;
-
-import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
-import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Tml</b></em>'.
+ * An implementation of the model object '<em><b>Method</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.dexels.navajo.dsl.model.tsl.impl.TmlImpl#getMethods <em>Methods</em>}</li>
+ *   <li>{@link com.dexels.navajo.dsl.model.tsl.impl.MethodImpl#getName <em>Name</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class TmlImpl extends ElementImpl implements Tml {
+public class MethodImpl extends ElementImpl implements Method {
 	/**
-	 * The cached value of the '{@link #getMethods() <em>Methods</em>}' containment reference list.
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getMethods()
+	 * @see #getName()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<Methods> methods;
+	protected static final String NAME_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getName()
+	 * @generated
+	 * @ordered
+	 */
+	protected String name = NAME_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected TmlImpl() {
+	protected MethodImpl() {
 		super();
 	}
 
@@ -65,7 +66,7 @@ public class TmlImpl extends ElementImpl implements Tml {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return TslPackage.Literals.TML;
+		return TslPackage.Literals.METHOD;
 	}
 
 	/**
@@ -73,11 +74,8 @@ public class TmlImpl extends ElementImpl implements Tml {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<Methods> getMethods() {
-		if (methods == null) {
-			methods = new EObjectContainmentEList<Methods>(Methods.class, this, TslPackage.TML__METHODS);
-		}
-		return methods;
+	public String getName() {
+		return name;
 	}
 
 	/**
@@ -85,13 +83,11 @@ public class TmlImpl extends ElementImpl implements Tml {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case TslPackage.TML__METHODS:
-				return ((InternalEList<?>)getMethods()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
+	public void setName(String newName) {
+		String oldName = name;
+		name = newName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TslPackage.METHOD__NAME, oldName, name));
 	}
 
 	/**
@@ -102,8 +98,8 @@ public class TmlImpl extends ElementImpl implements Tml {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case TslPackage.TML__METHODS:
-				return getMethods();
+			case TslPackage.METHOD__NAME:
+				return getName();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -113,13 +109,11 @@ public class TmlImpl extends ElementImpl implements Tml {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case TslPackage.TML__METHODS:
-				getMethods().clear();
-				getMethods().addAll((Collection<? extends Methods>)newValue);
+			case TslPackage.METHOD__NAME:
+				setName((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -133,8 +127,8 @@ public class TmlImpl extends ElementImpl implements Tml {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case TslPackage.TML__METHODS:
-				getMethods().clear();
+			case TslPackage.METHOD__NAME:
+				setName(NAME_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -148,10 +142,26 @@ public class TmlImpl extends ElementImpl implements Tml {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case TslPackage.TML__METHODS:
-				return methods != null && !methods.isEmpty();
+			case TslPackage.METHOD__NAME:
+				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 		}
 		return super.eIsSet(featureID);
 	}
 
-} //TmlImpl
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy()) return super.toString();
+
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (name: ");
+		result.append(name);
+		result.append(')');
+		return result.toString();
+	}
+
+} //MethodImpl

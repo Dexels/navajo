@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  *   <li>{@link com.dexels.navajo.dsl.model.tsl.impl.PossibleExpressionImpl#getKey <em>Key</em>}</li>
  *   <li>{@link com.dexels.navajo.dsl.model.tsl.impl.PossibleExpressionImpl#getExpressionValue <em>Expression Value</em>}</li>
  *   <li>{@link com.dexels.navajo.dsl.model.tsl.impl.PossibleExpressionImpl#getValue <em>Value</em>}</li>
+ *   <li>{@link com.dexels.navajo.dsl.model.tsl.impl.PossibleExpressionImpl#getNamespace <em>Namespace</em>}</li>
  * </ul>
  * </p>
  *
@@ -85,6 +86,26 @@ public class PossibleExpressionImpl extends EObjectImpl implements PossibleExpre
 	 * @ordered
 	 */
 	protected String value = VALUE_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getNamespace() <em>Namespace</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getNamespace()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String NAMESPACE_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getNamespace() <em>Namespace</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getNamespace()
+	 * @generated
+	 * @ordered
+	 */
+	protected String namespace = NAMESPACE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -195,6 +216,27 @@ public class PossibleExpressionImpl extends EObjectImpl implements PossibleExpre
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getNamespace() {
+		return namespace;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setNamespace(String newNamespace) {
+		String oldNamespace = namespace;
+		namespace = newNamespace;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TslPackage.POSSIBLE_EXPRESSION__NAMESPACE, oldNamespace, namespace));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -218,6 +260,8 @@ public class PossibleExpressionImpl extends EObjectImpl implements PossibleExpre
 				return getExpressionValue();
 			case TslPackage.POSSIBLE_EXPRESSION__VALUE:
 				return getValue();
+			case TslPackage.POSSIBLE_EXPRESSION__NAMESPACE:
+				return getNamespace();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -238,6 +282,9 @@ public class PossibleExpressionImpl extends EObjectImpl implements PossibleExpre
 				return;
 			case TslPackage.POSSIBLE_EXPRESSION__VALUE:
 				setValue((String)newValue);
+				return;
+			case TslPackage.POSSIBLE_EXPRESSION__NAMESPACE:
+				setNamespace((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -260,6 +307,9 @@ public class PossibleExpressionImpl extends EObjectImpl implements PossibleExpre
 			case TslPackage.POSSIBLE_EXPRESSION__VALUE:
 				setValue(VALUE_EDEFAULT);
 				return;
+			case TslPackage.POSSIBLE_EXPRESSION__NAMESPACE:
+				setNamespace(NAMESPACE_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -278,6 +328,8 @@ public class PossibleExpressionImpl extends EObjectImpl implements PossibleExpre
 				return expressionValue != null;
 			case TslPackage.POSSIBLE_EXPRESSION__VALUE:
 				return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT.equals(value);
+			case TslPackage.POSSIBLE_EXPRESSION__NAMESPACE:
+				return NAMESPACE_EDEFAULT == null ? namespace != null : !NAMESPACE_EDEFAULT.equals(namespace);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -296,6 +348,8 @@ public class PossibleExpressionImpl extends EObjectImpl implements PossibleExpre
 		result.append(key);
 		result.append(", value: ");
 		result.append(value);
+		result.append(", namespace: ");
+		result.append(namespace);
 		result.append(')');
 		return result.toString();
 	}

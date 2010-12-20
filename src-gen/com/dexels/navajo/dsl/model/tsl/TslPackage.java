@@ -67,7 +67,7 @@ public interface TslPackage extends EPackage {
 	 * @see com.dexels.navajo.dsl.model.tsl.impl.TslPackageImpl#getElement()
 	 * @generated
 	 */
-	int ELEMENT = 2;
+	int ELEMENT = 4;
 
 	/**
 	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
@@ -143,13 +143,105 @@ public interface TslPackage extends EPackage {
 	int TML__ATTRIBUTES = ELEMENT__ATTRIBUTES;
 
 	/**
+	 * The feature id for the '<em><b>Methods</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TML__METHODS = ELEMENT_FEATURE_COUNT + 0;
+
+	/**
 	 * The number of structural features of the '<em>Tml</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TML_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 0;
+	int TML_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.tsl.impl.MethodsImpl <em>Methods</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see com.dexels.navajo.dsl.model.tsl.impl.MethodsImpl
+	 * @see com.dexels.navajo.dsl.model.tsl.impl.TslPackageImpl#getMethods()
+	 * @generated
+	 */
+	int METHODS = 1;
+
+	/**
+	 * The feature id for the '<em><b>Method</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int METHODS__METHOD = 0;
+
+	/**
+	 * The number of structural features of the '<em>Methods</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int METHODS_FEATURE_COUNT = 1;
+
+	/**
+	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.tsl.impl.MethodImpl <em>Method</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see com.dexels.navajo.dsl.model.tsl.impl.MethodImpl
+	 * @see com.dexels.navajo.dsl.model.tsl.impl.TslPackageImpl#getMethod()
+	 * @generated
+	 */
+	int METHOD = 2;
+
+	/**
+	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int METHOD__CHILDREN = ELEMENT__CHILDREN;
+
+	/**
+	 * The feature id for the '<em><b>Parent</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int METHOD__PARENT = ELEMENT__PARENT;
+
+	/**
+	 * The feature id for the '<em><b>Attributes</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int METHOD__ATTRIBUTES = ELEMENT__ATTRIBUTES;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int METHOD__NAME = ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Method</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int METHOD_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.tsl.impl.PossibleExpressionImpl <em>Possible Expression</em>}' class.
@@ -159,7 +251,7 @@ public interface TslPackage extends EPackage {
 	 * @see com.dexels.navajo.dsl.model.tsl.impl.TslPackageImpl#getPossibleExpression()
 	 * @generated
 	 */
-	int POSSIBLE_EXPRESSION = 1;
+	int POSSIBLE_EXPRESSION = 3;
 
 	/**
 	 * The feature id for the '<em><b>Key</b></em>' attribute.
@@ -189,13 +281,22 @@ public interface TslPackage extends EPackage {
 	int POSSIBLE_EXPRESSION__VALUE = 2;
 
 	/**
+	 * The feature id for the '<em><b>Namespace</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int POSSIBLE_EXPRESSION__NAMESPACE = 3;
+
+	/**
 	 * The number of structural features of the '<em>Possible Expression</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int POSSIBLE_EXPRESSION_FEATURE_COUNT = 3;
+	int POSSIBLE_EXPRESSION_FEATURE_COUNT = 4;
 
 	/**
 	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.tsl.impl.MessageImpl <em>Message</em>}' class.
@@ -205,7 +306,7 @@ public interface TslPackage extends EPackage {
 	 * @see com.dexels.navajo.dsl.model.tsl.impl.TslPackageImpl#getMessage()
 	 * @generated
 	 */
-	int MESSAGE = 3;
+	int MESSAGE = 5;
 
 	/**
 	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
@@ -235,13 +336,31 @@ public interface TslPackage extends EPackage {
 	int MESSAGE__ATTRIBUTES = ELEMENT__ATTRIBUTES;
 
 	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MESSAGE__NAME = ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MESSAGE__TYPE = ELEMENT_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>Message</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MESSAGE_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 0;
+	int MESSAGE_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.tsl.impl.MapImpl <em>Map</em>}' class.
@@ -251,7 +370,7 @@ public interface TslPackage extends EPackage {
 	 * @see com.dexels.navajo.dsl.model.tsl.impl.TslPackageImpl#getMap()
 	 * @generated
 	 */
-	int MAP = 4;
+	int MAP = 6;
 
 	/**
 	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
@@ -315,7 +434,7 @@ public interface TslPackage extends EPackage {
 	 * @see com.dexels.navajo.dsl.model.tsl.impl.TslPackageImpl#getProperty()
 	 * @generated
 	 */
-	int PROPERTY = 5;
+	int PROPERTY = 7;
 
 	/**
 	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
@@ -345,7 +464,7 @@ public interface TslPackage extends EPackage {
 	int PROPERTY__ATTRIBUTES = ELEMENT__ATTRIBUTES;
 
 	/**
-	 * The feature id for the '<em><b>Expression Value</b></em>' containment reference.
+	 * The feature id for the '<em><b>Expression Value</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -363,6 +482,61 @@ public interface TslPackage extends EPackage {
 	int PROPERTY_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 1;
 
 	/**
+	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.tsl.impl.ParamImpl <em>Param</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see com.dexels.navajo.dsl.model.tsl.impl.ParamImpl
+	 * @see com.dexels.navajo.dsl.model.tsl.impl.TslPackageImpl#getParam()
+	 * @generated
+	 */
+	int PARAM = 8;
+
+	/**
+	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAM__CHILDREN = PROPERTY__CHILDREN;
+
+	/**
+	 * The feature id for the '<em><b>Parent</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAM__PARENT = PROPERTY__PARENT;
+
+	/**
+	 * The feature id for the '<em><b>Attributes</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAM__ATTRIBUTES = PROPERTY__ATTRIBUTES;
+
+	/**
+	 * The feature id for the '<em><b>Expression Value</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAM__EXPRESSION_VALUE = PROPERTY__EXPRESSION_VALUE;
+
+	/**
+	 * The number of structural features of the '<em>Param</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAM_FEATURE_COUNT = PROPERTY_FEATURE_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.tsl.impl.ExpressionTagImpl <em>Expression Tag</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -370,7 +544,7 @@ public interface TslPackage extends EPackage {
 	 * @see com.dexels.navajo.dsl.model.tsl.impl.TslPackageImpl#getExpressionTag()
 	 * @generated
 	 */
-	int EXPRESSION_TAG = 6;
+	int EXPRESSION_TAG = 9;
 
 	/**
 	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
@@ -419,6 +593,144 @@ public interface TslPackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.tsl.impl.DebugTagImpl <em>Debug Tag</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see com.dexels.navajo.dsl.model.tsl.impl.DebugTagImpl
+	 * @see com.dexels.navajo.dsl.model.tsl.impl.TslPackageImpl#getDebugTag()
+	 * @generated
+	 */
+	int DEBUG_TAG = 10;
+
+	/**
+	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DEBUG_TAG__CHILDREN = ELEMENT__CHILDREN;
+
+	/**
+	 * The feature id for the '<em><b>Parent</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DEBUG_TAG__PARENT = ELEMENT__PARENT;
+
+	/**
+	 * The feature id for the '<em><b>Attributes</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DEBUG_TAG__ATTRIBUTES = ELEMENT__ATTRIBUTES;
+
+	/**
+	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DEBUG_TAG__EXPRESSION = ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Debug Tag</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DEBUG_TAG_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.tsl.impl.MapMethodImpl <em>Map Method</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see com.dexels.navajo.dsl.model.tsl.impl.MapMethodImpl
+	 * @see com.dexels.navajo.dsl.model.tsl.impl.TslPackageImpl#getMapMethod()
+	 * @generated
+	 */
+	int MAP_METHOD = 11;
+
+	/**
+	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAP_METHOD__CHILDREN = ELEMENT__CHILDREN;
+
+	/**
+	 * The feature id for the '<em><b>Parent</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAP_METHOD__PARENT = ELEMENT__PARENT;
+
+	/**
+	 * The feature id for the '<em><b>Attributes</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAP_METHOD__ATTRIBUTES = ELEMENT__ATTRIBUTES;
+
+	/**
+	 * The feature id for the '<em><b>Map Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAP_METHOD__MAP_NAME = ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Method Closing Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAP_METHOD__METHOD_CLOSING_NAME = ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Method Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAP_METHOD__METHOD_NAME = ELEMENT_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Method Closing Method</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAP_METHOD__METHOD_CLOSING_METHOD = ELEMENT_FEATURE_COUNT + 3;
+
+	/**
+	 * The number of structural features of the '<em>Map Method</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAP_METHOD_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 4;
+
+
+	/**
 	 * Returns the meta object for class '{@link com.dexels.navajo.dsl.model.tsl.Tml <em>Tml</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -427,6 +739,59 @@ public interface TslPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getTml();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link com.dexels.navajo.dsl.model.tsl.Tml#getMethods <em>Methods</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Methods</em>'.
+	 * @see com.dexels.navajo.dsl.model.tsl.Tml#getMethods()
+	 * @see #getTml()
+	 * @generated
+	 */
+	EReference getTml_Methods();
+
+	/**
+	 * Returns the meta object for class '{@link com.dexels.navajo.dsl.model.tsl.Methods <em>Methods</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Methods</em>'.
+	 * @see com.dexels.navajo.dsl.model.tsl.Methods
+	 * @generated
+	 */
+	EClass getMethods();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link com.dexels.navajo.dsl.model.tsl.Methods#getMethod <em>Method</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Method</em>'.
+	 * @see com.dexels.navajo.dsl.model.tsl.Methods#getMethod()
+	 * @see #getMethods()
+	 * @generated
+	 */
+	EReference getMethods_Method();
+
+	/**
+	 * Returns the meta object for class '{@link com.dexels.navajo.dsl.model.tsl.Method <em>Method</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Method</em>'.
+	 * @see com.dexels.navajo.dsl.model.tsl.Method
+	 * @generated
+	 */
+	EClass getMethod();
+
+	/**
+	 * Returns the meta object for the attribute '{@link com.dexels.navajo.dsl.model.tsl.Method#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see com.dexels.navajo.dsl.model.tsl.Method#getName()
+	 * @see #getMethod()
+	 * @generated
+	 */
+	EAttribute getMethod_Name();
 
 	/**
 	 * Returns the meta object for class '{@link com.dexels.navajo.dsl.model.tsl.PossibleExpression <em>Possible Expression</em>}'.
@@ -470,6 +835,17 @@ public interface TslPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getPossibleExpression_Value();
+
+	/**
+	 * Returns the meta object for the attribute '{@link com.dexels.navajo.dsl.model.tsl.PossibleExpression#getNamespace <em>Namespace</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Namespace</em>'.
+	 * @see com.dexels.navajo.dsl.model.tsl.PossibleExpression#getNamespace()
+	 * @see #getPossibleExpression()
+	 * @generated
+	 */
+	EAttribute getPossibleExpression_Namespace();
 
 	/**
 	 * Returns the meta object for class '{@link com.dexels.navajo.dsl.model.tsl.Element <em>Element</em>}'.
@@ -525,6 +901,28 @@ public interface TslPackage extends EPackage {
 	EClass getMessage();
 
 	/**
+	 * Returns the meta object for the attribute '{@link com.dexels.navajo.dsl.model.tsl.Message#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see com.dexels.navajo.dsl.model.tsl.Message#getName()
+	 * @see #getMessage()
+	 * @generated
+	 */
+	EAttribute getMessage_Name();
+
+	/**
+	 * Returns the meta object for the attribute '{@link com.dexels.navajo.dsl.model.tsl.Message#getType <em>Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Type</em>'.
+	 * @see com.dexels.navajo.dsl.model.tsl.Message#getType()
+	 * @see #getMessage()
+	 * @generated
+	 */
+	EAttribute getMessage_Type();
+
+	/**
 	 * Returns the meta object for class '{@link com.dexels.navajo.dsl.model.tsl.Map <em>Map</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -567,15 +965,25 @@ public interface TslPackage extends EPackage {
 	EClass getProperty();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link com.dexels.navajo.dsl.model.tsl.Property#getExpressionValue <em>Expression Value</em>}'.
+	 * Returns the meta object for the containment reference list '{@link com.dexels.navajo.dsl.model.tsl.Property#getExpressionValue <em>Expression Value</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Expression Value</em>'.
+	 * @return the meta object for the containment reference list '<em>Expression Value</em>'.
 	 * @see com.dexels.navajo.dsl.model.tsl.Property#getExpressionValue()
 	 * @see #getProperty()
 	 * @generated
 	 */
 	EReference getProperty_ExpressionValue();
+
+	/**
+	 * Returns the meta object for class '{@link com.dexels.navajo.dsl.model.tsl.Param <em>Param</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Param</em>'.
+	 * @see com.dexels.navajo.dsl.model.tsl.Param
+	 * @generated
+	 */
+	EClass getParam();
 
 	/**
 	 * Returns the meta object for class '{@link com.dexels.navajo.dsl.model.tsl.ExpressionTag <em>Expression Tag</em>}'.
@@ -597,6 +1005,81 @@ public interface TslPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getExpressionTag_Expression();
+
+	/**
+	 * Returns the meta object for class '{@link com.dexels.navajo.dsl.model.tsl.DebugTag <em>Debug Tag</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Debug Tag</em>'.
+	 * @see com.dexels.navajo.dsl.model.tsl.DebugTag
+	 * @generated
+	 */
+	EClass getDebugTag();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link com.dexels.navajo.dsl.model.tsl.DebugTag#getExpression <em>Expression</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Expression</em>'.
+	 * @see com.dexels.navajo.dsl.model.tsl.DebugTag#getExpression()
+	 * @see #getDebugTag()
+	 * @generated
+	 */
+	EReference getDebugTag_Expression();
+
+	/**
+	 * Returns the meta object for class '{@link com.dexels.navajo.dsl.model.tsl.MapMethod <em>Map Method</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Map Method</em>'.
+	 * @see com.dexels.navajo.dsl.model.tsl.MapMethod
+	 * @generated
+	 */
+	EClass getMapMethod();
+
+	/**
+	 * Returns the meta object for the attribute '{@link com.dexels.navajo.dsl.model.tsl.MapMethod#getMapName <em>Map Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Map Name</em>'.
+	 * @see com.dexels.navajo.dsl.model.tsl.MapMethod#getMapName()
+	 * @see #getMapMethod()
+	 * @generated
+	 */
+	EAttribute getMapMethod_MapName();
+
+	/**
+	 * Returns the meta object for the attribute '{@link com.dexels.navajo.dsl.model.tsl.MapMethod#getMethodClosingName <em>Method Closing Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Method Closing Name</em>'.
+	 * @see com.dexels.navajo.dsl.model.tsl.MapMethod#getMethodClosingName()
+	 * @see #getMapMethod()
+	 * @generated
+	 */
+	EAttribute getMapMethod_MethodClosingName();
+
+	/**
+	 * Returns the meta object for the attribute '{@link com.dexels.navajo.dsl.model.tsl.MapMethod#getMethodName <em>Method Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Method Name</em>'.
+	 * @see com.dexels.navajo.dsl.model.tsl.MapMethod#getMethodName()
+	 * @see #getMapMethod()
+	 * @generated
+	 */
+	EAttribute getMapMethod_MethodName();
+
+	/**
+	 * Returns the meta object for the attribute '{@link com.dexels.navajo.dsl.model.tsl.MapMethod#getMethodClosingMethod <em>Method Closing Method</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Method Closing Method</em>'.
+	 * @see com.dexels.navajo.dsl.model.tsl.MapMethod#getMethodClosingMethod()
+	 * @see #getMapMethod()
+	 * @generated
+	 */
+	EAttribute getMapMethod_MethodClosingMethod();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -631,6 +1114,50 @@ public interface TslPackage extends EPackage {
 		EClass TML = eINSTANCE.getTml();
 
 		/**
+		 * The meta object literal for the '<em><b>Methods</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TML__METHODS = eINSTANCE.getTml_Methods();
+
+		/**
+		 * The meta object literal for the '{@link com.dexels.navajo.dsl.model.tsl.impl.MethodsImpl <em>Methods</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see com.dexels.navajo.dsl.model.tsl.impl.MethodsImpl
+		 * @see com.dexels.navajo.dsl.model.tsl.impl.TslPackageImpl#getMethods()
+		 * @generated
+		 */
+		EClass METHODS = eINSTANCE.getMethods();
+
+		/**
+		 * The meta object literal for the '<em><b>Method</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference METHODS__METHOD = eINSTANCE.getMethods_Method();
+
+		/**
+		 * The meta object literal for the '{@link com.dexels.navajo.dsl.model.tsl.impl.MethodImpl <em>Method</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see com.dexels.navajo.dsl.model.tsl.impl.MethodImpl
+		 * @see com.dexels.navajo.dsl.model.tsl.impl.TslPackageImpl#getMethod()
+		 * @generated
+		 */
+		EClass METHOD = eINSTANCE.getMethod();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute METHOD__NAME = eINSTANCE.getMethod_Name();
+
+		/**
 		 * The meta object literal for the '{@link com.dexels.navajo.dsl.model.tsl.impl.PossibleExpressionImpl <em>Possible Expression</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -663,6 +1190,14 @@ public interface TslPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute POSSIBLE_EXPRESSION__VALUE = eINSTANCE.getPossibleExpression_Value();
+
+		/**
+		 * The meta object literal for the '<em><b>Namespace</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute POSSIBLE_EXPRESSION__NAMESPACE = eINSTANCE.getPossibleExpression_Namespace();
 
 		/**
 		 * The meta object literal for the '{@link com.dexels.navajo.dsl.model.tsl.impl.ElementImpl <em>Element</em>}' class.
@@ -709,6 +1244,22 @@ public interface TslPackage extends EPackage {
 		EClass MESSAGE = eINSTANCE.getMessage();
 
 		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute MESSAGE__NAME = eINSTANCE.getMessage_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute MESSAGE__TYPE = eINSTANCE.getMessage_Type();
+
+		/**
 		 * The meta object literal for the '{@link com.dexels.navajo.dsl.model.tsl.impl.MapImpl <em>Map</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -745,12 +1296,22 @@ public interface TslPackage extends EPackage {
 		EClass PROPERTY = eINSTANCE.getProperty();
 
 		/**
-		 * The meta object literal for the '<em><b>Expression Value</b></em>' containment reference feature.
+		 * The meta object literal for the '<em><b>Expression Value</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EReference PROPERTY__EXPRESSION_VALUE = eINSTANCE.getProperty_ExpressionValue();
+
+		/**
+		 * The meta object literal for the '{@link com.dexels.navajo.dsl.model.tsl.impl.ParamImpl <em>Param</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see com.dexels.navajo.dsl.model.tsl.impl.ParamImpl
+		 * @see com.dexels.navajo.dsl.model.tsl.impl.TslPackageImpl#getParam()
+		 * @generated
+		 */
+		EClass PARAM = eINSTANCE.getParam();
 
 		/**
 		 * The meta object literal for the '{@link com.dexels.navajo.dsl.model.tsl.impl.ExpressionTagImpl <em>Expression Tag</em>}' class.
@@ -769,6 +1330,66 @@ public interface TslPackage extends EPackage {
 		 * @generated
 		 */
 		EReference EXPRESSION_TAG__EXPRESSION = eINSTANCE.getExpressionTag_Expression();
+
+		/**
+		 * The meta object literal for the '{@link com.dexels.navajo.dsl.model.tsl.impl.DebugTagImpl <em>Debug Tag</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see com.dexels.navajo.dsl.model.tsl.impl.DebugTagImpl
+		 * @see com.dexels.navajo.dsl.model.tsl.impl.TslPackageImpl#getDebugTag()
+		 * @generated
+		 */
+		EClass DEBUG_TAG = eINSTANCE.getDebugTag();
+
+		/**
+		 * The meta object literal for the '<em><b>Expression</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DEBUG_TAG__EXPRESSION = eINSTANCE.getDebugTag_Expression();
+
+		/**
+		 * The meta object literal for the '{@link com.dexels.navajo.dsl.model.tsl.impl.MapMethodImpl <em>Map Method</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see com.dexels.navajo.dsl.model.tsl.impl.MapMethodImpl
+		 * @see com.dexels.navajo.dsl.model.tsl.impl.TslPackageImpl#getMapMethod()
+		 * @generated
+		 */
+		EClass MAP_METHOD = eINSTANCE.getMapMethod();
+
+		/**
+		 * The meta object literal for the '<em><b>Map Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute MAP_METHOD__MAP_NAME = eINSTANCE.getMapMethod_MapName();
+
+		/**
+		 * The meta object literal for the '<em><b>Method Closing Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute MAP_METHOD__METHOD_CLOSING_NAME = eINSTANCE.getMapMethod_MethodClosingName();
+
+		/**
+		 * The meta object literal for the '<em><b>Method Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute MAP_METHOD__METHOD_NAME = eINSTANCE.getMapMethod_MethodName();
+
+		/**
+		 * The meta object literal for the '<em><b>Method Closing Method</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute MAP_METHOD__METHOD_CLOSING_METHOD = eINSTANCE.getMapMethod_MethodClosingMethod();
 
 	}
 

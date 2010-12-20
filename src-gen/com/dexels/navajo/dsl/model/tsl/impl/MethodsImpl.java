@@ -6,14 +6,12 @@
  */
 package com.dexels.navajo.dsl.model.tsl.impl;
 
-import com.dexels.navajo.dsl.model.tsl.ExpressionTag;
-import com.dexels.navajo.dsl.model.tsl.PossibleExpression;
-import com.dexels.navajo.dsl.model.tsl.Property;
+import com.dexels.navajo.dsl.model.tsl.Method;
+import com.dexels.navajo.dsl.model.tsl.Methods;
 import com.dexels.navajo.dsl.model.tsl.TslPackage;
 
 import java.util.Collection;
 
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
@@ -21,41 +19,41 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Property</b></em>'.
+ * An implementation of the model object '<em><b>Methods</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.dexels.navajo.dsl.model.tsl.impl.PropertyImpl#getExpressionValue <em>Expression Value</em>}</li>
+ *   <li>{@link com.dexels.navajo.dsl.model.tsl.impl.MethodsImpl#getMethod <em>Method</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class PropertyImpl extends ElementImpl implements Property {
+public class MethodsImpl extends EObjectImpl implements Methods {
 	/**
-	 * The cached value of the '{@link #getExpressionValue() <em>Expression Value</em>}' containment reference list.
+	 * The cached value of the '{@link #getMethod() <em>Method</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getExpressionValue()
+	 * @see #getMethod()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<ExpressionTag> expressionValue;
+	protected EList<Method> method;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected PropertyImpl() {
+	protected MethodsImpl() {
 		super();
 	}
 
@@ -66,7 +64,7 @@ public class PropertyImpl extends ElementImpl implements Property {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return TslPackage.Literals.PROPERTY;
+		return TslPackage.Literals.METHODS;
 	}
 
 	/**
@@ -74,11 +72,11 @@ public class PropertyImpl extends ElementImpl implements Property {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<ExpressionTag> getExpressionValue() {
-		if (expressionValue == null) {
-			expressionValue = new EObjectContainmentEList<ExpressionTag>(ExpressionTag.class, this, TslPackage.PROPERTY__EXPRESSION_VALUE);
+	public EList<Method> getMethod() {
+		if (method == null) {
+			method = new EObjectContainmentEList<Method>(Method.class, this, TslPackage.METHODS__METHOD);
 		}
-		return expressionValue;
+		return method;
 	}
 
 	/**
@@ -89,8 +87,8 @@ public class PropertyImpl extends ElementImpl implements Property {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case TslPackage.PROPERTY__EXPRESSION_VALUE:
-				return ((InternalEList<?>)getExpressionValue()).basicRemove(otherEnd, msgs);
+			case TslPackage.METHODS__METHOD:
+				return ((InternalEList<?>)getMethod()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -103,8 +101,8 @@ public class PropertyImpl extends ElementImpl implements Property {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case TslPackage.PROPERTY__EXPRESSION_VALUE:
-				return getExpressionValue();
+			case TslPackage.METHODS__METHOD:
+				return getMethod();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -118,9 +116,9 @@ public class PropertyImpl extends ElementImpl implements Property {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case TslPackage.PROPERTY__EXPRESSION_VALUE:
-				getExpressionValue().clear();
-				getExpressionValue().addAll((Collection<? extends ExpressionTag>)newValue);
+			case TslPackage.METHODS__METHOD:
+				getMethod().clear();
+				getMethod().addAll((Collection<? extends Method>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -134,8 +132,8 @@ public class PropertyImpl extends ElementImpl implements Property {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case TslPackage.PROPERTY__EXPRESSION_VALUE:
-				getExpressionValue().clear();
+			case TslPackage.METHODS__METHOD:
+				getMethod().clear();
 				return;
 		}
 		super.eUnset(featureID);
@@ -149,10 +147,10 @@ public class PropertyImpl extends ElementImpl implements Property {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case TslPackage.PROPERTY__EXPRESSION_VALUE:
-				return expressionValue != null && !expressionValue.isEmpty();
+			case TslPackage.METHODS__METHOD:
+				return method != null && !method.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
 
-} //PropertyImpl
+} //MethodsImpl

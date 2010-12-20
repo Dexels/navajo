@@ -35,6 +35,24 @@ public interface TslFactory extends EFactory {
 	Tml createTml();
 
 	/**
+	 * Returns a new object of class '<em>Methods</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Methods</em>'.
+	 * @generated
+	 */
+	Methods createMethods();
+
+	/**
+	 * Returns a new object of class '<em>Method</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Method</em>'.
+	 * @generated
+	 */
+	Method createMethod();
+
+	/**
 	 * Returns a new object of class '<em>Possible Expression</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -80,6 +98,15 @@ public interface TslFactory extends EFactory {
 	Property createProperty();
 
 	/**
+	 * Returns a new object of class '<em>Param</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Param</em>'.
+	 * @generated
+	 */
+	Param createParam();
+
+	/**
 	 * Returns a new object of class '<em>Expression Tag</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -87,6 +114,24 @@ public interface TslFactory extends EFactory {
 	 * @generated
 	 */
 	ExpressionTag createExpressionTag();
+
+	/**
+	 * Returns a new object of class '<em>Debug Tag</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Debug Tag</em>'.
+	 * @generated
+	 */
+	DebugTag createDebugTag();
+
+	/**
+	 * Returns a new object of class '<em>Map Method</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Map Method</em>'.
+	 * @generated
+	 */
+	MapMethod createMapMethod();
 
 	/**
 	 * Returns the package supported by this factory.

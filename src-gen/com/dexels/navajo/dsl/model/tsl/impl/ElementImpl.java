@@ -18,6 +18,7 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -146,6 +147,19 @@ public class ElementImpl extends EObjectImpl implements Element {
 			attributes = new EObjectContainmentEList<PossibleExpression>(PossibleExpression.class, this, TslPackage.ELEMENT__ATTRIBUTES);
 		}
 		return attributes;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public int calculateDepth() {
+		EObject parent = eContainer();
+		if(parent instanceof Element) {
+			return ((Element)parent).calculateDepth()+1;
+		}
+		return 0;
 	}
 
 	/**
