@@ -139,14 +139,15 @@ public abstract class BaseNavajoServlet extends HttpServlet {
 				DispatcherInterface d = initDispatcher();
 				Navajo n = NavajoFactory.getInstance().createNavajo();
 				if ( bootstrapService == null ) {
-					Header h = NavajoFactory.getInstance().createHeader(n, MaintainanceRequest.METHOD_NAVAJO_PING, "", "", -1);
-					n.addHeader(h);
+//					Header h = NavajoFactory.getInstance().createHeader(n, MaintainanceRequest.METHOD_NAVAJO_PING, "", "", -1);
+//					n.addHeader(h);
+					// Don't ping if there is no bootstrap service
 				} else {
 					Header h = NavajoFactory.getInstance().createHeader(n, bootstrapService, bootstrapUser, bootstrapPassword, -1);
 					n.addHeader(h);
+					d.handle(n);
+					System.err.println("NAVAJO INSTANCE " +  d.getNavajoConfig().getInstanceName() + " BOOTSTRAPPED BY " + n.getHeader().getRPCName());
 				}
-				d.handle(n);
-				System.err.println("NAVAJO INSTANCE " +  d.getNavajoConfig().getInstanceName() + " BOOTSTRAPPED BY " + n.getHeader().getRPCName());
 			} catch (Exception e) {
 				e.printStackTrace(System.err);
 			}
@@ -194,6 +195,12 @@ public abstract class BaseNavajoServlet extends HttpServlet {
 	}
 
 	private String getSystemPath(String name) throws IOException {
+
+		String force = getServletContext().getInitParameter("forcedNavajoPath");
+		if(force!=null) {
+//			System.err.println("Using the force! navajo.properties will be ignored!");
+			return force;
+		}
 		Map<String,String> systemContexts = new HashMap<String, String>();
 		File home = new File(System.getProperty("user.home"));
 		File navajo = new File(home,"navajo.properties");
