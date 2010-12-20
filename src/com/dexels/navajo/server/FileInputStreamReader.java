@@ -33,19 +33,11 @@ public InputStream getResource(String name) {
     	if (f.exists()) {
     		return new FileInputStream(f);
     	}
-//    	String userdir = System.getProperty("user.dir");
     	System.err.println("userdir = " + filePath);
     	File dir = new File(filePath);
     	URL baseDir = dir.toURL();
     	URL res = new URL(baseDir,name);
     	System.err.println("Resolved to res url: "+res.toString());
-//    	File config = new File(name);
-//    	if (!config.exists()) {
-//    		System.err.println("Configuration resource not found: "+name);
-//    		return null;
-//		}
-//    	System.err.println("Full path: "+config.getAbsolutePath());
-//    	return new java.io.FileInputStream(config);
     	return res.openStream();
     } catch (Exception ioe) {
 //      ioe.printStackTrace();
