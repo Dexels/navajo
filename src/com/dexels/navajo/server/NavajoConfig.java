@@ -704,13 +704,28 @@ public final class NavajoConfig implements NavajoConfigInterface {
     		input = inputStreamReader.getResource(getScriptPath() + name + "_beta.xml");
     		return input;
     	} else {
-    		input = inputStreamReader.getResource(getScriptPath() + name + ".xml");
+    		System.err.println("Not beta");
+    		String path = getScriptPath() + name + ".xml";
+			input = inputStreamReader.getResource(path);
+    		if(input==null) {
+    			System.err.println("No resource found");
+    			File f = new File(contextRoot,"scripts/"+name+".xml");
+    			System.err.println("Looking into contextroot: "+f.getAbsolutePath());
+    			if(f.exists()) {
+    				System.err.println("Retrieving script from servlet context: "+path);
+    				return new FileInputStream(f);
+    			}
+    		}
     		return input;
     	}
     }
 
     public final InputStream getTmlScript(String name) throws IOException {
       return getTmlScript(name,false);
+    }
+    
+    public File getContextRoot() {
+   	 return contextRoot;
     }
 
     public final InputStream getTmlScript(String name, boolean useBeta) throws IOException {
@@ -833,7 +848,6 @@ public final class NavajoConfig implements NavajoConfigInterface {
      * @return whether full access log is required for access object.
      */
     public final boolean needsFullAccessLog(Access a) {
-    	
       // Check whether compiledscript has debugAll set or whether access object has debug all set.
       if ( a.isDebugAll() || ( a.getCompiledScript() != null && a.getCompiledScript().isDebugAll() ) ) {
     	  return true;

@@ -59,6 +59,9 @@ public interface NavajoConfigInterface {
 	public void setMonitorUsers(String monitorUsers);
 	public void setMonitorExceedTotaltime(int monitorExceedTotaltime);
 	
+	
+   public File getContextRoot();
+   
 	// Setters/getters.
 	public void setStatisticsRunnerEnabled(boolean b);
 	public String getAdapterPath();
