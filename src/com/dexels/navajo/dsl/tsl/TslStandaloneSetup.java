@@ -1,6 +1,9 @@
 
 package com.dexels.navajo.dsl.tsl;
 
+import com.dexels.navajo.dsl.tsl.formatting.TslFormatter;
+import com.google.inject.Injector;
+
 /**
  * Initialization support for running Xtext languages 
  * without equinox extension registry
@@ -8,7 +11,17 @@ package com.dexels.navajo.dsl.tsl;
 public class TslStandaloneSetup extends TslStandaloneSetupGenerated{
 
 	public static void doSetup() {
-		new TslStandaloneSetup().createInjectorAndDoEMFRegistration();
+		Injector ij = new TslStandaloneSetup().createInjectorAndDoEMFRegistration();
+//		InjectionTest i = ij.getInstance(InjectionTest.class);
+//		i.doSomething();
+		//		ij.getInstance(Class<? extends IFormatter>)
+		TslFormatter aa = ij.getInstance(TslFormatter.class);
+		
 	}
+
+	public static void main(String[] args) {
+		doSetup();
+	}
+	
 }
 

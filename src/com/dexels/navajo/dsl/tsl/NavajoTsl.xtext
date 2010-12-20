@@ -1,5 +1,5 @@
 //grammar com.dexels.navajo.dsl.tsl.Tsl with org.eclipse.xtext.common.Terminals //with com.dexels.navajo.dsl.expression.NavajoExpression
-grammar com.dexels.navajo.dsl.tsl.Tsl with com.dexels.navajo.dsl.expression.NavajoExpression
+grammar com.dexels.navajo.dsl.tsl.Tsl with com.dexels.navajo.dsl.expression.NavajoExpression hidden(WS, ML_COMMENT, SL_COMMENT,XMLComment,XMLHead)
 
 //import "platform:/resource/com.dexels.navajo.dsl.expression/src/com/dexels/navajo/dsl/expression/Navajo.ecore" as ncore
 //import "http://www.dexels.com/navajo/dsl/expression/NavajoExpression" as nexpr
@@ -13,72 +13,203 @@ import "platform:/resource/com.dexels.navajo.dsl.tsl.model/model/NavaScript.ecor
 
 
 Tml :
-	'<navascript' {Tml} (attributes+=PossibleExpression)* 
+	NAVASCRIPT_START {Tml} (attributes+=PossibleExpression)* 
 	(
-		('>' 
-			((children+=Message) | (children+=Map))*
-		'</navascript>'
+		(XML_TAG_END 
+			((children+=Message) | (children+=Map)| (children+=Param) | (methods += Methods) | (children+=DebugTag))*
+		NAVASCRIPT_END
 		)
 	|	(
-		'/>'
+		XML_TAG_SINGLEEND
 		)
 	);
 
+terminal XMLHead: '<?' -> '?>';
+terminal XMLComment: '<!--' -> '-->';
 terminal QUOTEQ: '"=';	
+terminal SEMICOLONQUOTE: ';"';
 
-//
-//terminal ATTSTRING	: 
-//	  '"' '"' 
-//	  |
-//	  ('"' !('"') '"')
-//	  |
-//	  ('"' !('='|'"')  ( '\\' ('b'|'t'|'n'|'f'|'r'|"'"|'\\') | !('\\'|'"') )*  !(';'|'"') '"')
-//	;	
+terminal DEBUG_START_TAG:
+	XML_TAG_START 'debug';
+terminal DEBUG_END_TAG:
+	XML_TAG_END 'debug' XML_TAG_END;
+
+
+//terminal NAVASCRIPT_START:
+//	'<navascript';
+
+terminal XML_START_ENDTAG:
+	'</';
+	
+	terminal XML_TAG_END: 
+	'>'
+;
+
+terminal XML_TAG_SINGLEEND: 
+	'/>'
+;
+
+terminal XML_TAG_START: '<';
 
 terminal EMPTYSTRING:
-		'""'
-		;
+	'""'
+;
 
 terminal ATTRIBUTESTRING	: 
-			(   '"' !('='|'"')* '"')
-	;	
+	(   '"' !('='|'"')* '"')
+;	
+
+terminal MAPENDKEYWORD: 
+	XML_START_ENDTAG 'map.'
+;
+
+terminal MAPSTARTKEYWORD: 
+	XML_TAG_START 'map.'
+;
+
+terminal PROPERTY_START_TAG:
+	XML_TAG_START 'property'
+;
+
+terminal PROPERTY_END_TAG: 
+	XML_START_ENDTAG 'property' XML_TAG_END
+;
+
+terminal PARAM_END_TAG: 
+	XML_START_ENDTAG 'param' XML_TAG_END
+;
+
+terminal MESSAGE_END_TAG: 
+	XML_START_ENDTAG 'message' XML_TAG_END
+;
+
+terminal METHODS_END_TAG: 
+	XML_START_ENDTAG 'methods' XML_TAG_END
+;
+terminal METHOD_END_TAG: 
+	XML_START_ENDTAG 'method' XML_TAG_END
+;
+
+terminal FIELD_END_TAG: 
+	XML_START_ENDTAG 'field' XML_TAG_END
+;
+
+terminal EXPRESSION_START_TAG:
+	XML_TAG_START 'expression'
+;
+
+terminal EXPRESSION_END_TAG:
+	XML_START_ENDTAG 'expression' XML_TAG_END
+;
+terminal PARAM_START_TAG:
+	XML_TAG_START 'param'
+;
+
+terminal MESSAGE_START_TAG:
+	XML_TAG_START 'message'
+;
+
+terminal METHOD_START_TAG:
+	XML_TAG_START 'method'
+;
+
+terminal METHODS_START_TAG:
+	XML_TAG_START 'methods'
+;
+
+terminal FIELD_START_TAG:
+	XML_TAG_START 'field'
+;
+terminal NAVASCRIPT_START:
+ 	XML_TAG_START NAVASCRIPT_KEYWORD;
+	
+	
+terminal NAVASCRIPT_KEYWORD:	
+	'navascript';
+
+terminal NAVASCRIPT_END:
+ 	XML_START_ENDTAG NAVASCRIPT_KEYWORD XML_TAG_END;
 
 
+terminal CDATA:
+
+	'<![CDATA[' -> ']]>'
+	;
+
+AttributeName:
+	ID;
 
 PossibleExpression:
-	key=ID '='
+	(namespace= ID ':')? key=AttributeName '='
 	(
-		 QUOTEQ expressionValue=TopLevel ';"'
+		 QUOTEQ expressionValue=TopLevel SEMICOLONQUOTE
 		| value=ATTRIBUTESTRING
 		| EMPTYSTRING
 	)
 	;
 
 
-Message:
-	'<message' {Message}  (attributes+=PossibleExpression)* 
+Methods :
+	METHODS_START_TAG {Methods} 
 	
-	(('>'
-		((children+=Message) | (children+=Property) | (children+=Map))*
-	'</message>'
+	((XML_TAG_END
+	(method+=Method)*
+	METHODS_END_TAG)
+	|
+	XML_TAG_SINGLEEND)
+	;
+	
+Method:
+	METHOD_START_TAG {Method}  (attributes+=PossibleExpression)* 
+	
+	((XML_TAG_END
+//		((children+=Message) | (children+=Property) | (children+=Map))*
+	METHOD_END_TAG
 	)
 	|
-	'/>'
+	XML_TAG_SINGLEEND
+	)
+	;	
+
+Message:
+	MESSAGE_START_TAG {Message}  (attributes+=PossibleExpression)* 
+	
+	((XML_TAG_END
+		((children+=Message) | (children+=Property) | (children+=Param)  | (children+=Map) | (children+=MapMethod) | (children+=DebugTag))*
+	MESSAGE_END_TAG
+	)
+	|
+	XML_TAG_SINGLEEND
 	)
 	;
+
+
 
 
 Map:
 	MapStart
-	( '/>'
-	| ('>'
-		((children+=Message) | (children+=Property) | (children+=Map))*
-		'</map.' mapClosingName=ID '>'
+	( XML_TAG_SINGLEEND
+	| (XML_TAG_END
+		((children+=Message) | (children+=Property) | (children+=Param) | (children+=Map) | (children+=MapMethod) | (children+=DebugTag))*
+		
+		mapClosingName = MapEnd
 	))
 	;
 
+
+MapEnd:
+		MAPENDKEYWORD ID XML_TAG_END
+;
+
+MapId:
+	ID;
+
+
+
+
+
 MapStart returns Map:
-	{Map} '<map.' mapName=ID (attributes+=PossibleExpression)*
+	{Map} MAPSTARTKEYWORD mapName=MapId (attributes+=PossibleExpression)*
 ;
 
 
@@ -101,19 +232,75 @@ MapStart returns Map:
 // '1' this makes 1 a keyword
 //PropertyCardinalities: CARDINALITY_SINGLE = "1" | CARDINALITY_MULTIPLE = "+";
 	
+
 	
 Property:
-	'<property' {Property} (attributes+=PossibleExpression)* 
+	PROPERTY_START_TAG {Property} (attributes+=PossibleExpression)* 
 	(
-		('/>')
+		(XML_TAG_SINGLEEND)
 	|
-		( '>' 	
-			(expressionValue = ExpressionTag)?
-		'</property>'
+		( XML_TAG_END 	
+			(expressionValue += ExpressionTag)*
+		PROPERTY_END_TAG
 		)
 	);
 
+Param returns Param:
+	PARAM_START_TAG {Param} (attributes+=PossibleExpression)* 
+	(
+		(XML_TAG_SINGLEEND)
+	|
+		( XML_TAG_END 	
+			(expressionValue += ExpressionTag)*
+		PARAM_END_TAG
+		)
+	);
+
+MapMethod returns MapMethod:
+	XML_TAG_START mapName = ID '.' methodName= ID (attributes+=PossibleExpression)* 
+	(
+		(XML_TAG_SINGLEEND)
+	|
+		( XML_TAG_END 
+			(CDATA)*
+		XML_START_ENDTAG methodClosingName = ID '.' methodClosingMethod = ID XML_TAG_END
+		)
+	);
+	
+Field returns Param:
+	FIELD_START_TAG {Param} (attributes+=PossibleExpression)*  XML_TAG_END
+	(
+	 XML_TAG_SINGLEEND
+	 |
+	 (
+		(expressionValue += ExpressionTag)*
+	 	FIELD_END_TAG
+	 )
+	)
+;
+
+DebugTag returns DebugTag:
+	DEBUG_START_TAG {DebugTag} (attributes+=PossibleExpression)* 
+	(
+		(XML_TAG_SINGLEEND)
+	|
+		( XML_TAG_END 	
+			expression=TopLevel
+		DEBUG_END_TAG
+		)
+	)	
+	;	
+
 ExpressionTag returns ExpressionTag:
-	'<expression>' expression=TopLevel '</expression>'
+	
+	EXPRESSION_START_TAG {ExpressionTag} (attributes+=PossibleExpression)* 
+	(
+		XML_TAG_SINGLEEND
+	|
+		( XML_TAG_END 	
+			expression=TopLevel
+		    EXPRESSION_END_TAG
+		)
+	)	
 	;	
 	

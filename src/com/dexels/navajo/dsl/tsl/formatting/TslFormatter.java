@@ -6,6 +6,8 @@ package com.dexels.navajo.dsl.tsl.formatting;
 import org.eclipse.xtext.formatting.impl.AbstractDeclarativeFormatter;
 import org.eclipse.xtext.formatting.impl.FormattingConfig;
 
+import com.dexels.navajo.dsl.tsl.services.TslGrammarAccess;
+
 /**
  * This class contains custom formatting description.
  * 
@@ -20,8 +22,72 @@ public class TslFormatter extends AbstractDeclarativeFormatter {
 	protected void configureFormatting(FormattingConfig c) {
 // It's usually a good idea to activate the following three statements.
 // They will add and preserve newlines around comments
-//		c.setLinewrap(0, 1, 2).before(getGrammarAccess().getSL_COMMENTRule());
-//		c.setLinewrap(0, 1, 2).before(getGrammarAccess().getML_COMMENTRule());
-//		c.setLinewrap(0, 1, 1).after(getGrammarAccess().getML_COMMENTRule());
+		TslGrammarAccess f = (TslGrammarAccess) getGrammarAccess();
+		c.setNoLinewrap();
+		c.setAutoLinewrap(160);
+
+		c.setSpace(" ").after(f.getMapIdRule());
+		c.setNoSpace().after(f.getAttributeNameRule());
+		c.setNoSpace().after(f.getMapStartRule());
+		c.setNoSpace().after(f.getMAPSTARTKEYWORDRule());
+		c.setNoSpace().after(f.getMAPENDKEYWORDRule());
+		c.setNoSpace().after(f.getDOLLARRule());
+		
+		c.setLinewrap(1).after(f.getXML_TAG_ENDRule());
+		c.setLinewrap(1).after(f.getXML_TAG_SINGLEENDRule());
+		c.setLinewrap(1).before(f.getXML_TAG_STARTRule());
+
+		c.setIndentationIncrement().after(f.getPARAM_START_TAGRule());
+		c.setIndentationDecrement().before(f.getPARAM_END_TAGRule());
+
+		c.setIndentationIncrement().after(f.getPROPERTY_START_TAGRule());
+		c.setIndentationDecrement().before(f.getPROPERTY_END_TAGRule());
+		
+		c.setIndentationIncrement().after(f.getMESSAGE_START_TAGRule());
+		c.setIndentationDecrement().before(f.getMESSAGE_END_TAGRule());
+		c.setIndentationDecrement().before(f.getMapEndRule());
+
+		c.setIndentationDecrement().before(f.getXML_TAG_SINGLEENDRule());
+
+		// 
+//		c.setLinewrap(1).after(f.getXML_TAG_SINGLEENDRule());
+
+//		c.setIndentationIncrement().after(f.getXML_TAG_ENDRule());
+//		
+//		c.setLinewrap(1).after(f.getEXPRESSION_STARTRule());
+		c.setIndentationIncrement().after(f.getEXPRESSION_START_TAGRule());
+		c.setIndentationDecrement().before(f.getEXPRESSION_END_TAGRule());
+//		c.setLinewrap(1).before(f.getEXPRESSION_ENDRule());
+
+		
+//		c.setLinewrap(1).after(f.getPROPERTY_END_TAGRule());
+//		c.setLinewrap(1).after(f.getMESSAGE_END_TAGRule());
+//		c.setLinewrap(1).after(f.getMapEndRule());
+//		c.setLinewrap(1).after(f.getMULTILINETAG_ENDRule());
+//		
+//		c.setLinewrap(1).before(f.getEXPRESSION_ENDRule());
+//		c.setLinewrap(1).after(f.getEXPRESSION_ENDRule());
+
+//		c.setIndentationDecrement().before(f.getNAVASCRIPT_ENDRule());
+//		c.setIndentationDecrement().before(f.getEXPRESSION_ENDRule());
+
+		c.setNoSpace().after(f.getQUOTEQRule());
+		c.setNoSpace().after(f.getPathElementRule());
+		c.setNoSpace().after(f.getFunctionNameRule());
+		c.setNoSpace().after(f.getAttributeNameRule());
+		c.setNoSpace().after(f.getSQBRACKET_OPENRule());
+		c.setNoSpace().after(f.getSQBRACKET_OPENRule());
+		c.setNoSpace().after(f.getTML_EXISTSRule());
+		c.setNoSpace().after(f.getTML_SEPARATORRule());
+		
+		//		c.setNoSpace().after(f.getMap)
+//		c.setLinewrap(1).after(f.findKeywordPairs("<", "/>").);
+		
+//		c.setLinewrap(1).after(f.getMessageRule());
+//		c.setLinewrap(1).after(f.getMessageRule());
+//		c.setLinewrap(1).after(f.getPropertyRule());
+
 	}
+
+
 }
