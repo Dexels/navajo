@@ -85,7 +85,7 @@ public abstract class BaseNavajoServlet extends HttpServlet {
 			extremeEdition = config.getInitParameter("extremeEdition")!=null;
 			configurationPath = config.getInitParameter("configuration");
 
-			if(extremeEdition) {
+			if(extremeEdition || true) {
 				String path;
 				try {
 					path = setupConfigurationPath(config);
@@ -204,6 +204,7 @@ public abstract class BaseNavajoServlet extends HttpServlet {
 		Map<String,String> systemContexts = new HashMap<String, String>();
 		File home = new File(System.getProperty("user.home"));
 		File navajo = new File(home,"navajo.properties");
+		System.err.println("Assuming navajo path: "+navajo.getAbsolutePath());
 		if(!navajo.exists()) {
 			return null;
 		}

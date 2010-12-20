@@ -24,6 +24,14 @@
  */
 package navajolisteners;
 
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+import org.osgi.service.http.HttpContext;
+import org.osgi.service.http.HttpService;
+
+import com.dexels.navajo.server.listener.http.TmlHttpServlet;
+
+
 public class Version extends dexels.Version {
 
 	public static final int MAJOR = 3;
@@ -34,13 +42,28 @@ public class Version extends dexels.Version {
 	public static final String RELEASEDATE = "2006-06-30";
 	
 	//	 Included packages.
-	String [] includes = {"navajo.Version"};
 	
 	public Version() {
+//		javax.mail.Address a;
 		setReleaseDate(RELEASEDATE);
-		addIncludes(includes);
 	}
 	
+	
+	
+	
+	@Override
+	public void start(BundleContext bc) throws Exception {
+		super.start(bc);
+		ServiceReference cc =  bc.getServiceReference(HttpService.class.getName());
+		HttpService h =  (HttpService) bc.getService(cc);
+		System.err.println("h: "+h);
+		HttpContext ccc = h.createDefaultHttpContext();
+h.registerServlet("/Postman", new TmlHttpServlet(), null, ccc);	
+	}
+
+
+
+
 	public int getMajor() {
 		return MAJOR;
 	}
