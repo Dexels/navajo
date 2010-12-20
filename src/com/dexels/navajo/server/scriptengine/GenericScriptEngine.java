@@ -50,6 +50,9 @@ public class GenericScriptEngine extends JavaPlugin {
       ScriptEngineManager sem = new ScriptEngineManager(); //DispatcherFactory.getScriptEngineManager();
       
       ScriptEngine se = sem.getEngineByExtension(extension);
+      if(se==null) {
+			throw new IllegalArgumentException("No engine found, unable to determine script engine type for extension: "+extension);      	
+      }
 		Navajo result = NavajoFactory.getInstance().createNavajo();
 		se.getBindings(ScriptContext.ENGINE_SCOPE).clear();
 		
