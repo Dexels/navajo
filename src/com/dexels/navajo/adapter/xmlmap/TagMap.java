@@ -265,8 +265,12 @@ public class TagMap implements Mappable {
 		return getChildText();
 	}
 
-	public TagMap getChild() throws UserException {
+	public TagMap getChild(boolean createIfNotFound) throws UserException {
 
+		if ( childName == null ) {
+			throw new UserException(-1, "Specify child name first.");
+		}
+		
 		StringTokenizer childList = new StringTokenizer(childName, "/");
 		TagMap child = this;
 
@@ -282,7 +286,7 @@ public class TagMap implements Mappable {
 			}
 			TagMap parent = child;
 			child = (TagMap) child.getChildTag(subChildName, index);
-			if ( child == null ) {
+			if ( child == null && createIfNotFound ) {
 				child = new TagMap();
 				child.setName(subChildName);
 				parent.setChild(child);
@@ -290,6 +294,19 @@ public class TagMap implements Mappable {
 		}
 
 		return child;
+	}
+	
+	public boolean getChildExists() throws UserException {
+		
+		child = getChild(false);		
+		return ( child != null );
+		
+	}
+	
+	public TagMap getChild() throws UserException {
+
+		return getChild(true);
+
 	}
 
 	public TagMap [] getChildren() {
