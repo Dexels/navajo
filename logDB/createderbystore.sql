@@ -41,11 +41,6 @@ parent_access_id varchar(256)
 
 
 );
---	CONSTRAINT NAVAJOACCESS_PK primary key (ACCESS_ID) 
---		using index
-
-
-
 
 DROP TABLE navajomap;
 
