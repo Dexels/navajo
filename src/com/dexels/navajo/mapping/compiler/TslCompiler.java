@@ -31,6 +31,7 @@ import com.dexels.navajo.mapping.compiler.meta.IncludeDependency;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.GenericHandler;
+import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.SystemException;
 
@@ -2549,19 +2550,25 @@ public String mapNode(int ident, Element n) throws Exception {
 	    	if ( MapMetaData.isMetaScript(script, scriptPath, packagePath) ) {
 	    		scriptType = "navascript";
 	    		MapMetaData mmd = MapMetaData.getInstance(configPath);
-				String intermed = mmd.parse(fullScriptPath);
+	    		InputStream metais = DispatcherFactory.getInstance().getNavajoConfig().getScript(packagePath+"/"+script);
+
+	    		String intermed = mmd.parse(fullScriptPath,metais);
+	    		metais.close();
 				is = new ByteArrayInputStream(intermed.getBytes());
 	    	} else {
-	    		is = new FileInputStream(fullScriptPath);
+//	    		is = new FileInputStream(fullScriptPath);
+	    		is = DispatcherFactory.getInstance().getNavajoConfig().getScript(packagePath+"/"+script);
 	    	}
 	    	
-	    	if ( ScriptInheritance.containsInject(fullScriptPath)) {
+	    	InputStream sis = DispatcherFactory.getInstance().getNavajoConfig().getScript(packagePath+script);
+	    	if ( ScriptInheritance.containsInject(sis)) {
 	    		// Inheritance preprocessor before compiling.
 	    		InputStream ais = null;
 	    		ais = ScriptInheritance.inherit(is, scriptPath, inheritedScripts);
 	    		is.close();
 	    		is = ais;
-	    	} 
+	    	}
+	    	sis.close();
 			
 			for (int i = 0; i < inheritedScripts.size(); i++) {
 				addDependency("dependentObjects.add( new InheritDependency( new Long(\"" + 

@@ -323,10 +323,16 @@ public class ScriptInheritance {
 		}
 		return false;
 	}
-	
-	public static boolean containsInject(String scriptPath) throws Exception {
+
+	/**
+	 * Checks the stream for an inject. WARNING: closes the stream
+	 * @param fis
+	 * @return
+	 * @throws Exception
+	 */
+	public static boolean containsInject(InputStream fis) throws Exception {
 		XMLElement e = new CaseSensitiveXMLElement();
-		FileInputStream fis = new FileInputStream(scriptPath);
+//		FileInputStream fis = new FileInputStream(scriptPath);
 		e.parseFromStream(fis);
 		fis.close();
 		

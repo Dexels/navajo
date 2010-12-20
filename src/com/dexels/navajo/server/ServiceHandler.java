@@ -26,6 +26,7 @@ package com.dexels.navajo.server;
  * ====================================================================
  */
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.listeners.NavajoDoneException;
 import com.dexels.navajo.persistence.*;
 
 public abstract class ServiceHandler implements Constructor {
@@ -47,8 +48,9 @@ public abstract class ServiceHandler implements Constructor {
      * @throws NavajoException
      * @throws UserException
      * @throws SystemException
+    * @throws NavajoDoneException 
      */
-    public abstract Navajo doService() throws NavajoException, UserException, SystemException, AuthorizationException;
+    public abstract Navajo doService() throws NavajoException, UserException, SystemException, AuthorizationException, NavajoDoneException;
 
     /**
      *

@@ -346,4 +346,9 @@ public class TestNavajoConfig implements NavajoConfigInterface {
 		return "javascript";
 	}
 
+	public File getContextRoot() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -51,9 +51,13 @@ public class SimpleRepository implements Repository {
 			parseBundle(method, username, inMessage, extraParams, rb);
 
 		} catch (MissingResourceException e) {
-			System.err.println("Can not open resource bundle. No big deal, I guess");
+			System.err.println("Can not open resource bundle in classpath. Looking in adapters now.");
 			try {
 				InputStream stream = config.getResourceBundle("application");
+				if(stream==null) {
+					System.err.println("Also not found, no globals then.");
+					return;
+				}
 				PropertyResourceBundle prb = new PropertyResourceBundle(stream);
 				parseBundle(method, username, inMessage, extraParams, prb);
 

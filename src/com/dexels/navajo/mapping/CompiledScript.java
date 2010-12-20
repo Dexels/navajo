@@ -25,6 +25,7 @@ package com.dexels.navajo.mapping;
  * ====================================================================
  */
 
+import com.dexels.navajo.listeners.NavajoDoneException;
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.mapping.compiler.meta.Dependency;
 import com.dexels.navajo.server.*;
@@ -284,6 +285,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
 				  }
 				  throw e;
 			  } finally {
+				  // TODO Will fail epically with continuations. Just because this thread will die doesn't mean this scirpt is done.
 				  finalBlock(access);
 			  }
 		  }
@@ -408,7 +410,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
   }
 
   public abstract void execute(Access access) throws
-      Exception;
+      Exception, NavajoDoneException;
 
   /**
    * Pool for use of Navajo functions.

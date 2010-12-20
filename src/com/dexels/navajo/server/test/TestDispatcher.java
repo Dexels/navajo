@@ -8,6 +8,7 @@ import java.util.Set;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.listeners.TmlRunnable;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.ClientInfo;
 import com.dexels.navajo.server.ConditionData;
@@ -184,6 +185,21 @@ public class TestDispatcher implements DispatcherInterface {
 	public void setHealth(String resourceId, int h) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public Navajo handle(Navajo inMessage, TmlRunnable initialRunnable, Object userCertificate) throws FatalException {
+		return handle(inMessage,userCertificate);
+	}
+
+	public void finalizeService(Navajo inMessage, Access access, Navajo outMessage, String rpcName, String rpcUser,
+			Throwable myException, String origThreadName, boolean scheduledWebservice, boolean afterWebServiceActivated) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public Navajo generateErrorMessage(Access access, String message, int code, int level, Throwable t) throws FatalException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -35,6 +35,7 @@ import java.util.Set;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.listeners.TmlRunnable;
 import com.dexels.navajo.mapping.CompiledScript;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
@@ -89,19 +90,14 @@ public final class Access implements java.io.Serializable, Mappable {
 	public Binary requestNavajo;
 	public Binary responseNavajo;
 	public boolean debugAll;
+	
+	private String requestUrl;
+
 	// Flag to indicate that during the execution of the webservice, break was called.
 	private boolean breakWasSet = false;
 	
 	private Object scriptEnvironment = null;
 	
-
-	public boolean isBreakWasSet() {
-		return breakWasSet;
-	}
-
-	public void setBreakWasSet(boolean breakWasSet) {
-		this.breakWasSet = breakWasSet;
-	}
 
 	private Throwable myException;
 	private Navajo outputDoc;
@@ -130,6 +126,13 @@ public final class Access implements java.io.Serializable, Mappable {
 
 	private HashMap<Integer, MapStatistics> mapStatistics = null;
 
+	// In order to manage continuations, I might need the original runnable.
+	// This service (and it's Access object) may be used by many different threads during its execution, but only
+	// the original knows how to commit the data and finalize the network connection.
+	protected TmlRunnable originalRunnable;
+
+
+	
 	public MapStatistics createStatistics() {
 		MapStatistics ms = new MapStatistics();
 		if ( mapStatistics == null ) { // First map.
@@ -139,6 +142,16 @@ public final class Access implements java.io.Serializable, Mappable {
 		mapStatistics.put(count, ms);
 
 		return ms;
+	}
+
+	
+
+	public boolean isBreakWasSet() {
+		return breakWasSet;
+	}
+
+	public void setBreakWasSet(boolean breakWasSet) {
+		this.breakWasSet = breakWasSet;
 	}
 
 	public void updateStatistics(MapStatistics ms, int levelId, String mapName, long totalTime, int elementCount, boolean isArrayElement) {
@@ -320,8 +333,7 @@ public final class Access implements java.io.Serializable, Mappable {
 			boolean betaUser, Object certificate) {
 
 		
-		myThread = Thread.currentThread();
-		
+		this();
 		synchronized (mutex) {
 			accessCount++;
 			this.accessID = created.getTime() + "-" + accessCount;
@@ -349,9 +361,7 @@ public final class Access implements java.io.Serializable, Mappable {
 			String rpcName, String userAgent, String ipAddress,
 			String hostName, Object certificate) {
 
-		
-		myThread = Thread.currentThread();
-		
+		this();
 		synchronized (mutex) {
 			accessCount++;
 			this.accessID = created.getTime() + "-" + accessCount;
@@ -411,7 +421,7 @@ public final class Access implements java.io.Serializable, Mappable {
 		a.consoleOutput = this.consoleOutput;
 		a.consoleContent = this.consoleContent;
 		a.parentAccessId = this.parentAccessId;
-		
+		a.debugAll = this.debugAll;
 		return a;
 	}
 	/**
@@ -762,5 +772,31 @@ public final class Access implements java.io.Serializable, Mappable {
 	public Object getScriptEnvironment() {
 		return this.scriptEnvironment;
 	}
+
 	
+	public String getRequestUrl() {
+		if(requestUrl==null) {
+			String hardCoded = "http://spiritus.dexels.nl:9080/JsSportlink/Comet";
+			System.err.println("\n\n\nWARNING HARDCODED URL:"+hardCoded+"!!!!\n\n");
+			return hardCoded;
+		}
+		return requestUrl;
+	}
+
+	public void setRequestUrl(String requestUrl) {
+		this.requestUrl = requestUrl;
+	}
+
+
+
+	public TmlRunnable getOriginalRunnable() {
+		return originalRunnable;
+	}
+
+
+
+	public void setOriginalRunnable(TmlRunnable originalRunnable) {
+		this.originalRunnable = originalRunnable;
+	}
+
 }

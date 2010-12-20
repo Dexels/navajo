@@ -25,9 +25,14 @@ public final class Expression {
 
         Object aap = null;
 
-        if (clause.trim().equals(""))
+        if (clause.trim().equals("")) {
           return new Operand(null, "", "");
-
+        }
+        if(clause.startsWith("=") && clause.endsWith(";")) {
+      	  
+      	  clause = clause.substring(1, clause.length()-1);
+      	  System.err.println("New style expression. Trimmed: "+clause);
+        }
         try {
 
           TMLParser parser = null;

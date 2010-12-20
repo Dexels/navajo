@@ -1,6 +1,7 @@
 package com.dexels.navajo.listeners;
 
 import java.io.IOException;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import com.dexels.navajo.document.Navajo;
 
@@ -28,6 +29,7 @@ public interface Scheduler {
 
 	/**
 	 * The runner object is complete, so we can schedule it now.
+	 * TODO Huh? Why an IO exception?
 	 * @param myRunner
 	 * @throws IOException 
 	 */
@@ -58,4 +60,10 @@ public interface Scheduler {
 	
 	public void shutdownScheduler();
 	
+	/**
+	 * To schedule 'other' runnable that need to be executed, you can use this pool.
+	 * Right now, I use it for the non-blocking HTTP client.
+	 * @return
+	 */
+	public ThreadPoolExecutor getGenericPool();
 }
