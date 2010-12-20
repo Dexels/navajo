@@ -22,6 +22,10 @@ TopLevel returns TopLevel:
 
  
 //terminal INT returns ecore::EString: ('0'..'9')+;
+terminal XML_GT: '&gt;';
+terminal XML_LT: '&lt;';
+terminal XML_GTEQ: '&gt;=';
+terminal XML_LTEQ: '&lt;=';
 
 terminal INT returns ecore::EInt: ('0'..'9')+;
 terminal ML_COMMENT	: '/*' -> '*/';
@@ -30,12 +34,29 @@ terminal SL_COMMENT 	: '//' !('\n'|'\r')* ('\r'? '\n')?;
 terminal WS			: (' '|'\t'|'\r'|'\n')+;
 terminal ID  		: '^'?('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
 	
+terminal AT: '@';	
 
 
 
 terminal LITERALSTRING returns ecore::EString: 
 			"'" ( '\\' ('b'|'t'|'n'|'f'|'r'|'"'|"'"|'\\') | !('\\'|"'") )* "'"
 	;
+	
+
+terminal SQBRACKET_OPEN:
+	'[';
+	
+terminal SQBRACKET_CLOSE:
+	']';
+
+terminal TML_SEPARATOR:
+	'/';
+
+terminal TML_EXISTS:
+	'?';
+	
+terminal DOLLAR:
+	'$';
 	
 
 // skipped url, image, points, datepattern, password
@@ -50,15 +71,15 @@ PathElement returns ecore::EString:
 	
 	
 TmlExpression returns TmlReference:
-	'[' (absolute?='/')? elements+=PathElement ('/' elements+=PathElement)* ']'
+	SQBRACKET_OPEN (absolute?=TML_SEPARATOR)? (param?=AT)? elements+=PathElement (TML_SEPARATOR elements+=PathElement)* SQBRACKET_CLOSE
 ;
 
 ExistsTmlExpression returns ExistsTmlReference: 
-	'?' '[' (absolute?='/')? elements+=PathElement ('/' elements+=PathElement)* ']'
+	TML_EXISTS SQBRACKET_OPEN (absolute?=TML_SEPARATOR)? (param?=AT)? elements+=PathElement (TML_SEPARATOR elements+=PathElement)* SQBRACKET_CLOSE
 ;
 
 MapGetReference returns MapGetReference: 
-	operations+='$' elements+=PathElement ('/' elements+=PathElement)* 
+	operations+=DOLLAR elements+=PathElement (TML_SEPARATOR elements+=PathElement)* 
 ;
    
 OrExpression returns Expression:
@@ -69,19 +90,19 @@ AndExpression returns Expression:
      ;  
 
 EqualityExpression returns Expression: 
-     parameters+=AdditiveExpression ((operations+='==' parameters+=AdditiveExpression) | (operations+='!=' parameters+=AdditiveExpression))?
+     parameters+=RelationalExpression ((operations+='==' parameters+=RelationalExpression) | (operations+='!=' parameters+=RelationalExpression))?
 ;     
   
 // Skipped for now. Trouble with overloaded '<' stuff  
-//RelationalExpression returns Expression: 
-//   {Expression} operands+=AdditiveExpression ((op='&lt;' operands+=AdditiveExpression)|(op='&gt;' operands+=AdditiveExpression)|(op='&lt;=' operands+=AdditiveExpression)|(op='&gt;=' operands+=AdditiveExpression))?
-//    ;
+RelationalExpression returns Expression: 
+   {Expression} parameters+=AdditiveExpression ((operations+=XML_LT parameters+=AdditiveExpression)|(operations+=XML_GT parameters+=AdditiveExpression)|(operations+=XML_LTEQ parameters+=AdditiveExpression)|(operations+=XML_GTEQ parameters+=AdditiveExpression))?
+    ;
 AdditiveExpression returns Expression:
       parameters+=MultiplicativeExpression (('+' parameters+=MultiplicativeExpression ) | ('-' parameters+=MultiplicativeExpression))*
 	;
 	
 MultiplicativeExpression returns Expression: 
-      parameters+=UnaryExpression ((operations+='*' parameters+=UnaryExpression ) |  (operations+='/' parameters+=UnaryExpression ))*
+      parameters+=UnaryExpression ((operations+='*' parameters+=UnaryExpression ) |  (operations+=TML_SEPARATOR parameters+=UnaryExpression ))*
 	;
 	
 UnaryExpression returns Expression:

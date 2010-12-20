@@ -8,7 +8,7 @@ var grammarURI = "classpath:/com/dexels/navajo/dsl/expression/NavajoExpression.x
 var file.extensions = "exr"
 var projectName = "com.dexels.navajo.dsl.expression"
 var runtimeProject = "../${projectName}"
-
+var aap
 Workflow {
 
     bean = StandaloneSetup {
@@ -29,6 +29,7 @@ Workflow {
 		pathUiProject = "${runtimeProject}.ui"
 		projectNameRt = projectName
 		projectNameUi = "${projectName}.ui"
+
 		language = {
 			uri = grammarURI
 			fileExtensions = file.extensions
