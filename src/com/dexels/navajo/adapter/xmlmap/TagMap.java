@@ -274,7 +274,7 @@ public class TagMap implements Mappable {
 		StringTokenizer childList = new StringTokenizer(childName, "/");
 		TagMap child = this;
 
-		while (childList.hasMoreTokens()) {
+		while (childList.hasMoreTokens() && child != null) {
 			String subChildName = childList.nextToken();
 			StringTokenizer indexSpecifier = new StringTokenizer(subChildName, "@");
 			int index = 0;
@@ -285,7 +285,9 @@ public class TagMap implements Mappable {
 				index = Integer.parseInt(indexSpecifier.nextToken());
 			}
 			TagMap parent = child;
-			child = (TagMap) child.getChildTag(subChildName, index);
+			if ( child != null ) {
+				child = (TagMap) child.getChildTag(subChildName, index);
+			}
 			if ( child == null && createIfNotFound ) {
 				child = new TagMap();
 				child.setName(subChildName);
