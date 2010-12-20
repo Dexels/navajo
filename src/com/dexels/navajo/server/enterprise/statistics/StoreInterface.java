@@ -35,6 +35,7 @@ public interface StoreInterface {
   /**
    * Method to store an access object in the (persistent) Navajo store.
    *
+   *It doesn't seem to be used. Is it deprecated?
    * @param a
    */
   public void storeAccess(final Access a, final AsyncMappable am);
