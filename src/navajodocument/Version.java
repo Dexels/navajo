@@ -70,46 +70,6 @@ package navajodocument;
  */
 public class Version extends dexels.Version {
 
-	public static final int MAJOR          = 9;
-	public static final int MINOR          = 2;
-	public static final int PATCHLEVEL     = 0;
-	public static final String VENDOR      = "Dexels";
-	public static final String PRODUCTNAME = "Navajo Document";
-	private static final String REL = "2010-01-21";
 
-	// Included packages.
 
-	public Version() {
-		setReleaseDate(REL);
-		String name = System.getProperty("com.dexels.navajo.DocumentImplementation");
-		if (name == null || name.equals("com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl"))
-			setSpecialVersion("JAXPIMPL");
-		else
-			setSpecialVersion("NANOIMPL");
-	}
-
-	public int getMajor() {
-		return MAJOR;
-	}
-
-	public int getMinor() {
-		return MINOR;
-	}
-
-	public int getPatchLevel() {
-		return PATCHLEVEL;
-	}
-
-	public String getVendor() {
-		return VENDOR;
-	}
-
-	public String getProductName() {
-		return PRODUCTNAME;
-	}
-
-	public static void main(String [] args) {
-		Version v = new Version();
-		System.err.println(v.toString());
-	}
 }
