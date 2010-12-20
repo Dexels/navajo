@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Set;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.listeners.TmlRunnable;
 import com.dexels.navajo.server.resource.ResourceManager;
 
 public interface DispatcherInterface extends ResourceManager {
@@ -13,10 +14,13 @@ public interface DispatcherInterface extends ResourceManager {
 	 * Methods to handle Navajo services.
 	 */
 	public Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo clientInfo) throws FatalException;
-	public Navajo handle(Navajo inMessage, Object userCertificate) throws FatalException;
+	public Navajo handle(Navajo inMessage, TmlRunnable initialRunnable, Object userCertificate) throws FatalException;
 	public Navajo handle(Navajo inMessage, boolean skipAuth) throws FatalException;
 	public Navajo handle(Navajo inMessage) throws FatalException;
 	
+	public void finalizeService(Navajo inMessage, Access access, Navajo outMessage, String rpcName, String rpcUser,		Throwable myException, String origThreadName, boolean scheduledWebservice, boolean afterWebServiceActivated);
+
+
 	/**
 	 * Special method to remove internal Server messages.
 	 * 
@@ -92,5 +96,7 @@ public interface DispatcherInterface extends ResourceManager {
 	public  String getProduct();
 	public  String getEdition();
 	
+	
+	  public  Navajo generateErrorMessage(Access access, String message, int code, int level, Throwable t) throws FatalException;
 	
 }
