@@ -123,6 +123,7 @@ public class ExpressionSwitch<T> {
 			case ExpressionPackage.EXISTS_TML_REFERENCE: {
 				ExistsTmlReference existsTmlReference = (ExistsTmlReference)theEObject;
 				T result = caseExistsTmlReference(existsTmlReference);
+				if (result == null) result = caseTmlReference(existsTmlReference);
 				if (result == null) result = caseExpression(existsTmlReference);
 				if (result == null) result = defaultCase(theEObject);
 				return result;

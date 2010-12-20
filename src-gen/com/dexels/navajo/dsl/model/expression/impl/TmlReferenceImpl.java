@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
  * <ul>
  *   <li>{@link com.dexels.navajo.dsl.model.expression.impl.TmlReferenceImpl#getPathElements <em>Path Elements</em>}</li>
  *   <li>{@link com.dexels.navajo.dsl.model.expression.impl.TmlReferenceImpl#isAbsolute <em>Absolute</em>}</li>
+ *   <li>{@link com.dexels.navajo.dsl.model.expression.impl.TmlReferenceImpl#isParam <em>Param</em>}</li>
  * </ul>
  * </p>
  *
@@ -65,6 +66,26 @@ public class TmlReferenceImpl extends ExpressionImpl implements TmlReference {
 	 * @ordered
 	 */
 	protected boolean absolute = ABSOLUTE_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isParam() <em>Param</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isParam()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean PARAM_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isParam() <em>Param</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isParam()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean param = PARAM_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -123,6 +144,27 @@ public class TmlReferenceImpl extends ExpressionImpl implements TmlReference {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isParam() {
+		return param;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setParam(boolean newParam) {
+		boolean oldParam = param;
+		param = newParam;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ExpressionPackage.TML_REFERENCE__PARAM, oldParam, param));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -130,6 +172,8 @@ public class TmlReferenceImpl extends ExpressionImpl implements TmlReference {
 				return getPathElements();
 			case ExpressionPackage.TML_REFERENCE__ABSOLUTE:
 				return isAbsolute();
+			case ExpressionPackage.TML_REFERENCE__PARAM:
+				return isParam();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -150,6 +194,9 @@ public class TmlReferenceImpl extends ExpressionImpl implements TmlReference {
 			case ExpressionPackage.TML_REFERENCE__ABSOLUTE:
 				setAbsolute((Boolean)newValue);
 				return;
+			case ExpressionPackage.TML_REFERENCE__PARAM:
+				setParam((Boolean)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -168,6 +215,9 @@ public class TmlReferenceImpl extends ExpressionImpl implements TmlReference {
 			case ExpressionPackage.TML_REFERENCE__ABSOLUTE:
 				setAbsolute(ABSOLUTE_EDEFAULT);
 				return;
+			case ExpressionPackage.TML_REFERENCE__PARAM:
+				setParam(PARAM_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -184,6 +234,8 @@ public class TmlReferenceImpl extends ExpressionImpl implements TmlReference {
 				return pathElements != null && !pathElements.isEmpty();
 			case ExpressionPackage.TML_REFERENCE__ABSOLUTE:
 				return absolute != ABSOLUTE_EDEFAULT;
+			case ExpressionPackage.TML_REFERENCE__PARAM:
+				return param != PARAM_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -202,6 +254,8 @@ public class TmlReferenceImpl extends ExpressionImpl implements TmlReference {
 		result.append(pathElements);
 		result.append(", absolute: ");
 		result.append(absolute);
+		result.append(", param: ");
+		result.append(param);
 		result.append(')');
 		return result.toString();
 	}

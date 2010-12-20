@@ -341,26 +341,17 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getTmlReference_Param() {
+		return (EAttribute)tmlReferenceEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getExistsTmlReference() {
 		return existsTmlReferenceEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getExistsTmlReference_PathElements() {
-		return (EAttribute)existsTmlReferenceEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getExistsTmlReference_Absolute() {
-		return (EAttribute)existsTmlReferenceEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -469,10 +460,9 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 		tmlReferenceEClass = createEClass(TML_REFERENCE);
 		createEAttribute(tmlReferenceEClass, TML_REFERENCE__PATH_ELEMENTS);
 		createEAttribute(tmlReferenceEClass, TML_REFERENCE__ABSOLUTE);
+		createEAttribute(tmlReferenceEClass, TML_REFERENCE__PARAM);
 
 		existsTmlReferenceEClass = createEClass(EXISTS_TML_REFERENCE);
-		createEAttribute(existsTmlReferenceEClass, EXISTS_TML_REFERENCE__PATH_ELEMENTS);
-		createEAttribute(existsTmlReferenceEClass, EXISTS_TML_REFERENCE__ABSOLUTE);
 
 		functionOperandsEClass = createEClass(FUNCTION_OPERANDS);
 		createEReference(functionOperandsEClass, FUNCTION_OPERANDS__PARAM_LIST);
@@ -515,7 +505,7 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 		functionCallEClass.getESuperTypes().add(this.getExpression());
 		mapGetReferenceEClass.getESuperTypes().add(this.getExpression());
 		tmlReferenceEClass.getESuperTypes().add(this.getExpression());
-		existsTmlReferenceEClass.getESuperTypes().add(this.getExpression());
+		existsTmlReferenceEClass.getESuperTypes().add(this.getTmlReference());
 		functionOperandsEClass.getESuperTypes().add(this.getExpression());
 		operationEClass.getESuperTypes().add(this.getExpression());
 
@@ -544,10 +534,9 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 		initEClass(tmlReferenceEClass, TmlReference.class, "TmlReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTmlReference_PathElements(), ecorePackage.getEString(), "pathElements", null, 0, -1, TmlReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTmlReference_Absolute(), ecorePackage.getEBoolean(), "absolute", null, 0, 1, TmlReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTmlReference_Param(), ecorePackage.getEBoolean(), "param", null, 0, 1, TmlReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(existsTmlReferenceEClass, ExistsTmlReference.class, "ExistsTmlReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getExistsTmlReference_PathElements(), ecorePackage.getEString(), "pathElements", null, 0, -1, ExistsTmlReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getExistsTmlReference_Absolute(), ecorePackage.getEBoolean(), "absolute", null, 0, 1, ExistsTmlReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(functionOperandsEClass, FunctionOperands.class, "FunctionOperands", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getFunctionOperands_ParamList(), this.getExpression(), null, "paramList", null, 0, -1, FunctionOperands.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

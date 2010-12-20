@@ -524,13 +524,22 @@ public interface ExpressionPackage extends EPackage {
 	int TML_REFERENCE__ABSOLUTE = EXPRESSION_FEATURE_COUNT + 1;
 
 	/**
+	 * The feature id for the '<em><b>Param</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TML_REFERENCE__PARAM = EXPRESSION_FEATURE_COUNT + 2;
+
+	/**
 	 * The number of structural features of the '<em>Tml Reference</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TML_REFERENCE_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
+	int TML_REFERENCE_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 3;
 
 	/**
 	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.expression.impl.ExistsTmlReferenceImpl <em>Exists Tml Reference</em>}' class.
@@ -549,7 +558,7 @@ public interface ExpressionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXISTS_TML_REFERENCE__PARENT = EXPRESSION__PARENT;
+	int EXISTS_TML_REFERENCE__PARENT = TML_REFERENCE__PARENT;
 
 	/**
 	 * The feature id for the '<em><b>Parameters</b></em>' containment reference list.
@@ -558,7 +567,7 @@ public interface ExpressionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXISTS_TML_REFERENCE__PARAMETERS = EXPRESSION__PARAMETERS;
+	int EXISTS_TML_REFERENCE__PARAMETERS = TML_REFERENCE__PARAMETERS;
 
 	/**
 	 * The feature id for the '<em><b>Operations</b></em>' attribute list.
@@ -567,7 +576,7 @@ public interface ExpressionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXISTS_TML_REFERENCE__OPERATIONS = EXPRESSION__OPERATIONS;
+	int EXISTS_TML_REFERENCE__OPERATIONS = TML_REFERENCE__OPERATIONS;
 
 	/**
 	 * The feature id for the '<em><b>Elements</b></em>' attribute list.
@@ -576,7 +585,7 @@ public interface ExpressionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXISTS_TML_REFERENCE__ELEMENTS = EXPRESSION__ELEMENTS;
+	int EXISTS_TML_REFERENCE__ELEMENTS = TML_REFERENCE__ELEMENTS;
 
 	/**
 	 * The feature id for the '<em><b>Subliteral</b></em>' reference list.
@@ -585,7 +594,7 @@ public interface ExpressionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXISTS_TML_REFERENCE__SUBLITERAL = EXPRESSION__SUBLITERAL;
+	int EXISTS_TML_REFERENCE__SUBLITERAL = TML_REFERENCE__SUBLITERAL;
 
 	/**
 	 * The feature id for the '<em><b>Value String</b></em>' attribute.
@@ -594,7 +603,7 @@ public interface ExpressionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXISTS_TML_REFERENCE__VALUE_STRING = EXPRESSION__VALUE_STRING;
+	int EXISTS_TML_REFERENCE__VALUE_STRING = TML_REFERENCE__VALUE_STRING;
 
 	/**
 	 * The feature id for the '<em><b>Expression Type</b></em>' attribute.
@@ -603,7 +612,7 @@ public interface ExpressionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXISTS_TML_REFERENCE__EXPRESSION_TYPE = EXPRESSION__EXPRESSION_TYPE;
+	int EXISTS_TML_REFERENCE__EXPRESSION_TYPE = TML_REFERENCE__EXPRESSION_TYPE;
 
 	/**
 	 * The feature id for the '<em><b>Path Sequence</b></em>' reference.
@@ -612,7 +621,7 @@ public interface ExpressionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXISTS_TML_REFERENCE__PATH_SEQUENCE = EXPRESSION__PATH_SEQUENCE;
+	int EXISTS_TML_REFERENCE__PATH_SEQUENCE = TML_REFERENCE__PATH_SEQUENCE;
 
 	/**
 	 * The feature id for the '<em><b>Exists Path Sequence</b></em>' reference.
@@ -621,7 +630,7 @@ public interface ExpressionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXISTS_TML_REFERENCE__EXISTS_PATH_SEQUENCE = EXPRESSION__EXISTS_PATH_SEQUENCE;
+	int EXISTS_TML_REFERENCE__EXISTS_PATH_SEQUENCE = TML_REFERENCE__EXISTS_PATH_SEQUENCE;
 
 	/**
 	 * The feature id for the '<em><b>Path Elements</b></em>' attribute list.
@@ -630,7 +639,7 @@ public interface ExpressionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXISTS_TML_REFERENCE__PATH_ELEMENTS = EXPRESSION_FEATURE_COUNT + 0;
+	int EXISTS_TML_REFERENCE__PATH_ELEMENTS = TML_REFERENCE__PATH_ELEMENTS;
 
 	/**
 	 * The feature id for the '<em><b>Absolute</b></em>' attribute.
@@ -639,7 +648,16 @@ public interface ExpressionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXISTS_TML_REFERENCE__ABSOLUTE = EXPRESSION_FEATURE_COUNT + 1;
+	int EXISTS_TML_REFERENCE__ABSOLUTE = TML_REFERENCE__ABSOLUTE;
+
+	/**
+	 * The feature id for the '<em><b>Param</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXISTS_TML_REFERENCE__PARAM = TML_REFERENCE__PARAM;
 
 	/**
 	 * The number of structural features of the '<em>Exists Tml Reference</em>' class.
@@ -648,7 +666,7 @@ public interface ExpressionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXISTS_TML_REFERENCE_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
+	int EXISTS_TML_REFERENCE_FEATURE_COUNT = TML_REFERENCE_FEATURE_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.expression.impl.FunctionOperandsImpl <em>Function Operands</em>}' class.
@@ -1113,6 +1131,17 @@ public interface ExpressionPackage extends EPackage {
 	EAttribute getTmlReference_Absolute();
 
 	/**
+	 * Returns the meta object for the attribute '{@link com.dexels.navajo.dsl.model.expression.TmlReference#isParam <em>Param</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Param</em>'.
+	 * @see com.dexels.navajo.dsl.model.expression.TmlReference#isParam()
+	 * @see #getTmlReference()
+	 * @generated
+	 */
+	EAttribute getTmlReference_Param();
+
+	/**
 	 * Returns the meta object for class '{@link com.dexels.navajo.dsl.model.expression.ExistsTmlReference <em>Exists Tml Reference</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1121,28 +1150,6 @@ public interface ExpressionPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getExistsTmlReference();
-
-	/**
-	 * Returns the meta object for the attribute list '{@link com.dexels.navajo.dsl.model.expression.ExistsTmlReference#getPathElements <em>Path Elements</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Path Elements</em>'.
-	 * @see com.dexels.navajo.dsl.model.expression.ExistsTmlReference#getPathElements()
-	 * @see #getExistsTmlReference()
-	 * @generated
-	 */
-	EAttribute getExistsTmlReference_PathElements();
-
-	/**
-	 * Returns the meta object for the attribute '{@link com.dexels.navajo.dsl.model.expression.ExistsTmlReference#isAbsolute <em>Absolute</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Absolute</em>'.
-	 * @see com.dexels.navajo.dsl.model.expression.ExistsTmlReference#isAbsolute()
-	 * @see #getExistsTmlReference()
-	 * @generated
-	 */
-	EAttribute getExistsTmlReference_Absolute();
 
 	/**
 	 * Returns the meta object for class '{@link com.dexels.navajo.dsl.model.expression.FunctionOperands <em>Function Operands</em>}'.
@@ -1400,6 +1407,14 @@ public interface ExpressionPackage extends EPackage {
 		EAttribute TML_REFERENCE__ABSOLUTE = eINSTANCE.getTmlReference_Absolute();
 
 		/**
+		 * The meta object literal for the '<em><b>Param</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TML_REFERENCE__PARAM = eINSTANCE.getTmlReference_Param();
+
+		/**
 		 * The meta object literal for the '{@link com.dexels.navajo.dsl.model.expression.impl.ExistsTmlReferenceImpl <em>Exists Tml Reference</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1408,22 +1423,6 @@ public interface ExpressionPackage extends EPackage {
 		 * @generated
 		 */
 		EClass EXISTS_TML_REFERENCE = eINSTANCE.getExistsTmlReference();
-
-		/**
-		 * The meta object literal for the '<em><b>Path Elements</b></em>' attribute list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EXISTS_TML_REFERENCE__PATH_ELEMENTS = eINSTANCE.getExistsTmlReference_PathElements();
-
-		/**
-		 * The meta object literal for the '<em><b>Absolute</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EXISTS_TML_REFERENCE__ABSOLUTE = eINSTANCE.getExistsTmlReference_Absolute();
 
 		/**
 		 * The meta object literal for the '{@link com.dexels.navajo.dsl.model.expression.impl.FunctionOperandsImpl <em>Function Operands</em>}' class.

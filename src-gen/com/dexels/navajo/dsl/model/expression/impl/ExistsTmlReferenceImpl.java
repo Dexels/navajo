@@ -26,46 +26,11 @@ import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
  * An implementation of the model object '<em><b>Exists Tml Reference</b></em>'.
  * <!-- end-user-doc -->
  * <p>
- * The following features are implemented:
- * <ul>
- *   <li>{@link com.dexels.navajo.dsl.model.expression.impl.ExistsTmlReferenceImpl#getPathElements <em>Path Elements</em>}</li>
- *   <li>{@link com.dexels.navajo.dsl.model.expression.impl.ExistsTmlReferenceImpl#isAbsolute <em>Absolute</em>}</li>
- * </ul>
  * </p>
  *
  * @generated
  */
-public class ExistsTmlReferenceImpl extends ExpressionImpl implements ExistsTmlReference {
-	/**
-	 * The cached value of the '{@link #getPathElements() <em>Path Elements</em>}' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getPathElements()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<String> pathElements;
-
-	/**
-	 * The default value of the '{@link #isAbsolute() <em>Absolute</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isAbsolute()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final boolean ABSOLUTE_EDEFAULT = false;
-
-	/**
-	 * The cached value of the '{@link #isAbsolute() <em>Absolute</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isAbsolute()
-	 * @generated
-	 * @ordered
-	 */
-	protected boolean absolute = ABSOLUTE_EDEFAULT;
-
+public class ExistsTmlReferenceImpl extends TmlReferenceImpl implements ExistsTmlReference {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -83,127 +48,6 @@ public class ExistsTmlReferenceImpl extends ExpressionImpl implements ExistsTmlR
 	@Override
 	protected EClass eStaticClass() {
 		return ExpressionPackage.Literals.EXISTS_TML_REFERENCE;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EList<String> getPathElements() {
-		if (pathElements == null) {
-			pathElements = new EDataTypeUniqueEList<String>(String.class, this, ExpressionPackage.EXISTS_TML_REFERENCE__PATH_ELEMENTS);
-		}
-		return pathElements;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public boolean isAbsolute() {
-		return absolute;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setAbsolute(boolean newAbsolute) {
-		boolean oldAbsolute = absolute;
-		absolute = newAbsolute;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ExpressionPackage.EXISTS_TML_REFERENCE__ABSOLUTE, oldAbsolute, absolute));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case ExpressionPackage.EXISTS_TML_REFERENCE__PATH_ELEMENTS:
-				return getPathElements();
-			case ExpressionPackage.EXISTS_TML_REFERENCE__ABSOLUTE:
-				return isAbsolute();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case ExpressionPackage.EXISTS_TML_REFERENCE__PATH_ELEMENTS:
-				getPathElements().clear();
-				getPathElements().addAll((Collection<? extends String>)newValue);
-				return;
-			case ExpressionPackage.EXISTS_TML_REFERENCE__ABSOLUTE:
-				setAbsolute((Boolean)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void eUnset(int featureID) {
-		switch (featureID) {
-			case ExpressionPackage.EXISTS_TML_REFERENCE__PATH_ELEMENTS:
-				getPathElements().clear();
-				return;
-			case ExpressionPackage.EXISTS_TML_REFERENCE__ABSOLUTE:
-				setAbsolute(ABSOLUTE_EDEFAULT);
-				return;
-		}
-		super.eUnset(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case ExpressionPackage.EXISTS_TML_REFERENCE__PATH_ELEMENTS:
-				return pathElements != null && !pathElements.isEmpty();
-			case ExpressionPackage.EXISTS_TML_REFERENCE__ABSOLUTE:
-				return absolute != ABSOLUTE_EDEFAULT;
-		}
-		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (pathElements: ");
-		result.append(pathElements);
-		result.append(", absolute: ");
-		result.append(absolute);
-		result.append(')');
-		return result.toString();
 	}
 
 } //ExistsTmlReferenceImpl
