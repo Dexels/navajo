@@ -26,16 +26,18 @@ import com.dexels.navajo.dsl.model.tsl.Map;
 import com.dexels.navajo.dsl.model.tsl.Message;
 import com.dexels.navajo.dsl.model.tsl.PossibleExpression;
 import com.dexels.navajo.dsl.model.tsl.Property;
+import com.dexels.navajo.dsl.model.tsl.Tml;
 /**
  * see http://www.eclipse.org/Xtext/documentation/latest/xtext.html#contentAssist on how to customize content assistant
  */
 public class TslProposalProvider extends AbstractTslProposalProvider {
 
 //	private static final String[] MESSAGE_ATTRIBUTES = new String[]{"name","type","filter"};
-	private static final String[] PROPERTY_ATTRIBUTES = new String[]{"name","type","length","cardinality","value","description","subtype"};
+//	private static final String[] PROPERTY_ATTRIBUTES = new String[]{"name","type","length","cardinality","value","description","subtype"};
 
 	private final java.util.Map<String,java.util.Map<String,List<String>>> proposalRepository = new HashMap<String, java.util.Map<String,List<String>>>();
 	private final java.util.Map<String,List<String>> typeProposalRegistry = new HashMap<String, List<String>>();
+
 	public TslProposalProvider() {
 		initializeProposalBundle();
 		initializeTypeBundle();
@@ -45,13 +47,10 @@ public class TslProposalProvider extends AbstractTslProposalProvider {
 		ResourceBundle rb = ResourceBundle.getBundle("com/dexels/navajo/dsl/tsl/ui/contentassist/proposals");
 		Set<String> keys = rb.keySet();
 		for (String key : keys) {
-			System.err.println("key:" + key);
 			String[] vla = key.split("/");
 			String classification = vla[0];
 			String[] entry = vla[1].split("\\.");
 			String vl = entry[0];
-			System.err.println("Classification: "+classification);
-			System.err.println("Entry: "+vl);
 
 			java.util.Map<String,List<String>> classEntry = proposalRepository.get(classification);
 			if(classEntry==null) {
@@ -64,17 +63,14 @@ public class TslProposalProvider extends AbstractTslProposalProvider {
 				classEntry.put(vl, proposals);
 			}
 			String value = rb.getString(key);
-			System.err.println(">>>>VALLL:"+value);
 			proposals.add(value);
 		}
-		System.err.println("Propo:\n"+proposalRepository);
 	}
 	
 	private void initializeTypeBundle() {
 		ResourceBundle rb = ResourceBundle.getBundle("com/dexels/navajo/dsl/tsl/ui/contentassist/typeproposals");
 		Set<String> keys = rb.keySet();
 		for (String key : keys) {
-			System.err.println("key:" + key);
 			String[] vla = key.split("\\.");
 			String type = vla[0];
 			List<String> proposals = typeProposalRegistry.get(type);
@@ -101,7 +97,14 @@ public class TslProposalProvider extends AbstractTslProposalProvider {
 	@Override
 	public void complete_Message(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
 		super.complete_Message(model, ruleCall, context, acceptor);
-		ICompletionProposal completionProposal = createCompletionProposal("<message name=\"<aap>\"/>", "Message simple", null, context);
+		String selected = context.getSelectedText();
+		if(selected==null) {
+			selected="messagename";
+		}
+		ICompletionProposal completionProposal = createCompletionProposal("<message name=\""+selected+"\">\n</message>", "Message with name: "+selected, null, context);
+		acceptor.accept(completionProposal);
+		completionProposal = createCompletionProposal("<message name=\""+selected+"\" type=\"array\">\n</message>", "Array message with name: "+selected, null, context);
+
 		acceptor.accept(completionProposal);
 	}
 
@@ -118,19 +121,103 @@ public class TslProposalProvider extends AbstractTslProposalProvider {
 		}
 	}
 
+	
+	
+	@Override
+	public void completePossibleExpression_Key(EObject model,
+			Assignment assignment, ContentAssistContext context,
+			ICompletionProposalAcceptor acceptor) {
+		super.completePossibleExpression_Key(model, assignment, context, acceptor);
+		System.err.println("I am a: "+model);
+		System.err.println("My parent is a : "+model.eContainer());
+
+			Set<String> possibilities = null;
+			if(model instanceof Property) {
+				possibilities = getPropertyKeys("property");
+			}
+
+			if(model instanceof Message) {
+				possibilities = getPropertyKeys("message");
+			}
+
+			if(model instanceof Tml) {
+				possibilities = getPropertyKeys("navascript");
+			}
+			if(possibilities!=null) {
+				for (String adapterProposal : possibilities) {
+					ICompletionProposal completionProposal = createCompletionProposal(adapterProposal+"=\"\"", adapterProposal, null, context);
+					acceptor.accept(completionProposal);
+				}
+			}
+
+	}
+
+	@Override
+	public void complete_ATTRIBUTESTRING(EObject model, RuleCall ruleCall,
+			ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+
+		super.complete_ATTRIBUTESTRING(model, ruleCall, context, acceptor);
+		System.err.println("I am a: "+model);
+		System.err.println("My parent is a : "+model.eContainer());
+		if(model instanceof PossibleExpression ) {
+			PossibleExpression expr = (PossibleExpression)model;
+			String myKey = expr.getKey();			
+//			System.err.println("yesyes. Key: "+myKey);
+			List<String> possibilities = null;
+			if(model.eContainer() instanceof Property) {
+				Property p = (Property)model.eContainer();
+				possibilities = getPropertyAttributes(myKey, expr.getValue(),"property");
+			}
+
+			if(model.eContainer() instanceof Message) {
+				Message p = (Message)model.eContainer();
+				possibilities = getPropertyAttributes(myKey, expr.getValue(),"message");
+			}
+
+			if(model.eContainer() instanceof Tml) {
+				Tml p = (Tml)model.eContainer();
+				possibilities = getPropertyAttributes(myKey, expr.getValue(),"navascript");
+			}
+
+			
+//			System.err.println("possi: "+possibilities);
+			if(possibilities!=null) {
+				for (String adapterProposal : possibilities) {
+					ICompletionProposal completionProposal = createCompletionProposal("\""+adapterProposal+"\"", adapterProposal, null, context);
+					acceptor.accept(completionProposal);
+				}
+			}
+		}
+	}
+
+	private List<String> getPropertyAttributes(String myKey, String value, String category) {
+		java.util.Map<String, List<String>> propertyProposals = proposalRepository.get(category);
+		if(propertyProposals==null) {
+			return null;
+		}
+		return  propertyProposals.get(myKey);
+//		return null;
+	}
+
+	private Set<String> getPropertyKeys(String category) {
+		java.util.Map<String, List<String>> propertyProposals = proposalRepository.get(category);
+		if(propertyProposals==null) {
+			return null;
+		}
+		return  propertyProposals.keySet();
+//		return null;
+	}
+
+	
 	@Override
 	public void complete_PossibleExpression(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
-		System.err.println("Completing expression attribute!");
-		System.err.println("MONKEY: "+model.getClass());
 		EObject ee = model;
 		if(ee instanceof Element) {
 			List<String> allowedAttributes = getAllowedAttributesForElement((Element)ee);
-			System.err.println("Possible Expressions: "+allowedAttributes);
 			for (String proposal : allowedAttributes) {
 				List<String> proposedValuesForAttribute = getProposedValuesForAttribute((Element)ee, proposal);
 				
 				for (String proposedValue : proposedValuesForAttribute) {
-					System.err.println("Adding proposal: "+proposal+" value: "+proposedValue);
 					ICompletionProposal completionProposal = createCompletionProposal(proposal+"=\""+proposedValue+"\"", "set: "+proposal+"("+proposedValue+")", null, context);
 					acceptor.accept(completionProposal);
 				}
@@ -138,7 +225,6 @@ public class TslProposalProvider extends AbstractTslProposalProvider {
 		} else {
 			System.err.println("Weird possibleexpression parent: "+ee.getClass());
 		}
-		System.err.println("Parent object: "+ee.getClass());
 	}
 
 
@@ -245,11 +331,13 @@ public class TslProposalProvider extends AbstractTslProposalProvider {
 			ICompletionProposalAcceptor acceptor) {
 		System.err.println("MapClosing...");
 		System.err.println("MODEL: "+model.getClass());
-		Map m = (Map)model;
-		
-		ICompletionProposal completionProposal = createCompletionProposal(m.getMapName()+">", m.getMapName(), null, context);
-		acceptor.accept(completionProposal);
-//		super.completeMap_MapClosingName(model, assignment, context, acceptor);
+		if(model instanceof Map) {
+			Map m = (Map)model;
+			
+			ICompletionProposal completionProposal = createCompletionProposal(m.getMapName()+">", m.getMapName(), null, context);
+			acceptor.accept(completionProposal);
+		}
+		super.completeMap_MapClosingName(model, assignment, context, acceptor);
 	}	
 	
 	@Override
