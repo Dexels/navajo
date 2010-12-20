@@ -1,5 +1,11 @@
 package navajoadapters;
 
+import org.osgi.framework.BundleContext;
+
+import com.dexels.navajo.adapter.MailMap;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
+
 /**
  * <p>Title: Navajo Product Project</p>
  * <p>Description: This is the official source for the Navajo server</p>
@@ -77,10 +83,8 @@ public class Version extends dexels.Version {
 	public static final String RELEASEDATE = "2010-09-17";
 
 	//	Included packages.
-	String [] includes = {"navajodocument.Version", "navajo.Version", "navajoclient.Version", "navajofunctions.Version"};
 
 	public Version() {
-		addIncludes(includes);
 		setReleaseDate(RELEASEDATE);
 	}
 
@@ -103,7 +107,12 @@ public class Version extends dexels.Version {
 	public String getProductName() {
 		return PRODUCTNAME;
 	}
-
+	@Override
+	public void start(BundleContext bc) throws Exception {
+		super.start(bc);
+		MailMap m = new MailMap();
+	}
+	
 	public static void main(String [] args) {
 		Version v = new Version();
 		System.err.println(v.toString());
