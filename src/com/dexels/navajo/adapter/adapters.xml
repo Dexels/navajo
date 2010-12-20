@@ -1,4 +1,31 @@
 <adapterdef>
+
+    <!-- Loops files in a directory -->
+    <map>
+        <tagname>fileentry</tagname>
+        <object>com.dexels.navajo.adapter.dirmap.FileEntryMap</object>
+        <values>
+            <value name="name" type="string" required="false" direction="out"/>
+            <value name="absolutePath" type="string" required="false" direction="in"/>
+            <value name="contents" type="binary" required="false" direction="out"/>
+            <value name="mimeType" type="string" required="false" direction="out"/>
+            <value name="size" type="integer" required="false" direction="out"/>
+            <value name="fileAge" type="integer" required="false" direction="out"/>
+            <value name="delete" type="boolean" required="false" direction="out"/>
+        </values>
+        <methods>
+		</methods>
+    </map>
+    
+    <map>
+        <tagname>dirmap</tagname>
+        <object>com.dexels.navajo.adapter.DirMap</object>
+        <values>
+            <value name="path" type="string" required="true" direction="in"/>
+            <value name="fileEntries" map="fileentry[]" required="false" direction="out"/>
+        </values>
+    </map>
+
     <!-- Array Message manipulation map -->
     <map>
         <tagname>arraymessage</tagname>
@@ -217,6 +244,8 @@
         <values>
             <value name="query" type="string" required="false" direction="in"/>
             <value name="update" type="string" required="false" direction="in"/>
+            <value name="binaryQuery" type="binary" required="false" direction="in"/>
+            <value name="binaryUpdate" type="binary" required="false" direction="in"/>
             <value name="debug" type="boolean" required="false" direction="in"/>
             <value name="transactionContext" type="integer" required="false" direction="in"/>
             <value name="datasource" type="string" required="false" direction="in"/>
