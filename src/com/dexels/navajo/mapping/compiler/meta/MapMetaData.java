@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
@@ -134,6 +135,20 @@ public class MapMetaData {
 		BufferedReader br = new BufferedReader(new FileReader(f));
 		StringWriter sw = new StringWriter();
 		parse(br, f.getName(),sw);
+		return sw.toString();
+	}
+
+	/**
+	 * Parses this script from the screen, the script name is still necessary. Does not close the stream!
+	 * @param scriptName
+	 * @param is
+	 * @return
+	 * @throws Exception
+	 */
+	public String parse(String scriptName, InputStream is) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(is));
+		StringWriter sw = new StringWriter();
+		parse(br, scriptName,sw);
 		return sw.toString();
 	}
 	
