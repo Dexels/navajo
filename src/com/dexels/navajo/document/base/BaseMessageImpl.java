@@ -1396,7 +1396,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 	    		e.printStackTrace();
 	    	}
 	    }
-
+	    
+	    
+	   
 	public void printElementJSONTypeless(final Writer sw) throws IOException {
 		String tagName = getTagName();
 		ArrayList<Message> messages = getAllMessages();
@@ -1508,6 +1510,12 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 			addProperty(p);
 		}
 
+	}
+
+	@Override
+	public void writeJSON(Writer writer) throws IOException {
+		super.printElementJSON(writer, isArrayMessage());
+		
 	}
 
 }

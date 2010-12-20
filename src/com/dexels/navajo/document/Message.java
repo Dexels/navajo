@@ -1,6 +1,8 @@
 package com.dexels.navajo.document;
 
 import java.beans.*;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.*;
 
 /**
@@ -332,6 +334,8 @@ public interface Message
    */
   public void write(java.io.OutputStream stream) throws NavajoException;
 
+  public void writeJSON(Writer writer) throws IOException;
+  
   /**
    * Set the message map for retreiving the right values for 'toString()'
    *
