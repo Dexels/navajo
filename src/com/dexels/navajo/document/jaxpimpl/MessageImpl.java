@@ -19,6 +19,8 @@
 package com.dexels.navajo.document.jaxpimpl;
 
 import java.beans.*;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.*;
 import java.util.regex.*;
 
@@ -929,6 +931,11 @@ public void merge(Message incoming) {
 		addProperty(p);
 	}
 	
+}
+
+@Override
+public void writeJSON(Writer writer) throws IOException {
+	throw new UnsupportedOperationException("No JSON output in JaxpImpl");
 }
 
 }
