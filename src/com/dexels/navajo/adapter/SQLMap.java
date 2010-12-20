@@ -146,6 +146,7 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
   
   public String update;
   public String query;
+  public Binary binaryUpdate;
   public String savedQuery;
   public boolean doUpdate;
   // Set autoCommit to true to overide default settings from sqlmap.xml configuration file!
@@ -207,8 +208,10 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
   protected Access myAccess;
   
   public int instances;
+  private boolean updateOnly;
   
-  private static Object semaphore = new Object();
+
+private static Object semaphore = new Object();
   private static boolean initialized = false;
   
   private void createDataSource(Message body, NavajoConfigInterface config) throws Throwable {
@@ -364,6 +367,18 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
 	}
 	  binaryStreamList.clear();
   }
+
+  /**
+   * I use this bugger for the batch updates.
+   * @return
+   */
+  public boolean isUpdateOnly() {
+		return updateOnly;
+	}
+
+	public void setUpdateOnly(boolean updateOnly) {
+		this.updateOnly = updateOnly;
+	}
 
   public void load(Access access) throws MappableException, UserException {
     // Check whether property file sqlmap.properties exists.
@@ -558,6 +573,11 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
     return (this.updateCount);
   }
 
+  public void setBinaryUpdate(Binary b) throws UserException {
+	  String query = new String(b.getData());
+	  setUpdate(query);
+  }
+
   public void setUpdate(final String newUpdate) throws UserException {
     update = newUpdate;
     
@@ -624,6 +644,12 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
 
     return rm.getColumnValue(columnName);
   }
+  
+  public void setBinaryQuery(Binary b) throws UserException {
+	  String query = new String(b.getData());
+	  setQuery(query);
+  }
+  
 
   /**
    * Use this method to define a new query.
@@ -964,7 +990,7 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
 		  
 		  InputStream os = b.getDataAsStream();
 
-		  if ( os != null ) {
+		  if ( os != null && b.getLength() > 0) {
 			  statement.setBinaryStream(i+1,os,(int)b.getLength());
 			  // All streams in this list will be closed on kill() or store()
 			  binaryStreamList.add(os);
@@ -1010,7 +1036,7 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
       }
       this.helper = new SQLBatchUpdateHelper(this.update,
                                              this.con, this.parameters,
-                                             this.debug);
+                                             this.debug,this.updateOnly);
       this.updateCount = this.helper.getUpdateCount();
 //      this.batchMode = false;
       return (this.helper.getResultSet());

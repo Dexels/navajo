@@ -61,7 +61,8 @@ public class SQLBatchUpdateHelper {
   private ArrayList preparedList = new ArrayList();
   private int updateCount = 0;
   private int pptr = 0;
-  private ResultSet rs = null;
+  private ResultSet rs = null; 
+  private final boolean updateOnly;
 
   // -------------------------------------------------------------- constructors
 
@@ -71,18 +72,21 @@ public class SQLBatchUpdateHelper {
     this.sql = sql;
     this.conn = conn;
     this.params = params;
-
+    this.updateOnly = false;
     this.parseStatements();
     this.executeStatements();
+    
   }
 
   public SQLBatchUpdateHelper(final String sql, final Connection conn,
-                              final ArrayList params, boolean debug) throws
+                              final ArrayList params, boolean debug, boolean updateOnly) throws
       SQLException {
+	  System.err.println("UpdateOnly: "+updateOnly);
     this.sql = sql;
     this.conn = conn;
     this.params = params;
     this.debug = debug;
+    this.updateOnly = updateOnly;
 
     this.parseStatements();
     this.executeStatements();
@@ -113,26 +117,34 @@ public class SQLBatchUpdateHelper {
     if (tok.countTokens() == 0) {
       throw new SQLException("tried to pass empty SQL statement batch");
     }
-
+    System.err.println("Amount of tokens: "+tok.countTokens());
     while (tok.hasMoreElements()) {
       final String s = tok.nextToken();
       if (s.length() > 0 && !s.matches("\\s*")) {
         if (this.debug) {
           System.out.println("parsed statement: " + s);
         }
-        this.parsed.add(s);
-        final PreparedStatement prepared = this.conn.prepareStatement(s);
-        final int required = this.countRequiredParameters(s);
-        if (this.debug) {
-          System.out.println("required number of parameters = " + required);
-        }
-        this.setStatementParameters(prepared, required);
-        this.preparedList.add(prepared);
+        
+        prepareStatement(s);
+      } else {
+      	System.err.println("Did not qualify");
       }
 
     }
+    System.err.println("No more tokents.");
 
   }
+
+protected void prepareStatement(final String s) throws SQLException {
+	this.parsed.add(s);
+	  final PreparedStatement prepared = this.conn.prepareStatement(s);
+	  final int required = this.countRequiredParameters(s);
+	  if (this.debug) {
+	    System.out.println("required number of parameters = " + required);
+	  }
+	  this.setStatementParameters(prepared, required);
+	  this.preparedList.add(prepared);
+}
 
   private final void executeStatements() throws SQLException {
     for (int i = 0; i < this.parsed.size(); i++) {
@@ -142,7 +154,7 @@ public class SQLBatchUpdateHelper {
       PreparedStatement prepared = (PreparedStatement) this.preparedList.get(i);
       this.rs = null;
 
-      if (!last) {
+      if (!last || updateOnly) {
         prepared.executeUpdate();
         if (this.debug) {
           System.out.println("successful execution of SQL '" + s + "'");
