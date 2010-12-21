@@ -21,12 +21,12 @@ public class TslLexicalHighlightingMapper extends AbstractAntlrTokenToAttributeI
 			return TslHighlightingConfiguration.DEPRECATED_ID;
 		}
 
-		boolean encountered = valueForAnyInString(tokenName, new String[]{"RULE_EMPTYSTRING","RULE_INT","RULE_LITERALSTRING"});
+		boolean encountered = valueForAnyInString(tokenName, new String[]{"RULE_ATTRIBUTESTRING","RULE_EMPTYSTRING","RULE_INT","RULE_LITERALSTRING"});
 		if(encountered) {
 			return TslHighlightingConfiguration.LITERAL_ID;
 		}
 
-		encountered = valueForAnyInString(tokenName, new String[]{"RULE_ATTRIBUTESTRING","RULE_PROPERTY_END_TAG","RULE_MESSAGE_END_TAG","'<navascript'","'<message'","'<map.'","'</map.'","'<property'","RULE_MULTILINETAG_END","RULE_SINGLELINETAG_END","'AND'","'OR'","'FORALL'","'TRUE'","'FALSE'","'NULL'","'TODAY'"});
+		encountered = valueForAnyInString(tokenName, new String[]{"RULE_PROPERTY_END_TAG","RULE_MESSAGE_END_TAG","ROLE_NAVASCRIPT_KEYWORD","'message'","'map'","'</map.'","'property'","RULE_MULTILINETAG_END","RULE_SINGLELINETAG_END","'AND'","'OR'","'FORALL'","'TRUE'","'FALSE'","'NULL'","'TODAY'","'methods'","'method'","'required'","'validations'","'check'","'direction'","'name'","'value'","'type'","'length'"});
 		if(encountered) {
 			return TslHighlightingConfiguration.KEYWORD_ID;
 		}
@@ -44,7 +44,7 @@ public class TslLexicalHighlightingMapper extends AbstractAntlrTokenToAttributeI
 		if("RULE_INT".equals(tokenName)) {
 			return DefaultHighlightingConfiguration.NUMBER_ID;
 		}
-		if("RULE_ML_COMMENT".equals(tokenName) | "RULE_SL_COMMENT".equals(tokenName)) {
+		if("RULE_ML_COMMENT".equals(tokenName) | "RULE_SL_COMMENT".equals(tokenName) | "CDATA".equals(tokenName)) {
 			return DefaultHighlightingConfiguration.COMMENT_ID;
 		}
 		return DefaultHighlightingConfiguration.DEFAULT_ID;

@@ -111,7 +111,7 @@ public class TslProposalProvider extends AbstractTslProposalProvider {
 	
 	public void complete_MapStart(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
 		// subclasses may override
-		super.complete_MapStart(model, ruleCall, context, acceptor);
+		super.complete_MapId(model, ruleCall, context, acceptor);
 		System.err.println("Completing mapstart!");
 		List<AdapterProposal> list = getAdapterProposals();
 		System.err.println("Adapterproposals: "+list.size());

@@ -19,6 +19,7 @@ import com.dexels.navajo.dsl.model.expression.FunctionCall;
 import com.dexels.navajo.dsl.model.expression.MapGetReference;
 import com.dexels.navajo.dsl.model.expression.TmlReference;
 import com.dexels.navajo.dsl.model.tsl.Map;
+import com.dexels.navajo.dsl.model.tsl.PossibleExpression;
 import com.dexels.navajo.dsl.model.tsl.Tml;
 
 public class TslSemanticHighlightingCalculator implements
@@ -97,7 +98,13 @@ public class TslSemanticHighlightingCalculator implements
 	    // TODO Create a separate category for map refs
 	    for (Map tag : aa) {
 	    	highlightLeafWithIndex(1,acceptor, tag,TslHighlightingConfiguration.MAP_ID);
-		}
+	    	for (PossibleExpression p : tag.getAttributes()) {
+				if("object".equals( p.getKey())) {
+					highlightFirstLeaf(acceptor, p, TslHighlightingConfiguration.MAP_ID);
+				}
+			} 
+	    	
+	    }
 	}
 
 	private void highlightMapGetReference(IHighlightedPositionAcceptor acceptor,
