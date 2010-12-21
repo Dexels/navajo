@@ -28,7 +28,7 @@ public class TslFormatter extends AbstractDeclarativeFormatter {
 
 		c.setSpace(" ").after(f.getMapIdRule());
 		c.setNoSpace().after(f.getAttributeNameRule());
-		c.setNoSpace().after(f.getMapStartRule());
+	//	c.setNoSpace().after(f.getMapStartRule());
 		c.setNoSpace().after(f.getMAPSTARTKEYWORDRule());
 		c.setNoSpace().after(f.getMAPENDKEYWORDRule());
 		c.setNoSpace().after(f.getDOLLARRule());
@@ -45,7 +45,7 @@ public class TslFormatter extends AbstractDeclarativeFormatter {
 		
 		c.setIndentationIncrement().after(f.getMESSAGE_START_TAGRule());
 		c.setIndentationDecrement().before(f.getMESSAGE_END_TAGRule());
-		c.setIndentationDecrement().before(f.getMapEndRule());
+//		c.setIndentationDecrement().before(f.getMapEndRule());
 
 		c.setIndentationDecrement().before(f.getXML_TAG_SINGLEENDRule());
 
@@ -55,8 +55,8 @@ public class TslFormatter extends AbstractDeclarativeFormatter {
 //		c.setIndentationIncrement().after(f.getXML_TAG_ENDRule());
 //		
 //		c.setLinewrap(1).after(f.getEXPRESSION_STARTRule());
-		c.setIndentationIncrement().after(f.getEXPRESSION_START_TAGRule());
-		c.setIndentationDecrement().before(f.getEXPRESSION_END_TAGRule());
+		c.setIndentationIncrement().after(f.getExpressionOrOptionRule());
+		c.setIndentationDecrement().before(f.getExpressionOrOptionRule());
 //		c.setLinewrap(1).before(f.getEXPRESSION_ENDRule());
 
 		

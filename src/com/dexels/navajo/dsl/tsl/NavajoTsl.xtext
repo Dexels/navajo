@@ -5,6 +5,7 @@ grammar com.dexels.navajo.dsl.tsl.Tsl with com.dexels.navajo.dsl.expression.Nava
 //import "http://www.dexels.com/navajo/dsl/expression/NavajoExpression" as nexpr
 import "platform:/resource/com.dexels.navajo.dsl.expression.model/model/Expression.ecore" as nexpr
 import "platform:/resource/com.dexels.navajo.dsl.tsl.model/model/NavaScript.ecore" 
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 
 //com.dexels.navajo.dsl.expression/src-gen/com/dexels.navajo/dsl/expression/NavajoExpression.ecore"
 //generate tsl "http://www.dexels.com/navajo/dsl/tsl/NavajoTsl"
@@ -16,7 +17,7 @@ Tml :
 	NAVASCRIPT_START {Tml} (attributes+=PossibleExpression)* 
 	(
 		(XML_TAG_END 
-			((children+=Message) | (children+=Map)| (children+=Param) | (methods += Methods) | (children+=DebugTag))*
+			((children+=Message) | (children+=Map)| (children+=Param) | (methods += Methods) | (children+=DebugTag)| (children+=Include))*
 		NAVASCRIPT_END
 		)
 	|	(
@@ -29,9 +30,9 @@ terminal XMLComment: '<!--' -> '-->';
 terminal QUOTEQ: '"=';	
 terminal SEMICOLONQUOTE: ';"';
 
-terminal DEBUG_START_TAG:
+DEBUG_START_TAG:
 	XML_TAG_START 'debug';
-terminal DEBUG_END_TAG:
+DEBUG_END_TAG:
 	XML_TAG_END 'debug' XML_TAG_END;
 
 
@@ -39,9 +40,10 @@ terminal DEBUG_END_TAG:
 //	'<navascript';
 
 terminal XML_START_ENDTAG:
-	'</';
+	'</'
+;
 	
-	terminal XML_TAG_END: 
+terminal XML_TAG_END: 
 	'>'
 ;
 
@@ -59,85 +61,110 @@ terminal ATTRIBUTESTRING	:
 	(   '"' !('='|'"')* '"')
 ;	
 
-terminal MAPENDKEYWORD: 
-	XML_START_ENDTAG 'map.'
+MAPENDKEYWORD: 
+	XML_START_ENDTAG MAPKEYWORD 
 ;
 
-terminal MAPSTARTKEYWORD: 
-	XML_TAG_START 'map.'
+MAPSTARTKEYWORD: 
+	XML_TAG_START MAPKEYWORD 
 ;
 
-terminal PROPERTY_START_TAG:
+terminal MAPKEYWORD: 
+	'map'
+;
+
+
+INCLUDE_START_TAG:
+	XML_TAG_START 'include'
+;
+
+PROPERTY_START_TAG:
 	XML_TAG_START 'property'
 ;
 
-terminal PROPERTY_END_TAG: 
+REQUIRED_START_TAG:
+	XML_TAG_START 'required'
+;
+//
+OPTION_START_TAG:
+	XML_TAG_START 'option'
+;
+
+OPTION_END_TAG: 
+	XML_START_ENDTAG 'option' XML_TAG_END
+;
+
+
+REQUIRED_END_TAG: 
+	XML_START_ENDTAG 'required' XML_TAG_END
+;
+
+PROPERTY_END_TAG: 
 	XML_START_ENDTAG 'property' XML_TAG_END
 ;
 
-terminal PARAM_END_TAG: 
+PARAM_END_TAG: 
 	XML_START_ENDTAG 'param' XML_TAG_END
 ;
 
-terminal MESSAGE_END_TAG: 
+MESSAGE_END_TAG: 
 	XML_START_ENDTAG 'message' XML_TAG_END
 ;
 
-terminal METHODS_END_TAG: 
+METHODS_END_TAG: 
 	XML_START_ENDTAG 'methods' XML_TAG_END
 ;
-terminal METHOD_END_TAG: 
+METHOD_END_TAG: 
 	XML_START_ENDTAG 'method' XML_TAG_END
 ;
 
-terminal FIELD_END_TAG: 
+FIELD_END_TAG: 
 	XML_START_ENDTAG 'field' XML_TAG_END
 ;
 
-terminal EXPRESSION_START_TAG:
+EXPRESSION_START_TAG:
 	XML_TAG_START 'expression'
 ;
 
-terminal EXPRESSION_END_TAG:
+EXPRESSION_END_TAG:
 	XML_START_ENDTAG 'expression' XML_TAG_END
 ;
-terminal PARAM_START_TAG:
+PARAM_START_TAG:
 	XML_TAG_START 'param'
 ;
 
-terminal MESSAGE_START_TAG:
+MESSAGE_START_TAG:
 	XML_TAG_START 'message'
 ;
 
-terminal METHOD_START_TAG:
+METHOD_START_TAG:
 	XML_TAG_START 'method'
 ;
 
-terminal METHODS_START_TAG:
+METHODS_START_TAG:
 	XML_TAG_START 'methods'
 ;
 
-terminal FIELD_START_TAG:
+FIELD_START_TAG:
 	XML_TAG_START 'field'
 ;
-terminal NAVASCRIPT_START:
+NAVASCRIPT_START:
  	XML_TAG_START NAVASCRIPT_KEYWORD;
 	
 	
 terminal NAVASCRIPT_KEYWORD:	
-	'navascript';
+	'navascript' | 'tsl';
 
-terminal NAVASCRIPT_END:
+
+NAVASCRIPT_END:
  	XML_START_ENDTAG NAVASCRIPT_KEYWORD XML_TAG_END;
 
 
-terminal CDATA:
 
-	'<![CDATA[' -> ']]>'
-	;
 
+// might need to add a lot more keywords here
 AttributeName:
-	ID;
+	ID | 'message';
 
 PossibleExpression:
 	(namespace= ID ':')? key=AttributeName '='
@@ -163,7 +190,7 @@ Method:
 	METHOD_START_TAG {Method}  (attributes+=PossibleExpression)* 
 	
 	((XML_TAG_END
-//		((children+=Message) | (children+=Property) | (children+=Map))*
+		(children+=Required)*
 	METHOD_END_TAG
 	)
 	|
@@ -171,11 +198,19 @@ Method:
 	)
 	;	
 
+// create Include entity in Model
+Include returns Method:
+	INCLUDE_START_TAG {Method}  (attributes+=PossibleExpression)* 
+	XML_TAG_SINGLEEND
+	;	
+
+
+
 Message:
 	MESSAGE_START_TAG {Message}  (attributes+=PossibleExpression)* 
 	
 	((XML_TAG_END
-		((children+=Message) | (children+=Property) | (children+=Param)  | (children+=Map) | (children+=MapMethod) | (children+=DebugTag))*
+		((children+=Message) | (children+=Property) | (children+=Param)  | (children+=Map) | (children+=MapMethod) | (children+=DebugTag) | (children+=Field))*
 	MESSAGE_END_TAG
 	)
 	|
@@ -186,31 +221,28 @@ Message:
 
 
 
-Map:
-	MapStart
-	( XML_TAG_SINGLEEND
+Map returns Map:
+	MAPSTARTKEYWORD {Map} (
+		('.' mapName=MapId (attributes+=PossibleExpression)*)
+	|	(attributes+=PossibleExpression)*
+	) 
+	(
+			( XML_TAG_SINGLEEND
 	| (XML_TAG_END
-		((children+=Message) | (children+=Property) | (children+=Param) | (children+=Map) | (children+=MapMethod) | (children+=DebugTag))*
+		((children+=Message) | (children+=Property) | (children+=Param) | (children+=Map) | (children+=MapMethod) | (children+=DebugTag) | (children+=Field) )*
 		
-		mapClosingName = MapEnd
+		(XML_START_ENDTAG MAPKEYWORD ('.' mapClosingName=MapId)? XML_TAG_END)
 	))
+	)
 	;
 
 
-MapEnd:
-		MAPENDKEYWORD ID XML_TAG_END
-;
+
 
 MapId:
 	ID;
 
 
-
-
-
-MapStart returns Map:
-	{Map} MAPSTARTKEYWORD mapName=MapId (attributes+=PossibleExpression)*
-;
 
 
 
@@ -233,6 +265,19 @@ MapStart returns Map:
 //PropertyCardinalities: CARDINALITY_SINGLE = "1" | CARDINALITY_MULTIPLE = "+";
 	
 
+
+Required: 
+	REQUIRED_START_TAG {Required} (attributes+=PossibleExpression)*
+	(
+		(XML_TAG_SINGLEEND)
+	|
+		( XML_TAG_END 	
+		REQUIRED_END_TAG
+		)
+	);
+	
+
+	
 	
 Property:
 	PROPERTY_START_TAG {Property} (attributes+=PossibleExpression)* 
@@ -240,7 +285,11 @@ Property:
 		(XML_TAG_SINGLEEND)
 	|
 		( XML_TAG_END 	
-			(expressionValue += ExpressionTag)*
+			(
+				children += ExpressionOrOption
+				|
+				children += Map
+		 	)*
 		PROPERTY_END_TAG
 		)
 	);
@@ -251,7 +300,7 @@ Param returns Param:
 		(XML_TAG_SINGLEEND)
 	|
 		( XML_TAG_END 	
-			(expressionValue += ExpressionTag)*
+			(children += ExpressionOrOption)*
 		PARAM_END_TAG
 		)
 	);
@@ -262,7 +311,7 @@ MapMethod returns MapMethod:
 		(XML_TAG_SINGLEEND)
 	|
 		( XML_TAG_END 
-			(CDATA)*
+			(expression = TopLevel)
 		XML_START_ENDTAG methodClosingName = ID '.' methodClosingMethod = ID XML_TAG_END
 		)
 	);
@@ -273,9 +322,10 @@ Field returns Param:
 	 XML_TAG_SINGLEEND
 	 |
 	 (
-		(expressionValue += ExpressionTag)*
-	 	FIELD_END_TAG
+		((children += ExpressionOrOption) | (children+=Message) | (children+=Property) | (children+=Param) | (children+=Map) | (children+=MapMethod) | (children+=DebugTag) | (children+=Field) )*
+	 	
 	 )
+	 FIELD_END_TAG
 	)
 ;
 
@@ -291,16 +341,43 @@ DebugTag returns DebugTag:
 	)	
 	;	
 
+ExpressionOrOption returns Element:
+		EXPRESSION_START_TAG ExpressionTag
+		|
+		OPTION_START_TAG Option
+		
+		
+;
+ExpressionOnly returns Element:
+	XML_TAG_START 
+		'expression' ExpressionTag
+		
+;
+
+
 ExpressionTag returns ExpressionTag:
 	
-	EXPRESSION_START_TAG {ExpressionTag} (attributes+=PossibleExpression)* 
+	{ExpressionTag} (attributes+=PossibleExpression)* 
 	(
 		XML_TAG_SINGLEEND
 	|
 		( XML_TAG_END 	
 			expression=TopLevel
+			
 		    EXPRESSION_END_TAG
 		)
 	)	
 	;	
+	
+Option: 
+	 {Option} (attributes+=PossibleExpression)*
+	(
+		XML_TAG_SINGLEEND
+	|
+		( XML_TAG_END 	
+		OPTION_END_TAG
+		)
+	);
+	
+
 	
