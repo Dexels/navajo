@@ -32,6 +32,12 @@ terminal ML_COMMENT	: '/*' -> '*/';
 terminal SL_COMMENT 	: '//' !('\n'|'\r')* ('\r'? '\n')?;
 
 terminal WS			: (' '|'\t'|'\r'|'\n')+;
+terminal TRUE: 'true' | 'TRUE';
+terminal FALSE: 'false' | 'FALSE';
+terminal NULL: 'null' | 'NULL';
+terminal TODAY: 'today' | 'TODAY';
+terminal FORALL: 'FORALL';
+terminal PARENT: "..";
 terminal ID  		: '^'?('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
 	
 terminal AT: '@';	
@@ -40,6 +46,7 @@ terminal AT: '@';
 
 terminal LITERALSTRING returns ecore::EString: 
 			"'" ( '\\' ('b'|'t'|'n'|'f'|'r'|'"'|"'"|'\\') | !('\\'|"'") )* "'"
+			| 	'<![CDATA[' -> ']]>'
 	;
 	
 
@@ -66,7 +73,7 @@ terminal DOLLAR:
 //terminal PATH_ELEMENT: ('.'|'..'|("a".. "z"| "A" .. "Z"|"_")("a".. "z"| "A" .. "Z"|"0" .. "9"|"_")*);
  	
 PathElement returns ecore::EString:
-	(ID|"."|"..")
+	(ID|"."|PARENT)
 	;
 	
 	
@@ -78,8 +85,12 @@ ExistsTmlExpression returns ExistsTmlReference:
 	TML_EXISTS SQBRACKET_OPEN (absolute?=TML_SEPARATOR)? (param?=AT)? elements+=PathElement (TML_SEPARATOR elements+=PathElement)* SQBRACKET_CLOSE
 ;
 
+MapReferenceParams returns ReferenceParams: 
+	'(' (getterParams+=Literal) (',' getterParams+=Literal)* ')'
+;
+
 MapGetReference returns MapGetReference: 
-	operations+=DOLLAR elements+=PathElement (TML_SEPARATOR elements+=PathElement)* 
+	operations+=DOLLAR (elements+=PARENT TML_SEPARATOR)* elements+=ID  (referenceParams=MapReferenceParams)?
 ;
    
 OrExpression returns Expression:
@@ -132,16 +143,14 @@ FunctionCall returns FunctionCall:
 Literal returns Expression:
   {Expression}INT
   | valueString= LITERALSTRING
-  | operations+='FORALL' '(' valueString=LITERALSTRING ',' parameters+=OrExpression ')'
+  | operations+=FORALL '(' valueString=LITERALSTRING ',' parameters+=OrExpression ')'
   // TODO Add float
-  | FunctionCall
-//  | {Expression} elements+=ExistsTmlExpression 
-//  | {Expression} elements+=TmlExpression 
+  | parameters+=FunctionCall
   | expressionType='{' (parameters+=OrExpression)?  (',' parameters+=OrExpression)* '}'
-  | elements+="NULL" 
-  | elements+="TODAY" 
-  | elements+="TRUE" 
-  | elements+="FALSE"
+  | elements+=NULL
+  | elements+=TODAY 
+  | elements+=TRUE
+  | elements+=FALSE
   | parameters+=TmlExpression
   | parameters+=ExistsTmlExpression
   | parameters+=MapGetReference
