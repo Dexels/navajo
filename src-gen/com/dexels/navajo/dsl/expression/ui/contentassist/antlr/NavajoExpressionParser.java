@@ -49,8 +49,10 @@ public class NavajoExpressionParser extends AbstractContentAssistParser {
 					put(grammarAccess.getTmlExpressionAccess().getGroup_4(), "rule__TmlExpression__Group_4__0");
 					put(grammarAccess.getExistsTmlExpressionAccess().getGroup(), "rule__ExistsTmlExpression__Group__0");
 					put(grammarAccess.getExistsTmlExpressionAccess().getGroup_5(), "rule__ExistsTmlExpression__Group_5__0");
+					put(grammarAccess.getMapReferenceParamsAccess().getGroup(), "rule__MapReferenceParams__Group__0");
+					put(grammarAccess.getMapReferenceParamsAccess().getGroup_2(), "rule__MapReferenceParams__Group_2__0");
 					put(grammarAccess.getMapGetReferenceAccess().getGroup(), "rule__MapGetReference__Group__0");
-					put(grammarAccess.getMapGetReferenceAccess().getGroup_2(), "rule__MapGetReference__Group_2__0");
+					put(grammarAccess.getMapGetReferenceAccess().getGroup_1(), "rule__MapGetReference__Group_1__0");
 					put(grammarAccess.getOrExpressionAccess().getGroup(), "rule__OrExpression__Group__0");
 					put(grammarAccess.getOrExpressionAccess().getGroup_1(), "rule__OrExpression__Group_1__0");
 					put(grammarAccess.getAndExpressionAccess().getGroup(), "rule__AndExpression__Group__0");
@@ -86,9 +88,12 @@ public class NavajoExpressionParser extends AbstractContentAssistParser {
 					put(grammarAccess.getExistsTmlExpressionAccess().getParamAssignment_3(), "rule__ExistsTmlExpression__ParamAssignment_3");
 					put(grammarAccess.getExistsTmlExpressionAccess().getElementsAssignment_4(), "rule__ExistsTmlExpression__ElementsAssignment_4");
 					put(grammarAccess.getExistsTmlExpressionAccess().getElementsAssignment_5_1(), "rule__ExistsTmlExpression__ElementsAssignment_5_1");
+					put(grammarAccess.getMapReferenceParamsAccess().getGetterParamsAssignment_1(), "rule__MapReferenceParams__GetterParamsAssignment_1");
+					put(grammarAccess.getMapReferenceParamsAccess().getGetterParamsAssignment_2_1(), "rule__MapReferenceParams__GetterParamsAssignment_2_1");
 					put(grammarAccess.getMapGetReferenceAccess().getOperationsAssignment_0(), "rule__MapGetReference__OperationsAssignment_0");
-					put(grammarAccess.getMapGetReferenceAccess().getElementsAssignment_1(), "rule__MapGetReference__ElementsAssignment_1");
-					put(grammarAccess.getMapGetReferenceAccess().getElementsAssignment_2_1(), "rule__MapGetReference__ElementsAssignment_2_1");
+					put(grammarAccess.getMapGetReferenceAccess().getElementsAssignment_1_0(), "rule__MapGetReference__ElementsAssignment_1_0");
+					put(grammarAccess.getMapGetReferenceAccess().getElementsAssignment_2(), "rule__MapGetReference__ElementsAssignment_2");
+					put(grammarAccess.getMapGetReferenceAccess().getReferenceParamsAssignment_3(), "rule__MapGetReference__ReferenceParamsAssignment_3");
 					put(grammarAccess.getOrExpressionAccess().getParametersAssignment_0(), "rule__OrExpression__ParametersAssignment_0");
 					put(grammarAccess.getOrExpressionAccess().getOperationsAssignment_1_0(), "rule__OrExpression__OperationsAssignment_1_0");
 					put(grammarAccess.getOrExpressionAccess().getParametersAssignment_1_1(), "rule__OrExpression__ParametersAssignment_1_1");
@@ -128,6 +133,7 @@ public class NavajoExpressionParser extends AbstractContentAssistParser {
 					put(grammarAccess.getLiteralAccess().getOperationsAssignment_2_0(), "rule__Literal__OperationsAssignment_2_0");
 					put(grammarAccess.getLiteralAccess().getValueStringAssignment_2_2(), "rule__Literal__ValueStringAssignment_2_2");
 					put(grammarAccess.getLiteralAccess().getParametersAssignment_2_4(), "rule__Literal__ParametersAssignment_2_4");
+					put(grammarAccess.getLiteralAccess().getParametersAssignment_3(), "rule__Literal__ParametersAssignment_3");
 					put(grammarAccess.getLiteralAccess().getExpressionTypeAssignment_4_0(), "rule__Literal__ExpressionTypeAssignment_4_0");
 					put(grammarAccess.getLiteralAccess().getParametersAssignment_4_1(), "rule__Literal__ParametersAssignment_4_1");
 					put(grammarAccess.getLiteralAccess().getParametersAssignment_4_2_1(), "rule__Literal__ParametersAssignment_4_2_1");

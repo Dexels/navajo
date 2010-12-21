@@ -13,42 +13,42 @@ import java.util.ArrayList;
 @SuppressWarnings("all")
 public class InternalNavajoExpressionLexer extends Lexer {
     public static final int RULE_ID=4;
-    public static final int RULE_SQBRACKET_OPEN=5;
-    public static final int RULE_XML_LT=12;
+    public static final int RULE_PARENT=5;
+    public static final int RULE_SQBRACKET_OPEN=6;
+    public static final int RULE_XML_LT=13;
     public static final int T29=29;
-    public static final int RULE_LITERALSTRING=16;
+    public static final int RULE_LITERALSTRING=17;
     public static final int T28=28;
-    public static final int RULE_XML_GTEQ=15;
+    public static final int RULE_XML_GTEQ=16;
     public static final int T27=27;
     public static final int T26=26;
-    public static final int RULE_TML_SEPARATOR=7;
-    public static final int T25=25;
+    public static final int RULE_TML_SEPARATOR=8;
     public static final int Tokens=40;
-    public static final int T24=24;
     public static final int EOF=-1;
-    public static final int RULE_SL_COMMENT=18;
-    public static final int T23=23;
-    public static final int T22=22;
-    public static final int T21=21;
-    public static final int T20=20;
-    public static final int RULE_ML_COMMENT=17;
-    public static final int RULE_DOLLAR=11;
-    public static final int RULE_TML_EXISTS=8;
-    public static final int RULE_SQBRACKET_CLOSE=6;
-    public static final int RULE_XML_LTEQ=14;
-    public static final int RULE_INT=9;
+    public static final int RULE_SL_COMMENT=24;
+    public static final int RULE_NULL=19;
+    public static final int RULE_ML_COMMENT=23;
+    public static final int RULE_TRUE=21;
+    public static final int RULE_DOLLAR=12;
+    public static final int RULE_FORALL=18;
+    public static final int RULE_FALSE=22;
+    public static final int RULE_TML_EXISTS=9;
+    public static final int RULE_SQBRACKET_CLOSE=7;
+    public static final int RULE_TODAY=20;
+    public static final int RULE_XML_LTEQ=15;
+    public static final int RULE_INT=10;
     public static final int T38=38;
     public static final int T37=37;
     public static final int T39=39;
     public static final int T34=34;
-    public static final int RULE_WS=19;
+    public static final int RULE_WS=25;
     public static final int T33=33;
     public static final int T36=36;
-    public static final int RULE_XML_GT=13;
+    public static final int RULE_XML_GT=14;
     public static final int T35=35;
     public static final int T30=30;
     public static final int T32=32;
-    public static final int RULE_AT=10;
+    public static final int RULE_AT=11;
     public static final int T31=31;
     public InternalNavajoExpressionLexer() {;} 
     public InternalNavajoExpressionLexer(CharStream input) {
@@ -56,123 +56,14 @@ public class InternalNavajoExpressionLexer extends Lexer {
     }
     public String getGrammarFileName() { return "../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g"; }
 
-    // $ANTLR start T20
-    public final void mT20() throws RecognitionException {
-        try {
-            int _type = T20;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:10:5: ( '.' )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:10:7: '.'
-            {
-            match('.'); 
-
-            }
-
-            this.type = _type;
-        }
-        finally {
-        }
-    }
-    // $ANTLR end T20
-
-    // $ANTLR start T21
-    public final void mT21() throws RecognitionException {
-        try {
-            int _type = T21;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:11:5: ( '..' )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:11:7: '..'
-            {
-            match(".."); 
-
-
-            }
-
-            this.type = _type;
-        }
-        finally {
-        }
-    }
-    // $ANTLR end T21
-
-    // $ANTLR start T22
-    public final void mT22() throws RecognitionException {
-        try {
-            int _type = T22;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:12:5: ( '+' )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:12:7: '+'
-            {
-            match('+'); 
-
-            }
-
-            this.type = _type;
-        }
-        finally {
-        }
-    }
-    // $ANTLR end T22
-
-    // $ANTLR start T23
-    public final void mT23() throws RecognitionException {
-        try {
-            int _type = T23;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:13:5: ( '-' )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:13:7: '-'
-            {
-            match('-'); 
-
-            }
-
-            this.type = _type;
-        }
-        finally {
-        }
-    }
-    // $ANTLR end T23
-
-    // $ANTLR start T24
-    public final void mT24() throws RecognitionException {
-        try {
-            int _type = T24;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:14:5: ( '(' )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:14:7: '('
-            {
-            match('('); 
-
-            }
-
-            this.type = _type;
-        }
-        finally {
-        }
-    }
-    // $ANTLR end T24
-
-    // $ANTLR start T25
-    public final void mT25() throws RecognitionException {
-        try {
-            int _type = T25;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:15:5: ( ')' )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:15:7: ')'
-            {
-            match(')'); 
-
-            }
-
-            this.type = _type;
-        }
-        finally {
-        }
-    }
-    // $ANTLR end T25
-
     // $ANTLR start T26
     public final void mT26() throws RecognitionException {
         try {
             int _type = T26;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:16:5: ( ',' )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:16:7: ','
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:10:5: ( '.' )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:10:7: '.'
             {
-            match(','); 
+            match('.'); 
 
             }
 
@@ -187,10 +78,10 @@ public class InternalNavajoExpressionLexer extends Lexer {
     public final void mT27() throws RecognitionException {
         try {
             int _type = T27;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:17:5: ( '}' )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:17:7: '}'
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:11:5: ( '(' )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:11:7: '('
             {
-            match('}'); 
+            match('('); 
 
             }
 
@@ -205,11 +96,10 @@ public class InternalNavajoExpressionLexer extends Lexer {
     public final void mT28() throws RecognitionException {
         try {
             int _type = T28;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:18:5: ( 'OR' )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:18:7: 'OR'
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:12:5: ( ')' )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:12:7: ')'
             {
-            match("OR"); 
-
+            match(')'); 
 
             }
 
@@ -224,11 +114,10 @@ public class InternalNavajoExpressionLexer extends Lexer {
     public final void mT29() throws RecognitionException {
         try {
             int _type = T29;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:19:5: ( 'AND' )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:19:7: 'AND'
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:13:5: ( ',' )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:13:7: ','
             {
-            match("AND"); 
-
+            match(','); 
 
             }
 
@@ -243,11 +132,10 @@ public class InternalNavajoExpressionLexer extends Lexer {
     public final void mT30() throws RecognitionException {
         try {
             int _type = T30;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:20:5: ( '==' )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:20:7: '=='
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:14:5: ( '+' )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:14:7: '+'
             {
-            match("=="); 
-
+            match('+'); 
 
             }
 
@@ -262,11 +150,10 @@ public class InternalNavajoExpressionLexer extends Lexer {
     public final void mT31() throws RecognitionException {
         try {
             int _type = T31;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:21:5: ( '!=' )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:21:7: '!='
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:15:5: ( '-' )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:15:7: '-'
             {
-            match("!="); 
-
+            match('-'); 
 
             }
 
@@ -281,10 +168,10 @@ public class InternalNavajoExpressionLexer extends Lexer {
     public final void mT32() throws RecognitionException {
         try {
             int _type = T32;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:22:5: ( '*' )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:22:7: '*'
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:16:5: ( '}' )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:16:7: '}'
             {
-            match('*'); 
+            match('}'); 
 
             }
 
@@ -299,10 +186,11 @@ public class InternalNavajoExpressionLexer extends Lexer {
     public final void mT33() throws RecognitionException {
         try {
             int _type = T33;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:23:5: ( '!' )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:23:7: '!'
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:17:5: ( 'OR' )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:17:7: 'OR'
             {
-            match('!'); 
+            match("OR"); 
+
 
             }
 
@@ -317,10 +205,10 @@ public class InternalNavajoExpressionLexer extends Lexer {
     public final void mT34() throws RecognitionException {
         try {
             int _type = T34;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:24:5: ( 'FORALL' )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:24:7: 'FORALL'
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:18:5: ( 'AND' )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:18:7: 'AND'
             {
-            match("FORALL"); 
+            match("AND"); 
 
 
             }
@@ -336,10 +224,11 @@ public class InternalNavajoExpressionLexer extends Lexer {
     public final void mT35() throws RecognitionException {
         try {
             int _type = T35;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:25:5: ( '{' )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:25:7: '{'
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:19:5: ( '==' )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:19:7: '=='
             {
-            match('{'); 
+            match("=="); 
+
 
             }
 
@@ -354,10 +243,10 @@ public class InternalNavajoExpressionLexer extends Lexer {
     public final void mT36() throws RecognitionException {
         try {
             int _type = T36;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:26:5: ( 'NULL' )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:26:7: 'NULL'
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:20:5: ( '!=' )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:20:7: '!='
             {
-            match("NULL"); 
+            match("!="); 
 
 
             }
@@ -373,11 +262,10 @@ public class InternalNavajoExpressionLexer extends Lexer {
     public final void mT37() throws RecognitionException {
         try {
             int _type = T37;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:27:5: ( 'TODAY' )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:27:7: 'TODAY'
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:21:5: ( '*' )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:21:7: '*'
             {
-            match("TODAY"); 
-
+            match('*'); 
 
             }
 
@@ -392,11 +280,10 @@ public class InternalNavajoExpressionLexer extends Lexer {
     public final void mT38() throws RecognitionException {
         try {
             int _type = T38;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:28:5: ( 'TRUE' )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:28:7: 'TRUE'
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:22:5: ( '!' )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:22:7: '!'
             {
-            match("TRUE"); 
-
+            match('!'); 
 
             }
 
@@ -411,11 +298,10 @@ public class InternalNavajoExpressionLexer extends Lexer {
     public final void mT39() throws RecognitionException {
         try {
             int _type = T39;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:29:5: ( 'FALSE' )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:29:7: 'FALSE'
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:23:5: ( '{' )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:23:7: '{'
             {
-            match("FALSE"); 
-
+            match('{'); 
 
             }
 
@@ -430,8 +316,8 @@ public class InternalNavajoExpressionLexer extends Lexer {
     public final void mRULE_XML_GT() throws RecognitionException {
         try {
             int _type = RULE_XML_GT;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4413:13: ( '&gt;' )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4413:15: '&gt;'
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4680:13: ( '&gt;' )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4680:15: '&gt;'
             {
             match("&gt;"); 
 
@@ -449,8 +335,8 @@ public class InternalNavajoExpressionLexer extends Lexer {
     public final void mRULE_XML_LT() throws RecognitionException {
         try {
             int _type = RULE_XML_LT;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4415:13: ( '&lt;' )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4415:15: '&lt;'
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4682:13: ( '&lt;' )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4682:15: '&lt;'
             {
             match("&lt;"); 
 
@@ -468,8 +354,8 @@ public class InternalNavajoExpressionLexer extends Lexer {
     public final void mRULE_XML_GTEQ() throws RecognitionException {
         try {
             int _type = RULE_XML_GTEQ;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4417:15: ( '&gt;=' )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4417:17: '&gt;='
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4684:15: ( '&gt;=' )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4684:17: '&gt;='
             {
             match("&gt;="); 
 
@@ -487,8 +373,8 @@ public class InternalNavajoExpressionLexer extends Lexer {
     public final void mRULE_XML_LTEQ() throws RecognitionException {
         try {
             int _type = RULE_XML_LTEQ;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4419:15: ( '&lt;=' )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4419:17: '&lt;='
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4686:15: ( '&lt;=' )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4686:17: '&lt;='
             {
             match("&lt;="); 
 
@@ -506,10 +392,10 @@ public class InternalNavajoExpressionLexer extends Lexer {
     public final void mRULE_INT() throws RecognitionException {
         try {
             int _type = RULE_INT;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4421:10: ( ( '0' .. '9' )+ )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4421:12: ( '0' .. '9' )+
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4688:10: ( ( '0' .. '9' )+ )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4688:12: ( '0' .. '9' )+
             {
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4421:12: ( '0' .. '9' )+
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4688:12: ( '0' .. '9' )+
             int cnt1=0;
             loop1:
             do {
@@ -523,7 +409,7 @@ public class InternalNavajoExpressionLexer extends Lexer {
 
                 switch (alt1) {
             	case 1 :
-            	    // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4421:13: '0' .. '9'
+            	    // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4688:13: '0' .. '9'
             	    {
             	    matchRange('0','9'); 
 
@@ -553,12 +439,12 @@ public class InternalNavajoExpressionLexer extends Lexer {
     public final void mRULE_ML_COMMENT() throws RecognitionException {
         try {
             int _type = RULE_ML_COMMENT;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4423:17: ( '/*' ( options {greedy=false; } : . )* '*/' )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4423:19: '/*' ( options {greedy=false; } : . )* '*/'
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4690:17: ( '/*' ( options {greedy=false; } : . )* '*/' )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4690:19: '/*' ( options {greedy=false; } : . )* '*/'
             {
             match("/*"); 
 
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4423:24: ( options {greedy=false; } : . )*
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4690:24: ( options {greedy=false; } : . )*
             loop2:
             do {
                 int alt2=2;
@@ -583,7 +469,7 @@ public class InternalNavajoExpressionLexer extends Lexer {
 
                 switch (alt2) {
             	case 1 :
-            	    // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4423:52: .
+            	    // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4690:52: .
             	    {
             	    matchAny(); 
 
@@ -611,12 +497,12 @@ public class InternalNavajoExpressionLexer extends Lexer {
     public final void mRULE_SL_COMMENT() throws RecognitionException {
         try {
             int _type = RULE_SL_COMMENT;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4425:17: ( '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )? )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4425:19: '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )?
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4692:17: ( '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )? )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4692:19: '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )?
             {
             match("//"); 
 
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4425:24: (~ ( ( '\\n' | '\\r' ) ) )*
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4692:24: (~ ( ( '\\n' | '\\r' ) ) )*
             loop3:
             do {
                 int alt3=2;
@@ -629,7 +515,7 @@ public class InternalNavajoExpressionLexer extends Lexer {
 
                 switch (alt3) {
             	case 1 :
-            	    // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4425:24: ~ ( ( '\\n' | '\\r' ) )
+            	    // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4692:24: ~ ( ( '\\n' | '\\r' ) )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\f')||(input.LA(1)>='\u000E' && input.LA(1)<='\uFFFE') ) {
             	        input.consume();
@@ -650,7 +536,7 @@ public class InternalNavajoExpressionLexer extends Lexer {
                 }
             } while (true);
 
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4425:40: ( ( '\\r' )? '\\n' )?
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4692:40: ( ( '\\r' )? '\\n' )?
             int alt5=2;
             int LA5_0 = input.LA(1);
 
@@ -659,9 +545,9 @@ public class InternalNavajoExpressionLexer extends Lexer {
             }
             switch (alt5) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4425:41: ( '\\r' )? '\\n'
+                    // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4692:41: ( '\\r' )? '\\n'
                     {
-                    // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4425:41: ( '\\r' )?
+                    // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4692:41: ( '\\r' )?
                     int alt4=2;
                     int LA4_0 = input.LA(1);
 
@@ -670,7 +556,7 @@ public class InternalNavajoExpressionLexer extends Lexer {
                     }
                     switch (alt4) {
                         case 1 :
-                            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4425:41: '\\r'
+                            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4692:41: '\\r'
                             {
                             match('\r'); 
 
@@ -700,10 +586,10 @@ public class InternalNavajoExpressionLexer extends Lexer {
     public final void mRULE_WS() throws RecognitionException {
         try {
             int _type = RULE_WS;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4427:9: ( ( ' ' | '\\t' | '\\r' | '\\n' )+ )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4427:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4694:9: ( ( ' ' | '\\t' | '\\r' | '\\n' )+ )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4694:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
             {
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4427:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4694:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
             int cnt6=0;
             loop6:
             do {
@@ -752,23 +638,273 @@ public class InternalNavajoExpressionLexer extends Lexer {
     }
     // $ANTLR end RULE_WS
 
+    // $ANTLR start RULE_TRUE
+    public final void mRULE_TRUE() throws RecognitionException {
+        try {
+            int _type = RULE_TRUE;
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4696:11: ( ( 'true' | 'TRUE' ) )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4696:13: ( 'true' | 'TRUE' )
+            {
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4696:13: ( 'true' | 'TRUE' )
+            int alt7=2;
+            int LA7_0 = input.LA(1);
+
+            if ( (LA7_0=='t') ) {
+                alt7=1;
+            }
+            else if ( (LA7_0=='T') ) {
+                alt7=2;
+            }
+            else {
+                NoViableAltException nvae =
+                    new NoViableAltException("4696:13: ( 'true' | 'TRUE' )", 7, 0, input);
+
+                throw nvae;
+            }
+            switch (alt7) {
+                case 1 :
+                    // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4696:14: 'true'
+                    {
+                    match("true"); 
+
+
+                    }
+                    break;
+                case 2 :
+                    // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4696:21: 'TRUE'
+                    {
+                    match("TRUE"); 
+
+
+                    }
+                    break;
+
+            }
+
+
+            }
+
+            this.type = _type;
+        }
+        finally {
+        }
+    }
+    // $ANTLR end RULE_TRUE
+
+    // $ANTLR start RULE_FALSE
+    public final void mRULE_FALSE() throws RecognitionException {
+        try {
+            int _type = RULE_FALSE;
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4698:12: ( ( 'false' | 'FALSE' ) )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4698:14: ( 'false' | 'FALSE' )
+            {
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4698:14: ( 'false' | 'FALSE' )
+            int alt8=2;
+            int LA8_0 = input.LA(1);
+
+            if ( (LA8_0=='f') ) {
+                alt8=1;
+            }
+            else if ( (LA8_0=='F') ) {
+                alt8=2;
+            }
+            else {
+                NoViableAltException nvae =
+                    new NoViableAltException("4698:14: ( 'false' | 'FALSE' )", 8, 0, input);
+
+                throw nvae;
+            }
+            switch (alt8) {
+                case 1 :
+                    // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4698:15: 'false'
+                    {
+                    match("false"); 
+
+
+                    }
+                    break;
+                case 2 :
+                    // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4698:23: 'FALSE'
+                    {
+                    match("FALSE"); 
+
+
+                    }
+                    break;
+
+            }
+
+
+            }
+
+            this.type = _type;
+        }
+        finally {
+        }
+    }
+    // $ANTLR end RULE_FALSE
+
+    // $ANTLR start RULE_NULL
+    public final void mRULE_NULL() throws RecognitionException {
+        try {
+            int _type = RULE_NULL;
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4700:11: ( ( 'null' | 'NULL' ) )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4700:13: ( 'null' | 'NULL' )
+            {
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4700:13: ( 'null' | 'NULL' )
+            int alt9=2;
+            int LA9_0 = input.LA(1);
+
+            if ( (LA9_0=='n') ) {
+                alt9=1;
+            }
+            else if ( (LA9_0=='N') ) {
+                alt9=2;
+            }
+            else {
+                NoViableAltException nvae =
+                    new NoViableAltException("4700:13: ( 'null' | 'NULL' )", 9, 0, input);
+
+                throw nvae;
+            }
+            switch (alt9) {
+                case 1 :
+                    // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4700:14: 'null'
+                    {
+                    match("null"); 
+
+
+                    }
+                    break;
+                case 2 :
+                    // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4700:21: 'NULL'
+                    {
+                    match("NULL"); 
+
+
+                    }
+                    break;
+
+            }
+
+
+            }
+
+            this.type = _type;
+        }
+        finally {
+        }
+    }
+    // $ANTLR end RULE_NULL
+
+    // $ANTLR start RULE_TODAY
+    public final void mRULE_TODAY() throws RecognitionException {
+        try {
+            int _type = RULE_TODAY;
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4702:12: ( ( 'today' | 'TODAY' ) )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4702:14: ( 'today' | 'TODAY' )
+            {
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4702:14: ( 'today' | 'TODAY' )
+            int alt10=2;
+            int LA10_0 = input.LA(1);
+
+            if ( (LA10_0=='t') ) {
+                alt10=1;
+            }
+            else if ( (LA10_0=='T') ) {
+                alt10=2;
+            }
+            else {
+                NoViableAltException nvae =
+                    new NoViableAltException("4702:14: ( 'today' | 'TODAY' )", 10, 0, input);
+
+                throw nvae;
+            }
+            switch (alt10) {
+                case 1 :
+                    // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4702:15: 'today'
+                    {
+                    match("today"); 
+
+
+                    }
+                    break;
+                case 2 :
+                    // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4702:23: 'TODAY'
+                    {
+                    match("TODAY"); 
+
+
+                    }
+                    break;
+
+            }
+
+
+            }
+
+            this.type = _type;
+        }
+        finally {
+        }
+    }
+    // $ANTLR end RULE_TODAY
+
+    // $ANTLR start RULE_FORALL
+    public final void mRULE_FORALL() throws RecognitionException {
+        try {
+            int _type = RULE_FORALL;
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4704:13: ( 'FORALL' )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4704:15: 'FORALL'
+            {
+            match("FORALL"); 
+
+
+            }
+
+            this.type = _type;
+        }
+        finally {
+        }
+    }
+    // $ANTLR end RULE_FORALL
+
+    // $ANTLR start RULE_PARENT
+    public final void mRULE_PARENT() throws RecognitionException {
+        try {
+            int _type = RULE_PARENT;
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4706:13: ( '..' )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4706:15: '..'
+            {
+            match(".."); 
+
+
+            }
+
+            this.type = _type;
+        }
+        finally {
+        }
+    }
+    // $ANTLR end RULE_PARENT
+
     // $ANTLR start RULE_ID
     public final void mRULE_ID() throws RecognitionException {
         try {
             int _type = RULE_ID;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4429:9: ( ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )* )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4429:11: ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )*
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4708:9: ( ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )* )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4708:11: ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )*
             {
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4429:11: ( '^' )?
-            int alt7=2;
-            int LA7_0 = input.LA(1);
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4708:11: ( '^' )?
+            int alt11=2;
+            int LA11_0 = input.LA(1);
 
-            if ( (LA7_0=='^') ) {
-                alt7=1;
+            if ( (LA11_0=='^') ) {
+                alt11=1;
             }
-            switch (alt7) {
+            switch (alt11) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4429:11: '^'
+                    // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4708:11: '^'
                     {
                     match('^'); 
 
@@ -787,18 +923,18 @@ public class InternalNavajoExpressionLexer extends Lexer {
                 recover(mse);    throw mse;
             }
 
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4429:40: ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )*
-            loop8:
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4708:40: ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )*
+            loop12:
             do {
-                int alt8=2;
-                int LA8_0 = input.LA(1);
+                int alt12=2;
+                int LA12_0 = input.LA(1);
 
-                if ( ((LA8_0>='0' && LA8_0<='9')||(LA8_0>='A' && LA8_0<='Z')||LA8_0=='_'||(LA8_0>='a' && LA8_0<='z')) ) {
-                    alt8=1;
+                if ( ((LA12_0>='0' && LA12_0<='9')||(LA12_0>='A' && LA12_0<='Z')||LA12_0=='_'||(LA12_0>='a' && LA12_0<='z')) ) {
+                    alt12=1;
                 }
 
 
-                switch (alt8) {
+                switch (alt12) {
             	case 1 :
             	    // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:
             	    {
@@ -817,7 +953,7 @@ public class InternalNavajoExpressionLexer extends Lexer {
             	    break;
 
             	default :
-            	    break loop8;
+            	    break loop12;
                 }
             } while (true);
 
@@ -835,8 +971,8 @@ public class InternalNavajoExpressionLexer extends Lexer {
     public final void mRULE_AT() throws RecognitionException {
         try {
             int _type = RULE_AT;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4431:9: ( '@' )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4431:11: '@'
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4710:9: ( '@' )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4710:11: '@'
             {
             match('@'); 
 
@@ -853,65 +989,147 @@ public class InternalNavajoExpressionLexer extends Lexer {
     public final void mRULE_LITERALSTRING() throws RecognitionException {
         try {
             int _type = RULE_LITERALSTRING;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4433:20: ( '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4433:22: '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\''
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4712:20: ( ( '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' | '<![CDATA[' ( options {greedy=false; } : . )* ']]>' ) )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4712:22: ( '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' | '<![CDATA[' ( options {greedy=false; } : . )* ']]>' )
             {
-            match('\''); 
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4433:27: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )*
-            loop9:
-            do {
-                int alt9=3;
-                int LA9_0 = input.LA(1);
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4712:22: ( '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' | '<![CDATA[' ( options {greedy=false; } : . )* ']]>' )
+            int alt15=2;
+            int LA15_0 = input.LA(1);
 
-                if ( (LA9_0=='\\') ) {
-                    alt9=1;
-                }
-                else if ( ((LA9_0>='\u0000' && LA9_0<='&')||(LA9_0>='(' && LA9_0<='[')||(LA9_0>=']' && LA9_0<='\uFFFE')) ) {
-                    alt9=2;
-                }
+            if ( (LA15_0=='\'') ) {
+                alt15=1;
+            }
+            else if ( (LA15_0=='<') ) {
+                alt15=2;
+            }
+            else {
+                NoViableAltException nvae =
+                    new NoViableAltException("4712:22: ( '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' | '<![CDATA[' ( options {greedy=false; } : . )* ']]>' )", 15, 0, input);
 
+                throw nvae;
+            }
+            switch (alt15) {
+                case 1 :
+                    // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4712:23: '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\''
+                    {
+                    match('\''); 
+                    // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4712:28: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )*
+                    loop13:
+                    do {
+                        int alt13=3;
+                        int LA13_0 = input.LA(1);
 
-                switch (alt9) {
-            	case 1 :
-            	    // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4433:28: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' )
-            	    {
-            	    match('\\'); 
-            	    if ( input.LA(1)=='\"'||input.LA(1)=='\''||input.LA(1)=='\\'||input.LA(1)=='b'||input.LA(1)=='f'||input.LA(1)=='n'||input.LA(1)=='r'||input.LA(1)=='t' ) {
-            	        input.consume();
-
-            	    }
-            	    else {
-            	        MismatchedSetException mse =
-            	            new MismatchedSetException(null,input);
-            	        recover(mse);    throw mse;
-            	    }
-
-
-            	    }
-            	    break;
-            	case 2 :
-            	    // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4433:69: ~ ( ( '\\\\' | '\\'' ) )
-            	    {
-            	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='&')||(input.LA(1)>='(' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFE') ) {
-            	        input.consume();
-
-            	    }
-            	    else {
-            	        MismatchedSetException mse =
-            	            new MismatchedSetException(null,input);
-            	        recover(mse);    throw mse;
-            	    }
+                        if ( (LA13_0=='\\') ) {
+                            alt13=1;
+                        }
+                        else if ( ((LA13_0>='\u0000' && LA13_0<='&')||(LA13_0>='(' && LA13_0<='[')||(LA13_0>=']' && LA13_0<='\uFFFE')) ) {
+                            alt13=2;
+                        }
 
 
-            	    }
-            	    break;
+                        switch (alt13) {
+                    	case 1 :
+                    	    // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4712:29: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' )
+                    	    {
+                    	    match('\\'); 
+                    	    if ( input.LA(1)=='\"'||input.LA(1)=='\''||input.LA(1)=='\\'||input.LA(1)=='b'||input.LA(1)=='f'||input.LA(1)=='n'||input.LA(1)=='r'||input.LA(1)=='t' ) {
+                    	        input.consume();
 
-            	default :
-            	    break loop9;
-                }
-            } while (true);
+                    	    }
+                    	    else {
+                    	        MismatchedSetException mse =
+                    	            new MismatchedSetException(null,input);
+                    	        recover(mse);    throw mse;
+                    	    }
 
-            match('\''); 
+
+                    	    }
+                    	    break;
+                    	case 2 :
+                    	    // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4712:70: ~ ( ( '\\\\' | '\\'' ) )
+                    	    {
+                    	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='&')||(input.LA(1)>='(' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFE') ) {
+                    	        input.consume();
+
+                    	    }
+                    	    else {
+                    	        MismatchedSetException mse =
+                    	            new MismatchedSetException(null,input);
+                    	        recover(mse);    throw mse;
+                    	    }
+
+
+                    	    }
+                    	    break;
+
+                    	default :
+                    	    break loop13;
+                        }
+                    } while (true);
+
+                    match('\''); 
+
+                    }
+                    break;
+                case 2 :
+                    // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4712:92: '<![CDATA[' ( options {greedy=false; } : . )* ']]>'
+                    {
+                    match("<![CDATA["); 
+
+                    // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4712:104: ( options {greedy=false; } : . )*
+                    loop14:
+                    do {
+                        int alt14=2;
+                        int LA14_0 = input.LA(1);
+
+                        if ( (LA14_0==']') ) {
+                            int LA14_1 = input.LA(2);
+
+                            if ( (LA14_1==']') ) {
+                                int LA14_3 = input.LA(3);
+
+                                if ( (LA14_3=='>') ) {
+                                    alt14=2;
+                                }
+                                else if ( ((LA14_3>='\u0000' && LA14_3<='=')||(LA14_3>='?' && LA14_3<='\uFFFE')) ) {
+                                    alt14=1;
+                                }
+
+
+                            }
+                            else if ( ((LA14_1>='\u0000' && LA14_1<='\\')||(LA14_1>='^' && LA14_1<='\uFFFE')) ) {
+                                alt14=1;
+                            }
+
+
+                        }
+                        else if ( ((LA14_0>='\u0000' && LA14_0<='\\')||(LA14_0>='^' && LA14_0<='\uFFFE')) ) {
+                            alt14=1;
+                        }
+
+
+                        switch (alt14) {
+                    	case 1 :
+                    	    // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4712:132: .
+                    	    {
+                    	    matchAny(); 
+
+                    	    }
+                    	    break;
+
+                    	default :
+                    	    break loop14;
+                        }
+                    } while (true);
+
+                    match("]]>"); 
+
+
+                    }
+                    break;
+
+            }
+
 
             }
 
@@ -926,8 +1144,8 @@ public class InternalNavajoExpressionLexer extends Lexer {
     public final void mRULE_SQBRACKET_OPEN() throws RecognitionException {
         try {
             int _type = RULE_SQBRACKET_OPEN;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4435:21: ( '[' )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4435:23: '['
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4714:21: ( '[' )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4714:23: '['
             {
             match('['); 
 
@@ -944,8 +1162,8 @@ public class InternalNavajoExpressionLexer extends Lexer {
     public final void mRULE_SQBRACKET_CLOSE() throws RecognitionException {
         try {
             int _type = RULE_SQBRACKET_CLOSE;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4437:22: ( ']' )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4437:24: ']'
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4716:22: ( ']' )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4716:24: ']'
             {
             match(']'); 
 
@@ -962,8 +1180,8 @@ public class InternalNavajoExpressionLexer extends Lexer {
     public final void mRULE_TML_SEPARATOR() throws RecognitionException {
         try {
             int _type = RULE_TML_SEPARATOR;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4439:20: ( '/' )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4439:22: '/'
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4718:20: ( '/' )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4718:22: '/'
             {
             match('/'); 
 
@@ -980,8 +1198,8 @@ public class InternalNavajoExpressionLexer extends Lexer {
     public final void mRULE_TML_EXISTS() throws RecognitionException {
         try {
             int _type = RULE_TML_EXISTS;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4441:17: ( '?' )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4441:19: '?'
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4720:17: ( '?' )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4720:19: '?'
             {
             match('?'); 
 
@@ -998,8 +1216,8 @@ public class InternalNavajoExpressionLexer extends Lexer {
     public final void mRULE_DOLLAR() throws RecognitionException {
         try {
             int _type = RULE_DOLLAR;
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4443:13: ( '$' )
-            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4443:15: '$'
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4722:13: ( '$' )
+            // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:4722:15: '$'
             {
             match('$'); 
 
@@ -1013,342 +1231,181 @@ public class InternalNavajoExpressionLexer extends Lexer {
     // $ANTLR end RULE_DOLLAR
 
     public void mTokens() throws RecognitionException {
-        // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:8: ( T20 | T21 | T22 | T23 | T24 | T25 | T26 | T27 | T28 | T29 | T30 | T31 | T32 | T33 | T34 | T35 | T36 | T37 | T38 | T39 | RULE_XML_GT | RULE_XML_LT | RULE_XML_GTEQ | RULE_XML_LTEQ | RULE_INT | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_WS | RULE_ID | RULE_AT | RULE_LITERALSTRING | RULE_SQBRACKET_OPEN | RULE_SQBRACKET_CLOSE | RULE_TML_SEPARATOR | RULE_TML_EXISTS | RULE_DOLLAR )
-        int alt10=36;
+        // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:8: ( T26 | T27 | T28 | T29 | T30 | T31 | T32 | T33 | T34 | T35 | T36 | T37 | T38 | T39 | RULE_XML_GT | RULE_XML_LT | RULE_XML_GTEQ | RULE_XML_LTEQ | RULE_INT | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_WS | RULE_TRUE | RULE_FALSE | RULE_NULL | RULE_TODAY | RULE_FORALL | RULE_PARENT | RULE_ID | RULE_AT | RULE_LITERALSTRING | RULE_SQBRACKET_OPEN | RULE_SQBRACKET_CLOSE | RULE_TML_SEPARATOR | RULE_TML_EXISTS | RULE_DOLLAR )
+        int alt16=36;
         switch ( input.LA(1) ) {
         case '.':
             {
-            int LA10_1 = input.LA(2);
+            int LA16_1 = input.LA(2);
 
-            if ( (LA10_1=='.') ) {
-                alt10=2;
+            if ( (LA16_1=='.') ) {
+                alt16=28;
             }
             else {
-                alt10=1;}
-            }
-            break;
-        case '+':
-            {
-            alt10=3;
-            }
-            break;
-        case '-':
-            {
-            alt10=4;
+                alt16=1;}
             }
             break;
         case '(':
             {
-            alt10=5;
+            alt16=2;
             }
             break;
         case ')':
             {
-            alt10=6;
+            alt16=3;
             }
             break;
         case ',':
             {
-            alt10=7;
+            alt16=4;
+            }
+            break;
+        case '+':
+            {
+            alt16=5;
+            }
+            break;
+        case '-':
+            {
+            alt16=6;
             }
             break;
         case '}':
             {
-            alt10=8;
+            alt16=7;
             }
             break;
         case 'O':
             {
-            int LA10_8 = input.LA(2);
+            int LA16_8 = input.LA(2);
 
-            if ( (LA10_8=='R') ) {
-                int LA10_30 = input.LA(3);
+            if ( (LA16_8=='R') ) {
+                int LA16_33 = input.LA(3);
 
-                if ( ((LA10_30>='0' && LA10_30<='9')||(LA10_30>='A' && LA10_30<='Z')||LA10_30=='_'||(LA10_30>='a' && LA10_30<='z')) ) {
-                    alt10=29;
+                if ( ((LA16_33>='0' && LA16_33<='9')||(LA16_33>='A' && LA16_33<='Z')||LA16_33=='_'||(LA16_33>='a' && LA16_33<='z')) ) {
+                    alt16=29;
                 }
                 else {
-                    alt10=9;}
+                    alt16=8;}
             }
             else {
-                alt10=29;}
+                alt16=29;}
             }
             break;
         case 'A':
             {
-            int LA10_9 = input.LA(2);
+            int LA16_9 = input.LA(2);
 
-            if ( (LA10_9=='N') ) {
-                int LA10_31 = input.LA(3);
+            if ( (LA16_9=='N') ) {
+                int LA16_34 = input.LA(3);
 
-                if ( (LA10_31=='D') ) {
-                    int LA10_45 = input.LA(4);
+                if ( (LA16_34=='D') ) {
+                    int LA16_52 = input.LA(4);
 
-                    if ( ((LA10_45>='0' && LA10_45<='9')||(LA10_45>='A' && LA10_45<='Z')||LA10_45=='_'||(LA10_45>='a' && LA10_45<='z')) ) {
-                        alt10=29;
+                    if ( ((LA16_52>='0' && LA16_52<='9')||(LA16_52>='A' && LA16_52<='Z')||LA16_52=='_'||(LA16_52>='a' && LA16_52<='z')) ) {
+                        alt16=29;
                     }
                     else {
-                        alt10=10;}
+                        alt16=9;}
                 }
                 else {
-                    alt10=29;}
+                    alt16=29;}
             }
             else {
-                alt10=29;}
+                alt16=29;}
             }
             break;
         case '=':
             {
-            alt10=11;
+            alt16=10;
             }
             break;
         case '!':
             {
-            int LA10_11 = input.LA(2);
+            int LA16_11 = input.LA(2);
 
-            if ( (LA10_11=='=') ) {
-                alt10=12;
+            if ( (LA16_11=='=') ) {
+                alt16=11;
             }
             else {
-                alt10=14;}
+                alt16=13;}
             }
             break;
         case '*':
             {
-            alt10=13;
-            }
-            break;
-        case 'F':
-            {
-            switch ( input.LA(2) ) {
-            case 'O':
-                {
-                int LA10_34 = input.LA(3);
-
-                if ( (LA10_34=='R') ) {
-                    int LA10_46 = input.LA(4);
-
-                    if ( (LA10_46=='A') ) {
-                        int LA10_54 = input.LA(5);
-
-                        if ( (LA10_54=='L') ) {
-                            int LA10_61 = input.LA(6);
-
-                            if ( (LA10_61=='L') ) {
-                                int LA10_70 = input.LA(7);
-
-                                if ( ((LA10_70>='0' && LA10_70<='9')||(LA10_70>='A' && LA10_70<='Z')||LA10_70=='_'||(LA10_70>='a' && LA10_70<='z')) ) {
-                                    alt10=29;
-                                }
-                                else {
-                                    alt10=15;}
-                            }
-                            else {
-                                alt10=29;}
-                        }
-                        else {
-                            alt10=29;}
-                    }
-                    else {
-                        alt10=29;}
-                }
-                else {
-                    alt10=29;}
-                }
-                break;
-            case 'A':
-                {
-                int LA10_35 = input.LA(3);
-
-                if ( (LA10_35=='L') ) {
-                    int LA10_47 = input.LA(4);
-
-                    if ( (LA10_47=='S') ) {
-                        int LA10_55 = input.LA(5);
-
-                        if ( (LA10_55=='E') ) {
-                            int LA10_62 = input.LA(6);
-
-                            if ( ((LA10_62>='0' && LA10_62<='9')||(LA10_62>='A' && LA10_62<='Z')||LA10_62=='_'||(LA10_62>='a' && LA10_62<='z')) ) {
-                                alt10=29;
-                            }
-                            else {
-                                alt10=20;}
-                        }
-                        else {
-                            alt10=29;}
-                    }
-                    else {
-                        alt10=29;}
-                }
-                else {
-                    alt10=29;}
-                }
-                break;
-            default:
-                alt10=29;}
-
+            alt16=12;
             }
             break;
         case '{':
             {
-            alt10=16;
-            }
-            break;
-        case 'N':
-            {
-            int LA10_15 = input.LA(2);
-
-            if ( (LA10_15=='U') ) {
-                int LA10_36 = input.LA(3);
-
-                if ( (LA10_36=='L') ) {
-                    int LA10_48 = input.LA(4);
-
-                    if ( (LA10_48=='L') ) {
-                        int LA10_56 = input.LA(5);
-
-                        if ( ((LA10_56>='0' && LA10_56<='9')||(LA10_56>='A' && LA10_56<='Z')||LA10_56=='_'||(LA10_56>='a' && LA10_56<='z')) ) {
-                            alt10=29;
-                        }
-                        else {
-                            alt10=17;}
-                    }
-                    else {
-                        alt10=29;}
-                }
-                else {
-                    alt10=29;}
-            }
-            else {
-                alt10=29;}
-            }
-            break;
-        case 'T':
-            {
-            switch ( input.LA(2) ) {
-            case 'O':
-                {
-                int LA10_37 = input.LA(3);
-
-                if ( (LA10_37=='D') ) {
-                    int LA10_49 = input.LA(4);
-
-                    if ( (LA10_49=='A') ) {
-                        int LA10_57 = input.LA(5);
-
-                        if ( (LA10_57=='Y') ) {
-                            int LA10_64 = input.LA(6);
-
-                            if ( ((LA10_64>='0' && LA10_64<='9')||(LA10_64>='A' && LA10_64<='Z')||LA10_64=='_'||(LA10_64>='a' && LA10_64<='z')) ) {
-                                alt10=29;
-                            }
-                            else {
-                                alt10=18;}
-                        }
-                        else {
-                            alt10=29;}
-                    }
-                    else {
-                        alt10=29;}
-                }
-                else {
-                    alt10=29;}
-                }
-                break;
-            case 'R':
-                {
-                int LA10_38 = input.LA(3);
-
-                if ( (LA10_38=='U') ) {
-                    int LA10_50 = input.LA(4);
-
-                    if ( (LA10_50=='E') ) {
-                        int LA10_58 = input.LA(5);
-
-                        if ( ((LA10_58>='0' && LA10_58<='9')||(LA10_58>='A' && LA10_58<='Z')||LA10_58=='_'||(LA10_58>='a' && LA10_58<='z')) ) {
-                            alt10=29;
-                        }
-                        else {
-                            alt10=19;}
-                    }
-                    else {
-                        alt10=29;}
-                }
-                else {
-                    alt10=29;}
-                }
-                break;
-            default:
-                alt10=29;}
-
+            alt16=14;
             }
             break;
         case '&':
             {
-            int LA10_17 = input.LA(2);
+            int LA16_14 = input.LA(2);
 
-            if ( (LA10_17=='l') ) {
-                int LA10_39 = input.LA(3);
+            if ( (LA16_14=='l') ) {
+                int LA16_37 = input.LA(3);
 
-                if ( (LA10_39=='t') ) {
-                    int LA10_51 = input.LA(4);
+                if ( (LA16_37=='t') ) {
+                    int LA16_53 = input.LA(4);
 
-                    if ( (LA10_51==';') ) {
-                        int LA10_59 = input.LA(5);
+                    if ( (LA16_53==';') ) {
+                        int LA16_65 = input.LA(5);
 
-                        if ( (LA10_59=='=') ) {
-                            alt10=24;
+                        if ( (LA16_65=='=') ) {
+                            alt16=18;
                         }
                         else {
-                            alt10=22;}
+                            alt16=16;}
                     }
                     else {
                         NoViableAltException nvae =
-                            new NoViableAltException("1:1: Tokens : ( T20 | T21 | T22 | T23 | T24 | T25 | T26 | T27 | T28 | T29 | T30 | T31 | T32 | T33 | T34 | T35 | T36 | T37 | T38 | T39 | RULE_XML_GT | RULE_XML_LT | RULE_XML_GTEQ | RULE_XML_LTEQ | RULE_INT | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_WS | RULE_ID | RULE_AT | RULE_LITERALSTRING | RULE_SQBRACKET_OPEN | RULE_SQBRACKET_CLOSE | RULE_TML_SEPARATOR | RULE_TML_EXISTS | RULE_DOLLAR );", 10, 51, input);
+                            new NoViableAltException("1:1: Tokens : ( T26 | T27 | T28 | T29 | T30 | T31 | T32 | T33 | T34 | T35 | T36 | T37 | T38 | T39 | RULE_XML_GT | RULE_XML_LT | RULE_XML_GTEQ | RULE_XML_LTEQ | RULE_INT | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_WS | RULE_TRUE | RULE_FALSE | RULE_NULL | RULE_TODAY | RULE_FORALL | RULE_PARENT | RULE_ID | RULE_AT | RULE_LITERALSTRING | RULE_SQBRACKET_OPEN | RULE_SQBRACKET_CLOSE | RULE_TML_SEPARATOR | RULE_TML_EXISTS | RULE_DOLLAR );", 16, 53, input);
 
                         throw nvae;
                     }
                 }
                 else {
                     NoViableAltException nvae =
-                        new NoViableAltException("1:1: Tokens : ( T20 | T21 | T22 | T23 | T24 | T25 | T26 | T27 | T28 | T29 | T30 | T31 | T32 | T33 | T34 | T35 | T36 | T37 | T38 | T39 | RULE_XML_GT | RULE_XML_LT | RULE_XML_GTEQ | RULE_XML_LTEQ | RULE_INT | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_WS | RULE_ID | RULE_AT | RULE_LITERALSTRING | RULE_SQBRACKET_OPEN | RULE_SQBRACKET_CLOSE | RULE_TML_SEPARATOR | RULE_TML_EXISTS | RULE_DOLLAR );", 10, 39, input);
+                        new NoViableAltException("1:1: Tokens : ( T26 | T27 | T28 | T29 | T30 | T31 | T32 | T33 | T34 | T35 | T36 | T37 | T38 | T39 | RULE_XML_GT | RULE_XML_LT | RULE_XML_GTEQ | RULE_XML_LTEQ | RULE_INT | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_WS | RULE_TRUE | RULE_FALSE | RULE_NULL | RULE_TODAY | RULE_FORALL | RULE_PARENT | RULE_ID | RULE_AT | RULE_LITERALSTRING | RULE_SQBRACKET_OPEN | RULE_SQBRACKET_CLOSE | RULE_TML_SEPARATOR | RULE_TML_EXISTS | RULE_DOLLAR );", 16, 37, input);
 
                     throw nvae;
                 }
             }
-            else if ( (LA10_17=='g') ) {
-                int LA10_40 = input.LA(3);
+            else if ( (LA16_14=='g') ) {
+                int LA16_38 = input.LA(3);
 
-                if ( (LA10_40=='t') ) {
-                    int LA10_52 = input.LA(4);
+                if ( (LA16_38=='t') ) {
+                    int LA16_54 = input.LA(4);
 
-                    if ( (LA10_52==';') ) {
-                        int LA10_60 = input.LA(5);
+                    if ( (LA16_54==';') ) {
+                        int LA16_66 = input.LA(5);
 
-                        if ( (LA10_60=='=') ) {
-                            alt10=23;
+                        if ( (LA16_66=='=') ) {
+                            alt16=17;
                         }
                         else {
-                            alt10=21;}
+                            alt16=15;}
                     }
                     else {
                         NoViableAltException nvae =
-                            new NoViableAltException("1:1: Tokens : ( T20 | T21 | T22 | T23 | T24 | T25 | T26 | T27 | T28 | T29 | T30 | T31 | T32 | T33 | T34 | T35 | T36 | T37 | T38 | T39 | RULE_XML_GT | RULE_XML_LT | RULE_XML_GTEQ | RULE_XML_LTEQ | RULE_INT | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_WS | RULE_ID | RULE_AT | RULE_LITERALSTRING | RULE_SQBRACKET_OPEN | RULE_SQBRACKET_CLOSE | RULE_TML_SEPARATOR | RULE_TML_EXISTS | RULE_DOLLAR );", 10, 52, input);
+                            new NoViableAltException("1:1: Tokens : ( T26 | T27 | T28 | T29 | T30 | T31 | T32 | T33 | T34 | T35 | T36 | T37 | T38 | T39 | RULE_XML_GT | RULE_XML_LT | RULE_XML_GTEQ | RULE_XML_LTEQ | RULE_INT | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_WS | RULE_TRUE | RULE_FALSE | RULE_NULL | RULE_TODAY | RULE_FORALL | RULE_PARENT | RULE_ID | RULE_AT | RULE_LITERALSTRING | RULE_SQBRACKET_OPEN | RULE_SQBRACKET_CLOSE | RULE_TML_SEPARATOR | RULE_TML_EXISTS | RULE_DOLLAR );", 16, 54, input);
 
                         throw nvae;
                     }
                 }
                 else {
                     NoViableAltException nvae =
-                        new NoViableAltException("1:1: Tokens : ( T20 | T21 | T22 | T23 | T24 | T25 | T26 | T27 | T28 | T29 | T30 | T31 | T32 | T33 | T34 | T35 | T36 | T37 | T38 | T39 | RULE_XML_GT | RULE_XML_LT | RULE_XML_GTEQ | RULE_XML_LTEQ | RULE_INT | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_WS | RULE_ID | RULE_AT | RULE_LITERALSTRING | RULE_SQBRACKET_OPEN | RULE_SQBRACKET_CLOSE | RULE_TML_SEPARATOR | RULE_TML_EXISTS | RULE_DOLLAR );", 10, 40, input);
+                        new NoViableAltException("1:1: Tokens : ( T26 | T27 | T28 | T29 | T30 | T31 | T32 | T33 | T34 | T35 | T36 | T37 | T38 | T39 | RULE_XML_GT | RULE_XML_LT | RULE_XML_GTEQ | RULE_XML_LTEQ | RULE_INT | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_WS | RULE_TRUE | RULE_FALSE | RULE_NULL | RULE_TODAY | RULE_FORALL | RULE_PARENT | RULE_ID | RULE_AT | RULE_LITERALSTRING | RULE_SQBRACKET_OPEN | RULE_SQBRACKET_CLOSE | RULE_TML_SEPARATOR | RULE_TML_EXISTS | RULE_DOLLAR );", 16, 38, input);
 
                     throw nvae;
                 }
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("1:1: Tokens : ( T20 | T21 | T22 | T23 | T24 | T25 | T26 | T27 | T28 | T29 | T30 | T31 | T32 | T33 | T34 | T35 | T36 | T37 | T38 | T39 | RULE_XML_GT | RULE_XML_LT | RULE_XML_GTEQ | RULE_XML_LTEQ | RULE_INT | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_WS | RULE_ID | RULE_AT | RULE_LITERALSTRING | RULE_SQBRACKET_OPEN | RULE_SQBRACKET_CLOSE | RULE_TML_SEPARATOR | RULE_TML_EXISTS | RULE_DOLLAR );", 10, 17, input);
+                    new NoViableAltException("1:1: Tokens : ( T26 | T27 | T28 | T29 | T30 | T31 | T32 | T33 | T34 | T35 | T36 | T37 | T38 | T39 | RULE_XML_GT | RULE_XML_LT | RULE_XML_GTEQ | RULE_XML_LTEQ | RULE_INT | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_WS | RULE_TRUE | RULE_FALSE | RULE_NULL | RULE_TODAY | RULE_FORALL | RULE_PARENT | RULE_ID | RULE_AT | RULE_LITERALSTRING | RULE_SQBRACKET_OPEN | RULE_SQBRACKET_CLOSE | RULE_TML_SEPARATOR | RULE_TML_EXISTS | RULE_DOLLAR );", 16, 14, input);
 
                 throw nvae;
             }
@@ -1365,7 +1422,7 @@ public class InternalNavajoExpressionLexer extends Lexer {
         case '8':
         case '9':
             {
-            alt10=25;
+            alt16=19;
             }
             break;
         case '/':
@@ -1373,16 +1430,16 @@ public class InternalNavajoExpressionLexer extends Lexer {
             switch ( input.LA(2) ) {
             case '*':
                 {
-                alt10=26;
+                alt16=20;
                 }
                 break;
             case '/':
                 {
-                alt10=27;
+                alt16=21;
                 }
                 break;
             default:
-                alt10=34;}
+                alt16=34;}
 
             }
             break;
@@ -1391,7 +1448,292 @@ public class InternalNavajoExpressionLexer extends Lexer {
         case '\r':
         case ' ':
             {
-            alt10=28;
+            alt16=22;
+            }
+            break;
+        case 't':
+            {
+            switch ( input.LA(2) ) {
+            case 'r':
+                {
+                int LA16_42 = input.LA(3);
+
+                if ( (LA16_42=='u') ) {
+                    int LA16_55 = input.LA(4);
+
+                    if ( (LA16_55=='e') ) {
+                        int LA16_67 = input.LA(5);
+
+                        if ( ((LA16_67>='0' && LA16_67<='9')||(LA16_67>='A' && LA16_67<='Z')||LA16_67=='_'||(LA16_67>='a' && LA16_67<='z')) ) {
+                            alt16=29;
+                        }
+                        else {
+                            alt16=23;}
+                    }
+                    else {
+                        alt16=29;}
+                }
+                else {
+                    alt16=29;}
+                }
+                break;
+            case 'o':
+                {
+                int LA16_43 = input.LA(3);
+
+                if ( (LA16_43=='d') ) {
+                    int LA16_56 = input.LA(4);
+
+                    if ( (LA16_56=='a') ) {
+                        int LA16_68 = input.LA(5);
+
+                        if ( (LA16_68=='y') ) {
+                            int LA16_81 = input.LA(6);
+
+                            if ( ((LA16_81>='0' && LA16_81<='9')||(LA16_81>='A' && LA16_81<='Z')||LA16_81=='_'||(LA16_81>='a' && LA16_81<='z')) ) {
+                                alt16=29;
+                            }
+                            else {
+                                alt16=26;}
+                        }
+                        else {
+                            alt16=29;}
+                    }
+                    else {
+                        alt16=29;}
+                }
+                else {
+                    alt16=29;}
+                }
+                break;
+            default:
+                alt16=29;}
+
+            }
+            break;
+        case 'T':
+            {
+            switch ( input.LA(2) ) {
+            case 'R':
+                {
+                int LA16_44 = input.LA(3);
+
+                if ( (LA16_44=='U') ) {
+                    int LA16_57 = input.LA(4);
+
+                    if ( (LA16_57=='E') ) {
+                        int LA16_69 = input.LA(5);
+
+                        if ( ((LA16_69>='0' && LA16_69<='9')||(LA16_69>='A' && LA16_69<='Z')||LA16_69=='_'||(LA16_69>='a' && LA16_69<='z')) ) {
+                            alt16=29;
+                        }
+                        else {
+                            alt16=23;}
+                    }
+                    else {
+                        alt16=29;}
+                }
+                else {
+                    alt16=29;}
+                }
+                break;
+            case 'O':
+                {
+                int LA16_45 = input.LA(3);
+
+                if ( (LA16_45=='D') ) {
+                    int LA16_58 = input.LA(4);
+
+                    if ( (LA16_58=='A') ) {
+                        int LA16_70 = input.LA(5);
+
+                        if ( (LA16_70=='Y') ) {
+                            int LA16_82 = input.LA(6);
+
+                            if ( ((LA16_82>='0' && LA16_82<='9')||(LA16_82>='A' && LA16_82<='Z')||LA16_82=='_'||(LA16_82>='a' && LA16_82<='z')) ) {
+                                alt16=29;
+                            }
+                            else {
+                                alt16=26;}
+                        }
+                        else {
+                            alt16=29;}
+                    }
+                    else {
+                        alt16=29;}
+                }
+                else {
+                    alt16=29;}
+                }
+                break;
+            default:
+                alt16=29;}
+
+            }
+            break;
+        case 'f':
+            {
+            int LA16_20 = input.LA(2);
+
+            if ( (LA16_20=='a') ) {
+                int LA16_46 = input.LA(3);
+
+                if ( (LA16_46=='l') ) {
+                    int LA16_59 = input.LA(4);
+
+                    if ( (LA16_59=='s') ) {
+                        int LA16_71 = input.LA(5);
+
+                        if ( (LA16_71=='e') ) {
+                            int LA16_83 = input.LA(6);
+
+                            if ( ((LA16_83>='0' && LA16_83<='9')||(LA16_83>='A' && LA16_83<='Z')||LA16_83=='_'||(LA16_83>='a' && LA16_83<='z')) ) {
+                                alt16=29;
+                            }
+                            else {
+                                alt16=24;}
+                        }
+                        else {
+                            alt16=29;}
+                    }
+                    else {
+                        alt16=29;}
+                }
+                else {
+                    alt16=29;}
+            }
+            else {
+                alt16=29;}
+            }
+            break;
+        case 'F':
+            {
+            switch ( input.LA(2) ) {
+            case 'A':
+                {
+                int LA16_47 = input.LA(3);
+
+                if ( (LA16_47=='L') ) {
+                    int LA16_60 = input.LA(4);
+
+                    if ( (LA16_60=='S') ) {
+                        int LA16_72 = input.LA(5);
+
+                        if ( (LA16_72=='E') ) {
+                            int LA16_84 = input.LA(6);
+
+                            if ( ((LA16_84>='0' && LA16_84<='9')||(LA16_84>='A' && LA16_84<='Z')||LA16_84=='_'||(LA16_84>='a' && LA16_84<='z')) ) {
+                                alt16=29;
+                            }
+                            else {
+                                alt16=24;}
+                        }
+                        else {
+                            alt16=29;}
+                    }
+                    else {
+                        alt16=29;}
+                }
+                else {
+                    alt16=29;}
+                }
+                break;
+            case 'O':
+                {
+                int LA16_48 = input.LA(3);
+
+                if ( (LA16_48=='R') ) {
+                    int LA16_61 = input.LA(4);
+
+                    if ( (LA16_61=='A') ) {
+                        int LA16_73 = input.LA(5);
+
+                        if ( (LA16_73=='L') ) {
+                            int LA16_85 = input.LA(6);
+
+                            if ( (LA16_85=='L') ) {
+                                int LA16_89 = input.LA(7);
+
+                                if ( ((LA16_89>='0' && LA16_89<='9')||(LA16_89>='A' && LA16_89<='Z')||LA16_89=='_'||(LA16_89>='a' && LA16_89<='z')) ) {
+                                    alt16=29;
+                                }
+                                else {
+                                    alt16=27;}
+                            }
+                            else {
+                                alt16=29;}
+                        }
+                        else {
+                            alt16=29;}
+                    }
+                    else {
+                        alt16=29;}
+                }
+                else {
+                    alt16=29;}
+                }
+                break;
+            default:
+                alt16=29;}
+
+            }
+            break;
+        case 'n':
+            {
+            int LA16_22 = input.LA(2);
+
+            if ( (LA16_22=='u') ) {
+                int LA16_49 = input.LA(3);
+
+                if ( (LA16_49=='l') ) {
+                    int LA16_62 = input.LA(4);
+
+                    if ( (LA16_62=='l') ) {
+                        int LA16_74 = input.LA(5);
+
+                        if ( ((LA16_74>='0' && LA16_74<='9')||(LA16_74>='A' && LA16_74<='Z')||LA16_74=='_'||(LA16_74>='a' && LA16_74<='z')) ) {
+                            alt16=29;
+                        }
+                        else {
+                            alt16=25;}
+                    }
+                    else {
+                        alt16=29;}
+                }
+                else {
+                    alt16=29;}
+            }
+            else {
+                alt16=29;}
+            }
+            break;
+        case 'N':
+            {
+            int LA16_23 = input.LA(2);
+
+            if ( (LA16_23=='U') ) {
+                int LA16_50 = input.LA(3);
+
+                if ( (LA16_50=='L') ) {
+                    int LA16_63 = input.LA(4);
+
+                    if ( (LA16_63=='L') ) {
+                        int LA16_75 = input.LA(5);
+
+                        if ( ((LA16_75>='0' && LA16_75<='9')||(LA16_75>='A' && LA16_75<='Z')||LA16_75=='_'||(LA16_75>='a' && LA16_75<='z')) ) {
+                            alt16=29;
+                        }
+                        else {
+                            alt16=25;}
+                    }
+                    else {
+                        alt16=29;}
+                }
+                else {
+                    alt16=29;}
+            }
+            else {
+                alt16=29;}
             }
             break;
         case 'B':
@@ -1422,7 +1764,6 @@ public class InternalNavajoExpressionLexer extends Lexer {
         case 'c':
         case 'd':
         case 'e':
-        case 'f':
         case 'g':
         case 'h':
         case 'i':
@@ -1430,13 +1771,11 @@ public class InternalNavajoExpressionLexer extends Lexer {
         case 'k':
         case 'l':
         case 'm':
-        case 'n':
         case 'o':
         case 'p':
         case 'q':
         case 'r':
         case 's':
-        case 't':
         case 'u':
         case 'v':
         case 'w':
@@ -1444,294 +1783,295 @@ public class InternalNavajoExpressionLexer extends Lexer {
         case 'y':
         case 'z':
             {
-            alt10=29;
+            alt16=29;
             }
             break;
         case '@':
             {
-            alt10=30;
+            alt16=30;
             }
             break;
         case '\'':
+        case '<':
             {
-            alt10=31;
+            alt16=31;
             }
             break;
         case '[':
             {
-            alt10=32;
+            alt16=32;
             }
             break;
         case ']':
             {
-            alt10=33;
+            alt16=33;
             }
             break;
         case '?':
             {
-            alt10=35;
+            alt16=35;
             }
             break;
         case '$':
             {
-            alt10=36;
+            alt16=36;
             }
             break;
         default:
             NoViableAltException nvae =
-                new NoViableAltException("1:1: Tokens : ( T20 | T21 | T22 | T23 | T24 | T25 | T26 | T27 | T28 | T29 | T30 | T31 | T32 | T33 | T34 | T35 | T36 | T37 | T38 | T39 | RULE_XML_GT | RULE_XML_LT | RULE_XML_GTEQ | RULE_XML_LTEQ | RULE_INT | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_WS | RULE_ID | RULE_AT | RULE_LITERALSTRING | RULE_SQBRACKET_OPEN | RULE_SQBRACKET_CLOSE | RULE_TML_SEPARATOR | RULE_TML_EXISTS | RULE_DOLLAR );", 10, 0, input);
+                new NoViableAltException("1:1: Tokens : ( T26 | T27 | T28 | T29 | T30 | T31 | T32 | T33 | T34 | T35 | T36 | T37 | T38 | T39 | RULE_XML_GT | RULE_XML_LT | RULE_XML_GTEQ | RULE_XML_LTEQ | RULE_INT | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_WS | RULE_TRUE | RULE_FALSE | RULE_NULL | RULE_TODAY | RULE_FORALL | RULE_PARENT | RULE_ID | RULE_AT | RULE_LITERALSTRING | RULE_SQBRACKET_OPEN | RULE_SQBRACKET_CLOSE | RULE_TML_SEPARATOR | RULE_TML_EXISTS | RULE_DOLLAR );", 16, 0, input);
 
             throw nvae;
         }
 
-        switch (alt10) {
+        switch (alt16) {
             case 1 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:10: T20
-                {
-                mT20(); 
-
-                }
-                break;
-            case 2 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:14: T21
-                {
-                mT21(); 
-
-                }
-                break;
-            case 3 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:18: T22
-                {
-                mT22(); 
-
-                }
-                break;
-            case 4 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:22: T23
-                {
-                mT23(); 
-
-                }
-                break;
-            case 5 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:26: T24
-                {
-                mT24(); 
-
-                }
-                break;
-            case 6 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:30: T25
-                {
-                mT25(); 
-
-                }
-                break;
-            case 7 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:34: T26
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:10: T26
                 {
                 mT26(); 
 
                 }
                 break;
-            case 8 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:38: T27
+            case 2 :
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:14: T27
                 {
                 mT27(); 
 
                 }
                 break;
-            case 9 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:42: T28
+            case 3 :
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:18: T28
                 {
                 mT28(); 
 
                 }
                 break;
-            case 10 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:46: T29
+            case 4 :
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:22: T29
                 {
                 mT29(); 
 
                 }
                 break;
-            case 11 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:50: T30
+            case 5 :
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:26: T30
                 {
                 mT30(); 
 
                 }
                 break;
-            case 12 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:54: T31
+            case 6 :
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:30: T31
                 {
                 mT31(); 
 
                 }
                 break;
-            case 13 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:58: T32
+            case 7 :
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:34: T32
                 {
                 mT32(); 
 
                 }
                 break;
-            case 14 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:62: T33
+            case 8 :
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:38: T33
                 {
                 mT33(); 
 
                 }
                 break;
-            case 15 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:66: T34
+            case 9 :
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:42: T34
                 {
                 mT34(); 
 
                 }
                 break;
-            case 16 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:70: T35
+            case 10 :
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:46: T35
                 {
                 mT35(); 
 
                 }
                 break;
-            case 17 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:74: T36
+            case 11 :
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:50: T36
                 {
                 mT36(); 
 
                 }
                 break;
-            case 18 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:78: T37
+            case 12 :
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:54: T37
                 {
                 mT37(); 
 
                 }
                 break;
-            case 19 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:82: T38
+            case 13 :
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:58: T38
                 {
                 mT38(); 
 
                 }
                 break;
-            case 20 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:86: T39
+            case 14 :
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:62: T39
                 {
                 mT39(); 
 
                 }
                 break;
-            case 21 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:90: RULE_XML_GT
+            case 15 :
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:66: RULE_XML_GT
                 {
                 mRULE_XML_GT(); 
 
                 }
                 break;
-            case 22 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:102: RULE_XML_LT
+            case 16 :
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:78: RULE_XML_LT
                 {
                 mRULE_XML_LT(); 
 
                 }
                 break;
-            case 23 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:114: RULE_XML_GTEQ
+            case 17 :
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:90: RULE_XML_GTEQ
                 {
                 mRULE_XML_GTEQ(); 
 
                 }
                 break;
-            case 24 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:128: RULE_XML_LTEQ
+            case 18 :
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:104: RULE_XML_LTEQ
                 {
                 mRULE_XML_LTEQ(); 
 
                 }
                 break;
-            case 25 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:142: RULE_INT
+            case 19 :
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:118: RULE_INT
                 {
                 mRULE_INT(); 
 
                 }
                 break;
-            case 26 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:151: RULE_ML_COMMENT
+            case 20 :
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:127: RULE_ML_COMMENT
                 {
                 mRULE_ML_COMMENT(); 
 
                 }
                 break;
-            case 27 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:167: RULE_SL_COMMENT
+            case 21 :
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:143: RULE_SL_COMMENT
                 {
                 mRULE_SL_COMMENT(); 
 
                 }
                 break;
-            case 28 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:183: RULE_WS
+            case 22 :
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:159: RULE_WS
                 {
                 mRULE_WS(); 
 
                 }
                 break;
+            case 23 :
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:167: RULE_TRUE
+                {
+                mRULE_TRUE(); 
+
+                }
+                break;
+            case 24 :
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:177: RULE_FALSE
+                {
+                mRULE_FALSE(); 
+
+                }
+                break;
+            case 25 :
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:188: RULE_NULL
+                {
+                mRULE_NULL(); 
+
+                }
+                break;
+            case 26 :
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:198: RULE_TODAY
+                {
+                mRULE_TODAY(); 
+
+                }
+                break;
+            case 27 :
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:209: RULE_FORALL
+                {
+                mRULE_FORALL(); 
+
+                }
+                break;
+            case 28 :
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:221: RULE_PARENT
+                {
+                mRULE_PARENT(); 
+
+                }
+                break;
             case 29 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:191: RULE_ID
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:233: RULE_ID
                 {
                 mRULE_ID(); 
 
                 }
                 break;
             case 30 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:199: RULE_AT
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:241: RULE_AT
                 {
                 mRULE_AT(); 
 
                 }
                 break;
             case 31 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:207: RULE_LITERALSTRING
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:249: RULE_LITERALSTRING
                 {
                 mRULE_LITERALSTRING(); 
 
                 }
                 break;
             case 32 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:226: RULE_SQBRACKET_OPEN
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:268: RULE_SQBRACKET_OPEN
                 {
                 mRULE_SQBRACKET_OPEN(); 
 
                 }
                 break;
             case 33 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:246: RULE_SQBRACKET_CLOSE
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:288: RULE_SQBRACKET_CLOSE
                 {
                 mRULE_SQBRACKET_CLOSE(); 
 
                 }
                 break;
             case 34 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:267: RULE_TML_SEPARATOR
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:309: RULE_TML_SEPARATOR
                 {
                 mRULE_TML_SEPARATOR(); 
 
                 }
                 break;
             case 35 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:286: RULE_TML_EXISTS
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:328: RULE_TML_EXISTS
                 {
                 mRULE_TML_EXISTS(); 
 
                 }
                 break;
             case 36 :
-                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:302: RULE_DOLLAR
+                // ../com.dexels.navajo.dsl.expression.ui/src-gen/com/dexels/navajo/dsl/expression/ui/contentassist/antlr/internal/InternalNavajoExpression.g:1:344: RULE_DOLLAR
                 {
                 mRULE_DOLLAR(); 
 
