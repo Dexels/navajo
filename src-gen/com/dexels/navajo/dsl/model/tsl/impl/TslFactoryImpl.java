@@ -72,6 +72,8 @@ public class TslFactoryImpl extends EFactoryImpl implements TslFactory {
 			case TslPackage.EXPRESSION_TAG: return createExpressionTag();
 			case TslPackage.DEBUG_TAG: return createDebugTag();
 			case TslPackage.MAP_METHOD: return createMapMethod();
+			case TslPackage.REQUIRED: return createRequired();
+			case TslPackage.OPTION: return createOption();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -195,6 +197,26 @@ public class TslFactoryImpl extends EFactoryImpl implements TslFactory {
 	public MapMethod createMapMethod() {
 		MapMethodImpl mapMethod = new MapMethodImpl();
 		return mapMethod;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Required createRequired() {
+		RequiredImpl required = new RequiredImpl();
+		return required;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Option createOption() {
+		OptionImpl option = new OptionImpl();
+		return option;
 	}
 
 	/**

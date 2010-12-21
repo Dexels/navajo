@@ -16,9 +16,11 @@ import com.dexels.navajo.dsl.model.tsl.MapMethod;
 import com.dexels.navajo.dsl.model.tsl.Message;
 import com.dexels.navajo.dsl.model.tsl.Method;
 import com.dexels.navajo.dsl.model.tsl.Methods;
+import com.dexels.navajo.dsl.model.tsl.Option;
 import com.dexels.navajo.dsl.model.tsl.Param;
 import com.dexels.navajo.dsl.model.tsl.PossibleExpression;
 import com.dexels.navajo.dsl.model.tsl.Property;
+import com.dexels.navajo.dsl.model.tsl.Required;
 import com.dexels.navajo.dsl.model.tsl.Tml;
 import com.dexels.navajo.dsl.model.tsl.TslFactory;
 import com.dexels.navajo.dsl.model.tsl.TslPackage;
@@ -120,6 +122,20 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 	 * @generated
 	 */
 	private EClass mapMethodEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass requiredEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass optionEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -325,6 +341,15 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getElement_Content() {
+		return (EAttribute)elementEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getMessage() {
 		return messageEClass;
 	}
@@ -487,6 +512,33 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getMapMethod_Expression() {
+		return (EReference)mapMethodEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getRequired() {
+		return requiredEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getOption() {
+		return optionEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public TslFactory getTslFactory() {
 		return (TslFactory)getEFactoryInstance();
 	}
@@ -529,6 +581,7 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 		createEReference(elementEClass, ELEMENT__CHILDREN);
 		createEReference(elementEClass, ELEMENT__PARENT);
 		createEReference(elementEClass, ELEMENT__ATTRIBUTES);
+		createEAttribute(elementEClass, ELEMENT__CONTENT);
 
 		messageEClass = createEClass(MESSAGE);
 		createEAttribute(messageEClass, MESSAGE__NAME);
@@ -554,6 +607,11 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 		createEAttribute(mapMethodEClass, MAP_METHOD__METHOD_CLOSING_NAME);
 		createEAttribute(mapMethodEClass, MAP_METHOD__METHOD_NAME);
 		createEAttribute(mapMethodEClass, MAP_METHOD__METHOD_CLOSING_METHOD);
+		createEReference(mapMethodEClass, MAP_METHOD__EXPRESSION);
+
+		requiredEClass = createEClass(REQUIRED);
+
+		optionEClass = createEClass(OPTION);
 	}
 
 	/**
@@ -596,6 +654,8 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 		expressionTagEClass.getESuperTypes().add(this.getElement());
 		debugTagEClass.getESuperTypes().add(this.getElement());
 		mapMethodEClass.getESuperTypes().add(this.getElement());
+		requiredEClass.getESuperTypes().add(this.getElement());
+		optionEClass.getESuperTypes().add(this.getElement());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(tmlEClass, Tml.class, "Tml", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -617,6 +677,7 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 		initEReference(getElement_Children(), this.getElement(), this.getElement_Parent(), "children", null, 0, -1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getElement_Parent(), this.getElement(), this.getElement_Children(), "parent", null, 0, 1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getElement_Attributes(), this.getPossibleExpression(), null, "attributes", null, 0, -1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getElement_Content(), ecorePackage.getEString(), "content", null, 0, 1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		addEOperation(elementEClass, ecorePackage.getEInt(), "calculateDepth", 0, 1, IS_UNIQUE, IS_ORDERED);
 
@@ -644,6 +705,11 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 		initEAttribute(getMapMethod_MethodClosingName(), ecorePackage.getEString(), "methodClosingName", null, 0, 1, MapMethod.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getMapMethod_MethodName(), ecorePackage.getEString(), "methodName", null, 0, 1, MapMethod.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getMapMethod_MethodClosingMethod(), ecorePackage.getEString(), "methodClosingMethod", null, 0, 1, MapMethod.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getMapMethod_Expression(), theExpressionPackage.getTopLevel(), null, "expression", null, 0, 1, MapMethod.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(requiredEClass, Required.class, "Required", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(optionEClass, Option.class, "Option", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

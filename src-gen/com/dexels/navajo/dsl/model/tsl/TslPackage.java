@@ -97,13 +97,22 @@ public interface TslPackage extends EPackage {
 	int ELEMENT__ATTRIBUTES = 2;
 
 	/**
+	 * The feature id for the '<em><b>Content</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ELEMENT__CONTENT = 3;
+
+	/**
 	 * The number of structural features of the '<em>Element</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT_FEATURE_COUNT = 3;
+	int ELEMENT_FEATURE_COUNT = 4;
 
 	/**
 	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.tsl.impl.TmlImpl <em>Tml</em>}' class.
@@ -141,6 +150,15 @@ public interface TslPackage extends EPackage {
 	 * @ordered
 	 */
 	int TML__ATTRIBUTES = ELEMENT__ATTRIBUTES;
+
+	/**
+	 * The feature id for the '<em><b>Content</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TML__CONTENT = ELEMENT__CONTENT;
 
 	/**
 	 * The feature id for the '<em><b>Methods</b></em>' containment reference list.
@@ -224,6 +242,15 @@ public interface TslPackage extends EPackage {
 	 * @ordered
 	 */
 	int METHOD__ATTRIBUTES = ELEMENT__ATTRIBUTES;
+
+	/**
+	 * The feature id for the '<em><b>Content</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int METHOD__CONTENT = ELEMENT__CONTENT;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -336,6 +363,15 @@ public interface TslPackage extends EPackage {
 	int MESSAGE__ATTRIBUTES = ELEMENT__ATTRIBUTES;
 
 	/**
+	 * The feature id for the '<em><b>Content</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MESSAGE__CONTENT = ELEMENT__CONTENT;
+
+	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -398,6 +434,15 @@ public interface TslPackage extends EPackage {
 	 * @ordered
 	 */
 	int MAP__ATTRIBUTES = ELEMENT__ATTRIBUTES;
+
+	/**
+	 * The feature id for the '<em><b>Content</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAP__CONTENT = ELEMENT__CONTENT;
 
 	/**
 	 * The feature id for the '<em><b>Map Name</b></em>' attribute.
@@ -464,6 +509,15 @@ public interface TslPackage extends EPackage {
 	int PROPERTY__ATTRIBUTES = ELEMENT__ATTRIBUTES;
 
 	/**
+	 * The feature id for the '<em><b>Content</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROPERTY__CONTENT = ELEMENT__CONTENT;
+
+	/**
 	 * The feature id for the '<em><b>Expression Value</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -519,6 +573,15 @@ public interface TslPackage extends EPackage {
 	int PARAM__ATTRIBUTES = PROPERTY__ATTRIBUTES;
 
 	/**
+	 * The feature id for the '<em><b>Content</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAM__CONTENT = PROPERTY__CONTENT;
+
+	/**
 	 * The feature id for the '<em><b>Expression Value</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -572,6 +635,15 @@ public interface TslPackage extends EPackage {
 	 * @ordered
 	 */
 	int EXPRESSION_TAG__ATTRIBUTES = ELEMENT__ATTRIBUTES;
+
+	/**
+	 * The feature id for the '<em><b>Content</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPRESSION_TAG__CONTENT = ELEMENT__CONTENT;
 
 	/**
 	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
@@ -630,6 +702,15 @@ public interface TslPackage extends EPackage {
 	int DEBUG_TAG__ATTRIBUTES = ELEMENT__ATTRIBUTES;
 
 	/**
+	 * The feature id for the '<em><b>Content</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DEBUG_TAG__CONTENT = ELEMENT__CONTENT;
+
+	/**
 	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -685,6 +766,15 @@ public interface TslPackage extends EPackage {
 	int MAP_METHOD__ATTRIBUTES = ELEMENT__ATTRIBUTES;
 
 	/**
+	 * The feature id for the '<em><b>Content</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAP_METHOD__CONTENT = ELEMENT__CONTENT;
+
+	/**
 	 * The feature id for the '<em><b>Map Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -721,13 +811,133 @@ public interface TslPackage extends EPackage {
 	int MAP_METHOD__METHOD_CLOSING_METHOD = ELEMENT_FEATURE_COUNT + 3;
 
 	/**
+	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAP_METHOD__EXPRESSION = ELEMENT_FEATURE_COUNT + 4;
+
+	/**
 	 * The number of structural features of the '<em>Map Method</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MAP_METHOD_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 4;
+	int MAP_METHOD_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 5;
+
+
+	/**
+	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.tsl.impl.RequiredImpl <em>Required</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see com.dexels.navajo.dsl.model.tsl.impl.RequiredImpl
+	 * @see com.dexels.navajo.dsl.model.tsl.impl.TslPackageImpl#getRequired()
+	 * @generated
+	 */
+	int REQUIRED = 12;
+
+	/**
+	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REQUIRED__CHILDREN = ELEMENT__CHILDREN;
+
+	/**
+	 * The feature id for the '<em><b>Parent</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REQUIRED__PARENT = ELEMENT__PARENT;
+
+	/**
+	 * The feature id for the '<em><b>Attributes</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REQUIRED__ATTRIBUTES = ELEMENT__ATTRIBUTES;
+
+	/**
+	 * The feature id for the '<em><b>Content</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REQUIRED__CONTENT = ELEMENT__CONTENT;
+
+	/**
+	 * The number of structural features of the '<em>Required</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REQUIRED_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.tsl.impl.OptionImpl <em>Option</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see com.dexels.navajo.dsl.model.tsl.impl.OptionImpl
+	 * @see com.dexels.navajo.dsl.model.tsl.impl.TslPackageImpl#getOption()
+	 * @generated
+	 */
+	int OPTION = 13;
+
+	/**
+	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPTION__CHILDREN = ELEMENT__CHILDREN;
+
+	/**
+	 * The feature id for the '<em><b>Parent</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPTION__PARENT = ELEMENT__PARENT;
+
+	/**
+	 * The feature id for the '<em><b>Attributes</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPTION__ATTRIBUTES = ELEMENT__ATTRIBUTES;
+
+	/**
+	 * The feature id for the '<em><b>Content</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPTION__CONTENT = ELEMENT__CONTENT;
+
+	/**
+	 * The number of structural features of the '<em>Option</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPTION_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 0;
 
 
 	/**
@@ -889,6 +1099,17 @@ public interface TslPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getElement_Attributes();
+
+	/**
+	 * Returns the meta object for the attribute '{@link com.dexels.navajo.dsl.model.tsl.Element#getContent <em>Content</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Content</em>'.
+	 * @see com.dexels.navajo.dsl.model.tsl.Element#getContent()
+	 * @see #getElement()
+	 * @generated
+	 */
+	EAttribute getElement_Content();
 
 	/**
 	 * Returns the meta object for class '{@link com.dexels.navajo.dsl.model.tsl.Message <em>Message</em>}'.
@@ -1082,6 +1303,37 @@ public interface TslPackage extends EPackage {
 	EAttribute getMapMethod_MethodClosingMethod();
 
 	/**
+	 * Returns the meta object for the containment reference '{@link com.dexels.navajo.dsl.model.tsl.MapMethod#getExpression <em>Expression</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Expression</em>'.
+	 * @see com.dexels.navajo.dsl.model.tsl.MapMethod#getExpression()
+	 * @see #getMapMethod()
+	 * @generated
+	 */
+	EReference getMapMethod_Expression();
+
+	/**
+	 * Returns the meta object for class '{@link com.dexels.navajo.dsl.model.tsl.Required <em>Required</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Required</em>'.
+	 * @see com.dexels.navajo.dsl.model.tsl.Required
+	 * @generated
+	 */
+	EClass getRequired();
+
+	/**
+	 * Returns the meta object for class '{@link com.dexels.navajo.dsl.model.tsl.Option <em>Option</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Option</em>'.
+	 * @see com.dexels.navajo.dsl.model.tsl.Option
+	 * @generated
+	 */
+	EClass getOption();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1232,6 +1484,14 @@ public interface TslPackage extends EPackage {
 		 * @generated
 		 */
 		EReference ELEMENT__ATTRIBUTES = eINSTANCE.getElement_Attributes();
+
+		/**
+		 * The meta object literal for the '<em><b>Content</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ELEMENT__CONTENT = eINSTANCE.getElement_Content();
 
 		/**
 		 * The meta object literal for the '{@link com.dexels.navajo.dsl.model.tsl.impl.MessageImpl <em>Message</em>}' class.
@@ -1390,6 +1650,34 @@ public interface TslPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute MAP_METHOD__METHOD_CLOSING_METHOD = eINSTANCE.getMapMethod_MethodClosingMethod();
+
+		/**
+		 * The meta object literal for the '<em><b>Expression</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference MAP_METHOD__EXPRESSION = eINSTANCE.getMapMethod_Expression();
+
+		/**
+		 * The meta object literal for the '{@link com.dexels.navajo.dsl.model.tsl.impl.RequiredImpl <em>Required</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see com.dexels.navajo.dsl.model.tsl.impl.RequiredImpl
+		 * @see com.dexels.navajo.dsl.model.tsl.impl.TslPackageImpl#getRequired()
+		 * @generated
+		 */
+		EClass REQUIRED = eINSTANCE.getRequired();
+
+		/**
+		 * The meta object literal for the '{@link com.dexels.navajo.dsl.model.tsl.impl.OptionImpl <em>Option</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see com.dexels.navajo.dsl.model.tsl.impl.OptionImpl
+		 * @see com.dexels.navajo.dsl.model.tsl.impl.TslPackageImpl#getOption()
+		 * @generated
+		 */
+		EClass OPTION = eINSTANCE.getOption();
 
 	}
 

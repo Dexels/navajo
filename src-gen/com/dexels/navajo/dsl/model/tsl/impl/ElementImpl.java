@@ -39,6 +39,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link com.dexels.navajo.dsl.model.tsl.impl.ElementImpl#getChildren <em>Children</em>}</li>
  *   <li>{@link com.dexels.navajo.dsl.model.tsl.impl.ElementImpl#getParent <em>Parent</em>}</li>
  *   <li>{@link com.dexels.navajo.dsl.model.tsl.impl.ElementImpl#getAttributes <em>Attributes</em>}</li>
+ *   <li>{@link com.dexels.navajo.dsl.model.tsl.impl.ElementImpl#getContent <em>Content</em>}</li>
  * </ul>
  * </p>
  *
@@ -64,6 +65,26 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 * @ordered
 	 */
 	protected EList<PossibleExpression> attributes;
+
+	/**
+	 * The default value of the '{@link #getContent() <em>Content</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getContent()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String CONTENT_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getContent() <em>Content</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getContent()
+	 * @generated
+	 * @ordered
+	 */
+	protected String content = CONTENT_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -152,6 +173,27 @@ public class ElementImpl extends EObjectImpl implements Element {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getContent() {
+		return content;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setContent(String newContent) {
+		String oldContent = content;
+		content = newContent;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TslPackage.ELEMENT__CONTENT, oldContent, content));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated NOT
 	 */
 	public int calculateDepth() {
@@ -227,6 +269,8 @@ public class ElementImpl extends EObjectImpl implements Element {
 				return getParent();
 			case TslPackage.ELEMENT__ATTRIBUTES:
 				return getAttributes();
+			case TslPackage.ELEMENT__CONTENT:
+				return getContent();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -251,6 +295,9 @@ public class ElementImpl extends EObjectImpl implements Element {
 				getAttributes().clear();
 				getAttributes().addAll((Collection<? extends PossibleExpression>)newValue);
 				return;
+			case TslPackage.ELEMENT__CONTENT:
+				setContent((String)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -272,6 +319,9 @@ public class ElementImpl extends EObjectImpl implements Element {
 			case TslPackage.ELEMENT__ATTRIBUTES:
 				getAttributes().clear();
 				return;
+			case TslPackage.ELEMENT__CONTENT:
+				setContent(CONTENT_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -290,8 +340,26 @@ public class ElementImpl extends EObjectImpl implements Element {
 				return getParent() != null;
 			case TslPackage.ELEMENT__ATTRIBUTES:
 				return attributes != null && !attributes.isEmpty();
+			case TslPackage.ELEMENT__CONTENT:
+				return CONTENT_EDEFAULT == null ? content != null : !CONTENT_EDEFAULT.equals(content);
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy()) return super.toString();
+
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (content: ");
+		result.append(content);
+		result.append(')');
+		return result.toString();
 	}
 
 } //ElementImpl
