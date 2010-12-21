@@ -62,6 +62,15 @@ public interface ExpressionFactory extends EFactory {
 	MapGetReference createMapGetReference();
 
 	/**
+	 * Returns a new object of class '<em>Reference Params</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Reference Params</em>'.
+	 * @generated
+	 */
+	ReferenceParams createReferenceParams();
+
+	/**
 	 * Returns a new object of class '<em>Tml Reference</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

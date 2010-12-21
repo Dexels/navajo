@@ -15,6 +15,7 @@ import com.dexels.navajo.dsl.model.expression.FunctionOperands;
 import com.dexels.navajo.dsl.model.expression.MapGetReference;
 import com.dexels.navajo.dsl.model.expression.Operation;
 import com.dexels.navajo.dsl.model.expression.PathSequence;
+import com.dexels.navajo.dsl.model.expression.ReferenceParams;
 import com.dexels.navajo.dsl.model.expression.TmlReference;
 import com.dexels.navajo.dsl.model.expression.TopLevel;
 
@@ -59,6 +60,13 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 	 * @generated
 	 */
 	private EClass mapGetReferenceEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass referenceParamsEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -314,6 +322,33 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getMapGetReference_ReferenceParams() {
+		return (EReference)mapGetReferenceEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getReferenceParams() {
+		return referenceParamsEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getReferenceParams_GetterParams() {
+		return (EReference)referenceParamsEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getTmlReference() {
 		return tmlReferenceEClass;
 	}
@@ -456,6 +491,10 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 
 		mapGetReferenceEClass = createEClass(MAP_GET_REFERENCE);
 		createEAttribute(mapGetReferenceEClass, MAP_GET_REFERENCE__PATH_ELEMENTS);
+		createEReference(mapGetReferenceEClass, MAP_GET_REFERENCE__REFERENCE_PARAMS);
+
+		referenceParamsEClass = createEClass(REFERENCE_PARAMS);
+		createEReference(referenceParamsEClass, REFERENCE_PARAMS__GETTER_PARAMS);
 
 		tmlReferenceEClass = createEClass(TML_REFERENCE);
 		createEAttribute(tmlReferenceEClass, TML_REFERENCE__PATH_ELEMENTS);
@@ -530,6 +569,10 @@ public class ExpressionPackageImpl extends EPackageImpl implements ExpressionPac
 
 		initEClass(mapGetReferenceEClass, MapGetReference.class, "MapGetReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getMapGetReference_PathElements(), ecorePackage.getEString(), "pathElements", null, 0, -1, MapGetReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getMapGetReference_ReferenceParams(), this.getReferenceParams(), null, "referenceParams", null, 0, 1, MapGetReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(referenceParamsEClass, ReferenceParams.class, "ReferenceParams", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getReferenceParams_GetterParams(), this.getExpression(), null, "getterParams", null, 0, -1, ReferenceParams.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(tmlReferenceEClass, TmlReference.class, "TmlReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTmlReference_PathElements(), ecorePackage.getEString(), "pathElements", null, 0, -1, TmlReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

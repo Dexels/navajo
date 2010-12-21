@@ -64,6 +64,7 @@ public class ExpressionFactoryImpl extends EFactoryImpl implements ExpressionFac
 			case ExpressionPackage.EXPRESSION: return createExpression();
 			case ExpressionPackage.FUNCTION_CALL: return createFunctionCall();
 			case ExpressionPackage.MAP_GET_REFERENCE: return createMapGetReference();
+			case ExpressionPackage.REFERENCE_PARAMS: return createReferenceParams();
 			case ExpressionPackage.TML_REFERENCE: return createTmlReference();
 			case ExpressionPackage.EXISTS_TML_REFERENCE: return createExistsTmlReference();
 			case ExpressionPackage.FUNCTION_OPERANDS: return createFunctionOperands();
@@ -112,6 +113,16 @@ public class ExpressionFactoryImpl extends EFactoryImpl implements ExpressionFac
 	public MapGetReference createMapGetReference() {
 		MapGetReferenceImpl mapGetReference = new MapGetReferenceImpl();
 		return mapGetReference;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ReferenceParams createReferenceParams() {
+		ReferenceParamsImpl referenceParams = new ReferenceParamsImpl();
+		return referenceParams;
 	}
 
 	/**

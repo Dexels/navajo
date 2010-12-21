@@ -88,6 +88,10 @@ public class ExpressionAdapterFactory extends AdapterFactoryImpl {
 				return createMapGetReferenceAdapter();
 			}
 			@Override
+			public Adapter caseReferenceParams(ReferenceParams object) {
+				return createReferenceParamsAdapter();
+			}
+			@Override
 			public Adapter caseTmlReference(TmlReference object) {
 				return createTmlReferenceAdapter();
 			}
@@ -180,6 +184,20 @@ public class ExpressionAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createMapGetReferenceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link com.dexels.navajo.dsl.model.expression.ReferenceParams <em>Reference Params</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see com.dexels.navajo.dsl.model.expression.ReferenceParams
+	 * @generated
+	 */
+	public Adapter createReferenceParamsAdapter() {
 		return null;
 	}
 

@@ -406,13 +406,50 @@ public interface ExpressionPackage extends EPackage {
 	int MAP_GET_REFERENCE__PATH_ELEMENTS = EXPRESSION_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Reference Params</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAP_GET_REFERENCE__REFERENCE_PARAMS = EXPRESSION_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>Map Get Reference</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MAP_GET_REFERENCE_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 1;
+	int MAP_GET_REFERENCE_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
+
+	/**
+	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.expression.impl.ReferenceParamsImpl <em>Reference Params</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see com.dexels.navajo.dsl.model.expression.impl.ReferenceParamsImpl
+	 * @see com.dexels.navajo.dsl.model.expression.impl.ExpressionPackageImpl#getReferenceParams()
+	 * @generated
+	 */
+	int REFERENCE_PARAMS = 4;
+
+	/**
+	 * The feature id for the '<em><b>Getter Params</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_PARAMS__GETTER_PARAMS = 0;
+
+	/**
+	 * The number of structural features of the '<em>Reference Params</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_PARAMS_FEATURE_COUNT = 1;
 
 	/**
 	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.expression.impl.TmlReferenceImpl <em>Tml Reference</em>}' class.
@@ -422,7 +459,7 @@ public interface ExpressionPackage extends EPackage {
 	 * @see com.dexels.navajo.dsl.model.expression.impl.ExpressionPackageImpl#getTmlReference()
 	 * @generated
 	 */
-	int TML_REFERENCE = 4;
+	int TML_REFERENCE = 5;
 
 	/**
 	 * The feature id for the '<em><b>Parent</b></em>' container reference.
@@ -549,7 +586,7 @@ public interface ExpressionPackage extends EPackage {
 	 * @see com.dexels.navajo.dsl.model.expression.impl.ExpressionPackageImpl#getExistsTmlReference()
 	 * @generated
 	 */
-	int EXISTS_TML_REFERENCE = 5;
+	int EXISTS_TML_REFERENCE = 6;
 
 	/**
 	 * The feature id for the '<em><b>Parent</b></em>' container reference.
@@ -676,7 +713,7 @@ public interface ExpressionPackage extends EPackage {
 	 * @see com.dexels.navajo.dsl.model.expression.impl.ExpressionPackageImpl#getFunctionOperands()
 	 * @generated
 	 */
-	int FUNCTION_OPERANDS = 6;
+	int FUNCTION_OPERANDS = 7;
 
 	/**
 	 * The feature id for the '<em><b>Parent</b></em>' container reference.
@@ -785,7 +822,7 @@ public interface ExpressionPackage extends EPackage {
 	 * @see com.dexels.navajo.dsl.model.expression.impl.ExpressionPackageImpl#getOperation()
 	 * @generated
 	 */
-	int OPERATION = 7;
+	int OPERATION = 8;
 
 	/**
 	 * The feature id for the '<em><b>Parent</b></em>' container reference.
@@ -894,7 +931,7 @@ public interface ExpressionPackage extends EPackage {
 	 * @see com.dexels.navajo.dsl.model.expression.impl.ExpressionPackageImpl#getPathSequence()
 	 * @generated
 	 */
-	int PATH_SEQUENCE = 8;
+	int PATH_SEQUENCE = 9;
 
 	/**
 	 * The feature id for the '<em><b>Path Elements</b></em>' attribute list.
@@ -1097,6 +1134,38 @@ public interface ExpressionPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getMapGetReference_PathElements();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link com.dexels.navajo.dsl.model.expression.MapGetReference#getReferenceParams <em>Reference Params</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Reference Params</em>'.
+	 * @see com.dexels.navajo.dsl.model.expression.MapGetReference#getReferenceParams()
+	 * @see #getMapGetReference()
+	 * @generated
+	 */
+	EReference getMapGetReference_ReferenceParams();
+
+	/**
+	 * Returns the meta object for class '{@link com.dexels.navajo.dsl.model.expression.ReferenceParams <em>Reference Params</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Reference Params</em>'.
+	 * @see com.dexels.navajo.dsl.model.expression.ReferenceParams
+	 * @generated
+	 */
+	EClass getReferenceParams();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link com.dexels.navajo.dsl.model.expression.ReferenceParams#getGetterParams <em>Getter Params</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Getter Params</em>'.
+	 * @see com.dexels.navajo.dsl.model.expression.ReferenceParams#getGetterParams()
+	 * @see #getReferenceParams()
+	 * @generated
+	 */
+	EReference getReferenceParams_GetterParams();
 
 	/**
 	 * Returns the meta object for class '{@link com.dexels.navajo.dsl.model.expression.TmlReference <em>Tml Reference</em>}'.
@@ -1379,6 +1448,32 @@ public interface ExpressionPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute MAP_GET_REFERENCE__PATH_ELEMENTS = eINSTANCE.getMapGetReference_PathElements();
+
+		/**
+		 * The meta object literal for the '<em><b>Reference Params</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference MAP_GET_REFERENCE__REFERENCE_PARAMS = eINSTANCE.getMapGetReference_ReferenceParams();
+
+		/**
+		 * The meta object literal for the '{@link com.dexels.navajo.dsl.model.expression.impl.ReferenceParamsImpl <em>Reference Params</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see com.dexels.navajo.dsl.model.expression.impl.ReferenceParamsImpl
+		 * @see com.dexels.navajo.dsl.model.expression.impl.ExpressionPackageImpl#getReferenceParams()
+		 * @generated
+		 */
+		EClass REFERENCE_PARAMS = eINSTANCE.getReferenceParams();
+
+		/**
+		 * The meta object literal for the '<em><b>Getter Params</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference REFERENCE_PARAMS__GETTER_PARAMS = eINSTANCE.getReferenceParams_GetterParams();
 
 		/**
 		 * The meta object literal for the '{@link com.dexels.navajo.dsl.model.expression.impl.TmlReferenceImpl <em>Tml Reference</em>}' class.
