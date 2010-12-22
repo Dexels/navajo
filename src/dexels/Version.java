@@ -7,14 +7,12 @@ import org.osgi.framework.ServiceReference;
 public class Version extends BaseVersion implements BundleActivator {
 
 	protected BundleContext context = null;
-	@Override
 	public void start(BundleContext bc) throws Exception {
 		context = bc;
 		ServiceReference a = null;// bc.getServiceReference(HttpService.class.getName());
 		System.err.println("Bundle started: "+bc.getBundle().toString());
 	}
 
-	@Override
 	public void stop(BundleContext arg0) throws Exception {
 		context = null;
 		
