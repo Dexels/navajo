@@ -32,9 +32,10 @@ Export-Package: com.dexels.navajo.functions.util,
  navajo
 Import-Package: junit.framework;version="3.8.2",
  org.junit,
- org.osgi.framework;version="1.3.0"
+ org.osgi.framework;version="1.3.0",
+ org.osgi.service.log;version="1.3.0"
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.listeners;visibility:=reexport,
  com.dexels.navajo.core;visibility:=reexport,
  com.dexels.navajo.function;bundle-version="2.0.1",
- maildependency;bundle-version="1.0.0"
+ javax.mail;bundle-version="1.4.0"
