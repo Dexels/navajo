@@ -24,12 +24,15 @@
  */
 package navajolisteners;
 
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Hashtable;
+
 import org.osgi.service.http.HttpContext;
 import org.osgi.service.http.HttpService;
 
 import com.dexels.navajo.server.listener.http.TmlHttpServlet;
+import com.dexels.navajo.server.listener.nql.NqlServlet;
 
 
 public class Version extends dexels.Version {
@@ -54,11 +57,6 @@ public class Version extends dexels.Version {
 	@Override
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
-		ServiceReference cc =  bc.getServiceReference(HttpService.class.getName());
-		HttpService h =  (HttpService) bc.getService(cc);
-		System.err.println("h: "+h);
-		HttpContext ccc = h.createDefaultHttpContext();
-h.registerServlet("/Postman", new TmlHttpServlet(), null, ccc);	
 	}
 
 
