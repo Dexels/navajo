@@ -160,8 +160,9 @@ public final class NavajoConfig implements NavajoConfigInterface {
     @SuppressWarnings("unchecked")
 	private void loadConfig(InputStream in, String externalRootPath, String servletContextPath)  throws SystemException{
     	
-   	 
-		contextRoot = new File(servletContextPath);
+   	if(servletContextPath!=null) {
+   		contextRoot = new File(servletContextPath);
+   	}
 
     	configuration = NavajoFactory.getInstance().createNavajo(in);
     	
