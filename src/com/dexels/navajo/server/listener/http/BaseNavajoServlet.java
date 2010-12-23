@@ -65,6 +65,7 @@ public abstract class BaseNavajoServlet extends HttpServlet {
 	protected final DispatcherInterface initDispatcher() throws NavajoException {
 
 		String servletContextRootPath = getServletContext().getRealPath("");
+		System.err.println("Context root path: "+servletContextRootPath);
 		if (configurationPath!=null) {
 			// Old SKOOL. Path provided, notify the dispatcher by passing a null DEFAULT_SERVER_XML
 			if(extremeEdition) {
@@ -80,12 +81,18 @@ public abstract class BaseNavajoServlet extends HttpServlet {
 
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
+		
+		Enumeration ee = config.getInitParameterNames();
+		while(ee.hasMoreElements()) {
+			String nextElement = (String) ee.nextElement();
+			System.err.println("Initparam: "+nextElement+" value: "+config.getInitParameter(nextElement));
+		}
 
 		synchronized( initializationSemaphore ) {
 			extremeEdition = config.getInitParameter("extremeEdition")!=null;
 			configurationPath = config.getInitParameter("configuration");
 
-			if(extremeEdition || true) {
+			if(extremeEdition ) {
 				String path;
 				try {
 					path = setupConfigurationPath(config);
@@ -160,7 +167,7 @@ public abstract class BaseNavajoServlet extends HttpServlet {
 
 	private String setupConfigurationPath(ServletConfig config) throws IOException {
 		String contextName =  config.getServletContext().getContextPath().substring(1);
-		String navajoPath = getSystemPath(contextName);
+		String navajoPath = getSystemPath(config,contextName);
 		return navajoPath;
 	}
 
@@ -194,9 +201,10 @@ public abstract class BaseNavajoServlet extends HttpServlet {
 		}
 	}
 
-	private String getSystemPath(String name) throws IOException {
+	private String getSystemPath(ServletConfig config, String name) throws IOException {
 
-		String force = getServletContext().getInitParameter("forcedNavajoPath");
+		String force = config.getInitParameter("forcedNavajoPath");
+		System.err.println("Force: "+force);
 		if(force!=null) {
 //			System.err.println("Using the force! navajo.properties will be ignored!");
 			return force;
