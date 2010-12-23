@@ -1,0 +1,21 @@
+Bundle-Name: Navajo Rhino
+Bundle-SymbolicName: com.dexels.navajo.rhino
+Bundle-Description: A Hello World bundle
+Bundle-ManifestVersion: 2
+Bundle-Version: 1.0.0
+Bundle-Activator: navajorhino.Version
+Bundle-ClassPath: .,mail.jar
+Include-Resource: lib
+Export-Package: com.dexels.navajo.adapter,
+ com.dexels.navajo.rhino,
+ com.dexels.navajo.testmap,
+ navajorhino
+Import-Package: com.dexels.navajo.functions,
+ junit.framework;version="3.8.2",
+ org.osgi.framework;version="1.3.0",
+ org.osgi.service.http;version="1.2.1"
+Bundle-Vendor: Dexels
+Require-Bundle: org.mozilla.javascript;bundle-version="1.0.0";visibility:=reexport,
+ com.dexels.navajo.document;bundle-version="1.0.0",
+ com.dexels.navajo.core;bundle-version="2.9.0",
+ com.dexels.navajo.client.async;bundle-version="1.0.0"
