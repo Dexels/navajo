@@ -105,6 +105,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
   public boolean block = true;
   private boolean serviceCalled = false;
   private boolean serviceFinished = false;
+  private Exception myException = null;
   
   public boolean isBlock() {
 	  return block;
@@ -560,6 +561,17 @@ private Object waitForResult = new Object();
 					  SchedulerRegistry.getScheduler().submit(this, true);
 				  }
 				  serviceCalled = true;
+				  if ( getException() != null ) {
+					  if ( getException() instanceof ConditionErrorException ) {
+						  throw (ConditionErrorException) getException();
+					  } else if ( getException() instanceof UserException ) {
+						  throw (UserException) getException();
+					  } else if ( getException() instanceof SystemException ) {
+						  throw (SystemException) getException();
+					  } else {
+						  throw new SystemException(-1, "", getException());
+					  }
+				  }
 			  } catch (IOException e) {
 				  e.printStackTrace();
 			  }
@@ -911,8 +923,8 @@ private Object waitForResult = new Object();
 	  access.setOutputDoc(inDoc);
   }
 
-  public void continueAfterRun() {
-	  try {
+  public void continueAfterRun() throws UserException, SystemException, ConditionErrorException, AuthorizationException {
+	 try {
 		  // Get task if if trigger was specified.
 	      if ( trigger != null ) {
 	    	  taskId = inDoc.getHeader().getSchedule();
@@ -965,7 +977,7 @@ private Object waitForResult = new Object();
 	      }
 
 	      if (breakOnConditionError && inDoc.getMessage("ConditionErrors") != null) {
-	    	  AuditLog.log("NavajoMap", "BREAKONCONDITIONERROR WAS SET TO TRUE, RETURNING CONDITION ERROR", Level.INFO, access.accessID);
+	    	  AuditLog.log("NavajoMap", ">>>> BREAKONCONDITIONERROR WAS SET TO TRUE, RETURNING CONDITION ERROR", Level.INFO, access.accessID);
 	    	  //System.err.println("BREAKONCONDITIONERROR WAS SET TO TRUE, RETURNING CONDITION ERROR");
 	          throw new ConditionErrorException(inDoc);
 	      } else if (inDoc.getMessage("ConditionErrors") != null) {
@@ -1006,12 +1018,8 @@ private Object waitForResult = new Object();
 	        outDoc = inDoc;
 	      }
 		  
-		  
-	  } catch (Exception e) {
-		  e.printStackTrace(Access.getConsoleWriter(access));
-		  //throw new UserException(-1, e.getMessage());
 	  } finally {
-		  synchronized (waitForResult) {
+		   synchronized (waitForResult) {
 			  waitForResult.notify();
 		  }
 	  }  
@@ -1020,7 +1028,7 @@ private Object waitForResult = new Object();
   
   public void run()  {
 
-	  try {
+	 try {
 		  Header h = outDoc.getHeader();
 		  if (h == null) {
 			  h = NavajoFactory.getInstance().createHeader(outDoc, method, access.rpcUser, access.rpcPwd, -1);
@@ -1035,9 +1043,9 @@ private Object waitForResult = new Object();
 
 		  inDoc = DispatcherFactory.getInstance().handle(outDoc, true);
 		  continueAfterRun();
-	  } catch (Exception e) {
-		  // TODO Auto-generated catch block
-		  e.printStackTrace();
+		  
+	 } catch (Exception e) {
+		 setException(e);
 	  } finally {
 		  serviceFinished = true;
 		  setIsFinished();
@@ -1289,10 +1297,13 @@ private Object waitForResult = new Object();
   }
 
   public void setException(Exception e) {
-	  // TODO Auto-generated method stub
-
+	  myException = e;
   }
 
+  public Exception getException() {
+	  return myException;
+  }
+  
   public void setScheduledAt(long currentTimeMillis) {
 	  // TODO Auto-generated method stub
 
