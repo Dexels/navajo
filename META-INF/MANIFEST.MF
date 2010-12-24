@@ -11,14 +11,16 @@ Export-Package: com.dexels.navajo.client,
  com.dexels.navajo.persistence.impl,
  com.dexels.navajo.server,
  com.dexels.navajo.server.listener.http,
+ com.dexels.navajo.server.listener.http.filter,
+ com.dexels.navajo.server.listener.nql,
  com.dexels.navajo.sharedstore,
  dexels,
  navajolisteners
-Import-Package: junit.framework;version="3.8.2",
+Import-Package: javax.servlet;version="2.5.0",
+ javax.servlet.http;version="2.5.0",
+ junit.framework;version="3.8.2",
  org.osgi.framework;version="1.3.0",
  org.osgi.service.http;version="1.2.1"
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.client;visibility:=reexport,
- javax.servlet;bundle-version="2.5.0";visibility:=reexport,
- com.dexels.navajo.core;visibility:=reexport,
- com.dexels.navajo.client.dependencies;bundle-version="1.0.0"
+Require-Bundle: com.dexels.navajo.client,
+ com.dexels.navajo.core
