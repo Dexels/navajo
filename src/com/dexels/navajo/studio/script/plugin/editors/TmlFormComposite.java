@@ -1220,8 +1220,8 @@ public class TmlFormComposite extends Composite {
 					}
 				}
 
-				b.rebuildReportDataSource(myCurrentNavajo, new File(birt
-						.getLocation().toOSString()));
+//				b.rebuildReportDataSource(myCurrentNavajo, new File(birt
+//						.getLocation().toOSString()));
 				birt.refreshLocal(0, null);
 				final IEditorPart editor = NavajoScriptPluginPlugin
 						.getDefault().getWorkbench().getActiveWorkbenchWindow()

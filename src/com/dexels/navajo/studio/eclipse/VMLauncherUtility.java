@@ -5,24 +5,18 @@ package com.dexels.navajo.studio.eclipse;
  * All Rights Reserved.
  */
 
-import java.io.*;
 import java.util.ArrayList;
 
-import org.eclipse.core.internal.resources.*;
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.jobs.*;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.Launch;
 import org.eclipse.debug.core.model.ISourceLocator;
 import org.eclipse.debug.ui.IDebugUIConstants;
-import org.eclipse.jdt.debug.ui.*;
 import org.eclipse.jdt.launching.ExecutionArguments;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
@@ -32,17 +26,6 @@ import org.eclipse.jdt.launching.IVMRunner;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jdt.launching.LibraryLocation;
 import org.eclipse.jdt.launching.VMRunnerConfiguration;
-import org.eclipse.jface.preference.*;
-import org.eclipse.ui.*;
-import org.eclipse.ui.internal.*;
-import org.eclipse.ui.part.*;
-
-import com.dexels.navajo.client.*;
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.studio.script.plugin.*;
-import com.dexels.navajo.studio.script.plugin.navajobrowser.*;
-import com.dexels.navajo.studio.script.plugin.navajobrowser.preferences.*;
-//import com.sun.rsasign.*;
 
 /**
  * Utility class for launching a JVM in Eclipse and registering it to debugger

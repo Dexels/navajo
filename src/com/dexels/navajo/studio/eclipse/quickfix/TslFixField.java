@@ -11,7 +11,6 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.ui.*;
 
-import com.dexels.navajo.mapping.compiler.*;
 
 /**
  * @author Administrator

@@ -324,7 +324,9 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
 
     
     public void dispose() {
-        formComposite.removeNavajoScriptListener(this);
+    	if(formComposite!=null) {
+            formComposite.removeNavajoScriptListener(this);
+    	}
         NavajoScriptPluginPlugin.getDefault().removeServerEntryListener(this);
         super.dispose();
     }

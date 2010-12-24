@@ -6,6 +6,8 @@
  */
 package com.dexels.navajo.studio.script.plugin.views;
 
+import org.eclipse.core.internal.resources.Workspace;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.*;
@@ -25,7 +27,11 @@ public abstract class BaseNavajoView extends ViewPart {
     public void init(final IViewSite site) throws PartInitException {
         super.init(site);
         final BaseNavajoView me = this;
-        final IContextService ics = (IContextService)NavajoScriptPluginPlugin.getDefault().getWorkbench().getAdapter(IContextService.class);
+        NavajoScriptPluginPlugin plugin = NavajoScriptPluginPlugin.getDefault();
+//		IWorkbench workbench = ResourcesPlugin.getPlugin().getWorkbench();
+		//IWorkbench workbench =  Platform. //ResourcesPlugin.getWorkspace();
+		IWorkbench workbench = PlatformUI.getWorkbench();
+		final IContextService ics = (IContextService)workbench.getAdapter(IContextService.class);
 
          NavajoScriptPluginPlugin.getDefaultWorkbench().getDisplay().syncExec(new Runnable(){
 

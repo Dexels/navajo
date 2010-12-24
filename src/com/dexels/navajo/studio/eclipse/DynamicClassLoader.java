@@ -31,6 +31,7 @@ package com.dexels.navajo.studio.eclipse;
 import org.dexels.utils.*;
 import java.io.*;
 import java.util.*;
+import java.util.zip.ZipException;
 
 /**
 * This class is an EXACT copy of NavajoClassLoader. Only difference:
@@ -207,8 +208,17 @@ public class DynamicClassLoader extends MultiClassLoader {
           if (jarResources == null) {
             jarResources = new HashSet();
             for (int i = 0; i < files.length; i++) {
-              JarResources d = new JarResources(files[i]);
-              jarResources.add(d);
+              JarResources d;
+			try {
+				d = new JarResources(files[i]);
+	              jarResources.add(d);
+			} catch (ZipException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
             }
           }
         }

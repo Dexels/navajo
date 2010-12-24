@@ -29,7 +29,6 @@ import org.eclipse.text.edits.*;
 import org.eclipse.ui.*;
 import org.eclipse.ui.internal.*;
 import org.eclipse.ui.part.*;
-import org.eclipse.ui.texteditor.*;
 
 import com.dexels.navajo.client.impl.*;
 import com.dexels.navajo.studio.script.plugin.*;
@@ -501,37 +500,37 @@ public class FunctionViewer extends BaseNavajoView {
     }
 
     private String sendRunnerCommand(String input) {
-
-        try {
-            currentSocket = new Socket(InetAddress.getLocalHost(), NavajoExpressionRunner.PORT);
-            socketWriter = new PrintWriter(new OutputStreamWriter(currentSocket.getOutputStream()));
-            socketWriter.write(input + "\n");
-            socketWriter.flush();
-            BufferedReader br = new BufferedReader(new InputStreamReader(currentSocket.getInputStream()));
-            final String line = br.readLine();
-            //                Display.getDefault().syncExec(r);
-            return line;
-        } catch (UnknownHostException e2) {
-            e2.printStackTrace();
-            // TODO Add dialog here explaining that you need to start the
-            // evaluation first.
-            return "error: " + e2.getMessage();
-        } catch (IOException e2) {
-            e2.printStackTrace();
-            return "error" + e2.getMessage();
-
-        } finally {
-            try {
-                if (currentSocket != null) {
-                    currentSocket.close();
-                } else {
-                    System.err.println("Null socket. Strange.");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                return "error closing socket";
-            }
-        }
+		return "aap";
+//        try {
+//            currentSocket = new Socket(InetAddress.getLocalHost(), NavajoExpressionRunner.PORT);
+//            socketWriter = new PrintWriter(new OutputStreamWriter(currentSocket.getOutputStream()));
+//            socketWriter.write(input + "\n");
+//            socketWriter.flush();
+//            BufferedReader br = new BufferedReader(new InputStreamReader(currentSocket.getInputStream()));
+//            final String line = br.readLine();
+//            //                Display.getDefault().syncExec(r);
+//            return line;
+//        } catch (UnknownHostException e2) {
+//            e2.printStackTrace();
+//            // TODO Add dialog here explaining that you need to start the
+//            // evaluation first.
+//            return "error: " + e2.getMessage();
+//        } catch (IOException e2) {
+//            e2.printStackTrace();
+//            return "error" + e2.getMessage();
+//
+//        } finally {
+//            try {
+//                if (currentSocket != null) {
+//                    currentSocket.close();
+//                } else {
+//                    System.err.println("Null socket. Strange.");
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                return "error closing socket";
+//            }
+//        }
 
     }
 }

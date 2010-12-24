@@ -28,10 +28,9 @@ import org.eclipse.ui.ide.*;
 import org.eclipse.ui.internal.*;
 import org.eclipse.ui.part.*;
 import org.eclipse.ui.plugin.*;
-import org.eclipse.ui.texteditor.*;
+import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.osgi.framework.BundleContext;
 
-import com.dexels.navajo.birt.BirtUtils;
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.nanoimpl.*;
@@ -228,7 +227,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
             IPath relPath = sourceTmlPath.removeFirstSegments(tml.getFullPath().segmentCount());
             relTmlLocation = relPath.toString();
         }
- 
+        
         final IProject project = tml.getProject();
         final String scriptName = name;
 
@@ -589,11 +588,14 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
      * Returns the shared instance.
      */
     public static NavajoScriptPluginPlugin getDefault() {
+    	if(plugin==null) {
+    		plugin = new NavajoScriptPluginPlugin();
+    	}
         return plugin;
     }
     
     public static IWorkbench getDefaultWorkbench() {
-        return plugin.getWorkbench();
+        return PlatformUI.getWorkbench();
     }
     
 
@@ -617,66 +619,6 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         return resourceBundle;
     }
 
-    // BEWARE: Verify semicolon
-
-//    private String[] addPreferenceParameters(String[] previous) {
-//        String[] prefParams = StringUtil.cutString(NavajoScriptPluginPlugin.getDefault().getJvmParamaters(), System.getProperty("path.separator"));
-//        return StringUtil.concat(previous, prefParams);
-//    }
-
-//    private String[] addPreferenceJvmToClasspath(String[] previous) {
-//        String[] prefClasspath = StringUtil.cutString(NavajoScriptPluginPlugin.getDefault().getJvmClasspath(), System.getProperty("path.separator"));
-//        return StringUtil.concatUniq(previous, prefClasspath);
-//    }
-
-//    private String[] addPreferenceJvmToBootClasspath(String[] previous) {
-//        String[] prefBootClasspath = StringUtil.cutString(NavajoScriptPluginPlugin.getDefault().getJvmBootClasspath(), System
-//                .getProperty("path.separator"));
-//        return StringUtil.concatUniq(previous, prefBootClasspath);
-//    }
-
-//    public String getJvmParamaters() {
-//        IPreferenceStore pref = NavajoScriptPluginPlugin.getDefault().getPreferenceStore();
-//        return pref.getString(PREF_JVM_PARAMETERS_KEY);
-//    }
-//
-//    public String getJvmClasspath() {
-//        IPreferenceStore pref = NavajoScriptPluginPlugin.getDefault().getPreferenceStore();
-//        return pref.getString(PREF_JVM_CLASSPATH_KEY);
-//    }
-//
-//    public String getJvmBootClasspath() {
-//        IPreferenceStore pref = NavajoScriptPluginPlugin.getDefault().getPreferenceStore();
-//        return pref.getString(PREF_JVM_BOOTCLASSPATH_KEY);
-//    }
-
-    //
-    //	public void setProjectsInCP(List projectsInCP) {
-    //		this.saveProjectsToPreferenceStore(projectsInCP,
-    // NAVAJO_PREF_PROJECTSINCP_KEY);
-    //	}
-    //
-    //	public List getProjectsInCP() {
-    //		return
-    // this.readProjectsFromPreferenceStore(NAVAJO_PREF_PROJECTSINCP_KEY);
-    //	}
-    //	
-    //	public void setProjectsInSourcePath(List projectsInCP) {
-    //		this.saveProjectsToPreferenceStore(projectsInCP,
-    // NAVAJO_PREF_PROJECTSINSOURCEPATH_KEY);
-    //	}
-    //
-    //	public List getProjectsInSourcePath() {
-    //		IPreferenceStore pref =
-    // NavajoScriptPluginPlugin.getDefault().getPreferenceStore();
-    //		if(!(pref.contains(NAVAJO_PREF_PROJECTSINSOURCEPATH_KEY))) {
-    //			// Project list in source path should be filled to make migration from
-    // v2.1 to v2.1.1 easier
-    //			initProjectsInSourcePath();
-    //		}
-    //		return
-    // this.readProjectsFromPreferenceStore(NAVAJO_PREF_PROJECTSINSOURCEPATH_KEY);
-    //	}
 
     static List readProjectsFromPreferenceStore(String keyInPreferenceStore) {
         IPreferenceStore pref = NavajoScriptPluginPlugin.getDefault().getPreferenceStore();
