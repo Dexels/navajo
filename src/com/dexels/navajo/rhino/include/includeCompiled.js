@@ -1,4 +1,6 @@
-var conditionErrors = new com.dexels.navajo.rhino.flow.ConditionError();
+env.log("Ready to go!");
+var monkey = new Packages.java.lang.String("hoempapa");
+//var conditionErrors = new Packages.com.dexels.navajo.rhino.flow.ConditionError();
 
 function callMap(mapClass, callback) {
 	map = env.createMappable(mapClass,input, output, env.getAccess().getCurrentOutMessage());

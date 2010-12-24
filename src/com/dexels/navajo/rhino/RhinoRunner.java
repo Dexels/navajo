@@ -193,7 +193,8 @@ public class RhinoRunner {
 //					return null;
 //				}
 //			};
-			
+			ConditionError conditionError = new com.dexels.navajo.rhino.flow.ConditionError();
+
 			a.setInDoc(a.getInDoc());
 			scriptEnvironment.setAccess(a);
 			scriptEnvironment.setGlobalScope(globalScope);
@@ -202,9 +203,14 @@ public class RhinoRunner {
 			ScriptableObject.putProperty(globalScope, "output", Context.javaToJS(a.getOutputDoc(), globalScope));
 			ScriptableObject.putProperty(globalScope, "access", Context.javaToJS(a, globalScope));
 			ScriptableObject.putProperty(globalScope, "env", Context.javaToJS(scriptEnvironment, globalScope));
+			ScriptableObject.putProperty(globalScope, "conditionErrors", Context.javaToJS(conditionError, globalScope));
+			
 			cx.setOptimizationLevel(-1); // must use interpreter mode
 			Script includeCompiledRun = cx.compileReader(includeCompiledReader, "includeCompiled.js", 1, null);
 			Script includeRun = cx.compileReader(includeReader, "include.js", 1, null);
+			System.err.println("Compilers read!");
+
+			
 			Script scriptrun = cx.compileReader(fileReader, a.getRpcName() + ".js", 1, null);
 
 			cx.executeScriptWithContinuations(includeRun, globalScope);

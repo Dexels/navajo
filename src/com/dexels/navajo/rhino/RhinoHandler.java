@@ -93,7 +93,11 @@ public class RhinoHandler extends ServiceHandler {
 			}
 			
 			ClassLoader cl = DispatcherFactory.getInstance().getNavajoConfig().getClassloader();
-			Class<? extends CompiledScript> rcsClass = (Class<? extends CompiledScript>) Class.forName("com.dexels.navajo.rhino.RhinoCompiledScript", true, cl);
+			try {
+				Class<? extends CompiledScript> rcsClass = (Class<? extends CompiledScript>) Class.forName("com.dexels.navajo.rhino.RhinoCompiledScript", true, cl);
+			} catch (Throwable e) {
+				System.err.println("Classloading error in Rhino Handler. This can be removed once OSGi is functional");
+			}
 			RhinoCompiledScript rcs = new RhinoCompiledScript(); //(CompiledScript) rcsClass.newInstance();
 			rcs.setScript(compiledPath);
 //			Method ss = rcsClass.getMethod("setScript", File.class);
