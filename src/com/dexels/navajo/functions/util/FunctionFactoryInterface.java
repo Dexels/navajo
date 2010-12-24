@@ -19,12 +19,7 @@ public abstract class FunctionFactoryInterface {
 	
 	public void injectExtension(ExtensionDefinition fd) {
 		readDefinitionFile(getConfig(), fd);
-		try {
-			System.err.println("Mombasa: "+getDef("Date").getDescription());
-		} catch (TMLExpressionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
 	}
 
 	
