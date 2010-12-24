@@ -11,11 +11,14 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.swing.RootPaneContainer;
 
+import navajo.ExtensionDefinition;
+
 import tipi.*;
 
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.types.*;
+import com.dexels.navajo.functions.StandardFunctionDefinitions;
 import com.dexels.navajo.functions.util.FunctionDefinition;
 import com.dexels.navajo.parser.*;
 import com.dexels.navajo.parser.Expression;
@@ -638,6 +641,7 @@ public abstract class TipiContext {
 
 	protected void parseXMLElement(XMLElement elm) throws TipiException {
 		String elmName = elm.getName();
+		ExtensionDefinition ed = new StandardFunctionDefinitions();
 		String extension = elm.getStringAttribute("extension");
 		setSplashInfo("Loading user interface");
 		if (!elmName.equals("tid") && !elmName.equals("functiondef")) {
@@ -647,7 +651,7 @@ public abstract class TipiContext {
 		List<XMLElement> children = elm.getChildren();
 		for (int i = 0; i < children.size(); i++) {
 			XMLElement child = children.get(i);
-			parseChild(child,extension);
+			parseChild(child,extension,ed);
 		}
 	}
 
@@ -658,7 +662,7 @@ public abstract class TipiContext {
 	 * @param dir
 	 * @throws TipiException
 	 */
-	protected void parseChild(XMLElement child, String extension) throws TipiException {
+	protected void parseChild(XMLElement child, String extension, ExtensionDefinition ed) throws TipiException {
 
 		String childName = child.getName();
 		if (childName.equals("client-config")) {
@@ -737,19 +741,24 @@ public abstract class TipiContext {
 			return;
 		}
 		if (childName.equals("function")) {
-			parseFunction(child);
+			try {
+				parseFunction(child,ed);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
 			return;
 		}
 
 		throw new TipiException("Wtf? What is this tag: " + childName);
 	}
 
-	private void parseFunction(XMLElement f) {
+	private void parseFunction(XMLElement f, ExtensionDefinition ed) throws ClassNotFoundException {
 //		   <function name="Age" class="com.dexels.navajo.functions.Age">
 //	        <description>calculates the age given a birth date. The calculation is as of the second date parameter, otherwise, if not provided, will be as of today.</description>
 //	        <input>date,date|empty</input>
 //	        <result>integer</result>
 //	    </function>
+		
 		XMLElement description = f.getChildByTagName("description");
 		String desc = description==null?"":description.getContent();
 		XMLElement input = f.getChildByTagName("input");
@@ -757,7 +766,7 @@ public abstract class TipiContext {
 		XMLElement result = f.getChildByTagName("result");
 		String res = result==null?"":result.getContent();
 
-		FunctionDefinition fd = new FunctionDefinition(f.getStringAttribute("class"),desc,inp,res);
+		FunctionDefinition fd = new FunctionDefinition(f.getStringAttribute("class"),desc,inp,res,ed);
 		getClassManager().addFunctionDefinition(f.getStringAttribute("name"),fd);
 	}
 

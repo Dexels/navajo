@@ -7,5 +7,7 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Navajo"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NavajoFunctions"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/NavajoDocument"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/DexelsVersionControl"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

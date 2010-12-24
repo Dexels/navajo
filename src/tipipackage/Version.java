@@ -40,28 +40,5 @@ public class Version extends dexels.Version {
 		addIncludes(includes);
 	}
 
-	public int getMajor() {
-		return MAJOR;
-	}
-
-	public int getMinor() {
-		return MINOR;
-	}
-
-	public int getPatchLevel() {
-		return PATCHLEVEL;
-	}
-
-	public String getVendor() {
-		return VENDOR;
-	}
-
-	public String getProductName() {
-		return PRODUCTNAME;
-	}
-
-	public static void main(String[] args) {
-		Version v = new Version();
-		System.err.println(v.versionString());
-	}
+	
 }
