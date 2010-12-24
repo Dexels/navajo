@@ -4,6 +4,7 @@ Bundle-Description: Core version manager
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.0
 Bundle-Activator: dexels.Version
-Export-Package: dexels
+Export-Package: dexels,
+ junit.framework
 Import-Package: org.osgi.framework;version="1.3.0"
 Bundle-Vendor: Dexels
