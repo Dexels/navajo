@@ -6,7 +6,6 @@ Bundle-Version: 1.0.0
 Bundle-Activator: navajoasyncclient.Version
 Export-Package: com.dexels.navajo.client
 Import-Package: junit.framework;version="3.8.2",
- org.junit,
  org.osgi.framework;version="1.3.0"
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.document,
