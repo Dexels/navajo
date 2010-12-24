@@ -9,11 +9,14 @@ Export-Package: com.dexels.navajo.client,
  com.dexels.navajo.client.context,
  com.dexels.navajo.client.logger,
  com.dexels.navajo.client.nql,
+ com.dexels.navajo.jabber,
  com.jcraft.jzlib,
  dexels,
  org.jivesoftware.smack,
+ org.jivesoftware.smack.packet,
  org.jivesoftware.smack.util,
- org.jivesoftware.smackx
+ org.jivesoftware.smackx,
+ org.jivesoftware.smackx.muc
 Import-Package: junit.framework;version="3.8.2",
  org.osgi.framework;version="1.3.0"
 Bundle-Vendor: Dexels
