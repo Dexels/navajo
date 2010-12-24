@@ -476,12 +476,13 @@
         <result>binary</result>
     </function>
 
-    
-    <function name="ExistsWorkflow" class="com.dexels.navajo.functions.ExistsWorkflow">
+<!-- This function isn't here! -->    
+   <!-- <function name="ExistsWorkflow" class="com.dexels.navajo.functions.ExistsWorkflow">
         <description>Check whether a workflow with specified name and given global state exists</description>
         <input/>
         <result/>
     </function>
+    -->
     <function name="ExistsProperty" class="com.dexels.navajo.functions.ExistsProperty">
         <description>Checks whether a property exists in the Input Navajo</description>
         <input/>

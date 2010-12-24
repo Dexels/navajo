@@ -24,6 +24,13 @@
  */
 package navajofunctions;
 
+import org.osgi.framework.BundleContext;
+
+import com.dexels.navajo.functions.StandardFunctionDefinitions;
+import com.dexels.navajo.functions.util.FunctionFactoryFactory;
+import com.dexels.navajo.functions.util.FunctionFactoryInterface;
+import com.dexels.navajo.functions.util.JarFunctionFactory;
+
 /**
  * VERSION HISTORY
  * 
@@ -44,8 +51,33 @@ public class Version extends dexels.Version {
 	
 	public Version() {
 		setReleaseDate(RELEASEDATE);
+		
 	}
 	
+	
+
+	@Override
+	public void start(BundleContext bc) throws Exception {
+		super.start(bc);
+//		JarFunctionFactory jf = new JarFunctionFactory();
+//		jf.init();
+		FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
+		System.err.println(">> "+fi);
+		fi.init();
+		System.err.println("woo: "+ fi.getConfig());
+		System.err.println("Started NavajoFunction");
+		fi.injectExtension(new StandardFunctionDefinitions());
+	}
+
+
+
+	@Override
+	public void stop(BundleContext arg0) throws Exception {
+		// TODO Auto-generated method stub
+		super.stop(arg0);
+	}
+
+
 
 	public static void main(String [] args) {
 		Version v = new Version();
@@ -54,5 +86,6 @@ public class Version extends dexels.Version {
 		for (int i = 0; i < d.length; i++) {
 			System.err.println("\t"+d[i].toString());
 		}
+//		FunctionFactoryInterface. getInstance();
 	}
 }
