@@ -6,8 +6,6 @@ import java.io.File;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import org.junit.After;
-import org.junit.Before;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -45,7 +43,6 @@ public class PersistenceManagerImplTest extends TestCase {
 
 	private SharedStoreInterface si;
 	private PersistenceManagerImpl pi = null;
-	@Before
 	public void setUp() throws Exception {
 		DispatcherFactory df = new DispatcherFactory(new Dispatcher(new TestNavajoConfig()));
 		df.getInstance().setUseAuthorisation(false);
@@ -66,7 +63,6 @@ public class PersistenceManagerImplTest extends TestCase {
 		}
 	}
 	
-	@After
 	public void tearDown() throws Exception {
 		File f = new File("/tmp/sharedstore");
 		deleteFiles(f);
