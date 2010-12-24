@@ -24,7 +24,6 @@ public class JarFunctionFactory extends FunctionFactoryInterface {
 			InputStream fis = fd.getDefinitionAsStream();
 			xml.parseFromStream(fis);
 			fis.close();
-			System.err.println("Parse complete!: "+xml);
 			if (!( xml.getName().equals("functiondef") || xml.getName().equals("tid"))) {
 				return;
 			}
@@ -78,7 +77,6 @@ public class JarFunctionFactory extends FunctionFactoryInterface {
 		
 		
 		try {
-			System.err.println("<><><>");
 			Iterator iter = ServiceRegistry.lookupProviders(Class.forName("navajo.ExtensionDefinition", true, myClassLoader),myClassLoader);
 			while(iter.hasNext()) {
 				ExtensionDefinition ed = (ExtensionDefinition) iter.next();
