@@ -10,7 +10,10 @@ Require-Bundle: com.dexels.navajo.version;visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Export-Package: com.dexels.navajo.document,
  com.dexels.navajo.document.base,
+ com.dexels.navajo.document.jaxpimpl,
  com.dexels.navajo.document.jaxpimpl.xml,
  com.dexels.navajo.document.nanoimpl,
  com.dexels.navajo.document.types,
- com.dexels.navajo.persistence
+ com.dexels.navajo.persistence,
+ metadata,
+ org.dexels.utils
