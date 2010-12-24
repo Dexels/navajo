@@ -15,14 +15,16 @@ import com.dexels.navajo.server.DispatcherFactory;
 
 public class JarFunctionFactory extends FunctionFactoryInterface {
 
-	private final void readDefinitionFile(HashMap<String, FunctionDefinition> fuds, ExtensionDefinition fd) {
+
+	@Override
+	public final void readDefinitionFile(HashMap<String, FunctionDefinition> fuds, ExtensionDefinition fd) {
 		// Read config file.
 		CaseSensitiveXMLElement xml = new CaseSensitiveXMLElement();
 		try {
 			InputStream fis = fd.getDefinitionAsStream();
 			xml.parseFromStream(fis);
 			fis.close();
-			
+			System.err.println("Parse complete!: "+xml);
 			if (!( xml.getName().equals("functiondef") || xml.getName().equals("tid"))) {
 				return;
 			}
@@ -51,7 +53,7 @@ public class JarFunctionFactory extends FunctionFactoryInterface {
 					}
 				}
 				if ( name != null ) {
-					fuds.put(name, new FunctionDefinition(object, description, inputParams, resultParam));
+					fuds.put(name, new FunctionDefinition(object, description, inputParams, resultParam,fd));
 				}
 			}
 			
@@ -62,7 +64,11 @@ public class JarFunctionFactory extends FunctionFactoryInterface {
 	
 	@Override
 	public void init() {
-		HashMap<String, FunctionDefinition> fuds = new HashMap<String, FunctionDefinition>();
+		HashMap<String, FunctionDefinition> fuds = getConfig();
+		if(getConfig()==null) {
+			fuds = new HashMap<String, FunctionDefinition>();
+			setConfig(fuds);
+		}
 		ClassLoader myClassLoader = null;
 		if ( DispatcherFactory.getInstance() != null ) {
 			myClassLoader = DispatcherFactory.getInstance().getNavajoConfig().getClassloader();
@@ -72,11 +78,12 @@ public class JarFunctionFactory extends FunctionFactoryInterface {
 		
 		
 		try {
-			Iterator iter = ServiceRegistry.lookupProviders(Class.forName("navajo.ExtensionDefinition", true, myClassLoader), 
-					                                        myClassLoader);
+			System.err.println("<><><>");
+			Iterator iter = ServiceRegistry.lookupProviders(Class.forName("navajo.ExtensionDefinition", true, myClassLoader),myClassLoader);
 			while(iter.hasNext()) {
 				ExtensionDefinition ed = (ExtensionDefinition) iter.next();
 				readDefinitionFile(fuds, ed);
+				System.err.println("Extension found....: "+ed);
 			}
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block

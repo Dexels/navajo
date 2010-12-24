@@ -4,6 +4,8 @@ import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Vector;
 
+import navajo.ExtensionDefinition;
+
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 
@@ -41,7 +43,7 @@ public class TestFunctionFactory extends FunctionFactoryInterface {
 					}
 				}
 				if ( name != null ) {
-					fuds.put(name, new FunctionDefinition(object, description, inputParams, resultParam));
+					fuds.put(name, new FunctionDefinition(object, description, inputParams, resultParam,null));
 				}
 			}
 			setConfig(fuds);
@@ -49,6 +51,13 @@ public class TestFunctionFactory extends FunctionFactoryInterface {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@Override
+	public void readDefinitionFile(HashMap<String, FunctionDefinition> fuds,
+			ExtensionDefinition fd) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

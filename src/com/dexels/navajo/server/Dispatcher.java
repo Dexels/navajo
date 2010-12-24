@@ -416,17 +416,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean, DispatcherI
   
 	  try {
 		  
-		  Class<? extends ServiceHandler> c;
-		  
-		  if ( access.betaUser ) {
-			  c = navajoConfig.getBetaClassLoader().getClass(handler);
-		  } else {
-			  c = navajoConfig.getClassloader().getClass(handler);
-		  }
-		  
-		  ServiceHandler sh = c.newInstance();
-		  
-		  sh.setInput(access);
+		  ServiceHandler sh = createHandler(handler, access);
 		
 		  // If recompile is needed ALWAYS set expirationInterval to -1.
 		  // TODO: IMPLEMENT NEEDS RECOMPILE DIFFERENTLY: I DO NOT WANT GENERICHANDLER DEPENDENCY @ THIS
@@ -474,6 +464,26 @@ public final class Dispatcher implements Mappable, DispatcherMXBean, DispatcherI
 		  }
 	  }
   }
+
+private ServiceHandler createHandler(String handler, Access access)
+		throws ClassNotFoundException, InstantiationException,
+		IllegalAccessException {
+	
+	
+	return HandlerFactory.createHandler(handler,navajoConfig,access);
+//	Class<? extends ServiceHandler> c;
+//	  
+//	  if ( access.betaUser ) {
+//		  c = navajoConfig.getBetaClassLoader().getClass(handler);
+//	  } else {
+//		  c = navajoConfig.getClassloader().getClass(handler);
+//	  }
+//	  
+//	  ServiceHandler sh = c.newInstance();
+//	  
+//	  sh.setInput(access);
+//	return sh;
+}
 
   public  final boolean doMatchCN() {
     return matchCN;

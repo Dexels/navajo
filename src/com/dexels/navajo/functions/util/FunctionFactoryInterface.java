@@ -1,6 +1,9 @@
 package com.dexels.navajo.functions.util;
 
 import java.util.HashMap;
+
+import navajo.ExtensionDefinition;
+
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.server.UserException;
@@ -12,7 +15,21 @@ public abstract class FunctionFactoryInterface {
 	private boolean initializing = false;
 	
 	public abstract void init();
+
 	
+	public void injectExtension(ExtensionDefinition fd) {
+		readDefinitionFile(getConfig(), fd);
+		try {
+			System.err.println("Mombasa: "+getDef("Date").getDescription());
+		} catch (TMLExpressionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	
+	public abstract void readDefinitionFile(HashMap<String, FunctionDefinition> fuds, ExtensionDefinition fd) ;
+
 	/**
 	 * Fetch a functiondefinition. If not found first time, try re-init (maybe new definition), if still not found throw Exception.
 	 * 
@@ -20,6 +37,7 @@ public abstract class FunctionFactoryInterface {
 	 * @return
 	 * @throws UserException
 	 */
+	
 	private final FunctionDefinition getDef(String name) throws TMLExpressionException {
 		
 		while ( initializing ) {
@@ -59,9 +77,10 @@ public abstract class FunctionFactoryInterface {
 		
 		try {
 			FunctionDefinition fd = getDef(functionName);
-			Class myClass = Class.forName(fd.getObject(), true, cl);
+//			Class myClass = Class.forName(fd.getObject(), true, cl);
+			Class<? extends FunctionInterface> myClass = fd.getFunctionClass();
 			// TODO INSTANTIATE FUNCTION USING FACTORY, SETTING TYPE SIGNATURE IN FACTORY!!!
-			FunctionInterface fi = (FunctionInterface) myClass.newInstance();
+			FunctionInterface fi =myClass.newInstance();
 			if (!fi.isInitialized()) {
 				fi.setTypes(fd.getInputParams(), fd.getResultParam());
 			}

@@ -38,7 +38,8 @@ Export-Package: com.dexels.navajo.adapter.navajomap,
  com.dexels.navajo.sharedstore,
  com.dexels.navajo.util,
  dexels,
- navajo
+ navajo,
+ org.dexels.utils
 Import-Package: junit.framework;version="3.8.2",
  org.junit,
  org.osgi.framework;version="1.3.0"

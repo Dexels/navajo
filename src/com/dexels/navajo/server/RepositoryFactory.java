@@ -10,14 +10,24 @@ package com.dexels.navajo.server;
  * @version $Id$
  */
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.dexels.navajo.loader.NavajoClassLoader;
 
 
 public class RepositoryFactory {
 
+	private final static Map<String,Repository> repositoryRepository = new HashMap<String, Repository>();
+	
     public static Repository getRepository(String className, NavajoConfigInterface config) {
         try {
-            Repository rp = (Repository) config.getClassloader().getClass(className).newInstance();
+        	Repository localRp = repositoryRepository.get(className);
+        	if(localRp!=null) {
+        		localRp.setNavajoConfig(config);
+        		return localRp;
+        	}
+        	Repository rp = (Repository) config.getClassloader().getClass(className).newInstance();
             rp.setNavajoConfig(config);
             System.out.println("Using alternative repository: " + className);
             return rp;
@@ -32,9 +42,19 @@ public class RepositoryFactory {
         }
     }
 
+
+    public static void registerRepository(String className, Repository r) {
+    	repositoryRepository.put(className, r);
+    }
     @SuppressWarnings("unchecked")
 	public static Repository getRepository(NavajoClassLoader loader, String repositoryClass, NavajoConfigInterface config) {
-        try {
+    	Repository localRp = repositoryRepository.get(repositoryClass);
+    	if(localRp!=null) {
+    		localRp.setNavajoConfig(config);
+    		return localRp;
+    	}
+
+    	try {
             Class c = loader.getClass(repositoryClass);
             Repository rp = (Repository) c.newInstance();
 

@@ -233,8 +233,6 @@ public class Version extends dexels.Version {
 	@Override
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
-		Navajo n = NavajoFactory.getInstance().createNavajo();
-		n.write(System.err);
 	}
 
 
