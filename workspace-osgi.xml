@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project default="feature_export" name="build">
-	<target name="feature_export">
-		<pde.exportFeatures destination="/var/www/html/NavajoOSGi" exportSource="true" exportType="directory" features="com.dexels.navajo.core.feature,com.dexels.navajo.server.enterprise.feature,com.dexels.navajo.server.feature" useJARFormat="true"/>
-	</target>
-</project>
