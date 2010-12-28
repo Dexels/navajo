@@ -26,4 +26,4 @@ Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.listeners;visibility:=reexport,
  com.dexels.navajo.core;visibility:=reexport,
  com.dexels.navajo.function;bundle-version="2.0.1",
- com.dexels.adapters.deps;bundle-version="1.0.0"
+ com.dexels.navajo.adapters.deps;bundle-version="1.0.0"
