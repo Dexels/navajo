@@ -5,11 +5,7 @@ Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.0
 Bundle-ClassPath: .
 Export-Package: com.dexels.navajo.jsp.tags
-Import-Package: javax.servlet;version="2.5.0",
- javax.servlet.http;version="2.5.0",
- javax.servlet.jsp;version="2.0.0",
- javax.servlet.jsp.tagext,
- junit.framework;version="3.8.2",
+Import-Package: junit.framework;version="3.8.2",
  org.osgi.framework;version="1.3.0"
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.document;visibility:=reexport,
@@ -17,4 +13,5 @@ Require-Bundle: com.dexels.navajo.document;visibility:=reexport,
  com.dexels.navajo.jsp;bundle-version="1.0.0",
  org.apache.ant;bundle-version="1.7.1",
  com.uwyn.jhighlight;bundle-version="1.0.0",
- org.apache.taglibs.standard;bundle-version="1.0.0"
+ org.apache.taglibs.standard;bundle-version="1.0.0",
+ javax.servlet;bundle-version="2.5.0"
