@@ -50,7 +50,7 @@
          unpack="false"/>
 
    <plugin
-         id="com.uwin.jhighlight"
+         id="com.uwyn.jhighlight"
          download-size="0"
          install-size="0"
          version="0.0.0"
