@@ -16,5 +16,5 @@ Require-Bundle: com.dexels.navajo.document;visibility:=reexport,
  com.dexels.navajo.client;bundle-version="1.0.0",
  com.dexels.navajo.jsp;bundle-version="1.0.0",
  org.apache.ant;bundle-version="1.7.1",
- com.uwin.jhighlight;bundle-version="1.0.0",
+ com.uwyn.jhighlight;bundle-version="1.0.0",
  org.apache.taglibs.standard;bundle-version="1.0.0"
