@@ -3,7 +3,7 @@
       id="com.dexels.navajo.core.feature"
       label="Navajo Core Feature"
       version="1.0.0.qualifier"
-      provider-name="DEXELS">
+      provider-name="Dexels">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -16,6 +16,11 @@
    <license url="http://www.example.com/license">
       [Enter License Description here.]
    </license>
+
+   <requires>
+      <import plugin="javax.servlet"/>
+      <import plugin="org.junit"/>
+   </requires>
 
    <plugin
          id="org.apache.tomcat.catalina"
@@ -39,24 +44,11 @@
          unpack="false"/>
 
    <plugin
-         id="javax.servlet"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="com.dexels.navajo.client.async"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
-   <plugin
-         id="org.junit"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
 
    <plugin
          id="com.dexels.navajo.listeners.tomcat"
@@ -66,7 +58,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.jcraft.jzlib"
+         id="com.jcraft.jzlib"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -88,20 +80,6 @@
 
    <plugin
          id="com.dexels.navajo.version"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.osgi.services"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.osgi"
          download-size="0"
          install-size="0"
          version="0.0.0"
