@@ -21,4 +21,4 @@ Import-Package: junit.framework;version="3.8.2",
  org.osgi.framework;version="1.3.0"
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.document,
- org.jcraft.jzlib;bundle-version="1.0.0"
+ com.jcraft.jzlib;bundle-version="1.0.0"
