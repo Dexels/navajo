@@ -26,7 +26,7 @@ public class TslLexicalHighlightingMapper extends AbstractAntlrTokenToAttributeI
 			return TslHighlightingConfiguration.LITERAL_ID;
 		}
 
-		encountered = valueForAnyInString(tokenName, new String[]{"RULE_PROPERTY_END_TAG","RULE_MESSAGE_END_TAG","ROLE_NAVASCRIPT_KEYWORD","'message'","'map'","'</map.'","'property'","RULE_MULTILINETAG_END","RULE_SINGLELINETAG_END","'AND'","'OR'","'FORALL'","'TRUE'","'FALSE'","'NULL'","'TODAY'","'methods'","'method'","'required'","'validations'","'check'","'direction'","'name'","'value'","'type'","'length'"});
+		encountered = valueForAnyInString(tokenName, new String[]{"RULE_PROPERTY_END_TAG","RULE_MESSAGE_END_TAG","RULE_NAVASCRIPT_KEYWORD","'message'","'map'","'</map.'","'property'","RULE_MULTILINETAG_END","RULE_SINGLELINETAG_END","'AND'","'OR'","'FORALL'","RULE_TRUE","RULE_FALSE","RULE_NULL'","RULE_TODAY","'methods'","'method'","'required'","'validations'","'check'","'direction'","'name'","'value'","'type'","'length'","'option'","'field'","'include'","'break'"});
 		if(encountered) {
 			return TslHighlightingConfiguration.KEYWORD_ID;
 		}
@@ -44,8 +44,10 @@ public class TslLexicalHighlightingMapper extends AbstractAntlrTokenToAttributeI
 		if("RULE_INT".equals(tokenName)) {
 			return DefaultHighlightingConfiguration.NUMBER_ID;
 		}
-		if("RULE_ML_COMMENT".equals(tokenName) | "RULE_SL_COMMENT".equals(tokenName) | "CDATA".equals(tokenName)) {
-			return DefaultHighlightingConfiguration.COMMENT_ID;
+		encountered = valueForAnyInString(tokenName, new String[]{"RULE_XMLHead","RULE_XMLComment","RULE_CDATA","RULE_SL_COMMENT","RULE_ML_COMMENT"});
+		if(encountered) { 
+			System.err.println("COMMENT FOUND>>>>"+getId(tokenType)+" ttype: "+tokenType+" tokenname: "+tokenName);
+			return TslHighlightingConfiguration.TSL_COMMENT_ID;
 		}
 		return DefaultHighlightingConfiguration.DEFAULT_ID;
 	}

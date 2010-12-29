@@ -11,6 +11,7 @@ import org.eclipse.xtext.parsetree.LeafNode;
 import org.eclipse.xtext.parsetree.NodeAdapter;
 import org.eclipse.xtext.parsetree.NodeUtil;
 import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.ui.editor.syntaxcoloring.DefaultHighlightingConfiguration;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightedPositionAcceptor;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.ISemanticHighlightingCalculator;
 
@@ -18,7 +19,9 @@ import com.dexels.navajo.dsl.model.expression.ExistsTmlReference;
 import com.dexels.navajo.dsl.model.expression.FunctionCall;
 import com.dexels.navajo.dsl.model.expression.MapGetReference;
 import com.dexels.navajo.dsl.model.expression.TmlReference;
+import com.dexels.navajo.dsl.model.expression.TopLevel;
 import com.dexels.navajo.dsl.model.tsl.Map;
+import com.dexels.navajo.dsl.model.tsl.MapMethod;
 import com.dexels.navajo.dsl.model.tsl.PossibleExpression;
 import com.dexels.navajo.dsl.model.tsl.Tml;
 
@@ -75,7 +78,8 @@ public class TslSemanticHighlightingCalculator implements
 	    highlightTmlImput(acceptor, m);
 	    highlightMapGetReference(acceptor,m);
 	    highlightMapTag(acceptor,m);
-	    
+	    highlightTmlToplevel(acceptor,m);
+	    highlightMapMethod(acceptor,m);
 	    Iterable<AbstractNode> allNodes = NodeUtil.getAllContents(
 	    		  resource.getParseResult().getRootNode());
 	    
@@ -100,7 +104,10 @@ public class TslSemanticHighlightingCalculator implements
 	    	highlightLeafWithIndex(1,acceptor, tag,TslHighlightingConfiguration.MAP_ID);
 	    	for (PossibleExpression p : tag.getAttributes()) {
 				if("object".equals( p.getKey())) {
-					highlightFirstLeaf(acceptor, p, TslHighlightingConfiguration.MAP_ID);
+					TopLevel expressionValue = p.getExpressionValue();
+					if(expressionValue!=null) {
+						highlightFirstLeaf(acceptor, expressionValue, TslHighlightingConfiguration.MAP_ID);
+					}
 				}
 			} 
 	    	
@@ -112,6 +119,15 @@ public class TslSemanticHighlightingCalculator implements
 		List<MapGetReference> aa = EcoreUtil2.eAllOfType(m, MapGetReference.class);
 	    for (MapGetReference ref : aa) {
 	    	highlightAllLeaves(acceptor, ref,TslHighlightingConfiguration.MAP_ID);
+		}
+	}
+	private void highlightMapMethod(IHighlightedPositionAcceptor acceptor,
+			Tml m) {
+		List<MapMethod> aa = EcoreUtil2.eAllOfType(m, MapMethod.class);
+	    for (MapMethod ref : aa) {
+//	    	ref.
+	    	highlightFirstLeaf(acceptor,ref,TslHighlightingConfiguration.MAP_ID);
+//	    	highlightAllLeaves(acceptor, ref,TslHighlightingConfiguration.MAP_ID);
 		}
 	}
 
@@ -130,6 +146,11 @@ public class TslSemanticHighlightingCalculator implements
 
 	}
 
+	private void highlightTmlToplevel(IHighlightedPositionAcceptor acceptor,Tml m) {
+		for(PossibleExpression a :m.getAttributes()) {
+			highlightFirstLeaf(acceptor, a, TslHighlightingConfiguration.TSL_COMMENT_ID);
+		}
+	}
 
 	private void highlightAllLeaves(IHighlightedPositionAcceptor acceptor, EObject m, String highlightId) {
 		NodeAdapter adapter = NodeUtil.getNodeAdapter(m);
@@ -143,6 +164,11 @@ public class TslSemanticHighlightingCalculator implements
 		highlightLeafWithIndex(0, acceptor, m, highlightId);
 	}
 
+	private void highlightLeafWithIndex(int[] indices, IHighlightedPositionAcceptor acceptor, EObject m, String highlightId) {
+		for (int i : indices) {
+			highlightLeafWithIndex(i,acceptor,m,highlightId);
+		}
+	}
 	private void highlightLeafWithIndex(int index, IHighlightedPositionAcceptor acceptor, EObject m, String highlightId) {
 		NodeAdapter adapter = NodeUtil.getNodeAdapter(m);
 		CompositeNode node = adapter.getParserNode();
