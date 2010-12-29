@@ -1,154 +1,20 @@
 <plugin>
-  <extension
-         point="org.eclipse.ui.newWizards">
-      <category
-            name="Navajo"
-            id="NavajoStudioPlugin">
-      </category>
-      <wizard
-            name="New blank script wizard"
-            icon="icons/dexels_newscript.gif"
-            category="NavajoStudioPlugin"
-            class="com.dexels.navajo.studio.script.plugin.wizards.NewScriptWizard"
-            id="com.dexels.navajo.studio.script.plugin.wizards.NewScriptWizard">
-       <description>Create a new, empty, Navajo script.</description>
-      </wizard>
-   </extension> 
-  <extension point="org.eclipse.ui.newWizards">
-      <category name="Examples" id="NavajoStudioPlugin">
-      </category>
-      <wizard
-            name="New navajo demo project"
-            icon="icons/dexels_newscript.gif"
-            category="NavajoStudioPlugin"
-            class="com.dexels.navajo.studio.script.plugin.wizards.NavajoDemoProjectWizard"
-            id="com.dexels.navajo.studio.script.plugin.wizards.NavajoDemoProjectWizard">
-       <description>Create a new, empty, Navajo project.</description>
-      </wizard>
-   </extension>
       
    <extension point="org.eclipse.ui.views">
-      <category name="Navajo Script Category" id="com.dexels.plugin.views"/>
 
-      <view name="Adapter viewer" icon="icons/dexels_adapter.gif" category="com.dexels.plugin.views"
-         class="com.dexels.navajo.studio.script.plugin.views.AdapterViewer"
-         id="com.dexels.AdapterViewer"/>
-      <view name="Function viewer" icon="icons/dexels_function.gif" category="com.dexels.plugin.views"
-         class="com.dexels.navajo.studio.script.plugin.views.FunctionViewer"
-         id="com.dexels.FunctionViewer"/>
-      <view name="TML viewer" icon="icons/dexels_function.gif" category="com.dexels.plugin.views"
-         class="com.dexels.navajo.studio.script.plugin.views.TmlViewer"
-         id="com.dexels.TmlViewer"/>
       <view name="TML browser" icon="icons/dexels_function.gif" category="com.dexels.plugin.views"
          class="com.dexels.navajo.studio.script.plugin.views.TmlBrowser"
          id="com.dexels.TmlBrowser"/>
-     <view name="Tsl Metadata" icon="icons/dexels.gif" category="com.dexels.plugin.views"
-         class="com.dexels.navajo.studio.script.plugin.views.MetaDataViewer"
-         id="com.dexels.MetaDataViewer"/>
    </extension>
    
  
-   <extension id="NavajoScriptBuilder" name="TSL Builder"
-      point="org.eclipse.core.resources.builders">
-      <builder hasNature="false">
-         <run class="com.dexels.navajo.studio.eclipse.NavajoBuilder"/>
-      </builder>
-   </extension>
-   <extension id="NavajoNature" name="Navajo Nature" point="org.eclipse.core.resources.natures">
-      <runtime>
-         <run class="com.dexels.navajo.studio.eclipse.NavajoNature"/>
-      </runtime>
-      <builder id="NavajoScriptBuilder"/>
-   </extension>   
    
-    <extension id="actionAap" point="org.eclipse.ui.actionSets">
-      <actionSet label="Navajo script" visible="true" id="com.dexels.ActionSet">
-         <menu label="Navajo script" id="sampleMenu">
-            <separator name="sampleGroup"/>
-         </menu>
-         
-         
-       <!-- <action label="Reload current" icon="icons/dexels.gif"  tooltip="Reload current tml" 
-               class="com.dexels.navajo.studio.script.plugin.actions.NavajoReloadAction"
-               id="com.dexels.plugin.reload" definitionId="com.dexels.plugin.command.reload"/>
-           -->    
-		<action label="Reload"
-            class="com.dexels.navajo.studio.script.plugin.actions.NavajoReloadAction"
-            menubarPath="sampleMenu/sampleGroup"
-            id="reloadCurrent" definitionId="com.dexels.plugin.command.reload"/>
-                           
-       <action label="Start socketRunner"
-            class="com.dexels.navajo.studio.script.plugin.actions.StartSocketRunner"
-            menubarPath="sampleMenu/sampleGroup"
-            id="startSocket" definitionId="com.dexels.plugin.command.socket"/>
-            
-       <action label="Back"
-            class="com.dexels.navajo.studio.script.plugin.actions.NavajoBackAction"
-            menubarPath="sampleMenu/sampleGroup"
-            id="back" definitionId="com.dexels.plugin.command.back"/>
 
-       <action label="Forward"
-            class="com.dexels.navajo.studio.script.plugin.actions.NavajoForwardAction"
-            menubarPath="sampleMenu/sampleGroup"
-            id="forward" definitionId="com.dexels.plugin.command.forward"/>
- 
-            
-       </actionSet>  
-       
-   </extension> 
-	<extension point="org.eclipse.ui.commands">
-		<command id="com.dexels.plugin.command.socket" name="Start socket" description="Starts the runner of the current navajo project" categoryId="org.eclipse.ui.category.views"/>
-		<command id="com.dexels.plugin.command.reload" name="Reload" description="Reload current tml" categoryId="org.eclipse.ui.category.views"/>
-		<command id="com.dexels.plugin.command.java" name="Java" description="Show java" categoryId="org.eclipse.ui.category.views"/>
-		<command id="com.dexels.plugin.command.recompile" name="Recompile" description="Recompile" categoryId="org.eclipse.ui.category.views"/>
-		<command id="com.dexels.plugin.command.tml" name="Tml" description="Tml" categoryId="org.eclipse.ui.category.views"/>
-
-		<command id="com.dexels.plugin.command.forward" name="Forward" description="Forward" categoryId="org.eclipse.ui.category.views"/>
-		<command id="com.dexels.plugin.command.back" name="Back" description="Back" categoryId="org.eclipse.ui.category.views"/>
-		<!--=
-		<keyBinding string="Shift+F7" command="com.dexels.plugin.command.reload" configuration="org.eclipse.ui.defaultAcceleratorConfiguration"/>
-	    <keyBinding string="Shift+F6" command="com.dexels.plugin.command.socket" configuration="org.eclipse.ui.defaultAcceleratorConfiguration"/>
-	    <keyBinding string="Ctrl+U" command="com.dexels.plugin.command.java" configuration="org.eclipse.ui.defaultAcceleratorConfiguration"/>
-	    <keyBinding string="Ctrl+R" command="com.dexels.plugin.command.recompile" configuration="org.eclipse.ui.defaultAcceleratorConfiguration"/>
-	    <keyBinding string="Ctrl+T" command="com.dexels.plugin.command.tml" configuration="org.eclipse.ui.defaultAcceleratorConfiguration"/>
-	-->
-
-	<!--
-	Editor commands:
-		Show java
-		Show script
-		Show tml
-		Run init / Refresh
-		(Re)start socketrunner
-		
-	Generic commands:
-		Show view: TML Browser
-		Show view: Metadata
-			
-
--->
-</extension>
-
-	<extension point="org.eclipse.ui.bindings">
-		 <key sequence="F5" commandId="com.dexels.plugin.command.reload" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" contextId="com.dexels.navajoContext" />
-	</extension>
-	<extension point="org.eclipse.ui.bindings">
-		 <key sequence="Ctrl+ARROW_LEFT" commandId="com.dexels.plugin.command.back" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" contextId="com.dexels.navajoContext" />
-	</extension>
-	<extension point="org.eclipse.ui.bindings">
-		 <key sequence="Ctrl+ARROW_RIGHT" commandId="com.dexels.plugin.command.forward" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" contextId="com.dexels.navajoContext" />
-	</extension>
-	<extension point="org.eclipse.ui.bindings">
-		 <key sequence="Shift+F7" commandId="com.dexels.plugin.command.recompile" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" contextId="com.dexels.navajoContext" />
-	</extension>
 	
    <extension point="org.eclipse.ui.preferencePages">
       <page name="Navajo Browser Preferences"
          class="com.dexels.navajo.studio.script.plugin.navajobrowser.preferences.NavajoPreferencePage"
          id="com.dexels.NavajoPreferencePage"/>
-      <page name="Navajo socket preferences"
-         class="com.dexels.navajo.studio.script.plugin.navajobrowser.preferences.NavajoSocketPreferencePage"
-         id="com.dexels.NavajoSocketPreferencePage"/>
          
    </extension>
   <!--   <extension point="org.eclipse.ui.editors">
@@ -167,34 +33,6 @@
    </extension>
   --> 
    
-   <extension
-         point="org.eclipse.ui.propertyPages">
-      <page
-            adaptable="true"
-            objectClass="org.eclipse.core.resources.IProject"
-            icon="icons/dexels.gif"
-            class="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioPropertyPage"
-            name="Navajo"
-            id="com.dexels.plugin.NavajoStudioPropertyPage">
-         <filter name="nature" value="com.dexels.plugin.NavajoNature"/>
-        </page>
-     <!-- <page objectClass="org.eclipse.core.resources.IProject" icon="icons/sample.gif" name="Navajo propeties"
-            id="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioPropertyPage" class="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioPropertyPage">
-          <filter name="nature" value="com.dexels.plugin.NavajoNature"/>
-      </page>
-      <page objectClass="org.eclipse.core.resources.IProject" icon="icons/dexels_fill.gif" name="Navajo Server"
-            id="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioServerConfig" class="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioServerConfig">
-          <filter name="nature" value="com.dexels.plugin.NavajoNature"/>
-      </page>
-      <page objectClass="org.eclipse.core.resources.IProject" icon="icons/dexels_fill.gif" name="Navajo SQLMap"
-            id="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioSqlConfig" class="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioSqlConfig">
-           <filter name="nature" value="com.dexels.plugin.NavajoNature"/>
-      </page>
-     <page objectClass="org.eclipse.core.resources.IProject" icon="icons/dexels_fill.gif" name="Navajo Persistence"
-            id="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioPersistenceConfig" class="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioPersistenceConfig">
-           <filter name="nature" value="com.dexels.plugin.NavajoNature"/>
-      </page>-->
-   </extension>
 <!--
   <extension point="org.eclipse.ui.propertyPages">
       <page objectClass="org.eclipse.core.resources.IFile" icon="icons/sample.gif" name="Studio propeties"
@@ -204,163 +42,15 @@
       <page objectClass="org.eclipse.core.resources.IFile" icon="icons/sample.gif" name="Studio propeties"
             nameFilter="*.*"  id="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioSqlConfig" class="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioSqlConfig"/>
    </extension>-->
-    <extension point="org.eclipse.ui.decorators"> 
-        <decorator
-            id="com.dexels.plugin.tmldecorator" 
-            label="TML Decorator" 
-            state="false" 
-            lightweight="true" 
-            icon="icons/tml_decorator.gif" 
-            location="TOP_LEFT"> 
-            <enablement>
-                <objectClass name="org.eclipse.core.resources.IResource"/> 
-            </enablement>
-        </decorator>
-    </extension>
  <!--<extension point="org.eclipse.ui.decorators"> 
     </extension>     -->
-<extension point="org.eclipse.ui.decorators"> 
-        <decorator id="com.dexels.plugin.initdecorator"  location="TOP_LEFT" label="Init script Decorator" state="true" icon="icons/script_is_init2.gif">
-            <enablement>
-                <and>
-                <objectClass name="org.eclipse.core.resources.IFile"/> 
-                <objectState name="name" value="*.xml"/> 
-                <objectState name="name" value="Init*"/> 
-				</and>
-            </enablement>
-        </decorator>
-    </extension>     
-<extension point="org.eclipse.ui.decorators"> 
-        <decorator id="com.dexels.plugin.navajoprojectdecorator" location="TOP_LEFT"  label="Dexels" state="true" icon="icons/dexels_small.gif">
-            <enablement>
-                <and>
-                <objectClass name="org.eclipse.core.resources.IProject"/> 
-                 <objectState name="projectNature" value="com.dexels.plugin.NavajoNature"/> 
-				</and>
-            </enablement>
-        </decorator>
-    </extension>     
-
-<extension point="org.eclipse.ui.popupMenus">
-   <objectContribution adaptable="true" objectClass="org.eclipse.core.resources.IProject" id="com.dexels.plugin.popupMenu">
-      <filter name="projectNature"
-            value="com.dexels.plugin.NavajoNature">
-      </filter>
-      
-        <action label="Remove navajo nature" icon="icons/remove_dexels_nature.gif"
-            class="com.dexels.navajo.studio.script.plugin.actions.RemoveNavajoNatureAction"
-            tooltip="Remove navajo nature" id="com.dexels.RemoveNavajoNatureAction"/>
-
-     <action label="Start socketRunner" icon="icons/dexels_start.gif"
-            class="com.dexels.navajo.studio.script.plugin.actions.StartSocketRunner"
-            tooltip="Start socketRunner" id="PopupStartSocketRunner"/>
-            
-     <action label="Refresh navajo classloader" icon="icons/dexels.gif"
-            class="com.dexels.navajo.studio.script.plugin.actions.RefreshClassloader"
-           tooltip="Creates a new classloader for the compiler" id="PopupRefreshClassloader"/>
-
-  
-
-     
-   </objectContribution>
-</extension>
 
 
 
 
-<extension point="org.eclipse.ui.popupMenus">
-   <objectContribution adaptable="true" objectClass="org.eclipse.core.resources.IProject" id="com.dexels.plugin.popupMenuAdd">
-      <filter name="projectNature"
-            value="org.eclipse.jdt.core.javanature">
-      </filter>
-      
-        <action label="Add navajo nature" icon="icons/dexels_nature.gif"
-            class="com.dexels.navajo.studio.script.plugin.actions.NavajoNatureAction"
-            tooltip="Add navajo nature" id="com.dexels.NavajoNatureAction"/>
-      
-   </objectContribution>
-</extension>
+
 <!-- Don't know why this does not work -->
-<extension point="org.eclipse.ui.ide.projectNatureImages">
-        <image id="com.dexels.plugin.navajoNatureImage" natureId="com.dexels.plugin.NavajoNature" icon="icons/dexels_small.gif"/>
- </extension>
  
- <extension point="org.eclipse.ui.popupMenus">
-       <objectContribution
-            objectClass="org.eclipse.core.resources.IFile"
-            nameFilter="*.xml"
-            id="com.dexels.plugin.contributionpopupXml">
-
-         <action label="Run.." icon="icons/start.gif"  tooltip="Run remote script" 
-               class="com.dexels.navajo.studio.script.plugin.actions.NavajoRemoteAction"
-               id="com.dexels.plugin.newAction"/>
- <!--        <action label="Run local.." icon="icons/start.gif"  tooltip="Run local script" 
-               class="com.dexels.navajo.studio.script.plugin.actions.NavajoAction"
-               id="com.dexels.plugin.remoteAction"/> -->
-         <action label="Show java.." icon="icons/dexels_searchjava.gif"  tooltip="Shows the java file of this script, if it exists" 
-               class="com.dexels.navajo.studio.script.plugin.actions.FindJavaSource"
-               id="com.dexels.plugin.showJava" definitionId="com.dexels.plugin.command.java"/>
-        <action label="Recompile script.." icon="icons/dexels_recompile.gif"  tooltip="Recompiles this script." 
-               class="com.dexels.navajo.studio.script.plugin.actions.RecompileAction"
-               id="com.dexels.plugin.recompile" definitionId="com.dexels.plugin.command.recompile"/>
-         <action label="Show latest tml.." icon="icons/dexels_searchtml.gif"  tooltip="Shows the latest TML file of this script, if it exists" 
-               class="com.dexels.navajo.studio.script.plugin.actions.ShowTml"
-               id="com.dexels.plugin.showTml" definitionId="com.dexels.plugin.command.tml"/>
-          <action label="Show input tml.." icon="icons/dexels_searchtml.gif"  tooltip="Shows the latest TML file of this script, if it exists" 
-             class="com.dexels.navajo.studio.script.plugin.actions.ShowGeneratedInputTml"
-             id="com.dexels.plugin.showTml" definitionId="com.dexels.plugin.command.tml"/>               
-         <action label="Edit latest tml.." icon="icons/dexels_searchtml.gif"  tooltip="Edits the latest TML file of this script, if it exists" 
-               class="com.dexels.navajo.studio.script.plugin.actions.FindTml"
-               id="com.dexels.plugin.editTml"/>
-         <action label="Show Metadata.." icon="icons/dexels.gif"  tooltip="Shows metadata of this script" 
-               class="com.dexels.navajo.studio.script.plugin.actions.ScriptMetaData"
-               id="com.dexels.plugin.scriptMetaData" definitionId="com.dexels.plugin.command.socket"/>
-
-      </objectContribution>
-     <objectContribution
-            objectClass="org.eclipse.core.resources.IFolder"
-            id="com.dexels.plugin.contributionpopupFolder">
-       <action label="Recompile folder.." icon="icons/dexels_recompile.gif"  tooltip="Recompiles the scripts in this folder" 
-               class="com.dexels.navajo.studio.script.plugin.actions.RecompileAction"
-               id="com.dexels.plugin.recompile"/>
-
-       </objectContribution>
-    </extension>
- <extension point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            objectClass="org.eclipse.core.resources.IFile"
-            nameFilter="*.tml"
-            id="com.dexels.plugin.contributionTml">
-
-         <action label="Show TML" icon="icons/dexels_tml.gif"  tooltip="Shows this file in the viewer" 
-               class="com.dexels.navajo.studio.script.plugin.actions.ShowTml"
-               id="com.dexels.plugin.newAction2"/>
-         <action label="Show Generated input TML" icon="icons/dexels_tml.gif"  tooltip="Show required input" 
-            class="com.dexels.navajo.studio.script.plugin.actions.ShowGeneratedInputTml"
-            id="com.dexels.plugin.newActiongenerated"/>
-         
-         <action label="Show java.." icon="icons/dexels_searchjava.gif"  tooltip="Shows the java file of this script, if it exists" 
-               class="com.dexels.navajo.studio.script.plugin.actions.FindJavaSource"
-               id="com.dexels.plugin.showJava"/>
-         <action label="Show script.." icon="icons/dexels_searchxml.gif"  tooltip="Shows the xml file of this script, if it exists" 
-               class="com.dexels.navajo.studio.script.plugin.actions.FindScript"
-               id="com.dexels.plugin.showXml"/>
-      </objectContribution>
-   </extension>
- <extension point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            objectClass="org.eclipse.core.resources.IFile"
-            nameFilter="*.java"
-            id="com.dexels.plugin.contributionTml">
-
-         <action label="Show TML" icon="icons/dexels_tml.gif"  tooltip="Shows this file in the viewer" 
-               class="com.dexels.navajo.studio.script.plugin.actions.ShowTml"
-               id="com.dexels.plugin.newAction2"/>
-         <action label="Show script.." icon="icons/dexels_searchxml.gif"  tooltip="Shows the xml file of this script, if it exists" 
-               class="com.dexels.navajo.studio.script.plugin.actions.FindScript"
-               id="com.dexels.plugin.showXml"/>
-      </objectContribution>
-   </extension>
 <!--
 <extension point="org.eclipse.ui.ide.markerResolution" id="tslFix">
 	<markerResolutionGenerator class="com.dexels.navajo.studio.eclipse.quickfix.TslFixGenerator" markerType="org.eclipse.core.resources.problemmarker">
@@ -370,13 +60,6 @@
 -->
    
   
-    <extension id="TslMarker" point="org.eclipse.core.resources.markers">
-      <super type="org.eclipse.core.resources.problemmarker"/>
-  		<super type="org.eclipse.core.resources.textmarker"/> 
-          <attribute name="code" />
-          <attribute name="tslCompileException" />
-      <persistent value="true" />
-   </extension>
    
   <!--   <extension id="aap" point="org.eclipse.core.resources.markers">
       <super type="org.eclipse.core.resources.problemmarker"/>

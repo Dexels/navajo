@@ -7,12 +7,6 @@
 package com.dexels.navajo.studio.script.plugin.actions;
 
 import org.eclipse.jface.action.IAction;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleEvent;
-import org.osgi.framework.BundleListener;
-
-import com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin;
 
 /**
  * @author Administrator
@@ -37,34 +31,33 @@ public class StartSocketRunner extends BaseNavajoAction {
 //        } catch (Exception e1) {
 //            NavajoScriptPluginPlugin.getDefault().log("starting socket runner did not work.",e1);
 //        }
-        BundleContext bc = NavajoScriptPluginPlugin.getDefault().getBundle().getBundleContext();
-        Bundle serverBundle = null;
-
-        bc.addBundleListener(new BundleListener(){
-
-			public void bundleChanged(BundleEvent be) {
-				System.err.println("Bundle event: "+be.getType()+" be: "+be.getBundle().getSymbolicName());
-				
-			}});
+//        BundleContext bc = NavajoScriptPluginPlugin.getDefault().getBundle().getBundleContext();
+//        Bundle serverBundle = null;
+//
+//        bc.addBundleListener(new BundleListener(){
+//
+//			public void bundleChanged(BundleEvent be) {
+//				System.err.println("Bundle event: "+be.getType()+" be: "+be.getBundle().getSymbolicName());
+//				
+//			}});
         //bc.installBundle("file:///Users/frank/Documents/workspace-osgi/com.dexels.navajo.server");
-			Bundle[] b = bc.getBundles();
-			for (Bundle bundle : b) {
-				System.err.println("b: "+bundle.getSymbolicName()+" > "+bundle.getState());
-				if(bundle.getSymbolicName().equals("com.dexels.navajo.server")) {
-					serverBundle = bundle;
-				}
-			}
-			navajoserver.Version v;
+//			Bundle[] b = bc.getBundles();
+//			for (Bundle bundle : b) {
+//				System.err.println("b: "+bundle.getSymbolicName()+" > "+bundle.getState());
+//				if(bundle.getSymbolicName().equals("com.dexels.navajo.server")) {
+//					serverBundle = bundle;
+//				}
+//			}
+//			navajoserver.Version v;
 //			try {
 //				v.start(bc);
 //			} catch (Exception e) {
 //				e.printStackTrace();
 //			}
-			System.err.println(">>> "+serverBundle.getState());
+//			System.err.println(">>> "+serverBundle.getState());
 			//		try {
 ////			serverBundle.start();
 //		} catch (BundleException e) {
-//			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
     }
