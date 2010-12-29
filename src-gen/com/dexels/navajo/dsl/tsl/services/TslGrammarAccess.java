@@ -40,6 +40,10 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cChildrenDebugTagParserRuleCall_3_0_1_4_0 = (RuleCall)cChildrenAssignment_3_0_1_4.eContents().get(0);
 		private final Assignment cChildrenAssignment_3_0_1_5 = (Assignment)cAlternatives_3_0_1.eContents().get(5);
 		private final RuleCall cChildrenIncludeParserRuleCall_3_0_1_5_0 = (RuleCall)cChildrenAssignment_3_0_1_5.eContents().get(0);
+		private final Assignment cChildrenAssignment_3_0_1_6 = (Assignment)cAlternatives_3_0_1.eContents().get(6);
+		private final RuleCall cChildrenValidationsParserRuleCall_3_0_1_6_0 = (RuleCall)cChildrenAssignment_3_0_1_6.eContents().get(0);
+		private final Assignment cChildrenAssignment_3_0_1_7 = (Assignment)cAlternatives_3_0_1.eContents().get(7);
+		private final RuleCall cChildrenCommentParserRuleCall_3_0_1_7_0 = (RuleCall)cChildrenAssignment_3_0_1_7.eContents().get(0);
 		private final RuleCall cNAVASCRIPT_ENDParserRuleCall_3_0_2 = (RuleCall)cGroup_3_0.eContents().get(2);
 		private final RuleCall cXML_TAG_SINGLEENDTerminalRuleCall_3_1 = (RuleCall)cAlternatives_3.eContents().get(1);
 		
@@ -47,11 +51,13 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		////generate tsl "http://www.dexels.com/navajo/dsl/tsl/NavajoTsl"
 		//Tml:
 		//	NAVASCRIPT_START {Tml} attributes+=PossibleExpression* (XML_TAG_END (children+=Message | children+=Map |
-		//	children+=Param | methods+=Methods | children+=DebugTag | children+=Include)* NAVASCRIPT_END | XML_TAG_SINGLEEND);
+		//	children+=Param | methods+=Methods | children+=DebugTag | children+=Include | children+=Validations |
+		//	children+=Comment)* NAVASCRIPT_END | XML_TAG_SINGLEEND);
 		public ParserRule getRule() { return rule; }
 
 		//NAVASCRIPT_START {Tml} attributes+=PossibleExpression* (XML_TAG_END (children+=Message | children+=Map | children+=Param
-		//| methods+=Methods | children+=DebugTag | children+=Include)* NAVASCRIPT_END | XML_TAG_SINGLEEND)
+		//| methods+=Methods | children+=DebugTag | children+=Include | children+=Validations | children+=Comment)*
+		//NAVASCRIPT_END | XML_TAG_SINGLEEND)
 		public Group getGroup() { return cGroup; }
 
 		//NAVASCRIPT_START
@@ -67,17 +73,18 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		public RuleCall getAttributesPossibleExpressionParserRuleCall_2_0() { return cAttributesPossibleExpressionParserRuleCall_2_0; }
 
 		//XML_TAG_END (children+=Message | children+=Map | children+=Param | methods+=Methods | children+=DebugTag |
-		//children+=Include)* NAVASCRIPT_END | XML_TAG_SINGLEEND
+		//children+=Include | children+=Validations | children+=Comment)* NAVASCRIPT_END | XML_TAG_SINGLEEND
 		public Alternatives getAlternatives_3() { return cAlternatives_3; }
 
 		//XML_TAG_END (children+=Message | children+=Map | children+=Param | methods+=Methods | children+=DebugTag |
-		//children+=Include)* NAVASCRIPT_END
+		//children+=Include | children+=Validations | children+=Comment)* NAVASCRIPT_END
 		public Group getGroup_3_0() { return cGroup_3_0; }
 
 		//XML_TAG_END
 		public RuleCall getXML_TAG_ENDTerminalRuleCall_3_0_0() { return cXML_TAG_ENDTerminalRuleCall_3_0_0; }
 
-		//(children+=Message | children+=Map | children+=Param | methods+=Methods | children+=DebugTag | children+=Include)*
+		//(children+=Message | children+=Map | children+=Param | methods+=Methods | children+=DebugTag | children+=Include |
+		//children+=Validations | children+=Comment)*
 		public Alternatives getAlternatives_3_0_1() { return cAlternatives_3_0_1; }
 
 		//children+=Message
@@ -115,6 +122,18 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 
 		//Include
 		public RuleCall getChildrenIncludeParserRuleCall_3_0_1_5_0() { return cChildrenIncludeParserRuleCall_3_0_1_5_0; }
+
+		//children+=Validations
+		public Assignment getChildrenAssignment_3_0_1_6() { return cChildrenAssignment_3_0_1_6; }
+
+		//Validations
+		public RuleCall getChildrenValidationsParserRuleCall_3_0_1_6_0() { return cChildrenValidationsParserRuleCall_3_0_1_6_0; }
+
+		//children+=Comment
+		public Assignment getChildrenAssignment_3_0_1_7() { return cChildrenAssignment_3_0_1_7; }
+
+		//Comment
+		public RuleCall getChildrenCommentParserRuleCall_3_0_1_7_0() { return cChildrenCommentParserRuleCall_3_0_1_7_0; }
 
 		//NAVASCRIPT_END
 		public RuleCall getNAVASCRIPT_ENDParserRuleCall_3_0_2() { return cNAVASCRIPT_ENDParserRuleCall_3_0_2; }
@@ -267,6 +286,86 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		public Keyword getRequiredKeyword_1() { return cRequiredKeyword_1; }
 	}
 
+	public class VALIDATIONS_START_TAGElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "VALIDATIONS_START_TAG");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cXML_TAG_STARTTerminalRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Keyword cValidationsKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		
+		//VALIDATIONS_START_TAG returns ecore::EString:
+		//	XML_TAG_START "validations";
+		public ParserRule getRule() { return rule; }
+
+		//XML_TAG_START "validations"
+		public Group getGroup() { return cGroup; }
+
+		//XML_TAG_START
+		public RuleCall getXML_TAG_STARTTerminalRuleCall_0() { return cXML_TAG_STARTTerminalRuleCall_0; }
+
+		//"validations"
+		public Keyword getValidationsKeyword_1() { return cValidationsKeyword_1; }
+	}
+
+	public class CHECK_START_TAGElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "CHECK_START_TAG");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cXML_TAG_STARTTerminalRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Keyword cCheckKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		
+		//CHECK_START_TAG returns ecore::EString:
+		//	XML_TAG_START "check";
+		public ParserRule getRule() { return rule; }
+
+		//XML_TAG_START "check"
+		public Group getGroup() { return cGroup; }
+
+		//XML_TAG_START
+		public RuleCall getXML_TAG_STARTTerminalRuleCall_0() { return cXML_TAG_STARTTerminalRuleCall_0; }
+
+		//"check"
+		public Keyword getCheckKeyword_1() { return cCheckKeyword_1; }
+	}
+
+	public class COMMENT_START_TAGElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "COMMENT_START_TAG");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cXML_TAG_STARTTerminalRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Keyword cCommentKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		
+		//COMMENT_START_TAG returns ecore::EString:
+		//	XML_TAG_START "comment";
+		public ParserRule getRule() { return rule; }
+
+		//XML_TAG_START "comment"
+		public Group getGroup() { return cGroup; }
+
+		//XML_TAG_START
+		public RuleCall getXML_TAG_STARTTerminalRuleCall_0() { return cXML_TAG_STARTTerminalRuleCall_0; }
+
+		//"comment"
+		public Keyword getCommentKeyword_1() { return cCommentKeyword_1; }
+	}
+
+	public class BREAK_START_TAGElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "BREAK_START_TAG");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cXML_TAG_STARTTerminalRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Keyword cBreakKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		
+		//BREAK_START_TAG returns ecore::EString:
+		//	XML_TAG_START "break";
+		public ParserRule getRule() { return rule; }
+
+		//XML_TAG_START "break"
+		public Group getGroup() { return cGroup; }
+
+		//XML_TAG_START
+		public RuleCall getXML_TAG_STARTTerminalRuleCall_0() { return cXML_TAG_STARTTerminalRuleCall_0; }
+
+		//"break"
+		public Keyword getBreakKeyword_1() { return cBreakKeyword_1; }
+	}
+
 	public class OPTION_START_TAGElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "OPTION_START_TAG");
 		private final Group cGroup = (Group)rule.eContents().get(1);
@@ -286,6 +385,30 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 
 		//"option"
 		public Keyword getOptionKeyword_1() { return cOptionKeyword_1; }
+	}
+
+	public class BREAK_END_TAGElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "BREAK_END_TAG");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cXML_START_ENDTAGTerminalRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Keyword cBreakKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final RuleCall cXML_TAG_ENDTerminalRuleCall_2 = (RuleCall)cGroup.eContents().get(2);
+		
+		//BREAK_END_TAG returns ecore::EString:
+		//	XML_START_ENDTAG "break" XML_TAG_END;
+		public ParserRule getRule() { return rule; }
+
+		//XML_START_ENDTAG "break" XML_TAG_END
+		public Group getGroup() { return cGroup; }
+
+		//XML_START_ENDTAG
+		public RuleCall getXML_START_ENDTAGTerminalRuleCall_0() { return cXML_START_ENDTAGTerminalRuleCall_0; }
+
+		//"break"
+		public Keyword getBreakKeyword_1() { return cBreakKeyword_1; }
+
+		//XML_TAG_END
+		public RuleCall getXML_TAG_ENDTerminalRuleCall_2() { return cXML_TAG_ENDTerminalRuleCall_2; }
 	}
 
 	public class OPTION_END_TAGElements extends AbstractParserRuleElementFinder {
@@ -355,6 +478,78 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 
 		//"property"
 		public Keyword getPropertyKeyword_1() { return cPropertyKeyword_1; }
+
+		//XML_TAG_END
+		public RuleCall getXML_TAG_ENDTerminalRuleCall_2() { return cXML_TAG_ENDTerminalRuleCall_2; }
+	}
+
+	public class COMMENT_END_TAGElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "COMMENT_END_TAG");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cXML_START_ENDTAGTerminalRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Keyword cCommentKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final RuleCall cXML_TAG_ENDTerminalRuleCall_2 = (RuleCall)cGroup.eContents().get(2);
+		
+		//COMMENT_END_TAG returns ecore::EString:
+		//	XML_START_ENDTAG "comment" XML_TAG_END;
+		public ParserRule getRule() { return rule; }
+
+		//XML_START_ENDTAG "comment" XML_TAG_END
+		public Group getGroup() { return cGroup; }
+
+		//XML_START_ENDTAG
+		public RuleCall getXML_START_ENDTAGTerminalRuleCall_0() { return cXML_START_ENDTAGTerminalRuleCall_0; }
+
+		//"comment"
+		public Keyword getCommentKeyword_1() { return cCommentKeyword_1; }
+
+		//XML_TAG_END
+		public RuleCall getXML_TAG_ENDTerminalRuleCall_2() { return cXML_TAG_ENDTerminalRuleCall_2; }
+	}
+
+	public class VALIDATIONS_END_TAGElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "VALIDATIONS_END_TAG");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cXML_START_ENDTAGTerminalRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Keyword cValidationsKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final RuleCall cXML_TAG_ENDTerminalRuleCall_2 = (RuleCall)cGroup.eContents().get(2);
+		
+		//VALIDATIONS_END_TAG returns ecore::EString:
+		//	XML_START_ENDTAG "validations" XML_TAG_END;
+		public ParserRule getRule() { return rule; }
+
+		//XML_START_ENDTAG "validations" XML_TAG_END
+		public Group getGroup() { return cGroup; }
+
+		//XML_START_ENDTAG
+		public RuleCall getXML_START_ENDTAGTerminalRuleCall_0() { return cXML_START_ENDTAGTerminalRuleCall_0; }
+
+		//"validations"
+		public Keyword getValidationsKeyword_1() { return cValidationsKeyword_1; }
+
+		//XML_TAG_END
+		public RuleCall getXML_TAG_ENDTerminalRuleCall_2() { return cXML_TAG_ENDTerminalRuleCall_2; }
+	}
+
+	public class CHECK_END_TAGElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "CHECK_END_TAG");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cXML_START_ENDTAGTerminalRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Keyword cCheckKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final RuleCall cXML_TAG_ENDTerminalRuleCall_2 = (RuleCall)cGroup.eContents().get(2);
+		
+		//CHECK_END_TAG returns ecore::EString:
+		//	XML_START_ENDTAG "check" XML_TAG_END;
+		public ParserRule getRule() { return rule; }
+
+		//XML_START_ENDTAG "check" XML_TAG_END
+		public Group getGroup() { return cGroup; }
+
+		//XML_START_ENDTAG
+		public RuleCall getXML_START_ENDTAGTerminalRuleCall_0() { return cXML_START_ENDTAGTerminalRuleCall_0; }
+
+		//"check"
+		public Keyword getCheckKeyword_1() { return cCheckKeyword_1; }
 
 		//XML_TAG_END
 		public RuleCall getXML_TAG_ENDTerminalRuleCall_2() { return cXML_TAG_ENDTerminalRuleCall_2; }
@@ -673,13 +868,14 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final RuleCall cIDTerminalRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
 		private final Keyword cMessageKeyword_1 = (Keyword)cAlternatives.eContents().get(1);
+		private final Keyword cCommentKeyword_2 = (Keyword)cAlternatives.eContents().get(2);
 		
 		//// might need to add a lot more keywords here
 		//AttributeName returns ecore::EString:
-		//	ID | "message";
+		//	ID | "message" | "comment";
 		public ParserRule getRule() { return rule; }
 
-		//ID | "message"
+		//ID | "message" | "comment"
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//ID
@@ -687,6 +883,9 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 
 		//"message"
 		public Keyword getMessageKeyword_1() { return cMessageKeyword_1; }
+
+		//"comment"
+		public Keyword getCommentKeyword_2() { return cCommentKeyword_2; }
 	}
 
 	public class PossibleExpressionElements extends AbstractParserRuleElementFinder {
@@ -873,6 +1072,218 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		public RuleCall getXML_TAG_SINGLEENDTerminalRuleCall_3_1() { return cXML_TAG_SINGLEENDTerminalRuleCall_3_1; }
 	}
 
+	public class ValidationsElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "Validations");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cVALIDATIONS_START_TAGParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Action cValidationsAction_1 = (Action)cGroup.eContents().get(1);
+		private final Alternatives cAlternatives_2 = (Alternatives)cGroup.eContents().get(2);
+		private final Group cGroup_2_0 = (Group)cAlternatives_2.eContents().get(0);
+		private final RuleCall cXML_TAG_ENDTerminalRuleCall_2_0_0 = (RuleCall)cGroup_2_0.eContents().get(0);
+		private final Assignment cChildrenAssignment_2_0_1 = (Assignment)cGroup_2_0.eContents().get(1);
+		private final RuleCall cChildrenCheckParserRuleCall_2_0_1_0 = (RuleCall)cChildrenAssignment_2_0_1.eContents().get(0);
+		private final RuleCall cVALIDATIONS_END_TAGParserRuleCall_2_0_2 = (RuleCall)cGroup_2_0.eContents().get(2);
+		private final RuleCall cXML_TAG_SINGLEENDTerminalRuleCall_2_1 = (RuleCall)cAlternatives_2.eContents().get(1);
+		
+		//Validations:
+		//	VALIDATIONS_START_TAG {Validations} (XML_TAG_END children+=Check* VALIDATIONS_END_TAG | XML_TAG_SINGLEEND);
+		public ParserRule getRule() { return rule; }
+
+		//VALIDATIONS_START_TAG {Validations} (XML_TAG_END children+=Check* VALIDATIONS_END_TAG | XML_TAG_SINGLEEND)
+		public Group getGroup() { return cGroup; }
+
+		//VALIDATIONS_START_TAG
+		public RuleCall getVALIDATIONS_START_TAGParserRuleCall_0() { return cVALIDATIONS_START_TAGParserRuleCall_0; }
+
+		//{Validations}
+		public Action getValidationsAction_1() { return cValidationsAction_1; }
+
+		//XML_TAG_END children+=Check* VALIDATIONS_END_TAG | XML_TAG_SINGLEEND
+		public Alternatives getAlternatives_2() { return cAlternatives_2; }
+
+		//XML_TAG_END children+=Check* VALIDATIONS_END_TAG
+		public Group getGroup_2_0() { return cGroup_2_0; }
+
+		//XML_TAG_END
+		public RuleCall getXML_TAG_ENDTerminalRuleCall_2_0_0() { return cXML_TAG_ENDTerminalRuleCall_2_0_0; }
+
+		//children+=Check*
+		public Assignment getChildrenAssignment_2_0_1() { return cChildrenAssignment_2_0_1; }
+
+		//Check
+		public RuleCall getChildrenCheckParserRuleCall_2_0_1_0() { return cChildrenCheckParserRuleCall_2_0_1_0; }
+
+		//VALIDATIONS_END_TAG
+		public RuleCall getVALIDATIONS_END_TAGParserRuleCall_2_0_2() { return cVALIDATIONS_END_TAGParserRuleCall_2_0_2; }
+
+		//XML_TAG_SINGLEEND
+		public RuleCall getXML_TAG_SINGLEENDTerminalRuleCall_2_1() { return cXML_TAG_SINGLEENDTerminalRuleCall_2_1; }
+	}
+
+	public class CheckElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "Check");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cCHECK_START_TAGParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Action cCheckAction_1 = (Action)cGroup.eContents().get(1);
+		private final Assignment cAttributesAssignment_2 = (Assignment)cGroup.eContents().get(2);
+		private final RuleCall cAttributesPossibleExpressionParserRuleCall_2_0 = (RuleCall)cAttributesAssignment_2.eContents().get(0);
+		private final Alternatives cAlternatives_3 = (Alternatives)cGroup.eContents().get(3);
+		private final Group cGroup_3_0 = (Group)cAlternatives_3.eContents().get(0);
+		private final RuleCall cXML_TAG_ENDTerminalRuleCall_3_0_0 = (RuleCall)cGroup_3_0.eContents().get(0);
+		private final Assignment cExpressionAssignment_3_0_1 = (Assignment)cGroup_3_0.eContents().get(1);
+		private final RuleCall cExpressionTopLevelParserRuleCall_3_0_1_0 = (RuleCall)cExpressionAssignment_3_0_1.eContents().get(0);
+		private final RuleCall cCHECK_END_TAGParserRuleCall_3_0_2 = (RuleCall)cGroup_3_0.eContents().get(2);
+		private final RuleCall cXML_TAG_SINGLEENDTerminalRuleCall_3_1 = (RuleCall)cAlternatives_3.eContents().get(1);
+		
+		//Check:
+		//	CHECK_START_TAG {Check} attributes+=PossibleExpression* (XML_TAG_END expression=TopLevel CHECK_END_TAG |
+		//	XML_TAG_SINGLEEND);
+		public ParserRule getRule() { return rule; }
+
+		//CHECK_START_TAG {Check} attributes+=PossibleExpression* (XML_TAG_END expression=TopLevel CHECK_END_TAG |
+		//XML_TAG_SINGLEEND)
+		public Group getGroup() { return cGroup; }
+
+		//CHECK_START_TAG
+		public RuleCall getCHECK_START_TAGParserRuleCall_0() { return cCHECK_START_TAGParserRuleCall_0; }
+
+		//{Check}
+		public Action getCheckAction_1() { return cCheckAction_1; }
+
+		//attributes+=PossibleExpression*
+		public Assignment getAttributesAssignment_2() { return cAttributesAssignment_2; }
+
+		//PossibleExpression
+		public RuleCall getAttributesPossibleExpressionParserRuleCall_2_0() { return cAttributesPossibleExpressionParserRuleCall_2_0; }
+
+		//XML_TAG_END expression=TopLevel CHECK_END_TAG | XML_TAG_SINGLEEND
+		public Alternatives getAlternatives_3() { return cAlternatives_3; }
+
+		//XML_TAG_END expression=TopLevel CHECK_END_TAG
+		public Group getGroup_3_0() { return cGroup_3_0; }
+
+		//XML_TAG_END
+		public RuleCall getXML_TAG_ENDTerminalRuleCall_3_0_0() { return cXML_TAG_ENDTerminalRuleCall_3_0_0; }
+
+		//expression=TopLevel
+		public Assignment getExpressionAssignment_3_0_1() { return cExpressionAssignment_3_0_1; }
+
+		//TopLevel
+		public RuleCall getExpressionTopLevelParserRuleCall_3_0_1_0() { return cExpressionTopLevelParserRuleCall_3_0_1_0; }
+
+		//CHECK_END_TAG
+		public RuleCall getCHECK_END_TAGParserRuleCall_3_0_2() { return cCHECK_END_TAGParserRuleCall_3_0_2; }
+
+		//XML_TAG_SINGLEEND
+		public RuleCall getXML_TAG_SINGLEENDTerminalRuleCall_3_1() { return cXML_TAG_SINGLEENDTerminalRuleCall_3_1; }
+	}
+
+	public class CommentElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "Comment");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cCOMMENT_START_TAGParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Action cCommentAction_1 = (Action)cGroup.eContents().get(1);
+		private final Assignment cAttributesAssignment_2 = (Assignment)cGroup.eContents().get(2);
+		private final RuleCall cAttributesPossibleExpressionParserRuleCall_2_0 = (RuleCall)cAttributesAssignment_2.eContents().get(0);
+		private final Alternatives cAlternatives_3 = (Alternatives)cGroup.eContents().get(3);
+		private final Group cGroup_3_0 = (Group)cAlternatives_3.eContents().get(0);
+		private final RuleCall cXML_TAG_ENDTerminalRuleCall_3_0_0 = (RuleCall)cGroup_3_0.eContents().get(0);
+		private final RuleCall cCOMMENT_END_TAGParserRuleCall_3_0_1 = (RuleCall)cGroup_3_0.eContents().get(1);
+		private final RuleCall cXML_TAG_SINGLEENDTerminalRuleCall_3_1 = (RuleCall)cAlternatives_3.eContents().get(1);
+		
+		//Comment:
+		//	COMMENT_START_TAG {Comment} attributes+=PossibleExpression* (XML_TAG_END //		expression=TopLevel
+		//	COMMENT_END_TAG | XML_TAG_SINGLEEND);
+		public ParserRule getRule() { return rule; }
+
+		//COMMENT_START_TAG {Comment} attributes+=PossibleExpression* (XML_TAG_END //		expression=TopLevel
+		//COMMENT_END_TAG | XML_TAG_SINGLEEND)
+		public Group getGroup() { return cGroup; }
+
+		//COMMENT_START_TAG
+		public RuleCall getCOMMENT_START_TAGParserRuleCall_0() { return cCOMMENT_START_TAGParserRuleCall_0; }
+
+		//{Comment}
+		public Action getCommentAction_1() { return cCommentAction_1; }
+
+		//attributes+=PossibleExpression*
+		public Assignment getAttributesAssignment_2() { return cAttributesAssignment_2; }
+
+		//PossibleExpression
+		public RuleCall getAttributesPossibleExpressionParserRuleCall_2_0() { return cAttributesPossibleExpressionParserRuleCall_2_0; }
+
+		//XML_TAG_END //		expression=TopLevel
+		//COMMENT_END_TAG | XML_TAG_SINGLEEND
+		public Alternatives getAlternatives_3() { return cAlternatives_3; }
+
+		//XML_TAG_END //		expression=TopLevel
+		//COMMENT_END_TAG
+		public Group getGroup_3_0() { return cGroup_3_0; }
+
+		//XML_TAG_END
+		public RuleCall getXML_TAG_ENDTerminalRuleCall_3_0_0() { return cXML_TAG_ENDTerminalRuleCall_3_0_0; }
+
+		////		expression=TopLevel
+		//COMMENT_END_TAG
+		public RuleCall getCOMMENT_END_TAGParserRuleCall_3_0_1() { return cCOMMENT_END_TAGParserRuleCall_3_0_1; }
+
+		//XML_TAG_SINGLEEND
+		public RuleCall getXML_TAG_SINGLEENDTerminalRuleCall_3_1() { return cXML_TAG_SINGLEENDTerminalRuleCall_3_1; }
+	}
+
+	public class BreakElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "Break");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cBREAK_START_TAGParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Action cBreakAction_1 = (Action)cGroup.eContents().get(1);
+		private final Assignment cAttributesAssignment_2 = (Assignment)cGroup.eContents().get(2);
+		private final RuleCall cAttributesPossibleExpressionParserRuleCall_2_0 = (RuleCall)cAttributesAssignment_2.eContents().get(0);
+		private final Alternatives cAlternatives_3 = (Alternatives)cGroup.eContents().get(3);
+		private final Group cGroup_3_0 = (Group)cAlternatives_3.eContents().get(0);
+		private final RuleCall cXML_TAG_ENDTerminalRuleCall_3_0_0 = (RuleCall)cGroup_3_0.eContents().get(0);
+		private final RuleCall cBREAK_END_TAGParserRuleCall_3_0_1 = (RuleCall)cGroup_3_0.eContents().get(1);
+		private final RuleCall cXML_TAG_SINGLEENDTerminalRuleCall_3_1 = (RuleCall)cAlternatives_3.eContents().get(1);
+		
+		//Break:
+		//	BREAK_START_TAG {Break} attributes+=PossibleExpression* (XML_TAG_END //		expression=TopLevel
+		//	BREAK_END_TAG | XML_TAG_SINGLEEND);
+		public ParserRule getRule() { return rule; }
+
+		//BREAK_START_TAG {Break} attributes+=PossibleExpression* (XML_TAG_END //		expression=TopLevel
+		//BREAK_END_TAG | XML_TAG_SINGLEEND)
+		public Group getGroup() { return cGroup; }
+
+		//BREAK_START_TAG
+		public RuleCall getBREAK_START_TAGParserRuleCall_0() { return cBREAK_START_TAGParserRuleCall_0; }
+
+		//{Break}
+		public Action getBreakAction_1() { return cBreakAction_1; }
+
+		//attributes+=PossibleExpression*
+		public Assignment getAttributesAssignment_2() { return cAttributesAssignment_2; }
+
+		//PossibleExpression
+		public RuleCall getAttributesPossibleExpressionParserRuleCall_2_0() { return cAttributesPossibleExpressionParserRuleCall_2_0; }
+
+		//XML_TAG_END //		expression=TopLevel
+		//BREAK_END_TAG | XML_TAG_SINGLEEND
+		public Alternatives getAlternatives_3() { return cAlternatives_3; }
+
+		//XML_TAG_END //		expression=TopLevel
+		//BREAK_END_TAG
+		public Group getGroup_3_0() { return cGroup_3_0; }
+
+		//XML_TAG_END
+		public RuleCall getXML_TAG_ENDTerminalRuleCall_3_0_0() { return cXML_TAG_ENDTerminalRuleCall_3_0_0; }
+
+		////		expression=TopLevel
+		//BREAK_END_TAG
+		public RuleCall getBREAK_END_TAGParserRuleCall_3_0_1() { return cBREAK_END_TAGParserRuleCall_3_0_1; }
+
+		//XML_TAG_SINGLEEND
+		public RuleCall getXML_TAG_SINGLEENDTerminalRuleCall_3_1() { return cXML_TAG_SINGLEENDTerminalRuleCall_3_1; }
+	}
+
 	public class IncludeElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "Include");
 		private final Group cGroup = (Group)rule.eContents().get(1);
@@ -931,18 +1342,22 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cChildrenDebugTagParserRuleCall_3_0_1_5_0 = (RuleCall)cChildrenAssignment_3_0_1_5.eContents().get(0);
 		private final Assignment cChildrenAssignment_3_0_1_6 = (Assignment)cAlternatives_3_0_1.eContents().get(6);
 		private final RuleCall cChildrenFieldParserRuleCall_3_0_1_6_0 = (RuleCall)cChildrenAssignment_3_0_1_6.eContents().get(0);
+		private final Assignment cChildrenAssignment_3_0_1_7 = (Assignment)cAlternatives_3_0_1.eContents().get(7);
+		private final RuleCall cChildrenCommentParserRuleCall_3_0_1_7_0 = (RuleCall)cChildrenAssignment_3_0_1_7.eContents().get(0);
+		private final Assignment cChildrenAssignment_3_0_1_8 = (Assignment)cAlternatives_3_0_1.eContents().get(8);
+		private final RuleCall cChildrenBreakParserRuleCall_3_0_1_8_0 = (RuleCall)cChildrenAssignment_3_0_1_8.eContents().get(0);
 		private final RuleCall cMESSAGE_END_TAGParserRuleCall_3_0_2 = (RuleCall)cGroup_3_0.eContents().get(2);
 		private final RuleCall cXML_TAG_SINGLEENDTerminalRuleCall_3_1 = (RuleCall)cAlternatives_3.eContents().get(1);
 		
 		//Message:
 		//	MESSAGE_START_TAG {Message} attributes+=PossibleExpression* (XML_TAG_END (children+=Message | children+=Property |
-		//	children+=Param | children+=Map | children+=MapMethod | children+=DebugTag | children+=Field)* MESSAGE_END_TAG |
-		//	XML_TAG_SINGLEEND);
+		//	children+=Param | children+=Map | children+=MapMethod | children+=DebugTag | children+=Field | children+=Comment |
+		//	children+=Break)* MESSAGE_END_TAG | XML_TAG_SINGLEEND);
 		public ParserRule getRule() { return rule; }
 
 		//MESSAGE_START_TAG {Message} attributes+=PossibleExpression* (XML_TAG_END (children+=Message | children+=Property |
-		//children+=Param | children+=Map | children+=MapMethod | children+=DebugTag | children+=Field)* MESSAGE_END_TAG |
-		//XML_TAG_SINGLEEND)
+		//children+=Param | children+=Map | children+=MapMethod | children+=DebugTag | children+=Field | children+=Comment |
+		//children+=Break)* MESSAGE_END_TAG | XML_TAG_SINGLEEND)
 		public Group getGroup() { return cGroup; }
 
 		//MESSAGE_START_TAG
@@ -958,18 +1373,18 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		public RuleCall getAttributesPossibleExpressionParserRuleCall_2_0() { return cAttributesPossibleExpressionParserRuleCall_2_0; }
 
 		//XML_TAG_END (children+=Message | children+=Property | children+=Param | children+=Map | children+=MapMethod |
-		//children+=DebugTag | children+=Field)* MESSAGE_END_TAG | XML_TAG_SINGLEEND
+		//children+=DebugTag | children+=Field | children+=Comment | children+=Break)* MESSAGE_END_TAG | XML_TAG_SINGLEEND
 		public Alternatives getAlternatives_3() { return cAlternatives_3; }
 
 		//XML_TAG_END (children+=Message | children+=Property | children+=Param | children+=Map | children+=MapMethod |
-		//children+=DebugTag | children+=Field)* MESSAGE_END_TAG
+		//children+=DebugTag | children+=Field | children+=Comment | children+=Break)* MESSAGE_END_TAG
 		public Group getGroup_3_0() { return cGroup_3_0; }
 
 		//XML_TAG_END
 		public RuleCall getXML_TAG_ENDTerminalRuleCall_3_0_0() { return cXML_TAG_ENDTerminalRuleCall_3_0_0; }
 
 		//(children+=Message | children+=Property | children+=Param | children+=Map | children+=MapMethod | children+=DebugTag |
-		//children+=Field)*
+		//children+=Field | children+=Comment | children+=Break)*
 		public Alternatives getAlternatives_3_0_1() { return cAlternatives_3_0_1; }
 
 		//children+=Message
@@ -1014,6 +1429,18 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		//Field
 		public RuleCall getChildrenFieldParserRuleCall_3_0_1_6_0() { return cChildrenFieldParserRuleCall_3_0_1_6_0; }
 
+		//children+=Comment
+		public Assignment getChildrenAssignment_3_0_1_7() { return cChildrenAssignment_3_0_1_7; }
+
+		//Comment
+		public RuleCall getChildrenCommentParserRuleCall_3_0_1_7_0() { return cChildrenCommentParserRuleCall_3_0_1_7_0; }
+
+		//children+=Break
+		public Assignment getChildrenAssignment_3_0_1_8() { return cChildrenAssignment_3_0_1_8; }
+
+		//Break
+		public RuleCall getChildrenBreakParserRuleCall_3_0_1_8_0() { return cChildrenBreakParserRuleCall_3_0_1_8_0; }
+
 		//MESSAGE_END_TAG
 		public RuleCall getMESSAGE_END_TAGParserRuleCall_3_0_2() { return cMESSAGE_END_TAGParserRuleCall_3_0_2; }
 
@@ -1054,6 +1481,10 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cChildrenDebugTagParserRuleCall_3_1_1_5_0 = (RuleCall)cChildrenAssignment_3_1_1_5.eContents().get(0);
 		private final Assignment cChildrenAssignment_3_1_1_6 = (Assignment)cAlternatives_3_1_1.eContents().get(6);
 		private final RuleCall cChildrenFieldParserRuleCall_3_1_1_6_0 = (RuleCall)cChildrenAssignment_3_1_1_6.eContents().get(0);
+		private final Assignment cChildrenAssignment_3_1_1_7 = (Assignment)cAlternatives_3_1_1.eContents().get(7);
+		private final RuleCall cChildrenCommentParserRuleCall_3_1_1_7_0 = (RuleCall)cChildrenAssignment_3_1_1_7.eContents().get(0);
+		private final Assignment cChildrenAssignment_3_1_1_8 = (Assignment)cAlternatives_3_1_1.eContents().get(8);
+		private final RuleCall cChildrenBreakParserRuleCall_3_1_1_8_0 = (RuleCall)cChildrenAssignment_3_1_1_8.eContents().get(0);
 		private final Group cGroup_3_1_2 = (Group)cGroup_3_1.eContents().get(2);
 		private final RuleCall cXML_START_ENDTAGTerminalRuleCall_3_1_2_0 = (RuleCall)cGroup_3_1_2.eContents().get(0);
 		private final RuleCall cMAPKEYWORDTerminalRuleCall_3_1_2_1 = (RuleCall)cGroup_3_1_2.eContents().get(1);
@@ -1066,14 +1497,14 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		//Map:
 		//	MAPSTARTKEYWORD {Map} ("." mapName=MapId attributes+=PossibleExpression* | attributes+=PossibleExpression*)
 		//	(XML_TAG_SINGLEEND | XML_TAG_END (children+=Message | children+=Property | children+=Param | children+=Map |
-		//	children+=MapMethod | children+=DebugTag | children+=Field)* (XML_START_ENDTAG MAPKEYWORD ("." mapClosingName=MapId)?
-		//	XML_TAG_END));
+		//	children+=MapMethod | children+=DebugTag | children+=Field | children+=Comment | children+=Break)* (XML_START_ENDTAG
+		//	MAPKEYWORD ("." mapClosingName=MapId)? XML_TAG_END));
 		public ParserRule getRule() { return rule; }
 
 		//MAPSTARTKEYWORD {Map} ("." mapName=MapId attributes+=PossibleExpression* | attributes+=PossibleExpression*)
 		//(XML_TAG_SINGLEEND | XML_TAG_END (children+=Message | children+=Property | children+=Param | children+=Map |
-		//children+=MapMethod | children+=DebugTag | children+=Field)* (XML_START_ENDTAG MAPKEYWORD ("." mapClosingName=MapId)?
-		//XML_TAG_END))
+		//children+=MapMethod | children+=DebugTag | children+=Field | children+=Comment | children+=Break)* (XML_START_ENDTAG
+		//MAPKEYWORD ("." mapClosingName=MapId)? XML_TAG_END))
 		public Group getGroup() { return cGroup; }
 
 		//MAPSTARTKEYWORD
@@ -1110,22 +1541,23 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		public RuleCall getAttributesPossibleExpressionParserRuleCall_2_1_0() { return cAttributesPossibleExpressionParserRuleCall_2_1_0; }
 
 		//XML_TAG_SINGLEEND | XML_TAG_END (children+=Message | children+=Property | children+=Param | children+=Map |
-		//children+=MapMethod | children+=DebugTag | children+=Field)* (XML_START_ENDTAG MAPKEYWORD ("." mapClosingName=MapId)?
-		//XML_TAG_END)
+		//children+=MapMethod | children+=DebugTag | children+=Field | children+=Comment | children+=Break)* (XML_START_ENDTAG
+		//MAPKEYWORD ("." mapClosingName=MapId)? XML_TAG_END)
 		public Alternatives getAlternatives_3() { return cAlternatives_3; }
 
 		//XML_TAG_SINGLEEND
 		public RuleCall getXML_TAG_SINGLEENDTerminalRuleCall_3_0() { return cXML_TAG_SINGLEENDTerminalRuleCall_3_0; }
 
 		//XML_TAG_END (children+=Message | children+=Property | children+=Param | children+=Map | children+=MapMethod |
-		//children+=DebugTag | children+=Field)* (XML_START_ENDTAG MAPKEYWORD ("." mapClosingName=MapId)? XML_TAG_END)
+		//children+=DebugTag | children+=Field | children+=Comment | children+=Break)* (XML_START_ENDTAG MAPKEYWORD ("."
+		//mapClosingName=MapId)? XML_TAG_END)
 		public Group getGroup_3_1() { return cGroup_3_1; }
 
 		//XML_TAG_END
 		public RuleCall getXML_TAG_ENDTerminalRuleCall_3_1_0() { return cXML_TAG_ENDTerminalRuleCall_3_1_0; }
 
 		//(children+=Message | children+=Property | children+=Param | children+=Map | children+=MapMethod | children+=DebugTag |
-		//children+=Field)*
+		//children+=Field | children+=Comment | children+=Break)*
 		public Alternatives getAlternatives_3_1_1() { return cAlternatives_3_1_1; }
 
 		//children+=Message
@@ -1169,6 +1601,18 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 
 		//Field
 		public RuleCall getChildrenFieldParserRuleCall_3_1_1_6_0() { return cChildrenFieldParserRuleCall_3_1_1_6_0; }
+
+		//children+=Comment
+		public Assignment getChildrenAssignment_3_1_1_7() { return cChildrenAssignment_3_1_1_7; }
+
+		//Comment
+		public RuleCall getChildrenCommentParserRuleCall_3_1_1_7_0() { return cChildrenCommentParserRuleCall_3_1_1_7_0; }
+
+		//children+=Break
+		public Assignment getChildrenAssignment_3_1_1_8() { return cChildrenAssignment_3_1_1_8; }
+
+		//Break
+		public RuleCall getChildrenBreakParserRuleCall_3_1_1_8_0() { return cChildrenBreakParserRuleCall_3_1_1_8_0; }
 
 		//XML_START_ENDTAG MAPKEYWORD ("." mapClosingName=MapId)? XML_TAG_END
 		public Group getGroup_3_1_2() { return cGroup_3_1_2; }
@@ -1521,17 +1965,21 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cChildrenDebugTagParserRuleCall_4_1_0_6_0 = (RuleCall)cChildrenAssignment_4_1_0_6.eContents().get(0);
 		private final Assignment cChildrenAssignment_4_1_0_7 = (Assignment)cAlternatives_4_1_0.eContents().get(7);
 		private final RuleCall cChildrenFieldParserRuleCall_4_1_0_7_0 = (RuleCall)cChildrenAssignment_4_1_0_7.eContents().get(0);
+		private final Assignment cChildrenAssignment_4_1_0_8 = (Assignment)cAlternatives_4_1_0.eContents().get(8);
+		private final RuleCall cChildrenCommentParserRuleCall_4_1_0_8_0 = (RuleCall)cChildrenAssignment_4_1_0_8.eContents().get(0);
+		private final Assignment cChildrenAssignment_4_1_0_9 = (Assignment)cAlternatives_4_1_0.eContents().get(9);
+		private final RuleCall cChildrenBreakParserRuleCall_4_1_0_9_0 = (RuleCall)cChildrenAssignment_4_1_0_9.eContents().get(0);
 		private final RuleCall cFIELD_END_TAGParserRuleCall_4_1_1 = (RuleCall)cGroup_4_1.eContents().get(1);
 		
 		//Field returns Param:
 		//	FIELD_START_TAG {Param} attributes+=PossibleExpression* XML_TAG_END (XML_TAG_SINGLEEND | (children+=ExpressionOrOption
 		//	| children+=Message | children+=Property | children+=Param | children+=Map | children+=MapMethod | children+=DebugTag
-		//	| children+=Field)* FIELD_END_TAG);
+		//	| children+=Field | children+=Comment | children+=Break)* FIELD_END_TAG);
 		public ParserRule getRule() { return rule; }
 
 		//FIELD_START_TAG {Param} attributes+=PossibleExpression* XML_TAG_END (XML_TAG_SINGLEEND | (children+=ExpressionOrOption |
 		//children+=Message | children+=Property | children+=Param | children+=Map | children+=MapMethod | children+=DebugTag |
-		//children+=Field)* FIELD_END_TAG)
+		//children+=Field | children+=Comment | children+=Break)* FIELD_END_TAG)
 		public Group getGroup() { return cGroup; }
 
 		//FIELD_START_TAG
@@ -1550,18 +1998,19 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		public RuleCall getXML_TAG_ENDTerminalRuleCall_3() { return cXML_TAG_ENDTerminalRuleCall_3; }
 
 		//XML_TAG_SINGLEEND | (children+=ExpressionOrOption | children+=Message | children+=Property | children+=Param |
-		//children+=Map | children+=MapMethod | children+=DebugTag | children+=Field)* FIELD_END_TAG
+		//children+=Map | children+=MapMethod | children+=DebugTag | children+=Field | children+=Comment | children+=Break)*
+		//FIELD_END_TAG
 		public Alternatives getAlternatives_4() { return cAlternatives_4; }
 
 		//XML_TAG_SINGLEEND
 		public RuleCall getXML_TAG_SINGLEENDTerminalRuleCall_4_0() { return cXML_TAG_SINGLEENDTerminalRuleCall_4_0; }
 
 		//(children+=ExpressionOrOption | children+=Message | children+=Property | children+=Param | children+=Map |
-		//children+=MapMethod | children+=DebugTag | children+=Field)* FIELD_END_TAG
+		//children+=MapMethod | children+=DebugTag | children+=Field | children+=Comment | children+=Break)* FIELD_END_TAG
 		public Group getGroup_4_1() { return cGroup_4_1; }
 
 		//(children+=ExpressionOrOption | children+=Message | children+=Property | children+=Param | children+=Map |
-		//children+=MapMethod | children+=DebugTag | children+=Field)*
+		//children+=MapMethod | children+=DebugTag | children+=Field | children+=Comment | children+=Break)*
 		public Alternatives getAlternatives_4_1_0() { return cAlternatives_4_1_0; }
 
 		//children+=ExpressionOrOption
@@ -1611,6 +2060,18 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 
 		//Field
 		public RuleCall getChildrenFieldParserRuleCall_4_1_0_7_0() { return cChildrenFieldParserRuleCall_4_1_0_7_0; }
+
+		//children+=Comment
+		public Assignment getChildrenAssignment_4_1_0_8() { return cChildrenAssignment_4_1_0_8; }
+
+		//Comment
+		public RuleCall getChildrenCommentParserRuleCall_4_1_0_8_0() { return cChildrenCommentParserRuleCall_4_1_0_8_0; }
+
+		//children+=Break
+		public Assignment getChildrenAssignment_4_1_0_9() { return cChildrenAssignment_4_1_0_9; }
+
+		//Break
+		public RuleCall getChildrenBreakParserRuleCall_4_1_0_9_0() { return cChildrenBreakParserRuleCall_4_1_0_9_0; }
 
 		//FIELD_END_TAG
 		public RuleCall getFIELD_END_TAGParserRuleCall_4_1_1() { return cFIELD_END_TAGParserRuleCall_4_1_1; }
@@ -1851,10 +2312,18 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 	private INCLUDE_START_TAGElements pINCLUDE_START_TAG;
 	private PROPERTY_START_TAGElements pPROPERTY_START_TAG;
 	private REQUIRED_START_TAGElements pREQUIRED_START_TAG;
+	private VALIDATIONS_START_TAGElements pVALIDATIONS_START_TAG;
+	private CHECK_START_TAGElements pCHECK_START_TAG;
+	private COMMENT_START_TAGElements pCOMMENT_START_TAG;
+	private BREAK_START_TAGElements pBREAK_START_TAG;
 	private OPTION_START_TAGElements pOPTION_START_TAG;
+	private BREAK_END_TAGElements pBREAK_END_TAG;
 	private OPTION_END_TAGElements pOPTION_END_TAG;
 	private REQUIRED_END_TAGElements pREQUIRED_END_TAG;
 	private PROPERTY_END_TAGElements pPROPERTY_END_TAG;
+	private COMMENT_END_TAGElements pCOMMENT_END_TAG;
+	private VALIDATIONS_END_TAGElements pVALIDATIONS_END_TAG;
+	private CHECK_END_TAGElements pCHECK_END_TAG;
 	private PARAM_END_TAGElements pPARAM_END_TAG;
 	private MESSAGE_END_TAGElements pMESSAGE_END_TAG;
 	private METHODS_END_TAGElements pMETHODS_END_TAG;
@@ -1874,6 +2343,10 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 	private PossibleExpressionElements pPossibleExpression;
 	private MethodsElements pMethods;
 	private MethodElements pMethod;
+	private ValidationsElements pValidations;
+	private CheckElements pCheck;
+	private CommentElements pComment;
+	private BreakElements pBreak;
 	private IncludeElements pInclude;
 	private MessageElements pMessage;
 	private MapElements pMap;
@@ -1914,7 +2387,8 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 	////generate tsl "http://www.dexels.com/navajo/dsl/tsl/NavajoTsl"
 	//Tml:
 	//	NAVASCRIPT_START {Tml} attributes+=PossibleExpression* (XML_TAG_END (children+=Message | children+=Map |
-	//	children+=Param | methods+=Methods | children+=DebugTag | children+=Include)* NAVASCRIPT_END | XML_TAG_SINGLEEND);
+	//	children+=Param | methods+=Methods | children+=DebugTag | children+=Include | children+=Validations |
+	//	children+=Comment)* NAVASCRIPT_END | XML_TAG_SINGLEEND);
 	public TmlElements getTmlAccess() {
 		return (pTml != null) ? pTml : (pTml = new TmlElements());
 	}
@@ -2061,6 +2535,46 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		return getREQUIRED_START_TAGAccess().getRule();
 	}
 
+	//VALIDATIONS_START_TAG returns ecore::EString:
+	//	XML_TAG_START "validations";
+	public VALIDATIONS_START_TAGElements getVALIDATIONS_START_TAGAccess() {
+		return (pVALIDATIONS_START_TAG != null) ? pVALIDATIONS_START_TAG : (pVALIDATIONS_START_TAG = new VALIDATIONS_START_TAGElements());
+	}
+	
+	public ParserRule getVALIDATIONS_START_TAGRule() {
+		return getVALIDATIONS_START_TAGAccess().getRule();
+	}
+
+	//CHECK_START_TAG returns ecore::EString:
+	//	XML_TAG_START "check";
+	public CHECK_START_TAGElements getCHECK_START_TAGAccess() {
+		return (pCHECK_START_TAG != null) ? pCHECK_START_TAG : (pCHECK_START_TAG = new CHECK_START_TAGElements());
+	}
+	
+	public ParserRule getCHECK_START_TAGRule() {
+		return getCHECK_START_TAGAccess().getRule();
+	}
+
+	//COMMENT_START_TAG returns ecore::EString:
+	//	XML_TAG_START "comment";
+	public COMMENT_START_TAGElements getCOMMENT_START_TAGAccess() {
+		return (pCOMMENT_START_TAG != null) ? pCOMMENT_START_TAG : (pCOMMENT_START_TAG = new COMMENT_START_TAGElements());
+	}
+	
+	public ParserRule getCOMMENT_START_TAGRule() {
+		return getCOMMENT_START_TAGAccess().getRule();
+	}
+
+	//BREAK_START_TAG returns ecore::EString:
+	//	XML_TAG_START "break";
+	public BREAK_START_TAGElements getBREAK_START_TAGAccess() {
+		return (pBREAK_START_TAG != null) ? pBREAK_START_TAG : (pBREAK_START_TAG = new BREAK_START_TAGElements());
+	}
+	
+	public ParserRule getBREAK_START_TAGRule() {
+		return getBREAK_START_TAGAccess().getRule();
+	}
+
 	////
 	//OPTION_START_TAG returns ecore::EString:
 	//	XML_TAG_START "option";
@@ -2070,6 +2584,16 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getOPTION_START_TAGRule() {
 		return getOPTION_START_TAGAccess().getRule();
+	}
+
+	//BREAK_END_TAG returns ecore::EString:
+	//	XML_START_ENDTAG "break" XML_TAG_END;
+	public BREAK_END_TAGElements getBREAK_END_TAGAccess() {
+		return (pBREAK_END_TAG != null) ? pBREAK_END_TAG : (pBREAK_END_TAG = new BREAK_END_TAGElements());
+	}
+	
+	public ParserRule getBREAK_END_TAGRule() {
+		return getBREAK_END_TAGAccess().getRule();
 	}
 
 	//OPTION_END_TAG returns ecore::EString:
@@ -2100,6 +2624,36 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getPROPERTY_END_TAGRule() {
 		return getPROPERTY_END_TAGAccess().getRule();
+	}
+
+	//COMMENT_END_TAG returns ecore::EString:
+	//	XML_START_ENDTAG "comment" XML_TAG_END;
+	public COMMENT_END_TAGElements getCOMMENT_END_TAGAccess() {
+		return (pCOMMENT_END_TAG != null) ? pCOMMENT_END_TAG : (pCOMMENT_END_TAG = new COMMENT_END_TAGElements());
+	}
+	
+	public ParserRule getCOMMENT_END_TAGRule() {
+		return getCOMMENT_END_TAGAccess().getRule();
+	}
+
+	//VALIDATIONS_END_TAG returns ecore::EString:
+	//	XML_START_ENDTAG "validations" XML_TAG_END;
+	public VALIDATIONS_END_TAGElements getVALIDATIONS_END_TAGAccess() {
+		return (pVALIDATIONS_END_TAG != null) ? pVALIDATIONS_END_TAG : (pVALIDATIONS_END_TAG = new VALIDATIONS_END_TAGElements());
+	}
+	
+	public ParserRule getVALIDATIONS_END_TAGRule() {
+		return getVALIDATIONS_END_TAGAccess().getRule();
+	}
+
+	//CHECK_END_TAG returns ecore::EString:
+	//	XML_START_ENDTAG "check" XML_TAG_END;
+	public CHECK_END_TAGElements getCHECK_END_TAGAccess() {
+		return (pCHECK_END_TAG != null) ? pCHECK_END_TAG : (pCHECK_END_TAG = new CHECK_END_TAGElements());
+	}
+	
+	public ParserRule getCHECK_END_TAGRule() {
+		return getCHECK_END_TAGAccess().getRule();
 	}
 
 	//PARAM_END_TAG returns ecore::EString:
@@ -2250,7 +2804,7 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 
 	//// might need to add a lot more keywords here
 	//AttributeName returns ecore::EString:
-	//	ID | "message";
+	//	ID | "message" | "comment";
 	public AttributeNameElements getAttributeNameAccess() {
 		return (pAttributeName != null) ? pAttributeName : (pAttributeName = new AttributeNameElements());
 	}
@@ -2291,6 +2845,49 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		return getMethodAccess().getRule();
 	}
 
+	//Validations:
+	//	VALIDATIONS_START_TAG {Validations} (XML_TAG_END children+=Check* VALIDATIONS_END_TAG | XML_TAG_SINGLEEND);
+	public ValidationsElements getValidationsAccess() {
+		return (pValidations != null) ? pValidations : (pValidations = new ValidationsElements());
+	}
+	
+	public ParserRule getValidationsRule() {
+		return getValidationsAccess().getRule();
+	}
+
+	//Check:
+	//	CHECK_START_TAG {Check} attributes+=PossibleExpression* (XML_TAG_END expression=TopLevel CHECK_END_TAG |
+	//	XML_TAG_SINGLEEND);
+	public CheckElements getCheckAccess() {
+		return (pCheck != null) ? pCheck : (pCheck = new CheckElements());
+	}
+	
+	public ParserRule getCheckRule() {
+		return getCheckAccess().getRule();
+	}
+
+	//Comment:
+	//	COMMENT_START_TAG {Comment} attributes+=PossibleExpression* (XML_TAG_END //		expression=TopLevel
+	//	COMMENT_END_TAG | XML_TAG_SINGLEEND);
+	public CommentElements getCommentAccess() {
+		return (pComment != null) ? pComment : (pComment = new CommentElements());
+	}
+	
+	public ParserRule getCommentRule() {
+		return getCommentAccess().getRule();
+	}
+
+	//Break:
+	//	BREAK_START_TAG {Break} attributes+=PossibleExpression* (XML_TAG_END //		expression=TopLevel
+	//	BREAK_END_TAG | XML_TAG_SINGLEEND);
+	public BreakElements getBreakAccess() {
+		return (pBreak != null) ? pBreak : (pBreak = new BreakElements());
+	}
+	
+	public ParserRule getBreakRule() {
+		return getBreakAccess().getRule();
+	}
+
 	//// create Include entity in Model
 	//Include returns Method:
 	//	INCLUDE_START_TAG {Method} attributes+=PossibleExpression* XML_TAG_SINGLEEND;
@@ -2304,8 +2901,8 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 
 	//Message:
 	//	MESSAGE_START_TAG {Message} attributes+=PossibleExpression* (XML_TAG_END (children+=Message | children+=Property |
-	//	children+=Param | children+=Map | children+=MapMethod | children+=DebugTag | children+=Field)* MESSAGE_END_TAG |
-	//	XML_TAG_SINGLEEND);
+	//	children+=Param | children+=Map | children+=MapMethod | children+=DebugTag | children+=Field | children+=Comment |
+	//	children+=Break)* MESSAGE_END_TAG | XML_TAG_SINGLEEND);
 	public MessageElements getMessageAccess() {
 		return (pMessage != null) ? pMessage : (pMessage = new MessageElements());
 	}
@@ -2317,8 +2914,8 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 	//Map:
 	//	MAPSTARTKEYWORD {Map} ("." mapName=MapId attributes+=PossibleExpression* | attributes+=PossibleExpression*)
 	//	(XML_TAG_SINGLEEND | XML_TAG_END (children+=Message | children+=Property | children+=Param | children+=Map |
-	//	children+=MapMethod | children+=DebugTag | children+=Field)* (XML_START_ENDTAG MAPKEYWORD ("." mapClosingName=MapId)?
-	//	XML_TAG_END));
+	//	children+=MapMethod | children+=DebugTag | children+=Field | children+=Comment | children+=Break)* (XML_START_ENDTAG
+	//	MAPKEYWORD ("." mapClosingName=MapId)? XML_TAG_END));
 	public MapElements getMapAccess() {
 		return (pMap != null) ? pMap : (pMap = new MapElements());
 	}
@@ -2394,7 +2991,7 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 	//Field returns Param:
 	//	FIELD_START_TAG {Param} attributes+=PossibleExpression* XML_TAG_END (XML_TAG_SINGLEEND | (children+=ExpressionOrOption
 	//	| children+=Message | children+=Property | children+=Param | children+=Map | children+=MapMethod | children+=DebugTag
-	//	| children+=Field)* FIELD_END_TAG);
+	//	| children+=Field | children+=Comment | children+=Break)* FIELD_END_TAG);
 	public FieldElements getFieldAccess() {
 		return (pField != null) ? pField : (pField = new FieldElements());
 	}

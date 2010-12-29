@@ -17,7 +17,7 @@ Tml :
 	NAVASCRIPT_START {Tml} (attributes+=PossibleExpression)* 
 	(
 		(XML_TAG_END 
-			((children+=Message) | (children+=Map)| (children+=Param) | (methods += Methods) | (children+=DebugTag)| (children+=Include))*
+			((children+=Message) | (children+=Map)| (children+=Param) | (methods += Methods) | (children+=DebugTag)| (children+=Include) | (children+=Validations) | (children+=Comment))*
 		NAVASCRIPT_END
 		)
 	|	(
@@ -85,10 +85,33 @@ PROPERTY_START_TAG:
 REQUIRED_START_TAG:
 	XML_TAG_START 'required'
 ;
+
+VALIDATIONS_START_TAG:
+	XML_TAG_START 'validations'
+;
+CHECK_START_TAG:
+	XML_TAG_START 'check'
+;
+COMMENT_START_TAG:
+	XML_TAG_START 'comment'
+;
+
+BREAK_START_TAG:
+	XML_TAG_START 'break'
+;
+
+
 //
 OPTION_START_TAG:
 	XML_TAG_START 'option'
 ;
+
+
+
+BREAK_END_TAG: 
+	XML_START_ENDTAG 'break' XML_TAG_END
+;
+
 
 OPTION_END_TAG: 
 	XML_START_ENDTAG 'option' XML_TAG_END
@@ -102,6 +125,17 @@ REQUIRED_END_TAG:
 PROPERTY_END_TAG: 
 	XML_START_ENDTAG 'property' XML_TAG_END
 ;
+
+COMMENT_END_TAG: 
+	XML_START_ENDTAG 'comment' XML_TAG_END
+;
+VALIDATIONS_END_TAG: 
+	XML_START_ENDTAG 'validations' XML_TAG_END
+;
+CHECK_END_TAG: 
+	XML_START_ENDTAG 'check' XML_TAG_END
+;
+
 
 PARAM_END_TAG: 
 	XML_START_ENDTAG 'param' XML_TAG_END
@@ -162,9 +196,9 @@ NAVASCRIPT_END:
 
 
 
-// might need to add a lot more keywords here
+// might need to add a lot more kywords here
 AttributeName:
-	ID | 'message';
+	ID | 'message' | 'comment' ;
 
 PossibleExpression:
 	(namespace= ID ':')? key=AttributeName '='
@@ -197,6 +231,54 @@ Method:
 	XML_TAG_SINGLEEND
 	)
 	;	
+	
+
+Validations :
+	VALIDATIONS_START_TAG {Validations} 
+	
+	((XML_TAG_END
+	( children+=Check)*
+	VALIDATIONS_END_TAG)
+	|
+	XML_TAG_SINGLEEND)
+	;
+	
+Check:
+	CHECK_START_TAG {Check}  (attributes+=PossibleExpression)* 
+	
+	((XML_TAG_END
+		expression=TopLevel
+	CHECK_END_TAG
+	)
+	|
+	XML_TAG_SINGLEEND
+	)
+	;	
+	
+	
+Comment:
+	COMMENT_START_TAG {Comment}  (attributes+=PossibleExpression)* 
+	
+	((XML_TAG_END
+//		expression=TopLevel
+	COMMENT_END_TAG
+	)
+	|
+	XML_TAG_SINGLEEND
+	)
+	;	
+	
+Break:
+	BREAK_START_TAG {Break}  (attributes+=PossibleExpression)* 
+	 
+	((XML_TAG_END
+//		expression=TopLevel
+	BREAK_END_TAG
+	)
+	|
+	XML_TAG_SINGLEEND
+	)
+	;	
 
 // create Include entity in Model
 Include returns Method:
@@ -210,7 +292,7 @@ Message:
 	MESSAGE_START_TAG {Message}  (attributes+=PossibleExpression)* 
 	
 	((XML_TAG_END
-		((children+=Message) | (children+=Property) | (children+=Param)  | (children+=Map) | (children+=MapMethod) | (children+=DebugTag) | (children+=Field))*
+		((children+=Message) | (children+=Property) | (children+=Param)  | (children+=Map) | (children+=MapMethod) | (children+=DebugTag) | (children+=Field) | (children+=Comment) | (children+=Break))*
 	MESSAGE_END_TAG
 	)
 	|
@@ -229,7 +311,7 @@ Map returns Map:
 	(
 			( XML_TAG_SINGLEEND
 	| (XML_TAG_END
-		((children+=Message) | (children+=Property) | (children+=Param) | (children+=Map) | (children+=MapMethod) | (children+=DebugTag) | (children+=Field) )*
+		((children+=Message) | (children+=Property) | (children+=Param) | (children+=Map) | (children+=MapMethod) | (children+=DebugTag) | (children+=Field) | (children+=Comment) | (children+=Break))*
 		
 		(XML_START_ENDTAG MAPKEYWORD ('.' mapClosingName=MapId)? XML_TAG_END)
 	))
@@ -322,7 +404,7 @@ Field returns Param:
 	 XML_TAG_SINGLEEND
 	 |
 	 (
-		((children += ExpressionOrOption) | (children+=Message) | (children+=Property) | (children+=Param) | (children+=Map) | (children+=MapMethod) | (children+=DebugTag) | (children+=Field) )*
+		((children += ExpressionOrOption) | (children+=Message) | (children+=Property) | (children+=Param) | (children+=Map) | (children+=MapMethod) | (children+=DebugTag) | (children+=Field) | (children+=Comment) | (children+=Break))*
 	 	
 	 )
 	 FIELD_END_TAG
