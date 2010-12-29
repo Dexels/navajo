@@ -6,13 +6,18 @@
  */
 package com.dexels.navajo.studio.eclipse;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.StringWriter;
 
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.PlatformObject;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.studio.script.plugin.*;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin;
 
 public class NavajoStorage extends PlatformObject implements IStorage {
 

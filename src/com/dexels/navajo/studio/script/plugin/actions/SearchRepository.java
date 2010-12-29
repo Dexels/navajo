@@ -1,27 +1,17 @@
 package com.dexels.navajo.studio.script.plugin.actions;
 
-import java.util.*;
+import java.util.ArrayList;
 
-import org.eclipse.core.internal.resources.*;
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
-import org.eclipse.core.runtime.jobs.*;
-import org.eclipse.jdt.core.*;
-import org.eclipse.jdt.core.search.*;
-import org.eclipse.jdt.internal.core.*;
-import org.eclipse.jdt.internal.ui.*;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.*;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.*;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.eclipse.ui.internal.*;
-import org.eclipse.ui.internal.misc.*;
-import org.eclipse.jface.dialogs.MessageDialog;
 
-import com.dexels.navajo.studio.script.plugin.*;
-//import com.sun.corba.se.internal.Activation.*;
+import com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin;
 
 /**
  * Our sample action implements workbench action delegate. The action proxy will

@@ -6,7 +6,7 @@
  */
 package com.dexels.navajo.studio.script.plugin.editors;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Navajo;
 
 public interface INavajoScriptListener {
     public void callingScript(String name);

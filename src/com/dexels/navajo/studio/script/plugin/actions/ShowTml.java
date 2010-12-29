@@ -6,14 +6,11 @@
  */
 package com.dexels.navajo.studio.script.plugin.actions;
 
-import java.io.*;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.action.IAction;
 
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
-import org.eclipse.jface.action.*;
-
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.studio.script.plugin.*;
+import com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin;
 
 /**
  * @author Administrator

@@ -6,13 +6,10 @@
  */
 package com.dexels.navajo.studio.script.plugin.actions;
 
-import org.eclipse.core.resources.*;
-import org.eclipse.debug.core.*;
-import org.eclipse.jface.action.*;
-import org.eclipse.ui.*;
-import org.eclipse.ui.internal.*;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.jface.action.IAction;
 
-import com.dexels.navajo.studio.script.plugin.*;
+import com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin;
 
 /**
  * @author Administrator

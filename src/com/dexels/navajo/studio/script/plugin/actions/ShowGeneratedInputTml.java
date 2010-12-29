@@ -6,14 +6,19 @@
  */
 package com.dexels.navajo.studio.script.plugin.actions;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
-import org.eclipse.jface.action.*;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.action.IAction;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.studio.script.plugin.*;
+import com.dexels.navajo.document.Header;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin;
 import com.dexels.navajo.util.Generate;
 
 /**

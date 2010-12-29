@@ -1,34 +1,38 @@
 package com.dexels.navajo.studio.script.plugin.propertypages;
 
-import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
 
-import org.eclipse.core.internal.resources.*;
-import org.eclipse.core.resources.*;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.QualifiedName;
-import org.eclipse.core.runtime.jobs.*;
-import org.eclipse.jdt.core.search.*;
-import org.eclipse.jdt.internal.core.search.processing.*;
-import org.eclipse.jface.viewers.*;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.*;
-import org.eclipse.swt.layout.*;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.*;
+import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
-import org.eclipse.ui.internal.*;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.studio.script.plugin.*;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.studio.script.plugin.NavajoPluginException;
+import com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin;
+import com.dexels.navajo.studio.script.plugin.SearchResultContentProvider;
 
 public class NavajoStudioPropertyPage extends PropertyPage implements IWorkbenchPropertyPage {
 

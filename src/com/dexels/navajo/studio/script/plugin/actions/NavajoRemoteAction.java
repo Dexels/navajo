@@ -1,24 +1,9 @@
 package com.dexels.navajo.studio.script.plugin.actions;
 
-import java.io.*;
-import java.util.*;
-
-import org.eclipse.core.internal.resources.*;
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
-import org.eclipse.core.runtime.jobs.*;
-import org.eclipse.jdt.core.*;
-import org.eclipse.jdt.internal.ui.*;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.*;
-import org.eclipse.ui.*;
-import org.eclipse.ui.internal.*;
-import org.eclipse.ui.internal.misc.*;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-import com.dexels.navajo.client.*;
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.studio.script.plugin.*;
+import com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin;
 
 /**
  * Our sample action implements workbench action delegate. The action proxy will

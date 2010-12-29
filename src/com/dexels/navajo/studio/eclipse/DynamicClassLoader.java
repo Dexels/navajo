@@ -28,10 +28,17 @@ package com.dexels.navajo.studio.eclipse;
  * ====================================================================
  */
 
-import org.dexels.utils.*;
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.zip.ZipException;
+
+import org.dexels.utils.JarResources;
+import org.dexels.utils.MultiClassLoader;
 
 /**
 * This class is an EXACT copy of NavajoClassLoader. Only difference:

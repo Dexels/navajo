@@ -6,31 +6,31 @@
  */
 package com.dexels.navajo.studio.eclipse;
 
-import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
-import javax.sound.midi.*;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IResourceDeltaVisitor;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jdt.internal.compiler.batch.Main;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
-import org.eclipse.core.runtime.jobs.*;
-import org.eclipse.jdt.core.*;
-import org.eclipse.jdt.internal.compiler.batch.*;
-import org.eclipse.jdt.internal.formatter.*;
-import org.eclipse.jface.dialogs.*;
-import org.eclipse.swt.widgets.*;
-import org.eclipse.ui.internal.*;
-// import org.eclipse.osgi.service.datalocation.*;
-
-import com.dexels.navajo.client.*;
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.nanoimpl.*;
-import com.dexels.navajo.loader.*;
-import com.dexels.navajo.mapping.compiler.*;
-import com.dexels.navajo.mapping.compiler.meta.*;
-import com.dexels.navajo.server.*;
-import com.dexels.navajo.studio.script.plugin.*;
-import com.dexels.navajo.studio.script.plugin.navajobrowser.*;
+import com.dexels.navajo.mapping.compiler.TslCompileException;
+import com.dexels.navajo.mapping.compiler.TslCompiler;
+import com.dexels.navajo.studio.script.plugin.NavajoPluginException;
+import com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin;
 
 /**
  * @author Administrator

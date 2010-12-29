@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Widget;
 
-import com.dexels.navajo.studio.eclipse.*;
+import com.dexels.navajo.studio.eclipse.NavajoPluginResources;
 
 public class ListFieldEditor extends ListEditor implements NavajoPluginResources {
 

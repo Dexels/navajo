@@ -6,13 +6,17 @@
  */
 package com.dexels.navajo.studio.script.plugin;
 
-import java.util.*;
+import java.util.ArrayList;
 
-import org.eclipse.core.resources.*;
-import org.eclipse.jdt.core.*;
-import org.eclipse.jdt.core.search.*;
-import org.eclipse.jdt.internal.core.*;
-import org.eclipse.jface.viewers.*;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.search.SearchMatch;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.Viewer;
 
 /**
  * @author Administrator

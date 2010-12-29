@@ -6,22 +6,26 @@
  */
 package com.dexels.navajo.studio.script.plugin.views;
 
-import java.util.*;
+import java.util.Stack;
 
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
-import org.eclipse.jface.viewers.*;
-import org.eclipse.swt.*;
-import org.eclipse.swt.layout.*;
-import org.eclipse.swt.widgets.*;
-import org.eclipse.ui.*;
-import org.eclipse.ui.contexts.*;
-import org.eclipse.ui.forms.widgets.*;
-import org.eclipse.ui.part.*;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IResourceDeltaVisitor;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.studio.script.plugin.*;
-import com.dexels.navajo.studio.script.plugin.editors.*;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.studio.script.plugin.NavajoPluginException;
+import com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin;
+import com.dexels.navajo.studio.script.plugin.editors.TmlFormComposite;
 
 /**
  * @author Administrator

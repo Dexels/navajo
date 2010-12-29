@@ -6,15 +6,18 @@
  */
 package com.dexels.navajo.studio.script.plugin.views;
 
-import org.eclipse.core.internal.resources.Workspace;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.*;
-import org.eclipse.swt.widgets.*;
-import org.eclipse.ui.*;
-import org.eclipse.ui.contexts.*;
-import org.eclipse.ui.part.*;
+import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.contexts.IContextActivation;
+import org.eclipse.ui.contexts.IContextService;
+import org.eclipse.ui.part.ViewPart;
 
-import com.dexels.navajo.studio.script.plugin.*;
+import com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin;
 
 public abstract class BaseNavajoView extends ViewPart {
 

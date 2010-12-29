@@ -6,12 +6,14 @@
  */
 package com.dexels.navajo.studio.eclipse;
 
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
-import org.eclipse.jface.resource.*;
-import org.eclipse.ui.*;
+import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.PlatformObject;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.IPersistableElement;
+import org.eclipse.ui.IStorageEditorInput;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Navajo;
 
 public class NavajoInput extends PlatformObject implements IStorageEditorInput {
 

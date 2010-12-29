@@ -6,18 +6,19 @@
  */
 package com.dexels.navajo.studio.script.plugin.propertypages;
 
-import java.io.*;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.dialogs.PropertyPage;
 
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
-import org.eclipse.swt.layout.*;
-import org.eclipse.swt.widgets.*;
-import org.eclipse.ui.dialogs.*;
-
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.nanoimpl.*;
-import com.dexels.navajo.studio.script.plugin.*;
-import com.dexels.navajo.studio.script.plugin.editors.*;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.nanoimpl.XMLParseException;
+import com.dexels.navajo.studio.script.plugin.NavajoPluginException;
+import com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin;
+import com.dexels.navajo.studio.script.plugin.editors.TmlFormComposite;
 
 /**
  * @author Administrator

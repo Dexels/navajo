@@ -6,12 +6,17 @@
  */
 package com.dexels.navajo.studio.eclipse;
 
-import java.util.*;
+import java.util.StringTokenizer;
 
-import com.dexels.navajo.client.*;
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.types.*;
-import com.dexels.navajo.studio.script.plugin.*;
+import com.dexels.navajo.client.ClientException;
+import com.dexels.navajo.client.ClientInterface;
+import com.dexels.navajo.client.NavajoClientFactory;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin;
 
 public class ServerEntry {
     private final String protocol;

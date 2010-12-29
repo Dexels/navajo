@@ -6,16 +6,18 @@
  */
 package com.dexels.navajo.swtclient;
 
-import java.util.*;
+import java.util.ArrayList;
 
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
-import org.eclipse.jface.viewers.*;
-import org.eclipse.swt.widgets.*;
-import org.eclipse.ui.*;
+import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ICellModifier;
+import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.swt.widgets.Item;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.studio.script.plugin.editors.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
 
 /**
  * @author Administrator

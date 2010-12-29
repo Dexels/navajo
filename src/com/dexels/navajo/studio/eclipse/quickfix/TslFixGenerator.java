@@ -6,13 +6,15 @@
  */
 package com.dexels.navajo.studio.eclipse.quickfix;
 
-import java.util.*;
+import java.util.Iterator;
 
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
-import org.eclipse.ui.*;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.ui.IMarkerResolution;
+import org.eclipse.ui.IMarkerResolution2;
+import org.eclipse.ui.IMarkerResolutionGenerator;
 
-import com.dexels.navajo.mapping.compiler.*;
+import com.dexels.navajo.mapping.compiler.TslCompileException;
 
 /**
  * @author Administrator

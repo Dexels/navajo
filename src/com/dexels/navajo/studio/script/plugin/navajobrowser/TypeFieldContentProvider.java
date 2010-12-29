@@ -6,10 +6,18 @@
  */
 package com.dexels.navajo.studio.script.plugin.navajobrowser;
 
-import org.eclipse.jdt.core.*;
-import org.eclipse.jdt.internal.core.*;
-import org.eclipse.jface.viewers.*;
-import org.eclipse.swt.graphics.*;
+import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IField;
+import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.Signature;
+import org.eclipse.jdt.internal.core.JavaElement;
+import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Administrator

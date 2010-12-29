@@ -6,20 +6,13 @@
  */
 package com.dexels.navajo.studio.script.plugin.actions;
 
-import java.util.*;
-
-import org.eclipse.core.resources.*;
-import org.eclipse.debug.core.*;
-import org.eclipse.jface.action.*;
-import org.eclipse.ui.*;
-import org.eclipse.ui.internal.*;
+import org.eclipse.jface.action.IAction;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
-import org.osgi.framework.BundleException;
 import org.osgi.framework.BundleListener;
 
-import com.dexels.navajo.studio.script.plugin.*;
+import com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin;
 
 /**
  * @author Administrator

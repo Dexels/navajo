@@ -7,12 +7,11 @@
 
 package com.dexels.navajo.swtclient;
 
-import java.util.*;
-
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Property;
 
 /**
  * Sorter for the TableViewerExample that displays items of type

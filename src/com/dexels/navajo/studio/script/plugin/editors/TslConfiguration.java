@@ -6,11 +6,18 @@
  */
 package com.dexels.navajo.studio.script.plugin.editors;
 
-import org.eclipse.jface.text.*;
-import org.eclipse.jface.text.contentassist.*;
-import org.eclipse.jface.text.presentation.*;
-import org.eclipse.jface.text.rules.*;
-import org.eclipse.jface.text.source.*;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITextHover;
+import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.contentassist.ContentAssistant;
+import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
+import org.eclipse.jface.text.contentassist.IContentAssistant;
+import org.eclipse.jface.text.presentation.IPresentationReconciler;
+import org.eclipse.jface.text.presentation.PresentationReconciler;
+import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
+import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.jface.text.source.SourceViewerConfiguration;
 
 /**
  * @author Administrator

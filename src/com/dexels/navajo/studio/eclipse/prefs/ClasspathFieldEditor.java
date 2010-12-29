@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Widget;
 
-import com.dexels.navajo.studio.eclipse.*;
+import com.dexels.navajo.studio.eclipse.NavajoPluginResources;
 
 /**
  * A field editor to edit directory paths.

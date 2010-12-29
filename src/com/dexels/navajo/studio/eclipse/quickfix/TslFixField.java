@@ -6,10 +6,10 @@
  */
 package com.dexels.navajo.studio.eclipse.quickfix;
 
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
-import org.eclipse.swt.graphics.*;
-import org.eclipse.ui.*;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.IMarkerResolution2;
 
 
 /**

@@ -6,14 +6,11 @@
  */
 package com.dexels.navajo.studio.script.plugin.actions;
 
-import org.eclipse.core.internal.resources.*;
-import org.eclipse.core.resources.*;
-import org.eclipse.jface.action.*;
-import org.eclipse.jface.dialogs.*;
-import org.eclipse.jface.viewers.*;
-import org.eclipse.ui.*;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-import com.dexels.navajo.studio.script.plugin.*;
+import com.dexels.navajo.studio.script.plugin.NavajoPluginException;
+import com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin;
 
 /**
  * @author Administrator
