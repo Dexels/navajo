@@ -1,5 +1,5 @@
 Bundle-Name: Navajo Birt
-Bundle-SymbolicName: com.dexels.navajo.birt
+Bundle-SymbolicName: com.dexels.navajo.birt.push
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.0
@@ -8,5 +8,4 @@ Export-Package: com.dexels.navajo.adapter,
  com.dexels.navajo.birt,
  navajobirt
 Bundle-Vendor: Dexels
-Require-Bundle: org.eclipse.birt.report.engine;bundle-version="2.6.1",
- com.dexels.navajo.adapters;bundle-version="1.0.0"
+Require-Bundle: com.dexels.navajo.adapters;bundle-version="1.0.0"
