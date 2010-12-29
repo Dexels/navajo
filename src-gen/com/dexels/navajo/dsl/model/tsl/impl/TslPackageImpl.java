@@ -8,6 +8,9 @@ package com.dexels.navajo.dsl.model.tsl.impl;
 
 import com.dexels.navajo.dsl.model.expression.ExpressionPackage;
 
+import com.dexels.navajo.dsl.model.tsl.Break;
+import com.dexels.navajo.dsl.model.tsl.Check;
+import com.dexels.navajo.dsl.model.tsl.Comment;
 import com.dexels.navajo.dsl.model.tsl.DebugTag;
 import com.dexels.navajo.dsl.model.tsl.Element;
 import com.dexels.navajo.dsl.model.tsl.ExpressionTag;
@@ -25,6 +28,7 @@ import com.dexels.navajo.dsl.model.tsl.Tml;
 import com.dexels.navajo.dsl.model.tsl.TslFactory;
 import com.dexels.navajo.dsl.model.tsl.TslPackage;
 
+import com.dexels.navajo.dsl.model.tsl.Validations;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
@@ -136,6 +140,34 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 	 * @generated
 	 */
 	private EClass optionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass checkEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass validationsEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass commentEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass breakEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -539,6 +571,60 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getCheck() {
+		return checkEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getCheck_Code() {
+		return (EAttribute)checkEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getCheck_Expression() {
+		return (EReference)checkEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getValidations() {
+		return validationsEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getComment() {
+		return commentEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getBreak() {
+		return breakEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public TslFactory getTslFactory() {
 		return (TslFactory)getEFactoryInstance();
 	}
@@ -612,6 +698,16 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 		requiredEClass = createEClass(REQUIRED);
 
 		optionEClass = createEClass(OPTION);
+
+		checkEClass = createEClass(CHECK);
+		createEAttribute(checkEClass, CHECK__CODE);
+		createEReference(checkEClass, CHECK__EXPRESSION);
+
+		validationsEClass = createEClass(VALIDATIONS);
+
+		commentEClass = createEClass(COMMENT);
+
+		breakEClass = createEClass(BREAK);
 	}
 
 	/**
@@ -656,6 +752,10 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 		mapMethodEClass.getESuperTypes().add(this.getElement());
 		requiredEClass.getESuperTypes().add(this.getElement());
 		optionEClass.getESuperTypes().add(this.getElement());
+		checkEClass.getESuperTypes().add(this.getElement());
+		validationsEClass.getESuperTypes().add(this.getElement());
+		commentEClass.getESuperTypes().add(this.getElement());
+		breakEClass.getESuperTypes().add(this.getElement());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(tmlEClass, Tml.class, "Tml", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -710,6 +810,16 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 		initEClass(requiredEClass, Required.class, "Required", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(optionEClass, Option.class, "Option", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(checkEClass, Check.class, "Check", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getCheck_Code(), ecorePackage.getEString(), "code", null, 0, 1, Check.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getCheck_Expression(), theExpressionPackage.getTopLevel(), null, "expression", null, 0, 1, Check.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(validationsEClass, Validations.class, "Validations", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(commentEClass, Comment.class, "Comment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(breakEClass, Break.class, "Break", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

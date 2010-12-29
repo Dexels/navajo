@@ -128,6 +128,22 @@ public class TslAdapterFactory extends AdapterFactoryImpl {
 				return createOptionAdapter();
 			}
 			@Override
+			public Adapter caseCheck(Check object) {
+				return createCheckAdapter();
+			}
+			@Override
+			public Adapter caseValidations(Validations object) {
+				return createValidationsAdapter();
+			}
+			@Override
+			public Adapter caseComment(Comment object) {
+				return createCommentAdapter();
+			}
+			@Override
+			public Adapter caseBreak(Break object) {
+				return createBreakAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -340,6 +356,62 @@ public class TslAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createOptionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link com.dexels.navajo.dsl.model.tsl.Check <em>Check</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see com.dexels.navajo.dsl.model.tsl.Check
+	 * @generated
+	 */
+	public Adapter createCheckAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link com.dexels.navajo.dsl.model.tsl.Validations <em>Validations</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see com.dexels.navajo.dsl.model.tsl.Validations
+	 * @generated
+	 */
+	public Adapter createValidationsAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link com.dexels.navajo.dsl.model.tsl.Comment <em>Comment</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see com.dexels.navajo.dsl.model.tsl.Comment
+	 * @generated
+	 */
+	public Adapter createCommentAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link com.dexels.navajo.dsl.model.tsl.Break <em>Break</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see com.dexels.navajo.dsl.model.tsl.Break
+	 * @generated
+	 */
+	public Adapter createBreakAdapter() {
 		return null;
 	}
 

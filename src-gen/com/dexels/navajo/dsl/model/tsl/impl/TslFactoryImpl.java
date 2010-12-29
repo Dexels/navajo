@@ -74,6 +74,10 @@ public class TslFactoryImpl extends EFactoryImpl implements TslFactory {
 			case TslPackage.MAP_METHOD: return createMapMethod();
 			case TslPackage.REQUIRED: return createRequired();
 			case TslPackage.OPTION: return createOption();
+			case TslPackage.CHECK: return createCheck();
+			case TslPackage.VALIDATIONS: return createValidations();
+			case TslPackage.COMMENT: return createComment();
+			case TslPackage.BREAK: return createBreak();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -217,6 +221,46 @@ public class TslFactoryImpl extends EFactoryImpl implements TslFactory {
 	public Option createOption() {
 		OptionImpl option = new OptionImpl();
 		return option;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Check createCheck() {
+		CheckImpl check = new CheckImpl();
+		return check;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Validations createValidations() {
+		ValidationsImpl validations = new ValidationsImpl();
+		return validations;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Comment createComment() {
+		CommentImpl comment = new CommentImpl();
+		return comment;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Break createBreak() {
+		BreakImpl break_ = new BreakImpl();
+		return break_;
 	}
 
 	/**

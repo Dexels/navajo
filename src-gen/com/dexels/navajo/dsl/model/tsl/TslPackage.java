@@ -941,6 +941,246 @@ public interface TslPackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.tsl.impl.CheckImpl <em>Check</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see com.dexels.navajo.dsl.model.tsl.impl.CheckImpl
+	 * @see com.dexels.navajo.dsl.model.tsl.impl.TslPackageImpl#getCheck()
+	 * @generated
+	 */
+	int CHECK = 14;
+
+	/**
+	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECK__CHILDREN = ELEMENT__CHILDREN;
+
+	/**
+	 * The feature id for the '<em><b>Parent</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECK__PARENT = ELEMENT__PARENT;
+
+	/**
+	 * The feature id for the '<em><b>Attributes</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECK__ATTRIBUTES = ELEMENT__ATTRIBUTES;
+
+	/**
+	 * The feature id for the '<em><b>Content</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECK__CONTENT = ELEMENT__CONTENT;
+
+	/**
+	 * The feature id for the '<em><b>Code</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECK__CODE = ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECK__EXPRESSION = ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Check</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECK_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 2;
+
+	/**
+	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.tsl.impl.ValidationsImpl <em>Validations</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see com.dexels.navajo.dsl.model.tsl.impl.ValidationsImpl
+	 * @see com.dexels.navajo.dsl.model.tsl.impl.TslPackageImpl#getValidations()
+	 * @generated
+	 */
+	int VALIDATIONS = 15;
+
+	/**
+	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VALIDATIONS__CHILDREN = ELEMENT__CHILDREN;
+
+	/**
+	 * The feature id for the '<em><b>Parent</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VALIDATIONS__PARENT = ELEMENT__PARENT;
+
+	/**
+	 * The feature id for the '<em><b>Attributes</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VALIDATIONS__ATTRIBUTES = ELEMENT__ATTRIBUTES;
+
+	/**
+	 * The feature id for the '<em><b>Content</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VALIDATIONS__CONTENT = ELEMENT__CONTENT;
+
+	/**
+	 * The number of structural features of the '<em>Validations</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VALIDATIONS_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.tsl.impl.CommentImpl <em>Comment</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see com.dexels.navajo.dsl.model.tsl.impl.CommentImpl
+	 * @see com.dexels.navajo.dsl.model.tsl.impl.TslPackageImpl#getComment()
+	 * @generated
+	 */
+	int COMMENT = 16;
+
+	/**
+	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMMENT__CHILDREN = ELEMENT__CHILDREN;
+
+	/**
+	 * The feature id for the '<em><b>Parent</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMMENT__PARENT = ELEMENT__PARENT;
+
+	/**
+	 * The feature id for the '<em><b>Attributes</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMMENT__ATTRIBUTES = ELEMENT__ATTRIBUTES;
+
+	/**
+	 * The feature id for the '<em><b>Content</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMMENT__CONTENT = ELEMENT__CONTENT;
+
+	/**
+	 * The number of structural features of the '<em>Comment</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMMENT_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 0;
+
+
+	/**
+	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.tsl.impl.BreakImpl <em>Break</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see com.dexels.navajo.dsl.model.tsl.impl.BreakImpl
+	 * @see com.dexels.navajo.dsl.model.tsl.impl.TslPackageImpl#getBreak()
+	 * @generated
+	 */
+	int BREAK = 17;
+
+	/**
+	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BREAK__CHILDREN = ELEMENT__CHILDREN;
+
+	/**
+	 * The feature id for the '<em><b>Parent</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BREAK__PARENT = ELEMENT__PARENT;
+
+	/**
+	 * The feature id for the '<em><b>Attributes</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BREAK__ATTRIBUTES = ELEMENT__ATTRIBUTES;
+
+	/**
+	 * The feature id for the '<em><b>Content</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BREAK__CONTENT = ELEMENT__CONTENT;
+
+	/**
+	 * The number of structural features of the '<em>Break</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BREAK_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 0;
+
+
+	/**
 	 * Returns the meta object for class '{@link com.dexels.navajo.dsl.model.tsl.Tml <em>Tml</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1334,6 +1574,68 @@ public interface TslPackage extends EPackage {
 	EClass getOption();
 
 	/**
+	 * Returns the meta object for class '{@link com.dexels.navajo.dsl.model.tsl.Check <em>Check</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Check</em>'.
+	 * @see com.dexels.navajo.dsl.model.tsl.Check
+	 * @generated
+	 */
+	EClass getCheck();
+
+	/**
+	 * Returns the meta object for the attribute '{@link com.dexels.navajo.dsl.model.tsl.Check#getCode <em>Code</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Code</em>'.
+	 * @see com.dexels.navajo.dsl.model.tsl.Check#getCode()
+	 * @see #getCheck()
+	 * @generated
+	 */
+	EAttribute getCheck_Code();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link com.dexels.navajo.dsl.model.tsl.Check#getExpression <em>Expression</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Expression</em>'.
+	 * @see com.dexels.navajo.dsl.model.tsl.Check#getExpression()
+	 * @see #getCheck()
+	 * @generated
+	 */
+	EReference getCheck_Expression();
+
+	/**
+	 * Returns the meta object for class '{@link com.dexels.navajo.dsl.model.tsl.Validations <em>Validations</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Validations</em>'.
+	 * @see com.dexels.navajo.dsl.model.tsl.Validations
+	 * @generated
+	 */
+	EClass getValidations();
+
+	/**
+	 * Returns the meta object for class '{@link com.dexels.navajo.dsl.model.tsl.Comment <em>Comment</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Comment</em>'.
+	 * @see com.dexels.navajo.dsl.model.tsl.Comment
+	 * @generated
+	 */
+	EClass getComment();
+
+	/**
+	 * Returns the meta object for class '{@link com.dexels.navajo.dsl.model.tsl.Break <em>Break</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Break</em>'.
+	 * @see com.dexels.navajo.dsl.model.tsl.Break
+	 * @generated
+	 */
+	EClass getBreak();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1678,6 +1980,62 @@ public interface TslPackage extends EPackage {
 		 * @generated
 		 */
 		EClass OPTION = eINSTANCE.getOption();
+
+		/**
+		 * The meta object literal for the '{@link com.dexels.navajo.dsl.model.tsl.impl.CheckImpl <em>Check</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see com.dexels.navajo.dsl.model.tsl.impl.CheckImpl
+		 * @see com.dexels.navajo.dsl.model.tsl.impl.TslPackageImpl#getCheck()
+		 * @generated
+		 */
+		EClass CHECK = eINSTANCE.getCheck();
+
+		/**
+		 * The meta object literal for the '<em><b>Code</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CHECK__CODE = eINSTANCE.getCheck_Code();
+
+		/**
+		 * The meta object literal for the '<em><b>Expression</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference CHECK__EXPRESSION = eINSTANCE.getCheck_Expression();
+
+		/**
+		 * The meta object literal for the '{@link com.dexels.navajo.dsl.model.tsl.impl.ValidationsImpl <em>Validations</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see com.dexels.navajo.dsl.model.tsl.impl.ValidationsImpl
+		 * @see com.dexels.navajo.dsl.model.tsl.impl.TslPackageImpl#getValidations()
+		 * @generated
+		 */
+		EClass VALIDATIONS = eINSTANCE.getValidations();
+
+		/**
+		 * The meta object literal for the '{@link com.dexels.navajo.dsl.model.tsl.impl.CommentImpl <em>Comment</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see com.dexels.navajo.dsl.model.tsl.impl.CommentImpl
+		 * @see com.dexels.navajo.dsl.model.tsl.impl.TslPackageImpl#getComment()
+		 * @generated
+		 */
+		EClass COMMENT = eINSTANCE.getComment();
+
+		/**
+		 * The meta object literal for the '{@link com.dexels.navajo.dsl.model.tsl.impl.BreakImpl <em>Break</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see com.dexels.navajo.dsl.model.tsl.impl.BreakImpl
+		 * @see com.dexels.navajo.dsl.model.tsl.impl.TslPackageImpl#getBreak()
+		 * @generated
+		 */
+		EClass BREAK = eINSTANCE.getBreak();
 
 	}
 

@@ -152,6 +152,42 @@ public interface TslFactory extends EFactory {
 	Option createOption();
 
 	/**
+	 * Returns a new object of class '<em>Check</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Check</em>'.
+	 * @generated
+	 */
+	Check createCheck();
+
+	/**
+	 * Returns a new object of class '<em>Validations</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Validations</em>'.
+	 * @generated
+	 */
+	Validations createValidations();
+
+	/**
+	 * Returns a new object of class '<em>Comment</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Comment</em>'.
+	 * @generated
+	 */
+	Comment createComment();
+
+	/**
+	 * Returns a new object of class '<em>Break</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Break</em>'.
+	 * @generated
+	 */
+	Break createBreak();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
