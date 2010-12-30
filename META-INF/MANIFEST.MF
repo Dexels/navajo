@@ -12,13 +12,13 @@ Export-Package: com.dexels.navajo.adapter,
  com.dexels.navajo.testmap,
  navajorhino
 Bundle-Vendor: Dexels
-Require-Bundle: org.mozilla.javascript;bundle-version="1.0.0",
- com.dexels.navajo.document;bundle-version="1.0.0",
+Require-Bundle: com.dexels.navajo.document;bundle-version="1.0.0",
  com.dexels.navajo.client.async;bundle-version="1.0.0",
  com.dexels.navajo.listeners;bundle-version="1.0.0",
  com.dexels.navajo.core;bundle-version="2.9.0",
  com.dexels.navajo.client;bundle-version="1.0.0",
  com.dexels.navajo.function;bundle-version="2.0.1",
- com.dexels.navajo.adapters;bundle-version="1.0.0"
+ com.dexels.navajo.adapters;bundle-version="1.0.0",
+ org.mozilla.javascript;bundle-version="1.0.0"
 Import-Package: junit.framework;version="3.8.2",
  org.osgi.framework;version="1.5.0"
