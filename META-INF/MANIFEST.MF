@@ -23,4 +23,5 @@ Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.client,
  com.dexels.navajo.core,
  org.eclipse.osgi;bundle-version="3.6.1",
- javax.servlet;bundle-version="2.5.0"
+ javax.servlet;bundle-version="2.5.0",
+ com.dexels.navajo.document;bundle-version="1.0.0"
