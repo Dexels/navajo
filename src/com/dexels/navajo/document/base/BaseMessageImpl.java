@@ -658,10 +658,19 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		if (messageList == null || messageMap == null) {
 			return;
 		}
-		messageList.remove(msg);
-		messageMap.remove(msg.getName());
+		if ( msg.getParentMessage() != null ) {
+			BaseMessageImpl parent = ((BaseMessageImpl) msg.getParentMessage());
+			parent.deleteDirectChildMessage(msg);
+		} else {
+			deleteDirectChildMessage(msg);
+		}
 	}
 
+	private final void deleteDirectChildMessage(Message child) {
+		messageList.remove(child);
+		messageMap.remove(child.getName());
+	}
+	
 	/**
 	 * Add a collection of properties to a message.
 	 * Properties that already exist are overwritten.
