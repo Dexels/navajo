@@ -5,14 +5,14 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.StringTokenizer;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -21,9 +21,7 @@ import com.dexels.navajo.document.NavajoLaszloConverter;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
-import com.dexels.navajo.document.nanoimpl.XMLElement;
-import com.dexels.navajo.document.types.*;
-import com.dexels.navajo.parser.DefaultExpressionEvaluator;
+import com.dexels.navajo.document.types.Binary;
 
 public class BirtUtils {
 
