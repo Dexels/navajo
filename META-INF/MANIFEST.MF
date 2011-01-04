@@ -12,9 +12,18 @@ Export-Package: com.dexels.navajo.adapter,
  navajorhino
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.document;bundle-version="1.0.0",
- org.apache.batik.transcoder;bundle-version="1.6.0"
+ org.apache.batik.transcoder;bundle-version="1.6.0",
+ org.apache.batik.bridge;bundle-version="1.6.0",
+ org.apache.batik.css;bundle-version="1.6.0",
+ org.apache.batik.dom;bundle-version="1.6.0",
+ org.apache.batik.dom.svg;bundle-version="1.6.0",
+ org.apache.batik.ext.awt;bundle-version="1.6.0",
+ org.apache.batik.parser;bundle-version="1.6.0",
+ org.apache.batik.pdf;bundle-version="1.6.0",
+ org.apache.batik.svggen;bundle-version="1.6.0",
+ org.apache.batik.util;bundle-version="1.6.0",
+ org.apache.batik.util.gui;bundle-version="1.6.0",
+ org.apache.batik.xml;bundle-version="1.6.0"
 Import-Package: junit.framework;version="3.8.2",
- org.osgi.framework;version="1.5.0",
- org.w3c.dom.smil;version="1.0.0",
- org.w3c.dom.svg;version="1.1.0"
+ org.osgi.framework;version="1.5.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
