@@ -303,6 +303,16 @@ public class TestMessage extends TestCase {
     m2 = m.getMessage("testmessage_sub2");
     Assert.assertNull(m2);
   }
+  
+  public void testRemoveMessage2() throws Exception {
+	    Message m = testDoc.getMessage("testmessage/testmessage_sub1");
+	    Assert.assertNotNull(m);
+	    testDoc.removeMessage(m);
+	    Message m2 = testDoc.getMessage("testmessage/testmessage_sub1");
+	    Assert.assertNull(m2);
+	    Message m3 = testDoc.getMessage("testmessage");
+	    Assert.assertNotNull(m3);
+	  }
 
   public void testRemoveProperty() {
      Message m = testDoc.getMessage("testmessage");
