@@ -23,7 +23,9 @@ Export-Package: com.dexels.navajo.adapter,
 Import-Package: junit.framework;version="3.8.2",
  org.osgi.framework;version="1.3.0"
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.listeners;visibility:=reexport,
- com.dexels.navajo.core;visibility:=reexport,
+Require-Bundle: com.dexels.navajo.listeners,
+ com.dexels.navajo.core,
  com.dexels.navajo.function;bundle-version="2.0.1",
- com.dexels.navajo.adapters.deps;bundle-version="1.0.0"
+ com.dexels.navajo.adapters.deps;bundle-version="1.0.0",
+ com.dexels.navajo.document;bundle-version="1.0.0",
+ com.dexels.navajo.client;bundle-version="1.0.0"
