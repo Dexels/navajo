@@ -1,9 +1,8 @@
 package swtclient;
 
-import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
-public class Version implements BundleActivator {
+public class Version extends dexels.Version {
 
 	private static BundleContext context;
 
@@ -15,8 +14,8 @@ public class Version implements BundleActivator {
 	 * (non-Javadoc)
 	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
 	 */
-	public void start(BundleContext bundleContext) throws Exception {
-		Version.context = bundleContext;
+	public void start(BundleContext bc) throws Exception {
+		super.start(bc);
 	}
 
 	/*
