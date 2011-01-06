@@ -47,7 +47,5 @@ Export-Package: com.dexels.navajo.adapter.navajomap,
  dexels,
  navajo,
  org.dexels.utils
-Import-Package: junit.framework;version="3.8.2",
- org.osgi.framework;version="1.3.0"
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.document
