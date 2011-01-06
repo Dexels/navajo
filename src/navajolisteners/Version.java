@@ -24,16 +24,7 @@
  */
 package navajolisteners;
 
-import java.util.Dictionary;
-import java.util.HashMap;
-import java.util.Hashtable;
-
 import org.osgi.framework.BundleContext;
-import org.osgi.service.http.HttpContext;
-import org.osgi.service.http.HttpService;
-
-import com.dexels.navajo.server.listener.http.TmlHttpServlet;
-import com.dexels.navajo.server.listener.nql.NqlServlet;
 
 
 public class Version extends dexels.Version {
