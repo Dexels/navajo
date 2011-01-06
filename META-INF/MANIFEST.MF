@@ -8,5 +8,5 @@ Export-Package: dexels,
  junit.framework,
  org.osgi.framework
 Bundle-Vendor: Dexels
-Require-Bundle: org.junit;bundle-version="3.8.2";visibility:=reexport,
- org.eclipse.osgi;bundle-version="3.5.2"
+Require-Bundle: org.junit;bundle-version="3.8.2";visibility:=reexport
+Import-Package: org.osgi.framework
