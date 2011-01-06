@@ -20,8 +20,6 @@ Export-Package: com.dexels.navajo.adapter,
  com.dexels.navajo.functions,
  navajoadapters,
  org.dexels.grus
-Import-Package: junit.framework;version="3.8.2",
- org.osgi.framework;version="1.3.0"
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.listeners,
  com.dexels.navajo.core,
