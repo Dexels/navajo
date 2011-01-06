@@ -24,13 +24,6 @@
    </requires>
 
    <plugin
-         id="com.dexels.navajo.dev.script"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="com.gface"
          download-size="0"
          install-size="0"
