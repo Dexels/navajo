@@ -5,8 +5,8 @@ Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.0
 Bundle-Activator: dexels.Version
 Export-Package: dexels,
- junit.framework
-Import-Package: junit.framework,
- org.osgi.framework;version="1.3.0"
+ junit.framework,
+ org.osgi.framework
 Bundle-Vendor: Dexels
-Require-Bundle: org.junit;bundle-version="3.8.2";visibility:=reexport
+Require-Bundle: org.junit;bundle-version="3.8.2";visibility:=reexport,
+ org.eclipse.osgi;bundle-version="3.5.2"
