@@ -255,6 +255,8 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		// not on the new type.
 		// This is still important for firing update events
 		myValue = null;
+		selectionList.clear();
+		
 		firePropertyChanged(o, null);
 	}
 	public final void setAnyValue(Object o) {
