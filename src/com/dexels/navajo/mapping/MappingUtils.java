@@ -269,6 +269,7 @@ public final class MappingUtils {
     	ref.addProperty(prop);
     }
     else { // Existing property.
+    	prop.clearValue();
     	prop.setType(type);
     	if (type.equals(Property.BINARY_PROPERTY)) {
     		if (value != null && (value instanceof Binary)) {
