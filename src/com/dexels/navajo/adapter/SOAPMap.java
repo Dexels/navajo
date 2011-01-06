@@ -1,6 +1,9 @@
 package com.dexels.navajo.adapter;
 
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.StringWriter;
 import java.net.URL;
 import java.util.ArrayList;
@@ -138,7 +141,7 @@ public class SOAPMap implements Mappable {
 				soapPart.setContent( ss );
 				msg.setContentDescription("text/xml");
 				
-				System.err.println(new String(requestBody.getData()));
+				//System.err.println(new String(requestBody.getData()));
 				// attachments
 				if ( requestAttachments.size() > 0 ) {
 					for ( int i = 0; i < requestAttachments.size(); i++ ) {
@@ -183,7 +186,7 @@ public class SOAPMap implements Mappable {
 					try {
 						connection.close();
 					} catch (SOAPException e) {
-						//e.printStackTrace();
+						e.printStackTrace();
 					}
 				}
 			}
@@ -223,15 +226,15 @@ SOAPAction: "https://sportlink.rfxweb.nl/GetClub"
 		//sm.setUrl("http://10.0.0.132:8080/corvus/httpd/ebms/sender");
 		sm.setUrl("https://sportlink.rfxweb.nl/Test/Sportlink.asmx");
 		//sm.setUrl("http://10.0.0.132:8080/corvus/httpd/ebms/receiver_list");
-		sm.setSoapAction("https://sportlink.rfxweb.nl/GetClub");
+		sm.setSoapAction("https://sportlink.rfxweb.nl/GetClubMembers");
 		String body = 
-		"<GetClub xmlns=\"https://sportlink.rfxweb.nl/\">" +
-        "<ClubId>V0001101</ClubId>" +
-        "</GetClub>";
+		"<GetClubMembers xmlns=\"https://sportlink.rfxweb.nl/\">" +
+        "<Club_ID>V0013356</Club_ID>" +
+        "</GetClubMembers>";
         
 		String header =
 			"<rfxws_header xmlns=\"https://sportlink.rfxweb.nl/\">" +
-	      "<Bondskey>P8-raj3t&amp;as!ast</Bondskey>" +
+	      "<Bondskey>P8-raj3tas!ast</Bondskey>" +
 	      "<UserId>SLC</UserId>" +
 	      "<UserPassword>#9eza5UHa#at5U?</UserPassword>" +
 	    "</rfxws_header>";
@@ -249,7 +252,11 @@ SOAPAction: "https://sportlink.rfxweb.nl/GetClub"
 		sm.setDoSend(true);
 		
 		System.err.println("\n\nRESPONSE:\n");
-		sm.getResponseBody().write(System.err);
+		
+		FileOutputStream fw = new FileOutputStream(new File("/home/arjen/result.xml"));
+		//sm.getResponseBody().write(System.err);
+		sm.getResponseBody().write(fw);
+		fw.close();
 		
 		SoapAttachment [] sa = sm.getResponseAttachments();
 		System.err.println("received " + sa.length + " attachments.");
@@ -259,10 +266,10 @@ SOAPAction: "https://sportlink.rfxweb.nl/GetClub"
 		
 		XMLMap response = sm.getXmlResponse();
 		
-		response.setChildName("soap:Body/soap:Fault/faultstring");
+		response.setChildName("/soap:Body/GetClubMembersResponse/GetClubMembersResult");
 		
-		System.err.println("Value: " + response.getChildExists());
-		
+		System.err.println("Value: " + response.getChild().getChildren().length);
+
 		
 		//System.err.println(response.getChildText("SOAP-ENV:Body/geocodeResponse/.*/item/lat"));
 		
