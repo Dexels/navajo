@@ -20,4 +20,11 @@ Require-Bundle: com.dexels.navajo.document;bundle-version="1.0.1",
  com.dexels.navajo.core;bundle-version="2.9.0",
  com.dexels.navajo.version;bundle-version="1.0.0",
  com.gface;bundle-version="0.9.1"
-Export-Package: com.dexels.navajo.swtclient
+Export-Package: com.dexels.navajo.swtclient;
+  uses:="org.eclipse.swt.graphics,
+   org.eclipse.jface.viewers,
+   com.dexels.navajo.document.types,
+   org.eclipse.swt.widgets,
+   com.dexels.navajo.document,
+   org.eclipse.ui.forms.widgets",
+ swtclient
