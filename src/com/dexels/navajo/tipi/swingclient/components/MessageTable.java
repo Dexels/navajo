@@ -72,7 +72,6 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
-import com.dexels.navajo.document.lazy.MessageListener;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.swingclient.UserInterface;
 import com.dexels.navajo.tipi.swingclient.components.sort.CustomTableHeaderRenderer;
@@ -88,7 +87,7 @@ import com.dexels.navajo.tipi.swingclient.components.sort.TableSorter;
  */
 public class MessageTable
     extends JTable
-    implements MessageListener, CellEditorListener,  PropertyChangeListener, ListSelectionListener, CopyCompatible {
+    implements CellEditorListener,  PropertyChangeListener, ListSelectionListener, CopyCompatible {
   private final PropertyCellEditor myEditor = new PropertyCellEditor(this);
 
   private PropertyCellRenderer myRenderer = new PropertyCellRenderer();

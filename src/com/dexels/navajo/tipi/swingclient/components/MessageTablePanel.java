@@ -30,7 +30,7 @@ import com.dexels.navajo.tipi.swingclient.*;
 
 public class MessageTablePanel
     extends BasePanel
-    implements MessageListener, CopyCompatible, Printable {
+    implements CopyCompatible, Printable {
 
   final JScrollPane jScrollPane1 = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
 
