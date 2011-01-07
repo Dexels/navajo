@@ -28,6 +28,6 @@ package com.dexels.navajo.server;
 
 public class Constants {
 
-    public final static String CONDITION_ERROR_MESSAGE = "conditionerrors";
+    public final static String CONDITION_ERROR_MESSAGE = "ConditionErrors";
     public final static String ERROR_MESSAGE = "error";
 }
