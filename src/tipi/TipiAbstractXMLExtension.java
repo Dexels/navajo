@@ -7,6 +7,9 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
+
 import navajo.ExtensionDefinition;
 
 import com.dexels.navajo.tipi.TipiContext;
@@ -14,7 +17,7 @@ import com.dexels.navajo.tipi.tipixml.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 import com.dexels.navajo.tipi.tipixml.XMLParseException;
 
-public class TipiAbstractXMLExtension extends AbstractTipiExtension implements TipiExtension, ExtensionDefinition {
+public class TipiAbstractXMLExtension extends AbstractTipiExtension implements TipiExtension, ExtensionDefinition,BundleActivator {
 
 	private final List<String> thirdPartyList = new ArrayList<String>();
 	private final List<String> includes = new ArrayList<String>();
@@ -138,6 +141,17 @@ public class TipiAbstractXMLExtension extends AbstractTipiExtension implements T
 
 	public void initialize(TipiContext tc) {
 		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void start(BundleContext bc) throws Exception {
+		System.err.println("Unimplemented TIPI bundle start!");
+	}
+
+	@Override
+	public void stop(BundleContext bc) throws Exception {
+		System.err.println("Unimplemented TIPI bundle stop!");
 		
 	}
 
