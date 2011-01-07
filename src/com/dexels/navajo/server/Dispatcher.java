@@ -1051,22 +1051,7 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
         		}
         	}
         }
-       
-        // Call after web service event...
-        if ( access != null && !scheduledWebservice ) {
-        	
-        	//access.setInDoc(inMessage);
-        	//if (!isSpecialwebservice(rpcName)  ) {
-        	// Register webservice call to WebserviceListener if it was not a scheduled webservice.
-        	afterWebServiceActivated = WebserviceListenerFactory.getInstance().afterWebservice(rpcName, access);
-        	//}
-        }
         
-        if ( access != null ) {
-        	return access.getOutputDoc();
-        } else {
-        	return outMessage;
-        }
       }
       } catch(NavajoDoneException e) {
      	 System.err.println("NavajoDone caught in dispatcher. Need to prevent finalize block!");
@@ -1118,12 +1103,21 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
 						afterWebServiceActivated);
 			}
 		}
+    
+    if ( access != null ) {
+    	return access.getOutputDoc();
+    } else {
+    	return outMessage;
+    }
   }
 
 public void finalizeService(Navajo inMessage, Access access, Navajo outMessage, String rpcName, String rpcUser,
 		Throwable myException, String origThreadName, boolean scheduledWebservice, boolean afterWebServiceActivated) {
 	if (access != null && !scheduledWebservice) {
 
+		// Call after web service event...
+		afterWebServiceActivated = WebserviceListenerFactory.getInstance().afterWebservice(rpcName, access);
+		
 //		access.getOriginalRunnable().
 		// Remove access object from set of active webservices first.
 		synchronized (accessSet) {
