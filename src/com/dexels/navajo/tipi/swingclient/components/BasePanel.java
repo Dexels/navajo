@@ -8,7 +8,6 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
-import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 
 /**
@@ -436,18 +435,7 @@ public void setEnabled(boolean b) {
 
 
 
-  // Required for V1 !!
-  public Navajo createMemberMessage(String id) {
-    Navajo n = null;
-    try {
-      n = NavajoClientFactory.getClient().doSimpleSend("InitUpdateMember");
-      n.getMessage("QueryUpdateMember").getProperty("MemberIdentifier").setValue(id);
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-    }
-    return n;
-  }
+
 
   public void setWaiting(boolean b) {
 //    if (getRootPane()!=null) {
