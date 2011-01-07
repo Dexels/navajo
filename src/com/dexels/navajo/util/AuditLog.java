@@ -69,7 +69,7 @@ public final class AuditLog implements Mappable {
 		if ( instanceName == null && DispatcherFactory.getInstance() != null ) {
 			instanceName = DispatcherFactory.getInstance().getNavajoConfig().getInstanceName();
 		}
-		logger.info(instanceName + ":" + subsystem + message);
+		logger.info(instanceName + "/" + Thread.currentThread().hashCode() + ":" + subsystem + message);
 		AuditLogEvent ale = new AuditLogEvent(subsystem.toUpperCase(), message, level);
 		ale.setAccessId(accessId);
 		NavajoEventRegistry.getInstance().publishEvent(ale);
