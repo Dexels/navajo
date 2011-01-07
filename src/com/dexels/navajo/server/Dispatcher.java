@@ -640,7 +640,7 @@ private ServiceHandler createHandler(String handler, Access access)
 
       if (access != null) {
         prop = NavajoFactory.getInstance().createProperty(outMessage,
-            "access_id", Property.INTEGER_PROPERTY, access.accessID + "", 100,
+            "access_id", Property.STRING_PROPERTY, access.accessID + "", 100,
             "Access id", Property.DIR_OUT);
         errorMessage.addProperty(prop);
         access.setException(t);
