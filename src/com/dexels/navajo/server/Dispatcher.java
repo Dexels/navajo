@@ -537,7 +537,7 @@ private ServiceHandler createHandler(String handler, Access access)
 
     try {
       Navajo out = generateErrorMessage(access, message, SystemException.SYSTEM_ERROR, 1, e);
-
+      access.setOutputDoc(out);
       return out;
     }
     catch (Exception ne) {
@@ -587,6 +587,7 @@ private ServiceHandler createHandler(String handler, Access access)
       if (access != null) {
         access.setException(ae);
       }
+      access.setOutputDoc(outMessage);
       return outMessage;
     }
     catch (Exception e) {
@@ -680,7 +681,7 @@ private ServiceHandler createHandler(String handler, Access access)
     	  
     	  outMessage.addMessage(locksExceeded);
       }
-      
+      access.setOutputDoc(outMessage);
       return outMessage;
     }
     catch (Exception e) {
