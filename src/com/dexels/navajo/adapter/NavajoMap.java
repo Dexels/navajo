@@ -64,8 +64,12 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
   public String propertyId;
   public MessageMap message;
   public MessageMap [] messages;
+  public OptionMap [] selections;
+ 
   public String messagePointer;
-  public boolean exists;
+  public String selectionPointer = null;
+
+public boolean exists;
   public String append;
   public String appendTo;
   // appendParms is used to append entire output doc of called webservice to param block.
@@ -602,6 +606,53 @@ private Object waitForResult = new Object();
 	  Property p = getPropertyObject(fullName);
 	  return p.getTypedValue();
   }
+  
+  public void setSelectionPointer(String selectionPointer) {
+	  this.selectionPointer = selectionPointer;
+  }
+  
+  public void setSelections(OptionMap [] selections) throws Exception {
+
+	  if ( selectionPointer == null ) {
+		  throw new UserException(-1, "Set selectionPointer first.");
+	  }
+	  Property p = getPropertyObject(selectionPointer);
+	  if ( !p.getType().equals(Property.SELECTION_PROPERTY) ) {
+		  throw new UserException(-1, "selections only supported for selection properties");
+	  }
+
+	  p.clearSelections();
+
+	  for (int i = 0; i < selections.length; i++) {
+		  Selection s = NavajoFactory.getInstance().createSelection(p.getRootDoc(), selections[i].getOptionName(), selections[i].getOptionValue(), selections[i].getOptionSelected());
+		  p.addSelection(s);
+	  }	   
+
+  }
+  
+  public OptionMap [] getSelections() throws Exception {
+	  
+	    if ( selectionPointer == null ) {
+	    	throw new UserException(-1, "Set selectionPointer first.");
+	    }
+	    Property p = getPropertyObject(selectionPointer);
+	    if ( !p.getType().equals(Property.SELECTION_PROPERTY) ) {
+	    	throw new UserException(-1, "selections only supported for selection properties");
+	    }
+	    
+	    ArrayList<Selection> all = p.getAllSelections();
+	    OptionMap [] om = new OptionMap[all.size()];
+	    for ( int i = 0; i < all.size(); i++ ) {
+	    	Selection s = all.get(i);
+	    	om[i] = new OptionMap();
+	    	om[i].setOptionName(s.getName());
+	    	om[i].setOptionValue(s.getValue());
+	    	om[i].setOptionSelected(s.isSelected());
+	    	
+	    }
+	    
+		return om;
+	}
   
   private Property getPropertyObject(String fullName) throws UserException {
 	  waitForResult();
@@ -1318,24 +1369,25 @@ private Object waitForResult = new Object();
 		System.err.println("Set input navajo in NavajoMap... Isn't this odd?");	
 		inDoc = n;
 	}
-@Override
+
 public String getUrl() {
-	return this.access.getRequestUrl();
+	return "TEMPORARY VERSION!!!";
+	//return this.access.getRequestUrl();
 }
 
-@Override
+
 public Access getAccess() {
 	// TODO Auto-generated method stub
 	return access;
 }
 
-@Override
+
 public void setAccess(Access access) {
 	// TODO Auto-generated method stub
 	
 }
 
-@Override
+
 public void writeOutput(Navajo inDoc, Navajo outDoc) throws IOException, FileNotFoundException, UnsupportedEncodingException,
 		NavajoException {
 	// TODO Auto-generated method stub
