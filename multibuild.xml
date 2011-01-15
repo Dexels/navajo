@@ -84,7 +84,7 @@
 		<for list="${projects}" delimiter="," param="project">
 			<sequential>
 			
-				<ant antfile="../@{project}/legacyBuild.xml" inheritall="true" dir="../@{project}">
+				<ant antfile="../@{project}/buildLegacy.xml" inheritall="true" dir="../@{project}">
 				</ant>
 			</sequential>
 		</for>
