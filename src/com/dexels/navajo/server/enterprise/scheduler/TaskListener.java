@@ -11,7 +11,7 @@ public interface TaskListener {
 	 * @return
 	 */
 	public boolean beforeTask(TaskInterface t, Navajo request);
-	public void afterTask(TaskInterface t, Navajo response);
+	public boolean afterTask(TaskInterface t, Navajo response);
 	public String getDescription();
 	
 }
