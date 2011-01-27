@@ -97,11 +97,12 @@ public class SOAPMap implements Mappable {
 			sb.append(namespaces.get(i));
 		}
 		sb.append(">\n");
-		sb.append("<SOAP-ENV:Header>\n");
+		// CHANGE: Prevent empty headers, it seems to mess up some soap servers
 		if ( requestHeader != null ) {
+			sb.append("<SOAP-ENV:Header>\n");
 			sb.append(new String(requestHeader.getData()));
+			sb.append("</SOAP-ENV:Header>\n");
 		}
-		sb.append("</SOAP-ENV:Header>\n");
 		
 		if ( !containsSoapBody ) {
 			sb.append("<SOAP-ENV:Body>\n");
@@ -253,10 +254,9 @@ SOAPAction: "https://sportlink.rfxweb.nl/GetClub"
 		
 		System.err.println("\n\nRESPONSE:\n");
 		
-		FileOutputStream fw = new FileOutputStream(new File("/home/arjen/result.xml"));
-		//sm.getResponseBody().write(System.err);
-		sm.getResponseBody().write(fw);
-		fw.close();
+//		FileOutputStream fw = new FileOutputStream(new File("/home/arjen/result.xml"));
+//		sm.getResponseBody().write(fw);
+//		fw.close();
 		
 		SoapAttachment [] sa = sm.getResponseAttachments();
 		System.err.println("received " + sa.length + " attachments.");
