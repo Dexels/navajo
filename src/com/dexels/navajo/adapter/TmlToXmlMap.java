@@ -26,6 +26,15 @@ public class TmlToXmlMap implements Mappable {
 	private boolean hasBeenBuild = false;
 	
 	ArrayList<String[]> attributes = new ArrayList<String[]>();
+	private String targetNamespace;
+
+	public String getTargetNamespace() {
+		return targetNamespace;
+	}
+
+	public void setTargetNamespace(String targetNamespace) {
+		this.targetNamespace = targetNamespace;
+	}
 
 	public void setAttributePath(String path) {
 		this.attributePath = path;
@@ -85,7 +94,11 @@ public class TmlToXmlMap implements Mappable {
 					throw new UserException(1200, "Root message not found for TML2XML map");
 				}
 				content.setStart(root.getName());
-
+				// Add the target namespace 
+				if(targetNamespace!=null) {
+					content.setAttributeName("xmlns");
+					content.setAttributeText(targetNamespace);
+				}
 				ArrayList<Property> allProperties = root.getAllProperties();
 				for (int i = 0; i < allProperties.size(); i++) {
 					appendProperty(allProperties.get(i), content);
@@ -170,6 +183,26 @@ public class TmlToXmlMap implements Mappable {
 		return content.getContent();
 	}
 
+	
+	public void setProcessSoapData(boolean b) throws UserException {
+		// TODO I think this overwrites multipart messages (?). Find an example and verify
+		Message settings = this.document.getMessage("_SoapSettings");
+		Message headers = this.document.getMessage("_SoapHeaders");
+		settings.setMode(Message.MSG_MODE_IGNORE);
+		headers.setMode(Message.MSG_MODE_IGNORE);
+		setTargetNamespace(settings.getProperty("TargetNamespace").getValue());
+		Property parts = settings.getProperty("Parts");
+		String partList = parts.getValue();
+		String[] partArray = partList.split(",");
+		for (String pt : partArray) {
+			Message rootParent = this.document.getMessage(pt);
+			// should have only one child, if I'm not mistaken.
+			for (Message child : rootParent.getAllMessages()) {
+				setRootPath(child.getFullMessageName());
+				setBuildContent(true);
+			}
+		}
+	}
 	public static void main(String[] args) {
 		try {
 			TmlToXmlMap t2x = new TmlToXmlMap();
