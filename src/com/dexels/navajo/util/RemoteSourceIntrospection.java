@@ -99,10 +99,10 @@ public class RemoteSourceIntrospection {
 	
 	public void getTipiDependency(String line, RemoteSourceDefinition rsd){
 		// A service= attribute for Tipi
-		if(line.indexOf("service=") > -1){
+		if(line.indexOf(" service=") > -1){
 			boolean callService = line.indexOf("<callService") > -1 || line.indexOf("injectNavajo") > -1;
 			
-			String dependency = line.substring(line.indexOf("service=") + 9);
+			String dependency = line.substring(line.indexOf(" service=") + 10);
 			dependency = dependency.substring(0, dependency.indexOf("\""));
 		
 			if(dependency != null && dependency.indexOf("{") == -1){
@@ -126,8 +126,8 @@ public class RemoteSourceIntrospection {
 		}
 		
 		// Old style tipi ws call
-		if(line.indexOf("<performMethod") > -1 && line.indexOf("method=") > -1){
-			String dependency = line.substring(line.indexOf("method=") + 8);
+		if(line.indexOf("<performMethod") > -1 && line.indexOf(" method=") > -1){
+			String dependency = line.substring(line.indexOf(" method=") + 9);
 			dependency = dependency.substring(0, dependency.indexOf("\""));
 		
 			if(dependency != null && dependency.indexOf("{") == -1){
