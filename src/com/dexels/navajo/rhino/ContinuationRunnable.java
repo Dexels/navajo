@@ -92,7 +92,7 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 		System.err.println("Finalizing access...");
 		Access access = environment.getAccess();
 		// TODO: Make pretty, remove stupid params
-		DispatcherFactory.getInstance().finalizeService(access.getInDoc(), access, access.getOutputDoc(), access.getRpcName(), access.getRpcUser(), null, null, false,false);
+		DispatcherFactory.getInstance().finalizeService(access.getInDoc(), access, access.getOutputDoc(), access.getRpcName(), access.getRpcUser(), null, null, false,false,null);
 
 		TmlRunnable originalRunnable = access.getOriginalRunnable();
 		if(originalRunnable!=null) {
