@@ -161,14 +161,15 @@ public class SOAPMap implements Mappable {
 					}
 				}
 				
-				/* IMPORTANT! */
-				msg.saveChanges();
 				
 				if ( username != null && password != null) {
 					MimeHeaders headers= msg.getMimeHeaders();
 					String authorization = new BASE64Encoder().encode( (username + ":" + password).getBytes());
 					headers.addHeader("Authorization", "Basic " + authorization);
 				}
+				
+				/* IMPORTANT! */
+				msg.saveChanges();
 				
 				soapReply = connection.call(msg, endpoint);
 				
@@ -243,8 +244,8 @@ SOAPAction: "https://sportlink.rfxweb.nl/GetClub"
 	public static void main(String [] args) throws Exception {
 		
 		SOAPMap sm = new SOAPMap();
-		//sm.setUsername("aap");
-		//sm.setPassword("noot");
+		sm.setUsername("aap");
+		sm.setPassword("noot");
 		//sm.setUrl("http://10.0.0.132:8080/corvus/httpd/ebms/sender");
 		sm.setUrl("https://sportlink.rfxweb.nl/Test/Sportlink.asmx");
 		//sm.setUrl("http://10.0.0.132:8080/corvus/httpd/ebms/receiver_list");
