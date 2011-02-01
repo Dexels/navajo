@@ -568,7 +568,7 @@ public final class Access implements java.io.Serializable, Mappable {
 				m.addProperty(p);
 				Header h = NavajoFactory.getInstance().createHeader(doc, "navajo/ProcessGetAgent", "ME", "ME", -1);
 				doc.addHeader(h);
-				Navajo result = DispatcherFactory.getInstance().handle(doc, true);
+				Navajo result = DispatcherFactory.getInstance().handle(doc, true,null);
 				if ( result != null ) {
 					return result.getProperty("/Access/AgentId").getValue();
 				}

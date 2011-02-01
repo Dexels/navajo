@@ -57,7 +57,7 @@ public class FastDispatcher {
 	 * @return
 	 */
 	public Navajo handle(Navajo in) throws FatalException {
-		return DispatcherFactory.getInstance().handle(in, true);
+		return DispatcherFactory.getInstance().handle(in, true,null);
 	}
 	
 	/**

@@ -748,7 +748,7 @@ private ServiceHandler createHandler(String handler, Access access)
    */
   public final Navajo handle(Navajo inMessage,  TmlRunnable origRunnable, Object userCertificate) throws
       FatalException {
-    return processNavajo(inMessage, userCertificate, null, false,  origRunnable);
+    return processNavajo(inMessage, userCertificate, null, false,  origRunnable,null);
   }
 
   /**
@@ -758,13 +758,18 @@ private ServiceHandler createHandler(String handler, Access access)
    * @return
    * @throws FatalException
    */
-  public final Navajo handle(Navajo inMessage,boolean skipAuth) throws FatalException {
-    return processNavajo(inMessage, null, null, skipAuth,null);
+  public final Navajo handle(Navajo inMessage,boolean skipAuth,AfterWebServiceEmitter emit) throws FatalException {
+    return processNavajo(inMessage, null, null, skipAuth,null,emit);
    
   }
   
+  public final Navajo handle(Navajo inMessage,boolean skipAuth) throws FatalException {
+	    return processNavajo(inMessage, null, null, skipAuth,null,null);
+	   
+	  }
+  
   public final Navajo handle(Navajo inMessage) throws FatalException {
-	  return processNavajo(inMessage, null, null, false,null);
+	  return processNavajo(inMessage, null, null, false,null,null);
   }
 
   public String getThreadName(Access a) {
@@ -810,7 +815,7 @@ private ServiceHandler createHandler(String handler, Access access)
   public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo clientInfo) throws FatalException {
 	  // Maybe use event to trigger handle event.... such that NavajoRequest events can be proxied/intercepted by
 	  // other classes.
-	  return processNavajo(inMessage, userCertificate, clientInfo, false,null);
+	  return processNavajo(inMessage, userCertificate, clientInfo, false,null,null);
   }
   
   /**
@@ -825,7 +830,7 @@ private ServiceHandler createHandler(String handler, Access access)
    * @throws FatalException
    */
   @SuppressWarnings("deprecation")
-private final Navajo processNavajo(Navajo inMessage, Object userCertificate, ClientInfo clientInfo, boolean skipAuth, TmlRunnable origRunnable) throws
+private final Navajo processNavajo(Navajo inMessage, Object userCertificate, ClientInfo clientInfo, boolean skipAuth, TmlRunnable origRunnable, AfterWebServiceEmitter emit) throws
       FatalException {
 	
     Access access = null;
@@ -1101,7 +1106,7 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
     	if(!preventFinalize) {
     		System.err.println("prevent Finalize not set, so finalizing service");
 				finalizeService(inMessage, access, outMessage, rpcName, rpcUser, myException, origThreadName, scheduledWebservice,
-						afterWebServiceActivated);
+						afterWebServiceActivated,emit);
 			}
 		}
     
@@ -1112,9 +1117,14 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
     }
   }
 
+
 public void finalizeService(Navajo inMessage, Access access, Navajo outMessage, String rpcName, String rpcUser,
-		Throwable myException, String origThreadName, boolean scheduledWebservice, boolean afterWebServiceActivated) {
+		Throwable myException, String origThreadName, boolean scheduledWebservice, boolean afterWebServiceActivated, AfterWebServiceEmitter emit) {
 	if (access != null && !scheduledWebservice) {
+		  // If emitter is specified, first fire emitter.
+	      if ( emit != null ) {
+	      emit.emit(access.getOutputDoc());
+	      }
 
 		// Call after web service event...
 		afterWebServiceActivated = WebserviceListenerFactory.getInstance().afterWebservice(rpcName, access);
