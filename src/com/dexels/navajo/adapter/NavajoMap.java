@@ -613,20 +613,32 @@ private Object waitForResult = new Object();
   
   public void setSelections(OptionMap [] selections) throws Exception {
 
-	  if ( selectionPointer == null ) {
-		  throw new UserException(-1, "Set selectionPointer first.");
+	  if ( currentProperty == null ) {
+		  throw new UserException(-1, "Set property name first.");
 	  }
-	  Property p = getPropertyObject(selectionPointer);
-	  if ( !p.getType().equals(Property.SELECTION_PROPERTY) ) {
-		  throw new UserException(-1, "selections only supported for selection properties");
-	  }
-
-	  p.clearSelections();
-
+	 
+	  currentProperty.setType(Property.SELECTION_PROPERTY);
+	  
+	  currentProperty.clearValue();
+	  currentProperty.clearSelections();
+	  
+	  int selected = 0;
 	  for (int i = 0; i < selections.length; i++) {
-		  Selection s = NavajoFactory.getInstance().createSelection(p.getRootDoc(), selections[i].getOptionName(), selections[i].getOptionValue(), selections[i].getOptionSelected());
-		  p.addSelection(s);
+		  Selection s = NavajoFactory.getInstance().createSelection(currentProperty.getRootDoc(), 
+				  selections[i].getOptionName(), selections[i].getOptionValue(), selections[i].getOptionSelected());
+		  currentProperty.addSelection(s);
+		  if ( selections[i].getOptionSelected() ) {
+			  selected++;
+		  }
 	  }	   
+	  
+	  if ( selected > 1 ) {
+		  currentProperty.setCardinality("+");
+	  } else {
+		  currentProperty.setCardinality("1");
+		  
+	  }
+	  addProperty(currentFullName, currentProperty);
 
   }
   
