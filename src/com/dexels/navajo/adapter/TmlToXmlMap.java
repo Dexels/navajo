@@ -191,10 +191,12 @@ public class TmlToXmlMap implements Mappable {
 		settings.setMode(Message.MSG_MODE_IGNORE);
 		headers.setMode(Message.MSG_MODE_IGNORE);
 		setTargetNamespace(settings.getProperty("TargetNamespace").getValue());
+		System.err.println("Using namespace: "+settings.getProperty("TargetNamespace").getValue());
 		Property parts = settings.getProperty("Parts");
 		String partList = parts.getValue();
 		String[] partArray = partList.split(",");
 		for (String pt : partArray) {
+			System.err.println("Part: "+pt);
 			Message rootParent = this.document.getMessage(pt);
 			// should have only one child, if I'm not mistaken.
 			for (Message child : rootParent.getAllMessages()) {
