@@ -23,6 +23,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import sun.misc.BASE64Encoder;
+
 import com.dexels.navajo.adapter.soapmap.SoapAttachment;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.Mappable;
@@ -38,7 +40,10 @@ public class SOAPMap implements Mappable {
 	public XMLMap xmlRequest;
 	public Binary requestBody = null;
 	public Binary requestHeader = null;
-
+	// For Basic Authentication.
+	public String username = null;
+	public String password = null;
+	
 	public boolean doSend;
 	public Binary responseBody;
 	public XMLMap xmlReponse;
@@ -126,7 +131,7 @@ public class SOAPMap implements Mappable {
 
 				SOAPConnectionFactory scf = SOAPConnectionFactory.newInstance();
 				connection = scf.createConnection();
-
+				
 				MessageFactory mf = MessageFactory.newInstance();
 
 				// Create a message from the message factory.
@@ -142,7 +147,7 @@ public class SOAPMap implements Mappable {
 				soapPart.setContent( ss );
 				msg.setContentDescription("text/xml");
 				
-				//System.err.println(new String(requestBody.getData()));
+				System.err.println(new String(requestBody.getData()));
 				// attachments
 				if ( requestAttachments.size() > 0 ) {
 					for ( int i = 0; i < requestAttachments.size(); i++ ) {
@@ -158,6 +163,12 @@ public class SOAPMap implements Mappable {
 				
 				/* IMPORTANT! */
 				msg.saveChanges();
+				
+				if ( username != null && password != null) {
+					MimeHeaders headers= msg.getMimeHeaders();
+					String authorization = new BASE64Encoder().encode( (username + ":" + password).getBytes());
+					headers.addHeader("Authorization", "Basic " + authorization);
+				}
 				
 				soapReply = connection.call(msg, endpoint);
 				
@@ -194,6 +205,14 @@ public class SOAPMap implements Mappable {
 		}
 	}
 	
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	public SOAPMessage getSoapReply() {
 		return soapReply;
 	}
@@ -224,6 +243,8 @@ SOAPAction: "https://sportlink.rfxweb.nl/GetClub"
 	public static void main(String [] args) throws Exception {
 		
 		SOAPMap sm = new SOAPMap();
+		//sm.setUsername("aap");
+		//sm.setPassword("noot");
 		//sm.setUrl("http://10.0.0.132:8080/corvus/httpd/ebms/sender");
 		sm.setUrl("https://sportlink.rfxweb.nl/Test/Sportlink.asmx");
 		//sm.setUrl("http://10.0.0.132:8080/corvus/httpd/ebms/receiver_list");
