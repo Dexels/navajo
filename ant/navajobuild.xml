@@ -227,6 +227,7 @@
 					<fileset dir="${testbuild}">
 						<include name="*/**" />
 					</fileset>
+				
 				</jar>
 			</then>
 			</if>
@@ -265,6 +266,7 @@
 
 	<target name="testgeneral" description="Run the JUnit tests" >
 		<antcall target="compiletest"/>
+		<property name="testSuite" value="${ant.project.name}"/>
 		<echo message="Testing project: ${ant.project.name}"/>
 		<junit showoutput="true" printsummary="yes" haltonfailure="${continueonfailedtest}"  >
 			<classpath refid="test.class.path" />
@@ -274,7 +276,7 @@
 			<classpath path="${build}"/>
 			<classpath path="${dependencyclasses}"/>
 			<formatter type="plain" />
-			<test name="${ant.project.name}" outfile="result" todir="./${testreports}"/>
+			<test name="${testSuite}" outfile="result" todir="./${testreports}"/>
 			<sysproperty key="integrationServers" value="${integrationServers}"/>
 			<sysproperty key="integrationServerUser" value="${integrationServerUser}"/>
 			<sysproperty key="integrationServerPassword" value="${integrationServerPassword}"/>
@@ -415,16 +417,26 @@
 			<fileset dir=".">
 				<include name="lib/**"/>
 			<!-- Should not need this	<include name="compilelib/**"/>-->
+				<include name="scripts/**"/>
 			</fileset>
+			<fileset dir="work">
+				<include name="docs/**"/>
+			</fileset>
+<!--			<fileset dir="doc" >
+				<include name="**"/>
+			</fileset>-->
 		</copy>
 		
       	 <copy todir="${work}/tmp/${ant.project.name}/lib">
 			<fileset dir="${deploydependencylib}">
 				<include name="*.jar"/>
 			</fileset>
+      	 	
 		</copy>
 
-		<zip zipfile="${distribution}/${ant.project.name}/${ant.project.name}Binary.zip" basedir="${work}/tmp">
+		
+		
+		<zip zipfile="${distribution}/${ant.project.name}/${ant.project.name}.zip" basedir="${work}/tmp">
 		</zip>
 	</target>
 </project>
