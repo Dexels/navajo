@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- $Id$ -->
+<project name="TipiRDF" default="proxyarchive" basedir=".">
+	<property name="src" location="src" />
+	<property name="dist" location="dist"/>
+	<property name="build" location="classes" />
+	<property name="lib" value="lib" />
+	<property name="archive" value="${ant.project.name}.jar" />
+	<property name="proxyarchive" value="SwingMain.jar" />
+	<property name="dist" location="dist"/>
+	<property name="NavajoClient" value="${PROJECTHOME}/NavajoClient" />
+	<property name="NavajoClient.build" value="${NavajoClient}/classes" />
+	<property name="NavajoDocument" value="${PROJECTHOME}/NavajoDocument" />
+	<property name="NavajoDocument.build" value="${NavajoDocument}/classes" />
+	<property name="Navajo" value="${PROJECTHOME}/Navajo" />
+	<property name="Navajo.build" value="${Navajo}/classes" />
+	<property name="TipiSwingClient" value="${PROJECTHOME}/TipiSwingClient" />
+	<property name="TipiSwingClient.build" value="${TipiSwingClient}/classes" />
+	<property name="AnimatedTransitions" value="${PROJECTHOME}/AnimatedTransitions" />
+	<property name="AnimatedTransitions.build" value="${AnimatedTransitions}/classes" />
+	<property name="TimingFramework" value="${PROJECTHOME}/TimingFramework" />
+	<property name="TimingFramework.build" value="${TimingFramework}/classes" />
+	<property name="NavajoTipi" value="${PROJECTHOME}/NavajoTipi" />
+	<property name="NavajoTipi.build" value="${NavajoTipi}/classes" />
+	<property name="DexelsVersionControl" value="${PROJECTHOME}/DexelsVersionControl" />
+	<property name="DexelsVersionControl.build" value="${PROJECTHOME}/DexelsVersionControl/classes" />
+	<path id="depend">
+		<!-- NavajoSwingTipi needs the libraries from the NavajoTipi project, OK? -->
+		<!--<fileset dir="${NavajoTipi}/lib">
+			<include name="**/*.jar"/>
+		</fileset>-->
+		<pathelement location="${NavajoClient.build}" />
+		<pathelement location="${NavajoDocument.build}" />
+		<pathelement location="${Navajo.build}" />
+		<pathelement location="${TipiSwingClient.build}" />
+		<pathelement location="${NavajoTipi.build}" />
+		<pathelement location="${AnimatedTransitions.build}" />
+		<pathelement location="${TimingFramework.build}" />
+		<pathelement location="${DexelsVersionControl.build}" />
+	</path>
+	<target name="init" >
+		<tstamp />
+		<mkdir dir="${NavajoDocument.build}" />
+		<mkdir dir="${NavajoClient.build}" />
+		<mkdir dir="${Navajo.build}" />
+		<mkdir dir="${TipiSwingClient.build}" />
+		<mkdir dir="${NavajoTipi.build}" />
+		<mkdir dir="${build}" />
+	</target>
+	<target name="clean" >
+		<delete file="${archive}" />
+		<delete dir="${NavajoClient.build}" />
+		<delete dir="${NavajoDocument.build}" />
+		<delete dir="${Navajo.build}" />
+		<delete dir="${TipiSwingClient.build}" />
+		<delete dir="${NavajoTipi.build}" />
+		<delete dir="${build}" />
+	    <delete dir="${dist}"/>
+	</target>
+	<target name="NavajoTipi" depends="init">
+		<!-- NavajoSwingClient sub-project should build NavajoDocument, 
+		 NavajoClient, Navajo, NavajoSwingClient and NavajoTipi
+		 sub-projects if necessary -->
+	<!--	<ant dir="${NavajoTipi}" target="archive" inheritAll="false">
+			<property name="PROJECTHOME" value="${PROJECTHOME}" />
+		</ant>-->
+		<ant dir="${AnimatedTransitions}" target="archive" inheritAll="false"/>
+		<ant dir="${TimingFramework}" target="archive" inheritAll="false"/>
+
+	</target>
+	<target name="resource">
+		<copy todir="${build}">
+			<fileset dir="${src}">
+				<exclude name="**/*.java" />
+				<exclude name="CVS" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="compile" depends="NavajoTipi">
+		<javac srcdir="${src}" destdir="${build}">
+			<classpath refid="depend" />
+		</javac>
+	</target>
+	<target name="archive" depends="compile,resource">
+		<jar jarfile="${archive}">
+
+			<fileset dir="${build}" />
+			<fileset dir="${DexelsVersionControl.build}" />
+			<service type="tipi.TipiExtension">
+				<provider classname="tipi.TipiSwingExtension" />
+			</service>
+			<manifest>
+
+				<attribute name="Built-By" value="Frank" />
+<!--				<attribute name="Class-Path" value="NavajoSwingTipi.jar,tipipackage.jar,NavajoRuntime.jar,NavajoSwingClient.jar,NavajoLogger.jar,NavajoDocument.jar" />
+-->				<attribute name="Main-Class" value="tipi.MainApplication" />
+			</manifest>
+
+		</jar>
+	</target>
+	<target name="proxyarchive" depends="archive">
+		<jar jarfile="${proxyarchive}">
+
+			<fileset dir="${build}">
+				<exclude name="com/**" />
+				<include name="tipi/MainApplication.class" />
+			</fileset>
+<!--			<fileset dir="../NavajoTipi/classes">
+				<exclude name="com/**" />
+				<exclude name="AllTests.class" />
+				<exclude name="tests/**" />
+				<exclude name="tipipackage/**" />
+				<exclude name="tipi/**" />
+				
+								
+			</fileset>-->
+
+			<manifest>
+				<attribute name="Built-By" value="Frank" />
+				<attribute name="Main-Class" value="tipi.MainApplication" />
+			</manifest>
+
+		</jar>
+	</target>
+</project>
+<!-- EOF: $RCSfile$ -->

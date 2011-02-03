@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tid errorhandler="error">
+   <tipiclass addtocontainer="true" childcount="*" class="RDFGraph" layoutmanager="false" module="dashboard" name="rdfgraph" package="com.dexels.rdf.visualization" studio-icon="tabs.gif" type="tipi">
+      <events>
+         <event name="onInstantiate"/>
+         <event name="onObjectChanged">
+            <param name="url" type="string"/>
+            <param name="predicate" type="string"/>                  
+         </event>
+      </events>
+      <values>
+          <value direction="out" name="selectedServer" type="string"/>  
+      </values>
+      <methods>
+         <method name="setNamespace">
+            <param name="url" type="string"/>
+            <param name="ns" type="string"/>
+         </method>
+         <method name="setViewDepth">
+            <param name="depth" type="integer"/>
+         </method> 
+         <method name="clear"/>  
+      </methods>
+   </tipiclass>
+</tid>

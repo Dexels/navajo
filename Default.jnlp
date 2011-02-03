@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp version="1" href="Default.jnlp" spec="1.0+" codebase="file:/C:/workspace/TipiRDF/">
+    <information>
+        <title>Tipi Default Application</title>
+        <vendor>Dexels</vendor>
+        <homepage>http://www.dexels.com</homepage>
+        <icon href="/resource/icon.png"/>
+        <icon href="/resource/splash.jpg" kind="splash"/>
+    </information>
+    <resources>
+        <j2se version="1.6+" java-vm-args="-ea -Xmx512M -Dtipilaf=org.jvnet.substance.skin.SubstanceNebulaLookAndFeel"/>
+        <jar main="false" href="lib/DexelsVersionControl.jar"/>
+        <jar main="false" href="lib/NavajoClient.jar"/>
+        <jar main="false" href="lib/NavajoDocument.jar"/>
+        <jar main="false" href="lib/Navajo.jar"/>
+        <jar main="false" href="lib/NavajoFunctions.jar"/>
+        <jar main="false" href="lib/Tipi.jar"/>
+        <jar main="false" href="lib/jzlib.jar"/>
+        <jar main="false" href="lib/TipiSwingClient.jar"/>
+        <jar main="false" href="lib/TimingFramework.jar"/>
+        <jar main="false" href="lib/AnimatedTransitions.jar"/>
+        <jar main="false" href="lib/javadocking.jar"/>
+        <jar main="true" href="lib/TipiSwing.jar"/>
+        <jar main="false" href="lib/TipiRichClient.jar"/>
+        <jar main="false" href="lib/TipiRich.jar"/>
+        <jar main="false" href="lib/TipiJOGLDashboard.jar"/>
+        <jar main="false" href="lib/smack.jar"/>
+        <jar main="false" href="lib/smackx.jar"/>
+        <jar main="false" href="lib/TipiJabber.jar"/>
+        <jar main="false" href="lib/TipiJogl.jar"/>
+        <extension href="http://download.java.net/media/jogl/builds/archive/jsr-231-webstart-current/jogl.jnlp" name="jogl"/>
+        <jar main="false" href="lib/substance5_1.jar"/>
+        <jar main="false" href="lib/TipiSubstance.jar"/>
+        <jar main="false" href="lib/miglayout-3.6-swing.jar"/>
+        <jar main="false" href="lib/TipiSwingMig.jar"/>
+        <jar main="false" href="lib/TipiCharting.jar"/>
+        <jar main="false" href="lib/gnujaxp.jar"/>
+        <jar main="false" href="lib/iText-2.1.5.jar"/>
+        <jar main="false" href="lib/jcommon-1.0.16.jar"/>
+        <jar main="false" href="lib/jfreechart-1.0.13.jar"/>
+    </resources>
+    <security>
+        <all-permissions/>
+    </security>
+    <application-desc main-class="tipi.MainApplication">
+        <argument>testarg=aap</argument>
+        <argument>sessionTimeout=60</argument>
+        <argument>icon=resource/icon.png</argument>
+        <argument>title=Tipi Default Application</argument>
+        <argument>splash=resource/splash.jpg</argument>
+        <argument>repository=http://spiritus.dexels.nl:41766/Tipi/</argument>
+        <argument>vendor=Dexels</argument>
+        <argument>permissions=all</argument>
+        <argument>build=local</argument>
+        <argument>extensions=Tipi,TipiSwing,TipiRich,TipiJOGLDashboard,TipiJabber,TipiJogl,TipiSubstance,TipiSwingMig,TipiCharting</argument>
+        <argument>homepage=http://www.dexels.com</argument>
+        <argument>start.xml</argument>
+    </application-desc>
+</jnlp>
