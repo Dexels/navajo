@@ -2,14 +2,9 @@ Bundle-Name: Navajo Svg Renderer
 Bundle-SymbolicName: com.dexels.navajo.svg.adapter
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.0.qualifier
 Include-Resource: lib
-Export-Package: com.dexels.navajo.adapter,
- com.dexels.navajo.rhino,
- com.dexels.navajo.rhino.flow,
- com.dexels.navajo.rhino.include,
- com.dexels.navajo.testmap,
- navajorhino
+Export-Package: com.dexels.navajo.adapters
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.document;bundle-version="1.0.0",
  org.apache.batik.transcoder;bundle-version="1.6.0",
