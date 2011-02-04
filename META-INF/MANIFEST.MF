@@ -13,7 +13,7 @@ Export-Package: com.dexels.navajo.adapter,
  navajorhino
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.document;bundle-version="1.0.0",
- com.dexels.navajo.client.async;bundle-version="1.0.0",
+ com.dexels.navajo.client.async;bundle-version="1.0.1",
  com.dexels.navajo.listeners;bundle-version="1.0.0",
  com.dexels.navajo.core;bundle-version="2.9.0",
  com.dexels.navajo.client;bundle-version="1.0.0",
