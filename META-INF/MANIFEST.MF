@@ -4,7 +4,10 @@ Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.1
 Bundle-Activator: navajoclient.Version
-Bundle-ClassPath: .
+Bundle-ClassPath: .,
+ lib/jzlib.jar,
+ lib/smack.jar,
+ lib/smackx.jar
 Export-Package: com.dexels.navajo.client,
  com.dexels.navajo.client.context,
  com.dexels.navajo.client.logger,
