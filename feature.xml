@@ -2,7 +2,7 @@
 <feature
       id="com.dexels.navajo.core.feature"
       label="Navajo Core Feature"
-      version="1.0.0.qualifier"
+      version="1.0.3.qualifier"
       provider-name="Dexels">
 
    <description url="http://www.example.com/description">
@@ -31,13 +31,6 @@
 
    <plugin
          id="com.dexels.navajo.client"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.hamcrest.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -98,12 +91,6 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
-   <plugin
-         id="org.junit"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
 
    <plugin
          id="com.dexels.navajo.adapters"
