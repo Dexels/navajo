@@ -2,7 +2,7 @@
 <feature
       id="com.dexels.navajo.dev"
       label="Navajo Development Plugin"
-      version="1.0.0.qualifier"
+      version="1.0.2.qualifier"
       provider-name="Dexels">
 
    <description url="http://www.example.com/description">
@@ -19,7 +19,6 @@
 
    <requires>
       <import feature="com.dexels.navajo.core.feature" version="1.0.0.qualifier"/>
-      <import feature="com.dexels.navajo.server.enterprise.feature" version="1.0.0.qualifier"/>
       <import feature="com.dexels.navajo.server.feature" version="1.0.0.qualifier"/>
    </requires>
 
@@ -39,6 +38,13 @@
 
    <plugin
          id="com.dexels.navajo.tipi.swt.client"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.dexels.navajo.dev.script"
          download-size="0"
          install-size="0"
          version="0.0.0"
