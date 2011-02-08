@@ -641,6 +641,7 @@ public abstract class TipiContext {
 
 	protected void parseXMLElement(XMLElement elm) throws TipiException {
 		String elmName = elm.getName();
+		// TODO Remove this hard dependency on NavajoFunctions, or promote the StandardFunctionDefinitions class to Navajo core
 		ExtensionDefinition ed = new StandardFunctionDefinitions();
 		String extension = elm.getStringAttribute("extension");
 		setSplashInfo("Loading user interface");
