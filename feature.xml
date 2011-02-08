@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="com.dexels.navajo.tipi.feature"
-      label="Feature"
+      label="Tipi Swing"
       version="1.0.0.qualifier"
       provider-name="DEXELS">
 
@@ -18,10 +18,30 @@
    </license>
 
    <plugin
-         id="com.dexels.navajo.tipi.swing.client"
+         id="com.dexels.navajo.tipi"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
+   <plugin
+         id="com.dexels.navajo.tipi.swingclient"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.dexels.navajo.tipi.swing"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.dexels.navajo.tipi.swing.deps"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
 </feature>
