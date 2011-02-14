@@ -4,9 +4,9 @@
 <%@page import="java.util.*"%>
 <%@ taglib prefix="c" uri="../WEB-INF/tags/c.tld"%>
 <%@ taglib prefix="nav" uri="../WEB-INF/tags/navajo.tld"%>
-<%@ page import="com.dexels.navajo.jsp.NavajoContext"%>
+<%@ page import="com.dexels.navajo.client.context.NavajoContext"%>
 <%@ page trimDirectiveWhitespaces="true" %>
-<jsp:useBean id="navajoContext" class="com.dexels.navajo.jsp.NavajoContext" scope="session" />	        <nav:service service="${param['service']}">
+<jsp:useBean id="navajoContext" class="com.dexels.navajo.client.context.NavajoContext" scope="session" />	        <nav:service service="${param['service']}">
 	          <div id="col1_content" class="clearfix">
 	            <h3>Message structure</h3>
 	            <div class="info">

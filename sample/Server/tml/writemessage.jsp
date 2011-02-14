@@ -4,9 +4,9 @@
 <%@page import="java.util.*"%>
 <%@ taglib prefix="c" uri="../WEB-INF/tags/c.tld"%>
 <%@ taglib prefix="nav" uri="../WEB-INF/tags/navajo.tld"%>
-<%@ page import="com.dexels.navajo.jsp.NavajoContext"%>
+<%@ page import="com.dexels.navajo.client.context.NavajoContext"%>
 <%@ page trimDirectiveWhitespaces="true" %>
-<jsp:useBean id="navajoContext" class="com.dexels.navajo.jsp.NavajoContext" scope="session" />
+<jsp:useBean id="navajoContext" class="com.dexels.navajo.client.context.NavajoContext" scope="session" />
 <div class="important">
 	<a name="${navajoContext.messagePath}">
 	<h4>${navajoContext.message.name}</h4>

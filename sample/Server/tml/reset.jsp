@@ -5,7 +5,7 @@
 <%@ taglib prefix="c" uri="../WEB-INF/tags/c.tld"%>
 <%@ taglib prefix="nav" uri="../WEB-INF/tags/navajo.tld"%>
 <%@ page trimDirectiveWhitespaces="true" %>
-<%@ page import="com.dexels.navajo.jsp.NavajoContext"%>
+<%@ page import="com.dexels.navajo.client.context.NavajoContext"%>
 	<%
 	  NavajoContext xx = (NavajoContext) pageContext.findAttribute("navajoContext");
 	  xx.reset();

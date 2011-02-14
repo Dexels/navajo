@@ -52,10 +52,33 @@
       <info>Pushes a service on the stack</info>
       <attribute>
          <name>service</name>
-         <required>true</required>
+         <required>false</required>
 	      <rtexprvalue>true</rtexprvalue>
       </attribute>
+      <attribute>
+         <name>serviceBinary</name>
+         <required>false</required>
+	      <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+         <name>serviceString</name>
+         <required>false</required>
+	      <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      
    </tag>
+   
+   <tag>
+      <name>tml</name>
+      <tagclass>com.dexels.navajo.jsp.tags.TmlTag</tagclass>
+      <info>Parses TML, and pushes it on the stack as navajo object. Accepts Strings and Binaries</info>
+      <attribute>
+         <name>content</name>
+         <required>true</required>
+	     <rtexprvalue>true</rtexprvalue>
+      </attribute>
+   </tag>
+   
 
    <tag>
       <name>dump</name>
@@ -73,7 +96,11 @@
       </attribute>
    </tag>
 
-
+   <tag>
+      <name>reset</name>
+      <tagclass>com.dexels.navajo.jsp.tags.ResetTag</tagclass>
+      <info>Reset message stack</info>      
+   </tag>
 
    <tag>
       <name>log</name>
