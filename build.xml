@@ -7,7 +7,8 @@
 	<taskdef name="undeploy" classname="org.apache.catalina.ant.UndeployTask" />
 
 	<property file="build.properties" />
-	<property name="basicdeploy" value="DexelsVersionControl,NavajoDocument,NavajoClient,Navajo,NavajoListeners,NavajoAdapters,NavajoJsp,NavajoFunctions" />
+<!--	<property name="basicdeploy" value="DexelsVersionControl,NavajoDocument,NavajoClient,Navajo,NavajoListeners,NavajoAdapters,NavajoJsp,NavajoJspServer,NavajoFunctions" />-->
+	<property name="basicdeploy" value="DexelsVersionControl,NavajoDocument,NavajoClient,Navajo,NavajoListeners,NavajoAdapters,NavajoJsp,NavajoJspServer,NavajoFunctions,NavajoEnterprise,NavajoEnterpriseAdapters,NavajoEnterpriseListeners" />
 	<property name="enterprisedeploy" value="NavajoEnterprise,NavajoEnterpriseAdapters,NavajoEnterpriseListeners" />
 
 	
