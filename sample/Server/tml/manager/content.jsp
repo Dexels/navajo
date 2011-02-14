@@ -7,9 +7,9 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="nav" uri="/WEB-INF/tags/navajo.tld"%>
 <%@ taglib prefix="navserver" uri="/WEB-INF/tags/navajoserver.tld"%>
-<%@ page import="com.dexels.navajo.client.context.NavajoContext"%>
+<%@ page import="com.dexels.navajo.jsp.NavajoContext"%>
 <jsp:useBean id="navajoContext"
-	class="com.dexels.navajo.client.context.NavajoContext" scope="session" />
+	class="com.dexels.navajo.jsp.NavajoContext" scope="session" />
 <jsp:useBean id="serverContext"
 	class="com.dexels.navajo.jsp.server.NavajoServerContext"
 	scope="session" />

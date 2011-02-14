@@ -5,8 +5,8 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="../WEB-INF/tags/c.tld"%>
 <%@ taglib prefix="nav" uri="../WEB-INF/tags/navajo.tld"%>
-<%@ page import="com.dexels.navajo.client.context.NavajoContext"%>
-<jsp:useBean id="navajoContext" class="com.dexels.navajo.client.context.NavajoContext" scope="session" />
+<%@ page import="com.dexels.navajo.jsp.NavajoContext"%>
+<jsp:useBean id="navajoContext" class="com.dexels.navajo.jsp.NavajoContext" scope="session" />
 	<div>
 		<c:choose>
 			<c:when test="${navajoContext.property.direction == 'out'}">

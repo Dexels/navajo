@@ -4,9 +4,9 @@
 <%@page import="java.util.*"%>
 <%@ taglib prefix="c" uri="../WEB-INF/tags/c.tld"%>
 <%@ taglib prefix="nav" uri="../WEB-INF/tags/navajo.tld"%>
-<%@ page import="com.dexels.navajo.client.context.NavajoContext"%>
+<%@ page import="com.dexels.navajo.jsp.NavajoContext"%>
 <%@ page trimDirectiveWhitespaces="true" %>
-<jsp:useBean id="navajoContext" class="com.dexels.navajo.client.context.NavajoContext" scope="session" />
+<jsp:useBean id="navajoContext" class="com.dexels.navajo.jsp.NavajoContext" scope="session" />
 <div>
 <c:import url="tml/writepropertydescription.jsp"/>
 <c:import url="tml/writepropertyvalue.jsp"/>

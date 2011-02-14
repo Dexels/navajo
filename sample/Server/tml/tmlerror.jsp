@@ -5,9 +5,9 @@
 <%@page import="java.net.*"%>
 <%@page import="java.util.*"%>
 <%@ taglib prefix="c" uri="../WEB-INF/tags/c.tld"%>
-<%@ page import="com.dexels.navajo.client.context.NavajoContext"%>
+<%@ page import="com.dexels.navajo.jsp.NavajoContext"%>
 <%@ page trimDirectiveWhitespaces="true" %>
-<jsp:useBean id="navajoContext" class="com.dexels.navajo.client.context.NavajoContext" scope="page" />
+<jsp:useBean id="navajoContext" class="com.dexels.navajo.jsp.NavajoContext" scope="page" />
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
