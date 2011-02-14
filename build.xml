@@ -24,7 +24,7 @@
 	</target>
 	
 	
-	<target name="init" depends="clean">
+	<target name="init">
 		<mkdir dir="${work}"/>
 		<mkdir dir="${work}/temp"/>
 		<mkdir dir="${distribution}"/>
