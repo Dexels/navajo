@@ -38,6 +38,7 @@
 
 	<target name="download" depends="prepare">
 		<mkdir dir="${webInfLib}" />
+		<echo message="Processing: ${currentdeploy}"/>
 		<for list="${currentdeploy}" delimiter="," param="deploy">
 			<sequential>
 				<get dest="${worktemp}/current.zip" src="${navajoRepositoryUrl}/@{deploy}/@{deploy}Binary.zip" />
@@ -103,6 +104,7 @@
 		<ant antfile="build.xml" target="gatherBinaries">
 			<property name="currentdeploy" value="${basicdeploy}"/>
 		</ant>
+		<echo message="Deployname: ${deployname}"></echo>
 		<if>
 			<equals arg1="${deployname}" arg2="Enterprise"/>
 			<then>
