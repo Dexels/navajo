@@ -9,6 +9,8 @@
 				<include name="adapters/**"/>
 				<include name="config/**"/>
 				<include name="scripts/**"/>
+				<exclude name="scripts/navajo/**"/>
+
 				<exclude name="CVS/**"/>
 			</fileset>
 		</copy>
