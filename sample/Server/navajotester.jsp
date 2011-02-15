@@ -12,21 +12,24 @@
 
 <jsp:useBean id="navajoContext" class="com.dexels.navajo.client.context.NavajoContext" scope="session" />
 <jsp:useBean id="serverContext" class="com.dexels.navajo.jsp.server.NavajoServerContext" scope="session" />
+<jsp:setProperty property="navajoContext" name="serverContext" value="${navajoContext}"/>
+<navserver:localclient/>
 <nav:postHandler/>
 <html>
 <head>
+<style type="text/css">
+	.consoleScroll {
+	height:300px;
+	width:700px;
+	overflow:scroll;
+	}
+</style>
+
 <c:if test="${param['service']!= null }">
 	<jsp:setProperty property="script" name="serverContext" value="${param['service']}"/>
 </c:if>	
 <title>
-<c:choose>
-	<c:when test="${serverContext.scriptStatus!=null}">
-		${serverContext.scriptStatus.name}	
-	</c:when>
-	<c:otherwise>
-		Navajo Tester 2.0
-	</c:otherwise>
-</c:choose>
+Navajo Tester 2.2
 </title>
 <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 <!-- add your meta tags here -->
@@ -38,8 +41,6 @@
 <c:import url="tml/manager/extrastylesheets.jsp"></c:import>
 
 </head>
-	<nav:client username="ROOT" password="ROOT"  />
-<!--server="penelope1.dexels.com/sportlink/knvb/servlet/Postman"	-->
 
 
 	<c:if test="${param['service']!= null }">
@@ -65,13 +66,14 @@
           <!-- start: skip link navigation -->
 
         </div>
-        <h2><a href="index.jsp">Navajo Tester 2.0</a></h2>
+        <h2><a href="index.jsp">Navajo Tester 2.2</a></h2>
         <%
        	try {
 				Class.forName("com.sun.tools.javac.Main");
 			} catch (ClassNotFoundException e) {
 				System.err.println("No sun compiler.");
 				out.write("<p class=\"warning\">No compiler found! Add a tools.jar (from a JDK) to the webapp, or to the Tomcat/lib folder (recommended)</p>");
+
 			}
 
         %>

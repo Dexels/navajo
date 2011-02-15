@@ -13,6 +13,8 @@
 <jsp:useBean id="serverContext" class="com.dexels.navajo.jsp.server.NavajoServerContext" scope="session" />
 <jsp:setProperty property="pageContext" name="serverContext" value="${pageContext}"/>
 <jsp:useBean id="installerContext" class="com.dexels.navajo.jsp.server.InstallerContext" scope="page" />
+<jsp:setProperty property="installerContext" name="serverContext" value="${installerContext}"/>
+
 <jsp:setProperty property="pageContext" name="installerContext" value="${pageContext}"/>
 <c:choose>
 	<c:when test="${installerContext.validInstallation}">

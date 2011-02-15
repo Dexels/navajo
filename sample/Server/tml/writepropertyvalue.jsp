@@ -59,8 +59,15 @@
 
 					</c:when>
 					<c:when test="${navajoContext.property.type == 'binary'}">
-							<a href="tml/binary.jsp?path=${navajoContext.propertyPath}"><img src="tml/binary.jsp?path=${navajoContext.propertyPath}"/></a>
+							<a href="tml/binary.jsp?path=${navajoContext.propertyPath}">Download binary</a>
 						<c:if test="${navajoContext.property.subTypes['mime']=='image/jpeg'}">
+							<a href="tml/binary.jsp?path=${navajoContext.propertyPath}"><img src="tml/binary.jsp?path=${navajoContext.propertyPath}"/></a>
+						</c:if>
+						<c:if test="${navajoContext.property.subTypes['mime']=='image/png'}">
+							<a href="tml/binary.jsp?path=${navajoContext.propertyPath}"><img src="tml/binary.jsp?path=${navajoContext.propertyPath}"/></a>
+						</c:if>
+						<c:if test="${navajoContext.property.subTypes['mime']=='image/gif'}">
+							<a href="tml/binary.jsp?path=${navajoContext.propertyPath}"><img src="tml/binary.jsp?path=${navajoContext.propertyPath}"/></a>
 						</c:if>
 						
 					</c:when>
@@ -119,10 +126,12 @@
 						
 					</c:when>
 					<c:when test="${navajoContext.property.type == 'binary'}">
-							<a href="tml/binary.jsp?path=${navajoContext.propertyPath}"><img src="tml/binary.jsp?path=${navajoContext.propertyPath}"/></a>
-							${navajoContext.property.subTypes['mime']=='image/jpeg'}
-							MAAAAP:	${navajoContext.property.subTypes['mime']}
+						Binary type: ${navajoContext.property.length } subtypes: ${navajoContext.property.name}
 						<c:if test="${navajoContext.property.subTypes['mime']=='image/jpeg'}">
+							<a href="tml/binary.jsp?path=${navajoContext.propertyPath}">
+								<img src="tml/binary.jsp?path=${navajoContext.propertyPath}"/>
+							</a>
+							${navajoContext.property.subTypes['mime']=='image/jpeg'}
 						</c:if>
 					</c:when>
 					

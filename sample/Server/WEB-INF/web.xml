@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/j2ee/dtds/web-app_2_3.dtd">
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/j2ee/dtds/web-app_2_5.dtd">
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee"
 	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
@@ -19,41 +19,66 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	<servlet>
 		<servlet-name>Rest</servlet-name>
 		<servlet-class>com.dexels.navajo.server.listener.http.RestTmlServlet</servlet-class>
+        <init-param>
+            <param-name>extremeEdition</param-name>
+            <param-value>true</param-value>
+        </init-param>
 	</servlet>
+
+
+
+	<servlet>
+		<servlet-name>Nql</servlet-name>
+		<servlet-class>com.dexels.navajo.server.listener.nql.NqlServlet</servlet-class>
+	</servlet>
+	
+
+	
 	<servlet>
 		<servlet-name>Comet</servlet-name>
 		<servlet-class>com.dexels.navajo.server.listener.http.comet.TmlCometServlet</servlet-class>
+        <init-param>
+            <param-name>extremeEdition</param-name>
+            <param-value>true</param-value>
+        </init-param>
         <init-param>
             <param-name>schedulerClass</param-name>
             <param-value>com.dexels.navajo.server.listener.http.schedulers.priority.PriorityThreadPoolScheduler</param-value>
         </init-param>
         <init-param>
             <param-name>priorityPoolSize</param-name>
-            <param-value>5</param-value>
+            <param-value>2</param-value>
         </init-param>
         <init-param>
             <param-name>normalPoolSize</param-name>
-            <param-value>100</param-value>
+            <param-value>5</param-value>
         </init-param>
         <init-param>
             <param-name>systemPoolSize</param-name>
-            <param-value>5</param-value>
+            <param-value>2</param-value>
         </init-param>
 	</servlet>
+	
 	<servlet>
 		<servlet-name>PostmanNew</servlet-name>
 		<servlet-class>com.dexels.navajo.server.listener.http.standard.TmlStandardServlet</servlet-class>
+        <init-param>
+            <param-name>extremeEdition</param-name>
+            <param-value>true</param-value>
+        </init-param>
 	</servlet>
+	
 	<servlet>
 		<servlet-name>NavaDoc</servlet-name>
 		<servlet-class>com.dexels.navajo.util.navadoc.servlet.DocumentWebService</servlet-class>
 	</servlet>
 
-
 	<servlet-mapping>
 		<servlet-name>Comet</servlet-name>
 		<url-pattern>/Comet</url-pattern>
 	</servlet-mapping>
+
+    
 	<servlet-mapping>
 		<servlet-name>PostmanNew</servlet-name>
 		<url-pattern>/PostmanNew</url-pattern>
@@ -73,6 +98,17 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<servlet-name>NavaDoc</servlet-name>
 		<url-pattern>/NavaDoc</url-pattern>
 	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>Nql</servlet-name>
+		<url-pattern>/Nql</url-pattern>
+	</servlet-mapping>
+		
+
+		<!-- <servlet-name>Comet</servlet-name>-->
+
+<!-- 	
+ -->    
 		<!-- Define a Security Constraint on this Application -->
 	<!-- 
 	<security-constraint>

@@ -8,9 +8,9 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <jsp:useBean id="navajoContext" class="com.dexels.navajo.client.context.NavajoContext" scope="session" />
 <div class="important">
-	<a name="${navajoContext.messagePath}">
-	<h4>${navajoContext.message.name}</h4>
-	</a>
+	
+	<h4><a name="${navajoContext.messagePath}">${navajoContext.message.name}</a></h4>
+	
 	<c:choose>
 		<c:when test="${navajoContext.message.type == 'array'}">
 				<c:import url="tml/writearraymessage.jsp"/>
@@ -28,5 +28,4 @@
 			</c:forEach>
 		</c:otherwise>		
 	</c:choose>
-	
 </div>

@@ -39,7 +39,7 @@
 			            <li class="active"><strong>Tml Source</strong></li>
 	          		</c:when>
 	          		<c:otherwise>
-		            		<li><a href="${pageContext.request.requestURI}?view=tml&amp;service=${param['service']}">Tml</a></li>
+		            		<li><a href="${pageContext.request.requestURI}?view=tml&amp;service=${param['service']}">Tml Source</a></li>
 	
 	          		</c:otherwise>
 	          	</c:choose>
@@ -68,17 +68,46 @@
 	          		</c:otherwise>
 	          	</c:choose>
           	</c:if>
+       		<c:if test="${param['service']!=null && param['service']!=''}">
+	          	<c:choose>
+	          		<c:when test="${param['view']=='history'}">
+			            <li class="active"><strong>History</strong></li>
+	          		</c:when>
+	          		<c:otherwise>
+	       				<c:if test="${param['service']!=null && param['service']!=''}">
+				            <li><a href="${pageContext.request.requestURI}?view=history&amp;service=${param['service']}">History</a></li>
+	    				</c:if>
+	          		</c:otherwise>
+	          	</c:choose>
+          	</c:if>
+       		<c:if test="${param['service']!=null && param['service']!=''}">
+	          	<c:choose>
+	          		<c:when test="${param['view']=='accessdetail'}">
+			            <li class="active"><strong>Access Detail</strong></li>
+	          		</c:when>
+	          		<c:otherwise>
+	       				<c:if test="${param['service']!=null && param['service']!=''}">
+				            <li><a href="#">Access Detail</a></li>
+	    				</c:if>
+	          		</c:otherwise>
+	          	</c:choose>
+          	</c:if>
+          	
+          	
           	<c:if test="${serverContext.scriptStatus.documented}">
-		       	<c:choose>
+		       		<!-- DISABLED NAVADOC -->
+<%--		       	<c:choose>
 	          		<c:when test="${param['view']=='navadoc'}">
 			            <li class="active"><strong>NavaDoc</strong></li>
 	          		</c:when>
 	          		<c:otherwise>
 	       				<c:if test="${param['service']!=null && param['service']!=''}">
-				            <li><a href="${pageContext.request.requestURI}?view=navadoc&amp;service=${param['service']}">NavaDoc</a></li>
-	    				</c:if>
+				         <li class="active"><strong>NavaDoc</strong></li>
+	          		<% //       <li><a href="${pageContext.request.requestURI}?view=navadoc&amp;service=${param['service']}">NavaDoc</a></li>
+	          		 %></c:if>
 	          		</c:otherwise>
 	          	</c:choose> 
+ --%>
 	         </c:if>
          	    				
           	          

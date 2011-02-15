@@ -20,5 +20,8 @@
 	<li>
 		<a href="index.jsp?view=home&configfile=sqlmap">sqlmap.xml</a>
 	</li>
+	<li>
+		<a href="index.jsp?view=home&configfile=sqlmap">sqlmap.xml</a>
+	</li>
 </ul>
 </div>

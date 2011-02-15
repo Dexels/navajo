@@ -73,7 +73,7 @@
 				<form action="tml/installer/doinstall.jsp" method="post">
 					<table>
 						<tr>
-							<td>CVS Root:</td>
+							<td>Path:</td>
 							<td><input type="text" name="selectedPath" value="${installerContext.suggestedPath}"/></td>
 						</tr>
 					</table>
@@ -105,7 +105,7 @@
 								<td><input type="text" name="selectedPath" value="${installerContext.suggestedPath}"/></td>
 							</tr>
 						</table>
-						<input type="submit" value="Create default installation">
+						<input type="submit" value="Check out from CVS">
 					</form>
 				</div>
 		    </div>

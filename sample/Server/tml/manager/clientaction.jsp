@@ -1,6 +1,4 @@
-	<nav:client username="ROOT" password="R20T"  />
 <!--server="penelope1.dexels.com/sportlink/knvb/servlet/Postman"	-->
-
 		<c:if test="${param['service']!= null }">
 			<c:if test="${param[param['service']]==true}">
 				<c:choose>

@@ -48,6 +48,24 @@
 			</c:otherwise>
 		</c:choose>
 	</c:when>
+	<c:when test="${param['view']=='history'}">
+		<c:if test="${param['service'] != null && param['service']!='' }">
+				<c:import url="tml/manager/servicehistory.jsp"/>
+		</c:if>
+	</c:when>
+	<c:when test="${param['view']=='log'}">
+		<c:if test="${param['service'] != null && param['service']!='' }">
+			<nav:service service="${param['service']}">
+				<c:import url="tml/manager/servicelog.jsp"/>
+			</nav:service>
+		</c:if>
+	</c:when>
+	<c:when test="${param['view']=='accessdetail'}">
+		<c:if test="${param['service'] != null && param['service']!='' }">
+				<c:import url="tml/manager/accessdetail.jsp"/>
+		</c:if>
+	</c:when>
+
 	<c:when test="${param['view']=='navadoc'}">
 		<c:if test="${param['service'] != null && param['service']!=''}">
 			<c:import url="NavaDoc?sname=${param['service']}"/>
