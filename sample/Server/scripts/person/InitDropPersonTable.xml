@@ -7,16 +7,16 @@
         <field name="datasource">
             <expression value="'default'"/>
         </field>
-        <field name="query">
+        <field name="update">
             <expression xml:space="preserve">DROP TABLE person</expression>
         </field>
   
-            <property name="Result" type="string" direction="in" description="Result">
-                <expression value="$rowCount"/>
-            </property>
-
-        <!-- for the photo get person id -->
-       
+     <field name="doUpdate">
+            <expression value="true"/>
+        </field>
+        <param name="UpdateCount">
+            <expression value="[/@UpdateCount] + $updateCount"/>
+        </param>       
     </map>
    
 </tsl>
