@@ -15,7 +15,7 @@
 		</field>
 
 		<field name="binaryUpdate" >
-			<expression value="GetContextResource('db/createmysqlstore.sql')"/>
+			<expression value="GetContextResource('db/createderbystore.sql')"/>
 		</field>
 
 		<field name="doUpdate">
