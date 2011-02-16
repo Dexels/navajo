@@ -83,7 +83,7 @@
         </field>
         <field name="query">
             <expression xml:space="preserve">
-                 SELECT exception,navajoin,navajoout,console FROM navajolog WHERE access_id = ?
+                 SELECT \"exception\",navajoin,navajoout,console FROM navajolog WHERE access_id = ?
             </expression>
         </field>
         <field name="parameter">
