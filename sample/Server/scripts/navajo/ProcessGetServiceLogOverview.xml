@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tsl author="Arjen Schoneveld" id="InitGetAccessLogOverview" xmlns="http://www.dexels.com/navascript"
+<tsl  xmlns="http://www.dexels.com/navascript"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://mail.dexels.com:8080/schema/navascript.xsd">
     <methods>
         <method name="navajo/ProcessGetAccessLog">
@@ -32,8 +32,12 @@
                     navajoaccess.hostname
                  FROM 
                     navajoaccess
+                 WHERE navajoaccess.webservice = ?
                  ORDER BY created DESC
              </expression>
+        </field>
+        <field name="parameter">
+        	<expression value="[/AccessDetails/Service]"/>
         </field>
         <message name="AccessDetails">
             <property direction="in" name="AccessId" value="" description="AccessId" type="string" length="20"/>

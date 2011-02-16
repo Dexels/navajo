@@ -20,15 +20,10 @@
                     navajoaccess.webservice,
                     navajoaccess.username,
                     navajoaccess.ip_address,
-                    navajoaccess.hostname,
-                    navajolog.exception, 
-                    navajolog.navajoin, 
-                    navajolog.navajoout,
-                    navajolog.console
+                    navajoaccess.hostname
                  FROM 
-                   navajolog, navajoaccess
-                 WHERE navajolog.access_id = ?
-                 AND navajoaccess.access_id = navajolog.access_id
+                   navajoaccess
+                 WHERE navajoaccess.access_id = ?
             </expression>
         </field>
         <field name="parameter">
@@ -77,7 +72,25 @@
             <property name="CompressedSend" direction="out" description="CompressedSend">
                 <expression value="$columnValue('compressedsnd') == 'TRUE'"/>
             </property>
-            <property name="Exception" direction="out" description="Exception">
+        </message>
+    </map>
+
+
+
+    <map object="com.dexels.navajo.adapter.SQLMap">
+        <field name="datasource">
+            <expression value="'navajostore'"/>
+        </field>
+        <field name="query">
+            <expression xml:space="preserve">
+                 SELECT exception,navajoin,navajoout,console FROM navajolog WHERE access_id = ?
+            </expression>
+        </field>
+        <field name="parameter">
+            <expression value="[/AccessDetails/AccessId]"/>
+        </field>
+        <message name="FullLog" condition="$rowCount &gt; 0">
+             <property name="Exception" direction="out" description="Exception">
                 <expression value="ToString($columnValue('exception'))"/>
             </property>
             <property name="NavajoIn" direction="out" description="NavajoIn">
@@ -91,4 +104,5 @@
             </property>
         </message>
     </map>
+
 </tsl>

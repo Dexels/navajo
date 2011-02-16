@@ -4,6 +4,9 @@
         <method name="navajo/ProcessGetAccessLog">
             <required message="AccessDetails"/>
         </method>
+        <method name="navajo/ProcessGetServiceLogOverview">
+            <required message="AccessDetails"/>
+        </method>
     </methods>
     <message name="AccessDetails">
         <property name="Service" direction="in" type="string" length="20"/>
