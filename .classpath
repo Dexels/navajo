@@ -4,5 +4,12 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/NavajoJsp"/>
 	<classpathentry kind="lib" path="/NavajoJsp/lib/jstl.jar"/>
 	<classpathentry kind="lib" path="/NavajoJsp/lib/standard.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/NavajoJspServer"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/DexelsVersionControl"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Navajo"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/NavajoClient"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/NavajoDocument"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/NavajoFunctions"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/NavajoListeners"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -3,12 +3,15 @@
 <project default="publish" >
 	<taskdef name="for" classname="net.sf.antcontrib.logic.ForTask" onerror="ignore" />
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
-	<taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask" />
+<!--	<taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask" />
 	<taskdef name="undeploy" classname="org.apache.catalina.ant.UndeployTask" />
+-->
+	
+	  <taskdef resource="org/apache/catalina/ant/catalina.tasks"/>
 
 	<property file="build.properties" />
 <!--	<property name="basicdeploy" value="DexelsVersionControl,NavajoDocument,NavajoClient,Navajo,NavajoListeners,NavajoAdapters,NavajoJsp,NavajoJspServer,NavajoFunctions" />-->
-	<property name="basicdeploy" value="DexelsVersionControl,NavajoDocument,NavajoClient,Navajo,NavajoListeners,NavajoAdapters,NavajoJsp,NavajoJspServer,NavajoFunctions,NavajoEnterprise,NavajoEnterpriseAdapters,NavajoEnterpriseListeners" />
+	<property name="basicdeploy" value="DexelsVersionControl,NavajoDocument,NavajoClient,Navajo,NavajoListeners,NavajoAdapters,NavajoJsp,NavajoJspServer,NavajoFunctions,NavajoEnterprise,NavajoEnterpriseAdapters,NavajoEnterpriseListeners,NavajoAsyncClient,NavajoListenersTomcat,NavajoRhino" />
 	<property name="enterprisedeploy" value="NavajoEnterprise,NavajoEnterpriseAdapters,NavajoEnterpriseListeners" />
 
 	
@@ -19,6 +22,8 @@
 	<property name="distribution" value="distribution"/>
 	<property name="deployRoot" value="${navajoScpUser}@${navajoScpServer}:${navajoScpPath}" />
 
+	
+	
 	
 	<target name="clean">
 		<delete dir="${work}"/>
@@ -120,20 +125,21 @@
 				<include name="**/*"/>
 		 	</fileset>
 		</war>
+		<echo message="War complete. Deploying to Tomcat: ${navajoTomcatServerManager}"/>
 		<deploy url="${navajoTomcatServerManager}" update="true" username="${navajoTomcatUser}" password="${navajoTomcatPassword}" path="/${deployname}" war="${distribution}/${deployname}.war" />
 
 	</target>
 
 	
-	<target name="deploy" >
+	<target name="deploy" depends="clean">
 		<ant antfile="build.xml" target="assemble"/>
 	</target>
 	<target name="upload" depends="deploy">
-		<scp trust="true"  sftp="true" verbose="true" password="${navajoScpPassword}" todir="${deployRoot}">
+		<!--<scp trust="true"  sftp="true" verbose="true" password="${navajoScpPassword}" todir="${deployRoot}">
 			<fileset dir="${distribution}">
 				<include name="${deployname}.war" />
 			</fileset>
-		</scp>
+		</scp>-->
 	</target>
 
 	
