@@ -20,6 +20,9 @@ import com.dexels.navajo.server.GenericHandler;
 /**
  * This class can be used to check the availability of 'Resources' that a web service depends on.
  * Furthermore it can give a 'waiting time' hint for retries in case of unavailablity of one of the resources.
+ *
+ * @TODO:
+ * Use Full QoS model to define status of Resources: responsetime, availability, ...
  * 
  * @author arjen
  *
