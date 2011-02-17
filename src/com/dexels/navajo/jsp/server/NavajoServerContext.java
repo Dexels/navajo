@@ -292,9 +292,24 @@ public class NavajoServerContext {
 				all.add(file.getName().substring(0,ii));
 			}
 		}
+//		File scripts  = new File(getContextRoot(),"scripts");
+//		File navajo  = new File(scripts,"navajo");
+//		filelist = navajo.listFiles();
+//		for (File file : filelist) {
+//			int ii = file.getName().lastIndexOf('.');
+//			if(ii>=0 && !file.isDirectory()) {
+//				all.add("navajo/"+file.getName().substring(0,ii));
+//			}
+//		}
+		Collections.sort(all);
+		return all;
+	}
+	
+	public List<String> getNavajoScripts() throws IOException {
+		List<String> all = new ArrayList<String>();
 		File scripts  = new File(getContextRoot(),"scripts");
 		File navajo  = new File(scripts,"navajo");
-		filelist = navajo.listFiles();
+		File[] filelist = navajo.listFiles();
 		for (File file : filelist) {
 			int ii = file.getName().lastIndexOf('.');
 			if(ii>=0 && !file.isDirectory()) {
@@ -304,7 +319,6 @@ public class NavajoServerContext {
 		Collections.sort(all);
 		return all;
 	}
-	
 
 	public List<ScriptStatus> getScriptList() throws IOException {
 		List<ScriptStatus> all = new ArrayList<ScriptStatus>();
