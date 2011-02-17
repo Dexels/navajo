@@ -26,6 +26,19 @@
       </attribute>
    </tag>
 
+
+
+   <tag>
+      <name>write</name>
+      <tagclass>com.dexels.navajo.jsp.tags.WriteServiceTag</tagclass>
+      <info>Dumps a webservice</info>
+      <attribute>
+         <name>includeProperties</name>
+         <required>false</required>
+      </attribute>
+   </tag>
+
+
      <tag>
       <name>postHandler</name>
       <tagclass>com.dexels.navajo.jsp.tags.PostHandlerTag</tagclass>
@@ -51,6 +64,24 @@
       <attribute>
          <name>service</name>
          <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+         <name>log</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+      </attribute>
+   </tag>
+
+
+
+   <tag>
+      <name>log</name>
+      <tagclass>com.dexels.navajo.jsp.tags.LogTag</tagclass>
+      <info>Dumps a webservice</info>
+      <attribute>
+         <name>text</name>
+         <required>true</required>
          <rtexprvalue>true</rtexprvalue>
       </attribute>
    </tag>
