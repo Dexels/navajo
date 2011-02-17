@@ -45,6 +45,7 @@ public class SimpleRepository implements Repository {
 	 */
 	public void initGlobals(String method, String username, Navajo inMessage, Map<String,String> extraParams) throws NavajoException {
 //		config.getRootPath();
+		System.err.println("Parsing globals");
 
 		try {
 			ResourceBundle rb = ResourceBundle.getBundle("application");

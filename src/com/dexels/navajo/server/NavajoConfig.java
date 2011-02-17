@@ -552,12 +552,12 @@ public final class NavajoConfig implements NavajoConfigInterface {
      */
     public InputStream getResourceBundle(String name) throws IOException {
    	File adPath = new File(getAdapterPath());
-		File bundleFile = new File(adPath,name);
+		File bundleFile = new File(adPath,name+".properties");
 		if(!bundleFile.exists()) {
+			System.err.println("Bundle: "+name+" not found. Resolved to non-existing file: "+bundleFile.getAbsolutePath());
 			return null;
 		}
-		System.err.println("File based resource path. Using: "+bundleFile);
-		FileInputStream fix = new FileInputStream(bundleFile+".properties");
+		FileInputStream fix = new FileInputStream(bundleFile);
 		return fix;
     }
     /*
