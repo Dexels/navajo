@@ -92,6 +92,40 @@ if(res!=null) {
 				</c:if>
 				</table>
 			</div>
+
+			<div class="important">
+			<h4>Deployments</h4>
+					<table>
+						<thead>
+							<c:forEach var="deploy" items="${app.deployments}">
+								<td>
+									<c:choose>
+										<c:when test="${deploy == app.currentDeploy}">
+											<b>
+												<a onclick="if(confirm('Deploy application: ${app.applicationName} for configuration: ${deploy}?')) location.href = 'TipiAdminServlet?app=${manager.currentApplication}&amp;cmd=build&amp;deploy=${app.currentDeploy}&amp;destination=/details.jsp'; ">${deploy}</a> 
+											</b>
+										</c:when>
+										<c:otherwise>
+												<a onclick="if(confirm('Deploy application: ${app.applicationName} for configuration: ${deploy}?')) location.href = 'TipiAdminServlet?app=${manager.currentApplication}&amp;cmd=build&amp;deploy=${app.currentDeploy}&amp;destination=/details.jsp'; ">${deploy}</a> 
+										</c:otherwise>
+									</c:choose>
+									( deploys on: ${app.managerUrl[ deploy]})
+								</td>
+							</c:forEach>
+						</thead>
+						<c:forEach var="profile" items="${app.profiles}">
+							<tr>
+								<c:forEach var="deploy" items="${app.deployments}">
+									<td>
+										<a href="Apps/${app.applicationName}/${profile}.jnlp">${profile}</a>
+									</td>
+								</c:forEach>
+							</tr>
+						</c:forEach>
+					</table>
+			</div>
+
+			
 			<div class="important">
 			<h4>Settings</h4>
 					<a href="editor.jsp?application=${app.applicationName}&amp;filePath=settings/tipi.properties">Edit tipi.properties</a>
@@ -100,13 +134,11 @@ if(res!=null) {
 			</div>
 			
 			<div class="important">
-			
-								<c:if test="${app.buildType=='web'}">
+			<c:if test="${app.buildType=='web'}">
 			<h4>Run Echo App</h4>
-						Echo app: <a href="${app.liveUrl}${app.applicationName}">Start application</a><br/>
+			Echo app: <a href="${app.liveUrl}${app.applicationName}">Start application</a><br/>
 			</div>
-
-					</c:if>
+			</c:if>
 			<div class="important">
 				<h4>Extensions</h4>
 				<table>

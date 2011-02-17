@@ -2,8 +2,12 @@ package com.dexels.navajo.tipi;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
 
@@ -14,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.dexels.navajo.tipi.projectbuilder.BaseJnlpBuilder;
 import com.dexels.navajo.tipi.projectbuilder.LocalJnlpBuilder;
+import com.dexels.navajo.tipi.projectbuilder.ProjectBuilder;
 import com.dexels.navajo.tipi.util.XMLElement;
 
 /**
@@ -116,14 +121,17 @@ public class TipiServlet extends HttpServlet {
 		String profile = servletPath.substring(servletPath.lastIndexOf('/')+1,servletPath.lastIndexOf('.'));
 	//	String propertypath = getServletContext().getRealPath(myAppPath+"/settings/tipi.properties");
 //		System.err.println("Using profile: "+profile);
-		File prop = new File(myAppPath+"/settings/tipi.properties");
-		FileInputStream fis = new FileInputStream(prop);
-		PropertyResourceBundle prb = new PropertyResourceBundle(fis);
-
-		fis.close();
+//		File prop = new File(myAppPath+"/settings/tipi.properties");
+//		FileInputStream fis = new FileInputStream(prop);
+		//PropertyResourceBundle prb = new PropertyResourceBundle(fis);
+		Map<String,String> tipiSettings = ProjectBuilder.assembleTipi(new File(myAppPath)); // parsePropertyFile(prop);
+		
+		
+		
+//		fis.close();
 		BaseJnlpBuilder l = new LocalJnlpBuilder();
 		String codebase = "http://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/"+applicationPath;
-		String repository = prb.getString("repository");
+		String repository = tipiSettings.get("repository");
 
 		File profileSettings = new File(myAppPath+"/settings/profiles/"+profile+".properties");
 		if(profileSettings.exists()) {
@@ -132,16 +140,34 @@ public class TipiServlet extends HttpServlet {
 		}
 		
 		
+		
+		
 		boolean useVersioning = false;
 		
 		try {
-			useVersioning = prb.getString("useJnlpVersioning").equals("true");
+			useVersioning = tipiSettings.get("useJnlpVersioning").equals("true");
 		} catch (MissingResourceException e) {
 		}
-		XMLElement jnlp = l.buildElement(repository, prb.getString("extensions"),applicationDir, codebase,myAppUrl, profile+".jnlp",profile,useVersioning);
+		XMLElement jnlp = l.buildElement(repository, tipiSettings.get("extensions"),tipiSettings,tipiSettings.get("deploy"), applicationDir, codebase,myAppUrl, profile+".jnlp",profile,useVersioning);
 		return jnlp;
 
 	}
+	
+	private Map<String, String> parsePropertyFile(File path) throws FileNotFoundException, IOException {
+		Map<String, String> params = new HashMap<String, String>();
+		FileInputStream fr = new FileInputStream(path);
+
+		PropertyResourceBundle p = new PropertyResourceBundle(fr);
+		fr.close();
+		Enumeration<String> eb = p.getKeys();
+		while (eb.hasMoreElements()) {
+			String string = (String) eb.nextElement();
+			params.put(string, p.getString(string));
+		}
+		System.err.println("params: " + params);
+		return params;
+	}
+	
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */

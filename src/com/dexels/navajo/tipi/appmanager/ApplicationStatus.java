@@ -14,10 +14,12 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.PropertyResourceBundle;
 import java.util.StringTokenizer;
 
@@ -32,6 +34,9 @@ public class ApplicationStatus {
 
 	private ApplicationManager manager;
 	private List<String> profiles;
+	private List<String> deployments;
+
+
 	private List<ExtensionEntry> extensions;
 	private String applicationName;
 	private File appFolder;
@@ -39,7 +44,15 @@ public class ApplicationStatus {
 	private boolean localSign;
 	private String buildType = null;
 	private String liveUrl = null;
+	private String currentDeploy = null;
 	
+	private final Map<String,Map<String,String>> deploymentData = new HashMap<String,Map<String,String>>();
+	
+	
+	public String getCurrentDeploy() {
+		return currentDeploy;
+	}
+
 	public String getLiveUrl() {
 		return liveUrl;
 	}
@@ -150,6 +163,19 @@ public class ApplicationStatus {
 //		return getApplicationName()+"/Application.jnlp";
 //	}
 	
+	private void setCurrentDeploy(String deploy) {
+		currentDeploy = deploy;
+		
+	}
+	
+	public List<String> getDeployments() {
+		return deployments;
+	}
+
+
+	public void setDeployments(List<String> deployments) {
+		this.deployments = deployments;
+	}
 
 	
 	public void load(File appDir ) throws IOException {
@@ -180,9 +206,14 @@ public class ApplicationStatus {
 	   	 setLiveUrl(settings.getString("liveUrl"));
 	    }
 	    
+	    if(settings.containsKey("deploy")) {
+	   	 setCurrentDeploy(settings.getString("deploy"));
+	    }
+	    
 	    setExists(true);
 	    applicationName = appDir.getName();
 	    processProfiles(appDir);
+	    processDeploys(appDir);
 	    
 	    File cvsDir = new File(appDir,"CVS");
 	    if(cvsDir.exists()) {
@@ -203,6 +234,8 @@ public class ApplicationStatus {
 	    
 	}
 	
+
+
 	private long getYoungestFile(File folder) {
 		long youngest = 0;
 		for (File file : folder.listFiles()) {
@@ -249,6 +282,56 @@ public class ApplicationStatus {
 		setProfiles(pro);
 	}
 
+	
+	private void processDeploys(File appDir) throws IOException {
+		List<String> deplo = new LinkedList<String>();
+		File deploymentsDir = new File(appDir,"settings/deploy");
+//		if(!profilesDir.exists() || profilesDir.listFiles().length ==0) {
+//			pro.add("Default");
+//			setProfiles(pro);
+	//		return;
+//		}
+		deploymentData.clear();
+		if(deploymentsDir.exists()) {
+			for (File file : deploymentsDir.listFiles()) {
+				//pro.add(file.getName());
+				if(file.canRead() && file.isFile() && file.getName().endsWith(".properties")) {
+					String deployName = file.getName().substring(0,file.getName().length()-".properties".length());
+					deplo.add(deployName);
+					addDeployData(deployName,file);
+				}
+			}
+		}
+		setDeployments(deplo);
+	}
+	
+	private void addDeployData(String deployName, File file) throws IOException {
+		FileInputStream fis = new FileInputStream(file);
+		PropertyResourceBundle settings = new PropertyResourceBundle(fis);
+		Enumeration<String> keys = settings.getKeys();
+		while(keys.hasMoreElements()) {
+			String key = keys.nextElement();
+			Map<String,String> element = new HashMap<String, String>();
+			String value = settings.getString(key);
+			element.put(key, value);
+			deploymentData.put(key, element);
+			System.err.println("Adding data: "+deployName+" : "+key+" : "+value);
+		}
+	}
+
+	public Map<String, String> getManagerUrl() {
+		Map<String,String> element = new HashMap<String, String>();
+		for (Entry<String, Map<String, String>> e: deploymentData.entrySet()) {
+			String managerUrl = e.getValue().get("managerUrl");
+//			System.err.println("E: "+managerUrl);
+			if(managerUrl!=null) {
+				element.put(e.getKey(), managerUrl);
+			}
+		}
+		System.err.println("RESULT: "+element);
+		return element;
+	}
+	
 	private boolean profileNeedsRebuild(File profileProperties, String profileName, File appDir) {
 		File jnlpFile = new File(appDir, profileName+".jnlp");
 		if(!jnlpFile.exists()) {

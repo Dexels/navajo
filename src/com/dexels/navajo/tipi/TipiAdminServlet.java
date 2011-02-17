@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.dexels.navajo.tipi.appmanager.ApplicationStatus;
 import com.dexels.navajo.tipi.projectbuilder.ClientActions;
 import com.dexels.navajo.tipi.projectbuilder.ProjectBuilder;
+import com.dexels.navajo.tipi.projectbuilder.XsdBuilder;
 import com.oreilly.servlet.MultipartRequest;
 
 public class TipiAdminServlet extends HttpServlet {
@@ -64,6 +65,11 @@ public class TipiAdminServlet extends HttpServlet {
 			download(application, ff, response);
 			return;
 		}
+		if (commando.equals("xsd")) {
+			downloadXsd(application, ff, response);
+			return;
+		}
+		
 		if (commando.equals("uploaddirect")) {
 			String result = upload(application,request);
 			response.getWriter().write(result+"\n");
@@ -151,7 +157,7 @@ public class TipiAdminServlet extends HttpServlet {
 	 */
 	private String performCommando(String commando, String application, File appDir, URL appUrl, HttpServletRequest request) throws ServletException {
 		if (commando.equals("build")) {
-			return build(application, appDir,getServletContext());
+			return build(application, appDir,getServletContext(),request.getParameter("deploy"));
 		}
 		if (commando.equals("clean")) {
 			return clean(application, appDir);
@@ -166,7 +172,7 @@ public class TipiAdminServlet extends HttpServlet {
 			return uploadMultipart(application,request);
 		}
 		if (commando.equals("saveConfig")) {
-			return saveConfig(application, appDir,request);
+			return saveConfig(application, appDir,request,request.getParameter("deploy"));
 		}
 		if (commando.equals("cvsupdate")) {
 			try {
@@ -196,7 +202,7 @@ public class TipiAdminServlet extends HttpServlet {
 	}
 
 
-	private String saveConfig(String application, File appDir, HttpServletRequest request) throws ServletException {
+	private String saveConfig(String application, File appDir, HttpServletRequest request,String deployment) throws ServletException {
 //		File currentAppDir = new File(appDir,application);
 		String filePath = request.getParameter("filePath");
 			if(filePath.indexOf("..")!=-1) {
@@ -213,7 +219,7 @@ public class TipiAdminServlet extends HttpServlet {
 			e.printStackTrace();
 			return "Error saving: "+filePath+" problem: "+e.getMessage();
 		}
-		build(application, appDir,getServletContext());
+		build(application, appDir,getServletContext(),deployment);
 		return "Configuration saved";
 	}
 	private String upload(String application, HttpServletRequest request)  {
@@ -336,7 +342,7 @@ public class TipiAdminServlet extends HttpServlet {
 		}
 
 	}
-	public static void buildIfNecessary(HttpServletRequest request, File appDir, ServletContext context) {
+	public static void buildIfNecessary(HttpServletRequest request, File appDir, ServletContext context,String deployment) {
 		final String appsTag = "Apps/";
 //		String requestString = request.getServletPath();
 		String requestURI = request.getRequestURI();
@@ -356,8 +362,27 @@ public class TipiAdminServlet extends HttpServlet {
 			as.load(currentAppDir);
 			boolean res = as.getRebuildMap().get(profileName);
 			if(res) {
-				build(appName, currentAppDir, context);
+				build(appName, currentAppDir, context,deployment);
 			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private void downloadXsd(String application, File appDir, HttpServletResponse response) throws IOException {
+		response.setContentType("text/xml");
+		response.setHeader("Content-Disposition", "attachment; filename=\"tipi.xsd\"");
+		XsdBuilder b = new XsdBuilder();
+		try { 
+
+			Map<String,String> params = ProjectBuilder.assembleTipi(appDir);
+			String extensionRepository = params.get("repository")+"Extensions/";
+			
+			b.build(params.get("repository"),extensionRepository, params.get("extensions"), appDir);
+			System.err.println("XSD rebuilt!");
+			copyResource(response.getOutputStream(), new FileInputStream(new File(appDir,"tipi/tipi.xsd")));
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -426,7 +451,7 @@ public class TipiAdminServlet extends HttpServlet {
 		fw.flush();
 		fw.close();
 	}
-	public static String build(String application, File appDir, ServletContext context) {
+	public static String build(String application, File appDir, ServletContext context,String deployment) {
 		// TipiProjectBuilder
 		String codebase = context.getInitParameter("appUrl");
 		if(codebase!=null) {
@@ -434,13 +459,13 @@ public class TipiAdminServlet extends HttpServlet {
 		}
 		String postProcessAnt = null;
 		try {
-			postProcessAnt = ProjectBuilder.buildTipiProject(appDir,codebase);
+			postProcessAnt = ProjectBuilder.buildTipiProject(appDir,codebase,deployment);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return "Error building " + application + ": " + e.getMessage();
 		}
 		
-
+		System.err.println("Post process ant: "+postProcessAnt);
 		
 		if(postProcessAnt!=null) {
 
@@ -448,14 +473,12 @@ public class TipiAdminServlet extends HttpServlet {
 			
 			String result;
 			try {
-				Map<String,String> props = new HashMap<String, String>();
-				FileInputStream is = new FileInputStream(new File(appDir,"settings/tipi.properties"));
-				PropertyResourceBundle pe = new PropertyResourceBundle(is);
-				props.put("managerUrl", pe.getString("managerUrl"));
-				props.put("managerUsername", pe.getString("managerUsername"));
-				props.put("managerPassword", pe.getString("managerPassword"));
-				is.close();
-
+				
+				Map<String,String> tipiProps = ProjectBuilder.assembleTipi(appDir); 
+				Map<String,String> props = new HashMap<String, String>(); 
+				props.put("managerUrl", tipiProps.get("managerUrl"));
+				props.put("managerUsername", tipiProps.get("managerUsername"));
+				props.put("managerPassword", tipiProps.get("managerPassword"));
 				props.put("application", application);
 				result = AntRun.callAnt(new File(path), appDir, props,null);
 				System.err.println("Result: "+result);
