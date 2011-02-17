@@ -32,7 +32,7 @@ public class TribeManagerFactory {
 						instance = (TribeManagerInterface) m.invoke(dummy, (Object[])null);
 						tribeManagerFound = true;
 					} catch (Throwable e) {
-						//e.printStackTrace(System.err);
+						e.printStackTrace(System.err);
 						AuditLog.log("INIT", "WARNING: Tribe Manager not available", Level.WARNING);
 						instance = new DummyTribeManager();
 					}	
