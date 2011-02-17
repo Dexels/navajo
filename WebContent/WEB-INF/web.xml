@@ -38,19 +38,30 @@
 		<param-name>defaultTemplate</param-name>
 		<param-value>TemplateJnlpProject</param-value>
 	</context-param>
-
+<!-- 
 	<context-param>
 		<description></description>
 		<param-name>appFolder</param-name>
 		<param-value>/var/www/html/Tipi/AppStore/</param-value>
 	</context-param>
+-->
+<!--	<context-param>
+		<description></description>
+		<param-name>appUrl</param-name>
+		<param-value>http://spiritus.dexels.nl:41766/Tipi/AppStore/</param-value>
+	</context-param>
 
-
+ 	<servlet>
+		<description></description>
+		<display-name>TipiServlet</display-name>
+		<servlet-name>TipiServlet</servlet-name>
+		<servlet-class>com.dexels.navajo.tipi.TipiServlet</servlet-class>
+	</servlet>-->
 	
 	<context-param>
 		<description></description>
 		<param-name>serverTitle</param-name>
-		<param-value>Spiritus at Dexels</param-value>
+		<param-value>Local Server</param-value>
 	</context-param>
 	
 	
@@ -60,11 +71,6 @@
 		<servlet-name>TipiAdminServlet</servlet-name>
 		<servlet-class>com.dexels.navajo.tipi.TipiAdminServlet</servlet-class>
 	</servlet>
-
-
-
-
-
 	<servlet>
 		<description></description>
 		<display-name>JnlpDownloadServlet</display-name>
@@ -72,13 +78,15 @@
 		<servlet-class>jnlp.sample.servlet.JnlpDownloadServlet</servlet-class>
 		<init-param>
 			<param-name>logLevel</param-name>
-			<param-value>DEBUG</param-value>
+			<param-value>SEVERE</param-value>
 		</init-param>
 		<init-param>
 			<param-name>logPath</param-name>
 			<param-value>jnlplog.txt</param-value>
 		</init-param>
 	</servlet>
+	
+	
 	
 	<servlet-mapping>
 		<servlet-name>TipiAdminServlet</servlet-name>
@@ -88,6 +96,13 @@
 		<servlet-name>JnlpDownloadServlet</servlet-name>
 		<url-pattern>/Apps/*</url-pattern>
 	</servlet-mapping>
+
+
+
+
+
+
+
 	<!-- Define reference to the user database for looking up roles -->
 	<resource-env-ref>
 		<description>
