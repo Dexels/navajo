@@ -22,7 +22,7 @@
 	<property name="distribution" value="distribution"/>
 	<property name="deployRoot" value="${navajoScpUser}@${navajoScpServer}:${navajoScpPath}" />
 
-	
+
 	
 	
 	<target name="clean">
@@ -126,7 +126,7 @@
 		 	</fileset>
 		</war>
 		<echo message="War complete. Deploying to Tomcat: ${navajoTomcatServerManager}"/>
-		<deploy url="${navajoTomcatServerManager}" update="true" username="${navajoTomcatUser}" password="${navajoTomcatPassword}" path="/${deployname}" war="${distribution}/${deployname}.war" />
+		<deploy url="${navajoTomcatServerManager}" update="true" username="${navajoTomcatUser}" password="${navajoTomcatPassword}" path="/${deployContextName}" war="${distribution}/${deployname}.war" />
 
 	</target>
 
