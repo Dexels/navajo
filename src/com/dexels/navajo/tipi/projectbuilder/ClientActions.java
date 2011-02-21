@@ -16,20 +16,14 @@ import java.io.Reader;
 import java.io.WriteAbortedException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Enumeration;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.PropertyResourceBundle;
 import java.util.StringTokenizer;
-import java.util.TreeMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
-
 
 import com.dexels.navajo.tipi.extensionmanager.ExtensionManager;
 import com.dexels.navajo.tipi.projectbuilder.impl.InMemoryUrlCache;
@@ -259,21 +253,21 @@ public class ClientActions {
 		copyResource(fos, cacheStream);
 	}
 
-	private static InputStream checkNeedsUpdate(File f, URL jar, boolean clean) throws IOException {
-		if(!f.exists()) {
-			return jar.openStream();
-		}
-
-		long local = f.lastModified();
-		URLConnection uc = jar.openConnection();
-		long remote = uc.getLastModified();
-		if(remote > local || clean) {
-			return uc.getInputStream();
-		}
-//		System.err.println("Skipping: "+jar);
-		
-		return null;
-	}
+//	private static InputStream checkNeedsUpdate(File f, URL jar, boolean clean) throws IOException {
+//		if(!f.exists()) {
+//			return jar.openStream();
+//		}
+//
+//		long local = f.lastModified();
+//		URLConnection uc = jar.openConnection();
+//		long remote = uc.getLastModified();
+//		if(remote > local || clean) {
+//			return uc.getInputStream();
+//		}
+////		System.err.println("Skipping: "+jar);
+//		
+//		return null;
+//	}
 
 	public static XMLElement getXMLElement(URL extensionURL) {
 //		System.err.println("Getting url: "+extensionURL);
