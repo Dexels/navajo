@@ -139,6 +139,13 @@ public class NQLContext {
 		}
 	}
 	
+	public void setContentLength(long l) {
+		
+		if(callback!=null) {
+			callback.setContentLength(l);
+		}
+	}
+	
 	protected void writeJSON() throws IOException {
 		Message m = (Message)content;
 		Writer w = new OutputStreamWriter(callback.getOutputStream());
@@ -150,6 +157,9 @@ public class NQLContext {
 	private void writeBinary(OutputStream outputStream) throws IOException {
 		Binary b = (Binary)content;
 		setMimeType( b.getMimeType());
+		if ( b != null && b.getLength() > 0 ) {
+			setContentLength(b.getLength());
+		}
 		b.write(callback.getOutputStream());
 		outputStream.write(b.getData());
 	}
@@ -281,8 +291,14 @@ public class NQLContext {
 
 			public void setOutputType(String mime) {
 				System.err.println("Output detected: "+mime);
-			}});
-
+			}
+			
+			public void setContentLength(long l) {
+				System.err.println("Content length detected: "+l);
+			}
+		});
+		
+		
 		nq.setup("penelope1.dexels.com/sportlink/knvb1_test/servlet/Postman", "ROOT", "R20T");
 		String nql = "service:club/InitSearchClubs|ClubSearch/ShortName:Hoek|service:club/ProcessSearchClubs|output:Club|format:csv";
 	
