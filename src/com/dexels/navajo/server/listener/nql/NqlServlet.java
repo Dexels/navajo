@@ -41,6 +41,12 @@ public class NqlServlet extends HttpServlet {
 				resp.setContentType(mime);
 			}
 			
+			public void setContentLength(long l) {
+				resp.setContentLength((int) l);
+				resp.setHeader("Accept-Ranges", "none");
+				resp.setHeader("Connection", "close");
+			}
+			
 			public OutputStream getOutputStream() {
 				try {
 					return resp.getOutputStream();
