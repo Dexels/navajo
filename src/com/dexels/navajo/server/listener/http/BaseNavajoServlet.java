@@ -41,123 +41,15 @@ public abstract class BaseNavajoServlet extends HttpServlet {
 	protected static boolean streamingMode = true; 
 
 	public static final String DEFAULT_SERVER_XML = "config/server.xml";
-	public static final String DOC_IMPL = "com.dexels.navajo.DocumentImplementation";
-	public static final String NANO = "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl";
-	public static final String JAXP = "com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl";
-	public static final String QDSAX = "com.dexels.navajo.document.base.BaseNavajoFactoryImpl";
 	
 	public static final String COMPRESS_GZIP = "gzip";
 	public static final String COMPRESS_JZLIB = "jzlib";
 
-	private static Object initializationSemaphore = new Object();
-	
-	protected final DispatcherInterface initDispatcher() throws NavajoException {
 
-		String servletContextRootPath = getServletContext().getRealPath("");
-		System.err.println("Context root path: "+servletContextRootPath);
-		if (configurationPath!=null) {
-			// Old SKOOL. Path provided, notify the dispatcher by passing a null DEFAULT_SERVER_XML
-			if(extremeEdition) {
-				return DispatcherFactory.getInstance(new File(configurationPath), DEFAULT_SERVER_XML, new com.dexels.navajo.server.FileInputStreamReader(),servletContextRootPath);
-			} else {
-				return DispatcherFactory.getInstance(configurationPath, null, new com.dexels.navajo.server.FileInputStreamReader(),servletContextRootPath);
-			}
-		} else {
-			return DispatcherFactory.getInstance(rootPath, DEFAULT_SERVER_XML, new com.dexels.navajo.server.FileInputStreamReader(),servletContextRootPath);
-		}
-
+	protected DispatcherInterface initDispatcher() {
+		return DispatcherFactory.getInstance();
 	}
 
-	public void init(ServletConfig config) throws ServletException {
-		super.init(config);
-		
-		Enumeration ee = config.getInitParameterNames();
-		while(ee.hasMoreElements()) {
-			String nextElement = (String) ee.nextElement();
-			System.err.println("Initparam: "+nextElement+" value: "+config.getInitParameter(nextElement));
-		}
-
-		synchronized( initializationSemaphore ) {
-			extremeEdition = config.getInitParameter("extremeEdition")!=null;
-			configurationPath = config.getInitParameter("configuration");
-
-			if(extremeEdition ) {
-				String path;
-				try {
-					path = setupConfigurationPath(config);
-				} catch (IOException e) {
-					path = null;
-					e.printStackTrace();
-				}
-				if(path!=null) {
-					System.err.println("Path found. Using: "+path);
-					File f = new File(path);
-					configurationPath = path;
-				}
-			}
-			// Check whether defined bootstrap webservice is present.
-			String bootstrapUrl = config.getInitParameter("bootstrap_url");
-			String bootstrapService = config.getInitParameter("bootstrap_service");
-			String bootstrapUser = config.getInitParameter("bootstrap_user");
-			String bootstrapPassword = config.getInitParameter("bootstrap_password");
-
-			System.setProperty(DOC_IMPL,QDSAX);
-			System.err.println("Configuration path: "+configurationPath);
-
-			boolean verified = false;
-
-			URL configUrl;
-			InputStream is = null;
-			try {
-				configUrl = new URL(configurationPath);
-				is = configUrl.openStream();
-				verified = true;
-			} catch (MalformedURLException e) {
-				//e.printStackTrace(System.err);
-			} catch (IOException e) {
-			} finally {
-				if(is!=null) {
-					try {
-						is.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-			if( configurationPath==null || "".equals(configurationPath)|| !verified) {
-				rootPath = config.getServletContext().getRealPath("");
-			}
-			System.err.println("Resolved Configuration path: "+configurationPath);
-			System.err.println("Resolved Root path: "+rootPath);
-
-			// Startup Navajo instance.
-			try {
-				DispatcherInterface d = initDispatcher();
-				Navajo n = NavajoFactory.getInstance().createNavajo();
-				if ( bootstrapService == null ) {
-//					Header h = NavajoFactory.getInstance().createHeader(n, MaintainanceRequest.METHOD_NAVAJO_PING, "", "", -1);
-//					n.addHeader(h);
-					// Don't ping if there is no bootstrap service
-				} else {
-					Header h = NavajoFactory.getInstance().createHeader(n, bootstrapService, bootstrapUser, bootstrapPassword, -1);
-					n.addHeader(h);
-					d.handle(n);
-					System.err.println("NAVAJO INSTANCE " +  d.getNavajoConfig().getInstanceName() + " BOOTSTRAPPED BY " + n.getHeader().getRPCName());
-				}
-			} catch (Exception e) {
-				e.printStackTrace(System.err);
-			}
-
-		
-		}
-
-	}
-
-	private String setupConfigurationPath(ServletConfig config) throws IOException {
-		String contextName =  config.getServletContext().getContextPath().substring(1);
-		String navajoPath = getSystemPath(config,contextName);
-		return navajoPath;
-	}
 
 	protected final void dumHttp(HttpServletRequest request, long index, File dir) {
 		// Dump stuff.
@@ -189,40 +81,6 @@ public abstract class BaseNavajoServlet extends HttpServlet {
 		}
 	}
 
-	private String getSystemPath(ServletConfig config, String name) throws IOException {
-
-		String force = config.getInitParameter("forcedNavajoPath");
-		System.err.println("Force: "+force);
-		if(force!=null) {
-//			System.err.println("Using the force! navajo.properties will be ignored!");
-			return force;
-		}
-		Map<String,String> systemContexts = new HashMap<String, String>();
-		File home = new File(System.getProperty("user.home"));
-		File navajo = new File(home,"navajo.properties");
-		System.err.println("Assuming navajo path: "+navajo.getAbsolutePath());
-		if(!navajo.exists()) {
-			return null;
-		}
-		BufferedReader br = new BufferedReader(new FileReader(navajo));
-		while(true) {
-			String line = br.readLine();
-			if(line==null) {
-				break;
-			}
-			String[] r = line.split("=");
-			systemContexts.put(r[0], r[1]);
-		}
-		br.close();
-		System.err.println("Maps: "+systemContexts);
-		return systemContexts.get(name);
-	}
-	
-	public void destroy() {
-		System.err.println("In NavajoServlet destroy()");
-		// Kill Dispatcher.
-		Dispatcher.killMe();
-	}
 
 	protected final void copyResource(OutputStream out, InputStream in){
 		BufferedInputStream bin = new BufferedInputStream(in);
