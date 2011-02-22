@@ -1474,11 +1474,19 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 	}
 
 	public Map<String, Property> getProperties() {
-		return new HashMap<String, Property>(propertyMap);
+		if(propertyMap == null){
+			return new HashMap<String, Property>();
+		}else { 
+			return new HashMap<String, Property>(propertyMap);
+		}
 	}
 
 	public Map<String, Message> getMessages() {
-		return new HashMap<String, Message>(messageMap);
+		if(messageMap == null){
+			return new HashMap<String, Message>();
+		} else { 
+			return new HashMap<String, Message>(messageMap);
+		}
 	}
 
 	public List<Message> getElements() {
