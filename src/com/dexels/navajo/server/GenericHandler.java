@@ -128,7 +128,7 @@ public final class GenericHandler extends ServiceHandler {
     
     private static final Object[] getScriptPathServiceNameAndScriptFile(String rpcName, boolean betaUser) {
     	String scriptPath = DispatcherFactory.getInstance().getNavajoConfig().getScriptPath();
-    	System.err.println("Looking for script: "+rpcName);
+    	//System.err.println("Looking for script: "+rpcName);
     	int strip = rpcName.lastIndexOf("/");
         String pathPrefix = "";
         String serviceName = rpcName;
@@ -160,7 +160,7 @@ public final class GenericHandler extends ServiceHandler {
        	//-------------------------------
        	String sp = "scripts/";
        	File scrPath = new File(DispatcherFactory.getInstance().getNavajoConfig().getContextRoot(),sp);
-       	System.err.println("Proposed script path: "+scrPath.getAbsolutePath()+" exists? "+scrPath.exists());
+       	//System.err.println("Proposed script path: "+scrPath.getAbsolutePath()+" exists? "+scrPath.exists());
        	scriptFile = new File(scrPath + rpcName + "_" + applicationGroup + ".xml");
        	if (scriptFile.exists()) {
        		serviceName += "_" + applicationGroup;
@@ -236,13 +236,13 @@ public final class GenericHandler extends ServiceHandler {
 		String className = "com.dexels.navajo.server.scriptengine.GenericScriptEngine";
     	//    	sourceFileName = ( scriptFile != null ? DispatcherFactory.getInstance().getNavajoConfig().getCompiledScriptPath() : DispatcherFactory.getInstance().getNavajoConfig().getScriptPath() )
 //    			             + "/" + pathPrefix + serviceName + ".java";
-    	System.err.println("in getScriptPathServiceNameAndScriptFile()");
-    	System.err.println("pathPrefix = " + pathPrefix);
-    	System.err.println("serviceName = " + serviceName);
-    	System.err.println("scriptFile = " + scripts[0]);
-    	System.err.println("sourceFileName = " + scripts[0].getName());
-    	System.err.println("classFileName = " + classFileName);
-    	System.err.println("className = " + className);
+//    	System.err.println("in getScriptPathServiceNameAndScriptFile()");
+//    	System.err.println("pathPrefix = " + pathPrefix);
+//    	System.err.println("serviceName = " + serviceName);
+//    	System.err.println("scriptFile = " + scripts[0]);
+//    	System.err.println("sourceFileName = " + scripts[0].getName());
+//    	System.err.println("classFileName = " + classFileName);
+//    	System.err.println("className = " + className);
     	
     	
     	return new Object[]{pathPrefix,serviceName,scriptFile,sourceFileName,scripts[0],className,classFileName,null,false};

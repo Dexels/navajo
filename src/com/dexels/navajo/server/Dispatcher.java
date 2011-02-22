@@ -1105,7 +1105,7 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
     }
     finally {
     	if(!preventFinalize) {
-    		System.err.println("prevent Finalize not set, so finalizing service");
+    		//System.err.println("prevent Finalize not set, so finalizing service");
 				finalizeService(inMessage, access, outMessage, rpcName, rpcUser, myException, origThreadName, scheduledWebservice,
 						afterWebServiceActivated,emit);
 			}
