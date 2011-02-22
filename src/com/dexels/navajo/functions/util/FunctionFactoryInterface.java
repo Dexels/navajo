@@ -72,10 +72,10 @@ public abstract class FunctionFactoryInterface {
 		
 		try {
 			FunctionDefinition fd = getDef(functionName);
-//			Class myClass = Class.forName(fd.getObject(), true, cl);
-			Class<? extends FunctionInterface> myClass = fd.getFunctionClass();
+			Class myClass = Class.forName(fd.getObject(), true, cl);
+//			Class<? extends FunctionInterface> myClass = fd.getFunctionClass();
 			// TODO INSTANTIATE FUNCTION USING FACTORY, SETTING TYPE SIGNATURE IN FACTORY!!!
-			FunctionInterface fi =myClass.newInstance();
+			FunctionInterface fi =(FunctionInterface) myClass.newInstance();
 			if (!fi.isInitialized()) {
 				fi.setTypes(fd.getInputParams(), fd.getResultParam());
 			}

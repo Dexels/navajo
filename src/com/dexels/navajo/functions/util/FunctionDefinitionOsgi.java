@@ -2,14 +2,17 @@ package com.dexels.navajo.functions.util;
 
 import navajo.ExtensionDefinition;
 
-public final class FunctionDefinition {
+import com.dexels.navajo.parser.FunctionInterface;
+
+public final class FunctionDefinitionOsgi {
 
 	private final String object;
 	private final String description;
 	private final String [][] inputParams;
 	private final String [] resultParam;
+	private final Class <? extends FunctionInterface> myClass;
 	
-	public FunctionDefinition(final String object, final String description, final String inputParams, final String resultParam, ExtensionDefinition fd) {
+	public FunctionDefinitionOsgi(final String object, final String description, final String inputParams, final String resultParam, ExtensionDefinition fd) throws ClassNotFoundException {
 		this.object = object;
 		this.description = description;
 		if ( inputParams != null && !inputParams.equals("") ) {
@@ -26,8 +29,20 @@ public final class FunctionDefinition {
 		} else {
 			this.resultParam = null;
 		}
+		ClassLoader cl = null;
+		if(fd!=null) {
+			cl = fd.getClass().getClassLoader();
+		} else {
+			cl = this.getClass().getClassLoader();
+		}
+		myClass = (Class<? extends FunctionInterface>) Class.forName(object,true,cl);
 	}
 
+	
+	public final Class<? extends FunctionInterface> getFunctionClass() {
+		return myClass;
+	}
+	
 	public final String getObject() {
 		return object;
 	}
