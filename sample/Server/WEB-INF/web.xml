@@ -76,17 +76,13 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	<servlet-mapping>
 		<servlet-name>Comet</servlet-name>
 		<url-pattern>/Comet</url-pattern>
-	</servlet-mapping>
-
-    
-	<servlet-mapping>
-		<servlet-name>PostmanNew</servlet-name>
-		<url-pattern>/PostmanNew</url-pattern>
+		<url-pattern>/Postman</url-pattern>
+		<url-pattern>/servlet/Postman</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>Postman</servlet-name>
-		<url-pattern>/Postman</url-pattern>
+		<url-pattern>/PostmanLegacy</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
