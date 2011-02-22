@@ -4,13 +4,17 @@
 	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	id="WebApp_ID" version="2.5">
+
+
+	<listener>
+		<listener-class>
+			com.dexels.navajo.server.listener.NavajoContextListener
+    	</listener-class>
+	</listener>
+	
 	<servlet>
 		<servlet-name>Postman</servlet-name>
 		<servlet-class>com.dexels.navajo.server.listener.http.TmlHttpServlet</servlet-class>
-        <init-param>
-            <param-name>extremeEdition</param-name>
-            <param-value>true</param-value>
-        </init-param>
         <load-on-startup>-1</load-on-startup>	
 	</servlet>
 	
@@ -19,10 +23,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	<servlet>
 		<servlet-name>Rest</servlet-name>
 		<servlet-class>com.dexels.navajo.server.listener.http.RestTmlServlet</servlet-class>
-        <init-param>
-            <param-name>extremeEdition</param-name>
-            <param-value>true</param-value>
-        </init-param>
 	</servlet>
 
 
@@ -38,10 +38,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<servlet-name>Comet</servlet-name>
 		<servlet-class>com.dexels.navajo.server.listener.http.comet.TmlCometServlet</servlet-class>
         <init-param>
-            <param-name>extremeEdition</param-name>
-            <param-value>true</param-value>
-        </init-param>
-        <init-param>
             <param-name>schedulerClass</param-name>
             <param-value>com.dexels.navajo.server.listener.http.schedulers.priority.PriorityThreadPoolScheduler</param-value>
         </init-param>
@@ -56,15 +52,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
         <init-param>
             <param-name>systemPoolSize</param-name>
             <param-value>2</param-value>
-        </init-param>
-	</servlet>
-	
-	<servlet>
-		<servlet-name>PostmanNew</servlet-name>
-		<servlet-class>com.dexels.navajo.server.listener.http.standard.TmlStandardServlet</servlet-class>
-        <init-param>
-            <param-name>extremeEdition</param-name>
-            <param-value>true</param-value>
         </init-param>
 	</servlet>
 	
