@@ -17,6 +17,7 @@
 	<!--
 	Calls clean before every build. May be a bit slower (everything will be recompiled..)
 	-->
+	
 	<property name="clean" value="true"/>
 
 	<!--
