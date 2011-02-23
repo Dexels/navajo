@@ -1,6 +1,7 @@
 package com.dexels.navajo.server.listener.http;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 
 import javax.servlet.ServletConfig;
@@ -15,6 +16,10 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.server.DispatcherFactory;
 
+@Deprecated
+/**
+ * @deprecated
+ */
 public class DocumentServlet extends TmlHttpServlet {
 
 	/**
@@ -91,7 +96,6 @@ public class DocumentServlet extends TmlHttpServlet {
 			e.printStackTrace();
 			throw new ServletException("Invalid request.");
 		}
-		
 		//super.doGet(req, res);
 	}
 	
