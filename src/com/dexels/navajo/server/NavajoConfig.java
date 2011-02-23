@@ -1,40 +1,30 @@
 package com.dexels.navajo.server;
 
-import com.dexels.navajo.document.*;
-
-
-/**
- * Title:        Navajo Product Project
- * Description:  This is the official source for the Navajo server
- * Copyright:    Copyright (c) 2002
- * Company:      Dexels BV
- * @author Arjen Schoneveld
- * @version $Id$
- *
- * The NavajoConfig object is a singleton object that is used to specify
- * several Navajo Instance specific settings. It parses the server.xml file
- * specified in the Navajo config path.
- * 
- * DISCLAIMER
- *
- * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED.  IN NO EVENT SHALL DEXELS BV OR ITS CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
- * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
- * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- * ====================================================================
- */
-
-import java.util.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Writer;
+import java.lang.management.ManagementFactory;
+import java.lang.management.OperatingSystemMXBean;
+import java.util.HashMap;
+import java.util.List;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.loader.NavajoClassLoader;
+import com.dexels.navajo.loader.NavajoClassSupplier;
+import com.dexels.navajo.lockguard.LockManager;
+import com.dexels.navajo.parser.DefaultExpressionEvaluator;
+import com.dexels.navajo.persistence.PersistenceManager;
+import com.dexels.navajo.persistence.PersistenceManagerFactory;
 import com.dexels.navajo.server.enterprise.descriptionprovider.DescriptionProviderInterface;
 import com.dexels.navajo.server.enterprise.integrity.WorkerFactory;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
@@ -42,18 +32,6 @@ import com.dexels.navajo.server.enterprise.monitoring.AgentFactory;
 import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerFactory;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerFactory;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
-
-import com.dexels.navajo.loader.NavajoClassLoader;
-import com.dexels.navajo.loader.NavajoClassSupplier;
-import com.dexels.navajo.lockguard.LockManager;
-
-import java.io.*;
-import java.lang.management.ManagementFactory;
-import java.lang.management.OperatingSystemMXBean;
-import java.lang.reflect.Method;
-
-import com.dexels.navajo.parser.DefaultExpressionEvaluator;
-import com.dexels.navajo.persistence.*;
 
 /*
  * The default NavajoConfig class.
@@ -71,7 +49,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
 	private String repositoryClass = "com.dexels.navajo.server.SimpleRepository";
 	private String dbPath;
 	private String auditLevel;
-	private HashMap dbProperties = new HashMap();
+	private HashMap<String,Object> dbProperties = new HashMap<String,Object>();
 	public String store;
 	
 	private String resourcePath;
@@ -86,7 +64,6 @@ public final class NavajoConfig implements NavajoConfigInterface {
     public int maxAccessSetSize = MAX_ACCESS_SET_SIZE;
     
     private Message body;
-    private boolean jabberStarted = false;
     private boolean statisticsRunnerStarted = false;
     
     /**
@@ -146,16 +123,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
 		myOs = ManagementFactory.getOperatingSystemMXBean();
 		
 	}
-    
-	/**
-	 * Use Dispatcher to fetch reference to NavajoConfig.
-	 * 
-	 * @return
-	 */
-	@Deprecated
-    private static NavajoConfig getInstance() {
-    	return instance;
-    }
+
       
     @SuppressWarnings("unchecked")
 	private void loadConfig(InputStream in, String externalRootPath, String servletContextPath)  throws SystemException{
@@ -182,7 +150,6 @@ public final class NavajoConfig implements NavajoConfigInterface {
     			}
     			rootPath = properDir(r);
     		} else {
-    		//	System.err.println("New skool configuration (rootPath found), path:"+externalRootPath);
     			rootPath = externalRootPath;
     			
     		}
@@ -268,12 +235,12 @@ public final class NavajoConfig implements NavajoConfigInterface {
 				descriptionProviderClass = descriptionProviderProperty.getValue();
 				if (descriptionProviderClass!=null) {
 					try {
-					Class cc = Class.forName(descriptionProviderClass);
+					Class<? extends DescriptionProviderInterface> cc = (Class<? extends DescriptionProviderInterface>) Class.forName(descriptionProviderClass);
 					System.err.println("Descriptionprovider is: " + descriptionProviderClass);
 					if (cc!=null) {
 //						System.err.println("Setting description provider. config hash: "+hashCode());
 						if (myDescriptionProvider==null) {
-							myDescriptionProvider = (DescriptionProviderInterface)cc.newInstance();
+							myDescriptionProvider = cc.newInstance();
 							myDescriptionProvider.setDescriptionConfigMessage(descriptionMessage);
 						} else {
 							System.err.println("Warning: Resetting description provider.");
@@ -314,9 +281,9 @@ public final class NavajoConfig implements NavajoConfigInterface {
     		Message maintenance = body.getMessage("maintenance-services");
     		
     		if ( maintenance != null ) {
-    			ArrayList propertyList = maintenance.getAllProperties();
+    			List<Property> propertyList = maintenance.getAllProperties();
     			for (int i = 0; i < propertyList.size(); i++) {
-    				Property prop = (Property) propertyList.get(i);
+    				Property prop = propertyList.get(i);
     				properties.put(prop.getName(), scriptPath + prop.getValue());
     			}
     		}
