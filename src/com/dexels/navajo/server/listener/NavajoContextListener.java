@@ -61,12 +61,11 @@ public class NavajoContextListener implements ServletContextListener {
 		String path;
 		path = getInstallationPath(sc);
 		if (path != null) {
-			System.err.println("Path found. Using: " + path);
 			configurationPath = path;
 		}
 		// Check whether defined bootstrap webservice is present.
 		System.setProperty(DOC_IMPL, QDSAX);
-		System.err.println("Configuration path: " + configurationPath);
+//		System.err.println("Configuration path: " + configurationPath);
 
 		boolean verified = false;
 
@@ -92,8 +91,8 @@ public class NavajoContextListener implements ServletContextListener {
 				|| !verified) {
 			rootPath = sc.getRealPath("");
 		}
-		System.err.println("Resolved Configuration path: " + configurationPath);
-		System.err.println("Resolved Root path: " + rootPath);
+//		System.err.println("Resolved Configuration path: " + configurationPath);
+//		System.err.println("Resolved Root path: " + rootPath);
 
 		// Startup Navajo instance.
 		try {
@@ -216,9 +215,11 @@ public class NavajoContextListener implements ServletContextListener {
 		String engineInstance = System.getProperty("com.dexels.navajo.server.EngineInstance");
 		String key = contextPath;
 		if(engineInstance!=null) {
-			key = engineInstance + "/"+contextPath;
+			key = contextPath+"@"+engineInstance;
 		}
+		System.err.println("LOOKING FOR CONTEXT: "+key);
 		String result = systemContexts.get(key);
+		System.err.println(">> "+systemContexts+" >>>>> "+result);
 		if(result!=null) {
 			return result;
 		}
