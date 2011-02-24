@@ -34,7 +34,6 @@ public class NavajoServerContext {
 	}
 
 	public void setInstallerContext(InstallerContext installerContext) throws IOException {
-		System.err.println("Connected installer to server!");
 		this.installerContext = installerContext;
 
 	}
@@ -101,9 +100,7 @@ public class NavajoServerContext {
 			File contextFile = new File(pageContext.getServletContext().getRealPath(""));
 			File buildFile = new File(contextFile,antFile);
 			File navajoRoot = getNavajoRoot();
-	//		System.err.println("Running ant: "+buildFile.getAbsolutePath()+" baseDir: "+navajoRoot.getAbsolutePath());
 			AntRun.callAnt(buildFile, navajoRoot, params, null);
-//			System.err.println("Result: \n"+result);
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
