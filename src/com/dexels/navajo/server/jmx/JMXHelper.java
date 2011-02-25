@@ -73,7 +73,11 @@ public final class JMXHelper  {
 		Iterator<Monitor> allMonitors = monitors.iterator();
 		while ( allMonitors.hasNext() ) {
 			Monitor monitor = allMonitors.next();
-			monitor.stop();
+			try {
+				monitor.stop();
+			} catch (Exception e) {
+				e.printStackTrace(System.err);
+			}
 			AuditLog.log("JMX", "Stopped JMX Monitor: " + monitor.getClass().getName(), Level.WARNING);
 		}
 		
@@ -91,6 +95,7 @@ public final class JMXHelper  {
 			}
 		}
 	}
+	
 	
 	public void disconnect() {
 		try {
