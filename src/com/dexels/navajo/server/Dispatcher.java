@@ -1247,6 +1247,9 @@ public void finalizeService(Navajo inMessage, Access access, Navajo outMessage, 
   public static void killMe() {
 	  if ( DispatcherFactory.getInstance() != null ) {
 		  
+		  // Stop JMX.
+		  JMXHelper.destroy();
+		  
 		  // 1. Kill all supporting threads.
 		  GenericThread.killAllThreads();
 		  
@@ -1259,14 +1262,6 @@ public void finalizeService(Navajo inMessage, Access access, Navajo outMessage, 
 		  // 4. Kill tribe manager.
 		  TribeManagerFactory.getInstance().terminate();
 		  
-		  // 5. Finally kill myself
-		  //instance = null;
-		  try {
-			  JMXHelper.deregisterMXBean(JMXHelper.NAVAJO_DOMAIN, "Dispatcher");
-		  } catch (Throwable e) {
-			  // TODO Auto-generated catch block
-			  e.printStackTrace();
-		  }
 		  AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Navajo Dispatcher terminated.");
 			 
 	  }  
