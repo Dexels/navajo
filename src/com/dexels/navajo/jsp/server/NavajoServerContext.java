@@ -108,13 +108,19 @@ public class NavajoServerContext {
 	}
 	
 	public void setupClient() throws IOException {
+		Map<String,String> settings = getClientSettings();
+		
+		getNavajoContext().setupClient(settings.get("server") , settings.get("username")  , settings.get("password"), settings.get("requestServerName"), Integer.parseInt(settings.get("requestServerPort")), settings.get("requestContextPath"),true);
+	}
+
+	public Map<String,String> getClientSettings() throws IOException {
 		HttpServletRequest rr =  (HttpServletRequest) getPageContext().getRequest();
 		StringBuffer sb = new StringBuffer();
 		sb.append(rr.getServerName()+":");
 		sb.append(rr.getServerPort());
 		sb.append(rr.getContextPath());
 		String server = sb.toString()+"/Comet";
-		ResourceBundle client = getClientSettings();
+		ResourceBundle client = getClientSettingsBundle();
 		String username = "guest";
 		String password = "guest";
 		if(client!=null) {
@@ -126,16 +132,20 @@ public class NavajoServerContext {
 					server = sb.toString()+serv;
 				}
 			}
-
 		}
 		HttpServletRequest request = (HttpServletRequest) getPageContext().getRequest();
 		String requestServerName = request.getServerName();
 		int requestServerPort = request.getServerPort();
 		String requestContextPath = request.getContextPath();
-
 		
-		getNavajoContext().setupClient(server, username, password, requestServerName,requestServerPort,requestContextPath,true);
-		
+		Map<String,String> result = new HashMap<String, String>();
+		result.put("server", server);
+		result.put("username", username);
+		result.put("password", password);
+		result.put("requestServerName", requestServerName);
+		result.put("requestServerPort", ""+requestServerPort);
+		result.put("requestContextPath", requestContextPath);
+		return result;
 	}
 	
 	public File getCurrentFolder() throws IOException {
@@ -265,7 +275,7 @@ public class NavajoServerContext {
 		return new File(getNavajoRoot(),"config/");
 	}
 	
-	public ResourceBundle getClientSettings() throws IOException {
+	public ResourceBundle getClientSettingsBundle() throws IOException {
 		File props = new File(getConfigRoot(),"client.properties");
 		if(!props.exists()) {
 			System.err.println("Not found.");
