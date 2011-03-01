@@ -67,6 +67,15 @@ public class NQLContext {
 		context.setupClient(server, username, password);
 	}
 	
+	/**
+	 * 
+	 * @param server Server can be null, then a suitable* server will be assembled from the requestParams
+	 * @param username
+	 * @param password
+	 * @param requestServerName
+	 * @param requestServerPort
+	 * @param requestContextPath
+	 */
 	public void setupClient(String server, String username, String password,String requestServerName,int requestServerPort, String requestContextPath) {
 		context.setupClient(server, username, password,requestServerName,requestServerPort,requestContextPath, false);
 	}
@@ -147,7 +156,13 @@ public class NQLContext {
 	}
 	
 	protected void writeJSON() throws IOException {
-		Message m = (Message)content;
+		Message m = null;
+		if(content instanceof Navajo) {
+			Navajo n = (Navajo)content;
+			m = n.getRootMessage();
+		} else {
+			m = (Message)content;
+		}
 		Writer w = new OutputStreamWriter(callback.getOutputStream());
 		m.writeJSON(w);
 		w.flush();
