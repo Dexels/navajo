@@ -51,6 +51,19 @@
          <rtexprvalue>true</rtexprvalue>
       </attribute>
    </tag>
+
+   <tag>
+      <name>formatlaszlo</name>
+      <tagclass>com.dexels.navajo.jsp.server.DumpFormattedLaszloTag</tagclass>
+      <info>Dumps a webservice (Laszlo Style) formatted in XHTML.</info>
+      <attribute>
+         <name>service</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+      </attribute>
+   </tag>
+
+
    <tag>
       <name>postHandler</name>
       <tagclass>com.dexels.navajo.jsp.tags.PostHandlerTag</tagclass>
