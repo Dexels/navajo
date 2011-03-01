@@ -43,9 +43,7 @@ public class ZipUtils {
 			while ((entry = zis.getNextEntry()) != null) {
 		//	ZipEntry entry = zis.getNextEntry();
 				// .nextElement();
-				if (entry == null) {
-					break;
-				}
+
 //				System.err.println("Enztru: " + entry.getName());
 				File file = new File(destination, entry.getName());
 				if (entry.isDirectory()) {

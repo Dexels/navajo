@@ -37,7 +37,13 @@ import com.oreilly.servlet.MultipartRequest;
 
 public class TipiAdminServlet extends HttpServlet {
 
-//	private File applicationFolder = null;
+/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7408601729859146393L;
+
+
+	//	private File applicationFolder = null;
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		this.doGet(request, response);
 	}
@@ -65,6 +71,12 @@ public class TipiAdminServlet extends HttpServlet {
 			download(application, ff, response);
 			return;
 		}
+		if (commando.equals("downloaddeploy")) {
+			String deploy = request.getParameter("deploy");
+			String profile = request.getParameter("profile");
+			downloadDeploy(application,deploy,profile, ff, response);
+			return;
+		}
 		if (commando.equals("xsd")) {
 			downloadXsd(application, ff, response);
 			return;
@@ -88,9 +100,6 @@ public class TipiAdminServlet extends HttpServlet {
 			response.getWriter().write(resultMessage+"\n");
 		} else {
 
-			if(destination==null) {
-				destination = "";
-			}
 			response.sendRedirect(getServletContext().getContextPath() + destination +"?result=" + URLEncoder.encode(resultMessage, "UTF-8")+"&application="+URLEncoder.encode(application, "UTF-8"));
 		}
 		
@@ -157,7 +166,7 @@ public class TipiAdminServlet extends HttpServlet {
 	 */
 	private String performCommando(String commando, String application, File appDir, URL appUrl, HttpServletRequest request) throws ServletException {
 		if (commando.equals("build")) {
-			return build(application, appDir,getServletContext(),request.getParameter("deploy"));
+			return build(application, appDir,getServletContext(),request.getParameter("deploy"),request.getParameter("profile"),request.getParameter("skipdeploy")!=null);
 		}
 		if (commando.equals("clean")) {
 			return clean(application, appDir);
@@ -219,7 +228,7 @@ public class TipiAdminServlet extends HttpServlet {
 			e.printStackTrace();
 			return "Error saving: "+filePath+" problem: "+e.getMessage();
 		}
-		build(application, appDir,getServletContext(),deployment);
+		build(application, appDir,getServletContext(),deployment,null,true);
 		return "Configuration saved";
 	}
 	private String upload(String application, HttpServletRequest request)  {
@@ -237,6 +246,7 @@ public class TipiAdminServlet extends HttpServlet {
 			e.printStackTrace();
 			return "ERROR -  "+e.getMessage();
 		}}
+	@SuppressWarnings("unchecked")
 	private String uploadMultipart(String application, HttpServletRequest request) {
 //		System.err.println(">>" +request.getParameterMap());
 		try {
@@ -342,46 +352,45 @@ public class TipiAdminServlet extends HttpServlet {
 		}
 
 	}
-	public static void buildIfNecessary(HttpServletRequest request, File appDir, ServletContext context,String deployment) {
-		final String appsTag = "Apps/";
-//		String requestString = request.getServletPath();
-		String requestURI = request.getRequestURI();
-		int ind =  requestURI.indexOf(appsTag);
-		if(ind==-1) {
-			return;
-		}
-		int jnlpUnd =  requestURI.indexOf(".jnlp");
-		if(jnlpUnd==-1) {
-			return;
-		}
-		String appName = requestURI.substring(ind+appsTag.length(),requestURI.lastIndexOf('/'));
-		String profileName = requestURI.substring(requestURI.lastIndexOf('/')+1,jnlpUnd);
-		File currentAppDir = new File(appDir,appName);
-		ApplicationStatus as = new ApplicationStatus();
-		try {
-			as.load(currentAppDir);
-			boolean res = as.getRebuildMap().get(profileName);
-			if(res) {
-				build(appName, currentAppDir, context,deployment);
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+//	public static void buildIfNecessary(HttpServletRequest request, File appDir, ServletContext context,String deployment,String profile) {
+//		final String appsTag = "Apps/";
+//		String requestURI = request.getRequestURI();
+//		int ind =  requestURI.indexOf(appsTag);
+//		if(ind==-1) {
+//			return;
+//		}
+//		int jnlpUnd =  requestURI.indexOf(".jnlp");
+//		if(jnlpUnd==-1) {
+//			return;
+//		}
+//		String appName = requestURI.substring(ind+appsTag.length(),requestURI.lastIndexOf('/'));
+//		String profileName = requestURI.substring(requestURI.lastIndexOf('/')+1,jnlpUnd);
+//		File currentAppDir = new File(appDir,appName);
+//		ApplicationStatus as = new ApplicationStatus();
+//		try {
+//			as.load(currentAppDir);
+//			boolean res = as.getRebuildMap().get(profileName);
+//			if(res) {
+//				build(appName, currentAppDir, context,deployment,profile,false);
+//			}
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	private void downloadXsd(String application, File appDir, HttpServletResponse response) throws IOException {
 		response.setContentType("text/xml");
 		response.setHeader("Content-Disposition", "attachment; filename=\"tipi.xsd\"");
 		XsdBuilder b = new XsdBuilder();
 		try { 
-
-			Map<String,String> params = ProjectBuilder.assembleTipi(appDir);
-			String extensionRepository = params.get("repository")+"Extensions/";
+			File currentAppdir = new File(appDir,application);
+			System.err.println("Appdir: "+appDir+" curr: "+currentAppdir+" aapp: "+application );
+			Map<String,String> params = ProjectBuilder.assembleTipi(currentAppdir);
+			String extensionRepository = params.get("repository");
 			
-			b.build(params.get("repository"),extensionRepository, params.get("extensions"), appDir);
+			b.build(params.get("repository"),extensionRepository, params.get("extensions"), currentAppdir);
 			System.err.println("XSD rebuilt!");
-			copyResource(response.getOutputStream(), new FileInputStream(new File(appDir,"tipi/tipi.xsd")));
+			copyResource(response.getOutputStream(), new FileInputStream(new File(currentAppdir,"tipi/tipi.xsd")));
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -404,6 +413,39 @@ public class TipiAdminServlet extends HttpServlet {
 				AntRun.callAnt(new File(path), actualAppFolder, userProperties,null);
 //				System.err.println("Result: "+result);
 				File output = new File(actualAppFolder,application+".zip");
+				FileInputStream fis = new FileInputStream(output);
+				OutputStream os = response.getOutputStream();
+				copyResource(os, fis);
+				os.flush();
+				output.delete();
+			} catch (IOException e) {
+				e.printStackTrace();
+				System.err.println("Error building " + application + ": " + e.getMessage());
+				response.getWriter().write("Error building " + application + ": " + e.getMessage());
+				response.getWriter().flush();
+				
+	}		
+	}
+
+
+	
+
+	private void downloadDeploy(String application, String deploy, String profile, File appDir, HttpServletResponse response) throws IOException {
+		// TODO Auto-generated method stub
+		// application/x-zip-compressed
+		response.setContentType("application/x-zip-compressed");
+		String fileName = application;
+		if(deploy!=null) {
+			fileName = application +"_"+deploy;
+		}
+		response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + ".war" + "\"");
+		
+
+		String buildResponse =  build(application, appDir,getServletContext(),deploy,profile,true);
+		System.err.println("Ant build response: "+buildResponse);
+		try {
+				File actualAppFolder = new File(appDir, application);
+				File output = new File(actualAppFolder,application+".war");
 				FileInputStream fis = new FileInputStream(output);
 				OutputStream os = response.getOutputStream();
 				copyResource(os, fis);
@@ -451,8 +493,9 @@ public class TipiAdminServlet extends HttpServlet {
 		fw.flush();
 		fw.close();
 	}
-	public static String build(String application, File appDir, ServletContext context,String deployment) {
+	public static String build(String application, File appDir, ServletContext context,String deployment,String profile, boolean skipBuild) {
 		// TipiProjectBuilder
+		StringBuffer extraMessage = new StringBuffer();
 		String codebase = context.getInitParameter("appUrl");
 		if(codebase!=null) {
 			codebase = codebase+application+"/";
@@ -476,9 +519,18 @@ public class TipiAdminServlet extends HttpServlet {
 				
 				Map<String,String> tipiProps = ProjectBuilder.assembleTipi(appDir); 
 				Map<String,String> props = new HashMap<String, String>(); 
+				if(skipBuild) {
+					props.put("skipdeploy", "true");
+				}
 				props.put("managerUrl", tipiProps.get("managerUrl"));
 				props.put("managerUsername", tipiProps.get("managerUsername"));
 				props.put("managerPassword", tipiProps.get("managerPassword"));
+				props.put("tipiAppstore", "true");
+				// TODO should be done for all properties
+				props.put("applicationContext", processProfileData(tipiProps.get("applicationContext"),profile));
+				// 
+				
+				extraMessage.append("Deployed to: "+tipiProps.get("managerUrl")+" with context: "+tipiProps.get("applicationContext"));
 				props.put("application", application);
 				result = AntRun.callAnt(new File(path), appDir, props,null);
 				System.err.println("Result: "+result);
@@ -519,9 +571,16 @@ public class TipiAdminServlet extends HttpServlet {
 		}	catch (MissingResourceException me) {
 			System.err.println("No keystore found");
 		}
-		return "OK - "+application + " built!";
+		return "OK - "+application + " built!\n "+extraMessage.toString();
 	}
 
+	
+	private static String processProfileData(String rawValue, String profile) {
+		if(rawValue==null) {
+			return null;
+		}
+		return rawValue.replaceAll("\\[\\[profile\\]\\]", profile);
+	}
 	public boolean deleteDirectory(File path) {
 		if (path.exists()) {
 			File[] files = path.listFiles();
