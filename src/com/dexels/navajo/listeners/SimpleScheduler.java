@@ -31,6 +31,8 @@ public class SimpleScheduler implements Scheduler {
 	}
 
 	public void run(TmlRunnable myRunner) {
+		myRunner.setTmlScheduler(this);
+		myRunner.run();
 	}
 
 	public void runFinished(TmlRunnable tr) {
@@ -42,12 +44,11 @@ public class SimpleScheduler implements Scheduler {
 	public void submit(TmlRunnable myRunner, boolean priority)
 			throws IOException {
 		System.err.println("Submitting to simple pool...");
-
+		myRunner.setTmlScheduler(this);
 		normalPool.submit(myRunner);
 	}
 
 	public ThreadPoolExecutor getGenericPool() {
-		// TODO Auto-generated method stub
 		return normalPool;
 	}
 
