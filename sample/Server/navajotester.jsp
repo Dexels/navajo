@@ -29,7 +29,7 @@
 	<jsp:setProperty property="script" name="serverContext" value="${param['service']}"/>
 </c:if>	
 <title>
-Navajo Tester 2.2
+<c:import url="tml/writeversion.jsp" />
 </title>
 <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 <!-- add your meta tags here -->
@@ -66,13 +66,14 @@ Navajo Tester 2.2
           <!-- start: skip link navigation -->
 
         </div>
-        <h2><a href="index.jsp">Navajo Tester 2.2</a></h2>
+        <h2><a href="index.jsp"><c:import url="tml/writeversion.jsp" /></a></h2>
+        <div style="float: right; position: absolute;  right: 30px; top: 10px;"><a href="http://www.dexels.com"><img src="images/logo_dexels.png"/></a></div>
         <%
        	try {
 				Class.forName("com.sun.tools.javac.Main");
 			} catch (ClassNotFoundException e) {
 				System.err.println("No sun compiler.");
-				out.write("<p class=\"warning\">No compiler found! Add a tools.jar (from a JDK) to the webapp, or to the Tomcat/lib folder (recommended)</p>");
+				out.write("<p class=\"warning\">No Sun compiler found! Add a tools.jar (from a JDK) to the webapp, or to the Tomcat/lib folder (recommended)</p>");
 
 			}
 

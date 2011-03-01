@@ -14,7 +14,7 @@
 <nav:postHandler/>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-<title>Navajo Installer 2.0</title>
+<title><c:import url="tml/writeversion.jsp" /></title>
 <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 <!-- add your meta tags here -->
 
@@ -67,8 +67,6 @@
 				</p>
 				<h3>Create default application</h3>
 				<div class="info">
-
-<!-- 				<a href="tml/installer/doinstall.jsp?selectedPath=${installerContext.suggestedPath}">install</a> -->
 				<form action="tml/installer/doinstall.jsp" method="post">
 					<table>
 						<tr>
