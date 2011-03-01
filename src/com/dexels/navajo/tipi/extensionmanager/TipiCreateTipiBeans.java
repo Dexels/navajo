@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,15 +11,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 import java.util.Map.Entry;
-
+import java.util.Vector;
 
 import com.dexels.navajo.tipi.projectbuilder.ComponentMerger;
 import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
@@ -245,7 +241,7 @@ private void createFunctions(String extension, Writer writer, List<XMLElement> a
 		int i = 0;
 		StringBuffer abb = new StringBuffer();
 		for (String param : params) {
-			abb.append("  fi.insertOperand(param"+i+");\n");
+			abb.append("  fi.insertOperand(param"+i+"); //"+param+"\n");
 			i++;
 		}
 		return abb.toString();
@@ -474,14 +470,10 @@ public static void main(String[] args) throws IOException {
 	ll =  xe.getAllElementsByTagName("function");
 	tcci.createFunctions("Tipi",sw, ll, actionsFile);
 
-	for (XMLElement xmlElement : ll) {
-		
-	}
 
 	System.err.println("Res:\n"+sw.toString());
 }
-//	public void execute(URL repository, String originalExtension, String version, Map<String,List<XMLElement>> classDefElements, String repositoryDeploy) {
-//public static Map<String,List<XMLElement>> getAllClassDefs(String currentProject, String remoteRepository, URL repository, List<String> projects) throws IOException {
+
 		
 
 
