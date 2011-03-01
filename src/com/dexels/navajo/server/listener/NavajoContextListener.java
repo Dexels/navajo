@@ -217,9 +217,7 @@ public class NavajoContextListener implements ServletContextListener {
 		if(engineInstance!=null) {
 			key = contextPath+"@"+engineInstance;
 		}
-		System.err.println("LOOKING FOR CONTEXT: "+key);
 		String result = systemContexts.get(key);
-		System.err.println(">> "+systemContexts+" >>>>> "+result);
 		if(result!=null) {
 			return result;
 		}
@@ -229,10 +227,10 @@ public class NavajoContextListener implements ServletContextListener {
 	private Map<String,String> loadSystemContexts() throws IOException {
 		File home = new File(System.getProperty("user.home"));
 		File navajo = new File(home,"navajo.properties");
-		if(!navajo.exists()) {
-			return null;
-		}
 		Map<String,String> systemContexts = new HashMap<String, String>();
+		if(!navajo.exists()) {
+			return systemContexts;
+		}
 		BufferedReader br = new BufferedReader(new FileReader(navajo));
 		
 		while(true) {
