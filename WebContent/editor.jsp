@@ -53,7 +53,7 @@
           <div id="col1_content" class="clearfix">
             <h3>Usage</h3>
 			<div class="info">
-				Bla bla bla
+				Edit with care, file may be under CVS control
 			</div>
 
         </div>

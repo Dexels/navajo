@@ -10,7 +10,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-<title>Tipi Application Store - <%= getServletContext().getInitParameter("serverTitle") %>  ( <%= getServletContext().getContextPath() %>) </title>
+<title><c:import url="parts/apptitle.jsp"></c:import> - <%= getServletContext().getInitParameter("serverTitle") %>  ( <%= getServletContext().getContextPath() %>) </title>
 <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 <!-- add your meta tags here -->
 
@@ -37,7 +37,7 @@ if(res!=null) {
 %>
 
         </div>
-        <h2>Tipi App Store</h2>
+        <h2><c:import url="parts/apptitle.jsp"></c:import></h2>
       </div>
       <div id="nav">
         <!-- skiplink anchor: navigation -->
