@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE project>
 <project>
 <!--	<property name="application" value="SportlinkAcceptatie"/>
 	<property name="appName" value="SportlinkClub"/>
 	<property name="branch" value="Acceptance"/>
 	<property name="cvsRoot" value=":pserver:frank@spiritus.dexels.nl:/home/cvs"/>
 -->
+	<fail unless="tipiAppstore" message="This script will only run from the app store."/>
+
 	<target name="prep">
 		<mkdir dir="temp"/>
 		<echo message="Module: ${module} branch: ${branch}"/>

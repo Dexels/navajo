@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE project>
 <project default="signall">
+	<fail unless="tipiAppstore" message="This script will only run from the app store."/>
 	<taskdef name="p200ant" classname="de.matthiasmann.p200ant.P200AntTask"/>
 
 	<target name="signall" >
