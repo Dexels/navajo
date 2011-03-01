@@ -14,6 +14,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import com.dexels.navajo.document.types.ClockTime;
@@ -24,33 +25,51 @@ public class NavajoLaszloConverter {
 		try {
 			Document doc = XMLDocumentUtils.createDocument(is, false);
 
-			// System.err.println("Received: " +
-			// XMLDocumentUtils.toString(doc));
+			 System.err.println("Received: " + XMLDocumentUtils.toString(doc));
 
-			Node root = doc.getFirstChild();
-			n = NavajoFactory.getInstance().createNavajo();
-			if (root != null) {
-
-				Node tml = root.getFirstChild();
-
-				String rpc_name = ((Element) tml).getAttribute("rpc_name");
-				rpc_name = rpc_name.replaceAll("_", "/");
-				String rpc_usr = ((Element) tml).getAttribute("rpc_usr");
-				String rpc_pwd = ((Element) tml).getAttribute("rpc_pwd");
-
-				Header h = NavajoFactory.getInstance().createHeader(n, rpc_name, rpc_usr, rpc_pwd, -1);
-				n.addHeader(h);
-				NodeList children = tml.getChildNodes();
-				for (int i = 0; i < children.getLength(); i++) {
-					Node noot = children.item(i);
-					createMessageFromLaszlo(noot, n, null);
+			 Node root = doc.getFirstChild();
+			 NodeList nl = root.getChildNodes();
+			for (int i = 0; i < nl.getLength(); i++) {
+				Node nn = nl.item(i);
+				if(nn==null) {
+					System.err.println("WTF?!");
+				}
+				if(nn instanceof Text && nn!=null) {
+					Text t = (Text)nn;
+				}
+				
+				if(nn instanceof Element) {
+					Element rootElement = (Element)nn;
+					if("tml".equals(rootElement.getNodeName())) {
+						return convertNodeToNavajo(rootElement);
+//					} else {
+//						return convertChildrenToNavajo(rootElement);
+					}
 				}
 			}
-			// System.err.println("Created navajo: ");
-			// n.write(System.err);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return n;
+	}
+
+
+	private static Navajo convertNodeToNavajo(Element tml) {
+		Navajo n;
+		System.err.println("ELEMENT NAME: "+tml.getNodeName());
+		n = NavajoFactory.getInstance().createNavajo();
+			String rpc_name = tml.getAttribute("rpc_name");
+			rpc_name = rpc_name.replaceAll("_", "/");
+			String rpc_usr = tml.getAttribute("rpc_usr");
+			String rpc_pwd = tml.getAttribute("rpc_pwd");
+ 
+			Header h = NavajoFactory.getInstance().createHeader(n, rpc_name, rpc_usr, rpc_pwd, -1);
+			n.addHeader(h);
+			NodeList children = tml.getChildNodes();
+			for (int i = 0; i < children.getLength(); i++) {
+				Node noot = children.item(i);
+				createMessageFromLaszlo(noot, n, null);
+			}
 		return n;
 	}
 
@@ -58,6 +77,15 @@ public class NavajoLaszloConverter {
 		return createLaszloFromNavajo(in, "navajoDataSource");
 	}
 
+	public static void writeBirtXml(Navajo n, Writer w) {
+		Document d = createLaszloFromNavajo(n);
+		XMLDocumentUtils.write(d, w, false);
+	}
+	/**
+	 * Laszlo == BIRT style, by the way
+	 * @param m
+	 * @param w
+	 */
 	public static void writeBirtXml(Message m, Writer w) {
 		Document d = createLaszloFromNavajo(m, false, null);
 		XMLDocumentUtils.write(d, w, false);
@@ -90,7 +118,7 @@ public class NavajoLaszloConverter {
 	public static Document createLaszloFromNavajo(Navajo in, boolean includeSelections,  String serviceName) {
 		Document doc = XMLDocumentUtils.createDocument();
 		try {
-
+			in.write(System.err);
 			String nodeName = serviceName.replaceAll("/", "_");
 			Element root = doc.createElement(nodeName);
 			doc.appendChild(root);
