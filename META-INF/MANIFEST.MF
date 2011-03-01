@@ -18,6 +18,8 @@ Export-Package: com.dexels.navajo.client;uses:="javax.servlet,javax.servlet.http
    com.dexels.navajo.document,
    javax.servlet.http",
  com.dexels.navajo.server.listener.http.filter;uses:="javax.servlet,javax.servlet.http,com.dexels.navajo.document",
+ com.dexels.navajo.server.listener.http.impl,
+ com.dexels.navajo.server.listener.http.schedulers,
  com.dexels.navajo.server.listener.nql;uses:="javax.servlet.http",
  com.dexels.navajo.sharedstore;uses:="junit.framework",
  dexels,
