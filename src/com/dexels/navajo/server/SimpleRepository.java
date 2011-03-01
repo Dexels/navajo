@@ -45,14 +45,11 @@ public class SimpleRepository implements Repository {
 	 */
 	public void initGlobals(String method, String username, Navajo inMessage, Map<String,String> extraParams) throws NavajoException {
 //		config.getRootPath();
-		System.err.println("Parsing globals");
-
 		try {
 			ResourceBundle rb = ResourceBundle.getBundle("application");
 			parseBundle(method, username, inMessage, extraParams, rb);
 
 		} catch (MissingResourceException e) {
-			System.err.println("Can not open resource bundle in classpath. Looking in adapters now.");
 			try {
 				InputStream stream = config.getResourceBundle("application");
 				if(stream==null) {
@@ -66,9 +63,7 @@ public class SimpleRepository implements Repository {
 				System.err.println("Still can not open resource bundle. Also no big deal, I guess");
 				e1.printStackTrace();
 			}
-			
 		}
-
 	}
 
 	private void parseBundle(String method, String username, Navajo inMessage, Map<String, String> extraParams, ResourceBundle rb)

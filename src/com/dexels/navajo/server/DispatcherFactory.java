@@ -44,13 +44,13 @@ public class DispatcherFactory {
 			return instance;
 		}
 		URL configurationUrl;
-		System.err.println("Extremeskool configuration detected.");
+//		System.err.println("Extremeskool configuration detected.");
 		String absRootPath = rootPath.getAbsolutePath();
 		if(!absRootPath.endsWith("/")) {
 			absRootPath = absRootPath+ "/";
 		}
-		System.err.println("Rootpath: "+absRootPath);
-		System.err.println("ServerXML: "+serverXmlPath);
+//		System.err.println("Rootpath: "+absRootPath);
+//		System.err.println("ServerXML: "+serverXmlPath);
 		
 		try {
 //			URL rootUrl = rootPath.toURI().toURL();
