@@ -47,7 +47,7 @@ public class RepositoryFactory {
     	repositoryRepository.put(className, r);
     }
     @SuppressWarnings("unchecked")
-	public static Repository getRepository(NavajoClassLoader loader, String repositoryClass, NavajoConfigInterface config) {
+    public static Repository getRepository(NavajoClassLoader loader, String repositoryClass, NavajoConfigInterface config) {
     	Repository localRp = repositoryRepository.get(repositoryClass);
     	if(localRp!=null) {
     		localRp.setNavajoConfig(config);
@@ -55,7 +55,7 @@ public class RepositoryFactory {
     	}
 
     	try {
-            Class c = loader.getClass(repositoryClass);
+			Class<? extends Repository> c = (Class<? extends Repository>)loader.getClass(repositoryClass);
             Repository rp = (Repository) c.newInstance();
 
             rp.setNavajoConfig(config);
