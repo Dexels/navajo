@@ -1,10 +1,8 @@
 package com.dexels.navajo.tipi.projectbuilder;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 import java.util.Map;
 
 import com.dexels.navajo.tipi.extensionmanager.ExtensionManager;

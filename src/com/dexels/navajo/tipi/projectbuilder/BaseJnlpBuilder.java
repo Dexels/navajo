@@ -1,20 +1,14 @@
 package com.dexels.navajo.tipi.projectbuilder;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.PropertyResourceBundle;
 import java.util.StringTokenizer;
 
-import org.omg.CORBA.VersionSpecHelper;
-
-import com.dexels.navajo.tipi.extensionmanager.ExtensionManager;
 import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.util.XMLElement;
 
@@ -42,22 +36,21 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 		return mainExtension;
 	}
 
-	private void buildVersionFile(File baseDir,String repository, List<String> extensions) throws IOException {
-		// TODO Auto-generated method stub
-		XMLElement jnlpVersions = new CaseSensitiveXMLElement("jnlp-versions");
-		for (String ext : extensions) {
-			Map<String, String> versionMap = myVersionResolver.resolveVersion(ext);
-			String version = versionMap.get("version");
-			List<String> jars = ExtensionManager.getJars(repository, versionMap.get("extension"),version,new HashMap<String,String>(),new HashMap<String,String>());
-			appendExtensionToVersions(jnlpVersions, ext,version,jars);
-		}
-		System.err.println("Versions: "+jnlpVersions.toString());
-		FileWriter fw = new FileWriter(new File(baseDir,"versions.xml"));
-		fw.write("<?xml version=\"1.0\"?>\n");
-		jnlpVersions.write(fw);
-		fw.flush();
-		fw.close();
-	}
+//	private void buildVersionFile(File baseDir,String repository, List<String> extensions) throws IOException {
+//		XMLElement jnlpVersions = new CaseSensitiveXMLElement("jnlp-versions");
+//		for (String ext : extensions) {
+//			Map<String, String> versionMap = myVersionResolver.resolveVersion(ext);
+//			String version = versionMap.get("version");
+//			List<String> jars = ExtensionManager.getJars(repository, versionMap.get("extension"),version,new HashMap<String,String>(),new HashMap<String,String>());
+//			appendExtensionToVersions(jnlpVersions, ext,version,jars);
+//		}
+//		System.err.println("Versions: "+jnlpVersions.toString());
+//		FileWriter fw = new FileWriter(new File(baseDir,"versions.xml"));
+//		fw.write("<?xml version=\"1.0\"?>\n");
+//		jnlpVersions.write(fw);
+//		fw.flush();
+//		fw.close();
+//	}
 
 //	<?xml version="1.0"?>
 //	<jnlp-versions>
@@ -71,6 +64,7 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 //	</jnlp-versions>
 	
 	
+	@SuppressWarnings("unused")
 	private void appendExtensionToVersions(XMLElement jnlpVersions, String ext, String version, List<String> jars) {
 		for (String currentResource : jars) {
 			XMLElement resource = new CaseSensitiveXMLElement("resource");

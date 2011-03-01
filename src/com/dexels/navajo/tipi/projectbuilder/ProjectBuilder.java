@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -29,7 +28,8 @@ public class ProjectBuilder {
 			extensionRepository = extensionRepository+ "Extensions/";
 		}
 		StringTokenizer st = new StringTokenizer(extensions, ",");
-		Map<String,List<String>> repDefinition= ClientActions.getExtensions(extensionRepository);
+		// Probably dead code, but I'm not completely convinced.
+		ClientActions.getExtensions(extensionRepository);
 		while (st.hasMoreTokens()) {
 				String token = st.nextToken();
 				VersionResolver vr = new VersionResolver();

@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
-import java.util.Map.Entry;
 
 import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.util.XMLElement;
@@ -23,7 +23,7 @@ public class ClassModel {
 	private final Map<String, StringBuffer> valueDescription = new HashMap<String, StringBuffer>();
 
 	// current name of the component, changes as more definitions are added.
-	private final String name;
+//	private final String name;
 	
 	private final Map<String, String> attributes = new HashMap<String, String>();
 
@@ -32,7 +32,7 @@ public class ClassModel {
 	private StringBuffer description = new StringBuffer();
 	
 	public ClassModel(String name) {
-		this.name = name;
+//		this.name = name;
 	}
 	
 	public void addDefinition(XMLElement input) {
@@ -130,7 +130,7 @@ public class ClassModel {
 	private void addEvent(XMLElement event) {
 //		System.err.println("ADDING EVENT: "+event);
 		String name = event.getStringAttribute("name");
-		XMLElement old = events.get(name);
+//		XMLElement old = events.get(name);
 		
 		XMLElement desc =  event.getChildByTagName("description");
 		
