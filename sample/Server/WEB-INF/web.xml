@@ -26,7 +26,27 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	</servlet>
 
 
+	<servlet>
+		<servlet-name>Laszlo</servlet-name>
+		<servlet-class>com.dexels.navajo.server.listener.http.NavajoFilterServlet</servlet-class>
+		<init-param>
+            <param-name>inputFilterClass</param-name>
+            <param-value>com.dexels.navajo.server.listener.http.wrapper.laszlo.LaszloRequestWrapper</param-value>
+        </init-param>
+		<init-param>
+            <param-name>outputFilterClass</param-name>
+            <param-value>com.dexels.navajo.server.listener.http.wrapper.laszlo.LaszloResponseWrapper</param-value>
+        </init-param>
+		<init-param>
+            <param-name>postmanServletName</param-name>
+            <param-value>Comet</param-value>
+        </init-param>
+		
 
+
+
+	</servlet>
+	
 	<servlet>
 		<servlet-name>Nql</servlet-name>
 		<servlet-class>com.dexels.navajo.server.listener.nql.NqlServlet</servlet-class>
@@ -87,7 +107,10 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<url-pattern>/Nql</url-pattern>
 	</servlet-mapping>
 		
-
+	<servlet-mapping>
+		<servlet-name>Laszlo</servlet-name>
+		<url-pattern>/Laszlo</url-pattern>
+	</servlet-mapping>
 		<!-- <servlet-name>Comet</servlet-name>-->
 
 <!-- 	
