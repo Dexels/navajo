@@ -105,6 +105,12 @@
     letter-spacing: .07em;
     cursor: help;
   }
+  
+  #logo {
+	width: 107px;
+	height: 60px;
+   	background-image: url("../../images/logo_dexels.png");
+   }
 
   sub, sup { font-size: 91.6667%; }
 
