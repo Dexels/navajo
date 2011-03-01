@@ -54,7 +54,7 @@ import com.jcraft.jzlib.ZOutputStream;
  * This servlet handles HTTP POST requests.
  * The HTTP POST body is assumed to contain a TML document.
  * The TML document is processed by the dispatcher the resulting TML document is send back as a reply.
- *
+ * @deprecated
  */
 
 public class JSONHttpServlet extends TmlHttpServlet {
