@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.document.NavajoLaszloConverter;
 import com.dexels.navajo.server.listener.http.wrapper.NavajoRequestWrapper;
 
 public class IdentityRequestWrapper implements NavajoRequestWrapper {

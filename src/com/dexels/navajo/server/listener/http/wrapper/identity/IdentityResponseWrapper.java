@@ -14,8 +14,6 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoLaszloConverter;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import com.dexels.navajo.server.listener.http.wrapper.NavajoResponseWrapper;
-import com.dexels.navajo.server.listener.http.wrapper.impl.NavajoServletRequestWrapper;
-import com.dexels.navajo.server.listener.http.wrapper.impl.NavajoServletResponseWrapper;
 
 public class IdentityResponseWrapper implements NavajoResponseWrapper {
 
@@ -30,7 +28,6 @@ public class IdentityResponseWrapper implements NavajoResponseWrapper {
 //		Navajo indoc = wrappedRequest.getInputNavajo();
 //		Navajo outDoc = wrappedResponse.getResponseNavajo();
 		
-        long sendStart = System.currentTimeMillis();
 		if (useSendCompression) {
 			originalResponse.setContentType("text/xml; charset=UTF-8");
 			originalResponse.setHeader("Content-Encoding", "gzip");

@@ -6,8 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.server.listener.http.wrapper.impl.NavajoServletRequestWrapper;
-import com.dexels.navajo.server.listener.http.wrapper.impl.NavajoServletResponseWrapper;
 
 public interface NavajoResponseWrapper {
 	/**

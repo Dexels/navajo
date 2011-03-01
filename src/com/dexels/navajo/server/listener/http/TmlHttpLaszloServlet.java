@@ -44,6 +44,10 @@ import com.dexels.navajo.server.DispatcherInterface;
  * contain a TML document. The TML document is processed by the dispatcher the
  * resulting TML document is send back as a reply.
  * @slightly deprecated 
+ * @deprecated
+ * 
+ * Use NavajoFilterServlet based solution now
+ * 
  */
 
 public final class TmlHttpLaszloServlet extends TmlHttpServlet {
@@ -173,21 +177,29 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 	}
 
 
+	
+	
 	public static void main(String[] args) {
 		System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.base.BaseNavajoFactoryImpl");
 		NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
-		NavajoClientFactory.getClient().setServerUrl("penelope1.dexels.com/sportlink/knvb1_test/servlet/Postman");
+		NavajoClientFactory.getClient().setServerUrl("penelope1.dexels.com/sportlink/test/knvb/Comet");
 		NavajoClientFactory.getClient().setUsername("ROOT");
 		NavajoClientFactory.getClient().setPassword("R20T");
 		try {
-			Message init = NavajoClientFactory.getClient().doSimpleSend("club/InitSearchClubs", "ClubSearch");
-			init.getProperty("ClubName").setValue("veld");
-			Navajo n = NavajoClientFactory.getClient().doSimpleSend(init.getRootDoc(), "club/ProcessSearchClubs");
+			Navajo init = NavajoClientFactory.getClient().doSimpleSend("club/InitSearchClubs");
+			init.getProperty("ClubSearch/ClubName").setValue("veld");
+			NavajoLaszloConverter.dumpNavajoLaszloStyle(init,"kip.xml","club/InitSearchClubs");
+			
+			StringWriter sw = new StringWriter();
+			NavajoLaszloConverter.writeBirtXml(init.getMessage("ClubSearch"), sw);
+			System.err.println(sw.toString());
+			
+			Navajo n = NavajoClientFactory.getClient().doSimpleSend(init, "club/ProcessSearchClubs");
 			NavajoLaszloConverter.dumpNavajoLaszloStyle(n,"aap.xml","club/ProcessSearchClubs");
 			
-			init = NavajoClientFactory.getClient().doSimpleSend("club/InitUpdateClub", "Club");
-			init.getProperty("ClubIdentifier").setValue("BBFW63X");
-			n = NavajoClientFactory.getClient().doSimpleSend(init.getRootDoc(), "club/ProcessQueryClub");
+			init = NavajoClientFactory.getClient().doSimpleSend("club/InitUpdateClub");
+			init.getProperty("Club/ClubIdentifier").setValue("BBFW63X");
+			n = NavajoClientFactory.getClient().doSimpleSend(init, "club/ProcessQueryClub");
 			NavajoLaszloConverter.dumpNavajoLaszloStyle(n,"noot.xml","club/ProcessQueryClub");
 
 			// ----------------------------------------------
@@ -212,6 +224,7 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 //				}
 //			}
 //			nav.write(System.err);
+			System.err.println("Ok, done");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
