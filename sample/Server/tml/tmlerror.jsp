@@ -54,7 +54,7 @@
 		</font>
 
 		<%
-		out.println("<div class='info'><code>");
+		out.println("<div class='info'><code><pre>\n");
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
 		exception.printStackTrace(pw);
@@ -62,7 +62,7 @@
 		out.print(sw2);
 		sw.close();
 		pw.close();
-		out.println("</code></div>");
+		out.println("\n</pre></code></div>");
 		%>
 	
      </div>
