@@ -32,9 +32,18 @@
 		</c:if>
 	</c:when>
 	<c:when test="${param['view']=='tml'}">
-		<c:if test="${param['service'] != null && param['service']!='' && navajoContext.navajos[param['service']]!=null}">
+			<a href="${pageContext.request.requestURI}?view=laszlo&amp;service=${param['service']}">View as Laszlo</a>		
+			<c:if test="${param['service'] != null && param['service']!='' && navajoContext.navajos[param['service']]!=null}">
 			<nav:service service="${param['service']}">
 				<navserver:formattml service="${param['service']}" />
+			</nav:service>
+		</c:if>
+	</c:when>
+	<c:when test="${param['view']=='laszlo'}">
+		<a href="${pageContext.request.requestURI}?view=tml&amp;service=${param['service']}">View as TML</a>
+		<c:if test="${param['service'] != null && param['service']!='' && navajoContext.navajos[param['service']]!=null}">
+			<nav:service service="${param['service']}">
+				<navserver:formatlaszlo service="${param['service']}" />
 			</nav:service>
 		</c:if>
 	</c:when>

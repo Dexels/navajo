@@ -35,7 +35,7 @@
        		
        		<c:if test="${param['service']!=null && param['service']!='' && navajoContext.navajos[param['service']]!=null}">
 	          	<c:choose>
-	          		<c:when test="${param['view']=='tml'}">
+	          		<c:when test="${param['view']=='tml' || param['view']=='laszlo'}">
 			            <li class="active"><strong>Tml Source</strong></li>
 	          		</c:when>
 	          		<c:otherwise>
