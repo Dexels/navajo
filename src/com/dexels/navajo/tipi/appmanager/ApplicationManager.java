@@ -88,11 +88,21 @@ private ServletContext context = null;
 			if(!file.isDirectory()) {
 				continue;
 			}
+			if(!isTipiAppDir(file)) {
+				continue;
+			}
 			ApplicationStatus appStatus = new ApplicationStatus();
 			appStatus.setManager(this);
 			appStatus.load(file);
 			appStats.add(appStatus);
 		}
+	}
+
+	private boolean isTipiAppDir(File tipiRoot) {
+		File tipiDir = new File(tipiRoot,"tipi");
+		File settingsProp = new File(tipiRoot,"settings/tipi.properties");
+		return tipiDir.exists() && settingsProp.exists();
+//		return false;
 	}
 
 	public  List<ApplicationStatus> getApplications() throws IOException {

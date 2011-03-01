@@ -1,16 +1,11 @@
 package com.dexels.navajo.tipi.appmanager;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Date;
@@ -19,13 +14,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.PropertyResourceBundle;
 import java.util.StringTokenizer;
-
-import javax.servlet.ServletContext;
-
-import com.dexels.navajo.tipi.projectbuilder.ClientActions;
 
 public class ApplicationStatus {
 	//private String name;
@@ -53,6 +43,9 @@ public class ApplicationStatus {
 		return currentDeploy;
 	}
 
+	public String getRealPath() {
+		return appFolder.getAbsolutePath();
+	}
 	public String getLiveUrl() {
 		return liveUrl;
 	}
@@ -63,6 +56,24 @@ public class ApplicationStatus {
 
 	public String getBuildType() {
 		return buildType;
+	}
+	
+	public String propertyEntry(String deployment, String profile, String name) {
+		Map<String,String> depl = deploymentData.get(deployment);
+		if(depl==null) {
+			// TODO maybe check tipi.properties?
+			return null;
+		}
+		String rawValue = depl.get(name);
+		return processProfileData(rawValue,profile);
+	}
+	
+
+	private String processProfileData(String rawValue, String profile) {
+		if(rawValue==null) {
+			return null;
+		}
+		return rawValue.replaceAll("\\[\\[profile\\]\\]", profile);
 	}
 
 	public void setBuildType(String buildType) {
@@ -236,22 +247,22 @@ public class ApplicationStatus {
 	
 
 
-	private long getYoungestFile(File folder) {
-		long youngest = 0;
-		for (File file : folder.listFiles()) {
-			long lastModified = 0;
-			if(file.isDirectory()) {
-				lastModified = getYoungestFile(file);
-			} else {
-				lastModified = file.lastModified();
-
-			}
-			if(lastModified > youngest) {
-				youngest = lastModified;
-			}
-		}
-		return youngest;
-	}
+//	private long getYoungestFile(File folder) {
+//		long youngest = 0;
+//		for (File file : folder.listFiles()) {
+//			long lastModified = 0;
+//			if(file.isDirectory()) {
+//				lastModified = getYoungestFile(file);
+//			} else {
+//				lastModified = file.lastModified();
+//
+//			}
+//			if(lastModified > youngest) {
+//				youngest = lastModified;
+//			}
+//		}
+//		return youngest;
+//	}
 
 	private void processProfiles(File appDir) {
 		List<String> pro = new LinkedList<String>();
@@ -309,27 +320,19 @@ public class ApplicationStatus {
 		FileInputStream fis = new FileInputStream(file);
 		PropertyResourceBundle settings = new PropertyResourceBundle(fis);
 		Enumeration<String> keys = settings.getKeys();
+		Map<String,String> element = new HashMap<String, String>();
 		while(keys.hasMoreElements()) {
 			String key = keys.nextElement();
-			Map<String,String> element = new HashMap<String, String>();
 			String value = settings.getString(key);
 			element.put(key, value);
-			deploymentData.put(key, element);
 			System.err.println("Adding data: "+deployName+" : "+key+" : "+value);
 		}
+		deploymentData.put(deployName, element);
 	}
 
-	public Map<String, String> getManagerUrl() {
-		Map<String,String> element = new HashMap<String, String>();
-		for (Entry<String, Map<String, String>> e: deploymentData.entrySet()) {
-			String managerUrl = e.getValue().get("managerUrl");
-//			System.err.println("E: "+managerUrl);
-			if(managerUrl!=null) {
-				element.put(e.getKey(), managerUrl);
-			}
-		}
-		System.err.println("RESULT: "+element);
-		return element;
+	public String getManagerUrl(String deploy) {
+		Map<String,String> element = deploymentData.get(deploy);
+		return element.get("managerUrl");
 	}
 	
 	private boolean profileNeedsRebuild(File profileProperties, String profileName, File appDir) {
@@ -356,9 +359,6 @@ public class ApplicationStatus {
 
 	public boolean isValid() {
 		File libDir = new File(appFolder,"lib");
-		if(libDir==null) {
-			return false;
-		}
 		if(!libDir.exists()) {
 			return false;
 		}
