@@ -1,0 +1,55 @@
+package com.dexels.navajo.server.listener.http.wrapper.identity;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.w3c.dom.Document;
+
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoLaszloConverter;
+import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
+import com.dexels.navajo.server.listener.http.wrapper.NavajoResponseWrapper;
+import com.dexels.navajo.server.listener.http.wrapper.impl.NavajoServletRequestWrapper;
+import com.dexels.navajo.server.listener.http.wrapper.impl.NavajoServletResponseWrapper;
+
+public class IdentityResponseWrapper implements NavajoResponseWrapper {
+
+	@Override
+	public void processResponse(HttpServletRequest originalRequest,
+			Navajo indoc, Navajo outDoc,
+			HttpServletResponse originalResponse) throws IOException {
+
+		String sendEncoding = originalRequest.getHeader("Accept-Encoding");
+		boolean useSendCompression = ((sendEncoding != null) && (sendEncoding.indexOf("zip") != -1));
+		
+//		Navajo indoc = wrappedRequest.getInputNavajo();
+//		Navajo outDoc = wrappedResponse.getResponseNavajo();
+		
+        long sendStart = System.currentTimeMillis();
+		if (useSendCompression) {
+			originalResponse.setContentType("text/xml; charset=UTF-8");
+			originalResponse.setHeader("Content-Encoding", "gzip");
+			java.util.zip.GZIPOutputStream gzipout = new java.util.zip.GZIPOutputStream(originalResponse.getOutputStream());
+
+			Document laszlo = NavajoLaszloConverter.createLaszloFromNavajo(outDoc,indoc.getHeader().getRPCName());
+			XMLDocumentUtils.write(laszlo, new OutputStreamWriter(gzipout), false);
+			gzipout.close();
+		} else {
+			originalResponse.setContentType("text/xml; charset=UTF-8");
+			OutputStream out = (OutputStream) originalResponse.getOutputStream();
+			try {
+				outDoc.write(out);
+			} catch (NavajoException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			out.close();
+		}
+	}
+
+}
