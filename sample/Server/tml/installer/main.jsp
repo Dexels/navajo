@@ -15,7 +15,7 @@
 <nav:postHandler/>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-<title>Navajo Installer 2.0</title>
+<title>Navajo Installer 2.2</title>
 <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 <!-- add your meta tags here -->
 
@@ -27,7 +27,7 @@
 </head>
 
 <body>
-
+<% pageContext.setAttribute("engineInstance", System.getProperty("com.dexels.navajo.server.EngineInstance")); %>
 
   <input type="hidden" name="inputNavajo" value="${param['service']}"/>
   <div class="page_margins">
@@ -35,12 +35,15 @@
       <div id="header">
         <div id="topnav">
           <!-- start: skip link navigation -->
-
+			
         </div>
-        <h2><a href="index.jsp">Navajo Installer 2.0</a></h2>
+        <h2><a href="index.jsp">Navajo Installer 2.2</a></h2>
       </div>
       <div id="nav">
         <!-- skiplink anchor: navigation -->
+        
+        
+        
         <a id="navigation" name="navigation"></a>
         <div class="hlist">
   
@@ -56,16 +59,38 @@
         <div id="col3">
           <div id="col3_content" class="clearfix" style="overflow:auto">
 				<h3>No installation found.</h3>
-				<p>While it is completely possible to run a navajo installation in-place, I strongly recommend
-				installing the actual files elsewhere.
-				</p>
 				<p>
 				Current server context: ${serverContext.contextName}
+				Current engine instance: ${engineInstance }
 				</p>
 				<p>
 				
 				Choose an installation path for context: ${serverContext.contextName}:
 				</p>
+				<c:if test="">
+				</c:if>
+				<c:choose>
+					<c:when test="${engineInstance!=''}">
+						<h3>Engine instance detected: ${engineInstance}</h3>
+						<div class="important">
+							This installation will use a '@${engineInstance}' suffix.:
+						</div>		
+					</c:when>
+					<c:otherwise>
+						<h3>No engine instance detected</h3>
+						<div class="important">
+							That is probably ok. If you are running just one servlet container, this is not necessary.
+							If you do need an engine instance make sure the following system property is set:<br/>
+							(Most likely in catalina.sh in case of Tomcat 7+)
+							<br/>
+							com.dexels.navajo.server.EngineInstance = instance-name
+							<br/>
+							Restart the server and this message will be gone.
+							
+						</div>
+					</c:otherwise>
+				</c:choose>
+				
 				<h3>Create default application</h3>
 				<div class="info">
 

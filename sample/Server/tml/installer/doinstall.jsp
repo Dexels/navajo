@@ -30,19 +30,31 @@
 	System.err.println("Result:"+result);
 
 	String deleteLocal = request.getParameter("deleteLocal");
+
 	if(deleteLocal!=null) {
 		//String result2 = NavajoInstaller.callAnt(new File(application.getRealPath( "WEB-INF/ant/deleteLocal.xml")),new File(path),params);
 		//System.err.println("Result:"+result2);
 	}
 	
-	
+	String contextPath = application.getContextPath().substring(1) ;
+	String engineInstance = System.getProperty("com.dexels.navajo.server.EngineInstance");
+	String key = contextPath;
+	if(engineInstance!=null) {
+		key = contextPath +"@"+engineInstance;
+	}
+
+	// TODO Check if it already contains the value. This construction is incorrect if
+	// the installation directory has simply been deleted.
 	File home = new File(System.getProperty("user.home"));
 	File navajo = new File(home,"navajo.properties");
 	FileWriter fw = new FileWriter(navajo,true);
-	fw.write(application.getContextPath().substring(1) +"="+selectedPath+"\n");
+	fw.write(key+"="+selectedPath+"\n");
 	fw.flush();
 	fw.close();
-	
+
+	// ----
+	installerContext.initialize();
+
 %>
 <html><head>
   <meta http-equiv="Refresh" content="0; url=../../index.jsp">
