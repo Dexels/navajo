@@ -38,11 +38,6 @@ public class DumpFormattedTmlTag extends BaseNavajoTag  {
 
 		getNavajoContext().getNavajo();
 		try {
-			if (myService == null) {
-				n.write(getPageContext().getOut());
-			} else {
-				n.write(getPageContext().getOut());
-			}
 			File f= File.createTempFile("tmpTml", ".xml");
 			FileOutputStream fos = new FileOutputStream(f);
 			n.write(fos);
