@@ -24,7 +24,6 @@
  */
 package navajolisteners;
 
-import org.osgi.framework.BundleContext;
 
 
 public class Version extends dexels.Version {
