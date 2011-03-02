@@ -16,5 +16,7 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/NavajoClient"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/NavajoFunctions"/>
 	<classpathentry exported="true" kind="lib" path="compilelib/servlet-api.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/DexelsVersionControl"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/NavajoDocument"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
