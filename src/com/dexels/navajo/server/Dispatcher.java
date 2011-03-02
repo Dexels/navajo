@@ -48,7 +48,6 @@ import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.types.ChangeNotificationEvent;
 import com.dexels.navajo.events.types.NavajoExceptionEvent;
 import com.dexels.navajo.events.types.NavajoResponseEvent;
-import com.dexels.navajo.events.types.ServerTooBusyEvent;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.server.jmx.SNMPManager;
 import com.dexels.navajo.server.resource.ResourceManager;
@@ -126,7 +125,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean, DispatcherI
   public static final double requestRate = 0.0;
   private  long[] rateWindow = new long[rateWindowSize];
   
-  private static Object semaphore = new Object();
+//  private static Object semaphore = new Object();
   private int peakAccessSetSize = 0;
   
   private static final Set<BroadcastMessage> broadcastMessage = Collections.synchronizedSet(new HashSet<BroadcastMessage>());
@@ -352,7 +351,6 @@ public final class Dispatcher implements Mappable, DispatcherMXBean, DispatcherI
    * @return
    * @throws Exception
    */
-  @SuppressWarnings("unchecked")
   private final Navajo dispatch(String handler, Access access) throws Exception {
 	  
 	  WorkerInterface integ = null;
@@ -830,8 +828,7 @@ private ServiceHandler createHandler(String handler, Access access)
    * @return
    * @throws FatalException
    */
-  @SuppressWarnings("deprecation")
-private final Navajo processNavajo(Navajo inMessage, Object userCertificate, ClientInfo clientInfo, boolean skipAuth, TmlRunnable origRunnable, AfterWebServiceEmitter emit) throws
+  private final Navajo processNavajo(Navajo inMessage, Object userCertificate, ClientInfo clientInfo, boolean skipAuth, TmlRunnable origRunnable, AfterWebServiceEmitter emit) throws
       FatalException {
 	
     Access access = null;
@@ -1111,11 +1108,7 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
 			}
 		}
     
-    if ( access != null ) {
-    	return access.getOutputDoc();
-    } else {
-    	return outMessage;
-    }
+    return access.getOutputDoc();
   }
 
 
@@ -1262,12 +1255,33 @@ public void finalizeService(Navajo inMessage, Access access, Navajo outMessage, 
 		  // 4. Kill tribe manager.
 		  TribeManagerFactory.getInstance().terminate();
 		  
+		  // 5. Shut down DbConnectionBroker
+		  // Very ugly should be handled in a better way:
+		  // - By registering 'resources' to be killable
+		  // - OSGi package lifecycles
+		  // right now I just dug up 
+		  shutdownNavajoExtension("navajoadapters");
+		  
 		  AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Navajo Dispatcher terminated.");
 			 
 	  }  
   }
 
-  public String getServerId() {
+  @SuppressWarnings("unchecked")
+private static void shutdownNavajoExtension(String name) {
+	  // This should be replaced by OSGi bundle management
+	  try {
+		Class <? extends dexels.Version> version = (Class<? extends dexels.Version>) Class.forName(name.toLowerCase()+".version");
+		dexels.Version v = version.newInstance();
+		v.shutdown();
+	  } catch (Throwable e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	  
+}
+
+public String getServerId() {
 	  return TslCompiler.getHostName();
   }
 
