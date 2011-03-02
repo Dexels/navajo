@@ -41,7 +41,7 @@
 	Upload all distribution files to a repository (using SCP)
 	Edit the build.properties file in DexelsVersionControl for locations / credentials.
 	-->
-	<property name="uploaddownloads" value="true"/>
+	<property name="uploaddownloads" value="false"/>
 	
 	<!--
 	Build javadoc files of this project. Not all that useful, as it will not 'link' to other project's javadoc.
