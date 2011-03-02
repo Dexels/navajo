@@ -1,14 +1,18 @@
 package org.dexels.grus;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 
 public class GrusManager implements Runnable {
 
 	private final static GrusManager instance; 
 	private Thread myThread;
 	private final static HashSet<DbConnectionBroker> registeredBrokers = new HashSet<DbConnectionBroker>();
+	private boolean shutdown = false;
+	
 	
 	static  {
 		GrusManager myGrus = new GrusManager();
@@ -16,6 +20,21 @@ public class GrusManager implements Runnable {
 		myGrus.myThread.setDaemon(true);
 		myGrus.myThread.start();
 		instance = myGrus;
+	}
+	
+	public void shutdown() {
+
+		shutdown = true;
+		myThread.interrupt();
+		List<DbConnectionBroker> br = new ArrayList<DbConnectionBroker>(registeredBrokers);
+		for (DbConnectionBroker db : br) {
+			try {
+				db.destroy();
+			} catch (Throwable t) {
+				System.err.println("Problem shutting down broker: ");
+				t.printStackTrace();
+			}
+		}
 	}
 
 	public static GrusManager getInstance() {
@@ -33,7 +52,7 @@ public class GrusManager implements Runnable {
 	public void run() {
 		long maxAge;
 		
-		while (true) {	
+		while (!shutdown) {	
 
 			try {
 
