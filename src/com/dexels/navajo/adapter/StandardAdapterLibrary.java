@@ -13,6 +13,9 @@ import navajo.ExtensionDefinition;
  */
 public class StandardAdapterLibrary implements ExtensionDefinition {
 
+	
+	private ClassLoader extensionClassLoader = null;
+	
 	public InputStream getDefinitionAsStream() {
 		return getClass().getClassLoader().getResourceAsStream("com/dexels/navajo/adapter/adapters.xml");
 	}
@@ -73,6 +76,16 @@ public class StandardAdapterLibrary implements ExtensionDefinition {
 	public String requiresMainImplementation() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public ClassLoader getExtensionClassloader() {
+		// TODO Auto-generated method stub
+		return extensionClassLoader;
+	}
+
+	public void setExtensionClassloader(ClassLoader extClassloader) {
+		// TODO Auto-generated method stub
+		extensionClassLoader =  extClassloader;
 	}
 
 }
