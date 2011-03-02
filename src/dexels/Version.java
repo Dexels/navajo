@@ -43,4 +43,8 @@ public class Version extends BaseVersion implements BundleActivator {
 		return context.getBundle().getSymbolicName();
 	}
 
+	public void shutdown() {
+		// add extension shutdown code
+	}
+	
 }
