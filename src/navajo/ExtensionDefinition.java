@@ -51,4 +51,6 @@ public interface ExtensionDefinition {
 	public String getProjectName();
 	public String getDeploymentDescriptor();
 	public List<String> getDependingProjectUrls();
+	public ClassLoader getExtensionClassloader();
+	public void setExtensionClassloader(ClassLoader extClassloader);
 }
