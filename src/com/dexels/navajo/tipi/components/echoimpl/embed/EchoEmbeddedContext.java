@@ -3,6 +3,8 @@ package com.dexels.navajo.tipi.components.echoimpl.embed;
 import java.io.*;
 import java.util.*;
 
+import tipi.TipiEchoExtension;
+
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.echoimpl.*;
 import com.dexels.navajo.tipi.tipixml.*;
@@ -50,7 +52,8 @@ public class EchoEmbeddedContext extends EchoTipiContext {
 	public void loadDefinition(String def, String name) throws XMLParseException, IOException, TipiException {
 		// public void parseStream(InputStream in, String sourceName, boolean
 		// studioMode) throws IOException, XMLParseException, TipiException {
-		parseStream(getTipiResourceStream(def), name, false);
+		parseStream(getTipiResourceStream(def), name, false, new TipiEchoExtension());
+		switchToDefinition(name);
 	}
 
 	public void clearTopScreen() {

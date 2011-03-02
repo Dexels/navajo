@@ -3,6 +3,8 @@ package com.dexels.navajo.tipi.components.echoimpl.embed;
 import java.io.*;
 import java.util.*;
 
+import navajo.ExtensionDefinition;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.echoimpl.*;
@@ -28,7 +30,7 @@ public class TipiEchoStandaloneContainer implements TipiStandaloneToplevelContai
  }
 
  
-  public void loadDefinition(String tipiPath, String definitionName,String resourceBaseDirectory) throws IOException, TipiException {
+  public void loadDefinition(String tipiPath, String definitionName,String resourceBaseDirectory, ExtensionDefinition ed) throws IOException, TipiException {
 	  System.err.println("Loading def: "+definitionName+" tipipath: "+tipiPath+" resbase: "+resourceBaseDirectory);
 	  embeddedContext = new EchoEmbeddedContext(myInstance, (EchoTipiContext) getContext(), new String[]{tipiPath},false,new String[]{definitionName},libraries,resourceBaseDirectory);
    

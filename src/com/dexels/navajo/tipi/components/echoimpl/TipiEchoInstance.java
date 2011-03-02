@@ -12,7 +12,9 @@ import javax.servlet.http.HttpSession;
 import javax.sound.midi.SysexMessage;
 
 import tipi.TipiApplicationInstance;
+import tipi.TipiEchoExtension;
 
+import navajo.ExtensionDefinition;
 import nextapp.echo2.app.*;
 import nextapp.echo2.webcontainer.ContainerContext;
 import nextapp.echo2.webcontainer.command.BrowserRedirectCommand;
@@ -96,12 +98,13 @@ public class TipiEchoInstance extends ApplicationInstance implements TipiApplica
 //		context.parseURL(tipidef, false);
 //	}
 
-	public void loadTipi(TipiContext newContext, String fileName) throws IOException, TipiException {
+	public void loadTipi(TipiContext newContext, String fileName, ExtensionDefinition ed) throws IOException, TipiException {
 		System.err.println("Context: "+newContext+" filename: "+fileName);
 		InputStream in = newContext.getTipiResourceStream(fileName);
 
 		if(in!=null) {
-			newContext.parseStream(in, "startup", false);
+			newContext.parseStream(in, "startup", false,ed);
+			newContext.switchToDefinition("startup");
 			in.close();
 			 
 		} else {
@@ -125,9 +128,9 @@ public class TipiEchoInstance extends ApplicationInstance implements TipiApplica
 		return w.getWindow();
 	}
 
-	private void initServlet(TipiContext newContext, Enumeration args) throws Exception {
+	private void initServlet(TipiContext newContext, Enumeration args, ExtensionDefinition ed) throws Exception {
 		checkForProperties(newContext, args);
-		loadTipi(newContext, tipiDef);
+		loadTipi(newContext, tipiDef,ed);
 	}
 
 	private Map checkForProperties(TipiContext context, Enumeration e) {
@@ -166,6 +169,7 @@ public class TipiEchoInstance extends ApplicationInstance implements TipiApplica
 		return context;
 	}
 
+	@Override
 	public TipiContext createContext() throws IOException {
 
 		String stylePath = myServletContext.getRealPath("Default.stylesheet");
@@ -193,6 +197,9 @@ public class TipiEchoInstance extends ApplicationInstance implements TipiApplica
 		newContext.setGenericResourceLoader(servletContextResourceLoader);
 	//	context.setResourceBaseDirectory(new File(myServletContext.getRealPath("/") + "resource/tipi/"));
 		
+		TipiEchoExtension ed = new TipiEchoExtension();
+		ed.initialize(newContext);
+		
 		getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
 		TipiScreen es = new TipiScreen();
 		newContext.parseRequiredIncludes();
@@ -202,7 +209,7 @@ public class TipiEchoInstance extends ApplicationInstance implements TipiApplica
 		newContext.setDefaultTopLevel(es);
 		try {
 			System.err.println("Context created: "+newContext.hashCode());
-			initServlet(newContext, myServletConfig.getInitParameterNames());
+			initServlet(newContext, myServletConfig.getInitParameterNames(),ed);
 		} catch (Throwable ex) {
 			ex.printStackTrace();
 		}
@@ -210,23 +217,26 @@ public class TipiEchoInstance extends ApplicationInstance implements TipiApplica
 	}
 
 	public void dispose(TipiContext t) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	public TipiContext getCurrentContext() {
-		// TODO Auto-generated method stub
 		return context;
 	}
 
 	public void reboot() throws IOException {
-		// TODO Auto-generated method stub
 		
 	}
 
 	public void setCurrentContext(TipiContext currentContext) {
 		context = currentContext;
 		
+	}
+
+	@Override
+	public String getDefinition() {
+		System.err.println("WARNING UNCLEAR FUNCTION");
+		return "startup";
 	}
 
 }
