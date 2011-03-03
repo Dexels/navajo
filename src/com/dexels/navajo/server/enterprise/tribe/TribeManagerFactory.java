@@ -58,4 +58,12 @@ public class TribeManagerFactory {
 			}	
 		}
 	}
+
+	public static final void shutdown() {
+		if(instance==null) {
+			return;
+		}
+		instance.terminate();
+		instance = null;
+	}
 }
