@@ -33,7 +33,7 @@ public class NavajoContextListener implements ServletContextListener {
 	
 	@Override
 	public void contextDestroyed(ServletContextEvent sc) {
-		Dispatcher.killMe();
+		DispatcherFactory.killMe();
 	}
 
 	@Override
