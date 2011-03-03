@@ -8,5 +8,5 @@ public interface JabberWorkerInterface {
 	public String getJabberServer();
 	public String getJabberPort();
 	public String getJabberService();
-	
+	public void terminate();
 }

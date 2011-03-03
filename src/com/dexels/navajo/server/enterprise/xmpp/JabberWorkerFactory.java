@@ -12,6 +12,15 @@ public class JabberWorkerFactory {
 	private static volatile JabberWorkerInterface instance = null;
 	private static Object semaphore = new Object();
 	
+	
+	public static void shutdown() {
+		if(instance==null) {
+			return;
+		}
+		getInstance().terminate();
+		instance = null;
+	}
+	
 	public static JabberWorkerInterface getInstance() {
 
 		if ( instance != null ) {

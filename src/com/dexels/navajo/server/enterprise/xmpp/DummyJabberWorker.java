@@ -27,4 +27,9 @@ public class DummyJabberWorker implements JabberWorkerInterface {
 		return "Service not available";
 	}
 
+	@Override
+	public void terminate() {
+		
+	}
+
 }
