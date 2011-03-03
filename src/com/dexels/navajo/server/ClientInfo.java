@@ -32,7 +32,9 @@ public class ClientInfo {
   public String ip;
   public String host;
   public int parseTime;
-  public String encoding;
+  public int queueTime;
+ 
+public String encoding;
   public boolean compressedRecv;
   public boolean compressedSend;
   public int contentLength;
@@ -43,6 +45,7 @@ public class ClientInfo {
                     String host,
                     String encoding,
                     int parseTime,
+                    int queueTime,
                     boolean compressedrecv,
                     boolean compressedsend,
                     int contentLength,
@@ -50,12 +53,32 @@ public class ClientInfo {
     this.ip = ip;
     this.host = host;
     this.parseTime = parseTime;
+    this.queueTime = queueTime;
     this.encoding = encoding;
     this.compressedRecv = compressedrecv;
     this.compressedSend = compressedsend;
     this.contentLength = contentLength;
     this.created = created;
     //this.threadCount = threadCount;
+  }
+  
+  public ClientInfo(String ip,
+		  String host,
+		  String encoding,
+		  int parseTime,
+		  boolean compressedrecv,
+		  boolean compressedsend,
+		  int contentLength,
+		  Date created) {
+	  this.ip = ip;
+	  this.host = host;
+	  this.parseTime = parseTime;
+	  this.encoding = encoding;
+	  this.compressedRecv = compressedrecv;
+	  this.compressedSend = compressedsend;
+	  this.contentLength = contentLength;
+	  this.created = created;
+	  //this.threadCount = threadCount;
   }
 
   public String getIP() {
@@ -65,6 +88,9 @@ public class ClientInfo {
   public String getHost() {
     return this.host;
   }
+  public int getQueueTime() {
+		return queueTime;
+	}
   public int getParseTime() {
     return parseTime;
   }
