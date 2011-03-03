@@ -746,9 +746,9 @@ private ServiceHandler createHandler(String handler, Access access)
    * @return
    * @throws FatalException
    */
-  public final Navajo handle(Navajo inMessage,  TmlRunnable origRunnable, Object userCertificate) throws
+  public final Navajo handle(Navajo inMessage,  TmlRunnable origRunnable, Object userCertificate, ClientInfo clientInfo) throws
       FatalException {
-    return processNavajo(inMessage, userCertificate, null, false,  origRunnable,null);
+    return processNavajo(inMessage, userCertificate,clientInfo,  false,  origRunnable,null);
   }
 
   /**
@@ -912,6 +912,7 @@ private ServiceHandler createHandler(String handler, Access access)
             access.ipAddress = clientInfo.getIP();
             access.hostName = clientInfo.getHost();
             access.parseTime = clientInfo.getParseTime();
+            access.queueTime = clientInfo.getQueueTime();
             access.requestEncoding = clientInfo.getEncoding();
             access.compressedReceive = clientInfo.isCompressedRecv();
             access.compressedSend = clientInfo.isCompressedSend();

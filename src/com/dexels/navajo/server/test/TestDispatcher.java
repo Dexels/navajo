@@ -206,8 +206,7 @@ public class TestDispatcher implements DispatcherInterface {
 	@Override
 	public Navajo handle(Navajo inMessage, boolean skipAuth,
 			AfterWebServiceEmitter emit) throws FatalException {
-		// TODO Auto-generated method stub
-		return null;
+		return handle(inMessage,null);
 	}
 
 	@Override
@@ -218,6 +217,13 @@ public class TestDispatcher implements DispatcherInterface {
 			AfterWebServiceEmitter emit) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Navajo handle(Navajo inMessage, TmlRunnable initialRunnable,
+			Object userCertificate, ClientInfo clientInfo)
+			throws FatalException {
+		return handle(inMessage,userCertificate);
 	}
 
 }
