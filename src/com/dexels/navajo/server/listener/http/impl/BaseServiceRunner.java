@@ -24,6 +24,7 @@ import com.dexels.navajo.listeners.NavajoDoneException;
 import com.dexels.navajo.listeners.Scheduler;
 import com.dexels.navajo.listeners.TmlRunnable;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.ClientInfo;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.FastDispatcher;
