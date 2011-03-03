@@ -1,5 +1,6 @@
 package navajoadapters;
 
+import org.dexels.grus.GrusManager;
 import org.osgi.framework.BundleContext;
 
 import com.dexels.navajo.adapter.MailMap;
@@ -111,6 +112,11 @@ public class Version extends dexels.Version {
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
 		MailMap m = new MailMap();
+	}
+	
+	@Override
+	public void shutdown() {
+		GrusManager.getInstance().shutdown();
 	}
 	
 	public static void main(String [] args) {
