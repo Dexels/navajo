@@ -179,7 +179,16 @@ public abstract  class BaseServiceRunner extends BaseInMemoryRequest implements 
 		  } else {
 			  boolean continuationFound = false;
 			  try {
-				  Navajo outDoc = DispatcherFactory.getInstance().removeInternalMessages(DispatcherFactory.getInstance().handle(in, this,cert));
+				  
+				  String sendEncoding = request.getHeader("Accept-Encoding");
+			      String recvEncoding = request.getHeader("Content-Encoding");
+					
+				  ClientInfo clientInfo = 	new ClientInfo(request.getRemoteAddr(), "unknown",
+							recvEncoding, (int) (scheduledAt - connectedAt), (int) (startedAt - scheduledAt), ( recvEncoding != null && ( recvEncoding.equals(COMPRESS_GZIP) || recvEncoding.equals(COMPRESS_JZLIB))), 
+							( sendEncoding != null && ( sendEncoding.equals(COMPRESS_GZIP) || sendEncoding.equals(COMPRESS_JZLIB))), 
+							request.getContentLength(), new java.util.Date( connectedAt ) );
+				  
+				  Navajo outDoc = DispatcherFactory.getInstance().removeInternalMessages(DispatcherFactory.getInstance().handle(in, this,cert, clientInfo));
 				  // Do do: Support async services in a more elegant way.
 				  if(!isAborted()) {
 					  writeOutput(in, outDoc);			  
