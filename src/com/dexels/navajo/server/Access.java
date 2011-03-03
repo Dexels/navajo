@@ -79,6 +79,7 @@ public final class Access implements java.io.Serializable, Mappable {
 	public transient CompiledScript myScript = null;
 	private int totaltime;
 	public int parseTime;
+	public int queueTime;
 	public int authorisationTime;
 	public int clientTime;
 	public int processingTime;
@@ -406,6 +407,7 @@ public final class Access implements java.io.Serializable, Mappable {
 		a.parseTime = this.parseTime;
 		a.authorisationTime = this.authorisationTime;
 		a.clientTime = this.clientTime;
+		a.queueTime = this.queueTime;
 		a.processingTime = this.processingTime;
 		a.requestEncoding = this.requestEncoding;
 		a.compressedReceive = this.compressedReceive;
@@ -489,6 +491,10 @@ public final class Access implements java.io.Serializable, Mappable {
 		return totaltime;
 	}
 
+	public int getQueueTime() {
+		return queueTime;
+	}
+
 	public Navajo getInDoc() {
 		return inDoc;
 	}
@@ -527,6 +533,7 @@ public final class Access implements java.io.Serializable, Mappable {
 			h.setHeaderAttribute("serverTime",""+getTotaltime());
 			h.setHeaderAttribute("authorisationTime",""+authorisationTime);
 			h.setHeaderAttribute("requestParseTime",""+parseTime);
+			h.setHeaderAttribute("queueTime",""+queueTime);
 			h.setHeaderAttribute("processingTime",""+processingTime);
 			h.setHeaderAttribute("threadCount", this.threadCount+"");
 			h.setHeaderAttribute("cpuload", cpuload+"");
