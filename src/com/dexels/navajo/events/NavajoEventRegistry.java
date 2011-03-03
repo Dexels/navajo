@@ -45,6 +45,12 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 		instance = null;
 	}
 	
+	public void shutdown() {
+		monitoredEvents.clear();
+		monitorLeveledEvents.clear();
+		clearInstance();
+	}
+	
 	/**
 	 * Return a (singleton) instance of the NavajoEventRegistry.
 	 * 
