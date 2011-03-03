@@ -41,8 +41,13 @@ public class AgentFactory {
 				return instance;
 			}
 		}
-		
-		
-		
+	}
+
+	public static final void shutdown() {
+		if(instance==null) {
+			return;
+		}
+		instance.stop();
+		instance = null;
 	}
 }
