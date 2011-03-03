@@ -124,7 +124,18 @@ public final class NavajoConfig implements NavajoConfigInterface {
 		
 	}
 
+	
+	public static void terminate() {
+		if(instance!=null) {
+			instance.shutdown();
+			instance=null;
+		}
+	}
       
+	public void shutdown() {
+		// do shutdown stuff?
+	}
+	
     @SuppressWarnings("unchecked")
 	private void loadConfig(InputStream in, String externalRootPath, String servletContextPath)  throws SystemException{
     	
