@@ -37,6 +37,7 @@ import com.dexels.navajo.server.enterprise.scheduler.TaskInterface;
 import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerFactory;
 import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerInterface;
 import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerFactory;
+import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerFactory;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.server.enterprise.xmpp.JabberWorkerFactory;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
@@ -1237,49 +1238,6 @@ public void finalizeService(Navajo inMessage, Access access, Navajo outMessage, 
 	  instances--;
   }
   
-  public static void killMe() {
-	  if ( DispatcherFactory.getInstance() != null ) {
-		  
-		  // Stop JMX.
-		  JMXHelper.destroy();
-		  
-		  // 1. Kill all supporting threads.
-		  GenericThread.killAllThreads();
-		  
-		  // 2. Clear all classloaders.
-		  GenericHandler.doClearCache();
-		  
-	      // 3. Shutdown monitoring agent.
-		  AgentFactory.getInstance().stop();
-		  
-		  // 4. Kill tribe manager.
-		  TribeManagerFactory.getInstance().terminate();
-		  
-		  // 5. Shut down DbConnectionBroker
-		  // Very ugly should be handled in a better way:
-		  // - By registering 'resources' to be killable
-		  // - OSGi package lifecycles
-		  // right now I just dug up 
-		  shutdownNavajoExtension("navajoadapters");
-		  
-		  AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Navajo Dispatcher terminated.");
-			 
-	  }  
-  }
-
-  @SuppressWarnings("unchecked")
-private static void shutdownNavajoExtension(String name) {
-	  // This should be replaced by OSGi bundle management
-	  try {
-		Class <? extends dexels.Version> version = (Class<? extends dexels.Version>) Class.forName(name.toLowerCase()+".version");
-		dexels.Version v = version.newInstance();
-		v.shutdown();
-	  } catch (Throwable e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-	  
-}
 
 public String getServerId() {
 	  return TslCompiler.getHostName();
@@ -1618,7 +1576,7 @@ public String getServerId() {
 			  }
 		  }
 	  }
-	  Dispatcher.killMe();
+	  DispatcherFactory.killMe();
 	  
   }
 

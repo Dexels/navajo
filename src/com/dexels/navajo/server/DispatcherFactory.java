@@ -10,7 +10,13 @@ import javax.script.ScriptEngineManager;
 
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.events.NavajoEventRegistry;
+import com.dexels.navajo.server.enterprise.monitoring.AgentFactory;
+import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerFactory;
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
+import com.dexels.navajo.server.enterprise.xmpp.JabberWorkerFactory;
 import com.dexels.navajo.server.jmx.JMXHelper;
+import com.dexels.navajo.util.AuditLog;
 
 public class DispatcherFactory {
 
@@ -20,7 +26,56 @@ public class DispatcherFactory {
 	
 	public DispatcherFactory() {	
 	}
-	
+
+  public static void killMe() {
+	  if ( DispatcherFactory.getInstance() != null ) {
+		  
+		  // Stop JMX.
+		  JMXHelper.destroy();
+		  
+		  // 1. Kill all supporting threads.
+		  GenericThread.killAllThreads();
+		  // remove the static links
+		  StatisticsRunnerFactory.shutdown();
+		  
+		  // 2. Clear all classloaders.
+		  GenericHandler.doClearCache();
+		  
+	      // 3. Shutdown monitoring agent.
+		  AgentFactory.shutdown();
+		  
+		  // 4. Kill tribe manager.
+		  TribeManagerFactory.shutdown();
+		  
+		  NavajoEventRegistry.getInstance().shutdown();
+		  // 5. Shut down DbConnectionBroker
+		  // Very ugly should be handled in a better way:
+		  // - By registering 'resources' to be killable
+		  // - OSGi package lifecycles
+		  // right now I just dug up 
+		  shutdownNavajoExtension("navajoadapters");
+		  
+		  AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Navajo Dispatcher terminated.");
+
+		  JabberWorkerFactory.shutdown();
+	  }  
+	  shutdown();
+  }
+
+  @SuppressWarnings("unchecked")
+private static void shutdownNavajoExtension(String name) {
+	  // This should be replaced by OSGi bundle management
+	  try {
+		Class <? extends dexels.Version> version = (Class<? extends dexels.Version>) Class.forName(name.toLowerCase()+".Version");
+		dexels.Version v = version.newInstance();
+		v.shutdown();
+	  } catch (Throwable e) {
+		e.printStackTrace();
+	}
+	  
+}
+
+  
 	public DispatcherFactory(DispatcherInterface injectedDispatcher) {	
 		instance = injectedDispatcher;
 	}
@@ -64,6 +119,12 @@ public class DispatcherFactory {
 		
 		createInstance(absRootPath, fileInputStreamReader, configurationUrl,servletContextRootPath);
 		return instance;
+	}
+	
+	public static void shutdown() {
+		instance = null;
+		scriptEngineFactory = null;
+		NavajoConfig.terminate();
 	}
 	
 	public static ScriptEngineManager getScriptEngineManager() {
