@@ -68,4 +68,6 @@ public interface StoreInterface {
    * @param m
    */
   public void setDatabaseParameters(Map m);
+
+public void shutdown();
 }

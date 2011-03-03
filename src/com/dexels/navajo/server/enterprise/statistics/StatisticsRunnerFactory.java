@@ -36,4 +36,11 @@ public class StatisticsRunnerFactory {
 		}
 	}
 	
+	public static final void shutdown() {
+		if(instance==null) {
+			return;
+		}
+		instance = null;
+	}
+	
 }
