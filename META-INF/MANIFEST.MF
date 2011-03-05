@@ -1,0 +1,15 @@
+Bundle-Name: Navajo Listeners Jetty Continuations
+Bundle-SymbolicName: com.dexels.navajo.listeners.jetty
+Bundle-Description: A Hello World bundle
+Bundle-ManifestVersion: 2
+Bundle-Version: 1.0.0
+Bundle-Activator: navajolistenerstomcat.Version
+Bundle-ClassPath: .,
+ lib/jetty-continuation-8.0.0.M2.jar,
+ compilelib/servlet-api.jar
+Include-Resource: lib
+Bundle-Vendor: Dexels
+Require-Bundle: com.dexels.navajo.client,
+ com.dexels.navajo.core,
+ com.dexels.navajo.listeners;bundle-version="3.1.1",
+ com.dexels.navajo.document;bundle-version="1.0.0"
