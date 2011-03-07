@@ -1,10 +1,12 @@
 package com.dexels.navajo.server.listener.http.continuation;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
@@ -39,8 +41,7 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 		super(request, inputDoc, response, sendEncoding, recvEncoding, cert);
 		connectedAt = System.currentTimeMillis();
 		continuation = ContinuationSupport.getContinuation(request);
-		System.err.println("Continuation found: "+continuation.getClass());
-		
+		continuation.setTimeout(Long.MAX_VALUE);
 
 	}
 	
@@ -57,7 +58,10 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 		super.endTransaction();
 	}
 
-
+	
+	public InputStream getRequestInputStream() throws IOException {
+		return request.getInputStream();
+	}
 
 	// 
 	public void writeOutput(Navajo inDoc, Navajo outDoc) throws IOException, FileNotFoundException, UnsupportedEncodingException, NavajoException {
@@ -66,10 +70,15 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 		response.setContentType("text/xml; charset=UTF-8");
 		response.setHeader("Connection", "close"); // THIS IS NOT SUPPORTED, I.E. IT DOES NOT WORK...EH.. PROBABLY..
 		// Should be refactored to a special filter.
+		
+		
+		System.err.println("Content-Encoding: "+recvEncoding);
+//		System.err.println("Accept-Encoding: "+sendEncoding);
 	if ( recvEncoding != null && recvEncoding.equals(COMPRESS_JZLIB)) {		
-		response.setHeader("Content-Encoding", COMPRESS_JZLIB);
+		  response.setHeader("Content-Encoding", COMPRESS_JZLIB);
 		  out = new ZOutputStream(response.getOutputStream(), JZlib.Z_BEST_SPEED);
 	  } else if ( recvEncoding != null && recvEncoding.equals(COMPRESS_GZIP)) {
+
 		  response.setHeader("Content-Encoding", COMPRESS_GZIP);
 		  out = new java.util.zip.GZIPOutputStream(response.getOutputStream());
 	  }
@@ -82,7 +91,7 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 	  long finishedScriptAt = System.currentTimeMillis();
 	  // postTime = 
 	  long postTime = scheduledAt - connectedAt;
-	  long queueTime = connectedAt - scheduledAt;
+	  long queueTime = startedAt - scheduledAt;
 	  long serverTime = finishedScriptAt - connectedAt;
 
 	  outDoc.getHeader().setHeaderAttribute("postTime", ""+postTime);
@@ -98,7 +107,15 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 		  threadStatus = "Schedule status unknown, no scheduler found.";
 	  }
 //	  int threadsActive = getActiveCount();
-
+	  System.err.println("StreamClass: "+out.getClass().getName());
+	  System.err.println("ResponseClass: "+response.getClass().getName());
+	  long startWrite = System.currentTimeMillis();
+	  outDoc.write(out);
+//	  out.flush();
+	  out.close();
+//	  response.getOutputStream().flush();
+//	  response.getOutputStream().close();
+//	  
 	  if ( inDoc != null && inDoc.getHeader() != null && outDoc != null && outDoc.getHeader() != null && !Dispatcher.isSpecialwebservice(inDoc.getHeader().getRPCName())) {
 		  System.err.println("(" + DispatcherFactory.getInstance().getApplicationId() + "): " + 
 				          new java.util.Date(connectedAt) + ": " +
@@ -115,12 +132,12 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 						  ",cqt="+queueTime+
 						  ",qst="+serverTime+
 						  ",cta="+threadStatus+
-						  ",cwt=N/A)" + " (" + sendEncoding + "/" + recvEncoding +
+						  ",cwt="+(System.currentTimeMillis()-startWrite)+")" + " (" + sendEncoding + "/" + recvEncoding +
 						  
 				  ")" );
 	  }
 
-	  outDoc.write(out);
+	  
 
 	
 }
@@ -134,7 +151,7 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 	   * @throws ServletException
 	   */
 	  private final void execute() throws IOException, ServletException {
-		  
+		  startedAt = System.currentTimeMillis();
 //		  BufferedReader r = null;
 		  try {
 			  Navajo in = getInputNavajo();
@@ -148,7 +165,7 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 				      String recvEncoding = request.getHeader("Content-Encoding");
 						
 					  ClientInfo clientInfo = 	new ClientInfo(request.getRemoteAddr(), "unknown",
-								recvEncoding, (int) (scheduledAt - connectedAt), (int) (connectedAt - scheduledAt), ( recvEncoding != null && ( recvEncoding.equals(COMPRESS_GZIP) || recvEncoding.equals(COMPRESS_JZLIB))), 
+								recvEncoding, (int) (scheduledAt - connectedAt), (int) (startedAt - scheduledAt), ( recvEncoding != null && ( recvEncoding.equals(COMPRESS_GZIP) || recvEncoding.equals(COMPRESS_JZLIB))), 
 								( sendEncoding != null && ( sendEncoding.equals(COMPRESS_GZIP) || sendEncoding.equals(COMPRESS_JZLIB))), 
 								request.getContentLength(), new java.util.Date( connectedAt ) );
 					  
