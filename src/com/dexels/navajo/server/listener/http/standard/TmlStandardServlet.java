@@ -16,11 +16,11 @@ import com.dexels.navajo.server.listener.http.TmlScheduler;
 
 public class TmlStandardServlet extends HttpServlet implements SchedulableServlet {
 
-	private TmlScheduler myScreen = null;
+	private TmlScheduler myScheduler = null;
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		boolean precheck = myScreen.preCheckRequest(req);
+		boolean precheck = myScheduler.preCheckRequest(req);
 		if(!precheck) {
 			req.getInputStream().close();
 			resp.getOutputStream().close();
@@ -50,7 +50,7 @@ public class TmlStandardServlet extends HttpServlet implements SchedulableServle
 
 	@Override
 	public TmlScheduler getTmlScheduler() {
-		return myScreen;
+		return myScheduler;
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class TmlStandardServlet extends HttpServlet implements SchedulableServle
 
 	@Override
 	public void setTmlScheduler(TmlScheduler s) {
-		myScreen = s;
+		myScheduler = s;
 	}
 	
 	

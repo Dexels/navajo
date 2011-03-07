@@ -15,14 +15,10 @@ import com.dexels.navajo.server.listener.http.impl.BaseServiceRunner;
 
 public class TmlStandardRunner extends BaseServiceRunner implements TmlRunnable {
 
-	private final HttpServletRequest request;
-	private final HttpServletResponse response;
 	private  Navajo inputDoc;
 	
 	public  TmlStandardRunner(HttpServletRequest request,Navajo inputDoc, HttpServletResponse response,  String sendEncoding, String recvEncoding, Object cert) {
 		super(request, response,sendEncoding,recvEncoding,cert);
-		this.response = response;
-		this.request = request;
 		this.inputDoc = inputDoc;
 	}
 

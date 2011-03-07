@@ -42,19 +42,23 @@ public abstract  class BaseServiceRunner extends BaseInMemoryRequest implements 
 	public static final String COMPRESS_NONE = "";
 
 
-	protected final HttpServletResponse response;
+	protected  HttpServletResponse response;
+	public void setResponse(HttpServletResponse response) {
+		this.response = response;
+	}
+
 	protected final HttpServletRequest request;
 	
-	private final String recvEncoding;
-   private final String sendEncoding;
-   private final Object cert;
+	protected final String recvEncoding;
+   protected final String sendEncoding;
+   protected final Object cert;
 //   private InputStream is;
 	private boolean committed;
 	 private boolean isAborted = false;
 
-	private long connectedAt = -1;
-	private long scheduledAt = -1;
-	private long startedAt = -1;
+	 protected long connectedAt = -1;
+	protected long scheduledAt = -1;
+	protected long startedAt = -1;
 	private TmlScheduler tmlScheduler;
 	private String url;
 
@@ -159,24 +163,24 @@ public abstract  class BaseServiceRunner extends BaseInMemoryRequest implements 
 				  endTransaction();
 			  }
 			  
-		  } else if ( in.getHeader().getHeaderAttribute("fastflow") != null ) {
-
-			  Runnable onFinish = new Runnable() {
-
-				public void run() {
-					try {
-						tmlScheduler.removeTmlRunnable(request);
-						endTransaction();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-				  
-			  };
-			  
-			  new FastDispatcher().handle(in, response.getOutputStream(), onFinish);
-			  
+//		  } else if ( in.getHeader().getHeaderAttribute("fastflow") != null ) {
+//
+//			  Runnable onFinish = new Runnable() {
+//
+//				public void run() {
+//					try {
+//						tmlScheduler.removeTmlRunnable(request);
+//						endTransaction();
+//					} catch (IOException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//				}
+//				  
+//			  };
+//			  
+//			  new FastDispatcher().handle(in, response.getOutputStream(), onFinish);
+//			  
 		  } else {
 			  boolean continuationFound = false;
 			  try {
@@ -329,8 +333,7 @@ public void writeOutput(Navajo inDoc, Navajo outDoc) throws IOException, FileNot
 		  //out.write("DIT IS HET RESULTAAT VAN DE WEBSERVICE.");
 		 
 		//  response.flushBuffer();
-		  out.flush();
-		  out.close();
+//		  out.close();
 //		  
 		  
 		  
@@ -368,7 +371,7 @@ public void writeOutput(Navajo inDoc, Navajo outDoc) throws IOException, FileNot
 					  ")" );
 //			  System.err.println("Thread name: "+Thread.currentThread().getName());
 		  }
-		  out = null;
+		  //out = null;
 //	} finally {
 //		temp.delete();
 //	}

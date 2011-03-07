@@ -33,7 +33,14 @@ public class NavajoContextListener implements ServletContextListener {
 	
 	@Override
 	public void contextDestroyed(ServletContextEvent sc) {
-		DispatcherFactory.killMe();
+		dexels.Version.shutdownNavajoExtension("navajo");
+		dexels.Version.shutdownNavajoExtension("navajodocument");
+		dexels.Version.shutdownNavajoExtension("navajoclient");
+		dexels.Version.shutdownNavajoExtension("navajoadapters");
+		dexels.Version.shutdownNavajoExtension("navajolisteners");
+		dexels.Version.shutdownNavajoExtension("navajoenterpriseadapters");
+		dexels.Version.shutdownNavajoExtension("navajoenterprise");
+		dexels.Version.shutdownNavajoExtension("navajoenterpriselisteners");
 	}
 
 	@Override
