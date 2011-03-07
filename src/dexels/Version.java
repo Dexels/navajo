@@ -44,7 +44,24 @@ public class Version extends BaseVersion implements BundleActivator {
 	}
 
 	public void shutdown() {
-		// add extension shutdown code
+		if(context==null) {
+			System.err.println("No OSGi present.");
+		}
+		System.err.println("Shutting down bundle: "+getClass().getName());
 	}
 	
+
+	  @SuppressWarnings("unchecked")
+	public static void shutdownNavajoExtension(String name) {
+		  // This should be replaced by OSGi bundle management
+		  try {
+			Class <? extends dexels.Version> version = (Class<? extends dexels.Version>) Class.forName(name.toLowerCase()+".Version");
+			dexels.Version v = version.newInstance();
+			v.shutdown();
+		  } catch (Throwable e) {
+			  System.err.println("Extension shutdown failed.");
+		}
+		  
+	}
+
 }
