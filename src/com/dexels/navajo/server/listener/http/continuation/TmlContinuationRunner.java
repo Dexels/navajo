@@ -49,6 +49,7 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 	@Override
 	public void endTransaction() throws IOException {
 		try {
+			// writeOutput moved from execute to here, as the scheduler thread shouldn't touch the response output stream
 			writeOutput(getInputNavajo(), outDoc);
 		} catch (NavajoException e) {
 			e.printStackTrace();
@@ -58,11 +59,13 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 
 
 
+	// 
 	public void writeOutput(Navajo inDoc, Navajo outDoc) throws IOException, FileNotFoundException, UnsupportedEncodingException, NavajoException {
 		OutputStream out = null;
 
 		response.setContentType("text/xml; charset=UTF-8");
 		response.setHeader("Connection", "close"); // THIS IS NOT SUPPORTED, I.E. IT DOES NOT WORK...EH.. PROBABLY..
+		// Should be refactored to a special filter.
 	if ( recvEncoding != null && recvEncoding.equals(COMPRESS_JZLIB)) {		
 		response.setHeader("Content-Encoding", COMPRESS_JZLIB);
 		  out = new ZOutputStream(response.getOutputStream(), JZlib.Z_BEST_SPEED);
@@ -159,6 +162,7 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 				  }
 				  finally {
 					  getTmlScheduler().removeTmlRunnable(request);
+					  getTmlScheduler().runFinished(this);
 					  if(!continuationFound) {
 						  resumeContinuation();
 					  }
