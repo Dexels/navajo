@@ -1,9 +1,9 @@
 <%@page import="java.io.*"%>
 <%@page import="java.net.*"%>
 <%@page import="java.util.*"%>
-<%@ taglib prefix="c" uri="/WEB-INF/tags/c.tld"%>
-<%@ taglib prefix="nav" uri="/WEB-INF/tags/navajo.tld"%>
-<%@ taglib prefix="navserver" uri="/WEB-INF/tags/navajoserver.tld"%>
+<%@ taglib prefix="c" uri="/WEB-INF/tld/c.tld"%>
+<%@ taglib prefix="nav" uri="/WEB-INF/tld/navajo.tld"%>
+<%@ taglib prefix="navserver" uri="/WEB-INF/tld/navajoserver.tld"%>
 <%@ page import="com.dexels.navajo.client.context.NavajoContext"%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <jsp:useBean id="navajoContext" class="com.dexels.navajo.client.context.NavajoContext" scope="session" />
@@ -15,7 +15,7 @@
 <nav:postHandler/>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-<title>Navajo Installer 2.2</title>
+<title><c:import url="tml/writeversion.jsp" /></title>
 <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 <!-- add your meta tags here -->
 
@@ -37,7 +37,7 @@
           <!-- start: skip link navigation -->
 			
         </div>
-        <h2><a href="index.jsp">Navajo Installer 2.2</a></h2>
+        <h2><c:import url="tml/writeversion.jsp" /></h2>
       </div>
       <div id="nav">
         <!-- skiplink anchor: navigation -->
@@ -64,7 +64,11 @@
 				Current engine instance: ${engineInstance }
 				</p>
 				<p>
+				<% out.println("Using user home: "+System.getProperty("user.home"));
+				 %>
+				</p>
 				
+				<p>
 				Choose an installation path for context: ${serverContext.contextName}:
 				</p>
 				<c:if test="">

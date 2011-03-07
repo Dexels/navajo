@@ -1,9 +1,9 @@
 <%@page import="java.io.*"%>
 <%@page import="java.net.*"%>
 <%@page import="java.util.*"%>
-<%@ taglib prefix="c" uri="/WEB-INF/tags/c.tld"%>
-<%@ taglib prefix="nav" uri="/WEB-INF/tags/navajo.tld"%>
-<%@ taglib prefix="navserver" uri="/WEB-INF/tags/navajoserver.tld"%>
+<%@ taglib prefix="c" uri="/WEB-INF/tld/c.tld"%>
+<%@ taglib prefix="nav" uri="/WEB-INF/tld/navajo.tld"%>
+<%@ taglib prefix="navserver" uri="/WEB-INF/tld/navajoserver.tld"%>
 <%@ page import="com.dexels.navajo.client.context.NavajoContext"%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@page import="com.dexels.navajo.installer.NavajoInstaller"%>
@@ -45,6 +45,7 @@
 
 	// TODO Check if it already contains the value. This construction is incorrect if
 	// the installation directory has simply been deleted.
+	System.err.println("Using user home: "+System.getProperty("user.home"));
 	File home = new File(System.getProperty("user.home"));
 	File navajo = new File(home,"navajo.properties");
 	FileWriter fw = new FileWriter(navajo,true);

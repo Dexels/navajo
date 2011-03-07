@@ -4,7 +4,7 @@
 <%@page import="java.io.*"%>
 <%@page import="java.net.*"%>
 <%@page import="java.util.*"%>
-<%@ taglib prefix="c" uri="../WEB-INF/tags/c.tld"%>
+<%@ taglib prefix="c" uri="../WEB-INF/tld/c.tld"%>
 <%@ page import="com.dexels.navajo.client.context.NavajoContext"%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <jsp:useBean id="navajoContext" class="com.dexels.navajo.client.context.NavajoContext" scope="page" />

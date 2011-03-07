@@ -3,8 +3,8 @@
 <%@page import="java.net.*"%>
 <%@page import="java.util.*"%>
 <%@ page trimDirectiveWhitespaces="true" %>
-<%@ taglib prefix="c" uri="../WEB-INF/tags/c.tld"%>
-<%@ taglib prefix="nav" uri="../WEB-INF/tags/navajo.tld"%>
+<%@ taglib prefix="c" uri="../WEB-INF/tld/c.tld"%>
+<%@ taglib prefix="nav" uri="../WEB-INF/tld/navajo.tld"%>
 <%@ page import="com.dexels.navajo.client.context.NavajoContext"%>
 <jsp:useBean id="navajoContext" class="com.dexels.navajo.client.context.NavajoContext" scope="session" />
 	<div>
