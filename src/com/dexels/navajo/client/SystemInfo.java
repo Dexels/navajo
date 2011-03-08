@@ -99,7 +99,7 @@ public class SystemInfo {
 		return compactInfo;
 	}
 	
-	public static SystemInfo parseSystemInfoString(String s) {
+	public SystemInfo parseSystemInfoString(String s) {
 		SystemInfo info = new SystemInfo(s);
 		return info;
 	}
@@ -107,7 +107,11 @@ public class SystemInfo {
 	public static void main(String [] args) {
 		SystemInfo info = SystemInfo.getSystemInfo();
 		System.err.println(info);
-		SystemInfo info2 = SystemInfo.parseSystemInfoString(info.toString());
+		SystemInfo info2 = SystemInfo.getSystemInfo().parseSystemInfoString(info.toString());
 		System.err.println(info2);
+	}
+	
+	public static void clearInstance() {
+		instance = null;
 	}
 }
