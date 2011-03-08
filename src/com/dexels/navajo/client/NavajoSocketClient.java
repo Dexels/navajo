@@ -18,6 +18,7 @@ import com.dexels.navajo.document.*;
  *
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * @deprecated Not used, and not worth maintaining. Use a lightweight servlet container.
  */
 public class NavajoSocketClient extends ClientQueueImpl {
     
