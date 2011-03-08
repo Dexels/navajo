@@ -4,6 +4,17 @@ import org.osgi.framework.BundleContext;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.events.NavajoEventRegistry;
+import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.GenericHandler;
+import com.dexels.navajo.server.GenericThread;
+import com.dexels.navajo.server.NavajoConfig;
+import com.dexels.navajo.server.enterprise.monitoring.AgentFactory;
+import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerFactory;
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
+import com.dexels.navajo.server.enterprise.xmpp.JabberWorkerFactory;
+import com.dexels.navajo.server.jmx.JMXHelper;
+import com.dexels.navajo.server.resource.ResourceCheckerManager;
 /**
  * <p>Title: Navajo Product Project</p>
  * <p>Description: This is the official source for the Navajo server</p>
@@ -28,6 +39,7 @@ import com.dexels.navajo.document.NavajoFactory;
  * SUCH DAMAGE.
  * ====================================================================
  */
+import com.dexels.navajo.util.AuditLog;
 
 /**
  * 
@@ -245,4 +257,49 @@ public class Version extends dexels.Version {
 			System.err.println("\t"+d[i].toString());
 		}
 	}
+
+
+
+	@Override
+	public void shutdown() {
+		super.shutdown();
+		  // Stop JMX.
+		  JMXHelper.destroy();
+			ResourceCheckerManager.clearInstance();
+		  
+		  // 1. Kill all supporting threads.
+		  GenericThread.killAllThreads();
+		  // remove the static links
+		  StatisticsRunnerFactory.shutdown();
+		  
+		  // 2. Clear all classloaders.
+		  GenericHandler.doClearCache();
+		  
+	      // 3. Shutdown monitoring agent.
+		  AgentFactory.shutdown();
+		  
+		  // 4. Kill tribe manager.
+		  TribeManagerFactory.shutdown();
+		  
+		  NavajoEventRegistry.getInstance().shutdown();
+		  NavajoEventRegistry.clearInstance();
+		  // 5. Shut down DbConnectionBroker
+		  // Very ugly should be handled in a better way:
+		  // - By registering 'resources' to be killable
+		  // - OSGi package lifecycles
+		  // right now I just dug up 
+
+		  NavajoConfig.terminate();
+		  
+		  DispatcherFactory.getInstance().shutdown();
+		  AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Navajo Dispatcher terminated.");
+
+		  JabberWorkerFactory.shutdown();
+		  DispatcherFactory.shutdown();
+	
+	}
+	
+
+	
+	
 }
