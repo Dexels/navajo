@@ -51,7 +51,7 @@ public class NavajoClient implements ClientInterface {
   private String[] serverUrls;
   private double[] serverLoads;
   
-  private final static Random randomize = new Random(System.currentTimeMillis());
+  private final Random randomize = new Random(System.currentTimeMillis());
   // Threadsafe collections:
   private Map<String,Message> globalMessages = new HashMap<String,Message>();
   private Map<String,Navajo> serviceCache = new HashMap<String,Navajo>();
@@ -1177,125 +1177,6 @@ private final Navajo retryTransaction(String server, Navajo out, boolean useComp
     return 0;
   }
 
-  /**
-   * Not supported
-   * @param request Message
-   * @param service String
-   * @param responseMsgName String
-   * @param startIndex int
-   * @param endIndex int
-   * @param total int
-   * @return LazyMessage
-   */
-  public final LazyMessage doLazySend(Message request, String service, String responseMsgName, int startIndex, int endIndex, int total) {
-    // is this one used?
-    throw new UnsupportedOperationException("Lazy message are not yet supported in the implementation!");
-  }
-
-  /**
-   * Not supported
-   * @param n Navajo
-   * @param service String
-   * @param lazyMessageName String
-   * @param startIndex int
-   * @param endIndex int
-   * @param total int
-   * @throws ClientException
-   * @return LazyMessage
-   */
-  public final LazyMessage doLazySend(Navajo n, String service, String lazyMessageName, int startIndex, int endIndex, int total) throws ClientException {
-
-    n.addLazyMessagePath(lazyMessageName, startIndex, endIndex, total);
-    Navajo reply = doSimpleSend(n, service);
-
-    Message m = reply.getMessage(lazyMessageName);
-    if (m == null) {
-      return null;
-    }
-    if (!LazyMessage.class.isInstance(m)) {
-      System.err.println("No lazy result returned after lazy send!");
-      return (LazyMessage) m;
-    }
-    else {
-      LazyMessage l = (LazyMessage) m;
-      l.setResponseMessageName(lazyMessageName);
-      l.setRequest(service, n);
-      return l;
-    }
-  }
-
-  /**
-   * Not supported
-   * @param n Navajo
-   * @param service String
-   * @param lazyMessageName String
-   * @param startIndex int
-   * @param endIndex int
-   * @param total int
-   * @param v ConditionErrorHandler
-   * @throws ClientException
-   * @return LazyMessage
-   */
-  public final LazyMessage doLazySend(Navajo n, String service, String lazyMessageName, int startIndex, int endIndex, int total, ConditionErrorHandler v) throws ClientException {
-    n.addLazyMessagePath(lazyMessageName, startIndex, endIndex, total);
-    Navajo reply = doSimpleSend(n, service, v);
-    Message m = reply.getMessage(lazyMessageName);
-    if (m == null) {
-      return null;
-    }
-    if (!LazyMessage.class.isInstance(m)) {
-      System.err.println("No lazy result returned after lazy send!");
-      return (LazyMessage) m;
-    }
-    else {
-      LazyMessage l = (LazyMessage) m;
-      l.setResponseMessageName(lazyMessageName);
-      l.setRequest(service, n);
-      return l;
-    }
-  }
-
-  /**
-   * Not supported
-   * @param request Navajo
-   * @param service String
-   * @param lazyPath String
-   * @param startIndex int
-   * @param endIndex int
-   * @throws ClientException
-   * @return Navajo
-   */
-  public final Navajo createLazyNavajo(Navajo request, String service, String lazyPath, int startIndex, int endIndex) throws ClientException {
-    return null;
-  }
-
-  /**
-   * Nor supported
-   * @param request Navajo
-   * @param startIndex int
-   * @param endIndex int
-   * @throws ClientException
-   * @return Navajo
-   */
-  public final Navajo performLazyUpdate(Navajo request, int startIndex, int endIndex) throws ClientException {
-    return null;
-  }
-
-  /**
-   * Not supported
-   * @return boolean
-   */
-  public final boolean useLazyMessaging() {
-    return useLazyMessaging;
-  }
-
-  /**
-   * Not supported
-   * @param b boolean
-   */
-  public final void setUseLazyMessaging(boolean b) {
-    useLazyMessaging = b;
-  }
 
   /**
    * Perform a synchronous webservice call
