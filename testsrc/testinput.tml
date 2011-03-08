@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tml documentImplementation="SAXP">
+   <header requestParseTime="3" sourceScript="club/InitSearchClubs" processingTime="2" accessId="1299592692573-2356" transferTime="4" cpuload="0.01375" threadName="&amp;quot;http-nio-80&amp;quot;-exec-4" authorisationTime="434" serverTime="439" threadCount="0" queueTime="0" clientTime="443" postTime="3">
+      <transaction rpc_usr="ROOT" rpc_name="club/InitSearchClubs" rpc_pwd=""/>
+      <callback/>
+      <client/>
+      <piggyback requestRate="0.10678912" serverId="localhost.localdomain/KNVB Test"/>
+   </header>
+   <message name="ClubSearch" type="simple">
+      <property description="Relatiecode" direction="in" name="OrganizationId" value="" length="12" type="string"/>
+      <property description="Regiocode" direction="in" name="RegionCode" value="" length="35" type="string"/>
+      <property description="Zoeknaam" direction="in" name="SearchName" value="" length="15" type="string"/>
+      <property description="Korte naam" direction="in" name="ShortName" value="" length="15" type="string"/>
+      <property description="Club naam" direction="in" name="ClubName" value="" length="36" type="string"/>
+      <property description="Gemeentenaam" direction="in" name="CommunityName" value="" length="36" type="string"/>
+      <property description="Gemeentecode" direction="in" name="CommunityId" value="" length="36" type="string"/>
+      <property direction="in" name="Max" value="" length="10" type="integer"/>
+      <property direction="in" name="Min" value="" length="10" type="integer"/>
+      <property direction="in" name="SportId" value="" length="10" type="string"/>
+      <property description="Opgeheven verenigingen tonen" direction="in" name="ShowLiquidated" value="false" length="10" type="boolean"/>
+   </message>
+   <methods>
+      <method name="club/ProcessSearchClubs"/>
+   </methods>
+</tml>
