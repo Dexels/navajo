@@ -67,6 +67,14 @@
 				<% out.println("Using user home: "+System.getProperty("user.home"));
 				 %>
 				</p>
+				<p>
+				<%
+				String path = application.getRealPath("");
+				String selectedPath = request.getParameter("selectedPath");
+
+				out.println("Using user home: "+System.getProperty("user.home"));
+				 %>
+				</p>
 				
 				<p>
 				Choose an installation path for context: ${serverContext.contextName}:
