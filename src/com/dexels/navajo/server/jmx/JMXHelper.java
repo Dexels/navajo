@@ -7,13 +7,18 @@ import java.lang.management.ThreadMXBean;
 import java.rmi.NotBoundException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 
 
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
+import javax.management.ListenerNotFoundException;
 import javax.management.MBeanRegistrationException;
 import javax.management.MBeanServer;
 import javax.management.MBeanServerConnection;
@@ -52,7 +57,8 @@ public final class JMXHelper  {
 	
 	private static HashSet<Monitor> monitors = new HashSet<Monitor>();
 	private static HashSet<ObjectName> mbeans = new HashSet<ObjectName>();
-	
+
+	private static Map<Monitor,List<NotificationListener>> listenerMap = new HashMap<Monitor, List<NotificationListener>>();
 	private RMIServer getRMIServer(String hostName, int port) throws IOException {
 
 		Registry registry = LocateRegistry.getRegistry(hostName, port);
@@ -69,19 +75,21 @@ public final class JMXHelper  {
 	public static void destroy() {
 		
 		AuditLog.log("JMX", "Deregistering JMX Beans", Level.WARNING);
-		
+		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
+
 		Iterator<Monitor> allMonitors = monitors.iterator();
 		while ( allMonitors.hasNext() ) {
 			Monitor monitor = allMonitors.next();
 			try {
+				// doesn't do anything
 				monitor.stop();
+				deregisterListenersForMonitor(monitor);
 			} catch (Exception e) {
 				e.printStackTrace(System.err);
 			}
 			AuditLog.log("JMX", "Stopped JMX Monitor: " + monitor.getClass().getName(), Level.WARNING);
 		}
 		
-		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
 		Iterator<ObjectName> allBeans = mbeans.iterator();
 		while ( allBeans.hasNext() ) {
 			ObjectName mbean = allBeans.next();
@@ -94,6 +102,11 @@ public final class JMXHelper  {
 				e.printStackTrace();
 			}
 		}
+		
+		listenerMap.clear();
+		mbeans.clear();
+		monitors.clear();
+		System.err.println("ALL BEANS DEREGISTERED. BEANCOUNT: "+mbs.getMBeanCount());
 	}
 	
 	
@@ -191,6 +204,30 @@ public final class JMXHelper  {
 		return domain;
 	}
 	
+	private static void registerListenerForMonitor(Monitor m, NotificationListener nl) {
+		List<NotificationListener> nll = listenerMap.get(m);
+		if(nll==null) {
+			nll = new ArrayList<NotificationListener>();
+			listenerMap.put(m, nll);
+		}
+		nll.add(nl);
+	}
+
+	private static void deregisterListenersForMonitor(Monitor m) {
+		List<NotificationListener> nll = listenerMap.get(m);
+		if(nll==null) {
+			System.err.println("No listeners to deregister for monitor: "+m);
+			return;
+		}
+		System.err.println("# of Monitors to deregister: "+nll.size());
+		for (NotificationListener notificationListener : nll) {
+			try {
+				m.removeNotificationListener(notificationListener);
+			} catch (ListenerNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 	public final static void registerMXBean(Object o, String domain, String type) {
 		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
 		ObjectName name = getObjectName(domain, type);
@@ -221,51 +258,24 @@ public final class JMXHelper  {
 		mbeans.add(name);
 	}
 
-	public final static void deregisterMXBean(String domain, String type) throws Throwable {
-		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
-		ObjectName name = getObjectName(domain, type);
-		if ( name != null ) {
-			try {
-				mbs.unregisterMBean(name);
-			} finally {
-				mbeans.remove(name);
+	public final static void deregisterMXBean(String domain, String type) {
+		try {
+			MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
+			ObjectName name = getObjectName(domain, type);
+			if ( name != null ) {
+				try {
+					mbs.unregisterMBean(name);
+				} finally {
+					mbeans.remove(name);
+				}
 			}
+		} catch (MBeanRegistrationException e) {
+			System.err.println("Deregister of: "+domain+" : "+type+" failed ("+e.getMessage()+"). Continuing");
+		} catch (InstanceNotFoundException e) {
+			System.err.println("Deregister of: "+domain+" : "+type+" failed ("+e.getMessage()+"). Continuing");
 		}
 	}
 		
-	public final static Monitor addMonitor(NotificationListener listener, String domain, String type, String attributeName, long frequency) {
-		
-		final Monitor monitor = new Monitor() {
-
-			@Override
-			public void start() {
-				System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Started monitor");
-			}
-
-			@Override
-			public void stop() {
-				System.err.println("Stopped monitor");
-			}
-			
-		};
-		
-		monitor.addObservedObject( getObjectName(domain, type) );
-		monitor.setGranularityPeriod(1000L);
-		monitor.addNotificationListener(listener, null, null);
-		
-		 MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
-	        try {
-				mbs.registerMBean(monitor, getObjectName( MONITOR_DOMAIN, "NotificationMonitor-" + monitor.hashCode()));
-				monitor.addNotificationListener( listener, null, null);
-				monitor.start();
-				monitors.add(monitor);
-			} catch (Exception e) {
-				e.printStackTrace(System.err);
-			}
-		
-		return monitor;
-	}
-	
 	public final static void addGaugeMonitor(NotificationListener listener, String domain, String type, String attributeName, Number low, Number high, long frequency) {
 		// construct monitor
 		
@@ -286,10 +296,13 @@ public final class JMXHelper  {
 
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
         try {
-			mbs.registerMBean(monitor, getObjectName( MONITOR_DOMAIN, "GaugeMonitor-" + monitor.hashCode()));
+			ObjectName objectName = getObjectName( MONITOR_DOMAIN, "GaugeMonitor-" + monitor.hashCode());
+			mbs.registerMBean(monitor, objectName);
 			monitor.addNotificationListener( listener, null, null);
+			registerListenerForMonitor(monitor,listener);
 			monitor.start();
 			monitors.add(monitor);
+			mbeans.add(objectName);
 		} catch (Exception e) {
 			e.printStackTrace(System.err);
 		}
