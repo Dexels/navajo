@@ -71,6 +71,10 @@ public class NavajoContext {
 		Navajo n = myClient.doSimpleSend(input, service);
 		System.err.println("Send complete!");
 		n.getHeader().setRPCName(service);
+		Navajo old = myNavajoMap.get(service);
+		if(old!=null) {
+			myInverseNavajoMap.remove(old);
+		}
 		myNavajoMap.put(service, n);
 		myInverseNavajoMap.put(n, service);
 		long time2 = System.currentTimeMillis() - time;
