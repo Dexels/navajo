@@ -41,10 +41,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
             <param-name>postmanServletName</param-name>
             <param-value>Comet</param-value>
         </init-param>
-		
-
-
-
 	</servlet>
 	
 	<servlet>
@@ -67,7 +63,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
         </init-param>
         <init-param>
             <param-name>normalPoolSize</param-name>
-            <param-value>5</param-value>
+            <param-value>20</param-value>
         </init-param>
         <init-param>
             <param-name>systemPoolSize</param-name>
