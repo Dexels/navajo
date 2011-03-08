@@ -14,7 +14,6 @@ public class NavajoClientFactory {
 
   private static ClientLogger clientLoggerInstance;
 
-  private static final Map<String,ClientInterface> clientMap = new HashMap<String,ClientInterface>();
 
   /**
    * Create a Client with a given class and configuration
@@ -46,7 +45,6 @@ public class NavajoClientFactory {
     catch (ClientException ex1) {
       ex1.printStackTrace();
     }
-    clientMap.put(client.getClientName(),myClient);
     if (myClient==null) {
       myClient = client;
     }
@@ -78,6 +76,8 @@ public class NavajoClientFactory {
    */
   public static void resetClient() {
     myClient=null;
+    clientLoggerInstance = null;
+    
   }
 
   /**
@@ -129,23 +129,6 @@ public class NavajoClientFactory {
     }
 
     return myClient;
-  }
-
-  /**
-   * Clear client map
-   */
-  public static void clearClientMap() {
-    clientMap.clear();
-  }
-
-  /**
-   * Get client by name
-   * @param name String
-   * @return ClientInterface
-   */
-  public static ClientInterface getClientByName(String name) {
-    ClientInterface ci = clientMap.get(name);
-    return ci;
   }
 
   /**
