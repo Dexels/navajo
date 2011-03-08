@@ -226,4 +226,10 @@ public class TestDispatcher implements DispatcherInterface {
 		return handle(inMessage,userCertificate);
 	}
 
+	@Override
+	public void shutdown() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

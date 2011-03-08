@@ -100,5 +100,6 @@ public interface DispatcherInterface extends ResourceManager {
 	
 	
 	  public  Navajo generateErrorMessage(Access access, String message, int code, int level, Throwable t) throws FatalException;
+	public void shutdown();
 	
 }
