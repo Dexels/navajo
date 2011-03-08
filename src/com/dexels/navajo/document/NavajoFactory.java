@@ -2,6 +2,7 @@ package com.dexels.navajo.document;
 
 import java.io.*;
 import java.util.*;
+import java.util.Map.Entry;
 
 import com.dexels.navajo.document.base.*;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
@@ -150,7 +151,27 @@ public abstract class NavajoFactory {
 		  }
 	  }
   }
+  
+  /**
+   * Clean up static references
+   */
+  public static void terminate() {
+	  for ( Entry<String,NavajoFactory> element :alternativeFactories.entrySet()) {
+		if(element.getValue()!=null) {
+			element.getValue().shutdown();
+		}
+	}
+//	  Might still leak..
+	  alternativeFactories.clear();
+	//  alternativeFactories = null;
+	  if(impl!=null) {
+		  impl.shutdown();
+	  }
+  }
 
+  public void shutdown() {
+	  
+  }
   /**
    * Parses a given string of key=value pairs and returns them in a Map
    * @param subType String
@@ -560,31 +581,7 @@ public abstract class NavajoFactory {
    */
   public abstract Point createPoint(Property p) throws NavajoException;
 
-  /**
-   * Create a LazyMessagePath object
-   * @param tb Navajo
-   * @param path String
-   * @param startIndex int
-   * @param endIndex int
-   * @param total int
-   * @return LazyMessagePath
-   */
-  public abstract LazyMessagePath createLazyMessagePath(Navajo tb, String path,
-      int startIndex, int endIndex, int total);
-
-
-  /**
-   * Create a LazyMessage object
-   * @param tb Navajo
-   * @param name String
-   * @param windowSize int
-   * @return LazyMessage
-   */
-  public abstract LazyMessage createLazyMessage(Navajo tb, String name,
-                                                int windowSize);
-
-
-
+ 
   /**
    * Fires an binary progress event event to all listeners
    * @param b boolean
