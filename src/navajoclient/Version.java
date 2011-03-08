@@ -24,6 +24,9 @@
  */
 package navajoclient;
 
+import com.dexels.navajo.client.NavajoClientFactory;
+import com.dexels.navajo.client.SystemInfo;
+
 /**
  * VERSION HISTORY
  * 
@@ -86,4 +89,13 @@ public class Version extends dexels.Version {
 			System.err.println("\t"+d[i].toString());
 		}
 	}
+
+	@Override
+	public void shutdown() {
+		NavajoClientFactory.resetClient();
+		SystemInfo.clearInstance();
+		super.shutdown();
+	}
+	
+	
 }
