@@ -4,9 +4,9 @@
 <%@page import="java.util.*"%>
 <%@ page trimDirectiveWhitespaces="true" %>
 
-<%@ taglib prefix="c" uri="WEB-INF/tags/c.tld"%>
-<%@ taglib prefix="nav" uri="WEB-INF/tags/navajo.tld"%>
-<%@ taglib prefix="navserver" uri="WEB-INF/tags/navajoserver.tld"%>
+<%@ taglib prefix="c" uri="/WEB-INF/tld/c.tld"%>
+<%@ taglib prefix="nav" uri="/WEB-INF/tld/navajo.tld"%>
+<%@ taglib prefix="navserver" uri="/WEB-INF/tld/navajoserver.tld"%>
 <%@ page import="com.dexels.navajo.client.context.NavajoContext"%>
 <%@ page import="com.dexels.navajo.jsp.server.NavajoServerContext"%>
 
