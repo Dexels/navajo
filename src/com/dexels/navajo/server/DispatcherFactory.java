@@ -27,53 +27,6 @@ public class DispatcherFactory {
 	public DispatcherFactory() {	
 	}
 
-  public static void killMe() {
-	  if ( DispatcherFactory.getInstance() != null ) {
-		  
-		  // Stop JMX.
-		  JMXHelper.destroy();
-		  
-		  // 1. Kill all supporting threads.
-		  GenericThread.killAllThreads();
-		  // remove the static links
-		  StatisticsRunnerFactory.shutdown();
-		  
-		  // 2. Clear all classloaders.
-		  GenericHandler.doClearCache();
-		  
-	      // 3. Shutdown monitoring agent.
-		  AgentFactory.shutdown();
-		  
-		  // 4. Kill tribe manager.
-		  TribeManagerFactory.shutdown();
-		  
-		  NavajoEventRegistry.getInstance().shutdown();
-		  // 5. Shut down DbConnectionBroker
-		  // Very ugly should be handled in a better way:
-		  // - By registering 'resources' to be killable
-		  // - OSGi package lifecycles
-		  // right now I just dug up 
-		  shutdownNavajoExtension("navajoadapters");
-		  
-		  AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Navajo Dispatcher terminated.");
-
-		  JabberWorkerFactory.shutdown();
-	  }  
-	  shutdown();
-  }
-
-  @SuppressWarnings("unchecked")
-private static void shutdownNavajoExtension(String name) {
-	  // This should be replaced by OSGi bundle management
-	  try {
-		Class <? extends dexels.Version> version = (Class<? extends dexels.Version>) Class.forName(name.toLowerCase()+".Version");
-		dexels.Version v = version.newInstance();
-		v.shutdown();
-	  } catch (Throwable e) {
-		e.printStackTrace();
-	}
-	  
-}
 
   
 	public DispatcherFactory(DispatcherInterface injectedDispatcher) {	

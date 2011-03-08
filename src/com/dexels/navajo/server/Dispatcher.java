@@ -1577,7 +1577,6 @@ public String getServerId() {
 			  }
 		  }
 	  }
-	  DispatcherFactory.killMe();
 	  
   }
 
