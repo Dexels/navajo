@@ -24,6 +24,8 @@
  */
 package navajodocument;
 
+import com.dexels.navajo.document.NavajoFactory;
+
 /**
  * VERSION HISTORY
  *
@@ -69,6 +71,12 @@ package navajodocument;
  * 
  */
 public class Version extends dexels.Version {
+
+	@Override
+	public void shutdown() {
+		super.shutdown();
+		NavajoFactory.terminate();
+	}
 
 
 
