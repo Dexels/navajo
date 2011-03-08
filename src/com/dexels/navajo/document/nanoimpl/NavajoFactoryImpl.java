@@ -187,44 +187,6 @@ public final class NavajoFactoryImpl extends NavajoFactory {
 		return new NavajoExceptionImpl(message);
 		//    throw new java.lang.UnsupportedOperationException("Method createNavajoException() not yet implemented.");
 	}
-	public LazyMessagePath createLazyMessagePath(Navajo tb, String path, int startIndex, int endIndex, int total) {
-		//    return new LazyMessagePathImpl(tb, path,startIndex,endIndex, total);
-		return null;
-	}
-	public LazyMessage createLazyMessage(Navajo tb, String name, int windowSize) {
-		Object instance = null;
-		try {
-			Class<?> cc = Class.forName(
-			"com.dexels.navajo.document.nanoimpl.LazyMessageImpl");
-			Class<?>[] paramClasses = new Class[] {
-					Navajo.class, String.class, Integer.class};
-			try {
-				Constructor<?> cons = cc.getConstructor(paramClasses);
-				Object[] params = new Object[] {
-						tb, name, new Integer(windowSize)};
-				instance = cons.newInstance(params);
-				//    return new LazyMessageImpl(tb, name, windowSize);
-			}
-			catch (InvocationTargetException ex1) {
-			}
-			catch (IllegalArgumentException ex1) {
-			}
-			catch (IllegalAccessException ex1) {
-			}
-			catch (InstantiationException ex1) {
-			}
-			catch (SecurityException ex1) {
-			}
-			catch (NoSuchMethodException ex1) {
-			}
-		}
-		catch (ClassNotFoundException ex) {
-		}
-		if (instance==null) {
-			System.err.println("Well, some kind of exception occurred");
-		}
-		return (LazyMessage)instance;
-	}
 	public  Navajo createNavaScript(java.io.InputStream stream) {
 		throw new java.lang.UnsupportedOperationException("Method createNavaScript() not yet implemented.");
 	}

@@ -1118,12 +1118,6 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
       throw new UnsupportedOperationException("The getRootMessage method should not be used anymore. It is only implemented in the nanoimpl!");
     }
 
-    public LazyMessagePath getLazyMessagePath(String path) {
-      throw new UnsupportedOperationException("The getLazyMessagePath is not implemented in JaxpImpl. Sorry.");
-    }
-    public void addLazyMessagePath(String message,int startIndex, int endIndex, int total) {
-      throw new UnsupportedOperationException("The addLazyMessagePath is not implemented in JaxpImpl. Sorry.");
-    }
 
     public boolean isEqual(Navajo o) {
 

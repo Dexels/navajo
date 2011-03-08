@@ -28,11 +28,6 @@ public interface Navajo
   public static final String MESSAGE_SEPARATOR = "/";
   public static final String PARENT_MESSAGE = "..";
 
-  public LazyMessagePath getLazyMessagePath(String s);
-
-  public void addLazyMessagePath(String message, int startIndex, int endIndex,
-                                 int total);
-
   /**
    * Set the errorDescription class property.
    * @param String description

@@ -166,12 +166,6 @@ public final class NavajoFactoryImpl extends NavajoFactory {
 	public Point createPoint(Property p) throws NavajoException {
 		return new PointImpl(p);
 	}
-	public LazyMessagePath createLazyMessagePath(Navajo tb, String path, int startIndex, int endIndex, int total) {
-		throw new java.lang.UnsupportedOperationException("Method createLazyMessagePath() not yet implemented.");
-	}
-	public LazyMessage createLazyMessage(Navajo tb, String name, int windowSize) {
-		throw new java.lang.UnsupportedOperationException("Method createLazyMessage() not yet implemented.");
-	}
 
 	public Navajo createNavajoJSON(Reader r){
 		// First we determine Navajo -> JSON , see BaseNode

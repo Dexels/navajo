@@ -26,30 +26,7 @@ public class BaseHeaderImpl
   protected String myIp;
   
   private Set<Map<String,String>> piggyBackData = null;
-  
-  
-  /**
-   * @deprecated
-   */
-  @Deprecated
-protected String myLazyMessage = null;
   protected long expiration = -1;
-  /**
-   * @deprecated
-   */
- @Deprecated
-protected TreeMap<String,LazyMessagePath> lazyMessageList = new TreeMap<String,LazyMessagePath>();
-
-  //protected boolean isFinished = false;
-///**
-//  * @deprecated
-//  */
-// //protected String myCallbackName = null;
-// /**
-//  * @deprecated
-//  */
-// //protected String myCallbackPointer = null;
-// //protected int percReady = -1;
   
 
   protected Map<String,String> attributeMap = null;
@@ -115,23 +92,6 @@ protected TreeMap<String,LazyMessagePath> lazyMessageList = new TreeMap<String,L
     return attributeMap.get(key);
   }
 
-  /**
-   * @deprecated
-   */
-
-  @Deprecated
-public final void addLazyMessagePath(String path, int startIndex,
-                                       int endIndex, int total) {
-    LazyMessagePath lmp = NavajoFactory.getInstance().createLazyMessagePath(getRootDoc(), path, startIndex, endIndex, total);
-    lazyMessageList.put(path, lmp);
-    /** @TODO repair this function*/
-//    throw new UnsupportedOperationException();
-  }
-
-//  public ArrayList getAllLazyMessages() {
-//    return lazyMessageList;
-//  }
-
 
   /**
    * @deprecated
@@ -154,19 +114,6 @@ public final void setIdentification(String user, String password,
 public final void setService(String service) {
       myTransaction.setRpc_name(service);
         }
-  
-  /**
-   * @deprecated
-   */
-  @Deprecated
-public final LazyMessagePath getLazyMessagePath(String path) {
-    /** @todo repair this function*/
-//    throw new UnsupportedOperationException();
-//
-    return lazyMessageList.get(path);
-  }
-
- 
 
   public final void setRPCName(String s) {
       myTransaction.setRpc_name(s);
@@ -222,10 +169,7 @@ public final void setRequestData(String ipAddress, String host) {
     expiration = l;
   }
 
-  public Map<String,LazyMessagePath> getLazyMessageMap() {
-    return lazyMessageList;
-  }
-
+ 
 
  
   public void removeCallBackPointers() {
@@ -336,15 +280,6 @@ public final String getHostName() {
     return "localhost";
 
   }
-
-  public com.dexels.navajo.document.LazyMessageImpl getLazyMessages() {
-    return null;
-  }
-  
-  /**
-   * @deprecated
-   * TODO: Add object ref for supporting multiple async objects!
-   */
 
   @Deprecated
 public int getCallBackProgress() {

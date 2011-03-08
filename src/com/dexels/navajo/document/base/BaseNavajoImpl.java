@@ -147,16 +147,6 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
 //    addMessage(m);
   }
 
-  /**
-   * @deprecated
-   * @see com.dexels.navajo.document.Navajo#addLazyMessagePath(java.lang.String, int, int, int)
-   */
-  @Deprecated
-public void addLazyMessagePath(String path, int startIndex, int endIndex, int total) {
-///** @todo Fix this one */
-    myHeader.addLazyMessagePath(path, startIndex, endIndex, total);
-  }
-//
 
   public ArrayList<Message> getAllMessages() {
     return rootMessage.getAllMessages();
@@ -198,13 +188,6 @@ public void addLazyMessagePath(String path, int startIndex, int endIndex, int to
     rootMessage.addMessage(n);
   }
 
-  /**
-   * @deprecated
-   */
-  @Deprecated
-public LazyMessagePath getLazyMessagePath(String path) {
-    return myHeader.getLazyMessagePath(path);
-  }
 
   public void clearAllSelections() {
     try {

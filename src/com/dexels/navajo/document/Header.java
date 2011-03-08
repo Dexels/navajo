@@ -52,19 +52,7 @@ public interface Header extends java.io.Serializable {
      */
     public void setExpirationInterval(long l);
 
-    /**
-     * Get the defined lazy messages from the control tag.
-     * @deprecated
-     * <transaction rcp_usr="" rpc_pwd="" rpc_name="">
-     *   <lazymessage name="/MemberData" startindex="10" endindex="100"/>
-     * </transaction>
-     * @param message
-     * @return
-     */
-    @Deprecated
-	public LazyMessageImpl getLazyMessages();
-
-    /**
+       /**
      * Get the name of the service (RPC name) from a Navajo message.
      */
     public String getRPCName();
@@ -174,38 +162,6 @@ public interface Header extends java.io.Serializable {
 
     public String getCallBackSignature();
     
-//    /**
-//    * Serialize a header as a string to a particular writer.
-//    *
-//    * @param writer
-//    */
-//   public void write(java.io.Writer writer);
-//
-//   /**
-//     * Serialize a header as a string to a particular output stream.
-//     *
-//     * @param stream
-//     */
-//   public void write(java.io.OutputStream stream);
-
-   /**
-    * @deprecated
-    * @param path
-    * @return
-    */
-    @Deprecated
-	public LazyMessagePath getLazyMessagePath(String path);
-
-    
-    /**
-     * @deprecated
-     * @param path
-     * @param startIndex
-     * @param endIndex
-     * @param total
-     */
-    @Deprecated
-	public void addLazyMessagePath(String path, int startIndex, int endIndex, int total);
 
 
     /**

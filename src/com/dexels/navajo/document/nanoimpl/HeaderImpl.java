@@ -164,7 +164,6 @@ protected String myInterrupt = null;
 
   public final void merge(HeaderImpl n) {
     setExpiration(n.getExpirationInterval());
-    lazyMessageList.putAll(n.getLazyMessageMap());
     setRPCUser(n.getRPCUser());
     setService(n.getRPCName());
     setRPCPassword(n.getRPCPassword());

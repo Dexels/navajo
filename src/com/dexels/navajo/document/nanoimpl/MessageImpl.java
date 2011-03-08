@@ -150,49 +150,7 @@ public class MessageImpl
         // Ok, now a simple implentation of the laziness check.
         MessageImpl msg = null;
 //        if (false) {
-        if (MSG_MODE_LAZY.equals(mode) && child.getAttribute(Message.MSG_LAZY_REMAINING)!=null) {
-//          System.err.println("YES! A lazy message!");
-//          System.err.println("CONSTRUCTING LAZY MESSAGE: \n");
-//           System.err.println("\n\n");
-          int lazyRemaining = Integer.parseInt( (String) child.getAttribute(
-              Message.MSG_LAZY_REMAINING));
-           int currentTotal = Integer.parseInt( (String) child.getAttribute(
-              Message.MSG_ARRAY_SIZE));
-          System.err.println("lazyRemaining = " + lazyRemaining +
-                             ", current total = " + currentTotal + ", total = " +
-                             child.getAttribute(Message.MSG_LAZY_COUNT));
-          int windowSize = 100;
-          if (lazyRemaining == 0) {
-            windowSize = 0;
-          }
-          else if (lazyRemaining < currentTotal) {
-            windowSize = lazyRemaining;
-          }
-          else {
-            windowSize = currentTotal;
-          }
-          if (windowSize < 0) {
-            windowSize = 0;
-          }
-          System.err.println("windowSize = " + windowSize);
 
-          msg = (MessageImpl) NavajoFactory.getInstance().createLazyMessage(
-              myDocRoot, childName, windowSize);
-          if (type != null) {
-            msg.setType(type);
-          }
-          if (definitionMessage!=null) {
-            msg.fromXml(child,this);
-          } else {
-            msg.fromXml(child);
-          }
-          msg.setCurrentTotal(currentTotal);
-          if ( (index != null) && !index.equals("")) {
-            msg.setIndex(Integer.parseInt(index));
-            msg.setType(MSG_TYPE_ARRAY_ELEMENT);
-          }
-        }
-        else {
           msg = (MessageImpl) NavajoFactory.getInstance().createMessage(myDocRoot, childName);
           if (type != null) {
             msg.setType(type);
@@ -206,9 +164,6 @@ public class MessageImpl
           } else {
             msg.fromXml(child);
           }
-
-        }
-
 
 //            System.err.println("Defparent not present, definitionlist present");
         if (msg.getType().equals(MSG_TYPE_DEFINITION)) {

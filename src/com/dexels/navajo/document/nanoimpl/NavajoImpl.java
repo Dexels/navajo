@@ -61,18 +61,6 @@ public final class NavajoImpl extends BaseNavajoImpl implements Navajo, NanoElem
 
 
 
-/**
- * @deprecated
- *  (non-Javadoc)
- * @see com.dexels.navajo.document.Navajo#addLazyMessagePath(java.lang.String, int, int, int)
- */
-  @Deprecated
-public void addLazyMessagePath(String path, int startIndex, int endIndex, int total) {
-///** @todo Fix this one */
-    myHeader.addLazyMessagePath(path, startIndex, endIndex, total);
-  }
-//
-
   public static Method createMethod(NavajoImpl n, String name) {
     return new MethodImpl(n,name);
   }
@@ -145,16 +133,6 @@ public void addLazyMessagePath(String path, int startIndex, int endIndex, int to
   }
 
 
-
- /**
- * @deprecated
- *  (non-Javadoc)
- * @see com.dexels.navajo.document.Navajo#getLazyMessagePath(java.lang.String)
- */
-  @Deprecated
-public LazyMessagePath getLazyMessagePath(String path) {
-    return myHeader.getLazyMessagePath(path);
-  }
 
   public void write(java.io.Writer writer) throws NavajoException {
   	try {

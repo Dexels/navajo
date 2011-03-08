@@ -141,61 +141,7 @@ public final class HeaderImpl implements Header {
        n.setAttribute("expiration_interval", l+"");
 
     }
-    /**
-     * Get the defined lazy messages from the control tag.
-     *
-     * <transaction rcp_usr="" rpc_pwd="" rpc_name="">
-     *   <lazymessage name="/MemberData" startindex="10" endindex="100"/>
-     * </transaction>
-     * @param message
-     * @return
-     */
-    public final com.dexels.navajo.document.LazyMessageImpl getLazyMessages() {
 
-        com.dexels.navajo.document.LazyMessageImpl lm =
-                        new com.dexels.navajo.document.LazyMessageImpl();
-        Element n = (Element)
-                XMLutils.findNode(ref, "transaction");
-        NodeList list = n.getChildNodes();
-        for (int i = 0; i < list.getLength(); i++) {
-            Node child = list.item(i);
-            if (child.getNodeName().equals("lazymessage")) {
-              Element e = (Element) child;
-              String name = e.getAttribute("name");
-              String si = e.getAttribute("startindex");
-              String ei = e.getAttribute("endindex");
-              String te = e.getAttribute("lazy_total");
-              boolean valid = true;
-
-              int startIndex = 0;
-              try {
-                startIndex = Integer.parseInt(si);
-              } catch (Exception ex) {
-                valid = false;
-              }
-
-              int endIndex = 0;
-              try {
-                 endIndex = Integer.parseInt(ei);
-              } catch (Exception ex) {
-                 valid = false;
-              }
-
-              int totalElements = 0;
-              try {
-                totalElements = Integer.parseInt(te);
-              }
-              catch (Exception ex) {
-                valid = false;
-              }
-
-              if (valid) {
-                  lm.addLazyMessage(name, startIndex, endIndex, totalElements);
-              }
-            }
-        }
-        return lm;
-    }
 
     /**
      * Get the name of the service (RPC name) from a Navajo message.
@@ -367,10 +313,6 @@ public final class HeaderImpl implements Header {
         else
           return "";
       }
-    }
-
-    public LazyMessagePath getLazyMessagePath(String path) {
-      throw new UnsupportedOperationException("Sorry, getLazyMessagePath is not supported in JaxpImpl!");
     }
 
     public int getCallBackProgress() {
