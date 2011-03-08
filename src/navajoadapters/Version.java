@@ -4,6 +4,7 @@ import org.dexels.grus.GrusManager;
 import org.osgi.framework.BundleContext;
 
 import com.dexels.navajo.adapter.MailMap;
+import com.dexels.navajo.adapter.SQLMap;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 
@@ -117,6 +118,7 @@ public class Version extends dexels.Version {
 	@Override
 	public void shutdown() {
 		GrusManager.getInstance().shutdown();
+		SQLMap.terminateFixedBroker();
 	}
 	
 	public static void main(String [] args) {

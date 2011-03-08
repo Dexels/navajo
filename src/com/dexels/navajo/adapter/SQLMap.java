@@ -286,8 +286,16 @@ private static Object semaphore = new Object();
     if (fixedBroker != null) {
       fixedBroker.destroy(datasourceName);
     }
+    fixedBroker = null;
   }
 
+  public static void terminateFixedBroker() {
+	    if (fixedBroker != null) {
+	        fixedBroker.terminate();
+	      }
+	      fixedBroker = null;
+	  
+  }
   /**
    *
    * @param reload

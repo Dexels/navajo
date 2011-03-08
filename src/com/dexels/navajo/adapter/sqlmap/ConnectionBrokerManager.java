@@ -35,7 +35,7 @@ import java.sql.*;
 
 public class ConnectionBrokerManager extends Object implements ResourceManager, ConnectionBrokerManagerMBean {
 
-  private Map brokerMap = Collections.synchronizedMap(new HashMap());
+  private Map<String,SQLMapBroker> brokerMap = Collections.synchronizedMap(new HashMap<String,SQLMapBroker>());
  
   private boolean debug = true;
 
@@ -52,6 +52,20 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
     this.debug = b;
   }
 
+  public void terminate() {
+	  try {
+		for (SQLMapBroker sq : brokerMap.values()) {
+			// close them or something?
+		}
+		  JMXHelper.deregisterMXBean( JMXHelper.NAVAJO_DOMAIN, "ConnectionBrokerManager");
+		  brokerMap.clear();
+	  } catch (Throwable e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	  
+  }
+  
   /**
    * 
    * @param dsrc, datasource name
@@ -144,12 +158,12 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
    * @return
    */
   public final Set<SQLMapBroker> getBrokersByUrl(String url) {
-	  Iterator<Entry> allDatasources = brokerMap.entrySet().iterator();
+	  Iterator<Entry<String,SQLMapBroker>> allDatasources = brokerMap.entrySet().iterator();
 	  HashSet<SQLMapBroker> all = new HashSet<SQLMapBroker>();
 	  while ( allDatasources.hasNext() ) {
-		  Entry entry = allDatasources.next();
-		  String datasource = (String) entry.getKey();
-		  SQLMapBroker b = (SQLMapBroker) entry.getValue();
+		  Entry<String,SQLMapBroker> entry = allDatasources.next();
+//		  String datasource = (String) entry.getKey();
+		  SQLMapBroker b = entry.getValue();
 		  if ( b.getUrl().equals(url) ) {
 			  all.add(b);
 		  }
