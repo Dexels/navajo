@@ -107,7 +107,6 @@ public final class Access implements java.io.Serializable, Mappable {
 	// If the mergeDoc is not empty, it will ALWAYS be merged when setOutputDoc is called.
 	private Navajo mergedDoc;
 
-	private LazyMessageImpl lazyMap;
 	private Message currentOutMessage;
 	private Object userCertificate;
 	private static Object mutex = new Object();
@@ -441,18 +440,7 @@ public final class Access implements java.io.Serializable, Mappable {
 		return userCertificate;
 	}
 
-	/*
-	 * 
-	 */
-	@Deprecated
-	public final void setLazyMessages(LazyMessageImpl h) {
-		this.lazyMap = h;
-	}
 
-	@Deprecated
-	public final LazyMessageImpl getLazyMessages() {
-		return this.lazyMap;
-	}
 
 	public final Message getCurrentOutMessage() {
 		return currentOutMessage;

@@ -78,7 +78,6 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
   public String subtype = "";
   public Property p = null;
   public LazyArray la = null;
-  public LazyMessageImpl lm = null;
   public String fullMsgName = "";
   public boolean matchingConditions = false;
   public HashMap evaluatedAttributes = null;
