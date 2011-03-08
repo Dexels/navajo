@@ -17,7 +17,7 @@ import com.dexels.navajo.events.types.NavajoCompileScriptEvent;
  */
 public class ResourceCheckerManager implements NavajoListener {
 
-	private static final ResourceCheckerManager myResourceCheckerMngr;
+	private static ResourceCheckerManager myResourceCheckerMngr;
 	
 	static {
 		myResourceCheckerMngr = new ResourceCheckerManager();
@@ -28,6 +28,13 @@ public class ResourceCheckerManager implements NavajoListener {
 	
 	public static ResourceCheckerManager getInstance() {
 		return myResourceCheckerMngr;
+	}
+	
+	public static void clearInstance() {
+		if(myResourceCheckerMngr!=null) {
+			NavajoEventRegistry.getInstance().removeListener(NavajoCompileScriptEvent.class, myResourceCheckerMngr);
+		}
+		myResourceCheckerMngr = null;
 	}
 	
 	/**
