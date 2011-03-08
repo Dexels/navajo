@@ -76,7 +76,7 @@ public final class GenericHandler extends ServiceHandler {
     }
 
     @SuppressWarnings("unchecked")
-	protected static void doClearCache() {
+	public static void doClearCache() {
        loadedClasses = null;
        loadedClasses = new HashMap();
     }
