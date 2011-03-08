@@ -1,15 +1,12 @@
 package com.dexels.navajo.queuemanager;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 
 import com.dexels.navajo.queuemanager.api.InputContext;
 import com.dexels.navajo.queuemanager.api.PoolContext;
@@ -34,6 +31,14 @@ public class QueueManager {
 		this.poolContext = poolContext;
 	}
 	
+	public void flushCache() {
+		cache.clear();
+	}
+	
+	public void flushCache(String service) {
+		cache.remove(service);
+	}
+
 	public String resolve(InputContext in, String script) throws NavajoSchedulingException  {
 		long begin = System.currentTimeMillis();
 		BasePoolResponse pr = cache.get(in.getServiceName());
