@@ -1,8 +1,10 @@
 package com.dexels.navajo.functions;
 
-import com.dexels.navajo.parser.*;
-import com.dexels.navajo.document.types.*;
-import java.util.*;
+import java.util.Calendar;
+
+import com.dexels.navajo.document.types.ClockTime;
+import com.dexels.navajo.document.types.StopwatchTime;
+import com.dexels.navajo.parser.FunctionInterface;
 
 /**
  * <p>Title: </p>

@@ -1,9 +1,5 @@
 package com.dexels.navajo.functions;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 

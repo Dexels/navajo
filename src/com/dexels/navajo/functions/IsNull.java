@@ -1,7 +1,7 @@
 package com.dexels.navajo.functions;
 
-import com.dexels.navajo.document.types.*;
-import com.dexels.navajo.parser.*;
+import com.dexels.navajo.document.types.NavajoType;
+import com.dexels.navajo.parser.FunctionInterface;
 
 
 /**

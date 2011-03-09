@@ -1,7 +1,4 @@
 package com.dexels.navajo.functions;
-import java.net.URLEncoder;
-
-import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 

@@ -1,10 +1,10 @@
 package com.dexels.navajo.functions;
 
-import com.dexels.navajo.parser.*;
+import java.io.StringWriter;
+
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.Money;
-
-import java.io.StringWriter;
+import com.dexels.navajo.parser.FunctionInterface;
 
 
 /**

@@ -4,9 +4,8 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.document.types.*;
 
 /**
  * @author Jarno Posthumus

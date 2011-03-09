@@ -1,11 +1,10 @@
 package com.dexels.navajo.functions;
 
-import com.dexels.navajo.parser.*;
-import com.dexels.navajo.server.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
 
-import java.io.*;
-import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.server.DispatcherFactory;
 
 
 /**

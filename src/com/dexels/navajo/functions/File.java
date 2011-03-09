@@ -1,9 +1,11 @@
 package com.dexels.navajo.functions;
 
-import com.dexels.navajo.parser.*;
-import java.io.*;
-import com.dexels.navajo.document.types.Binary;
+import java.io.FileInputStream;
+
 import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.parser.Expression;
+import com.dexels.navajo.parser.FunctionInterface;
 
 
 /**

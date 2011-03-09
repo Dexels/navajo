@@ -1,7 +1,7 @@
 package com.dexels.navajo.functions;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
 
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;

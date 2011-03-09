@@ -1,12 +1,13 @@
 package com.dexels.navajo.functions;
 
-import java.io.*;
-import java.io.File;
+import java.io.OutputStream;
 
-import com.dexels.navajo.parser.*;
-import com.dexels.navajo.server.*;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.GenericHandler;
 
 
 /**

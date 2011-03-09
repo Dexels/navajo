@@ -5,7 +5,6 @@ import java.util.StringTokenizer;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.FunctionInterface;

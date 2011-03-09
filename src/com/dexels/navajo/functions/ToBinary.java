@@ -1,7 +1,7 @@
 package com.dexels.navajo.functions;
 
-import com.dexels.navajo.parser.*;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.parser.FunctionInterface;
 
 /**
  * <p>Title: Navajo Product Project</p>

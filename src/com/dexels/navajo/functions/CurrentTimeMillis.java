@@ -1,7 +1,8 @@
 package com.dexels.navajo.functions;
 
-import com.dexels.navajo.parser.*;
 import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.parser.Expression;
+import com.dexels.navajo.parser.FunctionInterface;
 
 
 public final class CurrentTimeMillis extends FunctionInterface {

@@ -1,14 +1,24 @@
 package com.dexels.navajo.functions;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.Label;
+import java.awt.RenderingHints;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.util.Random;
+
+import javax.imageio.ImageIO;
+
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.parser.*;
-import javax.imageio.*;
-import java.io.*;
-import java.awt.*;
-import java.awt.geom.*;
-import java.awt.image.*;
-import java.util.Random;
+import com.dexels.navajo.parser.Expression;
+import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.parser.TMLExpressionException;
 
 /**
  * <p>Title: ToSecureImage.java</p>

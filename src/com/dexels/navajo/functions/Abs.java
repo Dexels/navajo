@@ -46,37 +46,7 @@ public class Abs extends FunctionInterface {
 	}
 	
 	public static void main(String [] args) throws Exception {
-	
-		if ( true ) {
-			Abs a = new Abs();
-			a.reset();
-			a.insertOperand(new Double(-30));
-			Object o = a.evaluateWithTypeChecking();
-		}
-		
-		// Timing.
-		if ( false ) {
-			long start = System.currentTimeMillis();
-			for (int i = 0; i < 10000; i++) {
-				Abs a = new Abs();
-				a.reset();
-				a.insertOperand(new Integer(-30));
-				Object o = a.evaluateWithTypeChecking();
-				//System.err.println("o = " + o);
-			}
-			System.err.println("With type checking, took: " +  ( System.currentTimeMillis() - start ) + " millis.");
-
-			start = System.currentTimeMillis();
-			for (int i = 0; i < 10000; i++) {
-				Abs a = new Abs();
-				a.reset();
-				a.insertOperand(new Integer(-30));
-				Object o = a.evaluate();
-				//System.err.println("o = " + o);
-			}
-			System.err.println("Without type checking, took: " +  ( System.currentTimeMillis() - start ) + " millis.");
-		}
-		
+			
 	}
 	
 

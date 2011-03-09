@@ -1,10 +1,8 @@
 package com.dexels.navajo.functions;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import java.util.Date;
-import com.dexels.navajo.parser.FunctionInterface;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import com.dexels.navajo.parser.TMLExpressionException;
 
 public class GetUrlModificationTime extends GetUrlBase {

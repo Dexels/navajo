@@ -1,15 +1,20 @@
 package com.dexels.navajo.functions;
 
-import com.dexels.navajo.parser.*;
+import java.util.ArrayList;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
-import java.util.ArrayList;
 import com.dexels.navajo.document.NavajoException;
-import com.dexels.navajo.document.Property;
-import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.types.Money;
+import com.dexels.navajo.document.types.Percentage;
+import com.dexels.navajo.parser.Condition;
+import com.dexels.navajo.parser.Expression;
+import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.server.SystemException;
 
 /**
  * <p>Title: Navajo Product Project</p>

@@ -4,13 +4,12 @@
  */
 package com.dexels.navajo.functions;
 
-import java.io.*;
+import java.io.IOException;
 
-import com.dexels.navajo.document.types.*;
-import com.dexels.navajo.functions.scale.*;
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.functions.scale.ImageScaler;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.server.UserException;
 
 /**
  * @author arjen

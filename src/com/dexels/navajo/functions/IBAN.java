@@ -14,7 +14,6 @@ package com.dexels.navajo.functions;
 */
 
 import java.math.BigInteger;
-import java.util.Iterator;
 import java.util.ResourceBundle;
 import java.util.Set;
 

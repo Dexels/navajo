@@ -24,7 +24,8 @@
  */
 package com.dexels.navajo.functions;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.StringReader;
 
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.parser.FunctionInterface;

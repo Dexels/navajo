@@ -1,11 +1,12 @@
 package com.dexels.navajo.functions;
 
 
-import com.dexels.navajo.parser.*;
-import java.util.*;
+import java.util.Locale;
 
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.types.ClockTime;
+import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.parser.TMLExpressionException;
 
 /**
  * Title:        Navajo

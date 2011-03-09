@@ -2,9 +2,9 @@ package com.dexels.navajo.functions;
 
 import java.util.List;
 
-import com.dexels.navajo.parser.*;
-import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.parser.TMLExpressionException;
 
 /**
  * <p>

@@ -10,9 +10,11 @@ package com.dexels.navajo.functions;
  * @version $Id$
  */
 
-import java.util.*;
-import com.dexels.navajo.parser.*;
-import com.dexels.navajo.document.Operand;
+import java.util.ArrayList;
+
+import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.parser.Utils;
 
 
 public final class Contains extends FunctionInterface {

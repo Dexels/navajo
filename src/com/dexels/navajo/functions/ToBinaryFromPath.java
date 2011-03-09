@@ -2,10 +2,10 @@ package com.dexels.navajo.functions;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 
-import com.dexels.navajo.parser.*;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.parser.TMLExpressionException;
 
 /**
  * <p>Title: Navajo Product Project</p>

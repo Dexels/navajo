@@ -1,12 +1,8 @@
 package com.dexels.navajo.functions;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import java.util.Date;
+import java.util.List;
 
 import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.Property;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 

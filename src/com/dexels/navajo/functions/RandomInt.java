@@ -1,7 +1,8 @@
 package com.dexels.navajo.functions;
 
-import com.dexels.navajo.parser.*;
-import java.util.*;
+import java.util.ArrayList;
+
+import com.dexels.navajo.parser.FunctionInterface;
 
 
 /**

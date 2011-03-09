@@ -1,7 +1,9 @@
 package com.dexels.navajo.functions;
 
-import com.dexels.navajo.parser.*;
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import com.dexels.navajo.parser.FunctionInterface;
 
 /**
  * <p>Title: <h3>SportLink Services</h3><br></p>

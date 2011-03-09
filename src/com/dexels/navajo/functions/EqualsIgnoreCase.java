@@ -10,8 +10,10 @@ package com.dexels.navajo.functions;
  * @version $Id$
  */
 
-import java.util.*;
-import com.dexels.navajo.parser.*;
+import java.util.ArrayList;
+
+import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.parser.TMLExpressionException;
 
 
 public final class EqualsIgnoreCase  extends FunctionInterface {

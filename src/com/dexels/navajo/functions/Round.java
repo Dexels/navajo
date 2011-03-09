@@ -1,7 +1,8 @@
 package com.dexels.navajo.functions;
 
 
-import com.dexels.navajo.parser.*;
+import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.parser.TMLExpressionException;
 
 
 /**
@@ -15,6 +16,9 @@ import com.dexels.navajo.parser.*;
  * $Id$
  *
  $ $Log$
+ $ Revision 1.2  2011/03/09 09:31:43  frank
+ $ Warning cleanup
+ $
  $ Revision 1.1  2005/05/13 13:02:50  matthijs
  $ init version
  $

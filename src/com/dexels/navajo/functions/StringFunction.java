@@ -1,18 +1,10 @@
 package com.dexels.navajo.functions;
 
-import com.dexels.navajo.parser.*;
-
-
-/**
- * <p>Title: Navajo Product Project</p>
- * <p>Description: This is the official source for the Navajo server</p>
- * <p>Copyright: Copyright (c) 2002</p>
- * <p>Company: Dexels BV</p>
- * @author Arjen Schoneveld
- * @version 1.0
- */
-import java.lang.reflect.*;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+
+import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.parser.TMLExpressionException;
 
 public final class StringFunction extends FunctionInterface {
 

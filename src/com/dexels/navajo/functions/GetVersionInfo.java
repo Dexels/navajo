@@ -26,7 +26,6 @@ package com.dexels.navajo.functions;
 
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
 
 import dexels.Version;

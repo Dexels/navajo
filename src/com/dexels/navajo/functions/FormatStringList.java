@@ -1,9 +1,12 @@
 package com.dexels.navajo.functions;
 
 
-import com.dexels.navajo.parser.*;
-import java.util.*;
+import java.util.ArrayList;
+
 import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.parser.Expression;
+import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.parser.TMLExpressionException;
 
 
 /**

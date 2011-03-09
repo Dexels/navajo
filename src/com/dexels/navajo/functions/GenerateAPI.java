@@ -1,8 +1,11 @@
 package com.dexels.navajo.functions;
 
-import java.util.*;
-import java.net.*;
-import java.io.*;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
 
 import com.dexels.navajo.parser.FunctionInterface;
 

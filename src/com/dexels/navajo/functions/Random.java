@@ -1,6 +1,6 @@
 package com.dexels.navajo.functions;
 
-import com.dexels.navajo.parser.*;
+import com.dexels.navajo.parser.FunctionInterface;
 
 /**
  * <p>Title: <h3>SportLink Services</h3><br></p>

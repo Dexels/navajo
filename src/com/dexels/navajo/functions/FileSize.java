@@ -1,8 +1,8 @@
 
 package com.dexels.navajo.functions;
 
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.document.types.*;
 
 /**
  * @author Jarno Posthumus

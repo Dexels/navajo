@@ -1,20 +1,10 @@
 package com.dexels.navajo.functions;
 
-import com.dexels.navajo.parser.*;
-
-
-/**
- * <p>Title: NavaTest</p>
- * <p>Description: Navajo Web Services Testing Framework
- * allows generation of random string values given a specified length</p>
- * <p>Copyright: Copyright (c) 2002 - 2003</p>
- * <p>Company: Dexels</p>
- * @author Matthew Eichler
- * @version $Id$
- */
-
-import java.util.Random;
 import java.util.Date;
+import java.util.Random;
+
+import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.parser.TMLExpressionException;
 
 public final class RandomString extends FunctionInterface {
 

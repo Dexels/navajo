@@ -11,7 +11,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
-import java.io.*;
+import java.io.OutputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;

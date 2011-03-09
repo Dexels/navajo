@@ -3,7 +3,7 @@ package com.dexels.navajo.functions;
 
 import java.util.Calendar;
 
-import com.dexels.navajo.parser.*;
+import com.dexels.navajo.parser.FunctionInterface;
 
 
 /**

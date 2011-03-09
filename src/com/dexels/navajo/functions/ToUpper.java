@@ -10,7 +10,7 @@ package com.dexels.navajo.functions;
  * @version $Id$
  */
 
-import com.dexels.navajo.parser.*;
+import com.dexels.navajo.parser.FunctionInterface;
 
 
 public final class ToUpper extends FunctionInterface {

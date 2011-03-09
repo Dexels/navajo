@@ -13,7 +13,7 @@ package com.dexels.navajo.functions;
 import java.util.Locale;
 
 import com.dexels.navajo.document.types.Money;
-import com.dexels.navajo.parser.*;
+import com.dexels.navajo.parser.FunctionInterface;
 
 
 public final class ToDouble extends FunctionInterface {

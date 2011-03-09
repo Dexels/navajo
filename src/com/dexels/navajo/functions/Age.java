@@ -1,16 +1,9 @@
 package com.dexels.navajo.functions;
 
-import com.dexels.navajo.parser.*;
+import java.util.Calendar;
 
-/**
- * Title:        Navajo Product Project
- * Description:  This is the official source for the Navajo server
- * Copyright:    Copyright (c) 2002
- * Company:      Dexels BV
- * @author Arjen Schoneveld
- * @version $Id$
- */
-import java.util.*;
+import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.parser.TMLExpressionException;
 
 public final class Age
     extends FunctionInterface {

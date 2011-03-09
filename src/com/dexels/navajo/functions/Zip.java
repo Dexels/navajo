@@ -24,7 +24,6 @@
  */
 package com.dexels.navajo.functions;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.zip.ZipEntry;

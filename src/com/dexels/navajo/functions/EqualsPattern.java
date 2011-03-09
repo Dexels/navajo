@@ -2,7 +2,6 @@ package com.dexels.navajo.functions;
 
 import java.util.regex.Pattern;
 
-import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 

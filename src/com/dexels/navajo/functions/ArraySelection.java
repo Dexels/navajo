@@ -1,13 +1,14 @@
 package com.dexels.navajo.functions;
 
-import com.dexels.navajo.parser.*;
-import com.dexels.navajo.document.*;
-
 import java.util.ArrayList;
-import com.dexels.navajo.document.NavajoException;
-import com.dexels.navajo.server.SystemException;
+
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
-import java.util.HashSet;
+import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.parser.TMLExpressionException;
 
 /**
  * <p>
