@@ -11,19 +11,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.eclipse.jetty.continuation.Continuation;
-import org.eclipse.jetty.continuation.ContinuationSupport;
-
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.listeners.TmlRunnable;
-import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.server.listener.http.SchedulableServlet;
 import com.dexels.navajo.server.listener.http.SchedulerTools;
 import com.dexels.navajo.server.listener.http.TmlScheduler;
-import com.dexels.navajo.server.listener.http.standard.TmlStandardRunner;
 import com.jcraft.jzlib.ZInputStream;
 
 
