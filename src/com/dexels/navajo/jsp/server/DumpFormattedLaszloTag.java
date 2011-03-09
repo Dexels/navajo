@@ -3,7 +3,6 @@ package com.dexels.navajo.jsp.server;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,7 +11,6 @@ import java.io.OutputStream;
 import javax.servlet.jsp.JspException;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoLaszloConverter;
 import com.dexels.navajo.jsp.tags.BaseNavajoTag;
 import com.uwyn.jhighlight.renderer.XhtmlRendererFactory;

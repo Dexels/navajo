@@ -261,9 +261,8 @@ public class NavajoServerContext {
 		if(installedContext==null) {
 			String real = pageContext.getServletContext().getRealPath("");
 			return new File(real);			
-		} else {
-			return new File(installedContext);
 		}
+		return new File(installedContext);
 	}
 
 	public File getScriptRoot() throws IOException {

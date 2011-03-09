@@ -1,15 +1,12 @@
 package com.dexels.navajo.jsp.server;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.jsp.PageContext;
-import com.dexels.navajo.server.listener.*;
+
+import com.dexels.navajo.server.listener.NavajoContextListener;
 public class InstallerContext {
 	private PageContext pageContext;
 //	private Map<String,String> systemContexts = new HashMap<String, String>();

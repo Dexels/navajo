@@ -134,12 +134,11 @@ public class FormattedFileTag  extends BaseNavajoTag {
 		System.err.println("Resolving: "+path);
 		if(serverContext==null) {
 			 return getPageContext().getServletContext().getRealPath(path);
-		} else {
-			File root = getServerContext().getNavajoRoot();
-			String absolutePath = new File(root,path).getAbsolutePath();
-			System.err.println("FormatFile: Resolved path: "+absolutePath);
-			return absolutePath;
-		}
+		} 
+		File root = getServerContext().getNavajoRoot();
+		String absolutePath = new File(root,path).getAbsolutePath();
+		System.err.println("FormatFile: Resolved path: "+absolutePath);
+		return absolutePath;
 	}
 
 }
