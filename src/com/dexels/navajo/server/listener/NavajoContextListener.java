@@ -41,6 +41,7 @@ public class NavajoContextListener implements ServletContextListener {
 		dexels.Version.shutdownNavajoExtension("navajoenterpriseadapters");
 		dexels.Version.shutdownNavajoExtension("navajoenterprise");
 		dexels.Version.shutdownNavajoExtension("navajoenterpriselisteners");
+		dexels.Version.shutdownNavajoExtension("navajoqueuemanager");
 	}
 
 	@Override
