@@ -41,7 +41,7 @@ public class ServiceTag extends BaseNavajoTag {
 				}
 				getNavajoContext().pushNavajo(m);
 			} else if(serviceBinary!=null){
-				Binary b = (Binary)serviceBinary;
+				Binary b = serviceBinary;
 				if(b==null) {
 					throw new IllegalStateException("Either supply a service name or  " + myService + " is not found");
 				}
