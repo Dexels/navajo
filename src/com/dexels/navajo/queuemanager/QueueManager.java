@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 
 import com.dexels.navajo.queuemanager.api.InputContext;
 import com.dexels.navajo.queuemanager.api.PoolContext;
@@ -18,6 +17,22 @@ public class QueueManager {
 	private PoolContext poolContext;
 	private final Map<String,BasePoolResponse> cache = new HashMap<String,BasePoolResponse>();
 	private File scriptDir = null;
+	
+	private static QueueManager instance = null;
+
+	public synchronized static QueueManager getInstance() {
+		if(instance==null) {
+			instance = new QueueManager();
+		}
+		return instance;
+	}
+	
+	public static void clearInstance() {
+		if(instance!=null) {
+			instance.cache.clear();
+			instance = null;
+		}
+	}
 	
 	public File getScriptDir() {
 		return scriptDir;
@@ -39,11 +54,11 @@ public class QueueManager {
 		cache.remove(service);
 	}
 
-	public String resolve(InputContext in, String script) throws NavajoSchedulingException  {
+	public String resolve(InputContext in, String script, String engineName) throws NavajoSchedulingException  {
 		long begin = System.currentTimeMillis();
 		BasePoolResponse pr = cache.get(in.getServiceName());
 		if(pr==null || !pr.isValid()) {
-			pr = callResolutionScript(in, script, begin);
+			pr = callResolutionScript(in, script, begin,engineName);
 			cache.put(in.getServiceName(), pr);
 		} else {
 			System.err.println("Returning cached response");			
@@ -55,13 +70,11 @@ public class QueueManager {
 	}
 
 	private BasePoolResponse callResolutionScript(InputContext in,
-			String script, long begin) throws NavajoSchedulingException {
+			String script, long begin, String engineName) throws NavajoSchedulingException {
 		BasePoolResponse pc = new BasePoolResponse();
-		ScriptEngineManager factory = new ScriptEngineManager();
-        ScriptEngine engine = factory.getEngineByName("javascript");
+        ScriptEngine engine = NavajoQueueScopeManager.getInstance().getScope();
 		long init = System.currentTimeMillis();
 
-		System.err.println("Engine startup: "+(init-begin)+" millis.");
         engine.put("inputContext", in);
         engine.put("log", new ScriptLogger());
         engine.put("poolContext", poolContext);
@@ -77,6 +90,7 @@ public class QueueManager {
 			FileReader fr = new FileReader(scriptFile);
 			engine.eval(fr);
 			fr.close();
+			NavajoQueueScopeManager.getInstance().releaseScope(engine);
 		} catch (Exception e) {
 			throw new NavajoSchedulingException(e);
 		} finally {
