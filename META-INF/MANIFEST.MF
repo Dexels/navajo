@@ -3,7 +3,12 @@ Bundle-SymbolicName: com.dexels.navajo.jsp.server
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.0
-Bundle-ClassPath: .
+Bundle-ClassPath: .,
+ lib/ant-launcher.jar,
+ lib/ant.jar,
+ lib/derby.jar,
+ lib/jhighlight-1.0.jar,
+ lib/standard.jar
 Export-Package: com.dexels.navajo.jsp.tags
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.document;visibility:=reexport,
