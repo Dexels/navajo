@@ -35,16 +35,6 @@ public abstract class BasicRunnable implements TmlRunnable {
 		return null;
 	}
 
-	@Override
-	public Scheduler getTmlScheduler() {
-		return scheduler;
-	}
-
-	@Override
-	public void setTmlScheduler(Scheduler schedule) {
-		this.scheduler = schedule;
-		
-	}
 
 	@Override
 	public boolean isAborted() {
@@ -52,7 +42,7 @@ public abstract class BasicRunnable implements TmlRunnable {
 	}
 
 	@Override
-	public void abort() {
+	public void abort(String reason) {
 		aborted = true;
 	}
 
