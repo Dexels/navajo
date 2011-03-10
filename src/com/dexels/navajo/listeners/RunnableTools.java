@@ -89,6 +89,11 @@ public class RunnableTools {
 				throw new UnsupportedOperationException();
 			}
 
+			@Override
+			public Object getAttribute(String name) {
+				return target.getAttribute(name);
+			}
+
 			
 		};
 		return t;

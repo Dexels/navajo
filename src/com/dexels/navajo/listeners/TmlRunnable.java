@@ -21,6 +21,8 @@ public interface TmlRunnable extends Runnable {
 	public RequestQueue getRequestQueue();
 	public void setRequestQueue(RequestQueue rq);
 	
+	public Object getAttribute(String name);
+	
 	public boolean isAborted();
 	public void abort();
 	
