@@ -681,11 +681,13 @@ private ServiceHandler createHandler(String handler, Access access)
     	  
     	  outMessage.addMessage(locksExceeded);
       }
-      access.setOutputDoc(outMessage);
+      if (access != null) {
+          access.setOutputDoc(outMessage);
+      }
       return outMessage;
     }
     catch (Exception e) {
-      throw new FatalException(e.getMessage());
+      throw new FatalException( e.getMessage(),e);
     }
   }
 
