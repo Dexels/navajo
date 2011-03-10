@@ -33,7 +33,9 @@ public class ClientInfo {
   public String host;
   public int parseTime;
   public int queueTime;
- 
+  public int queueSize;
+  public String queueId;
+  
 public String encoding;
   public boolean compressedRecv;
   public boolean compressedSend;
@@ -46,6 +48,8 @@ public String encoding;
                     String encoding,
                     int parseTime,
                     int queueTime,
+                    int queueSize,
+                    String queueId,
                     boolean compressedrecv,
                     boolean compressedsend,
                     int contentLength,
