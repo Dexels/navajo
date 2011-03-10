@@ -11,7 +11,7 @@ import javax.script.ScriptEngineManager;
 public class NavajoQueueScopeManager {
 	
 	private static NavajoQueueScopeManager instance = null;
-	private final String engineName = "javascript";
+	private final static String engineName = "javascript";
 	private ScriptEngineManager factory = new ScriptEngineManager();
 
 	private int MAX_UNUSED_SCOPES = 50;
