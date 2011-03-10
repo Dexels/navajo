@@ -42,12 +42,6 @@ public interface Scheduler {
 	 */
 	public void run(TmlRunnable myRunner);
 
-	
-	/**
-	 * A likely reason to cancel a TmlRunnable would be because the client connection has been lost.
-	 * However, this request is complete, and we could just proceed with running the webservice.
-	 */
-	public void cancel(TmlRunnable myRunner);
 
 	public void runFinished(TmlRunnable tr);
 	
@@ -65,5 +59,5 @@ public interface Scheduler {
 	 * Right now, I use it for the non-blocking HTTP client.
 	 * @return
 	 */
-	public ThreadPoolExecutor getGenericPool();
+	public RequestQueue getDefaultQueue();
 }

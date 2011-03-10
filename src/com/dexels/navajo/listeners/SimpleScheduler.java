@@ -8,10 +8,10 @@ import com.dexels.navajo.document.Navajo;
 
 public class SimpleScheduler implements Scheduler {
 
-	private final ThreadPoolExecutor normalPool;
+	private final RequestQueue normalPool;
 	
 	public SimpleScheduler() {
-		normalPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(50);
+		normalPool = ThreadPoolRequestQueue.create(this, "default", Thread.NORM_PRIORITY, 50);
 	}
 	
 	public void cancel(TmlRunnable myRunner) {
@@ -23,7 +23,7 @@ public class SimpleScheduler implements Scheduler {
 	}
 
 	public String getSchedulingStatus() {
-		return "SimpleScheduler: " + normalPool.getActiveCount() + "/" + normalPool.getPoolSize() + " (" + normalPool.getQueue().size() + ")";
+		return "SimpleScheduler: " + normalPool.getActiveRequestCount() + "/" + normalPool.getMaximumActiveRequestCount() + " (" + normalPool.getQueueSize() + ")";
 	}
 
 	public int getTimeout() {
@@ -31,7 +31,6 @@ public class SimpleScheduler implements Scheduler {
 	}
 
 	public void run(TmlRunnable myRunner) {
-		myRunner.setTmlScheduler(this);
 		myRunner.run();
 	}
 
@@ -44,11 +43,10 @@ public class SimpleScheduler implements Scheduler {
 	public void submit(TmlRunnable myRunner, boolean priority)
 			throws IOException {
 		System.err.println("Submitting to simple pool...");
-		myRunner.setTmlScheduler(this);
 		normalPool.submit(myRunner);
 	}
 
-	public ThreadPoolExecutor getGenericPool() {
+	public RequestQueue getDefaultQueue() {
 		return normalPool;
 	}
 

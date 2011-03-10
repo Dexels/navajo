@@ -51,12 +51,12 @@ public class RunnableTools {
 				return target.getInputNavajo();
 			}
 
-			public Scheduler getTmlScheduler() {
-				return target.getTmlScheduler();
+			public RequestQueue getRequestQueue() {
+				return target.getRequestQueue();
 			}
 
-			public void setTmlScheduler(Scheduler schedule) {
-				target.setTmlScheduler(schedule);
+			public void setRequestQueue(RequestQueue rq) {
+				target.setRequestQueue(rq);
 			}
 
 			public boolean isAborted() {
@@ -88,6 +88,7 @@ public class RunnableTools {
 					UnsupportedEncodingException, NavajoException {
 				throw new UnsupportedOperationException();
 			}
+
 			
 		};
 		return t;
