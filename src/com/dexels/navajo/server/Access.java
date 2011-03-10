@@ -80,6 +80,8 @@ public final class Access implements java.io.Serializable, Mappable {
 	private int totaltime;
 	public int parseTime;
 	public int queueTime;
+	public int queueSize;
+	public String queueId;
 	public int authorisationTime;
 	public int clientTime;
 	public int processingTime;
@@ -407,6 +409,8 @@ public final class Access implements java.io.Serializable, Mappable {
 		a.authorisationTime = this.authorisationTime;
 		a.clientTime = this.clientTime;
 		a.queueTime = this.queueTime;
+		a.queueSize = this.queueSize;
+		a.queueId = this.queueId;
 		a.processingTime = this.processingTime;
 		a.requestEncoding = this.requestEncoding;
 		a.compressedReceive = this.compressedReceive;
@@ -522,6 +526,8 @@ public final class Access implements java.io.Serializable, Mappable {
 			h.setHeaderAttribute("authorisationTime",""+authorisationTime);
 			h.setHeaderAttribute("requestParseTime",""+parseTime);
 			h.setHeaderAttribute("queueTime",""+queueTime);
+			h.setHeaderAttribute("queueId",""+queueId);
+			h.setHeaderAttribute("queueSize",""+queueSize);
 			h.setHeaderAttribute("processingTime",""+processingTime);
 			h.setHeaderAttribute("threadCount", this.threadCount+"");
 			h.setHeaderAttribute("cpuload", cpuload+"");
@@ -792,6 +798,30 @@ public final class Access implements java.io.Serializable, Mappable {
 
 	public void setOriginalRunnable(TmlRunnable originalRunnable) {
 		this.originalRunnable = originalRunnable;
+	}
+
+
+
+	public int getQueueSize() {
+		return queueSize;
+	}
+
+
+
+	public void setQueueSize(int queueSize) {
+		this.queueSize = queueSize;
+	}
+
+
+
+	public String getQueueId() {
+		return queueId;
+	}
+
+
+
+	public void setQueueId(String queueId) {
+		this.queueId = queueId;
 	}
 
 }
