@@ -29,7 +29,7 @@ public class AsyncClient {
 	private String username;
 	private String password;
 
-	private NavajoThreadPool myThreadPool;
+//	private NavajoThreadPool myThreadPool;
 	
 	private int actualCalls = 0;
 	private static AsyncClient instance;
@@ -66,8 +66,8 @@ public class AsyncClient {
 
 	public AsyncClient() {
 		client = new HttpClient();
-		myThreadPool = new NavajoThreadPool();
-		client.setThreadPool(myThreadPool);
+//		myThreadPool = new NavajoThreadPool();
+//		client.setThreadPool(myThreadPool);
 		client.setConnectorType(HttpClient.CONNECTOR_SELECT_CHANNEL);
 		client.setMaxConnectionsPerAddress(200); // max 200 concurrent connections
 																// to every address
@@ -325,7 +325,8 @@ public class AsyncClient {
 		// I suspect the http thread pool has daemon threads, so the vm will shut
 		// down if there are no 'real' threads.
 		Thread.sleep(10000);
-		ac.myThreadPool.rootPool.shutdownScheduler();
+//		ac.
+//		ac.myThreadPool.rootPool.shutdownScheduler();
 	}
 
 	public HttpClient getClient() {
