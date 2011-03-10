@@ -1,9 +1,12 @@
 package com.dexels.navajo.server.listener.http.schedulers.priority;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -12,7 +15,13 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.listeners.RequestQueue;
 import com.dexels.navajo.listeners.ThreadPoolRequestQueue;
 import com.dexels.navajo.listeners.TmlRunnable;
+import com.dexels.navajo.queuemanager.NavajoSchedulingException;
+import com.dexels.navajo.queuemanager.QueueManager;
+import com.dexels.navajo.queuemanager.api.InputContext;
+import com.dexels.navajo.queuemanager.api.QueueContext;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.server.listener.http.TmlScheduler;
 import com.dexels.navajo.server.resource.ResourceCheckerManager;
@@ -61,6 +70,9 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 	private long processed = 0;
 	private long errors = 0;
 	private long resubmits = 0;
+	private QueueContext queueContext;
+	private QueueManager queueManager;
+	private Map<String,RequestQueue> queueMap;
 	
 	// Keep track of last throttle timestamp.
 //	private long throttleTimestamp = 0;
@@ -107,33 +119,109 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		// Start fast pool.
 		fastPool = ThreadPoolRequestQueue.create(this, "fastThread", 7, normalPool.getMaximumActiveRequestCount() * 2);
 		
+		queueMap = new HashMap<String,RequestQueue>();
+		queueMap.put("fastThread",fastPool);
+		queueMap.put("slowThread",slowPool);
+		queueMap.put("normalThread",normalPool);
+		queueMap.put("priorityThread",priorityPool);
+		queueMap.put("systemThread", systemPool);
+
+		this.queueContext = new QueueContext() {
+
+			@Override
+			public double getQueueHealth(String queueName) {
+				return 0;
+			}
+
+			@Override
+			public int getQueueSize(String queueName) {
+				RequestQueue r = queueMap.get(queueName);
+				if(r!=null) {
+					return r.getQueueSize();
+				}
+				return -1;
+			}
+
+			
+			@Override
+			public Set<String> getQueueNames() {
+				return queueMap.keySet();
+			}};
+			
+		queueManager = new QueueManager();
+		queueManager.setQueueContext(queueContext);
+		queueManager.setScriptDir(new File(DispatcherFactory.getInstance().getNavajoConfig().getConfigPath()));
 	}
 	
-	public final void submit(final TmlRunnable myRunner, boolean priority) throws IOException {
-		submitToPool(myRunner, determineThreadPool(myRunner, priority) ) ;
+	public final void submit(final TmlRunnable myRunner, boolean priority)  {
+			submitToPool(myRunner, determineThreadPool(myRunner, priority) ) ;
+		
 	}
 
-	private final RequestQueue determineThreadPool(String user, String service) {
-		boolean system;
-
-		system = Dispatcher.isSpecialwebservice(service);
-
-		String prio = null;
-		if("admin".equals(user)) {
-			prio = "zeer_belangrijk";
-		}
-		if (system) {
-			return systemPool;
-		} else if (prio != null) {
-			if(priorityPool.getQueueSize() > normalPool.getQueueSize()  ) {
-				System.err.println("Submitting request in normal queue, due to high load on the priority queue");
-				return normalPool;
-			} else {
-				return priorityPool;
+	private final RequestQueue determineThreadPool(final TmlRunnable myRunner, final boolean priority) {
+		InputContext ic = new InputContext() {
+			
+			@Override
+			public String getUserName() {
+				return getInputNavajo().getHeader().getRPCUser();
 			}
-		} else {
-			return normalPool;
+			
+			@Override
+			public String getServiceName() {
+				return getInputNavajo().getHeader().getRPCName();
+			}
+			
+			@Override
+			public boolean isPriority() {
+				return priority;
+			}
+
+			
+			@Override
+			public String getResourceAvailability() {
+				ServiceAvailability sa;
+				try {
+					sa = ResourceCheckerManager.getInstance().getResourceChecker(getServiceName(), myRunner.getInputNavajo()).getServiceAvailability();
+					return sa.getStatus();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				return "ok";
+			}
+			
+			@Override
+			public HttpServletRequest getRequest() {
+
+				return (HttpServletRequest) myRunner.getAttribute("httpRequest");
+			}
+			
+			@Override
+			public Navajo getInputNavajo() {
+				try {
+					return myRunner.getInputNavajo();
+				} catch (IOException e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
+		};
+		String queueName;
+		try {
+			queueName = queueManager.resolve(ic, "resolvequeue.js", "javascript");
+		} catch (NavajoSchedulingException e) {
+			e.printStackTrace();
+			if(e.getReason()==NavajoSchedulingException.SCRIPT_PROBLEM || e.getReason() == NavajoSchedulingException.UNKNOWN) {
+				return getDefaultQueue();
+			}
+
+			return null;
 		}
+		
+		RequestQueue r = queueMap.get(queueName);
+		if(r!=null) {
+			return r;
+		}
+		return getDefaultQueue();
 	}
 	
 	private final RequestQueue findPoolWithShortestQueue() {
@@ -157,58 +245,63 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		}
 	}
 	
-	private final RequestQueue determineThreadPool(TmlRunnable myRunner, boolean priority) throws IOException {
-		
-		if ( priority ) {
-			if ( getPriorityQueueSize() > 0 ) {
-				return findPoolWithShortestQueue();
-			} else {
-				return priorityPool;
-			}
-		}
-		
-		if ( myRunner.getInputNavajo() == null || myRunner.getInputNavajo().getHeader() == null ) {
-			throw new IOException("Missing Navajo header.");
-		}
-		
-		final String service = myRunner.getInputNavajo().getHeader().getRPCName();
-
-		boolean system;
-
-		final ServiceAvailability sa = ResourceCheckerManager.getInstance().getResourceChecker(service, myRunner.getInputNavajo()).getServiceAvailability();
-		
-		//System.err.println("ServiceAvailability is: " + sa.getHealth());
-		system = Dispatcher.isSpecialwebservice(service);
-
-		if ( sa.getHealth() == ServiceAvailability.STATUS_OK ) {
-			return fastPool;
-		} else if ( sa.getHealth() == ServiceAvailability.STATUS_DEAD || !sa.isAvailable() ) {
-			errors++;
-			System.err.println("Service not available: " + service + "(ServiceAvailability=" + sa.getHealth() + ")");
-			throw new IOException("Service not available: " + service);
-		} 
-		else if ( sa.getHealth() == ServiceAvailability.STATUS_VERYBUSY ) {
-			System.err.println("Service to slow pool: " + service + "(ServiceAvailability=" + sa.getHealth() + ")");
-			return slowPool;
-		}
-		
-		if (system) {
-			System.err.println("Service to system pool: " + service + "(ServiceAvailability=" + sa.getHealth() + ")");
-			return systemPool;
-		} else {
-			System.err.println("Service to normal pool: " + service + "(ServiceAvailability=" + sa.getHealth() + ")");
-			return normalPool;
-		}
-
-	}
+//	private final RequestQueue determineThreadPool(TmlRunnable myRunner, boolean priority) throws IOException {
+//		
+//		
+//		if ( priority ) {
+//			if ( getPriorityQueueSize() > 0 ) {
+//				return findPoolWithShortestQueue();
+//			} else {
+//				return priorityPool;
+//			}
+//		}
+//		
+//		if ( myRunner.getInputNavajo() == null || myRunner.getInputNavajo().getHeader() == null ) {
+//			throw new IOException("Missing Navajo header.");
+//		}
+//		
+//		final String service = myRunner.getInputNavajo().getHeader().getRPCName();
+//
+//		boolean system;
+//
+//		final ServiceAvailability sa = ResourceCheckerManager.getInstance().getResourceChecker(service, myRunner.getInputNavajo()).getServiceAvailability();
+//		
+//		//System.err.println("ServiceAvailability is: " + sa.getHealth());
+//		system = Dispatcher.isSpecialwebservice(service);
+//
+//		if ( sa.getHealth() == ServiceAvailability.STATUS_OK ) {
+//			return fastPool;
+//		} else if ( sa.getHealth() == ServiceAvailability.STATUS_DEAD || !sa.isAvailable() ) {
+//			errors++;
+//			System.err.println("Service not available: " + service + "(ServiceAvailability=" + sa.getHealth() + ")");
+//			throw new IOException("Service not available: " + service);
+//		} 
+//		else if ( sa.getHealth() == ServiceAvailability.STATUS_VERYBUSY ) {
+//			System.err.println("Service to slow pool: " + service + "(ServiceAvailability=" + sa.getHealth() + ")");
+//			return slowPool;
+//		}
+//		
+//		if (system) {
+//			System.err.println("Service to system pool: " + service + "(ServiceAvailability=" + sa.getHealth() + ")");
+//			return systemPool;
+//		} else {
+//			System.err.println("Service to normal pool: " + service + "(ServiceAvailability=" + sa.getHealth() + ")");
+//			return normalPool;
+//		}
+//
+//	}
 	
-	private final void submitToPool(TmlRunnable run, RequestQueue pool) throws IOException {
+	private final void submitToPool(TmlRunnable run, RequestQueue pool) {
 		
 		// Again, check back log size.
-		if ( pool.getQueueSize() >= maxbacklog ) {
-			throw new IOException("Service unavailable, queue size too large: " + run.getInputNavajo().getHeader().getRPCName());
-		}
+		if ( pool == null) {
+				run.abort("Scheduling refused");
 		
+			return;
+		}
+		if( pool.getQueueSize() >= maxbacklog) {
+				run.abort("Enormous backlog!");
+		}
 		// Calculate moving average inter-arrival time.
 		synchronized (interArrivalTime) {
 			long arrivalTime = System.currentTimeMillis();
@@ -244,48 +337,6 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 
 	@Override
 	public final boolean preCheckRequest(final HttpServletRequest request) {
-//		Enumeration<String> names = request.getHeaderNames();
-//		while (names.hasMoreElements()) {
-//			String headerName = (String) names.nextElement();
-//			System.err.println("Header: "+headerName+" value: "+request.getHeader(headerName));
-//		}
-		
-		if ( !request.getMethod().equals("POST") ) {
-			// Only accept POST requests.
-			System.err.println("Only accepting POSTs now!");
-			return false;
-		}
-		
-		String user = request.getHeader("rpcUser");
-		String service = request.getHeader("rpcName");
-		
-		if(user==null || service ==null) {
-			//System.err.println("No header fields found in HTTP header, skipping pre-check!");
-			return true;
-		}
-
-		RequestQueue pool = determineThreadPool(service, user);
-		if(pool==null) {
-			// hmm odd..
-			System.err.println("Can't decide on a threadpool.");
-			return false;
-		}
-
-		int backlog = pool.getQueueSize();
-		if(backlog>maxbacklog) {
-			System.err.println("Refusing service: Backlog too great ("+maxbacklog+")");
-			return false;
-		}
-
-		double expectedQueuingTime = pool.getExpectedQueueTime();
-		//System.err.println("Expecting queuetime: "+expectedQueuingTime+" timeout: "+timeout);
-		if(expectedQueuingTime > timeout) {
-			System.err.println("Refusing service: Don't expect to finish within timeout.");
-			return false;
-		}
-		
-		
-		//System.err.println(request.getRemoteAddr()+" port: "+request.getRemotePort()+" host: "+request.getRemoteHost());
 		return true;
 	}	
 	
