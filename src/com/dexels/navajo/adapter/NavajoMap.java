@@ -1328,9 +1328,9 @@ private Object waitForResult = new Object();
 
   }
 
-  public void abort() {
-	  // TODO Auto-generated method stub
-
+  @Override
+  public void abort(String reason) {
+	  System.err.println("Aborting navajomap: "+reason);
   }
 
   public void endTransaction() throws IOException {

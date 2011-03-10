@@ -1295,9 +1295,8 @@ protected void prepareSend(String method) {
 
   }
 
-  public void abort() {
-	  // TODO Auto-generated method stub
-
+  public void abort(String reason) {
+	  System.err.println("Aborting navajomap: "+reason);
   }
 
   public void endTransaction() throws IOException {
