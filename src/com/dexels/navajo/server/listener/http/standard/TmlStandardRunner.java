@@ -3,6 +3,7 @@ package com.dexels.navajo.server.listener.http.standard;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,16 +11,17 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.listeners.TmlRunnable;
-import com.dexels.navajo.server.FatalException;
 import com.dexels.navajo.server.listener.http.impl.BaseServiceRunner;
 
 public class TmlStandardRunner extends BaseServiceRunner implements TmlRunnable {
 
 	private  Navajo inputDoc;
+	private  HashMap<String,Object> attributes = new HashMap<String,Object>();
 	
 	public  TmlStandardRunner(HttpServletRequest request,Navajo inputDoc, HttpServletResponse response,  String sendEncoding, String recvEncoding, Object cert) {
 		super(request, response,sendEncoding,recvEncoding,cert);
 		this.inputDoc = inputDoc;
+		attributes.put("httpRequest", request);
 	}
 
 	public int getActiveCount() {
@@ -60,6 +62,11 @@ public class TmlStandardRunner extends BaseServiceRunner implements TmlRunnable 
 	public void setResponseNavajo(Navajo n)  {
 		inputDoc = n;
 		
+	}
+
+	@Override
+	public Object getAttribute(String name) {
+		return attributes.get(name);
 	}
 
 }
