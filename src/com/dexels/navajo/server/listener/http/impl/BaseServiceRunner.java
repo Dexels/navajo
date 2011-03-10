@@ -126,6 +126,9 @@ public abstract  class BaseServiceRunner extends BaseInMemoryRequest implements 
 	}
 	
 	public final TmlScheduler getTmlScheduler() {
+		if(myQueue==null) {
+			return null;
+		}
 		return (TmlScheduler) myQueue.getTmlScheduler();
 	}
 
@@ -266,7 +269,7 @@ protected final Navajo parseInputNavajo() throws IOException, UnsupportedEncodin
 	  is.close();
 	
 	  if(DispatcherFactory.getInstance()==null) {
-		  abort();
+		  abort("Navajo server not initialized properly. Has the postman been called?");
 		  throw new IllegalStateException("Navajo server not initialized properly. Has the postman been called?");
 	  }
 	return in;
@@ -456,7 +459,7 @@ protected final void copyResource(OutputStream out, InputStream in){
 
 
 @Override
-public void abort() {
+public void abort(String reason) {
 	isAborted = true;
 }
 
