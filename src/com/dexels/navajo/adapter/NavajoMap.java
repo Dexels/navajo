@@ -1,5 +1,6 @@
 package com.dexels.navajo.adapter;
 
+import com.dexels.navajo.listeners.RequestQueue;
 import com.dexels.navajo.listeners.Scheduler;
 import com.dexels.navajo.listeners.SchedulerRegistry;
 import com.dexels.navajo.listeners.TmlRunnable;
@@ -98,6 +99,9 @@ public boolean exists;
   private Property currentProperty;
   private String currentFullName;
   protected Access access;
+  
+  private RequestQueue myRequestQueue;
+  
   protected NavajoConfigInterface config;
   protected Navajo inMessage;
   protected Message msgPointer;
@@ -1404,5 +1408,15 @@ public void writeOutput(Navajo inDoc, Navajo outDoc) throws IOException, FileNot
 		NavajoException {
 	// TODO Auto-generated method stub
 	
+}
+
+@Override
+public RequestQueue getRequestQueue() {
+	return myRequestQueue;
+}
+
+@Override
+public void setRequestQueue(RequestQueue myQueue) {
+	myRequestQueue = myQueue;
 }
 }

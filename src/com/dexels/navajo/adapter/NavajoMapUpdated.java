@@ -1,5 +1,6 @@
 package com.dexels.navajo.adapter;
 
+import com.dexels.navajo.listeners.RequestQueue;
 import com.dexels.navajo.listeners.Scheduler;
 import com.dexels.navajo.listeners.SchedulerRegistry;
 import com.dexels.navajo.listeners.TmlRunnable;
@@ -106,6 +107,8 @@ public class NavajoMapUpdated extends AsyncMappable implements Mappable, HasDepe
   private boolean serviceCalled = false;
   private Object waitForResult = new Object();
   private boolean forceInline;
+
+  private RequestQueue myRequestQueue;
 
   
   
@@ -1369,5 +1372,15 @@ public void writeOutput(Navajo inDoc, Navajo outDoc) throws IOException, FileNot
 		NavajoException {
 
 	throw new UnsupportedOperationException("huh?");
+}
+
+@Override
+public RequestQueue getRequestQueue() {
+	return myRequestQueue;
+}
+
+@Override
+public void setRequestQueue(RequestQueue myQueue) {
+	myRequestQueue = myQueue;
 }
 }
