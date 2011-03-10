@@ -39,7 +39,8 @@ public class ClientInfo {
 public String encoding;
   public boolean compressedRecv;
   public boolean compressedSend;
-  public int contentLength;
+
+public int contentLength;
   public Date created;
   //public int threadCount;
 
@@ -63,6 +64,8 @@ public String encoding;
     this.compressedSend = compressedsend;
     this.contentLength = contentLength;
     this.created = created;
+    this.queueId = queueId;
+    this.queueSize = queueSize;
     //this.threadCount = threadCount;
   }
   
@@ -113,6 +116,13 @@ public String encoding;
   public Date getCreated() {
     return created;
   }
+  public int getQueueSize() {
+		return queueSize;
+	}
+
+	public String getQueueId() {
+		return queueId;
+	}
 //  public int getThreadCount() {
 //    return threadCount;
 //  }

@@ -918,6 +918,8 @@ private ServiceHandler createHandler(String handler, Access access)
             access.compressedSend = clientInfo.isCompressedSend();
             access.contentLength = clientInfo.getContentLength();
             access.created = clientInfo.getCreated();
+            access.queueId = clientInfo.getQueueId();
+            access.queueSize = clientInfo.getQueueSize();
             // Set the name of this thread.
             origThreadName = Thread.currentThread().getName();
             Thread.currentThread().setName(getThreadName(access));
