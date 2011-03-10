@@ -15,7 +15,6 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import com.dexels.navajo.document.NavajoException;
-import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.DispatcherInterface;
 
@@ -47,22 +46,25 @@ public class NavajoContextListener implements ServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent sc) {
 
+		init(sc.getServletContext());
+	}
+
+	public void init(ServletContext sc) {
 		System.err.println("==========================================================");
-		System.err.println("INITIALIZING NAVAJO INSTANCE: " +  sc.getServletContext().getContextPath());
+		System.err.println("INITIALIZING NAVAJO INSTANCE: " +  sc.getContextPath());
 		System.err.println("==========================================================");
 		
-		if(!isValidInstallationForContext(sc.getServletContext())) {
+		if(!isValidInstallationForContext(sc)) {
 			System.err.println("No valid installation found, abandoning Context initialization.");
 			return;
 		}
 
-		initializeContext(sc.getServletContext());
+		initializeContext(sc);
+	}
 
-		
-		}
-
+	
 	// Should be called after installation, so the context will still be initialized.
-	public void initializeContext(ServletContext sc) {
+	public static void initializeContext(ServletContext sc) {
 		String configurationPath = null;
 		String rootPath = null;
 
@@ -110,7 +112,7 @@ public class NavajoContextListener implements ServletContextListener {
 		}
 	}
 
-	protected final DispatcherInterface initDispatcher(ServletContext sc, String rootPath, String configurationPath) throws NavajoException {
+	protected final static DispatcherInterface initDispatcher(ServletContext sc, String rootPath, String configurationPath) throws NavajoException {
 
 		String servletContextRootPath = sc.getRealPath("");
 		System.err.println("Context root path: "+servletContextRootPath);
@@ -176,7 +178,7 @@ public class NavajoContextListener implements ServletContextListener {
 //
 //	
 	
-	public boolean isValidInstallationForContext(ServletContext context) {
+	public static boolean isValidInstallationForContext(ServletContext context) {
 		String installPath = getInstallationPath(context);
 
 		if(installPath==null) {
@@ -198,7 +200,7 @@ public class NavajoContextListener implements ServletContextListener {
 	}
 
 	
-	public String getInstallationPath(ServletContext context) {
+	public static String getInstallationPath(ServletContext context) {
 		String force = context.getInitParameter("forcedNavajoPath");
 		if(force!=null) {
 			return force;
@@ -219,7 +221,7 @@ public class NavajoContextListener implements ServletContextListener {
 //		return getInstallationPath(systemContexts,contextPath);
 //	}
 
-	private String getInstallationPath(Map<String,String> systemContexts,String contextPath) {
+	private static String getInstallationPath(Map<String,String> systemContexts,String contextPath) {
 		String engineInstance = System.getProperty("com.dexels.navajo.server.EngineInstance");
 		String key = contextPath;
 		if(engineInstance!=null) {
@@ -232,7 +234,7 @@ public class NavajoContextListener implements ServletContextListener {
 		return systemContexts.get(contextPath);
 	}
 	
-	private Map<String,String> loadSystemContexts() throws IOException {
+	private static Map<String,String> loadSystemContexts() throws IOException {
 		File home = new File(System.getProperty("user.home"));
 		File navajo = new File(home,"navajo.properties");
 		Map<String,String> systemContexts = new HashMap<String, String>();
