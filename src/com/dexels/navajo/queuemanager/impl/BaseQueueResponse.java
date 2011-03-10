@@ -1,20 +1,20 @@
 package com.dexels.navajo.queuemanager.impl;
 
-import com.dexels.navajo.queuemanager.api.PoolResponse;
+import com.dexels.navajo.queuemanager.api.QueueResponse;
 
-public class BasePoolResponse implements PoolResponse {
-	private String poolName = null;
+public class BaseQueueResponse implements QueueResponse {
+	private String queueName = null;
 	private long cacheTime;
 	private long created;
 	private String response;
 
-	public BasePoolResponse() {
+	public BaseQueueResponse() {
 		created = System.currentTimeMillis();
 	}
 	
 	@Override
-	public void setPoolName(String poolName) {
-		this.poolName = poolName;
+	public void setQueueName(String queueName) {
+		this.queueName = queueName;
 	}
 	
 	@Override
@@ -27,8 +27,8 @@ public class BasePoolResponse implements PoolResponse {
 		this.response = response;
 	}
 
-	public String getPoolName() {
-		return poolName;
+	public String getQueueName() {
+		return queueName;
 	}
 
 	public long getCacheTime() {

@@ -8,14 +8,14 @@ import java.util.Map;
 import javax.script.ScriptEngine;
 
 import com.dexels.navajo.queuemanager.api.InputContext;
-import com.dexels.navajo.queuemanager.api.PoolContext;
-import com.dexels.navajo.queuemanager.api.PoolResponse;
-import com.dexels.navajo.queuemanager.impl.BasePoolResponse;
+import com.dexels.navajo.queuemanager.api.QueueContext;
+import com.dexels.navajo.queuemanager.api.QueueResponse;
+import com.dexels.navajo.queuemanager.impl.BaseQueueResponse;
 import com.dexels.navajo.queuemanager.impl.ScriptLogger;
 
 public class QueueManager {
-	private PoolContext poolContext;
-	private final Map<String,BasePoolResponse> cache = new HashMap<String,BasePoolResponse>();
+	private QueueContext queueContext;
+	private final Map<String,BaseQueueResponse> cache = new HashMap<String,BaseQueueResponse>();
 	private File scriptDir = null;
 	
 	private static QueueManager instance = null;
@@ -42,8 +42,8 @@ public class QueueManager {
 		this.scriptDir = scriptDir;
 	}
 
-	public void setPoolContext(PoolContext poolContext) {
-		this.poolContext = poolContext;
+	public void setQueueContext(QueueContext queueContext) {
+		this.queueContext = queueContext;
 	}
 	
 	public void flushCache() {
@@ -56,28 +56,28 @@ public class QueueManager {
 
 	public String resolve(InputContext in, String script, String engineName) throws NavajoSchedulingException  {
 		long begin = System.currentTimeMillis();
-		BasePoolResponse pr = cache.get(in.getServiceName());
+		BaseQueueResponse pr = cache.get(in.getServiceName());
 		if(pr==null || !pr.isValid()) {
 			pr = callResolutionScript(in, script, begin,engineName);
 			cache.put(in.getServiceName(), pr);
 		} else {
 			System.err.println("Returning cached response");			
 		}
-        if(!PoolResponse.ACCEPT.equals(pr.getResponse())) {
+        if(!QueueResponse.ACCEPT.equals(pr.getResponse())) {
         	throw new NavajoSchedulingException("Scheduling refused!");
         }
-        return pr.getPoolName();
+        return pr.getQueueName();
 	}
 
-	private BasePoolResponse callResolutionScript(InputContext in,
+	private BaseQueueResponse callResolutionScript(InputContext in,
 			String script, long begin, String engineName) throws NavajoSchedulingException {
-		BasePoolResponse pc = new BasePoolResponse();
+		BaseQueueResponse pc = new BaseQueueResponse();
         ScriptEngine engine = NavajoQueueScopeManager.getInstance().getScope();
 //		long init = System.currentTimeMillis();
 
         engine.put("inputContext", in);
         engine.put("log", new ScriptLogger());
-        engine.put("poolContext", poolContext);
+        engine.put("queueContext", queueContext);
         engine.put("response", pc);
         // basic example
         try {
@@ -96,7 +96,7 @@ public class QueueManager {
 			throw new NavajoSchedulingException(e);
 		} finally {
 			long res = System.currentTimeMillis() - begin;
-			System.err.println("Pool selection took: "+res+" millis.");
+			System.err.println("Queue selection took: "+res+" millis.");
 		}
 		return pc;
 	}
