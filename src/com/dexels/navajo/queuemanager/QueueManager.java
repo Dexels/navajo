@@ -73,7 +73,7 @@ public class QueueManager {
 			String script, long begin, String engineName) throws NavajoSchedulingException {
 		BasePoolResponse pc = new BasePoolResponse();
         ScriptEngine engine = NavajoQueueScopeManager.getInstance().getScope();
-		long init = System.currentTimeMillis();
+//		long init = System.currentTimeMillis();
 
         engine.put("inputContext", in);
         engine.put("log", new ScriptLogger());
@@ -88,7 +88,8 @@ public class QueueManager {
         		scriptFile = new File(scriptDir,script);
         	}
 			FileReader fr = new FileReader(scriptFile);
-			engine.eval(fr);
+			Object result = engine.eval(fr);
+			System.err.println("Result: "+result);
 			fr.close();
 			NavajoQueueScopeManager.getInstance().releaseScope(engine);
 		} catch (Exception e) {
