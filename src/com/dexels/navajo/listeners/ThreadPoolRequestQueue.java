@@ -94,7 +94,7 @@ public class ThreadPoolRequestQueue extends RequestQueue {
 		}
 		for (Runnable runnable : awaiting) {
 			TmlRunnable tr = (TmlRunnable)runnable;
-			tr.abort();
+			tr.abort("Aborting: Queue shutting down");
 			System.err.println("Aborting task!");
 		}
 	}

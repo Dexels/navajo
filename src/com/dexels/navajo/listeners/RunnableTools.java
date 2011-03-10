@@ -63,8 +63,8 @@ public class RunnableTools {
 				return target.isAborted();
 			}
 
-			public void abort() {
-				target.abort();
+			public void abort(String reason) {
+				target.abort(reason);
 			}
 
 			public String getUrl() {

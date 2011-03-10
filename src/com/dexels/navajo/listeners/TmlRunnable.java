@@ -24,7 +24,7 @@ public interface TmlRunnable extends Runnable {
 	public Object getAttribute(String name);
 	
 	public boolean isAborted();
-	public void abort();
+	public void abort(String string);
 	
 	public String getUrl();
 
