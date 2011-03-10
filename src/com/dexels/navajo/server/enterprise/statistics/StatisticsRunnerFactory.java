@@ -11,6 +11,7 @@ public class StatisticsRunnerFactory {
 	private static volatile StatisticsRunnerInterface instance = null;
 	private static Object semaphore = new Object();
 	
+	@SuppressWarnings("unchecked")
 	public static final StatisticsRunnerInterface getInstance(String storePath, Map parameters, String storeClass) {
 
 		if ( instance != null ) {
@@ -21,8 +22,8 @@ public class StatisticsRunnerFactory {
 				
 				if ( instance == null ) {
 					try {
-						Class c = Class.forName("com.dexels.navajo.server.statistics.StatisticsRunner");
-						StatisticsRunnerInterface dummy = (StatisticsRunnerInterface) c.newInstance();
+						Class<StatisticsRunnerInterface> c = (Class<StatisticsRunnerInterface>) Class.forName("com.dexels.navajo.server.statistics.StatisticsRunner");
+						StatisticsRunnerInterface dummy = c.newInstance();
 						Method m = c.getMethod("getInstance", new Class[]{String.class, Map.class, String.class});
 						instance = (StatisticsRunnerInterface) m.invoke(dummy, new Object[]{storePath, parameters, storeClass});
 					} catch (Exception e) {
