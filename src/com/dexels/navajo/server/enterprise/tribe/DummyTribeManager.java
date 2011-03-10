@@ -47,8 +47,8 @@ public class DummyTribeManager implements TribeManagerInterface {
 		return null;
 	}
 
-	public Set getAllMembers() {
-		HashSet s =  new HashSet();
+	public Set<TribeMemberInterface> getAllMembers() {
+		Set<TribeMemberInterface> s =  new HashSet<TribeMemberInterface>();
 		s.add(new TribeMemberImpl());
 		return s;
 	}

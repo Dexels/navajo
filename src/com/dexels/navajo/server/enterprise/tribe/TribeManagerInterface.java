@@ -90,7 +90,7 @@ public interface TribeManagerInterface {
 	 * 
 	 * @return
 	 */
-	public Set getAllMembers();
+	public Set<TribeMemberInterface> getAllMembers();
 	
 	/**
 	 * Ask a SPECIFIC Tribal Member something.

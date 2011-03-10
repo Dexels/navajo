@@ -2,7 +2,6 @@ package com.dexels.navajo.server.enterprise.tribe;
 
 import java.io.Serializable;
 
-import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
 
 /**
