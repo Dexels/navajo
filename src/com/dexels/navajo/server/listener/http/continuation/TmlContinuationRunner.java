@@ -41,6 +41,19 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 
 	}
 	
+	@Override
+	public void abort(String reason) {
+		super.abort(reason);
+		try {
+			System.err.println("Abort: "+reason+" generating outdoc and resuming");
+			outDoc = DispatcherFactory.getInstance().generateErrorMessage(null, reason, -1, 0, null);
+//			endTransaction();
+			resumeContinuation();
+		} catch (FatalException e) {
+			e.printStackTrace();
+		}
+	}
+
 	
 
 	@Override
