@@ -16,6 +16,7 @@ import org.eclipse.jetty.continuation.ContinuationSupport;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.listeners.NavajoDoneException;
+import com.dexels.navajo.listeners.TmlRunnable;
 import com.dexels.navajo.server.ClientInfo;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
@@ -159,8 +160,12 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 					  String sendEncoding = request.getHeader("Accept-Encoding");
 				      String recvEncoding = request.getHeader("Content-Encoding");
 						
+				      TmlRunnable tml = getTmlRunnable();
+				      int queueSize = tml.getRequestQueue().getQueueSize();
+				      String queueId = tml.getRequestQueue().getId();
+				      
 					  ClientInfo clientInfo = 	new ClientInfo(request.getRemoteAddr(), "unknown",
-								recvEncoding, (int) (scheduledAt - connectedAt), (int) (startedAt - scheduledAt), ( recvEncoding != null && ( recvEncoding.equals(COMPRESS_GZIP) || recvEncoding.equals(COMPRESS_JZLIB))), 
+								recvEncoding, (int) (scheduledAt - connectedAt), (int) (startedAt - scheduledAt), queueSize, queueId, ( recvEncoding != null && ( recvEncoding.equals(COMPRESS_GZIP) || recvEncoding.equals(COMPRESS_JZLIB))), 
 								( sendEncoding != null && ( sendEncoding.equals(COMPRESS_GZIP) || sendEncoding.equals(COMPRESS_JZLIB))), 
 								request.getContentLength(), new java.util.Date( connectedAt ) );
 					  

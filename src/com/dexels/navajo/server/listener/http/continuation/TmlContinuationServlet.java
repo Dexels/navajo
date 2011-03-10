@@ -20,8 +20,6 @@ import com.dexels.navajo.server.listener.http.SchedulerTools;
 import com.dexels.navajo.server.listener.http.TmlScheduler;
 import com.jcraft.jzlib.ZInputStream;
 
-
-
 public class TmlContinuationServlet extends HttpServlet implements SchedulableServlet {
 
 	private static final long serialVersionUID = -8645365233991777113L;
@@ -77,7 +75,6 @@ public class TmlContinuationServlet extends HttpServlet implements SchedulableSe
 			}
 
 			TmlContinuationRunner tr = new TmlContinuationRunner(req,inputDoc, resp,  sendEncoding, recvEncoding, certObject);
-			tr.setTmlScheduler(getTmlScheduler());
 			req.setAttribute("tmlRunner", tr);
 		
 		tr.suspendContinuation();
