@@ -15,6 +15,7 @@ import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.listeners.NavajoDoneException;
+import com.dexels.navajo.listeners.RequestQueue;
 import com.dexels.navajo.listeners.TmlRunnable;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.DispatcherFactory;
@@ -26,7 +27,7 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 	private ScriptEnvironment environment;
 	private long scheduledAt;
 	private Access access;
-	
+	private RequestQueue requestQueue;
 	
 	public ContinuationRunnable( ScriptEnvironment se, ContinuationPending pending) {
 		this.pending = pending;
@@ -186,6 +187,23 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 			NavajoException {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("This runnable is not capable of writing the output, it is not linked to any stream.");
+	}
+
+	@Override
+	public RequestQueue getRequestQueue() {
+		return requestQueue;
+	}
+
+	@Override
+	public void setRequestQueue(RequestQueue rq) {
+		this.requestQueue = rq;
+		
+	}
+
+	@Override
+	public Object getAttribute(String name) {
+		// TODO not implemented
+		return null;
 	}
 
 	
