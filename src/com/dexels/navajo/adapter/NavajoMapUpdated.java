@@ -1383,4 +1383,10 @@ public RequestQueue getRequestQueue() {
 public void setRequestQueue(RequestQueue myQueue) {
 	myRequestQueue = myQueue;
 }
+
+@Override
+public Object getAttribute(String name) {
+	// TODO Auto-generated method stub
+	return null;
+}
 }
