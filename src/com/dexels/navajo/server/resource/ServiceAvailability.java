@@ -35,6 +35,24 @@ public class ServiceAvailability {
 		this.unavailableResources = unavailableResources;
 	}
 	
+	public String getStatus() {
+		switch (health) {
+			case STATUS_UNKNOWN:
+				return "unknown";
+			case STATUS_OK:
+				return "ok";
+			case STATUS_BUSY:
+				return "busy";
+			case STATUS_VERYBUSY:
+				return "verybusy";
+			case STATUS_DEAD:
+				return "dead";
+	
+			default:
+				return "unknown";
+		}
+	}
+	
 	public int getHealth() {
 		return health;
 	}
