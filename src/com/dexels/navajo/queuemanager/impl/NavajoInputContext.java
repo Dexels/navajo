@@ -30,11 +30,15 @@ public class NavajoInputContext implements InputContext {
 	@Override
 	public String getResourceAvailability() {
 		// link to ResourceManager
-		return "OK";
+		return "ok";
 	}
 	@Override
 	public HttpServletRequest getRequest() {
 		return request;
+	}
+	@Override
+	public boolean isPriority() {
+		return false;
 	}
 
 }

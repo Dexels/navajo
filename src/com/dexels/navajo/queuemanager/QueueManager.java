@@ -2,10 +2,12 @@ package com.dexels.navajo.queuemanager;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.script.ScriptEngine;
+import javax.script.ScriptException;
 
 import com.dexels.navajo.queuemanager.api.InputContext;
 import com.dexels.navajo.queuemanager.api.QueueContext;
@@ -64,7 +66,8 @@ public class QueueManager {
 			System.err.println("Returning cached response");			
 		}
         if(!QueueResponse.ACCEPT.equals(pr.getResponse())) {
-        	throw new NavajoSchedulingException("Scheduling refused!");
+        	NavajoSchedulingException navajoSchedulingException = new NavajoSchedulingException(NavajoSchedulingException.REQUEST_REFUSED, "Scheduling refused!");
+        	throw navajoSchedulingException;
         }
         return pr.getQueueName();
 	}
@@ -92,8 +95,11 @@ public class QueueManager {
 			System.err.println("Result: "+result);
 			fr.close();
 			NavajoQueueScopeManager.getInstance().releaseScope(engine);
-		} catch (Exception e) {
-			throw new NavajoSchedulingException(e);
+		} catch (IOException e) {
+			throw new NavajoSchedulingException(NavajoSchedulingException.SCRIPT_PROBLEM,"Error reading script",e);
+		} catch (ScriptException e) {
+			e.printStackTrace();
+			throw new NavajoSchedulingException(NavajoSchedulingException.SCRIPT_PROBLEM,"Error executing script",e);
 		} finally {
 			long res = System.currentTimeMillis() - begin;
 			System.err.println("Queue selection took: "+res+" millis.");

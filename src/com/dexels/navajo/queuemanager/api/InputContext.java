@@ -12,4 +12,5 @@ public interface InputContext {
 	public String getResourceAvailability();
 	
 	public HttpServletRequest getRequest();
+	boolean isPriority();
 }
