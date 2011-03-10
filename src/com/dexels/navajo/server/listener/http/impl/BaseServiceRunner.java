@@ -21,6 +21,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.listeners.NavajoDoneException;
+import com.dexels.navajo.listeners.RequestQueue;
 import com.dexels.navajo.listeners.Scheduler;
 import com.dexels.navajo.listeners.TmlRunnable;
 import com.dexels.navajo.server.Access;
@@ -60,6 +61,8 @@ public abstract  class BaseServiceRunner extends BaseInMemoryRequest implements 
 	protected long scheduledAt = -1;
 	protected long startedAt = -1;
 	private TmlScheduler tmlScheduler;
+	private RequestQueue myQueue;
+	
 	private String url;
 
 	private Access access;
@@ -123,14 +126,16 @@ public abstract  class BaseServiceRunner extends BaseInMemoryRequest implements 
 	}
 	
 	public final TmlScheduler getTmlScheduler() {
-		return tmlScheduler;
+		return (TmlScheduler) myQueue.getTmlScheduler();
 	}
 
-
-	public final void setTmlScheduler(Scheduler tmlScheduler) {
-		this.tmlScheduler = (TmlScheduler) tmlScheduler;
+	public RequestQueue getRequestQueue() {	
+		return myQueue;
 	}
-
+	
+	public void setRequestQueue(RequestQueue myQueue) {
+		this.myQueue = myQueue;
+	}
 	
   /**
    * Handle a request.
@@ -187,9 +192,13 @@ public abstract  class BaseServiceRunner extends BaseInMemoryRequest implements 
 				  
 				  String sendEncoding = request.getHeader("Accept-Encoding");
 			      String recvEncoding = request.getHeader("Content-Encoding");
-					
+			
+			      String queueId = myQueue.getId();
+			      int queueLength = myQueue.getQueueSize();
+			      
 				  ClientInfo clientInfo = 	new ClientInfo(request.getRemoteAddr(), "unknown",
-							recvEncoding, (int) (scheduledAt - connectedAt), (int) (startedAt - scheduledAt), ( recvEncoding != null && ( recvEncoding.equals(COMPRESS_GZIP) || recvEncoding.equals(COMPRESS_JZLIB))), 
+							recvEncoding, (int) (scheduledAt - connectedAt), (int) (startedAt - scheduledAt), queueLength, queueId, 
+							( recvEncoding != null && ( recvEncoding.equals(COMPRESS_GZIP) || recvEncoding.equals(COMPRESS_JZLIB))), 
 							( sendEncoding != null && ( sendEncoding.equals(COMPRESS_GZIP) || sendEncoding.equals(COMPRESS_JZLIB))), 
 							request.getContentLength(), new java.util.Date( connectedAt ) );
 				  

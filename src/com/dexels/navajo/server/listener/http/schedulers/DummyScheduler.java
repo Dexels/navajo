@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.listeners.RequestQueue;
 import com.dexels.navajo.listeners.TmlRunnable;
 import com.dexels.navajo.server.listener.http.TmlScheduler;
 
@@ -16,11 +17,6 @@ public class DummyScheduler implements TmlScheduler {
 
 	}
 	
-	@Override
-	public void cancel(TmlRunnable myRunner) {
-		System.err.println("Canceling requests not supported. Ignoring.");
-	}
-
 	@Override
 	public boolean checkNavajo(Navajo input) {
 		return true;
@@ -40,7 +36,6 @@ public class DummyScheduler implements TmlScheduler {
 
 	@Override
 	public void run(TmlRunnable myRunner) {
-		myRunner.setTmlScheduler(this);
 		myRunner.run();
 	}
 
@@ -83,7 +78,7 @@ public class DummyScheduler implements TmlScheduler {
 	}
 
 	@Override
-	public ThreadPoolExecutor getGenericPool() {
+	public RequestQueue getDefaultQueue() {
 		throw new UnsupportedOperationException("Can not getGenericPool using DummyScheduler");
 
 	}
