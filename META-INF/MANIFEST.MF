@@ -49,4 +49,6 @@ Export-Package: com.dexels.navajo.adapter.navajomap,
  navajo,
  org.dexels.utils
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.document
+Require-Bundle: com.dexels.navajo.document,
+ com.dexels.navajo.version,
+ com.dexels.navajo.queuemanager;bundle-version="0.1.0"
