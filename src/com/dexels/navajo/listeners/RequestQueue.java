@@ -54,7 +54,7 @@ public abstract class RequestQueue {
 	
 	public abstract void finished();
 	
-	public abstract void sumbitToQueue(TmlRunnable tml);
+	protected abstract void sumbitToQueue(TmlRunnable tml);
 	
 	public abstract void shutDownQueue();
 	

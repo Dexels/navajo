@@ -53,7 +53,7 @@ public class ThreadPoolRequestQueue extends RequestQueue {
 	}
 
 	@Override
-	public void sumbitToQueue(TmlRunnable tml) {
+	protected void sumbitToQueue(TmlRunnable tml) {
 		tpe.submit(tml);
 	}
 
