@@ -276,7 +276,7 @@ public final class JMXHelper  {
 		}
 	}
 		
-	public final static void addGaugeMonitor(NotificationListener listener, String domain, String type, String attributeName, Number low, Number high, long frequency) {
+	public final static GaugeMonitor addGaugeMonitor(NotificationListener listener, String domain, String type, String attributeName, Number low, Number high, long frequency) {
 		// construct monitor
 		
         final GaugeMonitor monitor = new GaugeMonitor();
@@ -306,6 +306,8 @@ public final class JMXHelper  {
 		} catch (Exception e) {
 			e.printStackTrace(System.err);
 		}
+		
+		return monitor;
 	}
 	
 }
