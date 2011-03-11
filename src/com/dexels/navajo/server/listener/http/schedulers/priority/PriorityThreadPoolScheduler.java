@@ -41,7 +41,7 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 	private RequestQueue slowPool;
 	private RequestQueue fastPool;
 	
-	private final Map<TmlRunnable,RequestQueue> poolMapper = new HashMap<TmlRunnable, RequestQueue>();
+	private final Map<TmlRunnable,RequestQueue> poolMapper = Collections.synchronizedMap(new HashMap<TmlRunnable, RequestQueue>());
 	private final Map<HttpServletRequest, TmlRunnable> tmlRunnableMap = Collections.synchronizedMap( new HashMap<HttpServletRequest, TmlRunnable>());
 	
 	private int timeout = 7200000;
@@ -301,6 +301,7 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		}
 		if( pool.getQueueSize() >= maxbacklog) {
 				run.abort("Enormous backlog!");
+				return;
 		}
 		// Calculate moving average inter-arrival time.
 		synchronized (interArrivalTime) {
