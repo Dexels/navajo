@@ -81,7 +81,7 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 		// Should be refactored to a special filter.
 		
 		
-		System.err.println("Content-Encoding: "+recvEncoding);
+		//System.err.println("Content-Encoding: "+recvEncoding);
 //		System.err.println("Accept-Encoding: "+sendEncoding);
 	if ( recvEncoding != null && recvEncoding.equals(COMPRESS_JZLIB)) {		
 		  response.setHeader("Content-Encoding", COMPRESS_JZLIB);
@@ -92,7 +92,7 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 		  out = new java.util.zip.GZIPOutputStream(response.getOutputStream());
 	  }
 	  else {
-		  System.err.println("No content encoding specified: (" + sendEncoding + "/" + recvEncoding + ")");
+		  //System.err.println("No content encoding specified: (" + sendEncoding + "/" + recvEncoding + ")");
 		  out = response.getOutputStream();
 	  }
 	
@@ -116,8 +116,8 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 		  threadStatus = "Schedule status unknown, no scheduler found.";
 	  }
 //	  int threadsActive = getActiveCount();
-	  System.err.println("StreamClass: "+out.getClass().getName());
-	  System.err.println("ResponseClass: "+response.getClass().getName());
+	  //System.err.println("StreamClass: "+out.getClass().getName());
+	  //System.err.println("ResponseClass: "+response.getClass().getName());
 	  long startWrite = System.currentTimeMillis();
 	  outDoc.write(out);
 //	  out.flush();
@@ -187,7 +187,7 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 				  } catch (NavajoDoneException e) {
 					  // temp catch, to be able to pre
 					  continuationFound = true;
-					  System.err.println("Navajo done in service runner. Thread disconnected...");
+					  //.println("Navajo done in service runner. Thread disconnected...");
 					  throw(e);
 				  }
 				  finally {
