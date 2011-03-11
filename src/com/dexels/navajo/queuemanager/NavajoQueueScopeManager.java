@@ -34,10 +34,10 @@ public class NavajoQueueScopeManager {
 
 		ScriptEngine so = freeScopes.poll();
 		if(so!=null) {
-			System.err.println("Reusing scope. Free scopes: "+freeScopes.size());
+			//System.err.println("Reusing scope. Free scopes: "+freeScopes.size());
 			return so;
 		}
-		System.err.println("Creating scope. Free scopes: "+freeScopes.size());
+		//System.err.println("Creating scope. Free scopes: "+freeScopes.size());
         ScriptEngine engine = factory.getEngineByName(engineName);
 		long started = System.currentTimeMillis();
 

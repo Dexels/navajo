@@ -63,7 +63,7 @@ public class QueueManager {
 			pr = callResolutionScript(in, script, begin,engineName);
 			cache.put(in.getServiceName(), pr);
 		} else {
-			System.err.println("Returning cached response");			
+			//System.err.println("Returning cached response");			
 		}
         if(!QueueResponse.ACCEPT.equals(pr.getResponse())) {
         	NavajoSchedulingException navajoSchedulingException = new NavajoSchedulingException(NavajoSchedulingException.REQUEST_REFUSED, "Scheduling refused!");
@@ -92,7 +92,7 @@ public class QueueManager {
         	}
 			FileReader fr = new FileReader(scriptFile);
 			Object result = engine.eval(fr);
-			System.err.println("Result: "+result);
+			//System.err.println("Result: "+result);
 			fr.close();
 			NavajoQueueScopeManager.getInstance().releaseScope(engine);
 		} catch (IOException e) {
@@ -101,8 +101,8 @@ public class QueueManager {
 			e.printStackTrace();
 			throw new NavajoSchedulingException(NavajoSchedulingException.SCRIPT_PROBLEM,"Error executing script",e);
 		} finally {
-			long res = System.currentTimeMillis() - begin;
-			System.err.println("Queue selection took: "+res+" millis.");
+			//long res = System.currentTimeMillis() - begin;
+			//System.err.println("Queue selection took: "+res+" millis.");
 		}
 		return pc;
 	}
