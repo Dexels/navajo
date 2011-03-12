@@ -387,7 +387,10 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 			}
 
 			dis = initDispatcher();
-
+			if(dis==null) {
+				System.err.println("SERIOUS: No dispatcher found. The navajo context did not initialize properly, check the logs to find out why!");
+				return;
+			}
 			// Check for certificate.
 			Object certObject = request.getAttribute( "javax.servlet.request.X509Certificate");
 
