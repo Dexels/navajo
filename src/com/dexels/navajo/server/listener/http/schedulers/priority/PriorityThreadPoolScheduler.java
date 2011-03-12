@@ -2,6 +2,7 @@ package com.dexels.navajo.server.listener.http.schedulers.priority;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -73,6 +74,9 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 	private QueueContext queueContext;
 	private QueueManager queueManager;
 	private Map<String,RequestQueue> queueMap;
+	
+	private Map<String,Long> warnings = new HashMap<String,Long>();
+	private static String RESOLUTION_SCRIPT_DOES_NOT_EXIST = "resolutionscript";
 	
 	// Keep track of last throttle timestamp.
 //	private long throttleTimestamp = 0;
@@ -159,6 +163,14 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 	}
 
 	private final RequestQueue determineThreadPool(final TmlRunnable myRunner, final boolean priority) {
+		
+		/**
+		 * Priority immediately returns priority pool (currently only used for scheduled Tasks).
+		 */
+		if ( priority ) {
+			return priorityPool;
+		}
+		
 		InputContext ic = new InputContext() {
 			
 			@Override
@@ -209,11 +221,21 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		try {
 			queueName = queueManager.resolve(ic, "resolvequeue.js", "javascript");
 		} catch (NavajoSchedulingException e) {
-			e.printStackTrace();
 			if(e.getReason()==NavajoSchedulingException.SCRIPT_PROBLEM || e.getReason() == NavajoSchedulingException.UNKNOWN) {
+				synchronized (warnings) {
+					Long warning = warnings.get(RESOLUTION_SCRIPT_DOES_NOT_EXIST);
+					if ( warning == null ) {
+						warning = Long.valueOf(0);
+						warnings.put(RESOLUTION_SCRIPT_DOES_NOT_EXIST, warning);
+					} 
+					if ( warning.longValue() < 100 ) {
+						System.err.println("Could not find queue resolution script, using default queue.");
+						warning = warning.longValue() + 1;
+					}
+				}
 				return getDefaultQueue();
 			}
-
+			e.printStackTrace(System.err);
 			return null;
 		}
 		
