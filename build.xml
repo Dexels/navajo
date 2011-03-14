@@ -11,7 +11,7 @@
 
 	<property file="build.properties" />
 <!--	<property name="basicdeploy" value="DexelsVersionControl,NavajoDocument,NavajoClient,Navajo,NavajoListeners,NavajoAdapters,NavajoJsp,NavajoJspServer,NavajoFunctions" />-->
-	<property name="basicdeploy" value="DexelsVersionControl,NavajoDocument,NavajoClient,Navajo,NavajoListeners,NavajoAdapters,NavajoJsp,NavajoJspServer,NavajoFunctions,NavajoEnterprise,NavajoEnterpriseAdapters,NavajoEnterpriseListeners,NavajoAsyncClient,NavajoListenersTomcat,NavajoListenersContinuations,NavajoRhino" />
+	<property name="basicdeploy" value="DexelsVersionControl,NavajoDocument,NavajoQueueManager,NavajoClient,Navajo,NavajoListeners,NavajoAdapters,NavajoJsp,NavajoJspServer,NavajoFunctions,NavajoEnterprise,NavajoEnterpriseAdapters,NavajoEnterpriseListeners,NavajoAsyncClient,NavajoListenersTomcat,NavajoListenersContinuations,NavajoRhino" />
 	<property name="enterprisedeploy" value="NavajoEnterprise,NavajoEnterpriseAdapters,NavajoEnterpriseListeners" />
 
 	
@@ -21,9 +21,6 @@
 	<property name="worktemp" value="${work}/temp"/>
 	<property name="distribution" value="distribution"/>
 	<property name="deployRoot" value="${navajoScpUser}@${navajoScpServer}:${navajoScpPath}" />
-
-
-	
 	
 	<target name="clean">
 		<delete dir="${work}"/>
@@ -125,6 +122,12 @@
 				<include name="**/*"/>
 		 	</fileset>
 		</war>
+		<war destfile="${distribution}/${deployname}_nojars.war">
+		 	<fileset dir="${work}">
+				<include name="**/*"/>
+		 		<exclude name="**/*.jar"/>
+		 	</fileset>
+		</war>
 		<echo message="War complete. Deploying to Tomcat: ${navajoTomcatServerManager}"/>
 		<deploy url="${navajoTomcatServerManager}" update="true" username="${navajoTomcatUser}" password="${navajoTomcatPassword}" path="/${deployContextName}" war="${distribution}/${deployname}.war" />
 
@@ -135,16 +138,16 @@
 		<ant antfile="build.xml" target="assemble"/>
 	</target>
 	<target name="upload" depends="deploy">
-		<!--<scp trust="true"  sftp="true" verbose="true" password="${navajoScpPassword}" todir="${deployRoot}">
+		<scp trust="true"  sftp="true" verbose="true" password="${navajoScpPassword}" todir="${deployRoot}">
 			<fileset dir="${distribution}">
 				<include name="${deployname}.war" />
 			</fileset>
-		</scp>-->
+		</scp>
 	</target>
 
 	
 	<target name="publish" depends="deploy,upload">
-			
+			<copy tofile="/Library/jetty-hightide-8.0.0.M2/webapps/NavajoJetty.war" file="${distribution}/${deployname}.war"/>
 	</target>
 </project>
 <!-- EOF: $RCSfile$ -->
