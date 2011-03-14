@@ -33,6 +33,11 @@ public class SimpleRepository implements Repository {
 	public Access authorizeUser(String username, String password,
 			String service, Navajo inMessage, Object certificate)
 			throws SystemException, AuthorizationException {
+		try {
+			initGlobals(service, username, inMessage, null);
+		} catch (NavajoException e) {
+			e.printStackTrace();
+		}
 		return new Access(1, 1, 1, username, service, "", "", "", certificate);
 	}
 
