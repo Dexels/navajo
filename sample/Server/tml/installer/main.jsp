@@ -27,8 +27,12 @@
 </head>
 
 <body>
-<% pageContext.setAttribute("engineInstance", System.getProperty("com.dexels.navajo.server.EngineInstance")); %>
-
+<% 
+String inst =  System.getProperty("com.dexels.navajo.server.EngineInstance");
+if(inst!=null) {
+	pageContext.setAttribute("engineInstance",inst); 
+}
+%>
   <input type="hidden" name="inputNavajo" value="${param['service']}"/>
   <div class="page_margins">
     <div class="page">
@@ -82,8 +86,7 @@
 				<c:if test="">
 				</c:if>
 				<c:choose>
-					<c:when test="${engineInstance!=''}">
-						<h3>Engine instance detected: ${engineInstance}</h3>
+					<c:when test="${engineInstance!='' && engineInstance!=null}">
 						<div class="important">
 							This installation will use a '@${engineInstance}' suffix.:
 						</div>		
