@@ -81,7 +81,7 @@
 	<import file="../DexelsVersionControl/ant/navajobuild.xml" />
 
 	<target name="afterdeploy">
-		<copy todir="../NavajoServer/sample/Server/WEB-INF/tags/">
+		<copy todir="../NavajoServer/sample/Server/WEB-INF/tld/">
 			<fileset dir="WEB-INF/tags">
 				<include name="*.tld"/>
 			</fileset>

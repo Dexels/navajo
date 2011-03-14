@@ -18,7 +18,6 @@ Require-Bundle: com.dexels.navajo.document;visibility:=reexport,
  com.uwyn.jhighlight;bundle-version="1.0.0",
  org.apache.taglibs.standard;bundle-version="1.0.0",
  javax.servlet.jsp,
- javax.servlet;bundle-version="2.5.0",
  com.dexels.navajo.listeners;bundle-version="3.0.1"
 Import-Package: javax.el;version="2.1.0",
  javax.servlet;version="2.5.0",
