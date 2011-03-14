@@ -20,6 +20,11 @@ public class RepositoryFactory {
 
 	private final static Map<String,Repository> repositoryRepository = new HashMap<String, Repository>();
 	
+	// Put SimpleRepository in repositoryRepository.
+	static {
+		repositoryRepository.put("com.dexels.navajo.server.SimpleRepository", new SimpleRepository());
+	}
+	
     public static Repository getRepository(String className, NavajoConfigInterface config) {
         try {
         	Repository localRp = repositoryRepository.get(className);
