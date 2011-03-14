@@ -24,6 +24,8 @@
  */
 package navajolisteners;
 
+import com.dexels.navajo.listeners.SchedulerRegistry;
+
 
 
 public class Version extends dexels.Version {
@@ -35,6 +37,15 @@ public class Version extends dexels.Version {
 //		javax.mail.Address a;
 //		setReleaseDate(RELEASEDATE);
 	}
+
+	@Override
+	public void shutdown() {
+
+		super.shutdown();
+		SchedulerRegistry.setScheduler(null);
+	}
+	
+	
 	
 
 }
