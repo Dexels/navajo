@@ -928,9 +928,10 @@ private ServiceHandler createHandler(String handler, Access access)
         }
       } 
       else {  
-        access = new Access(0, 0, 0, rpcUser, rpcName, "" , ( clientInfo != null ? clientInfo.getIP() : ""), ( clientInfo != null ?  clientInfo.getHost() : ""), null);
+    	// Use SimpleRepository authorisation is skipped.
+    	access = RepositoryFactory.getRepository("com.dexels.navajo.server.SimpleRepository", navajoConfig)
+    				.authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, null);
       }
-      
       
       if (clientInfo != null && access != null) {
     	  access.ipAddress = clientInfo.getIP();
