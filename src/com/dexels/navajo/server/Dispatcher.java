@@ -912,25 +912,7 @@ private ServiceHandler createHandler(String handler, Access access)
         	  System.err.println("EMPTY REPOSITORY, INVALID STATE OF DISPATCHER!");
         	  throw new FatalException("EMPTY REPOSITORY, INVALID STATE OF DISPATCHER!");
           }
-          
           access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate);
-          
-          if (clientInfo != null && access != null) {
-            access.ipAddress = clientInfo.getIP();
-            access.hostName = clientInfo.getHost();
-            access.parseTime = clientInfo.getParseTime();
-            access.queueTime = clientInfo.getQueueTime();
-            access.requestEncoding = clientInfo.getEncoding();
-            access.compressedReceive = clientInfo.isCompressedRecv();
-            access.compressedSend = clientInfo.isCompressedSend();
-            access.contentLength = clientInfo.getContentLength();
-            access.created = clientInfo.getCreated();
-            access.queueId = clientInfo.getQueueId();
-            access.queueSize = clientInfo.getQueueSize();
-            // Set the name of this thread.
-            origThreadName = Thread.currentThread().getName();
-            Thread.currentThread().setName(getThreadName(access));
-          }
         }
         catch (AuthorizationException ex) {
           outMessage = generateAuthorizationErrorMessage(access, ex, rpcName);
@@ -947,6 +929,24 @@ private ServiceHandler createHandler(String handler, Access access)
       } 
       else {  
         access = new Access(0, 0, 0, rpcUser, rpcName, "" , ( clientInfo != null ? clientInfo.getIP() : ""), ( clientInfo != null ?  clientInfo.getHost() : ""), null);
+      }
+      
+      
+      if (clientInfo != null && access != null) {
+    	  access.ipAddress = clientInfo.getIP();
+    	  access.hostName = clientInfo.getHost();
+    	  access.parseTime = clientInfo.getParseTime();
+    	  access.queueTime = clientInfo.getQueueTime();
+    	  access.requestEncoding = clientInfo.getEncoding();
+    	  access.compressedReceive = clientInfo.isCompressedRecv();
+    	  access.compressedSend = clientInfo.isCompressedSend();
+    	  access.contentLength = clientInfo.getContentLength();
+    	  access.created = clientInfo.getCreated();
+    	  access.queueId = clientInfo.getQueueId();
+    	  access.queueSize = clientInfo.getQueueSize();
+    	  // Set the name of this thread.
+    	  origThreadName = Thread.currentThread().getName();
+    	  Thread.currentThread().setName(getThreadName(access));
       }
 
       // register TmlRunnable with access object:
