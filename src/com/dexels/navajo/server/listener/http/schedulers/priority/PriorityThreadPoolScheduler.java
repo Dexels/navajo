@@ -162,6 +162,21 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		
 	}
 
+	private final void logWarning(String type, String message) {
+		
+		synchronized (warnings) {
+			Long warning = warnings.get(type);
+			if ( warning == null ) {
+				warning = Long.valueOf(0);
+				warnings.put(type, warning);
+			} 
+			if ( warning.longValue() < 100 ) {
+				System.err.println(message);
+				warning = warning.longValue() + 1;
+			}	
+		}
+	}
+	
 	private final RequestQueue determineThreadPool(final TmlRunnable myRunner, final boolean priority) {
 		
 		/**
@@ -222,17 +237,7 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 			queueName = queueManager.resolve(ic, "resolvequeue.js", "javascript");
 		} catch (NavajoSchedulingException e) {
 			if(e.getReason()==NavajoSchedulingException.SCRIPT_PROBLEM || e.getReason() == NavajoSchedulingException.UNKNOWN) {
-				synchronized (warnings) {
-					Long warning = warnings.get(RESOLUTION_SCRIPT_DOES_NOT_EXIST);
-					if ( warning == null ) {
-						warning = Long.valueOf(0);
-						warnings.put(RESOLUTION_SCRIPT_DOES_NOT_EXIST, warning);
-					} 
-					if ( warning.longValue() < 100 ) {
-						System.err.println("Could not find queue resolution script, using default queue.");
-						warning = warning.longValue() + 1;
-					}
-				}
+				logWarning(RESOLUTION_SCRIPT_DOES_NOT_EXIST, "Could not find queue resolution script, using default queue.");
 				return getDefaultQueue();
 			}
 			e.printStackTrace(System.err);
