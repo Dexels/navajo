@@ -131,7 +131,7 @@ public final class Access implements java.io.Serializable, Mappable {
 	// In order to manage continuations, I might need the original runnable.
 	// This service (and it's Access object) may be used by many different threads during its execution, but only
 	// the original knows how to commit the data and finalize the network connection.
-	protected TmlRunnable originalRunnable;
+	protected transient TmlRunnable originalRunnable;
 
 
 	

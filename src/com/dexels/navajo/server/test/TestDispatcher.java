@@ -232,4 +232,12 @@ public class TestDispatcher implements DispatcherInterface {
 		
 	}
 
+	@Override
+	public Navajo handle(Navajo inMessage, boolean skipAuth,
+			AfterWebServiceEmitter emit, ClientInfo clientInfo)
+			throws FatalException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -765,6 +765,11 @@ private ServiceHandler createHandler(String handler, Access access)
    
   }
   
+  public final Navajo handle(Navajo inMessage,boolean skipAuth,AfterWebServiceEmitter emit, ClientInfo clientInfo) throws FatalException {
+	    return processNavajo(inMessage, null, clientInfo, skipAuth,null,emit);
+	   
+	  }
+  
   public final Navajo handle(Navajo inMessage,boolean skipAuth) throws FatalException {
 	    return processNavajo(inMessage, null, null, skipAuth,null,null);
 	   
