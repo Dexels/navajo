@@ -2,6 +2,7 @@ package com.dexels.navajo.server.listener.http;
 
 import javax.servlet.http.HttpServlet;
 
+import com.dexels.navajo.listeners.SchedulerRegistry;
 import com.dexels.navajo.server.listener.http.schedulers.DummyScheduler;
 
 public class SchedulerTools {
@@ -14,6 +15,7 @@ public class SchedulerTools {
 			try {
 				Class<TmlScheduler> cc = (Class<TmlScheduler>) Class.forName(schedulerName);
 				TmlScheduler scheduler = cc.newInstance();
+				SchedulerRegistry.setScheduler(scheduler);
 				scheduler.initialize(servlet);
 				return scheduler;
 			} catch (ClassNotFoundException e) {
