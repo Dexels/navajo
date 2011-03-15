@@ -94,7 +94,7 @@ public class QueueManager {
 			Object result = engine.eval(fr);
 			//System.err.println("Result: "+result);
 			fr.close();
-			NavajoQueueScopeManager.getInstance().releaseScope(engine);
+			
 		} catch (IOException e) {
 			throw new NavajoSchedulingException(NavajoSchedulingException.SCRIPT_PROBLEM,"Error reading script",e);
 		} catch (ScriptException e) {
@@ -103,6 +103,7 @@ public class QueueManager {
 		} finally {
 			//long res = System.currentTimeMillis() - begin;
 			//System.err.println("Queue selection took: "+res+" millis.");
+			NavajoQueueScopeManager.getInstance().releaseScope(engine);
 		}
 		return pc;
 	}
