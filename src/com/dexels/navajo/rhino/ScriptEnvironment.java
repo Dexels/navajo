@@ -15,7 +15,6 @@ import java.util.Stack;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContinuationPending;
 import org.mozilla.javascript.Function;
-import org.mozilla.javascript.IdScriptableObject;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 
@@ -29,9 +28,6 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
-import com.dexels.navajo.listeners.Scheduler;
-import com.dexels.navajo.listeners.TmlRunnable;
-import com.dexels.navajo.mapping.CompiledScript;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
@@ -442,31 +438,17 @@ public abstract class ScriptEnvironment implements Serializable {
 		this.onFinishHandler = onFinish;
 	}
 
-	@SuppressWarnings("unchecked")
-	public Object createMappable(String className, Navajo input, Navajo output, Message currentOutMessage) {
+	public Object createMappable(String className, Navajo input, Navajo output, Message currentOutMessage) throws ClassNotFoundException {
 		try {
 
 	    	ClassLoader cl = DispatcherFactory.getInstance().getNavajoConfig().getClassloader();
-	    	Class mclass = Class.forName(className, true, cl);
-
-//			Class<? extends Mappable> mclass = (Class<? extends Mappable>) Class.forName(className);
+	    	Class<?> mclass = Class.forName(className, true, cl);
 			Object obj = mclass.newInstance();
-//			Access ac = new Access();
-//			ac.setInDoc(input);
-//			ac.setOutputDoc(output);
-//			ac.setCurrentOutMessage(currentOutMessage);
-//			obj.load(ac);
 			return obj;
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
-//		} catch (MappableException e) {
-//			e.printStackTrace();
-//		} catch (UserException e) {
-//			e.printStackTrace();
 		}
 		return null;
 	}

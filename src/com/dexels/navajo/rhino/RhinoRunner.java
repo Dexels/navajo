@@ -16,8 +16,10 @@ import org.mozilla.javascript.JavaScriptException;
 import org.mozilla.javascript.Script;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.WrappedException;
 
 import com.dexels.navajo.document.Header;
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
@@ -30,6 +32,7 @@ import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.AuthorizationException;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.FatalException;
 import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.test.TestNavajoConfig;
@@ -185,14 +188,6 @@ public class RhinoRunner {
 		ScriptableObject globalScope = null;
 		try {
 			globalScope = (ScriptableObject) NavajoScopeManager.getInstance().getScope();
-//			ScriptableObject globalScope = cx.initStandardObjects();
-//			ScriptableObject localScope = new ScriptableObject() {
-//				
-//				@Override
-//				public String getClassName() {
-//					return null;
-//				}
-//			};
 			ConditionError conditionError = new com.dexels.navajo.rhino.flow.ConditionError();
 
 			a.setInDoc(a.getInDoc());
@@ -208,11 +203,7 @@ public class RhinoRunner {
 			cx.setOptimizationLevel(-1); // must use interpreter mode
 			Script includeCompiledRun = cx.compileReader(includeCompiledReader, "includeCompiled.js", 1, null);
 			Script includeRun = cx.compileReader(includeReader, "include.js", 1, null);
-			System.err.println("Compilers read!");
-
-			
 			Script scriptrun = cx.compileReader(fileReader, a.getRpcName() + ".js", 1, null);
-
 			cx.executeScriptWithContinuations(includeRun, globalScope);
 			cx.executeScriptWithContinuations(includeCompiledRun, globalScope);
 
@@ -235,18 +226,14 @@ public class RhinoRunner {
 			System.err.println("End of run, should only happen if no continuations happened!");
 			scriptEnvironment.finishRun();
 			NavajoScopeManager.getInstance().releaseScope(globalScope);
-
-			// onFinish.run();
 			return scriptEnvironment;
 		} catch (ContinuationPending pending) {
-			// continueScript(pending);
 			System.err.println("Continuation thrown. That's cool. Rethrowing NavajoDoneException");
 			Object o = pending.getContinuation();
 			if (o == null) {
 				scriptEnvironment.setAsync(true);
 				return scriptEnvironment;
 			}
-			//SchedulerRegistry.getScheduler().submit(new ContinuationRunnable(scriptEnvironment, o), false);
 			System.err.println("Scheduled continuation");
 			throw new NavajoDoneException(pending);
 //			throw pending;
@@ -255,15 +242,26 @@ public class RhinoRunner {
 			throw pending;
 		} catch (ConditionError e) {
 			System.err.println("Condition Error detected!");
+
 			NavajoScopeManager.getInstance().releaseScope(globalScope);
 			a.setOutputDoc(e.getConditionErrors());
 			return scriptEnvironment;
 		} catch (BreakError e) {
 			System.err.println("Break Error detected!");
+			generateErrorMessage("Break Error detected: "+e.getMessage(),e,a);
+
 			NavajoScopeManager.getInstance().releaseScope(globalScope);
 			return scriptEnvironment;
+		} catch (WrappedException e) {
+			System.err.println("Very unknown error. Should create error message!");
+			generateErrorMessage("Wrapped error: "+e.getCause().getMessage(),e.getCause(),a);
+			NavajoScopeManager.getInstance().releaseScope(globalScope);
+			e.printStackTrace();
+			return scriptEnvironment;
+			
 		} catch (Exception e) {
 			System.err.println("Very unknown error. Should create error message!");
+			generateErrorMessage("Unknown error:"+e.getMessage(),e,a);
 			NavajoScopeManager.getInstance().releaseScope(globalScope);
 			e.printStackTrace();
 			return scriptEnvironment;
@@ -275,6 +273,15 @@ public class RhinoRunner {
 			includeReader.close();
 		}
 		// special case without interruptions. What to do?
+	}
+
+	private void generateErrorMessage(String message, Throwable e, Access a) {
+		
+		try {
+			DispatcherFactory.getInstance().generateErrorMessage(a, message, -1, 0, e);
+		} catch (FatalException e1) {
+			e1.printStackTrace();
+		}
 	}
 
 	private Reader getIncludeReader(String path) throws FileNotFoundException {
