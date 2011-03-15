@@ -17,6 +17,7 @@ public class Version extends dexels.Version {
 		RhinoRepository rp = new RhinoRepository();
 		RepositoryFactory.registerRepository("com.dexels.navajo.rhino.RhinoRepository", rp);
 		HandlerFactory.registerHandler("com.dexels.navajo.rhino.RhinoHandler", new RhinoHandler());
+		System.err.println("Registered rhino repository: "+rp);
 	}
 
 }
