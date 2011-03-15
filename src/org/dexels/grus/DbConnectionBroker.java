@@ -259,6 +259,7 @@ public final class DbConnectionBroker extends Object
 					try {
 						if ( conns[i] != null ) {
 							conns[i].close();
+							transactionContextBrokerMap.remove(conns[i].hashCode());
 						}
 					} catch (Throwable e) {
 					}
