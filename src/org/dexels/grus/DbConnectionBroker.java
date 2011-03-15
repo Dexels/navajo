@@ -258,10 +258,15 @@ public final class DbConnectionBroker extends Object
 					--current;
 					try {
 						if ( conns[i] != null ) {
-							conns[i].close();
+							try {
+								conns[i].close();
+							} catch (Throwable t) {
+								t.printStackTrace(System.err);
+							}
 							transactionContextBrokerMap.remove(conns[i].hashCode());
 						}
 					} catch (Throwable e) {
+						e.printStackTrace(System.err);
 					}
 					conns[i] = null;
 					usedmap[i] = false;
@@ -311,6 +316,9 @@ public final class DbConnectionBroker extends Object
 		int id = idOfConnection(conn);
 		if(id >= 0) {
 			usedmap[id] = false;
+			if ( conn != null ) {
+				transactionContextBrokerMap.remove(conn.hashCode());
+			}
 			++available;
 			//System.err.println("In Free: available: "+available);
 			notify();
