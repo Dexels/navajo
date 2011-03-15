@@ -59,7 +59,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
         </init-param>
         <init-param>
             <param-name>priorityPoolSize</param-name>
-            <param-value>2</param-value>
+            <param-value>15</param-value>
         </init-param>
         <init-param>
             <param-name>normalPoolSize</param-name>
