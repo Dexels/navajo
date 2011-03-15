@@ -1,15 +1,13 @@
 package navajoasyncclient;
 
+import org.osgi.framework.*;
 
+public class Version extends dexels.Version implements BundleActivator {
 
-public class Version extends dexels.Version {
-
-		
 	//	 Included packages.
 	
 	public Version() {
-//		javax.mail.Address a;
-//		setReleaseDate(RELEASEDATE);
+		System.err.println("STarting aSynC client");
 	}
 	
 
