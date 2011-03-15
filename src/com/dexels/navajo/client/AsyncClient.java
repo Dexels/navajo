@@ -6,7 +6,6 @@ import java.io.IOException;
 
 import org.eclipse.jetty.client.ContentExchange;
 import org.eclipse.jetty.client.HttpClient;
-import org.eclipse.jetty.http.HttpFields;
 import org.eclipse.jetty.io.Buffer;
 
 import com.dexels.navajo.document.Header;
@@ -166,7 +165,6 @@ public class AsyncClient {
 			
 			@Override
 			protected void onExpire() {
-				// TODO Auto-generated method stub
 				super.onExpire();
 				try {
 					continuation.onFail(null);
@@ -215,7 +213,7 @@ public class AsyncClient {
 			protected void onResponseComplete() throws IOException {
 				super.onResponseComplete();
 				// TODO: Add streaming?
-				int status = super.getResponseStatus();
+//				int status = super.getResponseStatus();
 				byte[] responseContentBytes = getResponseContentBytes();
 				if(responseContentBytes!=null) {
 					ByteArrayInputStream bais = new ByteArrayInputStream(responseContentBytes);
@@ -238,7 +236,7 @@ public class AsyncClient {
 			@Override
 			protected void onResponseContent(Buffer content) throws IOException {
 				// TODO: Implement for streaming
-				HttpFields a = getRequestFields();
+//				HttpFields a = getRequestFields();
 				super.onResponseContent(content);
 			}
 
@@ -286,19 +284,19 @@ public class AsyncClient {
 		};
 
 		
-		NavajoResponseHandler testFields = new NavajoResponseHandler() {
+//		NavajoResponseHandler testFields = 
+			
+			new NavajoResponseHandler() {
 			@Override
 			public void onResponse(Navajo n) {
 				System.err.println("Navajo finished!");
 				try {
 					System.err.println("Response: ..");
 					n.write(System.err);
-//					n.getProperty("SearchCriteria/Name").setValue("Berend");
 					ac.callService(n, "person/ProcessSearchPersons", showOutput);
 				} catch (NavajoException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
