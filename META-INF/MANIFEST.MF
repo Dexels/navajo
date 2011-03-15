@@ -5,7 +5,7 @@ Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.3
 Bundle-Activator: navajodocument.Version
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.version;visibility:=reexport
+Require-Bundle: com.dexels.navajo.version
 Bundle-ActivationPolicy: lazy
 Export-Package: com.dexels.navajo.document,
  com.dexels.navajo.document.base,
