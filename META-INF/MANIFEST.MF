@@ -22,4 +22,5 @@ Export-Package: com.dexels.navajo.client,
  org.jivesoftware.smackx.muc
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.document,
- com.jcraft.jzlib;bundle-version="1.0.0"
+ com.jcraft.jzlib;bundle-version="1.0.0",
+ com.dexels.navajo.version;bundle-version="1.0.3"
