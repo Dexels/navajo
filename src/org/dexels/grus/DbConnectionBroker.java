@@ -24,7 +24,7 @@ public final class DbConnectionBroker extends Object
 	protected boolean closed; // Whether closed for business
 	protected boolean dead = false;
 	public  boolean supportsAutocommit = true;
-	protected boolean sanityCheck = true;
+	protected boolean sanityCheck = false;
 	
 	private static int instances = 0;
 	
@@ -105,11 +105,13 @@ public final class DbConnectionBroker extends Object
 	private final boolean testConnection(final Connection conn) {
 
 		if ( conn == null ) {
-			return false;
-			
+			log("TESTCONNECTION: CONN = NULL...");
+			return false;	
 		}
+		
 		try {
 			if(conn.isClosed()) {
+				log("TESTCONNECTION: CONN WAS CLOSED...");
 				return false;
 			}
 
@@ -140,6 +142,7 @@ public final class DbConnectionBroker extends Object
 				}
 			}
 		} catch(Exception e) {
+			log("TESTCONNECTION: CONN HAD EXCEPTION: " + e.getMessage());
 			return false;
 		}
 		return true;
@@ -171,6 +174,53 @@ public final class DbConnectionBroker extends Object
 		}
 		System.err.println("Could not find connectionid: " + connectionId);
 		return null;
+	}
+	
+	public final synchronized void refreshConnections() {
+		
+		long maxAge = (long) (System.currentTimeMillis() - this.timeoutDays * 86400000L);
+		int idle = 0;
+		int currentCount = this.current;
+		//System.err.println(Thread.currentThread().getName() + ": MAXAGE IS: " + maxAge);
+		// Check IDLE time, created[i] contains timestamp of last use.
+		
+		if ( this.conns != null ) {
+			for (int i = 0; i < this.conns.length; i++) {
+				if (this.conns[i] != null && !this.usedmap[i] && this.created[i] < maxAge) {
+					try {
+						this.log("Closing idle and aged connection: " + this.conns[i].hashCode());
+						this.conns[i].close();
+						idle++;
+					} catch (SQLException e) {
+						//e.printStackTrace(System.err);
+					}
+					transactionContextBrokerMap.remove(this.conns[i].hashCode());
+					this.conns[i] = null;
+					this.usedmap[i] = false;
+					--this.available;
+					--this.current;
+					// System.err.println("Checking timeout for
+					// connections, current count is " + current);
+				} else if ( this.created[i] < maxAge ) {
+					// If connection was in use, but als aged, mark it as aged, such that it can
+					// be destroyed upon 
+					this.aged[i] = true;
+				}
+			}
+		}
+		
+		//System.err.println( (++index) + ": " + inspectedBroker.location + "/" + inspectedBroker.username + ": IDLE COUNT: " + idle + ", currentCount = " + currentCount);
+		if (idle == currentCount) {
+			this.log("Nobody interested anymore, about to kill thread ( idle = " + idle + ", currentCount = " + currentCount + ")");
+			// Nobody interested anymore.
+			this.closed = true;
+			this.dead = true;
+			try {
+				this.destroy(2000);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}	
 	}
 	
 	public final synchronized Connection getConnection() {
@@ -275,7 +325,7 @@ public final class DbConnectionBroker extends Object
 		return -1;
 	}
 	
-	private final synchronized void destroy(int millis) throws SQLException
+	private final void destroy(int millis) throws SQLException
 	{
 		SQLException ex = null;
 		
@@ -305,7 +355,7 @@ public final class DbConnectionBroker extends Object
 		
 	}
 	
-	public void destroy() {
+	public synchronized void destroy() {
 		try { destroy(2000); } catch(SQLException e) { }
 	}
 	
