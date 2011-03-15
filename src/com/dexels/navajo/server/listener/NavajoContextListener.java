@@ -59,17 +59,22 @@ public class NavajoContextListener implements ServletContextListener {
 			return;
 		}
 
-		initializeContext(sc);
+		initializeContext(sc,null);
 	}
 
+	/**
+	 * Initialized a Navajo context.
+	 * @param sc
+	 * @param force Use this to force the path
+	 */
 	
 	// Should be called after installation, so the context will still be initialized.
-	public static void initializeContext(ServletContext sc) {
+	public static void initializeContext(ServletContext sc, String force) {
 		String configurationPath = null;
 		String rootPath = null;
 
 		String path;
-		path = getInstallationPath(sc);
+		path = getInstallationPath(sc,force);
 		if (path != null) {
 			configurationPath = path;
 		}
@@ -179,7 +184,7 @@ public class NavajoContextListener implements ServletContextListener {
 //	
 	
 	public static boolean isValidInstallationForContext(ServletContext context) {
-		String installPath = getInstallationPath(context);
+		String installPath = getInstallationPath(context,null);
 
 		if(installPath==null) {
 			return false;
@@ -200,8 +205,11 @@ public class NavajoContextListener implements ServletContextListener {
 	}
 
 	
-	public static String getInstallationPath(ServletContext context) {
-		String force = context.getInitParameter("forcedNavajoPath");
+	public static String getInstallationPath(ServletContext context, String force) {
+		if(force==null) {
+			force = context.getInitParameter("forcedNavajoPath");
+		}
+		System.err.println("Force: "+force);
 		if(force!=null) {
 			return force;
 		} else {
@@ -221,6 +229,9 @@ public class NavajoContextListener implements ServletContextListener {
 //		return getInstallationPath(systemContexts,contextPath);
 //	}
 
+	/**
+	 * Only used when the path is not forced.
+	 */
 	private static String getInstallationPath(Map<String,String> systemContexts,String contextPath) {
 		String engineInstance = System.getProperty("com.dexels.navajo.server.EngineInstance");
 		String key = contextPath;
