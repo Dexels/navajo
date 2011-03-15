@@ -316,9 +316,6 @@ public final class DbConnectionBroker extends Object
 		int id = idOfConnection(conn);
 		if(id >= 0) {
 			usedmap[id] = false;
-			if ( conn != null ) {
-				transactionContextBrokerMap.remove(conn.hashCode());
-			}
 			++available;
 			//System.err.println("In Free: available: "+available);
 			notify();
