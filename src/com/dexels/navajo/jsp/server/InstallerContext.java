@@ -18,11 +18,11 @@ public class InstallerContext {
 	 * Returns if the location dictated by this context is plausible
 	 */
 	public boolean isValidInstallation() {
-		return contextStarter.isValidInstallationForContext(getServletContext());
+		return NavajoContextListener.isValidInstallationForContext(getServletContext());
 	}
 	
 	public String getNavajoRoot(String serverContext) throws IOException {
-		return  contextStarter.getInstallationPath(getServletContext());
+		return  NavajoContextListener.getInstallationPath(getServletContext(),null);
 	}
 	
 	public String getSuggestedPath() {
@@ -46,7 +46,7 @@ public class InstallerContext {
 	 * Call this after a fresh install (because in that case the context initialization has been skipped)
 	 */
 	public void initialize() {
-		contextStarter.initializeContext(getPageContext().getServletContext());
+		contextStarter.initializeContext(getPageContext().getServletContext(),null);
 	}
 	
 	public String getContextPath() {
