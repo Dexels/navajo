@@ -49,14 +49,11 @@ public class NavajoQueueScopeManager {
 	}
 	
 	public synchronized void releaseScope(ScriptEngine scope) {
-		System.err.println("Releasing scope. Free scopes: "+freeScopes.size());
 		if(freeScopes.size()>=MAX_UNUSED_SCOPES) {
-			System.err.println("Too many unused scopes, discarding this one.");
 			cleanScope(scope);
 			return;
 		}
 		freeScopes.add(scope);
-		System.err.println("Released scope. Free scopes: "+freeScopes.size());
 	}
 
 	private void cleanScope(ScriptEngine engine) {
