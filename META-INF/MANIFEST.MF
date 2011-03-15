@@ -8,7 +8,8 @@ Export-Package: com.dexels.navajo.jsp.tags
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.document,
  com.dexels.navajo.client;bundle-version="1.0.0",
- javax.servlet.jsp;bundle-version="2.0.0"
+ javax.servlet.jsp;bundle-version="2.0.0",
+ com.dexels.navajo.version;bundle-version="1.0.3"
 Import-Package: javax.el;version="2.1.0",
  javax.servlet;version="2.5.0",
  javax.servlet.http;version="2.5.0",
