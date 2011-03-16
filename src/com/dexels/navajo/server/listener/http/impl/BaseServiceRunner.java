@@ -167,7 +167,9 @@ public abstract  class BaseServiceRunner extends BaseInMemoryRequest implements 
 				  writeOutput(in, callbackNavajo);
 				  
 			  } finally {
-				  tmlScheduler.removeTmlRunnable(request);
+				  if ( tmlScheduler != null ) {
+				  	tmlScheduler.removeTmlRunnable(request);
+				  }
 				  endTransaction();
 			  }
 			  
@@ -219,7 +221,9 @@ public abstract  class BaseServiceRunner extends BaseInMemoryRequest implements 
 				  throw(e);
 			  }
 			  finally {
-				  tmlScheduler.removeTmlRunnable(request);
+				  if ( tmlScheduler != null ) {
+					  tmlScheduler.removeTmlRunnable(request);
+				  }
 				  if(!continuationFound) {
 					  // this will be the responsibility of the next thread, who will finish the continuation.
 					  endTransaction();
