@@ -549,7 +549,7 @@ private ServiceHandler createHandler(String handler, Access access)
   /**
    * Generate a Navajo authorization error response.
    *
-   * @param access
+   * @param access Beware, might be null
    * @param ae
    * @return
    * @throws FatalException
@@ -586,8 +586,8 @@ private ServiceHandler createHandler(String handler, Access access)
           
       if (access != null) {
         access.setException(ae);
+        access.setOutputDoc(outMessage);
       }
-      access.setOutputDoc(outMessage);
       return outMessage;
     }
     catch (Exception e) {
