@@ -4,6 +4,7 @@ import navajo.ExtensionDefinition;
 
 public final class FunctionDefinition {
 
+	// = fully qualified class name, actually
 	private final String object;
 	private final String description;
 	private final String [][] inputParams;
@@ -44,6 +45,10 @@ public final class FunctionDefinition {
 		return resultParam;
 	}
 
+	public String toString() {
+		return description;
+	}
+	
 	public static void main(String [] args) throws Exception {
 		
 	}
