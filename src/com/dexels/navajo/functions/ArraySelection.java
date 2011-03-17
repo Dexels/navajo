@@ -1,6 +1,7 @@
 package com.dexels.navajo.functions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -60,16 +61,16 @@ public class ArraySelection extends FunctionInterface {
 			throw new TMLExpressionException(this, "Empty or non existing array message: " + messageName);
 		}
 
-		ArrayList arrayMsg = array.getAllMessages();
+		List<Message> arrayMsg = array.getAllMessages();
 
-		ArrayList result = new ArrayList();
+		List<Selection> result = new ArrayList<Selection>();
 		if (arrayMsg == null) {
 			throw new TMLExpressionException(this, "Empty or non existing array message: " + messageName);
 		}
 		for (int i = 0; i < arrayMsg.size(); i++) {
-			Message m = (Message) arrayMsg.get(i);
-			Property p = (Property) m.getProperty(propertyName);
-			Property val = (Property) m.getProperty(valuePropertyName);
+			Message m = arrayMsg.get(i);
+			Property p = m.getProperty(propertyName);
+			Property val = m.getProperty(valuePropertyName);
 			Selection s = NavajoFactory.getInstance().createSelection(doc, "" + p.getTypedValue(), "" + val.getTypedValue(), false);
 			result.add(s);
 		}

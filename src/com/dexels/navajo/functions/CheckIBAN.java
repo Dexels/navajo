@@ -43,16 +43,15 @@ public final class CheckIBAN extends FunctionInterface {
       String bad = "4511425"; // 4511425
       CheckIBAN e = new CheckIBAN();
       e.reset();
-      e.insertOperand((String)bad);
+      e.insertOperand(bad);
       try {
 		System.out.println("Good? " + e.evaluate());
 		
 		e.reset();
 		String good = "GB82WEST12345698765432";
-		e.insertOperand((String)good);
+		e.insertOperand(good);
 	    System.out.println("Good? " + e.evaluate());
 	} catch (TMLExpressionException e1) {
-		// TODO Auto-generated catch block
 		e1.printStackTrace();
 	}
     }

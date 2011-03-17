@@ -67,12 +67,10 @@ public class StandardFunctionDefinitions implements ExtensionDefinition {
 		return null;
 	}
 	public ClassLoader getExtensionClassloader() {
-		// TODO Auto-generated method stub
 		return extensionClassLoader;
 	}
 
 	public void setExtensionClassloader(ClassLoader extClassloader) {
-		// TODO Auto-generated method stub
 		extensionClassLoader =  extClassloader;
 	}
 
