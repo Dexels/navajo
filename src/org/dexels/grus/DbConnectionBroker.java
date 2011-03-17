@@ -188,7 +188,7 @@ public final class DbConnectionBroker extends Object
 			for (int i = 0; i < this.conns.length; i++) {
 				if (this.conns[i] != null && !this.usedmap[i] && this.created[i] < maxAge) {
 					try {
-						this.log("Closing idle and aged connection: " + this.conns[i].hashCode());
+						this.log("****** Closing idle and aged connection: " + this.conns[i].hashCode());
 						this.conns[i].close();
 						idle++;
 					} catch (SQLException e) {
@@ -197,13 +197,13 @@ public final class DbConnectionBroker extends Object
 					transactionContextBrokerMap.remove(this.conns[i].hashCode());
 					this.conns[i] = null;
 					this.usedmap[i] = false;
-					--this.available;
 					--this.current;
 					// System.err.println("Checking timeout for
 					// connections, current count is " + current);
 				} else if ( this.created[i] < maxAge ) {
 					// If connection was in use, but als aged, mark it as aged, such that it can
 					// be destroyed upon 
+					log("***** marking connection " + conns[i].hashCode() + " as aged.");
 					this.aged[i] = true;
 				}
 			}
@@ -254,7 +254,7 @@ public final class DbConnectionBroker extends Object
 					usedmap[i] = true;
 					return conns[i];
 				} else {
-					log("Invalid connection, did not pass test: " + conns[i].hashCode());
+					log("***** Invalid connection, did not pass test: " + conns[i].hashCode());
 					--current;
 					try {
 						if ( conns[i] != null ) {
@@ -278,10 +278,12 @@ public final class DbConnectionBroker extends Object
 		for(int i=0; i<conns.length; i++) {
 			if( conns[i] == null && usedmap[i] == false ) {
 				try {
-					//System.out.println("IN DBCONNECTION BROKER: CREATING NEW CONNECTION FOR " + username);
 					//long start = System.currentTimeMillis();
+					log("***** ABOUT TO CREATE NEW CONNECTION");
 					DriverManager.setLoginTimeout(5);
 					conns[i] = DriverManager.getConnection(location,username,password);
+					log("***** IN DBCONNECTION BROKER: CREATING NEW CONNECTION: " + conns[i].hashCode());
+					
 					//System.err.println("Opening connection to " + username + " took: " + (  System.currentTimeMillis() - start ));
 				} catch(SQLException e) {
 					e.printStackTrace(System.err);
@@ -299,6 +301,7 @@ public final class DbConnectionBroker extends Object
 		// TODO PUT REQUEST IN WAITING LIST!
 //        log("Assertion failure: no connections, retrying...");
 //		return getConnection();
+		log("***** RETURNING NULL!!");
 		return null;
 	}
 	
