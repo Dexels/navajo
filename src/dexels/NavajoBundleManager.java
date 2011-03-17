@@ -8,9 +8,15 @@ import org.osgi.framework.FrameworkListener;
 
 public class NavajoBundleManager extends Version {
 
+	private static NavajoBundleManager instance = null;
+
+	private BundleContext myBundleContext = null;
+	
 	@Override
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
+		myBundleContext = bc;
+		instance = this;
 		System.err.println("Starting Dexels version manager1");
 		bc.addBundleListener(new BundleListener() {
 			
@@ -29,10 +35,19 @@ public class NavajoBundleManager extends Version {
 		});
 	}
 
+	public static NavajoBundleManager getInstance() {
+		return instance;
+	}
+
+	public BundleContext getBundleContext() {
+		return myBundleContext;
+	}
+
+	
 	@Override
 	public void stop(BundleContext arg0) throws Exception {
-		// TODO Auto-generated method stub
 		super.stop(arg0);
+		instance = null;
 	}
 
 }
