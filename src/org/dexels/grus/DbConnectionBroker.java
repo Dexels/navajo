@@ -24,7 +24,7 @@ public final class DbConnectionBroker extends Object
 	protected boolean closed; // Whether closed for business
 	protected boolean dead = false;
 	public  boolean supportsAutocommit = true;
-	protected boolean sanityCheck = false;
+	protected boolean sanityCheck = true;
 	
 	private static int instances = 0;
 	
@@ -67,7 +67,7 @@ public final class DbConnectionBroker extends Object
 	{
 		Class.forName(dbDriver);
 		
-		System.err.println("in DBCONNECTIONBROKER(), FOUND JDBC DRIVER CLASS: " + dbDriver + ", LOCATION = " + dbServer);
+//		System.err.println("in DBCONNECTIONBROKER(), FOUND JDBC DRIVER CLASS: " + dbDriver + ", LOCATION = " + dbServer);
 		location  = dbServer;
 		username  = dbLogin;
 		password  = dbPassword;
@@ -131,7 +131,6 @@ public final class DbConnectionBroker extends Object
 				if ( !metaUsername.toLowerCase().equals(this.username.toLowerCase()) ||
 						!metaLocation.toLowerCase().equals(this.location.toLowerCase())) {
 					try {
-						conn.close();
 						System.err.println("FOUND ILLEGAL CONNECTION: ");
 						AuditLog.log("GRUS", "Found ILLEGAL connection " + metaLocation+"/"+metaUsername +
 								", EXPECTED: " + this.location + "/" + this.username);
@@ -186,58 +185,32 @@ public final class DbConnectionBroker extends Object
 		
 		if ( this.conns != null ) {
 			for (int i = 0; i < this.conns.length; i++) {
-				if (this.conns[i] != null && !this.usedmap[i] && this.created[i] < maxAge) {
-					try {
-						this.log("****** Closing idle and aged connection: " + this.conns[i].hashCode());
-						this.conns[i].close();
-						idle++;
-					} catch (SQLException e) {
-						//e.printStackTrace(System.err);
-					}
-					transactionContextBrokerMap.remove(this.conns[i].hashCode());
-					this.conns[i] = null;
-					this.usedmap[i] = false;
-					--this.current;
-					// System.err.println("Checking timeout for
-					// connections, current count is " + current);
-				} else if ( this.created[i] < maxAge ) {
-					// If connection was in use, but als aged, mark it as aged, such that it can
-					// be destroyed upon 
-					log("***** marking connection " + conns[i].hashCode() + " as aged.");
+				if (this.conns[i] != null && this.created[i] < maxAge) {
+//					log("@@@@@ marking connection " + conns[i].hashCode() + " as aged.");
 					this.aged[i] = true;
 				}
 			}
 		}
 		
-		//System.err.println( (++index) + ": " + inspectedBroker.location + "/" + inspectedBroker.username + ": IDLE COUNT: " + idle + ", currentCount = " + currentCount);
-		if (idle == currentCount) {
-			this.log("Nobody interested anymore, about to kill thread ( idle = " + idle + ", currentCount = " + currentCount + ")");
-			// Nobody interested anymore.
-			this.closed = true;
-			this.dead = true;
-			try {
-				this.destroy(2000);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}	
 	}
 	
 	public final synchronized Connection getConnection() {
 		//System.err.println("BrokerHash: +"+hashCode()+"+total connections: "+conns.length+" available: "+available+" current: "+current);
 
 		if(closed && timeoutDays > 0) {
-			log("Broker closed. No more connections available.");
+//			log("@@@@ Broker closed. No more connections available.");
 			return null;
 		}
 
 		// EDIT BY FRANK: Placed wait into a loop. Also added timeout to loop, to be sure
 		while(timeoutDays > 0 && available == 0 && current == conns.length ) {
 			try {
-				log("Waiting for connection " + username + "@" + location + " to become available. current = " + current);
-				wait(60000);
+				log("@@@@@ Waiting for connection " + username + "@" + location + " to become available. current = " + current);
+				wait();
+				
 			} catch(InterruptedException e) {
 				// dunno.
+				e.printStackTrace();
 			}
 		}
 
@@ -248,17 +221,17 @@ public final class DbConnectionBroker extends Object
 		// Check for available existing connection.
 		for(int i=0; i<conns.length; i++) {
 			if(conns[i] != null && usedmap[i] == false) {
-				--available;
 				// Test connection and check whether connection has not yet aged.
 				if(testConnection(conns[i]) && !aged[i]) {
+					--available;
 					usedmap[i] = true;
 					return conns[i];
 				} else {
-					log("***** Invalid connection, did not pass test: " + conns[i].hashCode());
-					--current;
+					log("@@@@@ Invalid connection (aged=" + aged[i] + ") did not pass test: " + conns[i].hashCode());
 					try {
 						if ( conns[i] != null ) {
 							try {
+								--current;
 								conns[i].close();
 							} catch (Throwable t) {
 								t.printStackTrace(System.err);
@@ -276,13 +249,14 @@ public final class DbConnectionBroker extends Object
 		
 		// Create new connection if maxconnections has not yet been reached.
 		for(int i=0; i<conns.length; i++) {
-			if( conns[i] == null && usedmap[i] == false ) {
+			if( conns[i] == null ) {
 				try {
+					//System.out.println("IN DBCONNECTION BROKER: CREATING NEW CONNECTION FOR " + username);
 					//long start = System.currentTimeMillis();
-					log("***** ABOUT TO CREATE NEW CONNECTION");
+					log("@@@@@ ABOUT TO CREATE NEW CONNECTION");
 					DriverManager.setLoginTimeout(5);
 					conns[i] = DriverManager.getConnection(location,username,password);
-					log("***** IN DBCONNECTION BROKER: CREATING NEW CONNECTION: " + conns[i].hashCode());
+					log("@@@@@ IN DBCONNECTION BROKER: CREATING NEW CONNECTION: " + conns[i].hashCode());
 					
 					//System.err.println("Opening connection to " + username + " took: " + (  System.currentTimeMillis() - start ));
 				} catch(SQLException e) {
@@ -301,23 +275,14 @@ public final class DbConnectionBroker extends Object
 		// TODO PUT REQUEST IN WAITING LIST!
 //        log("Assertion failure: no connections, retrying...");
 //		return getConnection();
-		log("***** RETURNING NULL!!");
+		log("@@@@@ RETURNING NULL!!");
 		return null;
 	}
 	
 	public final synchronized String freeConnection(Connection conn) {
 		
-		if ( timeoutDays == 0 ) {	
-			try {
-				//System.err.println("trying to destroy....");
-				destroy(0);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} 
 		int id = idOfConnection(conn);
-		if(id >= 0) {
+		if( id >= 0 && usedmap[id] ) {
 			usedmap[id] = false;
 			++available;
 			//System.err.println("In Free: available: "+available);
