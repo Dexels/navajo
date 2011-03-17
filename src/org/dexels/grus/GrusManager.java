@@ -9,7 +9,7 @@ public class GrusManager implements Runnable {
 
 	private final static GrusManager instance; 
 	private Thread myThread;
-	private final static HashSet<DbConnectionBroker> registeredBrokers = new HashSet<DbConnectionBroker>();
+	private final HashSet<DbConnectionBroker> registeredBrokers = new HashSet<DbConnectionBroker>();
 	private boolean shutdown = false;
 	
 	
