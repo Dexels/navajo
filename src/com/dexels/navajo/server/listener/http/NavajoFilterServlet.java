@@ -12,6 +12,8 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.listeners.SchedulerRegistry;
 import com.dexels.navajo.listeners.TmlRunnable;
+import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.FatalException;
 import com.dexels.navajo.server.listener.http.standard.TmlStandardRunner;
 import com.dexels.navajo.server.listener.http.standard.TmlStandardServlet;
 import com.dexels.navajo.server.listener.http.wrapper.NavajoRequestWrapper;
@@ -25,11 +27,6 @@ public class NavajoFilterServlet extends TmlStandardServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = 7843782840626326460L;
-//	private String inputFilterClass = null;
-//	private String outputFilterClass = null;
-//	private String postmanServletName = null;
-//	private NavajoRequestWrapper inputFilter;
-//	private NavajoResponseWrapper outputFilter;
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException  {
@@ -73,9 +70,6 @@ public class NavajoFilterServlet extends TmlStandardServlet {
 			resp.getOutputStream().close();
 			return;
 		}
-//		System.err.println("Precheck complete");
-//		Navajo inputDoc = NavajoFactory.getInstance().createNavajo(req.getInputStream());
-//		req.getInputStream().close();
 
 	  	  Object certObject = req.getAttribute( "javax.servlet.request.X509Certificate");
 			String recvEncoding = req.getHeader("Content-Encoding");
@@ -84,52 +78,14 @@ public class NavajoFilterServlet extends TmlStandardServlet {
 			Navajo input = buildRequest(getInitParameter("inputFilterClass"), req);
 			boolean check = getTmlScheduler().checkNavajo(input);
 
-			TmlRunnable tr = new TmlStandardRunner(req,input, resp,  sendEncoding, recvEncoding, certObject) {
+			try {
+				Navajo output = DispatcherFactory.getInstance().handle(input);
+				processResponse(req, input, output, resp);
 
-				@Override
-				public void writeOutput(Navajo inDoc, Navajo outDoc)
-						throws IOException, FileNotFoundException,
-						UnsupportedEncodingException, NavajoException {
-					System.err.println("WRITING  OUTPUT.......");
-					processResponse(req, inDoc, outDoc, resp);
-				}
-
-				@Override
-				public void run() {
-					System.err.println(" Start run");
-					super.run();
-					System.err.println(" End run");
-				}
-				
-				
-			};
-
-		if(!check) {
-			resp.getOutputStream().close();
-			return;
-		}
-		System.err.println("Check complete");
-		
-		System.err.println("Runnable created");
-		SchedulerRegistry.getScheduler().run(tr);
-		System.err.println("Post finished");
-
-		
-		
-		
-	
-		
-		
-
-////		RequestDispatcher rd = req.getRequestDispatcher(postmanServlet);
-//		if(outputFilter==null) {
-//			// no output intervention required, we can forward:
-//			rd.forward(_req, resp);
-//		} else {
-//			rd.include(_req, new NavajoServletResponseWrapper(resp));
-//			System.err.println("Request: "+_req);
-//			processResponse(req,request,nsrw, resp);
-//		}
+			} catch (FatalException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 	}
 
 
