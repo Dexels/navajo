@@ -336,11 +336,6 @@
         <input/>
         <result/>
     </function>
-    <function name="GetUrlBase" class="com.dexels.navajo.functions.GetUrlBase">
-        <description/>
-        <input/>
-        <result/>
-    </function>
     <function name="GetSelectedValue" class="com.dexels.navajo.functions.GetSelectedValue">
         <description>Gets the value of a selected property</description>
         <input/>
