@@ -30,7 +30,7 @@ public class PostLaszlo extends TestCase {
 		System.err.println("Starting test");
 		FileInputStream fis = new FileInputStream("testdata/dummygetcurrentmatches.xml");
 		
-		URL u = new URL("http://localhost:8080/knvb/Laszlo");
+		URL u = new URL("http://localhost:9080/knvb/Laszlo");
 		URLConnection uc = u.openConnection();
 		uc.setDoInput(true);
 		uc.setDoOutput(true);
