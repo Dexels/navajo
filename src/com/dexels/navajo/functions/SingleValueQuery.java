@@ -109,13 +109,13 @@ public class SingleValueQuery extends FunctionInterface {
 	  } catch (Exception e) {
 		  sql.kill();
 		  e.printStackTrace();
-		  throw new TMLExpressionException(this, "Fatal error: " + e.getMessage() + ", query = " + sql.getQuery());
+		  throw new TMLExpressionException(this, "Fatal error: " + e.getMessage() + ", query = " + sql.getQuery(),e);
 	  } finally {
 		  try {
 			  sql.store();
 		  } catch (Exception e1) {
 			  e1.printStackTrace();
-			  throw new TMLExpressionException(this, "Fatal error: " + e1.getMessage() + ", query = " + sql.getQuery());
+			  throw new TMLExpressionException(this, "Fatal error: " + e1.getMessage() + ", query = " + sql.getQuery(),e1);
 		  }
 		  //System.out.println("SingleValueQuery(), result = " + result);
 	  }
