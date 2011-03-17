@@ -37,10 +37,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
             <param-name>outputFilterClass</param-name>
             <param-value>com.dexels.navajo.server.listener.http.wrapper.laszlo.LaszloResponseWrapper</param-value>
         </init-param>
-		<init-param>
-            <param-name>postmanServletName</param-name>
-            <param-value>Comet</param-value>
-        </init-param>
 	</servlet>
 	
 	<servlet>
@@ -87,6 +83,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	<servlet-mapping>
 		<servlet-name>Postman</servlet-name>
 		<url-pattern>/PostmanLegacy</url-pattern>
+		<url-pattern>/doc/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
@@ -107,6 +104,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	<servlet-mapping>
 		<servlet-name>Laszlo</servlet-name>
 		<url-pattern>/Laszlo</url-pattern>
+		<url-pattern>/servlet/Laszlo</url-pattern>
 	</servlet-mapping>
 		<!-- <servlet-name>Comet</servlet-name>-->
 
