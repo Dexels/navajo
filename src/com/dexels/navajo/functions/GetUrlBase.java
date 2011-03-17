@@ -14,7 +14,7 @@ import com.dexels.navajo.parser.FunctionInterface;
 
 public abstract class GetUrlBase extends FunctionInterface {
 
-
+	
 	
     protected static Date getUrlDate(URL u) {
         InputStream os = null;
@@ -109,33 +109,5 @@ public abstract class GetUrlBase extends FunctionInterface {
 		}
 	}
 
-//    protected static void flushConnection(URLConnection openConnection)
-//			 {
-//		InputStream iss;
-//		try {
-//			iss = openConnection.getInputStream();
-//			copyResource(new OutputStream(){
-//				public void write(int b) throws IOException {
-//					// do absolutely nothing
-//				}}, iss);
-//			iss.close();
-//		} catch (Throwable e) {
-//			e.printStackTrace();
-//		}
-//	}
-
-//    protected static final void copyResource(OutputStream out, InputStream in)
-//			throws IOException {
-//		BufferedInputStream bin = new BufferedInputStream(in);
-//		BufferedOutputStream bout = new BufferedOutputStream(out);
-//		byte[] buffer = new byte[1024];
-//		int read;
-//		while ((read = bin.read(buffer)) > -1) {
-//			bout.write(buffer, 0, read);
-//		}
-//		bin.close();
-//		bout.flush();
-//		// bout.close();
-//	}
 
 }
