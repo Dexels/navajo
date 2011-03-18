@@ -198,16 +198,13 @@ public final class DbConnectionBroker extends Object
 		//System.err.println("BrokerHash: +"+hashCode()+"+total connections: "+conns.length+" available: "+available+" current: "+current);
 
 		if(closed && timeoutDays > 0) {
-//			log("@@@@ Broker closed. No more connections available.");
 			return null;
 		}
 
 		// EDIT BY FRANK: Placed wait into a loop. Also added timeout to loop, to be sure
 		while(timeoutDays > 0 && available == 0 && current == conns.length ) {
 			try {
-				log("@@@@@ Waiting for connection " + username + "@" + location + " to become available. current = " + current);
-				wait();
-				
+				wait(60000);
 			} catch(InterruptedException e) {
 				// dunno.
 				e.printStackTrace();
@@ -222,12 +219,11 @@ public final class DbConnectionBroker extends Object
 		for(int i=0; i<conns.length; i++) {
 			if(conns[i] != null && usedmap[i] == false) {
 				// Test connection and check whether connection has not yet aged.
+				--available;
 				if(testConnection(conns[i]) && !aged[i]) {
-					--available;
 					usedmap[i] = true;
 					return conns[i];
 				} else {
-					log("@@@@@ Invalid connection (aged=" + aged[i] + ") did not pass test: " + conns[i].hashCode());
 					try {
 						if ( conns[i] != null ) {
 							try {
@@ -253,10 +249,8 @@ public final class DbConnectionBroker extends Object
 				try {
 					//System.out.println("IN DBCONNECTION BROKER: CREATING NEW CONNECTION FOR " + username);
 					//long start = System.currentTimeMillis();
-					log("@@@@@ ABOUT TO CREATE NEW CONNECTION");
 					DriverManager.setLoginTimeout(5);
 					conns[i] = DriverManager.getConnection(location,username,password);
-					log("@@@@@ IN DBCONNECTION BROKER: CREATING NEW CONNECTION: " + conns[i].hashCode());
 					
 					//System.err.println("Opening connection to " + username + " took: " + (  System.currentTimeMillis() - start ));
 				} catch(SQLException e) {
@@ -273,19 +267,19 @@ public final class DbConnectionBroker extends Object
 			}
 		}
 		// TODO PUT REQUEST IN WAITING LIST!
-//        log("Assertion failure: no connections, retrying...");
+//         "Assertion failure: no connections, retrying...");
 //		return getConnection();
-		log("@@@@@ RETURNING NULL!!");
+		log("@@@@@ RETURNING NULL!! THIS SHOULD NOT HAPPEN");
 		return null;
 	}
 	
 	public final synchronized String freeConnection(Connection conn) {
 		
 		int id = idOfConnection(conn);
+		
 		if( id >= 0 && usedmap[id] ) {
 			usedmap[id] = false;
 			++available;
-			//System.err.println("In Free: available: "+available);
 			notify();
 		}
 		
