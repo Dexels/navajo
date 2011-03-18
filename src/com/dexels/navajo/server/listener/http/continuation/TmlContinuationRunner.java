@@ -103,10 +103,12 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 	  long queueTime = startedAt - scheduledAt;
 	  long serverTime = finishedScriptAt - connectedAt;
 
-	  outDoc.getHeader().setHeaderAttribute("postTime", ""+postTime);
-	  outDoc.getHeader().setHeaderAttribute("queueTime", ""+queueTime);
-	  outDoc.getHeader().setHeaderAttribute("serverTime", ""+serverTime);
-	  outDoc.getHeader().setHeaderAttribute("threadName", ""+Thread.currentThread().getName());
+	  if ( outDoc != null ) {
+		  outDoc.getHeader().setHeaderAttribute("postTime", ""+postTime);
+		  outDoc.getHeader().setHeaderAttribute("queueTime", ""+queueTime);
+		  outDoc.getHeader().setHeaderAttribute("serverTime", ""+serverTime);
+		  outDoc.getHeader().setHeaderAttribute("threadName", ""+Thread.currentThread().getName());
+	  }
 	  
 	  TmlScheduler ts = getTmlScheduler();
 	  String threadStatus = null;
@@ -119,7 +121,11 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 	  //System.err.println("StreamClass: "+out.getClass().getName());
 	  //System.err.println("ResponseClass: "+response.getClass().getName());
 	  long startWrite = System.currentTimeMillis();
-	  outDoc.write(out);
+	  if ( outDoc != null ) {
+		  outDoc.write(out);
+	  } else {
+		  System.err.println("WARNING. EMPTY OUTDOC FOUND.");
+	  }
 //	  out.flush();
 	  out.close();
 //	  response.getOutputStream().flush();
