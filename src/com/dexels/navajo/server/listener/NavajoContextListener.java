@@ -209,7 +209,6 @@ public class NavajoContextListener implements ServletContextListener {
 		if(force==null) {
 			force = context.getInitParameter("forcedNavajoPath");
 		}
-		System.err.println("Force: "+force);
 		if(force!=null) {
 			return force;
 		} else {
