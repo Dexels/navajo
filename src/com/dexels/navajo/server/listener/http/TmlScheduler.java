@@ -30,12 +30,5 @@ public interface TmlScheduler extends Scheduler {
 	 * @return
 	 */
 	public boolean preCheckRequest(HttpServletRequest request);
-		
-	public void removeTmlRunnable(HttpServletRequest req);
-	
-	public void addTmlRunnable(HttpServletRequest req, TmlRunnable run);
-	
-	public TmlRunnable getTmlRunnable(HttpServletRequest req);
-	
 
 }

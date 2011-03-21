@@ -50,31 +50,8 @@ public class DummyScheduler implements TmlScheduler {
 	}
 
 	@Override
-	public void runFinished(TmlRunnable tr) {
-		
-	}
-
-	@Override
 	public void shutdownScheduler() {
 		
-	}
-
-	@Override
-	public void addTmlRunnable(HttpServletRequest req, TmlRunnable run) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void removeTmlRunnable(HttpServletRequest req) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public TmlRunnable getTmlRunnable(HttpServletRequest req) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
