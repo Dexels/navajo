@@ -42,14 +42,10 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 	private RequestQueue slowPool;
 	private RequestQueue fastPool;
 	
-	private final Map<TmlRunnable,RequestQueue> poolMapper = Collections.synchronizedMap(new HashMap<TmlRunnable, RequestQueue>());
-	private final Map<HttpServletRequest, TmlRunnable> tmlRunnableMap = Collections.synchronizedMap( new HashMap<HttpServletRequest, TmlRunnable>());
-	
 	private int timeout = 7200000;
 	private int throttleDelay = 2000;
 	
 	private static int WINDOW_SIZE                 = 500;
-	private long   previousDepartureTime           = 0;
 //	private double previousAvgDepartureTime        = 0.0;
 	private int [] interDepartureTime              = new int[WINDOW_SIZE];
 	private long   departures                      = 0;
@@ -343,7 +339,6 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		
 		long before = System.currentTimeMillis();
 		run.setScheduledAt(before);
-		poolMapper.put(run, pool);
 		pool.submit(run);
 		processed++;
 		
@@ -395,18 +390,9 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		", slow: "+slowPool.getActiveRequestCount()+"/"+slowPool.getMaximumActiveRequestCount()+" ("+slowPool.getQueueSize()+")" +
 		", fast: "+fastPool.getActiveRequestCount()+"/"+fastPool.getMaximumActiveRequestCount()+" ("+fastPool.getQueueSize()+")" +
 		", priority: "+priorityPool.getActiveRequestCount()+"/"+priorityPool.getMaximumActiveRequestCount()+" ("+priorityPool.getQueueSize()+")" +
-		", system: "+systemPool.getActiveRequestCount()+"/"+systemPool.getMaximumActiveRequestCount()+" ("+systemPool.getQueueSize()+")" +
-		", poolmap size: " + poolMapper.size() + ", runnablemap size: " + tmlRunnableMap.size();
+		", system: "+systemPool.getActiveRequestCount()+"/"+systemPool.getMaximumActiveRequestCount()+" ("+systemPool.getQueueSize()+")";
 		
 	}
-
-	@Override
-	public final void runFinished(TmlRunnable tr) {
-		RequestQueue rq = poolMapper.get(tr);
-		rq.finished();
-		poolMapper.remove(tr);
-	}
-
 
 	@Override
 	public void shutdownScheduler() {
@@ -443,30 +429,6 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		}
 	}
 	
-	@Override
-	public void removeTmlRunnable(HttpServletRequest req) {
-		// Calculate moving average inter-departure time.
-		synchronized (interDepartureTime) {
-			long departureTime = System.currentTimeMillis();
-			if ( previousDepartureTime != 0 ) { 
-				int diff = (int) ( departureTime - previousDepartureTime );
-				interDepartureTime[(int) ( (departures - 1) % WINDOW_SIZE ) ] = diff;
-			} 
-			previousDepartureTime = departureTime;
-			departures++;
-		}
-		tmlRunnableMap.remove(req);
-	}
-	
-	public void addTmlRunnable(HttpServletRequest req, TmlRunnable run) {
-		tmlRunnableMap.put(req, run);
-	}
-
-	@Override
-	public TmlRunnable getTmlRunnable(HttpServletRequest req) {
-		return tmlRunnableMap.get(req);
-	}
-
 	@Override
 	public long getErrors() {
 		return errors;
