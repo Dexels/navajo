@@ -41,9 +41,6 @@ public interface Scheduler {
 	 * @param myRunner
 	 */
 	public void run(TmlRunnable myRunner);
-
-
-	public void runFinished(TmlRunnable tr);
 	
 	/**
 	 * Returns a string describing the status of this scheduling implementation
