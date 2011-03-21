@@ -64,6 +64,7 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 		} catch (NavajoException e) {
 			e.printStackTrace();
 		}
+		getRequestQueue().finished();
 		super.endTransaction();
 	}
 
@@ -197,8 +198,6 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 					  throw(e);
 				  }
 				  finally {
-					  getTmlScheduler().removeTmlRunnable(request);
-					  getTmlScheduler().runFinished(this);
 					  if(!continuationFound) {
 						  resumeContinuation();
 					  }
