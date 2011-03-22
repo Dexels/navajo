@@ -21,9 +21,8 @@
 	<property name="dependencycompilelib" value="${dependencybase}/compilelib" />
 	<property name="archive" value="${ant.project.name}.jar" />
 	<property name="junitjar" value="../DexelsVersionControl/compilelib/junit.jar" />
-	<property file="../../DexelsVersionControl/ant/build.properties" />
+	<property file="../DexelsVersionControl/ant/build.properties" />
 	<property name="deployRoot" value="${navajoScpUser}@${navajoScpServer}:${navajoScpPath}" />
-
 <!--	<taskdef name="antclipse" classname="net.sf.antcontrib.antclipse.ClassPathTask"/>
 -->	<taskdef name="for" classname="net.sf.antcontrib.logic.ForTask" onerror="ignore" />
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
