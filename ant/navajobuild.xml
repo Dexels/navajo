@@ -434,9 +434,7 @@
       	 	
 		</copy>
 
-		
-		
-		<zip zipfile="${distribution}/${ant.project.name}/${ant.project.name}.zip" basedir="${work}/tmp">
+		<zip zipfile="${distribution}/${ant.project.name}/${ant.project.name}Binary.zip" basedir="${work}/tmp">
 		</zip>
 	</target>
 </project>
