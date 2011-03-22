@@ -65,23 +65,23 @@ public class Version extends dexels.Version {
 	@Override
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
-		FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
-		fi.init();
-		fi.clearFunctionNames();
-		fi.injectExtension(new StandardFunctionDefinitions());
-//		System.err.println("Detected functions: "+fi.getFunctionNames());
-		for (String functionName : fi.getFunctionNames()) {
-			FunctionDefinition fd = fi.getDef(functionName);
-			 Properties props = new Properties();
-			 System.err.println("Registering: "+functionName);
-			 props.put("functionName", functionName);
-			 props.put("functionDefinition", fd);
-			context.registerService(FunctionInterface.class.getName(), fi.instantiateFunctionClass(fd,getClass().getClassLoader()), props);
-		}
-		
-//	        props.put("Language", "English");
-//	        context.registerService(
-//	            DictionaryService.class.getName(), new DictionaryImpl(), props);
+//		FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
+//		fi.init();
+//		fi.clearFunctionNames();
+//		fi.injectExtension(new StandardFunctionDefinitions());
+////		System.err.println("Detected functions: "+fi.getFunctionNames());
+//		for (String functionName : fi.getFunctionNames()) {
+//			FunctionDefinition fd = fi.getDef(functionName);
+//			 Properties props = new Properties();
+//			 System.err.println("Registering: "+functionName);
+//			 props.put("functionName", functionName);
+//			 props.put("functionDefinition", fd);
+//			context.registerService(FunctionInterface.class.getName(), fi.instantiateFunctionClass(fd,getClass().getClassLoader()), props);
+//		}
+//		
+////	        props.put("Language", "English");
+////	        context.registerService(
+////	            DictionaryService.class.getName(), new DictionaryImpl(), props);
 	}
 
 
