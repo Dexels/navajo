@@ -1,5 +1,7 @@
 USE navajostore;
 
+GRANT ALL ON navajostore.* TO navajo@'%' IDENTIFIED BY 'navajo';
+
 CREATE TABLE statistics (
     module VARCHAR(32) ,
     value VARCHAR(32) ,
