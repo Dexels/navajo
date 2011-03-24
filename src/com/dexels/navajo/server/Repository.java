@@ -88,4 +88,10 @@ public interface Repository {
      */
     public void initGlobals(String method, String username, Navajo inMessage, Map<String,String> extraParams) throws NavajoException;
 
+    /**
+     * Legacy date mode will truncate dates to day level (so time is discarded)
+     * @return
+     */
+	public boolean useLegacyDateMode();
+
 }

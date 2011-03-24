@@ -30,6 +30,14 @@ public class SimpleRepository implements Repository {
 		this.config = config;
 	}
 
+	/**
+	 * @see Repository
+	 */
+	
+	public boolean useLegacyDateMode() {
+		return false;
+	}
+	
 	public Access authorizeUser(String username, String password,
 			String service, Navajo inMessage, Object certificate)
 			throws SystemException, AuthorizationException {
