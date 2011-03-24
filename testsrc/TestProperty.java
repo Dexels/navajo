@@ -502,6 +502,7 @@ public class TestProperty extends TestCase {
 		p2.setType("date");
 		p2.removeAllSelections();
 		
+		// these could be non-equal, right?
 		p1.setAnyValue(new java.util.Date());
 		p2.setAnyValue(new java.util.Date());
 		assertTrue(p1.isEqual(p2));
