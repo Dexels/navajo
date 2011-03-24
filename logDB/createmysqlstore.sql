@@ -108,6 +108,12 @@ CREATE TABLE propertydescription  (
    PRIMARY KEY (DESCRIPTIONID)
 );
 
+CREATE INDEX PROPDESC_INDEX ON propertydescription (
+  NAME
+, LOCALE
+, OBJECTID
+);
+
 CREATE TABLE navajoaccess_agent (
         created date, 
         agent varchar(1024),
