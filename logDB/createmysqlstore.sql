@@ -1,12 +1,11 @@
-DROP TABLE statistics;
-
+USE navajostore;
 
 CREATE TABLE statistics (
-    module VARCHAR(32) NOT NULL,
-    value VARCHAR(32) NOT NULL,
-    week INTEGER(2) NOT NULL,
-    year INTEGER(4) NOT NULL,
-    timestmp TIMESTAMP  NOT NULL,
+    module VARCHAR(32) ,
+    value VARCHAR(32) ,
+    week INTEGER(2) ,
+    year INTEGER(4) ,
+    timestmp TIMESTAMP  ,
     server VARCHAR(128)
 );
 
@@ -15,9 +14,7 @@ CREATE INDEX STATISTICS_MODL_SRV_TIME ON statistics
   module,server, timestmp
 );
 
-DROP TABLE navajoaccess;
-
-create table navajoaccess (
+CREATE TABLE navajoaccess (
 access_id 	varchar(128) not null,
 webservice 	varchar(128) not null,
 username 	varchar(128),
@@ -34,22 +31,18 @@ hostname 	varchar(128),
 clientid        varchar(255),
 clienttime      integer,
 created 	timestamp,
-agentid varchar(128),
-clientinfo varchar(2048),
-cpuload float,
-parent_access_id varchar(256)
-
-
+agentid         varchar(128),
+clientinfo      varchar(2048),
+cpuload         float,
+parent_access_id varchar(255),
+queuetime       integer,
+processingtime  integer,
+queueid         varchar(255),
+queuelength     integer,
+PRIMARY KEY (access_id)
 );
---	CONSTRAINT NAVAJOACCESS_PK primary key (ACCESS_ID) 
---		using index
 
-
-
-
-DROP TABLE navajomap;
-
-create table navajomap (
+CREATE TABLE navajomap (
   access_id       varchar(128) not null,
   sequence_id     integer not null,
   level_id        integer not null,
@@ -57,12 +50,9 @@ create table navajomap (
   array           char(1) default '0',
   instancecount   integer,
   totaltime       integer,
-  created         timestamp not null
+  created         timestamp not null,
+  PRIMARY KEY (access_id, sequence_id, level_id)
 );
---  CONSTRAINT NAVAJOMAP_PK primary key (ACCESS_ID, SEQUENCE_ID, LEVEL_ID) using index;
- 
-
-drop table navajoasync;
 
 create table navajoasync (
   access_id       varchar(128) not null,
@@ -70,27 +60,18 @@ create table navajoasync (
   asyncmap        varchar(128) not null,
   totaltime       integer,
   exception       blob,
-  created         timestamp not null
---  constraint navajoasync_pk primary key (access_id, ref_id) using index
-    
+  created         timestamp not null,
+  PRIMARY KEY (access_id)
 );
-
-
-drop table navajolog;
 
 create table navajolog (
 access_id 	varchar(128) not null, 
 exception 	blob, 
 navajoin 	blob, 
 navajoout 	blob,
-console blob
---   constraint navajolog_pk primary key (access_id) using index
+console         blob,
+PRIMARY KEY (access_id)
 );
-
-
-
-
---drop index navajoaccess_indx;
 
 create index navajoaccess_indx on navajoaccess (
   username,
@@ -104,9 +85,6 @@ CREATE INDEX NAVAJOACCCESS_INDX_US ON navajoaccess (
   USERNAME
 );
 
-
-DROP TABLE auditlog;
-
 CREATE TABLE auditlog (
    instance VARCHAR(255),
    subsystem VARCHAR(255),
@@ -116,20 +94,77 @@ CREATE TABLE auditlog (
    lastupdate TIMESTAMP
 );
 
-DROP TABLE propertydescription;
-
 CREATE TABLE propertydescription  (
-   DESCRIPTIONID        INTEGER(9)                       not null,
-   LOCALE               VARCHAR(32)                    not null,
+   DESCRIPTIONID        INTEGER,
+   LOCALE               VARCHAR(32),                    
    SUBLOCALE            VARCHAR(32),
-   NAME                 VARCHAR(255)                   not null,
+   NAME                 VARCHAR(255),
    CONTEXT              VARCHAR(255),
    OBJECTID             VARCHAR(32),
    OBJECTTYPE           VARCHAR(32),
    DESCRIPTION          VARCHAR(255),
-   UPDATEBY             VARCHAR(32),                   --default USER not null,
-   LASTUPDATE           DATE                          --default SYSDATE not null,
-
---   constraint PROPERTYDESCRIPTION_PK primary key (DESCRIPTIONID) using index
+   UPDATEBY             VARCHAR(32),                   
+   LASTUPDATE           DATE,                          
+   PRIMARY KEY (DESCRIPTIONID)
 );
 
+CREATE TABLE navajoaccess_agent (
+        created date, 
+        agent varchar(1024),
+        calls integer,
+        totaltime integer,
+        avgtime integer,
+        stdevtime integer,
+        maxtime integer,
+        mintime integer,
+        errors integer,
+        internal integer
+);
+
+CREATE TABLE navajoaccess_consol (
+        created date,
+        calls integer,
+        totaltime integer,
+        internal integer
+);
+
+CREATE TABLE navajoaccess_user (
+        created DATE,
+        username VARCHAR(256),
+        calls integer,
+        totaltime integer,
+        avgtime integer,
+        stdevtime integer,
+        maxtime integer,
+        mintime integer,
+        errors integer,
+        internal integer
+);
+
+CREATE TABLE navajoaccess_user_service (
+        created date, 
+        agent varchar(256),
+        username varchar(256),
+        webservice varchar(1024),
+        calls integer,
+        totaltime integer,
+        avgtime integer,
+        stdevtime integer,
+        maxtime integer,
+        mintime integer,
+        errors integer,
+        internal integer
+);
+
+CREATE TABLE navajoaccess_webservice (
+        created date,
+        webservice varchar(1024),
+        calls integer,
+        totaltime integer,
+        avgtime integer,
+        stdevtime integer,
+        maxtime integer,
+        mintime integer,
+        errors integer,
+        internal integer
+);
