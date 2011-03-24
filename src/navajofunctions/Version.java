@@ -24,18 +24,29 @@
  */
 package navajofunctions;
 
+import java.util.Date;
 import java.util.Properties;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
 
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.functions.StandardFunctionDefinitions;
 import com.dexels.navajo.functions.util.FunctionDefinition;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.FunctionFactoryInterface;
 import com.dexels.navajo.functions.util.JarFunctionFactory;
+import com.dexels.navajo.parser.DefaultExpressionEvaluator;
+import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.server.SystemException;
 
 /**
  * VERSION HISTORY
@@ -94,13 +105,4 @@ public class Version extends dexels.Version {
 
 
 
-	public static void main(String [] args) {
-		Version v = new Version();
-		System.err.println(v.toString());
-		dexels.Version [] d = v.getIncludePackages();
-		for (int i = 0; i < d.length; i++) {
-			System.err.println("\t"+d[i].toString());
-		}
-//		FunctionFactoryInterface. getInstance();
-	}
 }
