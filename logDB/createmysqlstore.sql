@@ -109,9 +109,9 @@ CREATE TABLE propertydescription  (
 );
 
 CREATE INDEX PROPDESC_INDEX ON propertydescription (
-  NAME
+  OBJECTID
+, NAME
 , LOCALE
-, OBJECTID
 );
 
 CREATE TABLE navajoaccess_agent (
