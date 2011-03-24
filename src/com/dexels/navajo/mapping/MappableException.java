@@ -30,4 +30,9 @@ public class MappableException extends Exception {
     public MappableException(String s) {
         super(s);
     }
+
+    public MappableException(String s, Throwable cause) {
+        super(s,cause);
+    }
+
 }
