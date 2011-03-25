@@ -1,5 +1,5 @@
 Bundle-Name: Navajo Listeners Jetty Continuations
-Bundle-SymbolicName: com.dexels.navajo.listeners.jetty
+Bundle-SymbolicName: com.dexels.navajo.listeners.continuations
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.0
