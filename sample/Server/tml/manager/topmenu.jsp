@@ -68,46 +68,7 @@
 	          		</c:otherwise>
 	          	</c:choose>
           	</c:if>
-       		<c:if test="${param['service']!=null && param['service']!=''}">
-	          	<c:choose>
-	          		<c:when test="${param['view']=='history'}">
-			            <li class="active"><strong>History</strong></li>
-	          		</c:when>
-	          		<c:otherwise>
-	       				<c:if test="${param['service']!=null && param['service']!=''}">
-				            <li><a href="${pageContext.request.requestURI}?view=history&amp;service=${param['service']}">History</a></li>
-	    				</c:if>
-	          		</c:otherwise>
-	          	</c:choose>
-          	</c:if>
-       		<c:if test="${param['service']!=null && param['service']!=''}">
-	          	<c:choose>
-	          		<c:when test="${param['view']=='accessdetail'}">
-			            <li class="active"><strong>Access Detail</strong></li>
-	          		</c:when>
-	          		<c:otherwise>
-	       				<c:if test="${param['service']!=null && param['service']!=''}">
-				            <li><a href="#">Access Detail</a></li>
-	    				</c:if>
-	          		</c:otherwise>
-	          	</c:choose>
-          	</c:if>
-          	
-          	
-          	<c:if test="${serverContext.scriptStatus.documented}">
-		       		<!-- DISABLED NAVADOC -->
-<%--		       	<c:choose>
-	          		<c:when test="${param['view']=='navadoc'}">
-			            <li class="active"><strong>NavaDoc</strong></li>
-	          		</c:when>
-	          		<c:otherwise>
-	       				<c:if test="${param['service']!=null && param['service']!=''}">
-				         <li class="active"><strong>NavaDoc</strong></li>
-	          		<% //       <li><a href="${pageContext.request.requestURI}?view=navadoc&amp;service=${param['service']}">NavaDoc</a></li>
-	          		 %></c:if>
-	          		</c:otherwise>
-	          	</c:choose> 
- --%>
-	         </c:if>
-         	    				
+
+	<%--Removed history and access detail pages for now, check old CVS to retrieve if needed --%>          	
+		
           	          
