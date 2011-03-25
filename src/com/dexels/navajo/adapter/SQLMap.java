@@ -241,7 +241,7 @@ private static Object semaphore = new Object();
     String autoCommitStr = ( body.getProperty("autocommit") != null ? body.getProperty("autocommit").getValue() : "" ); 
     boolean ac = (autoCommitStr.equals("") ||
                   autoCommitStr.equalsIgnoreCase("true"));
-    DbConnectionBroker myBroker = null;
+//    DbConnectionBroker myBroker = null;
     autoCommitMap.put(dataSourceName, new Boolean(ac));
 
     if (fixedBroker.get(dataSourceName, username, password) != null) {
@@ -276,6 +276,13 @@ private static Object semaphore = new Object();
     
   }
 
+  public Object getParameter(int index) {
+	  if(parameters==null) {
+		  return null;
+	  }
+	  return parameters.get(index);
+  }
+  
   public int getInstances() {
 	  return ConnectionBrokerManager.getInstances();
   }
@@ -344,18 +351,18 @@ private static Object semaphore = new Object();
 		  catch (NavajoException ne) {
 			  ne.printStackTrace(Access.getConsoleWriter(myAccess));
 			  AuditLog.log("SQLMap", ne.getMessage(), Level.SEVERE, (myAccess != null ? myAccess.accessID : "unknown access") );
-			  throw new MappableException(ne.getMessage());
+			  throw new MappableException(ne.getMessage(),ne);
 		  }
 		  catch (java.io.IOException fnfe) {
 			  fnfe.printStackTrace(Access.getConsoleWriter(myAccess));
 			  AuditLog.log("SQLMap", fnfe.getMessage(), Level.SEVERE, (myAccess != null ? myAccess.accessID : "unknown access"));
 			  throw new MappableException(
 					  "Could not load configuration file for SQLMap object: " +
-					  fnfe.getMessage());
+					  fnfe.getMessage(),fnfe);
 		  } catch (Throwable t) {
 			  t.printStackTrace(Access.getConsoleWriter(myAccess));
 			  AuditLog.log("SQLMap", t.getMessage(), Level.SEVERE, ( myAccess != null ? myAccess.accessID : "" ));
-			  throw new MappableException(t.getMessage());
+			  throw new MappableException(t.getMessage(),t);
 		  }
 	  //}
   }
@@ -952,9 +959,16 @@ private static Object semaphore = new Object();
         	 statement.setDouble(i + 1, ( (Percentage) param).doubleValue());
         }
         else if (param instanceof java.util.Date) {
-          java.sql.Date sqlDate = new java.sql.Date( ( (java.util.Date) param).
-              getTime());
-          statement.setDate(i + 1, sqlDate);
+          
+          long time = ( (java.util.Date) param).getTime();
+          if(isLegacyMode()) {
+              java.sql.Date sqlDate = new java.sql.Date( time);
+              statement.setDate(i + 1, sqlDate);
+          } else {
+              Timestamp sqlDate = new java.sql.Timestamp( time);
+              statement.setTimestamp(i + 1, sqlDate);
+          }
+          
         }
         else if (param instanceof Boolean) {
           statement.setBoolean(i + 1, ( (Boolean) param).booleanValue());
@@ -984,6 +998,11 @@ private static Object semaphore = new Object();
 
   }
  
+private boolean isLegacyMode() {
+	Repository r = DispatcherFactory.getInstance().getNavajoConfig().getRepository();
+	return r.useLegacyDateMode();
+}
+
 /**
  * BEWARE! Possible resource leak!!! Should the stream be closed?
  * @param statement

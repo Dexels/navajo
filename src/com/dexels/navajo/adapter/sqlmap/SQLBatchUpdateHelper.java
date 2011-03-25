@@ -34,6 +34,7 @@ import java.util.StringTokenizer;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.sql.ResultSet;
 import java.sql.SQLWarning;
@@ -42,6 +43,8 @@ import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.Percentage;
+import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.Repository;
 
 public class SQLBatchUpdateHelper {
 
@@ -249,8 +252,20 @@ protected void prepareStatement(final String s) throws SQLException {
       pre.setDouble(idx + 1, ( (Double) param).doubleValue());
     }
     else if (param instanceof java.util.Date) {
-      java.sql.Date sqlDate = new java.sql.Date( ( (java.util.Date) param).getTime());
-      pre.setDate(idx + 1, sqlDate);
+    
+      long time = ( (java.util.Date) param).getTime();
+      if(isLegacyMode()) {
+          java.sql.Date sqlDate = new java.sql.Date( time);
+          pre.setDate(idx + 1, sqlDate);
+      } else {
+          Timestamp sqlDate = new java.sql.Timestamp( time);
+          pre.setTimestamp(idx + 1, sqlDate);
+      }
+//      java.sql.Date sqlDate = new java.sql.Date( time);
+//      System.err.println("UTILDATE: "+param);
+//      System.err.println("LONGDATE: "+time);
+//      System.err.println("SQLDATE: "+sqlDate);
+//      pre.setDate(idx + 1, sqlDate);
     }
     else if (param instanceof Boolean) {
       pre.setBoolean(idx + 1, ( (Boolean) param).booleanValue());
@@ -270,6 +285,12 @@ protected void prepareStatement(final String s) throws SQLException {
 
   }
 
+  private boolean isLegacyMode() {
+		Repository r = DispatcherFactory.getInstance().getNavajoConfig().getRepository();
+		return r.useLegacyDateMode();
+	}
+
+  
   private final void logWarnings(final PreparedStatement pre) throws SQLException {
     if (this.debug) {
       SQLWarning warning = pre.getWarnings();
