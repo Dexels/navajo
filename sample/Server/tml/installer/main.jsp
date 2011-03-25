@@ -88,7 +88,7 @@ if(inst!=null) {
 				<c:choose>
 					<c:when test="${engineInstance!='' && engineInstance!=null}">
 						<div class="important">
-							This installation will use a '@${engineInstance}' suffix.:
+							This installation will use a '@${engineInstance}' suffix.
 						</div>		
 					</c:when>
 					<c:otherwise>
