@@ -24,6 +24,8 @@
  */
 package navajodocument;
 
+import org.osgi.framework.BundleContext;
+
 import com.dexels.navajo.document.NavajoFactory;
 
 /**
@@ -78,6 +80,17 @@ public class Version extends dexels.Version {
 		NavajoFactory.terminate();
 	}
 
+	@Override
+	public void start(BundleContext bc) throws Exception {
+		super.start(bc);
+	}
+
+	@Override
+	public void stop(BundleContext bc) throws Exception {
+		super.stop(bc);
+	}
+
+	
 
 
 }
