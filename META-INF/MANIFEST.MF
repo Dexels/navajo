@@ -2,7 +2,7 @@ Bundle-Name: Navajo Client
 Bundle-SymbolicName: com.dexels.navajo.client
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 3.0.1
+Bundle-Version: 3.0.2
 Bundle-Activator: navajoclient.Version
 Bundle-ClassPath: .,
  lib/jzlib.jar,
@@ -22,5 +22,5 @@ Export-Package: com.dexels.navajo.client,
  org.jivesoftware.smackx.muc
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.document,
- com.jcraft.jzlib;bundle-version="1.0.0",
  com.dexels.navajo.version;bundle-version="1.0.3"
+Import-Package: org.osgi.framework;version="1.5.0"
