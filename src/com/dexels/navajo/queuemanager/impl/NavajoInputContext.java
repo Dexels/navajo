@@ -4,6 +4,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.queuemanager.api.InputContext;
+import com.dexels.navajo.server.resource.ResourceCheckerManager;
+import com.dexels.navajo.server.resource.ServiceAvailability;
 
 public class NavajoInputContext implements InputContext {
 
@@ -30,7 +32,8 @@ public class NavajoInputContext implements InputContext {
 	@Override
 	public String getResourceAvailability() {
 		// link to ResourceManager
-		return "ok";
+		final ServiceAvailability sa = ResourceCheckerManager.getInstance().getResourceChecker(getServiceName(), getInputNavajo()).getServiceAvailability();
+		return sa.getStatus();
 	}
 	@Override
 	public HttpServletRequest getRequest() {
