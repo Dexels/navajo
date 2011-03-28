@@ -29,6 +29,7 @@ Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.client,
  com.dexels.navajo.core,
  com.dexels.navajo.document;bundle-version="1.0.0",
- com.dexels.navajo.queuemanager;bundle-version="0.1.0"
+ com.dexels.navajo.queuemanager;bundle-version="1.0.1"
 Import-Package: javax.servlet;version="2.5.0",
- javax.servlet.http;version="2.5.0"
+ javax.servlet.http;version="2.5.0",
+ org.osgi.framework;version="1.5.0"
