@@ -7,9 +7,11 @@ Bundle-ClassPath: .
 Include-Resource: lib
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.client,
- com.dexels.navajo.document;bundle-version="1.0.0"
+ com.dexels.navajo.document;bundle-version="1.0.0",
+ com.dexels.navajo.core;bundle-version="2.9.2"
 Import-Package: javax.servlet;version="2.5.0",
- javax.servlet.http;version="2.5.0"
+ javax.servlet.http;version="2.5.0",
+ org.osgi.framework;version="1.5.0"
 Export-Package: com.dexels.navajo.queuemanager,
  com.dexels.navajo.queuemanager.api,
  navajoqueuemanager
