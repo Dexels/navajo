@@ -18,7 +18,7 @@
 			<layout>p2</layout>
 			<url>http://spiritus.dexels.nl:41766/eclipse/platform/</url>
 		</repository>
-		<repository>
+<!-- 		<repository>
 			<id>spiritus repository delta pack</id>
 			<layout>p2</layout>
 			<url>http://spiritus.dexels.nl:41766/eclipse/delta/</url>
@@ -28,6 +28,7 @@
 			<layout>p2</layout>
 			<url>http://spiritus.dexels.nl:41766/eclipse/jetty/</url>
 		</repository>
+-->
 		<repository>
 			<id>spiritus repository jdt</id>
 			<layout>p2</layout>
@@ -72,7 +73,7 @@
 				<groupId>${tycho-groupid}</groupId>
 				<artifactId>tycho-p2-director-plugin</artifactId>
 				<version>${tycho-version}</version>
-				<executions>
+				<!-- <executions>
 					<execution>
 						<id>materialize-products</id>
 						<goals>
@@ -93,7 +94,7 @@
 						</product>
 					</products>
 				</configuration>
-				 
+				  -->
 			</plugin>
 		</plugins>
 

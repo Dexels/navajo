@@ -2,7 +2,7 @@
 <feature
       id="com.dexels.navajo.core.feature"
       label="Navajo Core Feature"
-      version="1.0.3.qualifier"
+      version="1.0.3"
       provider-name="Dexels">
 
    <description url="http://www.example.com/description">
@@ -37,21 +37,7 @@
          unpack="false"/>
 
    <plugin
-         id="com.jcraft.jzlib"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="com.dexels.navajo.document"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.dexels.navajo.listeners"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -66,61 +52,6 @@
 
    <plugin
          id="com.dexels.navajo.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.dexels.navajo.function"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.dexels.navajo.adapters"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.dexels.navajo.adapters.deps"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="com.dexels.navajo.queuemanager"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.dexels.navajo.rhino"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.mozilla.javascript"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.dexels.jetty.test"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.dexels.navajo.listeners.continuations"
          download-size="0"
          install-size="0"
          version="0.0.0"
