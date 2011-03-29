@@ -17,11 +17,6 @@
       [Enter License Description here.]
    </license>
 
-   <requires>
-      <import plugin="javax.servlet"/>
-      <import plugin="org.junit"/>
-   </requires>
-
    <plugin
          id="com.dexels.navajo.client"
          download-size="0"
