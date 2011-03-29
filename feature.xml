@@ -2,7 +2,7 @@
 <feature
       id="com.dexels.navajo.dev"
       label="Navajo Development Plugin"
-      version="1.0.2.qualifier"
+      version="1.0.2"
       provider-name="Dexels">
 
    <description url="http://www.example.com/description">
@@ -21,13 +21,6 @@
       <import feature="com.dexels.navajo.core.feature" version="1.0.0.qualifier"/>
       <import feature="com.dexels.navajo.server.feature" version="1.0.0.qualifier"/>
    </requires>
-
-   <plugin
-         id="com.gface"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
    <plugin
          id="com.dexels.navajo.birt.push"
