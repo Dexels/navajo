@@ -1,5 +1,7 @@
 package com.dexels.navajo.listeners;
 
+import java.util.List;
+
 public abstract class RequestQueue {
 
 	private final Scheduler myScheduler;
@@ -57,6 +59,20 @@ public abstract class RequestQueue {
 	protected abstract void sumbitToQueue(TmlRunnable tml);
 	
 	public abstract void shutDownQueue();
+	
+	/**
+	 * Flush the queue, i.e. cancel all TmlRunnable requests in the queue.
+	 * Returns the number of flushed requests.
+	 * 
+	 */
+	public abstract int flushQueue();
+	
+	/**
+	 * Returns a list of all requests.
+	 * 
+	 * @return
+	 */
+	public abstract List<TmlRunnable> getQueuedRequests();
 	
 	/**
 	 * Returns the Scheduler associated with this RequestQueue.
