@@ -2,12 +2,11 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Navajo SWT Client
 Bundle-SymbolicName: com.dexels.navajo.tipi.swt.client
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.0.0
 Bundle-Activator: swtclient.Version
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Import-Package: com.gface.date,
- org.eclipse.jface.viewers,
+Import-Package: org.eclipse.jface.viewers,
  org.eclipse.swt,
  org.eclipse.swt.events,
  org.eclipse.swt.layout,
@@ -26,3 +25,5 @@ Export-Package: com.dexels.navajo.swtclient;
    com.dexels.navajo.document,
    org.eclipse.ui.forms.widgets",
  swtclient
+Bundle-ClassPath: lib/com.gface_0.9.1.jar,
+ .
