@@ -2,7 +2,7 @@ Bundle-Name: Navajo Adapters
 Bundle-SymbolicName: com.dexels.navajo.adapters
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.1
 Bundle-Activator: navajoadapters.Version
 Export-Package: com.dexels.navajo.adapter,
  com.dexels.navajo.adapter.clieop,
@@ -23,9 +23,9 @@ Export-Package: com.dexels.navajo.adapter,
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.listeners,
  com.dexels.navajo.core,
- com.dexels.navajo.function;bundle-version="2.0.1",
- com.dexels.navajo.adapters.deps;bundle-version="1.0.0",
  com.dexels.navajo.document;bundle-version="1.0.0",
  com.dexels.navajo.client;bundle-version="1.0.0",
  com.dexels.navajo.version
 Import-Package: org.osgi.framework;version="1.5.0"
+Bundle-ClassPath: lib/mail.jar,
+ .
