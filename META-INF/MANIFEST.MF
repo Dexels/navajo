@@ -30,6 +30,7 @@ Require-Bundle: com.dexels.navajo.client,
  com.dexels.navajo.core,
  com.dexels.navajo.document;bundle-version="1.0.0",
  com.dexels.navajo.queuemanager;bundle-version="1.0.1",
- javax.servlet;bundle-version="3.0.0"
+ javax.servlet;bundle-version="3.0.0",
+ com.dexels.navajo.version;bundle-version="1.0.3"
 Import-Package: junit.framework,
  org.osgi.framework;version="1.5.0"
