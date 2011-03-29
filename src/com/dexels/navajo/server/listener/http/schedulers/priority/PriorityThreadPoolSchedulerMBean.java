@@ -36,6 +36,12 @@ public interface PriorityThreadPoolSchedulerMBean {
 	public int getSlowQueueSize();
 	public int getFastQueueSize();
 	
+	public int flushSystemQueue();
+	public int flushNormalQueue();
+	public int flushPriorityQueue();
+	public int flushSlowQueue();
+	public int flushFastQueue();
+	
 	public long getProcessed();
 	public long getErrors();
 	public long getResubmits();

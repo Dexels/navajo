@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -570,5 +571,49 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 	public int getPriorityActive() {
 		return priorityPool.getActiveRequestCount();
 	}
+
+	@Override
+	public int flushSystemQueue() {
+		return systemPool.flushQueue();
+	}
+
+	@Override
+	public int flushNormalQueue() {
+		return normalPool.flushQueue();
+	}
+
+	@Override
+	public int flushPriorityQueue() {
+		return priorityPool.flushQueue();
+	}
+
+	@Override
+	public int flushSlowQueue() {
+		return slowPool.flushQueue();
+	}
+
+	@Override
+	public int flushFastQueue() {
+		return fastPool.flushQueue();
+	}
 	
+	public List<TmlRunnable> getSlowRequests() {
+		return slowPool.getQueuedRequests();
+	}
+	
+	public List<TmlRunnable> getNormalRequests() {
+		return normalPool.getQueuedRequests();
+	}
+	
+	public List<TmlRunnable> getFastRequests() {
+		return fastPool.getQueuedRequests();
+	}
+	
+	public List<TmlRunnable> getPriorityRequests() {
+		return priorityPool.getQueuedRequests();
+	}
+	
+	public List<TmlRunnable> getSystemRequests() {
+		return systemPool.getQueuedRequests();
+	}
 }
