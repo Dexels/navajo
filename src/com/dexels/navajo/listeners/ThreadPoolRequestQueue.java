@@ -9,8 +9,6 @@ import java.util.Queue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
-import com.dexels.navajo.document.Header;
-
 public class ThreadPoolRequestQueue extends RequestQueue {
 
 	private final ThreadPoolExecutor tpe;
