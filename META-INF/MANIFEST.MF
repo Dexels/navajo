@@ -2,7 +2,7 @@ Bundle-Name: Navajo Listeners
 Bundle-SymbolicName: com.dexels.navajo.listeners
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 3.1.1
+Bundle-Version: 3.1.2
 Bundle-Activator: navajolisteners.Version
 Bundle-ClassPath: .,mail.jar
 Include-Resource: lib
@@ -30,6 +30,6 @@ Require-Bundle: com.dexels.navajo.client,
  com.dexels.navajo.core,
  com.dexels.navajo.document;bundle-version="1.0.0",
  com.dexels.navajo.queuemanager;bundle-version="1.0.1"
-Import-Package: javax.servlet;version="2.5.0",
- javax.servlet.http;version="2.5.0",
+Import-Package: javax.servlet;version="3.0.0",
+ javax.servlet.http;version="3.0.0",
  org.osgi.framework;version="1.5.0"
