@@ -1,9 +1,6 @@
 package com.dexels.navajo.rhino;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 
 import com.dexels.navajo.listeners.NavajoDoneException;
 import com.dexels.navajo.mapping.CompiledScript;

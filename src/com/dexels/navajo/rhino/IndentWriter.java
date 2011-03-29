@@ -1,7 +1,6 @@
 package com.dexels.navajo.rhino;
 
 import java.io.IOException;
-import java.io.Writer;
 
 public class IndentWriter {
 	

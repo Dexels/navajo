@@ -398,7 +398,7 @@ public abstract class ScriptEnvironment implements Serializable {
 	}
 	
 	protected void finishRun() {
-		Navajo response = getResponse();
+//		Navajo response = getResponse();
 //		  try {
 //			response.write(System.err);
 //		} catch (NavajoException e) {

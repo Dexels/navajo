@@ -4,7 +4,6 @@ import org.osgi.framework.BundleContext;
 
 import com.dexels.navajo.rhino.RhinoHandler;
 import com.dexels.navajo.rhino.RhinoRepository;
-import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.HandlerFactory;
 import com.dexels.navajo.server.RepositoryFactory;
 
@@ -19,5 +18,4 @@ public class Version extends dexels.Version {
 		HandlerFactory.registerHandler("com.dexels.navajo.rhino.RhinoHandler", new RhinoHandler());
 		System.err.println("Registered rhino repository: "+rp);
 	}
-
 }

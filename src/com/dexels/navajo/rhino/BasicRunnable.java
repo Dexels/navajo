@@ -3,14 +3,13 @@ package com.dexels.navajo.rhino;
 import java.io.IOException;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.listeners.Scheduler;
 import com.dexels.navajo.listeners.TmlRunnable;
 
 public abstract class BasicRunnable implements TmlRunnable {
 
 	private boolean committed;
-	private long scheduledAt;
-	private Scheduler scheduler;
+//	private long scheduledAt;
+//	private Scheduler scheduler;
 	private boolean aborted = false;
 
 
@@ -26,7 +25,6 @@ public abstract class BasicRunnable implements TmlRunnable {
 
 	@Override
 	public void setScheduledAt(long currentTimeMillis) {
-		scheduledAt = currentTimeMillis;
 	}
 
 

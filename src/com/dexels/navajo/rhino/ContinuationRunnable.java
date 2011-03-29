@@ -25,7 +25,7 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 	private final Object continuation;
 	private final ContinuationPending pending;
 	private ScriptEnvironment environment;
-	private long scheduledAt;
+//	private long scheduledAt;
 	private Access access;
 	private RequestQueue requestQueue;
 	

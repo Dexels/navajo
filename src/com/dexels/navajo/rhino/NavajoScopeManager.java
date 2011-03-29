@@ -1,10 +1,7 @@
 package com.dexels.navajo.rhino;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Set;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;

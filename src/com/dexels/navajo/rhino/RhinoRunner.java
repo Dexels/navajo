@@ -14,12 +14,10 @@ import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContinuationPending;
 import org.mozilla.javascript.JavaScriptException;
 import org.mozilla.javascript.Script;
-import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.WrappedException;
 
 import com.dexels.navajo.document.Header;
-import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
@@ -44,7 +42,6 @@ public class RhinoRunner {
 
 	private boolean localMode = false;
 
-	private static Scriptable globalScriptScope = null;
 	
 	public static void main(String[] args) throws IOException, InterruptedException, NavajoException, UserException,
 			SystemException, AuthorizationException, ClassNotFoundException, NavajoDoneException {
@@ -65,7 +62,7 @@ public class RhinoRunner {
 		
 		
 		
-		Navajo n = runScript("sleepmap", input, false);
+		 runScript("sleepmap", input, false);
 //		System.err.println("\n\nENTEREING CHECKFIELDS........\n\n");
 //		Navajo o = runScript("checkparam", n, false);
 //		Navajo o = runScript("checksimpleparam", n, false);

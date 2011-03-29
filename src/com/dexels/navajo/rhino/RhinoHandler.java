@@ -3,21 +3,15 @@ package com.dexels.navajo.rhino;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
-import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
-import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.listeners.NavajoDoneException;
 import com.dexels.navajo.mapping.CompiledScript;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.AuthorizationException;
 import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.FatalException;
 import com.dexels.navajo.server.ServiceHandler;
 import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.server.UserException;
@@ -94,7 +88,7 @@ public class RhinoHandler extends ServiceHandler {
 			
 			ClassLoader cl = DispatcherFactory.getInstance().getNavajoConfig().getClassloader();
 			try {
-				Class<? extends CompiledScript> rcsClass = (Class<? extends CompiledScript>) Class.forName("com.dexels.navajo.rhino.RhinoCompiledScript", true, cl);
+				Class.forName("com.dexels.navajo.rhino.RhinoCompiledScript", true, cl);
 			} catch (Throwable e) {
 				System.err.println("Classloading error in Rhino Handler. This can be removed once OSGi is functional");
 			}
