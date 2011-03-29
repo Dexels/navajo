@@ -22,13 +22,6 @@
    </requires>
 
    <plugin
-         id="org.apache.tomcat.catalina"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="com.dexels.navajo.jsp"
          download-size="0"
          install-size="0"
@@ -37,33 +30,6 @@
 
    <plugin
          id="com.dexels.navajo.jsp.server"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.uwyn.jhighlight"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.ant"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.ant.launching"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.taglibs.standard"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -82,12 +48,6 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
-   <plugin
-         id="com.dexels.navajo.adapters.deps"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
 
    <plugin
          id="com.dexels.navajo.listeners"
