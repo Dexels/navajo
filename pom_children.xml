@@ -13,6 +13,7 @@
 		<module>../NavajoQueueManager</module>
 		<module>../NavajoListeners</module>
 		<module>../NavajoListenersContinuations</module>
+		<module>../NavajoFunctions</module>
 		<module>../NavajoAdapters</module>
 		<module>../NavajoAsyncClient</module>
 		<module>../NavajoRhino</module>
