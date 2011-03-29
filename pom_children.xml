@@ -18,6 +18,6 @@
 		<module>../NavajoRhino</module>
 		<module>../NavajoJsp</module>
 		<module>../NavajoJspServer</module>
-		<module>../com.dexels.navajo.core.feature</module>
+		<module>../com.dexels.navajo.server.feature</module>
 	</modules>
 </project>
