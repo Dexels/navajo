@@ -1,16 +1,21 @@
 package com.dexels.navajo.listeners;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import com.dexels.navajo.document.Header;
+
 public class ThreadPoolRequestQueue extends RequestQueue {
 
 	private final ThreadPoolExecutor tpe;
 	private final Queue<Long> finishedServicesAt = new LinkedList<Long>();
-
+	
 	private static final int MAX_TIMELOG_SIZE = 80;
 	
 	protected ThreadPoolRequestQueue(String id, ThreadPoolExecutor tpe, Scheduler ms) {
@@ -20,6 +25,7 @@ public class ThreadPoolRequestQueue extends RequestQueue {
 
 	public static ThreadPoolRequestQueue create(final Scheduler myScheduler, final String id, final int priority, final int nrThreads) {
 		ThreadPoolExecutor t = (ThreadPoolExecutor) Executors.newFixedThreadPool(nrThreads);
+		
 		t.setCorePoolSize(nrThreads);
 		t.setMaximumPoolSize(nrThreads);
         t.setThreadFactory(new NamedThreadFactory(id) {
@@ -97,6 +103,28 @@ public class ThreadPoolRequestQueue extends RequestQueue {
 			tr.abort("Aborting: Queue shutting down");
 			System.err.println("Aborting task!");
 		}
+	}
+
+	@Override
+	public int flushQueue() {
+		ArrayList list = new ArrayList();
+		int size = tpe.getQueue().drainTo(list);
+		System.err.println("Drained " + size + " items. List size: " + list.size());
+		return size;
+	}
+
+	@Override
+	public List<TmlRunnable> getQueuedRequests() {
+		ArrayList runnable = new ArrayList();
+		return runnable;
+//		Iterator iter = tpe.getQueue().iterator();
+//	    while ( iter.hasNext() ) {
+//	    	Object o = iter.next();
+//	    	System.err.println("In getQueuedRequests: " + o);
+//	    	TmlRunnable tml = (TmlRunnable) iter.next();
+//	    	runnable.add(tml);
+//	    }
+//	    return runnable;
 	}
 
 }
