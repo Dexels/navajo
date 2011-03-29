@@ -29,6 +29,11 @@
                   <layout>p2</layout>
                   <url>http://spiritus.dexels.nl:41766/eclipse/birt</url>
         </repository>
+  		<repository>
+                  <id>Navajo P2</id>
+                  <layout>p2</layout>
+                  <url>http://spiritus.dexels.nl:41766/p2</url>
+        </repository>
 
         <repository>
                   <id>jetty</id>
