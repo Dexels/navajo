@@ -10,7 +10,6 @@
 
 	<modules>
 		<module>../NavajoFunctions</module>
-		<module>../NavajoRhino</module>
 		<module>../NavajoJsp</module>
 		<module>../NavajoJspServer</module>
 	</modules>
