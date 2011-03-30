@@ -48,7 +48,7 @@ import com.dexels.navajo.client.SystemInfo;
  * 2.2.3. Added support for piggybacking of data.
  * 2.2.4. Removed evil keep-alive
  */
-public class Version extends dexels.Version {
+public class Version extends com.dexels.navajo.version.Version {
 
 	public static final int MAJOR = 3;
 	public static final int MINOR = 0;
