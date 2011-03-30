@@ -1,8 +1,7 @@
 package navajoasyncclient;
 
-import org.osgi.framework.*;
 
-public class Version extends dexels.Version implements BundleActivator {
+public class Version extends com.dexels.navajo.version.Version  {
 
 	//	 Included packages.
 	
