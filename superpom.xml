@@ -13,6 +13,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<repositories>
+	<!-- 
 		<repository>
 			<id>spiritus repository</id>
 			<layout>p2</layout>
@@ -40,10 +41,27 @@
                   <layout>p2</layout>
                   <url>http://download.eclipse.org/jetty/updates/jetty-bundles-8.x/8.0.0.M2/</url>
         </repository>
-
+-->
 	</repositories>
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.sonatype.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<resolver>p2</resolver>
+					<target>
+						<artifact>
+							<groupId>com.dexels.navajo.core</groupId>
+							<artifactId>targetplatform</artifactId>
+							<version>0.0.1-SNAPSHOT</version>
+							<classifier>navajo_target</classifier>
+						</artifact>
+					</target>
+					<ignoreTychoRepositories>false</ignoreTychoRepositories>
+				</configuration>
+			</plugin>		
 			<plugin>
 				<groupId>org.sonatype.tycho</groupId>
 				<artifactId>target-platform-configuration</artifactId>
