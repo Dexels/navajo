@@ -9,7 +9,6 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>../javax.servlet</module>
 		<module>../NavajoQueueManager</module>
 		<module>../NavajoListeners</module>
 		<module>../NavajoListenersContinuations</module>
