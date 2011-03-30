@@ -10,13 +10,8 @@
 
 	<modules>
 		<module>../NavajoFunctions</module>
-		<module>../NavajoAdapters</module>
 		<module>../NavajoRhino</module>
 		<module>../NavajoJsp</module>
 		<module>../NavajoJspServer</module>
-		<module>../NavajoQueueManager</module>
-		<module>../NavajoListeners</module>
-		<module>../NavajoListenersContinuations</module>
-		<module>../com.dexels.navajo.server.feature</module>
 	</modules>
 </project>
