@@ -75,7 +75,7 @@ import com.dexels.navajo.document.NavajoFactory;
  * 2.2.7 Added support for non-broker mode of SQLMap.
  *
  */
-public class Version extends dexels.Version {
+public class Version extends com.dexels.navajo.version.Version {
 
 	public static final int    MAJOR       = 3;
 	public static final int    MINOR       = 1;
