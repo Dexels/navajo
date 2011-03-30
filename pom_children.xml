@@ -9,15 +9,14 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>../NavajoQueueManager</module>
-		<module>../NavajoListeners</module>
-		<module>../NavajoListenersContinuations</module>
 		<module>../NavajoFunctions</module>
 		<module>../NavajoAdapters</module>
-		<module>../NavajoAsyncClient</module>
 		<module>../NavajoRhino</module>
 		<module>../NavajoJsp</module>
 		<module>../NavajoJspServer</module>
+		<module>../NavajoQueueManager</module>
+		<module>../NavajoListeners</module>
+		<module>../NavajoListenersContinuations</module>
 		<module>../com.dexels.navajo.server.feature</module>
 	</modules>
 </project>
