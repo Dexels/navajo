@@ -12,6 +12,6 @@ Export-Package: com.dexels.navajo.functions,
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.document;bundle-version="1.0.0",
  com.dexels.navajo.core;bundle-version="2.9.0",
- com.dexels.navajo.version;bundle-version="1.0.3"
+ com.dexels.navajo.version;bundle-version="1.0.4"
 Import-Package: junit.framework,
  org.osgi.framework
