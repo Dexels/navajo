@@ -29,7 +29,7 @@
 						<configuration>
 							<artifacts>
 								<artifact>
-									<file>NavajoGlobalTarget.target</file>
+									<file>navajo_target.target</file>
 									<type>target</type>
 									<classifier>navajo_target</classifier>
 								</artifact>
