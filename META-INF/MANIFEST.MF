@@ -13,5 +13,6 @@ Require-Bundle: com.dexels.navajo.document,
  org.apache.ant;bundle-version="1.7.1",
  com.dexels.navajo.listeners;bundle-version="3.0.1",
  javax.servlet;bundle-version="3.0.0",
- javax.servlet.jsp;bundle-version="2.0.0"
+ javax.servlet.jsp;bundle-version="2.0.0",
+ com.dexels.navajo.version
 Import-Package: org.osgi.framework;version="1.5.0"
