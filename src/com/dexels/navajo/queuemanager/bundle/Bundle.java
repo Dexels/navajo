@@ -22,15 +22,29 @@
  * SUCH DAMAGE.
  * ====================================================================
  */
-package navajoqueuemanager;
+package com.dexels.navajo.queuemanager.bundle;
 
 import com.dexels.navajo.queuemanager.NavajoQueueScopeManager;
 import com.dexels.navajo.queuemanager.QueueManager;
 
 
 
-public class Version extends com.dexels.navajo.version.Version {
+public class Bundle extends com.dexels.navajo.version.Version {
 
+		
+	//	 Included packages.
+	
+	public Bundle() {
+//		javax.mail.Address a;
+//		setReleaseDate(RELEASEDATE);
+	}
+
+	@Override
+	public void shutdown() {
+		NavajoQueueScopeManager.clearInstance();
+		QueueManager.clearInstance();
+	}
+	
 	
 
 }
