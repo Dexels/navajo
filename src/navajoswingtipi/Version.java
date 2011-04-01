@@ -25,44 +25,86 @@
  */
 package navajoswingtipi;
 
+import java.io.IOException;
+
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkEvent;
+import org.osgi.framework.FrameworkListener;
+
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.tipixml.XMLParseException;
+
+import tipi.MainApplication;
+import tipi.SwingTipiApplicationInstance;
+import tipi.TipiSwingExtension;
+
 public class Version extends dexels.Version {
 
-	public static final int MAJOR = 4;
-	public static final int MINOR = 2;
-	public static final int PATCHLEVEL = 1;
-	public static final String VENDOR = "Dexels";
-	public static final String PRODUCTNAME = "Navajo Swing Tipi";
 	
 	//	 Included packages.
-	String [] includes = {"tipipackage.Version"};
 	
 	public Version() {
-		setReleaseDate("2005-10-20");
-		addIncludes(includes);
+//		addIncludes(includes);
 	}
 	
-	public int getMajor() {
-		return MAJOR;
+	@SuppressWarnings("restriction")
+	public void start(BundleContext bc) throws Exception {
+		System.err.println("Starting swing tipi");
+		super.start(bc);
+		
+		bc.addFrameworkListener(new FrameworkListener(){
+
+			private SwingTipiApplicationInstance instance;
+
+			@Override
+			public void frameworkEvent(FrameworkEvent event) {
+				if(FrameworkEvent.STARTED == event.getType()) {
+					try {
+						TipiSwingExtension tse = new TipiSwingExtension();
+						ClassLoader classLoader = tse.getClass().getClassLoader();
+						System.err.println("Loader: "+classLoader.hashCode());
+						tse.setExtensionClassloader(classLoader);
+						System.err.println("goooo!");
+						instance = MainApplication.runApp(new String[]{"tipiCodeBase=/Users/frank/Documents/workspace-osgi-temp/TipiExample/tipi/"});
+						System.err.println("INstance ready!");
+						instance.getCurrentContext().processRequiredIncludes(tse);
+						System.err.println("Includes ready!");
+					} catch (XMLParseException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					SwingUtilities.invokeLater(new Runnable() {
+						
+						@Override
+						public void run() {
+							try {
+								instance.getCurrentContext().switchToDefinition(instance.getDefinition());
+							} catch (TipiException e) {
+								e.printStackTrace();
+							}
+							System.err.println("Creating test frame");
+							JFrame mm = new JFrame("bbbbbb");
+							mm.setBounds(100, 100, 200, 200);
+							mm.setVisible(true);
+							System.err.println("Created test frame");
+						}
+					});
+				}
+				System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> "+event);
+			}});
+//
+//		
 	}
 
-	public int getMinor() {
-		return MINOR;
-	}
-
-	public int getPatchLevel() {
-		return PATCHLEVEL;
-	}
-
-	public String getVendor() {
-		return VENDOR;
-	}
-
-	public String getProductName() {
-		return PRODUCTNAME;
-	}
 
 	public static void main(String [] args) {
-		Version v = new Version();
-		System.err.println(v.versionString());
+		JFrame mm = new JFrame("aaaa");
+		System.err.println("MM>>>>>M: "+mm);
+		mm.setBounds(100, 100, 200, 200);
+		mm.setVisible(true);
 	}
 }

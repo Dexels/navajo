@@ -3,6 +3,8 @@ package com.dexels.navajo.tipi.components.swingimpl.embed;
 import java.io.*;
 import java.util.*;
 
+import navajo.ExtensionDefinition;
+
 import tipi.SwingTipiApplicationInstance;
 
 import com.dexels.navajo.tipi.*;
@@ -48,18 +50,19 @@ public class SwingEmbeddedContext extends SwingTipiContext {
 	
 	}
 
-	public SwingEmbeddedContext(SwingTipiApplicationInstance instance,SwingTipiContext parentContext,String tipiDefinition[], boolean debugMode, String[] definitionName, List<String> libraries, String resourceBaseDirectory)
+	public SwingEmbeddedContext(SwingTipiApplicationInstance instance,SwingTipiContext parentContext,String tipiDefinition[], boolean debugMode, String[] definitionName, List<String> libraries, String resourceBaseDirectory,ExtensionDefinition ed)
 			throws TipiException, IOException {
 		this(instance,parentContext);
 		for (int i = 0; i < definitionName.length; i++) {
-			loadDefinition(tipiDefinition[i], definitionName[i]);
+			loadDefinition(tipiDefinition[i], definitionName[i],ed);
 		}
 	}
 
-	public void loadDefinition(String def, String name) throws XMLParseException, IOException, TipiException {
+	public void loadDefinition(String def, String name, ExtensionDefinition ed) throws XMLParseException, IOException, TipiException {
 		// public void parseStream(InputStream in, String sourceName, boolean
 		// studioMode) throws IOException, XMLParseException, TipiException {
-		parseStream(getTipiResourceStream(def), name, false);
+		parseStream(getTipiResourceStream(def), name, false, ed);
+		switchToDefinition(name);
 	}
 
 	public void clearTopScreen() {

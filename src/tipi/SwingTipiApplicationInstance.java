@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.swing.*;
 
+import navajo.ExtensionDefinition;
+
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.components.swingimpl.SwingTipiContext;
@@ -19,6 +21,12 @@ import com.dexels.navajo.tipi.tipixml.XMLParseException;
 public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance {
 
 	private String definition;
+	public String getDefinition() {
+		return definition;
+	}
+
+
+
 	private String definitionPath;
 	private List<String> args;
 	private TipiApplet appletRoot;
@@ -61,6 +69,10 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance {
 		// context.processRequiredIncludes();
 
 		context.processProperties(properties);
+
+		TipiSwingExtension tse = new TipiSwingExtension();
+		tse.initialize(context);
+		
 		InputStream tipiResourceStream = context.getTipiResourceStream(definitionPath);
 		if (tipiResourceStream == null) {
 			System.err.println("Error starting up: Can not load tipi. Resource not found: "+definitionPath);
@@ -84,7 +96,8 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance {
 			}
 		} else {
 			try {
-				context.parseStream(tipiResourceStream, definition, false);
+				context.parseStream(tipiResourceStream, definition, false,tse);
+//				context.switchToDefinition(definition);
 			} catch (XMLParseException e) {
 				e.printStackTrace();
 			} catch (TipiException e) {

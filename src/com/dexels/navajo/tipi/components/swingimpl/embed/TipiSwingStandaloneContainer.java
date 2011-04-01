@@ -3,6 +3,8 @@ package com.dexels.navajo.tipi.components.swingimpl.embed;
 import java.io.*;
 import java.util.*;
 
+import navajo.ExtensionDefinition;
+
 import tipi.SwingTipiApplicationInstance;
 
 import com.dexels.navajo.document.*;
@@ -24,11 +26,12 @@ public class TipiSwingStandaloneContainer implements TipiStandaloneToplevelConta
   private SwingEmbeddedContext embeddedContext = null;
   private final List<String> libraries = new ArrayList<String>();
   private UserInterface ui = null;
-
+  private SwingTipiContext parentContext = null;
+  
   public TipiSwingStandaloneContainer(SwingTipiApplicationInstance instance, SwingTipiContext parentContext) {
 		embeddedContext = new SwingEmbeddedContext(instance, parentContext);
-
- }
+		this.parentContext = parentContext;
+  }
 
   public void setUserInterface(UserInterface u) {
     ui = u;
@@ -37,10 +40,10 @@ public class TipiSwingStandaloneContainer implements TipiStandaloneToplevelConta
     }
   }
 
-
-  public void loadDefinition(String tipiPath, String definitionName,String resourceBaseDirectory) throws IOException, TipiException {
+ @Override
+  public void loadDefinition(String tipiPath, String definitionName,String resourceBaseDirectory, ExtensionDefinition ed) throws IOException, TipiException {
 	 // System.err.println("Loading def: "+definitionName+" tipipath: "+tipiPath+" resbase: "+resourceBaseDirectory);
-	  embeddedContext = new SwingEmbeddedContext((SwingTipiApplicationInstance) getContext().getApplicationInstance(), (SwingTipiContext) getContext(), new String[]{tipiPath},false,new String[]{definitionName},libraries,resourceBaseDirectory);
+	  embeddedContext = new SwingEmbeddedContext((SwingTipiApplicationInstance) getContext().getApplicationInstance(), (SwingTipiContext) getContext(), new String[]{tipiPath},false,new String[]{definitionName},libraries,resourceBaseDirectory,ed);
     if (ui!=null) {
       embeddedContext.setUserInterface(ui);
     }
@@ -68,4 +71,5 @@ public class TipiSwingStandaloneContainer implements TipiStandaloneToplevelConta
   public void shutDownTipi() {
     embeddedContext.shutdown();
   }
+
 }

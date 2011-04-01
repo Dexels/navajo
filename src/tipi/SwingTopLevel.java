@@ -2,6 +2,8 @@ package tipi;
 
 import java.io.*;
 
+import navajo.ExtensionDefinition;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.*;
@@ -30,7 +32,7 @@ public class SwingTopLevel implements TipiStandaloneToplevelContainer {
 
 
 
-	public void loadDefinition(String tipiPath, String definitionName, String resourceBaseDirectory) throws IOException, TipiException {
+	public void loadDefinition(String tipiPath, String definitionName, String resourceBaseDirectory, ExtensionDefinition ed) throws IOException, TipiException {
 		
 	}
 

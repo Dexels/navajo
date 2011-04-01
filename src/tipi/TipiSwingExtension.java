@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
 
+import org.osgi.framework.BundleContext;
+
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.tipixml.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
@@ -14,6 +16,7 @@ public class TipiSwingExtension extends TipiAbstractXMLExtension implements Tipi
 
 	public TipiSwingExtension() throws XMLParseException,
 			IOException {
+		System.err.println("Loading xml... ");
 		loadXML();
 	}
 
@@ -21,7 +24,4 @@ public class TipiSwingExtension extends TipiAbstractXMLExtension implements Tipi
 		// Do nothing
 		
 	}
-
-	
-
 }

@@ -24,6 +24,8 @@ public class BorderParser
   public Object parse(TipiComponent source, String expression,TipiEvent event) {
     return parseBorder(expression);
   }
+  
+  // {border:/boldtitled-tralalala}
 
   private Border parseBorder(String s) {
     StringTokenizer st = new StringTokenizer(s, "-");

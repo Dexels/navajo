@@ -1,6 +1,7 @@
 package tipi;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.net.*;
 import java.util.*;
 
@@ -13,16 +14,23 @@ import com.dexels.navajo.tipi.swingclient.components.*;
 
 public class MainApplication {
 
+	// TODO Remove evil static
 	private static SwingTipiApplicationInstance myApplication = null;
 
 	static public void main(String[] args) throws Exception {
 		// TODO Refactor Formatters in NavajoFactory, so this can be done later.
+		// TODO This is more urgent due to the OSGi loading
+		SwingTipiApplicationInstance instance = runApp(args);
+		instance.getCurrentContext().switchToDefinition(instance.getDefinition());
+	}
+
+	public static SwingTipiApplicationInstance runApp(String[] args) {
 		try {
 			Locale.setDefault(new Locale("nl", "NL"));
 		} catch (SecurityException se) {
 			System.err.println("Sandbox. Using default locale");
 		}
-		
+
 		List<String> arrrgs = new ArrayList<String>();
 
 		String definition = null;
@@ -30,14 +38,12 @@ public class MainApplication {
 				arrrgs.add(args[i]);
 		}
 		if(args.length>0 ) {
-//				System.err.println("final arg: "+args[args.length-1].endsWith(".xml"));
 				if(args[args.length-1].endsWith(".xml")) {
 					definition = args[args.length - 1];
 					
 				}
 			}
-//		}
-		initializeSwingApplication(checkStudio(), arrrgs, definition,null,null);
+		return initializeSwingApplication(checkStudio(), arrrgs, definition,null,null);
 	}
 
 	/**
@@ -65,40 +71,53 @@ public class MainApplication {
 	 * @param def
 	 */
 	public static SwingTipiApplicationInstance initializeSwingApplication(final boolean studioMode, final List<String> arrrgs, final String def, final TipiApplet appletRoot, final RootPaneContainer otherRoot) {
-		RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager());
-		SwingUtilities.invokeLater(new Runnable() {
 
-			public void run() {
-				try {
-					if (studioMode) {
-						myApplication = new SwingTipiApplicationInstance("develop", "tipi/develop.xml", arrrgs, appletRoot, otherRoot);
+		RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager());
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+
+				public void run() {
+					try {
+						if (studioMode) {
+							myApplication = new SwingTipiApplicationInstance("develop", "tipi/develop.xml", arrrgs, appletRoot, otherRoot);
 //						SwingTipiContext s = initialize("develop", "tipi/develop.xml", arrrgs, null, null);
-						
-					} else {
-						if (def == null) {
-							myApplication = new SwingTipiApplicationInstance("init", "init.xml", arrrgs, appletRoot, otherRoot);
+							
 						} else {
-							if (def.endsWith(".xml")) {
-								myApplication = new SwingTipiApplicationInstance("init", def, arrrgs, appletRoot, otherRoot);
+							if (def == null) {
+								myApplication = new SwingTipiApplicationInstance("init", "init.xml", arrrgs, appletRoot, otherRoot);
 							} else {
-								myApplication = new SwingTipiApplicationInstance(def, "start.xml", arrrgs, appletRoot, otherRoot);
+								if (def.endsWith(".xml")) {
+									myApplication = new SwingTipiApplicationInstance("init", def, arrrgs, appletRoot, otherRoot);
+								} else {
+									myApplication = new SwingTipiApplicationInstance(def, "start.xml", arrrgs, appletRoot, otherRoot);
+								}
 							}
 						}
+
+						if(myApplication!=null) {
+								myApplication.startup();
+								String deff = def;
+								if(deff==null) {
+									deff = "init.xml";
+								}
+								
+//								myApplication.getCurrentContext().switchToDefinition(def);
+//							if(studioMode) {
+//								((SwingTipiContext)myApplication.getCurrentContext()).injectApplication(def, arrrgs, "/init/tipi/sandbox");
+//							}
+						}
+
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
 
-					if(myApplication!=null) {
-							myApplication.startup();
-							if(studioMode) {
-								((SwingTipiContext)myApplication.getCurrentContext()).injectApplication(def, arrrgs, "/init/tipi/sandbox");
-							}
-					}
-
-				} catch (Exception e) {
-					e.printStackTrace();
 				}
-
-			}
-		});
+			});
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
 		
 		return myApplication;
 	}
@@ -137,18 +156,6 @@ public class MainApplication {
 		openStream.close();
 		return result;
 	}
-
-
-
-//	public static Map<String, String> parseProperties(String gsargs) {
-//		StringTokenizer st = new StringTokenizer(gsargs);
-//		ArrayList<String> a = new ArrayList<String>();
-//		while (st.hasMoreTokens()) {
-//			String next = st.nextToken();
-//			a.add(next);
-//		}
-//		return parseProperties(a);
-//	}
 
 
 }
