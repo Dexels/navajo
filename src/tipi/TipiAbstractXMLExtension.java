@@ -7,9 +7,6 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.osgi.framework.BundleActivator;
-import org.osgi.framework.BundleContext;
-
 import navajo.ExtensionDefinition;
 
 import com.dexels.navajo.tipi.TipiContext;
@@ -17,7 +14,7 @@ import com.dexels.navajo.tipi.tipixml.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 import com.dexels.navajo.tipi.tipixml.XMLParseException;
 
-public class TipiAbstractXMLExtension extends AbstractTipiExtension implements TipiExtension, ExtensionDefinition,BundleActivator {
+public class TipiAbstractXMLExtension extends AbstractTipiExtension implements TipiExtension, ExtensionDefinition {
 
 	private final List<String> thirdPartyList = new ArrayList<String>();
 	private final List<String> includes = new ArrayList<String>();
@@ -28,11 +25,14 @@ public class TipiAbstractXMLExtension extends AbstractTipiExtension implements T
 	private String description = null;
 	private String project = null;
 	
+	private ClassLoader extensionClassLoader;
+	
 	public TipiAbstractXMLExtension() {
 	}
 	
 	protected void loadXML()  {
 		String xmlName = getClass().getSimpleName()+".xml";
+		System.err.println("Loading classdef: "+xmlName);
 		loadXML(xmlName);
 	}
 	
@@ -145,14 +145,11 @@ public class TipiAbstractXMLExtension extends AbstractTipiExtension implements T
 	}
 
 	@Override
-	public void start(BundleContext bc) throws Exception {
-		System.err.println("Unimplemented TIPI bundle start!");
+	public ClassLoader getExtensionClassloader() {
+		return extensionClassLoader;
 	}
 
-	@Override
-	public void stop(BundleContext bc) throws Exception {
-		System.err.println("Unimplemented TIPI bundle stop!");
-		
+	public void setExtensionClassloader(ClassLoader extensionClassLoader) {
+		this.extensionClassLoader = extensionClassLoader;
 	}
-
 }

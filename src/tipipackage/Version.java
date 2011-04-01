@@ -24,21 +24,28 @@
  */
 package tipipackage;
 
+import tipipackage.Version;
+
+import org.osgi.framework.BundleContext;
+
+
 public class Version extends dexels.Version {
 
-	public static final int MAJOR = 7;
-	public static final int MINOR = 6;
-	public static final int PATCHLEVEL = 0;
-	public static final String VENDOR = "Dexels";
-	public static final String PRODUCTNAME = "Navajo Tipi";
 
 	// Included packages.
-	String[] includes = { "navajoclient.Version", "navajo.Version", "navajodocument.Version" };
-
 	public Version() {
-		setReleaseDate(RELEASEDATE);
-		addIncludes(includes);
+//		addIncludes(includes);
+	}
+	
+	public void start(BundleContext bc) throws Exception {
+		System.err.println("Starting core tipi");
+		super.start(bc);
 	}
 
+
+	public static void main(String [] args) {
+		Version v = new Version();
+		System.err.println(v.versionString());
+	}
 	
 }

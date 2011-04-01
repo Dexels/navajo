@@ -2,6 +2,8 @@ package com.dexels.navajo.tipi.internal;
 
 import java.util.*;
 
+import navajo.ExtensionDefinition;
+
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.actions.*;
 import com.dexels.navajo.tipi.tipixml.*;
@@ -25,9 +27,9 @@ public class TipiActionManager {
 	public TipiActionManager() {
 	}
 
-	public void addAction(XMLElement actionDef, TipiContext context) throws TipiException {
+	public void addAction(XMLElement actionDef, TipiContext context, ExtensionDefinition ed) throws TipiException {
 		TipiActionFactory taf = new TipiActionFactory();
-		taf.load(actionDef, context);
+		taf.load(actionDef, context,ed);
 		actionFactoryMap.put(actionDef.getStringAttribute("name"), taf);
 	}
 

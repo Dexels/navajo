@@ -25,7 +25,7 @@ public class AbstractTipiTest extends TestCase {
 	}	
 
 	public void setContext(String definition, File tipiDir, String[] properties) throws Exception {
-		myContext = (HeadlessTipiContext) HeadlessApplicationInstance.initialize(definition,tipiDir,properties);
+		myContext = (HeadlessTipiContext) HeadlessApplicationInstance.initialize(definition,tipiDir,properties,null);
 			System.err.println("Resource loader set: "+tipiDir.getAbsolutePath());
 	}
 	

@@ -13,6 +13,7 @@ public class TipiCoreExtension extends TipiAbstractXMLExtension  {
 		// Do nothing
 
 	}
+	
 
 
 public static void main(String[] args) {

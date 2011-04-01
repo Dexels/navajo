@@ -11,7 +11,10 @@ import java.util.NoSuchElementException;
 import java.util.PropertyResourceBundle;
 import java.util.StringTokenizer;
 
+import navajo.ExtensionDefinition;
+
 import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.TipiException;
 
 public abstract class BaseTipiApplicationInstance implements TipiApplicationInstance {
 
@@ -25,8 +28,10 @@ public abstract class BaseTipiApplicationInstance implements TipiApplicationInst
 		this.currentContext = currentContext;
 	}
 
-	public final void startup() throws IOException {
-		setCurrentContext(createContext());
+	public final void startup() throws IOException, TipiException {
+		TipiContext context = createContext();
+		setCurrentContext(context);
+//		context.switchToDefinition(getDefinition());
 	}
 
 	
@@ -35,7 +40,7 @@ public abstract class BaseTipiApplicationInstance implements TipiApplicationInst
 	}
 
 	
-	public final void reboot() throws IOException {
+	public final void reboot() throws IOException, TipiException {
 		TipiContext tc =  currentContext;
 		startup();
 		dispose(tc);

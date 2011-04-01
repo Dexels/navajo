@@ -2,6 +2,8 @@ package com.dexels.navajo.tipi.actions;
 
 import java.util.*;
 
+import navajo.ExtensionDefinition;
+
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.tipi.tipixml.*;
@@ -35,7 +37,7 @@ public class TipiActionFactory {
 	// throw new java.lang.UnsupportedOperationException("Method
 	// getActionParameter() not yet implemented.");
 	// }
-	public void load(XMLElement actionDef, TipiContext context) throws TipiException {
+	public void load(XMLElement actionDef, TipiContext context, ExtensionDefinition ed) throws TipiException {
 		if (actionDef == null || !actionDef.getName().equals("tipiaction")) {
 			throw new IllegalArgumentException("Can not instantiate tipi action.");
 		}
@@ -43,14 +45,18 @@ public class TipiActionFactory {
 		myName = (String) actionDef.getAttribute("name");
 		String clas = (String) actionDef.getAttribute("class");
 		String fullDef = pack + "." + clas;
-		context.setSplashInfo("Adding action: " + fullDef);
+		context.setSplashInfo("Adding action: " + fullDef+" for extension: "+ed);
 		// System.err.println("Adding action: " + fullDef);
 		// context.setSplashInfo("Adding action: " + fullDef);
+		ClassLoader extensionLoader = ed.getExtensionClassloader();
+		if(extensionLoader==null) {
+			extensionLoader = getClass().getClassLoader();
+		}
 		try {
-			myActionClass = Class.forName(fullDef, true, getClass().getClassLoader());
+			myActionClass = Class.forName(fullDef, true, extensionLoader);
 		} catch (ClassNotFoundException ex) {
 			System.err.println("Trouble loading action class: " + fullDef);
-			throw new TipiException("Trouble loading action class: " + fullDef);
+			throw new TipiException("Trouble loading action class: " + fullDef, ex);
 		}
 		myContext = context;
 		List<XMLElement> children = actionDef.getChildren();

@@ -156,6 +156,7 @@ public abstract class TipiContext {
 
 	public TipiContext(TipiApplicationInstance myApplication, TipiContext parent) {
 //		this();
+		System.err.println("Creating CONTEXT");
 		myParentContext = parent;
 		this.myApplication = myApplication;
 		initializeExtensions(ServiceRegistry.lookupProviders(TipiExtension.class));
@@ -172,12 +173,13 @@ public abstract class TipiContext {
 		if (myThreadPool == null) {
 			myThreadPool = new TipiThreadPool(this, getPoolSize());
 		}
-
-//		if (coreExtensionList.isEmpty()) {
-//			System.err.println("Beware: no extensions. Running without jars? Entering fake mode...");
-//			fakeJars = true;
-	//		fakeExtensions();
-//		}
+		System.err.println("Core extensions: "+coreExtensionList.size());
+		System.err.println("Main extensions: "+mainExtensionList.size());
+		if (coreExtensionList.isEmpty()) {
+			System.err.println("Beware: no extensions. Running without jars? Entering fake mode...");
+			fakeJars = true;
+		}
+//		fakeExtensions();
 //		System.err.println("Warning: Fake mode forced!");
 //			fakeExtensions();
 		
@@ -263,6 +265,7 @@ public abstract class TipiContext {
 		int count = 0;
 		while (tt.hasNext()) {
 			TipiExtension element = tt.next();
+			System.err.println("Extension: "+element.getId());
 			String[] incls = element.getIncludes();
 			for (String string : incls) {
 			}
@@ -418,9 +421,9 @@ public abstract class TipiContext {
 	// myTopLevel = tl;
 	// }
 
-	public void parseFile(File location, boolean studioMode, String dir) throws IOException, XMLParseException, TipiException {
-		parseStream(new FileInputStream(location), dir, studioMode);
-	}
+//	public void parseFile(File location, boolean studioMode, String dir) throws IOException, XMLParseException, TipiException {
+//		parseStream(new FileInputStream(location), dir, studioMode);
+//	}
 
 	// public void parseURL(URL location, boolean studioMode) throws
 	// IOException, XMLParseException, TipiException {
@@ -432,9 +435,11 @@ public abstract class TipiContext {
 	// }
 	// }
 
-	public void parseURL(URL location, boolean studioMode, String definitionName) throws IOException, XMLParseException, TipiException {
-		parseStream(location.openStream(), location.toString(), definitionName, studioMode);
-	}
+//	public void parseURL(URL location, boolean studioMode, String definitionName) throws IOException, XMLParseException, TipiException {
+//		parseStream(location.openStream(), location.toString(), definitionName, studioMode);
+//		switchToDefinition(definitionName);
+//
+//	}
 
 	public Map<String, XMLElement> getTipiClassDefMap() {
 		return getClassManager().getClassMap();
@@ -590,11 +595,11 @@ public abstract class TipiContext {
 		}
 	}
 
-	public void parseStream(InputStream in, String sourceName, boolean studioMode) throws IOException, XMLParseException, TipiException {
-		parseStream(in, sourceName, sourceName, studioMode);
+	public void parseStream(InputStream in, String sourceName, boolean studioMode, ExtensionDefinition ed) throws IOException, XMLParseException, TipiException {
+		parseStream(in, sourceName, sourceName, studioMode,ed);
 	}
 
-	public void parseStream(InputStream in) throws IOException, XMLParseException, TipiException {
+	public void parseStream(InputStream in, ExtensionDefinition ed) throws IOException, XMLParseException, TipiException {
 		XMLElement doc = new CaseSensitiveXMLElement();
 		long stamp = System.currentTimeMillis();
 		
@@ -604,10 +609,10 @@ public abstract class TipiContext {
 		stamp = System.currentTimeMillis() - stamp;
 		
 		isr.close();
-		parseXMLElement(doc);
+		parseXMLElement(doc,ed);
 	}
 
-	public void parseStream(InputStream in, String sourceName, String definitionName, boolean studioMode) throws IOException,
+	public void parseStream(InputStream in, String sourceName, String definitionName, boolean studioMode, ExtensionDefinition ed) throws IOException,
 			XMLParseException, TipiException {
 		XMLElement doc = new CaseSensitiveXMLElement();
 		InputStreamReader isr = new InputStreamReader(in, "UTF-8");
@@ -619,30 +624,15 @@ public abstract class TipiContext {
 		parseTime+= stamp;
 		
 		isr.close();
-		parseXMLElement(doc);
+		parseXMLElement(doc,ed);
 
-		switchToDefinition(definitionName);
-		if (errorHandler != null) {
-			try {
-				System.err.println("Error handlers are deprecated remove 'error' attribute!");
-				// Class<TipiErrorHandler> c = (Class<TipiErrorHandler>)
-				// getTipiClass(errorHandler);
-				// if (c != null) {
-				// eHandler = c.newInstance();
-				// eHandler.setContext(this);
-				// eHandler.initResource();
-				// }
-			} catch (Exception e) {
-				System.err.println("Error instantiating TipiErrorHandler!");
-				e.printStackTrace();
-			}
-		}
+
 	}
 
-	protected void parseXMLElement(XMLElement elm) throws TipiException {
+	protected void parseXMLElement(XMLElement elm, ExtensionDefinition ed) throws TipiException {
 		String elmName = elm.getName();
 		// TODO Remove this hard dependency on NavajoFunctions, or promote the StandardFunctionDefinitions class to Navajo core
-		ExtensionDefinition ed = new StandardFunctionDefinitions();
+//		ExtensionDefinition ed = new StandardFunctionDefinitions();
 		String extension = elm.getStringAttribute("extension");
 		setSplashInfo("Loading user interface");
 		if (!elmName.equals("tid") && !elmName.equals("functiondef")) {
@@ -682,19 +672,19 @@ public abstract class TipiContext {
 		}
 
 		if (childName.equals("tipiclass")) {
-			getClassManager().addTipiClassDefinition(child);
+			getClassManager().addTipiClassDefinition(child,ed);
 			if(extension!=null) {
 				child.setAttribute("extension", extension);
 			}
 			return;
 		}
 		if (childName.equals("tipiaction")) {
-			addActionDefinition(child);
+			addActionDefinition(child,ed);
 			return;
 		}
 		if (childName.equals("tipi-include")) {
 			// if (!"__ignore".equals(dir)) {
-			parseLibrary(child);
+			parseLibrary(child,ed);
 			// }
 			return;
 		}
@@ -926,7 +916,7 @@ public abstract class TipiContext {
 //		parseLibrary(location, false, null, false);
 //	}
 
-	private final void parseLibrary(XMLElement lib) throws TipiException {
+	private final void parseLibrary(XMLElement lib,ExtensionDefinition tipiExtension) throws TipiException {
 
 		String location = (String) lib.getAttribute("location");
 		String lazy = (String) lib.getAttribute("lazy");
@@ -940,7 +930,7 @@ public abstract class TipiContext {
 			System.err.println("Not reparsing lazy: " + componentName);
 			return;
 		}
-		parseLibrary(location, true, componentName, isLazy,null);
+		parseLibrary(location, true, componentName, isLazy,tipiExtension);
 	}
 
 	public void processRequiredIncludes(TipiExtension tipiExtension) {
@@ -957,7 +947,7 @@ public abstract class TipiContext {
 		
 		for (String element : includes) {
 			try {
-				parseLibrary(element, false, element, false,tipiExtension.getProjectName().toLowerCase());
+				parseLibrary(element, false, element, false,tipiExtension);
 			} catch (UnsupportedClassVersionError e) {
 				throw new UnsupportedClassVersionError("Error parsing extension: " + element + " wrong java version! " + e.getCause()
 						+ " - " + e.getMessage());
@@ -966,7 +956,12 @@ public abstract class TipiContext {
 		
 	}
 
-	private final void parseLibrary(String location, boolean addToInclude, String definition, boolean isLazy, String extension) {
+	private final void parseLibrary(String location, boolean addToInclude, String definition, boolean isLazy, ExtensionDefinition tipiExtension) {
+		String extension = null;
+		
+		if(tipiExtension!=null) {
+			extension = tipiExtension.getProjectName().toLowerCase();
+		}
 		if (isLazy) {
 			if (definition == null) {
 				throw new IllegalArgumentException("Lazy include, but no definition found. Location: " + location);
@@ -1002,7 +997,7 @@ public abstract class TipiContext {
 				if(extension!=null) {
 					doc.setAttribute("extension", extension);
 				}
-				parseXMLElement(doc);
+				parseXMLElement(doc,tipiExtension);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1139,6 +1134,17 @@ public abstract class TipiContext {
 			throw new TipiException("Problems reloading TipiComponent class: " + definition.toString());
 		}
 	}
+	
+	/**
+	 * TODO Support parentExtension: call setParentExtension when creating a component, that way
+	 * we know who its instantiating extension is.
+	 * @param instance
+	 * @param event
+	 * @param t
+	 * @param parent
+	 * @return
+	 * @throws TipiException
+	 */
 
 	public TipiComponent instantiateComponent(XMLElement instance, TipiEvent event, TipiInstantiateTipi t,TipiComponent parent) throws TipiException {
 		String name = (String) instance.getAttribute("name");
@@ -1350,8 +1356,8 @@ public abstract class TipiContext {
 //		return tipiClassDefMap.keySet().iterator();
 //	}
 
-	public void addActionDefinition(XMLElement xe) throws TipiException {
-		myActionManager.addAction(xe, this);
+	public void addActionDefinition(XMLElement xe, ExtensionDefinition ed) throws TipiException {
+		myActionManager.addAction(xe, this,ed);
 	}
 
 	public void addTipiInstance(String service, TipiDataComponent instance) {
@@ -1510,10 +1516,12 @@ public abstract class TipiContext {
 
 	public void switchToDefinition(String name) throws TipiException {
 		clearTopScreen();
+		System.err.println("Switching!!!");
 		setSplashInfo("Starting application: " + name);
 		XMLElement componentDefinition = null; //
 		componentDefinition = getComponentDefinition(name);
 		// fallback to init:
+		System.err.println("COM: "+componentDefinition);
 		if (componentDefinition == null) {
 			componentDefinition = getComponentDefinition("init");
 		}
@@ -1523,6 +1531,7 @@ public abstract class TipiContext {
 		}
 		componentDefinition.setAttribute("id", "init");
 		TipiComponent tc = instantiateComponent(componentDefinition, null, null,null);
+		System.err.println("Created component: "+tc);
 		tc.commitToUi();
 
 		try {
@@ -1545,6 +1554,15 @@ public abstract class TipiContext {
 		}
 		setSplashVisible(false);
 		fireTipiStructureChanged(tc);
+		
+		if (errorHandler != null) {
+			try {
+				System.err.println("Error handlers are deprecated remove 'error' attribute!");
+			} catch (Exception e) {
+				System.err.println("Error instantiating TipiErrorHandler!");
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public abstract void setSplashVisible(boolean b);

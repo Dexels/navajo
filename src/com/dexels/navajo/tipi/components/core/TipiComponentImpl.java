@@ -7,6 +7,8 @@ import java.util.*;
 
 import javax.sound.midi.SysexMessage;
 
+import tipi.TipiExtension;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.core.adapter.BaseAdapter;
@@ -74,6 +76,16 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 	private final Map<String, PropertyChangeListener> myDataListeners = new HashMap<String, PropertyChangeListener>();
 	private String extension;
 	private String componentType;
+
+	private TipiExtension myParentExtension;
+	
+	public TipiExtension getParentExtension() {
+		return myParentExtension;
+	}
+
+	public void setParentExtension(TipiExtension myParentExtension) {
+		this.myParentExtension = myParentExtension;
+	}
 
 	public String getComponentType() {
 		return componentType;

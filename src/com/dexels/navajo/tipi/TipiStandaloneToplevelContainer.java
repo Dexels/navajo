@@ -8,12 +8,14 @@ package com.dexels.navajo.tipi;
 
 import java.io.*;
 
+import navajo.ExtensionDefinition;
+
 import com.dexels.navajo.document.*;
 
 public interface TipiStandaloneToplevelContainer {
 	// public void setResourceBaseDirectory(File f);
 
-	public void loadDefinition(String tipiPath, String definitionName, String resourceBaseDirectory) throws IOException, TipiException;
+	public void loadDefinition(String tipiPath, String definitionName, String resourceBaseDirectory, ExtensionDefinition ed) throws IOException, TipiException;
 
 	public void loadClassPathLib(String location);
 

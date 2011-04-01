@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import navajo.ExtensionDefinition;
+
 import com.dexels.navajo.functions.util.FunctionDefinition;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
@@ -16,9 +18,7 @@ public final class ClassManager {
 	protected final Map<String, XMLElement> tipiClassDefMap = new HashMap<String, XMLElement>();
 	private final TipiContext myContext;
 	protected final Map<String, List<String>> unresolvedExtensions = new HashMap<String, List<String>>();
-
 	private final Map<String, XMLElement> interfaceMap = new HashMap<String, XMLElement>();
-
 	private final Map<String, FunctionDefinition> functionDefinitionMap = new HashMap<String, FunctionDefinition>();
 
 	
@@ -60,7 +60,7 @@ public final class ClassManager {
 		tipiClassDefMap.clear();
 	}
 
-	public final void addTipiClassDefinition(XMLElement xe) {
+	public final void addTipiClassDefinition(XMLElement xe, ExtensionDefinition ed) {
 		String name = (String) xe.getAttribute("name");
 		String clas = (String) xe.getAttribute("class");
 		if(clas==null) {

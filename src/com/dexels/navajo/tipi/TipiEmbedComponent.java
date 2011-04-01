@@ -10,6 +10,8 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import navajo.ExtensionDefinition;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.tipi.components.core.*;
@@ -37,7 +39,7 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 				ZipResourceLoader zr = new ZipResourceLoader(b);
 				stc.getContext().setTipiResourceLoader(new TmlResourceLoader(zr, "tipi/"));
 				stc.getContext().setGenericResourceLoader(new TmlResourceLoader(zr, "resource/"));
-				parseLocation("init.xml");
+				parseLocation("init.xml", getParentExtension());
 				switchToDefinition("init");
 				Message m = n.getMessage(NAVAJO_MESSAGE_PATH);
 				List<Message> al = m.getAllMessages();
@@ -123,7 +125,7 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 				}
 				Operand oo = compMeth.getEvaluatedParameter("location", event);
 				String loc = (String) oo.value;
-				parseLocation(loc);
+				parseLocation(loc, getParentExtension());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -203,10 +205,10 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 		});
 	}
 
-	private void parseLocation(String loc) throws IOException, TipiException {
+	private void parseLocation(String loc, ExtensionDefinition ed) throws IOException, TipiException {
 		System.err.println("Parsing: " + loc);
 		InputStream tipiResourceStream = stc.getContext().getTipiResourceStream(loc);
-		stc.getContext().parseStream(tipiResourceStream);
+		stc.getContext().parseStream(tipiResourceStream, ed);
 	}
 
 	private void loadNavajo(Navajo n, String method) {
