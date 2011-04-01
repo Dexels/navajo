@@ -32,7 +32,6 @@ import java.util.Hashtable;
  * @author Justin Couch
  * @version $Revision$
  *
- * Torsten R�mer, 2003-05-22: Made some slight modifications so that this
  * useful class works for me as well   
  */
 public class ImageGenerator implements ImageConsumer
@@ -193,8 +192,6 @@ public class ImageGenerator implements ImageConsumer
      * Fetch the image. This image is not necessarily completely rendered
      * although we do try to guarantee it.
      *
-     * Torsten R�mer: Changed to public
-     *
      * @return The image that has been created for the current input
      */
     public BufferedImage getImage()
@@ -222,7 +219,6 @@ public class ImageGenerator implements ImageConsumer
      * the necessary information is given, and once created, will not overwrite
      * the current image.
      *
-     * Torsten R�mer: Use another constructor of BufferedImage. With the one used
      * here the resulting jpg was extremely blueish.
      */
     private void createImage()
