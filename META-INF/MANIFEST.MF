@@ -1,9 +1,9 @@
 Bundle-Name: Navajo Swing Tipi Client
-Bundle-SymbolicName: com.dexels.navajo.tipi.swing.client
+Bundle-SymbolicName: com.dexels.navajo.tipi.swingclient
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: navajoasyncclient.Version
+Bundle-Version: 1.0.2.qualifier
+Bundle-Activator: tipiswingclient.Version
 Export-Package: com.dexels.navajo.dnd,
  com.dexels.navajo.swingclient.ui,
  com.dexels.navajo.tipi.swingclient,

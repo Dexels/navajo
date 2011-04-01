@@ -47,7 +47,7 @@ public class Version extends dexels.Version {
 	String [] includes = {"navajodocument.Version"};
 
 	public Version() {
-		addIncludes(includes);
+//		addIncludes(includes);
 		setReleaseDate("2006-06-29");
 	}
 
