@@ -3,10 +3,13 @@
    <feature url="features/com.dexels.navajo.core.feature_1.0.3.jar" id="com.dexels.navajo.core.feature" version="1.0.3">
       <category name="Navajo"/>
    </feature>
-   <feature url="features/com.dexels.navajo.server.feature_1.0.1.jar" id="com.dexels.navajo.server.feature" version="1.0.1">
+   <feature url="features/com.dexels.navajo.dev_1.0.2.jar" id="com.dexels.navajo.dev" version="1.0.2">
       <category name="Navajo"/>
    </feature>
-   <feature url="features/com.dexels.navajo.dev_1.0.2.jar" id="com.dexels.navajo.dev" version="1.0.2">
+   <feature url="features/com.dexels.navajo.server.feature_1.0.3.jar" id="com.dexels.navajo.server.feature" version="1.0.3">
+      <category name="Navajo"/>
+   </feature>
+   <feature url="features/com.dexels.navajo.server.enterprise.feature_1.0.1.jar" id="com.dexels.navajo.server.enterprise.feature" version="1.0.1">
       <category name="Navajo"/>
    </feature>
    <category-def name="Navajo" label="Navajo"/>
