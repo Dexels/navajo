@@ -1,0 +1,29 @@
+Bundle-Name: Navajo Tipi Charting
+Bundle-SymbolicName: com.dexels.navajo.tipi.charting
+Bundle-Description: A Hello World bundle
+Bundle-ManifestVersion: 2
+Bundle-Version: 1.0.1
+Export-Package: com.dexels.navajo.dnd,
+ com.dexels.navajo.swingclient.ui,
+ com.dexels.navajo.tipi.swingclient,
+ com.dexels.navajo.tipi.swingclient.components,
+ com.dexels.navajo.tipi.swingclient.components.calendar,
+ com.dexels.navajo.tipi.swingclient.components.remotecombobox,
+ com.dexels.navajo.tipi.swingclient.components.sort,
+ tipiswingclient
+Bundle-Vendor: Dexels
+Require-Bundle: com.dexels.navajo.document,
+ com.dexels.navajo.client,
+ com.dexels.navajo.tipi,
+ com.dexels.navajo.core,
+ com.dexels.navajo.tipi.swingclient,
+ com.dexels.navajo.tipi.swing.deps,
+ com.dexels.navajo.version
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: lib/gnujaxp.jar,
+ lib/iText-2.1.5.jar,
+ lib/jcommon-1.0.16.jar,
+ lib/jfreechart-1.0.13-experimental.jar,
+ lib/jfreechart-1.0.13-swt.jar,
+ lib/swtgraphics2d.jar,
+ lib/jfreechart-1.0.13.jar
