@@ -2,7 +2,7 @@ Bundle-Name: Navajo Adapters
 Bundle-SymbolicName: com.dexels.navajo.adapters
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.1
+Bundle-Version: 1.0.2
 Bundle-Activator: navajoadapters.Version
 Export-Package: com.dexels.navajo.adapter,
  com.dexels.navajo.adapter.clieop,
@@ -18,6 +18,10 @@ Export-Package: com.dexels.navajo.adapter,
  com.dexels.navajo.adapter.xmlmap,
  com.dexels.navajo.datasource,
  com.dexels.navajo.functions,
+ javax.mail,
+ javax.mail.event,
+ javax.mail.internet,
+ javax.mail.search,
  navajoadapters,
  org.dexels.grus
 Bundle-Vendor: Dexels
