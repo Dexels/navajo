@@ -7,7 +7,6 @@
 package com.sun.tools.apache.ant.pack200;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.*;
 import org.apache.tools.ant.taskdefs.*;
 import java.util.*;
 import java.io.*;
