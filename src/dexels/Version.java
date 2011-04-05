@@ -2,14 +2,13 @@ package dexels;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
 
 public class Version extends BaseVersion implements BundleActivator {
 
 	protected BundleContext context = null;
 	public void start(BundleContext bc) throws Exception {
 		context = bc;
-		ServiceReference a = null;// bc.getServiceReference(HttpService.class.getName());
+//		ServiceReference a = null;// bc.getServiceReference(HttpService.class.getName());
 		System.err.println("Bundle started: "+bc.getBundle().toString());
 	}
 
