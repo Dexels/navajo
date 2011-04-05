@@ -19,7 +19,6 @@ public class TipiAbstractXMLExtension extends AbstractTipiExtension implements T
 	private final List<String> thirdPartyList = new ArrayList<String>();
 	private final List<String> includes = new ArrayList<String>();
 	private final List<String> requires = new ArrayList<String>();
-//	private final List<String> jars = new ArrayList<String>();
 	private String id = null;
 	private String requiresMain = null;
 	private String description = null;
@@ -89,11 +88,6 @@ public class TipiAbstractXMLExtension extends AbstractTipiExtension implements T
 		return thirdPartyList;
 	}
 
-	@Deprecated
-	public final String getDeploymentDescriptor() {
-		return null;
-	}
-
 	public final String getDescription() {
 		return description;
 	}
@@ -151,5 +145,11 @@ public class TipiAbstractXMLExtension extends AbstractTipiExtension implements T
 
 	public void setExtensionClassloader(ClassLoader extensionClassLoader) {
 		this.extensionClassLoader = extensionClassLoader;
+	}
+
+	@Override
+	public String getDeploymentDescriptor() {
+		
+		return null;
 	}
 }
