@@ -1107,6 +1107,7 @@ private Object waitForResult = new Object();
 		  }
 		  // Clear request id.
 		  h.setRequestId(null);
+		  h.setHeaderAttribute("parentaccessid", access.accessID);
 
 		  inDoc = DispatcherFactory.getInstance().handle(outDoc, true);
 		  continueAfterRun();
