@@ -4,5 +4,10 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/NavajoSwingTipi"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="lib" path="lib/substance5_1.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Navajo"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/NavajoClient"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/NavajoDocument"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/NavajoTipi"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TipiSwingClient"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
