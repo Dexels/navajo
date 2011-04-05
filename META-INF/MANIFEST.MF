@@ -1,0 +1,29 @@
+Bundle-Name: Navajo Tipi Svg Library (Batik)
+Bundle-SymbolicName: com.dexels.navajo.tipi.svg
+Bundle-Description: A Hello World bundle
+Bundle-ManifestVersion: 2
+Bundle-Version: 1.0.2.qualifier
+Bundle-Vendor: Dexels
+Import-Package: org.osgi.framework;version="1.5.0"
+Require-Bundle: com.dexels.navajo.tipi;bundle-version="1.0.43",
+ com.dexels.navajo.tipi.swing;bundle-version="1.0.41",
+ com.dexels.navajo.document;bundle-version="1.0.3",
+ com.dexels.navajo.version;bundle-version="1.0.6"
+Bundle-ClassPath: lib/batik-swing.jar,
+ lib/batik-anim.jar,
+ lib/batik-awt-util.jar,
+ lib/batik-bridge.jar,
+ lib/batik-css.jar,
+ lib/batik-dom.jar,
+ lib/batik-ext.jar,
+ lib/batik-gui-util.jar,
+ lib/batik-gvt.jar,
+ lib/batik-parser.jar,
+ lib/batik-script.jar,
+ lib/batik-svg-dom.jar,
+ lib/batik-util.jar,
+ lib/batik-xml.jar,
+ lib/js.jar,
+ lib/log4j-1_2_4.jar,
+ lib/xml-apis-ext.jar,
+ lib/xml-apis.jar
