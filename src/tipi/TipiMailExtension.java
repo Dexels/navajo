@@ -1,6 +1,7 @@
 package tipi;
 
 import java.util.*;
+import navajo.*;
 
 import com.dexels.navajo.tipi.*;
 

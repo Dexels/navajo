@@ -1,0 +1,14 @@
+Bundle-Name: Navajo Tipi Mail extension
+Bundle-SymbolicName: com.dexels.navajo.tipi.mail
+Bundle-Description: A Hello World bundle
+Bundle-ManifestVersion: 2
+Bundle-Version: 1.0.15
+Bundle-Vendor: Dexels
+Require-Bundle: com.dexels.navajo.document,
+ com.dexels.navajo.tipi,
+ com.dexels.navajo.version;bundle-version="1.0.6",
+ com.dexels.navajo.client;bundle-version="3.0.2",
+ com.dexels.navajo.core;bundle-version="2.9.2"
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .,
+ lib/mail.jar
