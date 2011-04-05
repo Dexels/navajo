@@ -147,9 +147,5 @@ public class TipiAbstractXMLExtension extends AbstractTipiExtension implements T
 		this.extensionClassLoader = extensionClassLoader;
 	}
 
-	@Override
-	public String getDeploymentDescriptor() {
-		
-		return null;
-	}
+
 }
