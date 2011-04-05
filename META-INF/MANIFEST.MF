@@ -6,6 +6,7 @@ Bundle-Version: 1.0.41.qualifier
 Bundle-Activator: navajoswingtipi.Version
 Export-Package: com.dexels.navajo.dnd,
  com.dexels.navajo.swingclient.ui,
+ com.dexels.navajo.tipi.components.swingimpl.parsers,
  com.dexels.navajo.tipi.swingclient,
  com.dexels.navajo.tipi.swingclient.components,
  com.dexels.navajo.tipi.swingclient.components.calendar,
@@ -21,3 +22,7 @@ Require-Bundle: com.dexels.navajo.document,
  com.dexels.navajo.tipi.swing.deps,
  com.dexels.navajo.version
 Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: classes/,
+ lib/AnimatedTransitions.jar,
+ lib/TimingFramework.jar,
+ .
