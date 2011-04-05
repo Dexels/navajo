@@ -5,6 +5,8 @@ import java.security.AccessControlException;
 
 import com.dexels.navajo.parser.FunctionInterface;
 
+import dexels.NavajoBundleManager;
+
 public class FunctionFactoryFactory {
 
 	private static volatile FunctionFactoryInterface instance = null;
@@ -34,6 +36,11 @@ public class FunctionFactoryFactory {
 				// can't read property. Whatever, func remains null.
 			}
 
+			if(NavajoBundleManager.getInstance()!=null) {
+				System.err.println("OSGi environment detected!");
+				func = "com.dexels.navajo.functions.util.OsgiFunctionFactory";
+			}
+			
 			if ( func != null ) {
 				try {
 					Class c = Class.forName(func);
@@ -64,45 +71,6 @@ public class FunctionFactoryFactory {
 		fi.insertOperand("SELECT * FROM AAP WHERE noot = ?");
 		fi.insertOperand("PIPO");
 		fi.evaluateWithTypeChecking();
-		
-//		long start = System.currentTimeMillis();
-		
-//		for (int i = 0; i < 10000; i++) {
-//			//Abs fi = new Abs(); 
-//			FunctionInterface fi = fii.getInstance(cl, "Abs");
-//			fi.reset();
-//			fi.insertOperand(new Integer(30));
-//			Object o = fi.evaluateWithTypeChecking();
-//		}
-//		System.err.println("With type checking, took: " +  ( System.currentTimeMillis() - start ) + " millis.");
-//		
-//		FunctionInterface fi = fii.getInstance(cl, "FormatDate");
-//		fi.reset();
-//		fi.insertOperand(new Float(-40.0));
-//		try {
-//		Object o = fi.evaluateWithTypeChecking();
-//		System.err.println(o);
-//		} catch (Exception e) {
-//			System.err.println(e.getMessage());
-//		}
-//		
-//		FunctionInterface fi2 = fii.getInstance(cl, "Abs");
-//		fi2.reset();
-//		fi2.insertOperand(new String("aap"));
-//		try {
-//		Object o2 = fi2.evaluateWithTypeChecking();
-//		} catch (Exception e) {
-//			System.err.println(e.getMessage());
-//		}
-//		FunctionInterface fi = fii.getInstance(cl, "FormatStringList");
-//		fi.reset();
-//		ArrayList aap = new ArrayList();aap.add("noot");aap.add("mies");aap.add("vuur");
-//		fi.insertOperand(aap);
-//		//fi.insertOperand("*");
-//		//fi.insertOperand(new Binary(new FileInputStream("/home/arjen/@")));
-//		//fi.insertOperand(new SimpleDateFormat("dd-mm-yyyy").parse("18-10-1999"));
-//		Object o = fi.evaluateWithTypeChecking();
-//		System.err.println(o);
 		
 	}
 }

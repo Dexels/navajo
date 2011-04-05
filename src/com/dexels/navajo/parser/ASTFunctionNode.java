@@ -4,6 +4,9 @@ package com.dexels.navajo.parser;
 /**
  * $Id$
  * $Log$
+ * Revision 1.29  2011/04/05 15:48:28  frank
+ * Added OSGi based function solution
+ *
  * Revision 1.28  2009/02/04 15:36:21  arjen
  * Alway evaluate function with type checking enabled.
  *
@@ -106,14 +109,15 @@ package com.dexels.navajo.parser;
  *
  */
 
-import com.dexels.navajo.server.Dispatcher;
-import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.NavajoConfig;
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.FunctionFactoryInterface;
+import com.dexels.navajo.server.DispatcherFactory;
 
-@SuppressWarnings("unchecked")
+import dexels.NavajoBundleManager;
+
 public final class ASTFunctionNode extends SimpleNode {
 
 	String functionName;
@@ -141,14 +145,16 @@ public final class ASTFunctionNode extends SimpleNode {
 			cl = DispatcherFactory.getInstance().getNavajoConfig().getBetaClassLoader();
 		}
 
+		NavajoBundleManager.getInstance();
+		
 		FunctionFactoryInterface fff = FunctionFactoryFactory.getInstance();
-		FunctionInterface  f = (FunctionInterface) fff.getInstance(cl, functionName);
+		FunctionInterface  f = fff.getInstance(cl, functionName);
 		f.inMessage = doc;
 		f.currentMessage = parentMsg;
 		f.reset();
 
 		for (int i = 0; i < args; i++) {
-			Object a = (Object) jjtGetChild(i).interpret();
+			Object a = jjtGetChild(i).interpret();
 			f.insertOperand(a);
 		}
 

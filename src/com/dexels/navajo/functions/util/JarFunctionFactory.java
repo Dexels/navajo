@@ -24,40 +24,60 @@ public class JarFunctionFactory extends FunctionFactoryInterface {
 			InputStream fis = fd.getDefinitionAsStream();
 			xml.parseFromStream(fis);
 			fis.close();
-			if (!( xml.getName().equals("functiondef") || xml.getName().equals("tid"))) {
-				return;
-			}
+//			if (!( xml.getName().equals("functiondef") || xml.getName().equals("tid"))) {
+//				return;
+//			}
 			
 			
 			Vector<XMLElement> children = xml.getChildren();
 			for (int i = 0; i < children.size(); i++) {
 				// Get object, usage and description.
-				XMLElement function = children.get(i);
-				Vector<XMLElement> def = function.getChildren();
-				String name = (String) function.getAttribute("name");
-				String object = (String) function.getAttribute("class");
-				String description = null;
-				String inputParams = null;
-				String resultParam = null;
-				for (int j = 0; j < def.size(); j++) {
-					
-					if ( def.get(j).getName().equals("description")) {
-						description =  def.get(j).getContent();
-					}
-					if ( def.get(j).getName().equals("input")) {
-						inputParams =  def.get(j).getContent();
-					}
-					if ( def.get(j).getName().equals("result")) {
-						resultParam =  def.get(j).getContent();
-					}
+				XMLElement element = children.get(i);
+				
+				if(element.getName().equals("function")) {
+					parseFunction(fuds, fd, element);
 				}
-				if ( name != null ) {
-					fuds.put(name, new FunctionDefinition(object, description, inputParams, resultParam,fd));
+				if(element.getName().equals("map")) {
+					parseAdapters(fuds, fd, element);
 				}
+
 			}
 			
 		} catch (Exception e) {
 			throw new RuntimeException(e);
+		}
+	}
+
+	public void parseAdapters(HashMap<String, FunctionDefinition> fuds,
+			ExtensionDefinition fd, XMLElement element) {
+//		System.err.println("PARSING: "+element);
+		String name = element.getElementByTagName("tagname").getContent();
+		String className = element.getElementByTagName("object").getContent();
+			adapterConfig.put(name, className);
+	}
+	
+	public void parseFunction(HashMap<String, FunctionDefinition> fuds,
+			ExtensionDefinition fd, XMLElement element) {
+		Vector<XMLElement> def = element.getChildren();
+		String name = (String) element.getAttribute("name");
+		String object = (String) element.getAttribute("class");
+		String description = null;
+		String inputParams = null;
+		String resultParam = null;
+		for (int j = 0; j < def.size(); j++) {
+			// TODO Check tag name?
+			if ( def.get(j).getName().equals("description")) {
+				description =  def.get(j).getContent();
+			}
+			if ( def.get(j).getName().equals("input")) {
+				inputParams =  def.get(j).getContent();
+			}
+			if ( def.get(j).getName().equals("result")) {
+				resultParam =  def.get(j).getContent();
+			}
+		}
+		if ( name != null ) {
+			fuds.put(name, new FunctionDefinition(object, description, inputParams, resultParam,fd));
 		}
 	}
 	

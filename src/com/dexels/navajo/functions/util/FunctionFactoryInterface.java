@@ -1,6 +1,7 @@
 package com.dexels.navajo.functions.util;
 
 import java.util.HashMap;
+import java.util.Set;
 
 import navajo.ExtensionDefinition;
 
@@ -10,7 +11,8 @@ import com.dexels.navajo.server.UserException;
 
 public abstract class FunctionFactoryInterface {
 
-	private HashMap<String, FunctionDefinition> config = null;
+	private HashMap<String, FunctionDefinition> functionConfig = null;
+	protected final HashMap<String, String> adapterConfig = new HashMap<String, String>();
 	private static Object semaphore = new Object();
 	private boolean initializing = false;
 	
@@ -33,7 +35,7 @@ public abstract class FunctionFactoryInterface {
 	 * @throws UserException
 	 */
 	
-	private final FunctionDefinition getDef(String name) throws TMLExpressionException {
+	public final FunctionDefinition getDef(String name) throws TMLExpressionException {
 		
 		while ( initializing ) {
 			// Wait a bit.
@@ -47,34 +49,53 @@ public abstract class FunctionFactoryInterface {
 			}
 		}
 		
-		FunctionDefinition fd = config.get(name);
+		FunctionDefinition fd = functionConfig.get(name);
 		if ( fd != null ) {
 			return fd;
 		} else {
-			// Try with fresh config.
-//			synchronized (semaphore) {
-//				setInitializing(true);
-//				System.err.println("Reread function config, maybe new definition found: " + name);
-//				init();
-//				setInitializing(false);
-//				semaphore.notify();
-//			}
-//			fd = config.get(name);
-//			if ( fd != null ) {
-//				return fd;
-//			} else {
-				throw new TMLExpressionException("Could not find function definition: " + name);
-//			}
+			throw new TMLExpressionException("Could not find function definition: " + name);
 		}
 	}
-		
-	public final FunctionInterface getInstance(final ClassLoader cl, final String functionName) throws TMLExpressionException {
-		
+	
+	public final String getAdapterClass(String name)  {
+		return adapterConfig.get(name);
+	}
+
+	public final Object getAdapterInstance(String name, ClassLoader cl)  {
+		try {
+			Class c = Class.forName(getAdapterClass(name),true,cl);
+			return c.newInstance();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	
+	public Set<String> getFunctionNames() {
+		return functionConfig.keySet();
+	}
+	public void clearFunctionNames() {
+		functionConfig.clear();
+	}
+
+	public Set<String> getAdapterNames() {
+		return adapterConfig.keySet();
+	}
+	public void clearAdapterNames() {
+		adapterConfig.clear();
+	}
+
+	public FunctionInterface getInstance(final ClassLoader cl, final String functionName) throws TMLExpressionException {
 		try {
 			FunctionDefinition fd = getDef(functionName);
 			Class myClass = Class.forName(fd.getObject(), true, cl);
-//			Class<? extends FunctionInterface> myClass = fd.getFunctionClass();
-			// TODO INSTANTIATE FUNCTION USING FACTORY, SETTING TYPE SIGNATURE IN FACTORY!!!
 			FunctionInterface fi =(FunctionInterface) myClass.newInstance();
 			if (!fi.isInitialized()) {
 				fi.setTypes(fd.getInputParams(), fd.getResultParam());
@@ -104,11 +125,11 @@ public abstract class FunctionFactoryInterface {
 	}
 
 	public HashMap<String, FunctionDefinition> getConfig() {
-		return config;
+		return functionConfig;
 	}
 
 	public void setConfig(HashMap<String, FunctionDefinition> config) {
-		this.config = config;
+		this.functionConfig = config;
 	}
 
 	public boolean isInitializing() {
@@ -118,5 +139,21 @@ public abstract class FunctionFactoryInterface {
 	public void setInitializing(boolean initializing) {
 		this.initializing = initializing;
 	}
+	public FunctionInterface instantiateFunctionClass(FunctionDefinition fd, ClassLoader classLoader) {
+		try {
+			Class<? extends FunctionInterface> clz = (Class<? extends FunctionInterface>) Class.forName(fd.getObject(),true,classLoader);
+			return clz.newInstance();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+//	
 	
 }
