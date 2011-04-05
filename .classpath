@@ -4,5 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NavajoSwingTipi"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NavajoSwingEditor"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/NavajoTipi"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
