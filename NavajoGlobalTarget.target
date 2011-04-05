@@ -10,27 +10,20 @@
 <repository location="http://spiritus.dexels.nl:41766/eclipse/platform"/>
 </location>
 <location includeAllPlatforms="true" includeMode="slicer" type="InstallableUnit">
-<unit id="org.eclipse.birt.feature.group" version="2.6.2.r262_v20101008-9iF7A9JGHMBCRz-R8tbxRel8kQrI"/>
-<repository location="http://spiritus.dexels.nl:41766/eclipse/birt"/>
-</location>
-<location includeAllPlatforms="true" includeMode="slicer" type="InstallableUnit">
 <unit id="org.eclipse.jdt.feature.group" version="3.6.2.r362_v20101117-0800-7z8XFW6FLFlmjJcvz03jyeFBLS_F"/>
 <repository location="http://spiritus.dexels.nl:41766/eclipse/jdt"/>
 </location>
 <location includeAllPlatforms="true" includeMode="slicer" type="InstallableUnit">
-<unit id="org.eclipse.jetty.bundles.f.feature.group" version="8.0.0.M2"/>
-<repository location="http://download.eclipse.org/jetty/updates/jetty-bundles-8.x/8.0.0.M2/"/>
+<unit id="org.eclipse.jetty.bundles.f.feature.group" version="7.3.1.v20110307"/>
+<repository location="http://download.eclipse.org/jetty/updates/jetty-bundles-7.x/"/>
 </location>
 <location includeAllPlatforms="true" includeMode="slicer" type="InstallableUnit">
-<unit id="org.eclipse.osgi" version="3.6.2.R36x_v20110210"/>
+<unit id="org.eclipse.birt.feature.group" version="2.6.2.r262_v20101008-9iF7A9JGHMBCRz-R8tbxRel8kQrI"/>
+<repository location="http://spiritus.dexels.nl:41766/eclipse/birt"/>
 </location>
 <location includeAllPlatforms="true" includeMode="slicer" type="InstallableUnit">
 <unit id="com.dexels.navajo.core.feature.feature.group" version="1.0.3"/>
 <repository location="http://spiritus.dexels.nl:41766/p2"/>
-</location>
-<location includeAllPlatforms="true" includeMode="slicer" type="InstallableUnit">
-<unit id="org.eclipse.jetty.bundles.f.feature.group" version="7.3.1.v20110307"/>
-<repository location="http://download.eclipse.org/jetty/updates/jetty-bundles-7.x/"/>
 </location>
 </locations>
 </target>
