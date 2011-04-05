@@ -24,5 +24,13 @@
 <location includeAllPlatforms="true" includeMode="slicer" type="InstallableUnit">
 <unit id="org.eclipse.osgi" version="3.6.2.R36x_v20110210"/>
 </location>
+<location includeAllPlatforms="true" includeMode="slicer" type="InstallableUnit">
+<unit id="com.dexels.navajo.core.feature.feature.group" version="1.0.3"/>
+<repository location="http://spiritus.dexels.nl:41766/p2"/>
+</location>
+<location includeAllPlatforms="true" includeMode="slicer" type="InstallableUnit">
+<unit id="org.eclipse.jetty.bundles.f.feature.group" version="7.3.1.v20110307"/>
+<repository location="http://download.eclipse.org/jetty/updates/jetty-bundles-7.x/"/>
+</location>
 </locations>
 </target>
