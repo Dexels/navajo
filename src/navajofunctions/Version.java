@@ -24,7 +24,18 @@
  */
 package navajofunctions;
 
+import java.util.Properties;
+
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+
+
+import com.dexels.navajo.functions.StandardFunctionDefinitions;
+import com.dexels.navajo.functions.util.FunctionDefinition;
+import com.dexels.navajo.functions.util.FunctionFactoryFactory;
+import com.dexels.navajo.functions.util.FunctionFactoryInterface;
+import com.dexels.navajo.functions.util.JarFunctionFactory;
+import com.dexels.navajo.parser.FunctionInterface;
 
 /**
  * VERSION HISTORY
@@ -39,7 +50,7 @@ import org.osgi.framework.BundleContext;
  * 
  * 1.1.2. Fix in ToClockTime
  */
-public class Version extends com.dexels.navajo.version.Version {
+public class Version extends dexels.Version {
 
 
 	//Included packages.
@@ -54,23 +65,23 @@ public class Version extends com.dexels.navajo.version.Version {
 	@Override
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
-//		FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
-//		fi.init();
-//		fi.clearFunctionNames();
-//		fi.injectExtension(new StandardFunctionDefinitions());
-////		System.err.println("Detected functions: "+fi.getFunctionNames());
-//		for (String functionName : fi.getFunctionNames()) {
-//			FunctionDefinition fd = fi.getDef(functionName);
-//			 Properties props = new Properties();
-//			 System.err.println("Registering: "+functionName);
-//			 props.put("functionName", functionName);
-//			 props.put("functionDefinition", fd);
-//			context.registerService(FunctionInterface.class.getName(), fi.instantiateFunctionClass(fd,getClass().getClassLoader()), props);
-//		}
-//		
-////	        props.put("Language", "English");
-////	        context.registerService(
-////	            DictionaryService.class.getName(), new DictionaryImpl(), props);
+		FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
+		fi.init();
+		fi.clearFunctionNames();
+		fi.injectExtension(new StandardFunctionDefinitions());
+//		System.err.println("Detected functions: "+fi.getFunctionNames());
+		for (String functionName : fi.getFunctionNames()) {
+			FunctionDefinition fd = fi.getDef(functionName);
+			 Properties props = new Properties();
+			 System.err.println("Registering: "+functionName);
+			 props.put("functionName", functionName);
+			 props.put("functionDefinition", fd);
+			context.registerService(FunctionInterface.class.getName(), fi.instantiateFunctionClass(fd,getClass().getClassLoader()), props);
+		}
+		
+//	        props.put("Language", "English");
+//	        context.registerService(
+//	            DictionaryService.class.getName(), new DictionaryImpl(), props);
 	}
 
 
@@ -83,4 +94,13 @@ public class Version extends com.dexels.navajo.version.Version {
 
 
 
+	public static void main(String [] args) {
+		Version v = new Version();
+		System.err.println(v.toString());
+		dexels.Version [] d = v.getIncludePackages();
+		for (int i = 0; i < d.length; i++) {
+			System.err.println("\t"+d[i].toString());
+		}
+//		FunctionFactoryInterface. getInstance();
+	}
 }
