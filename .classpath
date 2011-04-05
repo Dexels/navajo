@@ -5,5 +5,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/NavajoSwingTipi"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NavajoSwingEditor"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NavajoTipi"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
