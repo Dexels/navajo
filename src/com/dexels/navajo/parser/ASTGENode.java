@@ -40,10 +40,10 @@ public final class ASTGENode extends SimpleNode {
 
     public final Object interpret() throws TMLExpressionException {
 
-        Object a = (Object) jjtGetChild(0).interpret();
+        Object a = jjtGetChild(0).interpret();
 
 
-        Object b = (Object) jjtGetChild(1).interpret();
+        Object b = jjtGetChild(1).interpret();
 
 
         if (a instanceof java.util.ArrayList) { // Compare all elements in the list.
