@@ -2,12 +2,8 @@
 <classpath>
 	<classpathentry exported="true" kind="lib" path="lib/p200ant.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/catalina-ant.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/TipiAntTask.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jsch-0.1.39.jar"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/TipiBuildLibrary"/>
-	<classpathentry kind="lib" path="/TipiServer/WebContent/WEB-INF/lib/cos.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
