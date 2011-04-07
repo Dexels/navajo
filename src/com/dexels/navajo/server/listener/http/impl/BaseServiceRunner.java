@@ -54,10 +54,19 @@ public abstract  class BaseServiceRunner extends BaseInMemoryRequest implements 
    protected final String sendEncoding;
    protected final Object cert;
 //   private InputStream is;
-	private boolean committed;
+	private boolean committed = false;
 	 private boolean isAborted = false;
 
 	 protected long connectedAt = -1;
+	 
+	public long getConnectedAt() {
+		return connectedAt;
+	}
+
+	public long getStartedAt() {
+		return startedAt;
+	}
+
 	protected long scheduledAt = -1;
 	protected long startedAt = -1;
 	private TmlScheduler tmlScheduler;
