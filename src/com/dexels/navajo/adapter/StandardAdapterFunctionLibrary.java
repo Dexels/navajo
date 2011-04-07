@@ -19,17 +19,14 @@ public class StandardAdapterFunctionLibrary implements ExtensionDefinition {
 	}
 
 	public String getConnectorId() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public List<String> getDependingProjectUrls() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public String getDeploymentDescriptor() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -42,46 +39,37 @@ public class StandardAdapterFunctionLibrary implements ExtensionDefinition {
 	}
 
 	public String[] getIncludes() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public List<String> getLibraryJars() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public List<String> getMainJars() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public String getProjectName() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public List<String> getRequiredExtensions() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public boolean isMainImplementation() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public String requiresMainImplementation() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	public ClassLoader getExtensionClassloader() {
-		// TODO Auto-generated method stub
 		return extensionClassLoader;
 	}
 
 	public void setExtensionClassloader(ClassLoader extClassloader) {
-		// TODO Auto-generated method stub
 		extensionClassLoader =  extClassloader;
 	}
 
