@@ -28,6 +28,8 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.functions.util.FunctionFactoryFactory;
+import com.dexels.navajo.functions.util.FunctionFactoryInterface;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
@@ -440,9 +442,10 @@ public abstract class ScriptEnvironment implements Serializable {
 
 	public Object createMappable(String className, Navajo input, Navajo output, Message currentOutMessage) throws ClassNotFoundException {
 		try {
-
 	    	ClassLoader cl = DispatcherFactory.getInstance().getNavajoConfig().getClassloader();
-	    	Class<?> mclass = Class.forName(className, true, cl);
+	    	// Note, the ClassLoader is not actually used by OSGi
+	    	Class<?> mclass = FunctionFactoryFactory.getInstance().getAdapterClass(className,cl);
+//	    	Class<?> mclass = Class.forName(className, true, cl);
 			Object obj = mclass.newInstance();
 			return obj;
 		} catch (InstantiationException e) {
