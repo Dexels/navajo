@@ -91,7 +91,9 @@ public class ClieOp2Map implements Mappable {
 				if ( posts[i].paymentCharacteristicRecord != null ) {
 					p.print(padClieOpLine(posts[i].getPaymentCharacteristicRecord())+"\r\n");
 				}
-				p.print(padClieOpLine(posts[i].getDescriptionRecord())+"\r\n");
+				if ( posts[i].descriptionRecord != null ) {
+					p.print(padClieOpLine(posts[i].getDescriptionRecord())+"\r\n");
+				}
 				p.print(padClieOpLine(posts[i].getBenaficiaryNameRecord())+"\r\n");
 			} else {
 				p.print(padClieOpLine(posts[i].getTransactionRecord())+"\r\n");
@@ -99,7 +101,9 @@ public class ClieOp2Map implements Mappable {
 				if ( posts[i].paymentCharacteristicRecord != null ) {
 					p.print(padClieOpLine(posts[i].getPaymentCharacteristicRecord())+"\r\n");
 				}
-				p.print(padClieOpLine(posts[i].getDescriptionRecord())+"\r\n");
+				if ( posts[i].descriptionRecord != null ) {
+					p.print(padClieOpLine(posts[i].getDescriptionRecord())+"\r\n");
+				}
 			}
 		}
 		p.print(padClieOpLine(getBatchCloseRecord())+"\r\n");
@@ -243,8 +247,17 @@ public class ClieOp2Map implements Mappable {
             post.setIsPayment(true);
             post.setLastName("de Clown");
             post.setPaymentDescription("hoelahoepen");
-            post.setPaymentCharacteristicRecord("harrienak");
+            post.setPaymentCharacteristicRecord("12345678901234");
             posts[i] = post;
+            try {
+				posts[i].store();
+			} catch (MappableException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (UserException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
           }
           map.setPosts(posts);
           try {

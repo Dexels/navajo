@@ -32,21 +32,21 @@ public class ClieOp2Post implements Mappable {
 			if(isPayment){
 				if(checkBankAccount(accountNumberReceiver)){
 					transactionRecord = getTransactionRecord();
-					paymentCharacteristicRecord = getPaymentCharacteristicRecord();
+					//paymentCharacteristicRecord = getPaymentCharacteristicRecord();
 					//descriptionRecord = getDescriptionRecord();
 					benaficiaryNameRecord = getBenaficiaryNameRecord();
 				}
 			} else {
 				if(checkBankAccount(accountNumberPayer)){
 					transactionRecord = getTransactionRecord();
-					paymentCharacteristicRecord = getPaymentCharacteristicRecord();
+					//paymentCharacteristicRecord = getPaymentCharacteristicRecord();
 					//descriptionRecord = getDescriptionRecord();
 					benaficiaryNameRecord = getBenaficiaryNameRecord();
 				}
 			}
 		} else {
 			transactionRecord = getTransactionRecord();
-			paymentCharacteristicRecord = getPaymentCharacteristicRecord();
+			//paymentCharacteristicRecord = getPaymentCharacteristicRecord();
 			//descriptionRecord = getDescriptionRecord();
 			benaficiaryNameRecord = getPayerNameRecord();
 		}
@@ -77,8 +77,10 @@ public class ClieOp2Post implements Mappable {
 	}
 	
 	public String getPaymentCharacteristicRecord(){
-		paymentCharacteristicRecord = "0150A"+paymentCharacteristicRecord;
-		return paymentCharacteristicRecord;
+		if ( paymentCharacteristicRecord != null && paymentCharacteristicRecord.length() > 16) {
+			paymentCharacteristicRecord = paymentCharacteristicRecord.substring(0, 16);
+		}
+		return "0150A"+paymentCharacteristicRecord;
 	}
 	
 	public String getDescriptionRecord(){
