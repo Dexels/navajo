@@ -262,7 +262,7 @@ private static Object semaphore = new Object();
     			refresh, new Boolean(ac), false);
     }
     catch (ClassNotFoundException e) {
-      throw new UserException( -1, e.toString());
+      throw new UserException( -1, e.toString(),e);
     }
 
     String logOutput = "Created datasource: " + dataSourceName + "\n" +
