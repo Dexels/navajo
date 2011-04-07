@@ -32,15 +32,7 @@ public class NavajoContextListener implements ServletContextListener {
 	
 	@Override
 	public void contextDestroyed(ServletContextEvent sc) {
-		dexels.Version.shutdownNavajoExtension("navajo");
-		dexels.Version.shutdownNavajoExtension("navajodocument");
-		dexels.Version.shutdownNavajoExtension("navajoclient");
-		dexels.Version.shutdownNavajoExtension("navajoadapters");
-		dexels.Version.shutdownNavajoExtension("navajolisteners");
-		dexels.Version.shutdownNavajoExtension("navajoenterpriseadapters");
-		dexels.Version.shutdownNavajoExtension("navajoenterprise");
-		dexels.Version.shutdownNavajoExtension("navajoenterpriselisteners");
-		dexels.Version.shutdownNavajoExtension("navajoqueuemanager");
+		destroyContext(sc.getServletContext());
 	}
 
 	@Override
@@ -62,6 +54,19 @@ public class NavajoContextListener implements ServletContextListener {
 		initializeContext(sc,null);
 	}
 
+	public static void destroyContext(ServletContext sc) {
+		dexels.Version.shutdownNavajoExtension("navajo");
+		dexels.Version.shutdownNavajoExtension("navajodocument");
+		dexels.Version.shutdownNavajoExtension("navajoclient");
+		dexels.Version.shutdownNavajoExtension("navajoadapters");
+		dexels.Version.shutdownNavajoExtension("navajolisteners");
+		dexels.Version.shutdownNavajoExtension("navajoenterpriseadapters");
+		dexels.Version.shutdownNavajoExtension("navajoenterprise");
+		dexels.Version.shutdownNavajoExtension("navajoenterpriselisteners");
+		dexels.Version.shutdownNavajoExtension("navajoqueuemanager");
+
+	}
+	
 	/**
 	 * Initialized a Navajo context.
 	 * @param sc
