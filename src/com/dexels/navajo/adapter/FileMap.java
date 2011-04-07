@@ -61,6 +61,7 @@ public class FileMap implements Mappable {
 		return baos.toByteArray();
 	}
 
+	// TODO Should be streaming, easy rewrite
 	public Binary getContent() throws UserException {
 		try {
 			Binary b = new Binary(getBytes());
