@@ -168,6 +168,7 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 	   */
 	  private final void execute() throws IOException, ServletException {
 		  startedAt = System.currentTimeMillis();
+		  setCommitted(true);
 //		  BufferedReader r = null;
 		  try {
 			  Navajo in = getInputNavajo();
