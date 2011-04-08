@@ -57,21 +57,34 @@ public abstract class FunctionFactoryInterface {
 		}
 	}
 	
-	public final String getAdapterClass(String name)  {
+	public  String getAdapterClass(String name)  {
 		return adapterConfig.get(name);
 	}
 
 	public final Object getAdapterInstance(String name, ClassLoader cl)  {
 		try {
-			Class c = Class.forName(getAdapterClass(name),true,cl);
+			Class<?> c = getAdapterClass(name, cl);
+			if(c==null) {
+				// No adapter found, going old skool:
+				c = Class.forName(name, true, cl);
+			}
 			return c.newInstance();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// old skool class fail, unreachable in injected OSGi mode
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public  Class<?> getAdapterClass(String name, ClassLoader cl) {
+		try {
+			Class<?> c = Class.forName(getAdapterClass(name),true,cl);
+			return c;
+		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 		return null;
