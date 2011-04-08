@@ -53,6 +53,10 @@ public class MailMap implements MailMapInterface, Mappable, HasDependentResource
     public String text = "";
     public String contentType = "text/plain";
 
+    public String smtpUser = "";
+    public String smtpPass = "";
+
+    
     public AttachementMap [] multipleAttachments = null;
     public AttachementMap attachment = null;
     public boolean ignoreFailures = false;
@@ -74,6 +78,8 @@ public class MailMap implements MailMapInterface, Mappable, HasDependentResource
 	
 	private Navajo myNavajo;
 	private Access myAccess;
+
+	private boolean useEncryption = false;
 	
     public MailMap() {}
 
@@ -129,11 +135,7 @@ public class MailMap implements MailMapInterface, Mappable, HasDependentResource
 
     			result = text;
 
-    			Properties props = System.getProperties();
-
-    			props.put("mail.smtp.host", mailServer);
-    			Session session = Session.getInstance(props);
-    			
+    			Session session = createSession();
     			javax.mail.Message msg = new MimeMessage(session);
 
     			//System.err.println("Created mime message: " + msg);
@@ -242,11 +244,51 @@ public class MailMap implements MailMapInterface, Mappable, HasDependentResource
     			}else{
     				AuditLog.log("MailMap", e.getMessage(), Level.SEVERE, myAccess.accessID);
     				//e.printStackTrace();
-    				throw new UserException( -1, e.getMessage());
+    				throw new UserException( -1, e.getMessage(),e);
     			}
     		}    	
     }
 
+	private Session createSession() {
+		Properties props = System.getProperties();
+		props.put("mail.smtp.host", mailServer);
+		
+		if(smtpUser!=null && !"".equals(smtpUser)) {
+			// Use auth
+		     props.put("mail.smtp.auth", "true");
+		     props.put("mail.debug", "true");
+		     if(useEncryption ) {
+		    	 System.err.println("Using encrypt + auth. ");
+		    	 props.put("mail.smtp.port", "465");
+		    	 props.put("mail.smtp.socketFactory.port", "465");
+		    	 props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+		    	 props.put("mail.smtp.socketFactory.fallback", "false");
+		     }
+		     props.list(System.err);
+		     Authenticator auth = new SMTPAuthenticator();
+		     Session session = Session.getDefaultInstance(props, auth);
+				return session;
+		} else {
+		     props.list(System.err);
+			Session session = Session.getInstance(props);
+			return session;
+		}
+	}
+
+	/**
+	* SimpleAuthenticator is used to do simple authentication
+	* when the SMTP server requires it.
+	*/
+	private class SMTPAuthenticator extends javax.mail.Authenticator
+	{
+
+	    public PasswordAuthentication getPasswordAuthentication()
+	    {
+	        return new PasswordAuthentication(smtpUser, smtpPass);
+	    }
+	}
+
+	
     public String getFailure(){
       return failure;
     }
@@ -255,7 +297,23 @@ public class MailMap implements MailMapInterface, Mappable, HasDependentResource
       ignoreFailures = b;
     }
 
-    public void setRecipients(String s) {
+    public String getSmtpUser() {
+		return smtpUser;
+	}
+
+	public void setSmtpUser(String smtpUser) {
+		this.smtpUser = smtpUser;
+	}
+
+	public String getSmtpPass() {
+		return smtpPass;
+	}
+
+	public void setSmtpPass(String smtpPass) {
+		this.smtpPass = smtpPass;
+	}
+
+	public void setRecipients(String s) {
 
         java.util.StringTokenizer tok = new StringTokenizer(s, ",");
 
@@ -348,7 +406,15 @@ public class MailMap implements MailMapInterface, Mappable, HasDependentResource
 	  return null;
   }
 
-  public Binary getResponse() {
+  public boolean isUseEncryption() {
+	return useEncryption;
+}
+
+public void setUseEncryption(boolean useEncryption) {
+	this.useEncryption = useEncryption;
+}
+
+public Binary getResponse() {
 	  return null;
   }
 
