@@ -74,6 +74,9 @@ public class TmlContinuationServlet extends HttpServlet implements SchedulableSe
 				return;
 			}
 
+			// Resolve remote address first. To prevent random IP addresses when trying to
+			// resolve it at a later time (???).
+			String remoteAddress = req.getRemoteAddr();
 			TmlContinuationRunner tr = new TmlContinuationRunner(req,inputDoc, resp,  sendEncoding, recvEncoding, certObject);
 			req.setAttribute("tmlRunner", tr);
 		
