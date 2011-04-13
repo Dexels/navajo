@@ -219,6 +219,7 @@ public class NavajoServerContext {
 			if(rootPath.equals(currentPath)) {
 				return "";
 			}
+			currentPath = currentPath.replace('\\', '/');
 			String relativePath = currentPath.substring(rootPath.length()+1, currentPath.length())+"/";
 			return relativePath;
 			
