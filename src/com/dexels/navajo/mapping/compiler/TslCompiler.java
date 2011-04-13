@@ -2549,7 +2549,7 @@ public String mapNode(int ident, Element n) throws Exception {
 	    	// Check for metascript.
 	    	if ( MapMetaData.isMetaScript(script, scriptPath, packagePath) ) {
 	    		scriptType = "navascript";
-	    		MapMetaData mmd = MapMetaData.getInstance(configPath);
+	    		MapMetaData mmd = MapMetaData.getInstance();
 	    		InputStream metais = DispatcherFactory.getInstance().getNavajoConfig().getScript(packagePath+"/"+script);
 
 	    		String intermed = mmd.parse(fullScriptPath,metais);
