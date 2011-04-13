@@ -50,7 +50,7 @@ import com.dexels.navajo.parser.FunctionInterface;
  * 
  * 1.1.2. Fix in ToClockTime
  */
-public class Version extends dexels.Version {
+public class Version extends com.dexels.navajo.version.Version {
 
 
 	//Included packages.
@@ -68,10 +68,11 @@ public class Version extends dexels.Version {
 		FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
 		fi.init();
 		fi.clearFunctionNames();
-		fi.injectExtension(new StandardFunctionDefinitions());
+		StandardFunctionDefinitions extensionDef = new StandardFunctionDefinitions();
+		fi.injectExtension(extensionDef);
 //		System.err.println("Detected functions: "+fi.getFunctionNames());
-		for (String functionName : fi.getFunctionNames()) {
-			FunctionDefinition fd = fi.getDef(functionName);
+		for (String functionName : fi.getFunctionNames(extensionDef)) {
+			FunctionDefinition fd = fi.getDef(extensionDef,functionName);
 			 Properties props = new Properties();
 			 System.err.println("Registering: "+functionName);
 			 props.put("functionName", functionName);
@@ -97,7 +98,7 @@ public class Version extends dexels.Version {
 	public static void main(String [] args) {
 		Version v = new Version();
 		System.err.println(v.toString());
-		dexels.Version [] d = v.getIncludePackages();
+		com.dexels.navajo.version.Version [] d = v.getIncludePackages();
 		for (int i = 0; i < d.length; i++) {
 			System.err.println("\t"+d[i].toString());
 		}
