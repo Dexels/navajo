@@ -17,6 +17,7 @@ import javax.servlet.ServletContextListener;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.DispatcherInterface;
+import com.dexels.navajo.version.Version;
 
 public class NavajoContextListener implements ServletContextListener {
 
@@ -55,15 +56,15 @@ public class NavajoContextListener implements ServletContextListener {
 	}
 
 	public static void destroyContext(ServletContext sc) {
-		dexels.Version.shutdownNavajoExtension("navajo");
-		dexels.Version.shutdownNavajoExtension("navajodocument");
-		dexels.Version.shutdownNavajoExtension("navajoclient");
-		dexels.Version.shutdownNavajoExtension("navajoadapters");
-		dexels.Version.shutdownNavajoExtension("navajolisteners");
-		dexels.Version.shutdownNavajoExtension("navajoenterpriseadapters");
-		dexels.Version.shutdownNavajoExtension("navajoenterprise");
-		dexels.Version.shutdownNavajoExtension("navajoenterpriselisteners");
-		dexels.Version.shutdownNavajoExtension("navajoqueuemanager");
+		Version.shutdownNavajoExtension("navajo");
+		Version.shutdownNavajoExtension("navajodocument");
+		Version.shutdownNavajoExtension("navajoclient");
+		Version.shutdownNavajoExtension("navajoadapters");
+		Version.shutdownNavajoExtension("navajolisteners");
+		Version.shutdownNavajoExtension("navajoenterpriseadapters");
+		Version.shutdownNavajoExtension("navajoenterprise");
+		Version.shutdownNavajoExtension("navajoenterpriselisteners");
+		Version.shutdownNavajoExtension("navajoqueuemanager");
 
 	}
 	
