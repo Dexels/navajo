@@ -1,6 +1,7 @@
 package com.dexels.navajo.functions.util;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import navajo.ExtensionDefinition;
@@ -11,8 +12,13 @@ import com.dexels.navajo.server.UserException;
 
 public abstract class FunctionFactoryInterface {
 
-	private HashMap<String, FunctionDefinition> functionConfig = null;
-	protected final HashMap<String, String> adapterConfig = new HashMap<String, String>();
+	private Map<String, FunctionDefinition> defaultConfig = null;
+//	protected final HashMap<String, String> defaultAdapterConfig = new HashMap<String, String>();
+
+	protected final Map<ExtensionDefinition,Map<String, String>> adapterConfig = new HashMap<ExtensionDefinition,Map<String, String>>();
+	
+	protected final Map<ExtensionDefinition,Map<String,FunctionDefinition>> functionConfig = new HashMap<ExtensionDefinition,Map<String,FunctionDefinition>>();
+
 	private static Object semaphore = new Object();
 	private boolean initializing = false;
 	
@@ -20,13 +26,29 @@ public abstract class FunctionFactoryInterface {
 
 	
 	public void injectExtension(ExtensionDefinition fd) {
-		readDefinitionFile(getConfig(), fd);
+		readDefinitionFile(getConfig(fd), fd);
 
 	}
 
 	
-	public abstract void readDefinitionFile(HashMap<String, FunctionDefinition> fuds, ExtensionDefinition fd) ;
+	public abstract void readDefinitionFile(Map<String, FunctionDefinition> fuds, ExtensionDefinition fd) ;
 
+	
+	public final FunctionDefinition getDef(String name) throws TMLExpressionException {
+		if(defaultConfig!=null) {
+			FunctionDefinition fd = defaultConfig.get(name);
+			if(fd!=null) {
+				return fd;
+			}
+		}
+		for (Map<String, FunctionDefinition> elt : functionConfig.values()) {
+			FunctionDefinition fd = elt.get(name);
+			if(fd!=null) {
+				return fd;
+			}
+		}
+		return null;
+	}
 	/**
 	 * Fetch a functiondefinition. If not found first time, try re-init (maybe new definition), if still not found throw Exception.
 	 * 
@@ -35,7 +57,7 @@ public abstract class FunctionFactoryInterface {
 	 * @throws UserException
 	 */
 	
-	public final FunctionDefinition getDef(String name) throws TMLExpressionException {
+	public final FunctionDefinition getDef(ExtensionDefinition ed, String name) throws TMLExpressionException {
 		
 		while ( initializing ) {
 			// Wait a bit.
@@ -49,7 +71,7 @@ public abstract class FunctionFactoryInterface {
 			}
 		}
 		
-		FunctionDefinition fd = functionConfig.get(name);
+		FunctionDefinition fd = functionConfig.get(ed).get(name);
 		if ( fd != null ) {
 			return fd;
 		} else {
@@ -57,15 +79,16 @@ public abstract class FunctionFactoryInterface {
 		}
 	}
 	
-	public  String getAdapterClass(String name)  {
-		return adapterConfig.get(name);
+	public  String getAdapterClass(String name, ExtensionDefinition ed)  {
+		return getAdapterConfig(ed).get(name);
 	}
 
 	public final Object getAdapterInstance(String name, ClassLoader cl)  {
 		try {
+			// Old skool, adapter should have been supplied by an OSGi service
 			Class<?> c = getAdapterClass(name, cl);
 			if(c==null) {
-				// No adapter found, going old skool:
+				// No adapter found, going older skool:
 				c = Class.forName(name, true, cl);
 			}
 			return c.newInstance();
@@ -80,9 +103,26 @@ public abstract class FunctionFactoryInterface {
 		return null;
 	}
 
-	public  Class<?> getAdapterClass(String name, ClassLoader cl) {
+	public  Class<?> getAdapterClass(String name, ClassLoader cl) throws ClassNotFoundException {
+		for (ExtensionDefinition elt : adapterConfig.keySet()) {
+			String ss = getAdapterClass(name, elt);
+			if(ss!=null) {
+				try {
+					Class<?> c = Class.forName(getAdapterClass(name,elt),true,cl);
+					return c;
+				} catch (ClassNotFoundException e) {
+					// not found in this extensiondefinition.
+				}				
+			}
+		}
+		// no class found, throw.
+		throw new ClassNotFoundException("Adapter named: "+name+" not found.");
+		
+		}
+
+	public  Class<?> getAdapterClass(String name, ClassLoader cl, ExtensionDefinition ed) {
 		try {
-			Class<?> c = Class.forName(getAdapterClass(name),true,cl);
+			Class<?> c = Class.forName(getAdapterClass(name,ed),true,cl);
 			return c;
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -91,21 +131,22 @@ public abstract class FunctionFactoryInterface {
 	}
 
 	
-	public Set<String> getFunctionNames() {
-		return functionConfig.keySet();
+	public Set<String> getFunctionNames(ExtensionDefinition ed) {
+		return functionConfig.get(ed).keySet();
 	}
 	public void clearFunctionNames() {
 		functionConfig.clear();
 	}
 
-	public Set<String> getAdapterNames() {
-		return adapterConfig.keySet();
+	public Set<String> getAdapterNames(ExtensionDefinition ed) {
+		return getAdapterConfig(ed).keySet();
 	}
 	public void clearAdapterNames() {
 		adapterConfig.clear();
 	}
 
 	public FunctionInterface getInstance(final ClassLoader cl, final String functionName) throws TMLExpressionException {
+		// This method is only used for non osgi resolution
 		try {
 			FunctionDefinition fd = getDef(functionName);
 			Class myClass = Class.forName(fd.getObject(), true, cl);
@@ -137,14 +178,43 @@ public abstract class FunctionFactoryInterface {
 		}
 	}
 
-	public HashMap<String, FunctionDefinition> getConfig() {
-		return functionConfig;
+	public Map<String, FunctionDefinition> getConfig(ExtensionDefinition ed) {
+		Map<String, FunctionDefinition> map = functionConfig.get(ed);
+		if(map!=null) {
+			return map;
+		}
+		map = new HashMap<String, FunctionDefinition>();
+		functionConfig.put(ed,map);
+		return map;
+	}
+	
+	public Map<String, String> getAdapterConfig(ExtensionDefinition ed) {
+		Map<String, String> map = adapterConfig.get(ed);
+		if(map!=null) {
+			return map;
+		}
+		map = new HashMap<String, String>();
+		adapterConfig.put(ed,map);
+		return map;
+	}
+	
+
+	public void setAdapterConfig(ExtensionDefinition ed, Map<String, String> config) {
+		this.adapterConfig.put(ed, config);
 	}
 
-	public void setConfig(HashMap<String, FunctionDefinition> config) {
-		this.functionConfig = config;
+	public void setConfig(ExtensionDefinition ed, Map<String, FunctionDefinition> config) {
+		this.functionConfig.put(ed, config);
 	}
 
+	public Map<String, FunctionDefinition> getDefaultConfig() {
+		return defaultConfig;
+	}
+
+	public void setDefaultConfig(Map<String, FunctionDefinition> config) {
+		this.defaultConfig = config;
+	}
+	
 	public boolean isInitializing() {
 		return initializing;
 	}

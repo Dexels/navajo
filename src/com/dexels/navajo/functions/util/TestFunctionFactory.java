@@ -2,6 +2,7 @@ package com.dexels.navajo.functions.util;
 
 import java.io.FileInputStream;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 import navajo.ExtensionDefinition;
@@ -46,15 +47,17 @@ public class TestFunctionFactory extends FunctionFactoryInterface {
 					fuds.put(name, new FunctionDefinition(object, description, inputParams, resultParam,null));
 				}
 			}
-			setConfig(fuds);
+			setDefaultConfig(fuds);
 			
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
+
+
 	@Override
-	public void readDefinitionFile(HashMap<String, FunctionDefinition> fuds,
+	public void readDefinitionFile(Map<String, FunctionDefinition> fuds,
 			ExtensionDefinition fd) {
 		// TODO Auto-generated method stub
 		

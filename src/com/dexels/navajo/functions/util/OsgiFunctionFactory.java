@@ -33,6 +33,7 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 			ServiceReference[] refs = context.getServiceReferences(interfaceClass.getName(), "("+serviceKey+"="+name+")");
 			if(refs==null) {
 				System.err.println("Service resolution failed: Query: "+"("+serviceKey+"="+name+")"+" class: "+interfaceClass.getName());
+				return null;
 			}
 			return context.getService(refs[0]);
 			
@@ -43,7 +44,7 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 	}
 	
 	@Override
-	public  Class<?> getAdapterClass(String adapterClassName, ClassLoader cl) {
+	public  Class<?> getAdapterClass(String adapterClassName, ClassLoader cl) throws ClassNotFoundException {
 			Class osgiResolution = (Class) getComponent(adapterClassName, "adapterClass", Class.class);
 			if (osgiResolution==null) {
 				System.err.println("OSGi failed. Going old skool");
