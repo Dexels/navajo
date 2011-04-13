@@ -76,7 +76,7 @@
     </map>
     <map>
         <tagname>csvline</tagname>
-        <object>com.dexels.navajo.adapter.CSVEntryMap</object>
+        <object>com.dexels.navajo.adapter.csvmap.CSVEntryMap</object>
         <description/>
     </map>
     <!-- HTTP adapter -->
@@ -98,21 +98,9 @@
         </methods>
     </map>
     <!-- FTP adapter -->
-    <map>
-        <tagname>ftp</tagname>
-        <object>com.dexels.navajo.adapter.FTPMap</object>
-        <values>
-            <value name="server" type="string" required="true" direction="in"/>
-            <value name="username" type="string" required="true" direction="in"/>
-            <value name="password" type="string" required="true" direction="in"/>
-            <value name="filename" type="string" required="false" direction="in"/>
-            <value name="path" type="string" required="false" direction="in"/>
-            <value name="filename" type="string" required="false" direction="in"/>
-            <value name="content" type="binary" required="false" direction="in"/>
-            <value name="queuedsend" type="boolean" required="false" direction="in"/>
-            <value name="useBinary" type="boolean" required="false" direction="in"/>
-        </values>
-    </map>
+	<!--  MOVED TO ENTERPRISE ADAPTERS TODO CHECK AND FIX -->
+<!--  
+     -->
     <!-- Mail adapter -->
     <map>
         <tagname>mail</tagname>
@@ -121,12 +109,15 @@
             <value name="mailServer" type="string" required="true" direction="in"/>
             <value name="queuedSend" type="boolean" required="false" direction="in"/>
             <value name="ignoreFailures" type="boolean" required="false" direction="in"/>
-            <value name="sender" type="string" required="false" direction="in"/>
+            <value name="sender" type="string" required="true" direction="in"/>
             <value name="subject" type="string" required="false" direction="in"/>
             <value name="text" type="string" required="false" direction="in"/>
-            <value name="recipients" type="string" required="false" direction="in"/>
+            <value name="recipients" type="string" required="true" direction="in"/>
             <value name="attachment" map="attachment" required="false" direction="in"/>
             <value name="multipleAttachments" map="attachment []" required="false" direction="in"/>
+            <value name="smtpUser" type="string" required="false" direction="in"/>
+            <value name="smtpPass" type="string" required="false" direction="in"/>
+            <value name="useEncryption" type="boolean" required="false" direction="in"/>
         </values>
     </map>
     <!--Alternative mail adapter -->
@@ -148,7 +139,7 @@
     </map>
     <map>
         <tagname>attachment</tagname>
-        <object>com.dexels.navajo.adapter.AttachmentMap</object>
+        <object>com.dexels.navajo.adapter.mailmap.AttachementMap</object>
         <description/>
         <values>
             <value name="attachFileName" type="string" required="false" direction="in"/>
@@ -217,6 +208,9 @@
         <object>com.dexels.navajo.adapter.navajomap.MessageMap</object>
     </map>
     <!-- RSS adapter -->
+
+	<!-- Moved to NavajoEnterpriseAdapters I think TODO Check & FIX -->
+	<!-- 
     <map>
         <tagname>rss</tagname>
         <object>com.dexels.navajo.adapter.RSSMap</object>
@@ -229,7 +223,7 @@
                 <param name="name" field="title" type="string" required="true"/>
             </method>
         </methods>
-    </map>
+    </map> -->
     <!-- Navajo listener adapter -->
     <map>
         <tagname>navajolistener</tagname>
@@ -297,7 +291,7 @@
     <map>
         <tagname>resultrow</tagname>
         <abstract>false</abstract>
-        <object>com.dexels.navajo.adapter.ResultSetMap</object>
+        <object>com.dexels.navajo.adapter.sqlmap.ResultSetMap</object>
     </map>
     <!-- Audit Log adapter -->
     <map>
@@ -382,7 +376,10 @@
         </methods>
     </map>
     <!-- com.dexels.navajo.mapping.bean.ServiceMapper -->
-    <map>
+<!--  This one should be declared in navajo's own adapters.
+I think there is no problem now, as NavajoAdapters uses a filthy DynamicImport flag -->
+
+  <map>
         <tagname>service</tagname>
         <object>com.dexels.navajo.mapping.bean.ServiceMapper</object>
         <values>
@@ -425,6 +422,27 @@
         <object>com.dexels.navajo.adapter.TmlToXmlMap</object>
         <values>
             <value name="rootPath" type="string" required="true" direction="in"/>          
+        </values>
+        <methods>
+            <method name="addAttribute">                
+                <param name="path" field="attributePath" type="string" required="true"/>
+                <param name="name" field="attributeName" type="string" required="true"/>
+                <param name="value" field="attributeValue" type="string" required="true"/>
+            </method>
+            <method name="dumpObject">
+                <param name="value" field="dumpObject" type="boolean" required="automatic" value="true"/>
+            </method>
+            <method name="buildContent">
+                <param name="value" field="buildContent" type="boolean" required="automatic" value="true"/>
+            </method>
+        </methods>
+    </map>
+     <map>
+        <tagname>testbean</tagname>
+        <object>com.dexels.navajo.adapter.TestBean</object>
+        <values>
+            <value name="monkey" type="string" required="false" direction="in"/>          
+            <value name="today" type="date" required="false" direction="in"/>          
         </values>
         <methods>
             <method name="addAttribute">                
