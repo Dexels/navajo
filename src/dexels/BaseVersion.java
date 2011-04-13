@@ -2,6 +2,8 @@ package dexels;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.dexels.navajo.version.Version;
+
 /**
  * <p>Title: Navajo Product Project</p>
  * <p>Description: This is the official source for the Navajo server</p>
@@ -132,7 +134,7 @@ public abstract class BaseVersion implements Comparable<Version> {
 	public String versionString() {
 		StringBuffer s = new StringBuffer();
 		s.append(toString()+"\n");
-		dexels.Version [] d = getIncludePackages();
+		Version [] d = getIncludePackages();
 		for (int i = 0; i < d.length; i++) {
 			s.append("\t"+d[i].toString()+"\n");
 		}
