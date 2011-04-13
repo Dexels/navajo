@@ -72,8 +72,8 @@ TOKEN:
   <TRUE: "true"> |
   <FALSE: "false"> |
   <TODAY: "TODAY"> |
-  <NAME_OPTION: "name"> |
-  <VALUE_OPTION: "value"> |
+  <NAME_OPTION: ":name"> |
+  <VALUE_OPTION: ":value"> |
   <BEGIN_LIST: "{"> |
   <END_LIST: "}"> |
   <LIST_SEPARATOR: ","> |
@@ -117,7 +117,7 @@ TOKEN:
 {
   <NORMAL_IDENTIFIER: <IDENTIFIER>(<IDENTIFIER>)* > |
   <STRING_LITERAL: "'"(<IDENTIFIER>|"|"|" "|"\n"|":"|";"|"-"|"_"|"?"|"*"|"\\'"|"("|")"|"="|"+"|"/"|"!"|"<"|">"|","|"."|"["|"]"|"@"|"#"|"$"|"%"|"^"|"&"|"{"|"}"|"\""|"\""|"/"|"\\"|"\t"|"~"|<DIGIT>)*"'" > |
-  <EXPRESSION_LITERAL: "`"(<IDENTIFIER>|"("|")"|"$"|"'"|"'"|"+"|"!"|"?"|"*"|"<"|">"|","|"."|"="|"/"|"["|"]"|" "|":"|";"|"-"|"@"|"#"|"_"|<DIGIT>)*"`" > |
+  <EXPRESSION_LITERAL: "`"(<IDENTIFIER>|"("|")"|"$"|"'"|"'"|"+"|"!"|"?"|"*"|"<"|">"|","|"."|"="|"/"|"["|"]"|" "|":"|";"|"-"|"@"|"#"|"_"|"%"|<DIGIT>)*"`" > |
   <TIPI_IDENTIFIER: "{"(<IDENTIFIER>|"~"|" "|"\n"|":"|";"|"-"|"_"|"?"|"*"|"("|")"|"="|"+"|"/"|"!"|"<"|">"|","|"."|"["|"]"|"@"|"#"|"$"|"%"|"^"|"&"|"\""|"\""|"/"|"\\"|<DIGIT>)+"}" >
 }
 
@@ -932,7 +932,7 @@ void ExistsTmlLiteral()      :
   }
   try {
 /*@egen*/
-  (t = <EXISTS_TML_IDENTIFIER> (":" (<NAME_OPTION> {jjtn001.selectionOption = "name";} | <VALUE_OPTION> {jjtn001.selectionOption = "value";}))? "]" ("." <NORMAL_IDENTIFIER> { jjtn001.option = token.image;})?/*@bgen(jjtree)*/
+  (t = <EXISTS_TML_IDENTIFIER> ( (<NAME_OPTION> {jjtn001.selectionOption = "name";} | <VALUE_OPTION> {jjtn001.selectionOption = "value";}))? "]" ("." <NORMAL_IDENTIFIER> { jjtn001.option = token.image;})?/*@bgen(jjtree)*/
     {
       jjtree.closeNodeScope(jjtn001, true);
       jjtc001 = false;
@@ -959,7 +959,7 @@ void TmlLiteral()      :
   }
   try {
 /*@egen*/
-  (t = <TML_IDENTIFIER> (":" (<NAME_OPTION>  {jjtn001.selectionOption = "name";}   | <VALUE_OPTION> {jjtn001.selectionOption = "value";}))?  "]" ("." <NORMAL_IDENTIFIER> { jjtn001.option = token.image;})?/*@bgen(jjtree)*/
+  (t = <TML_IDENTIFIER> ( (<NAME_OPTION>  {jjtn001.selectionOption = "name";}   | <VALUE_OPTION> {jjtn001.selectionOption = "value";}))?  "]" ("." <NORMAL_IDENTIFIER> { jjtn001.option = token.image;})?/*@bgen(jjtree)*/
     {
       jjtree.closeNodeScope(jjtn001, true);
       jjtc001 = false;

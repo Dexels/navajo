@@ -56,8 +56,8 @@ public interface TMLParserConstants {
     "\"true\"",
     "\"false\"",
     "\"TODAY\"",
-    "\"name\"",
-    "\"value\"",
+    "\":name\"",
+    "\":value\"",
     "\"{\"",
     "\"}\"",
     "\",\"",
@@ -91,7 +91,6 @@ public interface TMLParserConstants {
     "\"(\"",
     "\")\"",
     "\"$\"",
-    "\":\"",
     "\"]\"",
     "\".\"",
   };

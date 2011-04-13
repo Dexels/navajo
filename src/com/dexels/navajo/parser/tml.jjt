@@ -70,8 +70,8 @@ TOKEN:
   <TRUE: "true"> |
   <FALSE: "false"> |
   <TODAY: "TODAY"> |
-  <NAME_OPTION: "name"> |
-  <VALUE_OPTION: "value"> |
+  <NAME_OPTION: ":name"> |
+  <VALUE_OPTION: ":value"> |
   <BEGIN_LIST: "{"> |
   <END_LIST: "}"> |
   <LIST_SEPARATOR: ","> |
@@ -276,7 +276,7 @@ void ExistsTmlLiteral() #void:
 {Token t;
 }
 {
-  (t = <EXISTS_TML_IDENTIFIER> (":" (<NAME_OPTION> {jjtThis.selectionOption = "name";} | <VALUE_OPTION> {jjtThis.selectionOption = "value";}))? "]" ("." <NORMAL_IDENTIFIER> { jjtThis.option = token.image;})?
+  (t = <EXISTS_TML_IDENTIFIER> ( (<NAME_OPTION> {jjtThis.selectionOption = "name";} | <VALUE_OPTION> {jjtThis.selectionOption = "value";}))? "]" ("." <NORMAL_IDENTIFIER> { jjtThis.option = token.image;})?
     { jjtThis.exists = true; jjtThis.val = t.image; jjtThis.doc = inputDoc; jjtThis.parentMsg = parentMsg; jjtThis.parentParamMsg = parentParamMsg; jjtThis.parentSel = parentSel;}
   ) #TmlNode
 }
@@ -285,7 +285,7 @@ void TmlLiteral() #void:
 {Token t;
 }
 {
-  (t = <TML_IDENTIFIER> (":" (<NAME_OPTION>  {jjtThis.selectionOption = "name";}   | <VALUE_OPTION> {jjtThis.selectionOption = "value";}))?  "]" ("." <NORMAL_IDENTIFIER> { jjtThis.option = token.image;})?
+  (t = <TML_IDENTIFIER> ( (<NAME_OPTION>  {jjtThis.selectionOption = "name";}   | <VALUE_OPTION> {jjtThis.selectionOption = "value";}))?  "]" ("." <NORMAL_IDENTIFIER> { jjtThis.option = token.image;})?
     { jjtThis.exists = false; jjtThis.val = t.image; jjtThis.doc = inputDoc; jjtThis.parentMsg = parentMsg; jjtThis.parentParamMsg = parentParamMsg; jjtThis.parentSel = parentSel;}
   ) #TmlNode
 }

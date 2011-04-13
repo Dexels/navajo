@@ -4,7 +4,7 @@
 #
 # Copyright (C) 1998-2000 Metamata, Inc.
 
-export CLASSPATH=/home/arjen/projecten/Navajo/lib/javacc.jar
+export CLASSPATH=../../../../../../NavajoUtilities/compilelib/javacc.jar
 
 NEWARGS=""
 
