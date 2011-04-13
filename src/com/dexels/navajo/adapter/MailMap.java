@@ -140,6 +140,9 @@ public class MailMap implements MailMapInterface, Mappable, HasDependentResource
 
     			//System.err.println("Created mime message: " + msg);
 
+    			if(sender==null || "".equals(sender)) {
+    				throw new UserException(-1,"Error: Required sender address not set!");
+    			}
     			msg.setFrom(new InternetAddress(sender));
 
     			InternetAddress[] addresses = new InternetAddress[this.recipientArray.length];
