@@ -52,7 +52,7 @@ public final class DefaultExpressionEvaluator
     catch (Throwable ex) {
    	 ex.printStackTrace();
       throw NavajoFactory.getInstance().createNavajoException("Parse error: " +
-          ex.getMessage() + "\n while parsing: " + clause);
+          ex.getMessage() + "\n while parsing: " + clause,ex);
     }
   }
 
