@@ -1,0 +1,17 @@
+<adapterdef>
+
+<!-- Yet unused, it is still declared in NavajoAdapters' adapters.xml -->
+    <map>
+        <tagname>service</tagname>
+        <object>com.dexels.navajo.mapping.bean.ServiceMapper</object>
+        <values>
+            <value name="serviceClass" type="string" required="true" direction="in"/>
+            <value name="serviceMethod" type="string" required="true" direction="in"/>
+        </values>
+        <methods>
+            <method name="invoke">
+                <param name="value" field="invoke" type="boolean" required="automatic" value="true"/>
+            </method>
+        </methods>
+    </map>
+</adapterdef>

@@ -2,7 +2,7 @@ Bundle-Name: Navajo Core
 Bundle-SymbolicName: com.dexels.navajo.core
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 2.9.2
+Bundle-Version: 2.9.3
 Bundle-Activator: navajo.Version
 Export-Package: com.dexels.navajo.adapter.navajomap;uses:="com.dexels.navajo.server.resource",
  com.dexels.navajo.events;uses:="junit.framework",
@@ -73,3 +73,4 @@ Require-Bundle: com.dexels.navajo.document,
  com.dexels.navajo.version
 Import-Package: junit.framework,
  org.osgi.framework;version="1.5.0"
+Bundle-ActivationPolicy: lazy
