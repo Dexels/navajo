@@ -97,10 +97,15 @@ public final class NavajoFactoryImpl extends NavajoFactory {
 		//    throw new java.lang.UnsupportedOperationException("Method createHeader() not yet implemented.");
 	}
 
-	public NavajoException createNavajoException(Exception e) {
+	public NavajoException createNavajoException(Throwable e) {
 		return new NavajoExceptionImpl(e);
 	}
 
+	public NavajoException createNavajoException(String message, Throwable e) {
+		return new NavajoExceptionImpl(message,e);
+	}
+
+	
 	public Navajo createNavajo(InputStream stream) {
 		NavajoImpl n = new NavajoImpl(this);
 		XMLElement xe = new CaseSensitiveXMLElement();

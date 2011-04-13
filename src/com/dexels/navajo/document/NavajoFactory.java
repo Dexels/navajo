@@ -314,8 +314,17 @@ public abstract class NavajoFactory {
    * @param e Exception
    * @return NavajoException
    */
-  public abstract NavajoException createNavajoException(Exception e);
+  public abstract NavajoException createNavajoException(Throwable e);
 
+  /**
+   * Create a NavajoException object with a given message AND Exception object
+   * @param e Exception
+   * @param message String
+   * @return NavajoException
+   */
+  public abstract NavajoException createNavajoException(String message,Throwable e);
+
+  
   /**
    *  Create a Navjao object from a given InputStream
    *  @param stream InputStream

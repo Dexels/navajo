@@ -102,7 +102,7 @@ public class BaseNavajoFactoryImpl extends NavajoFactory implements Serializable
 		//    throw new java.lang.UnsupportedOperationException("Method createHeader() not yet implemented.");
 	}
 
-	public NavajoException createNavajoException(Exception e) {
+	public NavajoException createNavajoException(Throwable e) {
 		return new NavajoExceptionImpl(e);
 	}
 
@@ -150,6 +150,10 @@ public class BaseNavajoFactoryImpl extends NavajoFactory implements Serializable
 	}
 	public NavajoException createNavajoException(String message) {
 		return new NavajoExceptionImpl(message);
+		//    throw new java.lang.UnsupportedOperationException("Method createNavajoException() not yet implemented.");
+	}
+	public NavajoException createNavajoException(String message, Throwable t) {
+		return new NavajoExceptionImpl(message,t);
 		//    throw new java.lang.UnsupportedOperationException("Method createNavajoException() not yet implemented.");
 	}
 

@@ -19,8 +19,11 @@ public final class NavajoExceptionImpl extends NavajoException {
   public NavajoExceptionImpl(String message) {
     super(message);
   }
-  public NavajoExceptionImpl(Exception root) {
+  public NavajoExceptionImpl(Throwable root) {
 	super(root);
   }
+  public NavajoExceptionImpl(String message, Throwable root) {
+		super(message,root);
+	 }
   
 }

@@ -11,7 +11,7 @@ package com.dexels.navajo.document;
 
 public abstract class NavajoException extends Exception {
 
-	public NavajoException(Exception e) {
+	public NavajoException(Throwable e) {
 		super(e);
 	}
 	
@@ -30,6 +30,16 @@ public abstract class NavajoException extends Exception {
       super(message);
     }
 
+    
+    /**
+     * Construct a NavajoException with a given message (text) AND a root cause
+     * @param message String
+     */
+    public NavajoException(String message, Throwable root) {
+      super(message,root);
+    }
+
+    
     /**
      * Gets the wrapped exception.
      *

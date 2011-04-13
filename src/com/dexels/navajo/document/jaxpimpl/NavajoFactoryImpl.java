@@ -14,6 +14,7 @@ import java.io.*;
 import org.w3c.dom.*;
 
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.base.NavajoExceptionImpl;
 import com.dexels.navajo.document.jaxpimpl.xml.*;
 
 public final class NavajoFactoryImpl extends NavajoFactory {
@@ -22,9 +23,14 @@ public final class NavajoFactoryImpl extends NavajoFactory {
 		return new NavajoExceptionImpl(message);
 	}
 
-	public NavajoException createNavajoException(Exception e) {
+	public NavajoException createNavajoException(Throwable e) {
 		return new NavajoExceptionImpl(e);
 	}
+
+	public NavajoException createNavajoException(String message, Throwable e) {
+		return new NavajoExceptionImpl(message,e);
+	}
+
 
 	public Navajo createNavajo(java.io.InputStream stream) {
 		try {
