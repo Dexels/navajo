@@ -6,7 +6,8 @@ Bundle-Version: 1.0.6
 Bundle-Activator: dexels.NavajoBundleManager
 Export-Package: com.dexels.navajo.version,
  dexels,
- navajo
+ navajo,
+ org.osgi.framework
 Bundle-Vendor: Dexels
 Import-Package: org.osgi.framework
 Bundle-ClassPath: .
