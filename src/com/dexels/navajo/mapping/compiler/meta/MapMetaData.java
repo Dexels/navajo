@@ -36,17 +36,17 @@ import com.dexels.navajo.util.AuditLog;
 @SuppressWarnings("unchecked")
 public class MapMetaData {
 
-	protected HashMap<String, MapDefinition> maps = new HashMap<String, MapDefinition>();
+	protected final HashMap<String, MapDefinition> maps = new HashMap<String, MapDefinition>();
 	
 	private static MapMetaData instance = null;
-	private String configPath = null;
+//	private String configPath = null;
 	
-	private MapMetaData(String configPath) {
+	private MapMetaData() {
 		// Create empty MapDefinition.
 		MapDefinition empty = new MapDefinition(this);
 		empty.tagName = "__empty__";
 		empty.objectName = "null";
-		this.configPath = configPath;
+//		this.configPath = configPath;
 		maps.put("__empty__", empty);
 	}
 	
@@ -80,8 +80,7 @@ public class MapMetaData {
 						//System.err.println("Found " + allmaps.size() + " map definitions");
 						for ( int i = 0; i < allmaps.size(); i++ ) {
 							XMLElement map = (XMLElement) allmaps.get(i);
-							MapDefinition md = MapDefinition.parseDef(map);
-							maps.put(md.tagName, md);
+							MapDefinition md = addMapDefinition(map);
 						}
 					}
 					
@@ -93,16 +92,22 @@ public class MapMetaData {
 	
 		}
 	}
-	
-	public static MapMetaData getInstance() throws Exception {
-		return getInstance("aap");
+
+	public MapDefinition addMapDefinition(XMLElement map) throws Exception {
+		MapDefinition md = MapDefinition.parseDef(map);
+		maps.put(md.tagName, md);
+		return md;
 	}
 	
-	public static MapMetaData getInstance(String c) throws Exception {
+//	public static MapMetaData getInstance() throws Exception {
+//		return getInstance("aap");
+//	}
+	
+	public static MapMetaData getInstance() throws Exception {
 		if ( instance != null ) {
 			return instance;
 		} else {
-			instance = new MapMetaData(c);
+			instance = new MapMetaData();
             // Read map definitions from config file.
 			instance.readConfig();
 		}
@@ -206,7 +211,7 @@ public class MapMetaData {
 	public static void main(String [] args) throws Exception {
 		
 		DispatcherFactory df = new DispatcherFactory(new TestDispatcher(new TestNavajoConfig()));
-		MapMetaData mmd = MapMetaData.getInstance("/home/arjen/projecten/Navajo");
+		MapMetaData mmd = MapMetaData.getInstance();
 		//System.err.println("is: " + mmd.isMetaScript("ProcessQueryMemberNewStyle", "/home/arjen/projecten/Navajo/", "."));
 		
 		String result = mmd.parse("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/InitTest.xml");
