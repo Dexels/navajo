@@ -273,6 +273,16 @@ function addElement(callback) {
 	return result;
 }
 
+function addErrorMessage(message, code, body) {
+	addMessage("error", function(){
+		addProperty("message", message, null);
+		addProperty("body", body, null);
+		addProperty("code", code, null);
+	}
+	);
+}
+
+
 
 function addArrayMessage(messageName, callback) {
 	result = env.addArrayMessage(messageName);

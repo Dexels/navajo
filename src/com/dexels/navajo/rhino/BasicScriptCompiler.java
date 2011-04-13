@@ -29,6 +29,7 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLParseException;
 import com.dexels.navajo.functions.XmlUnescape;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
+import com.dexels.navajo.mapping.compiler.meta.MissingParameterException;
 
 public class BasicScriptCompiler implements ScriptCompiler {
 
@@ -321,8 +322,29 @@ public class BasicScriptCompiler implements ScriptCompiler {
 			xx.parseFromReader(sr);
 //			System.err.println("NAVASCRIPT:==================\n=============================\n"+current+"\n\nTSL========================\n==================="+xx);
 			process(xx,os);
+		} catch (MissingParameterException e) {
+			e.printStackTrace();
+			try {
+				processCompileError(e.getMessage(), "MissingParameterException", e, os);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			try {
+				System.err.println("Debatable contruction: Generates an error js file. Should be rewritten, I think. Don't know what I was thinking");
+				processCompileError(e.getMessage(), "IOException", e, os);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			try {
+				System.err.println("Debatable contruction: Generates an error js file. Should be rewritten, I think. Don't know what I was thinking");
+				processCompileError(e.getMessage(), "IOException", e, os);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		}
 		
 	}
@@ -335,6 +357,31 @@ public class BasicScriptCompiler implements ScriptCompiler {
 	private void processComment(XMLElement current, IndentWriter os) throws IOException {
 		String value = current.getStringAttribute("value");
 		os.writeln("// comment: "+value);
+	}
+	
+	private void processCompileError(String message,String type,Throwable t, IndentWriter os) throws IOException {
+
+		os.writeln("// error: "+message);
+		if(t!=null) {
+			//function addErrorMessage(message, code, body) {
+			StringBuffer sb = new StringBuffer();
+			writeStacktrace(t,sb);
+//			System.err.println("sb::::: "+sb);
+			os.write(sb.toString());
+			os.writeln("addErrorMessage(\""+message+"\","+"-1,\""+t.getMessage()+"\");");
+		}
+	}
+	
+
+	private void writeStacktrace(Throwable t,StringBuffer b) {
+		StackTraceElement[] o = t.getStackTrace();
+		for (StackTraceElement stackTraceElement : o) {
+			b.append("//\tat "+stackTraceElement.getClassName()+"."+stackTraceElement.getMethodName()+"("+stackTraceElement.getFileName()+":"+stackTraceElement.getLineNumber()+")\n");
+		}
+		if(t.getCause()!=null) {
+			b.append("//Caused by: \n");
+			writeStacktrace(t.getCause(), b);
+		}
 	}
 
 	private void processValidations(XMLElement current, IndentWriter os) throws IOException {
