@@ -289,11 +289,7 @@ public class MapDefinition {
 				if ( md.abstractMap ) {
 					throw new MetaCompileException(filename, child, "Illegal declaration of abstract adapter: " + md.tagName);
 				}
-				if ( md != null ) {
-					md.generateCode(child, ( map != null ? map : out ), filename );
-				} else {
-					throw new UnknownAdapterException(child.getName(), child, filename);
-				}
+				md.generateCode(child, ( map != null ? map : out ), filename );
 			} else if (!( 
 					    child.getName().equals("message") || 
 					    child.getName().equals("antimessage") || 
