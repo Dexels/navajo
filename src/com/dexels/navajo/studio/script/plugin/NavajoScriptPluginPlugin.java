@@ -1865,7 +1865,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         }
         myPreferences = store;
         store.setDefault(P_NAVAJO_PATH, "navajo-tester");
-        store.setDefault(NAVAJO_APPLICATION_SERVERS,"Ficus|http|10.0.0.3:3000/sportlink/knvb/servlet/Postman|ROOT|\nLocal socket|socket|localhost:10000|ROOT|");
+        store.setDefault(NAVAJO_APPLICATION_SERVERS,"LocalJetty|http|localhost:8888/Postman||\n");
         store.setDefault(NAVAJO_PLUGIN_SCRIPT_INVOCATIONS, "InitNavajoStatus");
 
         store.setDefault(REMOTE_SERVERURL, "localhost:10000");
