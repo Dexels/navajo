@@ -1,12 +1,17 @@
 package navajoadapters;
 
+import java.util.Properties;
+
 import org.dexels.grus.GrusManager;
 import org.osgi.framework.BundleContext;
 
-import com.dexels.navajo.adapter.MailMap;
 import com.dexels.navajo.adapter.SQLMap;
-import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.adapter.StandardAdapterFunctionLibrary;
+import com.dexels.navajo.adapter.StandardAdapterLibrary;
+import com.dexels.navajo.functions.util.FunctionDefinition;
+import com.dexels.navajo.functions.util.FunctionFactoryFactory;
+import com.dexels.navajo.functions.util.FunctionFactoryInterface;
+import com.dexels.navajo.parser.FunctionInterface;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -77,42 +82,47 @@ import com.dexels.navajo.document.NavajoFactory;
  */
 public class Version extends com.dexels.navajo.version.Version {
 
-	public static final int    MAJOR       = 3;
-	public static final int    MINOR       = 1;
-	public static final int    PATCHLEVEL  = 1;
-	public static final String VENDOR      = "Dexels";
-	public static final String PRODUCTNAME = "Navajo Adapter Library";
-	public static final String RELEASEDATE = "2010-09-17";
-
-	//	Included packages.
 
 	public Version() {
 		setReleaseDate(RELEASEDATE);
 	}
 
-	public int getMajor() {
-		return MAJOR;
-	}
 
-	public int getMinor() {
-		return MINOR;
-	}
-
-	public int getPatchLevel() {
-		return PATCHLEVEL;
-	}
-
-	public String getVendor() {
-		return VENDOR;
-	}
-
-	public String getProductName() {
-		return PRODUCTNAME;
-	}
 	@Override
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
-		MailMap m = new MailMap();
+		FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
+		fi.init();
+		
+		fi.clearFunctionNames();
+
+		StandardAdapterFunctionLibrary extensionDef = new StandardAdapterFunctionLibrary();
+		fi.injectExtension(extensionDef);
+		//		System.err.println("Detected functions: "+fi.getFunctionNames());
+		for (String functionName : fi.getFunctionNames(extensionDef)) {
+			FunctionDefinition fd = fi.getDef(extensionDef,functionName);
+			 Properties props = new Properties();
+			 System.err.println("Registering: "+functionName);
+			 props.put("functionName", functionName);
+			 props.put("functionDefinition", fd);
+			context.registerService(FunctionInterface.class.getName(), fi.instantiateFunctionClass(fd,getClass().getClassLoader()), props);
+		}
+		StandardAdapterLibrary library = new StandardAdapterLibrary();
+		fi.injectExtension(library);
+		System.err.println("Adapterlib injected!");
+		for(String adapterName: fi.getAdapterNames(library)) {
+
+			String adapterClass = fi.getAdapterClass(adapterName,library);
+			Class c = Class.forName(adapterClass);
+
+			 Properties props = new Properties();
+			 System.err.println("Registering adapter: "+adapterName + "class: "+adapterClass);
+			 props.put("adapterName", adapterName);
+			 props.put("adapterClass", c.getName());
+			if(adapterClass!=null) {
+				context.registerService(Class.class.getName(), c, props);
+			}
+		}
 	}
 	
 	@Override
@@ -121,12 +131,5 @@ public class Version extends com.dexels.navajo.version.Version {
 		SQLMap.terminateFixedBroker();
 	}
 	
-	public static void main(String [] args) {
-		Version v = new Version();
-		System.err.println(v.toString());
-		dexels.Version [] d = (dexels.Version [] ) v.getIncludePackages();
-		for (int i = 0; i < d.length; i++) {
-			System.err.println("\t"+d[i].toString());
-		}
-	}
+
 }
