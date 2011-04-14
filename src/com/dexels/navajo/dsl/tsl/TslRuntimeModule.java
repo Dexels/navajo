@@ -4,7 +4,6 @@
 package com.dexels.navajo.dsl.tsl;
 
 import com.dexels.navajo.dsl.tsl.validation.TslJavaValidator;
-import com.google.inject.Inject;
 
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.

@@ -15,7 +15,7 @@ public class TslStandaloneSetup extends TslStandaloneSetupGenerated{
 //		InjectionTest i = ij.getInstance(InjectionTest.class);
 //		i.doSomething();
 		//		ij.getInstance(Class<? extends IFormatter>)
-		TslFormatter aa = ij.getInstance(TslFormatter.class);
+		ij.getInstance(TslFormatter.class);
 		
 	}
 

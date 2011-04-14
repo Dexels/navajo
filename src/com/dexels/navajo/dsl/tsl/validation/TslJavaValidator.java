@@ -7,7 +7,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.xtext.validation.Check;
 
-import com.dexels.navajo.dsl.model.expression.ExpressionPackage;
 import com.dexels.navajo.dsl.model.expression.FunctionCall;
 import com.dexels.navajo.dsl.model.tsl.PossibleExpression;
 import com.dexels.navajo.dsl.model.tsl.Property;
