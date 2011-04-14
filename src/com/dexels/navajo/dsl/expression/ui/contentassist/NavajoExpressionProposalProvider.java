@@ -19,7 +19,6 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.xtext.Assignment;
 import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
@@ -29,12 +28,9 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
-import com.dexels.navajo.document.nanoimpl.XMLParseException;
-import com.dexels.navajo.dsl.expression.ui.contentassist.AbstractNavajoExpressionProposalProvider;
 import com.dexels.navajo.dsl.expression.ui.contentassist.impl.NavajoResourceFinder;
 import com.dexels.navajo.dsl.expression.ui.contentassist.impl.TestNavajoResourceFinder;
 import com.dexels.navajo.dsl.model.expression.Expression;
-import com.dexels.navajo.dsl.model.expression.MapGetReference;
 import com.dexels.navajo.dsl.model.tsl.ExpressionTag;
 import com.dexels.navajo.dsl.model.tsl.Map;
 /**
@@ -279,15 +275,16 @@ public class NavajoExpressionProposalProvider extends AbstractNavajoExpressionPr
 		
 	}
 
-	private List<FunctionProposal> findFunctionByName(String name) {
-		List<FunctionProposal> result = new ArrayList<FunctionProposal>();
-		for (FunctionProposal f :functions) {
-			if(f.getName().equals(name)) {
-				result.add(f);
-			}
-		}
-		return result;
-	}
+//	private List<FunctionProposal> findFunctionByName(String name) {
+//		List<FunctionProposal> result = new ArrayList<FunctionProposal>();
+//		for (FunctionProposal f :functions) {
+//			if(f.getName().equals(name)) {
+//				result.add(f);
+//			}
+//		}
+//		return result;
+//	}
+	
 	private boolean isLegal(List<String> propose) {
 		int index=0;
 		for (String r : propose) {
@@ -310,7 +307,7 @@ public class NavajoExpressionProposalProvider extends AbstractNavajoExpressionPr
 		}
 
 		Navajo input = npp.getNavajoResourceFinder().getInputNavajo();
-		List<InputTmlProposal> l =  npp.listPropertyPaths(npp.getNavajoResourceFinder().getInputNavajo());
+		List<InputTmlProposal> l =  npp.listPropertyPaths(input);
 		for (InputTmlProposal tmlProposal : l) {
 			System.err.println("Proposal: "+tmlProposal.getProposal()+" ---- "+tmlProposal.getProposalDescription());
 		}

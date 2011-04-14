@@ -2,7 +2,6 @@ package com.dexels.navajo.dsl.expression.ui.syntax;
 
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfiguration;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfigurationAcceptor;
-import org.eclipse.xtext.ui.editor.syntaxcoloring.ISemanticHighlightingConfiguration;
 
 public class TslHighlightingConfiguration implements IHighlightingConfiguration {
 
