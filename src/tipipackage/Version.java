@@ -29,7 +29,7 @@ import tipipackage.Version;
 import org.osgi.framework.BundleContext;
 
 
-public class Version extends dexels.Version {
+public class Version extends com.dexels.navajo.version.Version {
 
 
 	// Included packages.
