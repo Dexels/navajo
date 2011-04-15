@@ -26,6 +26,6 @@ package navajojsp;
 
 
 
-public class Version extends com.dexels.navajo.version.Version {
+public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 }
