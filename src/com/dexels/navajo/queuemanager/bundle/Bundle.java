@@ -29,7 +29,7 @@ import com.dexels.navajo.queuemanager.QueueManager;
 
 
 
-public class Bundle extends com.dexels.navajo.version.Version {
+public class Bundle extends com.dexels.navajo.version.AbstractVersion {
 
 		
 	//	 Included packages.
