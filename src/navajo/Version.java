@@ -224,7 +224,7 @@ import com.dexels.navajo.util.AuditLog;
  * 
  */
 
-public class Version extends com.dexels.navajo.version.Version {
+public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 	public static final int MAJOR = 9;
 	public static final int MINOR = 2;

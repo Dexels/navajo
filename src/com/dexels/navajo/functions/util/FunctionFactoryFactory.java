@@ -4,8 +4,8 @@ package com.dexels.navajo.functions.util;
 import java.security.AccessControlException;
 
 import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.version.NavajoBundleManager;
 
-import dexels.NavajoBundleManager;
 
 public class FunctionFactoryFactory {
 

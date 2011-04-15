@@ -5,8 +5,8 @@ import java.util.Set;
 
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.version.NavajoBundleManager;
 
-import dexels.NavajoBundleManager;
 
 import navajo.ExtensionDefinition;
 import org.osgi.framework.*;

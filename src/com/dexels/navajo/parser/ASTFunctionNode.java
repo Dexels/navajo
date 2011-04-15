@@ -4,6 +4,9 @@ package com.dexels.navajo.parser;
 /**
  * $Id$
  * $Log$
+ * Revision 1.30  2011/04/15 14:17:32  frank
+ * renamed 'Version' (the basic one) to 'AbstractVersion' it seems to confuse Tycho
+ *
  * Revision 1.29  2011/04/05 15:48:28  frank
  * Added OSGi based function solution
  *
@@ -115,8 +118,8 @@ import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.FunctionFactoryInterface;
 import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.version.NavajoBundleManager;
 
-import dexels.NavajoBundleManager;
 
 public final class ASTFunctionNode extends SimpleNode {
 
