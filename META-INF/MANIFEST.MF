@@ -72,5 +72,6 @@ Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.document,
  com.dexels.navajo.version
 Import-Package: junit.framework,
- org.osgi.framework;version="1.5.0"
+ org.osgi.framework;version="1.5.0",
+ org.osgi.util.tracker;version="1.4.0"
 Bundle-ActivationPolicy: lazy
