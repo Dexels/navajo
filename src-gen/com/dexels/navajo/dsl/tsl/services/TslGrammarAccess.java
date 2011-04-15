@@ -870,7 +870,7 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cMessageKeyword_1 = (Keyword)cAlternatives.eContents().get(1);
 		private final Keyword cCommentKeyword_2 = (Keyword)cAlternatives.eContents().get(2);
 		
-		//// might need to add a lot more keywords here
+		//// might need to add a lot more kywords here
 		//AttributeName returns ecore::EString:
 		//	ID | "message" | "comment";
 		public ParserRule getRule() { return rule; }
@@ -2802,7 +2802,7 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		return getNAVASCRIPT_ENDAccess().getRule();
 	}
 
-	//// might need to add a lot more keywords here
+	//// might need to add a lot more kywords here
 	//AttributeName returns ecore::EString:
 	//	ID | "message" | "comment";
 	public AttributeNameElements getAttributeNameAccess() {
