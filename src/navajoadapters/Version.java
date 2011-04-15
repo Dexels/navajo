@@ -80,7 +80,7 @@ import com.dexels.navajo.parser.FunctionInterface;
  * 2.2.7 Added support for non-broker mode of SQLMap.
  *
  */
-public class Version extends com.dexels.navajo.version.Version {
+public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 
 	public Version() {
