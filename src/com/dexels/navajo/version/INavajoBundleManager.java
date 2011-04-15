@@ -1,4 +1,4 @@
-package dexels;
+package com.dexels.navajo.version;
 
 import java.io.File;
 

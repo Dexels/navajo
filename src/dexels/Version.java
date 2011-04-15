@@ -3,6 +3,8 @@ package dexels;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
+import com.dexels.navajo.version.BaseVersion;
+
 @Deprecated
 /**
  * @deprecated Use only for legacy projects, such as NavajoSwingClient and sportlink-clnt-v2

@@ -2,11 +2,9 @@ package com.dexels.navajo.version;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
 
-import dexels.BaseVersion;
 
-public class Version extends BaseVersion implements BundleActivator {
+public abstract class AbstractVersion extends BaseVersion implements BundleActivator {
 
 	protected BundleContext context = null;
 	public void start(BundleContext bc) throws Exception {
@@ -60,8 +58,8 @@ public class Version extends BaseVersion implements BundleActivator {
 	public static void shutdownNavajoExtension(String name) {
 		  // This should be replaced by OSGi bundle management
 		  try {
-			Class <? extends Version> version = (Class<? extends Version>) Class.forName(name.toLowerCase()+".Version");
-			Version v = version.newInstance();
+			Class <? extends AbstractVersion> version = (Class<? extends AbstractVersion>) Class.forName(name.toLowerCase()+".Version");
+			AbstractVersion v = version.newInstance();
 			v.shutdown();
 		  } catch (Throwable e) {
 			  System.err.println("Extension shutdown failed.");

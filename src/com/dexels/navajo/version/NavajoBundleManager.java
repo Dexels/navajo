@@ -1,4 +1,4 @@
-package dexels;
+package com.dexels.navajo.version;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -14,9 +14,9 @@ import org.osgi.framework.BundleListener;
 import org.osgi.framework.FrameworkEvent;
 import org.osgi.framework.FrameworkListener;
 
-import com.dexels.navajo.version.Version;
+import com.dexels.navajo.version.AbstractVersion;
 
-public class NavajoBundleManager extends Version implements INavajoBundleManager {
+public class NavajoBundleManager extends AbstractVersion implements INavajoBundleManager {
 
 	private static INavajoBundleManager instance = null;
 

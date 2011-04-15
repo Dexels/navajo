@@ -1,4 +1,4 @@
-package dexels;
+package com.dexels.navajo.version;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;

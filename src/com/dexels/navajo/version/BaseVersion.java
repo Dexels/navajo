@@ -1,8 +1,8 @@
-package dexels;
+package com.dexels.navajo.version;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import com.dexels.navajo.version.Version;
+import com.dexels.navajo.version.AbstractVersion;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -29,7 +29,7 @@ import com.dexels.navajo.version.Version;
  * ====================================================================
  */
 
-public abstract class BaseVersion implements Comparable<Version> {
+public abstract class BaseVersion implements Comparable<AbstractVersion> {
 
 	public String RELEASEDATE;
 	
@@ -52,7 +52,7 @@ public abstract class BaseVersion implements Comparable<Version> {
 	public abstract String getVendor();
 	
 	// List of versions of included packages.
-	public ArrayList<Version> includedPackages = new ArrayList<Version>();
+	public ArrayList<AbstractVersion> includedPackages = new ArrayList<AbstractVersion>();
 	
 	private String specialVersion = null;
 	
@@ -69,11 +69,11 @@ public abstract class BaseVersion implements Comparable<Version> {
 	 * @param versionClass
 	 * @return
 	 */
-	public boolean checkInclude(String versionClass, Set<Version> previouslyVisited) {
+	public boolean checkInclude(String versionClass, Set<AbstractVersion> previouslyVisited) {
 		
 		
 		for (int i = 0; i < includedPackages.size(); i++) {
-			Version v = includedPackages.get(i);
+			AbstractVersion v = includedPackages.get(i);
 //			System.err.print(this.getClass().getName() +
 //					": Checking if " + versionClass + " is already included...");
 			if (v.getClass().getName().equals(versionClass)) {
@@ -89,7 +89,7 @@ public abstract class BaseVersion implements Comparable<Version> {
 	public void addInclude(String versionClass) {
 		try {
 			Class<?> c = Class.forName(versionClass);
-			Version v = (Version) c.newInstance();
+			AbstractVersion v = (AbstractVersion) c.newInstance();
 			// Check if v is not already included in chain.
 			if (!checkInclude(versionClass, null)) {
 				//System.err.println(this.getClass().getName() + ": Adding " + versionClass);
@@ -134,17 +134,17 @@ public abstract class BaseVersion implements Comparable<Version> {
 	public String versionString() {
 		StringBuffer s = new StringBuffer();
 		s.append(toString()+"\n");
-		Version [] d = getIncludePackages();
+		AbstractVersion [] d = getIncludePackages();
 		for (int i = 0; i < d.length; i++) {
 			s.append("\t"+d[i].toString()+"\n");
 		}
 		return s.toString();
 	}
 	
-	protected void buildIncludeTree(Set<Version> t) {
+	protected void buildIncludeTree(Set<AbstractVersion> t) {
 		//System.err.println(this.getClass().getName() + ": in buildIncludeTree: " + t.size());
 		for (int i = 0; i < includedPackages.size(); i++) {
-			Version child = includedPackages.get(i);
+			AbstractVersion child = includedPackages.get(i);
 			if (!t.contains(child)) {
 				//System.err.println("Adding " + child.getClass().getName());
 				t.add(child);
@@ -152,7 +152,7 @@ public abstract class BaseVersion implements Comparable<Version> {
 		}
 		// Loop over children.
 		for (int i = 0; i < includedPackages.size(); i++) {
-			Version child = includedPackages.get(i);
+			AbstractVersion child = includedPackages.get(i);
 			child.buildIncludeTree(t);
 		}
 	}
@@ -161,11 +161,11 @@ public abstract class BaseVersion implements Comparable<Version> {
 	 * Get included packages. Include children includes.
 	 * @return
 	 */
-	public Version [] getIncludePackages() {
+	public AbstractVersion [] getIncludePackages() {
 		
-		Set<Version> allDeps = new TreeSet<Version>();
+		Set<AbstractVersion> allDeps = new TreeSet<AbstractVersion>();
 		buildIncludeTree(allDeps);
-		Version [] v = new Version[allDeps.size()];
+		AbstractVersion [] v = new AbstractVersion[allDeps.size()];
 		v = allDeps.toArray(v);
 		return v;
 	}
@@ -174,7 +174,7 @@ public abstract class BaseVersion implements Comparable<Version> {
 		return o.getClass().getName().equals(this.getClass().getName());
 	}
 	
-	public int compareTo(Version o) {
+	public int compareTo(AbstractVersion o) {
 	    return o.getClass().getName().compareTo(this.getClass().getName());
 	}
 	
