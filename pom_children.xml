@@ -9,8 +9,6 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>../DexelsVersionControl</module>
-		<module>../javax.servlet</module>
 		<module>../NavajoQueueManager</module>
 		<module>../NavajoListeners</module>
 		<module>../NavajoListenersContinuations</module>

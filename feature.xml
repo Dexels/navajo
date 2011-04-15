@@ -20,7 +20,7 @@
    <requires>
       <import plugin="javax.servlet.jsp" version="2.0.0" match="greaterOrEqual"/>
       <import plugin="com.dexels.navajo.version" version="1.0.5" match="greaterOrEqual"/>
-      <import plugin="javax.servlet" version="3.0.0" match="greaterOrEqual"/>
+      <import plugin="javax.servlet" version="2.5.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.osgi"/>
       <import plugin="com.dexels.navajo.jsp" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="org.apache.ant" version="1.7.1" match="greaterOrEqual"/>
