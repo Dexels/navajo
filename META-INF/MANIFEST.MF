@@ -23,7 +23,7 @@ Export-Package: com.dexels.navajo.client,
  org.jivesoftware.smackx.muc
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.document,
- com.dexels.navajo.version;bundle-version="1.0.3"
+ com.dexels.navajo.version
 Import-Package: junit.framework,
  org.osgi.framework;version="1.5.0"
 Bundle-ActivationPolicy: lazy
