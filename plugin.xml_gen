@@ -9,7 +9,7 @@
             class="com.dexels.navajo.dsl.tsl.ui.TslExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
             contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
             default="true"
-            extensions="tsl"
+            extensions="tsl,xml"
             id="com.dexels.navajo.dsl.tsl.Tsl"
             name="Tsl Editor">
         </editor>
@@ -134,6 +134,20 @@
         <resourceServiceProvider
             class="com.dexels.navajo.dsl.tsl.ui.TslExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
             uriExtension="tsl">
+        </resourceServiceProvider>
+    </extension>
+
+	<extension
+		point="org.eclipse.emf.ecore.extension_parser">
+		<parser
+			class="com.dexels.navajo.dsl.tsl.ui.TslExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
+			type="xml">
+		</parser>
+	</extension>
+	<extension point="org.eclipse.xtext.extension_resourceServiceProvider">
+        <resourceServiceProvider
+            class="com.dexels.navajo.dsl.tsl.ui.TslExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
+            uriExtension="xml">
         </resourceServiceProvider>
     </extension>
 
