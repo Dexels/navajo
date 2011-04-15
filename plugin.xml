@@ -13,7 +13,7 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <package
             uri="http://www.dexels.com/navajo/dsl/tsl/NavajoTsl"
-            class="tsl.TslPackage"
+            class="com.dexels.navajo.dsl.model.tsl.TslPackage"
             genModel="model/NavaScript.genmodel"/>
    </extension>
 
