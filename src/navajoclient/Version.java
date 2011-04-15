@@ -48,7 +48,7 @@ import com.dexels.navajo.client.SystemInfo;
  * 2.2.3. Added support for piggybacking of data.
  * 2.2.4. Removed evil keep-alive
  */
-public class Version extends com.dexels.navajo.version.Version {
+public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 	public static final int MAJOR = 3;
 	public static final int MINOR = 0;
@@ -84,7 +84,7 @@ public class Version extends com.dexels.navajo.version.Version {
 	public static void main(String [] args) {
 		Version v = new Version();
 		System.err.println(v.toString());
-		com.dexels.navajo.version.Version [] d = v.getIncludePackages();
+		com.dexels.navajo.version.AbstractVersion [] d = v.getIncludePackages();
 		for (int i = 0; i < d.length; i++) {
 			System.err.println("\t"+d[i].toString());
 		}
