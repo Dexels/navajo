@@ -5,13 +5,11 @@ import java.util.List;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.EcoreUtil2;
-import org.eclipse.xtext.parsetree.AbstractNode;
 import org.eclipse.xtext.parsetree.CompositeNode;
 import org.eclipse.xtext.parsetree.LeafNode;
 import org.eclipse.xtext.parsetree.NodeAdapter;
 import org.eclipse.xtext.parsetree.NodeUtil;
 import org.eclipse.xtext.resource.XtextResource;
-import org.eclipse.xtext.ui.editor.syntaxcoloring.DefaultHighlightingConfiguration;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightedPositionAcceptor;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.ISemanticHighlightingCalculator;
 
@@ -80,7 +78,7 @@ public class TslSemanticHighlightingCalculator implements
 	    highlightMapTag(acceptor,m);
 	    highlightTmlToplevel(acceptor,m);
 	    highlightMapMethod(acceptor,m);
-	    Iterable<AbstractNode> allNodes = NodeUtil.getAllContents(
+	    NodeUtil.getAllContents(
 	    		  resource.getParseResult().getRootNode());
 	    
 	    

@@ -1,7 +1,5 @@
 package com.dexels.navajo.dsl.tsl.ui.highlighting;
 
-import java.util.regex.Pattern;
-
 import org.eclipse.xtext.ui.editor.syntaxcoloring.DefaultHighlightingConfiguration;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.antlr.AbstractAntlrTokenToAttributeIdMapper;
 
