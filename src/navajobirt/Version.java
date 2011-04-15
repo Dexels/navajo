@@ -30,7 +30,7 @@ package navajobirt;
  * 2.0.3. -Added more verbose timing information
  * 
  */
-public class Version extends dexels.Version {
+public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 	public static final int MAJOR = 1;
 	public static final int MINOR = 0;
@@ -43,36 +43,7 @@ public class Version extends dexels.Version {
 	String [] includes = {"navajodocument.Version"};
 	
 	public Version() {
-		addIncludes(includes);
-		setReleaseDate(RELEASEDATE);
-	}
-	
-	public int getMajor() {
-		return MAJOR;
+		
 	}
 
-	public int getMinor() {
-		return MINOR;
-	}
-
-	public int getPatchLevel() {
-		return PATCHLEVEL;
-	}
-
-	public String getVendor() {
-		return VENDOR;
-	}
-
-	public String getProductName() {
-		return PRODUCTNAME;
-	}
-
-	public static void main(String [] args) {
-		Version v = new Version();
-		System.err.println(v.toString());
-		dexels.Version [] d = (dexels.Version [] ) v.getIncludePackages();
-		for (int i = 0; i < d.length; i++) {
-			System.err.println("\t"+d[i].toString());
-		}
-	}
 }
