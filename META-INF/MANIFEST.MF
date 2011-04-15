@@ -14,7 +14,9 @@ Require-Bundle: com.dexels.navajo.dsl.expression;visibility:=reexport,
  org.eclipse.xtext.builder,
  org.antlr.runtime,
  com.dexels.navajo.dsl.expression.model;bundle-version="1.0.0",
- com.dexels.navajo.dsl.tsl.model;bundle-version="1.0.0"
+ com.dexels.navajo.dsl.tsl.model;bundle-version="1.0.0",
+ com.dexels.navajo.version;bundle-version="1.0.6",
+ com.dexels.navajo.document;bundle-version="1.0.4"
 Import-Package: org.apache.log4j
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: com.dexels.navajo.dsl.expression.ui,
