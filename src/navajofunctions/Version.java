@@ -50,7 +50,7 @@ import com.dexels.navajo.parser.FunctionInterface;
  * 
  * 1.1.2. Fix in ToClockTime
  */
-public class Version extends com.dexels.navajo.version.Version {
+public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 
 	//Included packages.
@@ -98,7 +98,7 @@ public class Version extends com.dexels.navajo.version.Version {
 	public static void main(String [] args) {
 		Version v = new Version();
 		System.err.println(v.toString());
-		com.dexels.navajo.version.Version [] d = v.getIncludePackages();
+		com.dexels.navajo.version.AbstractVersion [] d = v.getIncludePackages();
 		for (int i = 0; i < d.length; i++) {
 			System.err.println("\t"+d[i].toString());
 		}

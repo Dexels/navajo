@@ -54,7 +54,7 @@ public final class GetVersionInfo extends FunctionInterface {
 				c = DispatcherFactory.getInstance().getNavajoConfig().getClassloader().getClass(packageName+".Version");
 			}
 //			return "DUMMY FUNCTION, FIX ME!";
-			Version v = (Version) c.newInstance();
+			AbstractVersion v = (AbstractVersion) c.newInstance();
 			return v.toString();
 		} catch (Exception e) {
 			e.printStackTrace(System.err);
