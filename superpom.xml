@@ -55,7 +55,7 @@
 						<artifact>
 							<groupId>com.dexels.navajo.core</groupId>
 							<artifactId>targetplatform</artifactId>
-							<version>0.0.5-SNAPSHOT</version>
+							<version>0.0.6-SNAPSHOT</version>
 							<classifier>navajo_target</classifier>
 						</artifact>
 					</target>
