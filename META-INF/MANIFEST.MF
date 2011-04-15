@@ -2,7 +2,7 @@ Bundle-Name: Navajo Listeners
 Bundle-SymbolicName: com.dexels.navajo.listeners
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 3.1.3
+Bundle-Version: 3.1.4
 Bundle-Activator: navajolisteners.Version
 Bundle-ClassPath: .,mail.jar
 Include-Resource: lib
@@ -29,7 +29,7 @@ Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.client,
  com.dexels.navajo.core,
  com.dexels.navajo.document;bundle-version="1.0.0",
- com.dexels.navajo.version;bundle-version="1.0.6"
+ com.dexels.navajo.version;bundle-version="1.0.7"
 Import-Package: javax.servlet;version="2.5.0",
  javax.servlet.http,
  junit.framework,
