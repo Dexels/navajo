@@ -7,7 +7,7 @@ import com.dexels.navajo.rhino.RhinoRepository;
 import com.dexels.navajo.server.HandlerFactory;
 import com.dexels.navajo.server.RepositoryFactory;
 
-public class Version extends com.dexels.navajo.version.Version {
+public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 	@Override
 	public void start(BundleContext bc) throws Exception {
