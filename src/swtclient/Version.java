@@ -2,7 +2,7 @@ package swtclient;
 
 import org.osgi.framework.BundleContext;
 
-public class Version extends dexels.Version {
+public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 	private static BundleContext context;
 
