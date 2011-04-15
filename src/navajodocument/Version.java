@@ -72,7 +72,7 @@ import com.dexels.navajo.document.NavajoFactory;
  * 9.2.0 Changed Navajo merged semantics.
  * 
  */
-public class Version extends com.dexels.navajo.version.Version {
+public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 	@Override
 	public void shutdown() {
