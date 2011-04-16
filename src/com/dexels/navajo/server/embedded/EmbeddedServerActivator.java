@@ -1,17 +1,12 @@
 package com.dexels.navajo.server.embedded;
 
-import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.eclipse.jetty.util.component.LifeCycle;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
-import com.dexels.navajo.rhino.RhinoHandler;
 import com.dexels.navajo.server.listener.NavajoContextListener;
 import com.dexels.navajo.server.listener.http.TmlHttpServlet;
 import com.dexels.navajo.server.listener.nql.NqlServlet;
@@ -44,8 +39,22 @@ public class EmbeddedServerActivator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		touchNavajoParts(context);
+	}
+
+	private void touchNavajoParts(BundleContext context) {
 		System.err.println("Navajo embedded server activating!");
-		
+		navajodocument.Version.getRandom();
+		navajoclient.Version.getRandom();
+		navajolisteners.Version.getRandom();
+		navajo.Version.getRandom();
+		navajorhino.Version.getRandom();
+		navajoadapters.Version.getRandom();
+		navajofunctions.Version.getRandom();
+		navajoenterprise.Version.getRandom();
+		navajoenterpriseadapters.Version.getRandom();
+		navajoenterpriselisteners.Version.getRandom();
+		System.err.println("Touch complete!");
 	}
 
 	/*
@@ -66,21 +75,9 @@ public class EmbeddedServerActivator extends AbstractUIPlugin {
 		return plugin;
 	}
 
-	/**
-	 * Returns an image descriptor for the image file at the given
-	 * plug-in relative path
-	 *
-	 * @param path the path
-	 * @return the image descriptor
-	 */
-	public static ImageDescriptor getImageDescriptor(String path) {
-		return imageDescriptorFromPlugin(PLUGIN_ID, path);
-	}
-	
+
 	
 	public Server startServer(final int port, final String navajoPath) throws Exception, InterruptedException {
-		RhinoHandler r;
-
 		jettyServer = initializeServer(port, navajoPath);	
 		startServer();
 		return jettyServer;
@@ -109,18 +106,12 @@ public class EmbeddedServerActivator extends AbstractUIPlugin {
 	}
 
 	protected void serverStopped(Server server) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	public void stopServer() {
 		System.err.println("Stopping server");
 		try {
-//			Connector[] cc = this.jettyServer.getConnectors();
-//			for (Connector connector : cc) {
-//				connector.getCo
-//			}
-//			webappContextHandler.getServletContext().s
 			if(this.jettyServer==null) {
 				return;
 			}

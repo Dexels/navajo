@@ -23,5 +23,10 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jetty.security;bundle-version="[7.0.0,8.0.0)",
  com.dexels.navajo.version,
  com.dexels.navajo.client;bundle-version="3.0.2",
- com.dexels.navajo.rhino;bundle-version="1.0.3"
+ com.dexels.navajo.rhino;bundle-version="1.0.3",
+ com.dexels.navajo.enterprise;bundle-version="1.0.2";resolution:=optional,
+ com.dexels.navajo.enterprise.adapters;bundle-version="1.0.1";resolution:=optional,
+ com.dexels.navajo.enterprise.adapters.deps;bundle-version="1.0.1";resolution:=optional,
+ com.dexels.navajo.enterprise.listeners;bundle-version="1.0.3";resolution:=optional,
+ com.dexels.navajo.enterprise.listeners.deps;bundle-version="1.0.1";resolution:=optional
 Bundle-ActivationPolicy: lazy
