@@ -1,5 +1,17 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.StringTokenizer;
+
+import metadata.FormatDescription;
+
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.tipi.components.swingimpl.actions.TipiSaveValue;
+
+//TODO move and promote
+
 public class DefaultBrowser {
 
 	// private static final String WIN_ID = "Windows";
@@ -72,4 +84,47 @@ public class DefaultBrowser {
 		return result;
 	}
 
+	public static void openBinary(Binary b) {
+		String extString = null;
+		String fileNameEval = null;
+	
+		if (extString == null) {
+			String mime = b.guessContentType();
+			String ext = null;
+			FormatDescription fd = b.getFormatDescription();
+			if(fd!=null) {
+				List<String> extensions = fd.getFileExtensions();
+				if(!extensions.isEmpty()) {
+					ext = extensions.get(0);
+
+				}
+			}
+			if (mime != null) {
+				if (mime.indexOf("/") != -1) {
+					StringTokenizer st = new StringTokenizer(mime, "/");
+					String major = st.nextToken();
+					String minor = st.nextToken();
+					System.err.println("Binary type: " + major + " and minor: " + minor);
+					if(ext!=null) {
+						extString = ext;
+					} else {
+						extString = minor;
+					}
+				}
+			}
+		}
+
+		try {
+			if (fileNameEval == null) {
+				fileNameEval = "data_";
+			}
+			File f = File.createTempFile(fileNameEval, "." + extString);
+			DefaultBrowser.displayURL(f.getAbsolutePath());
+			f.deleteOnExit();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+	
 }
