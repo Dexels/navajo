@@ -17,6 +17,10 @@ public class ResultMessage implements Mappable {
 	private Message msg;
 	private Message parentMsg;
 	private Navajo myNavajo;
+	public Message getMsg() {
+		return msg;
+	}
+
 	private String suppressProperties = null;
 	
 	public void setMessage(Message m, String suppressProperties) {

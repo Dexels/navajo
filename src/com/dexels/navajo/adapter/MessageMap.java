@@ -1,6 +1,7 @@
 package com.dexels.navajo.adapter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import com.dexels.navajo.adapter.messagemap.ResultMessage;
 import com.dexels.navajo.document.Message;
@@ -56,6 +57,7 @@ public class MessageMap implements Mappable {
 	private boolean removeSource = false;
 	private String joinType = INNER_JOIN;
 	private String suppressProperties = null;
+	private boolean removeDuplicates = false;
 	
 	private Access myAccess;
 	private Message msg1 = null;
@@ -145,6 +147,7 @@ public class MessageMap implements Mappable {
 	
 	public ResultMessage [] getResultMessage() throws UserException, NavajoException {
 		
+		HashSet<String> messageHash = new HashSet<String>();
 		
 		ArrayList<ResultMessage> resultingMessage = new ArrayList<ResultMessage>();
 		
@@ -227,9 +230,32 @@ public class MessageMap implements Mappable {
 			}
 		}
 		
+		if ( removeDuplicates ) {
+			for ( int i = 0; i < resultingMessage.size(); i++ ) {
+				
+				int hashCode = getMessageHash(resultingMessage.get(i).getMsg());
+				for ( int j = i; j < resultingMessage.size(); j++ ) {
+					if ( getMessageHash(resultingMessage.get(j).getMsg()) == hashCode ) {
+						resultingMessage.remove(j);
+						break;
+					}
+				}
+			}
+		}
+		
 		this.resultMessage = new ResultMessage[resultingMessage.size()];
 		this.resultMessage = (ResultMessage []) resultingMessage.toArray(resultMessage);
+		
+		
 		return this.resultMessage;
+	}
+	
+	private int getMessageHash(Message m) {
+		int hashCode = 0;
+		for ( int i = 0; i < m.getAllProperties().size(); i++ ) {
+			hashCode += m.getAllProperties().get(i).hashCode();
+		}
+		return hashCode;
 	}
 	
 	public void load(Access access) throws MappableException, UserException {
