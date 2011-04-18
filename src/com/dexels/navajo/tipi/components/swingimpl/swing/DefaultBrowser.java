@@ -8,7 +8,6 @@ import java.util.StringTokenizer;
 import metadata.FormatDescription;
 
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.tipi.components.swingimpl.actions.TipiSaveValue;
 
 //TODO move and promote
 
