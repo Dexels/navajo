@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -25,7 +26,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.DebugException;
-import org.eclipse.debug.core.Launch;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -83,7 +83,7 @@ import com.dexels.navajo.swtclient.SwtFactory;
 public class TmlFormComposite extends Composite {
 
 	private static final Color LINK_BACKGROUND_COLOR = new Color(Display.getCurrent(), 240, 240, 220);
-	private static final Color BLUE_BACKGROUND_COLOR = new Color(Display.getCurrent(), 220, 220, 240);
+//	private static final Color BLUE_BACKGROUND_COLOR = new Color(Display.getCurrent(), 220, 220, 240);
 
 	private static final Color FORM_BACKGROUND_COLOR = LINK_BACKGROUND_COLOR;
 
@@ -115,7 +115,7 @@ public class TmlFormComposite extends Composite {
 
 	private ServerEntry myServerEntry;
 
-	private final ArrayList myScriptListeners = new ArrayList();
+	private final List<INavajoScriptListener> myScriptListeners = new ArrayList<INavajoScriptListener>();
 
 	// private ScrolledComposite mainMessageScroll;
 
@@ -154,6 +154,7 @@ public class TmlFormComposite extends Composite {
 		if (mainMessageContainer != null) {
 			mainMessageContainer.dispose();
 		}
+		System.err.println("MyFile: "+myFile);
 		myCurrentName = scriptName;
 		myCurrentFile = myFile;
 		myCurrentNavajo = n;
@@ -203,54 +204,22 @@ public class TmlFormComposite extends Composite {
 		reload(myCurrentNavajo, myCurrentFile, null);
 	}
 
-	// public void setTreeNavajo(Navajo n, IFile myFile) {
-	// System.err.println("Setting navajo");
-	// 
-	// final TreeViewer tv = SwtFactory.getInstance().createNavajoTree(n,
-	// getForm().getBody());
-	// // book.setContent(tv.getTree());
-	// // System.err.println("Bookheight: "+book.getSize().y);
-	// getForm().getBody().setBackground(new
-	// Color(Workbench.getInstance().getDisplay(), 240, 240, 220));
-	//
-	// GridData gd = new GridData(GridData.FILL, GridData.BEGINNING, true,
-	// false);
-	// gd.grabExcessHorizontalSpace = true;
-	// tv.getTree().setLayoutData(gd);
-	// tv.getTree().addTreeListener(new TreeListener() {
-	//
-	// public void treeCollapsed(TreeEvent e) {
-	// System.err.println("Tree opened!");
-	// // tv.getTree().pack();
-	// // tv.getTree().layout();
-	// // getForm().getBody().layout();
-	// }
-	//
-	// public void treeExpanded(TreeEvent e) {
-	// System.err.println("Tree opened!");
-	// // tv.getTree().pack();
-	// // tv.getTree().layout();
-	// // getForm().getBody().layout();
-	// }
-	// });
-	// myForm.reflow(true);
-	// }
+
 
 	/**
 	 * @param n
 	 * @param myFile
 	 */
 	private void setMessages(Navajo n, Composite container) {
-		ArrayList al;
+		List<Message> al;
 		try {
 			al = n.getAllMessages();
 		} catch (NavajoException e) {
 			e.printStackTrace();
 			return;
 		}
-		for (Iterator iter = al.iterator(); iter.hasNext();) {
-			Message element = (Message) iter.next();
-			System.err.println("Adding message: " + element.getName());
+		for (Iterator<Message> iter = al.iterator(); iter.hasNext();) {
+			Message element = iter.next();
 			addMessage(element, container);
 		}
 
@@ -269,12 +238,12 @@ public class TmlFormComposite extends Composite {
 			// System.err.println("ELEMENT: "+element.getClass());
 
 			// If there is a binary property, don't put it in a table
-			ArrayList al = element.getAllProperties();
-			if (element.getAllMessages().size() > 0) {
+			List<Property> al = element.getAllProperties();
+			if (!element.getAllMessages().isEmpty()) {
 				return false;
 			}
 			for (int j = 0; j < al.size(); j++) {
-				Property p = (Property) al.get(j);
+				Property p = al.get(j);
 				if (Property.BINARY_PROPERTY.equals(p.getType())) {
 					return false;
 				}
@@ -313,19 +282,6 @@ public class TmlFormComposite extends Composite {
 		}
 		
 		System.err.println("Double");
-//
-//		final Menu popup = new Menu(spb.getShell(),SWT.POP_UP);
-//		MenuItem item = new MenuItem(popup,SWT.PUSH);
-//		item.setText("Print as BIRT");
-//		item.addListener(SWT.Selection, new Listener(){
-//
-//			public void handleEvent(Event event) {
-//				System.err.println("Hoei!");
-//			}});
-//
-//		
-//		s.setMenu(popup);
-
 		if (isSuitableForTreeTable(element)) {
 			if (element.getArraySize() == 0) {
 				Label l = getKit().createLabel(s, "Empty table.");
@@ -348,12 +304,11 @@ public class TmlFormComposite extends Composite {
 				h.addHyperlinkListener(new HyperlinkAdapter(){
 
 					public void linkActivated(HyperlinkEvent e) {
-						// TODO Auto-generated method stub
-						ArrayList props = reference.getAllProperties();
+						List<Property> props = reference.getAllProperties();
 							final String[] names = new String[props.size()];
 						final int[] sizes = new int[props.size()];
 						for (int i = 0; i < names.length; i++) {
-							names[i] = ((Property) props.get(i)).getName();
+							names[i] = props.get(i).getName();
 							sizes[i]=tc.getTable().getColumn(i).getWidth();
 						}
 						Object[] aa = tc.getColumnProperties();
@@ -365,7 +320,7 @@ public class TmlFormComposite extends Composite {
 				});
 			}
 		} else {
-			ArrayList al = element.getAllProperties();
+			List<Property> al = element.getAllProperties();
 			if (al.size() > 0) {
 				TableWrapLayout llayout = new TableWrapLayout();
 				llayout.numColumns = 2;
@@ -377,7 +332,7 @@ public class TmlFormComposite extends Composite {
 				props.setLayoutData(tff);
 				addProperties(element, props);
 			}
-			ArrayList subm = element.getAllMessages();
+			List<Message> subm = element.getAllMessages();
 
 			if (subm.size() != 0) {
 				Composite submsgs = getKit().createComposite(s, SWT.NONE);
@@ -387,8 +342,8 @@ public class TmlFormComposite extends Composite {
 
 				submsgs.setLayoutData(tdd);
 				submsgs.setLayout(new TableWrapLayout());
-				for (Iterator iter = subm.iterator(); iter.hasNext();) {
-					Message submsg = (Message) iter.next();
+				for (Iterator<Message> iter = subm.iterator(); iter.hasNext();) {
+					Message submsg = iter.next();
 					addMessage(submsg, submsgs);
 				}
 			}
@@ -409,10 +364,8 @@ public class TmlFormComposite extends Composite {
 					}
 					
 				} catch (NavajoException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}  catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				return Status.OK_STATUS;
@@ -438,9 +391,9 @@ public class TmlFormComposite extends Composite {
 	 */
 	private void addProperties(Message element, Composite spb) {
 		// System.err.println("adding properties");
-		ArrayList al = element.getAllProperties();
-		for (Iterator iter = al.iterator(); iter.hasNext();) {
-			Property prop = (Property) iter.next();
+		List<Property> al = element.getAllProperties();
+		for (Iterator<Property> iter = al.iterator(); iter.hasNext();) {
+			Property prop = iter.next();
 			addFormProperty(prop, spb);
 		}
 	}
@@ -512,8 +465,8 @@ public class TmlFormComposite extends Composite {
 		addRefreshAdaptersHref(list, myFile);
 		addRecompileHref(list, scriptName, myFile);
 
-		for (Iterator iter = n.getAllMethods().iterator(); iter.hasNext();) {
-			final Method element = (Method) iter.next();
+		for (Iterator<Method> iter = n.getAllMethods().iterator(); iter.hasNext();) {
+			final Method element = iter.next();
 			final Hyperlink hl = whiteKit.createHyperlink(list, element.getName(), SWT.NONE);
 			hl.setHref(element.getName());
 			if (myFile != null) {
@@ -605,18 +558,18 @@ public class TmlFormComposite extends Composite {
 		addLabel(transactionList, "Password: " + h.getRPCPassword());
 		addLabel(transactionList, "Webservice: " + h.getRPCName());
 
-		Map headerAttributes = h.getHeaderAttributes();
+		Map<String,String> headerAttributes = h.getHeaderAttributes();
 		if (headerAttributes != null) {
-			Set s = headerAttributes.keySet();
-			for (Iterator iter = s.iterator(); iter.hasNext();) {
-				String element = (String) iter.next();
+			Set<String> s = headerAttributes.keySet();
+			for (Iterator<String> iter = s.iterator(); iter.hasNext();) {
+				String element = iter.next();
 				addLabel(performanceList, element + ": " + h.getHeaderAttribute(element));
 			}
 		}
 	}
 
 	private void addLabel(Composite transactionList, String label) {
-		Label l = getKit().createLabel(transactionList, label);
+		getKit().createLabel(transactionList, label);
 	}
 
 	private void addRefreshAdaptersHref(Composite list, final IFile myFile) {
@@ -632,7 +585,6 @@ public class TmlFormComposite extends Composite {
 					IFile cp = myFile.getProject().getFile(".classpath");
 					cp.touch(null);
 				} catch (CoreException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 					NavajoScriptPluginPlugin.getDefault().log("Error reloading adapters: ", e1);
 				}
@@ -660,7 +612,6 @@ public class TmlFormComposite extends Composite {
 						e1.printStackTrace();
 					}
 				} catch (CoreException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 					NavajoScriptPluginPlugin.getDefault().log("Error recompiling current script?!: ", e1);
 				}
@@ -705,14 +656,13 @@ public class TmlFormComposite extends Composite {
 		
 		final Hyperlink h3 = whiteKit.createHyperlink(list, "[[RUN TABLE REPORT]]", SWT.NONE);
 		tdd = new TableWrapData();
-		hl.setLayoutData(tdd);
-		hl.addHyperlinkListener(new HyperlinkAdapter() {
+		h3.setLayoutData(tdd);
+		h3.addHyperlinkListener(new HyperlinkAdapter() {
 			public void linkActivated(HyperlinkEvent e) {
 				Navajo copiedNavajo = n.copy();
 				try {
 					runHref(copiedNavajo, null, "ProcessPrintGenericBirt", e, false, null);
 				} catch (Exception e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 		}
@@ -1038,7 +988,6 @@ public class TmlFormComposite extends Composite {
 							}
 						});
 					} catch (ClientException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					return Status.OK_STATUS;
@@ -1075,49 +1024,17 @@ public class TmlFormComposite extends Composite {
 			// InputStream is = tmlFile.getContents();
 			Navajo n = NavajoScriptPluginPlugin.getDefault().loadNavajo(tmlFile);
 
-			// NavajoFactory.getInstance().createNavajo(is);
-			// is.close();
-			//            
 			setNavajo(n, tmlFile, myCurrentName);
 			fireGotoScript(name, n);
 			myForm.reflow(false);
 			return;
 		}
-		final IFile finalScript = scriptFile;
-		String ll = myCurrentNavajo.getHeader().getHeaderAttribute("local");
-		if ("true".equals(ll)) {
-			// THIS IS DEPRECATED
-			try {
-				Launch l = NavajoScriptPluginPlugin.getDefault().runNavajo("com.dexels.navajo.client.impl.NavajoRunner", finalScript,
-						myFile);
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-		} else {
 			Job j = new Job("Running Navajo...") {
 
 				protected IStatus run(IProgressMonitor monitor) {
 
 					if (reload) {
-						// String sourceTmlName =
-						// nav.getHeader().getAttribute("sourceScript");
-						// System.err.println("RELOAD: LOOKING IN
-						// HEADER:"+sourceTmlName);
-						// nav.getHeader().write(System.err);
-						// myCurrentNavajo.getHeader().setAttribute("sourceScript",
-						// sourceTmlName);
-						// try {
-						// IFile sourceFile = null;
-						// // if (sourceTmlName!=null &&
-						// !"".equals(sourceTmlName)) {
-						// sourceFile =
-						// NavajoScriptPluginPlugin.getDefault().getTmlFile(ipp,
-						// sourceTmlName);
-						// }
 						NavajoScriptPluginPlugin.getDefault().runRemoteNavajo(ipp, name, myFile, sourceTmlName);
-						// } catch (NavajoPluginException e) {
-						// e.printStackTrace();
-						// }
 
 					} else {
 						System.err.println("Setting header to: " + sourceTmlName);
@@ -1129,7 +1046,6 @@ public class TmlFormComposite extends Composite {
 				}
 			};
 			j.schedule();
-		}
 
 	}
 
@@ -1170,17 +1086,15 @@ public class TmlFormComposite extends Composite {
 	}
 
 	private void fireGotoScript(String scriptName, Navajo n) {
-		System.err.println("goto Script hit!!!");
 		for (int i = 0; i < myScriptListeners.size(); i++) {
-			INavajoScriptListener current = (INavajoScriptListener) myScriptListeners.get(i);
+			INavajoScriptListener current = myScriptListeners.get(i);
 			current.gotoScript(scriptName, n);
 		}
 	}
 
 	private void fireScriptCalled(String scriptName) {
-		System.err.println("Script called hit!!!");
 		for (int i = 0; i < myScriptListeners.size(); i++) {
-			INavajoScriptListener current = (INavajoScriptListener) myScriptListeners.get(i);
+			INavajoScriptListener current = myScriptListeners.get(i);
 			current.callingScript(scriptName);
 		}
 	}
@@ -1206,16 +1120,11 @@ public class TmlFormComposite extends Composite {
 	}
 
 	protected void createBirt(String service) {
-		// TODO Auto-generated method stub
-		// FileDialog fd = new FileDialog(formComposite.getShell());
 		BirtUtils b = new BirtUtils();
 		try {
 			IFile birt = getCurrentReport();
 			if (birt==null) {
 				SaveAsDialog sd = new SaveAsDialog(getShell());
-				// fd.setText("Choose report name");
-				// sd.showClosedProjects(false);
-				// fd.setFileName("NewReport.rptdesign");
 				sd.setOriginalName(service);
 
 				int result = sd.open();
