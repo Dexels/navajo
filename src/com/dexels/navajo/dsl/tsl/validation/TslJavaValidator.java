@@ -7,7 +7,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.xtext.validation.Check;
 
-import com.dexels.navajo.dsl.model.expression.FunctionCall;
+import com.dexels.navajo.dsl.model.expression.ExpressionPackage;
+import com.dexels.navajo.dsl.model.tsl.Message;
 import com.dexels.navajo.dsl.model.tsl.PossibleExpression;
 import com.dexels.navajo.dsl.model.tsl.Property;
 import com.dexels.navajo.dsl.model.tsl.Tml;
@@ -17,16 +18,14 @@ import com.dexels.navajo.dsl.model.tsl.TslPackage;
 
 public class TslJavaValidator extends AbstractTslJavaValidator {
 
+	public TslJavaValidator() {
+		super();
+		System.err.println("TSL VALOIDATOR CREATED");
+	}
 	
-//	@Check
-//	public void checkGreetingStartsWithCapital(Greeting greeting) {
-//		if (!Character.isUpperCase(greeting.getName().charAt(0))) {
-//			warning("Name should start with a capital", MyDslPackage.GREETING__NAME);
-//		}
-//	}
 
 	@Check
-	public void checkMessage(FunctionCall fc) {
+	public void checkMessage(Message fc) {
 		warning("Messages suck.",TslPackage.MESSAGE);
 	}
 
@@ -48,8 +47,9 @@ public class TslJavaValidator extends AbstractTslJavaValidator {
 
 	@Override
 	protected List<EPackage> getEPackages() {
+		System.err.println("Adding packages............");
 		List<EPackage> ePackages = super.getEPackages();
-//		ePackages.add(ExpressionPackage.eINSTANCE);
+		ePackages.add(ExpressionPackage.eINSTANCE);
 		ePackages.add(TslPackage.eINSTANCE);
 		return ePackages;
 	}
