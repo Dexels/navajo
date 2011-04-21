@@ -3,7 +3,6 @@
  */
 package com.dexels.navajo.dsl.tsl;
 
-import com.dexels.navajo.dsl.tsl.validation.TslJavaValidator;
 
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
@@ -11,11 +10,7 @@ import com.dexels.navajo.dsl.tsl.validation.TslJavaValidator;
 public class TslRuntimeModule extends com.dexels.navajo.dsl.tsl.AbstractTslRuntimeModule {
 
 	
-	@Override
-	public Class<? extends TslJavaValidator> bindTslJavaValidator() {
-		System.err.println("Binding TSL ");
-		return super.bindTslJavaValidator();
-	}
 
+	
 	
 }
