@@ -89,13 +89,9 @@ ruleTml returns [EObject current=null]
     @after { resetLookahead(); 
     	lastConsumedNode = currentNode;
     }:
-(
+(RULE_NAVASCRIPT_START
     { 
-        currentNode=createCompositeNode(grammarAccess.getTmlAccess().getNAVASCRIPT_STARTParserRuleCall_0(), currentNode); 
-    }
-ruleNAVASCRIPT_START
-    { 
-        currentNode = currentNode.getParent();
+    createLeafNode(grammarAccess.getTmlAccess().getNAVASCRIPT_STARTTerminalRuleCall_0(), null); 
     }
 (
     { 
@@ -335,13 +331,9 @@ ruleNAVASCRIPT_START
 	    }
 
 )
-))*
+))*RULE_NAVASCRIPT_END
     { 
-        currentNode=createCompositeNode(grammarAccess.getTmlAccess().getNAVASCRIPT_ENDParserRuleCall_3_0_2(), currentNode); 
-    }
-ruleNAVASCRIPT_END
-    { 
-        currentNode = currentNode.getParent();
+    createLeafNode(grammarAccess.getTmlAccess().getNAVASCRIPT_ENDTerminalRuleCall_3_0_2(), null); 
     }
 )
     |RULE_XML_TAG_SINGLEEND
@@ -350,1268 +342,6 @@ ruleNAVASCRIPT_END
     }
 ))
 ;
-
-
-
-
-
-// Entry rule entryRuleDEBUG_START_TAG
-entryRuleDEBUG_START_TAG returns [String current=null] 
-	:
-	{ currentNode = createCompositeNode(grammarAccess.getDEBUG_START_TAGRule(), currentNode); } 
-	 iv_ruleDEBUG_START_TAG=ruleDEBUG_START_TAG 
-	 { $current=$iv_ruleDEBUG_START_TAG.current.getText(); }  
-	 EOF 
-;
-
-// Rule DEBUG_START_TAG
-ruleDEBUG_START_TAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
-    @init { setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-	    lastConsumedNode = currentNode;
-    }:
-(    this_XML_TAG_START_0=RULE_XML_TAG_START    {
-		$current.merge(this_XML_TAG_START_0);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getDEBUG_START_TAGAccess().getXML_TAG_STARTTerminalRuleCall_0(), null); 
-    }
-
-	kw='debug' 
-    {
-        $current.merge(kw);
-        createLeafNode(grammarAccess.getDEBUG_START_TAGAccess().getDebugKeyword_1(), null); 
-    }
-)
-    ;
-
-
-
-
-
-// Entry rule entryRuleDEBUG_END_TAG
-entryRuleDEBUG_END_TAG returns [String current=null] 
-	:
-	{ currentNode = createCompositeNode(grammarAccess.getDEBUG_END_TAGRule(), currentNode); } 
-	 iv_ruleDEBUG_END_TAG=ruleDEBUG_END_TAG 
-	 { $current=$iv_ruleDEBUG_END_TAG.current.getText(); }  
-	 EOF 
-;
-
-// Rule DEBUG_END_TAG
-ruleDEBUG_END_TAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
-    @init { setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-	    lastConsumedNode = currentNode;
-    }:
-(    this_XML_TAG_END_0=RULE_XML_TAG_END    {
-		$current.merge(this_XML_TAG_END_0);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getDEBUG_END_TAGAccess().getXML_TAG_ENDTerminalRuleCall_0(), null); 
-    }
-
-	kw='debug' 
-    {
-        $current.merge(kw);
-        createLeafNode(grammarAccess.getDEBUG_END_TAGAccess().getDebugKeyword_1(), null); 
-    }
-    this_XML_TAG_END_2=RULE_XML_TAG_END    {
-		$current.merge(this_XML_TAG_END_2);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getDEBUG_END_TAGAccess().getXML_TAG_ENDTerminalRuleCall_2(), null); 
-    }
-)
-    ;
-
-
-
-
-
-
-
-// Entry rule entryRuleMAPSTARTKEYWORD
-entryRuleMAPSTARTKEYWORD returns [String current=null] 
-	:
-	{ currentNode = createCompositeNode(grammarAccess.getMAPSTARTKEYWORDRule(), currentNode); } 
-	 iv_ruleMAPSTARTKEYWORD=ruleMAPSTARTKEYWORD 
-	 { $current=$iv_ruleMAPSTARTKEYWORD.current.getText(); }  
-	 EOF 
-;
-
-// Rule MAPSTARTKEYWORD
-ruleMAPSTARTKEYWORD returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
-    @init { setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-	    lastConsumedNode = currentNode;
-    }:
-(    this_XML_TAG_START_0=RULE_XML_TAG_START    {
-		$current.merge(this_XML_TAG_START_0);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getMAPSTARTKEYWORDAccess().getXML_TAG_STARTTerminalRuleCall_0(), null); 
-    }
-    this_MAPKEYWORD_1=RULE_MAPKEYWORD    {
-		$current.merge(this_MAPKEYWORD_1);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getMAPSTARTKEYWORDAccess().getMAPKEYWORDTerminalRuleCall_1(), null); 
-    }
-)
-    ;
-
-
-
-
-
-// Entry rule entryRuleINCLUDE_START_TAG
-entryRuleINCLUDE_START_TAG returns [String current=null] 
-	:
-	{ currentNode = createCompositeNode(grammarAccess.getINCLUDE_START_TAGRule(), currentNode); } 
-	 iv_ruleINCLUDE_START_TAG=ruleINCLUDE_START_TAG 
-	 { $current=$iv_ruleINCLUDE_START_TAG.current.getText(); }  
-	 EOF 
-;
-
-// Rule INCLUDE_START_TAG
-ruleINCLUDE_START_TAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
-    @init { setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-	    lastConsumedNode = currentNode;
-    }:
-(    this_XML_TAG_START_0=RULE_XML_TAG_START    {
-		$current.merge(this_XML_TAG_START_0);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getINCLUDE_START_TAGAccess().getXML_TAG_STARTTerminalRuleCall_0(), null); 
-    }
-
-	kw='include' 
-    {
-        $current.merge(kw);
-        createLeafNode(grammarAccess.getINCLUDE_START_TAGAccess().getIncludeKeyword_1(), null); 
-    }
-)
-    ;
-
-
-
-
-
-// Entry rule entryRulePROPERTY_START_TAG
-entryRulePROPERTY_START_TAG returns [String current=null] 
-	:
-	{ currentNode = createCompositeNode(grammarAccess.getPROPERTY_START_TAGRule(), currentNode); } 
-	 iv_rulePROPERTY_START_TAG=rulePROPERTY_START_TAG 
-	 { $current=$iv_rulePROPERTY_START_TAG.current.getText(); }  
-	 EOF 
-;
-
-// Rule PROPERTY_START_TAG
-rulePROPERTY_START_TAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
-    @init { setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-	    lastConsumedNode = currentNode;
-    }:
-(    this_XML_TAG_START_0=RULE_XML_TAG_START    {
-		$current.merge(this_XML_TAG_START_0);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getPROPERTY_START_TAGAccess().getXML_TAG_STARTTerminalRuleCall_0(), null); 
-    }
-
-	kw='property' 
-    {
-        $current.merge(kw);
-        createLeafNode(grammarAccess.getPROPERTY_START_TAGAccess().getPropertyKeyword_1(), null); 
-    }
-)
-    ;
-
-
-
-
-
-// Entry rule entryRuleREQUIRED_START_TAG
-entryRuleREQUIRED_START_TAG returns [String current=null] 
-	:
-	{ currentNode = createCompositeNode(grammarAccess.getREQUIRED_START_TAGRule(), currentNode); } 
-	 iv_ruleREQUIRED_START_TAG=ruleREQUIRED_START_TAG 
-	 { $current=$iv_ruleREQUIRED_START_TAG.current.getText(); }  
-	 EOF 
-;
-
-// Rule REQUIRED_START_TAG
-ruleREQUIRED_START_TAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
-    @init { setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-	    lastConsumedNode = currentNode;
-    }:
-(    this_XML_TAG_START_0=RULE_XML_TAG_START    {
-		$current.merge(this_XML_TAG_START_0);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getREQUIRED_START_TAGAccess().getXML_TAG_STARTTerminalRuleCall_0(), null); 
-    }
-
-	kw='required' 
-    {
-        $current.merge(kw);
-        createLeafNode(grammarAccess.getREQUIRED_START_TAGAccess().getRequiredKeyword_1(), null); 
-    }
-)
-    ;
-
-
-
-
-
-// Entry rule entryRuleVALIDATIONS_START_TAG
-entryRuleVALIDATIONS_START_TAG returns [String current=null] 
-	:
-	{ currentNode = createCompositeNode(grammarAccess.getVALIDATIONS_START_TAGRule(), currentNode); } 
-	 iv_ruleVALIDATIONS_START_TAG=ruleVALIDATIONS_START_TAG 
-	 { $current=$iv_ruleVALIDATIONS_START_TAG.current.getText(); }  
-	 EOF 
-;
-
-// Rule VALIDATIONS_START_TAG
-ruleVALIDATIONS_START_TAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
-    @init { setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-	    lastConsumedNode = currentNode;
-    }:
-(    this_XML_TAG_START_0=RULE_XML_TAG_START    {
-		$current.merge(this_XML_TAG_START_0);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getVALIDATIONS_START_TAGAccess().getXML_TAG_STARTTerminalRuleCall_0(), null); 
-    }
-
-	kw='validations' 
-    {
-        $current.merge(kw);
-        createLeafNode(grammarAccess.getVALIDATIONS_START_TAGAccess().getValidationsKeyword_1(), null); 
-    }
-)
-    ;
-
-
-
-
-
-// Entry rule entryRuleCHECK_START_TAG
-entryRuleCHECK_START_TAG returns [String current=null] 
-	:
-	{ currentNode = createCompositeNode(grammarAccess.getCHECK_START_TAGRule(), currentNode); } 
-	 iv_ruleCHECK_START_TAG=ruleCHECK_START_TAG 
-	 { $current=$iv_ruleCHECK_START_TAG.current.getText(); }  
-	 EOF 
-;
-
-// Rule CHECK_START_TAG
-ruleCHECK_START_TAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
-    @init { setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-	    lastConsumedNode = currentNode;
-    }:
-(    this_XML_TAG_START_0=RULE_XML_TAG_START    {
-		$current.merge(this_XML_TAG_START_0);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getCHECK_START_TAGAccess().getXML_TAG_STARTTerminalRuleCall_0(), null); 
-    }
-
-	kw='check' 
-    {
-        $current.merge(kw);
-        createLeafNode(grammarAccess.getCHECK_START_TAGAccess().getCheckKeyword_1(), null); 
-    }
-)
-    ;
-
-
-
-
-
-// Entry rule entryRuleCOMMENT_START_TAG
-entryRuleCOMMENT_START_TAG returns [String current=null] 
-	:
-	{ currentNode = createCompositeNode(grammarAccess.getCOMMENT_START_TAGRule(), currentNode); } 
-	 iv_ruleCOMMENT_START_TAG=ruleCOMMENT_START_TAG 
-	 { $current=$iv_ruleCOMMENT_START_TAG.current.getText(); }  
-	 EOF 
-;
-
-// Rule COMMENT_START_TAG
-ruleCOMMENT_START_TAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
-    @init { setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-	    lastConsumedNode = currentNode;
-    }:
-(    this_XML_TAG_START_0=RULE_XML_TAG_START    {
-		$current.merge(this_XML_TAG_START_0);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getCOMMENT_START_TAGAccess().getXML_TAG_STARTTerminalRuleCall_0(), null); 
-    }
-
-	kw='comment' 
-    {
-        $current.merge(kw);
-        createLeafNode(grammarAccess.getCOMMENT_START_TAGAccess().getCommentKeyword_1(), null); 
-    }
-)
-    ;
-
-
-
-
-
-// Entry rule entryRuleBREAK_START_TAG
-entryRuleBREAK_START_TAG returns [String current=null] 
-	:
-	{ currentNode = createCompositeNode(grammarAccess.getBREAK_START_TAGRule(), currentNode); } 
-	 iv_ruleBREAK_START_TAG=ruleBREAK_START_TAG 
-	 { $current=$iv_ruleBREAK_START_TAG.current.getText(); }  
-	 EOF 
-;
-
-// Rule BREAK_START_TAG
-ruleBREAK_START_TAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
-    @init { setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-	    lastConsumedNode = currentNode;
-    }:
-(    this_XML_TAG_START_0=RULE_XML_TAG_START    {
-		$current.merge(this_XML_TAG_START_0);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getBREAK_START_TAGAccess().getXML_TAG_STARTTerminalRuleCall_0(), null); 
-    }
-
-	kw='break' 
-    {
-        $current.merge(kw);
-        createLeafNode(grammarAccess.getBREAK_START_TAGAccess().getBreakKeyword_1(), null); 
-    }
-)
-    ;
-
-
-
-
-
-// Entry rule entryRuleOPTION_START_TAG
-entryRuleOPTION_START_TAG returns [String current=null] 
-	:
-	{ currentNode = createCompositeNode(grammarAccess.getOPTION_START_TAGRule(), currentNode); } 
-	 iv_ruleOPTION_START_TAG=ruleOPTION_START_TAG 
-	 { $current=$iv_ruleOPTION_START_TAG.current.getText(); }  
-	 EOF 
-;
-
-// Rule OPTION_START_TAG
-ruleOPTION_START_TAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
-    @init { setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-	    lastConsumedNode = currentNode;
-    }:
-(    this_XML_TAG_START_0=RULE_XML_TAG_START    {
-		$current.merge(this_XML_TAG_START_0);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getOPTION_START_TAGAccess().getXML_TAG_STARTTerminalRuleCall_0(), null); 
-    }
-
-	kw='option' 
-    {
-        $current.merge(kw);
-        createLeafNode(grammarAccess.getOPTION_START_TAGAccess().getOptionKeyword_1(), null); 
-    }
-)
-    ;
-
-
-
-
-
-// Entry rule entryRuleBREAK_END_TAG
-entryRuleBREAK_END_TAG returns [String current=null] 
-	:
-	{ currentNode = createCompositeNode(grammarAccess.getBREAK_END_TAGRule(), currentNode); } 
-	 iv_ruleBREAK_END_TAG=ruleBREAK_END_TAG 
-	 { $current=$iv_ruleBREAK_END_TAG.current.getText(); }  
-	 EOF 
-;
-
-// Rule BREAK_END_TAG
-ruleBREAK_END_TAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
-    @init { setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-	    lastConsumedNode = currentNode;
-    }:
-(    this_XML_START_ENDTAG_0=RULE_XML_START_ENDTAG    {
-		$current.merge(this_XML_START_ENDTAG_0);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getBREAK_END_TAGAccess().getXML_START_ENDTAGTerminalRuleCall_0(), null); 
-    }
-
-	kw='break' 
-    {
-        $current.merge(kw);
-        createLeafNode(grammarAccess.getBREAK_END_TAGAccess().getBreakKeyword_1(), null); 
-    }
-    this_XML_TAG_END_2=RULE_XML_TAG_END    {
-		$current.merge(this_XML_TAG_END_2);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getBREAK_END_TAGAccess().getXML_TAG_ENDTerminalRuleCall_2(), null); 
-    }
-)
-    ;
-
-
-
-
-
-// Entry rule entryRuleOPTION_END_TAG
-entryRuleOPTION_END_TAG returns [String current=null] 
-	:
-	{ currentNode = createCompositeNode(grammarAccess.getOPTION_END_TAGRule(), currentNode); } 
-	 iv_ruleOPTION_END_TAG=ruleOPTION_END_TAG 
-	 { $current=$iv_ruleOPTION_END_TAG.current.getText(); }  
-	 EOF 
-;
-
-// Rule OPTION_END_TAG
-ruleOPTION_END_TAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
-    @init { setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-	    lastConsumedNode = currentNode;
-    }:
-(    this_XML_START_ENDTAG_0=RULE_XML_START_ENDTAG    {
-		$current.merge(this_XML_START_ENDTAG_0);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getOPTION_END_TAGAccess().getXML_START_ENDTAGTerminalRuleCall_0(), null); 
-    }
-
-	kw='option' 
-    {
-        $current.merge(kw);
-        createLeafNode(grammarAccess.getOPTION_END_TAGAccess().getOptionKeyword_1(), null); 
-    }
-    this_XML_TAG_END_2=RULE_XML_TAG_END    {
-		$current.merge(this_XML_TAG_END_2);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getOPTION_END_TAGAccess().getXML_TAG_ENDTerminalRuleCall_2(), null); 
-    }
-)
-    ;
-
-
-
-
-
-// Entry rule entryRuleREQUIRED_END_TAG
-entryRuleREQUIRED_END_TAG returns [String current=null] 
-	:
-	{ currentNode = createCompositeNode(grammarAccess.getREQUIRED_END_TAGRule(), currentNode); } 
-	 iv_ruleREQUIRED_END_TAG=ruleREQUIRED_END_TAG 
-	 { $current=$iv_ruleREQUIRED_END_TAG.current.getText(); }  
-	 EOF 
-;
-
-// Rule REQUIRED_END_TAG
-ruleREQUIRED_END_TAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
-    @init { setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-	    lastConsumedNode = currentNode;
-    }:
-(    this_XML_START_ENDTAG_0=RULE_XML_START_ENDTAG    {
-		$current.merge(this_XML_START_ENDTAG_0);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getREQUIRED_END_TAGAccess().getXML_START_ENDTAGTerminalRuleCall_0(), null); 
-    }
-
-	kw='required' 
-    {
-        $current.merge(kw);
-        createLeafNode(grammarAccess.getREQUIRED_END_TAGAccess().getRequiredKeyword_1(), null); 
-    }
-    this_XML_TAG_END_2=RULE_XML_TAG_END    {
-		$current.merge(this_XML_TAG_END_2);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getREQUIRED_END_TAGAccess().getXML_TAG_ENDTerminalRuleCall_2(), null); 
-    }
-)
-    ;
-
-
-
-
-
-// Entry rule entryRulePROPERTY_END_TAG
-entryRulePROPERTY_END_TAG returns [String current=null] 
-	:
-	{ currentNode = createCompositeNode(grammarAccess.getPROPERTY_END_TAGRule(), currentNode); } 
-	 iv_rulePROPERTY_END_TAG=rulePROPERTY_END_TAG 
-	 { $current=$iv_rulePROPERTY_END_TAG.current.getText(); }  
-	 EOF 
-;
-
-// Rule PROPERTY_END_TAG
-rulePROPERTY_END_TAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
-    @init { setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-	    lastConsumedNode = currentNode;
-    }:
-(    this_XML_START_ENDTAG_0=RULE_XML_START_ENDTAG    {
-		$current.merge(this_XML_START_ENDTAG_0);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getPROPERTY_END_TAGAccess().getXML_START_ENDTAGTerminalRuleCall_0(), null); 
-    }
-
-	kw='property' 
-    {
-        $current.merge(kw);
-        createLeafNode(grammarAccess.getPROPERTY_END_TAGAccess().getPropertyKeyword_1(), null); 
-    }
-    this_XML_TAG_END_2=RULE_XML_TAG_END    {
-		$current.merge(this_XML_TAG_END_2);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getPROPERTY_END_TAGAccess().getXML_TAG_ENDTerminalRuleCall_2(), null); 
-    }
-)
-    ;
-
-
-
-
-
-// Entry rule entryRuleCOMMENT_END_TAG
-entryRuleCOMMENT_END_TAG returns [String current=null] 
-	:
-	{ currentNode = createCompositeNode(grammarAccess.getCOMMENT_END_TAGRule(), currentNode); } 
-	 iv_ruleCOMMENT_END_TAG=ruleCOMMENT_END_TAG 
-	 { $current=$iv_ruleCOMMENT_END_TAG.current.getText(); }  
-	 EOF 
-;
-
-// Rule COMMENT_END_TAG
-ruleCOMMENT_END_TAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
-    @init { setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-	    lastConsumedNode = currentNode;
-    }:
-(    this_XML_START_ENDTAG_0=RULE_XML_START_ENDTAG    {
-		$current.merge(this_XML_START_ENDTAG_0);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getCOMMENT_END_TAGAccess().getXML_START_ENDTAGTerminalRuleCall_0(), null); 
-    }
-
-	kw='comment' 
-    {
-        $current.merge(kw);
-        createLeafNode(grammarAccess.getCOMMENT_END_TAGAccess().getCommentKeyword_1(), null); 
-    }
-    this_XML_TAG_END_2=RULE_XML_TAG_END    {
-		$current.merge(this_XML_TAG_END_2);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getCOMMENT_END_TAGAccess().getXML_TAG_ENDTerminalRuleCall_2(), null); 
-    }
-)
-    ;
-
-
-
-
-
-// Entry rule entryRuleVALIDATIONS_END_TAG
-entryRuleVALIDATIONS_END_TAG returns [String current=null] 
-	:
-	{ currentNode = createCompositeNode(grammarAccess.getVALIDATIONS_END_TAGRule(), currentNode); } 
-	 iv_ruleVALIDATIONS_END_TAG=ruleVALIDATIONS_END_TAG 
-	 { $current=$iv_ruleVALIDATIONS_END_TAG.current.getText(); }  
-	 EOF 
-;
-
-// Rule VALIDATIONS_END_TAG
-ruleVALIDATIONS_END_TAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
-    @init { setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-	    lastConsumedNode = currentNode;
-    }:
-(    this_XML_START_ENDTAG_0=RULE_XML_START_ENDTAG    {
-		$current.merge(this_XML_START_ENDTAG_0);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getVALIDATIONS_END_TAGAccess().getXML_START_ENDTAGTerminalRuleCall_0(), null); 
-    }
-
-	kw='validations' 
-    {
-        $current.merge(kw);
-        createLeafNode(grammarAccess.getVALIDATIONS_END_TAGAccess().getValidationsKeyword_1(), null); 
-    }
-    this_XML_TAG_END_2=RULE_XML_TAG_END    {
-		$current.merge(this_XML_TAG_END_2);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getVALIDATIONS_END_TAGAccess().getXML_TAG_ENDTerminalRuleCall_2(), null); 
-    }
-)
-    ;
-
-
-
-
-
-// Entry rule entryRuleCHECK_END_TAG
-entryRuleCHECK_END_TAG returns [String current=null] 
-	:
-	{ currentNode = createCompositeNode(grammarAccess.getCHECK_END_TAGRule(), currentNode); } 
-	 iv_ruleCHECK_END_TAG=ruleCHECK_END_TAG 
-	 { $current=$iv_ruleCHECK_END_TAG.current.getText(); }  
-	 EOF 
-;
-
-// Rule CHECK_END_TAG
-ruleCHECK_END_TAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
-    @init { setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-	    lastConsumedNode = currentNode;
-    }:
-(    this_XML_START_ENDTAG_0=RULE_XML_START_ENDTAG    {
-		$current.merge(this_XML_START_ENDTAG_0);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getCHECK_END_TAGAccess().getXML_START_ENDTAGTerminalRuleCall_0(), null); 
-    }
-
-	kw='check' 
-    {
-        $current.merge(kw);
-        createLeafNode(grammarAccess.getCHECK_END_TAGAccess().getCheckKeyword_1(), null); 
-    }
-    this_XML_TAG_END_2=RULE_XML_TAG_END    {
-		$current.merge(this_XML_TAG_END_2);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getCHECK_END_TAGAccess().getXML_TAG_ENDTerminalRuleCall_2(), null); 
-    }
-)
-    ;
-
-
-
-
-
-// Entry rule entryRulePARAM_END_TAG
-entryRulePARAM_END_TAG returns [String current=null] 
-	:
-	{ currentNode = createCompositeNode(grammarAccess.getPARAM_END_TAGRule(), currentNode); } 
-	 iv_rulePARAM_END_TAG=rulePARAM_END_TAG 
-	 { $current=$iv_rulePARAM_END_TAG.current.getText(); }  
-	 EOF 
-;
-
-// Rule PARAM_END_TAG
-rulePARAM_END_TAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
-    @init { setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-	    lastConsumedNode = currentNode;
-    }:
-(    this_XML_START_ENDTAG_0=RULE_XML_START_ENDTAG    {
-		$current.merge(this_XML_START_ENDTAG_0);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getPARAM_END_TAGAccess().getXML_START_ENDTAGTerminalRuleCall_0(), null); 
-    }
-
-	kw='param' 
-    {
-        $current.merge(kw);
-        createLeafNode(grammarAccess.getPARAM_END_TAGAccess().getParamKeyword_1(), null); 
-    }
-    this_XML_TAG_END_2=RULE_XML_TAG_END    {
-		$current.merge(this_XML_TAG_END_2);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getPARAM_END_TAGAccess().getXML_TAG_ENDTerminalRuleCall_2(), null); 
-    }
-)
-    ;
-
-
-
-
-
-// Entry rule entryRuleMESSAGE_END_TAG
-entryRuleMESSAGE_END_TAG returns [String current=null] 
-	:
-	{ currentNode = createCompositeNode(grammarAccess.getMESSAGE_END_TAGRule(), currentNode); } 
-	 iv_ruleMESSAGE_END_TAG=ruleMESSAGE_END_TAG 
-	 { $current=$iv_ruleMESSAGE_END_TAG.current.getText(); }  
-	 EOF 
-;
-
-// Rule MESSAGE_END_TAG
-ruleMESSAGE_END_TAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
-    @init { setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-	    lastConsumedNode = currentNode;
-    }:
-(    this_XML_START_ENDTAG_0=RULE_XML_START_ENDTAG    {
-		$current.merge(this_XML_START_ENDTAG_0);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getMESSAGE_END_TAGAccess().getXML_START_ENDTAGTerminalRuleCall_0(), null); 
-    }
-
-	kw='message' 
-    {
-        $current.merge(kw);
-        createLeafNode(grammarAccess.getMESSAGE_END_TAGAccess().getMessageKeyword_1(), null); 
-    }
-    this_XML_TAG_END_2=RULE_XML_TAG_END    {
-		$current.merge(this_XML_TAG_END_2);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getMESSAGE_END_TAGAccess().getXML_TAG_ENDTerminalRuleCall_2(), null); 
-    }
-)
-    ;
-
-
-
-
-
-// Entry rule entryRuleMETHODS_END_TAG
-entryRuleMETHODS_END_TAG returns [String current=null] 
-	:
-	{ currentNode = createCompositeNode(grammarAccess.getMETHODS_END_TAGRule(), currentNode); } 
-	 iv_ruleMETHODS_END_TAG=ruleMETHODS_END_TAG 
-	 { $current=$iv_ruleMETHODS_END_TAG.current.getText(); }  
-	 EOF 
-;
-
-// Rule METHODS_END_TAG
-ruleMETHODS_END_TAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
-    @init { setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-	    lastConsumedNode = currentNode;
-    }:
-(    this_XML_START_ENDTAG_0=RULE_XML_START_ENDTAG    {
-		$current.merge(this_XML_START_ENDTAG_0);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getMETHODS_END_TAGAccess().getXML_START_ENDTAGTerminalRuleCall_0(), null); 
-    }
-
-	kw='methods' 
-    {
-        $current.merge(kw);
-        createLeafNode(grammarAccess.getMETHODS_END_TAGAccess().getMethodsKeyword_1(), null); 
-    }
-    this_XML_TAG_END_2=RULE_XML_TAG_END    {
-		$current.merge(this_XML_TAG_END_2);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getMETHODS_END_TAGAccess().getXML_TAG_ENDTerminalRuleCall_2(), null); 
-    }
-)
-    ;
-
-
-
-
-
-// Entry rule entryRuleMETHOD_END_TAG
-entryRuleMETHOD_END_TAG returns [String current=null] 
-	:
-	{ currentNode = createCompositeNode(grammarAccess.getMETHOD_END_TAGRule(), currentNode); } 
-	 iv_ruleMETHOD_END_TAG=ruleMETHOD_END_TAG 
-	 { $current=$iv_ruleMETHOD_END_TAG.current.getText(); }  
-	 EOF 
-;
-
-// Rule METHOD_END_TAG
-ruleMETHOD_END_TAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
-    @init { setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-	    lastConsumedNode = currentNode;
-    }:
-(    this_XML_START_ENDTAG_0=RULE_XML_START_ENDTAG    {
-		$current.merge(this_XML_START_ENDTAG_0);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getMETHOD_END_TAGAccess().getXML_START_ENDTAGTerminalRuleCall_0(), null); 
-    }
-
-	kw='method' 
-    {
-        $current.merge(kw);
-        createLeafNode(grammarAccess.getMETHOD_END_TAGAccess().getMethodKeyword_1(), null); 
-    }
-    this_XML_TAG_END_2=RULE_XML_TAG_END    {
-		$current.merge(this_XML_TAG_END_2);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getMETHOD_END_TAGAccess().getXML_TAG_ENDTerminalRuleCall_2(), null); 
-    }
-)
-    ;
-
-
-
-
-
-// Entry rule entryRuleFIELD_END_TAG
-entryRuleFIELD_END_TAG returns [String current=null] 
-	:
-	{ currentNode = createCompositeNode(grammarAccess.getFIELD_END_TAGRule(), currentNode); } 
-	 iv_ruleFIELD_END_TAG=ruleFIELD_END_TAG 
-	 { $current=$iv_ruleFIELD_END_TAG.current.getText(); }  
-	 EOF 
-;
-
-// Rule FIELD_END_TAG
-ruleFIELD_END_TAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
-    @init { setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-	    lastConsumedNode = currentNode;
-    }:
-(    this_XML_START_ENDTAG_0=RULE_XML_START_ENDTAG    {
-		$current.merge(this_XML_START_ENDTAG_0);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getFIELD_END_TAGAccess().getXML_START_ENDTAGTerminalRuleCall_0(), null); 
-    }
-
-	kw='field' 
-    {
-        $current.merge(kw);
-        createLeafNode(grammarAccess.getFIELD_END_TAGAccess().getFieldKeyword_1(), null); 
-    }
-    this_XML_TAG_END_2=RULE_XML_TAG_END    {
-		$current.merge(this_XML_TAG_END_2);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getFIELD_END_TAGAccess().getXML_TAG_ENDTerminalRuleCall_2(), null); 
-    }
-)
-    ;
-
-
-
-
-
-// Entry rule entryRuleEXPRESSION_START_TAG
-entryRuleEXPRESSION_START_TAG returns [String current=null] 
-	:
-	{ currentNode = createCompositeNode(grammarAccess.getEXPRESSION_START_TAGRule(), currentNode); } 
-	 iv_ruleEXPRESSION_START_TAG=ruleEXPRESSION_START_TAG 
-	 { $current=$iv_ruleEXPRESSION_START_TAG.current.getText(); }  
-	 EOF 
-;
-
-// Rule EXPRESSION_START_TAG
-ruleEXPRESSION_START_TAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
-    @init { setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-	    lastConsumedNode = currentNode;
-    }:
-(    this_XML_TAG_START_0=RULE_XML_TAG_START    {
-		$current.merge(this_XML_TAG_START_0);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getEXPRESSION_START_TAGAccess().getXML_TAG_STARTTerminalRuleCall_0(), null); 
-    }
-
-	kw='expression' 
-    {
-        $current.merge(kw);
-        createLeafNode(grammarAccess.getEXPRESSION_START_TAGAccess().getExpressionKeyword_1(), null); 
-    }
-)
-    ;
-
-
-
-
-
-// Entry rule entryRuleEXPRESSION_END_TAG
-entryRuleEXPRESSION_END_TAG returns [String current=null] 
-	:
-	{ currentNode = createCompositeNode(grammarAccess.getEXPRESSION_END_TAGRule(), currentNode); } 
-	 iv_ruleEXPRESSION_END_TAG=ruleEXPRESSION_END_TAG 
-	 { $current=$iv_ruleEXPRESSION_END_TAG.current.getText(); }  
-	 EOF 
-;
-
-// Rule EXPRESSION_END_TAG
-ruleEXPRESSION_END_TAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
-    @init { setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-	    lastConsumedNode = currentNode;
-    }:
-(    this_XML_START_ENDTAG_0=RULE_XML_START_ENDTAG    {
-		$current.merge(this_XML_START_ENDTAG_0);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getEXPRESSION_END_TAGAccess().getXML_START_ENDTAGTerminalRuleCall_0(), null); 
-    }
-
-	kw='expression' 
-    {
-        $current.merge(kw);
-        createLeafNode(grammarAccess.getEXPRESSION_END_TAGAccess().getExpressionKeyword_1(), null); 
-    }
-    this_XML_TAG_END_2=RULE_XML_TAG_END    {
-		$current.merge(this_XML_TAG_END_2);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getEXPRESSION_END_TAGAccess().getXML_TAG_ENDTerminalRuleCall_2(), null); 
-    }
-)
-    ;
-
-
-
-
-
-// Entry rule entryRulePARAM_START_TAG
-entryRulePARAM_START_TAG returns [String current=null] 
-	:
-	{ currentNode = createCompositeNode(grammarAccess.getPARAM_START_TAGRule(), currentNode); } 
-	 iv_rulePARAM_START_TAG=rulePARAM_START_TAG 
-	 { $current=$iv_rulePARAM_START_TAG.current.getText(); }  
-	 EOF 
-;
-
-// Rule PARAM_START_TAG
-rulePARAM_START_TAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
-    @init { setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-	    lastConsumedNode = currentNode;
-    }:
-(    this_XML_TAG_START_0=RULE_XML_TAG_START    {
-		$current.merge(this_XML_TAG_START_0);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getPARAM_START_TAGAccess().getXML_TAG_STARTTerminalRuleCall_0(), null); 
-    }
-
-	kw='param' 
-    {
-        $current.merge(kw);
-        createLeafNode(grammarAccess.getPARAM_START_TAGAccess().getParamKeyword_1(), null); 
-    }
-)
-    ;
-
-
-
-
-
-// Entry rule entryRuleMESSAGE_START_TAG
-entryRuleMESSAGE_START_TAG returns [String current=null] 
-	:
-	{ currentNode = createCompositeNode(grammarAccess.getMESSAGE_START_TAGRule(), currentNode); } 
-	 iv_ruleMESSAGE_START_TAG=ruleMESSAGE_START_TAG 
-	 { $current=$iv_ruleMESSAGE_START_TAG.current.getText(); }  
-	 EOF 
-;
-
-// Rule MESSAGE_START_TAG
-ruleMESSAGE_START_TAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
-    @init { setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-	    lastConsumedNode = currentNode;
-    }:
-(    this_XML_TAG_START_0=RULE_XML_TAG_START    {
-		$current.merge(this_XML_TAG_START_0);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getMESSAGE_START_TAGAccess().getXML_TAG_STARTTerminalRuleCall_0(), null); 
-    }
-
-	kw='message' 
-    {
-        $current.merge(kw);
-        createLeafNode(grammarAccess.getMESSAGE_START_TAGAccess().getMessageKeyword_1(), null); 
-    }
-)
-    ;
-
-
-
-
-
-// Entry rule entryRuleMETHOD_START_TAG
-entryRuleMETHOD_START_TAG returns [String current=null] 
-	:
-	{ currentNode = createCompositeNode(grammarAccess.getMETHOD_START_TAGRule(), currentNode); } 
-	 iv_ruleMETHOD_START_TAG=ruleMETHOD_START_TAG 
-	 { $current=$iv_ruleMETHOD_START_TAG.current.getText(); }  
-	 EOF 
-;
-
-// Rule METHOD_START_TAG
-ruleMETHOD_START_TAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
-    @init { setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-	    lastConsumedNode = currentNode;
-    }:
-(    this_XML_TAG_START_0=RULE_XML_TAG_START    {
-		$current.merge(this_XML_TAG_START_0);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getMETHOD_START_TAGAccess().getXML_TAG_STARTTerminalRuleCall_0(), null); 
-    }
-
-	kw='method' 
-    {
-        $current.merge(kw);
-        createLeafNode(grammarAccess.getMETHOD_START_TAGAccess().getMethodKeyword_1(), null); 
-    }
-)
-    ;
-
-
-
-
-
-// Entry rule entryRuleMETHODS_START_TAG
-entryRuleMETHODS_START_TAG returns [String current=null] 
-	:
-	{ currentNode = createCompositeNode(grammarAccess.getMETHODS_START_TAGRule(), currentNode); } 
-	 iv_ruleMETHODS_START_TAG=ruleMETHODS_START_TAG 
-	 { $current=$iv_ruleMETHODS_START_TAG.current.getText(); }  
-	 EOF 
-;
-
-// Rule METHODS_START_TAG
-ruleMETHODS_START_TAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
-    @init { setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-	    lastConsumedNode = currentNode;
-    }:
-(    this_XML_TAG_START_0=RULE_XML_TAG_START    {
-		$current.merge(this_XML_TAG_START_0);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getMETHODS_START_TAGAccess().getXML_TAG_STARTTerminalRuleCall_0(), null); 
-    }
-
-	kw='methods' 
-    {
-        $current.merge(kw);
-        createLeafNode(grammarAccess.getMETHODS_START_TAGAccess().getMethodsKeyword_1(), null); 
-    }
-)
-    ;
-
-
-
-
-
-// Entry rule entryRuleFIELD_START_TAG
-entryRuleFIELD_START_TAG returns [String current=null] 
-	:
-	{ currentNode = createCompositeNode(grammarAccess.getFIELD_START_TAGRule(), currentNode); } 
-	 iv_ruleFIELD_START_TAG=ruleFIELD_START_TAG 
-	 { $current=$iv_ruleFIELD_START_TAG.current.getText(); }  
-	 EOF 
-;
-
-// Rule FIELD_START_TAG
-ruleFIELD_START_TAG returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
-    @init { setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-	    lastConsumedNode = currentNode;
-    }:
-(    this_XML_TAG_START_0=RULE_XML_TAG_START    {
-		$current.merge(this_XML_TAG_START_0);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getFIELD_START_TAGAccess().getXML_TAG_STARTTerminalRuleCall_0(), null); 
-    }
-
-	kw='field' 
-    {
-        $current.merge(kw);
-        createLeafNode(grammarAccess.getFIELD_START_TAGAccess().getFieldKeyword_1(), null); 
-    }
-)
-    ;
-
-
-
-
-
-// Entry rule entryRuleNAVASCRIPT_START
-entryRuleNAVASCRIPT_START returns [String current=null] 
-	:
-	{ currentNode = createCompositeNode(grammarAccess.getNAVASCRIPT_STARTRule(), currentNode); } 
-	 iv_ruleNAVASCRIPT_START=ruleNAVASCRIPT_START 
-	 { $current=$iv_ruleNAVASCRIPT_START.current.getText(); }  
-	 EOF 
-;
-
-// Rule NAVASCRIPT_START
-ruleNAVASCRIPT_START returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
-    @init { setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-	    lastConsumedNode = currentNode;
-    }:
-(    this_XML_TAG_START_0=RULE_XML_TAG_START    {
-		$current.merge(this_XML_TAG_START_0);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getNAVASCRIPT_STARTAccess().getXML_TAG_STARTTerminalRuleCall_0(), null); 
-    }
-    this_NAVASCRIPT_KEYWORD_1=RULE_NAVASCRIPT_KEYWORD    {
-		$current.merge(this_NAVASCRIPT_KEYWORD_1);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getNAVASCRIPT_STARTAccess().getNAVASCRIPT_KEYWORDTerminalRuleCall_1(), null); 
-    }
-)
-    ;
-
-
-
-
-
-// Entry rule entryRuleNAVASCRIPT_END
-entryRuleNAVASCRIPT_END returns [String current=null] 
-	:
-	{ currentNode = createCompositeNode(grammarAccess.getNAVASCRIPT_ENDRule(), currentNode); } 
-	 iv_ruleNAVASCRIPT_END=ruleNAVASCRIPT_END 
-	 { $current=$iv_ruleNAVASCRIPT_END.current.getText(); }  
-	 EOF 
-;
-
-// Rule NAVASCRIPT_END
-ruleNAVASCRIPT_END returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
-    @init { setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-	    lastConsumedNode = currentNode;
-    }:
-(    this_XML_START_ENDTAG_0=RULE_XML_START_ENDTAG    {
-		$current.merge(this_XML_START_ENDTAG_0);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getNAVASCRIPT_ENDAccess().getXML_START_ENDTAGTerminalRuleCall_0(), null); 
-    }
-    this_NAVASCRIPT_KEYWORD_1=RULE_NAVASCRIPT_KEYWORD    {
-		$current.merge(this_NAVASCRIPT_KEYWORD_1);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getNAVASCRIPT_ENDAccess().getNAVASCRIPT_KEYWORDTerminalRuleCall_1(), null); 
-    }
-    this_XML_TAG_END_2=RULE_XML_TAG_END    {
-		$current.merge(this_XML_TAG_END_2);
-    }
-
-    { 
-    createLeafNode(grammarAccess.getNAVASCRIPT_ENDAccess().getXML_TAG_ENDTerminalRuleCall_2(), null); 
-    }
-)
-    ;
 
 
 
@@ -1633,28 +363,14 @@ ruleAttributeName returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleT
     @after { resetLookahead(); 
 	    lastConsumedNode = currentNode;
     }:
-(    this_ID_0=RULE_ID    {
+    this_ID_0=RULE_ID    {
 		$current.merge(this_ID_0);
     }
 
     { 
-    createLeafNode(grammarAccess.getAttributeNameAccess().getIDTerminalRuleCall_0(), null); 
+    createLeafNode(grammarAccess.getAttributeNameAccess().getIDTerminalRuleCall(), null); 
     }
 
-    |
-	kw='message' 
-    {
-        $current.merge(kw);
-        createLeafNode(grammarAccess.getAttributeNameAccess().getMessageKeyword_1(), null); 
-    }
-
-    |
-	kw='comment' 
-    {
-        $current.merge(kw);
-        createLeafNode(grammarAccess.getAttributeNameAccess().getCommentKeyword_2(), null); 
-    }
-)
     ;
 
 
@@ -1818,13 +534,9 @@ ruleMethods returns [EObject current=null]
     @after { resetLookahead(); 
     	lastConsumedNode = currentNode;
     }:
-(
+(RULE_METHODS_START_TAG
     { 
-        currentNode=createCompositeNode(grammarAccess.getMethodsAccess().getMETHODS_START_TAGParserRuleCall_0(), currentNode); 
-    }
-ruleMETHODS_START_TAG
-    { 
-        currentNode = currentNode.getParent();
+    createLeafNode(grammarAccess.getMethodsAccess().getMETHODS_START_TAGTerminalRuleCall_0(), null); 
     }
 (
     { 
@@ -1865,13 +577,9 @@ ruleMETHODS_START_TAG
 	    }
 
 )
-)*
+)*RULE_METHODS_END_TAG
     { 
-        currentNode=createCompositeNode(grammarAccess.getMethodsAccess().getMETHODS_END_TAGParserRuleCall_2_0_2(), currentNode); 
-    }
-ruleMETHODS_END_TAG
-    { 
-        currentNode = currentNode.getParent();
+    createLeafNode(grammarAccess.getMethodsAccess().getMETHODS_END_TAGTerminalRuleCall_2_0_2(), null); 
     }
 )
     |RULE_XML_TAG_SINGLEEND
@@ -1901,13 +609,9 @@ ruleMethod returns [EObject current=null]
     @after { resetLookahead(); 
     	lastConsumedNode = currentNode;
     }:
-(
+(RULE_METHOD_START_TAG
     { 
-        currentNode=createCompositeNode(grammarAccess.getMethodAccess().getMETHOD_START_TAGParserRuleCall_0(), currentNode); 
-    }
-ruleMETHOD_START_TAG
-    { 
-        currentNode = currentNode.getParent();
+    createLeafNode(grammarAccess.getMethodAccess().getMETHOD_START_TAGTerminalRuleCall_0(), null); 
     }
 (
     { 
@@ -1972,13 +676,9 @@ ruleMETHOD_START_TAG
 	    }
 
 )
-)*
+)*RULE_METHOD_END_TAG
     { 
-        currentNode=createCompositeNode(grammarAccess.getMethodAccess().getMETHOD_END_TAGParserRuleCall_3_0_2(), currentNode); 
-    }
-ruleMETHOD_END_TAG
-    { 
-        currentNode = currentNode.getParent();
+    createLeafNode(grammarAccess.getMethodAccess().getMETHOD_END_TAGTerminalRuleCall_3_0_2(), null); 
     }
 )
     |RULE_XML_TAG_SINGLEEND
@@ -2008,13 +708,9 @@ ruleValidations returns [EObject current=null]
     @after { resetLookahead(); 
     	lastConsumedNode = currentNode;
     }:
-(
+(RULE_VALIDATIONS_START_TAG
     { 
-        currentNode=createCompositeNode(grammarAccess.getValidationsAccess().getVALIDATIONS_START_TAGParserRuleCall_0(), currentNode); 
-    }
-ruleVALIDATIONS_START_TAG
-    { 
-        currentNode = currentNode.getParent();
+    createLeafNode(grammarAccess.getValidationsAccess().getVALIDATIONS_START_TAGTerminalRuleCall_0(), null); 
     }
 (
     { 
@@ -2055,13 +751,9 @@ ruleVALIDATIONS_START_TAG
 	    }
 
 )
-)*
+)*RULE_VALIDATIONS_END_TAG
     { 
-        currentNode=createCompositeNode(grammarAccess.getValidationsAccess().getVALIDATIONS_END_TAGParserRuleCall_2_0_2(), currentNode); 
-    }
-ruleVALIDATIONS_END_TAG
-    { 
-        currentNode = currentNode.getParent();
+    createLeafNode(grammarAccess.getValidationsAccess().getVALIDATIONS_END_TAGTerminalRuleCall_2_0_2(), null); 
     }
 )
     |RULE_XML_TAG_SINGLEEND
@@ -2091,13 +783,9 @@ ruleCheck returns [EObject current=null]
     @after { resetLookahead(); 
     	lastConsumedNode = currentNode;
     }:
-(
+(RULE_CHECK_START_TAG
     { 
-        currentNode=createCompositeNode(grammarAccess.getCheckAccess().getCHECK_START_TAGParserRuleCall_0(), currentNode); 
-    }
-ruleCHECK_START_TAG
-    { 
-        currentNode = currentNode.getParent();
+    createLeafNode(grammarAccess.getCheckAccess().getCHECK_START_TAGTerminalRuleCall_0(), null); 
     }
 (
     { 
@@ -2162,13 +850,9 @@ ruleCHECK_START_TAG
 	    }
 
 )
-)
+)RULE_CHECK_END_TAG
     { 
-        currentNode=createCompositeNode(grammarAccess.getCheckAccess().getCHECK_END_TAGParserRuleCall_3_0_2(), currentNode); 
-    }
-ruleCHECK_END_TAG
-    { 
-        currentNode = currentNode.getParent();
+    createLeafNode(grammarAccess.getCheckAccess().getCHECK_END_TAGTerminalRuleCall_3_0_2(), null); 
     }
 )
     |RULE_XML_TAG_SINGLEEND
@@ -2198,13 +882,9 @@ ruleComment returns [EObject current=null]
     @after { resetLookahead(); 
     	lastConsumedNode = currentNode;
     }:
-(
+(RULE_COMMENT_START_TAG
     { 
-        currentNode=createCompositeNode(grammarAccess.getCommentAccess().getCOMMENT_START_TAGParserRuleCall_0(), currentNode); 
-    }
-ruleCOMMENT_START_TAG
-    { 
-        currentNode = currentNode.getParent();
+    createLeafNode(grammarAccess.getCommentAccess().getCOMMENT_START_TAGTerminalRuleCall_0(), null); 
     }
 (
     { 
@@ -2245,13 +925,9 @@ ruleCOMMENT_START_TAG
     { 
     createLeafNode(grammarAccess.getCommentAccess().getXML_TAG_ENDTerminalRuleCall_3_0_0(), null); 
     }
-
+RULE_COMMENT_END_TAG
     { 
-        currentNode=createCompositeNode(grammarAccess.getCommentAccess().getCOMMENT_END_TAGParserRuleCall_3_0_1(), currentNode); 
-    }
-ruleCOMMENT_END_TAG
-    { 
-        currentNode = currentNode.getParent();
+    createLeafNode(grammarAccess.getCommentAccess().getCOMMENT_END_TAGTerminalRuleCall_3_0_1(), null); 
     }
 )
     |RULE_XML_TAG_SINGLEEND
@@ -2281,13 +957,9 @@ ruleBreak returns [EObject current=null]
     @after { resetLookahead(); 
     	lastConsumedNode = currentNode;
     }:
-(
+(RULE_BREAK_START_TAG
     { 
-        currentNode=createCompositeNode(grammarAccess.getBreakAccess().getBREAK_START_TAGParserRuleCall_0(), currentNode); 
-    }
-ruleBREAK_START_TAG
-    { 
-        currentNode = currentNode.getParent();
+    createLeafNode(grammarAccess.getBreakAccess().getBREAK_START_TAGTerminalRuleCall_0(), null); 
     }
 (
     { 
@@ -2328,13 +1000,9 @@ ruleBREAK_START_TAG
     { 
     createLeafNode(grammarAccess.getBreakAccess().getXML_TAG_ENDTerminalRuleCall_3_0_0(), null); 
     }
-
+RULE_BREAK_END_TAG
     { 
-        currentNode=createCompositeNode(grammarAccess.getBreakAccess().getBREAK_END_TAGParserRuleCall_3_0_1(), currentNode); 
-    }
-ruleBREAK_END_TAG
-    { 
-        currentNode = currentNode.getParent();
+    createLeafNode(grammarAccess.getBreakAccess().getBREAK_END_TAGTerminalRuleCall_3_0_1(), null); 
     }
 )
     |RULE_XML_TAG_SINGLEEND
@@ -2364,13 +1032,9 @@ ruleInclude returns [EObject current=null]
     @after { resetLookahead(); 
     	lastConsumedNode = currentNode;
     }:
-(
+(RULE_INCLUDE_START_TAG
     { 
-        currentNode=createCompositeNode(grammarAccess.getIncludeAccess().getINCLUDE_START_TAGParserRuleCall_0(), currentNode); 
-    }
-ruleINCLUDE_START_TAG
-    { 
-        currentNode = currentNode.getParent();
+    createLeafNode(grammarAccess.getIncludeAccess().getINCLUDE_START_TAGTerminalRuleCall_0(), null); 
     }
 (
     { 
@@ -2434,13 +1098,9 @@ ruleMessage returns [EObject current=null]
     @after { resetLookahead(); 
     	lastConsumedNode = currentNode;
     }:
-(
+(RULE_MESSAGE_START_TAG
     { 
-        currentNode=createCompositeNode(grammarAccess.getMessageAccess().getMESSAGE_START_TAGParserRuleCall_0(), currentNode); 
-    }
-ruleMESSAGE_START_TAG
-    { 
-        currentNode = currentNode.getParent();
+    createLeafNode(grammarAccess.getMessageAccess().getMESSAGE_START_TAGTerminalRuleCall_0(), null); 
     }
 (
     { 
@@ -2705,13 +1365,9 @@ ruleMESSAGE_START_TAG
 	    }
 
 )
-))*
+))*RULE_MESSAGE_END_TAG
     { 
-        currentNode=createCompositeNode(grammarAccess.getMessageAccess().getMESSAGE_END_TAGParserRuleCall_3_0_2(), currentNode); 
-    }
-ruleMESSAGE_END_TAG
-    { 
-        currentNode = currentNode.getParent();
+    createLeafNode(grammarAccess.getMessageAccess().getMESSAGE_END_TAGTerminalRuleCall_3_0_2(), null); 
     }
 )
     |RULE_XML_TAG_SINGLEEND
@@ -2741,13 +1397,9 @@ ruleMap returns [EObject current=null]
     @after { resetLookahead(); 
     	lastConsumedNode = currentNode;
     }:
-(
+(RULE_MAPSTARTKEYWORD
     { 
-        currentNode=createCompositeNode(grammarAccess.getMapAccess().getMAPSTARTKEYWORDParserRuleCall_0(), currentNode); 
-    }
-ruleMAPSTARTKEYWORD
-    { 
-        currentNode = currentNode.getParent();
+    createLeafNode(grammarAccess.getMapAccess().getMAPSTARTKEYWORDTerminalRuleCall_0(), null); 
     }
 (
     { 
@@ -3070,24 +1722,20 @@ ruleMAPSTARTKEYWORD
 	    }
 
 )
-))*(RULE_XML_START_ENDTAG
+))*(RULE_MAPENDKEYWORD
     { 
-    createLeafNode(grammarAccess.getMapAccess().getXML_START_ENDTAGTerminalRuleCall_3_1_2_0(), null); 
-    }
-RULE_MAPKEYWORD
-    { 
-    createLeafNode(grammarAccess.getMapAccess().getMAPKEYWORDTerminalRuleCall_3_1_2_1(), null); 
+    createLeafNode(grammarAccess.getMapAccess().getMAPENDKEYWORDTerminalRuleCall_3_1_2_0(), null); 
     }
 (	'.' 
     {
-        createLeafNode(grammarAccess.getMapAccess().getFullStopKeyword_3_1_2_2_0(), null); 
+        createLeafNode(grammarAccess.getMapAccess().getFullStopKeyword_3_1_2_1_0(), null); 
     }
 (
 (
 		{ 
-	        currentNode=createCompositeNode(grammarAccess.getMapAccess().getMapClosingNameMapIdParserRuleCall_3_1_2_2_1_0(), currentNode); 
+	        currentNode=createCompositeNode(grammarAccess.getMapAccess().getMapClosingNameMapIdParserRuleCall_3_1_2_1_1_0(), currentNode); 
 	    }
-		lv_mapClosingName_20_0=ruleMapId		{
+		lv_mapClosingName_19_0=ruleMapId		{
 	        if ($current==null) {
 	            $current = factory.create(grammarAccess.getMapRule().getType().getClassifier());
 	            associateNodeWithAstElement(currentNode.getParent(), $current);
@@ -3096,7 +1744,7 @@ RULE_MAPKEYWORD
 	       		set(
 	       			$current, 
 	       			"mapClosingName",
-	        		lv_mapClosingName_20_0, 
+	        		lv_mapClosingName_19_0, 
 	        		"MapId", 
 	        		currentNode);
 	        } catch (ValueConverterException vce) {
@@ -3108,7 +1756,7 @@ RULE_MAPKEYWORD
 )
 ))?RULE_XML_TAG_END
     { 
-    createLeafNode(grammarAccess.getMapAccess().getXML_TAG_ENDTerminalRuleCall_3_1_2_3(), null); 
+    createLeafNode(grammarAccess.getMapAccess().getXML_TAG_ENDTerminalRuleCall_3_1_2_2(), null); 
     }
 ))))
 ;
@@ -3163,13 +1811,9 @@ ruleRequired returns [EObject current=null]
     @after { resetLookahead(); 
     	lastConsumedNode = currentNode;
     }:
-(
+(RULE_REQUIRED_START_TAG
     { 
-        currentNode=createCompositeNode(grammarAccess.getRequiredAccess().getREQUIRED_START_TAGParserRuleCall_0(), currentNode); 
-    }
-ruleREQUIRED_START_TAG
-    { 
-        currentNode = currentNode.getParent();
+    createLeafNode(grammarAccess.getRequiredAccess().getREQUIRED_START_TAGTerminalRuleCall_0(), null); 
     }
 (
     { 
@@ -3215,13 +1859,9 @@ ruleREQUIRED_START_TAG
     { 
     createLeafNode(grammarAccess.getRequiredAccess().getXML_TAG_ENDTerminalRuleCall_3_1_0(), null); 
     }
-
+RULE_REQUIRED_END_TAG
     { 
-        currentNode=createCompositeNode(grammarAccess.getRequiredAccess().getREQUIRED_END_TAGParserRuleCall_3_1_1(), currentNode); 
-    }
-ruleREQUIRED_END_TAG
-    { 
-        currentNode = currentNode.getParent();
+    createLeafNode(grammarAccess.getRequiredAccess().getREQUIRED_END_TAGTerminalRuleCall_3_1_1(), null); 
     }
 )))
 ;
@@ -3246,13 +1886,9 @@ ruleProperty returns [EObject current=null]
     @after { resetLookahead(); 
     	lastConsumedNode = currentNode;
     }:
-(
+(RULE_PROPERTY_START_TAG
     { 
-        currentNode=createCompositeNode(grammarAccess.getPropertyAccess().getPROPERTY_START_TAGParserRuleCall_0(), currentNode); 
-    }
-rulePROPERTY_START_TAG
-    { 
-        currentNode = currentNode.getParent();
+    createLeafNode(grammarAccess.getPropertyAccess().getPROPERTY_START_TAGTerminalRuleCall_0(), null); 
     }
 (
     { 
@@ -3347,13 +1983,9 @@ rulePROPERTY_START_TAG
 	    }
 
 )
-))*
+))*RULE_PROPERTY_END_TAG
     { 
-        currentNode=createCompositeNode(grammarAccess.getPropertyAccess().getPROPERTY_END_TAGParserRuleCall_3_1_2(), currentNode); 
-    }
-rulePROPERTY_END_TAG
-    { 
-        currentNode = currentNode.getParent();
+    createLeafNode(grammarAccess.getPropertyAccess().getPROPERTY_END_TAGTerminalRuleCall_3_1_2(), null); 
     }
 )))
 ;
@@ -3378,13 +2010,9 @@ ruleParam returns [EObject current=null]
     @after { resetLookahead(); 
     	lastConsumedNode = currentNode;
     }:
-(
+(RULE_PARAM_START_TAG
     { 
-        currentNode=createCompositeNode(grammarAccess.getParamAccess().getPARAM_START_TAGParserRuleCall_0(), currentNode); 
-    }
-rulePARAM_START_TAG
-    { 
-        currentNode = currentNode.getParent();
+    createLeafNode(grammarAccess.getParamAccess().getPARAM_START_TAGTerminalRuleCall_0(), null); 
     }
 (
     { 
@@ -3430,10 +2058,10 @@ rulePARAM_START_TAG
     { 
     createLeafNode(grammarAccess.getParamAccess().getXML_TAG_ENDTerminalRuleCall_3_1_0(), null); 
     }
-(
+((
 (
 		{ 
-	        currentNode=createCompositeNode(grammarAccess.getParamAccess().getChildrenExpressionOrOptionParserRuleCall_3_1_1_0(), currentNode); 
+	        currentNode=createCompositeNode(grammarAccess.getParamAccess().getChildrenExpressionOrOptionParserRuleCall_3_1_1_0_0(), currentNode); 
 	    }
 		lv_children_5_0=ruleExpressionOrOption		{
 	        if ($current==null) {
@@ -3454,13 +2082,34 @@ rulePARAM_START_TAG
 	    }
 
 )
-)*
+)
+    |(
+(
+		{ 
+	        currentNode=createCompositeNode(grammarAccess.getParamAccess().getChildrenMapParserRuleCall_3_1_1_1_0(), currentNode); 
+	    }
+		lv_children_6_0=ruleMap		{
+	        if ($current==null) {
+	            $current = factory.create(grammarAccess.getParamRule().getType().getClassifier());
+	            associateNodeWithAstElement(currentNode.getParent(), $current);
+	        }
+	        try {
+	       		add(
+	       			$current, 
+	       			"children",
+	        		lv_children_6_0, 
+	        		"Map", 
+	        		currentNode);
+	        } catch (ValueConverterException vce) {
+				handleValueConverterException(vce);
+	        }
+	        currentNode = currentNode.getParent();
+	    }
+
+)
+))*RULE_PARAM_END_TAG
     { 
-        currentNode=createCompositeNode(grammarAccess.getParamAccess().getPARAM_END_TAGParserRuleCall_3_1_2(), currentNode); 
-    }
-rulePARAM_END_TAG
-    { 
-        currentNode = currentNode.getParent();
+    createLeafNode(grammarAccess.getParamAccess().getPARAM_END_TAGTerminalRuleCall_3_1_2(), null); 
     }
 )))
 ;
@@ -3485,9 +2134,9 @@ ruleMapMethod returns [EObject current=null]
     @after { resetLookahead(); 
     	lastConsumedNode = currentNode;
     }:
-(RULE_XML_TAG_START
+(RULE_MAP_METHOD_STARTTAG_START
     { 
-    createLeafNode(grammarAccess.getMapMethodAccess().getXML_TAG_STARTTerminalRuleCall_0(), null); 
+    createLeafNode(grammarAccess.getMapMethodAccess().getMAP_METHOD_STARTTAG_STARTTerminalRuleCall_0(), null); 
     }
 (
 (
@@ -3519,25 +2168,25 @@ ruleMapMethod returns [EObject current=null]
     }
 (
 (
-		lv_methodName_3_0=RULE_ID
-		{
-			createLeafNode(grammarAccess.getMapMethodAccess().getMethodNameIDTerminalRuleCall_3_0(), "methodName"); 
-		}
-		{
+		{ 
+	        currentNode=createCompositeNode(grammarAccess.getMapMethodAccess().getMethodNameAttributeNameParserRuleCall_3_0(), currentNode); 
+	    }
+		lv_methodName_3_0=ruleAttributeName		{
 	        if ($current==null) {
 	            $current = factory.create(grammarAccess.getMapMethodRule().getType().getClassifier());
-	            associateNodeWithAstElement(currentNode, $current);
+	            associateNodeWithAstElement(currentNode.getParent(), $current);
 	        }
 	        try {
 	       		set(
 	       			$current, 
 	       			"methodName",
 	        		lv_methodName_3_0, 
-	        		"ID", 
-	        		lastConsumedNode);
+	        		"AttributeName", 
+	        		currentNode);
 	        } catch (ValueConverterException vce) {
 				handleValueConverterException(vce);
 	        }
+	        currentNode = currentNode.getParent();
 	    }
 
 )
@@ -3574,22 +2223,22 @@ ruleMapMethod returns [EObject current=null]
     { 
     createLeafNode(grammarAccess.getMapMethodAccess().getXML_TAG_ENDTerminalRuleCall_5_1_0(), null); 
     }
-(
+((
 (
 		{ 
-	        currentNode=createCompositeNode(grammarAccess.getMapMethodAccess().getExpressionTopLevelParserRuleCall_5_1_1_0(), currentNode); 
+	        currentNode=createCompositeNode(grammarAccess.getMapMethodAccess().getChildrenExpressionOrOptionParserRuleCall_5_1_1_0_0(), currentNode); 
 	    }
-		lv_expression_7_0=ruleTopLevel		{
+		lv_children_7_0=ruleExpressionOrOption		{
 	        if ($current==null) {
 	            $current = factory.create(grammarAccess.getMapMethodRule().getType().getClassifier());
 	            associateNodeWithAstElement(currentNode.getParent(), $current);
 	        }
 	        try {
-	       		set(
+	       		add(
 	       			$current, 
-	       			"expression",
-	        		lv_expression_7_0, 
-	        		"TopLevel", 
+	       			"children",
+	        		lv_children_7_0, 
+	        		"ExpressionOrOption", 
 	        		currentNode);
 	        } catch (ValueConverterException vce) {
 				handleValueConverterException(vce);
@@ -3598,13 +2247,238 @@ ruleMapMethod returns [EObject current=null]
 	    }
 
 )
-)RULE_XML_START_ENDTAG
+)
+    |(
+(
+		{ 
+	        currentNode=createCompositeNode(grammarAccess.getMapMethodAccess().getChildrenMessageParserRuleCall_5_1_1_1_0(), currentNode); 
+	    }
+		lv_children_8_0=ruleMessage		{
+	        if ($current==null) {
+	            $current = factory.create(grammarAccess.getMapMethodRule().getType().getClassifier());
+	            associateNodeWithAstElement(currentNode.getParent(), $current);
+	        }
+	        try {
+	       		add(
+	       			$current, 
+	       			"children",
+	        		lv_children_8_0, 
+	        		"Message", 
+	        		currentNode);
+	        } catch (ValueConverterException vce) {
+				handleValueConverterException(vce);
+	        }
+	        currentNode = currentNode.getParent();
+	    }
+
+)
+)
+    |(
+(
+		{ 
+	        currentNode=createCompositeNode(grammarAccess.getMapMethodAccess().getChildrenPropertyParserRuleCall_5_1_1_2_0(), currentNode); 
+	    }
+		lv_children_9_0=ruleProperty		{
+	        if ($current==null) {
+	            $current = factory.create(grammarAccess.getMapMethodRule().getType().getClassifier());
+	            associateNodeWithAstElement(currentNode.getParent(), $current);
+	        }
+	        try {
+	       		add(
+	       			$current, 
+	       			"children",
+	        		lv_children_9_0, 
+	        		"Property", 
+	        		currentNode);
+	        } catch (ValueConverterException vce) {
+				handleValueConverterException(vce);
+	        }
+	        currentNode = currentNode.getParent();
+	    }
+
+)
+)
+    |(
+(
+		{ 
+	        currentNode=createCompositeNode(grammarAccess.getMapMethodAccess().getChildrenParamParserRuleCall_5_1_1_3_0(), currentNode); 
+	    }
+		lv_children_10_0=ruleParam		{
+	        if ($current==null) {
+	            $current = factory.create(grammarAccess.getMapMethodRule().getType().getClassifier());
+	            associateNodeWithAstElement(currentNode.getParent(), $current);
+	        }
+	        try {
+	       		add(
+	       			$current, 
+	       			"children",
+	        		lv_children_10_0, 
+	        		"Param", 
+	        		currentNode);
+	        } catch (ValueConverterException vce) {
+				handleValueConverterException(vce);
+	        }
+	        currentNode = currentNode.getParent();
+	    }
+
+)
+)
+    |(
+(
+		{ 
+	        currentNode=createCompositeNode(grammarAccess.getMapMethodAccess().getChildrenMapParserRuleCall_5_1_1_4_0(), currentNode); 
+	    }
+		lv_children_11_0=ruleMap		{
+	        if ($current==null) {
+	            $current = factory.create(grammarAccess.getMapMethodRule().getType().getClassifier());
+	            associateNodeWithAstElement(currentNode.getParent(), $current);
+	        }
+	        try {
+	       		add(
+	       			$current, 
+	       			"children",
+	        		lv_children_11_0, 
+	        		"Map", 
+	        		currentNode);
+	        } catch (ValueConverterException vce) {
+				handleValueConverterException(vce);
+	        }
+	        currentNode = currentNode.getParent();
+	    }
+
+)
+)
+    |(
+(
+		{ 
+	        currentNode=createCompositeNode(grammarAccess.getMapMethodAccess().getChildrenMapMethodParserRuleCall_5_1_1_5_0(), currentNode); 
+	    }
+		lv_children_12_0=ruleMapMethod		{
+	        if ($current==null) {
+	            $current = factory.create(grammarAccess.getMapMethodRule().getType().getClassifier());
+	            associateNodeWithAstElement(currentNode.getParent(), $current);
+	        }
+	        try {
+	       		add(
+	       			$current, 
+	       			"children",
+	        		lv_children_12_0, 
+	        		"MapMethod", 
+	        		currentNode);
+	        } catch (ValueConverterException vce) {
+				handleValueConverterException(vce);
+	        }
+	        currentNode = currentNode.getParent();
+	    }
+
+)
+)
+    |(
+(
+		{ 
+	        currentNode=createCompositeNode(grammarAccess.getMapMethodAccess().getChildrenDebugTagParserRuleCall_5_1_1_6_0(), currentNode); 
+	    }
+		lv_children_13_0=ruleDebugTag		{
+	        if ($current==null) {
+	            $current = factory.create(grammarAccess.getMapMethodRule().getType().getClassifier());
+	            associateNodeWithAstElement(currentNode.getParent(), $current);
+	        }
+	        try {
+	       		add(
+	       			$current, 
+	       			"children",
+	        		lv_children_13_0, 
+	        		"DebugTag", 
+	        		currentNode);
+	        } catch (ValueConverterException vce) {
+				handleValueConverterException(vce);
+	        }
+	        currentNode = currentNode.getParent();
+	    }
+
+)
+)
+    |(
+(
+		{ 
+	        currentNode=createCompositeNode(grammarAccess.getMapMethodAccess().getChildrenFieldParserRuleCall_5_1_1_7_0(), currentNode); 
+	    }
+		lv_children_14_0=ruleField		{
+	        if ($current==null) {
+	            $current = factory.create(grammarAccess.getMapMethodRule().getType().getClassifier());
+	            associateNodeWithAstElement(currentNode.getParent(), $current);
+	        }
+	        try {
+	       		add(
+	       			$current, 
+	       			"children",
+	        		lv_children_14_0, 
+	        		"Field", 
+	        		currentNode);
+	        } catch (ValueConverterException vce) {
+				handleValueConverterException(vce);
+	        }
+	        currentNode = currentNode.getParent();
+	    }
+
+)
+)
+    |(
+(
+		{ 
+	        currentNode=createCompositeNode(grammarAccess.getMapMethodAccess().getChildrenCommentParserRuleCall_5_1_1_8_0(), currentNode); 
+	    }
+		lv_children_15_0=ruleComment		{
+	        if ($current==null) {
+	            $current = factory.create(grammarAccess.getMapMethodRule().getType().getClassifier());
+	            associateNodeWithAstElement(currentNode.getParent(), $current);
+	        }
+	        try {
+	       		add(
+	       			$current, 
+	       			"children",
+	        		lv_children_15_0, 
+	        		"Comment", 
+	        		currentNode);
+	        } catch (ValueConverterException vce) {
+				handleValueConverterException(vce);
+	        }
+	        currentNode = currentNode.getParent();
+	    }
+
+)
+)
+    |(
+(
+		{ 
+	        currentNode=createCompositeNode(grammarAccess.getMapMethodAccess().getChildrenBreakParserRuleCall_5_1_1_9_0(), currentNode); 
+	    }
+		lv_children_16_0=ruleBreak		{
+	        if ($current==null) {
+	            $current = factory.create(grammarAccess.getMapMethodRule().getType().getClassifier());
+	            associateNodeWithAstElement(currentNode.getParent(), $current);
+	        }
+	        try {
+	       		add(
+	       			$current, 
+	       			"children",
+	        		lv_children_16_0, 
+	        		"Break", 
+	        		currentNode);
+	        } catch (ValueConverterException vce) {
+				handleValueConverterException(vce);
+	        }
+	        currentNode = currentNode.getParent();
+	    }
+
+)
+))*RULE_MAP_METHOD_ENDTAG_START
     { 
-    createLeafNode(grammarAccess.getMapMethodAccess().getXML_START_ENDTAGTerminalRuleCall_5_1_2(), null); 
+    createLeafNode(grammarAccess.getMapMethodAccess().getMAP_METHOD_ENDTAG_STARTTerminalRuleCall_5_1_2(), null); 
     }
 (
 (
-		lv_methodClosingName_9_0=RULE_ID
+		lv_methodClosingName_18_0=RULE_ID
 		{
 			createLeafNode(grammarAccess.getMapMethodAccess().getMethodClosingNameIDTerminalRuleCall_5_1_3_0(), "methodClosingName"); 
 		}
@@ -3617,7 +2491,7 @@ ruleMapMethod returns [EObject current=null]
 	       		set(
 	       			$current, 
 	       			"methodClosingName",
-	        		lv_methodClosingName_9_0, 
+	        		lv_methodClosingName_18_0, 
 	        		"ID", 
 	        		lastConsumedNode);
 	        } catch (ValueConverterException vce) {
@@ -3632,7 +2506,7 @@ ruleMapMethod returns [EObject current=null]
     }
 (
 (
-		lv_methodClosingMethod_11_0=RULE_ID
+		lv_methodClosingMethod_20_0=RULE_ID
 		{
 			createLeafNode(grammarAccess.getMapMethodAccess().getMethodClosingMethodIDTerminalRuleCall_5_1_5_0(), "methodClosingMethod"); 
 		}
@@ -3645,7 +2519,7 @@ ruleMapMethod returns [EObject current=null]
 	       		set(
 	       			$current, 
 	       			"methodClosingMethod",
-	        		lv_methodClosingMethod_11_0, 
+	        		lv_methodClosingMethod_20_0, 
 	        		"ID", 
 	        		lastConsumedNode);
 	        } catch (ValueConverterException vce) {
@@ -3681,13 +2555,9 @@ ruleField returns [EObject current=null]
     @after { resetLookahead(); 
     	lastConsumedNode = currentNode;
     }:
-(
+(RULE_FIELD_START_TAG
     { 
-        currentNode=createCompositeNode(grammarAccess.getFieldAccess().getFIELD_START_TAGParserRuleCall_0(), currentNode); 
-    }
-ruleFIELD_START_TAG
-    { 
-        currentNode = currentNode.getParent();
+    createLeafNode(grammarAccess.getFieldAccess().getFIELD_START_TAGTerminalRuleCall_0(), null); 
     }
 (
     { 
@@ -3982,13 +2852,9 @@ ruleFIELD_START_TAG
 	    }
 
 )
-))*
+))*RULE_FIELD_END_TAG
     { 
-        currentNode=createCompositeNode(grammarAccess.getFieldAccess().getFIELD_END_TAGParserRuleCall_4_1_1(), currentNode); 
-    }
-ruleFIELD_END_TAG
-    { 
-        currentNode = currentNode.getParent();
+    createLeafNode(grammarAccess.getFieldAccess().getFIELD_END_TAGTerminalRuleCall_4_1_1(), null); 
     }
 )))
 ;
@@ -4013,13 +2879,9 @@ ruleDebugTag returns [EObject current=null]
     @after { resetLookahead(); 
     	lastConsumedNode = currentNode;
     }:
-(
+(RULE_DEBUG_START_TAG
     { 
-        currentNode=createCompositeNode(grammarAccess.getDebugTagAccess().getDEBUG_START_TAGParserRuleCall_0(), currentNode); 
-    }
-ruleDEBUG_START_TAG
-    { 
-        currentNode = currentNode.getParent();
+    createLeafNode(grammarAccess.getDebugTagAccess().getDEBUG_START_TAGTerminalRuleCall_0(), null); 
     }
 (
     { 
@@ -4089,13 +2951,9 @@ ruleDEBUG_START_TAG
 	    }
 
 )
-)
+)RULE_DEBUG_END_TAG
     { 
-        currentNode=createCompositeNode(grammarAccess.getDebugTagAccess().getDEBUG_END_TAGParserRuleCall_3_1_2(), currentNode); 
-    }
-ruleDEBUG_END_TAG
-    { 
-        currentNode = currentNode.getParent();
+    createLeafNode(grammarAccess.getDebugTagAccess().getDEBUG_END_TAGTerminalRuleCall_3_1_2(), null); 
     }
 )))
 ;
@@ -4120,13 +2978,9 @@ ruleExpressionOrOption returns [EObject current=null]
     @after { resetLookahead(); 
     	lastConsumedNode = currentNode;
     }:
-((
+((RULE_EXPRESSION_START_TAG
     { 
-        currentNode=createCompositeNode(grammarAccess.getExpressionOrOptionAccess().getEXPRESSION_START_TAGParserRuleCall_0_0(), currentNode); 
-    }
-ruleEXPRESSION_START_TAG
-    { 
-        currentNode = currentNode.getParent();
+    createLeafNode(grammarAccess.getExpressionOrOptionAccess().getEXPRESSION_START_TAGTerminalRuleCall_0_0(), null); 
     }
 
     { 
@@ -4138,13 +2992,9 @@ ruleEXPRESSION_START_TAG
         currentNode = currentNode.getParent();
     }
 )
-    |(
+    |(RULE_OPTION_START_TAG
     { 
-        currentNode=createCompositeNode(grammarAccess.getExpressionOrOptionAccess().getOPTION_START_TAGParserRuleCall_1_0(), currentNode); 
-    }
-ruleOPTION_START_TAG
-    { 
-        currentNode = currentNode.getParent();
+    createLeafNode(grammarAccess.getExpressionOrOptionAccess().getOPTION_START_TAGTerminalRuleCall_1_0(), null); 
     }
 
     { 
@@ -4157,8 +3007,6 @@ ruleOPTION_START_TAG
     }
 ))
 ;
-
-
 
 
 
@@ -4248,13 +3096,9 @@ ruleExpressionTag returns [EObject current=null]
 	    }
 
 )
-)
+)RULE_EXPRESSION_END_TAG
     { 
-        currentNode=createCompositeNode(grammarAccess.getExpressionTagAccess().getEXPRESSION_END_TAGParserRuleCall_2_1_2(), currentNode); 
-    }
-ruleEXPRESSION_END_TAG
-    { 
-        currentNode = currentNode.getParent();
+    createLeafNode(grammarAccess.getExpressionTagAccess().getEXPRESSION_END_TAGTerminalRuleCall_2_1_2(), null); 
     }
 )))
 ;
@@ -4323,13 +3167,9 @@ ruleOption returns [EObject current=null]
     { 
     createLeafNode(grammarAccess.getOptionAccess().getXML_TAG_ENDTerminalRuleCall_2_1_0(), null); 
     }
-
+RULE_OPTION_END_TAG
     { 
-        currentNode=createCompositeNode(grammarAccess.getOptionAccess().getOPTION_END_TAGParserRuleCall_2_1_1(), currentNode); 
-    }
-ruleOPTION_END_TAG
-    { 
-        currentNode = currentNode.getParent();
+    createLeafNode(grammarAccess.getOptionAccess().getOPTION_END_TAGTerminalRuleCall_2_1_1(), null); 
     }
 )))
 ;
@@ -6017,6 +4857,84 @@ ruleFunctionCall returns [EObject current=null]
 
 
 
+// Entry rule entryRuleDateLiteral
+entryRuleDateLiteral returns [EObject current=null] 
+	:
+	{ currentNode = createCompositeNode(grammarAccess.getDateLiteralRule(), currentNode); }
+	 iv_ruleDateLiteral=ruleDateLiteral 
+	 { $current=$iv_ruleDateLiteral.current; } 
+	 EOF 
+;
+
+// Rule DateLiteral
+ruleDateLiteral returns [EObject current=null] 
+    @init { EObject temp=null; setCurrentLookahead(); resetLookahead(); 
+    }
+    @after { resetLookahead(); 
+    	lastConsumedNode = currentNode;
+    }:
+((
+    { 
+        temp=factory.create(grammarAccess.getDateLiteralAccess().getExpressionAction_0().getType().getClassifier());
+        $current = temp; 
+        temp = null;
+        CompositeNode newNode = createCompositeNode(grammarAccess.getDateLiteralAccess().getExpressionAction_0(), currentNode.getParent());
+    newNode.getChildren().add(currentNode);
+    moveLookaheadInfo(currentNode, newNode);
+    currentNode = newNode; 
+        associateNodeWithAstElement(currentNode, $current); 
+    }
+)RULE_NUMBER
+    { 
+    createLeafNode(grammarAccess.getDateLiteralAccess().getNUMBERTerminalRuleCall_1(), null); 
+    }
+	'#' 
+    {
+        createLeafNode(grammarAccess.getDateLiteralAccess().getNumberSignKeyword_2(), null); 
+    }
+RULE_NUMBER
+    { 
+    createLeafNode(grammarAccess.getDateLiteralAccess().getNUMBERTerminalRuleCall_3(), null); 
+    }
+	'#' 
+    {
+        createLeafNode(grammarAccess.getDateLiteralAccess().getNumberSignKeyword_4(), null); 
+    }
+RULE_NUMBER
+    { 
+    createLeafNode(grammarAccess.getDateLiteralAccess().getNUMBERTerminalRuleCall_5(), null); 
+    }
+	'#' 
+    {
+        createLeafNode(grammarAccess.getDateLiteralAccess().getNumberSignKeyword_6(), null); 
+    }
+RULE_NUMBER
+    { 
+    createLeafNode(grammarAccess.getDateLiteralAccess().getNUMBERTerminalRuleCall_7(), null); 
+    }
+	'#' 
+    {
+        createLeafNode(grammarAccess.getDateLiteralAccess().getNumberSignKeyword_8(), null); 
+    }
+RULE_NUMBER
+    { 
+    createLeafNode(grammarAccess.getDateLiteralAccess().getNUMBERTerminalRuleCall_9(), null); 
+    }
+	'#' 
+    {
+        createLeafNode(grammarAccess.getDateLiteralAccess().getNumberSignKeyword_10(), null); 
+    }
+RULE_NUMBER
+    { 
+    createLeafNode(grammarAccess.getDateLiteralAccess().getNUMBERTerminalRuleCall_11(), null); 
+    }
+)
+;
+
+
+
+
+
 // Entry rule entryRuleLiteral
 entryRuleLiteral returns [EObject current=null] 
 	:
@@ -6044,9 +4962,9 @@ ruleLiteral returns [EObject current=null]
     currentNode = newNode; 
         associateNodeWithAstElement(currentNode, $current); 
     }
-)RULE_INT
+)RULE_NUMBER
     { 
-    createLeafNode(grammarAccess.getLiteralAccess().getINTTerminalRuleCall_0_1(), null); 
+    createLeafNode(grammarAccess.getLiteralAccess().getNUMBERTerminalRuleCall_0_1(), null); 
     }
 )
     |(
@@ -6436,6 +5354,31 @@ ruleLiteral returns [EObject current=null]
 	    }
 
 )
+)
+    |(
+(
+		{ 
+	        currentNode=createCompositeNode(grammarAccess.getLiteralAccess().getParametersDateLiteralParserRuleCall_12_0(), currentNode); 
+	    }
+		lv_parameters_22_0=ruleDateLiteral		{
+	        if ($current==null) {
+	            $current = factory.create(grammarAccess.getLiteralRule().getType().getClassifier());
+	            associateNodeWithAstElement(currentNode.getParent(), $current);
+	        }
+	        try {
+	       		add(
+	       			$current, 
+	       			"parameters",
+	        		lv_parameters_22_0, 
+	        		"DateLiteral", 
+	        		currentNode);
+	        } catch (ValueConverterException vce) {
+				handleValueConverterException(vce);
+	        }
+	        currentNode = currentNode.getParent();
+	    }
+
+)
 ))
 ;
 
@@ -6451,21 +5394,85 @@ RULE_QUOTEQ : '"=';
 
 RULE_SEMICOLONQUOTE : ';"';
 
+RULE_DEBUG_START_TAG : '<debug';
+
+RULE_DEBUG_END_TAG : '</debug' RULE_XML_TAG_END;
+
+RULE_EMPTYSTRING : '""';
+
+RULE_ATTRIBUTESTRING : '"' ~(('='|'"'))* '"';
+
 RULE_XML_START_ENDTAG : '</';
 
 RULE_XML_TAG_END : '>';
 
 RULE_XML_TAG_SINGLEEND : '/>';
 
-RULE_XML_TAG_START : '<';
+RULE_MAP_METHOD_STARTTAG_START : '<_';
 
-RULE_EMPTYSTRING : '""';
+RULE_MAP_METHOD_ENDTAG_START : '</_';
 
-RULE_ATTRIBUTESTRING : '"' ~(('='|'"'))* '"';
+RULE_MAPENDKEYWORD : '</map';
 
-RULE_MAPKEYWORD : 'map';
+RULE_MAPSTARTKEYWORD : '<map';
 
-RULE_NAVASCRIPT_KEYWORD : ('navascript'|'tsl');
+RULE_INCLUDE_START_TAG : '<include';
+
+RULE_PROPERTY_START_TAG : '<property';
+
+RULE_REQUIRED_START_TAG : '<required';
+
+RULE_VALIDATIONS_START_TAG : '<validations';
+
+RULE_CHECK_START_TAG : '<check';
+
+RULE_COMMENT_START_TAG : '<comment';
+
+RULE_BREAK_START_TAG : '<break';
+
+RULE_OPTION_START_TAG : '<option';
+
+RULE_BREAK_END_TAG : '</break' RULE_XML_TAG_END;
+
+RULE_OPTION_END_TAG : '</option' RULE_XML_TAG_END;
+
+RULE_REQUIRED_END_TAG : '</required' RULE_XML_TAG_END;
+
+RULE_PROPERTY_END_TAG : '</property' RULE_XML_TAG_END;
+
+RULE_COMMENT_END_TAG : '</comment' RULE_XML_TAG_END;
+
+RULE_VALIDATIONS_END_TAG : '</validations' RULE_XML_TAG_END;
+
+RULE_CHECK_END_TAG : '</check' RULE_XML_TAG_END;
+
+RULE_PARAM_END_TAG : '</param' RULE_XML_TAG_END;
+
+RULE_MESSAGE_END_TAG : '</message' RULE_XML_TAG_END;
+
+RULE_METHODS_END_TAG : '</methods' RULE_XML_TAG_END;
+
+RULE_METHOD_END_TAG : '</method' RULE_XML_TAG_END;
+
+RULE_FIELD_END_TAG : '</field' RULE_XML_TAG_END;
+
+RULE_EXPRESSION_START_TAG : '<expression';
+
+RULE_EXPRESSION_END_TAG : '</expression' RULE_XML_TAG_END;
+
+RULE_PARAM_START_TAG : '<param';
+
+RULE_MESSAGE_START_TAG : '<message';
+
+RULE_METHOD_START_TAG : '<method';
+
+RULE_METHODS_START_TAG : '<methods';
+
+RULE_FIELD_START_TAG : '<field';
+
+RULE_NAVASCRIPT_START : ('<navascript'|'<tsl');
+
+RULE_NAVASCRIPT_END : ('</navascript' RULE_XML_TAG_END|'</tsl' RULE_XML_TAG_END);
 
 RULE_XML_GT : '&gt;';
 
@@ -6475,7 +5482,7 @@ RULE_XML_GTEQ : '&gt;=';
 
 RULE_XML_LTEQ : '&lt;=';
 
-RULE_INT : ('0'..'9')+;
+RULE_NUMBER : ('0'..'9')* ('.' ('0'..'9')+)?;
 
 RULE_ML_COMMENT : '/*' ( options {greedy=false;} : . )*'*/';
 
