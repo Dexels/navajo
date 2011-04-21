@@ -99,7 +99,7 @@ public class TslSemanticHighlightingCalculator implements
 		List<Map> aa = EcoreUtil2.eAllOfType(m, Map.class);
 	    // TODO Create a separate category for map refs
 	    for (Map tag : aa) {
-	    	highlightLeafWithIndex(1,acceptor, tag,TslHighlightingConfiguration.MAP_ID);
+	    	highlightLeafWithIndex(0,acceptor, tag,TslHighlightingConfiguration.MAP_ID);
 	    	for (PossibleExpression p : tag.getAttributes()) {
 				if("object".equals( p.getKey())) {
 					TopLevel expressionValue = p.getExpressionValue();
