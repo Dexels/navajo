@@ -6,6 +6,8 @@ package com.dexels.navajo.dsl.tsl.ui.labeling;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider;
 
+import com.dexels.navajo.dsl.model.tsl.Message;
+import com.dexels.navajo.dsl.model.tsl.Tml;
 import com.google.inject.Inject;
 
 /**
@@ -20,6 +22,20 @@ public class TslLabelProvider extends DefaultEObjectLabelProvider {
 		super(delegate);
 	}
 
+	String text(Message m) {
+		
+		String name = m.getName();
+		if(m.isArray()) {
+			return name+"[]";
+		}
+		return name;
+	}
+
+	String text(Tml m) {
+		return "navascript";
+	}
+
+	
 /*
 	//Labels and icons can be computed like this:
 	

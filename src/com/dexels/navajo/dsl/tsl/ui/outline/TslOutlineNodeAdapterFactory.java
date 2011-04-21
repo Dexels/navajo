@@ -5,12 +5,16 @@ package com.dexels.navajo.dsl.tsl.ui.outline;
 
 import org.eclipse.xtext.ui.editor.outline.actions.DefaultContentOutlineNodeAdapterFactory;
 
+import com.dexels.navajo.dsl.model.tsl.Message;
+import com.dexels.navajo.dsl.model.tsl.Tml;
+
 public class TslOutlineNodeAdapterFactory extends DefaultContentOutlineNodeAdapterFactory {
 
 	private static final Class<?>[] types = { 
 		// provide list of classes to adapt to, e.g.:
 		// Entity.class
 		// Service.class
+		Tml.class,Message.class
 	};
 
 	@Override
