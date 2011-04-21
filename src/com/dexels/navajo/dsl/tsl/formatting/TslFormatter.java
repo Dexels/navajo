@@ -35,7 +35,7 @@ public class TslFormatter extends AbstractDeclarativeFormatter {
 		
 		c.setLinewrap(1).after(f.getXML_TAG_ENDRule());
 		c.setLinewrap(1).after(f.getXML_TAG_SINGLEENDRule());
-		c.setLinewrap(1).before(f.getXML_TAG_STARTRule());
+//		c.setLinewrap(1).before(f.getXML_TAG_STARTRule());
 
 		c.setIndentationIncrement().after(f.getPARAM_START_TAGRule());
 		c.setIndentationDecrement().before(f.getPARAM_END_TAGRule());
