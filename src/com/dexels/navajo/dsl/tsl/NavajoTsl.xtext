@@ -30,14 +30,25 @@ terminal XMLComment: '<!--' -> '-->';
 terminal QUOTEQ: '"=';	
 terminal SEMICOLONQUOTE: ';"';
 
-DEBUG_START_TAG:
-	XML_TAG_START 'debug';
-DEBUG_END_TAG:
-	XML_TAG_END 'debug' XML_TAG_END;
+
+
+terminal DEBUG_START_TAG:
+	 '<debug';
+terminal DEBUG_END_TAG:
+	 '</debug' XML_TAG_END;
 
 
 //terminal NAVASCRIPT_START:
 //	'<navascript';
+
+
+terminal EMPTYSTRING:
+	'""'
+;
+
+terminal ATTRIBUTESTRING	: 
+	('"' !('='|'"')* '"')
+;	
 
 terminal XML_START_ENDTAG:
 	'</'
@@ -51,154 +62,145 @@ terminal XML_TAG_SINGLEEND:
 	'/>'
 ;
 
-terminal XML_TAG_START: '<';
+terminal MAP_METHOD_STARTTAG_START: '<_';
+terminal MAP_METHOD_ENDTAG_START: '</_';
 
-terminal EMPTYSTRING:
-	'""'
+
+//terminal XML_TAG_START: '<';
+
+
+terminal MAPENDKEYWORD: 
+	'</map'
 ;
 
-terminal ATTRIBUTESTRING	: 
-	(   '"' !('='|'"')* '"')
-;	
-
-MAPENDKEYWORD: 
-	XML_START_ENDTAG MAPKEYWORD 
-;
-
-MAPSTARTKEYWORD: 
-	XML_TAG_START MAPKEYWORD 
-;
-
-terminal MAPKEYWORD: 
-	'map'
+terminal MAPSTARTKEYWORD: 
+	'<map' 
 ;
 
 
-INCLUDE_START_TAG:
-	XML_TAG_START 'include'
+
+terminal INCLUDE_START_TAG:
+	 '<include'
 ;
 
-PROPERTY_START_TAG:
-	XML_TAG_START 'property'
+terminal PROPERTY_START_TAG:
+	 '<property'
 ;
 
-REQUIRED_START_TAG:
-	XML_TAG_START 'required'
+terminal REQUIRED_START_TAG:
+	 '<required'
 ;
 
-VALIDATIONS_START_TAG:
-	XML_TAG_START 'validations'
+terminal VALIDATIONS_START_TAG:
+	 '<validations'
 ;
-CHECK_START_TAG:
-	XML_TAG_START 'check'
+terminal CHECK_START_TAG:
+	 '<check'
 ;
-COMMENT_START_TAG:
-	XML_TAG_START 'comment'
+terminal COMMENT_START_TAG:
+	 '<comment'
 ;
 
-BREAK_START_TAG:
-	XML_TAG_START 'break'
+terminal BREAK_START_TAG:
+	 '<break'
 ;
 
 
 //
-OPTION_START_TAG:
-	XML_TAG_START 'option'
+terminal OPTION_START_TAG:
+	 '<option'
 ;
 
 
 
-BREAK_END_TAG: 
-	XML_START_ENDTAG 'break' XML_TAG_END
+terminal BREAK_END_TAG: 
+	 '</break' XML_TAG_END
 ;
 
 
-OPTION_END_TAG: 
-	XML_START_ENDTAG 'option' XML_TAG_END
+terminal OPTION_END_TAG: 
+	 '</option' XML_TAG_END
 ;
 
 
-REQUIRED_END_TAG: 
-	XML_START_ENDTAG 'required' XML_TAG_END
+terminal REQUIRED_END_TAG: 
+	 '</required' XML_TAG_END
 ;
 
-PROPERTY_END_TAG: 
-	XML_START_ENDTAG 'property' XML_TAG_END
+terminal PROPERTY_END_TAG: 
+	 '</property' XML_TAG_END
 ;
 
-COMMENT_END_TAG: 
-	XML_START_ENDTAG 'comment' XML_TAG_END
+terminal COMMENT_END_TAG: 
+	 '</comment' XML_TAG_END
 ;
-VALIDATIONS_END_TAG: 
-	XML_START_ENDTAG 'validations' XML_TAG_END
+terminal VALIDATIONS_END_TAG: 
+	'</validations' XML_TAG_END
 ;
-CHECK_END_TAG: 
-	XML_START_ENDTAG 'check' XML_TAG_END
-;
-
-
-PARAM_END_TAG: 
-	XML_START_ENDTAG 'param' XML_TAG_END
+terminal CHECK_END_TAG: 
+	'</check' XML_TAG_END
 ;
 
-MESSAGE_END_TAG: 
-	XML_START_ENDTAG 'message' XML_TAG_END
+
+terminal PARAM_END_TAG: 
+	'</param' XML_TAG_END
 ;
 
-METHODS_END_TAG: 
-	XML_START_ENDTAG 'methods' XML_TAG_END
-;
-METHOD_END_TAG: 
-	XML_START_ENDTAG 'method' XML_TAG_END
+terminal MESSAGE_END_TAG: 
+	'</message' XML_TAG_END
 ;
 
-FIELD_END_TAG: 
-	XML_START_ENDTAG 'field' XML_TAG_END
+terminal METHODS_END_TAG: 
+	 '</methods' XML_TAG_END
+;
+terminal METHOD_END_TAG: 
+	 '</method' XML_TAG_END
 ;
 
-EXPRESSION_START_TAG:
-	XML_TAG_START 'expression'
+terminal FIELD_END_TAG: 
+	 '</field' XML_TAG_END
 ;
 
-EXPRESSION_END_TAG:
-	XML_START_ENDTAG 'expression' XML_TAG_END
-;
-PARAM_START_TAG:
-	XML_TAG_START 'param'
+terminal EXPRESSION_START_TAG:
+	 '<expression'
 ;
 
-MESSAGE_START_TAG:
-	XML_TAG_START 'message'
+terminal EXPRESSION_END_TAG:
+	 '</expression' XML_TAG_END
+;
+terminal PARAM_START_TAG:
+	 '<param'
 ;
 
-METHOD_START_TAG:
-	XML_TAG_START 'method'
+terminal MESSAGE_START_TAG:
+	'<message'
 ;
 
-METHODS_START_TAG:
-	XML_TAG_START 'methods'
+terminal METHOD_START_TAG:
+	 '<method'
 ;
 
-FIELD_START_TAG:
-	XML_TAG_START 'field'
+terminal METHODS_START_TAG:
+	 '<methods'
 ;
-NAVASCRIPT_START:
- 	XML_TAG_START NAVASCRIPT_KEYWORD;
+
+terminal FIELD_START_TAG:
+	 '<field'
+;
+terminal NAVASCRIPT_START:
+ //	XML_TAG_START NAVASCRIPT_KEYWORD;
+	'<navascript' | '<tsl';
+
+terminal  NAVASCRIPT_END:
+ 	//XML_START_ENDTAG NAVASCRIPT_KEYWORD XML_TAG_END;
+	('</navascript' XML_TAG_END ) | ('</tsl' XML_TAG_END)
+	;
 	
-	
-terminal NAVASCRIPT_KEYWORD:	
-	'navascript' | 'tsl';
 
 
-NAVASCRIPT_END:
- 	XML_START_ENDTAG NAVASCRIPT_KEYWORD XML_TAG_END;
-
-
-
-
-// might need to add a lot more kywords here
+// might need to add a lot more kywords here 'message' | 'comment' 
 AttributeName:
-	ID | 'message' | 'comment' ;
+	ID ;
 
 PossibleExpression:
 	(namespace= ID ':')? key=AttributeName '='
@@ -208,7 +210,6 @@ PossibleExpression:
 		| EMPTYSTRING
 	)
 	;
-
 
 Methods :
 	METHODS_START_TAG {Methods} 
@@ -313,10 +314,11 @@ Map returns Map:
 	| (XML_TAG_END
 		((children+=Message) | (children+=Property) | (children+=Param) | (children+=Map) | (children+=MapMethod) | (children+=DebugTag) | (children+=Field) | (children+=Comment) | (children+=Break))*
 		
-		(XML_START_ENDTAG MAPKEYWORD ('.' mapClosingName=MapId)? XML_TAG_END)
+		(MAPENDKEYWORD ('.' mapClosingName=MapId)? XML_TAG_END)
 	))
 	)
 	;
+	
 
 
 
@@ -382,19 +384,19 @@ Param returns Param:
 		(XML_TAG_SINGLEEND)
 	|
 		( XML_TAG_END 	
-			(children += ExpressionOrOption)*
+			((children += ExpressionOrOption) | (children+=Map))*
 		PARAM_END_TAG
 		)
 	);
 
 MapMethod returns MapMethod:
-	XML_TAG_START mapName = ID '.' methodName= ID (attributes+=PossibleExpression)* 
+	MAP_METHOD_STARTTAG_START  mapName = ID '.' methodName= AttributeName (attributes+=PossibleExpression)* 
 	(
 		(XML_TAG_SINGLEEND)
 	|
 		( XML_TAG_END 
-			(expression = TopLevel)
-		XML_START_ENDTAG methodClosingName = ID '.' methodClosingMethod = ID XML_TAG_END
+			((children += ExpressionOrOption) | (children+=Message) | (children+=Property) | (children+=Param) | (children+=Map) | (children+=MapMethod) | (children+=DebugTag) | (children+=Field) | (children+=Comment) | (children+=Break))*
+		MAP_METHOD_ENDTAG_START methodClosingName = ID '.' methodClosingMethod = ID XML_TAG_END
 		)
 	);
 	
@@ -405,7 +407,6 @@ Field returns Param:
 	 |
 	 (
 		((children += ExpressionOrOption) | (children+=Message) | (children+=Property) | (children+=Param) | (children+=Map) | (children+=MapMethod) | (children+=DebugTag) | (children+=Field) | (children+=Comment) | (children+=Break))*
-	 	
 	 )
 	 FIELD_END_TAG
 	)
@@ -428,11 +429,6 @@ ExpressionOrOption returns Element:
 		|
 		OPTION_START_TAG Option
 		
-		
-;
-ExpressionOnly returns Element:
-	XML_TAG_START 
-		'expression' ExpressionTag
 		
 ;
 
