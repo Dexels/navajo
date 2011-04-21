@@ -27,7 +27,9 @@ terminal XML_LT: '&lt;';
 terminal XML_GTEQ: '&gt;=';
 terminal XML_LTEQ: '&lt;=';
 
-terminal INT returns ecore::EInt: ('0'..'9')+;
+terminal NUMBER returns ecore::EBigDecimal:
+  ('0'..'9')* ('.' ('0'..'9')+)?;
+
 terminal ML_COMMENT	: '/*' -> '*/';
 terminal SL_COMMENT 	: '//' !('\n'|'\r')* ('\r'? '\n')?;
 
@@ -135,13 +137,24 @@ FunctionCall returns FunctionCall:
 	name=FunctionName '('(parameters+=OrExpression)? (',' parameters+=OrExpression)*  ')'
 ;
 
+//void DatePatternLiteral() #void:
+//{}
+//{
+//  (Literal()"#"Literal()"#"Literal()"#"Literal()"#"Literal()"#"Literal()) #DatePatternNode
+//}
+
 
 //Expression returns Expression:
 //	Literal | FunctionCall | FunctionOperands ;
 
+DateLiteral returns Expression:
+{Expression}
+	NUMBER '#' NUMBER '#' NUMBER '#' NUMBER '#' NUMBER '#' NUMBER
+;
+
 
 Literal returns Expression:
-  {Expression}INT
+  {Expression}NUMBER
   | valueString= LITERALSTRING
   | operations+=FORALL '(' valueString=LITERALSTRING ',' parameters+=OrExpression ')'
   // TODO Add float
@@ -154,5 +167,7 @@ Literal returns Expression:
   | parameters+=TmlExpression
   | parameters+=ExistsTmlExpression
   | parameters+=MapGetReference
+  | parameters+=DateLiteral
+  
   ;
 
