@@ -97,6 +97,7 @@ public class TslSwitch<T> {
 			case TslPackage.METHODS: {
 				Methods methods = (Methods)theEObject;
 				T result = caseMethods(methods);
+				if (result == null) result = caseElement(methods);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -208,6 +209,13 @@ public class TslSwitch<T> {
 				Break break_ = (Break)theEObject;
 				T result = caseBreak(break_);
 				if (result == null) result = caseElement(break_);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case TslPackage.FIELD: {
+				Field field = (Field)theEObject;
+				T result = caseField(field);
+				if (result == null) result = caseElement(field);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -482,6 +490,21 @@ public class TslSwitch<T> {
 	 * @generated
 	 */
 	public T caseBreak(Break object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Field</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Field</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseField(Field object) {
 		return null;
 	}
 

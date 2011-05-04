@@ -84,6 +84,42 @@ public class PropertyImpl extends ElementImpl implements Property {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public String getType() {
+		for (PossibleExpression possibleExpression : getAttributes()) {
+			if("type".equals(possibleExpression.getKey())) {
+				if(possibleExpression.getValue()!=null) {
+					return possibleExpression.getValue();
+				} else {
+					return null;
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public String getName() {
+		for (PossibleExpression possibleExpression : getAttributes()) {
+			if("name".equals(possibleExpression.getKey())) {
+				if(possibleExpression.getValue()!=null) {
+					return possibleExpression.getValue();
+				} else {
+					return null;
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override

@@ -235,6 +235,15 @@ public class PossibleExpressionImpl extends EObjectImpl implements PossibleExpre
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public boolean isExpression() {
+		return(getExpressionValue()!=null);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override

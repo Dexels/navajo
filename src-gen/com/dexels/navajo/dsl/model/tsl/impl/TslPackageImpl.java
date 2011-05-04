@@ -14,6 +14,7 @@ import com.dexels.navajo.dsl.model.tsl.Comment;
 import com.dexels.navajo.dsl.model.tsl.DebugTag;
 import com.dexels.navajo.dsl.model.tsl.Element;
 import com.dexels.navajo.dsl.model.tsl.ExpressionTag;
+import com.dexels.navajo.dsl.model.tsl.Field;
 import com.dexels.navajo.dsl.model.tsl.Map;
 import com.dexels.navajo.dsl.model.tsl.MapMethod;
 import com.dexels.navajo.dsl.model.tsl.Message;
@@ -168,6 +169,13 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 	 * @generated
 	 */
 	private EClass breakEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass fieldEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -382,26 +390,26 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getElement_SplitTag() {
+		return (EAttribute)elementEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getElement_ClosedTag() {
+		return (EAttribute)elementEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getMessage() {
 		return messageEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getMessage_Name() {
-		return (EAttribute)messageEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getMessage_Type() {
-		return (EAttribute)messageEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -625,6 +633,24 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getField() {
+		return fieldEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getField_ExpressionValue() {
+		return (EReference)fieldEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public TslFactory getTslFactory() {
 		return (TslFactory)getEFactoryInstance();
 	}
@@ -668,10 +694,10 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 		createEReference(elementEClass, ELEMENT__PARENT);
 		createEReference(elementEClass, ELEMENT__ATTRIBUTES);
 		createEAttribute(elementEClass, ELEMENT__CONTENT);
+		createEAttribute(elementEClass, ELEMENT__SPLIT_TAG);
+		createEAttribute(elementEClass, ELEMENT__CLOSED_TAG);
 
 		messageEClass = createEClass(MESSAGE);
-		createEAttribute(messageEClass, MESSAGE__NAME);
-		createEAttribute(messageEClass, MESSAGE__TYPE);
 
 		mapEClass = createEClass(MAP);
 		createEAttribute(mapEClass, MAP__MAP_NAME);
@@ -708,6 +734,9 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 		commentEClass = createEClass(COMMENT);
 
 		breakEClass = createEClass(BREAK);
+
+		fieldEClass = createEClass(FIELD);
+		createEReference(fieldEClass, FIELD__EXPRESSION_VALUE);
 	}
 
 	/**
@@ -742,6 +771,7 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 
 		// Add supertypes to classes
 		tmlEClass.getESuperTypes().add(this.getElement());
+		methodsEClass.getESuperTypes().add(this.getElement());
 		methodEClass.getESuperTypes().add(this.getElement());
 		messageEClass.getESuperTypes().add(this.getElement());
 		mapEClass.getESuperTypes().add(this.getElement());
@@ -756,6 +786,7 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 		validationsEClass.getESuperTypes().add(this.getElement());
 		commentEClass.getESuperTypes().add(this.getElement());
 		breakEClass.getESuperTypes().add(this.getElement());
+		fieldEClass.getESuperTypes().add(this.getElement());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(tmlEClass, Tml.class, "Tml", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -773,24 +804,38 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 		initEAttribute(getPossibleExpression_Value(), ecorePackage.getEString(), "value", null, 0, 1, PossibleExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getPossibleExpression_Namespace(), ecorePackage.getEString(), "namespace", null, 0, 1, PossibleExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		addEOperation(possibleExpressionEClass, ecorePackage.getEBoolean(), "isExpression", 0, 1, IS_UNIQUE, IS_ORDERED);
+
 		initEClass(elementEClass, Element.class, "Element", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getElement_Children(), this.getElement(), this.getElement_Parent(), "children", null, 0, -1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getElement_Parent(), this.getElement(), this.getElement_Children(), "parent", null, 0, 1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getElement_Attributes(), this.getPossibleExpression(), null, "attributes", null, 0, -1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getElement_Content(), ecorePackage.getEString(), "content", null, 0, 1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getElement_SplitTag(), ecorePackage.getEBoolean(), "splitTag", "false", 0, 1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getElement_ClosedTag(), ecorePackage.getEBoolean(), "closedTag", "false", 0, 1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		addEOperation(elementEClass, ecorePackage.getEInt(), "calculateDepth", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(messageEClass, Message.class, "Message", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getMessage_Name(), ecorePackage.getEString(), "name", null, 0, 1, Message.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getMessage_Type(), ecorePackage.getEString(), "type", null, 0, 1, Message.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		addEOperation(messageEClass, ecorePackage.getEString(), "getName", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		addEOperation(messageEClass, ecorePackage.getEString(), "getType", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		addEOperation(messageEClass, ecorePackage.getEBoolean(), "isArray", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(mapEClass, Map.class, "Map", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getMap_MapName(), ecorePackage.getEString(), "mapName", null, 0, 1, Map.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getMap_MapClosingName(), ecorePackage.getEString(), "mapClosingName", null, 0, 1, Map.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		addEOperation(mapEClass, ecorePackage.getEString(), "getRef", 0, 1, IS_UNIQUE, IS_ORDERED);
+
 		initEClass(propertyEClass, Property.class, "Property", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getProperty_ExpressionValue(), this.getExpressionTag(), null, "expressionValue", null, 0, -1, Property.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		addEOperation(propertyEClass, ecorePackage.getEString(), "getType", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		addEOperation(propertyEClass, ecorePackage.getEString(), "getName", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(paramEClass, Param.class, "Param", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -820,6 +865,9 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 		initEClass(commentEClass, Comment.class, "Comment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(breakEClass, Break.class, "Break", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(fieldEClass, Field.class, "Field", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getField_ExpressionValue(), this.getExpressionTag(), null, "expressionValue", null, 0, -1, Field.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

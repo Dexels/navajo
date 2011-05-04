@@ -144,6 +144,23 @@ public class MapImpl extends ElementImpl implements Map {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public String getRef() {
+		for (PossibleExpression possibleExpression : getAttributes()) {
+			if("ref".equals(possibleExpression.getKey())) {
+				if(possibleExpression.getValue()!=null) {
+					return possibleExpression.getValue();
+				} else {
+					return null;
+				}
+			}
+		}
+		return null;	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override

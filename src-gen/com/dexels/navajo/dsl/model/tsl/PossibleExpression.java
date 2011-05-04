@@ -134,4 +134,12 @@ public interface PossibleExpression extends EObject {
 	 */
 	void setNamespace(String value);
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
+	boolean isExpression();
+
 } // PossibleExpression

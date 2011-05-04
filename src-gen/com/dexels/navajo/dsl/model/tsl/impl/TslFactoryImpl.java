@@ -78,6 +78,7 @@ public class TslFactoryImpl extends EFactoryImpl implements TslFactory {
 			case TslPackage.VALIDATIONS: return createValidations();
 			case TslPackage.COMMENT: return createComment();
 			case TslPackage.BREAK: return createBreak();
+			case TslPackage.FIELD: return createField();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -261,6 +262,16 @@ public class TslFactoryImpl extends EFactoryImpl implements TslFactory {
 	public Break createBreak() {
 		BreakImpl break_ = new BreakImpl();
 		return break_;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Field createField() {
+		FieldImpl field = new FieldImpl();
+		return field;
 	}
 
 	/**

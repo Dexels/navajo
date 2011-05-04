@@ -78,4 +78,12 @@ public interface Map extends Element {
 	 */
 	void setMapClosingName(String value);
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
+	String getRef();
+
 } // Map

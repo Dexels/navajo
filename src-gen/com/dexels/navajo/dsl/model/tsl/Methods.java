@@ -26,7 +26,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface Methods extends EObject {
+public interface Methods extends Element {
 	/**
 	 * Returns the value of the '<em><b>Method</b></em>' containment reference list.
 	 * The list contents are of type {@link com.dexels.navajo.dsl.model.tsl.Method}.

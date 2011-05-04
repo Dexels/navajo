@@ -40,6 +40,8 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link com.dexels.navajo.dsl.model.tsl.impl.ElementImpl#getParent <em>Parent</em>}</li>
  *   <li>{@link com.dexels.navajo.dsl.model.tsl.impl.ElementImpl#getAttributes <em>Attributes</em>}</li>
  *   <li>{@link com.dexels.navajo.dsl.model.tsl.impl.ElementImpl#getContent <em>Content</em>}</li>
+ *   <li>{@link com.dexels.navajo.dsl.model.tsl.impl.ElementImpl#isSplitTag <em>Split Tag</em>}</li>
+ *   <li>{@link com.dexels.navajo.dsl.model.tsl.impl.ElementImpl#isClosedTag <em>Closed Tag</em>}</li>
  * </ul>
  * </p>
  *
@@ -85,6 +87,46 @@ public class ElementImpl extends EObjectImpl implements Element {
 	 * @ordered
 	 */
 	protected String content = CONTENT_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isSplitTag() <em>Split Tag</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isSplitTag()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean SPLIT_TAG_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isSplitTag() <em>Split Tag</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isSplitTag()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean splitTag = SPLIT_TAG_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isClosedTag() <em>Closed Tag</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isClosedTag()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean CLOSED_TAG_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isClosedTag() <em>Closed Tag</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isClosedTag()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean closedTag = CLOSED_TAG_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -194,6 +236,48 @@ public class ElementImpl extends EObjectImpl implements Element {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean isSplitTag() {
+		return splitTag;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setSplitTag(boolean newSplitTag) {
+		boolean oldSplitTag = splitTag;
+		splitTag = newSplitTag;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TslPackage.ELEMENT__SPLIT_TAG, oldSplitTag, splitTag));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean isClosedTag() {
+		return closedTag;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setClosedTag(boolean newClosedTag) {
+		boolean oldClosedTag = closedTag;
+		closedTag = newClosedTag;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TslPackage.ELEMENT__CLOSED_TAG, oldClosedTag, closedTag));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated NOT
 	 */
 	public int calculateDepth() {
@@ -271,6 +355,10 @@ public class ElementImpl extends EObjectImpl implements Element {
 				return getAttributes();
 			case TslPackage.ELEMENT__CONTENT:
 				return getContent();
+			case TslPackage.ELEMENT__SPLIT_TAG:
+				return isSplitTag();
+			case TslPackage.ELEMENT__CLOSED_TAG:
+				return isClosedTag();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -298,6 +386,12 @@ public class ElementImpl extends EObjectImpl implements Element {
 			case TslPackage.ELEMENT__CONTENT:
 				setContent((String)newValue);
 				return;
+			case TslPackage.ELEMENT__SPLIT_TAG:
+				setSplitTag((Boolean)newValue);
+				return;
+			case TslPackage.ELEMENT__CLOSED_TAG:
+				setClosedTag((Boolean)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -322,6 +416,12 @@ public class ElementImpl extends EObjectImpl implements Element {
 			case TslPackage.ELEMENT__CONTENT:
 				setContent(CONTENT_EDEFAULT);
 				return;
+			case TslPackage.ELEMENT__SPLIT_TAG:
+				setSplitTag(SPLIT_TAG_EDEFAULT);
+				return;
+			case TslPackage.ELEMENT__CLOSED_TAG:
+				setClosedTag(CLOSED_TAG_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -342,6 +442,10 @@ public class ElementImpl extends EObjectImpl implements Element {
 				return attributes != null && !attributes.isEmpty();
 			case TslPackage.ELEMENT__CONTENT:
 				return CONTENT_EDEFAULT == null ? content != null : !CONTENT_EDEFAULT.equals(content);
+			case TslPackage.ELEMENT__SPLIT_TAG:
+				return splitTag != SPLIT_TAG_EDEFAULT;
+			case TslPackage.ELEMENT__CLOSED_TAG:
+				return closedTag != CLOSED_TAG_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -358,6 +462,10 @@ public class ElementImpl extends EObjectImpl implements Element {
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (content: ");
 		result.append(content);
+		result.append(", splitTag: ");
+		result.append(splitTag);
+		result.append(", closedTag: ");
+		result.append(closedTag);
 		result.append(')');
 		return result.toString();
 	}

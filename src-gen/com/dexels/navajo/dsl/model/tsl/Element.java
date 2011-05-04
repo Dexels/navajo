@@ -22,6 +22,8 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link com.dexels.navajo.dsl.model.tsl.Element#getParent <em>Parent</em>}</li>
  *   <li>{@link com.dexels.navajo.dsl.model.tsl.Element#getAttributes <em>Attributes</em>}</li>
  *   <li>{@link com.dexels.navajo.dsl.model.tsl.Element#getContent <em>Content</em>}</li>
+ *   <li>{@link com.dexels.navajo.dsl.model.tsl.Element#isSplitTag <em>Split Tag</em>}</li>
+ *   <li>{@link com.dexels.navajo.dsl.model.tsl.Element#isClosedTag <em>Closed Tag</em>}</li>
  * </ul>
  * </p>
  *
@@ -119,9 +121,63 @@ public interface Element extends EObject {
 	void setContent(String value);
 
 	/**
+	 * Returns the value of the '<em><b>Split Tag</b></em>' attribute.
+	 * The default value is <code>"false"</code>.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Split Tag</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Split Tag</em>' attribute.
+	 * @see #setSplitTag(boolean)
+	 * @see com.dexels.navajo.dsl.model.tsl.TslPackage#getElement_SplitTag()
+	 * @model default="false"
+	 * @generated
+	 */
+	boolean isSplitTag();
+
+	/**
+	 * Sets the value of the '{@link com.dexels.navajo.dsl.model.tsl.Element#isSplitTag <em>Split Tag</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @model
+	 * @param value the new value of the '<em>Split Tag</em>' attribute.
+	 * @see #isSplitTag()
+	 * @generated
+	 */
+	void setSplitTag(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Closed Tag</b></em>' attribute.
+	 * The default value is <code>"false"</code>.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Closed Tag</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Closed Tag</em>' attribute.
+	 * @see #setClosedTag(boolean)
+	 * @see com.dexels.navajo.dsl.model.tsl.TslPackage#getElement_ClosedTag()
+	 * @model default="false"
+	 * @generated
+	 */
+	boolean isClosedTag();
+
+	/**
+	 * Sets the value of the '{@link com.dexels.navajo.dsl.model.tsl.Element#isClosedTag <em>Closed Tag</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Closed Tag</em>' attribute.
+	 * @see #isClosedTag()
+	 * @generated
+	 */
+	void setClosedTag(boolean value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model annotation="http://www.eclipse.org/emf/2002/GenModel body='return ElementLogic.calculateDepth(this);'"
 	 * @generated
 	 */
 	int calculateDepth();

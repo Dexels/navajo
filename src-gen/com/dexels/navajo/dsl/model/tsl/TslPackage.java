@@ -106,13 +106,31 @@ public interface TslPackage extends EPackage {
 	int ELEMENT__CONTENT = 3;
 
 	/**
+	 * The feature id for the '<em><b>Split Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ELEMENT__SPLIT_TAG = 4;
+
+	/**
+	 * The feature id for the '<em><b>Closed Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ELEMENT__CLOSED_TAG = 5;
+
+	/**
 	 * The number of structural features of the '<em>Element</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT_FEATURE_COUNT = 4;
+	int ELEMENT_FEATURE_COUNT = 6;
 
 	/**
 	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.tsl.impl.TmlImpl <em>Tml</em>}' class.
@@ -161,6 +179,24 @@ public interface TslPackage extends EPackage {
 	int TML__CONTENT = ELEMENT__CONTENT;
 
 	/**
+	 * The feature id for the '<em><b>Split Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TML__SPLIT_TAG = ELEMENT__SPLIT_TAG;
+
+	/**
+	 * The feature id for the '<em><b>Closed Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TML__CLOSED_TAG = ELEMENT__CLOSED_TAG;
+
+	/**
 	 * The feature id for the '<em><b>Methods</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -189,13 +225,67 @@ public interface TslPackage extends EPackage {
 	int METHODS = 1;
 
 	/**
+	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int METHODS__CHILDREN = ELEMENT__CHILDREN;
+
+	/**
+	 * The feature id for the '<em><b>Parent</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int METHODS__PARENT = ELEMENT__PARENT;
+
+	/**
+	 * The feature id for the '<em><b>Attributes</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int METHODS__ATTRIBUTES = ELEMENT__ATTRIBUTES;
+
+	/**
+	 * The feature id for the '<em><b>Content</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int METHODS__CONTENT = ELEMENT__CONTENT;
+
+	/**
+	 * The feature id for the '<em><b>Split Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int METHODS__SPLIT_TAG = ELEMENT__SPLIT_TAG;
+
+	/**
+	 * The feature id for the '<em><b>Closed Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int METHODS__CLOSED_TAG = ELEMENT__CLOSED_TAG;
+
+	/**
 	 * The feature id for the '<em><b>Method</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int METHODS__METHOD = 0;
+	int METHODS__METHOD = ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Methods</em>' class.
@@ -204,7 +294,7 @@ public interface TslPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int METHODS_FEATURE_COUNT = 1;
+	int METHODS_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.tsl.impl.MethodImpl <em>Method</em>}' class.
@@ -251,6 +341,24 @@ public interface TslPackage extends EPackage {
 	 * @ordered
 	 */
 	int METHOD__CONTENT = ELEMENT__CONTENT;
+
+	/**
+	 * The feature id for the '<em><b>Split Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int METHOD__SPLIT_TAG = ELEMENT__SPLIT_TAG;
+
+	/**
+	 * The feature id for the '<em><b>Closed Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int METHOD__CLOSED_TAG = ELEMENT__CLOSED_TAG;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -372,22 +480,22 @@ public interface TslPackage extends EPackage {
 	int MESSAGE__CONTENT = ELEMENT__CONTENT;
 
 	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Split Tag</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MESSAGE__NAME = ELEMENT_FEATURE_COUNT + 0;
+	int MESSAGE__SPLIT_TAG = ELEMENT__SPLIT_TAG;
 
 	/**
-	 * The feature id for the '<em><b>Type</b></em>' attribute.
+	 * The feature id for the '<em><b>Closed Tag</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MESSAGE__TYPE = ELEMENT_FEATURE_COUNT + 1;
+	int MESSAGE__CLOSED_TAG = ELEMENT__CLOSED_TAG;
 
 	/**
 	 * The number of structural features of the '<em>Message</em>' class.
@@ -396,7 +504,7 @@ public interface TslPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MESSAGE_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 2;
+	int MESSAGE_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.tsl.impl.MapImpl <em>Map</em>}' class.
@@ -443,6 +551,24 @@ public interface TslPackage extends EPackage {
 	 * @ordered
 	 */
 	int MAP__CONTENT = ELEMENT__CONTENT;
+
+	/**
+	 * The feature id for the '<em><b>Split Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAP__SPLIT_TAG = ELEMENT__SPLIT_TAG;
+
+	/**
+	 * The feature id for the '<em><b>Closed Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAP__CLOSED_TAG = ELEMENT__CLOSED_TAG;
 
 	/**
 	 * The feature id for the '<em><b>Map Name</b></em>' attribute.
@@ -518,6 +644,24 @@ public interface TslPackage extends EPackage {
 	int PROPERTY__CONTENT = ELEMENT__CONTENT;
 
 	/**
+	 * The feature id for the '<em><b>Split Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROPERTY__SPLIT_TAG = ELEMENT__SPLIT_TAG;
+
+	/**
+	 * The feature id for the '<em><b>Closed Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROPERTY__CLOSED_TAG = ELEMENT__CLOSED_TAG;
+
+	/**
 	 * The feature id for the '<em><b>Expression Value</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -582,6 +726,24 @@ public interface TslPackage extends EPackage {
 	int PARAM__CONTENT = PROPERTY__CONTENT;
 
 	/**
+	 * The feature id for the '<em><b>Split Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAM__SPLIT_TAG = PROPERTY__SPLIT_TAG;
+
+	/**
+	 * The feature id for the '<em><b>Closed Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAM__CLOSED_TAG = PROPERTY__CLOSED_TAG;
+
+	/**
 	 * The feature id for the '<em><b>Expression Value</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -644,6 +806,24 @@ public interface TslPackage extends EPackage {
 	 * @ordered
 	 */
 	int EXPRESSION_TAG__CONTENT = ELEMENT__CONTENT;
+
+	/**
+	 * The feature id for the '<em><b>Split Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPRESSION_TAG__SPLIT_TAG = ELEMENT__SPLIT_TAG;
+
+	/**
+	 * The feature id for the '<em><b>Closed Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPRESSION_TAG__CLOSED_TAG = ELEMENT__CLOSED_TAG;
 
 	/**
 	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
@@ -711,6 +891,24 @@ public interface TslPackage extends EPackage {
 	int DEBUG_TAG__CONTENT = ELEMENT__CONTENT;
 
 	/**
+	 * The feature id for the '<em><b>Split Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DEBUG_TAG__SPLIT_TAG = ELEMENT__SPLIT_TAG;
+
+	/**
+	 * The feature id for the '<em><b>Closed Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DEBUG_TAG__CLOSED_TAG = ELEMENT__CLOSED_TAG;
+
+	/**
 	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -773,6 +971,24 @@ public interface TslPackage extends EPackage {
 	 * @ordered
 	 */
 	int MAP_METHOD__CONTENT = ELEMENT__CONTENT;
+
+	/**
+	 * The feature id for the '<em><b>Split Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAP_METHOD__SPLIT_TAG = ELEMENT__SPLIT_TAG;
+
+	/**
+	 * The feature id for the '<em><b>Closed Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAP_METHOD__CLOSED_TAG = ELEMENT__CLOSED_TAG;
 
 	/**
 	 * The feature id for the '<em><b>Map Name</b></em>' attribute.
@@ -876,6 +1092,24 @@ public interface TslPackage extends EPackage {
 	int REQUIRED__CONTENT = ELEMENT__CONTENT;
 
 	/**
+	 * The feature id for the '<em><b>Split Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REQUIRED__SPLIT_TAG = ELEMENT__SPLIT_TAG;
+
+	/**
+	 * The feature id for the '<em><b>Closed Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REQUIRED__CLOSED_TAG = ELEMENT__CLOSED_TAG;
+
+	/**
 	 * The number of structural features of the '<em>Required</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -929,6 +1163,24 @@ public interface TslPackage extends EPackage {
 	 * @ordered
 	 */
 	int OPTION__CONTENT = ELEMENT__CONTENT;
+
+	/**
+	 * The feature id for the '<em><b>Split Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPTION__SPLIT_TAG = ELEMENT__SPLIT_TAG;
+
+	/**
+	 * The feature id for the '<em><b>Closed Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPTION__CLOSED_TAG = ELEMENT__CLOSED_TAG;
 
 	/**
 	 * The number of structural features of the '<em>Option</em>' class.
@@ -985,6 +1237,24 @@ public interface TslPackage extends EPackage {
 	 * @ordered
 	 */
 	int CHECK__CONTENT = ELEMENT__CONTENT;
+
+	/**
+	 * The feature id for the '<em><b>Split Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECK__SPLIT_TAG = ELEMENT__SPLIT_TAG;
+
+	/**
+	 * The feature id for the '<em><b>Closed Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHECK__CLOSED_TAG = ELEMENT__CLOSED_TAG;
 
 	/**
 	 * The feature id for the '<em><b>Code</b></em>' attribute.
@@ -1060,6 +1330,24 @@ public interface TslPackage extends EPackage {
 	int VALIDATIONS__CONTENT = ELEMENT__CONTENT;
 
 	/**
+	 * The feature id for the '<em><b>Split Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VALIDATIONS__SPLIT_TAG = ELEMENT__SPLIT_TAG;
+
+	/**
+	 * The feature id for the '<em><b>Closed Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VALIDATIONS__CLOSED_TAG = ELEMENT__CLOSED_TAG;
+
+	/**
 	 * The number of structural features of the '<em>Validations</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1113,6 +1401,24 @@ public interface TslPackage extends EPackage {
 	 * @ordered
 	 */
 	int COMMENT__CONTENT = ELEMENT__CONTENT;
+
+	/**
+	 * The feature id for the '<em><b>Split Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMMENT__SPLIT_TAG = ELEMENT__SPLIT_TAG;
+
+	/**
+	 * The feature id for the '<em><b>Closed Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMMENT__CLOSED_TAG = ELEMENT__CLOSED_TAG;
 
 	/**
 	 * The number of structural features of the '<em>Comment</em>' class.
@@ -1171,6 +1477,24 @@ public interface TslPackage extends EPackage {
 	int BREAK__CONTENT = ELEMENT__CONTENT;
 
 	/**
+	 * The feature id for the '<em><b>Split Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BREAK__SPLIT_TAG = ELEMENT__SPLIT_TAG;
+
+	/**
+	 * The feature id for the '<em><b>Closed Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BREAK__CLOSED_TAG = ELEMENT__CLOSED_TAG;
+
+	/**
 	 * The number of structural features of the '<em>Break</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1178,6 +1502,89 @@ public interface TslPackage extends EPackage {
 	 * @ordered
 	 */
 	int BREAK_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 0;
+
+
+	/**
+	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.tsl.impl.FieldImpl <em>Field</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see com.dexels.navajo.dsl.model.tsl.impl.FieldImpl
+	 * @see com.dexels.navajo.dsl.model.tsl.impl.TslPackageImpl#getField()
+	 * @generated
+	 */
+	int FIELD = 18;
+
+	/**
+	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FIELD__CHILDREN = ELEMENT__CHILDREN;
+
+	/**
+	 * The feature id for the '<em><b>Parent</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FIELD__PARENT = ELEMENT__PARENT;
+
+	/**
+	 * The feature id for the '<em><b>Attributes</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FIELD__ATTRIBUTES = ELEMENT__ATTRIBUTES;
+
+	/**
+	 * The feature id for the '<em><b>Content</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FIELD__CONTENT = ELEMENT__CONTENT;
+
+	/**
+	 * The feature id for the '<em><b>Split Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FIELD__SPLIT_TAG = ELEMENT__SPLIT_TAG;
+
+	/**
+	 * The feature id for the '<em><b>Closed Tag</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FIELD__CLOSED_TAG = ELEMENT__CLOSED_TAG;
+
+	/**
+	 * The feature id for the '<em><b>Expression Value</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FIELD__EXPRESSION_VALUE = ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Field</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FIELD_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 1;
 
 
 	/**
@@ -1352,6 +1759,28 @@ public interface TslPackage extends EPackage {
 	EAttribute getElement_Content();
 
 	/**
+	 * Returns the meta object for the attribute '{@link com.dexels.navajo.dsl.model.tsl.Element#isSplitTag <em>Split Tag</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Split Tag</em>'.
+	 * @see com.dexels.navajo.dsl.model.tsl.Element#isSplitTag()
+	 * @see #getElement()
+	 * @generated
+	 */
+	EAttribute getElement_SplitTag();
+
+	/**
+	 * Returns the meta object for the attribute '{@link com.dexels.navajo.dsl.model.tsl.Element#isClosedTag <em>Closed Tag</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Closed Tag</em>'.
+	 * @see com.dexels.navajo.dsl.model.tsl.Element#isClosedTag()
+	 * @see #getElement()
+	 * @generated
+	 */
+	EAttribute getElement_ClosedTag();
+
+	/**
 	 * Returns the meta object for class '{@link com.dexels.navajo.dsl.model.tsl.Message <em>Message</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1360,28 +1789,6 @@ public interface TslPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getMessage();
-
-	/**
-	 * Returns the meta object for the attribute '{@link com.dexels.navajo.dsl.model.tsl.Message#getName <em>Name</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see com.dexels.navajo.dsl.model.tsl.Message#getName()
-	 * @see #getMessage()
-	 * @generated
-	 */
-	EAttribute getMessage_Name();
-
-	/**
-	 * Returns the meta object for the attribute '{@link com.dexels.navajo.dsl.model.tsl.Message#getType <em>Type</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Type</em>'.
-	 * @see com.dexels.navajo.dsl.model.tsl.Message#getType()
-	 * @see #getMessage()
-	 * @generated
-	 */
-	EAttribute getMessage_Type();
 
 	/**
 	 * Returns the meta object for class '{@link com.dexels.navajo.dsl.model.tsl.Map <em>Map</em>}'.
@@ -1636,6 +2043,27 @@ public interface TslPackage extends EPackage {
 	EClass getBreak();
 
 	/**
+	 * Returns the meta object for class '{@link com.dexels.navajo.dsl.model.tsl.Field <em>Field</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Field</em>'.
+	 * @see com.dexels.navajo.dsl.model.tsl.Field
+	 * @generated
+	 */
+	EClass getField();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link com.dexels.navajo.dsl.model.tsl.Field#getExpressionValue <em>Expression Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Expression Value</em>'.
+	 * @see com.dexels.navajo.dsl.model.tsl.Field#getExpressionValue()
+	 * @see #getField()
+	 * @generated
+	 */
+	EReference getField_ExpressionValue();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1796,6 +2224,22 @@ public interface TslPackage extends EPackage {
 		EAttribute ELEMENT__CONTENT = eINSTANCE.getElement_Content();
 
 		/**
+		 * The meta object literal for the '<em><b>Split Tag</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ELEMENT__SPLIT_TAG = eINSTANCE.getElement_SplitTag();
+
+		/**
+		 * The meta object literal for the '<em><b>Closed Tag</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ELEMENT__CLOSED_TAG = eINSTANCE.getElement_ClosedTag();
+
+		/**
 		 * The meta object literal for the '{@link com.dexels.navajo.dsl.model.tsl.impl.MessageImpl <em>Message</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1804,22 +2248,6 @@ public interface TslPackage extends EPackage {
 		 * @generated
 		 */
 		EClass MESSAGE = eINSTANCE.getMessage();
-
-		/**
-		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute MESSAGE__NAME = eINSTANCE.getMessage_Name();
-
-		/**
-		 * The meta object literal for the '<em><b>Type</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute MESSAGE__TYPE = eINSTANCE.getMessage_Type();
 
 		/**
 		 * The meta object literal for the '{@link com.dexels.navajo.dsl.model.tsl.impl.MapImpl <em>Map</em>}' class.
@@ -2036,6 +2464,24 @@ public interface TslPackage extends EPackage {
 		 * @generated
 		 */
 		EClass BREAK = eINSTANCE.getBreak();
+
+		/**
+		 * The meta object literal for the '{@link com.dexels.navajo.dsl.model.tsl.impl.FieldImpl <em>Field</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see com.dexels.navajo.dsl.model.tsl.impl.FieldImpl
+		 * @see com.dexels.navajo.dsl.model.tsl.impl.TslPackageImpl#getField()
+		 * @generated
+		 */
+		EClass FIELD = eINSTANCE.getField();
+
+		/**
+		 * The meta object literal for the '<em><b>Expression Value</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference FIELD__EXPRESSION_VALUE = eINSTANCE.getField_ExpressionValue();
 
 	}
 
