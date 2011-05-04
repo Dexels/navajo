@@ -16,6 +16,7 @@ Export-Package: com.dexels.navajo.adapter.navajomap;uses:="com.dexels.navajo.ser
    com.dexels.navajo.server,
    com.dexels.navajo.server.jmx,
    com.dexels.navajo.document",
+ com.dexels.navajo.mapping.bean,
  com.dexels.navajo.mapping.compiler;uses:="com.dexels.navajo.loader,org.w3c.dom,com.dexels.navajo.document.nanoimpl",
  com.dexels.navajo.mapping.compiler.meta;uses:="junit.framework",
  com.dexels.navajo.parser;uses:="junit.framework",
