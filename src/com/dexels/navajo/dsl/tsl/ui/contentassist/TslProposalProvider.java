@@ -13,13 +13,16 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
+import org.eclipse.xtext.AbstractElement;
+import org.eclipse.xtext.AbstractRule;
 import org.eclipse.xtext.Assignment;
+import org.eclipse.xtext.Grammar;
 import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
 
-import com.dexels.navajo.dsl.expression.ui.contentassist.AdapterProposal;
-import com.dexels.navajo.dsl.expression.ui.contentassist.INavajoResourceFinder;
+import com.dexels.navajo.dsl.expression.proposals.AdapterProposal;
+import com.dexels.navajo.dsl.expression.proposals.INavajoResourceFinder;
 import com.dexels.navajo.dsl.expression.ui.contentassist.NavajoExpressionProposalProvider;
 import com.dexels.navajo.dsl.model.tsl.Element;
 import com.dexels.navajo.dsl.model.tsl.Map;
@@ -27,6 +30,7 @@ import com.dexels.navajo.dsl.model.tsl.Message;
 import com.dexels.navajo.dsl.model.tsl.PossibleExpression;
 import com.dexels.navajo.dsl.model.tsl.Property;
 import com.dexels.navajo.dsl.model.tsl.Tml;
+import com.dexels.navajo.dsl.model.tsl.TslFactory;
 /**
  * see http://www.eclipse.org/Xtext/documentation/latest/xtext.html#contentAssist on how to customize content assistant
  */
@@ -38,6 +42,8 @@ public class TslProposalProvider extends AbstractTslProposalProvider {
 	private final java.util.Map<String,java.util.Map<String,List<String>>> proposalRepository = new HashMap<String, java.util.Map<String,List<String>>>();
 	private final java.util.Map<String,List<String>> typeProposalRegistry = new HashMap<String, List<String>>();
 
+//	private final NavajoContextProvider contextProvider = new NavajoContextProvider();
+	
 	public TslProposalProvider() {
 		initializeProposalBundle();
 		initializeTypeBundle();
@@ -86,50 +92,186 @@ public class TslProposalProvider extends AbstractTslProposalProvider {
 	
 	
 	public TslProposalProvider(INavajoResourceFinder navajoFinder) throws CoreException, IOException {
-		setNavajoResourceFinder(navajoFinder);
-		initialize(navajoFinder);
+		navajoContext.initialize(navajoFinder);
+	
 		initializeProposalBundle();
 
 	}
 	
+	@Override
+	public void complete_MapGetReference(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		Map m = getMapParent(model);
+		if(m==null) {
+			return;
+		}
+		if(m.getMapName()==null) {
+			System.err.println("No map name, attempting to resolve...");
+			resolveMapName(m);
+		}
+		List<String> getters = navajoContext.getAdapter(m.getMapName()).getGetters();
+		for (String string : getters) {
+			ICompletionProposal completionProposal = createCompletionProposal("$"+string, "$"+string, null, context);
+			acceptor.accept(completionProposal);
+
+		}
+	}
 	
 	
+	//TODO Extend to also include parent maps
+	private Map getMapParent(EObject model) {
+		if(model instanceof Map) {
+			return (Map) model;
+		}
+		if(model==null) {
+			return null;
+		}
+		return getMapParent(model.eContainer());
+	}
+
+	// Figure out the type / name of a reffed map based on its parent type and field
+	private void resolveMapName(Map m) {
+		if(m.getMapName()==null && m.getRef()!=null) {
+			Map parent = getMapParent (m.eContainer());
+			String mapName = resolveChildMapType(parent,m.getRef());
+			
+			// Do something more intelligent
+			if(mapName.endsWith("[]")) {
+				mapName = mapName.substring(0, mapName.length()-2);
+			}
+			m.setMapName(mapName);
+		}
+		
+	}
+	
+	private String stripQuotes(String label) {
+		if(label.startsWith("\"") && label.endsWith("\"")) {
+			return label.substring(1, label.length()-1);
+		}
+		return label;
+	}
+	
+	private String resolveChildMapType(Map parent, String ref) {
+		ref = stripQuotes(ref);
+		String set = navajoContext.getAdapter(parent.getMapName()).getGetterMapType(ref);
+		return set;
+	}
+
+	@Override
+	public void complete_Property(EObject model, RuleCall ruleCall,
+			ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		super.complete_Property(model, ruleCall, context, acceptor);
+		Element ee = (Element)model;
+		String selected = context.getSelectedText();
+		if(selected==null || "".equals(selected)) {
+			selected="propertyName";
+		}
+
+		ICompletionProposal completionProposal = createCompletionProposal("<property name=\""+selected+"\">\n</property>", "Property with name: "+selected, null, context);
+		acceptor.accept(completionProposal);
+
+		if(ee instanceof Property) {
+			if(ee.isSplitTag() && !ee.isClosedTag()) {
+				completionProposal = createCompletionProposal("</property>","</property>", null, context);
+				acceptor.accept(completionProposal);
+				
+			}
+		}
+	}
+
+	
+	
+	
+	@Override
+	public void complete_ExpressionTag(EObject model, RuleCall ruleCall,
+			ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		super.complete_ExpressionTag(model, ruleCall, context, acceptor);
+		ICompletionProposal completionProposal = createCompletionProposal("<![CDATA[\n]]>","<![CDATA tag", null, context);
+		acceptor.accept(completionProposal);
+		
+	}
+
+	
+	
+	@Override
+	public void completeExpressionTag_Expression(EObject model,
+			Assignment assignment, ContentAssistContext context,
+			ICompletionProposalAcceptor acceptor) {
+		super.completeExpressionTag_Expression(model, assignment, context, acceptor);
+		ICompletionProposal completionProposal = createCompletionProposal("<![CDATA[\n]]>","<![CDATA tag", null, context);
+		acceptor.accept(completionProposal);
+	}
+
 	@Override
 	public void complete_Message(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
 		super.complete_Message(model, ruleCall, context, acceptor);
 		String selected = context.getSelectedText();
-		if(selected==null) {
+		if(selected==null || "".equals(selected)) {
 			selected="messagename";
 		}
 		ICompletionProposal completionProposal = createCompletionProposal("<message name=\""+selected+"\">\n</message>", "Message with name: "+selected, null, context);
 		acceptor.accept(completionProposal);
 		completionProposal = createCompletionProposal("<message name=\""+selected+"\" type=\"array\">\n</message>", "Array message with name: "+selected, null, context);
+		acceptor.accept(completionProposal);
+		
+		if(model instanceof Message) {
+			Message t = (Message)model;
+			if(t.isArray()) {
+				completionProposal = createCompletionProposal("<message name=\""+t.getName()+"\" type=\"array_element\">\n</message>", "Add element with name: "+t.getName(), null, context);
+				acceptor.accept(completionProposal);
+			}
+			if(t.isSplitTag() && !t.isClosedTag()) {
+				completionProposal = createCompletionProposal("</message>","</message>", null, context);
+				acceptor.accept(completionProposal);
+				
+			}
+//			if(t.getMethods()==null || t.getMethods().isEmpty()) {
+//				t.getMethods().add(TslFactory.eINSTANCE.createMethods());
+//			}
+		}
+		
+	}
 
+	
+	@Override
+	public void complete_MapId(EObject model, RuleCall ruleCall,
+			ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		super.complete_MapId(model, ruleCall, context, acceptor);
+		List<AdapterProposal> list = navajoContext.getAdapterProposals();
+		Map m = (Map)model;
+		for (AdapterProposal adapterProposal : list) {
+			if(m.getMapName()==null || adapterProposal.getTagName().startsWith(m.getMapName())) {
+				String mapIdProposal = adapterProposal.getMapIdProposal(m.getMapName());
+				ICompletionProposal completionProposal = createCompletionProposal(adapterProposal.getTagName(), context);
+				acceptor.accept(completionProposal);
+			}
+		}
+		
+	}
+
+	
+	
+	
+	@Override
+	public void complete_DebugTag(EObject model, RuleCall ruleCall,
+			ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		super.complete_DebugTag(model, ruleCall, context, acceptor);
+		String selected = context.getSelectedText();
+		if(selected==null || "".equals(selected)) {
+			selected="statement";
+		}
+		ICompletionProposal completionProposal = createCompletionProposal("<debug value=\""+selected+"\">\n</debug>", "Debug statement with value: "+selected, null, context);
 		acceptor.accept(completionProposal);
 	}
 
-	
-	public void complete_MapStart(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
-		// subclasses may override
-		super.complete_MapId(model, ruleCall, context, acceptor);
-		System.err.println("Completing mapstart!");
-		List<AdapterProposal> list = getAdapterProposals();
-		System.err.println("Adapterproposals: "+list.size());
-		for (AdapterProposal adapterProposal : list) {
-			ICompletionProposal completionProposal = createCompletionProposal(adapterProposal.getFullProposal(), adapterProposal.getTagName(), null, context);
-			acceptor.accept(completionProposal);
-		}
-	}
-
-	
+//	public void completeMap_Children(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+//		super.completeMap_Children(model, assignment, context, acceptor);
+//	}
 	
 	@Override
 	public void completePossibleExpression_Key(EObject model,
 			Assignment assignment, ContentAssistContext context,
 			ICompletionProposalAcceptor acceptor) {
 		super.completePossibleExpression_Key(model, assignment, context, acceptor);
-		System.err.println("I am a: "+model);
-		System.err.println("My parent is a : "+model.eContainer());
 
 			Set<String> possibilities = null;
 			if(model instanceof Property) {
@@ -157,8 +299,6 @@ public class TslProposalProvider extends AbstractTslProposalProvider {
 			ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
 
 		super.complete_ATTRIBUTESTRING(model, ruleCall, context, acceptor);
-		System.err.println("I am a: "+model);
-		System.err.println("My parent is a : "+model.eContainer());
 		if(model instanceof PossibleExpression ) {
 			PossibleExpression expr = (PossibleExpression)model;
 			String myKey = expr.getKey();			
@@ -235,11 +375,15 @@ public class TslProposalProvider extends AbstractTslProposalProvider {
 			String[] split = elt.split("/");
 			if (split.length>1) {
 				assert(split[0].equals("expression"));
-				System.err.println("Type::"+split[1]);
+//				System.err.println("Type::"+split[1]);
 				List<String> proposedValuesForType = typeProposalRegistry.get(split[1]);
 				if ("any".equals(split[1])) {
 					result.add("=;");
 				} else {
+					if(proposedValuesForType==null) {
+//						System.err.println("Error proposing types for: "+elt);
+						continue;
+					}
 					for (String p : proposedValuesForType) {
 						result.add("="+p+";");
 					}
@@ -249,9 +393,26 @@ public class TslProposalProvider extends AbstractTslProposalProvider {
 				result.add(elt);
 			}
 		}
-		System.err.println("Proposed values: "+result);
 
 		return result;
+	}
+	
+	
+	
+	
+/**
+ * How can I make this reliable? No idea if it is the right map?
+ * @param model
+ * @return
+ */
+	private Map findMapInModel(Element model) {
+		List<Element> children = model.getChildren();
+		for (Element element : children) {
+			if(element instanceof Map) {
+				return (Map) element;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -274,9 +435,9 @@ public class TslProposalProvider extends AbstractTslProposalProvider {
 		List<String> result = new ArrayList<String>();
 		if(ee instanceof Map) {
 			Map m = (Map)ee;
-			AdapterProposal aa = getAdapter(m.getMapName());
+			AdapterProposal aa = navajoContext.getAdapter(m.getMapName());
 			String type = aa.getTypeOfValue(proposal);
-			System.err.println("Looking for proposal: "+proposal+" map: "+m.getMapName()+" type: "+type);
+//			System.err.println("Looking for proposal: "+proposal+" map: "+m.getMapName()+" type: "+type);
 			List<String> proposals = typeProposalRegistry.get(type);
 			if(proposals!=null) {
 				for (String current : proposals) {
@@ -284,7 +445,6 @@ public class TslProposalProvider extends AbstractTslProposalProvider {
 				}
 			}
 		}
-		System.err.println("Proposed raw values: "+result);
 		return result;
 	}
 
@@ -308,8 +468,8 @@ public class TslProposalProvider extends AbstractTslProposalProvider {
 		}
 		if(ee instanceof Map) {
 			Map m = (Map)ee;
-			AdapterProposal aa = getAdapter(m.getMapName());
-			System.err.println("Looking for map: "+m.getMapName());
+			AdapterProposal aa = navajoContext.getAdapter(m.getMapName());
+//			System.err.println("Looking for map: "+m.getMapName());
 			if(aa!=null) {
 				List<String> setters =  aa.getSetters();
 				result.addAll(setters);
@@ -329,8 +489,6 @@ public class TslProposalProvider extends AbstractTslProposalProvider {
 	public void completeMap_MapClosingName(EObject model,
 			Assignment assignment, ContentAssistContext context,
 			ICompletionProposalAcceptor acceptor) {
-		System.err.println("MapClosing...");
-		System.err.println("MODEL: "+model.getClass());
 		if(model instanceof Map) {
 			Map m = (Map)model;
 			
@@ -340,19 +498,74 @@ public class TslProposalProvider extends AbstractTslProposalProvider {
 		super.completeMap_MapClosingName(model, assignment, context, acceptor);
 	}	
 	
-	@Override
-	public void complete_Map(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
-		System.err.println("Completing map: "+ruleCall.getRule().getName());
-		
-		super.complete_Map(model, ruleCall, context, acceptor);
-		if(model instanceof Map) {
-			Map m = (Map)model;
-			ICompletionProposal completionProposal = createCompletionProposal("</"+m.getMapClosingName()+">" , "</"+m.getMapClosingName()+">", null, context);
-			acceptor.accept(completionProposal);
+
+	
+	public void complete_Map(EObject m, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		List<AdapterProposal> props = navajoContext.getAdapterProposals();
+		for (AdapterProposal adapterProposal : props) {
+			ICompletionProposal completionProposal = createCompletionProposal(adapterProposal.getFullProposal() , "map: "+adapterProposal.getTagName(), null, context);
+			acceptor.accept(completionProposal);			
 		}
 
+		// Look for parent maps
+		Map mm = getMapParent(m);
+		if(mm!=null) {
+			String mapName = mm.getMapName();
+			AdapterProposal ap = navajoContext.getAdapter(mapName);
+			List<String> refs = ap.getMapRefProposals();
+			for (String ref: refs) {
+				ICompletionProposal completionProposal = createCompletionProposal(ref , "mapref: "+ref, null, context);
+				acceptor.accept(completionProposal);			
+			}
+		}
+		
+		if(m instanceof Map) {
+			Map currentMap = (Map) m;
+			if(currentMap==null || currentMap.getMapClosingName()==null) {
+				ICompletionProposal completionProposal = createCompletionProposal("</map."+currentMap.getMapName()+">" , "</map."+currentMap.getMapName()+">", null, context);
+				acceptor.accept(completionProposal);			
+			}
+
+			List<AdapterProposal> propos = navajoContext.getAdapterProposals();
+			for (AdapterProposal adapterProposal : propos) {
+				ICompletionProposal completionProposal = createCompletionProposal(adapterProposal.getFullProposal() , "map: "+adapterProposal.getTagName(), null, context);
+				acceptor.accept(completionProposal);			
+			}
+		}
 	}
 	
+
+//	public void complete_Map(Map model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+//		System.err.println("Completing submap(?) ");
+//		debugElement(model);
+//		if(model instanceof Map) {
+//			Map m = (Map)model;
+//			ICompletionProposal completionProposal = createCompletionProposal("</"+m.getMapClosingName()+">" , "</"+m.getMapClosingName()+">", null, context);
+//			acceptor.accept(completionProposal);
+//		} else {
+//			
+//			System.err.println("No, not a map but: "+model.getClass());
+//		}
+//	}
+//
+//	private void debugElement(Element model) {
+//		if(model.getParent()!=null) {
+//			System.err.println("Element: "+model.getClass()+ " parent = "+model.getParent().getClass());
+//		} else {
+//			System.err.println("Element: "+model.getClass()+ " parent = none");
+//		}
+//		for (Element e : model.getChildren()) {
+//			System.err.println("CHILDreN------");
+//			debugElement(e);
+//		}
+//		for (PossibleExpression e : model.getAttributes()) {
+//			System.err.println("Attribute: "+e.getKey()+" value: "+e.getValue());
+//			
+//			
+//		}
+//		System.err.println("End of debug");
+//	}
+
 	public static void main(String[] args) throws Exception {
 		System.setProperty("testmode", "true");
 		NavajoExpressionProposalProvider npp = new TslProposalProvider();
