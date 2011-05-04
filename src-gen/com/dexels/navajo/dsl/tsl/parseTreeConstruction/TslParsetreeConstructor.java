@@ -743,12 +743,12 @@ protected class Tml_XML_TAG_SINGLEENDTerminalRuleCall_3_1 extends UnassignedText
  *
  * PossibleExpression:
  * 	(namespace=ID ":")? key=AttributeName "=" (QUOTEQ expressionValue=TopLevel SEMICOLONQUOTE | value=ATTRIBUTESTRING |
- * 	EMPTYSTRING);
+ * 	value=EMPTYSTRING);
  *
  **/
 
 // (namespace=ID ":")? key=AttributeName "=" (QUOTEQ expressionValue=TopLevel SEMICOLONQUOTE | value=ATTRIBUTESTRING |
-// EMPTYSTRING)
+// value=EMPTYSTRING)
 protected class PossibleExpression_Group extends GroupToken {
 	
 	public PossibleExpression_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -911,7 +911,7 @@ protected class PossibleExpression_EqualsSignKeyword_2 extends KeywordToken  {
 
 }
 
-// QUOTEQ expressionValue=TopLevel SEMICOLONQUOTE | value=ATTRIBUTESTRING | EMPTYSTRING
+// QUOTEQ expressionValue=TopLevel SEMICOLONQUOTE | value=ATTRIBUTESTRING | value=EMPTYSTRING
 protected class PossibleExpression_Alternatives_3 extends AlternativesToken {
 
 	public PossibleExpression_Alternatives_3(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -928,7 +928,7 @@ protected class PossibleExpression_Alternatives_3 extends AlternativesToken {
 		switch(index) {
 			case 0: return new PossibleExpression_Group_3_0(lastRuleCallOrigin, this, 0, inst);
 			case 1: return new PossibleExpression_ValueAssignment_3_1(lastRuleCallOrigin, this, 1, inst);
-			case 2: return new PossibleExpression_EMPTYSTRINGTerminalRuleCall_3_2(lastRuleCallOrigin, this, 2, inst);
+			case 2: return new PossibleExpression_ValueAssignment_3_2(lastRuleCallOrigin, this, 2, inst);
 			default: return null;
 		}	
 	}
@@ -1082,16 +1082,16 @@ protected class PossibleExpression_ValueAssignment_3_1 extends AssignmentToken  
 
 }
 
-// EMPTYSTRING
-protected class PossibleExpression_EMPTYSTRINGTerminalRuleCall_3_2 extends UnassignedTextToken {
-
-	public PossibleExpression_EMPTYSTRINGTerminalRuleCall_3_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+// value=EMPTYSTRING
+protected class PossibleExpression_ValueAssignment_3_2 extends AssignmentToken  {
+	
+	public PossibleExpression_ValueAssignment_3_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
-	public RuleCall getGrammarElement() {
-		return grammarAccess.getPossibleExpressionAccess().getEMPTYSTRINGTerminalRuleCall_3_2();
+	public Assignment getGrammarElement() {
+		return grammarAccess.getPossibleExpressionAccess().getValueAssignment_3_2();
 	}
 
     @Override
@@ -1100,6 +1100,18 @@ protected class PossibleExpression_EMPTYSTRINGTerminalRuleCall_3_2 extends Unass
 			case 0: return new PossibleExpression_EqualsSignKeyword_2(lastRuleCallOrigin, this, 0, inst);
 			default: return null;
 		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("value",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("value");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getPossibleExpressionAccess().getValueEMPTYSTRINGTerminalRuleCall_3_2_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getPossibleExpressionAccess().getValueEMPTYSTRINGTerminalRuleCall_3_2_0();
+			return obj;
+		}
+		return null;
 	}
 
 }
@@ -1112,11 +1124,11 @@ protected class PossibleExpression_EMPTYSTRINGTerminalRuleCall_3_2 extends Unass
 /************ begin Rule Methods ****************
  *
  * Methods:
- * 	METHODS_START_TAG {Methods} (XML_TAG_END method+=Method* METHODS_END_TAG | XML_TAG_SINGLEEND);
+ * 	METHODS_START_TAG {Methods} (splitTag?=XML_TAG_END method+=Method* closedTag?=METHODS_END_TAG | XML_TAG_SINGLEEND);
  *
  **/
 
-// METHODS_START_TAG {Methods} (XML_TAG_END method+=Method* METHODS_END_TAG | XML_TAG_SINGLEEND)
+// METHODS_START_TAG {Methods} (splitTag?=XML_TAG_END method+=Method* closedTag?=METHODS_END_TAG | XML_TAG_SINGLEEND)
 protected class Methods_Group extends GroupToken {
 	
 	public Methods_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -1193,7 +1205,7 @@ protected class Methods_MethodsAction_1 extends ActionToken  {
 	}
 }
 
-// XML_TAG_END method+=Method* METHODS_END_TAG | XML_TAG_SINGLEEND
+// splitTag?=XML_TAG_END method+=Method* closedTag?=METHODS_END_TAG | XML_TAG_SINGLEEND
 protected class Methods_Alternatives_2 extends AlternativesToken {
 
 	public Methods_Alternatives_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -1216,7 +1228,7 @@ protected class Methods_Alternatives_2 extends AlternativesToken {
 
 }
 
-// XML_TAG_END method+=Method* METHODS_END_TAG
+// splitTag?=XML_TAG_END method+=Method* closedTag?=METHODS_END_TAG
 protected class Methods_Group_2_0 extends GroupToken {
 	
 	public Methods_Group_2_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -1231,23 +1243,23 @@ protected class Methods_Group_2_0 extends GroupToken {
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new Methods_METHODS_END_TAGTerminalRuleCall_2_0_2(lastRuleCallOrigin, this, 0, inst);
+			case 0: return new Methods_ClosedTagAssignment_2_0_2(lastRuleCallOrigin, this, 0, inst);
 			default: return null;
 		}	
 	}
 
 }
 
-// XML_TAG_END
-protected class Methods_XML_TAG_ENDTerminalRuleCall_2_0_0 extends UnassignedTextToken {
-
-	public Methods_XML_TAG_ENDTerminalRuleCall_2_0_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+// splitTag?=XML_TAG_END
+protected class Methods_SplitTagAssignment_2_0_0 extends AssignmentToken  {
+	
+	public Methods_SplitTagAssignment_2_0_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
-	public RuleCall getGrammarElement() {
-		return grammarAccess.getMethodsAccess().getXML_TAG_ENDTerminalRuleCall_2_0_0();
+	public Assignment getGrammarElement() {
+		return grammarAccess.getMethodsAccess().getSplitTagAssignment_2_0_0();
 	}
 
     @Override
@@ -1256,6 +1268,18 @@ protected class Methods_XML_TAG_ENDTerminalRuleCall_2_0_0 extends UnassignedText
 			case 0: return new Methods_MethodsAction_1(lastRuleCallOrigin, this, 0, inst);
 			default: return null;
 		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("splitTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("splitTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getMethodsAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_2_0_0_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getMethodsAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_2_0_0_0();
+			return obj;
+		}
+		return null;
 	}
 
 }
@@ -1301,30 +1325,43 @@ protected class Methods_MethodAssignment_2_0_1 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new Methods_MethodAssignment_2_0_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Methods_XML_TAG_ENDTerminalRuleCall_2_0_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new Methods_SplitTagAssignment_2_0_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
 }
 
-// METHODS_END_TAG
-protected class Methods_METHODS_END_TAGTerminalRuleCall_2_0_2 extends UnassignedTextToken {
-
-	public Methods_METHODS_END_TAGTerminalRuleCall_2_0_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+// closedTag?=METHODS_END_TAG
+protected class Methods_ClosedTagAssignment_2_0_2 extends AssignmentToken  {
+	
+	public Methods_ClosedTagAssignment_2_0_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
-	public RuleCall getGrammarElement() {
-		return grammarAccess.getMethodsAccess().getMETHODS_END_TAGTerminalRuleCall_2_0_2();
+	public Assignment getGrammarElement() {
+		return grammarAccess.getMethodsAccess().getClosedTagAssignment_2_0_2();
 	}
 
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
 			case 0: return new Methods_MethodAssignment_2_0_1(lastRuleCallOrigin, this, 0, inst);
+			case 1: return new Methods_SplitTagAssignment_2_0_0(lastRuleCallOrigin, this, 1, inst);
 			default: return null;
 		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("closedTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("closedTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getMethodsAccess().getClosedTagMETHODS_END_TAGTerminalRuleCall_2_0_2_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getMethodsAccess().getClosedTagMETHODS_END_TAGTerminalRuleCall_2_0_2_0();
+			return obj;
+		}
+		return null;
 	}
 
 }
@@ -1360,13 +1397,13 @@ protected class Methods_XML_TAG_SINGLEENDTerminalRuleCall_2_1 extends Unassigned
 /************ begin Rule Method ****************
  *
  * Method:
- * 	METHOD_START_TAG {Method} attributes+=PossibleExpression* (XML_TAG_END children+=Required* METHOD_END_TAG |
- * 	XML_TAG_SINGLEEND);
+ * 	METHOD_START_TAG {Method} attributes+=PossibleExpression* (splitTag?=XML_TAG_END children+=Required*
+ * 	closedTag?=METHOD_END_TAG | XML_TAG_SINGLEEND);
  *
  **/
 
-// METHOD_START_TAG {Method} attributes+=PossibleExpression* (XML_TAG_END children+=Required* METHOD_END_TAG |
-// XML_TAG_SINGLEEND)
+// METHOD_START_TAG {Method} attributes+=PossibleExpression* (splitTag?=XML_TAG_END children+=Required*
+// closedTag?=METHOD_END_TAG | XML_TAG_SINGLEEND)
 protected class Method_Group extends GroupToken {
 	
 	public Method_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -1490,7 +1527,7 @@ protected class Method_AttributesAssignment_2 extends AssignmentToken  {
 	}	
 }
 
-// XML_TAG_END children+=Required* METHOD_END_TAG | XML_TAG_SINGLEEND
+// splitTag?=XML_TAG_END children+=Required* closedTag?=METHOD_END_TAG | XML_TAG_SINGLEEND
 protected class Method_Alternatives_3 extends AlternativesToken {
 
 	public Method_Alternatives_3(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -1513,7 +1550,7 @@ protected class Method_Alternatives_3 extends AlternativesToken {
 
 }
 
-// XML_TAG_END children+=Required* METHOD_END_TAG
+// splitTag?=XML_TAG_END children+=Required* closedTag?=METHOD_END_TAG
 protected class Method_Group_3_0 extends GroupToken {
 	
 	public Method_Group_3_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -1528,23 +1565,23 @@ protected class Method_Group_3_0 extends GroupToken {
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new Method_METHOD_END_TAGTerminalRuleCall_3_0_2(lastRuleCallOrigin, this, 0, inst);
+			case 0: return new Method_ClosedTagAssignment_3_0_2(lastRuleCallOrigin, this, 0, inst);
 			default: return null;
 		}	
 	}
 
 }
 
-// XML_TAG_END
-protected class Method_XML_TAG_ENDTerminalRuleCall_3_0_0 extends UnassignedTextToken {
-
-	public Method_XML_TAG_ENDTerminalRuleCall_3_0_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+// splitTag?=XML_TAG_END
+protected class Method_SplitTagAssignment_3_0_0 extends AssignmentToken  {
+	
+	public Method_SplitTagAssignment_3_0_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
-	public RuleCall getGrammarElement() {
-		return grammarAccess.getMethodAccess().getXML_TAG_ENDTerminalRuleCall_3_0_0();
+	public Assignment getGrammarElement() {
+		return grammarAccess.getMethodAccess().getSplitTagAssignment_3_0_0();
 	}
 
     @Override
@@ -1554,6 +1591,18 @@ protected class Method_XML_TAG_ENDTerminalRuleCall_3_0_0 extends UnassignedTextT
 			case 1: return new Method_MethodAction_1(lastRuleCallOrigin, this, 1, inst);
 			default: return null;
 		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("splitTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("splitTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getMethodAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_0_0_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getMethodAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_0_0_0();
+			return obj;
+		}
+		return null;
 	}
 
 }
@@ -1599,30 +1648,43 @@ protected class Method_ChildrenAssignment_3_0_1 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new Method_ChildrenAssignment_3_0_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Method_XML_TAG_ENDTerminalRuleCall_3_0_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new Method_SplitTagAssignment_3_0_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
 }
 
-// METHOD_END_TAG
-protected class Method_METHOD_END_TAGTerminalRuleCall_3_0_2 extends UnassignedTextToken {
-
-	public Method_METHOD_END_TAGTerminalRuleCall_3_0_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+// closedTag?=METHOD_END_TAG
+protected class Method_ClosedTagAssignment_3_0_2 extends AssignmentToken  {
+	
+	public Method_ClosedTagAssignment_3_0_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
-	public RuleCall getGrammarElement() {
-		return grammarAccess.getMethodAccess().getMETHOD_END_TAGTerminalRuleCall_3_0_2();
+	public Assignment getGrammarElement() {
+		return grammarAccess.getMethodAccess().getClosedTagAssignment_3_0_2();
 	}
 
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
 			case 0: return new Method_ChildrenAssignment_3_0_1(lastRuleCallOrigin, this, 0, inst);
+			case 1: return new Method_SplitTagAssignment_3_0_0(lastRuleCallOrigin, this, 1, inst);
 			default: return null;
 		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("closedTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("closedTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getMethodAccess().getClosedTagMETHOD_END_TAGTerminalRuleCall_3_0_2_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getMethodAccess().getClosedTagMETHOD_END_TAGTerminalRuleCall_3_0_2_0();
+			return obj;
+		}
+		return null;
 	}
 
 }
@@ -1659,11 +1721,13 @@ protected class Method_XML_TAG_SINGLEENDTerminalRuleCall_3_1 extends UnassignedT
 /************ begin Rule Validations ****************
  *
  * Validations:
- * 	VALIDATIONS_START_TAG {Validations} (XML_TAG_END children+=Check* VALIDATIONS_END_TAG | XML_TAG_SINGLEEND);
+ * 	VALIDATIONS_START_TAG {Validations} (splitTag?=XML_TAG_END children+=Check* closedTag?=VALIDATIONS_END_TAG |
+ * 	XML_TAG_SINGLEEND);
  *
  **/
 
-// VALIDATIONS_START_TAG {Validations} (XML_TAG_END children+=Check* VALIDATIONS_END_TAG | XML_TAG_SINGLEEND)
+// VALIDATIONS_START_TAG {Validations} (splitTag?=XML_TAG_END children+=Check* closedTag?=VALIDATIONS_END_TAG |
+// XML_TAG_SINGLEEND)
 protected class Validations_Group extends GroupToken {
 	
 	public Validations_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -1740,7 +1804,7 @@ protected class Validations_ValidationsAction_1 extends ActionToken  {
 	}
 }
 
-// XML_TAG_END children+=Check* VALIDATIONS_END_TAG | XML_TAG_SINGLEEND
+// splitTag?=XML_TAG_END children+=Check* closedTag?=VALIDATIONS_END_TAG | XML_TAG_SINGLEEND
 protected class Validations_Alternatives_2 extends AlternativesToken {
 
 	public Validations_Alternatives_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -1763,7 +1827,7 @@ protected class Validations_Alternatives_2 extends AlternativesToken {
 
 }
 
-// XML_TAG_END children+=Check* VALIDATIONS_END_TAG
+// splitTag?=XML_TAG_END children+=Check* closedTag?=VALIDATIONS_END_TAG
 protected class Validations_Group_2_0 extends GroupToken {
 	
 	public Validations_Group_2_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -1778,23 +1842,23 @@ protected class Validations_Group_2_0 extends GroupToken {
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new Validations_VALIDATIONS_END_TAGTerminalRuleCall_2_0_2(lastRuleCallOrigin, this, 0, inst);
+			case 0: return new Validations_ClosedTagAssignment_2_0_2(lastRuleCallOrigin, this, 0, inst);
 			default: return null;
 		}	
 	}
 
 }
 
-// XML_TAG_END
-protected class Validations_XML_TAG_ENDTerminalRuleCall_2_0_0 extends UnassignedTextToken {
-
-	public Validations_XML_TAG_ENDTerminalRuleCall_2_0_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+// splitTag?=XML_TAG_END
+protected class Validations_SplitTagAssignment_2_0_0 extends AssignmentToken  {
+	
+	public Validations_SplitTagAssignment_2_0_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
-	public RuleCall getGrammarElement() {
-		return grammarAccess.getValidationsAccess().getXML_TAG_ENDTerminalRuleCall_2_0_0();
+	public Assignment getGrammarElement() {
+		return grammarAccess.getValidationsAccess().getSplitTagAssignment_2_0_0();
 	}
 
     @Override
@@ -1803,6 +1867,18 @@ protected class Validations_XML_TAG_ENDTerminalRuleCall_2_0_0 extends Unassigned
 			case 0: return new Validations_ValidationsAction_1(lastRuleCallOrigin, this, 0, inst);
 			default: return null;
 		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("splitTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("splitTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getValidationsAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_2_0_0_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getValidationsAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_2_0_0_0();
+			return obj;
+		}
+		return null;
 	}
 
 }
@@ -1848,30 +1924,43 @@ protected class Validations_ChildrenAssignment_2_0_1 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new Validations_ChildrenAssignment_2_0_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Validations_XML_TAG_ENDTerminalRuleCall_2_0_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new Validations_SplitTagAssignment_2_0_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
 }
 
-// VALIDATIONS_END_TAG
-protected class Validations_VALIDATIONS_END_TAGTerminalRuleCall_2_0_2 extends UnassignedTextToken {
-
-	public Validations_VALIDATIONS_END_TAGTerminalRuleCall_2_0_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+// closedTag?=VALIDATIONS_END_TAG
+protected class Validations_ClosedTagAssignment_2_0_2 extends AssignmentToken  {
+	
+	public Validations_ClosedTagAssignment_2_0_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
-	public RuleCall getGrammarElement() {
-		return grammarAccess.getValidationsAccess().getVALIDATIONS_END_TAGTerminalRuleCall_2_0_2();
+	public Assignment getGrammarElement() {
+		return grammarAccess.getValidationsAccess().getClosedTagAssignment_2_0_2();
 	}
 
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
 			case 0: return new Validations_ChildrenAssignment_2_0_1(lastRuleCallOrigin, this, 0, inst);
+			case 1: return new Validations_SplitTagAssignment_2_0_0(lastRuleCallOrigin, this, 1, inst);
 			default: return null;
 		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("closedTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("closedTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getValidationsAccess().getClosedTagVALIDATIONS_END_TAGTerminalRuleCall_2_0_2_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getValidationsAccess().getClosedTagVALIDATIONS_END_TAGTerminalRuleCall_2_0_2_0();
+			return obj;
+		}
+		return null;
 	}
 
 }
@@ -1907,13 +1996,13 @@ protected class Validations_XML_TAG_SINGLEENDTerminalRuleCall_2_1 extends Unassi
 /************ begin Rule Check ****************
  *
  * Check:
- * 	CHECK_START_TAG {Check} attributes+=PossibleExpression* (XML_TAG_END expression=TopLevel CHECK_END_TAG |
- * 	XML_TAG_SINGLEEND);
+ * 	CHECK_START_TAG {Check} attributes+=PossibleExpression* (splitTag?=XML_TAG_END expression=TopLevel
+ * 	closedTag?=CHECK_END_TAG | XML_TAG_SINGLEEND);
  *
  **/
 
-// CHECK_START_TAG {Check} attributes+=PossibleExpression* (XML_TAG_END expression=TopLevel CHECK_END_TAG |
-// XML_TAG_SINGLEEND)
+// CHECK_START_TAG {Check} attributes+=PossibleExpression* (splitTag?=XML_TAG_END expression=TopLevel
+// closedTag?=CHECK_END_TAG | XML_TAG_SINGLEEND)
 protected class Check_Group extends GroupToken {
 	
 	public Check_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -2037,7 +2126,7 @@ protected class Check_AttributesAssignment_2 extends AssignmentToken  {
 	}	
 }
 
-// XML_TAG_END expression=TopLevel CHECK_END_TAG | XML_TAG_SINGLEEND
+// splitTag?=XML_TAG_END expression=TopLevel closedTag?=CHECK_END_TAG | XML_TAG_SINGLEEND
 protected class Check_Alternatives_3 extends AlternativesToken {
 
 	public Check_Alternatives_3(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -2060,7 +2149,7 @@ protected class Check_Alternatives_3 extends AlternativesToken {
 
 }
 
-// XML_TAG_END expression=TopLevel CHECK_END_TAG
+// splitTag?=XML_TAG_END expression=TopLevel closedTag?=CHECK_END_TAG
 protected class Check_Group_3_0 extends GroupToken {
 	
 	public Check_Group_3_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -2075,23 +2164,23 @@ protected class Check_Group_3_0 extends GroupToken {
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new Check_CHECK_END_TAGTerminalRuleCall_3_0_2(lastRuleCallOrigin, this, 0, inst);
+			case 0: return new Check_ClosedTagAssignment_3_0_2(lastRuleCallOrigin, this, 0, inst);
 			default: return null;
 		}	
 	}
 
 }
 
-// XML_TAG_END
-protected class Check_XML_TAG_ENDTerminalRuleCall_3_0_0 extends UnassignedTextToken {
-
-	public Check_XML_TAG_ENDTerminalRuleCall_3_0_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+// splitTag?=XML_TAG_END
+protected class Check_SplitTagAssignment_3_0_0 extends AssignmentToken  {
+	
+	public Check_SplitTagAssignment_3_0_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
-	public RuleCall getGrammarElement() {
-		return grammarAccess.getCheckAccess().getXML_TAG_ENDTerminalRuleCall_3_0_0();
+	public Assignment getGrammarElement() {
+		return grammarAccess.getCheckAccess().getSplitTagAssignment_3_0_0();
 	}
 
     @Override
@@ -2101,6 +2190,18 @@ protected class Check_XML_TAG_ENDTerminalRuleCall_3_0_0 extends UnassignedTextTo
 			case 1: return new Check_CheckAction_1(lastRuleCallOrigin, this, 1, inst);
 			default: return null;
 		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("splitTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("splitTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getCheckAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_0_0_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getCheckAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_0_0_0();
+			return obj;
+		}
+		return null;
 	}
 
 }
@@ -2145,22 +2246,22 @@ protected class Check_ExpressionAssignment_3_0_1 extends AssignmentToken  {
 	public AbstractToken createFollowerAfterReturn(AbstractToken next,	int actIndex, int index, IEObjectConsumer inst) {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
-			case 0: return new Check_XML_TAG_ENDTerminalRuleCall_3_0_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 0: return new Check_SplitTagAssignment_3_0_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
 }
 
-// CHECK_END_TAG
-protected class Check_CHECK_END_TAGTerminalRuleCall_3_0_2 extends UnassignedTextToken {
-
-	public Check_CHECK_END_TAGTerminalRuleCall_3_0_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+// closedTag?=CHECK_END_TAG
+protected class Check_ClosedTagAssignment_3_0_2 extends AssignmentToken  {
+	
+	public Check_ClosedTagAssignment_3_0_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
-	public RuleCall getGrammarElement() {
-		return grammarAccess.getCheckAccess().getCHECK_END_TAGTerminalRuleCall_3_0_2();
+	public Assignment getGrammarElement() {
+		return grammarAccess.getCheckAccess().getClosedTagAssignment_3_0_2();
 	}
 
     @Override
@@ -2169,6 +2270,18 @@ protected class Check_CHECK_END_TAGTerminalRuleCall_3_0_2 extends UnassignedText
 			case 0: return new Check_ExpressionAssignment_3_0_1(lastRuleCallOrigin, this, 0, inst);
 			default: return null;
 		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("closedTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("closedTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getCheckAccess().getClosedTagCHECK_END_TAGTerminalRuleCall_3_0_2_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getCheckAccess().getClosedTagCHECK_END_TAGTerminalRuleCall_3_0_2_0();
+			return obj;
+		}
+		return null;
 	}
 
 }
@@ -2205,13 +2318,13 @@ protected class Check_XML_TAG_SINGLEENDTerminalRuleCall_3_1 extends UnassignedTe
 /************ begin Rule Comment ****************
  *
  * Comment:
- * 	COMMENT_START_TAG {Comment} attributes+=PossibleExpression* (XML_TAG_END //		expression=TopLevel
- * 	COMMENT_END_TAG | XML_TAG_SINGLEEND);
+ * 	COMMENT_START_TAG {Comment} attributes+=PossibleExpression* (splitTag?=XML_TAG_END //		expression=TopLevel
+ * 	closedTag?=COMMENT_END_TAG | XML_TAG_SINGLEEND);
  *
  **/
 
-// COMMENT_START_TAG {Comment} attributes+=PossibleExpression* (XML_TAG_END //		expression=TopLevel
-// COMMENT_END_TAG | XML_TAG_SINGLEEND)
+// COMMENT_START_TAG {Comment} attributes+=PossibleExpression* (splitTag?=XML_TAG_END //		expression=TopLevel
+// closedTag?=COMMENT_END_TAG | XML_TAG_SINGLEEND)
 protected class Comment_Group extends GroupToken {
 	
 	public Comment_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -2335,8 +2448,8 @@ protected class Comment_AttributesAssignment_2 extends AssignmentToken  {
 	}	
 }
 
-// XML_TAG_END //		expression=TopLevel
-// COMMENT_END_TAG | XML_TAG_SINGLEEND
+// splitTag?=XML_TAG_END //		expression=TopLevel
+// closedTag?=COMMENT_END_TAG | XML_TAG_SINGLEEND
 protected class Comment_Alternatives_3 extends AlternativesToken {
 
 	public Comment_Alternatives_3(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -2351,12 +2464,107 @@ protected class Comment_Alternatives_3 extends AlternativesToken {
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new Comment_XML_TAG_SINGLEENDTerminalRuleCall_3_1(lastRuleCallOrigin, this, 0, inst);
+			case 0: return new Comment_Group_3_0(lastRuleCallOrigin, this, 0, inst);
+			case 1: return new Comment_XML_TAG_SINGLEENDTerminalRuleCall_3_1(lastRuleCallOrigin, this, 1, inst);
 			default: return null;
 		}	
 	}
 
 }
+
+// splitTag?=XML_TAG_END //		expression=TopLevel
+// closedTag?=COMMENT_END_TAG
+protected class Comment_Group_3_0 extends GroupToken {
+	
+	public Comment_Group_3_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Group getGrammarElement() {
+		return grammarAccess.getCommentAccess().getGroup_3_0();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new Comment_ClosedTagAssignment_3_0_1(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// splitTag?=XML_TAG_END
+protected class Comment_SplitTagAssignment_3_0_0 extends AssignmentToken  {
+	
+	public Comment_SplitTagAssignment_3_0_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Assignment getGrammarElement() {
+		return grammarAccess.getCommentAccess().getSplitTagAssignment_3_0_0();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new Comment_AttributesAssignment_2(lastRuleCallOrigin, this, 0, inst);
+			case 1: return new Comment_CommentAction_1(lastRuleCallOrigin, this, 1, inst);
+			default: return null;
+		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("splitTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("splitTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getCommentAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_0_0_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getCommentAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_0_0_0();
+			return obj;
+		}
+		return null;
+	}
+
+}
+
+// //		expression=TopLevel
+// closedTag?=COMMENT_END_TAG
+protected class Comment_ClosedTagAssignment_3_0_1 extends AssignmentToken  {
+	
+	public Comment_ClosedTagAssignment_3_0_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Assignment getGrammarElement() {
+		return grammarAccess.getCommentAccess().getClosedTagAssignment_3_0_1();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new Comment_SplitTagAssignment_3_0_0(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("closedTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("closedTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getCommentAccess().getClosedTagCOMMENT_END_TAGTerminalRuleCall_3_0_1_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getCommentAccess().getClosedTagCOMMENT_END_TAGTerminalRuleCall_3_0_1_0();
+			return obj;
+		}
+		return null;
+	}
+
+}
+
 
 // XML_TAG_SINGLEEND
 protected class Comment_XML_TAG_SINGLEENDTerminalRuleCall_3_1 extends UnassignedTextToken {
@@ -2389,13 +2597,13 @@ protected class Comment_XML_TAG_SINGLEENDTerminalRuleCall_3_1 extends Unassigned
 /************ begin Rule Break ****************
  *
  * Break:
- * 	BREAK_START_TAG {Break} attributes+=PossibleExpression* (XML_TAG_END //		expression=TopLevel
- * 	BREAK_END_TAG | XML_TAG_SINGLEEND);
+ * 	BREAK_START_TAG {Break} attributes+=PossibleExpression* (splitTag?=XML_TAG_END //		expression=TopLevel
+ * 	closedTag?=BREAK_END_TAG | XML_TAG_SINGLEEND);
  *
  **/
 
-// BREAK_START_TAG {Break} attributes+=PossibleExpression* (XML_TAG_END //		expression=TopLevel
-// BREAK_END_TAG | XML_TAG_SINGLEEND)
+// BREAK_START_TAG {Break} attributes+=PossibleExpression* (splitTag?=XML_TAG_END //		expression=TopLevel
+// closedTag?=BREAK_END_TAG | XML_TAG_SINGLEEND)
 protected class Break_Group extends GroupToken {
 	
 	public Break_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -2519,8 +2727,8 @@ protected class Break_AttributesAssignment_2 extends AssignmentToken  {
 	}	
 }
 
-// XML_TAG_END //		expression=TopLevel
-// BREAK_END_TAG | XML_TAG_SINGLEEND
+// splitTag?=XML_TAG_END //		expression=TopLevel
+// closedTag?=BREAK_END_TAG | XML_TAG_SINGLEEND
 protected class Break_Alternatives_3 extends AlternativesToken {
 
 	public Break_Alternatives_3(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -2535,12 +2743,107 @@ protected class Break_Alternatives_3 extends AlternativesToken {
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new Break_XML_TAG_SINGLEENDTerminalRuleCall_3_1(lastRuleCallOrigin, this, 0, inst);
+			case 0: return new Break_Group_3_0(lastRuleCallOrigin, this, 0, inst);
+			case 1: return new Break_XML_TAG_SINGLEENDTerminalRuleCall_3_1(lastRuleCallOrigin, this, 1, inst);
 			default: return null;
 		}	
 	}
 
 }
+
+// splitTag?=XML_TAG_END //		expression=TopLevel
+// closedTag?=BREAK_END_TAG
+protected class Break_Group_3_0 extends GroupToken {
+	
+	public Break_Group_3_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Group getGrammarElement() {
+		return grammarAccess.getBreakAccess().getGroup_3_0();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new Break_ClosedTagAssignment_3_0_1(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// splitTag?=XML_TAG_END
+protected class Break_SplitTagAssignment_3_0_0 extends AssignmentToken  {
+	
+	public Break_SplitTagAssignment_3_0_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Assignment getGrammarElement() {
+		return grammarAccess.getBreakAccess().getSplitTagAssignment_3_0_0();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new Break_AttributesAssignment_2(lastRuleCallOrigin, this, 0, inst);
+			case 1: return new Break_BreakAction_1(lastRuleCallOrigin, this, 1, inst);
+			default: return null;
+		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("splitTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("splitTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getBreakAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_0_0_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getBreakAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_0_0_0();
+			return obj;
+		}
+		return null;
+	}
+
+}
+
+// //		expression=TopLevel
+// closedTag?=BREAK_END_TAG
+protected class Break_ClosedTagAssignment_3_0_1 extends AssignmentToken  {
+	
+	public Break_ClosedTagAssignment_3_0_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Assignment getGrammarElement() {
+		return grammarAccess.getBreakAccess().getClosedTagAssignment_3_0_1();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new Break_SplitTagAssignment_3_0_0(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("closedTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("closedTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getBreakAccess().getClosedTagBREAK_END_TAGTerminalRuleCall_3_0_1_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getBreakAccess().getClosedTagBREAK_END_TAGTerminalRuleCall_3_0_1_0();
+			return obj;
+		}
+		return null;
+	}
+
+}
+
 
 // XML_TAG_SINGLEEND
 protected class Break_XML_TAG_SINGLEENDTerminalRuleCall_3_1 extends UnassignedTextToken {
@@ -2574,11 +2877,13 @@ protected class Break_XML_TAG_SINGLEENDTerminalRuleCall_3_1 extends UnassignedTe
  *
  * // create Include entity in Model
  * Include returns Method:
- * 	INCLUDE_START_TAG {Method} attributes+=PossibleExpression* XML_TAG_SINGLEEND;
+ * 	INCLUDE_START_TAG {Method} attributes+=PossibleExpression* (splitTag?=XML_TAG_END closedTag?=INCLUDE_END_TAG |
+ * 	XML_TAG_SINGLEEND);
  *
  **/
 
-// INCLUDE_START_TAG {Method} attributes+=PossibleExpression* XML_TAG_SINGLEEND
+// INCLUDE_START_TAG {Method} attributes+=PossibleExpression* (splitTag?=XML_TAG_END closedTag?=INCLUDE_END_TAG |
+// XML_TAG_SINGLEEND)
 protected class Include_Group extends GroupToken {
 	
 	public Include_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -2593,7 +2898,7 @@ protected class Include_Group extends GroupToken {
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new Include_XML_TAG_SINGLEENDTerminalRuleCall_3(lastRuleCallOrigin, this, 0, inst);
+			case 0: return new Include_Alternatives_3(lastRuleCallOrigin, this, 0, inst);
 			default: return null;
 		}	
 	}
@@ -2702,16 +3007,131 @@ protected class Include_AttributesAssignment_2 extends AssignmentToken  {
 	}	
 }
 
-// XML_TAG_SINGLEEND
-protected class Include_XML_TAG_SINGLEENDTerminalRuleCall_3 extends UnassignedTextToken {
+// splitTag?=XML_TAG_END closedTag?=INCLUDE_END_TAG | XML_TAG_SINGLEEND
+protected class Include_Alternatives_3 extends AlternativesToken {
 
-	public Include_XML_TAG_SINGLEENDTerminalRuleCall_3(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+	public Include_Alternatives_3(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Alternatives getGrammarElement() {
+		return grammarAccess.getIncludeAccess().getAlternatives_3();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new Include_Group_3_0(lastRuleCallOrigin, this, 0, inst);
+			case 1: return new Include_XML_TAG_SINGLEENDTerminalRuleCall_3_1(lastRuleCallOrigin, this, 1, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// splitTag?=XML_TAG_END closedTag?=INCLUDE_END_TAG
+protected class Include_Group_3_0 extends GroupToken {
+	
+	public Include_Group_3_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Group getGrammarElement() {
+		return grammarAccess.getIncludeAccess().getGroup_3_0();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new Include_ClosedTagAssignment_3_0_1(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// splitTag?=XML_TAG_END
+protected class Include_SplitTagAssignment_3_0_0 extends AssignmentToken  {
+	
+	public Include_SplitTagAssignment_3_0_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Assignment getGrammarElement() {
+		return grammarAccess.getIncludeAccess().getSplitTagAssignment_3_0_0();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new Include_AttributesAssignment_2(lastRuleCallOrigin, this, 0, inst);
+			case 1: return new Include_MethodAction_1(lastRuleCallOrigin, this, 1, inst);
+			default: return null;
+		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("splitTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("splitTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getIncludeAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_0_0_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getIncludeAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_0_0_0();
+			return obj;
+		}
+		return null;
+	}
+
+}
+
+// closedTag?=INCLUDE_END_TAG
+protected class Include_ClosedTagAssignment_3_0_1 extends AssignmentToken  {
+	
+	public Include_ClosedTagAssignment_3_0_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Assignment getGrammarElement() {
+		return grammarAccess.getIncludeAccess().getClosedTagAssignment_3_0_1();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new Include_SplitTagAssignment_3_0_0(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("closedTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("closedTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getIncludeAccess().getClosedTagINCLUDE_END_TAGTerminalRuleCall_3_0_1_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getIncludeAccess().getClosedTagINCLUDE_END_TAGTerminalRuleCall_3_0_1_0();
+			return obj;
+		}
+		return null;
+	}
+
+}
+
+
+// XML_TAG_SINGLEEND
+protected class Include_XML_TAG_SINGLEENDTerminalRuleCall_3_1 extends UnassignedTextToken {
+
+	public Include_XML_TAG_SINGLEENDTerminalRuleCall_3_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
 	public RuleCall getGrammarElement() {
-		return grammarAccess.getIncludeAccess().getXML_TAG_SINGLEENDTerminalRuleCall_3();
+		return grammarAccess.getIncludeAccess().getXML_TAG_SINGLEENDTerminalRuleCall_3_1();
 	}
 
     @Override
@@ -2726,21 +3146,22 @@ protected class Include_XML_TAG_SINGLEENDTerminalRuleCall_3 extends UnassignedTe
 }
 
 
+
 /************ end Rule Include ****************/
 
 
 /************ begin Rule Message ****************
  *
  * Message:
- * 	MESSAGE_START_TAG {Message} attributes+=PossibleExpression* (XML_TAG_END (children+=Message | children+=Property |
- * 	children+=Param | children+=Map | children+=MapMethod | children+=DebugTag | children+=Field | children+=Comment |
- * 	children+=Break)* MESSAGE_END_TAG | XML_TAG_SINGLEEND);
+ * 	MESSAGE_START_TAG {Message} attributes+=PossibleExpression* (splitTag?=XML_TAG_END (children+=Message |
+ * 	children+=Property | children+=Param | children+=Map | children+=MapMethod | children+=DebugTag | children+=Field |
+ * 	children+=Comment | children+=Break)* closedTag?=MESSAGE_END_TAG | XML_TAG_SINGLEEND);
  *
  **/
 
-// MESSAGE_START_TAG {Message} attributes+=PossibleExpression* (XML_TAG_END (children+=Message | children+=Property |
-// children+=Param | children+=Map | children+=MapMethod | children+=DebugTag | children+=Field | children+=Comment |
-// children+=Break)* MESSAGE_END_TAG | XML_TAG_SINGLEEND)
+// MESSAGE_START_TAG {Message} attributes+=PossibleExpression* (splitTag?=XML_TAG_END (children+=Message |
+// children+=Property | children+=Param | children+=Map | children+=MapMethod | children+=DebugTag | children+=Field |
+// children+=Comment | children+=Break)* closedTag?=MESSAGE_END_TAG | XML_TAG_SINGLEEND)
 protected class Message_Group extends GroupToken {
 	
 	public Message_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -2864,8 +3285,9 @@ protected class Message_AttributesAssignment_2 extends AssignmentToken  {
 	}	
 }
 
-// XML_TAG_END (children+=Message | children+=Property | children+=Param | children+=Map | children+=MapMethod |
-// children+=DebugTag | children+=Field | children+=Comment | children+=Break)* MESSAGE_END_TAG | XML_TAG_SINGLEEND
+// splitTag?=XML_TAG_END (children+=Message | children+=Property | children+=Param | children+=Map | children+=MapMethod |
+// children+=DebugTag | children+=Field | children+=Comment | children+=Break)* closedTag?=MESSAGE_END_TAG |
+// XML_TAG_SINGLEEND
 protected class Message_Alternatives_3 extends AlternativesToken {
 
 	public Message_Alternatives_3(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -2888,8 +3310,8 @@ protected class Message_Alternatives_3 extends AlternativesToken {
 
 }
 
-// XML_TAG_END (children+=Message | children+=Property | children+=Param | children+=Map | children+=MapMethod |
-// children+=DebugTag | children+=Field | children+=Comment | children+=Break)* MESSAGE_END_TAG
+// splitTag?=XML_TAG_END (children+=Message | children+=Property | children+=Param | children+=Map | children+=MapMethod |
+// children+=DebugTag | children+=Field | children+=Comment | children+=Break)* closedTag?=MESSAGE_END_TAG
 protected class Message_Group_3_0 extends GroupToken {
 	
 	public Message_Group_3_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -2904,23 +3326,23 @@ protected class Message_Group_3_0 extends GroupToken {
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new Message_MESSAGE_END_TAGTerminalRuleCall_3_0_2(lastRuleCallOrigin, this, 0, inst);
+			case 0: return new Message_ClosedTagAssignment_3_0_2(lastRuleCallOrigin, this, 0, inst);
 			default: return null;
 		}	
 	}
 
 }
 
-// XML_TAG_END
-protected class Message_XML_TAG_ENDTerminalRuleCall_3_0_0 extends UnassignedTextToken {
-
-	public Message_XML_TAG_ENDTerminalRuleCall_3_0_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+// splitTag?=XML_TAG_END
+protected class Message_SplitTagAssignment_3_0_0 extends AssignmentToken  {
+	
+	public Message_SplitTagAssignment_3_0_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
-	public RuleCall getGrammarElement() {
-		return grammarAccess.getMessageAccess().getXML_TAG_ENDTerminalRuleCall_3_0_0();
+	public Assignment getGrammarElement() {
+		return grammarAccess.getMessageAccess().getSplitTagAssignment_3_0_0();
 	}
 
     @Override
@@ -2930,6 +3352,18 @@ protected class Message_XML_TAG_ENDTerminalRuleCall_3_0_0 extends UnassignedText
 			case 1: return new Message_MessageAction_1(lastRuleCallOrigin, this, 1, inst);
 			default: return null;
 		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("splitTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("splitTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getMessageAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_0_0_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getMessageAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_0_0_0();
+			return obj;
+		}
+		return null;
 	}
 
 }
@@ -3006,7 +3440,7 @@ protected class Message_ChildrenAssignment_3_0_1_0 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new Message_Alternatives_3_0_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Message_XML_TAG_ENDTerminalRuleCall_3_0_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new Message_SplitTagAssignment_3_0_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
@@ -3053,7 +3487,7 @@ protected class Message_ChildrenAssignment_3_0_1_1 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new Message_Alternatives_3_0_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Message_XML_TAG_ENDTerminalRuleCall_3_0_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new Message_SplitTagAssignment_3_0_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
@@ -3100,7 +3534,7 @@ protected class Message_ChildrenAssignment_3_0_1_2 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new Message_Alternatives_3_0_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Message_XML_TAG_ENDTerminalRuleCall_3_0_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new Message_SplitTagAssignment_3_0_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
@@ -3147,7 +3581,7 @@ protected class Message_ChildrenAssignment_3_0_1_3 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new Message_Alternatives_3_0_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Message_XML_TAG_ENDTerminalRuleCall_3_0_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new Message_SplitTagAssignment_3_0_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
@@ -3194,7 +3628,7 @@ protected class Message_ChildrenAssignment_3_0_1_4 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new Message_Alternatives_3_0_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Message_XML_TAG_ENDTerminalRuleCall_3_0_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new Message_SplitTagAssignment_3_0_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
@@ -3241,7 +3675,7 @@ protected class Message_ChildrenAssignment_3_0_1_5 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new Message_Alternatives_3_0_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Message_XML_TAG_ENDTerminalRuleCall_3_0_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new Message_SplitTagAssignment_3_0_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
@@ -3288,7 +3722,7 @@ protected class Message_ChildrenAssignment_3_0_1_6 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new Message_Alternatives_3_0_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Message_XML_TAG_ENDTerminalRuleCall_3_0_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new Message_SplitTagAssignment_3_0_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
@@ -3335,7 +3769,7 @@ protected class Message_ChildrenAssignment_3_0_1_7 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new Message_Alternatives_3_0_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Message_XML_TAG_ENDTerminalRuleCall_3_0_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new Message_SplitTagAssignment_3_0_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
@@ -3382,31 +3816,44 @@ protected class Message_ChildrenAssignment_3_0_1_8 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new Message_Alternatives_3_0_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Message_XML_TAG_ENDTerminalRuleCall_3_0_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new Message_SplitTagAssignment_3_0_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
 }
 
 
-// MESSAGE_END_TAG
-protected class Message_MESSAGE_END_TAGTerminalRuleCall_3_0_2 extends UnassignedTextToken {
-
-	public Message_MESSAGE_END_TAGTerminalRuleCall_3_0_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+// closedTag?=MESSAGE_END_TAG
+protected class Message_ClosedTagAssignment_3_0_2 extends AssignmentToken  {
+	
+	public Message_ClosedTagAssignment_3_0_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
-	public RuleCall getGrammarElement() {
-		return grammarAccess.getMessageAccess().getMESSAGE_END_TAGTerminalRuleCall_3_0_2();
+	public Assignment getGrammarElement() {
+		return grammarAccess.getMessageAccess().getClosedTagAssignment_3_0_2();
 	}
 
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
 			case 0: return new Message_Alternatives_3_0_1(lastRuleCallOrigin, this, 0, inst);
+			case 1: return new Message_SplitTagAssignment_3_0_0(lastRuleCallOrigin, this, 1, inst);
 			default: return null;
 		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("closedTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("closedTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getMessageAccess().getClosedTagMESSAGE_END_TAGTerminalRuleCall_3_0_2_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getMessageAccess().getClosedTagMESSAGE_END_TAGTerminalRuleCall_3_0_2_0();
+			return obj;
+		}
+		return null;
 	}
 
 }
@@ -3443,17 +3890,17 @@ protected class Message_XML_TAG_SINGLEENDTerminalRuleCall_3_1 extends Unassigned
 /************ begin Rule Map ****************
  *
  * Map:
- * 	MAPSTARTKEYWORD {Map} ("." mapName=MapId attributes+=PossibleExpression* | attributes+=PossibleExpression*)
- * 	(XML_TAG_SINGLEEND | XML_TAG_END (children+=Message | children+=Property | children+=Param | children+=Map |
- * 	children+=MapMethod | children+=DebugTag | children+=Field | children+=Comment | children+=Break)* (MAPENDKEYWORD ("."
- * 	mapClosingName=MapId)? XML_TAG_END));
+ * 	MAPSTARTKEYWORD {Map} (DOT mapName=MapId attributes+=PossibleExpression* | attributes+=PossibleExpression*)
+ * 	(XML_TAG_SINGLEEND | splitTag?=XML_TAG_END (children+=Message | children+=Property | children+=Param | children+=Map |
+ * 	children+=MapMethod | children+=DebugTag | children+=Field | children+=Comment | children+=Break)* (MAPENDKEYWORD (DOT
+ * 	mapClosingName=MapId)? closedTag?=XML_TAG_END));
  *
  **/
 
-// MAPSTARTKEYWORD {Map} ("." mapName=MapId attributes+=PossibleExpression* | attributes+=PossibleExpression*)
-// (XML_TAG_SINGLEEND | XML_TAG_END (children+=Message | children+=Property | children+=Param | children+=Map |
-// children+=MapMethod | children+=DebugTag | children+=Field | children+=Comment | children+=Break)* (MAPENDKEYWORD ("."
-// mapClosingName=MapId)? XML_TAG_END))
+// MAPSTARTKEYWORD {Map} (DOT mapName=MapId attributes+=PossibleExpression* | attributes+=PossibleExpression*)
+// (XML_TAG_SINGLEEND | splitTag?=XML_TAG_END (children+=Message | children+=Property | children+=Param | children+=Map |
+// children+=MapMethod | children+=DebugTag | children+=Field | children+=Comment | children+=Break)* (MAPENDKEYWORD (DOT
+// mapClosingName=MapId)? closedTag?=XML_TAG_END))
 protected class Map_Group extends GroupToken {
 	
 	public Map_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -3530,7 +3977,7 @@ protected class Map_MapAction_1 extends ActionToken  {
 	}
 }
 
-// "." mapName=MapId attributes+=PossibleExpression* | attributes+=PossibleExpression*
+// DOT mapName=MapId attributes+=PossibleExpression* | attributes+=PossibleExpression*
 protected class Map_Alternatives_2 extends AlternativesToken {
 
 	public Map_Alternatives_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -3553,7 +4000,7 @@ protected class Map_Alternatives_2 extends AlternativesToken {
 
 }
 
-// "." mapName=MapId attributes+=PossibleExpression*
+// DOT mapName=MapId attributes+=PossibleExpression*
 protected class Map_Group_2_0 extends GroupToken {
 	
 	public Map_Group_2_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -3576,16 +4023,16 @@ protected class Map_Group_2_0 extends GroupToken {
 
 }
 
-// "."
-protected class Map_FullStopKeyword_2_0_0 extends KeywordToken  {
-	
-	public Map_FullStopKeyword_2_0_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+// DOT
+protected class Map_DOTTerminalRuleCall_2_0_0 extends UnassignedTextToken {
+
+	public Map_DOTTerminalRuleCall_2_0_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
-	public Keyword getGrammarElement() {
-		return grammarAccess.getMapAccess().getFullStopKeyword_2_0_0();
+	public RuleCall getGrammarElement() {
+		return grammarAccess.getMapAccess().getDOTTerminalRuleCall_2_0_0();
 	}
 
     @Override
@@ -3613,7 +4060,7 @@ protected class Map_MapNameAssignment_2_0_1 extends AssignmentToken  {
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new Map_FullStopKeyword_2_0_0(lastRuleCallOrigin, this, 0, inst);
+			case 0: return new Map_DOTTerminalRuleCall_2_0_0(lastRuleCallOrigin, this, 0, inst);
 			default: return null;
 		}	
 	}
@@ -3728,9 +4175,9 @@ protected class Map_AttributesAssignment_2_1 extends AssignmentToken  {
 }
 
 
-// XML_TAG_SINGLEEND | XML_TAG_END (children+=Message | children+=Property | children+=Param | children+=Map |
-// children+=MapMethod | children+=DebugTag | children+=Field | children+=Comment | children+=Break)* (MAPENDKEYWORD ("."
-// mapClosingName=MapId)? XML_TAG_END)
+// XML_TAG_SINGLEEND | splitTag?=XML_TAG_END (children+=Message | children+=Property | children+=Param | children+=Map |
+// children+=MapMethod | children+=DebugTag | children+=Field | children+=Comment | children+=Break)* (MAPENDKEYWORD (DOT
+// mapClosingName=MapId)? closedTag?=XML_TAG_END)
 protected class Map_Alternatives_3 extends AlternativesToken {
 
 	public Map_Alternatives_3(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -3775,9 +4222,9 @@ protected class Map_XML_TAG_SINGLEENDTerminalRuleCall_3_0 extends UnassignedText
 
 }
 
-// XML_TAG_END (children+=Message | children+=Property | children+=Param | children+=Map | children+=MapMethod |
-// children+=DebugTag | children+=Field | children+=Comment | children+=Break)* (MAPENDKEYWORD ("." mapClosingName=MapId)?
-// XML_TAG_END)
+// splitTag?=XML_TAG_END (children+=Message | children+=Property | children+=Param | children+=Map | children+=MapMethod |
+// children+=DebugTag | children+=Field | children+=Comment | children+=Break)* (MAPENDKEYWORD (DOT mapClosingName=MapId)?
+// closedTag?=XML_TAG_END)
 protected class Map_Group_3_1 extends GroupToken {
 	
 	public Map_Group_3_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -3799,16 +4246,16 @@ protected class Map_Group_3_1 extends GroupToken {
 
 }
 
-// XML_TAG_END
-protected class Map_XML_TAG_ENDTerminalRuleCall_3_1_0 extends UnassignedTextToken {
-
-	public Map_XML_TAG_ENDTerminalRuleCall_3_1_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+// splitTag?=XML_TAG_END
+protected class Map_SplitTagAssignment_3_1_0 extends AssignmentToken  {
+	
+	public Map_SplitTagAssignment_3_1_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
-	public RuleCall getGrammarElement() {
-		return grammarAccess.getMapAccess().getXML_TAG_ENDTerminalRuleCall_3_1_0();
+	public Assignment getGrammarElement() {
+		return grammarAccess.getMapAccess().getSplitTagAssignment_3_1_0();
 	}
 
     @Override
@@ -3817,6 +4264,18 @@ protected class Map_XML_TAG_ENDTerminalRuleCall_3_1_0 extends UnassignedTextToke
 			case 0: return new Map_Alternatives_2(lastRuleCallOrigin, this, 0, inst);
 			default: return null;
 		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("splitTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("splitTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getMapAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_1_0_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getMapAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_1_0_0();
+			return obj;
+		}
+		return null;
 	}
 
 }
@@ -3893,7 +4352,7 @@ protected class Map_ChildrenAssignment_3_1_1_0 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new Map_Alternatives_3_1_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Map_XML_TAG_ENDTerminalRuleCall_3_1_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new Map_SplitTagAssignment_3_1_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
@@ -3940,7 +4399,7 @@ protected class Map_ChildrenAssignment_3_1_1_1 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new Map_Alternatives_3_1_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Map_XML_TAG_ENDTerminalRuleCall_3_1_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new Map_SplitTagAssignment_3_1_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
@@ -3987,7 +4446,7 @@ protected class Map_ChildrenAssignment_3_1_1_2 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new Map_Alternatives_3_1_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Map_XML_TAG_ENDTerminalRuleCall_3_1_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new Map_SplitTagAssignment_3_1_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
@@ -4034,7 +4493,7 @@ protected class Map_ChildrenAssignment_3_1_1_3 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new Map_Alternatives_3_1_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Map_XML_TAG_ENDTerminalRuleCall_3_1_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new Map_SplitTagAssignment_3_1_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
@@ -4081,7 +4540,7 @@ protected class Map_ChildrenAssignment_3_1_1_4 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new Map_Alternatives_3_1_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Map_XML_TAG_ENDTerminalRuleCall_3_1_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new Map_SplitTagAssignment_3_1_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
@@ -4128,7 +4587,7 @@ protected class Map_ChildrenAssignment_3_1_1_5 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new Map_Alternatives_3_1_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Map_XML_TAG_ENDTerminalRuleCall_3_1_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new Map_SplitTagAssignment_3_1_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
@@ -4175,7 +4634,7 @@ protected class Map_ChildrenAssignment_3_1_1_6 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new Map_Alternatives_3_1_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Map_XML_TAG_ENDTerminalRuleCall_3_1_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new Map_SplitTagAssignment_3_1_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
@@ -4222,7 +4681,7 @@ protected class Map_ChildrenAssignment_3_1_1_7 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new Map_Alternatives_3_1_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Map_XML_TAG_ENDTerminalRuleCall_3_1_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new Map_SplitTagAssignment_3_1_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
@@ -4269,14 +4728,14 @@ protected class Map_ChildrenAssignment_3_1_1_8 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new Map_Alternatives_3_1_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Map_XML_TAG_ENDTerminalRuleCall_3_1_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new Map_SplitTagAssignment_3_1_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
 }
 
 
-// MAPENDKEYWORD ("." mapClosingName=MapId)? XML_TAG_END
+// MAPENDKEYWORD (DOT mapClosingName=MapId)? closedTag?=XML_TAG_END
 protected class Map_Group_3_1_2 extends GroupToken {
 	
 	public Map_Group_3_1_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -4291,7 +4750,7 @@ protected class Map_Group_3_1_2 extends GroupToken {
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new Map_XML_TAG_ENDTerminalRuleCall_3_1_2_2(lastRuleCallOrigin, this, 0, inst);
+			case 0: return new Map_ClosedTagAssignment_3_1_2_2(lastRuleCallOrigin, this, 0, inst);
 			default: return null;
 		}	
 	}
@@ -4314,14 +4773,14 @@ protected class Map_MAPENDKEYWORDTerminalRuleCall_3_1_2_0 extends UnassignedText
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
 			case 0: return new Map_Alternatives_3_1_1(lastRuleCallOrigin, this, 0, inst);
-			case 1: return new Map_XML_TAG_ENDTerminalRuleCall_3_1_0(lastRuleCallOrigin, this, 1, inst);
+			case 1: return new Map_SplitTagAssignment_3_1_0(lastRuleCallOrigin, this, 1, inst);
 			default: return null;
 		}	
 	}
 
 }
 
-// ("." mapClosingName=MapId)?
+// (DOT mapClosingName=MapId)?
 protected class Map_Group_3_1_2_1 extends GroupToken {
 	
 	public Map_Group_3_1_2_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -4343,16 +4802,16 @@ protected class Map_Group_3_1_2_1 extends GroupToken {
 
 }
 
-// "."
-protected class Map_FullStopKeyword_3_1_2_1_0 extends KeywordToken  {
-	
-	public Map_FullStopKeyword_3_1_2_1_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+// DOT
+protected class Map_DOTTerminalRuleCall_3_1_2_1_0 extends UnassignedTextToken {
+
+	public Map_DOTTerminalRuleCall_3_1_2_1_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
-	public Keyword getGrammarElement() {
-		return grammarAccess.getMapAccess().getFullStopKeyword_3_1_2_1_0();
+	public RuleCall getGrammarElement() {
+		return grammarAccess.getMapAccess().getDOTTerminalRuleCall_3_1_2_1_0();
 	}
 
     @Override
@@ -4380,7 +4839,7 @@ protected class Map_MapClosingNameAssignment_3_1_2_1_1 extends AssignmentToken  
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new Map_FullStopKeyword_3_1_2_1_0(lastRuleCallOrigin, this, 0, inst);
+			case 0: return new Map_DOTTerminalRuleCall_3_1_2_1_0(lastRuleCallOrigin, this, 0, inst);
 			default: return null;
 		}	
 	}
@@ -4400,16 +4859,16 @@ protected class Map_MapClosingNameAssignment_3_1_2_1_1 extends AssignmentToken  
 }
 
 
-// XML_TAG_END
-protected class Map_XML_TAG_ENDTerminalRuleCall_3_1_2_2 extends UnassignedTextToken {
-
-	public Map_XML_TAG_ENDTerminalRuleCall_3_1_2_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+// closedTag?=XML_TAG_END
+protected class Map_ClosedTagAssignment_3_1_2_2 extends AssignmentToken  {
+	
+	public Map_ClosedTagAssignment_3_1_2_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
-	public RuleCall getGrammarElement() {
-		return grammarAccess.getMapAccess().getXML_TAG_ENDTerminalRuleCall_3_1_2_2();
+	public Assignment getGrammarElement() {
+		return grammarAccess.getMapAccess().getClosedTagAssignment_3_1_2_2();
 	}
 
     @Override
@@ -4419,6 +4878,18 @@ protected class Map_XML_TAG_ENDTerminalRuleCall_3_1_2_2 extends UnassignedTextTo
 			case 1: return new Map_MAPENDKEYWORDTerminalRuleCall_3_1_2_0(lastRuleCallOrigin, this, 1, inst);
 			default: return null;
 		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("closedTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("closedTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getMapAccess().getClosedTagXML_TAG_ENDTerminalRuleCall_3_1_2_2_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getMapAccess().getClosedTagXML_TAG_ENDTerminalRuleCall_3_1_2_2_0();
+			return obj;
+		}
+		return null;
 	}
 
 }
@@ -4445,11 +4916,13 @@ protected class Map_XML_TAG_ENDTerminalRuleCall_3_1_2_2 extends UnassignedTextTo
  * // '1' this makes 1 a keyword
  * //PropertyCardinalities: CARDINALITY_SINGLE = "1" | CARDINALITY_MULTIPLE = "+";
  * Required:
- * 	REQUIRED_START_TAG {Required} attributes+=PossibleExpression* (XML_TAG_SINGLEEND | XML_TAG_END REQUIRED_END_TAG);
+ * 	REQUIRED_START_TAG {Required} attributes+=PossibleExpression* (XML_TAG_SINGLEEND | splitTag?=XML_TAG_END
+ * 	closedTag?=REQUIRED_END_TAG);
  *
  **/
 
-// REQUIRED_START_TAG {Required} attributes+=PossibleExpression* (XML_TAG_SINGLEEND | XML_TAG_END REQUIRED_END_TAG)
+// REQUIRED_START_TAG {Required} attributes+=PossibleExpression* (XML_TAG_SINGLEEND | splitTag?=XML_TAG_END
+// closedTag?=REQUIRED_END_TAG)
 protected class Required_Group extends GroupToken {
 	
 	public Required_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -4573,7 +5046,7 @@ protected class Required_AttributesAssignment_2 extends AssignmentToken  {
 	}	
 }
 
-// XML_TAG_SINGLEEND | XML_TAG_END REQUIRED_END_TAG
+// XML_TAG_SINGLEEND | splitTag?=XML_TAG_END closedTag?=REQUIRED_END_TAG
 protected class Required_Alternatives_3 extends AlternativesToken {
 
 	public Required_Alternatives_3(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -4589,6 +5062,7 @@ protected class Required_Alternatives_3 extends AlternativesToken {
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
 			case 0: return new Required_XML_TAG_SINGLEENDTerminalRuleCall_3_0(lastRuleCallOrigin, this, 0, inst);
+			case 1: return new Required_Group_3_1(lastRuleCallOrigin, this, 1, inst);
 			default: return null;
 		}	
 	}
@@ -4618,6 +5092,98 @@ protected class Required_XML_TAG_SINGLEENDTerminalRuleCall_3_0 extends Unassigne
 
 }
 
+// splitTag?=XML_TAG_END closedTag?=REQUIRED_END_TAG
+protected class Required_Group_3_1 extends GroupToken {
+	
+	public Required_Group_3_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Group getGrammarElement() {
+		return grammarAccess.getRequiredAccess().getGroup_3_1();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new Required_ClosedTagAssignment_3_1_1(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// splitTag?=XML_TAG_END
+protected class Required_SplitTagAssignment_3_1_0 extends AssignmentToken  {
+	
+	public Required_SplitTagAssignment_3_1_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Assignment getGrammarElement() {
+		return grammarAccess.getRequiredAccess().getSplitTagAssignment_3_1_0();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new Required_AttributesAssignment_2(lastRuleCallOrigin, this, 0, inst);
+			case 1: return new Required_RequiredAction_1(lastRuleCallOrigin, this, 1, inst);
+			default: return null;
+		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("splitTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("splitTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getRequiredAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_1_0_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getRequiredAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_1_0_0();
+			return obj;
+		}
+		return null;
+	}
+
+}
+
+// closedTag?=REQUIRED_END_TAG
+protected class Required_ClosedTagAssignment_3_1_1 extends AssignmentToken  {
+	
+	public Required_ClosedTagAssignment_3_1_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Assignment getGrammarElement() {
+		return grammarAccess.getRequiredAccess().getClosedTagAssignment_3_1_1();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new Required_SplitTagAssignment_3_1_0(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("closedTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("closedTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getRequiredAccess().getClosedTagREQUIRED_END_TAGTerminalRuleCall_3_1_1_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getRequiredAccess().getClosedTagREQUIRED_END_TAGTerminalRuleCall_3_1_1_0();
+			return obj;
+		}
+		return null;
+	}
+
+}
+
+
 
 
 /************ end Rule Required ****************/
@@ -4626,13 +5192,13 @@ protected class Required_XML_TAG_SINGLEENDTerminalRuleCall_3_0 extends Unassigne
 /************ begin Rule Property ****************
  *
  * Property:
- * 	PROPERTY_START_TAG {Property} attributes+=PossibleExpression* (XML_TAG_SINGLEEND | XML_TAG_END
- * 	(children+=ExpressionOrOption | children+=Map)* PROPERTY_END_TAG);
+ * 	PROPERTY_START_TAG {Property} attributes+=PossibleExpression* (XML_TAG_SINGLEEND | splitTag?=XML_TAG_END
+ * 	(children+=ExpressionOrOption | children+=Map)* closedTag?=PROPERTY_END_TAG);
  *
  **/
 
-// PROPERTY_START_TAG {Property} attributes+=PossibleExpression* (XML_TAG_SINGLEEND | XML_TAG_END
-// (children+=ExpressionOrOption | children+=Map)* PROPERTY_END_TAG)
+// PROPERTY_START_TAG {Property} attributes+=PossibleExpression* (XML_TAG_SINGLEEND | splitTag?=XML_TAG_END
+// (children+=ExpressionOrOption | children+=Map)* closedTag?=PROPERTY_END_TAG)
 protected class Property_Group extends GroupToken {
 	
 	public Property_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -4756,7 +5322,7 @@ protected class Property_AttributesAssignment_2 extends AssignmentToken  {
 	}	
 }
 
-// XML_TAG_SINGLEEND | XML_TAG_END (children+=ExpressionOrOption | children+=Map)* PROPERTY_END_TAG
+// XML_TAG_SINGLEEND | splitTag?=XML_TAG_END (children+=ExpressionOrOption | children+=Map)* closedTag?=PROPERTY_END_TAG
 protected class Property_Alternatives_3 extends AlternativesToken {
 
 	public Property_Alternatives_3(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -4802,7 +5368,7 @@ protected class Property_XML_TAG_SINGLEENDTerminalRuleCall_3_0 extends Unassigne
 
 }
 
-// XML_TAG_END (children+=ExpressionOrOption | children+=Map)* PROPERTY_END_TAG
+// splitTag?=XML_TAG_END (children+=ExpressionOrOption | children+=Map)* closedTag?=PROPERTY_END_TAG
 protected class Property_Group_3_1 extends GroupToken {
 	
 	public Property_Group_3_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -4817,23 +5383,23 @@ protected class Property_Group_3_1 extends GroupToken {
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new Property_PROPERTY_END_TAGTerminalRuleCall_3_1_2(lastRuleCallOrigin, this, 0, inst);
+			case 0: return new Property_ClosedTagAssignment_3_1_2(lastRuleCallOrigin, this, 0, inst);
 			default: return null;
 		}	
 	}
 
 }
 
-// XML_TAG_END
-protected class Property_XML_TAG_ENDTerminalRuleCall_3_1_0 extends UnassignedTextToken {
-
-	public Property_XML_TAG_ENDTerminalRuleCall_3_1_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+// splitTag?=XML_TAG_END
+protected class Property_SplitTagAssignment_3_1_0 extends AssignmentToken  {
+	
+	public Property_SplitTagAssignment_3_1_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
-	public RuleCall getGrammarElement() {
-		return grammarAccess.getPropertyAccess().getXML_TAG_ENDTerminalRuleCall_3_1_0();
+	public Assignment getGrammarElement() {
+		return grammarAccess.getPropertyAccess().getSplitTagAssignment_3_1_0();
 	}
 
     @Override
@@ -4843,6 +5409,18 @@ protected class Property_XML_TAG_ENDTerminalRuleCall_3_1_0 extends UnassignedTex
 			case 1: return new Property_PropertyAction_1(lastRuleCallOrigin, this, 1, inst);
 			default: return null;
 		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("splitTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("splitTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getPropertyAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_1_0_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getPropertyAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_1_0_0();
+			return obj;
+		}
+		return null;
 	}
 
 }
@@ -4911,7 +5489,7 @@ protected class Property_ChildrenAssignment_3_1_1_0 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new Property_Alternatives_3_1_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Property_XML_TAG_ENDTerminalRuleCall_3_1_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new Property_SplitTagAssignment_3_1_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
@@ -4958,31 +5536,44 @@ protected class Property_ChildrenAssignment_3_1_1_1 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new Property_Alternatives_3_1_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Property_XML_TAG_ENDTerminalRuleCall_3_1_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new Property_SplitTagAssignment_3_1_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
 }
 
 
-// PROPERTY_END_TAG
-protected class Property_PROPERTY_END_TAGTerminalRuleCall_3_1_2 extends UnassignedTextToken {
-
-	public Property_PROPERTY_END_TAGTerminalRuleCall_3_1_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+// closedTag?=PROPERTY_END_TAG
+protected class Property_ClosedTagAssignment_3_1_2 extends AssignmentToken  {
+	
+	public Property_ClosedTagAssignment_3_1_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
-	public RuleCall getGrammarElement() {
-		return grammarAccess.getPropertyAccess().getPROPERTY_END_TAGTerminalRuleCall_3_1_2();
+	public Assignment getGrammarElement() {
+		return grammarAccess.getPropertyAccess().getClosedTagAssignment_3_1_2();
 	}
 
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
 			case 0: return new Property_Alternatives_3_1_1(lastRuleCallOrigin, this, 0, inst);
+			case 1: return new Property_SplitTagAssignment_3_1_0(lastRuleCallOrigin, this, 1, inst);
 			default: return null;
 		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("closedTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("closedTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getPropertyAccess().getClosedTagPROPERTY_END_TAGTerminalRuleCall_3_1_2_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getPropertyAccess().getClosedTagPROPERTY_END_TAGTerminalRuleCall_3_1_2_0();
+			return obj;
+		}
+		return null;
 	}
 
 }
@@ -4996,13 +5587,13 @@ protected class Property_PROPERTY_END_TAGTerminalRuleCall_3_1_2 extends Unassign
 /************ begin Rule Param ****************
  *
  * Param:
- * 	PARAM_START_TAG {Param} attributes+=PossibleExpression* (XML_TAG_SINGLEEND | XML_TAG_END (children+=ExpressionOrOption
- * 	| children+=Map)* PARAM_END_TAG);
+ * 	PARAM_START_TAG {Param} attributes+=PossibleExpression* (XML_TAG_SINGLEEND | splitTag?=XML_TAG_END
+ * 	(children+=ExpressionOrOption | children+=Map)* closedTag?=PARAM_END_TAG);
  *
  **/
 
-// PARAM_START_TAG {Param} attributes+=PossibleExpression* (XML_TAG_SINGLEEND | XML_TAG_END (children+=ExpressionOrOption |
-// children+=Map)* PARAM_END_TAG)
+// PARAM_START_TAG {Param} attributes+=PossibleExpression* (XML_TAG_SINGLEEND | splitTag?=XML_TAG_END
+// (children+=ExpressionOrOption | children+=Map)* closedTag?=PARAM_END_TAG)
 protected class Param_Group extends GroupToken {
 	
 	public Param_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -5126,7 +5717,7 @@ protected class Param_AttributesAssignment_2 extends AssignmentToken  {
 	}	
 }
 
-// XML_TAG_SINGLEEND | XML_TAG_END (children+=ExpressionOrOption | children+=Map)* PARAM_END_TAG
+// XML_TAG_SINGLEEND | splitTag?=XML_TAG_END (children+=ExpressionOrOption | children+=Map)* closedTag?=PARAM_END_TAG
 protected class Param_Alternatives_3 extends AlternativesToken {
 
 	public Param_Alternatives_3(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -5172,7 +5763,7 @@ protected class Param_XML_TAG_SINGLEENDTerminalRuleCall_3_0 extends UnassignedTe
 
 }
 
-// XML_TAG_END (children+=ExpressionOrOption | children+=Map)* PARAM_END_TAG
+// splitTag?=XML_TAG_END (children+=ExpressionOrOption | children+=Map)* closedTag?=PARAM_END_TAG
 protected class Param_Group_3_1 extends GroupToken {
 	
 	public Param_Group_3_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -5187,23 +5778,23 @@ protected class Param_Group_3_1 extends GroupToken {
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new Param_PARAM_END_TAGTerminalRuleCall_3_1_2(lastRuleCallOrigin, this, 0, inst);
+			case 0: return new Param_ClosedTagAssignment_3_1_2(lastRuleCallOrigin, this, 0, inst);
 			default: return null;
 		}	
 	}
 
 }
 
-// XML_TAG_END
-protected class Param_XML_TAG_ENDTerminalRuleCall_3_1_0 extends UnassignedTextToken {
-
-	public Param_XML_TAG_ENDTerminalRuleCall_3_1_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+// splitTag?=XML_TAG_END
+protected class Param_SplitTagAssignment_3_1_0 extends AssignmentToken  {
+	
+	public Param_SplitTagAssignment_3_1_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
-	public RuleCall getGrammarElement() {
-		return grammarAccess.getParamAccess().getXML_TAG_ENDTerminalRuleCall_3_1_0();
+	public Assignment getGrammarElement() {
+		return grammarAccess.getParamAccess().getSplitTagAssignment_3_1_0();
 	}
 
     @Override
@@ -5213,6 +5804,18 @@ protected class Param_XML_TAG_ENDTerminalRuleCall_3_1_0 extends UnassignedTextTo
 			case 1: return new Param_ParamAction_1(lastRuleCallOrigin, this, 1, inst);
 			default: return null;
 		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("splitTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("splitTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getParamAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_1_0_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getParamAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_1_0_0();
+			return obj;
+		}
+		return null;
 	}
 
 }
@@ -5281,7 +5884,7 @@ protected class Param_ChildrenAssignment_3_1_1_0 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new Param_Alternatives_3_1_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Param_XML_TAG_ENDTerminalRuleCall_3_1_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new Param_SplitTagAssignment_3_1_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
@@ -5328,31 +5931,44 @@ protected class Param_ChildrenAssignment_3_1_1_1 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new Param_Alternatives_3_1_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Param_XML_TAG_ENDTerminalRuleCall_3_1_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new Param_SplitTagAssignment_3_1_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
 }
 
 
-// PARAM_END_TAG
-protected class Param_PARAM_END_TAGTerminalRuleCall_3_1_2 extends UnassignedTextToken {
-
-	public Param_PARAM_END_TAGTerminalRuleCall_3_1_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+// closedTag?=PARAM_END_TAG
+protected class Param_ClosedTagAssignment_3_1_2 extends AssignmentToken  {
+	
+	public Param_ClosedTagAssignment_3_1_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
-	public RuleCall getGrammarElement() {
-		return grammarAccess.getParamAccess().getPARAM_END_TAGTerminalRuleCall_3_1_2();
+	public Assignment getGrammarElement() {
+		return grammarAccess.getParamAccess().getClosedTagAssignment_3_1_2();
 	}
 
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
 			case 0: return new Param_Alternatives_3_1_1(lastRuleCallOrigin, this, 0, inst);
+			case 1: return new Param_SplitTagAssignment_3_1_0(lastRuleCallOrigin, this, 1, inst);
 			default: return null;
 		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("closedTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("closedTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getParamAccess().getClosedTagPARAM_END_TAGTerminalRuleCall_3_1_2_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getParamAccess().getClosedTagPARAM_END_TAGTerminalRuleCall_3_1_2_0();
+			return obj;
+		}
+		return null;
 	}
 
 }
@@ -5366,17 +5982,17 @@ protected class Param_PARAM_END_TAGTerminalRuleCall_3_1_2 extends UnassignedText
 /************ begin Rule MapMethod ****************
  *
  * MapMethod:
- * 	MAP_METHOD_STARTTAG_START mapName=ID "." methodName=AttributeName attributes+=PossibleExpression* (XML_TAG_SINGLEEND |
- * 	XML_TAG_END (children+=ExpressionOrOption | children+=Message | children+=Property | children+=Param | children+=Map |
- * 	children+=MapMethod | children+=DebugTag | children+=Field | children+=Comment | children+=Break)*
- * 	MAP_METHOD_ENDTAG_START methodClosingName=ID "." methodClosingMethod=ID XML_TAG_END);
+ * 	MAP_METHOD_STARTTAG_START mapName=ID DOT methodName=AttributeName attributes+=PossibleExpression* (XML_TAG_SINGLEEND |
+ * 	splitTag?=XML_TAG_END (children+=ExpressionOrOption | children+=Message | children+=Property | children+=Param |
+ * 	children+=Map | children+=MapMethod | children+=DebugTag | children+=Field | children+=Comment | children+=Break)*
+ * 	closedTag?=MAP_METHOD_ENDTAG_START methodClosingName=ID DOT methodClosingMethod=ID XML_TAG_END);
  *
  **/
 
-// MAP_METHOD_STARTTAG_START mapName=ID "." methodName=AttributeName attributes+=PossibleExpression* (XML_TAG_SINGLEEND |
-// XML_TAG_END (children+=ExpressionOrOption | children+=Message | children+=Property | children+=Param | children+=Map |
-// children+=MapMethod | children+=DebugTag | children+=Field | children+=Comment | children+=Break)*
-// MAP_METHOD_ENDTAG_START methodClosingName=ID "." methodClosingMethod=ID XML_TAG_END)
+// MAP_METHOD_STARTTAG_START mapName=ID DOT methodName=AttributeName attributes+=PossibleExpression* (XML_TAG_SINGLEEND |
+// splitTag?=XML_TAG_END (children+=ExpressionOrOption | children+=Message | children+=Property | children+=Param |
+// children+=Map | children+=MapMethod | children+=DebugTag | children+=Field | children+=Comment | children+=Break)*
+// closedTag?=MAP_METHOD_ENDTAG_START methodClosingName=ID DOT methodClosingMethod=ID XML_TAG_END)
 protected class MapMethod_Group extends GroupToken {
 	
 	public MapMethod_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -5460,16 +6076,16 @@ protected class MapMethod_MapNameAssignment_1 extends AssignmentToken  {
 
 }
 
-// "."
-protected class MapMethod_FullStopKeyword_2 extends KeywordToken  {
-	
-	public MapMethod_FullStopKeyword_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+// DOT
+protected class MapMethod_DOTTerminalRuleCall_2 extends UnassignedTextToken {
+
+	public MapMethod_DOTTerminalRuleCall_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
-	public Keyword getGrammarElement() {
-		return grammarAccess.getMapMethodAccess().getFullStopKeyword_2();
+	public RuleCall getGrammarElement() {
+		return grammarAccess.getMapMethodAccess().getDOTTerminalRuleCall_2();
 	}
 
     @Override
@@ -5497,7 +6113,7 @@ protected class MapMethod_MethodNameAssignment_3 extends AssignmentToken  {
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new MapMethod_FullStopKeyword_2(lastRuleCallOrigin, this, 0, inst);
+			case 0: return new MapMethod_DOTTerminalRuleCall_2(lastRuleCallOrigin, this, 0, inst);
 			default: return null;
 		}	
 	}
@@ -5563,9 +6179,9 @@ protected class MapMethod_AttributesAssignment_4 extends AssignmentToken  {
 	}	
 }
 
-// XML_TAG_SINGLEEND | XML_TAG_END (children+=ExpressionOrOption | children+=Message | children+=Property | children+=Param
-// | children+=Map | children+=MapMethod | children+=DebugTag | children+=Field | children+=Comment | children+=Break)*
-// MAP_METHOD_ENDTAG_START methodClosingName=ID "." methodClosingMethod=ID XML_TAG_END
+// XML_TAG_SINGLEEND | splitTag?=XML_TAG_END (children+=ExpressionOrOption | children+=Message | children+=Property |
+// children+=Param | children+=Map | children+=MapMethod | children+=DebugTag | children+=Field | children+=Comment |
+// children+=Break)* closedTag?=MAP_METHOD_ENDTAG_START methodClosingName=ID DOT methodClosingMethod=ID XML_TAG_END
 protected class MapMethod_Alternatives_5 extends AlternativesToken {
 
 	public MapMethod_Alternatives_5(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -5611,9 +6227,9 @@ protected class MapMethod_XML_TAG_SINGLEENDTerminalRuleCall_5_0 extends Unassign
 
 }
 
-// XML_TAG_END (children+=ExpressionOrOption | children+=Message | children+=Property | children+=Param | children+=Map |
-// children+=MapMethod | children+=DebugTag | children+=Field | children+=Comment | children+=Break)*
-// MAP_METHOD_ENDTAG_START methodClosingName=ID "." methodClosingMethod=ID XML_TAG_END
+// splitTag?=XML_TAG_END (children+=ExpressionOrOption | children+=Message | children+=Property | children+=Param |
+// children+=Map | children+=MapMethod | children+=DebugTag | children+=Field | children+=Comment | children+=Break)*
+// closedTag?=MAP_METHOD_ENDTAG_START methodClosingName=ID DOT methodClosingMethod=ID XML_TAG_END
 protected class MapMethod_Group_5_1 extends GroupToken {
 	
 	public MapMethod_Group_5_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -5635,16 +6251,16 @@ protected class MapMethod_Group_5_1 extends GroupToken {
 
 }
 
-// XML_TAG_END
-protected class MapMethod_XML_TAG_ENDTerminalRuleCall_5_1_0 extends UnassignedTextToken {
-
-	public MapMethod_XML_TAG_ENDTerminalRuleCall_5_1_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+// splitTag?=XML_TAG_END
+protected class MapMethod_SplitTagAssignment_5_1_0 extends AssignmentToken  {
+	
+	public MapMethod_SplitTagAssignment_5_1_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
-	public RuleCall getGrammarElement() {
-		return grammarAccess.getMapMethodAccess().getXML_TAG_ENDTerminalRuleCall_5_1_0();
+	public Assignment getGrammarElement() {
+		return grammarAccess.getMapMethodAccess().getSplitTagAssignment_5_1_0();
 	}
 
     @Override
@@ -5654,6 +6270,18 @@ protected class MapMethod_XML_TAG_ENDTerminalRuleCall_5_1_0 extends UnassignedTe
 			case 1: return new MapMethod_MethodNameAssignment_3(lastRuleCallOrigin, this, 1, inst);
 			default: return null;
 		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("splitTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("splitTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getMapMethodAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_5_1_0_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getMapMethodAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_5_1_0_0();
+			return obj;
+		}
+		return null;
 	}
 
 }
@@ -5731,7 +6359,7 @@ protected class MapMethod_ChildrenAssignment_5_1_1_0 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new MapMethod_Alternatives_5_1_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new MapMethod_XML_TAG_ENDTerminalRuleCall_5_1_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new MapMethod_SplitTagAssignment_5_1_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
@@ -5778,7 +6406,7 @@ protected class MapMethod_ChildrenAssignment_5_1_1_1 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new MapMethod_Alternatives_5_1_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new MapMethod_XML_TAG_ENDTerminalRuleCall_5_1_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new MapMethod_SplitTagAssignment_5_1_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
@@ -5825,7 +6453,7 @@ protected class MapMethod_ChildrenAssignment_5_1_1_2 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new MapMethod_Alternatives_5_1_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new MapMethod_XML_TAG_ENDTerminalRuleCall_5_1_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new MapMethod_SplitTagAssignment_5_1_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
@@ -5872,7 +6500,7 @@ protected class MapMethod_ChildrenAssignment_5_1_1_3 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new MapMethod_Alternatives_5_1_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new MapMethod_XML_TAG_ENDTerminalRuleCall_5_1_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new MapMethod_SplitTagAssignment_5_1_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
@@ -5919,7 +6547,7 @@ protected class MapMethod_ChildrenAssignment_5_1_1_4 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new MapMethod_Alternatives_5_1_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new MapMethod_XML_TAG_ENDTerminalRuleCall_5_1_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new MapMethod_SplitTagAssignment_5_1_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
@@ -5966,7 +6594,7 @@ protected class MapMethod_ChildrenAssignment_5_1_1_5 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new MapMethod_Alternatives_5_1_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new MapMethod_XML_TAG_ENDTerminalRuleCall_5_1_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new MapMethod_SplitTagAssignment_5_1_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
@@ -6013,7 +6641,7 @@ protected class MapMethod_ChildrenAssignment_5_1_1_6 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new MapMethod_Alternatives_5_1_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new MapMethod_XML_TAG_ENDTerminalRuleCall_5_1_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new MapMethod_SplitTagAssignment_5_1_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
@@ -6060,7 +6688,7 @@ protected class MapMethod_ChildrenAssignment_5_1_1_7 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new MapMethod_Alternatives_5_1_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new MapMethod_XML_TAG_ENDTerminalRuleCall_5_1_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new MapMethod_SplitTagAssignment_5_1_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
@@ -6107,7 +6735,7 @@ protected class MapMethod_ChildrenAssignment_5_1_1_8 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new MapMethod_Alternatives_5_1_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new MapMethod_XML_TAG_ENDTerminalRuleCall_5_1_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new MapMethod_SplitTagAssignment_5_1_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
@@ -6154,32 +6782,44 @@ protected class MapMethod_ChildrenAssignment_5_1_1_9 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new MapMethod_Alternatives_5_1_1(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new MapMethod_XML_TAG_ENDTerminalRuleCall_5_1_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new MapMethod_SplitTagAssignment_5_1_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
 }
 
 
-// MAP_METHOD_ENDTAG_START
-protected class MapMethod_MAP_METHOD_ENDTAG_STARTTerminalRuleCall_5_1_2 extends UnassignedTextToken {
-
-	public MapMethod_MAP_METHOD_ENDTAG_STARTTerminalRuleCall_5_1_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+// closedTag?=MAP_METHOD_ENDTAG_START
+protected class MapMethod_ClosedTagAssignment_5_1_2 extends AssignmentToken  {
+	
+	public MapMethod_ClosedTagAssignment_5_1_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
-	public RuleCall getGrammarElement() {
-		return grammarAccess.getMapMethodAccess().getMAP_METHOD_ENDTAG_STARTTerminalRuleCall_5_1_2();
+	public Assignment getGrammarElement() {
+		return grammarAccess.getMapMethodAccess().getClosedTagAssignment_5_1_2();
 	}
 
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
 			case 0: return new MapMethod_Alternatives_5_1_1(lastRuleCallOrigin, this, 0, inst);
-			case 1: return new MapMethod_XML_TAG_ENDTerminalRuleCall_5_1_0(lastRuleCallOrigin, this, 1, inst);
+			case 1: return new MapMethod_SplitTagAssignment_5_1_0(lastRuleCallOrigin, this, 1, inst);
 			default: return null;
 		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("closedTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("closedTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getMapMethodAccess().getClosedTagMAP_METHOD_ENDTAG_STARTTerminalRuleCall_5_1_2_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getMapMethodAccess().getClosedTagMAP_METHOD_ENDTAG_STARTTerminalRuleCall_5_1_2_0();
+			return obj;
+		}
+		return null;
 	}
 
 }
@@ -6199,7 +6839,7 @@ protected class MapMethod_MethodClosingNameAssignment_5_1_3 extends AssignmentTo
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new MapMethod_MAP_METHOD_ENDTAG_STARTTerminalRuleCall_5_1_2(lastRuleCallOrigin, this, 0, inst);
+			case 0: return new MapMethod_ClosedTagAssignment_5_1_2(lastRuleCallOrigin, this, 0, inst);
 			default: return null;
 		}	
 	}
@@ -6218,16 +6858,16 @@ protected class MapMethod_MethodClosingNameAssignment_5_1_3 extends AssignmentTo
 
 }
 
-// "."
-protected class MapMethod_FullStopKeyword_5_1_4 extends KeywordToken  {
-	
-	public MapMethod_FullStopKeyword_5_1_4(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+// DOT
+protected class MapMethod_DOTTerminalRuleCall_5_1_4 extends UnassignedTextToken {
+
+	public MapMethod_DOTTerminalRuleCall_5_1_4(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
-	public Keyword getGrammarElement() {
-		return grammarAccess.getMapMethodAccess().getFullStopKeyword_5_1_4();
+	public RuleCall getGrammarElement() {
+		return grammarAccess.getMapMethodAccess().getDOTTerminalRuleCall_5_1_4();
 	}
 
     @Override
@@ -6255,7 +6895,7 @@ protected class MapMethod_MethodClosingMethodAssignment_5_1_5 extends Assignment
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new MapMethod_FullStopKeyword_5_1_4(lastRuleCallOrigin, this, 0, inst);
+			case 0: return new MapMethod_DOTTerminalRuleCall_5_1_4(lastRuleCallOrigin, this, 0, inst);
 			default: return null;
 		}	
 	}
@@ -6304,16 +6944,16 @@ protected class MapMethod_XML_TAG_ENDTerminalRuleCall_5_1_6 extends UnassignedTe
 
 /************ begin Rule Field ****************
  *
- * Field returns Param:
- * 	FIELD_START_TAG {Param} attributes+=PossibleExpression* XML_TAG_END (XML_TAG_SINGLEEND | (children+=ExpressionOrOption
- * 	| children+=Message | children+=Property | children+=Param | children+=Map | children+=MapMethod | children+=DebugTag
- * 	| children+=Field | children+=Comment | children+=Break)* FIELD_END_TAG);
+ * Field:
+ * 	FIELD_START_TAG {Field} attributes+=PossibleExpression* (XML_TAG_SINGLEEND | (splitTag?=XML_TAG_END
+ * 	(children+=ExpressionOrOption | children+=Param | children+=Map | children+=MapMethod | children+=DebugTag |
+ * 	children+=Comment | children+=Break)*) closedTag?=FIELD_END_TAG);
  *
  **/
 
-// FIELD_START_TAG {Param} attributes+=PossibleExpression* XML_TAG_END (XML_TAG_SINGLEEND | (children+=ExpressionOrOption |
-// children+=Message | children+=Property | children+=Param | children+=Map | children+=MapMethod | children+=DebugTag |
-// children+=Field | children+=Comment | children+=Break)* FIELD_END_TAG)
+// FIELD_START_TAG {Field} attributes+=PossibleExpression* (XML_TAG_SINGLEEND | (splitTag?=XML_TAG_END
+// (children+=ExpressionOrOption | children+=Param | children+=Map | children+=MapMethod | children+=DebugTag |
+// children+=Comment | children+=Break)*) closedTag?=FIELD_END_TAG)
 protected class Field_Group extends GroupToken {
 	
 	public Field_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -6328,14 +6968,14 @@ protected class Field_Group extends GroupToken {
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new Field_Alternatives_4(lastRuleCallOrigin, this, 0, inst);
+			case 0: return new Field_Alternatives_3(lastRuleCallOrigin, this, 0, inst);
 			default: return null;
 		}	
 	}
 
     @Override
 	public IEObjectConsumer tryConsume() {
-		if(getEObject().eClass() != grammarAccess.getFieldAccess().getParamAction_1().getType().getClassifier())
+		if(getEObject().eClass() != grammarAccess.getFieldAccess().getFieldAction_1().getType().getClassifier())
 			return null;
 		return eObjectConsumer;
 	}
@@ -6363,16 +7003,16 @@ protected class Field_FIELD_START_TAGTerminalRuleCall_0 extends UnassignedTextTo
 
 }
 
-// {Param}
-protected class Field_ParamAction_1 extends ActionToken  {
+// {Field}
+protected class Field_FieldAction_1 extends ActionToken  {
 
-	public Field_ParamAction_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+	public Field_FieldAction_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
 	public Action getGrammarElement() {
-		return grammarAccess.getFieldAccess().getParamAction_1();
+		return grammarAccess.getFieldAccess().getFieldAction_1();
 	}
 
     @Override
@@ -6431,54 +7071,30 @@ protected class Field_AttributesAssignment_2 extends AssignmentToken  {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
 			case 0: return new Field_AttributesAssignment_2(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Field_ParamAction_1(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new Field_FieldAction_1(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
 }
 
-// XML_TAG_END
-protected class Field_XML_TAG_ENDTerminalRuleCall_3 extends UnassignedTextToken {
+// XML_TAG_SINGLEEND | (splitTag?=XML_TAG_END (children+=ExpressionOrOption | children+=Param | children+=Map |
+// children+=MapMethod | children+=DebugTag | children+=Comment | children+=Break)*) closedTag?=FIELD_END_TAG
+protected class Field_Alternatives_3 extends AlternativesToken {
 
-	public Field_XML_TAG_ENDTerminalRuleCall_3(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
-		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
-	}
-	
-	@Override
-	public RuleCall getGrammarElement() {
-		return grammarAccess.getFieldAccess().getXML_TAG_ENDTerminalRuleCall_3();
-	}
-
-    @Override
-	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
-		switch(index) {
-			case 0: return new Field_AttributesAssignment_2(lastRuleCallOrigin, this, 0, inst);
-			case 1: return new Field_ParamAction_1(lastRuleCallOrigin, this, 1, inst);
-			default: return null;
-		}	
-	}
-
-}
-
-// XML_TAG_SINGLEEND | (children+=ExpressionOrOption | children+=Message | children+=Property | children+=Param |
-// children+=Map | children+=MapMethod | children+=DebugTag | children+=Field | children+=Comment | children+=Break)*
-// FIELD_END_TAG
-protected class Field_Alternatives_4 extends AlternativesToken {
-
-	public Field_Alternatives_4(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+	public Field_Alternatives_3(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
 	public Alternatives getGrammarElement() {
-		return grammarAccess.getFieldAccess().getAlternatives_4();
+		return grammarAccess.getFieldAccess().getAlternatives_3();
 	}
 
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new Field_XML_TAG_SINGLEENDTerminalRuleCall_4_0(lastRuleCallOrigin, this, 0, inst);
-			case 1: return new Field_Group_4_1(lastRuleCallOrigin, this, 1, inst);
+			case 0: return new Field_XML_TAG_SINGLEENDTerminalRuleCall_3_0(lastRuleCallOrigin, this, 0, inst);
+			case 1: return new Field_Group_3_1(lastRuleCallOrigin, this, 1, inst);
 			default: return null;
 		}	
 	}
@@ -6486,76 +7102,133 @@ protected class Field_Alternatives_4 extends AlternativesToken {
 }
 
 // XML_TAG_SINGLEEND
-protected class Field_XML_TAG_SINGLEENDTerminalRuleCall_4_0 extends UnassignedTextToken {
+protected class Field_XML_TAG_SINGLEENDTerminalRuleCall_3_0 extends UnassignedTextToken {
 
-	public Field_XML_TAG_SINGLEENDTerminalRuleCall_4_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+	public Field_XML_TAG_SINGLEENDTerminalRuleCall_3_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
 	public RuleCall getGrammarElement() {
-		return grammarAccess.getFieldAccess().getXML_TAG_SINGLEENDTerminalRuleCall_4_0();
+		return grammarAccess.getFieldAccess().getXML_TAG_SINGLEENDTerminalRuleCall_3_0();
 	}
 
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new Field_XML_TAG_ENDTerminalRuleCall_3(lastRuleCallOrigin, this, 0, inst);
+			case 0: return new Field_AttributesAssignment_2(lastRuleCallOrigin, this, 0, inst);
+			case 1: return new Field_FieldAction_1(lastRuleCallOrigin, this, 1, inst);
 			default: return null;
 		}	
 	}
 
 }
 
-// (children+=ExpressionOrOption | children+=Message | children+=Property | children+=Param | children+=Map |
-// children+=MapMethod | children+=DebugTag | children+=Field | children+=Comment | children+=Break)* FIELD_END_TAG
-protected class Field_Group_4_1 extends GroupToken {
+// (splitTag?=XML_TAG_END (children+=ExpressionOrOption | children+=Param | children+=Map | children+=MapMethod |
+// children+=DebugTag | children+=Comment | children+=Break)*) closedTag?=FIELD_END_TAG
+protected class Field_Group_3_1 extends GroupToken {
 	
-	public Field_Group_4_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+	public Field_Group_3_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
 	public Group getGrammarElement() {
-		return grammarAccess.getFieldAccess().getGroup_4_1();
+		return grammarAccess.getFieldAccess().getGroup_3_1();
 	}
 
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new Field_FIELD_END_TAGTerminalRuleCall_4_1_1(lastRuleCallOrigin, this, 0, inst);
+			case 0: return new Field_ClosedTagAssignment_3_1_1(lastRuleCallOrigin, this, 0, inst);
 			default: return null;
 		}	
 	}
 
 }
 
-// (children+=ExpressionOrOption | children+=Message | children+=Property | children+=Param | children+=Map |
-// children+=MapMethod | children+=DebugTag | children+=Field | children+=Comment | children+=Break)*
-protected class Field_Alternatives_4_1_0 extends AlternativesToken {
-
-	public Field_Alternatives_4_1_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+// splitTag?=XML_TAG_END (children+=ExpressionOrOption | children+=Param | children+=Map | children+=MapMethod |
+// children+=DebugTag | children+=Comment | children+=Break)*
+protected class Field_Group_3_1_0 extends GroupToken {
+	
+	public Field_Group_3_1_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
-	public Alternatives getGrammarElement() {
-		return grammarAccess.getFieldAccess().getAlternatives_4_1_0();
+	public Group getGrammarElement() {
+		return grammarAccess.getFieldAccess().getGroup_3_1_0();
 	}
 
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new Field_ChildrenAssignment_4_1_0_0(lastRuleCallOrigin, this, 0, inst);
-			case 1: return new Field_ChildrenAssignment_4_1_0_1(lastRuleCallOrigin, this, 1, inst);
-			case 2: return new Field_ChildrenAssignment_4_1_0_2(lastRuleCallOrigin, this, 2, inst);
-			case 3: return new Field_ChildrenAssignment_4_1_0_3(lastRuleCallOrigin, this, 3, inst);
-			case 4: return new Field_ChildrenAssignment_4_1_0_4(lastRuleCallOrigin, this, 4, inst);
-			case 5: return new Field_ChildrenAssignment_4_1_0_5(lastRuleCallOrigin, this, 5, inst);
-			case 6: return new Field_ChildrenAssignment_4_1_0_6(lastRuleCallOrigin, this, 6, inst);
-			case 7: return new Field_ChildrenAssignment_4_1_0_7(lastRuleCallOrigin, this, 7, inst);
-			case 8: return new Field_ChildrenAssignment_4_1_0_8(lastRuleCallOrigin, this, 8, inst);
-			case 9: return new Field_ChildrenAssignment_4_1_0_9(lastRuleCallOrigin, this, 9, inst);
+			case 0: return new Field_Alternatives_3_1_0_1(lastRuleCallOrigin, this, 0, inst);
+			case 1: return new Field_SplitTagAssignment_3_1_0_0(lastRuleCallOrigin, this, 1, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// splitTag?=XML_TAG_END
+protected class Field_SplitTagAssignment_3_1_0_0 extends AssignmentToken  {
+	
+	public Field_SplitTagAssignment_3_1_0_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Assignment getGrammarElement() {
+		return grammarAccess.getFieldAccess().getSplitTagAssignment_3_1_0_0();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new Field_AttributesAssignment_2(lastRuleCallOrigin, this, 0, inst);
+			case 1: return new Field_FieldAction_1(lastRuleCallOrigin, this, 1, inst);
+			default: return null;
+		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("splitTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("splitTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getFieldAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_1_0_0_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getFieldAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_1_0_0_0();
+			return obj;
+		}
+		return null;
+	}
+
+}
+
+// (children+=ExpressionOrOption | children+=Param | children+=Map | children+=MapMethod | children+=DebugTag |
+// children+=Comment | children+=Break)*
+protected class Field_Alternatives_3_1_0_1 extends AlternativesToken {
+
+	public Field_Alternatives_3_1_0_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Alternatives getGrammarElement() {
+		return grammarAccess.getFieldAccess().getAlternatives_3_1_0_1();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new Field_ChildrenAssignment_3_1_0_1_0(lastRuleCallOrigin, this, 0, inst);
+			case 1: return new Field_ChildrenAssignment_3_1_0_1_1(lastRuleCallOrigin, this, 1, inst);
+			case 2: return new Field_ChildrenAssignment_3_1_0_1_2(lastRuleCallOrigin, this, 2, inst);
+			case 3: return new Field_ChildrenAssignment_3_1_0_1_3(lastRuleCallOrigin, this, 3, inst);
+			case 4: return new Field_ChildrenAssignment_3_1_0_1_4(lastRuleCallOrigin, this, 4, inst);
+			case 5: return new Field_ChildrenAssignment_3_1_0_1_5(lastRuleCallOrigin, this, 5, inst);
+			case 6: return new Field_ChildrenAssignment_3_1_0_1_6(lastRuleCallOrigin, this, 6, inst);
 			default: return null;
 		}	
 	}
@@ -6563,15 +7236,15 @@ protected class Field_Alternatives_4_1_0 extends AlternativesToken {
 }
 
 // children+=ExpressionOrOption
-protected class Field_ChildrenAssignment_4_1_0_0 extends AssignmentToken  {
+protected class Field_ChildrenAssignment_3_1_0_1_0 extends AssignmentToken  {
 	
-	public Field_ChildrenAssignment_4_1_0_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+	public Field_ChildrenAssignment_3_1_0_1_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
 	public Assignment getGrammarElement() {
-		return grammarAccess.getFieldAccess().getChildrenAssignment_4_1_0_0();
+		return grammarAccess.getFieldAccess().getChildrenAssignment_3_1_0_1_0();
 	}
 
     @Override
@@ -6590,7 +7263,7 @@ protected class Field_ChildrenAssignment_4_1_0_0 extends AssignmentToken  {
 			IEObjectConsumer param = createEObjectConsumer((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getExpressionOrOptionRule().getType().getClassifier())) {
 				type = AssignmentType.PARSER_RULE_CALL;
-				element = grammarAccess.getFieldAccess().getChildrenExpressionOrOptionParserRuleCall_4_1_0_0_0(); 
+				element = grammarAccess.getFieldAccess().getChildrenExpressionOrOptionParserRuleCall_3_1_0_1_0_0(); 
 				consumed = obj;
 				return param;
 			}
@@ -6602,117 +7275,23 @@ protected class Field_ChildrenAssignment_4_1_0_0 extends AssignmentToken  {
 	public AbstractToken createFollowerAfterReturn(AbstractToken next,	int actIndex, int index, IEObjectConsumer inst) {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
-			case 0: return new Field_Alternatives_4_1_0(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Field_XML_TAG_ENDTerminalRuleCall_3(lastRuleCallOrigin, next, actIndex, consumed);
-			default: return null;
-		}	
-	}	
-}
-
-// children+=Message
-protected class Field_ChildrenAssignment_4_1_0_1 extends AssignmentToken  {
-	
-	public Field_ChildrenAssignment_4_1_0_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
-		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
-	}
-	
-	@Override
-	public Assignment getGrammarElement() {
-		return grammarAccess.getFieldAccess().getChildrenAssignment_4_1_0_1();
-	}
-
-    @Override
-	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
-		switch(index) {
-			case 0: return new Message_Group(this, this, 0, inst);
-			default: return null;
-		}	
-	}
-
-    @Override	
-	public IEObjectConsumer tryConsume() {
-		if((value = eObjectConsumer.getConsumable("children",true)) == null) return null;
-		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("children");
-		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
-			IEObjectConsumer param = createEObjectConsumer((EObject)value);
-			if(param.isInstanceOf(grammarAccess.getMessageRule().getType().getClassifier())) {
-				type = AssignmentType.PARSER_RULE_CALL;
-				element = grammarAccess.getFieldAccess().getChildrenMessageParserRuleCall_4_1_0_1_0(); 
-				consumed = obj;
-				return param;
-			}
-		}
-		return null;
-	}
-
-    @Override
-	public AbstractToken createFollowerAfterReturn(AbstractToken next,	int actIndex, int index, IEObjectConsumer inst) {
-		if(value == inst.getEObject() && !inst.isConsumed()) return null;
-		switch(index) {
-			case 0: return new Field_Alternatives_4_1_0(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Field_XML_TAG_ENDTerminalRuleCall_3(lastRuleCallOrigin, next, actIndex, consumed);
-			default: return null;
-		}	
-	}	
-}
-
-// children+=Property
-protected class Field_ChildrenAssignment_4_1_0_2 extends AssignmentToken  {
-	
-	public Field_ChildrenAssignment_4_1_0_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
-		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
-	}
-	
-	@Override
-	public Assignment getGrammarElement() {
-		return grammarAccess.getFieldAccess().getChildrenAssignment_4_1_0_2();
-	}
-
-    @Override
-	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
-		switch(index) {
-			case 0: return new Property_Group(this, this, 0, inst);
-			default: return null;
-		}	
-	}
-
-    @Override	
-	public IEObjectConsumer tryConsume() {
-		if((value = eObjectConsumer.getConsumable("children",true)) == null) return null;
-		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("children");
-		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
-			IEObjectConsumer param = createEObjectConsumer((EObject)value);
-			if(param.isInstanceOf(grammarAccess.getPropertyRule().getType().getClassifier())) {
-				type = AssignmentType.PARSER_RULE_CALL;
-				element = grammarAccess.getFieldAccess().getChildrenPropertyParserRuleCall_4_1_0_2_0(); 
-				consumed = obj;
-				return param;
-			}
-		}
-		return null;
-	}
-
-    @Override
-	public AbstractToken createFollowerAfterReturn(AbstractToken next,	int actIndex, int index, IEObjectConsumer inst) {
-		if(value == inst.getEObject() && !inst.isConsumed()) return null;
-		switch(index) {
-			case 0: return new Field_Alternatives_4_1_0(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Field_XML_TAG_ENDTerminalRuleCall_3(lastRuleCallOrigin, next, actIndex, consumed);
+			case 0: return new Field_Alternatives_3_1_0_1(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new Field_SplitTagAssignment_3_1_0_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
 }
 
 // children+=Param
-protected class Field_ChildrenAssignment_4_1_0_3 extends AssignmentToken  {
+protected class Field_ChildrenAssignment_3_1_0_1_1 extends AssignmentToken  {
 	
-	public Field_ChildrenAssignment_4_1_0_3(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+	public Field_ChildrenAssignment_3_1_0_1_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
 	public Assignment getGrammarElement() {
-		return grammarAccess.getFieldAccess().getChildrenAssignment_4_1_0_3();
+		return grammarAccess.getFieldAccess().getChildrenAssignment_3_1_0_1_1();
 	}
 
     @Override
@@ -6731,7 +7310,7 @@ protected class Field_ChildrenAssignment_4_1_0_3 extends AssignmentToken  {
 			IEObjectConsumer param = createEObjectConsumer((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getParamRule().getType().getClassifier())) {
 				type = AssignmentType.PARSER_RULE_CALL;
-				element = grammarAccess.getFieldAccess().getChildrenParamParserRuleCall_4_1_0_3_0(); 
+				element = grammarAccess.getFieldAccess().getChildrenParamParserRuleCall_3_1_0_1_1_0(); 
 				consumed = obj;
 				return param;
 			}
@@ -6743,23 +7322,23 @@ protected class Field_ChildrenAssignment_4_1_0_3 extends AssignmentToken  {
 	public AbstractToken createFollowerAfterReturn(AbstractToken next,	int actIndex, int index, IEObjectConsumer inst) {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
-			case 0: return new Field_Alternatives_4_1_0(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Field_XML_TAG_ENDTerminalRuleCall_3(lastRuleCallOrigin, next, actIndex, consumed);
+			case 0: return new Field_Alternatives_3_1_0_1(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new Field_SplitTagAssignment_3_1_0_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
 }
 
 // children+=Map
-protected class Field_ChildrenAssignment_4_1_0_4 extends AssignmentToken  {
+protected class Field_ChildrenAssignment_3_1_0_1_2 extends AssignmentToken  {
 	
-	public Field_ChildrenAssignment_4_1_0_4(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+	public Field_ChildrenAssignment_3_1_0_1_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
 	public Assignment getGrammarElement() {
-		return grammarAccess.getFieldAccess().getChildrenAssignment_4_1_0_4();
+		return grammarAccess.getFieldAccess().getChildrenAssignment_3_1_0_1_2();
 	}
 
     @Override
@@ -6778,7 +7357,7 @@ protected class Field_ChildrenAssignment_4_1_0_4 extends AssignmentToken  {
 			IEObjectConsumer param = createEObjectConsumer((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getMapRule().getType().getClassifier())) {
 				type = AssignmentType.PARSER_RULE_CALL;
-				element = grammarAccess.getFieldAccess().getChildrenMapParserRuleCall_4_1_0_4_0(); 
+				element = grammarAccess.getFieldAccess().getChildrenMapParserRuleCall_3_1_0_1_2_0(); 
 				consumed = obj;
 				return param;
 			}
@@ -6790,23 +7369,23 @@ protected class Field_ChildrenAssignment_4_1_0_4 extends AssignmentToken  {
 	public AbstractToken createFollowerAfterReturn(AbstractToken next,	int actIndex, int index, IEObjectConsumer inst) {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
-			case 0: return new Field_Alternatives_4_1_0(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Field_XML_TAG_ENDTerminalRuleCall_3(lastRuleCallOrigin, next, actIndex, consumed);
+			case 0: return new Field_Alternatives_3_1_0_1(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new Field_SplitTagAssignment_3_1_0_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
 }
 
 // children+=MapMethod
-protected class Field_ChildrenAssignment_4_1_0_5 extends AssignmentToken  {
+protected class Field_ChildrenAssignment_3_1_0_1_3 extends AssignmentToken  {
 	
-	public Field_ChildrenAssignment_4_1_0_5(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+	public Field_ChildrenAssignment_3_1_0_1_3(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
 	public Assignment getGrammarElement() {
-		return grammarAccess.getFieldAccess().getChildrenAssignment_4_1_0_5();
+		return grammarAccess.getFieldAccess().getChildrenAssignment_3_1_0_1_3();
 	}
 
     @Override
@@ -6825,7 +7404,7 @@ protected class Field_ChildrenAssignment_4_1_0_5 extends AssignmentToken  {
 			IEObjectConsumer param = createEObjectConsumer((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getMapMethodRule().getType().getClassifier())) {
 				type = AssignmentType.PARSER_RULE_CALL;
-				element = grammarAccess.getFieldAccess().getChildrenMapMethodParserRuleCall_4_1_0_5_0(); 
+				element = grammarAccess.getFieldAccess().getChildrenMapMethodParserRuleCall_3_1_0_1_3_0(); 
 				consumed = obj;
 				return param;
 			}
@@ -6837,23 +7416,23 @@ protected class Field_ChildrenAssignment_4_1_0_5 extends AssignmentToken  {
 	public AbstractToken createFollowerAfterReturn(AbstractToken next,	int actIndex, int index, IEObjectConsumer inst) {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
-			case 0: return new Field_Alternatives_4_1_0(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Field_XML_TAG_ENDTerminalRuleCall_3(lastRuleCallOrigin, next, actIndex, consumed);
+			case 0: return new Field_Alternatives_3_1_0_1(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new Field_SplitTagAssignment_3_1_0_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
 }
 
 // children+=DebugTag
-protected class Field_ChildrenAssignment_4_1_0_6 extends AssignmentToken  {
+protected class Field_ChildrenAssignment_3_1_0_1_4 extends AssignmentToken  {
 	
-	public Field_ChildrenAssignment_4_1_0_6(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+	public Field_ChildrenAssignment_3_1_0_1_4(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
 	public Assignment getGrammarElement() {
-		return grammarAccess.getFieldAccess().getChildrenAssignment_4_1_0_6();
+		return grammarAccess.getFieldAccess().getChildrenAssignment_3_1_0_1_4();
 	}
 
     @Override
@@ -6872,7 +7451,7 @@ protected class Field_ChildrenAssignment_4_1_0_6 extends AssignmentToken  {
 			IEObjectConsumer param = createEObjectConsumer((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getDebugTagRule().getType().getClassifier())) {
 				type = AssignmentType.PARSER_RULE_CALL;
-				element = grammarAccess.getFieldAccess().getChildrenDebugTagParserRuleCall_4_1_0_6_0(); 
+				element = grammarAccess.getFieldAccess().getChildrenDebugTagParserRuleCall_3_1_0_1_4_0(); 
 				consumed = obj;
 				return param;
 			}
@@ -6884,70 +7463,23 @@ protected class Field_ChildrenAssignment_4_1_0_6 extends AssignmentToken  {
 	public AbstractToken createFollowerAfterReturn(AbstractToken next,	int actIndex, int index, IEObjectConsumer inst) {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
-			case 0: return new Field_Alternatives_4_1_0(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Field_XML_TAG_ENDTerminalRuleCall_3(lastRuleCallOrigin, next, actIndex, consumed);
-			default: return null;
-		}	
-	}	
-}
-
-// children+=Field
-protected class Field_ChildrenAssignment_4_1_0_7 extends AssignmentToken  {
-	
-	public Field_ChildrenAssignment_4_1_0_7(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
-		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
-	}
-	
-	@Override
-	public Assignment getGrammarElement() {
-		return grammarAccess.getFieldAccess().getChildrenAssignment_4_1_0_7();
-	}
-
-    @Override
-	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
-		switch(index) {
-			case 0: return new Field_Group(this, this, 0, inst);
-			default: return null;
-		}	
-	}
-
-    @Override	
-	public IEObjectConsumer tryConsume() {
-		if((value = eObjectConsumer.getConsumable("children",true)) == null) return null;
-		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("children");
-		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
-			IEObjectConsumer param = createEObjectConsumer((EObject)value);
-			if(param.isInstanceOf(grammarAccess.getFieldRule().getType().getClassifier())) {
-				type = AssignmentType.PARSER_RULE_CALL;
-				element = grammarAccess.getFieldAccess().getChildrenFieldParserRuleCall_4_1_0_7_0(); 
-				consumed = obj;
-				return param;
-			}
-		}
-		return null;
-	}
-
-    @Override
-	public AbstractToken createFollowerAfterReturn(AbstractToken next,	int actIndex, int index, IEObjectConsumer inst) {
-		if(value == inst.getEObject() && !inst.isConsumed()) return null;
-		switch(index) {
-			case 0: return new Field_Alternatives_4_1_0(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Field_XML_TAG_ENDTerminalRuleCall_3(lastRuleCallOrigin, next, actIndex, consumed);
+			case 0: return new Field_Alternatives_3_1_0_1(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new Field_SplitTagAssignment_3_1_0_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
 }
 
 // children+=Comment
-protected class Field_ChildrenAssignment_4_1_0_8 extends AssignmentToken  {
+protected class Field_ChildrenAssignment_3_1_0_1_5 extends AssignmentToken  {
 	
-	public Field_ChildrenAssignment_4_1_0_8(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+	public Field_ChildrenAssignment_3_1_0_1_5(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
 	public Assignment getGrammarElement() {
-		return grammarAccess.getFieldAccess().getChildrenAssignment_4_1_0_8();
+		return grammarAccess.getFieldAccess().getChildrenAssignment_3_1_0_1_5();
 	}
 
     @Override
@@ -6966,7 +7498,7 @@ protected class Field_ChildrenAssignment_4_1_0_8 extends AssignmentToken  {
 			IEObjectConsumer param = createEObjectConsumer((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getCommentRule().getType().getClassifier())) {
 				type = AssignmentType.PARSER_RULE_CALL;
-				element = grammarAccess.getFieldAccess().getChildrenCommentParserRuleCall_4_1_0_8_0(); 
+				element = grammarAccess.getFieldAccess().getChildrenCommentParserRuleCall_3_1_0_1_5_0(); 
 				consumed = obj;
 				return param;
 			}
@@ -6978,23 +7510,23 @@ protected class Field_ChildrenAssignment_4_1_0_8 extends AssignmentToken  {
 	public AbstractToken createFollowerAfterReturn(AbstractToken next,	int actIndex, int index, IEObjectConsumer inst) {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
-			case 0: return new Field_Alternatives_4_1_0(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Field_XML_TAG_ENDTerminalRuleCall_3(lastRuleCallOrigin, next, actIndex, consumed);
+			case 0: return new Field_Alternatives_3_1_0_1(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new Field_SplitTagAssignment_3_1_0_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
 }
 
 // children+=Break
-protected class Field_ChildrenAssignment_4_1_0_9 extends AssignmentToken  {
+protected class Field_ChildrenAssignment_3_1_0_1_6 extends AssignmentToken  {
 	
-	public Field_ChildrenAssignment_4_1_0_9(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+	public Field_ChildrenAssignment_3_1_0_1_6(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
 	public Assignment getGrammarElement() {
-		return grammarAccess.getFieldAccess().getChildrenAssignment_4_1_0_9();
+		return grammarAccess.getFieldAccess().getChildrenAssignment_3_1_0_1_6();
 	}
 
     @Override
@@ -7013,7 +7545,7 @@ protected class Field_ChildrenAssignment_4_1_0_9 extends AssignmentToken  {
 			IEObjectConsumer param = createEObjectConsumer((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getBreakRule().getType().getClassifier())) {
 				type = AssignmentType.PARSER_RULE_CALL;
-				element = grammarAccess.getFieldAccess().getChildrenBreakParserRuleCall_4_1_0_9_0(); 
+				element = grammarAccess.getFieldAccess().getChildrenBreakParserRuleCall_3_1_0_1_6_0(); 
 				consumed = obj;
 				return param;
 			}
@@ -7025,32 +7557,45 @@ protected class Field_ChildrenAssignment_4_1_0_9 extends AssignmentToken  {
 	public AbstractToken createFollowerAfterReturn(AbstractToken next,	int actIndex, int index, IEObjectConsumer inst) {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
-			case 0: return new Field_Alternatives_4_1_0(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new Field_XML_TAG_ENDTerminalRuleCall_3(lastRuleCallOrigin, next, actIndex, consumed);
+			case 0: return new Field_Alternatives_3_1_0_1(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new Field_SplitTagAssignment_3_1_0_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
 }
 
 
-// FIELD_END_TAG
-protected class Field_FIELD_END_TAGTerminalRuleCall_4_1_1 extends UnassignedTextToken {
 
-	public Field_FIELD_END_TAGTerminalRuleCall_4_1_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+// closedTag?=FIELD_END_TAG
+protected class Field_ClosedTagAssignment_3_1_1 extends AssignmentToken  {
+	
+	public Field_ClosedTagAssignment_3_1_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
-	public RuleCall getGrammarElement() {
-		return grammarAccess.getFieldAccess().getFIELD_END_TAGTerminalRuleCall_4_1_1();
+	public Assignment getGrammarElement() {
+		return grammarAccess.getFieldAccess().getClosedTagAssignment_3_1_1();
 	}
 
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new Field_Alternatives_4_1_0(lastRuleCallOrigin, this, 0, inst);
+			case 0: return new Field_Group_3_1_0(lastRuleCallOrigin, this, 0, inst);
 			default: return null;
 		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("closedTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("closedTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getFieldAccess().getClosedTagFIELD_END_TAGTerminalRuleCall_3_1_1_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getFieldAccess().getClosedTagFIELD_END_TAGTerminalRuleCall_3_1_1_0();
+			return obj;
+		}
+		return null;
 	}
 
 }
@@ -7064,13 +7609,13 @@ protected class Field_FIELD_END_TAGTerminalRuleCall_4_1_1 extends UnassignedText
 /************ begin Rule DebugTag ****************
  *
  * DebugTag:
- * 	DEBUG_START_TAG {DebugTag} attributes+=PossibleExpression* (XML_TAG_SINGLEEND | XML_TAG_END expression=TopLevel
- * 	DEBUG_END_TAG);
+ * 	DEBUG_START_TAG {DebugTag} attributes+=PossibleExpression* (XML_TAG_SINGLEEND | splitTag?=XML_TAG_END
+ * 	expression=TopLevel? closedTag?=DEBUG_END_TAG);
  *
  **/
 
-// DEBUG_START_TAG {DebugTag} attributes+=PossibleExpression* (XML_TAG_SINGLEEND | XML_TAG_END expression=TopLevel
-// DEBUG_END_TAG)
+// DEBUG_START_TAG {DebugTag} attributes+=PossibleExpression* (XML_TAG_SINGLEEND | splitTag?=XML_TAG_END
+// expression=TopLevel? closedTag?=DEBUG_END_TAG)
 protected class DebugTag_Group extends GroupToken {
 	
 	public DebugTag_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -7194,7 +7739,7 @@ protected class DebugTag_AttributesAssignment_2 extends AssignmentToken  {
 	}	
 }
 
-// XML_TAG_SINGLEEND | XML_TAG_END expression=TopLevel DEBUG_END_TAG
+// XML_TAG_SINGLEEND | splitTag?=XML_TAG_END expression=TopLevel? closedTag?=DEBUG_END_TAG
 protected class DebugTag_Alternatives_3 extends AlternativesToken {
 
 	public DebugTag_Alternatives_3(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -7240,7 +7785,7 @@ protected class DebugTag_XML_TAG_SINGLEENDTerminalRuleCall_3_0 extends Unassigne
 
 }
 
-// XML_TAG_END expression=TopLevel DEBUG_END_TAG
+// splitTag?=XML_TAG_END expression=TopLevel? closedTag?=DEBUG_END_TAG
 protected class DebugTag_Group_3_1 extends GroupToken {
 	
 	public DebugTag_Group_3_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -7255,23 +7800,23 @@ protected class DebugTag_Group_3_1 extends GroupToken {
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new DebugTag_DEBUG_END_TAGTerminalRuleCall_3_1_2(lastRuleCallOrigin, this, 0, inst);
+			case 0: return new DebugTag_ClosedTagAssignment_3_1_2(lastRuleCallOrigin, this, 0, inst);
 			default: return null;
 		}	
 	}
 
 }
 
-// XML_TAG_END
-protected class DebugTag_XML_TAG_ENDTerminalRuleCall_3_1_0 extends UnassignedTextToken {
-
-	public DebugTag_XML_TAG_ENDTerminalRuleCall_3_1_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+// splitTag?=XML_TAG_END
+protected class DebugTag_SplitTagAssignment_3_1_0 extends AssignmentToken  {
+	
+	public DebugTag_SplitTagAssignment_3_1_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
-	public RuleCall getGrammarElement() {
-		return grammarAccess.getDebugTagAccess().getXML_TAG_ENDTerminalRuleCall_3_1_0();
+	public Assignment getGrammarElement() {
+		return grammarAccess.getDebugTagAccess().getSplitTagAssignment_3_1_0();
 	}
 
     @Override
@@ -7283,9 +7828,21 @@ protected class DebugTag_XML_TAG_ENDTerminalRuleCall_3_1_0 extends UnassignedTex
 		}	
 	}
 
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("splitTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("splitTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getDebugTagAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_1_0_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getDebugTagAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_1_0_0();
+			return obj;
+		}
+		return null;
+	}
+
 }
 
-// expression=TopLevel
+// expression=TopLevel?
 protected class DebugTag_ExpressionAssignment_3_1_1 extends AssignmentToken  {
 	
 	public DebugTag_ExpressionAssignment_3_1_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -7307,7 +7864,7 @@ protected class DebugTag_ExpressionAssignment_3_1_1 extends AssignmentToken  {
 
     @Override	
 	public IEObjectConsumer tryConsume() {
-		if((value = eObjectConsumer.getConsumable("expression",true)) == null) return null;
+		if((value = eObjectConsumer.getConsumable("expression",false)) == null) return null;
 		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("expression");
 		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
 			IEObjectConsumer param = createEObjectConsumer((EObject)value);
@@ -7325,30 +7882,43 @@ protected class DebugTag_ExpressionAssignment_3_1_1 extends AssignmentToken  {
 	public AbstractToken createFollowerAfterReturn(AbstractToken next,	int actIndex, int index, IEObjectConsumer inst) {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
-			case 0: return new DebugTag_XML_TAG_ENDTerminalRuleCall_3_1_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 0: return new DebugTag_SplitTagAssignment_3_1_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
 }
 
-// DEBUG_END_TAG
-protected class DebugTag_DEBUG_END_TAGTerminalRuleCall_3_1_2 extends UnassignedTextToken {
-
-	public DebugTag_DEBUG_END_TAGTerminalRuleCall_3_1_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+// closedTag?=DEBUG_END_TAG
+protected class DebugTag_ClosedTagAssignment_3_1_2 extends AssignmentToken  {
+	
+	public DebugTag_ClosedTagAssignment_3_1_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
-	public RuleCall getGrammarElement() {
-		return grammarAccess.getDebugTagAccess().getDEBUG_END_TAGTerminalRuleCall_3_1_2();
+	public Assignment getGrammarElement() {
+		return grammarAccess.getDebugTagAccess().getClosedTagAssignment_3_1_2();
 	}
 
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
 			case 0: return new DebugTag_ExpressionAssignment_3_1_1(lastRuleCallOrigin, this, 0, inst);
+			case 1: return new DebugTag_SplitTagAssignment_3_1_0(lastRuleCallOrigin, this, 1, inst);
 			default: return null;
 		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("closedTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("closedTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getDebugTagAccess().getClosedTagDEBUG_END_TAGTerminalRuleCall_3_1_2_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getDebugTagAccess().getClosedTagDEBUG_END_TAGTerminalRuleCall_3_1_2_0();
+			return obj;
+		}
+		return null;
 	}
 
 }
@@ -7576,12 +8146,13 @@ protected class ExpressionOrOption_OptionParserRuleCall_1_1 extends RuleCallToke
 /************ begin Rule ExpressionTag ****************
  *
  * ExpressionTag:
- * 	{ExpressionTag} attributes+=PossibleExpression* (XML_TAG_SINGLEEND | XML_TAG_END expression=TopLevel
- * 	EXPRESSION_END_TAG);
+ * 	{ExpressionTag} attributes+=PossibleExpression* (XML_TAG_SINGLEEND | splitTag?=XML_TAG_END expression=TopLevel
+ * 	closedTag?=EXPRESSION_END_TAG);
  *
  **/
 
-// {ExpressionTag} attributes+=PossibleExpression* (XML_TAG_SINGLEEND | XML_TAG_END expression=TopLevel EXPRESSION_END_TAG)
+// {ExpressionTag} attributes+=PossibleExpression* (XML_TAG_SINGLEEND | splitTag?=XML_TAG_END expression=TopLevel
+// closedTag?=EXPRESSION_END_TAG)
 protected class ExpressionTag_Group extends GroupToken {
 	
 	public ExpressionTag_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -7683,7 +8254,7 @@ protected class ExpressionTag_AttributesAssignment_1 extends AssignmentToken  {
 	}	
 }
 
-// XML_TAG_SINGLEEND | XML_TAG_END expression=TopLevel EXPRESSION_END_TAG
+// XML_TAG_SINGLEEND | splitTag?=XML_TAG_END expression=TopLevel closedTag?=EXPRESSION_END_TAG
 protected class ExpressionTag_Alternatives_2 extends AlternativesToken {
 
 	public ExpressionTag_Alternatives_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -7729,7 +8300,7 @@ protected class ExpressionTag_XML_TAG_SINGLEENDTerminalRuleCall_2_0 extends Unas
 
 }
 
-// XML_TAG_END expression=TopLevel EXPRESSION_END_TAG
+// splitTag?=XML_TAG_END expression=TopLevel closedTag?=EXPRESSION_END_TAG
 protected class ExpressionTag_Group_2_1 extends GroupToken {
 	
 	public ExpressionTag_Group_2_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -7744,23 +8315,23 @@ protected class ExpressionTag_Group_2_1 extends GroupToken {
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new ExpressionTag_EXPRESSION_END_TAGTerminalRuleCall_2_1_2(lastRuleCallOrigin, this, 0, inst);
+			case 0: return new ExpressionTag_ClosedTagAssignment_2_1_2(lastRuleCallOrigin, this, 0, inst);
 			default: return null;
 		}	
 	}
 
 }
 
-// XML_TAG_END
-protected class ExpressionTag_XML_TAG_ENDTerminalRuleCall_2_1_0 extends UnassignedTextToken {
-
-	public ExpressionTag_XML_TAG_ENDTerminalRuleCall_2_1_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+// splitTag?=XML_TAG_END
+protected class ExpressionTag_SplitTagAssignment_2_1_0 extends AssignmentToken  {
+	
+	public ExpressionTag_SplitTagAssignment_2_1_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
-	public RuleCall getGrammarElement() {
-		return grammarAccess.getExpressionTagAccess().getXML_TAG_ENDTerminalRuleCall_2_1_0();
+	public Assignment getGrammarElement() {
+		return grammarAccess.getExpressionTagAccess().getSplitTagAssignment_2_1_0();
 	}
 
     @Override
@@ -7770,6 +8341,18 @@ protected class ExpressionTag_XML_TAG_ENDTerminalRuleCall_2_1_0 extends Unassign
 			case 1: return new ExpressionTag_ExpressionTagAction_0(lastRuleCallOrigin, this, 1, inst);
 			default: return null;
 		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("splitTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("splitTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getExpressionTagAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_2_1_0_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getExpressionTagAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_2_1_0_0();
+			return obj;
+		}
+		return null;
 	}
 
 }
@@ -7814,22 +8397,22 @@ protected class ExpressionTag_ExpressionAssignment_2_1_1 extends AssignmentToken
 	public AbstractToken createFollowerAfterReturn(AbstractToken next,	int actIndex, int index, IEObjectConsumer inst) {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
-			case 0: return new ExpressionTag_XML_TAG_ENDTerminalRuleCall_2_1_0(lastRuleCallOrigin, next, actIndex, consumed);
+			case 0: return new ExpressionTag_SplitTagAssignment_2_1_0(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
 }
 
-// EXPRESSION_END_TAG
-protected class ExpressionTag_EXPRESSION_END_TAGTerminalRuleCall_2_1_2 extends UnassignedTextToken {
-
-	public ExpressionTag_EXPRESSION_END_TAGTerminalRuleCall_2_1_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+// closedTag?=EXPRESSION_END_TAG
+protected class ExpressionTag_ClosedTagAssignment_2_1_2 extends AssignmentToken  {
+	
+	public ExpressionTag_ClosedTagAssignment_2_1_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
-	public RuleCall getGrammarElement() {
-		return grammarAccess.getExpressionTagAccess().getEXPRESSION_END_TAGTerminalRuleCall_2_1_2();
+	public Assignment getGrammarElement() {
+		return grammarAccess.getExpressionTagAccess().getClosedTagAssignment_2_1_2();
 	}
 
     @Override
@@ -7838,6 +8421,18 @@ protected class ExpressionTag_EXPRESSION_END_TAGTerminalRuleCall_2_1_2 extends U
 			case 0: return new ExpressionTag_ExpressionAssignment_2_1_1(lastRuleCallOrigin, this, 0, inst);
 			default: return null;
 		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("closedTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("closedTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getExpressionTagAccess().getClosedTagEXPRESSION_END_TAGTerminalRuleCall_2_1_2_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getExpressionTagAccess().getClosedTagEXPRESSION_END_TAGTerminalRuleCall_2_1_2_0();
+			return obj;
+		}
+		return null;
 	}
 
 }
@@ -7851,11 +8446,11 @@ protected class ExpressionTag_EXPRESSION_END_TAGTerminalRuleCall_2_1_2 extends U
 /************ begin Rule Option ****************
  *
  * Option:
- * 	{Option} attributes+=PossibleExpression* (XML_TAG_SINGLEEND | XML_TAG_END OPTION_END_TAG);
+ * 	{Option} attributes+=PossibleExpression* (XML_TAG_SINGLEEND | splitTag?=XML_TAG_END closedTag?=OPTION_END_TAG);
  *
  **/
 
-// {Option} attributes+=PossibleExpression* (XML_TAG_SINGLEEND | XML_TAG_END OPTION_END_TAG)
+// {Option} attributes+=PossibleExpression* (XML_TAG_SINGLEEND | splitTag?=XML_TAG_END closedTag?=OPTION_END_TAG)
 protected class Option_Group extends GroupToken {
 	
 	public Option_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -7957,7 +8552,7 @@ protected class Option_AttributesAssignment_1 extends AssignmentToken  {
 	}	
 }
 
-// XML_TAG_SINGLEEND | XML_TAG_END OPTION_END_TAG
+// XML_TAG_SINGLEEND | splitTag?=XML_TAG_END closedTag?=OPTION_END_TAG
 protected class Option_Alternatives_2 extends AlternativesToken {
 
 	public Option_Alternatives_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -7973,6 +8568,7 @@ protected class Option_Alternatives_2 extends AlternativesToken {
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
 			case 0: return new Option_XML_TAG_SINGLEENDTerminalRuleCall_2_0(lastRuleCallOrigin, this, 0, inst);
+			case 1: return new Option_Group_2_1(lastRuleCallOrigin, this, 1, inst);
 			default: return null;
 		}	
 	}
@@ -8001,6 +8597,98 @@ protected class Option_XML_TAG_SINGLEENDTerminalRuleCall_2_0 extends UnassignedT
 	}
 
 }
+
+// splitTag?=XML_TAG_END closedTag?=OPTION_END_TAG
+protected class Option_Group_2_1 extends GroupToken {
+	
+	public Option_Group_2_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Group getGrammarElement() {
+		return grammarAccess.getOptionAccess().getGroup_2_1();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new Option_ClosedTagAssignment_2_1_1(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// splitTag?=XML_TAG_END
+protected class Option_SplitTagAssignment_2_1_0 extends AssignmentToken  {
+	
+	public Option_SplitTagAssignment_2_1_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Assignment getGrammarElement() {
+		return grammarAccess.getOptionAccess().getSplitTagAssignment_2_1_0();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new Option_AttributesAssignment_1(lastRuleCallOrigin, this, 0, inst);
+			case 1: return new Option_OptionAction_0(lastRuleCallOrigin, this, 1, inst);
+			default: return null;
+		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("splitTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("splitTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getOptionAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_2_1_0_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getOptionAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_2_1_0_0();
+			return obj;
+		}
+		return null;
+	}
+
+}
+
+// closedTag?=OPTION_END_TAG
+protected class Option_ClosedTagAssignment_2_1_1 extends AssignmentToken  {
+	
+	public Option_ClosedTagAssignment_2_1_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Assignment getGrammarElement() {
+		return grammarAccess.getOptionAccess().getClosedTagAssignment_2_1_1();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new Option_SplitTagAssignment_2_1_0(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("closedTag",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("closedTag");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getOptionAccess().getClosedTagOPTION_END_TAGTerminalRuleCall_2_1_1_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getOptionAccess().getClosedTagOPTION_END_TAGTerminalRuleCall_2_1_1_0();
+			return obj;
+		}
+		return null;
+	}
+
+}
+
 
 
 

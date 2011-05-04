@@ -24,75 +24,77 @@ import java.util.ArrayList;
 @SuppressWarnings("all")
 public class InternalTslParser extends AbstractInternalAntlrParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_NAVASCRIPT_START", "RULE_XML_TAG_END", "RULE_NAVASCRIPT_END", "RULE_XML_TAG_SINGLEEND", "RULE_ID", "RULE_QUOTEQ", "RULE_SEMICOLONQUOTE", "RULE_ATTRIBUTESTRING", "RULE_EMPTYSTRING", "RULE_METHODS_START_TAG", "RULE_METHODS_END_TAG", "RULE_METHOD_START_TAG", "RULE_METHOD_END_TAG", "RULE_VALIDATIONS_START_TAG", "RULE_VALIDATIONS_END_TAG", "RULE_CHECK_START_TAG", "RULE_CHECK_END_TAG", "RULE_COMMENT_START_TAG", "RULE_COMMENT_END_TAG", "RULE_BREAK_START_TAG", "RULE_BREAK_END_TAG", "RULE_INCLUDE_START_TAG", "RULE_MESSAGE_START_TAG", "RULE_MESSAGE_END_TAG", "RULE_MAPSTARTKEYWORD", "RULE_MAPENDKEYWORD", "RULE_REQUIRED_START_TAG", "RULE_REQUIRED_END_TAG", "RULE_PROPERTY_START_TAG", "RULE_PROPERTY_END_TAG", "RULE_PARAM_START_TAG", "RULE_PARAM_END_TAG", "RULE_MAP_METHOD_STARTTAG_START", "RULE_MAP_METHOD_ENDTAG_START", "RULE_FIELD_START_TAG", "RULE_FIELD_END_TAG", "RULE_DEBUG_START_TAG", "RULE_DEBUG_END_TAG", "RULE_EXPRESSION_START_TAG", "RULE_OPTION_START_TAG", "RULE_EXPRESSION_END_TAG", "RULE_OPTION_END_TAG", "RULE_PARENT", "RULE_SQBRACKET_OPEN", "RULE_TML_SEPARATOR", "RULE_AT", "RULE_SQBRACKET_CLOSE", "RULE_TML_EXISTS", "RULE_DOLLAR", "RULE_XML_LT", "RULE_XML_GT", "RULE_XML_LTEQ", "RULE_XML_GTEQ", "RULE_NUMBER", "RULE_LITERALSTRING", "RULE_FORALL", "RULE_NULL", "RULE_TODAY", "RULE_TRUE", "RULE_FALSE", "RULE_XMLHEAD", "RULE_XMLCOMMENT", "RULE_XML_START_ENDTAG", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_WS", "':'", "'='", "'.'", "'('", "','", "')'", "'OR'", "'AND'", "'=='", "'!='", "'+'", "'-'", "'*'", "'!'", "'#'", "'{'", "'}'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_NAVASCRIPT_START", "RULE_XML_TAG_END", "RULE_NAVASCRIPT_END", "RULE_XML_TAG_SINGLEEND", "RULE_ID", "RULE_QUOTEQ", "RULE_SEMICOLONQUOTE", "RULE_ATTRIBUTESTRING", "RULE_EMPTYSTRING", "RULE_METHODS_START_TAG", "RULE_METHODS_END_TAG", "RULE_METHOD_START_TAG", "RULE_METHOD_END_TAG", "RULE_VALIDATIONS_START_TAG", "RULE_VALIDATIONS_END_TAG", "RULE_CHECK_START_TAG", "RULE_CHECK_END_TAG", "RULE_COMMENT_START_TAG", "RULE_COMMENT_END_TAG", "RULE_BREAK_START_TAG", "RULE_BREAK_END_TAG", "RULE_INCLUDE_START_TAG", "RULE_INCLUDE_END_TAG", "RULE_MESSAGE_START_TAG", "RULE_MESSAGE_END_TAG", "RULE_MAPSTARTKEYWORD", "RULE_DOT", "RULE_MAPENDKEYWORD", "RULE_REQUIRED_START_TAG", "RULE_REQUIRED_END_TAG", "RULE_PROPERTY_START_TAG", "RULE_PROPERTY_END_TAG", "RULE_PARAM_START_TAG", "RULE_PARAM_END_TAG", "RULE_MAP_METHOD_STARTTAG_START", "RULE_MAP_METHOD_ENDTAG_START", "RULE_FIELD_START_TAG", "RULE_FIELD_END_TAG", "RULE_DEBUG_START_TAG", "RULE_DEBUG_END_TAG", "RULE_EXPRESSION_START_TAG", "RULE_OPTION_START_TAG", "RULE_EXPRESSION_END_TAG", "RULE_OPTION_END_TAG", "RULE_PARENT", "RULE_SQBRACKET_OPEN", "RULE_TML_SEPARATOR", "RULE_AT", "RULE_SQBRACKET_CLOSE", "RULE_TML_EXISTS", "RULE_DOLLAR", "RULE_XML_LT", "RULE_XML_GT", "RULE_XML_LTEQ", "RULE_XML_GTEQ", "RULE_NUMBER", "RULE_LITERALSTRING", "RULE_FORALL", "RULE_NULL", "RULE_TODAY", "RULE_TRUE", "RULE_FALSE", "RULE_XMLHEAD", "RULE_XMLCOMMENT", "RULE_XML_START_ENDTAG", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_WS", "':'", "'='", "'('", "','", "')'", "'OR'", "'AND'", "'=='", "'!='", "'+'", "'-'", "'*'", "'!'", "'#'", "'{'", "'}'"
     };
-    public static final int RULE_OPTION_END_TAG=45;
+    public static final int RULE_OPTION_END_TAG=47;
     public static final int RULE_CHECK_START_TAG=19;
     public static final int RULE_NAVASCRIPT_END=6;
     public static final int RULE_ID=8;
-    public static final int RULE_XMLCOMMENT=65;
+    public static final int RULE_XMLCOMMENT=67;
     public static final int RULE_COMMENT_END_TAG=22;
-    public static final int RULE_PARENT=46;
-    public static final int RULE_SQBRACKET_OPEN=47;
+    public static final int RULE_PARENT=48;
+    public static final int RULE_SQBRACKET_OPEN=49;
     public static final int RULE_COMMENT_START_TAG=21;
     public static final int RULE_QUOTEQ=9;
-    public static final int RULE_EXPRESSION_END_TAG=44;
-    public static final int RULE_XMLHEAD=64;
-    public static final int RULE_REQUIRED_START_TAG=30;
+    public static final int RULE_EXPRESSION_END_TAG=46;
+    public static final int RULE_XMLHEAD=66;
+    public static final int RULE_REQUIRED_START_TAG=32;
     public static final int RULE_METHODS_END_TAG=14;
-    public static final int RULE_LITERALSTRING=58;
+    public static final int RULE_LITERALSTRING=60;
     public static final int EOF=-1;
     public static final int RULE_BREAK_END_TAG=24;
-    public static final int RULE_FORALL=59;
-    public static final int RULE_FALSE=63;
-    public static final int RULE_OPTION_START_TAG=43;
+    public static final int RULE_FORALL=61;
+    public static final int RULE_FALSE=65;
+    public static final int RULE_DOT=30;
+    public static final int RULE_OPTION_START_TAG=45;
     public static final int RULE_EMPTYSTRING=12;
-    public static final int RULE_NUMBER=57;
-    public static final int RULE_TODAY=61;
+    public static final int RULE_NUMBER=59;
+    public static final int RULE_TODAY=63;
     public static final int RULE_METHOD_START_TAG=15;
-    public static final int RULE_XML_LTEQ=55;
-    public static final int RULE_FIELD_START_TAG=38;
+    public static final int RULE_XML_LTEQ=57;
+    public static final int RULE_FIELD_START_TAG=40;
     public static final int RULE_METHOD_END_TAG=16;
     public static final int RULE_CHECK_END_TAG=20;
     public static final int RULE_INCLUDE_START_TAG=25;
-    public static final int RULE_REQUIRED_END_TAG=31;
-    public static final int RULE_MAPENDKEYWORD=29;
-    public static final int RULE_DEBUG_START_TAG=40;
-    public static final int RULE_FIELD_END_TAG=39;
+    public static final int RULE_REQUIRED_END_TAG=33;
+    public static final int RULE_INCLUDE_END_TAG=26;
+    public static final int RULE_MAPENDKEYWORD=31;
+    public static final int RULE_DEBUG_START_TAG=42;
+    public static final int RULE_FIELD_END_TAG=41;
     public static final int RULE_XML_TAG_SINGLEEND=7;
-    public static final int RULE_PROPERTY_START_TAG=32;
+    public static final int RULE_PROPERTY_START_TAG=34;
     public static final int RULE_ATTRIBUTESTRING=11;
     public static final int RULE_XML_TAG_END=5;
-    public static final int RULE_MESSAGE_START_TAG=26;
-    public static final int RULE_XML_LT=53;
-    public static final int RULE_MAP_METHOD_STARTTAG_START=36;
-    public static final int RULE_MESSAGE_END_TAG=27;
-    public static final int RULE_XML_GTEQ=56;
-    public static final int RULE_TML_SEPARATOR=48;
-    public static final int RULE_SL_COMMENT=68;
-    public static final int RULE_NULL=60;
-    public static final int RULE_ML_COMMENT=67;
-    public static final int RULE_TRUE=62;
-    public static final int RULE_PROPERTY_END_TAG=33;
-    public static final int RULE_DOLLAR=52;
-    public static final int RULE_EXPRESSION_START_TAG=42;
-    public static final int RULE_TML_EXISTS=51;
+    public static final int RULE_MESSAGE_START_TAG=27;
+    public static final int RULE_XML_LT=55;
+    public static final int RULE_MAP_METHOD_STARTTAG_START=38;
+    public static final int RULE_MESSAGE_END_TAG=28;
+    public static final int RULE_XML_GTEQ=58;
+    public static final int RULE_TML_SEPARATOR=50;
+    public static final int RULE_SL_COMMENT=70;
+    public static final int RULE_NULL=62;
+    public static final int RULE_ML_COMMENT=69;
+    public static final int RULE_TRUE=64;
+    public static final int RULE_PROPERTY_END_TAG=35;
+    public static final int RULE_DOLLAR=54;
+    public static final int RULE_EXPRESSION_START_TAG=44;
+    public static final int RULE_TML_EXISTS=53;
     public static final int RULE_VALIDATIONS_START_TAG=17;
     public static final int RULE_BREAK_START_TAG=23;
     public static final int RULE_NAVASCRIPT_START=4;
-    public static final int RULE_SQBRACKET_CLOSE=50;
-    public static final int RULE_DEBUG_END_TAG=41;
+    public static final int RULE_SQBRACKET_CLOSE=52;
+    public static final int RULE_DEBUG_END_TAG=43;
     public static final int RULE_METHODS_START_TAG=13;
-    public static final int RULE_MAPSTARTKEYWORD=28;
+    public static final int RULE_MAPSTARTKEYWORD=29;
     public static final int RULE_SEMICOLONQUOTE=10;
-    public static final int RULE_XML_START_ENDTAG=66;
+    public static final int RULE_XML_START_ENDTAG=68;
     public static final int RULE_VALIDATIONS_END_TAG=18;
-    public static final int RULE_WS=69;
-    public static final int RULE_XML_GT=54;
-    public static final int RULE_MAP_METHOD_ENDTAG_START=37;
-    public static final int RULE_PARAM_END_TAG=35;
-    public static final int RULE_AT=49;
-    public static final int RULE_PARAM_START_TAG=34;
+    public static final int RULE_WS=71;
+    public static final int RULE_XML_GT=56;
+    public static final int RULE_MAP_METHOD_ENDTAG_START=39;
+    public static final int RULE_PARAM_END_TAG=37;
+    public static final int RULE_AT=51;
+    public static final int RULE_PARAM_START_TAG=36;
 
         public InternalTslParser(TokenStream input) {
             super(input);
@@ -847,12 +849,13 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start rulePossibleExpression
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:390:1: rulePossibleExpression returns [EObject current=null] : ( ( ( (lv_namespace_0_0= RULE_ID ) ) ':' )? ( (lv_key_2_0= ruleAttributeName ) ) '=' ( ( RULE_QUOTEQ ( (lv_expressionValue_5_0= ruleTopLevel ) ) RULE_SEMICOLONQUOTE ) | ( (lv_value_7_0= RULE_ATTRIBUTESTRING ) ) | RULE_EMPTYSTRING ) ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:390:1: rulePossibleExpression returns [EObject current=null] : ( ( ( (lv_namespace_0_0= RULE_ID ) ) ':' )? ( (lv_key_2_0= ruleAttributeName ) ) '=' ( ( RULE_QUOTEQ ( (lv_expressionValue_5_0= ruleTopLevel ) ) RULE_SEMICOLONQUOTE ) | ( (lv_value_7_0= RULE_ATTRIBUTESTRING ) ) | ( (lv_value_8_0= RULE_EMPTYSTRING ) ) ) ) ;
     public final EObject rulePossibleExpression() throws RecognitionException {
         EObject current = null;
 
         Token lv_namespace_0_0=null;
         Token lv_value_7_0=null;
+        Token lv_value_8_0=null;
         AntlrDatatypeRuleToken lv_key_2_0 = null;
 
         EObject lv_expressionValue_5_0 = null;
@@ -861,11 +864,11 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:395:6: ( ( ( ( (lv_namespace_0_0= RULE_ID ) ) ':' )? ( (lv_key_2_0= ruleAttributeName ) ) '=' ( ( RULE_QUOTEQ ( (lv_expressionValue_5_0= ruleTopLevel ) ) RULE_SEMICOLONQUOTE ) | ( (lv_value_7_0= RULE_ATTRIBUTESTRING ) ) | RULE_EMPTYSTRING ) ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:396:1: ( ( ( (lv_namespace_0_0= RULE_ID ) ) ':' )? ( (lv_key_2_0= ruleAttributeName ) ) '=' ( ( RULE_QUOTEQ ( (lv_expressionValue_5_0= ruleTopLevel ) ) RULE_SEMICOLONQUOTE ) | ( (lv_value_7_0= RULE_ATTRIBUTESTRING ) ) | RULE_EMPTYSTRING ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:395:6: ( ( ( ( (lv_namespace_0_0= RULE_ID ) ) ':' )? ( (lv_key_2_0= ruleAttributeName ) ) '=' ( ( RULE_QUOTEQ ( (lv_expressionValue_5_0= ruleTopLevel ) ) RULE_SEMICOLONQUOTE ) | ( (lv_value_7_0= RULE_ATTRIBUTESTRING ) ) | ( (lv_value_8_0= RULE_EMPTYSTRING ) ) ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:396:1: ( ( ( (lv_namespace_0_0= RULE_ID ) ) ':' )? ( (lv_key_2_0= ruleAttributeName ) ) '=' ( ( RULE_QUOTEQ ( (lv_expressionValue_5_0= ruleTopLevel ) ) RULE_SEMICOLONQUOTE ) | ( (lv_value_7_0= RULE_ATTRIBUTESTRING ) ) | ( (lv_value_8_0= RULE_EMPTYSTRING ) ) ) )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:396:1: ( ( ( (lv_namespace_0_0= RULE_ID ) ) ':' )? ( (lv_key_2_0= ruleAttributeName ) ) '=' ( ( RULE_QUOTEQ ( (lv_expressionValue_5_0= ruleTopLevel ) ) RULE_SEMICOLONQUOTE ) | ( (lv_value_7_0= RULE_ATTRIBUTESTRING ) ) | RULE_EMPTYSTRING ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:396:2: ( ( (lv_namespace_0_0= RULE_ID ) ) ':' )? ( (lv_key_2_0= ruleAttributeName ) ) '=' ( ( RULE_QUOTEQ ( (lv_expressionValue_5_0= ruleTopLevel ) ) RULE_SEMICOLONQUOTE ) | ( (lv_value_7_0= RULE_ATTRIBUTESTRING ) ) | RULE_EMPTYSTRING )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:396:1: ( ( ( (lv_namespace_0_0= RULE_ID ) ) ':' )? ( (lv_key_2_0= ruleAttributeName ) ) '=' ( ( RULE_QUOTEQ ( (lv_expressionValue_5_0= ruleTopLevel ) ) RULE_SEMICOLONQUOTE ) | ( (lv_value_7_0= RULE_ATTRIBUTESTRING ) ) | ( (lv_value_8_0= RULE_EMPTYSTRING ) ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:396:2: ( ( (lv_namespace_0_0= RULE_ID ) ) ':' )? ( (lv_key_2_0= ruleAttributeName ) ) '=' ( ( RULE_QUOTEQ ( (lv_expressionValue_5_0= ruleTopLevel ) ) RULE_SEMICOLONQUOTE ) | ( (lv_value_7_0= RULE_ATTRIBUTESTRING ) ) | ( (lv_value_8_0= RULE_EMPTYSTRING ) ) )
             {
             // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:396:2: ( ( (lv_namespace_0_0= RULE_ID ) ) ':' )?
             int alt4=2;
@@ -874,7 +877,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
             if ( (LA4_0==RULE_ID) ) {
                 int LA4_1 = input.LA(2);
 
-                if ( (LA4_1==70) ) {
+                if ( (LA4_1==72) ) {
                     alt4=1;
                 }
             }
@@ -915,7 +918,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    match(input,70,FOLLOW_70_in_rulePossibleExpression595); 
+                    match(input,72,FOLLOW_72_in_rulePossibleExpression595); 
 
                             createLeafNode(grammarAccess.getPossibleExpressionAccess().getColonKeyword_0_1(), null); 
                         
@@ -961,11 +964,11 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            match(input,71,FOLLOW_71_in_rulePossibleExpression628); 
+            match(input,73,FOLLOW_73_in_rulePossibleExpression628); 
 
                     createLeafNode(grammarAccess.getPossibleExpressionAccess().getEqualsSignKeyword_2(), null); 
                 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:452:1: ( ( RULE_QUOTEQ ( (lv_expressionValue_5_0= ruleTopLevel ) ) RULE_SEMICOLONQUOTE ) | ( (lv_value_7_0= RULE_ATTRIBUTESTRING ) ) | RULE_EMPTYSTRING )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:452:1: ( ( RULE_QUOTEQ ( (lv_expressionValue_5_0= ruleTopLevel ) ) RULE_SEMICOLONQUOTE ) | ( (lv_value_7_0= RULE_ATTRIBUTESTRING ) ) | ( (lv_value_8_0= RULE_EMPTYSTRING ) ) )
             int alt5=3;
             switch ( input.LA(1) ) {
             case RULE_QUOTEQ:
@@ -985,7 +988,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                 break;
             default:
                 NoViableAltException nvae =
-                    new NoViableAltException("452:1: ( ( RULE_QUOTEQ ( (lv_expressionValue_5_0= ruleTopLevel ) ) RULE_SEMICOLONQUOTE ) | ( (lv_value_7_0= RULE_ATTRIBUTESTRING ) ) | RULE_EMPTYSTRING )", 5, 0, input);
+                    new NoViableAltException("452:1: ( ( RULE_QUOTEQ ( (lv_expressionValue_5_0= ruleTopLevel ) ) RULE_SEMICOLONQUOTE ) | ( (lv_value_7_0= RULE_ATTRIBUTESTRING ) ) | ( (lv_value_8_0= RULE_EMPTYSTRING ) ) )", 5, 0, input);
 
                 throw nvae;
             }
@@ -1087,12 +1090,41 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 3 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:510:6: RULE_EMPTYSTRING
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:510:6: ( (lv_value_8_0= RULE_EMPTYSTRING ) )
                     {
-                    match(input,RULE_EMPTYSTRING,FOLLOW_RULE_EMPTYSTRING_in_rulePossibleExpression711); 
-                     
-                        createLeafNode(grammarAccess.getPossibleExpressionAccess().getEMPTYSTRINGTerminalRuleCall_3_2(), null); 
-                        
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:510:6: ( (lv_value_8_0= RULE_EMPTYSTRING ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:511:1: (lv_value_8_0= RULE_EMPTYSTRING )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:511:1: (lv_value_8_0= RULE_EMPTYSTRING )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:512:3: lv_value_8_0= RULE_EMPTYSTRING
+                    {
+                    lv_value_8_0=(Token)input.LT(1);
+                    match(input,RULE_EMPTYSTRING,FOLLOW_RULE_EMPTYSTRING_in_rulePossibleExpression719); 
+
+                    			createLeafNode(grammarAccess.getPossibleExpressionAccess().getValueEMPTYSTRINGTerminalRuleCall_3_2_0(), "value"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getPossibleExpressionRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"value",
+                    	        		lv_value_8_0, 
+                    	        		"EMPTYSTRING", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
 
                     }
                     break;
@@ -1122,7 +1154,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleMethods
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:522:1: entryRuleMethods returns [EObject current=null] : iv_ruleMethods= ruleMethods EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:542:1: entryRuleMethods returns [EObject current=null] : iv_ruleMethods= ruleMethods EOF ;
     public final EObject entryRuleMethods() throws RecognitionException {
         EObject current = null;
 
@@ -1130,16 +1162,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:523:2: (iv_ruleMethods= ruleMethods EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:524:2: iv_ruleMethods= ruleMethods EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:543:2: (iv_ruleMethods= ruleMethods EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:544:2: iv_ruleMethods= ruleMethods EOF
             {
              currentNode = createCompositeNode(grammarAccess.getMethodsRule(), currentNode); 
-            pushFollow(FOLLOW_ruleMethods_in_entryRuleMethods747);
+            pushFollow(FOLLOW_ruleMethods_in_entryRuleMethods761);
             iv_ruleMethods=ruleMethods();
             _fsp--;
 
              current =iv_ruleMethods; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleMethods757); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleMethods771); 
 
             }
 
@@ -1157,28 +1189,30 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleMethods
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:531:1: ruleMethods returns [EObject current=null] : ( RULE_METHODS_START_TAG () ( ( RULE_XML_TAG_END ( (lv_method_3_0= ruleMethod ) )* RULE_METHODS_END_TAG ) | RULE_XML_TAG_SINGLEEND ) ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:551:1: ruleMethods returns [EObject current=null] : ( RULE_METHODS_START_TAG () ( ( ( (lv_splitTag_2_0= RULE_XML_TAG_END ) ) ( (lv_method_3_0= ruleMethod ) )* ( (lv_closedTag_4_0= RULE_METHODS_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND ) ) ;
     public final EObject ruleMethods() throws RecognitionException {
         EObject current = null;
 
+        Token lv_splitTag_2_0=null;
+        Token lv_closedTag_4_0=null;
         EObject lv_method_3_0 = null;
 
 
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:536:6: ( ( RULE_METHODS_START_TAG () ( ( RULE_XML_TAG_END ( (lv_method_3_0= ruleMethod ) )* RULE_METHODS_END_TAG ) | RULE_XML_TAG_SINGLEEND ) ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:537:1: ( RULE_METHODS_START_TAG () ( ( RULE_XML_TAG_END ( (lv_method_3_0= ruleMethod ) )* RULE_METHODS_END_TAG ) | RULE_XML_TAG_SINGLEEND ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:556:6: ( ( RULE_METHODS_START_TAG () ( ( ( (lv_splitTag_2_0= RULE_XML_TAG_END ) ) ( (lv_method_3_0= ruleMethod ) )* ( (lv_closedTag_4_0= RULE_METHODS_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:557:1: ( RULE_METHODS_START_TAG () ( ( ( (lv_splitTag_2_0= RULE_XML_TAG_END ) ) ( (lv_method_3_0= ruleMethod ) )* ( (lv_closedTag_4_0= RULE_METHODS_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND ) )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:537:1: ( RULE_METHODS_START_TAG () ( ( RULE_XML_TAG_END ( (lv_method_3_0= ruleMethod ) )* RULE_METHODS_END_TAG ) | RULE_XML_TAG_SINGLEEND ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:537:2: RULE_METHODS_START_TAG () ( ( RULE_XML_TAG_END ( (lv_method_3_0= ruleMethod ) )* RULE_METHODS_END_TAG ) | RULE_XML_TAG_SINGLEEND )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:557:1: ( RULE_METHODS_START_TAG () ( ( ( (lv_splitTag_2_0= RULE_XML_TAG_END ) ) ( (lv_method_3_0= ruleMethod ) )* ( (lv_closedTag_4_0= RULE_METHODS_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:557:2: RULE_METHODS_START_TAG () ( ( ( (lv_splitTag_2_0= RULE_XML_TAG_END ) ) ( (lv_method_3_0= ruleMethod ) )* ( (lv_closedTag_4_0= RULE_METHODS_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND )
             {
-            match(input,RULE_METHODS_START_TAG,FOLLOW_RULE_METHODS_START_TAG_in_ruleMethods791); 
+            match(input,RULE_METHODS_START_TAG,FOLLOW_RULE_METHODS_START_TAG_in_ruleMethods805); 
              
                 createLeafNode(grammarAccess.getMethodsAccess().getMETHODS_START_TAGTerminalRuleCall_0(), null); 
                 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:541:1: ()
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:542:5: 
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:561:1: ()
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:562:5: 
             {
              
                     temp=factory.create(grammarAccess.getMethodsAccess().getMethodsAction_1().getType().getClassifier());
@@ -1193,7 +1227,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:552:2: ( ( RULE_XML_TAG_END ( (lv_method_3_0= ruleMethod ) )* RULE_METHODS_END_TAG ) | RULE_XML_TAG_SINGLEEND )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:572:2: ( ( ( (lv_splitTag_2_0= RULE_XML_TAG_END ) ) ( (lv_method_3_0= ruleMethod ) )* ( (lv_closedTag_4_0= RULE_METHODS_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND )
             int alt7=2;
             int LA7_0 = input.LA(1);
 
@@ -1205,22 +1239,51 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("552:2: ( ( RULE_XML_TAG_END ( (lv_method_3_0= ruleMethod ) )* RULE_METHODS_END_TAG ) | RULE_XML_TAG_SINGLEEND )", 7, 0, input);
+                    new NoViableAltException("572:2: ( ( ( (lv_splitTag_2_0= RULE_XML_TAG_END ) ) ( (lv_method_3_0= ruleMethod ) )* ( (lv_closedTag_4_0= RULE_METHODS_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND )", 7, 0, input);
 
                 throw nvae;
             }
             switch (alt7) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:552:3: ( RULE_XML_TAG_END ( (lv_method_3_0= ruleMethod ) )* RULE_METHODS_END_TAG )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:572:3: ( ( (lv_splitTag_2_0= RULE_XML_TAG_END ) ) ( (lv_method_3_0= ruleMethod ) )* ( (lv_closedTag_4_0= RULE_METHODS_END_TAG ) ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:552:3: ( RULE_XML_TAG_END ( (lv_method_3_0= ruleMethod ) )* RULE_METHODS_END_TAG )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:552:4: RULE_XML_TAG_END ( (lv_method_3_0= ruleMethod ) )* RULE_METHODS_END_TAG
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:572:3: ( ( (lv_splitTag_2_0= RULE_XML_TAG_END ) ) ( (lv_method_3_0= ruleMethod ) )* ( (lv_closedTag_4_0= RULE_METHODS_END_TAG ) ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:572:4: ( (lv_splitTag_2_0= RULE_XML_TAG_END ) ) ( (lv_method_3_0= ruleMethod ) )* ( (lv_closedTag_4_0= RULE_METHODS_END_TAG ) )
                     {
-                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleMethods810); 
-                     
-                        createLeafNode(grammarAccess.getMethodsAccess().getXML_TAG_ENDTerminalRuleCall_2_0_0(), null); 
-                        
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:556:1: ( (lv_method_3_0= ruleMethod ) )*
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:572:4: ( (lv_splitTag_2_0= RULE_XML_TAG_END ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:573:1: (lv_splitTag_2_0= RULE_XML_TAG_END )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:573:1: (lv_splitTag_2_0= RULE_XML_TAG_END )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:574:3: lv_splitTag_2_0= RULE_XML_TAG_END
+                    {
+                    lv_splitTag_2_0=(Token)input.LT(1);
+                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleMethods832); 
+
+                    			createLeafNode(grammarAccess.getMethodsAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_2_0_0_0(), "splitTag"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getMethodsRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"splitTag",
+                    	        		true, 
+                    	        		"XML_TAG_END", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:596:2: ( (lv_method_3_0= ruleMethod ) )*
                     loop6:
                     do {
                         int alt6=2;
@@ -1233,15 +1296,15 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                         switch (alt6) {
                     	case 1 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:557:1: (lv_method_3_0= ruleMethod )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:597:1: (lv_method_3_0= ruleMethod )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:557:1: (lv_method_3_0= ruleMethod )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:558:3: lv_method_3_0= ruleMethod
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:597:1: (lv_method_3_0= ruleMethod )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:598:3: lv_method_3_0= ruleMethod
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getMethodsAccess().getMethodMethodParserRuleCall_2_0_1_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleMethod_in_ruleMethods830);
+                    	    pushFollow(FOLLOW_ruleMethod_in_ruleMethods858);
                     	    lv_method_3_0=ruleMethod();
                     	    _fsp--;
 
@@ -1274,10 +1337,39 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                         }
                     } while (true);
 
-                    match(input,RULE_METHODS_END_TAG,FOLLOW_RULE_METHODS_END_TAG_in_ruleMethods840); 
-                     
-                        createLeafNode(grammarAccess.getMethodsAccess().getMETHODS_END_TAGTerminalRuleCall_2_0_2(), null); 
-                        
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:620:3: ( (lv_closedTag_4_0= RULE_METHODS_END_TAG ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:621:1: (lv_closedTag_4_0= RULE_METHODS_END_TAG )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:621:1: (lv_closedTag_4_0= RULE_METHODS_END_TAG )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:622:3: lv_closedTag_4_0= RULE_METHODS_END_TAG
+                    {
+                    lv_closedTag_4_0=(Token)input.LT(1);
+                    match(input,RULE_METHODS_END_TAG,FOLLOW_RULE_METHODS_END_TAG_in_ruleMethods876); 
+
+                    			createLeafNode(grammarAccess.getMethodsAccess().getClosedTagMETHODS_END_TAGTerminalRuleCall_2_0_2_0(), "closedTag"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getMethodsRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"closedTag",
+                    	        		true, 
+                    	        		"METHODS_END_TAG", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
 
                     }
 
@@ -1285,9 +1377,9 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:585:6: RULE_XML_TAG_SINGLEEND
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:645:6: RULE_XML_TAG_SINGLEEND
                     {
-                    match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleMethods855); 
+                    match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleMethods897); 
                      
                         createLeafNode(grammarAccess.getMethodsAccess().getXML_TAG_SINGLEENDTerminalRuleCall_2_1(), null); 
                         
@@ -1320,7 +1412,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleMethod
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:597:1: entryRuleMethod returns [EObject current=null] : iv_ruleMethod= ruleMethod EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:657:1: entryRuleMethod returns [EObject current=null] : iv_ruleMethod= ruleMethod EOF ;
     public final EObject entryRuleMethod() throws RecognitionException {
         EObject current = null;
 
@@ -1328,16 +1420,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:598:2: (iv_ruleMethod= ruleMethod EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:599:2: iv_ruleMethod= ruleMethod EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:658:2: (iv_ruleMethod= ruleMethod EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:659:2: iv_ruleMethod= ruleMethod EOF
             {
              currentNode = createCompositeNode(grammarAccess.getMethodRule(), currentNode); 
-            pushFollow(FOLLOW_ruleMethod_in_entryRuleMethod891);
+            pushFollow(FOLLOW_ruleMethod_in_entryRuleMethod933);
             iv_ruleMethod=ruleMethod();
             _fsp--;
 
              current =iv_ruleMethod; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleMethod901); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleMethod943); 
 
             }
 
@@ -1355,10 +1447,12 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleMethod
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:606:1: ruleMethod returns [EObject current=null] : ( RULE_METHOD_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( RULE_XML_TAG_END ( (lv_children_4_0= ruleRequired ) )* RULE_METHOD_END_TAG ) | RULE_XML_TAG_SINGLEEND ) ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:666:1: ruleMethod returns [EObject current=null] : ( RULE_METHOD_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_children_4_0= ruleRequired ) )* ( (lv_closedTag_5_0= RULE_METHOD_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND ) ) ;
     public final EObject ruleMethod() throws RecognitionException {
         EObject current = null;
 
+        Token lv_splitTag_3_0=null;
+        Token lv_closedTag_5_0=null;
         EObject lv_attributes_2_0 = null;
 
         EObject lv_children_4_0 = null;
@@ -1367,18 +1461,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:611:6: ( ( RULE_METHOD_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( RULE_XML_TAG_END ( (lv_children_4_0= ruleRequired ) )* RULE_METHOD_END_TAG ) | RULE_XML_TAG_SINGLEEND ) ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:612:1: ( RULE_METHOD_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( RULE_XML_TAG_END ( (lv_children_4_0= ruleRequired ) )* RULE_METHOD_END_TAG ) | RULE_XML_TAG_SINGLEEND ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:671:6: ( ( RULE_METHOD_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_children_4_0= ruleRequired ) )* ( (lv_closedTag_5_0= RULE_METHOD_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:672:1: ( RULE_METHOD_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_children_4_0= ruleRequired ) )* ( (lv_closedTag_5_0= RULE_METHOD_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND ) )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:612:1: ( RULE_METHOD_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( RULE_XML_TAG_END ( (lv_children_4_0= ruleRequired ) )* RULE_METHOD_END_TAG ) | RULE_XML_TAG_SINGLEEND ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:612:2: RULE_METHOD_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( RULE_XML_TAG_END ( (lv_children_4_0= ruleRequired ) )* RULE_METHOD_END_TAG ) | RULE_XML_TAG_SINGLEEND )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:672:1: ( RULE_METHOD_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_children_4_0= ruleRequired ) )* ( (lv_closedTag_5_0= RULE_METHOD_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:672:2: RULE_METHOD_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_children_4_0= ruleRequired ) )* ( (lv_closedTag_5_0= RULE_METHOD_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND )
             {
-            match(input,RULE_METHOD_START_TAG,FOLLOW_RULE_METHOD_START_TAG_in_ruleMethod935); 
+            match(input,RULE_METHOD_START_TAG,FOLLOW_RULE_METHOD_START_TAG_in_ruleMethod977); 
              
                 createLeafNode(grammarAccess.getMethodAccess().getMETHOD_START_TAGTerminalRuleCall_0(), null); 
                 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:616:1: ()
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:617:5: 
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:676:1: ()
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:677:5: 
             {
              
                     temp=factory.create(grammarAccess.getMethodAccess().getMethodAction_1().getType().getClassifier());
@@ -1393,7 +1487,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:627:2: ( (lv_attributes_2_0= rulePossibleExpression ) )*
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:687:2: ( (lv_attributes_2_0= rulePossibleExpression ) )*
             loop8:
             do {
                 int alt8=2;
@@ -1406,15 +1500,15 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                 switch (alt8) {
             	case 1 :
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:628:1: (lv_attributes_2_0= rulePossibleExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:688:1: (lv_attributes_2_0= rulePossibleExpression )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:628:1: (lv_attributes_2_0= rulePossibleExpression )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:629:3: lv_attributes_2_0= rulePossibleExpression
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:688:1: (lv_attributes_2_0= rulePossibleExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:689:3: lv_attributes_2_0= rulePossibleExpression
             	    {
             	     
             	    	        currentNode=createCompositeNode(grammarAccess.getMethodAccess().getAttributesPossibleExpressionParserRuleCall_2_0(), currentNode); 
             	    	    
-            	    pushFollow(FOLLOW_rulePossibleExpression_in_ruleMethod964);
+            	    pushFollow(FOLLOW_rulePossibleExpression_in_ruleMethod1006);
             	    lv_attributes_2_0=rulePossibleExpression();
             	    _fsp--;
 
@@ -1447,7 +1541,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                 }
             } while (true);
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:651:3: ( ( RULE_XML_TAG_END ( (lv_children_4_0= ruleRequired ) )* RULE_METHOD_END_TAG ) | RULE_XML_TAG_SINGLEEND )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:711:3: ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_children_4_0= ruleRequired ) )* ( (lv_closedTag_5_0= RULE_METHOD_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND )
             int alt10=2;
             int LA10_0 = input.LA(1);
 
@@ -1459,22 +1553,51 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("651:3: ( ( RULE_XML_TAG_END ( (lv_children_4_0= ruleRequired ) )* RULE_METHOD_END_TAG ) | RULE_XML_TAG_SINGLEEND )", 10, 0, input);
+                    new NoViableAltException("711:3: ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_children_4_0= ruleRequired ) )* ( (lv_closedTag_5_0= RULE_METHOD_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND )", 10, 0, input);
 
                 throw nvae;
             }
             switch (alt10) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:651:4: ( RULE_XML_TAG_END ( (lv_children_4_0= ruleRequired ) )* RULE_METHOD_END_TAG )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:711:4: ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_children_4_0= ruleRequired ) )* ( (lv_closedTag_5_0= RULE_METHOD_END_TAG ) ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:651:4: ( RULE_XML_TAG_END ( (lv_children_4_0= ruleRequired ) )* RULE_METHOD_END_TAG )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:651:5: RULE_XML_TAG_END ( (lv_children_4_0= ruleRequired ) )* RULE_METHOD_END_TAG
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:711:4: ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_children_4_0= ruleRequired ) )* ( (lv_closedTag_5_0= RULE_METHOD_END_TAG ) ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:711:5: ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_children_4_0= ruleRequired ) )* ( (lv_closedTag_5_0= RULE_METHOD_END_TAG ) )
                     {
-                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleMethod976); 
-                     
-                        createLeafNode(grammarAccess.getMethodAccess().getXML_TAG_ENDTerminalRuleCall_3_0_0(), null); 
-                        
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:655:1: ( (lv_children_4_0= ruleRequired ) )*
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:711:5: ( (lv_splitTag_3_0= RULE_XML_TAG_END ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:712:1: (lv_splitTag_3_0= RULE_XML_TAG_END )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:712:1: (lv_splitTag_3_0= RULE_XML_TAG_END )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:713:3: lv_splitTag_3_0= RULE_XML_TAG_END
+                    {
+                    lv_splitTag_3_0=(Token)input.LT(1);
+                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleMethod1026); 
+
+                    			createLeafNode(grammarAccess.getMethodAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_0_0_0(), "splitTag"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getMethodRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"splitTag",
+                    	        		true, 
+                    	        		"XML_TAG_END", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:735:2: ( (lv_children_4_0= ruleRequired ) )*
                     loop9:
                     do {
                         int alt9=2;
@@ -1487,15 +1610,15 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                         switch (alt9) {
                     	case 1 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:656:1: (lv_children_4_0= ruleRequired )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:736:1: (lv_children_4_0= ruleRequired )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:656:1: (lv_children_4_0= ruleRequired )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:657:3: lv_children_4_0= ruleRequired
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:736:1: (lv_children_4_0= ruleRequired )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:737:3: lv_children_4_0= ruleRequired
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getMethodAccess().getChildrenRequiredParserRuleCall_3_0_1_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleRequired_in_ruleMethod996);
+                    	    pushFollow(FOLLOW_ruleRequired_in_ruleMethod1052);
                     	    lv_children_4_0=ruleRequired();
                     	    _fsp--;
 
@@ -1528,10 +1651,39 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                         }
                     } while (true);
 
-                    match(input,RULE_METHOD_END_TAG,FOLLOW_RULE_METHOD_END_TAG_in_ruleMethod1006); 
-                     
-                        createLeafNode(grammarAccess.getMethodAccess().getMETHOD_END_TAGTerminalRuleCall_3_0_2(), null); 
-                        
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:759:3: ( (lv_closedTag_5_0= RULE_METHOD_END_TAG ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:760:1: (lv_closedTag_5_0= RULE_METHOD_END_TAG )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:760:1: (lv_closedTag_5_0= RULE_METHOD_END_TAG )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:761:3: lv_closedTag_5_0= RULE_METHOD_END_TAG
+                    {
+                    lv_closedTag_5_0=(Token)input.LT(1);
+                    match(input,RULE_METHOD_END_TAG,FOLLOW_RULE_METHOD_END_TAG_in_ruleMethod1070); 
+
+                    			createLeafNode(grammarAccess.getMethodAccess().getClosedTagMETHOD_END_TAGTerminalRuleCall_3_0_2_0(), "closedTag"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getMethodRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"closedTag",
+                    	        		true, 
+                    	        		"METHOD_END_TAG", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
 
                     }
 
@@ -1539,9 +1691,9 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:684:6: RULE_XML_TAG_SINGLEEND
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:784:6: RULE_XML_TAG_SINGLEEND
                     {
-                    match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleMethod1021); 
+                    match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleMethod1091); 
                      
                         createLeafNode(grammarAccess.getMethodAccess().getXML_TAG_SINGLEENDTerminalRuleCall_3_1(), null); 
                         
@@ -1574,7 +1726,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleValidations
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:696:1: entryRuleValidations returns [EObject current=null] : iv_ruleValidations= ruleValidations EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:796:1: entryRuleValidations returns [EObject current=null] : iv_ruleValidations= ruleValidations EOF ;
     public final EObject entryRuleValidations() throws RecognitionException {
         EObject current = null;
 
@@ -1582,16 +1734,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:697:2: (iv_ruleValidations= ruleValidations EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:698:2: iv_ruleValidations= ruleValidations EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:797:2: (iv_ruleValidations= ruleValidations EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:798:2: iv_ruleValidations= ruleValidations EOF
             {
              currentNode = createCompositeNode(grammarAccess.getValidationsRule(), currentNode); 
-            pushFollow(FOLLOW_ruleValidations_in_entryRuleValidations1057);
+            pushFollow(FOLLOW_ruleValidations_in_entryRuleValidations1127);
             iv_ruleValidations=ruleValidations();
             _fsp--;
 
              current =iv_ruleValidations; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleValidations1067); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleValidations1137); 
 
             }
 
@@ -1609,28 +1761,30 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleValidations
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:705:1: ruleValidations returns [EObject current=null] : ( RULE_VALIDATIONS_START_TAG () ( ( RULE_XML_TAG_END ( (lv_children_3_0= ruleCheck ) )* RULE_VALIDATIONS_END_TAG ) | RULE_XML_TAG_SINGLEEND ) ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:805:1: ruleValidations returns [EObject current=null] : ( RULE_VALIDATIONS_START_TAG () ( ( ( (lv_splitTag_2_0= RULE_XML_TAG_END ) ) ( (lv_children_3_0= ruleCheck ) )* ( (lv_closedTag_4_0= RULE_VALIDATIONS_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND ) ) ;
     public final EObject ruleValidations() throws RecognitionException {
         EObject current = null;
 
+        Token lv_splitTag_2_0=null;
+        Token lv_closedTag_4_0=null;
         EObject lv_children_3_0 = null;
 
 
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:710:6: ( ( RULE_VALIDATIONS_START_TAG () ( ( RULE_XML_TAG_END ( (lv_children_3_0= ruleCheck ) )* RULE_VALIDATIONS_END_TAG ) | RULE_XML_TAG_SINGLEEND ) ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:711:1: ( RULE_VALIDATIONS_START_TAG () ( ( RULE_XML_TAG_END ( (lv_children_3_0= ruleCheck ) )* RULE_VALIDATIONS_END_TAG ) | RULE_XML_TAG_SINGLEEND ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:810:6: ( ( RULE_VALIDATIONS_START_TAG () ( ( ( (lv_splitTag_2_0= RULE_XML_TAG_END ) ) ( (lv_children_3_0= ruleCheck ) )* ( (lv_closedTag_4_0= RULE_VALIDATIONS_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:811:1: ( RULE_VALIDATIONS_START_TAG () ( ( ( (lv_splitTag_2_0= RULE_XML_TAG_END ) ) ( (lv_children_3_0= ruleCheck ) )* ( (lv_closedTag_4_0= RULE_VALIDATIONS_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND ) )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:711:1: ( RULE_VALIDATIONS_START_TAG () ( ( RULE_XML_TAG_END ( (lv_children_3_0= ruleCheck ) )* RULE_VALIDATIONS_END_TAG ) | RULE_XML_TAG_SINGLEEND ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:711:2: RULE_VALIDATIONS_START_TAG () ( ( RULE_XML_TAG_END ( (lv_children_3_0= ruleCheck ) )* RULE_VALIDATIONS_END_TAG ) | RULE_XML_TAG_SINGLEEND )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:811:1: ( RULE_VALIDATIONS_START_TAG () ( ( ( (lv_splitTag_2_0= RULE_XML_TAG_END ) ) ( (lv_children_3_0= ruleCheck ) )* ( (lv_closedTag_4_0= RULE_VALIDATIONS_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:811:2: RULE_VALIDATIONS_START_TAG () ( ( ( (lv_splitTag_2_0= RULE_XML_TAG_END ) ) ( (lv_children_3_0= ruleCheck ) )* ( (lv_closedTag_4_0= RULE_VALIDATIONS_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND )
             {
-            match(input,RULE_VALIDATIONS_START_TAG,FOLLOW_RULE_VALIDATIONS_START_TAG_in_ruleValidations1101); 
+            match(input,RULE_VALIDATIONS_START_TAG,FOLLOW_RULE_VALIDATIONS_START_TAG_in_ruleValidations1171); 
              
                 createLeafNode(grammarAccess.getValidationsAccess().getVALIDATIONS_START_TAGTerminalRuleCall_0(), null); 
                 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:715:1: ()
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:716:5: 
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:815:1: ()
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:816:5: 
             {
              
                     temp=factory.create(grammarAccess.getValidationsAccess().getValidationsAction_1().getType().getClassifier());
@@ -1645,7 +1799,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:726:2: ( ( RULE_XML_TAG_END ( (lv_children_3_0= ruleCheck ) )* RULE_VALIDATIONS_END_TAG ) | RULE_XML_TAG_SINGLEEND )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:826:2: ( ( ( (lv_splitTag_2_0= RULE_XML_TAG_END ) ) ( (lv_children_3_0= ruleCheck ) )* ( (lv_closedTag_4_0= RULE_VALIDATIONS_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND )
             int alt12=2;
             int LA12_0 = input.LA(1);
 
@@ -1657,22 +1811,51 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("726:2: ( ( RULE_XML_TAG_END ( (lv_children_3_0= ruleCheck ) )* RULE_VALIDATIONS_END_TAG ) | RULE_XML_TAG_SINGLEEND )", 12, 0, input);
+                    new NoViableAltException("826:2: ( ( ( (lv_splitTag_2_0= RULE_XML_TAG_END ) ) ( (lv_children_3_0= ruleCheck ) )* ( (lv_closedTag_4_0= RULE_VALIDATIONS_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND )", 12, 0, input);
 
                 throw nvae;
             }
             switch (alt12) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:726:3: ( RULE_XML_TAG_END ( (lv_children_3_0= ruleCheck ) )* RULE_VALIDATIONS_END_TAG )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:826:3: ( ( (lv_splitTag_2_0= RULE_XML_TAG_END ) ) ( (lv_children_3_0= ruleCheck ) )* ( (lv_closedTag_4_0= RULE_VALIDATIONS_END_TAG ) ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:726:3: ( RULE_XML_TAG_END ( (lv_children_3_0= ruleCheck ) )* RULE_VALIDATIONS_END_TAG )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:726:4: RULE_XML_TAG_END ( (lv_children_3_0= ruleCheck ) )* RULE_VALIDATIONS_END_TAG
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:826:3: ( ( (lv_splitTag_2_0= RULE_XML_TAG_END ) ) ( (lv_children_3_0= ruleCheck ) )* ( (lv_closedTag_4_0= RULE_VALIDATIONS_END_TAG ) ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:826:4: ( (lv_splitTag_2_0= RULE_XML_TAG_END ) ) ( (lv_children_3_0= ruleCheck ) )* ( (lv_closedTag_4_0= RULE_VALIDATIONS_END_TAG ) )
                     {
-                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleValidations1120); 
-                     
-                        createLeafNode(grammarAccess.getValidationsAccess().getXML_TAG_ENDTerminalRuleCall_2_0_0(), null); 
-                        
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:730:1: ( (lv_children_3_0= ruleCheck ) )*
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:826:4: ( (lv_splitTag_2_0= RULE_XML_TAG_END ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:827:1: (lv_splitTag_2_0= RULE_XML_TAG_END )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:827:1: (lv_splitTag_2_0= RULE_XML_TAG_END )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:828:3: lv_splitTag_2_0= RULE_XML_TAG_END
+                    {
+                    lv_splitTag_2_0=(Token)input.LT(1);
+                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleValidations1198); 
+
+                    			createLeafNode(grammarAccess.getValidationsAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_2_0_0_0(), "splitTag"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getValidationsRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"splitTag",
+                    	        		true, 
+                    	        		"XML_TAG_END", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:850:2: ( (lv_children_3_0= ruleCheck ) )*
                     loop11:
                     do {
                         int alt11=2;
@@ -1685,15 +1868,15 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                         switch (alt11) {
                     	case 1 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:731:1: (lv_children_3_0= ruleCheck )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:851:1: (lv_children_3_0= ruleCheck )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:731:1: (lv_children_3_0= ruleCheck )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:732:3: lv_children_3_0= ruleCheck
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:851:1: (lv_children_3_0= ruleCheck )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:852:3: lv_children_3_0= ruleCheck
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getValidationsAccess().getChildrenCheckParserRuleCall_2_0_1_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleCheck_in_ruleValidations1140);
+                    	    pushFollow(FOLLOW_ruleCheck_in_ruleValidations1224);
                     	    lv_children_3_0=ruleCheck();
                     	    _fsp--;
 
@@ -1726,10 +1909,39 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                         }
                     } while (true);
 
-                    match(input,RULE_VALIDATIONS_END_TAG,FOLLOW_RULE_VALIDATIONS_END_TAG_in_ruleValidations1150); 
-                     
-                        createLeafNode(grammarAccess.getValidationsAccess().getVALIDATIONS_END_TAGTerminalRuleCall_2_0_2(), null); 
-                        
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:874:3: ( (lv_closedTag_4_0= RULE_VALIDATIONS_END_TAG ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:875:1: (lv_closedTag_4_0= RULE_VALIDATIONS_END_TAG )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:875:1: (lv_closedTag_4_0= RULE_VALIDATIONS_END_TAG )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:876:3: lv_closedTag_4_0= RULE_VALIDATIONS_END_TAG
+                    {
+                    lv_closedTag_4_0=(Token)input.LT(1);
+                    match(input,RULE_VALIDATIONS_END_TAG,FOLLOW_RULE_VALIDATIONS_END_TAG_in_ruleValidations1242); 
+
+                    			createLeafNode(grammarAccess.getValidationsAccess().getClosedTagVALIDATIONS_END_TAGTerminalRuleCall_2_0_2_0(), "closedTag"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getValidationsRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"closedTag",
+                    	        		true, 
+                    	        		"VALIDATIONS_END_TAG", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
 
                     }
 
@@ -1737,9 +1949,9 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:759:6: RULE_XML_TAG_SINGLEEND
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:899:6: RULE_XML_TAG_SINGLEEND
                     {
-                    match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleValidations1165); 
+                    match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleValidations1263); 
                      
                         createLeafNode(grammarAccess.getValidationsAccess().getXML_TAG_SINGLEENDTerminalRuleCall_2_1(), null); 
                         
@@ -1772,7 +1984,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleCheck
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:771:1: entryRuleCheck returns [EObject current=null] : iv_ruleCheck= ruleCheck EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:911:1: entryRuleCheck returns [EObject current=null] : iv_ruleCheck= ruleCheck EOF ;
     public final EObject entryRuleCheck() throws RecognitionException {
         EObject current = null;
 
@@ -1780,16 +1992,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:772:2: (iv_ruleCheck= ruleCheck EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:773:2: iv_ruleCheck= ruleCheck EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:912:2: (iv_ruleCheck= ruleCheck EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:913:2: iv_ruleCheck= ruleCheck EOF
             {
              currentNode = createCompositeNode(grammarAccess.getCheckRule(), currentNode); 
-            pushFollow(FOLLOW_ruleCheck_in_entryRuleCheck1201);
+            pushFollow(FOLLOW_ruleCheck_in_entryRuleCheck1299);
             iv_ruleCheck=ruleCheck();
             _fsp--;
 
              current =iv_ruleCheck; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleCheck1211); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleCheck1309); 
 
             }
 
@@ -1807,10 +2019,12 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleCheck
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:780:1: ruleCheck returns [EObject current=null] : ( RULE_CHECK_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( RULE_XML_TAG_END ( (lv_expression_4_0= ruleTopLevel ) ) RULE_CHECK_END_TAG ) | RULE_XML_TAG_SINGLEEND ) ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:920:1: ruleCheck returns [EObject current=null] : ( RULE_CHECK_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_expression_4_0= ruleTopLevel ) ) ( (lv_closedTag_5_0= RULE_CHECK_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND ) ) ;
     public final EObject ruleCheck() throws RecognitionException {
         EObject current = null;
 
+        Token lv_splitTag_3_0=null;
+        Token lv_closedTag_5_0=null;
         EObject lv_attributes_2_0 = null;
 
         EObject lv_expression_4_0 = null;
@@ -1819,18 +2033,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:785:6: ( ( RULE_CHECK_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( RULE_XML_TAG_END ( (lv_expression_4_0= ruleTopLevel ) ) RULE_CHECK_END_TAG ) | RULE_XML_TAG_SINGLEEND ) ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:786:1: ( RULE_CHECK_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( RULE_XML_TAG_END ( (lv_expression_4_0= ruleTopLevel ) ) RULE_CHECK_END_TAG ) | RULE_XML_TAG_SINGLEEND ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:925:6: ( ( RULE_CHECK_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_expression_4_0= ruleTopLevel ) ) ( (lv_closedTag_5_0= RULE_CHECK_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:926:1: ( RULE_CHECK_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_expression_4_0= ruleTopLevel ) ) ( (lv_closedTag_5_0= RULE_CHECK_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND ) )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:786:1: ( RULE_CHECK_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( RULE_XML_TAG_END ( (lv_expression_4_0= ruleTopLevel ) ) RULE_CHECK_END_TAG ) | RULE_XML_TAG_SINGLEEND ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:786:2: RULE_CHECK_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( RULE_XML_TAG_END ( (lv_expression_4_0= ruleTopLevel ) ) RULE_CHECK_END_TAG ) | RULE_XML_TAG_SINGLEEND )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:926:1: ( RULE_CHECK_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_expression_4_0= ruleTopLevel ) ) ( (lv_closedTag_5_0= RULE_CHECK_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:926:2: RULE_CHECK_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_expression_4_0= ruleTopLevel ) ) ( (lv_closedTag_5_0= RULE_CHECK_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND )
             {
-            match(input,RULE_CHECK_START_TAG,FOLLOW_RULE_CHECK_START_TAG_in_ruleCheck1245); 
+            match(input,RULE_CHECK_START_TAG,FOLLOW_RULE_CHECK_START_TAG_in_ruleCheck1343); 
              
                 createLeafNode(grammarAccess.getCheckAccess().getCHECK_START_TAGTerminalRuleCall_0(), null); 
                 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:790:1: ()
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:791:5: 
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:930:1: ()
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:931:5: 
             {
              
                     temp=factory.create(grammarAccess.getCheckAccess().getCheckAction_1().getType().getClassifier());
@@ -1845,7 +2059,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:801:2: ( (lv_attributes_2_0= rulePossibleExpression ) )*
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:941:2: ( (lv_attributes_2_0= rulePossibleExpression ) )*
             loop13:
             do {
                 int alt13=2;
@@ -1858,15 +2072,15 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                 switch (alt13) {
             	case 1 :
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:802:1: (lv_attributes_2_0= rulePossibleExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:942:1: (lv_attributes_2_0= rulePossibleExpression )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:802:1: (lv_attributes_2_0= rulePossibleExpression )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:803:3: lv_attributes_2_0= rulePossibleExpression
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:942:1: (lv_attributes_2_0= rulePossibleExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:943:3: lv_attributes_2_0= rulePossibleExpression
             	    {
             	     
             	    	        currentNode=createCompositeNode(grammarAccess.getCheckAccess().getAttributesPossibleExpressionParserRuleCall_2_0(), currentNode); 
             	    	    
-            	    pushFollow(FOLLOW_rulePossibleExpression_in_ruleCheck1274);
+            	    pushFollow(FOLLOW_rulePossibleExpression_in_ruleCheck1372);
             	    lv_attributes_2_0=rulePossibleExpression();
             	    _fsp--;
 
@@ -1899,7 +2113,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                 }
             } while (true);
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:825:3: ( ( RULE_XML_TAG_END ( (lv_expression_4_0= ruleTopLevel ) ) RULE_CHECK_END_TAG ) | RULE_XML_TAG_SINGLEEND )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:965:3: ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_expression_4_0= ruleTopLevel ) ) ( (lv_closedTag_5_0= RULE_CHECK_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND )
             int alt14=2;
             int LA14_0 = input.LA(1);
 
@@ -1911,31 +2125,60 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("825:3: ( ( RULE_XML_TAG_END ( (lv_expression_4_0= ruleTopLevel ) ) RULE_CHECK_END_TAG ) | RULE_XML_TAG_SINGLEEND )", 14, 0, input);
+                    new NoViableAltException("965:3: ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_expression_4_0= ruleTopLevel ) ) ( (lv_closedTag_5_0= RULE_CHECK_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND )", 14, 0, input);
 
                 throw nvae;
             }
             switch (alt14) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:825:4: ( RULE_XML_TAG_END ( (lv_expression_4_0= ruleTopLevel ) ) RULE_CHECK_END_TAG )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:965:4: ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_expression_4_0= ruleTopLevel ) ) ( (lv_closedTag_5_0= RULE_CHECK_END_TAG ) ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:825:4: ( RULE_XML_TAG_END ( (lv_expression_4_0= ruleTopLevel ) ) RULE_CHECK_END_TAG )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:825:5: RULE_XML_TAG_END ( (lv_expression_4_0= ruleTopLevel ) ) RULE_CHECK_END_TAG
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:965:4: ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_expression_4_0= ruleTopLevel ) ) ( (lv_closedTag_5_0= RULE_CHECK_END_TAG ) ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:965:5: ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_expression_4_0= ruleTopLevel ) ) ( (lv_closedTag_5_0= RULE_CHECK_END_TAG ) )
                     {
-                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleCheck1286); 
-                     
-                        createLeafNode(grammarAccess.getCheckAccess().getXML_TAG_ENDTerminalRuleCall_3_0_0(), null); 
-                        
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:829:1: ( (lv_expression_4_0= ruleTopLevel ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:830:1: (lv_expression_4_0= ruleTopLevel )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:965:5: ( (lv_splitTag_3_0= RULE_XML_TAG_END ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:966:1: (lv_splitTag_3_0= RULE_XML_TAG_END )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:830:1: (lv_expression_4_0= ruleTopLevel )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:831:3: lv_expression_4_0= ruleTopLevel
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:966:1: (lv_splitTag_3_0= RULE_XML_TAG_END )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:967:3: lv_splitTag_3_0= RULE_XML_TAG_END
+                    {
+                    lv_splitTag_3_0=(Token)input.LT(1);
+                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleCheck1392); 
+
+                    			createLeafNode(grammarAccess.getCheckAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_0_0_0(), "splitTag"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getCheckRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"splitTag",
+                    	        		true, 
+                    	        		"XML_TAG_END", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:989:2: ( (lv_expression_4_0= ruleTopLevel ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:990:1: (lv_expression_4_0= ruleTopLevel )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:990:1: (lv_expression_4_0= ruleTopLevel )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:991:3: lv_expression_4_0= ruleTopLevel
                     {
                      
                     	        currentNode=createCompositeNode(grammarAccess.getCheckAccess().getExpressionTopLevelParserRuleCall_3_0_1_0(), currentNode); 
                     	    
-                    pushFollow(FOLLOW_ruleTopLevel_in_ruleCheck1306);
+                    pushFollow(FOLLOW_ruleTopLevel_in_ruleCheck1418);
                     lv_expression_4_0=ruleTopLevel();
                     _fsp--;
 
@@ -1962,10 +2205,39 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    match(input,RULE_CHECK_END_TAG,FOLLOW_RULE_CHECK_END_TAG_in_ruleCheck1315); 
-                     
-                        createLeafNode(grammarAccess.getCheckAccess().getCHECK_END_TAGTerminalRuleCall_3_0_2(), null); 
-                        
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1013:2: ( (lv_closedTag_5_0= RULE_CHECK_END_TAG ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1014:1: (lv_closedTag_5_0= RULE_CHECK_END_TAG )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1014:1: (lv_closedTag_5_0= RULE_CHECK_END_TAG )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1015:3: lv_closedTag_5_0= RULE_CHECK_END_TAG
+                    {
+                    lv_closedTag_5_0=(Token)input.LT(1);
+                    match(input,RULE_CHECK_END_TAG,FOLLOW_RULE_CHECK_END_TAG_in_ruleCheck1435); 
+
+                    			createLeafNode(grammarAccess.getCheckAccess().getClosedTagCHECK_END_TAGTerminalRuleCall_3_0_2_0(), "closedTag"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getCheckRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"closedTag",
+                    	        		true, 
+                    	        		"CHECK_END_TAG", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
 
                     }
 
@@ -1973,9 +2245,9 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:858:6: RULE_XML_TAG_SINGLEEND
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1038:6: RULE_XML_TAG_SINGLEEND
                     {
-                    match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleCheck1330); 
+                    match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleCheck1456); 
                      
                         createLeafNode(grammarAccess.getCheckAccess().getXML_TAG_SINGLEENDTerminalRuleCall_3_1(), null); 
                         
@@ -2008,7 +2280,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleComment
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:870:1: entryRuleComment returns [EObject current=null] : iv_ruleComment= ruleComment EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1050:1: entryRuleComment returns [EObject current=null] : iv_ruleComment= ruleComment EOF ;
     public final EObject entryRuleComment() throws RecognitionException {
         EObject current = null;
 
@@ -2016,16 +2288,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:871:2: (iv_ruleComment= ruleComment EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:872:2: iv_ruleComment= ruleComment EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1051:2: (iv_ruleComment= ruleComment EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1052:2: iv_ruleComment= ruleComment EOF
             {
              currentNode = createCompositeNode(grammarAccess.getCommentRule(), currentNode); 
-            pushFollow(FOLLOW_ruleComment_in_entryRuleComment1366);
+            pushFollow(FOLLOW_ruleComment_in_entryRuleComment1492);
             iv_ruleComment=ruleComment();
             _fsp--;
 
              current =iv_ruleComment; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleComment1376); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleComment1502); 
 
             }
 
@@ -2043,28 +2315,30 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleComment
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:879:1: ruleComment returns [EObject current=null] : ( RULE_COMMENT_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( RULE_XML_TAG_END RULE_COMMENT_END_TAG ) | RULE_XML_TAG_SINGLEEND ) ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1059:1: ruleComment returns [EObject current=null] : ( RULE_COMMENT_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_COMMENT_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND ) ) ;
     public final EObject ruleComment() throws RecognitionException {
         EObject current = null;
 
+        Token lv_splitTag_3_0=null;
+        Token lv_closedTag_4_0=null;
         EObject lv_attributes_2_0 = null;
 
 
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:884:6: ( ( RULE_COMMENT_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( RULE_XML_TAG_END RULE_COMMENT_END_TAG ) | RULE_XML_TAG_SINGLEEND ) ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:885:1: ( RULE_COMMENT_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( RULE_XML_TAG_END RULE_COMMENT_END_TAG ) | RULE_XML_TAG_SINGLEEND ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1064:6: ( ( RULE_COMMENT_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_COMMENT_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1065:1: ( RULE_COMMENT_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_COMMENT_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND ) )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:885:1: ( RULE_COMMENT_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( RULE_XML_TAG_END RULE_COMMENT_END_TAG ) | RULE_XML_TAG_SINGLEEND ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:885:2: RULE_COMMENT_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( RULE_XML_TAG_END RULE_COMMENT_END_TAG ) | RULE_XML_TAG_SINGLEEND )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1065:1: ( RULE_COMMENT_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_COMMENT_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1065:2: RULE_COMMENT_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_COMMENT_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND )
             {
-            match(input,RULE_COMMENT_START_TAG,FOLLOW_RULE_COMMENT_START_TAG_in_ruleComment1410); 
+            match(input,RULE_COMMENT_START_TAG,FOLLOW_RULE_COMMENT_START_TAG_in_ruleComment1536); 
              
                 createLeafNode(grammarAccess.getCommentAccess().getCOMMENT_START_TAGTerminalRuleCall_0(), null); 
                 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:889:1: ()
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:890:5: 
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1069:1: ()
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1070:5: 
             {
              
                     temp=factory.create(grammarAccess.getCommentAccess().getCommentAction_1().getType().getClassifier());
@@ -2079,7 +2353,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:900:2: ( (lv_attributes_2_0= rulePossibleExpression ) )*
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1080:2: ( (lv_attributes_2_0= rulePossibleExpression ) )*
             loop15:
             do {
                 int alt15=2;
@@ -2092,15 +2366,15 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                 switch (alt15) {
             	case 1 :
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:901:1: (lv_attributes_2_0= rulePossibleExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1081:1: (lv_attributes_2_0= rulePossibleExpression )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:901:1: (lv_attributes_2_0= rulePossibleExpression )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:902:3: lv_attributes_2_0= rulePossibleExpression
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1081:1: (lv_attributes_2_0= rulePossibleExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1082:3: lv_attributes_2_0= rulePossibleExpression
             	    {
             	     
             	    	        currentNode=createCompositeNode(grammarAccess.getCommentAccess().getAttributesPossibleExpressionParserRuleCall_2_0(), currentNode); 
             	    	    
-            	    pushFollow(FOLLOW_rulePossibleExpression_in_ruleComment1439);
+            	    pushFollow(FOLLOW_rulePossibleExpression_in_ruleComment1565);
             	    lv_attributes_2_0=rulePossibleExpression();
             	    _fsp--;
 
@@ -2133,7 +2407,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                 }
             } while (true);
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:924:3: ( ( RULE_XML_TAG_END RULE_COMMENT_END_TAG ) | RULE_XML_TAG_SINGLEEND )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1104:3: ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_COMMENT_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND )
             int alt16=2;
             int LA16_0 = input.LA(1);
 
@@ -2145,25 +2419,83 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("924:3: ( ( RULE_XML_TAG_END RULE_COMMENT_END_TAG ) | RULE_XML_TAG_SINGLEEND )", 16, 0, input);
+                    new NoViableAltException("1104:3: ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_COMMENT_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND )", 16, 0, input);
 
                 throw nvae;
             }
             switch (alt16) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:924:4: ( RULE_XML_TAG_END RULE_COMMENT_END_TAG )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1104:4: ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_COMMENT_END_TAG ) ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:924:4: ( RULE_XML_TAG_END RULE_COMMENT_END_TAG )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:924:5: RULE_XML_TAG_END RULE_COMMENT_END_TAG
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1104:4: ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_COMMENT_END_TAG ) ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1104:5: ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_COMMENT_END_TAG ) )
                     {
-                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleComment1451); 
-                     
-                        createLeafNode(grammarAccess.getCommentAccess().getXML_TAG_ENDTerminalRuleCall_3_0_0(), null); 
-                        
-                    match(input,RULE_COMMENT_END_TAG,FOLLOW_RULE_COMMENT_END_TAG_in_ruleComment1459); 
-                     
-                        createLeafNode(grammarAccess.getCommentAccess().getCOMMENT_END_TAGTerminalRuleCall_3_0_1(), null); 
-                        
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1104:5: ( (lv_splitTag_3_0= RULE_XML_TAG_END ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1105:1: (lv_splitTag_3_0= RULE_XML_TAG_END )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1105:1: (lv_splitTag_3_0= RULE_XML_TAG_END )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1106:3: lv_splitTag_3_0= RULE_XML_TAG_END
+                    {
+                    lv_splitTag_3_0=(Token)input.LT(1);
+                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleComment1585); 
+
+                    			createLeafNode(grammarAccess.getCommentAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_0_0_0(), "splitTag"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getCommentRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"splitTag",
+                    	        		true, 
+                    	        		"XML_TAG_END", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1128:2: ( (lv_closedTag_4_0= RULE_COMMENT_END_TAG ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1129:1: (lv_closedTag_4_0= RULE_COMMENT_END_TAG )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1129:1: (lv_closedTag_4_0= RULE_COMMENT_END_TAG )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1130:3: lv_closedTag_4_0= RULE_COMMENT_END_TAG
+                    {
+                    lv_closedTag_4_0=(Token)input.LT(1);
+                    match(input,RULE_COMMENT_END_TAG,FOLLOW_RULE_COMMENT_END_TAG_in_ruleComment1607); 
+
+                    			createLeafNode(grammarAccess.getCommentAccess().getClosedTagCOMMENT_END_TAGTerminalRuleCall_3_0_1_0(), "closedTag"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getCommentRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"closedTag",
+                    	        		true, 
+                    	        		"COMMENT_END_TAG", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
 
                     }
 
@@ -2171,9 +2503,9 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:933:6: RULE_XML_TAG_SINGLEEND
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1153:6: RULE_XML_TAG_SINGLEEND
                     {
-                    match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleComment1474); 
+                    match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleComment1628); 
                      
                         createLeafNode(grammarAccess.getCommentAccess().getXML_TAG_SINGLEENDTerminalRuleCall_3_1(), null); 
                         
@@ -2206,7 +2538,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleBreak
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:945:1: entryRuleBreak returns [EObject current=null] : iv_ruleBreak= ruleBreak EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1165:1: entryRuleBreak returns [EObject current=null] : iv_ruleBreak= ruleBreak EOF ;
     public final EObject entryRuleBreak() throws RecognitionException {
         EObject current = null;
 
@@ -2214,16 +2546,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:946:2: (iv_ruleBreak= ruleBreak EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:947:2: iv_ruleBreak= ruleBreak EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1166:2: (iv_ruleBreak= ruleBreak EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1167:2: iv_ruleBreak= ruleBreak EOF
             {
              currentNode = createCompositeNode(grammarAccess.getBreakRule(), currentNode); 
-            pushFollow(FOLLOW_ruleBreak_in_entryRuleBreak1510);
+            pushFollow(FOLLOW_ruleBreak_in_entryRuleBreak1664);
             iv_ruleBreak=ruleBreak();
             _fsp--;
 
              current =iv_ruleBreak; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleBreak1520); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleBreak1674); 
 
             }
 
@@ -2241,28 +2573,30 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleBreak
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:954:1: ruleBreak returns [EObject current=null] : ( RULE_BREAK_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( RULE_XML_TAG_END RULE_BREAK_END_TAG ) | RULE_XML_TAG_SINGLEEND ) ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1174:1: ruleBreak returns [EObject current=null] : ( RULE_BREAK_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_BREAK_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND ) ) ;
     public final EObject ruleBreak() throws RecognitionException {
         EObject current = null;
 
+        Token lv_splitTag_3_0=null;
+        Token lv_closedTag_4_0=null;
         EObject lv_attributes_2_0 = null;
 
 
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:959:6: ( ( RULE_BREAK_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( RULE_XML_TAG_END RULE_BREAK_END_TAG ) | RULE_XML_TAG_SINGLEEND ) ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:960:1: ( RULE_BREAK_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( RULE_XML_TAG_END RULE_BREAK_END_TAG ) | RULE_XML_TAG_SINGLEEND ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1179:6: ( ( RULE_BREAK_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_BREAK_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1180:1: ( RULE_BREAK_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_BREAK_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND ) )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:960:1: ( RULE_BREAK_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( RULE_XML_TAG_END RULE_BREAK_END_TAG ) | RULE_XML_TAG_SINGLEEND ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:960:2: RULE_BREAK_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( RULE_XML_TAG_END RULE_BREAK_END_TAG ) | RULE_XML_TAG_SINGLEEND )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1180:1: ( RULE_BREAK_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_BREAK_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1180:2: RULE_BREAK_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_BREAK_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND )
             {
-            match(input,RULE_BREAK_START_TAG,FOLLOW_RULE_BREAK_START_TAG_in_ruleBreak1554); 
+            match(input,RULE_BREAK_START_TAG,FOLLOW_RULE_BREAK_START_TAG_in_ruleBreak1708); 
              
                 createLeafNode(grammarAccess.getBreakAccess().getBREAK_START_TAGTerminalRuleCall_0(), null); 
                 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:964:1: ()
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:965:5: 
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1184:1: ()
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1185:5: 
             {
              
                     temp=factory.create(grammarAccess.getBreakAccess().getBreakAction_1().getType().getClassifier());
@@ -2277,7 +2611,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:975:2: ( (lv_attributes_2_0= rulePossibleExpression ) )*
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1195:2: ( (lv_attributes_2_0= rulePossibleExpression ) )*
             loop17:
             do {
                 int alt17=2;
@@ -2290,15 +2624,15 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                 switch (alt17) {
             	case 1 :
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:976:1: (lv_attributes_2_0= rulePossibleExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1196:1: (lv_attributes_2_0= rulePossibleExpression )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:976:1: (lv_attributes_2_0= rulePossibleExpression )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:977:3: lv_attributes_2_0= rulePossibleExpression
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1196:1: (lv_attributes_2_0= rulePossibleExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1197:3: lv_attributes_2_0= rulePossibleExpression
             	    {
             	     
             	    	        currentNode=createCompositeNode(grammarAccess.getBreakAccess().getAttributesPossibleExpressionParserRuleCall_2_0(), currentNode); 
             	    	    
-            	    pushFollow(FOLLOW_rulePossibleExpression_in_ruleBreak1583);
+            	    pushFollow(FOLLOW_rulePossibleExpression_in_ruleBreak1737);
             	    lv_attributes_2_0=rulePossibleExpression();
             	    _fsp--;
 
@@ -2331,7 +2665,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                 }
             } while (true);
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:999:3: ( ( RULE_XML_TAG_END RULE_BREAK_END_TAG ) | RULE_XML_TAG_SINGLEEND )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1219:3: ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_BREAK_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND )
             int alt18=2;
             int LA18_0 = input.LA(1);
 
@@ -2343,25 +2677,83 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("999:3: ( ( RULE_XML_TAG_END RULE_BREAK_END_TAG ) | RULE_XML_TAG_SINGLEEND )", 18, 0, input);
+                    new NoViableAltException("1219:3: ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_BREAK_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND )", 18, 0, input);
 
                 throw nvae;
             }
             switch (alt18) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:999:4: ( RULE_XML_TAG_END RULE_BREAK_END_TAG )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1219:4: ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_BREAK_END_TAG ) ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:999:4: ( RULE_XML_TAG_END RULE_BREAK_END_TAG )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:999:5: RULE_XML_TAG_END RULE_BREAK_END_TAG
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1219:4: ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_BREAK_END_TAG ) ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1219:5: ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_BREAK_END_TAG ) )
                     {
-                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleBreak1595); 
-                     
-                        createLeafNode(grammarAccess.getBreakAccess().getXML_TAG_ENDTerminalRuleCall_3_0_0(), null); 
-                        
-                    match(input,RULE_BREAK_END_TAG,FOLLOW_RULE_BREAK_END_TAG_in_ruleBreak1603); 
-                     
-                        createLeafNode(grammarAccess.getBreakAccess().getBREAK_END_TAGTerminalRuleCall_3_0_1(), null); 
-                        
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1219:5: ( (lv_splitTag_3_0= RULE_XML_TAG_END ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1220:1: (lv_splitTag_3_0= RULE_XML_TAG_END )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1220:1: (lv_splitTag_3_0= RULE_XML_TAG_END )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1221:3: lv_splitTag_3_0= RULE_XML_TAG_END
+                    {
+                    lv_splitTag_3_0=(Token)input.LT(1);
+                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleBreak1757); 
+
+                    			createLeafNode(grammarAccess.getBreakAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_0_0_0(), "splitTag"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getBreakRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"splitTag",
+                    	        		true, 
+                    	        		"XML_TAG_END", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1243:2: ( (lv_closedTag_4_0= RULE_BREAK_END_TAG ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1244:1: (lv_closedTag_4_0= RULE_BREAK_END_TAG )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1244:1: (lv_closedTag_4_0= RULE_BREAK_END_TAG )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1245:3: lv_closedTag_4_0= RULE_BREAK_END_TAG
+                    {
+                    lv_closedTag_4_0=(Token)input.LT(1);
+                    match(input,RULE_BREAK_END_TAG,FOLLOW_RULE_BREAK_END_TAG_in_ruleBreak1779); 
+
+                    			createLeafNode(grammarAccess.getBreakAccess().getClosedTagBREAK_END_TAGTerminalRuleCall_3_0_1_0(), "closedTag"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getBreakRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"closedTag",
+                    	        		true, 
+                    	        		"BREAK_END_TAG", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
 
                     }
 
@@ -2369,9 +2761,9 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1008:6: RULE_XML_TAG_SINGLEEND
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1268:6: RULE_XML_TAG_SINGLEEND
                     {
-                    match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleBreak1618); 
+                    match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleBreak1800); 
                      
                         createLeafNode(grammarAccess.getBreakAccess().getXML_TAG_SINGLEENDTerminalRuleCall_3_1(), null); 
                         
@@ -2404,7 +2796,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleInclude
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1020:1: entryRuleInclude returns [EObject current=null] : iv_ruleInclude= ruleInclude EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1280:1: entryRuleInclude returns [EObject current=null] : iv_ruleInclude= ruleInclude EOF ;
     public final EObject entryRuleInclude() throws RecognitionException {
         EObject current = null;
 
@@ -2412,16 +2804,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1021:2: (iv_ruleInclude= ruleInclude EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1022:2: iv_ruleInclude= ruleInclude EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1281:2: (iv_ruleInclude= ruleInclude EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1282:2: iv_ruleInclude= ruleInclude EOF
             {
              currentNode = createCompositeNode(grammarAccess.getIncludeRule(), currentNode); 
-            pushFollow(FOLLOW_ruleInclude_in_entryRuleInclude1654);
+            pushFollow(FOLLOW_ruleInclude_in_entryRuleInclude1836);
             iv_ruleInclude=ruleInclude();
             _fsp--;
 
              current =iv_ruleInclude; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleInclude1664); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleInclude1846); 
 
             }
 
@@ -2439,28 +2831,30 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleInclude
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1029:1: ruleInclude returns [EObject current=null] : ( RULE_INCLUDE_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* RULE_XML_TAG_SINGLEEND ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1289:1: ruleInclude returns [EObject current=null] : ( RULE_INCLUDE_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_INCLUDE_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND ) ) ;
     public final EObject ruleInclude() throws RecognitionException {
         EObject current = null;
 
+        Token lv_splitTag_3_0=null;
+        Token lv_closedTag_4_0=null;
         EObject lv_attributes_2_0 = null;
 
 
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1034:6: ( ( RULE_INCLUDE_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* RULE_XML_TAG_SINGLEEND ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1035:1: ( RULE_INCLUDE_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* RULE_XML_TAG_SINGLEEND )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1294:6: ( ( RULE_INCLUDE_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_INCLUDE_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1295:1: ( RULE_INCLUDE_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_INCLUDE_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND ) )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1035:1: ( RULE_INCLUDE_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* RULE_XML_TAG_SINGLEEND )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1035:2: RULE_INCLUDE_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* RULE_XML_TAG_SINGLEEND
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1295:1: ( RULE_INCLUDE_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_INCLUDE_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1295:2: RULE_INCLUDE_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_INCLUDE_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND )
             {
-            match(input,RULE_INCLUDE_START_TAG,FOLLOW_RULE_INCLUDE_START_TAG_in_ruleInclude1698); 
+            match(input,RULE_INCLUDE_START_TAG,FOLLOW_RULE_INCLUDE_START_TAG_in_ruleInclude1880); 
              
                 createLeafNode(grammarAccess.getIncludeAccess().getINCLUDE_START_TAGTerminalRuleCall_0(), null); 
                 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1039:1: ()
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1040:5: 
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1299:1: ()
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1300:5: 
             {
              
                     temp=factory.create(grammarAccess.getIncludeAccess().getMethodAction_1().getType().getClassifier());
@@ -2475,7 +2869,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1050:2: ( (lv_attributes_2_0= rulePossibleExpression ) )*
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1310:2: ( (lv_attributes_2_0= rulePossibleExpression ) )*
             loop19:
             do {
                 int alt19=2;
@@ -2488,15 +2882,15 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                 switch (alt19) {
             	case 1 :
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1051:1: (lv_attributes_2_0= rulePossibleExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1311:1: (lv_attributes_2_0= rulePossibleExpression )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1051:1: (lv_attributes_2_0= rulePossibleExpression )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1052:3: lv_attributes_2_0= rulePossibleExpression
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1311:1: (lv_attributes_2_0= rulePossibleExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1312:3: lv_attributes_2_0= rulePossibleExpression
             	    {
             	     
             	    	        currentNode=createCompositeNode(grammarAccess.getIncludeAccess().getAttributesPossibleExpressionParserRuleCall_2_0(), currentNode); 
             	    	    
-            	    pushFollow(FOLLOW_rulePossibleExpression_in_ruleInclude1727);
+            	    pushFollow(FOLLOW_rulePossibleExpression_in_ruleInclude1909);
             	    lv_attributes_2_0=rulePossibleExpression();
             	    _fsp--;
 
@@ -2529,10 +2923,114 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                 }
             } while (true);
 
-            match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleInclude1737); 
-             
-                createLeafNode(grammarAccess.getIncludeAccess().getXML_TAG_SINGLEENDTerminalRuleCall_3(), null); 
-                
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1334:3: ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_INCLUDE_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND )
+            int alt20=2;
+            int LA20_0 = input.LA(1);
+
+            if ( (LA20_0==RULE_XML_TAG_END) ) {
+                alt20=1;
+            }
+            else if ( (LA20_0==RULE_XML_TAG_SINGLEEND) ) {
+                alt20=2;
+            }
+            else {
+                NoViableAltException nvae =
+                    new NoViableAltException("1334:3: ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_INCLUDE_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND )", 20, 0, input);
+
+                throw nvae;
+            }
+            switch (alt20) {
+                case 1 :
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1334:4: ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_INCLUDE_END_TAG ) ) )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1334:4: ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_INCLUDE_END_TAG ) ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1334:5: ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_INCLUDE_END_TAG ) )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1334:5: ( (lv_splitTag_3_0= RULE_XML_TAG_END ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1335:1: (lv_splitTag_3_0= RULE_XML_TAG_END )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1335:1: (lv_splitTag_3_0= RULE_XML_TAG_END )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1336:3: lv_splitTag_3_0= RULE_XML_TAG_END
+                    {
+                    lv_splitTag_3_0=(Token)input.LT(1);
+                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleInclude1929); 
+
+                    			createLeafNode(grammarAccess.getIncludeAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_0_0_0(), "splitTag"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getIncludeRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"splitTag",
+                    	        		true, 
+                    	        		"XML_TAG_END", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1358:2: ( (lv_closedTag_4_0= RULE_INCLUDE_END_TAG ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1359:1: (lv_closedTag_4_0= RULE_INCLUDE_END_TAG )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1359:1: (lv_closedTag_4_0= RULE_INCLUDE_END_TAG )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1360:3: lv_closedTag_4_0= RULE_INCLUDE_END_TAG
+                    {
+                    lv_closedTag_4_0=(Token)input.LT(1);
+                    match(input,RULE_INCLUDE_END_TAG,FOLLOW_RULE_INCLUDE_END_TAG_in_ruleInclude1951); 
+
+                    			createLeafNode(grammarAccess.getIncludeAccess().getClosedTagINCLUDE_END_TAGTerminalRuleCall_3_0_1_0(), "closedTag"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getIncludeRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"closedTag",
+                    	        		true, 
+                    	        		"INCLUDE_END_TAG", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
+
+                    }
+
+
+                    }
+                    break;
+                case 2 :
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1383:6: RULE_XML_TAG_SINGLEEND
+                    {
+                    match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleInclude1972); 
+                     
+                        createLeafNode(grammarAccess.getIncludeAccess().getXML_TAG_SINGLEENDTerminalRuleCall_3_1(), null); 
+                        
+
+                    }
+                    break;
+
+            }
+
 
             }
 
@@ -2556,7 +3054,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleMessage
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1086:1: entryRuleMessage returns [EObject current=null] : iv_ruleMessage= ruleMessage EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1395:1: entryRuleMessage returns [EObject current=null] : iv_ruleMessage= ruleMessage EOF ;
     public final EObject entryRuleMessage() throws RecognitionException {
         EObject current = null;
 
@@ -2564,16 +3062,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1087:2: (iv_ruleMessage= ruleMessage EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1088:2: iv_ruleMessage= ruleMessage EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1396:2: (iv_ruleMessage= ruleMessage EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1397:2: iv_ruleMessage= ruleMessage EOF
             {
              currentNode = createCompositeNode(grammarAccess.getMessageRule(), currentNode); 
-            pushFollow(FOLLOW_ruleMessage_in_entryRuleMessage1772);
+            pushFollow(FOLLOW_ruleMessage_in_entryRuleMessage2008);
             iv_ruleMessage=ruleMessage();
             _fsp--;
 
              current =iv_ruleMessage; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleMessage1782); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleMessage2018); 
 
             }
 
@@ -2591,10 +3089,12 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleMessage
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1095:1: ruleMessage returns [EObject current=null] : ( RULE_MESSAGE_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( RULE_XML_TAG_END ( ( (lv_children_4_0= ruleMessage ) ) | ( (lv_children_5_0= ruleProperty ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleField ) ) | ( (lv_children_11_0= ruleComment ) ) | ( (lv_children_12_0= ruleBreak ) ) )* RULE_MESSAGE_END_TAG ) | RULE_XML_TAG_SINGLEEND ) ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1404:1: ruleMessage returns [EObject current=null] : ( RULE_MESSAGE_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( ( (lv_children_4_0= ruleMessage ) ) | ( (lv_children_5_0= ruleProperty ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleField ) ) | ( (lv_children_11_0= ruleComment ) ) | ( (lv_children_12_0= ruleBreak ) ) )* ( (lv_closedTag_13_0= RULE_MESSAGE_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND ) ) ;
     public final EObject ruleMessage() throws RecognitionException {
         EObject current = null;
 
+        Token lv_splitTag_3_0=null;
+        Token lv_closedTag_13_0=null;
         EObject lv_attributes_2_0 = null;
 
         EObject lv_children_4_0 = null;
@@ -2619,18 +3119,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1100:6: ( ( RULE_MESSAGE_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( RULE_XML_TAG_END ( ( (lv_children_4_0= ruleMessage ) ) | ( (lv_children_5_0= ruleProperty ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleField ) ) | ( (lv_children_11_0= ruleComment ) ) | ( (lv_children_12_0= ruleBreak ) ) )* RULE_MESSAGE_END_TAG ) | RULE_XML_TAG_SINGLEEND ) ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1101:1: ( RULE_MESSAGE_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( RULE_XML_TAG_END ( ( (lv_children_4_0= ruleMessage ) ) | ( (lv_children_5_0= ruleProperty ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleField ) ) | ( (lv_children_11_0= ruleComment ) ) | ( (lv_children_12_0= ruleBreak ) ) )* RULE_MESSAGE_END_TAG ) | RULE_XML_TAG_SINGLEEND ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1409:6: ( ( RULE_MESSAGE_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( ( (lv_children_4_0= ruleMessage ) ) | ( (lv_children_5_0= ruleProperty ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleField ) ) | ( (lv_children_11_0= ruleComment ) ) | ( (lv_children_12_0= ruleBreak ) ) )* ( (lv_closedTag_13_0= RULE_MESSAGE_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1410:1: ( RULE_MESSAGE_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( ( (lv_children_4_0= ruleMessage ) ) | ( (lv_children_5_0= ruleProperty ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleField ) ) | ( (lv_children_11_0= ruleComment ) ) | ( (lv_children_12_0= ruleBreak ) ) )* ( (lv_closedTag_13_0= RULE_MESSAGE_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND ) )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1101:1: ( RULE_MESSAGE_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( RULE_XML_TAG_END ( ( (lv_children_4_0= ruleMessage ) ) | ( (lv_children_5_0= ruleProperty ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleField ) ) | ( (lv_children_11_0= ruleComment ) ) | ( (lv_children_12_0= ruleBreak ) ) )* RULE_MESSAGE_END_TAG ) | RULE_XML_TAG_SINGLEEND ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1101:2: RULE_MESSAGE_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( RULE_XML_TAG_END ( ( (lv_children_4_0= ruleMessage ) ) | ( (lv_children_5_0= ruleProperty ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleField ) ) | ( (lv_children_11_0= ruleComment ) ) | ( (lv_children_12_0= ruleBreak ) ) )* RULE_MESSAGE_END_TAG ) | RULE_XML_TAG_SINGLEEND )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1410:1: ( RULE_MESSAGE_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( ( (lv_children_4_0= ruleMessage ) ) | ( (lv_children_5_0= ruleProperty ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleField ) ) | ( (lv_children_11_0= ruleComment ) ) | ( (lv_children_12_0= ruleBreak ) ) )* ( (lv_closedTag_13_0= RULE_MESSAGE_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1410:2: RULE_MESSAGE_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( ( (lv_children_4_0= ruleMessage ) ) | ( (lv_children_5_0= ruleProperty ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleField ) ) | ( (lv_children_11_0= ruleComment ) ) | ( (lv_children_12_0= ruleBreak ) ) )* ( (lv_closedTag_13_0= RULE_MESSAGE_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND )
             {
-            match(input,RULE_MESSAGE_START_TAG,FOLLOW_RULE_MESSAGE_START_TAG_in_ruleMessage1816); 
+            match(input,RULE_MESSAGE_START_TAG,FOLLOW_RULE_MESSAGE_START_TAG_in_ruleMessage2052); 
              
                 createLeafNode(grammarAccess.getMessageAccess().getMESSAGE_START_TAGTerminalRuleCall_0(), null); 
                 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1105:1: ()
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1106:5: 
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1414:1: ()
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1415:5: 
             {
              
                     temp=factory.create(grammarAccess.getMessageAccess().getMessageAction_1().getType().getClassifier());
@@ -2645,28 +3145,28 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1116:2: ( (lv_attributes_2_0= rulePossibleExpression ) )*
-            loop20:
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1425:2: ( (lv_attributes_2_0= rulePossibleExpression ) )*
+            loop21:
             do {
-                int alt20=2;
-                int LA20_0 = input.LA(1);
+                int alt21=2;
+                int LA21_0 = input.LA(1);
 
-                if ( (LA20_0==RULE_ID) ) {
-                    alt20=1;
+                if ( (LA21_0==RULE_ID) ) {
+                    alt21=1;
                 }
 
 
-                switch (alt20) {
+                switch (alt21) {
             	case 1 :
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1117:1: (lv_attributes_2_0= rulePossibleExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1426:1: (lv_attributes_2_0= rulePossibleExpression )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1117:1: (lv_attributes_2_0= rulePossibleExpression )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1118:3: lv_attributes_2_0= rulePossibleExpression
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1426:1: (lv_attributes_2_0= rulePossibleExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1427:3: lv_attributes_2_0= rulePossibleExpression
             	    {
             	     
             	    	        currentNode=createCompositeNode(grammarAccess.getMessageAccess().getAttributesPossibleExpressionParserRuleCall_2_0(), currentNode); 
             	    	    
-            	    pushFollow(FOLLOW_rulePossibleExpression_in_ruleMessage1845);
+            	    pushFollow(FOLLOW_rulePossibleExpression_in_ruleMessage2081);
             	    lv_attributes_2_0=rulePossibleExpression();
             	    _fsp--;
 
@@ -2695,104 +3195,133 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
             	    break;
 
             	default :
-            	    break loop20;
+            	    break loop21;
                 }
             } while (true);
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1140:3: ( ( RULE_XML_TAG_END ( ( (lv_children_4_0= ruleMessage ) ) | ( (lv_children_5_0= ruleProperty ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleField ) ) | ( (lv_children_11_0= ruleComment ) ) | ( (lv_children_12_0= ruleBreak ) ) )* RULE_MESSAGE_END_TAG ) | RULE_XML_TAG_SINGLEEND )
-            int alt22=2;
-            int LA22_0 = input.LA(1);
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1449:3: ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( ( (lv_children_4_0= ruleMessage ) ) | ( (lv_children_5_0= ruleProperty ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleField ) ) | ( (lv_children_11_0= ruleComment ) ) | ( (lv_children_12_0= ruleBreak ) ) )* ( (lv_closedTag_13_0= RULE_MESSAGE_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND )
+            int alt23=2;
+            int LA23_0 = input.LA(1);
 
-            if ( (LA22_0==RULE_XML_TAG_END) ) {
-                alt22=1;
+            if ( (LA23_0==RULE_XML_TAG_END) ) {
+                alt23=1;
             }
-            else if ( (LA22_0==RULE_XML_TAG_SINGLEEND) ) {
-                alt22=2;
+            else if ( (LA23_0==RULE_XML_TAG_SINGLEEND) ) {
+                alt23=2;
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("1140:3: ( ( RULE_XML_TAG_END ( ( (lv_children_4_0= ruleMessage ) ) | ( (lv_children_5_0= ruleProperty ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleField ) ) | ( (lv_children_11_0= ruleComment ) ) | ( (lv_children_12_0= ruleBreak ) ) )* RULE_MESSAGE_END_TAG ) | RULE_XML_TAG_SINGLEEND )", 22, 0, input);
+                    new NoViableAltException("1449:3: ( ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( ( (lv_children_4_0= ruleMessage ) ) | ( (lv_children_5_0= ruleProperty ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleField ) ) | ( (lv_children_11_0= ruleComment ) ) | ( (lv_children_12_0= ruleBreak ) ) )* ( (lv_closedTag_13_0= RULE_MESSAGE_END_TAG ) ) ) | RULE_XML_TAG_SINGLEEND )", 23, 0, input);
 
                 throw nvae;
             }
-            switch (alt22) {
+            switch (alt23) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1140:4: ( RULE_XML_TAG_END ( ( (lv_children_4_0= ruleMessage ) ) | ( (lv_children_5_0= ruleProperty ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleField ) ) | ( (lv_children_11_0= ruleComment ) ) | ( (lv_children_12_0= ruleBreak ) ) )* RULE_MESSAGE_END_TAG )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1449:4: ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( ( (lv_children_4_0= ruleMessage ) ) | ( (lv_children_5_0= ruleProperty ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleField ) ) | ( (lv_children_11_0= ruleComment ) ) | ( (lv_children_12_0= ruleBreak ) ) )* ( (lv_closedTag_13_0= RULE_MESSAGE_END_TAG ) ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1140:4: ( RULE_XML_TAG_END ( ( (lv_children_4_0= ruleMessage ) ) | ( (lv_children_5_0= ruleProperty ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleField ) ) | ( (lv_children_11_0= ruleComment ) ) | ( (lv_children_12_0= ruleBreak ) ) )* RULE_MESSAGE_END_TAG )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1140:5: RULE_XML_TAG_END ( ( (lv_children_4_0= ruleMessage ) ) | ( (lv_children_5_0= ruleProperty ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleField ) ) | ( (lv_children_11_0= ruleComment ) ) | ( (lv_children_12_0= ruleBreak ) ) )* RULE_MESSAGE_END_TAG
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1449:4: ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( ( (lv_children_4_0= ruleMessage ) ) | ( (lv_children_5_0= ruleProperty ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleField ) ) | ( (lv_children_11_0= ruleComment ) ) | ( (lv_children_12_0= ruleBreak ) ) )* ( (lv_closedTag_13_0= RULE_MESSAGE_END_TAG ) ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1449:5: ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( ( (lv_children_4_0= ruleMessage ) ) | ( (lv_children_5_0= ruleProperty ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleField ) ) | ( (lv_children_11_0= ruleComment ) ) | ( (lv_children_12_0= ruleBreak ) ) )* ( (lv_closedTag_13_0= RULE_MESSAGE_END_TAG ) )
                     {
-                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleMessage1857); 
-                     
-                        createLeafNode(grammarAccess.getMessageAccess().getXML_TAG_ENDTerminalRuleCall_3_0_0(), null); 
-                        
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1144:1: ( ( (lv_children_4_0= ruleMessage ) ) | ( (lv_children_5_0= ruleProperty ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleField ) ) | ( (lv_children_11_0= ruleComment ) ) | ( (lv_children_12_0= ruleBreak ) ) )*
-                    loop21:
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1449:5: ( (lv_splitTag_3_0= RULE_XML_TAG_END ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1450:1: (lv_splitTag_3_0= RULE_XML_TAG_END )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1450:1: (lv_splitTag_3_0= RULE_XML_TAG_END )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1451:3: lv_splitTag_3_0= RULE_XML_TAG_END
+                    {
+                    lv_splitTag_3_0=(Token)input.LT(1);
+                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleMessage2101); 
+
+                    			createLeafNode(grammarAccess.getMessageAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_0_0_0(), "splitTag"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getMessageRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"splitTag",
+                    	        		true, 
+                    	        		"XML_TAG_END", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1473:2: ( ( (lv_children_4_0= ruleMessage ) ) | ( (lv_children_5_0= ruleProperty ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleField ) ) | ( (lv_children_11_0= ruleComment ) ) | ( (lv_children_12_0= ruleBreak ) ) )*
+                    loop22:
                     do {
-                        int alt21=10;
+                        int alt22=10;
                         switch ( input.LA(1) ) {
                         case RULE_MESSAGE_START_TAG:
                             {
-                            alt21=1;
+                            alt22=1;
                             }
                             break;
                         case RULE_PROPERTY_START_TAG:
                             {
-                            alt21=2;
+                            alt22=2;
                             }
                             break;
                         case RULE_PARAM_START_TAG:
                             {
-                            alt21=3;
+                            alt22=3;
                             }
                             break;
                         case RULE_MAPSTARTKEYWORD:
                             {
-                            alt21=4;
+                            alt22=4;
                             }
                             break;
                         case RULE_MAP_METHOD_STARTTAG_START:
                             {
-                            alt21=5;
+                            alt22=5;
                             }
                             break;
                         case RULE_DEBUG_START_TAG:
                             {
-                            alt21=6;
+                            alt22=6;
                             }
                             break;
                         case RULE_FIELD_START_TAG:
                             {
-                            alt21=7;
+                            alt22=7;
                             }
                             break;
                         case RULE_COMMENT_START_TAG:
                             {
-                            alt21=8;
+                            alt22=8;
                             }
                             break;
                         case RULE_BREAK_START_TAG:
                             {
-                            alt21=9;
+                            alt22=9;
                             }
                             break;
 
                         }
 
-                        switch (alt21) {
+                        switch (alt22) {
                     	case 1 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1144:2: ( (lv_children_4_0= ruleMessage ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1473:3: ( (lv_children_4_0= ruleMessage ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1144:2: ( (lv_children_4_0= ruleMessage ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1145:1: (lv_children_4_0= ruleMessage )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1473:3: ( (lv_children_4_0= ruleMessage ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1474:1: (lv_children_4_0= ruleMessage )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1145:1: (lv_children_4_0= ruleMessage )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1146:3: lv_children_4_0= ruleMessage
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1474:1: (lv_children_4_0= ruleMessage )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1475:3: lv_children_4_0= ruleMessage
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getMessageAccess().getChildrenMessageParserRuleCall_3_0_1_0_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleMessage_in_ruleMessage1878);
+                    	    pushFollow(FOLLOW_ruleMessage_in_ruleMessage2128);
                     	    lv_children_4_0=ruleMessage();
                     	    _fsp--;
 
@@ -2823,18 +3352,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1169:6: ( (lv_children_5_0= ruleProperty ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1498:6: ( (lv_children_5_0= ruleProperty ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1169:6: ( (lv_children_5_0= ruleProperty ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1170:1: (lv_children_5_0= ruleProperty )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1498:6: ( (lv_children_5_0= ruleProperty ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1499:1: (lv_children_5_0= ruleProperty )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1170:1: (lv_children_5_0= ruleProperty )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1171:3: lv_children_5_0= ruleProperty
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1499:1: (lv_children_5_0= ruleProperty )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1500:3: lv_children_5_0= ruleProperty
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getMessageAccess().getChildrenPropertyParserRuleCall_3_0_1_1_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleProperty_in_ruleMessage1905);
+                    	    pushFollow(FOLLOW_ruleProperty_in_ruleMessage2155);
                     	    lv_children_5_0=ruleProperty();
                     	    _fsp--;
 
@@ -2865,18 +3394,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    }
                     	    break;
                     	case 3 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1194:6: ( (lv_children_6_0= ruleParam ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1523:6: ( (lv_children_6_0= ruleParam ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1194:6: ( (lv_children_6_0= ruleParam ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1195:1: (lv_children_6_0= ruleParam )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1523:6: ( (lv_children_6_0= ruleParam ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1524:1: (lv_children_6_0= ruleParam )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1195:1: (lv_children_6_0= ruleParam )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1196:3: lv_children_6_0= ruleParam
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1524:1: (lv_children_6_0= ruleParam )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1525:3: lv_children_6_0= ruleParam
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getMessageAccess().getChildrenParamParserRuleCall_3_0_1_2_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleParam_in_ruleMessage1932);
+                    	    pushFollow(FOLLOW_ruleParam_in_ruleMessage2182);
                     	    lv_children_6_0=ruleParam();
                     	    _fsp--;
 
@@ -2907,18 +3436,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    }
                     	    break;
                     	case 4 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1219:6: ( (lv_children_7_0= ruleMap ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1548:6: ( (lv_children_7_0= ruleMap ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1219:6: ( (lv_children_7_0= ruleMap ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1220:1: (lv_children_7_0= ruleMap )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1548:6: ( (lv_children_7_0= ruleMap ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1549:1: (lv_children_7_0= ruleMap )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1220:1: (lv_children_7_0= ruleMap )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1221:3: lv_children_7_0= ruleMap
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1549:1: (lv_children_7_0= ruleMap )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1550:3: lv_children_7_0= ruleMap
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getMessageAccess().getChildrenMapParserRuleCall_3_0_1_3_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleMap_in_ruleMessage1959);
+                    	    pushFollow(FOLLOW_ruleMap_in_ruleMessage2209);
                     	    lv_children_7_0=ruleMap();
                     	    _fsp--;
 
@@ -2949,18 +3478,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    }
                     	    break;
                     	case 5 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1244:6: ( (lv_children_8_0= ruleMapMethod ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1573:6: ( (lv_children_8_0= ruleMapMethod ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1244:6: ( (lv_children_8_0= ruleMapMethod ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1245:1: (lv_children_8_0= ruleMapMethod )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1573:6: ( (lv_children_8_0= ruleMapMethod ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1574:1: (lv_children_8_0= ruleMapMethod )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1245:1: (lv_children_8_0= ruleMapMethod )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1246:3: lv_children_8_0= ruleMapMethod
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1574:1: (lv_children_8_0= ruleMapMethod )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1575:3: lv_children_8_0= ruleMapMethod
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getMessageAccess().getChildrenMapMethodParserRuleCall_3_0_1_4_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleMapMethod_in_ruleMessage1986);
+                    	    pushFollow(FOLLOW_ruleMapMethod_in_ruleMessage2236);
                     	    lv_children_8_0=ruleMapMethod();
                     	    _fsp--;
 
@@ -2991,18 +3520,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    }
                     	    break;
                     	case 6 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1269:6: ( (lv_children_9_0= ruleDebugTag ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1598:6: ( (lv_children_9_0= ruleDebugTag ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1269:6: ( (lv_children_9_0= ruleDebugTag ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1270:1: (lv_children_9_0= ruleDebugTag )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1598:6: ( (lv_children_9_0= ruleDebugTag ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1599:1: (lv_children_9_0= ruleDebugTag )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1270:1: (lv_children_9_0= ruleDebugTag )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1271:3: lv_children_9_0= ruleDebugTag
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1599:1: (lv_children_9_0= ruleDebugTag )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1600:3: lv_children_9_0= ruleDebugTag
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getMessageAccess().getChildrenDebugTagParserRuleCall_3_0_1_5_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleDebugTag_in_ruleMessage2013);
+                    	    pushFollow(FOLLOW_ruleDebugTag_in_ruleMessage2263);
                     	    lv_children_9_0=ruleDebugTag();
                     	    _fsp--;
 
@@ -3033,18 +3562,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    }
                     	    break;
                     	case 7 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1294:6: ( (lv_children_10_0= ruleField ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1623:6: ( (lv_children_10_0= ruleField ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1294:6: ( (lv_children_10_0= ruleField ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1295:1: (lv_children_10_0= ruleField )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1623:6: ( (lv_children_10_0= ruleField ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1624:1: (lv_children_10_0= ruleField )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1295:1: (lv_children_10_0= ruleField )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1296:3: lv_children_10_0= ruleField
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1624:1: (lv_children_10_0= ruleField )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1625:3: lv_children_10_0= ruleField
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getMessageAccess().getChildrenFieldParserRuleCall_3_0_1_6_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleField_in_ruleMessage2040);
+                    	    pushFollow(FOLLOW_ruleField_in_ruleMessage2290);
                     	    lv_children_10_0=ruleField();
                     	    _fsp--;
 
@@ -3075,18 +3604,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    }
                     	    break;
                     	case 8 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1319:6: ( (lv_children_11_0= ruleComment ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1648:6: ( (lv_children_11_0= ruleComment ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1319:6: ( (lv_children_11_0= ruleComment ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1320:1: (lv_children_11_0= ruleComment )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1648:6: ( (lv_children_11_0= ruleComment ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1649:1: (lv_children_11_0= ruleComment )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1320:1: (lv_children_11_0= ruleComment )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1321:3: lv_children_11_0= ruleComment
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1649:1: (lv_children_11_0= ruleComment )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1650:3: lv_children_11_0= ruleComment
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getMessageAccess().getChildrenCommentParserRuleCall_3_0_1_7_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleComment_in_ruleMessage2067);
+                    	    pushFollow(FOLLOW_ruleComment_in_ruleMessage2317);
                     	    lv_children_11_0=ruleComment();
                     	    _fsp--;
 
@@ -3117,18 +3646,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    }
                     	    break;
                     	case 9 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1344:6: ( (lv_children_12_0= ruleBreak ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1673:6: ( (lv_children_12_0= ruleBreak ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1344:6: ( (lv_children_12_0= ruleBreak ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1345:1: (lv_children_12_0= ruleBreak )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1673:6: ( (lv_children_12_0= ruleBreak ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1674:1: (lv_children_12_0= ruleBreak )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1345:1: (lv_children_12_0= ruleBreak )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1346:3: lv_children_12_0= ruleBreak
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1674:1: (lv_children_12_0= ruleBreak )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1675:3: lv_children_12_0= ruleBreak
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getMessageAccess().getChildrenBreakParserRuleCall_3_0_1_8_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleBreak_in_ruleMessage2094);
+                    	    pushFollow(FOLLOW_ruleBreak_in_ruleMessage2344);
                     	    lv_children_12_0=ruleBreak();
                     	    _fsp--;
 
@@ -3160,14 +3689,43 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    break;
 
                     	default :
-                    	    break loop21;
+                    	    break loop22;
                         }
                     } while (true);
 
-                    match(input,RULE_MESSAGE_END_TAG,FOLLOW_RULE_MESSAGE_END_TAG_in_ruleMessage2105); 
-                     
-                        createLeafNode(grammarAccess.getMessageAccess().getMESSAGE_END_TAGTerminalRuleCall_3_0_2(), null); 
-                        
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1697:4: ( (lv_closedTag_13_0= RULE_MESSAGE_END_TAG ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1698:1: (lv_closedTag_13_0= RULE_MESSAGE_END_TAG )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1698:1: (lv_closedTag_13_0= RULE_MESSAGE_END_TAG )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1699:3: lv_closedTag_13_0= RULE_MESSAGE_END_TAG
+                    {
+                    lv_closedTag_13_0=(Token)input.LT(1);
+                    match(input,RULE_MESSAGE_END_TAG,FOLLOW_RULE_MESSAGE_END_TAG_in_ruleMessage2363); 
+
+                    			createLeafNode(grammarAccess.getMessageAccess().getClosedTagMESSAGE_END_TAGTerminalRuleCall_3_0_2_0(), "closedTag"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getMessageRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"closedTag",
+                    	        		true, 
+                    	        		"MESSAGE_END_TAG", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
 
                     }
 
@@ -3175,9 +3733,9 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1373:6: RULE_XML_TAG_SINGLEEND
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1722:6: RULE_XML_TAG_SINGLEEND
                     {
-                    match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleMessage2120); 
+                    match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleMessage2384); 
                      
                         createLeafNode(grammarAccess.getMessageAccess().getXML_TAG_SINGLEENDTerminalRuleCall_3_1(), null); 
                         
@@ -3210,7 +3768,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleMap
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1385:1: entryRuleMap returns [EObject current=null] : iv_ruleMap= ruleMap EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1734:1: entryRuleMap returns [EObject current=null] : iv_ruleMap= ruleMap EOF ;
     public final EObject entryRuleMap() throws RecognitionException {
         EObject current = null;
 
@@ -3218,16 +3776,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1386:2: (iv_ruleMap= ruleMap EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1387:2: iv_ruleMap= ruleMap EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1735:2: (iv_ruleMap= ruleMap EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1736:2: iv_ruleMap= ruleMap EOF
             {
              currentNode = createCompositeNode(grammarAccess.getMapRule(), currentNode); 
-            pushFollow(FOLLOW_ruleMap_in_entryRuleMap2156);
+            pushFollow(FOLLOW_ruleMap_in_entryRuleMap2420);
             iv_ruleMap=ruleMap();
             _fsp--;
 
              current =iv_ruleMap; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleMap2166); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleMap2430); 
 
             }
 
@@ -3245,10 +3803,12 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleMap
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1394:1: ruleMap returns [EObject current=null] : ( RULE_MAPSTARTKEYWORD () ( ( '.' ( (lv_mapName_3_0= ruleMapId ) ) ( (lv_attributes_4_0= rulePossibleExpression ) )* ) | ( (lv_attributes_5_0= rulePossibleExpression ) )* ) ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* ( RULE_MAPENDKEYWORD ( '.' ( (lv_mapClosingName_19_0= ruleMapId ) ) )? RULE_XML_TAG_END ) ) ) ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1743:1: ruleMap returns [EObject current=null] : ( RULE_MAPSTARTKEYWORD () ( ( RULE_DOT ( (lv_mapName_3_0= ruleMapId ) ) ( (lv_attributes_4_0= rulePossibleExpression ) )* ) | ( (lv_attributes_5_0= rulePossibleExpression ) )* ) ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_7_0= RULE_XML_TAG_END ) ) ( ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* ( RULE_MAPENDKEYWORD ( RULE_DOT ( (lv_mapClosingName_19_0= ruleMapId ) ) )? ( (lv_closedTag_20_0= RULE_XML_TAG_END ) ) ) ) ) ) ;
     public final EObject ruleMap() throws RecognitionException {
         EObject current = null;
 
+        Token lv_splitTag_7_0=null;
+        Token lv_closedTag_20_0=null;
         AntlrDatatypeRuleToken lv_mapName_3_0 = null;
 
         EObject lv_attributes_4_0 = null;
@@ -3279,18 +3839,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1399:6: ( ( RULE_MAPSTARTKEYWORD () ( ( '.' ( (lv_mapName_3_0= ruleMapId ) ) ( (lv_attributes_4_0= rulePossibleExpression ) )* ) | ( (lv_attributes_5_0= rulePossibleExpression ) )* ) ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* ( RULE_MAPENDKEYWORD ( '.' ( (lv_mapClosingName_19_0= ruleMapId ) ) )? RULE_XML_TAG_END ) ) ) ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1400:1: ( RULE_MAPSTARTKEYWORD () ( ( '.' ( (lv_mapName_3_0= ruleMapId ) ) ( (lv_attributes_4_0= rulePossibleExpression ) )* ) | ( (lv_attributes_5_0= rulePossibleExpression ) )* ) ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* ( RULE_MAPENDKEYWORD ( '.' ( (lv_mapClosingName_19_0= ruleMapId ) ) )? RULE_XML_TAG_END ) ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1748:6: ( ( RULE_MAPSTARTKEYWORD () ( ( RULE_DOT ( (lv_mapName_3_0= ruleMapId ) ) ( (lv_attributes_4_0= rulePossibleExpression ) )* ) | ( (lv_attributes_5_0= rulePossibleExpression ) )* ) ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_7_0= RULE_XML_TAG_END ) ) ( ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* ( RULE_MAPENDKEYWORD ( RULE_DOT ( (lv_mapClosingName_19_0= ruleMapId ) ) )? ( (lv_closedTag_20_0= RULE_XML_TAG_END ) ) ) ) ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1749:1: ( RULE_MAPSTARTKEYWORD () ( ( RULE_DOT ( (lv_mapName_3_0= ruleMapId ) ) ( (lv_attributes_4_0= rulePossibleExpression ) )* ) | ( (lv_attributes_5_0= rulePossibleExpression ) )* ) ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_7_0= RULE_XML_TAG_END ) ) ( ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* ( RULE_MAPENDKEYWORD ( RULE_DOT ( (lv_mapClosingName_19_0= ruleMapId ) ) )? ( (lv_closedTag_20_0= RULE_XML_TAG_END ) ) ) ) ) )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1400:1: ( RULE_MAPSTARTKEYWORD () ( ( '.' ( (lv_mapName_3_0= ruleMapId ) ) ( (lv_attributes_4_0= rulePossibleExpression ) )* ) | ( (lv_attributes_5_0= rulePossibleExpression ) )* ) ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* ( RULE_MAPENDKEYWORD ( '.' ( (lv_mapClosingName_19_0= ruleMapId ) ) )? RULE_XML_TAG_END ) ) ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1400:2: RULE_MAPSTARTKEYWORD () ( ( '.' ( (lv_mapName_3_0= ruleMapId ) ) ( (lv_attributes_4_0= rulePossibleExpression ) )* ) | ( (lv_attributes_5_0= rulePossibleExpression ) )* ) ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* ( RULE_MAPENDKEYWORD ( '.' ( (lv_mapClosingName_19_0= ruleMapId ) ) )? RULE_XML_TAG_END ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1749:1: ( RULE_MAPSTARTKEYWORD () ( ( RULE_DOT ( (lv_mapName_3_0= ruleMapId ) ) ( (lv_attributes_4_0= rulePossibleExpression ) )* ) | ( (lv_attributes_5_0= rulePossibleExpression ) )* ) ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_7_0= RULE_XML_TAG_END ) ) ( ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* ( RULE_MAPENDKEYWORD ( RULE_DOT ( (lv_mapClosingName_19_0= ruleMapId ) ) )? ( (lv_closedTag_20_0= RULE_XML_TAG_END ) ) ) ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1749:2: RULE_MAPSTARTKEYWORD () ( ( RULE_DOT ( (lv_mapName_3_0= ruleMapId ) ) ( (lv_attributes_4_0= rulePossibleExpression ) )* ) | ( (lv_attributes_5_0= rulePossibleExpression ) )* ) ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_7_0= RULE_XML_TAG_END ) ) ( ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* ( RULE_MAPENDKEYWORD ( RULE_DOT ( (lv_mapClosingName_19_0= ruleMapId ) ) )? ( (lv_closedTag_20_0= RULE_XML_TAG_END ) ) ) ) )
             {
-            match(input,RULE_MAPSTARTKEYWORD,FOLLOW_RULE_MAPSTARTKEYWORD_in_ruleMap2200); 
+            match(input,RULE_MAPSTARTKEYWORD,FOLLOW_RULE_MAPSTARTKEYWORD_in_ruleMap2464); 
              
                 createLeafNode(grammarAccess.getMapAccess().getMAPSTARTKEYWORDTerminalRuleCall_0(), null); 
                 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1404:1: ()
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1405:5: 
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1753:1: ()
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1754:5: 
             {
              
                     temp=factory.create(grammarAccess.getMapAccess().getMapAction_1().getType().getClassifier());
@@ -3305,43 +3865,43 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1415:2: ( ( '.' ( (lv_mapName_3_0= ruleMapId ) ) ( (lv_attributes_4_0= rulePossibleExpression ) )* ) | ( (lv_attributes_5_0= rulePossibleExpression ) )* )
-            int alt25=2;
-            int LA25_0 = input.LA(1);
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1764:2: ( ( RULE_DOT ( (lv_mapName_3_0= ruleMapId ) ) ( (lv_attributes_4_0= rulePossibleExpression ) )* ) | ( (lv_attributes_5_0= rulePossibleExpression ) )* )
+            int alt26=2;
+            int LA26_0 = input.LA(1);
 
-            if ( (LA25_0==72) ) {
-                alt25=1;
+            if ( (LA26_0==RULE_DOT) ) {
+                alt26=1;
             }
-            else if ( (LA25_0==RULE_XML_TAG_END||(LA25_0>=RULE_XML_TAG_SINGLEEND && LA25_0<=RULE_ID)) ) {
-                alt25=2;
+            else if ( (LA26_0==RULE_XML_TAG_END||(LA26_0>=RULE_XML_TAG_SINGLEEND && LA26_0<=RULE_ID)) ) {
+                alt26=2;
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("1415:2: ( ( '.' ( (lv_mapName_3_0= ruleMapId ) ) ( (lv_attributes_4_0= rulePossibleExpression ) )* ) | ( (lv_attributes_5_0= rulePossibleExpression ) )* )", 25, 0, input);
+                    new NoViableAltException("1764:2: ( ( RULE_DOT ( (lv_mapName_3_0= ruleMapId ) ) ( (lv_attributes_4_0= rulePossibleExpression ) )* ) | ( (lv_attributes_5_0= rulePossibleExpression ) )* )", 26, 0, input);
 
                 throw nvae;
             }
-            switch (alt25) {
+            switch (alt26) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1415:3: ( '.' ( (lv_mapName_3_0= ruleMapId ) ) ( (lv_attributes_4_0= rulePossibleExpression ) )* )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1764:3: ( RULE_DOT ( (lv_mapName_3_0= ruleMapId ) ) ( (lv_attributes_4_0= rulePossibleExpression ) )* )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1415:3: ( '.' ( (lv_mapName_3_0= ruleMapId ) ) ( (lv_attributes_4_0= rulePossibleExpression ) )* )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1415:5: '.' ( (lv_mapName_3_0= ruleMapId ) ) ( (lv_attributes_4_0= rulePossibleExpression ) )*
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1764:3: ( RULE_DOT ( (lv_mapName_3_0= ruleMapId ) ) ( (lv_attributes_4_0= rulePossibleExpression ) )* )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1764:4: RULE_DOT ( (lv_mapName_3_0= ruleMapId ) ) ( (lv_attributes_4_0= rulePossibleExpression ) )*
                     {
-                    match(input,72,FOLLOW_72_in_ruleMap2220); 
-
-                            createLeafNode(grammarAccess.getMapAccess().getFullStopKeyword_2_0_0(), null); 
+                    match(input,RULE_DOT,FOLLOW_RULE_DOT_in_ruleMap2483); 
+                     
+                        createLeafNode(grammarAccess.getMapAccess().getDOTTerminalRuleCall_2_0_0(), null); 
                         
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1419:1: ( (lv_mapName_3_0= ruleMapId ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1420:1: (lv_mapName_3_0= ruleMapId )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1768:1: ( (lv_mapName_3_0= ruleMapId ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1769:1: (lv_mapName_3_0= ruleMapId )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1420:1: (lv_mapName_3_0= ruleMapId )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1421:3: lv_mapName_3_0= ruleMapId
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1769:1: (lv_mapName_3_0= ruleMapId )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1770:3: lv_mapName_3_0= ruleMapId
                     {
                      
                     	        currentNode=createCompositeNode(grammarAccess.getMapAccess().getMapNameMapIdParserRuleCall_2_0_1_0(), currentNode); 
                     	    
-                    pushFollow(FOLLOW_ruleMapId_in_ruleMap2241);
+                    pushFollow(FOLLOW_ruleMapId_in_ruleMap2503);
                     lv_mapName_3_0=ruleMapId();
                     _fsp--;
 
@@ -3368,28 +3928,28 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1443:2: ( (lv_attributes_4_0= rulePossibleExpression ) )*
-                    loop23:
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1792:2: ( (lv_attributes_4_0= rulePossibleExpression ) )*
+                    loop24:
                     do {
-                        int alt23=2;
-                        int LA23_0 = input.LA(1);
+                        int alt24=2;
+                        int LA24_0 = input.LA(1);
 
-                        if ( (LA23_0==RULE_ID) ) {
-                            alt23=1;
+                        if ( (LA24_0==RULE_ID) ) {
+                            alt24=1;
                         }
 
 
-                        switch (alt23) {
+                        switch (alt24) {
                     	case 1 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1444:1: (lv_attributes_4_0= rulePossibleExpression )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1793:1: (lv_attributes_4_0= rulePossibleExpression )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1444:1: (lv_attributes_4_0= rulePossibleExpression )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1445:3: lv_attributes_4_0= rulePossibleExpression
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1793:1: (lv_attributes_4_0= rulePossibleExpression )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1794:3: lv_attributes_4_0= rulePossibleExpression
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getMapAccess().getAttributesPossibleExpressionParserRuleCall_2_0_2_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_rulePossibleExpression_in_ruleMap2262);
+                    	    pushFollow(FOLLOW_rulePossibleExpression_in_ruleMap2524);
                     	    lv_attributes_4_0=rulePossibleExpression();
                     	    _fsp--;
 
@@ -3418,7 +3978,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    break;
 
                     	default :
-                    	    break loop23;
+                    	    break loop24;
                         }
                     } while (true);
 
@@ -3429,30 +3989,30 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1468:6: ( (lv_attributes_5_0= rulePossibleExpression ) )*
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1817:6: ( (lv_attributes_5_0= rulePossibleExpression ) )*
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1468:6: ( (lv_attributes_5_0= rulePossibleExpression ) )*
-                    loop24:
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1817:6: ( (lv_attributes_5_0= rulePossibleExpression ) )*
+                    loop25:
                     do {
-                        int alt24=2;
-                        int LA24_0 = input.LA(1);
+                        int alt25=2;
+                        int LA25_0 = input.LA(1);
 
-                        if ( (LA24_0==RULE_ID) ) {
-                            alt24=1;
+                        if ( (LA25_0==RULE_ID) ) {
+                            alt25=1;
                         }
 
 
-                        switch (alt24) {
+                        switch (alt25) {
                     	case 1 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1469:1: (lv_attributes_5_0= rulePossibleExpression )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1818:1: (lv_attributes_5_0= rulePossibleExpression )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1469:1: (lv_attributes_5_0= rulePossibleExpression )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1470:3: lv_attributes_5_0= rulePossibleExpression
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1818:1: (lv_attributes_5_0= rulePossibleExpression )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1819:3: lv_attributes_5_0= rulePossibleExpression
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getMapAccess().getAttributesPossibleExpressionParserRuleCall_2_1_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_rulePossibleExpression_in_ruleMap2291);
+                    	    pushFollow(FOLLOW_rulePossibleExpression_in_ruleMap2553);
                     	    lv_attributes_5_0=rulePossibleExpression();
                     	    _fsp--;
 
@@ -3481,7 +4041,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    break;
 
                     	default :
-                    	    break loop24;
+                    	    break loop25;
                         }
                     } while (true);
 
@@ -3491,27 +4051,27 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1492:4: ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* ( RULE_MAPENDKEYWORD ( '.' ( (lv_mapClosingName_19_0= ruleMapId ) ) )? RULE_XML_TAG_END ) ) )
-            int alt28=2;
-            int LA28_0 = input.LA(1);
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1841:4: ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_7_0= RULE_XML_TAG_END ) ) ( ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* ( RULE_MAPENDKEYWORD ( RULE_DOT ( (lv_mapClosingName_19_0= ruleMapId ) ) )? ( (lv_closedTag_20_0= RULE_XML_TAG_END ) ) ) ) )
+            int alt29=2;
+            int LA29_0 = input.LA(1);
 
-            if ( (LA28_0==RULE_XML_TAG_SINGLEEND) ) {
-                alt28=1;
+            if ( (LA29_0==RULE_XML_TAG_SINGLEEND) ) {
+                alt29=1;
             }
-            else if ( (LA28_0==RULE_XML_TAG_END) ) {
-                alt28=2;
+            else if ( (LA29_0==RULE_XML_TAG_END) ) {
+                alt29=2;
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("1492:4: ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* ( RULE_MAPENDKEYWORD ( '.' ( (lv_mapClosingName_19_0= ruleMapId ) ) )? RULE_XML_TAG_END ) ) )", 28, 0, input);
+                    new NoViableAltException("1841:4: ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_7_0= RULE_XML_TAG_END ) ) ( ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* ( RULE_MAPENDKEYWORD ( RULE_DOT ( (lv_mapClosingName_19_0= ruleMapId ) ) )? ( (lv_closedTag_20_0= RULE_XML_TAG_END ) ) ) ) )", 29, 0, input);
 
                 throw nvae;
             }
-            switch (alt28) {
+            switch (alt29) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1492:5: RULE_XML_TAG_SINGLEEND
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1841:5: RULE_XML_TAG_SINGLEEND
                     {
-                    match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleMap2303); 
+                    match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleMap2565); 
                      
                         createLeafNode(grammarAccess.getMapAccess().getXML_TAG_SINGLEENDTerminalRuleCall_3_0(), null); 
                         
@@ -3519,82 +4079,111 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1497:6: ( RULE_XML_TAG_END ( ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* ( RULE_MAPENDKEYWORD ( '.' ( (lv_mapClosingName_19_0= ruleMapId ) ) )? RULE_XML_TAG_END ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1846:6: ( ( (lv_splitTag_7_0= RULE_XML_TAG_END ) ) ( ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* ( RULE_MAPENDKEYWORD ( RULE_DOT ( (lv_mapClosingName_19_0= ruleMapId ) ) )? ( (lv_closedTag_20_0= RULE_XML_TAG_END ) ) ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1497:6: ( RULE_XML_TAG_END ( ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* ( RULE_MAPENDKEYWORD ( '.' ( (lv_mapClosingName_19_0= ruleMapId ) ) )? RULE_XML_TAG_END ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1497:7: RULE_XML_TAG_END ( ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* ( RULE_MAPENDKEYWORD ( '.' ( (lv_mapClosingName_19_0= ruleMapId ) ) )? RULE_XML_TAG_END )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1846:6: ( ( (lv_splitTag_7_0= RULE_XML_TAG_END ) ) ( ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* ( RULE_MAPENDKEYWORD ( RULE_DOT ( (lv_mapClosingName_19_0= ruleMapId ) ) )? ( (lv_closedTag_20_0= RULE_XML_TAG_END ) ) ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1846:7: ( (lv_splitTag_7_0= RULE_XML_TAG_END ) ) ( ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* ( RULE_MAPENDKEYWORD ( RULE_DOT ( (lv_mapClosingName_19_0= ruleMapId ) ) )? ( (lv_closedTag_20_0= RULE_XML_TAG_END ) ) )
                     {
-                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleMap2318); 
-                     
-                        createLeafNode(grammarAccess.getMapAccess().getXML_TAG_ENDTerminalRuleCall_3_1_0(), null); 
-                        
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1501:1: ( ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )*
-                    loop26:
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1846:7: ( (lv_splitTag_7_0= RULE_XML_TAG_END ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1847:1: (lv_splitTag_7_0= RULE_XML_TAG_END )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1847:1: (lv_splitTag_7_0= RULE_XML_TAG_END )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1848:3: lv_splitTag_7_0= RULE_XML_TAG_END
+                    {
+                    lv_splitTag_7_0=(Token)input.LT(1);
+                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleMap2588); 
+
+                    			createLeafNode(grammarAccess.getMapAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_1_0_0(), "splitTag"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getMapRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"splitTag",
+                    	        		true, 
+                    	        		"XML_TAG_END", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1870:2: ( ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )*
+                    loop27:
                     do {
-                        int alt26=10;
+                        int alt27=10;
                         switch ( input.LA(1) ) {
                         case RULE_MESSAGE_START_TAG:
                             {
-                            alt26=1;
+                            alt27=1;
                             }
                             break;
                         case RULE_PROPERTY_START_TAG:
                             {
-                            alt26=2;
+                            alt27=2;
                             }
                             break;
                         case RULE_PARAM_START_TAG:
                             {
-                            alt26=3;
+                            alt27=3;
                             }
                             break;
                         case RULE_MAPSTARTKEYWORD:
                             {
-                            alt26=4;
+                            alt27=4;
                             }
                             break;
                         case RULE_MAP_METHOD_STARTTAG_START:
                             {
-                            alt26=5;
+                            alt27=5;
                             }
                             break;
                         case RULE_DEBUG_START_TAG:
                             {
-                            alt26=6;
+                            alt27=6;
                             }
                             break;
                         case RULE_FIELD_START_TAG:
                             {
-                            alt26=7;
+                            alt27=7;
                             }
                             break;
                         case RULE_COMMENT_START_TAG:
                             {
-                            alt26=8;
+                            alt27=8;
                             }
                             break;
                         case RULE_BREAK_START_TAG:
                             {
-                            alt26=9;
+                            alt27=9;
                             }
                             break;
 
                         }
 
-                        switch (alt26) {
+                        switch (alt27) {
                     	case 1 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1501:2: ( (lv_children_8_0= ruleMessage ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1870:3: ( (lv_children_8_0= ruleMessage ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1501:2: ( (lv_children_8_0= ruleMessage ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1502:1: (lv_children_8_0= ruleMessage )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1870:3: ( (lv_children_8_0= ruleMessage ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1871:1: (lv_children_8_0= ruleMessage )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1502:1: (lv_children_8_0= ruleMessage )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1503:3: lv_children_8_0= ruleMessage
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1871:1: (lv_children_8_0= ruleMessage )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1872:3: lv_children_8_0= ruleMessage
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getMapAccess().getChildrenMessageParserRuleCall_3_1_1_0_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleMessage_in_ruleMap2339);
+                    	    pushFollow(FOLLOW_ruleMessage_in_ruleMap2615);
                     	    lv_children_8_0=ruleMessage();
                     	    _fsp--;
 
@@ -3625,18 +4214,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1526:6: ( (lv_children_9_0= ruleProperty ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1895:6: ( (lv_children_9_0= ruleProperty ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1526:6: ( (lv_children_9_0= ruleProperty ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1527:1: (lv_children_9_0= ruleProperty )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1895:6: ( (lv_children_9_0= ruleProperty ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1896:1: (lv_children_9_0= ruleProperty )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1527:1: (lv_children_9_0= ruleProperty )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1528:3: lv_children_9_0= ruleProperty
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1896:1: (lv_children_9_0= ruleProperty )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1897:3: lv_children_9_0= ruleProperty
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getMapAccess().getChildrenPropertyParserRuleCall_3_1_1_1_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleProperty_in_ruleMap2366);
+                    	    pushFollow(FOLLOW_ruleProperty_in_ruleMap2642);
                     	    lv_children_9_0=ruleProperty();
                     	    _fsp--;
 
@@ -3667,18 +4256,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    }
                     	    break;
                     	case 3 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1551:6: ( (lv_children_10_0= ruleParam ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1920:6: ( (lv_children_10_0= ruleParam ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1551:6: ( (lv_children_10_0= ruleParam ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1552:1: (lv_children_10_0= ruleParam )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1920:6: ( (lv_children_10_0= ruleParam ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1921:1: (lv_children_10_0= ruleParam )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1552:1: (lv_children_10_0= ruleParam )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1553:3: lv_children_10_0= ruleParam
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1921:1: (lv_children_10_0= ruleParam )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1922:3: lv_children_10_0= ruleParam
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getMapAccess().getChildrenParamParserRuleCall_3_1_1_2_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleParam_in_ruleMap2393);
+                    	    pushFollow(FOLLOW_ruleParam_in_ruleMap2669);
                     	    lv_children_10_0=ruleParam();
                     	    _fsp--;
 
@@ -3709,18 +4298,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    }
                     	    break;
                     	case 4 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1576:6: ( (lv_children_11_0= ruleMap ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1945:6: ( (lv_children_11_0= ruleMap ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1576:6: ( (lv_children_11_0= ruleMap ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1577:1: (lv_children_11_0= ruleMap )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1945:6: ( (lv_children_11_0= ruleMap ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1946:1: (lv_children_11_0= ruleMap )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1577:1: (lv_children_11_0= ruleMap )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1578:3: lv_children_11_0= ruleMap
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1946:1: (lv_children_11_0= ruleMap )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1947:3: lv_children_11_0= ruleMap
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getMapAccess().getChildrenMapParserRuleCall_3_1_1_3_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleMap_in_ruleMap2420);
+                    	    pushFollow(FOLLOW_ruleMap_in_ruleMap2696);
                     	    lv_children_11_0=ruleMap();
                     	    _fsp--;
 
@@ -3751,18 +4340,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    }
                     	    break;
                     	case 5 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1601:6: ( (lv_children_12_0= ruleMapMethod ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1970:6: ( (lv_children_12_0= ruleMapMethod ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1601:6: ( (lv_children_12_0= ruleMapMethod ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1602:1: (lv_children_12_0= ruleMapMethod )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1970:6: ( (lv_children_12_0= ruleMapMethod ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1971:1: (lv_children_12_0= ruleMapMethod )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1602:1: (lv_children_12_0= ruleMapMethod )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1603:3: lv_children_12_0= ruleMapMethod
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1971:1: (lv_children_12_0= ruleMapMethod )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1972:3: lv_children_12_0= ruleMapMethod
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getMapAccess().getChildrenMapMethodParserRuleCall_3_1_1_4_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleMapMethod_in_ruleMap2447);
+                    	    pushFollow(FOLLOW_ruleMapMethod_in_ruleMap2723);
                     	    lv_children_12_0=ruleMapMethod();
                     	    _fsp--;
 
@@ -3793,18 +4382,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    }
                     	    break;
                     	case 6 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1626:6: ( (lv_children_13_0= ruleDebugTag ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1995:6: ( (lv_children_13_0= ruleDebugTag ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1626:6: ( (lv_children_13_0= ruleDebugTag ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1627:1: (lv_children_13_0= ruleDebugTag )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1995:6: ( (lv_children_13_0= ruleDebugTag ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1996:1: (lv_children_13_0= ruleDebugTag )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1627:1: (lv_children_13_0= ruleDebugTag )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1628:3: lv_children_13_0= ruleDebugTag
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1996:1: (lv_children_13_0= ruleDebugTag )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1997:3: lv_children_13_0= ruleDebugTag
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getMapAccess().getChildrenDebugTagParserRuleCall_3_1_1_5_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleDebugTag_in_ruleMap2474);
+                    	    pushFollow(FOLLOW_ruleDebugTag_in_ruleMap2750);
                     	    lv_children_13_0=ruleDebugTag();
                     	    _fsp--;
 
@@ -3835,18 +4424,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    }
                     	    break;
                     	case 7 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1651:6: ( (lv_children_14_0= ruleField ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2020:6: ( (lv_children_14_0= ruleField ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1651:6: ( (lv_children_14_0= ruleField ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1652:1: (lv_children_14_0= ruleField )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2020:6: ( (lv_children_14_0= ruleField ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2021:1: (lv_children_14_0= ruleField )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1652:1: (lv_children_14_0= ruleField )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1653:3: lv_children_14_0= ruleField
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2021:1: (lv_children_14_0= ruleField )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2022:3: lv_children_14_0= ruleField
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getMapAccess().getChildrenFieldParserRuleCall_3_1_1_6_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleField_in_ruleMap2501);
+                    	    pushFollow(FOLLOW_ruleField_in_ruleMap2777);
                     	    lv_children_14_0=ruleField();
                     	    _fsp--;
 
@@ -3877,18 +4466,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    }
                     	    break;
                     	case 8 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1676:6: ( (lv_children_15_0= ruleComment ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2045:6: ( (lv_children_15_0= ruleComment ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1676:6: ( (lv_children_15_0= ruleComment ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1677:1: (lv_children_15_0= ruleComment )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2045:6: ( (lv_children_15_0= ruleComment ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2046:1: (lv_children_15_0= ruleComment )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1677:1: (lv_children_15_0= ruleComment )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1678:3: lv_children_15_0= ruleComment
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2046:1: (lv_children_15_0= ruleComment )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2047:3: lv_children_15_0= ruleComment
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getMapAccess().getChildrenCommentParserRuleCall_3_1_1_7_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleComment_in_ruleMap2528);
+                    	    pushFollow(FOLLOW_ruleComment_in_ruleMap2804);
                     	    lv_children_15_0=ruleComment();
                     	    _fsp--;
 
@@ -3919,18 +4508,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    }
                     	    break;
                     	case 9 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1701:6: ( (lv_children_16_0= ruleBreak ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2070:6: ( (lv_children_16_0= ruleBreak ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1701:6: ( (lv_children_16_0= ruleBreak ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1702:1: (lv_children_16_0= ruleBreak )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2070:6: ( (lv_children_16_0= ruleBreak ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2071:1: (lv_children_16_0= ruleBreak )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1702:1: (lv_children_16_0= ruleBreak )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1703:3: lv_children_16_0= ruleBreak
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2071:1: (lv_children_16_0= ruleBreak )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2072:3: lv_children_16_0= ruleBreak
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getMapAccess().getChildrenBreakParserRuleCall_3_1_1_8_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleBreak_in_ruleMap2555);
+                    	    pushFollow(FOLLOW_ruleBreak_in_ruleMap2831);
                     	    lv_children_16_0=ruleBreak();
                     	    _fsp--;
 
@@ -3962,42 +4551,42 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    break;
 
                     	default :
-                    	    break loop26;
+                    	    break loop27;
                         }
                     } while (true);
 
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1725:4: ( RULE_MAPENDKEYWORD ( '.' ( (lv_mapClosingName_19_0= ruleMapId ) ) )? RULE_XML_TAG_END )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1725:5: RULE_MAPENDKEYWORD ( '.' ( (lv_mapClosingName_19_0= ruleMapId ) ) )? RULE_XML_TAG_END
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2094:4: ( RULE_MAPENDKEYWORD ( RULE_DOT ( (lv_mapClosingName_19_0= ruleMapId ) ) )? ( (lv_closedTag_20_0= RULE_XML_TAG_END ) ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2094:5: RULE_MAPENDKEYWORD ( RULE_DOT ( (lv_mapClosingName_19_0= ruleMapId ) ) )? ( (lv_closedTag_20_0= RULE_XML_TAG_END ) )
                     {
-                    match(input,RULE_MAPENDKEYWORD,FOLLOW_RULE_MAPENDKEYWORD_in_ruleMap2567); 
+                    match(input,RULE_MAPENDKEYWORD,FOLLOW_RULE_MAPENDKEYWORD_in_ruleMap2843); 
                      
                         createLeafNode(grammarAccess.getMapAccess().getMAPENDKEYWORDTerminalRuleCall_3_1_2_0(), null); 
                         
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1729:1: ( '.' ( (lv_mapClosingName_19_0= ruleMapId ) ) )?
-                    int alt27=2;
-                    int LA27_0 = input.LA(1);
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2098:1: ( RULE_DOT ( (lv_mapClosingName_19_0= ruleMapId ) ) )?
+                    int alt28=2;
+                    int LA28_0 = input.LA(1);
 
-                    if ( (LA27_0==72) ) {
-                        alt27=1;
+                    if ( (LA28_0==RULE_DOT) ) {
+                        alt28=1;
                     }
-                    switch (alt27) {
+                    switch (alt28) {
                         case 1 :
-                            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1729:3: '.' ( (lv_mapClosingName_19_0= ruleMapId ) )
+                            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2098:2: RULE_DOT ( (lv_mapClosingName_19_0= ruleMapId ) )
                             {
-                            match(input,72,FOLLOW_72_in_ruleMap2577); 
-
-                                    createLeafNode(grammarAccess.getMapAccess().getFullStopKeyword_3_1_2_1_0(), null); 
+                            match(input,RULE_DOT,FOLLOW_RULE_DOT_in_ruleMap2852); 
+                             
+                                createLeafNode(grammarAccess.getMapAccess().getDOTTerminalRuleCall_3_1_2_1_0(), null); 
                                 
-                            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1733:1: ( (lv_mapClosingName_19_0= ruleMapId ) )
-                            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1734:1: (lv_mapClosingName_19_0= ruleMapId )
+                            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2102:1: ( (lv_mapClosingName_19_0= ruleMapId ) )
+                            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2103:1: (lv_mapClosingName_19_0= ruleMapId )
                             {
-                            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1734:1: (lv_mapClosingName_19_0= ruleMapId )
-                            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1735:3: lv_mapClosingName_19_0= ruleMapId
+                            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2103:1: (lv_mapClosingName_19_0= ruleMapId )
+                            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2104:3: lv_mapClosingName_19_0= ruleMapId
                             {
                              
                             	        currentNode=createCompositeNode(grammarAccess.getMapAccess().getMapClosingNameMapIdParserRuleCall_3_1_2_1_1_0(), currentNode); 
                             	    
-                            pushFollow(FOLLOW_ruleMapId_in_ruleMap2598);
+                            pushFollow(FOLLOW_ruleMapId_in_ruleMap2872);
                             lv_mapClosingName_19_0=ruleMapId();
                             _fsp--;
 
@@ -4030,10 +4619,39 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleMap2609); 
-                     
-                        createLeafNode(grammarAccess.getMapAccess().getXML_TAG_ENDTerminalRuleCall_3_1_2_2(), null); 
-                        
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2126:4: ( (lv_closedTag_20_0= RULE_XML_TAG_END ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2127:1: (lv_closedTag_20_0= RULE_XML_TAG_END )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2127:1: (lv_closedTag_20_0= RULE_XML_TAG_END )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2128:3: lv_closedTag_20_0= RULE_XML_TAG_END
+                    {
+                    lv_closedTag_20_0=(Token)input.LT(1);
+                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleMap2891); 
+
+                    			createLeafNode(grammarAccess.getMapAccess().getClosedTagXML_TAG_ENDTerminalRuleCall_3_1_2_2_0(), "closedTag"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getMapRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"closedTag",
+                    	        		true, 
+                    	        		"XML_TAG_END", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
 
                     }
 
@@ -4069,7 +4687,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleMapId
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1769:1: entryRuleMapId returns [String current=null] : iv_ruleMapId= ruleMapId EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2158:1: entryRuleMapId returns [String current=null] : iv_ruleMapId= ruleMapId EOF ;
     public final String entryRuleMapId() throws RecognitionException {
         String current = null;
 
@@ -4077,16 +4695,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1770:2: (iv_ruleMapId= ruleMapId EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1771:2: iv_ruleMapId= ruleMapId EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2159:2: (iv_ruleMapId= ruleMapId EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2160:2: iv_ruleMapId= ruleMapId EOF
             {
              currentNode = createCompositeNode(grammarAccess.getMapIdRule(), currentNode); 
-            pushFollow(FOLLOW_ruleMapId_in_entryRuleMapId2648);
+            pushFollow(FOLLOW_ruleMapId_in_entryRuleMapId2936);
             iv_ruleMapId=ruleMapId();
             _fsp--;
 
              current =iv_ruleMapId.getText(); 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleMapId2659); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleMapId2947); 
 
             }
 
@@ -4104,7 +4722,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleMapId
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1778:1: ruleMapId returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : this_ID_0= RULE_ID ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2167:1: ruleMapId returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : this_ID_0= RULE_ID ;
     public final AntlrDatatypeRuleToken ruleMapId() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -4113,11 +4731,11 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
          setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1783:6: (this_ID_0= RULE_ID )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1784:5: this_ID_0= RULE_ID
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2172:6: (this_ID_0= RULE_ID )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2173:5: this_ID_0= RULE_ID
             {
             this_ID_0=(Token)input.LT(1);
-            match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleMapId2698); 
+            match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleMapId2986); 
 
             		current.merge(this_ID_0);
                 
@@ -4144,7 +4762,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleRequired
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1799:1: entryRuleRequired returns [EObject current=null] : iv_ruleRequired= ruleRequired EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2188:1: entryRuleRequired returns [EObject current=null] : iv_ruleRequired= ruleRequired EOF ;
     public final EObject entryRuleRequired() throws RecognitionException {
         EObject current = null;
 
@@ -4152,16 +4770,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1800:2: (iv_ruleRequired= ruleRequired EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1801:2: iv_ruleRequired= ruleRequired EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2189:2: (iv_ruleRequired= ruleRequired EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2190:2: iv_ruleRequired= ruleRequired EOF
             {
              currentNode = createCompositeNode(grammarAccess.getRequiredRule(), currentNode); 
-            pushFollow(FOLLOW_ruleRequired_in_entryRuleRequired2742);
+            pushFollow(FOLLOW_ruleRequired_in_entryRuleRequired3030);
             iv_ruleRequired=ruleRequired();
             _fsp--;
 
              current =iv_ruleRequired; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleRequired2752); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleRequired3040); 
 
             }
 
@@ -4179,28 +4797,30 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleRequired
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1808:1: ruleRequired returns [EObject current=null] : ( RULE_REQUIRED_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END RULE_REQUIRED_END_TAG ) ) ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2197:1: ruleRequired returns [EObject current=null] : ( RULE_REQUIRED_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_5_0= RULE_REQUIRED_END_TAG ) ) ) ) ) ;
     public final EObject ruleRequired() throws RecognitionException {
         EObject current = null;
 
+        Token lv_splitTag_4_0=null;
+        Token lv_closedTag_5_0=null;
         EObject lv_attributes_2_0 = null;
 
 
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1813:6: ( ( RULE_REQUIRED_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END RULE_REQUIRED_END_TAG ) ) ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1814:1: ( RULE_REQUIRED_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END RULE_REQUIRED_END_TAG ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2202:6: ( ( RULE_REQUIRED_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_5_0= RULE_REQUIRED_END_TAG ) ) ) ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2203:1: ( RULE_REQUIRED_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_5_0= RULE_REQUIRED_END_TAG ) ) ) ) )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1814:1: ( RULE_REQUIRED_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END RULE_REQUIRED_END_TAG ) ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1814:2: RULE_REQUIRED_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END RULE_REQUIRED_END_TAG ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2203:1: ( RULE_REQUIRED_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_5_0= RULE_REQUIRED_END_TAG ) ) ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2203:2: RULE_REQUIRED_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_5_0= RULE_REQUIRED_END_TAG ) ) ) )
             {
-            match(input,RULE_REQUIRED_START_TAG,FOLLOW_RULE_REQUIRED_START_TAG_in_ruleRequired2786); 
+            match(input,RULE_REQUIRED_START_TAG,FOLLOW_RULE_REQUIRED_START_TAG_in_ruleRequired3074); 
              
                 createLeafNode(grammarAccess.getRequiredAccess().getREQUIRED_START_TAGTerminalRuleCall_0(), null); 
                 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1818:1: ()
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1819:5: 
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2207:1: ()
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2208:5: 
             {
              
                     temp=factory.create(grammarAccess.getRequiredAccess().getRequiredAction_1().getType().getClassifier());
@@ -4215,28 +4835,28 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1829:2: ( (lv_attributes_2_0= rulePossibleExpression ) )*
-            loop29:
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2218:2: ( (lv_attributes_2_0= rulePossibleExpression ) )*
+            loop30:
             do {
-                int alt29=2;
-                int LA29_0 = input.LA(1);
+                int alt30=2;
+                int LA30_0 = input.LA(1);
 
-                if ( (LA29_0==RULE_ID) ) {
-                    alt29=1;
+                if ( (LA30_0==RULE_ID) ) {
+                    alt30=1;
                 }
 
 
-                switch (alt29) {
+                switch (alt30) {
             	case 1 :
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1830:1: (lv_attributes_2_0= rulePossibleExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2219:1: (lv_attributes_2_0= rulePossibleExpression )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1830:1: (lv_attributes_2_0= rulePossibleExpression )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1831:3: lv_attributes_2_0= rulePossibleExpression
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2219:1: (lv_attributes_2_0= rulePossibleExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2220:3: lv_attributes_2_0= rulePossibleExpression
             	    {
             	     
             	    	        currentNode=createCompositeNode(grammarAccess.getRequiredAccess().getAttributesPossibleExpressionParserRuleCall_2_0(), currentNode); 
             	    	    
-            	    pushFollow(FOLLOW_rulePossibleExpression_in_ruleRequired2815);
+            	    pushFollow(FOLLOW_rulePossibleExpression_in_ruleRequired3103);
             	    lv_attributes_2_0=rulePossibleExpression();
             	    _fsp--;
 
@@ -4265,31 +4885,31 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
             	    break;
 
             	default :
-            	    break loop29;
+            	    break loop30;
                 }
             } while (true);
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1853:3: ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END RULE_REQUIRED_END_TAG ) )
-            int alt30=2;
-            int LA30_0 = input.LA(1);
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2242:3: ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_5_0= RULE_REQUIRED_END_TAG ) ) ) )
+            int alt31=2;
+            int LA31_0 = input.LA(1);
 
-            if ( (LA30_0==RULE_XML_TAG_SINGLEEND) ) {
-                alt30=1;
+            if ( (LA31_0==RULE_XML_TAG_SINGLEEND) ) {
+                alt31=1;
             }
-            else if ( (LA30_0==RULE_XML_TAG_END) ) {
-                alt30=2;
+            else if ( (LA31_0==RULE_XML_TAG_END) ) {
+                alt31=2;
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("1853:3: ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END RULE_REQUIRED_END_TAG ) )", 30, 0, input);
+                    new NoViableAltException("2242:3: ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_5_0= RULE_REQUIRED_END_TAG ) ) ) )", 31, 0, input);
 
                 throw nvae;
             }
-            switch (alt30) {
+            switch (alt31) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1853:4: RULE_XML_TAG_SINGLEEND
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2242:4: RULE_XML_TAG_SINGLEEND
                     {
-                    match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleRequired2826); 
+                    match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleRequired3114); 
                      
                         createLeafNode(grammarAccess.getRequiredAccess().getXML_TAG_SINGLEENDTerminalRuleCall_3_0(), null); 
                         
@@ -4297,19 +4917,77 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1858:6: ( RULE_XML_TAG_END RULE_REQUIRED_END_TAG )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2247:6: ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_5_0= RULE_REQUIRED_END_TAG ) ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1858:6: ( RULE_XML_TAG_END RULE_REQUIRED_END_TAG )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1858:7: RULE_XML_TAG_END RULE_REQUIRED_END_TAG
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2247:6: ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_5_0= RULE_REQUIRED_END_TAG ) ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2247:7: ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_5_0= RULE_REQUIRED_END_TAG ) )
                     {
-                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleRequired2841); 
-                     
-                        createLeafNode(grammarAccess.getRequiredAccess().getXML_TAG_ENDTerminalRuleCall_3_1_0(), null); 
-                        
-                    match(input,RULE_REQUIRED_END_TAG,FOLLOW_RULE_REQUIRED_END_TAG_in_ruleRequired2849); 
-                     
-                        createLeafNode(grammarAccess.getRequiredAccess().getREQUIRED_END_TAGTerminalRuleCall_3_1_1(), null); 
-                        
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2247:7: ( (lv_splitTag_4_0= RULE_XML_TAG_END ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2248:1: (lv_splitTag_4_0= RULE_XML_TAG_END )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2248:1: (lv_splitTag_4_0= RULE_XML_TAG_END )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2249:3: lv_splitTag_4_0= RULE_XML_TAG_END
+                    {
+                    lv_splitTag_4_0=(Token)input.LT(1);
+                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleRequired3137); 
+
+                    			createLeafNode(grammarAccess.getRequiredAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_1_0_0(), "splitTag"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getRequiredRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"splitTag",
+                    	        		true, 
+                    	        		"XML_TAG_END", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2271:2: ( (lv_closedTag_5_0= RULE_REQUIRED_END_TAG ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2272:1: (lv_closedTag_5_0= RULE_REQUIRED_END_TAG )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2272:1: (lv_closedTag_5_0= RULE_REQUIRED_END_TAG )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2273:3: lv_closedTag_5_0= RULE_REQUIRED_END_TAG
+                    {
+                    lv_closedTag_5_0=(Token)input.LT(1);
+                    match(input,RULE_REQUIRED_END_TAG,FOLLOW_RULE_REQUIRED_END_TAG_in_ruleRequired3159); 
+
+                    			createLeafNode(grammarAccess.getRequiredAccess().getClosedTagREQUIRED_END_TAGTerminalRuleCall_3_1_1_0(), "closedTag"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getRequiredRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"closedTag",
+                    	        		true, 
+                    	        		"REQUIRED_END_TAG", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
 
                     }
 
@@ -4342,7 +5020,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleProperty
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1874:1: entryRuleProperty returns [EObject current=null] : iv_ruleProperty= ruleProperty EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2303:1: entryRuleProperty returns [EObject current=null] : iv_ruleProperty= ruleProperty EOF ;
     public final EObject entryRuleProperty() throws RecognitionException {
         EObject current = null;
 
@@ -4350,16 +5028,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1875:2: (iv_ruleProperty= ruleProperty EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1876:2: iv_ruleProperty= ruleProperty EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2304:2: (iv_ruleProperty= ruleProperty EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2305:2: iv_ruleProperty= ruleProperty EOF
             {
              currentNode = createCompositeNode(grammarAccess.getPropertyRule(), currentNode); 
-            pushFollow(FOLLOW_ruleProperty_in_entryRuleProperty2886);
+            pushFollow(FOLLOW_ruleProperty_in_entryRuleProperty3202);
             iv_ruleProperty=ruleProperty();
             _fsp--;
 
              current =iv_ruleProperty; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleProperty2896); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleProperty3212); 
 
             }
 
@@ -4377,10 +5055,12 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleProperty
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1883:1: ruleProperty returns [EObject current=null] : ( RULE_PROPERTY_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* RULE_PROPERTY_END_TAG ) ) ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2312:1: ruleProperty returns [EObject current=null] : ( RULE_PROPERTY_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* ( (lv_closedTag_7_0= RULE_PROPERTY_END_TAG ) ) ) ) ) ;
     public final EObject ruleProperty() throws RecognitionException {
         EObject current = null;
 
+        Token lv_splitTag_4_0=null;
+        Token lv_closedTag_7_0=null;
         EObject lv_attributes_2_0 = null;
 
         EObject lv_children_5_0 = null;
@@ -4391,18 +5071,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1888:6: ( ( RULE_PROPERTY_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* RULE_PROPERTY_END_TAG ) ) ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1889:1: ( RULE_PROPERTY_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* RULE_PROPERTY_END_TAG ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2317:6: ( ( RULE_PROPERTY_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* ( (lv_closedTag_7_0= RULE_PROPERTY_END_TAG ) ) ) ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2318:1: ( RULE_PROPERTY_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* ( (lv_closedTag_7_0= RULE_PROPERTY_END_TAG ) ) ) ) )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1889:1: ( RULE_PROPERTY_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* RULE_PROPERTY_END_TAG ) ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1889:2: RULE_PROPERTY_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* RULE_PROPERTY_END_TAG ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2318:1: ( RULE_PROPERTY_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* ( (lv_closedTag_7_0= RULE_PROPERTY_END_TAG ) ) ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2318:2: RULE_PROPERTY_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* ( (lv_closedTag_7_0= RULE_PROPERTY_END_TAG ) ) ) )
             {
-            match(input,RULE_PROPERTY_START_TAG,FOLLOW_RULE_PROPERTY_START_TAG_in_ruleProperty2930); 
+            match(input,RULE_PROPERTY_START_TAG,FOLLOW_RULE_PROPERTY_START_TAG_in_ruleProperty3246); 
              
                 createLeafNode(grammarAccess.getPropertyAccess().getPROPERTY_START_TAGTerminalRuleCall_0(), null); 
                 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1893:1: ()
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1894:5: 
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2322:1: ()
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2323:5: 
             {
              
                     temp=factory.create(grammarAccess.getPropertyAccess().getPropertyAction_1().getType().getClassifier());
@@ -4417,28 +5097,28 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1904:2: ( (lv_attributes_2_0= rulePossibleExpression ) )*
-            loop31:
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2333:2: ( (lv_attributes_2_0= rulePossibleExpression ) )*
+            loop32:
             do {
-                int alt31=2;
-                int LA31_0 = input.LA(1);
+                int alt32=2;
+                int LA32_0 = input.LA(1);
 
-                if ( (LA31_0==RULE_ID) ) {
-                    alt31=1;
+                if ( (LA32_0==RULE_ID) ) {
+                    alt32=1;
                 }
 
 
-                switch (alt31) {
+                switch (alt32) {
             	case 1 :
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1905:1: (lv_attributes_2_0= rulePossibleExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2334:1: (lv_attributes_2_0= rulePossibleExpression )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1905:1: (lv_attributes_2_0= rulePossibleExpression )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1906:3: lv_attributes_2_0= rulePossibleExpression
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2334:1: (lv_attributes_2_0= rulePossibleExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2335:3: lv_attributes_2_0= rulePossibleExpression
             	    {
             	     
             	    	        currentNode=createCompositeNode(grammarAccess.getPropertyAccess().getAttributesPossibleExpressionParserRuleCall_2_0(), currentNode); 
             	    	    
-            	    pushFollow(FOLLOW_rulePossibleExpression_in_ruleProperty2959);
+            	    pushFollow(FOLLOW_rulePossibleExpression_in_ruleProperty3275);
             	    lv_attributes_2_0=rulePossibleExpression();
             	    _fsp--;
 
@@ -4467,31 +5147,31 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
             	    break;
 
             	default :
-            	    break loop31;
+            	    break loop32;
                 }
             } while (true);
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1928:3: ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* RULE_PROPERTY_END_TAG ) )
-            int alt33=2;
-            int LA33_0 = input.LA(1);
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2357:3: ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* ( (lv_closedTag_7_0= RULE_PROPERTY_END_TAG ) ) ) )
+            int alt34=2;
+            int LA34_0 = input.LA(1);
 
-            if ( (LA33_0==RULE_XML_TAG_SINGLEEND) ) {
-                alt33=1;
+            if ( (LA34_0==RULE_XML_TAG_SINGLEEND) ) {
+                alt34=1;
             }
-            else if ( (LA33_0==RULE_XML_TAG_END) ) {
-                alt33=2;
+            else if ( (LA34_0==RULE_XML_TAG_END) ) {
+                alt34=2;
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("1928:3: ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* RULE_PROPERTY_END_TAG ) )", 33, 0, input);
+                    new NoViableAltException("2357:3: ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* ( (lv_closedTag_7_0= RULE_PROPERTY_END_TAG ) ) ) )", 34, 0, input);
 
                 throw nvae;
             }
-            switch (alt33) {
+            switch (alt34) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1928:4: RULE_XML_TAG_SINGLEEND
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2357:4: RULE_XML_TAG_SINGLEEND
                     {
-                    match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleProperty2970); 
+                    match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleProperty3286); 
                      
                         createLeafNode(grammarAccess.getPropertyAccess().getXML_TAG_SINGLEENDTerminalRuleCall_3_0(), null); 
                         
@@ -4499,43 +5179,72 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1933:6: ( RULE_XML_TAG_END ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* RULE_PROPERTY_END_TAG )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2362:6: ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* ( (lv_closedTag_7_0= RULE_PROPERTY_END_TAG ) ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1933:6: ( RULE_XML_TAG_END ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* RULE_PROPERTY_END_TAG )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1933:7: RULE_XML_TAG_END ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* RULE_PROPERTY_END_TAG
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2362:6: ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* ( (lv_closedTag_7_0= RULE_PROPERTY_END_TAG ) ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2362:7: ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* ( (lv_closedTag_7_0= RULE_PROPERTY_END_TAG ) )
                     {
-                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleProperty2985); 
-                     
-                        createLeafNode(grammarAccess.getPropertyAccess().getXML_TAG_ENDTerminalRuleCall_3_1_0(), null); 
-                        
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1937:1: ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )*
-                    loop32:
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2362:7: ( (lv_splitTag_4_0= RULE_XML_TAG_END ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2363:1: (lv_splitTag_4_0= RULE_XML_TAG_END )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2363:1: (lv_splitTag_4_0= RULE_XML_TAG_END )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2364:3: lv_splitTag_4_0= RULE_XML_TAG_END
+                    {
+                    lv_splitTag_4_0=(Token)input.LT(1);
+                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleProperty3309); 
+
+                    			createLeafNode(grammarAccess.getPropertyAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_1_0_0(), "splitTag"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getPropertyRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"splitTag",
+                    	        		true, 
+                    	        		"XML_TAG_END", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2386:2: ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )*
+                    loop33:
                     do {
-                        int alt32=3;
-                        int LA32_0 = input.LA(1);
+                        int alt33=3;
+                        int LA33_0 = input.LA(1);
 
-                        if ( ((LA32_0>=RULE_EXPRESSION_START_TAG && LA32_0<=RULE_OPTION_START_TAG)) ) {
-                            alt32=1;
+                        if ( ((LA33_0>=RULE_EXPRESSION_START_TAG && LA33_0<=RULE_OPTION_START_TAG)) ) {
+                            alt33=1;
                         }
-                        else if ( (LA32_0==RULE_MAPSTARTKEYWORD) ) {
-                            alt32=2;
+                        else if ( (LA33_0==RULE_MAPSTARTKEYWORD) ) {
+                            alt33=2;
                         }
 
 
-                        switch (alt32) {
+                        switch (alt33) {
                     	case 1 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1937:2: ( (lv_children_5_0= ruleExpressionOrOption ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2386:3: ( (lv_children_5_0= ruleExpressionOrOption ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1937:2: ( (lv_children_5_0= ruleExpressionOrOption ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1938:1: (lv_children_5_0= ruleExpressionOrOption )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2386:3: ( (lv_children_5_0= ruleExpressionOrOption ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2387:1: (lv_children_5_0= ruleExpressionOrOption )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1938:1: (lv_children_5_0= ruleExpressionOrOption )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1939:3: lv_children_5_0= ruleExpressionOrOption
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2387:1: (lv_children_5_0= ruleExpressionOrOption )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2388:3: lv_children_5_0= ruleExpressionOrOption
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getPropertyAccess().getChildrenExpressionOrOptionParserRuleCall_3_1_1_0_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleExpressionOrOption_in_ruleProperty3006);
+                    	    pushFollow(FOLLOW_ruleExpressionOrOption_in_ruleProperty3336);
                     	    lv_children_5_0=ruleExpressionOrOption();
                     	    _fsp--;
 
@@ -4566,18 +5275,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1962:6: ( (lv_children_6_0= ruleMap ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2411:6: ( (lv_children_6_0= ruleMap ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1962:6: ( (lv_children_6_0= ruleMap ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1963:1: (lv_children_6_0= ruleMap )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2411:6: ( (lv_children_6_0= ruleMap ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2412:1: (lv_children_6_0= ruleMap )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1963:1: (lv_children_6_0= ruleMap )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1964:3: lv_children_6_0= ruleMap
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2412:1: (lv_children_6_0= ruleMap )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2413:3: lv_children_6_0= ruleMap
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getPropertyAccess().getChildrenMapParserRuleCall_3_1_1_1_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleMap_in_ruleProperty3033);
+                    	    pushFollow(FOLLOW_ruleMap_in_ruleProperty3363);
                     	    lv_children_6_0=ruleMap();
                     	    _fsp--;
 
@@ -4609,14 +5318,43 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    break;
 
                     	default :
-                    	    break loop32;
+                    	    break loop33;
                         }
                     } while (true);
 
-                    match(input,RULE_PROPERTY_END_TAG,FOLLOW_RULE_PROPERTY_END_TAG_in_ruleProperty3044); 
-                     
-                        createLeafNode(grammarAccess.getPropertyAccess().getPROPERTY_END_TAGTerminalRuleCall_3_1_2(), null); 
-                        
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2435:4: ( (lv_closedTag_7_0= RULE_PROPERTY_END_TAG ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2436:1: (lv_closedTag_7_0= RULE_PROPERTY_END_TAG )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2436:1: (lv_closedTag_7_0= RULE_PROPERTY_END_TAG )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2437:3: lv_closedTag_7_0= RULE_PROPERTY_END_TAG
+                    {
+                    lv_closedTag_7_0=(Token)input.LT(1);
+                    match(input,RULE_PROPERTY_END_TAG,FOLLOW_RULE_PROPERTY_END_TAG_in_ruleProperty3382); 
+
+                    			createLeafNode(grammarAccess.getPropertyAccess().getClosedTagPROPERTY_END_TAGTerminalRuleCall_3_1_2_0(), "closedTag"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getPropertyRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"closedTag",
+                    	        		true, 
+                    	        		"PROPERTY_END_TAG", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
 
                     }
 
@@ -4649,7 +5387,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleParam
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1998:1: entryRuleParam returns [EObject current=null] : iv_ruleParam= ruleParam EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2467:1: entryRuleParam returns [EObject current=null] : iv_ruleParam= ruleParam EOF ;
     public final EObject entryRuleParam() throws RecognitionException {
         EObject current = null;
 
@@ -4657,16 +5395,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:1999:2: (iv_ruleParam= ruleParam EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2000:2: iv_ruleParam= ruleParam EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2468:2: (iv_ruleParam= ruleParam EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2469:2: iv_ruleParam= ruleParam EOF
             {
              currentNode = createCompositeNode(grammarAccess.getParamRule(), currentNode); 
-            pushFollow(FOLLOW_ruleParam_in_entryRuleParam3081);
+            pushFollow(FOLLOW_ruleParam_in_entryRuleParam3425);
             iv_ruleParam=ruleParam();
             _fsp--;
 
              current =iv_ruleParam; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleParam3091); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleParam3435); 
 
             }
 
@@ -4684,10 +5422,12 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleParam
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2007:1: ruleParam returns [EObject current=null] : ( RULE_PARAM_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* RULE_PARAM_END_TAG ) ) ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2476:1: ruleParam returns [EObject current=null] : ( RULE_PARAM_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* ( (lv_closedTag_7_0= RULE_PARAM_END_TAG ) ) ) ) ) ;
     public final EObject ruleParam() throws RecognitionException {
         EObject current = null;
 
+        Token lv_splitTag_4_0=null;
+        Token lv_closedTag_7_0=null;
         EObject lv_attributes_2_0 = null;
 
         EObject lv_children_5_0 = null;
@@ -4698,18 +5438,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2012:6: ( ( RULE_PARAM_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* RULE_PARAM_END_TAG ) ) ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2013:1: ( RULE_PARAM_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* RULE_PARAM_END_TAG ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2481:6: ( ( RULE_PARAM_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* ( (lv_closedTag_7_0= RULE_PARAM_END_TAG ) ) ) ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2482:1: ( RULE_PARAM_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* ( (lv_closedTag_7_0= RULE_PARAM_END_TAG ) ) ) ) )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2013:1: ( RULE_PARAM_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* RULE_PARAM_END_TAG ) ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2013:2: RULE_PARAM_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* RULE_PARAM_END_TAG ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2482:1: ( RULE_PARAM_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* ( (lv_closedTag_7_0= RULE_PARAM_END_TAG ) ) ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2482:2: RULE_PARAM_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* ( (lv_closedTag_7_0= RULE_PARAM_END_TAG ) ) ) )
             {
-            match(input,RULE_PARAM_START_TAG,FOLLOW_RULE_PARAM_START_TAG_in_ruleParam3125); 
+            match(input,RULE_PARAM_START_TAG,FOLLOW_RULE_PARAM_START_TAG_in_ruleParam3469); 
              
                 createLeafNode(grammarAccess.getParamAccess().getPARAM_START_TAGTerminalRuleCall_0(), null); 
                 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2017:1: ()
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2018:5: 
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2486:1: ()
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2487:5: 
             {
              
                     temp=factory.create(grammarAccess.getParamAccess().getParamAction_1().getType().getClassifier());
@@ -4724,28 +5464,28 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2028:2: ( (lv_attributes_2_0= rulePossibleExpression ) )*
-            loop34:
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2497:2: ( (lv_attributes_2_0= rulePossibleExpression ) )*
+            loop35:
             do {
-                int alt34=2;
-                int LA34_0 = input.LA(1);
+                int alt35=2;
+                int LA35_0 = input.LA(1);
 
-                if ( (LA34_0==RULE_ID) ) {
-                    alt34=1;
+                if ( (LA35_0==RULE_ID) ) {
+                    alt35=1;
                 }
 
 
-                switch (alt34) {
+                switch (alt35) {
             	case 1 :
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2029:1: (lv_attributes_2_0= rulePossibleExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2498:1: (lv_attributes_2_0= rulePossibleExpression )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2029:1: (lv_attributes_2_0= rulePossibleExpression )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2030:3: lv_attributes_2_0= rulePossibleExpression
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2498:1: (lv_attributes_2_0= rulePossibleExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2499:3: lv_attributes_2_0= rulePossibleExpression
             	    {
             	     
             	    	        currentNode=createCompositeNode(grammarAccess.getParamAccess().getAttributesPossibleExpressionParserRuleCall_2_0(), currentNode); 
             	    	    
-            	    pushFollow(FOLLOW_rulePossibleExpression_in_ruleParam3154);
+            	    pushFollow(FOLLOW_rulePossibleExpression_in_ruleParam3498);
             	    lv_attributes_2_0=rulePossibleExpression();
             	    _fsp--;
 
@@ -4774,31 +5514,31 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
             	    break;
 
             	default :
-            	    break loop34;
+            	    break loop35;
                 }
             } while (true);
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2052:3: ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* RULE_PARAM_END_TAG ) )
-            int alt36=2;
-            int LA36_0 = input.LA(1);
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2521:3: ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* ( (lv_closedTag_7_0= RULE_PARAM_END_TAG ) ) ) )
+            int alt37=2;
+            int LA37_0 = input.LA(1);
 
-            if ( (LA36_0==RULE_XML_TAG_SINGLEEND) ) {
-                alt36=1;
+            if ( (LA37_0==RULE_XML_TAG_SINGLEEND) ) {
+                alt37=1;
             }
-            else if ( (LA36_0==RULE_XML_TAG_END) ) {
-                alt36=2;
+            else if ( (LA37_0==RULE_XML_TAG_END) ) {
+                alt37=2;
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("2052:3: ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* RULE_PARAM_END_TAG ) )", 36, 0, input);
+                    new NoViableAltException("2521:3: ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* ( (lv_closedTag_7_0= RULE_PARAM_END_TAG ) ) ) )", 37, 0, input);
 
                 throw nvae;
             }
-            switch (alt36) {
+            switch (alt37) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2052:4: RULE_XML_TAG_SINGLEEND
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2521:4: RULE_XML_TAG_SINGLEEND
                     {
-                    match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleParam3165); 
+                    match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleParam3509); 
                      
                         createLeafNode(grammarAccess.getParamAccess().getXML_TAG_SINGLEENDTerminalRuleCall_3_0(), null); 
                         
@@ -4806,43 +5546,72 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2057:6: ( RULE_XML_TAG_END ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* RULE_PARAM_END_TAG )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2526:6: ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* ( (lv_closedTag_7_0= RULE_PARAM_END_TAG ) ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2057:6: ( RULE_XML_TAG_END ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* RULE_PARAM_END_TAG )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2057:7: RULE_XML_TAG_END ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* RULE_PARAM_END_TAG
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2526:6: ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* ( (lv_closedTag_7_0= RULE_PARAM_END_TAG ) ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2526:7: ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )* ( (lv_closedTag_7_0= RULE_PARAM_END_TAG ) )
                     {
-                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleParam3180); 
-                     
-                        createLeafNode(grammarAccess.getParamAccess().getXML_TAG_ENDTerminalRuleCall_3_1_0(), null); 
-                        
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2061:1: ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )*
-                    loop35:
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2526:7: ( (lv_splitTag_4_0= RULE_XML_TAG_END ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2527:1: (lv_splitTag_4_0= RULE_XML_TAG_END )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2527:1: (lv_splitTag_4_0= RULE_XML_TAG_END )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2528:3: lv_splitTag_4_0= RULE_XML_TAG_END
+                    {
+                    lv_splitTag_4_0=(Token)input.LT(1);
+                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleParam3532); 
+
+                    			createLeafNode(grammarAccess.getParamAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_1_0_0(), "splitTag"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getParamRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"splitTag",
+                    	        		true, 
+                    	        		"XML_TAG_END", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2550:2: ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMap ) ) )*
+                    loop36:
                     do {
-                        int alt35=3;
-                        int LA35_0 = input.LA(1);
+                        int alt36=3;
+                        int LA36_0 = input.LA(1);
 
-                        if ( ((LA35_0>=RULE_EXPRESSION_START_TAG && LA35_0<=RULE_OPTION_START_TAG)) ) {
-                            alt35=1;
+                        if ( ((LA36_0>=RULE_EXPRESSION_START_TAG && LA36_0<=RULE_OPTION_START_TAG)) ) {
+                            alt36=1;
                         }
-                        else if ( (LA35_0==RULE_MAPSTARTKEYWORD) ) {
-                            alt35=2;
+                        else if ( (LA36_0==RULE_MAPSTARTKEYWORD) ) {
+                            alt36=2;
                         }
 
 
-                        switch (alt35) {
+                        switch (alt36) {
                     	case 1 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2061:2: ( (lv_children_5_0= ruleExpressionOrOption ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2550:3: ( (lv_children_5_0= ruleExpressionOrOption ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2061:2: ( (lv_children_5_0= ruleExpressionOrOption ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2062:1: (lv_children_5_0= ruleExpressionOrOption )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2550:3: ( (lv_children_5_0= ruleExpressionOrOption ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2551:1: (lv_children_5_0= ruleExpressionOrOption )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2062:1: (lv_children_5_0= ruleExpressionOrOption )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2063:3: lv_children_5_0= ruleExpressionOrOption
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2551:1: (lv_children_5_0= ruleExpressionOrOption )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2552:3: lv_children_5_0= ruleExpressionOrOption
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getParamAccess().getChildrenExpressionOrOptionParserRuleCall_3_1_1_0_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleExpressionOrOption_in_ruleParam3201);
+                    	    pushFollow(FOLLOW_ruleExpressionOrOption_in_ruleParam3559);
                     	    lv_children_5_0=ruleExpressionOrOption();
                     	    _fsp--;
 
@@ -4873,18 +5642,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2086:6: ( (lv_children_6_0= ruleMap ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2575:6: ( (lv_children_6_0= ruleMap ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2086:6: ( (lv_children_6_0= ruleMap ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2087:1: (lv_children_6_0= ruleMap )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2575:6: ( (lv_children_6_0= ruleMap ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2576:1: (lv_children_6_0= ruleMap )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2087:1: (lv_children_6_0= ruleMap )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2088:3: lv_children_6_0= ruleMap
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2576:1: (lv_children_6_0= ruleMap )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2577:3: lv_children_6_0= ruleMap
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getParamAccess().getChildrenMapParserRuleCall_3_1_1_1_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleMap_in_ruleParam3228);
+                    	    pushFollow(FOLLOW_ruleMap_in_ruleParam3586);
                     	    lv_children_6_0=ruleMap();
                     	    _fsp--;
 
@@ -4916,14 +5685,43 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    break;
 
                     	default :
-                    	    break loop35;
+                    	    break loop36;
                         }
                     } while (true);
 
-                    match(input,RULE_PARAM_END_TAG,FOLLOW_RULE_PARAM_END_TAG_in_ruleParam3239); 
-                     
-                        createLeafNode(grammarAccess.getParamAccess().getPARAM_END_TAGTerminalRuleCall_3_1_2(), null); 
-                        
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2599:4: ( (lv_closedTag_7_0= RULE_PARAM_END_TAG ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2600:1: (lv_closedTag_7_0= RULE_PARAM_END_TAG )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2600:1: (lv_closedTag_7_0= RULE_PARAM_END_TAG )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2601:3: lv_closedTag_7_0= RULE_PARAM_END_TAG
+                    {
+                    lv_closedTag_7_0=(Token)input.LT(1);
+                    match(input,RULE_PARAM_END_TAG,FOLLOW_RULE_PARAM_END_TAG_in_ruleParam3605); 
+
+                    			createLeafNode(grammarAccess.getParamAccess().getClosedTagPARAM_END_TAGTerminalRuleCall_3_1_2_0(), "closedTag"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getParamRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"closedTag",
+                    	        		true, 
+                    	        		"PARAM_END_TAG", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
 
                     }
 
@@ -4956,7 +5754,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleMapMethod
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2122:1: entryRuleMapMethod returns [EObject current=null] : iv_ruleMapMethod= ruleMapMethod EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2631:1: entryRuleMapMethod returns [EObject current=null] : iv_ruleMapMethod= ruleMapMethod EOF ;
     public final EObject entryRuleMapMethod() throws RecognitionException {
         EObject current = null;
 
@@ -4964,16 +5762,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2123:2: (iv_ruleMapMethod= ruleMapMethod EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2124:2: iv_ruleMapMethod= ruleMapMethod EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2632:2: (iv_ruleMapMethod= ruleMapMethod EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2633:2: iv_ruleMapMethod= ruleMapMethod EOF
             {
              currentNode = createCompositeNode(grammarAccess.getMapMethodRule(), currentNode); 
-            pushFollow(FOLLOW_ruleMapMethod_in_entryRuleMapMethod3276);
+            pushFollow(FOLLOW_ruleMapMethod_in_entryRuleMapMethod3648);
             iv_ruleMapMethod=ruleMapMethod();
             _fsp--;
 
              current =iv_ruleMapMethod; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleMapMethod3286); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleMapMethod3658); 
 
             }
 
@@ -4991,11 +5789,13 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleMapMethod
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2131:1: ruleMapMethod returns [EObject current=null] : ( RULE_MAP_METHOD_STARTTAG_START ( (lv_mapName_1_0= RULE_ID ) ) '.' ( (lv_methodName_3_0= ruleAttributeName ) ) ( (lv_attributes_4_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( ( (lv_children_7_0= ruleExpressionOrOption ) ) | ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* RULE_MAP_METHOD_ENDTAG_START ( (lv_methodClosingName_18_0= RULE_ID ) ) '.' ( (lv_methodClosingMethod_20_0= RULE_ID ) ) RULE_XML_TAG_END ) ) ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2640:1: ruleMapMethod returns [EObject current=null] : ( RULE_MAP_METHOD_STARTTAG_START ( (lv_mapName_1_0= RULE_ID ) ) RULE_DOT ( (lv_methodName_3_0= ruleAttributeName ) ) ( (lv_attributes_4_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_6_0= RULE_XML_TAG_END ) ) ( ( (lv_children_7_0= ruleExpressionOrOption ) ) | ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* ( (lv_closedTag_17_0= RULE_MAP_METHOD_ENDTAG_START ) ) ( (lv_methodClosingName_18_0= RULE_ID ) ) RULE_DOT ( (lv_methodClosingMethod_20_0= RULE_ID ) ) RULE_XML_TAG_END ) ) ) ;
     public final EObject ruleMapMethod() throws RecognitionException {
         EObject current = null;
 
         Token lv_mapName_1_0=null;
+        Token lv_splitTag_6_0=null;
+        Token lv_closedTag_17_0=null;
         Token lv_methodClosingName_18_0=null;
         Token lv_methodClosingMethod_20_0=null;
         AntlrDatatypeRuleToken lv_methodName_3_0 = null;
@@ -5026,24 +5826,24 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2136:6: ( ( RULE_MAP_METHOD_STARTTAG_START ( (lv_mapName_1_0= RULE_ID ) ) '.' ( (lv_methodName_3_0= ruleAttributeName ) ) ( (lv_attributes_4_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( ( (lv_children_7_0= ruleExpressionOrOption ) ) | ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* RULE_MAP_METHOD_ENDTAG_START ( (lv_methodClosingName_18_0= RULE_ID ) ) '.' ( (lv_methodClosingMethod_20_0= RULE_ID ) ) RULE_XML_TAG_END ) ) ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2137:1: ( RULE_MAP_METHOD_STARTTAG_START ( (lv_mapName_1_0= RULE_ID ) ) '.' ( (lv_methodName_3_0= ruleAttributeName ) ) ( (lv_attributes_4_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( ( (lv_children_7_0= ruleExpressionOrOption ) ) | ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* RULE_MAP_METHOD_ENDTAG_START ( (lv_methodClosingName_18_0= RULE_ID ) ) '.' ( (lv_methodClosingMethod_20_0= RULE_ID ) ) RULE_XML_TAG_END ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2645:6: ( ( RULE_MAP_METHOD_STARTTAG_START ( (lv_mapName_1_0= RULE_ID ) ) RULE_DOT ( (lv_methodName_3_0= ruleAttributeName ) ) ( (lv_attributes_4_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_6_0= RULE_XML_TAG_END ) ) ( ( (lv_children_7_0= ruleExpressionOrOption ) ) | ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* ( (lv_closedTag_17_0= RULE_MAP_METHOD_ENDTAG_START ) ) ( (lv_methodClosingName_18_0= RULE_ID ) ) RULE_DOT ( (lv_methodClosingMethod_20_0= RULE_ID ) ) RULE_XML_TAG_END ) ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2646:1: ( RULE_MAP_METHOD_STARTTAG_START ( (lv_mapName_1_0= RULE_ID ) ) RULE_DOT ( (lv_methodName_3_0= ruleAttributeName ) ) ( (lv_attributes_4_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_6_0= RULE_XML_TAG_END ) ) ( ( (lv_children_7_0= ruleExpressionOrOption ) ) | ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* ( (lv_closedTag_17_0= RULE_MAP_METHOD_ENDTAG_START ) ) ( (lv_methodClosingName_18_0= RULE_ID ) ) RULE_DOT ( (lv_methodClosingMethod_20_0= RULE_ID ) ) RULE_XML_TAG_END ) ) )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2137:1: ( RULE_MAP_METHOD_STARTTAG_START ( (lv_mapName_1_0= RULE_ID ) ) '.' ( (lv_methodName_3_0= ruleAttributeName ) ) ( (lv_attributes_4_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( ( (lv_children_7_0= ruleExpressionOrOption ) ) | ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* RULE_MAP_METHOD_ENDTAG_START ( (lv_methodClosingName_18_0= RULE_ID ) ) '.' ( (lv_methodClosingMethod_20_0= RULE_ID ) ) RULE_XML_TAG_END ) ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2137:2: RULE_MAP_METHOD_STARTTAG_START ( (lv_mapName_1_0= RULE_ID ) ) '.' ( (lv_methodName_3_0= ruleAttributeName ) ) ( (lv_attributes_4_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( ( (lv_children_7_0= ruleExpressionOrOption ) ) | ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* RULE_MAP_METHOD_ENDTAG_START ( (lv_methodClosingName_18_0= RULE_ID ) ) '.' ( (lv_methodClosingMethod_20_0= RULE_ID ) ) RULE_XML_TAG_END ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2646:1: ( RULE_MAP_METHOD_STARTTAG_START ( (lv_mapName_1_0= RULE_ID ) ) RULE_DOT ( (lv_methodName_3_0= ruleAttributeName ) ) ( (lv_attributes_4_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_6_0= RULE_XML_TAG_END ) ) ( ( (lv_children_7_0= ruleExpressionOrOption ) ) | ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* ( (lv_closedTag_17_0= RULE_MAP_METHOD_ENDTAG_START ) ) ( (lv_methodClosingName_18_0= RULE_ID ) ) RULE_DOT ( (lv_methodClosingMethod_20_0= RULE_ID ) ) RULE_XML_TAG_END ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2646:2: RULE_MAP_METHOD_STARTTAG_START ( (lv_mapName_1_0= RULE_ID ) ) RULE_DOT ( (lv_methodName_3_0= ruleAttributeName ) ) ( (lv_attributes_4_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_6_0= RULE_XML_TAG_END ) ) ( ( (lv_children_7_0= ruleExpressionOrOption ) ) | ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* ( (lv_closedTag_17_0= RULE_MAP_METHOD_ENDTAG_START ) ) ( (lv_methodClosingName_18_0= RULE_ID ) ) RULE_DOT ( (lv_methodClosingMethod_20_0= RULE_ID ) ) RULE_XML_TAG_END ) )
             {
-            match(input,RULE_MAP_METHOD_STARTTAG_START,FOLLOW_RULE_MAP_METHOD_STARTTAG_START_in_ruleMapMethod3320); 
+            match(input,RULE_MAP_METHOD_STARTTAG_START,FOLLOW_RULE_MAP_METHOD_STARTTAG_START_in_ruleMapMethod3692); 
              
                 createLeafNode(grammarAccess.getMapMethodAccess().getMAP_METHOD_STARTTAG_STARTTerminalRuleCall_0(), null); 
                 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2141:1: ( (lv_mapName_1_0= RULE_ID ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2142:1: (lv_mapName_1_0= RULE_ID )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2650:1: ( (lv_mapName_1_0= RULE_ID ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2651:1: (lv_mapName_1_0= RULE_ID )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2142:1: (lv_mapName_1_0= RULE_ID )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2143:3: lv_mapName_1_0= RULE_ID
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2651:1: (lv_mapName_1_0= RULE_ID )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2652:3: lv_mapName_1_0= RULE_ID
             {
             lv_mapName_1_0=(Token)input.LT(1);
-            match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleMapMethod3336); 
+            match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleMapMethod3708); 
 
             			createLeafNode(grammarAccess.getMapMethodAccess().getMapNameIDTerminalRuleCall_1_0(), "mapName"); 
             		
@@ -5069,20 +5869,20 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            match(input,72,FOLLOW_72_in_ruleMapMethod3351); 
-
-                    createLeafNode(grammarAccess.getMapMethodAccess().getFullStopKeyword_2(), null); 
+            match(input,RULE_DOT,FOLLOW_RULE_DOT_in_ruleMapMethod3722); 
+             
+                createLeafNode(grammarAccess.getMapMethodAccess().getDOTTerminalRuleCall_2(), null); 
                 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2169:1: ( (lv_methodName_3_0= ruleAttributeName ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2170:1: (lv_methodName_3_0= ruleAttributeName )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2678:1: ( (lv_methodName_3_0= ruleAttributeName ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2679:1: (lv_methodName_3_0= ruleAttributeName )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2170:1: (lv_methodName_3_0= ruleAttributeName )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2171:3: lv_methodName_3_0= ruleAttributeName
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2679:1: (lv_methodName_3_0= ruleAttributeName )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2680:3: lv_methodName_3_0= ruleAttributeName
             {
              
             	        currentNode=createCompositeNode(grammarAccess.getMapMethodAccess().getMethodNameAttributeNameParserRuleCall_3_0(), currentNode); 
             	    
-            pushFollow(FOLLOW_ruleAttributeName_in_ruleMapMethod3372);
+            pushFollow(FOLLOW_ruleAttributeName_in_ruleMapMethod3742);
             lv_methodName_3_0=ruleAttributeName();
             _fsp--;
 
@@ -5109,28 +5909,28 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2193:2: ( (lv_attributes_4_0= rulePossibleExpression ) )*
-            loop37:
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2702:2: ( (lv_attributes_4_0= rulePossibleExpression ) )*
+            loop38:
             do {
-                int alt37=2;
-                int LA37_0 = input.LA(1);
+                int alt38=2;
+                int LA38_0 = input.LA(1);
 
-                if ( (LA37_0==RULE_ID) ) {
-                    alt37=1;
+                if ( (LA38_0==RULE_ID) ) {
+                    alt38=1;
                 }
 
 
-                switch (alt37) {
+                switch (alt38) {
             	case 1 :
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2194:1: (lv_attributes_4_0= rulePossibleExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2703:1: (lv_attributes_4_0= rulePossibleExpression )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2194:1: (lv_attributes_4_0= rulePossibleExpression )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2195:3: lv_attributes_4_0= rulePossibleExpression
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2703:1: (lv_attributes_4_0= rulePossibleExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2704:3: lv_attributes_4_0= rulePossibleExpression
             	    {
             	     
             	    	        currentNode=createCompositeNode(grammarAccess.getMapMethodAccess().getAttributesPossibleExpressionParserRuleCall_4_0(), currentNode); 
             	    	    
-            	    pushFollow(FOLLOW_rulePossibleExpression_in_ruleMapMethod3393);
+            	    pushFollow(FOLLOW_rulePossibleExpression_in_ruleMapMethod3763);
             	    lv_attributes_4_0=rulePossibleExpression();
             	    _fsp--;
 
@@ -5159,31 +5959,31 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
             	    break;
 
             	default :
-            	    break loop37;
+            	    break loop38;
                 }
             } while (true);
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2217:3: ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( ( (lv_children_7_0= ruleExpressionOrOption ) ) | ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* RULE_MAP_METHOD_ENDTAG_START ( (lv_methodClosingName_18_0= RULE_ID ) ) '.' ( (lv_methodClosingMethod_20_0= RULE_ID ) ) RULE_XML_TAG_END ) )
-            int alt39=2;
-            int LA39_0 = input.LA(1);
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2726:3: ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_6_0= RULE_XML_TAG_END ) ) ( ( (lv_children_7_0= ruleExpressionOrOption ) ) | ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* ( (lv_closedTag_17_0= RULE_MAP_METHOD_ENDTAG_START ) ) ( (lv_methodClosingName_18_0= RULE_ID ) ) RULE_DOT ( (lv_methodClosingMethod_20_0= RULE_ID ) ) RULE_XML_TAG_END ) )
+            int alt40=2;
+            int LA40_0 = input.LA(1);
 
-            if ( (LA39_0==RULE_XML_TAG_SINGLEEND) ) {
-                alt39=1;
+            if ( (LA40_0==RULE_XML_TAG_SINGLEEND) ) {
+                alt40=1;
             }
-            else if ( (LA39_0==RULE_XML_TAG_END) ) {
-                alt39=2;
+            else if ( (LA40_0==RULE_XML_TAG_END) ) {
+                alt40=2;
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("2217:3: ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( ( (lv_children_7_0= ruleExpressionOrOption ) ) | ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* RULE_MAP_METHOD_ENDTAG_START ( (lv_methodClosingName_18_0= RULE_ID ) ) '.' ( (lv_methodClosingMethod_20_0= RULE_ID ) ) RULE_XML_TAG_END ) )", 39, 0, input);
+                    new NoViableAltException("2726:3: ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_6_0= RULE_XML_TAG_END ) ) ( ( (lv_children_7_0= ruleExpressionOrOption ) ) | ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* ( (lv_closedTag_17_0= RULE_MAP_METHOD_ENDTAG_START ) ) ( (lv_methodClosingName_18_0= RULE_ID ) ) RULE_DOT ( (lv_methodClosingMethod_20_0= RULE_ID ) ) RULE_XML_TAG_END ) )", 40, 0, input);
 
                 throw nvae;
             }
-            switch (alt39) {
+            switch (alt40) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2217:4: RULE_XML_TAG_SINGLEEND
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2726:4: RULE_XML_TAG_SINGLEEND
                     {
-                    match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleMapMethod3404); 
+                    match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleMapMethod3774); 
                      
                         createLeafNode(grammarAccess.getMapMethodAccess().getXML_TAG_SINGLEENDTerminalRuleCall_5_0(), null); 
                         
@@ -5191,88 +5991,117 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2222:6: ( RULE_XML_TAG_END ( ( (lv_children_7_0= ruleExpressionOrOption ) ) | ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* RULE_MAP_METHOD_ENDTAG_START ( (lv_methodClosingName_18_0= RULE_ID ) ) '.' ( (lv_methodClosingMethod_20_0= RULE_ID ) ) RULE_XML_TAG_END )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2731:6: ( ( (lv_splitTag_6_0= RULE_XML_TAG_END ) ) ( ( (lv_children_7_0= ruleExpressionOrOption ) ) | ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* ( (lv_closedTag_17_0= RULE_MAP_METHOD_ENDTAG_START ) ) ( (lv_methodClosingName_18_0= RULE_ID ) ) RULE_DOT ( (lv_methodClosingMethod_20_0= RULE_ID ) ) RULE_XML_TAG_END )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2222:6: ( RULE_XML_TAG_END ( ( (lv_children_7_0= ruleExpressionOrOption ) ) | ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* RULE_MAP_METHOD_ENDTAG_START ( (lv_methodClosingName_18_0= RULE_ID ) ) '.' ( (lv_methodClosingMethod_20_0= RULE_ID ) ) RULE_XML_TAG_END )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2222:7: RULE_XML_TAG_END ( ( (lv_children_7_0= ruleExpressionOrOption ) ) | ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* RULE_MAP_METHOD_ENDTAG_START ( (lv_methodClosingName_18_0= RULE_ID ) ) '.' ( (lv_methodClosingMethod_20_0= RULE_ID ) ) RULE_XML_TAG_END
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2731:6: ( ( (lv_splitTag_6_0= RULE_XML_TAG_END ) ) ( ( (lv_children_7_0= ruleExpressionOrOption ) ) | ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* ( (lv_closedTag_17_0= RULE_MAP_METHOD_ENDTAG_START ) ) ( (lv_methodClosingName_18_0= RULE_ID ) ) RULE_DOT ( (lv_methodClosingMethod_20_0= RULE_ID ) ) RULE_XML_TAG_END )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2731:7: ( (lv_splitTag_6_0= RULE_XML_TAG_END ) ) ( ( (lv_children_7_0= ruleExpressionOrOption ) ) | ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )* ( (lv_closedTag_17_0= RULE_MAP_METHOD_ENDTAG_START ) ) ( (lv_methodClosingName_18_0= RULE_ID ) ) RULE_DOT ( (lv_methodClosingMethod_20_0= RULE_ID ) ) RULE_XML_TAG_END
                     {
-                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleMapMethod3419); 
-                     
-                        createLeafNode(grammarAccess.getMapMethodAccess().getXML_TAG_ENDTerminalRuleCall_5_1_0(), null); 
-                        
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2226:1: ( ( (lv_children_7_0= ruleExpressionOrOption ) ) | ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )*
-                    loop38:
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2731:7: ( (lv_splitTag_6_0= RULE_XML_TAG_END ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2732:1: (lv_splitTag_6_0= RULE_XML_TAG_END )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2732:1: (lv_splitTag_6_0= RULE_XML_TAG_END )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2733:3: lv_splitTag_6_0= RULE_XML_TAG_END
+                    {
+                    lv_splitTag_6_0=(Token)input.LT(1);
+                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleMapMethod3797); 
+
+                    			createLeafNode(grammarAccess.getMapMethodAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_5_1_0_0(), "splitTag"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getMapMethodRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"splitTag",
+                    	        		true, 
+                    	        		"XML_TAG_END", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2755:2: ( ( (lv_children_7_0= ruleExpressionOrOption ) ) | ( (lv_children_8_0= ruleMessage ) ) | ( (lv_children_9_0= ruleProperty ) ) | ( (lv_children_10_0= ruleParam ) ) | ( (lv_children_11_0= ruleMap ) ) | ( (lv_children_12_0= ruleMapMethod ) ) | ( (lv_children_13_0= ruleDebugTag ) ) | ( (lv_children_14_0= ruleField ) ) | ( (lv_children_15_0= ruleComment ) ) | ( (lv_children_16_0= ruleBreak ) ) )*
+                    loop39:
                     do {
-                        int alt38=11;
+                        int alt39=11;
                         switch ( input.LA(1) ) {
                         case RULE_EXPRESSION_START_TAG:
                         case RULE_OPTION_START_TAG:
                             {
-                            alt38=1;
+                            alt39=1;
                             }
                             break;
                         case RULE_MESSAGE_START_TAG:
                             {
-                            alt38=2;
+                            alt39=2;
                             }
                             break;
                         case RULE_PROPERTY_START_TAG:
                             {
-                            alt38=3;
+                            alt39=3;
                             }
                             break;
                         case RULE_PARAM_START_TAG:
                             {
-                            alt38=4;
+                            alt39=4;
                             }
                             break;
                         case RULE_MAPSTARTKEYWORD:
                             {
-                            alt38=5;
+                            alt39=5;
                             }
                             break;
                         case RULE_MAP_METHOD_STARTTAG_START:
                             {
-                            alt38=6;
+                            alt39=6;
                             }
                             break;
                         case RULE_DEBUG_START_TAG:
                             {
-                            alt38=7;
+                            alt39=7;
                             }
                             break;
                         case RULE_FIELD_START_TAG:
                             {
-                            alt38=8;
+                            alt39=8;
                             }
                             break;
                         case RULE_COMMENT_START_TAG:
                             {
-                            alt38=9;
+                            alt39=9;
                             }
                             break;
                         case RULE_BREAK_START_TAG:
                             {
-                            alt38=10;
+                            alt39=10;
                             }
                             break;
 
                         }
 
-                        switch (alt38) {
+                        switch (alt39) {
                     	case 1 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2226:2: ( (lv_children_7_0= ruleExpressionOrOption ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2755:3: ( (lv_children_7_0= ruleExpressionOrOption ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2226:2: ( (lv_children_7_0= ruleExpressionOrOption ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2227:1: (lv_children_7_0= ruleExpressionOrOption )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2755:3: ( (lv_children_7_0= ruleExpressionOrOption ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2756:1: (lv_children_7_0= ruleExpressionOrOption )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2227:1: (lv_children_7_0= ruleExpressionOrOption )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2228:3: lv_children_7_0= ruleExpressionOrOption
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2756:1: (lv_children_7_0= ruleExpressionOrOption )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2757:3: lv_children_7_0= ruleExpressionOrOption
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getMapMethodAccess().getChildrenExpressionOrOptionParserRuleCall_5_1_1_0_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleExpressionOrOption_in_ruleMapMethod3440);
+                    	    pushFollow(FOLLOW_ruleExpressionOrOption_in_ruleMapMethod3824);
                     	    lv_children_7_0=ruleExpressionOrOption();
                     	    _fsp--;
 
@@ -5303,18 +6132,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2251:6: ( (lv_children_8_0= ruleMessage ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2780:6: ( (lv_children_8_0= ruleMessage ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2251:6: ( (lv_children_8_0= ruleMessage ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2252:1: (lv_children_8_0= ruleMessage )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2780:6: ( (lv_children_8_0= ruleMessage ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2781:1: (lv_children_8_0= ruleMessage )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2252:1: (lv_children_8_0= ruleMessage )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2253:3: lv_children_8_0= ruleMessage
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2781:1: (lv_children_8_0= ruleMessage )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2782:3: lv_children_8_0= ruleMessage
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getMapMethodAccess().getChildrenMessageParserRuleCall_5_1_1_1_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleMessage_in_ruleMapMethod3467);
+                    	    pushFollow(FOLLOW_ruleMessage_in_ruleMapMethod3851);
                     	    lv_children_8_0=ruleMessage();
                     	    _fsp--;
 
@@ -5345,18 +6174,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    }
                     	    break;
                     	case 3 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2276:6: ( (lv_children_9_0= ruleProperty ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2805:6: ( (lv_children_9_0= ruleProperty ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2276:6: ( (lv_children_9_0= ruleProperty ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2277:1: (lv_children_9_0= ruleProperty )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2805:6: ( (lv_children_9_0= ruleProperty ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2806:1: (lv_children_9_0= ruleProperty )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2277:1: (lv_children_9_0= ruleProperty )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2278:3: lv_children_9_0= ruleProperty
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2806:1: (lv_children_9_0= ruleProperty )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2807:3: lv_children_9_0= ruleProperty
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getMapMethodAccess().getChildrenPropertyParserRuleCall_5_1_1_2_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleProperty_in_ruleMapMethod3494);
+                    	    pushFollow(FOLLOW_ruleProperty_in_ruleMapMethod3878);
                     	    lv_children_9_0=ruleProperty();
                     	    _fsp--;
 
@@ -5387,18 +6216,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    }
                     	    break;
                     	case 4 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2301:6: ( (lv_children_10_0= ruleParam ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2830:6: ( (lv_children_10_0= ruleParam ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2301:6: ( (lv_children_10_0= ruleParam ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2302:1: (lv_children_10_0= ruleParam )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2830:6: ( (lv_children_10_0= ruleParam ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2831:1: (lv_children_10_0= ruleParam )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2302:1: (lv_children_10_0= ruleParam )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2303:3: lv_children_10_0= ruleParam
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2831:1: (lv_children_10_0= ruleParam )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2832:3: lv_children_10_0= ruleParam
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getMapMethodAccess().getChildrenParamParserRuleCall_5_1_1_3_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleParam_in_ruleMapMethod3521);
+                    	    pushFollow(FOLLOW_ruleParam_in_ruleMapMethod3905);
                     	    lv_children_10_0=ruleParam();
                     	    _fsp--;
 
@@ -5429,18 +6258,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    }
                     	    break;
                     	case 5 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2326:6: ( (lv_children_11_0= ruleMap ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2855:6: ( (lv_children_11_0= ruleMap ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2326:6: ( (lv_children_11_0= ruleMap ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2327:1: (lv_children_11_0= ruleMap )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2855:6: ( (lv_children_11_0= ruleMap ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2856:1: (lv_children_11_0= ruleMap )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2327:1: (lv_children_11_0= ruleMap )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2328:3: lv_children_11_0= ruleMap
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2856:1: (lv_children_11_0= ruleMap )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2857:3: lv_children_11_0= ruleMap
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getMapMethodAccess().getChildrenMapParserRuleCall_5_1_1_4_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleMap_in_ruleMapMethod3548);
+                    	    pushFollow(FOLLOW_ruleMap_in_ruleMapMethod3932);
                     	    lv_children_11_0=ruleMap();
                     	    _fsp--;
 
@@ -5471,18 +6300,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    }
                     	    break;
                     	case 6 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2351:6: ( (lv_children_12_0= ruleMapMethod ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2880:6: ( (lv_children_12_0= ruleMapMethod ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2351:6: ( (lv_children_12_0= ruleMapMethod ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2352:1: (lv_children_12_0= ruleMapMethod )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2880:6: ( (lv_children_12_0= ruleMapMethod ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2881:1: (lv_children_12_0= ruleMapMethod )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2352:1: (lv_children_12_0= ruleMapMethod )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2353:3: lv_children_12_0= ruleMapMethod
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2881:1: (lv_children_12_0= ruleMapMethod )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2882:3: lv_children_12_0= ruleMapMethod
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getMapMethodAccess().getChildrenMapMethodParserRuleCall_5_1_1_5_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleMapMethod_in_ruleMapMethod3575);
+                    	    pushFollow(FOLLOW_ruleMapMethod_in_ruleMapMethod3959);
                     	    lv_children_12_0=ruleMapMethod();
                     	    _fsp--;
 
@@ -5513,18 +6342,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    }
                     	    break;
                     	case 7 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2376:6: ( (lv_children_13_0= ruleDebugTag ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2905:6: ( (lv_children_13_0= ruleDebugTag ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2376:6: ( (lv_children_13_0= ruleDebugTag ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2377:1: (lv_children_13_0= ruleDebugTag )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2905:6: ( (lv_children_13_0= ruleDebugTag ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2906:1: (lv_children_13_0= ruleDebugTag )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2377:1: (lv_children_13_0= ruleDebugTag )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2378:3: lv_children_13_0= ruleDebugTag
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2906:1: (lv_children_13_0= ruleDebugTag )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2907:3: lv_children_13_0= ruleDebugTag
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getMapMethodAccess().getChildrenDebugTagParserRuleCall_5_1_1_6_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleDebugTag_in_ruleMapMethod3602);
+                    	    pushFollow(FOLLOW_ruleDebugTag_in_ruleMapMethod3986);
                     	    lv_children_13_0=ruleDebugTag();
                     	    _fsp--;
 
@@ -5555,18 +6384,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    }
                     	    break;
                     	case 8 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2401:6: ( (lv_children_14_0= ruleField ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2930:6: ( (lv_children_14_0= ruleField ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2401:6: ( (lv_children_14_0= ruleField ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2402:1: (lv_children_14_0= ruleField )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2930:6: ( (lv_children_14_0= ruleField ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2931:1: (lv_children_14_0= ruleField )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2402:1: (lv_children_14_0= ruleField )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2403:3: lv_children_14_0= ruleField
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2931:1: (lv_children_14_0= ruleField )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2932:3: lv_children_14_0= ruleField
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getMapMethodAccess().getChildrenFieldParserRuleCall_5_1_1_7_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleField_in_ruleMapMethod3629);
+                    	    pushFollow(FOLLOW_ruleField_in_ruleMapMethod4013);
                     	    lv_children_14_0=ruleField();
                     	    _fsp--;
 
@@ -5597,18 +6426,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    }
                     	    break;
                     	case 9 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2426:6: ( (lv_children_15_0= ruleComment ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2955:6: ( (lv_children_15_0= ruleComment ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2426:6: ( (lv_children_15_0= ruleComment ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2427:1: (lv_children_15_0= ruleComment )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2955:6: ( (lv_children_15_0= ruleComment ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2956:1: (lv_children_15_0= ruleComment )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2427:1: (lv_children_15_0= ruleComment )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2428:3: lv_children_15_0= ruleComment
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2956:1: (lv_children_15_0= ruleComment )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2957:3: lv_children_15_0= ruleComment
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getMapMethodAccess().getChildrenCommentParserRuleCall_5_1_1_8_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleComment_in_ruleMapMethod3656);
+                    	    pushFollow(FOLLOW_ruleComment_in_ruleMapMethod4040);
                     	    lv_children_15_0=ruleComment();
                     	    _fsp--;
 
@@ -5639,18 +6468,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    }
                     	    break;
                     	case 10 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2451:6: ( (lv_children_16_0= ruleBreak ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2980:6: ( (lv_children_16_0= ruleBreak ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2451:6: ( (lv_children_16_0= ruleBreak ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2452:1: (lv_children_16_0= ruleBreak )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2980:6: ( (lv_children_16_0= ruleBreak ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2981:1: (lv_children_16_0= ruleBreak )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2452:1: (lv_children_16_0= ruleBreak )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2453:3: lv_children_16_0= ruleBreak
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2981:1: (lv_children_16_0= ruleBreak )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2982:3: lv_children_16_0= ruleBreak
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getMapMethodAccess().getChildrenBreakParserRuleCall_5_1_1_9_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleBreak_in_ruleMapMethod3683);
+                    	    pushFollow(FOLLOW_ruleBreak_in_ruleMapMethod4067);
                     	    lv_children_16_0=ruleBreak();
                     	    _fsp--;
 
@@ -5682,22 +6511,51 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    break;
 
                     	default :
-                    	    break loop38;
+                    	    break loop39;
                         }
                     } while (true);
 
-                    match(input,RULE_MAP_METHOD_ENDTAG_START,FOLLOW_RULE_MAP_METHOD_ENDTAG_START_in_ruleMapMethod3694); 
-                     
-                        createLeafNode(grammarAccess.getMapMethodAccess().getMAP_METHOD_ENDTAG_STARTTerminalRuleCall_5_1_2(), null); 
-                        
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2479:1: ( (lv_methodClosingName_18_0= RULE_ID ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2480:1: (lv_methodClosingName_18_0= RULE_ID )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3004:4: ( (lv_closedTag_17_0= RULE_MAP_METHOD_ENDTAG_START ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3005:1: (lv_closedTag_17_0= RULE_MAP_METHOD_ENDTAG_START )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2480:1: (lv_methodClosingName_18_0= RULE_ID )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2481:3: lv_methodClosingName_18_0= RULE_ID
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3005:1: (lv_closedTag_17_0= RULE_MAP_METHOD_ENDTAG_START )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3006:3: lv_closedTag_17_0= RULE_MAP_METHOD_ENDTAG_START
+                    {
+                    lv_closedTag_17_0=(Token)input.LT(1);
+                    match(input,RULE_MAP_METHOD_ENDTAG_START,FOLLOW_RULE_MAP_METHOD_ENDTAG_START_in_ruleMapMethod4086); 
+
+                    			createLeafNode(grammarAccess.getMapMethodAccess().getClosedTagMAP_METHOD_ENDTAG_STARTTerminalRuleCall_5_1_2_0(), "closedTag"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getMapMethodRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"closedTag",
+                    	        		true, 
+                    	        		"MAP_METHOD_ENDTAG_START", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3028:2: ( (lv_methodClosingName_18_0= RULE_ID ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3029:1: (lv_methodClosingName_18_0= RULE_ID )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3029:1: (lv_methodClosingName_18_0= RULE_ID )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3030:3: lv_methodClosingName_18_0= RULE_ID
                     {
                     lv_methodClosingName_18_0=(Token)input.LT(1);
-                    match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleMapMethod3710); 
+                    match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleMapMethod4108); 
 
                     			createLeafNode(grammarAccess.getMapMethodAccess().getMethodClosingNameIDTerminalRuleCall_5_1_3_0(), "methodClosingName"); 
                     		
@@ -5723,18 +6581,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    match(input,72,FOLLOW_72_in_ruleMapMethod3725); 
-
-                            createLeafNode(grammarAccess.getMapMethodAccess().getFullStopKeyword_5_1_4(), null); 
+                    match(input,RULE_DOT,FOLLOW_RULE_DOT_in_ruleMapMethod4122); 
+                     
+                        createLeafNode(grammarAccess.getMapMethodAccess().getDOTTerminalRuleCall_5_1_4(), null); 
                         
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2507:1: ( (lv_methodClosingMethod_20_0= RULE_ID ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2508:1: (lv_methodClosingMethod_20_0= RULE_ID )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3056:1: ( (lv_methodClosingMethod_20_0= RULE_ID ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3057:1: (lv_methodClosingMethod_20_0= RULE_ID )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2508:1: (lv_methodClosingMethod_20_0= RULE_ID )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2509:3: lv_methodClosingMethod_20_0= RULE_ID
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3057:1: (lv_methodClosingMethod_20_0= RULE_ID )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3058:3: lv_methodClosingMethod_20_0= RULE_ID
                     {
                     lv_methodClosingMethod_20_0=(Token)input.LT(1);
-                    match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleMapMethod3742); 
+                    match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleMapMethod4138); 
 
                     			createLeafNode(grammarAccess.getMapMethodAccess().getMethodClosingMethodIDTerminalRuleCall_5_1_5_0(), "methodClosingMethod"); 
                     		
@@ -5760,7 +6618,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleMapMethod3756); 
+                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleMapMethod4152); 
                      
                         createLeafNode(grammarAccess.getMapMethodAccess().getXML_TAG_ENDTerminalRuleCall_5_1_6(), null); 
                         
@@ -5796,7 +6654,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleField
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2543:1: entryRuleField returns [EObject current=null] : iv_ruleField= ruleField EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3092:1: entryRuleField returns [EObject current=null] : iv_ruleField= ruleField EOF ;
     public final EObject entryRuleField() throws RecognitionException {
         EObject current = null;
 
@@ -5804,16 +6662,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2544:2: (iv_ruleField= ruleField EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2545:2: iv_ruleField= ruleField EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3093:2: (iv_ruleField= ruleField EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3094:2: iv_ruleField= ruleField EOF
             {
              currentNode = createCompositeNode(grammarAccess.getFieldRule(), currentNode); 
-            pushFollow(FOLLOW_ruleField_in_entryRuleField3793);
+            pushFollow(FOLLOW_ruleField_in_entryRuleField4189);
             iv_ruleField=ruleField();
             _fsp--;
 
              current =iv_ruleField; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleField3803); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleField4199); 
 
             }
 
@@ -5831,10 +6689,12 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleField
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2552:1: ruleField returns [EObject current=null] : ( RULE_FIELD_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* RULE_XML_TAG_END ( RULE_XML_TAG_SINGLEEND | ( ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMessage ) ) | ( (lv_children_7_0= ruleProperty ) ) | ( (lv_children_8_0= ruleParam ) ) | ( (lv_children_9_0= ruleMap ) ) | ( (lv_children_10_0= ruleMapMethod ) ) | ( (lv_children_11_0= ruleDebugTag ) ) | ( (lv_children_12_0= ruleField ) ) | ( (lv_children_13_0= ruleComment ) ) | ( (lv_children_14_0= ruleBreak ) ) )* RULE_FIELD_END_TAG ) ) ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3101:1: ruleField returns [EObject current=null] : ( RULE_FIELD_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleComment ) ) | ( (lv_children_11_0= ruleBreak ) ) )* ) ( (lv_closedTag_12_0= RULE_FIELD_END_TAG ) ) ) ) ) ;
     public final EObject ruleField() throws RecognitionException {
         EObject current = null;
 
+        Token lv_splitTag_4_0=null;
+        Token lv_closedTag_12_0=null;
         EObject lv_attributes_2_0 = null;
 
         EObject lv_children_5_0 = null;
@@ -5851,34 +6711,28 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
         EObject lv_children_11_0 = null;
 
-        EObject lv_children_12_0 = null;
-
-        EObject lv_children_13_0 = null;
-
-        EObject lv_children_14_0 = null;
-
 
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2557:6: ( ( RULE_FIELD_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* RULE_XML_TAG_END ( RULE_XML_TAG_SINGLEEND | ( ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMessage ) ) | ( (lv_children_7_0= ruleProperty ) ) | ( (lv_children_8_0= ruleParam ) ) | ( (lv_children_9_0= ruleMap ) ) | ( (lv_children_10_0= ruleMapMethod ) ) | ( (lv_children_11_0= ruleDebugTag ) ) | ( (lv_children_12_0= ruleField ) ) | ( (lv_children_13_0= ruleComment ) ) | ( (lv_children_14_0= ruleBreak ) ) )* RULE_FIELD_END_TAG ) ) ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2558:1: ( RULE_FIELD_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* RULE_XML_TAG_END ( RULE_XML_TAG_SINGLEEND | ( ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMessage ) ) | ( (lv_children_7_0= ruleProperty ) ) | ( (lv_children_8_0= ruleParam ) ) | ( (lv_children_9_0= ruleMap ) ) | ( (lv_children_10_0= ruleMapMethod ) ) | ( (lv_children_11_0= ruleDebugTag ) ) | ( (lv_children_12_0= ruleField ) ) | ( (lv_children_13_0= ruleComment ) ) | ( (lv_children_14_0= ruleBreak ) ) )* RULE_FIELD_END_TAG ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3106:6: ( ( RULE_FIELD_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleComment ) ) | ( (lv_children_11_0= ruleBreak ) ) )* ) ( (lv_closedTag_12_0= RULE_FIELD_END_TAG ) ) ) ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3107:1: ( RULE_FIELD_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleComment ) ) | ( (lv_children_11_0= ruleBreak ) ) )* ) ( (lv_closedTag_12_0= RULE_FIELD_END_TAG ) ) ) ) )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2558:1: ( RULE_FIELD_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* RULE_XML_TAG_END ( RULE_XML_TAG_SINGLEEND | ( ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMessage ) ) | ( (lv_children_7_0= ruleProperty ) ) | ( (lv_children_8_0= ruleParam ) ) | ( (lv_children_9_0= ruleMap ) ) | ( (lv_children_10_0= ruleMapMethod ) ) | ( (lv_children_11_0= ruleDebugTag ) ) | ( (lv_children_12_0= ruleField ) ) | ( (lv_children_13_0= ruleComment ) ) | ( (lv_children_14_0= ruleBreak ) ) )* RULE_FIELD_END_TAG ) ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2558:2: RULE_FIELD_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* RULE_XML_TAG_END ( RULE_XML_TAG_SINGLEEND | ( ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMessage ) ) | ( (lv_children_7_0= ruleProperty ) ) | ( (lv_children_8_0= ruleParam ) ) | ( (lv_children_9_0= ruleMap ) ) | ( (lv_children_10_0= ruleMapMethod ) ) | ( (lv_children_11_0= ruleDebugTag ) ) | ( (lv_children_12_0= ruleField ) ) | ( (lv_children_13_0= ruleComment ) ) | ( (lv_children_14_0= ruleBreak ) ) )* RULE_FIELD_END_TAG ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3107:1: ( RULE_FIELD_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleComment ) ) | ( (lv_children_11_0= ruleBreak ) ) )* ) ( (lv_closedTag_12_0= RULE_FIELD_END_TAG ) ) ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3107:2: RULE_FIELD_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleComment ) ) | ( (lv_children_11_0= ruleBreak ) ) )* ) ( (lv_closedTag_12_0= RULE_FIELD_END_TAG ) ) ) )
             {
-            match(input,RULE_FIELD_START_TAG,FOLLOW_RULE_FIELD_START_TAG_in_ruleField3837); 
+            match(input,RULE_FIELD_START_TAG,FOLLOW_RULE_FIELD_START_TAG_in_ruleField4233); 
              
                 createLeafNode(grammarAccess.getFieldAccess().getFIELD_START_TAGTerminalRuleCall_0(), null); 
                 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2562:1: ()
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2563:5: 
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3111:1: ()
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3112:5: 
             {
              
-                    temp=factory.create(grammarAccess.getFieldAccess().getParamAction_1().getType().getClassifier());
+                    temp=factory.create(grammarAccess.getFieldAccess().getFieldAction_1().getType().getClassifier());
                     current = temp; 
                     temp = null;
-                    CompositeNode newNode = createCompositeNode(grammarAccess.getFieldAccess().getParamAction_1(), currentNode.getParent());
+                    CompositeNode newNode = createCompositeNode(grammarAccess.getFieldAccess().getFieldAction_1(), currentNode.getParent());
                 newNode.getChildren().add(currentNode);
                 moveLookaheadInfo(currentNode, newNode);
                 currentNode = newNode; 
@@ -5887,28 +6741,28 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2573:2: ( (lv_attributes_2_0= rulePossibleExpression ) )*
-            loop40:
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3122:2: ( (lv_attributes_2_0= rulePossibleExpression ) )*
+            loop41:
             do {
-                int alt40=2;
-                int LA40_0 = input.LA(1);
+                int alt41=2;
+                int LA41_0 = input.LA(1);
 
-                if ( (LA40_0==RULE_ID) ) {
-                    alt40=1;
+                if ( (LA41_0==RULE_ID) ) {
+                    alt41=1;
                 }
 
 
-                switch (alt40) {
+                switch (alt41) {
             	case 1 :
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2574:1: (lv_attributes_2_0= rulePossibleExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3123:1: (lv_attributes_2_0= rulePossibleExpression )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2574:1: (lv_attributes_2_0= rulePossibleExpression )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2575:3: lv_attributes_2_0= rulePossibleExpression
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3123:1: (lv_attributes_2_0= rulePossibleExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3124:3: lv_attributes_2_0= rulePossibleExpression
             	    {
             	     
             	    	        currentNode=createCompositeNode(grammarAccess.getFieldAccess().getAttributesPossibleExpressionParserRuleCall_2_0(), currentNode); 
             	    	    
-            	    pushFollow(FOLLOW_rulePossibleExpression_in_ruleField3866);
+            	    pushFollow(FOLLOW_rulePossibleExpression_in_ruleField4262);
             	    lv_attributes_2_0=rulePossibleExpression();
             	    _fsp--;
 
@@ -5937,120 +6791,137 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
             	    break;
 
             	default :
-            	    break loop40;
+            	    break loop41;
                 }
             } while (true);
 
-            match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleField3876); 
-             
-                createLeafNode(grammarAccess.getFieldAccess().getXML_TAG_ENDTerminalRuleCall_3(), null); 
-                
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2601:1: ( RULE_XML_TAG_SINGLEEND | ( ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMessage ) ) | ( (lv_children_7_0= ruleProperty ) ) | ( (lv_children_8_0= ruleParam ) ) | ( (lv_children_9_0= ruleMap ) ) | ( (lv_children_10_0= ruleMapMethod ) ) | ( (lv_children_11_0= ruleDebugTag ) ) | ( (lv_children_12_0= ruleField ) ) | ( (lv_children_13_0= ruleComment ) ) | ( (lv_children_14_0= ruleBreak ) ) )* RULE_FIELD_END_TAG ) )
-            int alt42=2;
-            int LA42_0 = input.LA(1);
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3146:3: ( RULE_XML_TAG_SINGLEEND | ( ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleComment ) ) | ( (lv_children_11_0= ruleBreak ) ) )* ) ( (lv_closedTag_12_0= RULE_FIELD_END_TAG ) ) ) )
+            int alt43=2;
+            int LA43_0 = input.LA(1);
 
-            if ( (LA42_0==RULE_XML_TAG_SINGLEEND) ) {
-                alt42=1;
+            if ( (LA43_0==RULE_XML_TAG_SINGLEEND) ) {
+                alt43=1;
             }
-            else if ( (LA42_0==RULE_COMMENT_START_TAG||LA42_0==RULE_BREAK_START_TAG||LA42_0==RULE_MESSAGE_START_TAG||LA42_0==RULE_MAPSTARTKEYWORD||LA42_0==RULE_PROPERTY_START_TAG||LA42_0==RULE_PARAM_START_TAG||LA42_0==RULE_MAP_METHOD_STARTTAG_START||(LA42_0>=RULE_FIELD_START_TAG && LA42_0<=RULE_DEBUG_START_TAG)||(LA42_0>=RULE_EXPRESSION_START_TAG && LA42_0<=RULE_OPTION_START_TAG)) ) {
-                alt42=2;
+            else if ( (LA43_0==RULE_XML_TAG_END) ) {
+                alt43=2;
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("2601:1: ( RULE_XML_TAG_SINGLEEND | ( ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMessage ) ) | ( (lv_children_7_0= ruleProperty ) ) | ( (lv_children_8_0= ruleParam ) ) | ( (lv_children_9_0= ruleMap ) ) | ( (lv_children_10_0= ruleMapMethod ) ) | ( (lv_children_11_0= ruleDebugTag ) ) | ( (lv_children_12_0= ruleField ) ) | ( (lv_children_13_0= ruleComment ) ) | ( (lv_children_14_0= ruleBreak ) ) )* RULE_FIELD_END_TAG ) )", 42, 0, input);
+                    new NoViableAltException("3146:3: ( RULE_XML_TAG_SINGLEEND | ( ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleComment ) ) | ( (lv_children_11_0= ruleBreak ) ) )* ) ( (lv_closedTag_12_0= RULE_FIELD_END_TAG ) ) ) )", 43, 0, input);
 
                 throw nvae;
             }
-            switch (alt42) {
+            switch (alt43) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2601:2: RULE_XML_TAG_SINGLEEND
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3146:4: RULE_XML_TAG_SINGLEEND
                     {
-                    match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleField3885); 
+                    match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleField4273); 
                      
-                        createLeafNode(grammarAccess.getFieldAccess().getXML_TAG_SINGLEENDTerminalRuleCall_4_0(), null); 
+                        createLeafNode(grammarAccess.getFieldAccess().getXML_TAG_SINGLEENDTerminalRuleCall_3_0(), null); 
                         
 
                     }
                     break;
                 case 2 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2606:6: ( ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMessage ) ) | ( (lv_children_7_0= ruleProperty ) ) | ( (lv_children_8_0= ruleParam ) ) | ( (lv_children_9_0= ruleMap ) ) | ( (lv_children_10_0= ruleMapMethod ) ) | ( (lv_children_11_0= ruleDebugTag ) ) | ( (lv_children_12_0= ruleField ) ) | ( (lv_children_13_0= ruleComment ) ) | ( (lv_children_14_0= ruleBreak ) ) )* RULE_FIELD_END_TAG )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3151:6: ( ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleComment ) ) | ( (lv_children_11_0= ruleBreak ) ) )* ) ( (lv_closedTag_12_0= RULE_FIELD_END_TAG ) ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2606:6: ( ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMessage ) ) | ( (lv_children_7_0= ruleProperty ) ) | ( (lv_children_8_0= ruleParam ) ) | ( (lv_children_9_0= ruleMap ) ) | ( (lv_children_10_0= ruleMapMethod ) ) | ( (lv_children_11_0= ruleDebugTag ) ) | ( (lv_children_12_0= ruleField ) ) | ( (lv_children_13_0= ruleComment ) ) | ( (lv_children_14_0= ruleBreak ) ) )* RULE_FIELD_END_TAG )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2606:7: ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMessage ) ) | ( (lv_children_7_0= ruleProperty ) ) | ( (lv_children_8_0= ruleParam ) ) | ( (lv_children_9_0= ruleMap ) ) | ( (lv_children_10_0= ruleMapMethod ) ) | ( (lv_children_11_0= ruleDebugTag ) ) | ( (lv_children_12_0= ruleField ) ) | ( (lv_children_13_0= ruleComment ) ) | ( (lv_children_14_0= ruleBreak ) ) )* RULE_FIELD_END_TAG
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3151:6: ( ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleComment ) ) | ( (lv_children_11_0= ruleBreak ) ) )* ) ( (lv_closedTag_12_0= RULE_FIELD_END_TAG ) ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3151:7: ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleComment ) ) | ( (lv_children_11_0= ruleBreak ) ) )* ) ( (lv_closedTag_12_0= RULE_FIELD_END_TAG ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2606:7: ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleMessage ) ) | ( (lv_children_7_0= ruleProperty ) ) | ( (lv_children_8_0= ruleParam ) ) | ( (lv_children_9_0= ruleMap ) ) | ( (lv_children_10_0= ruleMapMethod ) ) | ( (lv_children_11_0= ruleDebugTag ) ) | ( (lv_children_12_0= ruleField ) ) | ( (lv_children_13_0= ruleComment ) ) | ( (lv_children_14_0= ruleBreak ) ) )*
-                    loop41:
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3151:7: ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleComment ) ) | ( (lv_children_11_0= ruleBreak ) ) )* )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3151:8: ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleComment ) ) | ( (lv_children_11_0= ruleBreak ) ) )*
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3151:8: ( (lv_splitTag_4_0= RULE_XML_TAG_END ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3152:1: (lv_splitTag_4_0= RULE_XML_TAG_END )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3152:1: (lv_splitTag_4_0= RULE_XML_TAG_END )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3153:3: lv_splitTag_4_0= RULE_XML_TAG_END
+                    {
+                    lv_splitTag_4_0=(Token)input.LT(1);
+                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleField4297); 
+
+                    			createLeafNode(grammarAccess.getFieldAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_1_0_0_0(), "splitTag"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getFieldRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"splitTag",
+                    	        		true, 
+                    	        		"XML_TAG_END", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3175:2: ( ( (lv_children_5_0= ruleExpressionOrOption ) ) | ( (lv_children_6_0= ruleParam ) ) | ( (lv_children_7_0= ruleMap ) ) | ( (lv_children_8_0= ruleMapMethod ) ) | ( (lv_children_9_0= ruleDebugTag ) ) | ( (lv_children_10_0= ruleComment ) ) | ( (lv_children_11_0= ruleBreak ) ) )*
+                    loop42:
                     do {
-                        int alt41=11;
+                        int alt42=8;
                         switch ( input.LA(1) ) {
                         case RULE_EXPRESSION_START_TAG:
                         case RULE_OPTION_START_TAG:
                             {
-                            alt41=1;
-                            }
-                            break;
-                        case RULE_MESSAGE_START_TAG:
-                            {
-                            alt41=2;
-                            }
-                            break;
-                        case RULE_PROPERTY_START_TAG:
-                            {
-                            alt41=3;
+                            alt42=1;
                             }
                             break;
                         case RULE_PARAM_START_TAG:
                             {
-                            alt41=4;
+                            alt42=2;
                             }
                             break;
                         case RULE_MAPSTARTKEYWORD:
                             {
-                            alt41=5;
+                            alt42=3;
                             }
                             break;
                         case RULE_MAP_METHOD_STARTTAG_START:
                             {
-                            alt41=6;
+                            alt42=4;
                             }
                             break;
                         case RULE_DEBUG_START_TAG:
                             {
-                            alt41=7;
-                            }
-                            break;
-                        case RULE_FIELD_START_TAG:
-                            {
-                            alt41=8;
+                            alt42=5;
                             }
                             break;
                         case RULE_COMMENT_START_TAG:
                             {
-                            alt41=9;
+                            alt42=6;
                             }
                             break;
                         case RULE_BREAK_START_TAG:
                             {
-                            alt41=10;
+                            alt42=7;
                             }
                             break;
 
                         }
 
-                        switch (alt41) {
+                        switch (alt42) {
                     	case 1 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2606:8: ( (lv_children_5_0= ruleExpressionOrOption ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3175:3: ( (lv_children_5_0= ruleExpressionOrOption ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2606:8: ( (lv_children_5_0= ruleExpressionOrOption ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2607:1: (lv_children_5_0= ruleExpressionOrOption )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3175:3: ( (lv_children_5_0= ruleExpressionOrOption ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3176:1: (lv_children_5_0= ruleExpressionOrOption )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2607:1: (lv_children_5_0= ruleExpressionOrOption )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2608:3: lv_children_5_0= ruleExpressionOrOption
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3176:1: (lv_children_5_0= ruleExpressionOrOption )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3177:3: lv_children_5_0= ruleExpressionOrOption
                     	    {
                     	     
-                    	    	        currentNode=createCompositeNode(grammarAccess.getFieldAccess().getChildrenExpressionOrOptionParserRuleCall_4_1_0_0_0(), currentNode); 
+                    	    	        currentNode=createCompositeNode(grammarAccess.getFieldAccess().getChildrenExpressionOrOptionParserRuleCall_3_1_0_1_0_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleExpressionOrOption_in_ruleField3913);
+                    	    pushFollow(FOLLOW_ruleExpressionOrOption_in_ruleField4324);
                     	    lv_children_5_0=ruleExpressionOrOption();
                     	    _fsp--;
 
@@ -6081,19 +6952,19 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2631:6: ( (lv_children_6_0= ruleMessage ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3200:6: ( (lv_children_6_0= ruleParam ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2631:6: ( (lv_children_6_0= ruleMessage ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2632:1: (lv_children_6_0= ruleMessage )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3200:6: ( (lv_children_6_0= ruleParam ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3201:1: (lv_children_6_0= ruleParam )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2632:1: (lv_children_6_0= ruleMessage )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2633:3: lv_children_6_0= ruleMessage
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3201:1: (lv_children_6_0= ruleParam )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3202:3: lv_children_6_0= ruleParam
                     	    {
                     	     
-                    	    	        currentNode=createCompositeNode(grammarAccess.getFieldAccess().getChildrenMessageParserRuleCall_4_1_0_1_0(), currentNode); 
+                    	    	        currentNode=createCompositeNode(grammarAccess.getFieldAccess().getChildrenParamParserRuleCall_3_1_0_1_1_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleMessage_in_ruleField3940);
-                    	    lv_children_6_0=ruleMessage();
+                    	    pushFollow(FOLLOW_ruleParam_in_ruleField4351);
+                    	    lv_children_6_0=ruleParam();
                     	    _fsp--;
 
 
@@ -6106,90 +6977,6 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    	       			current, 
                     	    	       			"children",
                     	    	        		lv_children_6_0, 
-                    	    	        		"Message", 
-                    	    	        		currentNode);
-                    	    	        } catch (ValueConverterException vce) {
-                    	    				handleValueConverterException(vce);
-                    	    	        }
-                    	    	        currentNode = currentNode.getParent();
-                    	    	    
-
-                    	    }
-
-
-                    	    }
-
-
-                    	    }
-                    	    break;
-                    	case 3 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2656:6: ( (lv_children_7_0= ruleProperty ) )
-                    	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2656:6: ( (lv_children_7_0= ruleProperty ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2657:1: (lv_children_7_0= ruleProperty )
-                    	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2657:1: (lv_children_7_0= ruleProperty )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2658:3: lv_children_7_0= ruleProperty
-                    	    {
-                    	     
-                    	    	        currentNode=createCompositeNode(grammarAccess.getFieldAccess().getChildrenPropertyParserRuleCall_4_1_0_2_0(), currentNode); 
-                    	    	    
-                    	    pushFollow(FOLLOW_ruleProperty_in_ruleField3967);
-                    	    lv_children_7_0=ruleProperty();
-                    	    _fsp--;
-
-
-                    	    	        if (current==null) {
-                    	    	            current = factory.create(grammarAccess.getFieldRule().getType().getClassifier());
-                    	    	            associateNodeWithAstElement(currentNode.getParent(), current);
-                    	    	        }
-                    	    	        try {
-                    	    	       		add(
-                    	    	       			current, 
-                    	    	       			"children",
-                    	    	        		lv_children_7_0, 
-                    	    	        		"Property", 
-                    	    	        		currentNode);
-                    	    	        } catch (ValueConverterException vce) {
-                    	    				handleValueConverterException(vce);
-                    	    	        }
-                    	    	        currentNode = currentNode.getParent();
-                    	    	    
-
-                    	    }
-
-
-                    	    }
-
-
-                    	    }
-                    	    break;
-                    	case 4 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2681:6: ( (lv_children_8_0= ruleParam ) )
-                    	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2681:6: ( (lv_children_8_0= ruleParam ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2682:1: (lv_children_8_0= ruleParam )
-                    	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2682:1: (lv_children_8_0= ruleParam )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2683:3: lv_children_8_0= ruleParam
-                    	    {
-                    	     
-                    	    	        currentNode=createCompositeNode(grammarAccess.getFieldAccess().getChildrenParamParserRuleCall_4_1_0_3_0(), currentNode); 
-                    	    	    
-                    	    pushFollow(FOLLOW_ruleParam_in_ruleField3994);
-                    	    lv_children_8_0=ruleParam();
-                    	    _fsp--;
-
-
-                    	    	        if (current==null) {
-                    	    	            current = factory.create(grammarAccess.getFieldRule().getType().getClassifier());
-                    	    	            associateNodeWithAstElement(currentNode.getParent(), current);
-                    	    	        }
-                    	    	        try {
-                    	    	       		add(
-                    	    	       			current, 
-                    	    	       			"children",
-                    	    	        		lv_children_8_0, 
                     	    	        		"Param", 
                     	    	        		currentNode);
                     	    	        } catch (ValueConverterException vce) {
@@ -6206,20 +6993,20 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                     	    }
                     	    break;
-                    	case 5 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2706:6: ( (lv_children_9_0= ruleMap ) )
+                    	case 3 :
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3225:6: ( (lv_children_7_0= ruleMap ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2706:6: ( (lv_children_9_0= ruleMap ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2707:1: (lv_children_9_0= ruleMap )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3225:6: ( (lv_children_7_0= ruleMap ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3226:1: (lv_children_7_0= ruleMap )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2707:1: (lv_children_9_0= ruleMap )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2708:3: lv_children_9_0= ruleMap
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3226:1: (lv_children_7_0= ruleMap )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3227:3: lv_children_7_0= ruleMap
                     	    {
                     	     
-                    	    	        currentNode=createCompositeNode(grammarAccess.getFieldAccess().getChildrenMapParserRuleCall_4_1_0_4_0(), currentNode); 
+                    	    	        currentNode=createCompositeNode(grammarAccess.getFieldAccess().getChildrenMapParserRuleCall_3_1_0_1_2_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleMap_in_ruleField4021);
-                    	    lv_children_9_0=ruleMap();
+                    	    pushFollow(FOLLOW_ruleMap_in_ruleField4378);
+                    	    lv_children_7_0=ruleMap();
                     	    _fsp--;
 
 
@@ -6231,7 +7018,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    	       		add(
                     	    	       			current, 
                     	    	       			"children",
-                    	    	        		lv_children_9_0, 
+                    	    	        		lv_children_7_0, 
                     	    	        		"Map", 
                     	    	        		currentNode);
                     	    	        } catch (ValueConverterException vce) {
@@ -6248,20 +7035,20 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                     	    }
                     	    break;
-                    	case 6 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2731:6: ( (lv_children_10_0= ruleMapMethod ) )
+                    	case 4 :
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3250:6: ( (lv_children_8_0= ruleMapMethod ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2731:6: ( (lv_children_10_0= ruleMapMethod ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2732:1: (lv_children_10_0= ruleMapMethod )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3250:6: ( (lv_children_8_0= ruleMapMethod ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3251:1: (lv_children_8_0= ruleMapMethod )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2732:1: (lv_children_10_0= ruleMapMethod )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2733:3: lv_children_10_0= ruleMapMethod
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3251:1: (lv_children_8_0= ruleMapMethod )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3252:3: lv_children_8_0= ruleMapMethod
                     	    {
                     	     
-                    	    	        currentNode=createCompositeNode(grammarAccess.getFieldAccess().getChildrenMapMethodParserRuleCall_4_1_0_5_0(), currentNode); 
+                    	    	        currentNode=createCompositeNode(grammarAccess.getFieldAccess().getChildrenMapMethodParserRuleCall_3_1_0_1_3_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleMapMethod_in_ruleField4048);
-                    	    lv_children_10_0=ruleMapMethod();
+                    	    pushFollow(FOLLOW_ruleMapMethod_in_ruleField4405);
+                    	    lv_children_8_0=ruleMapMethod();
                     	    _fsp--;
 
 
@@ -6273,7 +7060,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    	       		add(
                     	    	       			current, 
                     	    	       			"children",
-                    	    	        		lv_children_10_0, 
+                    	    	        		lv_children_8_0, 
                     	    	        		"MapMethod", 
                     	    	        		currentNode);
                     	    	        } catch (ValueConverterException vce) {
@@ -6290,20 +7077,20 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                     	    }
                     	    break;
-                    	case 7 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2756:6: ( (lv_children_11_0= ruleDebugTag ) )
+                    	case 5 :
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3275:6: ( (lv_children_9_0= ruleDebugTag ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2756:6: ( (lv_children_11_0= ruleDebugTag ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2757:1: (lv_children_11_0= ruleDebugTag )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3275:6: ( (lv_children_9_0= ruleDebugTag ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3276:1: (lv_children_9_0= ruleDebugTag )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2757:1: (lv_children_11_0= ruleDebugTag )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2758:3: lv_children_11_0= ruleDebugTag
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3276:1: (lv_children_9_0= ruleDebugTag )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3277:3: lv_children_9_0= ruleDebugTag
                     	    {
                     	     
-                    	    	        currentNode=createCompositeNode(grammarAccess.getFieldAccess().getChildrenDebugTagParserRuleCall_4_1_0_6_0(), currentNode); 
+                    	    	        currentNode=createCompositeNode(grammarAccess.getFieldAccess().getChildrenDebugTagParserRuleCall_3_1_0_1_4_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleDebugTag_in_ruleField4075);
-                    	    lv_children_11_0=ruleDebugTag();
+                    	    pushFollow(FOLLOW_ruleDebugTag_in_ruleField4432);
+                    	    lv_children_9_0=ruleDebugTag();
                     	    _fsp--;
 
 
@@ -6315,7 +7102,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    	       		add(
                     	    	       			current, 
                     	    	       			"children",
-                    	    	        		lv_children_11_0, 
+                    	    	        		lv_children_9_0, 
                     	    	        		"DebugTag", 
                     	    	        		currentNode);
                     	    	        } catch (ValueConverterException vce) {
@@ -6332,20 +7119,20 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                     	    }
                     	    break;
-                    	case 8 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2781:6: ( (lv_children_12_0= ruleField ) )
+                    	case 6 :
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3300:6: ( (lv_children_10_0= ruleComment ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2781:6: ( (lv_children_12_0= ruleField ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2782:1: (lv_children_12_0= ruleField )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3300:6: ( (lv_children_10_0= ruleComment ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3301:1: (lv_children_10_0= ruleComment )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2782:1: (lv_children_12_0= ruleField )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2783:3: lv_children_12_0= ruleField
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3301:1: (lv_children_10_0= ruleComment )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3302:3: lv_children_10_0= ruleComment
                     	    {
                     	     
-                    	    	        currentNode=createCompositeNode(grammarAccess.getFieldAccess().getChildrenFieldParserRuleCall_4_1_0_7_0(), currentNode); 
+                    	    	        currentNode=createCompositeNode(grammarAccess.getFieldAccess().getChildrenCommentParserRuleCall_3_1_0_1_5_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleField_in_ruleField4102);
-                    	    lv_children_12_0=ruleField();
+                    	    pushFollow(FOLLOW_ruleComment_in_ruleField4459);
+                    	    lv_children_10_0=ruleComment();
                     	    _fsp--;
 
 
@@ -6357,49 +7144,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    	       		add(
                     	    	       			current, 
                     	    	       			"children",
-                    	    	        		lv_children_12_0, 
-                    	    	        		"Field", 
-                    	    	        		currentNode);
-                    	    	        } catch (ValueConverterException vce) {
-                    	    				handleValueConverterException(vce);
-                    	    	        }
-                    	    	        currentNode = currentNode.getParent();
-                    	    	    
-
-                    	    }
-
-
-                    	    }
-
-
-                    	    }
-                    	    break;
-                    	case 9 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2806:6: ( (lv_children_13_0= ruleComment ) )
-                    	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2806:6: ( (lv_children_13_0= ruleComment ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2807:1: (lv_children_13_0= ruleComment )
-                    	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2807:1: (lv_children_13_0= ruleComment )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2808:3: lv_children_13_0= ruleComment
-                    	    {
-                    	     
-                    	    	        currentNode=createCompositeNode(grammarAccess.getFieldAccess().getChildrenCommentParserRuleCall_4_1_0_8_0(), currentNode); 
-                    	    	    
-                    	    pushFollow(FOLLOW_ruleComment_in_ruleField4129);
-                    	    lv_children_13_0=ruleComment();
-                    	    _fsp--;
-
-
-                    	    	        if (current==null) {
-                    	    	            current = factory.create(grammarAccess.getFieldRule().getType().getClassifier());
-                    	    	            associateNodeWithAstElement(currentNode.getParent(), current);
-                    	    	        }
-                    	    	        try {
-                    	    	       		add(
-                    	    	       			current, 
-                    	    	       			"children",
-                    	    	        		lv_children_13_0, 
+                    	    	        		lv_children_10_0, 
                     	    	        		"Comment", 
                     	    	        		currentNode);
                     	    	        } catch (ValueConverterException vce) {
@@ -6416,20 +7161,20 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                     	    }
                     	    break;
-                    	case 10 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2831:6: ( (lv_children_14_0= ruleBreak ) )
+                    	case 7 :
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3325:6: ( (lv_children_11_0= ruleBreak ) )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2831:6: ( (lv_children_14_0= ruleBreak ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2832:1: (lv_children_14_0= ruleBreak )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3325:6: ( (lv_children_11_0= ruleBreak ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3326:1: (lv_children_11_0= ruleBreak )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2832:1: (lv_children_14_0= ruleBreak )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2833:3: lv_children_14_0= ruleBreak
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3326:1: (lv_children_11_0= ruleBreak )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3327:3: lv_children_11_0= ruleBreak
                     	    {
                     	     
-                    	    	        currentNode=createCompositeNode(grammarAccess.getFieldAccess().getChildrenBreakParserRuleCall_4_1_0_9_0(), currentNode); 
+                    	    	        currentNode=createCompositeNode(grammarAccess.getFieldAccess().getChildrenBreakParserRuleCall_3_1_0_1_6_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleBreak_in_ruleField4156);
-                    	    lv_children_14_0=ruleBreak();
+                    	    pushFollow(FOLLOW_ruleBreak_in_ruleField4486);
+                    	    lv_children_11_0=ruleBreak();
                     	    _fsp--;
 
 
@@ -6441,7 +7186,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    	       		add(
                     	    	       			current, 
                     	    	       			"children",
-                    	    	        		lv_children_14_0, 
+                    	    	        		lv_children_11_0, 
                     	    	        		"Break", 
                     	    	        		currentNode);
                     	    	        } catch (ValueConverterException vce) {
@@ -6460,14 +7205,46 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    break;
 
                     	default :
-                    	    break loop41;
+                    	    break loop42;
                         }
                     } while (true);
 
-                    match(input,RULE_FIELD_END_TAG,FOLLOW_RULE_FIELD_END_TAG_in_ruleField4167); 
-                     
-                        createLeafNode(grammarAccess.getFieldAccess().getFIELD_END_TAGTerminalRuleCall_4_1_1(), null); 
-                        
+
+                    }
+
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3349:5: ( (lv_closedTag_12_0= RULE_FIELD_END_TAG ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3350:1: (lv_closedTag_12_0= RULE_FIELD_END_TAG )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3350:1: (lv_closedTag_12_0= RULE_FIELD_END_TAG )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3351:3: lv_closedTag_12_0= RULE_FIELD_END_TAG
+                    {
+                    lv_closedTag_12_0=(Token)input.LT(1);
+                    match(input,RULE_FIELD_END_TAG,FOLLOW_RULE_FIELD_END_TAG_in_ruleField4506); 
+
+                    			createLeafNode(grammarAccess.getFieldAccess().getClosedTagFIELD_END_TAGTerminalRuleCall_3_1_1_0(), "closedTag"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getFieldRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"closedTag",
+                    	        		true, 
+                    	        		"FIELD_END_TAG", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
 
                     }
 
@@ -6500,7 +7277,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleDebugTag
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2867:1: entryRuleDebugTag returns [EObject current=null] : iv_ruleDebugTag= ruleDebugTag EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3381:1: entryRuleDebugTag returns [EObject current=null] : iv_ruleDebugTag= ruleDebugTag EOF ;
     public final EObject entryRuleDebugTag() throws RecognitionException {
         EObject current = null;
 
@@ -6508,16 +7285,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2868:2: (iv_ruleDebugTag= ruleDebugTag EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2869:2: iv_ruleDebugTag= ruleDebugTag EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3382:2: (iv_ruleDebugTag= ruleDebugTag EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3383:2: iv_ruleDebugTag= ruleDebugTag EOF
             {
              currentNode = createCompositeNode(grammarAccess.getDebugTagRule(), currentNode); 
-            pushFollow(FOLLOW_ruleDebugTag_in_entryRuleDebugTag4204);
+            pushFollow(FOLLOW_ruleDebugTag_in_entryRuleDebugTag4549);
             iv_ruleDebugTag=ruleDebugTag();
             _fsp--;
 
              current =iv_ruleDebugTag; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleDebugTag4214); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleDebugTag4559); 
 
             }
 
@@ -6535,10 +7312,12 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleDebugTag
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2876:1: ruleDebugTag returns [EObject current=null] : ( RULE_DEBUG_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( (lv_expression_5_0= ruleTopLevel ) ) RULE_DEBUG_END_TAG ) ) ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3390:1: ruleDebugTag returns [EObject current=null] : ( RULE_DEBUG_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( (lv_expression_5_0= ruleTopLevel ) )? ( (lv_closedTag_6_0= RULE_DEBUG_END_TAG ) ) ) ) ) ;
     public final EObject ruleDebugTag() throws RecognitionException {
         EObject current = null;
 
+        Token lv_splitTag_4_0=null;
+        Token lv_closedTag_6_0=null;
         EObject lv_attributes_2_0 = null;
 
         EObject lv_expression_5_0 = null;
@@ -6547,18 +7326,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2881:6: ( ( RULE_DEBUG_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( (lv_expression_5_0= ruleTopLevel ) ) RULE_DEBUG_END_TAG ) ) ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2882:1: ( RULE_DEBUG_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( (lv_expression_5_0= ruleTopLevel ) ) RULE_DEBUG_END_TAG ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3395:6: ( ( RULE_DEBUG_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( (lv_expression_5_0= ruleTopLevel ) )? ( (lv_closedTag_6_0= RULE_DEBUG_END_TAG ) ) ) ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3396:1: ( RULE_DEBUG_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( (lv_expression_5_0= ruleTopLevel ) )? ( (lv_closedTag_6_0= RULE_DEBUG_END_TAG ) ) ) ) )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2882:1: ( RULE_DEBUG_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( (lv_expression_5_0= ruleTopLevel ) ) RULE_DEBUG_END_TAG ) ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2882:2: RULE_DEBUG_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( (lv_expression_5_0= ruleTopLevel ) ) RULE_DEBUG_END_TAG ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3396:1: ( RULE_DEBUG_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( (lv_expression_5_0= ruleTopLevel ) )? ( (lv_closedTag_6_0= RULE_DEBUG_END_TAG ) ) ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3396:2: RULE_DEBUG_START_TAG () ( (lv_attributes_2_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( (lv_expression_5_0= ruleTopLevel ) )? ( (lv_closedTag_6_0= RULE_DEBUG_END_TAG ) ) ) )
             {
-            match(input,RULE_DEBUG_START_TAG,FOLLOW_RULE_DEBUG_START_TAG_in_ruleDebugTag4248); 
+            match(input,RULE_DEBUG_START_TAG,FOLLOW_RULE_DEBUG_START_TAG_in_ruleDebugTag4593); 
              
                 createLeafNode(grammarAccess.getDebugTagAccess().getDEBUG_START_TAGTerminalRuleCall_0(), null); 
                 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2886:1: ()
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2887:5: 
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3400:1: ()
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3401:5: 
             {
              
                     temp=factory.create(grammarAccess.getDebugTagAccess().getDebugTagAction_1().getType().getClassifier());
@@ -6573,28 +7352,28 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2897:2: ( (lv_attributes_2_0= rulePossibleExpression ) )*
-            loop43:
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3411:2: ( (lv_attributes_2_0= rulePossibleExpression ) )*
+            loop44:
             do {
-                int alt43=2;
-                int LA43_0 = input.LA(1);
+                int alt44=2;
+                int LA44_0 = input.LA(1);
 
-                if ( (LA43_0==RULE_ID) ) {
-                    alt43=1;
+                if ( (LA44_0==RULE_ID) ) {
+                    alt44=1;
                 }
 
 
-                switch (alt43) {
+                switch (alt44) {
             	case 1 :
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2898:1: (lv_attributes_2_0= rulePossibleExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3412:1: (lv_attributes_2_0= rulePossibleExpression )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2898:1: (lv_attributes_2_0= rulePossibleExpression )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2899:3: lv_attributes_2_0= rulePossibleExpression
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3412:1: (lv_attributes_2_0= rulePossibleExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3413:3: lv_attributes_2_0= rulePossibleExpression
             	    {
             	     
             	    	        currentNode=createCompositeNode(grammarAccess.getDebugTagAccess().getAttributesPossibleExpressionParserRuleCall_2_0(), currentNode); 
             	    	    
-            	    pushFollow(FOLLOW_rulePossibleExpression_in_ruleDebugTag4277);
+            	    pushFollow(FOLLOW_rulePossibleExpression_in_ruleDebugTag4622);
             	    lv_attributes_2_0=rulePossibleExpression();
             	    _fsp--;
 
@@ -6623,31 +7402,31 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
             	    break;
 
             	default :
-            	    break loop43;
+            	    break loop44;
                 }
             } while (true);
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2921:3: ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( (lv_expression_5_0= ruleTopLevel ) ) RULE_DEBUG_END_TAG ) )
-            int alt44=2;
-            int LA44_0 = input.LA(1);
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3435:3: ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( (lv_expression_5_0= ruleTopLevel ) )? ( (lv_closedTag_6_0= RULE_DEBUG_END_TAG ) ) ) )
+            int alt46=2;
+            int LA46_0 = input.LA(1);
 
-            if ( (LA44_0==RULE_XML_TAG_SINGLEEND) ) {
-                alt44=1;
+            if ( (LA46_0==RULE_XML_TAG_SINGLEEND) ) {
+                alt46=1;
             }
-            else if ( (LA44_0==RULE_XML_TAG_END) ) {
-                alt44=2;
+            else if ( (LA46_0==RULE_XML_TAG_END) ) {
+                alt46=2;
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("2921:3: ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( (lv_expression_5_0= ruleTopLevel ) ) RULE_DEBUG_END_TAG ) )", 44, 0, input);
+                    new NoViableAltException("3435:3: ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( (lv_expression_5_0= ruleTopLevel ) )? ( (lv_closedTag_6_0= RULE_DEBUG_END_TAG ) ) ) )", 46, 0, input);
 
                 throw nvae;
             }
-            switch (alt44) {
+            switch (alt46) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2921:4: RULE_XML_TAG_SINGLEEND
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3435:4: RULE_XML_TAG_SINGLEEND
                     {
-                    match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleDebugTag4288); 
+                    match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleDebugTag4633); 
                      
                         createLeafNode(grammarAccess.getDebugTagAccess().getXML_TAG_SINGLEENDTerminalRuleCall_3_0(), null); 
                         
@@ -6655,44 +7434,37 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2926:6: ( RULE_XML_TAG_END ( (lv_expression_5_0= ruleTopLevel ) ) RULE_DEBUG_END_TAG )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3440:6: ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( (lv_expression_5_0= ruleTopLevel ) )? ( (lv_closedTag_6_0= RULE_DEBUG_END_TAG ) ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2926:6: ( RULE_XML_TAG_END ( (lv_expression_5_0= ruleTopLevel ) ) RULE_DEBUG_END_TAG )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2926:7: RULE_XML_TAG_END ( (lv_expression_5_0= ruleTopLevel ) ) RULE_DEBUG_END_TAG
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3440:6: ( ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( (lv_expression_5_0= ruleTopLevel ) )? ( (lv_closedTag_6_0= RULE_DEBUG_END_TAG ) ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3440:7: ( (lv_splitTag_4_0= RULE_XML_TAG_END ) ) ( (lv_expression_5_0= ruleTopLevel ) )? ( (lv_closedTag_6_0= RULE_DEBUG_END_TAG ) )
                     {
-                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleDebugTag4303); 
-                     
-                        createLeafNode(grammarAccess.getDebugTagAccess().getXML_TAG_ENDTerminalRuleCall_3_1_0(), null); 
-                        
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2930:1: ( (lv_expression_5_0= ruleTopLevel ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2931:1: (lv_expression_5_0= ruleTopLevel )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3440:7: ( (lv_splitTag_4_0= RULE_XML_TAG_END ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3441:1: (lv_splitTag_4_0= RULE_XML_TAG_END )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2931:1: (lv_expression_5_0= ruleTopLevel )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2932:3: lv_expression_5_0= ruleTopLevel
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3441:1: (lv_splitTag_4_0= RULE_XML_TAG_END )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3442:3: lv_splitTag_4_0= RULE_XML_TAG_END
                     {
-                     
-                    	        currentNode=createCompositeNode(grammarAccess.getDebugTagAccess().getExpressionTopLevelParserRuleCall_3_1_1_0(), currentNode); 
-                    	    
-                    pushFollow(FOLLOW_ruleTopLevel_in_ruleDebugTag4323);
-                    lv_expression_5_0=ruleTopLevel();
-                    _fsp--;
+                    lv_splitTag_4_0=(Token)input.LT(1);
+                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleDebugTag4656); 
 
+                    			createLeafNode(grammarAccess.getDebugTagAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_3_1_0_0(), "splitTag"); 
+                    		
 
                     	        if (current==null) {
                     	            current = factory.create(grammarAccess.getDebugTagRule().getType().getClassifier());
-                    	            associateNodeWithAstElement(currentNode.getParent(), current);
+                    	            associateNodeWithAstElement(currentNode, current);
                     	        }
                     	        try {
                     	       		set(
                     	       			current, 
-                    	       			"expression",
-                    	        		lv_expression_5_0, 
-                    	        		"TopLevel", 
-                    	        		currentNode);
+                    	       			"splitTag",
+                    	        		true, 
+                    	        		"XML_TAG_END", 
+                    	        		lastConsumedNode);
                     	        } catch (ValueConverterException vce) {
                     				handleValueConverterException(vce);
                     	        }
-                    	        currentNode = currentNode.getParent();
                     	    
 
                     }
@@ -6700,10 +7472,86 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    match(input,RULE_DEBUG_END_TAG,FOLLOW_RULE_DEBUG_END_TAG_in_ruleDebugTag4332); 
-                     
-                        createLeafNode(grammarAccess.getDebugTagAccess().getDEBUG_END_TAGTerminalRuleCall_3_1_2(), null); 
-                        
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3464:2: ( (lv_expression_5_0= ruleTopLevel ) )?
+                    int alt45=2;
+                    int LA45_0 = input.LA(1);
+
+                    if ( (LA45_0==RULE_ID||LA45_0==RULE_SQBRACKET_OPEN||(LA45_0>=RULE_TML_EXISTS && LA45_0<=RULE_DOLLAR)||(LA45_0>=RULE_NUMBER && LA45_0<=RULE_FALSE)||LA45_0==74||LA45_0==84||LA45_0==86) ) {
+                        alt45=1;
+                    }
+                    switch (alt45) {
+                        case 1 :
+                            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3465:1: (lv_expression_5_0= ruleTopLevel )
+                            {
+                            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3465:1: (lv_expression_5_0= ruleTopLevel )
+                            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3466:3: lv_expression_5_0= ruleTopLevel
+                            {
+                             
+                            	        currentNode=createCompositeNode(grammarAccess.getDebugTagAccess().getExpressionTopLevelParserRuleCall_3_1_1_0(), currentNode); 
+                            	    
+                            pushFollow(FOLLOW_ruleTopLevel_in_ruleDebugTag4682);
+                            lv_expression_5_0=ruleTopLevel();
+                            _fsp--;
+
+
+                            	        if (current==null) {
+                            	            current = factory.create(grammarAccess.getDebugTagRule().getType().getClassifier());
+                            	            associateNodeWithAstElement(currentNode.getParent(), current);
+                            	        }
+                            	        try {
+                            	       		set(
+                            	       			current, 
+                            	       			"expression",
+                            	        		lv_expression_5_0, 
+                            	        		"TopLevel", 
+                            	        		currentNode);
+                            	        } catch (ValueConverterException vce) {
+                            				handleValueConverterException(vce);
+                            	        }
+                            	        currentNode = currentNode.getParent();
+                            	    
+
+                            }
+
+
+                            }
+                            break;
+
+                    }
+
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3488:3: ( (lv_closedTag_6_0= RULE_DEBUG_END_TAG ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3489:1: (lv_closedTag_6_0= RULE_DEBUG_END_TAG )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3489:1: (lv_closedTag_6_0= RULE_DEBUG_END_TAG )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3490:3: lv_closedTag_6_0= RULE_DEBUG_END_TAG
+                    {
+                    lv_closedTag_6_0=(Token)input.LT(1);
+                    match(input,RULE_DEBUG_END_TAG,FOLLOW_RULE_DEBUG_END_TAG_in_ruleDebugTag4700); 
+
+                    			createLeafNode(grammarAccess.getDebugTagAccess().getClosedTagDEBUG_END_TAGTerminalRuleCall_3_1_2_0(), "closedTag"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getDebugTagRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"closedTag",
+                    	        		true, 
+                    	        		"DEBUG_END_TAG", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
 
                     }
 
@@ -6736,7 +7584,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleExpressionOrOption
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2966:1: entryRuleExpressionOrOption returns [EObject current=null] : iv_ruleExpressionOrOption= ruleExpressionOrOption EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3520:1: entryRuleExpressionOrOption returns [EObject current=null] : iv_ruleExpressionOrOption= ruleExpressionOrOption EOF ;
     public final EObject entryRuleExpressionOrOption() throws RecognitionException {
         EObject current = null;
 
@@ -6744,16 +7592,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2967:2: (iv_ruleExpressionOrOption= ruleExpressionOrOption EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2968:2: iv_ruleExpressionOrOption= ruleExpressionOrOption EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3521:2: (iv_ruleExpressionOrOption= ruleExpressionOrOption EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3522:2: iv_ruleExpressionOrOption= ruleExpressionOrOption EOF
             {
              currentNode = createCompositeNode(grammarAccess.getExpressionOrOptionRule(), currentNode); 
-            pushFollow(FOLLOW_ruleExpressionOrOption_in_entryRuleExpressionOrOption4369);
+            pushFollow(FOLLOW_ruleExpressionOrOption_in_entryRuleExpressionOrOption4743);
             iv_ruleExpressionOrOption=ruleExpressionOrOption();
             _fsp--;
 
              current =iv_ruleExpressionOrOption; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleExpressionOrOption4379); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleExpressionOrOption4753); 
 
             }
 
@@ -6771,7 +7619,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleExpressionOrOption
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2975:1: ruleExpressionOrOption returns [EObject current=null] : ( ( RULE_EXPRESSION_START_TAG this_ExpressionTag_1= ruleExpressionTag ) | ( RULE_OPTION_START_TAG this_Option_3= ruleOption ) ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3529:1: ruleExpressionOrOption returns [EObject current=null] : ( ( RULE_EXPRESSION_START_TAG this_ExpressionTag_1= ruleExpressionTag ) | ( RULE_OPTION_START_TAG this_Option_3= ruleOption ) ) ;
     public final EObject ruleExpressionOrOption() throws RecognitionException {
         EObject current = null;
 
@@ -6783,40 +7631,40 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2980:6: ( ( ( RULE_EXPRESSION_START_TAG this_ExpressionTag_1= ruleExpressionTag ) | ( RULE_OPTION_START_TAG this_Option_3= ruleOption ) ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2981:1: ( ( RULE_EXPRESSION_START_TAG this_ExpressionTag_1= ruleExpressionTag ) | ( RULE_OPTION_START_TAG this_Option_3= ruleOption ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3534:6: ( ( ( RULE_EXPRESSION_START_TAG this_ExpressionTag_1= ruleExpressionTag ) | ( RULE_OPTION_START_TAG this_Option_3= ruleOption ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3535:1: ( ( RULE_EXPRESSION_START_TAG this_ExpressionTag_1= ruleExpressionTag ) | ( RULE_OPTION_START_TAG this_Option_3= ruleOption ) )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2981:1: ( ( RULE_EXPRESSION_START_TAG this_ExpressionTag_1= ruleExpressionTag ) | ( RULE_OPTION_START_TAG this_Option_3= ruleOption ) )
-            int alt45=2;
-            int LA45_0 = input.LA(1);
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3535:1: ( ( RULE_EXPRESSION_START_TAG this_ExpressionTag_1= ruleExpressionTag ) | ( RULE_OPTION_START_TAG this_Option_3= ruleOption ) )
+            int alt47=2;
+            int LA47_0 = input.LA(1);
 
-            if ( (LA45_0==RULE_EXPRESSION_START_TAG) ) {
-                alt45=1;
+            if ( (LA47_0==RULE_EXPRESSION_START_TAG) ) {
+                alt47=1;
             }
-            else if ( (LA45_0==RULE_OPTION_START_TAG) ) {
-                alt45=2;
+            else if ( (LA47_0==RULE_OPTION_START_TAG) ) {
+                alt47=2;
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("2981:1: ( ( RULE_EXPRESSION_START_TAG this_ExpressionTag_1= ruleExpressionTag ) | ( RULE_OPTION_START_TAG this_Option_3= ruleOption ) )", 45, 0, input);
+                    new NoViableAltException("3535:1: ( ( RULE_EXPRESSION_START_TAG this_ExpressionTag_1= ruleExpressionTag ) | ( RULE_OPTION_START_TAG this_Option_3= ruleOption ) )", 47, 0, input);
 
                 throw nvae;
             }
-            switch (alt45) {
+            switch (alt47) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2981:2: ( RULE_EXPRESSION_START_TAG this_ExpressionTag_1= ruleExpressionTag )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3535:2: ( RULE_EXPRESSION_START_TAG this_ExpressionTag_1= ruleExpressionTag )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2981:2: ( RULE_EXPRESSION_START_TAG this_ExpressionTag_1= ruleExpressionTag )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2981:3: RULE_EXPRESSION_START_TAG this_ExpressionTag_1= ruleExpressionTag
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3535:2: ( RULE_EXPRESSION_START_TAG this_ExpressionTag_1= ruleExpressionTag )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3535:3: RULE_EXPRESSION_START_TAG this_ExpressionTag_1= ruleExpressionTag
                     {
-                    match(input,RULE_EXPRESSION_START_TAG,FOLLOW_RULE_EXPRESSION_START_TAG_in_ruleExpressionOrOption4414); 
+                    match(input,RULE_EXPRESSION_START_TAG,FOLLOW_RULE_EXPRESSION_START_TAG_in_ruleExpressionOrOption4788); 
                      
                         createLeafNode(grammarAccess.getExpressionOrOptionAccess().getEXPRESSION_START_TAGTerminalRuleCall_0_0(), null); 
                         
                      
                             currentNode=createCompositeNode(grammarAccess.getExpressionOrOptionAccess().getExpressionTagParserRuleCall_0_1(), currentNode); 
                         
-                    pushFollow(FOLLOW_ruleExpressionTag_in_ruleExpressionOrOption4435);
+                    pushFollow(FOLLOW_ruleExpressionTag_in_ruleExpressionOrOption4809);
                     this_ExpressionTag_1=ruleExpressionTag();
                     _fsp--;
 
@@ -6831,19 +7679,19 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2995:6: ( RULE_OPTION_START_TAG this_Option_3= ruleOption )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3549:6: ( RULE_OPTION_START_TAG this_Option_3= ruleOption )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2995:6: ( RULE_OPTION_START_TAG this_Option_3= ruleOption )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:2995:7: RULE_OPTION_START_TAG this_Option_3= ruleOption
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3549:6: ( RULE_OPTION_START_TAG this_Option_3= ruleOption )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3549:7: RULE_OPTION_START_TAG this_Option_3= ruleOption
                     {
-                    match(input,RULE_OPTION_START_TAG,FOLLOW_RULE_OPTION_START_TAG_in_ruleExpressionOrOption4451); 
+                    match(input,RULE_OPTION_START_TAG,FOLLOW_RULE_OPTION_START_TAG_in_ruleExpressionOrOption4825); 
                      
                         createLeafNode(grammarAccess.getExpressionOrOptionAccess().getOPTION_START_TAGTerminalRuleCall_1_0(), null); 
                         
                      
                             currentNode=createCompositeNode(grammarAccess.getExpressionOrOptionAccess().getOptionParserRuleCall_1_1(), currentNode); 
                         
-                    pushFollow(FOLLOW_ruleOption_in_ruleExpressionOrOption4472);
+                    pushFollow(FOLLOW_ruleOption_in_ruleExpressionOrOption4846);
                     this_Option_3=ruleOption();
                     _fsp--;
 
@@ -6880,7 +7728,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleExpressionTag
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3016:1: entryRuleExpressionTag returns [EObject current=null] : iv_ruleExpressionTag= ruleExpressionTag EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3570:1: entryRuleExpressionTag returns [EObject current=null] : iv_ruleExpressionTag= ruleExpressionTag EOF ;
     public final EObject entryRuleExpressionTag() throws RecognitionException {
         EObject current = null;
 
@@ -6888,16 +7736,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3017:2: (iv_ruleExpressionTag= ruleExpressionTag EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3018:2: iv_ruleExpressionTag= ruleExpressionTag EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3571:2: (iv_ruleExpressionTag= ruleExpressionTag EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3572:2: iv_ruleExpressionTag= ruleExpressionTag EOF
             {
              currentNode = createCompositeNode(grammarAccess.getExpressionTagRule(), currentNode); 
-            pushFollow(FOLLOW_ruleExpressionTag_in_entryRuleExpressionTag4508);
+            pushFollow(FOLLOW_ruleExpressionTag_in_entryRuleExpressionTag4882);
             iv_ruleExpressionTag=ruleExpressionTag();
             _fsp--;
 
              current =iv_ruleExpressionTag; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleExpressionTag4518); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleExpressionTag4892); 
 
             }
 
@@ -6915,10 +7763,12 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleExpressionTag
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3025:1: ruleExpressionTag returns [EObject current=null] : ( () ( (lv_attributes_1_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( (lv_expression_4_0= ruleTopLevel ) ) RULE_EXPRESSION_END_TAG ) ) ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3579:1: ruleExpressionTag returns [EObject current=null] : ( () ( (lv_attributes_1_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_expression_4_0= ruleTopLevel ) ) ( (lv_closedTag_5_0= RULE_EXPRESSION_END_TAG ) ) ) ) ) ;
     public final EObject ruleExpressionTag() throws RecognitionException {
         EObject current = null;
 
+        Token lv_splitTag_3_0=null;
+        Token lv_closedTag_5_0=null;
         EObject lv_attributes_1_0 = null;
 
         EObject lv_expression_4_0 = null;
@@ -6927,14 +7777,14 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3030:6: ( ( () ( (lv_attributes_1_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( (lv_expression_4_0= ruleTopLevel ) ) RULE_EXPRESSION_END_TAG ) ) ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3031:1: ( () ( (lv_attributes_1_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( (lv_expression_4_0= ruleTopLevel ) ) RULE_EXPRESSION_END_TAG ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3584:6: ( ( () ( (lv_attributes_1_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_expression_4_0= ruleTopLevel ) ) ( (lv_closedTag_5_0= RULE_EXPRESSION_END_TAG ) ) ) ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3585:1: ( () ( (lv_attributes_1_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_expression_4_0= ruleTopLevel ) ) ( (lv_closedTag_5_0= RULE_EXPRESSION_END_TAG ) ) ) ) )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3031:1: ( () ( (lv_attributes_1_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( (lv_expression_4_0= ruleTopLevel ) ) RULE_EXPRESSION_END_TAG ) ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3031:2: () ( (lv_attributes_1_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( (lv_expression_4_0= ruleTopLevel ) ) RULE_EXPRESSION_END_TAG ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3585:1: ( () ( (lv_attributes_1_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_expression_4_0= ruleTopLevel ) ) ( (lv_closedTag_5_0= RULE_EXPRESSION_END_TAG ) ) ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3585:2: () ( (lv_attributes_1_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_expression_4_0= ruleTopLevel ) ) ( (lv_closedTag_5_0= RULE_EXPRESSION_END_TAG ) ) ) )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3031:2: ()
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3032:5: 
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3585:2: ()
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3586:5: 
             {
              
                     temp=factory.create(grammarAccess.getExpressionTagAccess().getExpressionTagAction_0().getType().getClassifier());
@@ -6949,28 +7799,28 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3042:2: ( (lv_attributes_1_0= rulePossibleExpression ) )*
-            loop46:
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3596:2: ( (lv_attributes_1_0= rulePossibleExpression ) )*
+            loop48:
             do {
-                int alt46=2;
-                int LA46_0 = input.LA(1);
+                int alt48=2;
+                int LA48_0 = input.LA(1);
 
-                if ( (LA46_0==RULE_ID) ) {
-                    alt46=1;
+                if ( (LA48_0==RULE_ID) ) {
+                    alt48=1;
                 }
 
 
-                switch (alt46) {
+                switch (alt48) {
             	case 1 :
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3043:1: (lv_attributes_1_0= rulePossibleExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3597:1: (lv_attributes_1_0= rulePossibleExpression )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3043:1: (lv_attributes_1_0= rulePossibleExpression )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3044:3: lv_attributes_1_0= rulePossibleExpression
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3597:1: (lv_attributes_1_0= rulePossibleExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3598:3: lv_attributes_1_0= rulePossibleExpression
             	    {
             	     
             	    	        currentNode=createCompositeNode(grammarAccess.getExpressionTagAccess().getAttributesPossibleExpressionParserRuleCall_1_0(), currentNode); 
             	    	    
-            	    pushFollow(FOLLOW_rulePossibleExpression_in_ruleExpressionTag4573);
+            	    pushFollow(FOLLOW_rulePossibleExpression_in_ruleExpressionTag4947);
             	    lv_attributes_1_0=rulePossibleExpression();
             	    _fsp--;
 
@@ -6999,31 +7849,31 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
             	    break;
 
             	default :
-            	    break loop46;
+            	    break loop48;
                 }
             } while (true);
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3066:3: ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( (lv_expression_4_0= ruleTopLevel ) ) RULE_EXPRESSION_END_TAG ) )
-            int alt47=2;
-            int LA47_0 = input.LA(1);
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3620:3: ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_expression_4_0= ruleTopLevel ) ) ( (lv_closedTag_5_0= RULE_EXPRESSION_END_TAG ) ) ) )
+            int alt49=2;
+            int LA49_0 = input.LA(1);
 
-            if ( (LA47_0==RULE_XML_TAG_SINGLEEND) ) {
-                alt47=1;
+            if ( (LA49_0==RULE_XML_TAG_SINGLEEND) ) {
+                alt49=1;
             }
-            else if ( (LA47_0==RULE_XML_TAG_END) ) {
-                alt47=2;
+            else if ( (LA49_0==RULE_XML_TAG_END) ) {
+                alt49=2;
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("3066:3: ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END ( (lv_expression_4_0= ruleTopLevel ) ) RULE_EXPRESSION_END_TAG ) )", 47, 0, input);
+                    new NoViableAltException("3620:3: ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_expression_4_0= ruleTopLevel ) ) ( (lv_closedTag_5_0= RULE_EXPRESSION_END_TAG ) ) ) )", 49, 0, input);
 
                 throw nvae;
             }
-            switch (alt47) {
+            switch (alt49) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3066:4: RULE_XML_TAG_SINGLEEND
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3620:4: RULE_XML_TAG_SINGLEEND
                     {
-                    match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleExpressionTag4584); 
+                    match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleExpressionTag4958); 
                      
                         createLeafNode(grammarAccess.getExpressionTagAccess().getXML_TAG_SINGLEENDTerminalRuleCall_2_0(), null); 
                         
@@ -7031,25 +7881,54 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3071:6: ( RULE_XML_TAG_END ( (lv_expression_4_0= ruleTopLevel ) ) RULE_EXPRESSION_END_TAG )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3625:6: ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_expression_4_0= ruleTopLevel ) ) ( (lv_closedTag_5_0= RULE_EXPRESSION_END_TAG ) ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3071:6: ( RULE_XML_TAG_END ( (lv_expression_4_0= ruleTopLevel ) ) RULE_EXPRESSION_END_TAG )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3071:7: RULE_XML_TAG_END ( (lv_expression_4_0= ruleTopLevel ) ) RULE_EXPRESSION_END_TAG
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3625:6: ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_expression_4_0= ruleTopLevel ) ) ( (lv_closedTag_5_0= RULE_EXPRESSION_END_TAG ) ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3625:7: ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_expression_4_0= ruleTopLevel ) ) ( (lv_closedTag_5_0= RULE_EXPRESSION_END_TAG ) )
                     {
-                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleExpressionTag4599); 
-                     
-                        createLeafNode(grammarAccess.getExpressionTagAccess().getXML_TAG_ENDTerminalRuleCall_2_1_0(), null); 
-                        
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3075:1: ( (lv_expression_4_0= ruleTopLevel ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3076:1: (lv_expression_4_0= ruleTopLevel )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3625:7: ( (lv_splitTag_3_0= RULE_XML_TAG_END ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3626:1: (lv_splitTag_3_0= RULE_XML_TAG_END )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3076:1: (lv_expression_4_0= ruleTopLevel )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3077:3: lv_expression_4_0= ruleTopLevel
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3626:1: (lv_splitTag_3_0= RULE_XML_TAG_END )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3627:3: lv_splitTag_3_0= RULE_XML_TAG_END
+                    {
+                    lv_splitTag_3_0=(Token)input.LT(1);
+                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleExpressionTag4981); 
+
+                    			createLeafNode(grammarAccess.getExpressionTagAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_2_1_0_0(), "splitTag"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getExpressionTagRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"splitTag",
+                    	        		true, 
+                    	        		"XML_TAG_END", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3649:2: ( (lv_expression_4_0= ruleTopLevel ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3650:1: (lv_expression_4_0= ruleTopLevel )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3650:1: (lv_expression_4_0= ruleTopLevel )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3651:3: lv_expression_4_0= ruleTopLevel
                     {
                      
                     	        currentNode=createCompositeNode(grammarAccess.getExpressionTagAccess().getExpressionTopLevelParserRuleCall_2_1_1_0(), currentNode); 
                     	    
-                    pushFollow(FOLLOW_ruleTopLevel_in_ruleExpressionTag4619);
+                    pushFollow(FOLLOW_ruleTopLevel_in_ruleExpressionTag5007);
                     lv_expression_4_0=ruleTopLevel();
                     _fsp--;
 
@@ -7076,10 +7955,39 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    match(input,RULE_EXPRESSION_END_TAG,FOLLOW_RULE_EXPRESSION_END_TAG_in_ruleExpressionTag4628); 
-                     
-                        createLeafNode(grammarAccess.getExpressionTagAccess().getEXPRESSION_END_TAGTerminalRuleCall_2_1_2(), null); 
-                        
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3673:2: ( (lv_closedTag_5_0= RULE_EXPRESSION_END_TAG ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3674:1: (lv_closedTag_5_0= RULE_EXPRESSION_END_TAG )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3674:1: (lv_closedTag_5_0= RULE_EXPRESSION_END_TAG )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3675:3: lv_closedTag_5_0= RULE_EXPRESSION_END_TAG
+                    {
+                    lv_closedTag_5_0=(Token)input.LT(1);
+                    match(input,RULE_EXPRESSION_END_TAG,FOLLOW_RULE_EXPRESSION_END_TAG_in_ruleExpressionTag5024); 
+
+                    			createLeafNode(grammarAccess.getExpressionTagAccess().getClosedTagEXPRESSION_END_TAGTerminalRuleCall_2_1_2_0(), "closedTag"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getExpressionTagRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"closedTag",
+                    	        		true, 
+                    	        		"EXPRESSION_END_TAG", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
 
                     }
 
@@ -7112,7 +8020,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleOption
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3111:1: entryRuleOption returns [EObject current=null] : iv_ruleOption= ruleOption EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3705:1: entryRuleOption returns [EObject current=null] : iv_ruleOption= ruleOption EOF ;
     public final EObject entryRuleOption() throws RecognitionException {
         EObject current = null;
 
@@ -7120,16 +8028,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3112:2: (iv_ruleOption= ruleOption EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3113:2: iv_ruleOption= ruleOption EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3706:2: (iv_ruleOption= ruleOption EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3707:2: iv_ruleOption= ruleOption EOF
             {
              currentNode = createCompositeNode(grammarAccess.getOptionRule(), currentNode); 
-            pushFollow(FOLLOW_ruleOption_in_entryRuleOption4665);
+            pushFollow(FOLLOW_ruleOption_in_entryRuleOption5067);
             iv_ruleOption=ruleOption();
             _fsp--;
 
              current =iv_ruleOption; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleOption4675); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleOption5077); 
 
             }
 
@@ -7147,24 +8055,26 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleOption
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3120:1: ruleOption returns [EObject current=null] : ( () ( (lv_attributes_1_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END RULE_OPTION_END_TAG ) ) ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3714:1: ruleOption returns [EObject current=null] : ( () ( (lv_attributes_1_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_OPTION_END_TAG ) ) ) ) ) ;
     public final EObject ruleOption() throws RecognitionException {
         EObject current = null;
 
+        Token lv_splitTag_3_0=null;
+        Token lv_closedTag_4_0=null;
         EObject lv_attributes_1_0 = null;
 
 
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3125:6: ( ( () ( (lv_attributes_1_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END RULE_OPTION_END_TAG ) ) ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3126:1: ( () ( (lv_attributes_1_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END RULE_OPTION_END_TAG ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3719:6: ( ( () ( (lv_attributes_1_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_OPTION_END_TAG ) ) ) ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3720:1: ( () ( (lv_attributes_1_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_OPTION_END_TAG ) ) ) ) )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3126:1: ( () ( (lv_attributes_1_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END RULE_OPTION_END_TAG ) ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3126:2: () ( (lv_attributes_1_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END RULE_OPTION_END_TAG ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3720:1: ( () ( (lv_attributes_1_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_OPTION_END_TAG ) ) ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3720:2: () ( (lv_attributes_1_0= rulePossibleExpression ) )* ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_OPTION_END_TAG ) ) ) )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3126:2: ()
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3127:5: 
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3720:2: ()
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3721:5: 
             {
              
                     temp=factory.create(grammarAccess.getOptionAccess().getOptionAction_0().getType().getClassifier());
@@ -7179,28 +8089,28 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3137:2: ( (lv_attributes_1_0= rulePossibleExpression ) )*
-            loop48:
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3731:2: ( (lv_attributes_1_0= rulePossibleExpression ) )*
+            loop50:
             do {
-                int alt48=2;
-                int LA48_0 = input.LA(1);
+                int alt50=2;
+                int LA50_0 = input.LA(1);
 
-                if ( (LA48_0==RULE_ID) ) {
-                    alt48=1;
+                if ( (LA50_0==RULE_ID) ) {
+                    alt50=1;
                 }
 
 
-                switch (alt48) {
+                switch (alt50) {
             	case 1 :
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3138:1: (lv_attributes_1_0= rulePossibleExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3732:1: (lv_attributes_1_0= rulePossibleExpression )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3138:1: (lv_attributes_1_0= rulePossibleExpression )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3139:3: lv_attributes_1_0= rulePossibleExpression
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3732:1: (lv_attributes_1_0= rulePossibleExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3733:3: lv_attributes_1_0= rulePossibleExpression
             	    {
             	     
             	    	        currentNode=createCompositeNode(grammarAccess.getOptionAccess().getAttributesPossibleExpressionParserRuleCall_1_0(), currentNode); 
             	    	    
-            	    pushFollow(FOLLOW_rulePossibleExpression_in_ruleOption4730);
+            	    pushFollow(FOLLOW_rulePossibleExpression_in_ruleOption5132);
             	    lv_attributes_1_0=rulePossibleExpression();
             	    _fsp--;
 
@@ -7229,31 +8139,31 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
             	    break;
 
             	default :
-            	    break loop48;
+            	    break loop50;
                 }
             } while (true);
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3161:3: ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END RULE_OPTION_END_TAG ) )
-            int alt49=2;
-            int LA49_0 = input.LA(1);
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3755:3: ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_OPTION_END_TAG ) ) ) )
+            int alt51=2;
+            int LA51_0 = input.LA(1);
 
-            if ( (LA49_0==RULE_XML_TAG_SINGLEEND) ) {
-                alt49=1;
+            if ( (LA51_0==RULE_XML_TAG_SINGLEEND) ) {
+                alt51=1;
             }
-            else if ( (LA49_0==RULE_XML_TAG_END) ) {
-                alt49=2;
+            else if ( (LA51_0==RULE_XML_TAG_END) ) {
+                alt51=2;
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("3161:3: ( RULE_XML_TAG_SINGLEEND | ( RULE_XML_TAG_END RULE_OPTION_END_TAG ) )", 49, 0, input);
+                    new NoViableAltException("3755:3: ( RULE_XML_TAG_SINGLEEND | ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_OPTION_END_TAG ) ) ) )", 51, 0, input);
 
                 throw nvae;
             }
-            switch (alt49) {
+            switch (alt51) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3161:4: RULE_XML_TAG_SINGLEEND
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3755:4: RULE_XML_TAG_SINGLEEND
                     {
-                    match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleOption4741); 
+                    match(input,RULE_XML_TAG_SINGLEEND,FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleOption5143); 
                      
                         createLeafNode(grammarAccess.getOptionAccess().getXML_TAG_SINGLEENDTerminalRuleCall_2_0(), null); 
                         
@@ -7261,19 +8171,77 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3166:6: ( RULE_XML_TAG_END RULE_OPTION_END_TAG )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3760:6: ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_OPTION_END_TAG ) ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3166:6: ( RULE_XML_TAG_END RULE_OPTION_END_TAG )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3166:7: RULE_XML_TAG_END RULE_OPTION_END_TAG
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3760:6: ( ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_OPTION_END_TAG ) ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3760:7: ( (lv_splitTag_3_0= RULE_XML_TAG_END ) ) ( (lv_closedTag_4_0= RULE_OPTION_END_TAG ) )
                     {
-                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleOption4756); 
-                     
-                        createLeafNode(grammarAccess.getOptionAccess().getXML_TAG_ENDTerminalRuleCall_2_1_0(), null); 
-                        
-                    match(input,RULE_OPTION_END_TAG,FOLLOW_RULE_OPTION_END_TAG_in_ruleOption4764); 
-                     
-                        createLeafNode(grammarAccess.getOptionAccess().getOPTION_END_TAGTerminalRuleCall_2_1_1(), null); 
-                        
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3760:7: ( (lv_splitTag_3_0= RULE_XML_TAG_END ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3761:1: (lv_splitTag_3_0= RULE_XML_TAG_END )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3761:1: (lv_splitTag_3_0= RULE_XML_TAG_END )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3762:3: lv_splitTag_3_0= RULE_XML_TAG_END
+                    {
+                    lv_splitTag_3_0=(Token)input.LT(1);
+                    match(input,RULE_XML_TAG_END,FOLLOW_RULE_XML_TAG_END_in_ruleOption5166); 
+
+                    			createLeafNode(grammarAccess.getOptionAccess().getSplitTagXML_TAG_ENDTerminalRuleCall_2_1_0_0(), "splitTag"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getOptionRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"splitTag",
+                    	        		true, 
+                    	        		"XML_TAG_END", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3784:2: ( (lv_closedTag_4_0= RULE_OPTION_END_TAG ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3785:1: (lv_closedTag_4_0= RULE_OPTION_END_TAG )
+                    {
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3785:1: (lv_closedTag_4_0= RULE_OPTION_END_TAG )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3786:3: lv_closedTag_4_0= RULE_OPTION_END_TAG
+                    {
+                    lv_closedTag_4_0=(Token)input.LT(1);
+                    match(input,RULE_OPTION_END_TAG,FOLLOW_RULE_OPTION_END_TAG_in_ruleOption5188); 
+
+                    			createLeafNode(grammarAccess.getOptionAccess().getClosedTagOPTION_END_TAGTerminalRuleCall_2_1_1_0(), "closedTag"); 
+                    		
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getOptionRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode, current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"closedTag",
+                    	        		true, 
+                    	        		"OPTION_END_TAG", 
+                    	        		lastConsumedNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	    
+
+                    }
+
+
+                    }
+
 
                     }
 
@@ -7306,7 +8274,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleTopLevel
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3182:1: entryRuleTopLevel returns [EObject current=null] : iv_ruleTopLevel= ruleTopLevel EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3816:1: entryRuleTopLevel returns [EObject current=null] : iv_ruleTopLevel= ruleTopLevel EOF ;
     public final EObject entryRuleTopLevel() throws RecognitionException {
         EObject current = null;
 
@@ -7314,16 +8282,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3183:2: (iv_ruleTopLevel= ruleTopLevel EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3184:2: iv_ruleTopLevel= ruleTopLevel EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3817:2: (iv_ruleTopLevel= ruleTopLevel EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3818:2: iv_ruleTopLevel= ruleTopLevel EOF
             {
              currentNode = createCompositeNode(grammarAccess.getTopLevelRule(), currentNode); 
-            pushFollow(FOLLOW_ruleTopLevel_in_entryRuleTopLevel4801);
+            pushFollow(FOLLOW_ruleTopLevel_in_entryRuleTopLevel5231);
             iv_ruleTopLevel=ruleTopLevel();
             _fsp--;
 
              current =iv_ruleTopLevel; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleTopLevel4811); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleTopLevel5241); 
 
             }
 
@@ -7341,7 +8309,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleTopLevel
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3191:1: ruleTopLevel returns [EObject current=null] : ( (lv_toplevelExpression_0_0= ruleOrExpression ) ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3825:1: ruleTopLevel returns [EObject current=null] : ( (lv_toplevelExpression_0_0= ruleOrExpression ) ) ;
     public final EObject ruleTopLevel() throws RecognitionException {
         EObject current = null;
 
@@ -7351,19 +8319,19 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3196:6: ( ( (lv_toplevelExpression_0_0= ruleOrExpression ) ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3197:1: ( (lv_toplevelExpression_0_0= ruleOrExpression ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3830:6: ( ( (lv_toplevelExpression_0_0= ruleOrExpression ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3831:1: ( (lv_toplevelExpression_0_0= ruleOrExpression ) )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3197:1: ( (lv_toplevelExpression_0_0= ruleOrExpression ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3198:1: (lv_toplevelExpression_0_0= ruleOrExpression )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3831:1: ( (lv_toplevelExpression_0_0= ruleOrExpression ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3832:1: (lv_toplevelExpression_0_0= ruleOrExpression )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3198:1: (lv_toplevelExpression_0_0= ruleOrExpression )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3199:3: lv_toplevelExpression_0_0= ruleOrExpression
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3832:1: (lv_toplevelExpression_0_0= ruleOrExpression )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3833:3: lv_toplevelExpression_0_0= ruleOrExpression
             {
              
             	        currentNode=createCompositeNode(grammarAccess.getTopLevelAccess().getToplevelExpressionOrExpressionParserRuleCall_0(), currentNode); 
             	    
-            pushFollow(FOLLOW_ruleOrExpression_in_ruleTopLevel4856);
+            pushFollow(FOLLOW_ruleOrExpression_in_ruleTopLevel5286);
             lv_toplevelExpression_0_0=ruleOrExpression();
             _fsp--;
 
@@ -7410,7 +8378,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRulePathElement
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3229:1: entryRulePathElement returns [String current=null] : iv_rulePathElement= rulePathElement EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3863:1: entryRulePathElement returns [String current=null] : iv_rulePathElement= rulePathElement EOF ;
     public final String entryRulePathElement() throws RecognitionException {
         String current = null;
 
@@ -7418,16 +8386,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3230:2: (iv_rulePathElement= rulePathElement EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3231:2: iv_rulePathElement= rulePathElement EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3864:2: (iv_rulePathElement= rulePathElement EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3865:2: iv_rulePathElement= rulePathElement EOF
             {
              currentNode = createCompositeNode(grammarAccess.getPathElementRule(), currentNode); 
-            pushFollow(FOLLOW_rulePathElement_in_entryRulePathElement4892);
+            pushFollow(FOLLOW_rulePathElement_in_entryRulePathElement5322);
             iv_rulePathElement=rulePathElement();
             _fsp--;
 
              current =iv_rulePathElement.getText(); 
-            match(input,EOF,FOLLOW_EOF_in_entryRulePathElement4903); 
+            match(input,EOF,FOLLOW_EOF_in_entryRulePathElement5333); 
 
             }
 
@@ -7445,7 +8413,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start rulePathElement
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3238:1: rulePathElement returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_ID_0= RULE_ID | kw= '.' | this_PARENT_2= RULE_PARENT ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3872:1: rulePathElement returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_ID_0= RULE_ID | kw= '.' | this_PARENT_2= RULE_PARENT ) ;
     public final AntlrDatatypeRuleToken rulePathElement() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -7456,40 +8424,40 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
          setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3243:6: ( (this_ID_0= RULE_ID | kw= '.' | this_PARENT_2= RULE_PARENT ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3244:1: (this_ID_0= RULE_ID | kw= '.' | this_PARENT_2= RULE_PARENT )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3877:6: ( (this_ID_0= RULE_ID | kw= '.' | this_PARENT_2= RULE_PARENT ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3878:1: (this_ID_0= RULE_ID | kw= '.' | this_PARENT_2= RULE_PARENT )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3244:1: (this_ID_0= RULE_ID | kw= '.' | this_PARENT_2= RULE_PARENT )
-            int alt50=3;
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3878:1: (this_ID_0= RULE_ID | kw= '.' | this_PARENT_2= RULE_PARENT )
+            int alt52=3;
             switch ( input.LA(1) ) {
             case RULE_ID:
                 {
-                alt50=1;
+                alt52=1;
                 }
                 break;
-            case 72:
+            case RULE_DOT:
                 {
-                alt50=2;
+                alt52=2;
                 }
                 break;
             case RULE_PARENT:
                 {
-                alt50=3;
+                alt52=3;
                 }
                 break;
             default:
                 NoViableAltException nvae =
-                    new NoViableAltException("3244:1: (this_ID_0= RULE_ID | kw= '.' | this_PARENT_2= RULE_PARENT )", 50, 0, input);
+                    new NoViableAltException("3878:1: (this_ID_0= RULE_ID | kw= '.' | this_PARENT_2= RULE_PARENT )", 52, 0, input);
 
                 throw nvae;
             }
 
-            switch (alt50) {
+            switch (alt52) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3244:6: this_ID_0= RULE_ID
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3878:6: this_ID_0= RULE_ID
                     {
                     this_ID_0=(Token)input.LT(1);
-                    match(input,RULE_ID,FOLLOW_RULE_ID_in_rulePathElement4943); 
+                    match(input,RULE_ID,FOLLOW_RULE_ID_in_rulePathElement5373); 
 
                     		current.merge(this_ID_0);
                         
@@ -7500,10 +8468,10 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3253:2: kw= '.'
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3887:2: kw= '.'
                     {
                     kw=(Token)input.LT(1);
-                    match(input,72,FOLLOW_72_in_rulePathElement4967); 
+                    match(input,RULE_DOT,FOLLOW_RULE_DOT_in_rulePathElement5397); 
 
                             current.merge(kw);
                             createLeafNode(grammarAccess.getPathElementAccess().getFullStopKeyword_1(), null); 
@@ -7512,10 +8480,10 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 3 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3259:10: this_PARENT_2= RULE_PARENT
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3893:10: this_PARENT_2= RULE_PARENT
                     {
                     this_PARENT_2=(Token)input.LT(1);
-                    match(input,RULE_PARENT,FOLLOW_RULE_PARENT_in_rulePathElement4988); 
+                    match(input,RULE_PARENT,FOLLOW_RULE_PARENT_in_rulePathElement5418); 
 
                     		current.merge(this_PARENT_2);
                         
@@ -7548,7 +8516,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleTmlExpression
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3274:1: entryRuleTmlExpression returns [EObject current=null] : iv_ruleTmlExpression= ruleTmlExpression EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3908:1: entryRuleTmlExpression returns [EObject current=null] : iv_ruleTmlExpression= ruleTmlExpression EOF ;
     public final EObject entryRuleTmlExpression() throws RecognitionException {
         EObject current = null;
 
@@ -7556,16 +8524,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3275:2: (iv_ruleTmlExpression= ruleTmlExpression EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3276:2: iv_ruleTmlExpression= ruleTmlExpression EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3909:2: (iv_ruleTmlExpression= ruleTmlExpression EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3910:2: iv_ruleTmlExpression= ruleTmlExpression EOF
             {
              currentNode = createCompositeNode(grammarAccess.getTmlExpressionRule(), currentNode); 
-            pushFollow(FOLLOW_ruleTmlExpression_in_entryRuleTmlExpression5033);
+            pushFollow(FOLLOW_ruleTmlExpression_in_entryRuleTmlExpression5463);
             iv_ruleTmlExpression=ruleTmlExpression();
             _fsp--;
 
              current =iv_ruleTmlExpression; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleTmlExpression5043); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleTmlExpression5473); 
 
             }
 
@@ -7583,7 +8551,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleTmlExpression
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3283:1: ruleTmlExpression returns [EObject current=null] : ( RULE_SQBRACKET_OPEN ( (lv_absolute_1_0= RULE_TML_SEPARATOR ) )? ( (lv_param_2_0= RULE_AT ) )? ( (lv_elements_3_0= rulePathElement ) ) ( RULE_TML_SEPARATOR ( (lv_elements_5_0= rulePathElement ) ) )* RULE_SQBRACKET_CLOSE ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3917:1: ruleTmlExpression returns [EObject current=null] : ( RULE_SQBRACKET_OPEN ( (lv_absolute_1_0= RULE_TML_SEPARATOR ) )? ( (lv_param_2_0= RULE_AT ) )? ( (lv_elements_3_0= rulePathElement ) ) ( RULE_TML_SEPARATOR ( (lv_elements_5_0= rulePathElement ) ) )* RULE_SQBRACKET_CLOSE ) ;
     public final EObject ruleTmlExpression() throws RecognitionException {
         EObject current = null;
 
@@ -7597,32 +8565,32 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3288:6: ( ( RULE_SQBRACKET_OPEN ( (lv_absolute_1_0= RULE_TML_SEPARATOR ) )? ( (lv_param_2_0= RULE_AT ) )? ( (lv_elements_3_0= rulePathElement ) ) ( RULE_TML_SEPARATOR ( (lv_elements_5_0= rulePathElement ) ) )* RULE_SQBRACKET_CLOSE ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3289:1: ( RULE_SQBRACKET_OPEN ( (lv_absolute_1_0= RULE_TML_SEPARATOR ) )? ( (lv_param_2_0= RULE_AT ) )? ( (lv_elements_3_0= rulePathElement ) ) ( RULE_TML_SEPARATOR ( (lv_elements_5_0= rulePathElement ) ) )* RULE_SQBRACKET_CLOSE )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3922:6: ( ( RULE_SQBRACKET_OPEN ( (lv_absolute_1_0= RULE_TML_SEPARATOR ) )? ( (lv_param_2_0= RULE_AT ) )? ( (lv_elements_3_0= rulePathElement ) ) ( RULE_TML_SEPARATOR ( (lv_elements_5_0= rulePathElement ) ) )* RULE_SQBRACKET_CLOSE ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3923:1: ( RULE_SQBRACKET_OPEN ( (lv_absolute_1_0= RULE_TML_SEPARATOR ) )? ( (lv_param_2_0= RULE_AT ) )? ( (lv_elements_3_0= rulePathElement ) ) ( RULE_TML_SEPARATOR ( (lv_elements_5_0= rulePathElement ) ) )* RULE_SQBRACKET_CLOSE )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3289:1: ( RULE_SQBRACKET_OPEN ( (lv_absolute_1_0= RULE_TML_SEPARATOR ) )? ( (lv_param_2_0= RULE_AT ) )? ( (lv_elements_3_0= rulePathElement ) ) ( RULE_TML_SEPARATOR ( (lv_elements_5_0= rulePathElement ) ) )* RULE_SQBRACKET_CLOSE )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3289:2: RULE_SQBRACKET_OPEN ( (lv_absolute_1_0= RULE_TML_SEPARATOR ) )? ( (lv_param_2_0= RULE_AT ) )? ( (lv_elements_3_0= rulePathElement ) ) ( RULE_TML_SEPARATOR ( (lv_elements_5_0= rulePathElement ) ) )* RULE_SQBRACKET_CLOSE
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3923:1: ( RULE_SQBRACKET_OPEN ( (lv_absolute_1_0= RULE_TML_SEPARATOR ) )? ( (lv_param_2_0= RULE_AT ) )? ( (lv_elements_3_0= rulePathElement ) ) ( RULE_TML_SEPARATOR ( (lv_elements_5_0= rulePathElement ) ) )* RULE_SQBRACKET_CLOSE )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3923:2: RULE_SQBRACKET_OPEN ( (lv_absolute_1_0= RULE_TML_SEPARATOR ) )? ( (lv_param_2_0= RULE_AT ) )? ( (lv_elements_3_0= rulePathElement ) ) ( RULE_TML_SEPARATOR ( (lv_elements_5_0= rulePathElement ) ) )* RULE_SQBRACKET_CLOSE
             {
-            match(input,RULE_SQBRACKET_OPEN,FOLLOW_RULE_SQBRACKET_OPEN_in_ruleTmlExpression5077); 
+            match(input,RULE_SQBRACKET_OPEN,FOLLOW_RULE_SQBRACKET_OPEN_in_ruleTmlExpression5507); 
              
                 createLeafNode(grammarAccess.getTmlExpressionAccess().getSQBRACKET_OPENTerminalRuleCall_0(), null); 
                 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3293:1: ( (lv_absolute_1_0= RULE_TML_SEPARATOR ) )?
-            int alt51=2;
-            int LA51_0 = input.LA(1);
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3927:1: ( (lv_absolute_1_0= RULE_TML_SEPARATOR ) )?
+            int alt53=2;
+            int LA53_0 = input.LA(1);
 
-            if ( (LA51_0==RULE_TML_SEPARATOR) ) {
-                alt51=1;
+            if ( (LA53_0==RULE_TML_SEPARATOR) ) {
+                alt53=1;
             }
-            switch (alt51) {
+            switch (alt53) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3294:1: (lv_absolute_1_0= RULE_TML_SEPARATOR )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3928:1: (lv_absolute_1_0= RULE_TML_SEPARATOR )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3294:1: (lv_absolute_1_0= RULE_TML_SEPARATOR )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3295:3: lv_absolute_1_0= RULE_TML_SEPARATOR
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3928:1: (lv_absolute_1_0= RULE_TML_SEPARATOR )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3929:3: lv_absolute_1_0= RULE_TML_SEPARATOR
                     {
                     lv_absolute_1_0=(Token)input.LT(1);
-                    match(input,RULE_TML_SEPARATOR,FOLLOW_RULE_TML_SEPARATOR_in_ruleTmlExpression5093); 
+                    match(input,RULE_TML_SEPARATOR,FOLLOW_RULE_TML_SEPARATOR_in_ruleTmlExpression5523); 
 
                     			createLeafNode(grammarAccess.getTmlExpressionAccess().getAbsoluteTML_SEPARATORTerminalRuleCall_1_0(), "absolute"); 
                     		
@@ -7651,22 +8619,22 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3317:3: ( (lv_param_2_0= RULE_AT ) )?
-            int alt52=2;
-            int LA52_0 = input.LA(1);
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3951:3: ( (lv_param_2_0= RULE_AT ) )?
+            int alt54=2;
+            int LA54_0 = input.LA(1);
 
-            if ( (LA52_0==RULE_AT) ) {
-                alt52=1;
+            if ( (LA54_0==RULE_AT) ) {
+                alt54=1;
             }
-            switch (alt52) {
+            switch (alt54) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3318:1: (lv_param_2_0= RULE_AT )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3952:1: (lv_param_2_0= RULE_AT )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3318:1: (lv_param_2_0= RULE_AT )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3319:3: lv_param_2_0= RULE_AT
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3952:1: (lv_param_2_0= RULE_AT )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3953:3: lv_param_2_0= RULE_AT
                     {
                     lv_param_2_0=(Token)input.LT(1);
-                    match(input,RULE_AT,FOLLOW_RULE_AT_in_ruleTmlExpression5116); 
+                    match(input,RULE_AT,FOLLOW_RULE_AT_in_ruleTmlExpression5546); 
 
                     			createLeafNode(grammarAccess.getTmlExpressionAccess().getParamATTerminalRuleCall_2_0(), "param"); 
                     		
@@ -7695,16 +8663,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3341:3: ( (lv_elements_3_0= rulePathElement ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3342:1: (lv_elements_3_0= rulePathElement )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3975:3: ( (lv_elements_3_0= rulePathElement ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3976:1: (lv_elements_3_0= rulePathElement )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3342:1: (lv_elements_3_0= rulePathElement )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3343:3: lv_elements_3_0= rulePathElement
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3976:1: (lv_elements_3_0= rulePathElement )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3977:3: lv_elements_3_0= rulePathElement
             {
              
             	        currentNode=createCompositeNode(grammarAccess.getTmlExpressionAccess().getElementsPathElementParserRuleCall_3_0(), currentNode); 
             	    
-            pushFollow(FOLLOW_rulePathElement_in_ruleTmlExpression5143);
+            pushFollow(FOLLOW_rulePathElement_in_ruleTmlExpression5573);
             lv_elements_3_0=rulePathElement();
             _fsp--;
 
@@ -7731,35 +8699,35 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3365:2: ( RULE_TML_SEPARATOR ( (lv_elements_5_0= rulePathElement ) ) )*
-            loop53:
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3999:2: ( RULE_TML_SEPARATOR ( (lv_elements_5_0= rulePathElement ) ) )*
+            loop55:
             do {
-                int alt53=2;
-                int LA53_0 = input.LA(1);
+                int alt55=2;
+                int LA55_0 = input.LA(1);
 
-                if ( (LA53_0==RULE_TML_SEPARATOR) ) {
-                    alt53=1;
+                if ( (LA55_0==RULE_TML_SEPARATOR) ) {
+                    alt55=1;
                 }
 
 
-                switch (alt53) {
+                switch (alt55) {
             	case 1 :
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3365:3: RULE_TML_SEPARATOR ( (lv_elements_5_0= rulePathElement ) )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3999:3: RULE_TML_SEPARATOR ( (lv_elements_5_0= rulePathElement ) )
             	    {
-            	    match(input,RULE_TML_SEPARATOR,FOLLOW_RULE_TML_SEPARATOR_in_ruleTmlExpression5153); 
+            	    match(input,RULE_TML_SEPARATOR,FOLLOW_RULE_TML_SEPARATOR_in_ruleTmlExpression5583); 
             	     
             	        createLeafNode(grammarAccess.getTmlExpressionAccess().getTML_SEPARATORTerminalRuleCall_4_0(), null); 
             	        
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3369:1: ( (lv_elements_5_0= rulePathElement ) )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3370:1: (lv_elements_5_0= rulePathElement )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4003:1: ( (lv_elements_5_0= rulePathElement ) )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4004:1: (lv_elements_5_0= rulePathElement )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3370:1: (lv_elements_5_0= rulePathElement )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3371:3: lv_elements_5_0= rulePathElement
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4004:1: (lv_elements_5_0= rulePathElement )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4005:3: lv_elements_5_0= rulePathElement
             	    {
             	     
             	    	        currentNode=createCompositeNode(grammarAccess.getTmlExpressionAccess().getElementsPathElementParserRuleCall_4_1_0(), currentNode); 
             	    	    
-            	    pushFollow(FOLLOW_rulePathElement_in_ruleTmlExpression5173);
+            	    pushFollow(FOLLOW_rulePathElement_in_ruleTmlExpression5603);
             	    lv_elements_5_0=rulePathElement();
             	    _fsp--;
 
@@ -7791,11 +8759,11 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
             	    break;
 
             	default :
-            	    break loop53;
+            	    break loop55;
                 }
             } while (true);
 
-            match(input,RULE_SQBRACKET_CLOSE,FOLLOW_RULE_SQBRACKET_CLOSE_in_ruleTmlExpression5184); 
+            match(input,RULE_SQBRACKET_CLOSE,FOLLOW_RULE_SQBRACKET_CLOSE_in_ruleTmlExpression5614); 
              
                 createLeafNode(grammarAccess.getTmlExpressionAccess().getSQBRACKET_CLOSETerminalRuleCall_5(), null); 
                 
@@ -7822,7 +8790,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleExistsTmlExpression
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3405:1: entryRuleExistsTmlExpression returns [EObject current=null] : iv_ruleExistsTmlExpression= ruleExistsTmlExpression EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4039:1: entryRuleExistsTmlExpression returns [EObject current=null] : iv_ruleExistsTmlExpression= ruleExistsTmlExpression EOF ;
     public final EObject entryRuleExistsTmlExpression() throws RecognitionException {
         EObject current = null;
 
@@ -7830,16 +8798,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3406:2: (iv_ruleExistsTmlExpression= ruleExistsTmlExpression EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3407:2: iv_ruleExistsTmlExpression= ruleExistsTmlExpression EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4040:2: (iv_ruleExistsTmlExpression= ruleExistsTmlExpression EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4041:2: iv_ruleExistsTmlExpression= ruleExistsTmlExpression EOF
             {
              currentNode = createCompositeNode(grammarAccess.getExistsTmlExpressionRule(), currentNode); 
-            pushFollow(FOLLOW_ruleExistsTmlExpression_in_entryRuleExistsTmlExpression5219);
+            pushFollow(FOLLOW_ruleExistsTmlExpression_in_entryRuleExistsTmlExpression5649);
             iv_ruleExistsTmlExpression=ruleExistsTmlExpression();
             _fsp--;
 
              current =iv_ruleExistsTmlExpression; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleExistsTmlExpression5229); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleExistsTmlExpression5659); 
 
             }
 
@@ -7857,7 +8825,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleExistsTmlExpression
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3414:1: ruleExistsTmlExpression returns [EObject current=null] : ( RULE_TML_EXISTS RULE_SQBRACKET_OPEN ( (lv_absolute_2_0= RULE_TML_SEPARATOR ) )? ( (lv_param_3_0= RULE_AT ) )? ( (lv_elements_4_0= rulePathElement ) ) ( RULE_TML_SEPARATOR ( (lv_elements_6_0= rulePathElement ) ) )* RULE_SQBRACKET_CLOSE ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4048:1: ruleExistsTmlExpression returns [EObject current=null] : ( RULE_TML_EXISTS RULE_SQBRACKET_OPEN ( (lv_absolute_2_0= RULE_TML_SEPARATOR ) )? ( (lv_param_3_0= RULE_AT ) )? ( (lv_elements_4_0= rulePathElement ) ) ( RULE_TML_SEPARATOR ( (lv_elements_6_0= rulePathElement ) ) )* RULE_SQBRACKET_CLOSE ) ;
     public final EObject ruleExistsTmlExpression() throws RecognitionException {
         EObject current = null;
 
@@ -7871,36 +8839,36 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3419:6: ( ( RULE_TML_EXISTS RULE_SQBRACKET_OPEN ( (lv_absolute_2_0= RULE_TML_SEPARATOR ) )? ( (lv_param_3_0= RULE_AT ) )? ( (lv_elements_4_0= rulePathElement ) ) ( RULE_TML_SEPARATOR ( (lv_elements_6_0= rulePathElement ) ) )* RULE_SQBRACKET_CLOSE ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3420:1: ( RULE_TML_EXISTS RULE_SQBRACKET_OPEN ( (lv_absolute_2_0= RULE_TML_SEPARATOR ) )? ( (lv_param_3_0= RULE_AT ) )? ( (lv_elements_4_0= rulePathElement ) ) ( RULE_TML_SEPARATOR ( (lv_elements_6_0= rulePathElement ) ) )* RULE_SQBRACKET_CLOSE )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4053:6: ( ( RULE_TML_EXISTS RULE_SQBRACKET_OPEN ( (lv_absolute_2_0= RULE_TML_SEPARATOR ) )? ( (lv_param_3_0= RULE_AT ) )? ( (lv_elements_4_0= rulePathElement ) ) ( RULE_TML_SEPARATOR ( (lv_elements_6_0= rulePathElement ) ) )* RULE_SQBRACKET_CLOSE ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4054:1: ( RULE_TML_EXISTS RULE_SQBRACKET_OPEN ( (lv_absolute_2_0= RULE_TML_SEPARATOR ) )? ( (lv_param_3_0= RULE_AT ) )? ( (lv_elements_4_0= rulePathElement ) ) ( RULE_TML_SEPARATOR ( (lv_elements_6_0= rulePathElement ) ) )* RULE_SQBRACKET_CLOSE )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3420:1: ( RULE_TML_EXISTS RULE_SQBRACKET_OPEN ( (lv_absolute_2_0= RULE_TML_SEPARATOR ) )? ( (lv_param_3_0= RULE_AT ) )? ( (lv_elements_4_0= rulePathElement ) ) ( RULE_TML_SEPARATOR ( (lv_elements_6_0= rulePathElement ) ) )* RULE_SQBRACKET_CLOSE )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3420:2: RULE_TML_EXISTS RULE_SQBRACKET_OPEN ( (lv_absolute_2_0= RULE_TML_SEPARATOR ) )? ( (lv_param_3_0= RULE_AT ) )? ( (lv_elements_4_0= rulePathElement ) ) ( RULE_TML_SEPARATOR ( (lv_elements_6_0= rulePathElement ) ) )* RULE_SQBRACKET_CLOSE
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4054:1: ( RULE_TML_EXISTS RULE_SQBRACKET_OPEN ( (lv_absolute_2_0= RULE_TML_SEPARATOR ) )? ( (lv_param_3_0= RULE_AT ) )? ( (lv_elements_4_0= rulePathElement ) ) ( RULE_TML_SEPARATOR ( (lv_elements_6_0= rulePathElement ) ) )* RULE_SQBRACKET_CLOSE )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4054:2: RULE_TML_EXISTS RULE_SQBRACKET_OPEN ( (lv_absolute_2_0= RULE_TML_SEPARATOR ) )? ( (lv_param_3_0= RULE_AT ) )? ( (lv_elements_4_0= rulePathElement ) ) ( RULE_TML_SEPARATOR ( (lv_elements_6_0= rulePathElement ) ) )* RULE_SQBRACKET_CLOSE
             {
-            match(input,RULE_TML_EXISTS,FOLLOW_RULE_TML_EXISTS_in_ruleExistsTmlExpression5263); 
+            match(input,RULE_TML_EXISTS,FOLLOW_RULE_TML_EXISTS_in_ruleExistsTmlExpression5693); 
              
                 createLeafNode(grammarAccess.getExistsTmlExpressionAccess().getTML_EXISTSTerminalRuleCall_0(), null); 
                 
-            match(input,RULE_SQBRACKET_OPEN,FOLLOW_RULE_SQBRACKET_OPEN_in_ruleExistsTmlExpression5271); 
+            match(input,RULE_SQBRACKET_OPEN,FOLLOW_RULE_SQBRACKET_OPEN_in_ruleExistsTmlExpression5701); 
              
                 createLeafNode(grammarAccess.getExistsTmlExpressionAccess().getSQBRACKET_OPENTerminalRuleCall_1(), null); 
                 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3428:1: ( (lv_absolute_2_0= RULE_TML_SEPARATOR ) )?
-            int alt54=2;
-            int LA54_0 = input.LA(1);
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4062:1: ( (lv_absolute_2_0= RULE_TML_SEPARATOR ) )?
+            int alt56=2;
+            int LA56_0 = input.LA(1);
 
-            if ( (LA54_0==RULE_TML_SEPARATOR) ) {
-                alt54=1;
+            if ( (LA56_0==RULE_TML_SEPARATOR) ) {
+                alt56=1;
             }
-            switch (alt54) {
+            switch (alt56) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3429:1: (lv_absolute_2_0= RULE_TML_SEPARATOR )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4063:1: (lv_absolute_2_0= RULE_TML_SEPARATOR )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3429:1: (lv_absolute_2_0= RULE_TML_SEPARATOR )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3430:3: lv_absolute_2_0= RULE_TML_SEPARATOR
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4063:1: (lv_absolute_2_0= RULE_TML_SEPARATOR )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4064:3: lv_absolute_2_0= RULE_TML_SEPARATOR
                     {
                     lv_absolute_2_0=(Token)input.LT(1);
-                    match(input,RULE_TML_SEPARATOR,FOLLOW_RULE_TML_SEPARATOR_in_ruleExistsTmlExpression5287); 
+                    match(input,RULE_TML_SEPARATOR,FOLLOW_RULE_TML_SEPARATOR_in_ruleExistsTmlExpression5717); 
 
                     			createLeafNode(grammarAccess.getExistsTmlExpressionAccess().getAbsoluteTML_SEPARATORTerminalRuleCall_2_0(), "absolute"); 
                     		
@@ -7929,22 +8897,22 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3452:3: ( (lv_param_3_0= RULE_AT ) )?
-            int alt55=2;
-            int LA55_0 = input.LA(1);
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4086:3: ( (lv_param_3_0= RULE_AT ) )?
+            int alt57=2;
+            int LA57_0 = input.LA(1);
 
-            if ( (LA55_0==RULE_AT) ) {
-                alt55=1;
+            if ( (LA57_0==RULE_AT) ) {
+                alt57=1;
             }
-            switch (alt55) {
+            switch (alt57) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3453:1: (lv_param_3_0= RULE_AT )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4087:1: (lv_param_3_0= RULE_AT )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3453:1: (lv_param_3_0= RULE_AT )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3454:3: lv_param_3_0= RULE_AT
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4087:1: (lv_param_3_0= RULE_AT )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4088:3: lv_param_3_0= RULE_AT
                     {
                     lv_param_3_0=(Token)input.LT(1);
-                    match(input,RULE_AT,FOLLOW_RULE_AT_in_ruleExistsTmlExpression5310); 
+                    match(input,RULE_AT,FOLLOW_RULE_AT_in_ruleExistsTmlExpression5740); 
 
                     			createLeafNode(grammarAccess.getExistsTmlExpressionAccess().getParamATTerminalRuleCall_3_0(), "param"); 
                     		
@@ -7973,16 +8941,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3476:3: ( (lv_elements_4_0= rulePathElement ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3477:1: (lv_elements_4_0= rulePathElement )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4110:3: ( (lv_elements_4_0= rulePathElement ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4111:1: (lv_elements_4_0= rulePathElement )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3477:1: (lv_elements_4_0= rulePathElement )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3478:3: lv_elements_4_0= rulePathElement
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4111:1: (lv_elements_4_0= rulePathElement )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4112:3: lv_elements_4_0= rulePathElement
             {
              
             	        currentNode=createCompositeNode(grammarAccess.getExistsTmlExpressionAccess().getElementsPathElementParserRuleCall_4_0(), currentNode); 
             	    
-            pushFollow(FOLLOW_rulePathElement_in_ruleExistsTmlExpression5337);
+            pushFollow(FOLLOW_rulePathElement_in_ruleExistsTmlExpression5767);
             lv_elements_4_0=rulePathElement();
             _fsp--;
 
@@ -8009,35 +8977,35 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3500:2: ( RULE_TML_SEPARATOR ( (lv_elements_6_0= rulePathElement ) ) )*
-            loop56:
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4134:2: ( RULE_TML_SEPARATOR ( (lv_elements_6_0= rulePathElement ) ) )*
+            loop58:
             do {
-                int alt56=2;
-                int LA56_0 = input.LA(1);
+                int alt58=2;
+                int LA58_0 = input.LA(1);
 
-                if ( (LA56_0==RULE_TML_SEPARATOR) ) {
-                    alt56=1;
+                if ( (LA58_0==RULE_TML_SEPARATOR) ) {
+                    alt58=1;
                 }
 
 
-                switch (alt56) {
+                switch (alt58) {
             	case 1 :
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3500:3: RULE_TML_SEPARATOR ( (lv_elements_6_0= rulePathElement ) )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4134:3: RULE_TML_SEPARATOR ( (lv_elements_6_0= rulePathElement ) )
             	    {
-            	    match(input,RULE_TML_SEPARATOR,FOLLOW_RULE_TML_SEPARATOR_in_ruleExistsTmlExpression5347); 
+            	    match(input,RULE_TML_SEPARATOR,FOLLOW_RULE_TML_SEPARATOR_in_ruleExistsTmlExpression5777); 
             	     
             	        createLeafNode(grammarAccess.getExistsTmlExpressionAccess().getTML_SEPARATORTerminalRuleCall_5_0(), null); 
             	        
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3504:1: ( (lv_elements_6_0= rulePathElement ) )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3505:1: (lv_elements_6_0= rulePathElement )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4138:1: ( (lv_elements_6_0= rulePathElement ) )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4139:1: (lv_elements_6_0= rulePathElement )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3505:1: (lv_elements_6_0= rulePathElement )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3506:3: lv_elements_6_0= rulePathElement
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4139:1: (lv_elements_6_0= rulePathElement )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4140:3: lv_elements_6_0= rulePathElement
             	    {
             	     
             	    	        currentNode=createCompositeNode(grammarAccess.getExistsTmlExpressionAccess().getElementsPathElementParserRuleCall_5_1_0(), currentNode); 
             	    	    
-            	    pushFollow(FOLLOW_rulePathElement_in_ruleExistsTmlExpression5367);
+            	    pushFollow(FOLLOW_rulePathElement_in_ruleExistsTmlExpression5797);
             	    lv_elements_6_0=rulePathElement();
             	    _fsp--;
 
@@ -8069,11 +9037,11 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
             	    break;
 
             	default :
-            	    break loop56;
+            	    break loop58;
                 }
             } while (true);
 
-            match(input,RULE_SQBRACKET_CLOSE,FOLLOW_RULE_SQBRACKET_CLOSE_in_ruleExistsTmlExpression5378); 
+            match(input,RULE_SQBRACKET_CLOSE,FOLLOW_RULE_SQBRACKET_CLOSE_in_ruleExistsTmlExpression5808); 
              
                 createLeafNode(grammarAccess.getExistsTmlExpressionAccess().getSQBRACKET_CLOSETerminalRuleCall_6(), null); 
                 
@@ -8100,7 +9068,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleMapReferenceParams
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3540:1: entryRuleMapReferenceParams returns [EObject current=null] : iv_ruleMapReferenceParams= ruleMapReferenceParams EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4174:1: entryRuleMapReferenceParams returns [EObject current=null] : iv_ruleMapReferenceParams= ruleMapReferenceParams EOF ;
     public final EObject entryRuleMapReferenceParams() throws RecognitionException {
         EObject current = null;
 
@@ -8108,16 +9076,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3541:2: (iv_ruleMapReferenceParams= ruleMapReferenceParams EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3542:2: iv_ruleMapReferenceParams= ruleMapReferenceParams EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4175:2: (iv_ruleMapReferenceParams= ruleMapReferenceParams EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4176:2: iv_ruleMapReferenceParams= ruleMapReferenceParams EOF
             {
              currentNode = createCompositeNode(grammarAccess.getMapReferenceParamsRule(), currentNode); 
-            pushFollow(FOLLOW_ruleMapReferenceParams_in_entryRuleMapReferenceParams5413);
+            pushFollow(FOLLOW_ruleMapReferenceParams_in_entryRuleMapReferenceParams5843);
             iv_ruleMapReferenceParams=ruleMapReferenceParams();
             _fsp--;
 
              current =iv_ruleMapReferenceParams; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleMapReferenceParams5423); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleMapReferenceParams5853); 
 
             }
 
@@ -8135,7 +9103,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleMapReferenceParams
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3549:1: ruleMapReferenceParams returns [EObject current=null] : ( '(' ( (lv_getterParams_1_0= ruleLiteral ) ) ( ',' ( (lv_getterParams_3_0= ruleLiteral ) ) )* ')' ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4183:1: ruleMapReferenceParams returns [EObject current=null] : ( '(' ( (lv_getterParams_1_0= ruleLiteral ) ) ( ',' ( (lv_getterParams_3_0= ruleLiteral ) ) )* ')' ) ;
     public final EObject ruleMapReferenceParams() throws RecognitionException {
         EObject current = null;
 
@@ -8147,26 +9115,26 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3554:6: ( ( '(' ( (lv_getterParams_1_0= ruleLiteral ) ) ( ',' ( (lv_getterParams_3_0= ruleLiteral ) ) )* ')' ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3555:1: ( '(' ( (lv_getterParams_1_0= ruleLiteral ) ) ( ',' ( (lv_getterParams_3_0= ruleLiteral ) ) )* ')' )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4188:6: ( ( '(' ( (lv_getterParams_1_0= ruleLiteral ) ) ( ',' ( (lv_getterParams_3_0= ruleLiteral ) ) )* ')' ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4189:1: ( '(' ( (lv_getterParams_1_0= ruleLiteral ) ) ( ',' ( (lv_getterParams_3_0= ruleLiteral ) ) )* ')' )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3555:1: ( '(' ( (lv_getterParams_1_0= ruleLiteral ) ) ( ',' ( (lv_getterParams_3_0= ruleLiteral ) ) )* ')' )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3555:3: '(' ( (lv_getterParams_1_0= ruleLiteral ) ) ( ',' ( (lv_getterParams_3_0= ruleLiteral ) ) )* ')'
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4189:1: ( '(' ( (lv_getterParams_1_0= ruleLiteral ) ) ( ',' ( (lv_getterParams_3_0= ruleLiteral ) ) )* ')' )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4189:3: '(' ( (lv_getterParams_1_0= ruleLiteral ) ) ( ',' ( (lv_getterParams_3_0= ruleLiteral ) ) )* ')'
             {
-            match(input,73,FOLLOW_73_in_ruleMapReferenceParams5458); 
+            match(input,74,FOLLOW_74_in_ruleMapReferenceParams5888); 
 
                     createLeafNode(grammarAccess.getMapReferenceParamsAccess().getLeftParenthesisKeyword_0(), null); 
                 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3559:1: ( (lv_getterParams_1_0= ruleLiteral ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3560:1: (lv_getterParams_1_0= ruleLiteral )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4193:1: ( (lv_getterParams_1_0= ruleLiteral ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4194:1: (lv_getterParams_1_0= ruleLiteral )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3560:1: (lv_getterParams_1_0= ruleLiteral )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3561:3: lv_getterParams_1_0= ruleLiteral
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4194:1: (lv_getterParams_1_0= ruleLiteral )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4195:3: lv_getterParams_1_0= ruleLiteral
             {
              
             	        currentNode=createCompositeNode(grammarAccess.getMapReferenceParamsAccess().getGetterParamsLiteralParserRuleCall_1_0(), currentNode); 
             	    
-            pushFollow(FOLLOW_ruleLiteral_in_ruleMapReferenceParams5479);
+            pushFollow(FOLLOW_ruleLiteral_in_ruleMapReferenceParams5909);
             lv_getterParams_1_0=ruleLiteral();
             _fsp--;
 
@@ -8193,35 +9161,35 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3583:2: ( ',' ( (lv_getterParams_3_0= ruleLiteral ) ) )*
-            loop57:
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4217:2: ( ',' ( (lv_getterParams_3_0= ruleLiteral ) ) )*
+            loop59:
             do {
-                int alt57=2;
-                int LA57_0 = input.LA(1);
+                int alt59=2;
+                int LA59_0 = input.LA(1);
 
-                if ( (LA57_0==74) ) {
-                    alt57=1;
+                if ( (LA59_0==75) ) {
+                    alt59=1;
                 }
 
 
-                switch (alt57) {
+                switch (alt59) {
             	case 1 :
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3583:4: ',' ( (lv_getterParams_3_0= ruleLiteral ) )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4217:4: ',' ( (lv_getterParams_3_0= ruleLiteral ) )
             	    {
-            	    match(input,74,FOLLOW_74_in_ruleMapReferenceParams5490); 
+            	    match(input,75,FOLLOW_75_in_ruleMapReferenceParams5920); 
 
             	            createLeafNode(grammarAccess.getMapReferenceParamsAccess().getCommaKeyword_2_0(), null); 
             	        
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3587:1: ( (lv_getterParams_3_0= ruleLiteral ) )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3588:1: (lv_getterParams_3_0= ruleLiteral )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4221:1: ( (lv_getterParams_3_0= ruleLiteral ) )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4222:1: (lv_getterParams_3_0= ruleLiteral )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3588:1: (lv_getterParams_3_0= ruleLiteral )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3589:3: lv_getterParams_3_0= ruleLiteral
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4222:1: (lv_getterParams_3_0= ruleLiteral )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4223:3: lv_getterParams_3_0= ruleLiteral
             	    {
             	     
             	    	        currentNode=createCompositeNode(grammarAccess.getMapReferenceParamsAccess().getGetterParamsLiteralParserRuleCall_2_1_0(), currentNode); 
             	    	    
-            	    pushFollow(FOLLOW_ruleLiteral_in_ruleMapReferenceParams5511);
+            	    pushFollow(FOLLOW_ruleLiteral_in_ruleMapReferenceParams5941);
             	    lv_getterParams_3_0=ruleLiteral();
             	    _fsp--;
 
@@ -8253,11 +9221,11 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
             	    break;
 
             	default :
-            	    break loop57;
+            	    break loop59;
                 }
             } while (true);
 
-            match(input,75,FOLLOW_75_in_ruleMapReferenceParams5523); 
+            match(input,76,FOLLOW_76_in_ruleMapReferenceParams5953); 
 
                     createLeafNode(grammarAccess.getMapReferenceParamsAccess().getRightParenthesisKeyword_3(), null); 
                 
@@ -8284,7 +9252,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleMapGetReference
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3623:1: entryRuleMapGetReference returns [EObject current=null] : iv_ruleMapGetReference= ruleMapGetReference EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4257:1: entryRuleMapGetReference returns [EObject current=null] : iv_ruleMapGetReference= ruleMapGetReference EOF ;
     public final EObject entryRuleMapGetReference() throws RecognitionException {
         EObject current = null;
 
@@ -8292,16 +9260,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3624:2: (iv_ruleMapGetReference= ruleMapGetReference EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3625:2: iv_ruleMapGetReference= ruleMapGetReference EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4258:2: (iv_ruleMapGetReference= ruleMapGetReference EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4259:2: iv_ruleMapGetReference= ruleMapGetReference EOF
             {
              currentNode = createCompositeNode(grammarAccess.getMapGetReferenceRule(), currentNode); 
-            pushFollow(FOLLOW_ruleMapGetReference_in_entryRuleMapGetReference5559);
+            pushFollow(FOLLOW_ruleMapGetReference_in_entryRuleMapGetReference5989);
             iv_ruleMapGetReference=ruleMapGetReference();
             _fsp--;
 
              current =iv_ruleMapGetReference; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleMapGetReference5569); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleMapGetReference5999); 
 
             }
 
@@ -8319,7 +9287,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleMapGetReference
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3632:1: ruleMapGetReference returns [EObject current=null] : ( ( (lv_operations_0_0= RULE_DOLLAR ) ) ( ( (lv_elements_1_0= RULE_PARENT ) ) RULE_TML_SEPARATOR )* ( (lv_elements_3_0= RULE_ID ) ) ( (lv_referenceParams_4_0= ruleMapReferenceParams ) )? ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4266:1: ruleMapGetReference returns [EObject current=null] : ( ( (lv_operations_0_0= RULE_DOLLAR ) ) ( ( (lv_elements_1_0= RULE_PARENT ) ) RULE_TML_SEPARATOR )* ( (lv_elements_3_0= RULE_ID ) ) ( (lv_referenceParams_4_0= ruleMapReferenceParams ) )? ) ;
     public final EObject ruleMapGetReference() throws RecognitionException {
         EObject current = null;
 
@@ -8332,20 +9300,20 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3637:6: ( ( ( (lv_operations_0_0= RULE_DOLLAR ) ) ( ( (lv_elements_1_0= RULE_PARENT ) ) RULE_TML_SEPARATOR )* ( (lv_elements_3_0= RULE_ID ) ) ( (lv_referenceParams_4_0= ruleMapReferenceParams ) )? ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3638:1: ( ( (lv_operations_0_0= RULE_DOLLAR ) ) ( ( (lv_elements_1_0= RULE_PARENT ) ) RULE_TML_SEPARATOR )* ( (lv_elements_3_0= RULE_ID ) ) ( (lv_referenceParams_4_0= ruleMapReferenceParams ) )? )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4271:6: ( ( ( (lv_operations_0_0= RULE_DOLLAR ) ) ( ( (lv_elements_1_0= RULE_PARENT ) ) RULE_TML_SEPARATOR )* ( (lv_elements_3_0= RULE_ID ) ) ( (lv_referenceParams_4_0= ruleMapReferenceParams ) )? ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4272:1: ( ( (lv_operations_0_0= RULE_DOLLAR ) ) ( ( (lv_elements_1_0= RULE_PARENT ) ) RULE_TML_SEPARATOR )* ( (lv_elements_3_0= RULE_ID ) ) ( (lv_referenceParams_4_0= ruleMapReferenceParams ) )? )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3638:1: ( ( (lv_operations_0_0= RULE_DOLLAR ) ) ( ( (lv_elements_1_0= RULE_PARENT ) ) RULE_TML_SEPARATOR )* ( (lv_elements_3_0= RULE_ID ) ) ( (lv_referenceParams_4_0= ruleMapReferenceParams ) )? )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3638:2: ( (lv_operations_0_0= RULE_DOLLAR ) ) ( ( (lv_elements_1_0= RULE_PARENT ) ) RULE_TML_SEPARATOR )* ( (lv_elements_3_0= RULE_ID ) ) ( (lv_referenceParams_4_0= ruleMapReferenceParams ) )?
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4272:1: ( ( (lv_operations_0_0= RULE_DOLLAR ) ) ( ( (lv_elements_1_0= RULE_PARENT ) ) RULE_TML_SEPARATOR )* ( (lv_elements_3_0= RULE_ID ) ) ( (lv_referenceParams_4_0= ruleMapReferenceParams ) )? )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4272:2: ( (lv_operations_0_0= RULE_DOLLAR ) ) ( ( (lv_elements_1_0= RULE_PARENT ) ) RULE_TML_SEPARATOR )* ( (lv_elements_3_0= RULE_ID ) ) ( (lv_referenceParams_4_0= ruleMapReferenceParams ) )?
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3638:2: ( (lv_operations_0_0= RULE_DOLLAR ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3639:1: (lv_operations_0_0= RULE_DOLLAR )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4272:2: ( (lv_operations_0_0= RULE_DOLLAR ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4273:1: (lv_operations_0_0= RULE_DOLLAR )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3639:1: (lv_operations_0_0= RULE_DOLLAR )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3640:3: lv_operations_0_0= RULE_DOLLAR
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4273:1: (lv_operations_0_0= RULE_DOLLAR )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4274:3: lv_operations_0_0= RULE_DOLLAR
             {
             lv_operations_0_0=(Token)input.LT(1);
-            match(input,RULE_DOLLAR,FOLLOW_RULE_DOLLAR_in_ruleMapGetReference5611); 
+            match(input,RULE_DOLLAR,FOLLOW_RULE_DOLLAR_in_ruleMapGetReference6041); 
 
             			createLeafNode(grammarAccess.getMapGetReferenceAccess().getOperationsDOLLARTerminalRuleCall_0_0(), "operations"); 
             		
@@ -8371,29 +9339,29 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3662:2: ( ( (lv_elements_1_0= RULE_PARENT ) ) RULE_TML_SEPARATOR )*
-            loop58:
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4296:2: ( ( (lv_elements_1_0= RULE_PARENT ) ) RULE_TML_SEPARATOR )*
+            loop60:
             do {
-                int alt58=2;
-                int LA58_0 = input.LA(1);
+                int alt60=2;
+                int LA60_0 = input.LA(1);
 
-                if ( (LA58_0==RULE_PARENT) ) {
-                    alt58=1;
+                if ( (LA60_0==RULE_PARENT) ) {
+                    alt60=1;
                 }
 
 
-                switch (alt58) {
+                switch (alt60) {
             	case 1 :
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3662:3: ( (lv_elements_1_0= RULE_PARENT ) ) RULE_TML_SEPARATOR
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4296:3: ( (lv_elements_1_0= RULE_PARENT ) ) RULE_TML_SEPARATOR
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3662:3: ( (lv_elements_1_0= RULE_PARENT ) )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3663:1: (lv_elements_1_0= RULE_PARENT )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4296:3: ( (lv_elements_1_0= RULE_PARENT ) )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4297:1: (lv_elements_1_0= RULE_PARENT )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3663:1: (lv_elements_1_0= RULE_PARENT )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3664:3: lv_elements_1_0= RULE_PARENT
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4297:1: (lv_elements_1_0= RULE_PARENT )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4298:3: lv_elements_1_0= RULE_PARENT
             	    {
             	    lv_elements_1_0=(Token)input.LT(1);
-            	    match(input,RULE_PARENT,FOLLOW_RULE_PARENT_in_ruleMapGetReference5634); 
+            	    match(input,RULE_PARENT,FOLLOW_RULE_PARENT_in_ruleMapGetReference6064); 
 
             	    			createLeafNode(grammarAccess.getMapGetReferenceAccess().getElementsPARENTTerminalRuleCall_1_0_0(), "elements"); 
             	    		
@@ -8419,7 +9387,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             	    }
 
-            	    match(input,RULE_TML_SEPARATOR,FOLLOW_RULE_TML_SEPARATOR_in_ruleMapGetReference5648); 
+            	    match(input,RULE_TML_SEPARATOR,FOLLOW_RULE_TML_SEPARATOR_in_ruleMapGetReference6078); 
             	     
             	        createLeafNode(grammarAccess.getMapGetReferenceAccess().getTML_SEPARATORTerminalRuleCall_1_1(), null); 
             	        
@@ -8428,18 +9396,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
             	    break;
 
             	default :
-            	    break loop58;
+            	    break loop60;
                 }
             } while (true);
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3690:3: ( (lv_elements_3_0= RULE_ID ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3691:1: (lv_elements_3_0= RULE_ID )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4324:3: ( (lv_elements_3_0= RULE_ID ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4325:1: (lv_elements_3_0= RULE_ID )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3691:1: (lv_elements_3_0= RULE_ID )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3692:3: lv_elements_3_0= RULE_ID
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4325:1: (lv_elements_3_0= RULE_ID )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4326:3: lv_elements_3_0= RULE_ID
             {
             lv_elements_3_0=(Token)input.LT(1);
-            match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleMapGetReference5666); 
+            match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleMapGetReference6096); 
 
             			createLeafNode(grammarAccess.getMapGetReferenceAccess().getElementsIDTerminalRuleCall_2_0(), "elements"); 
             		
@@ -8465,24 +9433,24 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3714:2: ( (lv_referenceParams_4_0= ruleMapReferenceParams ) )?
-            int alt59=2;
-            int LA59_0 = input.LA(1);
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4348:2: ( (lv_referenceParams_4_0= ruleMapReferenceParams ) )?
+            int alt61=2;
+            int LA61_0 = input.LA(1);
 
-            if ( (LA59_0==73) ) {
-                alt59=1;
+            if ( (LA61_0==74) ) {
+                alt61=1;
             }
-            switch (alt59) {
+            switch (alt61) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3715:1: (lv_referenceParams_4_0= ruleMapReferenceParams )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4349:1: (lv_referenceParams_4_0= ruleMapReferenceParams )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3715:1: (lv_referenceParams_4_0= ruleMapReferenceParams )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3716:3: lv_referenceParams_4_0= ruleMapReferenceParams
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4349:1: (lv_referenceParams_4_0= ruleMapReferenceParams )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4350:3: lv_referenceParams_4_0= ruleMapReferenceParams
                     {
                      
                     	        currentNode=createCompositeNode(grammarAccess.getMapGetReferenceAccess().getReferenceParamsMapReferenceParamsParserRuleCall_3_0(), currentNode); 
                     	    
-                    pushFollow(FOLLOW_ruleMapReferenceParams_in_ruleMapGetReference5692);
+                    pushFollow(FOLLOW_ruleMapReferenceParams_in_ruleMapGetReference6122);
                     lv_referenceParams_4_0=ruleMapReferenceParams();
                     _fsp--;
 
@@ -8535,7 +9503,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleOrExpression
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3746:1: entryRuleOrExpression returns [EObject current=null] : iv_ruleOrExpression= ruleOrExpression EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4380:1: entryRuleOrExpression returns [EObject current=null] : iv_ruleOrExpression= ruleOrExpression EOF ;
     public final EObject entryRuleOrExpression() throws RecognitionException {
         EObject current = null;
 
@@ -8543,16 +9511,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3747:2: (iv_ruleOrExpression= ruleOrExpression EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3748:2: iv_ruleOrExpression= ruleOrExpression EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4381:2: (iv_ruleOrExpression= ruleOrExpression EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4382:2: iv_ruleOrExpression= ruleOrExpression EOF
             {
              currentNode = createCompositeNode(grammarAccess.getOrExpressionRule(), currentNode); 
-            pushFollow(FOLLOW_ruleOrExpression_in_entryRuleOrExpression5729);
+            pushFollow(FOLLOW_ruleOrExpression_in_entryRuleOrExpression6159);
             iv_ruleOrExpression=ruleOrExpression();
             _fsp--;
 
              current =iv_ruleOrExpression; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleOrExpression5739); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleOrExpression6169); 
 
             }
 
@@ -8570,7 +9538,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleOrExpression
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3755:1: ruleOrExpression returns [EObject current=null] : ( ( (lv_parameters_0_0= ruleAndExpression ) ) ( ( (lv_operations_1_0= 'OR' ) ) ( (lv_parameters_2_0= ruleAndExpression ) ) )* ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4389:1: ruleOrExpression returns [EObject current=null] : ( ( (lv_parameters_0_0= ruleAndExpression ) ) ( ( (lv_operations_1_0= 'OR' ) ) ( (lv_parameters_2_0= ruleAndExpression ) ) )* ) ;
     public final EObject ruleOrExpression() throws RecognitionException {
         EObject current = null;
 
@@ -8583,22 +9551,22 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3760:6: ( ( ( (lv_parameters_0_0= ruleAndExpression ) ) ( ( (lv_operations_1_0= 'OR' ) ) ( (lv_parameters_2_0= ruleAndExpression ) ) )* ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3761:1: ( ( (lv_parameters_0_0= ruleAndExpression ) ) ( ( (lv_operations_1_0= 'OR' ) ) ( (lv_parameters_2_0= ruleAndExpression ) ) )* )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4394:6: ( ( ( (lv_parameters_0_0= ruleAndExpression ) ) ( ( (lv_operations_1_0= 'OR' ) ) ( (lv_parameters_2_0= ruleAndExpression ) ) )* ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4395:1: ( ( (lv_parameters_0_0= ruleAndExpression ) ) ( ( (lv_operations_1_0= 'OR' ) ) ( (lv_parameters_2_0= ruleAndExpression ) ) )* )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3761:1: ( ( (lv_parameters_0_0= ruleAndExpression ) ) ( ( (lv_operations_1_0= 'OR' ) ) ( (lv_parameters_2_0= ruleAndExpression ) ) )* )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3761:2: ( (lv_parameters_0_0= ruleAndExpression ) ) ( ( (lv_operations_1_0= 'OR' ) ) ( (lv_parameters_2_0= ruleAndExpression ) ) )*
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4395:1: ( ( (lv_parameters_0_0= ruleAndExpression ) ) ( ( (lv_operations_1_0= 'OR' ) ) ( (lv_parameters_2_0= ruleAndExpression ) ) )* )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4395:2: ( (lv_parameters_0_0= ruleAndExpression ) ) ( ( (lv_operations_1_0= 'OR' ) ) ( (lv_parameters_2_0= ruleAndExpression ) ) )*
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3761:2: ( (lv_parameters_0_0= ruleAndExpression ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3762:1: (lv_parameters_0_0= ruleAndExpression )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4395:2: ( (lv_parameters_0_0= ruleAndExpression ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4396:1: (lv_parameters_0_0= ruleAndExpression )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3762:1: (lv_parameters_0_0= ruleAndExpression )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3763:3: lv_parameters_0_0= ruleAndExpression
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4396:1: (lv_parameters_0_0= ruleAndExpression )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4397:3: lv_parameters_0_0= ruleAndExpression
             {
              
             	        currentNode=createCompositeNode(grammarAccess.getOrExpressionAccess().getParametersAndExpressionParserRuleCall_0_0(), currentNode); 
             	    
-            pushFollow(FOLLOW_ruleAndExpression_in_ruleOrExpression5785);
+            pushFollow(FOLLOW_ruleAndExpression_in_ruleOrExpression6215);
             lv_parameters_0_0=ruleAndExpression();
             _fsp--;
 
@@ -8625,29 +9593,29 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3785:2: ( ( (lv_operations_1_0= 'OR' ) ) ( (lv_parameters_2_0= ruleAndExpression ) ) )*
-            loop60:
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4419:2: ( ( (lv_operations_1_0= 'OR' ) ) ( (lv_parameters_2_0= ruleAndExpression ) ) )*
+            loop62:
             do {
-                int alt60=2;
-                int LA60_0 = input.LA(1);
+                int alt62=2;
+                int LA62_0 = input.LA(1);
 
-                if ( (LA60_0==76) ) {
-                    alt60=1;
+                if ( (LA62_0==77) ) {
+                    alt62=1;
                 }
 
 
-                switch (alt60) {
+                switch (alt62) {
             	case 1 :
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3785:3: ( (lv_operations_1_0= 'OR' ) ) ( (lv_parameters_2_0= ruleAndExpression ) )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4419:3: ( (lv_operations_1_0= 'OR' ) ) ( (lv_parameters_2_0= ruleAndExpression ) )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3785:3: ( (lv_operations_1_0= 'OR' ) )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3786:1: (lv_operations_1_0= 'OR' )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4419:3: ( (lv_operations_1_0= 'OR' ) )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4420:1: (lv_operations_1_0= 'OR' )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3786:1: (lv_operations_1_0= 'OR' )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3787:3: lv_operations_1_0= 'OR'
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4420:1: (lv_operations_1_0= 'OR' )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4421:3: lv_operations_1_0= 'OR'
             	    {
             	    lv_operations_1_0=(Token)input.LT(1);
-            	    match(input,76,FOLLOW_76_in_ruleOrExpression5804); 
+            	    match(input,77,FOLLOW_77_in_ruleOrExpression6234); 
 
             	            createLeafNode(grammarAccess.getOrExpressionAccess().getOperationsORKeyword_1_0_0(), "operations"); 
             	        
@@ -8669,16 +9637,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             	    }
 
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3806:2: ( (lv_parameters_2_0= ruleAndExpression ) )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3807:1: (lv_parameters_2_0= ruleAndExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4440:2: ( (lv_parameters_2_0= ruleAndExpression ) )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4441:1: (lv_parameters_2_0= ruleAndExpression )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3807:1: (lv_parameters_2_0= ruleAndExpression )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3808:3: lv_parameters_2_0= ruleAndExpression
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4441:1: (lv_parameters_2_0= ruleAndExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4442:3: lv_parameters_2_0= ruleAndExpression
             	    {
             	     
             	    	        currentNode=createCompositeNode(grammarAccess.getOrExpressionAccess().getParametersAndExpressionParserRuleCall_1_1_0(), currentNode); 
             	    	    
-            	    pushFollow(FOLLOW_ruleAndExpression_in_ruleOrExpression5838);
+            	    pushFollow(FOLLOW_ruleAndExpression_in_ruleOrExpression6268);
             	    lv_parameters_2_0=ruleAndExpression();
             	    _fsp--;
 
@@ -8710,7 +9678,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
             	    break;
 
             	default :
-            	    break loop60;
+            	    break loop62;
                 }
             } while (true);
 
@@ -8737,7 +9705,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleAndExpression
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3838:1: entryRuleAndExpression returns [EObject current=null] : iv_ruleAndExpression= ruleAndExpression EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4472:1: entryRuleAndExpression returns [EObject current=null] : iv_ruleAndExpression= ruleAndExpression EOF ;
     public final EObject entryRuleAndExpression() throws RecognitionException {
         EObject current = null;
 
@@ -8745,16 +9713,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3839:2: (iv_ruleAndExpression= ruleAndExpression EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3840:2: iv_ruleAndExpression= ruleAndExpression EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4473:2: (iv_ruleAndExpression= ruleAndExpression EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4474:2: iv_ruleAndExpression= ruleAndExpression EOF
             {
              currentNode = createCompositeNode(grammarAccess.getAndExpressionRule(), currentNode); 
-            pushFollow(FOLLOW_ruleAndExpression_in_entryRuleAndExpression5876);
+            pushFollow(FOLLOW_ruleAndExpression_in_entryRuleAndExpression6306);
             iv_ruleAndExpression=ruleAndExpression();
             _fsp--;
 
              current =iv_ruleAndExpression; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleAndExpression5886); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleAndExpression6316); 
 
             }
 
@@ -8772,7 +9740,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleAndExpression
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3847:1: ruleAndExpression returns [EObject current=null] : ( ( (lv_parameters_0_0= ruleEqualityExpression ) ) ( ( (lv_operations_1_0= 'AND' ) ) ( (lv_parameters_2_0= ruleEqualityExpression ) ) )* ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4481:1: ruleAndExpression returns [EObject current=null] : ( ( (lv_parameters_0_0= ruleEqualityExpression ) ) ( ( (lv_operations_1_0= 'AND' ) ) ( (lv_parameters_2_0= ruleEqualityExpression ) ) )* ) ;
     public final EObject ruleAndExpression() throws RecognitionException {
         EObject current = null;
 
@@ -8785,22 +9753,22 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3852:6: ( ( ( (lv_parameters_0_0= ruleEqualityExpression ) ) ( ( (lv_operations_1_0= 'AND' ) ) ( (lv_parameters_2_0= ruleEqualityExpression ) ) )* ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3853:1: ( ( (lv_parameters_0_0= ruleEqualityExpression ) ) ( ( (lv_operations_1_0= 'AND' ) ) ( (lv_parameters_2_0= ruleEqualityExpression ) ) )* )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4486:6: ( ( ( (lv_parameters_0_0= ruleEqualityExpression ) ) ( ( (lv_operations_1_0= 'AND' ) ) ( (lv_parameters_2_0= ruleEqualityExpression ) ) )* ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4487:1: ( ( (lv_parameters_0_0= ruleEqualityExpression ) ) ( ( (lv_operations_1_0= 'AND' ) ) ( (lv_parameters_2_0= ruleEqualityExpression ) ) )* )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3853:1: ( ( (lv_parameters_0_0= ruleEqualityExpression ) ) ( ( (lv_operations_1_0= 'AND' ) ) ( (lv_parameters_2_0= ruleEqualityExpression ) ) )* )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3853:2: ( (lv_parameters_0_0= ruleEqualityExpression ) ) ( ( (lv_operations_1_0= 'AND' ) ) ( (lv_parameters_2_0= ruleEqualityExpression ) ) )*
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4487:1: ( ( (lv_parameters_0_0= ruleEqualityExpression ) ) ( ( (lv_operations_1_0= 'AND' ) ) ( (lv_parameters_2_0= ruleEqualityExpression ) ) )* )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4487:2: ( (lv_parameters_0_0= ruleEqualityExpression ) ) ( ( (lv_operations_1_0= 'AND' ) ) ( (lv_parameters_2_0= ruleEqualityExpression ) ) )*
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3853:2: ( (lv_parameters_0_0= ruleEqualityExpression ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3854:1: (lv_parameters_0_0= ruleEqualityExpression )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4487:2: ( (lv_parameters_0_0= ruleEqualityExpression ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4488:1: (lv_parameters_0_0= ruleEqualityExpression )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3854:1: (lv_parameters_0_0= ruleEqualityExpression )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3855:3: lv_parameters_0_0= ruleEqualityExpression
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4488:1: (lv_parameters_0_0= ruleEqualityExpression )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4489:3: lv_parameters_0_0= ruleEqualityExpression
             {
              
             	        currentNode=createCompositeNode(grammarAccess.getAndExpressionAccess().getParametersEqualityExpressionParserRuleCall_0_0(), currentNode); 
             	    
-            pushFollow(FOLLOW_ruleEqualityExpression_in_ruleAndExpression5932);
+            pushFollow(FOLLOW_ruleEqualityExpression_in_ruleAndExpression6362);
             lv_parameters_0_0=ruleEqualityExpression();
             _fsp--;
 
@@ -8827,29 +9795,29 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3877:2: ( ( (lv_operations_1_0= 'AND' ) ) ( (lv_parameters_2_0= ruleEqualityExpression ) ) )*
-            loop61:
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4511:2: ( ( (lv_operations_1_0= 'AND' ) ) ( (lv_parameters_2_0= ruleEqualityExpression ) ) )*
+            loop63:
             do {
-                int alt61=2;
-                int LA61_0 = input.LA(1);
+                int alt63=2;
+                int LA63_0 = input.LA(1);
 
-                if ( (LA61_0==77) ) {
-                    alt61=1;
+                if ( (LA63_0==78) ) {
+                    alt63=1;
                 }
 
 
-                switch (alt61) {
+                switch (alt63) {
             	case 1 :
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3877:3: ( (lv_operations_1_0= 'AND' ) ) ( (lv_parameters_2_0= ruleEqualityExpression ) )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4511:3: ( (lv_operations_1_0= 'AND' ) ) ( (lv_parameters_2_0= ruleEqualityExpression ) )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3877:3: ( (lv_operations_1_0= 'AND' ) )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3878:1: (lv_operations_1_0= 'AND' )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4511:3: ( (lv_operations_1_0= 'AND' ) )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4512:1: (lv_operations_1_0= 'AND' )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3878:1: (lv_operations_1_0= 'AND' )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3879:3: lv_operations_1_0= 'AND'
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4512:1: (lv_operations_1_0= 'AND' )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4513:3: lv_operations_1_0= 'AND'
             	    {
             	    lv_operations_1_0=(Token)input.LT(1);
-            	    match(input,77,FOLLOW_77_in_ruleAndExpression5951); 
+            	    match(input,78,FOLLOW_78_in_ruleAndExpression6381); 
 
             	            createLeafNode(grammarAccess.getAndExpressionAccess().getOperationsANDKeyword_1_0_0(), "operations"); 
             	        
@@ -8871,16 +9839,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             	    }
 
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3898:2: ( (lv_parameters_2_0= ruleEqualityExpression ) )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3899:1: (lv_parameters_2_0= ruleEqualityExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4532:2: ( (lv_parameters_2_0= ruleEqualityExpression ) )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4533:1: (lv_parameters_2_0= ruleEqualityExpression )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3899:1: (lv_parameters_2_0= ruleEqualityExpression )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3900:3: lv_parameters_2_0= ruleEqualityExpression
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4533:1: (lv_parameters_2_0= ruleEqualityExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4534:3: lv_parameters_2_0= ruleEqualityExpression
             	    {
             	     
             	    	        currentNode=createCompositeNode(grammarAccess.getAndExpressionAccess().getParametersEqualityExpressionParserRuleCall_1_1_0(), currentNode); 
             	    	    
-            	    pushFollow(FOLLOW_ruleEqualityExpression_in_ruleAndExpression5985);
+            	    pushFollow(FOLLOW_ruleEqualityExpression_in_ruleAndExpression6415);
             	    lv_parameters_2_0=ruleEqualityExpression();
             	    _fsp--;
 
@@ -8912,7 +9880,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
             	    break;
 
             	default :
-            	    break loop61;
+            	    break loop63;
                 }
             } while (true);
 
@@ -8939,7 +9907,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleEqualityExpression
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3930:1: entryRuleEqualityExpression returns [EObject current=null] : iv_ruleEqualityExpression= ruleEqualityExpression EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4564:1: entryRuleEqualityExpression returns [EObject current=null] : iv_ruleEqualityExpression= ruleEqualityExpression EOF ;
     public final EObject entryRuleEqualityExpression() throws RecognitionException {
         EObject current = null;
 
@@ -8947,16 +9915,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3931:2: (iv_ruleEqualityExpression= ruleEqualityExpression EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3932:2: iv_ruleEqualityExpression= ruleEqualityExpression EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4565:2: (iv_ruleEqualityExpression= ruleEqualityExpression EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4566:2: iv_ruleEqualityExpression= ruleEqualityExpression EOF
             {
              currentNode = createCompositeNode(grammarAccess.getEqualityExpressionRule(), currentNode); 
-            pushFollow(FOLLOW_ruleEqualityExpression_in_entryRuleEqualityExpression6023);
+            pushFollow(FOLLOW_ruleEqualityExpression_in_entryRuleEqualityExpression6453);
             iv_ruleEqualityExpression=ruleEqualityExpression();
             _fsp--;
 
              current =iv_ruleEqualityExpression; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleEqualityExpression6033); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleEqualityExpression6463); 
 
             }
 
@@ -8974,7 +9942,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleEqualityExpression
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3939:1: ruleEqualityExpression returns [EObject current=null] : ( ( (lv_parameters_0_0= ruleRelationalExpression ) ) ( ( ( (lv_operations_1_0= '==' ) ) ( (lv_parameters_2_0= ruleRelationalExpression ) ) ) | ( ( (lv_operations_3_0= '!=' ) ) ( (lv_parameters_4_0= ruleRelationalExpression ) ) ) )? ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4573:1: ruleEqualityExpression returns [EObject current=null] : ( ( (lv_parameters_0_0= ruleRelationalExpression ) ) ( ( ( (lv_operations_1_0= '==' ) ) ( (lv_parameters_2_0= ruleRelationalExpression ) ) ) | ( ( (lv_operations_3_0= '!=' ) ) ( (lv_parameters_4_0= ruleRelationalExpression ) ) ) )? ) ;
     public final EObject ruleEqualityExpression() throws RecognitionException {
         EObject current = null;
 
@@ -8990,22 +9958,22 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3944:6: ( ( ( (lv_parameters_0_0= ruleRelationalExpression ) ) ( ( ( (lv_operations_1_0= '==' ) ) ( (lv_parameters_2_0= ruleRelationalExpression ) ) ) | ( ( (lv_operations_3_0= '!=' ) ) ( (lv_parameters_4_0= ruleRelationalExpression ) ) ) )? ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3945:1: ( ( (lv_parameters_0_0= ruleRelationalExpression ) ) ( ( ( (lv_operations_1_0= '==' ) ) ( (lv_parameters_2_0= ruleRelationalExpression ) ) ) | ( ( (lv_operations_3_0= '!=' ) ) ( (lv_parameters_4_0= ruleRelationalExpression ) ) ) )? )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4578:6: ( ( ( (lv_parameters_0_0= ruleRelationalExpression ) ) ( ( ( (lv_operations_1_0= '==' ) ) ( (lv_parameters_2_0= ruleRelationalExpression ) ) ) | ( ( (lv_operations_3_0= '!=' ) ) ( (lv_parameters_4_0= ruleRelationalExpression ) ) ) )? ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4579:1: ( ( (lv_parameters_0_0= ruleRelationalExpression ) ) ( ( ( (lv_operations_1_0= '==' ) ) ( (lv_parameters_2_0= ruleRelationalExpression ) ) ) | ( ( (lv_operations_3_0= '!=' ) ) ( (lv_parameters_4_0= ruleRelationalExpression ) ) ) )? )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3945:1: ( ( (lv_parameters_0_0= ruleRelationalExpression ) ) ( ( ( (lv_operations_1_0= '==' ) ) ( (lv_parameters_2_0= ruleRelationalExpression ) ) ) | ( ( (lv_operations_3_0= '!=' ) ) ( (lv_parameters_4_0= ruleRelationalExpression ) ) ) )? )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3945:2: ( (lv_parameters_0_0= ruleRelationalExpression ) ) ( ( ( (lv_operations_1_0= '==' ) ) ( (lv_parameters_2_0= ruleRelationalExpression ) ) ) | ( ( (lv_operations_3_0= '!=' ) ) ( (lv_parameters_4_0= ruleRelationalExpression ) ) ) )?
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4579:1: ( ( (lv_parameters_0_0= ruleRelationalExpression ) ) ( ( ( (lv_operations_1_0= '==' ) ) ( (lv_parameters_2_0= ruleRelationalExpression ) ) ) | ( ( (lv_operations_3_0= '!=' ) ) ( (lv_parameters_4_0= ruleRelationalExpression ) ) ) )? )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4579:2: ( (lv_parameters_0_0= ruleRelationalExpression ) ) ( ( ( (lv_operations_1_0= '==' ) ) ( (lv_parameters_2_0= ruleRelationalExpression ) ) ) | ( ( (lv_operations_3_0= '!=' ) ) ( (lv_parameters_4_0= ruleRelationalExpression ) ) ) )?
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3945:2: ( (lv_parameters_0_0= ruleRelationalExpression ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3946:1: (lv_parameters_0_0= ruleRelationalExpression )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4579:2: ( (lv_parameters_0_0= ruleRelationalExpression ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4580:1: (lv_parameters_0_0= ruleRelationalExpression )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3946:1: (lv_parameters_0_0= ruleRelationalExpression )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3947:3: lv_parameters_0_0= ruleRelationalExpression
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4580:1: (lv_parameters_0_0= ruleRelationalExpression )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4581:3: lv_parameters_0_0= ruleRelationalExpression
             {
              
             	        currentNode=createCompositeNode(grammarAccess.getEqualityExpressionAccess().getParametersRelationalExpressionParserRuleCall_0_0(), currentNode); 
             	    
-            pushFollow(FOLLOW_ruleRelationalExpression_in_ruleEqualityExpression6079);
+            pushFollow(FOLLOW_ruleRelationalExpression_in_ruleEqualityExpression6509);
             lv_parameters_0_0=ruleRelationalExpression();
             _fsp--;
 
@@ -9032,31 +10000,31 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3969:2: ( ( ( (lv_operations_1_0= '==' ) ) ( (lv_parameters_2_0= ruleRelationalExpression ) ) ) | ( ( (lv_operations_3_0= '!=' ) ) ( (lv_parameters_4_0= ruleRelationalExpression ) ) ) )?
-            int alt62=3;
-            int LA62_0 = input.LA(1);
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4603:2: ( ( ( (lv_operations_1_0= '==' ) ) ( (lv_parameters_2_0= ruleRelationalExpression ) ) ) | ( ( (lv_operations_3_0= '!=' ) ) ( (lv_parameters_4_0= ruleRelationalExpression ) ) ) )?
+            int alt64=3;
+            int LA64_0 = input.LA(1);
 
-            if ( (LA62_0==78) ) {
-                alt62=1;
+            if ( (LA64_0==79) ) {
+                alt64=1;
             }
-            else if ( (LA62_0==79) ) {
-                alt62=2;
+            else if ( (LA64_0==80) ) {
+                alt64=2;
             }
-            switch (alt62) {
+            switch (alt64) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3969:3: ( ( (lv_operations_1_0= '==' ) ) ( (lv_parameters_2_0= ruleRelationalExpression ) ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4603:3: ( ( (lv_operations_1_0= '==' ) ) ( (lv_parameters_2_0= ruleRelationalExpression ) ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3969:3: ( ( (lv_operations_1_0= '==' ) ) ( (lv_parameters_2_0= ruleRelationalExpression ) ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3969:4: ( (lv_operations_1_0= '==' ) ) ( (lv_parameters_2_0= ruleRelationalExpression ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4603:3: ( ( (lv_operations_1_0= '==' ) ) ( (lv_parameters_2_0= ruleRelationalExpression ) ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4603:4: ( (lv_operations_1_0= '==' ) ) ( (lv_parameters_2_0= ruleRelationalExpression ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3969:4: ( (lv_operations_1_0= '==' ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3970:1: (lv_operations_1_0= '==' )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4603:4: ( (lv_operations_1_0= '==' ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4604:1: (lv_operations_1_0= '==' )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3970:1: (lv_operations_1_0= '==' )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3971:3: lv_operations_1_0= '=='
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4604:1: (lv_operations_1_0= '==' )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4605:3: lv_operations_1_0= '=='
                     {
                     lv_operations_1_0=(Token)input.LT(1);
-                    match(input,78,FOLLOW_78_in_ruleEqualityExpression6099); 
+                    match(input,79,FOLLOW_79_in_ruleEqualityExpression6529); 
 
                             createLeafNode(grammarAccess.getEqualityExpressionAccess().getOperationsEqualsSignEqualsSignKeyword_1_0_0_0(), "operations"); 
                         
@@ -9078,16 +10046,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3990:2: ( (lv_parameters_2_0= ruleRelationalExpression ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3991:1: (lv_parameters_2_0= ruleRelationalExpression )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4624:2: ( (lv_parameters_2_0= ruleRelationalExpression ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4625:1: (lv_parameters_2_0= ruleRelationalExpression )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3991:1: (lv_parameters_2_0= ruleRelationalExpression )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:3992:3: lv_parameters_2_0= ruleRelationalExpression
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4625:1: (lv_parameters_2_0= ruleRelationalExpression )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4626:3: lv_parameters_2_0= ruleRelationalExpression
                     {
                      
                     	        currentNode=createCompositeNode(grammarAccess.getEqualityExpressionAccess().getParametersRelationalExpressionParserRuleCall_1_0_1_0(), currentNode); 
                     	    
-                    pushFollow(FOLLOW_ruleRelationalExpression_in_ruleEqualityExpression6133);
+                    pushFollow(FOLLOW_ruleRelationalExpression_in_ruleEqualityExpression6563);
                     lv_parameters_2_0=ruleRelationalExpression();
                     _fsp--;
 
@@ -9121,19 +10089,19 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4015:6: ( ( (lv_operations_3_0= '!=' ) ) ( (lv_parameters_4_0= ruleRelationalExpression ) ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4649:6: ( ( (lv_operations_3_0= '!=' ) ) ( (lv_parameters_4_0= ruleRelationalExpression ) ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4015:6: ( ( (lv_operations_3_0= '!=' ) ) ( (lv_parameters_4_0= ruleRelationalExpression ) ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4015:7: ( (lv_operations_3_0= '!=' ) ) ( (lv_parameters_4_0= ruleRelationalExpression ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4649:6: ( ( (lv_operations_3_0= '!=' ) ) ( (lv_parameters_4_0= ruleRelationalExpression ) ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4649:7: ( (lv_operations_3_0= '!=' ) ) ( (lv_parameters_4_0= ruleRelationalExpression ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4015:7: ( (lv_operations_3_0= '!=' ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4016:1: (lv_operations_3_0= '!=' )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4649:7: ( (lv_operations_3_0= '!=' ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4650:1: (lv_operations_3_0= '!=' )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4016:1: (lv_operations_3_0= '!=' )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4017:3: lv_operations_3_0= '!='
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4650:1: (lv_operations_3_0= '!=' )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4651:3: lv_operations_3_0= '!='
                     {
                     lv_operations_3_0=(Token)input.LT(1);
-                    match(input,79,FOLLOW_79_in_ruleEqualityExpression6159); 
+                    match(input,80,FOLLOW_80_in_ruleEqualityExpression6589); 
 
                             createLeafNode(grammarAccess.getEqualityExpressionAccess().getOperationsExclamationMarkEqualsSignKeyword_1_1_0_0(), "operations"); 
                         
@@ -9155,16 +10123,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4036:2: ( (lv_parameters_4_0= ruleRelationalExpression ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4037:1: (lv_parameters_4_0= ruleRelationalExpression )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4670:2: ( (lv_parameters_4_0= ruleRelationalExpression ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4671:1: (lv_parameters_4_0= ruleRelationalExpression )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4037:1: (lv_parameters_4_0= ruleRelationalExpression )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4038:3: lv_parameters_4_0= ruleRelationalExpression
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4671:1: (lv_parameters_4_0= ruleRelationalExpression )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4672:3: lv_parameters_4_0= ruleRelationalExpression
                     {
                      
                     	        currentNode=createCompositeNode(grammarAccess.getEqualityExpressionAccess().getParametersRelationalExpressionParserRuleCall_1_1_1_0(), currentNode); 
                     	    
-                    pushFollow(FOLLOW_ruleRelationalExpression_in_ruleEqualityExpression6193);
+                    pushFollow(FOLLOW_ruleRelationalExpression_in_ruleEqualityExpression6623);
                     lv_parameters_4_0=ruleRelationalExpression();
                     _fsp--;
 
@@ -9223,7 +10191,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleRelationalExpression
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4068:1: entryRuleRelationalExpression returns [EObject current=null] : iv_ruleRelationalExpression= ruleRelationalExpression EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4702:1: entryRuleRelationalExpression returns [EObject current=null] : iv_ruleRelationalExpression= ruleRelationalExpression EOF ;
     public final EObject entryRuleRelationalExpression() throws RecognitionException {
         EObject current = null;
 
@@ -9231,16 +10199,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4069:2: (iv_ruleRelationalExpression= ruleRelationalExpression EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4070:2: iv_ruleRelationalExpression= ruleRelationalExpression EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4703:2: (iv_ruleRelationalExpression= ruleRelationalExpression EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4704:2: iv_ruleRelationalExpression= ruleRelationalExpression EOF
             {
              currentNode = createCompositeNode(grammarAccess.getRelationalExpressionRule(), currentNode); 
-            pushFollow(FOLLOW_ruleRelationalExpression_in_entryRuleRelationalExpression6232);
+            pushFollow(FOLLOW_ruleRelationalExpression_in_entryRuleRelationalExpression6662);
             iv_ruleRelationalExpression=ruleRelationalExpression();
             _fsp--;
 
              current =iv_ruleRelationalExpression; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleRelationalExpression6242); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleRelationalExpression6672); 
 
             }
 
@@ -9258,7 +10226,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleRelationalExpression
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4077:1: ruleRelationalExpression returns [EObject current=null] : ( () ( (lv_parameters_1_0= ruleAdditiveExpression ) ) ( ( ( (lv_operations_2_0= RULE_XML_LT ) ) ( (lv_parameters_3_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_4_0= RULE_XML_GT ) ) ( (lv_parameters_5_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_6_0= RULE_XML_LTEQ ) ) ( (lv_parameters_7_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_8_0= RULE_XML_GTEQ ) ) ( (lv_parameters_9_0= ruleAdditiveExpression ) ) ) )? ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4711:1: ruleRelationalExpression returns [EObject current=null] : ( () ( (lv_parameters_1_0= ruleAdditiveExpression ) ) ( ( ( (lv_operations_2_0= RULE_XML_LT ) ) ( (lv_parameters_3_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_4_0= RULE_XML_GT ) ) ( (lv_parameters_5_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_6_0= RULE_XML_LTEQ ) ) ( (lv_parameters_7_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_8_0= RULE_XML_GTEQ ) ) ( (lv_parameters_9_0= ruleAdditiveExpression ) ) ) )? ) ;
     public final EObject ruleRelationalExpression() throws RecognitionException {
         EObject current = null;
 
@@ -9280,14 +10248,14 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4082:6: ( ( () ( (lv_parameters_1_0= ruleAdditiveExpression ) ) ( ( ( (lv_operations_2_0= RULE_XML_LT ) ) ( (lv_parameters_3_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_4_0= RULE_XML_GT ) ) ( (lv_parameters_5_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_6_0= RULE_XML_LTEQ ) ) ( (lv_parameters_7_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_8_0= RULE_XML_GTEQ ) ) ( (lv_parameters_9_0= ruleAdditiveExpression ) ) ) )? ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4083:1: ( () ( (lv_parameters_1_0= ruleAdditiveExpression ) ) ( ( ( (lv_operations_2_0= RULE_XML_LT ) ) ( (lv_parameters_3_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_4_0= RULE_XML_GT ) ) ( (lv_parameters_5_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_6_0= RULE_XML_LTEQ ) ) ( (lv_parameters_7_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_8_0= RULE_XML_GTEQ ) ) ( (lv_parameters_9_0= ruleAdditiveExpression ) ) ) )? )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4716:6: ( ( () ( (lv_parameters_1_0= ruleAdditiveExpression ) ) ( ( ( (lv_operations_2_0= RULE_XML_LT ) ) ( (lv_parameters_3_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_4_0= RULE_XML_GT ) ) ( (lv_parameters_5_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_6_0= RULE_XML_LTEQ ) ) ( (lv_parameters_7_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_8_0= RULE_XML_GTEQ ) ) ( (lv_parameters_9_0= ruleAdditiveExpression ) ) ) )? ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4717:1: ( () ( (lv_parameters_1_0= ruleAdditiveExpression ) ) ( ( ( (lv_operations_2_0= RULE_XML_LT ) ) ( (lv_parameters_3_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_4_0= RULE_XML_GT ) ) ( (lv_parameters_5_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_6_0= RULE_XML_LTEQ ) ) ( (lv_parameters_7_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_8_0= RULE_XML_GTEQ ) ) ( (lv_parameters_9_0= ruleAdditiveExpression ) ) ) )? )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4083:1: ( () ( (lv_parameters_1_0= ruleAdditiveExpression ) ) ( ( ( (lv_operations_2_0= RULE_XML_LT ) ) ( (lv_parameters_3_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_4_0= RULE_XML_GT ) ) ( (lv_parameters_5_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_6_0= RULE_XML_LTEQ ) ) ( (lv_parameters_7_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_8_0= RULE_XML_GTEQ ) ) ( (lv_parameters_9_0= ruleAdditiveExpression ) ) ) )? )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4083:2: () ( (lv_parameters_1_0= ruleAdditiveExpression ) ) ( ( ( (lv_operations_2_0= RULE_XML_LT ) ) ( (lv_parameters_3_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_4_0= RULE_XML_GT ) ) ( (lv_parameters_5_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_6_0= RULE_XML_LTEQ ) ) ( (lv_parameters_7_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_8_0= RULE_XML_GTEQ ) ) ( (lv_parameters_9_0= ruleAdditiveExpression ) ) ) )?
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4717:1: ( () ( (lv_parameters_1_0= ruleAdditiveExpression ) ) ( ( ( (lv_operations_2_0= RULE_XML_LT ) ) ( (lv_parameters_3_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_4_0= RULE_XML_GT ) ) ( (lv_parameters_5_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_6_0= RULE_XML_LTEQ ) ) ( (lv_parameters_7_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_8_0= RULE_XML_GTEQ ) ) ( (lv_parameters_9_0= ruleAdditiveExpression ) ) ) )? )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4717:2: () ( (lv_parameters_1_0= ruleAdditiveExpression ) ) ( ( ( (lv_operations_2_0= RULE_XML_LT ) ) ( (lv_parameters_3_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_4_0= RULE_XML_GT ) ) ( (lv_parameters_5_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_6_0= RULE_XML_LTEQ ) ) ( (lv_parameters_7_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_8_0= RULE_XML_GTEQ ) ) ( (lv_parameters_9_0= ruleAdditiveExpression ) ) ) )?
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4083:2: ()
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4084:5: 
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4717:2: ()
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4718:5: 
             {
              
                     temp=factory.create(grammarAccess.getRelationalExpressionAccess().getExpressionAction_0().getType().getClassifier());
@@ -9302,16 +10270,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4094:2: ( (lv_parameters_1_0= ruleAdditiveExpression ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4095:1: (lv_parameters_1_0= ruleAdditiveExpression )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4728:2: ( (lv_parameters_1_0= ruleAdditiveExpression ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4729:1: (lv_parameters_1_0= ruleAdditiveExpression )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4095:1: (lv_parameters_1_0= ruleAdditiveExpression )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4096:3: lv_parameters_1_0= ruleAdditiveExpression
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4729:1: (lv_parameters_1_0= ruleAdditiveExpression )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4730:3: lv_parameters_1_0= ruleAdditiveExpression
             {
              
             	        currentNode=createCompositeNode(grammarAccess.getRelationalExpressionAccess().getParametersAdditiveExpressionParserRuleCall_1_0(), currentNode); 
             	    
-            pushFollow(FOLLOW_ruleAdditiveExpression_in_ruleRelationalExpression6297);
+            pushFollow(FOLLOW_ruleAdditiveExpression_in_ruleRelationalExpression6727);
             lv_parameters_1_0=ruleAdditiveExpression();
             _fsp--;
 
@@ -9338,46 +10306,46 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4118:2: ( ( ( (lv_operations_2_0= RULE_XML_LT ) ) ( (lv_parameters_3_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_4_0= RULE_XML_GT ) ) ( (lv_parameters_5_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_6_0= RULE_XML_LTEQ ) ) ( (lv_parameters_7_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_8_0= RULE_XML_GTEQ ) ) ( (lv_parameters_9_0= ruleAdditiveExpression ) ) ) )?
-            int alt63=5;
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4752:2: ( ( ( (lv_operations_2_0= RULE_XML_LT ) ) ( (lv_parameters_3_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_4_0= RULE_XML_GT ) ) ( (lv_parameters_5_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_6_0= RULE_XML_LTEQ ) ) ( (lv_parameters_7_0= ruleAdditiveExpression ) ) ) | ( ( (lv_operations_8_0= RULE_XML_GTEQ ) ) ( (lv_parameters_9_0= ruleAdditiveExpression ) ) ) )?
+            int alt65=5;
             switch ( input.LA(1) ) {
                 case RULE_XML_LT:
                     {
-                    alt63=1;
+                    alt65=1;
                     }
                     break;
                 case RULE_XML_GT:
                     {
-                    alt63=2;
+                    alt65=2;
                     }
                     break;
                 case RULE_XML_LTEQ:
                     {
-                    alt63=3;
+                    alt65=3;
                     }
                     break;
                 case RULE_XML_GTEQ:
                     {
-                    alt63=4;
+                    alt65=4;
                     }
                     break;
             }
 
-            switch (alt63) {
+            switch (alt65) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4118:3: ( ( (lv_operations_2_0= RULE_XML_LT ) ) ( (lv_parameters_3_0= ruleAdditiveExpression ) ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4752:3: ( ( (lv_operations_2_0= RULE_XML_LT ) ) ( (lv_parameters_3_0= ruleAdditiveExpression ) ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4118:3: ( ( (lv_operations_2_0= RULE_XML_LT ) ) ( (lv_parameters_3_0= ruleAdditiveExpression ) ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4118:4: ( (lv_operations_2_0= RULE_XML_LT ) ) ( (lv_parameters_3_0= ruleAdditiveExpression ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4752:3: ( ( (lv_operations_2_0= RULE_XML_LT ) ) ( (lv_parameters_3_0= ruleAdditiveExpression ) ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4752:4: ( (lv_operations_2_0= RULE_XML_LT ) ) ( (lv_parameters_3_0= ruleAdditiveExpression ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4118:4: ( (lv_operations_2_0= RULE_XML_LT ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4119:1: (lv_operations_2_0= RULE_XML_LT )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4752:4: ( (lv_operations_2_0= RULE_XML_LT ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4753:1: (lv_operations_2_0= RULE_XML_LT )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4119:1: (lv_operations_2_0= RULE_XML_LT )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4120:3: lv_operations_2_0= RULE_XML_LT
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4753:1: (lv_operations_2_0= RULE_XML_LT )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4754:3: lv_operations_2_0= RULE_XML_LT
                     {
                     lv_operations_2_0=(Token)input.LT(1);
-                    match(input,RULE_XML_LT,FOLLOW_RULE_XML_LT_in_ruleRelationalExpression6316); 
+                    match(input,RULE_XML_LT,FOLLOW_RULE_XML_LT_in_ruleRelationalExpression6746); 
 
                     			createLeafNode(grammarAccess.getRelationalExpressionAccess().getOperationsXML_LTTerminalRuleCall_2_0_0_0(), "operations"); 
                     		
@@ -9403,16 +10371,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4142:2: ( (lv_parameters_3_0= ruleAdditiveExpression ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4143:1: (lv_parameters_3_0= ruleAdditiveExpression )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4776:2: ( (lv_parameters_3_0= ruleAdditiveExpression ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4777:1: (lv_parameters_3_0= ruleAdditiveExpression )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4143:1: (lv_parameters_3_0= ruleAdditiveExpression )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4144:3: lv_parameters_3_0= ruleAdditiveExpression
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4777:1: (lv_parameters_3_0= ruleAdditiveExpression )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4778:3: lv_parameters_3_0= ruleAdditiveExpression
                     {
                      
                     	        currentNode=createCompositeNode(grammarAccess.getRelationalExpressionAccess().getParametersAdditiveExpressionParserRuleCall_2_0_1_0(), currentNode); 
                     	    
-                    pushFollow(FOLLOW_ruleAdditiveExpression_in_ruleRelationalExpression6342);
+                    pushFollow(FOLLOW_ruleAdditiveExpression_in_ruleRelationalExpression6772);
                     lv_parameters_3_0=ruleAdditiveExpression();
                     _fsp--;
 
@@ -9446,19 +10414,19 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4167:6: ( ( (lv_operations_4_0= RULE_XML_GT ) ) ( (lv_parameters_5_0= ruleAdditiveExpression ) ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4801:6: ( ( (lv_operations_4_0= RULE_XML_GT ) ) ( (lv_parameters_5_0= ruleAdditiveExpression ) ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4167:6: ( ( (lv_operations_4_0= RULE_XML_GT ) ) ( (lv_parameters_5_0= ruleAdditiveExpression ) ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4167:7: ( (lv_operations_4_0= RULE_XML_GT ) ) ( (lv_parameters_5_0= ruleAdditiveExpression ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4801:6: ( ( (lv_operations_4_0= RULE_XML_GT ) ) ( (lv_parameters_5_0= ruleAdditiveExpression ) ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4801:7: ( (lv_operations_4_0= RULE_XML_GT ) ) ( (lv_parameters_5_0= ruleAdditiveExpression ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4167:7: ( (lv_operations_4_0= RULE_XML_GT ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4168:1: (lv_operations_4_0= RULE_XML_GT )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4801:7: ( (lv_operations_4_0= RULE_XML_GT ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4802:1: (lv_operations_4_0= RULE_XML_GT )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4168:1: (lv_operations_4_0= RULE_XML_GT )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4169:3: lv_operations_4_0= RULE_XML_GT
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4802:1: (lv_operations_4_0= RULE_XML_GT )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4803:3: lv_operations_4_0= RULE_XML_GT
                     {
                     lv_operations_4_0=(Token)input.LT(1);
-                    match(input,RULE_XML_GT,FOLLOW_RULE_XML_GT_in_ruleRelationalExpression6367); 
+                    match(input,RULE_XML_GT,FOLLOW_RULE_XML_GT_in_ruleRelationalExpression6797); 
 
                     			createLeafNode(grammarAccess.getRelationalExpressionAccess().getOperationsXML_GTTerminalRuleCall_2_1_0_0(), "operations"); 
                     		
@@ -9484,16 +10452,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4191:2: ( (lv_parameters_5_0= ruleAdditiveExpression ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4192:1: (lv_parameters_5_0= ruleAdditiveExpression )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4825:2: ( (lv_parameters_5_0= ruleAdditiveExpression ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4826:1: (lv_parameters_5_0= ruleAdditiveExpression )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4192:1: (lv_parameters_5_0= ruleAdditiveExpression )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4193:3: lv_parameters_5_0= ruleAdditiveExpression
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4826:1: (lv_parameters_5_0= ruleAdditiveExpression )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4827:3: lv_parameters_5_0= ruleAdditiveExpression
                     {
                      
                     	        currentNode=createCompositeNode(grammarAccess.getRelationalExpressionAccess().getParametersAdditiveExpressionParserRuleCall_2_1_1_0(), currentNode); 
                     	    
-                    pushFollow(FOLLOW_ruleAdditiveExpression_in_ruleRelationalExpression6393);
+                    pushFollow(FOLLOW_ruleAdditiveExpression_in_ruleRelationalExpression6823);
                     lv_parameters_5_0=ruleAdditiveExpression();
                     _fsp--;
 
@@ -9527,19 +10495,19 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 3 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4216:6: ( ( (lv_operations_6_0= RULE_XML_LTEQ ) ) ( (lv_parameters_7_0= ruleAdditiveExpression ) ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4850:6: ( ( (lv_operations_6_0= RULE_XML_LTEQ ) ) ( (lv_parameters_7_0= ruleAdditiveExpression ) ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4216:6: ( ( (lv_operations_6_0= RULE_XML_LTEQ ) ) ( (lv_parameters_7_0= ruleAdditiveExpression ) ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4216:7: ( (lv_operations_6_0= RULE_XML_LTEQ ) ) ( (lv_parameters_7_0= ruleAdditiveExpression ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4850:6: ( ( (lv_operations_6_0= RULE_XML_LTEQ ) ) ( (lv_parameters_7_0= ruleAdditiveExpression ) ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4850:7: ( (lv_operations_6_0= RULE_XML_LTEQ ) ) ( (lv_parameters_7_0= ruleAdditiveExpression ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4216:7: ( (lv_operations_6_0= RULE_XML_LTEQ ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4217:1: (lv_operations_6_0= RULE_XML_LTEQ )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4850:7: ( (lv_operations_6_0= RULE_XML_LTEQ ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4851:1: (lv_operations_6_0= RULE_XML_LTEQ )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4217:1: (lv_operations_6_0= RULE_XML_LTEQ )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4218:3: lv_operations_6_0= RULE_XML_LTEQ
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4851:1: (lv_operations_6_0= RULE_XML_LTEQ )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4852:3: lv_operations_6_0= RULE_XML_LTEQ
                     {
                     lv_operations_6_0=(Token)input.LT(1);
-                    match(input,RULE_XML_LTEQ,FOLLOW_RULE_XML_LTEQ_in_ruleRelationalExpression6418); 
+                    match(input,RULE_XML_LTEQ,FOLLOW_RULE_XML_LTEQ_in_ruleRelationalExpression6848); 
 
                     			createLeafNode(grammarAccess.getRelationalExpressionAccess().getOperationsXML_LTEQTerminalRuleCall_2_2_0_0(), "operations"); 
                     		
@@ -9565,16 +10533,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4240:2: ( (lv_parameters_7_0= ruleAdditiveExpression ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4241:1: (lv_parameters_7_0= ruleAdditiveExpression )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4874:2: ( (lv_parameters_7_0= ruleAdditiveExpression ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4875:1: (lv_parameters_7_0= ruleAdditiveExpression )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4241:1: (lv_parameters_7_0= ruleAdditiveExpression )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4242:3: lv_parameters_7_0= ruleAdditiveExpression
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4875:1: (lv_parameters_7_0= ruleAdditiveExpression )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4876:3: lv_parameters_7_0= ruleAdditiveExpression
                     {
                      
                     	        currentNode=createCompositeNode(grammarAccess.getRelationalExpressionAccess().getParametersAdditiveExpressionParserRuleCall_2_2_1_0(), currentNode); 
                     	    
-                    pushFollow(FOLLOW_ruleAdditiveExpression_in_ruleRelationalExpression6444);
+                    pushFollow(FOLLOW_ruleAdditiveExpression_in_ruleRelationalExpression6874);
                     lv_parameters_7_0=ruleAdditiveExpression();
                     _fsp--;
 
@@ -9608,19 +10576,19 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 4 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4265:6: ( ( (lv_operations_8_0= RULE_XML_GTEQ ) ) ( (lv_parameters_9_0= ruleAdditiveExpression ) ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4899:6: ( ( (lv_operations_8_0= RULE_XML_GTEQ ) ) ( (lv_parameters_9_0= ruleAdditiveExpression ) ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4265:6: ( ( (lv_operations_8_0= RULE_XML_GTEQ ) ) ( (lv_parameters_9_0= ruleAdditiveExpression ) ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4265:7: ( (lv_operations_8_0= RULE_XML_GTEQ ) ) ( (lv_parameters_9_0= ruleAdditiveExpression ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4899:6: ( ( (lv_operations_8_0= RULE_XML_GTEQ ) ) ( (lv_parameters_9_0= ruleAdditiveExpression ) ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4899:7: ( (lv_operations_8_0= RULE_XML_GTEQ ) ) ( (lv_parameters_9_0= ruleAdditiveExpression ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4265:7: ( (lv_operations_8_0= RULE_XML_GTEQ ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4266:1: (lv_operations_8_0= RULE_XML_GTEQ )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4899:7: ( (lv_operations_8_0= RULE_XML_GTEQ ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4900:1: (lv_operations_8_0= RULE_XML_GTEQ )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4266:1: (lv_operations_8_0= RULE_XML_GTEQ )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4267:3: lv_operations_8_0= RULE_XML_GTEQ
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4900:1: (lv_operations_8_0= RULE_XML_GTEQ )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4901:3: lv_operations_8_0= RULE_XML_GTEQ
                     {
                     lv_operations_8_0=(Token)input.LT(1);
-                    match(input,RULE_XML_GTEQ,FOLLOW_RULE_XML_GTEQ_in_ruleRelationalExpression6469); 
+                    match(input,RULE_XML_GTEQ,FOLLOW_RULE_XML_GTEQ_in_ruleRelationalExpression6899); 
 
                     			createLeafNode(grammarAccess.getRelationalExpressionAccess().getOperationsXML_GTEQTerminalRuleCall_2_3_0_0(), "operations"); 
                     		
@@ -9646,16 +10614,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4289:2: ( (lv_parameters_9_0= ruleAdditiveExpression ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4290:1: (lv_parameters_9_0= ruleAdditiveExpression )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4923:2: ( (lv_parameters_9_0= ruleAdditiveExpression ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4924:1: (lv_parameters_9_0= ruleAdditiveExpression )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4290:1: (lv_parameters_9_0= ruleAdditiveExpression )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4291:3: lv_parameters_9_0= ruleAdditiveExpression
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4924:1: (lv_parameters_9_0= ruleAdditiveExpression )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4925:3: lv_parameters_9_0= ruleAdditiveExpression
                     {
                      
                     	        currentNode=createCompositeNode(grammarAccess.getRelationalExpressionAccess().getParametersAdditiveExpressionParserRuleCall_2_3_1_0(), currentNode); 
                     	    
-                    pushFollow(FOLLOW_ruleAdditiveExpression_in_ruleRelationalExpression6495);
+                    pushFollow(FOLLOW_ruleAdditiveExpression_in_ruleRelationalExpression6925);
                     lv_parameters_9_0=ruleAdditiveExpression();
                     _fsp--;
 
@@ -9714,7 +10682,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleAdditiveExpression
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4321:1: entryRuleAdditiveExpression returns [EObject current=null] : iv_ruleAdditiveExpression= ruleAdditiveExpression EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4955:1: entryRuleAdditiveExpression returns [EObject current=null] : iv_ruleAdditiveExpression= ruleAdditiveExpression EOF ;
     public final EObject entryRuleAdditiveExpression() throws RecognitionException {
         EObject current = null;
 
@@ -9722,16 +10690,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4322:2: (iv_ruleAdditiveExpression= ruleAdditiveExpression EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4323:2: iv_ruleAdditiveExpression= ruleAdditiveExpression EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4956:2: (iv_ruleAdditiveExpression= ruleAdditiveExpression EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4957:2: iv_ruleAdditiveExpression= ruleAdditiveExpression EOF
             {
              currentNode = createCompositeNode(grammarAccess.getAdditiveExpressionRule(), currentNode); 
-            pushFollow(FOLLOW_ruleAdditiveExpression_in_entryRuleAdditiveExpression6534);
+            pushFollow(FOLLOW_ruleAdditiveExpression_in_entryRuleAdditiveExpression6964);
             iv_ruleAdditiveExpression=ruleAdditiveExpression();
             _fsp--;
 
              current =iv_ruleAdditiveExpression; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleAdditiveExpression6544); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleAdditiveExpression6974); 
 
             }
 
@@ -9749,7 +10717,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleAdditiveExpression
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4330:1: ruleAdditiveExpression returns [EObject current=null] : ( ( (lv_parameters_0_0= ruleMultiplicativeExpression ) ) ( ( '+' ( (lv_parameters_2_0= ruleMultiplicativeExpression ) ) ) | ( '-' ( (lv_parameters_4_0= ruleMultiplicativeExpression ) ) ) )* ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4964:1: ruleAdditiveExpression returns [EObject current=null] : ( ( (lv_parameters_0_0= ruleMultiplicativeExpression ) ) ( ( '+' ( (lv_parameters_2_0= ruleMultiplicativeExpression ) ) ) | ( '-' ( (lv_parameters_4_0= ruleMultiplicativeExpression ) ) ) )* ) ;
     public final EObject ruleAdditiveExpression() throws RecognitionException {
         EObject current = null;
 
@@ -9763,22 +10731,22 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4335:6: ( ( ( (lv_parameters_0_0= ruleMultiplicativeExpression ) ) ( ( '+' ( (lv_parameters_2_0= ruleMultiplicativeExpression ) ) ) | ( '-' ( (lv_parameters_4_0= ruleMultiplicativeExpression ) ) ) )* ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4336:1: ( ( (lv_parameters_0_0= ruleMultiplicativeExpression ) ) ( ( '+' ( (lv_parameters_2_0= ruleMultiplicativeExpression ) ) ) | ( '-' ( (lv_parameters_4_0= ruleMultiplicativeExpression ) ) ) )* )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4969:6: ( ( ( (lv_parameters_0_0= ruleMultiplicativeExpression ) ) ( ( '+' ( (lv_parameters_2_0= ruleMultiplicativeExpression ) ) ) | ( '-' ( (lv_parameters_4_0= ruleMultiplicativeExpression ) ) ) )* ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4970:1: ( ( (lv_parameters_0_0= ruleMultiplicativeExpression ) ) ( ( '+' ( (lv_parameters_2_0= ruleMultiplicativeExpression ) ) ) | ( '-' ( (lv_parameters_4_0= ruleMultiplicativeExpression ) ) ) )* )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4336:1: ( ( (lv_parameters_0_0= ruleMultiplicativeExpression ) ) ( ( '+' ( (lv_parameters_2_0= ruleMultiplicativeExpression ) ) ) | ( '-' ( (lv_parameters_4_0= ruleMultiplicativeExpression ) ) ) )* )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4336:2: ( (lv_parameters_0_0= ruleMultiplicativeExpression ) ) ( ( '+' ( (lv_parameters_2_0= ruleMultiplicativeExpression ) ) ) | ( '-' ( (lv_parameters_4_0= ruleMultiplicativeExpression ) ) ) )*
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4970:1: ( ( (lv_parameters_0_0= ruleMultiplicativeExpression ) ) ( ( '+' ( (lv_parameters_2_0= ruleMultiplicativeExpression ) ) ) | ( '-' ( (lv_parameters_4_0= ruleMultiplicativeExpression ) ) ) )* )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4970:2: ( (lv_parameters_0_0= ruleMultiplicativeExpression ) ) ( ( '+' ( (lv_parameters_2_0= ruleMultiplicativeExpression ) ) ) | ( '-' ( (lv_parameters_4_0= ruleMultiplicativeExpression ) ) ) )*
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4336:2: ( (lv_parameters_0_0= ruleMultiplicativeExpression ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4337:1: (lv_parameters_0_0= ruleMultiplicativeExpression )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4970:2: ( (lv_parameters_0_0= ruleMultiplicativeExpression ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4971:1: (lv_parameters_0_0= ruleMultiplicativeExpression )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4337:1: (lv_parameters_0_0= ruleMultiplicativeExpression )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4338:3: lv_parameters_0_0= ruleMultiplicativeExpression
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4971:1: (lv_parameters_0_0= ruleMultiplicativeExpression )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4972:3: lv_parameters_0_0= ruleMultiplicativeExpression
             {
              
             	        currentNode=createCompositeNode(grammarAccess.getAdditiveExpressionAccess().getParametersMultiplicativeExpressionParserRuleCall_0_0(), currentNode); 
             	    
-            pushFollow(FOLLOW_ruleMultiplicativeExpression_in_ruleAdditiveExpression6590);
+            pushFollow(FOLLOW_ruleMultiplicativeExpression_in_ruleAdditiveExpression7020);
             lv_parameters_0_0=ruleMultiplicativeExpression();
             _fsp--;
 
@@ -9805,41 +10773,41 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4360:2: ( ( '+' ( (lv_parameters_2_0= ruleMultiplicativeExpression ) ) ) | ( '-' ( (lv_parameters_4_0= ruleMultiplicativeExpression ) ) ) )*
-            loop64:
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4994:2: ( ( '+' ( (lv_parameters_2_0= ruleMultiplicativeExpression ) ) ) | ( '-' ( (lv_parameters_4_0= ruleMultiplicativeExpression ) ) ) )*
+            loop66:
             do {
-                int alt64=3;
-                int LA64_0 = input.LA(1);
+                int alt66=3;
+                int LA66_0 = input.LA(1);
 
-                if ( (LA64_0==80) ) {
-                    alt64=1;
+                if ( (LA66_0==81) ) {
+                    alt66=1;
                 }
-                else if ( (LA64_0==81) ) {
-                    alt64=2;
+                else if ( (LA66_0==82) ) {
+                    alt66=2;
                 }
 
 
-                switch (alt64) {
+                switch (alt66) {
             	case 1 :
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4360:3: ( '+' ( (lv_parameters_2_0= ruleMultiplicativeExpression ) ) )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4994:3: ( '+' ( (lv_parameters_2_0= ruleMultiplicativeExpression ) ) )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4360:3: ( '+' ( (lv_parameters_2_0= ruleMultiplicativeExpression ) ) )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4360:5: '+' ( (lv_parameters_2_0= ruleMultiplicativeExpression ) )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4994:3: ( '+' ( (lv_parameters_2_0= ruleMultiplicativeExpression ) ) )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4994:5: '+' ( (lv_parameters_2_0= ruleMultiplicativeExpression ) )
             	    {
-            	    match(input,80,FOLLOW_80_in_ruleAdditiveExpression6602); 
+            	    match(input,81,FOLLOW_81_in_ruleAdditiveExpression7032); 
 
             	            createLeafNode(grammarAccess.getAdditiveExpressionAccess().getPlusSignKeyword_1_0_0(), null); 
             	        
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4364:1: ( (lv_parameters_2_0= ruleMultiplicativeExpression ) )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4365:1: (lv_parameters_2_0= ruleMultiplicativeExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4998:1: ( (lv_parameters_2_0= ruleMultiplicativeExpression ) )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4999:1: (lv_parameters_2_0= ruleMultiplicativeExpression )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4365:1: (lv_parameters_2_0= ruleMultiplicativeExpression )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4366:3: lv_parameters_2_0= ruleMultiplicativeExpression
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4999:1: (lv_parameters_2_0= ruleMultiplicativeExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5000:3: lv_parameters_2_0= ruleMultiplicativeExpression
             	    {
             	     
             	    	        currentNode=createCompositeNode(grammarAccess.getAdditiveExpressionAccess().getParametersMultiplicativeExpressionParserRuleCall_1_0_1_0(), currentNode); 
             	    	    
-            	    pushFollow(FOLLOW_ruleMultiplicativeExpression_in_ruleAdditiveExpression6623);
+            	    pushFollow(FOLLOW_ruleMultiplicativeExpression_in_ruleAdditiveExpression7053);
             	    lv_parameters_2_0=ruleMultiplicativeExpression();
             	    _fsp--;
 
@@ -9873,25 +10841,25 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
             	    }
             	    break;
             	case 2 :
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4389:6: ( '-' ( (lv_parameters_4_0= ruleMultiplicativeExpression ) ) )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5023:6: ( '-' ( (lv_parameters_4_0= ruleMultiplicativeExpression ) ) )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4389:6: ( '-' ( (lv_parameters_4_0= ruleMultiplicativeExpression ) ) )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4389:8: '-' ( (lv_parameters_4_0= ruleMultiplicativeExpression ) )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5023:6: ( '-' ( (lv_parameters_4_0= ruleMultiplicativeExpression ) ) )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5023:8: '-' ( (lv_parameters_4_0= ruleMultiplicativeExpression ) )
             	    {
-            	    match(input,81,FOLLOW_81_in_ruleAdditiveExpression6641); 
+            	    match(input,82,FOLLOW_82_in_ruleAdditiveExpression7071); 
 
             	            createLeafNode(grammarAccess.getAdditiveExpressionAccess().getHyphenMinusKeyword_1_1_0(), null); 
             	        
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4393:1: ( (lv_parameters_4_0= ruleMultiplicativeExpression ) )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4394:1: (lv_parameters_4_0= ruleMultiplicativeExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5027:1: ( (lv_parameters_4_0= ruleMultiplicativeExpression ) )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5028:1: (lv_parameters_4_0= ruleMultiplicativeExpression )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4394:1: (lv_parameters_4_0= ruleMultiplicativeExpression )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4395:3: lv_parameters_4_0= ruleMultiplicativeExpression
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5028:1: (lv_parameters_4_0= ruleMultiplicativeExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5029:3: lv_parameters_4_0= ruleMultiplicativeExpression
             	    {
             	     
             	    	        currentNode=createCompositeNode(grammarAccess.getAdditiveExpressionAccess().getParametersMultiplicativeExpressionParserRuleCall_1_1_1_0(), currentNode); 
             	    	    
-            	    pushFollow(FOLLOW_ruleMultiplicativeExpression_in_ruleAdditiveExpression6662);
+            	    pushFollow(FOLLOW_ruleMultiplicativeExpression_in_ruleAdditiveExpression7092);
             	    lv_parameters_4_0=ruleMultiplicativeExpression();
             	    _fsp--;
 
@@ -9926,7 +10894,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
             	    break;
 
             	default :
-            	    break loop64;
+            	    break loop66;
                 }
             } while (true);
 
@@ -9953,7 +10921,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleMultiplicativeExpression
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4425:1: entryRuleMultiplicativeExpression returns [EObject current=null] : iv_ruleMultiplicativeExpression= ruleMultiplicativeExpression EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5059:1: entryRuleMultiplicativeExpression returns [EObject current=null] : iv_ruleMultiplicativeExpression= ruleMultiplicativeExpression EOF ;
     public final EObject entryRuleMultiplicativeExpression() throws RecognitionException {
         EObject current = null;
 
@@ -9961,16 +10929,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4426:2: (iv_ruleMultiplicativeExpression= ruleMultiplicativeExpression EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4427:2: iv_ruleMultiplicativeExpression= ruleMultiplicativeExpression EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5060:2: (iv_ruleMultiplicativeExpression= ruleMultiplicativeExpression EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5061:2: iv_ruleMultiplicativeExpression= ruleMultiplicativeExpression EOF
             {
              currentNode = createCompositeNode(grammarAccess.getMultiplicativeExpressionRule(), currentNode); 
-            pushFollow(FOLLOW_ruleMultiplicativeExpression_in_entryRuleMultiplicativeExpression6701);
+            pushFollow(FOLLOW_ruleMultiplicativeExpression_in_entryRuleMultiplicativeExpression7131);
             iv_ruleMultiplicativeExpression=ruleMultiplicativeExpression();
             _fsp--;
 
              current =iv_ruleMultiplicativeExpression; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleMultiplicativeExpression6711); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleMultiplicativeExpression7141); 
 
             }
 
@@ -9988,7 +10956,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleMultiplicativeExpression
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4434:1: ruleMultiplicativeExpression returns [EObject current=null] : ( ( (lv_parameters_0_0= ruleUnaryExpression ) ) ( ( ( (lv_operations_1_0= '*' ) ) ( (lv_parameters_2_0= ruleUnaryExpression ) ) ) | ( ( (lv_operations_3_0= RULE_TML_SEPARATOR ) ) ( (lv_parameters_4_0= ruleUnaryExpression ) ) ) )* ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5068:1: ruleMultiplicativeExpression returns [EObject current=null] : ( ( (lv_parameters_0_0= ruleUnaryExpression ) ) ( ( ( (lv_operations_1_0= '*' ) ) ( (lv_parameters_2_0= ruleUnaryExpression ) ) ) | ( ( (lv_operations_3_0= RULE_TML_SEPARATOR ) ) ( (lv_parameters_4_0= ruleUnaryExpression ) ) ) )* ) ;
     public final EObject ruleMultiplicativeExpression() throws RecognitionException {
         EObject current = null;
 
@@ -10004,22 +10972,22 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4439:6: ( ( ( (lv_parameters_0_0= ruleUnaryExpression ) ) ( ( ( (lv_operations_1_0= '*' ) ) ( (lv_parameters_2_0= ruleUnaryExpression ) ) ) | ( ( (lv_operations_3_0= RULE_TML_SEPARATOR ) ) ( (lv_parameters_4_0= ruleUnaryExpression ) ) ) )* ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4440:1: ( ( (lv_parameters_0_0= ruleUnaryExpression ) ) ( ( ( (lv_operations_1_0= '*' ) ) ( (lv_parameters_2_0= ruleUnaryExpression ) ) ) | ( ( (lv_operations_3_0= RULE_TML_SEPARATOR ) ) ( (lv_parameters_4_0= ruleUnaryExpression ) ) ) )* )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5073:6: ( ( ( (lv_parameters_0_0= ruleUnaryExpression ) ) ( ( ( (lv_operations_1_0= '*' ) ) ( (lv_parameters_2_0= ruleUnaryExpression ) ) ) | ( ( (lv_operations_3_0= RULE_TML_SEPARATOR ) ) ( (lv_parameters_4_0= ruleUnaryExpression ) ) ) )* ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5074:1: ( ( (lv_parameters_0_0= ruleUnaryExpression ) ) ( ( ( (lv_operations_1_0= '*' ) ) ( (lv_parameters_2_0= ruleUnaryExpression ) ) ) | ( ( (lv_operations_3_0= RULE_TML_SEPARATOR ) ) ( (lv_parameters_4_0= ruleUnaryExpression ) ) ) )* )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4440:1: ( ( (lv_parameters_0_0= ruleUnaryExpression ) ) ( ( ( (lv_operations_1_0= '*' ) ) ( (lv_parameters_2_0= ruleUnaryExpression ) ) ) | ( ( (lv_operations_3_0= RULE_TML_SEPARATOR ) ) ( (lv_parameters_4_0= ruleUnaryExpression ) ) ) )* )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4440:2: ( (lv_parameters_0_0= ruleUnaryExpression ) ) ( ( ( (lv_operations_1_0= '*' ) ) ( (lv_parameters_2_0= ruleUnaryExpression ) ) ) | ( ( (lv_operations_3_0= RULE_TML_SEPARATOR ) ) ( (lv_parameters_4_0= ruleUnaryExpression ) ) ) )*
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5074:1: ( ( (lv_parameters_0_0= ruleUnaryExpression ) ) ( ( ( (lv_operations_1_0= '*' ) ) ( (lv_parameters_2_0= ruleUnaryExpression ) ) ) | ( ( (lv_operations_3_0= RULE_TML_SEPARATOR ) ) ( (lv_parameters_4_0= ruleUnaryExpression ) ) ) )* )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5074:2: ( (lv_parameters_0_0= ruleUnaryExpression ) ) ( ( ( (lv_operations_1_0= '*' ) ) ( (lv_parameters_2_0= ruleUnaryExpression ) ) ) | ( ( (lv_operations_3_0= RULE_TML_SEPARATOR ) ) ( (lv_parameters_4_0= ruleUnaryExpression ) ) ) )*
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4440:2: ( (lv_parameters_0_0= ruleUnaryExpression ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4441:1: (lv_parameters_0_0= ruleUnaryExpression )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5074:2: ( (lv_parameters_0_0= ruleUnaryExpression ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5075:1: (lv_parameters_0_0= ruleUnaryExpression )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4441:1: (lv_parameters_0_0= ruleUnaryExpression )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4442:3: lv_parameters_0_0= ruleUnaryExpression
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5075:1: (lv_parameters_0_0= ruleUnaryExpression )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5076:3: lv_parameters_0_0= ruleUnaryExpression
             {
              
             	        currentNode=createCompositeNode(grammarAccess.getMultiplicativeExpressionAccess().getParametersUnaryExpressionParserRuleCall_0_0(), currentNode); 
             	    
-            pushFollow(FOLLOW_ruleUnaryExpression_in_ruleMultiplicativeExpression6757);
+            pushFollow(FOLLOW_ruleUnaryExpression_in_ruleMultiplicativeExpression7187);
             lv_parameters_0_0=ruleUnaryExpression();
             _fsp--;
 
@@ -10046,35 +11014,35 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4464:2: ( ( ( (lv_operations_1_0= '*' ) ) ( (lv_parameters_2_0= ruleUnaryExpression ) ) ) | ( ( (lv_operations_3_0= RULE_TML_SEPARATOR ) ) ( (lv_parameters_4_0= ruleUnaryExpression ) ) ) )*
-            loop65:
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5098:2: ( ( ( (lv_operations_1_0= '*' ) ) ( (lv_parameters_2_0= ruleUnaryExpression ) ) ) | ( ( (lv_operations_3_0= RULE_TML_SEPARATOR ) ) ( (lv_parameters_4_0= ruleUnaryExpression ) ) ) )*
+            loop67:
             do {
-                int alt65=3;
-                int LA65_0 = input.LA(1);
+                int alt67=3;
+                int LA67_0 = input.LA(1);
 
-                if ( (LA65_0==82) ) {
-                    alt65=1;
+                if ( (LA67_0==83) ) {
+                    alt67=1;
                 }
-                else if ( (LA65_0==RULE_TML_SEPARATOR) ) {
-                    alt65=2;
+                else if ( (LA67_0==RULE_TML_SEPARATOR) ) {
+                    alt67=2;
                 }
 
 
-                switch (alt65) {
+                switch (alt67) {
             	case 1 :
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4464:3: ( ( (lv_operations_1_0= '*' ) ) ( (lv_parameters_2_0= ruleUnaryExpression ) ) )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5098:3: ( ( (lv_operations_1_0= '*' ) ) ( (lv_parameters_2_0= ruleUnaryExpression ) ) )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4464:3: ( ( (lv_operations_1_0= '*' ) ) ( (lv_parameters_2_0= ruleUnaryExpression ) ) )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4464:4: ( (lv_operations_1_0= '*' ) ) ( (lv_parameters_2_0= ruleUnaryExpression ) )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5098:3: ( ( (lv_operations_1_0= '*' ) ) ( (lv_parameters_2_0= ruleUnaryExpression ) ) )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5098:4: ( (lv_operations_1_0= '*' ) ) ( (lv_parameters_2_0= ruleUnaryExpression ) )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4464:4: ( (lv_operations_1_0= '*' ) )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4465:1: (lv_operations_1_0= '*' )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5098:4: ( (lv_operations_1_0= '*' ) )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5099:1: (lv_operations_1_0= '*' )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4465:1: (lv_operations_1_0= '*' )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4466:3: lv_operations_1_0= '*'
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5099:1: (lv_operations_1_0= '*' )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5100:3: lv_operations_1_0= '*'
             	    {
             	    lv_operations_1_0=(Token)input.LT(1);
-            	    match(input,82,FOLLOW_82_in_ruleMultiplicativeExpression6777); 
+            	    match(input,83,FOLLOW_83_in_ruleMultiplicativeExpression7207); 
 
             	            createLeafNode(grammarAccess.getMultiplicativeExpressionAccess().getOperationsAsteriskKeyword_1_0_0_0(), "operations"); 
             	        
@@ -10096,16 +11064,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             	    }
 
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4485:2: ( (lv_parameters_2_0= ruleUnaryExpression ) )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4486:1: (lv_parameters_2_0= ruleUnaryExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5119:2: ( (lv_parameters_2_0= ruleUnaryExpression ) )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5120:1: (lv_parameters_2_0= ruleUnaryExpression )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4486:1: (lv_parameters_2_0= ruleUnaryExpression )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4487:3: lv_parameters_2_0= ruleUnaryExpression
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5120:1: (lv_parameters_2_0= ruleUnaryExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5121:3: lv_parameters_2_0= ruleUnaryExpression
             	    {
             	     
             	    	        currentNode=createCompositeNode(grammarAccess.getMultiplicativeExpressionAccess().getParametersUnaryExpressionParserRuleCall_1_0_1_0(), currentNode); 
             	    	    
-            	    pushFollow(FOLLOW_ruleUnaryExpression_in_ruleMultiplicativeExpression6811);
+            	    pushFollow(FOLLOW_ruleUnaryExpression_in_ruleMultiplicativeExpression7241);
             	    lv_parameters_2_0=ruleUnaryExpression();
             	    _fsp--;
 
@@ -10139,19 +11107,19 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
             	    }
             	    break;
             	case 2 :
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4510:6: ( ( (lv_operations_3_0= RULE_TML_SEPARATOR ) ) ( (lv_parameters_4_0= ruleUnaryExpression ) ) )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5144:6: ( ( (lv_operations_3_0= RULE_TML_SEPARATOR ) ) ( (lv_parameters_4_0= ruleUnaryExpression ) ) )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4510:6: ( ( (lv_operations_3_0= RULE_TML_SEPARATOR ) ) ( (lv_parameters_4_0= ruleUnaryExpression ) ) )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4510:7: ( (lv_operations_3_0= RULE_TML_SEPARATOR ) ) ( (lv_parameters_4_0= ruleUnaryExpression ) )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5144:6: ( ( (lv_operations_3_0= RULE_TML_SEPARATOR ) ) ( (lv_parameters_4_0= ruleUnaryExpression ) ) )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5144:7: ( (lv_operations_3_0= RULE_TML_SEPARATOR ) ) ( (lv_parameters_4_0= ruleUnaryExpression ) )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4510:7: ( (lv_operations_3_0= RULE_TML_SEPARATOR ) )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4511:1: (lv_operations_3_0= RULE_TML_SEPARATOR )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5144:7: ( (lv_operations_3_0= RULE_TML_SEPARATOR ) )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5145:1: (lv_operations_3_0= RULE_TML_SEPARATOR )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4511:1: (lv_operations_3_0= RULE_TML_SEPARATOR )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4512:3: lv_operations_3_0= RULE_TML_SEPARATOR
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5145:1: (lv_operations_3_0= RULE_TML_SEPARATOR )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5146:3: lv_operations_3_0= RULE_TML_SEPARATOR
             	    {
             	    lv_operations_3_0=(Token)input.LT(1);
-            	    match(input,RULE_TML_SEPARATOR,FOLLOW_RULE_TML_SEPARATOR_in_ruleMultiplicativeExpression6836); 
+            	    match(input,RULE_TML_SEPARATOR,FOLLOW_RULE_TML_SEPARATOR_in_ruleMultiplicativeExpression7266); 
 
             	    			createLeafNode(grammarAccess.getMultiplicativeExpressionAccess().getOperationsTML_SEPARATORTerminalRuleCall_1_1_0_0(), "operations"); 
             	    		
@@ -10177,16 +11145,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             	    }
 
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4534:2: ( (lv_parameters_4_0= ruleUnaryExpression ) )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4535:1: (lv_parameters_4_0= ruleUnaryExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5168:2: ( (lv_parameters_4_0= ruleUnaryExpression ) )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5169:1: (lv_parameters_4_0= ruleUnaryExpression )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4535:1: (lv_parameters_4_0= ruleUnaryExpression )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4536:3: lv_parameters_4_0= ruleUnaryExpression
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5169:1: (lv_parameters_4_0= ruleUnaryExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5170:3: lv_parameters_4_0= ruleUnaryExpression
             	    {
             	     
             	    	        currentNode=createCompositeNode(grammarAccess.getMultiplicativeExpressionAccess().getParametersUnaryExpressionParserRuleCall_1_1_1_0(), currentNode); 
             	    	    
-            	    pushFollow(FOLLOW_ruleUnaryExpression_in_ruleMultiplicativeExpression6862);
+            	    pushFollow(FOLLOW_ruleUnaryExpression_in_ruleMultiplicativeExpression7292);
             	    lv_parameters_4_0=ruleUnaryExpression();
             	    _fsp--;
 
@@ -10221,7 +11189,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
             	    break;
 
             	default :
-            	    break loop65;
+            	    break loop67;
                 }
             } while (true);
 
@@ -10248,7 +11216,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleUnaryExpression
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4566:1: entryRuleUnaryExpression returns [EObject current=null] : iv_ruleUnaryExpression= ruleUnaryExpression EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5200:1: entryRuleUnaryExpression returns [EObject current=null] : iv_ruleUnaryExpression= ruleUnaryExpression EOF ;
     public final EObject entryRuleUnaryExpression() throws RecognitionException {
         EObject current = null;
 
@@ -10256,16 +11224,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4567:2: (iv_ruleUnaryExpression= ruleUnaryExpression EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4568:2: iv_ruleUnaryExpression= ruleUnaryExpression EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5201:2: (iv_ruleUnaryExpression= ruleUnaryExpression EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5202:2: iv_ruleUnaryExpression= ruleUnaryExpression EOF
             {
              currentNode = createCompositeNode(grammarAccess.getUnaryExpressionRule(), currentNode); 
-            pushFollow(FOLLOW_ruleUnaryExpression_in_entryRuleUnaryExpression6901);
+            pushFollow(FOLLOW_ruleUnaryExpression_in_entryRuleUnaryExpression7331);
             iv_ruleUnaryExpression=ruleUnaryExpression();
             _fsp--;
 
              current =iv_ruleUnaryExpression; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleUnaryExpression6911); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleUnaryExpression7341); 
 
             }
 
@@ -10283,7 +11251,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleUnaryExpression
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4575:1: ruleUnaryExpression returns [EObject current=null] : ( ( ( (lv_operations_0_0= '!' ) ) ( (lv_parameters_1_0= rulePrimaryExpression ) ) ) | this_PrimaryExpression_2= rulePrimaryExpression ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5209:1: ruleUnaryExpression returns [EObject current=null] : ( ( ( (lv_operations_0_0= '!' ) ) ( (lv_parameters_1_0= rulePrimaryExpression ) ) ) | this_PrimaryExpression_2= rulePrimaryExpression ) ;
     public final EObject ruleUnaryExpression() throws RecognitionException {
         EObject current = null;
 
@@ -10296,40 +11264,40 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4580:6: ( ( ( ( (lv_operations_0_0= '!' ) ) ( (lv_parameters_1_0= rulePrimaryExpression ) ) ) | this_PrimaryExpression_2= rulePrimaryExpression ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4581:1: ( ( ( (lv_operations_0_0= '!' ) ) ( (lv_parameters_1_0= rulePrimaryExpression ) ) ) | this_PrimaryExpression_2= rulePrimaryExpression )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5214:6: ( ( ( ( (lv_operations_0_0= '!' ) ) ( (lv_parameters_1_0= rulePrimaryExpression ) ) ) | this_PrimaryExpression_2= rulePrimaryExpression ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5215:1: ( ( ( (lv_operations_0_0= '!' ) ) ( (lv_parameters_1_0= rulePrimaryExpression ) ) ) | this_PrimaryExpression_2= rulePrimaryExpression )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4581:1: ( ( ( (lv_operations_0_0= '!' ) ) ( (lv_parameters_1_0= rulePrimaryExpression ) ) ) | this_PrimaryExpression_2= rulePrimaryExpression )
-            int alt66=2;
-            int LA66_0 = input.LA(1);
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5215:1: ( ( ( (lv_operations_0_0= '!' ) ) ( (lv_parameters_1_0= rulePrimaryExpression ) ) ) | this_PrimaryExpression_2= rulePrimaryExpression )
+            int alt68=2;
+            int LA68_0 = input.LA(1);
 
-            if ( (LA66_0==83) ) {
-                alt66=1;
+            if ( (LA68_0==84) ) {
+                alt68=1;
             }
-            else if ( (LA66_0==RULE_ID||LA66_0==RULE_SQBRACKET_OPEN||(LA66_0>=RULE_TML_EXISTS && LA66_0<=RULE_DOLLAR)||(LA66_0>=RULE_NUMBER && LA66_0<=RULE_FALSE)||LA66_0==73||LA66_0==85) ) {
-                alt66=2;
+            else if ( (LA68_0==RULE_ID||LA68_0==RULE_SQBRACKET_OPEN||(LA68_0>=RULE_TML_EXISTS && LA68_0<=RULE_DOLLAR)||(LA68_0>=RULE_NUMBER && LA68_0<=RULE_FALSE)||LA68_0==74||LA68_0==86) ) {
+                alt68=2;
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("4581:1: ( ( ( (lv_operations_0_0= '!' ) ) ( (lv_parameters_1_0= rulePrimaryExpression ) ) ) | this_PrimaryExpression_2= rulePrimaryExpression )", 66, 0, input);
+                    new NoViableAltException("5215:1: ( ( ( (lv_operations_0_0= '!' ) ) ( (lv_parameters_1_0= rulePrimaryExpression ) ) ) | this_PrimaryExpression_2= rulePrimaryExpression )", 68, 0, input);
 
                 throw nvae;
             }
-            switch (alt66) {
+            switch (alt68) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4581:2: ( ( (lv_operations_0_0= '!' ) ) ( (lv_parameters_1_0= rulePrimaryExpression ) ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5215:2: ( ( (lv_operations_0_0= '!' ) ) ( (lv_parameters_1_0= rulePrimaryExpression ) ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4581:2: ( ( (lv_operations_0_0= '!' ) ) ( (lv_parameters_1_0= rulePrimaryExpression ) ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4581:3: ( (lv_operations_0_0= '!' ) ) ( (lv_parameters_1_0= rulePrimaryExpression ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5215:2: ( ( (lv_operations_0_0= '!' ) ) ( (lv_parameters_1_0= rulePrimaryExpression ) ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5215:3: ( (lv_operations_0_0= '!' ) ) ( (lv_parameters_1_0= rulePrimaryExpression ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4581:3: ( (lv_operations_0_0= '!' ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4582:1: (lv_operations_0_0= '!' )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5215:3: ( (lv_operations_0_0= '!' ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5216:1: (lv_operations_0_0= '!' )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4582:1: (lv_operations_0_0= '!' )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4583:3: lv_operations_0_0= '!'
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5216:1: (lv_operations_0_0= '!' )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5217:3: lv_operations_0_0= '!'
                     {
                     lv_operations_0_0=(Token)input.LT(1);
-                    match(input,83,FOLLOW_83_in_ruleUnaryExpression6955); 
+                    match(input,84,FOLLOW_84_in_ruleUnaryExpression7385); 
 
                             createLeafNode(grammarAccess.getUnaryExpressionAccess().getOperationsExclamationMarkKeyword_0_0_0(), "operations"); 
                         
@@ -10351,16 +11319,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4602:2: ( (lv_parameters_1_0= rulePrimaryExpression ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4603:1: (lv_parameters_1_0= rulePrimaryExpression )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5236:2: ( (lv_parameters_1_0= rulePrimaryExpression ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5237:1: (lv_parameters_1_0= rulePrimaryExpression )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4603:1: (lv_parameters_1_0= rulePrimaryExpression )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4604:3: lv_parameters_1_0= rulePrimaryExpression
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5237:1: (lv_parameters_1_0= rulePrimaryExpression )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5238:3: lv_parameters_1_0= rulePrimaryExpression
                     {
                      
                     	        currentNode=createCompositeNode(grammarAccess.getUnaryExpressionAccess().getParametersPrimaryExpressionParserRuleCall_0_1_0(), currentNode); 
                     	    
-                    pushFollow(FOLLOW_rulePrimaryExpression_in_ruleUnaryExpression6989);
+                    pushFollow(FOLLOW_rulePrimaryExpression_in_ruleUnaryExpression7419);
                     lv_parameters_1_0=rulePrimaryExpression();
                     _fsp--;
 
@@ -10394,12 +11362,12 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4628:5: this_PrimaryExpression_2= rulePrimaryExpression
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5262:5: this_PrimaryExpression_2= rulePrimaryExpression
                     {
                      
                             currentNode=createCompositeNode(grammarAccess.getUnaryExpressionAccess().getPrimaryExpressionParserRuleCall_1(), currentNode); 
                         
-                    pushFollow(FOLLOW_rulePrimaryExpression_in_ruleUnaryExpression7018);
+                    pushFollow(FOLLOW_rulePrimaryExpression_in_ruleUnaryExpression7448);
                     this_PrimaryExpression_2=rulePrimaryExpression();
                     _fsp--;
 
@@ -10433,7 +11401,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRulePrimaryExpression
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4644:1: entryRulePrimaryExpression returns [EObject current=null] : iv_rulePrimaryExpression= rulePrimaryExpression EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5278:1: entryRulePrimaryExpression returns [EObject current=null] : iv_rulePrimaryExpression= rulePrimaryExpression EOF ;
     public final EObject entryRulePrimaryExpression() throws RecognitionException {
         EObject current = null;
 
@@ -10441,16 +11409,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4645:2: (iv_rulePrimaryExpression= rulePrimaryExpression EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4646:2: iv_rulePrimaryExpression= rulePrimaryExpression EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5279:2: (iv_rulePrimaryExpression= rulePrimaryExpression EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5280:2: iv_rulePrimaryExpression= rulePrimaryExpression EOF
             {
              currentNode = createCompositeNode(grammarAccess.getPrimaryExpressionRule(), currentNode); 
-            pushFollow(FOLLOW_rulePrimaryExpression_in_entryRulePrimaryExpression7053);
+            pushFollow(FOLLOW_rulePrimaryExpression_in_entryRulePrimaryExpression7483);
             iv_rulePrimaryExpression=rulePrimaryExpression();
             _fsp--;
 
              current =iv_rulePrimaryExpression; 
-            match(input,EOF,FOLLOW_EOF_in_entryRulePrimaryExpression7063); 
+            match(input,EOF,FOLLOW_EOF_in_entryRulePrimaryExpression7493); 
 
             }
 
@@ -10468,7 +11436,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start rulePrimaryExpression
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4653:1: rulePrimaryExpression returns [EObject current=null] : ( ( (lv_parameters_0_0= ruleLiteral ) ) | ( '(' ( (lv_parameters_2_0= ruleOrExpression ) ) ')' ) ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5287:1: rulePrimaryExpression returns [EObject current=null] : ( ( (lv_parameters_0_0= ruleLiteral ) ) | ( '(' ( (lv_parameters_2_0= ruleOrExpression ) ) ')' ) ) ;
     public final EObject rulePrimaryExpression() throws RecognitionException {
         EObject current = null;
 
@@ -10480,39 +11448,39 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4658:6: ( ( ( (lv_parameters_0_0= ruleLiteral ) ) | ( '(' ( (lv_parameters_2_0= ruleOrExpression ) ) ')' ) ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4659:1: ( ( (lv_parameters_0_0= ruleLiteral ) ) | ( '(' ( (lv_parameters_2_0= ruleOrExpression ) ) ')' ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5292:6: ( ( ( (lv_parameters_0_0= ruleLiteral ) ) | ( '(' ( (lv_parameters_2_0= ruleOrExpression ) ) ')' ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5293:1: ( ( (lv_parameters_0_0= ruleLiteral ) ) | ( '(' ( (lv_parameters_2_0= ruleOrExpression ) ) ')' ) )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4659:1: ( ( (lv_parameters_0_0= ruleLiteral ) ) | ( '(' ( (lv_parameters_2_0= ruleOrExpression ) ) ')' ) )
-            int alt67=2;
-            int LA67_0 = input.LA(1);
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5293:1: ( ( (lv_parameters_0_0= ruleLiteral ) ) | ( '(' ( (lv_parameters_2_0= ruleOrExpression ) ) ')' ) )
+            int alt69=2;
+            int LA69_0 = input.LA(1);
 
-            if ( (LA67_0==RULE_ID||LA67_0==RULE_SQBRACKET_OPEN||(LA67_0>=RULE_TML_EXISTS && LA67_0<=RULE_DOLLAR)||(LA67_0>=RULE_NUMBER && LA67_0<=RULE_FALSE)||LA67_0==85) ) {
-                alt67=1;
+            if ( (LA69_0==RULE_ID||LA69_0==RULE_SQBRACKET_OPEN||(LA69_0>=RULE_TML_EXISTS && LA69_0<=RULE_DOLLAR)||(LA69_0>=RULE_NUMBER && LA69_0<=RULE_FALSE)||LA69_0==86) ) {
+                alt69=1;
             }
-            else if ( (LA67_0==73) ) {
-                alt67=2;
+            else if ( (LA69_0==74) ) {
+                alt69=2;
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("4659:1: ( ( (lv_parameters_0_0= ruleLiteral ) ) | ( '(' ( (lv_parameters_2_0= ruleOrExpression ) ) ')' ) )", 67, 0, input);
+                    new NoViableAltException("5293:1: ( ( (lv_parameters_0_0= ruleLiteral ) ) | ( '(' ( (lv_parameters_2_0= ruleOrExpression ) ) ')' ) )", 69, 0, input);
 
                 throw nvae;
             }
-            switch (alt67) {
+            switch (alt69) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4659:2: ( (lv_parameters_0_0= ruleLiteral ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5293:2: ( (lv_parameters_0_0= ruleLiteral ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4659:2: ( (lv_parameters_0_0= ruleLiteral ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4660:1: (lv_parameters_0_0= ruleLiteral )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5293:2: ( (lv_parameters_0_0= ruleLiteral ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5294:1: (lv_parameters_0_0= ruleLiteral )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4660:1: (lv_parameters_0_0= ruleLiteral )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4661:3: lv_parameters_0_0= ruleLiteral
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5294:1: (lv_parameters_0_0= ruleLiteral )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5295:3: lv_parameters_0_0= ruleLiteral
                     {
                      
                     	        currentNode=createCompositeNode(grammarAccess.getPrimaryExpressionAccess().getParametersLiteralParserRuleCall_0_0(), currentNode); 
                     	    
-                    pushFollow(FOLLOW_ruleLiteral_in_rulePrimaryExpression7109);
+                    pushFollow(FOLLOW_ruleLiteral_in_rulePrimaryExpression7539);
                     lv_parameters_0_0=ruleLiteral();
                     _fsp--;
 
@@ -10543,25 +11511,25 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4684:6: ( '(' ( (lv_parameters_2_0= ruleOrExpression ) ) ')' )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5318:6: ( '(' ( (lv_parameters_2_0= ruleOrExpression ) ) ')' )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4684:6: ( '(' ( (lv_parameters_2_0= ruleOrExpression ) ) ')' )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4684:8: '(' ( (lv_parameters_2_0= ruleOrExpression ) ) ')'
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5318:6: ( '(' ( (lv_parameters_2_0= ruleOrExpression ) ) ')' )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5318:8: '(' ( (lv_parameters_2_0= ruleOrExpression ) ) ')'
                     {
-                    match(input,73,FOLLOW_73_in_rulePrimaryExpression7126); 
+                    match(input,74,FOLLOW_74_in_rulePrimaryExpression7556); 
 
                             createLeafNode(grammarAccess.getPrimaryExpressionAccess().getLeftParenthesisKeyword_1_0(), null); 
                         
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4688:1: ( (lv_parameters_2_0= ruleOrExpression ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4689:1: (lv_parameters_2_0= ruleOrExpression )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5322:1: ( (lv_parameters_2_0= ruleOrExpression ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5323:1: (lv_parameters_2_0= ruleOrExpression )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4689:1: (lv_parameters_2_0= ruleOrExpression )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4690:3: lv_parameters_2_0= ruleOrExpression
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5323:1: (lv_parameters_2_0= ruleOrExpression )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5324:3: lv_parameters_2_0= ruleOrExpression
                     {
                      
                     	        currentNode=createCompositeNode(grammarAccess.getPrimaryExpressionAccess().getParametersOrExpressionParserRuleCall_1_1_0(), currentNode); 
                     	    
-                    pushFollow(FOLLOW_ruleOrExpression_in_rulePrimaryExpression7147);
+                    pushFollow(FOLLOW_ruleOrExpression_in_rulePrimaryExpression7577);
                     lv_parameters_2_0=ruleOrExpression();
                     _fsp--;
 
@@ -10588,7 +11556,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    match(input,75,FOLLOW_75_in_rulePrimaryExpression7157); 
+                    match(input,76,FOLLOW_76_in_rulePrimaryExpression7587); 
 
                             createLeafNode(grammarAccess.getPrimaryExpressionAccess().getRightParenthesisKeyword_1_2(), null); 
                         
@@ -10621,7 +11589,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleFunctionName
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4724:1: entryRuleFunctionName returns [String current=null] : iv_ruleFunctionName= ruleFunctionName EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5358:1: entryRuleFunctionName returns [String current=null] : iv_ruleFunctionName= ruleFunctionName EOF ;
     public final String entryRuleFunctionName() throws RecognitionException {
         String current = null;
 
@@ -10629,16 +11597,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4725:2: (iv_ruleFunctionName= ruleFunctionName EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4726:2: iv_ruleFunctionName= ruleFunctionName EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5359:2: (iv_ruleFunctionName= ruleFunctionName EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5360:2: iv_ruleFunctionName= ruleFunctionName EOF
             {
              currentNode = createCompositeNode(grammarAccess.getFunctionNameRule(), currentNode); 
-            pushFollow(FOLLOW_ruleFunctionName_in_entryRuleFunctionName7195);
+            pushFollow(FOLLOW_ruleFunctionName_in_entryRuleFunctionName7625);
             iv_ruleFunctionName=ruleFunctionName();
             _fsp--;
 
              current =iv_ruleFunctionName.getText(); 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleFunctionName7206); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleFunctionName7636); 
 
             }
 
@@ -10656,7 +11624,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleFunctionName
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4733:1: ruleFunctionName returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : this_ID_0= RULE_ID ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5367:1: ruleFunctionName returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : this_ID_0= RULE_ID ;
     public final AntlrDatatypeRuleToken ruleFunctionName() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -10665,11 +11633,11 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
          setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4738:6: (this_ID_0= RULE_ID )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4739:5: this_ID_0= RULE_ID
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5372:6: (this_ID_0= RULE_ID )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5373:5: this_ID_0= RULE_ID
             {
             this_ID_0=(Token)input.LT(1);
-            match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleFunctionName7245); 
+            match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleFunctionName7675); 
 
             		current.merge(this_ID_0);
                 
@@ -10696,7 +11664,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleFunctionCall
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4754:1: entryRuleFunctionCall returns [EObject current=null] : iv_ruleFunctionCall= ruleFunctionCall EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5388:1: entryRuleFunctionCall returns [EObject current=null] : iv_ruleFunctionCall= ruleFunctionCall EOF ;
     public final EObject entryRuleFunctionCall() throws RecognitionException {
         EObject current = null;
 
@@ -10704,16 +11672,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4755:2: (iv_ruleFunctionCall= ruleFunctionCall EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4756:2: iv_ruleFunctionCall= ruleFunctionCall EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5389:2: (iv_ruleFunctionCall= ruleFunctionCall EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5390:2: iv_ruleFunctionCall= ruleFunctionCall EOF
             {
              currentNode = createCompositeNode(grammarAccess.getFunctionCallRule(), currentNode); 
-            pushFollow(FOLLOW_ruleFunctionCall_in_entryRuleFunctionCall7289);
+            pushFollow(FOLLOW_ruleFunctionCall_in_entryRuleFunctionCall7719);
             iv_ruleFunctionCall=ruleFunctionCall();
             _fsp--;
 
              current =iv_ruleFunctionCall; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleFunctionCall7299); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleFunctionCall7729); 
 
             }
 
@@ -10731,7 +11699,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleFunctionCall
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4763:1: ruleFunctionCall returns [EObject current=null] : ( ( (lv_name_0_0= ruleFunctionName ) ) '(' ( (lv_parameters_2_0= ruleOrExpression ) )? ( ',' ( (lv_parameters_4_0= ruleOrExpression ) ) )* ')' ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5397:1: ruleFunctionCall returns [EObject current=null] : ( ( (lv_name_0_0= ruleFunctionName ) ) '(' ( (lv_parameters_2_0= ruleOrExpression ) )? ( ',' ( (lv_parameters_4_0= ruleOrExpression ) ) )* ')' ) ;
     public final EObject ruleFunctionCall() throws RecognitionException {
         EObject current = null;
 
@@ -10745,22 +11713,22 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4768:6: ( ( ( (lv_name_0_0= ruleFunctionName ) ) '(' ( (lv_parameters_2_0= ruleOrExpression ) )? ( ',' ( (lv_parameters_4_0= ruleOrExpression ) ) )* ')' ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4769:1: ( ( (lv_name_0_0= ruleFunctionName ) ) '(' ( (lv_parameters_2_0= ruleOrExpression ) )? ( ',' ( (lv_parameters_4_0= ruleOrExpression ) ) )* ')' )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5402:6: ( ( ( (lv_name_0_0= ruleFunctionName ) ) '(' ( (lv_parameters_2_0= ruleOrExpression ) )? ( ',' ( (lv_parameters_4_0= ruleOrExpression ) ) )* ')' ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5403:1: ( ( (lv_name_0_0= ruleFunctionName ) ) '(' ( (lv_parameters_2_0= ruleOrExpression ) )? ( ',' ( (lv_parameters_4_0= ruleOrExpression ) ) )* ')' )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4769:1: ( ( (lv_name_0_0= ruleFunctionName ) ) '(' ( (lv_parameters_2_0= ruleOrExpression ) )? ( ',' ( (lv_parameters_4_0= ruleOrExpression ) ) )* ')' )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4769:2: ( (lv_name_0_0= ruleFunctionName ) ) '(' ( (lv_parameters_2_0= ruleOrExpression ) )? ( ',' ( (lv_parameters_4_0= ruleOrExpression ) ) )* ')'
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5403:1: ( ( (lv_name_0_0= ruleFunctionName ) ) '(' ( (lv_parameters_2_0= ruleOrExpression ) )? ( ',' ( (lv_parameters_4_0= ruleOrExpression ) ) )* ')' )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5403:2: ( (lv_name_0_0= ruleFunctionName ) ) '(' ( (lv_parameters_2_0= ruleOrExpression ) )? ( ',' ( (lv_parameters_4_0= ruleOrExpression ) ) )* ')'
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4769:2: ( (lv_name_0_0= ruleFunctionName ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4770:1: (lv_name_0_0= ruleFunctionName )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5403:2: ( (lv_name_0_0= ruleFunctionName ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5404:1: (lv_name_0_0= ruleFunctionName )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4770:1: (lv_name_0_0= ruleFunctionName )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4771:3: lv_name_0_0= ruleFunctionName
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5404:1: (lv_name_0_0= ruleFunctionName )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5405:3: lv_name_0_0= ruleFunctionName
             {
              
             	        currentNode=createCompositeNode(grammarAccess.getFunctionCallAccess().getNameFunctionNameParserRuleCall_0_0(), currentNode); 
             	    
-            pushFollow(FOLLOW_ruleFunctionName_in_ruleFunctionCall7345);
+            pushFollow(FOLLOW_ruleFunctionName_in_ruleFunctionCall7775);
             lv_name_0_0=ruleFunctionName();
             _fsp--;
 
@@ -10787,28 +11755,28 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            match(input,73,FOLLOW_73_in_ruleFunctionCall7355); 
+            match(input,74,FOLLOW_74_in_ruleFunctionCall7785); 
 
                     createLeafNode(grammarAccess.getFunctionCallAccess().getLeftParenthesisKeyword_1(), null); 
                 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4797:1: ( (lv_parameters_2_0= ruleOrExpression ) )?
-            int alt68=2;
-            int LA68_0 = input.LA(1);
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5431:1: ( (lv_parameters_2_0= ruleOrExpression ) )?
+            int alt70=2;
+            int LA70_0 = input.LA(1);
 
-            if ( (LA68_0==RULE_ID||LA68_0==RULE_SQBRACKET_OPEN||(LA68_0>=RULE_TML_EXISTS && LA68_0<=RULE_DOLLAR)||(LA68_0>=RULE_NUMBER && LA68_0<=RULE_FALSE)||LA68_0==73||LA68_0==83||LA68_0==85) ) {
-                alt68=1;
+            if ( (LA70_0==RULE_ID||LA70_0==RULE_SQBRACKET_OPEN||(LA70_0>=RULE_TML_EXISTS && LA70_0<=RULE_DOLLAR)||(LA70_0>=RULE_NUMBER && LA70_0<=RULE_FALSE)||LA70_0==74||LA70_0==84||LA70_0==86) ) {
+                alt70=1;
             }
-            switch (alt68) {
+            switch (alt70) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4798:1: (lv_parameters_2_0= ruleOrExpression )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5432:1: (lv_parameters_2_0= ruleOrExpression )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4798:1: (lv_parameters_2_0= ruleOrExpression )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4799:3: lv_parameters_2_0= ruleOrExpression
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5432:1: (lv_parameters_2_0= ruleOrExpression )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5433:3: lv_parameters_2_0= ruleOrExpression
                     {
                      
                     	        currentNode=createCompositeNode(grammarAccess.getFunctionCallAccess().getParametersOrExpressionParserRuleCall_2_0(), currentNode); 
                     	    
-                    pushFollow(FOLLOW_ruleOrExpression_in_ruleFunctionCall7376);
+                    pushFollow(FOLLOW_ruleOrExpression_in_ruleFunctionCall7806);
                     lv_parameters_2_0=ruleOrExpression();
                     _fsp--;
 
@@ -10838,35 +11806,35 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4821:3: ( ',' ( (lv_parameters_4_0= ruleOrExpression ) ) )*
-            loop69:
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5455:3: ( ',' ( (lv_parameters_4_0= ruleOrExpression ) ) )*
+            loop71:
             do {
-                int alt69=2;
-                int LA69_0 = input.LA(1);
+                int alt71=2;
+                int LA71_0 = input.LA(1);
 
-                if ( (LA69_0==74) ) {
-                    alt69=1;
+                if ( (LA71_0==75) ) {
+                    alt71=1;
                 }
 
 
-                switch (alt69) {
+                switch (alt71) {
             	case 1 :
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4821:5: ',' ( (lv_parameters_4_0= ruleOrExpression ) )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5455:5: ',' ( (lv_parameters_4_0= ruleOrExpression ) )
             	    {
-            	    match(input,74,FOLLOW_74_in_ruleFunctionCall7388); 
+            	    match(input,75,FOLLOW_75_in_ruleFunctionCall7818); 
 
             	            createLeafNode(grammarAccess.getFunctionCallAccess().getCommaKeyword_3_0(), null); 
             	        
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4825:1: ( (lv_parameters_4_0= ruleOrExpression ) )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4826:1: (lv_parameters_4_0= ruleOrExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5459:1: ( (lv_parameters_4_0= ruleOrExpression ) )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5460:1: (lv_parameters_4_0= ruleOrExpression )
             	    {
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4826:1: (lv_parameters_4_0= ruleOrExpression )
-            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4827:3: lv_parameters_4_0= ruleOrExpression
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5460:1: (lv_parameters_4_0= ruleOrExpression )
+            	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5461:3: lv_parameters_4_0= ruleOrExpression
             	    {
             	     
             	    	        currentNode=createCompositeNode(grammarAccess.getFunctionCallAccess().getParametersOrExpressionParserRuleCall_3_1_0(), currentNode); 
             	    	    
-            	    pushFollow(FOLLOW_ruleOrExpression_in_ruleFunctionCall7409);
+            	    pushFollow(FOLLOW_ruleOrExpression_in_ruleFunctionCall7839);
             	    lv_parameters_4_0=ruleOrExpression();
             	    _fsp--;
 
@@ -10898,11 +11866,11 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
             	    break;
 
             	default :
-            	    break loop69;
+            	    break loop71;
                 }
             } while (true);
 
-            match(input,75,FOLLOW_75_in_ruleFunctionCall7421); 
+            match(input,76,FOLLOW_76_in_ruleFunctionCall7851); 
 
                     createLeafNode(grammarAccess.getFunctionCallAccess().getRightParenthesisKeyword_4(), null); 
                 
@@ -10929,7 +11897,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleDateLiteral
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4861:1: entryRuleDateLiteral returns [EObject current=null] : iv_ruleDateLiteral= ruleDateLiteral EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5495:1: entryRuleDateLiteral returns [EObject current=null] : iv_ruleDateLiteral= ruleDateLiteral EOF ;
     public final EObject entryRuleDateLiteral() throws RecognitionException {
         EObject current = null;
 
@@ -10937,16 +11905,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4862:2: (iv_ruleDateLiteral= ruleDateLiteral EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4863:2: iv_ruleDateLiteral= ruleDateLiteral EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5496:2: (iv_ruleDateLiteral= ruleDateLiteral EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5497:2: iv_ruleDateLiteral= ruleDateLiteral EOF
             {
              currentNode = createCompositeNode(grammarAccess.getDateLiteralRule(), currentNode); 
-            pushFollow(FOLLOW_ruleDateLiteral_in_entryRuleDateLiteral7457);
+            pushFollow(FOLLOW_ruleDateLiteral_in_entryRuleDateLiteral7887);
             iv_ruleDateLiteral=ruleDateLiteral();
             _fsp--;
 
              current =iv_ruleDateLiteral; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleDateLiteral7467); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleDateLiteral7897); 
 
             }
 
@@ -10964,21 +11932,21 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleDateLiteral
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4870:1: ruleDateLiteral returns [EObject current=null] : ( () RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5504:1: ruleDateLiteral returns [EObject current=null] : ( () RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER ) ;
     public final EObject ruleDateLiteral() throws RecognitionException {
         EObject current = null;
 
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4875:6: ( ( () RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4876:1: ( () RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5509:6: ( ( () RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5510:1: ( () RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4876:1: ( () RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4876:2: () RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5510:1: ( () RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5510:2: () RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER '#' RULE_NUMBER
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4876:2: ()
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4877:5: 
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5510:2: ()
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5511:5: 
             {
              
                     temp=factory.create(grammarAccess.getDateLiteralAccess().getExpressionAction_0().getType().getClassifier());
@@ -10993,47 +11961,47 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
             }
 
-            match(input,RULE_NUMBER,FOLLOW_RULE_NUMBER_in_ruleDateLiteral7510); 
+            match(input,RULE_NUMBER,FOLLOW_RULE_NUMBER_in_ruleDateLiteral7940); 
              
                 createLeafNode(grammarAccess.getDateLiteralAccess().getNUMBERTerminalRuleCall_1(), null); 
                 
-            match(input,84,FOLLOW_84_in_ruleDateLiteral7519); 
+            match(input,85,FOLLOW_85_in_ruleDateLiteral7949); 
 
                     createLeafNode(grammarAccess.getDateLiteralAccess().getNumberSignKeyword_2(), null); 
                 
-            match(input,RULE_NUMBER,FOLLOW_RULE_NUMBER_in_ruleDateLiteral7528); 
+            match(input,RULE_NUMBER,FOLLOW_RULE_NUMBER_in_ruleDateLiteral7958); 
              
                 createLeafNode(grammarAccess.getDateLiteralAccess().getNUMBERTerminalRuleCall_3(), null); 
                 
-            match(input,84,FOLLOW_84_in_ruleDateLiteral7537); 
+            match(input,85,FOLLOW_85_in_ruleDateLiteral7967); 
 
                     createLeafNode(grammarAccess.getDateLiteralAccess().getNumberSignKeyword_4(), null); 
                 
-            match(input,RULE_NUMBER,FOLLOW_RULE_NUMBER_in_ruleDateLiteral7546); 
+            match(input,RULE_NUMBER,FOLLOW_RULE_NUMBER_in_ruleDateLiteral7976); 
              
                 createLeafNode(grammarAccess.getDateLiteralAccess().getNUMBERTerminalRuleCall_5(), null); 
                 
-            match(input,84,FOLLOW_84_in_ruleDateLiteral7555); 
+            match(input,85,FOLLOW_85_in_ruleDateLiteral7985); 
 
                     createLeafNode(grammarAccess.getDateLiteralAccess().getNumberSignKeyword_6(), null); 
                 
-            match(input,RULE_NUMBER,FOLLOW_RULE_NUMBER_in_ruleDateLiteral7564); 
+            match(input,RULE_NUMBER,FOLLOW_RULE_NUMBER_in_ruleDateLiteral7994); 
              
                 createLeafNode(grammarAccess.getDateLiteralAccess().getNUMBERTerminalRuleCall_7(), null); 
                 
-            match(input,84,FOLLOW_84_in_ruleDateLiteral7573); 
+            match(input,85,FOLLOW_85_in_ruleDateLiteral8003); 
 
                     createLeafNode(grammarAccess.getDateLiteralAccess().getNumberSignKeyword_8(), null); 
                 
-            match(input,RULE_NUMBER,FOLLOW_RULE_NUMBER_in_ruleDateLiteral7582); 
+            match(input,RULE_NUMBER,FOLLOW_RULE_NUMBER_in_ruleDateLiteral8012); 
              
                 createLeafNode(grammarAccess.getDateLiteralAccess().getNUMBERTerminalRuleCall_9(), null); 
                 
-            match(input,84,FOLLOW_84_in_ruleDateLiteral7591); 
+            match(input,85,FOLLOW_85_in_ruleDateLiteral8021); 
 
                     createLeafNode(grammarAccess.getDateLiteralAccess().getNumberSignKeyword_10(), null); 
                 
-            match(input,RULE_NUMBER,FOLLOW_RULE_NUMBER_in_ruleDateLiteral7600); 
+            match(input,RULE_NUMBER,FOLLOW_RULE_NUMBER_in_ruleDateLiteral8030); 
              
                 createLeafNode(grammarAccess.getDateLiteralAccess().getNUMBERTerminalRuleCall_11(), null); 
                 
@@ -11060,7 +12028,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start entryRuleLiteral
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4939:1: entryRuleLiteral returns [EObject current=null] : iv_ruleLiteral= ruleLiteral EOF ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5573:1: entryRuleLiteral returns [EObject current=null] : iv_ruleLiteral= ruleLiteral EOF ;
     public final EObject entryRuleLiteral() throws RecognitionException {
         EObject current = null;
 
@@ -11068,16 +12036,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4940:2: (iv_ruleLiteral= ruleLiteral EOF )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4941:2: iv_ruleLiteral= ruleLiteral EOF
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5574:2: (iv_ruleLiteral= ruleLiteral EOF )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5575:2: iv_ruleLiteral= ruleLiteral EOF
             {
              currentNode = createCompositeNode(grammarAccess.getLiteralRule(), currentNode); 
-            pushFollow(FOLLOW_ruleLiteral_in_entryRuleLiteral7635);
+            pushFollow(FOLLOW_ruleLiteral_in_entryRuleLiteral8065);
             iv_ruleLiteral=ruleLiteral();
             _fsp--;
 
              current =iv_ruleLiteral; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleLiteral7645); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleLiteral8075); 
 
             }
 
@@ -11095,7 +12063,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start ruleLiteral
-    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4948:1: ruleLiteral returns [EObject current=null] : ( ( () RULE_NUMBER ) | ( (lv_valueString_2_0= RULE_LITERALSTRING ) ) | ( ( (lv_operations_3_0= RULE_FORALL ) ) '(' ( (lv_valueString_5_0= RULE_LITERALSTRING ) ) ',' ( (lv_parameters_7_0= ruleOrExpression ) ) ')' ) | ( (lv_parameters_9_0= ruleFunctionCall ) ) | ( ( (lv_expressionType_10_0= '{' ) ) ( (lv_parameters_11_0= ruleOrExpression ) )? ( ',' ( (lv_parameters_13_0= ruleOrExpression ) ) )* '}' ) | ( (lv_elements_15_0= RULE_NULL ) ) | ( (lv_elements_16_0= RULE_TODAY ) ) | ( (lv_elements_17_0= RULE_TRUE ) ) | ( (lv_elements_18_0= RULE_FALSE ) ) | ( (lv_parameters_19_0= ruleTmlExpression ) ) | ( (lv_parameters_20_0= ruleExistsTmlExpression ) ) | ( (lv_parameters_21_0= ruleMapGetReference ) ) | ( (lv_parameters_22_0= ruleDateLiteral ) ) ) ;
+    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5582:1: ruleLiteral returns [EObject current=null] : ( ( () RULE_NUMBER ) | ( (lv_valueString_2_0= RULE_LITERALSTRING ) ) | ( ( (lv_operations_3_0= RULE_FORALL ) ) '(' ( (lv_valueString_5_0= RULE_LITERALSTRING ) ) ',' ( (lv_parameters_7_0= ruleOrExpression ) ) ')' ) | ( (lv_parameters_9_0= ruleFunctionCall ) ) | ( ( (lv_expressionType_10_0= '{' ) ) ( (lv_parameters_11_0= ruleOrExpression ) )? ( ',' ( (lv_parameters_13_0= ruleOrExpression ) ) )* '}' ) | ( (lv_elements_15_0= RULE_NULL ) ) | ( (lv_elements_16_0= RULE_TODAY ) ) | ( (lv_elements_17_0= RULE_TRUE ) ) | ( (lv_elements_18_0= RULE_FALSE ) ) | ( (lv_parameters_19_0= ruleTmlExpression ) ) | ( (lv_parameters_20_0= ruleExistsTmlExpression ) ) | ( (lv_parameters_21_0= ruleMapGetReference ) ) | ( (lv_parameters_22_0= ruleDateLiteral ) ) ) ;
     public final EObject ruleLiteral() throws RecognitionException {
         EObject current = null;
 
@@ -11127,25 +12095,25 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4953:6: ( ( ( () RULE_NUMBER ) | ( (lv_valueString_2_0= RULE_LITERALSTRING ) ) | ( ( (lv_operations_3_0= RULE_FORALL ) ) '(' ( (lv_valueString_5_0= RULE_LITERALSTRING ) ) ',' ( (lv_parameters_7_0= ruleOrExpression ) ) ')' ) | ( (lv_parameters_9_0= ruleFunctionCall ) ) | ( ( (lv_expressionType_10_0= '{' ) ) ( (lv_parameters_11_0= ruleOrExpression ) )? ( ',' ( (lv_parameters_13_0= ruleOrExpression ) ) )* '}' ) | ( (lv_elements_15_0= RULE_NULL ) ) | ( (lv_elements_16_0= RULE_TODAY ) ) | ( (lv_elements_17_0= RULE_TRUE ) ) | ( (lv_elements_18_0= RULE_FALSE ) ) | ( (lv_parameters_19_0= ruleTmlExpression ) ) | ( (lv_parameters_20_0= ruleExistsTmlExpression ) ) | ( (lv_parameters_21_0= ruleMapGetReference ) ) | ( (lv_parameters_22_0= ruleDateLiteral ) ) ) )
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4954:1: ( ( () RULE_NUMBER ) | ( (lv_valueString_2_0= RULE_LITERALSTRING ) ) | ( ( (lv_operations_3_0= RULE_FORALL ) ) '(' ( (lv_valueString_5_0= RULE_LITERALSTRING ) ) ',' ( (lv_parameters_7_0= ruleOrExpression ) ) ')' ) | ( (lv_parameters_9_0= ruleFunctionCall ) ) | ( ( (lv_expressionType_10_0= '{' ) ) ( (lv_parameters_11_0= ruleOrExpression ) )? ( ',' ( (lv_parameters_13_0= ruleOrExpression ) ) )* '}' ) | ( (lv_elements_15_0= RULE_NULL ) ) | ( (lv_elements_16_0= RULE_TODAY ) ) | ( (lv_elements_17_0= RULE_TRUE ) ) | ( (lv_elements_18_0= RULE_FALSE ) ) | ( (lv_parameters_19_0= ruleTmlExpression ) ) | ( (lv_parameters_20_0= ruleExistsTmlExpression ) ) | ( (lv_parameters_21_0= ruleMapGetReference ) ) | ( (lv_parameters_22_0= ruleDateLiteral ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5587:6: ( ( ( () RULE_NUMBER ) | ( (lv_valueString_2_0= RULE_LITERALSTRING ) ) | ( ( (lv_operations_3_0= RULE_FORALL ) ) '(' ( (lv_valueString_5_0= RULE_LITERALSTRING ) ) ',' ( (lv_parameters_7_0= ruleOrExpression ) ) ')' ) | ( (lv_parameters_9_0= ruleFunctionCall ) ) | ( ( (lv_expressionType_10_0= '{' ) ) ( (lv_parameters_11_0= ruleOrExpression ) )? ( ',' ( (lv_parameters_13_0= ruleOrExpression ) ) )* '}' ) | ( (lv_elements_15_0= RULE_NULL ) ) | ( (lv_elements_16_0= RULE_TODAY ) ) | ( (lv_elements_17_0= RULE_TRUE ) ) | ( (lv_elements_18_0= RULE_FALSE ) ) | ( (lv_parameters_19_0= ruleTmlExpression ) ) | ( (lv_parameters_20_0= ruleExistsTmlExpression ) ) | ( (lv_parameters_21_0= ruleMapGetReference ) ) | ( (lv_parameters_22_0= ruleDateLiteral ) ) ) )
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5588:1: ( ( () RULE_NUMBER ) | ( (lv_valueString_2_0= RULE_LITERALSTRING ) ) | ( ( (lv_operations_3_0= RULE_FORALL ) ) '(' ( (lv_valueString_5_0= RULE_LITERALSTRING ) ) ',' ( (lv_parameters_7_0= ruleOrExpression ) ) ')' ) | ( (lv_parameters_9_0= ruleFunctionCall ) ) | ( ( (lv_expressionType_10_0= '{' ) ) ( (lv_parameters_11_0= ruleOrExpression ) )? ( ',' ( (lv_parameters_13_0= ruleOrExpression ) ) )* '}' ) | ( (lv_elements_15_0= RULE_NULL ) ) | ( (lv_elements_16_0= RULE_TODAY ) ) | ( (lv_elements_17_0= RULE_TRUE ) ) | ( (lv_elements_18_0= RULE_FALSE ) ) | ( (lv_parameters_19_0= ruleTmlExpression ) ) | ( (lv_parameters_20_0= ruleExistsTmlExpression ) ) | ( (lv_parameters_21_0= ruleMapGetReference ) ) | ( (lv_parameters_22_0= ruleDateLiteral ) ) )
             {
-            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4954:1: ( ( () RULE_NUMBER ) | ( (lv_valueString_2_0= RULE_LITERALSTRING ) ) | ( ( (lv_operations_3_0= RULE_FORALL ) ) '(' ( (lv_valueString_5_0= RULE_LITERALSTRING ) ) ',' ( (lv_parameters_7_0= ruleOrExpression ) ) ')' ) | ( (lv_parameters_9_0= ruleFunctionCall ) ) | ( ( (lv_expressionType_10_0= '{' ) ) ( (lv_parameters_11_0= ruleOrExpression ) )? ( ',' ( (lv_parameters_13_0= ruleOrExpression ) ) )* '}' ) | ( (lv_elements_15_0= RULE_NULL ) ) | ( (lv_elements_16_0= RULE_TODAY ) ) | ( (lv_elements_17_0= RULE_TRUE ) ) | ( (lv_elements_18_0= RULE_FALSE ) ) | ( (lv_parameters_19_0= ruleTmlExpression ) ) | ( (lv_parameters_20_0= ruleExistsTmlExpression ) ) | ( (lv_parameters_21_0= ruleMapGetReference ) ) | ( (lv_parameters_22_0= ruleDateLiteral ) ) )
-            int alt72=13;
+            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5588:1: ( ( () RULE_NUMBER ) | ( (lv_valueString_2_0= RULE_LITERALSTRING ) ) | ( ( (lv_operations_3_0= RULE_FORALL ) ) '(' ( (lv_valueString_5_0= RULE_LITERALSTRING ) ) ',' ( (lv_parameters_7_0= ruleOrExpression ) ) ')' ) | ( (lv_parameters_9_0= ruleFunctionCall ) ) | ( ( (lv_expressionType_10_0= '{' ) ) ( (lv_parameters_11_0= ruleOrExpression ) )? ( ',' ( (lv_parameters_13_0= ruleOrExpression ) ) )* '}' ) | ( (lv_elements_15_0= RULE_NULL ) ) | ( (lv_elements_16_0= RULE_TODAY ) ) | ( (lv_elements_17_0= RULE_TRUE ) ) | ( (lv_elements_18_0= RULE_FALSE ) ) | ( (lv_parameters_19_0= ruleTmlExpression ) ) | ( (lv_parameters_20_0= ruleExistsTmlExpression ) ) | ( (lv_parameters_21_0= ruleMapGetReference ) ) | ( (lv_parameters_22_0= ruleDateLiteral ) ) )
+            int alt74=13;
             switch ( input.LA(1) ) {
             case RULE_NUMBER:
                 {
-                int LA72_1 = input.LA(2);
+                int LA74_1 = input.LA(2);
 
-                if ( (LA72_1==84) ) {
-                    alt72=13;
+                if ( (LA74_1==85) ) {
+                    alt74=13;
                 }
-                else if ( (LA72_1==EOF||LA72_1==RULE_SEMICOLONQUOTE||LA72_1==RULE_CHECK_END_TAG||LA72_1==RULE_DEBUG_END_TAG||LA72_1==RULE_EXPRESSION_END_TAG||LA72_1==RULE_TML_SEPARATOR||(LA72_1>=RULE_XML_LT && LA72_1<=RULE_XML_GTEQ)||(LA72_1>=74 && LA72_1<=82)||LA72_1==86) ) {
-                    alt72=1;
+                else if ( (LA74_1==EOF||LA74_1==RULE_SEMICOLONQUOTE||LA74_1==RULE_CHECK_END_TAG||LA74_1==RULE_DEBUG_END_TAG||LA74_1==RULE_EXPRESSION_END_TAG||LA74_1==RULE_TML_SEPARATOR||(LA74_1>=RULE_XML_LT && LA74_1<=RULE_XML_GTEQ)||(LA74_1>=75 && LA74_1<=83)||LA74_1==87) ) {
+                    alt74=1;
                 }
                 else {
                     NoViableAltException nvae =
-                        new NoViableAltException("4954:1: ( ( () RULE_NUMBER ) | ( (lv_valueString_2_0= RULE_LITERALSTRING ) ) | ( ( (lv_operations_3_0= RULE_FORALL ) ) '(' ( (lv_valueString_5_0= RULE_LITERALSTRING ) ) ',' ( (lv_parameters_7_0= ruleOrExpression ) ) ')' ) | ( (lv_parameters_9_0= ruleFunctionCall ) ) | ( ( (lv_expressionType_10_0= '{' ) ) ( (lv_parameters_11_0= ruleOrExpression ) )? ( ',' ( (lv_parameters_13_0= ruleOrExpression ) ) )* '}' ) | ( (lv_elements_15_0= RULE_NULL ) ) | ( (lv_elements_16_0= RULE_TODAY ) ) | ( (lv_elements_17_0= RULE_TRUE ) ) | ( (lv_elements_18_0= RULE_FALSE ) ) | ( (lv_parameters_19_0= ruleTmlExpression ) ) | ( (lv_parameters_20_0= ruleExistsTmlExpression ) ) | ( (lv_parameters_21_0= ruleMapGetReference ) ) | ( (lv_parameters_22_0= ruleDateLiteral ) ) )", 72, 1, input);
+                        new NoViableAltException("5588:1: ( ( () RULE_NUMBER ) | ( (lv_valueString_2_0= RULE_LITERALSTRING ) ) | ( ( (lv_operations_3_0= RULE_FORALL ) ) '(' ( (lv_valueString_5_0= RULE_LITERALSTRING ) ) ',' ( (lv_parameters_7_0= ruleOrExpression ) ) ')' ) | ( (lv_parameters_9_0= ruleFunctionCall ) ) | ( ( (lv_expressionType_10_0= '{' ) ) ( (lv_parameters_11_0= ruleOrExpression ) )? ( ',' ( (lv_parameters_13_0= ruleOrExpression ) ) )* '}' ) | ( (lv_elements_15_0= RULE_NULL ) ) | ( (lv_elements_16_0= RULE_TODAY ) ) | ( (lv_elements_17_0= RULE_TRUE ) ) | ( (lv_elements_18_0= RULE_FALSE ) ) | ( (lv_parameters_19_0= ruleTmlExpression ) ) | ( (lv_parameters_20_0= ruleExistsTmlExpression ) ) | ( (lv_parameters_21_0= ruleMapGetReference ) ) | ( (lv_parameters_22_0= ruleDateLiteral ) ) )", 74, 1, input);
 
                     throw nvae;
                 }
@@ -11153,75 +12121,75 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                 break;
             case RULE_LITERALSTRING:
                 {
-                alt72=2;
+                alt74=2;
                 }
                 break;
             case RULE_FORALL:
                 {
-                alt72=3;
+                alt74=3;
                 }
                 break;
             case RULE_ID:
                 {
-                alt72=4;
+                alt74=4;
                 }
                 break;
-            case 85:
+            case 86:
                 {
-                alt72=5;
+                alt74=5;
                 }
                 break;
             case RULE_NULL:
                 {
-                alt72=6;
+                alt74=6;
                 }
                 break;
             case RULE_TODAY:
                 {
-                alt72=7;
+                alt74=7;
                 }
                 break;
             case RULE_TRUE:
                 {
-                alt72=8;
+                alt74=8;
                 }
                 break;
             case RULE_FALSE:
                 {
-                alt72=9;
+                alt74=9;
                 }
                 break;
             case RULE_SQBRACKET_OPEN:
                 {
-                alt72=10;
+                alt74=10;
                 }
                 break;
             case RULE_TML_EXISTS:
                 {
-                alt72=11;
+                alt74=11;
                 }
                 break;
             case RULE_DOLLAR:
                 {
-                alt72=12;
+                alt74=12;
                 }
                 break;
             default:
                 NoViableAltException nvae =
-                    new NoViableAltException("4954:1: ( ( () RULE_NUMBER ) | ( (lv_valueString_2_0= RULE_LITERALSTRING ) ) | ( ( (lv_operations_3_0= RULE_FORALL ) ) '(' ( (lv_valueString_5_0= RULE_LITERALSTRING ) ) ',' ( (lv_parameters_7_0= ruleOrExpression ) ) ')' ) | ( (lv_parameters_9_0= ruleFunctionCall ) ) | ( ( (lv_expressionType_10_0= '{' ) ) ( (lv_parameters_11_0= ruleOrExpression ) )? ( ',' ( (lv_parameters_13_0= ruleOrExpression ) ) )* '}' ) | ( (lv_elements_15_0= RULE_NULL ) ) | ( (lv_elements_16_0= RULE_TODAY ) ) | ( (lv_elements_17_0= RULE_TRUE ) ) | ( (lv_elements_18_0= RULE_FALSE ) ) | ( (lv_parameters_19_0= ruleTmlExpression ) ) | ( (lv_parameters_20_0= ruleExistsTmlExpression ) ) | ( (lv_parameters_21_0= ruleMapGetReference ) ) | ( (lv_parameters_22_0= ruleDateLiteral ) ) )", 72, 0, input);
+                    new NoViableAltException("5588:1: ( ( () RULE_NUMBER ) | ( (lv_valueString_2_0= RULE_LITERALSTRING ) ) | ( ( (lv_operations_3_0= RULE_FORALL ) ) '(' ( (lv_valueString_5_0= RULE_LITERALSTRING ) ) ',' ( (lv_parameters_7_0= ruleOrExpression ) ) ')' ) | ( (lv_parameters_9_0= ruleFunctionCall ) ) | ( ( (lv_expressionType_10_0= '{' ) ) ( (lv_parameters_11_0= ruleOrExpression ) )? ( ',' ( (lv_parameters_13_0= ruleOrExpression ) ) )* '}' ) | ( (lv_elements_15_0= RULE_NULL ) ) | ( (lv_elements_16_0= RULE_TODAY ) ) | ( (lv_elements_17_0= RULE_TRUE ) ) | ( (lv_elements_18_0= RULE_FALSE ) ) | ( (lv_parameters_19_0= ruleTmlExpression ) ) | ( (lv_parameters_20_0= ruleExistsTmlExpression ) ) | ( (lv_parameters_21_0= ruleMapGetReference ) ) | ( (lv_parameters_22_0= ruleDateLiteral ) ) )", 74, 0, input);
 
                 throw nvae;
             }
 
-            switch (alt72) {
+            switch (alt74) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4954:2: ( () RULE_NUMBER )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5588:2: ( () RULE_NUMBER )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4954:2: ( () RULE_NUMBER )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4954:3: () RULE_NUMBER
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5588:2: ( () RULE_NUMBER )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5588:3: () RULE_NUMBER
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4954:3: ()
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4955:5: 
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5588:3: ()
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5589:5: 
                     {
                      
                             temp=factory.create(grammarAccess.getLiteralAccess().getExpressionAction_0_0().getType().getClassifier());
@@ -11236,7 +12204,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    match(input,RULE_NUMBER,FOLLOW_RULE_NUMBER_in_ruleLiteral7689); 
+                    match(input,RULE_NUMBER,FOLLOW_RULE_NUMBER_in_ruleLiteral8119); 
                      
                         createLeafNode(grammarAccess.getLiteralAccess().getNUMBERTerminalRuleCall_0_1(), null); 
                         
@@ -11247,16 +12215,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4970:6: ( (lv_valueString_2_0= RULE_LITERALSTRING ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5604:6: ( (lv_valueString_2_0= RULE_LITERALSTRING ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4970:6: ( (lv_valueString_2_0= RULE_LITERALSTRING ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4971:1: (lv_valueString_2_0= RULE_LITERALSTRING )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5604:6: ( (lv_valueString_2_0= RULE_LITERALSTRING ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5605:1: (lv_valueString_2_0= RULE_LITERALSTRING )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4971:1: (lv_valueString_2_0= RULE_LITERALSTRING )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4972:3: lv_valueString_2_0= RULE_LITERALSTRING
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5605:1: (lv_valueString_2_0= RULE_LITERALSTRING )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5606:3: lv_valueString_2_0= RULE_LITERALSTRING
                     {
                     lv_valueString_2_0=(Token)input.LT(1);
-                    match(input,RULE_LITERALSTRING,FOLLOW_RULE_LITERALSTRING_in_ruleLiteral7712); 
+                    match(input,RULE_LITERALSTRING,FOLLOW_RULE_LITERALSTRING_in_ruleLiteral8142); 
 
                     			createLeafNode(grammarAccess.getLiteralAccess().getValueStringLITERALSTRINGTerminalRuleCall_1_0(), "valueString"); 
                     		
@@ -11286,19 +12254,19 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 3 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4995:6: ( ( (lv_operations_3_0= RULE_FORALL ) ) '(' ( (lv_valueString_5_0= RULE_LITERALSTRING ) ) ',' ( (lv_parameters_7_0= ruleOrExpression ) ) ')' )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5629:6: ( ( (lv_operations_3_0= RULE_FORALL ) ) '(' ( (lv_valueString_5_0= RULE_LITERALSTRING ) ) ',' ( (lv_parameters_7_0= ruleOrExpression ) ) ')' )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4995:6: ( ( (lv_operations_3_0= RULE_FORALL ) ) '(' ( (lv_valueString_5_0= RULE_LITERALSTRING ) ) ',' ( (lv_parameters_7_0= ruleOrExpression ) ) ')' )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4995:7: ( (lv_operations_3_0= RULE_FORALL ) ) '(' ( (lv_valueString_5_0= RULE_LITERALSTRING ) ) ',' ( (lv_parameters_7_0= ruleOrExpression ) ) ')'
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5629:6: ( ( (lv_operations_3_0= RULE_FORALL ) ) '(' ( (lv_valueString_5_0= RULE_LITERALSTRING ) ) ',' ( (lv_parameters_7_0= ruleOrExpression ) ) ')' )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5629:7: ( (lv_operations_3_0= RULE_FORALL ) ) '(' ( (lv_valueString_5_0= RULE_LITERALSTRING ) ) ',' ( (lv_parameters_7_0= ruleOrExpression ) ) ')'
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4995:7: ( (lv_operations_3_0= RULE_FORALL ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4996:1: (lv_operations_3_0= RULE_FORALL )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5629:7: ( (lv_operations_3_0= RULE_FORALL ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5630:1: (lv_operations_3_0= RULE_FORALL )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4996:1: (lv_operations_3_0= RULE_FORALL )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:4997:3: lv_operations_3_0= RULE_FORALL
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5630:1: (lv_operations_3_0= RULE_FORALL )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5631:3: lv_operations_3_0= RULE_FORALL
                     {
                     lv_operations_3_0=(Token)input.LT(1);
-                    match(input,RULE_FORALL,FOLLOW_RULE_FORALL_in_ruleLiteral7741); 
+                    match(input,RULE_FORALL,FOLLOW_RULE_FORALL_in_ruleLiteral8171); 
 
                     			createLeafNode(grammarAccess.getLiteralAccess().getOperationsFORALLTerminalRuleCall_2_0_0(), "operations"); 
                     		
@@ -11324,18 +12292,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    match(input,73,FOLLOW_73_in_ruleLiteral7756); 
+                    match(input,74,FOLLOW_74_in_ruleLiteral8186); 
 
                             createLeafNode(grammarAccess.getLiteralAccess().getLeftParenthesisKeyword_2_1(), null); 
                         
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5023:1: ( (lv_valueString_5_0= RULE_LITERALSTRING ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5024:1: (lv_valueString_5_0= RULE_LITERALSTRING )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5657:1: ( (lv_valueString_5_0= RULE_LITERALSTRING ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5658:1: (lv_valueString_5_0= RULE_LITERALSTRING )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5024:1: (lv_valueString_5_0= RULE_LITERALSTRING )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5025:3: lv_valueString_5_0= RULE_LITERALSTRING
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5658:1: (lv_valueString_5_0= RULE_LITERALSTRING )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5659:3: lv_valueString_5_0= RULE_LITERALSTRING
                     {
                     lv_valueString_5_0=(Token)input.LT(1);
-                    match(input,RULE_LITERALSTRING,FOLLOW_RULE_LITERALSTRING_in_ruleLiteral7773); 
+                    match(input,RULE_LITERALSTRING,FOLLOW_RULE_LITERALSTRING_in_ruleLiteral8203); 
 
                     			createLeafNode(grammarAccess.getLiteralAccess().getValueStringLITERALSTRINGTerminalRuleCall_2_2_0(), "valueString"); 
                     		
@@ -11361,20 +12329,20 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    match(input,74,FOLLOW_74_in_ruleLiteral7788); 
+                    match(input,75,FOLLOW_75_in_ruleLiteral8218); 
 
                             createLeafNode(grammarAccess.getLiteralAccess().getCommaKeyword_2_3(), null); 
                         
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5051:1: ( (lv_parameters_7_0= ruleOrExpression ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5052:1: (lv_parameters_7_0= ruleOrExpression )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5685:1: ( (lv_parameters_7_0= ruleOrExpression ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5686:1: (lv_parameters_7_0= ruleOrExpression )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5052:1: (lv_parameters_7_0= ruleOrExpression )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5053:3: lv_parameters_7_0= ruleOrExpression
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5686:1: (lv_parameters_7_0= ruleOrExpression )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5687:3: lv_parameters_7_0= ruleOrExpression
                     {
                      
                     	        currentNode=createCompositeNode(grammarAccess.getLiteralAccess().getParametersOrExpressionParserRuleCall_2_4_0(), currentNode); 
                     	    
-                    pushFollow(FOLLOW_ruleOrExpression_in_ruleLiteral7809);
+                    pushFollow(FOLLOW_ruleOrExpression_in_ruleLiteral8239);
                     lv_parameters_7_0=ruleOrExpression();
                     _fsp--;
 
@@ -11401,7 +12369,7 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    match(input,75,FOLLOW_75_in_ruleLiteral7819); 
+                    match(input,76,FOLLOW_76_in_ruleLiteral8249); 
 
                             createLeafNode(grammarAccess.getLiteralAccess().getRightParenthesisKeyword_2_5(), null); 
                         
@@ -11412,18 +12380,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 4 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5080:6: ( (lv_parameters_9_0= ruleFunctionCall ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5714:6: ( (lv_parameters_9_0= ruleFunctionCall ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5080:6: ( (lv_parameters_9_0= ruleFunctionCall ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5081:1: (lv_parameters_9_0= ruleFunctionCall )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5714:6: ( (lv_parameters_9_0= ruleFunctionCall ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5715:1: (lv_parameters_9_0= ruleFunctionCall )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5081:1: (lv_parameters_9_0= ruleFunctionCall )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5082:3: lv_parameters_9_0= ruleFunctionCall
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5715:1: (lv_parameters_9_0= ruleFunctionCall )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5716:3: lv_parameters_9_0= ruleFunctionCall
                     {
                      
                     	        currentNode=createCompositeNode(grammarAccess.getLiteralAccess().getParametersFunctionCallParserRuleCall_3_0(), currentNode); 
                     	    
-                    pushFollow(FOLLOW_ruleFunctionCall_in_ruleLiteral7847);
+                    pushFollow(FOLLOW_ruleFunctionCall_in_ruleLiteral8277);
                     lv_parameters_9_0=ruleFunctionCall();
                     _fsp--;
 
@@ -11454,19 +12422,19 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 5 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5105:6: ( ( (lv_expressionType_10_0= '{' ) ) ( (lv_parameters_11_0= ruleOrExpression ) )? ( ',' ( (lv_parameters_13_0= ruleOrExpression ) ) )* '}' )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5739:6: ( ( (lv_expressionType_10_0= '{' ) ) ( (lv_parameters_11_0= ruleOrExpression ) )? ( ',' ( (lv_parameters_13_0= ruleOrExpression ) ) )* '}' )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5105:6: ( ( (lv_expressionType_10_0= '{' ) ) ( (lv_parameters_11_0= ruleOrExpression ) )? ( ',' ( (lv_parameters_13_0= ruleOrExpression ) ) )* '}' )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5105:7: ( (lv_expressionType_10_0= '{' ) ) ( (lv_parameters_11_0= ruleOrExpression ) )? ( ',' ( (lv_parameters_13_0= ruleOrExpression ) ) )* '}'
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5739:6: ( ( (lv_expressionType_10_0= '{' ) ) ( (lv_parameters_11_0= ruleOrExpression ) )? ( ',' ( (lv_parameters_13_0= ruleOrExpression ) ) )* '}' )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5739:7: ( (lv_expressionType_10_0= '{' ) ) ( (lv_parameters_11_0= ruleOrExpression ) )? ( ',' ( (lv_parameters_13_0= ruleOrExpression ) ) )* '}'
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5105:7: ( (lv_expressionType_10_0= '{' ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5106:1: (lv_expressionType_10_0= '{' )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5739:7: ( (lv_expressionType_10_0= '{' ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5740:1: (lv_expressionType_10_0= '{' )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5106:1: (lv_expressionType_10_0= '{' )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5107:3: lv_expressionType_10_0= '{'
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5740:1: (lv_expressionType_10_0= '{' )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5741:3: lv_expressionType_10_0= '{'
                     {
                     lv_expressionType_10_0=(Token)input.LT(1);
-                    match(input,85,FOLLOW_85_in_ruleLiteral7872); 
+                    match(input,86,FOLLOW_86_in_ruleLiteral8302); 
 
                             createLeafNode(grammarAccess.getLiteralAccess().getExpressionTypeLeftCurlyBracketKeyword_4_0_0(), "expressionType"); 
                         
@@ -11488,24 +12456,24 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5126:2: ( (lv_parameters_11_0= ruleOrExpression ) )?
-                    int alt70=2;
-                    int LA70_0 = input.LA(1);
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5760:2: ( (lv_parameters_11_0= ruleOrExpression ) )?
+                    int alt72=2;
+                    int LA72_0 = input.LA(1);
 
-                    if ( (LA70_0==RULE_ID||LA70_0==RULE_SQBRACKET_OPEN||(LA70_0>=RULE_TML_EXISTS && LA70_0<=RULE_DOLLAR)||(LA70_0>=RULE_NUMBER && LA70_0<=RULE_FALSE)||LA70_0==73||LA70_0==83||LA70_0==85) ) {
-                        alt70=1;
+                    if ( (LA72_0==RULE_ID||LA72_0==RULE_SQBRACKET_OPEN||(LA72_0>=RULE_TML_EXISTS && LA72_0<=RULE_DOLLAR)||(LA72_0>=RULE_NUMBER && LA72_0<=RULE_FALSE)||LA72_0==74||LA72_0==84||LA72_0==86) ) {
+                        alt72=1;
                     }
-                    switch (alt70) {
+                    switch (alt72) {
                         case 1 :
-                            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5127:1: (lv_parameters_11_0= ruleOrExpression )
+                            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5761:1: (lv_parameters_11_0= ruleOrExpression )
                             {
-                            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5127:1: (lv_parameters_11_0= ruleOrExpression )
-                            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5128:3: lv_parameters_11_0= ruleOrExpression
+                            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5761:1: (lv_parameters_11_0= ruleOrExpression )
+                            // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5762:3: lv_parameters_11_0= ruleOrExpression
                             {
                              
                             	        currentNode=createCompositeNode(grammarAccess.getLiteralAccess().getParametersOrExpressionParserRuleCall_4_1_0(), currentNode); 
                             	    
-                            pushFollow(FOLLOW_ruleOrExpression_in_ruleLiteral7906);
+                            pushFollow(FOLLOW_ruleOrExpression_in_ruleLiteral8336);
                             lv_parameters_11_0=ruleOrExpression();
                             _fsp--;
 
@@ -11535,35 +12503,35 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5150:3: ( ',' ( (lv_parameters_13_0= ruleOrExpression ) ) )*
-                    loop71:
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5784:3: ( ',' ( (lv_parameters_13_0= ruleOrExpression ) ) )*
+                    loop73:
                     do {
-                        int alt71=2;
-                        int LA71_0 = input.LA(1);
+                        int alt73=2;
+                        int LA73_0 = input.LA(1);
 
-                        if ( (LA71_0==74) ) {
-                            alt71=1;
+                        if ( (LA73_0==75) ) {
+                            alt73=1;
                         }
 
 
-                        switch (alt71) {
+                        switch (alt73) {
                     	case 1 :
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5150:5: ',' ( (lv_parameters_13_0= ruleOrExpression ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5784:5: ',' ( (lv_parameters_13_0= ruleOrExpression ) )
                     	    {
-                    	    match(input,74,FOLLOW_74_in_ruleLiteral7918); 
+                    	    match(input,75,FOLLOW_75_in_ruleLiteral8348); 
 
                     	            createLeafNode(grammarAccess.getLiteralAccess().getCommaKeyword_4_2_0(), null); 
                     	        
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5154:1: ( (lv_parameters_13_0= ruleOrExpression ) )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5155:1: (lv_parameters_13_0= ruleOrExpression )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5788:1: ( (lv_parameters_13_0= ruleOrExpression ) )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5789:1: (lv_parameters_13_0= ruleOrExpression )
                     	    {
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5155:1: (lv_parameters_13_0= ruleOrExpression )
-                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5156:3: lv_parameters_13_0= ruleOrExpression
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5789:1: (lv_parameters_13_0= ruleOrExpression )
+                    	    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5790:3: lv_parameters_13_0= ruleOrExpression
                     	    {
                     	     
                     	    	        currentNode=createCompositeNode(grammarAccess.getLiteralAccess().getParametersOrExpressionParserRuleCall_4_2_1_0(), currentNode); 
                     	    	    
-                    	    pushFollow(FOLLOW_ruleOrExpression_in_ruleLiteral7939);
+                    	    pushFollow(FOLLOW_ruleOrExpression_in_ruleLiteral8369);
                     	    lv_parameters_13_0=ruleOrExpression();
                     	    _fsp--;
 
@@ -11595,11 +12563,11 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     	    break;
 
                     	default :
-                    	    break loop71;
+                    	    break loop73;
                         }
                     } while (true);
 
-                    match(input,86,FOLLOW_86_in_ruleLiteral7951); 
+                    match(input,87,FOLLOW_87_in_ruleLiteral8381); 
 
                             createLeafNode(grammarAccess.getLiteralAccess().getRightCurlyBracketKeyword_4_3(), null); 
                         
@@ -11610,16 +12578,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 6 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5183:6: ( (lv_elements_15_0= RULE_NULL ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5817:6: ( (lv_elements_15_0= RULE_NULL ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5183:6: ( (lv_elements_15_0= RULE_NULL ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5184:1: (lv_elements_15_0= RULE_NULL )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5817:6: ( (lv_elements_15_0= RULE_NULL ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5818:1: (lv_elements_15_0= RULE_NULL )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5184:1: (lv_elements_15_0= RULE_NULL )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5185:3: lv_elements_15_0= RULE_NULL
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5818:1: (lv_elements_15_0= RULE_NULL )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5819:3: lv_elements_15_0= RULE_NULL
                     {
                     lv_elements_15_0=(Token)input.LT(1);
-                    match(input,RULE_NULL,FOLLOW_RULE_NULL_in_ruleLiteral7975); 
+                    match(input,RULE_NULL,FOLLOW_RULE_NULL_in_ruleLiteral8405); 
 
                     			createLeafNode(grammarAccess.getLiteralAccess().getElementsNULLTerminalRuleCall_5_0(), "elements"); 
                     		
@@ -11649,16 +12617,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 7 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5208:6: ( (lv_elements_16_0= RULE_TODAY ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5842:6: ( (lv_elements_16_0= RULE_TODAY ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5208:6: ( (lv_elements_16_0= RULE_TODAY ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5209:1: (lv_elements_16_0= RULE_TODAY )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5842:6: ( (lv_elements_16_0= RULE_TODAY ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5843:1: (lv_elements_16_0= RULE_TODAY )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5209:1: (lv_elements_16_0= RULE_TODAY )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5210:3: lv_elements_16_0= RULE_TODAY
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5843:1: (lv_elements_16_0= RULE_TODAY )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5844:3: lv_elements_16_0= RULE_TODAY
                     {
                     lv_elements_16_0=(Token)input.LT(1);
-                    match(input,RULE_TODAY,FOLLOW_RULE_TODAY_in_ruleLiteral8003); 
+                    match(input,RULE_TODAY,FOLLOW_RULE_TODAY_in_ruleLiteral8433); 
 
                     			createLeafNode(grammarAccess.getLiteralAccess().getElementsTODAYTerminalRuleCall_6_0(), "elements"); 
                     		
@@ -11688,16 +12656,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 8 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5233:6: ( (lv_elements_17_0= RULE_TRUE ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5867:6: ( (lv_elements_17_0= RULE_TRUE ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5233:6: ( (lv_elements_17_0= RULE_TRUE ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5234:1: (lv_elements_17_0= RULE_TRUE )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5867:6: ( (lv_elements_17_0= RULE_TRUE ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5868:1: (lv_elements_17_0= RULE_TRUE )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5234:1: (lv_elements_17_0= RULE_TRUE )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5235:3: lv_elements_17_0= RULE_TRUE
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5868:1: (lv_elements_17_0= RULE_TRUE )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5869:3: lv_elements_17_0= RULE_TRUE
                     {
                     lv_elements_17_0=(Token)input.LT(1);
-                    match(input,RULE_TRUE,FOLLOW_RULE_TRUE_in_ruleLiteral8031); 
+                    match(input,RULE_TRUE,FOLLOW_RULE_TRUE_in_ruleLiteral8461); 
 
                     			createLeafNode(grammarAccess.getLiteralAccess().getElementsTRUETerminalRuleCall_7_0(), "elements"); 
                     		
@@ -11727,16 +12695,16 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 9 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5258:6: ( (lv_elements_18_0= RULE_FALSE ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5892:6: ( (lv_elements_18_0= RULE_FALSE ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5258:6: ( (lv_elements_18_0= RULE_FALSE ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5259:1: (lv_elements_18_0= RULE_FALSE )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5892:6: ( (lv_elements_18_0= RULE_FALSE ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5893:1: (lv_elements_18_0= RULE_FALSE )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5259:1: (lv_elements_18_0= RULE_FALSE )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5260:3: lv_elements_18_0= RULE_FALSE
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5893:1: (lv_elements_18_0= RULE_FALSE )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5894:3: lv_elements_18_0= RULE_FALSE
                     {
                     lv_elements_18_0=(Token)input.LT(1);
-                    match(input,RULE_FALSE,FOLLOW_RULE_FALSE_in_ruleLiteral8059); 
+                    match(input,RULE_FALSE,FOLLOW_RULE_FALSE_in_ruleLiteral8489); 
 
                     			createLeafNode(grammarAccess.getLiteralAccess().getElementsFALSETerminalRuleCall_8_0(), "elements"); 
                     		
@@ -11766,18 +12734,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 10 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5283:6: ( (lv_parameters_19_0= ruleTmlExpression ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5917:6: ( (lv_parameters_19_0= ruleTmlExpression ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5283:6: ( (lv_parameters_19_0= ruleTmlExpression ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5284:1: (lv_parameters_19_0= ruleTmlExpression )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5917:6: ( (lv_parameters_19_0= ruleTmlExpression ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5918:1: (lv_parameters_19_0= ruleTmlExpression )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5284:1: (lv_parameters_19_0= ruleTmlExpression )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5285:3: lv_parameters_19_0= ruleTmlExpression
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5918:1: (lv_parameters_19_0= ruleTmlExpression )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5919:3: lv_parameters_19_0= ruleTmlExpression
                     {
                      
                     	        currentNode=createCompositeNode(grammarAccess.getLiteralAccess().getParametersTmlExpressionParserRuleCall_9_0(), currentNode); 
                     	    
-                    pushFollow(FOLLOW_ruleTmlExpression_in_ruleLiteral8091);
+                    pushFollow(FOLLOW_ruleTmlExpression_in_ruleLiteral8521);
                     lv_parameters_19_0=ruleTmlExpression();
                     _fsp--;
 
@@ -11808,18 +12776,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 11 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5308:6: ( (lv_parameters_20_0= ruleExistsTmlExpression ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5942:6: ( (lv_parameters_20_0= ruleExistsTmlExpression ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5308:6: ( (lv_parameters_20_0= ruleExistsTmlExpression ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5309:1: (lv_parameters_20_0= ruleExistsTmlExpression )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5942:6: ( (lv_parameters_20_0= ruleExistsTmlExpression ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5943:1: (lv_parameters_20_0= ruleExistsTmlExpression )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5309:1: (lv_parameters_20_0= ruleExistsTmlExpression )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5310:3: lv_parameters_20_0= ruleExistsTmlExpression
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5943:1: (lv_parameters_20_0= ruleExistsTmlExpression )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5944:3: lv_parameters_20_0= ruleExistsTmlExpression
                     {
                      
                     	        currentNode=createCompositeNode(grammarAccess.getLiteralAccess().getParametersExistsTmlExpressionParserRuleCall_10_0(), currentNode); 
                     	    
-                    pushFollow(FOLLOW_ruleExistsTmlExpression_in_ruleLiteral8118);
+                    pushFollow(FOLLOW_ruleExistsTmlExpression_in_ruleLiteral8548);
                     lv_parameters_20_0=ruleExistsTmlExpression();
                     _fsp--;
 
@@ -11850,18 +12818,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 12 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5333:6: ( (lv_parameters_21_0= ruleMapGetReference ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5967:6: ( (lv_parameters_21_0= ruleMapGetReference ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5333:6: ( (lv_parameters_21_0= ruleMapGetReference ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5334:1: (lv_parameters_21_0= ruleMapGetReference )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5967:6: ( (lv_parameters_21_0= ruleMapGetReference ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5968:1: (lv_parameters_21_0= ruleMapGetReference )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5334:1: (lv_parameters_21_0= ruleMapGetReference )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5335:3: lv_parameters_21_0= ruleMapGetReference
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5968:1: (lv_parameters_21_0= ruleMapGetReference )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5969:3: lv_parameters_21_0= ruleMapGetReference
                     {
                      
                     	        currentNode=createCompositeNode(grammarAccess.getLiteralAccess().getParametersMapGetReferenceParserRuleCall_11_0(), currentNode); 
                     	    
-                    pushFollow(FOLLOW_ruleMapGetReference_in_ruleLiteral8145);
+                    pushFollow(FOLLOW_ruleMapGetReference_in_ruleLiteral8575);
                     lv_parameters_21_0=ruleMapGetReference();
                     _fsp--;
 
@@ -11892,18 +12860,18 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 13 :
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5358:6: ( (lv_parameters_22_0= ruleDateLiteral ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5992:6: ( (lv_parameters_22_0= ruleDateLiteral ) )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5358:6: ( (lv_parameters_22_0= ruleDateLiteral ) )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5359:1: (lv_parameters_22_0= ruleDateLiteral )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5992:6: ( (lv_parameters_22_0= ruleDateLiteral ) )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5993:1: (lv_parameters_22_0= ruleDateLiteral )
                     {
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5359:1: (lv_parameters_22_0= ruleDateLiteral )
-                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5360:3: lv_parameters_22_0= ruleDateLiteral
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5993:1: (lv_parameters_22_0= ruleDateLiteral )
+                    // ../com.dexels.navajo.dsl.tsl/src-gen/com/dexels/navajo/dsl/tsl/parser/antlr/internal/InternalTsl.g:5994:3: lv_parameters_22_0= ruleDateLiteral
                     {
                      
                     	        currentNode=createCompositeNode(grammarAccess.getLiteralAccess().getParametersDateLiteralParserRuleCall_12_0(), currentNode); 
                     	    
-                    pushFollow(FOLLOW_ruleDateLiteral_in_ruleLiteral8172);
+                    pushFollow(FOLLOW_ruleDateLiteral_in_ruleLiteral8602);
                     lv_parameters_22_0=ruleDateLiteral();
                     _fsp--;
 
@@ -11961,15 +12929,15 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
     public static final BitSet FOLLOW_EOF_in_entryRuleTml85 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_RULE_NAVASCRIPT_START_in_ruleTml119 = new BitSet(new long[]{0x00000000000001A0L});
     public static final BitSet FOLLOW_rulePossibleExpression_in_ruleTml148 = new BitSet(new long[]{0x00000000000001A0L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleTml160 = new BitSet(new long[]{0x0000010416222040L});
-    public static final BitSet FOLLOW_ruleMessage_in_ruleTml181 = new BitSet(new long[]{0x0000010416222040L});
-    public static final BitSet FOLLOW_ruleMap_in_ruleTml208 = new BitSet(new long[]{0x0000010416222040L});
-    public static final BitSet FOLLOW_ruleParam_in_ruleTml235 = new BitSet(new long[]{0x0000010416222040L});
-    public static final BitSet FOLLOW_ruleMethods_in_ruleTml262 = new BitSet(new long[]{0x0000010416222040L});
-    public static final BitSet FOLLOW_ruleDebugTag_in_ruleTml289 = new BitSet(new long[]{0x0000010416222040L});
-    public static final BitSet FOLLOW_ruleInclude_in_ruleTml316 = new BitSet(new long[]{0x0000010416222040L});
-    public static final BitSet FOLLOW_ruleValidations_in_ruleTml343 = new BitSet(new long[]{0x0000010416222040L});
-    public static final BitSet FOLLOW_ruleComment_in_ruleTml370 = new BitSet(new long[]{0x0000010416222040L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleTml160 = new BitSet(new long[]{0x000004102A222040L});
+    public static final BitSet FOLLOW_ruleMessage_in_ruleTml181 = new BitSet(new long[]{0x000004102A222040L});
+    public static final BitSet FOLLOW_ruleMap_in_ruleTml208 = new BitSet(new long[]{0x000004102A222040L});
+    public static final BitSet FOLLOW_ruleParam_in_ruleTml235 = new BitSet(new long[]{0x000004102A222040L});
+    public static final BitSet FOLLOW_ruleMethods_in_ruleTml262 = new BitSet(new long[]{0x000004102A222040L});
+    public static final BitSet FOLLOW_ruleDebugTag_in_ruleTml289 = new BitSet(new long[]{0x000004102A222040L});
+    public static final BitSet FOLLOW_ruleInclude_in_ruleTml316 = new BitSet(new long[]{0x000004102A222040L});
+    public static final BitSet FOLLOW_ruleValidations_in_ruleTml343 = new BitSet(new long[]{0x000004102A222040L});
+    public static final BitSet FOLLOW_ruleComment_in_ruleTml370 = new BitSet(new long[]{0x000004102A222040L});
     public static final BitSet FOLLOW_RULE_NAVASCRIPT_END_in_ruleTml381 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleTml396 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleAttributeName_in_entryRuleAttributeName433 = new BitSet(new long[]{0x0000000000000000L});
@@ -11977,339 +12945,338 @@ public class InternalTslParser extends AbstractInternalAntlrParser {
     public static final BitSet FOLLOW_RULE_ID_in_ruleAttributeName483 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rulePossibleExpression_in_entryRulePossibleExpression527 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRulePossibleExpression537 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_ID_in_rulePossibleExpression580 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000040L});
-    public static final BitSet FOLLOW_70_in_rulePossibleExpression595 = new BitSet(new long[]{0x0000000000000100L});
-    public static final BitSet FOLLOW_ruleAttributeName_in_rulePossibleExpression618 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000080L});
-    public static final BitSet FOLLOW_71_in_rulePossibleExpression628 = new BitSet(new long[]{0x0000000000001A00L});
-    public static final BitSet FOLLOW_RULE_QUOTEQ_in_rulePossibleExpression639 = new BitSet(new long[]{0xFE18800000000100L,0x0000000000280200L});
+    public static final BitSet FOLLOW_RULE_ID_in_rulePossibleExpression580 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000100L});
+    public static final BitSet FOLLOW_72_in_rulePossibleExpression595 = new BitSet(new long[]{0x0000000000000100L});
+    public static final BitSet FOLLOW_ruleAttributeName_in_rulePossibleExpression618 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000200L});
+    public static final BitSet FOLLOW_73_in_rulePossibleExpression628 = new BitSet(new long[]{0x0000000000001A00L});
+    public static final BitSet FOLLOW_RULE_QUOTEQ_in_rulePossibleExpression639 = new BitSet(new long[]{0xF862000000000100L,0x0000000000500403L});
     public static final BitSet FOLLOW_ruleTopLevel_in_rulePossibleExpression659 = new BitSet(new long[]{0x0000000000000400L});
     public static final BitSet FOLLOW_RULE_SEMICOLONQUOTE_in_rulePossibleExpression668 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_RULE_ATTRIBUTESTRING_in_rulePossibleExpression691 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_EMPTYSTRING_in_rulePossibleExpression711 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleMethods_in_entryRuleMethods747 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleMethods757 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_METHODS_START_TAG_in_ruleMethods791 = new BitSet(new long[]{0x00000000000000A0L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleMethods810 = new BitSet(new long[]{0x000000000000C000L});
-    public static final BitSet FOLLOW_ruleMethod_in_ruleMethods830 = new BitSet(new long[]{0x000000000000C000L});
-    public static final BitSet FOLLOW_RULE_METHODS_END_TAG_in_ruleMethods840 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleMethods855 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleMethod_in_entryRuleMethod891 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleMethod901 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_METHOD_START_TAG_in_ruleMethod935 = new BitSet(new long[]{0x00000000000001A0L});
-    public static final BitSet FOLLOW_rulePossibleExpression_in_ruleMethod964 = new BitSet(new long[]{0x00000000000001A0L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleMethod976 = new BitSet(new long[]{0x0000000040010000L});
-    public static final BitSet FOLLOW_ruleRequired_in_ruleMethod996 = new BitSet(new long[]{0x0000000040010000L});
-    public static final BitSet FOLLOW_RULE_METHOD_END_TAG_in_ruleMethod1006 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleMethod1021 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleValidations_in_entryRuleValidations1057 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleValidations1067 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_VALIDATIONS_START_TAG_in_ruleValidations1101 = new BitSet(new long[]{0x00000000000000A0L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleValidations1120 = new BitSet(new long[]{0x00000000000C0000L});
-    public static final BitSet FOLLOW_ruleCheck_in_ruleValidations1140 = new BitSet(new long[]{0x00000000000C0000L});
-    public static final BitSet FOLLOW_RULE_VALIDATIONS_END_TAG_in_ruleValidations1150 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleValidations1165 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleCheck_in_entryRuleCheck1201 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleCheck1211 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_CHECK_START_TAG_in_ruleCheck1245 = new BitSet(new long[]{0x00000000000001A0L});
-    public static final BitSet FOLLOW_rulePossibleExpression_in_ruleCheck1274 = new BitSet(new long[]{0x00000000000001A0L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleCheck1286 = new BitSet(new long[]{0xFE18800000000100L,0x0000000000280200L});
-    public static final BitSet FOLLOW_ruleTopLevel_in_ruleCheck1306 = new BitSet(new long[]{0x0000000000100000L});
-    public static final BitSet FOLLOW_RULE_CHECK_END_TAG_in_ruleCheck1315 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleCheck1330 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleComment_in_entryRuleComment1366 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleComment1376 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_COMMENT_START_TAG_in_ruleComment1410 = new BitSet(new long[]{0x00000000000001A0L});
-    public static final BitSet FOLLOW_rulePossibleExpression_in_ruleComment1439 = new BitSet(new long[]{0x00000000000001A0L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleComment1451 = new BitSet(new long[]{0x0000000000400000L});
-    public static final BitSet FOLLOW_RULE_COMMENT_END_TAG_in_ruleComment1459 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleComment1474 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleBreak_in_entryRuleBreak1510 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleBreak1520 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_BREAK_START_TAG_in_ruleBreak1554 = new BitSet(new long[]{0x00000000000001A0L});
-    public static final BitSet FOLLOW_rulePossibleExpression_in_ruleBreak1583 = new BitSet(new long[]{0x00000000000001A0L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleBreak1595 = new BitSet(new long[]{0x0000000001000000L});
-    public static final BitSet FOLLOW_RULE_BREAK_END_TAG_in_ruleBreak1603 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleBreak1618 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleInclude_in_entryRuleInclude1654 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleInclude1664 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_INCLUDE_START_TAG_in_ruleInclude1698 = new BitSet(new long[]{0x0000000000000180L});
-    public static final BitSet FOLLOW_rulePossibleExpression_in_ruleInclude1727 = new BitSet(new long[]{0x0000000000000180L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleInclude1737 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleMessage_in_entryRuleMessage1772 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleMessage1782 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_MESSAGE_START_TAG_in_ruleMessage1816 = new BitSet(new long[]{0x00000000000001A0L});
-    public static final BitSet FOLLOW_rulePossibleExpression_in_ruleMessage1845 = new BitSet(new long[]{0x00000000000001A0L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleMessage1857 = new BitSet(new long[]{0x000001551CA00000L});
-    public static final BitSet FOLLOW_ruleMessage_in_ruleMessage1878 = new BitSet(new long[]{0x000001551CA00000L});
-    public static final BitSet FOLLOW_ruleProperty_in_ruleMessage1905 = new BitSet(new long[]{0x000001551CA00000L});
-    public static final BitSet FOLLOW_ruleParam_in_ruleMessage1932 = new BitSet(new long[]{0x000001551CA00000L});
-    public static final BitSet FOLLOW_ruleMap_in_ruleMessage1959 = new BitSet(new long[]{0x000001551CA00000L});
-    public static final BitSet FOLLOW_ruleMapMethod_in_ruleMessage1986 = new BitSet(new long[]{0x000001551CA00000L});
-    public static final BitSet FOLLOW_ruleDebugTag_in_ruleMessage2013 = new BitSet(new long[]{0x000001551CA00000L});
-    public static final BitSet FOLLOW_ruleField_in_ruleMessage2040 = new BitSet(new long[]{0x000001551CA00000L});
-    public static final BitSet FOLLOW_ruleComment_in_ruleMessage2067 = new BitSet(new long[]{0x000001551CA00000L});
-    public static final BitSet FOLLOW_ruleBreak_in_ruleMessage2094 = new BitSet(new long[]{0x000001551CA00000L});
-    public static final BitSet FOLLOW_RULE_MESSAGE_END_TAG_in_ruleMessage2105 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleMessage2120 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleMap_in_entryRuleMap2156 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleMap2166 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_MAPSTARTKEYWORD_in_ruleMap2200 = new BitSet(new long[]{0x00000000000001A0L,0x0000000000000100L});
-    public static final BitSet FOLLOW_72_in_ruleMap2220 = new BitSet(new long[]{0x0000000000000100L});
-    public static final BitSet FOLLOW_ruleMapId_in_ruleMap2241 = new BitSet(new long[]{0x00000000000001A0L});
-    public static final BitSet FOLLOW_rulePossibleExpression_in_ruleMap2262 = new BitSet(new long[]{0x00000000000001A0L});
-    public static final BitSet FOLLOW_rulePossibleExpression_in_ruleMap2291 = new BitSet(new long[]{0x00000000000001A0L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleMap2303 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleMap2318 = new BitSet(new long[]{0x0000015534A00000L});
-    public static final BitSet FOLLOW_ruleMessage_in_ruleMap2339 = new BitSet(new long[]{0x0000015534A00000L});
-    public static final BitSet FOLLOW_ruleProperty_in_ruleMap2366 = new BitSet(new long[]{0x0000015534A00000L});
-    public static final BitSet FOLLOW_ruleParam_in_ruleMap2393 = new BitSet(new long[]{0x0000015534A00000L});
-    public static final BitSet FOLLOW_ruleMap_in_ruleMap2420 = new BitSet(new long[]{0x0000015534A00000L});
-    public static final BitSet FOLLOW_ruleMapMethod_in_ruleMap2447 = new BitSet(new long[]{0x0000015534A00000L});
-    public static final BitSet FOLLOW_ruleDebugTag_in_ruleMap2474 = new BitSet(new long[]{0x0000015534A00000L});
-    public static final BitSet FOLLOW_ruleField_in_ruleMap2501 = new BitSet(new long[]{0x0000015534A00000L});
-    public static final BitSet FOLLOW_ruleComment_in_ruleMap2528 = new BitSet(new long[]{0x0000015534A00000L});
-    public static final BitSet FOLLOW_ruleBreak_in_ruleMap2555 = new BitSet(new long[]{0x0000015534A00000L});
-    public static final BitSet FOLLOW_RULE_MAPENDKEYWORD_in_ruleMap2567 = new BitSet(new long[]{0x0000000000000020L,0x0000000000000100L});
-    public static final BitSet FOLLOW_72_in_ruleMap2577 = new BitSet(new long[]{0x0000000000000100L});
-    public static final BitSet FOLLOW_ruleMapId_in_ruleMap2598 = new BitSet(new long[]{0x0000000000000020L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleMap2609 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleMapId_in_entryRuleMapId2648 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleMapId2659 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_ID_in_ruleMapId2698 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleRequired_in_entryRuleRequired2742 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleRequired2752 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_REQUIRED_START_TAG_in_ruleRequired2786 = new BitSet(new long[]{0x00000000000001A0L});
-    public static final BitSet FOLLOW_rulePossibleExpression_in_ruleRequired2815 = new BitSet(new long[]{0x00000000000001A0L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleRequired2826 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleRequired2841 = new BitSet(new long[]{0x0000000080000000L});
-    public static final BitSet FOLLOW_RULE_REQUIRED_END_TAG_in_ruleRequired2849 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleProperty_in_entryRuleProperty2886 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleProperty2896 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_PROPERTY_START_TAG_in_ruleProperty2930 = new BitSet(new long[]{0x00000000000001A0L});
-    public static final BitSet FOLLOW_rulePossibleExpression_in_ruleProperty2959 = new BitSet(new long[]{0x00000000000001A0L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleProperty2970 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleProperty2985 = new BitSet(new long[]{0x00000C0210000000L});
-    public static final BitSet FOLLOW_ruleExpressionOrOption_in_ruleProperty3006 = new BitSet(new long[]{0x00000C0210000000L});
-    public static final BitSet FOLLOW_ruleMap_in_ruleProperty3033 = new BitSet(new long[]{0x00000C0210000000L});
-    public static final BitSet FOLLOW_RULE_PROPERTY_END_TAG_in_ruleProperty3044 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleParam_in_entryRuleParam3081 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleParam3091 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_PARAM_START_TAG_in_ruleParam3125 = new BitSet(new long[]{0x00000000000001A0L});
-    public static final BitSet FOLLOW_rulePossibleExpression_in_ruleParam3154 = new BitSet(new long[]{0x00000000000001A0L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleParam3165 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleParam3180 = new BitSet(new long[]{0x00000C0810000000L});
-    public static final BitSet FOLLOW_ruleExpressionOrOption_in_ruleParam3201 = new BitSet(new long[]{0x00000C0810000000L});
-    public static final BitSet FOLLOW_ruleMap_in_ruleParam3228 = new BitSet(new long[]{0x00000C0810000000L});
-    public static final BitSet FOLLOW_RULE_PARAM_END_TAG_in_ruleParam3239 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleMapMethod_in_entryRuleMapMethod3276 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleMapMethod3286 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_MAP_METHOD_STARTTAG_START_in_ruleMapMethod3320 = new BitSet(new long[]{0x0000000000000100L});
-    public static final BitSet FOLLOW_RULE_ID_in_ruleMapMethod3336 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000100L});
-    public static final BitSet FOLLOW_72_in_ruleMapMethod3351 = new BitSet(new long[]{0x0000000000000100L});
-    public static final BitSet FOLLOW_ruleAttributeName_in_ruleMapMethod3372 = new BitSet(new long[]{0x00000000000001A0L});
-    public static final BitSet FOLLOW_rulePossibleExpression_in_ruleMapMethod3393 = new BitSet(new long[]{0x00000000000001A0L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleMapMethod3404 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleMapMethod3419 = new BitSet(new long[]{0x00000D7514A00000L});
-    public static final BitSet FOLLOW_ruleExpressionOrOption_in_ruleMapMethod3440 = new BitSet(new long[]{0x00000D7514A00000L});
-    public static final BitSet FOLLOW_ruleMessage_in_ruleMapMethod3467 = new BitSet(new long[]{0x00000D7514A00000L});
-    public static final BitSet FOLLOW_ruleProperty_in_ruleMapMethod3494 = new BitSet(new long[]{0x00000D7514A00000L});
-    public static final BitSet FOLLOW_ruleParam_in_ruleMapMethod3521 = new BitSet(new long[]{0x00000D7514A00000L});
-    public static final BitSet FOLLOW_ruleMap_in_ruleMapMethod3548 = new BitSet(new long[]{0x00000D7514A00000L});
-    public static final BitSet FOLLOW_ruleMapMethod_in_ruleMapMethod3575 = new BitSet(new long[]{0x00000D7514A00000L});
-    public static final BitSet FOLLOW_ruleDebugTag_in_ruleMapMethod3602 = new BitSet(new long[]{0x00000D7514A00000L});
-    public static final BitSet FOLLOW_ruleField_in_ruleMapMethod3629 = new BitSet(new long[]{0x00000D7514A00000L});
-    public static final BitSet FOLLOW_ruleComment_in_ruleMapMethod3656 = new BitSet(new long[]{0x00000D7514A00000L});
-    public static final BitSet FOLLOW_ruleBreak_in_ruleMapMethod3683 = new BitSet(new long[]{0x00000D7514A00000L});
-    public static final BitSet FOLLOW_RULE_MAP_METHOD_ENDTAG_START_in_ruleMapMethod3694 = new BitSet(new long[]{0x0000000000000100L});
-    public static final BitSet FOLLOW_RULE_ID_in_ruleMapMethod3710 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000100L});
-    public static final BitSet FOLLOW_72_in_ruleMapMethod3725 = new BitSet(new long[]{0x0000000000000100L});
-    public static final BitSet FOLLOW_RULE_ID_in_ruleMapMethod3742 = new BitSet(new long[]{0x0000000000000020L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleMapMethod3756 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleField_in_entryRuleField3793 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleField3803 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_FIELD_START_TAG_in_ruleField3837 = new BitSet(new long[]{0x0000000000000120L});
-    public static final BitSet FOLLOW_rulePossibleExpression_in_ruleField3866 = new BitSet(new long[]{0x0000000000000120L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleField3876 = new BitSet(new long[]{0x00000DD514A00080L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleField3885 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleExpressionOrOption_in_ruleField3913 = new BitSet(new long[]{0x00000DD514A00000L});
-    public static final BitSet FOLLOW_ruleMessage_in_ruleField3940 = new BitSet(new long[]{0x00000DD514A00000L});
-    public static final BitSet FOLLOW_ruleProperty_in_ruleField3967 = new BitSet(new long[]{0x00000DD514A00000L});
-    public static final BitSet FOLLOW_ruleParam_in_ruleField3994 = new BitSet(new long[]{0x00000DD514A00000L});
-    public static final BitSet FOLLOW_ruleMap_in_ruleField4021 = new BitSet(new long[]{0x00000DD514A00000L});
-    public static final BitSet FOLLOW_ruleMapMethod_in_ruleField4048 = new BitSet(new long[]{0x00000DD514A00000L});
-    public static final BitSet FOLLOW_ruleDebugTag_in_ruleField4075 = new BitSet(new long[]{0x00000DD514A00000L});
-    public static final BitSet FOLLOW_ruleField_in_ruleField4102 = new BitSet(new long[]{0x00000DD514A00000L});
-    public static final BitSet FOLLOW_ruleComment_in_ruleField4129 = new BitSet(new long[]{0x00000DD514A00000L});
-    public static final BitSet FOLLOW_ruleBreak_in_ruleField4156 = new BitSet(new long[]{0x00000DD514A00000L});
-    public static final BitSet FOLLOW_RULE_FIELD_END_TAG_in_ruleField4167 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleDebugTag_in_entryRuleDebugTag4204 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleDebugTag4214 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_DEBUG_START_TAG_in_ruleDebugTag4248 = new BitSet(new long[]{0x00000000000001A0L});
-    public static final BitSet FOLLOW_rulePossibleExpression_in_ruleDebugTag4277 = new BitSet(new long[]{0x00000000000001A0L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleDebugTag4288 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleDebugTag4303 = new BitSet(new long[]{0xFE18800000000100L,0x0000000000280200L});
-    public static final BitSet FOLLOW_ruleTopLevel_in_ruleDebugTag4323 = new BitSet(new long[]{0x0000020000000000L});
-    public static final BitSet FOLLOW_RULE_DEBUG_END_TAG_in_ruleDebugTag4332 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleExpressionOrOption_in_entryRuleExpressionOrOption4369 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleExpressionOrOption4379 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_EXPRESSION_START_TAG_in_ruleExpressionOrOption4414 = new BitSet(new long[]{0x00000000000001A0L});
-    public static final BitSet FOLLOW_ruleExpressionTag_in_ruleExpressionOrOption4435 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_OPTION_START_TAG_in_ruleExpressionOrOption4451 = new BitSet(new long[]{0x00000000000001A0L});
-    public static final BitSet FOLLOW_ruleOption_in_ruleExpressionOrOption4472 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleExpressionTag_in_entryRuleExpressionTag4508 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleExpressionTag4518 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_rulePossibleExpression_in_ruleExpressionTag4573 = new BitSet(new long[]{0x00000000000001A0L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleExpressionTag4584 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleExpressionTag4599 = new BitSet(new long[]{0xFE18800000000100L,0x0000000000280200L});
-    public static final BitSet FOLLOW_ruleTopLevel_in_ruleExpressionTag4619 = new BitSet(new long[]{0x0000100000000000L});
-    public static final BitSet FOLLOW_RULE_EXPRESSION_END_TAG_in_ruleExpressionTag4628 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleOption_in_entryRuleOption4665 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleOption4675 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_rulePossibleExpression_in_ruleOption4730 = new BitSet(new long[]{0x00000000000001A0L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleOption4741 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleOption4756 = new BitSet(new long[]{0x0000200000000000L});
-    public static final BitSet FOLLOW_RULE_OPTION_END_TAG_in_ruleOption4764 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleTopLevel_in_entryRuleTopLevel4801 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleTopLevel4811 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleOrExpression_in_ruleTopLevel4856 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_rulePathElement_in_entryRulePathElement4892 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRulePathElement4903 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_ID_in_rulePathElement4943 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_72_in_rulePathElement4967 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_PARENT_in_rulePathElement4988 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleTmlExpression_in_entryRuleTmlExpression5033 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleTmlExpression5043 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_SQBRACKET_OPEN_in_ruleTmlExpression5077 = new BitSet(new long[]{0x0003400000000100L,0x0000000000000100L});
-    public static final BitSet FOLLOW_RULE_TML_SEPARATOR_in_ruleTmlExpression5093 = new BitSet(new long[]{0x0002400000000100L,0x0000000000000100L});
-    public static final BitSet FOLLOW_RULE_AT_in_ruleTmlExpression5116 = new BitSet(new long[]{0x0000400000000100L,0x0000000000000100L});
-    public static final BitSet FOLLOW_rulePathElement_in_ruleTmlExpression5143 = new BitSet(new long[]{0x0005000000000000L});
-    public static final BitSet FOLLOW_RULE_TML_SEPARATOR_in_ruleTmlExpression5153 = new BitSet(new long[]{0x0000400000000100L,0x0000000000000100L});
-    public static final BitSet FOLLOW_rulePathElement_in_ruleTmlExpression5173 = new BitSet(new long[]{0x0005000000000000L});
-    public static final BitSet FOLLOW_RULE_SQBRACKET_CLOSE_in_ruleTmlExpression5184 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleExistsTmlExpression_in_entryRuleExistsTmlExpression5219 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleExistsTmlExpression5229 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_TML_EXISTS_in_ruleExistsTmlExpression5263 = new BitSet(new long[]{0x0000800000000000L});
-    public static final BitSet FOLLOW_RULE_SQBRACKET_OPEN_in_ruleExistsTmlExpression5271 = new BitSet(new long[]{0x0003400000000100L,0x0000000000000100L});
-    public static final BitSet FOLLOW_RULE_TML_SEPARATOR_in_ruleExistsTmlExpression5287 = new BitSet(new long[]{0x0002400000000100L,0x0000000000000100L});
-    public static final BitSet FOLLOW_RULE_AT_in_ruleExistsTmlExpression5310 = new BitSet(new long[]{0x0000400000000100L,0x0000000000000100L});
-    public static final BitSet FOLLOW_rulePathElement_in_ruleExistsTmlExpression5337 = new BitSet(new long[]{0x0005000000000000L});
-    public static final BitSet FOLLOW_RULE_TML_SEPARATOR_in_ruleExistsTmlExpression5347 = new BitSet(new long[]{0x0000400000000100L,0x0000000000000100L});
-    public static final BitSet FOLLOW_rulePathElement_in_ruleExistsTmlExpression5367 = new BitSet(new long[]{0x0005000000000000L});
-    public static final BitSet FOLLOW_RULE_SQBRACKET_CLOSE_in_ruleExistsTmlExpression5378 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleMapReferenceParams_in_entryRuleMapReferenceParams5413 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleMapReferenceParams5423 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_73_in_ruleMapReferenceParams5458 = new BitSet(new long[]{0xFE18800000000100L,0x0000000000200000L});
-    public static final BitSet FOLLOW_ruleLiteral_in_ruleMapReferenceParams5479 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000C00L});
-    public static final BitSet FOLLOW_74_in_ruleMapReferenceParams5490 = new BitSet(new long[]{0xFE18800000000100L,0x0000000000200000L});
-    public static final BitSet FOLLOW_ruleLiteral_in_ruleMapReferenceParams5511 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000C00L});
-    public static final BitSet FOLLOW_75_in_ruleMapReferenceParams5523 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleMapGetReference_in_entryRuleMapGetReference5559 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleMapGetReference5569 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_DOLLAR_in_ruleMapGetReference5611 = new BitSet(new long[]{0x0000400000000100L});
-    public static final BitSet FOLLOW_RULE_PARENT_in_ruleMapGetReference5634 = new BitSet(new long[]{0x0001000000000000L});
-    public static final BitSet FOLLOW_RULE_TML_SEPARATOR_in_ruleMapGetReference5648 = new BitSet(new long[]{0x0000400000000100L});
-    public static final BitSet FOLLOW_RULE_ID_in_ruleMapGetReference5666 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000200L});
-    public static final BitSet FOLLOW_ruleMapReferenceParams_in_ruleMapGetReference5692 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleOrExpression_in_entryRuleOrExpression5729 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleOrExpression5739 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleAndExpression_in_ruleOrExpression5785 = new BitSet(new long[]{0x0000000000000002L,0x0000000000001000L});
-    public static final BitSet FOLLOW_76_in_ruleOrExpression5804 = new BitSet(new long[]{0xFE18800000000100L,0x0000000000280200L});
-    public static final BitSet FOLLOW_ruleAndExpression_in_ruleOrExpression5838 = new BitSet(new long[]{0x0000000000000002L,0x0000000000001000L});
-    public static final BitSet FOLLOW_ruleAndExpression_in_entryRuleAndExpression5876 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleAndExpression5886 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleEqualityExpression_in_ruleAndExpression5932 = new BitSet(new long[]{0x0000000000000002L,0x0000000000002000L});
-    public static final BitSet FOLLOW_77_in_ruleAndExpression5951 = new BitSet(new long[]{0xFE18800000000100L,0x0000000000280200L});
-    public static final BitSet FOLLOW_ruleEqualityExpression_in_ruleAndExpression5985 = new BitSet(new long[]{0x0000000000000002L,0x0000000000002000L});
-    public static final BitSet FOLLOW_ruleEqualityExpression_in_entryRuleEqualityExpression6023 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleEqualityExpression6033 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleRelationalExpression_in_ruleEqualityExpression6079 = new BitSet(new long[]{0x0000000000000002L,0x000000000000C000L});
-    public static final BitSet FOLLOW_78_in_ruleEqualityExpression6099 = new BitSet(new long[]{0xFE18800000000100L,0x0000000000280200L});
-    public static final BitSet FOLLOW_ruleRelationalExpression_in_ruleEqualityExpression6133 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_79_in_ruleEqualityExpression6159 = new BitSet(new long[]{0xFE18800000000100L,0x0000000000280200L});
-    public static final BitSet FOLLOW_ruleRelationalExpression_in_ruleEqualityExpression6193 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleRelationalExpression_in_entryRuleRelationalExpression6232 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleRelationalExpression6242 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleAdditiveExpression_in_ruleRelationalExpression6297 = new BitSet(new long[]{0x01E0000000000002L});
-    public static final BitSet FOLLOW_RULE_XML_LT_in_ruleRelationalExpression6316 = new BitSet(new long[]{0xFE18800000000100L,0x0000000000280200L});
-    public static final BitSet FOLLOW_ruleAdditiveExpression_in_ruleRelationalExpression6342 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_XML_GT_in_ruleRelationalExpression6367 = new BitSet(new long[]{0xFE18800000000100L,0x0000000000280200L});
-    public static final BitSet FOLLOW_ruleAdditiveExpression_in_ruleRelationalExpression6393 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_XML_LTEQ_in_ruleRelationalExpression6418 = new BitSet(new long[]{0xFE18800000000100L,0x0000000000280200L});
-    public static final BitSet FOLLOW_ruleAdditiveExpression_in_ruleRelationalExpression6444 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_XML_GTEQ_in_ruleRelationalExpression6469 = new BitSet(new long[]{0xFE18800000000100L,0x0000000000280200L});
-    public static final BitSet FOLLOW_ruleAdditiveExpression_in_ruleRelationalExpression6495 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleAdditiveExpression_in_entryRuleAdditiveExpression6534 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleAdditiveExpression6544 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleMultiplicativeExpression_in_ruleAdditiveExpression6590 = new BitSet(new long[]{0x0000000000000002L,0x0000000000030000L});
-    public static final BitSet FOLLOW_80_in_ruleAdditiveExpression6602 = new BitSet(new long[]{0xFE18800000000100L,0x0000000000280200L});
-    public static final BitSet FOLLOW_ruleMultiplicativeExpression_in_ruleAdditiveExpression6623 = new BitSet(new long[]{0x0000000000000002L,0x0000000000030000L});
-    public static final BitSet FOLLOW_81_in_ruleAdditiveExpression6641 = new BitSet(new long[]{0xFE18800000000100L,0x0000000000280200L});
-    public static final BitSet FOLLOW_ruleMultiplicativeExpression_in_ruleAdditiveExpression6662 = new BitSet(new long[]{0x0000000000000002L,0x0000000000030000L});
-    public static final BitSet FOLLOW_ruleMultiplicativeExpression_in_entryRuleMultiplicativeExpression6701 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleMultiplicativeExpression6711 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleUnaryExpression_in_ruleMultiplicativeExpression6757 = new BitSet(new long[]{0x0001000000000002L,0x0000000000040000L});
-    public static final BitSet FOLLOW_82_in_ruleMultiplicativeExpression6777 = new BitSet(new long[]{0xFE18800000000100L,0x0000000000280200L});
-    public static final BitSet FOLLOW_ruleUnaryExpression_in_ruleMultiplicativeExpression6811 = new BitSet(new long[]{0x0001000000000002L,0x0000000000040000L});
-    public static final BitSet FOLLOW_RULE_TML_SEPARATOR_in_ruleMultiplicativeExpression6836 = new BitSet(new long[]{0xFE18800000000100L,0x0000000000280200L});
-    public static final BitSet FOLLOW_ruleUnaryExpression_in_ruleMultiplicativeExpression6862 = new BitSet(new long[]{0x0001000000000002L,0x0000000000040000L});
-    public static final BitSet FOLLOW_ruleUnaryExpression_in_entryRuleUnaryExpression6901 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleUnaryExpression6911 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_83_in_ruleUnaryExpression6955 = new BitSet(new long[]{0xFE18800000000100L,0x0000000000200200L});
-    public static final BitSet FOLLOW_rulePrimaryExpression_in_ruleUnaryExpression6989 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_rulePrimaryExpression_in_ruleUnaryExpression7018 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_rulePrimaryExpression_in_entryRulePrimaryExpression7053 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRulePrimaryExpression7063 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleLiteral_in_rulePrimaryExpression7109 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_73_in_rulePrimaryExpression7126 = new BitSet(new long[]{0xFE18800000000100L,0x0000000000280200L});
-    public static final BitSet FOLLOW_ruleOrExpression_in_rulePrimaryExpression7147 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000800L});
-    public static final BitSet FOLLOW_75_in_rulePrimaryExpression7157 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleFunctionName_in_entryRuleFunctionName7195 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleFunctionName7206 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_ID_in_ruleFunctionName7245 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleFunctionCall_in_entryRuleFunctionCall7289 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleFunctionCall7299 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleFunctionName_in_ruleFunctionCall7345 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000200L});
-    public static final BitSet FOLLOW_73_in_ruleFunctionCall7355 = new BitSet(new long[]{0xFE18800000000100L,0x0000000000280E00L});
-    public static final BitSet FOLLOW_ruleOrExpression_in_ruleFunctionCall7376 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000C00L});
-    public static final BitSet FOLLOW_74_in_ruleFunctionCall7388 = new BitSet(new long[]{0xFE18800000000100L,0x0000000000280200L});
-    public static final BitSet FOLLOW_ruleOrExpression_in_ruleFunctionCall7409 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000C00L});
-    public static final BitSet FOLLOW_75_in_ruleFunctionCall7421 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleDateLiteral_in_entryRuleDateLiteral7457 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleDateLiteral7467 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_NUMBER_in_ruleDateLiteral7510 = new BitSet(new long[]{0x0000000000000000L,0x0000000000100000L});
-    public static final BitSet FOLLOW_84_in_ruleDateLiteral7519 = new BitSet(new long[]{0x0200000000000000L});
-    public static final BitSet FOLLOW_RULE_NUMBER_in_ruleDateLiteral7528 = new BitSet(new long[]{0x0000000000000000L,0x0000000000100000L});
-    public static final BitSet FOLLOW_84_in_ruleDateLiteral7537 = new BitSet(new long[]{0x0200000000000000L});
-    public static final BitSet FOLLOW_RULE_NUMBER_in_ruleDateLiteral7546 = new BitSet(new long[]{0x0000000000000000L,0x0000000000100000L});
-    public static final BitSet FOLLOW_84_in_ruleDateLiteral7555 = new BitSet(new long[]{0x0200000000000000L});
-    public static final BitSet FOLLOW_RULE_NUMBER_in_ruleDateLiteral7564 = new BitSet(new long[]{0x0000000000000000L,0x0000000000100000L});
-    public static final BitSet FOLLOW_84_in_ruleDateLiteral7573 = new BitSet(new long[]{0x0200000000000000L});
-    public static final BitSet FOLLOW_RULE_NUMBER_in_ruleDateLiteral7582 = new BitSet(new long[]{0x0000000000000000L,0x0000000000100000L});
-    public static final BitSet FOLLOW_84_in_ruleDateLiteral7591 = new BitSet(new long[]{0x0200000000000000L});
-    public static final BitSet FOLLOW_RULE_NUMBER_in_ruleDateLiteral7600 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleLiteral_in_entryRuleLiteral7635 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleLiteral7645 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_NUMBER_in_ruleLiteral7689 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_LITERALSTRING_in_ruleLiteral7712 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_FORALL_in_ruleLiteral7741 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000200L});
-    public static final BitSet FOLLOW_73_in_ruleLiteral7756 = new BitSet(new long[]{0x0400000000000000L});
-    public static final BitSet FOLLOW_RULE_LITERALSTRING_in_ruleLiteral7773 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000400L});
-    public static final BitSet FOLLOW_74_in_ruleLiteral7788 = new BitSet(new long[]{0xFE18800000000100L,0x0000000000280200L});
-    public static final BitSet FOLLOW_ruleOrExpression_in_ruleLiteral7809 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000800L});
-    public static final BitSet FOLLOW_75_in_ruleLiteral7819 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleFunctionCall_in_ruleLiteral7847 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_85_in_ruleLiteral7872 = new BitSet(new long[]{0xFE18800000000100L,0x0000000000680600L});
-    public static final BitSet FOLLOW_ruleOrExpression_in_ruleLiteral7906 = new BitSet(new long[]{0x0000000000000000L,0x0000000000400400L});
-    public static final BitSet FOLLOW_74_in_ruleLiteral7918 = new BitSet(new long[]{0xFE18800000000100L,0x0000000000280200L});
-    public static final BitSet FOLLOW_ruleOrExpression_in_ruleLiteral7939 = new BitSet(new long[]{0x0000000000000000L,0x0000000000400400L});
-    public static final BitSet FOLLOW_86_in_ruleLiteral7951 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_NULL_in_ruleLiteral7975 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_TODAY_in_ruleLiteral8003 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_TRUE_in_ruleLiteral8031 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_FALSE_in_ruleLiteral8059 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleTmlExpression_in_ruleLiteral8091 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleExistsTmlExpression_in_ruleLiteral8118 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleMapGetReference_in_ruleLiteral8145 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleDateLiteral_in_ruleLiteral8172 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_EMPTYSTRING_in_rulePossibleExpression719 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleMethods_in_entryRuleMethods761 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleMethods771 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_METHODS_START_TAG_in_ruleMethods805 = new BitSet(new long[]{0x00000000000000A0L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleMethods832 = new BitSet(new long[]{0x000000000000C000L});
+    public static final BitSet FOLLOW_ruleMethod_in_ruleMethods858 = new BitSet(new long[]{0x000000000000C000L});
+    public static final BitSet FOLLOW_RULE_METHODS_END_TAG_in_ruleMethods876 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleMethods897 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleMethod_in_entryRuleMethod933 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleMethod943 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_METHOD_START_TAG_in_ruleMethod977 = new BitSet(new long[]{0x00000000000001A0L});
+    public static final BitSet FOLLOW_rulePossibleExpression_in_ruleMethod1006 = new BitSet(new long[]{0x00000000000001A0L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleMethod1026 = new BitSet(new long[]{0x0000000100010000L});
+    public static final BitSet FOLLOW_ruleRequired_in_ruleMethod1052 = new BitSet(new long[]{0x0000000100010000L});
+    public static final BitSet FOLLOW_RULE_METHOD_END_TAG_in_ruleMethod1070 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleMethod1091 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleValidations_in_entryRuleValidations1127 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleValidations1137 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_VALIDATIONS_START_TAG_in_ruleValidations1171 = new BitSet(new long[]{0x00000000000000A0L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleValidations1198 = new BitSet(new long[]{0x00000000000C0000L});
+    public static final BitSet FOLLOW_ruleCheck_in_ruleValidations1224 = new BitSet(new long[]{0x00000000000C0000L});
+    public static final BitSet FOLLOW_RULE_VALIDATIONS_END_TAG_in_ruleValidations1242 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleValidations1263 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleCheck_in_entryRuleCheck1299 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleCheck1309 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_CHECK_START_TAG_in_ruleCheck1343 = new BitSet(new long[]{0x00000000000001A0L});
+    public static final BitSet FOLLOW_rulePossibleExpression_in_ruleCheck1372 = new BitSet(new long[]{0x00000000000001A0L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleCheck1392 = new BitSet(new long[]{0xF862000000000100L,0x0000000000500403L});
+    public static final BitSet FOLLOW_ruleTopLevel_in_ruleCheck1418 = new BitSet(new long[]{0x0000000000100000L});
+    public static final BitSet FOLLOW_RULE_CHECK_END_TAG_in_ruleCheck1435 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleCheck1456 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleComment_in_entryRuleComment1492 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleComment1502 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_COMMENT_START_TAG_in_ruleComment1536 = new BitSet(new long[]{0x00000000000001A0L});
+    public static final BitSet FOLLOW_rulePossibleExpression_in_ruleComment1565 = new BitSet(new long[]{0x00000000000001A0L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleComment1585 = new BitSet(new long[]{0x0000000000400000L});
+    public static final BitSet FOLLOW_RULE_COMMENT_END_TAG_in_ruleComment1607 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleComment1628 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleBreak_in_entryRuleBreak1664 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleBreak1674 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_BREAK_START_TAG_in_ruleBreak1708 = new BitSet(new long[]{0x00000000000001A0L});
+    public static final BitSet FOLLOW_rulePossibleExpression_in_ruleBreak1737 = new BitSet(new long[]{0x00000000000001A0L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleBreak1757 = new BitSet(new long[]{0x0000000001000000L});
+    public static final BitSet FOLLOW_RULE_BREAK_END_TAG_in_ruleBreak1779 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleBreak1800 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleInclude_in_entryRuleInclude1836 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleInclude1846 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_INCLUDE_START_TAG_in_ruleInclude1880 = new BitSet(new long[]{0x00000000000001A0L});
+    public static final BitSet FOLLOW_rulePossibleExpression_in_ruleInclude1909 = new BitSet(new long[]{0x00000000000001A0L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleInclude1929 = new BitSet(new long[]{0x0000000004000000L});
+    public static final BitSet FOLLOW_RULE_INCLUDE_END_TAG_in_ruleInclude1951 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleInclude1972 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleMessage_in_entryRuleMessage2008 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleMessage2018 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_MESSAGE_START_TAG_in_ruleMessage2052 = new BitSet(new long[]{0x00000000000001A0L});
+    public static final BitSet FOLLOW_rulePossibleExpression_in_ruleMessage2081 = new BitSet(new long[]{0x00000000000001A0L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleMessage2101 = new BitSet(new long[]{0x0000055438A00000L});
+    public static final BitSet FOLLOW_ruleMessage_in_ruleMessage2128 = new BitSet(new long[]{0x0000055438A00000L});
+    public static final BitSet FOLLOW_ruleProperty_in_ruleMessage2155 = new BitSet(new long[]{0x0000055438A00000L});
+    public static final BitSet FOLLOW_ruleParam_in_ruleMessage2182 = new BitSet(new long[]{0x0000055438A00000L});
+    public static final BitSet FOLLOW_ruleMap_in_ruleMessage2209 = new BitSet(new long[]{0x0000055438A00000L});
+    public static final BitSet FOLLOW_ruleMapMethod_in_ruleMessage2236 = new BitSet(new long[]{0x0000055438A00000L});
+    public static final BitSet FOLLOW_ruleDebugTag_in_ruleMessage2263 = new BitSet(new long[]{0x0000055438A00000L});
+    public static final BitSet FOLLOW_ruleField_in_ruleMessage2290 = new BitSet(new long[]{0x0000055438A00000L});
+    public static final BitSet FOLLOW_ruleComment_in_ruleMessage2317 = new BitSet(new long[]{0x0000055438A00000L});
+    public static final BitSet FOLLOW_ruleBreak_in_ruleMessage2344 = new BitSet(new long[]{0x0000055438A00000L});
+    public static final BitSet FOLLOW_RULE_MESSAGE_END_TAG_in_ruleMessage2363 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleMessage2384 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleMap_in_entryRuleMap2420 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleMap2430 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_MAPSTARTKEYWORD_in_ruleMap2464 = new BitSet(new long[]{0x00000000400001A0L});
+    public static final BitSet FOLLOW_RULE_DOT_in_ruleMap2483 = new BitSet(new long[]{0x0000000000000100L});
+    public static final BitSet FOLLOW_ruleMapId_in_ruleMap2503 = new BitSet(new long[]{0x00000000000001A0L});
+    public static final BitSet FOLLOW_rulePossibleExpression_in_ruleMap2524 = new BitSet(new long[]{0x00000000000001A0L});
+    public static final BitSet FOLLOW_rulePossibleExpression_in_ruleMap2553 = new BitSet(new long[]{0x00000000000001A0L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleMap2565 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleMap2588 = new BitSet(new long[]{0x00000554A8A00000L});
+    public static final BitSet FOLLOW_ruleMessage_in_ruleMap2615 = new BitSet(new long[]{0x00000554A8A00000L});
+    public static final BitSet FOLLOW_ruleProperty_in_ruleMap2642 = new BitSet(new long[]{0x00000554A8A00000L});
+    public static final BitSet FOLLOW_ruleParam_in_ruleMap2669 = new BitSet(new long[]{0x00000554A8A00000L});
+    public static final BitSet FOLLOW_ruleMap_in_ruleMap2696 = new BitSet(new long[]{0x00000554A8A00000L});
+    public static final BitSet FOLLOW_ruleMapMethod_in_ruleMap2723 = new BitSet(new long[]{0x00000554A8A00000L});
+    public static final BitSet FOLLOW_ruleDebugTag_in_ruleMap2750 = new BitSet(new long[]{0x00000554A8A00000L});
+    public static final BitSet FOLLOW_ruleField_in_ruleMap2777 = new BitSet(new long[]{0x00000554A8A00000L});
+    public static final BitSet FOLLOW_ruleComment_in_ruleMap2804 = new BitSet(new long[]{0x00000554A8A00000L});
+    public static final BitSet FOLLOW_ruleBreak_in_ruleMap2831 = new BitSet(new long[]{0x00000554A8A00000L});
+    public static final BitSet FOLLOW_RULE_MAPENDKEYWORD_in_ruleMap2843 = new BitSet(new long[]{0x0000000040000020L});
+    public static final BitSet FOLLOW_RULE_DOT_in_ruleMap2852 = new BitSet(new long[]{0x0000000000000100L});
+    public static final BitSet FOLLOW_ruleMapId_in_ruleMap2872 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleMap2891 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleMapId_in_entryRuleMapId2936 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleMapId2947 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_ID_in_ruleMapId2986 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleRequired_in_entryRuleRequired3030 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleRequired3040 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_REQUIRED_START_TAG_in_ruleRequired3074 = new BitSet(new long[]{0x00000000000001A0L});
+    public static final BitSet FOLLOW_rulePossibleExpression_in_ruleRequired3103 = new BitSet(new long[]{0x00000000000001A0L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleRequired3114 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleRequired3137 = new BitSet(new long[]{0x0000000200000000L});
+    public static final BitSet FOLLOW_RULE_REQUIRED_END_TAG_in_ruleRequired3159 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleProperty_in_entryRuleProperty3202 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleProperty3212 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_PROPERTY_START_TAG_in_ruleProperty3246 = new BitSet(new long[]{0x00000000000001A0L});
+    public static final BitSet FOLLOW_rulePossibleExpression_in_ruleProperty3275 = new BitSet(new long[]{0x00000000000001A0L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleProperty3286 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleProperty3309 = new BitSet(new long[]{0x0000300820000000L});
+    public static final BitSet FOLLOW_ruleExpressionOrOption_in_ruleProperty3336 = new BitSet(new long[]{0x0000300820000000L});
+    public static final BitSet FOLLOW_ruleMap_in_ruleProperty3363 = new BitSet(new long[]{0x0000300820000000L});
+    public static final BitSet FOLLOW_RULE_PROPERTY_END_TAG_in_ruleProperty3382 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleParam_in_entryRuleParam3425 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleParam3435 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_PARAM_START_TAG_in_ruleParam3469 = new BitSet(new long[]{0x00000000000001A0L});
+    public static final BitSet FOLLOW_rulePossibleExpression_in_ruleParam3498 = new BitSet(new long[]{0x00000000000001A0L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleParam3509 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleParam3532 = new BitSet(new long[]{0x0000302020000000L});
+    public static final BitSet FOLLOW_ruleExpressionOrOption_in_ruleParam3559 = new BitSet(new long[]{0x0000302020000000L});
+    public static final BitSet FOLLOW_ruleMap_in_ruleParam3586 = new BitSet(new long[]{0x0000302020000000L});
+    public static final BitSet FOLLOW_RULE_PARAM_END_TAG_in_ruleParam3605 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleMapMethod_in_entryRuleMapMethod3648 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleMapMethod3658 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_MAP_METHOD_STARTTAG_START_in_ruleMapMethod3692 = new BitSet(new long[]{0x0000000000000100L});
+    public static final BitSet FOLLOW_RULE_ID_in_ruleMapMethod3708 = new BitSet(new long[]{0x0000000040000000L});
+    public static final BitSet FOLLOW_RULE_DOT_in_ruleMapMethod3722 = new BitSet(new long[]{0x0000000000000100L});
+    public static final BitSet FOLLOW_ruleAttributeName_in_ruleMapMethod3742 = new BitSet(new long[]{0x00000000000001A0L});
+    public static final BitSet FOLLOW_rulePossibleExpression_in_ruleMapMethod3763 = new BitSet(new long[]{0x00000000000001A0L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleMapMethod3774 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleMapMethod3797 = new BitSet(new long[]{0x000035D428A00000L});
+    public static final BitSet FOLLOW_ruleExpressionOrOption_in_ruleMapMethod3824 = new BitSet(new long[]{0x000035D428A00000L});
+    public static final BitSet FOLLOW_ruleMessage_in_ruleMapMethod3851 = new BitSet(new long[]{0x000035D428A00000L});
+    public static final BitSet FOLLOW_ruleProperty_in_ruleMapMethod3878 = new BitSet(new long[]{0x000035D428A00000L});
+    public static final BitSet FOLLOW_ruleParam_in_ruleMapMethod3905 = new BitSet(new long[]{0x000035D428A00000L});
+    public static final BitSet FOLLOW_ruleMap_in_ruleMapMethod3932 = new BitSet(new long[]{0x000035D428A00000L});
+    public static final BitSet FOLLOW_ruleMapMethod_in_ruleMapMethod3959 = new BitSet(new long[]{0x000035D428A00000L});
+    public static final BitSet FOLLOW_ruleDebugTag_in_ruleMapMethod3986 = new BitSet(new long[]{0x000035D428A00000L});
+    public static final BitSet FOLLOW_ruleField_in_ruleMapMethod4013 = new BitSet(new long[]{0x000035D428A00000L});
+    public static final BitSet FOLLOW_ruleComment_in_ruleMapMethod4040 = new BitSet(new long[]{0x000035D428A00000L});
+    public static final BitSet FOLLOW_ruleBreak_in_ruleMapMethod4067 = new BitSet(new long[]{0x000035D428A00000L});
+    public static final BitSet FOLLOW_RULE_MAP_METHOD_ENDTAG_START_in_ruleMapMethod4086 = new BitSet(new long[]{0x0000000000000100L});
+    public static final BitSet FOLLOW_RULE_ID_in_ruleMapMethod4108 = new BitSet(new long[]{0x0000000040000000L});
+    public static final BitSet FOLLOW_RULE_DOT_in_ruleMapMethod4122 = new BitSet(new long[]{0x0000000000000100L});
+    public static final BitSet FOLLOW_RULE_ID_in_ruleMapMethod4138 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleMapMethod4152 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleField_in_entryRuleField4189 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleField4199 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_FIELD_START_TAG_in_ruleField4233 = new BitSet(new long[]{0x00000000000001A0L});
+    public static final BitSet FOLLOW_rulePossibleExpression_in_ruleField4262 = new BitSet(new long[]{0x00000000000001A0L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleField4273 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleField4297 = new BitSet(new long[]{0x0000365020A00000L});
+    public static final BitSet FOLLOW_ruleExpressionOrOption_in_ruleField4324 = new BitSet(new long[]{0x0000365020A00000L});
+    public static final BitSet FOLLOW_ruleParam_in_ruleField4351 = new BitSet(new long[]{0x0000365020A00000L});
+    public static final BitSet FOLLOW_ruleMap_in_ruleField4378 = new BitSet(new long[]{0x0000365020A00000L});
+    public static final BitSet FOLLOW_ruleMapMethod_in_ruleField4405 = new BitSet(new long[]{0x0000365020A00000L});
+    public static final BitSet FOLLOW_ruleDebugTag_in_ruleField4432 = new BitSet(new long[]{0x0000365020A00000L});
+    public static final BitSet FOLLOW_ruleComment_in_ruleField4459 = new BitSet(new long[]{0x0000365020A00000L});
+    public static final BitSet FOLLOW_ruleBreak_in_ruleField4486 = new BitSet(new long[]{0x0000365020A00000L});
+    public static final BitSet FOLLOW_RULE_FIELD_END_TAG_in_ruleField4506 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleDebugTag_in_entryRuleDebugTag4549 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleDebugTag4559 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_DEBUG_START_TAG_in_ruleDebugTag4593 = new BitSet(new long[]{0x00000000000001A0L});
+    public static final BitSet FOLLOW_rulePossibleExpression_in_ruleDebugTag4622 = new BitSet(new long[]{0x00000000000001A0L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleDebugTag4633 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleDebugTag4656 = new BitSet(new long[]{0xF862080000000100L,0x0000000000500403L});
+    public static final BitSet FOLLOW_ruleTopLevel_in_ruleDebugTag4682 = new BitSet(new long[]{0x0000080000000000L});
+    public static final BitSet FOLLOW_RULE_DEBUG_END_TAG_in_ruleDebugTag4700 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleExpressionOrOption_in_entryRuleExpressionOrOption4743 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleExpressionOrOption4753 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_EXPRESSION_START_TAG_in_ruleExpressionOrOption4788 = new BitSet(new long[]{0x00000000000001A0L});
+    public static final BitSet FOLLOW_ruleExpressionTag_in_ruleExpressionOrOption4809 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_OPTION_START_TAG_in_ruleExpressionOrOption4825 = new BitSet(new long[]{0x00000000000001A0L});
+    public static final BitSet FOLLOW_ruleOption_in_ruleExpressionOrOption4846 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleExpressionTag_in_entryRuleExpressionTag4882 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleExpressionTag4892 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_rulePossibleExpression_in_ruleExpressionTag4947 = new BitSet(new long[]{0x00000000000001A0L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleExpressionTag4958 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleExpressionTag4981 = new BitSet(new long[]{0xF862000000000100L,0x0000000000500403L});
+    public static final BitSet FOLLOW_ruleTopLevel_in_ruleExpressionTag5007 = new BitSet(new long[]{0x0000400000000000L});
+    public static final BitSet FOLLOW_RULE_EXPRESSION_END_TAG_in_ruleExpressionTag5024 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleOption_in_entryRuleOption5067 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleOption5077 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_rulePossibleExpression_in_ruleOption5132 = new BitSet(new long[]{0x00000000000001A0L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_SINGLEEND_in_ruleOption5143 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_XML_TAG_END_in_ruleOption5166 = new BitSet(new long[]{0x0000800000000000L});
+    public static final BitSet FOLLOW_RULE_OPTION_END_TAG_in_ruleOption5188 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleTopLevel_in_entryRuleTopLevel5231 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleTopLevel5241 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleOrExpression_in_ruleTopLevel5286 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_rulePathElement_in_entryRulePathElement5322 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRulePathElement5333 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_ID_in_rulePathElement5373 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_DOT_in_rulePathElement5397 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_PARENT_in_rulePathElement5418 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleTmlExpression_in_entryRuleTmlExpression5463 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleTmlExpression5473 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_SQBRACKET_OPEN_in_ruleTmlExpression5507 = new BitSet(new long[]{0x000D000040000100L});
+    public static final BitSet FOLLOW_RULE_TML_SEPARATOR_in_ruleTmlExpression5523 = new BitSet(new long[]{0x0009000040000100L});
+    public static final BitSet FOLLOW_RULE_AT_in_ruleTmlExpression5546 = new BitSet(new long[]{0x0001000040000100L});
+    public static final BitSet FOLLOW_rulePathElement_in_ruleTmlExpression5573 = new BitSet(new long[]{0x0014000000000000L});
+    public static final BitSet FOLLOW_RULE_TML_SEPARATOR_in_ruleTmlExpression5583 = new BitSet(new long[]{0x0001000040000100L});
+    public static final BitSet FOLLOW_rulePathElement_in_ruleTmlExpression5603 = new BitSet(new long[]{0x0014000000000000L});
+    public static final BitSet FOLLOW_RULE_SQBRACKET_CLOSE_in_ruleTmlExpression5614 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleExistsTmlExpression_in_entryRuleExistsTmlExpression5649 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleExistsTmlExpression5659 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_TML_EXISTS_in_ruleExistsTmlExpression5693 = new BitSet(new long[]{0x0002000000000000L});
+    public static final BitSet FOLLOW_RULE_SQBRACKET_OPEN_in_ruleExistsTmlExpression5701 = new BitSet(new long[]{0x000D000040000100L});
+    public static final BitSet FOLLOW_RULE_TML_SEPARATOR_in_ruleExistsTmlExpression5717 = new BitSet(new long[]{0x0009000040000100L});
+    public static final BitSet FOLLOW_RULE_AT_in_ruleExistsTmlExpression5740 = new BitSet(new long[]{0x0001000040000100L});
+    public static final BitSet FOLLOW_rulePathElement_in_ruleExistsTmlExpression5767 = new BitSet(new long[]{0x0014000000000000L});
+    public static final BitSet FOLLOW_RULE_TML_SEPARATOR_in_ruleExistsTmlExpression5777 = new BitSet(new long[]{0x0001000040000100L});
+    public static final BitSet FOLLOW_rulePathElement_in_ruleExistsTmlExpression5797 = new BitSet(new long[]{0x0014000000000000L});
+    public static final BitSet FOLLOW_RULE_SQBRACKET_CLOSE_in_ruleExistsTmlExpression5808 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleMapReferenceParams_in_entryRuleMapReferenceParams5843 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleMapReferenceParams5853 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_74_in_ruleMapReferenceParams5888 = new BitSet(new long[]{0xF862000000000100L,0x0000000000400003L});
+    public static final BitSet FOLLOW_ruleLiteral_in_ruleMapReferenceParams5909 = new BitSet(new long[]{0x0000000000000000L,0x0000000000001800L});
+    public static final BitSet FOLLOW_75_in_ruleMapReferenceParams5920 = new BitSet(new long[]{0xF862000000000100L,0x0000000000400003L});
+    public static final BitSet FOLLOW_ruleLiteral_in_ruleMapReferenceParams5941 = new BitSet(new long[]{0x0000000000000000L,0x0000000000001800L});
+    public static final BitSet FOLLOW_76_in_ruleMapReferenceParams5953 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleMapGetReference_in_entryRuleMapGetReference5989 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleMapGetReference5999 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_DOLLAR_in_ruleMapGetReference6041 = new BitSet(new long[]{0x0001000000000100L});
+    public static final BitSet FOLLOW_RULE_PARENT_in_ruleMapGetReference6064 = new BitSet(new long[]{0x0004000000000000L});
+    public static final BitSet FOLLOW_RULE_TML_SEPARATOR_in_ruleMapGetReference6078 = new BitSet(new long[]{0x0001000000000100L});
+    public static final BitSet FOLLOW_RULE_ID_in_ruleMapGetReference6096 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000400L});
+    public static final BitSet FOLLOW_ruleMapReferenceParams_in_ruleMapGetReference6122 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleOrExpression_in_entryRuleOrExpression6159 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleOrExpression6169 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleAndExpression_in_ruleOrExpression6215 = new BitSet(new long[]{0x0000000000000002L,0x0000000000002000L});
+    public static final BitSet FOLLOW_77_in_ruleOrExpression6234 = new BitSet(new long[]{0xF862000000000100L,0x0000000000500403L});
+    public static final BitSet FOLLOW_ruleAndExpression_in_ruleOrExpression6268 = new BitSet(new long[]{0x0000000000000002L,0x0000000000002000L});
+    public static final BitSet FOLLOW_ruleAndExpression_in_entryRuleAndExpression6306 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleAndExpression6316 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleEqualityExpression_in_ruleAndExpression6362 = new BitSet(new long[]{0x0000000000000002L,0x0000000000004000L});
+    public static final BitSet FOLLOW_78_in_ruleAndExpression6381 = new BitSet(new long[]{0xF862000000000100L,0x0000000000500403L});
+    public static final BitSet FOLLOW_ruleEqualityExpression_in_ruleAndExpression6415 = new BitSet(new long[]{0x0000000000000002L,0x0000000000004000L});
+    public static final BitSet FOLLOW_ruleEqualityExpression_in_entryRuleEqualityExpression6453 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleEqualityExpression6463 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleRelationalExpression_in_ruleEqualityExpression6509 = new BitSet(new long[]{0x0000000000000002L,0x0000000000018000L});
+    public static final BitSet FOLLOW_79_in_ruleEqualityExpression6529 = new BitSet(new long[]{0xF862000000000100L,0x0000000000500403L});
+    public static final BitSet FOLLOW_ruleRelationalExpression_in_ruleEqualityExpression6563 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_80_in_ruleEqualityExpression6589 = new BitSet(new long[]{0xF862000000000100L,0x0000000000500403L});
+    public static final BitSet FOLLOW_ruleRelationalExpression_in_ruleEqualityExpression6623 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleRelationalExpression_in_entryRuleRelationalExpression6662 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleRelationalExpression6672 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleAdditiveExpression_in_ruleRelationalExpression6727 = new BitSet(new long[]{0x0780000000000002L});
+    public static final BitSet FOLLOW_RULE_XML_LT_in_ruleRelationalExpression6746 = new BitSet(new long[]{0xF862000000000100L,0x0000000000500403L});
+    public static final BitSet FOLLOW_ruleAdditiveExpression_in_ruleRelationalExpression6772 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_XML_GT_in_ruleRelationalExpression6797 = new BitSet(new long[]{0xF862000000000100L,0x0000000000500403L});
+    public static final BitSet FOLLOW_ruleAdditiveExpression_in_ruleRelationalExpression6823 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_XML_LTEQ_in_ruleRelationalExpression6848 = new BitSet(new long[]{0xF862000000000100L,0x0000000000500403L});
+    public static final BitSet FOLLOW_ruleAdditiveExpression_in_ruleRelationalExpression6874 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_XML_GTEQ_in_ruleRelationalExpression6899 = new BitSet(new long[]{0xF862000000000100L,0x0000000000500403L});
+    public static final BitSet FOLLOW_ruleAdditiveExpression_in_ruleRelationalExpression6925 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleAdditiveExpression_in_entryRuleAdditiveExpression6964 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleAdditiveExpression6974 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleMultiplicativeExpression_in_ruleAdditiveExpression7020 = new BitSet(new long[]{0x0000000000000002L,0x0000000000060000L});
+    public static final BitSet FOLLOW_81_in_ruleAdditiveExpression7032 = new BitSet(new long[]{0xF862000000000100L,0x0000000000500403L});
+    public static final BitSet FOLLOW_ruleMultiplicativeExpression_in_ruleAdditiveExpression7053 = new BitSet(new long[]{0x0000000000000002L,0x0000000000060000L});
+    public static final BitSet FOLLOW_82_in_ruleAdditiveExpression7071 = new BitSet(new long[]{0xF862000000000100L,0x0000000000500403L});
+    public static final BitSet FOLLOW_ruleMultiplicativeExpression_in_ruleAdditiveExpression7092 = new BitSet(new long[]{0x0000000000000002L,0x0000000000060000L});
+    public static final BitSet FOLLOW_ruleMultiplicativeExpression_in_entryRuleMultiplicativeExpression7131 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleMultiplicativeExpression7141 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleUnaryExpression_in_ruleMultiplicativeExpression7187 = new BitSet(new long[]{0x0004000000000002L,0x0000000000080000L});
+    public static final BitSet FOLLOW_83_in_ruleMultiplicativeExpression7207 = new BitSet(new long[]{0xF862000000000100L,0x0000000000500403L});
+    public static final BitSet FOLLOW_ruleUnaryExpression_in_ruleMultiplicativeExpression7241 = new BitSet(new long[]{0x0004000000000002L,0x0000000000080000L});
+    public static final BitSet FOLLOW_RULE_TML_SEPARATOR_in_ruleMultiplicativeExpression7266 = new BitSet(new long[]{0xF862000000000100L,0x0000000000500403L});
+    public static final BitSet FOLLOW_ruleUnaryExpression_in_ruleMultiplicativeExpression7292 = new BitSet(new long[]{0x0004000000000002L,0x0000000000080000L});
+    public static final BitSet FOLLOW_ruleUnaryExpression_in_entryRuleUnaryExpression7331 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleUnaryExpression7341 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_84_in_ruleUnaryExpression7385 = new BitSet(new long[]{0xF862000000000100L,0x0000000000400403L});
+    public static final BitSet FOLLOW_rulePrimaryExpression_in_ruleUnaryExpression7419 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_rulePrimaryExpression_in_ruleUnaryExpression7448 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_rulePrimaryExpression_in_entryRulePrimaryExpression7483 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRulePrimaryExpression7493 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleLiteral_in_rulePrimaryExpression7539 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_74_in_rulePrimaryExpression7556 = new BitSet(new long[]{0xF862000000000100L,0x0000000000500403L});
+    public static final BitSet FOLLOW_ruleOrExpression_in_rulePrimaryExpression7577 = new BitSet(new long[]{0x0000000000000000L,0x0000000000001000L});
+    public static final BitSet FOLLOW_76_in_rulePrimaryExpression7587 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleFunctionName_in_entryRuleFunctionName7625 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleFunctionName7636 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_ID_in_ruleFunctionName7675 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleFunctionCall_in_entryRuleFunctionCall7719 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleFunctionCall7729 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleFunctionName_in_ruleFunctionCall7775 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000400L});
+    public static final BitSet FOLLOW_74_in_ruleFunctionCall7785 = new BitSet(new long[]{0xF862000000000100L,0x0000000000501C03L});
+    public static final BitSet FOLLOW_ruleOrExpression_in_ruleFunctionCall7806 = new BitSet(new long[]{0x0000000000000000L,0x0000000000001800L});
+    public static final BitSet FOLLOW_75_in_ruleFunctionCall7818 = new BitSet(new long[]{0xF862000000000100L,0x0000000000500403L});
+    public static final BitSet FOLLOW_ruleOrExpression_in_ruleFunctionCall7839 = new BitSet(new long[]{0x0000000000000000L,0x0000000000001800L});
+    public static final BitSet FOLLOW_76_in_ruleFunctionCall7851 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleDateLiteral_in_entryRuleDateLiteral7887 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleDateLiteral7897 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_NUMBER_in_ruleDateLiteral7940 = new BitSet(new long[]{0x0000000000000000L,0x0000000000200000L});
+    public static final BitSet FOLLOW_85_in_ruleDateLiteral7949 = new BitSet(new long[]{0x0800000000000000L});
+    public static final BitSet FOLLOW_RULE_NUMBER_in_ruleDateLiteral7958 = new BitSet(new long[]{0x0000000000000000L,0x0000000000200000L});
+    public static final BitSet FOLLOW_85_in_ruleDateLiteral7967 = new BitSet(new long[]{0x0800000000000000L});
+    public static final BitSet FOLLOW_RULE_NUMBER_in_ruleDateLiteral7976 = new BitSet(new long[]{0x0000000000000000L,0x0000000000200000L});
+    public static final BitSet FOLLOW_85_in_ruleDateLiteral7985 = new BitSet(new long[]{0x0800000000000000L});
+    public static final BitSet FOLLOW_RULE_NUMBER_in_ruleDateLiteral7994 = new BitSet(new long[]{0x0000000000000000L,0x0000000000200000L});
+    public static final BitSet FOLLOW_85_in_ruleDateLiteral8003 = new BitSet(new long[]{0x0800000000000000L});
+    public static final BitSet FOLLOW_RULE_NUMBER_in_ruleDateLiteral8012 = new BitSet(new long[]{0x0000000000000000L,0x0000000000200000L});
+    public static final BitSet FOLLOW_85_in_ruleDateLiteral8021 = new BitSet(new long[]{0x0800000000000000L});
+    public static final BitSet FOLLOW_RULE_NUMBER_in_ruleDateLiteral8030 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleLiteral_in_entryRuleLiteral8065 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleLiteral8075 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_NUMBER_in_ruleLiteral8119 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_LITERALSTRING_in_ruleLiteral8142 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_FORALL_in_ruleLiteral8171 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000400L});
+    public static final BitSet FOLLOW_74_in_ruleLiteral8186 = new BitSet(new long[]{0x1000000000000000L});
+    public static final BitSet FOLLOW_RULE_LITERALSTRING_in_ruleLiteral8203 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000800L});
+    public static final BitSet FOLLOW_75_in_ruleLiteral8218 = new BitSet(new long[]{0xF862000000000100L,0x0000000000500403L});
+    public static final BitSet FOLLOW_ruleOrExpression_in_ruleLiteral8239 = new BitSet(new long[]{0x0000000000000000L,0x0000000000001000L});
+    public static final BitSet FOLLOW_76_in_ruleLiteral8249 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleFunctionCall_in_ruleLiteral8277 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_86_in_ruleLiteral8302 = new BitSet(new long[]{0xF862000000000100L,0x0000000000D00C03L});
+    public static final BitSet FOLLOW_ruleOrExpression_in_ruleLiteral8336 = new BitSet(new long[]{0x0000000000000000L,0x0000000000800800L});
+    public static final BitSet FOLLOW_75_in_ruleLiteral8348 = new BitSet(new long[]{0xF862000000000100L,0x0000000000500403L});
+    public static final BitSet FOLLOW_ruleOrExpression_in_ruleLiteral8369 = new BitSet(new long[]{0x0000000000000000L,0x0000000000800800L});
+    public static final BitSet FOLLOW_87_in_ruleLiteral8381 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_NULL_in_ruleLiteral8405 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_TODAY_in_ruleLiteral8433 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_TRUE_in_ruleLiteral8461 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_FALSE_in_ruleLiteral8489 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleTmlExpression_in_ruleLiteral8521 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleExistsTmlExpression_in_ruleLiteral8548 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleMapGetReference_in_ruleLiteral8575 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleDateLiteral_in_ruleLiteral8602 = new BitSet(new long[]{0x0000000000000002L});
 
 }
