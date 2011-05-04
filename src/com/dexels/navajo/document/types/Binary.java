@@ -43,6 +43,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     private transient File lazySourceFile = null;
     private transient InputStream lazyInputStream = null;
     private String myRef = null;
+    private String extension = null;
     
     public final static String MSEXCEL = "application/msexcel";
 
@@ -458,7 +459,14 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
         
     }
     
+    public void setExtension(String e) {
+    	this.extension = e;
+    }
+    
     public String getExtension() {
+    	if(extension!=null) {
+    		return extension;
+    	}
         if(currentFormatDescription==null) {
             guessContentType();
         }
