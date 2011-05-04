@@ -5,8 +5,6 @@ package com.dexels.navajo.dsl.expression.ui.contentassist;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -23,310 +21,29 @@ import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
 
-import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
-import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.nanoimpl.XMLElement;
-import com.dexels.navajo.dsl.expression.ui.contentassist.impl.NavajoResourceFinder;
-import com.dexels.navajo.dsl.expression.ui.contentassist.impl.TestNavajoResourceFinder;
+import com.dexels.navajo.dsl.expression.proposals.FunctionProposal;
+import com.dexels.navajo.dsl.expression.proposals.INavajoContextProvider;
+import com.dexels.navajo.dsl.expression.proposals.InputTmlProposal;
+import com.dexels.navajo.dsl.expression.proposals.NavajoContextProvider;
+import com.dexels.navajo.dsl.expression.proposals.NavajoResourceFinder;
+import com.dexels.navajo.dsl.expression.proposals.TestNavajoResourceFinder;
 import com.dexels.navajo.dsl.model.expression.Expression;
 import com.dexels.navajo.dsl.model.tsl.ExpressionTag;
 import com.dexels.navajo.dsl.model.tsl.Map;
+import com.google.inject.Inject;
 /**
  * see http://www.eclipse.org/Xtext/documentation/latest/xtext.html#contentAssist on how to customize content assistant
  */
 public class NavajoExpressionProposalProvider extends AbstractNavajoExpressionProposalProvider {
 
-
-	protected List<FunctionProposal> functions = new ArrayList<FunctionProposal>();
-	protected List<AdapterProposal> adapters = new ArrayList<AdapterProposal>();
-	protected java.util.Map<String, AdapterProposal> adapterMap = new HashMap<String, AdapterProposal>();
-	protected List<InputTmlProposal> tmlProposal = new ArrayList<InputTmlProposal>();
-	private INavajoResourceFinder navajoResourceFinder= null;
+	// TODO Rewrite to do dep inj.
+	@Inject
+	protected  INavajoContextProvider navajoContext; // = new NavajoContextProvider();
 	
-	
+	@Inject
 	public NavajoExpressionProposalProvider() {
-		if(System.getProperty("testmode")!=null) {
-			try {
-				initialize(new TestNavajoResourceFinder());
-			} catch (CoreException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} else {
-			try {
-				initialize(new NavajoResourceFinder());
-			} catch (CoreException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+	
 	}	
-
-
-
-	public List<FunctionProposal> getFunctions() {
-		return functions;
-	}
-
-
-	public List<AdapterProposal> getAdapters() {
-		return adapters;
-	}
-
-
-	public List<InputTmlProposal> getTmlProposal() {
-		return tmlProposal;
-	}
-
-
-	protected void initialize(INavajoResourceFinder navajoResourceFinder)
-			throws CoreException, IOException {
-		//InputStream is = this.getClass().getClassLoader().getResource("com/dexels/navajo/dsl/ui/functions.xml").openStream();
-		setNavajoResourceFinder(navajoResourceFinder);
-		initializeFunctions(navajoResourceFinder);
-		initializeAdapters(navajoResourceFinder);
-		initializeInput(navajoResourceFinder);
-		System.err.println("Initialization complete. functions: "+functions.size()+" adapters: "+adapters.size()+" tml: "+tmlProposal.size());
-	}
-
-
-	private void initializeInput(INavajoResourceFinder navajoResourceFinder) {
-		try {
-			Navajo inputNavajo = navajoResourceFinder.getInputNavajo();
-			if(inputNavajo==null) {
-				return;
-			}
-			tmlProposal =  listPropertyPaths(inputNavajo);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void initializeAdapters(INavajoResourceFinder navajoResourceFinder)
-			throws CoreException, IOException {
-		XMLElement adaptersList = getNavajoResourceFinder().getAdapters();
-		if(adaptersList==null) {
-			return;
-		}
-
-		for (XMLElement x : adaptersList.getChildren()) {
-			AdapterProposal fr = new AdapterProposal();
-			fr.setTagName(x.getElementByTagName("tagname").getContent());
-			XMLElement valueList = x.getElementByTagName("values");
-			if(valueList!=null) {
-				List<XMLElement> valueElements = valueList.getChildren();
-				for (XMLElement value : valueElements) {
-					AdapterValueEntry ave = new AdapterValueEntry();
-					ave.load(value);
-					fr.addValueEntry(ave);
-				}
-			}
-			adapters.add(fr);
-			adapterMap.put(fr.getTagName(), fr);
-		}
-		Collections.sort(adapters);
-	}
-	
-	protected List<AdapterProposal> getAdapterProposals() {
-		return adapters;
-	}
-	
-	protected AdapterProposal getAdapter(String name) {
-		return adapterMap.get(name);
-	}
-
-	private void initializeFunctions(INavajoResourceFinder navajoResourceFinder)
-			throws CoreException, IOException {
-		XMLElement functionList = getNavajoResourceFinder().getFunctions();
-		if(functionList==null) {
-			return;
-		}
-		for (XMLElement x : functionList.getChildren()) {
-			String input = x.getElementByTagName("input").getContent();
-			List<List<String>> alternatives = parseAlternatives(input);
-			for (List<String> inputList : alternatives) {
-				FunctionProposal fr = new FunctionProposal();
-				fr.setName(x.getStringAttribute("name"));
-				fr.setDescription(x.getElementByTagName("description")
-						.getContent());
-				fr.setInput(inputList);
-				fr.setResult(x.getElementByTagName("result").getContent());
-				functions.add(fr);
-			}
-		}
-		Collections.sort(functions);
-	}
-
-	
-	public INavajoResourceFinder getNavajoResourceFinder() {
-		return navajoResourceFinder;
-	}
-
-	public void setNavajoResourceFinder(INavajoResourceFinder navajoResourceFinder) {
-		this.navajoResourceFinder = navajoResourceFinder;
-	}
-	
-	public List<InputTmlProposal> listPropertyPaths(Navajo in) {
-		List<InputTmlProposal> result = new ArrayList<InputTmlProposal>();
-		List<Message> m;
-		try {
-			m = in.getAllMessages();
-			for (Message message : m) {
-				listPropertyPaths(message,result);
-			}
-		} catch (NavajoException e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
-
-	
-	private void listPropertyPaths(Message m, List<InputTmlProposal> result) throws NavajoException {
-		List<Property> pl = m.getAllProperties();
-		for (Property property : pl) {
-			InputTmlProposal fp = new InputTmlProposal();
-			fp.setProperty(property);
-			fp.setAbsolute(false);
-			result.add(fp);
-			InputTmlProposal fpabs = new InputTmlProposal();
-			fpabs.setProperty(property);
-			fpabs.setAbsolute(true);
-			result.add(fpabs);
-		}
-		List<Message> ml = m.getAllMessages();
-		for (Message message : ml) {
-			if (message.getType().equals(Message.MSG_TYPE_ARRAY)) {
-				if(message.getArraySize()>0) {
-					listPropertyPaths(message.getMessage(0),result);
-				}
-			} else {
-				listPropertyPaths(message,result);
-			}
-		}
-
-		
-	}
-
-	private List<List<String>> parseAlternatives(String input) {
-		List<String> base = new ArrayList<String>();
-		List<List<String>> result = new ArrayList<List<String>>();
-		String[] params = input.split(",");
-		for (String string : params) {
-			base.add(string);
-		}
-		result.add(base);
-		while (true) {
-			boolean found = false;
-			for (List<String> alternative : result) {
-				int index = 0;
-				for (String element : alternative) {
-					if (element.indexOf("|") != -1) {
-						found = true;
-						break;
-					}
-					index++;
-				}
-				if (found) {
-
-					String currentExample = alternative.get(index);
-					String[] alts = currentExample.split("\\|");
-					for (String currentAlt : alts) {
-						List<String> newAlt = new ArrayList<String>(alternative);
-						newAlt.set(index , currentAlt);
-						result.add(newAlt);
-					}
-					result.remove(alternative);
-					break;
-				}
-
-			}
-			if (!found) {
-				break;
-			}
-		}
-		for (List<String> propose : result) {
-			stripTrailingEmpties(propose);
-		}
-		List<List<String>> invalid = new ArrayList<List<String>>();
-		for (List<String> propose : result) {
-			if (!isLegal(propose)) {
-				invalid.add(propose);
-			}
-		}
-		result.removeAll(invalid);
-		return result;
-	}
-
-	private void stripTrailingEmpties(List<String> propose) {
-		for (int i = propose.size()-1; i>=0; i--) {
-			if(propose.get(i).equals("empty")) {
-				propose.remove(i);
-			}
-		}
-		
-	}
-
-//	private List<FunctionProposal> findFunctionByName(String name) {
-//		List<FunctionProposal> result = new ArrayList<FunctionProposal>();
-//		for (FunctionProposal f :functions) {
-//			if(f.getName().equals(name)) {
-//				result.add(f);
-//			}
-//		}
-//		return result;
-//	}
-	
-	private boolean isLegal(List<String> propose) {
-		int index=0;
-		for (String r : propose) {
-			if(r.equals("empty") && index!=propose.size()-1) {
-				return false;
-			}
-			index++;
-		}
-		return true;
-	}
-
-	public static void main(String[] args) throws Exception {
-		System.setProperty("testmode", "true");
-		NavajoExpressionProposalProvider npp = new NavajoExpressionProposalProvider();
-		System.err.println("Parse test of: string,integer,string|empty,boolean|empty");
-		System.err.println("result: " + npp.parseAlternatives("string,integer,string|empty,boolean|empty"));
-		System.err.println("Function count: " + npp.functions.size());
-		for (FunctionProposal f : npp.functions) {
-			System.err.println("Function: " + f.getProposalDescription());
-		}
-
-		Navajo input = npp.getNavajoResourceFinder().getInputNavajo();
-		List<InputTmlProposal> l =  npp.listPropertyPaths(input);
-		for (InputTmlProposal tmlProposal : l) {
-			System.err.println("Proposal: "+tmlProposal.getProposal()+" ---- "+tmlProposal.getProposalDescription());
-		}
-		for (AdapterProposal f : npp.adapters) {
-			System.err.println("Adapter: " + f.getTagName());
-		}
-		List<String> stack = new ArrayList<String>();
-		stack.add("ftp");
-		stack.add("sqlquery");
-		
-		List<String> proposals = new ArrayList<String>();
-		StringBuffer prefixBuffer = new StringBuffer();
-		npp.processGetters(stack, proposals, prefixBuffer);		
-		for (String string : proposals) {
-			System.err.println("Proposal: "+string);
-		}
-	}
-	
-	
 
 
 	public void complete_FunctionCall(EObject model, RuleCall ruleCall,
@@ -334,7 +51,7 @@ public class NavajoExpressionProposalProvider extends AbstractNavajoExpressionPr
 		// subclasses may override
 		super.complete_FunctionCall(model, ruleCall, context, acceptor);
 		// compute the plain proposal
-		for (FunctionProposal f : functions) {
+		for (FunctionProposal f : navajoContext.getFunctions()) {
 			ICompletionProposal completionProposal = createCompletionProposal(f.getProposal(true), f.getProposalDescription(), null, context);
 			acceptor.accept(completionProposal);
 		}
@@ -374,7 +91,7 @@ public class NavajoExpressionProposalProvider extends AbstractNavajoExpressionPr
 //		acceptor.accept(completionProposal);
 //		completionProposal = createCompletionProposal("[/Club/ClubName]", "[Club name] /Club/ClubName: De Schoof", null, context);
 //		acceptor.accept(completionProposal);
-		for (InputTmlProposal tt : tmlProposal) {
+		for (InputTmlProposal tt : navajoContext.getTmlProposal()) {
 			ICompletionProposal completionProposal = createCompletionProposal(tt.getProposal(), tt.getProposalDescription(), null, context);
 			acceptor.accept(completionProposal);
 		}
@@ -385,7 +102,7 @@ public class NavajoExpressionProposalProvider extends AbstractNavajoExpressionPr
 	public void complete_PathElement(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
 		super.complete_PathElement(model, ruleCall, context, acceptor);
 		System.err.println("Completing path element!");
-		debugExpression((Expression) model);
+//		navajoContext.debugExpression((Expression) model);
 	}
 	
 	@Override
@@ -394,7 +111,7 @@ public class NavajoExpressionProposalProvider extends AbstractNavajoExpressionPr
 		System.err.println("Map Stack: "+getMapStack(model));
 		Expression mfr = null;
 		List<String> proposals = new ArrayList<String>();
-		processGetters(getMapStack(model), proposals, new StringBuffer());
+		navajoContext.processGetters(getMapStack(model), proposals, new StringBuffer());
 		
 		if(model instanceof ExpressionTag) {
 			ExpressionTag et = (ExpressionTag)model;
@@ -403,7 +120,7 @@ public class NavajoExpressionProposalProvider extends AbstractNavajoExpressionPr
 		if(model instanceof Expression) {
 			mfr = (Expression)model;
 		}
-		debugExpression(mfr);
+//		navajoContext.debugExpression(mfr);
 		
 		if(mfr!=null) {
 			EList<String> elts = mfr.getElements();
@@ -436,49 +153,20 @@ public class NavajoExpressionProposalProvider extends AbstractNavajoExpressionPr
 		return result;
 	}
 	
-	private void processGetters(List<String> mapStack,List<String> proposals, StringBuffer prefix ) {
-		if(mapStack.isEmpty()) {
-			return;
-		}
-		String mapName = mapStack.get(0);
-		AdapterProposal ap = adapterMap.get(mapName);
-		if(ap==null) {
-			System.err.println("Warning: map: "+mapName+" not found!");
-		}
-		List<String> apGetters = ap.getGetters();
-		for (String getter : apGetters) {
-			proposals.add("$"+prefix.toString()+getter);
-		}
-		mapStack.remove(0);
-		prefix.append("../");
-		processGetters(mapStack, proposals, prefix);
-	}
-	
-	private void debugExpression(Expression e) {
-		if(e==null) {
-			return;
-		}
-		Expression c = e;
-		while(c.getParent()!=null) {
-			System.err.println("Parent:: "+c.getParent().getClass()+" getParams: "+c.getParameters()+" >> "+c.getElements());
-			c = c.getParent();
-		}
-		System.err.println("== finished debugexpression ==");
-	}
 
 	
 	@Override
 	public void complete_ExistsTmlExpression(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
 		// subclasses may override
 		super.complete_ExistsTmlExpression(model, ruleCall, context, acceptor);
-		if(tmlProposal==null) {
+		if(navajoContext.getTmlProposal()==null) {
 			
 		}
 		//		ICompletionProposal completionProposal = createCompletionProposal("?[/Club/ClubIdentifier]", "[ClubCode] /Club/ClubIdentifier: BBFW63X", null, context);
 //		acceptor.accept(completionProposal);
 //		completionProposal = createCompletionProposal("?[/Club/ClubName]", "[Club name] /Club/ClubName: De Schoof", null, context);
 //		acceptor.accept(completionProposal);
-		for (InputTmlProposal tt : tmlProposal) {
+		for (InputTmlProposal tt : navajoContext.getTmlProposal()) {
 			ICompletionProposal completionProposal = createCompletionProposal("?"+tt.getProposal(), "?"+tt.getProposalDescription(), null, context);
 			acceptor.accept(completionProposal);
 		}
@@ -489,8 +177,7 @@ public class NavajoExpressionProposalProvider extends AbstractNavajoExpressionPr
 	
 	
 	 public  IProject getCurrentProject(){
-		  IEditorPart editor = 
-		  PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+		  IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		  IEditorInput input =  editor.getEditorInput();
 		  IFile file = null;
 		  if(input instanceof IFileEditorInput){
