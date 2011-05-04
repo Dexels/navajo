@@ -60,7 +60,10 @@ public class RhinoHandler extends ServiceHandler {
 			InputStream inStr = DispatcherFactory.getInstance().getNavajoConfig().getScript(a.getRpcName());
 			File compiledPath = new File(DispatcherFactory.getInstance().getNavajoConfig().getCompiledScriptPath()+"/"+a.getRpcName()+".js");
 			File scriptPath = new File(DispatcherFactory.getInstance().getNavajoConfig().getScriptPath()+"/"+a.getRpcName()+".xml");
-			
+			if(!scriptPath.exists()) {
+				scriptPath = new File(DispatcherFactory.getInstance().getNavajoConfig().getScriptPath()+"/"+a.getRpcName()+".tsl");
+				
+			}
 			long lastCompiled = compiledPath.lastModified();
 			long scriptEdited = scriptPath.lastModified();
 			if(scriptEdited<lastCompiled) {
