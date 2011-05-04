@@ -45,7 +45,8 @@ protected class ThisRootNode extends RootToken {
 			case 11: return new UnaryExpression_Alternatives(this, this, 11, inst);
 			case 12: return new PrimaryExpression_Alternatives(this, this, 12, inst);
 			case 13: return new FunctionCall_Group(this, this, 13, inst);
-			case 14: return new Literal_Alternatives(this, this, 14, inst);
+			case 14: return new DateLiteral_Group(this, this, 14, inst);
+			case 15: return new Literal_Alternatives(this, this, 15, inst);
 			default: return null;
 		}	
 	}	
@@ -3642,24 +3643,337 @@ protected class FunctionCall_RightParenthesisKeyword_4 extends KeywordToken  {
 /************ end Rule FunctionCall ****************/
 
 
-/************ begin Rule Literal ****************
+/************ begin Rule DateLiteral ****************
  *
+ * //void DatePatternLiteral() #void:
+ * //{}
+ * //{
+ * //  (Literal()"#"Literal()"#"Literal()"#"Literal()"#"Literal()"#"Literal()) #DatePatternNode
+ * //}
  * //Expression returns Expression:
  * //	Literal | FunctionCall | FunctionOperands ;
- * Literal returns Expression:
- * 	{Expression} INT // TODO Add float
- * 	| valueString=LITERALSTRING | operations+=FORALL "(" valueString=LITERALSTRING "," parameters+=OrExpression ")" |
- * 	parameters+=FunctionCall | expressionType="{" parameters+=OrExpression? ("," parameters+=OrExpression)* "}" |
- * 	elements+=NULL | elements+=TODAY | elements+=TRUE | elements+=FALSE | parameters+=TmlExpression |
- * 	parameters+=ExistsTmlExpression | parameters+=MapGetReference;
+ * DateLiteral returns Expression:
+ * 	{Expression} NUMBER "#" NUMBER "#" NUMBER "#" NUMBER "#" NUMBER "#" NUMBER;
  *
  **/
 
-// {Expression} INT // TODO Add float
+// {Expression} NUMBER "#" NUMBER "#" NUMBER "#" NUMBER "#" NUMBER "#" NUMBER
+protected class DateLiteral_Group extends GroupToken {
+	
+	public DateLiteral_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Group getGrammarElement() {
+		return grammarAccess.getDateLiteralAccess().getGroup();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new DateLiteral_NUMBERTerminalRuleCall_11(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+    @Override
+	public IEObjectConsumer tryConsume() {
+		if(getEObject().eClass() != grammarAccess.getDateLiteralAccess().getExpressionAction_0().getType().getClassifier())
+			return null;
+		return eObjectConsumer;
+	}
+
+}
+
+// {Expression}
+protected class DateLiteral_ExpressionAction_0 extends ActionToken  {
+
+	public DateLiteral_ExpressionAction_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Action getGrammarElement() {
+		return grammarAccess.getDateLiteralAccess().getExpressionAction_0();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			default: return lastRuleCallOrigin.createFollowerAfterReturn(this, index, index, inst);
+		}	
+	}
+
+    @Override
+	public IEObjectConsumer tryConsume() {
+		if(!eObjectConsumer.isConsumed()) return null;
+		return eObjectConsumer;
+	}
+}
+
+// NUMBER
+protected class DateLiteral_NUMBERTerminalRuleCall_1 extends UnassignedTextToken {
+
+	public DateLiteral_NUMBERTerminalRuleCall_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public RuleCall getGrammarElement() {
+		return grammarAccess.getDateLiteralAccess().getNUMBERTerminalRuleCall_1();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new DateLiteral_ExpressionAction_0(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// "#"
+protected class DateLiteral_NumberSignKeyword_2 extends KeywordToken  {
+	
+	public DateLiteral_NumberSignKeyword_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Keyword getGrammarElement() {
+		return grammarAccess.getDateLiteralAccess().getNumberSignKeyword_2();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new DateLiteral_NUMBERTerminalRuleCall_1(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// NUMBER
+protected class DateLiteral_NUMBERTerminalRuleCall_3 extends UnassignedTextToken {
+
+	public DateLiteral_NUMBERTerminalRuleCall_3(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public RuleCall getGrammarElement() {
+		return grammarAccess.getDateLiteralAccess().getNUMBERTerminalRuleCall_3();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new DateLiteral_NumberSignKeyword_2(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// "#"
+protected class DateLiteral_NumberSignKeyword_4 extends KeywordToken  {
+	
+	public DateLiteral_NumberSignKeyword_4(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Keyword getGrammarElement() {
+		return grammarAccess.getDateLiteralAccess().getNumberSignKeyword_4();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new DateLiteral_NUMBERTerminalRuleCall_3(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// NUMBER
+protected class DateLiteral_NUMBERTerminalRuleCall_5 extends UnassignedTextToken {
+
+	public DateLiteral_NUMBERTerminalRuleCall_5(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public RuleCall getGrammarElement() {
+		return grammarAccess.getDateLiteralAccess().getNUMBERTerminalRuleCall_5();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new DateLiteral_NumberSignKeyword_4(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// "#"
+protected class DateLiteral_NumberSignKeyword_6 extends KeywordToken  {
+	
+	public DateLiteral_NumberSignKeyword_6(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Keyword getGrammarElement() {
+		return grammarAccess.getDateLiteralAccess().getNumberSignKeyword_6();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new DateLiteral_NUMBERTerminalRuleCall_5(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// NUMBER
+protected class DateLiteral_NUMBERTerminalRuleCall_7 extends UnassignedTextToken {
+
+	public DateLiteral_NUMBERTerminalRuleCall_7(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public RuleCall getGrammarElement() {
+		return grammarAccess.getDateLiteralAccess().getNUMBERTerminalRuleCall_7();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new DateLiteral_NumberSignKeyword_6(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// "#"
+protected class DateLiteral_NumberSignKeyword_8 extends KeywordToken  {
+	
+	public DateLiteral_NumberSignKeyword_8(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Keyword getGrammarElement() {
+		return grammarAccess.getDateLiteralAccess().getNumberSignKeyword_8();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new DateLiteral_NUMBERTerminalRuleCall_7(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// NUMBER
+protected class DateLiteral_NUMBERTerminalRuleCall_9 extends UnassignedTextToken {
+
+	public DateLiteral_NUMBERTerminalRuleCall_9(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public RuleCall getGrammarElement() {
+		return grammarAccess.getDateLiteralAccess().getNUMBERTerminalRuleCall_9();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new DateLiteral_NumberSignKeyword_8(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// "#"
+protected class DateLiteral_NumberSignKeyword_10 extends KeywordToken  {
+	
+	public DateLiteral_NumberSignKeyword_10(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Keyword getGrammarElement() {
+		return grammarAccess.getDateLiteralAccess().getNumberSignKeyword_10();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new DateLiteral_NUMBERTerminalRuleCall_9(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// NUMBER
+protected class DateLiteral_NUMBERTerminalRuleCall_11 extends UnassignedTextToken {
+
+	public DateLiteral_NUMBERTerminalRuleCall_11(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public RuleCall getGrammarElement() {
+		return grammarAccess.getDateLiteralAccess().getNUMBERTerminalRuleCall_11();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new DateLiteral_NumberSignKeyword_10(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+
+/************ end Rule DateLiteral ****************/
+
+
+/************ begin Rule Literal ****************
+ *
+ * Literal returns Expression:
+ * 	{Expression} NUMBER // TODO Add float
+ * 	| valueString=LITERALSTRING | operations+=FORALL "(" valueString=LITERALSTRING "," parameters+=OrExpression ")" |
+ * 	parameters+=FunctionCall | expressionType="{" parameters+=OrExpression? ("," parameters+=OrExpression)* "}" |
+ * 	elements+=NULL | elements+=TODAY | elements+=TRUE | elements+=FALSE | parameters+=TmlExpression |
+ * 	parameters+=ExistsTmlExpression | parameters+=MapGetReference | parameters+=DateLiteral;
+ *
+ **/
+
+// {Expression} NUMBER // TODO Add float
 // | valueString=LITERALSTRING | operations+=FORALL "(" valueString=LITERALSTRING "," parameters+=OrExpression ")" |
 // parameters+=FunctionCall | expressionType="{" parameters+=OrExpression? ("," parameters+=OrExpression)* "}" |
 // elements+=NULL | elements+=TODAY | elements+=TRUE | elements+=FALSE | parameters+=TmlExpression |
-// parameters+=ExistsTmlExpression | parameters+=MapGetReference
+// parameters+=ExistsTmlExpression | parameters+=MapGetReference | parameters+=DateLiteral
 protected class Literal_Alternatives extends AlternativesToken {
 
 	public Literal_Alternatives(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -3686,6 +4000,7 @@ protected class Literal_Alternatives extends AlternativesToken {
 			case 9: return new Literal_ParametersAssignment_9(lastRuleCallOrigin, this, 9, inst);
 			case 10: return new Literal_ParametersAssignment_10(lastRuleCallOrigin, this, 10, inst);
 			case 11: return new Literal_ParametersAssignment_11(lastRuleCallOrigin, this, 11, inst);
+			case 12: return new Literal_ParametersAssignment_12(lastRuleCallOrigin, this, 12, inst);
 			default: return null;
 		}	
 	}
@@ -3699,7 +4014,7 @@ protected class Literal_Alternatives extends AlternativesToken {
 
 }
 
-// {Expression} INT
+// {Expression} NUMBER
 protected class Literal_Group_0 extends GroupToken {
 	
 	public Literal_Group_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -3714,7 +4029,7 @@ protected class Literal_Group_0 extends GroupToken {
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new Literal_INTTerminalRuleCall_0_1(lastRuleCallOrigin, this, 0, inst);
+			case 0: return new Literal_NUMBERTerminalRuleCall_0_1(lastRuleCallOrigin, this, 0, inst);
 			default: return null;
 		}	
 	}
@@ -3747,16 +4062,16 @@ protected class Literal_ExpressionAction_0_0 extends ActionToken  {
 	}
 }
 
-// INT
-protected class Literal_INTTerminalRuleCall_0_1 extends UnassignedTextToken {
+// NUMBER
+protected class Literal_NUMBERTerminalRuleCall_0_1 extends UnassignedTextToken {
 
-	public Literal_INTTerminalRuleCall_0_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+	public Literal_NUMBERTerminalRuleCall_0_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
 	public RuleCall getGrammarElement() {
-		return grammarAccess.getLiteralAccess().getINTTerminalRuleCall_0_1();
+		return grammarAccess.getLiteralAccess().getNUMBERTerminalRuleCall_0_1();
 	}
 
     @Override
@@ -4520,6 +4835,51 @@ protected class Literal_ParametersAssignment_11 extends AssignmentToken  {
 			if(param.isInstanceOf(grammarAccess.getMapGetReferenceRule().getType().getClassifier())) {
 				type = AssignmentType.PARSER_RULE_CALL;
 				element = grammarAccess.getLiteralAccess().getParametersMapGetReferenceParserRuleCall_11_0(); 
+				consumed = obj;
+				return param;
+			}
+		}
+		return null;
+	}
+
+    @Override
+	public AbstractToken createFollowerAfterReturn(AbstractToken next,	int actIndex, int index, IEObjectConsumer inst) {
+		if(value == inst.getEObject() && !inst.isConsumed()) return null;
+		switch(index) {
+			default: return lastRuleCallOrigin.createFollowerAfterReturn(next, actIndex , index, consumed);
+		}	
+	}	
+}
+
+// parameters+=DateLiteral
+protected class Literal_ParametersAssignment_12 extends AssignmentToken  {
+	
+	public Literal_ParametersAssignment_12(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Assignment getGrammarElement() {
+		return grammarAccess.getLiteralAccess().getParametersAssignment_12();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new DateLiteral_Group(this, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("parameters",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("parameters");
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
+			IEObjectConsumer param = createEObjectConsumer((EObject)value);
+			if(param.isInstanceOf(grammarAccess.getDateLiteralRule().getType().getClassifier())) {
+				type = AssignmentType.PARSER_RULE_CALL;
+				element = grammarAccess.getLiteralAccess().getParametersDateLiteralParserRuleCall_12_0(); 
 				consumed = obj;
 				return param;
 			}

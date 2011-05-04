@@ -1752,6 +1752,84 @@ ruleFunctionCall returns [EObject current=null]
 
 
 
+// Entry rule entryRuleDateLiteral
+entryRuleDateLiteral returns [EObject current=null] 
+	:
+	{ currentNode = createCompositeNode(grammarAccess.getDateLiteralRule(), currentNode); }
+	 iv_ruleDateLiteral=ruleDateLiteral 
+	 { $current=$iv_ruleDateLiteral.current; } 
+	 EOF 
+;
+
+// Rule DateLiteral
+ruleDateLiteral returns [EObject current=null] 
+    @init { EObject temp=null; setCurrentLookahead(); resetLookahead(); 
+    }
+    @after { resetLookahead(); 
+    	lastConsumedNode = currentNode;
+    }:
+((
+    { 
+        temp=factory.create(grammarAccess.getDateLiteralAccess().getExpressionAction_0().getType().getClassifier());
+        $current = temp; 
+        temp = null;
+        CompositeNode newNode = createCompositeNode(grammarAccess.getDateLiteralAccess().getExpressionAction_0(), currentNode.getParent());
+    newNode.getChildren().add(currentNode);
+    moveLookaheadInfo(currentNode, newNode);
+    currentNode = newNode; 
+        associateNodeWithAstElement(currentNode, $current); 
+    }
+)RULE_NUMBER
+    { 
+    createLeafNode(grammarAccess.getDateLiteralAccess().getNUMBERTerminalRuleCall_1(), null); 
+    }
+	'#' 
+    {
+        createLeafNode(grammarAccess.getDateLiteralAccess().getNumberSignKeyword_2(), null); 
+    }
+RULE_NUMBER
+    { 
+    createLeafNode(grammarAccess.getDateLiteralAccess().getNUMBERTerminalRuleCall_3(), null); 
+    }
+	'#' 
+    {
+        createLeafNode(grammarAccess.getDateLiteralAccess().getNumberSignKeyword_4(), null); 
+    }
+RULE_NUMBER
+    { 
+    createLeafNode(grammarAccess.getDateLiteralAccess().getNUMBERTerminalRuleCall_5(), null); 
+    }
+	'#' 
+    {
+        createLeafNode(grammarAccess.getDateLiteralAccess().getNumberSignKeyword_6(), null); 
+    }
+RULE_NUMBER
+    { 
+    createLeafNode(grammarAccess.getDateLiteralAccess().getNUMBERTerminalRuleCall_7(), null); 
+    }
+	'#' 
+    {
+        createLeafNode(grammarAccess.getDateLiteralAccess().getNumberSignKeyword_8(), null); 
+    }
+RULE_NUMBER
+    { 
+    createLeafNode(grammarAccess.getDateLiteralAccess().getNUMBERTerminalRuleCall_9(), null); 
+    }
+	'#' 
+    {
+        createLeafNode(grammarAccess.getDateLiteralAccess().getNumberSignKeyword_10(), null); 
+    }
+RULE_NUMBER
+    { 
+    createLeafNode(grammarAccess.getDateLiteralAccess().getNUMBERTerminalRuleCall_11(), null); 
+    }
+)
+;
+
+
+
+
+
 // Entry rule entryRuleLiteral
 entryRuleLiteral returns [EObject current=null] 
 	:
@@ -1779,9 +1857,9 @@ ruleLiteral returns [EObject current=null]
     currentNode = newNode; 
         associateNodeWithAstElement(currentNode, $current); 
     }
-)RULE_INT
+)RULE_NUMBER
     { 
-    createLeafNode(grammarAccess.getLiteralAccess().getINTTerminalRuleCall_0_1(), null); 
+    createLeafNode(grammarAccess.getLiteralAccess().getNUMBERTerminalRuleCall_0_1(), null); 
     }
 )
     |(
@@ -2171,6 +2249,31 @@ ruleLiteral returns [EObject current=null]
 	    }
 
 )
+)
+    |(
+(
+		{ 
+	        currentNode=createCompositeNode(grammarAccess.getLiteralAccess().getParametersDateLiteralParserRuleCall_12_0(), currentNode); 
+	    }
+		lv_parameters_22_0=ruleDateLiteral		{
+	        if ($current==null) {
+	            $current = factory.create(grammarAccess.getLiteralRule().getType().getClassifier());
+	            associateNodeWithAstElement(currentNode.getParent(), $current);
+	        }
+	        try {
+	       		add(
+	       			$current, 
+	       			"parameters",
+	        		lv_parameters_22_0, 
+	        		"DateLiteral", 
+	        		currentNode);
+	        } catch (ValueConverterException vce) {
+				handleValueConverterException(vce);
+	        }
+	        currentNode = currentNode.getParent();
+	    }
+
+)
 ))
 ;
 
@@ -2186,7 +2289,7 @@ RULE_XML_GTEQ : '&gt;=';
 
 RULE_XML_LTEQ : '&lt;=';
 
-RULE_INT : ('0'..'9')+;
+RULE_NUMBER : ('0'..'9')+ ('.' ('0'..'9')+)?;
 
 RULE_ML_COMMENT : '/*' ( options {greedy=false;} : . )*'*/';
 
