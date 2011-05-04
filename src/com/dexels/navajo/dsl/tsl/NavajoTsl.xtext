@@ -30,6 +30,7 @@ terminal XMLComment: '<!--' -> '-->';
 terminal QUOTEQ: '"=';	
 terminal SEMICOLONQUOTE: ';"';
 
+terminal DOT: '.';
 
 
 terminal DEBUG_START_TAG:
@@ -127,6 +128,11 @@ terminal REQUIRED_END_TAG:
 	 '</required' XML_TAG_END
 ;
 
+terminal INCLUDE_END_TAG: 
+	 '</include' XML_TAG_END
+;
+
+
 terminal PROPERTY_END_TAG: 
 	 '</property' XML_TAG_END
 ;
@@ -207,16 +213,16 @@ PossibleExpression:
 	(
 		 QUOTEQ expressionValue=TopLevel SEMICOLONQUOTE
 		| value=ATTRIBUTESTRING
-		| EMPTYSTRING
+		| value=EMPTYSTRING
 	)
 	;
 
 Methods :
 	METHODS_START_TAG {Methods} 
 	
-	((XML_TAG_END
+	((splitTag?=XML_TAG_END
 	(method+=Method)*
-	METHODS_END_TAG)
+	closedTag?=METHODS_END_TAG)
 	|
 	XML_TAG_SINGLEEND)
 	;
@@ -224,9 +230,9 @@ Methods :
 Method:
 	METHOD_START_TAG {Method}  (attributes+=PossibleExpression)* 
 	
-	((XML_TAG_END
+	((splitTag?=XML_TAG_END
 		(children+=Required)*
-	METHOD_END_TAG
+	closedTag?=METHOD_END_TAG
 	)
 	|
 	XML_TAG_SINGLEEND
@@ -237,9 +243,9 @@ Method:
 Validations :
 	VALIDATIONS_START_TAG {Validations} 
 	
-	((XML_TAG_END
+	((splitTag?=XML_TAG_END
 	( children+=Check)*
-	VALIDATIONS_END_TAG)
+	closedTag?=VALIDATIONS_END_TAG)
 	|
 	XML_TAG_SINGLEEND)
 	;
@@ -247,9 +253,9 @@ Validations :
 Check:
 	CHECK_START_TAG {Check}  (attributes+=PossibleExpression)* 
 	
-	((XML_TAG_END
+	((splitTag?=XML_TAG_END
 		expression=TopLevel
-	CHECK_END_TAG
+	closedTag?=CHECK_END_TAG
 	)
 	|
 	XML_TAG_SINGLEEND
@@ -260,9 +266,9 @@ Check:
 Comment:
 	COMMENT_START_TAG {Comment}  (attributes+=PossibleExpression)* 
 	
-	((XML_TAG_END
+	((splitTag ?= XML_TAG_END
 //		expression=TopLevel
-	COMMENT_END_TAG
+	closedTag?=COMMENT_END_TAG
 	)
 	|
 	XML_TAG_SINGLEEND
@@ -272,9 +278,9 @@ Comment:
 Break:
 	BREAK_START_TAG {Break}  (attributes+=PossibleExpression)* 
 	 
-	((XML_TAG_END
+	((splitTag ?= XML_TAG_END
 //		expression=TopLevel
-	BREAK_END_TAG
+		closedTag?=BREAK_END_TAG
 	)
 	|
 	XML_TAG_SINGLEEND
@@ -283,8 +289,11 @@ Break:
 
 // create Include entity in Model
 Include returns Method:
-	INCLUDE_START_TAG {Method}  (attributes+=PossibleExpression)* 
-	XML_TAG_SINGLEEND
+	INCLUDE_START_TAG {Method}  
+		(attributes+=PossibleExpression)* 
+
+		(( splitTag?=XML_TAG_END closedTag?=INCLUDE_END_TAG) |
+	XML_TAG_SINGLEEND)
 	;	
 
 
@@ -292,9 +301,9 @@ Include returns Method:
 Message:
 	MESSAGE_START_TAG {Message}  (attributes+=PossibleExpression)* 
 	
-	((XML_TAG_END
+	((splitTag?=XML_TAG_END
 		((children+=Message) | (children+=Property) | (children+=Param)  | (children+=Map) | (children+=MapMethod) | (children+=DebugTag) | (children+=Field) | (children+=Comment) | (children+=Break))*
-	MESSAGE_END_TAG
+	closedTag ?= MESSAGE_END_TAG
 	)
 	|
 	XML_TAG_SINGLEEND
@@ -306,15 +315,15 @@ Message:
 
 Map returns Map:
 	MAPSTARTKEYWORD {Map} (
-		('.' mapName=MapId (attributes+=PossibleExpression)*)
+		(DOT mapName=MapId (attributes+=PossibleExpression)*)
 	|	(attributes+=PossibleExpression)*
 	) 
 	(
 			( XML_TAG_SINGLEEND
-	| (XML_TAG_END
+	| (splitTag?=XML_TAG_END
 		((children+=Message) | (children+=Property) | (children+=Param) | (children+=Map) | (children+=MapMethod) | (children+=DebugTag) | (children+=Field) | (children+=Comment) | (children+=Break))*
 		
-		(MAPENDKEYWORD ('.' mapClosingName=MapId)? XML_TAG_END)
+		(MAPENDKEYWORD (DOT mapClosingName=MapId)? closedTag?=XML_TAG_END)
 	))
 	)
 	;
@@ -355,8 +364,8 @@ Required:
 	(
 		(XML_TAG_SINGLEEND)
 	|
-		( XML_TAG_END 	
-		REQUIRED_END_TAG
+		( splitTag?=XML_TAG_END 	
+			closedTag ?= REQUIRED_END_TAG
 		)
 	);
 	
@@ -368,13 +377,13 @@ Property:
 	(
 		(XML_TAG_SINGLEEND)
 	|
-		( XML_TAG_END 	
+		( splitTag?=XML_TAG_END 	
 			(
 				children += ExpressionOrOption
 				|
 				children += Map
 		 	)*
-		PROPERTY_END_TAG
+		closedTag ?= PROPERTY_END_TAG
 		)
 	);
 
@@ -383,32 +392,32 @@ Param returns Param:
 	(
 		(XML_TAG_SINGLEEND)
 	|
-		( XML_TAG_END 	
+		( splitTag?=XML_TAG_END 	
 			((children += ExpressionOrOption) | (children+=Map))*
-		PARAM_END_TAG
+		closedTag ?= PARAM_END_TAG
 		)
 	);
 
 MapMethod returns MapMethod:
-	MAP_METHOD_STARTTAG_START  mapName = ID '.' methodName= AttributeName (attributes+=PossibleExpression)* 
+	MAP_METHOD_STARTTAG_START  mapName = ID DOT methodName= AttributeName (attributes+=PossibleExpression)* 
 	(
 		(XML_TAG_SINGLEEND)
 	|
-		( XML_TAG_END 
+		( splitTag?=XML_TAG_END 
 			((children += ExpressionOrOption) | (children+=Message) | (children+=Property) | (children+=Param) | (children+=Map) | (children+=MapMethod) | (children+=DebugTag) | (children+=Field) | (children+=Comment) | (children+=Break))*
-		MAP_METHOD_ENDTAG_START methodClosingName = ID '.' methodClosingMethod = ID XML_TAG_END
+		closedTag ?= MAP_METHOD_ENDTAG_START methodClosingName = ID DOT methodClosingMethod = ID XML_TAG_END
 		)
 	);
 	
-Field returns Param:
-	FIELD_START_TAG {Param} (attributes+=PossibleExpression)*  XML_TAG_END
+Field returns Field:
+	FIELD_START_TAG {Field} (attributes+=PossibleExpression)*  
 	(
 	 XML_TAG_SINGLEEND
 	 |
-	 (
-		((children += ExpressionOrOption) | (children+=Message) | (children+=Property) | (children+=Param) | (children+=Map) | (children+=MapMethod) | (children+=DebugTag) | (children+=Field) | (children+=Comment) | (children+=Break))*
+	 ( splitTag?=XML_TAG_END
+		((children += ExpressionOrOption)  | (children+=Param) | (children+=Map) | (children+=MapMethod) | (children+=DebugTag) | (children+=Comment) | (children+=Break))*
 	 )
-	 FIELD_END_TAG
+	 closedTag ?= FIELD_END_TAG
 	)
 ;
 
@@ -417,9 +426,9 @@ DebugTag returns DebugTag:
 	(
 		(XML_TAG_SINGLEEND)
 	|
-		( XML_TAG_END 	
-			expression=TopLevel
-		DEBUG_END_TAG
+		( splitTag?=XML_TAG_END 	
+			(expression=TopLevel)?
+		closedTag ?= DEBUG_END_TAG
 		)
 	)	
 	;	
@@ -439,10 +448,10 @@ ExpressionTag returns ExpressionTag:
 	(
 		XML_TAG_SINGLEEND
 	|
-		( XML_TAG_END 	
+		( splitTag?=XML_TAG_END 	
 			expression=TopLevel
 			
-		    EXPRESSION_END_TAG
+		    closedTag ?= EXPRESSION_END_TAG
 		)
 	)	
 	;	
@@ -452,8 +461,8 @@ Option:
 	(
 		XML_TAG_SINGLEEND
 	|
-		( XML_TAG_END 	
-		OPTION_END_TAG
+		( splitTag?=XML_TAG_END 	
+		closedTag ?= OPTION_END_TAG
 		)
 	);
 	
