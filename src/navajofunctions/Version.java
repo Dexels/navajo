@@ -34,7 +34,6 @@ import com.dexels.navajo.functions.StandardFunctionDefinitions;
 import com.dexels.navajo.functions.util.FunctionDefinition;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.FunctionFactoryInterface;
-import com.dexels.navajo.functions.util.JarFunctionFactory;
 import com.dexels.navajo.parser.FunctionInterface;
 
 /**
