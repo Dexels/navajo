@@ -89,7 +89,10 @@ public class JarFunctionFactory extends FunctionFactoryInterface {
 			}
 		}
 		if ( name != null ) {
-			fuds.put(name, new FunctionDefinition(object, description, inputParams, resultParam,fd));
+			FunctionDefinition functionDefinition = new FunctionDefinition(object, description, inputParams, resultParam,fd);
+			functionDefinition.setXmlElement(element);
+			fuds.put(name, functionDefinition);
+			
 		}
 	}
 	

@@ -1,8 +1,11 @@
 package com.dexels.navajo.functions.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
+import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.version.NavajoBundleManager;
@@ -16,6 +19,7 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 
 	public FunctionInterface getInstance(final ClassLoader cl, final String functionName) throws TMLExpressionException  {
 		FunctionInterface osgiResolution = (FunctionInterface) getComponent(functionName, "functionName", FunctionInterface.class);
+
 		if (osgiResolution==null) {
 			System.err.println("OSGi failed. Going old skool");
 			return super.getInstance(cl, functionName);
@@ -25,6 +29,30 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 		}
 	}
 	
+	@Override
+	public List<XMLElement> getAllFunctionElements(String interfaceClass, String propertyKey)  {
+		List<XMLElement> result = new ArrayList<XMLElement>();
+		BundleContext context = NavajoBundleManager.getInstance().getBundleContext();
+		try {
+			ServiceReference[] refs = context.getServiceReferences(interfaceClass, null);
+			if(refs==null) {
+				System.err.println("Service enumeration failed class: "+interfaceClass);
+				return null;
+			}
+			for (ServiceReference serviceReference : refs) {
+				Object o = serviceReference.getProperty(propertyKey);
+				FunctionDefinition fd = (FunctionDefinition)o;
+				XMLElement xe = fd.getXmlElement();
+				if(xe!=null) {
+					result.add(xe);
+				}
+			}
+			
+		} catch (InvalidSyntaxException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 	
 	public Object getComponent( final String name, String serviceKey, Class interfaceClass)  {
 		System.err.println("GETTINH FUNCTION FROM OSHI!!!!: "+name);

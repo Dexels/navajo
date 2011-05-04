@@ -1,5 +1,8 @@
 package com.dexels.navajo.functions.util;
 
+
+import com.dexels.navajo.document.nanoimpl.XMLElement;
+
 import navajo.ExtensionDefinition;
 
 public final class FunctionDefinition {
@@ -9,6 +12,7 @@ public final class FunctionDefinition {
 	private final String description;
 	private final String [][] inputParams;
 	private final String [] resultParam;
+	private XMLElement xmlElement;
 	
 	public FunctionDefinition(final String object, final String description, final String inputParams, final String resultParam, ExtensionDefinition fd) {
 		this.object = object;
@@ -51,5 +55,14 @@ public final class FunctionDefinition {
 	
 	public static void main(String [] args) throws Exception {
 		
+	}
+
+	public void setXmlElement(XMLElement f) {
+		this.xmlElement = f;
+		
+	}
+
+	public XMLElement getXmlElement() {
+		return xmlElement;
 	}
 }

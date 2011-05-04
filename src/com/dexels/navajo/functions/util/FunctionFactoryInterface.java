@@ -1,11 +1,13 @@
 package com.dexels.navajo.functions.util;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import navajo.ExtensionDefinition;
 
+import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.server.UserException;
@@ -238,5 +240,7 @@ public abstract class FunctionFactoryInterface {
 		return null;
 	}
 //	
-	
+	public List<XMLElement> getAllFunctionElements(String interfaceClass, String propertyKey)  {
+		throw new UnsupportedOperationException("getAllFunctionElements only implemented in OSGi");
+	}
 }
