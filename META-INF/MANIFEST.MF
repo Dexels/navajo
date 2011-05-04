@@ -7,11 +7,15 @@ Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: model,
+Export-Package: com.dexels.navajo.dsl.expression.proposals,
  com.dexels.navajo.dsl.model.expression,
+ com.dexels.navajo.dsl.model.expression.impl,
  com.dexels.navajo.dsl.model.expression.util,
- com.dexels.navajo.dsl.model.expression.impl
+ model
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.emf.ecore;visibility:=reexport
+ org.eclipse.emf.ecore;visibility:=reexport,
+ com.dexels.navajo.document;bundle-version="1.0.4",
+ com.google.inject;bundle-version="2.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: com.dexels.navajo.dsl.expression.ExpressionActivator
+Import-Package: org.eclipse.core.resources
