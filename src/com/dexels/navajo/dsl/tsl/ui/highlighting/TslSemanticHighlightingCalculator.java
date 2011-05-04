@@ -99,7 +99,9 @@ public class TslSemanticHighlightingCalculator implements
 		List<Map> aa = EcoreUtil2.eAllOfType(m, Map.class);
 	    // TODO Create a separate category for map refs
 	    for (Map tag : aa) {
-	    	highlightLeafWithIndex(0,acceptor, tag,TslHighlightingConfiguration.MAP_ID);
+//	    	highlightLeafWithIndex(0,acceptor, tag,TslHighlightingConfiguration.MAP_ID);
+	    	highlightLeafWithIndex(new int[]{0,-5,-4,-3,-2,-1},acceptor, tag,TslHighlightingConfiguration.MAP_ID);
+	    	
 	    	for (PossibleExpression p : tag.getAttributes()) {
 				if("object".equals( p.getKey())) {
 					TopLevel expressionValue = p.getExpressionValue();
@@ -167,14 +169,30 @@ public class TslSemanticHighlightingCalculator implements
 			highlightLeafWithIndex(i,acceptor,m,highlightId);
 		}
 	}
+	
+	
+	/**
+	 * Negative index = count from last
+	 * @param index
+	 * @param acceptor
+	 * @param m
+	 * @param highlightId
+	 */
 	private void highlightLeafWithIndex(int index, IHighlightedPositionAcceptor acceptor, EObject m, String highlightId) {
 		NodeAdapter adapter = NodeUtil.getNodeAdapter(m);
 		CompositeNode node = adapter.getParserNode();
 		//LeafNode nn = node.getLeafNodes().get(0);
 		int ind = 0;
+		if(index<0) {
+			index = node.getLeafNodes().size() + index;
+			
+//			System.err.println("Highlighting from last: "+index);
+//			LeafNode nnn = node.getLeafNodes().get(index);
+//			System.err.println("LEAD: "+nnn.getText());
+		}
 		for(LeafNode nn: node.getLeafNodes()) {
 			if(!nn.isHidden()) {
-				if(ind>=index) {
+				if(ind==index) {
 					acceptor.addPosition(nn.getOffset(), nn.getLength(),  highlightId);
 					return;
 				}
