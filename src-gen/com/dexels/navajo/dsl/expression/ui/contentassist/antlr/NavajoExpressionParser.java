@@ -75,6 +75,7 @@ public class NavajoExpressionParser extends AbstractContentAssistParser {
 					put(grammarAccess.getPrimaryExpressionAccess().getGroup_1(), "rule__PrimaryExpression__Group_1__0");
 					put(grammarAccess.getFunctionCallAccess().getGroup(), "rule__FunctionCall__Group__0");
 					put(grammarAccess.getFunctionCallAccess().getGroup_3(), "rule__FunctionCall__Group_3__0");
+					put(grammarAccess.getDateLiteralAccess().getGroup(), "rule__DateLiteral__Group__0");
 					put(grammarAccess.getLiteralAccess().getGroup_0(), "rule__Literal__Group_0__0");
 					put(grammarAccess.getLiteralAccess().getGroup_2(), "rule__Literal__Group_2__0");
 					put(grammarAccess.getLiteralAccess().getGroup_4(), "rule__Literal__Group_4__0");
@@ -144,6 +145,7 @@ public class NavajoExpressionParser extends AbstractContentAssistParser {
 					put(grammarAccess.getLiteralAccess().getParametersAssignment_9(), "rule__Literal__ParametersAssignment_9");
 					put(grammarAccess.getLiteralAccess().getParametersAssignment_10(), "rule__Literal__ParametersAssignment_10");
 					put(grammarAccess.getLiteralAccess().getParametersAssignment_11(), "rule__Literal__ParametersAssignment_11");
+					put(grammarAccess.getLiteralAccess().getParametersAssignment_12(), "rule__Literal__ParametersAssignment_12");
 				}
 			};
 		}
