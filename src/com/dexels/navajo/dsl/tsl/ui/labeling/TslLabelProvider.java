@@ -7,6 +7,7 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider;
 
 import com.dexels.navajo.dsl.model.tsl.Message;
+import com.dexels.navajo.dsl.model.tsl.Property;
 import com.dexels.navajo.dsl.model.tsl.Tml;
 import com.google.inject.Inject;
 
@@ -22,6 +23,10 @@ public class TslLabelProvider extends DefaultEObjectLabelProvider {
 		super(delegate);
 	}
 
+	String text(Property m) {
+		return m.getName();
+	}
+	
 	String text(Message m) {
 		
 		String name = m.getName();

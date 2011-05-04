@@ -13,6 +13,7 @@ import org.eclipse.xtext.ui.editor.outline.transformer.AbstractDeclarativeSemant
 
 import com.dexels.navajo.dsl.model.tsl.Element;
 import com.dexels.navajo.dsl.model.tsl.Message;
+import com.dexels.navajo.dsl.model.tsl.Property;
 import com.dexels.navajo.dsl.model.tsl.Tml;
 
 /**
@@ -43,6 +44,9 @@ public class TslTransformer extends AbstractDeclarativeSemanticModelTransformer 
 				if(element instanceof Message) {
 					result.add(element);
 				}
+				if(element instanceof Property) {
+					result.add(element);
+				}
 			}
 			return result;
 		}		
@@ -69,4 +73,11 @@ public class TslTransformer extends AbstractDeclarativeSemanticModelTransformer 
 		    node.setLabel(stripQuotes(node.getLabel()));
 		    return node;
 		  }
+
+	public ContentOutlineNode createNode(Property semanticNode, ContentOutlineNode parentNode) {
+	    ContentOutlineNode node = super.newOutlineNode(semanticNode, parentNode);
+	    node.setLabel(stripQuotes("prop:"+node.getLabel()));
+	    return node;
+	  }
+
 }
