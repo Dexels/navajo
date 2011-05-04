@@ -622,7 +622,11 @@ public final class NavajoConfig implements NavajoConfigInterface {
 	 */
     public final InputStream getResource(String path) {
     	try {
-			return new FileInputStream(getResourceFile(path));
+    		File f = getResourceFile(path);
+    		if(!f.exists()) {
+    			return null;
+    		}
+			return new FileInputStream(f);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -687,8 +691,15 @@ public final class NavajoConfig implements NavajoConfigInterface {
     		String path = getScriptPath() + name + ".xml";
 			input = inputStreamReader.getResource(path);
     		if(input==null) {
+        		path = getScriptPath() + name + ".tsl";
+    			input = inputStreamReader.getResource(path);
+    		}
+    		if(input==null) {
     			System.err.println("No resource found");
     			File f = new File(contextRoot,"scripts/"+name+".xml");
+    			if(!f.exists()) {
+    				f = new File(contextRoot,"scripts/"+name+".tsl");
+    			}
     			System.err.println("Looking into contextroot: "+f.getAbsolutePath());
     			if(f.exists()) {
     				System.err.println("Retrieving script from servlet context: "+path);
