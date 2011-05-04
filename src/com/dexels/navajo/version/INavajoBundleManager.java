@@ -11,6 +11,6 @@ public interface INavajoBundleManager {
 
 	public abstract void loadAdapterPackages(File navajoRoot, BundleContext bc);
 	public Bundle locateBundleForClass(String clazz);
-	public Class loadClassInAnyBundle(String clazz) throws ClassNotFoundException;
+	public Class<?> loadClassInAnyBundle(String clazz) throws ClassNotFoundException;
 			
 }
