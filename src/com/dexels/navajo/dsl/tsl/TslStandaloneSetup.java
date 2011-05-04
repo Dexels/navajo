@@ -15,12 +15,20 @@ public class TslStandaloneSetup extends TslStandaloneSetupGenerated{
 //		InjectionTest i = ij.getInstance(InjectionTest.class);
 //		i.doSomething();
 		//		ij.getInstance(Class<? extends IFormatter>)
-		ij.getInstance(TslFormatter.class);
-		
+		TslFormatter t = ij.getInstance(TslFormatter.class);
+	
 	}
 
 	public static void main(String[] args) {
 		doSetup();
+		
+		String name = "Gorilla";
+		if(name!=null && !(name.length()<1)) {
+			if (!Character.isUpperCase(name.charAt(0))) {
+				// lower case name
+				System.err.println("Not upper.");
+			}
+		}
 	}
 	
 }
