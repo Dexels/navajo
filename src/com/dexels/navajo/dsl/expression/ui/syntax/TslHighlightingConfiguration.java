@@ -5,9 +5,7 @@ import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfigurationAcce
 
 public class TslHighlightingConfiguration implements IHighlightingConfiguration {
 
-	@Override
 	public void configure(IHighlightingConfigurationAcceptor acceptor) {
-		// TODO Auto-generated method stub
 
 	}
 //	public Class<? extends ILexicalHighlightingConfiguration> bind<MyDsl>LexicalHighlightingConfiguration()
