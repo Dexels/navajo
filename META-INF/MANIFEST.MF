@@ -5,9 +5,8 @@ Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.8
 Bundle-Activator: com.dexels.navajo.version.NavajoBundleManager
 Export-Package: com.dexels.navajo.version,
- navajo,
  org.osgi.framework
 Bundle-Vendor: Dexels
 Bundle-ClassPath: .
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.eclipse.osgi;bundle-version="3.6.2"
+Import-Package: org.osgi.framework
