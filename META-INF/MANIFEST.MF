@@ -5,7 +5,8 @@ Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.4
 Bundle-Activator: navajodocument.Version
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.version
+Require-Bundle: com.dexels.navajo.version;bundle-version="1.0.8",
+ org.eclipse.osgi;bundle-version="3.6.2"
 Bundle-ActivationPolicy: lazy
 Export-Package: com.dexels.navajo.document,
  com.dexels.navajo.document.base,
@@ -18,5 +19,4 @@ Export-Package: com.dexels.navajo.document,
  metadata,
  navajodocument,
  org.dexels.utils
-Import-Package: junit.framework,
- org.osgi.framework;version="1.5.0"
+Import-Package: junit.framework
