@@ -7,8 +7,7 @@ Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: com.dexels.navajo.dsl.expression.proposals,
- com.dexels.navajo.dsl.model.expression,
+Export-Package: com.dexels.navajo.dsl.model.expression,
  com.dexels.navajo.dsl.model.expression.impl,
  com.dexels.navajo.dsl.model.expression.util,
  model
