@@ -80,7 +80,6 @@ public class TslQuickfixProvider extends DefaultQuickfixProvider {
 	public void insertMissingAttribute(final Issue issue,IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Insert: "+issue.getData()[0]+" with \""+issue.getData()[1]+"\"", "Insert missing attribute", null , new ISemanticModification() {
 			
-			@Override
 			public void apply(EObject element, IModificationContext context)
 					throws Exception {
 				System.err.println("APPPPPLyING!!!!!!! "+issue.getData()[0]+" ::: "+issue.getData()[1]);

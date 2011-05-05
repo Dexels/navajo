@@ -17,7 +17,6 @@ public class TslHighlightingConfiguration implements IHighlightingConfiguration 
 	public static final String LITERAL_ID = "literal";
 	public static final String TSL_COMMENT_ID = "tslcomment";
 
-	@Override
 	public void configure(IHighlightingConfigurationAcceptor acceptor) {
 		System.err.println("Tsl highlighter configured!");
 		acceptor.acceptDefaultHighlighting(MAP_ID, "Map", mapIdTextStyle());

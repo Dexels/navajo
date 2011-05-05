@@ -63,7 +63,6 @@ public class TslSemanticHighlightingCalculator implements
 //		return null;
 //	}
 	
-	@Override
 	public void provideHighlightingFor(XtextResource resource,
 			IHighlightedPositionAcceptor acceptor) {
 		EList<EObject> contents = resource.getContents();
