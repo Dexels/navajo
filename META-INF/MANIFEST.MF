@@ -2,7 +2,7 @@ Bundle-Name: Navajo Jsp Server
 Bundle-SymbolicName: com.dexels.navajo.jsp.server
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.1
+Bundle-Version: 1.0.2.qualifier
 Bundle-ClassPath: .,
  lib/jhighlight-1.0.jar
 Export-Package: com.dexels.navajo.jsp.tags
