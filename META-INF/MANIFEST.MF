@@ -28,5 +28,11 @@ Require-Bundle: org.eclipse.ui,
  com.dexels.navajo.enterprise.adapters;bundle-version="1.0.1";resolution:=optional,
  com.dexels.navajo.enterprise.adapters.deps;bundle-version="1.0.1";resolution:=optional,
  com.dexels.navajo.enterprise.listeners;bundle-version="1.0.3";resolution:=optional,
- com.dexels.navajo.enterprise.listeners.deps;bundle-version="1.0.1";resolution:=optional
+ com.dexels.navajo.enterprise.listeners.deps;bundle-version="1.0.1";resolution:=optional,
+ com.dexels.navajo.dsl.tsl;bundle-version="1.0.0",
+ com.dexels.navajo.dsl.expression;bundle-version="1.0.0",
+ com.dexels.navajo.dsl.expression.ui;bundle-version="1.0.0",
+ org.eclipse.xtext;bundle-version="1.0.1",
+ org.eclipse.xtext.ui;bundle-version="1.0.1",
+ com.dexels.navajo.dev.script;bundle-version="0.99.25"
 Bundle-ActivationPolicy: lazy

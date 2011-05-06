@@ -1,12 +1,22 @@
 package com.dexels.navajo.server.embedded;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 
+import com.dexels.navajo.dsl.expression.NavajoExpressionRuntimeModule;
+import com.dexels.navajo.dsl.expression.ui.NavajoExpressionUiModule;
+import com.dexels.navajo.dsl.expression.ui.contentassist.NavajoExpressionProposalProvider;
 import com.dexels.navajo.server.listener.NavajoContextListener;
 import com.dexels.navajo.server.listener.http.TmlHttpServlet;
 import com.dexels.navajo.server.listener.nql.NqlServlet;
@@ -25,7 +35,13 @@ public class EmbeddedServerActivator extends AbstractUIPlugin {
 	protected Server jettyServer;
 
 	private ServletContextHandler webappContextHandler;
+
+	private NavajoExpressionProposalProvider navajoExpressionProvider;
 	
+	public NavajoExpressionProposalProvider getNavajoExpressionProvider() {
+		return navajoExpressionProvider;
+	}
+
 	/**
 	 * The constructor
 	 */
@@ -40,6 +56,8 @@ public class EmbeddedServerActivator extends AbstractUIPlugin {
 		super.start(context);
 		plugin = this;
 		touchNavajoParts(context);
+//		   getB	"com.dexels.navajo.dsl.expression.ui.contentassist.NavajoExpressionProposalProvider"
+		
 	}
 
 	private void touchNavajoParts(BundleContext context) {
@@ -54,6 +72,7 @@ public class EmbeddedServerActivator extends AbstractUIPlugin {
 		navajoenterprise.Version.getRandom();
 		navajoenterpriseadapters.Version.getRandom();
 		navajoenterpriselisteners.Version.getRandom();
+		NavajoExpressionRuntimeModule a;
 		System.err.println("Touch complete!");
 	}
 
@@ -77,9 +96,17 @@ public class EmbeddedServerActivator extends AbstractUIPlugin {
 
 
 	
-	public Server startServer(final int port, final String navajoPath) throws Exception, InterruptedException {
-		jettyServer = initializeServer(port, navajoPath);	
+	public Server startServer(final String projectName) throws Exception, InterruptedException {
+		IProject navajoProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+		jettyServer = initializeServer(navajoProject);	
 		startServer();
+//		NavajoExpressionUiModule inst = NavajoExpressionUiModule.getInstance();
+//		System.err.println("INST: "+inst);
+		
+//		ServiceReference sr = getBundle().getBundleContext().getServiceReference("com.dexels.navajo.dsl.expression.ui.contentassist.NavajoExpressionProposalProvider");	
+//		navajoExpressionProvider = (NavajoExpressionProposalProvider) getBundle().getBundleContext().getService(sr);
+//		System.err.println("Service ref aquired!");
+		
 		return jettyServer;
 	}
 	
@@ -93,7 +120,7 @@ public class EmbeddedServerActivator extends AbstractUIPlugin {
 					try {
 						EmbeddedServerActivator.this.jettyServer.start();
 						EmbeddedServerActivator.this.jettyServer.join();
-						EmbeddedServerActivator.this.serverStopped(jettyServer);
+//						EmbeddedServerActivator.this.serverStopped(jettyServer);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -105,10 +132,7 @@ public class EmbeddedServerActivator extends AbstractUIPlugin {
 		
 	}
 
-	protected void serverStopped(Server server) {
-		
-	}
-
+	
 	public void stopServer() {
 		System.err.println("Stopping server");
 		try {
@@ -128,6 +152,21 @@ public class EmbeddedServerActivator extends AbstractUIPlugin {
 		}
 	}
 	
+	public Server initializeServer(IProject folder) throws IOException {
+		int port = findFreePort();
+		System.err.println("FREE PORT: "+port);
+		String ss = folder.getLocation().toString();
+		Server sc = initializeServer(port, ss);
+		return sc;
+	}
+	
+	public int findFreePort() throws IOException {
+		ServerSocket server = new ServerSocket(0);
+		int port = server.getLocalPort();
+		server.close();
+		return port;
+	}
+
 	public Server initializeServer(int port, String navajoPath) {
 		Server server = new Server();
 		SelectChannelConnector connector = new SelectChannelConnector();

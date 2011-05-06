@@ -1,20 +1,38 @@
 package com.dexels.navajo.server.embedded.views;
 
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.util.component.LifeCycle;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.GroupMarker;
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.osgi.framework.Bundle;
 
+import com.dexels.navajo.client.ClientException;
+import com.dexels.navajo.client.context.NavajoContext;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.server.embedded.EmbeddedServerActivator;
+import com.dexels.navajo.studio.script.plugin.views.TmlClientView;
 
 
 /**
@@ -46,6 +64,11 @@ public class ServerControlPanel extends ViewPart {
 	private Action startServerAction;
 	private Action stopServerAction;
 
+//	private String serverURL = null;
+
+//	private IProject currentProject = null;
+	private NavajoContext localContext;
+	
 	/**
 	 * The constructor.
 	 */
@@ -60,30 +83,52 @@ public class ServerControlPanel extends ViewPart {
 		viewer = new Composite(parent, SWT.NORMAL);
 		// Create the help context id for the viewer's control
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(viewer, "com.dexels.navajo.server.embedded.viewer");
-		makeActions();
+//		serverURL = "localhost:"+8888+"/Postman";
+//		currentProject = ResourcesPlugin.getWorkspace().getRoot().getProject("Navajo");
+		makeActions("Navajo");
 		contributeToActionBars();
 	}
-
-
 
 	private void contributeToActionBars() {
 		IActionBars bars = getViewSite().getActionBars();
 		fillLocalToolBar(bars.getToolBarManager());
+//		fillMenuBar(menuBar)
 	}
 
-
+	
+	 protected void fillMenuBar(IMenuManager menuBar) {
+	        MenuManager fileMenu = new MenuManager("&File", IWorkbenchActionConstants.M_FILE);
+	        MenuManager helpMenu = new MenuManager("&Help", IWorkbenchActionConstants.M_HELP);
+	        
+	        menuBar.add(fileMenu);
+	        // Add a group marker indicating where action set menus will appear.
+	        menuBar.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+	        menuBar.add(helpMenu);
+	        
+	        // File
+	        fileMenu.add(stopServerAction);
+	        fileMenu.add(new Separator());
+//	        fileMenu.add(messagePopupAction);
+//	        fileMenu.add(openViewAction);
+//	        fileMenu.add(new Separator());
+//	        fileMenu.add(exitAction);
+//	        
+	        // Help
+//	        helpMenu.add(aboutAction);
+	    }
 	
 	private void fillLocalToolBar(IToolBarManager manager) {
 		manager.add(startServerAction);
 		manager.add(stopServerAction);
 	}
 
-	private void makeActions() {
+	private void makeActions(final String projectName) {
 		startServerAction = new Action() {
 			public void run() {
 				try {
-					dumpBundleStates();
-					Server s = EmbeddedServerActivator.getDefault().startServer(8888,"/Users/frank/knvb");
+//					dumpBundleStates();
+					Server s = EmbeddedServerActivator.getDefault().startServer(projectName).getServer();
+					System.err.println("SErver: "+s);
 					s.addLifeCycleListener(new LifeCycle.Listener() {
 						
 						@Override
@@ -116,6 +161,16 @@ public class ServerControlPanel extends ViewPart {
 							startServerAction.setEnabled(true);
 						}
 					});
+					int port = s.getConnectors()[0].getPort();
+					String server = "localhost:"+port+"/Postman";
+					setupClient(server, "plugin","plugin");
+					IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+					callPluginServices(project);
+					IWorkbenchWindow window = EmbeddedServerActivator.getDefault().getWorkbench().getActiveWorkbenchWindow();
+					IWorkbenchPage page = window.getActivePage();	
+					TmlClientView tw = (TmlClientView) page.showView("com.dexels.TmlClientView");
+//					int port = s.getConnectors()[0].getPort();
+					tw.setServerPort(port);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				} catch (Exception e) {
@@ -139,6 +194,38 @@ public class ServerControlPanel extends ViewPart {
 		stopServerAction.setToolTipText("Action 2 tooltip");
 		stopServerAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ELCL_STOP));
 	
+	}
+
+	protected void setupClient(String server, String user, String pass) {
+		localContext = new NavajoContext();
+		localContext.setupClient(server,user, pass);
+		
+	}
+
+	protected void callPluginServices(IProject project) throws CoreException {
+		try {
+			localContext.callService("plugin/InitNavajoBundle");
+			Navajo n = localContext.getNavajo("plugin/InitNavajoBundle");
+			n.write(System.err);
+			Binary b = (Binary) n.getProperty("NavajoBundle/FunctionDefinition").getTypedValue();
+			IFolder iff = project.getFolder("navajoconfig");
+			if(!iff.exists()) {
+				iff.create(true, true, null);
+			}
+			IFile ifi = iff.getFile("functions.xml");
+			if(!ifi.exists()) {
+				ifi.create(b.getDataAsStream(), true, null);
+			} else {
+				ifi.setContents(b.getDataAsStream(), true, false,null);
+				ifi.refreshLocal(1, null);
+			}
+		} catch (ClientException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NavajoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	protected void dumpBundleStates() {
