@@ -10,13 +10,9 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
-import org.eclipse.xtext.AbstractElement;
-import org.eclipse.xtext.AbstractRule;
 import org.eclipse.xtext.Assignment;
-import org.eclipse.xtext.Grammar;
 import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
@@ -30,7 +26,6 @@ import com.dexels.navajo.dsl.model.tsl.Message;
 import com.dexels.navajo.dsl.model.tsl.PossibleExpression;
 import com.dexels.navajo.dsl.model.tsl.Property;
 import com.dexels.navajo.dsl.model.tsl.Tml;
-import com.dexels.navajo.dsl.model.tsl.TslFactory;
 /**
  * see http://www.eclipse.org/Xtext/documentation/latest/xtext.html#contentAssist on how to customize content assistant
  */
@@ -91,7 +86,7 @@ public class TslProposalProvider extends AbstractTslProposalProvider {
 	
 	
 	
-	public TslProposalProvider(INavajoResourceFinder navajoFinder) throws CoreException, IOException {
+	public TslProposalProvider(INavajoResourceFinder navajoFinder) throws IOException {
 		navajoContext.initialize(navajoFinder);
 	
 		initializeProposalBundle();
