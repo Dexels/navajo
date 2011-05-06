@@ -2,7 +2,7 @@
 <feature
       id="com.dexels.navajo.dev"
       label="Navajo Development Plugin"
-      version="1.0.2"
+      version="2.0.1"
       provider-name="Dexels">
 
    <description url="http://www.example.com/description">
@@ -18,8 +18,8 @@
    </license>
 
    <requires>
-      <import feature="com.dexels.navajo.core.feature" version="1.0.0.qualifier"/>
-      <import feature="com.dexels.navajo.server.feature" version="1.0.0.qualifier"/>
+      <import feature="com.dexels.navajo.core.feature" version="1.0.6"/>
+      <import feature="com.dexels.navajo.server.feature" version="1.0.3"/>
    </requires>
 
    <plugin
