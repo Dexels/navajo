@@ -77,7 +77,6 @@ public class MetaDataViewer extends BaseNavajoView {
 
     private Hyperlink showScript;
 
-    private Hyperlink showTml;
 
     private Hyperlink recompileScript;
 
@@ -128,7 +127,6 @@ public class MetaDataViewer extends BaseNavajoView {
         titleLabel.setBackground(SECTION_BACKGROUND_COLOR);
         showScript = kit.createHyperlink(headPanel, "[[Edit script]]", SWT.NONE);
         editTml = kit.createHyperlink(headPanel, "[[Edit TML]]", SWT.NONE);
-        showTml = kit.createHyperlink(headPanel, "[[Show TML]]", SWT.NONE);
         recompileScript = kit.createHyperlink(headPanel, "[[Recompile script]]", SWT.NONE);
         showScript.addHyperlinkListener(new HyperlinkAdapter(){
             public void linkActivated(HyperlinkEvent e) {
@@ -149,20 +147,7 @@ public class MetaDataViewer extends BaseNavajoView {
                     }
                 }
             }});
-        showTml.addHyperlinkListener(new HyperlinkAdapter(){
-            public void linkActivated(HyperlinkEvent e) {
-                if (myFile!=null) {
-                    try {
-                        IFile tml = NavajoScriptPluginPlugin.getDefault().getTmlFile(myFile.getProject(), scriptName);
-                        if (tml!=null) {
-                            NavajoScriptPluginPlugin.getDefault().showTml(tml,scriptName);
-                        }
-                    } catch (Exception e1) {
-                        e1.printStackTrace();
-                    }
-                }
-            }});
-        recompileScript.addHyperlinkListener(new HyperlinkAdapter(){
+          recompileScript.addHyperlinkListener(new HyperlinkAdapter(){
             public void linkActivated(HyperlinkEvent e) {
                 if (myFile!=null) {
                     try {
@@ -350,15 +335,7 @@ public class MetaDataViewer extends BaseNavajoView {
                         NavajoScriptPluginPlugin.getDefault().openInEditor(fff);
                         return;
                     }
-                    if ((stateMask & SWT.CTRL) != 0) {
-                        IFile tmlfile = NavajoScriptPluginPlugin.getDefault().getTmlFile(myFile.getProject(), name);
-                        if (tmlfile!=null && tmlfile.exists()) {
-                            NavajoScriptPluginPlugin.getDefault().showTml(tmlfile,name);
-                        } else {
-                            NavajoScriptPluginPlugin.getDefault().showError("No tml file found. Run the script first.");
-                        }
-                        return;
-                    }
+                
                     NavajoScriptPluginPlugin.getDefault().showMetaData(myFile, name);
                 } catch (Exception e1) {
                     NavajoScriptPluginPlugin.getDefault().showError("Error: "+e1.getMessage());

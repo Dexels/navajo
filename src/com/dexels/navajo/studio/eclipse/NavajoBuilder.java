@@ -45,18 +45,10 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
       private boolean isOkToCompile;
 //    private TslMetaDataHandler metaDataHandler;
 //    private int compileCount;
-    private boolean classPathChanged;
 
     /**
      * 
      */
-    public NavajoBuilder() {
-        super();
-        // Force dependency to JDT Compiler. Not pretty, but used to fool 
-        // the dependency optimizer. It will kick out the JDT dependency otherwise
-        // because it can not see the dependency
-        Main m;
-    }
 
     protected void startupOnInitialize() {
         if (getProject() == null) {
@@ -65,28 +57,7 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
             System.err.println("Builder created for project: " + getProject().getName());
         }
         NavajoScriptPluginPlugin.getDefault().setNavajoBuilder(this);
-//
-//        InputStream metaIn = null;
-//        try {
-//            IFile iff = NavajoScriptPluginPlugin.getDefault().getScriptMetadataFile((IProject) getProject());
-//            if (iff != null && iff.exists()) {
-//                iff.refreshLocal(0, null);
-//                metaIn = iff.getContents();
-//                metaDataHandler.loadScriptData(metaIn);
-//            }
-//        } catch (Exception e) {
-//            NavajoScriptPluginPlugin.getDefault().log(e);
-//        } finally {
-//            if (metaIn != null) {
-//                try {
-//                    metaIn.close();
-//                } catch (IOException e1) {
-//                    NavajoScriptPluginPlugin.getDefault().log(e1);
-//                }
-//            }
-//        }
-//        NavajoScriptPluginPlugin.getDefault().getNavajoCompiler(getProject()).addMetaDataListener(metaDataHandler);
-    }
+   }
 
     
     
@@ -171,80 +142,13 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
      */
     private void fullBuild(ArrayList compilationList, IFolder scriptDir, IFolder compiled, IProgressMonitor monitor, IFolder currentDir,
             String currentPrefix) throws CoreException {
-        IResource[] ir = ((IFolder) currentDir).members();
-        for (int i = 0; i < ir.length; i++) {
-            String name = ir[i].getName();
-            if (ir[i] instanceof IFolder) {
-                IFolder cc = (IFolder) ir[i];
-                if (cc.getName().equals("CVS")) {
-                    // uglyish hack
-                    continue;
-                }
-                if (cc.getName().equals("include")) {
-                    // uglyish hack
-                    // continue;
-                }
-
-                if (currentPrefix.equals("")) {
-                    String prefix = name;
-                    fullBuild(compilationList, scriptDir, compiled, monitor, cc, prefix);
-                } else {
-                    String prefix = currentPrefix + "/" + name;
-                    fullBuild(compilationList, scriptDir, compiled, monitor, cc, prefix);
-                }
-            } else {
-                if (ir[i] instanceof IFile) {
-                    IFile ffile = (IFile) ir[i];
-                    String script = null;
-                    if (currentPrefix.equals("")) {
-                        script = name;
-                    } else {
-                        script = currentPrefix + "/" + name;
-                    }
-                    if (name.endsWith(".sample")) {
-                        continue;
-                    }
-                    long modstamp = ffile.getModificationStamp();
-                    IFile compiledFile;
-                    try {
-                        compiledFile = NavajoScriptPluginPlugin.getDefault().getCompiledScriptFile(getProject(), script);
-                    } catch (NavajoPluginException e) {
-                        System.err.println("No compiled scriptdir?!");
-                        continue;
-                    }
-                    if (compiledFile != null) {
-                        if (compiledFile.exists()) {
-                            long compStamp = compiledFile.getModificationStamp();
-                            long localStamp = compiledFile.getLocalTimeStamp();
-                            if (localStamp > compStamp) {
-                                MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "You edited the java source form:", name
-                                        + ", 0uw3");
-                            }
-                            if (compStamp > modstamp) {
-                                System.err.println("SHOULD SKIP:: " + name);
-                                continue;
-                            }
-                        }
-                    } else {
-                        System.err.println("NO COMPILED FILE FOUND");
-                    }
-
-                    script = script.endsWith(".xml") ? script.substring(0, script.length() - 4) : script;
-                    addCompilation(compilationList, scriptDir, compiled, currentPrefix, script);
-                    // System.err.println("Script: " + ir[i].getName());
-
-                } else {
-                    MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Geen idee wat voor script dingetje dit is:", name);
-                }
-            }
-        }
+    
     }
 
     public void clean(int kind, final IFolder compileDir, IProgressMonitor ipm) throws CoreException {
         System.err.println("Cleaning folder....");
         NavajoScriptPluginPlugin.getDefault().getMetaDataHandler().flushAll();
         cleanFolder(compileDir);
-
     }
 
     private void cleanFolder(IResource r) throws CoreException {
@@ -264,7 +168,6 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
         final IFolder configFolder = NavajoScriptPluginPlugin.getDefault().getNavajoConfigFolder(getProject());
         final IFolder adapterFolder = NavajoScriptPluginPlugin.getDefault().getAdaptersFolder(getProject());
                 
-        classPathChanged = false;
         IResourceDeltaVisitor visitor = new IResourceDeltaVisitor() {
             public boolean visit(IResourceDelta delta) {
                 // only interested in changed resources (not added or removed)
@@ -328,19 +231,6 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                     // Do this later; Avoid doing it multiple times
                     // NavajoScriptPluginPlugin.getDefault().refreshCompilerClassLoader(current.getProject());
 
-                    classPathChanged = true;
-                }
-                if (current.getName().equals(".navajoroot")) {
-                    System.err.println("Detected navajoroot change, project: "+current.getProject().getName());
-                    try {
-                        NavajoScriptPluginPlugin.getDefault().logMessage("Navajoroot changed, refreshing both root path and server.xml");
-                        NavajoScriptPluginPlugin.getDefault().refreshNavajoRootPath(current.getProject());
-                        NavajoScriptPluginPlugin.getDefault().refreshServerXmlNavajo(current.getProject());
-                        classPathChanged = true;
-                    } catch (NavajoPluginException e) {
-                        NavajoScriptPluginPlugin.getDefault().showError("Error refreshing navajo root?!",e);
-                        e.printStackTrace();
-                    }
                 }
                 
                 try {
@@ -354,7 +244,6 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
 
                 if ("jar".equalsIgnoreCase(ext) || "zip".equalsIgnoreCase(ext) && adapterFolder.getFullPath().isPrefixOf(current.getFullPath()) ) {
                     System.err.println("Adapters changed!");
-                    classPathChanged = true;
                 }
                 
                 if ("java".equalsIgnoreCase(ext)) {
@@ -380,13 +269,6 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
         };
         if (ird!=null) {
             ird.accept(visitor);
-            if (classPathChanged) {
-                System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Rebuilding stuff");
-//                NavajoScriptPluginPlugin.getDefault().refreshNavajoCompiler(getProject());
-                NavajoScriptPluginPlugin.getDefault().getClassProvider(getProject(), true);
-//                NavajoScriptPluginPlugin.getDefault().showInfo("A classpath change occurred!");
-                NavajoScriptPluginPlugin.getDefault().refreshCompilerClassLoader(getProject());
-            }
             try {
                 monitor.beginTask("Compiling TSL", changed.size());
                 String name = ird.getFullPath().toString();
@@ -503,181 +385,7 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
             isOkToCompile = true;
             return;
         }
-        final ArrayList javaCompilations = new ArrayList();
-//        Job job = new Job("Compiling scripts: ") {
-//            protected IStatus run(IProgressMonitor monitor) {
-                long totalOld = 0;
-                long totalNew = 0;
-
-                long totalJava = 0;
-                int totalJavaScript = 0;
-                int totalLines = 0;
-                double javaAvg = 0;
-                long time = System.currentTimeMillis();
-                
-//                Set classPathSet = new HashSet();
-                monitor.beginTask("Compiling TSL", compilationList.size());
-                IFolder fbin = null;
-                try {
-                    fbin = NavajoScriptPluginPlugin.getDefault().getCompiledScriptFolder(getProject());
-                    if (!fbin.exists()) {
-                        fbin.create(false, true, null);
-                    }
-                } catch (NavajoPluginException e2) {
-                    NavajoScriptPluginPlugin.getDefault().log("Error compliling script ",e2);
-                } catch (CoreException e2) {
-                    NavajoScriptPluginPlugin.getDefault().log("Error compliling script ",e2);
-                }
-//                
-                
-                
-                
-                
-                ArrayList compiledFiles = new ArrayList();
-                 ClassProvider cp = NavajoScriptPluginPlugin.getDefault().getClassProvider(getProject(), false);
-//                System.err.println("ClassPro: "+cp.toString());
-//                System.err.println("navavcomp: "+navajoCompiler.toString());
-//                System.err.println("Navacomp cl: "+navajoCompiler.getClass().getClassLoader());
-                
-                for (int i = 0; i < compilationList.size(); i++) {
-                    if (monitor.isCanceled()) {
-                        break;
-                    }
-                    TslCompiler navajoCompiler = NavajoScriptPluginPlugin.getDefault().getNavajoCompiler(getProject());
-                    
-                    NavajoScriptCompilation current = (NavajoScriptCompilation) compilationList.get(i);
-                    String javaSrc = current.getCompileDir() + "/" + current.getScript() + ".java";
-                       try {
-                        IFile ifi = NavajoScriptPluginPlugin.getDefault().getScriptFile(getProject(), current.getScript());
-                        IFile output = NavajoScriptPluginPlugin.getDefault().getCompiledScriptFile(getProject(), current.getScript());
-                        IFile classfile = NavajoScriptPluginPlugin.getDefault().getClassFile(getProject(), current.getScript());
-                        try {
-                            monitor.setTaskName(" Compiling: " + i + "/" + compilationList.size() + " " + current.getScript());
-                            monitor.worked(1);
-                            if (!ifi.exists()) {
-                                continue;
-                            }
-                            ifi.deleteMarkers(IMarker.PROBLEM, true, 0);// monitor.worked(1);
-                            long cc = System.currentTimeMillis();
-                            int lines = 0;
-                            
-//                            navajoCompiler.compileTsl(current.getScript(), current.getScriptDir(), current.getCompileDir(), current.getScriptPackage(), true);
-                      
-                            String strippedScript = null;
-                            if (current.getScript().indexOf("/")!=-1) {
-                                strippedScript = current.getScript().substring(current.getScript().lastIndexOf("/")+1,current.getScript().length());
-								
-							} else {
-	                            strippedScript = current.getScript();
-							}
-                            
-                            navajoCompiler.compileScript(strippedScript, current.getScriptDir(), current.getCompileDir(), current.getScriptPackage(),getConfigDir());
-                            totalLines += lines;
-                            totalNew += (System.currentTimeMillis() - cc);
-                                    totalJava += (System.currentTimeMillis() - cc);
-                            totalJavaScript++;
-                            cc = System.currentTimeMillis();
-                            javaCompilations.add(javaSrc);
-                            compiledFiles.add(output);
-                        } catch (Throwable e) {
-                            NavajoScriptPluginPlugin.getDefault().log("Compile exception:", e);
-                            int start = 0;
-                            int end = 5;
-                            if (e instanceof TslCompileException) {
-                                TslCompileException tce = (TslCompileException)e;
-                                System.err.println("TCE detected!");
-                                if (tce.isAttributeProblem()) {
-                                    System.err.println("ATTRIBUTEPROBLEM::: "+tce.getOffendingAttribute());
-                                    System.err.println("ALTERNATIVES: "+tce.getSolutions());
-//                                    start = tce.getStartOffset();
-                                    start = 10;
-                                    end = 20;
-                                } else {
-                                    System.err.println("TagPROBLEM!");
-                                    System.err.println("ALTERNATIVES: "+tce.getSolutions());
-                                    start = ((TslCompileException) e).getStartOffset();
-                                    end = ((TslCompileException) e).getEndOffset();
-                               }
-                                
-                                try {
-                                    NavajoScriptPluginPlugin.getDefault().reportProblem(e.getMessage(), ifi, start, end + 1, (TslCompileException) e);
-                                    
-                                } catch (CoreException e1) {
-                                    NavajoScriptPluginPlugin.getDefault().log("Error reporting error. This is a classic one.",e1);
-                                }
-                                if (classfile.exists()) {
-                                    if (!classfile.isSynchronized(0)) {
-                                        classfile.refreshLocal(0, monitor);
-                                    }
-                                    classfile.delete(false, null);
-                                }
-                                if (output.exists()) {
-                                    if (!output.isSynchronized(0)) {
-                                        output.refreshLocal(0, monitor);
-                                    }
-                                    output.delete(false, null);
-                                }
-                                continue;
-                            }
-                            if (ifi != null) {
-                                if (!ifi.exists()) {
-                                } else {
-                                    System.err.println("REPORTING PROBLEM!");
-                                    try {
-                                        NavajoScriptPluginPlugin.getDefault().reportProblem(e.getMessage(), ifi, start, end + 1, null);
-                                    } catch (CoreException e1) {
-                                        NavajoScriptPluginPlugin.getDefault().log("Oh great, an error displaying an error. ",e1);
-                                    }
-                                }
-                            }
-                        }
-                    } catch (NavajoPluginException e) {
-                        e.printStackTrace();
-                        NavajoScriptPluginPlugin.getDefault().log(e);
-                    }
-                }
-                monitor.worked(1);
-                monitor.setTaskName("Compiling "+javaCompilations.size()+" java files...");
-              if (javaCompilations.size()>0) {
-            	  TslCompiler navajoCompiler = NavajoScriptPluginPlugin.getDefault().getNavajoCompiler(getProject());
-                  
-                    try { 
-                        Class cc = Class.forName("org.eclipse.jdt.internal.compiler.batch.Main",true,NavajoScriptPluginPlugin.class.getClassLoader());
-                        if (cc!=null) {
-                            navajoCompiler.setCompileClassLoader(cc.getClass().getClassLoader());
-                        } else {
-                            navajoCompiler.setCompileClassLoader(getClass().getClassLoader());
-                        }
-                        navajoCompiler.compileAllTslToJava(javaCompilations);
-                    } catch (NavajoPluginException e3) {
-                        NavajoScriptPluginPlugin.getDefault().log("Error compiling java files.",e3);
-                    } catch (Exception e3) {
-                        NavajoScriptPluginPlugin.getDefault().log("Error compiling java files.",e3);
-                    }
-                }
-                monitor.done();
-                System.err.println("Total compiled lines: " + totalLines);
-                System.err.println("TSL COMPILE TOOK: " + totalNew);
-                System.err.println("Performance: " + ((1000 * totalLines) / (totalNew + 1)) + " lines/sec.");
-                System.err.println("JAVA COMPILE TOOK: " + totalJavaScript + " scripts in " + totalJava + " millis!");
-                long cc = System.currentTimeMillis();
-                try {
-              if (compiledFiles.size() > LARGE_COMPILE_THRESHOLD) {
-                        IFolder ifff = NavajoScriptPluginPlugin.getDefault().getCompileFolder(getProject());
-                        ifff.refreshLocal(IResource.DEPTH_INFINITE, null);
-                    } else {
-                        for (int i = 0; i < compiledFiles.size(); i++) {
-                            IFile c = (IFile) compiledFiles.get(i);
-                            c.refreshLocal(0, null);
-                        }
-                    }
-                } catch (NavajoPluginException e) {
-                    NavajoScriptPluginPlugin.getDefault().log("Error refreshing .java files after build!",e);
-                } catch (CoreException e) {
-                    NavajoScriptPluginPlugin.getDefault().log("Error refreshing .java files after build!",e);
-                }
-
-                long diff = System.currentTimeMillis() - cc;
+        
     }
 
     private String getConfigDir() throws NavajoPluginException {

@@ -50,11 +50,12 @@ public class NavajoStorage extends PlatformObject implements IStorage {
     }
 
     public String getName() {
-        return myName;
+        return myName+".xml";
     }
 
     public boolean isReadOnly() {
         return true;
     }
 
+    
 }

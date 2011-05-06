@@ -30,10 +30,7 @@ public class NavajoAction extends BaseNavajoAction {
      * @see IWorkbenchWindowActionDelegate#run
      */
     public void run(IAction action) {
-        try {
-            NavajoScriptPluginPlugin.getDefault().runNavajo(NavajoScriptPluginPlugin.NAVAJO_RUNNER_CLASS, file);
-          } catch (Exception e) {
-              NavajoScriptPluginPlugin.getDefault().log("Error running navajo standalone. I thought this one was deprecated, by the way.",e);
-        }
+        
+    	System.err.println("Removed.. Will not do anything");
     }
 }

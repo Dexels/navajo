@@ -12,6 +12,7 @@ import java.util.Iterator;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
@@ -53,7 +54,7 @@ public abstract class BaseNavajoAction implements IWorkbenchWindowActionDelegate
 
     protected IContainer folder;
 
-    protected final ArrayList selectionList = new ArrayList();
+    protected final ArrayList<IResource> selectionList = new ArrayList<IResource>();
     
     public BaseNavajoAction() {
         super();
@@ -70,7 +71,6 @@ public abstract class BaseNavajoAction implements IWorkbenchWindowActionDelegate
                 selectionList.clear();
                 if (empty) {
                     
-                    IEditorPart activeEditor = NavajoScriptPluginPlugin.getDefaultWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
                         this.selection = null;
                         file = null;
                         folder = null;
@@ -127,26 +127,6 @@ public abstract class BaseNavajoAction implements IWorkbenchWindowActionDelegate
             NavajoScriptPluginPlugin.getDefault().log("Core exception in NavajoAction",e);
         }
 
-    }
-
-    public IProject getProject() {
-        // I am unsure whether this is a good idea.
-        if (folder==null) {
-            System.err.println("Hey! I thought this did not happen any more!");
-             if (file!=null) {
-                IProject ip = file.getProject();
-                return ip;
-            } else {
-                NavajoScriptPluginPlugin.getDefault().log("BaseNavajoAction: Getting Default project. Shouldn't happen. Fix.");
-                return NavajoScriptPluginPlugin.getDefault().getDefaultNavajoProject();
-            }
-        } else {
-            if (folder instanceof IProject) {
-                return (IProject)folder;
-            } else {
-                return folder.getProject();
-            }
-        }
     }
     
     /**

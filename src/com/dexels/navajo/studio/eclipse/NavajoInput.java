@@ -35,7 +35,7 @@ public class NavajoInput extends PlatformObject implements IStorageEditorInput {
     }
 
     public String getName() {
-        return myStorage.getName();
+        return myStorage.getName()+".xml";
     }
 
     public IPersistableElement getPersistable() {

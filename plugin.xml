@@ -7,9 +7,27 @@
          id="com.dexels.TmlBrowser"/>
    </extension>
    
- 
+   <extension point="org.eclipse.ui.views">
+
+      <view name="TML Client View" icon="icons/dexels_function.gif" category="com.dexels.plugin.views"
+         class="com.dexels.navajo.studio.script.plugin.views.TmlClientView"
+         id="com.dexels.TmlClientView"/>
+   </extension>
    
 
+  
+   <extension id="NavajoScriptBuilder" name="TSL Builder"
+      point="org.eclipse.core.resources.builders">
+      <builder hasNature="false">
+         <run class="com.dexels.navajo.studio.eclipse.NavajoBuilder"/>
+      </builder>
+   </extension>
+   <extension id="NavajoNature" name="Navajo Nature" point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run class="com.dexels.navajo.studio.eclipse.NavajoNature"/>
+      </runtime>
+      <builder id="NavajoScriptBuilder"/>
+   </extension>
 	
    <extension point="org.eclipse.ui.preferencePages">
       <page name="Navajo Browser Preferences"
@@ -58,6 +76,9 @@
 	</markerResolutionGenerator>
 </extension>
 -->
+            <action label="Run.." icon="icons/start.gif"  tooltip="Run remote script" 
+               class="com.dexels.navajo.studio.script.plugin.actions.NavajoRemoteAction"
+               id="com.dexels.plugin.newAction"/>
    
   
    
@@ -99,6 +120,9 @@
       </editorContribution>
  </extension>
 -->
+
+
+
 	<extension point="org.eclipse.ui.contexts">
 		<context name="Navajo context" description="Navajo context description" id="com.dexels.navajoContext" parentId="org.eclipse.ui.contexts.window"/>
 	</extension>

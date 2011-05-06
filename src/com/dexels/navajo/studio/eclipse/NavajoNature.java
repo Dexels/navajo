@@ -52,35 +52,39 @@ public class NavajoNature extends PlatformObject implements IProjectNature {
      * @see org.eclipse.core.resources.IProjectNature#configure()
      */
     public void configure() throws CoreException {
-        addBuilderToProject(myProject);
-        new Job("Building scripts...") {
-            protected IStatus run(IProgressMonitor monitor) {
-                try {
-                    try {
-                        System.err.println("Building scriptssssss...");
-                        IFolder tml = NavajoScriptPluginPlugin.getDefault().getTmlFolder(myProject);
-                        if (!tml.exists()) {
-                            tml.create(true, true, monitor);
-                        }
-                        IFolder scripts = NavajoScriptPluginPlugin.getDefault().getScriptFolder(myProject);
-                        if (!scripts.exists()) {
-                            scripts.create(true, true, monitor);
-                        }
-                        IFolder compiled = NavajoScriptPluginPlugin.getDefault().getCompileFolder(myProject);
-                        if (!compiled.exists()) {
-                            compiled.create(true, true, monitor);
-                        }
-                    } catch (NavajoPluginException e1) {
-                        NavajoScriptPluginPlugin.getDefault().log("Error configuring navajo project!",e1);
-                    }
-                    System.err.println("Starting build");
-                    myProject.build(IncrementalProjectBuilder.FULL_BUILD, BUILDER_ID, null, monitor);
-                } catch (CoreException e) {
-                    NavajoScriptPluginPlugin.getDefault().log("Error preforming full build after configuring navajo project!",e);
-                }
-                return Status.OK_STATUS;
-            }
-        }.schedule();
+    	System.err.println("NOT adding builder to project.");
+    	if(true) {
+    		return;
+    	}
+    	addBuilderToProject(myProject);
+//        new Job("Building scripts...") {
+//            protected IStatus run(IProgressMonitor monitor) {
+//                try {
+//                    try {
+//                        System.err.println("Building scriptssssss...");
+//                        IFolder tml = NavajoScriptPluginPlugin.getDefault().getTmlFolder(myProject);
+//                        if (!tml.exists()) {
+//                            tml.create(true, true, monitor);
+//                        }
+//                        IFolder scripts = NavajoScriptPluginPlugin.getDefault().getScriptFolder(myProject);
+//                        if (!scripts.exists()) {
+//                            scripts.create(true, true, monitor);
+//                        }
+//                        IFolder compiled = NavajoScriptPluginPlugin.getDefault().getCompileFolder(myProject);
+//                        if (!compiled.exists()) {
+//                            compiled.create(true, true, monitor);
+//                        }
+//                    } catch (NavajoPluginException e1) {
+//                        NavajoScriptPluginPlugin.getDefault().log("Error configuring navajo project!",e1);
+//                    }
+//                    System.err.println("Starting build");
+//                    myProject.build(IncrementalProjectBuilder.FULL_BUILD, BUILDER_ID, null, monitor);
+//                } catch (CoreException e) {
+//                    NavajoScriptPluginPlugin.getDefault().log("Error preforming full build after configuring navajo project!",e);
+//                }
+//                return Status.OK_STATUS;
+//            }
+//        }.schedule();
     }
 
     /*
@@ -89,7 +93,10 @@ public class NavajoNature extends PlatformObject implements IProjectNature {
      * @see org.eclipse.core.resources.IProjectNature#deconfigure()
      */
     public void deconfigure() throws CoreException {
-        System.err.println("Deconfiguring NavajoNature");
+        System.err.println("Deconfiguring NavajoNature. NOT decomissioning Builder");
+        if(true) {
+        	return;
+        }
         removeBuilderFromProject(myProject);
     }
 
@@ -164,7 +171,6 @@ public class NavajoNature extends PlatformObject implements IProjectNature {
         try {
             description = project.getDescription();
         } catch (CoreException e) {
-            //          FavoritesLog.logError(e);
             NavajoScriptPluginPlugin.getDefault().log("Error getting project description of project: "+project.getName(),e);
             return;
         }

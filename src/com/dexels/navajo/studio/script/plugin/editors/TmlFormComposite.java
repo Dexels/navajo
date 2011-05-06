@@ -101,7 +101,6 @@ public class TmlFormComposite extends Composite {
 
 	private Composite mainMessageContainer;
 
-	private IFile myCurrentFile = null;
 
 	private Section methodSection;
 
@@ -150,13 +149,11 @@ public class TmlFormComposite extends Composite {
 		return myForm;
 	}
 
-	public void setNavajo(Navajo n, IFile myFile, String scriptName) {
+	public void setNavajo(Navajo n, String scriptName) {
 		if (mainMessageContainer != null) {
 			mainMessageContainer.dispose();
 		}
-		System.err.println("MyFile: "+myFile);
 		myCurrentName = scriptName;
-		myCurrentFile = myFile;
 		myCurrentNavajo = n;
 		mainMessageContainer = getKit().createComposite(myForm.getBody(), SWT.NONE);
 		mainMessageContainer.setVisible(false);
@@ -176,20 +173,11 @@ public class TmlFormComposite extends Composite {
 		l.setText(scriptName);
 		headComp.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.TOP));
 		try {
-			addEditScriptHref(scriptName, headComp, n, myCurrentFile);
-			addEditTmlHref(scriptName, headComp, n, myCurrentFile);
-			addEditReportHref(scriptName, headComp, n, myCurrentFile);
-			addRunReportHref(scriptName, headComp, n, myCurrentFile);
-
-		} catch (NavajoPluginException e1) {
-			e1.printStackTrace();
-		}
-
-		try {
-			setHeader(n, myFile, scriptName, mainMessageContainer);
+			setHeader(n, scriptName, mainMessageContainer);
 			setMessages(n, mainMessageContainer);
-			setMethods(n, myCurrentFile, scriptName);
+			setMethods(n, scriptName);
 			setBirtSection(n);
+			addRunReportHref(scriptName, headComp, n);
 		} catch (NavajoPluginException e1) {
 			e1.printStackTrace();
 		}
@@ -198,10 +186,6 @@ public class TmlFormComposite extends Composite {
 		// mainMessageContainer.getParent().layout();
 		fireGotoScript(scriptName, n);
 		myForm.reflow(true);
-	}
-
-	public void reload() throws NavajoPluginException {
-		reload(myCurrentNavajo, myCurrentFile, null);
 	}
 
 
@@ -440,7 +424,7 @@ public class TmlFormComposite extends Composite {
 	 * @param myFile
 	 */
 
-	private void setMethods(final Navajo n, final IFile myFile, final String scriptName) throws NavajoPluginException {
+	private void setMethods(final Navajo n, final String scriptName) throws NavajoPluginException {
 		HyperlinkGroup hg = new HyperlinkGroup(mainMessageContainer.getDisplay());
 		if (methodSection != null) {
 			methodSection.dispose();
@@ -458,29 +442,18 @@ public class TmlFormComposite extends Composite {
 		TableWrapLayout layout = new TableWrapLayout();
 		layout.numColumns = 2;
 		list.setLayout(layout);
-		addSaveHref(scriptName, list, n, myFile);
-		addBackHref(scriptName, list, n, myFile);
-		addReloadHref(scriptName, list, n, myFile);
-		addRestartHref(scriptName, list, n, myFile);
-		addRefreshAdaptersHref(list, myFile);
-		addRecompileHref(list, scriptName, myFile);
 
 		for (Iterator<Method> iter = n.getAllMethods().iterator(); iter.hasNext();) {
 			final Method element = iter.next();
 			final Hyperlink hl = whiteKit.createHyperlink(list, element.getName(), SWT.NONE);
 			hl.setHref(element.getName());
-			if (myFile != null) {
-				if (!NavajoScriptPluginPlugin.getDefault().isScriptExisting(myFile.getProject(), element.getName())) {
-					hl.setForeground(new Color(null, 200, 0, 0));
-					hl.setToolTipText("This script does not exist!");
-				}
-			}
+
 			TableWrapData tdd = new TableWrapData();
 			hl.setLayoutData(tdd);
 			hl.addHyperlinkListener(new HyperlinkAdapter() {
 				public void linkActivated(HyperlinkEvent e) {
 					try {
-						runHref(myCurrentNavajo, myFile, element.getName(), e, false, scriptName);
+						runHref(myCurrentNavajo, element.getName(), e, false, scriptName);
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
@@ -494,7 +467,7 @@ public class TmlFormComposite extends Composite {
 	 * @param myFile
 	 */
 
-	private void setHeader(final Navajo n, final IFile myFile, String scriptName, Composite parent) throws NavajoPluginException {
+	private void setHeader(final Navajo n, String scriptName, Composite parent) throws NavajoPluginException {
 		final ExpandableComposite ss = getKit().createExpandableComposite(parent, ExpandableComposite.TWISTIE);
 		ss.setBackground(new Color(Display.getCurrent(), 240, 220, 220));
 		TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB);
@@ -572,53 +545,8 @@ public class TmlFormComposite extends Composite {
 		getKit().createLabel(transactionList, label);
 	}
 
-	private void addRefreshAdaptersHref(Composite list, final IFile myFile) {
-		if (myFile == null) {
-			return;
-		}
-		final Hyperlink hl = whiteKit.createHyperlink(list, "[[Update adapters]]", SWT.NONE);
-		TableWrapData tdd = new TableWrapData();
-		hl.setLayoutData(tdd);
-		hl.addHyperlinkListener(new HyperlinkAdapter() {
-			public void linkActivated(HyperlinkEvent e) {
-				try {
-					IFile cp = myFile.getProject().getFile(".classpath");
-					cp.touch(null);
-				} catch (CoreException e1) {
-					e1.printStackTrace();
-					NavajoScriptPluginPlugin.getDefault().log("Error reloading adapters: ", e1);
-				}
-			}
+	
 
-		});
-	}
-
-	private void addRecompileHref(Composite list, final String scriptName, final IFile myFile) {
-		if (myFile == null) {
-			return;
-		}
-		final Hyperlink hl = whiteKit.createHyperlink(list, "[[Recompile]]", SWT.NONE);
-		TableWrapData tdd = new TableWrapData();
-		hl.setLayoutData(tdd);
-		hl.addHyperlinkListener(new HyperlinkAdapter() {
-			public void linkActivated(HyperlinkEvent e) {
-				try {
-					IFile iff;
-					try {
-						iff = NavajoScriptPluginPlugin.getDefault().getScriptFile(myFile.getProject(), scriptName);
-						iff.touch(null);
-					} catch (NavajoPluginException e1) {
-						NavajoScriptPluginPlugin.getDefault().log("Error recompiling current script?!: ", e1);
-						e1.printStackTrace();
-					}
-				} catch (CoreException e1) {
-					e1.printStackTrace();
-					NavajoScriptPluginPlugin.getDefault().log("Error recompiling current script?!: ", e1);
-				}
-			}
-
-		});
-	}
 
 	private void addBirtHref(Composite list, final Navajo n) {
 		// final Method element = (Method) iter.next();
@@ -661,7 +589,7 @@ public class TmlFormComposite extends Composite {
 			public void linkActivated(HyperlinkEvent e) {
 				Navajo copiedNavajo = n.copy();
 				try {
-					runHref(copiedNavajo, null, "ProcessPrintGenericBirt", e, false, null);
+					runHref(copiedNavajo, "ProcessPrintGenericBirt", e, false, null);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
@@ -669,111 +597,11 @@ public class TmlFormComposite extends Composite {
 		});
 	}
 
-	/**
-	 * @param list
-	 * @param n
-	 */
-	private void addReloadHref(final String name, Composite list, final Navajo n, final IFile myFile) throws NavajoPluginException {
-		if (myFile == null) {
-			return;
-		}
-		final Hyperlink hl = whiteKit.createHyperlink(list, "[[Reload]]", SWT.NONE);
-		hl.setHref(name);
-		TableWrapData tdd = new TableWrapData();
-		hl.setLayoutData(tdd);
-		hl.addHyperlinkListener(new HyperlinkAdapter() {
-			public void linkActivated(HyperlinkEvent e) {
-				try {
-					reload(n, myFile, e);
-				} catch (NavajoPluginException e1) {
-					e1.printStackTrace();
-				}
-			}
 
-		});
-	}
 
-	private void addRestartHref(final String name, Composite list, final Navajo n, final IFile myFile) throws NavajoPluginException {
-		if (myFile == null) {
-			return;
-		}
-		final IProject p = myFile.getProject();
-		final Hyperlink hl = whiteKit.createHyperlink(list, "[[Restart]]", SWT.NONE);
-		hl.setHref(name);
-		TableWrapData tdd = new TableWrapData();
-		hl.setLayoutData(tdd);
-		hl.addHyperlinkListener(new HyperlinkAdapter() {
-			public void linkActivated(HyperlinkEvent e) {
-				try {
-					NavajoScriptPluginPlugin.getDefault().startSocketRunner(p);
-				} catch (DebugException e1) {
-					e1.printStackTrace();
-				}
-			}
 
-		});
-	}
-
-	private void addEditTmlHref(final String name, Composite list, final Navajo n, final IFile myFile) throws NavajoPluginException {
-		if (myFile == null) {
-			return;
-		}
-		final Hyperlink hl = getKit().createHyperlink(list, "[[Edit TML]]", SWT.NONE);
-		hl.setHref(name);
-		// TableWrapData tdd = new TableWrapData();
-		// hl.setLayoutData(new
-		// TableWrapData(TableWrapData.LEFT,TableWrapData.TOP));
-		// hl.setBackground(new Color(Display.getCurrent(), 220, 220, 240));
-		hl.addHyperlinkListener(new HyperlinkAdapter() {
-			public void linkActivated(HyperlinkEvent e) {
-				try {
-					IFile tmlFile = NavajoScriptPluginPlugin.getDefault().getTmlFile(myFile.getProject(), name);
-					NavajoScriptPluginPlugin.getDefault().openInEditor(tmlFile);
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-			}
-		});
-	}
-
-	private void addEditReportHref(final String name, Composite list, final Navajo n, final IFile myFile) throws NavajoPluginException {
-		if (myFile == null) {
-			return;
-		}
-		final Hyperlink hl = getKit().createHyperlink(list, "[[Edit report]]", SWT.NONE);
-		hl.setHref(name);
-		// TableWrapData tdd = new TableWrapData();
-		// hl.setLayoutData(new
-		// TableWrapData(TableWrapData.LEFT,TableWrapData.TOP));
-		// hl.setBackground(new Color(Display.getCurrent(), 220, 220, 240));
-		hl.addHyperlinkListener(new HyperlinkAdapter() {
-			public void linkActivated(HyperlinkEvent e) {
-				try {
-					IFile reportFile = NavajoScriptPluginPlugin.getDefault().getReportFile(myFile.getProject(), name);
-
-					if (!reportFile.exists()) {
-						// public void createReport(IProject p, String name,
-						// Navajo n, File sourceFile) throws
-						// NavajoPluginException, IOException, NavajoException {
-						boolean res = NavajoScriptPluginPlugin.getDefault().showQuestion(
-								"No report found. Create: " + name + " fileloc: " + myFile.getLocation());
-						if (res) {
-							NavajoScriptPluginPlugin.getDefault().createReport(myFile.getProject(), name, n, myFile.getLocation().toFile());
-						}
-					}
-					NavajoScriptPluginPlugin.getDefault().openInEditor(reportFile);
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-			}
-		});
-	}
-
-	private void addRunReportHref(final String name, Composite list, final Navajo n, final IFile myFile) throws NavajoPluginException {
-		if (myFile == null) {
-			return;
-		}
-		final Hyperlink hl = getKit().createHyperlink(list, "[[Run report]]", SWT.NONE);
+	private void addRunReportHref(final String name, Composite list, final Navajo n) throws NavajoPluginException {
+			final Hyperlink hl = getKit().createHyperlink(list, "[[Run report]]", SWT.NONE);
 		hl.setHref(name);
 		// TableWrapData tdd = new TableWrapData();
 		// hl.setLayoutData(new
@@ -783,7 +611,7 @@ public class TmlFormComposite extends Composite {
 			public void linkActivated(HyperlinkEvent e) {
 				try {
 
-					runHref(myCurrentNavajo.copy(), myCurrentFile, "ProcessPrintGenericBirt", e, true, myCurrentName);
+					runHref(myCurrentNavajo.copy(), "ProcessPrintGenericBirt", e, true, myCurrentName);
 
 				} catch (Exception e1) {
 					e1.printStackTrace();
@@ -792,153 +620,8 @@ public class TmlFormComposite extends Composite {
 		});
 	}
 
-	//    
-	// public IFile getScriptFile(IProject p, String path) throws
-	// NavajoPluginException{
-	// IFolder iff = p.getFolder(getScriptPath(p));
-	// IFile ifff = iff.getFile(path + ".xml");
-	// return ifff;
-	// }
+	
 
-	private void addEditScriptHref(final String name, Composite list, final Navajo n, final IFile myFile) throws NavajoPluginException {
-		if (myFile == null) {
-			return;
-		}
-		final Hyperlink hl = getKit().createHyperlink(list, "[[Edit Script]]", SWT.NONE);
-		hl.setHref(name);
-		// TableWrapData tdd = new TableWrapData();
-		// hl.setLayoutData(new
-		// TableWrapData(TableWrapData.LEFT,TableWrapData.TOP));
-		// hl.setBackground(new Color(Display.getCurrent(), 220, 220, 240));
-
-		hl.addHyperlinkListener(new HyperlinkAdapter() {
-			public void linkActivated(HyperlinkEvent e) {
-				try {
-					IFile scriptFile = NavajoScriptPluginPlugin.getDefault().getScriptFile(myFile.getProject(), name);
-					NavajoScriptPluginPlugin.getDefault().openInEditor(scriptFile);
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-			}
-		});
-	}
-
-	private void addSaveHref(final String name, Composite list, final Navajo n, final IFile myFile) throws NavajoPluginException {
-		if (myFile == null) {
-			return;
-		}
-		final Hyperlink hl = whiteKit.createHyperlink(list, "[[Save]]", SWT.NONE);
-		hl.setHref(name);
-		// TableWrapData tdd = new TableWrapData();
-		// hl.setLayoutData(tdd);
-		hl.addHyperlinkListener(new HyperlinkAdapter() {
-			public void linkActivated(HyperlinkEvent e) {
-				try {
-					// System.err.println("My id:
-					// "+myEditor.getEditorSite().getId());
-					saveFile();
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-			}
-		});
-		// MenuItem mi = new MenuItem(popup, SWT.PUSH);
-		// mi.setText("Save");
-		// mi.addSelectionListener(new SelectionAdapter() {
-		// public void widgetSelected(SelectionEvent e) {
-		// try {
-		// saveFile();
-		// } catch (Exception e1) {
-		// e1.printStackTrace();
-		// }
-		// }
-		// });
-
-	}
-
-	private void reload(final Navajo n, final IFile myFile, HyperlinkEvent e) throws NavajoPluginException {
-		String scriptName = NavajoScriptPluginPlugin.getDefault().getScriptNameFromResource(myFile);
-		String sourceTml = null;
-		if (n.getHeader() != null) {
-			sourceTml = n.getHeader().getHeaderAttribute("sourceScript");
-		}
-		System.err.println(">>> IN RELOAD. " + sourceTml + "<<<");
-		try {
-			n.write(System.err);
-		} catch (NavajoException e2) {
-			e2.printStackTrace();
-		}
-		try {
-			Navajo nn = NavajoFactory.getInstance().createNavajo();
-			if (sourceTml == null || "".equals(sourceTml)) {
-				runHref(nn, null, scriptName, e, true, null);
-			} else {
-				IFile sourceTmlFile = NavajoScriptPluginPlugin.getDefault().getTmlFile(myFile.getProject(), sourceTml);
-				if (sourceTmlFile != null && sourceTmlFile.exists()) {
-					if (!sourceTmlFile.isSynchronized(0)) {
-						sourceTmlFile.refreshLocal(0, null);
-					}
-					nn = NavajoScriptPluginPlugin.getDefault().loadNavajo(sourceTmlFile);
-					// InputStream is = sourceTmlFile.getContents();
-					// nn = NavajoFactory.getInstance().createNavajo(is);
-					// is.close();
-					// System.err.println("LOCATED SOURCE: "+sourceTml);
-					// nn.write(System.err);
-				}
-				runHref(nn, sourceTmlFile, scriptName, e, true, sourceTml);
-			}
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
-		// if (myEditor != null) {
-		// NavajoScriptPluginPlugin.getDefaultWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditor(myEditor,
-		// false);
-		// }
-	}
-
-	private void addBackHref(final String name, Composite list, final Navajo n, final IFile myFile) {
-		if (n.getHeader() == null) {
-			return;
-		}
-		final String sourceTml = n.getHeader().getHeaderAttribute("sourceScript");
-
-		if (sourceTml == null || "".equals(sourceTml) || myFile == null) {
-			return;
-		}
-		final Hyperlink hl = whiteKit.createHyperlink(list, "[[Back]]", SWT.NONE);
-		hl.setHref(name);
-		TableWrapData tdd = new TableWrapData();
-		hl.setLayoutData(tdd);
-		hl.addHyperlinkListener(new HyperlinkAdapter() {
-			public void linkActivated(HyperlinkEvent e) {
-				if (sourceTml != null) {
-					try {
-						back(myFile, sourceTml);
-					} catch (NavajoPluginException e1) {
-						e1.printStackTrace();
-					}
-
-				}
-			}
-		});
-	}
-
-	private void saveFile() throws IOException, CoreException, NavajoException {
-		if (myCurrentFile == null) {
-			return;
-		}
-		// if (myEditor != null) {
-		// myEditor.doSave(null);
-		// } else {
-		File currentF = new File(myCurrentFile.getLocation().toOSString());
-		FileOutputStream fos = new FileOutputStream(currentF);
-		myCurrentNavajo.write(fos);
-		fos.flush();
-		fos.close();
-		myCurrentFile.refreshLocal(0, null);
-		// }
-
-	}
 
 	/**
 	 * @return Returns the kit.
@@ -947,15 +630,10 @@ public class TmlFormComposite extends Composite {
 		return kit;
 	}
 
-	private void runHref(final Navajo nav, final IFile myFile, final String name, HyperlinkEvent e, final boolean reload,
+	private void runHref(final Navajo nav,final String name, HyperlinkEvent e, final boolean reload,
 			final String sourceTmlName) throws Exception {
 		fireScriptCalled(name);
-		if (myFile == null) {
-			System.err.println("RUNHREF: file: [[null]] name: " + name + " reload: " + reload);
-
-		} else {
-			System.err.println("RUNHREF: file: " + myFile.getFullPath().toOSString() + "name: " + name + " reload: " + reload+" sourceTmlName: "+sourceTmlName);
-		}
+		System.err.println("RUNHREF: file: [[null]] name: " + name + " reload: " + reload);
 		nav.getHeader().setHeaderAttribute("sourceScript", sourceTmlName);
 		
 		try {
@@ -984,7 +662,7 @@ public class TmlFormComposite extends Composite {
 						Display.getDefault().syncExec(new Runnable() {
 
 							public void run() {
-								setNavajo(n, null, name);
+								setNavajo(n, name);
 							}
 						});
 					} catch (ClientException e) {
@@ -997,55 +675,7 @@ public class TmlFormComposite extends Composite {
 			return;
 		}
 		// I think this is for the TmlViewer
-
-		System.err.println("Found a null myServerEntry, I think. ");
-		saveFile();
-		final IProject ipp = myCurrentFile.getProject();
-		IFile scriptFile = NavajoScriptPluginPlugin.getDefault().getScriptFile(ipp, name);
-		IFile tmlFile = NavajoScriptPluginPlugin.getDefault().getTmlFile(ipp, name);
-		int stateMask = 0;
-
-		if (e != null) {
-			stateMask = e.getStateMask();
-		}
-
-		if ((stateMask & SWT.SHIFT) != 0) {
-			NavajoScriptPluginPlugin.getDefault().openInEditor(scriptFile);
-			return;
-		}
-		if ((stateMask & SWT.CTRL) != 0) {
-			if (!tmlFile.exists()) {
-				return;
-			}
-			if (tmlFile != null && !tmlFile.isSynchronized(0)) {
-				tmlFile.refreshLocal(0, null);
-			}
-			//            
-			// InputStream is = tmlFile.getContents();
-			Navajo n = NavajoScriptPluginPlugin.getDefault().loadNavajo(tmlFile);
-
-			setNavajo(n, tmlFile, myCurrentName);
-			fireGotoScript(name, n);
-			myForm.reflow(false);
-			return;
-		}
-			Job j = new Job("Running Navajo...") {
-
-				protected IStatus run(IProgressMonitor monitor) {
-
-					if (reload) {
-						NavajoScriptPluginPlugin.getDefault().runRemoteNavajo(ipp, name, myFile, sourceTmlName);
-
-					} else {
-						System.err.println("Setting header to: " + sourceTmlName);
-						myCurrentNavajo.getHeader().setHeaderAttribute("sourceScript", sourceTmlName);
-						NavajoScriptPluginPlugin.getDefault().runRemoteNavajo(ipp, name, myFile, sourceTmlName);
-
-					}
-					return Status.OK_STATUS;
-				}
-			};
-			j.schedule();
+		
 
 	}
 
@@ -1054,24 +684,7 @@ public class TmlFormComposite extends Composite {
 		myForm.reflow(false);
 	}
 
-	private void back(final IFile myFile, final String sourceTml) throws NavajoPluginException {
-		if (myFile == null) {
-			return;
-		}
-		IFile sourceTmlFile = NavajoScriptPluginPlugin.getDefault().getTmlFile(myFile.getProject(), sourceTml);
-		System.err.println("SourceMTL: " + sourceTml);
-		System.err.println("SourceTML full path: " + sourceTmlFile.getFullPath());
-		// if (myEditor != null) {
-		// NavajoScriptPluginPlugin.getDefault().openInEditor(sourceTmlFile);
-		// }
-		Navajo n = NavajoScriptPluginPlugin.getDefault().loadNavajo(sourceTmlFile);
-		setNavajo(n, sourceTmlFile, sourceTml);
-		fireGotoScript(sourceTml, n);
-		// BEware here...
-
-		myForm.reflow(true);
-		// runHref(sourceTmlFile, scriptName, e);
-	}
+	
 
 	public void setServerEntry(ServerEntry se) {
 		myServerEntry = se;
@@ -1099,13 +712,6 @@ public class TmlFormComposite extends Composite {
 		}
 	}
 
-	public void back() throws NavajoPluginException {
-		final String sourceTml = myCurrentNavajo.getHeader().getHeaderAttribute("sourceScript");
-		if (sourceTml == null || "".equals(sourceTml) || myCurrentFile == null) {
-			return;
-		}
-		back(myCurrentFile, sourceTml);
-	}
 
 	public Navajo getCurrentNavajo() {
 		return myCurrentNavajo;
@@ -1114,11 +720,6 @@ public class TmlFormComposite extends Composite {
 	public String getCurrentScript() {
 		return myCurrentName;
 	}
-
-	public IFile getCurrentFile() {
-		return myCurrentFile;
-	}
-
 	protected void createBirt(String service) {
 		BirtUtils b = new BirtUtils();
 		try {
@@ -1260,24 +861,11 @@ public class TmlFormComposite extends Composite {
 				reportDef.addProperty(reportProperty);
 				reportProperty.setAnyValue(b);
 				copiedNavajo.write(System.err);
-				runHref(copiedNavajo, null, "ProcessPrintGenericBirt", e, false, getCurrentScript());
+				runHref(copiedNavajo, "ProcessPrintGenericBirt", e, false, getCurrentScript());
 
 			} else {
-				// disabled for now
-				// if (birtReportName.getText() != null &&
-				// !"".equals(birtReportName.getText())) {
-				//
-				// // No supplied report file, but filename found.
-				// Property reportNameProperty =
-				// NavajoFactory.getInstance().createProperty(copiedNavajo,
-				// "ReportName",
-				// Property.STRING_PROPERTY, null, 0, null,
-				// Property.DIR_IN, null);
-				// reportDef.addProperty(reportNameProperty);
-				// reportNameProperty.setAnyValue(birtReportName.getText());
-				// }
-
-				runHref(copiedNavajo, null, "ProcessPrintGenericBirt", e, false, getCurrentScript());
+			
+				runHref(copiedNavajo, "ProcessPrintGenericBirt", e, false, getCurrentScript());
 
 			}
 
