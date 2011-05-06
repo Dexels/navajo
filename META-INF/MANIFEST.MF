@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: com.dexels.navajo.dsl.expression.ui
 Bundle-Vendor: My Company
-Bundle-Version: 1.0.1
+Bundle-Version: 1.0.2.qualifier
 Bundle-SymbolicName: com.dexels.navajo.dsl.expression.ui;singleton:=true
 Require-Bundle: com.dexels.navajo.dsl.expression;visibility:=reexport,
  org.eclipse.xtext.ui,
