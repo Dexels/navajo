@@ -1,8 +1,8 @@
 Bundle-Name: Navajo Listeners Jetty Continuations
 Bundle-SymbolicName: com.dexels.navajo.listeners.continuations
-Bundle-Description: A Hello World bundle
+Bundle-Description: Continuations
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.1.qualifier
+Bundle-Version: 1.0.3.qualifier
 Bundle-Activator: navajolistenerscontinuations.Version
 Bundle-ClassPath: .,
  lib/jetty-continuation-8.0.0.M2.jar,
@@ -15,3 +15,4 @@ Require-Bundle: com.dexels.navajo.client,
  com.dexels.navajo.document;bundle-version="1.0.0",
  com.dexels.navajo.version;bundle-version="1.0.3"
 Export-Package: com.dexels.navajo.server.listener.http.continuation
+Import-Package: javax.servlet;version="2.5.0"
