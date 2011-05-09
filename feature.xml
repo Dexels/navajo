@@ -2,7 +2,7 @@
 <feature
       id="com.dexels.navajo.server.embedded.feature"
       label="Embedded Server"
-      version="1.0.0.qualifier"
+      version="1.0.1.qualifier"
       provider-name="DEXELS">
 
    <description url="http://www.dexels.com/">
@@ -40,13 +40,6 @@
 
    <plugin
          id="com.dexels.navajo.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.osgi"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -163,11 +156,5 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
-   <plugin
-         id="org.junit"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
 
 </feature>
