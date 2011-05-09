@@ -1397,9 +1397,15 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 
        protected void savePreferenceStore() {
            String ss = serializeServerEntries();
-           myPreferences.setValue(NAVAJO_APPLICATION_SERVERS, ss);
+           if(ss!=null) {
+               myPreferences.setValue(NAVAJO_APPLICATION_SERVERS, ss);
+        	   
+           }
+           
            String sss = serializeServerInvocations();
-           myPreferences.setValue(NAVAJO_PLUGIN_SCRIPT_INVOCATIONS, sss);
+           if(sss!=null) {
+               myPreferences.setValue(NAVAJO_PLUGIN_SCRIPT_INVOCATIONS, sss);
+           }
            
            if (myBuilder!=null) {
 //                        try {
