@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
+import metadata.BinaryOpener;
 import metadata.FormatDescription;
 
 import org.eclipse.swt.SWT;
@@ -667,74 +668,9 @@ public class GenericPropertyComponent {
     }
 
     public static void openBinary(Binary b) throws IOException {
-        FileOutputStream fos = null;
-        File f = null;
-        String mime = b.getMimeType();
-        if (mime == null || "".equals(mime)) {
-            mime = b.guessContentType();
-        }
-        System.err.println("Mime: " + mime);
-        System.err.println("Size: "+b.getLength());
-        FormatDescription fd = b.getFormatDescription();
-        String extension = "dat";
-        if (fd!=null) {
-            List l = fd.getFileExtensions();
-            System.err.println("All extensions: "+l);
-            if (l!=null && !l.isEmpty()) {
-                extension = (String)l.get(0);
-                System.err.println("Extension: "+extension);
-            }
-        }
-        if (mime != null) {
-            if (mime.indexOf('/') >= 0) {
-                StringTokenizer st = new StringTokenizer(mime, "/");
-                String general = st.nextToken();
-                extension = st.nextToken();
-            }
-        }
-        try {
-            f = File.createTempFile("tempeclipse", "." + extension);
-            f.deleteOnExit();
-            fos = new FileOutputStream(f);
-            b.write(fos);
-            fos.flush();
-        } finally {
-            if (fos != null) {
-                fos.close();
-            }
-        }
-        if (f == null) {
-            return;
-        }
-        String fileName = f.getAbsolutePath();
-        if (System.getProperty("os.name").toLowerCase().indexOf("windows") >= 0) {
-            Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + fileName);
-        } else { // non-Windows platform, assume Linux/Unix
-            String[] cmd = new String[2];
-
-            if (fileName.toLowerCase().endsWith(".doc") || fileName.toLowerCase().endsWith(".xls") || fileName.toLowerCase().endsWith(".ppt")
-                    || fileName.toLowerCase().endsWith(".rtf")) {
-                cmd[0] = "ooffice";
-            } else if (fileName.toLowerCase().endsWith(".txt")) {
-                cmd = new String[4]; // resize
-
-                cmd[0] = "xterm";
-                cmd[1] = "-e";
-                cmd[2] = "vi";
-            } else if (fileName.toLowerCase().endsWith(".jpg") || fileName.toLowerCase().endsWith(".gif") || fileName.toLowerCase().endsWith(".png")) {
-                cmd[0] = "display";
-            } else if (fileName.toLowerCase().endsWith(".pdf")) {
-                cmd[0] = "xpdf";
-            } else { // we don't have a clue, try a plain web browser
-                cmd[0] = "mozilla";
-            }
-
-            cmd[(fileName.toLowerCase().endsWith(".txt")) ? 3 : 1] = fileName;
-
-            if (cmd[0] != null) {
-                Process p = Runtime.getRuntime().exec(cmd);
-            }
-        }
+    	
+    	BinaryOpener.openBinary(b);
+    	
     }
 
     public final Date getDate(String text) throws ParseException {
