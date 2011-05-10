@@ -26,7 +26,6 @@ public class ResultMessage implements Mappable {
 	public void setMessage(Message m, String suppressProperties) {
 		this.msg = m;
 		this.suppressProperties = suppressProperties;
-		processSuppressedProperties(this.msg); 
 	}
 	
 	private final boolean isPropertyInList(Property prop, String propertyStringList, boolean isArrayMessageElement) {
@@ -67,6 +66,15 @@ public class ResultMessage implements Mappable {
 		parentMsg.merge(copy);
 	}
 
+	public boolean getExists(String s) {
+		try {
+			getProperty(s);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
 	public Object getProperty(String s) throws UserException {
 		return getPropertyValue(s);
 	}
@@ -80,6 +88,7 @@ public class ResultMessage implements Mappable {
 	}
 	
 	public void store() throws MappableException, UserException {
+		processSuppressedProperties(this.msg); 
 	}
 
 }
