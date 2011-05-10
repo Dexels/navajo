@@ -323,6 +323,7 @@ public class MessageMap implements Mappable {
 		
 		MessageMap mm = new MessageMap();
 		mm.load(a);
+		mm.setSuppressProperties("propje3");
 		mm.setJoinMessage1("message1");
 		mm.setJoinMessage2("message2");
 		mm.setJoinCondition("propje1=blieblab");
@@ -338,6 +339,7 @@ public class MessageMap implements Mappable {
 		ResultMessage [] result = mm.getResultMessage();
 		for (int i = 0; i < result.length; i++) {
 			result[i].load(a);
+			System.err.println(">>>>>>: " + result[i].getProperty("propje3"));
 			result[i].store();
 		}
 		a.setCurrentOutMessage(null);
