@@ -336,11 +336,6 @@
         <input/>
         <result/>
     </function>
-    <function name="GetUrlBase" class="com.dexels.navajo.functions.GetUrlBase">
-        <description/>
-        <input/>
-        <result/>
-    </function>
     <function name="GetSelectedValue" class="com.dexels.navajo.functions.GetSelectedValue">
         <description>Gets the value of a selected property</description>
         <input/>
@@ -356,6 +351,12 @@
         <input/>
         <result/>
     </function>
+    <function name="GetValue" class="com.dexels.navajo.functions.GetValue">
+        <description>Gets a typed value from a property object</description>
+        <input/>
+        <result/>
+    </function>
+    
     <function name="GetPropertyType" class="com.dexels.navajo.functions.GetPropertyType">
         <description>Gets the type of property as a string</description>
         <input/>
@@ -470,12 +471,13 @@
         <result>binary</result>
     </function>
 
-    
-    <function name="ExistsWorkflow" class="com.dexels.navajo.functions.ExistsWorkflow">
+<!-- This function isn't here! -->    
+   <!-- <function name="ExistsWorkflow" class="com.dexels.navajo.functions.ExistsWorkflow">
         <description>Check whether a workflow with specified name and given global state exists</description>
         <input/>
         <result/>
     </function>
+    -->
     <function name="ExistsProperty" class="com.dexels.navajo.functions.ExistsProperty">
         <description>Checks whether a property exists in the Input Navajo</description>
         <input/>
@@ -581,6 +583,15 @@
         <input/>
         <result/>
     </function>
+    <function name="GetContextResource" class="com.dexels.navajo.functions.GetContextResource">
+        <description>GetContextResource gets the contents of a file in the servletcontext/resources folder</description>
+        <input/>
+        <result/>
+    </function>
+    
+        
+    
+    
     <function name="CheckInteger" class="com.dexels.navajo.functions.CheckInteger">
         <description>CheckInteger checks whether argument is valid integer</description>
         <input>any</input>
@@ -626,4 +637,10 @@
         <input>float|integer</input>
         <result>integer|float</result>
     </function>
+    <function name="Switch" class="com.dexels.navajo.functions.Switch">
+        <description>Switch(target, when, then, when, then, when, then, ..., else)</description>
+        <input>any,any,any,any,...</input>
+        <result>any</result>
+    </function>
+    
 </functiondef>
