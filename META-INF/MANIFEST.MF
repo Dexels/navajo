@@ -4,7 +4,8 @@ Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 2.9.3.qualifier
 Bundle-Activator: navajo.Version
-Export-Package: com.dexels.navajo.adapter.navajomap;uses:="com.dexels.navajo.server.resource",
+Export-Package: com.dexels.navajo.adapter,
+ com.dexels.navajo.adapter.navajomap;uses:="com.dexels.navajo.server.resource",
  com.dexels.navajo.events;uses:="junit.framework",
  com.dexels.navajo.events.types;uses:="junit.framework",
  com.dexels.navajo.functions.util;uses:="navajo,com.dexels.navajo.parser,com.dexels.navajo.document.nanoimpl",
