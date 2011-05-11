@@ -388,7 +388,7 @@
     <!-- com.dexels.navajo.mapping.bean.ServiceMapper -->
 <!--  This one should be declared in navajo's own adapters.
 I think there is no problem now, as NavajoAdapters uses a filthy DynamicImport flag -->
-
+<!-- 
   <map>
         <tagname>service</tagname>
         <object>com.dexels.navajo.mapping.bean.ServiceMapper</object>
@@ -402,6 +402,8 @@ I think there is no problem now, as NavajoAdapters uses a filthy DynamicImport f
             </method>
         </methods>
     </map>
+    
+ -->    
     <!-- SOAP adapter -->
     <map>
         <tagname>soap</tagname>
@@ -447,25 +449,5 @@ I think there is no problem now, as NavajoAdapters uses a filthy DynamicImport f
             </method>
         </methods>
     </map>
-     <map>
-        <tagname>testbean</tagname>
-        <object>com.dexels.navajo.adapter.TestBean</object>
-        <values>
-            <value name="monkey" type="string" required="false" direction="in"/>          
-            <value name="today" type="date" required="false" direction="in"/>          
-        </values>
-        <methods>
-            <method name="addAttribute">                
-                <param name="path" field="attributePath" type="string" required="true"/>
-                <param name="name" field="attributeName" type="string" required="true"/>
-                <param name="value" field="attributeValue" type="string" required="true"/>
-            </method>
-            <method name="dumpObject">
-                <param name="value" field="dumpObject" type="boolean" required="automatic" value="true"/>
-            </method>
-            <method name="buildContent">
-                <param name="value" field="buildContent" type="boolean" required="automatic" value="true"/>
-            </method>
-        </methods>
-    </map>
+
 </adapterdef>
