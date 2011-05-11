@@ -12,6 +12,9 @@ Export-Package: com.dexels.navajo.dnd,
  com.dexels.navajo.tipi.swingclient.components.calendar,
  com.dexels.navajo.tipi.swingclient.components.remotecombobox,
  com.dexels.navajo.tipi.swingclient.components.sort,
+ org.jdesktop.animation.timing,
+ org.jdesktop.animation.timing.interpolation,
+ org.jdesktop.animation.transitions,
  tipiswingclient
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.document,
