@@ -88,6 +88,8 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	}
 
 
+	// TODO Refactor into more reusable code
+	
 	@Override
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
