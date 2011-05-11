@@ -756,9 +756,12 @@ public abstract class TipiContext {
 		String inp = input==null?"":input.getContent();
 		XMLElement result = f.getChildByTagName("result");
 		String res = result==null?"":result.getContent();
+		String name = f.getStringAttribute("name");
 
 		FunctionDefinition fd = new FunctionDefinition(f.getStringAttribute("class"),desc,inp,res,ed);
-		getClassManager().addFunctionDefinition(f.getStringAttribute("name"),fd);
+		// TODO Realign tipixml / nanoxml implementations
+		//		fd.setXmlElement(f);
+		getClassManager().addFunctionDefinition(name,fd);
 	}
 
 	private void parseStorage(XMLElement child) {
