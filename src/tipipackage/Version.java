@@ -24,12 +24,11 @@
  */
 package tipipackage;
 
-import tipipackage.Version;
 
 import org.osgi.framework.BundleContext;
 
 
-public class Version extends com.dexels.navajo.version.Version {
+public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 
 	// Included packages.
