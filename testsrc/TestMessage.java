@@ -348,6 +348,33 @@ public class TestMessage extends TestCase {
 	  }
   }
   
+  public void testArrayMessagesWithHash() throws Exception {
+		 
+	  Message m = NavajoFactory.getInstance().createMessage(testDoc, "MyTop");
+	  testDoc.addMessage(m);
+	  Message a = NavajoFactory.getInstance().createMessage(testDoc, "MyArrayMessage", "array");
+	  m.addMessage(a);
+	  for (int i = 0; i < 5; i++) {
+		  Message a1 = NavajoFactory.getInstance().createMessage(testDoc, "MyArrayMessage");
+		  a.addMessage(a1);
+		  Property p = NavajoFactory.getInstance().createProperty(testDoc, "MyProp", "string", "noot" + i, 0, "", "in");
+		  a1.addProperty(p);
+		  Property p2 = NavajoFactory.getInstance().createProperty(testDoc, "MyProp2", "string", "aap" + i, 0, "", "in");
+		  a1.addProperty(p2);
+	  }
+	  assertEquals("array", testDoc.getMessage("/MyTop/MyArrayMessage").getType());
+	  assertEquals(5, testDoc.getMessage("/MyTop/MyArrayMessage").getArraySize());
+	  assertNotNull(testDoc.getProperty("/MyTop/MyArrayMessage@MyProp=noot2/MyProp2"));
+	  assertEquals("aap2", testDoc.getProperty("/MyTop/MyArrayMessage@MyProp=noot2/MyProp2").getValue());
+	  
+	  assertNotNull(testDoc.getProperty("/MyTop/MyArrayMessage@MyProp=noot3/MyProp2"));
+	  assertEquals("aap3", testDoc.getProperty("/MyTop/MyArrayMessage@MyProp=noot3/MyProp2").getValue());
+	  
+	  assertNotNull(testDoc.getProperty("/MyTop/MyArrayMessage@MyProp=noot4/MyProp2"));
+	  assertNotSame("aap3", testDoc.getProperty("/MyTop/MyArrayMessage@MyProp=noot4/MyProp2").getValue());
+	  
+  }
+  
   public void testSetName() throws Exception {
 	  Message m = NavajoFactory.getInstance().createMessage(testDoc, "MyTop");
 	  testDoc.addMessage(m);

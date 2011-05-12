@@ -476,17 +476,33 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 				if ((array.getType() != null) && (array.getType().equals(Message.MSG_TYPE_ARRAY))) {
 					if (arEl.hasMoreTokens()) {
 						String index = arEl.nextToken();
-						int i = 0;
-						try {
-							i = Integer.parseInt(index);
-						} catch (NumberFormatException ex) {
-							ex.printStackTrace();
+						
+						if ( index.indexOf("=") >= 0 ) {
+							String propertyName = index.split("=")[0];
+							String propertyValue = index.split("=")[1];
+							// Find array element.
+							for ( int x = 0; x < array.getArraySize(); x++ ) {
+								Message am = array.getMessage(x);
+								if ( am.getProperty(propertyName) != null ) {
+									if ( am.getProperty(propertyName).getValue().equals(propertyValue) ) {
+										return am;
+									}
+								}
+							}
+						} else {
+							int i = 0;
+							try {
+								i = Integer.parseInt(index);
+							} catch (NumberFormatException ex) {
+								ex.printStackTrace();
+							}
+							return array.getMessage(i);
 						}
-						return array.getMessage(i);
 					}
 				}
 			}
 		}
+		
 		if (messageMap == null) {
 			return null;
 		}
@@ -585,10 +601,26 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 									result.addAll(m.messageList);
 								}
 							} else {
-								try {
-									result.add(m.getMessage(Integer.parseInt(index)));
-								} catch (Exception pe) {
-									throw new NavajoExceptionImpl("Could not parse array index: " + index);
+								
+								if ( index.indexOf("=") >= 0 ) {
+									String propertyName = index.split("=")[0];
+									String propertyValue = index.split("=")[1];
+									// Find array element.
+									for ( int x = 0; x < m.getArraySize(); x++ ) {
+										Message am = m.getMessage(x);
+										if ( am.getProperty(propertyName) != null ) {
+											if ( am.getProperty(propertyName).getValue().equals(propertyValue) ) {
+												result.add(am);
+											}
+										}
+									}
+								} else {
+
+									try {
+										result.add(m.getMessage(Integer.parseInt(index)));
+									} catch (Exception pe) {
+										throw new NavajoExceptionImpl("Could not parse array index: " + index);
+									}
 								}
 							}
 						} else {
