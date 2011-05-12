@@ -189,7 +189,7 @@ public class MapMetaData {
 			String value = tslAttributes.get(name);
 			result.setAttribute(name, value);
 		}
-		
+//		System.err.println("TSL COMPILATION:\n"+result);
 		result.write(sw);
 	}
 	
