@@ -14,3 +14,4 @@ Require-Bundle: com.dexels.navajo.document,
  com.dexels.navajo.tipi.swing;bundle-version="1.0.41"
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/swingx.jar
+Export-Package: org.jdesktop.swingx.painter
