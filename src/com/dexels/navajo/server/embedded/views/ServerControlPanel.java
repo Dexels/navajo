@@ -84,8 +84,6 @@ public class ServerControlPanel extends ViewPart {
 		viewer = new Composite(parent, SWT.NORMAL);
 		// Create the help context id for the viewer's control
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(viewer, "com.dexels.navajo.server.embedded.viewer");
-//		serverURL = "localhost:"+8888+"/Postman";
-//		currentProject = ResourcesPlugin.getWorkspace().getRoot().getProject("Navajo");
 		makeActions("Navajo");
 		contributeToActionBars();
 	}
@@ -93,7 +91,6 @@ public class ServerControlPanel extends ViewPart {
 	private void contributeToActionBars() {
 		IActionBars bars = getViewSite().getActionBars();
 		fillLocalToolBar(bars.getToolBarManager());
-//		fillMenuBar(menuBar)
 	}
 
 	
@@ -129,6 +126,7 @@ public class ServerControlPanel extends ViewPart {
 
 			public void run() {
 				try {
+
 //					dumpBundleStates();
 					LifeCycle.Listener lifecycleListener = new LifeCycle.Listener() {
 						
@@ -178,6 +176,7 @@ public class ServerControlPanel extends ViewPart {
 					System.err.println("SErver: "+jettyServer);
 					int port = jettyServer.getConnectors()[0].getPort();
 					IWorkbenchWindow window = EmbeddedServerActivator.getDefault().getWorkbench().getActiveWorkbenchWindow();
+
 				IWorkbenchPage page = window.getActivePage();	
 				TmlClientView tw;
 					tw = (TmlClientView) page.showView("com.dexels.TmlClientView");
@@ -188,7 +187,7 @@ public class ServerControlPanel extends ViewPart {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			}
+			} 
 		};
 		startServerAction.setText("Start server");
 		
