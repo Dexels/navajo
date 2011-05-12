@@ -22,6 +22,7 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.osgi.framework.Bundle;
@@ -124,12 +125,12 @@ public class ServerControlPanel extends ViewPart {
 
 	private void makeActions(final String projectName) {
 		startServerAction = new Action() {
+			private Server jettyServer;
+
 			public void run() {
 				try {
 //					dumpBundleStates();
-					Server s = EmbeddedServerActivator.getDefault().startServer(projectName).getServer();
-					System.err.println("SErver: "+s);
-					s.addLifeCycleListener(new LifeCycle.Listener() {
+					LifeCycle.Listener lifecycleListener = new LifeCycle.Listener() {
 						
 						@Override
 						public void lifeCycleStopping(LifeCycle l) {
@@ -150,8 +151,20 @@ public class ServerControlPanel extends ViewPart {
 						
 						@Override
 						public void lifeCycleStarted(LifeCycle l) {
+							int port = jettyServer.getConnectors()[0].getPort();
 							stopServerAction.setEnabled(true);
 							startServerAction.setEnabled(false);							
+
+							String server = "localhost:"+port+"/Postman";
+							setupClient(server, "plugin","plugin");
+							IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+							try {
+								callPluginServices(project);
+							} catch (CoreException e1) {
+								e1.printStackTrace();
+							}
+							
+
 						}
 						
 						@Override
@@ -160,17 +173,16 @@ public class ServerControlPanel extends ViewPart {
 							stopServerAction.setEnabled(false);
 							startServerAction.setEnabled(true);
 						}
-					});
-					int port = s.getConnectors()[0].getPort();
-					String server = "localhost:"+port+"/Postman";
-					setupClient(server, "plugin","plugin");
-					IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
-					callPluginServices(project);
+					};
+					jettyServer = EmbeddedServerActivator.getDefault().startServer(projectName,lifecycleListener).getServer();
+					System.err.println("SErver: "+jettyServer);
+					int port = jettyServer.getConnectors()[0].getPort();
 					IWorkbenchWindow window = EmbeddedServerActivator.getDefault().getWorkbench().getActiveWorkbenchWindow();
-					IWorkbenchPage page = window.getActivePage();	
-					TmlClientView tw = (TmlClientView) page.showView("com.dexels.TmlClientView");
-//					int port = s.getConnectors()[0].getPort();
+				IWorkbenchPage page = window.getActivePage();	
+				TmlClientView tw;
+					tw = (TmlClientView) page.showView("com.dexels.TmlClientView");
 					tw.setServerPort(port);
+
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				} catch (Exception e) {

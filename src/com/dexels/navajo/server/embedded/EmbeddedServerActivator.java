@@ -3,19 +3,17 @@ package com.dexels.navajo.server.embedded;
 import java.io.IOException;
 import java.net.ServerSocket;
 
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.util.component.LifeCycle.Listener;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
 
 import com.dexels.navajo.dsl.expression.NavajoExpressionRuntimeModule;
-import com.dexels.navajo.dsl.expression.ui.NavajoExpressionUiModule;
 import com.dexels.navajo.dsl.expression.ui.contentassist.NavajoExpressionProposalProvider;
 import com.dexels.navajo.server.listener.NavajoContextListener;
 import com.dexels.navajo.server.listener.http.TmlHttpServlet;
@@ -96,9 +94,10 @@ public class EmbeddedServerActivator extends AbstractUIPlugin {
 
 
 	
-	public Server startServer(final String projectName) throws Exception, InterruptedException {
+	public Server startServer(final String projectName, Listener lifecycleListener) throws Exception, InterruptedException {
 		IProject navajoProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
-		jettyServer = initializeServer(navajoProject);	
+		jettyServer = initializeServer(navajoProject);
+		jettyServer.addLifeCycleListener(lifecycleListener);
 		startServer();
 //		NavajoExpressionUiModule inst = NavajoExpressionUiModule.getInstance();
 //		System.err.println("INST: "+inst);
