@@ -104,9 +104,9 @@ TOKEN:
 {
   <TML_IDENTIFIER: ("[")("/")?(<REGULAREXPRESSION>)?("/"<REGULAREXPRESSION>)* > |
   <EXISTS_TML_IDENTIFIER: ("?[")("/")?<REGULAREXPRESSION>("/"<REGULAREXPRESSION>)* > |
-  <#REGULAREXPRESSION: (<PARENT_MSG>|<LETTER>|<DIGIT>|"@"|"_"|"("|")"|<REGULAR2>|"\\"|"?"|"-"|<REGULAR1>)+ > |
+  <#REGULAREXPRESSION: (<PARENT_MSG>|<LETTER>|<DIGIT>|"@"|"="|"_"|"("|")"|<REGULAR2>|"\\"|"?"|"-"|<REGULAR1>)+ > |
   <#PARENT_MSG: "../"> |
-  <#REGULAR1: "["(<LETTER>|<DIGIT>|"-")+"]"> |
+  <#REGULAR1: "["(<LETTER>|<DIGIT>|"-"|"=")+"]"> |
   <#REGULAR2: ("."|<LETTER>|<DIGIT>)+"*"> |
   <#IDENTIFIER: (<LETTER>|"_"|"../"|"/")+(<LETTER>|<DIGIT>|"_"|"../")* > |
   <#LETTER: [ "a" - "z", "A" - "Z" ] > |
