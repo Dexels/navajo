@@ -75,4 +75,16 @@ public class TwitterAdapterLibrary implements ExtensionDefinition {
 		return null;
 	}
 
+	@Override
+	public ClassLoader getExtensionClassloader() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setExtensionClassloader(ClassLoader extClassloader) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

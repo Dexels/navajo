@@ -3,6 +3,7 @@ package com.dexels.twitter;
 import java.util.Date;
 import java.util.List;
 
+import winterwell.jtwitter.OAuthSignpostClient;
 import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.Twitter.Message;
 import winterwell.jtwitter.Twitter.Status;
@@ -12,20 +13,8 @@ public class TwitterAdapter {
 	private Twitter twit;
 	private String username, password, status;
 	private String currentUser;
-
-	public void setUsername(String username) {
-		this.username = username;
-		if(password != null){
-			twit = new Twitter(username, password);
-		}
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-		if(username != null){
-			twit = new Twitter(username, password);
-		}
-	}
+	private String token1;
+	private String token2;
 	
 	public void setCurrentUser(String userName){
 		this.currentUser = userName;
@@ -45,6 +34,23 @@ public class TwitterAdapter {
 		return new TwitterStatus(s);
 	}
 	
+	public void setUsername(String s) {
+		this.username = s;
+	}
+	
+	public void setToken1(String t) {
+		token1 = t;
+	}
+	
+	public void setToken2(String t) {
+		token2 = t;
+		OAuthSignpostClient oauthClient = new OAuthSignpostClient(OAuthSignpostClient.JTWITTER_OAUTH_KEY, 
+		    		OAuthSignpostClient.JTWITTER_OAUTH_SECRET, 
+		    		token1, token2);
+		System.err.println("Login in with token1: " + token1 + ", token2: " + token2);
+		
+		twit = new Twitter(username, oauthClient);
+	}
 
 	public void setStatus(String status) {
 		try {
@@ -227,5 +233,43 @@ public class TwitterAdapter {
 		return tws;
 	}
 	
+	public static void main(String [] args) {
+		// Make an oauth client (you'll want to change this bit)
+		
+		OAuthSignpostClient oauthClient = 
+		new OAuthSignpostClient(OAuthSignpostClient.JTWITTER_OAUTH_KEY, OAuthSignpostClient.JTWITTER_OAUTH_SECRET, "oob");
+		   
+			// Open the authorisation page in the user's browser
+		// On Android, you'd direct the user to URI url = client.authorizeUrl();
+		// On a desktop, we can do that like this:
+		oauthClient.authorizeDesktop();
+		// get the pin
+		String v = oauthClient.askUser("Please enter the verification PIN from Twitter");
+		oauthClient.setAuthorizationCode(v);
+		// Store the authorisation token details for future use
+		String[] accessToken = oauthClient.getAccessToken();
+		
+		System.err.println("accessToken[0]: " + accessToken[0]);
+		System.err.println("accessToken[1]: " + accessToken[1]);
+//		
+		// Next time we can use new OAuthSignpostClient(OAUTH_KEY, OAUTH_SECRET, 
+//		      accessToken[0], accessToken[1]) to avoid authenticating again.
+
+		// Make a Twitter object
+		Twitter twitter = new Twitter("bbfw63x", oauthClient);
+		// Print Daniel Winterstein's status
+		System.out.println(twitter.getStatus("bbfw63x"));
+		// Set my status
+		twitter.setSource("Navajo Integrator");
+		Status s = twitter.updateStatus("Nog een keer ietsie wat ook...");
+		
+	  System.err.println(s.getText());
+	  
+		
+	  List<User> followers = twitter.getFollowers();
+	  for ( int i = 0; i < followers.size(); i++ ) {
+		  System.err.println(followers.get(i));
+	  }
+	}
 
 }

@@ -1,12 +1,13 @@
 package com.dexels.twitter;
 
 import java.net.URI;
+import java.util.Date;
 
 import winterwell.jtwitter.Twitter.User;
 
 public class TwitterUser {
 	private String 			screenName;
-	private String 			createdAt;
+	private Date 			createdAt;
 	private String 			description;
 	private int 			favoritesCount;
 	private int 			followersCount;
@@ -18,7 +19,7 @@ public class TwitterUser {
 	private TwitterStatus 	status;
 	private int 			statusesCount;
 	private String 			timezone;
-	private int 			timezoneOffset;
+	private double 			timezoneOffset;
 	private URI 			websiteUrl;
 	
 	public TwitterUser(User u){
@@ -59,7 +60,7 @@ public class TwitterUser {
 		return screenName;
 	}
 	
-	public String getCreatedAt(){
+	public Date getCreatedAt(){
 		return createdAt;
 	}
 	
@@ -106,7 +107,7 @@ public class TwitterUser {
 		return timezone;
 	}
 	
-	public int getTimezoneOffset(){
+	public double getTimezoneOffset(){
 		return timezoneOffset;
 	}
 	
