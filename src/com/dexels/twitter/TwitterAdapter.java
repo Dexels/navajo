@@ -16,6 +16,10 @@ public class TwitterAdapter {
 	private String token1;
 	private String token2;
 	
+	private final static String API_KEY = "UVyOkSE0F1i2YcqaPc0jYg";
+	private final static String API_SECRET = "7Uhm0fVFrSesY0Czamuy86ZnyetVPkYjLLgG8N3rabE";
+	
+	
 	public void setCurrentUser(String userName){
 		this.currentUser = userName;
 	}
@@ -237,7 +241,7 @@ public class TwitterAdapter {
 		// Make an oauth client (you'll want to change this bit)
 		
 		OAuthSignpostClient oauthClient = 
-		new OAuthSignpostClient(OAuthSignpostClient.JTWITTER_OAUTH_KEY, OAuthSignpostClient.JTWITTER_OAUTH_SECRET, "oob");
+		new OAuthSignpostClient(API_KEY, API_SECRET, "oob");
 		   
 			// Open the authorisation page in the user's browser
 		// On Android, you'd direct the user to URI url = client.authorizeUrl();
