@@ -1,10 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: com.dexels.navajo.dsl.tsl.ui
-Bundle-Vendor: My Company
+Bundle-Vendor: Dexels
 Bundle-Version: 1.0.1.qualifier
 Bundle-SymbolicName: com.dexels.navajo.dsl.tsl.ui; singleton:=true
-Bundle-ActivationPolicy: lazy
 Require-Bundle: com.dexels.navajo.dsl.tsl;visibility:=reexport,
  org.eclipse.xtext.ui,
  org.eclipse.ui.editors;bundle-version="3.5.0",
@@ -24,3 +23,4 @@ Import-Package: org.apache.log4j
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: com.dexels.navajo.dsl.tsl.ui.contentassist.antlr
 Bundle-Activator: com.dexels.navajo.dsl.tsl.ui.internal.TslActivator
+Bundle-ActivationPolicy: lazy
