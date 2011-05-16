@@ -1,5 +1,6 @@
 package com.dexels.twitter;
 
+import java.net.URI;
 import java.util.Date;
 import java.util.List;
 
@@ -246,6 +247,10 @@ public class TwitterAdapter {
 			// Open the authorisation page in the user's browser
 		// On Android, you'd direct the user to URI url = client.authorizeUrl();
 		// On a desktop, we can do that like this:
+		
+		URI url = oauthClient.authorizeUrl();
+		System.err.println("url = " + url);
+		
 		oauthClient.authorizeDesktop();
 		// get the pin
 		String v = oauthClient.askUser("Please enter the verification PIN from Twitter");
