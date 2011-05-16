@@ -238,6 +238,14 @@ public class TwitterAdapter {
 		return tws;
 	}
 	
+	public String getBrowserURL() {
+		OAuthSignpostClient oauthClient = 
+			new OAuthSignpostClient(API_KEY, API_SECRET, "oob");
+		URI url = oauthClient.authorizeUrl();
+		
+		return url + "";
+	}
+	
 	public static void main(String [] args) {
 		// Make an oauth client (you'll want to change this bit)
 		
