@@ -20,7 +20,7 @@ public class NavajoExpressionJavaValidator extends AbstractNavajoExpressionJavaV
 	
 	@Check
 	public void checkFunction(FunctionCall fc) {
-		warning("I hate functions.",ExpressionPackage.FUNCTION_CALL__NAME);
+//		warning("I hate functions.",ExpressionPackage.FUNCTION_CALL__NAME);
 	}
 
 	@Override
