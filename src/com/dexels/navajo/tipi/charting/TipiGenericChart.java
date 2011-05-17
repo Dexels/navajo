@@ -30,6 +30,7 @@ public class TipiGenericChart extends TipiSwingDataComponentImpl {
 	private String messagePath = "HistoricOverview";
 	private String type = "";
 	private String title = "Title";
+	private Color backgroundColor = null;
 	
 	public Object createContainer() {		 
 		myChart = new ChartPanel(null);
@@ -116,6 +117,10 @@ public class TipiGenericChart extends TipiSwingDataComponentImpl {
 		if("messagePath".equals(name)){
 			this.messagePath = object.toString();
 		}
+		
+		if("backgroundColor".equals(name)){
+			this.backgroundColor = (Color) object;
+		}
 	}
 	
 	
@@ -129,7 +134,9 @@ public class TipiGenericChart extends TipiSwingDataComponentImpl {
 
 	public void render() {
 		JFreeChart chart = createChart(getNavajo());		
-		chart.getPlot().setBackgroundPaint(Color.black);		
+		if ( backgroundColor != null ) {
+			chart.getPlot().setBackgroundPaint(backgroundColor);
+		}	
 		myChart.setChart(chart);	
 	}
 	
