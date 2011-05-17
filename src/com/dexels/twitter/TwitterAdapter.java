@@ -1,8 +1,16 @@
 package com.dexels.twitter;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.URI;
 import java.util.Date;
 import java.util.List;
+
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.server.UserException;
 
 import winterwell.jtwitter.OAuthSignpostClient;
 import winterwell.jtwitter.Twitter;
@@ -16,7 +24,10 @@ public class TwitterAdapter {
 	private String currentUser;
 	private String token1;
 	private String token2;
+	private Binary signPost;
 	
+	private OAuthSignpostClient mySignPost = null; 
+		
 	private final static String API_KEY = "UVyOkSE0F1i2YcqaPc0jYg";
 	private final static String API_SECRET = "7Uhm0fVFrSesY0Czamuy86ZnyetVPkYjLLgG8N3rabE";
 	
@@ -49,9 +60,7 @@ public class TwitterAdapter {
 	
 	public void setToken2(String t) {
 		token2 = t;
-		OAuthSignpostClient oauthClient = new OAuthSignpostClient(OAuthSignpostClient.JTWITTER_OAUTH_KEY, 
-		    		OAuthSignpostClient.JTWITTER_OAUTH_SECRET, 
-		    		token1, token2);
+		OAuthSignpostClient oauthClient = new OAuthSignpostClient(API_KEY,  API_SECRET, token1, token2);
 		System.err.println("Login in with token1: " + token1 + ", token2: " + token2);
 		
 		twit = new Twitter(username, oauthClient);
@@ -238,15 +247,69 @@ public class TwitterAdapter {
 		return tws;
 	}
 	
+	private void createSignPostObkect() {
+		if ( mySignPost == null ) {
+			mySignPost =	new OAuthSignpostClient(API_KEY, API_SECRET, "oob");
+		}
+	}
+	
 	public String getBrowserURL() {
-		OAuthSignpostClient oauthClient = 
-			new OAuthSignpostClient(API_KEY, API_SECRET, "oob");
-		URI url = oauthClient.authorizeUrl();
+		createSignPostObkect();
+		URI url = mySignPost.authorizeUrl();
 		
 		return url + "";
 	}
 	
-	public static void main(String [] args) {
+	public Binary getSignPost() throws UserException {
+		if ( mySignPost != null ) {
+			Binary b = new Binary();
+			try {
+			ObjectOutputStream oos = new ObjectOutputStream(b.getOutputStream());
+			oos.writeObject(mySignPost);
+			oos.close();
+			} catch (Exception e) {
+				throw new UserException(-1, e.getMessage());
+			}
+			return b;
+		} else {
+			throw new UserException(-1, "Signpost not set.");
+		}
+	}
+	
+	public void setSignPost(Binary b) throws UserException {
+		ObjectInputStream ois;
+		try {
+			ois = new ObjectInputStream(b.getDataAsStream());
+			mySignPost = (OAuthSignpostClient) ois.readObject();
+		} catch (Exception e) {
+			throw new UserException(-1, e.getMessage());
+		}
+		
+	}
+	
+	public void setPincode(String pin) throws UserException {
+	
+		if ( mySignPost == null ) {
+			throw new UserException(-1, "Set signpost object first.");
+		}
+		
+		mySignPost.setAuthorizationCode(pin);
+		// Store the authorisation token details for future use
+		String[] accessToken = mySignPost.getAccessToken();
+		token1 = accessToken[0];
+		token2 = accessToken[1];
+		
+	}
+	
+	public String getToken1() {
+		return token1;
+	}
+	
+	public String getToken2() {
+		return token2;
+	}
+	
+	public static void main(String [] args) throws Exception {
 		// Make an oauth client (you'll want to change this bit)
 		
 		OAuthSignpostClient oauthClient = 
@@ -256,8 +319,8 @@ public class TwitterAdapter {
 		// On Android, you'd direct the user to URI url = client.authorizeUrl();
 		// On a desktop, we can do that like this:
 		
-		URI url = oauthClient.authorizeUrl();
-		System.err.println("url = " + url);
+		//URI url = oauthClient.authorizeUrl();
+		//System.err.println("url = " + url);
 		
 		oauthClient.authorizeDesktop();
 		// get the pin
@@ -287,6 +350,11 @@ public class TwitterAdapter {
 	  for ( int i = 0; i < followers.size(); i++ ) {
 		  System.err.println(followers.get(i));
 	  }
+	  
+	  ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("/Users/arjenschoneveld/oauth.class")));
+	  oos.writeObject(oauthClient);
+	  oos.close();
+	  
 	}
 
 }
