@@ -49,19 +49,19 @@
 	Build javadoc files of this project. Not all that useful, as it will not 'link' to other project's javadoc.
 	TODO: Build a centrally built javadoc repository at spiritus
 	-->
-	<property name="buildjavadoc" value="false"/>
+	<property name="buildjavadoc" value="true"/>
 
 	<!--
 	Upload javadoc files of this project. This may take a while
 	-->
-	<property name="deployjavadocs" value="false"/>
+	<property name="deployjavadocs" value="true"/>
 	
 	
 	<!--
 	Cleans up dependencies after building. They can safely be discarded, but they can prove useful
 	for debugging building problems
 	-->
-	<property name="cleanupdependencies" value="false"/>
+	<property name="cleanupdependencies" value="true"/>
 	
 	<!--
 	A comma separated list of Navajo project (e.g. DexelsVersionControl,NavajoDocument,NavajoClient)
