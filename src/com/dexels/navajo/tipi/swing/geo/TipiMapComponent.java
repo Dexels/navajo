@@ -28,7 +28,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 
 	private String messagePath = null;
 
-	private final JPanel overlayPanel = new JPanel();
+	private JPanel overlayPanel = null;
 
 	@Override
 	public Object createContainer() {
@@ -36,6 +36,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 
 			public void run() {
 				myMapKit = new TipiSwingMapImpl();
+				overlayPanel = new JPanel();
 				overlayPanel.setLayout(null);
 				overlayPanel.setOpaque(false);
 				myMapKit.getMainMap().addPropertyChangeListener(new PropertyChangeListener() {
