@@ -68,7 +68,7 @@ public class TipiTimeChart extends TipiChart {
 	            System.err.println("Adding series: " + valuePropName);
 	            
 	            TimeSeries ts = new TimeSeries(valuePropName);
-	            for(int i=0;i<stats.getArraySize();i++){
+	            for(int i=0;i<stats.getArraySize();i++) {
 	            	Message row = stats.getMessage(i);
 	            	String timeString = row.getProperty(xAxis).getValue();
 	            	Date dateValue = sdf.parse(timeString);

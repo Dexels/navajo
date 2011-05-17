@@ -42,5 +42,17 @@
                 <param name="value" type="float"/>   
             </method>
       </methods>        
-   </tipiclass>      
+   </tipiclass>   
+   <tipiclass addtocontainer="true" childcount="*" class="TipiGenericChart" layoutmanager="false" module="dashboard" name="chart" package="com.dexels.navajo.tipi.charting" studio-icon="tabs.gif" type="tipi">
+      <events>
+         <event name="onInstantiate"/>         
+         <event name="onLoad">
+            <param name="navajo" type="navajo"/>
+            <param name="service" type="string"/>
+         </event>         
+      </events>
+      <values>             
+          <value direction="in" name="title" type="string"/>
+      </values>       
+   </tipiclass>   
 </tid>
