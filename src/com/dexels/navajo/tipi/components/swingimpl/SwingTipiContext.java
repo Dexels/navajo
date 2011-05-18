@@ -365,7 +365,7 @@ public class SwingTipiContext extends TipiContext {
 			shutdown();
 			
 			super.exit();
-//			System.exit(0);
+			System.exit(0);
 		}
 	}
 
