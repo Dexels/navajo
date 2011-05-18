@@ -6,6 +6,7 @@ Bundle-Version: 1.0.41.qualifier
 Bundle-Activator: navajoswingtipi.Version
 Export-Package: com.dexels.navajo.dnd,
  com.dexels.navajo.swingclient.ui,
+ com.dexels.navajo.tipi.components.swingimpl,
  com.dexels.navajo.tipi.components.swingimpl.parsers,
  com.dexels.navajo.tipi.swingclient,
  com.dexels.navajo.tipi.swingclient.components,
