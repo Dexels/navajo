@@ -20,6 +20,7 @@
 		<copy todir="${dist}/lib" file="../Navajo/Navajo.jar" />
 		<copy todir="${dist}/lib" file="../NavajoClient/lib/jzlib.jar" />
 		<copy todir="${dist}/lib" file="../DexelsVersionControl/DexelsVersionControl.jar" />
+		<copy todir="${dist}/lib" file="../DexelsVersionControl/osgi.jar" />
 		<copy todir="${dist}/lib" file="Tipi.jar" />
 	</target>
 	<target name="cleandistribution" depends="archive">
