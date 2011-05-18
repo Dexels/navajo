@@ -31,7 +31,6 @@ public class TipiAbstractXMLExtension extends AbstractTipiExtension implements T
 	
 	protected void loadXML()  {
 		String xmlName = getClass().getSimpleName()+".xml";
-		System.err.println("Loading classdef: "+xmlName);
 		loadXML(xmlName);
 	}
 	
