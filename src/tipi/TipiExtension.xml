@@ -11,6 +11,7 @@
 		<include path="com/dexels/navajo/functions/functions.xml"/>
 	</includes>
 	<jars>
+		<jar path="osgi.jar"/>
 		<jar path="DexelsVersionControl.jar"/>
 		<jar path="NavajoClient.jar"/>
 		<jar path="NavajoDocument.jar"/>
