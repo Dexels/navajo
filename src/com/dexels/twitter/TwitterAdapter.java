@@ -212,6 +212,10 @@ public class TwitterAdapter {
 		return twit.getScreenName();
 	}
 	
+	public String getUserName() {
+		return twit.getUser(twit.getScreenName()).getName();
+	}
+	
 	public String[] getTrends(){
 		List<String> trends = twit.getTrends();		
 		String[] tws = new String[trends.size()];
