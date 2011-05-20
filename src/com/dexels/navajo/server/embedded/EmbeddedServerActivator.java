@@ -18,6 +18,7 @@ import com.dexels.navajo.dsl.expression.ui.contentassist.NavajoExpressionProposa
 import com.dexels.navajo.server.listener.NavajoContextListener;
 import com.dexels.navajo.server.listener.http.TmlHttpServlet;
 import com.dexels.navajo.server.listener.nql.NqlServlet;
+import com.dexels.navajo.client.context.NavajoContext;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -29,12 +30,19 @@ public class EmbeddedServerActivator extends AbstractUIPlugin {
 
 	// The shared instance
 	private static EmbeddedServerActivator plugin;
-
 	protected Server jettyServer;
-
+	private NavajoContext currentContext = null;
 	private ServletContextHandler webappContextHandler;
-
 	private NavajoExpressionProposalProvider navajoExpressionProvider;
+
+	public NavajoContext getCurrentContext() {
+		return currentContext;
+	}
+
+	public void setCurrentContext(NavajoContext currentContext) {
+		this.currentContext = currentContext;
+	}
+
 	
 	public NavajoExpressionProposalProvider getNavajoExpressionProvider() {
 		return navajoExpressionProvider;
@@ -99,13 +107,6 @@ public class EmbeddedServerActivator extends AbstractUIPlugin {
 		jettyServer = initializeServer(navajoProject);
 		jettyServer.addLifeCycleListener(lifecycleListener);
 		startServer();
-//		NavajoExpressionUiModule inst = NavajoExpressionUiModule.getInstance();
-//		System.err.println("INST: "+inst);
-		
-//		ServiceReference sr = getBundle().getBundleContext().getServiceReference("com.dexels.navajo.dsl.expression.ui.contentassist.NavajoExpressionProposalProvider");	
-//		navajoExpressionProvider = (NavajoExpressionProposalProvider) getBundle().getBundleContext().getService(sr);
-//		System.err.println("Service ref aquired!");
-		
 		return jettyServer;
 	}
 	
@@ -159,6 +160,7 @@ public class EmbeddedServerActivator extends AbstractUIPlugin {
 		return sc;
 	}
 	
+	// .... and if it is not free? 
 	public int findFreePort() throws IOException {
 		ServerSocket server = new ServerSocket(0);
 		int port = server.getLocalPort();
