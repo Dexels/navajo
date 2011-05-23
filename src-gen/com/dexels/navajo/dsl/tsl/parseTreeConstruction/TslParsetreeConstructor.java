@@ -742,13 +742,13 @@ protected class Tml_XML_TAG_SINGLEENDTerminalRuleCall_3_1 extends UnassignedText
 /************ begin Rule PossibleExpression ****************
  *
  * PossibleExpression:
- * 	(namespace=ID ":")? key=AttributeName "=" (QUOTEQ expressionValue=TopLevel SEMICOLONQUOTE | value=ATTRIBUTESTRING |
- * 	value=EMPTYSTRING);
+ * 	(namespace=ID ":")? key=AttributeName "=" (QUOTEQ expressionValue=TopLevel endToken=SEMICOLONQUOTE |
+ * 	value=ATTRIBUTESTRING | value=EMPTYSTRING);
  *
  **/
 
-// (namespace=ID ":")? key=AttributeName "=" (QUOTEQ expressionValue=TopLevel SEMICOLONQUOTE | value=ATTRIBUTESTRING |
-// value=EMPTYSTRING)
+// (namespace=ID ":")? key=AttributeName "=" (QUOTEQ expressionValue=TopLevel endToken=SEMICOLONQUOTE |
+// value=ATTRIBUTESTRING | value=EMPTYSTRING)
 protected class PossibleExpression_Group extends GroupToken {
 	
 	public PossibleExpression_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -911,7 +911,7 @@ protected class PossibleExpression_EqualsSignKeyword_2 extends KeywordToken  {
 
 }
 
-// QUOTEQ expressionValue=TopLevel SEMICOLONQUOTE | value=ATTRIBUTESTRING | value=EMPTYSTRING
+// QUOTEQ expressionValue=TopLevel endToken=SEMICOLONQUOTE | value=ATTRIBUTESTRING | value=EMPTYSTRING
 protected class PossibleExpression_Alternatives_3 extends AlternativesToken {
 
 	public PossibleExpression_Alternatives_3(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -935,7 +935,7 @@ protected class PossibleExpression_Alternatives_3 extends AlternativesToken {
 
 }
 
-// QUOTEQ expressionValue=TopLevel SEMICOLONQUOTE
+// QUOTEQ expressionValue=TopLevel endToken=SEMICOLONQUOTE
 protected class PossibleExpression_Group_3_0 extends GroupToken {
 	
 	public PossibleExpression_Group_3_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -950,7 +950,7 @@ protected class PossibleExpression_Group_3_0 extends GroupToken {
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new PossibleExpression_SEMICOLONQUOTETerminalRuleCall_3_0_2(lastRuleCallOrigin, this, 0, inst);
+			case 0: return new PossibleExpression_EndTokenAssignment_3_0_2(lastRuleCallOrigin, this, 0, inst);
 			default: return null;
 		}	
 	}
@@ -1025,16 +1025,16 @@ protected class PossibleExpression_ExpressionValueAssignment_3_0_1 extends Assig
 	}	
 }
 
-// SEMICOLONQUOTE
-protected class PossibleExpression_SEMICOLONQUOTETerminalRuleCall_3_0_2 extends UnassignedTextToken {
-
-	public PossibleExpression_SEMICOLONQUOTETerminalRuleCall_3_0_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+// endToken=SEMICOLONQUOTE
+protected class PossibleExpression_EndTokenAssignment_3_0_2 extends AssignmentToken  {
+	
+	public PossibleExpression_EndTokenAssignment_3_0_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
-	public RuleCall getGrammarElement() {
-		return grammarAccess.getPossibleExpressionAccess().getSEMICOLONQUOTETerminalRuleCall_3_0_2();
+	public Assignment getGrammarElement() {
+		return grammarAccess.getPossibleExpressionAccess().getEndTokenAssignment_3_0_2();
 	}
 
     @Override
@@ -1043,6 +1043,18 @@ protected class PossibleExpression_SEMICOLONQUOTETerminalRuleCall_3_0_2 extends 
 			case 0: return new PossibleExpression_ExpressionValueAssignment_3_0_1(lastRuleCallOrigin, this, 0, inst);
 			default: return null;
 		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("endToken",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("endToken");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getPossibleExpressionAccess().getEndTokenSEMICOLONQUOTETerminalRuleCall_3_0_2_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getPossibleExpressionAccess().getEndTokenSEMICOLONQUOTETerminalRuleCall_3_0_2_0();
+			return obj;
+		}
+		return null;
 	}
 
 }

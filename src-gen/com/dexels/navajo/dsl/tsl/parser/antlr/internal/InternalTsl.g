@@ -477,11 +477,31 @@ rulePossibleExpression returns [EObject current=null]
 	    }
 
 )
-)RULE_SEMICOLONQUOTE
-    { 
-    createLeafNode(grammarAccess.getPossibleExpressionAccess().getSEMICOLONQUOTETerminalRuleCall_3_0_2(), null); 
-    }
+)(
+(
+		lv_endToken_6_0=RULE_SEMICOLONQUOTE
+		{
+			createLeafNode(grammarAccess.getPossibleExpressionAccess().getEndTokenSEMICOLONQUOTETerminalRuleCall_3_0_2_0(), "endToken"); 
+		}
+		{
+	        if ($current==null) {
+	            $current = factory.create(grammarAccess.getPossibleExpressionRule().getType().getClassifier());
+	            associateNodeWithAstElement(currentNode, $current);
+	        }
+	        try {
+	       		set(
+	       			$current, 
+	       			"endToken",
+	        		lv_endToken_6_0, 
+	        		"SEMICOLONQUOTE", 
+	        		lastConsumedNode);
+	        } catch (ValueConverterException vce) {
+				handleValueConverterException(vce);
+	        }
+	    }
+
 )
+))
     |(
 (
 		lv_value_7_0=RULE_ATTRIBUTESTRING

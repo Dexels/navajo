@@ -170,19 +170,20 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cQUOTEQTerminalRuleCall_3_0_0 = (RuleCall)cGroup_3_0.eContents().get(0);
 		private final Assignment cExpressionValueAssignment_3_0_1 = (Assignment)cGroup_3_0.eContents().get(1);
 		private final RuleCall cExpressionValueTopLevelParserRuleCall_3_0_1_0 = (RuleCall)cExpressionValueAssignment_3_0_1.eContents().get(0);
-		private final RuleCall cSEMICOLONQUOTETerminalRuleCall_3_0_2 = (RuleCall)cGroup_3_0.eContents().get(2);
+		private final Assignment cEndTokenAssignment_3_0_2 = (Assignment)cGroup_3_0.eContents().get(2);
+		private final RuleCall cEndTokenSEMICOLONQUOTETerminalRuleCall_3_0_2_0 = (RuleCall)cEndTokenAssignment_3_0_2.eContents().get(0);
 		private final Assignment cValueAssignment_3_1 = (Assignment)cAlternatives_3.eContents().get(1);
 		private final RuleCall cValueATTRIBUTESTRINGTerminalRuleCall_3_1_0 = (RuleCall)cValueAssignment_3_1.eContents().get(0);
 		private final Assignment cValueAssignment_3_2 = (Assignment)cAlternatives_3.eContents().get(2);
 		private final RuleCall cValueEMPTYSTRINGTerminalRuleCall_3_2_0 = (RuleCall)cValueAssignment_3_2.eContents().get(0);
 		
 		//PossibleExpression:
-		//	(namespace=ID ":")? key=AttributeName "=" (QUOTEQ expressionValue=TopLevel SEMICOLONQUOTE | value=ATTRIBUTESTRING |
-		//	value=EMPTYSTRING);
+		//	(namespace=ID ":")? key=AttributeName "=" (QUOTEQ expressionValue=TopLevel endToken=SEMICOLONQUOTE |
+		//	value=ATTRIBUTESTRING | value=EMPTYSTRING);
 		public ParserRule getRule() { return rule; }
 
-		//(namespace=ID ":")? key=AttributeName "=" (QUOTEQ expressionValue=TopLevel SEMICOLONQUOTE | value=ATTRIBUTESTRING |
-		//value=EMPTYSTRING)
+		//(namespace=ID ":")? key=AttributeName "=" (QUOTEQ expressionValue=TopLevel endToken=SEMICOLONQUOTE |
+		//value=ATTRIBUTESTRING | value=EMPTYSTRING)
 		public Group getGroup() { return cGroup; }
 
 		//(namespace=ID ":")?
@@ -206,10 +207,10 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		//"="
 		public Keyword getEqualsSignKeyword_2() { return cEqualsSignKeyword_2; }
 
-		//QUOTEQ expressionValue=TopLevel SEMICOLONQUOTE | value=ATTRIBUTESTRING | value=EMPTYSTRING
+		//QUOTEQ expressionValue=TopLevel endToken=SEMICOLONQUOTE | value=ATTRIBUTESTRING | value=EMPTYSTRING
 		public Alternatives getAlternatives_3() { return cAlternatives_3; }
 
-		//QUOTEQ expressionValue=TopLevel SEMICOLONQUOTE
+		//QUOTEQ expressionValue=TopLevel endToken=SEMICOLONQUOTE
 		public Group getGroup_3_0() { return cGroup_3_0; }
 
 		//QUOTEQ
@@ -221,8 +222,11 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		//TopLevel
 		public RuleCall getExpressionValueTopLevelParserRuleCall_3_0_1_0() { return cExpressionValueTopLevelParserRuleCall_3_0_1_0; }
 
+		//endToken=SEMICOLONQUOTE
+		public Assignment getEndTokenAssignment_3_0_2() { return cEndTokenAssignment_3_0_2; }
+
 		//SEMICOLONQUOTE
-		public RuleCall getSEMICOLONQUOTETerminalRuleCall_3_0_2() { return cSEMICOLONQUOTETerminalRuleCall_3_0_2; }
+		public RuleCall getEndTokenSEMICOLONQUOTETerminalRuleCall_3_0_2_0() { return cEndTokenSEMICOLONQUOTETerminalRuleCall_3_0_2_0; }
 
 		//value=ATTRIBUTESTRING
 		public Assignment getValueAssignment_3_1() { return cValueAssignment_3_1; }
@@ -2169,8 +2173,8 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//PossibleExpression:
-	//	(namespace=ID ":")? key=AttributeName "=" (QUOTEQ expressionValue=TopLevel SEMICOLONQUOTE | value=ATTRIBUTESTRING |
-	//	value=EMPTYSTRING);
+	//	(namespace=ID ":")? key=AttributeName "=" (QUOTEQ expressionValue=TopLevel endToken=SEMICOLONQUOTE |
+	//	value=ATTRIBUTESTRING | value=EMPTYSTRING);
 	public PossibleExpressionElements getPossibleExpressionAccess() {
 		return (pPossibleExpression != null) ? pPossibleExpression : (pPossibleExpression = new PossibleExpressionElements());
 	}
