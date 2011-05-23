@@ -34,5 +34,52 @@
             file="contexts.xml">
       </contexts>
    </extension>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="com.dexels.navajo.server.embedded.actionSet"
+            label="Navajo Scripting"
+            visible="true">
+         <menu
+               id="navajoScriptActionSet"
+               label="Sample &amp;Menu">
+            <separator
+                  name="sampleGroup">
+            </separator>
+         </menu>
+
+      </actionSet>
+   </extension>
+
+
+
+
+
+
+
+
+<extension point="org.eclipse.ui.popupMenus">
+   <objectContribution adaptable="true" objectClass="org.eclipse.core.resources.IFile" nameFilter="*.tsl" id="com.dexels.plugin.popupMenuAdd">
+            
+        
+
+      
+            <action
+               class="com.dexels.navajo.server.embedded.actions.RunScript"
+               icon="icons/dexels_start.gif"
+               id="com.dexels.navajo.server.embedded.actions.RunScript"
+               label="&amp;Run navajo"
+               tooltip="HRun script">
+         </action>      
+   </objectContribution>
+</extension>
+
+
+
+
+
+   <extension
+         point="org.eclipse.ui.newWizards">
+   </extension>
 
 </plugin>
