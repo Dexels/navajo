@@ -76,10 +76,7 @@
 	</markerResolutionGenerator>
 </extension>
 -->
-            <action label="Run.." icon="icons/start.gif"  tooltip="Run remote script" 
-               class="com.dexels.navajo.studio.script.plugin.actions.NavajoRemoteAction"
-               id="com.dexels.plugin.newAction"/>
-   
+      
   
    
   <!--   <extension id="aap" point="org.eclipse.core.resources.markers">
@@ -126,4 +123,21 @@
 	<extension point="org.eclipse.ui.contexts">
 		<context name="Navajo context" description="Navajo context description" id="com.dexels.navajoContext" parentId="org.eclipse.ui.contexts.window"/>
 	</extension>
+ <extension
+       point="org.eclipse.core.filebuffers.documentSetup">
+ </extension>
+ <extension
+       point="org.eclipse.ui.newWizards">
+    <category
+          id="com.dexels.navajo.dev.script"
+          name="Navajo Wizard">
+    </category>
+    <wizard
+          category="com.dexels.navajo.dev.script"
+          class="com.dexels.navajo.dev.script.wizards.NavajoScriptWizard"
+          icon="icons/sample.gif"
+          id="com.dexels.navajo.dev.script.wizards.NavajoScriptWizard"
+          name="NavajoScriptWizard">
+    </wizard>
+ </extension>
  </plugin>
