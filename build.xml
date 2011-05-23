@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="deploy" name="buildanddeploy">
+	<property file="build.properties"/>
+	<property name="deployRoot" value="${navajoScpUser}@${navajoScpServer}:${navajoScpPath}" />
+	<import file="build_allfeatures.xml"/>
+	<target name="deploy">
+		<scp todir="${deployRoot}" password="${navajoScpPassword}" >
+			<fileset dir="/Users/frank/Desktop/dump5">
+			</fileset>
+		</scp>
+	</target>
+</project>
