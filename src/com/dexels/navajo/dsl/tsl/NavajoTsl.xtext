@@ -211,7 +211,7 @@ AttributeName:
 PossibleExpression:
 	(namespace= ID ':')? key=AttributeName '='
 	(
-		 QUOTEQ expressionValue=TopLevel SEMICOLONQUOTE
+		 QUOTEQ expressionValue=TopLevel endToken=SEMICOLONQUOTE
 		| value=ATTRIBUTESTRING
 		| value=EMPTYSTRING
 	)
