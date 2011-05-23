@@ -1,37 +1,38 @@
 package com.dexels.navajo.server.embedded.views;
 
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.util.component.LifeCycle;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.part.ViewPart;
-import org.osgi.framework.Bundle;
 
-import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.context.NavajoContext;
-import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
-import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.server.embedded.EmbeddedServerActivator;
-import com.dexels.navajo.studio.script.plugin.views.TmlClientView;
+import com.dexels.navajo.server.embedded.impl.ServerInstanceImpl;
+import com.dexels.navajo.studio.script.plugin.ServerInstance;
 
 
 /**
@@ -60,14 +61,20 @@ public class ServerControlPanel extends ViewPart {
 	public static final String ID = "com.dexels.navajo.server.embedded.views.ServerControlPanel";
 
 	private Composite viewer;
-	private Action startServerAction;
-	private Action stopServerAction;
+//	private Action startServerAction;
 
 //	private String serverURL = null;
-	private Server jettyServer;
 
 //	private IProject currentProject = null;
 	private NavajoContext localContext;
+	
+	private List<ServerInstanceImpl> serverInstances = new ArrayList<ServerInstanceImpl>();
+
+	private CTabFolder tabFolder;
+
+	private Combo projectSelection;
+
+	private Appendable outputAppendable;
 	
 	/**
 	 * The constructor.
@@ -84,8 +91,9 @@ public class ServerControlPanel extends ViewPart {
 		
 		viewer.setBackground(new Color(Display.getCurrent(), 240, 240, 220));
 
-		viewer.setLayout(new GridLayout(1,false));
+//		viewer.setLayout(new GridLayout(1,false));
       
+		viewer.setLayout(new GridLayout(1,false));
         
         Composite headComp = new Composite(viewer,SWT.BORDER);
         headComp.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,false));
@@ -93,90 +101,147 @@ public class ServerControlPanel extends ViewPart {
         TableWrapLayout twl = new TableWrapLayout();
         twl.numColumns=9;
         headComp.setLayout(twl);		
+        
+        createProjectSelector(headComp);
+        
+        Button refresh = new Button(headComp,SWT.PUSH);
+        refresh.setText("Refresh");
+
+        Button start = new Button(headComp,SWT.PUSH);
+        start.setText("Start");
+        
+        start.addSelectionListener(new SelectionListener(){
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				
+			}
+
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				startSelectedProjectServer();
+//				System.err.println("Starting");
+				
+			}});
 		// Create the help context id for the viewer's control
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(viewer, "com.dexels.navajo.server.embedded.viewer");
-		makeActions("Navajo");
-		contributeToActionBars();
+//		makeActions("Navajo");
+//		contributeToActionBars();
+		tabFolder = new CTabFolder(viewer, SWT.NONE);
+		tabFolder.setTabPosition(SWT.BOTTOM);
+		tabFolder.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,true));
+
 	}
 
-	private void contributeToActionBars() {
-		IActionBars bars = getViewSite().getActionBars();
-		fillLocalToolBar(bars.getToolBarManager());
-	}
+	private void createProjectSelector(Composite headComp) {
+		projectSelection = new Combo(headComp, SWT.NORMAL);
+		projectSelection.setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.FILL_GRAB));
 
-	
-
-	
-	private void fillLocalToolBar(IToolBarManager manager) {
-		manager.add(startServerAction);
-		manager.add(stopServerAction);
-	}
-
-	private void makeActions(final String projectName) {
-		startServerAction = createStartServerAction(projectName);
-		stopServerAction = createStopAction(projectName);
-	}
-
-	private Action createStartServerAction(final String projectName) {
-		Action startServerAction = new Action() {
-
-			public void run() {
-				startServer(projectName);
-			} 
-		};
-		startServerAction.setText("Start server");
-		
-		stopServerAction.setToolTipText("Starts server for project: "+projectName);
-		startServerAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
-			getImageDescriptor(ISharedImages.IMG_TOOL_FORWARD));
-		return startServerAction;
-	}
-
-	private Action createStopAction(final String projectName) {
-		Action stopServerAction = new Action() {
-			public void run() {
-				EmbeddedServerActivator.getDefault().stopServer();
-			}
-		};
-		stopServerAction.setEnabled(false);
-		stopServerAction.setText("Stop server");
-		stopServerAction.setToolTipText("Stops server for project: "+projectName);
-		stopServerAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ELCL_STOP));
-		return stopServerAction;
-	}
-
-	protected void setupClient(String server, String user, String pass) {
-		localContext = new NavajoContext();
-		localContext.setupClient(server,user, pass);
-		EmbeddedServerActivator.getDefault().setCurrentContext(localContext);
-		
-	}
-
-	protected void callPluginServices(IProject project) throws CoreException {
-		try {
-			localContext.callService("plugin/InitNavajoBundle");
-			Navajo n = localContext.getNavajo("plugin/InitNavajoBundle");
-			n.write(System.err);
-			Binary b = (Binary) n.getProperty("NavajoBundle/FunctionDefinition").getTypedValue();
-			IFolder iff = project.getFolder("navajoconfig");
-			if(!iff.exists()) {
-				iff.create(true, true, null);
-			}
-			IFile ifi = iff.getFile("functions.xml");
-			if(!ifi.exists()) {
-				ifi.create(b.getDataAsStream(), true, null);
-			} else {
-				ifi.setContents(b.getDataAsStream(), true, false,null);
-				ifi.refreshLocal(1, null);
-			}
-		} catch (ClientException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NavajoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		IProject[] pp = ResourcesPlugin.getPlugin().getWorkspace().getRoot().getProjects();
+		for (IProject iProject : pp) {
+			projectSelection.add(iProject.getName());
 		}
+		projectSelection.select(0);
 	}
+
+	private void startSelectedProjectServer() {
+		System.err.println("Selectionindex: "+projectSelection.getSelectionIndex());
+		String item = projectSelection.getItem(projectSelection.getSelectionIndex());
+		CTabItem cc = createNavajoServerTab(item);
+		ServerInstance si = startServerInstance(item,cc);
+		cc.setText(item+":"+si.getPort());
+		tabFolder.setSelection(cc);
+	}
+
+	private CTabItem createNavajoServerTab(String name) {
+		CTabItem cti = new CTabItem(tabFolder, SWT.NONE);
+
+		cti.setShowClose(true);
+		cti.setText(name);
+	        return cti;
+	}
+
+//	private void contributeToActionBars() {
+//		IActionBars bars = getViewSite().getActionBars();
+//		fillLocalToolBar(bars.getToolBarManager());
+//	}
+
+	
+
+	
+//	private void fillLocalToolBar(IToolBarManager manager) {
+//		manager.add(startServerAction);
+////		manager.add(stopServerAction);
+//	}
+
+//	private void makeActions(final String projectName) {
+//		startServerAction = createStartServerAction(projectName);
+////		stopServerAction = createStopAction(projectName);
+//	}
+//
+//	private Action createStartServerAction(final String projectName, final CTabItem tabItem) {
+//		Action startServerAction = new Action() {
+//
+//			public void run() {
+////				startServer(projectName);
+//				startServerInstance();
+//			} 
+//			
+//		};
+//		
+//		startServerAction.setText("Start server");
+//		
+//		startServerAction.setToolTipText("Starts server for project: "+projectName);
+//		startServerAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
+//			getImageDescriptor(ISharedImages.IMG_TOOL_FORWARD));
+//		return startServerAction;
+//	}
+
+//	private Action createStopAction(final String projectName) {
+//		Action stopServerAction = new Action() {
+//			public void run() {
+//				EmbeddedServerActivator.getDefault().stopServer();
+//			}
+//		};
+//		stopServerAction.setEnabled(false);
+//		stopServerAction.setText("Stop server");
+//		stopServerAction.setToolTipText("Stops server for project: "+projectName);
+//		stopServerAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ELCL_STOP));
+//		return stopServerAction;
+//	}
+
+//	protected void setupClient(String server, String user, String pass) {
+//		localContext = new NavajoContext();
+//		localContext.setupClient(server,user, pass);
+//		EmbeddedServerActivator.getDefault().setCurrentContext(localContext);
+//		
+//	}
+//
+//	protected void callPluginServices(IProject project) throws CoreException {
+//		try {
+//			localContext.callService("plugin/InitNavajoBundle");
+//			Navajo n = localContext.getNavajo("plugin/InitNavajoBundle");
+//			n.write(System.err);
+//			Binary b = (Binary) n.getProperty("NavajoBundle/FunctionDefinition").getTypedValue();
+//			IFolder iff = project.getFolder("navajoconfig");
+//			if(!iff.exists()) {
+//				iff.create(true, true, null);
+//			}
+//			IFile ifi = iff.getFile("functions.xml");
+//			if(!ifi.exists()) {
+//				ifi.create(b.getDataAsStream(), true, null);
+//			} else {
+//				ifi.setContents(b.getDataAsStream(), true, false,null);
+//				ifi.refreshLocal(1, null);
+//			}
+//		} catch (ClientException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (NavajoException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 
 //	protected void dumpBundleStates() {
 //		Bundle myBundle = EmbeddedServerActivator.getDefault().getBundle();
@@ -200,66 +265,140 @@ public class ServerControlPanel extends ViewPart {
 		viewer.setFocus();
 	}
 
-	private void startServer(final String projectName) {
-		try {
+	private ServerInstance startServerInstance(String projectName, final CTabItem ci) {
 
-//					dumpBundleStates();
-			LifeCycle.Listener lifecycleListener = new LifeCycle.Listener() {
-				
-				@Override
-				public void lifeCycleStopping(LifeCycle l) {
-					
-				}
-				
-				@Override
-				public void lifeCycleStopped(LifeCycle l) {
-					stopServerAction.setEnabled(false);
-					startServerAction.setEnabled(true);
-					
-				}
-				
-				@Override
-				public void lifeCycleStarting(LifeCycle l) {
-					
-				}
-				
-				@Override
-				public void lifeCycleStarted(LifeCycle l) {
-					int port = jettyServer.getConnectors()[0].getPort();
-					stopServerAction.setEnabled(true);
-					startServerAction.setEnabled(false);							
+//		ci.setLayout(new GridLayout(1,false));
+        
+        Composite panel = new Composite(tabFolder,SWT.BORDER);
+        panel.setBackground(new Color(Display.getCurrent(), 240, 240, 220));
+        ci.setControl(panel);
+		panel.setLayout(new GridLayout(1,false));
 
-					String server = "localhost:"+port+"/Postman";
-					setupClient(server, "plugin","plugin");
-					IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
-					try {
-						callPluginServices(project);
-					} catch (CoreException e1) {
-						e1.printStackTrace();
-					}
-					
+		Composite tb = new Composite(panel, SWT.NORMAL);
+        tb.setBackground(new Color(Display.getCurrent(), 220, 220, 240));
+        tb.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL ));
+        RowLayout rowLayout = new RowLayout();
+        tb.setLayout(rowLayout);
 
-				}
+		final StyledText textArea = new StyledText(panel, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
+		textArea.setLayoutData(new GridData(GridData.FILL_BOTH | GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL));
+		textArea.setEditable(false);
+
+		outputAppendable = new Appendable() {
+			
+			@Override
+			public Appendable append(CharSequence csq, int start, int end)
+					throws IOException {
+			    CharSequence cs = csq.subSequence(start, end);
+			    append(cs);
+			    return this;
+			}
+			
+			@Override
+			public Appendable append(final char c) throws IOException {
+
+				Display.getDefault().syncExec(new Runnable(){
+
+					@Override
+					public void run() {
+						textArea.append(""+c);
+					}});
+				return this;
+			}
+			
+			@Override
+			public Appendable append(final CharSequence csq) throws IOException {
+				Display.getDefault().syncExec(new Runnable(){
+
+					@Override
+					public void run() {
+						textArea.append(""+csq+"\n");
+						
+					}});
+				return this;
+			}
+		};
+		
+		final ServerInstanceImpl si = new ServerInstanceImpl(outputAppendable);
+
+		Button stop = new Button(tb,SWT.PUSH);
+		stop.setText("Stop");
+		stop.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				si.stopServer();
+				ci.dispose();
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
 				
-				@Override
-				public void lifeCycleFailure(LifeCycle l, Throwable e) {
-					l.removeLifeCycleListener(this);
-					stopServerAction.setEnabled(false);
-					startServerAction.setEnabled(true);
-				}
-			};
-			jettyServer = EmbeddedServerActivator.getDefault().startServer(projectName,lifecycleListener).getServer();
-			System.err.println("SErver: "+jettyServer);
-			int port = jettyServer.getConnectors()[0].getPort();
-			IWorkbenchWindow window = EmbeddedServerActivator.getDefault().getWorkbench().getActiveWorkbenchWindow();
-			IWorkbenchPage page = window.getActivePage();
-			TmlClientView tw;
-			tw = (TmlClientView) page.showView("com.dexels.TmlClientView");
-			tw.setServerPort(port);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+			}
+		});
+		
+		Button clear = new Button(tb,SWT.PUSH);
+		clear.setText("Clear");
+		clear.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				textArea.setText("");
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+
+
+		si.addLifeCycleListener(new LifeCycle.Listener() {
+			
+			@Override
+			public void lifeCycleStopping(LifeCycle arg0) {
+				
+			}
+			
+			@Override
+			public void lifeCycleStopped(LifeCycle arg0) {
+				ci.dispose();
+	
+			}
+			
+			@Override
+			public void lifeCycleStarting(LifeCycle arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void lifeCycleStarted(LifeCycle arg0) {
+//				System.err.println("Started");
+				
+			}
+			
+			@Override
+			public void lifeCycleFailure(LifeCycle arg0, Throwable arg1) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+//	cti.addDisposeListener(new DisposeListener() {
+//			
+//			@Override
+//			public void widgetDisposed(DisposeEvent arg0) {
+//				System.err.println("Closing tab");
+//			}
+//		});
+
+		serverInstances.add(si);
+		si.startServer(projectName);
+		return si;
 	}
+
+
 }

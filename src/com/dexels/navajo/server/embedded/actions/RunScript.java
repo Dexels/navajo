@@ -11,15 +11,19 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.jface.dialogs.MessageDialog;
 
 import com.dexels.navajo.client.ClientException;
+import com.dexels.navajo.client.context.NavajoContext;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.embedded.EmbeddedServerActivator;
 import com.dexels.navajo.studio.script.plugin.NavajoPluginException;
 import com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin;
+import com.dexels.navajo.studio.script.plugin.ServerInstance;
 
 /**
  * Our sample action implements workbench action delegate.
@@ -32,6 +36,7 @@ import com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin;
 public class RunScript implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window;
 	private String scriptName;
+	private IProject currentProject = null;
 	/**
 	 * The constructor.
 	 */
@@ -50,8 +55,25 @@ public class RunScript implements IWorkbenchWindowActionDelegate {
 
             protected IStatus run(IProgressMonitor monitor) {
             		try {
-            			EmbeddedServerActivator.getDefault().getCurrentContext().callService(scriptName);
-            			Navajo response = EmbeddedServerActivator.getDefault().getCurrentContext().getNavajo(scriptName);
+            			ServerInstance si = EmbeddedServerActivator.getDefault().getServerInstanceForProject(currentProject);
+            			if(si==null) {
+            				//
+            				Display.getDefault().syncExec(new Runnable(){
+
+								@Override
+								public void run() {
+									MessageDialog.openInformation(
+		            						Display.getDefault().getActiveShell(),
+		            						"Error",
+		            						"Navajo instance not running!");
+									
+								}});
+            				
+            			}
+            			NavajoContext nc = si.getNavajoContext();
+            			
+            			nc.callService(scriptName);
+            			Navajo response = nc.getNavajo(scriptName);
             			NavajoScriptPluginPlugin.getDefault().injectNavajoResponse(response, scriptName);
             		} catch (ClientException e) {
             			e.printStackTrace();
@@ -77,8 +99,13 @@ public class RunScript implements IWorkbenchWindowActionDelegate {
 		System.err.println("Selection size: "+iss.size());
 		IResource irr = (IResource) iss.getFirstElement();
 		IFile iff = (IFile)irr;
+		if(iff==null) {
+			scriptName=null;
+			return;
+		}
         try {
-			scriptName = NavajoScriptPluginPlugin.getDefault().getScriptNameFromResource(iff);
+        	currentProject  = iff.getProject();
+        	scriptName = NavajoScriptPluginPlugin.getDefault().getScriptNameFromResource(iff);
 		} catch (NavajoPluginException e) {
 			e.printStackTrace();
 		}

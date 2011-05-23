@@ -1,24 +1,20 @@
 package com.dexels.navajo.server.embedded;
 
-import java.io.IOException;
-import java.net.ServerSocket;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.component.LifeCycle.Listener;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-import com.dexels.navajo.dsl.expression.NavajoExpressionRuntimeModule;
-import com.dexels.navajo.dsl.expression.ui.contentassist.NavajoExpressionProposalProvider;
-import com.dexels.navajo.server.listener.NavajoContextListener;
-import com.dexels.navajo.server.listener.http.TmlHttpServlet;
-import com.dexels.navajo.server.listener.nql.NqlServlet;
 import com.dexels.navajo.client.context.NavajoContext;
+import com.dexels.navajo.dsl.expression.ui.contentassist.NavajoExpressionProposalProvider;
+import com.dexels.navajo.studio.script.plugin.ServerInstance;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -35,6 +31,8 @@ public class EmbeddedServerActivator extends AbstractUIPlugin {
 	private ServletContextHandler webappContextHandler;
 	private NavajoExpressionProposalProvider navajoExpressionProvider;
 
+	private final Map<IProject,ServerInstance> projectMap = new HashMap<IProject, ServerInstance>();
+	
 	public NavajoContext getCurrentContext() {
 		return currentContext;
 	}
@@ -60,6 +58,7 @@ public class EmbeddedServerActivator extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+//		context.installBundle("bla");
 		plugin = this;
 		touchNavajoParts(context);
 //		   getB	"com.dexels.navajo.dsl.expression.ui.contentassist.NavajoExpressionProposalProvider"
@@ -78,7 +77,7 @@ public class EmbeddedServerActivator extends AbstractUIPlugin {
 		navajoenterprise.Version.getRandom();
 		navajoenterpriseadapters.Version.getRandom();
 		navajoenterpriselisteners.Version.getRandom();
-		NavajoExpressionRuntimeModule a;
+//		NavajoExpressionRuntimeModule a;
 		System.err.println("Touch complete!");
 	}
 
@@ -100,87 +99,26 @@ public class EmbeddedServerActivator extends AbstractUIPlugin {
 		return plugin;
 	}
 
-
-	
-	public Server startServer(final String projectName, Listener lifecycleListener) throws Exception, InterruptedException {
-		IProject navajoProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
-		jettyServer = initializeServer(navajoProject);
-		jettyServer.addLifeCycleListener(lifecycleListener);
-		startServer();
-		return jettyServer;
+	public ServerInstance getServerInstanceForProject(IProject currentProject) {
+		return projectMap.get(currentProject);
 	}
-	
-	private void startServer() {
-		Thread t = new Thread() {
 
-			@Override
-			public void run() {
-					ClassLoader currentContextLoader = Thread.currentThread().getContextClassLoader();
-					Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
-					try {
-						EmbeddedServerActivator.this.jettyServer.start();
-						EmbeddedServerActivator.this.jettyServer.join();
-//						EmbeddedServerActivator.this.serverStopped(jettyServer);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					Thread.currentThread().setContextClassLoader(currentContextLoader );
-		        }
-			
-		};
-		t.start();
+	public void registerServerInstance(IProject navajoProject,
+			ServerInstance serverInstanceImpl) {
+		projectMap.put(navajoProject, serverInstanceImpl);
 		
 	}
 
-	
-	public void stopServer() {
-		System.err.println("Stopping server");
-		try {
-			if(this.jettyServer==null) {
-				return;
-			}
-			NavajoContextListener.destroyContext(webappContextHandler.getServletContext());
-			webappContextHandler.stop();
-			System.err.println("Context stopped");
+	public void deregisterServerInstance(IProject project) {
+		projectMap.remove(project);
+	}
 
-			
-			this.jettyServer.stop();
-			System.err.println("Server stopped");
-			this.jettyServer = null;
-		} catch (Exception e) {
-			e.printStackTrace();
+	public Map<String,ServerInstance> getSelectorMap() {
+		Map<String,ServerInstance> result = new HashMap<String,ServerInstance>();
+		for (Map.Entry<IProject,ServerInstance> e : projectMap.entrySet()) {
+			String label = e.getKey().getProject().getName()+" @localhost:"+e.getValue().getPort();
+			result.put(label, e.getValue());
 		}
+		return result;
 	}
-	
-	public Server initializeServer(IProject folder) throws IOException {
-		int port = findFreePort();
-		System.err.println("FREE PORT: "+port);
-		String ss = folder.getLocation().toString();
-		Server sc = initializeServer(port, ss);
-		return sc;
-	}
-	
-	// .... and if it is not free? 
-	public int findFreePort() throws IOException {
-		ServerSocket server = new ServerSocket(0);
-		int port = server.getLocalPort();
-		server.close();
-		return port;
-	}
-
-	public Server initializeServer(int port, String navajoPath) {
-		Server server = new Server();
-		SelectChannelConnector connector = new SelectChannelConnector();
-		connector.setPort(port);
-		server.addConnector(connector);
-		webappContextHandler = new ServletContextHandler(ServletContextHandler.NO_SECURITY | ServletContextHandler.NO_SESSIONS);
-		webappContextHandler.setContextPath("/");
-		NavajoContextListener.initializeContext(webappContextHandler.getServletContext(),navajoPath);
-		webappContextHandler.addServlet(new ServletHolder(new TmlHttpServlet()),"/Postman");
-		webappContextHandler.addServlet(new ServletHolder(new NqlServlet()),"/Nql");
-		webappContextHandler.addServlet(new ServletHolder(new NqlServlet()),"/Nssql");
-		server.setHandler(webappContextHandler);
-
-		return server;
-		}
 }
