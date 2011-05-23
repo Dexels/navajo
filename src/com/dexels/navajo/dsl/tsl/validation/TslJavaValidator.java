@@ -10,8 +10,6 @@ import org.eclipse.xtext.validation.Check;
 
 import com.dexels.navajo.dsl.expression.proposals.AdapterProposal;
 import com.dexels.navajo.dsl.expression.proposals.INavajoContextProvider;
-import com.dexels.navajo.dsl.expression.proposals.NavajoContextProvider;
-import com.dexels.navajo.dsl.expression.proposals.NavajoResourceFinder;
 import com.dexels.navajo.dsl.model.tsl.ExpressionTag;
 import com.dexels.navajo.dsl.model.tsl.Field;
 import com.dexels.navajo.dsl.model.tsl.Map;
@@ -20,6 +18,7 @@ import com.dexels.navajo.dsl.model.tsl.Option;
 import com.dexels.navajo.dsl.model.tsl.Param;
 import com.dexels.navajo.dsl.model.tsl.PossibleExpression;
 import com.dexels.navajo.dsl.model.tsl.Property;
+import com.dexels.navajo.dsl.model.tsl.Tml;
 import com.dexels.navajo.dsl.model.tsl.TslPackage;
 import com.google.inject.Inject;
  
@@ -37,6 +36,20 @@ public class TslJavaValidator extends AbstractTslJavaValidator {
 	public static final String ISSUE_MISSING_ATTRIBUTE = "ISSUE_MISSING_ATTRIBUTE";
 	private static final String DEFAULT_CARDINALITY = "1";
 
+	// TODO rewrite into property file based version	
+	public static String getDefaultValueForAttribute(String type, String attributeName) {
+		if("property".equals(type)) {
+			if("direction".equals(attributeName)) {
+				return "out";
+			}
+			if("type".equals(attributeName)) {
+				return "string";
+			}
+		}
+		return attributeName;
+	}
+	
+	
 	
 	protected INavajoContextProvider getNavajoContext() throws  IOException {
 //		if(navajoContext!=null) {
@@ -53,10 +66,19 @@ public class TslJavaValidator extends AbstractTslJavaValidator {
 		return ePackages;
 	}
 
+
+	
 	@Check
 	public void checkMessage(Message p) {
 		java.util.Map<String,String> attr = createAttributeMap(p.getAttributes());
-		validateNeeds("message",p.getAttributes(),attr, new String[]{"name"}, new String[]{}, new String[]{"name","type","filter","condition","index"},new String[]{"filter","condition"},new String[]{"filter","condition"});
+		validateNeeds("message",p.getAttributes(),attr, new String[]{"name"}, new String[]{}, new String[]{"name","type","filter","condition","index","mode"},new String[]{"filter","condition"},new String[]{"filter","condition"});
+		if(attr.get("mode")!=null) {
+			if(!"ignore".equals(attr.get("mode")) && !"default".equals(attr.get("mode")) ) {
+//				warning("Only 'ignore' and 'default' are valid modes!",TslPackage.MESSAGE,ISSUE_ILLEGAL_ATTRIBUTE,"mode");
+// TODO FIX, don't know why it fires on every message
+			}
+		}
+
 	}
 
 	@Check
@@ -85,14 +107,14 @@ public class TslJavaValidator extends AbstractTslJavaValidator {
 				warning("All selection properties should have a cardinality",TslPackage.PROPERTY,ISSUE_MISSING_ATTRIBUTE,"cardinality",DEFAULT_CARDINALITY);
 			}
 		}
-		String name = attr.get("name");
-		if(name!=null && !(name.length()<1)) {
-			if (!Character.isUpperCase(stripQuotes(name).charAt(0))) {
-				// lower case name
-				System.err.println("Not upper.");
-				warning("Property names should be capitalized.",getExpressionByName("name", p.getAttributes()), TslPackage.PROPERTY);
-			}
-		}
+//		String name = attr.get("name");
+//		if(name!=null && !(name.length()<1)) {
+//			if (!Character.isUpperCase(stripQuotes(name).charAt(0))) {
+//				// lower case name
+//				System.err.println("Not upper.");
+//				warning("Property names should be capitalized.",getExpressionByName("name", p.getAttributes()), TslPackage.PROPERTY);
+//			}
+//		}
 	}
 
 	private String stripQuotes(String label) {
@@ -156,7 +178,7 @@ public class TslJavaValidator extends AbstractTslJavaValidator {
 			if(attr.get("cardinality")==null) {
 				// cardinality required!
 				
-				warning("All selection properties should have a cardinality",TslPackage.PROPERTY,ISSUE_MISSING_ATTRIBUTE,DEFAULT_CARDINALITY);
+				warning("All selection properties should have a cardinality",TslPackage.PROPERTY,ISSUE_MISSING_ATTRIBUTE,"property","cardinality");
 				
 			}
 		}
@@ -187,13 +209,13 @@ public class TslJavaValidator extends AbstractTslJavaValidator {
 		for (String string : required) {
 			String result = map.get(string);
 			if(result==null) {
-				error("Tag: "+tagName+" is missing attribute: "+string+"",TslPackage.POSSIBLE_EXPRESSION,ISSUE_MISSING_ATTRIBUTE,string,string);
+				error("Tag: "+tagName+" is missing attribute: "+string+"",TslPackage.POSSIBLE_EXPRESSION,ISSUE_MISSING_ATTRIBUTE,tagName,string);
 			}
 		}
 		for (String string : requiredWarning) {
 			String result = map.get(string);
 			if(result==null) {
-				warning("Tag: "+tagName+" should have attribute: "+string+"",TslPackage.POSSIBLE_EXPRESSION,ISSUE_MISSING_ATTRIBUTE,string,"="+string+";");
+				warning("Tag: "+tagName+" should have attribute: "+string+"",TslPackage.POSSIBLE_EXPRESSION,ISSUE_MISSING_ATTRIBUTE,tagName,string);
 			}
 		}
 
