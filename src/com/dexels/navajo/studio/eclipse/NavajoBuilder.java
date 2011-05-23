@@ -15,7 +15,6 @@ import java.util.Set;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
@@ -23,12 +22,8 @@ import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jdt.internal.compiler.batch.Main;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Display;
 
-import com.dexels.navajo.mapping.compiler.TslCompileException;
-import com.dexels.navajo.mapping.compiler.TslCompiler;
 import com.dexels.navajo.studio.script.plugin.NavajoPluginException;
 import com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin;
 

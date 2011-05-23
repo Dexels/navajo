@@ -36,19 +36,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.Launch;
 import org.eclipse.debug.core.model.ISourceLocator;
-import org.eclipse.jdt.core.IClasspathEntry;
-import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.ISourceRange;
-import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.core.search.IJavaSearchConstants;
-import org.eclipse.jdt.core.search.SearchEngine;
-import org.eclipse.jdt.core.search.SearchMatch;
-import org.eclipse.jdt.core.search.SearchParticipant;
-import org.eclipse.jdt.core.search.SearchPattern;
-import org.eclipse.jdt.core.search.SearchRequestor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IEditorDescriptor;
@@ -73,12 +60,12 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.mapping.compiler.TslCompileException;
 import com.dexels.navajo.mapping.compiler.meta.TslMetaDataHandler;
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
+import com.dexels.navajo.studio.eclipse.INavajoActivityListener;
 import com.dexels.navajo.studio.eclipse.IServerEntryListener;
 import com.dexels.navajo.studio.eclipse.NavajoBuilder;
 import com.dexels.navajo.studio.eclipse.NavajoNature;
 import com.dexels.navajo.studio.eclipse.ServerEntry;
 import com.dexels.navajo.studio.eclipse.prefs.ProjectListElement;
-import com.dexels.navajo.studio.script.plugin.views.MetaDataViewer;
 import com.dexels.navajo.studio.script.plugin.views.TmlBrowser;
 
 /**
@@ -181,7 +168,6 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 
     private TmlBrowser currentTmlBrowser;
 
-    private MetaDataViewer currentMetaDataViewer;
 
     private ArrayList<ServerEntry> myServerEntries = null;
      private final List<IServerEntryListener> myServerEntryListeners = new ArrayList<IServerEntryListener>();
@@ -210,7 +196,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
     public static final String JAXP = "com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl";
     public static final String QDSAX = "com.dexels.navajo.document.base.BaseNavajoFactoryImpl";
 
-	
+	private final List<INavajoActivityListener> navajoActivityListeners = new ArrayList<INavajoActivityListener>();
     
     
     
@@ -237,6 +223,25 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         openViewer("com.dexels.MetaDataViewer");
     }
     
+    public void openTmlClientViewer() {
+        openViewer("com.dexels.TmlClientView");
+    }
+
+    public void injectNavajoResponse(Navajo n, String scriptName) {
+    	for (INavajoActivityListener nn : navajoActivityListeners) {
+			nn.navajoResponse(n,scriptName);
+		}
+    }
+    
+    public void addNavajoActivityListener(INavajoActivityListener il) {
+    	navajoActivityListeners.add(il);
+    }
+
+    public void removeNavajoActivityListener(INavajoActivityListener il) {
+    	navajoActivityListeners.remove(il);
+    }
+
+    
     public void openViewer(final String id) {
         getWorkbench().getDisplay().syncExec(new Runnable() {
 
@@ -252,29 +257,6 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
     }
 
 
-    /**
-     * Launch a new JVM running Tomcat Main class Set classpath, bootclasspath
-     * and environment variable
-     */
-
-    public void resolveProject(final ArrayList outputPaths, final ArrayList current, IJavaProject jp) throws JavaModelException {
-        if(!jp.isOpen()) {
-        }
-        IClasspathEntry[] ice = jp.getResolvedClasspath(true);
-        current.add(jp.getOutputLocation());
-        for (int i = 0; i < ice.length; i++) {
-            if (ice[i].getEntryKind() == IClasspathEntry.CPE_PROJECT) {
-                IProject prj = ResourcesPlugin.getWorkspace().getRoot().getProject(ice[i].getPath().toString());
-                IJavaProject project = JavaCore.create(prj);
-                resolveProject(outputPaths, current, project);
-                continue;
-            }
-            if (!current.contains(ice[i].getPath())) {
-             current.add(ice[i].getPath());
-         
-            }
-       }
-    }
 
     public IFile getServerXml(IProject prj) throws NavajoPluginException {
         return prj.getFile(new Path(getNavajoConfigPath(prj) + "/" + SERVER_FILE_NAME));
@@ -316,10 +298,6 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         return null;
     }
 
-    public void openInEditor(final IFile f) {
-        openInEditor(f, null);
-    }
-
 //    public void closeEditorsWithExtension(IEditorPart exclude, String extension) {
 //        IEditorPart[] iii = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getEditors();
 //        for (int i = 0; i < iii.length; i++) {
@@ -342,47 +320,6 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 //        }
 //
 //    }
-
-    public void openInEditor(final IFile f, final ISourceRange range) {
-        if (f == null || !f.exists()) {
-            System.err.println("Can not open: Null file or non existent.");
-            return;
-        }
-        getWorkbench().getDisplay().syncExec(new Runnable() {
-            public void run() {
-                boolean exclusiveForExtension = false;
-                System.err.println("AAP, exclusive: " + f.getFileExtension());
-
-                if (f.getFileExtension().equals(".tml")) {
-                    System.err.println("Yes, exclusive: " + f.getFileExtension());
-                    exclusiveForExtension = true;
-                }
-               IEditorDescriptor edId = getWorkbench().getEditorRegistry().getDefaultEditor(f.getName());
-                if (edId == null) {
-                    edId = getWorkbench().getEditorRegistry().findEditor(IEditorRegistry.SYSTEM_EXTERNAL_EDITOR_ID);
-                    System.err.println("No descriptor found for: " + f.getName());
-                    if (edId == null) {
-                        System.err.println("STILL No descriptor found for: " + f.getName() + ">> " + IEditorRegistry.SYSTEM_EXTERNAL_EDITOR_ID);
-                    }
-                }
-                try {
-                    getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(new FileEditorInput(f), edId.getId());
-                    if (range != null) {
-                        IEditorPart ied = getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-//                        if (ied != null && ied instanceof AbstractTextEditor) {
-//                            AbstractTextEditor cue = (AbstractTextEditor) ied;
-//                            //                                cue.
-//                            cue.selectAndReveal(range.getOffset(), range.getLength());
-//                        }
-                    }
-
-                } catch (PartInitException e) {
-                    // oh dear
-                    log("Error opening file in editor: "+f.getFullPath().toString(),e);
-                }
-            }
-        });
-    }
 
     /**
      * @return
@@ -780,7 +717,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
             sb.append(current);
         }
         String buffer = sb.toString();
-        if (buffer.endsWith(".xml") || buffer.endsWith(".tml")) {
+        if (buffer.endsWith(".xml") || buffer.endsWith(".tml")|| buffer.endsWith(".tsl")) {
             return buffer.substring(0, buffer.length() - 4);
         }
         if (buffer.endsWith(".java")) {
@@ -806,7 +743,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
             parentFold = getTmlFolder(ff.getProject());
         } else {
             //            boolean isXml = isParentOf(ff,getScriptFolder(ff.getProject()));
-            boolean isXml = ff.getFileExtension().equals("xml");
+            boolean isXml = ff.getFileExtension().equals("xml") || ff.getFileExtension().equals("tsl");
             if (isXml) {
                 parentFold = getScriptFolder(ff.getProject());
             } else {
@@ -895,46 +832,8 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         super.getLog().log(new Status(Status.ERROR,"navajo",0,msg,t));
     }
     
-    public ArrayList searchForExtendingClasses(IProject ipp, String interfaceName, IProgressMonitor monitor) throws CoreException {
-        return searchForClasses(ipp, interfaceName, monitor, IJavaSearchConstants.REFERENCES);
-    }
 
-    public ArrayList searchForImplementingClasses(IProject ipp, String interfaceName, IProgressMonitor monitor) throws CoreException {
-        return searchForClasses(ipp, interfaceName, monitor, IJavaSearchConstants.IMPLEMENTORS);
-    }
 
-    private ArrayList searchForClasses(IProject ipp, String interfaceName, IProgressMonitor monitor, int type) throws CoreException {
-        IProjectNature ipn = ipp.getNature("org.eclipse.jdt.core.javanature");
-        if (ipn instanceof IJavaProject) {
-            final ArrayList matches = new ArrayList();
-            IJavaProject jp = (IJavaProject) ipn;
-            SearchEngine s = new SearchEngine();
-            IType itt = jp.findType(interfaceName);
-            if (itt == null) {
-                return matches;
-            }
-            SearchPattern pat = SearchPattern.createPattern(itt.getPrimaryElement(), type);
-            String[] names = jp.getRequiredProjectNames();
-            // REFACTOR TO RECURSIVELY GET ALL PROJECTS:::\
-            // Also, will not return indirectly implemented classes :-/
-            IJavaElement[] prjs = new IJavaElement[names.length + 1];
-            for (int i = 0; i < names.length; i++) {
-                IProject currentPrj = ResourcesPlugin.getWorkspace().getRoot().getProject(names[i]);
-                IProjectNature rrr = currentPrj.getNature("org.eclipse.jdt.core.javanature");
-                prjs[i] = (IJavaElement) rrr;
-            }
-            prjs[names.length] = jp;
-            s.search(pat, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, s.createJavaSearchScope(prjs),
-                    new SearchRequestor() {
-                        public void acceptSearchMatch(SearchMatch match) throws CoreException {
-                            System.err.println(">>> "+match.toString());
-                            matches.add(match);
-                        }
-                    }, monitor);
-            return matches;
-        }
-        return null;
-    }
 
     public static ArrayList getProjectsByNature(String nature) throws CoreException {
         ArrayList al = new ArrayList();
@@ -1166,38 +1065,6 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
          return false;
     }
 
-    /**
-     * @param scriptName
-     * @return
-     */
-    public void showMetaData(IFile file, String scriptName) throws NavajoPluginException {
-        if (currentMetaDataViewer == null) {
-             openMetaDataViewer();
-            if (currentMetaDataViewer == null) {
-                System.err.println("STILL NO VIEWER?!");
-                return;
-            }
-            getWorkbench().getDisplay().asyncExec(new Runnable() {
-
-                public void run() {
-                    getWorkbench().getActiveWorkbenchWindow().getActivePage().bringToTop(currentMetaDataViewer);
-                }
-            });
- 
-            
-        }
-        if (currentMetaDataViewer!= null) {
-           currentMetaDataViewer.showScript(file, scriptName, metaDataHandler);
-        }
-    }
-
-    /**
-     * @param viewer
-     */
-    public void setMetaDataViewer(MetaDataViewer viewer) {
-        currentMetaDataViewer = viewer;
-        
-    }
 
     /**
      * @param builder

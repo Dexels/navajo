@@ -11,7 +11,6 @@ import java.util.Iterator;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
@@ -38,9 +37,7 @@ public class RemoveNavajoNatureAction extends BaseNavajoAction implements IWorkb
            while (iter.hasNext()) {
                System.err.println("Looping through selection...");
                Object element = iter.next();
-               if (element instanceof IJavaProject) {
-                   element = ((IJavaProject) element).getResource();
-               }
+
                if (!(element instanceof IResource)) {
                    System.err.println("Element: " + element + " is not a resource but a : " + element.getClass());
                    continue;
