@@ -24,7 +24,7 @@ public class BundleManagerMap implements Mappable {
 
 	}
 
-	private XMLElement createBundleXml() {
+	private XMLElement createFunctionBundleXml() {
 		XMLElement xe = new CaseSensitiveXMLElement("functiondef");
 		List<XMLElement> flist = FunctionFactoryFactory.getInstance().getAllFunctionElements(FunctionInterface.class.getName(),"functionDefinition");
 		System.err.println("LIST SIZE: "+flist.size());
@@ -37,7 +37,7 @@ public class BundleManagerMap implements Mappable {
 	public Binary getFunctionBinary() {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		Writer out = new OutputStreamWriter(baos);
-		XMLElement xe = createBundleXml();
+		XMLElement xe = createFunctionBundleXml();
 		try {
 			xe.write(out);
 			out.flush();
