@@ -13,9 +13,13 @@
       [Enter Copyright Description here.]
    </copyright>
 
-   <license url="http://www.example.com/license">
-      [Enter License Description here.]
+   <license url="http://www.navajo.nl/licence.html">
+      Dexels LGPL
    </license>
+
+   <url>
+      <discovery label="Navajo Home" url="http://www.navajo.nl/p2"/>
+   </url>
 
    <plugin
          id="com.dexels.navajo.oda"
