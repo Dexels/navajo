@@ -165,6 +165,7 @@ public class TslParser extends AbstractContentAssistParser {
 					put(grammarAccess.getPossibleExpressionAccess().getNamespaceAssignment_0_0(), "rule__PossibleExpression__NamespaceAssignment_0_0");
 					put(grammarAccess.getPossibleExpressionAccess().getKeyAssignment_1(), "rule__PossibleExpression__KeyAssignment_1");
 					put(grammarAccess.getPossibleExpressionAccess().getExpressionValueAssignment_3_0_1(), "rule__PossibleExpression__ExpressionValueAssignment_3_0_1");
+					put(grammarAccess.getPossibleExpressionAccess().getEndTokenAssignment_3_0_2(), "rule__PossibleExpression__EndTokenAssignment_3_0_2");
 					put(grammarAccess.getPossibleExpressionAccess().getValueAssignment_3_1(), "rule__PossibleExpression__ValueAssignment_3_1");
 					put(grammarAccess.getPossibleExpressionAccess().getValueAssignment_3_2(), "rule__PossibleExpression__ValueAssignment_3_2");
 					put(grammarAccess.getMethodsAccess().getSplitTagAssignment_2_0_0(), "rule__Methods__SplitTagAssignment_2_0_0");

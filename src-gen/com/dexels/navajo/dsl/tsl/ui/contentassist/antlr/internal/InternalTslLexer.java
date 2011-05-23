@@ -15,7 +15,7 @@ public class InternalTslLexer extends Lexer {
     public static final int T75=75;
     public static final int T76=76;
     public static final int RULE_OPTION_END_TAG=53;
-    public static final int RULE_CHECK_START_TAG=15;
+    public static final int RULE_CHECK_START_TAG=14;
     public static final int RULE_NAVASCRIPT_END=9;
     public static final int T73=73;
     public static final int RULE_ID=4;
@@ -26,11 +26,11 @@ public class InternalTslLexer extends Lexer {
     public static final int T77=77;
     public static final int RULE_PARENT=6;
     public static final int T78=78;
-    public static final int RULE_SQBRACKET_OPEN=31;
-    public static final int RULE_COMMENT_START_TAG=16;
+    public static final int RULE_SQBRACKET_OPEN=30;
+    public static final int RULE_COMMENT_START_TAG=15;
     public static final int RULE_QUOTEQ=10;
     public static final int RULE_EXPRESSION_END_TAG=52;
-    public static final int RULE_REQUIRED_START_TAG=23;
+    public static final int RULE_REQUIRED_START_TAG=22;
     public static final int RULE_XMLHEAD=66;
     public static final int RULE_METHODS_END_TAG=38;
     public static final int RULE_LITERALSTRING=60;
@@ -39,53 +39,53 @@ public class InternalTslLexer extends Lexer {
     public static final int RULE_BREAK_END_TAG=43;
     public static final int RULE_FORALL=61;
     public static final int RULE_FALSE=65;
-    public static final int RULE_DOT=21;
-    public static final int RULE_OPTION_START_TAG=30;
+    public static final int RULE_DOT=20;
+    public static final int RULE_OPTION_START_TAG=29;
     public static final int RULE_EMPTYSTRING=37;
-    public static final int RULE_NUMBER=35;
+    public static final int RULE_NUMBER=34;
     public static final int RULE_TODAY=63;
-    public static final int RULE_METHOD_START_TAG=13;
+    public static final int RULE_METHOD_START_TAG=12;
     public static final int RULE_XML_LTEQ=58;
-    public static final int RULE_FIELD_START_TAG=27;
-    public static final int RULE_INCLUDE_START_TAG=18;
+    public static final int RULE_FIELD_START_TAG=26;
+    public static final int RULE_INCLUDE_START_TAG=17;
     public static final int RULE_METHOD_END_TAG=39;
     public static final int RULE_CHECK_END_TAG=41;
     public static final int RULE_REQUIRED_END_TAG=46;
     public static final int RULE_INCLUDE_END_TAG=44;
-    public static final int RULE_MAPENDKEYWORD=22;
-    public static final int RULE_DEBUG_START_TAG=28;
+    public static final int RULE_MAPENDKEYWORD=21;
+    public static final int RULE_DEBUG_START_TAG=27;
     public static final int RULE_FIELD_END_TAG=50;
     public static final int RULE_XML_TAG_SINGLEEND=5;
-    public static final int RULE_PROPERTY_START_TAG=24;
+    public static final int RULE_PROPERTY_START_TAG=23;
     public static final int RULE_XML_TAG_END=8;
     public static final int RULE_ATTRIBUTESTRING=36;
-    public static final int RULE_MESSAGE_START_TAG=19;
+    public static final int RULE_MESSAGE_START_TAG=18;
     public static final int RULE_XML_LT=56;
-    public static final int RULE_MAP_METHOD_STARTTAG_START=26;
+    public static final int RULE_MAP_METHOD_STARTTAG_START=25;
     public static final int RULE_MESSAGE_END_TAG=45;
     public static final int RULE_XML_GTEQ=59;
-    public static final int RULE_TML_SEPARATOR=33;
+    public static final int RULE_TML_SEPARATOR=32;
     public static final int Tokens=88;
     public static final int RULE_SL_COMMENT=70;
     public static final int RULE_NULL=62;
     public static final int RULE_TRUE=64;
     public static final int RULE_ML_COMMENT=69;
     public static final int RULE_PROPERTY_END_TAG=47;
-    public static final int RULE_EXPRESSION_START_TAG=29;
+    public static final int RULE_EXPRESSION_START_TAG=28;
     public static final int RULE_DOLLAR=55;
-    public static final int RULE_TML_EXISTS=34;
+    public static final int RULE_TML_EXISTS=33;
     public static final int T84=84;
-    public static final int RULE_VALIDATIONS_START_TAG=14;
+    public static final int RULE_VALIDATIONS_START_TAG=13;
     public static final int T85=85;
     public static final int T86=86;
     public static final int T87=87;
-    public static final int RULE_BREAK_START_TAG=17;
+    public static final int RULE_BREAK_START_TAG=16;
     public static final int RULE_NAVASCRIPT_START=7;
-    public static final int RULE_SQBRACKET_CLOSE=32;
+    public static final int RULE_SQBRACKET_CLOSE=31;
     public static final int RULE_DEBUG_END_TAG=51;
-    public static final int RULE_METHODS_START_TAG=12;
-    public static final int RULE_MAPSTARTKEYWORD=20;
-    public static final int RULE_SEMICOLONQUOTE=11;
+    public static final int RULE_METHODS_START_TAG=11;
+    public static final int RULE_MAPSTARTKEYWORD=19;
+    public static final int RULE_SEMICOLONQUOTE=35;
     public static final int RULE_XML_START_ENDTAG=68;
     public static final int RULE_VALIDATIONS_END_TAG=40;
     public static final int T81=81;
@@ -96,7 +96,7 @@ public class InternalTslLexer extends Lexer {
     public static final int RULE_XML_GT=57;
     public static final int T82=82;
     public static final int RULE_PARAM_END_TAG=48;
-    public static final int RULE_PARAM_START_TAG=25;
+    public static final int RULE_PARAM_START_TAG=24;
     public static final int RULE_AT=54;
     public InternalTslLexer() {;} 
     public InternalTslLexer(CharStream input) {
@@ -400,12 +400,12 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_XMLHEAD() throws RecognitionException {
         try {
             int _type = RULE_XMLHEAD;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12761:14: ( '<?' ( options {greedy=false; } : . )* '?>' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12761:16: '<?' ( options {greedy=false; } : . )* '?>'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12776:14: ( '<?' ( options {greedy=false; } : . )* '?>' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12776:16: '<?' ( options {greedy=false; } : . )* '?>'
             {
             match("<?"); 
 
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12761:21: ( options {greedy=false; } : . )*
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12776:21: ( options {greedy=false; } : . )*
             loop1:
             do {
                 int alt1=2;
@@ -430,7 +430,7 @@ public class InternalTslLexer extends Lexer {
 
                 switch (alt1) {
             	case 1 :
-            	    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12761:49: .
+            	    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12776:49: .
             	    {
             	    matchAny(); 
 
@@ -458,12 +458,12 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_XMLCOMMENT() throws RecognitionException {
         try {
             int _type = RULE_XMLCOMMENT;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12763:17: ( '<!--' ( options {greedy=false; } : . )* '-->' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12763:19: '<!--' ( options {greedy=false; } : . )* '-->'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12778:17: ( '<!--' ( options {greedy=false; } : . )* '-->' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12778:19: '<!--' ( options {greedy=false; } : . )* '-->'
             {
             match("<!--"); 
 
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12763:26: ( options {greedy=false; } : . )*
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12778:26: ( options {greedy=false; } : . )*
             loop2:
             do {
                 int alt2=2;
@@ -497,7 +497,7 @@ public class InternalTslLexer extends Lexer {
 
                 switch (alt2) {
             	case 1 :
-            	    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12763:54: .
+            	    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12778:54: .
             	    {
             	    matchAny(); 
 
@@ -525,8 +525,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_QUOTEQ() throws RecognitionException {
         try {
             int _type = RULE_QUOTEQ;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12765:13: ( '\"=' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12765:15: '\"='
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12780:13: ( '\"=' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12780:15: '\"='
             {
             match("\"="); 
 
@@ -544,8 +544,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_SEMICOLONQUOTE() throws RecognitionException {
         try {
             int _type = RULE_SEMICOLONQUOTE;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12767:21: ( ';\"' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12767:23: ';\"'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12782:21: ( ';\"' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12782:23: ';\"'
             {
             match(";\""); 
 
@@ -563,8 +563,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_DOT() throws RecognitionException {
         try {
             int _type = RULE_DOT;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12769:10: ( '.' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12769:12: '.'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12784:10: ( '.' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12784:12: '.'
             {
             match('.'); 
 
@@ -581,8 +581,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_DEBUG_START_TAG() throws RecognitionException {
         try {
             int _type = RULE_DEBUG_START_TAG;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12771:22: ( '<debug' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12771:24: '<debug'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12786:22: ( '<debug' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12786:24: '<debug'
             {
             match("<debug"); 
 
@@ -600,8 +600,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_DEBUG_END_TAG() throws RecognitionException {
         try {
             int _type = RULE_DEBUG_END_TAG;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12773:20: ( '</debug' RULE_XML_TAG_END )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12773:22: '</debug' RULE_XML_TAG_END
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12788:20: ( '</debug' RULE_XML_TAG_END )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12788:22: '</debug' RULE_XML_TAG_END
             {
             match("</debug"); 
 
@@ -620,8 +620,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_EMPTYSTRING() throws RecognitionException {
         try {
             int _type = RULE_EMPTYSTRING;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12775:18: ( '\"\"' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12775:20: '\"\"'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12790:18: ( '\"\"' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12790:20: '\"\"'
             {
             match("\"\""); 
 
@@ -639,11 +639,11 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_ATTRIBUTESTRING() throws RecognitionException {
         try {
             int _type = RULE_ATTRIBUTESTRING;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12777:22: ( '\"' (~ ( ( '=' | '\"' ) ) )* '\"' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12777:24: '\"' (~ ( ( '=' | '\"' ) ) )* '\"'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12792:22: ( '\"' (~ ( ( '=' | '\"' ) ) )* '\"' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12792:24: '\"' (~ ( ( '=' | '\"' ) ) )* '\"'
             {
             match('\"'); 
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12777:28: (~ ( ( '=' | '\"' ) ) )*
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12792:28: (~ ( ( '=' | '\"' ) ) )*
             loop3:
             do {
                 int alt3=2;
@@ -656,7 +656,7 @@ public class InternalTslLexer extends Lexer {
 
                 switch (alt3) {
             	case 1 :
-            	    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12777:28: ~ ( ( '=' | '\"' ) )
+            	    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12792:28: ~ ( ( '=' | '\"' ) )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='!')||(input.LA(1)>='#' && input.LA(1)<='<')||(input.LA(1)>='>' && input.LA(1)<='\uFFFE') ) {
             	        input.consume();
@@ -692,8 +692,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_XML_START_ENDTAG() throws RecognitionException {
         try {
             int _type = RULE_XML_START_ENDTAG;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12779:23: ( '</' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12779:25: '</'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12794:23: ( '</' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12794:25: '</'
             {
             match("</"); 
 
@@ -711,8 +711,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_XML_TAG_END() throws RecognitionException {
         try {
             int _type = RULE_XML_TAG_END;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12781:18: ( '>' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12781:20: '>'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12796:18: ( '>' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12796:20: '>'
             {
             match('>'); 
 
@@ -729,8 +729,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_XML_TAG_SINGLEEND() throws RecognitionException {
         try {
             int _type = RULE_XML_TAG_SINGLEEND;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12783:24: ( '/>' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12783:26: '/>'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12798:24: ( '/>' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12798:26: '/>'
             {
             match("/>"); 
 
@@ -748,8 +748,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_MAP_METHOD_STARTTAG_START() throws RecognitionException {
         try {
             int _type = RULE_MAP_METHOD_STARTTAG_START;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12785:32: ( '<_' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12785:34: '<_'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12800:32: ( '<_' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12800:34: '<_'
             {
             match("<_"); 
 
@@ -767,8 +767,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_MAP_METHOD_ENDTAG_START() throws RecognitionException {
         try {
             int _type = RULE_MAP_METHOD_ENDTAG_START;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12787:30: ( '</_' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12787:32: '</_'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12802:30: ( '</_' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12802:32: '</_'
             {
             match("</_"); 
 
@@ -786,8 +786,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_MAPENDKEYWORD() throws RecognitionException {
         try {
             int _type = RULE_MAPENDKEYWORD;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12789:20: ( '</map' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12789:22: '</map'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12804:20: ( '</map' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12804:22: '</map'
             {
             match("</map"); 
 
@@ -805,8 +805,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_MAPSTARTKEYWORD() throws RecognitionException {
         try {
             int _type = RULE_MAPSTARTKEYWORD;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12791:22: ( '<map' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12791:24: '<map'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12806:22: ( '<map' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12806:24: '<map'
             {
             match("<map"); 
 
@@ -824,8 +824,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_INCLUDE_START_TAG() throws RecognitionException {
         try {
             int _type = RULE_INCLUDE_START_TAG;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12793:24: ( '<include' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12793:26: '<include'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12808:24: ( '<include' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12808:26: '<include'
             {
             match("<include"); 
 
@@ -843,8 +843,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_PROPERTY_START_TAG() throws RecognitionException {
         try {
             int _type = RULE_PROPERTY_START_TAG;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12795:25: ( '<property' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12795:27: '<property'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12810:25: ( '<property' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12810:27: '<property'
             {
             match("<property"); 
 
@@ -862,8 +862,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_REQUIRED_START_TAG() throws RecognitionException {
         try {
             int _type = RULE_REQUIRED_START_TAG;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12797:25: ( '<required' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12797:27: '<required'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12812:25: ( '<required' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12812:27: '<required'
             {
             match("<required"); 
 
@@ -881,8 +881,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_VALIDATIONS_START_TAG() throws RecognitionException {
         try {
             int _type = RULE_VALIDATIONS_START_TAG;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12799:28: ( '<validations' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12799:30: '<validations'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12814:28: ( '<validations' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12814:30: '<validations'
             {
             match("<validations"); 
 
@@ -900,8 +900,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_CHECK_START_TAG() throws RecognitionException {
         try {
             int _type = RULE_CHECK_START_TAG;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12801:22: ( '<check' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12801:24: '<check'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12816:22: ( '<check' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12816:24: '<check'
             {
             match("<check"); 
 
@@ -919,8 +919,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_COMMENT_START_TAG() throws RecognitionException {
         try {
             int _type = RULE_COMMENT_START_TAG;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12803:24: ( '<comment' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12803:26: '<comment'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12818:24: ( '<comment' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12818:26: '<comment'
             {
             match("<comment"); 
 
@@ -938,8 +938,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_BREAK_START_TAG() throws RecognitionException {
         try {
             int _type = RULE_BREAK_START_TAG;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12805:22: ( '<break' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12805:24: '<break'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12820:22: ( '<break' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12820:24: '<break'
             {
             match("<break"); 
 
@@ -957,8 +957,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_OPTION_START_TAG() throws RecognitionException {
         try {
             int _type = RULE_OPTION_START_TAG;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12807:23: ( '<option' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12807:25: '<option'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12822:23: ( '<option' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12822:25: '<option'
             {
             match("<option"); 
 
@@ -976,8 +976,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_BREAK_END_TAG() throws RecognitionException {
         try {
             int _type = RULE_BREAK_END_TAG;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12809:20: ( '</break' RULE_XML_TAG_END )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12809:22: '</break' RULE_XML_TAG_END
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12824:20: ( '</break' RULE_XML_TAG_END )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12824:22: '</break' RULE_XML_TAG_END
             {
             match("</break"); 
 
@@ -996,8 +996,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_OPTION_END_TAG() throws RecognitionException {
         try {
             int _type = RULE_OPTION_END_TAG;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12811:21: ( '</option' RULE_XML_TAG_END )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12811:23: '</option' RULE_XML_TAG_END
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12826:21: ( '</option' RULE_XML_TAG_END )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12826:23: '</option' RULE_XML_TAG_END
             {
             match("</option"); 
 
@@ -1016,8 +1016,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_REQUIRED_END_TAG() throws RecognitionException {
         try {
             int _type = RULE_REQUIRED_END_TAG;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12813:23: ( '</required' RULE_XML_TAG_END )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12813:25: '</required' RULE_XML_TAG_END
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12828:23: ( '</required' RULE_XML_TAG_END )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12828:25: '</required' RULE_XML_TAG_END
             {
             match("</required"); 
 
@@ -1036,8 +1036,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_INCLUDE_END_TAG() throws RecognitionException {
         try {
             int _type = RULE_INCLUDE_END_TAG;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12815:22: ( '</include' RULE_XML_TAG_END )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12815:24: '</include' RULE_XML_TAG_END
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12830:22: ( '</include' RULE_XML_TAG_END )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12830:24: '</include' RULE_XML_TAG_END
             {
             match("</include"); 
 
@@ -1056,8 +1056,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_PROPERTY_END_TAG() throws RecognitionException {
         try {
             int _type = RULE_PROPERTY_END_TAG;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12817:23: ( '</property' RULE_XML_TAG_END )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12817:25: '</property' RULE_XML_TAG_END
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12832:23: ( '</property' RULE_XML_TAG_END )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12832:25: '</property' RULE_XML_TAG_END
             {
             match("</property"); 
 
@@ -1076,8 +1076,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_COMMENT_END_TAG() throws RecognitionException {
         try {
             int _type = RULE_COMMENT_END_TAG;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12819:22: ( '</comment' RULE_XML_TAG_END )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12819:24: '</comment' RULE_XML_TAG_END
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12834:22: ( '</comment' RULE_XML_TAG_END )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12834:24: '</comment' RULE_XML_TAG_END
             {
             match("</comment"); 
 
@@ -1096,8 +1096,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_VALIDATIONS_END_TAG() throws RecognitionException {
         try {
             int _type = RULE_VALIDATIONS_END_TAG;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12821:26: ( '</validations' RULE_XML_TAG_END )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12821:28: '</validations' RULE_XML_TAG_END
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12836:26: ( '</validations' RULE_XML_TAG_END )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12836:28: '</validations' RULE_XML_TAG_END
             {
             match("</validations"); 
 
@@ -1116,8 +1116,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_CHECK_END_TAG() throws RecognitionException {
         try {
             int _type = RULE_CHECK_END_TAG;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12823:20: ( '</check' RULE_XML_TAG_END )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12823:22: '</check' RULE_XML_TAG_END
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12838:20: ( '</check' RULE_XML_TAG_END )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12838:22: '</check' RULE_XML_TAG_END
             {
             match("</check"); 
 
@@ -1136,8 +1136,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_PARAM_END_TAG() throws RecognitionException {
         try {
             int _type = RULE_PARAM_END_TAG;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12825:20: ( '</param' RULE_XML_TAG_END )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12825:22: '</param' RULE_XML_TAG_END
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12840:20: ( '</param' RULE_XML_TAG_END )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12840:22: '</param' RULE_XML_TAG_END
             {
             match("</param"); 
 
@@ -1156,8 +1156,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_MESSAGE_END_TAG() throws RecognitionException {
         try {
             int _type = RULE_MESSAGE_END_TAG;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12827:22: ( '</message' RULE_XML_TAG_END )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12827:24: '</message' RULE_XML_TAG_END
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12842:22: ( '</message' RULE_XML_TAG_END )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12842:24: '</message' RULE_XML_TAG_END
             {
             match("</message"); 
 
@@ -1176,8 +1176,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_METHODS_END_TAG() throws RecognitionException {
         try {
             int _type = RULE_METHODS_END_TAG;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12829:22: ( '</methods' RULE_XML_TAG_END )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12829:24: '</methods' RULE_XML_TAG_END
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12844:22: ( '</methods' RULE_XML_TAG_END )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12844:24: '</methods' RULE_XML_TAG_END
             {
             match("</methods"); 
 
@@ -1196,8 +1196,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_METHOD_END_TAG() throws RecognitionException {
         try {
             int _type = RULE_METHOD_END_TAG;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12831:21: ( '</method' RULE_XML_TAG_END )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12831:23: '</method' RULE_XML_TAG_END
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12846:21: ( '</method' RULE_XML_TAG_END )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12846:23: '</method' RULE_XML_TAG_END
             {
             match("</method"); 
 
@@ -1216,8 +1216,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_FIELD_END_TAG() throws RecognitionException {
         try {
             int _type = RULE_FIELD_END_TAG;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12833:20: ( '</field' RULE_XML_TAG_END )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12833:22: '</field' RULE_XML_TAG_END
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12848:20: ( '</field' RULE_XML_TAG_END )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12848:22: '</field' RULE_XML_TAG_END
             {
             match("</field"); 
 
@@ -1236,8 +1236,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_EXPRESSION_START_TAG() throws RecognitionException {
         try {
             int _type = RULE_EXPRESSION_START_TAG;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12835:27: ( '<expression' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12835:29: '<expression'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12850:27: ( '<expression' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12850:29: '<expression'
             {
             match("<expression"); 
 
@@ -1255,8 +1255,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_EXPRESSION_END_TAG() throws RecognitionException {
         try {
             int _type = RULE_EXPRESSION_END_TAG;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12837:25: ( '</expression' RULE_XML_TAG_END )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12837:27: '</expression' RULE_XML_TAG_END
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12852:25: ( '</expression' RULE_XML_TAG_END )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12852:27: '</expression' RULE_XML_TAG_END
             {
             match("</expression"); 
 
@@ -1275,8 +1275,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_PARAM_START_TAG() throws RecognitionException {
         try {
             int _type = RULE_PARAM_START_TAG;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12839:22: ( '<param' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12839:24: '<param'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12854:22: ( '<param' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12854:24: '<param'
             {
             match("<param"); 
 
@@ -1294,8 +1294,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_MESSAGE_START_TAG() throws RecognitionException {
         try {
             int _type = RULE_MESSAGE_START_TAG;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12841:24: ( '<message' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12841:26: '<message'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12856:24: ( '<message' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12856:26: '<message'
             {
             match("<message"); 
 
@@ -1313,8 +1313,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_METHOD_START_TAG() throws RecognitionException {
         try {
             int _type = RULE_METHOD_START_TAG;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12843:23: ( '<method' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12843:25: '<method'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12858:23: ( '<method' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12858:25: '<method'
             {
             match("<method"); 
 
@@ -1332,8 +1332,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_METHODS_START_TAG() throws RecognitionException {
         try {
             int _type = RULE_METHODS_START_TAG;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12845:24: ( '<methods' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12845:26: '<methods'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12860:24: ( '<methods' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12860:26: '<methods'
             {
             match("<methods"); 
 
@@ -1351,8 +1351,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_FIELD_START_TAG() throws RecognitionException {
         try {
             int _type = RULE_FIELD_START_TAG;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12847:22: ( '<field' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12847:24: '<field'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12862:22: ( '<field' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12862:24: '<field'
             {
             match("<field"); 
 
@@ -1370,10 +1370,10 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_NAVASCRIPT_START() throws RecognitionException {
         try {
             int _type = RULE_NAVASCRIPT_START;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12849:23: ( ( '<navascript' | '<tsl' ) )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12849:25: ( '<navascript' | '<tsl' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12864:23: ( ( '<navascript' | '<tsl' ) )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12864:25: ( '<navascript' | '<tsl' )
             {
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12849:25: ( '<navascript' | '<tsl' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12864:25: ( '<navascript' | '<tsl' )
             int alt4=2;
             int LA4_0 = input.LA(1);
 
@@ -1388,20 +1388,20 @@ public class InternalTslLexer extends Lexer {
                 }
                 else {
                     NoViableAltException nvae =
-                        new NoViableAltException("12849:25: ( '<navascript' | '<tsl' )", 4, 1, input);
+                        new NoViableAltException("12864:25: ( '<navascript' | '<tsl' )", 4, 1, input);
 
                     throw nvae;
                 }
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("12849:25: ( '<navascript' | '<tsl' )", 4, 0, input);
+                    new NoViableAltException("12864:25: ( '<navascript' | '<tsl' )", 4, 0, input);
 
                 throw nvae;
             }
             switch (alt4) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12849:26: '<navascript'
+                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12864:26: '<navascript'
                     {
                     match("<navascript"); 
 
@@ -1409,7 +1409,7 @@ public class InternalTslLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12849:40: '<tsl'
+                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12864:40: '<tsl'
                     {
                     match("<tsl"); 
 
@@ -1433,10 +1433,10 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_NAVASCRIPT_END() throws RecognitionException {
         try {
             int _type = RULE_NAVASCRIPT_END;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12851:21: ( ( '</navascript' RULE_XML_TAG_END | '</tsl' RULE_XML_TAG_END ) )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12851:23: ( '</navascript' RULE_XML_TAG_END | '</tsl' RULE_XML_TAG_END )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12866:21: ( ( '</navascript' RULE_XML_TAG_END | '</tsl' RULE_XML_TAG_END ) )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12866:23: ( '</navascript' RULE_XML_TAG_END | '</tsl' RULE_XML_TAG_END )
             {
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12851:23: ( '</navascript' RULE_XML_TAG_END | '</tsl' RULE_XML_TAG_END )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12866:23: ( '</navascript' RULE_XML_TAG_END | '</tsl' RULE_XML_TAG_END )
             int alt5=2;
             int LA5_0 = input.LA(1);
 
@@ -1454,27 +1454,27 @@ public class InternalTslLexer extends Lexer {
                     }
                     else {
                         NoViableAltException nvae =
-                            new NoViableAltException("12851:23: ( '</navascript' RULE_XML_TAG_END | '</tsl' RULE_XML_TAG_END )", 5, 2, input);
+                            new NoViableAltException("12866:23: ( '</navascript' RULE_XML_TAG_END | '</tsl' RULE_XML_TAG_END )", 5, 2, input);
 
                         throw nvae;
                     }
                 }
                 else {
                     NoViableAltException nvae =
-                        new NoViableAltException("12851:23: ( '</navascript' RULE_XML_TAG_END | '</tsl' RULE_XML_TAG_END )", 5, 1, input);
+                        new NoViableAltException("12866:23: ( '</navascript' RULE_XML_TAG_END | '</tsl' RULE_XML_TAG_END )", 5, 1, input);
 
                     throw nvae;
                 }
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("12851:23: ( '</navascript' RULE_XML_TAG_END | '</tsl' RULE_XML_TAG_END )", 5, 0, input);
+                    new NoViableAltException("12866:23: ( '</navascript' RULE_XML_TAG_END | '</tsl' RULE_XML_TAG_END )", 5, 0, input);
 
                 throw nvae;
             }
             switch (alt5) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12851:24: '</navascript' RULE_XML_TAG_END
+                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12866:24: '</navascript' RULE_XML_TAG_END
                     {
                     match("</navascript"); 
 
@@ -1483,7 +1483,7 @@ public class InternalTslLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12851:56: '</tsl' RULE_XML_TAG_END
+                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12866:56: '</tsl' RULE_XML_TAG_END
                     {
                     match("</tsl"); 
 
@@ -1508,8 +1508,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_XML_GT() throws RecognitionException {
         try {
             int _type = RULE_XML_GT;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12853:13: ( '&gt;' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12853:15: '&gt;'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12868:13: ( '&gt;' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12868:15: '&gt;'
             {
             match("&gt;"); 
 
@@ -1527,8 +1527,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_XML_LT() throws RecognitionException {
         try {
             int _type = RULE_XML_LT;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12855:13: ( '&lt;' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12855:15: '&lt;'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12870:13: ( '&lt;' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12870:15: '&lt;'
             {
             match("&lt;"); 
 
@@ -1546,8 +1546,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_XML_GTEQ() throws RecognitionException {
         try {
             int _type = RULE_XML_GTEQ;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12857:15: ( '&gt;=' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12857:17: '&gt;='
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12872:15: ( '&gt;=' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12872:17: '&gt;='
             {
             match("&gt;="); 
 
@@ -1565,8 +1565,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_XML_LTEQ() throws RecognitionException {
         try {
             int _type = RULE_XML_LTEQ;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12859:15: ( '&lt;=' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12859:17: '&lt;='
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12874:15: ( '&lt;=' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12874:17: '&lt;='
             {
             match("&lt;="); 
 
@@ -1584,10 +1584,10 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_NUMBER() throws RecognitionException {
         try {
             int _type = RULE_NUMBER;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12861:13: ( ( '0' .. '9' )+ ( '.' ( '0' .. '9' )+ )? )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12861:15: ( '0' .. '9' )+ ( '.' ( '0' .. '9' )+ )?
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12876:13: ( ( '0' .. '9' )+ ( '.' ( '0' .. '9' )+ )? )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12876:15: ( '0' .. '9' )+ ( '.' ( '0' .. '9' )+ )?
             {
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12861:15: ( '0' .. '9' )+
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12876:15: ( '0' .. '9' )+
             int cnt6=0;
             loop6:
             do {
@@ -1601,7 +1601,7 @@ public class InternalTslLexer extends Lexer {
 
                 switch (alt6) {
             	case 1 :
-            	    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12861:16: '0' .. '9'
+            	    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12876:16: '0' .. '9'
             	    {
             	    matchRange('0','9'); 
 
@@ -1617,7 +1617,7 @@ public class InternalTslLexer extends Lexer {
                 cnt6++;
             } while (true);
 
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12861:27: ( '.' ( '0' .. '9' )+ )?
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12876:27: ( '.' ( '0' .. '9' )+ )?
             int alt8=2;
             int LA8_0 = input.LA(1);
 
@@ -1626,10 +1626,10 @@ public class InternalTslLexer extends Lexer {
             }
             switch (alt8) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12861:28: '.' ( '0' .. '9' )+
+                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12876:28: '.' ( '0' .. '9' )+
                     {
                     match('.'); 
-                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12861:32: ( '0' .. '9' )+
+                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12876:32: ( '0' .. '9' )+
                     int cnt7=0;
                     loop7:
                     do {
@@ -1643,7 +1643,7 @@ public class InternalTslLexer extends Lexer {
 
                         switch (alt7) {
                     	case 1 :
-                    	    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12861:33: '0' .. '9'
+                    	    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12876:33: '0' .. '9'
                     	    {
                     	    matchRange('0','9'); 
 
@@ -1679,12 +1679,12 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_ML_COMMENT() throws RecognitionException {
         try {
             int _type = RULE_ML_COMMENT;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12863:17: ( '/*' ( options {greedy=false; } : . )* '*/' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12863:19: '/*' ( options {greedy=false; } : . )* '*/'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12878:17: ( '/*' ( options {greedy=false; } : . )* '*/' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12878:19: '/*' ( options {greedy=false; } : . )* '*/'
             {
             match("/*"); 
 
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12863:24: ( options {greedy=false; } : . )*
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12878:24: ( options {greedy=false; } : . )*
             loop9:
             do {
                 int alt9=2;
@@ -1709,7 +1709,7 @@ public class InternalTslLexer extends Lexer {
 
                 switch (alt9) {
             	case 1 :
-            	    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12863:52: .
+            	    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12878:52: .
             	    {
             	    matchAny(); 
 
@@ -1737,12 +1737,12 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_SL_COMMENT() throws RecognitionException {
         try {
             int _type = RULE_SL_COMMENT;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12865:17: ( '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )? )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12865:19: '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )?
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12880:17: ( '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )? )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12880:19: '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )?
             {
             match("//"); 
 
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12865:24: (~ ( ( '\\n' | '\\r' ) ) )*
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12880:24: (~ ( ( '\\n' | '\\r' ) ) )*
             loop10:
             do {
                 int alt10=2;
@@ -1755,7 +1755,7 @@ public class InternalTslLexer extends Lexer {
 
                 switch (alt10) {
             	case 1 :
-            	    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12865:24: ~ ( ( '\\n' | '\\r' ) )
+            	    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12880:24: ~ ( ( '\\n' | '\\r' ) )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\f')||(input.LA(1)>='\u000E' && input.LA(1)<='\uFFFE') ) {
             	        input.consume();
@@ -1776,7 +1776,7 @@ public class InternalTslLexer extends Lexer {
                 }
             } while (true);
 
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12865:40: ( ( '\\r' )? '\\n' )?
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12880:40: ( ( '\\r' )? '\\n' )?
             int alt12=2;
             int LA12_0 = input.LA(1);
 
@@ -1785,9 +1785,9 @@ public class InternalTslLexer extends Lexer {
             }
             switch (alt12) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12865:41: ( '\\r' )? '\\n'
+                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12880:41: ( '\\r' )? '\\n'
                     {
-                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12865:41: ( '\\r' )?
+                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12880:41: ( '\\r' )?
                     int alt11=2;
                     int LA11_0 = input.LA(1);
 
@@ -1796,7 +1796,7 @@ public class InternalTslLexer extends Lexer {
                     }
                     switch (alt11) {
                         case 1 :
-                            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12865:41: '\\r'
+                            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12880:41: '\\r'
                             {
                             match('\r'); 
 
@@ -1826,10 +1826,10 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_WS() throws RecognitionException {
         try {
             int _type = RULE_WS;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12867:9: ( ( ' ' | '\\t' | '\\r' | '\\n' )+ )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12867:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12882:9: ( ( ' ' | '\\t' | '\\r' | '\\n' )+ )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12882:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
             {
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12867:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12882:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
             int cnt13=0;
             loop13:
             do {
@@ -1882,10 +1882,10 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_TRUE() throws RecognitionException {
         try {
             int _type = RULE_TRUE;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12869:11: ( ( 'true' | 'TRUE' ) )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12869:13: ( 'true' | 'TRUE' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12884:11: ( ( 'true' | 'TRUE' ) )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12884:13: ( 'true' | 'TRUE' )
             {
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12869:13: ( 'true' | 'TRUE' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12884:13: ( 'true' | 'TRUE' )
             int alt14=2;
             int LA14_0 = input.LA(1);
 
@@ -1897,13 +1897,13 @@ public class InternalTslLexer extends Lexer {
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("12869:13: ( 'true' | 'TRUE' )", 14, 0, input);
+                    new NoViableAltException("12884:13: ( 'true' | 'TRUE' )", 14, 0, input);
 
                 throw nvae;
             }
             switch (alt14) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12869:14: 'true'
+                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12884:14: 'true'
                     {
                     match("true"); 
 
@@ -1911,7 +1911,7 @@ public class InternalTslLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12869:21: 'TRUE'
+                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12884:21: 'TRUE'
                     {
                     match("TRUE"); 
 
@@ -1935,10 +1935,10 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_FALSE() throws RecognitionException {
         try {
             int _type = RULE_FALSE;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12871:12: ( ( 'false' | 'FALSE' ) )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12871:14: ( 'false' | 'FALSE' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12886:12: ( ( 'false' | 'FALSE' ) )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12886:14: ( 'false' | 'FALSE' )
             {
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12871:14: ( 'false' | 'FALSE' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12886:14: ( 'false' | 'FALSE' )
             int alt15=2;
             int LA15_0 = input.LA(1);
 
@@ -1950,13 +1950,13 @@ public class InternalTslLexer extends Lexer {
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("12871:14: ( 'false' | 'FALSE' )", 15, 0, input);
+                    new NoViableAltException("12886:14: ( 'false' | 'FALSE' )", 15, 0, input);
 
                 throw nvae;
             }
             switch (alt15) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12871:15: 'false'
+                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12886:15: 'false'
                     {
                     match("false"); 
 
@@ -1964,7 +1964,7 @@ public class InternalTslLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12871:23: 'FALSE'
+                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12886:23: 'FALSE'
                     {
                     match("FALSE"); 
 
@@ -1988,10 +1988,10 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_NULL() throws RecognitionException {
         try {
             int _type = RULE_NULL;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12873:11: ( ( 'null' | 'NULL' ) )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12873:13: ( 'null' | 'NULL' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12888:11: ( ( 'null' | 'NULL' ) )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12888:13: ( 'null' | 'NULL' )
             {
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12873:13: ( 'null' | 'NULL' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12888:13: ( 'null' | 'NULL' )
             int alt16=2;
             int LA16_0 = input.LA(1);
 
@@ -2003,13 +2003,13 @@ public class InternalTslLexer extends Lexer {
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("12873:13: ( 'null' | 'NULL' )", 16, 0, input);
+                    new NoViableAltException("12888:13: ( 'null' | 'NULL' )", 16, 0, input);
 
                 throw nvae;
             }
             switch (alt16) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12873:14: 'null'
+                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12888:14: 'null'
                     {
                     match("null"); 
 
@@ -2017,7 +2017,7 @@ public class InternalTslLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12873:21: 'NULL'
+                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12888:21: 'NULL'
                     {
                     match("NULL"); 
 
@@ -2041,10 +2041,10 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_TODAY() throws RecognitionException {
         try {
             int _type = RULE_TODAY;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12875:12: ( ( 'today' | 'TODAY' ) )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12875:14: ( 'today' | 'TODAY' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12890:12: ( ( 'today' | 'TODAY' ) )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12890:14: ( 'today' | 'TODAY' )
             {
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12875:14: ( 'today' | 'TODAY' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12890:14: ( 'today' | 'TODAY' )
             int alt17=2;
             int LA17_0 = input.LA(1);
 
@@ -2056,13 +2056,13 @@ public class InternalTslLexer extends Lexer {
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("12875:14: ( 'today' | 'TODAY' )", 17, 0, input);
+                    new NoViableAltException("12890:14: ( 'today' | 'TODAY' )", 17, 0, input);
 
                 throw nvae;
             }
             switch (alt17) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12875:15: 'today'
+                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12890:15: 'today'
                     {
                     match("today"); 
 
@@ -2070,7 +2070,7 @@ public class InternalTslLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12875:23: 'TODAY'
+                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12890:23: 'TODAY'
                     {
                     match("TODAY"); 
 
@@ -2094,8 +2094,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_FORALL() throws RecognitionException {
         try {
             int _type = RULE_FORALL;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12877:13: ( 'FORALL' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12877:15: 'FORALL'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12892:13: ( 'FORALL' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12892:15: 'FORALL'
             {
             match("FORALL"); 
 
@@ -2113,8 +2113,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_PARENT() throws RecognitionException {
         try {
             int _type = RULE_PARENT;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12879:13: ( '..' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12879:15: '..'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12894:13: ( '..' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12894:15: '..'
             {
             match(".."); 
 
@@ -2132,10 +2132,10 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_ID() throws RecognitionException {
         try {
             int _type = RULE_ID;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12881:9: ( ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )* )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12881:11: ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )*
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12896:9: ( ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )* )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12896:11: ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )*
             {
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12881:11: ( '^' )?
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12896:11: ( '^' )?
             int alt18=2;
             int LA18_0 = input.LA(1);
 
@@ -2144,7 +2144,7 @@ public class InternalTslLexer extends Lexer {
             }
             switch (alt18) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12881:11: '^'
+                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12896:11: '^'
                     {
                     match('^'); 
 
@@ -2163,7 +2163,7 @@ public class InternalTslLexer extends Lexer {
                 recover(mse);    throw mse;
             }
 
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12881:40: ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )*
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12896:40: ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )*
             loop19:
             do {
                 int alt19=2;
@@ -2211,8 +2211,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_AT() throws RecognitionException {
         try {
             int _type = RULE_AT;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12883:9: ( '@' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12883:11: '@'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12898:9: ( '@' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12898:11: '@'
             {
             match('@'); 
 
@@ -2229,10 +2229,10 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_LITERALSTRING() throws RecognitionException {
         try {
             int _type = RULE_LITERALSTRING;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12885:20: ( ( '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' | '<![CDATA[' ( options {greedy=false; } : . )* ']]>' ) )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12885:22: ( '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' | '<![CDATA[' ( options {greedy=false; } : . )* ']]>' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12900:20: ( ( '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' | '<![CDATA[' ( options {greedy=false; } : . )* ']]>' ) )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12900:22: ( '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' | '<![CDATA[' ( options {greedy=false; } : . )* ']]>' )
             {
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12885:22: ( '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' | '<![CDATA[' ( options {greedy=false; } : . )* ']]>' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12900:22: ( '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' | '<![CDATA[' ( options {greedy=false; } : . )* ']]>' )
             int alt22=2;
             int LA22_0 = input.LA(1);
 
@@ -2244,16 +2244,16 @@ public class InternalTslLexer extends Lexer {
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("12885:22: ( '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' | '<![CDATA[' ( options {greedy=false; } : . )* ']]>' )", 22, 0, input);
+                    new NoViableAltException("12900:22: ( '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' | '<![CDATA[' ( options {greedy=false; } : . )* ']]>' )", 22, 0, input);
 
                 throw nvae;
             }
             switch (alt22) {
                 case 1 :
-                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12885:23: '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\''
+                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12900:23: '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\''
                     {
                     match('\''); 
-                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12885:28: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )*
+                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12900:28: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )*
                     loop20:
                     do {
                         int alt20=3;
@@ -2269,7 +2269,7 @@ public class InternalTslLexer extends Lexer {
 
                         switch (alt20) {
                     	case 1 :
-                    	    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12885:29: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' )
+                    	    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12900:29: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' )
                     	    {
                     	    match('\\'); 
                     	    if ( input.LA(1)=='\"'||input.LA(1)=='\''||input.LA(1)=='\\'||input.LA(1)=='b'||input.LA(1)=='f'||input.LA(1)=='n'||input.LA(1)=='r'||input.LA(1)=='t' ) {
@@ -2286,7 +2286,7 @@ public class InternalTslLexer extends Lexer {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12885:70: ~ ( ( '\\\\' | '\\'' ) )
+                    	    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12900:70: ~ ( ( '\\\\' | '\\'' ) )
                     	    {
                     	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='&')||(input.LA(1)>='(' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFE') ) {
                     	        input.consume();
@@ -2312,11 +2312,11 @@ public class InternalTslLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12885:92: '<![CDATA[' ( options {greedy=false; } : . )* ']]>'
+                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12900:92: '<![CDATA[' ( options {greedy=false; } : . )* ']]>'
                     {
                     match("<![CDATA["); 
 
-                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12885:104: ( options {greedy=false; } : . )*
+                    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12900:104: ( options {greedy=false; } : . )*
                     loop21:
                     do {
                         int alt21=2;
@@ -2350,7 +2350,7 @@ public class InternalTslLexer extends Lexer {
 
                         switch (alt21) {
                     	case 1 :
-                    	    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12885:132: .
+                    	    // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12900:132: .
                     	    {
                     	    matchAny(); 
 
@@ -2384,8 +2384,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_SQBRACKET_OPEN() throws RecognitionException {
         try {
             int _type = RULE_SQBRACKET_OPEN;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12887:21: ( '[' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12887:23: '['
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12902:21: ( '[' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12902:23: '['
             {
             match('['); 
 
@@ -2402,8 +2402,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_SQBRACKET_CLOSE() throws RecognitionException {
         try {
             int _type = RULE_SQBRACKET_CLOSE;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12889:22: ( ']' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12889:24: ']'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12904:22: ( ']' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12904:24: ']'
             {
             match(']'); 
 
@@ -2420,8 +2420,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_TML_SEPARATOR() throws RecognitionException {
         try {
             int _type = RULE_TML_SEPARATOR;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12891:20: ( '/' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12891:22: '/'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12906:20: ( '/' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12906:22: '/'
             {
             match('/'); 
 
@@ -2438,8 +2438,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_TML_EXISTS() throws RecognitionException {
         try {
             int _type = RULE_TML_EXISTS;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12893:17: ( '?' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12893:19: '?'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12908:17: ( '?' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12908:19: '?'
             {
             match('?'); 
 
@@ -2456,8 +2456,8 @@ public class InternalTslLexer extends Lexer {
     public final void mRULE_DOLLAR() throws RecognitionException {
         try {
             int _type = RULE_DOLLAR;
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12895:13: ( '$' )
-            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12895:15: '$'
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12910:13: ( '$' )
+            // ../com.dexels.navajo.dsl.tsl.ui/src-gen/com/dexels/navajo/dsl/tsl/ui/contentassist/antlr/internal/InternalTsl.g:12910:15: '$'
             {
             match('$'); 
 
