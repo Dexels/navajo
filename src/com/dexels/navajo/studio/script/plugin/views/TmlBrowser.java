@@ -486,4 +486,10 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
     }
 
 
+	public void callScript(String name, Navajo n) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 }

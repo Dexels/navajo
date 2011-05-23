@@ -9,6 +9,6 @@ package com.dexels.navajo.studio.script.plugin.editors;
 import com.dexels.navajo.document.Navajo;
 
 public interface INavajoScriptListener {
-    public void callingScript(String name);
     public void gotoScript(String name, Navajo n);
+    public void callScript(String name, Navajo n);
 }

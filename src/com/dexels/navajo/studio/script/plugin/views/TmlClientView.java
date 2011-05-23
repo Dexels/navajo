@@ -53,19 +53,21 @@ import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
+import com.dexels.navajo.studio.eclipse.INavajoActivityListener;
 import com.dexels.navajo.studio.eclipse.IServerEntryListener;
 import com.dexels.navajo.studio.eclipse.NavajoInput;
 import com.dexels.navajo.studio.eclipse.ScriptContentAssist;
 import com.dexels.navajo.studio.eclipse.ServerEntry;
 import com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin;
+import com.dexels.navajo.studio.script.plugin.ServerInstance;
 import com.dexels.navajo.studio.script.plugin.editors.INavajoScriptListener;
 import com.dexels.navajo.studio.script.plugin.editors.TmlFormComposite;
 
-public class TmlClientView extends BaseNavajoView implements INavajoScriptListener, IServerEntryListener {
+public class TmlClientView extends BaseNavajoView implements IServerEntryListener,INavajoActivityListener {
     private Navajo myCurrentNavajo = null;
     private TmlFormComposite formComposite;
-    private TextViewer myService;
-    private Button goButton;
+//    private TextViewer myService;
+//    private Button goButton;
     private Button backButton;
     private ComboViewer localeBox;
     private Button forwardButton;
@@ -77,8 +79,15 @@ public class TmlClientView extends BaseNavajoView implements INavajoScriptListen
     private final Stack<String> futureList = new Stack<String>();
     private final Map<String,Navajo> scriptMap = new HashMap<String,Navajo>();
     private Composite myContainer;
-	private ServerEntry serverEntry;
+//	private ServerEntry serverEntry;
+	private ServerInstance serverInstance;
   
+	
+	public void setServerInstance(ServerInstance si) {
+		this.serverInstance = si;
+		formComposite.setServerInstance(si);
+	}
+	
     public void createPartControl(Composite parent) {
     	
     	
@@ -95,48 +104,48 @@ public class TmlClientView extends BaseNavajoView implements INavajoScriptListen
         TableWrapLayout twl = new TableWrapLayout();
         twl.numColumns=9;
         headComp.setLayout(twl);
-        Label l = new Label(headComp,SWT.NONE);
-        l.setBackground(new Color(Display.getCurrent(), 240, 240, 220));
-        l.setText("Server: ");
-        l.setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.MIDDLE));
+//        Label l = new Label(headComp,SWT.NONE);
+//        l.setBackground(new Color(Display.getCurrent(), 240, 240, 220));
+//        l.setText("Server: ");
+//        l.setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.MIDDLE));
         
-        myService = new TextViewer(headComp,SWT.SINGLE | SWT.BORDER);
-        myService.getTextWidget().setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB,TableWrapData.FILL_GRAB));
-        myService.setDocument(new Document());
-        final ContentAssistant assistant = new ContentAssistant();
-        assistant.setContentAssistProcessor(new ScriptContentAssist(), IDocument.DEFAULT_CONTENT_TYPE);
-        assistant.install(myService);        
-        
-        myService.getControl().addKeyListener(new KeyAdapter() {
-            public void keyPressed(KeyEvent e)
-            {
-             switch(e.keyCode)
-            {
-            case ' ':
-                if ((e.stateMask | SWT.CTRL) != 0) {
-                    assistant.showPossibleCompletions();
-                }
-                break;
-            case '\n':
-                go();
-            break;
-            default:
-//            ignore everything else
-            }
-            }
-            });        
-        myService.getTextWidget().setDoubleClickEnabled(true);
-        goButton = new Button(headComp,SWT.PUSH);
-        goButton.setText("Go!");
-        goButton.setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.FILL_GRAB));
-        goButton.addSelectionListener(new SelectionListener() {
-            public void widgetSelected(SelectionEvent e) {
-                go();
-            }
-
-            public void widgetDefaultSelected(SelectionEvent e) {
-            }});
-        
+//        myService = new TextViewer(headComp,SWT.SINGLE | SWT.BORDER);
+//        myService.getTextWidget().setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB,TableWrapData.FILL_GRAB));
+//        myService.setDocument(new Document());
+//        final ContentAssistant assistant = new ContentAssistant();
+//        assistant.setContentAssistProcessor(new ScriptContentAssist(), IDocument.DEFAULT_CONTENT_TYPE);
+//        assistant.install(myService);        
+//        
+//        myService.getControl().addKeyListener(new KeyAdapter() {
+//            public void keyPressed(KeyEvent e)
+//            {
+//             switch(e.keyCode)
+//            {
+//            case ' ':
+//                if ((e.stateMask | SWT.CTRL) != 0) {
+//                    assistant.showPossibleCompletions();
+//                }
+//                break;
+//            case '\n':
+//                go();
+//            break;
+//            default:
+////            ignore everything else
+//            }
+//            }
+//            });        
+//        myService.getTextWidget().setDoubleClickEnabled(true);
+//        goButton = new Button(headComp,SWT.PUSH);
+//        goButton.setText("Go!");
+//        goButton.setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.FILL_GRAB));
+//        goButton.addSelectionListener(new SelectionListener() {
+//            public void widgetSelected(SelectionEvent e) {
+//                go();
+//            }
+//
+//            public void widgetDefaultSelected(SelectionEvent e) {
+//            }});
+//        
         
         localeBox = new ComboViewer(headComp);
         localeBox.getCombo().setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.FILL_GRAB));
@@ -146,6 +155,7 @@ public class TmlClientView extends BaseNavajoView implements INavajoScriptListen
             }});
 
         localeBox.add(NavajoScriptPluginPlugin.getDefault().getLocales());
+
         
         backButton = new Button(headComp,SWT.PUSH);
         backButton.setText("<");
@@ -198,9 +208,20 @@ public class TmlClientView extends BaseNavajoView implements INavajoScriptListen
         
         formComposite = new TmlFormComposite(myContainer);
         formComposite.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,true));
-        formComposite.addNavajoScriptListener(this);
+//        formComposite.addNavajoScriptListener(this);
+        NavajoScriptPluginPlugin.getDefault().addNavajoActivityListener(this);
     }
 
+    
+    public void addNavajoScriptListener(INavajoScriptListener listener) {
+    	formComposite.addNavajoScriptListener(listener);
+	}
+
+	public void removeNavajoScriptListener(INavajoScriptListener listener) {
+		formComposite.removeNavajoScriptListener(listener);
+	}
+
+    
 	protected void showSource() {
 
         IWorkbenchWindow window = NavajoScriptPluginPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
@@ -226,42 +247,45 @@ public class TmlClientView extends BaseNavajoView implements INavajoScriptListen
 
         if (currentService.equals(lastInit)) {
             // init function;
-            myService.getTextWidget().setText(lastInit);
-            go();
+//            myService.getTextWidget().setText(lastInit);
         } else {
             if (historyList.size()>1) {
                 // top = current (size-1) , item before is calling script
                 final String source = historyList.get(historyList.size()-2);
                 final Navajo sourceNavajo = scriptMap.get(source);
-                if (sourceNavajo==null) {
-                    return;
-                }
-                Job j = new Job("Running "+currentService+" on "+getServerEntry().getServer()){
-
-                    protected IStatus run(IProgressMonitor monitor) {
-                        try {
-                            myCurrentNavajo = getServerEntry().runProcess(currentService,sourceNavajo);
-                            setNavajo(myCurrentNavajo, currentService);
-                                    return Status.OK_STATUS;
-                        } catch (ClientException e) {
-                            e.printStackTrace();
-                            return Status.OK_STATUS;
-                        }
-                    }};
-                    j.schedule();
+                callNavajo(sourceNavajo);
 
             } else {
-                System.err.println("No init but nothing in history?!");
+                callNavajo(null);
             }
         }
     }
 
+	private void callNavajo(final Navajo sourceNavajo) {
+		Job j = new Job("Running "+currentService+" on :"+serverInstance.getPort()){
+
+		    protected IStatus run(IProgressMonitor monitor) {
+		        try {
+		        	myCurrentNavajo = serverInstance.callService(sourceNavajo, currentService);
+//                            myCurrentNavajo = getServerEntry().runProcess(currentService,sourceNavajo);
+		            setNavajo(myCurrentNavajo, currentService);
+		                    return Status.OK_STATUS;
+		        } catch (ClientException e) {
+		            e.printStackTrace();
+		            return Status.OK_STATUS;
+		        }
+		    }};
+		    j.schedule();
+	}
+
     
     public void dispose() {
-    	if(formComposite!=null) {
-            formComposite.removeNavajoScriptListener(this);
-    	}
+//    	if(formComposite!=null) {
+//            formComposite.removeNavajoScriptListener(this);
+//    	}
         NavajoScriptPluginPlugin.getDefault().removeServerEntryListener(this);
+        NavajoScriptPluginPlugin.getDefault().removeNavajoActivityListener(this);
+
         super.dispose();
     }
     private void back() {
@@ -308,39 +332,39 @@ public class TmlClientView extends BaseNavajoView implements INavajoScriptListen
         updateNavigationButtons();
     }
 
-    protected void serverChanged() {
-        formComposite.setServerEntry(getServerEntry());
-    }
+//    protected void serverChanged() {
+//        formComposite.setServerEntry(getServerEntry());
+//    }
+//
+//    private ServerEntry getServerEntry() {
+//		return serverEntry;
+//	}
+//    
+//    private void setServerEntry(ServerEntry s) {
+//    	this.serverEntry = s;
+//    }
 
-    private ServerEntry getServerEntry() {
-		return serverEntry;
-	}
-    
-    private void setServerEntry(ServerEntry s) {
-    	this.serverEntry = s;
-    }
-
-	protected void go() {
-        final ServerEntry se = getServerEntry();
-         final String script = myService.getTextWidget().getText();
-         lastInit = script;
-        Job j = new Job("Running "+script+" on "+se.getServer()){
-
-            protected IStatus run(IProgressMonitor monitor) {
-                try {
-                    myCurrentNavajo = se.runInit(script);
-                    setNavajo(myCurrentNavajo, script);
-                    if (myCurrentNavajo.getMessage("error")==null && myCurrentNavajo.getMessage("AuthenticationError")==null) {
-                        NavajoScriptPluginPlugin.getDefault().addToScriptInvocations(script);
-                    }
-                    return Status.OK_STATUS;
-                } catch (ClientException e) {
-                    e.printStackTrace();
-                    return Status.OK_STATUS;
-                }
-            }};
-            j.schedule();
-    }
+//	protected void go() {
+//        final ServerEntry se = getServerEntry();
+////         final String script = myService.getTextWidget().getText();
+//         lastInit = script;
+//        Job j = new Job("Running "+script+" on "+se.getServer()){
+//
+//            protected IStatus run(IProgressMonitor monitor) {
+//                try {
+//                    myCurrentNavajo = se.runInit(script);
+//                    setNavajo(myCurrentNavajo, script);
+//                    if (myCurrentNavajo.getMessage("error")==null && myCurrentNavajo.getMessage("AuthenticationError")==null) {
+//                        NavajoScriptPluginPlugin.getDefault().addToScriptInvocations(script);
+//                    }
+//                    return Status.OK_STATUS;
+//                } catch (ClientException e) {
+//                    e.printStackTrace();
+//                    return Status.OK_STATUS;
+//                }
+//            }};
+//            j.schedule();
+//    }
 
     /*
      * (non-Javadoc)
@@ -417,10 +441,15 @@ public class TmlClientView extends BaseNavajoView implements INavajoScriptListen
     public String getService() {
          return currentService;
     }
+//
+//	public void setServerPort(int port) {
+//		ServerEntry se = new ServerEntry("local", "http","localhost:"+port+"/Postman","plugin","plugin");
+//		setServerEntry(se);
+//	}
 
-	public void setServerPort(int port) {
-		ServerEntry se = new ServerEntry("local", "http","localhost:"+port+"/Postman","plugin","plugin");
-		setServerEntry(se);
+	public void navajoResponse(Navajo n, String scriptName) {
+		setNavajo(n, scriptName);
+		
 	}
 
 

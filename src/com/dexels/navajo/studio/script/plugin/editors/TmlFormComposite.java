@@ -57,7 +57,6 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.ide.ResourceUtil;
 
-import com.dexels.navajo.birt.BirtUtils;
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
@@ -70,6 +69,7 @@ import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.studio.eclipse.ServerEntry;
 import com.dexels.navajo.studio.script.plugin.NavajoPluginException;
 import com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin;
+import com.dexels.navajo.studio.script.plugin.ServerInstance;
 import com.dexels.navajo.swtclient.GenericPropertyComponent;
 import com.dexels.navajo.swtclient.SwtFactory;
 
@@ -115,6 +115,8 @@ public class TmlFormComposite extends Composite {
 	private ServerEntry myServerEntry;
 
 	private final List<INavajoScriptListener> myScriptListeners = new ArrayList<INavajoScriptListener>();
+
+	private ServerInstance serverInstance;
 
 	// private ScrolledComposite mainMessageScroll;
 
@@ -632,7 +634,7 @@ public class TmlFormComposite extends Composite {
 
 	private void runHref(final Navajo nav,final String name, HyperlinkEvent e, final boolean reload,
 			final String sourceTmlName) throws Exception {
-		fireScriptCalled(name);
+		fireScriptCalled(nav,name);
 		System.err.println("RUNHREF: file: [[null]] name: " + name + " reload: " + reload);
 		nav.getHeader().setHeaderAttribute("sourceScript", sourceTmlName);
 		
@@ -645,12 +647,27 @@ public class TmlFormComposite extends Composite {
 		}
 		
 		// I think this is for the TmlBrowser
-		if (myServerEntry != null) {
+		runScript(nav, name);
+		// I think this is for the TmlViewer
+		
+
+	}
+
+	private void runScript(final Navajo nav, final String name) {
+//		if (myServerEntry != null) {
 			Job j = new Job("Running Navajo...") {
 
 				protected IStatus run(IProgressMonitor monitor) {
 					try {
-						final Navajo n = myServerEntry.runProcess(name, nav);
+						Navajo output = null;
+						if(serverInstance!=null) {
+							System.err.println("Calling embedded server: "+name);
+							output = serverInstance.callService(nav, name);
+						} else {
+							output = myServerEntry.runProcess(name, nav);
+						}
+						final Navajo n = output;
+					
 						try {
 							System.err.println("Href run: ");
 							nav.getHeader().write(System.err);
@@ -673,10 +690,7 @@ public class TmlFormComposite extends Composite {
 			};
 			j.schedule();
 			return;
-		}
-		// I think this is for the TmlViewer
-		
-
+//		}
 	}
 
 	public void reflow() {
@@ -705,10 +719,10 @@ public class TmlFormComposite extends Composite {
 		}
 	}
 
-	private void fireScriptCalled(String scriptName) {
+	private void fireScriptCalled(Navajo nav, String scriptName) {
 		for (int i = 0; i < myScriptListeners.size(); i++) {
 			INavajoScriptListener current = myScriptListeners.get(i);
-			current.callingScript(scriptName);
+			current.callScript(scriptName, nav) ;
 		}
 	}
 
@@ -721,70 +735,68 @@ public class TmlFormComposite extends Composite {
 		return myCurrentName;
 	}
 	protected void createBirt(String service) {
-		BirtUtils b = new BirtUtils();
-		try {
-			IFile birt = getCurrentReport();
-			if (birt==null) {
-				SaveAsDialog sd = new SaveAsDialog(getShell());
-				sd.setOriginalName(service);
-
-				int result = sd.open();
-				if (result == Window.CANCEL) {
-					return;
-				}
-				IPath ip = sd.getResult();
-				IPath ipp = ip.addFileExtension("rptdesign");
-				IFile iff = ResourcesPlugin.getWorkspace().getRoot().getFile(ipp);
-
-				String rez = iff.getLocation().toString();
-				System.err.println("Result: " + rez);
-				File createdFile = new File(rez);
-
-				InputStream template = getClass().getClassLoader().getResourceAsStream("com/dexels/navajo/birt/blank.rptdesign");
-				b.createEmptyReport(myCurrentNavajo, createdFile, template);
-				iff.refreshLocal(0, null);
-				IDE.openEditor(NavajoScriptPluginPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage(), iff);
-				
-			} else {
-				boolean dirty = NavajoScriptPluginPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().isDirty();
-				boolean ok = NavajoScriptPluginPlugin.getDefault().showConfirm("Are you sure?","Do you really want to rewrite the datasources of this report?");
-				if(!ok) {
-					return;
-				}
-				if(dirty) {
-					boolean ok2 = NavajoScriptPluginPlugin.getDefault().showConfirm("Are you sure?","Is it ok to discard your unsaved changes?");
-					if(!ok2) {
-						return;
-					}
-				}
-
-//				b.rebuildReportDataSource(myCurrentNavajo, new File(birt
-//						.getLocation().toOSString()));
-				birt.refreshLocal(0, null);
-				final IEditorPart editor = NavajoScriptPluginPlugin
-						.getDefault().getWorkbench().getActiveWorkbenchWindow()
-						.getActivePage().getActiveEditor();
-				if (editor.getSite().getWorkbenchWindow().getActivePage() != null) {
-					Display.getDefault().syncExec(new Runnable() {
-						public void run() {
-							editor.getSite().getWorkbenchWindow().getActivePage().closeEditor(editor, false);
-						}
-					});
-				}
-				
-				IDE.openEditor(NavajoScriptPluginPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage(), birt);
-				
-
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (NavajoException e) {
-			e.printStackTrace();
-		} catch (CoreException e) {
-			e.printStackTrace();
-		} catch(Throwable t) {
-			t.printStackTrace();
-		}
+//		BirtUtils b = new BirtUtils();
+//		try {
+//			IFile birt = getCurrentReport();
+//			if (birt==null) {
+//				SaveAsDialog sd = new SaveAsDialog(getShell());
+//				sd.setOriginalName(service);
+//
+//				int result = sd.open();
+//				if (result == Window.CANCEL) {
+//					return;
+//				}
+//				IPath ip = sd.getResult();
+//				IPath ipp = ip.addFileExtension("rptdesign");
+//				IFile iff = ResourcesPlugin.getWorkspace().getRoot().getFile(ipp);
+//
+//				String rez = iff.getLocation().toString();
+//				System.err.println("Result: " + rez);
+//				File createdFile = new File(rez);
+//
+//				InputStream template = getClass().getClassLoader().getResourceAsStream("com/dexels/navajo/birt/blank.rptdesign");
+//				b.createEmptyReport(myCurrentNavajo, createdFile, template);
+//				iff.refreshLocal(0, null);
+//				IDE.openEditor(NavajoScriptPluginPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage(), iff);
+//				
+//			} else {
+//				boolean dirty = NavajoScriptPluginPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().isDirty();
+//				boolean ok = NavajoScriptPluginPlugin.getDefault().showConfirm("Are you sure?","Do you really want to rewrite the datasources of this report?");
+//				if(!ok) {
+//					return;
+//				}
+//				if(dirty) {
+//					boolean ok2 = NavajoScriptPluginPlugin.getDefault().showConfirm("Are you sure?","Is it ok to discard your unsaved changes?");
+//					if(!ok2) {
+//						return;
+//					}
+//				}
+//
+//				birt.refreshLocal(0, null);
+//				final IEditorPart editor = NavajoScriptPluginPlugin
+//						.getDefault().getWorkbench().getActiveWorkbenchWindow()
+//						.getActivePage().getActiveEditor();
+//				if (editor.getSite().getWorkbenchWindow().getActivePage() != null) {
+//					Display.getDefault().syncExec(new Runnable() {
+//						public void run() {
+//							editor.getSite().getWorkbenchWindow().getActivePage().closeEditor(editor, false);
+//						}
+//					});
+//				}
+//				
+//				IDE.openEditor(NavajoScriptPluginPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage(), birt);
+//				
+//
+//			}
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		} catch (NavajoException e) {
+//			e.printStackTrace();
+//		} catch (CoreException e) {
+//			e.printStackTrace();
+//		} catch(Throwable t) {
+//			t.printStackTrace();
+//		}
 	}
 
 	private IFile getCurrentReport() {
@@ -872,6 +884,11 @@ public class TmlFormComposite extends Composite {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
+	}
+
+	public void setServerInstance(ServerInstance si) {
+		this.serverInstance = si;
+		
 	}
 
 }
