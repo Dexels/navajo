@@ -76,38 +76,38 @@ public class TslQuickfixProvider extends DefaultQuickfixProvider {
 	});
 	}
 
+//	@Fix(TslJavaValidator.ISSUE_MISSING_ATTRIBUTE)
+//	public void insertMissingAttribute(final Issue issue,IssueResolutionAcceptor acceptor) {
+//		acceptor.accept(issue, "Insert: "+issue.getData()[0]+" with \""+issue.getData()[1]+"\"", "Insert missing attribute", null , new ISemanticModification() {
+//			
+//			public void apply(EObject element, IModificationContext context)
+//					throws Exception {
+//				System.err.println("APPPPPLyING!!!!!!! "+issue.getData()[0]+" ::: "+issue.getData()[1]);
+//				Element e = (Element)element;
+//				PossibleExpression pe = TslFactory.eINSTANCE.createPossibleExpression();
+//				pe.setKey(issue.getData()[0]);
+//				pe.setValue("\""+issue.getData()[1]+"\"");
+//				
+//				e.getAttributes().add(pe);
+//				
+//			}
+//		});
+//	}	
+	
+
 	@Fix(TslJavaValidator.ISSUE_MISSING_ATTRIBUTE)
 	public void insertMissingAttribute(final Issue issue,IssueResolutionAcceptor acceptor) {
-		acceptor.accept(issue, "Insert: "+issue.getData()[0]+" with \""+issue.getData()[1]+"\"", "Insert missing attribute", null , new ISemanticModification() {
-			
-			public void apply(EObject element, IModificationContext context)
-					throws Exception {
-				System.err.println("APPPPPLyING!!!!!!! "+issue.getData()[0]+" ::: "+issue.getData()[1]);
-				Element e = (Element)element;
-				PossibleExpression pe = TslFactory.eINSTANCE.createPossibleExpression();
-				pe.setKey(issue.getData()[0]);
-//				pe.setValue("\""+issue.getData()[1]+"\"");
-				
-				TopLevel tl = ExpressionFactory.eINSTANCE.createTopLevel();
-				pe.setExpressionValue(tl);
-//				tl.setToplevelExpression(ExpressionFactory.eINSTANCE.create)
-				//				
-				Expression ee = ExpressionFactory.eINSTANCE.createExpression();
-				tl.setToplevelExpression(ee);
-				ee.setValueString("=aap;");
-				//				
-				//				ee.setValueString("'"+issue.getData()[1]+"'");
-//				pe.setValue("\""+issue.getData()[1]+"\"");
-				e.getAttributes().add(pe);
-				
-			}
-		});
+		String value = TslJavaValidator.getDefaultValueForAttribute(issue.getData()[0], issue.getData()[1]);
+		if(value==null) {
+			value = "unknown";
+		}
+		acceptor.accept(issue, "Insert: "+issue.getData()[1]+" with \""+value+"\" to: "+issue.getData()[0], "Insert missing attribute", null , addAttributeToElement(issue, issue.getData()[1],value));
 	}	
-	
+
 	@Fix(TslJavaValidator.ISSUE_SHOULD_NOT_BE_EXPRESSION)
 	public void convertFromExpression(final Issue issue,IssueResolutionAcceptor acceptor) {
 		
-		acceptor.accept(issue, "Convert to literal", "Convert to literal (assume string)", null , new IModification() {
+		acceptor.accept(issue, "Convert to string literal", "Convert to literal (assume string)", null , new IModification() {
 		public void apply(IModificationContext context) throws BadLocationException {
 			IXtextDocument xtextDocument = context.getXtextDocument();
 			String issuetext = xtextDocument.get(issue.getOffset(),issue.getLength());
@@ -118,5 +118,37 @@ public class TslQuickfixProvider extends DefaultQuickfixProvider {
 		}
 	});
 	}	
+	
+	protected IModification addAttributeToElement(final Issue issue, final String key, final String value) {
+		IModification ii = new IModification() {
+			public void apply(IModificationContext context) throws BadLocationException {
+				IXtextDocument xtextDocument = context.getXtextDocument();
+				String issuetext = xtextDocument.get(issue.getOffset(),issue.getLength());
+				// find end of the first tag 
+				int index = issuetext.indexOf(">");
+				//int index = issuetext.lastIndexOf("/>");
+				if(index == -1) {
+					return;
+				}
+				if(issuetext.charAt(index-1)=='/') {
+					index--;
+				}
+
+				String localKey = key;
+				String atInsertionPoint = xtextDocument.get(issue.getOffset()+index-1, 1);
+				System.err.println("AT: "+atInsertionPoint);
+				// ensure leading whitespace
+				if(!Character.isWhitespace(atInsertionPoint.charAt(0))) {
+					localKey = " "+localKey;
+				}
+				xtextDocument.replace(issue.getOffset()+index, 0, localKey+"=\""+value+"\"");
+//				int start = issuetext.indexOf("=\"");
+//				int end = issuetext.lastIndexOf(";\"");
+//				xtextDocument.replace(issue.getOffset()+end-1,2,"");
+//				xtextDocument.replace(issue.getOffset()+start+2, 2,"");
+			}
+		};
+		return ii;
+	}
 	
 }
