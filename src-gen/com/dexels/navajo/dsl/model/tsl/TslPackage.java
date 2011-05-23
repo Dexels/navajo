@@ -425,13 +425,22 @@ public interface TslPackage extends EPackage {
 	int POSSIBLE_EXPRESSION__NAMESPACE = 3;
 
 	/**
+	 * The feature id for the '<em><b>End Token</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int POSSIBLE_EXPRESSION__END_TOKEN = 4;
+
+	/**
 	 * The number of structural features of the '<em>Possible Expression</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int POSSIBLE_EXPRESSION_FEATURE_COUNT = 4;
+	int POSSIBLE_EXPRESSION_FEATURE_COUNT = 5;
 
 	/**
 	 * The meta object id for the '{@link com.dexels.navajo.dsl.model.tsl.impl.MessageImpl <em>Message</em>}' class.
@@ -1705,6 +1714,17 @@ public interface TslPackage extends EPackage {
 	EAttribute getPossibleExpression_Namespace();
 
 	/**
+	 * Returns the meta object for the attribute '{@link com.dexels.navajo.dsl.model.tsl.PossibleExpression#getEndToken <em>End Token</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>End Token</em>'.
+	 * @see com.dexels.navajo.dsl.model.tsl.PossibleExpression#getEndToken()
+	 * @see #getPossibleExpression()
+	 * @generated
+	 */
+	EAttribute getPossibleExpression_EndToken();
+
+	/**
 	 * Returns the meta object for class '{@link com.dexels.navajo.dsl.model.tsl.Element <em>Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2180,6 +2200,14 @@ public interface TslPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute POSSIBLE_EXPRESSION__NAMESPACE = eINSTANCE.getPossibleExpression_Namespace();
+
+		/**
+		 * The meta object literal for the '<em><b>End Token</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute POSSIBLE_EXPRESSION__END_TOKEN = eINSTANCE.getPossibleExpression_EndToken();
 
 		/**
 		 * The meta object literal for the '{@link com.dexels.navajo.dsl.model.tsl.impl.ElementImpl <em>Element</em>}' class.

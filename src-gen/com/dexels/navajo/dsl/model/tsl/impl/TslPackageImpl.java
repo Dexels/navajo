@@ -345,6 +345,15 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getPossibleExpression_EndToken() {
+		return (EAttribute)possibleExpressionEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getElement() {
 		return elementEClass;
 	}
@@ -688,6 +697,7 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 		createEReference(possibleExpressionEClass, POSSIBLE_EXPRESSION__EXPRESSION_VALUE);
 		createEAttribute(possibleExpressionEClass, POSSIBLE_EXPRESSION__VALUE);
 		createEAttribute(possibleExpressionEClass, POSSIBLE_EXPRESSION__NAMESPACE);
+		createEAttribute(possibleExpressionEClass, POSSIBLE_EXPRESSION__END_TOKEN);
 
 		elementEClass = createEClass(ELEMENT);
 		createEReference(elementEClass, ELEMENT__CHILDREN);
@@ -803,6 +813,7 @@ public class TslPackageImpl extends EPackageImpl implements TslPackage {
 		initEReference(getPossibleExpression_ExpressionValue(), theExpressionPackage.getTopLevel(), null, "expressionValue", null, 0, 1, PossibleExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getPossibleExpression_Value(), ecorePackage.getEString(), "value", null, 0, 1, PossibleExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getPossibleExpression_Namespace(), ecorePackage.getEString(), "namespace", null, 0, 1, PossibleExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPossibleExpression_EndToken(), ecorePackage.getEString(), "endToken", null, 0, 1, PossibleExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		addEOperation(possibleExpressionEClass, ecorePackage.getEBoolean(), "isExpression", 0, 1, IS_UNIQUE, IS_ORDERED);
 

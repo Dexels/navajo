@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link com.dexels.navajo.dsl.model.tsl.PossibleExpression#getExpressionValue <em>Expression Value</em>}</li>
  *   <li>{@link com.dexels.navajo.dsl.model.tsl.PossibleExpression#getValue <em>Value</em>}</li>
  *   <li>{@link com.dexels.navajo.dsl.model.tsl.PossibleExpression#getNamespace <em>Namespace</em>}</li>
+ *   <li>{@link com.dexels.navajo.dsl.model.tsl.PossibleExpression#getEndToken <em>End Token</em>}</li>
  * </ul>
  * </p>
  *
@@ -133,6 +134,32 @@ public interface PossibleExpression extends EObject {
 	 * @generated
 	 */
 	void setNamespace(String value);
+
+	/**
+	 * Returns the value of the '<em><b>End Token</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>End Token</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>End Token</em>' attribute.
+	 * @see #setEndToken(String)
+	 * @see com.dexels.navajo.dsl.model.tsl.TslPackage#getPossibleExpression_EndToken()
+	 * @model
+	 * @generated
+	 */
+	String getEndToken();
+
+	/**
+	 * Sets the value of the '{@link com.dexels.navajo.dsl.model.tsl.PossibleExpression#getEndToken <em>End Token</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>End Token</em>' attribute.
+	 * @see #getEndToken()
+	 * @generated
+	 */
+	void setEndToken(String value);
 
 	/**
 	 * <!-- begin-user-doc -->
