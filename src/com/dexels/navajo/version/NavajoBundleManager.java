@@ -129,7 +129,7 @@ public class NavajoBundleManager extends AbstractVersion implements INavajoBundl
 	 * @see dexels.INavajoBundleManager#loadAdapterPackages(java.io.File, org.osgi.framework.BundleContext)
 	 */
 	@Override
-	public void loadAdapterPackages(File navajoRoot, BundleContext bc) {
+	public void loadAdapterPackages(File navajoRoot) {
 		File adapters = new File(navajoRoot,"adapters");
 		if(!adapters.exists()) {
 			return;
@@ -138,7 +138,7 @@ public class NavajoBundleManager extends AbstractVersion implements INavajoBundl
 		for (File file : children) {
 			if(file.isFile() && file.getName().endsWith("jar")) {
 				try {
-					injectJar(file,bc);
+					injectJar(file,myBundleContext);
 				} catch (BundleException e) {
 					e.printStackTrace();
 				}
@@ -147,13 +147,28 @@ public class NavajoBundleManager extends AbstractVersion implements INavajoBundl
 		
 		
 	}
+	public void uninstallAdapterBundles() {
+		for (Bundle b : bundleMap.values()) {
+			try {
+				b.stop();
+
+				System.err.println("Uninstalling bundle: "+b.getBundleId()+" name: "+b.getSymbolicName()+" @ "+b.getLocation());
+				b.uninstall();
+			} catch (BundleException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 
 	private void injectJar(File file, BundleContext bc) throws BundleException {
 		try {
+		
 			URL u = file.toURI().toURL();
 			// TODO uninstall optional existing bundles
 			System.err.println("Checking injection point: "+u);
 			Bundle installed = bc.installBundle(u.toString());
+			installed.start();
 			bundleMap.put(u, installed);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
