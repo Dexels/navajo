@@ -73,7 +73,6 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 		for (String functionName : fi.getFunctionNames(extensionDef)) {
 			FunctionDefinition fd = fi.getDef(extensionDef,functionName);
 			 Properties props = new Properties();
-			 System.err.println("Registering: "+functionName);
 			 props.put("functionName", functionName);
 			 props.put("functionDefinition", fd);
 			context.registerService(FunctionInterface.class.getName(), fi.instantiateFunctionClass(fd,getClass().getClassLoader()), props);
