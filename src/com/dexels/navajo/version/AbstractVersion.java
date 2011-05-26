@@ -4,12 +4,15 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
 
+
 public abstract class AbstractVersion extends BaseVersion implements BundleActivator {
 
+
+	
 	protected BundleContext context = null;
 	public void start(BundleContext bc) throws Exception {
 		context = bc;
-		System.err.println("Bundle started: "+bc.getBundle().toString());
+		logger.info("Bundle started: "+bc.getBundle().toString());
 	}
 
 	public void stop(BundleContext arg0) throws Exception {
@@ -44,9 +47,10 @@ public abstract class AbstractVersion extends BaseVersion implements BundleActiv
 
 	public void shutdown() {
 		if(context==null) {
-			System.err.println("No OSGi present.");
+			logger.info("No OSGi present.");
+
 		}
-		System.err.println("Shutting down bundle: "+getClass().getName());
+		logger.info("Shutting down bundle: "+getClass().getName());
 	}
 	
 	public static double getRandom() {
@@ -62,7 +66,7 @@ public abstract class AbstractVersion extends BaseVersion implements BundleActiv
 			AbstractVersion v = version.newInstance();
 			v.shutdown();
 		  } catch (Throwable e) {
-			  System.err.println("Extension shutdown failed.");
+				logger.warn("Extension shutdown failed.",e);
 		}
 		  
 	}

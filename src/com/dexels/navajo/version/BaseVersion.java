@@ -2,6 +2,9 @@ package com.dexels.navajo.version;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.version.AbstractVersion;
 
 /**
@@ -32,6 +35,9 @@ import com.dexels.navajo.version.AbstractVersion;
 public abstract class BaseVersion implements Comparable<AbstractVersion> {
 
 	public String RELEASEDATE;
+	
+	protected final static Logger logger = LoggerFactory.getLogger("com.dexels.navajo.version");
+
 	
 	/**
 	 * Major release increases when actually new funcionality is introduced.
@@ -97,7 +103,7 @@ public abstract class BaseVersion implements Comparable<AbstractVersion> {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.err.println("Could not find version class for: " + versionClass);
+			logger.warn("Could not find version class for: " + versionClass,e);
 		}
 	}
 	

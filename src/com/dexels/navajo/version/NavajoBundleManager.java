@@ -13,6 +13,8 @@ import org.osgi.framework.BundleException;
 import org.osgi.framework.BundleListener;
 import org.osgi.framework.FrameworkEvent;
 import org.osgi.framework.FrameworkListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.version.AbstractVersion;
 
@@ -22,6 +24,7 @@ public class NavajoBundleManager extends AbstractVersion implements INavajoBundl
 
 	private BundleContext myBundleContext = null;
 	private Map<URL,Bundle> bundleMap = new HashMap<URL,Bundle>();
+	final static Logger logger = LoggerFactory.getLogger("com.dexels.navajo.version");
 
 	
 	@Override
@@ -29,7 +32,7 @@ public class NavajoBundleManager extends AbstractVersion implements INavajoBundl
 		super.start(bc);
 		myBundleContext = bc;
 		instance = this;
-		System.err.println("Starting Dexels version manager1");
+		logger.debug("Starting Dexels version manager");
 		bc.addBundleListener(new BundleListener() {
 			
 			@Override
@@ -48,10 +51,10 @@ public class NavajoBundleManager extends AbstractVersion implements INavajoBundl
 		});
 		NavajoBundleManagerFactory.initialize(bc);
 		bc.registerService(INavajoBundleManager.class.getName(), this, null);
-		System.err.println("NavajoBundleManager... registered");
+		logger.debug("NavajoBundleManager... registered");
 	}
 
-	private String displayFrameworkEventType(int type) {
+	protected String displayFrameworkEventType(int type) {
 		switch (type) {
 		case FrameworkEvent.ERROR:
 			return "INFO";
@@ -98,20 +101,20 @@ public class NavajoBundleManager extends AbstractVersion implements INavajoBundl
 	
 	public Bundle locateBundleForClass(String clazz) {
 		for (Map.Entry<URL,Bundle> e : bundleMap.entrySet() ) {
-			Class loaded;
+			Class<?> loaded;
 			try {
 				loaded = e.getValue().loadClass(clazz);
 				if(loaded != null) {
 					return e.getValue();
 				}
 			} catch (ClassNotFoundException e1) {
-				System.err.println("Class: "+clazz+" not found in bundle: "+e.getValue().getSymbolicName());
+				logger.warn("Class: "+clazz+" not found in bundle: "+e.getValue().getSymbolicName());
 			}
 		}
 		return null;
 	}
 	
-	public Class loadClassInAnyBundle(String clazz) throws ClassNotFoundException {
+	public Class<?> loadClassInAnyBundle(String clazz) throws ClassNotFoundException {
 		Bundle b = locateBundleForClass(clazz);
 		if(b!=null) {
 			return b.loadClass(clazz);
@@ -151,8 +154,8 @@ public class NavajoBundleManager extends AbstractVersion implements INavajoBundl
 		for (Bundle b : bundleMap.values()) {
 			try {
 				b.stop();
+				logger.debug("Uninstalling bundle: "+b.getBundleId()+" name: "+b.getSymbolicName()+" @ "+b.getLocation());
 
-				System.err.println("Uninstalling bundle: "+b.getBundleId()+" name: "+b.getSymbolicName()+" @ "+b.getLocation());
 				b.uninstall();
 			} catch (BundleException e) {
 				e.printStackTrace();

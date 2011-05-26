@@ -16,7 +16,7 @@ public class Version extends BaseVersion implements BundleActivator {
 	public void start(BundleContext bc) throws Exception {
 		context = bc;
 //		ServiceReference a = null;// bc.getServiceReference(HttpService.class.getName());
-		System.err.println("Bundle started: "+bc.getBundle().toString());
+		logger.info("Bundle started: "+bc.getBundle().toString());
 	}
 
 	public void stop(BundleContext arg0) throws Exception {
@@ -53,7 +53,7 @@ public class Version extends BaseVersion implements BundleActivator {
 		if(context==null) {
 			System.err.println("No OSGi present.");
 		}
-		System.err.println("Shutting down bundle: "+getClass().getName());
+		logger.debug("Shutting down bundle: "+getClass().getName());
 	}
 	
 
@@ -65,7 +65,7 @@ public class Version extends BaseVersion implements BundleActivator {
 			dexels.Version v = version.newInstance();
 			v.shutdown();
 		  } catch (Throwable e) {
-			  System.err.println("Extension shutdown failed.");
+			  logger.error("Extension shutdown failed.",e);
 		}
 		  
 	}
