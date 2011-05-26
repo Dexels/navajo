@@ -11,7 +11,7 @@
 
 	<property file="build.properties" />
 <!--	<property name="basicdeploy" value="DexelsVersionControl,NavajoDocument,NavajoClient,Navajo,NavajoListeners,NavajoAdapters,NavajoJsp,NavajoJspServer,NavajoFunctions" />-->
-	<property name="basicdeploy" value="DexelsVersionControl,NavajoDocument,NavajoQueueManager,NavajoClient,Navajo,NavajoListeners,NavajoAdapters,NavajoJsp,NavajoJspServer,NavajoFunctions,NavajoEnterprise,NavajoEnterpriseAdapters,NavajoEnterpriseListeners,NavajoAsyncClient,NavajoListenersTomcat,NavajoListenersContinuations,NavajoRhino" />
+	<property name="basicdeploy" value="DexelsVersionControl,NavajoDocument,NavajoQueueManager,NavajoClient,Navajo,NavajoListeners,NavajoAdapters,NavajoJsp,NavajoJspServer,NavajoFunctions,NavajoEnterprise,NavajoEnterpriseAdapters,NavajoEnterpriseListeners,NavajoAsyncClient,NavajoListenersContinuations,NavajoRhino" />
 	<property name="enterprisedeploy" value="NavajoEnterprise,NavajoEnterpriseAdapters,NavajoEnterpriseListeners" />
 
 	
