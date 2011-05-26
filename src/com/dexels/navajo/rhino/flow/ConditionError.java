@@ -7,6 +7,10 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 
 public class ConditionError extends RuntimeException {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5199659554341354411L;
 	private Navajo conditionNavajo;
 	private Message conditionMessage;
 	
