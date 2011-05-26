@@ -2,7 +2,7 @@ Bundle-Name: Navajo Development Environment
 Bundle-SymbolicName: com.dexels.navajo.dev.script;singleton:=true
 Bundle-Description: 
 Bundle-ManifestVersion: 2
-Bundle-Version: 2.0.1.qualifier
+Bundle-Version: 2.0.2.qualifier
 Bundle-Activator: com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.adapters;bundle-version="1.0.0",
@@ -27,5 +27,7 @@ Require-Bundle: com.dexels.navajo.adapters;bundle-version="1.0.0",
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.core.resources,
  org.eclipse.debug.core
-Export-Package: com.dexels.navajo.studio.script.plugin,
+Export-Package: com.dexels.navajo.studio.eclipse,
+ com.dexels.navajo.studio.script.plugin,
+ com.dexels.navajo.studio.script.plugin.editors,
  com.dexels.navajo.studio.script.plugin.views
