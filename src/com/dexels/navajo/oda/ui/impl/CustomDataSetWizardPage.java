@@ -21,7 +21,6 @@ import org.eclipse.datatools.connectivity.oda.design.ResultSetColumns;
 import org.eclipse.datatools.connectivity.oda.design.ResultSetDefinition;
 import org.eclipse.datatools.connectivity.oda.design.ui.designsession.DesignSessionUtil;
 import org.eclipse.datatools.connectivity.oda.design.ui.wizards.DataSetWizardPage;
-import org.eclipse.datatools.connectivity.oda.design.util.DesignUtil;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -278,10 +277,6 @@ public class CustomDataSetWizardPage extends DataSetWizardPage
         IQuery query = conn.newQuery( null );
         query.prepare( queryText );
         
-        // TODO a runtime driver might require a query to first execute before
-        // its metadata is available
-//      query.setMaxRows( 1 );
-//      query.executeQuery();
         
         try
         {
@@ -359,7 +354,6 @@ public class CustomDataSetWizardPage extends DataSetWizardPage
         
         paramDesign.setDerivedMetaData( true );
 
-        // TODO replace below with data source specific implementation;
         // hard-coded parameter's default value for demo purpose
         if( paramDesign.getParameterDefinitions().size() > 0 )
         {
