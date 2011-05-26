@@ -2,12 +2,14 @@ Bundle-Name: Dexels Version Control
 Bundle-SymbolicName: com.dexels.navajo.version
 Bundle-Description: Core version manager
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.9.qualifier
+Bundle-Version: 1.0.10.qualifier
 Bundle-Activator: com.dexels.navajo.version.NavajoBundleManager
 Export-Package: com.dexels.navajo.version,
  navajo,
- org.osgi.framework
+ org.osgi.framework,
+ org.slf4j
 Bundle-Vendor: Dexels
 Bundle-ClassPath: .
 Bundle-ActivationPolicy: lazy
 Import-Package: org.osgi.framework
+Require-Bundle: org.slf4j.api;bundle-version="1.6.1"
