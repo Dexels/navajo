@@ -7,6 +7,7 @@
 package com.dexels.navajo.swtclient;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ICellModifier;
@@ -38,7 +39,6 @@ public class PropertyModifier implements ICellModifier {
         super();
         //        this.myEditor = myEditor;
         this.myViewer = myViewer;
-        // TODO Auto-generated constructor stub
     }
 
     /*
@@ -105,7 +105,6 @@ public class PropertyModifier implements ICellModifier {
      *      java.lang.String)
      */
     public Object getValue(Object element, String property) {
-        // TODO Auto-generated method stub
            Message mm = (Message) element;
         Property p = mm.getProperty(property);
         if (Property.SELECTION_PROPERTY.equals(p.getType())) {
@@ -113,7 +112,7 @@ public class PropertyModifier implements ICellModifier {
                 System.err.println("I DONT SUPPORT CARDINALITY PLUS IN TABLES DAMMIT");
             }
             try {
-                ArrayList al = p.getAllSelections();
+                ArrayList<Selection> al = p.getAllSelections();
 //                for (int i = 0; i < al.size(); i++) {
 //                    Selection current =  (Selection)al.get(i);
 //                    System.err.println("NAME: "+current.getName());
@@ -151,7 +150,6 @@ public class PropertyModifier implements ICellModifier {
         //            try {
         //                return p.getAllSelections();
         //            } catch (NavajoException e) {
-        //                // TODO Auto-generated catch block
         //                e.printStackTrace();
         //                return null;
         //            }
@@ -183,11 +181,11 @@ public class PropertyModifier implements ICellModifier {
             }
                 try {
                     int index = ((Integer)value).intValue();
-                    ArrayList al = p.getAllSelections();
+                    List<Selection> al = p.getAllSelections();
                     
                     // MAYBE DUMMY?
                     if (index==0) {
-                        p.setSelected(new ArrayList());
+                        p.setSelected(new ArrayList<String>());
                     } else {
                         Selection s = (Selection)al.get(index-1);
                         p.setSelected(s);

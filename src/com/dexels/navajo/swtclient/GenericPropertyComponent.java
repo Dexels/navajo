@@ -15,12 +15,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.StringTokenizer;
 
 import metadata.BinaryOpener;
-import metadata.FormatDescription;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
@@ -30,8 +26,8 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData; 
-import org.eclipse.swt.layout.GridData; 
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
@@ -66,18 +62,18 @@ public class GenericPropertyComponent {
     /**
      * 
      */
-
-    private static SimpleDateFormat displayDateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
-
-    private static SimpleDateFormat inputFormat1 = new SimpleDateFormat("dd-MM-yy");
-
-    private static SimpleDateFormat inputFormat2 = new SimpleDateFormat("dd/MM/yy");
-
-    private static SimpleDateFormat inputFormat3 = new SimpleDateFormat("ddMMyy");
-
-    private static SimpleDateFormat inputFormat4 = new SimpleDateFormat("ddMM");
-
-    private static SimpleDateFormat inputFormat5 = new SimpleDateFormat("dd");
+//
+//    private static SimpleDateFormat displayDateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
+//
+//    private static SimpleDateFormat inputFormat1 = new SimpleDateFormat("dd-MM-yy");
+//
+//    private static SimpleDateFormat inputFormat2 = new SimpleDateFormat("dd/MM/yy");
+//
+//    private static SimpleDateFormat inputFormat3 = new SimpleDateFormat("ddMMyy");
+//
+//    private static SimpleDateFormat inputFormat4 = new SimpleDateFormat("ddMM");
+//
+//    private static SimpleDateFormat inputFormat5 = new SimpleDateFormat("dd");
 
     private static SimpleDateFormat navajoDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -363,9 +359,6 @@ public class GenericPropertyComponent {
         
     private void createExpressionProperty() {
         String value = ""+myProperty.getTypedValue();
-        if (value == null) {
-            value = "";
-        }
         final Text ttt = new Text(currentComposite, SWT.BORDER | SWT.SINGLE);
         // toolkit.adapt(ttt,true,true);
         currentControl = ttt;
@@ -407,8 +400,6 @@ public class GenericPropertyComponent {
         ttt.addFocusListener(new FocusListener() {
 
             public void focusGained(FocusEvent e) {
-                // TODO Auto-generated method stub
-
             }
 
             public void focusLost(FocusEvent e) {
@@ -494,7 +485,6 @@ public class GenericPropertyComponent {
      */
     private void createFloatProperty() {
         createOtherProperty(false);
-        // TODO Auto-generated method stub
 
     }
 
@@ -506,7 +496,9 @@ public class GenericPropertyComponent {
 
     }
 
-    private void createClocktimeProperty() {
+    // Disabled?
+    @SuppressWarnings("unused")
+	private void createClocktimeProperty() {
         // Not used (yet)
         final HourSelectionCombo hsc = new HourSelectionCombo(currentComposite, SWT.BORDER);
         hsc.setMinuteInterval(1);
@@ -521,8 +513,6 @@ public class GenericPropertyComponent {
         if (dd == null) {
             return;
         }
-//        Calendar c = Calendar.getInstance();
-//        c.setTime(dd);
         hsc.setTime(dd);
         System.err.println("Adding listener to component: "+hsc.hashCode());
         hsc.addDateSelectionListener(new DateSelectionListener(){
@@ -549,7 +539,6 @@ public class GenericPropertyComponent {
             }
 
             public void widgetDefaultSelected(SelectionEvent e) {
-                // TODO Auto-generated method stub
 
             }
         });
@@ -565,10 +554,10 @@ public class GenericPropertyComponent {
 
         // toolkit.adapt(ttt,true,true);
         try {
-            final ArrayList al = myProperty.getAllSelections();
+            final ArrayList<Selection> al = myProperty.getAllSelections();
             boolean hasDummy = false;
-            for (Iterator iter = al.iterator(); iter.hasNext();) {
-            	Selection element = (Selection) iter.next();
+            for (Iterator<Selection> iter = al.iterator(); iter.hasNext();) {
+            	Selection element =  iter.next();
             	if (Selection.DUMMY_ELEMENT.equals(element.getValue())) {
 					hasDummy = true;
 				}
@@ -608,12 +597,10 @@ public class GenericPropertyComponent {
                 }
 
                 public void widgetDefaultSelected(SelectionEvent e) {
-                    // TODO Auto-generated method stub
 
                 }
             });
         } catch (NavajoException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
@@ -623,10 +610,10 @@ public class GenericPropertyComponent {
         final Composite comp = new Composite(currentComposite, SWT.BORDER);
         // comp.setLayout(new FillLayout(SWT.VERTICAL));
         comp.setLayout(new RowLayout());
-        ArrayList sel;
+        ArrayList<Selection> sel;
         try {
             sel = myProperty.getAllSelections();
-            for (Iterator iter = sel.iterator(); iter.hasNext();) {
+            for (Iterator<Selection> iter = sel.iterator(); iter.hasNext();) {
                 final Selection element = (Selection) iter.next();
                 final Button b = new Button(comp, SWT.CHECK);
                 b.setBackground(new Color(Display.getDefault(), 255, 255, 255));

@@ -8,6 +8,7 @@ package com.dexels.navajo.swtclient;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -61,7 +62,6 @@ public class MessageContentProvider extends LabelProvider implements IStructured
             try {
                 oo = m.getAllMessages().toArray();
             } catch (NavajoException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
@@ -94,7 +94,6 @@ public class MessageContentProvider extends LabelProvider implements IStructured
      *      int)
      */
     public Image getColumnImage(Object element, int columnIndex) {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -109,7 +108,7 @@ public class MessageContentProvider extends LabelProvider implements IStructured
             System.err.println("Class cast ex: " + element.getClass());
         }
         Message current = (Message) element;
-        ArrayList props = getRecursiveProperties(current);
+        List <Property> props = getRecursiveProperties(current);
         if (columnIndex >= props.size()) {
             return "xxx";
         }
@@ -128,7 +127,6 @@ public class MessageContentProvider extends LabelProvider implements IStructured
                     return "-";
                 }
             } catch (NavajoException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
                 return "-";
             } 
@@ -194,7 +192,6 @@ public class MessageContentProvider extends LabelProvider implements IStructured
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
      */
     public Object getParent(Object element) {
-        // TODO Auto-generated method stub
         Message m = (Message) element;
         return m.getParentMessage();
         //       return null;
@@ -206,18 +203,17 @@ public class MessageContentProvider extends LabelProvider implements IStructured
      * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
      */
     public boolean hasChildren(Object element) {
-        // TODO Auto-generated method stub
         Message m = (Message) element;
         return m.getArraySize() > 0;
         //        return false;
     }
 
-    public ArrayList getRecursiveProperties(Message m) {
-        ArrayList l = new ArrayList();
+    public List<Property> getRecursiveProperties(Message m) {
+        List<Property> l = new ArrayList<Property>();
         l.addAll(m.getAllProperties());
-        ArrayList n = m.getAllMessages();
-        for (Iterator iter = n.iterator(); iter.hasNext();) {
-            Message element = (Message) iter.next();
+        List<Message> n = m.getAllMessages();
+        for (Iterator<Message> iter = n.iterator(); iter.hasNext();) {
+            Message element = iter.next();
             l.addAll(getRecursiveProperties(element));
         }
         return l;

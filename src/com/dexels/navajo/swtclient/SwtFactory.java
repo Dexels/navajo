@@ -6,8 +6,8 @@
  */
 package com.dexels.navajo.swtclient;
 
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
@@ -67,39 +67,15 @@ public class SwtFactory {
                     ss[i+1] = s.getName();
                 }
                 final ComboBoxCellEditor cb = new ComboBoxCellEditor(tv, ss);
-//                cb.getControl()
-//                cb.create(tv);
-//                ((Combo)cb.getControl()).addSelectionListener(new SelectionListener(){
-//
-//                    public void widgetSelected(SelectionEvent e) {
-//                        try {
-//                        // TODO Auto-generated method stub
-//                          elt.setSelected(""+cb.getValue());
-//                    } catch (NavajoException e1) {
-//                        // TODO Auto-generated catch block
-//                        e1.printStackTrace();
-//                    }
-//                    }
-//
-//                    public void widgetDefaultSelected(SelectionEvent e) {
-//                        // TODO Auto-generated method stub
-//                        
-//                    }});
                 cb.addListener(new ICellEditorListener(){
 
                     public void applyEditorValue() {
-                        // TODO Auto-generated method stub
-                        
-                        
                     }
 
                     public void cancelEditor() {
-                        // TODO Auto-generated method stub
-                        
                     }
 
                     public void editorValueChanged(boolean oldValidState, boolean newValidState) {
-                        // TODO Auto-generated method stub
                        
                     }});
                return cb;
@@ -142,7 +118,6 @@ public class SwtFactory {
             }
 
         } catch (NavajoException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
 
         }
@@ -169,16 +144,15 @@ public class SwtFactory {
         if (element.getArraySize() == 0) {
             return tv;
         }
-        // TODO Add definition message support
         tv.getTable().setLayout(layout);
         Message m = element.getMessage(0);
-        ArrayList al = m.getAllProperties();
+        List<Property> al = m.getAllProperties();
         System.err.println("Got properties for table. Count: "+al.size());
         System.err.println("AL: "+al);
         CellEditor[] editors = new CellEditor[al.size()];
         String[] colNames = new String[al.size()];
         int count = 0;
-        for (Iterator iter = al.iterator(); iter.hasNext();) {
+        for (Iterator<Property> iter = al.iterator(); iter.hasNext();) {
             final Property elt = (Property) iter.next();
             //            layout.addColumnData(new ColumnWeightData(33, 75, true));
             TableColumn tc = new TableColumn(tv.getTable(), SWT.LEFT);
@@ -205,57 +179,6 @@ public class SwtFactory {
         }
         return tv;
     }
-
-//    public TableTreeViewer addTableTree(final Message element, Composite spb) {
-//         final TableTreeViewer tv = new TableTreeViewer(spb, SWT.FULL_SELECTION);
-//        final MessageContentProvider mc = new MessageContentProvider();
-//        tv.setLabelProvider(mc);
-//        tv.setContentProvider(mc);
-//        tv.setInput(element);
-//        tv.getTableTree().getTable().setHeaderVisible(true);
-//        tv.getTableTree().getTable().setLinesVisible(true);
-//
-//        //      Set up the table layout
-//        TableLayout layout = new TableLayout();
-//        if (element.getArraySize() == 0) {
-//            return null;
-//        }
-//        // TODO Add definition message support
-//        tv.getTableTree().getTable().setLayout(layout);
-//        Message m = element.getMessage(0);
-//        ArrayList al = mc.getRecursiveProperties(m);
-//        CellEditor[] editors = new CellEditor[al.size()];
-//        String[] colNames = new String[al.size()];
-//        int count = 0;
-//        for (Iterator iter = al.iterator(); iter.hasNext();) {
-//            final Property elt = (Property) iter.next();
-//            //          layout.addColumnData(new ColumnWeightData(33, 75, true));
-//            TableColumn tc = new TableColumn(tv.getTableTree().getTable(), SWT.LEFT);
-//            tc.setText(elt.getName());
-//            System.err.println("Added column: " + elt.getName());
-//            colNames[count] = elt.getName();
-//            editors[count] = SwtFactory.getInstance().createTableEditor(tv.getTableTree().getTable(), elt);
-//            tc.addSelectionListener(new SelectionAdapter() {
-//
-//                public void widgetSelected(SelectionEvent e) {
-//                    System.err.println("Sort hit: " + elt.getName());
-//                    ((PropertySorter) tv.getSorter()).setPropertyName(elt.getName());
-//                    tv.getSorter().sort(tv, mc.getElements(element));
-//                    tv.refresh();
-//                }
-//            });
-//
-//            count++;
-//        }
-//        tv.setColumnProperties(colNames);
-//        tv.setCellEditors(editors);
-//        tv.setSorter(new PropertySorter());
-//        tv.setCellModifier(new PropertyModifier(tv));
-//        for (int i = 0; i < tv.getTableTree().getTable().getColumnCount(); i++) {
-//            tv.getTableTree().getTable().getColumn(i).pack();
-//        }
-//        return tv;
-//    }
 
     public GenericPropertyComponent createProperty(Composite spb) {
         GenericPropertyComponent gpc = new GenericPropertyComponent(spb);

@@ -1,7 +1,8 @@
 package swtclient;
 
-import org.osgi.framework.BundleContext;
+import org.osgi.framework.*;
 
+@SuppressWarnings("restriction")
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 	private static BundleContext context;
