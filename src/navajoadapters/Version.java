@@ -102,27 +102,31 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 		fi.injectExtension(extensionDef);
 		//		System.err.println("Detected functions: "+fi.getFunctionNames());
 		for (String functionName : fi.getFunctionNames(extensionDef)) {
-			FunctionDefinition fd = fi.getDef(extensionDef,functionName);
-			 Properties props = new Properties();
-			 System.err.println("Registering: "+functionName);
-			 props.put("functionName", functionName);
-			 props.put("functionDefinition", fd);
-			context.registerService(FunctionInterface.class.getName(), fi.instantiateFunctionClass(fd,getClass().getClassLoader()), props);
+			FunctionDefinition fd = fi.getDef(extensionDef, functionName);
+			Properties props = new Properties();
+			props.put("functionName", functionName);
+			props.put("functionDefinition", fd);
+			context.registerService(FunctionInterface.class.getName(), fi
+					.instantiateFunctionClass(fd, getClass().getClassLoader()),
+					props);
 		}
 		StandardAdapterLibrary library = new StandardAdapterLibrary();
 		fi.injectExtension(library);
-		System.err.println("Adapterlib injected!");
 		for(String adapterName: fi.getAdapterNames(library)) {
-
+//			FunctionDefinition fd = fi.getAdapterDefinition(adapterName,extensionDef);
+			FunctionDefinition fd = fi.getAdapterConfig(library).get(adapterName);
+//			FunctionDefinition fd = fi.getDef(extensionDef, adapterName);
+			
 			String adapterClass = fi.getAdapterClass(adapterName,library);
 			Class c = Class.forName(adapterClass);
-
+			
 			 Properties props = new Properties();
-			 System.err.println("Registering adapter: "+adapterName + "class: "+adapterClass);
 			 props.put("adapterName", adapterName);
 			 props.put("adapterClass", c.getName());
+			 props.put("functionDefinition", fd);
+
 			if(adapterClass!=null) {
-				context.registerService(Class.class.getName(), c, props);
+				context.registerService(Object.class.getName(), c, props);
 			}
 		}
 	}
