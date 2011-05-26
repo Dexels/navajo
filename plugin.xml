@@ -6,7 +6,7 @@
          class="com.dexels.navajo.studio.script.plugin.views.TmlBrowser"
          id="com.dexels.TmlBrowser"/>
    </extension>
-   
+<!--
    <extension point="org.eclipse.ui.views">
 
       <view name="TML Client View" icon="icons/dexels_function.gif" category="com.dexels.plugin.views"
@@ -14,7 +14,7 @@
          id="com.dexels.TmlClientView"/>
    </extension>
    
-
+-->
   
    <extension id="NavajoScriptBuilder" name="TSL Builder"
       point="org.eclipse.core.resources.builders">
@@ -138,6 +138,13 @@
           icon="icons/sample.gif"
           id="com.dexels.navajo.dev.script.wizards.NavajoScriptWizard"
           name="NavajoScriptWizard">
+    </wizard>
+    <wizard
+          category="com.dexels.navajo.dev.script"
+          class="com.dexels.navajo.dev.script.wizards.NavajoProjectWizard"
+          icon="icons/sample.gif"
+          id="com.dexels.navajo.dev.script.wizards.NavajoProjectWizard"
+          name="Navajo new project wizard">
     </wizard>
  </extension>
  </plugin>
