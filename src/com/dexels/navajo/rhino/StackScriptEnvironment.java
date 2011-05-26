@@ -66,17 +66,13 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		if(!inputMessageStack.isEmpty()) {
 			top = inputMessageStack.peek();
 		}
-		try {
+//		try {
 			ExpressionEvaluator expressionEvaluator = NavajoFactory.getInstance().getExpressionEvaluator();
-//			getAccess().getInDoc().write(System.err);
-//			System.err.println("Expression: "+expression+" paramPath: "+getTopParamStackMessage());
 			o = expressionEvaluator.evaluate(expression, inDoc,getCurrentTreeNode(), top, getTopParamStackMessage());
-		} catch (Throwable e) {
-			log("Error evaluating expression: "+expression);
-			e.printStackTrace(getLogger());
-//			log("IN DOC: \n");
-//			inDoc.write(System.err);
-		}
+//		} catch (Throwable e) {
+//			log("Error evaluating expression: "+expression);
+//			e.printStackTrace(getLogger());
+//		}
 		if(o==null) {
 			return null;
 		}
