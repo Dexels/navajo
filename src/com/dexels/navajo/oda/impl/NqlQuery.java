@@ -51,7 +51,6 @@ public class NqlQuery implements IQuery
 	 */
 	public void prepare( String queryText ) throws OdaException
 	{
-        // TODO Auto-generated method stub
         m_preparedText = queryText;
         myConnection.setQueryText(queryText);
 	}
@@ -69,7 +68,6 @@ public class NqlQuery implements IQuery
 	 */
 	public void close() throws OdaException
 	{
-        // TODO Auto-generated method stub
         m_preparedText = null;
 	}
 
@@ -78,14 +76,9 @@ public class NqlQuery implements IQuery
 	 */
 	public IResultSetMetaData getMetaData() throws OdaException
 	{
-        /* TODO Auto-generated method stub
-         * Replace with implementation to return an instance 
-         * based on this prepared query.
-         */
 		try {
 			return new NqlResultSetMetaData(getConnection().getResult());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (NavajoException e) {
 			e.printStackTrace();
@@ -98,11 +91,7 @@ public class NqlQuery implements IQuery
 	 */
 	public IResultSet executeQuery() throws OdaException
 	{
-        /* TODO Auto-generated method stub
-         * Replace with implementation to return an instance 
-         * based on this prepared query.
-         */
-
+     
 		try {
 			Navajo nn = getConnection().performQuery(m_preparedText);
 			nn.write(System.err);
@@ -145,7 +134,6 @@ public class NqlQuery implements IQuery
 	 */
 	public void clearInParameters() throws OdaException
 	{
-        // TODO Auto-generated method stub
 		// only applies to input parameter
 	}
 
@@ -154,7 +142,6 @@ public class NqlQuery implements IQuery
 	 */
 	public void setInt( String parameterName, int value ) throws OdaException
 	{
-        // TODO Auto-generated method stub
 		// only applies to named input parameter
 	}
 
@@ -163,7 +150,6 @@ public class NqlQuery implements IQuery
 	 */
 	public void setInt( int parameterId, int value ) throws OdaException
 	{
-        // TODO Auto-generated method stub
 		// only applies to input parameter
 	}
 
@@ -172,7 +158,6 @@ public class NqlQuery implements IQuery
 	 */
 	public void setDouble( String parameterName, double value ) throws OdaException
 	{
-        // TODO Auto-generated method stub
 		// only applies to named input parameter
 	}
 
@@ -181,7 +166,6 @@ public class NqlQuery implements IQuery
 	 */
 	public void setDouble( int parameterId, double value ) throws OdaException
 	{
-        // TODO Auto-generated method stub
 		// only applies to input parameter
 	}
 
@@ -190,7 +174,6 @@ public class NqlQuery implements IQuery
 	 */
 	public void setBigDecimal( String parameterName, BigDecimal value ) throws OdaException
 	{
-        // TODO Auto-generated method stub
 		// only applies to named input parameter
 	}
 
@@ -199,7 +182,6 @@ public class NqlQuery implements IQuery
 	 */
 	public void setBigDecimal( int parameterId, BigDecimal value ) throws OdaException
 	{
-        // TODO Auto-generated method stub
 		// only applies to input parameter
 	}
 
@@ -208,7 +190,6 @@ public class NqlQuery implements IQuery
 	 */
 	public void setString( String parameterName, String value ) throws OdaException
 	{
-        // TODO Auto-generated method stub
 		// only applies to named input parameter
 	}
 
@@ -217,7 +198,6 @@ public class NqlQuery implements IQuery
 	 */
 	public void setString( int parameterId, String value ) throws OdaException
 	{
-        // TODO Auto-generated method stub
 		// only applies to input parameter
 	}
 
@@ -226,7 +206,6 @@ public class NqlQuery implements IQuery
 	 */
 	public void setDate( String parameterName, Date value ) throws OdaException
 	{
-        // TODO Auto-generated method stub
 		// only applies to named input parameter
 	}
 
@@ -235,7 +214,6 @@ public class NqlQuery implements IQuery
 	 */
 	public void setDate( int parameterId, Date value ) throws OdaException
 	{
-        // TODO Auto-generated method stub
 		// only applies to input parameter
 	}
 
@@ -244,7 +222,6 @@ public class NqlQuery implements IQuery
 	 */
 	public void setTime( String parameterName, Time value ) throws OdaException
 	{
-        // TODO Auto-generated method stub
 		// only applies to named input parameter
 	}
 
@@ -253,7 +230,6 @@ public class NqlQuery implements IQuery
 	 */
 	public void setTime( int parameterId, Time value ) throws OdaException
 	{
-        // TODO Auto-generated method stub
 		// only applies to input parameter
 	}
 
@@ -262,7 +238,6 @@ public class NqlQuery implements IQuery
 	 */
 	public void setTimestamp( String parameterName, Timestamp value ) throws OdaException
 	{
-        // TODO Auto-generated method stub
 		// only applies to named input parameter
 	}
 
@@ -271,7 +246,6 @@ public class NqlQuery implements IQuery
 	 */
 	public void setTimestamp( int parameterId, Timestamp value ) throws OdaException
 	{
-        // TODO Auto-generated method stub
 		// only applies to input parameter
 	}
 
@@ -281,7 +255,6 @@ public class NqlQuery implements IQuery
     public void setBoolean( String parameterName, boolean value )
             throws OdaException
     {
-        // TODO Auto-generated method stub
         // only applies to named input parameter
     }
 
@@ -291,7 +264,6 @@ public class NqlQuery implements IQuery
     public void setBoolean( int parameterId, boolean value )
             throws OdaException
     {
-        // TODO Auto-generated method stub       
         // only applies to input parameter
     }
 
@@ -301,7 +273,6 @@ public class NqlQuery implements IQuery
     public void setObject( String parameterName, Object value )
             throws OdaException
     {
-        // TODO Auto-generated method stub
         // only applies to named input parameter
     }
     
@@ -310,7 +281,6 @@ public class NqlQuery implements IQuery
      */
     public void setObject( int parameterId, Object value ) throws OdaException
     {
-        // TODO Auto-generated method stub
         // only applies to input parameter
     }
     
@@ -319,7 +289,6 @@ public class NqlQuery implements IQuery
      */
     public void setNull( String parameterName ) throws OdaException
     {
-        // TODO Auto-generated method stub
         // only applies to named input parameter
     }
 
@@ -328,7 +297,6 @@ public class NqlQuery implements IQuery
      */
     public void setNull( int parameterId ) throws OdaException
     {
-        // TODO Auto-generated method stub
         // only applies to input parameter
     }
 
@@ -337,7 +305,6 @@ public class NqlQuery implements IQuery
 	 */
 	public int findInParameter( String parameterName ) throws OdaException
 	{
-        // TODO Auto-generated method stub
 		// only applies to named input parameter
 		return 0;
 	}
@@ -347,10 +314,7 @@ public class NqlQuery implements IQuery
 	 */
 	public IParameterMetaData getParameterMetaData() throws OdaException
 	{
-        /* TODO Auto-generated method stub
-         * Replace with implementation to return an instance 
-         * based on this prepared query.
-         */
+     
 		return new ParameterMetaData();
 	}
 
@@ -396,7 +360,6 @@ public class NqlQuery implements IQuery
      */
     public String getEffectiveQueryText()
     {
-        // TODO Auto-generated method stub
         return m_preparedText;
     }
 

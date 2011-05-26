@@ -21,7 +21,6 @@ import org.eclipse.datatools.connectivity.oda.OdaException;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
-import com.dexels.navajo.document.Property;
 
 /**
  * Implementation class of IResultSet for an ODA runtime driver.
@@ -55,10 +54,6 @@ public class NqlResultSet implements IResultSet
 	 */
 	public IResultSetMetaData getMetaData() throws OdaException
 	{
-        /* TODO Auto-generated method stub
-         * Replace with implementation to return an instance 
-         * based on this result set.
-         */
 		return new NqlResultSetMetaData(message);
 	}
 
@@ -84,7 +79,6 @@ public class NqlResultSet implements IResultSet
 	 */
 	public boolean next() throws OdaException
 	{
-		// TODO replace with data source specific implementation
         
         // simple implementation done below for demo purpose only
         int maxRows = getMaxRows();
@@ -103,7 +97,6 @@ public class NqlResultSet implements IResultSet
 	 */
 	public void close() throws OdaException
 	{
-        // TODO Auto-generated method stub       
         m_currentRowId = 0;     // reset row counter
 	}
 
@@ -120,7 +113,6 @@ public class NqlResultSet implements IResultSet
 	 */
 	public String getString( int index ) throws OdaException
 	{
-        // TODO replace with data source specific implementation
         
         // hard-coded for demo purpose
 		
@@ -140,7 +132,6 @@ public class NqlResultSet implements IResultSet
 	 */
 	public int getInt( int index ) throws OdaException
 	{
-        // TODO replace with data source specific implementation
         
         // hard-coded for demo purpose
         return getRow();
@@ -159,7 +150,6 @@ public class NqlResultSet implements IResultSet
 	 */
 	public double getDouble( int index ) throws OdaException
 	{
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException();
 	}
 
@@ -176,7 +166,6 @@ public class NqlResultSet implements IResultSet
 	 */
 	public BigDecimal getBigDecimal( int index ) throws OdaException
 	{
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException();
 	}
 
@@ -193,7 +182,6 @@ public class NqlResultSet implements IResultSet
 	 */
 	public Date getDate( int index ) throws OdaException
 	{
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException();
 	}
 
@@ -210,7 +198,6 @@ public class NqlResultSet implements IResultSet
 	 */
 	public Time getTime( int index ) throws OdaException
 	{
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException();
 	}
 
@@ -227,7 +214,6 @@ public class NqlResultSet implements IResultSet
 	 */
 	public Timestamp getTimestamp( int index ) throws OdaException
 	{
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException();
 	}
 
@@ -244,7 +230,6 @@ public class NqlResultSet implements IResultSet
      */
     public IBlob getBlob( int index ) throws OdaException
     {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException();
     }
 
@@ -261,7 +246,6 @@ public class NqlResultSet implements IResultSet
      */
     public IClob getClob( int index ) throws OdaException
     {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException();
     }
 
@@ -278,7 +262,6 @@ public class NqlResultSet implements IResultSet
      */
     public boolean getBoolean( int index ) throws OdaException
     {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException();
     }
 
@@ -295,7 +278,6 @@ public class NqlResultSet implements IResultSet
      */
     public Object getObject( int index ) throws OdaException
     {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException();
     }
 
@@ -312,8 +294,6 @@ public class NqlResultSet implements IResultSet
      */
     public boolean wasNull() throws OdaException
     {
-        // TODO Auto-generated method stub
-        
         // hard-coded for demo purpose
         return false;
     }
@@ -323,7 +303,6 @@ public class NqlResultSet implements IResultSet
      */
     public int findColumn( String columnName ) throws OdaException
     {
-        // TODO replace with data source specific implementation
         
         // hard-coded for demo purpose
         int columnId = 1;   // dummy column id
