@@ -103,5 +103,10 @@ public abstract class AbstractTslUiModule extends DefaultUiModule {
 		binder.bind(org.eclipse.xtext.ui.editor.contentassist.antlr.internal.Lexer.class).annotatedWith(com.google.inject.name.Names.named(org.eclipse.xtext.ui.LexerUIBindings.CONTENT_ASSIST)).to(com.dexels.navajo.dsl.tsl.ui.contentassist.antlr.internal.InternalTslLexer.class);
 	}
 
+	// contributed by org.eclipse.xtext.ui.generator.projectWizard.SimpleProjectWizardFragment
+	public Class<? extends org.eclipse.xtext.ui.wizard.IProjectCreator> bindIProjectCreator() {
+		return com.dexels.navajo.dsl.tsl.ui.wizard.TslProjectCreator.class;
+	}
+
 
 }

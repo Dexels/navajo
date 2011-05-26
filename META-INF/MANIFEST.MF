@@ -2,9 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: com.dexels.navajo.dsl.tsl.ui
 Bundle-Vendor: Dexels
-Bundle-Version: 1.0.1.qualifier
+Bundle-Version: 1.0.2.qualifier
 Bundle-SymbolicName: com.dexels.navajo.dsl.tsl.ui; singleton:=true
-Require-Bundle: com.dexels.navajo.dsl.tsl;visibility:=reexport,
+Require-Bundle: com.dexels.navajo.document;bundle-version="1.0.5",
+ com.dexels.navajo.dsl.tsl;visibility:=reexport,
  org.eclipse.xtext.ui,
  org.eclipse.ui.editors;bundle-version="3.5.0",
  org.eclipse.ui.ide;bundle-version="3.5.0",
@@ -16,9 +17,13 @@ Require-Bundle: com.dexels.navajo.dsl.tsl;visibility:=reexport,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
  com.dexels.navajo.dsl.tsl.model;bundle-version="1.0.0",
- com.dexels.navajo.dsl.navajomanager;bundle-version="1.0.0"
+ com.dexels.navajo.dsl.navajomanager;bundle-version="1.0.0",
+ org.eclipse.xtend,
+ org.eclipse.xpand,
+ com.dexels.navajo.dev.script;bundle-version="2.0.1"
 Import-Package: org.apache.log4j
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: com.dexels.navajo.dsl.tsl.ui.contentassist.antlr
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: com.dexels.navajo.dsl.tsl.ui.contentassist.antlr,
+ com.dexels.navajo.dsl.tsl.ui.internal
 Bundle-Activator: com.dexels.navajo.dsl.tsl.ui.internal.TslActivator
 Bundle-ActivationPolicy: lazy
