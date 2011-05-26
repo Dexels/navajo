@@ -16,7 +16,7 @@ public class FunctionFactoryFactory {
 	}
 		
 	public static FunctionFactoryInterface getInstance() {
-		FunctionFactoryInterface fii;
+//		FunctionFactoryInterface fii;
 		
 		if ( instance != null ) {
 			return instance;
@@ -43,7 +43,7 @@ public class FunctionFactoryFactory {
 			
 			if ( func != null ) {
 				try {
-					Class c = Class.forName(func);
+					Class<? extends FunctionFactoryInterface> c = (Class<? extends FunctionFactoryInterface>) Class.forName(func);
 					instance = (FunctionFactoryInterface) c.newInstance();
 				} catch (Exception e) {
 					throw new RuntimeException(e);

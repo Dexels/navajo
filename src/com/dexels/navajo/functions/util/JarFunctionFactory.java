@@ -51,18 +51,24 @@ public class JarFunctionFactory extends FunctionFactoryInterface {
 		}
 	}
 
-	public void parseAdapters(Map<String, FunctionDefinition> fuds,
-			ExtensionDefinition fd, XMLElement element) {
-//		System.err.println("PARSING: "+element);
+	public void parseAdapters(Map<String, FunctionDefinition> fuds, ExtensionDefinition fd, XMLElement element) {
 		String name = element.getElementByTagName("tagname").getContent();
 		String className = element.getElementByTagName("object").getContent();
 		if(fd!=null) {
-			getAdapterConfig(fd).put(name, className);
+			FunctionDefinition functionDefinition = new FunctionDefinition(className, null, null, null,fd);
+			getAdapterConfig(fd).put(name, functionDefinition);
 			try {
 				MapMetaData.getInstance().addMapDefinition(element);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			if ( name != null ) {
+
+				functionDefinition.setXmlElement(element);
+				fuds.put(name, functionDefinition);
+				
+			}
+
 		} else {
 			throw new UnsupportedOperationException("Can not register adapter (pre-OSGi) without a ExtensionDefinition.");
 		}
@@ -116,7 +122,6 @@ public class JarFunctionFactory extends FunctionFactoryInterface {
 			while(iter.hasNext()) {
 				ExtensionDefinition ed = (ExtensionDefinition) iter.next();
 				readDefinitionFile(fuds, ed);
-				System.err.println("Extension found....: "+ed);
 			}
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block

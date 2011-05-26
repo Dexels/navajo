@@ -54,8 +54,32 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 		return result;
 	}
 	
+	@Override
+	public List<XMLElement> getAllAdapterElements(String interfaceClass, String propertyKey)  {
+		List<XMLElement> result = new ArrayList<XMLElement>();
+		BundleContext context = NavajoBundleManager.getInstance().getBundleContext();
+		try {
+			ServiceReference[] refs = context.getServiceReferences(interfaceClass, null);
+			if(refs==null) {
+				System.err.println("Service enumeration failed class: "+interfaceClass);
+				return null;
+			}
+			for (ServiceReference serviceReference : refs) {
+				Object o = serviceReference.getProperty(propertyKey);
+				FunctionDefinition fd = (FunctionDefinition)o;
+				XMLElement xe = fd.getXmlElement();
+				if(xe!=null) {
+					result.add(xe);
+				}
+			}
+		} catch (InvalidSyntaxException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	
 	public Object getComponent( final String name, String serviceKey, Class interfaceClass)  {
-		System.err.println("GETTINH FUNCTION FROM OSHI!!!!: "+name);
 		BundleContext context = NavajoBundleManager.getInstance().getBundleContext();
 		try {
 			ServiceReference[] refs = context.getServiceReferences(interfaceClass.getName(), "("+serviceKey+"="+name+")");
@@ -73,7 +97,7 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 	
 	@Override
 	public  Class<?> getAdapterClass(String adapterClassName, ClassLoader cl) throws ClassNotFoundException {
-			Class osgiResolution = (Class) getComponent(adapterClassName, "adapterClass", Class.class);
+			Class osgiResolution = (Class) getComponent(adapterClassName, "adapterClass", Object.class);
 			if (osgiResolution==null) {
 				System.err.println("OSGi failed. Going old skool");
 				return super.getAdapterClass(adapterClassName, cl);

@@ -17,7 +17,7 @@ public abstract class FunctionFactoryInterface {
 	private Map<String, FunctionDefinition> defaultConfig = null;
 //	protected final HashMap<String, String> defaultAdapterConfig = new HashMap<String, String>();
 
-	protected final Map<ExtensionDefinition,Map<String, String>> adapterConfig = new HashMap<ExtensionDefinition,Map<String, String>>();
+	protected final Map<ExtensionDefinition,Map<String, FunctionDefinition>> adapterConfig = new HashMap<ExtensionDefinition,Map<String, FunctionDefinition>>();
 	
 	protected final Map<ExtensionDefinition,Map<String,FunctionDefinition>> functionConfig = new HashMap<ExtensionDefinition,Map<String,FunctionDefinition>>();
 
@@ -82,9 +82,16 @@ public abstract class FunctionFactoryInterface {
 	}
 	
 	public  String getAdapterClass(String name, ExtensionDefinition ed)  {
-		return getAdapterConfig(ed).get(name);
+		return getAdapterConfig(ed).get(name).getObject();
 	}
 
+	public  FunctionDefinition getAdapterDefinition(String name, ExtensionDefinition ed)  {
+		Map<String, FunctionDefinition> configMap = getAdapterConfig(ed);
+		System.err.println("Looking for: "+name+" configmap: "+configMap.keySet());
+		return configMap.get(name);
+	}
+
+	
 	public final Object getAdapterInstance(String name, ClassLoader cl)  {
 		try {
 			// Old skool, adapter should have been supplied by an OSGi service
@@ -190,18 +197,18 @@ public abstract class FunctionFactoryInterface {
 		return map;
 	}
 	
-	public Map<String, String> getAdapterConfig(ExtensionDefinition ed) {
-		Map<String, String> map = adapterConfig.get(ed);
+	public Map<String, FunctionDefinition> getAdapterConfig(ExtensionDefinition ed) {
+		Map<String, FunctionDefinition> map = adapterConfig.get(ed);
 		if(map!=null) {
 			return map;
 		}
-		map = new HashMap<String, String>();
+		map = new HashMap<String, FunctionDefinition>();
 		adapterConfig.put(ed,map);
 		return map;
 	}
 	
 
-	public void setAdapterConfig(ExtensionDefinition ed, Map<String, String> config) {
+	public void setAdapterConfig(ExtensionDefinition ed, Map<String, FunctionDefinition> config) {
 		this.adapterConfig.put(ed, config);
 	}
 
@@ -242,5 +249,10 @@ public abstract class FunctionFactoryInterface {
 //	
 	public List<XMLElement> getAllFunctionElements(String interfaceClass, String propertyKey)  {
 		throw new UnsupportedOperationException("getAllFunctionElements only implemented in OSGi");
+	}
+
+
+	public List<XMLElement> getAllAdapterElements(String name, String string) {
+		throw new UnsupportedOperationException("getAllAdapterElements only implemented in OSGi");
 	}
 }
