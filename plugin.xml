@@ -9,7 +9,7 @@
             id="com.dexels.navajo.server.embedded">
       </category>
       <view
-            name="Control Panel"
+            name="Navajo Cockpit"
             icon="icons/sample.gif"
             category="com.dexels.navajo.server.embedded"
             class="com.dexels.navajo.server.embedded.views.ServerControlPanel"
