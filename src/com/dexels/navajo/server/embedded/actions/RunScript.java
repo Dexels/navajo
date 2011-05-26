@@ -1,7 +1,6 @@
 package com.dexels.navajo.server.embedded.actions;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -9,13 +8,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.eclipse.ui.handlers.HandlerUtil;
-import org.eclipse.jface.dialogs.MessageDialog;
 
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.context.NavajoContext;
@@ -34,7 +32,6 @@ import com.dexels.navajo.studio.script.plugin.ServerInstance;
  * @see IWorkbenchWindowActionDelegate
  */
 public class RunScript implements IWorkbenchWindowActionDelegate {
-	private IWorkbenchWindow window;
 	private String scriptName;
 	private IProject currentProject = null;
 	/**
@@ -69,12 +66,14 @@ public class RunScript implements IWorkbenchWindowActionDelegate {
 									
 								}});
             				
+            			} else {
+                			NavajoContext nc = si.getNavajoContext();
+                			
+                			nc.callService(scriptName);
+                			Navajo response = nc.getNavajo(scriptName);
+                			NavajoScriptPluginPlugin.getDefault().injectNavajoResponse(response, scriptName);
+            				
             			}
-            			NavajoContext nc = si.getNavajoContext();
-            			
-            			nc.callService(scriptName);
-            			Navajo response = nc.getNavajo(scriptName);
-            			NavajoScriptPluginPlugin.getDefault().injectNavajoResponse(response, scriptName);
             		} catch (ClientException e) {
             			e.printStackTrace();
             		}
@@ -125,6 +124,5 @@ public class RunScript implements IWorkbenchWindowActionDelegate {
 	 * @see IWorkbenchWindowActionDelegate#init
 	 */
 	public void init(IWorkbenchWindow window) {
-		this.window = window;
 	}
 }

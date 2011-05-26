@@ -1,14 +1,10 @@
 package com.dexels.navajo.server.embedded;
 
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.util.component.LifeCycle.Listener;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -28,7 +24,7 @@ public class EmbeddedServerActivator extends AbstractUIPlugin {
 	private static EmbeddedServerActivator plugin;
 	protected Server jettyServer;
 	private NavajoContext currentContext = null;
-	private ServletContextHandler webappContextHandler;
+//	private ServletContextHandler webappContextHandler;
 	private NavajoExpressionProposalProvider navajoExpressionProvider;
 
 	private final Map<IProject,ServerInstance> projectMap = new HashMap<IProject, ServerInstance>();

@@ -2,14 +2,10 @@ package com.dexels.navajo.server.embedded.impl;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
-
-import javax.swing.Box.Filler;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -24,13 +20,18 @@ import org.eclipse.jetty.util.component.LifeCycle;
 import org.eclipse.jetty.util.component.LifeCycle.Listener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.slf4j.LoggerFactory;
+
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.PatternLayout;
 
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.context.NavajoContext;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.server.embedded.EmbeddedLogger;
+import com.dexels.navajo.server.embedded.EmbeddedLogbackAppender;
 import com.dexels.navajo.server.embedded.EmbeddedServerActivator;
 import com.dexels.navajo.server.listener.NavajoContextListener;
 import com.dexels.navajo.server.listener.http.TmlHttpServlet;
@@ -39,14 +40,6 @@ import com.dexels.navajo.studio.script.plugin.ServerInstance;
 import com.dexels.navajo.studio.script.plugin.views.TmlClientView;
 import com.dexels.navajo.version.INavajoBundleManager;
 import com.dexels.navajo.version.NavajoBundleManager;
-
-import ch.qos.logback.core.*;
-import ch.qos.logback.classic.*;
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.classic.spi.LoggingEvent;
-
-import org.slf4j.*;
 
 public class ServerInstanceImpl implements ServerInstance {
 //	private String projectName;
@@ -133,11 +126,11 @@ public class ServerInstanceImpl implements ServerInstance {
 			};
 			
 			startServer(projectName,lifecycleListener);
-			Enumeration e =jettyServer.getAttributeNames();
-			while (e.hasMoreElements()) {
-				String object = (String) e.nextElement();
-				System.err.println("Attribute: "+object+" value: "+jettyServer.getAttribute(object));
-			}
+//			Enumeration e =jettyServer.getAttributeNames();
+//			while (e.hasMoreElements()) {
+//				String object = (String) e.nextElement();
+//				System.err.println("Attribute: "+object+" value: "+jettyServer.getAttribute(object));
+//			}
 			port = jettyServer.getConnectors()[0].getPort();
 			IWorkbenchWindow window = EmbeddedServerActivator.getDefault().getWorkbench().getActiveWorkbenchWindow();
 			IWorkbenchPage page = window.getActivePage();
@@ -168,8 +161,8 @@ public class ServerInstanceImpl implements ServerInstance {
 		try {
 			localContext.callService("plugin/InitNavajoBundle");
 			Navajo n = localContext.getNavajo("plugin/InitNavajoBundle");
-			n.write(System.err);
 			Binary b = (Binary) n.getProperty("NavajoBundle/FunctionDefinition").getTypedValue();
+			Binary adap = (Binary) n.getProperty("NavajoBundle/AdapterDefinition").getTypedValue();
 			IFolder iff = project.getFolder("navajoconfig");
 			if(!iff.exists()) {
 				iff.create(true, true, null);
@@ -181,10 +174,20 @@ public class ServerInstanceImpl implements ServerInstance {
 				ifi.setContents(b.getDataAsStream(), true, false,null);
 				ifi.refreshLocal(1, null);
 			}
+			ifi = iff.getFile("adapters.xml");
+			if(!ifi.exists()) {
+				ifi.create(adap.getDataAsStream(), true, null);
+			} else {
+				ifi.setContents(adap.getDataAsStream(), true, false,null);
+				ifi.refreshLocal(1, null);
+			}
+
 		} catch (ClientException e) {
 			e.printStackTrace();
-		} catch (NavajoException e) {
-			e.printStackTrace();
+		} catch(Throwable t) {
+			// safe catch
+			t.printStackTrace();
+			System.err.println("Unexpected behaviour. continuing");
 		}
 	}
 
@@ -284,17 +287,36 @@ public class ServerInstanceImpl implements ServerInstance {
 	}
 
 	private void initializeServer(int port, String navajoPath) throws FileNotFoundException {
-		   Logger logger = (Logger) LoggerFactory.getLogger("abc.xyz");
+		   Logger logger = (Logger) LoggerFactory.getLogger("org.eclipse.jetty.util.log");
 		   LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-		   FileAppender<ILoggingEvent> fileAppender = new FileAppender<ILoggingEvent>();
-//               (FileAppender<ILoggingEvent>) logger.getAppender("file");
-
-		   logger.addAppender(fileAppender);
-		   FileOutputStream fo = new FileOutputStream("/Users/frank/Desktop/log.txt");
-		   fileAppender.setOutputStream(fo);
-		   logger.warn("Hoempapa");
-		   System.err.println("LOG: "+org.eclipse.jetty.util.log.Log.getLog().getClass());
-		org.eclipse.jetty.util.log.Log.setLog(new EmbeddedLogger(this.outputAppendable));
+		   lc.reset();
+		   logger.setLevel(Level.INFO);
+		   
+		    PatternLayout patternLayout = new PatternLayout();
+		      patternLayout.setContext(lc);
+		      patternLayout.setPattern("%-5level %logger - %msg%n");
+		      patternLayout.start();
+		   
+		   EmbeddedLogbackAppender embeddedLogbackAppender = new EmbeddedLogbackAppender(this.outputAppendable);
+		   // Both of these should be set BEFORE setOutputStream is called.
+		   // Otherwise: Nasty silent NPE
+		   embeddedLogbackAppender.setContext(lc);
+		   embeddedLogbackAppender.setLayout(patternLayout);
+		   embeddedLogbackAppender.start();
+		   final Logger LOG =(Logger)  LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+		   System.err.println("Logger ");
+		   LOG.addAppender(embeddedLogbackAppender);
+		      
+			
+//	  
+//			PatternLayoutEncoder encoder = new PatternLayoutEncoder(); 
+//			encoder.setContext(lc);
+//			encoder.setPattern("%marker %level %msg%n");
+//			encoder.start();
+//		   embeddedLogbackAppender.setContext(lc);
+			
+//		   FileOutputStream fo = new FileOutputStream("/Users/frank/Desktop/log.txt");
+//		   fileAppender.setOutputStream(fo);
 		jettyServer = new Server();
 		SelectChannelConnector connector = new SelectChannelConnector();
 		connector.setPort(port);
@@ -304,7 +326,7 @@ public class ServerInstanceImpl implements ServerInstance {
 		NavajoContextListener.initializeContext(webappContextHandler.getServletContext(),navajoPath);
 		webappContextHandler.addServlet(new ServletHolder(new TmlHttpServlet()),"/Postman");
 		webappContextHandler.addServlet(new ServletHolder(new NqlServlet()),"/Nql");
-		webappContextHandler.addServlet(new ServletHolder(new NqlServlet()),"/Nssql");
+//		webappContextHandler.addServlet(new ServletHolder(new NqlServlet()),"/Nssql");
 		jettyServer.setHandler(webappContextHandler);
 
 		}

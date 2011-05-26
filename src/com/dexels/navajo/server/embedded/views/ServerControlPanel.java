@@ -12,8 +12,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
@@ -24,13 +22,11 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.part.ViewPart;
 
-import com.dexels.navajo.client.context.NavajoContext;
 import com.dexels.navajo.server.embedded.impl.ServerInstanceImpl;
 import com.dexels.navajo.studio.script.plugin.ServerInstance;
 
@@ -66,7 +62,7 @@ public class ServerControlPanel extends ViewPart {
 //	private String serverURL = null;
 
 //	private IProject currentProject = null;
-	private NavajoContext localContext;
+//	private NavajoContext localContext;
 	
 	private List<ServerInstanceImpl> serverInstances = new ArrayList<ServerInstanceImpl>();
 
@@ -106,7 +102,23 @@ public class ServerControlPanel extends ViewPart {
         
         Button refresh = new Button(headComp,SWT.PUSH);
         refresh.setText("Refresh");
+        refresh.addSelectionListener(new SelectionListener(){
 
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				
+			}
+
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				projectSelection.removeAll();
+				IProject[] pp = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+				for (IProject iProject : pp) {
+					projectSelection.add(iProject.getName());
+				}
+				projectSelection.select(0);//				System.err.println("Starting");
+				
+			}});
         Button start = new Button(headComp,SWT.PUSH);
         start.setText("Start");
         
@@ -137,7 +149,7 @@ public class ServerControlPanel extends ViewPart {
 		projectSelection = new Combo(headComp, SWT.NORMAL);
 		projectSelection.setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.FILL_GRAB));
 
-		IProject[] pp = ResourcesPlugin.getPlugin().getWorkspace().getRoot().getProjects();
+		IProject[] pp = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		for (IProject iProject : pp) {
 			projectSelection.add(iProject.getName());
 		}
@@ -312,7 +324,7 @@ public class ServerControlPanel extends ViewPart {
 
 					@Override
 					public void run() {
-						textArea.append(""+csq+"\n");
+						textArea.append(""+csq);
 						
 					}});
 				return this;
