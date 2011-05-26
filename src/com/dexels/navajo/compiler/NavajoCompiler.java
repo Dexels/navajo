@@ -25,16 +25,18 @@ package com.dexels.navajo.compiler;
  * ====================================================================
  */
 
-import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.server.NavajoConfig;
-import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.NavajoConfigInterface;
-
-import org.apache.jasper.compiler.*;
-
-import java.io.*;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
+
+import org.apache.jasper.compiler.SunJavaCompiler;
+
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.NavajoConfigInterface;
 
 public class NavajoCompiler
 {

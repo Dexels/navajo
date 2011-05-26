@@ -13,8 +13,7 @@ import javax.management.NotificationListener;
 
 import com.dexels.navajo.events.types.ChangeNotificationEvent;
 import com.dexels.navajo.events.types.LevelEvent;
-import com.dexels.navajo.events.types.TribeMemberDownEvent;
-import com.dexels.navajo.server.enterprise.scheduler.tribe.*;
+import com.dexels.navajo.server.enterprise.scheduler.tribe.NavajoEventProxyInterface;
 import com.dexels.navajo.server.jmx.JMXHelper;
 
 /**
@@ -238,12 +237,12 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	 * @return
 	 */
 	public boolean isMonitoredEvent(Class<? extends NavajoEvent> type, boolean ignoreEventProxy) {
-		Iterator iter = registry.keySet().iterator();
+		Iterator<Class<? extends NavajoEvent>> iter = registry.keySet().iterator();
 		while ( iter.hasNext() ) {
-			Class s = (Class) iter.next();
+			Class<? extends NavajoEvent> s = iter.next();
 			if ( s.equals(type) ) {
-				HashSet listeners = registry.get(s);
-				Iterator all = listeners.iterator();
+				HashSet<NavajoListener> listeners = registry.get(s);
+				Iterator<NavajoListener> all = listeners.iterator();
 				while ( all.hasNext() ) {
 					NavajoListener nl = (NavajoListener) all.next();
 					if ( !ignoreEventProxy || !( nl instanceof NavajoEventProxyInterface ) ) {
