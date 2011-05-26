@@ -361,6 +361,7 @@
 			<then>
 				<delete dir="${dependencybase}"/>
 				<delete dir="${work}"/>
+				<delete dir="test"/>
 			</then>
 		</if>
 	</target>
