@@ -34,10 +34,31 @@ public class BundleManagerMap implements Mappable {
 		return xe;
 	}
 
+	private XMLElement createAdapterBundleXml() {
+		XMLElement xe = new CaseSensitiveXMLElement("adapterdef");
+		List<XMLElement> flist = FunctionFactoryFactory.getInstance().getAllAdapterElements(Object.class.getName(),"functionDefinition");
+		System.err.println("LIST SIZE: "+flist.size());
+		for (XMLElement xmlElement : flist) {
+			xe.addChild(xmlElement);
+		}
+		return xe;
+	}
+
+	
 	public Binary getFunctionBinary() {
+		XMLElement xe = createFunctionBundleXml();
+		return createBinary(xe);
+	}
+
+	
+	public Binary getAdapterBinary() {
+		XMLElement xe = createAdapterBundleXml();
+		return createBinary(xe);
+	}
+
+	private Binary createBinary(XMLElement xe) {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		Writer out = new OutputStreamWriter(baos);
-		XMLElement xe = createFunctionBundleXml();
 		try {
 			xe.write(out);
 			out.flush();
