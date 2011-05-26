@@ -8,4 +8,4 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <jsp:useBean id="navajoContext" class="com.dexels.navajo.client.context.NavajoContext" scope="session" />
 <% pageContext.setAttribute("engineInstance", System.getProperty("com.dexels.navajo.server.EngineInstance")); %>
-Navajo Tester 2.4.0
+Navajo Tester 2.4.1
