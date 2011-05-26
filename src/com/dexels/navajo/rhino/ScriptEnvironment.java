@@ -36,6 +36,10 @@ import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.UserException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 public abstract class ScriptEnvironment implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -51,6 +55,7 @@ public abstract class ScriptEnvironment implements Serializable {
 	protected final Stack<Message> paramMessageStack = new Stack<Message>();
 	private transient Context currentContext;
 	
+	final static Logger logger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
 	
 	public Access getAccess() {
 		return access;
@@ -313,7 +318,7 @@ public abstract class ScriptEnvironment implements Serializable {
 					throw new IOException("Navajo failed.",t);
 				}
 			};
-			System.err.println("Calling server: "+getClient().getServer());
+			logger.info("Calling server: "+getClient().getServer());
 			getClient().callService(n, service, nrh);
 //			System.err.println("Freezing!");
 			throw (cp);
@@ -380,7 +385,7 @@ public abstract class ScriptEnvironment implements Serializable {
 			oos.flush();
 			oos.close();
 			byte[] data = out.toByteArray();
-			System.err.println("Serialized continuation size: "+data.length);
+			logger.info("Serialized continuation size: "+data.length);
 			ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
 			Object oo = ois.readObject();
 			System.err.println("Reserialize successful!");
@@ -422,7 +427,7 @@ public abstract class ScriptEnvironment implements Serializable {
 		
 	
 	public void log(String s) {
-		System.err.println("Threadname: "+ Thread.currentThread().getName()+" Log: "+s);
+		logger.info(s);
 	}
 
 	public Navajo getTml(String path) throws FileNotFoundException {
