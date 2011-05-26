@@ -1,25 +1,15 @@
 
 package com.dexels.navajo.dsl.tsl.ui.quickfix;
 
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.xtext.ui.editor.model.IXtextDocument;
 import org.eclipse.xtext.ui.editor.model.edit.IModification;
 import org.eclipse.xtext.ui.editor.model.edit.IModificationContext;
-import org.eclipse.xtext.ui.editor.model.edit.ISemanticModification;
 import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider;
 import org.eclipse.xtext.ui.editor.quickfix.Fix;
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor;
 import org.eclipse.xtext.validation.Issue;
 
-import com.dexels.navajo.dsl.model.expression.Expression;
-import com.dexels.navajo.dsl.model.expression.ExpressionFactory;
-import com.dexels.navajo.dsl.model.expression.TopLevel;
-import com.dexels.navajo.dsl.model.tsl.Element;
-import com.dexels.navajo.dsl.model.tsl.PossibleExpression;
-import com.dexels.navajo.dsl.model.tsl.TslFactory;
-import com.dexels.navajo.dsl.model.tsl.util.TslAdapterFactory;
-import com.dexels.navajo.dsl.tsl.ui.internal.TslActivator;
 import com.dexels.navajo.dsl.tsl.validation.TslJavaValidator;
 
 public class TslQuickfixProvider extends DefaultQuickfixProvider {

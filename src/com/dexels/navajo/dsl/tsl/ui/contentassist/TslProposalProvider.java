@@ -19,7 +19,6 @@ import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
 
 import com.dexels.navajo.dsl.expression.proposals.AdapterProposal;
 import com.dexels.navajo.dsl.expression.proposals.INavajoResourceFinder;
-import com.dexels.navajo.dsl.expression.ui.contentassist.NavajoExpressionProposalProvider;
 import com.dexels.navajo.dsl.model.tsl.Element;
 import com.dexels.navajo.dsl.model.tsl.Map;
 import com.dexels.navajo.dsl.model.tsl.Message;
@@ -235,7 +234,7 @@ public class TslProposalProvider extends AbstractTslProposalProvider {
 		Map m = (Map)model;
 		for (AdapterProposal adapterProposal : list) {
 			if(m.getMapName()==null || adapterProposal.getTagName().startsWith(m.getMapName())) {
-				String mapIdProposal = adapterProposal.getMapIdProposal(m.getMapName());
+//				String mapIdProposal = adapterProposal.getMapIdProposal(m.getMapName());
 				ICompletionProposal completionProposal = createCompletionProposal(adapterProposal.getTagName(), context);
 				acceptor.accept(completionProposal);
 			}
@@ -297,20 +296,19 @@ public class TslProposalProvider extends AbstractTslProposalProvider {
 		if(model instanceof PossibleExpression ) {
 			PossibleExpression expr = (PossibleExpression)model;
 			String myKey = expr.getKey();			
-//			System.err.println("yesyes. Key: "+myKey);
 			List<String> possibilities = null;
 			if(model.eContainer() instanceof Property) {
-				Property p = (Property)model.eContainer();
+//				Property p = (Property)model.eContainer();
 				possibilities = getPropertyAttributes(myKey, expr.getValue(),"property");
 			}
 
 			if(model.eContainer() instanceof Message) {
-				Message p = (Message)model.eContainer();
+//				Message p = (Message)model.eContainer();
 				possibilities = getPropertyAttributes(myKey, expr.getValue(),"message");
 			}
 
 			if(model.eContainer() instanceof Tml) {
-				Tml p = (Tml)model.eContainer();
+//				Tml p = (Tml)model.eContainer();
 				possibilities = getPropertyAttributes(myKey, expr.getValue(),"navascript");
 			}
 
@@ -395,20 +393,15 @@ public class TslProposalProvider extends AbstractTslProposalProvider {
 	
 	
 	
-/**
- * How can I make this reliable? No idea if it is the right map?
- * @param model
- * @return
- */
-	private Map findMapInModel(Element model) {
-		List<Element> children = model.getChildren();
-		for (Element element : children) {
-			if(element instanceof Map) {
-				return (Map) element;
-			}
-		}
-		return null;
-	}
+//	private Map findMapInModel(Element model) {
+//		List<Element> children = model.getChildren();
+//		for (Element element : children) {
+//			if(element instanceof Map) {
+//				return (Map) element;
+//			}
+//		}
+//		return null;
+//	}
 
 	/**
 	 * Get all valid values for a proposed attribute. May need post-processing
@@ -563,7 +556,7 @@ public class TslProposalProvider extends AbstractTslProposalProvider {
 
 	public static void main(String[] args) throws Exception {
 		System.setProperty("testmode", "true");
-		NavajoExpressionProposalProvider npp = new TslProposalProvider();
+		 new TslProposalProvider();
 		
 	}
 	

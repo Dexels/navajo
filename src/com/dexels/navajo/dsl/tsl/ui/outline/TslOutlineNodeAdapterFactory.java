@@ -9,6 +9,7 @@ import com.dexels.navajo.dsl.model.tsl.Message;
 import com.dexels.navajo.dsl.model.tsl.Property;
 import com.dexels.navajo.dsl.model.tsl.Tml;
 
+@SuppressWarnings("deprecation")
 public class TslOutlineNodeAdapterFactory extends DefaultContentOutlineNodeAdapterFactory {
 
 	private static final Class<?>[] types = { 
