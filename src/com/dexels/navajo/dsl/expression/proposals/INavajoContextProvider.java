@@ -32,4 +32,8 @@ public interface INavajoContextProvider {
 
 	public abstract AdapterProposal getAdapter(String mapName);
 
+	// ----
+	
+	public void setInputNavajo(Navajo n);
+	
 }
