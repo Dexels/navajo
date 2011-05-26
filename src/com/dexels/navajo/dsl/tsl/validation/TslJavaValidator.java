@@ -18,7 +18,6 @@ import com.dexels.navajo.dsl.model.tsl.Option;
 import com.dexels.navajo.dsl.model.tsl.Param;
 import com.dexels.navajo.dsl.model.tsl.PossibleExpression;
 import com.dexels.navajo.dsl.model.tsl.Property;
-import com.dexels.navajo.dsl.model.tsl.Tml;
 import com.dexels.navajo.dsl.model.tsl.TslPackage;
 import com.google.inject.Inject;
  
@@ -117,13 +116,13 @@ public class TslJavaValidator extends AbstractTslJavaValidator {
 //		}
 	}
 
-	private String stripQuotes(String label) {
-		if(label.startsWith("\"") && label.endsWith("\"")) {
-			return label.substring(1, label.length()-1);
-		}
-		return label;
-	}
-	
+//	private String stripQuotes(String label) {
+//		if(label.startsWith("\"") && label.endsWith("\"")) {
+//			return label.substring(1, label.length()-1);
+//		}
+//		return label;
+//	}
+//	
 	@Check
 	public void checkExpression(ExpressionTag p) {
 		java.util.Map<String,String> attr = createAttributeMap(p.getAttributes());
@@ -145,7 +144,6 @@ public class TslJavaValidator extends AbstractTslJavaValidator {
 				error("Map closing tag: "+p.getMapClosingName()+" does not match opening tag!", p, TslPackage.MAP__MAP_CLOSING_NAME);
 			}
 			try {
-				List<AdapterProposal> aaa= getNavajoContext().getAdapters();
 				AdapterProposal pp = getNavajoContext().getAdapter(p.getMapName());
 				if(pp==null) {
 					// can't do much then, probably a grammar error anyway
