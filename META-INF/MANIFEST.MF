@@ -2,7 +2,7 @@ Bundle-Name: Navajo Rhino
 Bundle-SymbolicName: com.dexels.navajo.rhino
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.6.qualifier
+Bundle-Version: 1.0.7.qualifier
 Bundle-Activator: navajorhino.Version
 Include-Resource: lib
 Export-Package: com.dexels.navajo.adapter,
@@ -18,7 +18,8 @@ Require-Bundle: com.dexels.navajo.document;bundle-version="1.0.0",
  com.dexels.navajo.client;bundle-version="1.0.1",
  com.dexels.navajo.adapters;bundle-version="1.0.0",
  com.dexels.navajo.function;bundle-version="2.0.2",
- com.dexels.navajo.version;bundle-version="1.0.6"
+ com.dexels.navajo.version;bundle-version="1.0.9",
+ org.slf4j.api;bundle-version="1.6.1"
 Bundle-ClassPath: lib/js.jar,
  .
 Import-Package: org.osgi.framework;version="1.5.0"
