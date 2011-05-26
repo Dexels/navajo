@@ -1,6 +1,5 @@
 package com.dexels.navajo.dsl.expression.proposals;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
