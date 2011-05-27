@@ -76,7 +76,6 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
     private static NavajoScriptPluginPlugin plugin;
 
     
-    com.jcraft.jzlib.ZOutputStream hardDep = null;
     
     //Resource bundle.
     private ResourceBundle resourceBundle;
