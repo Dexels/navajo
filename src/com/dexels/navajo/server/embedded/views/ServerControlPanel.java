@@ -157,8 +157,17 @@ public class ServerControlPanel extends ViewPart {
 	}
 
 	private void startSelectedProjectServer() {
-		System.err.println("Selectionindex: "+projectSelection.getSelectionIndex());
-		String item = projectSelection.getItem(projectSelection.getSelectionIndex());
+		int sel = projectSelection.getSelectionIndex();
+		System.err.println("Selectionindex: "+sel);
+		int itemCount = projectSelection.getItemCount();
+		if(itemCount==0) {
+			// No projects at all
+			return;
+		}
+		if(sel<0) {
+			sel = 0;
+		}
+		String item = projectSelection.getItem(sel);
 		CTabItem cc = createNavajoServerTab(item);
 		ServerInstance si = startServerInstance(item,cc);
 		cc.setText(item+":"+si.getPort());
@@ -340,7 +349,6 @@ public class ServerControlPanel extends ViewPart {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				si.stopServer();
-				ci.dispose();
 			}
 			
 			@Override
