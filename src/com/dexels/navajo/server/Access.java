@@ -33,6 +33,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.listeners.TmlRunnable;
@@ -58,6 +61,9 @@ public final class Access implements java.io.Serializable, Mappable {
 	 */
 	private static final long serialVersionUID = -7782160335447961196L;
 
+	final static Logger logger = LoggerFactory.getLogger(Access.class.getName());
+
+	
 	@SuppressWarnings("unused")
 	private static final String VERSION = "$Id$";
 
@@ -717,7 +723,8 @@ public final class Access implements java.io.Serializable, Mappable {
 		if ( a != null ) {
 			a.writeToConsole(s);
 		} 
-		System.err.print(s);
+		logger.info(s);
+//		System.err.print(s);
 	}
 	
 	/**
