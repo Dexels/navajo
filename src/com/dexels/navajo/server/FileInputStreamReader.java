@@ -25,17 +25,15 @@ public class FileInputStreamReader implements InputStreamReader {
       filePath = path;
   }
 
-  @SuppressWarnings("deprecation")
 public InputStream getResource(String name) {
     try {
-    	System.err.println("Loading config: "+name);
     	File f = new File(name);
     	if (f.exists()) {
     		return new FileInputStream(f);
     	}
     	System.err.println("userdir = " + filePath);
     	File dir = new File(filePath);
-    	URL baseDir = dir.toURL();
+    	URL baseDir = dir.toURI().toURL();
     	URL res = new URL(baseDir,name);
     	System.err.println("Resolved to res url: "+res.toString());
     	return res.openStream();
