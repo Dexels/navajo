@@ -53,7 +53,6 @@ public class ServerInstanceImpl implements ServerInstance {
 	private final List<LifeCycle.Listener> lifeCycleListeners = new ArrayList<LifeCycle.Listener>();
 	private final Appendable outputAppendable;
 
-
 	public ServerInstanceImpl(Appendable a) {
 		outputAppendable = a;
 	}
@@ -258,7 +257,9 @@ public class ServerInstanceImpl implements ServerInstance {
 			if(this.jettyServer==null) {
 				return;
 			}
-			NavajoContextListener.destroyContext(webappContextHandler.getServletContext());
+			System.err.println("Stopping context seems to hang? Disabled");
+//			NavajoContextListener.destroyContext(webappContextHandler.getServletContext());
+			System.err.println("Stopping context handler");
 			webappContextHandler.stop();
 			System.err.println("Context stopped");
 
@@ -266,7 +267,7 @@ public class ServerInstanceImpl implements ServerInstance {
 			this.jettyServer.stop();
 			System.err.println("Server stopped");
 			this.jettyServer = null;
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 	}
@@ -287,10 +288,10 @@ public class ServerInstanceImpl implements ServerInstance {
 	}
 
 	private void initializeServer(int port, String navajoPath) throws FileNotFoundException {
-		   Logger logger = (Logger) LoggerFactory.getLogger("org.eclipse.jetty.util.log");
+//		   Logger logger = (Logger) LoggerFactory.getLogger("org.eclipse.jetty.util.log");
 		   LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
 		   lc.reset();
-		   logger.setLevel(Level.INFO);
+//		   logger.setLevel(Level.INFO);
 		   
 		    PatternLayout patternLayout = new PatternLayout();
 		      patternLayout.setContext(lc);
