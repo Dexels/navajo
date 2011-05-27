@@ -18,9 +18,12 @@ Require-Bundle: com.dexels.navajo.document;bundle-version="1.0.0",
  com.dexels.navajo.client;bundle-version="1.0.1",
  com.dexels.navajo.adapters;bundle-version="1.0.0",
  com.dexels.navajo.function;bundle-version="2.0.2",
- com.dexels.navajo.version;bundle-version="1.0.9",
- org.slf4j.api;bundle-version="1.6.1"
+ com.dexels.navajo.version;bundle-version="1.0.9"
 Bundle-ClassPath: lib/js.jar,
  .
-Import-Package: org.osgi.framework;version="1.5.0"
+Import-Package: org.osgi.framework;version="1.5.0",
+ org.slf4j;version="1.6.1",
+ org.slf4j.helpers;version="1.6.1",
+ org.slf4j.impl;version="1.6.1",
+ org.slf4j.spi;version="1.6.1"
 Bundle-ActivationPolicy: lazy
