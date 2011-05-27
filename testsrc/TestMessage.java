@@ -119,11 +119,11 @@ public class TestMessage extends TestCase {
 
   public void testGetAllMessages() {
     Message m = testDoc.getMessage("testmessage");
-    ArrayList all = m.getAllMessages();
+    List<Message> all = m.getAllMessages();
     Assert.assertEquals(3, all.size());
-    Assert.assertEquals("testmessage_sub1", ((Message) all.get(0)).getName());
-    Assert.assertEquals("testmessage_sub2", ((Message) all.get(1)).getName());
-    Assert.assertEquals("testmessage_sub3", ((Message) all.get(2)).getName());
+    Assert.assertEquals("testmessage_sub1", (all.get(0)).getName());
+    Assert.assertEquals("testmessage_sub2", (all.get(1)).getName());
+    Assert.assertEquals("testmessage_sub3", (all.get(2)).getName());
     m = testDoc.getMessage("testmessage2");
     all = m.getAllMessages();
     Assert.assertNotNull(all);
@@ -132,12 +132,12 @@ public class TestMessage extends TestCase {
 
   public void testGetAllProperties() {
     Message m = testDoc.getMessage("testmessage");
-    ArrayList all = m.getAllProperties();
+    List<Property> all = m.getAllProperties();
     Assert.assertEquals(6, all.size());
-    Assert.assertEquals("testprop1", ((Property) all.get(0)).getName());
-    Assert.assertEquals("stringprop", ((Property) all.get(1)).getName());
-    Assert.assertEquals("integerprop", ((Property) all.get(2)).getName());
-    Assert.assertEquals("propfloat", ((Property) all.get(3)).getName());
+    Assert.assertEquals("testprop1", (all.get(0)).getName());
+    Assert.assertEquals("stringprop", (all.get(1)).getName());
+    Assert.assertEquals("integerprop", (all.get(2)).getName());
+    Assert.assertEquals("propfloat", (all.get(3)).getName());
     m = testDoc.getMessage("testmessage2");
     all = m.getAllProperties();
     Assert.assertNotNull(all);
@@ -184,30 +184,30 @@ public class TestMessage extends TestCase {
     // Regular expression message name match testing.
       Message m = testDoc.getMessage("testmessage");
 
-      ArrayList all = m.getMessages("testmessage_sub.*");
+      List<Message> all = m.getMessages("testmessage_sub.*");
       Assert.assertEquals(3, all.size());
-      Assert.assertEquals("testmessage_sub1", ((Message) all.get(0)).getName());
-      Assert.assertEquals("testmessage_sub2", ((Message) all.get(1)).getName());
-      Assert.assertEquals("testmessage_sub3", ((Message) all.get(2)).getName());
+      Assert.assertEquals("testmessage_sub1", (all.get(0)).getName());
+      Assert.assertEquals("testmessage_sub2", (all.get(1)).getName());
+      Assert.assertEquals("testmessage_sub3", (all.get(2)).getName());
 
       all = m.getMessages("testmessage_sub");
       Assert.assertEquals(0, all.size());
 
       all = m.getMessages("testmessage_sub[0-3]");
       Assert.assertEquals(3, all.size());
-      Assert.assertEquals("testmessage_sub1", ((Message) all.get(0)).getName());
-      Assert.assertEquals("testmessage_sub2", ((Message) all.get(1)).getName());
-      Assert.assertEquals("testmessage_sub3", ((Message) all.get(2)).getName());
+      Assert.assertEquals("testmessage_sub1", (all.get(0)).getName());
+      Assert.assertEquals("testmessage_sub2", (all.get(1)).getName());
+      Assert.assertEquals("testmessage_sub3", (all.get(2)).getName());
 
       all = m.getMessages("testmessage_sub[0-2]");
       Assert.assertEquals(2, all.size());
-      Assert.assertEquals("testmessage_sub1", ((Message) all.get(0)).getName());
-      Assert.assertEquals("testmessage_sub2", ((Message) all.get(1)).getName());
+      Assert.assertEquals("testmessage_sub1", (all.get(0)).getName());
+      Assert.assertEquals("testmessage_sub2", (all.get(1)).getName());
 
       all = m.getMessages("test[A-z]*_sub[0-2]");
       Assert.assertEquals(2, all.size());
-      Assert.assertEquals("testmessage_sub1", ((Message) all.get(0)).getName());
-      Assert.assertEquals("testmessage_sub2", ((Message) all.get(1)).getName());
+      Assert.assertEquals("testmessage_sub1", (all.get(0)).getName());
+      Assert.assertEquals("testmessage_sub2", (all.get(1)).getName());
 
       all = m.getMessages("test[A-d]*_sub[0-2]");
       Assert.assertEquals(0, all.size());
@@ -218,34 +218,34 @@ public class TestMessage extends TestCase {
 
       all = m.getMessages("/testmessage/test[A-z]*_sub[0-2]");
       Assert.assertEquals(2, all.size());
-      Assert.assertEquals("testmessage_sub1", ((Message) all.get(0)).getName());
-      Assert.assertEquals("testmessage_sub2", ((Message) all.get(1)).getName());
+      Assert.assertEquals("testmessage_sub1", (all.get(0)).getName());
+      Assert.assertEquals("testmessage_sub2", (all.get(1)).getName());
 
       all = m.getMessages("/testmessage/testmessage_sub.*/testmessage_sub1_sub[2-3]");
       Assert.assertEquals(2, all.size());
-      Assert.assertEquals("testmessage_sub1_sub2", ((Message) all.get(0)).getName());
-      Assert.assertEquals("testmessage_sub1_sub3", ((Message) all.get(1)).getName());
+      Assert.assertEquals("testmessage_sub1_sub2", (all.get(0)).getName());
+      Assert.assertEquals("testmessage_sub1_sub3", (all.get(1)).getName());
 
       all = m.getMessages("/testmessage/testmessage_sub.*/testmessage_sub.*_sub[2-3]");
       Assert.assertEquals(4, all.size());
-      Assert.assertEquals("testmessage_sub1_sub2", ((Message) all.get(0)).getName());
-      Assert.assertEquals("testmessage_sub1_sub3", ((Message) all.get(1)).getName());
-      Assert.assertEquals("testmessage_sub2_sub2", ((Message) all.get(2)).getName());
-      Assert.assertEquals("testmessage_sub2_sub3", ((Message) all.get(3)).getName());
+      Assert.assertEquals("testmessage_sub1_sub2", (all.get(0)).getName());
+      Assert.assertEquals("testmessage_sub1_sub3", (all.get(1)).getName());
+      Assert.assertEquals("testmessage_sub2_sub2", (all.get(2)).getName());
+      Assert.assertEquals("testmessage_sub2_sub3", (all.get(3)).getName());
 
       all = m.getMessages("testmessage_sub1/testmessage_sub1_sub.*");
       Assert.assertEquals(4, all.size());
-      Assert.assertEquals("testmessage_sub1_sub1", ((Message) all.get(0)).getName());
-      Assert.assertEquals("testmessage_sub1_sub2", ((Message) all.get(1)).getName());
-      Assert.assertEquals("testmessage_sub1_subje", ((Message) all.get(2)).getName());
-      Assert.assertEquals("testmessage_sub1_sub3", ((Message) all.get(3)).getName());
+      Assert.assertEquals("testmessage_sub1_sub1", (all.get(0)).getName());
+      Assert.assertEquals("testmessage_sub1_sub2", (all.get(1)).getName());
+      Assert.assertEquals("testmessage_sub1_subje", (all.get(2)).getName());
+      Assert.assertEquals("testmessage_sub1_sub3", (all.get(3)).getName());
 
       all = m.getMessages("testmessage_sub1/(testmessage){0,1}_sub1_sub.*");
       Assert.assertEquals(4, all.size());
-      Assert.assertEquals("testmessage_sub1_sub1", ((Message) all.get(0)).getName());
-      Assert.assertEquals("testmessage_sub1_sub2", ((Message) all.get(1)).getName());
-      Assert.assertEquals("testmessage_sub1_subje", ((Message) all.get(2)).getName());
-      Assert.assertEquals("testmessage_sub1_sub3", ((Message) all.get(3)).getName());
+      Assert.assertEquals("testmessage_sub1_sub1", (all.get(0)).getName());
+      Assert.assertEquals("testmessage_sub1_sub2", (all.get(1)).getName());
+      Assert.assertEquals("testmessage_sub1_subje", (all.get(2)).getName());
+      Assert.assertEquals("testmessage_sub1_sub3", (all.get(3)).getName());
 
   }
 
@@ -260,28 +260,28 @@ public class TestMessage extends TestCase {
 
       Message m = testDoc.getMessage("testmessage");
 
-      ArrayList all = m.getProperties("[A-z]*prop");
+      List<Property> all = m.getProperties("[A-z]*prop");
       Assert.assertEquals(2, all.size());
-      Assert.assertEquals("stringprop", ((Property) all.get(0)).getName());
-      Assert.assertEquals("integerprop", ((Property) all.get(1)).getName());
+      Assert.assertEquals("stringprop", (all.get(0)).getName());
+      Assert.assertEquals("integerprop", (all.get(1)).getName());
 
       all = m.getProperties("[A-z]*propjes");
       Assert.assertEquals(0, all.size());
 
       all = m.getProperties("testmessage_sub1/testmessage_sub1_sub.*/[A-z]*");
       Assert.assertEquals(1, all.size());
-      Assert.assertEquals("proppie", ((Property) all.get(0)).getName());
+      Assert.assertEquals("proppie", (all.get(0)).getName());
 
       m = m.getMessage("testmessage_sub1");
       all = m.getProperties("../[A-z]*prop");
       Assert.assertEquals(2, all.size());
-      Assert.assertEquals("stringprop", ((Property) all.get(0)).getName());
-      Assert.assertEquals("integerprop", ((Property) all.get(1)).getName());
+      Assert.assertEquals("stringprop", (all.get(0)).getName());
+      Assert.assertEquals("integerprop", (all.get(1)).getName());
 
       m = m.getMessage("testmessage_sub1_sub2");
       all = m.getProperties("../testmessage_sub1_sub1/[A-z]*");
       Assert.assertEquals(1, all.size());
-      Assert.assertEquals("proppie", ((Property) all.get(0)).getName());
+      Assert.assertEquals("proppie", (all.get(0)).getName());
 
    
   }
@@ -340,11 +340,11 @@ public class TestMessage extends TestCase {
 	  assertNotNull(testDoc.getProperty("/MyTop/MyArrayMessage@1/MyProp"));
 	  assertEquals("noot3", testDoc.getProperty("/MyTop/MyArrayMessage@3/MyProp").getValue());
 	  
-	  ArrayList al = testDoc.getMessages("/MyTop/MyArrayMessage");
+	  List<Message> al = testDoc.getMessages("/MyTop/MyArrayMessage");
 	  for (int i = 0; i < al.size(); i++) {
-		  assertEquals("noot"+i, ((Message) al.get(i)).getProperty("MyProp").getValue());
+		  assertEquals("noot"+i, (al.get(i)).getProperty("MyProp").getValue());
 		  // MyTop is my parent message(!) parent array is ignored!!
-		  assertEquals("MyTop", ((Message) al.get(i)).getParentMessage().getName());
+		  assertEquals("MyTop", (al.get(i)).getParentMessage().getName());
 	  }
   }
   

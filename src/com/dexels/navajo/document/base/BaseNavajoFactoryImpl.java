@@ -1,6 +1,8 @@
 package com.dexels.navajo.document.base;
 import java.io.*;
-import java.lang.reflect.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.Method;
@@ -19,9 +21,9 @@ import com.dexels.navajo.document.saximpl.qdxml.*;
 public class BaseNavajoFactoryImpl extends NavajoFactory implements Serializable {
 	//  private final SaxHandler saxHandler;
 
-	/**
-	 * 
-	 */
+	Logger instanceLog = LoggerFactory.getLogger("NavajoLog");
+	
+	
 	private static final long serialVersionUID = -4927821415020342916L;
 
 	public BaseNavajoFactoryImpl() {

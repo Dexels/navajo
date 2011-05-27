@@ -16,7 +16,8 @@ import com.dexels.navajo.document.*;
  */
 public class BaseClientImpl extends BaseNode {
 
-  private final Map<String,String> myAttributes = new HashMap<String,String>();
+	private static final long serialVersionUID = 6391221035914936805L;
+	private final Map<String,String> myAttributes = new HashMap<String,String>();
   
   public BaseClientImpl(Navajo n) {
     super(n);

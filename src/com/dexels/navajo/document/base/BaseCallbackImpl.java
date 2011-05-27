@@ -16,7 +16,8 @@ import com.dexels.navajo.document.*;
  */
 public class BaseCallbackImpl extends BaseNode {
 
-  private final List<BaseNode> myObjects = new ArrayList<BaseNode>();
+	private static final long serialVersionUID = 8739370944781100854L;
+private final List<BaseNode> myObjects = new ArrayList<BaseNode>();
    
   public BaseCallbackImpl(Navajo n) {
     super(n);

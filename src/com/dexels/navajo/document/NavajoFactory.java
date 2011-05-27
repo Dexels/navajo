@@ -4,6 +4,9 @@ import java.io.*;
 import java.util.*;
 import java.util.Map.Entry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.base.*;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
@@ -30,8 +33,11 @@ public abstract class NavajoFactory {
   
   private static Object semaphore = new Object();
   
-  private HashMap<String, Class> toJavaType = new HashMap<String, Class>();
-  private HashMap<Class, String> toNavajoType = new HashMap<Class, String>();
+  private HashMap<String, Class<?>> toJavaType = new HashMap<String, Class<?>>();
+  private HashMap<Class<?>, String> toNavajoType = new HashMap<Class<?>, String>();
+  
+  Logger ll = LoggerFactory.getLogger("aap");
+
   
   private void readTypes() throws Exception {
 	  ClassLoader cl = getClass().getClassLoader();
@@ -49,13 +55,13 @@ public abstract class NavajoFactory {
 		 XMLElement child = children.get(i);
 		 String navajotype = (String) child.getAttribute("name");
 		 String javaclass = (String) child.getAttribute("type");
-		 Class c = Class.forName(javaclass);
+		 Class<?> c = Class.forName(javaclass);
 		 toJavaType.put(navajotype, c);
 		 toNavajoType.put(c, navajotype);
 	 }
   }
   
-  public String getNavajoType(Class c) {
+  public String getNavajoType(Class<?> c) {
 	  if ( c == null ) {
 		  return "empty";
 	  } else
@@ -67,7 +73,7 @@ public abstract class NavajoFactory {
 	  
   }
   
-  public Class getJavaType(String p) {
+  public Class<?> getJavaType(String p) {
 	  return toJavaType.get(p);
   }
   

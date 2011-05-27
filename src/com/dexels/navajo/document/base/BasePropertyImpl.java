@@ -41,6 +41,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	protected String myName;
 	protected String myValue = null;
 
+	@SuppressWarnings("serial")
 	protected final ArrayList<BaseSelectionImpl> selectionList = new ArrayList<BaseSelectionImpl>() {
 		public String toString() {
 			if(size()==0) {
@@ -74,7 +75,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 	// private String myMessageName = null;
 	private Message myParent = null;
-	private Vector<String>[] myPoints = null;
+//	private Vector<String>[] myPoints = null;
 
 	protected boolean isListType = false;
 
@@ -164,8 +165,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		String value = st.nextToken();
 		subtypeMap.put(key, value);
 		subType = serializeSubtypes();
-		// TODO Auto-generated method stub
-
 	}
 
 
@@ -228,9 +227,8 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	public final String getFullPropertyName() {
 		if (getParentMessage() != null) {
 			return getParentMessage().getFullMessageName() + "/" + getName();
-		} else {
-			return getName();
 		}
+		return getName();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -317,7 +315,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			return;
 		}
 		if (o instanceof ArrayList) {
-			setValue((ArrayList) o);
+			setValue((ArrayList<?>) o);
 			return;
 		}		
 		if (o instanceof String) {
@@ -333,6 +331,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		firePropertyChanged(old, getTypedValue());
 	}
 
+	@SuppressWarnings("rawtypes")
 	private void setValue(ArrayList list){
 		// first, determine content of list.
 		if(list.isEmpty()) {
@@ -379,8 +378,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		// System.err.println("Evaluating property: "+getValue());
 		Operand o;
 		// No evaluator present.
-		String oldEvaluatedType = evaluatedType;
-		Object oldEvaluatedValue = evaluatedValue;
 		if (NavajoFactory.getInstance().getExpressionEvaluator() == null) {
 			return null;
 		}
@@ -392,24 +389,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 				try {
 					o = NavajoFactory.getInstance().getExpressionEvaluator().evaluate(getValue(), getRootDoc(), null, getParentMessage());
 					evaluatedType = o.type;
-//					boolean changed = false;
-//					if(o.value==null ) {
-//						if(oldEvaluatedValue!=null) {
-//							changed = true;
-//						}
-//					} else {
-//						if(!o.value.equals(oldEvaluatedValue)) {
-//							changed = true;
-//						}
-//					}
-//					if(!evaluatedType.equals(oldEvaluatedType)) {
-//						// define property listener type for evaluatedType changes
-//					}
-//					evaluatedValue = o.value;
-//					if(changed) {
-//						System.err.println("Old: "+oldEvaluatedValue+" new: "+o.value);
-//						firePropertyChanged(oldEvaluatedValue, o.value);
-//					}
 					return o.value;
 				} catch (Throwable e) {
 					// TODO Auto-generated catch block
@@ -468,13 +447,14 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		return evaluatedType;
 	}
 
+	@SuppressWarnings("unchecked")
 	public final void refreshExpression() throws NavajoException, ExpressionChangedException {
 		if (getType().equals(Property.EXPRESSION_PROPERTY)) {
 			// also sets evaluatedType
 			Object oldEvaluatedValue = evaluatedValue;
 			evaluatedValue = getEvaluatedValue();
 			if (evaluatedValue instanceof ArrayList) {
-				updateExpressionSelections((ArrayList) evaluatedValue);
+				updateExpressionSelections((ArrayList<Selection>) evaluatedValue);
 				firePropertyChanged("selection", "", " ");
 				write(System.err);
 			} else {

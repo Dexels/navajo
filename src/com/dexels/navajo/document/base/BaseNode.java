@@ -184,20 +184,20 @@ public abstract class BaseNode implements java.io.Serializable{
 			return;
 		}
 		// group the childred to see if JSONArrays must be created
-		HashMap<String, ArrayList> groupedChildren = new HashMap();
+		HashMap<String, List<BaseNode>> groupedChildren = new HashMap<String,List<BaseNode>>();
 		for (int j = 0; j < list.size(); j++) {
 			BaseNode child = list.get(j);
 			String key = child.getTagName();
 			if (!groupedChildren.containsKey(key)) {
-				groupedChildren.put(key, new ArrayList());
+				groupedChildren.put(key, new ArrayList<BaseNode>());
 			}
-			ArrayList l = groupedChildren.get(key);
+			List<BaseNode> l = groupedChildren.get(key);
 			l.add(child);
 		}
 		// Now all children are grouped.
-		Iterator it = groupedChildren.keySet().iterator();
+		Iterator<String> it = groupedChildren.keySet().iterator();
 		while (it.hasNext()) {
-			String key = (String) it.next();
+			String key = it.next();
 			list = groupedChildren.get(key);
 			// list should not be null, but to appease the warnings
 			if (list != null) {

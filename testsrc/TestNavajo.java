@@ -1,10 +1,17 @@
 
 
-import junit.framework.*;
-import org.w3c.dom.*;
-import java.util.*;
+import java.util.List;
 
-import com.dexels.navajo.document.*;
+import junit.framework.Assert;
+import junit.framework.TestCase;
+
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Method;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
 
 public class TestNavajo extends TestCase {
   NavajoDocumentTestFicture navajodocumenttestfictureInst = new NavajoDocumentTestFicture(this);
@@ -105,7 +112,7 @@ public class TestNavajo extends TestCase {
       Selection s2 = NavajoFactory.getInstance().createSelection(testDoc, "selectie"+i, i+"", true);
       sel2.addSelection(s2);
     }
-    ArrayList all = null;
+    List<Selection> all = null;
 
     all = testDoc.getMessage("testmessage").getProperty("sel1").getAllSelectedSelections();
     Assert.assertEquals(5, all.size());

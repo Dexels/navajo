@@ -16,6 +16,7 @@ import com.dexels.navajo.document.*;
  */
 public class BaseObjectImpl extends BaseNode {
 
+	private static final long serialVersionUID = -1937743662725211261L;
 	private final Map<String,String> myAttributes = new HashMap<String,String>();
   
   public BaseObjectImpl(Navajo n) {

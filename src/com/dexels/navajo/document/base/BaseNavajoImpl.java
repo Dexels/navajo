@@ -480,12 +480,10 @@ public void appendDocBuffer(Object d) throws NavajoException {
 }
 
 public void write(Writer writer, boolean condense, String method) throws NavajoException {
-    // TODO implement condensation, and method filtering
     write(writer);
 }
 
 public void write(OutputStream stream, boolean condense, String method) throws NavajoException {
-    // TODO implement condensation, and method filtering
     super.write(stream);
 }
 
@@ -535,7 +533,6 @@ public Map<String,String> getAttributes() {
 }
 
 public List<BaseNode> getChildren() {
-    // TODO Auto-generated method stub
     ArrayList<BaseNode> al = new ArrayList<BaseNode>();
     if (myHeader!=null) {
         al.add(myHeader);
@@ -612,8 +609,6 @@ public void writeJSONTypeless(Writer w) throws NavajoException{
 }
 
 public final void printElementJSONTypeless(final Writer sw) throws IOException {
-	String tagName = getTagName();
-	Map<String, String> map = getAttributes();
 	ArrayList<Message> list = getAllMessages();
 	
 	writeElement(sw, "{");

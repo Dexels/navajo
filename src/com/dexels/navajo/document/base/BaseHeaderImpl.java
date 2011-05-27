@@ -18,6 +18,7 @@ public class BaseHeaderImpl
     extends BaseNode
     implements Header {
 
+	private static final long serialVersionUID = 3426541418860665991L;
 //  protected String myName;
 //  protected String myPassword;
 //  protected String myService;

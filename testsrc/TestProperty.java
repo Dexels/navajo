@@ -1,16 +1,26 @@
 
-import junit.framework.*;
-
-import java.beans.*;
-import java.io.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
-import sun.rmi.runtime.*;
+import junit.framework.Assert;
+import junit.framework.TestCase;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.base.BaseMessageImpl;
-import com.dexels.navajo.document.base.BaseNavajoFactoryImpl;
 import com.dexels.navajo.document.base.BaseNavajoImpl;
 import com.dexels.navajo.document.base.BasePropertyImpl;
 import com.dexels.navajo.document.base.BaseSelectionImpl;
@@ -19,7 +29,6 @@ import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.Percentage;
 import com.dexels.navajo.document.types.StopwatchTime;
-import com.dexels.navajo.document.types.Memo;
 
 public class TestProperty extends TestCase {
 	NavajoDocumentTestFicture navajodocumenttestfictureInst = new NavajoDocumentTestFicture(this);
@@ -139,10 +148,7 @@ public class TestProperty extends TestCase {
 			Assert.assertEquals(s2.isSelected(), s1.isSelected());
 			Assert.assertEquals(s2.getName(), s1.getName());
 			Assert.assertEquals(s2.getValue(), s1.getValue());
-			ArrayList selections = ((ArrayList)testSelectionProp.getTypedValue());
-//			Selection sel = (Selection) selections.get(0);
-//			System.err.println("Typed: "+selections.toString());
-			// Check whether selection with same name is correctly replaced.
+//			ArrayList selections = ((ArrayList)testSelectionProp.getTypedValue());
 			Selection s3 = NavajoFactory.getInstance().createSelection(testDoc, "firstselection", "1", false);
 			testSelectionProp.addSelection(s3);
 			s2 = testSelectionProp.getSelection("firstselection");
@@ -165,9 +171,9 @@ public class TestProperty extends TestCase {
 			Selection s3 = NavajoFactory.getInstance().createSelection(testDoc, "firstselection", "1", false);
 			testSelectionProp.addSelectionWithoutReplace(s3);
 			int count = 0;
-			ArrayList all = testSelectionProp.getAllSelections();
+			List<Selection> all = testSelectionProp.getAllSelections();
 			for (int i = 0; i < all.size(); i++) {
-				if (((Selection)all.get(i)).getName().equals("firstselection"))
+				if ((all.get(i)).getName().equals("firstselection"))
 					count++;
 			}
 			Assert.assertEquals(2, count);
@@ -182,9 +188,9 @@ public class TestProperty extends TestCase {
 			testSelectionProp.addSelection(s2);
 			testSelectionProp.addSelection(s3);
 			testSelectionProp.clearSelections();
-			Iterator iter = testSelectionProp.getAllSelections().iterator();
+			Iterator<Selection> iter = testSelectionProp.getAllSelections().iterator();
 			while (iter.hasNext()) {
-				Selection s = (Selection) iter.next();
+				Selection s = iter.next();
 				Assert.assertTrue(!s.isSelected());
 			}
 	}
@@ -210,10 +216,10 @@ public class TestProperty extends TestCase {
 			testSelectionProp.addSelection(s1);
 			testSelectionProp.addSelection(s2);
 			testSelectionProp.addSelection(s3);
-			Iterator iter = testSelectionProp.getAllSelectedSelections().iterator();
+			Iterator<Selection> iter = testSelectionProp.getAllSelectedSelections().iterator();
 			int count = 0;
 			while (iter.hasNext()) {
-				Selection s = (Selection) iter.next();
+				Selection s = iter.next();
 				count++;
 				Assert.assertTrue((s.getName().equals("firstselection") || s.getName().equals("thirdselection")));
 				Assert.assertTrue(!s.getName().equals("secondselection"));
@@ -230,11 +236,11 @@ public class TestProperty extends TestCase {
 			testSelectionProp.addSelection(s1);
 			testSelectionProp.addSelection(s2);
 			testSelectionProp.addSelection(s3);
-			Iterator iter = testSelectionProp.getAllSelections().iterator();
+			Iterator<Selection> iter = testSelectionProp.getAllSelections().iterator();
 			int count = 3;
-			HashSet set = new HashSet();
+			Set<String> set = new HashSet<String>();
 			while (iter.hasNext()) {
-				Selection s = (Selection) iter.next();
+				Selection s = iter.next();
 				set.add(s.getName());
 				if ((s.getName().equals("firstselection") || s.getName().equals("thirdselection") || s.getName().equals("secondselection")))
 					count--;
@@ -357,7 +363,6 @@ public class TestProperty extends TestCase {
 	}
 
 //	public void testSetPoints() {
-//		// TODO.
 //		try {
 //			Property p = NavajoFactory.getInstance().createProperty(testDoc, "mypoints", Property.POINTS_PROPERTY, "", 0, "", Property.DIR_OUT);
 //			Vector [] points = new Vector[5];
@@ -440,7 +445,7 @@ public class TestProperty extends TestCase {
 			testSelectionProp1.addSelection(s2);
 			testSelectionProp1.addSelection(s3);
 			testSelectionProp1.addSelection(s4);
-			ArrayList l = new ArrayList();
+			ArrayList<String> l = new ArrayList<String>();
 			l.add("0");
 			l.add("3");
 			testSelectionProp1.setSelected(l);
@@ -477,23 +482,23 @@ public class TestProperty extends TestCase {
 		// Selections
 		p1.setType("selection");
 		p1.setCardinality("1");
-		p1.addSelection(new BaseSelectionImpl((Navajo) n, "opt1", "1", false));
-		p1.addSelection(new BaseSelectionImpl((Navajo) n, "opt2", "2", true));
-		p1.addSelection(new BaseSelectionImpl((Navajo) n, "opt3", "3", false));
+		p1.addSelection(new BaseSelectionImpl(n, "opt1", "1", false));
+		p1.addSelection(new BaseSelectionImpl(n, "opt2", "2", true));
+		p1.addSelection(new BaseSelectionImpl(n, "opt3", "3", false));
 		
 		p2.setType("selection");
 		p2.setCardinality("1");
-		p2.addSelection(new BaseSelectionImpl((Navajo) n, "opt1", "1", false));
-		p2.addSelection(new BaseSelectionImpl((Navajo) n, "opt2", "2", true));
-		p2.addSelection(new BaseSelectionImpl((Navajo) n, "opt3", "3", false));
+		p2.addSelection(new BaseSelectionImpl(n, "opt1", "1", false));
+		p2.addSelection(new BaseSelectionImpl(n, "opt2", "2", true));
+		p2.addSelection(new BaseSelectionImpl(n, "opt3", "3", false));
 		assertTrue(p1.isEqual(p2));
 		
-		p2.setSelected(new BaseSelectionImpl((Navajo) n, "opt2", "2", true), false);
-		p2.setSelected(new BaseSelectionImpl((Navajo) n, "opt2", "3", true), true);
+		p2.setSelected(new BaseSelectionImpl(n, "opt2", "2", true), false);
+		p2.setSelected(new BaseSelectionImpl(n, "opt2", "3", true), true);
 		assertFalse(p1.isEqual(p2));
 		
-		p1.setSelected(new BaseSelectionImpl((Navajo) n, "opt2", "2", true), false);
-		p1.setSelected(new BaseSelectionImpl((Navajo) n, "opt2", "3", true), true);
+		p1.setSelected(new BaseSelectionImpl(n, "opt2", "2", true), false);
+		p1.setSelected(new BaseSelectionImpl(n, "opt2", "3", true), true);
 		assertTrue(p1.isEqual(p2));
 		
 		// Date
@@ -507,20 +512,20 @@ public class TestProperty extends TestCase {
 		p2.setAnyValue(new java.util.Date());
 		assertTrue(p1.isEqual(p2));
 		
-		p2.setAnyValue(new java.util.Date((long) 32131332));
+		p2.setAnyValue(new java.util.Date(32131332L));
 		assertFalse(p1.isEqual(p2));
 		
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void testSelections() throws Exception {
 		BaseNavajoImpl n = new BaseNavajoImpl(NavajoFactory.getInstance());
-		BaseMessageImpl m = new BaseMessageImpl(n, "Aap");
 		BasePropertyImpl p1 = new BasePropertyImpl(n, "Noot");
 		p1.setType("selection");
 		p1.setCardinality("1");
-		p1.addSelection(new BaseSelectionImpl((Navajo) n, "opt1", "1", false));
-		p1.addSelection(new BaseSelectionImpl((Navajo) n, "opt2", "2", false));
-		p1.addSelection(new BaseSelectionImpl((Navajo) n, "opt3", "3", false));
+		p1.addSelection(new BaseSelectionImpl(n, "opt1", "1", false));
+		p1.addSelection(new BaseSelectionImpl(n, "opt2", "2", false));
+		p1.addSelection(new BaseSelectionImpl(n, "opt3", "3", false));
 		assertEquals("___DUMMY_ELEMENT___", p1.getSelected().getValue());
 		
 		// Cardinality 1
@@ -594,7 +599,6 @@ public class TestProperty extends TestCase {
 	
 	public void testSelectionEqualsUpdateFix() throws Exception {
 		BaseNavajoImpl n = new BaseNavajoImpl(NavajoFactory.getInstance());
-		BaseMessageImpl m = new BaseMessageImpl(n, "Aap");
 		BasePropertyImpl p1 = new BasePropertyImpl(n, "Noot");
 		p1.setType("selection");
 		p1.setCardinality("1");

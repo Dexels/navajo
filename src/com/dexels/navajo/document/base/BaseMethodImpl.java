@@ -4,7 +4,8 @@ import java.util.*;
 import com.dexels.navajo.document.*;
 
 public class BaseMethodImpl extends BaseNode implements Method {
-  protected ArrayList<BaseRequiredImpl> myRequiredMessages = new ArrayList<BaseRequiredImpl>();
+	private static final long serialVersionUID = 4307457202134807432L;
+	protected ArrayList<BaseRequiredImpl> myRequiredMessages = new ArrayList<BaseRequiredImpl>();
   protected String myName = "";
   protected Message myParent = null;
   protected String myDescription = null;
@@ -72,9 +73,8 @@ public class BaseMethodImpl extends BaseNode implements Method {
   public final String getPath() {
     if (myParent!=null) {
       return myParent.getFullMessageName()+"/"+getName();
-    } else {
-      return "/"+getName();
     }
+    return "/"+getName();
   }
 
   public final void setName(String name) {
