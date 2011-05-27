@@ -4,7 +4,7 @@ Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 3.1.5.qualifier
 Bundle-Activator: navajolisteners.Version
-Bundle-ClassPath: .,mail.jar
+Bundle-ClassPath: .
 Include-Resource: lib
 Export-Package: com.dexels.navajo.client;uses:="javax.servlet,javax.servlet.http,com.dexels.navajo.document",
  com.dexels.navajo.client.html;uses:="javax.servlet.http,com.dexels.navajo.document",
@@ -26,7 +26,7 @@ Export-Package: com.dexels.navajo.client;uses:="javax.servlet,javax.servlet.http
  dexels,
  navajolisteners;uses:="dexels"
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.client,
+Require-Bundle: com.dexels.navajo.client;bundle-version="3.0.4",
  com.dexels.navajo.core,
  com.dexels.navajo.document;bundle-version="1.0.0",
  com.dexels.navajo.version;bundle-version="1.0.7"
