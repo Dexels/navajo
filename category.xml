@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/com.dexels.navajo.core.feature_1.0.3.jar" id="com.dexels.navajo.core.feature" version="1.0.3">
+   <feature url="features/com.dexels.navajo.core.feature_1.0.7.qualifier.jar" id="com.dexels.navajo.core.feature" version="1.0.7.qualifier">
       <category name="Navajo"/>
    </feature>
    <category-def name="Navajo" label="Navajo"/>
