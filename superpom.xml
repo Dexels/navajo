@@ -12,37 +12,7 @@
 		<tycho-groupid>org.sonatype.tycho</tycho-groupid>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-	<repositories>
-	<!-- 
-	-->
 	
-		<repository>
-			<id>spiritus repository</id>
-			<layout>p2</layout>
-			<url>http://spiritus.dexels.nl:41766/eclipse/platform/</url>
-		</repository>
-
-		<repository>
-			<id>spiritus repository jdt</id>
-			<layout>p2</layout>
-			<url>http://spiritus.dexels.nl:41766/eclipse/jdt/</url>
-		</repository>
-  		<repository>
-                  <id>Eclipse Birt</id>
-                  <layout>p2</layout>
-                  <url>http://spiritus.dexels.nl:41766/eclipse/birt</url>
-        </repository>
-  		<repository>
-                  <id>Navajo P2</id>
-                  <layout>p2</layout>
-                  <url>http://spiritus.dexels.nl:41766/p2</url>
-        </repository>
-        <repository>
-                  <id>jetty</id>
-                  <layout>p2</layout>
-                  <url>http://download.eclipse.org/jetty/updates/jetty-bundles-8.x/8.0.0.M2/</url>
-        </repository>
-	</repositories>
 	<build>
 		<plugins>
 		<!--				-->	
