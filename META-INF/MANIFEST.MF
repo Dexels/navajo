@@ -2,7 +2,7 @@ Bundle-Name: Navajo Async Client
 Bundle-SymbolicName: com.dexels.navajo.client.async
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.4.qualifier
+Bundle-Version: 1.0.5.qualifier
 Export-Package: com.dexels.navajo.client,
  navajoasyncclient
 Bundle-Vendor: Dexels
@@ -22,4 +22,5 @@ Import-Package: org.eclipse.jetty.client;version="7.4.1.v20110513",
  org.eclipse.jetty.io;version="7.4.1.v20110513",
  org.eclipse.jetty.util;version="7.4.1.v20110513",
  org.eclipse.jetty.util.component;version="7.4.1.v20110513",
- org.osgi.framework;version="1.5.0"
+ org.osgi.framework;version="1.5.0",
+ org.slf4j;version="1.6.1"
