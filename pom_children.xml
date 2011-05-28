@@ -13,7 +13,6 @@
 		<module>../NavajoListeners</module>
 		<module>../NavajoListenersContinuations</module>
 		<module>../NavajoAdapters</module>
-		<module>../NavajoAsyncClient</module>
 		<module>../NavajoRhino</module>
 		<module>../NavajoJsp</module>
 		<module>../NavajoJspServer</module>
