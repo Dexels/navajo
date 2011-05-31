@@ -24,7 +24,7 @@ import java.util.ArrayList;
 @SuppressWarnings("all")
 public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_ID", "RULE_PARENT", "RULE_SQBRACKET_OPEN", "RULE_TML_SEPARATOR", "RULE_AT", "RULE_SQBRACKET_CLOSE", "RULE_TML_EXISTS", "RULE_DOLLAR", "RULE_XML_LT", "RULE_XML_GT", "RULE_XML_LTEQ", "RULE_XML_GTEQ", "RULE_NUMBER", "RULE_LITERALSTRING", "RULE_FORALL", "RULE_NULL", "RULE_TODAY", "RULE_TRUE", "RULE_FALSE", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_WS", "'.'", "'('", "','", "')'", "'OR'", "'AND'", "'=='", "'!='", "'+'", "'-'", "'*'", "'!'", "'#'", "'{'", "'}'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_ID", "RULE_PARENT", "RULE_SQBRACKET_OPEN", "RULE_TML_SEPARATOR", "RULE_AT", "RULE_SQBRACKET_CLOSE", "RULE_TML_EXISTS", "RULE_DOLLAR", "RULE_XML_LT", "RULE_XML_GT", "RULE_XML_LTEQ", "RULE_XML_GTEQ", "RULE_NUMBER", "RULE_LITERALSTRING", "RULE_FORALL", "RULE_NULL", "RULE_TODAY", "RULE_TRUE", "RULE_FALSE", "RULE_WS", "'.'", "'('", "','", "')'", "'OR'", "'AND'", "'=='", "'!='", "'+'", "'-'", "'*'", "'!'", "'#'", "'{'", "'}'"
     };
     public static final int RULE_ID=4;
     public static final int RULE_PARENT=5;
@@ -33,10 +33,8 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
     public static final int RULE_LITERALSTRING=17;
     public static final int RULE_XML_GTEQ=15;
     public static final int RULE_TML_SEPARATOR=7;
-    public static final int RULE_SL_COMMENT=24;
     public static final int EOF=-1;
     public static final int RULE_NULL=19;
-    public static final int RULE_ML_COMMENT=23;
     public static final int RULE_TRUE=21;
     public static final int RULE_DOLLAR=11;
     public static final int RULE_FORALL=18;
@@ -46,7 +44,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
     public static final int RULE_TODAY=20;
     public static final int RULE_SQBRACKET_CLOSE=9;
     public static final int RULE_XML_LTEQ=14;
-    public static final int RULE_WS=25;
+    public static final int RULE_WS=23;
     public static final int RULE_XML_GT=13;
     public static final int RULE_AT=8;
 
@@ -249,7 +247,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
                 alt1=1;
                 }
                 break;
-            case 26:
+            case 24:
                 {
                 alt1=2;
                 }
@@ -285,7 +283,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
                     // ../com.dexels.navajo.dsl.expression/src-gen/com/dexels/navajo/dsl/expression/parser/antlr/internal/InternalNavajoExpression.g:148:2: kw= '.'
                     {
                     kw=(Token)input.LT(1);
-                    match(input,26,FOLLOW_26_in_rulePathElement241); 
+                    match(input,24,FOLLOW_24_in_rulePathElement241); 
 
                             current.merge(kw);
                             createLeafNode(grammarAccess.getPathElementAccess().getFullStopKeyword_1(), null); 
@@ -935,7 +933,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
             // ../com.dexels.navajo.dsl.expression/src-gen/com/dexels/navajo/dsl/expression/parser/antlr/internal/InternalNavajoExpression.g:450:1: ( '(' ( (lv_getterParams_1_0= ruleLiteral ) ) ( ',' ( (lv_getterParams_3_0= ruleLiteral ) ) )* ')' )
             // ../com.dexels.navajo.dsl.expression/src-gen/com/dexels/navajo/dsl/expression/parser/antlr/internal/InternalNavajoExpression.g:450:3: '(' ( (lv_getterParams_1_0= ruleLiteral ) ) ( ',' ( (lv_getterParams_3_0= ruleLiteral ) ) )* ')'
             {
-            match(input,27,FOLLOW_27_in_ruleMapReferenceParams732); 
+            match(input,25,FOLLOW_25_in_ruleMapReferenceParams732); 
 
                     createLeafNode(grammarAccess.getMapReferenceParamsAccess().getLeftParenthesisKeyword_0(), null); 
                 
@@ -981,7 +979,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
                 int alt8=2;
                 int LA8_0 = input.LA(1);
 
-                if ( (LA8_0==28) ) {
+                if ( (LA8_0==26) ) {
                     alt8=1;
                 }
 
@@ -990,7 +988,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
             	case 1 :
             	    // ../com.dexels.navajo.dsl.expression/src-gen/com/dexels/navajo/dsl/expression/parser/antlr/internal/InternalNavajoExpression.g:478:4: ',' ( (lv_getterParams_3_0= ruleLiteral ) )
             	    {
-            	    match(input,28,FOLLOW_28_in_ruleMapReferenceParams764); 
+            	    match(input,26,FOLLOW_26_in_ruleMapReferenceParams764); 
 
             	            createLeafNode(grammarAccess.getMapReferenceParamsAccess().getCommaKeyword_2_0(), null); 
             	        
@@ -1039,7 +1037,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
                 }
             } while (true);
 
-            match(input,29,FOLLOW_29_in_ruleMapReferenceParams797); 
+            match(input,27,FOLLOW_27_in_ruleMapReferenceParams797); 
 
                     createLeafNode(grammarAccess.getMapReferenceParamsAccess().getRightParenthesisKeyword_3(), null); 
                 
@@ -1251,7 +1249,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
             int alt10=2;
             int LA10_0 = input.LA(1);
 
-            if ( (LA10_0==27) ) {
+            if ( (LA10_0==25) ) {
                 alt10=1;
             }
             switch (alt10) {
@@ -1413,7 +1411,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
                 int alt11=2;
                 int LA11_0 = input.LA(1);
 
-                if ( (LA11_0==30) ) {
+                if ( (LA11_0==28) ) {
                     alt11=1;
                 }
 
@@ -1429,7 +1427,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
             	    // ../com.dexels.navajo.dsl.expression/src-gen/com/dexels/navajo/dsl/expression/parser/antlr/internal/InternalNavajoExpression.g:682:3: lv_operations_1_0= 'OR'
             	    {
             	    lv_operations_1_0=(Token)input.LT(1);
-            	    match(input,30,FOLLOW_30_in_ruleOrExpression1078); 
+            	    match(input,28,FOLLOW_28_in_ruleOrExpression1078); 
 
             	            createLeafNode(grammarAccess.getOrExpressionAccess().getOperationsORKeyword_1_0_0(), "operations"); 
             	        
@@ -1615,7 +1613,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
                 int alt12=2;
                 int LA12_0 = input.LA(1);
 
-                if ( (LA12_0==31) ) {
+                if ( (LA12_0==29) ) {
                     alt12=1;
                 }
 
@@ -1631,7 +1629,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
             	    // ../com.dexels.navajo.dsl.expression/src-gen/com/dexels/navajo/dsl/expression/parser/antlr/internal/InternalNavajoExpression.g:774:3: lv_operations_1_0= 'AND'
             	    {
             	    lv_operations_1_0=(Token)input.LT(1);
-            	    match(input,31,FOLLOW_31_in_ruleAndExpression1225); 
+            	    match(input,29,FOLLOW_29_in_ruleAndExpression1225); 
 
             	            createLeafNode(grammarAccess.getAndExpressionAccess().getOperationsANDKeyword_1_0_0(), "operations"); 
             	        
@@ -1818,10 +1816,10 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
             int alt13=3;
             int LA13_0 = input.LA(1);
 
-            if ( (LA13_0==32) ) {
+            if ( (LA13_0==30) ) {
                 alt13=1;
             }
-            else if ( (LA13_0==33) ) {
+            else if ( (LA13_0==31) ) {
                 alt13=2;
             }
             switch (alt13) {
@@ -1838,7 +1836,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
                     // ../com.dexels.navajo.dsl.expression/src-gen/com/dexels/navajo/dsl/expression/parser/antlr/internal/InternalNavajoExpression.g:866:3: lv_operations_1_0= '=='
                     {
                     lv_operations_1_0=(Token)input.LT(1);
-                    match(input,32,FOLLOW_32_in_ruleEqualityExpression1373); 
+                    match(input,30,FOLLOW_30_in_ruleEqualityExpression1373); 
 
                             createLeafNode(grammarAccess.getEqualityExpressionAccess().getOperationsEqualsSignEqualsSignKeyword_1_0_0_0(), "operations"); 
                         
@@ -1915,7 +1913,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
                     // ../com.dexels.navajo.dsl.expression/src-gen/com/dexels/navajo/dsl/expression/parser/antlr/internal/InternalNavajoExpression.g:912:3: lv_operations_3_0= '!='
                     {
                     lv_operations_3_0=(Token)input.LT(1);
-                    match(input,33,FOLLOW_33_in_ruleEqualityExpression1433); 
+                    match(input,31,FOLLOW_31_in_ruleEqualityExpression1433); 
 
                             createLeafNode(grammarAccess.getEqualityExpressionAccess().getOperationsExclamationMarkEqualsSignKeyword_1_1_0_0(), "operations"); 
                         
@@ -2593,10 +2591,10 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
                 int alt15=3;
                 int LA15_0 = input.LA(1);
 
-                if ( (LA15_0==34) ) {
+                if ( (LA15_0==32) ) {
                     alt15=1;
                 }
-                else if ( (LA15_0==35) ) {
+                else if ( (LA15_0==33) ) {
                     alt15=2;
                 }
 
@@ -2608,7 +2606,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
             	    // ../com.dexels.navajo.dsl.expression/src-gen/com/dexels/navajo/dsl/expression/parser/antlr/internal/InternalNavajoExpression.g:1255:3: ( '+' ( (lv_parameters_2_0= ruleMultiplicativeExpression ) ) )
             	    // ../com.dexels.navajo.dsl.expression/src-gen/com/dexels/navajo/dsl/expression/parser/antlr/internal/InternalNavajoExpression.g:1255:5: '+' ( (lv_parameters_2_0= ruleMultiplicativeExpression ) )
             	    {
-            	    match(input,34,FOLLOW_34_in_ruleAdditiveExpression1876); 
+            	    match(input,32,FOLLOW_32_in_ruleAdditiveExpression1876); 
 
             	            createLeafNode(grammarAccess.getAdditiveExpressionAccess().getPlusSignKeyword_1_0_0(), null); 
             	        
@@ -2660,7 +2658,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
             	    // ../com.dexels.navajo.dsl.expression/src-gen/com/dexels/navajo/dsl/expression/parser/antlr/internal/InternalNavajoExpression.g:1284:6: ( '-' ( (lv_parameters_4_0= ruleMultiplicativeExpression ) ) )
             	    // ../com.dexels.navajo.dsl.expression/src-gen/com/dexels/navajo/dsl/expression/parser/antlr/internal/InternalNavajoExpression.g:1284:8: '-' ( (lv_parameters_4_0= ruleMultiplicativeExpression ) )
             	    {
-            	    match(input,35,FOLLOW_35_in_ruleAdditiveExpression1915); 
+            	    match(input,33,FOLLOW_33_in_ruleAdditiveExpression1915); 
 
             	            createLeafNode(grammarAccess.getAdditiveExpressionAccess().getHyphenMinusKeyword_1_1_0(), null); 
             	        
@@ -2834,7 +2832,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
                 int alt16=3;
                 int LA16_0 = input.LA(1);
 
-                if ( (LA16_0==36) ) {
+                if ( (LA16_0==34) ) {
                     alt16=1;
                 }
                 else if ( (LA16_0==RULE_TML_SEPARATOR) ) {
@@ -2856,7 +2854,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
             	    // ../com.dexels.navajo.dsl.expression/src-gen/com/dexels/navajo/dsl/expression/parser/antlr/internal/InternalNavajoExpression.g:1361:3: lv_operations_1_0= '*'
             	    {
             	    lv_operations_1_0=(Token)input.LT(1);
-            	    match(input,36,FOLLOW_36_in_ruleMultiplicativeExpression2051); 
+            	    match(input,34,FOLLOW_34_in_ruleMultiplicativeExpression2051); 
 
             	            createLeafNode(grammarAccess.getMultiplicativeExpressionAccess().getOperationsAsteriskKeyword_1_0_0_0(), "operations"); 
             	        
@@ -3085,10 +3083,10 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
             int alt17=2;
             int LA17_0 = input.LA(1);
 
-            if ( (LA17_0==37) ) {
+            if ( (LA17_0==35) ) {
                 alt17=1;
             }
-            else if ( (LA17_0==RULE_ID||LA17_0==RULE_SQBRACKET_OPEN||(LA17_0>=RULE_TML_EXISTS && LA17_0<=RULE_DOLLAR)||(LA17_0>=RULE_NUMBER && LA17_0<=RULE_FALSE)||LA17_0==27||LA17_0==39) ) {
+            else if ( (LA17_0==RULE_ID||LA17_0==RULE_SQBRACKET_OPEN||(LA17_0>=RULE_TML_EXISTS && LA17_0<=RULE_DOLLAR)||(LA17_0>=RULE_NUMBER && LA17_0<=RULE_FALSE)||LA17_0==25||LA17_0==37) ) {
                 alt17=2;
             }
             else {
@@ -3111,7 +3109,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
                     // ../com.dexels.navajo.dsl.expression/src-gen/com/dexels/navajo/dsl/expression/parser/antlr/internal/InternalNavajoExpression.g:1478:3: lv_operations_0_0= '!'
                     {
                     lv_operations_0_0=(Token)input.LT(1);
-                    match(input,37,FOLLOW_37_in_ruleUnaryExpression2229); 
+                    match(input,35,FOLLOW_35_in_ruleUnaryExpression2229); 
 
                             createLeafNode(grammarAccess.getUnaryExpressionAccess().getOperationsExclamationMarkKeyword_0_0_0(), "operations"); 
                         
@@ -3269,10 +3267,10 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
             int alt18=2;
             int LA18_0 = input.LA(1);
 
-            if ( (LA18_0==RULE_ID||LA18_0==RULE_SQBRACKET_OPEN||(LA18_0>=RULE_TML_EXISTS && LA18_0<=RULE_DOLLAR)||(LA18_0>=RULE_NUMBER && LA18_0<=RULE_FALSE)||LA18_0==39) ) {
+            if ( (LA18_0==RULE_ID||LA18_0==RULE_SQBRACKET_OPEN||(LA18_0>=RULE_TML_EXISTS && LA18_0<=RULE_DOLLAR)||(LA18_0>=RULE_NUMBER && LA18_0<=RULE_FALSE)||LA18_0==37) ) {
                 alt18=1;
             }
-            else if ( (LA18_0==27) ) {
+            else if ( (LA18_0==25) ) {
                 alt18=2;
             }
             else {
@@ -3330,7 +3328,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
                     // ../com.dexels.navajo.dsl.expression/src-gen/com/dexels/navajo/dsl/expression/parser/antlr/internal/InternalNavajoExpression.g:1579:6: ( '(' ( (lv_parameters_2_0= ruleOrExpression ) ) ')' )
                     // ../com.dexels.navajo.dsl.expression/src-gen/com/dexels/navajo/dsl/expression/parser/antlr/internal/InternalNavajoExpression.g:1579:8: '(' ( (lv_parameters_2_0= ruleOrExpression ) ) ')'
                     {
-                    match(input,27,FOLLOW_27_in_rulePrimaryExpression2400); 
+                    match(input,25,FOLLOW_25_in_rulePrimaryExpression2400); 
 
                             createLeafNode(grammarAccess.getPrimaryExpressionAccess().getLeftParenthesisKeyword_1_0(), null); 
                         
@@ -3370,7 +3368,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
 
                     }
 
-                    match(input,29,FOLLOW_29_in_rulePrimaryExpression2431); 
+                    match(input,27,FOLLOW_27_in_rulePrimaryExpression2431); 
 
                             createLeafNode(grammarAccess.getPrimaryExpressionAccess().getRightParenthesisKeyword_1_2(), null); 
                         
@@ -3569,7 +3567,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
 
             }
 
-            match(input,27,FOLLOW_27_in_ruleFunctionCall2629); 
+            match(input,25,FOLLOW_25_in_ruleFunctionCall2629); 
 
                     createLeafNode(grammarAccess.getFunctionCallAccess().getLeftParenthesisKeyword_1(), null); 
                 
@@ -3577,7 +3575,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
             int alt19=2;
             int LA19_0 = input.LA(1);
 
-            if ( (LA19_0==RULE_ID||LA19_0==RULE_SQBRACKET_OPEN||(LA19_0>=RULE_TML_EXISTS && LA19_0<=RULE_DOLLAR)||(LA19_0>=RULE_NUMBER && LA19_0<=RULE_FALSE)||LA19_0==27||LA19_0==37||LA19_0==39) ) {
+            if ( (LA19_0==RULE_ID||LA19_0==RULE_SQBRACKET_OPEN||(LA19_0>=RULE_TML_EXISTS && LA19_0<=RULE_DOLLAR)||(LA19_0>=RULE_NUMBER && LA19_0<=RULE_FALSE)||LA19_0==25||LA19_0==35||LA19_0==37) ) {
                 alt19=1;
             }
             switch (alt19) {
@@ -3626,7 +3624,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
                 int alt20=2;
                 int LA20_0 = input.LA(1);
 
-                if ( (LA20_0==28) ) {
+                if ( (LA20_0==26) ) {
                     alt20=1;
                 }
 
@@ -3635,7 +3633,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
             	case 1 :
             	    // ../com.dexels.navajo.dsl.expression/src-gen/com/dexels/navajo/dsl/expression/parser/antlr/internal/InternalNavajoExpression.g:1716:5: ',' ( (lv_parameters_4_0= ruleOrExpression ) )
             	    {
-            	    match(input,28,FOLLOW_28_in_ruleFunctionCall2662); 
+            	    match(input,26,FOLLOW_26_in_ruleFunctionCall2662); 
 
             	            createLeafNode(grammarAccess.getFunctionCallAccess().getCommaKeyword_3_0(), null); 
             	        
@@ -3684,7 +3682,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
                 }
             } while (true);
 
-            match(input,29,FOLLOW_29_in_ruleFunctionCall2695); 
+            match(input,27,FOLLOW_27_in_ruleFunctionCall2695); 
 
                     createLeafNode(grammarAccess.getFunctionCallAccess().getRightParenthesisKeyword_4(), null); 
                 
@@ -3779,7 +3777,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
              
                 createLeafNode(grammarAccess.getDateLiteralAccess().getNUMBERTerminalRuleCall_1(), null); 
                 
-            match(input,38,FOLLOW_38_in_ruleDateLiteral2793); 
+            match(input,36,FOLLOW_36_in_ruleDateLiteral2793); 
 
                     createLeafNode(grammarAccess.getDateLiteralAccess().getNumberSignKeyword_2(), null); 
                 
@@ -3787,7 +3785,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
              
                 createLeafNode(grammarAccess.getDateLiteralAccess().getNUMBERTerminalRuleCall_3(), null); 
                 
-            match(input,38,FOLLOW_38_in_ruleDateLiteral2811); 
+            match(input,36,FOLLOW_36_in_ruleDateLiteral2811); 
 
                     createLeafNode(grammarAccess.getDateLiteralAccess().getNumberSignKeyword_4(), null); 
                 
@@ -3795,7 +3793,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
              
                 createLeafNode(grammarAccess.getDateLiteralAccess().getNUMBERTerminalRuleCall_5(), null); 
                 
-            match(input,38,FOLLOW_38_in_ruleDateLiteral2829); 
+            match(input,36,FOLLOW_36_in_ruleDateLiteral2829); 
 
                     createLeafNode(grammarAccess.getDateLiteralAccess().getNumberSignKeyword_6(), null); 
                 
@@ -3803,7 +3801,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
              
                 createLeafNode(grammarAccess.getDateLiteralAccess().getNUMBERTerminalRuleCall_7(), null); 
                 
-            match(input,38,FOLLOW_38_in_ruleDateLiteral2847); 
+            match(input,36,FOLLOW_36_in_ruleDateLiteral2847); 
 
                     createLeafNode(grammarAccess.getDateLiteralAccess().getNumberSignKeyword_8(), null); 
                 
@@ -3811,7 +3809,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
              
                 createLeafNode(grammarAccess.getDateLiteralAccess().getNUMBERTerminalRuleCall_9(), null); 
                 
-            match(input,38,FOLLOW_38_in_ruleDateLiteral2865); 
+            match(input,36,FOLLOW_36_in_ruleDateLiteral2865); 
 
                     createLeafNode(grammarAccess.getDateLiteralAccess().getNumberSignKeyword_10(), null); 
                 
@@ -3919,10 +3917,10 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
                 {
                 int LA23_1 = input.LA(2);
 
-                if ( (LA23_1==38) ) {
+                if ( (LA23_1==36) ) {
                     alt23=13;
                 }
-                else if ( (LA23_1==EOF||LA23_1==RULE_TML_SEPARATOR||(LA23_1>=RULE_XML_LT && LA23_1<=RULE_XML_GTEQ)||(LA23_1>=28 && LA23_1<=36)||LA23_1==40) ) {
+                else if ( (LA23_1==EOF||LA23_1==RULE_TML_SEPARATOR||(LA23_1>=RULE_XML_LT && LA23_1<=RULE_XML_GTEQ)||(LA23_1>=26 && LA23_1<=34)||LA23_1==38) ) {
                     alt23=1;
                 }
                 else {
@@ -3948,7 +3946,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
                 alt23=4;
                 }
                 break;
-            case 39:
+            case 37:
                 {
                 alt23=5;
                 }
@@ -4106,7 +4104,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
 
                     }
 
-                    match(input,27,FOLLOW_27_in_ruleLiteral3030); 
+                    match(input,25,FOLLOW_25_in_ruleLiteral3030); 
 
                             createLeafNode(grammarAccess.getLiteralAccess().getLeftParenthesisKeyword_2_1(), null); 
                         
@@ -4143,7 +4141,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
 
                     }
 
-                    match(input,28,FOLLOW_28_in_ruleLiteral3062); 
+                    match(input,26,FOLLOW_26_in_ruleLiteral3062); 
 
                             createLeafNode(grammarAccess.getLiteralAccess().getCommaKeyword_2_3(), null); 
                         
@@ -4183,7 +4181,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
 
                     }
 
-                    match(input,29,FOLLOW_29_in_ruleLiteral3093); 
+                    match(input,27,FOLLOW_27_in_ruleLiteral3093); 
 
                             createLeafNode(grammarAccess.getLiteralAccess().getRightParenthesisKeyword_2_5(), null); 
                         
@@ -4248,7 +4246,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
                     // ../com.dexels.navajo.dsl.expression/src-gen/com/dexels/navajo/dsl/expression/parser/antlr/internal/InternalNavajoExpression.g:2002:3: lv_expressionType_10_0= '{'
                     {
                     lv_expressionType_10_0=(Token)input.LT(1);
-                    match(input,39,FOLLOW_39_in_ruleLiteral3146); 
+                    match(input,37,FOLLOW_37_in_ruleLiteral3146); 
 
                             createLeafNode(grammarAccess.getLiteralAccess().getExpressionTypeLeftCurlyBracketKeyword_4_0_0(), "expressionType"); 
                         
@@ -4274,7 +4272,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
                     int alt21=2;
                     int LA21_0 = input.LA(1);
 
-                    if ( (LA21_0==RULE_ID||LA21_0==RULE_SQBRACKET_OPEN||(LA21_0>=RULE_TML_EXISTS && LA21_0<=RULE_DOLLAR)||(LA21_0>=RULE_NUMBER && LA21_0<=RULE_FALSE)||LA21_0==27||LA21_0==37||LA21_0==39) ) {
+                    if ( (LA21_0==RULE_ID||LA21_0==RULE_SQBRACKET_OPEN||(LA21_0>=RULE_TML_EXISTS && LA21_0<=RULE_DOLLAR)||(LA21_0>=RULE_NUMBER && LA21_0<=RULE_FALSE)||LA21_0==25||LA21_0==35||LA21_0==37) ) {
                         alt21=1;
                     }
                     switch (alt21) {
@@ -4323,7 +4321,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
                         int alt22=2;
                         int LA22_0 = input.LA(1);
 
-                        if ( (LA22_0==28) ) {
+                        if ( (LA22_0==26) ) {
                             alt22=1;
                         }
 
@@ -4332,7 +4330,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
                     	case 1 :
                     	    // ../com.dexels.navajo.dsl.expression/src-gen/com/dexels/navajo/dsl/expression/parser/antlr/internal/InternalNavajoExpression.g:2045:5: ',' ( (lv_parameters_13_0= ruleOrExpression ) )
                     	    {
-                    	    match(input,28,FOLLOW_28_in_ruleLiteral3192); 
+                    	    match(input,26,FOLLOW_26_in_ruleLiteral3192); 
 
                     	            createLeafNode(grammarAccess.getLiteralAccess().getCommaKeyword_4_2_0(), null); 
                     	        
@@ -4381,7 +4379,7 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
                         }
                     } while (true);
 
-                    match(input,40,FOLLOW_40_in_ruleLiteral3225); 
+                    match(input,38,FOLLOW_38_in_ruleLiteral3225); 
 
                             createLeafNode(grammarAccess.getLiteralAccess().getRightCurlyBracketKeyword_4_3(), null); 
                         
@@ -4745,134 +4743,134 @@ public class InternalNavajoExpressionParser extends AbstractInternalAntlrParser 
     public static final BitSet FOLLOW_rulePathElement_in_entryRulePathElement166 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRulePathElement177 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_RULE_ID_in_rulePathElement217 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_26_in_rulePathElement241 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_24_in_rulePathElement241 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_RULE_PARENT_in_rulePathElement262 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleTmlExpression_in_entryRuleTmlExpression307 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRuleTmlExpression317 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_SQBRACKET_OPEN_in_ruleTmlExpression351 = new BitSet(new long[]{0x00000000040001B0L});
-    public static final BitSet FOLLOW_RULE_TML_SEPARATOR_in_ruleTmlExpression367 = new BitSet(new long[]{0x0000000004000130L});
-    public static final BitSet FOLLOW_RULE_AT_in_ruleTmlExpression390 = new BitSet(new long[]{0x0000000004000030L});
+    public static final BitSet FOLLOW_RULE_SQBRACKET_OPEN_in_ruleTmlExpression351 = new BitSet(new long[]{0x00000000010001B0L});
+    public static final BitSet FOLLOW_RULE_TML_SEPARATOR_in_ruleTmlExpression367 = new BitSet(new long[]{0x0000000001000130L});
+    public static final BitSet FOLLOW_RULE_AT_in_ruleTmlExpression390 = new BitSet(new long[]{0x0000000001000030L});
     public static final BitSet FOLLOW_rulePathElement_in_ruleTmlExpression417 = new BitSet(new long[]{0x0000000000000280L});
-    public static final BitSet FOLLOW_RULE_TML_SEPARATOR_in_ruleTmlExpression427 = new BitSet(new long[]{0x0000000004000030L});
+    public static final BitSet FOLLOW_RULE_TML_SEPARATOR_in_ruleTmlExpression427 = new BitSet(new long[]{0x0000000001000030L});
     public static final BitSet FOLLOW_rulePathElement_in_ruleTmlExpression447 = new BitSet(new long[]{0x0000000000000280L});
     public static final BitSet FOLLOW_RULE_SQBRACKET_CLOSE_in_ruleTmlExpression458 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleExistsTmlExpression_in_entryRuleExistsTmlExpression493 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRuleExistsTmlExpression503 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_RULE_TML_EXISTS_in_ruleExistsTmlExpression537 = new BitSet(new long[]{0x0000000000000040L});
-    public static final BitSet FOLLOW_RULE_SQBRACKET_OPEN_in_ruleExistsTmlExpression545 = new BitSet(new long[]{0x00000000040001B0L});
-    public static final BitSet FOLLOW_RULE_TML_SEPARATOR_in_ruleExistsTmlExpression561 = new BitSet(new long[]{0x0000000004000130L});
-    public static final BitSet FOLLOW_RULE_AT_in_ruleExistsTmlExpression584 = new BitSet(new long[]{0x0000000004000030L});
+    public static final BitSet FOLLOW_RULE_SQBRACKET_OPEN_in_ruleExistsTmlExpression545 = new BitSet(new long[]{0x00000000010001B0L});
+    public static final BitSet FOLLOW_RULE_TML_SEPARATOR_in_ruleExistsTmlExpression561 = new BitSet(new long[]{0x0000000001000130L});
+    public static final BitSet FOLLOW_RULE_AT_in_ruleExistsTmlExpression584 = new BitSet(new long[]{0x0000000001000030L});
     public static final BitSet FOLLOW_rulePathElement_in_ruleExistsTmlExpression611 = new BitSet(new long[]{0x0000000000000280L});
-    public static final BitSet FOLLOW_RULE_TML_SEPARATOR_in_ruleExistsTmlExpression621 = new BitSet(new long[]{0x0000000004000030L});
+    public static final BitSet FOLLOW_RULE_TML_SEPARATOR_in_ruleExistsTmlExpression621 = new BitSet(new long[]{0x0000000001000030L});
     public static final BitSet FOLLOW_rulePathElement_in_ruleExistsTmlExpression641 = new BitSet(new long[]{0x0000000000000280L});
     public static final BitSet FOLLOW_RULE_SQBRACKET_CLOSE_in_ruleExistsTmlExpression652 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleMapReferenceParams_in_entryRuleMapReferenceParams687 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRuleMapReferenceParams697 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_27_in_ruleMapReferenceParams732 = new BitSet(new long[]{0x00000080007F0C50L});
-    public static final BitSet FOLLOW_ruleLiteral_in_ruleMapReferenceParams753 = new BitSet(new long[]{0x0000000030000000L});
-    public static final BitSet FOLLOW_28_in_ruleMapReferenceParams764 = new BitSet(new long[]{0x00000080007F0C50L});
-    public static final BitSet FOLLOW_ruleLiteral_in_ruleMapReferenceParams785 = new BitSet(new long[]{0x0000000030000000L});
-    public static final BitSet FOLLOW_29_in_ruleMapReferenceParams797 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_25_in_ruleMapReferenceParams732 = new BitSet(new long[]{0x00000020007F0C50L});
+    public static final BitSet FOLLOW_ruleLiteral_in_ruleMapReferenceParams753 = new BitSet(new long[]{0x000000000C000000L});
+    public static final BitSet FOLLOW_26_in_ruleMapReferenceParams764 = new BitSet(new long[]{0x00000020007F0C50L});
+    public static final BitSet FOLLOW_ruleLiteral_in_ruleMapReferenceParams785 = new BitSet(new long[]{0x000000000C000000L});
+    public static final BitSet FOLLOW_27_in_ruleMapReferenceParams797 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleMapGetReference_in_entryRuleMapGetReference833 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRuleMapGetReference843 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_RULE_DOLLAR_in_ruleMapGetReference885 = new BitSet(new long[]{0x0000000000000030L});
     public static final BitSet FOLLOW_RULE_PARENT_in_ruleMapGetReference908 = new BitSet(new long[]{0x0000000000000080L});
     public static final BitSet FOLLOW_RULE_TML_SEPARATOR_in_ruleMapGetReference922 = new BitSet(new long[]{0x0000000000000030L});
-    public static final BitSet FOLLOW_RULE_ID_in_ruleMapGetReference940 = new BitSet(new long[]{0x0000000008000002L});
+    public static final BitSet FOLLOW_RULE_ID_in_ruleMapGetReference940 = new BitSet(new long[]{0x0000000002000002L});
     public static final BitSet FOLLOW_ruleMapReferenceParams_in_ruleMapGetReference966 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleOrExpression_in_entryRuleOrExpression1003 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRuleOrExpression1013 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleAndExpression_in_ruleOrExpression1059 = new BitSet(new long[]{0x0000000040000002L});
-    public static final BitSet FOLLOW_30_in_ruleOrExpression1078 = new BitSet(new long[]{0x000000A0087F0C50L});
-    public static final BitSet FOLLOW_ruleAndExpression_in_ruleOrExpression1112 = new BitSet(new long[]{0x0000000040000002L});
+    public static final BitSet FOLLOW_ruleAndExpression_in_ruleOrExpression1059 = new BitSet(new long[]{0x0000000010000002L});
+    public static final BitSet FOLLOW_28_in_ruleOrExpression1078 = new BitSet(new long[]{0x00000028027F0C50L});
+    public static final BitSet FOLLOW_ruleAndExpression_in_ruleOrExpression1112 = new BitSet(new long[]{0x0000000010000002L});
     public static final BitSet FOLLOW_ruleAndExpression_in_entryRuleAndExpression1150 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRuleAndExpression1160 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleEqualityExpression_in_ruleAndExpression1206 = new BitSet(new long[]{0x0000000080000002L});
-    public static final BitSet FOLLOW_31_in_ruleAndExpression1225 = new BitSet(new long[]{0x000000A0087F0C50L});
-    public static final BitSet FOLLOW_ruleEqualityExpression_in_ruleAndExpression1259 = new BitSet(new long[]{0x0000000080000002L});
+    public static final BitSet FOLLOW_ruleEqualityExpression_in_ruleAndExpression1206 = new BitSet(new long[]{0x0000000020000002L});
+    public static final BitSet FOLLOW_29_in_ruleAndExpression1225 = new BitSet(new long[]{0x00000028027F0C50L});
+    public static final BitSet FOLLOW_ruleEqualityExpression_in_ruleAndExpression1259 = new BitSet(new long[]{0x0000000020000002L});
     public static final BitSet FOLLOW_ruleEqualityExpression_in_entryRuleEqualityExpression1297 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRuleEqualityExpression1307 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleRelationalExpression_in_ruleEqualityExpression1353 = new BitSet(new long[]{0x0000000300000002L});
-    public static final BitSet FOLLOW_32_in_ruleEqualityExpression1373 = new BitSet(new long[]{0x000000A0087F0C50L});
+    public static final BitSet FOLLOW_ruleRelationalExpression_in_ruleEqualityExpression1353 = new BitSet(new long[]{0x00000000C0000002L});
+    public static final BitSet FOLLOW_30_in_ruleEqualityExpression1373 = new BitSet(new long[]{0x00000028027F0C50L});
     public static final BitSet FOLLOW_ruleRelationalExpression_in_ruleEqualityExpression1407 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_33_in_ruleEqualityExpression1433 = new BitSet(new long[]{0x000000A0087F0C50L});
+    public static final BitSet FOLLOW_31_in_ruleEqualityExpression1433 = new BitSet(new long[]{0x00000028027F0C50L});
     public static final BitSet FOLLOW_ruleRelationalExpression_in_ruleEqualityExpression1467 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleRelationalExpression_in_entryRuleRelationalExpression1506 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRuleRelationalExpression1516 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleAdditiveExpression_in_ruleRelationalExpression1571 = new BitSet(new long[]{0x000000000000F002L});
-    public static final BitSet FOLLOW_RULE_XML_LT_in_ruleRelationalExpression1590 = new BitSet(new long[]{0x000000A0087F0C50L});
+    public static final BitSet FOLLOW_RULE_XML_LT_in_ruleRelationalExpression1590 = new BitSet(new long[]{0x00000028027F0C50L});
     public static final BitSet FOLLOW_ruleAdditiveExpression_in_ruleRelationalExpression1616 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_XML_GT_in_ruleRelationalExpression1641 = new BitSet(new long[]{0x000000A0087F0C50L});
+    public static final BitSet FOLLOW_RULE_XML_GT_in_ruleRelationalExpression1641 = new BitSet(new long[]{0x00000028027F0C50L});
     public static final BitSet FOLLOW_ruleAdditiveExpression_in_ruleRelationalExpression1667 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_XML_LTEQ_in_ruleRelationalExpression1692 = new BitSet(new long[]{0x000000A0087F0C50L});
+    public static final BitSet FOLLOW_RULE_XML_LTEQ_in_ruleRelationalExpression1692 = new BitSet(new long[]{0x00000028027F0C50L});
     public static final BitSet FOLLOW_ruleAdditiveExpression_in_ruleRelationalExpression1718 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_XML_GTEQ_in_ruleRelationalExpression1743 = new BitSet(new long[]{0x000000A0087F0C50L});
+    public static final BitSet FOLLOW_RULE_XML_GTEQ_in_ruleRelationalExpression1743 = new BitSet(new long[]{0x00000028027F0C50L});
     public static final BitSet FOLLOW_ruleAdditiveExpression_in_ruleRelationalExpression1769 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleAdditiveExpression_in_entryRuleAdditiveExpression1808 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRuleAdditiveExpression1818 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleMultiplicativeExpression_in_ruleAdditiveExpression1864 = new BitSet(new long[]{0x0000000C00000002L});
-    public static final BitSet FOLLOW_34_in_ruleAdditiveExpression1876 = new BitSet(new long[]{0x000000A0087F0C50L});
-    public static final BitSet FOLLOW_ruleMultiplicativeExpression_in_ruleAdditiveExpression1897 = new BitSet(new long[]{0x0000000C00000002L});
-    public static final BitSet FOLLOW_35_in_ruleAdditiveExpression1915 = new BitSet(new long[]{0x000000A0087F0C50L});
-    public static final BitSet FOLLOW_ruleMultiplicativeExpression_in_ruleAdditiveExpression1936 = new BitSet(new long[]{0x0000000C00000002L});
+    public static final BitSet FOLLOW_ruleMultiplicativeExpression_in_ruleAdditiveExpression1864 = new BitSet(new long[]{0x0000000300000002L});
+    public static final BitSet FOLLOW_32_in_ruleAdditiveExpression1876 = new BitSet(new long[]{0x00000028027F0C50L});
+    public static final BitSet FOLLOW_ruleMultiplicativeExpression_in_ruleAdditiveExpression1897 = new BitSet(new long[]{0x0000000300000002L});
+    public static final BitSet FOLLOW_33_in_ruleAdditiveExpression1915 = new BitSet(new long[]{0x00000028027F0C50L});
+    public static final BitSet FOLLOW_ruleMultiplicativeExpression_in_ruleAdditiveExpression1936 = new BitSet(new long[]{0x0000000300000002L});
     public static final BitSet FOLLOW_ruleMultiplicativeExpression_in_entryRuleMultiplicativeExpression1975 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRuleMultiplicativeExpression1985 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleUnaryExpression_in_ruleMultiplicativeExpression2031 = new BitSet(new long[]{0x0000001000000082L});
-    public static final BitSet FOLLOW_36_in_ruleMultiplicativeExpression2051 = new BitSet(new long[]{0x000000A0087F0C50L});
-    public static final BitSet FOLLOW_ruleUnaryExpression_in_ruleMultiplicativeExpression2085 = new BitSet(new long[]{0x0000001000000082L});
-    public static final BitSet FOLLOW_RULE_TML_SEPARATOR_in_ruleMultiplicativeExpression2110 = new BitSet(new long[]{0x000000A0087F0C50L});
-    public static final BitSet FOLLOW_ruleUnaryExpression_in_ruleMultiplicativeExpression2136 = new BitSet(new long[]{0x0000001000000082L});
+    public static final BitSet FOLLOW_ruleUnaryExpression_in_ruleMultiplicativeExpression2031 = new BitSet(new long[]{0x0000000400000082L});
+    public static final BitSet FOLLOW_34_in_ruleMultiplicativeExpression2051 = new BitSet(new long[]{0x00000028027F0C50L});
+    public static final BitSet FOLLOW_ruleUnaryExpression_in_ruleMultiplicativeExpression2085 = new BitSet(new long[]{0x0000000400000082L});
+    public static final BitSet FOLLOW_RULE_TML_SEPARATOR_in_ruleMultiplicativeExpression2110 = new BitSet(new long[]{0x00000028027F0C50L});
+    public static final BitSet FOLLOW_ruleUnaryExpression_in_ruleMultiplicativeExpression2136 = new BitSet(new long[]{0x0000000400000082L});
     public static final BitSet FOLLOW_ruleUnaryExpression_in_entryRuleUnaryExpression2175 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRuleUnaryExpression2185 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_37_in_ruleUnaryExpression2229 = new BitSet(new long[]{0x00000080087F0C50L});
+    public static final BitSet FOLLOW_35_in_ruleUnaryExpression2229 = new BitSet(new long[]{0x00000020027F0C50L});
     public static final BitSet FOLLOW_rulePrimaryExpression_in_ruleUnaryExpression2263 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rulePrimaryExpression_in_ruleUnaryExpression2292 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rulePrimaryExpression_in_entryRulePrimaryExpression2327 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRulePrimaryExpression2337 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleLiteral_in_rulePrimaryExpression2383 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_27_in_rulePrimaryExpression2400 = new BitSet(new long[]{0x000000A0087F0C50L});
-    public static final BitSet FOLLOW_ruleOrExpression_in_rulePrimaryExpression2421 = new BitSet(new long[]{0x0000000020000000L});
-    public static final BitSet FOLLOW_29_in_rulePrimaryExpression2431 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_25_in_rulePrimaryExpression2400 = new BitSet(new long[]{0x00000028027F0C50L});
+    public static final BitSet FOLLOW_ruleOrExpression_in_rulePrimaryExpression2421 = new BitSet(new long[]{0x0000000008000000L});
+    public static final BitSet FOLLOW_27_in_rulePrimaryExpression2431 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleFunctionName_in_entryRuleFunctionName2469 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRuleFunctionName2480 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_RULE_ID_in_ruleFunctionName2519 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleFunctionCall_in_entryRuleFunctionCall2563 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRuleFunctionCall2573 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleFunctionName_in_ruleFunctionCall2619 = new BitSet(new long[]{0x0000000008000000L});
-    public static final BitSet FOLLOW_27_in_ruleFunctionCall2629 = new BitSet(new long[]{0x000000A0387F0C50L});
-    public static final BitSet FOLLOW_ruleOrExpression_in_ruleFunctionCall2650 = new BitSet(new long[]{0x0000000030000000L});
-    public static final BitSet FOLLOW_28_in_ruleFunctionCall2662 = new BitSet(new long[]{0x000000A0087F0C50L});
-    public static final BitSet FOLLOW_ruleOrExpression_in_ruleFunctionCall2683 = new BitSet(new long[]{0x0000000030000000L});
-    public static final BitSet FOLLOW_29_in_ruleFunctionCall2695 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleFunctionName_in_ruleFunctionCall2619 = new BitSet(new long[]{0x0000000002000000L});
+    public static final BitSet FOLLOW_25_in_ruleFunctionCall2629 = new BitSet(new long[]{0x000000280E7F0C50L});
+    public static final BitSet FOLLOW_ruleOrExpression_in_ruleFunctionCall2650 = new BitSet(new long[]{0x000000000C000000L});
+    public static final BitSet FOLLOW_26_in_ruleFunctionCall2662 = new BitSet(new long[]{0x00000028027F0C50L});
+    public static final BitSet FOLLOW_ruleOrExpression_in_ruleFunctionCall2683 = new BitSet(new long[]{0x000000000C000000L});
+    public static final BitSet FOLLOW_27_in_ruleFunctionCall2695 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleDateLiteral_in_entryRuleDateLiteral2731 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRuleDateLiteral2741 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_NUMBER_in_ruleDateLiteral2784 = new BitSet(new long[]{0x0000004000000000L});
-    public static final BitSet FOLLOW_38_in_ruleDateLiteral2793 = new BitSet(new long[]{0x0000000000010000L});
-    public static final BitSet FOLLOW_RULE_NUMBER_in_ruleDateLiteral2802 = new BitSet(new long[]{0x0000004000000000L});
-    public static final BitSet FOLLOW_38_in_ruleDateLiteral2811 = new BitSet(new long[]{0x0000000000010000L});
-    public static final BitSet FOLLOW_RULE_NUMBER_in_ruleDateLiteral2820 = new BitSet(new long[]{0x0000004000000000L});
-    public static final BitSet FOLLOW_38_in_ruleDateLiteral2829 = new BitSet(new long[]{0x0000000000010000L});
-    public static final BitSet FOLLOW_RULE_NUMBER_in_ruleDateLiteral2838 = new BitSet(new long[]{0x0000004000000000L});
-    public static final BitSet FOLLOW_38_in_ruleDateLiteral2847 = new BitSet(new long[]{0x0000000000010000L});
-    public static final BitSet FOLLOW_RULE_NUMBER_in_ruleDateLiteral2856 = new BitSet(new long[]{0x0000004000000000L});
-    public static final BitSet FOLLOW_38_in_ruleDateLiteral2865 = new BitSet(new long[]{0x0000000000010000L});
+    public static final BitSet FOLLOW_RULE_NUMBER_in_ruleDateLiteral2784 = new BitSet(new long[]{0x0000001000000000L});
+    public static final BitSet FOLLOW_36_in_ruleDateLiteral2793 = new BitSet(new long[]{0x0000000000010000L});
+    public static final BitSet FOLLOW_RULE_NUMBER_in_ruleDateLiteral2802 = new BitSet(new long[]{0x0000001000000000L});
+    public static final BitSet FOLLOW_36_in_ruleDateLiteral2811 = new BitSet(new long[]{0x0000000000010000L});
+    public static final BitSet FOLLOW_RULE_NUMBER_in_ruleDateLiteral2820 = new BitSet(new long[]{0x0000001000000000L});
+    public static final BitSet FOLLOW_36_in_ruleDateLiteral2829 = new BitSet(new long[]{0x0000000000010000L});
+    public static final BitSet FOLLOW_RULE_NUMBER_in_ruleDateLiteral2838 = new BitSet(new long[]{0x0000001000000000L});
+    public static final BitSet FOLLOW_36_in_ruleDateLiteral2847 = new BitSet(new long[]{0x0000000000010000L});
+    public static final BitSet FOLLOW_RULE_NUMBER_in_ruleDateLiteral2856 = new BitSet(new long[]{0x0000001000000000L});
+    public static final BitSet FOLLOW_36_in_ruleDateLiteral2865 = new BitSet(new long[]{0x0000000000010000L});
     public static final BitSet FOLLOW_RULE_NUMBER_in_ruleDateLiteral2874 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleLiteral_in_entryRuleLiteral2909 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRuleLiteral2919 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_RULE_NUMBER_in_ruleLiteral2963 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_RULE_LITERALSTRING_in_ruleLiteral2986 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_FORALL_in_ruleLiteral3015 = new BitSet(new long[]{0x0000000008000000L});
-    public static final BitSet FOLLOW_27_in_ruleLiteral3030 = new BitSet(new long[]{0x0000000000020000L});
-    public static final BitSet FOLLOW_RULE_LITERALSTRING_in_ruleLiteral3047 = new BitSet(new long[]{0x0000000010000000L});
-    public static final BitSet FOLLOW_28_in_ruleLiteral3062 = new BitSet(new long[]{0x000000A0087F0C50L});
-    public static final BitSet FOLLOW_ruleOrExpression_in_ruleLiteral3083 = new BitSet(new long[]{0x0000000020000000L});
-    public static final BitSet FOLLOW_29_in_ruleLiteral3093 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_FORALL_in_ruleLiteral3015 = new BitSet(new long[]{0x0000000002000000L});
+    public static final BitSet FOLLOW_25_in_ruleLiteral3030 = new BitSet(new long[]{0x0000000000020000L});
+    public static final BitSet FOLLOW_RULE_LITERALSTRING_in_ruleLiteral3047 = new BitSet(new long[]{0x0000000004000000L});
+    public static final BitSet FOLLOW_26_in_ruleLiteral3062 = new BitSet(new long[]{0x00000028027F0C50L});
+    public static final BitSet FOLLOW_ruleOrExpression_in_ruleLiteral3083 = new BitSet(new long[]{0x0000000008000000L});
+    public static final BitSet FOLLOW_27_in_ruleLiteral3093 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleFunctionCall_in_ruleLiteral3121 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_39_in_ruleLiteral3146 = new BitSet(new long[]{0x000001A0187F0C50L});
-    public static final BitSet FOLLOW_ruleOrExpression_in_ruleLiteral3180 = new BitSet(new long[]{0x0000010010000000L});
-    public static final BitSet FOLLOW_28_in_ruleLiteral3192 = new BitSet(new long[]{0x000000A0087F0C50L});
-    public static final BitSet FOLLOW_ruleOrExpression_in_ruleLiteral3213 = new BitSet(new long[]{0x0000010010000000L});
-    public static final BitSet FOLLOW_40_in_ruleLiteral3225 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_37_in_ruleLiteral3146 = new BitSet(new long[]{0x00000068067F0C50L});
+    public static final BitSet FOLLOW_ruleOrExpression_in_ruleLiteral3180 = new BitSet(new long[]{0x0000004004000000L});
+    public static final BitSet FOLLOW_26_in_ruleLiteral3192 = new BitSet(new long[]{0x00000028027F0C50L});
+    public static final BitSet FOLLOW_ruleOrExpression_in_ruleLiteral3213 = new BitSet(new long[]{0x0000004004000000L});
+    public static final BitSet FOLLOW_38_in_ruleLiteral3225 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_RULE_NULL_in_ruleLiteral3249 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_RULE_TODAY_in_ruleLiteral3277 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_RULE_TRUE_in_ruleLiteral3305 = new BitSet(new long[]{0x0000000000000002L});
