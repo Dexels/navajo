@@ -3,13 +3,11 @@
 */
 package com.dexels.navajo.dsl.expression.ui.contentassist;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
@@ -24,9 +22,6 @@ import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
 import com.dexels.navajo.dsl.expression.proposals.FunctionProposal;
 import com.dexels.navajo.dsl.expression.proposals.INavajoContextProvider;
 import com.dexels.navajo.dsl.expression.proposals.InputTmlProposal;
-import com.dexels.navajo.dsl.expression.proposals.NavajoContextProvider;
-import com.dexels.navajo.dsl.expression.proposals.NavajoResourceFinder;
-import com.dexels.navajo.dsl.expression.proposals.TestNavajoResourceFinder;
 import com.dexels.navajo.dsl.model.expression.Expression;
 import com.dexels.navajo.dsl.model.tsl.ExpressionTag;
 import com.dexels.navajo.dsl.model.tsl.Map;
@@ -36,7 +31,6 @@ import com.google.inject.Inject;
  */
 public class NavajoExpressionProposalProvider extends AbstractNavajoExpressionProposalProvider {
 
-	// TODO Rewrite to do dep inj.
 	@Inject
 	protected  INavajoContextProvider navajoContext; // = new NavajoContextProvider();
 	
@@ -44,6 +38,7 @@ public class NavajoExpressionProposalProvider extends AbstractNavajoExpressionPr
 	public NavajoExpressionProposalProvider() {
 	
 	}	
+	
 
 
 	public void complete_FunctionCall(EObject model, RuleCall ruleCall,
@@ -51,7 +46,7 @@ public class NavajoExpressionProposalProvider extends AbstractNavajoExpressionPr
 		// subclasses may override
 		super.complete_FunctionCall(model, ruleCall, context, acceptor);
 		// compute the plain proposal
-		for (FunctionProposal f : navajoContext.getFunctions()) {
+		for (FunctionProposal f : navajoContext.getFunctions(getCurrentProject())) {
 			ICompletionProposal completionProposal = createCompletionProposal(f.getProposal(true), f.getProposalDescription(), null, context);
 			acceptor.accept(completionProposal);
 		}
@@ -91,7 +86,7 @@ public class NavajoExpressionProposalProvider extends AbstractNavajoExpressionPr
 //		acceptor.accept(completionProposal);
 //		completionProposal = createCompletionProposal("[/Club/ClubName]", "[Club name] /Club/ClubName: De Schoof", null, context);
 //		acceptor.accept(completionProposal);
-		for (InputTmlProposal tt : navajoContext.getTmlProposal()) {
+		for (InputTmlProposal tt : navajoContext.getTmlProposal(getCurrentProject())) {
 			ICompletionProposal completionProposal = createCompletionProposal(tt.getProposal(), tt.getProposalDescription(), null, context);
 			acceptor.accept(completionProposal);
 		}
@@ -159,14 +154,14 @@ public class NavajoExpressionProposalProvider extends AbstractNavajoExpressionPr
 	public void complete_ExistsTmlExpression(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
 		// subclasses may override
 		super.complete_ExistsTmlExpression(model, ruleCall, context, acceptor);
-		if(navajoContext.getTmlProposal()==null) {
+		if(navajoContext.getTmlProposal(getCurrentProject())==null) {
 			
 		}
 		//		ICompletionProposal completionProposal = createCompletionProposal("?[/Club/ClubIdentifier]", "[ClubCode] /Club/ClubIdentifier: BBFW63X", null, context);
 //		acceptor.accept(completionProposal);
 //		completionProposal = createCompletionProposal("?[/Club/ClubName]", "[Club name] /Club/ClubName: De Schoof", null, context);
 //		acceptor.accept(completionProposal);
-		for (InputTmlProposal tt : navajoContext.getTmlProposal()) {
+		for (InputTmlProposal tt : navajoContext.getTmlProposal(getCurrentProject())) {
 			ICompletionProposal completionProposal = createCompletionProposal("?"+tt.getProposal(), "?"+tt.getProposalDescription(), null, context);
 			acceptor.accept(completionProposal);
 		}
