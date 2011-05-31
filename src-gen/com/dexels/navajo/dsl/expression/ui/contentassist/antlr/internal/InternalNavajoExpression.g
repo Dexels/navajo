@@ -5119,10 +5119,6 @@ RULE_XML_LTEQ : '&lt;=';
 
 RULE_NUMBER : ('0'..'9')+ ('.' ('0'..'9')+)?;
 
-RULE_ML_COMMENT : '/*' ( options {greedy=false;} : . )*'*/';
-
-RULE_SL_COMMENT : '//' ~(('\n'|'\r'))* ('\r'? '\n')?;
-
 RULE_WS : (' '|'\t'|'\r'|'\n')+;
 
 RULE_TRUE : ('true'|'TRUE');
