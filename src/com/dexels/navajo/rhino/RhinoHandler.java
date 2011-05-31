@@ -35,7 +35,7 @@ public class RhinoHandler extends ServiceHandler {
 //			e1.printStackTrace();
 			System.err.println("NavajoDone caught in handler. Rethrowing");
 			throw e1;
-		} catch (Exception e) {
+		} catch (Throwable e) {
 
 			e.printStackTrace();
 	       try {

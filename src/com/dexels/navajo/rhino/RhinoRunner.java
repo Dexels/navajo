@@ -16,6 +16,8 @@ import org.mozilla.javascript.JavaScriptException;
 import org.mozilla.javascript.Script;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.WrappedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
@@ -41,6 +43,8 @@ public class RhinoRunner {
 	// private Navajo response = null;
 
 	private boolean localMode = false;
+	
+	private static Logger logger = LoggerFactory.getLogger(RhinoRunner.class);
 
 	
 	public static void main(String[] args) throws IOException, InterruptedException, NavajoException, UserException,
@@ -149,7 +153,7 @@ public class RhinoRunner {
 						System.err.println("Waiting for scriptFinish");
 						se.wait();
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						logger.info("Interrupted:", e);
 					}
 				}
 			}
@@ -210,54 +214,51 @@ public class RhinoRunner {
 				Object o = e.getValue();
 				o = Context.jsToJava(o, Object.class);
 				System.err.println("o: " + o);
+				logger.error("Other exception:", e);
 				if (o instanceof RuntimeException) {
 					RuntimeException t = (RuntimeException) o;
-					System.err.println("Rethrowing.......");
 					throw t;
 				}
-				System.err.println("Other exception?");
-				e.printStackTrace();
 			}
 			// this only happens when the entire scripts runs without
 			// continuations.
-			System.err.println("End of run, should only happen if no continuations happened!");
 			scriptEnvironment.finishRun();
 			NavajoScopeManager.getInstance().releaseScope(globalScope);
 			return scriptEnvironment;
 		} catch (ContinuationPending pending) {
-			System.err.println("Continuation thrown. That's cool. Rethrowing NavajoDoneException");
 			Object o = pending.getContinuation();
 			if (o == null) {
 				scriptEnvironment.setAsync(true);
 				return scriptEnvironment;
 			}
-			System.err.println("Scheduled continuation");
+			logger.info("Continuation scheduled",pending);
 			throw new NavajoDoneException(pending);
 //			throw pending;
 		} catch (NavajoDoneException pending) {
 			// do NOT free the scope!
 			throw pending;
 		} catch (ConditionError e) {
-			System.err.println("Condition Error detected!");
+			logger.error("Condition error:", e);
 
 			NavajoScopeManager.getInstance().releaseScope(globalScope);
 			a.setOutputDoc(e.getConditionErrors());
 			return scriptEnvironment;
 		} catch (BreakError e) {
-			System.err.println("Break Error detected!");
 			generateErrorMessage("Break Error detected: "+e.getMessage(),e,a);
-
+			logger.warn("Break error detected",e);
 			NavajoScopeManager.getInstance().releaseScope(globalScope);
 			return scriptEnvironment;
 		} catch (WrappedException e) {
-			System.err.println("Very unknown error. Should create error message!");
 			generateErrorMessage("Wrapped error: "+e.getCause().getMessage(),e.getCause(),a);
+			//logger.error("Wrapped error:", e);
+
 			NavajoScopeManager.getInstance().releaseScope(globalScope);
 			e.printStackTrace();
 			return scriptEnvironment;
 			
-		} catch (Exception e) {
-			System.err.println("Very unknown error. Should create error message!");
+		} catch (Throwable e) {
+			System.err.println("THROWABLE!");
+			logger.error("Unknown error:", e);
 			generateErrorMessage("Unknown error:"+e.getMessage(),e,a);
 			NavajoScopeManager.getInstance().releaseScope(globalScope);
 			e.printStackTrace();
@@ -314,7 +315,7 @@ public class RhinoRunner {
 		}
 	}
 
-	public void run(Access access) throws NavajoException, SystemException, NavajoDoneException {
+	public void run(final Access access) throws NavajoException, SystemException, NavajoDoneException {
 		InputStream is = null;
 		try {
 			if (access.getOutputDoc() == null) {
@@ -324,7 +325,7 @@ public class RhinoRunner {
 			runScript(is, access,new ScriptFinishHandler(){
 				@Override
 				public void run() {
-					System.err.println("Script run complete.");
+					logger.info("Script: "+access.getRpcName()+" complete");
 					
 				}} );
 		} catch (IOException e) {
