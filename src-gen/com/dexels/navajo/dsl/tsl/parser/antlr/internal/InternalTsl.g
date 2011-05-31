@@ -89,27 +89,31 @@ ruleTml returns [EObject current=null]
     @after { resetLookahead(); 
     	lastConsumedNode = currentNode;
     }:
-(RULE_NAVASCRIPT_START
+((
     { 
-    createLeafNode(grammarAccess.getTmlAccess().getNAVASCRIPT_STARTTerminalRuleCall_0(), null); 
-    }
-(
-    { 
-        temp=factory.create(grammarAccess.getTmlAccess().getTmlAction_1().getType().getClassifier());
+        temp=factory.create(grammarAccess.getTmlAccess().getTmlAction_0().getType().getClassifier());
         $current = temp; 
         temp = null;
-        CompositeNode newNode = createCompositeNode(grammarAccess.getTmlAccess().getTmlAction_1(), currentNode.getParent());
+        CompositeNode newNode = createCompositeNode(grammarAccess.getTmlAccess().getTmlAction_0(), currentNode.getParent());
     newNode.getChildren().add(currentNode);
     moveLookaheadInfo(currentNode, newNode);
     currentNode = newNode; 
         associateNodeWithAstElement(currentNode, $current); 
     }
-)(
+)(RULE_XMLHEAD
+    { 
+    createLeafNode(grammarAccess.getTmlAccess().getXMLHeadTerminalRuleCall_1(), null); 
+    }
+)?RULE_NAVASCRIPT_START
+    { 
+    createLeafNode(grammarAccess.getTmlAccess().getNAVASCRIPT_STARTTerminalRuleCall_2(), null); 
+    }
+(
 (
 		{ 
-	        currentNode=createCompositeNode(grammarAccess.getTmlAccess().getAttributesPossibleExpressionParserRuleCall_2_0(), currentNode); 
+	        currentNode=createCompositeNode(grammarAccess.getTmlAccess().getAttributesPossibleExpressionParserRuleCall_3_0(), currentNode); 
 	    }
-		lv_attributes_2_0=rulePossibleExpression		{
+		lv_attributes_3_0=rulePossibleExpression		{
 	        if ($current==null) {
 	            $current = factory.create(grammarAccess.getTmlRule().getType().getClassifier());
 	            associateNodeWithAstElement(currentNode.getParent(), $current);
@@ -118,7 +122,7 @@ ruleTml returns [EObject current=null]
 	       		add(
 	       			$current, 
 	       			"attributes",
-	        		lv_attributes_2_0, 
+	        		lv_attributes_3_0, 
 	        		"PossibleExpression", 
 	        		currentNode);
 	        } catch (ValueConverterException vce) {
@@ -130,14 +134,14 @@ ruleTml returns [EObject current=null]
 )
 )*((RULE_XML_TAG_END
     { 
-    createLeafNode(grammarAccess.getTmlAccess().getXML_TAG_ENDTerminalRuleCall_3_0_0(), null); 
+    createLeafNode(grammarAccess.getTmlAccess().getXML_TAG_ENDTerminalRuleCall_4_0_0(), null); 
     }
 ((
 (
 		{ 
-	        currentNode=createCompositeNode(grammarAccess.getTmlAccess().getChildrenMessageParserRuleCall_3_0_1_0_0(), currentNode); 
+	        currentNode=createCompositeNode(grammarAccess.getTmlAccess().getChildrenMessageParserRuleCall_4_0_1_0_0(), currentNode); 
 	    }
-		lv_children_4_0=ruleMessage		{
+		lv_children_5_0=ruleMessage		{
 	        if ($current==null) {
 	            $current = factory.create(grammarAccess.getTmlRule().getType().getClassifier());
 	            associateNodeWithAstElement(currentNode.getParent(), $current);
@@ -146,7 +150,7 @@ ruleTml returns [EObject current=null]
 	       		add(
 	       			$current, 
 	       			"children",
-	        		lv_children_4_0, 
+	        		lv_children_5_0, 
 	        		"Message", 
 	        		currentNode);
 	        } catch (ValueConverterException vce) {
@@ -160,9 +164,9 @@ ruleTml returns [EObject current=null]
     |(
 (
 		{ 
-	        currentNode=createCompositeNode(grammarAccess.getTmlAccess().getChildrenMapParserRuleCall_3_0_1_1_0(), currentNode); 
+	        currentNode=createCompositeNode(grammarAccess.getTmlAccess().getChildrenMapParserRuleCall_4_0_1_1_0(), currentNode); 
 	    }
-		lv_children_5_0=ruleMap		{
+		lv_children_6_0=ruleMap		{
 	        if ($current==null) {
 	            $current = factory.create(grammarAccess.getTmlRule().getType().getClassifier());
 	            associateNodeWithAstElement(currentNode.getParent(), $current);
@@ -171,7 +175,7 @@ ruleTml returns [EObject current=null]
 	       		add(
 	       			$current, 
 	       			"children",
-	        		lv_children_5_0, 
+	        		lv_children_6_0, 
 	        		"Map", 
 	        		currentNode);
 	        } catch (ValueConverterException vce) {
@@ -185,9 +189,9 @@ ruleTml returns [EObject current=null]
     |(
 (
 		{ 
-	        currentNode=createCompositeNode(grammarAccess.getTmlAccess().getChildrenParamParserRuleCall_3_0_1_2_0(), currentNode); 
+	        currentNode=createCompositeNode(grammarAccess.getTmlAccess().getChildrenParamParserRuleCall_4_0_1_2_0(), currentNode); 
 	    }
-		lv_children_6_0=ruleParam		{
+		lv_children_7_0=ruleParam		{
 	        if ($current==null) {
 	            $current = factory.create(grammarAccess.getTmlRule().getType().getClassifier());
 	            associateNodeWithAstElement(currentNode.getParent(), $current);
@@ -196,7 +200,7 @@ ruleTml returns [EObject current=null]
 	       		add(
 	       			$current, 
 	       			"children",
-	        		lv_children_6_0, 
+	        		lv_children_7_0, 
 	        		"Param", 
 	        		currentNode);
 	        } catch (ValueConverterException vce) {
@@ -210,9 +214,9 @@ ruleTml returns [EObject current=null]
     |(
 (
 		{ 
-	        currentNode=createCompositeNode(grammarAccess.getTmlAccess().getMethodsMethodsParserRuleCall_3_0_1_3_0(), currentNode); 
+	        currentNode=createCompositeNode(grammarAccess.getTmlAccess().getMethodsMethodsParserRuleCall_4_0_1_3_0(), currentNode); 
 	    }
-		lv_methods_7_0=ruleMethods		{
+		lv_methods_8_0=ruleMethods		{
 	        if ($current==null) {
 	            $current = factory.create(grammarAccess.getTmlRule().getType().getClassifier());
 	            associateNodeWithAstElement(currentNode.getParent(), $current);
@@ -221,7 +225,7 @@ ruleTml returns [EObject current=null]
 	       		add(
 	       			$current, 
 	       			"methods",
-	        		lv_methods_7_0, 
+	        		lv_methods_8_0, 
 	        		"Methods", 
 	        		currentNode);
 	        } catch (ValueConverterException vce) {
@@ -235,9 +239,9 @@ ruleTml returns [EObject current=null]
     |(
 (
 		{ 
-	        currentNode=createCompositeNode(grammarAccess.getTmlAccess().getChildrenDebugTagParserRuleCall_3_0_1_4_0(), currentNode); 
+	        currentNode=createCompositeNode(grammarAccess.getTmlAccess().getChildrenDebugTagParserRuleCall_4_0_1_4_0(), currentNode); 
 	    }
-		lv_children_8_0=ruleDebugTag		{
+		lv_children_9_0=ruleDebugTag		{
 	        if ($current==null) {
 	            $current = factory.create(grammarAccess.getTmlRule().getType().getClassifier());
 	            associateNodeWithAstElement(currentNode.getParent(), $current);
@@ -246,7 +250,7 @@ ruleTml returns [EObject current=null]
 	       		add(
 	       			$current, 
 	       			"children",
-	        		lv_children_8_0, 
+	        		lv_children_9_0, 
 	        		"DebugTag", 
 	        		currentNode);
 	        } catch (ValueConverterException vce) {
@@ -260,9 +264,9 @@ ruleTml returns [EObject current=null]
     |(
 (
 		{ 
-	        currentNode=createCompositeNode(grammarAccess.getTmlAccess().getChildrenIncludeParserRuleCall_3_0_1_5_0(), currentNode); 
+	        currentNode=createCompositeNode(grammarAccess.getTmlAccess().getChildrenIncludeParserRuleCall_4_0_1_5_0(), currentNode); 
 	    }
-		lv_children_9_0=ruleInclude		{
+		lv_children_10_0=ruleInclude		{
 	        if ($current==null) {
 	            $current = factory.create(grammarAccess.getTmlRule().getType().getClassifier());
 	            associateNodeWithAstElement(currentNode.getParent(), $current);
@@ -271,7 +275,7 @@ ruleTml returns [EObject current=null]
 	       		add(
 	       			$current, 
 	       			"children",
-	        		lv_children_9_0, 
+	        		lv_children_10_0, 
 	        		"Include", 
 	        		currentNode);
 	        } catch (ValueConverterException vce) {
@@ -285,9 +289,9 @@ ruleTml returns [EObject current=null]
     |(
 (
 		{ 
-	        currentNode=createCompositeNode(grammarAccess.getTmlAccess().getChildrenValidationsParserRuleCall_3_0_1_6_0(), currentNode); 
+	        currentNode=createCompositeNode(grammarAccess.getTmlAccess().getChildrenValidationsParserRuleCall_4_0_1_6_0(), currentNode); 
 	    }
-		lv_children_10_0=ruleValidations		{
+		lv_children_11_0=ruleValidations		{
 	        if ($current==null) {
 	            $current = factory.create(grammarAccess.getTmlRule().getType().getClassifier());
 	            associateNodeWithAstElement(currentNode.getParent(), $current);
@@ -296,7 +300,7 @@ ruleTml returns [EObject current=null]
 	       		add(
 	       			$current, 
 	       			"children",
-	        		lv_children_10_0, 
+	        		lv_children_11_0, 
 	        		"Validations", 
 	        		currentNode);
 	        } catch (ValueConverterException vce) {
@@ -310,9 +314,9 @@ ruleTml returns [EObject current=null]
     |(
 (
 		{ 
-	        currentNode=createCompositeNode(grammarAccess.getTmlAccess().getChildrenCommentParserRuleCall_3_0_1_7_0(), currentNode); 
+	        currentNode=createCompositeNode(grammarAccess.getTmlAccess().getChildrenCommentParserRuleCall_4_0_1_7_0(), currentNode); 
 	    }
-		lv_children_11_0=ruleComment		{
+		lv_children_12_0=ruleComment		{
 	        if ($current==null) {
 	            $current = factory.create(grammarAccess.getTmlRule().getType().getClassifier());
 	            associateNodeWithAstElement(currentNode.getParent(), $current);
@@ -321,7 +325,7 @@ ruleTml returns [EObject current=null]
 	       		add(
 	       			$current, 
 	       			"children",
-	        		lv_children_11_0, 
+	        		lv_children_12_0, 
 	        		"Comment", 
 	        		currentNode);
 	        } catch (ValueConverterException vce) {
@@ -333,12 +337,12 @@ ruleTml returns [EObject current=null]
 )
 ))*RULE_NAVASCRIPT_END
     { 
-    createLeafNode(grammarAccess.getTmlAccess().getNAVASCRIPT_ENDTerminalRuleCall_3_0_2(), null); 
+    createLeafNode(grammarAccess.getTmlAccess().getNAVASCRIPT_ENDTerminalRuleCall_4_0_2(), null); 
     }
 )
     |RULE_XML_TAG_SINGLEEND
     { 
-    createLeafNode(grammarAccess.getTmlAccess().getXML_TAG_SINGLEENDTerminalRuleCall_3_1(), null); 
+    createLeafNode(grammarAccess.getTmlAccess().getXML_TAG_SINGLEENDTerminalRuleCall_4_1(), null); 
     }
 ))
 ;
@@ -6141,10 +6145,6 @@ RULE_XML_GTEQ : '&gt;=';
 RULE_XML_LTEQ : '&lt;=';
 
 RULE_NUMBER : ('0'..'9')+ ('.' ('0'..'9')+)?;
-
-RULE_ML_COMMENT : '/*' ( options {greedy=false;} : . )*'*/';
-
-RULE_SL_COMMENT : '//' ~(('\n'|'\r'))* ('\r'? '\n')?;
 
 RULE_WS : (' '|'\t'|'\r'|'\n')+;
 

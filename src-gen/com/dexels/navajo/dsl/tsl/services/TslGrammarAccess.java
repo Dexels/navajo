@@ -20,126 +20,130 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 	public class TmlElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "Tml");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final RuleCall cNAVASCRIPT_STARTTerminalRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
-		private final Action cTmlAction_1 = (Action)cGroup.eContents().get(1);
-		private final Assignment cAttributesAssignment_2 = (Assignment)cGroup.eContents().get(2);
-		private final RuleCall cAttributesPossibleExpressionParserRuleCall_2_0 = (RuleCall)cAttributesAssignment_2.eContents().get(0);
-		private final Alternatives cAlternatives_3 = (Alternatives)cGroup.eContents().get(3);
-		private final Group cGroup_3_0 = (Group)cAlternatives_3.eContents().get(0);
-		private final RuleCall cXML_TAG_ENDTerminalRuleCall_3_0_0 = (RuleCall)cGroup_3_0.eContents().get(0);
-		private final Alternatives cAlternatives_3_0_1 = (Alternatives)cGroup_3_0.eContents().get(1);
-		private final Assignment cChildrenAssignment_3_0_1_0 = (Assignment)cAlternatives_3_0_1.eContents().get(0);
-		private final RuleCall cChildrenMessageParserRuleCall_3_0_1_0_0 = (RuleCall)cChildrenAssignment_3_0_1_0.eContents().get(0);
-		private final Assignment cChildrenAssignment_3_0_1_1 = (Assignment)cAlternatives_3_0_1.eContents().get(1);
-		private final RuleCall cChildrenMapParserRuleCall_3_0_1_1_0 = (RuleCall)cChildrenAssignment_3_0_1_1.eContents().get(0);
-		private final Assignment cChildrenAssignment_3_0_1_2 = (Assignment)cAlternatives_3_0_1.eContents().get(2);
-		private final RuleCall cChildrenParamParserRuleCall_3_0_1_2_0 = (RuleCall)cChildrenAssignment_3_0_1_2.eContents().get(0);
-		private final Assignment cMethodsAssignment_3_0_1_3 = (Assignment)cAlternatives_3_0_1.eContents().get(3);
-		private final RuleCall cMethodsMethodsParserRuleCall_3_0_1_3_0 = (RuleCall)cMethodsAssignment_3_0_1_3.eContents().get(0);
-		private final Assignment cChildrenAssignment_3_0_1_4 = (Assignment)cAlternatives_3_0_1.eContents().get(4);
-		private final RuleCall cChildrenDebugTagParserRuleCall_3_0_1_4_0 = (RuleCall)cChildrenAssignment_3_0_1_4.eContents().get(0);
-		private final Assignment cChildrenAssignment_3_0_1_5 = (Assignment)cAlternatives_3_0_1.eContents().get(5);
-		private final RuleCall cChildrenIncludeParserRuleCall_3_0_1_5_0 = (RuleCall)cChildrenAssignment_3_0_1_5.eContents().get(0);
-		private final Assignment cChildrenAssignment_3_0_1_6 = (Assignment)cAlternatives_3_0_1.eContents().get(6);
-		private final RuleCall cChildrenValidationsParserRuleCall_3_0_1_6_0 = (RuleCall)cChildrenAssignment_3_0_1_6.eContents().get(0);
-		private final Assignment cChildrenAssignment_3_0_1_7 = (Assignment)cAlternatives_3_0_1.eContents().get(7);
-		private final RuleCall cChildrenCommentParserRuleCall_3_0_1_7_0 = (RuleCall)cChildrenAssignment_3_0_1_7.eContents().get(0);
-		private final RuleCall cNAVASCRIPT_ENDTerminalRuleCall_3_0_2 = (RuleCall)cGroup_3_0.eContents().get(2);
-		private final RuleCall cXML_TAG_SINGLEENDTerminalRuleCall_3_1 = (RuleCall)cAlternatives_3.eContents().get(1);
+		private final Action cTmlAction_0 = (Action)cGroup.eContents().get(0);
+		private final RuleCall cXMLHeadTerminalRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
+		private final RuleCall cNAVASCRIPT_STARTTerminalRuleCall_2 = (RuleCall)cGroup.eContents().get(2);
+		private final Assignment cAttributesAssignment_3 = (Assignment)cGroup.eContents().get(3);
+		private final RuleCall cAttributesPossibleExpressionParserRuleCall_3_0 = (RuleCall)cAttributesAssignment_3.eContents().get(0);
+		private final Alternatives cAlternatives_4 = (Alternatives)cGroup.eContents().get(4);
+		private final Group cGroup_4_0 = (Group)cAlternatives_4.eContents().get(0);
+		private final RuleCall cXML_TAG_ENDTerminalRuleCall_4_0_0 = (RuleCall)cGroup_4_0.eContents().get(0);
+		private final Alternatives cAlternatives_4_0_1 = (Alternatives)cGroup_4_0.eContents().get(1);
+		private final Assignment cChildrenAssignment_4_0_1_0 = (Assignment)cAlternatives_4_0_1.eContents().get(0);
+		private final RuleCall cChildrenMessageParserRuleCall_4_0_1_0_0 = (RuleCall)cChildrenAssignment_4_0_1_0.eContents().get(0);
+		private final Assignment cChildrenAssignment_4_0_1_1 = (Assignment)cAlternatives_4_0_1.eContents().get(1);
+		private final RuleCall cChildrenMapParserRuleCall_4_0_1_1_0 = (RuleCall)cChildrenAssignment_4_0_1_1.eContents().get(0);
+		private final Assignment cChildrenAssignment_4_0_1_2 = (Assignment)cAlternatives_4_0_1.eContents().get(2);
+		private final RuleCall cChildrenParamParserRuleCall_4_0_1_2_0 = (RuleCall)cChildrenAssignment_4_0_1_2.eContents().get(0);
+		private final Assignment cMethodsAssignment_4_0_1_3 = (Assignment)cAlternatives_4_0_1.eContents().get(3);
+		private final RuleCall cMethodsMethodsParserRuleCall_4_0_1_3_0 = (RuleCall)cMethodsAssignment_4_0_1_3.eContents().get(0);
+		private final Assignment cChildrenAssignment_4_0_1_4 = (Assignment)cAlternatives_4_0_1.eContents().get(4);
+		private final RuleCall cChildrenDebugTagParserRuleCall_4_0_1_4_0 = (RuleCall)cChildrenAssignment_4_0_1_4.eContents().get(0);
+		private final Assignment cChildrenAssignment_4_0_1_5 = (Assignment)cAlternatives_4_0_1.eContents().get(5);
+		private final RuleCall cChildrenIncludeParserRuleCall_4_0_1_5_0 = (RuleCall)cChildrenAssignment_4_0_1_5.eContents().get(0);
+		private final Assignment cChildrenAssignment_4_0_1_6 = (Assignment)cAlternatives_4_0_1.eContents().get(6);
+		private final RuleCall cChildrenValidationsParserRuleCall_4_0_1_6_0 = (RuleCall)cChildrenAssignment_4_0_1_6.eContents().get(0);
+		private final Assignment cChildrenAssignment_4_0_1_7 = (Assignment)cAlternatives_4_0_1.eContents().get(7);
+		private final RuleCall cChildrenCommentParserRuleCall_4_0_1_7_0 = (RuleCall)cChildrenAssignment_4_0_1_7.eContents().get(0);
+		private final RuleCall cNAVASCRIPT_ENDTerminalRuleCall_4_0_2 = (RuleCall)cGroup_4_0.eContents().get(2);
+		private final RuleCall cXML_TAG_SINGLEENDTerminalRuleCall_4_1 = (RuleCall)cAlternatives_4.eContents().get(1);
 		
 		////com.dexels.navajo.dsl.expression/src-gen/com/dexels.navajo/dsl/expression/NavajoExpression.ecore"
 		////generate tsl "http://www.dexels.com/navajo/dsl/tsl/NavajoTsl"
 		//Tml:
-		//	NAVASCRIPT_START {Tml} attributes+=PossibleExpression* (XML_TAG_END (children+=Message | children+=Map |
+		//	{Tml} XMLHead? NAVASCRIPT_START attributes+=PossibleExpression* (XML_TAG_END (children+=Message | children+=Map |
 		//	children+=Param | methods+=Methods | children+=DebugTag | children+=Include | children+=Validations |
 		//	children+=Comment)* NAVASCRIPT_END | XML_TAG_SINGLEEND);
 		public ParserRule getRule() { return rule; }
 
-		//NAVASCRIPT_START {Tml} attributes+=PossibleExpression* (XML_TAG_END (children+=Message | children+=Map | children+=Param
-		//| methods+=Methods | children+=DebugTag | children+=Include | children+=Validations | children+=Comment)*
-		//NAVASCRIPT_END | XML_TAG_SINGLEEND)
+		//{Tml} XMLHead? NAVASCRIPT_START attributes+=PossibleExpression* (XML_TAG_END (children+=Message | children+=Map |
+		//children+=Param | methods+=Methods | children+=DebugTag | children+=Include | children+=Validations |
+		//children+=Comment)* NAVASCRIPT_END | XML_TAG_SINGLEEND)
 		public Group getGroup() { return cGroup; }
 
-		//NAVASCRIPT_START
-		public RuleCall getNAVASCRIPT_STARTTerminalRuleCall_0() { return cNAVASCRIPT_STARTTerminalRuleCall_0; }
-
 		//{Tml}
-		public Action getTmlAction_1() { return cTmlAction_1; }
+		public Action getTmlAction_0() { return cTmlAction_0; }
+
+		//XMLHead?
+		public RuleCall getXMLHeadTerminalRuleCall_1() { return cXMLHeadTerminalRuleCall_1; }
+
+		//NAVASCRIPT_START
+		public RuleCall getNAVASCRIPT_STARTTerminalRuleCall_2() { return cNAVASCRIPT_STARTTerminalRuleCall_2; }
 
 		//attributes+=PossibleExpression*
-		public Assignment getAttributesAssignment_2() { return cAttributesAssignment_2; }
+		public Assignment getAttributesAssignment_3() { return cAttributesAssignment_3; }
 
 		//PossibleExpression
-		public RuleCall getAttributesPossibleExpressionParserRuleCall_2_0() { return cAttributesPossibleExpressionParserRuleCall_2_0; }
+		public RuleCall getAttributesPossibleExpressionParserRuleCall_3_0() { return cAttributesPossibleExpressionParserRuleCall_3_0; }
 
 		//XML_TAG_END (children+=Message | children+=Map | children+=Param | methods+=Methods | children+=DebugTag |
 		//children+=Include | children+=Validations | children+=Comment)* NAVASCRIPT_END | XML_TAG_SINGLEEND
-		public Alternatives getAlternatives_3() { return cAlternatives_3; }
+		public Alternatives getAlternatives_4() { return cAlternatives_4; }
 
 		//XML_TAG_END (children+=Message | children+=Map | children+=Param | methods+=Methods | children+=DebugTag |
 		//children+=Include | children+=Validations | children+=Comment)* NAVASCRIPT_END
-		public Group getGroup_3_0() { return cGroup_3_0; }
+		public Group getGroup_4_0() { return cGroup_4_0; }
 
 		//XML_TAG_END
-		public RuleCall getXML_TAG_ENDTerminalRuleCall_3_0_0() { return cXML_TAG_ENDTerminalRuleCall_3_0_0; }
+		public RuleCall getXML_TAG_ENDTerminalRuleCall_4_0_0() { return cXML_TAG_ENDTerminalRuleCall_4_0_0; }
 
 		//(children+=Message | children+=Map | children+=Param | methods+=Methods | children+=DebugTag | children+=Include |
 		//children+=Validations | children+=Comment)*
-		public Alternatives getAlternatives_3_0_1() { return cAlternatives_3_0_1; }
+		public Alternatives getAlternatives_4_0_1() { return cAlternatives_4_0_1; }
 
 		//children+=Message
-		public Assignment getChildrenAssignment_3_0_1_0() { return cChildrenAssignment_3_0_1_0; }
+		public Assignment getChildrenAssignment_4_0_1_0() { return cChildrenAssignment_4_0_1_0; }
 
 		//Message
-		public RuleCall getChildrenMessageParserRuleCall_3_0_1_0_0() { return cChildrenMessageParserRuleCall_3_0_1_0_0; }
+		public RuleCall getChildrenMessageParserRuleCall_4_0_1_0_0() { return cChildrenMessageParserRuleCall_4_0_1_0_0; }
 
 		//children+=Map
-		public Assignment getChildrenAssignment_3_0_1_1() { return cChildrenAssignment_3_0_1_1; }
+		public Assignment getChildrenAssignment_4_0_1_1() { return cChildrenAssignment_4_0_1_1; }
 
 		//Map
-		public RuleCall getChildrenMapParserRuleCall_3_0_1_1_0() { return cChildrenMapParserRuleCall_3_0_1_1_0; }
+		public RuleCall getChildrenMapParserRuleCall_4_0_1_1_0() { return cChildrenMapParserRuleCall_4_0_1_1_0; }
 
 		//children+=Param
-		public Assignment getChildrenAssignment_3_0_1_2() { return cChildrenAssignment_3_0_1_2; }
+		public Assignment getChildrenAssignment_4_0_1_2() { return cChildrenAssignment_4_0_1_2; }
 
 		//Param
-		public RuleCall getChildrenParamParserRuleCall_3_0_1_2_0() { return cChildrenParamParserRuleCall_3_0_1_2_0; }
+		public RuleCall getChildrenParamParserRuleCall_4_0_1_2_0() { return cChildrenParamParserRuleCall_4_0_1_2_0; }
 
 		//methods+=Methods
-		public Assignment getMethodsAssignment_3_0_1_3() { return cMethodsAssignment_3_0_1_3; }
+		public Assignment getMethodsAssignment_4_0_1_3() { return cMethodsAssignment_4_0_1_3; }
 
 		//Methods
-		public RuleCall getMethodsMethodsParserRuleCall_3_0_1_3_0() { return cMethodsMethodsParserRuleCall_3_0_1_3_0; }
+		public RuleCall getMethodsMethodsParserRuleCall_4_0_1_3_0() { return cMethodsMethodsParserRuleCall_4_0_1_3_0; }
 
 		//children+=DebugTag
-		public Assignment getChildrenAssignment_3_0_1_4() { return cChildrenAssignment_3_0_1_4; }
+		public Assignment getChildrenAssignment_4_0_1_4() { return cChildrenAssignment_4_0_1_4; }
 
 		//DebugTag
-		public RuleCall getChildrenDebugTagParserRuleCall_3_0_1_4_0() { return cChildrenDebugTagParserRuleCall_3_0_1_4_0; }
+		public RuleCall getChildrenDebugTagParserRuleCall_4_0_1_4_0() { return cChildrenDebugTagParserRuleCall_4_0_1_4_0; }
 
 		//children+=Include
-		public Assignment getChildrenAssignment_3_0_1_5() { return cChildrenAssignment_3_0_1_5; }
+		public Assignment getChildrenAssignment_4_0_1_5() { return cChildrenAssignment_4_0_1_5; }
 
 		//Include
-		public RuleCall getChildrenIncludeParserRuleCall_3_0_1_5_0() { return cChildrenIncludeParserRuleCall_3_0_1_5_0; }
+		public RuleCall getChildrenIncludeParserRuleCall_4_0_1_5_0() { return cChildrenIncludeParserRuleCall_4_0_1_5_0; }
 
 		//children+=Validations
-		public Assignment getChildrenAssignment_3_0_1_6() { return cChildrenAssignment_3_0_1_6; }
+		public Assignment getChildrenAssignment_4_0_1_6() { return cChildrenAssignment_4_0_1_6; }
 
 		//Validations
-		public RuleCall getChildrenValidationsParserRuleCall_3_0_1_6_0() { return cChildrenValidationsParserRuleCall_3_0_1_6_0; }
+		public RuleCall getChildrenValidationsParserRuleCall_4_0_1_6_0() { return cChildrenValidationsParserRuleCall_4_0_1_6_0; }
 
 		//children+=Comment
-		public Assignment getChildrenAssignment_3_0_1_7() { return cChildrenAssignment_3_0_1_7; }
+		public Assignment getChildrenAssignment_4_0_1_7() { return cChildrenAssignment_4_0_1_7; }
 
 		//Comment
-		public RuleCall getChildrenCommentParserRuleCall_3_0_1_7_0() { return cChildrenCommentParserRuleCall_3_0_1_7_0; }
+		public RuleCall getChildrenCommentParserRuleCall_4_0_1_7_0() { return cChildrenCommentParserRuleCall_4_0_1_7_0; }
 
 		//NAVASCRIPT_END
-		public RuleCall getNAVASCRIPT_ENDTerminalRuleCall_3_0_2() { return cNAVASCRIPT_ENDTerminalRuleCall_3_0_2; }
+		public RuleCall getNAVASCRIPT_ENDTerminalRuleCall_4_0_2() { return cNAVASCRIPT_ENDTerminalRuleCall_4_0_2; }
 
 		//XML_TAG_SINGLEEND
-		public RuleCall getXML_TAG_SINGLEENDTerminalRuleCall_3_1() { return cXML_TAG_SINGLEENDTerminalRuleCall_3_1; }
+		public RuleCall getXML_TAG_SINGLEENDTerminalRuleCall_4_1() { return cXML_TAG_SINGLEENDTerminalRuleCall_4_1; }
 	}
 
 	public class AttributeNameElements extends AbstractParserRuleElementFinder {
@@ -1869,7 +1873,7 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 	////com.dexels.navajo.dsl.expression/src-gen/com/dexels.navajo/dsl/expression/NavajoExpression.ecore"
 	////generate tsl "http://www.dexels.com/navajo/dsl/tsl/NavajoTsl"
 	//Tml:
-	//	NAVASCRIPT_START {Tml} attributes+=PossibleExpression* (XML_TAG_END (children+=Message | children+=Map |
+	//	{Tml} XMLHead? NAVASCRIPT_START attributes+=PossibleExpression* (XML_TAG_END (children+=Message | children+=Map |
 	//	children+=Param | methods+=Methods | children+=DebugTag | children+=Include | children+=Validations |
 	//	children+=Comment)* NAVASCRIPT_END | XML_TAG_SINGLEEND);
 	public TmlElements getTmlAccess() {
@@ -2452,18 +2456,6 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		return gaNavajoExpression.getNUMBERRule();
 	} 
 
-	//terminal ML_COMMENT:
-	//	"/ *"->"* /";
-	public TerminalRule getML_COMMENTRule() {
-		return gaNavajoExpression.getML_COMMENTRule();
-	} 
-
-	//terminal SL_COMMENT:
-	//	"//" !("\n" | "\r")* ("\r"? "\n")?;
-	public TerminalRule getSL_COMMENTRule() {
-		return gaNavajoExpression.getSL_COMMENTRule();
-	} 
-
 	//terminal WS:
 	//	(" " | "\t" | "\r" | "\n")+;
 	public TerminalRule getWSRule() {
@@ -2733,11 +2725,10 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//Literal returns Expression:
-	//	{Expression} NUMBER // TODO Add float
-	//	| valueString=LITERALSTRING | operations+=FORALL "(" valueString=LITERALSTRING "," parameters+=OrExpression ")" |
-	//	parameters+=FunctionCall | expressionType="{" parameters+=OrExpression? ("," parameters+=OrExpression)* "}" |
-	//	elements+=NULL | elements+=TODAY | elements+=TRUE | elements+=FALSE | parameters+=TmlExpression |
-	//	parameters+=ExistsTmlExpression | parameters+=MapGetReference | parameters+=DateLiteral;
+	//	{Expression} NUMBER | valueString=LITERALSTRING | operations+=FORALL "(" valueString=LITERALSTRING ","
+	//	parameters+=OrExpression ")" | parameters+=FunctionCall | expressionType="{" parameters+=OrExpression? (","
+	//	parameters+=OrExpression)* "}" | elements+=NULL | elements+=TODAY | elements+=TRUE | elements+=FALSE |
+	//	parameters+=TmlExpression | parameters+=ExistsTmlExpression | parameters+=MapGetReference | parameters+=DateLiteral;
 	public NavajoExpressionGrammarAccess.LiteralElements getLiteralAccess() {
 		return gaNavajoExpression.getLiteralAccess();
 	}

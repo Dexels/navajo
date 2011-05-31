@@ -1,5 +1,5 @@
 //grammar com.dexels.navajo.dsl.tsl.Tsl with org.eclipse.xtext.common.Terminals //with com.dexels.navajo.dsl.expression.NavajoExpression
-grammar com.dexels.navajo.dsl.tsl.Tsl with com.dexels.navajo.dsl.expression.NavajoExpression hidden(WS, ML_COMMENT, SL_COMMENT,XMLComment,XMLHead)
+grammar com.dexels.navajo.dsl.tsl.Tsl with com.dexels.navajo.dsl.expression.NavajoExpression hidden(WS, XMLComment)
 
 //import "platform:/resource/com.dexels.navajo.dsl.expression/src/com/dexels/navajo/dsl/expression/Navajo.ecore" as ncore
 //import "http://www.dexels.com/navajo/dsl/expression/NavajoExpression" as nexpr
@@ -14,7 +14,9 @@ import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 
 
 Tml :
-	NAVASCRIPT_START {Tml} (attributes+=PossibleExpression)* 
+	{Tml}
+	XMLHead?
+	NAVASCRIPT_START  (attributes+=PossibleExpression)* 
 	(
 		(XML_TAG_END 
 			((children+=Message) | (children+=Map)| (children+=Param) | (methods += Methods) | (children+=DebugTag)| (children+=Include) | (children+=Validations) | (children+=Comment))*
