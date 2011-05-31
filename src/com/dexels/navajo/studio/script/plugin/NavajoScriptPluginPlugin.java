@@ -226,9 +226,9 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         openViewer("com.dexels.TmlClientView");
     }
 
-    public void injectNavajoResponse(Navajo n, String scriptName) {
+    public void injectNavajoResponse(Navajo n, String scriptName, IProject currentProject) {
     	for (INavajoActivityListener nn : navajoActivityListeners) {
-			nn.navajoResponse(n,scriptName);
+			nn.navajoResponse(n,scriptName,currentProject);
 		}
     }
     
