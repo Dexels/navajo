@@ -21,7 +21,8 @@ Require-Bundle: com.dexels.navajo.document;bundle-version="1.0.5",
  org.eclipse.xtend,
  org.eclipse.xpand,
  com.dexels.navajo.dev.script;bundle-version="2.0.1"
-Import-Package: org.apache.log4j
+Import-Package: org.apache.log4j,
+ org.slf4j;version="1.6.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.dexels.navajo.dsl.tsl.ui.contentassist.antlr,
  com.dexels.navajo.dsl.tsl.ui.internal

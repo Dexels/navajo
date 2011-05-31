@@ -181,4 +181,11 @@
       </markerResolutionGenerator>
    </extension>
 
+   
+  <extension
+       point="org.eclipse.xtext.builder.participant">
+    <participant class="com.dexels.navajo.dsl.tsl.ui.NavajoScriptBuilder">
+    </participant>
+ </extension>
+
 </plugin>
