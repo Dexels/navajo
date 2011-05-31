@@ -71,7 +71,7 @@ public class RunScript implements IWorkbenchWindowActionDelegate {
                 			
                 			nc.callService(scriptName);
                 			Navajo response = nc.getNavajo(scriptName);
-                			NavajoScriptPluginPlugin.getDefault().injectNavajoResponse(response, scriptName);
+                			NavajoScriptPluginPlugin.getDefault().injectNavajoResponse(response, scriptName,currentProject);
             				
             			}
             		} catch (ClientException e) {
