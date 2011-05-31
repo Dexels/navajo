@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -66,6 +67,9 @@ public class TmlClientView extends BaseNavajoView implements IServerEntryListene
     private Composite myContainer;
 //	private ServerEntry serverEntry;
 	private ServerInstance serverInstance;
+	
+	
+	private IProject currentProject = null;
   
 	
 	public void setServerInstance(ServerInstance si) {
@@ -89,57 +93,6 @@ public class TmlClientView extends BaseNavajoView implements IServerEntryListene
         TableWrapLayout twl = new TableWrapLayout();
         twl.numColumns=9;
         headComp.setLayout(twl);
-//        Label l = new Label(headComp,SWT.NONE);
-//        l.setBackground(new Color(Display.getCurrent(), 240, 240, 220));
-//        l.setText("Server: ");
-//        l.setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.MIDDLE));
-        
-//        myService = new TextViewer(headComp,SWT.SINGLE | SWT.BORDER);
-//        myService.getTextWidget().setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB,TableWrapData.FILL_GRAB));
-//        myService.setDocument(new Document());
-//        final ContentAssistant assistant = new ContentAssistant();
-//        assistant.setContentAssistProcessor(new ScriptContentAssist(), IDocument.DEFAULT_CONTENT_TYPE);
-//        assistant.install(myService);        
-//        
-//        myService.getControl().addKeyListener(new KeyAdapter() {
-//            public void keyPressed(KeyEvent e)
-//            {
-//             switch(e.keyCode)
-//            {
-//            case ' ':
-//                if ((e.stateMask | SWT.CTRL) != 0) {
-//                    assistant.showPossibleCompletions();
-//                }
-//                break;
-//            case '\n':
-//                go();
-//            break;
-//            default:
-////            ignore everything else
-//            }
-//            }
-//            });        
-//        myService.getTextWidget().setDoubleClickEnabled(true);
-//        goButton = new Button(headComp,SWT.PUSH);
-//        goButton.setText("Go!");
-//        goButton.setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.FILL_GRAB));
-//        goButton.addSelectionListener(new SelectionListener() {
-//            public void widgetSelected(SelectionEvent e) {
-//                go();
-//            }
-//
-//            public void widgetDefaultSelected(SelectionEvent e) {
-//            }});
-//        
-        
-//        localeBox = new ComboViewer(headComp);
-//        localeBox.getCombo().setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.FILL_GRAB));
-//        localeBox.addSelectionChangedListener(new ISelectionChangedListener(){
-//            public void selectionChanged(SelectionChangedEvent event) {
-//            	NavajoScriptPluginPlugin.getDefault().setSelectedLocale((String)((IStructuredSelection)event.getSelection()).getFirstElement());
-//            }});
-//
-//        localeBox.add(NavajoScriptPluginPlugin.getDefault().getLocales());
 
         
         backButton = new Button(headComp,SWT.PUSH);
@@ -191,7 +144,7 @@ public class TmlClientView extends BaseNavajoView implements IServerEntryListene
         setAsInputButton.setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.FILL_GRAB));
         setAsInputButton.addSelectionListener(new SelectionListener() {
             public void widgetSelected(SelectionEvent e) {
-            	setCurrentAsInput();
+            	setCurrentAsInput(currentProject);
             }
 
             public void widgetDefaultSelected(SelectionEvent e) {
@@ -210,10 +163,10 @@ public class TmlClientView extends BaseNavajoView implements IServerEntryListene
     }
 
     
-    protected void setCurrentAsInput() {
+    protected void setCurrentAsInput(IProject currentProject) {
 		Injector ii = TslActivator.getInstance().getInjector("com.dexels.navajo.dsl.tsl.Tsl");
 		INavajoContextProvider icp2 = ii.getInstance(INavajoContextProvider.class);
-		icp2.setInputNavajo(formComposite.getCurrentNavajo());
+		icp2.setInputNavajo(currentProject, formComposite.getCurrentNavajo());
 		
 	}
 
@@ -303,13 +256,6 @@ public class TmlClientView extends BaseNavajoView implements IServerEntryListene
         String nn = (String)historyList.pop();
         System.err.println("BACKING TO: "+nn+" current: "+currentService);
          System.err.println(">>> "+historyList);
-//         while (nn.equals(currentService) && !historyList.isEmpty()) {
-//            nn = (String)historyList.pop();
-//        }
-//         if (nn.equals(currentService) && historyList.isEmpty()) {
-//             System.err.println("Could not find anything decent on the historystack");
-//             return;
-//        }
          Navajo n = scriptMap.get(nn);
          if (n!=null) {
 //            scriptMap.put(current, myCurrentNavajo);
@@ -452,9 +398,9 @@ public class TmlClientView extends BaseNavajoView implements IServerEntryListene
 //		setServerEntry(se);
 //	}
 
-	public void navajoResponse(Navajo n, String scriptName) {
+	public void navajoResponse(Navajo n, String scriptName, IProject currentProject) {
+		this.currentProject = currentProject;
 		setNavajo(n, scriptName);
-		
 	}
 
 
