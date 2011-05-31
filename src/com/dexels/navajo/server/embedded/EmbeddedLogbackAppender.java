@@ -1,5 +1,6 @@
 package com.dexels.navajo.server.embedded;
 
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PipedInputStream;
@@ -12,11 +13,17 @@ import ch.qos.logback.core.OutputStreamAppender;
 public class EmbeddedLogbackAppender extends OutputStreamAppender<ILoggingEvent> {
 
 	private Appendable output;
-	private final PipedOutputStream baos = new PipedOutputStream();
+	private PipedOutputStream baos = new PipedOutputStream();
 	private Reader r;
 
 	public EmbeddedLogbackAppender(Appendable a) {
 		super();
+		createStreams();
+		this.output = a;
+	}
+
+	private void createStreams() {
+		baos = new PipedOutputStream();
 		try {
 			PipedInputStream pis = new PipedInputStream(baos);
 			r = new InputStreamReader(pis);
@@ -24,13 +31,20 @@ public class EmbeddedLogbackAppender extends OutputStreamAppender<ILoggingEvent>
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		this.output = a;
 	}
 
 	@Override
 	protected void writeOut(ILoggingEvent event) throws IOException {
 		try {
-			super.writeOut(event);
+			try {
+				super.writeOut(event);
+			} catch (Throwable e) {
+				System.err.println("Trouble logging, rebuilding streams");
+				e.printStackTrace();
+				createStreams();
+				setOutputStream(baos);
+
+			}
 //			bos.flush();
 			
 			 char[] buf = new char[1024];
@@ -49,7 +63,8 @@ public class EmbeddedLogbackAppender extends OutputStreamAppender<ILoggingEvent>
 
 	  @Override
 	  public void start() {
-			setOutputStream(baos);
+		  BufferedOutputStream bomp = new BufferedOutputStream(baos,20000);
+			setOutputStream(bomp);
 		  super.start();
 	  }
 }
