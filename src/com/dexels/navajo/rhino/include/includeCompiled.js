@@ -1,5 +1,5 @@
-env.log("Ready to go!");
-var monkey = new Packages.java.lang.String("hoempapa");
+//env.log("Ready to go!");
+//var monkey = new Packages.java.lang.String("hoempapa");
 //var conditionErrors = new Packages.com.dexels.navajo.rhino.flow.ConditionError();
 
 function callMap(mapClass, callback) {
@@ -67,13 +67,13 @@ function callReferenceMap(field,filter,callback){
 	}
 	isArr = env.isArrayMapRef(field);
 	if(isArr) {
-		env.log('it is an array');
+		//env.log('it is an array');
 		ref = env.createMapRef(field);
-		env.log('Found ref: '+ref+' is array? '+isArr);
-		env.log("Elements: "+ref.length);
+		//env.log('Found ref: '+ref+' is array? '+isArr);
+		//env.log("Elements: "+ref.length);
 		for(a in ref) {
-			env.log('Entering loop');
-			env.log('Element: '+ref[a]);
+			//env.log('Entering loop');
+			//env.log('Element: '+ref[a]);
 			env.addElement();
 			env.pushMappableTreeNode(ref[a]);
 			if((filter==null || filter==undefined) || evaluateNavajo(filter)==true) {
@@ -83,11 +83,11 @@ function callReferenceMap(field,filter,callback){
 			}
 
 			env.popMappableTreeNode();
-			env.log('Should be poppin the element now:');
+			//env.log('Should be poppin the element now:');
 			env.popMessage();
 		}
 	} else {
-		env.log('it is not an array');
+		//env.log('it is not an array');
 		ref = env.createMapRef(field);
 			//env.pushMappableTreeNode(ref);
 			callback(ref);
@@ -100,9 +100,9 @@ function callReferenceMap(field,filter,callback){
 function forEachSubMap(field,callback) {
 	isArr = env.isArrayMapRef(field);
 	if(isArr) {
-		env.log('it is an array');
+		//env.log('it is an array');
 	} else {
-		env.log('it is not an array');
+		//env.log('it is not an array');
 		ref = env.createMapRef(field);
 			//env.pushMappableTreeNode(ref);
 			callback();
@@ -168,9 +168,9 @@ function forMessage(path,filter,callback) {
 }
 
 function forEachParamMessage(path,filter,callback) {
-	env.log('looping over children at path: '+path)
+	//env.log('looping over children at path: '+path)
 	mm = env.getInputMessage(path);
-	env.log('looping over resultant: '+mm.toString())
+	//env.log('looping over resultant: '+mm.toString())
 
 	list = mm.getAllMessages().toArray();
 	for(i in list) {
