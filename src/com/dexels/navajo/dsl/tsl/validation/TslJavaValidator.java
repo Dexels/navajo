@@ -4,8 +4,13 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.validation.Check;
 
 import com.dexels.navajo.dsl.expression.proposals.AdapterProposal;
@@ -18,6 +23,7 @@ import com.dexels.navajo.dsl.model.tsl.Option;
 import com.dexels.navajo.dsl.model.tsl.Param;
 import com.dexels.navajo.dsl.model.tsl.PossibleExpression;
 import com.dexels.navajo.dsl.model.tsl.Property;
+import com.dexels.navajo.dsl.model.tsl.Tml;
 import com.dexels.navajo.dsl.model.tsl.TslPackage;
 import com.google.inject.Inject;
  
@@ -51,11 +57,6 @@ public class TslJavaValidator extends AbstractTslJavaValidator {
 	
 	
 	protected INavajoContextProvider getNavajoContext() throws  IOException {
-//		if(navajoContext!=null) {
-//			return navajoContext;
-//		}
-//		navajoContext = new NavajoContextProvider();
-//		navajoContext.initialize(new NavajoResourceFinder());
 		return navajoContext;
 	}
 	
@@ -65,7 +66,9 @@ public class TslJavaValidator extends AbstractTslJavaValidator {
 		return ePackages;
 	}
 
-
+	@Check
+	public void checkTml(Tml p) {
+	}
 	
 	@Check
 	public void checkMessage(Message p) {
@@ -84,7 +87,7 @@ public class TslJavaValidator extends AbstractTslJavaValidator {
 	public void checkOption(Option p) {
 		// TODO Check if parent property is of type 'selection'
 		java.util.Map<String,String> attr = createAttributeMap(p.getAttributes());
-		validateNeeds("option",p.getAttributes(),attr, new String[]{"name","value","selected"}, new String[]{}, new String[]{"name","value","selected"},new String[]{"value","selected"},new String[]{});
+		validateNeeds("option",p.getAttributes(),attr, new String[]{"name","value","selected"}, new String[]{}, new String[]{"name","value","selected","condition"},new String[]{"value","selected","condition"},new String[]{"condition"});
 	}
 
 	
@@ -106,23 +109,9 @@ public class TslJavaValidator extends AbstractTslJavaValidator {
 				warning("All selection properties should have a cardinality",TslPackage.PROPERTY,ISSUE_MISSING_ATTRIBUTE,"cardinality",DEFAULT_CARDINALITY);
 			}
 		}
-//		String name = attr.get("name");
-//		if(name!=null && !(name.length()<1)) {
-//			if (!Character.isUpperCase(stripQuotes(name).charAt(0))) {
-//				// lower case name
-//				System.err.println("Not upper.");
-//				warning("Property names should be capitalized.",getExpressionByName("name", p.getAttributes()), TslPackage.PROPERTY);
-//			}
-//		}
 	}
 
-//	private String stripQuotes(String label) {
-//		if(label.startsWith("\"") && label.endsWith("\"")) {
-//			return label.substring(1, label.length()-1);
-//		}
-//		return label;
-//	}
-//	
+
 	@Check
 	public void checkExpression(ExpressionTag p) {
 		java.util.Map<String,String> attr = createAttributeMap(p.getAttributes());
@@ -134,8 +123,35 @@ public class TslJavaValidator extends AbstractTslJavaValidator {
 		}
 	}
 
+	 public  IProject getCurrentProject(EObject p){
+		 Resource eResource = p.eResource();
+		 URI eUri = eResource.getURI();
+		 if (eUri.isPlatformResource()) {
+			 String platformString = eUri.toPlatformString(true);
+			 return ResourcesPlugin.getWorkspace().getRoot().findMember(platformString).getProject();
+		 }
+		 return null;
+	 }
+//		  log.info("Class: "+getCurrentObject().getClass());
+//		  
+//		  IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+//		  IEditorInput input =  editor.getEditorInput();
+//		  IFile file = null;
+//		  if(input instanceof IFileEditorInput){
+//		   file = ((IFileEditorInput)input).getFile();
+//		  }
+//		  if(file==null) {
+//			  return null;
+//		  }
+//		  IProject project = file.getProject();
+//		  return project;
+//
+//		 }
+
+	
 	@Check
 	public void checkMap(Map p) {
+		java.util.Map<Object, Object> mmm = getContext();
 		java.util.Map<String,String> attr = createAttributeMap(p.getAttributes());
 //		System.err.println("Sys:"+p.getMapName()+" end: "+p.getMapClosingName()+" is split: "+p.isSplitTag());
 		if(p.getMapName()!=null) {
@@ -144,7 +160,7 @@ public class TslJavaValidator extends AbstractTslJavaValidator {
 				error("Map closing tag: "+p.getMapClosingName()+" does not match opening tag!", p, TslPackage.MAP__MAP_CLOSING_NAME);
 			}
 			try {
-				AdapterProposal pp = getNavajoContext().getAdapter(p.getMapName());
+				AdapterProposal pp = getNavajoContext().getAdapter(getCurrentProject(p), p.getMapName());
 				if(pp==null) {
 					// can't do much then, probably a grammar error anyway
 					error("Map: "+p.getMapName()+" is unknown!", p, TslPackage.MAP);
