@@ -6,7 +6,6 @@ import java.io.Reader;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 
 import com.dexels.navajo.document.Navajo;
@@ -18,6 +17,7 @@ import com.google.inject.Inject;
 
 public class NavajoResourceFinder implements INavajoResourceFinder{
 	
+	private IProject currentProject;
 	@Inject
 	public NavajoResourceFinder() {
 		
@@ -75,15 +75,20 @@ public class NavajoResourceFinder implements INavajoResourceFinder{
 		if(!f.exists()) {
 			return null;
 		}
+		f.refreshLocal(0, null);
 		InputStreamReader is = new InputStreamReader(f.getContents());
 		return is;
 	}
 
-	private IProject getCurrentProject(){
-
-		IProject ip = ResourcesPlugin.getWorkspace().getRoot().getProject("Navajo");
-		return ip;
-		}
+	@Override
+	public void setCurrentProject(IProject currentProject) {
+		this.currentProject = currentProject;
+	}
+	
+	@Override
+	public IProject getCurrentProject(){
+		return this.currentProject;
+	}
 
 	
 }

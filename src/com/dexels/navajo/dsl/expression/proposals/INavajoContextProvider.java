@@ -1,39 +1,35 @@
 package com.dexels.navajo.dsl.expression.proposals;
 
-import java.io.IOException;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
 
 import com.dexels.navajo.document.Navajo;
 import com.google.inject.ImplementedBy;
 
-@ImplementedBy(NavajoContextProvider.class)
+@ImplementedBy(NavajoGlobalContextProvider.class)
 public interface INavajoContextProvider {
 
-	public abstract List<FunctionProposal> getFunctions();
+	public abstract List<FunctionProposal> getFunctions(IProject project);
 
-	public abstract List<AdapterProposal> getAdapters();
+	public abstract List<AdapterProposal> getAdapters(IProject project);
 
-	public abstract List<AdapterProposal> getAdapterProposals();
+	public abstract List<AdapterProposal> getAdapterProposals(IProject project);
+	public abstract AdapterProposal getAdapter(IProject project, String mapName);
 
-	public abstract INavajoResourceFinder getNavajoResourceFinder();
+//	public abstract List<InputTmlProposal> listPropertyPaths(IProject project, Navajo in);
 
-	public abstract void setNavajoResourceFinder(
-			INavajoResourceFinder navajoResourceFinder);
 
-	public abstract List<InputTmlProposal> listPropertyPaths(Navajo in);
+	public abstract List<InputTmlProposal> getTmlProposal(IProject project);
 
-	public abstract void initialize(INavajoResourceFinder resourceFinder) throws IOException;
-
-	public abstract List<InputTmlProposal> getTmlProposal();
 
 	public abstract void processGetters(List<String> mapStack,
 			List<String> proposals, StringBuffer stringBuffer);
 
-	public abstract AdapterProposal getAdapter(String mapName);
 
 	// ----
 	
-	public void setInputNavajo(Navajo n);
+	public void setInputNavajo(IProject project,Navajo n);
+
 	
 }

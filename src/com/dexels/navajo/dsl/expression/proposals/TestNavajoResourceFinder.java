@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 
 import com.dexels.navajo.document.Navajo;
@@ -48,6 +49,16 @@ public class TestNavajoResourceFinder implements INavajoResourceFinder {
 		XMLElement functionList = new CaseSensitiveXMLElement();
 		functionList.parseFromReader(getReader("testartifacts/functions.xml"));
 		return functionList;
+	}
+
+	@Override
+	public IProject getCurrentProject() {
+		return null;
+	}
+
+	@Override
+	public void setCurrentProject(IProject currentProject) {
+		
 	}
 
 }

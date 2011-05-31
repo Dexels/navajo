@@ -11,20 +11,18 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.navajo.document.nanoimpl.XMLParseException;
 import com.dexels.navajo.dsl.model.expression.Expression;
-import com.google.inject.Inject;
 
 
-@com.google.inject.Singleton
-public class NavajoContextProvider implements INavajoContextProvider {
+public class NavajoContextProvider implements INavajoProjectContextProvider {
 	protected List<FunctionProposal> functions = new ArrayList<FunctionProposal>();
 	protected List<AdapterProposal> adapters = new ArrayList<AdapterProposal>();
 	protected java.util.Map<String, AdapterProposal> adapterMap = new HashMap<String, AdapterProposal>();
 	protected List<InputTmlProposal> tmlProposal = new ArrayList<InputTmlProposal>();
 	private INavajoResourceFinder navajoResourceFinder= null;
-
-	@Inject
-	public NavajoContextProvider(INavajoResourceFinder navajoResourceFinder) throws IOException {
+	
+	public NavajoContextProvider(INavajoResourceFinder navajoResourceFinder) {
 		initialize(navajoResourceFinder);
 	}
 
@@ -52,8 +50,7 @@ public class NavajoContextProvider implements INavajoContextProvider {
 	}
 
 
-	public void initialize(INavajoResourceFinder navajoResourceFinder)
-			throws IOException {
+	public void initialize(INavajoResourceFinder navajoResourceFinder) {
 		//InputStream is = this.getClass().getClassLoader().getResource("com/dexels/navajo/dsl/ui/functions.xml").openStream();
 		setNavajoResourceFinder(navajoResourceFinder);
 		initializeFunctions();
@@ -79,9 +76,15 @@ public class NavajoContextProvider implements INavajoContextProvider {
 		}
 	}
 
-	private void initializeAdapters()
-			throws IOException {
-		XMLElement adaptersList = getNavajoResourceFinder().getAdapters();
+	private void initializeAdapters(){
+		XMLElement adaptersList = null;
+		try {
+			adaptersList = getNavajoResourceFinder().getAdapters();
+		} catch (XMLParseException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		if(adaptersList==null) {
 			return;
 		}
@@ -130,9 +133,15 @@ public class NavajoContextProvider implements INavajoContextProvider {
 		return adapterMap.get(name);
 	}
 
-	private void initializeFunctions()
-			throws IOException {
-		XMLElement functionList = getNavajoResourceFinder().getFunctions();
+	private void initializeFunctions() {
+		XMLElement functionList = null;
+		try {
+			functionList = getNavajoResourceFinder().getFunctions();
+		} catch (XMLParseException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		if(functionList==null) {
 			return;
 		}
@@ -158,13 +167,14 @@ public class NavajoContextProvider implements INavajoContextProvider {
 	 */
 	@Override
 	public INavajoResourceFinder getNavajoResourceFinder() {
-		return navajoResourceFinder;
+		return this.navajoResourceFinder;
 	}
 
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.dsl.expression.proposals.INavajoContextProvider#setNavajoResourceFinder(com.dexels.navajo.dsl.expression.proposals.INavajoResourceFinder)
 	 */
 	@Override
+	
 	public void setNavajoResourceFinder(INavajoResourceFinder navajoResourceFinder) {
 		this.navajoResourceFinder = navajoResourceFinder;
 	}
@@ -172,7 +182,6 @@ public class NavajoContextProvider implements INavajoContextProvider {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.dsl.expression.proposals.INavajoContextProvider#listPropertyPaths(com.dexels.navajo.document.Navajo)
 	 */
-	@Override
 	public List<InputTmlProposal> listPropertyPaths(Navajo in) {
 		List<InputTmlProposal> result = new ArrayList<InputTmlProposal>();
 		List<Message> m;
