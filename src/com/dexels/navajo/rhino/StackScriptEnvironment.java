@@ -173,16 +173,9 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 						} else {
 							v = value;
 						}
-//						if(a) {
-//							method.invoke(map, v);
-//							return true;
-//						} else {
-					//		System.err.println("Warning type difference: found: "+prm+" encountered: "+v.getClass()+" invoking anyway.");
 							method.invoke(map, v);
 							return true;
-//						}
 					}
-//					System.err.println("Detected type: "+prm+" supplied object type: "+value.getClass());
 				} else {
 					log("Ignoring multiparam setter");
 				}
