@@ -37,8 +37,8 @@ public class TslParser extends AbstractContentAssistParser {
 			nameMappings = new HashMap<AbstractElement, String>() {
 				private static final long serialVersionUID = 1L;
 				{
-					put(grammarAccess.getTmlAccess().getAlternatives_3(), "rule__Tml__Alternatives_3");
-					put(grammarAccess.getTmlAccess().getAlternatives_3_0_1(), "rule__Tml__Alternatives_3_0_1");
+					put(grammarAccess.getTmlAccess().getAlternatives_4(), "rule__Tml__Alternatives_4");
+					put(grammarAccess.getTmlAccess().getAlternatives_4_0_1(), "rule__Tml__Alternatives_4_0_1");
 					put(grammarAccess.getPossibleExpressionAccess().getAlternatives_3(), "rule__PossibleExpression__Alternatives_3");
 					put(grammarAccess.getMethodsAccess().getAlternatives_2(), "rule__Methods__Alternatives_2");
 					put(grammarAccess.getMethodAccess().getAlternatives_3(), "rule__Method__Alternatives_3");
@@ -74,7 +74,7 @@ public class TslParser extends AbstractContentAssistParser {
 					put(grammarAccess.getPrimaryExpressionAccess().getAlternatives(), "rule__PrimaryExpression__Alternatives");
 					put(grammarAccess.getLiteralAccess().getAlternatives(), "rule__Literal__Alternatives");
 					put(grammarAccess.getTmlAccess().getGroup(), "rule__Tml__Group__0");
-					put(grammarAccess.getTmlAccess().getGroup_3_0(), "rule__Tml__Group_3_0__0");
+					put(grammarAccess.getTmlAccess().getGroup_4_0(), "rule__Tml__Group_4_0__0");
 					put(grammarAccess.getPossibleExpressionAccess().getGroup(), "rule__PossibleExpression__Group__0");
 					put(grammarAccess.getPossibleExpressionAccess().getGroup_0(), "rule__PossibleExpression__Group_0__0");
 					put(grammarAccess.getPossibleExpressionAccess().getGroup_3_0(), "rule__PossibleExpression__Group_3_0__0");
@@ -153,15 +153,15 @@ public class TslParser extends AbstractContentAssistParser {
 					put(grammarAccess.getLiteralAccess().getGroup_2(), "rule__Literal__Group_2__0");
 					put(grammarAccess.getLiteralAccess().getGroup_4(), "rule__Literal__Group_4__0");
 					put(grammarAccess.getLiteralAccess().getGroup_4_2(), "rule__Literal__Group_4_2__0");
-					put(grammarAccess.getTmlAccess().getAttributesAssignment_2(), "rule__Tml__AttributesAssignment_2");
-					put(grammarAccess.getTmlAccess().getChildrenAssignment_3_0_1_0(), "rule__Tml__ChildrenAssignment_3_0_1_0");
-					put(grammarAccess.getTmlAccess().getChildrenAssignment_3_0_1_1(), "rule__Tml__ChildrenAssignment_3_0_1_1");
-					put(grammarAccess.getTmlAccess().getChildrenAssignment_3_0_1_2(), "rule__Tml__ChildrenAssignment_3_0_1_2");
-					put(grammarAccess.getTmlAccess().getMethodsAssignment_3_0_1_3(), "rule__Tml__MethodsAssignment_3_0_1_3");
-					put(grammarAccess.getTmlAccess().getChildrenAssignment_3_0_1_4(), "rule__Tml__ChildrenAssignment_3_0_1_4");
-					put(grammarAccess.getTmlAccess().getChildrenAssignment_3_0_1_5(), "rule__Tml__ChildrenAssignment_3_0_1_5");
-					put(grammarAccess.getTmlAccess().getChildrenAssignment_3_0_1_6(), "rule__Tml__ChildrenAssignment_3_0_1_6");
-					put(grammarAccess.getTmlAccess().getChildrenAssignment_3_0_1_7(), "rule__Tml__ChildrenAssignment_3_0_1_7");
+					put(grammarAccess.getTmlAccess().getAttributesAssignment_3(), "rule__Tml__AttributesAssignment_3");
+					put(grammarAccess.getTmlAccess().getChildrenAssignment_4_0_1_0(), "rule__Tml__ChildrenAssignment_4_0_1_0");
+					put(grammarAccess.getTmlAccess().getChildrenAssignment_4_0_1_1(), "rule__Tml__ChildrenAssignment_4_0_1_1");
+					put(grammarAccess.getTmlAccess().getChildrenAssignment_4_0_1_2(), "rule__Tml__ChildrenAssignment_4_0_1_2");
+					put(grammarAccess.getTmlAccess().getMethodsAssignment_4_0_1_3(), "rule__Tml__MethodsAssignment_4_0_1_3");
+					put(grammarAccess.getTmlAccess().getChildrenAssignment_4_0_1_4(), "rule__Tml__ChildrenAssignment_4_0_1_4");
+					put(grammarAccess.getTmlAccess().getChildrenAssignment_4_0_1_5(), "rule__Tml__ChildrenAssignment_4_0_1_5");
+					put(grammarAccess.getTmlAccess().getChildrenAssignment_4_0_1_6(), "rule__Tml__ChildrenAssignment_4_0_1_6");
+					put(grammarAccess.getTmlAccess().getChildrenAssignment_4_0_1_7(), "rule__Tml__ChildrenAssignment_4_0_1_7");
 					put(grammarAccess.getPossibleExpressionAccess().getNamespaceAssignment_0_0(), "rule__PossibleExpression__NamespaceAssignment_0_0");
 					put(grammarAccess.getPossibleExpressionAccess().getKeyAssignment_1(), "rule__PossibleExpression__KeyAssignment_1");
 					put(grammarAccess.getPossibleExpressionAccess().getExpressionValueAssignment_3_0_1(), "rule__PossibleExpression__ExpressionValueAssignment_3_0_1");
@@ -354,7 +354,7 @@ public class TslParser extends AbstractContentAssistParser {
 	
 	@Override
 	protected String[] getInitialHiddenTokens() {
-		return new String[] { "RULE_WS", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_XMLCOMMENT", "RULE_XMLHEAD" };
+		return new String[] { "RULE_WS", "RULE_XMLCOMMENT" };
 	}
 	
 	public TslGrammarAccess getGrammarAccess() {
