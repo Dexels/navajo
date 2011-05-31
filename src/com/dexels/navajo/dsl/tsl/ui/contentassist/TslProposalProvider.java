@@ -3,7 +3,6 @@
 */
 package com.dexels.navajo.dsl.tsl.ui.contentassist;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +17,6 @@ import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
 
 import com.dexels.navajo.dsl.expression.proposals.AdapterProposal;
-import com.dexels.navajo.dsl.expression.proposals.INavajoResourceFinder;
 import com.dexels.navajo.dsl.model.tsl.Element;
 import com.dexels.navajo.dsl.model.tsl.Map;
 import com.dexels.navajo.dsl.model.tsl.Message;
@@ -85,13 +83,13 @@ public class TslProposalProvider extends AbstractTslProposalProvider {
 	
 	
 	
-	public TslProposalProvider(INavajoResourceFinder navajoFinder) throws IOException {
-		navajoContext.initialize(navajoFinder);
-	
-		initializeProposalBundle();
-
-	}
-	
+//	public TslProposalProvider(INavajoResourceFinder navajoFinder) throws IOException {
+//		navajoContext.initialize(navajoFinder);
+//	
+//		initializeProposalBundle();
+//
+//	}
+//	
 	@Override
 	public void complete_MapGetReference(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
 		Map m = getMapParent(model);
@@ -102,7 +100,7 @@ public class TslProposalProvider extends AbstractTslProposalProvider {
 			System.err.println("No map name, attempting to resolve...");
 			resolveMapName(m);
 		}
-		List<String> getters = navajoContext.getAdapter(m.getMapName()).getGetters();
+		List<String> getters = navajoContext.getAdapter(getCurrentProject(),m.getMapName()).getGetters();
 		for (String string : getters) {
 			ICompletionProposal completionProposal = createCompletionProposal("$"+string, "$"+string, null, context);
 			acceptor.accept(completionProposal);
@@ -146,7 +144,7 @@ public class TslProposalProvider extends AbstractTslProposalProvider {
 	
 	private String resolveChildMapType(Map parent, String ref) {
 		ref = stripQuotes(ref);
-		String set = navajoContext.getAdapter(parent.getMapName()).getGetterMapType(ref);
+		String set = navajoContext.getAdapter(getCurrentProject(),parent.getMapName()).getGetterMapType(ref);
 		return set;
 	}
 
@@ -230,7 +228,7 @@ public class TslProposalProvider extends AbstractTslProposalProvider {
 	public void complete_MapId(EObject model, RuleCall ruleCall,
 			ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
 		super.complete_MapId(model, ruleCall, context, acceptor);
-		List<AdapterProposal> list = navajoContext.getAdapterProposals();
+		List<AdapterProposal> list = navajoContext.getAdapterProposals(getCurrentProject());
 		Map m = (Map)model;
 		for (AdapterProposal adapterProposal : list) {
 			if(m.getMapName()==null || adapterProposal.getTagName().startsWith(m.getMapName())) {
@@ -423,7 +421,7 @@ public class TslProposalProvider extends AbstractTslProposalProvider {
 		List<String> result = new ArrayList<String>();
 		if(ee instanceof Map) {
 			Map m = (Map)ee;
-			AdapterProposal aa = navajoContext.getAdapter(m.getMapName());
+			AdapterProposal aa = navajoContext.getAdapter(getCurrentProject(),m.getMapName());
 			String type = aa.getTypeOfValue(proposal);
 //			System.err.println("Looking for proposal: "+proposal+" map: "+m.getMapName()+" type: "+type);
 			List<String> proposals = typeProposalRegistry.get(type);
@@ -456,7 +454,7 @@ public class TslProposalProvider extends AbstractTslProposalProvider {
 		}
 		if(ee instanceof Map) {
 			Map m = (Map)ee;
-			AdapterProposal aa = navajoContext.getAdapter(m.getMapName());
+			AdapterProposal aa = navajoContext.getAdapter(getCurrentProject(),m.getMapName());
 //			System.err.println("Looking for map: "+m.getMapName());
 			if(aa!=null) {
 				List<String> setters =  aa.getSetters();
@@ -489,7 +487,7 @@ public class TslProposalProvider extends AbstractTslProposalProvider {
 
 	
 	public void complete_Map(EObject m, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
-		List<AdapterProposal> props = navajoContext.getAdapterProposals();
+		List<AdapterProposal> props = navajoContext.getAdapterProposals(getCurrentProject());
 		for (AdapterProposal adapterProposal : props) {
 			ICompletionProposal completionProposal = createCompletionProposal(adapterProposal.getFullProposal() , "map: "+adapterProposal.getTagName(), null, context);
 			acceptor.accept(completionProposal);			
@@ -499,7 +497,7 @@ public class TslProposalProvider extends AbstractTslProposalProvider {
 		Map mm = getMapParent(m);
 		if(mm!=null) {
 			String mapName = mm.getMapName();
-			AdapterProposal ap = navajoContext.getAdapter(mapName);
+			AdapterProposal ap = navajoContext.getAdapter(getCurrentProject(),mapName);
 			List<String> refs = ap.getMapRefProposals();
 			for (String ref: refs) {
 				ICompletionProposal completionProposal = createCompletionProposal(ref , "mapref: "+ref, null, context);
@@ -514,7 +512,7 @@ public class TslProposalProvider extends AbstractTslProposalProvider {
 				acceptor.accept(completionProposal);			
 			}
 
-			List<AdapterProposal> propos = navajoContext.getAdapterProposals();
+			List<AdapterProposal> propos = navajoContext.getAdapterProposals(getCurrentProject());
 			for (AdapterProposal adapterProposal : propos) {
 				ICompletionProposal completionProposal = createCompletionProposal(adapterProposal.getFullProposal() , "map: "+adapterProposal.getTagName(), null, context);
 				acceptor.accept(completionProposal);			
