@@ -18,7 +18,6 @@ public class TslHighlightingConfiguration implements IHighlightingConfiguration 
 	public static final String TSL_COMMENT_ID = "tslcomment";
 
 	public void configure(IHighlightingConfigurationAcceptor acceptor) {
-		System.err.println("Tsl highlighter configured!");
 		acceptor.acceptDefaultHighlighting(MAP_ID, "Map", mapIdTextStyle());
 		acceptor.acceptDefaultHighlighting(FUNCTION_CALL_ID, "Function Call",
 				functionCallTextStyle());
@@ -33,7 +32,7 @@ public class TslHighlightingConfiguration implements IHighlightingConfiguration 
 		acceptor.acceptDefaultHighlighting(LITERAL_ID, "Literal",
 				literalStyle());
 		acceptor.acceptDefaultHighlighting(TSL_COMMENT_ID, "Comment",
-				literalStyle());
+				commentTextStyle());
 	}
 
 	public TextStyle mapIdTextStyle() {
@@ -85,7 +84,7 @@ public class TslHighlightingConfiguration implements IHighlightingConfiguration 
 
 	public TextStyle commentTextStyle() {
 		TextStyle textStyle = defaultTextStyle().copy();
-		textStyle.setColor(new RGB(20, 180, 20));
+		textStyle.setColor(new RGB(120, 180, 120));
 		textStyle.setStyle(SWT.ITALIC);
 
 		return textStyle;

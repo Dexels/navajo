@@ -65,22 +65,24 @@ public class TslSemanticHighlightingCalculator implements
 	
 	public void provideHighlightingFor(XtextResource resource,
 			IHighlightedPositionAcceptor acceptor) {
+		if(resource==null) {
+			return;
+		}
 		EList<EObject> contents = resource.getContents();
 		if(contents==null || contents.size()==0) {
 			return;
 		}
 		Tml m = (Tml) contents.get(0);
-		System.err.println("Resource: "+m.getClass());
 	    highlightFunctionCall(acceptor, m);
 	    highlightTmlImput(acceptor, m);
 	    highlightMapGetReference(acceptor,m);
 	    highlightMapTag(acceptor,m);
 	    highlightTmlToplevel(acceptor,m);
 	    highlightMapMethod(acceptor,m);
-	    NodeUtil.getAllContents(
-	    		  resource.getParseResult().getRootNode());
-	    
-	    
+//	    NodeUtil.getAllContents(
+//	    		  resource.getParseResult().getRootNode());
+//	    
+//	    
 
 
 	}
@@ -99,8 +101,12 @@ public class TslSemanticHighlightingCalculator implements
 	    // TODO Create a separate category for map refs
 	    for (Map tag : aa) {
 //	    	highlightLeafWithIndex(0,acceptor, tag,TslHighlightingConfiguration.MAP_ID);
-	    	highlightLeafWithIndex(new int[]{0,-5,-4,-3,-2,-1},acceptor, tag,TslHighlightingConfiguration.MAP_ID);
-	    	
+
+	    	if(tag.getMapName()!=null) {
+		    	highlightLeafWithIndex(new int[]{2,-2},acceptor, tag,TslHighlightingConfiguration.MAP_ID);
+	    	} else {
+		    	highlightLeafWithIndex(new int[]{},acceptor, tag,TslHighlightingConfiguration.MAP_ID);
+	    	}
 	    	for (PossibleExpression p : tag.getAttributes()) {
 				if("object".equals( p.getKey())) {
 					TopLevel expressionValue = p.getExpressionValue();
@@ -124,9 +130,7 @@ public class TslSemanticHighlightingCalculator implements
 			Tml m) {
 		List<MapMethod> aa = EcoreUtil2.eAllOfType(m, MapMethod.class);
 	    for (MapMethod ref : aa) {
-//	    	ref.
 	    	highlightFirstLeaf(acceptor,ref,TslHighlightingConfiguration.MAP_ID);
-//	    	highlightAllLeaves(acceptor, ref,TslHighlightingConfiguration.MAP_ID);
 		}
 	}
 
@@ -182,20 +186,33 @@ public class TslSemanticHighlightingCalculator implements
 		CompositeNode node = adapter.getParserNode();
 		//LeafNode nn = node.getLeafNodes().get(0);
 		int ind = 0;
+		EList<LeafNode> leafNodes = node.getLeafNodes();
 		if(index<0) {
-			index = node.getLeafNodes().size() + index;
-			
-//			System.err.println("Highlighting from last: "+index);
-//			LeafNode nnn = node.getLeafNodes().get(index);
-//			System.err.println("LEAD: "+nnn.getText());
+			ind = -1;
+			int current = leafNodes.size() + index;
+			for(int i = leafNodes.size()-1; i>=0;i--) {
+				LeafNode nn = node.getLeafNodes().get(i);
+				if(!nn.isHidden()) {
+					if(ind==index) {
+						acceptor.addPosition(nn.getOffset(), nn.getLength(),  highlightId);
+						return;
+					}
+					ind--;
+				} else {
+					System.err.println("Skipping invisible node: >"+nn.getText()+"<");
+				}
+			}
 		}
-		for(LeafNode nn: node.getLeafNodes()) {
+
+		for(LeafNode nn: leafNodes) {
 			if(!nn.isHidden()) {
 				if(ind==index) {
 					acceptor.addPosition(nn.getOffset(), nn.getLength(),  highlightId);
 					return;
 				}
 				ind++;
+			} else {
+				System.err.println("Skipping invisible node: >"+nn.getText()+"<");
 			}
 		}
 	}
