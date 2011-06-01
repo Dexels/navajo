@@ -10,7 +10,7 @@
     <type name="long" type="java.lang.Long"/>
     <type name="float" type="java.lang.Double"/>
     <type name="boolean" type="java.lang.Boolean"/>
-    <!--<type name="selection" type="java.lang.String"/>-->
+    <type name="selection" type="java.util.List"/>
     <type name="date" type="java.util.Date"/>
     <type name="clocktime" type="com.dexels.navajo.document.types.ClockTime"/>
     <type name="binary" type="com.dexels.navajo.document.types.Binary"/>

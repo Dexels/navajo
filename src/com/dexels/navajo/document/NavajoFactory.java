@@ -36,7 +36,7 @@ public abstract class NavajoFactory {
   private HashMap<String, Class<?>> toJavaType = new HashMap<String, Class<?>>();
   private HashMap<Class<?>, String> toNavajoType = new HashMap<Class<?>, String>();
   
-  Logger ll = LoggerFactory.getLogger("aap");
+  private static final Logger logger = LoggerFactory.getLogger(NavajoFactory.class);
 
   
   private void readTypes() throws Exception {
@@ -75,6 +75,10 @@ public abstract class NavajoFactory {
   
   public Class<?> getJavaType(String p) {
 	  return toJavaType.get(p);
+  }
+  
+  public Set<String> getNavajoTypes() {
+	  return toJavaType.keySet();
   }
   
   /**
