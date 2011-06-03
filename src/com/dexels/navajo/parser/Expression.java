@@ -31,7 +31,6 @@ public final class Expression {
         if(clause.startsWith("=") && clause.endsWith(";")) {
       	  
       	  clause = clause.substring(1, clause.length()-1);
-      	  System.err.println("New style expression. Trimmed: "+clause);
         }
         try {
 
