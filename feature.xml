@@ -30,13 +30,6 @@
          unpack="false"/>
 
    <plugin
-         id="com.dexels.navajo.dsl.expression.generator"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="com.dexels.navajo.dsl.expression.model"
          download-size="0"
          install-size="0"
@@ -59,13 +52,6 @@
 
    <plugin
          id="com.dexels.navajo.dsl.tsl"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.dexels.navajo.dsl.tsl.generator"
          download-size="0"
          install-size="0"
          version="0.0.0"
