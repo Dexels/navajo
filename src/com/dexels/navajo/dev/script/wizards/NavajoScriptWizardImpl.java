@@ -103,6 +103,9 @@ public class NavajoScriptWizardImpl extends WizardPage {
 			}
 		}
 		fileText.setText("InitTest");
+		if(selectedFolder==null || !selectedFolder.exists()) {
+			updateStatus("No valid script folder found!");
+		}
 	}
 
 
