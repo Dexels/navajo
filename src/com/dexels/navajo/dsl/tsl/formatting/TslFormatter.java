@@ -69,7 +69,10 @@ public class TslFormatter extends AbstractDeclarativeFormatter {
 		c.setLinewrap(1).before(f.getMETHODS_START_TAGRule());
 		c.setLinewrap(1).before(f.getMETHODS_END_TAGRule());
 		
-		
+
+		c.setIndentationIncrement().before(f.getDEBUG_START_TAGRule());
+		c.setIndentationDecrement().after(f.getDEBUG_END_TAGRule());
+
 		
 		c.setIndentationIncrement().before(f.getMAPSTARTKEYWORDRule());
 		c.setIndentationDecrement().after(f.getMAPENDKEYWORDRule());
@@ -100,6 +103,10 @@ public class TslFormatter extends AbstractDeclarativeFormatter {
 		//		c.setIndentationDecrement().before(f.getMapEndRule());
 
 		// switched
+//		c.setIndentationIncrement().after(f.getNAVASCRIPT_STARTRule());
+//		c.setIndentationDecrement().before(f.getNAVASCRIPT_ENDRule());
+
+		
 		c.setIndentationIncrement().before(f.getEXPRESSION_START_TAGRule());
 		c.setIndentationDecrement().after(f.getEXPRESSION_END_TAGRule());
 		
@@ -111,7 +118,7 @@ public class TslFormatter extends AbstractDeclarativeFormatter {
 
 		
 		c.setIndentationDecrement().after(f.getXML_TAG_SINGLEENDRule());
-
+		
 
 		
 //		c.setIndentationIncrement().after(f.getExpressionOrOptionRule());
