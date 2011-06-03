@@ -1,7 +1,10 @@
 package com.dexels.navajo.dsl.tsl.validation;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
@@ -13,8 +16,10 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.validation.Check;
 
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.dsl.expression.proposals.AdapterProposal;
 import com.dexels.navajo.dsl.expression.proposals.INavajoContextProvider;
+import com.dexels.navajo.dsl.model.tsl.Element;
 import com.dexels.navajo.dsl.model.tsl.ExpressionTag;
 import com.dexels.navajo.dsl.model.tsl.Field;
 import com.dexels.navajo.dsl.model.tsl.Map;
@@ -36,22 +41,52 @@ public class TslJavaValidator extends AbstractTslJavaValidator {
 
 	
 	public static final String ISSUE_ILLEGAL_ATTRIBUTE = "ISSUE_ILLEGAL_ATTRIBUTE";
+	public static final String ISSUE_ILLEGAL_ATTRIBUTE_VALUE = "ISSUE_ILLEGAL_ATTRIBUTE_VALUE";
 	public static final String ISSUE_SHOULD_BE_EXPRESSION = "ISSUE_SHOULD_BE_EXPRESSION";
 	public static final String ISSUE_SHOULD_NOT_BE_EXPRESSION = "ISSUE_SHOULD_NOT_BE_EXPRESSION";
 	public static final String ISSUE_MISSING_ATTRIBUTE = "ISSUE_MISSING_ATTRIBUTE";
+//	public static final String ISSUE_ILLEGAL_OPTIONAL_ATTRIBUTE_VALUE = "ISSUE_ILLEGAL_OPTIONAL_ATTRIBUTE_VALUE";
+
 	private static final String DEFAULT_CARDINALITY = "1";
 
+	
 	// TODO rewrite into property file based version	
-	public static String getDefaultValueForAttribute(String type, String attributeName) {
+	public static List<String> getDefaultValueForAttribute(String type, String attributeName) {
+		System.err.println("Getting default for: "+type+" attr: "+attributeName);
+		List<String> result = new ArrayList<String>();
 		if("property".equals(type)) {
 			if("direction".equals(attributeName)) {
-				return "out";
+				result.add("in");
+				result.add("out");
 			}
 			if("type".equals(attributeName)) {
-				return "string";
+				result.addAll(NavajoFactory.getInstance().getNavajoTypes());
+				Collections.sort(result);
+			}
+			if("name".equals(attributeName)) {
+				result.add("propertyName");
+			}
+			if("cardinality".equals(attributeName)) {
+				result.add("1");
+				result.add("+");
+			}
+
+		}
+		if("message".equals(type)) {
+			if("type".equals(attributeName)) {
+				result.add("simple");
+				result.add("array");
+				result.add("array_element");
+			}
+			if("mode".equals(attributeName)) {
+				result.add("default");
+				result.add("ignore");
+			}
+			if("name".equals(attributeName)) {
+				result.add("messageName");
 			}
 		}
-		return attributeName;
+		return result;
 	}
 	
 	
@@ -74,6 +109,8 @@ public class TslJavaValidator extends AbstractTslJavaValidator {
 	public void checkMessage(Message p) {
 		java.util.Map<String,String> attr = createAttributeMap(p.getAttributes());
 		validateNeeds("message",p.getAttributes(),attr, new String[]{"name"}, new String[]{}, new String[]{"name","type","filter","condition","index","mode"},new String[]{"filter","condition"},new String[]{"filter","condition"});
+		validateAttribute("message",p.getAttributes(),"type",getDefaultValueForAttribute("message", "type"),true);
+		validateAttribute("message",p.getAttributes(),"mode",getDefaultValueForAttribute("message", "mode"),true);
 		if(attr.get("mode")!=null) {
 			if(!"ignore".equals(attr.get("mode")) && !"default".equals(attr.get("mode")) ) {
 //				warning("Only 'ignore' and 'default' are valid modes!",TslPackage.MESSAGE,ISSUE_ILLEGAL_ATTRIBUTE,"mode");
@@ -97,18 +134,32 @@ public class TslJavaValidator extends AbstractTslJavaValidator {
 		if(p instanceof Param) {
 			return;
 		}
-		
+
+		java.util.Map<String,String> attr = createAttributeMap(p.getAttributes());
+
 		// TODO Check if it has expression children, if so, it shouldn't have a value
 		// TODO If only one conditionless expression, propose conversion to value attribute
 		
-		java.util.Map<String,String> attr = createAttributeMap(p.getAttributes());
-		validateNeeds("property",p.getAttributes(),attr, new String[]{"name"}, new String[]{"direction", "type"}, new String[]{"name","value","description","direction","subtypes","type","length","cardinality"},new String[]{"value","condition"},new String[]{"condition"});
-		if("selection".equals(attr.get("type"))) {
-			if(attr.get("cardinality")==null) {
-				// cardinality required!
-				warning("All selection properties should have a cardinality",TslPackage.PROPERTY,ISSUE_MISSING_ATTRIBUTE,"cardinality",DEFAULT_CARDINALITY);
+		EList<Element> ll = p.getChildren();
+		for (Element element : ll) {
+			if(element instanceof ExpressionTag) {
+				String value = attr.get("value");
+				if(value!=null) {
+					warning("Either supply a value attribute, or an expression node, not both.", p, TslPackage.EXPRESSION_TAG);
+				}
 			}
 		}
+		
+		validateNeeds("property",p.getAttributes(),attr, new String[]{"name"}, new String[]{"direction", "type"}, new String[]{"name","value","description","direction","subtypes","type","length","cardinality"},new String[]{"value","condition"},new String[]{"condition"});
+		String type = stripQuotes(attr.get("type"));
+		if("selection".equals(type)) {
+			if(attr.get("cardinality")==null) {
+				// cardinality required!
+				warning("All selection properties should have a cardinality",p,TslPackage.PROPERTY,ISSUE_MISSING_ATTRIBUTE,"property","cardinality");
+			}
+		}
+		validateAttribute("property",p.getAttributes(),"cardinality",TslJavaValidator.getDefaultValueForAttribute("property", "cardinality"),true);
+		validateAttribute("property",p.getAttributes(),"type",TslJavaValidator.getDefaultValueForAttribute("property", "type"),true);
 	}
 
 
@@ -151,7 +202,7 @@ public class TslJavaValidator extends AbstractTslJavaValidator {
 	
 	@Check
 	public void checkMap(Map p) {
-		java.util.Map<Object, Object> mmm = getContext();
+//		java.util.Map<Object, Object> mmm = getContext();
 		java.util.Map<String,String> attr = createAttributeMap(p.getAttributes());
 //		System.err.println("Sys:"+p.getMapName()+" end: "+p.getMapClosingName()+" is split: "+p.isSplitTag());
 		if(p.getMapName()!=null) {
@@ -192,7 +243,7 @@ public class TslJavaValidator extends AbstractTslJavaValidator {
 			if(attr.get("cardinality")==null) {
 				// cardinality required!
 				
-				warning("All selection properties should have a cardinality",TslPackage.PROPERTY,ISSUE_MISSING_ATTRIBUTE,"property","cardinality");
+				warning("All selection properties should have a cardinality",p,TslPackage.PROPERTY,ISSUE_MISSING_ATTRIBUTE,"property","cardinality");
 				
 			}
 		}
@@ -217,6 +268,64 @@ public class TslJavaValidator extends AbstractTslJavaValidator {
 			result.put(attribute.getKey(), value);
 		}
 		return result;
+	}
+
+
+	private void validateAttribute(String tagName, EList<PossibleExpression> eList, String attributeName,List<String> allowedValues, boolean isError) {
+		System.err.println("Validating: "+tagName+" atri: "+attributeName+" allowedValues: "+allowedValues);
+		String[] res = new String[allowedValues.size()];
+		for (int i=0; i<res.length;i++) {
+			res[i] = allowedValues.get(i);
+		}
+		try {
+			validateAttribute(tagName, eList, attributeName, res, isError);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	private void validateAttribute(String tagName, EList<PossibleExpression> eList, String attributeName, String[] allowedValues, boolean isError) {
+//		EList<PossibleExpression> eList = tag.getAttributes();
+		PossibleExpression pp = null;
+		for (PossibleExpression attribute : eList) {
+			String value = stripQuotes(attribute.getValue());
+			if(attributeName.equals(attribute.getKey())) {
+				pp = attribute;
+				boolean found = false;
+				
+				for (String allowed : allowedValues) {
+					if(allowed.equals(value)) {
+						found = true;
+					}
+				}
+				if(!found) {
+					List<String> allowedValuesList = new LinkedList<String>();
+					for (String string2 : allowedValues) {
+						allowedValuesList.add(string2);
+					}
+					if (isError) {
+						error("Tag: "+tagName+" has an attribute '"+attributeName+"', which should be one of the following values: "+allowedValuesList,pp,TslPackage.POSSIBLE_EXPRESSION,ISSUE_ILLEGAL_ATTRIBUTE_VALUE,new String[]{tagName,attributeName});
+					} else {
+
+						warning("Tag: "+tagName+" has an attribute '"+attributeName+"', which should be one of the following values: "+allowedValuesList,pp,TslPackage.POSSIBLE_EXPRESSION,ISSUE_ILLEGAL_ATTRIBUTE_VALUE,new String[]{tagName,attributeName});
+
+					}
+				}
+				
+			}
+		}		
+	}
+	
+	private String stripQuotes(String label) {
+		if(label==null) {
+			return null;
+		}
+		if(label.startsWith("\"") && label.endsWith("\"")) {
+			return label.substring(1, label.length()-1);
+		}
+		return label;
 	}
 	
 	private void validateNeeds(String tagName, EList<PossibleExpression> eList, java.util.Map<String,String> map, String[] required, String[] requiredWarning,String[] allowed,String[] canBeExpression,String[] mustBeExpression) {
