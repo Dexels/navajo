@@ -150,9 +150,9 @@ public class TslSemanticHighlightingCalculator implements
 	}
 
 	private void highlightTmlToplevel(IHighlightedPositionAcceptor acceptor,Tml m) {
-		for(PossibleExpression a :m.getAttributes()) {
-			highlightFirstLeaf(acceptor, a, TslHighlightingConfiguration.TSL_COMMENT_ID);
-		}
+//		for(PossibleExpression a :m.getAttributes()) {
+//			highlightFirstLeaf(acceptor, a, TslHighlightingConfiguration.TSL_COMMENT_ID);
+//		}
 	}
 
 	private void highlightAllLeaves(IHighlightedPositionAcceptor acceptor, EObject m, String highlightId) {
@@ -198,8 +198,6 @@ public class TslSemanticHighlightingCalculator implements
 						return;
 					}
 					ind--;
-				} else {
-					System.err.println("Skipping invisible node: >"+nn.getText()+"<");
 				}
 			}
 		}
@@ -211,8 +209,6 @@ public class TslSemanticHighlightingCalculator implements
 					return;
 				}
 				ind++;
-			} else {
-				System.err.println("Skipping invisible node: >"+nn.getText()+"<");
 			}
 		}
 	}
