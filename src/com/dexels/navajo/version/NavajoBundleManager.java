@@ -153,10 +153,11 @@ public class NavajoBundleManager extends AbstractVersion implements INavajoBundl
 	public void uninstallAdapterBundles() {
 		for (Bundle b : bundleMap.values()) {
 			try {
+				logger.debug("Stopping bundle: "+b.getBundleId()+" name: "+b.getSymbolicName()+" @ "+b.getLocation());
 				b.stop();
 				logger.debug("Uninstalling bundle: "+b.getBundleId()+" name: "+b.getSymbolicName()+" @ "+b.getLocation());
-
 				b.uninstall();
+				logger.debug("Uninstalled bundle: "+b.getBundleId()+" name: "+b.getSymbolicName()+" @ "+b.getLocation());
 			} catch (BundleException e) {
 				e.printStackTrace();
 			}
