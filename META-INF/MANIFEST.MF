@@ -9,12 +9,10 @@ Require-Bundle: com.dexels.navajo.document;bundle-version="1.0.5",
  org.eclipse.core.runtime,
  com.dexels.navajo.dev.script;bundle-version="2.0.1",
  com.dexels.navajo.dsl.expression;bundle-version="1.0.1",
- com.dexels.navajo.dsl.expression.generator;bundle-version="1.0.1",
  com.dexels.navajo.dsl.expression.model;bundle-version="1.0.1",
  com.dexels.navajo.dsl.expression.ui;bundle-version="1.0.2",
  com.dexels.navajo.dsl.navajomanager;bundle-version="1.0.1",
  com.dexels.navajo.dsl.tsl;bundle-version="1.0.1",
- com.dexels.navajo.dsl.tsl.generator;bundle-version="1.0.1",
  com.dexels.navajo.dsl.tsl.model;bundle-version="1.0.1",
  com.dexels.navajo.dsl.tsl.ui;bundle-version="1.0.2",
  org.eclipse.ui;bundle-version="3.6.2",
@@ -28,3 +26,4 @@ Require-Bundle: com.dexels.navajo.document;bundle-version="1.0.5",
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: com.dexels.navajo.studio.script.plugin.views
+Import-Package: com.google.inject;version="2.0.0"
