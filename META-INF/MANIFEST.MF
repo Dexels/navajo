@@ -21,7 +21,8 @@ Require-Bundle: org.eclipse.xtext;bundle-version="1.0.1",
  com.dexels.navajo.dsl.tsl.model;bundle-version="1.0.0",
  org.eclipse.core.runtime;bundle-version="3.6.0",
  com.dexels.navajo.dsl.navajomanager;bundle-version="1.0.0",
- org.eclipse.core.resources;bundle-version="3.6.1"
+ org.eclipse.core.resources;bundle-version="3.6.1",
+ com.dexels.navajo.document;bundle-version="1.0.5"
 Import-Package: org.apache.log4j
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: com.dexels.navajo.dsl.tsl,
