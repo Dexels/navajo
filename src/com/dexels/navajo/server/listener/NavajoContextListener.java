@@ -122,7 +122,9 @@ public class NavajoContextListener implements ServletContextListener {
 			e.printStackTrace(System.err);
 		}
 	}
-
+	public static DispatcherInterface initializeContext(String rootPath, String servletPath) throws NavajoException {
+		return DispatcherFactory.getInstance(rootPath, DEFAULT_SERVER_XML, new com.dexels.navajo.server.FileInputStreamReader(),servletPath);
+	}
 	protected final static DispatcherInterface initDispatcher(ServletContext sc, String rootPath, String configurationPath) throws NavajoException {
 
 		String servletContextRootPath = sc.getRealPath("");
@@ -131,7 +133,7 @@ public class NavajoContextListener implements ServletContextListener {
 			// Old SKOOL. Path provided, notify the dispatcher by passing a null DEFAULT_SERVER_XML
 				return DispatcherFactory.getInstance(new File(configurationPath), DEFAULT_SERVER_XML, new com.dexels.navajo.server.FileInputStreamReader(),servletContextRootPath);
 		} else {
-			return DispatcherFactory.getInstance(rootPath, DEFAULT_SERVER_XML, new com.dexels.navajo.server.FileInputStreamReader(),servletContextRootPath);
+			return initializeContext(rootPath, servletContextRootPath);
 		}
 
 	}
