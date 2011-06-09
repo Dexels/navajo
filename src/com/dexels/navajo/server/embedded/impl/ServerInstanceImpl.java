@@ -22,7 +22,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.slf4j.LoggerFactory;
 
-import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.PatternLayout;
@@ -74,7 +73,6 @@ public class ServerInstanceImpl implements ServerInstance {
 			final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 
 			
-//					dumpBundleStates();
 			LifeCycle.Listener lifecycleListener = new LifeCycle.Listener() {
 				
 				@Override
@@ -84,11 +82,7 @@ public class ServerInstanceImpl implements ServerInstance {
 				
 				@Override
 				public void lifeCycleStopped(LifeCycle l) {
-//					stopServerAction.setEnabled(false);
-//					startServerAction.setEnabled(true);
-//					
 					NavajoBundleManager.getInstance().uninstallAdapterBundles();
-//					NavajoBundleManager.getInstance().loadAdapterPackages(project.getRawLocation().toFile());
 					EmbeddedServerActivator.getDefault().deregisterServerInstance(project);
 
 					
@@ -252,34 +246,37 @@ public class ServerInstanceImpl implements ServerInstance {
 	 */
 	@Override
 	public void stopServer() {
-		System.err.println("Stopping server");
-		try {
-			if(this.jettyServer==null) {
-				return;
-			}
-			System.err.println("Stopping context seems to hang? Disabled");
-//			NavajoContextListener.destroyContext(webappContextHandler.getServletContext());
-			System.err.println("Stopping context handler");
-			webappContextHandler.stop();
-			System.err.println("Context stopped");
+		Thread t = new Thread() {
+			public void run() {
+				System.err.println("Stopping server");
+				try {
+					if(ServerInstanceImpl.this.jettyServer==null) {
+						return;
+					}
+//					System.err.println("Stopping context seems to hang? Disabled");
+//					NavajoContextListener.destroyContext(webappContextHandler.getServletContext());
+					System.err.println("Stopping context handler");
+					webappContextHandler.stop();
+					System.err.println("Context stopped");
 
-			
-			this.jettyServer.stop();
-			System.err.println("Server stopped");
-			this.jettyServer = null;
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+					
+					ServerInstanceImpl.this.jettyServer.stop();
+					System.err.println("Server stopped");
+					ServerInstanceImpl.this.jettyServer = null;
+				} catch (Throwable e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		t.start();
 	}
 	
 	private void initializeServer(IProject folder) throws IOException {
 		port = findFreePort();
-		System.err.println("FREE PORT: "+port);
 		String ss = folder.getLocation().toString();
 		initializeServer(port, ss);
 	}
 	
-	// .... and if it is not free? 
 	private int findFreePort() throws IOException {
 		ServerSocket server = new ServerSocket(0);
 		int port = server.getLocalPort();
@@ -307,17 +304,6 @@ public class ServerInstanceImpl implements ServerInstance {
 		   final Logger LOG =(Logger)  LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
 		   System.err.println("Logger ");
 		   LOG.addAppender(embeddedLogbackAppender);
-		      
-			
-//	  
-//			PatternLayoutEncoder encoder = new PatternLayoutEncoder(); 
-//			encoder.setContext(lc);
-//			encoder.setPattern("%marker %level %msg%n");
-//			encoder.start();
-//		   embeddedLogbackAppender.setContext(lc);
-			
-//		   FileOutputStream fo = new FileOutputStream("/Users/frank/Desktop/log.txt");
-//		   fileAppender.setOutputStream(fo);
 		jettyServer = new Server();
 		SelectChannelConnector connector = new SelectChannelConnector();
 		connector.setPort(port);

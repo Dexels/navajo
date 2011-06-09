@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jetty.util.component.LifeCycle;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -112,10 +113,7 @@ public class ServerControlPanel extends ViewPart {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				projectSelection.removeAll();
-				IProject[] pp = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-				for (IProject iProject : pp) {
-					projectSelection.add(iProject.getName());
-				}
+				collectValidProjects();
 				projectSelection.select(0);//				System.err.println("Starting");
 				
 			}});
@@ -149,10 +147,7 @@ public class ServerControlPanel extends ViewPart {
 		projectSelection = new Combo(headComp, SWT.NORMAL);
 		projectSelection.setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.FILL_GRAB));
 
-		IProject[] pp = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-		for (IProject iProject : pp) {
-			projectSelection.add(iProject.getName());
-		}
+		collectValidProjects();
 		projectSelection.select(0);
 	}
 
@@ -318,7 +313,7 @@ public class ServerControlPanel extends ViewPart {
 			@Override
 			public Appendable append(final char c) throws IOException {
 
-				Display.getDefault().syncExec(new Runnable(){
+				Display.getDefault().asyncExec(new Runnable(){
 
 					@Override
 					public void run() {
@@ -329,7 +324,7 @@ public class ServerControlPanel extends ViewPart {
 			
 			@Override
 			public Appendable append(final CharSequence csq) throws IOException {
-				Display.getDefault().syncExec(new Runnable(){
+				Display.getDefault().asyncExec(new Runnable(){
 
 					@Override
 					public void run() {
@@ -385,7 +380,7 @@ public class ServerControlPanel extends ViewPart {
 			
 			@Override
 			public void lifeCycleStopped(LifeCycle arg0) {
-				ci.dispose();
+//				ci.dispose();
 	
 			}
 			
@@ -418,6 +413,20 @@ public class ServerControlPanel extends ViewPart {
 		serverInstances.add(si);
 		si.startServer(projectName);
 		return si;
+	}
+
+	private void collectValidProjects() {
+		IProject[] pp = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		for (IProject iProject : pp) {
+			try {
+				if(iProject.hasNature("org.eclipse.xtext.ui.shared.xtextNature") && iProject.isOpen()) {
+					projectSelection.add(iProject.getName());
+				}
+			} catch (CoreException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 
