@@ -146,11 +146,6 @@ public class SwingTipiContext extends TipiContext {
 		}
 	}
 
-	public List<String> getRequiredIncludes() {
-		List<String> s = super.getRequiredIncludes();
-		s.add("com/dexels/navajo/tipi/components/swingimpl/swingclassdef.xml");
-		return s;
-	}
 
 	public void setUserInterface(UserInterface ui) {
 		myUserInterface = ui;
