@@ -18,21 +18,9 @@
    </license>
 
    <requires>
-      <import plugin="javax.servlet.jsp" version="2.0.0" match="greaterOrEqual"/>
-      <import plugin="com.dexels.navajo.version" version="1.0.5" match="greaterOrEqual"/>
       <import plugin="javax.servlet" version="2.5.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.osgi"/>
-      <import plugin="com.dexels.navajo.jsp" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.apache.ant" version="1.7.1" match="greaterOrEqual"/>
-      <import plugin="com.dexels.navajo.document" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="com.dexels.navajo.queuemanager" version="1.0.1" match="greaterOrEqual"/>
-      <import plugin="org.junit"/>
-      <import plugin="com.dexels.navajo.listeners" version="3.1.1" match="greaterOrEqual"/>
-      <import plugin="com.dexels.navajo.core" version="2.9.2" match="greaterOrEqual"/>
-      <import plugin="com.dexels.navajo.client.async" version="1.0.1" match="greaterOrEqual"/>
-      <import plugin="com.dexels.navajo.client" version="1.0.1" match="greaterOrEqual"/>
-      <import plugin="com.dexels.navajo.adapters" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="com.dexels.navajo.function" version="2.0.2" match="greaterOrEqual"/>
+      <import plugin="javax.servlet.jsp" version="2.0.0" match="greaterOrEqual"/>
+      <import feature="com.dexels.navajo.core.feature" version="1.0.7.qualifier"/>
    </requires>
 
    <plugin
