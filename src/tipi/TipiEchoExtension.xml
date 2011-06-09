@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<extension id="TipiSwing" requiresMain="" project="TipiSwing" version="0" title="Tipi Swing" vendor="Dexels" homepage="http://www.navajo.nl">
+<extension id="TipiSwing" isMain="true" requiresMain="" project="TipiSwing" version="0" title="Tipi Swing" vendor="Dexels" homepage="http://www.navajo.nl">
 	<description>
 		Standard swing implementation
 	</description>
