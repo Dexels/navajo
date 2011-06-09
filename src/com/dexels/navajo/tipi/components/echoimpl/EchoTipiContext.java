@@ -98,12 +98,7 @@ public class EchoTipiContext extends TipiContext {
     	return myInstance;
     }
 
-    public List<String> getRequiredIncludes() {
-        List<String> s = super.getRequiredIncludes();
-        s.add("com/dexels/navajo/tipi/components/echoimpl/echoclassdef.xml");
-        return s;
-    }
-    
+   
     public void finalize() {
     	instanceCount--;
     	 Window w = (Window) getTopLevel();
@@ -148,7 +143,7 @@ public class EchoTipiContext extends TipiContext {
 				
 			}
 		};
-		// TODO Remove, document or do something with this strange name dependancy
+		// TODO Remove, document or do something with this strange name dependency
 		if(Thread.currentThread().getName().indexOf("http")!=-1) {
 			r.run();
 		} else {
