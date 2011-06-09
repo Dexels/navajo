@@ -1,15 +1,14 @@
 package com.dexels.navajo.tipi.components.echoimpl.impl;
 
-import java.io.*;
+import java.io.IOException;
 
-import javax.servlet.http.*;
+import javax.servlet.http.Cookie;
 
-import nextapp.echo2.app.*;
-import nextapp.echo2.webcontainer.*;
-import nextapp.echo2.webcontainer.command.*;
+import nextapp.echo2.app.ApplicationInstance;
+import nextapp.echo2.webcontainer.ContainerContext;
+import nextapp.echo2.webcontainer.command.BrowserSetCookieCommand;
 
-import com.dexels.navajo.functions.ForAll;
-import com.dexels.navajo.tipi.internal.cookie.*;
+import com.dexels.navajo.tipi.internal.cookie.CookieManager;
 
 public class BrowserCookieManager implements CookieManager {
 	private Cookie createCookie(String s) {
