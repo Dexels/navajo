@@ -75,25 +75,9 @@ gridBagLayout = new GridBagLayout();
 		 JComponent jc = null;
 		 if (c instanceof JComponent) {
 			 jc = (JComponent)c;
-//             System.err.println("Adding component to GridPanel: "+jc+" with pref. size: "+jc.getPreferredSize());
-		 } else {
-		     System.err.println("Scheizze!");
          }
-//         jc.setBorder(BorderFactory.createLineBorder(Color.CYAN, 5));
-//         System.err.println("|||>"+constr+"<|||");
-//         jc.setVisible(true);
-         //         System.err.println("GRIDPANEL::: ADD TO CONTAINER: ::: "+o);
-//		 c.setBackground(new Color(t.nextFloat(),t.nextFloat(),t.nextFloat()));
          GridBagConstraints gc = parseGridConstraints(constr,jc);
-//         gridComponent.add(new JLabel(">>"+o.toString()),gc);
-//         System.err.println("GC: "+gc);
-//         System.err.println("Preferred of component to add: "+c.getPreferredSize()+" isset: "+c.isPreferredSizeSet()+" component: "+c);
          gridComponent.add(c,gc);
-
-//         System.err.println("Added to container. LAyout indications: ");
-//         System.err.println("Max: "+ gridBagLayout.maximumLayoutSize(gridComponent));
-//         System.err.println("Min: "+ gridBagLayout.minimumLayoutSize(gridComponent));
-//         System.err.println("Pref:"+ gridBagLayout.preferredLayoutSize(gridComponent));
     }
     
     
