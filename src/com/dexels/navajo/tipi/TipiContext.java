@@ -50,7 +50,7 @@ import com.dexels.navajo.tipi.validation.*;
  * @version 1.0
  */
 public abstract class TipiContext {
-
+ 
 	public abstract void runSyncInEventThread(Runnable r);
 
 	public abstract void runAsyncInEventThread(Runnable r);
@@ -147,7 +147,7 @@ public abstract class TipiContext {
 	private TipiValidationDecorator tipiValidationManager;
 	// Temp construct, until the connector pattern is fully functional
 	// TODO, fix and remove
-	protected final ClientInterface clientInterface;
+	protected ClientInterface clientInterface;
 
 	protected final TipiApplicationInstance myApplication;
 
@@ -155,11 +155,28 @@ public abstract class TipiContext {
 
 
 	public TipiContext(TipiApplicationInstance myApplication, TipiContext parent) {
-//		this();
+		this.myApplication = myApplication;
+		Iterator<TipiExtension> iter = ServiceRegistry.lookupProviders(TipiExtension.class);
+		List<TipiExtension> extensionList = new LinkedList<TipiExtension>();
+		while (iter.hasNext()) {
+			TipiExtension tipiExtension = (TipiExtension) iter.next();
+			extensionList.add(tipiExtension);
+		}
+		initializeContext(myApplication, extensionList, parent);
+	}
+	public TipiContext(TipiApplicationInstance myApplication, List<TipiExtension> preload, TipiContext parent) {
+		this.myApplication = myApplication;
+
+		//		this();
+		initializeContext(myApplication, preload, parent);
+	}
+
+	private void initializeContext(TipiApplicationInstance myApplication,
+			List<TipiExtension> preload, TipiContext parent) {
+
 		System.err.println("Creating CONTEXT");
 		myParentContext = parent;
-		this.myApplication = myApplication;
-		initializeExtensions(ServiceRegistry.lookupProviders(TipiExtension.class));
+		initializeExtensions(preload.iterator());
 		
 //		try {
 //			initializeExtensions(ServiceRegistry.lookupProviders(TipiExtension.class,ClassLoader.getSystemClassLoader()));
@@ -187,6 +204,7 @@ public abstract class TipiContext {
 		tipiResourceLoader = new ClassPathResourceLoader();
 		setStorageManager(new TipiNullStorageManager());
 		try {
+			@SuppressWarnings("unchecked")
 			Class<? extends TipiContextListener> cc = (Class<? extends TipiContextListener>) Class
 					.forName("com.dexels.navajo.tipi.tools.TipiEventDumpDebugger");
 			TipiContextListener tcl = cc.newInstance();
@@ -207,6 +225,9 @@ public abstract class TipiContext {
 	}
 	
 
+	protected void addMainExtension(TipiExtension te) {
+		mainExtensionList.add(te);
+	}
 	
 	private void fakeExtensions() {
 
@@ -265,13 +286,9 @@ public abstract class TipiContext {
 		int count = 0;
 		while (tt.hasNext()) {
 			TipiExtension element = tt.next();
-			System.err.println("Extension: "+element.getId());
-			String[] incls = element.getIncludes();
-			for (String string : incls) {
-			}
 			extensionMap.put(element.getId(), element);
 			count++;
-			if (element.requiresMainImplementation() == null) {
+			if (element.requiresMainImplementation() == null && !element.isMainImplementation()) {
 				coreExtensionList.add(element);
 				continue;
 			}
@@ -794,6 +811,7 @@ public abstract class TipiContext {
 			return;
 		}
 		try {
+			@SuppressWarnings("unchecked")
 			Class<? extends TipiStorageManager> c = (Class<? extends TipiStorageManager>) Class.forName(type);
 			TipiStorageManager tsm = c.newInstance();
 			setStorageManager(tsm);
@@ -945,6 +963,7 @@ public abstract class TipiContext {
 			return;
 		}
 		for (int i = 0; i < ss.length; i++) {
+			System.err.println("Adding include: "+ss[i]);
 			includes.add(ss[i]);
 		}
 		
@@ -2169,26 +2188,7 @@ public abstract class TipiContext {
 		myActivityListeners.remove(listener);
 	}
 
-	/**
-	 * @return
-	 */
-	public List<String> getRequiredIncludes() {
-		List<String> s = new ArrayList<String>();
-		s.add("com/dexels/navajo/tipi/classdef.xml");
-		s.add("com/dexels/navajo/tipi/actions/actiondef.xml");
-		return s;
-	}
 
-	/**
-	 * slightly redundant
-	 */
-	public List<String> parseRequiredIncludes() {
-		List<String> includeList = new LinkedList<String>();
-		for (String s : getRequiredIncludes()) {
-			includeList.add(s);
-		}
-		return includeList;
-	}
 
 	public void enqueueExecutable(TipiExecutable te) throws TipiException, TipiBreakException {
 		myThreadPool.enqueueExecutable(te);
