@@ -81,14 +81,15 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
     // super.disposeComponent();
     // }
     public void addToContainer(Object o, Object constraints) {
-        String constr = (String) constraints;
         Component c = (Component) o;
         if (c == null) {
             System.err.println("Warning: Adding null component to tipicomponent: " + getPath());
             return;
         }
             System.err.println("Warning: Adding non-component to tipicomponent: " + getPath()+ " class: "+c.getClass());
-        if(o instanceof PaneContainer) {
+            String constr = (String) constraints;
+
+            if(o instanceof PaneContainer) {
         	ContainerEx ce = new ContainerEx();
         	 gridComponent.add(ce);
             ce.add(c);
