@@ -56,6 +56,8 @@ public class TipiActionFactory {
 			myActionClass = Class.forName(fullDef, true, extensionLoader);
 		} catch (ClassNotFoundException ex) {
 			System.err.println("Trouble loading action class: " + fullDef);
+			System.err.println("Classloader: "+extensionLoader);
+			System.err.println("Exension: "+ed);
 			throw new TipiException("Trouble loading action class: " + fullDef, ex);
 		}
 		myContext = context;
