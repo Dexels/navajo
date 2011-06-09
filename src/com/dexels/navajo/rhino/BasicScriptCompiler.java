@@ -482,8 +482,8 @@ public class BasicScriptCompiler implements ScriptCompiler {
 		}
 		
 		if(mapClass.equals("com.dexels.navajo.adapter.NavajoMap")) {
-			System.err.println("Rplaced old skool map!");
-			mapClass = "com.dexels.navajo.adapter.NavajoMapContinuations";
+			System.err.println("Replaced old skool map: DISABLED");
+//			mapClass = "com.dexels.navajo.adapter.NavajoMapContinuations";
 		}
 		
 		os.writeln("callMap(\""+mapClass+"\",function() {");
