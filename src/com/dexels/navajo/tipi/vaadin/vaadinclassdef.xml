@@ -1,0 +1,367 @@
+<tid>
+	<tipiclass implements="basecomponent,datacomponent" addtocontainer="true" class="TipiButton" module="component"
+		name="button" childcount="0" package="com.dexels.navajo.tipi.vaadin.components" propertycomponent="false" studio-icon="button.gif"
+		type="component">
+		<events>
+			<event name="onActionPerformed" />
+		</events>
+		<values>
+			<value direction="inout" name="text" type="string" />
+			<value direction="in" name="icon" type="resource" />
+
+
+			<value direction="in" name="enabled" type="boolean" />
+		</values>
+
+	</tipiclass>
+
+	<tipiclass addtocontainer="true" implements="basecomponent,datacomponent" class="TipiLabel" module="component"
+		name="label" childcount="0" package="com.dexels.navajo.tipi.vaadin.components" propertycomponent="false" studio-icon="button.gif"
+		type="component">
+		<values>
+			<value direction="inout" name="text" type="string" />
+			<value direction="in" name="icon" type="resource" />
+		</values>
+	</tipiclass>
+
+	<tipiclass addtocontainer="true" implements="basecomponent,datacomponent" class="TipiLabel" module="component"
+		name="hidden" childcount="0" package="com.dexels.navajo.tipi.vaadin.components" propertycomponent="false" studio-icon="button.gif"
+		type="component">
+		<values>
+		</values>
+	</tipiclass>
+
+
+	<tipiclass class="TipiFrame" name="frame" implements="basecomponent,datacomponent" package="com.dexels.navajo.tipi.vaadin.components"
+		type="tipi" childcount="*" layoutmanager="true" addtocontainer="true" toplevel="true">
+		<events>
+			<event name="onInstantiate" />
+			<event name="onLoad" />
+			<event name="onWindowClosed" />
+		</events>
+		<values>
+			<value direction="in" name="icon" type="resource" />
+			<value direction="inout" name="title" type="string" />
+			<value direction="in" name="fullscreen" type="boolean" />
+			<value direction="in" name="style" type="string" />
+		</values>
+		<methods />
+	</tipiclass>
+
+	<tipiclass class="TipiPanel" name="panel" implements="basecomponent,datacomponent" package="com.dexels.navajo.tipi.vaadin.components"
+		type="tipi" childcount="*" layoutmanager="true" addtocontainer="true" toplevel="false">
+		<events>
+			<event name="onInstantiate" />
+			<event name="onLoad" />
+		</events>
+		<values>
+			<value direction="in" name="style" type="string" />
+		</values>
+		<methods />
+	</tipiclass>
+
+	<!-- Obsolete copy of panel -->
+	<tipiclass class="TipiPanel" name="tipi" implements="basecomponent,datacomponent" package="com.dexels.navajo.tipi.vaadin.components"
+		type="tipi" childcount="*" layoutmanager="true" addtocontainer="true" toplevel="false">
+		<events>
+			<event name="onInstantiate" />
+			<event name="onLoad" />
+		</events>
+		<values>
+			<value direction="in" name="style" type="string" />
+		</values>
+		<methods />
+	</tipiclass>
+
+	<!-- Also copy of panel -->
+	<tipiclass class="TipiPanel" name="column" implements="basecomponent,datacomponent" package="com.dexels.navajo.tipi.vaadin.components"
+		type="tipi" childcount="*" layoutmanager="true" addtocontainer="true" toplevel="false">
+		<events>
+			<event name="onInstantiate" />
+			<event name="onLoad" />
+		</events>
+		<values>
+			<value direction="in" name="style" type="string" />
+		</values>
+		<methods />
+	</tipiclass>
+
+
+	<tipiclass class="TipiToolbar" name="toolbar" implements="basecomponent,datacomponent" package="com.dexels.navajo.tipi.vaadin.components"
+		type="tipi" childcount="*" layoutmanager="false" addtocontainer="true" toplevel="false">
+		<events>
+			<event name="onInstantiate" />
+			<event name="onLoad" />
+		</events>
+		<values>
+			<value direction="in" name="style" type="string" />
+		</values>
+		<methods />
+	</tipiclass>
+
+	<!-- Copy 'row' from toolbar -->
+	<tipiclass class="TipiToolbar" name="row" implements="basecomponent,datacomponent" package="com.dexels.navajo.tipi.vaadin.components"
+		type="tipi" childcount="*" layoutmanager="false" addtocontainer="true" toplevel="false">
+		<events>
+			<event name="onInstantiate" />
+			<event name="onLoad" />
+		</events>
+		<values>
+			<value direction="in" name="style" type="string" />
+		</values>
+		<methods />
+	</tipiclass>
+
+	<tipiclass addtocontainer="false" childcount="*" class="TipiDialog" implements="basecomponent,datacomponent"
+		layoutmanager="true" module="container" name="dialog" package="com.dexels.navajo.tipi.vaadin.components" studio-icon="dialog.gif"
+		toplevel="true" type="tipi">
+		<events>
+			<event name="onInstantiate" />
+			<event name="onWindowClosed" />
+			<event name="onLoad">
+				<param name="service" type="string" />
+				<param name="navajo" type="navajo" />
+			</event>
+			<event name="onGeneratedErrors">
+				<param name="id" type="string" />
+				<param name="description" type="string" />
+			</event>
+		</events>
+		<values>
+			<value direction="inout" name="title" type="string" />
+			<value direction="in" name="x" type="integer" />
+			<value direction="in" name="y" type="integer" />
+			<value direction="in" name="h" type="float" />
+			<value direction="in" name="w" type="float" />
+		</values>
+		<methods>
+			<method name="show" />
+			<method name="hide" />
+			<method name="dispose" />
+		</methods>
+	</tipiclass>
+
+	<tipiclass addtocontainer="false" childcount="*" class="TipiWindow" implements="basecomponent,datacomponent"
+		layoutmanager="true" module="container" name="window" package="com.dexels.navajo.tipi.vaadin.components" studio-icon="dialog.gif"
+		toplevel="true" type="tipi">
+		<events>
+			<event name="onInstantiate" />
+			<event name="onWindowClosed" />
+			<event name="onLoad">
+				<param name="service" type="string" />
+				<param name="navajo" type="navajo" />
+			</event>
+			<event name="onGeneratedErrors">
+				<param name="id" type="string" />
+				<param name="description" type="string" />
+			</event>
+		</events>
+		<values>
+			<value direction="inout" name="title" type="string" />
+			<value direction="in" name="x" type="integer" />
+			<value direction="in" name="y" type="integer" />
+			<value direction="in" name="h" type="float" />
+			<value direction="in" name="w" type="float" />
+			<value direction="in" name="visible" type="boolean" />
+		</values>
+		<methods>
+		</methods>
+	</tipiclass>
+
+
+	<tipiclass class="TipiGridPanel" name="gridpanel" implements="basecomponent,datacomponent" package="com.dexels.navajo.tipi.vaadin.components"
+		type="tipi" childcount="*" layoutmanager="false" addtocontainer="true">
+		<events>
+			<event name="onInstantiate" />
+			<event name="onLoad">
+				<param name="service" type="string" />
+				<param name="navajo" type="navajo" />
+			</event>
+			<event name="onGeneratedErrors" />
+		</events>
+		<values>
+			<value direction="in" name="columnWidth" type="string" />
+			<value direction="in" name="height" type="integer" />
+		</values>
+		<methods />
+	</tipiclass>
+
+	<tipiclass class="TipiProperty" name="property" implements="basecomponent,datacomponent" package="com.dexels.navajo.tipi.vaadin.components"
+		propertycomponent="true" type="component" addtocontainer="true">
+		<events>
+			<event name="onValueChanged" />
+			<event name="onStateChanged" />
+			<event name="onFocusGained" />
+			<event name="onFocusLost" />
+			<event name="onEnter" />
+			<event name="onActionPerformed" />
+			<event name="onBinarySelected" />
+
+			<!-- only included for compatibility reasons. Not implement. -->
+			<event name="onKey">
+				<param name="code" type="integer" />
+				<param name="key" type="string" />
+				<param name="modifiers" type="string" />
+				<param name="mode" type="string" />
+			</event>
+		</events>
+		<values>
+			<value direction="inout" name="propertyname" type="string" />
+			<value direction="inout" name="propertyValue" type="object" />
+			<value direction="inout" name="enabled" type="boolean" />
+			<value direction="inout" name="visible" type="boolean" />
+			<value direction="inout" name="allowStringLineWrap" type="boolean" />
+			<value direction="inout" name="use_checkbox" type="boolean" />
+			<value direction="in" name="visibleRowCount" type="integer" />
+			<value direction="in" name="width" type="integer" />
+			<value direction="in" name="selectiontype" type="selection">
+				<option description="radio" value="radio" />
+				<option description="combo" value="combo" />
+				<option description="list" value="list" />
+				<option description="checkbox" value="checkbox" />
+			</value>
+
+			<value direction="inout" name="label_halign" type="selection">
+				<option description="Leading" value="leading" />
+				<option description="Left" value="left" />
+				<option description="Center" value="center" />
+				<option description="Right" value="right" />
+				<option description="Trailing" value="trailing" />
+			</value>
+			<value direction="inout" name="label_valign" type="selection" value="'top'">
+				<option description="Top" value="top" />
+				<option description="Center" value="center" />
+				<option description="Bottom" value="bottom" />
+			</value>
+			<value direction="inout" name="label_indent" type="integer" />
+			<value direction="inout" name="showlabel" type="boolean" value="true" />
+			<value direction="inout" name="capitalization" type="selection" value="'off'">
+				<option description="No capitalization'" value="off" />
+				<option description="Capitalize first letter" value="firstupper" />
+				<option description="Capitalize all letters" value="upper" />
+				<option description="Make all letters lowercase" value="lower" />
+			</value>
+			<value direction="in" name="useLabelsForReadOnly" type="boolean" value="true" />
+			<value direction="in" name="alwaysUseLabel" type="boolean" value="false" />
+			<value direction="in" name="useCheckBoxes" type="boolean" value="true" />
+			<value direction="in" name="checkboxGroupColumnCount" type="integer" />
+			<value direction="in" name="memoRowCount" type="integer" />
+			<value direction="in" name="memoColumnCount" type="integer" />
+			<value direction="in" name="horizontalScrolls" type="boolean" />
+			<value direction="in" name="verticalScrolls" type="boolean" />
+			<value direction="in" name="maxImageHeight" type="integer" />
+			<value direction="in" name="maxImageWidth" type="integer" />
+			<value direction="in" name="allowDateOverlay" type="boolean" />
+			<value direction="in" name="style" type="string" />
+
+		</values>
+		<methods />
+	</tipiclass>
+
+	<tipiclass addtocontainer="true" class="TipiCheckbox" implements="basecomponent,datacomponent" module="component"
+		name="checkbox" childcount="0" layoutmanager="false" package="com.dexels.navajo.tipi.vaadin.components"
+		propertycomponent="false" studio-icon="button.gif" type="component">
+		<events>
+			<event name="onInstantiate" />
+			<event name="onActionPerformed" />
+			<event name="onSelectionChanged" />
+
+		</events>
+		<values>
+			<value direction="inout" name="text" type="string" />
+			<value direction="in" name="icon" type="resource" />
+			<value direction="in" name="enabled" type="boolean" />
+			<value direction="in" name="visible" type="boolean" />
+			<value direction="inout" name="selected" type="boolean" />
+
+		</values>
+		<methods />
+	</tipiclass>
+
+
+	<tipiclass class="TipiTable" name="tipitable" package="com.dexels.navajo.tipi.vaadin.components" type="tipi"
+		childcount="0" layoutmanager="false" addtocontainer="true" customstructure="true">
+		<events>
+			<event name="onInstantiate" />
+			<event name="onActionPerformed" />
+			<event name="onSelectionChanged">
+				<param name="selectedMessage" type="message" />
+				<param name="selectedIndex" type="integer" />
+			</event>
+			<event name="onLoad" />
+
+			<event name="onSelectionChanged">
+				<param name="selectedMessage" type="message" />
+				<param name="selectedIndex" type="integer" />
+			</event>
+			<event name="onValueChanged">
+				<param name="name" type="string" />
+				<!--<param name="old" type="string"/> -->
+				<param name="new" type="string" />
+				<param name="row" type="string" />
+				<param name="column" type="string" />
+				<param name="message" type="message" />
+				<!--<param name="path" type="string"/> -->
+			</event>
+			<event name="onReport">
+				<param name="report" type="binary" />
+			</event>
+
+		</events>
+		<values>
+			<value direction="inout" name="messagepath" type="string" />
+
+			<value direction="in" name="rowsPerPage" type="integer" />
+			<value direction="inout" name="selectedIndex" type="integer" />
+			<value direction="inout" name="filtersvisible" type="boolean" />
+			<value direction="inout" name="columnsvisible" type="boolean" />
+			<value direction="inout" name="headervisible" type="boolean" />
+			<value direction="inout" name="showColumn" type="string" />
+			<value direction="inout" name="hideColumn" type="string" />
+			<value direction="out" name="selectedMessage" type="message" />
+			<value direction="in" name="enabled" type="boolean" />
+			<value direction="in" name="visible" type="boolean" />
+			<value direction="inout" name="tooltip" type="string" />
+
+			<value direction="in" name="columnDefinitionSavePath" type="string" />
+			<value direction="inout" name="h" type="integer" />
+			<value direction="inout" name="v" type="integer" />
+			<value direction="in" name="style" type="string" />
+		</values>
+		<methods>
+			<method name="selectNext" />
+			<method name="selectPrevious" />
+			<method name="selectFirst" />
+			<method name="selectLast" />
+			<method name="fireAction" />
+			<method name="saveColumns">
+				<param name="filepath" type="string" />
+			</method>
+			<method name="loadColumns">
+				<param name="filepath" type="string" />
+			</method>
+			<method name="printReport" />
+
+		</methods>
+	</tipiclass>
+
+	<tipiaction name="openBinary" class="TipiOpenBinary" package="com.dexels.navajo.tipi.vaadin.actions">
+		<description>Either serves a binary directly (by writing it in a local file...) (This is the old school way), or by
+			supplying an expression yielding a binary. This expression (a string) should be quoted. It will be encoded in a URL,
+			which will evaluate this expression.
+			Make sure this expression is context insensitive.
+    </description>
+		<param name="binary" type="binary" />
+	</tipiaction>
+
+	<tipiaction name="openBrowser" class="TipiOpenBrowser" package="com.dexels.navajo.tipi.vaadin.actions">
+		<description>
+			Open a native browser with the supplied url.
+		</description>
+		<param name="url" type="string" required="true" />
+	</tipiaction>
+
+	<tipiclass class="TipiBorderLayout" name="border" package="com.dexels.navajo.tipi.vaadin.layout" type="layout" />
+	<tipiclass class="TipiFlowLayout" name="flow" package="com.dexels.navajo.tipi.vaadin.layout" type="layout" />
+
+</tid>

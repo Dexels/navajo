@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<component id="com.dexels.navajo.tipi.vaadin" version="2">
+    <resource path="src/com/dexels/navajo/tipi/vaadin/LoginDialog.java" type="com.dexels.navajo.tipi.vaadin.LoginDialog">
+        <filter id="576720909">
+            <message_arguments>
+                <message_argument value="Window"/>
+                <message_argument value="LoginDialog"/>
+            </message_arguments>
+        </filter>
+    </resource>
+</component>
