@@ -9,12 +9,11 @@ import java.util.List;
 
 import navajo.ExtensionDefinition;
 
-import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.tipixml.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 import com.dexels.navajo.tipi.tipixml.XMLParseException;
 
-public class TipiAbstractXMLExtension extends AbstractTipiExtension implements TipiExtension, ExtensionDefinition {
+public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension implements TipiExtension, ExtensionDefinition {
 
 	private final List<String> thirdPartyList = new ArrayList<String>();
 	private final List<String> includes = new ArrayList<String>();
@@ -25,6 +24,7 @@ public class TipiAbstractXMLExtension extends AbstractTipiExtension implements T
 	private String project = null;
 	
 	private ClassLoader extensionClassLoader;
+	private boolean isMain;
 	
 	public TipiAbstractXMLExtension() {
 	}
@@ -32,6 +32,8 @@ public class TipiAbstractXMLExtension extends AbstractTipiExtension implements T
 	protected void loadXML()  {
 		String xmlName = getClass().getSimpleName()+".xml";
 		loadXML(xmlName);
+		// Added for Vaadin (OSGi, actually)
+		setExtensionClassloader(getClass().getClassLoader());
 	}
 	
 	protected void loadXML(String xmlName)  {
@@ -56,6 +58,7 @@ public class TipiAbstractXMLExtension extends AbstractTipiExtension implements T
 	private void loadXML(XMLElement xx) {
 		id = xx.getStringAttribute("id");
 		project = xx.getStringAttribute("project");
+		isMain = xx.getBooleanAttribute("isMain", "true", "false",false);
 		List<XMLElement> desc = xx.getElementsByTagName("description");
 		if(desc!=null && !desc.isEmpty()) {
 			description = desc.get(0).getContent();
@@ -94,6 +97,10 @@ public class TipiAbstractXMLExtension extends AbstractTipiExtension implements T
 	public final String getId() {
 		return id;
 	}
+	
+	public final boolean isMainImplementation() {
+		return isMain;
+	}
 
 	public final String[] getIncludes() {
 		String[] in = new String[includes.size()];
@@ -123,19 +130,11 @@ public class TipiAbstractXMLExtension extends AbstractTipiExtension implements T
 
 
 
-	public final boolean isMainImplementation() {
-		System.err.println("Need to implement main detection");
-		return false;
-	}
-
 	public final  String requiresMainImplementation() {
 		return requiresMain;
 	}
 
-	public void initialize(TipiContext tc) {
-		// TODO Auto-generated method stub
-		
-	}
+
 
 	@Override
 	public ClassLoader getExtensionClassloader() {
