@@ -1,9 +1,6 @@
 package tipi;
 
-import java.util.*;
-import navajo.*;
-
-import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.TipiContext;
 
 public class TipiMailExtension extends TipiAbstractXMLExtension implements TipiExtension {
 

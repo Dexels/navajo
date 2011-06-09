@@ -1,24 +1,44 @@
 package com.dexels.navajo.tipi.mail;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import javax.mail.*;
+import javax.mail.Address;
+import javax.mail.BodyPart;
 import javax.mail.Flags.Flag;
-import javax.mail.event.*;
-import javax.mail.internet.InternetAddress;
+import javax.mail.Folder;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Store;
+import javax.mail.Transport;
+import javax.mail.event.ConnectionEvent;
+import javax.mail.event.ConnectionListener;
+import javax.mail.event.FolderEvent;
+import javax.mail.event.FolderListener;
+import javax.mail.event.StoreEvent;
+import javax.mail.event.StoreListener;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import sun.tools.tree.DoStatement;
-
-import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.types.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.connectors.*;
-import com.dexels.navajo.tipi.internal.*;
-import com.sun.mail.imap.protocol.MailboxInfo;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiComponentMethod;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.connectors.TipiBaseConnector;
+import com.dexels.navajo.tipi.connectors.TipiConnector;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 
 public class TipiMailConnector extends TipiBaseConnector implements TipiConnector {
 	private long disconnectTimeout = 20000;
@@ -34,7 +54,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 	private int messageCount;
 	private int unreadMessageCount;
 	private Folder fff;
-	private Date recentAfter;
+//	private Date recentAfter;
 
 	private int pageSize = 0;
 	private int currentPage = 1;
@@ -127,8 +147,6 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 	}
 
 	private void sendMessage(Navajo n) {
-		// TODO Auto-generated method stub
-		// se
 	}
 
 	public String getDefaultEntryPoint() {
@@ -325,7 +343,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 			mailMode = (String) object;
 		}
 		if (name.equals("recentAfter")) {
-			recentAfter = (Date) object;
+//			recentAfter = (Date) object;
 		}
 		if (name.equals("pageSize")) {
 			pageSize = (Integer) object;
@@ -524,20 +542,20 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		}
 	}
 
-	private int determineRecentMessages() throws MessagingException {
-		javax.mail.Message[] m = fff.getMessages();
-		int result = 0;
-		for (javax.mail.Message message : m) {
-			Date d = message.getSentDate();
-			System.err.println("Datebefore: " + recentAfter);
-			System.err.println("sent: " + message.getSentDate());
-			System.err.println("received: " + message.getReceivedDate());
-			if (d.after(recentAfter)) {
-				result++;
-			}
-		}
-		return result;
-	}
+//	private int determineRecentMessages() throws MessagingException {
+//		javax.mail.Message[] m = fff.getMessages();
+//		int result = 0;
+//		for (javax.mail.Message message : m) {
+//			Date d = message.getSentDate();
+//			System.err.println("Datebefore: " + recentAfter);
+//			System.err.println("sent: " + message.getSentDate());
+//			System.err.println("received: " + message.getReceivedDate());
+//			if (d.after(recentAfter)) {
+//				result++;
+//			}
+//		}
+//		return result;
+//	}
 
 	public synchronized void disconnect() throws MessagingException {
 		if (store != null) {
