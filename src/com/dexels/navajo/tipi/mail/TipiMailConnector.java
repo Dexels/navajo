@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi.mail;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -17,14 +16,12 @@ import javax.mail.Folder;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Store;
-import javax.mail.Transport;
 import javax.mail.event.ConnectionEvent;
 import javax.mail.event.ConnectionListener;
 import javax.mail.event.FolderEvent;
 import javax.mail.event.FolderListener;
 import javax.mail.event.StoreEvent;
 import javax.mail.event.StoreListener;
-import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 import com.dexels.navajo.document.Message;
@@ -757,47 +754,6 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 
 	}
 
-	public void sendMail(Address from,Address to, String subject, String body) throws MessagingException {
-		System.out.println("sendMail()...");
-		Properties props = new Properties();
-//		props.put("mail.smtp.host", "smtp.gmail.com");
-//		props.put("mail.smtp.port", "465");
-		props.put("mail.smtp.auth", "true");
-
-	     props.put("mail.transport.protocol", "smtps");
-        props.put("mail.smtps.host", "smtp.gmail.com");
-        props.put("mail.smtps.auth", "true");
-//        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
-        props.put("mail.smtp.socketFactory.fallback", "false");
-//		Session session = Session.getDefaultInstance(props, null);
-//        Authenticator auth = new SMTPAuthenticator();
-//        Session session = Session.getDefaultInstance(props, auth);
-
-		Session session = Session.getDefaultInstance(props);		
- 
-		session.setDebug(true);
-		MimeMessage message = new MimeMessage(session);
-		message.setFrom(from);
-		message.addRecipient(javax.mail.Message.RecipientType.TO, to);
-		System.out.println("sendMail() 2...");
-
-		message.setSubject(subject);
-		message.setContent(body, "text/plain");
-
-		Transport transport = session.getTransport("smtps");
-
-		// ***** GET STUCK HERE!!! ******
-//		transport.connect("smtp.gmail.com", 465,"flyaruu@gmail.com", "");
-		transport.connect("flyaruu", "xxxxxxxxxx");
-		System.out.println("sendMail() 3...");
-		message.setSentDate(new Date());
-		message.saveChanges();
-		Transport.send(message);
-
-		System.out.println("sendMail() 4...");
-
-	}
 
 	public Set<String> getEntryPoints() {
 		Set<String> s = new HashSet<String>();
