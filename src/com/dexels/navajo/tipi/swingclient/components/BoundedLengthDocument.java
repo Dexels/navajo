@@ -1,8 +1,8 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import javax.swing.text.*;
-
-import com.dexels.navajo.document.*;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 
 /**
  * <p>Title: Seperate project for Navajo Swing client</p>

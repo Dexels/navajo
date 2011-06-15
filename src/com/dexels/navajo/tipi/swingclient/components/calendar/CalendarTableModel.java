@@ -1,12 +1,16 @@
 package com.dexels.navajo.tipi.swingclient.components.calendar;
 
-import java.text.*;
-import java.util.*;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 
-import javax.swing.event.*;
-import javax.swing.table.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.TableModel;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Message;
 
 /**
  * <p>Title: </p>

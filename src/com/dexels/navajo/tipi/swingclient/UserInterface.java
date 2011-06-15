@@ -1,10 +1,13 @@
 package com.dexels.navajo.tipi.swingclient;
 //import com.dexels.sportlink.client.swing.dialogs.*;
-import java.util.*;
+import java.util.Locale;
 
-import javax.swing.*;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 
-import com.dexels.navajo.tipi.swingclient.components.*;
+import com.dexels.navajo.tipi.swingclient.components.BaseWindow;
+import com.dexels.navajo.tipi.swingclient.components.CopyCompatible;
+import com.dexels.navajo.tipi.swingclient.components.PasteCompatible;
 /**
  * <p>Title: SportLink Client:</p>
  * <p>Description: </p>

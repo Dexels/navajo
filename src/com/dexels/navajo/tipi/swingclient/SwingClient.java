@@ -1,8 +1,11 @@
 package com.dexels.navajo.tipi.swingclient;
 
-import java.awt.*;
+import java.awt.BorderLayout;
 
-import javax.swing.*;
+import javax.swing.JDesktopPane;
+import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
+import javax.swing.UIManager;
 
 
 

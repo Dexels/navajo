@@ -1,6 +1,6 @@
 package com.dexels.navajo.tipi.swingclient.components.calendar;
 
-import java.util.*;
+import java.util.Date;
 
 /**
  * <p>Title: </p>

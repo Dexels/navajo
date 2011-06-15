@@ -1,12 +1,18 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Dimension;
+import java.awt.event.FocusEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 
-import javax.swing.*;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
+import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Property;
 
 public class PropertyTextArea extends JTextArea implements PropertyControlled   {
   private String textValue;

@@ -1,18 +1,33 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.*;
-import java.beans.*;
-import java.io.*;
-import java.lang.reflect.*;
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.AreaAveragingScaleFilter;
+import java.awt.image.BufferedImage;
+import java.awt.image.FilteredImageSource;
+import java.awt.image.ImageProducer;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 
-import javax.imageio.*;
-import javax.imageio.stream.*;
-import javax.swing.*;
+import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageInputStream;
+import javax.imageio.stream.ImageOutputStream;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.types.*;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.types.Binary;
 
 public class BinaryComponent extends JPanel implements PropertyControlled, PropertyChangeListener, ActionListener {
 

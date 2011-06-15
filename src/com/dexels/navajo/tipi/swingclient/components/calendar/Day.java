@@ -1,8 +1,13 @@
 package com.dexels.navajo.tipi.swingclient.components.calendar;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Message;
 
 //import com.dexels.navajo.document.*;
 

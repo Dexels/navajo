@@ -1,6 +1,6 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import java.awt.datatransfer.*;
+import java.awt.datatransfer.DataFlavor;
 
 /**
  * <p>Title: Seperate project for Navajo Swing client</p>

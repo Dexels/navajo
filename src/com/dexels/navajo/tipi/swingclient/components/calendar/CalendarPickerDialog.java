@@ -1,12 +1,30 @@
 package com.dexels.navajo.tipi.swingclient.components.calendar;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 
-import com.dexels.navajo.tipi.swingclient.components.*;
+import com.dexels.navajo.tipi.swingclient.components.BasePanel;
+import com.dexels.navajo.tipi.swingclient.components.DialogConstants;
+import com.dexels.navajo.tipi.swingclient.components.StandardDialog;
 
 /**
  * <p>

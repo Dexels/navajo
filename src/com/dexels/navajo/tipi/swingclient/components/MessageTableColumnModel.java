@@ -1,13 +1,17 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import java.util.*;
-import java.util.Map.*;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
-import javax.swing.event.*;
-import javax.swing.table.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.TableColumnModelEvent;
+import javax.swing.table.DefaultTableColumnModel;
+import javax.swing.table.TableColumn;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.swingclient.components.sort.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.tipi.swingclient.components.sort.CustomTableHeaderRenderer;
 
 /**
  * <p>Title: Seperate project for Navajo Swing client</p>

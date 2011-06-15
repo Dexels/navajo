@@ -1,7 +1,8 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.JTable;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
 
 /**
  * <p>Title: Seperate project for Navajo Swing client</p>

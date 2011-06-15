@@ -1,12 +1,14 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import java.awt.*;
-import java.text.*;
+import java.awt.Color;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 
-import javax.swing.*;
+import javax.swing.SwingConstants;
 
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.types.*;
+import com.dexels.navajo.document.types.Money;
 
 public class MoneyField extends AbstractPropertyField implements PropertyControlled {
 	private DecimalFormat myEditFormat = (DecimalFormat) NumberFormat.getInstance();

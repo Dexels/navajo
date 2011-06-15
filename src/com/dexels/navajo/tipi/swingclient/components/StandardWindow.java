@@ -8,15 +8,28 @@ package com.dexels.navajo.tipi.swingclient.components;
  * @author unascribed
  * @version 1.0
  */
-import java.awt.*;
-import java.awt.event.*;
-import java.beans.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.beans.PropertyVetoException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.swing.*;
+import javax.swing.ActionMap;
+import javax.swing.Box;
+import javax.swing.InputMap;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.swingclient.*;
+import com.dexels.navajo.document.Navajo;
 
 //import com.dexels.sportlink.client.swing.dialogs.*;
 

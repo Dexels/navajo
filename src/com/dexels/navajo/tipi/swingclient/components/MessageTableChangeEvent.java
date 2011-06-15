@@ -1,6 +1,6 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import javax.swing.event.*;
+import javax.swing.event.ChangeEvent;
 
 /**
  * <p>Title: </p>

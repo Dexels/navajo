@@ -12,7 +12,10 @@ package com.dexels.navajo.tipi.swingclient.components.sort;
 /**
  * @deprecated
  */
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
 /**
  * @deprecated
  */

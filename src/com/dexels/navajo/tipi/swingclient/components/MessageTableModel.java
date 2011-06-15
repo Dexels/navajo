@@ -1,14 +1,19 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import java.beans.*;
-import java.lang.reflect.*;
-import java.util.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.SwingUtilities;
+import javax.swing.table.AbstractTableModel;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.filter.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.filter.PropertyFilter;
 
 /**
  * <p>Title: </p>

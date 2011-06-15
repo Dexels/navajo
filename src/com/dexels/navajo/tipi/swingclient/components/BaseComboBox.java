@@ -1,11 +1,15 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
 
-import javax.swing.*;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
 
 
 

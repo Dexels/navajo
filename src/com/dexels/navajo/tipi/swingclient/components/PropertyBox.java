@@ -1,11 +1,12 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.beans.*;
-import java.util.*;
+import java.awt.event.ItemEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
 
 public class PropertyBox extends BaseComboBox implements PropertyControlled, PropertyChangeListener {
 

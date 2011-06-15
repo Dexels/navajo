@@ -1,11 +1,13 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import java.awt.event.*;
+import java.awt.event.FocusEvent;
 
-import javax.swing.*;
-import javax.swing.text.*;
+import javax.swing.SwingConstants;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.PropertyTypeException;
 
 /**
  * <p>Title: Seperate project for Navajo Swing client</p>

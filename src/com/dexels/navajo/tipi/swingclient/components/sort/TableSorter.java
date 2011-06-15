@@ -18,15 +18,19 @@
 
 package com.dexels.navajo.tipi.swingclient.components.sort;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Date;
+import java.util.Vector;
 
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
+import javax.swing.JTable;
+import javax.swing.event.TableModelEvent;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 
-import com.dexels.navajo.tipi.swingclient.components.*;
+import com.dexels.navajo.tipi.swingclient.components.MessageTable;
 
 //import com.dexels.navajo.document.*;
 

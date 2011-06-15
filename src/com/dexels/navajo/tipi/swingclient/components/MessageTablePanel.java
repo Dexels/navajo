@@ -1,21 +1,44 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.Point;
-import java.awt.event.*;
-import java.awt.print.*;
-import java.io.*;
-import java.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JToolBar;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.event.CellEditorListener;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.lazy.*;
-import com.dexels.navajo.document.types.*;
-import com.dexels.navajo.tipi.swingclient.*;
+import com.dexels.navajo.document.ExpressionChangedException;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.tipi.swingclient.SwingClient;
 
 //import com.dexels.navajo.tipi.tipixml.*;
 

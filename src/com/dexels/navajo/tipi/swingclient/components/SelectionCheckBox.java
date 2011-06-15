@@ -1,10 +1,13 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.JCheckBox;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
 
 /**
  * <p>Title: </p>

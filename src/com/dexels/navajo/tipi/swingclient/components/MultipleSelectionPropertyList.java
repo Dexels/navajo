@@ -1,14 +1,23 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import java.awt.*;
-import java.beans.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
 
 /**
  * <p>

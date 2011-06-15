@@ -1,14 +1,18 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.Component;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.util.ArrayList;
+import java.util.EventObject;
 
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
+import javax.swing.JTable;
+import javax.swing.event.CellEditorListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableCellEditor;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Property;
 
 /**
  * <p>Title: Seperate project for Navajo Swing client</p>

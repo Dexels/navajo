@@ -1,16 +1,16 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
 import java.awt.AlphaComposite;
-import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.*;
+import java.awt.event.FocusEvent;
 
 import javax.swing.ImageIcon;
-import javax.swing.text.*;
+import javax.swing.text.BadLocationException;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.Property;
 
 /**
  * <p>Title: Seperate project for Navajo Swing client</p>

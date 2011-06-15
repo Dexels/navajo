@@ -1,15 +1,33 @@
 package com.dexels.navajo.tipi.swingclient.components.remotecombobox;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.lang.reflect.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Vector;
 
-import javax.swing.*;
-import javax.swing.text.*;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
+import javax.swing.text.Document;
+import javax.swing.text.JTextComponent;
 
-import com.dexels.navajo.client.*;
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.client.ClientException;
+import com.dexels.navajo.client.ClientInterface;
+import com.dexels.navajo.client.NavajoClientFactory;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Property;
 
 public class AjaxComboBox extends JComboBox {
 	private String messagePath;

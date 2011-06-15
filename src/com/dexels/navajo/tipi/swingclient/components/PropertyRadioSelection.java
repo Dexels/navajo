@@ -1,12 +1,23 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.swing.*;
+import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
 
 /**
  * <p>Title: Seperate project for Navajo Swing client</p>

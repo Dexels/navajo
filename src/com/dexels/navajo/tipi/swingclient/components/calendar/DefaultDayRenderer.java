@@ -1,10 +1,18 @@
 package com.dexels.navajo.tipi.swingclient.components.calendar;
 
-import java.awt.*;
-import java.awt.image.*;
-import java.util.*;
+import java.awt.AlphaComposite;
+import java.awt.Component;
+import java.awt.Composite;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.util.Calendar;
+import java.util.Date;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JPanel;
 
 /**
  * <p>Title: </p>

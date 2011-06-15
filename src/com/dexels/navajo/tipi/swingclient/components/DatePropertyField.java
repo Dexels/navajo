@@ -1,16 +1,29 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.beans.*;
-import java.text.*;
-import java.util.*;
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Composite;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.beans.PropertyChangeEvent;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
-import javax.swing.*;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.swingclient.*;
-import com.dexels.navajo.tipi.swingclient.components.calendar.*;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.tipi.swingclient.SwingClient;
+import com.dexels.navajo.tipi.swingclient.components.calendar.CalendarPickerDialog;
 
 //import com.dexels.sportlink.client.swing.components.*;
 /**

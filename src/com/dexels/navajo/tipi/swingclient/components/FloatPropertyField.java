@@ -1,12 +1,15 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import java.awt.event.*;
+import java.awt.event.FocusEvent;
 
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.text.*;
+import javax.swing.SwingConstants;
+import javax.swing.event.DocumentEvent;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.PlainDocument;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Property;
 
 public class FloatPropertyField extends PropertyField implements PropertyControlled {
   protected Document myDocument = null;

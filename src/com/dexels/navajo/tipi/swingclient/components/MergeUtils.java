@@ -1,11 +1,15 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.types.*;
-import com.dexels.navajo.tipi.swingclient.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.tipi.swingclient.SwingClient;
 
 /**
  * <p>

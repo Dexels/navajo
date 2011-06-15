@@ -1,12 +1,15 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import java.awt.event.*;
-import java.beans.*;
-import java.lang.reflect.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.lang.reflect.InvocationTargetException;
 
-import javax.swing.*;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Property;
 
 public abstract class AbstractPropertyField extends JTextField implements FocusListener, PropertyChangeListener {
 

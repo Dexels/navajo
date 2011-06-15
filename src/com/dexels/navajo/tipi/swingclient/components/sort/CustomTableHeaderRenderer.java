@@ -1,12 +1,20 @@
 package com.dexels.navajo.tipi.swingclient.components.sort;
 
-import java.awt.*;
-import java.util.*;
+import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.table.TableCellRenderer;
 
-import com.dexels.navajo.tipi.swingclient.components.*;
+import com.dexels.navajo.tipi.swingclient.components.MessageTable;
 
 /**
  * <p>Title: ShellApplet</p>

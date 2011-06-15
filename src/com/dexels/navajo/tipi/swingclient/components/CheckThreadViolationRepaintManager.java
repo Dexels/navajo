@@ -1,6 +1,8 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.RepaintManager;
+import javax.swing.SwingUtilities;
 
 public class CheckThreadViolationRepaintManager extends RepaintManager {
     // it is recommended to pass the complete check  

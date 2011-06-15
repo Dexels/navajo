@@ -1,6 +1,6 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Property;
 
 /**
  * <p>Title: </p>

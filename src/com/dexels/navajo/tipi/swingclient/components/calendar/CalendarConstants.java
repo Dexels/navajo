@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.swingclient.components.calendar;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.SystemColor;
 
 /**
  * <p>Title: </p>

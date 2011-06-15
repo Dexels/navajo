@@ -1,9 +1,9 @@
 package com.dexels.navajo.tipi.swingclient.components.calendar;
 
-import java.util.*;
+import java.util.ArrayList;
 
-import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.JTable;
+import javax.swing.event.TableModelListener;
 
 /**
  * <p>Title: </p>

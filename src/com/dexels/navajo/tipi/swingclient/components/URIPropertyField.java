@@ -1,10 +1,14 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.font.*;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.font.TextAttribute;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Property;
 
 /**
  * <p>Title: Seperate project for Navajo Swing client</p>

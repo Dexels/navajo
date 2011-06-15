@@ -1,11 +1,11 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Component;
+import java.awt.event.FocusEvent;
 
-import javax.swing.*;
+import javax.swing.JPasswordField;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Property;
 
 /**
  * <p>

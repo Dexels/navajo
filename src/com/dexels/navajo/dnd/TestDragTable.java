@@ -1,9 +1,15 @@
 package com.dexels.navajo.dnd;
-import javax.swing.*;
-import javax.swing.table.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.beans.*;
+import java.awt.BorderLayout;
+import java.awt.event.InputEvent;
+
+import javax.swing.DropMode;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.TransferHandler;
+import javax.swing.table.DefaultTableModel;
  
 public class TestDragTable extends JTable implements Runnable{
  

@@ -1,5 +1,5 @@
 package com.dexels.navajo.tipi.swingclient.components;
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Message;
 
 public interface MessageTableListener {
   public void tableLoaded(Message m);

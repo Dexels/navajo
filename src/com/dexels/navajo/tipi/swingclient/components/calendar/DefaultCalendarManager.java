@@ -1,7 +1,9 @@
 package com.dexels.navajo.tipi.swingclient.components.calendar;
 
-import java.awt.event.*;
-import java.util.*;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 
 /**
  * <p>Title: </p>

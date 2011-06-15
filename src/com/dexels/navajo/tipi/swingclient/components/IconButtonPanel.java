@@ -1,12 +1,14 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
-import com.dexels.navajo.tipi.swingclient.*;
+import com.dexels.navajo.tipi.swingclient.UserInterface;
 
 /**
  * <p>Title: SportLink Client:</p>

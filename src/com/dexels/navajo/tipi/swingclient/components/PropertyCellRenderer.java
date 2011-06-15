@@ -1,14 +1,30 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import java.awt.*;
-import java.text.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Insets;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
+import java.util.Map;
 
-import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.table.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JTable;
+import javax.swing.ListCellRenderer;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
 
 //import com.dexels.navajo.document.nanoimpl.*;
 //import com.dexels.sportlink.client.swing.components.treetable.*;

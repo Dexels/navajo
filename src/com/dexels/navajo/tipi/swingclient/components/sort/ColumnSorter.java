@@ -8,7 +8,8 @@ package com.dexels.navajo.tipi.swingclient.components.sort;
  * @author Frank Lyaruu
  * @version 1.0
  */
-import java.util.*;
+import java.util.Comparator;
+import java.util.Vector;
 
 
 public class ColumnSorter implements Comparator {

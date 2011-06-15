@@ -1,13 +1,17 @@
 package com.dexels.navajo.tipi.swingclient.components.calendar;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.Dimension;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.Date;
 
-import javax.swing.*;
+import javax.swing.JTable;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.swingclient.components.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.tipi.swingclient.components.BasePanel;
 
 
 /**

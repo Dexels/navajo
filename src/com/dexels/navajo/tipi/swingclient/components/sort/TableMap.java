@@ -11,8 +11,10 @@
  * @author Philip Milne */
 package com.dexels.navajo.tipi.swingclient.components.sort;
 
-import javax.swing.event.*;
-import javax.swing.table.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
 
 public class TableMap
     extends AbstractTableModel

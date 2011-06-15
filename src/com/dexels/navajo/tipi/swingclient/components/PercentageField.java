@@ -1,11 +1,15 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import java.text.*;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 
-import javax.swing.*;
-import javax.swing.text.*;
+import javax.swing.SwingConstants;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 
-import com.dexels.navajo.document.types.*;
+import com.dexels.navajo.document.types.Percentage;
 
 public class PercentageField extends AbstractPropertyField implements PropertyControlled {
 	private DecimalFormat myEditFormat = (DecimalFormat) NumberFormat.getInstance();

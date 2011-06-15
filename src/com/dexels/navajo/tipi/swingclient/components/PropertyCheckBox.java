@@ -1,10 +1,9 @@
 package com.dexels.navajo.tipi.swingclient.components;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.event.ActionEvent;
 
-import javax.swing.*;
+import javax.swing.JCheckBox;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Property;
 
 //import com.dexels.sportlink.client.swing.components.*;
 

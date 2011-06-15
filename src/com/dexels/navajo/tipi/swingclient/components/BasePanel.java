@@ -1,14 +1,18 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.lang.reflect.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.event.FocusEvent;
+import java.awt.event.MouseEvent;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 
-import javax.swing.*;
-import javax.swing.border.*;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.border.LineBorder;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
 
 /**
  * <p>Title: SportLink Client:</p>

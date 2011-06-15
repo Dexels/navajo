@@ -1,11 +1,11 @@
 package com.dexels.navajo.tipi.swingclient.components.calendar;
 
-import java.awt.*;
-import java.util.*;
+import java.awt.Component;
+import java.util.EventObject;
 
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
+import javax.swing.JTable;
+import javax.swing.event.CellEditorListener;
+import javax.swing.table.TableCellEditor;
 
 /**
  * <p>Title: </p>

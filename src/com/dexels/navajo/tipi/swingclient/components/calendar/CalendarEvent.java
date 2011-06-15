@@ -1,6 +1,6 @@
 package com.dexels.navajo.tipi.swingclient.components.calendar;
 
-import java.awt.event.*;
+import java.awt.event.InputEvent;
 
 /**
  * <p>Title: </p>

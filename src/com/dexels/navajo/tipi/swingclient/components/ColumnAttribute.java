@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import java.util.*;
+import java.util.Map;
+import java.util.Set;
 /**
  * <p>Title: Seperate project for Navajo Swing client</p>
  * <p>Description: </p>

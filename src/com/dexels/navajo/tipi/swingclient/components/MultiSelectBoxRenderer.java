@@ -1,10 +1,12 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import java.awt.*;
+import java.awt.Component;
 
-import javax.swing.*;
+import javax.swing.JCheckBox;
+import javax.swing.JList;
+import javax.swing.ListCellRenderer;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Selection;
 
 /**
  * <p>Title: Seperate project for Navajo Swing client</p>
