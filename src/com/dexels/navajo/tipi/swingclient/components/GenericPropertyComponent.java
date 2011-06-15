@@ -56,6 +56,7 @@ import com.dexels.navajo.document.types.TypeFormatter;
  */
 
 public class GenericPropertyComponent extends JPanel {
+	private static final long serialVersionUID = -2357812021805333562L;
 	private JComponent currentComponent = null;
 	private int labelWidth = 0;
 	private int valign = SwingConstants.CENTER;
@@ -117,7 +118,7 @@ public class GenericPropertyComponent extends JPanel {
 	private boolean isFocusable = false;
 	private final ArrayList<PropertyEventListener> myPropertyEventListeners = new ArrayList<PropertyEventListener>();
 	private boolean alwaysUseLabel = false;
-	private Dimension myPreferredSize = null;
+//	private Dimension myPreferredSize = null;
 	private Component currentLabelIndentStrut = null;
 	private int forcedTotalWidth = -1;
 	private boolean showDatePicker = true;
@@ -1341,6 +1342,8 @@ public class GenericPropertyComponent extends JPanel {
 		// mind.
 
 		memoFieldScrollPane = new JScrollPane() {
+			private static final long serialVersionUID = 1L;
+
 			public Dimension getMinimumSize() {
 				return getPreferredSize();
 			}
@@ -1801,42 +1804,42 @@ public class GenericPropertyComponent extends JPanel {
 	}
 
 	public Dimension getPreferredSize() {
-		if (true) {
+//		if (true) {
 			return limitTo(super.getPreferredSize(), getMaximumSize());
-		}
-		if (myProperty == null || currentComponent == null) {
-			// System.err.println("no prop or no component");
-		}
-		Dimension labelDimension = null;
-		if (showLabel && getLabel() != null) {
-			labelDimension = getLabel().getPreferredSize();
-			if (currentLabelIndentStrut != null) {
-				labelDimension = new Dimension(Math.max(labelDimension.width, labelWidth), labelDimension.height);
-			}
-			if (labelDimension != null && labelWidth > labelDimension.width) {
-				labelDimension.width = labelWidth;
-			}
-		}
-		labelWidth = -1;
-		Dimension componentDimension = currentComponent.getPreferredSize();
-		if (componentDimension == null) {
-			// System.err.println("Component without dimension");
-			if (myPreferredSize != null) {
-				return limitTo(new Dimension(myPreferredSize.width, super.getPreferredSize().height), getMaximumSize());
-			}
-			return limitTo(super.getPreferredSize(), getMaximumSize());
-		}
-		if (labelDimension != null) {
-			int height = Math.max(labelDimension.height, componentDimension.height);
-			int w = labelDimension.width + componentDimension.width;
-			if (myPreferredSize != null) {
-				w = myPreferredSize.width;
-			}
-
-			return limitTo(new Dimension(w, height), getMaximumSize());
-		} else {
-			return limitTo(componentDimension, getMaximumSize());
-		}
+//		}
+////		if (myProperty == null || currentComponent == null) {
+////			// System.err.println("no prop or no component");
+////		}
+//		Dimension labelDimension = null;
+//		if (showLabel && getLabel() != null) {
+//			labelDimension = getLabel().getPreferredSize();
+//			if (currentLabelIndentStrut != null) {
+//				labelDimension = new Dimension(Math.max(labelDimension.width, labelWidth), labelDimension.height);
+//			}
+//			if (labelDimension != null && labelWidth > labelDimension.width) {
+//				labelDimension.width = labelWidth;
+//			}
+//		}
+//		labelWidth = -1;
+//		Dimension componentDimension = currentComponent.getPreferredSize();
+//		if (componentDimension == null) {
+//			// System.err.println("Component without dimension");
+//			if (myPreferredSize != null) {
+//				return limitTo(new Dimension(myPreferredSize.width, super.getPreferredSize().height), getMaximumSize());
+//			}
+//			return limitTo(super.getPreferredSize(), getMaximumSize());
+//		}
+//		if (labelDimension != null) {
+//			int height = Math.max(labelDimension.height, componentDimension.height);
+//			int w = labelDimension.width + componentDimension.width;
+//			if (myPreferredSize != null) {
+//				w = myPreferredSize.width;
+//			}
+//
+//			return limitTo(new Dimension(w, height), getMaximumSize());
+//		} else {
+//			return limitTo(componentDimension, getMaximumSize());
+//		}
 	}
 
 	public void setTextFieldColumns(int columnCount) {
@@ -1859,9 +1862,6 @@ public class GenericPropertyComponent extends JPanel {
 		return new Dimension(Math.min(preferredSize.width, maximumSize.width), Math.min(preferredSize.height, maximumSize.height));
 	}
 
-	public void setPreferredSize(Dimension preferredSize) {
-		myPreferredSize = preferredSize;
-	}
 
 	public void forceFieldAlignment(String forceFieldAlignment) {
 		this.forceFieldAlignment = forceFieldAlignment;
