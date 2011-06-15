@@ -12,3 +12,6 @@ Require-Bundle: com.dexels.navajo.document,
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  lib/mail.jar
+Export-Package: com.dexels.navajo.tipi.mail,
+ tipi
+Bundle-Activator: tipi.TipiMailExtension
