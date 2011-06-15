@@ -10,6 +10,10 @@ import com.dexels.navajo.document.*;
 
 public abstract class AbstractPropertyField extends JTextField implements FocusListener, PropertyChangeListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7775450101839857448L;
 	protected Property myProperty = null;
 
 	protected abstract String getEditingFormat(Object o);
