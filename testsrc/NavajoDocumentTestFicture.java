@@ -1,5 +1,8 @@
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
 
 public class NavajoDocumentTestFicture extends java.lang.Object {

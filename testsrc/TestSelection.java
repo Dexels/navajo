@@ -1,8 +1,11 @@
 
 
-import com.dexels.navajo.document.*;
-import junit.framework.*;
-import org.w3c.dom.*;
+import junit.framework.Assert;
+import junit.framework.TestCase;
+
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Selection;
 
 /**
  * This class is used to test the com.dexels.navajo.document.Selection implementation

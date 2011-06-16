@@ -1,10 +1,15 @@
 
-import junit.framework.*;
-
 import java.io.StringWriter;
-import java.util.*;
+import java.util.List;
 
-import com.dexels.navajo.document.*;
+import junit.framework.Assert;
+import junit.framework.TestCase;
+
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
 
 public class TestMessage extends TestCase {
 
