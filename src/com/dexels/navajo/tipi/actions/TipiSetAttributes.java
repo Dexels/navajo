@@ -25,7 +25,7 @@ import com.dexels.navajo.tipi.internal.*;
 public final class TipiSetAttributes extends TipiAction {
 
 	public final void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
-		Set<String> ss = getParameterNames();
+//		Set<String> ss = getParameterNames();
 
 		Object o = getEvaluatedParameterValue("path", event);
 		if(o==null) {

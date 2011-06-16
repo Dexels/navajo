@@ -2,9 +2,9 @@ package com.dexels.navajo.tipi.actions;
 
 import java.io.IOException;
 
-import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.TipiException;
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.internal.TipiAction;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 
 
 public final class TipiReboot extends TipiAction {

@@ -21,6 +21,8 @@ public final class ClassManager {
 	private final Map<String, XMLElement> interfaceMap = new HashMap<String, XMLElement>();
 	private final Map<String, FunctionDefinition> functionDefinitionMap = new HashMap<String, FunctionDefinition>();
 
+	private final Map<String, ExtensionDefinition> extensionMapper = new HashMap<String, ExtensionDefinition>();
+
 	
 	public ClassManager(TipiContext context) {
 		assert(context!=null);
@@ -28,7 +30,12 @@ public final class ClassManager {
 	}
 
 	public XMLElement getClassDef(String name) {
-		return tipiClassDefMap.get(name);
+		XMLElement xmlElement = tipiClassDefMap.get(name);
+		if(xmlElement==null) {
+			System.err.println("Missing classdef: "+name);
+			System.err.println("tipiClass: "+tipiClassDefMap.keySet());
+		}
+		return xmlElement;
 	}
 	
 	public XMLElement getAssembledClassDef(String name) throws TipiException {
@@ -63,9 +70,11 @@ public final class ClassManager {
 	public final void addTipiClassDefinition(XMLElement xe, ExtensionDefinition ed) {
 		String name = (String) xe.getAttribute("name");
 		String clas = (String) xe.getAttribute("class");
+		System.err.println("Adding class: "+name+" extension: "+ed.getId());
 		if(clas==null) {
 				interfaceMap.put(name,xe);
 		}
+		extensionMapper.put(name, ed);
 		String extending = (String) xe.getAttribute("implements");
 		StringTokenizer st = null;
 		List<String> isExtending = null;
@@ -79,6 +88,7 @@ public final class ClassManager {
 		if(isExtending!=null) {
 			unresolvedExtensions.put(name, isExtending);
 		}
+		// TODO
 		tipiClassDefMap.put(name, xe);
 	}
 
@@ -87,8 +97,16 @@ public final class ClassManager {
 		Class<?> cc = null;
 		String pack = (String) xe.getAttribute("package");
 		String clas = (String) xe.getAttribute("class");
+		String name = (String) xe.getAttribute("name");
 		String fullDef = pack + "." + clas;
+		ExtensionDefinition ed = extensionMapper.get(name);
 		try {
+			if(ed!=null) {
+				ClassLoader cl = ed.getClass().getClassLoader();
+				cc = Class.forName(fullDef, true, cl);
+				return cc;
+			}
+			System.err.println("FALLBACK: Loading class without Extension definition");
 			cc = Class.forName(fullDef, true, myContext.getClassLoader());
 		} catch (ClassNotFoundException ex) {
 			System.err.println("Error loading class: " + fullDef);

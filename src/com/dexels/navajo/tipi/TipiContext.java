@@ -1,36 +1,87 @@
 package com.dexels.navajo.tipi;
 
 import java.awt.Window;
-import java.beans.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
+import java.util.StringTokenizer;
 
-import javax.imageio.spi.*;
+import javax.imageio.spi.ServiceRegistry;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.swing.RootPaneContainer;
 
 import navajo.ExtensionDefinition;
+import tipi.TipiApplicationInstance;
+import tipi.TipiCoreExtension;
+import tipi.TipiExtension;
+import tipipackage.ITipiExtensionContainer;
 
-import tipi.*;
-
-import com.dexels.navajo.client.*;
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.types.*;
-import com.dexels.navajo.functions.StandardFunctionDefinitions;
+import com.dexels.navajo.client.ClientException;
+import com.dexels.navajo.client.ClientInterface;
+import com.dexels.navajo.client.ConditionErrorHandler;
+import com.dexels.navajo.client.NavajoClientFactory;
+import com.dexels.navajo.document.Header;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.functions.util.FunctionDefinition;
-import com.dexels.navajo.parser.*;
+import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 import com.dexels.navajo.parser.Expression;
-import com.dexels.navajo.tipi.actions.*;
+import com.dexels.navajo.tipi.actions.TipiInstantiateTipi;
 import com.dexels.navajo.tipi.classdef.ClassManager;
-import com.dexels.navajo.tipi.components.core.*;
-import com.dexels.navajo.tipi.connectors.*;
-import com.dexels.navajo.tipi.extension.*;
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.components.core.ShutdownListener;
+import com.dexels.navajo.tipi.components.core.ThreadActivityListener;
+import com.dexels.navajo.tipi.components.core.TipiComponentImpl;
+import com.dexels.navajo.tipi.components.core.TipiThread;
+import com.dexels.navajo.tipi.components.core.TipiThreadPool;
+import com.dexels.navajo.tipi.connectors.HttpNavajoConnector;
+import com.dexels.navajo.tipi.connectors.TipiConnector;
+import com.dexels.navajo.tipi.extension.ExtensionManager;
+import com.dexels.navajo.tipi.internal.BaseTipiErrorHandler;
+import com.dexels.navajo.tipi.internal.ClassPathResourceLoader;
+import com.dexels.navajo.tipi.internal.DescriptionProvider;
+import com.dexels.navajo.tipi.internal.FileResourceLoader;
+import com.dexels.navajo.tipi.internal.HttpResourceLoader;
+import com.dexels.navajo.tipi.internal.RemoteDescriptionProvider;
+import com.dexels.navajo.tipi.internal.TipiAction;
+import com.dexels.navajo.tipi.internal.TipiActionBlock;
+import com.dexels.navajo.tipi.internal.TipiActionManager;
+import com.dexels.navajo.tipi.internal.TipiAnonymousAction;
+import com.dexels.navajo.tipi.internal.TipiEvent;
+import com.dexels.navajo.tipi.internal.TipiFileStorageManager;
+import com.dexels.navajo.tipi.internal.TipiGeneralAspManager;
+import com.dexels.navajo.tipi.internal.TipiLayout;
+import com.dexels.navajo.tipi.internal.TipiNullStorageManager;
+import com.dexels.navajo.tipi.internal.TipiResourceLoader;
 import com.dexels.navajo.tipi.internal.cookie.CookieManager;
-import com.dexels.navajo.tipi.tipixml.*;
-import com.dexels.navajo.tipi.validation.*;
+import com.dexels.navajo.tipi.tipixml.CaseSensitiveXMLElement;
+import com.dexels.navajo.tipi.tipixml.XMLElement;
+import com.dexels.navajo.tipi.tipixml.XMLParseException;
+import com.dexels.navajo.tipi.validation.TipiValidationDecorator;
 
 /**
  * <p>
@@ -49,7 +100,7 @@ import com.dexels.navajo.tipi.validation.*;
  * @author not attributable
  * @version 1.0
  */
-public abstract class TipiContext {
+public abstract class TipiContext implements ITipiExtensionContainer {
  
 	public abstract void runSyncInEventThread(Runnable r);
 
@@ -229,6 +280,7 @@ public abstract class TipiContext {
 		mainExtensionList.add(te);
 	}
 	
+	@SuppressWarnings("unused")
 	private void fakeExtensions() {
 
 //		fakeExtension(coreExtensionList, "tipi.TipiExtension");
@@ -304,11 +356,18 @@ public abstract class TipiContext {
 		allExtensions.addAll(coreExtensionList);
 		allExtensions.addAll(optionalExtensionList);
 		checkExtensions(allExtensions);
+		appendIncludes(allExtensions);
+//		appendIncludes(coreExtensionList);
+//		appendIncludes(mainExtensionList);
+//		appendIncludes(optionalExtensionList);
 
-		appendIncludes(coreExtensionList);
-		appendIncludes(mainExtensionList);
-		appendIncludes(optionalExtensionList);
 
+	}
+	
+	public void addOptionalInclude(TipiExtension te) {
+		optionalExtensionList.add(te);
+		System.err.println("Adding optional include:" +te.getId()+ " to context: "+this.hashCode());
+		processRequiredIncludes(te);
 
 	}
 
@@ -326,7 +385,6 @@ public abstract class TipiContext {
 	private void appendIncludes(List<TipiExtension> extensionList) {
 		for (TipiExtension tipiExtension : extensionList) {
 			processRequiredIncludes(tipiExtension);
-
 		}
 	}
 
@@ -993,7 +1051,7 @@ public abstract class TipiContext {
 		}
 		try {
 			if (location != null) {
-				InputStream in = resolveInclude(location);
+				InputStream in = resolveInclude(location,tipiExtension);
 				if (in == null) {
 					return;
 				}
@@ -1026,11 +1084,17 @@ public abstract class TipiContext {
 		}
 	}
 
-	private InputStream resolveInclude(String location) {
+	private InputStream resolveInclude(String location, ExtensionDefinition tipiExtension) {
 		// first, try to resolve the include by checking the classpath:
+		if(tipiExtension!=null) {
+			InputStream iss = tipiExtension.getClass().getClassLoader().getResourceAsStream(location);
+			if(iss!=null) {
+				return iss;
+			}
+		}
 		InputStream iss = getClass().getClassLoader().getResourceAsStream(location);
 		if(iss!=null) {
-//			System.err.println("Classpath entry detected!");
+			System.err.println("FALLBACK: Using TipiContext classloader to locate include.");
 			return iss;
 		}
 		try {
@@ -2504,18 +2568,18 @@ public abstract class TipiContext {
 		return false;
 	}
 
-	private TipiResourceLoader createHttpResourceLoader(String codebase) throws MalformedURLException {
-		if (getCacheDir()==null ) {
-			return new HttpResourceLoader(codebase);
-			
-		} else {
-			return new CachedHttpResourceLoader(getCacheDir(),new URL(codebase));
-		}
-	}
-	
-	private File getCacheDir() {
-		return new File("/Users/frank/tipicache");
-	}
+//	private TipiResourceLoader createHttpResourceLoader(String codebase) throws MalformedURLException {
+//		if (getCacheDir()==null ) {
+//			return new HttpResourceLoader(codebase);
+//			
+//		} else {
+//			return new CachedHttpResourceLoader(getCacheDir(),new URL(codebase));
+//		}
+//	}
+//	
+//	private File getCacheDir() {
+//		return new File("/Users/frank/tipicache");
+//	}
 
 	/**
 	 * @return

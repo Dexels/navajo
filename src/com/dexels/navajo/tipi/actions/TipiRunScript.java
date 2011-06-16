@@ -5,15 +5,12 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 
-import javax.script.Compilable;
-import javax.script.CompiledScript;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
 import tipi.TipiExtension;
 
-import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.actions.adapters.BaseActions;
 import com.dexels.navajo.tipi.actions.adapters.Evaluator;
@@ -48,7 +45,6 @@ public class TipiRunScript extends TipiAction {
 	 		try {
 				script = new InputStreamReader(scriptPath.openStream());
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 	 	}
@@ -121,7 +117,7 @@ public class TipiRunScript extends TipiAction {
 	private void appendActions(String actionClass,TipiEvent event, ScriptEngine scr, TipiExtension t, boolean functions) {
 		BaseActions b = null;
 		try {
-			Class c = Class.forName(actionClass);
+			Class<?> c = Class.forName(actionClass);
 			b = (BaseActions)c.newInstance();
 			b.setComponent(getComponent());
 			b.setEvent(event);
