@@ -7,9 +7,13 @@ package com.dexels.navajo.document.json;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.util.Iterator;
-import java.util.StringTokenizer;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Method;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
 
 public class JSONParser {
 	private Navajo myNavajo;

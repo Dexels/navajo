@@ -29,6 +29,7 @@ import java.io.Writer;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -87,14 +88,14 @@ public class JSONArray {
     /**
      * The arrayList where the JSONArray's properties are kept.
      */
-    private ArrayList myArrayList;
+    private List<Object> myArrayList;
 
 
     /**
      * Construct an empty JSONArray.
      */
     public JSONArray() {
-        this.myArrayList = new ArrayList();
+        this.myArrayList = new ArrayList<Object>();
     }
 
     /**
@@ -163,10 +164,10 @@ public class JSONArray {
      * Construct a JSONArray from a Collection.
      * @param collection     A Collection.
      */
-    public JSONArray(Collection collection) {
+    public JSONArray(Collection<Object> collection) {
         this.myArrayList = (collection == null) ?
-            new ArrayList() :
-            new ArrayList(collection);
+            new ArrayList<Object>() :
+            new ArrayList<Object>(collection);
     }
 
 
@@ -571,7 +572,7 @@ public class JSONArray {
      * @param value A Collection value.
      * @return      this.
      */
-    public JSONArray put(Collection value) {
+    public JSONArray put(Collection<Object> value) {
         put(new JSONArray(value));
         return this;
     }
@@ -622,7 +623,7 @@ public class JSONArray {
      * @param value A Map value.
      * @return      this.
      */
-    public JSONArray put(Map value) {
+    public JSONArray put(Map<String,Object> value) {
         put(new JSONObject(value));
         return this;
     }
@@ -665,7 +666,7 @@ public class JSONArray {
      * @throws JSONException If the index is negative or if the value is
      * not finite.
      */
-    public JSONArray put(int index, Collection value) throws JSONException {
+    public JSONArray put(int index, Collection<Object> value) throws JSONException {
         put(index, new JSONArray(value));
         return this;
     }
@@ -726,7 +727,7 @@ public class JSONArray {
      * @throws JSONException If the index is negative or if the the value is
      *  an invalid number.
      */
-    public JSONArray put(int index, Map value) throws JSONException {
+    public JSONArray put(int index, Map<String,Object> value) throws JSONException {
         put(index, new JSONObject(value));
         return this;
     }

@@ -5,7 +5,8 @@ package com.dexels.navajo.document.json;
  * @version 2
  */
 public class JSONException extends Exception {
-    private Throwable cause;
+ 	private static final long serialVersionUID = 3577208239036495636L;
+	private Throwable cause;
 
     /**
      * Constructs a JSONException with an explanatory message.

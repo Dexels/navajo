@@ -129,7 +129,7 @@ public class JSONObject {
     /**
      * The hash map where the JSONObject's properties are kept.
      */
-    private HashMap myHashMap;
+    private Map<String,Object> myHashMap;
 
 
     /**
@@ -145,7 +145,7 @@ public class JSONObject {
      * Construct an empty JSONObject.
      */
     public JSONObject() {
-        this.myHashMap = new HashMap();
+        this.myHashMap = new HashMap<String,Object>();
     }
 
 
@@ -230,10 +230,10 @@ public class JSONObject {
      * @param map A map object that can be used to initialize the contents of
      *  the JSONObject.
      */
-    public JSONObject(Map map) {
+    public JSONObject(Map<String,Object> map) {
         this.myHashMap = (map == null) ?
-            new HashMap() :
-            new HashMap(map);
+            new HashMap<String,Object>() :
+            new HashMap<String,Object>(map);
     }
 
 
@@ -258,7 +258,7 @@ public class JSONObject {
      */
     public JSONObject(Object bean) {
         this();
-        Class klass = bean.getClass();
+        Class<?> klass = bean.getClass();
         Method[] methods = klass.getMethods();
         for (int i = 0; i < methods.length; i += 1) {
             try {
@@ -300,7 +300,7 @@ public class JSONObject {
      */
     public JSONObject(Object object, String names[]) {
         this();
-        Class c = object.getClass();
+        Class<?> c = object.getClass();
         for (int i = 0; i < names.length; i += 1) {
             String name = names[i];
         	try {
@@ -548,11 +548,11 @@ public class JSONObject {
     	if (length == 0) {
     		return null;
     	}
-    	Iterator i = jo.keys();
+    	Iterator<String> i = jo.keys();
     	String[] names = new String[length];
     	int j = 0;
     	while (i.hasNext()) {
-    		names[j] = (String)i.next();
+    		names[j] = i.next();
     		j += 1;
     	}
         return names;
@@ -568,7 +568,7 @@ public class JSONObject {
     	if (object == null) {
     		return null;
     	}
-    	Class klass = object.getClass();
+    	Class<?> klass = object.getClass();
     	Field[] fields = klass.getFields();
     	int length = fields.length;
     	if (length == 0) {
@@ -621,7 +621,7 @@ public class JSONObject {
      *
      * @return An iterator of the keys.
      */
-    public Iterator keys() {
+    public Iterator<String> keys() {
         return this.myHashMap.keySet().iterator();
     }
 
@@ -644,7 +644,7 @@ public class JSONObject {
      */
     public JSONArray names() {
         JSONArray ja = new JSONArray();
-        Iterator  keys = keys();
+        Iterator<String>  keys = keys();
         while (keys.hasNext()) {
             ja.put(keys.next());
         }
@@ -728,7 +728,7 @@ public class JSONObject {
      * @return      this.
      * @throws JSONException
      */
-    public JSONObject put(String key, Collection value) throws JSONException {
+    public JSONObject put(String key, Collection<Object> value) throws JSONException {
         put(key, new JSONArray(value));
         return this;
     }
@@ -954,7 +954,7 @@ public class JSONObject {
      * @return      this.
      * @throws JSONException
      */
-    public JSONObject put(String key, Map value) throws JSONException {
+    public JSONObject put(String key, Map<String,Object> value) throws JSONException {
         put(key, new JSONObject(value));
         return this;
     }
@@ -1134,7 +1134,7 @@ public class JSONObject {
      */
     public String toString() {
         try {
-            Iterator     keys = keys();
+            Iterator<String>     keys = keys();
             StringBuffer sb = new StringBuffer("{");
 
             while (keys.hasNext()) {
@@ -1190,7 +1190,7 @@ public class JSONObject {
         if (n == 0) {
             return "{}";
         }
-        Iterator     keys = keys();
+        Iterator<String>     keys = keys();
         StringBuffer sb = new StringBuffer("{");
         int          newindent = indent + indentFactor;
         Object       o;
@@ -1249,7 +1249,8 @@ public class JSONObject {
      *  with <code>}</code>&nbsp;<small>(right brace)</small>.
      * @throws JSONException If the value is or contains an invalid number.
      */
-    static String valueToString(Object value) throws JSONException {
+    @SuppressWarnings("unchecked")
+	static String valueToString(Object value) throws JSONException {
         if (value == null || value.equals(null)) {
             return "null";
         }
@@ -1273,10 +1274,10 @@ public class JSONObject {
             return value.toString();
         }
         if (value instanceof Map) {
-            return new JSONObject((Map)value).toString();
+            return new JSONObject((Map<String,Object>)value).toString();
         }
         if (value instanceof Collection) {
-            return new JSONArray((Collection)value).toString();
+            return new JSONArray((Collection<Object>)value).toString();
         }
         if (value.getClass().isArray()) {
             return new JSONArray(value).toString();
@@ -1299,7 +1300,8 @@ public class JSONObject {
      *  with <code>}</code>&nbsp;<small>(right brace)</small>.
      * @throws JSONException If the object contains an invalid number.
      */
-     static String valueToString(Object value, int indentFactor, int indent)
+     @SuppressWarnings("unchecked")
+	static String valueToString(Object value, int indentFactor, int indent)
             throws JSONException {
         if (value == null || value.equals(null)) {
             return "null";
@@ -1327,10 +1329,10 @@ public class JSONObject {
             return ((JSONArray)value).toString(indentFactor, indent);
         }
         if (value instanceof Map) {
-            return new JSONObject((Map)value).toString(indentFactor, indent);
+            return new JSONObject((Map<String,Object>)value).toString(indentFactor, indent);
         }
         if (value instanceof Collection) {
-            return new JSONArray((Collection)value).toString(indentFactor, indent);
+            return new JSONArray((Collection<Object>)value).toString(indentFactor, indent);
         }
         if (value.getClass().isArray()) {
             return new JSONArray(value).toString(indentFactor, indent);
@@ -1351,7 +1353,7 @@ public class JSONObject {
      public Writer write(Writer writer) throws JSONException {
         try {
             boolean  b = false;
-            Iterator keys = keys();
+            Iterator<String> keys = keys();
             writer.write('{');
 
             while (keys.hasNext()) {
