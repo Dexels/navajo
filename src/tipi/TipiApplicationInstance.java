@@ -2,8 +2,6 @@ package tipi;
 
 import java.io.IOException;
 
-import navajo.ExtensionDefinition;
-
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 
