@@ -70,8 +70,6 @@ public final class ClassManager {
 			ExtensionDefinition ed) {
 		String name = (String) xe.getAttribute("name");
 		String clas = (String) xe.getAttribute("class");
-		System.err.println("Adding class: " + name + " extension: "
-				+ ed.getId());
 		if (clas == null) {
 			interfaceMap.put(name, xe);
 		}
