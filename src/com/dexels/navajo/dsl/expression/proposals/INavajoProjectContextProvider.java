@@ -2,8 +2,6 @@ package com.dexels.navajo.dsl.expression.proposals;
 
 import java.util.List;
 
-import org.eclipse.core.resources.IProject;
-
 import com.dexels.navajo.document.Navajo;
 
 public interface INavajoProjectContextProvider {

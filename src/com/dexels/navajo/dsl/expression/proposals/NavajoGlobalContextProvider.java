@@ -1,6 +1,5 @@
 package com.dexels.navajo.dsl.expression.proposals;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +61,6 @@ public class NavajoGlobalContextProvider implements INavajoContextProvider {
 	@Override
 	public void processGetters(List<String> mapStack, List<String> proposals,
 			StringBuffer stringBuffer) {
-		// TODO Auto-generated method stub
 
 	}
 
