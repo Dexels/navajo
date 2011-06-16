@@ -7,13 +7,11 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
-import navajo.ExtensionDefinition;
-
 import com.dexels.navajo.tipi.tipixml.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 import com.dexels.navajo.tipi.tipixml.XMLParseException;
 
-public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension implements TipiExtension, ExtensionDefinition {
+public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension implements TipiExtension {
 
 	private final List<String> thirdPartyList = new ArrayList<String>();
 	private final List<String> includes = new ArrayList<String>();
@@ -29,16 +27,23 @@ public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension imp
 	public TipiAbstractXMLExtension() {
 	}
 	
-	protected void loadXML()  {
-		String xmlName = getClass().getSimpleName()+".xml";
+	public final void loadDescriptor() {
+		String xmlName = "tipi/"+getClass().getSimpleName()+".xml";
 		loadXML(xmlName);
 		// Added for Vaadin (OSGi, actually)
 		setExtensionClassloader(getClass().getClassLoader());
 	}
 	
+	/**
+	 * @deprecated Use loadDescriptor
+	 */
+	protected final void loadXML()  {
+		loadDescriptor();
+	}
+	
 	protected void loadXML(String xmlName)  {
 		try {
-			InputStream is = getClass().getResourceAsStream(xmlName);
+			InputStream is = getClass().getClassLoader().getResourceAsStream(xmlName);
 			if(is==null) {
 				throw new IllegalArgumentException("Problem loading extension: "+xmlName);
 			}
