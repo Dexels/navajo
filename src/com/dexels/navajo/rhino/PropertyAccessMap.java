@@ -8,19 +8,19 @@ import com.dexels.navajo.document.Property;
 
 public class PropertyAccessMap implements Map<String, Property> {
 
-	
 	private final StackScriptEnvironment context;
 
 	public PropertyAccessMap(StackScriptEnvironment n) {
 		this.context = n;
 	}
+
 	public void clear() {
-		
+
 	}
 
 	public boolean containsKey(Object key) {
 		Property o = get(key);
-		return o==null;
+		return o == null;
 	}
 
 	public boolean containsValue(Object value) {
@@ -32,7 +32,7 @@ public class PropertyAccessMap implements Map<String, Property> {
 	}
 
 	public Property get(Object key) {
-		String path = (String)key;
+		String path = (String) key;
 		return context.parsePropertyPath(path);
 	}
 
@@ -48,8 +48,6 @@ public class PropertyAccessMap implements Map<String, Property> {
 		return null;
 	}
 
-
-
 	public int size() {
 		return 1;
 	}
@@ -59,7 +57,7 @@ public class PropertyAccessMap implements Map<String, Property> {
 	}
 
 	public void putAll(Map<? extends String, ? extends Property> m) {
-		
+
 	}
 
 	public Property remove(Object key) {

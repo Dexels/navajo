@@ -6,6 +6,7 @@ import java.io.OutputStream;
 
 public interface ScriptCompiler {
 
-	public void compileTsl(String scriptName, InputStream is, OutputStream os, StringBuffer compilerErrors) throws IOException;
-		
+	public void compileTsl(String scriptName, InputStream is, OutputStream os,
+			StringBuffer compilerErrors) throws IOException;
+
 }

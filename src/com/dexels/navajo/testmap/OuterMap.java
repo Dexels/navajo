@@ -24,8 +24,8 @@ public class OuterMap implements Mappable {
 		i2.setSomeName("Noot");
 		InnerMap i3 = new InnerMap();
 		i3.setSomeName("Mies");
-		
-		inner = new InnerMap[]{i1,i2,i3};
+
+		inner = new InnerMap[] { i1, i2, i3 };
 	}
 
 	@Override

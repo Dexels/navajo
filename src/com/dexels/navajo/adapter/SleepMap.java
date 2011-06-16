@@ -11,29 +11,25 @@ public class SleepMap implements Mappable {
 
 	private Access access;
 
-	  public void load(Access access) throws MappableException, UserException {
-		    this.access = access;
-		  }
-	  
-	
-	
+	public void load(Access access) throws MappableException, UserException {
+		this.access = access;
+	}
+
 	public void setSleep(final String method) {
 		ContinuationRunnable cr = ContinuationMapUtils.getContinuation(access);
 		ContinuationMapUtils.scheduleAndContinue(cr);
 		cr.releaseCurrentThread();
-	
-	}
 
+	}
 
 	@Override
 	public void store() throws MappableException, UserException {
-		
+
 	}
 
 	@Override
 	public void kill() {
-		
+
 	}
 
-	
 }

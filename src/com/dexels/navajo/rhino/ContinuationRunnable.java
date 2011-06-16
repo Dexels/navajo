@@ -25,27 +25,27 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 	private final Object continuation;
 	private final ContinuationPending pending;
 	private ScriptEnvironment environment;
-//	private long scheduledAt;
+	// private long scheduledAt;
 	private Access access;
 	private RequestQueue requestQueue;
-	
-	public ContinuationRunnable( ScriptEnvironment se, ContinuationPending pending) {
+
+	public ContinuationRunnable(ScriptEnvironment se,
+			ContinuationPending pending) {
 		this.pending = pending;
 		this.continuation = pending.getContinuation();
 		this.environment = se;
 	}
-	
+
 	@Override
 	public Navajo getInputNavajo() throws IOException {
 		return environment.getAccess().getInDoc();
 	}
-	
-	@Override
-	public void setResponseNavajo(Navajo n)  {
-		environment.getAccess().setInDoc(n);
-		
-	}
 
+	@Override
+	public void setResponseNavajo(Navajo n) {
+		environment.getAccess().setInDoc(n);
+
+	}
 
 	public Object reserialize(Object c) {
 		try {
@@ -55,8 +55,9 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 			oos.flush();
 			oos.close();
 			byte[] data = out.toByteArray();
-			System.err.println("Serialized continuation size: "+data.length);
-			ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
+			System.err.println("Serialized continuation size: " + data.length);
+			ObjectInputStream ois = new ObjectInputStream(
+					new ByteArrayInputStream(data));
 			Object oo = ois.readObject();
 			System.err.println("Reserialize successful!");
 			return oo;
@@ -75,7 +76,7 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 			continueScript(null);
 		} catch (NavajoDoneException e) {
 			// TO
-			//			e.printStackTrace();
+			// e.printStackTrace();
 		} catch (Throwable t) {
 			t.printStackTrace();
 		} finally {
@@ -87,20 +88,24 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 		System.err.println(">>>>>>>>>>>>>>>>>>>Releasing current thread!!");
 		throw pending;
 	}
-	
+
 	@Override
 	public void endTransaction() throws IOException {
 		System.err.println("Finalizing access...");
 		Access access = environment.getAccess();
 		// TODO: Make pretty, remove stupid params
-		DispatcherFactory.getInstance().finalizeService(access.getInDoc(), access, access.getOutputDoc(), access.getRpcName(), access.getRpcUser(), null, null, false,false,null);
+		DispatcherFactory.getInstance().finalizeService(access.getInDoc(),
+				access, access.getOutputDoc(), access.getRpcName(),
+				access.getRpcUser(), null, null, false, false, null);
 
 		TmlRunnable originalRunnable = access.getOriginalRunnable();
-		if(originalRunnable!=null) {
-			System.err.println("Relaying endTransaction to original: "+originalRunnable.getClass());
+		if (originalRunnable != null) {
+			System.err.println("Relaying endTransaction to original: "
+					+ originalRunnable.getClass());
 			try {
 				System.err.println("Writing to output! ");
-				originalRunnable.writeOutput(getAccess().getInDoc(),getAccess().getOutputDoc());
+				originalRunnable.writeOutput(getAccess().getInDoc(),
+						getAccess().getOutputDoc());
 			} catch (NavajoException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -111,25 +116,29 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 		}
 	}
 
-	public void continueScript(final Object functionResult) throws ContinuationPending, NavajoDoneException {
+	public void continueScript(final Object functionResult)
+			throws ContinuationPending, NavajoDoneException {
 		Context context = Context.enter();
 		Header header = environment.getAccess().getOutputDoc().getHeader();
 		String threadHistory = header.getHeaderAttribute("threadName");
-		if (threadHistory==null) {
+		if (threadHistory == null) {
 			threadHistory = Thread.currentThread().getName();
 		} else {
-			threadHistory = threadHistory+";"+Thread.currentThread().getName();
+			threadHistory = threadHistory + ";"
+					+ Thread.currentThread().getName();
 		}
-		header.setHeaderAttribute("threadName",threadHistory);		
+		header.setHeaderAttribute("threadName", threadHistory);
 		try {
 			environment.setCurrentContext(context);
-			context.resumeContinuation(continuation, environment.getGlobalScope(), functionResult);
+			context.resumeContinuation(continuation,
+					environment.getGlobalScope(), functionResult);
 			endTransaction();
-			NavajoScopeManager.getInstance().releaseScope(environment.getGlobalScope());
+			NavajoScopeManager.getInstance().releaseScope(
+					environment.getGlobalScope());
 			Context.exit();
 		} catch (ContinuationPending e) {
 			try {
-//				Context.exit();
+				// Context.exit();
 				reschedule(environment, e);
 			} catch (IOException e1) {
 				e1.printStackTrace();
@@ -137,15 +146,18 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 			throw new NavajoDoneException(e);
 		} catch (IOException e) {
 			e.printStackTrace();
-			NavajoScopeManager.getInstance().releaseScope(environment.getGlobalScope());
+			NavajoScopeManager.getInstance().releaseScope(
+					environment.getGlobalScope());
 		}
 	}
 
 	// if another continuation is captured.
-	private void reschedule(ScriptEnvironment env, ContinuationPending e) throws IOException {
-		System.err.println("Multiple continuations:  "+e.hashCode());
-//		Thread.dumpStack();
-//		SchedulerRegistry.getScheduler().submit(new ContinuationRunnable(env, e.getContinuation()), false);
+	private void reschedule(ScriptEnvironment env, ContinuationPending e)
+			throws IOException {
+		System.err.println("Multiple continuations:  " + e.hashCode());
+		// Thread.dumpStack();
+		// SchedulerRegistry.getScheduler().submit(new ContinuationRunnable(env,
+		// e.getContinuation()), false);
 	}
 
 	@Override
@@ -155,8 +167,9 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 
 	@Override
 	public boolean isCommitted() {
-		TmlRunnable originalRunnable = environment.getAccess().getOriginalRunnable();
-		if(originalRunnable!=null) {
+		TmlRunnable originalRunnable = environment.getAccess()
+				.getOriginalRunnable();
+		if (originalRunnable != null) {
 			return originalRunnable.isCommitted();
 		}
 
@@ -165,8 +178,9 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 
 	@Override
 	public void setCommitted(boolean b) {
-		TmlRunnable originalRunnable = environment.getAccess().getOriginalRunnable();
-		if(originalRunnable!=null) {
+		TmlRunnable originalRunnable = environment.getAccess()
+				.getOriginalRunnable();
+		if (originalRunnable != null) {
 			originalRunnable.setCommitted(b);
 		}
 
@@ -180,13 +194,15 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 	@Override
 	public void setAccess(Access access) {
 		this.access = access;
-		
+
 	}
 
-	public void writeOutput(Navajo inDoc, Navajo outDoc) throws IOException, FileNotFoundException, UnsupportedEncodingException,
+	public void writeOutput(Navajo inDoc, Navajo outDoc) throws IOException,
+			FileNotFoundException, UnsupportedEncodingException,
 			NavajoException {
 		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("This runnable is not capable of writing the output, it is not linked to any stream.");
+		throw new UnsupportedOperationException(
+				"This runnable is not capable of writing the output, it is not linked to any stream.");
 	}
 
 	@Override
@@ -197,7 +213,7 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 	@Override
 	public void setRequestQueue(RequestQueue rq) {
 		this.requestQueue = rq;
-		
+
 	}
 
 	@Override
@@ -206,5 +222,4 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 		return null;
 	}
 
-	
 }

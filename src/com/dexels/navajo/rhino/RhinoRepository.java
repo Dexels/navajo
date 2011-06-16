@@ -9,8 +9,10 @@ import com.dexels.navajo.server.SystemException;
 public class RhinoRepository extends SimpleRepository {
 	public String getServlet(Access access) throws SystemException {
 		try {
-			authorizeUser(access.getRpcUser(),"password", access.getRpcName(), access.getInDoc(),null);
-			initGlobals(access.getRpcName(), access.getRpcUser(), access.getInDoc(), null);
+			authorizeUser(access.getRpcUser(), "password", access.getRpcName(),
+					access.getInDoc(), null);
+			initGlobals(access.getRpcName(), access.getRpcUser(),
+					access.getInDoc(), null);
 		} catch (AuthorizationException e) {
 			e.printStackTrace();
 		} catch (NavajoException e) {

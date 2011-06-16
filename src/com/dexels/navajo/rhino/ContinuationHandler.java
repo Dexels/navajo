@@ -25,11 +25,10 @@ public abstract class ContinuationHandler implements Runnable {
 		this.functionResult = functionResult;
 	}
 
-
 	public Object getFunctionResult() {
 		return functionResult;
 	}
-	
+
 	public void resumeScript() {
 		env.continueScript(continuation, functionResult);
 	}

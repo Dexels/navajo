@@ -10,9 +10,11 @@ import com.dexels.navajo.server.UserException;
 @Deprecated
 public class MappableFactory {
 	@SuppressWarnings("unchecked")
-	public Mappable createMappable(String className, Navajo input, Navajo output, Message currentOutMessage) {
+	public Mappable createMappable(String className, Navajo input,
+			Navajo output, Message currentOutMessage) {
 		try {
-			Class<? extends Mappable> mclass = (Class<? extends Mappable>) Class.forName(className);
+			Class<? extends Mappable> mclass = (Class<? extends Mappable>) Class
+					.forName(className);
 			Mappable obj = mclass.newInstance();
 			Access ac = new Access();
 			ac.setInDoc(input);

@@ -3,7 +3,7 @@ package com.dexels.navajo.rhino;
 import java.io.IOException;
 
 public class IndentWriter {
-	
+
 	private static final int INDENT = 3;
 	private final StringBuilder myWriter;
 	private int indent = 0;
@@ -27,6 +27,7 @@ public class IndentWriter {
 
 	/**
 	 * Will write indent + the line, but no newline
+	 * 
 	 * @param line
 	 * @throws IOException
 	 */
@@ -37,14 +38,13 @@ public class IndentWriter {
 		myWriter.append(line);
 	}
 
-	
 	public void in() {
 		indent += INDENT;
 	}
 
 	public void out() {
 		indent -= INDENT;
-		if(indent<0) {
+		if (indent < 0) {
 			throw new IllegalStateException("Negative indentation. Bad sign!");
 		}
 	}
