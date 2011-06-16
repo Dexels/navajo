@@ -10,3 +10,4 @@ Require-Bundle: com.dexels.navajo.document,
  com.dexels.navajo.version;bundle-version="1.0.5",
  com.dexels.navajo.swingeditor;bundle-version="1.1.1",
  com.dexels.navajo.tipi.swing;bundle-version="1.0.43"
+Bundle-Activator: tipi.TipiSwingEditorExtension
