@@ -1,6 +1,5 @@
 package com.dexels.navajo.rhino;
 
-import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
@@ -114,7 +113,6 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		return false;
 	}
 
-	@SuppressWarnings("unchecked")
 	public void addField(String fieldName, Object value)
 			throws IllegalArgumentException, IllegalAccessException,
 			InvocationTargetException {
@@ -128,9 +126,9 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 				+ fieldName.substring(1);
 		// System.err.println("Assumming setter name: "+fieldSetter);
 		Class<? extends Object> mapClass = map.getClass();
-		Class[] mapClassList = mapClass.getClasses();
+//		Class[] mapClassList = mapClass.getClasses();
 
-		Class t = mapClass;
+		Class<?> t = mapClass;
 
 		int emergencyCounter = 0;
 		while (t != null && !t.equals(Object.class) && emergencyCounter < 10) {
@@ -156,21 +154,19 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		for (java.lang.reflect.Method method : methods) {
 			if (method.getName().equals(fieldSetter)) {
 				// log("found qualified setter (based on name");
-				Class[] params = method.getParameterTypes();
+				Class<?>[] params = method.getParameterTypes();
 				if (params.length == 1) {
 					// log("Single parameter. Looking good.");
 					// method.invoke(map, value);
-					Class prm = params[0];
+					Class<?> prm = params[0];
 					if (value == null) {
 						// no further detective work possible
 						method.invoke(map, value);
 						return true;
 					} else {
 
-						// org.mozilla.javascript.BaseFunction c;
-						// log("Candidate found.");
-						boolean a = prm.isAssignableFrom(value.getClass());
-						// System.err.println("Assignment ok? "+a);
+						//boolean a = prm.isAssignableFrom(value.getClass());
+
 						Object v;
 						if (prm.equals(Float.class)) {
 							System.err.println("Float conversion performed");
@@ -219,7 +215,7 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 			// System.err.println("Examining method: "+method.toString()+" in class: "+map.getClass());
 			if (method.getName().equals(fieldGetter)) {
 				// log("found qualified getter");
-				int paramCount = method.getParameterTypes().length;
+//				int paramCount = method.getParameterTypes().length;
 				// log("Params in ref: "+paramCount);
 				return method.getReturnType().isArray();
 			}
@@ -247,7 +243,7 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		java.lang.reflect.Method[] methods = map.getClass().getMethods();
 		for (java.lang.reflect.Method method : methods) {
 			if (method.getName().equals(fieldGetter)) {
-				int paramCount = method.getParameterTypes().length;
+//				int paramCount = method.getParameterTypes().length;
 				boolean isArray = method.getReturnType().isArray();
 				Object mapref = method.invoke(map, new Object[] {});
 				if (isArray) {
@@ -263,10 +259,6 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 
 	public void popMapReference() {
 		popMappableTreeNode();
-	}
-
-	private PrintStream getLogger() {
-		return System.err;
 	}
 
 	public void setAccess(Access access) {
@@ -455,11 +447,10 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		return (Property) getTopmostElement(Property.class);
 	}
 
-	@SuppressWarnings("unchecked")
-	private Object getTopmostElement(Class[] cls) {
+	private Object getTopmostElement(Class<?>[] cls) {
 		for (int i = myElementStack.size() - 1; i >= 0; i--) {
 			Object e = myElementStack.get(i);
-			for (Class clz : cls) {
+			for (Class<?> clz : cls) {
 				if (clz.isAssignableFrom(e.getClass())) {
 					return e;
 				}
@@ -480,7 +471,6 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 
 	// no stack activity
 	public Message getInputMessage(String path) throws NavajoException {
-		String mode = "";
 		String path2 = path.replaceAll("@", Message.MSG_PARAMETERS_BLOCK + "/");
 		Message result = getAccess().getInDoc().getMessage(path2);
 		if (result == null) {
@@ -690,13 +680,11 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 
 	public Property addParam(String name, Object value,
 			Map<String, String> attributes) throws NavajoException {
-		// Property p = super.addProperty(getParamMessage(), name, value);
-		// pushProperty(p);
-		int length = 0;
-		String str = attributes.get("length");
-		if (str != null) {
-			length = Integer.valueOf(str);
-		}
+//		int length = 0;
+//		String str = attributes.get("length");
+//		if (str != null) {
+//			length = Integer.valueOf(str);
+//		}
 
 		String type = attributes.get("type");
 		if (type == null) {
@@ -704,10 +692,6 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		}
 		try {
 			Message param = getTopParamStackMessage();
-			// System.err.println("Param: "+param.getFullMessageName());
-			// if(param==null) {
-			// param = getParamMessage();
-			// }
 			Property pp = getParam(name, param);
 			if (pp == null) {
 				pp = createProperty(name, value, attributes, getAccess()
@@ -716,19 +700,6 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 			} else {
 				pp.setAnyValue(value);
 			}
-			// System.err.println("/////////////////////////////////: "+name+" > "+value);
-			// param.write(System.err);
-			// System.err.println("/////////////////////////////////");
-			// Property pp = MappingUtils.setProperty(true, param, name,
-			// value,type, attributes.get("subtype"),
-			// attributes.get("direction") , attributes.get("description"),
-			// length, getAccess().getOutputDoc(), getAccess().getInDoc(),
-			// false);
-			// pp.setAnyValue(value);
-			// System.err.println("/////////////////////////////////: AFTER CAAHNIE");
-			// param.write(System.err);
-			// System.err.println("/////////////////////////////////");
-
 			return pp;
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
