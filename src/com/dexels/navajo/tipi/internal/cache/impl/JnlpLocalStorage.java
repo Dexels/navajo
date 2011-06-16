@@ -36,13 +36,13 @@ public class JnlpLocalStorage implements LocalStorage {
 
 	private final String cacheBase = "tipicache_";
 	private final String relativePath;
-	private final CookieManager myCookieMananger;
+//	private final CookieManager myCookieMananger;
 
 	private final Map<String, Long> localModificationMap = new HashMap<String, Long>();
 
 	public JnlpLocalStorage(String relativePath, CookieManager cm)
 			throws UnavailableServiceException {
-		myCookieMananger = cm;
+//		myCookieMananger = cm;
 		ps = (PersistenceService) ServiceManager
 				.lookup("javax.jnlp.PersistenceService");
 		bs = (BasicService) ServiceManager.lookup("javax.jnlp.BasicService");
@@ -198,7 +198,7 @@ public class JnlpLocalStorage implements LocalStorage {
 			// System.err.println("Not found. fine.");
 		}
 		if (ff == null) {
-			long res = ps.create(muffinUrl, length);
+			ps.create(muffinUrl, length);
 		}
 
 		fc = ps.get(muffinUrl);

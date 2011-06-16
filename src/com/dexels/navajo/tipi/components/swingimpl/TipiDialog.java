@@ -66,7 +66,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 	private Point myOffset;
 	private RootPaneContainer myRootPaneContainer;
 	private boolean forceInternal = false;
-	private float opacity = 1.0f;
+//	private float opacity = 1.0f;
 
 	TipiSwingPanel tp;
 
@@ -218,7 +218,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 					return;
 				}
 				if (name.equals("opacity")) {
-					opacity = ((Double) object).floatValue();
+//					opacity = ((Double) object).floatValue();
 					if (myRootPaneContainer != null) {
 						if (myRootPaneContainer instanceof JDialog) {
 							JDialog jd = (JDialog) myRootPaneContainer;
@@ -334,6 +334,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 	// return super.performTipiEvent(type, event, sync);
 	// }
 
+	@SuppressWarnings("unused")
 	private final void constructDialog() {
 		// System.err.println("Constructing: studio? "+isStudioElement());
 

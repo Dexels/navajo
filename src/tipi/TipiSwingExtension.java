@@ -10,7 +10,7 @@ public class TipiSwingExtension extends TipiAbstractXMLExtension implements
 
 	public TipiSwingExtension() throws XMLParseException, IOException {
 		System.err.println("Loading xml... ");
-		loadXML();
+		loadDescriptor();
 	}
 
 	public void initialize(TipiContext tc) {

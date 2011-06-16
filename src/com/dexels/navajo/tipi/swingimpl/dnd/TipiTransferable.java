@@ -26,7 +26,7 @@ public class TipiTransferable implements Transferable {
 	}
 
 	public DataFlavor[] getTransferDataFlavors() {
-		DataFlavor[] parentFla = null;
+//		DataFlavor[] parentFla = null;
 		if (myHandler.getParentHandler() != null) {
 			// parentFla = myHandler.getParentHandler().
 		}

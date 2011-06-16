@@ -443,21 +443,10 @@ public class SwingTipiContext extends TipiContext {
 					TipiModalInternalFrame.showInternalMessage(getOtherRoot()
 							.getRootPane(), getOtherRoot().getContentPane(),
 							title, text, getPoolSize(), messageType);
-					// FIXME
-				} else if (false && getAppletRoot() != null
-						&& getDefaultDesktop() != null) {
-
-					// TipiModalInternalFrame.showInternalMessage(getAppletRoot().getRootPane(),
-					// getDefaultDesktop(), title, text,
-					// getPoolSize(),messageType);
+				} else 
 					JOptionPane.showMessageDialog((Component) getTopDialog(),
 							text, title, messageType);
 
-				} else {
-					JOptionPane.showMessageDialog((Component) getTopDialog(),
-							text, title, messageType);
-
-				}
 			}
 		});
 
@@ -553,7 +542,7 @@ public class SwingTipiContext extends TipiContext {
 	}
 
 	public void animateProperty(Property p, int duration, Object target) {
-		Class animatableClass = TipiAnimationManager.isAnimatable(
+		Class<?> animatableClass = TipiAnimationManager.isAnimatable(
 				p.getTypedValue(), target);
 		if (animatableClass != null) {
 			PropertyAnimator pa = new PropertyAnimator();

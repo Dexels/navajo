@@ -44,7 +44,6 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 public class TipiButton extends TipiSwingComponentImpl {
 
 	private boolean iAmEnabled = true;
-	private boolean verticalButton = false;
 
 	private AbstractAction buttonAction;
 

@@ -3,7 +3,6 @@ package com.dexels.navajo.tipi.components.swingimpl;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -15,7 +14,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import tipi.MainApplication;
-import tipi.SwingTipiApplicationInstance;
 
 public class TipiApplet extends JApplet {
 	/**
@@ -52,20 +50,19 @@ public class TipiApplet extends JApplet {
 		List<String> arguments = new ArrayList<String>();
 		getContentPane().setBackground(Color.orange);
 
-		String tipiFile = getParameter("tipiFile");
-		List<String> arrrgs = null;
-		String definition = null;
-		if (tipiFile != null) {
-			URL f;
-			try {
-				f = new URL(tipiFile);
-				arrrgs = MainApplication.parseBundleUrl(f);
-				definition = arrrgs.get(arrrgs.size() - 1);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+//		String tipiFile = getParameter("tipiFile");
+//		List<String> arrrgs = null;
+//		String definition = null;
+//		if (tipiFile != null) {
+//			URL f;
+//			try {
+//				f = new URL(tipiFile);
+//				arrrgs = MainApplication.parseBundleUrl(f);
+//				definition = arrrgs.get(arrrgs.size() - 1);
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
 
 		String init = this.getParameter("init");
 		// System.err.println("LocationOnScreen: "+getLocationOnScreen());
@@ -120,7 +117,7 @@ public class TipiApplet extends JApplet {
 			// IllegalArgumentException("Missing argument: Add 'init' argument to applet.");
 		}
 		try {
-			SwingTipiApplicationInstance stai = MainApplication
+			MainApplication
 					.initializeSwingApplication(false, arguments, init, this,
 							null);
 		} catch (Exception e) {

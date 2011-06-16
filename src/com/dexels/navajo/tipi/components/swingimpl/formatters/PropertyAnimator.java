@@ -19,7 +19,7 @@ public class PropertyAnimator {
 	// }
 
 	public void animateProperty(Property p, int duration, Object target,
-			final Class animationClass) {
+			final Class<?> animationClass) {
 		myProperty = p;
 		myAnimator = new Animator(duration);
 		myAnimator.setInterpolator(new SplineInterpolator(0f, 0.4f, 0.8f, 1f));
@@ -48,7 +48,7 @@ public class PropertyAnimator {
 	}
 
 	public void interpolate(Object start, Object end, float fraction,
-			Class animationClass) {
+			Class<?> animationClass) {
 		Number startN = (Number) start;
 		Number endN = (Number) end;
 		if (animationClass.equals(Integer.class)) {

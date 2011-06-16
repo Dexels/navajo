@@ -1,12 +1,7 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
-
-import org.jdesktop.animation.transitions.ComponentState;
 
 public class TipiSwingSplitPane extends JSplitPane {
 	/**
@@ -17,13 +12,9 @@ public class TipiSwingSplitPane extends JSplitPane {
 
 	public TipiSwingSplitPane(int orientation, JPanel left, JPanel right) {
 		super(orientation, left, right);
-		addMouseListener(new MouseAdapter() {
-
-			public void mouseClicked(MouseEvent e) {
-				System.err.println("click!");
-			}
-		});
-		ComponentState end = new ComponentState(this);
+	
+//		ComponentState end = 
+//			new ComponentState(this);
 
 		// Move effect = new Move();
 		// EffectsManager.setEffect(this, effect, TransitionType.DISAPPEARING);

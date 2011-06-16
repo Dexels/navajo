@@ -13,7 +13,6 @@ import java.util.Map;
 
 import javax.swing.Icon;
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
@@ -127,9 +126,9 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 					lastSelectedTab.doLayout();
 				}
 				if (myContext.getTopLevel() instanceof TipiApplet) {
-					TipiApplet ta = (TipiApplet) myContext.getTopLevel();
-					JPanel component = (JPanel) ta.getContentPane()
-							.getComponent(0);
+//					TipiApplet ta = (TipiApplet) myContext.getTopLevel();
+//					JPanel component = (JPanel) ta.getContentPane()
+//							.getComponent(0);
 
 				}
 			}

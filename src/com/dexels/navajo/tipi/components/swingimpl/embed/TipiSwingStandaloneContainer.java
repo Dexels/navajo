@@ -39,12 +39,12 @@ public class TipiSwingStandaloneContainer implements
 	private SwingEmbeddedContext embeddedContext = null;
 	private final List<String> libraries = new ArrayList<String>();
 	private UserInterface ui = null;
-	private SwingTipiContext parentContext = null;
+//	private SwingTipiContext parentContext = null;
 
 	public TipiSwingStandaloneContainer(SwingTipiApplicationInstance instance,
 			SwingTipiContext parentContext) {
 		embeddedContext = new SwingEmbeddedContext(instance, parentContext);
-		this.parentContext = parentContext;
+//		this.parentContext = parentContext;
 	}
 
 	public void setUserInterface(UserInterface u) {

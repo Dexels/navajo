@@ -49,7 +49,6 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 		// addIncludes(includes);
 	}
 
-	@SuppressWarnings("restriction")
 	public void start(BundleContext bc) throws Exception {
 		System.err.println("Starting swing tipi");
 		super.start(bc);

@@ -65,10 +65,8 @@ public class TipiPlaySound extends TipiAction {
 				AudioInputStream ais = AudioSystem.getAudioInputStream(urlVal);
 				playAudioStream(ais);
 			} catch (UnsupportedAudioFileException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -132,8 +130,8 @@ public class TipiPlaySound extends TipiAction {
 						// audioFormat.getFrameSize() );
 						// Odd sized sounds throw an exception if we don't write
 						// the same amount.
-						int framesWritten = dataLine
-								.write(buffer, 0, bytesRead);
+//						int framesWritten = dataLine
+//								.write(buffer, 0, bytesRead);
 					}
 				} // while
 			} catch (IOException e) {

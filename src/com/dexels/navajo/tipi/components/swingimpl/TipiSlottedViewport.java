@@ -7,7 +7,6 @@ import java.awt.Point;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
-import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
@@ -46,8 +45,8 @@ public class TipiSlottedViewport extends TipiSwingDataComponentImpl {
 
 	// private JPanel left = null;
 	// private JPanel right = null;
-	private int axis = BoxLayout.X_AXIS;
-	private LayoutManager layout;
+//	private int axis = BoxLayout.X_AXIS;
+//	private LayoutManager layout;
 	private JPanel clientPanel;
 	private TipiSwingViewport view;
 	private Component currentComponent;
@@ -95,8 +94,8 @@ public class TipiSlottedViewport extends TipiSwingDataComponentImpl {
 
 	protected void updateClientSize(TipiSwingViewport view) {
 		Dimension d = view.getSize();
-		Dimension e = new Dimension(d.width * view.getGridWidth(), d.height
-				* view.getGridHeight());
+//		Dimension e = new Dimension(d.width * view.getGridWidth(), d.height
+//				* view.getGridHeight());
 		Component[] ccc = clientPanel.getComponents();
 		for (int i = 0; i < ccc.length; i++) {
 			if (ccc[i] instanceof JComponent) {
@@ -268,7 +267,7 @@ public class TipiSlottedViewport extends TipiSwingDataComponentImpl {
 
 			public void run() {
 				if (currentComponent != null) {
-					Point p = getLocation(currentComponent);
+//					Point p = getLocation(currentComponent);
 					// view.setViewPosition(p);
 				} else {
 					// view.setViewPosition(new Point(0,0));
@@ -277,14 +276,5 @@ public class TipiSlottedViewport extends TipiSwingDataComponentImpl {
 		});
 	}
 
-	private Point getLocation(Object container) {
-		Component[] cc = clientPanel.getComponents();
-		for (int i = 0; i < cc.length; i++) {
-			if (cc[i] == container) {
-				return cc[i].getLocation();
-			}
-		}
-		return null;
-	}
 
 }

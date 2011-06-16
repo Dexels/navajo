@@ -1,7 +1,5 @@
 package com.dexels.navajo.tipi.components.swingimpl.cookie.impl;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -61,10 +59,12 @@ public class JnlpCookieManager extends TmpFileCookieManager implements
 		inputStream.close();
 	}
 
+	@SuppressWarnings("unused")
 	public void saveCookies() throws MalformedURLException, IOException {
 
 		URL cookieURL = new URL(bs.getCodeBase(), "tipi.cookie");
 		try {
+			// TODO Reuse fc if it is retrieved successfully
 			FileContents fc = ps.get(cookieURL);
 			// found, as we did not jump
 			// ps.delete(cookieURL);
@@ -86,19 +86,7 @@ public class JnlpCookieManager extends TmpFileCookieManager implements
 
 	}
 
-	private final void copyResource(OutputStream out, InputStream in)
-			throws IOException {
-		BufferedInputStream bin = new BufferedInputStream(in);
-		BufferedOutputStream bout = new BufferedOutputStream(out);
-		byte[] buffer = new byte[1024];
-		int read;
-		while ((read = bin.read(buffer)) > -1) {
-			bout.write(buffer, 0, read);
-		}
-		bin.close();
-		bout.flush();
-		bout.close();
-	}
+
 
 	@Override
 	public void deleteCookies() throws IOException {

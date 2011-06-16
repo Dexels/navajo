@@ -67,7 +67,7 @@ public final class TipiWindow
 			}
 
 			public void internalFrameClosing(final InternalFrameEvent e) {
-				Component cc = ((JInternalFrame) e.getSource()).getFocusOwner();
+//				Component cc = ((JInternalFrame) e.getSource()).getFocusOwner();
 				SwingUtilities.invokeLater(new Runnable() {
 
 					public void run() {

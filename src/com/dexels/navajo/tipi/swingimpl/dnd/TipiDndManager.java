@@ -16,11 +16,11 @@ import com.dexels.navajo.tipi.TipiException;
 
 public class TipiDndManager implements TipiDraggable, TipiDroppable {
 
-	private final JComponent myComponent;
+//	private final JComponent myComponent;
 	private final TipiComponent myTipiComponent;
 
 	public TipiDndManager(JComponent j, final TipiComponent ts) {
-		myComponent = j;
+//		myComponent = j;
 		myTipiComponent = ts;
 		if (!(j instanceof TipiDndCapable)) {
 			System.err.println("Not drag and drop capable");
@@ -29,6 +29,7 @@ public class TipiDndManager implements TipiDraggable, TipiDroppable {
 
 		j.setTransferHandler(new TipiTransferHandler(j.getTransferHandler()));
 		j.addMouseMotionListener(new MouseMotionAdapter() {
+			@SuppressWarnings("unchecked")
 			public void mouseDragged(MouseEvent e) {
 				JComponent c = (JComponent) e.getSource();
 				if (c instanceof JTextComponent) {
@@ -58,6 +59,7 @@ public class TipiDndManager implements TipiDraggable, TipiDroppable {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<String> getDragCategory() {
 		List<String> dragCategory = (List<String>) myTipiComponent
 				.getValue("dragCategory");
@@ -68,6 +70,7 @@ public class TipiDndManager implements TipiDraggable, TipiDroppable {
 		return myTipiComponent.getValue("dragValue");
 	}
 
+	@SuppressWarnings("unchecked")
 	public boolean acceptsDropCategory(List<String> category) {
 		List<String> dropCategory = (List<String>) myTipiComponent
 				.getValue("dropCategory");

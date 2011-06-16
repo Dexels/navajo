@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.LayoutManager;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * <p>
@@ -27,7 +28,7 @@ import java.util.Iterator;
  */
 
 public class VerticalFlowLayout implements LayoutManager {
-	private ArrayList components = new ArrayList();
+	private List<Component> components = new ArrayList<Component>();
 	private String location;
 
 	public VerticalFlowLayout() {
@@ -66,9 +67,9 @@ public class VerticalFlowLayout implements LayoutManager {
 		int columns = determineRequiredColumns(bar_height);
 		int column = 1;
 		int used_space = 0;
-		Iterator it = components.iterator();
+		Iterator<Component> it = components.iterator();
 		while (it.hasNext()) {
-			Component current = (Component) it.next();
+			Component current = it.next();
 			int y_pos = used_space;
 			used_space += current.getPreferredSize().height;
 			if (used_space > bar_height) {
@@ -107,9 +108,9 @@ public class VerticalFlowLayout implements LayoutManager {
 	public int determineRequiredColumns(int available_height) {
 		int required = 0;
 		int req_cols = 1;
-		Iterator it = components.iterator();
+		Iterator<Component> it = components.iterator();
 		while (it.hasNext()) {
-			Component c = (Component) it.next();
+			Component c = it.next();
 			required += c.getHeight();
 			if (required > available_height) {
 				req_cols++;

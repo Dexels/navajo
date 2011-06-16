@@ -526,6 +526,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 
 	public void setComponentValue(final String name, final Object object) {
 		runSyncInEventThread(new Runnable() {
+			@SuppressWarnings("unchecked")
 			public void run() {
 				if (name.equals("filtersvisible")) {
 					setFiltersVisible(Boolean.valueOf(object.toString())
@@ -554,7 +555,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 							.booleanValue());
 				}
 				if (name.equals("ignoreList")) {
-					setIgnoreList((List) object);
+					setIgnoreList((List<String>) object);
 				}
 
 				if (name.equals("readOnly")) {
@@ -761,6 +762,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 			final TipiComponentMethod compMeth, final TipiEvent event) {
 		runSyncInEventThread(new Runnable() {
 
+			@SuppressWarnings("unchecked")
 			public void run() {
 				int count = mm.getRowCount();
 				if (count != 0) {
@@ -793,7 +795,6 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 								.getEvaluatedParameterValue("messages", event);
 						ListSelectionModel lsm = mm.getTable()
 								.getSelectionModel();
-						int cnt = 0;
 						mm.getTable().getSelectionModel()
 								.setValueIsAdjusting(true);
 						lsm.clearSelection();

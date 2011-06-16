@@ -22,7 +22,7 @@ import com.dexels.navajo.tipi.TipiStorageManager;
 
 public class TipiCookieStorageManager implements TipiStorageManager {
 
-	private TipiContext myContext;
+//	private TipiContext myContext;
 	PersistenceService ps;
 	BasicService bs;
 
@@ -74,7 +74,8 @@ public class TipiCookieStorageManager implements TipiStorageManager {
 			id = cleanUpId(id);
 			URL cookieURL = new URL(bs.getCodeBase(), id);
 			try {
-				FileContents fc = ps.get(cookieURL);
+				// TODO Resolved twice, not necessary, may have ugly side effects
+				ps.get(cookieURL);
 				// found, as we did not jump
 				// ps.delete(cookieURL);
 			} catch (FileNotFoundException e) {
@@ -98,18 +99,9 @@ public class TipiCookieStorageManager implements TipiStorageManager {
 	}
 
 	public void setContext(TipiContext tc) {
-		myContext = tc;
+//		myContext = tc;
 	}
 
-	public static void main(String[] args) {
-		String s = "http://www.sportlink.com/apps/teaminschrijvingen_test_frank/admin|c:/vladb/columns_teamRegistrationClubOverviewWindow_nonTeams.tml";
-		try {
-			URL u = new URL(s);
-			System.err.println("Not malformed");
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+
 
 }
