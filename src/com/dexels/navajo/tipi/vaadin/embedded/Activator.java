@@ -2,7 +2,6 @@ package com.dexels.navajo.tipi.vaadin.embedded;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import javax.servlet.http.HttpServlet;
 
 public class Activator implements BundleActivator {
 

@@ -1,13 +1,5 @@
 package com.dexels.navajo.tipi.vaadin.embedded;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
@@ -15,11 +7,8 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.eclipse.jetty.util.resource.Resource;
-import org.eclipse.jetty.webapp.WebAppContext;
 
 import com.dexels.navajo.tipi.vaadin.application.servlet.TipiVaadinServlet;
-import com.vaadin.terminal.gwt.server.ApplicationServlet;
 
 //<context-param>
 //<description>
@@ -72,15 +61,6 @@ public class JettyServer {
 		sh.setInitParameter("application", "com.dexels.navajo.tipi.vaadin.application.TipiVaadinApplication");
 		webAppContext.addServlet(sh,"/vaadin/*");
 
-//		jettyServer.setHandler(webAppContext);
-//		try {
-//			System.err.println("Respaths: "+webAppContext.getResourcePaths("/"));
-//			Resource rr = webAppContext.getResource("/brooklynbridge.jpg");
-//			System.err.println("Reee: "+rr);
-//		} catch (MalformedURLException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
 		try {
 			jettyServer.start();
 		} catch (Exception e) {
