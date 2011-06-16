@@ -47,7 +47,7 @@ public class TslJavaValidator extends AbstractTslJavaValidator {
 	public static final String ISSUE_MISSING_ATTRIBUTE = "ISSUE_MISSING_ATTRIBUTE";
 //	public static final String ISSUE_ILLEGAL_OPTIONAL_ATTRIBUTE_VALUE = "ISSUE_ILLEGAL_OPTIONAL_ATTRIBUTE_VALUE";
 
-	private static final String DEFAULT_CARDINALITY = "1";
+//	private static final String DEFAULT_CARDINALITY = "1";
 
 	
 	// TODO rewrite into property file based version	
