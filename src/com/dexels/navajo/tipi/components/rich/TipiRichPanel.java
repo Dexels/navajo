@@ -55,8 +55,8 @@ public class TipiRichPanel extends TipiPanel {
 				}
 			});
 		} catch (Throwable e) {
-			throw new RuntimeException("Illegal constraint while adding object: " + c + " to component: " + getPath()
-					+ " with constraint: " + constraints);
+			throw new RuntimeException("Illegal constraint while adding object: " + c + " to component. "
+					+ " with constraint: " + constraints); 
 		}
 	}
 
