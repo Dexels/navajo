@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project default="feature_export" name="build">
 	<target name="feature_export">
-		<pde.exportFeatures destination="/Users/frank/Desktop/dump5" exportSource="false" exportType="directory" features="com.dexels.navajo.server.bridged.feature" useJARFormat="true"/>
+		<pde.exportFeatures destination="/Users/frank/Desktop/dump5" exportSource="false" exportType="directory" features="com.dexels.navajo.tipi.feature,com.dexels.navajo.tipi.vaadin.feature" useJARFormat="true"/>
 	</target>
 </project>
