@@ -6,18 +6,13 @@ public class TipiCoreExtension extends TipiAbstractXMLExtension  {
 
 	public TipiCoreExtension() {
 		super();
-		loadXML("TipiExtension.xml");
+//		loadXML("tipi/TipiExtension.xml");
 	}
 
 	public void initialize(TipiContext tc) {
 		// Do nothing
 
 	}
-	
 
-
-public static void main(String[] args) {
-	new TipiCoreExtension();
-}
 
 }
