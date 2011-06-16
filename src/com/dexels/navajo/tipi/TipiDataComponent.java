@@ -1,10 +1,10 @@
 package com.dexels.navajo.tipi;
 
-import java.util.*;
+import java.util.List;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.components.core.*;
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.tipi.internal.TipiEvent;
+import com.dexels.navajo.tipi.internal.TipiLayout;
 
 /**
  * <p>
