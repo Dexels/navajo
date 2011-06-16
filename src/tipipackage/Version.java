@@ -27,6 +27,8 @@ package tipipackage;
 
 import org.osgi.framework.BundleContext;
 
+import tipi.TipiCoreExtension;
+
 
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 
@@ -37,14 +39,15 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	}
 	
 	public void start(BundleContext bc) throws Exception {
-		System.err.println("Starting core tipi");
 		super.start(bc);
+		TipiExtensionRegistry ter = new TipiExtensionRegistry();
+		context.registerService(ITipiExtensionRegistry.class.getName(), ter, null);
+		
+		TipiCoreExtension tce = new TipiCoreExtension();
+		// special case for TipiCoreExtension, as it is not the bundle activator
+		// TODO Maybe refactor
+		tce.start(bc);
 	}
 
 
-	public static void main(String [] args) {
-		Version v = new Version();
-		System.err.println(v.versionString());
-	}
-	
 }
