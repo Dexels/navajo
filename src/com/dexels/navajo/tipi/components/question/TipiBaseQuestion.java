@@ -25,6 +25,7 @@ import com.dexels.navajo.tipi.tipixml.*;
  * 
  * @author not attributable
  * @version 1.0
+ * @deprecated
  */
 public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 	private String messagePath = null;
@@ -120,7 +121,7 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 		}
 		List<PropertyComponent> propertyList = getRecursiveProperties();
 		for (int i = 0; i < propertyList.size(); i++) {
-			PropertyComponent o = (PropertyComponent) propertyList.get(i);
+			PropertyComponent o = propertyList.get(i);
 			Property pp = m.getProperty(o.getPropertyName());
 			if (pp != null) {
 				o.setProperty(pp);

@@ -24,6 +24,7 @@ import com.dexels.navajo.tipi.internal.*;
  * 
  * @author not attributable
  * @version 1.0
+ * @deprecated
  */
 
 public abstract class TipiBaseQuestionGroup extends TipiDataComponentImpl {
@@ -133,7 +134,7 @@ public abstract class TipiBaseQuestionGroup extends TipiDataComponentImpl {
 		}
 		List<PropertyComponent> localprops = getRecursiveProperties();
 		for (int i = 0; i < localprops.size(); i++) {
-			PropertyComponent o = (PropertyComponent) localprops.get(i);
+			PropertyComponent o = localprops.get(i);
 			Property pp = m.getProperty(o.getPropertyName());
 			if (pp != null) {
 				o.setProperty(pp);

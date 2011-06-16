@@ -15,6 +15,11 @@ import com.dexels.navajo.tipi.actions.*;
 import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.internal.*;
 
+/**
+ * @deprecated
+ * @author frank
+ *
+ */
 public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 
 	protected String messagePath = null;
