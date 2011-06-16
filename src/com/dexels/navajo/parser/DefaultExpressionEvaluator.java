@@ -1,14 +1,22 @@
 package com.dexels.navajo.parser;
 
-import com.dexels.navajo.document.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import com.dexels.navajo.mapping.*;
-import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.document.ExpressionChangedException;
+import com.dexels.navajo.document.ExpressionEvaluator;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.mapping.MappableTreeNode;
 import com.dexels.navajo.server.DispatcherFactory;
-
-import java.util.*;
-
-import java.io.PrintWriter;
 
 
 /**
@@ -23,16 +31,16 @@ import java.io.PrintWriter;
 public final class DefaultExpressionEvaluator
     implements ExpressionEvaluator {
 
-  private long lastTime = 0;
+//  private long lastTime = 0;
 
   public DefaultExpressionEvaluator() {
-    lastTime = System.currentTimeMillis();
+//    lastTime = System.currentTimeMillis();
   }
 
   private void printStamp(String message) {
-    long newTime = System.currentTimeMillis();
+//    long newTime = System.currentTimeMillis();
 //    System.err.println("Event: "+message+"Diff: "+(newTime-lastTime));
-    lastTime = newTime;
+//    lastTime = newTime;
   }
 
   public final Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent) throws NavajoException {
@@ -84,34 +92,34 @@ public final class DefaultExpressionEvaluator
 
   }
 
-  private final List getExpressionList(Navajo n) throws NavajoException {
-    List expressionList = new ArrayList();
-    ArrayList a = n.getAllMessages();
+  private final List<Property> getExpressionList(Navajo n) throws NavajoException {
+    List<Property> expressionList = new ArrayList<Property>();
+    List<Message> a = n.getAllMessages();
     for (int i = 0; i < a.size(); i++) {
-      Message current = (Message) a.get(i);
+      Message current = a.get(i);
       getExpressionList(n, current, expressionList);
     }
     return expressionList;
   }
 
-  private final void getExpressionList(Navajo n, Message m, List expressionList) throws
+  private final void getExpressionList(Navajo n, Message m, List<Property> expressionList) throws
       NavajoException {
-    ArrayList a = m.getAllMessages();
+    List<Message> a = m.getAllMessages();
     for (int i = 0; i < a.size(); i++) {
-      Message current = (Message) a.get(i);
+      Message current = a.get(i);
       getExpressionList(n, current, expressionList);
     }
-    ArrayList b = m.getAllProperties();
+    List<Property> b = m.getAllProperties();
     for (int i = 0; i < b.size(); i++) {
-      Property current = (Property) b.get(i);
+      Property current = b.get(i);
       if (current.getType().equals(Property.EXPRESSION_PROPERTY)) {
         expressionList.add(current);
       }
     }
   }
 
-  private final List getExpressionDependencies(Navajo n, Property p,
-                                               List expressionList) throws
+  private final List<Property> getExpressionDependencies(Navajo n, Property p,
+                                               List<Property> expressionList) throws
       NavajoException {
 //    System.err.println("Type: " + p.getType() + " value: " + p.getValue());
     if (!p.getType().equals(Property.EXPRESSION_PROPERTY)) {
@@ -121,12 +129,11 @@ public final class DefaultExpressionEvaluator
     return getExpressionDependencies(expression, n, p.getParentMessage());
   }
 
-  private final List getExpressionDependencies(String expression, Navajo n,
+  private final List<Property> getExpressionDependencies(String expression, Navajo n,
                                                Message parent) {
     if (expression == null) {
       return null;
     }
-//    System.err.println("Checking deps for expression: "+expression);
     int startIndex = expression.indexOf('[');
     int endIndex = expression.indexOf(']');
     if (startIndex == -1) {
@@ -138,10 +145,9 @@ public final class DefaultExpressionEvaluator
     }
     String tml = expression.substring(startIndex + 1, endIndex);
     String rest = expression.substring(endIndex + 1);
-//    System.err.println("tml expression found: " + tml);
-    List restList = getExpressionDependencies(rest, n, parent);
+    List<Property> restList = getExpressionDependencies(rest, n, parent);
     if (restList == null) {
-      restList = new ArrayList();
+      restList = new ArrayList<Property>();
     }
     Property pp = parent.getProperty(tml);
     if (pp != null /*&& pp.getType().equals(Property.EXPRESSION_PROPERTY)*/) {
@@ -156,12 +162,12 @@ public final class DefaultExpressionEvaluator
 //  }
 //
 
-  private final List processRefreshQueue(List queue) throws NavajoException {
+  private final List<Property> processRefreshQueue(List<Property> queue) throws NavajoException {
     Object o = null;
     Object p = null;
-    List refreshQueue = null;
+    List<Property> refreshQueue = null;
     for (int i = 0; i < queue.size(); i++) {
-      Property current = (Property) queue.get(i);
+      Property current = queue.get(i);
       if (!(current instanceof com.dexels.navajo.document.base.BasePropertyImpl)) {
 		System.err.println("WTF??! "+current.getClass());
 	}
@@ -171,7 +177,6 @@ public final class DefaultExpressionEvaluator
         try {
 			current.refreshExpression();
 		} catch (ExpressionChangedException e) {
-			// TODO Auto-generated catch block
 //			e.printStackTrace();
 		}
     } catch (NavajoException e) {
@@ -187,7 +192,7 @@ public final class DefaultExpressionEvaluator
       }
       if (o == null || p == null) {
         if (refreshQueue == null) {
-          refreshQueue = new ArrayList();
+          refreshQueue = new ArrayList<Property>();
         }
         refreshQueue.add(current);
         continue;
@@ -196,20 +201,20 @@ public final class DefaultExpressionEvaluator
 //        continue;
 //      } else {
       if (refreshQueue == null) {
-        refreshQueue = new ArrayList();
+        refreshQueue = new ArrayList<Property>();
       }
       refreshQueue.add(current);
 //      }
     }
     if (refreshQueue == null) {
-       refreshQueue = new ArrayList();
+       refreshQueue = new ArrayList<Property>();
      }
     return refreshQueue;
   }
 
-  public final List processRefreshQueue(Map depMap) throws NavajoException {
+  public final List<Property> processRefreshQueue(Map<Property,List<Property>> depMap) throws NavajoException {
 //    printStamp("Before processRefreshQueue: ");
-    List updateQueue = createUpdateQueue(depMap);
+    List<Property> updateQueue = createUpdateQueue(depMap);
     return processRefreshQueue(updateQueue);
 //    System.err.println("processed refresh queue");
 //    printStamp("After processRefreshQueue: ");
@@ -224,18 +229,18 @@ public final class DefaultExpressionEvaluator
 //    printStamp("After processRefreshQueue: ");
 //  }
 
-  private final Map getExpressionDependencyMap(Navajo n, List exprList) throws
+  private final Map<Property,List<Property>> getExpressionDependencyMap(Navajo n, List<Property> exprList) throws
       NavajoException {
-    Map depMap = new HashMap();
+    Map<Property,List<Property>> depMap = new HashMap<Property,List<Property>>();
     for (int i = 0; i < exprList.size(); i++) {
-      Property current = (Property) exprList.get(i);
-      List l = getExpressionDependencies(n, current, exprList);
+      Property current = exprList.get(i);
+      List<Property> l = getExpressionDependencies(n, current, exprList);
       depMap.put(current, l);
     }
     return depMap;
   }
 
-  private final Map duplicateDependencyMap(Map original) {
+  private final Map<Property,List<Property>> duplicateDependencyMap(Map<Property,List<Property>> original) {
 //    Map copy = new HashMap();
 //    for (Iterator iter = original.keySet().iterator(); iter.hasNext(); ) {
 //      Property item = (Property)iter.next();
@@ -250,94 +255,75 @@ public final class DefaultExpressionEvaluator
     return original;
   }
 
-  public Map createDependencyMap(Navajo n) throws NavajoException {
+  public Map<Property,List<Property>> createDependencyMap(Navajo n) throws NavajoException {
     printStamp("Creating depmap ");
-    List l = getExpressionList(n);
+    List<Property> l = getExpressionList(n);
     printStamp("expressionList finished ");
-    Map mm = getExpressionDependencyMap(n, l);
+    Map<Property,List<Property>> mm = getExpressionDependencyMap(n, l);
     printStamp("createDependencyMap finished ");
     return mm;
   }
 
-  public Map createInverseDependencyMap(Navajo n, List expressionList,
-                                        Map dependencyMap) throws
-      NavajoException {
-    return null;
-  }
-
-  private final void getExpressionsDependingOn(Navajo n, List propertyList,
-                                               Map dependencyMap,
-                                               List outputList) throws
-      NavajoException {
-    ArrayList al = new ArrayList();
-    for (int i = 0; i < propertyList.size(); i++) {
-      Property current = (Property) propertyList.get(i);
-      List deps = (List) dependencyMap.get(current);
-      for (int j = 0; j < deps.size(); j++) {
-        Property curProp = (Property) deps.get(i);
-
-      }
-      if (deps != null && deps.contains(current) &&
-          !outputList.contains(current)) {
-        propertyList.add(current);
-      }
-    }
-//    return al;
-  }
-
-  private final void dumpDep(Property p, List deps, int indent,
-                             Map dependencyMap, PrintWriter out) throws
-      NavajoException {
-    spaces(indent, out);
-    if (deps == null) {
-      out.println("Property: " + p.getFullPropertyName() + " <none>");
-      return;
-    }
-    out.println("Property: " + p.getFullPropertyName() + " depends on: ");
-
-    for (int i = 0; i < deps.size(); i++) {
-//      spaces(indent+10);
-      Property current = (Property) deps.get(i);
-      List dd = (List) dependencyMap.get(current);
-      dumpDep(current, dd, indent + 3, dependencyMap, out);
-    }
-  }
-
-  private final void spaces(int l, PrintWriter out) {
-    for (int i = 0; i < l; i++) {
-      out.print(" ");
-    }
-  }
-
-  private final List createUpdateQueue(Map mm) throws NavajoException {
-    Map dependencyMap = duplicateDependencyMap(mm);
-    Set propKeys = dependencyMap.keySet();
-    List queue = new ArrayList();
-
-//    PrintWriter pw = null;
-//  try {
-//    pw = new PrintWriter(new FileWriter("c:/depdump.txt"));
+//  public Map createInverseDependencyMap(Navajo n, List expressionList,
+//		  Map<Property,List<Property>> dependencyMap) throws
+//      NavajoException {
+//    return null;
 //  }
-//  catch (IOException ex) {
-//    ex.printStackTrace();
-//  }
+
+//  private final void getExpressionsDependingOn(Navajo n, List propertyList,
+//		  Map<Property,List<Property>> dependencyMap,
+//                                               List outputList) throws
+//      NavajoException {
+//    ArrayList al = new ArrayList();
+//    for (int i = 0; i < propertyList.size(); i++) {
+//      Property current = (Property) propertyList.get(i);
+//      List deps = (List) dependencyMap.get(current);
+//      for (int j = 0; j < deps.size(); j++) {
+//        Property curProp = (Property) deps.get(i);
 //
-//    pw.println("Dumping depmap ==============================================");
-//    for (Iterator iter = propKeys.iterator(); iter.hasNext(); ) {
-//      Property item = (Property)iter.next();
-//      List ll = (List)dependencyMap.get(item);
-//
-//      dumpDep(item,ll,0,dependencyMap, pw);
+//      }
+//      if (deps != null && deps.contains(current) &&
+//          !outputList.contains(current)) {
+//        propertyList.add(current);
+//      }
 //    }
-//    pw.println("End of depmap dump ==========================================");
-//    pw.flush();
-//    pw.close();
-    
+////    return al;
+//  }
+
+//  private final void dumpDep(Property p, List deps, int indent,
+//                             Map dependencyMap, PrintWriter out) throws
+//      NavajoException {
+//    spaces(indent, out);
+//    if (deps == null) {
+//      out.println("Property: " + p.getFullPropertyName() + " <none>");
+//      return;
+//    }
+//    out.println("Property: " + p.getFullPropertyName() + " depends on: ");
+//
+//    for (int i = 0; i < deps.size(); i++) {
+////      spaces(indent+10);
+//      Property current = (Property) deps.get(i);
+//      List dd = (List) dependencyMap.get(current);
+//      dumpDep(current, dd, indent + 3, dependencyMap, out);
+//    }
+//  }
+
+//  private final void spaces(int l, PrintWriter out) {
+//    for (int i = 0; i < l; i++) {
+//      out.print(" ");
+//    }
+//  }
+
+  private final List<Property> createUpdateQueue(Map<Property,List<Property>> mm) throws NavajoException {
+	Map<Property,List<Property>> dependencyMap = duplicateDependencyMap(mm);
+    Set<Property> propKeys = dependencyMap.keySet();
+    List<Property> queue = new ArrayList<Property>();
+
     Navajo first = null;
     while (dependencyMap.size() > 0) {
       boolean found = false;
-      for (Iterator iter = propKeys.iterator(); iter.hasNext(); ) {
-        Property item = (Property) iter.next();
+      for (Iterator<Property> iter = propKeys.iterator(); iter.hasNext(); ) {
+        Property item = iter.next();
         if (first==null) {
             first = item.getRootDoc();
         }
@@ -350,7 +336,7 @@ public final class DefaultExpressionEvaluator
           break;
         }
 
-        List deps = (List) dependencyMap.get(item);
+        List<Property> deps = dependencyMap.get(item);
 
         if (deps == null) {
           if (!queue.contains(item)) {
@@ -392,14 +378,7 @@ public final class DefaultExpressionEvaluator
       }
       if (!found) {
         System.err.println("Arrrr shiver me timbers");
-//        for (Iterator iter = dependencyMap.keySet().iterator(); iter.hasNext(); ) {
-//          Property item = (Property) iter.next();
-//            System.err.println("Depmap: Property: " + item.getFullPropertyName());
-//            System.err.println("Deps: " + dependencyMap.get(item));
-//        }
-//        throw new RuntimeException("Cyclic expression dependency found");
       }
-//      System.err.println("End of for. Size: " + dependencyMap.size());
     }
     
     // UUUUUUUUUUUGLY: MAKE SURE EVERY SINGLE ONE GETS ADDED
@@ -409,16 +388,16 @@ public final class DefaultExpressionEvaluator
     return queue;
   }
 
-  private final void addExpressionToQueue(Property item, Map depMap, List queue) throws
+  private final void addExpressionToQueue(Property item, Map<Property,List<Property>> depMap, List<Property> queue) throws
       ExpressionDependencyException {
-    List deps = (List) depMap.get(item);
+    List<Property> deps = depMap.get(item);
     if (deps == null) {
       throw new RuntimeException("Huh?");
     }
     boolean problems = false;
     for (int i = 0; i < deps.size(); i++) {
-      Property p = (Property) deps.get(i);
-      List deps2 = (List) depMap.get(p);
+      Property p = deps.get(i);
+      List<Property> deps2 = depMap.get(p);
       if (deps2 == null) {
         depMap.remove(p);
         if (!queue.contains(p)) {
@@ -447,9 +426,9 @@ public final class DefaultExpressionEvaluator
 
   }
 
-  private final boolean containsExpressions(List expressionList) {
+  private final boolean containsExpressions(List<Property> expressionList) {
     for (int i = 0; i < expressionList.size(); i++) {
-      Property current = (Property) expressionList.get(i);
+      Property current = expressionList.get(i);
       if (Property.EXPRESSION_PROPERTY.equals(current.getType())) {
         return true;
       }
@@ -487,40 +466,23 @@ public final class DefaultExpressionEvaluator
     aap.addProperty(jet);
     aap.addProperty(mies);
 
-//    System.err.println("Wim typed: " + wim.getTypedValue());
-//    n.refreshExpression();
-//    System.err.println("After refresh: " + wim.getTypedValue());
     n.write(System.err);
-    List exprList = dee.getExpressionList(n);
-//    System.err.println("\n::: " + exprList);
+    List<Property> exprList = dee.getExpressionList(n);
     for (int i = 0; i < exprList.size(); i++) {
-      Property current = (Property) exprList.get(i);
-      List l = dee.getExpressionDependencies(n, current, exprList);
-//      System.err.println("Property: " + current.getFullPropertyName() +
-//                         " depends on: ");
+      Property current = exprList.get(i);
+      List<Property> l = dee.getExpressionDependencies(n, current, exprList);
       if (l != null) {
         for (int j = 0; j < l.size(); j++) {
-//          System.err.println("     Property: " +
-//                             ( (Property) l.get(j)).getFullPropertyName());
         }
 
       }
     }
 
-//    System.err.println("Creating depmap:");
-    Map depMap = dee.getExpressionDependencyMap(n, exprList);
-    System.err.println("depMap = " + depMap);
+    Map<Property,List<Property>> depMap = dee.getExpressionDependencyMap(n, exprList);
 
-    List queue = dee.createUpdateQueue(depMap);
-//    System.err.println("Queue ============");
-//    for (int i = 0; i < queue.size(); i++) {
-//      Property current = (Property) queue.get(i);
-//      System.err.println("Item: " + current.getFullPropertyName());
-//    }
-//    System.err.println("End of queue =====");
+    List<Property> queue = dee.createUpdateQueue(depMap);
     dee.processRefreshQueue(queue);
 
-    System.err.println("teun = " + teun.getTypedValue());
   }
 
   public ClassLoader getScriptClassLoader() {
