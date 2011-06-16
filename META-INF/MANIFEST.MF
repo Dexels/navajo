@@ -21,7 +21,6 @@ Require-Bundle: com.dexels.navajo.tipi;bundle-version="1.0.43",
  org.eclipse.jetty.webapp;bundle-version="7.4.1",
  org.eclipse.jetty.util;bundle-version="7.4.1",
  javax.servlet;bundle-version="2.5.0"
-Export-Package: com.dexels.navajo.tipi.vaadin.embedded,
- com.dexels.vaadintest
+Export-Package: com.dexels.navajo.tipi.vaadin.embedded
 Bundle-ClassPath: lib/vaadin-6.6.1.jar,
  .
