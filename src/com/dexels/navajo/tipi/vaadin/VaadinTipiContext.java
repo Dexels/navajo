@@ -13,6 +13,7 @@ import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.internal.FileResourceLoader;
 import com.dexels.navajo.tipi.vaadin.application.TipiVaadinApplication;
+import com.dexels.navajo.tipi.vaadin.cookie.BrowserCookieManager;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
 
@@ -35,7 +36,7 @@ public class VaadinTipiContext extends TipiContext {
 		File resource = new File(install,"resource");
 		setTipiResourceLoader(new FileResourceLoader(tipi));
 		setGenericResourceLoader(new FileResourceLoader(resource));
-		
+		setCookieManager(new BrowserCookieManager());
 		TipiScreen ts = new TipiScreen(this);
 		setDefaultTopLevel(ts);
 	}
