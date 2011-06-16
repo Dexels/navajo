@@ -2,7 +2,7 @@ package tipi;
 
 import java.io.InputStream;
 
-public abstract class AbstractTipiExtension implements TipiExtension {
+abstract class AbstractTipiExtension extends TipiAbstractOSGiExtension implements TipiExtension {
 	public int compareTo(TipiExtension o) {
 		return getId().compareTo(o.getId());
 	}
