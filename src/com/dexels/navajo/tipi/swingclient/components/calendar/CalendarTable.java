@@ -21,10 +21,13 @@ import com.dexels.navajo.tipi.swingclient.components.BasePanel;
  * <p>Company: Dexels.com</p>
  * @author not attributable
  * @version 1.0
+ * @deprecated
  */
 
 public class CalendarTable extends JTable {
-  private CalendarTableCellEditor myEditor = new CalendarTableCellEditor();
+
+	private static final long serialVersionUID = 9165405397452206651L;
+private CalendarTableCellEditor myEditor = new CalendarTableCellEditor();
   private CalendarTableCellRenderer myRenderer = new CalendarTableCellRenderer();
   private CalendarTableModel myDefaultModel = new CalendarTableModel();
   private MultiCalendarModel myMultiModel = new MultiCalendarModel();

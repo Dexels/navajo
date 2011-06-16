@@ -12,7 +12,8 @@ import javax.swing.text.PlainDocument;
 import com.dexels.navajo.document.Property;
 
 public class FloatPropertyField extends PropertyField implements PropertyControlled {
-  protected Document myDocument = null;
+	private static final long serialVersionUID = -315919846250291649L;
+protected Document myDocument = null;
   protected boolean readOnly = false;
 
   public FloatPropertyField() {
@@ -191,7 +192,9 @@ public void focusLost(FocusEvent e) {
 
 final class FloatNumberDocument extends PlainDocument {
 
-  @Override
+	private static final long serialVersionUID = 8231480445427602516L;
+
+@Override
 public final void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
     char[] source = str.toCharArray();
     char[] result = new char[source.length];

@@ -26,6 +26,7 @@ import javax.swing.JPanel;
 public class DefaultDayRenderer
     extends JPanel
     implements DayRendererInterface {
+	private static final long serialVersionUID = 7710359911721940746L;
 //  private Day myDay;
   private boolean isSelected = false;
   private boolean isAnchor = false;

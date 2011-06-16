@@ -88,34 +88,35 @@ import com.dexels.navajo.tipi.swingclient.components.sort.TableSorter;
 public class MessageTable
     extends JTable
     implements CellEditorListener,  PropertyChangeListener, ListSelectionListener, CopyCompatible {
-  private final PropertyCellEditor myEditor = new PropertyCellEditor(this);
+	private static final long serialVersionUID = -1174076772355177410L;
+
+private final PropertyCellEditor myEditor = new PropertyCellEditor(this);
 
   private PropertyCellRenderer myRenderer = new PropertyCellRenderer();
   private Message myMessage = null;
   private final MessageTableModel myModel;
-  private MouseAdapter headerMouseAdapter = null;
-  private final ArrayList actionListeners = new ArrayList();
-  private boolean doRepaint = true;
+//  private MouseAdapter headerMouseAdapter = null;
+  private final List<ActionListener> actionListeners = new ArrayList<ActionListener>();
   private Map<String,ColumnAttribute> columnAttributes;
-  private final Map rowColorMap = new HashMap();
+  private final Map<Integer,Color> rowColorMap = new HashMap<Integer,Color>();
   protected String columnPathString = null;
   private boolean changed;
   protected boolean savePathJustChanged = false;
   private JScrollPane myScroll = null;
-  private boolean autoStoreSizes = false;
+//  private boolean autoStoreSizes = false;
   private String primaryKeyColumn = null;
   private boolean showHeader = true;
-  private final ArrayList changelisteners = new ArrayList();
-  private boolean enabled;
+  private final List<ChangeListener> changelisteners = new ArrayList<ChangeListener>();
+//  private boolean enabled;
   private MessageTableFooter tableFooter = null;
-  protected final Map columnSizeMap = new HashMap();
-  private final HashMap cachedColumns = new HashMap();
-  private final Map replacementMap = new HashMap();
+  protected final Map<Integer,Integer> columnSizeMap = new HashMap<Integer,Integer>();
+  private final Map<String,Property> cachedColumns = new HashMap<String,Property>();
+//  private final Map replacementMap = new HashMap();
   private final TableSorter mySorter;
   private boolean refreshAfterEdit = false;
    private EditRowDialog bd = null;
 
-  private final ArrayList columnDividers = new ArrayList();
+  private final List<ColumnDivider> columnDividers = new ArrayList<ColumnDivider>();
 
 private Component myCurrentEditingComponent;
 	
@@ -130,31 +131,10 @@ private Component myCurrentEditingComponent;
     setDefaultEditor(Property.class, myEditor);
     setDragEnabled(true);
     setFillsViewportHeight(true);
-//    
-//    try {
-//		DataFlavor df = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType +";class=com.dexels.navajo.document.Message");
-//	    TransferHandler newHandler = new TransferHandler("message");
-//	    
-//	    newHandler.canImport(this, new DataFlavor[]{df});
-//
-//    } catch (ClassNotFoundException e1) {
-//		// TODO Auto-generated catch block
-//		e1.printStackTrace();
-//	}
-//      setDropMode(DropMode.ON); 
-//    setTransferHandler(new MessageTransferHandler());
-
-    
-
-    
-//    setDropTarget(dt);
-    
     setDefaultRenderer(Property.class, myRenderer);
-//    setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
     setPreferredScrollableViewportSize(getPreferredSize());
-//    setSurrendersFocusOnKeystroke(true);
     getTableHeader().setDefaultRenderer(new CustomTableHeaderRenderer());
-    headerMouseAdapter = mySorter.addMouseListenerToHeaderInTable(this);
+    mySorter.addMouseListenerToHeaderInTable(this);
 
     this.addCellEditorListener(this);
     this.getTableHeader().setReorderingAllowed(false);
@@ -167,7 +147,7 @@ private Component myCurrentEditingComponent;
     });
     addKeyListener(new KeyAdapter() {
       public void keyPressed(KeyEvent e) {
-        if ("Left".equals(e.getKeyText(e.getKeyCode())) || "Right".equals(e.getKeyText(e.getKeyCode()))) {
+        if ("Left".equals(KeyEvent.getKeyText(e.getKeyCode())) || "Right".equals(KeyEvent.getKeyText(e.getKeyCode()))) {
           if (isCellEditable(getSelectedRow(), getSelectedColumn())) {
             editCellAt(getSelectedRow(), getSelectedColumn());
           }
@@ -180,58 +160,16 @@ private Component myCurrentEditingComponent;
   			 return;
   		 }
         if (isEditing()) {
-          Property p = myEditor.getProperty();
           myEditor.updateProperty();
 
         }
       }
 
 	public void focusGained(FocusEvent e) {
-//		refreshSelectedCell();
 	}
     });
     setupTableActions();
     
-//    
-//    DropTarget dt = new DropTarget(this, new DropTargetAdapter() {
-//
-//		public void dragEnter(DropTargetDragEvent dtde) {
-//			// TODO Auto-generated method stub
-//			System.err.println("Entering table");
-//		}
-//
-//		public void dragExit(DropTargetEvent dte) {
-//			// TODO Auto-generated method stub
-//			
-//		}
-//
-//		public void dragOver(DropTargetDragEvent dtde) {
-//			// TODO Auto-generated method stub
-//			
-//		}
-//
-//		public void drop(DropTargetDropEvent dtde) {
-//			DataFlavor[] df = dtde.getCurrentDataFlavors();
-//			for (int i = 0; i < df.length; i++) {
-//				System.err.println("Flavor: "+df[i].getHumanPresentableName());
-//				System.err.println("Fla: "+df[i].getDefaultRepresentationClass());
-//				System.err.println("Flaa: "+df[i].getRepresentationClass());
-//
-//				if(df[i].isFlavorRemoteObjectType()) {
-//					System.err.println("Rmov");
-//				}
-//				if(df[i].isFlavorSerializedObjectType()) {
-//					System.err.println("ser");
-//				}
-//			}
-//			
-//		}
-//
-//		public void dropActionChanged(DropTargetDragEvent dtde) {
-//			// TODO Auto-generated method stub
-//			
-//		}});
-//    
   }
 
   
@@ -264,9 +202,9 @@ private Component myCurrentEditingComponent;
             }
             else {
               try {
-                ArrayList sels = p.getAllSelections();
+                List<Selection> sels = p.getAllSelections();
                 for (int j = 0; j < sels.size(); j++) {
-                  Selection s = (Selection) sels.get(j);
+                  Selection s = sels.get(j);
                   int w = getStringWidth(s.getName());
                   if (w > min) {
                     min = w + 4;
@@ -288,9 +226,9 @@ private Component myCurrentEditingComponent;
     }
   }
 
-  class EditRowDialog
-      extends JDialog {
-    MessageTable myTable;
+  class EditRowDialog   extends JDialog {
+  	private static final long serialVersionUID = 4706886031583492691L;
+	MessageTable myTable;
     private Message m, backup;
     JScrollPane scroll = new JScrollPane();
     JPanel mp = new JPanel();
@@ -449,9 +387,9 @@ private Component myCurrentEditingComponent;
 
         cancelButton.addActionListener(new ActionListener() {
           public void actionPerformed(ActionEvent e) {
-            ArrayList props = m.getAllProperties();
+            List<Property> props = m.getAllProperties();
             for (int i = 0; i < props.size(); i++) {
-              Property current = (Property) props.get(i);
+              Property current = props.get(i);
               Property back = backup.getProperty(current.getName());
               if (back == null) {
                 System.err.println("Weird. Property not found in backup");
@@ -460,10 +398,10 @@ private Component myCurrentEditingComponent;
               current.setValue(back.getValue());
               if (current.getType().equals(Property.SELECTION_PROPERTY)) {
                 try {
-                  ArrayList al = back.getAllSelectedSelections();
+                  List<Selection> al = back.getAllSelectedSelections();
                   current.clearSelections();
                   for (int j = 0; j < al.size(); j++) {
-                    Selection currentsel = (Selection) al.get(j);
+                    Selection currentsel = al.get(j);
                     System.err.println("Selected selection in backup: " + currentsel.getName() + " val: " + currentsel.getValue());
                     Selection sss = current.getSelection(currentsel.getName());
                     if (sss != null) {
@@ -514,7 +452,7 @@ private Component myCurrentEditingComponent;
   public void showEditDialog(String title, int row) throws NavajoException {
 //    System.err.println("Entering showEditDialog");
     setRowSelectionInterval(row, row);
-    int labelindent = 170;
+//    int labelindent = 170;
     Container toplevel = getTopLevelAncestor();
     if (toplevel == null) {
       return;
@@ -534,7 +472,7 @@ private Component myCurrentEditingComponent;
       return;
     }
 
-    final Message backup = m.copy();
+//    final Message backup = m.copy();
 
 //    System.err.println("Showing dialog");
     bd.setTitle(title);
@@ -699,11 +637,11 @@ private Component myCurrentEditingComponent;
       SimpleDateFormat navajoDateFormat = new SimpleDateFormat("yyyy-MM-dd");
       for (int i = 0; i < data.getArraySize(); i++) {
         String line = "";
-        ArrayList props = data.getMessage(i).getAllProperties();
+        List<Property> props = data.getMessage(i).getAllProperties();
         boolean nonNullFound = false;
         for (int j = 0; j < props.size(); j++) {
           String value = "";
-          Property p = (Property) props.get(j);
+          Property p = props.get(j);
           if (p.getType().equals(Property.SELECTION_PROPERTY)) {
             value = p.getSelected().getValue();
           }
@@ -759,35 +697,31 @@ private Component myCurrentEditingComponent;
     }
     int i = mapRowNumber(row);
     Integer in = new Integer(i);
-    Color c = (Color) rowColorMap.get(in);
+    Color c = rowColorMap.get(in);
 //    System.err.println("Looking for color... "+in);
     if (c == null && !rowColorMap.containsKey(in)) {
       createRowColor(i);
-      return (Color) rowColorMap.get(in);
+      return rowColorMap.get(in);
     }
     else {
       return c;
     }
   }
 
-  // Only used from mockup...
   public final void setRenderer(PropertyCellRenderer tr) {
-//    System.err.println("WHooze touching myRenderer!! " + tr.getClass());
     myRenderer = tr;
   }
 
   private final void createRowColor(int row) {
-    Color c;
-
     int i = mapRowNumber(row);
     Message m = getMessageRow(i);
-    Iterator it = columnAttributes.keySet().iterator();
+    Iterator<String> it = columnAttributes.keySet().iterator();
     if (it == null || !it.hasNext()) {
       setRowColor(i, null);
     }
     while (it.hasNext()) {
 
-      String key = (String) it.next();
+      String key = it.next();
       Property p = m.getProperty(key);
 //      System.err.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>>> Looking for color of row: " + key);
       if (p != null) {
@@ -806,10 +740,10 @@ private Component myCurrentEditingComponent;
             }
           }
           if (ca.getType().equals(ColumnAttribute.TYPE_FREEROWCOLOR)) {
-            Set s = ca.getParamKeys();
-            Iterator iter = s.iterator();
+            Set<String> s = ca.getParamKeys();
+            Iterator<String> iter = s.iterator();
             while (iter.hasNext()) {
-              String itkey = (String) iter.next();
+              String itkey = iter.next();
               if (p.getValue().indexOf(itkey) >= 0) {
                 String color = ca.getParam(itkey);
                 if (color != null) {
@@ -864,15 +798,15 @@ private Component myCurrentEditingComponent;
       }
       for (int i = 0; i < m.getArraySize(); i++) {
         Message cur = m.getMessage(i);
-        Iterator it = cachedColumns.keySet().iterator();
-        /** Todo Property.copy() implementeren in Document */while (it.hasNext()) {
-          String key = (String) it.next();
+        Iterator<String> it = cachedColumns.keySet().iterator();
+        while (it.hasNext()) {
+          String key = it.next();
           Property replaced = cur.getProperty(key);
-          Property p = (Property) cachedColumns.get(key);
+          Property p = cachedColumns.get(key);
           Property q = NavajoFactory.getInstance().createProperty(NavajoFactory.getInstance().createNavajo(), p.getName(), "1", p.getDescription(), "in");
-          ArrayList a = p.getAllSelections();
+          List<Selection> a = p.getAllSelections();
           for (int j = 0; j < a.size(); j++) {
-            Selection s = (Selection) a.get(j);
+            Selection s = a.get(j);
             Selection r = NavajoFactory.getInstance().createSelection(NavajoFactory.getInstance().createNavajo(), s.getName(), s.getValue(), false);
             if (replaced != null) {
               if (r.getValue() != null && replaced.getValue() != null && r.getValue().equals(replaced.getValue().trim())) {
@@ -990,7 +924,7 @@ public void updateTableSize() {
     super.paintComponent(g);
     Stroke s = g2.getStroke();
     for (int i = 0; i < columnDividers.size(); i++) {
-      ColumnDivider cd = (ColumnDivider) columnDividers.get(i);
+      ColumnDivider cd = columnDividers.get(i);
       int x = getXofColumn(cd.index);
       g2.setStroke(new BasicStroke(cd.width));
       g.drawLine(x, 0, x, getSize().height);
@@ -1116,10 +1050,8 @@ public void updateTableSize() {
     }
     else {
       createDefaultFromModel(m);
-      int maxadvance = -1;
+//      int maxadvance = -1;
       MessageTableColumnModel tcm = (MessageTableColumnModel) getColumnModel();
-//      for (int i = 0; i < tcm.getColumnCount(); i++) {
-//        TableColumn tc = tcm.getColumn(i);
       if (myModel.isShowingRowHeaders()) {
         tcm.getColumn(0).setWidth(45);
         tcm.getColumn(0).setMaxWidth(45);
@@ -1132,8 +1064,6 @@ public void updateTableSize() {
 
   public final void setEqualColumnSizes() {
       int width = getWidth();
-//      System.err.println("Width: "+width);
-//      System.err.println("columncount: "+getColumnCount());
       int divwidth = 50;
       if (width > 0) {
           divwidth = width/getColumnCount();
@@ -1142,9 +1072,7 @@ public void updateTableSize() {
       for (int i = 0; i < tmcm.getColumnCount(); i++) {
         TableColumn tc = tmcm.getColumn(i);
         tc.setPreferredWidth(divwidth);
-//        tc.setMinWidth(70);
       }
-//      fireTableStructureChanged();
   }
 
 
@@ -1224,7 +1152,6 @@ public void updateTableSize() {
 		  System.err.println("Error closing columns file.");
 		}
 	} catch (SecurityException e) {
-		// TODO Auto-generated catch block
 	}
   }
 
@@ -1233,15 +1160,15 @@ public void updateTableSize() {
     removeAllColumns();
     for (int i = 0; i < cdef.getArraySize(); i++) {
       Message m = cdef.getMessage(i);
-      String id = (String) m.getProperty("id").getValue();
-      String name = (String) m.getProperty("name").getValue();
-      String editable = (String) m.getProperty("editable").getValue();
+      String id = m.getProperty("id").getValue();
+      String name = m.getProperty("name").getValue();
+      String editable = m.getProperty("editable").getValue();
       addColumn(id, name, "true".equals(editable));
     }
     createDefaultColumnsFromModel();
 
 //    MessageTableColumnModel tcm = (MessageTableColumnModel) getColumnModel();
-    final int sortedColumn = Integer.parseInt( (String) cdef.getProperty("sortedColumn").getValue());
+    final int sortedColumn = Integer.parseInt( cdef.getProperty("sortedColumn").getValue());
     final boolean sortedDirection = cdef.getProperty("sortedDirection").getValue().equals("true");
    // System.err.println("sortedDirection: " + cdef.getProperty("sortedDirection").getValue());
 		SwingUtilities.invokeLater(new Runnable() {
@@ -1262,7 +1189,7 @@ public void updateTableSize() {
       }
       else {
         Message m = cdef.getMessage(i - substractCount);
-        int width = Integer.parseInt( (String) m.getProperty("width").getValue());
+        int width = Integer.parseInt( m.getProperty("width").getValue());
          //System.err.println("Setting " + i + " to width: " + width);
         setColumnWidth(i, width);
       }
@@ -1406,10 +1333,6 @@ public void updateTableSize() {
     }
   }
 
-  public boolean hasCachedSelectionProperties() {
-    return replacementMap.size() > 0;
-  }
-
   public ArrayList<Message> getSelectedMessages() {
     int rows = getRowCount();
     ArrayList<Message> selectedMsgs = new ArrayList<Message>();
@@ -1481,9 +1404,9 @@ public void updateTableSize() {
       }
       Message newRow = NavajoFactory.getInstance().createMessage(newNavajo, constructed.getName(), Message.MSG_TYPE_ARRAY_ELEMENT);
       if (includeInvisibleColumns) {
-        ArrayList ps = elt.getAllProperties();
+        List<Property> ps = elt.getAllProperties();
         for (int j = 0; j < ps.size(); j++) {
-          Property p = (Property) ps.get(j);
+          Property p = ps.get(j);
 
           if (p != null) {
 
@@ -1492,10 +1415,10 @@ public void updateTableSize() {
             if (p.getType() == Property.SELECTION_PROPERTY && p.getCardinality().equals("+")) {
               try {
                 q = NavajoFactory.getInstance().createProperty(newNavajo, p.getName(), "string", "", 255, p.getDescription(), "out");
-                ArrayList sels = p.getAllSelectedSelections();
-                String value = ( (Selection) sels.get(0)).getName();
+                List<Selection> sels = p.getAllSelectedSelections();
+                String value = sels.get(0).getName();
                 for (int g = 1; g < sels.size(); g++) {
-                  value = value + "/" + ( (Selection) sels.get(g)).getName();
+                  value = value + "/" + sels.get(g).getName();
                 }
                 q.setValue(value);
 
@@ -1530,10 +1453,10 @@ public void updateTableSize() {
             if (p.getType() == Property.SELECTION_PROPERTY && p.getCardinality().equals("+")) {
               try {
                 q = NavajoFactory.getInstance().createProperty(newNavajo, p.getName(), "string", "", 255, p.getDescription(), "out");
-                ArrayList sels = p.getAllSelectedSelections();
-                String value = ( (Selection) sels.get(0)).getName();
+                ArrayList<Selection> sels = p.getAllSelectedSelections();
+                String value = sels.get(0).getName();
                 for (int g = 1; g < sels.size(); g++) {
-                  value = value + "/" + ( (Selection) sels.get(g)).getName();
+                  value = value + "/" + sels.get(g).getName();
                 }
                 q.setValue(value);
 
@@ -1591,7 +1514,7 @@ public void updateTableSize() {
     Message m = getSelectedMessage();
     if (m != null) {
       for (int i = 0; i < actionListeners.size(); i++) {
-        ActionListener current = (ActionListener) actionListeners.get(i);
+        ActionListener current = actionListeners.get(i);
         current.actionPerformed(new ActionEvent(this, r, m.getFullMessageName()));
       }
     }
@@ -1719,7 +1642,7 @@ public void updateTableSize() {
 	  }
 
   public void updateExpressions() throws NavajoException {
-    List props = myMessage.getRootDoc().refreshExpression();
+    List<Property> props = myMessage.getRootDoc().refreshExpression();
 //        myMessage.refreshExpression();
 //        NavajoFactory.getInstance().getExpressionEvaluator().
    // System.err.println("# of properties changed: " + props.size());
@@ -1758,7 +1681,7 @@ public void updateTableSize() {
 	  if (changelisteners.size() == 0) {
 		  return;
 	  }
-	  Map m = new HashMap();
+	  Map<String,Object> m = new HashMap<String,Object>();
 	  m.put("name", p.getName());
 	  m.put("row", new Integer(getSelectedRow()));
 	  m.put("column", new Integer(getSelectedColumn()));
@@ -1768,7 +1691,7 @@ public void updateTableSize() {
 	  m.put("message", p.getParentMessage());
 
 	  for (int i = 0; i < changelisteners.size(); i++) {
-		  ChangeListener cl = (ChangeListener) changelisteners.get(i);
+		  ChangeListener cl = changelisteners.get(i);
 		  ChangeEvent e = new ChangeEvent(m);
 		  cl.stateChanged(e);
 	  }
@@ -1791,7 +1714,7 @@ public void updateTableSize() {
     m.put("property", current);
 
     for (int i = 0; i < changelisteners.size(); i++) {
-      ChangeListener cl = (ChangeListener) changelisteners.get(i);
+      ChangeListener cl = changelisteners.get(i);
       ChangeEvent e = new ChangeEvent(m);
       cl.stateChanged(e);
     }
@@ -1829,13 +1752,6 @@ public void updateTableSize() {
     getMessageModel().clearPropertyFilters(); 
   }
 
-  private boolean doRepaint() {
-    return doRepaint;
-  }
-
-  private void setRepaint(boolean b) {
-    doRepaint = b;
-  }
 
   public final void setSortingState(int columnIndex, boolean ascending) {
     getMessageModel().setSortingState(columnIndex, ascending);
@@ -1917,19 +1833,17 @@ public void updateTableSize() {
   public final void setAutoStoreColumnSizes(String path, boolean value) {
     if (value) {
       setColumnDefinitionSavePath(path);
-      for (int i = 0; i < getColumnModel().getColumnCount(); i++) {
-        TableColumn tc = this.getColumnModel().getColumn(i);
+//      for (int i = 0; i < getColumnModel().getColumnCount(); i++) {
+//        TableColumn tc = this.getColumnModel().getColumn(i);
 //        tc.addPropertyChangeListener(this);
-        autoStoreSizes = true;
-      }
+//      }
     }
-    else {
-      for (int i = 0; i < getColumnModel().getColumnCount(); i++) {
-        TableColumn tc = this.getColumnModel().getColumn(i);
+//    else {
+//      for (int i = 0; i < getColumnModel().getColumnCount(); i++) {
+//        TableColumn tc = this.getColumnModel().getColumn(i);
 //        tc.removePropertyChangeListener(this);
-        autoStoreSizes = false;
-      }
-    }
+//      }
+//    }
   }
 
   public void removeColumnsNavajo() {
@@ -1948,8 +1862,7 @@ public void updateTableSize() {
 		  e.printStackTrace();
 		}
 	} catch (SecurityException e) {
-		// TODO Auto-generated catch block
-//		e.printStackTrace();
+		// ignore security
 	}
   }
 
@@ -1968,11 +1881,10 @@ public void updateTableSize() {
 		  fw.flush();
 		  fw.close();
 		}
-		else {
+//		else {
 //      System.err.println("WARNING: Did not save columns because I have none... or no rows");
-		}
+//		}
 	} catch (SecurityException e) {
-		// TODO Auto-generated catch block
 //		e.printStackTrace();
 	}
   }
@@ -2011,12 +1923,10 @@ public void updateTableSize() {
     if (row >= getRowCount() || column >= getColumnCount()) {
       return null;
     }
-    /**@todo Override this javax.swing.JTable method*/
     return super.getValueAt(row, column);
   }
 
   public void resetChanged() {
-    //System.err.println("SETTING changed = false IN MESSAGETABLE.");
     changed = false;
   }
 
@@ -2057,14 +1967,14 @@ public void updateTableSize() {
     }
     //System.err.println("COLUMS IN COPY: " + cols);
     try {
-      ArrayList selectedMsgs = getSelectedMessages();
+      List<Message> selectedMsgs = getSelectedMessages();
       if (selectedMsgs != null) {
-        Message m1 = (Message) selectedMsgs.get(0);
+        Message m1 = selectedMsgs.get(0);
         Navajo n = NavajoFactory.getInstance().createNavajo();
         Message m = NavajoFactory.getInstance().createMessage(n, m1.getName(), Message.MSG_TYPE_ARRAY);
         n.addMessage(m);
         for (int i = 0; i < selectedMsgs.size(); i++) {
-          m.addElement( (Message) selectedMsgs.get(i));
+          m.addElement( selectedMsgs.get(i));
         }
         returnMsg = m;
       }
@@ -2079,7 +1989,6 @@ public void updateTableSize() {
     try {
         returnMsg.write(sw);
     } catch (NavajoException e) {
-        // TODO Auto-generated catch block
         e.printStackTrace();
     }
     return cols + "<tml>" + sw.toString() + "</tml>";
@@ -2107,7 +2016,9 @@ public void updateTableSize() {
 
     final Action oldTabAction = getActionMap().get(im.get(tab));
     Action tabAction = new AbstractAction() {
-      public void actionPerformed(ActionEvent e)
+		private static final long serialVersionUID = 1L;
+
+	public void actionPerformed(ActionEvent e)
 
       {
         oldTabAction.actionPerformed(e);
@@ -2142,7 +2053,9 @@ public void updateTableSize() {
     getActionMap().put(im.get(tab), tabAction);
     final Action oldInvTabAction = getActionMap().get(im.get(invtab));
     Action invTabAction = new AbstractAction() {
-      public void actionPerformed(ActionEvent e)
+		private static final long serialVersionUID = -8210184561348696732L;
+
+	public void actionPerformed(ActionEvent e)
 
       {
         oldInvTabAction.actionPerformed(e);
@@ -2223,8 +2136,8 @@ public void updateTableSize() {
 //		fireTableStructureChanged();
 //		requestFocusInWindow();
 //		transferFocus();
-		int oldColumn = getSelectedColumn();
-		int oldRow = getSelectedRow();
+//		int oldColumn = getSelectedColumn();
+//		int oldRow = getSelectedRow();
 //		getMessageModel().fireTableCellUpdated(oldRow, oldColumn);
 //		getMessageModel().fireTableCellUpdated(row, column);
 		
@@ -2241,14 +2154,13 @@ public void updateTableSize() {
 	}
 
 
-	private void refreshSelectedCell() {
-		int oldColumn = getSelectedColumn();
-		int oldRow = getSelectedRow();
-		getMessageModel().fireTableCellUpdated(oldRow, oldColumn);
-	}
+//	private void refreshSelectedCell() {
+//		int oldColumn = getSelectedColumn();
+//		int oldRow = getSelectedRow();
+//		getMessageModel().fireTableCellUpdated(oldRow, oldColumn);
+//	}
 
 	public void setCurrentEditingComponent(Component doGetEditor) {
-		// TODO Auto-generated method stub
 		myCurrentEditingComponent = doGetEditor;
 	}
 

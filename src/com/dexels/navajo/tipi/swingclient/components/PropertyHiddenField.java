@@ -14,7 +14,9 @@ import com.dexels.navajo.document.Property;
 public class PropertyHiddenField extends PropertyPasswordField {
 
 
-  @Override
+	private static final long serialVersionUID = -8722096684301164869L;
+
+@Override
 public void setProperty(Property p) {
     if (p == null) {
       //System.err.println("Setting to null property. Ignoring");

@@ -51,14 +51,16 @@ import com.dexels.navajo.tipi.swingclient.SwingClient;
  * @version 1.0
  */
 
+@SuppressWarnings("deprecation")
 public class MessageTablePanel
     extends BasePanel
     implements CopyCompatible, Printable {
 
-  final JScrollPane jScrollPane1 = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
 
-  };
+	private static final long serialVersionUID = 2048693736371650314L;
 
+final JScrollPane jScrollPane1 = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+  
   final MessageTable messageTable;
   private boolean ghosted = false;
 
@@ -86,10 +88,7 @@ public class MessageTablePanel
       messageTable = t;
     }
     jScrollPane1.add(messageTable);
-    // TODO Remove suspicious construction
-//    jScrollPane1.setViewport(new JViewport() {
-//
-//    });
+
     try {
       jbInit();
     }
@@ -578,25 +577,13 @@ public boolean hasChanged() {
     messageTable.messageChanged();
   }
 
-  public void setMessage(Message m) {
+public void setMessage(Message m) {
 
-    // Remove active filters.
-    //clearPropertyFilters();// 07-05-07 Not sure if we really want this
     messageTable.setMessage(m);
-    //filterPanel.setVisible(true);
     if (filterPanel.isVisible()) {
       filterPanel.setMessageTable(messageTable);
     }
-//    TableColumnModel fm = createFooterModel();
-//    if (fm!=null) {
-//      tableFooter.setColumnModel(fm);
-//
-//    }
-
-//    tableFooter.setTable(messageTable);
-
     createDefaultColumnsFromModel();
-//    updateTableSize();
     setLoadMessage(m);
     if(messageTable.hasPropertyFilters()){
     	messageTable.performFilters();
@@ -689,10 +676,7 @@ public void updateTableSize() {
     getMessage().addMessage(msg);
     MessageTableModel mtm = messageTable.getMessageModel();
     mtm.fireTableRowsInserted(messageTable.getRowCount() - 1, messageTable.getRowCount() - 1);
-    if (messageTable.hasCachedSelectionProperties()) {
-      setMessage(getMessage());
-    }
-    rebuildSort();
+      rebuildSort();
   }
 
   public final int addColumn(String id, String title, boolean editable) {
@@ -819,7 +803,7 @@ public void updateTableSize() {
   }
 
 
-  @Override
+@Override
 public final void setEnabled(boolean e) {
     enabled = e;
     super.setEnabled(enabled && (!ghosted));
@@ -828,14 +812,12 @@ public final void setEnabled(boolean e) {
   public void rowSelected(ListSelectionEvent e) {
   }
 
-  final void messageTable_valueChanged(ListSelectionEvent e) {
-    //System.err.println("=============>> value changed");
+final void messageTable_valueChanged(ListSelectionEvent e) {
     setStateUpdated();
     rowSelected(e);
   }
 
-  public final void fireDataChanged() {
-    //System.err.println("===============>> Fire datachanged");
+public final void fireDataChanged() {
     setStateUpdated();
     messageTable.fireDataChanged();
   }

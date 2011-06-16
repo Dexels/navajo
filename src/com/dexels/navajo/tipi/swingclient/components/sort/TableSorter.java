@@ -21,7 +21,6 @@ package com.dexels.navajo.tipi.swingclient.components.sort;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.JTable;
@@ -34,20 +33,21 @@ import com.dexels.navajo.tipi.swingclient.components.MessageTable;
 
 //import com.dexels.navajo.document.*;
 
-public class TableSorter
-    extends TableMap {
+public class TableSorter extends TableMap {
 
-  int indexes[];
+	private static final long serialVersionUID = -3022350836931378122L;
 
-  Vector sortingColumns = new Vector();
+int indexes[];
+
+  Vector<Integer> sortingColumns = new Vector<Integer>();
 
   boolean ascending = true;
   int compares;
   int sortedColumn = -1;
   boolean sortedAscending = true;
   // Used for async sorting
-  private int currentSortingColumn = -1;
-  private boolean currentAscending = false;
+//  private int currentSortingColumn = -1;
+//  private boolean currentAscending = false;
 
   public TableSorter() {
     indexes = new int[0]; // for consistency
@@ -80,8 +80,9 @@ public void setModel(TableModel model) {
 
   }
 
-  public int compareRowsByColumn(int row1, int row2, int column) {
-    Class type = model.getColumnClass(column);
+  @SuppressWarnings({ "rawtypes", "unchecked" })
+public int compareRowsByColumn(int row1, int row2, int column) {
+//    Class<?> type = model.getColumnClass(column);
     TableModel data = model;
     // Check for nulls.
     Object o1 = data.getValueAt(row1, column);
@@ -99,7 +100,6 @@ public void setModel(TableModel model) {
     }
 
 // ************** HackedByFrank
-    if (true) {
       if (Comparable.class.isInstance(o1)) {
 //        System.err.println("comp: '" + o1 + "' and '" + o2 + "' compare as: "+( (Comparable) o1).compareTo(o2));
         return ( (Comparable) o1).compareTo(o2);
@@ -108,96 +108,13 @@ public void setModel(TableModel model) {
         System.err.println("Oh, dear, comparing NON-COMPARABLE STUFF!");
         return 0;
       }
-    }
-    /*
-     * We copy all returned values from the getValue call in case
-     * an optimised model is reusing one object to return many
-     * values.  The Number subclasses in the JDK are immutable and
-     * so will not be used in this way but other subclasses of
-     * Number might want to do this to save space and avoid
-     * unnecessary heap allocation.
-     */
-    if (type.getSuperclass() == java.lang.Number.class) {
-      Number n1 = (Number) data.getValueAt(row1, column);
-      double d1 = n1.doubleValue();
-      Number n2 = (Number) data.getValueAt(row2, column);
-      double d2 = n2.doubleValue();
-      if (d1 < d2) {
-        return -1;
-      }
-      else if (d1 > d2) {
-        return 1;
-      }
-      else {
-        return 0;
-      }
-    }
-    else if (type == java.util.Date.class) {
-      Date d1 = (Date) data.getValueAt(row1, column);
-      long n1 = d1.getTime();
-      Date d2 = (Date) data.getValueAt(row2, column);
-      long n2 = d2.getTime();
-      if (n1 < n2) {
-        return -1;
-      }
-      else if (n1 > n2) {
-        return 1;
-      }
-      else {
-        return 0;
-      }
-    }
-    else if (type == String.class) {
-      String s1 = (String) data.getValueAt(row1, column);
-      String s2 = (String) data.getValueAt(row2, column);
-      int result = s1.compareTo(s2);
-      if (result < 0) {
-        return -1;
-      }
-      else if (result > 0) {
-        return 1;
-      }
-      else {
-        return 0;
-      }
-    }
-    else if (type == Boolean.class) {
-      Boolean bool1 = (Boolean) data.getValueAt(row1, column);
-      boolean b1 = bool1.booleanValue();
-      Boolean bool2 = (Boolean) data.getValueAt(row2, column);
-      boolean b2 = bool2.booleanValue();
-      if (b1 == b2) {
-        return 0;
-      }
-      else if (b1) { // Define false < true
-        return 1;
-      }
-      else {
-        return -1;
-      }
-    }
-    else {
-      Object v1 = data.getValueAt(row1, column);
-      String s1 = v1.toString();
-      Object v2 = data.getValueAt(row2, column);
-      String s2 = v2.toString();
-      int result = s1.compareTo(s2);
-      if (result < 0) {
-        return -1;
-      }
-      else if (result > 0) {
-        return 1;
-      }
-      else {
-        return 0;
-      }
-    }
+
   }
 
   public int compare(int row1, int row2) {
     compares++;
     for (int level = 0; level < sortingColumns.size(); level++) {
-      Integer column = (Integer) sortingColumns.elementAt(level);
+      Integer column = sortingColumns.elementAt(level);
       int result = compareRowsByColumn(row1, row2, column.intValue());
       if (result != 0) {
         return ascending ? result : -result;

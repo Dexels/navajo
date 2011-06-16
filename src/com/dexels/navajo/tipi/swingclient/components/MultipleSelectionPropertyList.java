@@ -2,7 +2,6 @@ package com.dexels.navajo.tipi.swingclient.components;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,19 +41,15 @@ import com.dexels.navajo.document.Selection;
  */
 
 public final class MultipleSelectionPropertyList extends JPanel implements PropertyControlled {
-	/** @todo Add action / changelisteners to this class */
 
+	private static final long serialVersionUID = 2207572420028970359L;
 	private Property myProperty;
 	private final DefaultListModel myModel = new DefaultListModel();
 	private final JList myList = new JList(myModel);
 
-	// private final BorderLayout borderLayout1 = new BorderLayout();
 	private JScrollPane jScrollPane1; // = new JScrollPane();
-//	private int myVisibleRowCount = 8;
-//	private ArrayList listeners = new ArrayList();
 	private boolean orderBySelected = false;
-	// TODO Fix property listener
-	private PropertyChangeListener myPropertyChangeListener = null;
+//	private PropertyChangeListener myPropertyChangeListener = null;
 
 	private boolean isReloading = false;
 	

@@ -15,11 +15,13 @@ import javax.swing.SwingUtilities;
  * <p>Company: Dexels</p>
  * @author not attributable
  * @version 1.0
+ * @deprecated
  */
 
 public class KeyEventHandler
     extends AbstractAction {
-  private String myMod;
+	private static final long serialVersionUID = -7451651160947685387L;
+private String myMod;
   private Component myComp;
 
   public KeyEventHandler(Component c, String modifier) {

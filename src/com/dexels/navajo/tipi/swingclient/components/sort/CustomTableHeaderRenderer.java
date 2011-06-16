@@ -28,7 +28,9 @@ import com.dexels.navajo.tipi.swingclient.components.MessageTable;
 public class CustomTableHeaderRenderer
     extends JLabel implements TableCellRenderer {
 
-  private static final int DEFAULT_INSET = 3;
+	private static final long serialVersionUID = -3227757814599248801L;
+
+private static final int DEFAULT_INSET = 3;
 
 public static final int ASCENDING = 1;
 
@@ -46,9 +48,7 @@ public static final int ASCENDING = 1;
   private ImageIcon none = new ImageIcon(TableSorter.class.getResource(
       "none.png"));
 
-  private int columnIndex;
-
-  private final Map sortingMap = new HashMap();
+  private final Map<Integer,Integer> sortingMap = new HashMap<Integer,Integer>();
 
   public CustomTableHeaderRenderer() {
     super();
@@ -78,7 +78,7 @@ public static final int ASCENDING = 1;
 
   private final void updateSorting(int column) {
     int sortingState = NONE;
-    Integer sortInt = (Integer)sortingMap.get(new Integer(column));
+    Integer sortInt = sortingMap.get(new Integer(column));
     if (sortInt!=null) {
       sortingState = sortInt.intValue();
     }
@@ -99,7 +99,7 @@ public static final int ASCENDING = 1;
 
   public int getSortingState(int column) {
     int sortingState = NONE;
-    Integer sortInt = (Integer)sortingMap.get(new Integer(column));
+    Integer sortInt = sortingMap.get(new Integer(column));
     if (sortInt!=null) {
       sortingState = sortInt.intValue();
     }

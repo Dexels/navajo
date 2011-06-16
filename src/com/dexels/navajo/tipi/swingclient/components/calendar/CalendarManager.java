@@ -9,6 +9,7 @@ import java.util.Date;
  * <p>Company: Dexels.com</p>
  * @author not attributable
  * @version 1.0
+ * @deprecated
  */
 
 public interface CalendarManager {

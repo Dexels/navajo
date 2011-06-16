@@ -9,6 +9,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -46,6 +47,7 @@ import com.dexels.navajo.document.base.BasePropertyImpl;
  */
 
 public final class MultipleSelectionPropertyPickList extends JPanel implements PropertyControlled {
+	private static final long serialVersionUID = -6853070214866368382L;
 	JScrollPane jScrollPane1 = new JScrollPane();
 	JScrollPane jScrollPane2 = new JScrollPane();
 	JButton selectButton = new JButton();
@@ -131,7 +133,6 @@ public final class MultipleSelectionPropertyPickList extends JPanel implements P
 					pp.write(stringWriter);
 					System.err.println("s: "+stringWriter.toString());
 				} catch (NavajoException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}};
@@ -154,11 +155,10 @@ public final class MultipleSelectionPropertyPickList extends JPanel implements P
 		deselectedModel.clear();
 		try {
 			if (p.getType().equals(Property.SELECTION_PROPERTY)) {
-				ArrayList all;
-				all = p.getAllSelections();
+				List<Selection> all = p.getAllSelections();
 
 				for (int i = 0; i < all.size(); i++) {
-					Selection s = (Selection) all.get(i);
+					Selection s = all.get(i);
 					if (s.isSelected()) {
 						selectedModel.addElement(s);
 					} else {
@@ -169,7 +169,6 @@ public final class MultipleSelectionPropertyPickList extends JPanel implements P
 				System.err.println("WARNING: Setting a non-selection type property in MultipleSelectionPropertyPickList");
 			}
 		} catch (NavajoException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -267,7 +266,6 @@ public final class MultipleSelectionPropertyPickList extends JPanel implements P
 	}
 
 	public void setVisibleRowCount(int count) {
-		// TODO Auto-generated method stub
 		visibleRows = count;
 		if (selectedList != null) {
 			selectedList.setVisibleRowCount(count);

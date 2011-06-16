@@ -8,7 +8,8 @@ import com.dexels.navajo.document.Property;
 //import com.dexels.sportlink.client.swing.components.*;
 
 public final class PropertyCheckBox extends JCheckBox implements  PropertyControlled {
-  private Property myProperty = null;
+	private static final long serialVersionUID = 7272685312953373721L;
+private Property myProperty = null;
  
 
   public PropertyCheckBox() {

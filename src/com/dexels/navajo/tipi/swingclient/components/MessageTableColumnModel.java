@@ -1,11 +1,9 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.TableColumnModelEvent;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableColumn;
 
@@ -24,46 +22,19 @@ import com.dexels.navajo.tipi.swingclient.components.sort.CustomTableHeaderRende
 
 public final class MessageTableColumnModel
     extends DefaultTableColumnModel {
-  private Message myMessage;
+
+	private static final long serialVersionUID = 4339496482186009316L;
+//  private Message myMessage;
   private int maxadvance;
 
   public MessageTableColumnModel() {
     CustomTableHeaderRenderer myRenderer = new CustomTableHeaderRenderer();
     maxadvance = myRenderer.getFontMetrics(myRenderer.getFont()).charWidth('M');
-//    addColumnModelListener(new TableColumnModelListener() {
-//      public void columnAdded(TableColumnModelEvent e){}
-//      public void columnMarginChanged(ChangeEvent e){
-//        System.err.println("Source: " + e.getSource());
-//
-//        System.err.println("COlumn size changed!!!!!!!!!!!!!!!!!!!!___________________________________________________>>");
-//      }
-//      public void columnMoved(TableColumnModelEvent e){}
-//      public void columnRemoved(TableColumnModelEvent e){}
-//      public void columnSelectionChanged(ListSelectionEvent e){}
-//    });
-  }
-
-  public final void dumpColumnWidths() {
-    for (int i = 0; i < getColumnCount(); i++) {
-      TableColumn tc = getColumn(i);
-//      System.err.println("Identifier: " + tc.getIdentifier() + " size: " + tc.getWidth());
-    }
-
-  }
-
-  @Override
-protected final void fireColumnMoved(TableColumnModelEvent e) {
-    /**@todo Override this javax.swing.table.DefaultTableColumnModel method*/
-    super.fireColumnMoved(e);
-//    dumpColumnWidths();
   }
 
 
-  @Override
-public final void setColumnMargin(int newMargin) {
-    super.setColumnMargin(newMargin);
-    /**@todo Implement this javax.swing.table.TableColumnModel abstract method*/
-  }
+
+
 
   public final void removeColumns() {
 //    super.remo
@@ -115,24 +86,20 @@ public TableColumn getColumn(int columnIndex) {
     }
    }
 
-   public void loadSizes(Map m) {
-     for (Iterator iter = m.entrySet().iterator(); iter.hasNext(); ) {
-
-       Entry e = (Entry) iter.next();
-       Integer size = (Integer) e.getValue();
-       Integer index = (Integer) e.getKey();
-       
-       
- 
-       if (size!=null) {
-         TableColumn tc = getColumn(index.intValue());
-         if (tc!=null) {
-         tc.setPreferredWidth(size.intValue());
-           tc.setWidth(size.intValue());
-             }
-       }
-       
-     }
+   public void loadSizes(Map<Integer,Integer> m) {
+	   for (Entry<Integer, Integer> e : m.entrySet()) {
+		   Integer size = e.getValue();
+	       Integer index = e.getKey();
+	       if (size!=null) {
+	         TableColumn tc = getColumn(index.intValue());
+	         if (tc!=null) {
+	         tc.setPreferredWidth(size.intValue());
+	           tc.setWidth(size.intValue());
+	             }
+	       }
+	       
+		
+	}
    }
 
   public final void createColumn(int index, MessageTableModel mtm, Message m) {

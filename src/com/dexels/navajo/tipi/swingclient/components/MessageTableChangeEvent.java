@@ -13,7 +13,8 @@ import javax.swing.event.ChangeEvent;
 
 public class MessageTableChangeEvent extends ChangeEvent {
 
-  private int myRow = -1;
+ 	private static final long serialVersionUID = -5496860644042474933L;
+private int myRow = -1;
   private int myColumn = -1;
 
   public MessageTableChangeEvent(Object o) {

@@ -31,11 +31,14 @@ import com.dexels.navajo.tipi.swingclient.SwingClient;
  * <p>Company: Dexels.com</p>
  * @author unascribed
  * @version 1.0
+ * @deprecated
  */
 
 public class StandardDialog extends JDialog implements DialogConstants, ResponseListener {
 
-  private boolean doWindowClose = true;
+	private static final long serialVersionUID = 4560643968422875526L;
+
+private boolean doWindowClose = true;
 
   private boolean isCommitted = false;
   BorderLayout borderLayout1 = new BorderLayout();

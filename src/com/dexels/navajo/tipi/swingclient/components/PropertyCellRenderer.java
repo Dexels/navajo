@@ -80,6 +80,8 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
 		//
 		myPropertyField = new TextPropertyField();
 		l = new JLabel() {
+			private static final long serialVersionUID = 4291863967079004796L;
+
 			@Override
 			public boolean isOpaque() {
 				return true;

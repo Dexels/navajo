@@ -9,6 +9,7 @@ import java.awt.event.InputEvent;
  * <p>Company: Dexels.com</p>
  * @author not attributable
  * @version 1.0
+ * @deprecated
  */
 
 public class CalendarEvent {

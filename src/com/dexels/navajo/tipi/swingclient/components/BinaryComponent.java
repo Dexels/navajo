@@ -31,6 +31,10 @@ import com.dexels.navajo.document.types.Binary;
 
 public class BinaryComponent extends JPanel implements PropertyControlled, PropertyChangeListener, ActionListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6097068768465009552L;
 	private Property myProperty = null;
 	private JComponent myBinaryLabel = null;
 	

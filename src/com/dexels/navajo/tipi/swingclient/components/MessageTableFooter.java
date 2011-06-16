@@ -14,7 +14,9 @@ import javax.swing.table.TableCellRenderer;
  */
 
 public class MessageTableFooter extends JTableHeader {
-   public MessageTableFooter(JTable table, TableCellRenderer tc) {
+  private static final long serialVersionUID = -4750039572930815538L;
+
+public MessageTableFooter(JTable table, TableCellRenderer tc) {
      super.setReorderingAllowed(false);
      super.setTable(table);
      setDefaultRenderer(tc);

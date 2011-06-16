@@ -11,6 +11,7 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Money;
 
 public class MoneyField extends AbstractPropertyField implements PropertyControlled {
+	private static final long serialVersionUID = 2015322918566278566L;
 	private DecimalFormat myEditFormat = (DecimalFormat) NumberFormat.getInstance();
 	public MoneyField() {
 		myEditFormat.setGroupingUsed(false);

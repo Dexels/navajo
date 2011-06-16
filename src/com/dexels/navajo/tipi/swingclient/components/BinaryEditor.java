@@ -214,7 +214,7 @@ public class BinaryEditor extends JPanel implements PropertyControlled, Property
 	public void propertyChange(PropertyChangeEvent e) {
 //		System.err.println("Property change detected: "+e.getPropertyName()+" old: "+e.getOldValue()+" new: "+e.getNewValue());
 		if ("value".equals(e.getPropertyName())) {
-			Binary old = (Binary) e.getOldValue();
+//			Binary old = (Binary) e.getOldValue();
 			Binary newValue = (Binary) e.getNewValue();
 //			if (old != null && newValue != null) {
 //				System.err.println("Old size: " + old.getLength() + " new size: " + newValue.getLength());

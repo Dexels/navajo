@@ -21,13 +21,18 @@ import com.dexels.navajo.document.Navajo;
  * <p>Company: Dexels.com</p>
  * @author unascribed
  * @version 1.0
+ * @deprecated
  */
 
 public class BasePanel
     extends JPanel
       {
 
-  private Message loadMessage = null;
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1403054920085605764L;
+private Message loadMessage = null;
   private Message initMessage = null;
   private Message rootMessage = null;
   protected BasePanel hostingPanel = null;

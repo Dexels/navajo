@@ -20,7 +20,8 @@ import javax.swing.JPanel;
 
 public class MultipleDayRenderer
     extends JPanel {
-  private Day[] myDays;
+	private static final long serialVersionUID = 5801774702945251103L;
+private Day[] myDays;
   private boolean isSelected = false;
   private boolean isAnchor = false;
   private String myLabel = "";

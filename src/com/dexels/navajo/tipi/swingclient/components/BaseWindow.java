@@ -26,7 +26,11 @@ import com.dexels.navajo.tipi.swingclient.UserInterface;
 
 public class BaseWindow extends JInternalFrame {
 
-  protected JPanel mainPanel = new JPanel();
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1671424109176553065L;
+protected JPanel mainPanel = new JPanel();
   BorderLayout borderLayout1 = new BorderLayout();
   private Component myOldGlassPane = null;
   ImageIcon myIcon = new ImageIcon(UserInterface.class.getResource("images/logo_mini.gif"));

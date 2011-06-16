@@ -35,11 +35,13 @@ import com.dexels.navajo.tipi.swingclient.components.calendar.CalendarPickerDial
  * @version 1.0
  */
 
+@SuppressWarnings("deprecation")
 public final class DatePropertyField
     extends PropertyField
     implements PropertyControlled {
 
-  private static SimpleDateFormat displayDateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
+	private static final long serialVersionUID = -6817551990943620076L;
+private static SimpleDateFormat displayDateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
   private static SimpleDateFormat inputFormat1 = new SimpleDateFormat("dd-MM-yy");
   private static SimpleDateFormat inputFormat2 = new SimpleDateFormat("dd/MM/yy");
   private static SimpleDateFormat inputFormat3 = new SimpleDateFormat("ddMMyy");
@@ -252,7 +254,7 @@ public final void paintComponent(Graphics g) {
     }
   }
 
-  private final void checkMouseClick(MouseEvent e) {
+private final void checkMouseClick(MouseEvent e) {
 	 if (showCalendarPickerButton && isEditable()) {
 		 if (getHeight() > 15) {
         if (e.getX() > getWidth() - (getHeight() / 2) && e.getX() < getWidth() && e.getY() > 0 && e.getY() < (getHeight() / 2)) {

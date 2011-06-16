@@ -20,7 +20,8 @@ import com.dexels.navajo.document.Property;
  */
 
 public class URIPropertyField extends TextPropertyField {
-  private boolean clickable = true;
+	private static final long serialVersionUID = -4554241617340878668L;
+private boolean clickable = true;
 //  private static final String WIN_ID = "Windows";
   private static final String WIN_PATH = "rundll32";
   private static final String WIN_FLAG = "url.dll,FileProtocolHandler";

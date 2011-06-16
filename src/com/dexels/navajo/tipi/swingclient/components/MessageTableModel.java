@@ -28,7 +28,8 @@ public class MessageTableModel
     extends AbstractTableModel
      {
 
-  private final List<String> myColumnIds = new ArrayList<String>();
+ 	private static final long serialVersionUID = -7930139592084553531L;
+private final List<String> myColumnIds = new ArrayList<String>();
   private final List<String> myColumnTitles = new ArrayList<String>();
   //private final ArrayList editableList = new ArrayList();
   private final HashMap<String,Boolean> editableMap = new HashMap<String,Boolean>();

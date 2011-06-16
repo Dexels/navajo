@@ -12,6 +12,7 @@ import java.util.HashMap;
  * <p>Company: Dexels.com</p>
  * @author not attributable
  * @version 1.0
+ * @deprecated
  */
 
 public class DefaultCalendarManager

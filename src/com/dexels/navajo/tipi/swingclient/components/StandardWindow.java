@@ -7,6 +7,7 @@ package com.dexels.navajo.tipi.swingclient.components;
  * <p>Company: Dexels.com</p>
  * @author unascribed
  * @version 1.0
+ *
  */
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -32,11 +33,14 @@ import javax.swing.KeyStroke;
 import com.dexels.navajo.document.Navajo;
 
 //import com.dexels.sportlink.client.swing.dialogs.*;
-
+/**
+ * @deprecated
+ */
 public class StandardWindow
     extends BaseWindow
     implements DialogConstants {
-  protected JToolBar dialogToolbar = new JToolBar();
+	private static final long serialVersionUID = 6135214311748697090L;
+protected JToolBar dialogToolbar = new JToolBar();
   protected JButton closeButton = new JButton();
   protected JButton insertButton = new JButton();
   protected JButton saveButton = new JButton();

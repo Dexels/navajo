@@ -1559,6 +1559,7 @@ public class GenericPropertyComponent extends JPanel {
 		firePropertyEvents(myProperty, type, true);
 	}
 
+	@SuppressWarnings("deprecation")
 	public void setEnabled(boolean value) {
 		if (myProperty != null) {
 			if (myProperty.getType().equals("selection") && !"+".equals(myProperty.getCardinality())) {

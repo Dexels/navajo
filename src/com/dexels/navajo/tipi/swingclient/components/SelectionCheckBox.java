@@ -20,7 +20,8 @@ import com.dexels.navajo.document.Selection;
 
 public final class SelectionCheckBox extends JCheckBox {
 
-  Selection mySelection;
+	private static final long serialVersionUID = 3939722308465164825L;
+Selection mySelection;
 private Property myProperty;
 
   public SelectionCheckBox() {

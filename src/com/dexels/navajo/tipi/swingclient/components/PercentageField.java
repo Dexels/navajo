@@ -12,6 +12,7 @@ import javax.swing.text.PlainDocument;
 import com.dexels.navajo.document.types.Percentage;
 
 public class PercentageField extends AbstractPropertyField implements PropertyControlled {
+	private static final long serialVersionUID = -4614624658588347172L;
 	private DecimalFormat myEditFormat = (DecimalFormat) NumberFormat.getInstance();
 	public PercentageField() {
 		myEditFormat.setGroupingUsed(false);
@@ -55,7 +56,8 @@ public class PercentageField extends AbstractPropertyField implements PropertyCo
 		updateProperty();
 	}
 	final class PercentageNumberDocument extends PlainDocument {
-		  boolean hasFocus = false;
+		private static final long serialVersionUID = -5356270889071289298L;
+		boolean hasFocus = false;
 
 		  @Override
 		public final void insertString(int offs, String str, AttributeSet a) throws BadLocationException {

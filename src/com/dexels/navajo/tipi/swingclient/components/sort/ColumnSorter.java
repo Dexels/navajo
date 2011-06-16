@@ -12,16 +12,15 @@ import java.util.Comparator;
 import java.util.Vector;
 
 
-public class ColumnSorter implements Comparator {
+public class ColumnSorter implements Comparator<Vector<?>> {
         int colIndex;
         boolean ascending;
         ColumnSorter(int colIndex, boolean ascending) {
             this.colIndex = colIndex;
             this.ascending = ascending;
         }
-        public int compare(Object a, Object b) {
-            Vector v1 = (Vector)a;
-            Vector v2 = (Vector)b;
+        @SuppressWarnings({ "unchecked", "rawtypes" })
+		public int compare(Vector<?> v1, Vector<?> v2) {
             Object o1 = v1.get(colIndex);
             Object o2 = v2.get(colIndex);
 
@@ -41,7 +40,7 @@ public class ColumnSorter implements Comparator {
                 return 1;
             } else if (o2 == null) {
                 return -1;
-            } else if (o1 instanceof Comparable) {
+            } else if (o1 instanceof Comparable<?>) {
                 if (ascending) {
                     return ((Comparable)o1).compareTo(o2);
                 } else {

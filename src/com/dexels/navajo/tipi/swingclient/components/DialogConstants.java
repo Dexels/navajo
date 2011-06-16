@@ -1,5 +1,11 @@
 package com.dexels.navajo.tipi.swingclient.components;
+/**
+ * @deprecated
+ * @author frank
+ *
+ */
 
+@Deprecated
 public interface DialogConstants {
   public static final int MODE_OK_CANCEL = 1;
   public static final int MODE_CONFIRM = 2;

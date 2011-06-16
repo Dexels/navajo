@@ -55,6 +55,7 @@ import com.dexels.navajo.document.Selection;
  */
 
 public class FilterPanel extends JPanel {
+	private static final long serialVersionUID = 4445177819384959544L;
 	static ResourceBundle res = ResourceBundle.getBundle("com.dexels.navajo.tipi.swingclient.components.filterpanelstrings");
 	private JPanel flipPanel = new JPanel();
 	private JPanel columnPanel = new JPanel();

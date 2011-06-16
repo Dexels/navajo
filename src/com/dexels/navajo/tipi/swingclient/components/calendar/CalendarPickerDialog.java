@@ -42,9 +42,14 @@ import com.dexels.navajo.tipi.swingclient.components.StandardDialog;
  * 
  * @author not attributable
  * @version 1.0
+ * @deprecated
  */
 
 public class CalendarPickerDialog extends StandardDialog implements CalendarManager {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2258070699725278356L;
 	BasePanel mainPanel = new BasePanel();
 	BasePanel mainControlPanel = new BasePanel();
 	BasePanel controlMonthPanel = new BasePanel();

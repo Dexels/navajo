@@ -22,7 +22,8 @@ import com.dexels.navajo.document.Property;
  */
 
 public class TextPropertyField extends PropertyField {
-  private final BoundedLengthDocument myDocument = new BoundedLengthDocument();
+ 	private static final long serialVersionUID = -7981567590499362651L;
+private final BoundedLengthDocument myDocument = new BoundedLengthDocument();
   private String search = "off";
   private ImageIcon searchIcon = new ImageIcon(TextPropertyField.class.getResource("view.png"));
   
@@ -175,7 +176,7 @@ public void setText(String s) {
 	    	int iconHeight = searchIcon.getIconHeight();
 	    	int diff = getHeight() - iconHeight;
 	    		    	
-	    	g2.drawImage(searchIcon.getImage(), (getWidth() - searchIcon.getIconWidth() - 2), (int)(diff/2), searchIcon.getIconWidth(), searchIcon.getIconHeight(), null);	        
+	    	g2.drawImage(searchIcon.getImage(), (getWidth() - searchIcon.getIconWidth() - 2), (diff/2), searchIcon.getIconWidth(), searchIcon.getIconHeight(), null);	        
 	        g2.setComposite(old);
 	      }
 	      

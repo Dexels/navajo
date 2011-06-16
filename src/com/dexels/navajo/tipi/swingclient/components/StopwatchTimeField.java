@@ -21,7 +21,8 @@ import com.dexels.navajo.document.types.StopwatchTime;
 
 public class StopwatchTimeField extends PropertyField {
 
-  private Document myDocument = null;
+	private static final long serialVersionUID = 562717952596187335L;
+private Document myDocument = null;
 
   public StopwatchTimeField() {
     super();
@@ -84,7 +85,9 @@ public final void update() {
 
 final class StopwatchTimeDocument extends PlainDocument {
 
-  @Override
+	private static final long serialVersionUID = 7690878176633537384L;
+
+@Override
 public final void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
     char[] source = str.toCharArray();
      char[] result = new char[source.length];

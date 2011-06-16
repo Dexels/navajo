@@ -16,7 +16,11 @@ import com.dexels.navajo.document.Selection;
 public abstract class BaseComboBox
     extends JComboBox
      {
-  DefaultComboBoxModel defaultComboBoxModel = new DefaultComboBoxModel();
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2894805109531627299L;
+DefaultComboBoxModel defaultComboBoxModel = new DefaultComboBoxModel();
 
   public BaseComboBox() {
 //	    this.setPreferredSize(new Dimension(125, ComponentConstants.PREFERRED_HEIGHT));

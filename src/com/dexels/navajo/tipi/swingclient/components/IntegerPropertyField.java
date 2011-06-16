@@ -21,6 +21,10 @@ import com.dexels.navajo.document.PropertyTypeException;
 public final class IntegerPropertyField
     extends PropertyField
     implements PropertyControlled {
+
+	private static final long serialVersionUID = -4044131066393441848L;
+
+
 //  private Property myProperty;
   private WholeNumberDocument myDocument = null;
 
@@ -146,7 +150,9 @@ public final void update() {
 
 final class WholeNumberDocument
     extends BoundedLengthDocument {
-  @Override
+	private static final long serialVersionUID = 805229741318103919L;
+
+@Override
   
 public final void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
     char[] source = str.toCharArray();

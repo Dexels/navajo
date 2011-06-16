@@ -21,7 +21,8 @@ public class PropertyField
     extends JTextField
     implements PropertyControlled, FocusListener {
 
-  protected String textValue;
+ 	private static final long serialVersionUID = -3840882138547155549L;
+protected String textValue;
   protected Property initProperty = null;
   private String forcedAlignment = null;
   

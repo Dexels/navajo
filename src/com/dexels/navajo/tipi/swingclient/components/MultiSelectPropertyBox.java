@@ -1,9 +1,7 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
 import java.awt.event.ItemEvent;
-import java.util.ArrayList;
 
-import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 
@@ -22,10 +20,11 @@ public class MultiSelectPropertyBox extends BaseComboBox
 
 //  ResourceBundle myResource;
 
-   private Property myProperty = null;
+	private static final long serialVersionUID = 1387588426549269939L;
+private Property myProperty = null;
    private Property myValueProperty = null;
-   private Message validationMsg;
-   private ArrayList rules = new ArrayList();
+//   private Message validationMsg;
+//   private ArrayList rules = new ArrayList();
 
 
    public MultiSelectPropertyBox() {

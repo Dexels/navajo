@@ -41,7 +41,6 @@ public class ImageGenerator implements ImageConsumer
     private Object holder;
 
     private ColorModel colorModel;
-    private Hashtable properties;
     private WritableRaster raster;
     private int width;
     private int height;
@@ -181,9 +180,9 @@ public class ImageGenerator implements ImageConsumer
      *
      * @param props The map of properties for this image
      */
-    public void setProperties(Hashtable props)
+    public void setProperties(Hashtable<?,?> props)
     {
-        properties = props;
+//        properties = props;
         createImage();
     }
 

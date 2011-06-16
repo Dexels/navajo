@@ -6,6 +6,8 @@ import javax.swing.text.PlainDocument;
 
 public class AjaxEditorDocument extends PlainDocument {
 
+	
+	private static final long serialVersionUID = 7442690284070678853L;
 	private boolean fireEvents = true;
 	private final AjaxComboBox myBox;
 

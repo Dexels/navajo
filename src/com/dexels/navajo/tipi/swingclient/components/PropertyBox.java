@@ -10,6 +10,8 @@ import com.dexels.navajo.document.Selection;
 
 public class PropertyBox extends BaseComboBox implements PropertyControlled, PropertyChangeListener {
 
+	private static final long serialVersionUID = 473768705535369366L;
+
 	private Property myProperty = null;
 
 	private Object lastSelection;

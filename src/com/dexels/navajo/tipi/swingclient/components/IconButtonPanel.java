@@ -2,7 +2,9 @@ package com.dexels.navajo.tipi.swingclient.components;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -17,17 +19,19 @@ import com.dexels.navajo.tipi.swingclient.UserInterface;
  * <p>Company: Dexels.com</p>
  * @author unascribed
  * @version 1.0
+ * @deprecated
  */
 
 public class IconButtonPanel extends JPanel {
-  //ResourceBundle res;
+ 	private static final long serialVersionUID = 1L;
+//ResourceBundle res;
   JButton newButton = new JButton();
   JButton saveButton = new JButton();
   JButton deleteButton = new JButton();
   JButton insertButton = new JButton();
   JButton cancelButton = new JButton();
   FlowLayout flowLayout1 = new FlowLayout();
-  ArrayList listeners = new ArrayList();
+  private List<ActionListener> listeners = new ArrayList<ActionListener>();
   public final static String NEW_BUTTON = "NEW";
   public final static String SAVE_BUTTON = "SAVE";
   public final static String DELETE_BUTTON = "DELETE";
@@ -162,7 +166,7 @@ public class IconButtonPanel extends JPanel {
 
   public void buttonPressed(ActionEvent e){
     for(int i=0;i<listeners.size();i++){
-      java.awt.event.ActionListener current = (java.awt.event.ActionListener)listeners.get(i);
+      java.awt.event.ActionListener current = listeners.get(i);
       current.actionPerformed(e);
     }
   }

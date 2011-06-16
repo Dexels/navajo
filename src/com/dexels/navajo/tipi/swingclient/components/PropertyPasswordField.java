@@ -27,6 +27,8 @@ import com.dexels.navajo.document.Property;
 
 public class PropertyPasswordField extends JPasswordField implements PropertyControlled {
 
+
+	private static final long serialVersionUID = 8379730240791137369L;
 	public String textValue;
 	public Property initProperty = null;
 	// public ResourceBundle localResource;
@@ -91,6 +93,7 @@ public class PropertyPasswordField extends JPasswordField implements PropertyCon
 
 	}
 
+	@SuppressWarnings("deprecation")
 	public void this_focusGained(FocusEvent e) {
 		if (isEditable()) {
 		}

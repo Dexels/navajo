@@ -30,6 +30,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
 
 public class AjaxComboBox extends JComboBox {
+	private static final long serialVersionUID = 7442041537617539253L;
 	private String messagePath;
 	private String propertyName;
 	private String valuePropertyName;

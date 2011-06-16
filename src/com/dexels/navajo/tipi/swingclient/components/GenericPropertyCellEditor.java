@@ -5,6 +5,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.ArrayList;
 import java.util.EventObject;
+import java.util.List;
 
 import javax.swing.JTable;
 import javax.swing.event.CellEditorListener;
@@ -27,7 +28,7 @@ public class GenericPropertyCellEditor
     implements TableCellEditor, ListSelectionListener {
   private final GenericPropertyComponent myComponent = new GenericPropertyComponent();
   private final MessageTable myTable;
-  private final ArrayList myListeners = new ArrayList();
+  private final List<CellEditorListener> myListeners = new ArrayList<CellEditorListener>();
   private Property copy;
 
   private int lastRow = -1, lastColumn = -1;
@@ -101,7 +102,7 @@ public class GenericPropertyCellEditor
 
     if(lastRow > -1){
       for (int i = 0; i < myListeners.size(); i++) {
-        CellEditorListener ce = (CellEditorListener) myListeners.get(i);
+        CellEditorListener ce = myListeners.get(i);
         ce.editingStopped(new MessageTableChangeEvent(myTable, lastRow, lastColumn));
       }
     }

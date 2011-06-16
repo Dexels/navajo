@@ -55,6 +55,7 @@ class NameIdMap {
 
 public class ColumnManagementDialog
     extends JDialog {
+	private static final long serialVersionUID = -6795986412646589943L;
 	private JList availableColumnList = new JList();
   private JList visibleColumnList = new JList();
   private JButton hideButton = new JButton();

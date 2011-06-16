@@ -85,7 +85,7 @@ public class BinaryTransferHandler extends TransferHandler {
 			JComponent comp = null;
 			if(myBeanComponent!=null) {
 				comp = myBeanComponent;
-			} else {http://www.apple.com/quicktime/qtv/macworld-san-francisco-2009/
+			} else {
 				comp = (JComponent) support.getComponent();
 			}
 
@@ -117,25 +117,12 @@ public class BinaryTransferHandler extends TransferHandler {
 				}
 
 			} catch (UnsupportedFlavorException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			} catch (IOException ex) {
-				// TODO Auto-generated catch block
 				ex.printStackTrace();
 			} 
 		
-//			try {
-//				transferable.getTransferDataFlavors();
-		//		Object o = transferable.getTransferData(DataFlavor.);
-			//	System.err.println("Image: "+o.getClass());
-//			} catch (UnsupportedFlavorException e1) {
-//				// TODO Auto-generated catch block
-//				e1.printStackTrace();
-//			} catch (IOException e1) {
-//				// TODO Auto-generated catch block
-//				e1.printStackTrace();
-//			}
-//			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -10,6 +10,7 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
@@ -24,10 +25,12 @@ import com.dexels.navajo.document.Selection;
  * @version 1.0
  */
 
+@SuppressWarnings("deprecation")
 public final class MultipleSelectionPropertyCheckboxGroup extends BasePanel implements PropertyControlled, PropertyChangeListener {
-  private Property myProperty;
+	private static final long serialVersionUID = -5094941150514654170L;
+private Property myProperty;
 //  private ArrayList mySelectionList = new ArrayList();
-  private ArrayList myListeners = new ArrayList();
+  private List<ItemListener> myListeners = new ArrayList<ItemListener>();
   private boolean columnMode = false;
   private int columns = 2;
 
@@ -46,7 +49,7 @@ public final class MultipleSelectionPropertyCheckboxGroup extends BasePanel impl
 
   private void fireListeners(ItemEvent e){
     for(int i=0;i<myListeners.size();i++){
-      ItemListener il = (ItemListener)myListeners.get(i);
+      ItemListener il = myListeners.get(i);
       il.itemStateChanged(e);
     }
   }
@@ -122,12 +125,6 @@ public final class MultipleSelectionPropertyCheckboxGroup extends BasePanel impl
   public final void update() {
     // dummy
   }
-
-
-  public static void main(String args[]){
-    int req = (int) Math.ceil(4 / 2);
-//    System.err.println("Req: " +req);
- }
 
 
 public void propertyChange(PropertyChangeEvent e) {

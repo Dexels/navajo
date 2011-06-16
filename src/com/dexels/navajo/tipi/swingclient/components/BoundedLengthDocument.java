@@ -15,6 +15,10 @@ import javax.swing.text.PlainDocument;
 
 
 class BoundedLengthDocument extends PlainDocument {
+/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2888344441704553296L;
 //  private Property myProperty = null;
   private String myCapitalizationMode = "off";
   private boolean check = true;

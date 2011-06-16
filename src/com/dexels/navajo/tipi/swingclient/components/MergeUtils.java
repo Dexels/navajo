@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Property;
@@ -92,9 +93,9 @@ public class MergeUtils {
 				if (m.getArraySize() > 0) {
 					String header = "";
 					Message h = m.getMessage(0);
-					ArrayList props = h.getAllProperties();
+					List<Property> props = h.getAllProperties();
 					for (int i = 0; i < props.size(); i++) {
-						Property p = (Property) props.get(i);
+						Property p = props.get(i);
 						String head = p.getDescription();
 						if ("null".equals(head) || head == null) {
 							head = "";
@@ -106,9 +107,9 @@ public class MergeUtils {
 					for (int i = 0; i < m.getArraySize(); i++) {
 						String line = "";
 						Message current = m.getMessage(i);
-						ArrayList prop = current.getAllProperties();
+						List<Property> prop = current.getAllProperties();
 						for (int j = 0; j < prop.size(); j++) {
-							Property p = (Property) prop.get(j);
+							Property p = prop.get(j);
 							if (p.getType().equals(Property.SELECTION_PROPERTY)) {
 								String value = p.getSelected().getName();
 								if ("null".equals(value) || value == null) {
@@ -139,9 +140,9 @@ public class MergeUtils {
 			} else {
 				String header = "";
 				String line = "";
-				ArrayList props = m.getAllProperties();
+				List<Property> props = m.getAllProperties();
 				for (int i = 0; i < props.size(); i++) {
-					Property p = (Property) props.get(i);
+					Property p = props.get(i);
 					header = header + p.getDescription() + delimiter;
 					String value = p.getValue();
 					if ("null".equals(value) || value == null) {
@@ -187,7 +188,7 @@ public class MergeUtils {
 			}
 
 			System.err.println("Sending mail: " + columnName);
-			ArrayList recepients = new ArrayList();
+			List<String> recepients = new ArrayList<String>();
 			for (int i = 0; i < data.getArraySize(); i++) {
 				String address = data.getMessage(i).getProperty(columnName).getValue();
 				System.err.println("Got: " + address);
@@ -200,7 +201,7 @@ public class MergeUtils {
 			String mailString = "mailto:?bcc=";
 
 			for (int j = 0; j < recepients.size(); j++) {
-				mailString = mailString + (String) recepients.get(j) + separator;
+				mailString = mailString + recepients.get(j) + separator;
 			}
 			mailString = mailString.substring(0, mailString.length() - 1);
 			System.err.println("Calling openDoc: " + mailString);
@@ -229,7 +230,6 @@ public class MergeUtils {
 			fos.close();
 			openDocument(f.getAbsolutePath());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -240,12 +240,12 @@ public class MergeUtils {
 
 	public static void openDocument(String docFile) {
 		try {
-			Process p = null;
+//			Process p = null;
 			if (System.getProperty("os.name").toLowerCase().indexOf("windows") >= 0) {
-				p = Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + docFile);
+				Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + docFile);
 			} else { 
 				if(System.getProperty("os.name").toLowerCase().indexOf("mac") >= 0) {
-					p = Runtime.getRuntime().exec("open " + docFile);
+					Runtime.getRuntime().exec("open " + docFile);
 				} else{
 				// non-Windows platform, assume Linux/Unix
 				String[] cmd = new String[2];
@@ -272,7 +272,7 @@ public class MergeUtils {
 				cmd[(docFile.toLowerCase().endsWith(".txt")) ? 3 : 1] = docFile;
 
 				if (cmd[0] != null) {
-					 p = Runtime.getRuntime().exec(cmd);
+					  Runtime.getRuntime().exec(cmd);
 				}
 				}
 			}

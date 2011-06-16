@@ -15,7 +15,8 @@ import javax.swing.KeyStroke;
 import com.dexels.navajo.document.Property;
 
 public class PropertyTextArea extends JTextArea implements PropertyControlled   {
-  private String textValue;
+	private static final long serialVersionUID = 6952361729861228490L;
+private String textValue;
   private Property initProperty = null;
  
   private BoundedLengthDocument myDocument = new BoundedLengthDocument();
@@ -42,7 +43,8 @@ private void updateText(Property p, String currentText) {
     return initProperty;
   }
 
-  public PropertyTextArea() {
+  @SuppressWarnings("deprecation")
+public PropertyTextArea() {
     setDocument(myDocument);
           this.addFocusListener(new java.awt.event.FocusAdapter() {
           @Override

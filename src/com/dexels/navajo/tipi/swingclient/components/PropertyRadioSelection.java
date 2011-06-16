@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.ButtonGroup;
@@ -30,17 +31,19 @@ import com.dexels.navajo.document.Selection;
 
 public final class PropertyRadioSelection extends JPanel
     implements PropertyControlled, ActionListener {
-  private Property myProperty = null;
+
+	private static final long serialVersionUID = 2786990335267017128L;
+private Property myProperty = null;
   private final ButtonGroup myGroup = new ButtonGroup();
 
-  private final Map selectionMap = new HashMap();
-  private final ArrayList buttonList = new ArrayList();
+  private final Map<JRadioButton,Selection> selectionMap = new HashMap<JRadioButton,Selection>();
+  private final List<ButtonModel> buttonList = new ArrayList<ButtonModel>();
   private final ArrayList<ActionListener> myActionListeners = new ArrayList<ActionListener>();
 
-  private static final int VERTICAL = 1;
-  private static final int HORIZONTAL = 2;
+//  private static final int VERTICAL = 1;
+//  private static final int HORIZONTAL = 2;
 
-  private int direction = VERTICAL;
+//  private int direction = VERTICAL;
 private boolean columnMode;
 private int checkboxGroupColumnCount;
 
@@ -51,12 +54,12 @@ private int checkboxGroupColumnCount;
 
   public final void setVertical() {
 //    setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
-      direction = VERTICAL;
+//      direction = VERTICAL;
     setLayout(new GridBagLayout());
 //    doLayout();
   }
   public final void setHorizontal() {
-      direction = HORIZONTAL;
+//      direction = HORIZONTAL;
       setLayout(new GridBagLayout());
 //    setLayout(new BoxLayout(this,BoxLayout.X_AXIS));
     doLayout();
@@ -87,17 +90,11 @@ private int checkboxGroupColumnCount;
         int col = 0;
         int row = 0;
 
-      ArrayList al = p.getAllSelections();
+      List<Selection> al = p.getAllSelections();
       for (int i = 0; i < al.size(); i++) {
-        Selection s = (Selection) al.get(i);
-//        if (direction==HORIZONTAL) {
-//            add(createButton(s),new GridBagConstraints(i,0,1,1,1,0,GridBagConstraints.NORTHWEST,GridBagConstraints.HORIZONTAL,new Insets(0,0,0,0),0,0));
-//        } else {
-//            add(createButton(s),new GridBagConstraints(0,i,1,1,1,0,GridBagConstraints.NORTHWEST,GridBagConstraints.HORIZONTAL,new Insets(0,0,0,0),0,0));
-//        }
+        Selection s = al.get(i);
         if(columnMode){
             int req = (int) Math.ceil(al.size() / (float)checkboxGroupColumnCount)-1; // offset with 1 because gridbag starts at 0
-//            System.err.println("Req: "+req);
             if(row+1 > req){
               add(createButton(s), new GridBagConstraints(col, row, 1, 1, 1.0, 1.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
             }else{
@@ -152,11 +149,7 @@ private int checkboxGroupColumnCount;
       return -1;
     }
     Integer i = new Integer(buttonList.indexOf(b));
-    if (i==null) {
-      System.err.println("Hmm weird. Unknown radiobutton, or something.");
-//      System.err.println("MAP: "+indexMap.toString()+" aap: "+b);
-      return -1;
-    }
+    
     return i.intValue();
   }
 
@@ -174,7 +167,7 @@ private int checkboxGroupColumnCount;
         System.err.println("Tsja, updateprop with null source");
     }
     try {
-      Selection s = (Selection) selectionMap.get(source);
+      Selection s = selectionMap.get(source);
       if (s != null) {
         myProperty.setSelected(s);
       }
