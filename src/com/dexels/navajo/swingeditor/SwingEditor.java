@@ -5,20 +5,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Enumeration;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
-import javax.swing.text.html.HTML.Tag;
 
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
@@ -33,6 +31,8 @@ import de.xeinfach.kafenio.component.ExtendedHTMLDocument;
  * 
  */
 public class SwingEditor extends KafenioPanel {
+	
+	private static final long serialVersionUID = 2156410387429367534L;
 	private Property myProperty;
 	private ArrayList<Binary> attachments = new ArrayList<Binary>();
 
@@ -98,6 +98,7 @@ public class SwingEditor extends KafenioPanel {
 		return getDocumentText();
 	}
 
+	@SuppressWarnings("rawtypes")
 	public String getProcessedText() {
 		try {
 			ArrayList<String> paths = new ArrayList<String>();
@@ -155,10 +156,8 @@ public class SwingEditor extends KafenioPanel {
 		jb.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ExtendedHTMLDocument extendedHtmlDoc = kp.getExtendedHtmlDoc();
-				String result;
 				try {
-					result = extendedHtmlDoc.getText(0, extendedHtmlDoc.getLength());
-					System.err.println("Result: " + kp.getProcessedText());
+					extendedHtmlDoc.getText(0, extendedHtmlDoc.getLength());
 				} catch (BadLocationException e1) {
 					e1.printStackTrace();
 				}

@@ -5,9 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.*;
-import java.net.*;
-import java.util.*;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -113,10 +110,8 @@ public class TipiSwingEditor extends TipiSwingDataComponentImpl  {
 		jb.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				ExtendedHTMLDocument extendedHtmlDoc = kp.getExtendedHtmlDoc();
-				String result;
 				try {
-					result = extendedHtmlDoc.getText(0, extendedHtmlDoc.getLength());
-					System.err.println("Result: "+kp.getDocumentText());
+					extendedHtmlDoc.getText(0, extendedHtmlDoc.getLength());
 				} catch (BadLocationException e1) {
 					e1.printStackTrace();
 				}
