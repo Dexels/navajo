@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi.vaadin;
 
 import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 
 public class GenericPropertyComponent extends FormLayout {

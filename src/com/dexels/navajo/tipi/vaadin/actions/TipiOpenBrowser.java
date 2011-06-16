@@ -7,7 +7,6 @@
 package com.dexels.navajo.tipi.vaadin.actions;
 
 import java.io.File;
-import java.io.FileReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -15,15 +14,8 @@ import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.vaadin.actions.base.TipiVaadinActionImpl;
-import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.FileResource;
-import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.StreamResource;
-import com.vaadin.terminal.URIHandler;
-import com.vaadin.ui.Embedded;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 /**
  * @author Administrator

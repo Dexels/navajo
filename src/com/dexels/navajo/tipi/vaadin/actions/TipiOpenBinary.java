@@ -6,7 +6,6 @@
  */
 package com.dexels.navajo.tipi.vaadin.actions;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import com.dexels.navajo.document.types.Binary;
@@ -15,13 +14,7 @@ import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.vaadin.actions.base.TipiVaadinActionImpl;
 import com.vaadin.terminal.DownloadStream;
-import com.vaadin.terminal.ExternalResource;
-import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.StreamResource;
 import com.vaadin.terminal.URIHandler;
-import com.vaadin.ui.Embedded;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 /**
  * @author Administrator
@@ -40,7 +33,9 @@ public class TipiOpenBinary extends TipiVaadinActionImpl {
         final Binary b  = (Binary) getEvaluatedParameterValue("binary", event);
 //			
 			  URIHandler uriHandler = new URIHandler() {
-			        public DownloadStream handleURI(URL context,
+				private static final long serialVersionUID = 1L;
+
+					public DownloadStream handleURI(URL context,
 			                                        String relativeUri) {
 			            // Do something here
 			            System.out.println("handleURI=" + relativeUri);

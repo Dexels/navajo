@@ -7,7 +7,6 @@ import java.util.Map;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.tipi.TipiBreakException;
@@ -15,7 +14,6 @@ import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.Table;
 
 public class TipiTable extends TipiVaadinComponentImpl {
@@ -33,6 +31,8 @@ public class TipiTable extends TipiVaadinComponentImpl {
 		table.setImmediate(true);
 		table.addListener(new Table.ValueChangeListener() {
 			
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void valueChange(ValueChangeEvent event) {
 				

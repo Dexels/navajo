@@ -3,7 +3,6 @@ package com.dexels.navajo.tipi.vaadin.components;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
-import com.vaadin.terminal.Resource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;

@@ -4,13 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.tipi.components.core.TipiComponentImpl;
 import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
 import com.dexels.navajo.tipi.vaadin.VaadinTipiContext;
 import com.dexels.navajo.tipi.vaadin.application.TipiVaadinApplication;
-import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.StreamResource;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -58,7 +55,7 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 	}
 	
 	protected void addToVaadinContainer(ComponentContainer currentContainer, Component component, Object constraints) {
-		currentContainer.addComponent((Component) component);
+		currentContainer.addComponent(component);
 		
 	}
 	

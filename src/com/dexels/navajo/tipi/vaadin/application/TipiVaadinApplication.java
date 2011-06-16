@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi.vaadin.application;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
@@ -49,20 +48,12 @@ public class TipiVaadinApplication extends Application implements
 
 	private void checkForExtensions() {
 		File extensions = new File(getInstallationFolder(),"extensions");
-		File[] list =extensions.listFiles(new FilenameFilter() {
-			
-			@Override
-			public boolean accept(File dir, String name) {
-				return name.endsWith(".jar");
-			}
-		});
-		System.err.println("FIles #"+list.length);
-		for (File file : list) {
-			TipiVaadinExtension.getInstance().installExtension(file);
-		}
+		TipiVaadinExtension.getInstance().installAllExtensions(extensions);
 		
-		
+//		installAllExtensions(TipiVaadinExtension.getInstance().getBundleContext(),extensions);
 	}
+
+	
 
 	@Override
 	public TipiContext getCurrentContext() {

@@ -1,8 +1,5 @@
 package com.dexels.navajo.tipi.vaadin.components;
 
-import com.dexels.navajo.tipi.TipiBreakException;
-import com.dexels.navajo.tipi.TipiComponentMethod;
-import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Component;

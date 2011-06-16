@@ -8,9 +8,6 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-
-
-
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
 import com.dexels.navajo.tipi.vaadin.components.grid.GridLayoutData;
@@ -249,7 +246,7 @@ public class TipiGridPanel extends TipiVaadinComponentImpl {
 
 	    private boolean isOccupied(int x, int y) {
 	        for (Iterator<Coordinate> iter = availabilityMatrix.iterator(); iter.hasNext();) {
-	            Coordinate element = (Coordinate) iter.next();
+	            Coordinate element = iter.next();
 	            if (element.equals(new Coordinate(x, y))) {
 	                return true;
 	            }

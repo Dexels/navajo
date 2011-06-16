@@ -1,14 +1,8 @@
 package tipi;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.LinkedList;
-import java.util.List;
 
-import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +18,10 @@ public class TipiVaadinExtension extends TipiAbstractXMLExtension implements Tip
 	private BundleContext context;
 	
 	
+	public BundleContext getBundleContext() {
+		return context;
+	}
+
 	public TipiVaadinExtension() throws XMLParseException,
 			IOException {
 		loadDescriptor();
@@ -33,6 +31,7 @@ public class TipiVaadinExtension extends TipiAbstractXMLExtension implements Tip
 	@Override
 	public void start(BundleContext context) throws Exception {
 		this.context = context;
+		logger.info("Registering VAADIN ");
 		registerTipiExtension(context);
 		
 	}
@@ -57,27 +56,4 @@ public class TipiVaadinExtension extends TipiAbstractXMLExtension implements Tip
 //		extensionContext = context;
 //	}
 
-	public void installExtension(File library) {
-		List<Bundle> loaded = new LinkedList<Bundle>();
-		try {
-			Bundle b = context.installBundle(library.toURI().toURL().toString());
-			logger.info("Bundle: "+b.getSymbolicName()+" id: "+b.getBundleId()+" loaded succesfully.");
-			loaded.add(b);
-		} catch (MalformedURLException e) {
-			logger.error("Bundle could not be loaded. Path invalid: "+library,e);
-//			e.printStackTrace();
-		} catch (BundleException e) {
-//			e.printStackTrace();
-			logger.error("Bundle with path: "+library+" could not be loaded.",e);
-		}
-		for (Bundle b : loaded) {
-			try {
-				b.start();
-				logger.info("Bundle: "+b.getSymbolicName()+" id: "+b.getBundleId()+" started succesfully.");
-			} catch (BundleException e) {
-				e.printStackTrace();
-				logger.error("Bundle: "+b.getSymbolicName()+" id: "+b.getBundleId()+" could not start.",e);
-			}
-		}
-	}
 }

@@ -1,8 +1,8 @@
 package com.dexels.navajo.tipi.vaadin.layout;
 
 
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.core.*;
+import com.dexels.navajo.tipi.TipiValue;
+import com.dexels.navajo.tipi.components.core.TipiLayoutImpl;
 import com.vaadin.ui.VerticalLayout;
 
 /**
