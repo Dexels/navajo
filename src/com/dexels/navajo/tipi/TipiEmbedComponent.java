@@ -6,16 +6,23 @@
  */
 package com.dexels.navajo.tipi;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.util.List;
 
 import navajo.ExtensionDefinition;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.types.*;
-import com.dexels.navajo.tipi.components.core.*;
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
+import com.dexels.navajo.tipi.internal.TipiEvent;
+import com.dexels.navajo.tipi.internal.TmlResourceLoader;
+import com.dexels.navajo.tipi.internal.ZipResourceLoader;
 
 public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 

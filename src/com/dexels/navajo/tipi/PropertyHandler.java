@@ -1,9 +1,10 @@
 package com.dexels.navajo.tipi;
 
-import java.beans.*;
-import java.util.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Set;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Property;
 
 public class PropertyHandler implements PropertyChangeListener {
 	

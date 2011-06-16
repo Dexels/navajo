@@ -1,11 +1,17 @@
 package com.dexels.navajo.tipi.actions;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.Map;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.internal.*;
-import com.dexels.navajo.tipi.tipixml.*;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.TipiValue;
+import com.dexels.navajo.tipi.internal.TipiAction;
+import com.dexels.navajo.tipi.internal.TipiEvent;
+import com.dexels.navajo.tipi.tipixml.CaseSensitiveXMLElement;
+import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 /**
  * <p>

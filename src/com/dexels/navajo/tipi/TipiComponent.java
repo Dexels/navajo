@@ -1,10 +1,17 @@
 package com.dexels.navajo.tipi;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.internal.*;
-import com.dexels.navajo.tipi.tipixml.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.tipi.internal.AttributeRef;
+import com.dexels.navajo.tipi.internal.PropertyComponent;
+import com.dexels.navajo.tipi.internal.TipiAction;
+import com.dexels.navajo.tipi.internal.TipiEvent;
+import com.dexels.navajo.tipi.internal.TipiLayout;
+import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 /**
  * <p>

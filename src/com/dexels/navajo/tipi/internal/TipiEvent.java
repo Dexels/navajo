@@ -1,10 +1,21 @@
 package com.dexels.navajo.tipi.internal;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.Stack;
 
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.tipixml.*;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.TipiEventListener;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.TipiExecutable;
+import com.dexels.navajo.tipi.TipiValue;
+import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 /**
  * <p>

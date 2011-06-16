@@ -1,12 +1,29 @@
 package com.dexels.navajo.tipi;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.jaxpimpl.xml.*;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 
 public class TipiScanner {
 

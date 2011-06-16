@@ -1,9 +1,15 @@
 package com.dexels.navajo.tipi.actions;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.tipi.internal.TipiAction;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 
 /**
  * <p>

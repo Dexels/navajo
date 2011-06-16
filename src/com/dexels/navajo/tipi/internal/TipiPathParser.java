@@ -1,14 +1,20 @@
 package com.dexels.navajo.tipi.internal;
 
-import java.awt.*;
-import java.net.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.StringTokenizer;
 
-import javax.swing.*;
-import javax.swing.border.*;
+import javax.swing.BorderFactory;
+import javax.swing.border.Border;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.TipiDataComponent;
 
 /**
  * <p>

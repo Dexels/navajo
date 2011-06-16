@@ -1,12 +1,17 @@
 package com.dexels.navajo.tipi.extension;
 
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 
-import tipi.*;
+import tipi.TipiExtension;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.connectors.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.connectors.TipiConnector;
 
 public class ExtensionManager {
 	public static void addExtensionMessage(TipiContext tc, Navajo parent, List<TipiExtension> extensionList, String name)

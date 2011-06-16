@@ -1,7 +1,8 @@
 package com.dexels.navajo.tipi.internal;
 
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 public class TmlResourceLoader extends ClassPathResourceLoader {
 

@@ -1,9 +1,13 @@
 package com.dexels.navajo.tipi.headless;
 
 import java.net.MalformedURLException;
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
 
-import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.internal.BaseTipiErrorHandler;
 
 public class HeadlessTipiContext extends TipiContext {

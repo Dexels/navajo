@@ -1,9 +1,11 @@
 package com.dexels.navajo.tipi.internal;
 
-import java.io.*;
+import java.io.File;
 
-import com.dexels.navajo.tipi.internal.cache.*;
-import com.dexels.navajo.tipi.internal.cache.impl.*;
+import com.dexels.navajo.tipi.internal.cache.CacheManager;
+import com.dexels.navajo.tipi.internal.cache.impl.FileLocalStorage;
+import com.dexels.navajo.tipi.internal.cache.impl.FileRemoteStorage;
+import com.dexels.navajo.tipi.internal.cache.impl.GeneralCacheManager;
 
 public class CachedFileResourceLoader extends CachedResourceLoader {
 

@@ -1,9 +1,10 @@
 package com.dexels.navajo.tipi.internal;
 
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.tipi.TipiContext;
 
 public class RemoteDescriptionProvider extends BaseDescriptionProvider {
 

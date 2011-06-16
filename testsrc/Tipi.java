@@ -1,10 +1,10 @@
+import junit.framework.Test;
+import junit.framework.TestSuite;
 import tests.cascadinglisteners.CascadingListeners;
 import tests.cascadinglisteners.NonCascadingListeners;
 import tests.core.CoreTipi;
 import tests.eventinject.EventInjectTipi;
 import tests.instantiateDispose.InstantiateDisposeTipi;
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
 public class Tipi {
 

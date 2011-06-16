@@ -1,10 +1,12 @@
 package com.dexels.navajo.tipi.internal;
 
-import java.io.*;
-import java.net.*;
+import java.io.File;
+import java.net.URL;
 
-import com.dexels.navajo.tipi.internal.cache.*;
-import com.dexels.navajo.tipi.internal.cache.impl.*;
+import com.dexels.navajo.tipi.internal.cache.CacheManager;
+import com.dexels.navajo.tipi.internal.cache.impl.FileLocalStorage;
+import com.dexels.navajo.tipi.internal.cache.impl.GeneralCacheManager;
+import com.dexels.navajo.tipi.internal.cache.impl.HttpRemoteStorage;
 
 public class CachedHttpResourceLoader extends CachedResourceLoader {
 

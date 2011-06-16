@@ -1,13 +1,23 @@
 package com.dexels.navajo.tipi.components.question;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.actions.*;
-import com.dexels.navajo.tipi.components.core.*;
-import com.dexels.navajo.tipi.internal.*;
-import com.dexels.navajo.tipi.tipixml.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.TipiDataComponent;
+import com.dexels.navajo.tipi.TipiEventListener;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.TipiExecutable;
+import com.dexels.navajo.tipi.actions.TipiInstantiateTipi;
+import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
+import com.dexels.navajo.tipi.internal.PropertyComponent;
+import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 /**
  * <p>

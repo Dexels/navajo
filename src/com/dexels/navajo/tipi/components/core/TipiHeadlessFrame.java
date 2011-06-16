@@ -1,8 +1,9 @@
 package com.dexels.navajo.tipi.components.core;
 
 
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.tipixml.*;
+import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 /**
  * <p>

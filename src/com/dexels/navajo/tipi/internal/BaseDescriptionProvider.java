@@ -1,8 +1,9 @@
 package com.dexels.navajo.tipi.internal;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
-import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.TipiContext;
 
 public abstract class BaseDescriptionProvider implements DescriptionProvider {
 

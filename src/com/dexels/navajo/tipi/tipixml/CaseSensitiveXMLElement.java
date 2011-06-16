@@ -1,6 +1,6 @@
 package com.dexels.navajo.tipi.tipixml;
 
-import java.util.*;
+import java.util.Hashtable;
 
 public class CaseSensitiveXMLElement extends XMLElement {
 	/**

@@ -1,8 +1,12 @@
 package com.dexels.navajo.tipi.internal;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 public class HttpResourceLoader extends ClassPathResourceLoader {

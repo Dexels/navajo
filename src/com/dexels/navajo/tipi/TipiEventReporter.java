@@ -1,6 +1,6 @@
 package com.dexels.navajo.tipi;
 
-import java.util.*;
+import java.util.Map;
 
 public interface TipiEventReporter {
 

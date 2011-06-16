@@ -1,8 +1,9 @@
 package com.dexels.navajo.tipi.components.core.parsers;
 
-import com.dexels.navajo.document.types.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.TipiTypeParser;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 
 /**
  * <p>

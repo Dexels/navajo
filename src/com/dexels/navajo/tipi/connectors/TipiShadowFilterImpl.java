@@ -1,10 +1,16 @@
 package com.dexels.navajo.tipi.connectors;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.filter.*;
-import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.filter.PropertyFilter;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiException;
 
 /**
  * <p>

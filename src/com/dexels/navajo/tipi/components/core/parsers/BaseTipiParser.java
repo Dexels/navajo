@@ -1,9 +1,14 @@
 package com.dexels.navajo.tipi.components.core.parsers;
 
-import java.util.*;
+import java.util.StringTokenizer;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.TipiDataComponent;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.TipiTypeParser;
 
 abstract class BaseTipiParser extends TipiTypeParser {
 	private static final String TIPI_HOME_SYMBOL = "~";

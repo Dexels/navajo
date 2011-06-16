@@ -4,10 +4,11 @@
  */
 package com.dexels.navajo.functions;
 
-import java.io.*;
+import java.io.StringWriter;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.parser.*;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.parser.TMLExpressionException;
 
 /**
  * @author frank

@@ -1,7 +1,8 @@
 package com.dexels.navajo.tipi.internal;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.TipiEventListener;
 
 /**
  * <p>

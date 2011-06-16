@@ -1,8 +1,8 @@
 package tests.cascadinglisteners;
 
-import java.io.*;
+import java.io.File;
 
-import com.dexels.navajo.tipi.testimpl.*;
+import com.dexels.navajo.tipi.testimpl.AbstractTipiTest;
 
 
 public class CascadingListeners extends AbstractTipiTest {

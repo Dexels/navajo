@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi;
 
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.internal.TipiEvent;
+import com.dexels.navajo.tipi.internal.TipiStackElement;
 
 /**
  * <p>Title: </p>

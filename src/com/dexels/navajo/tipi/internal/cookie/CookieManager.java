@@ -1,6 +1,6 @@
 package com.dexels.navajo.tipi.internal.cookie;
 
-import java.io.*;
+import java.io.IOException;
 
 public interface CookieManager {
 	public String getCookie(String key);

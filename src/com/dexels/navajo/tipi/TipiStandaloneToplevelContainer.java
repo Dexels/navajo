@@ -6,11 +6,11 @@
  */
 package com.dexels.navajo.tipi;
 
-import java.io.*;
+import java.io.IOException;
 
 import navajo.ExtensionDefinition;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Navajo;
 
 public interface TipiStandaloneToplevelContainer {
 	// public void setResourceBaseDirectory(File f);

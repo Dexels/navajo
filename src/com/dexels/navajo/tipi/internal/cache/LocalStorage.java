@@ -1,7 +1,8 @@
 package com.dexels.navajo.tipi.internal.cache;
 
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.Map;
 
 public interface LocalStorage {

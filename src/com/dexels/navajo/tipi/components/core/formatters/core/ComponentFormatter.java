@@ -1,7 +1,7 @@
 package com.dexels.navajo.tipi.components.core.formatters.core;
 
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.core.*;
+import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.components.core.TipiFormatter;
 
 public class ComponentFormatter extends TipiFormatter {
 

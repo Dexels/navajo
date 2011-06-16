@@ -1,9 +1,20 @@
 package com.dexels.navajo.tipi.components.core;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
+import java.util.TreeMap;
 
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.TipiEventListener;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.TipiExecutable;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 
 /**
  * <p>

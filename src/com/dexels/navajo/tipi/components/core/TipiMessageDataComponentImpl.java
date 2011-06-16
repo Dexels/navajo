@@ -1,8 +1,12 @@
 package com.dexels.navajo.tipi.components.core;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.internal.MessageComponent;
+import com.dexels.navajo.tipi.internal.PropertyComponent;
 
 public abstract class TipiMessageDataComponentImpl extends TipiDataComponentImpl implements MessageComponent {
 

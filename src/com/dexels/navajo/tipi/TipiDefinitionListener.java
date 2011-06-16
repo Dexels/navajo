@@ -1,6 +1,6 @@
 package com.dexels.navajo.tipi;
 
-import com.dexels.navajo.tipi.tipixml.*;
+import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 /**
  * <p>

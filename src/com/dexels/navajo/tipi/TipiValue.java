@@ -1,9 +1,15 @@
 package com.dexels.navajo.tipi;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.tipixml.*;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.tipi.tipixml.CaseSensitiveXMLElement;
+import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 /**
  * <p>

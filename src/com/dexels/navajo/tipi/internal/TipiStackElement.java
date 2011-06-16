@@ -1,6 +1,6 @@
 package com.dexels.navajo.tipi.internal;
 
-import com.dexels.navajo.tipi.tipixml.*;
+import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 public class TipiStackElement {
 	private String title;

@@ -1,6 +1,6 @@
 package com.dexels.navajo.tipi.validation;
 
-import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.TipiComponent;
 
 public class TipiValidationManager {
 	public boolean validateComponentTree(TipiComponent tc) {

@@ -1,11 +1,14 @@
 package com.dexels.navajo.tipi.internal.cache.impl;
 
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.dexels.navajo.tipi.internal.cache.*;
+import com.dexels.navajo.tipi.internal.cache.CacheManager;
+import com.dexels.navajo.tipi.internal.cache.LocalStorage;
+import com.dexels.navajo.tipi.internal.cache.RemoteStorage;
 
 public class GeneralCacheManager implements CacheManager {
 

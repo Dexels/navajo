@@ -1,9 +1,10 @@
 package tests.eventinject;
 
-import java.io.*;
+import java.io.File;
 
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.testimpl.*;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.testimpl.AbstractTipiTest;
 
 
 public class EventInjectTipi extends AbstractTipiTest {

@@ -1,9 +1,11 @@
 package com.dexels.navajo.tipi.components.core.parsers;
 
-import java.net.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.TipiTypeParser;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 
 /**
  * <p>

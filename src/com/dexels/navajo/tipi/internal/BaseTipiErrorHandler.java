@@ -1,10 +1,18 @@
 package com.dexels.navajo.tipi.internal;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.MissingResourceException;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.TipiErrorHandler;
 
 //import com.dexels.navajo.document.nanoimpl.*;
 /**

@@ -1,8 +1,6 @@
 package com.dexels.navajo.tipi;
 
-import com.dexels.navajo.tipi.TipiComponent;
-import com.dexels.navajo.tipi.TipiContext;
-import com.dexels.navajo.tipi.components.core.*;
+import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
 
 /**
  * <p>

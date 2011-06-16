@@ -1,9 +1,10 @@
 package com.dexels.navajo.tipi.internal;
 
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
-import com.dexels.navajo.tipi.internal.cache.*;
+import com.dexels.navajo.tipi.internal.cache.CacheManager;
 
 public abstract class CachedResourceLoader extends ClassPathResourceLoader {
 

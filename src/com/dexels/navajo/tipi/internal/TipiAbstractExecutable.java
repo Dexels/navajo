@@ -1,11 +1,20 @@
 package com.dexels.navajo.tipi.internal;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.parser.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.tipixml.*;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.parser.Expression;
+import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.TipiExecutable;
+import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 public abstract class TipiAbstractExecutable implements TipiExecutable {
 	private TipiEvent myEvent = null;

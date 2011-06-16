@@ -1,10 +1,13 @@
 package com.dexels.navajo.tipi.internal.cache.impl;
 
-import java.io.*;
-import java.net.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.Map;
 
-import com.dexels.navajo.tipi.internal.cache.*;
+import com.dexels.navajo.tipi.internal.cache.RemoteStorage;
 
 public class FileRemoteStorage implements RemoteStorage {
 	private File base = null;

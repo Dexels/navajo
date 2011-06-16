@@ -1,9 +1,12 @@
 package com.dexels.navajo.tipi.components.core;
 
-import java.util.*;
+import java.util.Stack;
 
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.TipiEventListener;
+import com.dexels.navajo.tipi.TipiExecutable;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 
 /**
  * <p>

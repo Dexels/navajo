@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.components.core.impl;
 
-import java.beans.*;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 // emmm, I think this thing is a bit odd, because it hardly does ANYthing
 public class ShadowFilter {

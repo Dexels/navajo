@@ -1,10 +1,17 @@
 package com.dexels.navajo.tipi.internal.cache.impl;
 
-import java.io.*;
-import java.net.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
 import java.util.Map;
 
-import com.dexels.navajo.tipi.internal.cache.*;
+import com.dexels.navajo.tipi.internal.cache.LocalStorage;
 
 public class FileLocalStorage implements LocalStorage {
 

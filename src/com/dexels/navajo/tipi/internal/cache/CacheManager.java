@@ -1,7 +1,8 @@
 package com.dexels.navajo.tipi.internal.cache;
 
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 public interface CacheManager {
 	public boolean hasLocal(String location) throws IOException;
