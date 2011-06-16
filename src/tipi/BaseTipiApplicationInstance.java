@@ -11,12 +11,10 @@ import java.util.NoSuchElementException;
 import java.util.PropertyResourceBundle;
 import java.util.StringTokenizer;
 
-import navajo.ExtensionDefinition;
-
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 
-public abstract class BaseTipiApplicationInstance implements TipiApplicationInstance {
+abstract class BaseTipiApplicationInstance implements TipiApplicationInstance {
 
 	private TipiContext currentContext;
 
@@ -84,7 +82,6 @@ public abstract class BaseTipiApplicationInstance implements TipiApplicationInst
 			}
 			index++;
 		}
-		System.err.println("Result: "+result);
 		return result;
 	}
 
