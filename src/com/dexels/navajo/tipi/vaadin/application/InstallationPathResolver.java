@@ -9,7 +9,7 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
-public class InstallationPathResolver {
+class InstallationPathResolver {
 
 	public static String getInstallationPath(ServletContext context) {
 		String force = context.getInitParameter("forcedTipiPath");
