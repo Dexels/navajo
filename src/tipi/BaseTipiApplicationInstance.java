@@ -14,7 +14,7 @@ import java.util.StringTokenizer;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 
-abstract class BaseTipiApplicationInstance implements TipiApplicationInstance {
+public abstract class BaseTipiApplicationInstance implements TipiApplicationInstance {
 
 	private TipiContext currentContext;
 
