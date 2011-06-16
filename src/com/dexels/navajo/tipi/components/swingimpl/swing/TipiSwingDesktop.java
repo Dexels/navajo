@@ -1,14 +1,19 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
-import java.awt.*;
-import java.io.*;
-import java.net.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Paint;
+import java.io.IOException;
+import java.net.URL;
 
-import javax.imageio.*;
-import javax.swing.*;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JDesktopPane;
 
-import com.dexels.navajo.document.types.*;
-import com.dexels.navajo.tipi.components.swingimpl.parsers.*;
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.tipi.components.swingimpl.parsers.TipiGradientPaint;
 
 /**
  * <p>
@@ -28,6 +33,10 @@ import com.dexels.navajo.tipi.components.swingimpl.parsers.*;
  * @version 1.0
  */
 public class TipiSwingDesktop extends JDesktopPane {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1844621625721636742L;
 	private static final String ALIGNMENT = "alignment";
 	private static final String PAINT = "paint";
 	private Image myImage = null;
@@ -46,16 +55,16 @@ public class TipiSwingDesktop extends JDesktopPane {
 	private TipiGradientPaint paint = null;
 
 	public TipiSwingDesktop() {
-		
+
 	}
 
 	public void setLogoUrl(Object o) {
 		ImageIcon imageIcon = getIcon(o);
-		if(imageIcon!=null) {
+		if (imageIcon != null) {
 			myImage = imageIcon.getImage();
 		}
 	}
-	
+
 	public int getHeight() {
 		return super.getHeight();
 	}
@@ -64,26 +73,26 @@ public class TipiSwingDesktop extends JDesktopPane {
 		return super.getWidth();
 	}
 
-	
 	protected ImageIcon getIcon(Object u) {
-		 if(u==null) {
-			 return null;
-		 }
-		 if(u instanceof URL) {
-			   return new ImageIcon((URL) u);
-		 }
-		 if(u instanceof Binary) {
-			 Image i;
+		if (u == null) {
+			return null;
+		}
+		if (u instanceof URL) {
+			return new ImageIcon((URL) u);
+		}
+		if (u instanceof Binary) {
+			Image i;
 			try {
 				i = ImageIO.read(((Binary) u).getDataAsStream());
-				 ImageIcon ii = new ImageIcon(i);
-				 return ii;
+				ImageIcon ii = new ImageIcon(i);
+				return ii;
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		 }
-		 return null;
-	  }
+		}
+		return null;
+	}
+
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		if (paint != null) {
@@ -101,29 +110,42 @@ public class TipiSwingDesktop extends JDesktopPane {
 				g.drawImage(myImage, 0, 0, this);
 			}
 			if (NORTH.equals(alignment)) {
-				g.drawImage(myImage, ((getWidth() / 2) - (myImage.getWidth(this) / 2)), 0, this);
+				g.drawImage(myImage,
+						((getWidth() / 2) - (myImage.getWidth(this) / 2)), 0,
+						this);
 			}
 			if (NORTHEAST.equals(alignment)) {
-				g.drawImage(myImage, getWidth() - myImage.getWidth(this), 0, this);
+				g.drawImage(myImage, getWidth() - myImage.getWidth(this), 0,
+						this);
 			}
 			if (WEST.equals(alignment)) {
-				g.drawImage(myImage, 0, ((getHeight() / 2) - (myImage.getHeight(this) / 2)), this);
+				g.drawImage(myImage, 0,
+						((getHeight() / 2) - (myImage.getHeight(this) / 2)),
+						this);
 			}
 			if (CENTER.equals(alignment)) {
-				g.drawImage(myImage, ((getWidth() / 2) - (myImage.getWidth(this) / 2)),
-						((getHeight() / 2) - (myImage.getHeight(this) / 2)), this);
+				g.drawImage(myImage,
+						((getWidth() / 2) - (myImage.getWidth(this) / 2)),
+						((getHeight() / 2) - (myImage.getHeight(this) / 2)),
+						this);
 			}
 			if (EAST.equals(alignment)) {
-				g.drawImage(myImage, getWidth() - myImage.getWidth(this), ((getHeight() / 2) - (myImage.getHeight(this) / 2)), this);
+				g.drawImage(myImage, getWidth() - myImage.getWidth(this),
+						((getHeight() / 2) - (myImage.getHeight(this) / 2)),
+						this);
 			}
 			if (SOUTHWEST.equals(alignment)) {
-				g.drawImage(myImage, 0, getHeight() - myImage.getHeight(this), this);
+				g.drawImage(myImage, 0, getHeight() - myImage.getHeight(this),
+						this);
 			}
 			if (SOUTH.equals(alignment)) {
-				g.drawImage(myImage, ((getWidth() / 2) - (myImage.getWidth(this) / 2)), getHeight() - myImage.getHeight(this), this);
+				g.drawImage(myImage,
+						((getWidth() / 2) - (myImage.getWidth(this) / 2)),
+						getHeight() - myImage.getHeight(this), this);
 			}
 			if (SOUTHEAST.equals(alignment)) {
-				g.drawImage(myImage, getWidth() - myImage.getWidth(this), getHeight() - myImage.getHeight(this), this);
+				g.drawImage(myImage, getWidth() - myImage.getWidth(this),
+						getHeight() - myImage.getHeight(this), this);
 			}
 		}
 		Color old = g.getColor();

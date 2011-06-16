@@ -1,16 +1,23 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Cursor;
+import java.awt.LayoutManager;
+import java.awt.Paint;
+import java.awt.event.MouseEvent;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.JPopupMenu;
+import javax.swing.JRootPane;
 
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.core.*;
-import com.dexels.navajo.tipi.components.swingimpl.parsers.*;
-import com.dexels.navajo.tipi.internal.*;
-import com.dexels.navajo.tipi.tipixml.*;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.TipiExecutable;
+import com.dexels.navajo.tipi.components.core.TipiComponentImpl;
+import com.dexels.navajo.tipi.components.swingimpl.parsers.TipiGradientPaint;
+import com.dexels.navajo.tipi.internal.TipiEvent;
+import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 /**
  * <p>
@@ -29,22 +36,26 @@ import com.dexels.navajo.tipi.tipixml.*;
  * @author not attributable
  * @version 1.0
  */
-public abstract class TipiSwingComponentImpl extends TipiComponentImpl implements TipiSwingComponent {
+public abstract class TipiSwingComponentImpl extends TipiComponentImpl
+		implements TipiSwingComponent {
 	protected TipiGradientPaint myPaint;
 	protected TipiPopupMenu myPopupMenu = null;
 	// private boolean committedInUI;
 	protected SwingTipiContext mySwingTipiContext;
 
 	public void showPopup(MouseEvent e) {
-		((JPopupMenu) myPopupMenu.getSwingContainer()).show(getSwingContainer(), e.getX(), e.getY());
+		((JPopupMenu) myPopupMenu.getSwingContainer()).show(
+				getSwingContainer(), e.getX(), e.getY());
 	}
 
-	public void setWaitCursor(final boolean b,final JRootPane root) {
+	public void setWaitCursor(final boolean b, final JRootPane root) {
 		runSyncInEventThread(new Runnable() {
 
 			public void run() {
 				if (root != null) {
-					root.setCursor(b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
+					root.setCursor(b ? Cursor
+							.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor
+							.getDefaultCursor());
 				}
 			}
 		});
@@ -58,7 +69,6 @@ public abstract class TipiSwingComponentImpl extends TipiComponentImpl implement
 	public TipiGradientPaint getPaint() {
 		return myPaint;
 	}
-
 
 	public void initContainer() {
 		mySwingTipiContext = (SwingTipiContext) myContext;
@@ -99,12 +109,15 @@ public abstract class TipiSwingComponentImpl extends TipiComponentImpl implement
 		});
 	}
 
-
-	public void animateTransition(TipiEvent te, TipiExecutable executableParent, List<TipiExecutable> exe, int duration) throws TipiBreakException {
-		mySwingTipiContext.animateDefaultTransition(this, te, executableParent, getSwingContainer(), exe,duration);
+	public void animateTransition(TipiEvent te,
+			TipiExecutable executableParent, List<TipiExecutable> exe,
+			int duration) throws TipiBreakException {
+		mySwingTipiContext.animateDefaultTransition(this, te, executableParent,
+				getSwingContainer(), exe, duration);
 	}
 
-	protected void loadValues(final XMLElement values, final TipiEvent event) throws TipiException {
+	protected void loadValues(final XMLElement values, final TipiEvent event)
+			throws TipiException {
 		runSyncInEventThread(new Runnable() {
 
 			public void run() {
@@ -127,10 +140,12 @@ public abstract class TipiSwingComponentImpl extends TipiComponentImpl implement
 		});
 	}
 
-	protected void doCallSetter(final Object component, final String propertyName, final Object param) {
+	protected void doCallSetter(final Object component,
+			final String propertyName, final Object param) {
 		runSyncInEventThread(new Runnable() {
 			public void run() {
-				TipiSwingComponentImpl.super.doCallSetter(component, propertyName, param);
+				TipiSwingComponentImpl.super.doCallSetter(component,
+						propertyName, param);
 			}
 		});
 	}

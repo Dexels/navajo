@@ -8,27 +8,62 @@ package com.dexels.navajo.tipi.components.swingimpl;
  * @author not attributable
  * @version 1.0();
  */
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.Point;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
 
-import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.event.*;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.types.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
-import com.dexels.navajo.tipi.internal.*;
-import com.dexels.navajo.tipi.swingclient.components.*;
-import com.dexels.navajo.tipi.tipixml.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiComponentMethod;
+import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.components.swingimpl.swing.ConditionalRemark;
+import com.dexels.navajo.tipi.components.swingimpl.swing.MessageTableFooterRenderer;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiMessageTablePanel;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingColumnAttributeParser;
+import com.dexels.navajo.tipi.internal.TipiEvent;
+import com.dexels.navajo.tipi.swingclient.components.ColumnAttribute;
+import com.dexels.navajo.tipi.swingclient.components.MessageTableModel;
+import com.dexels.navajo.tipi.swingclient.components.MessageTablePanel;
+import com.dexels.navajo.tipi.tipixml.XMLElement;
 
-public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListener {
+public class TipiTable extends TipiSwingDataComponentImpl implements
+		ChangeListener {
 	private String messagePath = "";
-	private  MessageTablePanel mm;
+	private MessageTablePanel mm;
 	private Map<String, ColumnAttribute> columnAttributes = new HashMap<String, ColumnAttribute>();
 
 	private final Map<Integer, Integer> columnSize = new HashMap<Integer, Integer>();
@@ -41,100 +76,104 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 	private String remarkBorder = null;
 
 	private Message columnMessage = null;
-	
+
 	// use with care. Here for threading probs
 	private int selectedMessageIndex = -1;
 	private List<XMLElement> columnList = new ArrayList<XMLElement>();
 
 	public Object createContainer() {
-		 mm = new TipiMessageTablePanel(myContext,this);
+		mm = new TipiMessageTablePanel(myContext, this);
 		mm.setShowRowHeaders(false);
 		// Don't register actionPerformed, that is done elsewhere.
 		mm.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
-				if(!e.getValueIsAdjusting()){
+				if (!e.getValueIsAdjusting()) {
 					messageTableSelectionChanged(e);
-					getAttributeProperty("selectedMessage").setAnyValue(mm.getSelectedMessage());
+					getAttributeProperty("selectedMessage").setAnyValue(
+							mm.getSelectedMessage());
 				}
 			}
 		});
 		mm.setFocusable(false);
-		mm.addFocusListener(new FocusListener(){
+		mm.addFocusListener(new FocusListener() {
 
 			public void focusGained(FocusEvent e) {
-				if(e.getOppositeComponent()!=null) {
+				if (e.getOppositeComponent() != null) {
 				}
 			}
 
 			public void focusLost(FocusEvent e) {
-				if(e.getOppositeComponent()!=null) {
+				if (e.getOppositeComponent() != null) {
 
 				}
-			}});
-			
-		mm.addChangeListener(this);
-//		TipiHelper th = new TipiSwingHelper();
-//		th.initHelper(this);
-//		addHelper(th);
+			}
+		});
 
-		mm.addActionListener(new ActionListener(){
+		mm.addChangeListener(this);
+		// TipiHelper th = new TipiSwingHelper();
+		// th.initHelper(this);
+		// addHelper(th);
+
+		mm.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				messageTableActionPerformed(e);
-			}});
-		
-		
-		   mm.getTable().addKeyListener(new KeyListener() {
-		        public void keyTyped(KeyEvent e) {
-		            Map<String,Object> m = getEventMap(e);
-		            m.put("mode", "typed");
-		           
-		            try {
-		                performTipiEvent("onKey", m, true);
-		            } catch (TipiException e1) {
-		                e1.printStackTrace();
-		            }
-		        }
+			}
+		});
 
-		        public void keyPressed(KeyEvent e) {
-		            Map<String,Object> m = getEventMap(e);
-		            m.put("mode", "pressed");
-		            if (e.getKeyCode()==KeyEvent.VK_ENTER) {
-		                try {
-		                System.err.println("Enterrrr!");
-//		              Consume is important, otherwise selection will be changed.
+		mm.getTable().addKeyListener(new KeyListener() {
+			public void keyTyped(KeyEvent e) {
+				Map<String, Object> m = getEventMap(e);
+				m.put("mode", "typed");
+
+				try {
+					performTipiEvent("onKey", m, true);
+				} catch (TipiException e1) {
+					e1.printStackTrace();
+				}
+			}
+
+			public void keyPressed(KeyEvent e) {
+				Map<String, Object> m = getEventMap(e);
+				m.put("mode", "pressed");
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					try {
+						System.err.println("Enterrrr!");
+						// Consume is important, otherwise selection will be
+						// changed.
 						e.consume();
-		                performTipiEvent("onEnter", m, true);
-		                } catch (TipiException e1) {
-		                    e1.printStackTrace();
-		                }
+						performTipiEvent("onEnter", m, true);
+					} catch (TipiException e1) {
+						e1.printStackTrace();
 					}
-		            try {
-		                performTipiEvent("onKey", m, true);
-		            } catch (TipiException e1) {
-		                e1.printStackTrace();
-		            }
-		        }
+				}
+				try {
+					performTipiEvent("onKey", m, true);
+				} catch (TipiException e1) {
+					e1.printStackTrace();
+				}
+			}
 
-		        public void keyReleased(KeyEvent e) {
-		        	Map<String,Object> m = getEventMap(e);
-		            m.put("mode", "released");
+			public void keyReleased(KeyEvent e) {
+				Map<String, Object> m = getEventMap(e);
+				m.put("mode", "released");
 
-		            try {
-		                performTipiEvent("onKey", m, true);
-		            } catch (TipiException e1) {
-		                e1.printStackTrace();
-		            }
-		        }
-		        
-		        public Map<String,Object> getEventMap(KeyEvent e) {
-		            Map<String,Object> hm = new HashMap<String,Object>();
-		            hm.put("code", new Integer(e.getKeyCode()));
-		            hm.put("modifiers", KeyEvent.getKeyModifiersText(e.getModifiers()));
-		            hm.put("key", KeyEvent.getKeyText(e.getKeyCode()));
-		            return hm;
-		        }
-		    });
+				try {
+					performTipiEvent("onKey", m, true);
+				} catch (TipiException e1) {
+					e1.printStackTrace();
+				}
+			}
+
+			public Map<String, Object> getEventMap(KeyEvent e) {
+				Map<String, Object> hm = new HashMap<String, Object>();
+				hm.put("code", new Integer(e.getKeyCode()));
+				hm.put("modifiers",
+						KeyEvent.getKeyModifiersText(e.getModifiers()));
+				hm.put("key", KeyEvent.getKeyText(e.getKeyCode()));
+				return hm;
+			}
+		});
 		mm.doLayout();
 		return mm;
 	}
@@ -142,22 +181,23 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 	@Override
 	public void showPopup(MouseEvent e) {
 		Point p = e.getPoint();
-		 System.err.println("TablePopup: "+p);
+		System.err.println("TablePopup: " + p);
 		// get the row index that contains that coordinate
-		int rowNumber = mm.getTable().rowAtPoint( p );
+		int rowNumber = mm.getTable().rowAtPoint(p);
 		mm.setSelectedRow(rowNumber);
 		// Get the ListSelectionModel of the JTable
-//		ListSelectionModel model = table.getSelectionModel();
+		// ListSelectionModel model = table.getSelectionModel();
 
 		// set the selected interval of rows. Using the "rowNumber"
 		// variable for the beginning and end selects only that one row.
-	//	model.setSelectionInterval( rowNumber, rowNumber );
+		// model.setSelectionInterval( rowNumber, rowNumber );
 
 		super.showPopup(e);
 	}
 
-	public final void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
-//		mm = (MessageTablePanel) getContainer();
+	public final void load(XMLElement elm, XMLElement instance,
+			TipiContext context) throws com.dexels.navajo.tipi.TipiException {
+		// mm = (MessageTablePanel) getContainer();
 		mm.removeAllColumns();
 		removeAllAggregate();
 		columnSize.clear();
@@ -166,33 +206,36 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 		messagePath = (String) elm.getAttribute("messagepath");
 		if (messagePath != null) {
 			if (messagePath.startsWith("'") && messagePath.endsWith("'")) {
-				messagePath = messagePath.substring(1, messagePath.length() - 1);
+				messagePath = messagePath
+						.substring(1, messagePath.length() - 1);
 			}
 		}
 		super.load(elm, instance, context);
-		
-		columnMessage = NavajoFactory.getInstance().createMessage(myContext.getStateNavajo(), "Columns",Message.MSG_TYPE_ARRAY);
+
+		columnMessage = NavajoFactory.getInstance().createMessage(
+				myContext.getStateNavajo(), "Columns", Message.MSG_TYPE_ARRAY);
 		getStateMessage().addMessage(columnMessage);
-		
+
 		List<XMLElement> children = elm.getChildren();
 		// int columnCount = 0;
-		
+
 		columnList.clear();
 		for (int i = 0; i < children.size(); i++) {
 			XMLElement child = children.get(i);
 			if (child.getName().equals("column")) {
 				columnList.add(child);
 				try {
-					loadColumn(i, child,columnMessage);
+					loadColumn(i, child, columnMessage);
 				} catch (NavajoException e) {
-					throw new TipiException("Error loading columns... ",e);
+					throw new TipiException("Error loading columns... ", e);
 				}
-			}			
-			
+			}
+
 			if (child.getName().equals("column-attribute")) {
 				String name = (String) child.getAttribute("name");
 				String type = (String) child.getAttribute("type");
-				if (name != null && type != null && !name.equals("") && !type.equals("")) {
+				if (name != null && type != null && !name.equals("")
+						&& !type.equals("")) {
 					columnAttributes.put(name, cap.parseAttribute(child));
 				}
 			}
@@ -201,11 +244,14 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 				List<XMLElement> remarks = child.getChildren();
 				for (int j = 0; j < remarks.size(); j++) {
 					XMLElement remark = remarks.get(j);
-					String condition = (String) remark.getAttribute("condition");
-					String remarkString = (String) remark.getAttribute("remark");
+					String condition = (String) remark
+							.getAttribute("condition");
+					String remarkString = (String) remark
+							.getAttribute("remark");
 					String colorString = (String) remark.getAttribute("color");
 					String fontString = (String) remark.getAttribute("font");
-					addConditionalRemark(remarkString, condition, colorString, fontString);
+					addConditionalRemark(remarkString, condition, colorString,
+							fontString);
 				}
 			}
 			if (child.getName().equals("columndivider")) {
@@ -217,13 +263,14 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 			}
 		}
 		mm.setColumnAttributes(columnAttributes);
-		runSyncInEventThread(new Runnable(){
+		runSyncInEventThread(new Runnable() {
 			public void run() {
 				mm.setFooterRenderer(myFooterRenderer);
-			}});
+			}
+		});
 	}
 
-	private  void reloadColumns() throws NavajoException {
+	private void reloadColumns() throws NavajoException {
 		mm.removeAllColumns();
 		columnCondition.clear();
 		List<Message> ss = columnMessage.getAllMessages();
@@ -233,13 +280,14 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 		int i = 0;
 
 		for (XMLElement child : columnList) {
-			
-			loadColumn(i++, child,columnMessage);
+
+			loadColumn(i++, child, columnMessage);
 		}
-		
+
 	}
 
-	private void loadColumn(int i, XMLElement child, Message columnArrayMessage) throws NavajoException {
+	private void loadColumn(int i, XMLElement child, Message columnArrayMessage)
+			throws NavajoException {
 		String label = (String) child.getAttribute("label");
 		String name = (String) child.getAttribute("name");
 		String editableString = (String) child.getAttribute("editable");
@@ -247,17 +295,20 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 		String condition = child.getStringAttribute("condition");
 		String typehint = child.getStringAttribute("typeHint");
 		int size = child.getIntAttribute("size", -1);
-		
-		Message columnMessage = NavajoFactory.getInstance().createMessage(myContext.getStateNavajo(), "Columns",Message.MSG_TYPE_ARRAY_ELEMENT);
+
+		Message columnMessage = NavajoFactory.getInstance().createMessage(
+				myContext.getStateNavajo(), "Columns",
+				Message.MSG_TYPE_ARRAY_ELEMENT);
 		columnArrayMessage.addMessage(columnMessage);
 
 		addProperty(columnMessage, "Label", label, Property.STRING_PROPERTY);
 		addProperty(columnMessage, "Name", name, Property.STRING_PROPERTY);
 		addProperty(columnMessage, "Aggregate", aggr, Property.STRING_PROPERTY);
 		addProperty(columnMessage, "Condition", aggr, Property.STRING_PROPERTY);
-		addProperty(columnMessage, "TypeHint", typehint, Property.STRING_PROPERTY);
+		addProperty(columnMessage, "TypeHint", typehint,
+				Property.STRING_PROPERTY);
 		addProperty(columnMessage, "Size", size, Property.INTEGER_PROPERTY);
-		
+
 		boolean editable = "true".equals(editableString);
 		// System.err.println("Putting size for column # "+columnCount+"
 		// to: "+size);
@@ -267,7 +318,8 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 		// System.err.println("Label to evaluate: "+labelString);
 
 		try {
-			Operand evalLabel = this.getContext().evaluate(labelString, this, null, null);
+			Operand evalLabel = this.getContext().evaluate(labelString, this,
+					null, null);
 			if (evalLabel != null) {
 
 				labelString = "" + evalLabel.value;
@@ -293,8 +345,8 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 			mm.setTypeHint(name, typehint);
 		}
 		if (aggr != null) {
-//			System.err.println("Adding agr: "+aggr+" col: "+i);
-//			Thread.dumpStack();
+			// System.err.println("Adding agr: "+aggr+" col: "+i);
+			// Thread.dumpStack();
 			addAggregate(i, aggr);
 		}
 		mm.messageChanged();
@@ -302,14 +354,16 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 
 	}
 
-//	 public void setColumnEditable(int columnIndex, boolean value) {
-//		 mm.setColumnEditable(columnIndex,value);
-//		 mm.fireDataChanged();
-//	 }	
-	 
-	private void addProperty(Message m, String name, Object value, String type) throws NavajoException {
+	// public void setColumnEditable(int columnIndex, boolean value) {
+	// mm.setColumnEditable(columnIndex,value);
+	// mm.fireDataChanged();
+	// }
+
+	private void addProperty(Message m, String name, Object value, String type)
+			throws NavajoException {
 		Navajo n = m.getRootDoc();
-		Property p = NavajoFactory.getInstance().createProperty(n, name, type, null, 0, null, Property.DIR_IN);
+		Property p = NavajoFactory.getInstance().createProperty(n, name, type,
+				null, 0, null, Property.DIR_IN);
 		p.setAnyValue(value);
 		m.addProperty(p);
 	}
@@ -319,9 +373,9 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 	}
 
 	public String[] getCustomChildTags() {
-		return new String[] { "column", "column-attribute", "remarks", "columndivider" };
+		return new String[] { "column", "column-attribute", "remarks",
+				"columndivider" };
 	}
-
 
 	public void messageTableSelectionChanged(ListSelectionEvent e) {
 		if (e.getValueIsAdjusting()) {
@@ -354,8 +408,9 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 	}
 
 	@Override
-	public void loadData(final Navajo n,final String method) throws TipiException, TipiBreakException {
-		
+	public void loadData(final Navajo n, final String method)
+			throws TipiException, TipiBreakException {
+
 		super.loadData(n, method);
 		runSyncInEventThread(new Runnable() {
 			public void run() {
@@ -377,20 +432,20 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 				runSyncInEventThread(new Runnable() {
 					public void run() {
 
-
-						// Hardcode it to true. If the component seems to work fine (check the output) set to false for a small (?)
+						// Hardcode it to true. If the component seems to work
+						// fine (check the output) set to false for a small (?)
 						// perf. gain.
 						boolean rowLoadEventFound = false;
 						int elementIndex = 0;
 						List<TipiEvent> list = getEventList();
 						for (TipiEvent tipiEvent : list) {
-							if("onRowLoad".equals( tipiEvent.getEventName())) {
+							if ("onRowLoad".equals(tipiEvent.getEventName())) {
 								rowLoadEventFound = true;
 							}
 						}
-						if(rowLoadEventFound) {
+						if (rowLoadEventFound) {
 							for (Message element : myMessage.getAllMessages()) {
-								
+
 								Map<String, Object> m = new HashMap<String, Object>();
 								m.put("service", method);
 								m.put("index", elementIndex);
@@ -407,7 +462,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 								}
 								elementIndex++;
 							}
-							
+
 						}
 						if (columnSize.size() == 0) {
 							mtp.createColumnsFromDef(m);
@@ -418,17 +473,15 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 						mtp.updateTableSize();
 						updateColumnVisibility();
 						mtp.updateColumnSizes();
-						if(selectedIndex<mtp.getRowCount()) {
+						if (selectedIndex < mtp.getRowCount()) {
 							mtp.setSelectedRow(selectedIndex);
 						}
-						
-						
+
 					}
 				});
 			}
 		}
 
-	    
 		Map<String, Object> m = new HashMap<String, Object>();
 		m.put("service", method);
 		m.put("navajo", n);
@@ -462,9 +515,11 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 	 * Overridden, to pervent automatically call perform the onload event.
 	 * (non-Javadoc)
 	 * 
-	 * @see com.dexels.navajo.tipi.components.core.TipiDataComponentImpl#doPerformOnLoad(java.lang.String)
+	 * @see
+	 * com.dexels.navajo.tipi.components.core.TipiDataComponentImpl#doPerformOnLoad
+	 * (java.lang.String)
 	 */
-	
+
 	@Override
 	protected void doPerformOnLoad(String method, Navajo n, boolean sync) {
 	}
@@ -472,92 +527,99 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 	public void setComponentValue(final String name, final Object object) {
 		runSyncInEventThread(new Runnable() {
 			public void run() {
-		if (name.equals("filtersvisible")) {
-			setFiltersVisible(Boolean.valueOf(object.toString()).booleanValue());
-		}
-		if (name.equals("visible")) {
-				mm.setVisible(Boolean.valueOf(object.toString()).booleanValue());
-		}
-		if (name.equals("hideColumn")) {
-			setColumnVisible(object.toString(), false);
-		}
-		if (name.equals("showColumn")) {
-			setColumnVisible(object.toString(), true);
-		}
-		if (name.equals("columnsvisible")) {
-			setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
-		}
-		if (name.equals("sortable")) {
-			mm.setSortingAllowed(Boolean.valueOf(object.toString()).booleanValue());
-		}
-		if (name.equals("headervisible")) {
-			setHeaderVisible(Boolean.valueOf(object.toString()).booleanValue());
-		}
-		if (name.equals("ignoreList")) {
-			setIgnoreList((List)object);
-		}
-		
-		if (name.equals("readOnly")) {
-			mm.setReadOnly(Boolean.valueOf(object.toString()).booleanValue());
-		}
-		if (name.equals("selectedIndex")) {
+				if (name.equals("filtersvisible")) {
+					setFiltersVisible(Boolean.valueOf(object.toString())
+							.booleanValue());
+				}
+				if (name.equals("visible")) {
+					mm.setVisible(Boolean.valueOf(object.toString())
+							.booleanValue());
+				}
+				if (name.equals("hideColumn")) {
+					setColumnVisible(object.toString(), false);
+				}
+				if (name.equals("showColumn")) {
+					setColumnVisible(object.toString(), true);
+				}
+				if (name.equals("columnsvisible")) {
+					setColumnsVisible(Boolean.valueOf(object.toString())
+							.booleanValue());
+				}
+				if (name.equals("sortable")) {
+					mm.setSortingAllowed(Boolean.valueOf(object.toString())
+							.booleanValue());
+				}
+				if (name.equals("headervisible")) {
+					setHeaderVisible(Boolean.valueOf(object.toString())
+							.booleanValue());
+				}
+				if (name.equals("ignoreList")) {
+					setIgnoreList((List) object);
+				}
+
+				if (name.equals("readOnly")) {
+					mm.setReadOnly(Boolean.valueOf(object.toString())
+							.booleanValue());
+				}
+				if (name.equals("selectedIndex")) {
 					selectedMessageIndex = ((Integer) object).intValue();
 					mm.setSelectedRow(selectedMessageIndex);
-			// setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
-		}
-		if (name.equals("selectedMessage")) {
+					// setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
+				}
+				if (name.equals("selectedMessage")) {
 					final Message m = ((Message) object);
 					mm.setSelectedMessage(m);
-			// setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
-		}
-		if (name.equals("rowHeight")) {
-			mm.setRowHeight(((Integer) object).intValue());
-		}
-		if (name.equals("showRowHeaders")) {
-			mm.setShowRowHeaders(((Boolean) object).booleanValue());
-		}
+					// setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
+				}
+				if (name.equals("rowHeight")) {
+					mm.setRowHeight(((Integer) object).intValue());
+				}
+				if (name.equals("showRowHeaders")) {
+					mm.setShowRowHeaders(((Boolean) object).booleanValue());
+				}
 
-		if (name.equals("autoresize")) {
-			if ("all".equals(object)) {
-				mm.setAutoResize(JTable.AUTO_RESIZE_ALL_COLUMNS);
-			}
-			if ("last".equals(object)) {
-				mm.setAutoResize(JTable.AUTO_RESIZE_LAST_COLUMN);
-			}
-			if ("next".equals(object)) {
-				mm.setAutoResize(JTable.AUTO_RESIZE_NEXT_COLUMN);
-			}
-			if ("subsequent".equals(object)) {
-				mm.setAutoResize(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
-			}
-			if ("off".equals(object)) {
-				mm.setAutoResize(JTable.AUTO_RESIZE_OFF);
-			}
-		}
-		if (name.equals("columnDefinitionSavePath")) {
+				if (name.equals("autoresize")) {
+					if ("all".equals(object)) {
+						mm.setAutoResize(JTable.AUTO_RESIZE_ALL_COLUMNS);
+					}
+					if ("last".equals(object)) {
+						mm.setAutoResize(JTable.AUTO_RESIZE_LAST_COLUMN);
+					}
+					if ("next".equals(object)) {
+						mm.setAutoResize(JTable.AUTO_RESIZE_NEXT_COLUMN);
+					}
+					if ("subsequent".equals(object)) {
+						mm.setAutoResize(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+					}
+					if ("off".equals(object)) {
+						mm.setAutoResize(JTable.AUTO_RESIZE_OFF);
+					}
+				}
+				if (name.equals("columnDefinitionSavePath")) {
 					setColumnDefinitionSavePath(object.toString());
-		}
-		if (name.equals("filtermode")) {
-			mm.setFilterMode("" + object);
-		}
-		if (name.equals("refreshAfterEdit")) {
-			mm.setRefreshAfterEdit(Boolean.valueOf(object.toString()).booleanValue());
-		}
-		if (name.equals("highColor")) {
-			mm.setHighColor((Color) object);
-		}
-		if (name.equals("lowColor")) {
-			mm.setLowColor((Color) object);
-		}
-		if (name.equals("selectedColor")) {
-			mm.setSelectedColor((Color) object);
-		}
-		if (name.equals("useScroll")) {
-			mm.setUseScrollBars((Boolean) object);
-		}
-		if (name.equals("border")) {
-			mm.setBorder((Border)object);
-		}
+				}
+				if (name.equals("filtermode")) {
+					mm.setFilterMode("" + object);
+				}
+				if (name.equals("refreshAfterEdit")) {
+					mm.setRefreshAfterEdit(Boolean.valueOf(object.toString())
+							.booleanValue());
+				}
+				if (name.equals("highColor")) {
+					mm.setHighColor((Color) object);
+				}
+				if (name.equals("lowColor")) {
+					mm.setLowColor((Color) object);
+				}
+				if (name.equals("selectedColor")) {
+					mm.setSelectedColor((Color) object);
+				}
+				if (name.equals("useScroll")) {
+					mm.setUseScrollBars((Boolean) object);
+				}
+				if (name.equals("border")) {
+					mm.setBorder((Border) object);
+				}
 			}
 		});
 
@@ -625,37 +687,37 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 			}
 			if (name.equals("lastMessage")) {
 				Message m = mm.getMessage();
-				if(m==null) {
+				if (m == null) {
 					return null;
 				}
 				int count = m.getArraySize();
-				
-				if(count==0) {
+
+				if (count == 0) {
 					return null;
 				}
-				return m.getMessage(count-1);
+				return m.getMessage(count - 1);
 			}
 			if (name.equals("firstMessage")) {
 				Message m = mm.getMessage();
-				if(m==null) {
+				if (m == null) {
 					return null;
 				}
 				int count = m.getArraySize();
-				
-				if(count==0) {
+
+				if (count == 0) {
 					return null;
 				}
 				return m.getMessage(0);
 			}
-			
-			
-			
+
 			if (name.equals("selectedMessages")) {
 				List<Message> all = mm.getSelectedMessages();
 				if (all != null && all.size() > 0) {
 					Navajo n = NavajoFactory.getInstance().createNavajo();
-					n.addHeader(NavajoFactory.getInstance().createHeader(n, "Anonymous", "unknown", "unknown", -1));
-					Message array = NavajoFactory.getInstance().createMessage(n, all.get(0).getName(), Message.MSG_TYPE_ARRAY);
+					n.addHeader(NavajoFactory.getInstance().createHeader(n,
+							"Anonymous", "unknown", "unknown", -1));
+					Message array = NavajoFactory.getInstance().createMessage(
+							n, all.get(0).getName(), Message.MSG_TYPE_ARRAY);
 					for (int i = 0; i < all.size(); i++) {
 						Message cur = all.get(i);
 						array.addMessage(cur);
@@ -695,8 +757,9 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 		}
 	}
 
-	protected void performComponentMethod(final String name, final TipiComponentMethod compMeth, final TipiEvent event) {
-		runSyncInEventThread(new Runnable(){
+	protected void performComponentMethod(final String name,
+			final TipiComponentMethod compMeth, final TipiEvent event) {
+		runSyncInEventThread(new Runnable() {
 
 			public void run() {
 				int count = mm.getRowCount();
@@ -726,80 +789,99 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 						mm.setSelectedRow(count - 1);
 					}
 					if ("selectMessages".equals(name)) {
-						List<Message> list = (List<Message>) compMeth.getEvaluatedParameterValue("messages", event);
-						ListSelectionModel lsm = mm.getTable().getSelectionModel();
+						List<Message> list = (List<Message>) compMeth
+								.getEvaluatedParameterValue("messages", event);
+						ListSelectionModel lsm = mm.getTable()
+								.getSelectionModel();
 						int cnt = 0;
-						mm.getTable().getSelectionModel().setValueIsAdjusting(true);
+						mm.getTable().getSelectionModel()
+								.setValueIsAdjusting(true);
 						lsm.clearSelection();
 						int rows = mm.getTable().getRowCount();
-						for (int i=0; i<rows; i++) {
+						for (int i = 0; i < rows; i++) {
 							for (Message message : list) {
-								if(mm.getTable().getMessageRow(i).hashCode() == message.hashCode()) {
+								if (mm.getTable().getMessageRow(i).hashCode() == message
+										.hashCode()) {
 									lsm.addSelectionInterval(i, i);
-									
+
 								}
 							}
 						}
-						mm.getTable().getSelectionModel().setValueIsAdjusting(false);
-						
+						mm.getTable().getSelectionModel()
+								.setValueIsAdjusting(false);
+
 					}
-					
+
 					if ("showEditDialog".equals(name)) {
-						Operand title = compMeth.getEvaluatedParameter("title", event);
+						Operand title = compMeth.getEvaluatedParameter("title",
+								event);
 						try {
 							String titleString;
-							titleString = title == null ? "Aap" : "" + title.value;
+							titleString = title == null ? "Aap" : ""
+									+ title.value;
 							mm.showEditDialog(titleString, mm.getSelectedRow());
 						} catch (Exception ex1) {
 							ex1.printStackTrace();
 						}
 					}
 					if ("selectByValue".equals(name)) {
-						Operand name = compMeth.getEvaluatedParameter("propertyName", event);
-						Operand value = compMeth.getEvaluatedParameter("value", event);
-						
+						Operand name = compMeth.getEvaluatedParameter(
+								"propertyName", event);
+						Operand value = compMeth.getEvaluatedParameter("value",
+								event);
+
 						try {
 							int rowCount = mm.getRowCount();
-							mm.getTable().getSelectionModel().setValueIsAdjusting(true);
+							mm.getTable().getSelectionModel()
+									.setValueIsAdjusting(true);
 							mm.getTable().getSelectionModel().clearSelection();
-							
+
 							for (int i = 0; i < rowCount; i++) {
 								Message current = mm.getMessageRow(i);
-								Property p = current.getProperty((String) name.value);
-								if(p!=null) {
-									if(p.getTypedValue().equals(value.value)) {										
-										mm.getTable().getSelectionModel().addSelectionInterval(i, i);
+								Property p = current
+										.getProperty((String) name.value);
+								if (p != null) {
+									if (p.getTypedValue().equals(value.value)) {
+										mm.getTable().getSelectionModel()
+												.addSelectionInterval(i, i);
 									}
 								}
-							}	
-							mm.getTable().getSelectionModel().setValueIsAdjusting(false);							
+							}
+							mm.getTable().getSelectionModel()
+									.setValueIsAdjusting(false);
 						} catch (Exception ex1) {
 							ex1.printStackTrace();
 						}
 					}
 				}
 				if ("export".equals(name)) {
-					Operand filename = compMeth.getEvaluatedParameter("filename", event);
-					Operand delimiter = compMeth.getEvaluatedParameter("delimiter", event);
+					Operand filename = compMeth.getEvaluatedParameter(
+							"filename", event);
+					Operand delimiter = compMeth.getEvaluatedParameter(
+							"delimiter", event);
 					// doExportAll();
-					mm.getTable().exportTable((String) filename.value, (String) delimiter.value);
+					mm.getTable().exportTable((String) filename.value,
+							(String) delimiter.value);
 				}
 
 				if ("setAllSelected".equals(name)) {
 					System.err.println("In setAllSelected");
-					Operand propertyName = compMeth.getEvaluatedParameter("propertyName", event);
-					Operand value = compMeth.getEvaluatedParameter("value", event);
+					Operand propertyName = compMeth.getEvaluatedParameter(
+							"propertyName", event);
+					Operand value = compMeth.getEvaluatedParameter("value",
+							event);
 					System.err.println("Value: " + value.value);
 					System.err.println("PropertyName: " + propertyName.value);
 					ArrayList<Message> al = mm.getSelectedMessages();
-					if(al==null) {
+					if (al == null) {
 						// Nothing is selected
 						return;
 					}
 					System.err.println("# of selected msgs: " + al.size());
 					for (int i = 0; i < al.size(); i++) {
 						Message current = al.get(i);
-						Property cp = current.getProperty("" + propertyName.value);
+						Property cp = current.getProperty(""
+								+ propertyName.value);
 						cp.setAnyValue(value.value);
 					}
 				}
@@ -807,7 +889,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 				if ("fireAction".equals(name)) {
 					try {
 						performTipiEvent("onActionPerformed", null, false);
-					
+
 					} catch (TipiException e) {
 						e.printStackTrace();
 					}
@@ -838,26 +920,36 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 					updateConditionalRemarks();
 				}
 				if ("editCell".equals(name)) {
-					Operand property = compMeth.getEvaluatedParameter("property", event);
-					
-					Property value = (Property)property.value;
-					if(value==null) {
-						System.err.println("Error: can not editCell, property null. Expression: "+compMeth.getParameter("property").toString());
+					Operand property = compMeth.getEvaluatedParameter(
+							"property", event);
+
+					Property value = (Property) property.value;
+					if (value == null) {
+						System.err
+								.println("Error: can not editCell, property null. Expression: "
+										+ compMeth.getParameter("property")
+												.toString());
 					} else {
 						editCell(value);
 					}
 				}
 				if ("sort".equals(name)) {
-					Operand index = compMeth.getEvaluatedParameter("index", event);
-					Operand direction = compMeth.getEvaluatedParameter("ascending", event);
-					mm.doSort(((Integer)index.value), ((Boolean)direction.value));
+					Operand index = compMeth.getEvaluatedParameter("index",
+							event);
+					Operand direction = compMeth.getEvaluatedParameter(
+							"ascending", event);
+					mm.doSort(((Integer) index.value),
+							((Boolean) direction.value));
 				}
-				 if ("setColumnEditable".equals(name)) {
-				 }		
+				if ("setColumnEditable".equals(name)) {
+				}
 				if ("doRunReport".equals(name)) {
-					Operand format = compMeth.getEvaluatedParameter("format", event);
-					Operand marginsOperand = compMeth.getEvaluatedParameter("margins", event);
-					Operand orientationOperand = compMeth.getEvaluatedParameter("orientation", event);
+					Operand format = compMeth.getEvaluatedParameter("format",
+							event);
+					Operand marginsOperand = compMeth.getEvaluatedParameter(
+							"margins", event);
+					Operand orientationOperand = compMeth
+							.getEvaluatedParameter("orientation", event);
 					String orientation = null;
 					if (orientationOperand != null) {
 						orientation = (String) orientationOperand.value;
@@ -867,7 +959,8 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 					if (marginsOperand != null) {
 						margin = new int[4];
 						String marginString = (String) marginsOperand.value;
-						StringTokenizer st = new StringTokenizer(marginString, ",");
+						StringTokenizer st = new StringTokenizer(marginString,
+								",");
 						margin[0] = Integer.parseInt(st.nextToken());
 						margin[1] = Integer.parseInt(st.nextToken());
 						margin[2] = Integer.parseInt(st.nextToken());
@@ -879,17 +972,18 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 						e.printStackTrace();
 					}
 				}
-			}});
-	
+			}
+		});
 
 	}
 
 	protected void editCell(final Property value) {
-		SwingUtilities.invokeLater(new Runnable(){
+		SwingUtilities.invokeLater(new Runnable() {
 
 			public void run() {
 				mm.editCell(value);
-			}});
+			}
+		});
 	}
 
 	public void setColumnDefinitionSavePath(String path) {
@@ -899,20 +993,20 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 	@SuppressWarnings("unchecked")
 	public void stateChanged(ChangeEvent e) {
 		Map<String, Object> m = (Map<String, Object>) e.getSource();
-		Object old =  m.get("old");
+		Object old = m.get("old");
 		Object newP = m.get("new");
 		flushAggregateValues();
 		updateConditionalRemarks();
 		mm.repaint();
 		try {
 
-			if(old==null) {
-				if(newP!=null) {
+			if (old == null) {
+				if (newP != null) {
 					// TODO: Should not be in sync mode, right?
 					performTipiEvent("onValueChanged", m, true);
 				}
 			} else {
-				if(!old.equals(newP)) {
+				if (!old.equals(newP)) {
 					performTipiEvent("onValueChanged", m, true);
 				}
 			}
@@ -923,17 +1017,19 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 
 	public void addAggregate(int columnIndex, String expression) {
 		if (myFooterRenderer == null) {
-			runSyncInEventThread(new Runnable(){
+			runSyncInEventThread(new Runnable() {
 				public void run() {
-					myFooterRenderer = new MessageTableFooterRenderer(TipiTable.this);
+					myFooterRenderer = new MessageTableFooterRenderer(
+							TipiTable.this);
 					myFooterRenderer.setVisible(true);
 					mm.setFooterRenderer(myFooterRenderer);
 					mm.doLayout();
-					
-				}});
+
+				}
+			});
 		}
 		myFooterRenderer.addAggregate(columnIndex, expression);
-	
+
 	}
 
 	public void flushAggregateValues() {
@@ -970,21 +1066,28 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 		int complied = 0;
 		for (int i = 0; i < conditionalRemarks.size(); i++) {
 			ConditionalRemark current = conditionalRemarks.get(i);
-			Operand oo = getContext().evaluate(current.getCondition(), this, null, myMessage);
+			Operand oo = getContext().evaluate(current.getCondition(), this,
+					null, myMessage);
 			boolean complies = false;
 			if (oo.value != null) {
 				Boolean b = (Boolean) oo.value;
 				complies = b.booleanValue();
 			}
 			if (complies) {
-				Operand o = myContext.evaluate(current.getRemark(), this, null, mm.getMessage());
-				Operand q = myContext.evaluate(current.getColor(), this, null, mm.getMessage());
-				Operand r = myContext.evaluate(current.getFont(), this, null, mm.getMessage());
+				Operand o = myContext.evaluate(current.getRemark(), this, null,
+						mm.getMessage());
+				Operand q = myContext.evaluate(current.getColor(), this, null,
+						mm.getMessage());
+				Operand r = myContext.evaluate(current.getFont(), this, null,
+						mm.getMessage());
 				Color c = q == null ? null : (Color) q.value;
 				Font f = r == null ? null : (Font) r.value;
 				// Operand o = evaluate(current.getRemark(),this,null);
-				remarkPanel.add(createRemark("" + o.value, c, f), new GridBagConstraints(0, complied, 1, 1, 1.0, 0.0,
-						GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(1, 1, 1, 1), 0, 0));
+				remarkPanel.add(createRemark("" + o.value, c, f),
+						new GridBagConstraints(0, complied, 1, 1, 1.0, 0.0,
+								GridBagConstraints.WEST,
+								GridBagConstraints.HORIZONTAL, new Insets(1, 1,
+										1, 1), 0, 0));
 				System.err.println("COMPLYING:  ");
 				complied++;
 			}
@@ -1006,10 +1109,13 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 		return ll;
 	}
 
-	public void addConditionalRemark(String remark, String condition, String c, String font) {
-		ConditionalRemark cr = new ConditionalRemark(this, remark, condition, c, font);
+	public void addConditionalRemark(String remark, String condition, String c,
+			String font) {
+		ConditionalRemark cr = new ConditionalRemark(this, remark, condition,
+				c, font);
 		conditionalRemarks.add(cr);
-		System.err.println("************************\nCreating remark panel\n********************************\n");
+		System.err
+				.println("************************\nCreating remark panel\n********************************\n");
 		if (remarkPanel == null) {
 			createRemarkPanel();
 		}
@@ -1018,7 +1124,8 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 
 	private final void createRemarkPanel() {
 		remarkPanel = new JPanel();
-		Operand r = myContext.evaluate(remarkBorder, this, null, mm.getMessage());
+		Operand r = myContext.evaluate(remarkBorder, this, null,
+				mm.getMessage());
 		Border b = r == null ? null : (Border) r.value;
 		if (b != null) {
 			remarkPanel.setBorder(b);
@@ -1026,7 +1133,8 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 		remarkPanel.setVisible(false);
 		remarkPanel.setLayout(new GridBagLayout());
 		// mm.add(remarkPanel, BorderLayout.SOUTH);
-		mm.add(remarkPanel, new GridBagConstraints(0, 3, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+		mm.add(remarkPanel, new GridBagConstraints(0, 3, 1, 1, 1.0, 0.0,
+				GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
 				new Insets(2, 2, 2, 2), 0, 0));
 		mm.revalidate();
 	}
@@ -1051,7 +1159,8 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 		mm.doChooseColumns();
 	}
 
-	public void doRunReport(String format, String orientation, int[] margins) throws TipiException {
+	public void doRunReport(String format, String orientation, int[] margins)
+			throws TipiException {
 		Binary b;
 		try {
 			b = mm.getTableReport(format, orientation, margins);
@@ -1063,6 +1172,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 		m.put("format", format);
 		performTipiEvent("onReportFinished", m, false);
 	}
+
 	@Override
 	public Object getActualComponent() {
 		return mm.getTable();

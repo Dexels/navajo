@@ -1,16 +1,24 @@
 package tipi;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
-import java.net.*;
-import java.util.*;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
 
-import javax.imageio.spi.ServiceRegistry;
-import javax.swing.*;
+import javax.swing.RepaintManager;
+import javax.swing.RootPaneContainer;
+import javax.swing.SwingUtilities;
 
-import com.dexels.navajo.tipi.components.swingimpl.*;
-import com.dexels.navajo.tipi.swingclient.*;
-import com.dexels.navajo.tipi.swingclient.components.*;
+import com.dexels.navajo.tipi.components.swingimpl.TipiApplet;
+import com.dexels.navajo.tipi.swingclient.components.CheckThreadViolationRepaintManager;
 
 public class MainApplication {
 
@@ -21,7 +29,8 @@ public class MainApplication {
 		// TODO Refactor Formatters in NavajoFactory, so this can be done later.
 		// TODO This is more urgent due to the OSGi loading
 		SwingTipiApplicationInstance instance = runApp(args);
-		instance.getCurrentContext().switchToDefinition(instance.getDefinition());
+		instance.getCurrentContext().switchToDefinition(
+				instance.getDefinition());
 	}
 
 	public static SwingTipiApplicationInstance runApp(String[] args) {
@@ -35,15 +44,16 @@ public class MainApplication {
 
 		String definition = null;
 		for (int i = 0; i < args.length; i++) {
-				arrrgs.add(args[i]);
+			arrrgs.add(args[i]);
 		}
-		if(args.length>0 ) {
-				if(args[args.length-1].endsWith(".xml")) {
-					definition = args[args.length - 1];
-					
-				}
+		if (args.length > 0) {
+			if (args[args.length - 1].endsWith(".xml")) {
+				definition = args[args.length - 1];
+
 			}
-		return initializeSwingApplication(checkStudio(), arrrgs, definition,null,null);
+		}
+		return initializeSwingApplication(checkStudio(), arrrgs, definition,
+				null, null);
 	}
 
 	/**
@@ -54,11 +64,11 @@ public class MainApplication {
 		try {
 			Class.forName("tipi.TipiToolsExtension");
 			String s = System.getProperty("studio");
-			if(s!=null) {
+			if (s != null) {
 				studio = s.equals("true");
 			}
-//			System.err.println("Tipi studio found, but disabled for now");
-//			studio = true;
+			// System.err.println("Tipi studio found, but disabled for now");
+			// studio = true;
 		} catch (ClassNotFoundException e) {
 			studio = false;
 		}
@@ -70,41 +80,55 @@ public class MainApplication {
 	 * @param arrrgs
 	 * @param def
 	 */
-	public static SwingTipiApplicationInstance initializeSwingApplication(final boolean studioMode, final List<String> arrrgs, final String def, final TipiApplet appletRoot, final RootPaneContainer otherRoot) {
+	public static SwingTipiApplicationInstance initializeSwingApplication(
+			final boolean studioMode, final List<String> arrrgs,
+			final String def, final TipiApplet appletRoot,
+			final RootPaneContainer otherRoot) {
 
-		RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager());
+		RepaintManager
+				.setCurrentManager(new CheckThreadViolationRepaintManager());
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 
 				public void run() {
 					try {
 						if (studioMode) {
-							myApplication = new SwingTipiApplicationInstance("develop", "tipi/develop.xml", arrrgs, appletRoot, otherRoot);
-//						SwingTipiContext s = initialize("develop", "tipi/develop.xml", arrrgs, null, null);
-							
+							myApplication = new SwingTipiApplicationInstance(
+									"develop", "tipi/develop.xml", arrrgs,
+									appletRoot, otherRoot);
+							// SwingTipiContext s = initialize("develop",
+							// "tipi/develop.xml", arrrgs, null, null);
+
 						} else {
 							if (def == null) {
-								myApplication = new SwingTipiApplicationInstance("init", "init.xml", arrrgs, appletRoot, otherRoot);
+								myApplication = new SwingTipiApplicationInstance(
+										"init", "init.xml", arrrgs, appletRoot,
+										otherRoot);
 							} else {
 								if (def.endsWith(".xml")) {
-									myApplication = new SwingTipiApplicationInstance("init", def, arrrgs, appletRoot, otherRoot);
+									myApplication = new SwingTipiApplicationInstance(
+											"init", def, arrrgs, appletRoot,
+											otherRoot);
 								} else {
-									myApplication = new SwingTipiApplicationInstance(def, "start.xml", arrrgs, appletRoot, otherRoot);
+									myApplication = new SwingTipiApplicationInstance(
+											def, "start.xml", arrrgs,
+											appletRoot, otherRoot);
 								}
 							}
 						}
 
-						if(myApplication!=null) {
-								myApplication.startup();
-								String deff = def;
-								if(deff==null) {
-									deff = "init.xml";
-								}
-								
-//								myApplication.getCurrentContext().switchToDefinition(def);
-//							if(studioMode) {
-//								((SwingTipiContext)myApplication.getCurrentContext()).injectApplication(def, arrrgs, "/init/tipi/sandbox");
-//							}
+						if (myApplication != null) {
+							myApplication.startup();
+							String deff = def;
+							if (deff == null) {
+								deff = "init.xml";
+							}
+
+							// myApplication.getCurrentContext().switchToDefinition(def);
+							// if(studioMode) {
+							// ((SwingTipiContext)myApplication.getCurrentContext()).injectApplication(def,
+							// arrrgs, "/init/tipi/sandbox");
+							// }
 						}
 
 					} catch (Exception e) {
@@ -118,7 +142,7 @@ public class MainApplication {
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 		}
-		
+
 		return myApplication;
 	}
 
@@ -129,18 +153,20 @@ public class MainApplication {
 	}
 
 	public static List<String> parseBundleUrl(URL u) throws IOException {
-//		URL u = new URL(path);
+		// URL u = new URL(path);
 		InputStream openStream = u.openStream();
 		return parseBundleStream(openStream);
 	}
 
 	/**
 	 * Beware: Will close stream
+	 * 
 	 * @param openStream
 	 * @return list of params.
 	 * @throws IOException
 	 */
-	private static List<String> parseBundleStream(InputStream openStream) throws IOException {
+	private static List<String> parseBundleStream(InputStream openStream)
+			throws IOException {
 		List<String> result = new LinkedList<String>();
 
 		InputStreamReader appUrl = new InputStreamReader(openStream);
@@ -156,6 +182,5 @@ public class MainApplication {
 		openStream.close();
 		return result;
 	}
-
 
 }

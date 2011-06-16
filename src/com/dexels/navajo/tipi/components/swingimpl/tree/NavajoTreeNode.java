@@ -1,10 +1,14 @@
 package com.dexels.navajo.tipi.components.swingimpl.tree;
 
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Vector;
 
-import javax.swing.tree.*;
+import javax.swing.tree.TreeNode;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
 
 public class NavajoTreeNode implements TreeNode {
 
@@ -14,10 +18,11 @@ public class NavajoTreeNode implements TreeNode {
 	public NavajoTreeNode(Navajo m) throws NavajoException {
 		myNavajo = m;
 		childList = new Vector<TreeNode>();
-		for (Iterator<Message> iter = myNavajo.getAllMessages().iterator(); iter.hasNext();) {
+		for (Iterator<Message> iter = myNavajo.getAllMessages().iterator(); iter
+				.hasNext();) {
 			Message element = iter.next();
-			System.err.println("ELEMENT: "+element.getName());
-			childList.add(new MessageTreeNode(element,this));
+			System.err.println("ELEMENT: " + element.getName());
+			childList.add(new MessageTreeNode(element, this));
 		}
 	}
 

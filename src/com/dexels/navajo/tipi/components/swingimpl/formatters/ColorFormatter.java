@@ -1,39 +1,39 @@
 package com.dexels.navajo.tipi.components.swingimpl.formatters;
 
-import java.awt.*;
+import java.awt.Color;
 
-import com.dexels.navajo.tipi.components.core.*;
+import com.dexels.navajo.tipi.components.core.TipiFormatter;
 
 public class ColorFormatter extends TipiFormatter {
 
 	@Override
 	public String format(Object o) {
-		Color tc = (Color)o;
+		Color tc = (Color) o;
 		String red = Integer.toHexString(tc.getRed());
-		if(red.length()==1) {
-			red = "0"+red;
+		if (red.length() == 1) {
+			red = "0" + red;
 		}
 		String green = Integer.toHexString(tc.getGreen());
-		if(green.length()==1) {
-			green = "0"+green;
+		if (green.length() == 1) {
+			green = "0" + green;
 		}
 		String blue = Integer.toHexString(tc.getBlue());
-		if(blue.length()==1) {
-			blue = "0"+blue;
+		if (blue.length() == 1) {
+			blue = "0" + blue;
 		}
-		String hex = "#"+ red+green +blue;
-		return "{color:/"+hex+"}";
+		String hex = "#" + red + green + blue;
+		return "{color:/" + hex + "}";
 	}
 
 	@Override
 	public Class<?> getType() {
 		return Color.class;
 	}
-	
+
 	public static void main(String[] args) {
 		Color c = Color.lightGray;
 		ColorFormatter cc = new ColorFormatter();
-		System.err.println("Format: "+cc.format(c));
+		System.err.println("Format: " + cc.format(c));
 	}
 
 }

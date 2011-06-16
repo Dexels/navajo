@@ -34,43 +34,45 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkEvent;
 import org.osgi.framework.FrameworkListener;
 
-import com.dexels.navajo.tipi.TipiException;
-import com.dexels.navajo.tipi.tipixml.XMLParseException;
-
 import tipi.MainApplication;
 import tipi.SwingTipiApplicationInstance;
 import tipi.TipiSwingExtension;
 
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.tipixml.XMLParseException;
+
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 
-	
-	//	 Included packages.
-	
+	// Included packages.
+
 	public Version() {
-//		addIncludes(includes);
+		// addIncludes(includes);
 	}
-	
+
 	@SuppressWarnings("restriction")
 	public void start(BundleContext bc) throws Exception {
 		System.err.println("Starting swing tipi");
 		super.start(bc);
-		
-		bc.addFrameworkListener(new FrameworkListener(){
+
+		bc.addFrameworkListener(new FrameworkListener() {
 
 			private SwingTipiApplicationInstance instance;
 
 			@Override
 			public void frameworkEvent(FrameworkEvent event) {
-				if(FrameworkEvent.STARTED == event.getType()) {
+				if (FrameworkEvent.STARTED == event.getType()) {
 					try {
 						TipiSwingExtension tse = new TipiSwingExtension();
-						ClassLoader classLoader = tse.getClass().getClassLoader();
-						System.err.println("Loader: "+classLoader.hashCode());
+						ClassLoader classLoader = tse.getClass()
+								.getClassLoader();
+						System.err.println("Loader: " + classLoader.hashCode());
 						tse.setExtensionClassloader(classLoader);
 						System.err.println("goooo!");
-						instance = MainApplication.runApp(new String[]{"tipiCodeBase=/Users/frank/Documents/workspace-osgi-temp/TipiExample/tipi/"});
+						instance = MainApplication
+								.runApp(new String[] { "tipiCodeBase=/Users/frank/Documents/workspace-osgi-temp/TipiExample/tipi/" });
 						System.err.println("INstance ready!");
-						instance.getCurrentContext().processRequiredIncludes(tse);
+						instance.getCurrentContext().processRequiredIncludes(
+								tse);
 						System.err.println("Includes ready!");
 					} catch (XMLParseException e) {
 						e.printStackTrace();
@@ -78,11 +80,13 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 						e.printStackTrace();
 					}
 					SwingUtilities.invokeLater(new Runnable() {
-						
+
 						@Override
 						public void run() {
 							try {
-								instance.getCurrentContext().switchToDefinition(instance.getDefinition());
+								instance.getCurrentContext()
+										.switchToDefinition(
+												instance.getDefinition());
 							} catch (TipiException e) {
 								e.printStackTrace();
 							}
@@ -94,16 +98,18 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 						}
 					});
 				}
-				System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> "+event);
-			}});
-//
-//		
+				System.err
+						.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> "
+								+ event);
+			}
+		});
+		//
+		//
 	}
 
-
-	public static void main(String [] args) {
+	public static void main(String[] args) {
 		JFrame mm = new JFrame("aaaa");
-		System.err.println("MM>>>>>M: "+mm);
+		System.err.println("MM>>>>>M: " + mm);
 		mm.setBounds(100, 100, 200, 200);
 		mm.setVisible(true);
 	}

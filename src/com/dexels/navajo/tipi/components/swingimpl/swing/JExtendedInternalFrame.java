@@ -19,13 +19,24 @@
 
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.AWTEvent;
+import java.awt.ActiveEvent;
+import java.awt.Component;
+import java.awt.EventQueue;
+import java.awt.event.MouseEvent;
 
-import javax.swing.*;
+import javax.swing.JInternalFrame;
+import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 
 public class JExtendedInternalFrame extends JInternalFrame {
-	public JExtendedInternalFrame(String title, boolean resizable, boolean closable, boolean maximizable, boolean iconifiable) {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2619439915934117879L;
+
+	public JExtendedInternalFrame(String title, boolean resizable,
+			boolean closable, boolean maximizable, boolean iconifiable) {
 		super(title, resizable, closable, maximizable, iconifiable);
 	}
 
@@ -70,8 +81,12 @@ public class JExtendedInternalFrame extends JInternalFrame {
 							MouseEvent mouseEvent = (MouseEvent) event;
 
 							if (isVisible()
-									&& (mouseEvent.getID() == MouseEvent.MOUSE_PRESSED || mouseEvent.getID() == MouseEvent.MOUSE_CLICKED)) {
-								Component target = SwingUtilities.getDeepestComponentAt(src2, mouseEvent.getX(), mouseEvent.getY());
+									&& (mouseEvent.getID() == MouseEvent.MOUSE_PRESSED || mouseEvent
+											.getID() == MouseEvent.MOUSE_CLICKED)) {
+								Component target = SwingUtilities
+										.getDeepestComponentAt(src2,
+												mouseEvent.getX(),
+												mouseEvent.getY());
 
 								// It would be nice if we could go
 								// SwingUtilities.isDescendingFrom(target, this)

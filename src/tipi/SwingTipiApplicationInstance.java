@@ -5,9 +5,9 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.*;
-
-import navajo.ExtensionDefinition;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.RootPaneContainer;
 
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
@@ -21,33 +21,30 @@ import com.dexels.navajo.tipi.tipixml.XMLParseException;
 public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance {
 
 	private String definition;
+
 	public String getDefinition() {
 		return definition;
 	}
-
-
 
 	private String definitionPath;
 	private List<String> args;
 	private TipiApplet appletRoot;
 	private RootPaneContainer otherRoot;
 
-	public SwingTipiApplicationInstance(String definition, String definitionPath, List<String> args, TipiApplet appletRoot, RootPaneContainer otherRoot) {
+	public SwingTipiApplicationInstance(String definition,
+			String definitionPath, List<String> args, TipiApplet appletRoot,
+			RootPaneContainer otherRoot) {
 		this.definition = definition;
 		this.definitionPath = definitionPath;
 		this.args = args;
 		this.appletRoot = appletRoot;
 		this.otherRoot = otherRoot;
 	}
-	
-	
 
 	public void dispose(TipiContext t) {
 		super.dispose(t);
 		System.exit(0);
 	}
-
-
 
 	public TipiContext createContext() throws IOException {
 		JFrame.setDefaultLookAndFeelDecorated(true);
@@ -72,15 +69,18 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance {
 
 		TipiSwingExtension tse = new TipiSwingExtension();
 		tse.initialize(context);
-		
-		InputStream tipiResourceStream = context.getTipiResourceStream(definitionPath);
+
+		InputStream tipiResourceStream = context
+				.getTipiResourceStream(definitionPath);
 		if (tipiResourceStream == null) {
-			System.err.println("Error starting up: Can not load tipi. Resource not found: "+definitionPath);
-			System.err.println("Codebase: "+context.getTipiResourceLoader());
-			String fatalErrorMsg="No connection allowed to server by security software, check your connection and security settings.";
+			System.err
+					.println("Error starting up: Can not load tipi. Resource not found: "
+							+ definitionPath);
+			System.err.println("Codebase: " + context.getTipiResourceLoader());
+			String fatalErrorMsg = "No connection allowed to server by security software, check your connection and security settings.";
 			try {
 				String msg = System.getProperty("fatalSystemErrorMessage");
-				if(msg!=null) {
+				if (msg != null) {
 					fatalErrorMsg = msg;
 				}
 			} catch (SecurityException e) {
@@ -96,8 +96,8 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance {
 			}
 		} else {
 			try {
-				context.parseStream(tipiResourceStream, definition, false,tse);
-//				context.switchToDefinition(definition);
+				context.parseStream(tipiResourceStream, definition, false, tse);
+				// context.switchToDefinition(definition);
 			} catch (XMLParseException e) {
 				e.printStackTrace();
 			} catch (TipiException e) {

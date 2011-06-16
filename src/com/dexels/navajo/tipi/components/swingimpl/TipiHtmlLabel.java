@@ -1,15 +1,16 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.awt.*;
+import javax.swing.JEditorPane;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.text.StyledEditorKit;
 
-import javax.swing.*;
-import javax.swing.text.*;
-import javax.swing.text.html.*;
-
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.tipi.PropertyHandler;
+import com.dexels.navajo.tipi.TipiEventListener;
+import com.dexels.navajo.tipi.TipiHelper;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
+import com.dexels.navajo.tipi.internal.PropertyComponent;
 
 /**
  * <p>
@@ -28,53 +29,48 @@ import com.dexels.navajo.tipi.internal.*;
  * @author not attributable
  * @version 1.0
  */
-public class TipiHtmlLabel extends TipiSwingDataComponentImpl implements PropertyComponent {
+public class TipiHtmlLabel extends TipiSwingDataComponentImpl implements
+		PropertyComponent {
 	private JEditorPane myLabel;
 	private JScrollPane jsp;
 	private String myPropertyName;
-	private  PropertyHandler myHandler;
+	private PropertyHandler myHandler;
 	private Property myProperty;
-	
+
 	public Object createContainer() {
-		myHandler = new PropertyHandler(this,null);
-//		myHandler.addMapping("value", "text");
+		myHandler = new PropertyHandler(this, null);
+		// myHandler.addMapping("value", "text");
 		myLabel = new JEditorPane();
-	    TipiHelper th = new TipiSwingHelper();
-	    myLabel.setAutoscrolls(true);
-	    th.initHelper(this);
-	    myLabel.setEditorKit(new StyledEditorKit());
-//	    myLabel.setFont(new Font("Sans", Font.ITALIC,20));
-	    myLabel.setContentType("text/html");
-//	    myLabel.setText("some very very very long text  ....");
+		TipiHelper th = new TipiSwingHelper();
+		myLabel.setAutoscrolls(true);
+		th.initHelper(this);
+		myLabel.setEditorKit(new StyledEditorKit());
+		// myLabel.setFont(new Font("Sans", Font.ITALIC,20));
+		myLabel.setContentType("text/html");
+		// myLabel.setText("some very very very long text  ....");
 
-	    
-//	    Font font = UIManager.getFont("Label.font");
-//        String bodyRule = "body { font-family: " + font.getFamily() + "; " +
-//                "font-size: " + font.getSize() + "pt; }";
-//        ((HTMLDocument)myLabel.getDocument()).getStyleSheet().addRule(bodyRule);
+		// Font font = UIManager.getFont("Label.font");
+		// String bodyRule = "body { font-family: " + font.getFamily() + "; " +
+		// "font-size: " + font.getSize() + "pt; }";
+		// ((HTMLDocument)myLabel.getDocument()).getStyleSheet().addRule(bodyRule);
 
-
-	    myLabel.setEditable(false);
-	    myLabel.setEnabled(true);
-	    addHelper(th);
-	     jsp = new JScrollPane(myLabel);
-//	     jsp.getViewport().
-	     jsp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		myLabel.setEditable(false);
+		myLabel.setEnabled(true);
+		addHelper(th);
+		jsp = new JScrollPane(myLabel);
+		// jsp.getViewport().
+		jsp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		return jsp;
 	}
 
-	
-	
 	public Object getActualComponent() {
 		return myLabel;
 	}
 
-
-
 	public void setComponentValue(final String name, final Object object) {
 		if (name.equals("text")) {
-			setHtmlText(""+object);
-//			((TipiSwingLabel) getContainer()).revalidate();
+			setHtmlText("" + object);
+			// ((TipiSwingLabel) getContainer()).revalidate();
 			return;
 		}
 		if (name.equals("propertyName")) {
@@ -82,8 +78,6 @@ public class TipiHtmlLabel extends TipiSwingDataComponentImpl implements Propert
 		}
 		super.setComponentValue(name, object);
 	}
-
-
 
 	/**
 	 * @param object
@@ -95,10 +89,8 @@ public class TipiHtmlLabel extends TipiSwingDataComponentImpl implements Propert
 				myLabel.setCaretPosition(0);
 			}
 		});
-		
+
 	}
-
-
 
 	public void addTipiEventListener(TipiEventListener listener) {
 	}
@@ -115,6 +107,5 @@ public class TipiHtmlLabel extends TipiSwingDataComponentImpl implements Propert
 		myProperty = p;
 		myHandler.setProperty(p);
 	}
-
 
 }

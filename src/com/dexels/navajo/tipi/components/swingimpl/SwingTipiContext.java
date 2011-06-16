@@ -1,32 +1,61 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.awt.*;
-import java.io.*;
-import java.lang.reflect.*;
-import java.net.*;
-import java.text.*;
-import java.util.*;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Cursor;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.RootPaneContainer;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
-import org.jdesktop.animation.timing.*;
-import org.jdesktop.animation.transitions.*;
+import org.jdesktop.animation.timing.Animator;
+import org.jdesktop.animation.timing.TimingTargetAdapter;
+import org.jdesktop.animation.transitions.ScreenTransition;
+import org.jdesktop.animation.transitions.TransitionTarget;
 
 import tipi.SwingTipiApplicationInstance;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.animation.*;
-import com.dexels.navajo.tipi.components.swingimpl.cookie.impl.*;
-import com.dexels.navajo.tipi.components.swingimpl.formatters.*;
-import com.dexels.navajo.tipi.components.swingimpl.jnlp.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.tipi.TipiActivityListener;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.TipiExecutable;
+import com.dexels.navajo.tipi.animation.TipiAnimationManager;
+import com.dexels.navajo.tipi.components.swingimpl.cookie.impl.JnlpCookieManager;
+import com.dexels.navajo.tipi.components.swingimpl.formatters.PropertyAnimator;
+import com.dexels.navajo.tipi.components.swingimpl.jnlp.WebStartProxy;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiModalInternalFrame;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingDesktop;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingDialog;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingSplash;
+import com.dexels.navajo.tipi.internal.TipiEvent;
+import com.dexels.navajo.tipi.internal.TipiResourceLoader;
 import com.dexels.navajo.tipi.internal.cookie.CookieManager;
-import com.dexels.navajo.tipi.internal.cookie.impl.*;
-import com.dexels.navajo.tipi.swingclient.*;
-import com.dexels.navajo.tipi.tipixml.*;
+import com.dexels.navajo.tipi.internal.cookie.impl.TmpFileCookieManager;
+import com.dexels.navajo.tipi.swingclient.UserInterface;
+import com.dexels.navajo.tipi.tipixml.CaseSensitiveXMLElement;
+import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 /**
  * <p>
@@ -48,8 +77,10 @@ import com.dexels.navajo.tipi.tipixml.*;
 public class SwingTipiContext extends TipiContext {
 	private TipiSwingSplash splash;
 
-	private final Set<Thread> threadSet = Collections.synchronizedSet(new HashSet<Thread>());
-	private final Set<Thread> dialogThreadSet = Collections.synchronizedSet(new HashSet<Thread>());
+	private final Set<Thread> threadSet = Collections
+			.synchronizedSet(new HashSet<Thread>());
+	private final Set<Thread> dialogThreadSet = Collections
+			.synchronizedSet(new HashSet<Thread>());
 	private final Stack<JDialog> dialogStack = new Stack<JDialog>();
 
 	// private JDialog blockingDialog;
@@ -62,54 +93,53 @@ public class SwingTipiContext extends TipiContext {
 
 	private RootPaneContainer myOtherRoot;
 
-	public SwingTipiContext(SwingTipiApplicationInstance instance, SwingTipiContext parentContext) {
+	public SwingTipiContext(SwingTipiApplicationInstance instance,
+			SwingTipiContext parentContext) {
 		super(instance, parentContext);
 		// Don't think it is right here
 		try {
 			Locale.setDefault(new Locale("nl", "NL"));
 		} catch (SecurityException se) {
 		}
-		 JFrame.setDefaultLookAndFeelDecorated(true);
-		 JDialog.setDefaultLookAndFeelDecorated(true);
+		JFrame.setDefaultLookAndFeelDecorated(true);
+		JDialog.setDefaultLookAndFeelDecorated(true);
 
-			try {
+		try {
 
 			// commented out!
-			if (WebStartProxy.hasJnlpContext() ) {
-//				System.err.println("JNLP DETECTED.");
+			if (WebStartProxy.hasJnlpContext()) {
+				// System.err.println("JNLP DETECTED.");
 				setCookieManager(new JnlpCookieManager());
 				try {
 					getCookieManager().loadCookies();
 				} catch (FileNotFoundException e) {
-//					System.err.println("No cookies (yet). No prob.");
+					// System.err.println("No cookies (yet). No prob.");
 				}
 			} else {
 				createTmpCookieManager();
 			}
 		} catch (Throwable e) {
-//			System.err.println("No jnlp found");
-		//	e.printStackTrace();
+			// System.err.println("No jnlp found");
+			// e.printStackTrace();
 			createTmpCookieManager();
 		}
-	//hasJnlpContext(
-//		if(false) {
-//			appendJnlpCodeBase();
-//			createJnlpCookieManager();
-//		} else {
-//			createTmpCookieManager();
-//		}
-		
-//		if(hasJnlpContext()) {
-//			appendJnlpCodeBase();
-//			createJnlpCookieManager();
-//		} else {
-//			createTmpCookieManager();
-//		}
-//		
-		
+		// hasJnlpContext(
+		// if(false) {
+		// appendJnlpCodeBase();
+		// createJnlpCookieManager();
+		// } else {
+		// createTmpCookieManager();
+		// }
+
+		// if(hasJnlpContext()) {
+		// appendJnlpCodeBase();
+		// createJnlpCookieManager();
+		// } else {
+		// createTmpCookieManager();
+		// }
+		//
+
 	}
-
-
 
 	private void createTmpCookieManager() {
 		CookieManager cm = new TmpFileCookieManager();
@@ -119,11 +149,10 @@ public class SwingTipiContext extends TipiContext {
 		} catch (IOException e) {
 			System.err.println("No cookies found. Continuing");
 		} catch (SecurityException e) {
-			System.err.println("No permission for temp cookies. Cookies disabled, use JNLP Cookies!");
+			System.err
+					.println("No permission for temp cookies. Cookies disabled, use JNLP Cookies!");
 		}
 	}
-	
-	
 
 	public void runSyncInEventThread(Runnable r) {
 		if (SwingUtilities.isEventDispatchThread()) {
@@ -146,7 +175,6 @@ public class SwingTipiContext extends TipiContext {
 		}
 	}
 
-
 	public void setUserInterface(UserInterface ui) {
 		myUserInterface = ui;
 	}
@@ -160,23 +188,25 @@ public class SwingTipiContext extends TipiContext {
 		// if (dialogShowing) {
 		// b = false;
 		// }
-//		System.err.println("SETWAITING: "+b+" thread: "+Thread.currentThread().getName());
-//		Thread.dumpStack();
+		// System.err.println("SETWAITING: "+b+" thread: "+Thread.currentThread().getName());
+		// Thread.dumpStack();
 		if (getAppletRoot() != null) {
 
-			getAppletRoot().setCursor(b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
+			getAppletRoot().setCursor(
+					b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor
+							.getDefaultCursor());
 		}
-//		for (int i = 0; i < rootPaneList.size(); i++) {
-//			Object obj = rootPaneList.get(i);
-			// if (TipiSwingComponent.class.isInstance(obj)) {
-			// TipiSwingComponent tc = (TipiSwingComponent) obj;
-			// tc.setWaitCursor(b);
-			// } else {
-			// ((Container) obj).setCursor(b ?
-			// Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) :
-			// Cursor.getDefaultCursor());
-			// }
-//		}
+		// for (int i = 0; i < rootPaneList.size(); i++) {
+		// Object obj = rootPaneList.get(i);
+		// if (TipiSwingComponent.class.isInstance(obj)) {
+		// TipiSwingComponent tc = (TipiSwingComponent) obj;
+		// tc.setWaitCursor(b);
+		// } else {
+		// ((Container) obj).setCursor(b ?
+		// Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) :
+		// Cursor.getDefaultCursor());
+		// }
+		// }
 		for (TipiActivityListener ta : myActivityListeners) {
 			ta.setActive(b);
 		}
@@ -221,10 +251,11 @@ public class SwingTipiContext extends TipiContext {
 		threadSet.add(workThread);
 		setActiveThreads(threadSet.size());
 		if (!threadSet.isEmpty()) {
-			runAsyncInEventThread(new Runnable(){
+			runAsyncInEventThread(new Runnable() {
 				public void run() {
 					setWaiting(true);
-				}});
+				}
+			});
 		}
 	}
 
@@ -237,11 +268,12 @@ public class SwingTipiContext extends TipiContext {
 		threadSet.remove(workThread);
 		setActiveThreads(threadSet.size());
 		if (threadSet.isEmpty()) {
-			runAsyncInEventThread(new Runnable(){
+			runAsyncInEventThread(new Runnable() {
 				public void run() {
 					setWaiting(false);
-				}});
-	}
+				}
+			});
+		}
 	}
 
 	public final void updateWaiting() {
@@ -266,11 +298,11 @@ public class SwingTipiContext extends TipiContext {
 	}
 
 	public void addTopLevel(Object toplevel) {
-//		rootPaneList.add(toplevel);
+		// rootPaneList.add(toplevel);
 	}
 
 	public void removeTopLevel(Object toplevel) {
-//		rootPaneList.remove(toplevel);
+		// rootPaneList.remove(toplevel);
 	}
 
 	protected void clearLogFile() {
@@ -294,8 +326,11 @@ public class SwingTipiContext extends TipiContext {
 		Date d = new Date(stamp);
 		// c.setTimeInMillis(stamp);
 		try {
-			FileWriter fw = new FileWriter(System.getProperty("user.home") + "/.tipidebug", true);
-			fw.write(category + ", " + inputFormat1.format(d) + ", " + " Thread: " + Thread.currentThread().getName() + "," + event + "\n");
+			FileWriter fw = new FileWriter(System.getProperty("user.home")
+					+ "/.tipidebug", true);
+			fw.write(category + ", " + inputFormat1.format(d) + ", "
+					+ " Thread: " + Thread.currentThread().getName() + ","
+					+ event + "\n");
 			fw.flush();
 			fw.close();
 		} catch (IOException ex) {
@@ -317,12 +352,17 @@ public class SwingTipiContext extends TipiContext {
 	}
 
 	public static void debugSwingTree(Component c, int indent) {
-		printIndent(indent, "Debugging component with hash: " + c.hashCode() + " class: " + c.getClass());
-		printIndent(indent, "Minimumsite: " + c.getMinimumSize() + " max: " + c.getMaximumSize());
+		printIndent(indent, "Debugging component with hash: " + c.hashCode()
+				+ " class: " + c.getClass());
+		printIndent(
+				indent,
+				"Minimumsite: " + c.getMinimumSize() + " max: "
+						+ c.getMaximumSize());
 		if (c instanceof JComponent) {
 			printIndent(indent, "Preferredsize: " + c.getPreferredSize());
 		}
-		printIndent(indent, "Size: " + c.getSize() + " visible: " + c.isVisible());
+		printIndent(indent,
+				"Size: " + c.getSize() + " visible: " + c.isVisible());
 
 		// c.setPreferredSize(null);
 		if (c instanceof Container) {
@@ -333,7 +373,8 @@ public class SwingTipiContext extends TipiContext {
 				debugSwingTree(ccc, indent + 3);
 			}
 		}
-		printIndent(indent, "End of debug component: " + c.hashCode() + " class: " + c.getClass());
+		printIndent(indent, "End of debug component: " + c.hashCode()
+				+ " class: " + c.getClass());
 
 	}
 
@@ -358,7 +399,7 @@ public class SwingTipiContext extends TipiContext {
 			myAppletRoot.reload();
 		} else {
 			shutdown();
-			
+
 			super.exit();
 			System.exit(0);
 		}
@@ -373,12 +414,16 @@ public class SwingTipiContext extends TipiContext {
 		return defaultDesktop;
 	}
 
-	public void showQuestion(final String text, final String title, final String[] options) throws TipiBreakException {
+	public void showQuestion(final String text, final String title,
+			final String[] options) throws TipiBreakException {
 		final Set<Integer> responseSet = new HashSet<Integer>();
 		runSyncInEventThread(new Runnable() {
 			public void run() {
-				int response = JOptionPane.showOptionDialog((Component) getTopDialog(), text, title, JOptionPane.YES_NO_OPTION,
-						JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+				int response = JOptionPane
+						.showOptionDialog((Component) getTopDialog(), text,
+								title, JOptionPane.YES_NO_OPTION,
+								JOptionPane.QUESTION_MESSAGE, null, options,
+								options[0]);
 				responseSet.add(response);
 			}
 		});
@@ -388,36 +433,41 @@ public class SwingTipiContext extends TipiContext {
 		}
 	}
 
-	private void showInfo(final String text, final String title,final int messageType) {
+	private void showInfo(final String text, final String title,
+			final int messageType) {
 		// swing implementation.
 		runSyncInEventThread(new Runnable() {
 
 			public void run() {
 				if (getOtherRoot() != null) {
-					TipiModalInternalFrame.showInternalMessage(getOtherRoot().getRootPane(), getOtherRoot().getContentPane(), title, text,
-							getPoolSize(),messageType);
+					TipiModalInternalFrame.showInternalMessage(getOtherRoot()
+							.getRootPane(), getOtherRoot().getContentPane(),
+							title, text, getPoolSize(), messageType);
 					// FIXME
-				} else if (false&& getAppletRoot() != null && getDefaultDesktop() != null) {
+				} else if (false && getAppletRoot() != null
+						&& getDefaultDesktop() != null) {
 
-//					TipiModalInternalFrame.showInternalMessage(getAppletRoot().getRootPane(), getDefaultDesktop(), title, text,
-//							getPoolSize(),messageType);
-					JOptionPane.showMessageDialog((Component) getTopDialog(), text, title, messageType);
-					
+					// TipiModalInternalFrame.showInternalMessage(getAppletRoot().getRootPane(),
+					// getDefaultDesktop(), title, text,
+					// getPoolSize(),messageType);
+					JOptionPane.showMessageDialog((Component) getTopDialog(),
+							text, title, messageType);
+
 				} else {
-					JOptionPane.showMessageDialog((Component) getTopDialog(), text, title, messageType);
-					
-			
+					JOptionPane.showMessageDialog((Component) getTopDialog(),
+							text, title, messageType);
+
 				}
 			}
 		});
 
 	}
-	
+
 	@Override
 	public void showInfo(final String text, final String title) {
 		showInfo(text, title, JOptionPane.INFORMATION_MESSAGE);
 	}
-	
+
 	@Override
 	public void showError(final String text, final String title) {
 		showInfo(text, title, JOptionPane.ERROR_MESSAGE);
@@ -428,9 +478,9 @@ public class SwingTipiContext extends TipiContext {
 		showInfo(text, title, JOptionPane.WARNING_MESSAGE);
 	}
 
-	
-	public void processProperties(Map<String, String> properties) throws MalformedURLException {
-		 appendJnlpCodeBase(properties);
+	public void processProperties(Map<String, String> properties)
+			throws MalformedURLException {
+		appendJnlpCodeBase(properties);
 		super.processProperties(properties);
 		String tipiLaf = null;
 
@@ -447,23 +497,27 @@ public class SwingTipiContext extends TipiContext {
 				// try nimbus first:
 				try {
 					Class.forName("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-					UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+					UIManager
+							.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
 
 				} catch (ClassNotFoundException e) {
 					// revert to system
-					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+					UIManager.setLookAndFeel(UIManager
+							.getSystemLookAndFeelClassName());
 
 				}
-				
+
 				// UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 			} else {
 				UIManager.setLookAndFeel(tipiLaf);
 
 			}
 		} catch (Exception e) {
-			System.err.println("Unable to load supplied look and feel: "+tipiLaf+" ("+e.getMessage()+")");
+			System.err.println("Unable to load supplied look and feel: "
+					+ tipiLaf + " (" + e.getMessage() + ")");
 		}
 	}
+
 	private void appendJnlpCodeBase(Map<String, String> properties) {
 		try {
 			WebStartProxy.appendJnlpProperties(properties);
@@ -471,25 +525,24 @@ public class SwingTipiContext extends TipiContext {
 		}
 	}
 
-
-
 	public boolean useCache() {
 		return "true".equals(getSystemProperty("cache"));
 	}
-	
-	protected TipiResourceLoader createDefaultResourceLoader(String loaderType, boolean useCache) {
-		if(hasJnlpContext()) {
+
+	protected TipiResourceLoader createDefaultResourceLoader(String loaderType,
+			boolean useCache) {
+		if (hasJnlpContext()) {
 			try {
-				return WebStartProxy.createDefaultWebstartLoader(loaderType,useCache,getCookieManager());
+				return WebStartProxy.createDefaultWebstartLoader(loaderType,
+						useCache, getCookieManager());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		
+
 		}
-		return super.createDefaultResourceLoader(loaderType,useCache);
+		return super.createDefaultResourceLoader(loaderType, useCache);
 	}
 
-	
 	public boolean hasJnlpContext() {
 		try {
 			Class.forName("javax.jnlp.ServiceManager");
@@ -498,13 +551,14 @@ public class SwingTipiContext extends TipiContext {
 			return false;
 		}
 	}
-	
+
 	public void animateProperty(Property p, int duration, Object target) {
-		Class animatableClass = TipiAnimationManager.isAnimatable(p.getTypedValue(), target);
-		if (animatableClass!=null) {
+		Class animatableClass = TipiAnimationManager.isAnimatable(
+				p.getTypedValue(), target);
+		if (animatableClass != null) {
 			PropertyAnimator pa = new PropertyAnimator();
-			System.err.println("animating...: "+animatableClass);
-			pa.animateProperty(p, duration, target,animatableClass);
+			System.err.println("animating...: " + animatableClass);
+			pa.animateProperty(p, duration, target, animatableClass);
 		} else {
 			System.err.println("No, not animatable");
 			super.animateProperty(p, duration, target);
@@ -513,7 +567,8 @@ public class SwingTipiContext extends TipiContext {
 	}
 
 	@Override
-	public void doActions(TipiEvent te, TipiComponent comp, TipiExecutable executableParent, List<TipiExecutable> exe)
+	public void doActions(TipiEvent te, TipiComponent comp,
+			TipiExecutable executableParent, List<TipiExecutable> exe)
 			throws TipiBreakException {
 		String component = executableParent.getBlockParam("animationComponent");
 		if (component == null) {
@@ -528,47 +583,51 @@ public class SwingTipiContext extends TipiContext {
 		}
 		TipiSwingComponent ttt = (TipiSwingComponent) tc;
 		String durationString = executableParent.getBlockParam("duration");
-		int duration=1500;
-		if (durationString==null) {
+		int duration = 1500;
+		if (durationString == null) {
 			//
 		} else {
 			duration = Integer.parseInt(durationString);
 		}
-		ttt.animateTransition(te, executableParent, exe,duration);
+		ttt.animateTransition(te, executableParent, exe, duration);
 
 	}
 
-	public void animateDefaultTransition(TipiSwingComponent tipiSwingComponentImpl, final TipiEvent te, final TipiExecutable exeParent,
-			Container swingContainer, final List<TipiExecutable> exe, int duration) throws TipiBreakException {
+	public void animateDefaultTransition(
+			TipiSwingComponent tipiSwingComponentImpl, final TipiEvent te,
+			final TipiExecutable exeParent, Container swingContainer,
+			final List<TipiExecutable> exe, int duration)
+			throws TipiBreakException {
 		if (!(swingContainer instanceof JComponent)) {
 			super.doActions(te, tipiSwingComponentImpl, exeParent, exe);
 			return;
 		}
 		final JComponent jjj = (JComponent) swingContainer;
-//		int delay = 1500;
+		// int delay = 1500;
 		final Animator animator = new Animator(duration);
 
-		final ScreenTransition transition = new ScreenTransition(jjj, new TransitionTarget() {
+		final ScreenTransition transition = new ScreenTransition(jjj,
+				new TransitionTarget() {
 
-			public void setupNextScreen() {
-					try {
-					int i = 0;
-					for (TipiExecutable current : exe) {
-						current.performAction(te, exeParent, i++);
+					public void setupNextScreen() {
+						try {
+							int i = 0;
+							for (TipiExecutable current : exe) {
+								current.performAction(te, exeParent, i++);
+							}
+						} catch (Throwable ex) {
+							te.dumpStack(ex.getMessage());
+							ex.printStackTrace();
+						}
+						// animator.resume();
+						animator.getCycleElapsedTime();
+						jjj.revalidate();
 					}
-				} catch (Throwable ex) {
-					te.dumpStack(ex.getMessage());
-					ex.printStackTrace();
-				}
-				// animator.resume();
-				animator.getCycleElapsedTime();
-				jjj.revalidate();
-			}
-		}, animator);
+				}, animator);
 		animator.addTarget(new TimingTargetAdapter() {
 			public void end() {
 				transition.dispose();
-			}  
+			}
 
 		});
 		animator.setAcceleration(.1f); // Accelerate for first 20%
@@ -582,8 +641,10 @@ public class SwingTipiContext extends TipiContext {
 
 	}
 
-	public void injectApplication(String definition, List<String> arrrgs, String sandBoxPath) {
-		TipiComponent sandbox = getDefaultTopLevel().getTipiComponentByPath(sandBoxPath);
+	public void injectApplication(String definition, List<String> arrrgs,
+			String sandBoxPath) {
+		TipiComponent sandbox = getDefaultTopLevel().getTipiComponentByPath(
+				sandBoxPath);
 		final XMLElement inst = new CaseSensitiveXMLElement();
 		inst.setName("c.windowembed");
 		inst.setAttribute("id", "app");
@@ -591,7 +652,6 @@ public class SwingTipiContext extends TipiContext {
 			System.err.println("SANDBOX FOUND!");
 		}
 	}
-
 
 	public void showInternalError(String errorString, Throwable t) {
 		super.showInternalError(errorString, t);
@@ -601,85 +661,88 @@ public class SwingTipiContext extends TipiContext {
 	}
 
 	public JDialog createDialog(TipiDialog d, String title) {
-		if(dialogStack.isEmpty()) {
-			if(getTopLevel() instanceof JFrame) {
-//				JDialog jd = new JDialog((JFrame)getTopLevel(),title);
-				JDialog jd = new TipiSwingDialog((JFrame)getTopDialog(),d);
+		if (dialogStack.isEmpty()) {
+			if (getTopLevel() instanceof JFrame) {
+				// JDialog jd = new JDialog((JFrame)getTopLevel(),title);
+				JDialog jd = new TipiSwingDialog((JFrame) getTopDialog(), d);
 				jd.setTitle(title);
 
-				((JComponent)jd.getContentPane()).setOpaque(false);
+				((JComponent) jd.getContentPane()).setOpaque(false);
 				dialogStack.push(jd);
 				return jd;
 			}
-			if(getAppletRoot()!=null) {
-				JFrame rootFrame = (JFrame) JOptionPane.getFrameForComponent(getAppletRoot()); 
-				JDialog jd = new TipiSwingDialog(rootFrame,d);
+			if (getAppletRoot() != null) {
+				JFrame rootFrame = (JFrame) JOptionPane
+						.getFrameForComponent(getAppletRoot());
+				JDialog jd = new TipiSwingDialog(rootFrame, d);
 				jd.setTitle(title);
 				dialogStack.push(jd);
 				return jd;
 			}
-			if( getTopLevel() instanceof JPanel) {
-					JFrame rootFrame = (JFrame)JOptionPane.getFrameForComponent( (JPanel)getTopLevel()); 
-					JDialog jd = new TipiSwingDialog(rootFrame,d);
-					jd.setTitle(title);
-					dialogStack.push(jd);
-					return jd;
+			if (getTopLevel() instanceof JPanel) {
+				JFrame rootFrame = (JFrame) JOptionPane
+						.getFrameForComponent((JPanel) getTopLevel());
+				JDialog jd = new TipiSwingDialog(rootFrame, d);
+				jd.setTitle(title);
+				dialogStack.push(jd);
+				return jd;
 			}
 			System.err.println("Trouble creating dialog");
-			JDialog jd = new TipiSwingDialog( (JFrame)null,d);
+			JDialog jd = new TipiSwingDialog((JFrame) null, d);
 			jd.setTitle(title);
 			dialogStack.push(jd);
 			return jd;
 		}
 		JDialog parent = dialogStack.peek();
 
-		System.err.println("Create dialog: Stack not empty: "+dialogStack.size()+", attaching to dialog with title: "+parent.getTitle());
+		System.err.println("Create dialog: Stack not empty: "
+				+ dialogStack.size() + ", attaching to dialog with title: "
+				+ parent.getTitle());
 
-		JDialog newMotherFucka = new JDialog(parent,title);
+		JDialog newMotherFucka = new JDialog(parent, title);
 		dialogStack.push(newMotherFucka);
 		return newMotherFucka;
 	}
-	
+
 	public void addDialog(JDialog j) {
-		if(dialogStack.contains(j)) {
+		if (dialogStack.contains(j)) {
 			return;
-		} 
+		}
 		dialogStack.push(j);
 	}
 
 	public RootPaneContainer getTopDialog() {
-		if(dialogStack.isEmpty()) {
+		if (dialogStack.isEmpty()) {
 			return (RootPaneContainer) getTopLevel();
 		}
 		JDialog parent = dialogStack.peek();
 		return parent;
 	}
-	
+
 	public void destroyDialog(JDialog j) {
-//		System.err.println("Before: "+dialogStack);
-		if(dialogStack.isEmpty()) {
+		// System.err.println("Before: "+dialogStack);
+		if (dialogStack.isEmpty()) {
 			System.err.println("Already empty");
 			return;
 		}
-		if(dialogStack.peek() == j) {
-				dialogStack.pop();
+		if (dialogStack.peek() == j) {
+			dialogStack.pop();
 			j.setVisible(false);
 			// smoking gun: (this line was missing)
 			j.dispose();
-//			System.err.println("After: "+dialogStack);
+			// System.err.println("After: "+dialogStack);
 
 			return;
 		}
-		if(!dialogStack.contains(j)) {
+		if (!dialogStack.contains(j)) {
 		} else {
 			JDialog sss = dialogStack.pop();
 			sss.dispose();
 			destroyDialog(j);
 		}
-		//System.err.println("After: "+dialogStack);
+		// System.err.println("After: "+dialogStack);
 		j.dispose();
 	}
-
 
 	@Override
 	public void showFatalStartupError(String message) {

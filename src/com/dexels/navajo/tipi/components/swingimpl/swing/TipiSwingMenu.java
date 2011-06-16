@@ -1,8 +1,10 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
-import java.net.*;
+import java.net.URL;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JMenu;
+import javax.swing.KeyStroke;
 
 /**
  * <p>
@@ -22,7 +24,11 @@ import javax.swing.*;
  * @version 1.0
  */
 public class TipiSwingMenu extends JMenu {
-	public static String STRINGMNEMONIC_CHANGED_PROPERTY = "string_mnemonic"; 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7483992922585536025L;
+	public static String STRINGMNEMONIC_CHANGED_PROPERTY = "string_mnemonic";
 
 	public void setIconUrl(URL u) {
 		setIcon(new ImageIcon(u));

@@ -1,15 +1,16 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
-import java.awt.*;
-import java.beans.*;
-import java.io.*;
-import java.net.*;
+import java.awt.Color;
+import java.awt.Image;
+import java.io.IOException;
+import java.net.URL;
 
-import javax.imageio.*;
-import javax.swing.*;
+import javax.imageio.ImageIO;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JPanel;
 
-import com.dexels.navajo.document.types.*;
-import com.dexels.navajo.tipi.components.swingimpl.parsers.*;
+import com.dexels.navajo.document.types.Binary;
 
 /**
  * <p>
@@ -30,6 +31,10 @@ import com.dexels.navajo.tipi.components.swingimpl.parsers.*;
  */
 public class TipiSwingTab extends JPanel implements TipiTabbable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1869629608167928815L;
 	private String tabTooltip;
 	private Icon tabIcon;
 	private int index;
@@ -54,7 +59,7 @@ public class TipiSwingTab extends JPanel implements TipiTabbable {
 	public void setTabIcon(Icon tabIcon) {
 		Icon old = this.tabIcon;
 		this.tabIcon = tabIcon;
-		if(old==tabIcon) {
+		if (old == tabIcon) {
 			System.err.println("whoops, identical");
 		}
 		firePropertyChange("tabIcon", old, tabIcon);
@@ -95,7 +100,7 @@ public class TipiSwingTab extends JPanel implements TipiTabbable {
 	public Object getIconUrl() {
 		return tabObject;
 	}
-	
+
 	protected ImageIcon getIcon(Object u) {
 		if (u == null) {
 			return null;

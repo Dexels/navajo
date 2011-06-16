@@ -1,11 +1,17 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
-import java.awt.*;
-import java.net.*;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Paint;
+import java.awt.Rectangle;
+import java.net.URL;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JPanel;
+import javax.swing.Scrollable;
 
-import com.dexels.navajo.tipi.components.swingimpl.parsers.*;
+import com.dexels.navajo.tipi.components.swingimpl.parsers.TipiGradientPaint;
 
 /**
  * <p>
@@ -25,10 +31,13 @@ import com.dexels.navajo.tipi.components.swingimpl.parsers.*;
  * @version 1.0
  */
 public class TipiSwingPanel extends JPanel implements Scrollable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7367347934095843177L;
 	private static final String ALIGNMENT = "alignment";
-	  private static final String PAINT = "paint";
-	  private TipiGradientPaint paint = null;
-	  
+	private static final String PAINT = "paint";
+	private TipiGradientPaint paint = null;
 
 	private ImageIcon myImage = null;
 	private final String NORTH = "north";
@@ -42,17 +51,18 @@ public class TipiSwingPanel extends JPanel implements Scrollable {
 	private final String SOUTHWEST = "southwest";
 
 	private String alignment = CENTER;
-//	private String title = null;
+
+	// private String title = null;
 
 	public TipiSwingPanel() {
-//		setBackground(new Color(0.0f,0.8f,0.0f,0.2f));
+		// setBackground(new Color(0.0f,0.8f,0.0f,0.2f));
 	}
-	
+
 	public void setAlignment(String al) {
 		String old = this.alignment;
-	    alignment = al;
-	    repaint();
-	    firePropertyChange(ALIGNMENT, old, al);
+		alignment = al;
+		repaint();
+		firePropertyChange(ALIGNMENT, old, al);
 	}
 
 	public TipiGradientPaint getPaint() {
@@ -64,14 +74,14 @@ public class TipiSwingPanel extends JPanel implements Scrollable {
 		this.paint = paint;
 		firePropertyChange(PAINT, old, paint);
 	}
-	
-	
+
 	private Dimension checkMax(Dimension preferredSize) {
 		Dimension maximumSize = getMaximumSize();
 		if (maximumSize == null) {
 			return preferredSize;
 		}
-		return new Dimension(Math.min(preferredSize.width, maximumSize.width), Math.min(preferredSize.height, maximumSize.height));
+		return new Dimension(Math.min(preferredSize.width, maximumSize.width),
+				Math.min(preferredSize.height, maximumSize.height));
 	}
 
 	private Dimension checkMin(Dimension preferredSize) {
@@ -79,7 +89,8 @@ public class TipiSwingPanel extends JPanel implements Scrollable {
 		if (minimumSize == null) {
 			return preferredSize;
 		}
-		return new Dimension(Math.max(preferredSize.width, minimumSize.width), Math.max(preferredSize.height, minimumSize.height));
+		return new Dimension(Math.max(preferredSize.width, minimumSize.width),
+				Math.max(preferredSize.height, minimumSize.height));
 	}
 
 	public Dimension checkMaxMin(Dimension d) {
@@ -107,43 +118,56 @@ public class TipiSwingPanel extends JPanel implements Scrollable {
 				g.drawImage(myImage.getImage(), 0, 0, this);
 			}
 			if (NORTH.equals(alignment)) {
-				g.drawImage(myImage.getImage(), ((getWidth() / 2) - (myImage.getIconWidth() / 2)), 0, this);
+				g.drawImage(myImage.getImage(),
+						((getWidth() / 2) - (myImage.getIconWidth() / 2)), 0,
+						this);
 			}
 			if (NORTHEAST.equals(alignment)) {
-				g.drawImage(myImage.getImage(), getWidth() - myImage.getIconWidth(), 0, this);
+				g.drawImage(myImage.getImage(),
+						getWidth() - myImage.getIconWidth(), 0, this);
 			}
 			if (WEST.equals(alignment)) {
-				g.drawImage(myImage.getImage(), 0, ((getHeight() / 2) - (myImage.getIconHeight() / 2)), this);
+				g.drawImage(myImage.getImage(), 0,
+						((getHeight() / 2) - (myImage.getIconHeight() / 2)),
+						this);
 			}
 			if (CENTER.equals(alignment)) {
-				g.drawImage(myImage.getImage(), ((getWidth() / 2) - (myImage.getIconWidth() / 2)), ((getHeight() / 2) - (myImage
-						.getIconHeight() / 2)), this);
+				g.drawImage(myImage.getImage(),
+						((getWidth() / 2) - (myImage.getIconWidth() / 2)),
+						((getHeight() / 2) - (myImage.getIconHeight() / 2)),
+						this);
 			}
 			if (EAST.equals(alignment)) {
-				g.drawImage(myImage.getImage(), getWidth() - myImage.getIconWidth(), ((getHeight() / 2) - (myImage.getIconHeight() / 2)),
+				g.drawImage(myImage.getImage(),
+						getWidth() - myImage.getIconWidth(),
+						((getHeight() / 2) - (myImage.getIconHeight() / 2)),
 						this);
 			}
 			if (SOUTHWEST.equals(alignment)) {
-				g.drawImage(myImage.getImage(), 0, getHeight() - myImage.getIconHeight(), this);
+				g.drawImage(myImage.getImage(), 0,
+						getHeight() - myImage.getIconHeight(), this);
 			}
 			if (SOUTH.equals(alignment)) {
-				g.drawImage(myImage.getImage(), ((getWidth() / 2) - (myImage.getIconWidth() / 2)), getHeight() - myImage.getIconHeight(),
-						this);
+				g.drawImage(myImage.getImage(),
+						((getWidth() / 2) - (myImage.getIconWidth() / 2)),
+						getHeight() - myImage.getIconHeight(), this);
 			}
 			if (SOUTHEAST.equals(alignment)) {
-				g.drawImage(myImage.getImage(), getWidth() - myImage.getIconWidth(), getHeight() - myImage.getIconHeight(), this);
+				g.drawImage(myImage.getImage(),
+						getWidth() - myImage.getIconWidth(), getHeight()
+								- myImage.getIconHeight(), this);
 			}
 		}
 	}
 
 	public void setImageUrl(URL u) {
-		
+
 		myImage = new ImageIcon(u);
 	}
+
 	public String getAlignment() {
 		return alignment;
 	}
-
 
 	public Dimension getPreferredScrollableViewportSize() {
 		return getPreferredSize();
@@ -164,14 +188,14 @@ public class TipiSwingPanel extends JPanel implements Scrollable {
 	public int getScrollableUnitIncrement(Rectangle arg0, int arg1, int arg2) {
 		return 20;
 	}
-	
-//	public String getTitle() {
-//		return title;
-//	}
 
-//	public void setTitle(String title) {
-//		this.title = title;
-//		setBorder(BorderFactory.createTitledBorder(title));
-//	}
-	
+	// public String getTitle() {
+	// return title;
+	// }
+
+	// public void setTitle(String title) {
+	// this.title = title;
+	// setBorder(BorderFactory.createTitledBorder(title));
+	// }
+
 }

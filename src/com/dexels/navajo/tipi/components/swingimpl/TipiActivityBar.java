@@ -1,69 +1,78 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 
-import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.TipiActivityListener;
 
 /**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: </p>
+ * <p>
+ * Title:
+ * </p>
+ * <p>
+ * Description:
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2003
+ * </p>
+ * <p>
+ * Company:
+ * </p>
+ * 
  * @author not attributable
  * @version 1.0
  */
-public class TipiActivityBar
-    extends TipiLabel
-    implements TipiActivityListener {
-  private boolean amIActive = false;
-  private ImageIcon busyIcon = null;
-  private ImageIcon freeIcon = null;
-  public TipiActivityBar() {
-  }
+public class TipiActivityBar extends TipiLabel implements TipiActivityListener {
+	private boolean amIActive = false;
+	private ImageIcon busyIcon = null;
+	private ImageIcon freeIcon = null;
 
-  public boolean isActive() {
-    return amIActive;
-  }
+	public TipiActivityBar() {
+	}
 
-  public void setActive(final boolean state) {
-    SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-        amIActive = state;
-//        setComponentValue("indeterminate", new Boolean(amIActive));
-        if (amIActive) {
-          ( (JLabel) getSwingContainer()).setIcon(busyIcon);
-        }
-        else {
-          ( (JLabel) getSwingContainer()).setIcon(freeIcon);
-        }
-      }
-    });
-  }
+	public boolean isActive() {
+		return amIActive;
+	}
 
-  public void setComponentValue(String name, Object object) {
-    super.setComponentValue(name, object);
-    if (name.equals("freeicon")) {
-      freeIcon = getIcon( object);
-    }
-    if (name.equals("busyicon")) {
-      busyIcon = getIcon( object);
-    }
-  }
+	public void setActive(final boolean state) {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				amIActive = state;
+				// setComponentValue("indeterminate", new Boolean(amIActive));
+				if (amIActive) {
+					((JLabel) getSwingContainer()).setIcon(busyIcon);
+				} else {
+					((JLabel) getSwingContainer()).setIcon(freeIcon);
+				}
+			}
+		});
+	}
 
-  public void setActiveThreads(int i) {
-    setComponentValue("text", "Active operations: " + i);
-  }
+	public void setComponentValue(String name, Object object) {
+		super.setComponentValue(name, object);
+		if (name.equals("freeicon")) {
+			freeIcon = getIcon(object);
+		}
+		if (name.equals("busyicon")) {
+			busyIcon = getIcon(object);
+		}
+	}
 
-  /**
-   * createContainer
-   *
-   * @return Object
-   * @todo Implement this
-   *   com.dexels.navajo.tipi.components.core.TipiComponentImpl method
-   */
-  public Object createContainer() {
-    Object o = super.createContainer();
-    myContext.addTipiActivityListener(this);
-    return o;
-  }
+	public void setActiveThreads(int i) {
+		setComponentValue("text", "Active operations: " + i);
+	}
+
+	/**
+	 * createContainer
+	 * 
+	 * @return Object
+	 * @todo Implement this
+	 *       com.dexels.navajo.tipi.components.core.TipiComponentImpl method
+	 */
+	public Object createContainer() {
+		Object o = super.createContainer();
+		myContext.addTipiActivityListener(this);
+		return o;
+	}
 }

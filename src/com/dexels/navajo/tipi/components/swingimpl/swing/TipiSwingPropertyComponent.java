@@ -1,16 +1,23 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
-import java.awt.*;
+import java.awt.Color;
 
-import javax.swing.*;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.swingclient.components.*;
-import com.dexels.navajo.tipi.swingimpl.dnd.*;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.swingclient.components.GenericPropertyComponent;
+import com.dexels.navajo.tipi.swingimpl.dnd.TipiDndCapable;
+import com.dexels.navajo.tipi.swingimpl.dnd.TipiDndManager;
 
-public class TipiSwingPropertyComponent extends GenericPropertyComponent implements TipiDndCapable {
-	
+public class TipiSwingPropertyComponent extends GenericPropertyComponent
+		implements TipiDndCapable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1703359870781330307L;
 	private static final String CAPITALIZATION = "capitalization";
 	private static final String CHECKBOXGROUPCOLUMNCOUNT = "checkboxGroupColumnCount";
 	private static final String HORIZONTALSCROLLS = "horizontalscrolls";
@@ -34,179 +41,204 @@ public class TipiSwingPropertyComponent extends GenericPropertyComponent impleme
 	private String labelVAlign;
 	private boolean alwaysUseLabel;
 	private TipiComponent myComponent;
-	private TipiSwingPropertyDescriptionLabel myLabel ;
+	private TipiSwingPropertyDescriptionLabel myLabel;
 	private final TipiDndManager myTipiDndManager;
-	
+
 	public TipiSwingPropertyComponent(TipiComponent tc) {
 		myComponent = tc;
-		myTipiDndManager = new TipiDndManager(this,tc);
+		myTipiDndManager = new TipiDndManager(this, tc);
 		setBackground(Color.red);
 	}
-	
+
 	public boolean isAlwaysUseLabel() {
 		return alwaysUseLabel;
 	}
+
 	public void setAlwaysUseLabel(boolean alwaysUseLabel) {
 		this.alwaysUseLabel = alwaysUseLabel;
 	}
+
 	public String getCapitalization() {
 		return super.getCapitalization();
 	}
+
 	public void setCapitalization(String capitalization) {
 		String old = super.getCapitalization();
 		super.setCapitalization(capitalization);
 		firePropertyChange(CAPITALIZATION, old, capitalization);
 	}
-	
-	
-// public void setProperty(Property p) {
-		  public void constructPropertyComponent(Property p) {
-		
+
+	// public void setProperty(Property p) {
+	public void constructPropertyComponent(Property p) {
+
 		String subtype = p.getSubType("tipitype");
-		if(subtype==null) {
+		if (subtype == null) {
 			super.constructPropertyComponent(p);
 			return;
 		}
-		System.err.println("TYPE: "+subtype);
-		
+		System.err.println("TYPE: " + subtype);
+
 		String[] types = Property.VALID_DATA_TYPES;
 		for (int i = 0; i < types.length; i++) {
-			if(subtype.equals(types[i])) {
+			if (subtype.equals(types[i])) {
 				p.setType(subtype);
 				super.constructPropertyComponent(p);
 				return;
 			}
 		}
-		if(subtype.equals("color")) {
+		if (subtype.equals("color")) {
 			TipiSwingColorButton tscb = new TipiSwingColorButton(myComponent);
 			tscb.setProperty(p);
 			addPropertyComponent(tscb);
-		} else if (subtype.equals("paint")){
+		} else if (subtype.equals("paint")) {
 			TipiSwingPaintEditor tscb = new TipiSwingPaintEditor(myComponent);
 			tscb.setProperty(p);
 			addPropertyComponent(tscb);
 		} else {
 			Object oo = p.getTypedValue();
-			if(oo!=null) {
-				addPropertyComponent(new JLabel("Huh: "+subtype+"=="+oo.getClass()));
+			if (oo != null) {
+				addPropertyComponent(new JLabel("Huh: " + subtype + "=="
+						+ oo.getClass()));
 			} else {
-				addPropertyComponent(new JLabel("Huh: "+subtype));
-				
+				addPropertyComponent(new JLabel("Huh: " + subtype));
+
 			}
-			System.err.println("Strange type: "+subtype);
+			System.err.println("Strange type: " + subtype);
 		}
 		// strange type found:
-		
+
 	}
-	
+
 	public void setCheckboxGroupColumnCount(int checkboxGroupColumnCount) {
 		int old = getCheckboxGroupColumnCount();
 		super.setCheckboxGroupColumnCount(checkboxGroupColumnCount);
-		firePropertyChange(CHECKBOXGROUPCOLUMNCOUNT, old, checkboxGroupColumnCount);
+		firePropertyChange(CHECKBOXGROUPCOLUMNCOUNT, old,
+				checkboxGroupColumnCount);
 	}
-	
+
 	public boolean isHorizontalScrolls() {
 		return super.hasHorizontalScrolls();
 	}
+
 	public void setHorizontalScrolls(boolean horizontalScrolls) {
 		boolean old = super.hasHorizontalScrolls();
 		super.setHorizontalScrolls(horizontalScrolls);
 		firePropertyChange(HORIZONTALSCROLLS, old, horizontalScrolls);
 	}
+
 	public String getLabelHAlign() {
 		return labelHAlign;
 	}
+
 	public void setLabelHAlign(String labelHAlign) {
 		String old = getLabelHAlign();
 		this.labelHAlign = labelHAlign;
 		firePropertyChange(LABELHALIGN, old, labelHAlign);
 	}
+
 	public int getLabelIndent() {
 		return super.getLabelIndent();
 	}
+
 	public void setLabelIndent(int labelIndent) {
 		int old = getLabelIndent();
 		super.setLabelIndent(labelIndent);
 		firePropertyChange(LABELINDENT, old, labelIndent);
 	}
+
 	public String getLabelVAlign() {
 		return labelVAlign;
 	}
+
 	public void setLabelVAlign(String labelVAlign) {
 		String old = getLabelVAlign();
 		this.labelVAlign = labelVAlign;
-		if("top".equals(labelVAlign)) {
+		if ("top".equals(labelVAlign)) {
 			super.setVerticalLabelAlignment(SwingConstants.TOP);
 		}
-		if("bottom".equals(labelVAlign)) {
+		if ("bottom".equals(labelVAlign)) {
 			super.setVerticalLabelAlignment(SwingConstants.BOTTOM);
 		}
-		if("center".equals(labelVAlign)) {
+		if ("center".equals(labelVAlign)) {
 			super.setVerticalLabelAlignment(SwingConstants.CENTER);
 		}
 		firePropertyChange(LABELVALIGN, old, labelVAlign);
 	}
+
 	public int getMaxImageHeight() {
 		return super.getMaxImageHeight();
 	}
+
 	public void setMaxImageHeight(int maxImageHeight) {
 		int old = getMaxImageHeight();
 		super.setMaxImageHeight(maxImageHeight);
 		firePropertyChange(MAXIMAGEHEIGHT, old, maxImageHeight);
 	}
+
 	public int getMaxImageWidth() {
 		return super.getMaxImageWidth();
 	}
+
 	public void setMaxImageWidth(int maxImageWidth) {
 		int old = getMaxImageWidth();
 		super.setMaxImageWidth(maxImageWidth);
 		firePropertyChange(MAXIMAGEWIDTH, old, maxImageWidth);
 	}
+
 	public int getMaxWidth() {
 		return super.getMaxWidth();
 	}
+
 	public void setMaxWidth(int maxWidth) {
 		int old = getMaxWidth();
 		super.setMaxWidth(maxWidth);
 		firePropertyChange(MAXWIDTH, old, maxWidth);
 	}
+
 	public int getMemoColumnCount() {
 		return super.getMemoColumnCount();
 	}
+
 	public void setMemoColumnCount(int memoColumnCount) {
 		int old = getMemoColumnCount();
 		super.setMemoColumnCount(memoColumnCount);
 		firePropertyChange(MEMOCOLUMNCOUNT, old, memoColumnCount);
 	}
+
 	public int getMemoRowCount() {
 		return super.getMemoColumnCount();
 	}
+
 	public void setMemoRowCount(int memoRowCount) {
 		int old = getMemoRowCount();
 		super.setMemoRowCount(memoRowCount);
 		firePropertyChange(MEMOROWCOUNT, old, memoRowCount);
 	}
+
 	public String getPropertyName() {
 		return propertyName;
 	}
+
 	public void setPropertyName(String propertyname) {
 		String old = propertyName;
 		this.propertyName = propertyname;
 		firePropertyChange(PROPERTYNAME, old, propertyname);
 	}
-	
+
 	public String getSelectionType() {
 		return super.getSelectionType();
 	}
+
 	public void setSelectionType(String selectionType) {
 		String old = getSelectionType();
 		super.setSelectionType(selectionType);
 		firePropertyChange(SELECTIONTYPE, old, selectionType);
 	}
-	
+
 	public boolean isShowDatePicker() {
 		return super.hasShowDatePicker();
 	}
+
 	public void setShowDatePicker(boolean showDatePicker) {
 		boolean old = isShowDatePicker();
 		super.setShowDatePicker(showDatePicker);
@@ -218,6 +250,7 @@ public class TipiSwingPropertyComponent extends GenericPropertyComponent impleme
 		setLabelVisible(showLabel);
 		firePropertyChange(SHOWLABEL, old, showLabel);
 	}
+
 	public void setVerticalScrolls(boolean verticalScrolls) {
 		boolean old = hasVerticalScrolls();
 		super.setVerticalScrolls(verticalScrolls);
@@ -229,22 +262,22 @@ public class TipiSwingPropertyComponent extends GenericPropertyComponent impleme
 		super.setVisibleRows(visibleRowCount);
 		firePropertyChange(VISIBLEROWCOUNT, old, visibleRowCount);
 	}
-	
+
 	public void setFocusable(boolean b) {
 		boolean old = isFocusable();
 		super.setFocusable(b);
 		firePropertyChange(FOCUSABLE, old, b);
-}
-	
+	}
+
 	public void setEnabled(boolean b) {
-		//super.setEnabled(b);
-//		System.err.println("IN SETENABLED. IGNORING");
-//		Thread.dumpStack();
+		// super.setEnabled(b);
+		// System.err.println("IN SETENABLED. IGNORING");
+		// Thread.dumpStack();
 	}
 
 	protected JLabel getLabel() {
-		if(myLabel==null) {
-			myLabel = new TipiSwingPropertyDescriptionLabel(this,myComponent);
+		if (myLabel == null) {
+			myLabel = new TipiSwingPropertyDescriptionLabel(this, myComponent);
 		}
 		return myLabel;
 	}

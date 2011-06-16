@@ -1,12 +1,12 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.awt.*;
+import javax.swing.JPanel;
 
-import javax.swing.*;
-
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.TipiHelper;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
 
 /**
  * <p>
@@ -28,7 +28,7 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 public class TipiArrayPanel extends TipiSwingDataComponentImpl {
 
 	private String messagePath = null;
-	
+
 	public Object createContainer() {
 		JPanel myPanel = new JPanel();
 		TipiHelper th = new TipiSwingHelper();
@@ -38,8 +38,9 @@ public class TipiArrayPanel extends TipiSwingDataComponentImpl {
 	}
 
 	@Override
-	public void loadData(Navajo n, String method) throws TipiException, TipiBreakException {
-		System.err.println("Message path loading: "+messagePath);
+	public void loadData(Navajo n, String method) throws TipiException,
+			TipiBreakException {
+		System.err.println("Message path loading: " + messagePath);
 		loadArrayData(n, method, messagePath);
 		super.loadData(n, method);
 		doLayout();
@@ -47,7 +48,7 @@ public class TipiArrayPanel extends TipiSwingDataComponentImpl {
 
 	@Override
 	protected Object getComponentValue(String name) {
-		if(name.equals("messagePath")) {
+		if (name.equals("messagePath")) {
 			return messagePath;
 		}
 		return super.getComponentValue(name);
@@ -55,15 +56,15 @@ public class TipiArrayPanel extends TipiSwingDataComponentImpl {
 
 	@Override
 	protected void setComponentValue(String name, Object object) {
-		if(name.equals("messagePath")) {
-			messagePath = (String)object;
+		if (name.equals("messagePath")) {
+			messagePath = (String) object;
 			return;
 		}
 		super.setComponentValue(name, object);
 	}
 
 	protected void cascadeLoad(Navajo n, String method) throws TipiException {
-	//	System.err.println("ArrayPanell: Not cascading: "+method);
+		// System.err.println("ArrayPanell: Not cascading: "+method);
 	}
-	
+
 }

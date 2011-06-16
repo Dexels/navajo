@@ -6,17 +6,21 @@
  */
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.swingclient.components.*;
+import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.swingclient.components.MessageTablePanel;
 
 public class TipiMessageTablePanel extends MessageTablePanel {
-    private String messagePath;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 375201137815855550L;
+	private String messagePath;
 
 	public TipiMessageTablePanel(TipiContext tc, TipiComponent component) {
-        super(new TipiMessageTable(tc,component));
+		super(new TipiMessageTable(tc, component));
 	}
 
-	
 	public String getMessagePath() {
 		return messagePath;
 	}
@@ -26,6 +30,5 @@ public class TipiMessageTablePanel extends MessageTablePanel {
 		this.messagePath = messagePath;
 		firePropertyChange("messagePath", old, messagePath);
 	}
-	
 
 }

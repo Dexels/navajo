@@ -6,19 +6,24 @@
  */
 package com.dexels.navajo.tipi.components.swingimpl.actions;
 
-import java.awt.*;
-import java.io.*;
-import java.util.*;
+import java.awt.Container;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
+import java.util.StringTokenizer;
 
-import javax.swing.*;
+import javax.swing.JFileChooser;
 
-import metadata.*;
+import metadata.FormatDescription;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.types.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.internal.TipiAction;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 
 /**
  * @author Administrator
@@ -37,7 +42,9 @@ public class TipiSaveBinary extends TipiAction {
 	 */
 	private File f = null;
 	private int result;
-	protected void execute(TipiEvent event) throws TipiBreakException, TipiException {
+
+	protected void execute(TipiEvent event) throws TipiBreakException,
+			TipiException {
 
 		Operand value = getEvaluatedParameter("value", event);
 		Operand extension = getEvaluatedParameter("extension", event);
@@ -49,7 +56,9 @@ public class TipiSaveBinary extends TipiAction {
 			throw new TipiException("TipiOpenBinary: null value supplied");
 		}
 		if (!(value.value instanceof Binary)) {
-			throw new TipiException("TipiOpenBinary: Type of value is not Binary, but: " + value.value.getClass());
+			throw new TipiException(
+					"TipiOpenBinary: Type of value is not Binary, but: "
+							+ value.value.getClass());
 		}
 		String extString = null;
 		if (extension != null) {
@@ -66,9 +75,9 @@ public class TipiSaveBinary extends TipiAction {
 			String mime = b.guessContentType();
 			String ext = null;
 			FormatDescription fd = b.getFormatDescription();
-			if(fd!=null) {
+			if (fd != null) {
 				List<String> extensions = fd.getFileExtensions();
-				if(!extensions.isEmpty()) {
+				if (!extensions.isEmpty()) {
 					ext = extensions.get(0);
 
 				}
@@ -78,8 +87,9 @@ public class TipiSaveBinary extends TipiAction {
 					StringTokenizer st = new StringTokenizer(mime, "/");
 					String major = st.nextToken();
 					String minor = st.nextToken();
-					System.err.println("Binary type: " + major + " and minor: " + minor);
-					if(ext!=null) {
+					System.err.println("Binary type: " + major + " and minor: "
+							+ minor);
+					if (ext != null) {
 						extString = ext;
 					} else {
 						extString = minor;
@@ -96,7 +106,7 @@ public class TipiSaveBinary extends TipiAction {
 
 			public void run() {
 				Container c = null;
-				doShowSaveDialog(c, fname+"."+e);
+				doShowSaveDialog(c, fname + "." + e);
 
 			}
 		});
@@ -105,14 +115,6 @@ public class TipiSaveBinary extends TipiAction {
 		}
 
 		saveFile(b, f);
-		
-		
-		
-		
-		
-		
-		
-		
 
 	}
 
@@ -126,7 +128,8 @@ public class TipiSaveBinary extends TipiAction {
 		f = jf.getSelectedFile();
 	}
 
-	public static void saveFile(Binary value, File f) throws TipiBreakException, TipiException {
+	public static void saveFile(Binary value, File f)
+			throws TipiBreakException, TipiException {
 		if (f == null) {
 			throw new TipiBreakException(-3);
 		}

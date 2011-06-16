@@ -1,20 +1,35 @@
 package com.dexels.navajo.tipi.components.swingimpl.tipimegatable;
 
-import java.awt.*;
-import java.io.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Stack;
 
-import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.JPanel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.swingimpl.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
-import com.dexels.navajo.tipi.internal.*;
-import com.dexels.navajo.tipi.swingclient.components.*;
-import com.dexels.navajo.tipi.tipixml.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiComponentMethod;
+import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.components.swingimpl.TipiSwingDataComponentImpl;
+import com.dexels.navajo.tipi.components.swingimpl.swing.MessageTableFooterRenderer;
+import com.dexels.navajo.tipi.internal.TipiEvent;
+import com.dexels.navajo.tipi.swingclient.components.MessageTablePanel;
+import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 /**
  * <p>
@@ -59,7 +74,9 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 		return myPanel;
 	}
 
-	public void addTableInstance(MessageTablePanel mtp, MessageTableFooterRenderer mfr, RemarkPanel remarkPanel, TipiTableBaseLayer tmtl) {
+	public void addTableInstance(MessageTablePanel mtp,
+			MessageTableFooterRenderer mfr, RemarkPanel remarkPanel,
+			TipiTableBaseLayer tmtl) {
 		tableInstances.add(mtp);
 		footerRendererMap.put(mtp, mfr);
 		// tableLayerMap.put(mtp,mfr);
@@ -131,7 +148,8 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 		}
 	}
 
-	public void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
+	public void load(XMLElement elm, XMLElement instance, TipiContext context)
+			throws com.dexels.navajo.tipi.TipiException {
 		super.load(elm, instance, context);
 		loadLevels(elm);
 	}
@@ -143,20 +161,21 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 		}
 	}
 
-
-
 	@SuppressWarnings("deprecation")
-	public void flatten(String serviceName, String hostUrl, String username, String password, String pincode, String keystore,
-			String keypass) throws NavajoException, TipiBreakException {
+	public void flatten(String serviceName, String hostUrl, String username,
+			String password, String pincode, String keystore, String keypass)
+			throws NavajoException, TipiBreakException {
 		Navajo out = NavajoFactory.getInstance().createNavajo();
-		Message outResult = NavajoFactory.getInstance().createMessage(out, "Answers", Message.MSG_TYPE_ARRAY);
+		Message outResult = NavajoFactory.getInstance().createMessage(out,
+				"Answers", Message.MSG_TYPE_ARRAY);
 		Message formData = myNavajo.getMessage("FormData");
 		Message outMessage = formData.copy(out);
 
 		Message m2 = myNavajo.getMessage("SendForm").copy(out);
 		out.addMessage(m2);
 
-		Property pin = NavajoFactory.getInstance().createProperty(out, "Pincode", Property.STRING_PROPERTY, pincode, 16, "",
+		Property pin = NavajoFactory.getInstance().createProperty(out,
+				"Pincode", Property.STRING_PROPERTY, pincode, 16, "",
 				Property.DIR_IN);
 		outMessage.addProperty(pin);
 		out.addMessage(outMessage);
@@ -167,10 +186,13 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 			flatten(al.get(i), outResult);
 		}
 
-		myContext.performTipiMethod(this, out, "*", serviceName, true, null, -1, hostUrl, username, password, keystore, keypass);
+		myContext.performTipiMethod(this, out, "*", serviceName, true, null,
+				-1, hostUrl, username, password, keystore, keypass);
 	}
 
-	protected void performComponentMethod(final String name, final TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
+	protected void performComponentMethod(final String name,
+			final TipiComponentMethod compMeth, TipiEvent event)
+			throws TipiBreakException {
 		if ("flatten".equals(name)) {
 			String username = null;
 			String password = null;
@@ -179,20 +201,27 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 			String hostUrl = null;
 			Operand host = compMeth.getEvaluatedParameter("hostUrl", event);
 			if (host != null) {
-				username = (String) compMeth.getEvaluatedParameter("username", event).value;
-				password = (String) compMeth.getEvaluatedParameter("password", event).value;
-				keystore = (String) compMeth.getEvaluatedParameter("keystore", event).value;
-				keypass = (String) compMeth.getEvaluatedParameter("keypass", event).value;
+				username = (String) compMeth.getEvaluatedParameter("username",
+						event).value;
+				password = (String) compMeth.getEvaluatedParameter("password",
+						event).value;
+				keystore = (String) compMeth.getEvaluatedParameter("keystore",
+						event).value;
+				keypass = (String) compMeth.getEvaluatedParameter("keypass",
+						event).value;
 				hostUrl = (String) host.value;
 			}
-			String serviceName = (String) compMeth.getEvaluatedParameter("serviceName", event).value;
-			String pincode = (String) compMeth.getEvaluatedParameter("pincode", event).value;
+			String serviceName = (String) compMeth.getEvaluatedParameter(
+					"serviceName", event).value;
+			String pincode = (String) compMeth.getEvaluatedParameter("pincode",
+					event).value;
 
 			try {
-				flatten(serviceName, hostUrl, username, password, pincode, keystore, keypass);
+				flatten(serviceName, hostUrl, username, password, pincode,
+						keystore, keypass);
 			} catch (NavajoException ex) {
 				ex.printStackTrace();
-				if(compMeth.getAction()!=null) {
+				if (compMeth.getAction() != null) {
 					compMeth.getAction().dumpStack("Error performing flatten");
 				}
 			}
@@ -213,8 +242,10 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 			}
 		}
 		if ("export".equals(name)) {
-			String filename = (String) compMeth.getEvaluatedParameter("filename", event).value;
-			String delimiter = (String) compMeth.getEvaluatedParameter("delimiter", event).value;
+			String filename = (String) compMeth.getEvaluatedParameter(
+					"filename", event).value;
+			String delimiter = (String) compMeth.getEvaluatedParameter(
+					"delimiter", event).value;
 			try {
 				flattenToCsv(filename, delimiter);
 			} catch (IOException e) {
@@ -223,10 +254,11 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 		}
 
 		if ("refreshRemarks".equals(name)) {
-			runSyncInEventThread(new Runnable(){
+			runSyncInEventThread(new Runnable() {
 				public void run() {
 					refreshAllTables();
-				}});
+				}
+			});
 		}
 		// if ("print".equals(name)) {
 		// Operand printJob = compMeth.getEvaluatedParameter("printJob",event);
@@ -248,13 +280,16 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 			List<Property> pl = in.getAllProperties();
 			for (int i = 0; i < pl.size(); i++) {
 				Property current = pl.get(i);
-				if (!current.getType().equals(Property.EXPRESSION_PROPERTY) && current.isDirIn() && !"".equals(p.getValue())) {
-					Message m = NavajoFactory.getInstance().createMessage(out.getRootDoc(), "Answers");
+				if (!current.getType().equals(Property.EXPRESSION_PROPERTY)
+						&& current.isDirIn() && !"".equals(p.getValue())) {
+					Message m = NavajoFactory.getInstance().createMessage(
+							out.getRootDoc(), "Answers");
 					out.addMessage(m);
 					Property codeCopy = p.copy(out.getRootDoc());
 					p.setLength(255);
 					codeCopy.setName("Id");
-					codeCopy.setValue(codeCopy.getValue() + "/" + current.getName());
+					codeCopy.setValue(codeCopy.getValue() + "/"
+							+ current.getName());
 
 					Property copy = current.copy(out.getRootDoc());
 					copy.setName("Value");
@@ -286,9 +321,9 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 				if (type.equals("table")) {
 					tmtl = new TipiTableLayer(this);
 				}
-//				if (type.equals("treetable")) {
-//					tmtl = new TipiTreeTableLayer(this);
-//				}
+				// if (type.equals("treetable")) {
+				// tmtl = new TipiTreeTableLayer(this);
+				// }
 				if (tmtl != null) {
 					tmtl.loadLayer(child);
 					layers.add(tmtl);
@@ -297,7 +332,8 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 		}
 	}
 
-	private final void flattenToCsv(String filename, String delimiter) throws IOException {
+	private final void flattenToCsv(String filename, String delimiter)
+			throws IOException {
 		Stack<TipiTableBaseLayer> s = new Stack<TipiTableBaseLayer>();
 		s.addAll(layers);
 		FileWriter f = new FileWriter(filename);
@@ -317,7 +353,8 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 		runSyncInEventThread(new Runnable() {
 
 			public void run() {
-				for (Iterator<TipiTableBaseLayer> iter = layers.iterator(); iter.hasNext();) {
+				for (Iterator<TipiTableBaseLayer> iter = layers.iterator(); iter
+						.hasNext();) {
 					TipiTableBaseLayer element = iter.next();
 					int i = element.getCurrentSelection();
 					result.add(new Integer(i));
@@ -333,7 +370,8 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 
 			public void run() {
 				int j = 0;
-				for (Iterator<TipiTableBaseLayer> iter = layers.iterator(); iter.hasNext();) {
+				for (Iterator<TipiTableBaseLayer> iter = layers.iterator(); iter
+						.hasNext();) {
 					TipiTableBaseLayer element = iter.next();
 					Integer iii = l.get(j);
 					if (iii.intValue() != -1) {
@@ -345,7 +383,8 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 		});
 	}
 
-	public void loadData(final Navajo n, String method) throws TipiException, TipiBreakException {
+	public void loadData(final Navajo n, String method) throws TipiException,
+			TipiBreakException {
 		myPanel.removeAll();
 		footerRendererMap.clear();
 		tableInstances.clear();

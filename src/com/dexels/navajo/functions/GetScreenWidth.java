@@ -1,11 +1,9 @@
 package com.dexels.navajo.functions;
 
-import java.awt.*;
+import java.awt.Toolkit;
 
-import javax.swing.*;
-
-import com.dexels.navajo.parser.*;
-import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.parser.TMLExpressionException;
 
 /**
  * @author frank

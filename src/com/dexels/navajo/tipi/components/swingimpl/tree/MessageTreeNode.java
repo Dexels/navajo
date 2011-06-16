@@ -1,10 +1,12 @@
 package com.dexels.navajo.tipi.components.swingimpl.tree;
 
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Vector;
 
-import javax.swing.tree.*;
+import javax.swing.tree.TreeNode;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Message;
 
 public class MessageTreeNode implements TreeNode {
 
@@ -16,18 +18,21 @@ public class MessageTreeNode implements TreeNode {
 		myParent = parent;
 		myMessage = m;
 		childList = new Vector<TreeNode>();
-		for (Iterator<Message> iter = myMessage.getAllMessages().iterator(); iter.hasNext();) {
+		for (Iterator<Message> iter = myMessage.getAllMessages().iterator(); iter
+				.hasNext();) {
 			Message element = iter.next();
-			childList.add(new MessageTreeNode(element,this));
+			childList.add(new MessageTreeNode(element, this));
 		}
 	}
 
 	public Message getMessage() {
 		return myMessage;
 	}
+
 	public String toString() {
 		return myMessage.getName();
 	}
+
 	public Enumeration<TreeNode> children() {
 		return childList.elements();
 	}

@@ -1,15 +1,19 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.awt.event.*;
-import java.util.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
-import javax.swing.JProgressBar;
-import javax.swing.event.*;
+import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiComponentMethod;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.TipiHelper;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingSlider;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 
 /**
  * <p>
@@ -108,10 +112,10 @@ public class TipiSlider extends TipiSwingComponentImpl {
 				public void run() {
 					String or = (String) object;
 					if ("horizontal".equals(or)) {
-						mySlide.setOrientation(mySlide.HORIZONTAL);
+						mySlide.setOrientation(SwingConstants.HORIZONTAL);
 					}
 					if ("vertical".equals(or)) {
-						mySlide.setOrientation(mySlide.VERTICAL);
+						mySlide.setOrientation(SwingConstants.VERTICAL);
 					}
 				}
 			});
@@ -120,33 +124,32 @@ public class TipiSlider extends TipiSwingComponentImpl {
 		if (name.equals("snaptoticks")) {
 			runSyncInEventThread(new Runnable() {
 				public void run() {
-					mySlide.setSnapToTicks((Boolean)object);
+					mySlide.setSnapToTicks((Boolean) object);
 				}
 			});
 		}
-		
+
 		if (name.equals("showticks")) {
 			runSyncInEventThread(new Runnable() {
 				public void run() {
-					mySlide.setPaintTicks((Boolean)object);
+					mySlide.setPaintTicks((Boolean) object);
 				}
 			});
 		}
 		if (name.equals("minortick")) {
 			runSyncInEventThread(new Runnable() {
 				public void run() {
-					mySlide.setMinorTickSpacing((Integer)object);
+					mySlide.setMinorTickSpacing((Integer) object);
 				}
 			});
 		}
 		if (name.equals("majortick")) {
 			runSyncInEventThread(new Runnable() {
 				public void run() {
-					mySlide.setMajorTickSpacing((Integer)object);
+					mySlide.setMajorTickSpacing((Integer) object);
 				}
 			});
 		}
-
 
 		super.setComponentValue(name, object);
 	}
@@ -158,7 +161,9 @@ public class TipiSlider extends TipiSwingComponentImpl {
 		return super.getComponentValue(name);
 	}
 
-	protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
+	protected void performComponentMethod(String name,
+			TipiComponentMethod compMeth, TipiEvent event)
+			throws TipiBreakException {
 		super.performComponentMethod(name, compMeth, event);
 
 	}

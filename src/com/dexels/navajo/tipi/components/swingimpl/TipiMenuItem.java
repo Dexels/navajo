@@ -1,12 +1,15 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Container;
+import java.awt.Cursor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JMenuItem;
 
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
+import com.dexels.navajo.tipi.TipiExecutable;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingMenuItem;
 
 /**
  * <p>
@@ -40,11 +43,12 @@ public class TipiMenuItem extends TipiSwingComponentImpl {
 			public void actionPerformed(ActionEvent e) {
 				setWaitCursor(true);
 
-				performTipiEvent("onActionPerformed", null, false, new Runnable() {
-					public void run() {
-						setWaitCursor(false);
-					}
-				});
+				performTipiEvent("onActionPerformed", null, false,
+						new Runnable() {
+							public void run() {
+								setWaitCursor(false);
+							}
+						});
 
 			}
 		});
@@ -70,7 +74,9 @@ public class TipiMenuItem extends TipiSwingComponentImpl {
 				// jj.getTopLevelAncestor()
 				if (jj.getTopLevelAncestor() != null) {
 
-					jj.getTopLevelAncestor().setCursor(b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
+					jj.getTopLevelAncestor().setCursor(
+							b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)
+									: Cursor.getDefaultCursor());
 				}
 			}
 		});

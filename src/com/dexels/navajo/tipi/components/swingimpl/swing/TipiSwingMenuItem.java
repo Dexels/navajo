@@ -1,8 +1,10 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
-import java.net.*;
+import java.net.URL;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
 
 /**
  * <p>
@@ -22,7 +24,12 @@ import javax.swing.*;
  * @version 1.0
  */
 public class TipiSwingMenuItem extends JMenuItem {
-	public static String STRINGMNEMONIC_CHANGED_PROPERTY = "string_mnemonic"; 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3647531512362433699L;
+	public static String STRINGMNEMONIC_CHANGED_PROPERTY = "string_mnemonic";
+
 	public TipiSwingMenuItem() {
 	}
 
@@ -35,10 +42,11 @@ public class TipiSwingMenuItem extends JMenuItem {
 		setMnemonic(s.charAt(0));
 		firePropertyChange(STRINGMNEMONIC_CHANGED_PROPERTY, old, s);
 	}
+
 	public String getStringMnemonic() {
-		return new String(""+(char)getMnemonic());
+		return new String("" + (char) getMnemonic());
 	}
-	
+
 	public void setAccelerator(String s) {
 		setAccelerator(KeyStroke.getKeyStroke(s));
 	}

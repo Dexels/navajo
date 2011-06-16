@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-
-import com.dexels.navajo.tipi.components.core.*;
+import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
 
 /**
  * <p>
@@ -22,7 +21,6 @@ import com.dexels.navajo.tipi.components.core.*;
  */
 public class TipiHeadlessFrame extends TipiDataComponentImpl {
 	// private JFrame myFrame = null;
-	
 
 	public TipiHeadlessFrame() {
 	}

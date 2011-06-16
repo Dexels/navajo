@@ -1,57 +1,77 @@
 package com.dexels.navajo.tipi.components.swingimpl.layout;
 
-import java.awt.*;
+import java.awt.Container;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
-import javax.swing.*;
+import javax.swing.JLabel;
 
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.core.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
-import com.dexels.navajo.tipi.tipixml.*;
+import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.TipiValue;
+import com.dexels.navajo.tipi.components.core.TipiLayoutImpl;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingGridBagConstraints;
+import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 /**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: </p>
+ * <p>
+ * Title:
+ * </p>
+ * <p>
+ * Description:
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2003
+ * </p>
+ * <p>
+ * Company:
+ * </p>
+ * 
  * @author not attributable
  * @version 1.0
  */
-public class TipiVerticalLayout
-    extends TipiLayoutImpl {
-@Override
+public class TipiVerticalLayout extends TipiLayoutImpl {
+	@Override
+	// GridBagLayout layout = null;
+	protected void setValue(String name, TipiValue tv) {
+		/**
+		 * @todo Implement this com.dexels.navajo.tipi.TipiLayout abstract method
+		 */
+	}
 
-//  GridBagLayout layout = null;
-  protected void setValue(String name, TipiValue tv) {
-    /**@todo Implement this com.dexels.navajo.tipi.TipiLayout abstract method*/
-  }
+	protected Object parseConstraint(String text, int index) {
+		// TipiSwingGridBagConstraints gt = new
+		// TipiSwingGridBagConstraints(text);
+		return createDefaultConstraint(index);
+	}
 
-  protected Object parseConstraint(String text,int index) {
-//    TipiSwingGridBagConstraints gt = new TipiSwingGridBagConstraints(text);
-    return createDefaultConstraint(index);
-  }
-
-  public void createLayout() {
-    GridBagLayout lay = new GridBagLayout();
-    setLayout(lay);
-    
-  }
-  
-	public void loadLayout(XMLElement def, final TipiComponent t) throws TipiException {
-		super.loadLayout(def, t);
-		myContext.runSyncInEventThread(new Runnable(){
-
-			public void run() {
-				Container c = ((Container)t.getContainer());
-				c.add(new JLabel(""),new TipiSwingGridBagConstraints(0, 999, 1, 1, 0, 1, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-			}});
+	public void createLayout() {
+		GridBagLayout lay = new GridBagLayout();
+		setLayout(lay);
 
 	}
 
-  
-  
-  public Object createDefaultConstraint(int index) {
+	public void loadLayout(XMLElement def, final TipiComponent t)
+			throws TipiException {
+		super.loadLayout(def, t);
+		myContext.runSyncInEventThread(new Runnable() {
 
-    return new TipiSwingGridBagConstraints(0, index, 1, 1, 0, 0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0);
-  }
+			public void run() {
+				Container c = ((Container) t.getContainer());
+				c.add(new JLabel(""), new TipiSwingGridBagConstraints(0, 999,
+						1, 1, 0, 1, GridBagConstraints.NORTHWEST,
+						GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0),
+						0, 0));
+			}
+		});
+
+	}
+
+	public Object createDefaultConstraint(int index) {
+
+		return new TipiSwingGridBagConstraints(0, index, 1, 1, 0, 0,
+				GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
+				new Insets(0, 0, 0, 0), 0, 0);
+	}
 }

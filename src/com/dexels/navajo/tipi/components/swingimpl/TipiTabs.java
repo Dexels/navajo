@@ -1,17 +1,31 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.awt.*;
-import java.beans.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
-import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.Icon;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.TipiComponentMethod;
+import com.dexels.navajo.tipi.TipiHelper;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiTabbable;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 
 /**
  * <p>
@@ -46,12 +60,19 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 
 		final JTabbedPane jt = new JTabbedPane() {
 
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1661243154472687618L;
+
 			private Dimension checkMax(Dimension preferredSize) {
 				Dimension maximumSize = getMaximumSize();
 				if (maximumSize == null) {
 					return preferredSize;
 				}
-				return new Dimension(Math.min(preferredSize.width, maximumSize.width), Math.min(preferredSize.height, maximumSize.height));
+				return new Dimension(Math.min(preferredSize.width,
+						maximumSize.width), Math.min(preferredSize.height,
+						maximumSize.height));
 			}
 
 			private Dimension checkMin(Dimension preferredSize) {
@@ -59,7 +80,9 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 				if (minimumSize == null) {
 					return preferredSize;
 				}
-				return new Dimension(Math.max(preferredSize.width, minimumSize.width), Math.max(preferredSize.height, minimumSize.height));
+				return new Dimension(Math.max(preferredSize.width,
+						minimumSize.width), Math.max(preferredSize.height,
+						minimumSize.height));
 			}
 
 			public Dimension checkMaxMin(Dimension d) {
@@ -81,13 +104,14 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 					return;
 				}
 				setWaitCursor(true);
-				TipiTabs.this.performTipiEvent("onTabChanged", null, false, new Runnable() {
+				TipiTabs.this.performTipiEvent("onTabChanged", null, false,
+						new Runnable() {
 
-					public void run() {
-						setWaitCursor(false);
+							public void run() {
+								setWaitCursor(false);
 
-					}
-				});
+							}
+						});
 
 				if (lastSelectedTab == null) {
 					System.err.println("last selected was null");
@@ -98,12 +122,14 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 					System.err.println("last selected is null");
 					getAttributeProperty("selectedindex").setAnyValue(-1);
 				} else {
-					getAttributeProperty("selectedindex").setAnyValue(jt.getSelectedIndex());
+					getAttributeProperty("selectedindex").setAnyValue(
+							jt.getSelectedIndex());
 					lastSelectedTab.doLayout();
 				}
-				if(myContext.getTopLevel() instanceof TipiApplet) {
-					TipiApplet ta = (TipiApplet)myContext.getTopLevel();
-					JPanel component = (JPanel) ta.getContentPane().getComponent(0);
+				if (myContext.getTopLevel() instanceof TipiApplet) {
+					TipiApplet ta = (TipiApplet) myContext.getTopLevel();
+					JPanel component = (JPanel) ta.getContentPane()
+							.getComponent(0);
 
 				}
 			}
@@ -111,7 +137,8 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 		return jt;
 	}
 
-	protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) {
+	protected void performComponentMethod(String name,
+			TipiComponentMethod compMeth, TipiEvent event) {
 		if (name.equals("enableTab")) {
 
 			Operand path = compMeth.getEvaluatedParameter("tabname", event);
@@ -138,7 +165,8 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 		}
 		if (name.equals("showTab")) {
 
-			Operand component = compMeth.getEvaluatedParameter("component", event);
+			Operand component = compMeth.getEvaluatedParameter("component",
+					event);
 			Operand value = compMeth.getEvaluatedParameter("value", event);
 
 			final boolean visible = ((Boolean) value.value).booleanValue();
@@ -164,7 +192,8 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 	private final void switchToAnotherTab() {
 		JTabbedPane p = (JTabbedPane) getContainer();
 		int lastIndex = p.indexOfComponent(lastSelectedTab);
-		if (lastIndex >= 0 && lastIndex < p.getTabCount() && p.isEnabledAt(lastIndex)) {
+		if (lastIndex >= 0 && lastIndex < p.getTabCount()
+				&& p.isEnabledAt(lastIndex)) {
 			p.setSelectedIndex(lastIndex);
 			return;
 		}
@@ -196,7 +225,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 					jc.revalidate();
 
 				}
-				final int nextIndex = childList.size()-1;
+				final int nextIndex = childList.size() - 1;
 				final JTabbedPane pane = (JTabbedPane) getContainer();
 				if (jc instanceof TipiTabbable) {
 					TipiTabbable tb = (TipiTabbable) jc;
@@ -204,31 +233,34 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 					Color back = tb.getTabBackgroundColor();
 					Color fore = tb.getTabForegroundColor();
 					String tip = tb.getTabTooltip();
-					
+
 					if (tabIcon != null) {
-						pane.addTab(stringConstraints, tabIcon,jc,tip);
+						pane.addTab(stringConstraints, tabIcon, jc, tip);
 					} else {
 						pane.addTab(stringConstraints, jc);
 					}
 					if (back != null) {
-						pane.setBackgroundAt(nextIndex, back);					
+						pane.setBackgroundAt(nextIndex, back);
 					}
 					if (fore != null) {
-						pane.setBackgroundAt(nextIndex, fore);					
+						pane.setBackgroundAt(nextIndex, fore);
 					}
 					tb.setIndex(nextIndex);
-					tb.addPropertyChangeListener(new PropertyChangeListener()  {
+					tb.addPropertyChangeListener(new PropertyChangeListener() {
 
 						public void propertyChange(final PropertyChangeEvent evt) {
-							if(evt.getPropertyName().equals("tabIcon")) {
-								runSyncInEventThread(new Runnable(){
+							if (evt.getPropertyName().equals("tabIcon")) {
+								runSyncInEventThread(new Runnable() {
 									public void run() {
-										pane.setIconAt(nextIndex, (Icon) evt.getNewValue());
-									}});
+										pane.setIconAt(nextIndex,
+												(Icon) evt.getNewValue());
+									}
+								});
 							}
 
-						}});
-					 
+						}
+					});
+
 				} else {
 					pane.addTab(stringConstraints, jc);
 				}
@@ -249,7 +281,9 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 			final TipiComponent tc = getTipiComponent(sel);
 			runSyncInEventThread(new Runnable() {
 				public void run() {
-					((JTabbedPane) getContainer()).setSelectedComponent((Component) (tc.getContainer()));
+					((JTabbedPane) getContainer())
+							.setSelectedComponent((Component) (tc
+									.getContainer()));
 				}
 			});
 		}
@@ -257,7 +291,8 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 			final Integer sel = (Integer) object;
 			runSyncInEventThread(new Runnable() {
 				public void run() {
-					((JTabbedPane) getContainer()).setSelectedIndex(sel.intValue());
+					((JTabbedPane) getContainer()).setSelectedIndex(sel
+							.intValue());
 				}
 			});
 		}
@@ -277,16 +312,16 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 	public void setTabPlacement(String sel) {
 		int placement = -1;
 		if (sel.equals("top")) {
-			placement = JTabbedPane.TOP;
+			placement = SwingConstants.TOP;
 		}
 		if (sel.equals("bottom")) {
-			placement = JTabbedPane.BOTTOM;
+			placement = SwingConstants.BOTTOM;
 		}
 		if (sel.equals("left")) {
-			placement = JTabbedPane.LEFT;
+			placement = SwingConstants.LEFT;
 		}
 		if (sel.equals("right")) {
-			placement = JTabbedPane.RIGHT;
+			placement = SwingConstants.RIGHT;
 		}
 		((JTabbedPane) getContainer()).setTabPlacement(placement);
 	}
@@ -303,7 +338,8 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 			return tc;
 		}
 		if (name.equals("selectedindex")) {
-			return new Integer(((JTabbedPane) getContainer()).getSelectedIndex());
+			return new Integer(
+					((JTabbedPane) getContainer()).getSelectedIndex());
 		}
 		if (name.equals("lastselectedindex")) {
 			return new Integer(getIndexOfTab(lastSelectedTab));

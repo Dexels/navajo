@@ -6,16 +6,16 @@
  */
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.awt.*;
+import java.awt.Container;
 
-import javax.swing.*;
+import javax.swing.BoxLayout;
 
 public class TipiRow extends TipiPanel {
 
-    public Object createContainer() {
-        Container container = (Container)super.createContainer();
-        container.setLayout(new BoxLayout(container,BoxLayout.Y_AXIS));
-        return container;
-    }
+	public Object createContainer() {
+		Container container = (Container) super.createContainer();
+		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+		return container;
+	}
 
 }

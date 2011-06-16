@@ -1,14 +1,19 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
-import java.net.*;
+import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.io.IOException;
+import java.net.URL;
 
-import javax.imageio.*;
-import javax.swing.*;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JInternalFrame;
 
-import com.dexels.navajo.document.types.*;
+import com.dexels.navajo.document.types.Binary;
 
 /**
  * <p>
@@ -29,6 +34,10 @@ import com.dexels.navajo.document.types.*;
  */
 public class TipiSwingWindow extends JInternalFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1660981988162626561L;
 	private Point position = null;
 	private Dimension oldSize = null;
 
@@ -79,7 +88,6 @@ public class TipiSwingWindow extends JInternalFrame {
 		firePropertyChange("title", old, title);
 	}
 
-	
 	public void setX(int x) {
 		Rectangle r = getBounds();
 		int oldX = r.x;
@@ -111,7 +119,7 @@ public class TipiSwingWindow extends JInternalFrame {
 		setBounds(r);
 		firePropertyChange("w", oldW, w);
 	}
-		
+
 	public void setIconUrl(URL u) {
 		setFrameIcon(new ImageIcon(u));
 	}
@@ -120,25 +128,24 @@ public class TipiSwingWindow extends JInternalFrame {
 		setFrameIcon(getIcon(u));
 	}
 
-	 protected ImageIcon getIcon(Object u) {
-		 if(u==null) {
-			 return null;
-		 }
-		 if(u instanceof URL) {
-			   return new ImageIcon((URL) u);
-		 }
-		 if(u instanceof Binary) {
-			 Image i;
+	protected ImageIcon getIcon(Object u) {
+		if (u == null) {
+			return null;
+		}
+		if (u instanceof URL) {
+			return new ImageIcon((URL) u);
+		}
+		if (u instanceof Binary) {
+			Image i;
 			try {
 				i = ImageIO.read(((Binary) u).getDataAsStream());
-				 ImageIcon ii = new ImageIcon(i);
-				 return ii;
+				ImageIcon ii = new ImageIcon(i);
+				return ii;
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		 }
-		 return null;
-	  }
+		}
+		return null;
+	}
 
- 
 }

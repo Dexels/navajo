@@ -1,14 +1,23 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.awt.event.*;
-import java.util.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.swing.event.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiComponentMethod;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.TipiHelper;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingTextField;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 
 /**
  * <p>
@@ -81,30 +90,31 @@ public class TipiTextField extends TipiSwingComponentImpl {
 			public Map<String, Object> getEventMap(KeyEvent e) {
 				Map<String, Object> hm = new HashMap<String, Object>();
 				hm.put("code", new Integer(e.getKeyCode()));
-				hm.put("modifiers", KeyEvent.getKeyModifiersText(e.getModifiers()));
+				hm.put("modifiers",
+						KeyEvent.getKeyModifiersText(e.getModifiers()));
 				hm.put("key", KeyEvent.getKeyText(e.getKeyCode()));
 				return hm;
 			}
 		});
-		myField.getDocument().addDocumentListener(new DocumentListener(){
+		myField.getDocument().addDocumentListener(new DocumentListener() {
 
 			public void changedUpdate(DocumentEvent e) {
 				getAttributeProperty("text").setAnyValue(myField.getText());
-					
+
 			}
 
 			public void insertUpdate(DocumentEvent e) {
 				getAttributeProperty("text").setAnyValue(myField.getText());
-					
+
 			}
 
 			public void removeUpdate(DocumentEvent e) {
 				getAttributeProperty("text").setAnyValue(myField.getText());
-						
-			}});
-	
-		
-		myField.addFocusListener(new FocusListener(){
+
+			}
+		});
+
+		myField.addFocusListener(new FocusListener() {
 
 			public void focusGained(FocusEvent e) {
 				try {
@@ -124,22 +134,24 @@ public class TipiTextField extends TipiSwingComponentImpl {
 				} catch (TipiException e1) {
 					e1.printStackTrace();
 				}
-				
-			}});
+
+			}
+		});
 		return myField;
 	}
-//
-//	public void setComponentValue(final String name, final Object object) {
-//		if (name.equals("text")) {
-//			runSyncInEventThread(new Runnable() {
-//				public void run() {
-//					myField.setText(object.toString());
-//					return;
-//				}
-//			});
-//		}
-//		super.setComponentValue(name, object);
-//	}
+
+	//
+	// public void setComponentValue(final String name, final Object object) {
+	// if (name.equals("text")) {
+	// runSyncInEventThread(new Runnable() {
+	// public void run() {
+	// myField.setText(object.toString());
+	// return;
+	// }
+	// });
+	// }
+	// super.setComponentValue(name, object);
+	// }
 
 	//
 	// public Object getComponentValue(String name) {
@@ -149,7 +161,9 @@ public class TipiTextField extends TipiSwingComponentImpl {
 	// return super.getComponentValue(name);
 	// }
 
-	protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
+	protected void performComponentMethod(String name,
+			TipiComponentMethod compMeth, TipiEvent event)
+			throws TipiBreakException {
 		super.performComponentMethod(name, compMeth, event);
 
 		// TODO Place in runSync
@@ -161,10 +175,11 @@ public class TipiTextField extends TipiSwingComponentImpl {
 			}
 		}
 		if (name.equals("selectAll")) {
-			runSyncInEventThread(new Runnable(){
+			runSyncInEventThread(new Runnable() {
 				public void run() {
 					myField.selectAll();
-				}});
+				}
+			});
 		}
 	}
 

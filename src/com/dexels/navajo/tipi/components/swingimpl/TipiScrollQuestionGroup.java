@@ -6,127 +6,137 @@
  */
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.lang.reflect.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Cursor;
+import java.awt.Graphics;
+import java.awt.LayoutManager;
+import java.awt.Paint;
+import java.awt.event.MouseEvent;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
 
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.question.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.TipiExecutable;
+import com.dexels.navajo.tipi.TipiHelper;
+import com.dexels.navajo.tipi.components.question.TipiBaseQuestionGroup;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingPanel;
+import com.dexels.navajo.tipi.internal.TipiEvent;
+/**
+ * @deprecated
+ * @author frank
+ *
+ */
+public class TipiScrollQuestionGroup extends TipiBaseQuestionGroup implements
+		TipiSwingComponent {
+	private JScrollPane jp;
+	private JPanel jpanel;
 
-public class TipiScrollQuestionGroup extends TipiBaseQuestionGroup implements TipiSwingComponent {
-    private JScrollPane jp;
-    private JPanel jpanel;
+	public Object createContainer() {
+		jp = new JScrollPane();
+		jp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		jp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		jpanel = new TipiSwingPanel();
 
-    public Object createContainer() {
-      jp = new JScrollPane();
-      jp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-      jp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-      jpanel = new TipiSwingPanel();
-     
-      jpanel.setLayout(new BorderLayout());
-      jp.getViewport().add(jpanel);
-      TipiHelper th = new TipiSwingHelper();
-      th.initHelper(this);
-      addHelper(th);
-      return jp;
-    }
-
-    public void addToContainer(Object c, Object constraints) {
-        jpanel.add((Component)c, constraints);
-    }
-    public void removeFromContainer(Object c) {
-        jpanel.remove((Component)c);
-    }
-
-    public void setContainerLayout(Object layout) {
-         jpanel.setLayout((LayoutManager)layout);
-    }
-
-
-	public void highLight(Component c, Graphics g) {
-	
-		
+		jpanel.setLayout(new BorderLayout());
+		jp.getViewport().add(jpanel);
+		TipiHelper th = new TipiSwingHelper();
+		th.initHelper(this);
+		addHelper(th);
+		return jp;
 	}
 
-	
+	public void addToContainer(Object c, Object constraints) {
+		jpanel.add((Component) c, constraints);
+	}
 
-	  public Container getSwingContainer() {
-	    return (Container) getContainer();
-	  }
+	public void removeFromContainer(Object c) {
+		jpanel.remove((Component) c);
+	}
 
-	  public void refreshLayout() {
-	    List<TipiComponent> elementList = new ArrayList<TipiComponent>();
-	    for (int i = 0; i < getChildCount(); i++) {
-	      TipiComponent current = getTipiComponent(i);
-	      if (current.isVisibleElement()) {
-	        removeFromContainer(current.getContainer());
-	      }
-	      elementList.add(current);
-	    }
-	    for (int i = 0; i < elementList.size(); i++) {
-	      final TipiComponent current = elementList.get(i);
-	      if (current.isVisibleElement()) {
-	        runSyncInEventThread(new Runnable() {
-	          public void run() {
-	            addToContainer(current.getContainer(), current.getConstraints());
-	          }
-	        });
-	      }
-	    }
-	  }
+	public void setContainerLayout(Object layout) {
+		jpanel.setLayout((LayoutManager) layout);
+	}
 
-	  public void runSyncInEventThread(Runnable r) {
-	    if (SwingUtilities.isEventDispatchThread()) {
-	      r.run();
-	    }
-	    else {
-	      try {
-	        SwingUtilities.invokeAndWait(r);
-	      }
-	      catch (InvocationTargetException ex) {
-	        throw new RuntimeException(ex);
-	      }
-	      catch (InterruptedException ex) {
-	      }
-	    }
-	  }
+	public void highLight(Component c, Graphics g) {
 
-	  public void runAsyncInEventThread(Runnable r) {
-	    if (SwingUtilities.isEventDispatchThread()) {
-	      r.run();
-	    }
-	    else {
-	      SwingUtilities.invokeLater(r);
-	    }
-	  }
-	
-	
-	
+	}
+
+	public Container getSwingContainer() {
+		return (Container) getContainer();
+	}
+
+	public void refreshLayout() {
+		List<TipiComponent> elementList = new ArrayList<TipiComponent>();
+		for (int i = 0; i < getChildCount(); i++) {
+			TipiComponent current = getTipiComponent(i);
+			if (current.isVisibleElement()) {
+				removeFromContainer(current.getContainer());
+			}
+			elementList.add(current);
+		}
+		for (int i = 0; i < elementList.size(); i++) {
+			final TipiComponent current = elementList.get(i);
+			if (current.isVisibleElement()) {
+				runSyncInEventThread(new Runnable() {
+					public void run() {
+						addToContainer(current.getContainer(),
+								current.getConstraints());
+					}
+				});
+			}
+		}
+	}
+
+	public void runSyncInEventThread(Runnable r) {
+		if (SwingUtilities.isEventDispatchThread()) {
+			r.run();
+		} else {
+			try {
+				SwingUtilities.invokeAndWait(r);
+			} catch (InvocationTargetException ex) {
+				throw new RuntimeException(ex);
+			} catch (InterruptedException ex) {
+			}
+		}
+	}
+
+	public void runAsyncInEventThread(Runnable r) {
+		if (SwingUtilities.isEventDispatchThread()) {
+			r.run();
+		} else {
+			SwingUtilities.invokeLater(r);
+		}
+	}
+
 	public void setCursor(Cursor c) {
-		
+
 	}
 
 	public void setPaint(Paint p) {
-		
+
 	}
 
 	public void setWaitCursor(boolean b) {
-		
+
 	}
 
 	public void showPopup(MouseEvent e) {
-		
+
 	}
 
-	public void animateTransition(TipiEvent te, TipiExecutable executableParent, List<TipiExecutable> exe, int duration) {
-		
+	public void animateTransition(TipiEvent te,
+			TipiExecutable executableParent, List<TipiExecutable> exe,
+			int duration) {
+
 	}
 
-    
 }

@@ -1,10 +1,11 @@
 package com.dexels.navajo.tipi.components.swingimpl.parsers;
 
-import java.awt.*;
-import java.util.*;
+import java.awt.Font;
+import java.util.StringTokenizer;
 
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.TipiTypeParser;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 
 /**
  * <p>

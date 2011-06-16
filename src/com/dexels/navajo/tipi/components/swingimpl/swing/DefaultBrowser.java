@@ -44,22 +44,28 @@ public class DefaultBrowser {
 				String lcOSName = System.getProperty("os.name").toLowerCase();
 				boolean MAC_OS_X = lcOSName.startsWith("mac os x");
 				if (MAC_OS_X) {
-					cmd = MAC_PATH +" " + url;
+					cmd = MAC_PATH + " " + url;
 					System.err.println("Executing MAC command: " + cmd);
 					Runtime.getRuntime().exec(cmd);
 					return result;
 				} else {
 
 				}
-				
+
 				if (url.indexOf(' ') != -1) {
 					System.err.println("Warning, spaces in URL, might fail");
 				}
-				if (url.toLowerCase().endsWith(".doc") || url.toLowerCase().endsWith(".xls") || url.toLowerCase().endsWith(".ppt")
-						|| url.toLowerCase().endsWith(".txt") || url.toLowerCase().endsWith(".rtf")) {
+				if (url.toLowerCase().endsWith(".doc")
+						|| url.toLowerCase().endsWith(".xls")
+						|| url.toLowerCase().endsWith(".ppt")
+						|| url.toLowerCase().endsWith(".txt")
+						|| url.toLowerCase().endsWith(".rtf")) {
 					cmd = "ooffice " + url;
-				} else if (url.toLowerCase().endsWith(".jpg") || url.toLowerCase().endsWith(".gif") || url.toLowerCase().endsWith(".png")
-						|| url.toLowerCase().endsWith(".tif") || url.toLowerCase().endsWith(".tiff")) {
+				} else if (url.toLowerCase().endsWith(".jpg")
+						|| url.toLowerCase().endsWith(".gif")
+						|| url.toLowerCase().endsWith(".png")
+						|| url.toLowerCase().endsWith(".tif")
+						|| url.toLowerCase().endsWith(".tiff")) {
 					cmd = "display " + url;
 				} else if (url.toLowerCase().endsWith(".pdf")) {
 					cmd = "xpdf " + url;
@@ -86,14 +92,14 @@ public class DefaultBrowser {
 	public static void openBinary(Binary b) {
 		String extString = null;
 		String fileNameEval = null;
-	
+
 		if (extString == null) {
 			String mime = b.guessContentType();
 			String ext = null;
 			FormatDescription fd = b.getFormatDescription();
-			if(fd!=null) {
+			if (fd != null) {
 				List<String> extensions = fd.getFileExtensions();
-				if(!extensions.isEmpty()) {
+				if (!extensions.isEmpty()) {
 					ext = extensions.get(0);
 
 				}
@@ -103,8 +109,9 @@ public class DefaultBrowser {
 					StringTokenizer st = new StringTokenizer(mime, "/");
 					String major = st.nextToken();
 					String minor = st.nextToken();
-					System.err.println("Binary type: " + major + " and minor: " + minor);
-					if(ext!=null) {
+					System.err.println("Binary type: " + major + " and minor: "
+							+ minor);
+					if (ext != null) {
 						extString = ext;
 					} else {
 						extString = minor;
@@ -125,5 +132,5 @@ public class DefaultBrowser {
 		}
 
 	}
-	
+
 }

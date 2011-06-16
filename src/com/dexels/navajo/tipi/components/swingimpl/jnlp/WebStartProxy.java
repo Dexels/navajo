@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.components.swingimpl.jnlp;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
@@ -12,18 +13,19 @@ import javax.jnlp.PersistenceService;
 import javax.jnlp.ServiceManager;
 import javax.jnlp.UnavailableServiceException;
 
-//import javax.jnlp.*;
-
-import com.dexels.navajo.tipi.components.swingimpl.*;
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.components.swingimpl.SwingTipiContext;
+import com.dexels.navajo.tipi.internal.HttpResourceLoader;
+import com.dexels.navajo.tipi.internal.TipiResourceLoader;
 import com.dexels.navajo.tipi.internal.cache.impl.CachedHttpJnlpResourceLoader;
 import com.dexels.navajo.tipi.internal.cookie.CookieManager;
 
 public class WebStartProxy {
 
-	public static void appendJnlpCodeBase(SwingTipiContext myContext, String loaderType) {
+	public static void appendJnlpCodeBase(SwingTipiContext myContext,
+			String loaderType) {
 		try {
-			javax.jnlp.BasicService bs = (javax.jnlp.BasicService) javax.jnlp.ServiceManager.lookup("javax.jnlp.BasicService");
+			javax.jnlp.BasicService bs = (javax.jnlp.BasicService) javax.jnlp.ServiceManager
+					.lookup("javax.jnlp.BasicService");
 
 			URL tipiCodeBase = new URL(bs.getCodeBase(), loaderType);
 			URL resourceCodeBase = new URL(bs.getCodeBase(), "resource");
@@ -37,21 +39,23 @@ public class WebStartProxy {
 
 	}
 
-	
 	public static TipiResourceLoader createDefaultWebstartLoader(
-			String relativePath, boolean useCache, CookieManager manager) throws IOException {
+			String relativePath, boolean useCache, CookieManager manager)
+			throws IOException {
 		javax.jnlp.BasicService bs;
 		try {
 			bs = (javax.jnlp.BasicService) javax.jnlp.ServiceManager
 					.lookup("javax.jnlp.BasicService");
 			URL codeURL = new URL(bs.getCodeBase(), relativePath);
-			if(codeURL.getProtocol().equals("file") && useCache) {
-				System.err.println("Using cache on file-based webstart. Not all that efficient.");
+			if (codeURL.getProtocol().equals("file") && useCache) {
+				System.err
+						.println("Using cache on file-based webstart. Not all that efficient.");
 			}
 			if (useCache) {
 				try {
 
-					return new CachedHttpJnlpResourceLoader(relativePath,codeURL,manager);
+					return new CachedHttpJnlpResourceLoader(relativePath,
+							codeURL, manager);
 				} catch (javax.jnlp.UnavailableServiceException e) {
 					System.err
 							.println("Cached HTTP/JNLP cacheloader failed. Returning uncached loader.");
@@ -69,18 +73,23 @@ public class WebStartProxy {
 
 	}
 
-	public static  void injectJnlpCache() {
+	public static void injectJnlpCache() {
 		try {
-			BasicService bs = (BasicService)ServiceManager.lookup("javax.jnlp.BasicService"); 
-			PersistenceService ps = (PersistenceService)ServiceManager.lookup("javax.jnlp.PersistenceService");
+			BasicService bs = (BasicService) ServiceManager
+					.lookup("javax.jnlp.BasicService");
+			PersistenceService ps = (PersistenceService) ServiceManager
+					.lookup("javax.jnlp.PersistenceService");
 			try {
 				URL base = bs.getCodeBase();
 				String[] muffins = ps.getNames(base);
 				for (int i = 0; i < muffins.length; i++) {
-					System.err.println("Parsing muffin: "+muffins[i]);
-						
-					FileContents fc = ps.get(new URL(base,muffins[i]));
-					System.err.println("Entry: "+muffins[i]+" readable: "+fc.canRead()+" writable: "+fc.canWrite()+" size: "+fc.getLength()+" maxsize: "+fc.getMaxLength());
+					System.err.println("Parsing muffin: " + muffins[i]);
+
+					FileContents fc = ps.get(new URL(base, muffins[i]));
+					System.err.println("Entry: " + muffins[i] + " readable: "
+							+ fc.canRead() + " writable: " + fc.canWrite()
+							+ " size: " + fc.getLength() + " maxsize: "
+							+ fc.getMaxLength());
 				}
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
@@ -93,22 +102,24 @@ public class WebStartProxy {
 			e.printStackTrace();
 		}
 	}
+
 	public static boolean hasJnlpContext() {
 		try {
-			javax.jnlp.BasicService bs = (javax.jnlp.BasicService)javax.jnlp.ServiceManager.lookup("javax.jnlp.BasicService");
-			return bs!=null;
+			javax.jnlp.BasicService bs = (javax.jnlp.BasicService) javax.jnlp.ServiceManager
+					.lookup("javax.jnlp.BasicService");
+			return bs != null;
 		} catch (Exception e) {
 			return false;
 		}
 	}
 
-
 	public static void appendJnlpProperties(Map<String, String> properties) {
 		try {
-			BasicService bs = (BasicService)ServiceManager.lookup("javax.jnlp.BasicService"); 
+			BasicService bs = (BasicService) ServiceManager
+					.lookup("javax.jnlp.BasicService");
 			try {
 				URL base = bs.getCodeBase();
-				URL args = new URL(base,"arguments.properties");
+				URL args = new URL(base, "arguments.properties");
 				InputStream is = args.openStream();
 				PropertyResourceBundle pr = new PropertyResourceBundle(is);
 				is.close();
@@ -118,10 +129,10 @@ public class WebStartProxy {
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
-//				System.err.println("No arguments. Ok. ");
+				// System.err.println("No arguments. Ok. ");
 			}
 		} catch (UnavailableServiceException e) {
-//			System.err.println("No jnlp detected");
+			// System.err.println("No jnlp detected");
 		}
 	}
 }

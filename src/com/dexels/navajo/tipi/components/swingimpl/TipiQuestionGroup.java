@@ -1,40 +1,52 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
+import java.lang.reflect.InvocationTargetException;
 
-import java.awt.*;
-import java.lang.reflect.*;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
-import javax.swing.*;
-
-import com.dexels.navajo.tipi.components.question.*;
+import com.dexels.navajo.tipi.components.question.TipiBaseQuestionGroup;
 
 /**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2004</p>
- * <p>Company: </p>
+ * <p>
+ * Title:
+ * </p>
+ * <p>
+ * Description:
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2004
+ * </p>
+ * <p>
+ * Company:
+ * </p>
+ * 
  * @author not attributable
  * @version 1.0
+ * @deprecated
  */
 
 public class TipiQuestionGroup extends TipiBaseQuestionGroup {
 
-    public Object createContainer() {
-        JPanel j = new JPanel();
-        j.setLayout(new BorderLayout());
-        return j;
-    }
+	public Object createContainer() {
+		JPanel j = new JPanel();
+		j.setLayout(new BorderLayout());
+		return j;
+	}
 
 	public void runAsyncInEventThread(Runnable runnable) {
-		if(SwingUtilities.isEventDispatchThread()) {
+		if (SwingUtilities.isEventDispatchThread()) {
 			runnable.run();
 		} else {
-				SwingUtilities.invokeLater(runnable);
+			SwingUtilities.invokeLater(runnable);
 		}
 	}
 
 	public void runSyncInEventThread(Runnable runnable) {
-		if(SwingUtilities.isEventDispatchThread()) {
+		if (SwingUtilities.isEventDispatchThread()) {
 			runnable.run();
 		} else {
 			try {
@@ -47,12 +59,15 @@ public class TipiQuestionGroup extends TipiBaseQuestionGroup {
 		}
 	}
 
-    public void addToContainer(final Object c, final Object constraints) {
-        System.err.println("Adding to TipiTabbedQuestionList container:   "+c+" constraints: "+constraints);
-        runSyncInEventThread(new Runnable(){
-            public void run() {
-                ((Container)getContainer()).add((Component)c, BorderLayout.CENTER);
-            }});
-       }
-    
+	public void addToContainer(final Object c, final Object constraints) {
+		System.err.println("Adding to TipiTabbedQuestionList container:   " + c
+				+ " constraints: " + constraints);
+		runSyncInEventThread(new Runnable() {
+			public void run() {
+				((Container) getContainer()).add((Component) c,
+						BorderLayout.CENTER);
+			}
+		});
+	}
+
 }

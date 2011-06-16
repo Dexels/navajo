@@ -1,15 +1,27 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
-import java.util.*;
+import java.awt.CardLayout;
+import java.awt.Container;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Date;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JPanel;
+import javax.swing.JToolBar;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingExportSeparatorPanel;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingExportSortingPanel;
 
 /**
  * <p>
@@ -71,26 +83,33 @@ public class TipiExportDialog extends TipiDialog {
 
 		getSwingContainer().setLayout(gridBagLayout1);
 		proceedButton.setText("Verder");
-		proceedButton.addActionListener(new TipiExportDialog_proceedButton_actionAdapter(this));
+		proceedButton
+				.addActionListener(new TipiExportDialog_proceedButton_actionAdapter(
+						this));
 		cancelButton.setText("Annuleren");
-		cancelButton.addActionListener(new TipiExportDialog_cancelButton_actionAdapter(this));
+		cancelButton
+				.addActionListener(new TipiExportDialog_cancelButton_actionAdapter(
+						this));
 		backButton.setText("Terug");
-		backButton.addActionListener(new TipiExportDialog_backButton_actionAdapter(this));
+		backButton
+				.addActionListener(new TipiExportDialog_backButton_actionAdapter(
+						this));
 		getSwingContainer().add(
 				container,
-				new GridBagConstraints(0, 0, 3, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0,
-						0));
+				new GridBagConstraints(0, 0, 3, 1, 1.0, 1.0,
+						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+						new Insets(0, 0, 0, 0), 0, 0));
 		container.setLayout(new CardLayout());
 		sp = new TipiSwingExportSortingPanel();
 		sep = new TipiSwingExportSeparatorPanel();
 		container.add(sp, "Sort");
 		container.add(sep, "Separator");
 		myBar.setFloatable(false);
-		getSwingContainer()
-				.add(
-						myBar,
-						new GridBagConstraints(0, 1, 3, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0,
-								0), 0, 0));
+		getSwingContainer().add(
+				myBar,
+				new GridBagConstraints(0, 1, 3, 1, 0.0, 0.0,
+						GridBagConstraints.EAST, GridBagConstraints.NONE,
+						new Insets(0, 0, 0, 0), 0, 0));
 		myBar.add(proceedButton);
 		myBar.add(cancelButton);
 		myBar.add(backButton);
@@ -106,10 +125,11 @@ public class TipiExportDialog extends TipiDialog {
 		if ("messagepath".equals(name)) {
 			msgPath = (String) value;
 			data = getNavajo().getMessage(msgPath);
-			runSyncInEventThread(new Runnable(){
+			runSyncInEventThread(new Runnable() {
 				public void run() {
 					sp.setMessage(data);
-				}});
+				}
+			});
 		}
 	}
 
@@ -141,7 +161,8 @@ public class TipiExportDialog extends TipiDialog {
 		}
 	}
 
-	private final void exportTitles(Message current, List<String> properties, String separator, Writer output) throws IOException {
+	private final void exportTitles(Message current, List<String> properties,
+			String separator, Writer output) throws IOException {
 		for (int j = 0; j < properties.size(); j++) {
 			Property current_prop = current.getProperty(properties.get(j));
 			String propName = current_prop.getDescription();
@@ -156,7 +177,8 @@ public class TipiExportDialog extends TipiDialog {
 		output.write("\n");
 	}
 
-	private final void exportData(List<String> properties, String[] filter, String separator, boolean addTitles) {
+	private final void exportData(List<String> properties, String[] filter,
+			String separator, boolean addTitles) {
 
 		if (data != null) {
 			JFileChooser fd = new JFileChooser("Opslaan");
@@ -184,18 +206,21 @@ public class TipiExportDialog extends TipiDialog {
 				boolean line_complies_to_filter = false;
 				String line = "";
 				for (int j = 0; j < properties.size(); j++) {
-					Property current_prop = current.getProperty(properties.get(j));
+					Property current_prop = current.getProperty(properties
+							.get(j));
 					String propValue;
 					if (current_prop.getType().equals(Property.DATE_PROPERTY)) {
 						Date d = (Date) current_prop.getTypedValue();
 						if (d == null) {
 							propValue = "";
 						} else {
-							java.text.SimpleDateFormat df = new java.text.SimpleDateFormat("yyyy-MM-dd");
+							java.text.SimpleDateFormat df = new java.text.SimpleDateFormat(
+									"yyyy-MM-dd");
 							propValue = df.format(d);
 						}
 					} else {
-						propValue = (current_prop.getValue() == null) ? "" : current_prop.getValue();
+						propValue = (current_prop.getValue() == null) ? ""
+								: current_prop.getValue();
 					}
 					if (properties.contains(current_prop.getName())) {
 						line_complies_to_filter = true;
@@ -245,7 +270,8 @@ public class TipiExportDialog extends TipiDialog {
 	}
 }
 
-class TipiExportDialog_proceedButton_actionAdapter implements java.awt.event.ActionListener {
+class TipiExportDialog_proceedButton_actionAdapter implements
+		java.awt.event.ActionListener {
 	TipiExportDialog adaptee;
 
 	TipiExportDialog_proceedButton_actionAdapter(TipiExportDialog adaptee) {
@@ -257,7 +283,8 @@ class TipiExportDialog_proceedButton_actionAdapter implements java.awt.event.Act
 	}
 }
 
-class TipiExportDialog_cancelButton_actionAdapter implements java.awt.event.ActionListener {
+class TipiExportDialog_cancelButton_actionAdapter implements
+		java.awt.event.ActionListener {
 	TipiExportDialog adaptee;
 
 	TipiExportDialog_cancelButton_actionAdapter(TipiExportDialog adaptee) {
@@ -269,7 +296,8 @@ class TipiExportDialog_cancelButton_actionAdapter implements java.awt.event.Acti
 	}
 }
 
-class TipiExportDialog_backButton_actionAdapter implements java.awt.event.ActionListener {
+class TipiExportDialog_backButton_actionAdapter implements
+		java.awt.event.ActionListener {
 	TipiExportDialog adaptee;
 
 	TipiExportDialog_backButton_actionAdapter(TipiExportDialog adaptee) {

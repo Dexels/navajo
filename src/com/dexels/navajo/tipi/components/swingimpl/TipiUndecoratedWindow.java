@@ -1,10 +1,13 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.awt.*;
+import java.awt.Rectangle;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.TipiHelper;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingPanel;
 
 /**
  * <p>
@@ -26,8 +29,9 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 public class TipiUndecoratedWindow extends TipiSwingDataComponentImpl {
 	TipiSwingPanel myPanel = null;
 	private Rectangle myBounds = new Rectangle();
+
 	public Object createContainer() {
-		runSyncInEventThread(new Runnable(){
+		runSyncInEventThread(new Runnable() {
 
 			public void run() {
 				myPanel = new TipiSwingPanel();
@@ -35,7 +39,8 @@ public class TipiUndecoratedWindow extends TipiSwingDataComponentImpl {
 				th.initHelper(TipiUndecoratedWindow.this);
 				addHelper(th);
 				myPanel.setOpaque(false);
-			}});
+			}
+		});
 
 		return myPanel;
 	}
@@ -61,7 +66,8 @@ public class TipiUndecoratedWindow extends TipiSwingDataComponentImpl {
 		super.setComponentValue(name, object);
 	}
 
-	public void loadData(final Navajo n, final String method) throws TipiException {
+	public void loadData(final Navajo n, final String method)
+			throws TipiException {
 		myNavajo = n;
 		myMethod = method;
 		runSyncInEventThread(new Runnable() {

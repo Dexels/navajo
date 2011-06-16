@@ -1,11 +1,11 @@
 package com.dexels.navajo.functions;
 
-import java.awt.*;
+import java.awt.Color;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
 
-import com.dexels.navajo.parser.*;
-import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.parser.TMLExpressionException;
 
 /**
  * @author frank
@@ -43,10 +43,12 @@ public class CreateTitledBorder extends FunctionInterface {
 			return null;
 		}
 		if (!(pp instanceof String)) {
-			throw new TMLExpressionException(this, "Invalid operand: " + pp.getClass().getName());
+			throw new TMLExpressionException(this, "Invalid operand: "
+					+ pp.getClass().getName());
 		}
-		String title = (String)pp;
-	     return BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.darkGray,1),title);
+		String title = (String) pp;
+		return BorderFactory.createTitledBorder(
+				BorderFactory.createLineBorder(Color.darkGray, 1), title);
 
 	}
 

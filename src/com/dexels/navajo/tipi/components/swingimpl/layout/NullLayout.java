@@ -1,29 +1,35 @@
 package com.dexels.navajo.tipi.components.swingimpl.layout;
 
-import java.awt.*;
-import java.util.*;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.LayoutManager2;
+import java.awt.Rectangle;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 
 public class NullLayout implements LayoutManager2 {
 
 	private Dimension mySize;
-	private Map<Component,Rectangle> components = new HashMap<Component, Rectangle>();
-	
+	private Map<Component, Rectangle> components = new HashMap<Component, Rectangle>();
+
 	public NullLayout(Dimension size) {
 		mySize = size;
 	}
 
 	public NullLayout() {
-		mySize = new Dimension(100,100);
+		mySize = new Dimension(100, 100);
 	}
-	
+
 	public void setWidth(int w) {
-		mySize = new Dimension(w,mySize.height);
+		mySize = new Dimension(w, mySize.height);
 	}
 
 	public void setHeight(int h) {
-		mySize = new Dimension(mySize.width,h);
+		mySize = new Dimension(mySize.width, h);
 	}
 
 	public void addLayoutComponent(Component arg0, Object arg1) {
@@ -39,14 +45,13 @@ public class NullLayout implements LayoutManager2 {
 	}
 
 	public void invalidateLayout(Container arg0) {
-		
+
 	}
 
 	public Dimension maximumLayoutSize(Container arg0) {
 		return null;
 	}
 
-	
 	public void layoutContainer(Container parent) {
 		for (Component c : components.keySet()) {
 			Rectangle r = components.get(c);
@@ -67,18 +72,18 @@ public class NullLayout implements LayoutManager2 {
 	}
 
 	public void addLayoutComponent(String name, Component comp) {
-//		System.err.println("que?");
+		// System.err.println("que?");
 	}
 
-	
 	public static void main(String[] args) {
 		JFrame j = new JFrame();
-		j.setSize(new Dimension(400,300));
+		j.setSize(new Dimension(400, 300));
 		j.getContentPane().setLayout(new NullLayout());
-		j.getContentPane().add(new JButton("woepie"),new Rectangle(10,100,50,100));
-		j.getContentPane().add(new JButton("wappie"),new Rectangle(10,200,50,10));
+		j.getContentPane().add(new JButton("woepie"),
+				new Rectangle(10, 100, 50, 100));
+		j.getContentPane().add(new JButton("wappie"),
+				new Rectangle(10, 200, 50, 10));
 		j.setVisible(true);
-		}
-	
+	}
 
 }

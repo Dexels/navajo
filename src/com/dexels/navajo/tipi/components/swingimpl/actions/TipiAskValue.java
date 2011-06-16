@@ -1,12 +1,13 @@
 package com.dexels.navajo.tipi.components.swingimpl.actions;
 
-import java.awt.*;
+import java.awt.Component;
 
-import javax.swing.*;
+import javax.swing.JOptionPane;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.internal.TipiAction;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 
 /**
  * <p>
@@ -30,11 +31,14 @@ public class TipiAskValue extends TipiAction {
 	public TipiAskValue() {
 	}
 
-	protected void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiBreakException, com.dexels.navajo.tipi.TipiException {
+	protected void execute(TipiEvent event)
+			throws com.dexels.navajo.tipi.TipiBreakException,
+			com.dexels.navajo.tipi.TipiException {
 		final Operand text = getEvaluatedParameter("text", event);
 		final Operand globalvalue = getEvaluatedParameter("value", event);
-		final Operand initialValue = getEvaluatedParameter("initialValue", event);
-		
+		final Operand initialValue = getEvaluatedParameter("initialValue",
+				event);
+
 		myContext.runSyncInEventThread(new Runnable() {
 
 			public void run() {
@@ -44,7 +48,9 @@ public class TipiAskValue extends TipiAction {
 						initVal = "" + initialValue.value;
 					}
 				}
-				String response = JOptionPane.showInputDialog((Component) myContext.getTopLevel(), text.value, initVal);
+				String response = JOptionPane.showInputDialog(
+						(Component) myContext.getTopLevel(), text.value,
+						initVal);
 				if (response != null) {
 					myContext.setGlobalValue("" + globalvalue.value, response);
 				} else {

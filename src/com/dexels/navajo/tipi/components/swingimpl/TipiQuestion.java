@@ -6,96 +6,108 @@
  */
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.awt.*;
-import java.lang.reflect.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.GridBagLayout;
+import java.awt.LayoutManager;
+import java.lang.reflect.InvocationTargetException;
 
-import javax.swing.*;
-import javax.swing.border.*;
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
 
-import com.dexels.navajo.tipi.components.question.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
-
+import com.dexels.navajo.tipi.components.question.TipiBaseQuestion;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingPanel;
+/**
+ * @deprecated
+ * @author frank
+ *
+ */
 public class TipiQuestion extends TipiBaseQuestion {
-    private TipiSwingPanel myPanel;
+	private TipiSwingPanel myPanel;
 
-  public void setValid(boolean b, String msg) {
-    
-            if (b == false) {
-                Border bbb = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.red), msg);
-                ((JComponent) getContainer()).setBorder(bbb);
-            } else {
-                Border bbb = BorderFactory.createEmptyBorder(2, 2, 2, 2);
-                ((JComponent) getContainer()).setBorder(bbb);
-            }
-        }
-  public Object createContainer() {
+	public void setValid(boolean b, String msg) {
 
-      myPanel = new TipiSwingPanel();
-//      TipiHelper th = new TipiSwingHelper();
-//      th.initHelper(this);
-//      addHelper(th);
-      myPanel.setLayout(new GridBagLayout());
-      myPanel.setFocusable(false);
-//      ((Container)object).setPreferredSize(new Dimension(800,100));
-       return myPanel;
-  }
+		if (b == false) {
+			Border bbb = BorderFactory.createTitledBorder(
+					BorderFactory.createLineBorder(Color.red), msg);
+			((JComponent) getContainer()).setBorder(bbb);
+		} else {
+			Border bbb = BorderFactory.createEmptyBorder(2, 2, 2, 2);
+			((JComponent) getContainer()).setBorder(bbb);
+		}
+	}
 
-  public void addToContainer(Object c, Object constraints) {
+	public Object createContainer() {
 
-          myPanel.add((Component)c, constraints);
-  }
-  public void removeFromContainer(final Object c) {
-	    runSyncInEventThread(new Runnable() {
-	      public void run() {
-	        ((Container)getContainer()).remove( (Component) c);
-	      }
-	    });
-	  }
+		myPanel = new TipiSwingPanel();
+		// TipiHelper th = new TipiSwingHelper();
+		// th.initHelper(this);
+		// addHelper(th);
+		myPanel.setLayout(new GridBagLayout());
+		myPanel.setFocusable(false);
+		// ((Container)object).setPreferredSize(new Dimension(800,100));
+		return myPanel;
+	}
 
-	  public void setContainerLayout(final Object layout) {
-	    runSyncInEventThread(new Runnable() {
-	      public void run() {
-	         ( (Container) getContainer()).setLayout( (LayoutManager) layout);
-	      }
-	    });
-	  }
-  protected void setQuestionBorder(String val) {
-      if (val==null) {
-          ((JPanel) getContainer()).setBorder(BorderFactory.createTitledBorder("" + val));
-      } else {
-          ((JPanel) getContainer()).setBorder(BorderFactory.createLoweredBevelBorder());
-      }        
-  }
-  
+	public void addToContainer(Object c, Object constraints) {
 
-  public void runSyncInEventThread(Runnable r) {
-    if (SwingUtilities.isEventDispatchThread() ) {
-      r.run();
-    }
-    else {
-      try {
-        SwingUtilities.invokeAndWait(r);
-      }
-      catch (InvocationTargetException ex) {
-        throw new RuntimeException(ex);
-      }
-      catch (InterruptedException ex) {
-      }
-    }
-  }
+		myPanel.add((Component) c, constraints);
+	}
 
-  public void runAsyncInEventThread(Runnable r) {
-    if (SwingUtilities.isEventDispatchThread() ) {
-      r.run();
-    }
-    else {
-      SwingUtilities.invokeLater(r);
-    }
-  }
+	public void removeFromContainer(final Object c) {
+		runSyncInEventThread(new Runnable() {
+			public void run() {
+				((Container) getContainer()).remove((Component) c);
+			}
+		});
+	}
 
-public void setQuestionVisible(boolean b) {
-    ((JComponent)getContainer()).setVisible(isRelevant());
-    
-}  
+	public void setContainerLayout(final Object layout) {
+		runSyncInEventThread(new Runnable() {
+			public void run() {
+				((Container) getContainer()).setLayout((LayoutManager) layout);
+			}
+		});
+	}
+
+	protected void setQuestionBorder(String val) {
+		if (val == null) {
+			((JPanel) getContainer()).setBorder(BorderFactory
+					.createTitledBorder("" + val));
+		} else {
+			((JPanel) getContainer()).setBorder(BorderFactory
+					.createLoweredBevelBorder());
+		}
+	}
+
+	public void runSyncInEventThread(Runnable r) {
+		if (SwingUtilities.isEventDispatchThread()) {
+			r.run();
+		} else {
+			try {
+				SwingUtilities.invokeAndWait(r);
+			} catch (InvocationTargetException ex) {
+				throw new RuntimeException(ex);
+			} catch (InterruptedException ex) {
+			}
+		}
+	}
+
+	public void runAsyncInEventThread(Runnable r) {
+		if (SwingUtilities.isEventDispatchThread()) {
+			r.run();
+		} else {
+			SwingUtilities.invokeLater(r);
+		}
+	}
+
+	public void setQuestionVisible(boolean b) {
+		((JComponent) getContainer()).setVisible(isRelevant());
+
+	}
 
 }

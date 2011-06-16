@@ -1,16 +1,16 @@
 package com.dexels.navajo.tipi.components.swingimpl.embed;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.util.List;
 
 import navajo.ExtensionDefinition;
-
 import tipi.SwingTipiApplicationInstance;
 
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.swingimpl.*;
-import com.dexels.navajo.tipi.swingclient.*;
-import com.dexels.navajo.tipi.tipixml.*;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.components.swingimpl.SwingTipiContext;
+import com.dexels.navajo.tipi.components.swingimpl.SwingTipiUserInterface;
+import com.dexels.navajo.tipi.swingclient.SwingClient;
+import com.dexels.navajo.tipi.tipixml.XMLParseException;
 
 /**
  * <p>
@@ -32,8 +32,9 @@ import com.dexels.navajo.tipi.tipixml.*;
 
 public class SwingEmbeddedContext extends SwingTipiContext {
 	TipiSwingStandaloneToplevel top = new TipiSwingStandaloneToplevel();
-	
-	public SwingEmbeddedContext(SwingTipiApplicationInstance instance, SwingTipiContext parentContext) {
+
+	public SwingEmbeddedContext(SwingTipiApplicationInstance instance,
+			SwingTipiContext parentContext) {
 		super(instance, parentContext);
 		if (SwingClient.getUserInterface() == null) {
 			SwingTipiUserInterface stui = new SwingTipiUserInterface(this);
@@ -41,24 +42,27 @@ public class SwingEmbeddedContext extends SwingTipiContext {
 		}
 		setDefaultTopLevel(top);
 		getDefaultTopLevel().setContext(this);
-//		parseRequiredIncludes();
-//		processRequiredIncludes();
-//		appendIncludes(coreExtensionList);
-//		appendIncludes(mainExtensionList);
-//		appendIncludes(optionalExtensionList);
+		// parseRequiredIncludes();
+		// processRequiredIncludes();
+		// appendIncludes(coreExtensionList);
+		// appendIncludes(mainExtensionList);
+		// appendIncludes(optionalExtensionList);
 
-	
 	}
 
-	public SwingEmbeddedContext(SwingTipiApplicationInstance instance,SwingTipiContext parentContext,String tipiDefinition[], boolean debugMode, String[] definitionName, List<String> libraries, String resourceBaseDirectory,ExtensionDefinition ed)
+	public SwingEmbeddedContext(SwingTipiApplicationInstance instance,
+			SwingTipiContext parentContext, String tipiDefinition[],
+			boolean debugMode, String[] definitionName, List<String> libraries,
+			String resourceBaseDirectory, ExtensionDefinition ed)
 			throws TipiException, IOException {
-		this(instance,parentContext);
+		this(instance, parentContext);
 		for (int i = 0; i < definitionName.length; i++) {
-			loadDefinition(tipiDefinition[i], definitionName[i],ed);
+			loadDefinition(tipiDefinition[i], definitionName[i], ed);
 		}
 	}
 
-	public void loadDefinition(String def, String name, ExtensionDefinition ed) throws XMLParseException, IOException, TipiException {
+	public void loadDefinition(String def, String name, ExtensionDefinition ed)
+			throws XMLParseException, IOException, TipiException {
 		// public void parseStream(InputStream in, String sourceName, boolean
 		// studioMode) throws IOException, XMLParseException, TipiException {
 		parseStream(getTipiResourceStream(def), name, false, ed);

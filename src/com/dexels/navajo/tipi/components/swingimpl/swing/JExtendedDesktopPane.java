@@ -1,9 +1,17 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
-import java.awt.*;
-import java.beans.*;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Insets;
+import java.awt.Point;
+import java.beans.PropertyVetoException;
 
-import javax.swing.*;
+import javax.swing.DefaultDesktopManager;
+import javax.swing.JComponent;
+import javax.swing.JDesktopPane;
+import javax.swing.JInternalFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JViewport;
 
 /**
  * An extension of JDesktopPane that supports often used functionality. This
@@ -12,6 +20,10 @@ import javax.swing.*;
  */
 public class JExtendedDesktopPane extends JDesktopPane {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1226266471316047404L;
 	private static int FRAME_OFFSET = 20;
 	private JExtendedDesktopManager manager;
 
@@ -90,10 +102,10 @@ public class JExtendedDesktopPane extends JDesktopPane {
 
 	public Component add(JInternalFrame frame) {
 
-//		JInternalFrame[] array = getAllFrames();
+		// JInternalFrame[] array = getAllFrames();
 		Point p;
-//		int w;
-//		int h;
+		// int w;
+		// int h;
 
 		Component retval = super.add(frame);
 		checkDesktopSize();
@@ -133,8 +145,10 @@ public class JExtendedDesktopPane extends JDesktopPane {
 
 		manager.setNormalSize();
 
-		int frameHeight = (getBounds().height - 5) - allFrames.length * FRAME_OFFSET;
-		int frameWidth = (getBounds().width - 5) - allFrames.length * FRAME_OFFSET;
+		int frameHeight = (getBounds().height - 5) - allFrames.length
+				* FRAME_OFFSET;
+		int frameWidth = (getBounds().width - 5) - allFrames.length
+				* FRAME_OFFSET;
 
 		for (int i = allFrames.length - 1; i >= 0; i--) {
 			allFrames[i].setSize(frameWidth, frameHeight);
@@ -191,6 +205,10 @@ public class JExtendedDesktopPane extends JDesktopPane {
  */
 class JExtendedDesktopManager extends DefaultDesktopManager {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1777181469365279667L;
 	private JExtendedDesktopPane desktop;
 
 	public JExtendedDesktopManager(JExtendedDesktopPane desktop) {
@@ -217,7 +235,9 @@ class JExtendedDesktopManager extends DefaultDesktopManager {
 			Dimension d = scrollPane.getVisibleRect().getSize();
 
 			if (scrollPane.getBorder() != null) {
-				d.setSize(d.getWidth() - scrollInsets.left - scrollInsets.right, d.getHeight() - scrollInsets.top - scrollInsets.bottom);
+				d.setSize(
+						d.getWidth() - scrollInsets.left - scrollInsets.right,
+						d.getHeight() - scrollInsets.top - scrollInsets.bottom);
 			}
 
 			d.setSize(d.getWidth() - 20, d.getHeight() - 20);
@@ -271,7 +291,9 @@ class JExtendedDesktopManager extends DefaultDesktopManager {
 			Dimension d = scrollPane.getVisibleRect().getSize();
 
 			if (scrollPane.getBorder() != null) {
-				d.setSize(d.getWidth() - scrollInsets.left - scrollInsets.right, d.getHeight() - scrollInsets.top - scrollInsets.bottom);
+				d.setSize(
+						d.getWidth() - scrollInsets.left - scrollInsets.right,
+						d.getHeight() - scrollInsets.top - scrollInsets.bottom);
 			}
 
 			if (x <= d.getWidth()) {

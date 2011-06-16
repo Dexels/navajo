@@ -1,11 +1,14 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Container;
+import java.awt.Paint;
+import java.awt.event.MouseEvent;
 import java.util.List;
 
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.TipiExecutable;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 
 /**
  * <p>
@@ -32,6 +35,7 @@ public interface TipiSwingComponent extends TipiComponent {
 
 	public void setPaint(Paint p);
 
-	public void animateTransition(TipiEvent te, TipiExecutable executableParent, List<TipiExecutable> exe, int duration)
-			throws TipiBreakException;
+	public void animateTransition(TipiEvent te,
+			TipiExecutable executableParent, List<TipiExecutable> exe,
+			int duration) throws TipiBreakException;
 }

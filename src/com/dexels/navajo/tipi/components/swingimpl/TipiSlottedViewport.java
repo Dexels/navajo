@@ -1,19 +1,25 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.beans.*;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.LayoutManager;
+import java.awt.Point;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
-import javax.swing.*;
-import javax.swing.text.*;
+import javax.swing.BoxLayout;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
 
-import org.jdesktop.animation.timing.*;
-import org.jdesktop.animation.timing.interpolation.*;
+import org.jdesktop.animation.timing.Animator;
+import org.jdesktop.animation.timing.TimingTarget;
+import org.jdesktop.animation.timing.interpolation.SplineInterpolator;
 
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
-import com.dexels.navajo.tipi.internal.*;
-import com.dexels.navajo.tipi.tipixml.*;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.TipiComponentMethod;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingViewport;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 
 /**
  * <p>
@@ -48,7 +54,7 @@ public class TipiSlottedViewport extends TipiSwingDataComponentImpl {
 
 	// private int width = 1;
 	// private int height = 2;
-	//	
+	//
 	public Object createContainer() {
 		view = new TipiSwingViewport();
 		// left = new JPanel();
@@ -89,7 +95,8 @@ public class TipiSlottedViewport extends TipiSwingDataComponentImpl {
 
 	protected void updateClientSize(TipiSwingViewport view) {
 		Dimension d = view.getSize();
-		Dimension e = new Dimension(d.width * view.getGridWidth(), d.height * view.getGridHeight());
+		Dimension e = new Dimension(d.width * view.getGridWidth(), d.height
+				* view.getGridHeight());
 		Component[] ccc = clientPanel.getComponents();
 		for (int i = 0; i < ccc.length; i++) {
 			if (ccc[i] instanceof JComponent) {
@@ -97,8 +104,8 @@ public class TipiSlottedViewport extends TipiSwingDataComponentImpl {
 				jc.setPreferredSize(d);
 			}
 		}
-//		clientPanel.setPreferredSize(e);
-		
+		// clientPanel.setPreferredSize(e);
+
 		clientPanel.doLayout();
 	}
 
@@ -200,63 +207,71 @@ public class TipiSlottedViewport extends TipiSwingDataComponentImpl {
 	}
 
 	@Override
-	protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
+	protected void performComponentMethod(String name,
+			TipiComponentMethod compMeth, TipiEvent event)
+			throws TipiBreakException {
 		super.performComponentMethod(name, compMeth, event);
 		if (name.equals("show")) {
-			final TipiComponent tc = (TipiComponent) compMeth.getEvaluatedParameterValue("component", event);
+			final TipiComponent tc = (TipiComponent) compMeth
+					.getEvaluatedParameterValue("component", event);
 			currentComponent = (Component) tc.getContainer();
 			refreshView();
 
 		}
 		if (name.equals("showAnimated")) {
-			final TipiComponent tc = (TipiComponent) compMeth.getEvaluatedParameterValue("component", event);
-			int duration = (Integer) compMeth.getEvaluatedParameterValue("duration", event);
+			final TipiComponent tc = (TipiComponent) compMeth
+					.getEvaluatedParameterValue("component", event);
+			int duration = (Integer) compMeth.getEvaluatedParameterValue(
+					"duration", event);
 			currentComponent = (Component) tc.getContainer();
-			
+
 			Animator myAnimator = new Animator(duration);
-			myAnimator.setInterpolator(new SplineInterpolator(0f,0.5f,0.6f,1f));
+			myAnimator.setInterpolator(new SplineInterpolator(0f, 0.5f, 0.6f,
+					1f));
 			myAnimator.setAcceleration(0.45f);
 			myAnimator.setDeceleration(0.45f);
-		    final Point initial = view.getViewPosition();
-		    final Point targetPos = currentComponent.getLocation();
-		    myAnimator.addTarget(new TimingTarget(){
+			final Point initial = view.getViewPosition();
+			final Point targetPos = currentComponent.getLocation();
+			myAnimator.addTarget(new TimingTarget() {
 
-		    
-		    	public void begin() {
-		    	}
+				public void begin() {
+				}
 
-		    	public void end() {
-		    	}
+				public void end() {
+				}
 
-		    	public void repeat() {
-		    	}
+				public void repeat() {
+				}
 
-		    	public void timingEvent(float e) {
-		    		view.setViewPosition(interpolate(initial, targetPos, e));
-		    	}});
-		    
-		    myAnimator.start();
+				public void timingEvent(float e) {
+					view.setViewPosition(interpolate(initial, targetPos, e));
+				}
+			});
+
+			myAnimator.start();
 			refreshView();
 
 		}
 	}
+
 	public Point interpolate(Point start, Point end, float fraction) {
-		int resX = start.x + (int)((end.x - start.x) * fraction);
-		int resY = start.y + (int)((end.y - start.y) * fraction);
-		Point point = new Point(resX,resY);
-//		System.err.println("point: "+point);
+		int resX = start.x + (int) ((end.x - start.x) * fraction);
+		int resY = start.y + (int) ((end.y - start.y) * fraction);
+		Point point = new Point(resX, resY);
+		// System.err.println("point: "+point);
 		return point;
-	
+
 	}
+
 	private void refreshView() {
 		runSyncInEventThread(new Runnable() {
 
 			public void run() {
-				if(currentComponent!=null) {
+				if (currentComponent != null) {
 					Point p = getLocation(currentComponent);
-//					view.setViewPosition(p);
+					// view.setViewPosition(p);
 				} else {
-//					view.setViewPosition(new Point(0,0));
+					// view.setViewPosition(new Point(0,0));
 				}
 			}
 		});

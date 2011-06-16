@@ -1,14 +1,20 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.awt.event.*;
-import java.util.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.swing.*;
+import javax.swing.JScrollPane;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiComponentMethod;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.TipiHelper;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingTextArea;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 
 /**
  * <p>
@@ -32,17 +38,11 @@ public class TipiTextArea extends TipiSwingComponentImpl {
 
 	public TipiTextArea() {
 	}
-	
-	
-	
 
 	@Override
 	public Object getActualComponent() {
 		return myTextArea;
 	}
-
-
-
 
 	public Object createContainer() {
 		myTextArea = new TipiSwingTextArea();
@@ -91,7 +91,8 @@ public class TipiTextArea extends TipiSwingComponentImpl {
 			public Map<String, Object> getEventMap(KeyEvent e) {
 				Map<String, Object> hm = new HashMap<String, Object>();
 				hm.put("code", new Integer(e.getKeyCode()));
-				hm.put("modifiers", KeyEvent.getKeyModifiersText(e.getModifiers()));
+				hm.put("modifiers",
+						KeyEvent.getKeyModifiersText(e.getModifiers()));
 				hm.put("key", KeyEvent.getKeyText(e.getKeyCode()));
 				return hm;
 			}
@@ -109,9 +110,9 @@ public class TipiTextArea extends TipiSwingComponentImpl {
 			});
 			return;
 		}
-//		if(name.equals("editable")) {
-//			myTextArea.setEditable((Boolean)object);
-//		}
+		// if(name.equals("editable")) {
+		// myTextArea.setEditable((Boolean)object);
+		// }
 		super.setComponentValue(name, object);
 	}
 
@@ -122,7 +123,9 @@ public class TipiTextArea extends TipiSwingComponentImpl {
 		return super.getComponentValue(name);
 	}
 
-	protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
+	protected void performComponentMethod(String name,
+			TipiComponentMethod compMeth, TipiEvent event)
+			throws TipiBreakException {
 		super.performComponentMethod(name, compMeth, event);
 
 		if (name.equals("append")) {
@@ -145,7 +148,8 @@ public class TipiTextArea extends TipiSwingComponentImpl {
 
 					public void run() {
 						String result = (String) o.value;
-						myTextArea.setText(myTextArea.getText() + result + "\n");
+						myTextArea
+								.setText(myTextArea.getText() + result + "\n");
 					}
 				});
 			}

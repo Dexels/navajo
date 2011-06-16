@@ -8,12 +8,12 @@ package com.dexels.navajo.tipi.components.swingimpl;
  * @author not attributable
  * @version 1.0
  */
-import javax.swing.*;
+import javax.swing.JMenuBar;
 
 public interface TopLevel {
-  public void setJMenuBar(JMenuBar j);
+	public void setJMenuBar(JMenuBar j);
 
-  public void setTitle(String s);
+	public void setTitle(String s);
 
-  public void setTipiMenubar(TipiMenubar tm);
+	public void setTipiMenubar(TipiMenubar tm);
 }

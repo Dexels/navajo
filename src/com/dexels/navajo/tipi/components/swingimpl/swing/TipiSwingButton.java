@@ -1,32 +1,49 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.image.*;
-import java.io.*;
-import java.net.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
 
-import javax.imageio.*;
-import javax.swing.*;
+import javax.imageio.ImageIO;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 
-import com.dexels.navajo.document.types.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.swingimpl.dnd.*;
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.swingimpl.dnd.TipiDndCapable;
+import com.dexels.navajo.tipi.swingimpl.dnd.TipiDndManager;
 
 public class TipiSwingButton extends JButton implements TipiDndCapable {
-	
-	public static String STRINGMNEMONIC_CHANGED_PROPERTY = "string_mnemonic"; 
-	
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5611343353338141519L;
+
+	public static String STRINGMNEMONIC_CHANGED_PROPERTY = "string_mnemonic";
+
 	private final TipiDndManager myDndManager;
-	
+
 	private boolean isVertical = false;
 	private boolean tipiBorderPainted = true;
 
 	public TipiSwingButton(final TipiComponent component) {
 		myDndManager = new TipiDndManager(this, component);
-		addMouseListener(new MouseAdapter(){
+		addMouseListener(new MouseAdapter() {
 
 			public void mouseEntered(MouseEvent e) {
 				TipiSwingButton.this.setBorderPainted(true);
@@ -38,6 +55,7 @@ public class TipiSwingButton extends JButton implements TipiDndCapable {
 					e1.printStackTrace();
 				}
 			}
+
 			public void mouseExited(MouseEvent e) {
 				TipiSwingButton.this.setBorderPainted(tipiBorderPainted);
 				try {
@@ -48,100 +66,93 @@ public class TipiSwingButton extends JButton implements TipiDndCapable {
 					e1.printStackTrace();
 				}
 			}
-		}
-		);
-	
+		});
+
 	}
 
 	public void setVertical(boolean isVertical) {
 		this.isVertical = isVertical;
-		if(isVertical) {
+		if (isVertical) {
 			createVerticalImage(super.getText(), true);
 		}
 	}
 
-
-	 @Override
+	@Override
 	public void setText(String text) {
 		super.setText(text);
-		if(isVertical) {
+		if (isVertical) {
 			createVerticalImage(super.getText(), true);
 		}
-	 }
-	
+	}
+
 	public void setForeground(Color fg) {
 		super.setForeground(fg);
-		if(isVertical) {
+		if (isVertical) {
 			createVerticalImage(super.getText(), true);
 		}
 	}
 
-		public String getText() {
-			if(isVertical) {
-				return "";
-			} else {
-				return super.getText();
-			}
+	public String getText() {
+		if (isVertical) {
+			return "";
+		} else {
+			return super.getText();
 		}
-		
-		
-		
-		
-		public void setBorderVisible(boolean b) {
-			boolean old = isBorderPainted();
-			setBorderPainted(b);
-			setContentAreaFilled(b);
-			tipiBorderPainted = b;
-			firePropertyChange("BorderVisible", old, b);
 	}
 
-	public void createVerticalImage (String caption, boolean clockwise) {
-	        System.err.println("Creating vertical image");
-	        Font f = getFont ();
-	        FontMetrics fm = getFontMetrics (f);
-	        int captionHeight = fm.getHeight ();
-	        int captionWidth = fm.stringWidth (caption);
-	        BufferedImage bi = new BufferedImage (captionHeight + 4,
-	                captionWidth + 4, BufferedImage.TYPE_INT_ARGB);
-	        Graphics2D g = (Graphics2D) bi.getGraphics ();
-	        
-	        g.setColor (new Color (0, 0, 0, 0)); // transparent
-	        g.fillRect (0, 0, bi.getWidth (), bi.getHeight ());
-	        
-	        g.setColor (getForeground ());
-	        g.setFont (f);
-	        g.setRenderingHint (RenderingHints.KEY_TEXT_ANTIALIASING,
-	                RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-	        
-	        if (clockwise) {
-	            g.rotate (Math.PI / 2);
-	        } else {
-	            g.rotate (- Math.PI / 2);
-	            g.translate (-bi.getHeight (), bi.getWidth ());
-	        }
-	        g.drawString (caption, 2, -6);
-	        
-	        Icon icon = new ImageIcon (bi);
-	        setIcon (icon);
-//	        super.setText("");
-	        setMargin (new Insets (2, 0, 2, 0));
-	         setActionCommand (caption);
-	    }
-	    
+	public void setBorderVisible(boolean b) {
+		boolean old = isBorderPainted();
+		setBorderPainted(b);
+		setContentAreaFilled(b);
+		tipiBorderPainted = b;
+		firePropertyChange("BorderVisible", old, b);
+	}
 
-//	public void setPreferredSize(Dimension d) {
-//		// ignore.
-//	}
-//
-//	
-//	
+	public void createVerticalImage(String caption, boolean clockwise) {
+		System.err.println("Creating vertical image");
+		Font f = getFont();
+		FontMetrics fm = getFontMetrics(f);
+		int captionHeight = fm.getHeight();
+		int captionWidth = fm.stringWidth(caption);
+		BufferedImage bi = new BufferedImage(captionHeight + 4,
+				captionWidth + 4, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = (Graphics2D) bi.getGraphics();
+
+		g.setColor(new Color(0, 0, 0, 0)); // transparent
+		g.fillRect(0, 0, bi.getWidth(), bi.getHeight());
+
+		g.setColor(getForeground());
+		g.setFont(f);
+		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
+		if (clockwise) {
+			g.rotate(Math.PI / 2);
+		} else {
+			g.rotate(-Math.PI / 2);
+			g.translate(-bi.getHeight(), bi.getWidth());
+		}
+		g.drawString(caption, 2, -6);
+
+		Icon icon = new ImageIcon(bi);
+		setIcon(icon);
+		// super.setText("");
+		setMargin(new Insets(2, 0, 2, 0));
+		setActionCommand(caption);
+	}
+
+	// public void setPreferredSize(Dimension d) {
+	// // ignore.
+	// }
+	//
+	//
+	//
 	@Override
 	public void setCursor(Cursor cursor) {
-		System.err.println("Setting cursor: "+cursor.getName());
+		System.err.println("Setting cursor: " + cursor.getName());
 		Thread.dumpStack();
 		super.setCursor(cursor);
 	}
-
 
 	public Dimension getMinimumSize() {
 		return getPreferredSize();
@@ -151,31 +162,26 @@ public class TipiSwingButton extends JButton implements TipiDndCapable {
 		setIcon(getIcon(u));
 	}
 
-	 protected ImageIcon getIcon(Object u) {
-		 if(u==null) {
-			 return null;
-		 }
-		 if(u instanceof URL) {
-			   return new ImageIcon((URL) u);
-		 }
-		 if(u instanceof Binary) {
-			 Image i;
+	protected ImageIcon getIcon(Object u) {
+		if (u == null) {
+			return null;
+		}
+		if (u instanceof URL) {
+			return new ImageIcon((URL) u);
+		}
+		if (u instanceof Binary) {
+			Image i;
 			try {
 				i = ImageIO.read(((Binary) u).getDataAsStream());
-				 ImageIcon ii = new ImageIcon(i);
-				 return ii;
+				ImageIcon ii = new ImageIcon(i);
+				return ii;
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		 }
-		 return null;
-	  }
+		}
+		return null;
+	}
 
-	 
-	
-	    	 
-	 
-	 
 	public void setStringMnemonic(String s) {
 		String old = getStringMnemonic();
 		setMnemonic(s.charAt(0));
@@ -189,7 +195,6 @@ public class TipiSwingButton extends JButton implements TipiDndCapable {
 	public void setMnemonic(String s) {
 		setMnemonic(s.charAt(0));
 	}
-
 
 	public TipiDndManager getDndManager() {
 		return myDndManager;

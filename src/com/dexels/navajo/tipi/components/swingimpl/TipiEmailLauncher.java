@@ -4,12 +4,11 @@
  */
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.io.*;
+import java.io.IOException;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.internal.*;
-
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.tipi.TipiComponentMethod;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 
 /**
  * @author matthijs (!)
@@ -20,76 +19,85 @@ import com.dexels.navajo.tipi.internal.*;
 @Deprecated
 public class TipiEmailLauncher extends TipiSwingDataComponentImpl {
 
-    private Message recipient = null;       
+	private Message recipient = null;
 
-    protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) {
-    	
-    	String propertyName = null;
-    	String emailSubject = null;
-    	String emailBody    = null;
-    	
-    	if (name.equals("setEmailParameters")) {
-    		propertyName = (String) compMeth.getEvaluatedParameter("propertyname", event).value;
-    		emailSubject = (String) compMeth.getEvaluatedParameter("subject", event).value;
-            emailBody    = (String) compMeth.getEvaluatedParameter("body", event).value;
-            
-            try {
-                recipient = (Message) compMeth.getEvaluatedParameter("messagepath", event).value;
-                
-                if (recipient == null) {
-                    System.err.println("TipiPersonEmail does not recieve a message as input! Aborting...");
-                    return;
-                }
-            } catch (Exception ex) {
-                System.err.println("Could not find data in 'messagepath'! \n");
-                ex.printStackTrace();
-                return;
-            }
-            createEmail(propertyName, emailSubject, emailBody);
-        }
-    }
+	protected void performComponentMethod(String name,
+			TipiComponentMethod compMeth, TipiEvent event) {
 
-    private void createEmail(String propertyName, String subject, String body) {
+		String propertyName = null;
+		String emailSubject = null;
+		String emailBody = null;
 
-        String emailAddress;        
-        String emailString = "mailto:";
-        boolean recipientsFound = false;
+		if (name.equals("setEmailParameters")) {
+			propertyName = (String) compMeth.getEvaluatedParameter(
+					"propertyname", event).value;
+			emailSubject = (String) compMeth.getEvaluatedParameter("subject",
+					event).value;
+			emailBody = (String) compMeth.getEvaluatedParameter("body", event).value;
 
-        try {
+			try {
+				recipient = (Message) compMeth.getEvaluatedParameter(
+						"messagepath", event).value;
 
-            for (int i = 0; i < recipient.getArraySize(); i++) {
-                Message current = recipient.getMessage(i);
-                emailAddress = current.getProperty(propertyName).getValue();
-                if (emailAddress != null && emailAddress.trim() != "") {
-                    recipientsFound = true;
-                    emailString = emailString + emailAddress + ",";
-                }
-            }
-            if (recipientsFound) {
-                emailString = emailString.substring(0, (emailString.length() - 1));
-                emailString = emailString + "?subject=" + subject + "&body=" + body;
-                System.err.println("Generated email string: " + emailString);
-                String cmd = "rundll32 url.dll,FileProtocolHandler " + emailString;
-                try {
-                    Runtime.getRuntime().exec(cmd);
-                } catch (IOException ex) {
-                    System.err.println("Could not launch email (rundll32)");
-                }
-            } else {
-                System.err.println("No recipients found that have an email address");
-            }
+				if (recipient == null) {
+					System.err
+							.println("TipiPersonEmail does not recieve a message as input! Aborting...");
+					return;
+				}
+			} catch (Exception ex) {
+				System.err.println("Could not find data in 'messagepath'! \n");
+				ex.printStackTrace();
+				return;
+			}
+			createEmail(propertyName, emailSubject, emailBody);
+		}
+	}
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+	private void createEmail(String propertyName, String subject, String body) {
 
-    public Object createContainer() {
-        return null;
-    }
+		String emailAddress;
+		String emailString = "mailto:";
+		boolean recipientsFound = false;
 
-    public static void main(String[] args) {
+		try {
 
-    }
+			for (int i = 0; i < recipient.getArraySize(); i++) {
+				Message current = recipient.getMessage(i);
+				emailAddress = current.getProperty(propertyName).getValue();
+				if (emailAddress != null && emailAddress.trim() != "") {
+					recipientsFound = true;
+					emailString = emailString + emailAddress + ",";
+				}
+			}
+			if (recipientsFound) {
+				emailString = emailString.substring(0,
+						(emailString.length() - 1));
+				emailString = emailString + "?subject=" + subject + "&body="
+						+ body;
+				System.err.println("Generated email string: " + emailString);
+				String cmd = "rundll32 url.dll,FileProtocolHandler "
+						+ emailString;
+				try {
+					Runtime.getRuntime().exec(cmd);
+				} catch (IOException ex) {
+					System.err.println("Could not launch email (rundll32)");
+				}
+			} else {
+				System.err
+						.println("No recipients found that have an email address");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Object createContainer() {
+		return null;
+	}
+
+	public static void main(String[] args) {
+
+	}
 
 }

@@ -1,14 +1,18 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
-import java.awt.*;
+import java.awt.Point;
 
-import javax.swing.*;
+import javax.swing.JViewport;
 
 public class TipiSwingViewport extends JViewport {
-	
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1077745085517516479L;
 	private int gridWidth;
 	private int gridHeight;
-	
+
 	public void setX(int x) {
 		int width = getSize().width;
 		setViewPosition(new Point(Math.min(x, width), 0));
@@ -19,14 +23,12 @@ public class TipiSwingViewport extends JViewport {
 		setViewPosition(new Point(0, Math.min(y, height)));
 	}
 
-
-	
 	@Override
 	public void setViewPosition(Point p) {
-		if(p.y==0 && p.x==642) {
+		if (p.y == 0 && p.x == 642) {
 			Thread.dumpStack();
 		}
-	
+
 		super.setViewPosition(p);
 	}
 
@@ -51,20 +53,19 @@ public class TipiSwingViewport extends JViewport {
 	}
 
 	public float getRelativeScrollX() {
-		return getX()/getWidth();
+		return getX() / getWidth();
 	}
 
 	public void setRelativeScrollX(float relativeScrollX) {
-		setX((int) (getWidth()*relativeScrollX));
+		setX((int) (getWidth() * relativeScrollX));
 	}
 
 	public float getRelativeScrollY() {
-		return getY()/getHeight();
+		return getY() / getHeight();
 	}
 
 	public void setRelativeScrollY(float relativeScrollY) {
-		setY((int) (getHeight()*relativeScrollY));
+		setY((int) (getHeight() * relativeScrollY));
 	}
-
 
 }

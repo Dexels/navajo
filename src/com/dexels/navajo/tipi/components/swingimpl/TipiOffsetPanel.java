@@ -1,11 +1,21 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.LayoutManager;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
+import com.dexels.navajo.tipi.TipiHelper;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingOffsetPanel;
 
 /**
  * <p>
@@ -30,18 +40,18 @@ public class TipiOffsetPanel extends TipiSwingDataComponentImpl {
 
 	@Override
 	public void addToContainer(Object c, Object constraints) {
-		myPanel.getClient().add((Component) c,constraints);
+		myPanel.getClient().add((Component) c, constraints);
 		myPanel.doLayout();
 	}
 
-//	@Override
+	// @Override
 	public Object getContainerLayout() {
 		return myPanel.getClient().getLayout();
 	}
 
-//	@Override
+	// @Override
 	public void removeFromContainer(Object c) {
-		myPanel.getClient().remove((Component)c);
+		myPanel.getClient().remove((Component) c);
 		myPanel.doLayout();
 	}
 
@@ -70,16 +80,20 @@ public class TipiOffsetPanel extends TipiSwingDataComponentImpl {
 		jp.setLayout(new GridBagLayout());
 		jp.setBorder(BorderFactory.createTitledBorder("Monkeeeyyy"));
 		jf.getContentPane().add(jp);
-		jp.add(Box.createHorizontalStrut(100), new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+		jp.add(Box.createHorizontalStrut(100), new GridBagConstraints(0, 0, 1,
+				1, 0.0, 0.0, GridBagConstraints.CENTER,
 				GridBagConstraints.HORIZONTAL, new Insets(2, 2, 2, 2), 0, 0));
-		jp.add(new JLabel("Da monkeyy"), new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+		jp.add(new JLabel("Da monkeyy"), new GridBagConstraints(0, 0, 1, 1,
+				0.0, 0.0, GridBagConstraints.CENTER,
 				GridBagConstraints.HORIZONTAL, new Insets(2, 2, 2, 2), 0, 0));
 		JTextField jr = new JTextField("");
 		jf.getContentPane().add(jp);
 
-		jp.add(jr, new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(2, 2,
-				2, 2), 0, 0));
-		jp.add(Box.createHorizontalStrut(100), new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER,
+		jp.add(jr, new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0,
+				GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+				new Insets(2, 2, 2, 2), 0, 0));
+		jp.add(Box.createHorizontalStrut(100), new GridBagConstraints(1, 0, 1,
+				1, 1.0, 0.0, GridBagConstraints.CENTER,
 				GridBagConstraints.HORIZONTAL, new Insets(2, 2, 2, 2), 0, 0));
 	}
 

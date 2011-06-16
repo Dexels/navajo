@@ -1,16 +1,30 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.awt.event.*;
-import java.beans.*;
-import java.util.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
-import com.dexels.navajo.tipi.internal.*;
-import com.dexels.navajo.tipi.swingclient.components.*;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.tipi.TipiComponentMethod;
+import com.dexels.navajo.tipi.TipiEventListener;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.TipiHelper;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingPropertyComponent;
+import com.dexels.navajo.tipi.internal.PropertyComponent;
+import com.dexels.navajo.tipi.internal.TipiEvent;
+import com.dexels.navajo.tipi.swingclient.components.GenericPropertyComponent;
+import com.dexels.navajo.tipi.swingclient.components.PropertyEventListener;
 
-public class TipiProperty extends TipiSwingComponentImpl implements PropertyComponent, PropertyChangeListener, PropertyEventListener {
+public class TipiProperty extends TipiSwingComponentImpl implements
+		PropertyComponent, PropertyChangeListener, PropertyEventListener {
 	private Property myProperty = null;
 	private Object myPropertyValue = null;
 	private List<TipiEventListener> myListeners = new ArrayList<TipiEventListener>();
@@ -47,7 +61,7 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 		addTipiEventListener(this);
 		p.addPropertyKeyListener(new KeyListener() {
 			public void keyTyped(KeyEvent e) {
-				Map<String,Object> m = getEventMap(e);
+				Map<String, Object> m = getEventMap(e);
 				m.put("mode", "typed");
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					try {
@@ -64,7 +78,7 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 			}
 
 			public void keyPressed(KeyEvent e) {
-				Map<String,Object> m = getEventMap(e);
+				Map<String, Object> m = getEventMap(e);
 				m.put("mode", "typed");
 				try {
 					performTipiEvent("onKey", m, false);
@@ -74,7 +88,7 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 			}
 
 			public void keyReleased(KeyEvent e) {
-				Map<String,Object> m = getEventMap(e);
+				Map<String, Object> m = getEventMap(e);
 				m.put("mode", "released");
 				try {
 					performTipiEvent("onKey", m, false);
@@ -83,10 +97,11 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 				}
 			}
 
-			public Map<String,Object> getEventMap(KeyEvent e) {
-				Map<String,Object> hm = new HashMap<String,Object>();
+			public Map<String, Object> getEventMap(KeyEvent e) {
+				Map<String, Object> hm = new HashMap<String, Object>();
 				hm.put("code", new Integer(e.getKeyCode()));
-				hm.put("modifiers", KeyEvent.getKeyModifiersText(e.getModifiers()));
+				hm.put("modifiers",
+						KeyEvent.getKeyModifiersText(e.getModifiers()));
 				hm.put("key", KeyEvent.getKeyText(e.getKeyCode()));
 				return hm;
 			}
@@ -102,7 +117,8 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 	public void setLabelWidth(final int width) {
 		runSyncInEventThread(new Runnable() {
 			public void run() {
-				((GenericPropertyComponent) getContainer()).setLabelIndent(width);
+				((GenericPropertyComponent) getContainer())
+						.setLabelIndent(width);
 			}
 		});
 	}
@@ -110,12 +126,12 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 	public void setValueWidth(final int width) {
 		runSyncInEventThread(new Runnable() {
 			public void run() {
-				((GenericPropertyComponent) getContainer()).setPropertyWidth(width);
+				((GenericPropertyComponent) getContainer())
+						.setPropertyWidth(width);
 			}
 		});
 	}
 
-	
 	@Override
 	public void addTipiEvent(TipiEvent te) {
 		myEventList.add(te);
@@ -139,7 +155,7 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 
 	@Override
 	protected Object getComponentValue(String name) {
-		if(name.equals("propertyValue")) {
+		if (name.equals("propertyValue")) {
 			// ----
 			return myPropertyValue;
 		}
@@ -148,8 +164,8 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 
 	@Override
 	protected void setComponentValue(String name, Object object) {
-		if(name.equals("propertyValue")) {
-			if(myProperty!=null) {
+		if (name.equals("propertyValue")) {
+			if (myProperty != null) {
 				myProperty.setAnyValue(object);
 			}
 			myPropertyValue = object;
@@ -164,10 +180,10 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 					myProperty.removePropertyChangeListener(TipiProperty.this);
 				}
 				// TODO: Not sure about this one:
-				if(myProperty!=null) {
-					myContext.unlink(myProperty.getRootDoc(),myProperty);
+				if (myProperty != null) {
+					myContext.unlink(myProperty.getRootDoc(), myProperty);
 				}
-				if(p!=null) {
+				if (p != null) {
 					p.addPropertyChangeListener(TipiProperty.this);
 				}
 				myProperty = p;
@@ -178,7 +194,6 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 			}
 		});
 	}
-
 
 	public void addTipiEventListener(TipiEventListener listener) {
 		if (listener == null) {
@@ -195,47 +210,49 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 		return getId();
 	}
 
-	
-	public void propertyEventFired(Property p, String eventType, boolean internal) {
-		propertyEventFired(p, eventType, null,internal);
+	public void propertyEventFired(Property p, String eventType,
+			boolean internal) {
+		propertyEventFired(p, eventType, null, internal);
 	}
-	public void propertyEventFired(Property p, String eventType,  Object oldValue,boolean internal) {
-		if("onValueChanged".equals(eventType)) {
-//			try {
-//				System.err.println("Onvalue Changed: "+oldValue+" new: "+p.getTypedValue()+" path: "+p.getFullPropertyName()+" ");
-//				if(oldValue!=null) {
-//					System.err.println("OLD CLASS: "+p.getTypedValue().getClass());
-//				}
-//				if(p.getTypedValue()!=null) {
-//					System.err.println("NEW CLASS: "+p.getTypedValue().getClass());
-//				}
-//			} catch (NavajoException e) {
-//				e.printStackTrace();
-//			}
-		
-//			Thread.dumpStack();
+
+	public void propertyEventFired(Property p, String eventType,
+			Object oldValue, boolean internal) {
+		if ("onValueChanged".equals(eventType)) {
+			// try {
+			// System.err.println("Onvalue Changed: "+oldValue+" new: "+p.getTypedValue()+" path: "+p.getFullPropertyName()+" ");
+			// if(oldValue!=null) {
+			// System.err.println("OLD CLASS: "+p.getTypedValue().getClass());
+			// }
+			// if(p.getTypedValue()!=null) {
+			// System.err.println("NEW CLASS: "+p.getTypedValue().getClass());
+			// }
+			// } catch (NavajoException e) {
+			// e.printStackTrace();
+			// }
+
+			// Thread.dumpStack();
 
 			Object typedValue = p.getTypedValue();
-			if(typedValue!=null && typedValue.equals(oldValue)) {
+			if (typedValue != null && typedValue.equals(oldValue)) {
 				System.err.println("No real change. Beware:");
 				Thread.dumpStack();
 			}
 			try {
-				Map<String,Object> m = new HashMap<String,Object>();
+				Map<String, Object> m = new HashMap<String, Object>();
 				m.put("propertyName", p.getFullPropertyName());
 				m.put("propertyValue", typedValue);
 				m.put("propertyType", p.getType());
 				m.put("internalChange", internal);
-							m.put("old", oldValue);
+				m.put("old", oldValue);
 				m.put("propertyLength", new Integer(p.getLength()));
 				// PropertyImpl p = (PropertyImpl)myProperty;
 				for (int i = 0; i < myListeners.size(); i++) {
 					TipiEventListener current = myListeners.get(i);
 					current.performTipiEvent(eventType, m, true);
-		
+
 				}
-//				performTipiEvent(eventType, m, false);
-		} catch (Exception ex) {
+				// performTipiEvent(eventType, m, false);
+			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
 		} else {
@@ -249,7 +266,7 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
-			
+
 		}
 		if (p == null) {
 			System.err.println("Trying to fire event from null property!");
@@ -261,7 +278,8 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 		((GenericPropertyComponent) getContainer()).updateProperty();
 	}
 
-	protected void performComponentMethod(final String name, final TipiComponentMethod compMeth, TipiEvent event) {
+	protected void performComponentMethod(final String name,
+			final TipiComponentMethod compMeth, TipiEvent event) {
 		if ("updateProperty".equals(name)) {
 			runSyncInEventThread(new Runnable() {
 				public void run() {
@@ -272,7 +290,8 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 			requestPropertyFocus();
 		}
 		if ("selectByName".equals(name)) {
-			String selectionName = (String) compMeth.getEvaluatedParameter("value", event).value;
+			String selectionName = (String) compMeth.getEvaluatedParameter(
+					"value", event).value;
 			if (myProperty != null) {
 				try {
 					Selection s = myProperty.getSelection(selectionName);
@@ -284,7 +303,8 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 			}
 		}
 		if ("selectByValue".equals(name)) {
-			String selectionValue = (String) compMeth.getEvaluatedParameter("value", event).value;
+			String selectionValue = (String) compMeth.getEvaluatedParameter(
+					"value", event).value;
 			if (myProperty != null) {
 				try {
 					myProperty.setSelected(selectionValue);
@@ -302,43 +322,52 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 	}
 
 	public void propertyChange(final PropertyChangeEvent e) {
-		runSyncInEventThread(new Runnable(){
+		runSyncInEventThread(new Runnable() {
 
 			public void run() {
-				if(e.getPropertyName().equals("value") || e.getPropertyName().equals("selection")) {
-//					if(e.getPropertyName().equals("selection")) {
-//						System.err.println("Change: "+e.getPropertyName());
-//					}
-//					System.err.println("OLD: "+e.getOldValue());
-//					System.err.println("NEW: "+e.getNewValue());
-//					Thread.dumpStack();
-					((GenericPropertyComponent) getContainer()).updatePropertyValue(e);
-					propertyEventFired((Property)e.getSource(),"onValueChanged", e.getOldValue(),false);
-					myPropertyValue = ((Property)e.getSource()).getTypedValue();
+				if (e.getPropertyName().equals("value")
+						|| e.getPropertyName().equals("selection")) {
+					// if(e.getPropertyName().equals("selection")) {
+					// System.err.println("Change: "+e.getPropertyName());
+					// }
+					// System.err.println("OLD: "+e.getOldValue());
+					// System.err.println("NEW: "+e.getNewValue());
+					// Thread.dumpStack();
+					((GenericPropertyComponent) getContainer())
+							.updatePropertyValue(e);
+					propertyEventFired((Property) e.getSource(),
+							"onValueChanged", e.getOldValue(), false);
+					myPropertyValue = ((Property) e.getSource())
+							.getTypedValue();
 				} else {
 					// direction, cardinality, length, or description change:
-					((GenericPropertyComponent) getContainer()).setProperty(getProperty());
-					if(e.getPropertyName().equals("cardinality")) {
-						propertyEventFired((Property)e.getSource(), "onCardinalityChanged",e.getOldValue(),false);
+					((GenericPropertyComponent) getContainer())
+							.setProperty(getProperty());
+					if (e.getPropertyName().equals("cardinality")) {
+						propertyEventFired((Property) e.getSource(),
+								"onCardinalityChanged", e.getOldValue(), false);
 					}
-					if(e.getPropertyName().equals("length")) {
-						propertyEventFired((Property)e.getSource(), "onLengthChanged",e.getOldValue(),false);
+					if (e.getPropertyName().equals("length")) {
+						propertyEventFired((Property) e.getSource(),
+								"onLengthChanged", e.getOldValue(), false);
 					}
-					if(e.getPropertyName().equals("description")) {
-						propertyEventFired((Property)e.getSource(), "onDescriptionChanged", e.getOldValue(),false);
+					if (e.getPropertyName().equals("description")) {
+						propertyEventFired((Property) e.getSource(),
+								"onDescriptionChanged", e.getOldValue(), false);
 					}
-					if(e.getPropertyName().equals("direction")) {
-						propertyEventFired((Property)e.getSource(), "onDirectionChanged", e.getOldValue(),false);
+					if (e.getPropertyName().equals("direction")) {
+						propertyEventFired((Property) e.getSource(),
+								"onDirectionChanged", e.getOldValue(), false);
 					}
-					if(e.getPropertyName().equals("type")) {
-						propertyEventFired((Property)e.getSource(), "onTypeChanged", e.getOldValue(),false);
+					if (e.getPropertyName().equals("type")) {
+						propertyEventFired((Property) e.getSource(),
+								"onTypeChanged", e.getOldValue(), false);
 					}
-				}			
+				}
 			}
-			
+
 		});
 
 	}
-
 
 }

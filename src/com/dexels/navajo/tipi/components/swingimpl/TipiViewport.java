@@ -35,7 +35,6 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 public class TipiViewport extends TipiSwingDataComponentImpl {
 
-
 	public TipiViewport() {
 	}
 
@@ -46,8 +45,6 @@ public class TipiViewport extends TipiSwingDataComponentImpl {
 	private JPanel clientPanel;
 	private JViewport view;
 
-	
-	
 	public Object createContainer() {
 		view = new TipiSwingViewport();
 		left = new JPanel();
@@ -56,7 +53,7 @@ public class TipiViewport extends TipiSwingDataComponentImpl {
 		right.setLayout(new BorderLayout());
 		clientPanel = new JPanel();
 		layout = new GridLayout();
-//		layout = new BoxLayout(clientPanel, axis);
+		// layout = new BoxLayout(clientPanel, axis);
 		clientPanel.setLayout(layout);
 		clientPanel.add(left);
 		clientPanel.add(right);
@@ -68,27 +65,27 @@ public class TipiViewport extends TipiSwingDataComponentImpl {
 			}
 
 		});
-		
+
 		view.setView(clientPanel);
 		return view;
 	}
 
-	public void initBeforeBuildingChildren(XMLElement instance, XMLElement classdef, XMLElement definition) {
+	public void initBeforeBuildingChildren(XMLElement instance,
+			XMLElement classdef, XMLElement definition) {
 		String constraint = null;
-		if(definition!=null) {
+		if (definition != null) {
 			constraint = definition.getStringAttribute("constraint");
 		}
-		if(instance!=null) {
+		if (instance != null) {
 			String c = instance.getStringAttribute("constraint");
-			if(c!=null) {
+			if (c != null) {
 				c = constraint;
 			}
 		}
-		System.err.println("Consttraints::: "+constraint);
+		System.err.println("Consttraints::: " + constraint);
 		super.initBeforeBuildingChildren(instance, classdef, definition);
 	}
 
-	
 	protected void updateClientSize(JViewport view) {
 		Dimension d = view.getSize();
 		if (axis == BoxLayout.Y_AXIS) {
@@ -105,7 +102,8 @@ public class TipiViewport extends TipiSwingDataComponentImpl {
 
 	public void addToContainer(Object c, Object constraints) {
 		if (constraints == null) {
-			throw new IllegalArgumentException("Constraint required when adding to a viewport");
+			throw new IllegalArgumentException(
+					"Constraint required when adding to a viewport");
 		}
 		String constr = constraints.toString();
 		Component cc = (Component) c;
@@ -154,26 +152,26 @@ public class TipiViewport extends TipiSwingDataComponentImpl {
 		clientPanel.setLayout(new BoxLayout(clientPanel, axis));
 	}
 
-	public void setComponentValue(String name,final  Object object) {
+	public void setComponentValue(String name, final Object object) {
 		super.setComponentValue(name, object);
-//		if (name.equals("x")) {
-//			runSyncInEventThread(new Runnable() {
-//				public void run() {
-//					System.err.println("Setx: "+object);
-//					view.setViewPosition(new Point((Integer) object, 0));
-//				}
-//			});
-//		}
-//
-//		if (name.equals("y")) {
-//			runSyncInEventThread(new Runnable() {
-//				public void run() {
-//					System.err.println("Sety: "+object);
-//					view.setViewPosition(new Point(0, (Integer) object));
-//				}
-//			});
-//
-//		}
+		// if (name.equals("x")) {
+		// runSyncInEventThread(new Runnable() {
+		// public void run() {
+		// System.err.println("Setx: "+object);
+		// view.setViewPosition(new Point((Integer) object, 0));
+		// }
+		// });
+		// }
+		//
+		// if (name.equals("y")) {
+		// runSyncInEventThread(new Runnable() {
+		// public void run() {
+		// System.err.println("Sety: "+object);
+		// view.setViewPosition(new Point(0, (Integer) object));
+		// }
+		// });
+		//
+		// }
 		// if (name.equals("dividersize")) {
 		// int size = ( (Integer) object).intValue();
 		// ((TipiSwingSplitPane) getContainer()).setDividerSize(size);

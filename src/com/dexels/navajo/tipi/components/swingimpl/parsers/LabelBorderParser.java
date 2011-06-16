@@ -1,12 +1,14 @@
 package com.dexels.navajo.tipi.components.swingimpl.parsers;
 
-import java.util.*;
+import java.util.StringTokenizer;
 
-import javax.swing.*;
-import javax.swing.border.*;
+import javax.swing.BorderFactory;
+import javax.swing.border.Border;
 
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.TipiTypeParser;
+import com.dexels.navajo.tipi.internal.DescriptionProvider;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 
 /**
  * <p>
@@ -50,7 +52,8 @@ public class LabelBorderParser extends TipiTypeParser {
 			if (dp == null) {
 				return BorderFactory.createTitledBorder("[" + title + "]");
 			} else {
-				return BorderFactory.createTitledBorder(myContext.XMLUnescape(dp.getDescription(title)));
+				return BorderFactory.createTitledBorder(myContext
+						.XMLUnescape(dp.getDescription(title)));
 			}
 		}
 		if ("indent".equals(borderName)) {
@@ -59,7 +62,8 @@ public class LabelBorderParser extends TipiTypeParser {
 				int left = Integer.parseInt(st.nextToken());
 				int bottom = Integer.parseInt(st.nextToken());
 				int right = Integer.parseInt(st.nextToken());
-				return BorderFactory.createEmptyBorder(top, left, bottom, right);
+				return BorderFactory
+						.createEmptyBorder(top, left, bottom, right);
 			} catch (Exception ex) {
 				System.err.println("Error while parsing border");
 			}
