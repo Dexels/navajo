@@ -22,7 +22,7 @@ public class ClassModel {
 	private final Map<String, StringBuffer> valueDescription = new HashMap<String, StringBuffer>();
 
 	// current name of the component, changes as more definitions are added.
-	private final String name;
+//	private final String name;
 	
 	private final Map<String, String> attributes = new HashMap<String, String>();
 
@@ -31,7 +31,7 @@ public class ClassModel {
 	private StringBuffer description = new StringBuffer();
 	
 	public ClassModel(String name) {
-		this.name = name;
+//		this.name = name;
 	}
 	
 	public void addDefinition(XMLElement input) {
@@ -86,7 +86,7 @@ public class ClassModel {
 	
 	private void addMethod(XMLElement method) {
 		String name = method.getStringAttribute("name");
-		XMLElement old = methods.get(name);
+//		XMLElement old = methods.get(name);
 
 		XMLElement desc =  method.getChildByTagName("description");
 		if(desc!=null) {
@@ -124,9 +124,8 @@ public class ClassModel {
 	}
 
 	private void addEvent(XMLElement event) {
-//		System.err.println("ADDING EVENT: "+event);
 		String name = event.getStringAttribute("name");
-		XMLElement old = events.get(name);
+//		XMLElement old = events.get(name);
 	
 		XMLElement desc =  event.getChildByTagName("description");
 		

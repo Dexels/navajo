@@ -139,14 +139,12 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 	}
 
 	public void loadData(Navajo n, String method) throws TipiException, TipiBreakException {
-//		System.err.println("Load data: "+method+" on component: "+getPath());
 		myMethod = method;
 		if (n == null) {
 			throw new TipiException("Loading with null Navajo! ");
 		}
 		myNavajo = n;
 		
-		if(true || "true".equals(myContext.getSystemProperty("isNewNavajoLoading"))) {
 //			System.err.println("Loading. # of componentS: "+propertyComponentSet.size()+" loading: "+getPath() );
 			for (TipiComponent tc : propertyComponentSet) {
 				tc.loadPropertiesFromNavajo(n);
@@ -155,15 +153,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 			cascadeLoad(n, method);
 			doPerformOnLoad(method, n, true);
 			doLayout();
-		} else {
-			loadProperties(n);
-			loadPropertiesFromNavajo(n);
-			loadMessages(n);
-			cascadeLoad(n, method);
-			doPerformOnLoad(method, n, true);
-			doLayout();
-		}
-		
+	
 	}
 
 	protected void loadMessages(Navajo n) {
@@ -321,7 +311,6 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 
 	@Override
 	public Object createContainer() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -357,13 +346,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 				try {
 					performTipiEvent("onBegin", staticParams, true);
 					int index = 0;
-					System.err.println("Mysterymessage:");
-					try {
-						m.write(System.err);
-					} catch (NavajoException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+
 					for (Message message : al) {
 						Map<String, Object> eventParams = new HashMap<String, Object>();
 						eventParams.put("message", message);
@@ -380,11 +363,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 						performTipiEvent("onAfterElement", eventParams, true);
 						index++;
 					}
-					System.err.println("Children: "+getChildCount());
-					for (int i=0;i<getChildCount();i++) {
-						TipiComponent c = getTipiComponent(i);
-						System.err.println("Child id: "+c.getId());
-					}
+
 					if(al.size()>0) {
 						performTipiEvent("onEnd", staticParams, true);
 					}
