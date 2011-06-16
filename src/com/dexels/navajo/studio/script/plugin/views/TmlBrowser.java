@@ -250,7 +250,7 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
         NavajoScriptPluginPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener(){
 
             public void propertyChange(PropertyChangeEvent event) {
-                System.err.println("Prefs changed. Ouwe.");
+                System.err.println("Prefs changed. Ouwe: "+event.getOldValue()+" new: "+event.getNewValue());
                 refreshFromPrefs();
             }});
         }

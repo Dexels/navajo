@@ -57,6 +57,7 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.ide.ResourceUtil;
 
+import com.dexels.navajo.birt.BirtUtils;
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
@@ -735,68 +736,68 @@ public class TmlFormComposite extends Composite {
 		return myCurrentName;
 	}
 	protected void createBirt(String service) {
-//		BirtUtils b = new BirtUtils();
-//		try {
-//			IFile birt = getCurrentReport();
-//			if (birt==null) {
-//				SaveAsDialog sd = new SaveAsDialog(getShell());
-//				sd.setOriginalName(service);
-//
-//				int result = sd.open();
-//				if (result == Window.CANCEL) {
-//					return;
-//				}
-//				IPath ip = sd.getResult();
-//				IPath ipp = ip.addFileExtension("rptdesign");
-//				IFile iff = ResourcesPlugin.getWorkspace().getRoot().getFile(ipp);
-//
-//				String rez = iff.getLocation().toString();
-//				System.err.println("Result: " + rez);
-//				File createdFile = new File(rez);
-//
-//				InputStream template = getClass().getClassLoader().getResourceAsStream("com/dexels/navajo/birt/blank.rptdesign");
-//				b.createEmptyReport(myCurrentNavajo, createdFile, template);
-//				iff.refreshLocal(0, null);
-//				IDE.openEditor(NavajoScriptPluginPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage(), iff);
-//				
-//			} else {
-//				boolean dirty = NavajoScriptPluginPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().isDirty();
-//				boolean ok = NavajoScriptPluginPlugin.getDefault().showConfirm("Are you sure?","Do you really want to rewrite the datasources of this report?");
-//				if(!ok) {
-//					return;
-//				}
-//				if(dirty) {
-//					boolean ok2 = NavajoScriptPluginPlugin.getDefault().showConfirm("Are you sure?","Is it ok to discard your unsaved changes?");
-//					if(!ok2) {
-//						return;
-//					}
-//				}
-//
-//				birt.refreshLocal(0, null);
-//				final IEditorPart editor = NavajoScriptPluginPlugin
-//						.getDefault().getWorkbench().getActiveWorkbenchWindow()
-//						.getActivePage().getActiveEditor();
-//				if (editor.getSite().getWorkbenchWindow().getActivePage() != null) {
-//					Display.getDefault().syncExec(new Runnable() {
-//						public void run() {
-//							editor.getSite().getWorkbenchWindow().getActivePage().closeEditor(editor, false);
-//						}
-//					});
-//				}
-//				
-//				IDE.openEditor(NavajoScriptPluginPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage(), birt);
-//				
-//
-//			}
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		} catch (NavajoException e) {
-//			e.printStackTrace();
-//		} catch (CoreException e) {
-//			e.printStackTrace();
-//		} catch(Throwable t) {
-//			t.printStackTrace();
-//		}
+		BirtUtils b = new BirtUtils();
+		try {
+			IFile birt = getCurrentReport();
+			if (birt==null) {
+				SaveAsDialog sd = new SaveAsDialog(getShell());
+				sd.setOriginalName(service);
+
+				int result = sd.open();
+				if (result == Window.CANCEL) {
+					return;
+				}
+				IPath ip = sd.getResult();
+				IPath ipp = ip.addFileExtension("rptdesign");
+				IFile iff = ResourcesPlugin.getWorkspace().getRoot().getFile(ipp);
+
+				String rez = iff.getLocation().toString();
+				System.err.println("Result: " + rez);
+				File createdFile = new File(rez);
+
+				InputStream template = getClass().getClassLoader().getResourceAsStream("com/dexels/navajo/birt/blank.rptdesign");
+				b.createEmptyReport(myCurrentNavajo, createdFile, template);
+				iff.refreshLocal(0, null);
+				IDE.openEditor(NavajoScriptPluginPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage(), iff);
+				
+			} else {
+				boolean dirty = NavajoScriptPluginPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().isDirty();
+				boolean ok = NavajoScriptPluginPlugin.getDefault().showConfirm("Are you sure?","Do you really want to rewrite the datasources of this report?");
+				if(!ok) {
+					return;
+				}
+				if(dirty) {
+					boolean ok2 = NavajoScriptPluginPlugin.getDefault().showConfirm("Are you sure?","Is it ok to discard your unsaved changes?");
+					if(!ok2) {
+						return;
+					}
+				}
+
+				birt.refreshLocal(0, null);
+				final IEditorPart editor = NavajoScriptPluginPlugin
+						.getDefault().getWorkbench().getActiveWorkbenchWindow()
+						.getActivePage().getActiveEditor();
+				if (editor.getSite().getWorkbenchWindow().getActivePage() != null) {
+					Display.getDefault().syncExec(new Runnable() {
+						public void run() {
+							editor.getSite().getWorkbenchWindow().getActivePage().closeEditor(editor, false);
+						}
+					});
+				}
+				
+				IDE.openEditor(NavajoScriptPluginPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage(), birt);
+				
+
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (NavajoException e) {
+			e.printStackTrace();
+		} catch (CoreException e) {
+			e.printStackTrace();
+		} catch(Throwable t) {
+			t.printStackTrace();
+		}
 	}
 
 	private IFile getCurrentReport() {
