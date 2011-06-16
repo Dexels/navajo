@@ -40,23 +40,25 @@ public class GetNavajo extends FunctionInterface {
 	 * @see com.dexels.navajo.parser.FunctionInterface#evaluate()
 	 */
 	public Object evaluate() throws TMLExpressionException {
-		if(getOperands().size()==0) {
+		if (getOperands().size() == 0) {
 			throw new TMLExpressionException(this, "GetNavajo NEEEDS arguments");
 		}
 
 		Object pp = getOperand(0);
 		if (pp == null) {
-			throw new TMLExpressionException(this, "Invalid operand: null context ");
+			throw new TMLExpressionException(this,
+					"Invalid operand: null context ");
 		}
 		if (!(pp instanceof TipiComponent)) {
-			if(pp instanceof TipiContext) {
-				TipiContext tt = (TipiContext)pp;
-				String name = (String)getOperand(1);
+			if (pp instanceof TipiContext) {
+				TipiContext tt = (TipiContext) pp;
+				String name = (String) getOperand(1);
 				return tt.getNavajo(name);
 			}
-			throw new TMLExpressionException(this, "Invalid operand: " + pp.getClass().getName());
+			throw new TMLExpressionException(this, "Invalid operand: "
+					+ pp.getClass().getName());
 		}
-	
+
 		TipiComponent tc = (TipiComponent) pp;
 		return tc.getNavajo();
 	}

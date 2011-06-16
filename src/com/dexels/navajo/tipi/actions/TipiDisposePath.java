@@ -24,7 +24,9 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 @Deprecated
 public class TipiDisposePath extends TipiAction {
-	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+	public void execute(TipiEvent event)
+			throws com.dexels.navajo.tipi.TipiException,
+			com.dexels.navajo.tipi.TipiBreakException {
 		try {
 			String pathVal = (String) getEvaluatedParameter("path", event).value;
 			TipiComponent tp = myContext.getTipiComponentByPath(pathVal);

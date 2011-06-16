@@ -31,7 +31,8 @@ public class SystemPropertyRefParser extends TipiTypeParser {
 		 * @todo Implement this com.dexels.navajo.tipi.TipiTypeParser abstract
 		 *       method
 		 */
-		throw new java.lang.UnsupportedOperationException("Method parse() not yet implemented.");
+		throw new java.lang.UnsupportedOperationException(
+				"Method parse() not yet implemented.");
 	}
 
 }

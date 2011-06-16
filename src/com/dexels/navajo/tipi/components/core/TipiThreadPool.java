@@ -43,18 +43,22 @@ public class TipiThreadPool {
 	private final TipiContext myContext;
 	private final Map<TipiExecutable, TipiEventListener> myListenerMap = Collections
 			.synchronizedMap(new HashMap<TipiExecutable, TipiEventListener>());
-	private List<TipiThread> myThreadCollection = Collections.synchronizedList(new ArrayList<TipiThread>());
-	private final Map<TipiThread, String> threadStateMap = Collections.synchronizedMap(new TreeMap<TipiThread, String>());
+	private List<TipiThread> myThreadCollection = Collections
+			.synchronizedList(new ArrayList<TipiThread>());
+	private final Map<TipiThread, String> threadStateMap = Collections
+			.synchronizedMap(new TreeMap<TipiThread, String>());
 
 	private boolean running = true;
-//	private Thread myShutdownThread = null;
+
+	// private Thread myShutdownThread = null;
 
 	// for use with echo
 
 	public TipiThreadPool(TipiContext context, int initSize) {
 		this.poolSize = initSize;
 		myContext = context;
-		String maxThreads = context.getSystemProperty("com.dexels.navajo.tipi.maxthreads");
+		String maxThreads = context
+				.getSystemProperty("com.dexels.navajo.tipi.maxthreads");
 		if (maxThreads != null && !"".equals(maxThreads)) {
 			int i = Integer.parseInt(maxThreads);
 			this.poolSize = i;
@@ -97,7 +101,8 @@ public class TipiThreadPool {
 
 	public void shutdown() {
 		setRunning(false);
-		for (Iterator<TipiThread> iter = myThreadCollection.iterator(); iter.hasNext();) {
+		for (Iterator<TipiThread> iter = myThreadCollection.iterator(); iter
+				.hasNext();) {
 			TipiThread item = iter.next();
 			// item.shutdown();
 			item.interrupt();
@@ -106,7 +111,8 @@ public class TipiThreadPool {
 
 	}
 
-	public synchronized TipiExecutable blockingGetExecutable() throws ThreadShutdownException {
+	public synchronized TipiExecutable blockingGetExecutable()
+			throws ThreadShutdownException {
 		while (isRunning()) {
 			TipiExecutable te = getExecutable();
 			if (te == null) {
@@ -153,7 +159,9 @@ public class TipiThreadPool {
 		notifyAll();
 	}
 
-	public void performAction(final TipiExecutable te, final TipiEventListener listener) throws TipiException, TipiBreakException {
+	public void performAction(final TipiExecutable te,
+			final TipiEventListener listener) throws TipiException,
+			TipiBreakException {
 		myListenerMap.put(te, listener);
 		myContext.enqueueExecutable(te);
 	}
@@ -163,7 +171,8 @@ public class TipiThreadPool {
 		if (t instanceof TipiThread) {
 			TipiThread tt = (TipiThread) t;
 			threadStateMap.put(tt, state);
-			myContext.fireThreadStateEvent(threadStateMap, tt, state, myWaitingQueue.size());
+			myContext.fireThreadStateEvent(threadStateMap, tt, state,
+					myWaitingQueue.size());
 
 		}
 	}
@@ -186,17 +195,17 @@ public class TipiThreadPool {
 			Stack<TipiExecutable> te = eventStackMap.get(t);
 			System.err.println("Dumping: " + t.getName());
 			for (TipiExecutable tipiExecutable : te) {
-				System.err.println("EXE: " + tipiExecutable.getEvent().getEventName());
+				System.err.println("EXE: "
+						+ tipiExecutable.getEvent().getEventName());
 			}
 			System.err.println("End of dump: " + t.getName());
 		}
 
 	}
 
-
 	public void waitForAllThreads() {
-//		myShutdownThread = Thread.currentThread();
-		while(myGroup.activeCount()>1) {
+		// myShutdownThread = Thread.currentThread();
+		while (myGroup.activeCount() > 1) {
 			synchronized (this) {
 				try {
 					wait();

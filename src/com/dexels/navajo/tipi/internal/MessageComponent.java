@@ -25,8 +25,8 @@ public interface MessageComponent extends TipiComponent {
 	public String getMessageName();
 
 	// Don't know if I'll need those:
-	//	public void addTipiEventListener(TipiEventListener listener);
-	//	public void addTipiEvent(TipiEvent te);
+	// public void addTipiEventListener(TipiEventListener listener);
+	// public void addTipiEvent(TipiEvent te);
 
 	public Message getMessage();
 

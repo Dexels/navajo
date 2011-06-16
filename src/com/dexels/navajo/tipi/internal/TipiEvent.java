@@ -36,9 +36,9 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  */
 public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable {
 	private String myEventName;
-	
+
 	private Runnable afterEvent = null;
-	
+
 	private Map<String, TipiValue> eventParameterMap = new HashMap<String, TipiValue>();
 
 	public TipiEvent() {
@@ -66,6 +66,7 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable 
 
 	/**
 	 * event-specific vars:
+	 * 
 	 * @param name
 	 * @return
 	 */
@@ -80,9 +81,9 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable 
 	public Set<String> getEventKeySet() {
 		return eventParameterMap.keySet();
 	}
-	
-	public Map<String,Object> getEvaluatedParameters() {
-		Map<String,Object> result = new HashMap<String, Object>();
+
+	public Map<String, Object> getEvaluatedParameters() {
+		Map<String, Object> result = new HashMap<String, Object>();
 		for (Entry<String, TipiValue> e : eventParameterMap.entrySet()) {
 			result.put(e.getKey(), e.getValue().getRawValue());
 		}
@@ -91,6 +92,7 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable 
 
 	/**
 	 * Initializes the eventtype from the classdef.
+	 * 
 	 * @param xe
 	 */
 	public void init(XMLElement xe) {
@@ -105,39 +107,43 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable 
 		}
 	}
 
-	public void load(TipiComponent tc, XMLElement elm, TipiContext context) throws TipiException {
+	public void load(TipiComponent tc, XMLElement elm, TipiContext context)
+			throws TipiException {
 		setComponent(tc);
 		String stringType = (String) elm.getAttribute("type");
 		if (stringType == null) {
 			stringType = elm.getName();
 		}
 		// check other event attributes
-		for (Iterator<String> iterator = elm.enumerateAttributeNames(); iterator.hasNext();) {
+		for (Iterator<String> iterator = elm.enumerateAttributeNames(); iterator
+				.hasNext();) {
 			String n = iterator.next();
 			if (!n.equals("expression") && !n.equals("condition")) {
 				setBlockParam(n, elm.getStringAttribute(n));
 			}
 		}
-		
+
 		String condition = (String) elm.getAttribute("condition");
-		if(condition!=null) {
+		if (condition != null) {
 			setExpression(condition);
 		}
-		
-		
+
 		myEventName = stringType;
-		setStackElement(new TipiStackElement(myEventName + ":", elm, getStackElement()));
-		for (Iterator<String> iterator = elm.enumerateAttributeNames(); iterator.hasNext();) {
+		setStackElement(new TipiStackElement(myEventName + ":", elm,
+				getStackElement()));
+		for (Iterator<String> iterator = elm.enumerateAttributeNames(); iterator
+				.hasNext();) {
 			String n = iterator.next();
-//			eventPropertyMap.put(n, elm.getStringAttribute(n));
-			setBlockParam(n,  elm.getStringAttribute(n));
+			// eventPropertyMap.put(n, elm.getStringAttribute(n));
+			setBlockParam(n, elm.getStringAttribute(n));
 		}
 		List<XMLElement> temp = elm.getChildren();
 		for (int i = 0; i < temp.size(); i++) {
 			XMLElement current = temp.get(i);
 
 			if (current.getName().equals("block")) {
-				TipiActionBlock ta = context.instantiateDefaultTipiActionBlock(getComponent());
+				TipiActionBlock ta = context
+						.instantiateDefaultTipiActionBlock(getComponent());
 				ta.load(current, getComponent(), this);
 				appendTipiExecutable(ta);
 				continue;
@@ -156,8 +162,6 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable 
 		return false;
 	}
 
-
-
 	public TipiContext getContext() {
 		if (getComponent() == null) {
 			throw new RuntimeException("Event without component is not allowed");
@@ -165,29 +169,31 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable 
 		return getComponent().getContext();
 	}
 
-	public void asyncPerformAction(final TipiEventListener listener, TipiExecutable parentExecutable, final Map<String, Object> event, Runnable afterEventParam) {
+	public void asyncPerformAction(final TipiEventListener listener,
+			TipiExecutable parentExecutable, final Map<String, Object> event,
+			Runnable afterEventParam) {
 
 		TipiEvent localEvent = (TipiEvent) this.clone();
 		localEvent.loadEventValues(event);
-//		if(!localEvent.checkCondition(localEvent)) {
-//			afterEventParam.run();
-//			return;
-//		}
+		// if(!localEvent.checkCondition(localEvent)) {
+		// afterEventParam.run();
+		// return;
+		// }
 		try {
 			localEvent.setAfterEvent(afterEventParam);
-			getContext().debugLog("event   ", "enqueueing (in event) async event: " + localEvent);
-			getComponent().getContext().performAction(localEvent, parentExecutable, listener);
+			getContext().debugLog("event   ",
+					"enqueueing (in event) async event: " + localEvent);
+			getComponent().getContext().performAction(localEvent,
+					parentExecutable, listener);
 		} catch (Throwable ex) {
 			ex.printStackTrace();
 		}
 	}
 
-
-	public void performAction(TipiEvent te, TipiExecutable parent, int index) throws TipiException, TipiBreakException {
+	public void performAction(TipiEvent te, TipiExecutable parent, int index)
+			throws TipiException, TipiBreakException {
 		performAction(getComponent(), parent, null);
 	}
-
-
 
 	private final void loadEventValues(Map<String, Object> m) {
 		if (m == null) {
@@ -204,19 +210,21 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable 
 	}
 
 	// Sync, in current thread
-	public void performAction(TipiEventListener listener, TipiExecutable executableParent, Map<String, Object> event)
+	public void performAction(TipiEventListener listener,
+			TipiExecutable executableParent, Map<String, Object> event)
 			throws TipiBreakException {
 		TipiEvent localInstance = this;
 		if (event != null) {
 			localInstance = (TipiEvent) this.clone();
 			localInstance.loadEventValues(event);
 		}
-		if(!localInstance.checkCondition(localInstance)) {
+		if (!localInstance.checkCondition(localInstance)) {
 			return;
 		}
 
 		Thread currentThread = Thread.currentThread();
-		final Stack<TipiExecutable> s = getContext().getThreadPool().getThreadStack(currentThread);
+		final Stack<TipiExecutable> s = getContext().getThreadPool()
+				.getThreadStack(currentThread);
 		TipiExecutable parentEvent = null;
 
 		if (s != null && !s.isEmpty()) {
@@ -230,7 +238,8 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable 
 				te.setRootCause(parentEvent.getStackElement());
 			}
 		}
-		getContext().debugLog("event   ", "performing event: " + localInstance.getEventName());
+		getContext().debugLog("event   ",
+				"performing event: " + localInstance.getEventName());
 
 		listener.eventStarted(localInstance, event);
 
@@ -248,11 +257,15 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable 
 		} catch (Throwable ex) {
 			dumpStack(ex.getMessage());
 			getContext().showInternalError(
-					"Error performing event: " + getEventName() + " for component: " + getComponent().getPath() + " action: " + last
-							+ " : " + ex.getMessage(), ex);
+					"Error performing event: " + getEventName()
+							+ " for component: " + getComponent().getPath()
+							+ " action: " + last + " : " + ex.getMessage(), ex);
 			ex.printStackTrace();
 		}
-		getContext().debugLog("event   ", "finished event: " + localInstance.getEventName() + " in component" + getComponent().getPath());
+		getContext().debugLog(
+				"event   ",
+				"finished event: " + localInstance.getEventName()
+						+ " in component" + getComponent().getPath());
 		listener.eventFinished(localInstance, event);
 	}
 
@@ -264,9 +277,8 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable 
 		return myEventName;
 	}
 
-
 	public String toString() {
-		return "TIpiEvent: " + myEventName + " - "  + " comp: " + getComponent();
+		return "TIpiEvent: " + myEventName + " - " + " comp: " + getComponent();
 	}
 
 	// This actually has a good reason
@@ -274,11 +286,9 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable 
 		return this;
 	}
 
-
 	public Map<String, TipiValue> getParameters() {
 		return new HashMap<String, TipiValue>(eventParameterMap);
 	}
-
 
 	public Runnable getAfterEvent() {
 		return afterEvent;

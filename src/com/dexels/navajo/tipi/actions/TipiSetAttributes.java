@@ -26,21 +26,25 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public final class TipiSetAttributes extends TipiAction {
 
-	public final void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
-//		Set<String> ss = getParameterNames();
+	public final void execute(TipiEvent event)
+			throws com.dexels.navajo.tipi.TipiException,
+			com.dexels.navajo.tipi.TipiBreakException {
+		// Set<String> ss = getParameterNames();
 
 		Object o = getEvaluatedParameterValue("path", event);
-		if(o==null) {
-			throw new TipiException("TipiSetAttributes: Path component missing ");
-	
+		if (o == null) {
+			throw new TipiException(
+					"TipiSetAttributes: Path component missing ");
+
 		}
-		if(!(o instanceof TipiComponent)) {
-			throw new TipiException("TipiSetAttributes: Path component wrong type");
+		if (!(o instanceof TipiComponent)) {
+			throw new TipiException(
+					"TipiSetAttributes: Path component wrong type");
 		}
-		TipiComponent tc = (TipiComponent)o;
+		TipiComponent tc = (TipiComponent) o;
 		Set<String> p = getParameterNames();
 		for (String name : p) {
-			if(name.equals("path")) {
+			if (name.equals("path")) {
 				// Path is reserved
 				continue;
 			}

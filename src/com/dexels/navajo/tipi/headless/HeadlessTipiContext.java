@@ -14,16 +14,18 @@ public class HeadlessTipiContext extends TipiContext {
 
 	StringBuffer infoBuffer = new StringBuffer();
 	Queue<String> infoQueue = new LinkedList<String>();
-//	private final Thread myInvokingThread;
 
-	
+	// private final Thread myInvokingThread;
+
 	public HeadlessTipiContext() {
-		super(null,null);
-//		myInvokingThread = Thread.currentThread(); 
+		super(null, null);
+		// myInvokingThread = Thread.currentThread();
 	}
-	
-	public void processProperties(Map<String, String> properties) throws MalformedURLException {
-		for (Iterator<String> iter = properties.keySet().iterator(); iter.hasNext();) {
+
+	public void processProperties(Map<String, String> properties)
+			throws MalformedURLException {
+		for (Iterator<String> iter = properties.keySet().iterator(); iter
+				.hasNext();) {
 			String element = iter.next();
 			String value = properties.get(element);
 			if (element.startsWith("-D")) {
@@ -35,15 +37,13 @@ public class HeadlessTipiContext extends TipiContext {
 		eHandler.setContext(this);
 		eHandler.initResource();
 
-	}	
-	
-	
-	public void exit() {
-		shutdown();
-		//myInvokingThread.interrupt();
 	}
 
-	
+	public void exit() {
+		shutdown();
+		// myInvokingThread.interrupt();
+	}
+
 	@Override
 	public void clearTopScreen() {
 
@@ -75,26 +75,28 @@ public class HeadlessTipiContext extends TipiContext {
 	public void setSplashVisible(boolean b) {
 
 	}
+
 	@Override
 	public void showInfo(String text, String title) {
-//		System.err.println("Title: "+title+" text: "+text);
+		// System.err.println("Title: "+title+" text: "+text);
 		infoBuffer.append(text);
 		infoBuffer.append("\n");
 		infoQueue.offer(text);
 	}
 
 	@Override
-	public void showQuestion(String text, String title, String[] options) throws TipiBreakException {
-//		System.err.println("Ask question: "+text+". I don't care about your answer. I assume yes.");
+	public void showQuestion(String text, String title, String[] options)
+			throws TipiBreakException {
+		// System.err.println("Ask question: "+text+". I don't care about your answer. I assume yes.");
 		infoBuffer.append(text);
 		infoBuffer.append("\n");
 		infoQueue.offer(text);
-}
+	}
 
 	public String getInfoBuffer() {
 		return infoBuffer.toString();
 	}
-	
+
 	public String expect() {
 		return infoQueue.poll();
 	}

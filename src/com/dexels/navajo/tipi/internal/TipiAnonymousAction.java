@@ -34,7 +34,8 @@ public class TipiAnonymousAction implements TipiExecutable {
 		return 0;
 	}
 
-	public void performAction(TipiEvent te, TipiExecutable parent, int index) throws TipiBreakException, TipiException {
+	public void performAction(TipiEvent te, TipiExecutable parent, int index)
+			throws TipiBreakException, TipiException {
 		myRunnable.run();
 
 	}
@@ -64,7 +65,7 @@ public class TipiAnonymousAction implements TipiExecutable {
 
 	public void setComponent(TipiComponent c) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

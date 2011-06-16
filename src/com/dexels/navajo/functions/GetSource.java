@@ -45,7 +45,8 @@ public class GetSource extends FunctionInterface {
 			return null;
 		}
 		if (!(pp instanceof Navajo)) {
-			throw new TMLExpressionException(this, "Invalid operand: " + pp.getClass().getName());
+			throw new TMLExpressionException(this, "Invalid operand: "
+					+ pp.getClass().getName());
 		}
 		Navajo n = (Navajo) pp;
 		StringWriter sw = new StringWriter();

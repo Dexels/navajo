@@ -27,7 +27,9 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class TipiDisposeChildren extends TipiAction {
-	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+	public void execute(TipiEvent event)
+			throws com.dexels.navajo.tipi.TipiException,
+			com.dexels.navajo.tipi.TipiBreakException {
 		try {
 			// String pathVal = getParameter("path").getValue();
 			// TipiComponent tp = (TipiComponent) evaluate(pathVal,
@@ -43,7 +45,8 @@ public class TipiDisposeChildren extends TipiAction {
 				children.add(tp.getTipiComponent(i));
 			}
 			for (TipiComponent tipiComponent : children) {
-				System.err.println("Disposing child: "+tipiComponent.getPath());
+				System.err.println("Disposing child: "
+						+ tipiComponent.getPath());
 				myContext.disposeTipiComponent(tipiComponent);
 
 			}

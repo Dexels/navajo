@@ -22,7 +22,9 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class TipiSetPassword extends TipiAction {
-	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+	public void execute(TipiEvent event)
+			throws com.dexels.navajo.tipi.TipiException,
+			com.dexels.navajo.tipi.TipiBreakException {
 		// TODO Add support for multi-servers
 		final Operand pass = getEvaluatedParameter("password", event);
 		myContext.getClient().setPassword("" + pass.value);

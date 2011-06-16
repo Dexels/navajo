@@ -35,15 +35,19 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 // <param name="message" type="message" required="true"/>
 // </tipiaction>
 public class TipiInsertMessage extends TipiAction {
-	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+	public void execute(TipiEvent event)
+			throws com.dexels.navajo.tipi.TipiException,
+			com.dexels.navajo.tipi.TipiBreakException {
 		Operand messageOperand = getEvaluatedParameter("message", event);
 		if (messageOperand == null || messageOperand.value == null) {
-			throw new TipiException("Error in insertMessage action: navajo message missing!");
+			throw new TipiException(
+					"Error in insertMessage action: navajo message missing!");
 		}
 
 		Message arrayMessage = (Message) messageOperand.value;
 		if (!Message.MSG_TYPE_ARRAY.equals(arrayMessage.getType())) {
-			throw new TipiException("Error in insertMessage. InsertMessage only works for array messages!");
+			throw new TipiException(
+					"Error in insertMessage. InsertMessage only works for array messages!");
 		}
 		Message definitionMessage = arrayMessage.getDefinitionMessage();
 		if (definitionMessage == null) {
@@ -51,7 +55,8 @@ public class TipiInsertMessage extends TipiAction {
 				throw new TipiException(
 						"Error in insertMessage. InsertMessage only works for array messages with definition messages (or array content)!");
 			}
-			definitionMessage = arrayMessage.getMessage(arrayMessage.getArraySize() - 1);
+			definitionMessage = arrayMessage.getMessage(arrayMessage
+					.getArraySize() - 1);
 		}
 
 		// TODO: Perhaps refactor into NavajoDocument

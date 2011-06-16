@@ -8,7 +8,8 @@ import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.internal.MessageComponent;
 import com.dexels.navajo.tipi.internal.PropertyComponent;
 
-public abstract class TipiMessageDataComponentImpl extends TipiDataComponentImpl implements MessageComponent {
+public abstract class TipiMessageDataComponentImpl extends
+		TipiDataComponentImpl implements MessageComponent {
 
 	private String myMessageName = null;
 	private Message myMessage;
@@ -24,8 +25,8 @@ public abstract class TipiMessageDataComponentImpl extends TipiDataComponentImpl
 
 	@Override
 	protected void setComponentValue(String name, Object object) {
-		if(name.equals("messageName")) {
-			myMessageName = (String)object;
+		if (name.equals("messageName")) {
+			myMessageName = (String) object;
 			return;
 		}
 		super.setComponentValue(name, object);
@@ -33,16 +34,14 @@ public abstract class TipiMessageDataComponentImpl extends TipiDataComponentImpl
 
 	public void setMessage(Message m) {
 		myMessage = m;
-		
+
 	}
 
-
-	
 	/**
 	 * @param n
 	 */
 	protected void loadProperties(Navajo n) {
-		if(myMessage==null) {
+		if (myMessage == null) {
 			// No message has been set. Reverting to parent behavior.
 			super.loadProperties(n);
 			return;
@@ -52,13 +51,19 @@ public abstract class TipiMessageDataComponentImpl extends TipiDataComponentImpl
 			Property p = myMessage.getProperty(current.getPropertyName());
 			if (p != null) {
 				try {
-					getContext().debugLog("data    ",
-							"delivering property: " + p.getFullPropertyName() + " to tipi: " + ((TipiComponent) current).getId());
+					getContext().debugLog(
+							"data    ",
+							"delivering property: " + p.getFullPropertyName()
+									+ " to tipi: "
+									+ ((TipiComponent) current).getId());
 				} catch (NavajoException ex) {
 					ex.printStackTrace();
 				}
 			} else {
-				getContext().debugLog("data    ", "delivering null property to tipi: " + ((TipiComponent) current).getId());
+				getContext().debugLog(
+						"data    ",
+						"delivering null property to tipi: "
+								+ ((TipiComponent) current).getId());
 			}
 			if (p != null) {
 				current.setProperty(p);

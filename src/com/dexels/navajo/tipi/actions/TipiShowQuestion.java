@@ -17,7 +17,9 @@ public class TipiShowQuestion extends TipiAction {
 
 	int response = 0;
 
-	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+	public void execute(TipiEvent event)
+			throws com.dexels.navajo.tipi.TipiException,
+			com.dexels.navajo.tipi.TipiBreakException {
 		final String[] options = { "Ja", "Nee" };
 		Operand o = getEvaluatedParameter("text", event);
 		if (o == null) {
@@ -25,7 +27,7 @@ public class TipiShowQuestion extends TipiAction {
 			return;
 		}
 		String title = (String) getEvaluatedParameterValue("title", event);
-		if(title==null) {
+		if (title == null) {
 			title = "Vraag";
 		}
 		myContext.showQuestion((String) o.value, title, options);

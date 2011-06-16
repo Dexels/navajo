@@ -55,7 +55,9 @@ public class TipiConvertTipi extends TipiAction {
 	public TipiConvertTipi() {
 	}
 
-	protected void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiBreakException, com.dexels.navajo.tipi.TipiException {
+	protected void execute(TipiEvent event)
+			throws com.dexels.navajo.tipi.TipiBreakException,
+			com.dexels.navajo.tipi.TipiException {
 
 		File dir = new File("C:/projecten/TipiSvgDemo/tipi");
 		// processFile(file);
@@ -79,9 +81,11 @@ public class TipiConvertTipi extends TipiAction {
 		}
 	}
 
-	private void processFile(File file, String relativePath) throws TransformerFactoryConfigurationError {
+	private void processFile(File file, String relativePath)
+			throws TransformerFactoryConfigurationError {
 		try {
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilderFactory factory = DocumentBuilderFactory
+					.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			// DOMImplementation impl = builder.getDOMImplementation();
 			Document d = builder.parse(file);
@@ -99,7 +103,8 @@ public class TipiConvertTipi extends TipiAction {
 
 			try {
 				// Create a transformer
-				Transformer xformer = TransformerFactory.newInstance().newTransformer();
+				Transformer xformer = TransformerFactory.newInstance()
+						.newTransformer();
 				// Set the public and system id
 				// / xformer.setOutputProperty(OutputKeys.METHOD, "text");
 				// Write the DOM document to a file
@@ -120,7 +125,8 @@ public class TipiConvertTipi extends TipiAction {
 		}
 	}
 
-	private void processElement(Document d, Element element, String relativePath) throws TipiBreakException {
+	private void processElement(Document d, Element element, String relativePath)
+			throws TipiBreakException {
 		checkElement(d, element, relativePath);
 		NodeList nl = element.getChildNodes();
 		for (int i = 0; i < nl.getLength(); i++) {
@@ -133,7 +139,8 @@ public class TipiConvertTipi extends TipiAction {
 
 	}
 
-	public Element cloneElementWithNewName(Document d, Element element, String newName) {
+	public Element cloneElementWithNewName(Document d, Element element,
+			String newName) {
 		Element newElement = d.createElement(newName);
 		NamedNodeMap nnm = element.getAttributes();
 		for (int i = 0; i < nnm.getLength(); i++) {
@@ -177,15 +184,19 @@ public class TipiConvertTipi extends TipiAction {
 
 	}
 
-	private void checkElement(Document d, Element element, String relativePath) throws TipiBreakException {
+	private void checkElement(Document d, Element element, String relativePath)
+			throws TipiBreakException {
 
 		if (element.getNodeName().equals("tid")) {
-			element.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-			element.setAttribute("xsi:noNamespaceSchemaLocation", relativePath + "tipi.xsd");
+			element.setAttribute("xmlns:xsi",
+					"http://www.w3.org/2001/XMLSchema-instance");
+			element.setAttribute("xsi:noNamespaceSchemaLocation", relativePath
+					+ "tipi.xsd");
 		}
 		// || element.getNodeName().equals("component-instance")) {
 
-		if (element.getNodeName().equals("tipi-instance") || element.getNodeName().equals("component-instance")) {
+		if (element.getNodeName().equals("tipi-instance")
+				|| element.getNodeName().equals("component-instance")) {
 			String cls = element.getAttribute("class");
 			if (cls == null || "".equals(cls)) {
 				cls = element.getAttribute("type");
@@ -197,14 +208,17 @@ public class TipiConvertTipi extends TipiAction {
 				throw new TipiBreakException();
 			}
 		}
-		if (element.getNodeName().equals("tipi") || element.getNodeName().equals("component") || element.getNodeName().equals("definition")) {
+		if (element.getNodeName().equals("tipi")
+				|| element.getNodeName().equals("component")
+				|| element.getNodeName().equals("definition")) {
 			String cls = element.getAttribute("class");
 			if (cls == null || "".equals(cls)) {
 				cls = element.getAttribute("type");
 			}
 			if (cls != null) {
 
-				if (((Element) element.getParentNode()).getNodeName().equals("tid")) {
+				if (((Element) element.getParentNode()).getNodeName().equals(
+						"tid")) {
 					Element e = cloneElementWithNewName(d, element, "d." + cls);
 					e.removeAttribute("class");
 					e.removeAttribute("type");
@@ -219,11 +233,14 @@ public class TipiConvertTipi extends TipiAction {
 		if (element.getNodeName().equals("event")) {
 			if (element.getAttribute("type") != null) {
 				if ("onActionPerformed".equals(element.getAttribute("type"))) {
-					System.err.println(">>>>>>>>Elements: " + element.getAttribute("type") + " count: " + count++);
+					System.err.println(">>>>>>>>Elements: "
+							+ element.getAttribute("type") + " count: "
+							+ count++);
 				}
 				// System.err.println("EventElements:
 				// "+element.getAttribute("type"));
-				Element e = cloneElementWithNewName(d, element, element.getAttribute("type"));
+				Element e = cloneElementWithNewName(d, element,
+						element.getAttribute("type"));
 				// e.setAttribute("apekool","hoera");
 				e.removeAttribute("type");
 				throw new TipiBreakException();
@@ -231,7 +248,8 @@ public class TipiConvertTipi extends TipiAction {
 		}
 		if (element.getNodeName().equals("layout")) {
 			if (element.getAttribute("type") != null) {
-				Element e = cloneElementWithNewName(d, element, "l." + element.getAttribute("type"));
+				Element e = cloneElementWithNewName(d, element,
+						"l." + element.getAttribute("type"));
 				e.removeAttribute("type");
 				throw new TipiBreakException();
 			}
@@ -239,7 +257,8 @@ public class TipiConvertTipi extends TipiAction {
 		if (element.getNodeName().equals("action")) {
 			if (element.getAttribute("type") != null) {
 
-				Element e = cloneElementWithNewName(d, element, element.getAttribute("type"));
+				Element e = cloneElementWithNewName(d, element,
+						element.getAttribute("type"));
 				e.removeAttribute("type");
 				NodeList nl = e.getChildNodes();
 				for (int i = 0; i < nl.getLength(); i++) {
@@ -247,7 +266,8 @@ public class TipiConvertTipi extends TipiAction {
 					if (n instanceof Element) {
 						Element cc = (Element) n;
 						if (cc.getNodeName().equals("param")) {
-							e.setAttribute(cc.getAttribute("name"), cc.getAttribute("value"));
+							e.setAttribute(cc.getAttribute("name"),
+									cc.getAttribute("value"));
 						}
 					}
 				}
@@ -271,7 +291,8 @@ public class TipiConvertTipi extends TipiAction {
 		}
 	}
 
-	public static void main(String[] args) throws TipiBreakException, TipiException {
+	public static void main(String[] args) throws TipiBreakException,
+			TipiException {
 		new TipiConvertTipi().execute(null);
 	}
 

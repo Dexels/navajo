@@ -41,9 +41,10 @@ public class ToBold extends FunctionInterface {
 		Object pp = getOperand(0);
 
 		if (!(pp instanceof String)) {
-			throw new TMLExpressionException(this, "Invalid operand: " + pp.getClass().getName());
-			}
-		return "<html><b>"+pp+"</b></html>";
+			throw new TMLExpressionException(this, "Invalid operand: "
+					+ pp.getClass().getName());
+		}
+		return "<html><b>" + pp + "</b></html>";
 	}
 
 }

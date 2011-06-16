@@ -24,16 +24,20 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class TipiInjectNavajo extends TipiAction {
-	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+	public void execute(TipiEvent event)
+			throws com.dexels.navajo.tipi.TipiException,
+			com.dexels.navajo.tipi.TipiBreakException {
 
 		Operand navajoOperand = getEvaluatedParameter("navajo", event);
 		Operand serviceOperand = getEvaluatedParameter("service", event);
 
 		if (navajoOperand == null || navajoOperand.value == null) {
-			throw new TipiException("Error injecting navajo: No navajo supplied!");
+			throw new TipiException(
+					"Error injecting navajo: No navajo supplied!");
 		}
 		if (serviceOperand == null || serviceOperand.value == null) {
-			throw new TipiException("Error injecting message: No service supplied!");
+			throw new TipiException(
+					"Error injecting message: No service supplied!");
 		}
 		Navajo navajo = (Navajo) navajoOperand.value;
 		String service = (String) serviceOperand.value;

@@ -61,7 +61,8 @@ public class TipiFileStorageManager implements TipiStorageManager {
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			throw new TipiException("File setting not found: " + in.getAbsolutePath());
+			throw new TipiException("File setting not found: "
+					+ in.getAbsolutePath());
 		} finally {
 			if (fis != null) {
 				try {
@@ -105,7 +106,8 @@ public class TipiFileStorageManager implements TipiStorageManager {
 			fos.flush();
 		} catch (NavajoException e) {
 			e.printStackTrace();
-			throw new TipiException("Error constructing file setting not found: " + id, e);
+			throw new TipiException(
+					"Error constructing file setting not found: " + id, e);
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new TipiException("Error writing file setting: " + id, e);
@@ -127,7 +129,7 @@ public class TipiFileStorageManager implements TipiStorageManager {
 
 	public void setContext(TipiContext tc) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

@@ -10,9 +10,10 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
 
-public class HttpNavajoConnector extends TipiBaseConnector  {
+public class HttpNavajoConnector extends TipiBaseConnector {
 
-	public void doTransaction(Navajo input, String service) throws TipiBreakException, TipiException {
+	public void doTransaction(Navajo input, String service)
+			throws TipiBreakException, TipiException {
 		if (input == null) {
 			input = NavajoFactory.getInstance().createNavajo();
 		}
@@ -27,7 +28,8 @@ public class HttpNavajoConnector extends TipiBaseConnector  {
 			Navajo result = myContext.getClient().doSimpleSend(nn, service);
 			performTipiEvent("onServiceReceived", s, false);
 			if (result.getHeader() != null) {
-				result.getHeader().setHeaderAttribute("sourceScript", result.getHeader().getRPCName());
+				result.getHeader().setHeaderAttribute("sourceScript",
+						result.getHeader().getRPCName());
 			}
 			myContext.loadNavajo(result, service);
 
@@ -54,7 +56,8 @@ public class HttpNavajoConnector extends TipiBaseConnector  {
 		return "http";
 	}
 
-	public void doTransaction(Navajo n, String service, String destination) throws TipiBreakException, TipiException {
+	public void doTransaction(Navajo n, String service, String destination)
+			throws TipiBreakException, TipiException {
 		doTransaction(n, service);
 	}
 

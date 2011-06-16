@@ -15,7 +15,7 @@ public class Tipi {
 		suite.addTest(new EventInjectTipi());
 		suite.addTest(new CascadingListeners());
 		suite.addTest(new NonCascadingListeners());
-			return suite;
+		return suite;
 	}
 
 }

@@ -45,35 +45,39 @@ public class TipiActionFactory {
 	// throw new java.lang.UnsupportedOperationException("Method
 	// getActionParameter() not yet implemented.");
 	// }
-	public void load(XMLElement actionDef, TipiContext context, ExtensionDefinition ed) throws TipiException {
+	public void load(XMLElement actionDef, TipiContext context,
+			ExtensionDefinition ed) throws TipiException {
 		if (actionDef == null || !actionDef.getName().equals("tipiaction")) {
-			throw new IllegalArgumentException("Can not instantiate tipi action.");
+			throw new IllegalArgumentException(
+					"Can not instantiate tipi action.");
 		}
 		String pack = (String) actionDef.getAttribute("package");
 		myName = (String) actionDef.getAttribute("name");
 		String clas = (String) actionDef.getAttribute("class");
 		String fullDef = pack + "." + clas;
-		context.setSplashInfo("Adding action: " + fullDef+" for extension: "+ed);
+		context.setSplashInfo("Adding action: " + fullDef + " for extension: "
+				+ ed);
 		// System.err.println("Adding action: " + fullDef);
 		// context.setSplashInfo("Adding action: " + fullDef);
 		ClassLoader extensionLoader = ed.getExtensionClassloader();
-		if(extensionLoader==null) {
+		if (extensionLoader == null) {
 			extensionLoader = getClass().getClassLoader();
 		}
 		try {
 			myActionClass = Class.forName(fullDef, true, extensionLoader);
 		} catch (ClassNotFoundException ex) {
 			System.err.println("Trouble loading action class: " + fullDef);
-			System.err.println("Classloader: "+extensionLoader);
-			System.err.println("Exension: "+ed);
-			throw new TipiException("Trouble loading action class: " + fullDef, ex);
+			System.err.println("Classloader: " + extensionLoader);
+			System.err.println("Exension: " + ed);
+			throw new TipiException("Trouble loading action class: " + fullDef,
+					ex);
 		}
 		myContext = context;
 		List<XMLElement> children = actionDef.getChildren();
 		for (int i = 0; i < children.size(); i++) {
 			XMLElement currentParam = children.get(i);
 			TipiValue tv = new TipiValue(null);
-			//assert "param".equals(currentParam.getName());
+			// assert "param".equals(currentParam.getName());
 			tv.load(currentParam);
 			myDefinedParams.put(tv.getName(), tv);
 		}
@@ -81,27 +85,30 @@ public class TipiActionFactory {
 
 	/**
 	 * 
-	 * @param instance is the actual action instance in the script
+	 * @param instance
+	 *            is the actual action instance in the script
 	 * @param tc
 	 * @param parentExe
 	 * @return
 	 * @throws TipiException
 	 */
-	public TipiAction instantateAction(XMLElement instance, TipiComponent tc, TipiExecutable parentExe) throws TipiException {
+	public TipiAction instantateAction(XMLElement instance, TipiComponent tc,
+			TipiExecutable parentExe) throws TipiException {
 		// todo:
 		// Instantiate the class.
 		TipiAction newAction;
 		newAction = createAction(tc);
 
-		if(instance.getContent()!=null) {
+		if (instance.getContent() != null) {
 			newAction.setText(instance.getContent());
 		}
-			String condition = instance.getStringAttribute("condition");
-		if(condition!=null) {
+		String condition = instance.getStringAttribute("condition");
+		if (condition != null) {
 			newAction.setExpression(condition);
 		}
-		
-		newAction.setStackElement(new TipiStackElement(myName, instance, parentExe.getStackElement()));
+
+		newAction.setStackElement(new TipiStackElement(myName, instance,
+				parentExe.getStackElement()));
 		// Check presence of supplied parameters in the defined parameters
 		List<XMLElement> c = instance.getChildren();
 
@@ -144,7 +151,8 @@ public class TipiActionFactory {
 		// Enumeration ee = instance.enumerateAttributeNames();
 
 		// }
-		for (Iterator<String> iterator = instance.enumerateAttributeNames(); iterator.hasNext();) {
+		for (Iterator<String> iterator = instance.enumerateAttributeNames(); iterator
+				.hasNext();) {
 			String element = iterator.next();
 			// System.err.println("Checking inline element: "+element);
 			if ("type".equals(element)) {
@@ -200,9 +208,11 @@ public class TipiActionFactory {
 		try {
 			newAction = (TipiAction) myActionClass.newInstance();
 		} catch (IllegalAccessException ex) {
-			throw new TipiException("Can not instantiate actionclass. "  + " problem: " + ex.getMessage());
+			throw new TipiException("Can not instantiate actionclass. "
+					+ " problem: " + ex.getMessage());
 		} catch (InstantiationException ex) {
-			throw new TipiException("Can not instantiate actionclass. " + " problem: " + ex.getMessage());
+			throw new TipiException("Can not instantiate actionclass. "
+					+ " problem: " + ex.getMessage());
 		}
 
 		newAction.setContext(myContext);

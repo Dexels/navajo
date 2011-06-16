@@ -23,11 +23,13 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public final class TipiAnimate extends TipiAction {
 
-	public final void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+	public final void execute(TipiEvent event)
+			throws com.dexels.navajo.tipi.TipiException,
+			com.dexels.navajo.tipi.TipiBreakException {
 
 		Object valueObject = getEvaluatedParameter("target", event).value;
 		final Property target = (Property) valueObject;
-		
+
 		final Object value = getEvaluatedParameter("value", event).value;
 
 		myContext.animateProperty(target, 500, value);

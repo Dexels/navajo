@@ -30,19 +30,22 @@ public abstract class TipiLayoutImpl extends TipiLayout {
 		return null;
 	}
 
-	public void loadLayout(XMLElement def, TipiComponent t) throws com.dexels.navajo.tipi.TipiException {
+	public void loadLayout(XMLElement def, TipiComponent t)
+			throws com.dexels.navajo.tipi.TipiException {
 		myInstanceElement = def;
 		myComponent = t;
 		List<XMLElement> v = myInstanceElement.getChildren();
 		for (int i = 0; i < v.size(); i++) {
 			XMLElement child = v.get(i);
 			String constraintString = child.getStringAttribute("constraint");
-			if (!child.getName().equals("event") && !child.getName().startsWith("on")) {
+			if (!child.getName().equals("event")
+					&& !child.getName().startsWith("on")) {
 				Object constraint = parseConstraint(constraintString, i);
 
 				t.addComponentInstance(myContext, child, constraint);
 			} else {
-				System.err.println("Event found within layout. Line: " + def.getLineNr() + "\nNot right, but should work");
+				System.err.println("Event found within layout. Line: "
+						+ def.getLineNr() + "\nNot right, but should work");
 			}
 		}
 	}

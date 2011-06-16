@@ -22,8 +22,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class TipiSetStorageInstanceId extends TipiAction {
-	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
-		String instanceId = (String) evaluate(getParameter("id").getValue(), event).value;
+	public void execute(TipiEvent event)
+			throws com.dexels.navajo.tipi.TipiException,
+			com.dexels.navajo.tipi.TipiBreakException {
+		String instanceId = (String) evaluate(getParameter("id").getValue(),
+				event).value;
 		if (instanceId != null) {
 			myContext.getStorageManager().setInstanceId(instanceId);
 		} else {

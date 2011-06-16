@@ -40,7 +40,8 @@ public class AliasParser extends BaseTipiParser {
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		String alias = findAlias(source, expression);
 		if (alias == null) {
-			throw new RuntimeException("Error. Can not find alias: " + expression);
+			throw new RuntimeException("Error. Can not find alias: "
+					+ expression);
 		}
 		// System.err.println("Found alias: "+alias);
 		try {

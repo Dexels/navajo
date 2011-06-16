@@ -15,35 +15,34 @@ import com.dexels.navajo.tipi.internal.TipiReference;
  */
 public class ToValue extends FunctionInterface {
 
-
 	public String remarks() {
 		return "Dereferences a TipiReference, which is basically a pointer. cool";
 	}
-
 
 	public String usage() {
 		return "Dereference(Reference)";
 	}
 
-
 	public Object evaluate() throws TMLExpressionException {
 		Object pp = getOperand(0);
-		if(getOperands().size()!=1) {
-			throw new TMLExpressionException(this, "Invalid number of operands: " + pp.getClass().getName()+" usage: "+usage());
-	
+		if (getOperands().size() != 1) {
+			throw new TMLExpressionException(this,
+					"Invalid number of operands: " + pp.getClass().getName()
+							+ " usage: " + usage());
+
 		}
-		
-		
-		if(pp instanceof TipiReference) {
-			TipiReference tr = (TipiReference)pp;
+
+		if (pp instanceof TipiReference) {
+			TipiReference tr = (TipiReference) pp;
 			return tr.getValue();
-			
+
 		}
-		if(pp instanceof Property) {
-			Property tr = (Property)pp;
+		if (pp instanceof Property) {
+			Property tr = (Property) pp;
 			return tr.getTypedValue();
 		}
-		throw new TMLExpressionException(this, "Invalid operand: " + pp.getClass().getName());
+		throw new TMLExpressionException(this, "Invalid operand: "
+				+ pp.getClass().getName());
 
 	}
 

@@ -8,6 +8,7 @@ import tipi.TipiExtension;
 public class TipiExtensionRegistry implements ITipiExtensionRegistry {
 
 	private final List<TipiExtension> registeredExtensions = new LinkedList<TipiExtension>();
+
 	@Override
 	public void registerTipiExtension(TipiExtension te) {
 		registeredExtensions.add(te);
@@ -23,7 +24,7 @@ public class TipiExtensionRegistry implements ITipiExtensionRegistry {
 	@Override
 	public void debugExtensions() {
 		for (TipiExtension te : registeredExtensions) {
-			System.err.println("Registered extension: "+te.getId());
+			System.err.println("Registered extension: " + te.getId());
 		}
 	}
 

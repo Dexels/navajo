@@ -10,6 +10,6 @@ public interface CookieManager {
 	public void saveCookies() throws IOException;
 
 	public void loadCookies() throws IOException;
-	
+
 	public void deleteCookies() throws IOException;
 }

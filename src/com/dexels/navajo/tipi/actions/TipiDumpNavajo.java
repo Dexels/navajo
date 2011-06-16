@@ -29,7 +29,9 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class TipiDumpNavajo extends TipiAction {
-	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+	public void execute(TipiEvent event)
+			throws com.dexels.navajo.tipi.TipiException,
+			com.dexels.navajo.tipi.TipiBreakException {
 
 		Operand navajo = getEvaluatedParameter("input", event);
 		Operand filename = getEvaluatedParameter("fileName", event);
@@ -43,7 +45,7 @@ public class TipiDumpNavajo extends TipiAction {
 			// if (evalTipi == null) {
 			if (file != null) {
 				File f = new File(file);
-				//myContext.showInfo("Dumping navajo in file: "+f.getAbsolutePath
+				// myContext.showInfo("Dumping navajo in file: "+f.getAbsolutePath
 				// (),"aapje");
 				w = new PrintStream(new FileOutputStream(f));
 			} else {

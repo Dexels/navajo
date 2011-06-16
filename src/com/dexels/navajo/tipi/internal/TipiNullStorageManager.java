@@ -27,7 +27,7 @@ public class TipiNullStorageManager implements TipiStorageManager {
 	}
 
 	public void setContext(TipiContext tc) {
-		
+
 	}
 
 }

@@ -36,7 +36,8 @@ public class UrlParser extends TipiTypeParser {
 			// String urlPath = path.substring(i + 2);
 			return new URL(path);
 		} catch (MalformedURLException ex) {
-			throw new IllegalArgumentException("supplied url not valid for: " + path);
+			throw new IllegalArgumentException("supplied url not valid for: "
+					+ path);
 		}
 	}
 

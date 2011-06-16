@@ -57,8 +57,8 @@ public class TipiValue {
 		if (this.selectionMap != null) {
 			tv.selectionMap = new HashMap<String, String>(this.selectionMap);
 		}
-		
-//		com.dexels.navajo.tipi.TipiLink a;
+
+		// com.dexels.navajo.tipi.TipiLink a;
 		return tv;
 	}
 
@@ -85,10 +85,14 @@ public class TipiValue {
 
 	public void load(XMLElement xe) {
 		// myXml = xe;
-		assert xe.getName().equals("value") || xe.getName().equals("param") || xe.getName().equals("description") : "Illegal tag detected: "+xe.getName();
-		if (!xe.getName().equals("value") && !xe.getName().equals("param") && !xe.getName().equals("description")) {
-			System.err.println("A tipi value element is supposed to be called: 'value' or even 'param', but definitely not '"
-					+ xe.getName() + "' you wobbling chincilla");
+		assert xe.getName().equals("value") || xe.getName().equals("param")
+				|| xe.getName().equals("description") : "Illegal tag detected: "
+				+ xe.getName();
+		if (!xe.getName().equals("value") && !xe.getName().equals("param")
+				&& !xe.getName().equals("description")) {
+			System.err
+					.println("A tipi value element is supposed to be called: 'value' or even 'param', but definitely not '"
+							+ xe.getName() + "' you wobbling chincilla");
 		}
 		this.name = xe.getStringAttribute("name");
 		this.type = xe.getStringAttribute("type", "!no type");
@@ -103,19 +107,23 @@ public class TipiValue {
 				for (int i = 0; i < options.size(); i++) {
 					XMLElement option = options.get(i);
 					String selectionValue = option.getStringAttribute("value");
-					String description = option.getStringAttribute("description", selectionValue);
+					String description = option.getStringAttribute(
+							"description", selectionValue);
 					selectionMap.put(selectionValue, description);
 				}
 			} else {
-				throw new RuntimeException("One or more options expected for selection value [" + this.name + "]");
+				throw new RuntimeException(
+						"One or more options expected for selection value ["
+								+ this.name + "]");
 			}
 		}
 	}
 
 	public Property createProperty() {
 		try {
-			Property p = NavajoFactory.getInstance().createProperty(myComponent.getContext().getStateNavajo(), getName(), getType(), "", 0,
-					"", getDirection());
+			Property p = NavajoFactory.getInstance().createProperty(
+					myComponent.getContext().getStateNavajo(), getName(),
+					getType(), "", 0, "", getDirection());
 			p.setAnyValue(null);
 			p.setSubType("tipitype=" + type);
 			return p;

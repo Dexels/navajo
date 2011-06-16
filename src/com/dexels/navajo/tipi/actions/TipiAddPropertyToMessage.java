@@ -27,7 +27,9 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class TipiAddPropertyToMessage extends TipiAction {
-	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+	public void execute(TipiEvent event)
+			throws com.dexels.navajo.tipi.TipiException,
+			com.dexels.navajo.tipi.TipiBreakException {
 		Operand pathOperand = getEvaluatedParameter("path", event);
 		Operand valueOperand = getEvaluatedParameter("value", event);
 		Operand messageOperand = getEvaluatedParameter("message", event);
@@ -35,23 +37,29 @@ public class TipiAddPropertyToMessage extends TipiAction {
 		Operand descriptionOperand = getEvaluatedParameter("description", event);
 
 		if (pathOperand == null || pathOperand.value == null) {
-			throw new TipiException("Error in addProperty action: path parameter missing!");
+			throw new TipiException(
+					"Error in addProperty action: path parameter missing!");
 		}
 		if (valueOperand == null || valueOperand.value == null) {
-			throw new TipiException("Error in addProperty action: value parameter missing!");
+			throw new TipiException(
+					"Error in addProperty action: value parameter missing!");
 		}
 		if (messageOperand == null || messageOperand.value == null) {
-			throw new TipiException("Error in addProperty action: navajo parameter missing!");
+			throw new TipiException(
+					"Error in addProperty action: navajo parameter missing!");
 		}
 		if (directionOperand == null || directionOperand.value == null) {
-			throw new TipiException("Error in addProperty action: direction parameter missing!");
+			throw new TipiException(
+					"Error in addProperty action: direction parameter missing!");
 		}
 		String path = (String) pathOperand.value;
 		if (path.indexOf("/") == -1) {
 			// no slashes:
-			throw new TipiException("Error in addProperty action: Invalid path: " + path);
+			throw new TipiException(
+					"Error in addProperty action: Invalid path: " + path);
 		}
-		String propertyName = path.substring(path.lastIndexOf("/") + 1, path.length());
+		String propertyName = path.substring(path.lastIndexOf("/") + 1,
+				path.length());
 		String messagePath = path.substring(0, path.lastIndexOf("/"));
 
 		Message m = (Message) messageOperand.value;
@@ -67,19 +75,22 @@ public class TipiAddPropertyToMessage extends TipiAction {
 		}
 
 		if (parentMessage == null) {
-			throw new TipiException("Error in addProperty action: Path not found: " + path);
+			throw new TipiException(
+					"Error in addProperty action: Path not found: " + path);
 		}
 
 		String direction = (String) directionOperand.value;
 		if (direction == null) {
 			direction = Property.DIR_IN;
 		}
-		if (!Property.DIR_IN.equals(direction) && (!Property.DIR_OUT.equals(direction))) {
+		if (!Property.DIR_IN.equals(direction)
+				&& (!Property.DIR_OUT.equals(direction))) {
 			direction = Property.DIR_IN;
 		}
 		try {
-			Property q = NavajoFactory.getInstance().createProperty(m.getRootDoc(), propertyName, Property.STRING_PROPERTY, null, 0,
-					(String) descriptionOperand.value, direction);
+			Property q = NavajoFactory.getInstance().createProperty(
+					m.getRootDoc(), propertyName, Property.STRING_PROPERTY,
+					null, 0, (String) descriptionOperand.value, direction);
 			q.setAnyValue(valueOperand.value);
 			parentMessage.addProperty(q);
 		} catch (NavajoException e) {

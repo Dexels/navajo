@@ -23,7 +23,9 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public final class TipiSetCookie extends TipiAction {
 
-	public final void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+	public final void execute(TipiEvent event)
+			throws com.dexels.navajo.tipi.TipiException,
+			com.dexels.navajo.tipi.TipiBreakException {
 
 		Operand nameO = getEvaluatedParameter("name", event);
 		Operand valueO = getEvaluatedParameter("value", event);

@@ -41,11 +41,14 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 	public void loadData(Navajo n, String method) throws TipiException {
 		if (isTipletService(n)) {
 			try {
-				Binary b = (Binary) n.getProperty(TIPLET_PROPERTY_PATH).getTypedValue();
+				Binary b = (Binary) n.getProperty(TIPLET_PROPERTY_PATH)
+						.getTypedValue();
 
 				ZipResourceLoader zr = new ZipResourceLoader(b);
-				stc.getContext().setTipiResourceLoader(new TmlResourceLoader(zr, "tipi/"));
-				stc.getContext().setGenericResourceLoader(new TmlResourceLoader(zr, "resource/"));
+				stc.getContext().setTipiResourceLoader(
+						new TmlResourceLoader(zr, "tipi/"));
+				stc.getContext().setGenericResourceLoader(
+						new TmlResourceLoader(zr, "resource/"));
 				parseLocation("init.xml", getParentExtension());
 				switchToDefinition("init");
 				Message m = n.getMessage(NAVAJO_MESSAGE_PATH);
@@ -65,7 +68,8 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 		Property navajoBinary = element.getProperty(NAVAJO_PROPERTY_NAME);
 		Property navajoName = element.getProperty(NAVAJONAME_PROPERTY_NAME);
 		Binary bb = (Binary) navajoBinary.getTypedValue();
-		Navajo embedded = NavajoFactory.getInstance().createNavajo(bb.getDataAsStream());
+		Navajo embedded = NavajoFactory.getInstance().createNavajo(
+				bb.getDataAsStream());
 		try {
 			stc.getContext().loadNavajo(embedded, navajoName.getValue());
 		} catch (TipiBreakException e) {
@@ -102,8 +106,10 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 			ZipResourceLoader tr;
 			try {
 				tr = new ZipResourceLoader(b);
-				stc.getContext().setTipiResourceLoader(new TmlResourceLoader(tr, "tipi/"));
-				stc.getContext().setGenericResourceLoader(new TmlResourceLoader(tr, "resource/"));
+				stc.getContext().setTipiResourceLoader(
+						new TmlResourceLoader(tr, "tipi/"));
+				stc.getContext().setGenericResourceLoader(
+						new TmlResourceLoader(tr, "resource/"));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -112,8 +118,10 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 
 		super.setComponentValue(name, value);
 	}
+
 	public void addToContainer(Object c, Object constraints) {
 	}
+
 	protected Object getComponentValue(String name) {
 		if (name.equals("context")) {
 			return myContext;
@@ -121,14 +129,17 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 		return super.getComponentValue(name);
 	}
 
-	protected void performComponentMethod(final String name, final TipiComponentMethod compMeth, TipiEvent event) {
+	protected void performComponentMethod(final String name,
+			final TipiComponentMethod compMeth, TipiEvent event) {
 		if ("loadDefinition".equals(name)) {
 			try {
 				if (resourceCodeBase == null) {
-					stc.getContext().setGenericResourceLoader(myContext.getGenericResourceLoader());
+					stc.getContext().setGenericResourceLoader(
+							myContext.getGenericResourceLoader());
 				}
 				if (tipiCodeBase == null) {
-					stc.getContext().setTipiResourceLoader(myContext.getTipiResourceLoader());
+					stc.getContext().setTipiResourceLoader(
+							myContext.getTipiResourceLoader());
 				}
 				Operand oo = compMeth.getEvaluatedParameter("location", event);
 				String loc = (String) oo.value;
@@ -140,12 +151,15 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 		if ("switch".equals(name)) {
 			try {
 				if (resourceCodeBase == null) {
-					stc.getContext().setGenericResourceLoader(myContext.getGenericResourceLoader());
+					stc.getContext().setGenericResourceLoader(
+							myContext.getGenericResourceLoader());
 				}
 				if (tipiCodeBase == null) {
-					stc.getContext().setTipiResourceLoader(myContext.getTipiResourceLoader());
+					stc.getContext().setTipiResourceLoader(
+							myContext.getTipiResourceLoader());
 				}
-				Operand oo = compMeth.getEvaluatedParameter("definition", event);
+				Operand oo = compMeth
+						.getEvaluatedParameter("definition", event);
 				String nameVal = (String) oo.value;
 
 				switchToDefinition(nameVal);
@@ -155,11 +169,14 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 		}
 		if ("addStartupProperty".equals(name)) {
 			try {
-				Operand nameOperand = compMeth.getEvaluatedParameter("propertyName", event);
+				Operand nameOperand = compMeth.getEvaluatedParameter(
+						"propertyName", event);
 				String nameVal = (String) nameOperand.value;
-				Operand valueOperand = compMeth.getEvaluatedParameter("value", event);
+				Operand valueOperand = compMeth.getEvaluatedParameter("value",
+						event);
 				String vakueVal = (String) valueOperand.value;
-				System.err.println("Adding: " + nameVal + " value: " + vakueVal);
+				System.err
+						.println("Adding: " + nameVal + " value: " + vakueVal);
 				stc.getContext().setSystemPropertyLocal(nameVal, vakueVal);
 				// ((Container) getContainer()).add((Component)
 				// stc.getContext().getTopLevel(), BorderLayout.CENTER);
@@ -169,9 +186,11 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 		}
 		if ("loadNavajo".equals(name)) {
 			try {
-				Operand navajoOperand = compMeth.getEvaluatedParameter("navajo", event);
+				Operand navajoOperand = compMeth.getEvaluatedParameter(
+						"navajo", event);
 				Navajo navajo = (Navajo) navajoOperand.value;
-				Operand methodOperand = compMeth.getEvaluatedParameter("method", event);
+				Operand methodOperand = compMeth.getEvaluatedParameter(
+						"method", event);
 				String method = (String) methodOperand.value;
 				loadNavajo(navajo, method);
 				// ((Container) getContainer()).add((Component)
@@ -182,14 +201,16 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 		}
 		if ("loadAllNavajo".equals(name)) {
 			try {
-				Operand messageOperand = compMeth.getEvaluatedParameter("message", event);
+				Operand messageOperand = compMeth.getEvaluatedParameter(
+						"message", event);
 				Message arrayMessage = (Message) messageOperand.value;
 				List<Message> elements = arrayMessage.getAllMessages();
 				for (int i = 0; i < elements.size(); i++) {
 					Message current = elements.get(i);
 					Property ob = current.getProperty("Navajo");
 					Binary b = (Binary) ob.getTypedValue();
-					Navajo n = NavajoFactory.getInstance().createNavajo(b.getDataAsStream());
+					Navajo n = NavajoFactory.getInstance().createNavajo(
+							b.getDataAsStream());
 					loadNavajo(n, n.getHeader().getRPCName());
 				}
 			} catch (Exception e) {
@@ -212,9 +233,11 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 		});
 	}
 
-	private void parseLocation(String loc, ExtensionDefinition ed) throws IOException, TipiException {
+	private void parseLocation(String loc, ExtensionDefinition ed)
+			throws IOException, TipiException {
 		System.err.println("Parsing: " + loc);
-		InputStream tipiResourceStream = stc.getContext().getTipiResourceStream(loc);
+		InputStream tipiResourceStream = stc.getContext()
+				.getTipiResourceStream(loc);
 		stc.getContext().parseStream(tipiResourceStream, ed);
 	}
 

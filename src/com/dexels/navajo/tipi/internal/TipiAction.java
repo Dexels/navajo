@@ -14,8 +14,8 @@ import com.dexels.navajo.tipi.TipiExecutable;
 import com.dexels.navajo.tipi.TipiValue;
 import com.dexels.navajo.tipi.actions.TipiActionFactory;
 
-public abstract class TipiAction extends TipiAbstractExecutable  {
-//	protected TipiContext myContext;
+public abstract class TipiAction extends TipiAbstractExecutable {
+	// protected TipiContext myContext;
 
 	protected TipiActionFactory myActionFactory;
 
@@ -27,12 +27,12 @@ public abstract class TipiAction extends TipiAbstractExecutable  {
 	protected Map<String, TipiValue> parameterMap = new HashMap<String, TipiValue>();
 
 	// if present, will intercept all parameter evaluations
-	protected Map<String, Object> evaluatedMap = null; // = new HashMap<String, TipiValue>();
+	protected Map<String, Object> evaluatedMap = null; // = new HashMap<String,
+														// TipiValue>();
 
-	
 	protected int counter = 0;
 
-//	private TipiStackElement stackElement = null;
+	// private TipiStackElement stackElement = null;
 
 	/**
 	 * Not 'really' supported, gets a bit difficult in the xml to distinguish
@@ -42,15 +42,16 @@ public abstract class TipiAction extends TipiAbstractExecutable  {
 		return null;
 	}
 
-	public void loadParameters(Map<String,Object> params) {
+	public void loadParameters(Map<String, Object> params) {
 		evaluatedMap = new HashMap<String, Object>();
-		if(params!=null) {
-			evaluatedMap.putAll(params);			
+		if (params != null) {
+			evaluatedMap.putAll(params);
 		}
 	}
-	
+
 	// protected TipiCondition myCondition;
-	protected abstract void execute(TipiEvent event) throws TipiBreakException, TipiException;
+	protected abstract void execute(TipiEvent event) throws TipiBreakException,
+			TipiException;
 
 	// protected TipiActionBlock myActionBlock;
 
@@ -66,17 +67,19 @@ public abstract class TipiAction extends TipiAbstractExecutable  {
 		myContext.setThreadState(state);
 	}
 
-	public void performAction(TipiEvent te, TipiExecutable parent, int index) throws TipiBreakException, TipiException {
+	public void performAction(TipiEvent te, TipiExecutable parent, int index)
+			throws TipiBreakException, TipiException {
 		myContext.debugLog("action", myType);
 		setEvent(te);
 		if (getComponent().isDisposed()) {
-			System.err.println("\n**** BREAKING. COMPONENT DISPOSED: " + getComponent().getPath() + " performing action: "
+			System.err.println("\n**** BREAKING. COMPONENT DISPOSED: "
+					+ getComponent().getPath() + " performing action: "
 					+ getClass().getName());
 			// Thread.dumpStack();
 			getStackElement().dumpStack("Component disposed: ");
 			throw new TipiBreakException(TipiBreakException.COMPONENT_DISPOSED);
 		}
-		if(!checkCondition(te)) {
+		if (!checkCondition(te)) {
 			return;
 		}
 
@@ -100,8 +103,6 @@ public abstract class TipiAction extends TipiAbstractExecutable  {
 		setEvent(null);
 	}
 
-
-
 	public void setType(String type) {
 		myType = type;
 	}
@@ -115,7 +116,7 @@ public abstract class TipiAction extends TipiAbstractExecutable  {
 	}
 
 	public TipiValue getParameter(String name) {
-		if(evaluatedMap!=null) {
+		if (evaluatedMap != null) {
 			Object o = evaluatedMap.get(name);
 			TipiValue result = new TipiValue(getComponent());
 			result.setName(name);
@@ -125,10 +126,11 @@ public abstract class TipiAction extends TipiAbstractExecutable  {
 		return parameterMap.get(name);
 	}
 
-//	public ArrayList<TipiValue> getParams() {
-//		ArrayList<TipiValue> parms = new ArrayList<TipiValue>(parameterMap.values());
-//		return parms;
-//	}
+	// public ArrayList<TipiValue> getParams() {
+	// ArrayList<TipiValue> parms = new
+	// ArrayList<TipiValue>(parameterMap.values());
+	// return parms;
+	// }
 
 	public Set<String> getParameterNames() {
 		return parameterMap.keySet();
@@ -146,8 +148,8 @@ public abstract class TipiAction extends TipiAbstractExecutable  {
 	}
 
 	public Operand getEvaluatedParameter(String name, TipiEvent event) {
-		if(evaluatedMap!=null) {
-			Operand result = new Operand(evaluatedMap.get(name),"Object",null);
+		if (evaluatedMap != null) {
+			Operand result = new Operand(evaluatedMap.get(name), "Object", null);
 			return result;
 		}
 
@@ -159,7 +161,7 @@ public abstract class TipiAction extends TipiAbstractExecutable  {
 	}
 
 	public Object getEvaluatedParameterValue(String name, TipiEvent event) {
-		if(evaluatedMap!=null) {
+		if (evaluatedMap != null) {
 			return evaluatedMap.get(name);
 		}
 		Operand o = getEvaluatedParameter(name, event);
@@ -180,6 +182,5 @@ public abstract class TipiAction extends TipiAbstractExecutable  {
 	public String getText() {
 		return myTextNode;
 	}
-
 
 }

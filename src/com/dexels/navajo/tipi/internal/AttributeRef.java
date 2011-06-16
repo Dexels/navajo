@@ -53,6 +53,7 @@ public class AttributeRef implements TipiReference {
 	}
 
 	public String toString() {
-		return "attributeref.[component:" + myComponent.getPath() + ",attribute:" + myName + "]";
+		return "attributeref.[component:" + myComponent.getPath()
+				+ ",attribute:" + myName + "]";
 	}
 }

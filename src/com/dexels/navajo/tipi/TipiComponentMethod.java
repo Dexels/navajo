@@ -33,18 +33,20 @@ public class TipiComponentMethod {
 	private final TipiComponent myComponent;
 
 	private Map<String, Object> parameters;
+
 	public TipiComponentMethod(TipiComponent c) {
 		myComponent = c;
 	}
 
 	public void load(XMLElement x) {
 		if (!x.getName().equals("method")) {
-			throw new IllegalArgumentException("Method components are supposed to be called 'method'");
+			throw new IllegalArgumentException(
+					"Method components are supposed to be called 'method'");
 		}
 		List<XMLElement> v = x.getChildren();
 		for (int i = 0; i < v.size(); i++) {
 			XMLElement child = v.get(i);
-			if(child.getName().equals("description")) {
+			if (child.getName().equals("description")) {
 				continue;
 			}
 			String argName = child.getStringAttribute("name");
@@ -58,17 +60,18 @@ public class TipiComponentMethod {
 		myTipiAction = instance;
 	}
 
-	public void performMethod(TipiComponent source, TipiComponent current, XMLElement invocation) {
+	public void performMethod(TipiComponent source, TipiComponent current,
+			XMLElement invocation) {
 		System.err.println("Unimplemented method!");
 	}
 
 	public TipiValue getParameter(String name) {
-		System.err.println("My action: "+myTipiAction);
+		System.err.println("My action: " + myTipiAction);
 		return myTipiAction.getParameter(name);
 	}
 
 	public Operand getEvaluatedParameter(String name, TipiEvent event) {
-		if(parameters!=null) {
+		if (parameters != null) {
 			Object o = parameters.get(name);
 			// need to set the type?
 			Operand op = new Operand(o, null, null);
@@ -92,23 +95,23 @@ public class TipiComponentMethod {
 
 	public Object getEvaluatedParameterValue(String string, TipiEvent event) {
 		Operand o = getEvaluatedParameter(string, event);
-		if(o==null) {
+		if (o == null) {
 			return null;
 		}
 		return o.value;
 	}
 
 	public void loadParams(Map<String, Object> params) {
-		if(parameters==null) {
+		if (parameters == null) {
 			parameters = new HashMap<String, Object>();
 		}
 		parameters.putAll(params);
-		System.err.println("Myarhs: "+myArgs);
-		System.err.println("Parameters: "+parameters);
-		System.err.println("Params: "+params);
+		System.err.println("Myarhs: " + myArgs);
+		System.err.println("Parameters: " + parameters);
+		System.err.println("Params: " + params);
 		for (Map.Entry<String, Object> element : parameters.entrySet()) {
 			TipiValue parameter = getParameter(element.getKey());
-			if(parameter!=null) {
+			if (parameter != null) {
 				parameter.setValue(element.getValue());
 			}
 		}

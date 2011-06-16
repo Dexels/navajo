@@ -52,7 +52,8 @@ public abstract class TipiLayout {
 	// XMLElement def);
 	public abstract void createLayout() throws TipiException;
 
-	protected abstract void loadLayout(XMLElement def, TipiComponent current) throws TipiException;
+	protected abstract void loadLayout(XMLElement def, TipiComponent current)
+			throws TipiException;
 
 	public void loadLayout(TipiComponent current) throws TipiException {
 		loadLayout(myDefinition, current);

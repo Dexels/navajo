@@ -93,7 +93,8 @@ public abstract class TipiBaseQuestionGroup extends TipiDataComponentImpl {
 		return super.getComponentValue(name);
 	}
 
-	private void recursiveListQuestions(TipiComponent start, List<TipiBaseQuestion> result) {
+	private void recursiveListQuestions(TipiComponent start,
+			List<TipiBaseQuestion> result) {
 		if (start instanceof TipiBaseQuestion) {
 			result.add((TipiBaseQuestion) start);
 		}
@@ -151,8 +152,9 @@ public abstract class TipiBaseQuestionGroup extends TipiDataComponentImpl {
 			for (int i = 0; i < question.getArraySize(); i++) {
 				Message current = question.getMessage(i);
 				String id = current.getProperty("Id").getValue();
-				TipiBaseQuestion tc = (TipiBaseQuestion) TipiInstantiateTipi.instantiateByDefinition(currentComponent, false, id,
-						questionDefinitionName, subConstraint, null);
+				TipiBaseQuestion tc = (TipiBaseQuestion) TipiInstantiateTipi
+						.instantiateByDefinition(currentComponent, false, id,
+								questionDefinitionName, subConstraint, null);
 				tc.setValue("messagePath", current.getFullMessageName());
 				tc.setValue("questionDefinitionName", questionDefinitionName);
 				tc.setQuestionGroup(this);

@@ -30,7 +30,7 @@ public abstract class CachedResourceLoader extends ClassPathResourceLoader {
 
 	public void flushCache() {
 		CacheManager c = getCacheManager();
-		if(c!=null) {
+		if (c != null) {
 			c.flushCache();
 		}
 	}

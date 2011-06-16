@@ -44,19 +44,21 @@ public class FindComponent extends FunctionInterface {
 			return null;
 		}
 		if (!(pp instanceof TipiComponent)) {
-			throw new TMLExpressionException(this, "Invalid operand: " + pp.getClass().getName());
+			throw new TMLExpressionException(this, "Invalid operand: "
+					+ pp.getClass().getName());
 		}
 		Object o = getOperand(1);
 		if (o == null) {
 			return null;
 		}
 		if (!(o instanceof String)) {
-			throw new TMLExpressionException(this, "Invalid operand: " + o.getClass().getName());
-			}
+			throw new TMLExpressionException(this, "Invalid operand: "
+					+ o.getClass().getName());
+		}
 		TipiComponent tc = (TipiComponent) pp;
 		String id = (String) o;
 		TipiComponent result = tc.findTipiComponentById(id);
-		System.err.println("Found: "+result.toString());
+		System.err.println("Found: " + result.toString());
 		return result;
 	}
 

@@ -31,7 +31,8 @@ public class NavajoParser extends TipiTypeParser {
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		// System.err.println("Parsing navajo expression: "+expression);
 		if (".".equals(expression)) {
-			System.err.println("Home navajo found. Component path: " + source.getPath());
+			System.err.println("Home navajo found. Component path: "
+					+ source.getPath());
 			return source.getValue(expression);
 		}
 		if (expression.indexOf(':') != -1) {
@@ -40,10 +41,12 @@ public class NavajoParser extends TipiTypeParser {
 			String attribute = st.nextToken();
 			TipiComponent tc = source.getTipiComponentByPath(componentPath);
 			if (tc == null) {
-				throw new IllegalArgumentException("Error addressing navajo: Component not found: " + componentPath
-						+ " original expression: " + expression);
+				throw new IllegalArgumentException(
+						"Error addressing navajo: Component not found: "
+								+ componentPath + " original expression: "
+								+ expression);
 			}
-			if(".".equals(attribute)) {
+			if (".".equals(attribute)) {
 				return tc.getNavajo();
 			}
 			return tc.getValue(attribute);

@@ -26,7 +26,8 @@ public class PropertyRefParser extends BaseTipiParser {
 		// return new PropertyRef(getPropertyByPath(source, expression));
 		if (expression.startsWith("!")) {
 			try {
-				return getAttributePropertyByPath(source, expression.substring(1));
+				return getAttributePropertyByPath(source,
+						expression.substring(1));
 			} catch (TipiException e) {
 				e.printStackTrace();
 				return null;

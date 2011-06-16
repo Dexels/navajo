@@ -44,14 +44,15 @@ public class BaseTipiErrorHandler implements TipiErrorHandler {
 	public void initResource() {
 		try {
 
-			InputStream tipiResourceStream = context.getTipiResourceStream("validation.properties");
+			InputStream tipiResourceStream = context
+					.getTipiResourceStream("validation.properties");
 			if (tipiResourceStream == null) {
 				return;
 			}
 			errorMessageBundle = new PropertyResourceBundle(tipiResourceStream);
 			// errorMessageBundle = ResourceBundle.getBundle("tipi.validation");
 		} catch (Exception ex) {
-//			ex.printStackTrace();
+			// ex.printStackTrace();
 			System.err.println("No validation bundle found. No problem.");
 			errorMessageBundle = null;
 		}
@@ -72,7 +73,8 @@ public class BaseTipiErrorHandler implements TipiErrorHandler {
 					// String expression =
 					// current.getProperty("FailedExpression").getValue();
 					String id = current.getProperty("Id").getValue();
-					errorMessage = errorMessage + getConditionErrorDescription(id, current) + "\n";
+					errorMessage = errorMessage
+							+ getConditionErrorDescription(id, current) + "\n";
 					try {
 						conditions.write(System.err);
 					} catch (NavajoException e) {
@@ -100,7 +102,9 @@ public class BaseTipiErrorHandler implements TipiErrorHandler {
 				}
 			}
 		} catch (MissingResourceException ex) {
-			System.err.println("----> Cannot find reference for condition errorId: " + id);
+			System.err
+					.println("----> Cannot find reference for condition errorId: "
+							+ id);
 		}
 		Property description = current.getProperty("Description");
 		if (description != null) {
@@ -114,9 +118,11 @@ public class BaseTipiErrorHandler implements TipiErrorHandler {
 		if (errorMessageBundle == null) {
 			// attempt remote propertyresource bundle;
 			try {
-				InputStream tipiResourceStream = c.getTipiResourceStream("validation.properties");
+				InputStream tipiResourceStream = c
+						.getTipiResourceStream("validation.properties");
 				if (tipiResourceStream != null) {
-					errorMessageBundle = new PropertyResourceBundle(tipiResourceStream);
+					errorMessageBundle = new PropertyResourceBundle(
+							tipiResourceStream);
 				} else {
 					// System.err.println(
 					// "Remote retrieve of validation.properties failed.");

@@ -20,7 +20,7 @@ public class TmpFileCookieManager implements CookieManager {
 	protected final Map<String, String> cookieMap = new HashMap<String, String>();
 
 	private File cookieFile = null;
-	
+
 	public String getCookie(String key) {
 		String cookieValue = cookieMap.get(key);
 		return cookieValue;
@@ -29,7 +29,7 @@ public class TmpFileCookieManager implements CookieManager {
 	public void setCookie(String key, String value) {
 		cookieMap.put(key, value);
 		try {
-//			System.err.println("Saving the cookies!");
+			// System.err.println("Saving the cookies!");
 			saveCookies();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -43,24 +43,25 @@ public class TmpFileCookieManager implements CookieManager {
 	}
 
 	protected void saveCookieWithStream(OutputStream fos) throws IOException {
-		PrintWriter fw = new PrintWriter( fos);
+		PrintWriter fw = new PrintWriter(fos);
 		Set<String> ss = cookieMap.keySet();
 		for (String key : ss) {
 			fw.println(key + "|" + cookieMap.get(key));
 		}
 		fw.flush();
-	//	fw.close();
+		// fw.close();
 	}
 
 	public void loadCookies() throws IOException {
-		cookieFile = new File(new File(System.getProperty("java.io.tmpdir")),"tipi.cookie");
-		
+		cookieFile = new File(new File(System.getProperty("java.io.tmpdir")),
+				"tipi.cookie");
+
 		FileInputStream fis = null;
 		try {
 			fis = new FileInputStream(cookieFile);
-		loadCookieFromStream(fis);
+			loadCookieFromStream(fis);
 		} finally {
-			if(fis!=null) {
+			if (fis != null) {
 				fis.close();
 			}
 		}
@@ -68,6 +69,7 @@ public class TmpFileCookieManager implements CookieManager {
 
 	/**
 	 * Will not close the stream! Remember.
+	 * 
 	 * @param fis
 	 * @throws IOException
 	 */
@@ -75,11 +77,11 @@ public class TmpFileCookieManager implements CookieManager {
 		BufferedReader fw = new BufferedReader(new InputStreamReader(fis));
 		String line = fw.readLine();
 		while (line != null) {
-			if(line.equals("")) {
+			if (line.equals("")) {
 				line = fw.readLine();
 				continue;
 			}
-			if(line.indexOf('|')!=-1) {
+			if (line.indexOf('|') != -1) {
 				StringTokenizer st = new StringTokenizer(line, "|");
 				String key = st.nextToken();
 				String value = st.nextToken();

@@ -11,7 +11,8 @@ import com.dexels.navajo.tipi.tipixml.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 import com.dexels.navajo.tipi.tipixml.XMLParseException;
 
-public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension implements TipiExtension {
+public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension
+		implements TipiExtension {
 
 	private final List<String> thirdPartyList = new ArrayList<String>();
 	private final List<String> includes = new ArrayList<String>();
@@ -20,32 +21,34 @@ public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension imp
 	private String requiresMain = null;
 	private String description = null;
 	private String project = null;
-	
+
 	private ClassLoader extensionClassLoader;
 	private boolean isMain;
-	
+
 	public TipiAbstractXMLExtension() {
 	}
-	
+
 	public final void loadDescriptor() {
-		String xmlName = "tipi/"+getClass().getSimpleName()+".xml";
+		String xmlName = "tipi/" + getClass().getSimpleName() + ".xml";
 		loadXML(xmlName);
 		// Added for Vaadin (OSGi, actually)
 		setExtensionClassloader(getClass().getClassLoader());
 	}
-	
+
 	/**
 	 * @deprecated Use loadDescriptor
 	 */
-	protected final void loadXML()  {
+	protected final void loadXML() {
 		loadDescriptor();
 	}
-	
-	protected void loadXML(String xmlName)  {
+
+	protected void loadXML(String xmlName) {
 		try {
-			InputStream is = getClass().getClassLoader().getResourceAsStream(xmlName);
-			if(is==null) {
-				throw new IllegalArgumentException("Problem loading extension: "+xmlName);
+			InputStream is = getClass().getClassLoader().getResourceAsStream(
+					xmlName);
+			if (is == null) {
+				throw new IllegalArgumentException(
+						"Problem loading extension: " + xmlName);
 			}
 			Reader r = new InputStreamReader(is);
 			XMLElement xx = new CaseSensitiveXMLElement();
@@ -58,33 +61,33 @@ public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension imp
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
+
 	private void loadXML(XMLElement xx) {
 		id = xx.getStringAttribute("id");
 		project = xx.getStringAttribute("project");
-		isMain = xx.getBooleanAttribute("isMain", "true", "false",false);
+		isMain = xx.getBooleanAttribute("isMain", "true", "false", false);
 		List<XMLElement> desc = xx.getElementsByTagName("description");
-		if(desc!=null && !desc.isEmpty()) {
+		if (desc != null && !desc.isEmpty()) {
 			description = desc.get(0).getContent();
 		}
 		List<XMLElement> includes = xx.getElementsByTagName("includes");
-		if(includes!=null && !includes.isEmpty()) {
+		if (includes != null && !includes.isEmpty()) {
 			XMLElement include = includes.get(0);
 			for (XMLElement element : include.getChildren()) {
 				this.includes.add(element.getStringAttribute("path"));
 			}
 		}
-		
+
 		List<XMLElement> requires = xx.getElementsByTagName("requires");
-		if(requires!=null && !requires.isEmpty()) {
+		if (requires != null && !requires.isEmpty()) {
 			XMLElement require = requires.get(0);
 			for (XMLElement element : require.getChildren()) {
 				this.requires.add(element.getStringAttribute("id"));
 			}
 		}
 	}
-
 
 	@Deprecated
 	public final String getConnectorId() {
@@ -102,7 +105,7 @@ public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension imp
 	public final String getId() {
 		return id;
 	}
-	
+
 	public final boolean isMainImplementation() {
 		return isMain;
 	}
@@ -115,12 +118,12 @@ public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension imp
 		return in;
 	}
 
-//	@Deprecated
-//	public final List<String> getLibraryJars() {
-//		return null;
-//	}
-//
-//	@Deprecated
+	// @Deprecated
+	// public final List<String> getLibraryJars() {
+	// return null;
+	// }
+	//
+	// @Deprecated
 	public final List<String> getJars() {
 		return null;
 	}
@@ -133,13 +136,9 @@ public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension imp
 		return requires;
 	}
 
-
-
-	public final  String requiresMainImplementation() {
+	public final String requiresMainImplementation() {
 		return requiresMain;
 	}
-
-
 
 	@Override
 	public ClassLoader getExtensionClassloader() {
@@ -149,6 +148,5 @@ public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension imp
 	public void setExtensionClassloader(ClassLoader extensionClassLoader) {
 		this.extensionClassLoader = extensionClassLoader;
 	}
-
 
 }

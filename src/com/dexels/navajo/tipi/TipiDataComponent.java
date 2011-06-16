@@ -26,7 +26,8 @@ import com.dexels.navajo.tipi.internal.TipiLayout;
 public interface TipiDataComponent extends TipiComponent {
 	public Navajo getNavajo();
 
-	public void loadData(Navajo n, String method) throws TipiException, TipiBreakException;
+	public void loadData(Navajo n, String method) throws TipiException,
+			TipiBreakException;
 
 	public String getCurrentMethod();
 
@@ -34,8 +35,10 @@ public interface TipiDataComponent extends TipiComponent {
 	 * @deprecated
 	 */
 	@Deprecated
-	public void performService(TipiContext context, String tipiPath, String service, boolean breakOnError, TipiEvent event,
-			long expirationInterval, String hostUrl, String username, String password, String keystore, String keypass)
+	public void performService(TipiContext context, String tipiPath,
+			String service, boolean breakOnError, TipiEvent event,
+			long expirationInterval, String hostUrl, String username,
+			String password, String keystore, String keypass)
 			throws TipiException, TipiBreakException;
 
 	public List<String> getServices();
@@ -47,7 +50,6 @@ public interface TipiDataComponent extends TipiComponent {
 	public void clearProperties();
 
 	public boolean loadErrors(Navajo n, String method);
-
 
 	public void replaceLayout(TipiLayout tl);
 

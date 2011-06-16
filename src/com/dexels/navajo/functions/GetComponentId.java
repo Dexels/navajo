@@ -43,7 +43,8 @@ public class GetComponentId extends FunctionInterface {
 			return null;
 		}
 		if (!(pp instanceof TipiComponent)) {
-			throw new TMLExpressionException(this, "Invalid operand: " + pp.getClass().getName());
+			throw new TMLExpressionException(this, "Invalid operand: "
+					+ pp.getClass().getName());
 		}
 		TipiComponent tc = (TipiComponent) pp;
 		return tc.getId();

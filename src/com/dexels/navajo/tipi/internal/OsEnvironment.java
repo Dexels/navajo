@@ -80,10 +80,12 @@ public class OsEnvironment {
 			}
 		} catch (java.io.IOException e) {
 			e.printStackTrace();
-			System.err.println("Could not determine the OS. Perhaps a security issue?");
+			System.err
+					.println("Could not determine the OS. Perhaps a security issue?");
 			return null;
 		}
-		java.io.BufferedReader br = new java.io.BufferedReader(new java.io.InputStreamReader(p.getInputStream()));
+		java.io.BufferedReader br = new java.io.BufferedReader(
+				new java.io.InputStreamReader(p.getInputStream()));
 		String line;
 		try {
 			int idx;
@@ -231,7 +233,8 @@ public class OsEnvironment {
 		try {
 			java.util.Properties p = OsEnvironment.get();
 			p.list(System.out);
-			System.out.println("the current value of TEMP is : " + p.getProperty("TEMP"));
+			System.out.println("the current value of TEMP is : "
+					+ p.getProperty("TEMP"));
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}

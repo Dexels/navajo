@@ -15,34 +15,33 @@ import com.dexels.navajo.tipi.internal.GlobalRef;
  */
 public class GlobalReference extends FunctionInterface {
 
-
 	public String remarks() {
 		return "GlobalReference to a certain global";
 	}
-
 
 	public String usage() {
 		return "GlobalReference('name')";
 	}
 
-
 	public Object evaluate() throws TMLExpressionException {
-		if(getOperands().size()!=2) {
-			throw new TMLExpressionException(this, "Invalid number of operands: " + getOperands()+" usage: "+usage());
-	
+		if (getOperands().size() != 2) {
+			throw new TMLExpressionException(this,
+					"Invalid number of operands: " + getOperands() + " usage: "
+							+ usage());
+
 		}
-		
-		TipiContext context = (TipiContext)getOperand(0);
+
+		TipiContext context = (TipiContext) getOperand(0);
 		Object pp = getOperand(1);
-			
-		
-		if(pp instanceof String) {
-			String ss = (String)pp;
-			
-			return new GlobalRef(ss,context);
-			
+
+		if (pp instanceof String) {
+			String ss = (String) pp;
+
+			return new GlobalRef(ss, context);
+
 		}
-		throw new TMLExpressionException(this, "Invalid operand: " + pp.getClass().getName());
+		throw new TMLExpressionException(this, "Invalid operand: "
+				+ pp.getClass().getName());
 
 	}
 

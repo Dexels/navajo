@@ -30,7 +30,9 @@ public class TipiUpdateExpressions extends TipiAction {
 	public TipiUpdateExpressions() {
 	}
 
-	protected void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiBreakException, com.dexels.navajo.tipi.TipiException {
+	protected void execute(TipiEvent event)
+			throws com.dexels.navajo.tipi.TipiBreakException,
+			com.dexels.navajo.tipi.TipiException {
 		Operand to = getEvaluatedParameter("path", event);
 		if (to != null) {
 			TipiDataComponent toData = (TipiDataComponent) to.value;

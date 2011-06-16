@@ -25,13 +25,13 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public class LinkParser extends BaseTipiParser {
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
-		StringTokenizer st = new StringTokenizer(expression,":");
+		StringTokenizer st = new StringTokenizer(expression, ":");
 		String path = st.nextToken();
 		String aspect = null;
-		if(st.hasMoreElements()) {
+		if (st.hasMoreElements()) {
 			aspect = st.nextToken();
 		}
-		PropertyLinkRequest r = new PropertyLinkRequest(path,aspect);
+		PropertyLinkRequest r = new PropertyLinkRequest(path, aspect);
 		return r;
 	}
 }

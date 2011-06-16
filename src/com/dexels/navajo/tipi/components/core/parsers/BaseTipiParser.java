@@ -17,7 +17,8 @@ abstract class BaseTipiParser extends TipiTypeParser {
 		return (TipiDataComponent) getTipiComponent(source, path);
 	}
 
-	protected TipiComponent getTipiComponent(TipiComponent source, String totalpath) {
+	protected TipiComponent getTipiComponent(TipiComponent source,
+			String totalpath) {
 		String path = getComponentPart(totalpath);
 		if (TIPI_HOME_SYMBOL.equals(path)) {
 			return source.getHomeComponent();
@@ -36,15 +37,18 @@ abstract class BaseTipiParser extends TipiTypeParser {
 		return myContext.getTipiComponentByPath(path);
 	}
 
-	protected Object getAttributePropertyValueByPath(TipiComponent source, String path) throws TipiException {
+	protected Object getAttributePropertyValueByPath(TipiComponent source,
+			String path) throws TipiException {
 		Property p = getAttributePropertyByPath(source, path);
 		if (p != null) {
 			return p.getTypedValue();
 		}
-		throw new TipiException("Attributeproperty not found: " + path + " in component " + source.getPath());
+		throw new TipiException("Attributeproperty not found: " + path
+				+ " in component " + source.getPath());
 	}
 
-	protected Property getAttributePropertyByPath(TipiComponent source, String path) throws TipiException {
+	protected Property getAttributePropertyByPath(TipiComponent source,
+			String path) throws TipiException {
 		StringTokenizer counter = new StringTokenizer(path, ":");
 		int tokencount = counter.countTokens();
 		if (tokencount == 2) {
@@ -72,8 +76,10 @@ abstract class BaseTipiParser extends TipiTypeParser {
 			if (n != null) {
 				return n.getProperty(propertyPath);
 			} else {
-				myContext.showInternalError("No navajo found, while looking for path: " + path + " Available: "
-						+ myContext.getNavajoNames(), new Exception());
+				myContext.showInternalError(
+						"No navajo found, while looking for path: " + path
+								+ " Available: " + myContext.getNavajoNames(),
+						new Exception());
 				return null;
 			}
 		}

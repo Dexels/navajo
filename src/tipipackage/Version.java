@@ -24,30 +24,27 @@
  */
 package tipipackage;
 
-
 import org.osgi.framework.BundleContext;
 
 import tipi.TipiCoreExtension;
 
-
 public class Version extends com.dexels.navajo.version.AbstractVersion {
-
 
 	// Included packages.
 	public Version() {
-//		addIncludes(includes);
+		// addIncludes(includes);
 	}
-	
+
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
 		TipiExtensionRegistry ter = new TipiExtensionRegistry();
-		context.registerService(ITipiExtensionRegistry.class.getName(), ter, null);
-		
+		context.registerService(ITipiExtensionRegistry.class.getName(), ter,
+				null);
+
 		TipiCoreExtension tce = new TipiCoreExtension();
 		// special case for TipiCoreExtension, as it is not the bundle activator
 		// TODO Maybe refactor
 		tce.start(bc);
 	}
-
 
 }

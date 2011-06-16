@@ -25,14 +25,14 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @deprecated
  */
 
-
 @Deprecated
-
 public class TipiReloadNavajo extends TipiAction {
 	public TipiReloadNavajo() {
 	}
 
-	protected void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiBreakException, com.dexels.navajo.tipi.TipiException {
+	protected void execute(TipiEvent event)
+			throws com.dexels.navajo.tipi.TipiBreakException,
+			com.dexels.navajo.tipi.TipiException {
 		Operand to = getEvaluatedParameter("to", event);
 		Operand from = getEvaluatedParameter("from", event);
 		Operand service = getEvaluatedParameter("service", event);

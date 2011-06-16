@@ -44,15 +44,17 @@ public class GetComponent extends FunctionInterface {
 			return null;
 		}
 		if (!(pp instanceof TipiComponent)) {
-			throw new TMLExpressionException(this, "Invalid operand: " + pp.getClass().getName());
+			throw new TMLExpressionException(this, "Invalid operand: "
+					+ pp.getClass().getName());
 		}
 		Object o = getOperand(1);
 		if (o == null) {
 			return null;
 		}
 		if (!(o instanceof String)) {
-			throw new TMLExpressionException(this, "Invalid operand: " + o.getClass().getName());
-			}
+			throw new TMLExpressionException(this, "Invalid operand: "
+					+ o.getClass().getName());
+		}
 		TipiComponent tc = (TipiComponent) pp;
 		String path = (String) o;
 		return tc.getTipiComponentByPath(path);

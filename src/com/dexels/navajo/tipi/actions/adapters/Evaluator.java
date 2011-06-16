@@ -6,13 +6,13 @@ import com.dexels.navajo.tipi.internal.TipiAction;
 public class Evaluator {
 	private final TipiAction myAction;
 
-	public Evaluator( TipiAction parentAction) {
+	public Evaluator(TipiAction parentAction) {
 		myAction = parentAction;
 	}
-	
+
 	public Object evaluate(String e) {
 		Operand evaluated = myAction.evaluate(e, myAction.getEvent());
-		if(evaluated==null) {
+		if (evaluated == null) {
 			return null;
 		} else {
 			return evaluated.value;

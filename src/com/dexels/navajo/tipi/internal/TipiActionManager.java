@@ -26,14 +26,15 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  * different action type.
  */
 public class TipiActionManager {
-	private final  Map<String, TipiActionFactory> actionFactoryMap = new HashMap<String, TipiActionFactory>();
+	private final Map<String, TipiActionFactory> actionFactoryMap = new HashMap<String, TipiActionFactory>();
 
 	public TipiActionManager() {
 	}
 
-	public void addAction(XMLElement actionDef, TipiContext context, ExtensionDefinition ed) throws TipiException {
+	public void addAction(XMLElement actionDef, TipiContext context,
+			ExtensionDefinition ed) throws TipiException {
 		TipiActionFactory taf = new TipiActionFactory();
-		taf.load(actionDef, context,ed);
+		taf.load(actionDef, context, ed);
 		actionFactoryMap.put(actionDef.getStringAttribute("name"), taf);
 	}
 
@@ -45,7 +46,8 @@ public class TipiActionManager {
 		return taf;
 	}
 
-	public TipiAction instantiateAction(XMLElement instance, TipiComponent tc, TipiExecutable parentExe) throws TipiException {
+	public TipiAction instantiateAction(XMLElement instance, TipiComponent tc,
+			TipiExecutable parentExe) throws TipiException {
 		String name = (String) instance.getAttribute("type");
 		if (name == null) {
 			name = instance.getName();
@@ -53,6 +55,5 @@ public class TipiActionManager {
 		TipiActionFactory taf = getActionFactory(name);
 		return taf.instantateAction(instance, tc, parentExe);
 	}
-	
 
 }

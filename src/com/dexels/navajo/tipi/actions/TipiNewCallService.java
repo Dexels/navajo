@@ -29,7 +29,9 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class TipiNewCallService extends TipiAction {
-	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+	public void execute(TipiEvent event)
+			throws com.dexels.navajo.tipi.TipiException,
+			com.dexels.navajo.tipi.TipiBreakException {
 
 		TipiValue parameter = getParameter("input");
 		// String unevaluated = null;
@@ -53,7 +55,8 @@ public class TipiNewCallService extends TipiAction {
 			destAddress = (String) destination.value;
 		}
 		if (serviceOperand == null || serviceOperand.value == null) {
-			throw new TipiException("Error in callService action: service parameter missing!");
+			throw new TipiException(
+					"Error in callService action: service parameter missing!");
 		}
 		String service = (String) serviceOperand.value;
 
@@ -80,13 +83,17 @@ public class TipiNewCallService extends TipiAction {
 			// long timeStamp = System.currentTimeMillis();
 			System.err.println("No connector");
 			if (defaultConnector == null) {
-				throw new IllegalStateException("No default tipi connector found!");
+				throw new IllegalStateException(
+						"No default tipi connector found!");
 			}
 			defaultConnector.doTransaction(input, service);
 		} else {
-			TipiConnector ttt = myContext.getConnector((String) connector.value);
+			TipiConnector ttt = myContext
+					.getConnector((String) connector.value);
 			if (ttt == null) {
-				System.err.println("Warning: connector: " + (String) connector.value + " not found, reverting to default connector");
+				System.err.println("Warning: connector: "
+						+ (String) connector.value
+						+ " not found, reverting to default connector");
 
 				defaultConnector.doTransaction(input, service, destAddress);
 			} else {
@@ -97,7 +104,9 @@ public class TipiNewCallService extends TipiAction {
 
 	}
 
-	public void oldExecute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+	public void oldExecute(TipiEvent event)
+			throws com.dexels.navajo.tipi.TipiException,
+			com.dexels.navajo.tipi.TipiBreakException {
 		TipiValue parameter = getParameter("input");
 		String unevaluated = null;
 		boolean breakOnError = false;
@@ -113,7 +122,8 @@ public class TipiNewCallService extends TipiAction {
 			breakOnError = ((Boolean) brk.value).booleanValue();
 		}
 		if (serviceOperand == null || serviceOperand.value == null) {
-			throw new TipiException("Error in callService action: service parameter missing!");
+			throw new TipiException(
+					"Error in callService action: service parameter missing!");
 		}
 		String service = (String) serviceOperand.value;
 		Navajo input = null;
@@ -122,7 +132,9 @@ public class TipiNewCallService extends TipiAction {
 		}
 
 		if (unevaluated != null && input == null) {
-			throw new TipiException("Input navajo not found when calling service: " + service + " supplied input: " + unevaluated);
+			throw new TipiException(
+					"Input navajo not found when calling service: " + service
+							+ " supplied input: " + unevaluated);
 		}
 		if (input == null) {
 			input = NavajoFactory.getInstance().createNavajo();
@@ -139,7 +151,8 @@ public class TipiNewCallService extends TipiAction {
 			myContext.addNavajo(service, result);
 			// is this correct? It is a bit odd.
 			if (result.getHeader() != null) {
-				result.getHeader().setHeaderAttribute("sourceScript", result.getHeader().getRPCName());
+				result.getHeader().setHeaderAttribute("sourceScript",
+						result.getHeader().getRPCName());
 			}
 			if (destinationOperand != null) {
 				if (destinationOperand.value != null) {

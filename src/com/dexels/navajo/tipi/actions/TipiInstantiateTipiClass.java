@@ -22,18 +22,22 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class TipiInstantiateTipiClass extends TipiInstantiateTipi {
-	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+	public void execute(TipiEvent event)
+			throws com.dexels.navajo.tipi.TipiException,
+			com.dexels.navajo.tipi.TipiBreakException {
 		instantiateTipi(true, event);
 	}
 
-	protected void instantiateTipi(boolean byClass, TipiEvent event) throws TipiException {
+	protected void instantiateTipi(boolean byClass, TipiEvent event)
+			throws TipiException {
 
 		Boolean force = (Boolean) getEvaluatedParameterValue("force", event);
 		if (force == null) {
 			force = Boolean.FALSE;
 		}
 		String id = (String) getEvaluatedParameterValue("id", event);
-		String constraints = (String) getEvaluatedParameterValue("constraints", event);
+		String constraints = (String) getEvaluatedParameterValue("constraints",
+				event);
 
 		String location = null;
 		TipiComponent parent = null;
@@ -51,6 +55,7 @@ public class TipiInstantiateTipiClass extends TipiInstantiateTipi {
 			parent = (TipiComponent) eval;
 		}
 		String className = (String) getEvaluatedParameter("class", event).value;
-		instantiateTipi(myContext, getComponent(), byClass, parent, force, id, className, null, parameterMap, constraints, event);
+		instantiateTipi(myContext, getComponent(), byClass, parent, force, id,
+				className, null, parameterMap, constraints, event);
 	}
 }

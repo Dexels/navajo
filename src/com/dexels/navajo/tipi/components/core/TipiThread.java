@@ -33,7 +33,8 @@ public class TipiThread extends Thread implements Comparable<TipiThread> {
 	private final String myName;
 	private final TipiContext myContext;
 
-	public TipiThread(TipiContext context, String name, ThreadGroup group, TipiThreadPool tp) {
+	public TipiThread(TipiContext context, String name, ThreadGroup group,
+			TipiThreadPool tp) {
 		super(group, name);
 		setDaemon(true);
 		myName = name;
@@ -53,27 +54,31 @@ public class TipiThread extends Thread implements Comparable<TipiThread> {
 						myPool.setThreadState(TipiThread.IDLE);
 						TipiExecutable te = myPool.blockingGetExecutable();
 
-//						final long t = System.currentTimeMillis();
+						// final long t = System.currentTimeMillis();
 						myPool.setThreadState(TipiThread.BUSY);
 						TipiExecutable parentEvent = null;
-						final Stack<TipiExecutable> s = myPool.getThreadStack(this);
+						final Stack<TipiExecutable> s = myPool
+								.getThreadStack(this);
 						if (s != null && !s.isEmpty()) {
 							parentEvent = s.peek();
 						}
 						myPool.pushCurrentEvent(te);
-						myContext.debugLog("event", "Thread: " + myName + " got an executable. Performing now");
+						myContext.debugLog("event", "Thread: " + myName
+								+ " got an executable. Performing now");
 						try {
-							myPool.getContext().threadStarted(Thread.currentThread());
+							myPool.getContext().threadStarted(
+									Thread.currentThread());
 							te.performAction(te.getEvent(), parentEvent, 0);
 						} catch (Throwable ex) {
 							if (!(ex instanceof TipiBreakException)) {
 								ex.printStackTrace();
 								te.dumpStack("Problem: " + ex.getMessage());
-								System.err.println("Exception caught: "+ ex.getMessage());
+								System.err.println("Exception caught: "
+										+ ex.getMessage());
 							}
 						} finally {
 							TipiEventListener tel = myPool.getEventListener(te);
-//							long t2 = System.currentTimeMillis();
+							// long t2 = System.currentTimeMillis();
 							if (tel != null) {
 								tel.eventFinished(te, null);
 							}
@@ -81,10 +86,10 @@ public class TipiThread extends Thread implements Comparable<TipiThread> {
 								te.getComponent().eventFinished(te, te);
 							}
 							myPool.removeEventListener(te.getEvent());
-							
-							if(te instanceof TipiEvent) {
-								TipiEvent tev = (TipiEvent)te;
-								if(tev.getAfterEvent()!=null) {
+
+							if (te instanceof TipiEvent) {
+								TipiEvent tev = (TipiEvent) te;
+								if (tev.getAfterEvent() != null) {
 									tev.getAfterEvent().run();
 								}
 							}
@@ -108,9 +113,9 @@ public class TipiThread extends Thread implements Comparable<TipiThread> {
 	}
 
 	private void shutdown() {
-			synchronized (myPool) {
-				myPool.notify();
-			}
+		synchronized (myPool) {
+			myPool.notify();
+		}
 	}
 
 	public int compareTo(TipiThread o) {

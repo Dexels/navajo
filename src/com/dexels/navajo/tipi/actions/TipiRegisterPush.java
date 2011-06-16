@@ -22,10 +22,12 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class TipiRegisterPush extends TipiAction {
-	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+	public void execute(TipiEvent event)
+			throws com.dexels.navajo.tipi.TipiException,
+			com.dexels.navajo.tipi.TipiBreakException {
 		String agentId = (String) getEvaluatedParameterValue("agentId", event);
 		boolean bb = myContext.getClient().attemptPushRegistration(agentId);
-		if(!bb) {
+		if (!bb) {
 			throw new TipiBreakException(TipiBreakException.BREAK_BLOCK);
 		}
 		System.err.println("Push register complete.");

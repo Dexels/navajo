@@ -24,12 +24,12 @@ public class GeneralCacheManager implements CacheManager {
 		if (isUpToDate(location)) {
 			return local.getLocalData(location);
 		}
-		Map<String,Object> metadata = new HashMap<String, Object>();
-		InputStream is = remote.getContents(location,metadata);
-		if(is==null) {
+		Map<String, Object> metadata = new HashMap<String, Object>();
+		InputStream is = remote.getContents(location, metadata);
+		if (is == null) {
 			return null;
 		}
-		local.storeData(location, is,metadata);
+		local.storeData(location, is, metadata);
 		return local.getLocalData(location);
 	}
 
@@ -58,10 +58,10 @@ public class GeneralCacheManager implements CacheManager {
 		if (isUpToDate(location)) {
 			return local.getURL(location);
 		}
-		Map<String,Object> metadata = new HashMap<String, Object>();
-		InputStream is = remote.getContents(location,metadata);
-		System.err.println("Loading data to local storage: "+metadata);
-		local.storeData(location, is,metadata);
+		Map<String, Object> metadata = new HashMap<String, Object>();
+		InputStream is = remote.getContents(location, metadata);
+		System.err.println("Loading data to local storage: " + metadata);
+		local.storeData(location, is, metadata);
 		return local.getURL(location);
 	}
 

@@ -29,7 +29,8 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public class TipiResourceCopier extends TipiHeadlessComponentImpl {
 
-	protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) {
+	protected void performComponentMethod(String name,
+			TipiComponentMethod compMeth, TipiEvent event) {
 		if (name.equals("copy")) {
 			Operand source = compMeth.getEvaluatedParameter("source", event);
 			Operand target = compMeth.getEvaluatedParameter("target", event);

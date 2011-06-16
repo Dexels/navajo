@@ -16,10 +16,10 @@ public class ClassPathResourceLoader implements TipiResourceLoader {
 
 	private URL getClassResourceURL(String location) {
 		ClassLoader classLoader = getClass().getClassLoader();
-		if(classLoader==null) {
+		if (classLoader == null) {
 			System.err.println("Null classloader detected!");
 			classLoader = ClassLoader.getSystemClassLoader();
-			
+
 		}
 		return classLoader.getResource(location);
 	}
@@ -33,12 +33,14 @@ public class ClassPathResourceLoader implements TipiResourceLoader {
 	}
 
 	public OutputStream writeResource(String resourceName) throws IOException {
-		throw new UnsupportedOperationException("The classpath resource loader is unable to write to the resource path");
+		throw new UnsupportedOperationException(
+				"The classpath resource loader is unable to write to the resource path");
 
 	}
 
 	public List<File> getAllResources() throws IOException {
-		throw new UnsupportedOperationException("The classpath resource loader is unable to enumerate resources");
+		throw new UnsupportedOperationException(
+				"The classpath resource loader is unable to enumerate resources");
 	}
 
 	public boolean isReadOnly() {

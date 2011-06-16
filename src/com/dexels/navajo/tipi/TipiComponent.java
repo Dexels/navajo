@@ -34,11 +34,12 @@ public interface TipiComponent extends TipiEventListener, TipiLink {
 	public void removeFromContainer(Object c);
 
 	public void addToContainer(Object c, Object constraints);
-	public void loadPropertiesFromNavajo(Navajo n);
-	public void loadPropertiesFromMessage(Message n);
-	public TipiDataComponent getServiceRoot();
-		
 
+	public void loadPropertiesFromNavajo(Navajo n);
+
+	public void loadPropertiesFromMessage(Message n);
+
+	public TipiDataComponent getServiceRoot();
 
 	public TipiContext getContext();
 
@@ -59,21 +60,25 @@ public interface TipiComponent extends TipiEventListener, TipiLink {
 	public Object getValue(String name);
 
 	public Iterable<TipiComponent> getChildren();
-	
+
 	/**
 	 * Loads an event definition from the component definition
 	 */
-	public void loadEventsDefinition(TipiContext context, XMLElement definition, XMLElement classDef) throws TipiException;
+	public void loadEventsDefinition(TipiContext context,
+			XMLElement definition, XMLElement classDef) throws TipiException;
 
-	public void loadMethodDefinitions(TipiContext context, XMLElement definition, XMLElement classDef) throws TipiException;
+	public void loadMethodDefinitions(TipiContext context,
+			XMLElement definition, XMLElement classDef) throws TipiException;
 
-	public void load(XMLElement def, XMLElement instance, TipiContext context) throws TipiException;
+	public void load(XMLElement def, XMLElement instance, TipiContext context)
+			throws TipiException;
 
 	public void setId(String id);
 
 	public boolean isVisibleElement();
 
-	public void instantiateComponent(XMLElement instance, XMLElement classdef) throws TipiException;
+	public void instantiateComponent(XMLElement instance, XMLElement classdef)
+			throws TipiException;
 
 	public void loadStartValues(XMLElement element, TipiEvent event);
 
@@ -85,29 +90,31 @@ public interface TipiComponent extends TipiEventListener, TipiLink {
 
 	public String getId();
 
-	public void performMethod(String methodName, TipiAction invocation, TipiEvent event) throws TipiBreakException;
+	public void performMethod(String methodName, TipiAction invocation,
+			TipiEvent event) throws TipiBreakException;
 
-	public void performMethod(String methodName, Map<String,Object> params,  TipiAction invocation, TipiEvent event);
-		
-		
+	public void performMethod(String methodName, Map<String, Object> params,
+			TipiAction invocation, TipiEvent event);
+
 	public TipiComponentMethod getTipiComponentMethod(String methodName);
 
 	public TipiComponent getTipiComponentByPath(String path);
 
 	public void setLayout(TipiLayout tl);
 
-	
 	/**
-	 * This is a hook to prepare the component for 'receiving children'
-	 * You can for example prepare your container, based on the attributes.
-	 * Some containers need to do this before children are added.
-	 * You can also do it in the createContainer method, but then you don't
-	 * have any access to the attributes.
+	 * This is a hook to prepare the component for 'receiving children' You can
+	 * for example prepare your container, based on the attributes. Some
+	 * containers need to do this before children are added. You can also do it
+	 * in the createContainer method, but then you don't have any access to the
+	 * attributes.
+	 * 
 	 * @param instance
 	 * @param classdef
 	 * @param definition
 	 */
-	public void initBeforeBuildingChildren(XMLElement instance, XMLElement classdef, XMLElement definition);
+	public void initBeforeBuildingChildren(XMLElement instance,
+			XMLElement classdef, XMLElement definition);
 
 	public TipiLayout getLayout();
 
@@ -116,16 +123,15 @@ public interface TipiComponent extends TipiEventListener, TipiLink {
 	public TipiComponent getTipiComponent(int i);
 
 	/**
-	 * Called when this component gets disposed. Do not call directly.
-	 * You can override it if you want, but make sure to call the super.
+	 * Called when this component gets disposed. Do not call directly. You can
+	 * override it if you want, but make sure to call the super.
 	 */
 
 	public void disposeComponent();
 
-	
 	/**
-	 * removes all child components.
-	 * You can override it if you want, but make sure to call the super.
+	 * removes all child components. You can override it if you want, but make
+	 * sure to call the super.
 	 */
 
 	public void removeAllChildren();
@@ -138,7 +144,8 @@ public interface TipiComponent extends TipiEventListener, TipiLink {
 
 	public void addComponent(TipiComponent c, TipiContext context, Object td);
 
-	public void addComponent(TipiComponent c, int index, TipiContext context, Object td);
+	public void addComponent(TipiComponent c, int index, TipiContext context,
+			Object td);
 
 	public Navajo getNavajo();
 
@@ -154,7 +161,8 @@ public interface TipiComponent extends TipiEventListener, TipiLink {
 
 	public void refreshParent();
 
-	public boolean performTipiEvent(String type, Map<String, Object> event, boolean sync) throws TipiException, TipiBreakException;
+	public boolean performTipiEvent(String type, Map<String, Object> event,
+			boolean sync) throws TipiException, TipiBreakException;
 
 	public String getName();
 
@@ -164,8 +172,7 @@ public interface TipiComponent extends TipiEventListener, TipiLink {
 
 	public void setCursor(int cursorid);
 
-
-//	public void checkValidation(Message msg);
+	// public void checkValidation(Message msg);
 
 	public void resetComponentValidationStateByRule(String id);
 
@@ -173,7 +180,6 @@ public interface TipiComponent extends TipiEventListener, TipiLink {
 
 	public int getIndex(TipiComponent node);
 
-	
 	public boolean hasPath(String path, TipiEvent event);
 
 	public String getPath();
@@ -186,14 +192,14 @@ public interface TipiComponent extends TipiEventListener, TipiLink {
 
 	public void componentInstantiated();
 
-
 	public void addHelper(TipiHelper th);
 
 	public void removeHelper(TipiHelper th);
 
 	public int getChildCount();
 
-	public TipiComponent addComponentInstance(TipiContext context, XMLElement inst, Object constraints) throws TipiException;
+	public TipiComponent addComponentInstance(TipiContext context,
+			XMLElement inst, Object constraints) throws TipiException;
 
 	public Object getContainerLayout();
 
@@ -203,25 +209,25 @@ public interface TipiComponent extends TipiEventListener, TipiLink {
 
 	public void setCurrentEvent(TipiEvent event);
 
-//	public void updateId(TipiComponent tc, String oldId, String id);
+	// public void updateId(TipiComponent tc, String oldId, String id);
 
 	/**
-	 * This returns the 'real' ui-component of this Tipi component.
-	 * In most of the cases, it will return the same as getContainer();
-	 * (If you don't override it, that is what you'll get)
-	 * getContainer will return the ui-component that will be placed into the
-	 * parent ui-component.
-	 * For example, if you have a swing tipitable, the getContainer will return
+	 * This returns the 'real' ui-component of this Tipi component. In most of
+	 * the cases, it will return the same as getContainer(); (If you don't
+	 * override it, that is what you'll get) getContainer will return the
+	 * ui-component that will be placed into the parent ui-component. For
+	 * example, if you have a swing tipitable, the getContainer will return
 	 * either a scrollbar or a panel, depending on the autoscroll version.
-	 * getActualComponent will return the 'real' component, a MessageTable in 
+	 * getActualComponent will return the 'real' component, a MessageTable in
 	 * this case.
+	 * 
 	 * @return
 	 */
 	public Object getActualComponent();
 
 	/**
-	 * A 'home component' is a toplevel component in a definition.
-	 * As such, it can be addressed using the '~' from within that definition.
+	 * A 'home component' is a toplevel component in a definition. As such, it
+	 * can be addressed using the '~' from within that definition.
 	 * 
 	 * @return
 	 */
@@ -253,10 +259,10 @@ public interface TipiComponent extends TipiEventListener, TipiLink {
 	public void runSyncInEventThread(Runnable r);
 
 	public void runAsyncInEventThread(Runnable r);
-	public void addedToParentContainer(TipiComponent parentTipiComponent, Object parentContainer, Object container, Object constriants);
+
+	public void addedToParentContainer(TipiComponent parentTipiComponent,
+			Object parentContainer, Object container, Object constriants);
 
 	public TipiComponent findTipiComponentById(String id);
-
-	
 
 }

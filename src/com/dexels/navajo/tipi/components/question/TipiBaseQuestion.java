@@ -91,7 +91,8 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 		myQuestionList = tql;
 	}
 
-	private void recursiveListQuestions(TipiComponent start, List<TipiComponent> result) {
+	private void recursiveListQuestions(TipiComponent start,
+			List<TipiComponent> result) {
 		if (start instanceof TipiBaseQuestion) {
 			result.add(start);
 		}
@@ -125,7 +126,8 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 		// if (enabledConditionProperty != null) {
 		// enabledCondition = enabledConditionProperty.getValue();
 		// }
-		Property validationConditionProperty = m.getProperty("ValidationCondition");
+		Property validationConditionProperty = m
+				.getProperty("ValidationCondition");
 		if (validationConditionProperty != null) {
 			validationCondition = validationConditionProperty.getValue();
 		}
@@ -142,7 +144,9 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 				// valueComponent = o;
 			}
 			o.addTipiEventListener(new TipiEventListener() {
-				public boolean performTipiEvent(String eventtype, Map<String, Object> source, boolean sync) throws TipiException {
+				public boolean performTipiEvent(String eventtype,
+						Map<String, Object> source, boolean sync)
+						throws TipiException {
 					updateQuestionList();
 					// System.err.println("Forwarding tipi event");
 
@@ -178,10 +182,12 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 				try {
 					// System.err.println("USING SUBQUESTION COMPONENT:
 					// "+tdc.getPath());
-					TipiBaseQuestion tc = (TipiBaseQuestion) TipiInstantiateTipi.instantiateByDefinition(tdc, false, myId,
-							questionDefinitionName, null, null);
+					TipiBaseQuestion tc = (TipiBaseQuestion) TipiInstantiateTipi
+							.instantiateByDefinition(tdc, false, myId,
+									questionDefinitionName, null, null);
 					tc.setValue("messagePath", current.getFullMessageName());
-					tc.setValue("questionDefinitionName", questionDefinitionName);
+					tc.setValue("questionDefinitionName",
+							questionDefinitionName);
 					tc.loadData(n, myContext);
 					tc.setQuestionGroup(questionGroup);
 					tc.setQuestionList(myQuestionList);
@@ -197,7 +203,6 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 
 	protected abstract void setQuestionBorder(String val);
 
-	
 	public void updateQuestionGroup() {
 		if (questionGroup != null) {
 			questionGroup.updateQuestions();
@@ -219,7 +224,8 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 		// return true;
 		// }
 		if (visibleCondition != null) {
-			Operand o = myContext.evaluate(visibleCondition, this, null, myMessage);
+			Operand o = myContext.evaluate(visibleCondition, this, null,
+					myMessage);
 			if (o != null) {
 				return ((Boolean) o.value).booleanValue();
 			}
@@ -310,7 +316,8 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 			return true;
 		}
 		if (validationCondition != null) {
-			Operand o = myContext.evaluate(validationCondition, this, null, myMessage);
+			Operand o = myContext.evaluate(validationCondition, this, null,
+					myMessage);
 			if (o != null) {
 				boolean result = ((Boolean) o.value).booleanValue();
 				return result;
@@ -321,7 +328,8 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 		return true;
 	}
 
-	public void load(XMLElement def, XMLElement instance, TipiContext context) throws TipiException {
+	public void load(XMLElement def, XMLElement instance, TipiContext context)
+			throws TipiException {
 		super.load(def, instance, context);
 	}
 

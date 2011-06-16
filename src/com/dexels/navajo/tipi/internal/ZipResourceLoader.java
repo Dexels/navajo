@@ -70,7 +70,8 @@ public class ZipResourceLoader extends ClassPathResourceLoader {
 		return super.getResourceStream(location);
 	}
 
-	private final void copyResource(OutputStream out, InputStream in) throws IOException {
+	private final void copyResource(OutputStream out, InputStream in)
+			throws IOException {
 		BufferedInputStream bin = new BufferedInputStream(in);
 		BufferedOutputStream bout = new BufferedOutputStream(out);
 		byte[] buffer = new byte[1024];

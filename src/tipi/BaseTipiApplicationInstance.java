@@ -29,27 +29,23 @@ abstract class BaseTipiApplicationInstance implements TipiApplicationInstance {
 	public final void startup() throws IOException, TipiException {
 		TipiContext context = createContext();
 		setCurrentContext(context);
-//		context.switchToDefinition(getDefinition());
+		// context.switchToDefinition(getDefinition());
 	}
 
-	
 	public void dispose(TipiContext t) {
 		t.exit();
 	}
 
-	
 	public final void reboot() throws IOException, TipiException {
-		TipiContext tc =  currentContext;
+		TipiContext tc = currentContext;
 		startup();
 		dispose(tc);
 	}
-	
 
-	
-	
-   // Utilities:
+	// Utilities:
 
-	protected Map<String, String> parseProperties(String gsargs) throws IOException {
+	protected Map<String, String> parseProperties(String gsargs)
+			throws IOException {
 		StringTokenizer st = new StringTokenizer(gsargs);
 		ArrayList<String> a = new ArrayList<String>();
 		while (st.hasMoreTokens()) {
@@ -58,12 +54,13 @@ abstract class BaseTipiApplicationInstance implements TipiApplicationInstance {
 		}
 		return parseProperties(a);
 	}
-	
-	protected Map<String, String> parseProperties(List<String> args) throws IOException {
+
+	protected Map<String, String> parseProperties(List<String> args)
+			throws IOException {
 		Map<String, String> result = new HashMap<String, String>();
 		int index = 0;
 		for (String current : args) {
-			if (current.indexOf("=")!=-1) {
+			if (current.indexOf("=") != -1) {
 				String prop = current;
 				try {
 					StringTokenizer st = new StringTokenizer(prop, "=");
@@ -74,29 +71,33 @@ abstract class BaseTipiApplicationInstance implements TipiApplicationInstance {
 				} catch (NoSuchElementException ex) {
 					System.err.println("Error parsing system property");
 				} catch (SecurityException se) {
-					System.err.println("Security exception: " + se.getMessage());
+					System.err
+							.println("Security exception: " + se.getMessage());
 					se.printStackTrace();
 				}
 			} else if (current.equals("-profile")) {
-				loadProfile(args.get(index+1),result);
+				loadProfile(args.get(index + 1), result);
 			}
 			index++;
 		}
 		return result;
 	}
 
-	private void loadProfile(String profileName, Map<String, String> result) throws IOException {
-		File profileFile = new File("settings/profiles/"+profileName+".properties");
+	private void loadProfile(String profileName, Map<String, String> result)
+			throws IOException {
+		File profileFile = new File("settings/profiles/" + profileName
+				+ ".properties");
 		File argumentsFile = new File("settings/arguments.properties");
 		FileInputStream arguments = new FileInputStream(argumentsFile);
-		readArguments(arguments,result);
+		readArguments(arguments, result);
 		arguments.close();
 		FileInputStream profile = new FileInputStream(profileFile);
-		readArguments(profile,result);
+		readArguments(profile, result);
 		profile.close();
 	}
 
-	private void readArguments(FileInputStream profile, Map<String, String> result) throws IOException {
+	private void readArguments(FileInputStream profile,
+			Map<String, String> result) throws IOException {
 		PropertyResourceBundle prb = new PropertyResourceBundle(profile);
 		for (String key : prb.keySet()) {
 			result.put(key, prb.getString(key));

@@ -21,14 +21,16 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class TipiSleep extends TipiAction {
-	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+	public void execute(TipiEvent event)
+			throws com.dexels.navajo.tipi.TipiException,
+			com.dexels.navajo.tipi.TipiBreakException {
 		int sleep = (Integer) getEvaluatedParameter("time", event).value;
 		try {
 			Thread.sleep(sleep);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		System.err.println("Slept for: "+sleep+" millis!");
+		System.err.println("Slept for: " + sleep + " millis!");
 	}
 
 }

@@ -16,13 +16,14 @@ public class FileRemoteStorage implements RemoteStorage {
 		this.base = base;
 	}
 
-	public InputStream getContents(String location, Map<String,Object> metadata) throws IOException {
+	public InputStream getContents(String location, Map<String, Object> metadata)
+			throws IOException {
 		File u = new File(base, location);
-		if(!u.exists()) {
+		if (!u.exists()) {
 			return null;
 		}
 		metadata.put("length", u.length());
-		
+
 		FileInputStream fis = new FileInputStream(u);
 		return fis;
 	}

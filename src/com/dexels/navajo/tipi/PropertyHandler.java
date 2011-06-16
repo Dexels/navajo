@@ -7,41 +7,46 @@ import java.util.Set;
 import com.dexels.navajo.document.Property;
 
 public class PropertyHandler implements PropertyChangeListener {
-	
+
 	private Property myProperty;
-	private  Set<PropertyLinkRequest> myMapping;
+	private Set<PropertyLinkRequest> myMapping;
 	private final TipiComponent myComponent;
+
 	public PropertyHandler(TipiComponent tc, Property p) {
-		this(tc,p,null);
+		this(tc, p, null);
 	}
-	public PropertyHandler(TipiComponent tc, Property p, Set<PropertyLinkRequest> mapping) {
+
+	public PropertyHandler(TipiComponent tc, Property p,
+			Set<PropertyLinkRequest> mapping) {
 		myMapping = mapping;
 		myComponent = tc;
 		setProperty(p);
 	}
 
 	public void propertyChange(PropertyChangeEvent evt) {
-		System.err.println("EVENT: "+evt.getPropertyName()+"val: "+evt.getNewValue());
-		updateAspect(evt.getPropertyName(),evt.getNewValue());
-		
+		System.err.println("EVENT: " + evt.getPropertyName() + "val: "
+				+ evt.getNewValue());
+		updateAspect(evt.getPropertyName(), evt.getNewValue());
+
 	}
+
 	/**
 	 * @param evt
 	 */
 	private void updateAspect(String aspect, Object value) {
-		if(myMapping==null) {
+		if (myMapping == null) {
 			return;
 		}
 		for (PropertyLinkRequest r : myMapping) {
-			if(myComponent==null) {
+			if (myComponent == null) {
 				throw new RuntimeException("wtf?");
 			}
-			if(r.getAspect().equals(aspect)) {
+			if (r.getAspect().equals(aspect)) {
 				myComponent.setValue(r.getAttributeName(), value);
 			}
 		}
 	}
-	
+
 	public void initProperty(Property p) {
 		updateAspect("description", p.getTypedValue());
 		updateAspect("value", p.getTypedValue());
@@ -51,21 +56,19 @@ public class PropertyHandler implements PropertyChangeListener {
 		updateAspect("cardinality", p.getCardinality());
 		updateAspect("subtype", p.getSubType());
 	}
-	
 
-	
-//	public void addMapping(String key, String value) {
-//		if(myMapping==null) {
-//			myMapping = new HashMap<String, String>();
-//		}
-//		myMapping.put(key, value);
-//	}
-	
+	// public void addMapping(String key, String value) {
+	// if(myMapping==null) {
+	// myMapping = new HashMap<String, String>();
+	// }
+	// myMapping.put(key, value);
+	// }
+
 	public void setProperty(Property p) {
-		if(p==myProperty) {
+		if (p == myProperty) {
 			return;
 		}
-		if(myProperty!=null) {
+		if (myProperty != null) {
 			myProperty.removePropertyChangeListener(this);
 		}
 		myProperty = p;

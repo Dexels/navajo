@@ -6,24 +6,28 @@ import org.osgi.framework.ServiceReference;
 
 import tipipackage.ITipiExtensionRegistry;
 
-public abstract class TipiAbstractOSGiExtension implements TipiExtension,BundleActivator {
+public abstract class TipiAbstractOSGiExtension implements TipiExtension,
+		BundleActivator {
 
 	private BundleContext context = null;
 
-
-	protected void registerTipiExtension(BundleContext context) throws Exception {
+	protected void registerTipiExtension(BundleContext context)
+			throws Exception {
 		this.context = context;
 		loadDescriptor();
-		ServiceReference refs = context.getServiceReference(ITipiExtensionRegistry.class.getName());
-		ITipiExtensionRegistry reg = (ITipiExtensionRegistry) context.getService(refs);
+		ServiceReference refs = context
+				.getServiceReference(ITipiExtensionRegistry.class.getName());
+		ITipiExtensionRegistry reg = (ITipiExtensionRegistry) context
+				.getService(refs);
 		reg.registerTipiExtension(this);
-		
-		
+
 	}
 
 	public ITipiExtensionRegistry getTipiExtensionRegistry() {
-		ServiceReference refs = context.getServiceReference(ITipiExtensionRegistry.class.getName());
-		ITipiExtensionRegistry reg = (ITipiExtensionRegistry) context.getService(refs);
+		ServiceReference refs = context
+				.getServiceReference(ITipiExtensionRegistry.class.getName());
+		ITipiExtensionRegistry reg = (ITipiExtensionRegistry) context
+				.getService(refs);
 		return reg;
 	}
 
@@ -34,6 +38,6 @@ public abstract class TipiAbstractOSGiExtension implements TipiExtension,BundleA
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		
+
 	}
 }

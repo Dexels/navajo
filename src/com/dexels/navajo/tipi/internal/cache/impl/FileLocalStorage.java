@@ -54,15 +54,18 @@ public class FileLocalStorage implements LocalStorage {
 		return f.exists();
 	}
 
-	public void storeData(String location, InputStream data, Map<String,Object> metadata) throws IOException {
-		System.err.println("File storage. Storing: "+metadata.get("length")+" bytes.");
+	public void storeData(String location, InputStream data,
+			Map<String, Object> metadata) throws IOException {
+		System.err.println("File storage. Storing: " + metadata.get("length")
+				+ " bytes.");
 		File f = new File(baseFile, convertPath(location));
 		FileOutputStream fos = new FileOutputStream(f);
 		copyResource(fos, data);
 
 	}
 
-	private final void copyResource(OutputStream out, InputStream in) throws IOException {
+	private final void copyResource(OutputStream out, InputStream in)
+			throws IOException {
 		BufferedInputStream bin = new BufferedInputStream(in);
 		BufferedOutputStream bout = new BufferedOutputStream(out);
 		byte[] buffer = new byte[1024];

@@ -6,7 +6,8 @@ import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.components.core.TipiHeadlessComponentImpl;
 
-public abstract class TipiBaseConnector extends TipiHeadlessComponentImpl implements TipiConnector {
+public abstract class TipiBaseConnector extends TipiHeadlessComponentImpl
+		implements TipiConnector {
 
 	// protected final Map<String,TipiValue> myEntrypoints = new HashMap<String,
 	// TipiValue>();
@@ -15,11 +16,13 @@ public abstract class TipiBaseConnector extends TipiHeadlessComponentImpl implem
 		doTransaction(null, null, null);
 	}
 
-	public final void doTransaction(String service) throws TipiBreakException, TipiException {
+	public final void doTransaction(String service) throws TipiBreakException,
+			TipiException {
 		doTransaction(null, service, null);
 	}
 
-	public void doTransaction(Navajo n, String service) throws TipiBreakException, TipiException {
+	public void doTransaction(Navajo n, String service)
+			throws TipiBreakException, TipiException {
 		doTransaction(n, service, null);
 	}
 
@@ -27,9 +30,10 @@ public abstract class TipiBaseConnector extends TipiHeadlessComponentImpl implem
 	// TipiBreakException, TipiException {
 	// doTransaction(null,service,null);
 	// }
-	//	
+	//
 
-	public void injectNavajo(String service, Navajo n) throws TipiBreakException {
+	public void injectNavajo(String service, Navajo n)
+			throws TipiBreakException {
 		if (myContext == null) {
 			System.err.println("Injecting: " + service);
 			try {

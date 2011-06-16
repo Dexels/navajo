@@ -26,7 +26,9 @@ public class TipiSetSystemProperty extends TipiAction {
 	public TipiSetSystemProperty() {
 	}
 
-	protected void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiBreakException, com.dexels.navajo.tipi.TipiException {
+	protected void execute(TipiEvent event)
+			throws com.dexels.navajo.tipi.TipiBreakException,
+			com.dexels.navajo.tipi.TipiException {
 		Operand name = getEvaluatedParameter("name", event);
 		Operand value = getEvaluatedParameter("value", event);
 		if (name == null || value == null) {

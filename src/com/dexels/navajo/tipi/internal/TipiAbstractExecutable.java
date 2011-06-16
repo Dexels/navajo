@@ -22,7 +22,7 @@ public abstract class TipiAbstractExecutable implements TipiExecutable {
 	protected TipiContext myContext;
 	private TipiStackElement stackElement = null;
 	private String myCondition = "";
-	
+
 	private Map<String, String> eventPropertyMap = new HashMap<String, String>();
 
 	private final List<TipiExecutable> myExecutables = new ArrayList<TipiExecutable>();
@@ -33,7 +33,7 @@ public abstract class TipiAbstractExecutable implements TipiExecutable {
 
 	public TipiAbstractExecutable() {
 	}
-	
+
 	public String getExpression() {
 		return myCondition;
 	}
@@ -41,11 +41,10 @@ public abstract class TipiAbstractExecutable implements TipiExecutable {
 	public void setExpression(String ex) {
 		myCondition = ex;
 	}
+
 	public void removeExecutable(TipiExecutable a) {
 		myExecutables.remove(a);
 	}
-
-
 
 	public void setContext(TipiContext tc) {
 		myContext = tc;
@@ -63,7 +62,6 @@ public abstract class TipiAbstractExecutable implements TipiExecutable {
 		myExecutables.clear();
 		myExecutables.addAll(executables);
 	}
-
 
 	public TipiComponent getComponent() {
 		return myComponent;
@@ -113,12 +111,14 @@ public abstract class TipiAbstractExecutable implements TipiExecutable {
 	}
 
 	public void setBlockParam(String key, String value) {
-		eventPropertyMap.put(key,value);
+		eventPropertyMap.put(key, value);
 	}
-	
-	protected void parseActions(TipiContext context, XMLElement current) throws TipiException {
+
+	protected void parseActions(TipiContext context, XMLElement current)
+			throws TipiException {
 		if (current.getName().indexOf(".") == -1) {
-			TipiAction ta = context.instantiateTipiAction(current, getComponent(), this);
+			TipiAction ta = context.instantiateTipiAction(current,
+					getComponent(), this);
 			appendTipiExecutable(ta);
 		} else {
 			StringTokenizer st = new StringTokenizer(current.getName(), ".");
@@ -128,29 +128,31 @@ public abstract class TipiAbstractExecutable implements TipiExecutable {
 				XMLElement newCopy = current.copy();
 				newCopy.setName("instantiate");
 				newCopy.setAttribute("expectType", "'" + classType + "'");
-				TipiAction ta = context.instantiateTipiAction(newCopy, getComponent(), this);
+				TipiAction ta = context.instantiateTipiAction(newCopy,
+						getComponent(), this);
 				appendTipiExecutable(ta);
-			} else if(method.equals("attribute")) {
-				//XMLElement xxx = context.getComponentDefinition(classType);
+			} else if (method.equals("attribute")) {
+				// XMLElement xxx = context.getComponentDefinition(classType);
 				// TODO Do an extra check if all attributes exist.
 				XMLElement newCopy = current.copy();
 				newCopy.setName("attribute");
-				TipiAction ta = context.instantiateTipiAction(newCopy, getComponent(), this);
+				TipiAction ta = context.instantiateTipiAction(newCopy,
+						getComponent(), this);
 				appendTipiExecutable(ta);
-				
-			} else{
-				//XMLElement xxx = context.getComponentDefinition(classType);
+
+			} else {
+				// XMLElement xxx = context.getComponentDefinition(classType);
 				// TODO Do an extra check if this method exists.
-				
+
 				XMLElement newCopy = current.copy();
 				newCopy.setName("performTipiMethod");
 				newCopy.setAttribute("name", "'" + method + "'");
-				TipiAction ta = context.instantiateTipiAction(newCopy, getComponent(), this);
+				TipiAction ta = context.instantiateTipiAction(newCopy,
+						getComponent(), this);
 				appendTipiExecutable(ta);
 			}
 		}
 	}
-
 
 	public boolean checkCondition(TipiEvent te) throws TipiBreakException {
 		if (getExpression() == null || getExpression().equals("")) {
@@ -159,8 +161,9 @@ public abstract class TipiAbstractExecutable implements TipiExecutable {
 		return evaluateBlock(getContext(), getComponent(), te);
 
 	}
-	
-	protected boolean evaluateBlock(TipiContext context, Object source, TipiEvent te) {
+
+	protected boolean evaluateBlock(TipiContext context, Object source,
+			TipiEvent te) {
 		// boolean valid = false;
 		Operand o;
 		try {
@@ -168,10 +171,12 @@ public abstract class TipiAbstractExecutable implements TipiExecutable {
 				TipiComponent tc = (TipiComponent) source;
 				synchronized (tc) {
 					tc.setCurrentEvent(te);
-					o = Expression.evaluate(getExpression(), ((TipiComponent) source).getNearestNavajo(), null, null, null,
-							(TipiComponent) source);
+					o = Expression.evaluate(getExpression(),
+							((TipiComponent) source).getNearestNavajo(), null,
+							null, null, (TipiComponent) source);
 					if (o.value == null) {
-						getContext().showInternalError("Block expression failed: " + getExpression());
+						getContext().showInternalError(
+								"Block expression failed: " + getExpression());
 						return false;
 					}
 					if (o.value.toString().equals("true")) {
@@ -179,7 +184,8 @@ public abstract class TipiAbstractExecutable implements TipiExecutable {
 					}
 				}
 			} else {
-				o = Expression.evaluate(getExpression(), null, null, null, null, (TipiComponent) source);
+				o = Expression.evaluate(getExpression(), null, null, null,
+						null, (TipiComponent) source);
 				if (o.value.toString().equals("true")) {
 					return true;
 				}
@@ -191,6 +197,7 @@ public abstract class TipiAbstractExecutable implements TipiExecutable {
 		}
 		return false;
 	}
+
 	public int getExecutableChildCount() {
 		return myExecutables.size();
 	}
@@ -198,6 +205,7 @@ public abstract class TipiAbstractExecutable implements TipiExecutable {
 	public TipiExecutable getExecutableChild(int index) {
 		return myExecutables.get(index);
 	}
+
 	public TipiContext getContext() {
 		return myContext;
 	}

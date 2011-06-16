@@ -1,6 +1,5 @@
 package com.dexels.navajo.tipi.components.core;
 
-
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
@@ -31,10 +30,9 @@ public class TipiHeadlessFrame extends TipiDataComponentImpl {
 	}
 
 	@Override
-	public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
+	public void load(XMLElement definition, XMLElement instance,
+			TipiContext context) throws TipiException {
 		super.load(definition, instance, context);
 	}
 
-	
-	
 }

@@ -22,13 +22,14 @@ public abstract class BaseActions {
 		this.myComponent = myComponent;
 	}
 
-	 public void performAction(String actionName,Map<String,Object> parameters) throws TipiException {
-		 TipiActionFactory aa = getComponent().getContext().getActionManager().getActionFactory(actionName);
-		 TipiAction rr  = aa.createAction(getComponent());
-		 rr.loadParameters(parameters);
-		 rr.performAction(event, invocation, -1);
-	 }
-
+	public void performAction(String actionName, Map<String, Object> parameters)
+			throws TipiException {
+		TipiActionFactory aa = getComponent().getContext().getActionManager()
+				.getActionFactory(actionName);
+		TipiAction rr = aa.createAction(getComponent());
+		rr.loadParameters(parameters);
+		rr.performAction(event, invocation, -1);
+	}
 
 	public void setInvocation(TipiAction invocation) {
 		this.invocation = invocation;

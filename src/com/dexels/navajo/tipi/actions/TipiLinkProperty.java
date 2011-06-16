@@ -23,9 +23,12 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public final class TipiLinkProperty extends TipiAction {
 
-	public final void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+	public final void execute(TipiEvent event)
+			throws com.dexels.navajo.tipi.TipiException,
+			com.dexels.navajo.tipi.TipiBreakException {
 
-		final Property master = (Property) getEvaluatedParameter("master", event).value;
+		final Property master = (Property) getEvaluatedParameter("master",
+				event).value;
 		final Property slave = (Property) getEvaluatedParameter("slave", event).value;
 
 		myContext.link(master, slave);

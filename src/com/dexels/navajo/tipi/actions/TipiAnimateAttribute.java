@@ -24,12 +24,16 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public final class TipiAnimateAttribute extends TipiAction {
 
-	public final void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+	public final void execute(TipiEvent event)
+			throws com.dexels.navajo.tipi.TipiException,
+			com.dexels.navajo.tipi.TipiBreakException {
 
-		String attribute = (String) getEvaluatedParameterValue("attribute", event);
+		String attribute = (String) getEvaluatedParameterValue("attribute",
+				event);
 		int duration = (Integer) getEvaluatedParameterValue("duration", event);
-		TipiComponent tc = (TipiComponent) getEvaluatedParameterValue("target", event);
-		
+		TipiComponent tc = (TipiComponent) getEvaluatedParameterValue("target",
+				event);
+
 		final Property target = tc.getAttributeProperty(attribute);
 		final Object value = getEvaluatedParameterValue("value", event);
 

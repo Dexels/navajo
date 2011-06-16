@@ -33,7 +33,7 @@ public class FileResourceLoader extends ClassPathResourceLoader {
 	@Override
 	public OutputStream writeResource(String resourceName) throws IOException {
 		File res = new File(baseFile, resourceName);
-		if(!res.getParentFile().exists()) {
+		if (!res.getParentFile().exists()) {
 			res.getParentFile().mkdirs();
 		}
 		FileOutputStream fos = new FileOutputStream(res);
@@ -53,7 +53,7 @@ public class FileResourceLoader extends ClassPathResourceLoader {
 		} else {
 			f = new File(baseFile, location);
 		}
-		
+
 		if (!f.exists()) {
 			return super.getResourceURL(location);
 		}

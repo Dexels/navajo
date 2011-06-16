@@ -30,13 +30,17 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  */
 public final class TipiDumpClass extends TipiAction {
 
-	public final void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+	public final void execute(TipiEvent event)
+			throws com.dexels.navajo.tipi.TipiException,
+			com.dexels.navajo.tipi.TipiBreakException {
 
 		try {
 			Navajo n = NavajoFactory.getInstance().createNavajo();
-			Message mm = NavajoFactory.getInstance().createMessage(n, "Class", Message.MSG_TYPE_ARRAY);
+			Message mm = NavajoFactory.getInstance().createMessage(n, "Class",
+					Message.MSG_TYPE_ARRAY);
 			n.addMessage(mm);
-			Map<String, XMLElement> m = myContext.getClassManager().getClassMap();
+			Map<String, XMLElement> m = myContext.getClassManager()
+					.getClassMap();
 			for (Iterator<String> iter = m.keySet().iterator(); iter.hasNext();) {
 				String element = iter.next();
 				XMLElement def = m.get(element);

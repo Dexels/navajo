@@ -11,7 +11,7 @@ import com.dexels.navajo.document.Navajo;
 public interface TipiStorageManager {
 
 	public void setContext(TipiContext tc);
-	
+
 	public Navajo getStorageDocument(String id) throws TipiException;
 
 	public void setStorageDocument(String id, Navajo n) throws TipiException;

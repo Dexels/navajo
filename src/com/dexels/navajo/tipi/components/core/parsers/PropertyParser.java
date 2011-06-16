@@ -30,7 +30,8 @@ public class PropertyParser extends BaseTipiParser {
 	private Object getPropertyValue(TipiComponent source, String expression) {
 		if (expression.startsWith("!")) {
 			try {
-				return getAttributePropertyValueByPath(source, expression.substring(1));
+				return getAttributePropertyValueByPath(source,
+						expression.substring(1));
 			} catch (TipiException e) {
 				e.printStackTrace();
 				return null;

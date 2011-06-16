@@ -22,13 +22,16 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 
 @Deprecated
 public class TipiRuntime extends TipiAction {
-	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+	public void execute(TipiEvent event)
+			throws com.dexels.navajo.tipi.TipiException,
+			com.dexels.navajo.tipi.TipiBreakException {
 		String txt = getParameter("command").getValue();
 		Operand o = null;
 		try {
 			o = evaluate(txt, event);
 		} catch (Exception ex) {
-			System.err.println("Error evaluating[" + txt + "] inserting as plain text only");
+			System.err.println("Error evaluating[" + txt
+					+ "] inserting as plain text only");
 			ex.printStackTrace();
 		}
 		String command = "rundll32 url,FileProtocolHandler ";

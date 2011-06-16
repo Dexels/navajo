@@ -29,7 +29,9 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 @Deprecated
 public class TipiPerformMethod extends TipiAction {
-	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+	public void execute(TipiEvent event)
+			throws com.dexels.navajo.tipi.TipiException,
+			com.dexels.navajo.tipi.TipiBreakException {
 		Operand hostUrlValue = null;
 		boolean breakOnError = false;
 		long expirationInterval = -1;
@@ -105,25 +107,32 @@ public class TipiPerformMethod extends TipiAction {
 		}
 		myContext.getClient().setCondensed(condenseCheck);
 		if (method == null) {
-			throw new IllegalArgumentException("Error performing method. Method evaluated to null.");
+			throw new IllegalArgumentException(
+					"Error performing method. Method evaluated to null.");
 		}
 		setThreadState("waiting");
 
 		if (evalTipi == null) {
 			if (getComponent().getNearestNavajo() != null) {
 				Navajo n = getComponent().getNearestNavajo();
-				myContext.performTipiMethod(null, n, destination, method.value.toString(), breakOnError, event, expirationInterval,
-						hostUrl, username, password, keystore, keypass);
+				myContext.performTipiMethod(null, n, destination,
+						method.value.toString(), breakOnError, event,
+						expirationInterval, hostUrl, username, password,
+						keystore, keypass);
 			} else {
-				myContext.performTipiMethod(null, NavajoFactory.getInstance().createNavajo(), destination, method.value.toString(),
-						breakOnError, event, expirationInterval, hostUrl, username, password, keystore, keypass);
+				myContext.performTipiMethod(null, NavajoFactory.getInstance()
+						.createNavajo(), destination, method.value.toString(),
+						breakOnError, event, expirationInterval, hostUrl,
+						username, password, keystore, keypass);
 			}
 			return;
 		}
 		setThreadState("busy");
 
-		evalTipi.performService(myContext, destination, method.value.toString(), breakOnError, event, expirationInterval, hostUrl,
-				username, password, keystore, keypass);
+		evalTipi.performService(myContext, destination,
+				method.value.toString(), breakOnError, event,
+				expirationInterval, hostUrl, username, password, keystore,
+				keypass);
 
 	}
 }

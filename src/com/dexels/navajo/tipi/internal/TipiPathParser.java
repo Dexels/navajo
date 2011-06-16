@@ -169,8 +169,12 @@ public class TipiPathParser {
 	}
 
 	private String getTipiPath(String path) {
-		if (path.startsWith("tipi:/") || path.startsWith("property:/") || path.startsWith("propertyref:/") || path.startsWith("message:/")
-				|| path.startsWith("component:/") || path.startsWith("attribute:/") || path.startsWith("attributeref:/")) {
+		if (path.startsWith("tipi:/") || path.startsWith("property:/")
+				|| path.startsWith("propertyref:/")
+				|| path.startsWith("message:/")
+				|| path.startsWith("component:/")
+				|| path.startsWith("attribute:/")
+				|| path.startsWith("attributeref:/")) {
 			String p = path.substring(path.indexOf(":") + 2);
 			if (p.indexOf(":") > 0) {
 				return p.substring(0, p.indexOf(":"));
@@ -209,7 +213,8 @@ public class TipiPathParser {
 			first_bit = message_path;
 		}
 		if (first_bit.equals(".")) {
-			String last_bit = message_path.substring(message_path.indexOf(":") + 1);
+			String last_bit = message_path
+					.substring(message_path.indexOf(":") + 1);
 			return ((Navajo) myTipi.getValue(first_bit)).getMessage(last_bit);
 		} else {
 			return (Message) myTipi.getValue(first_bit);
@@ -296,7 +301,8 @@ public class TipiPathParser {
 			String rpath = path.substring(i + 2);
 			return myContext.getTipiResourceURL(rpath);
 		}
-		throw new IllegalArgumentException("Invalid type: " + path + " is not not a resource!");
+		throw new IllegalArgumentException("Invalid type: " + path
+				+ " is not not a resource!");
 	}
 
 	public boolean appliesTo(TipiComponent tc) {
@@ -315,7 +321,8 @@ public class TipiPathParser {
 		if (myType == COLOR_DEF) {
 			return parseColor(path.substring(path.indexOf(":") + 2));
 		} else {
-			throw new IllegalArgumentException("Invalid type: " + path + " is not not a color!");
+			throw new IllegalArgumentException("Invalid type: " + path
+					+ " is not not a color!");
 		}
 	}
 
@@ -323,7 +330,8 @@ public class TipiPathParser {
 		if (myType == BORDER_DEF) {
 			return parseBorder(path.substring(path.indexOf(":") + 2));
 		} else {
-			throw new IllegalArgumentException("Invalid type: " + path + " is not not a border!");
+			throw new IllegalArgumentException("Invalid type: " + path
+					+ " is not not a border!");
 		}
 	}
 
@@ -331,7 +339,8 @@ public class TipiPathParser {
 		if (myType == FONT_DEF) {
 			return parseFont(path.substring(path.indexOf(":") + 2));
 		} else {
-			throw new IllegalArgumentException("Invalid type: " + path + " is not not a font!");
+			throw new IllegalArgumentException("Invalid type: " + path
+					+ " is not not a font!");
 		}
 	}
 
@@ -342,10 +351,12 @@ public class TipiPathParser {
 				String urlPath = path.substring(i + 2);
 				return new URL(urlPath);
 			} else {
-				throw new IllegalArgumentException("Invalid type: " + path + " is not not an url!");
+				throw new IllegalArgumentException("Invalid type: " + path
+						+ " is not not an url!");
 			}
 		} catch (MalformedURLException ex) {
-			throw new IllegalArgumentException("supplied url not valid for: " + path);
+			throw new IllegalArgumentException("supplied url not valid for: "
+					+ path);
 		}
 	}
 
@@ -371,7 +382,8 @@ public class TipiPathParser {
 				int left = Integer.parseInt(st.nextToken());
 				int bottom = Integer.parseInt(st.nextToken());
 				int right = Integer.parseInt(st.nextToken());
-				return BorderFactory.createEmptyBorder(top, left, bottom, right);
+				return BorderFactory
+						.createEmptyBorder(top, left, bottom, right);
 			} catch (Exception ex) {
 				System.err.println("Error while parsing border");
 			}

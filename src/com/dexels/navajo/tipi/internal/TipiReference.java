@@ -1,6 +1,5 @@
 package com.dexels.navajo.tipi.internal;
 
-
 /**
  * <p>
  * Title:
@@ -34,6 +33,7 @@ public interface TipiReference {
 	 *            The owner of this reference.
 	 */
 	public void setValue(Object expression);
-	public  Object getValue();
+
+	public Object getValue();
 
 }

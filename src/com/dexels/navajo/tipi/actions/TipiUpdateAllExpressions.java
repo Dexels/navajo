@@ -31,7 +31,9 @@ public class TipiUpdateAllExpressions extends TipiAction {
 	public TipiUpdateAllExpressions() {
 	}
 
-	protected void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiBreakException, com.dexels.navajo.tipi.TipiException {
+	protected void execute(TipiEvent event)
+			throws com.dexels.navajo.tipi.TipiBreakException,
+			com.dexels.navajo.tipi.TipiException {
 		Operand to = getEvaluatedParameter("path", event);
 		if (to == null) {
 			throw new TipiException("Null evaluation in TipiUpdateExpressions");

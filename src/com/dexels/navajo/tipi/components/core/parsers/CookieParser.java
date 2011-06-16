@@ -44,7 +44,7 @@ public class CookieParser extends TipiTypeParser {
 		// System.err.println("No containerContext!");
 		// }
 		// Cookie[] cc = containerContext.getCookies();
-		//     
+		//
 		// for (int i = 0; i < cc.length; i++) {
 		// if(cc[i].getName().equals(s)) {
 		// return cc[i].getValue();

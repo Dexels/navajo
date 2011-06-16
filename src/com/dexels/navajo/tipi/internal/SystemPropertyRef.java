@@ -1,6 +1,5 @@
 package com.dexels.navajo.tipi.internal;
 
-
 /**
  * <p>
  * Title:

@@ -1,6 +1,5 @@
 package com.dexels.navajo.tipi.components.core;
 
-
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiException;
@@ -26,32 +25,30 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 public class TipiHeadlessButton extends TipiComponentImpl {
 
 	private boolean enabled = true;
-	
+
 	@Override
 	protected Object getComponentValue(String name) {
-		if(name.equals("enabled")) {
+		if (name.equals("enabled")) {
 			return enabled;
 		}
 		return super.getComponentValue(name);
 	}
 
-
 	@Override
 	protected void setComponentValue(String name, Object object) {
-		if(name.equals("enabled")) {
+		if (name.equals("enabled")) {
 			enabled = (Boolean) object;
 			return;
 		}
 		super.setComponentValue(name, object);
 	}
 
-
 	public Object createContainer() {
 		return null;
 	}
 
-
-	protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) {
+	protected void performComponentMethod(String name,
+			TipiComponentMethod compMeth, TipiEvent event) {
 		if ("fireAction".equals(name)) {
 			for (int i = 0; i < getEventList().size(); i++) {
 				final int j = i;
@@ -70,9 +67,9 @@ public class TipiHeadlessButton extends TipiComponentImpl {
 		}
 	}
 
-	private void doFireAction(TipiEvent event) throws TipiBreakException, TipiException {
-			performTipiEvent("onActionPerformed", null, false);
-			
-	
+	private void doFireAction(TipiEvent event) throws TipiBreakException,
+			TipiException {
+		performTipiEvent("onActionPerformed", null, false);
+
 	}
 }

@@ -9,10 +9,11 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
 
-public class TmlWriteConnector extends TipiBaseConnector  {
+public class TmlWriteConnector extends TipiBaseConnector {
 
 	// assume a load:
-	public void doTransaction(Navajo input, String service) throws TipiBreakException, TipiException {
+	public void doTransaction(Navajo input, String service)
+			throws TipiBreakException, TipiException {
 		throw new TipiException("Please supply a service and a destination.");
 	}
 
@@ -24,12 +25,15 @@ public class TmlWriteConnector extends TipiBaseConnector  {
 		return "tmlwrite";
 	}
 
-	public void doTransaction(Navajo n, String service, String destination) throws TipiBreakException, TipiException {
+	public void doTransaction(Navajo n, String service, String destination)
+			throws TipiBreakException, TipiException {
 		if (n == null || destination == null) {
-			throw new TipiException("Please specify a destination and a navajo for saving!");
+			throw new TipiException(
+					"Please specify a destination and a navajo for saving!");
 		}
 		try {
-			OutputStream os = myContext.getGenericResourceLoader().writeResource(destination);
+			OutputStream os = myContext.getGenericResourceLoader()
+					.writeResource(destination);
 
 			try {
 				n.write(os);

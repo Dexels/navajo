@@ -49,7 +49,8 @@ public class TipiShadowFilterImpl extends TipiBaseConnector {
 			System.err.println("Adding filter: " + object);
 			propertyFilters.clear();
 			try {
-				propertyFilters.add(new PropertyFilter("*", (String) object, "string", "contains"));
+				propertyFilters.add(new PropertyFilter("*", (String) object,
+						"string", "contains"));
 				// reloadNavajo();
 			} catch (NavajoException e) {
 				e.printStackTrace();
@@ -62,7 +63,8 @@ public class TipiShadowFilterImpl extends TipiBaseConnector {
 		return super.getComponentValue(name);
 	}
 
-	public void doTransaction(Navajo n, String service, String destination) throws TipiBreakException, TipiException {
+	public void doTransaction(Navajo n, String service, String destination)
+			throws TipiBreakException, TipiException {
 		// super.loadData(n, method);
 		Navajo result = n.copy();
 		Message currentSet = result.getMessage(messagePath);
@@ -77,7 +79,8 @@ public class TipiShadowFilterImpl extends TipiBaseConnector {
 						toBeRemoved.add(c);
 					}
 				}
-				System.err.println("Scan took: " + (System.currentTimeMillis() - s));
+				System.err.println("Scan took: "
+						+ (System.currentTimeMillis() - s));
 			}
 		} catch (NavajoException e) {
 			e.printStackTrace();

@@ -15,7 +15,6 @@ import com.dexels.navajo.parser.TMLExpressionException;
  */
 public class GetNavajoName extends FunctionInterface {
 
-
 	public String remarks() {
 		return "Returns the name of the navajo object.";
 	}
@@ -37,19 +36,21 @@ public class GetNavajoName extends FunctionInterface {
 	public Object evaluate() throws TMLExpressionException {
 		Object pp = getOperand(0);
 		if (pp == null) {
-			throw new TMLExpressionException(this, "Invalid operand: null context ");
+			throw new TMLExpressionException(this,
+					"Invalid operand: null context ");
 		}
 		if (!(pp instanceof Navajo)) {
-			throw new TMLExpressionException(this, "Invalid operand: " + pp.getClass().getName());
+			throw new TMLExpressionException(this, "Invalid operand: "
+					+ pp.getClass().getName());
 		}
-	
+
 		Navajo tc = (Navajo) pp;
 		Header h = tc.getHeader();
-		if(h==null) {
+		if (h == null) {
 			return getFallBack(tc);
 		}
-		String name =  h.getRPCName();
-		if(name==null) {
+		String name = h.getRPCName();
+		if (name == null) {
 			return getFallBack(tc);
 		}
 		return name;

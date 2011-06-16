@@ -29,14 +29,13 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  */
 public class TipiActionBlock extends TipiAbstractExecutable {
 	private boolean multithread = false;
-	
+
 	public TipiActionBlock(TipiContext tc) {
 		super(tc);
 	}
 
-
-
-	public void performAction(TipiEvent te, TipiExecutable parent, int index) throws TipiBreakException, TipiException {
+	public void performAction(TipiEvent te, TipiExecutable parent, int index)
+			throws TipiBreakException, TipiException {
 		setEvent(te);
 		boolean evaluated;
 		evaluated = checkCondition(te);
@@ -48,12 +47,15 @@ public class TipiActionBlock extends TipiAbstractExecutable {
 			if (multithread) {
 				for (int i = 0; i < getExecutables().size(); i++) {
 					TipiExecutable current = getExecutables().get(i);
-					getContext().debugLog("thread", " multithread . Performing now");
-					System.err.println("In multithread block enqueueing: " + current.toString());
+					getContext().debugLog("thread",
+							" multithread . Performing now");
+					System.err.println("In multithread block enqueueing: "
+							+ current.toString());
 					getContext().enqueueExecutable(current);
 				}
 			} else {
-				getContext().doActions(te, getComponent(), this, getExecutables());
+				getContext().doActions(te, getComponent(), this,
+						getExecutables());
 			}
 			// not sure if this is wise
 			setEvent(null);
@@ -68,11 +70,11 @@ public class TipiActionBlock extends TipiAbstractExecutable {
 		}
 	}
 
-
-
-	public void load(XMLElement elm, TipiComponent parent, TipiExecutable parentExe) {
+	public void load(XMLElement elm, TipiComponent parent,
+			TipiExecutable parentExe) {
 		setComponent(parent);
-		for (Iterator<String> iterator = elm.enumerateAttributeNames(); iterator.hasNext();) {
+		for (Iterator<String> iterator = elm.enumerateAttributeNames(); iterator
+				.hasNext();) {
 			String n = iterator.next();
 			if (!n.equals("expression") && !n.equals("condition")) {
 				setBlockParam(n, elm.getStringAttribute(n));
@@ -84,7 +86,7 @@ public class TipiActionBlock extends TipiAbstractExecutable {
 		if (elm.getName().equals("block")) {
 			setExpression((String) elm.getAttribute("expression"));
 			String condition = (String) elm.getAttribute("condition");
-			if(condition!=null) {
+			if (condition != null) {
 				setExpression(condition);
 			}
 			String multi = elm.getStringAttribute("multithread");
@@ -92,7 +94,8 @@ public class TipiActionBlock extends TipiAbstractExecutable {
 				System.err.println("Load multithread block!");
 				multithread = true;
 			}
-			setStackElement(new TipiStackElement("if: (" + getExpression() + ")", elm, parentExe.getStackElement()));
+			setStackElement(new TipiStackElement("if: (" + getExpression()
+					+ ")", elm, parentExe.getStackElement()));
 			parseActions(elm.getChildren());
 		} else {
 			System.err.println("WTF?! WHAT IS THIS ELEMENT?!");
@@ -103,7 +106,9 @@ public class TipiActionBlock extends TipiAbstractExecutable {
 		try {
 			for (XMLElement current : temp) {
 				if (current.getName().equals("block")) {
-					TipiActionBlock con = getContext().instantiateTipiActionBlock(current, getComponent(), this);
+					TipiActionBlock con = getContext()
+							.instantiateTipiActionBlock(current,
+									getComponent(), this);
 
 					appendTipiExecutable(con);
 				} else {
@@ -114,7 +119,5 @@ public class TipiActionBlock extends TipiAbstractExecutable {
 			e.printStackTrace();
 		}
 	}
-
-
 
 }

@@ -25,14 +25,18 @@ import com.dexels.navajo.tipi.internal.TipiReference;
  */
 public final class TipiSet extends TipiAction {
 
-	public final void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+	public final void execute(TipiEvent event)
+			throws com.dexels.navajo.tipi.TipiException,
+			com.dexels.navajo.tipi.TipiBreakException {
 		String path = getParameter("element").getValue();
 
 		Object element = getEvaluatedParameterValue("element", event);
 
 		Object value = getEvaluatedParameterValue("value", event);
 		if (element == null) {
-			throw new TipiException("Error in setValue: to evaluation failed. Expression: " + path + " (from: " + value + ")");
+			throw new TipiException(
+					"Error in setValue: to evaluation failed. Expression: "
+							+ path + " (from: " + value + ")");
 		}
 		if (value != null || hasParameter("value")) {
 			if (element instanceof Property) {
@@ -42,45 +46,59 @@ public final class TipiSet extends TipiAction {
 				TipiReference p = (TipiReference) element;
 				p.setValue(value);
 			} else {
-				throw new TipiException("Error in setValue: illegal 'to' parameter. Expression: " + path + " (from: " + value + ")");
+				throw new TipiException(
+						"Error in setValue: illegal 'to' parameter. Expression: "
+								+ path + " (from: " + value + ")");
 			}
 
 		}
 		if (hasParameter("direction")) {
-			String direction = (String) getEvaluatedParameterValue("direction", event);
+			String direction = (String) getEvaluatedParameterValue("direction",
+					event);
 			if (element instanceof Property) {
 				Property p = (Property) element;
 				p.setDirection(direction);
 			} else {
-				throw new TipiException("Error in set: Can't change direction of attributeref:" + path);
+				throw new TipiException(
+						"Error in set: Can't change direction of attributeref:"
+								+ path);
 			}
 		}
 		if (hasParameter("description")) {
-			String description = (String) getEvaluatedParameterValue("description", event);
+			String description = (String) getEvaluatedParameterValue(
+					"description", event);
 			if (element instanceof Property) {
 				Property p = (Property) element;
 				p.setDescription(description);
 			} else {
-				throw new TipiException("Error in set: Can't change description of attributeref:" + path);
+				throw new TipiException(
+						"Error in set: Can't change description of attributeref:"
+								+ path);
 			}
 		}
 		if (hasParameter("propertyType")) {
-			String type = (String) getEvaluatedParameterValue("propertyType", event);
+			String type = (String) getEvaluatedParameterValue("propertyType",
+					event);
 			if (element instanceof Property) {
 				Property p = (Property) element;
 				p.setType(type);
 			} else {
-				throw new TipiException("Error in set: Can't change type of attributeref:" + path);
+				throw new TipiException(
+						"Error in set: Can't change type of attributeref:"
+								+ path);
 			}
 		}
-		
+
 		if (hasParameter("subType")) {
-			String type = (String) getEvaluatedParameterValue("propertyType", event);
+			String type = (String) getEvaluatedParameterValue("propertyType",
+					event);
 			if (element instanceof Property) {
 				Property p = (Property) element;
 				p.setSubType(type);
 			} else {
-				throw new TipiException("Error in set: Can't subType type of attributeref:" + path);
+				throw new TipiException(
+						"Error in set: Can't subType type of attributeref:"
+								+ path);
 			}
 		}
 

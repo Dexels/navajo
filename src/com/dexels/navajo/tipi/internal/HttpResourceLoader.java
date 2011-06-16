@@ -14,8 +14,9 @@ public class HttpResourceLoader extends ClassPathResourceLoader {
 	private final URL baseURL;
 
 	public HttpResourceLoader(String baseLocation) throws MalformedURLException {
-		if(!baseLocation.endsWith("/")) {
-			System.err.println("Warning, no trailing slash baseLocation: "+baseLocation);
+		if (!baseLocation.endsWith("/")) {
+			System.err.println("Warning, no trailing slash baseLocation: "
+					+ baseLocation);
 		}
 
 		this.baseURL = new URL(baseLocation);
@@ -23,7 +24,7 @@ public class HttpResourceLoader extends ClassPathResourceLoader {
 
 	public URL getResourceURL(String location) throws MalformedURLException {
 		URL u = new URL(baseURL, location);
-//		System.err.println("Getting resource!");
+		// System.err.println("Getting resource!");
 		return u;
 	}
 
@@ -35,34 +36,35 @@ public class HttpResourceLoader extends ClassPathResourceLoader {
 		try {
 			is = uc.getInputStream();
 		} catch (IOException e) {
-			 e.printStackTrace();
+			e.printStackTrace();
 		}
 		if (is != null) {
-			if("gzip".equals(uc.getContentEncoding())) {
+			if ("gzip".equals(uc.getContentEncoding())) {
 				return new GZIPInputStream(is);
 			}
 
-		return is;
+			return is;
 		}
-		InputStream classLoaderInputStream =  super.getResourceStream(location);
-//		if(classLoaderInputStream==null) {
-//			System.err.println("HttpResourceLoader failed. Looking in classpath: " + location + " base: " + baseURL+" resolvedurl: "+u);
-//		}
-	
+		InputStream classLoaderInputStream = super.getResourceStream(location);
+		// if(classLoaderInputStream==null) {
+		// System.err.println("HttpResourceLoader failed. Looking in classpath: "
+		// + location + " base: " + baseURL+" resolvedurl: "+u);
+		// }
+
 		return classLoaderInputStream;
 	}
 
 	public List<File> getAllResources() throws IOException {
-		throw new UnsupportedOperationException("The http resource loader is unable to enumerate resources");
+		throw new UnsupportedOperationException(
+				"The http resource loader is unable to enumerate resources");
 	}
 
-	
 	public static void main(String[] args) throws MalformedURLException {
 		URL u = new URL("http://www.aap.nl");
-		URL b = new URL(u,"noot/");
-		System.err.println("U: "+u);
-		System.err.println("B: "+b);
-		URL c = new URL(b,"init.xml");
-		System.err.println("C: "+c);
+		URL b = new URL(u, "noot/");
+		System.err.println("U: " + u);
+		System.err.println("B: " + b);
+		URL c = new URL(b, "init.xml");
+		System.err.println("C: " + c);
 	}
 }

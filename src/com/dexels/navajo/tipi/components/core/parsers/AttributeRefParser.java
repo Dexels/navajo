@@ -31,14 +31,16 @@ public class AttributeRefParser extends BaseTipiParser {
 		String attr = path.substring(path.indexOf(":") + 1);
 		TipiComponent tc = getTipiComponent(source, componentPath);
 		if (tc == null) {
-			myContext.showInternalError("Can not parse attributeref: " + path + " component not found.");
+			myContext.showInternalError("Can not parse attributeref: " + path
+					+ " component not found.");
 			return null;
 		}
 		AttributeRef attributeRef = tc.getAttributeRef(attr);
 		if (attributeRef != null) {
 			return attributeRef;
 		}
-		myContext.showInternalError("Can not parse attributeref: " + path + " attribute not found.");
+		myContext.showInternalError("Can not parse attributeref: " + path
+				+ " attribute not found.");
 		return null;
 	}
 

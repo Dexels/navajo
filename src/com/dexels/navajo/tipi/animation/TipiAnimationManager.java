@@ -6,7 +6,7 @@ public class TipiAnimationManager {
 		if (start == null || end == null) {
 			return null;
 		}
-		
+
 		if (start instanceof Integer && end instanceof Integer) {
 			return Integer.class;
 		}
@@ -17,7 +17,7 @@ public class TipiAnimationManager {
 			return Long.class;
 		}
 		if (!start.getClass().equals(end.getClass())) {
-			if(start instanceof Number && end instanceof Number) {
+			if (start instanceof Number && end instanceof Number) {
 				return Integer.class;
 			}
 			return null;

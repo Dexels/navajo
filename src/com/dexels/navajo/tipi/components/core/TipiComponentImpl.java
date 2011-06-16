@@ -62,7 +62,8 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  * @author not attributable
  * @version 1.0
  */
-public abstract class TipiComponentImpl implements TipiEventListener, TipiComponent, TipiLink {
+public abstract class TipiComponentImpl implements TipiEventListener,
+		TipiComponent, TipiLink {
 	public abstract Object createContainer();
 
 	private Object myContainer = null;
@@ -73,20 +74,20 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 	protected String myId;
 	protected TipiComponent myParent = null;
 	protected boolean isHomeComponent = false;
-	
+
 	// Maps a propertyPath onto a set of attributes
-	private Map<String,Set<PropertyLinkRequest>> linkMap = new HashMap<String, Set<PropertyLinkRequest>>();
+	private Map<String, Set<PropertyLinkRequest>> linkMap = new HashMap<String, Set<PropertyLinkRequest>>();
 	private Set<String> allLinks = new HashSet<String>();
-	
+
 	private final Map<String, TipiComponent> tipiComponentMap = new HashMap<String, TipiComponent>();
 
 	protected final List<PropertyComponent> properties = new ArrayList<PropertyComponent>();
 	protected final List<MessageComponent> messages = new ArrayList<MessageComponent>();
-	
-	
+
 	protected final List<TipiEvent> myEventList = new ArrayList<TipiEvent>();
 	private final List<TipiComponent> tipiComponentList = new ArrayList<TipiComponent>();
-//	private final Map<String, String> detectedExpressions = new HashMap<String, String>();
+	// private final Map<String, String> detectedExpressions = new
+	// HashMap<String, String>();
 	private final List<String> componentEvents = new ArrayList<String>();
 	private final Map<String, TipiValue> componentValues = new HashMap<String, TipiValue>();
 	private final Map<String, TipiComponentMethod> componentMethods = new HashMap<String, TipiComponentMethod>();
@@ -108,7 +109,7 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 	private String componentType;
 
 	private TipiExtension myParentExtension;
-	
+
 	public TipiExtension getParentExtension() {
 		return myParentExtension;
 	}
@@ -130,27 +131,30 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 	}
 
 	public void removeFromContainer(Object c) {
-		System.err.println("REMOVE FROM CONTAINER IGNORED: NOT IMPLEMENTED. CLASS: " + getClass());
+		System.err
+				.println("REMOVE FROM CONTAINER IGNORED: NOT IMPLEMENTED. CLASS: "
+						+ getClass());
 		// throw new UnsupportedOperationException("Can not remove from
 		// container of class: " + getClass());
 	}
-	
+
 	public boolean isServiceRoot() {
 		return false;
 	}
-	
+
 	public TipiDataComponent getServiceRoot() {
-		if(isServiceRoot()) {
-			return (TipiDataComponent)this;
+		if (isServiceRoot()) {
+			return (TipiDataComponent) this;
 		}
-		if(getTipiParent()==null) {
+		if (getTipiParent() == null) {
 			return null;
 		}
 		return getTipiParent().getServiceRoot();
 	}
-	
+
 	public void addToContainer(Object c, Object constraints) {
-		throw new UnsupportedOperationException("Can not add to container of class: " + getClass());
+		throw new UnsupportedOperationException(
+				"Can not add to container of class: " + getClass());
 	}
 
 	public Object getContainerLayout() {
@@ -167,10 +171,10 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 		// override to be useful
 	}
 
-
 	public TipiContext getContext() {
 		if (myContext == null) {
-			throw new RuntimeException("TipiComponent without context. This is not allowed");
+			throw new RuntimeException(
+					"TipiComponent without context. This is not allowed");
 		}
 		return myContext;
 	}
@@ -194,21 +198,21 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 		myContext = tc;
 	}
 
-//	public void setTransient(boolean b) {
-//		isTransient = b;
-//	}
-//
-//	public boolean isTransient() {
-//		return isTransient;
-//	}
+	// public void setTransient(boolean b) {
+	// isTransient = b;
+	// }
+	//
+	// public boolean isTransient() {
+	// return isTransient;
+	// }
 
 	public boolean isPropertyComponent() {
 		return isPropertyComponent;
 	}
 
-//	public boolean isValueSet(String name) {
-//		return detectedExpressions.containsKey(name);
-//	}
+	// public boolean isValueSet(String name) {
+	// return detectedExpressions.containsKey(name);
+	// }
 
 	// public void unSetValue(String name) {
 	// setValue(name, getTipiValue(name).getDefaultValue(), this, true, null);
@@ -228,38 +232,45 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 		setValue(name, value, this, false, null);
 	}
 
-	private final void setValue(String name, Object value, TipiComponent source, boolean defaultValue, TipiEvent event) {
+	private final void setValue(String name, Object value,
+			TipiComponent source, boolean defaultValue, TipiEvent event) {
 		setValue(name, "" + value, value, source, defaultValue, event);
 	}
 
-	private final void setValue(String name, String expression, Object value, TipiComponent source, boolean defaultValue, TipiEvent event) {
-		if(value instanceof PropertyLinkRequest) {
-			PropertyLinkRequest linkRequest = (PropertyLinkRequest)value;
+	private final void setValue(String name, String expression, Object value,
+			TipiComponent source, boolean defaultValue, TipiEvent event) {
+		if (value instanceof PropertyLinkRequest) {
+			PropertyLinkRequest linkRequest = (PropertyLinkRequest) value;
 			linkRequest.setAttributeName(name);
 			addLinkRequest(linkRequest);
 			return;
 		}
-		
+
 		Property tv = getAttributeProperty(name);
-		
+
 		if (tv == null) {
-			throw new UnsupportedOperationException("Setting value: " + name + " in: " + getClass() + " is not supported!");
+			throw new UnsupportedOperationException("Setting value: " + name
+					+ " in: " + getClass() + " is not supported!");
 		}
 		if ("out".equals(tv.getDirection())) {
-			throw new UnsupportedOperationException("Setting value: " + name + " in: " + getClass() + " is has out direction!");
+			throw new UnsupportedOperationException("Setting value: " + name
+					+ " in: " + getClass() + " is has out direction!");
 		}
 		String type = tv.getType();
 
 		if ((myContext.isValidType(type))) {
 			try {
-//				if (!defaultValue) {
-//					detectedExpressions.put(name, expression);
-//				}
+				// if (!defaultValue) {
+				// detectedExpressions.put(name, expression);
+				// }
 				if ("selection".equals(type)) {
 					Selection ss = tv.getSelection((String) value);
 					if (ss == null) {
-						throw new RuntimeException(this.getName() + ": Invalid selection value [" + value + "] for attribute " + name
-								+ ", valid values are: " + tv.getAllSelections());
+						throw new RuntimeException(this.getName()
+								+ ": Invalid selection value [" + value
+								+ "] for attribute " + name
+								+ ", valid values are: "
+								+ tv.getAllSelections());
 					} else {
 						setComponentValue(name, value);
 						tv.setAnyValue(value);
@@ -272,61 +283,64 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 				}
 				return;
 			} catch (Throwable e) {
-				myContext.showInternalError("Error in setter: " + name + " for component: " + getPath() + " proposed value: " + value
-						+ "\nFaillure: " + e.getMessage());
+				myContext.showInternalError("Error in setter: " + name
+						+ " for component: " + getPath() + " proposed value: "
+						+ value + "\nFaillure: " + e.getMessage());
 				e.printStackTrace();
 			}
 		} else {
 			setComponentValue(name, value);
-			System.err.println("Attribute type not specified in CLASSDEF: " + type);
+			System.err.println("Attribute type not specified in CLASSDEF: "
+					+ type);
 			System.err.println("Component name: " + getClass());
 			System.err.println("Attribute name: " + name);
 			System.err.println("Value: " + value);
-			throw new RuntimeException("Attribute type not specified in CLASSDEF: " + type);
+			throw new RuntimeException(
+					"Attribute type not specified in CLASSDEF: " + type);
 		}
 	}
 
-	
 	public Set<PropertyLinkRequest> getLinkAttributes(String propertyPath) {
 		return linkMap.get(propertyPath);
 	}
-	
-//	public Set<String> getLinkAttributes() {
-//		return allLinks;
-//	}
-	
+
+	// public Set<String> getLinkAttributes() {
+	// return allLinks;
+	// }
+
 	// TODO FIXME ETC: Store and release PropertyHandlers
-	
+
 	public void loadPropertiesFromNavajo(Navajo n) {
 		for (String currentPropertyPath : allLinks) {
 			Property p = n.getProperty(currentPropertyPath);
-			Set<PropertyLinkRequest> attributes = linkMap.get(currentPropertyPath);
-//			PropertyHandler ph = 
-			new PropertyHandler(this,p,attributes);
+			Set<PropertyLinkRequest> attributes = linkMap
+					.get(currentPropertyPath);
+			// PropertyHandler ph =
+			new PropertyHandler(this, p, attributes);
 		}
 	}
-	
+
 	public void loadPropertiesFromMessage(Message m) {
 		for (String currentPropertyPath : allLinks) {
 			Property p = m.getProperty(currentPropertyPath);
-			Set<PropertyLinkRequest> attributes = linkMap.get(currentPropertyPath);
-//			PropertyHandler ph = 
-			new PropertyHandler(this,p,attributes);
+			Set<PropertyLinkRequest> attributes = linkMap
+					.get(currentPropertyPath);
+			// PropertyHandler ph =
+			new PropertyHandler(this, p, attributes);
 		}
 	}
-	
-	
+
 	private void addLinkRequest(PropertyLinkRequest value) {
 		String propertyPath = value.getPropertyName();
-		Set<PropertyLinkRequest> registered  = linkMap.get(propertyPath);
-		if(registered==null) {
+		Set<PropertyLinkRequest> registered = linkMap.get(propertyPath);
+		if (registered == null) {
 			registered = new HashSet<PropertyLinkRequest>();
 			linkMap.put(propertyPath, registered);
 		}
 		registered.add(value);
 		allLinks.add(propertyPath);
 		TipiDataComponent td = getServiceRoot();
-		if(td!=null) {
+		if (td != null) {
 			td.registerPropertyChild(this);
 		}
 	}
@@ -335,26 +349,32 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 
 		TipiValue tv = componentValues.get(name);
 		if (tv == null) {
-			throw new UnsupportedOperationException("Getting value: " + name + " in: " + getClass() + " is not supported!");
+			throw new UnsupportedOperationException("Getting value: " + name
+					+ " in: " + getClass() + " is not supported!");
 		}
 		Object propval = getAttributeProperty(name).getTypedValue();
 		Object oo = getComponentValue(name);
 		if (oo == null) {
-//			if (propval != null) {
-//				System.err.println("Value mismatch detected in: " + getClass() + " attribute: " + name + " class: " + propval.getClass());
-//				System.err.println("Component says null, property says: " + propval);
-//			} else {
-//				return null;
-//			}
+			// if (propval != null) {
+			// System.err.println("Value mismatch detected in: " + getClass() +
+			// " attribute: " + name + " class: " + propval.getClass());
+			// System.err.println("Component says null, property says: " +
+			// propval);
+			// } else {
+			// return null;
+			// }
 		} else {
 			if (!oo.equals(propval)) {
-//				System.err.println("Value mismatch detected in: " + getClass() + " attribute: " + name);
-//				System.err.println("Component says " + oo + ", property says: " + propval);
+				// System.err.println("Value mismatch detected in: " +
+				// getClass() + " attribute: " + name);
+				// System.err.println("Component says " + oo +
+				// ", property says: " + propval);
 				getAttributeProperty(name).setAnyValue(oo);
 			}
 		}
 		/**
-		 * I should do an extra typecheck here, to check the supplied type against the TipiValue.
+		 * I should do an extra typecheck here, to check the supplied type
+		 * against the TipiValue.
 		 */
 		return getAttributeProperty(name).getTypedValue();
 	}
@@ -366,49 +386,56 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 	private Property createAttributeProperty(TipiValue tv) {
 		return tv.createProperty();
 	}
-//
-//	public String getStringValue(String name) {
-//		TipiValue tv = componentValues.get(name);
-//		if (tv == null) {
-//			throw new UnsupportedOperationException("Getting value: " + name + " in: " + getClass() + " is not supported!");
-//		}
-//		Object obj = getComponentValue(name);
-//		if (obj != null) {
-//			String result = myContext.toString(this, tv.getType(), obj);
-//			if (result != null) {
-//				return result;
-//			}
-//
-//			return obj.toString();
-//		}
-//		return null;
-//	}
 
-//	public String getExpression(String name) {
-//		return detectedExpressions.get(name);
-//	}
+	//
+	// public String getStringValue(String name) {
+	// TipiValue tv = componentValues.get(name);
+	// if (tv == null) {
+	// throw new UnsupportedOperationException("Getting value: " + name +
+	// " in: " + getClass() + " is not supported!");
+	// }
+	// Object obj = getComponentValue(name);
+	// if (obj != null) {
+	// String result = myContext.toString(this, tv.getType(), obj);
+	// if (result != null) {
+	// return result;
+	// }
+	//
+	// return obj.toString();
+	// }
+	// return null;
+	// }
 
-//	public TipiValue getTipiValue(String name) {
-//		return componentValues.get(name);
-//	}
+	// public String getExpression(String name) {
+	// return detectedExpressions.get(name);
+	// }
+
+	// public TipiValue getTipiValue(String name) {
+	// return componentValues.get(name);
+	// }
 
 	/**
 	 * Loads an event definition from the component definition
 	 */
-	public void loadEventsDefinition(TipiContext context, XMLElement definition, XMLElement classDef) throws TipiException {
+	public void loadEventsDefinition(TipiContext context,
+			XMLElement definition, XMLElement classDef) throws TipiException {
 		List<XMLElement> defChildren = definition.getChildren();
 		for (int i = 0; i < defChildren.size(); i++) {
 			XMLElement xx = defChildren.get(i);
 			// String[] s = getCustomChildTags();
-			if (!xx.getName().equals("layout") && !xx.getName().equals("tipi-instance") && !xx.getName().equals("component-instance")
-					&& !xx.getName().equals("component") && !xx.getName().startsWith("c.")) {
+			if (!xx.getName().equals("layout")
+					&& !xx.getName().equals("tipi-instance")
+					&& !xx.getName().equals("component-instance")
+					&& !xx.getName().equals("component")
+					&& !xx.getName().startsWith("c.")) {
 				String type = xx.getStringAttribute("type");
 				if (type == null) {
 					type = xx.getName();
 				}
 				if (componentEvents.contains(type)) {
 					TipiEvent event = new TipiEvent();
-					XMLElement eventDef = getEventDefFromClassDef(classDef, type);
+					XMLElement eventDef = getEventDefFromClassDef(classDef,
+							type);
 					event.init(eventDef);
 					event.load(this, xx, context);
 					addTipiEvent(event);
@@ -425,7 +452,8 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 				List<XMLElement> eventChildren = child.getChildren();
 				for (int j = 0; j < eventChildren.size(); j++) {
 					XMLElement eventChild = eventChildren.get(j);
-					String eventChildName = eventChild.getStringAttribute("name");
+					String eventChildName = eventChild
+							.getStringAttribute("name");
 					if (eventChildName == null) {
 						eventChildName = eventChild.getName();
 					}
@@ -439,7 +467,8 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 		return null;
 	}
 
-	public void loadMethodDefinitions(TipiContext context, XMLElement definition, XMLElement classDef) throws TipiException {
+	public void loadMethodDefinitions(TipiContext context,
+			XMLElement definition, XMLElement classDef) throws TipiException {
 		List<XMLElement> defChildren = definition.getChildren();
 		for (int i = 0; i < defChildren.size(); i++) {
 			XMLElement xx = defChildren.get(i);
@@ -451,7 +480,8 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 		}
 	}
 
-	public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
+	public void load(XMLElement definition, XMLElement instance,
+			TipiContext context) throws TipiException {
 		setContext(context);
 		String id = instance.getStringAttribute("id");
 		String name = instance.getStringAttribute("name");
@@ -472,28 +502,35 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 			setConstraints(constraint);
 		}
 		List<XMLElement> children = null;
-		if (instance.getAttribute("class") != null || instance.getAttribute("type") != null) {
+		if (instance.getAttribute("class") != null
+				|| instance.getAttribute("type") != null) {
 			children = instance.getChildren();
 		} else {
 			children = definition.getChildren();
 		}
 		for (int i = 0; i < children.size(); i++) {
 			XMLElement child = children.get(i);
-			if (child.getName().equals("layout") || child.getName().startsWith("l.")) {
+			if (child.getName().equals("layout")
+					|| child.getName().startsWith("l.")) {
 				instantiateWithLayout(child);
 			} else {
-				if (child.getName().equals("tipi-instance") || child.getName().equals("component-instance")
-						|| child.getName().equals("component") || child.getName().startsWith("c.")) {
-					addComponentInstance(myContext, child, child.getAttribute("constraint"));
+				if (child.getName().equals("tipi-instance")
+						|| child.getName().equals("component-instance")
+						|| child.getName().equals("component")
+						|| child.getName().startsWith("c.")) {
+					addComponentInstance(myContext, child,
+							child.getAttribute("constraint"));
 				}
 			}
 		}
 
 	}
+
 	private final void instantiateWithLayout(XMLElement x) throws TipiException {
 		TipiLayout tl = myContext.instantiateLayout(x, this);
 		if (tl == null) {
-			throw new RuntimeException("Trying to instantiate with layout, but the layout == null");
+			throw new RuntimeException(
+					"Trying to instantiate with layout, but the layout == null");
 		}
 		tl.setComponent(this);
 		setLayout(tl);
@@ -505,39 +542,43 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 		tl.loadLayout(this);
 		tl.commitLayout();
 	}
+
 	public void setId(String id) {
 		// System.err.println("CHANGING ID. FROM: "+myId+" to: "+id+".........
 		// VERIFYING PARENT. ");
-//		if (getTipiParent() != null) {
-//			getTipiParent().updateId(this, myId, id);
-//		}
+		// if (getTipiParent() != null) {
+		// getTipiParent().updateId(this, myId, id);
+		// }
 		myId = id;
 	}
 
-//	public void updateId(TipiComponent tc, String oldId, String id) {
-//		if (!tipiComponentMap.containsValue(tc)) {
-//			System.err.println("!!!!!!   Can not update id: Component not found.");
-//		}
-//		if (!tipiComponentList.contains(tc)) {
-//			System.err.println("!!!!!!   Can not update id: Component not found in list.");
-//		}
-//		if (!tipiComponentMap.containsKey(oldId)) {
-//			System.err.println("!!!!!!   Can not update id: Component not found in map.");
-//		}
-//		tipiComponentMap.remove(oldId);
-//		tipiComponentMap.put(id, tc);
-//
-//	}
+	// public void updateId(TipiComponent tc, String oldId, String id) {
+	// if (!tipiComponentMap.containsValue(tc)) {
+	// System.err.println("!!!!!!   Can not update id: Component not found.");
+	// }
+	// if (!tipiComponentList.contains(tc)) {
+	// System.err.println("!!!!!!   Can not update id: Component not found in list.");
+	// }
+	// if (!tipiComponentMap.containsKey(oldId)) {
+	// System.err.println("!!!!!!   Can not update id: Component not found in map.");
+	// }
+	// tipiComponentMap.remove(oldId);
+	// tipiComponentMap.put(id, tc);
+	//
+	// }
 
 	private final void removeChildComponent(TipiComponent tc) {
 		if (!tipiComponentMap.containsValue(tc)) {
-			System.err.println("!!!!!!   Can not removeChildComponent: Component not found.");
+			System.err
+					.println("!!!!!!   Can not removeChildComponent: Component not found.");
 		}
 		if (!tipiComponentList.contains(tc)) {
-			System.err.println("!!!!!!   Can not removeChildComponent : Component not found in list.");
+			System.err
+					.println("!!!!!!   Can not removeChildComponent : Component not found in list.");
 		}
 		if (!tipiComponentMap.containsKey(tc.getId())) {
-			System.err.println("!!!!!!   Can not removeChildComponent: Component not found in map.");
+			System.err
+					.println("!!!!!!   Can not removeChildComponent: Component not found in map.");
 		}
 		tipiComponentList.remove(tc);
 		tipiComponentMap.remove(tc.getId());
@@ -545,11 +586,13 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 
 	private final void addChildComponent(TipiComponent tc) {
 		if (tipiComponentList.contains(tc)) {
-			System.err.println("!!!!!!   Can not add child with id: " + tc.getId() + " component already in list.");
+			System.err.println("!!!!!!   Can not add child with id: "
+					+ tc.getId() + " component already in list.");
 			tipiComponentList.remove(tc);
 		}
 		if (tipiComponentMap.containsValue(tc)) {
-			System.err.println("!!!!!!   Can not add child with id:" + tc.getId() + " component already in map.");
+			System.err.println("!!!!!!   Can not add child with id:"
+					+ tc.getId() + " component already in map.");
 			tipiComponentMap.remove(tc.getId());
 		}
 		tipiComponentMap.put(tc.getId(), tc);
@@ -569,11 +612,14 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 		return isToplevel;
 	}
 
-	public void instantiateComponent(XMLElement instance, XMLElement classdef) throws TipiException {
+	public void instantiateComponent(XMLElement instance, XMLElement classdef)
+			throws TipiException {
 		String id = (String) instance.getAttribute("id");
 		String defname = (String) instance.getAttribute("name");
-		isVisibleElement = classdef.getStringAttribute("addtocontainer", "false").equals("true");
-		isToplevel = classdef.getStringAttribute("toplevel", "false").equals("true");
+		isVisibleElement = classdef.getStringAttribute("addtocontainer",
+				"false").equals("true");
+		isToplevel = classdef.getStringAttribute("toplevel", "false").equals(
+				"true");
 
 		if (id == null || "".equals(id)) {
 			// pretty deprecated. I don't like it.
@@ -624,7 +670,8 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 	 * @param instance
 	 * @param classdef
 	 */
-	public void initBeforeBuildingChildren(XMLElement instance, XMLElement classdef, XMLElement definition) {
+	public void initBeforeBuildingChildren(XMLElement instance,
+			XMLElement classdef, XMLElement definition) {
 	}
 
 	public void loadStartValues(XMLElement element, TipiEvent event) {
@@ -685,7 +732,8 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 		// no action
 	}
 
-	public void bind(final Object c, final String propertyName, final String containerPropertyName) throws TipiException {
+	public void bind(final Object c, final String propertyName,
+			final String containerPropertyName) throws TipiException {
 		final Property p = getAttributeProperty(propertyName);
 		PropertyChangeListener pcl = new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent e) {
@@ -698,12 +746,14 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 		myContainerListeners.add(pcl);
 		Method m;
 		try {
-			m = c.getClass().getMethod("addPropertyChangeListener", new Class[] { PropertyChangeListener.class });
+			m = c.getClass().getMethod("addPropertyChangeListener",
+					new Class[] { PropertyChangeListener.class });
 			m.invoke(c, new Object[] { pcl });
 		} catch (NoSuchMethodException e1) {
 			e1.printStackTrace();
 		} catch (Exception e) {
-			throw new TipiException("Trouble binding: " + this + " conainerProperty: " + containerPropertyName, e);
+			throw new TipiException("Trouble binding: " + this
+					+ " conainerProperty: " + containerPropertyName, e);
 		}
 
 		PropertyChangeListener propListener = new PropertyChangeListener() {
@@ -721,7 +771,8 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 
 			public String toString() {
 				try {
-					return "TipiComponentBoundProp: " + p.getFullPropertyName() + ":" + p.hashCode();
+					return "TipiComponentBoundProp: " + p.getFullPropertyName()
+							+ ":" + p.hashCode();
 				} catch (NavajoException e) {
 					e.printStackTrace();
 				}
@@ -732,19 +783,23 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 	}
 
 	private String getSetterName(String propertyName) {
-		return "set" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1, propertyName.length());
+		return "set" + propertyName.substring(0, 1).toUpperCase()
+				+ propertyName.substring(1, propertyName.length());
 	}
 
-	protected void doCallSetter(Object component, String propertyName, Object param) {
+	protected void doCallSetter(Object component, String propertyName,
+			Object param) {
 		try {
 			callSetter(component, propertyName, param);
 		} catch (Throwable e) {
 			e.printStackTrace();
-			myContext.showInternalError("Error setting value: "+propertyName+" to: "+param, e);
+			myContext.showInternalError("Error setting value: " + propertyName
+					+ " to: " + param, e);
 		}
 	}
 
-	private void callSetter(Object component, String propertyName, Object param) throws SecurityException, IllegalArgumentException,
+	private void callSetter(Object component, String propertyName, Object param)
+			throws SecurityException, IllegalArgumentException,
 			IllegalAccessException, InvocationTargetException {
 		String b = getSetterName(propertyName);
 		Class<?> paramType = param.getClass();
@@ -789,18 +844,20 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 	}
 
 	/**
-	 * Loads the attributes of an instance into a component.
-	 * You may need to override it if your instance 
+	 * Loads the attributes of an instance into a component. You may need to
+	 * override it if your instance
+	 * 
 	 * @param values
 	 * @param event
 	 * @throws TipiException
 	 */
-	protected void loadValues(XMLElement values, TipiEvent event) throws TipiException {
+	protected void loadValues(XMLElement values, TipiEvent event)
+			throws TipiException {
 		List<XMLElement> children = values.getChildren();
 		for (int i = 0; i < children.size(); i++) {
 			XMLElement xx = children.get(i);
-//			System.err.println("Values: "+values);
-//			assert "param".equals(xx.getName());
+			// System.err.println("Values: "+values);
+			// assert "param".equals(xx.getName());
 
 			String valueName = xx.getStringAttribute("name");
 			TipiValue tv = new TipiValue(this);
@@ -811,7 +868,9 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 			getStateMessage().addProperty(attrProp);
 			if (tv.getValue() != null && !"".equals(tv.getValue())) {
 				try {
-					setValue(tv.getName(), evaluate(tv.getValue(), this, event).value, this, true, event);
+					setValue(tv.getName(),
+							evaluate(tv.getValue(), this, event).value, this,
+							true, event);
 				} catch (Throwable ex) {
 					setValue(tv.getName(), tv.getValue(), this, true, event);
 				}
@@ -819,7 +878,7 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 			String containerProperty = xx.getStringAttribute("property");
 			if (containerProperty != null) {
 				bind(getActualComponent(), valueName, containerProperty);
-				
+
 			}
 			attrProp.forcePropertyChange();
 		}
@@ -837,28 +896,33 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 			return stateMessage;
 		}
 		Navajo stateNavajo = myContext.getStateNavajo();
-		stateMessage = NavajoFactory.getInstance().createMessage(stateNavajo, getId());
+		stateMessage = NavajoFactory.getInstance().createMessage(stateNavajo,
+				getId());
 		if (getTipiParent() != null) {
 			getTipiParent().getStateMessage().addMessage(stateMessage);
 		}
 		return stateMessage;
 	}
 
-	public final void performMethod(String methodName, Map<String,Object> params,  TipiAction invocation, TipiEvent event)  {
+	public final void performMethod(String methodName,
+			Map<String, Object> params, TipiAction invocation, TipiEvent event) {
 		TipiComponentMethod tcm = componentMethods.get(methodName);
 		if (tcm == null) {
-			System.err.println("Could not find component method: " + methodName + " component: " + getPath() + " class: " + getClass());
+			System.err.println("Could not find component method: " + methodName
+					+ " component: " + getPath() + " class: " + getClass());
 		} else {
 			tcm.loadInstance(invocation);
 			tcm.loadParams(params);
 			performComponentMethod(methodName, tcm, event);
 		}
 	}
-	
-	public final void performMethod(String methodName, TipiAction invocation, TipiEvent event) throws TipiBreakException {
+
+	public final void performMethod(String methodName, TipiAction invocation,
+			TipiEvent event) throws TipiBreakException {
 		TipiComponentMethod tcm = componentMethods.get(methodName);
 		if (tcm == null) {
-			System.err.println("Could not find component method: " + methodName + " component: " + getPath() + " class: " + getClass());
+			System.err.println("Could not find component method: " + methodName
+					+ " component: " + getPath() + " class: " + getClass());
 		} else {
 			tcm.loadInstance(invocation);
 			performComponentMethod(methodName, tcm, event);
@@ -870,7 +934,9 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 		return tcm;
 	}
 
-	protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
+	protected void performComponentMethod(String name,
+			TipiComponentMethod compMeth, TipiEvent event)
+			throws TipiBreakException {
 	}
 
 	/**
@@ -906,13 +972,13 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 			// System.err.println("First part getting: "+name);
 			TipiComponent t = getTipiComponent(name);
 			if (t == null) {
-				throw new NullPointerException("Did not find Tipi: " + name );
+				throw new NullPointerException("Did not find Tipi: " + name);
 			}
 			return t.getTipiComponentByPath(rest);
 		}
 	}
 
-	public  void setLayout(TipiLayout tl) {
+	public void setLayout(TipiLayout tl) {
 		currentLayout = tl;
 	}
 
@@ -931,10 +997,9 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 	}
 
 	public Iterable<TipiComponent> getChildren() {
-		return new ArrayList<TipiComponent>( tipiComponentList);
+		return new ArrayList<TipiComponent>(tipiComponentList);
 	}
 
-	
 	protected final TipiComponent getChildByContainer(Object container) {
 		for (int i = 0; i < getChildCount(); i++) {
 			TipiComponent child = getTipiComponent(i);
@@ -947,7 +1012,6 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 		return null;
 	}
 
-
 	/**
 	 * Disposes this component: Beware: Should not be called directly. To
 	 * programatically dispose a component, call
@@ -958,7 +1022,9 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 			for (PropertyChangeListener p : myContainerListeners) {
 				try {
 					Object c = getContainer();
-					Method m = c.getClass().getMethod("removePropertyChangeListener", new Class[] { PropertyChangeListener.class });
+					Method m = c.getClass().getMethod(
+							"removePropertyChangeListener",
+							new Class[] { PropertyChangeListener.class });
 					if (m == null) {
 						continue;
 					}
@@ -994,7 +1060,8 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 	}
 
 	public final void removeAllChildren() {
-		ArrayList<TipiComponent> backup = new ArrayList<TipiComponent>(tipiComponentList);
+		ArrayList<TipiComponent> backup = new ArrayList<TipiComponent>(
+				tipiComponentList);
 		for (int i = 0; i < backup.size(); i++) {
 			TipiComponent current = backup.get(i);
 			// myContext.disposeTipiComponent(current);
@@ -1002,8 +1069,6 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 		}
 		clearAllComponents();
 	}
-
-
 
 	public List<PropertyComponent> getRecursiveProperties() {
 		List<PropertyComponent> al = new ArrayList<PropertyComponent>();
@@ -1015,13 +1080,14 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 		return al;
 	}
 
-	public  void removeChild(TipiComponent child) {
+	public void removeChild(TipiComponent child) {
 		if (child == null) {
 			System.err.println("Null child... Can not proceed with deleting.");
 			return;
 		}
 		if (!tipiComponentMap.containsValue(child)) {
-			System.err.println("Can not dispose! No such component. I am " + getId() + " my class: " + getClass() + " child id: "
+			System.err.println("Can not dispose! No such component. I am "
+					+ getId() + " my class: " + getClass() + " child id: "
 					+ child.getId());
 			return;
 		}
@@ -1041,12 +1107,12 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 
 	public void setParent(TipiComponent tc) {
 		myParent = tc;
-		if(myParent!=null) {
+		if (myParent != null) {
 			tc.getStateMessage().addMessage(getStateMessage());
 		} else {
-//			System.err.println("Setting parent to null!!! "+getClass());
-//			Thread.dumpStack();
-//			throw new RuntimeException("HUH?");
+			// System.err.println("Setting parent to null!!! "+getClass());
+			// Thread.dumpStack();
+			// throw new RuntimeException("HUH?");
 		}
 	}
 
@@ -1058,11 +1124,12 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 		addComponent(c, -1, context, td);
 	}
 
-	public void addComponent(final TipiComponent c, int index, TipiContext context, Object td) {
-//		if(getTipiParent()==null) {
-//			System.err.println("Adding to component without parent. I am: "+getPath());
-//			Thread.dumpStack();
-//		}
+	public void addComponent(final TipiComponent c, int index,
+			TipiContext context, Object td) {
+		// if(getTipiParent()==null) {
+		// System.err.println("Adding to component without parent. I am: "+getPath());
+		// Thread.dumpStack();
+		// }
 		if (td == null && getLayout() != null) {
 			td = getLayout().createDefaultConstraint(tipiComponentList.size());
 			if (td != null) {
@@ -1077,31 +1144,34 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 		 *       added with the same id?
 		 */
 		if (tipiComponentMap.containsKey(c.getId())) {
-			System.err.println("   ===================================\n   WARNING: Adding component which is already present. ID: "
-					+ c.getId() + " parent: " + getPath() + "\n   =========================================");
-//			Thread.dumpStack();
-//			
+			System.err
+					.println("   ===================================\n   WARNING: Adding component which is already present. ID: "
+							+ c.getId()
+							+ " parent: "
+							+ getPath()
+							+ "\n   =========================================");
+			// Thread.dumpStack();
+			//
 		}
 		addChildComponent(c);
 		c.setParent(this);
 
-		
 		TipiDataComponent cparent = c.getServiceRoot();
-		if(cparent==null  ) {
-//			if(!"init".equals(getId())) {
-//				System.err.println("Component: "+c.getPath()+" has a null service root");
-//				System.err.println("Diagnosing. Parent: "+c.getTipiParent());
-//				System.err.println("I am. : "+getPath());
-//				System.err.println("My Parent: "+getTipiParent());
-//				System.err.println("My getServiceRoot: "+getServiceRoot());
-//				Thread.dumpStack();
-//				
-//			}
-				
+		if (cparent == null) {
+			// if(!"init".equals(getId())) {
+			// System.err.println("Component: "+c.getPath()+" has a null service root");
+			// System.err.println("Diagnosing. Parent: "+c.getTipiParent());
+			// System.err.println("I am. : "+getPath());
+			// System.err.println("My Parent: "+getTipiParent());
+			// System.err.println("My getServiceRoot: "+getServiceRoot());
+			// Thread.dumpStack();
+			//
+			// }
+
 		} else {
 			cparent.registerPropertyChild(c);
 		}
-		
+
 		// if(getStateMessage()!=null) {
 		getStateMessage().addMessage(c.getStateMessage());
 		// }
@@ -1112,16 +1182,17 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 		if (getContainer() != null && c.isVisibleElement()) {
 			addToContainer(c.getContainer(), td);
 			addedToParent();
-			} else {
+		} else {
 		}
-		c.addedToParentContainer(this, getActualComponent(), c.getContainer(), td);
-	if (c.isPropertyComponent() && c instanceof PropertyComponent) {
+		c.addedToParentContainer(this, getActualComponent(), c.getContainer(),
+				td);
+		if (c.isPropertyComponent() && c instanceof PropertyComponent) {
 			properties.add((PropertyComponent) c);
-//			System.err.println("prop: "+c.getClass());
-			} else {
-//			System.err.println("Non prop: "+c.getClass());
+			// System.err.println("prop: "+c.getClass());
+		} else {
+			// System.err.println("Non prop: "+c.getClass());
 		}
-		if ( c instanceof MessageComponent) {
+		if (c instanceof MessageComponent) {
 			messages.add((MessageComponent) c);
 		}
 
@@ -1145,9 +1216,10 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 		} catch (TipiBreakException e) {
 		}
 	}
-	
-	public void addedToParentContainer(TipiComponent parentTipiComponent, Object parentContainer, Object container, Object constriants) {
-		
+
+	public void addedToParentContainer(TipiComponent parentTipiComponent,
+			Object parentContainer, Object container, Object constriants) {
+
 	}
 
 	public Navajo getNavajo() {
@@ -1190,15 +1262,18 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 		if (TipiDataComponent.class.isInstance(getTipiParent())) {
 			((TipiDataComponent) getTipiParent()).refreshLayout();
 		} else {
-			System.err.println("Can not refresh parent: Parent is not a tipi. THIS is a bit weird, actually.");
+			System.err
+					.println("Can not refresh parent: Parent is not a tipi. THIS is a bit weird, actually.");
 		}
 	}
 
-	public boolean performTipiEvent(String type, Map<String, Object> event, boolean sync) throws TipiException, TipiBreakException {
-		return performTipiEvent(type, event, sync,null);
+	public boolean performTipiEvent(String type, Map<String, Object> event,
+			boolean sync) throws TipiException, TipiBreakException {
+		return performTipiEvent(type, event, sync, null);
 	}
-	
-	public boolean performTipiEvent(String type, Map<String, Object> event, boolean sync, Runnable afterEvent) throws  TipiBreakException {
+
+	public boolean performTipiEvent(String type, Map<String, Object> event,
+			boolean sync, Runnable afterEvent) throws TipiBreakException {
 		boolean hasEventType = false;
 		for (int i = 0; i < myEventList.size(); i++) {
 			TipiEvent te = myEventList.get(i);
@@ -1215,28 +1290,33 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 						throw (e);
 					} catch (Exception e) {
 						getContext().showInternalError(
-								"Error performing event: " + te.getEventName() + " for component: " + te.getComponent().getPath(), e);
+								"Error performing event: " + te.getEventName()
+										+ " for component: "
+										+ te.getComponent().getPath(), e);
 						e.printStackTrace();
 					} finally {
-						if(afterEvent!=null) {
+						if (afterEvent != null) {
 							afterEvent.run();
 						}
 					}
 				} else {
 					try {
-						if(te.checkCondition(te)) {
-							te.asyncPerformAction(this, parentEvent, event, afterEvent);
-								}
+						if (te.checkCondition(te)) {
+							te.asyncPerformAction(this, parentEvent, event,
+									afterEvent);
+						}
 					} catch (Throwable e) {
 						getContext().showInternalError(
-								"Error performing event: " + te.getEventName() + " for component: " + te.getComponent().getPath(), e);
+								"Error performing event: " + te.getEventName()
+										+ " for component: "
+										+ te.getComponent().getPath(), e);
 						e.printStackTrace();
 					}
 				}
 			}
 		}
-		if(!hasEventType) {
-			if(afterEvent!=null) {
+		if (!hasEventType) {
+			if (afterEvent != null) {
 				afterEvent.run();
 			}
 		}
@@ -1249,7 +1329,8 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 	public void eventFinished(TipiExecutable te, Object event) {
 	}
 
-	protected Operand evaluate(String expr, TipiComponent source, TipiEvent event) {
+	protected Operand evaluate(String expr, TipiComponent source,
+			TipiEvent event) {
 		// System.err.println("%%%%%%%%%%%%%%5 EVALUATING: "+expr);
 		return myContext.evaluate(expr, source, event);
 	}
@@ -1290,24 +1371,23 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 	public void setCursor(int cursorid) {
 	}
 
-
-//	public void checkValidation(Message msg) {
-//		Iterator<TipiComponent> it = tipiComponentList.iterator();
-//		while (it.hasNext()) {
-//			TipiComponent next = it.next();
-//			next.checkValidation(msg);
-//		}
-//		if (myContainer != null) {
-//			hadConditionErrors = true;
-//			// System.err.println("CHECKING VALIDATION: ");
-//			// msg.write(System.err);
-//			/** @todo Rewrite check for propertycomponent flag in classdef */
-//			if (PropertyValidatable.class.isInstance(myContainer)) {
-//				PropertyValidatable p = (PropertyValidatable) myContainer;
-//				p.checkForConditionErrors(msg);
-//			}
-//		}
-//	}
+	// public void checkValidation(Message msg) {
+	// Iterator<TipiComponent> it = tipiComponentList.iterator();
+	// while (it.hasNext()) {
+	// TipiComponent next = it.next();
+	// next.checkValidation(msg);
+	// }
+	// if (myContainer != null) {
+	// hadConditionErrors = true;
+	// // System.err.println("CHECKING VALIDATION: ");
+	// // msg.write(System.err);
+	// /** @todo Rewrite check for propertycomponent flag in classdef */
+	// if (PropertyValidatable.class.isInstance(myContainer)) {
+	// PropertyValidatable p = (PropertyValidatable) myContainer;
+	// p.checkForConditionErrors(msg);
+	// }
+	// }
+	// }
 
 	public void resetComponentValidationStateByRule(String id) {
 		if (myContainer != null) {
@@ -1338,7 +1418,8 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 		if (path.equals("*")) {
 			return true;
 		}
-		TipiComponent tc = (TipiComponent) myContext.parse(this, "component", path, event);
+		TipiComponent tc = (TipiComponent) myContext.parse(this, "component",
+				path, event);
 		// TipiPathParser tp = new TipiPathParser(this, myContext, path);
 		return tc == this;
 	}
@@ -1370,7 +1451,6 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 
 	public void componentInstantiated() {
 	}
-
 
 	public void addHelper(TipiHelper th) {
 		myHelpers.add(th);
@@ -1427,9 +1507,11 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 		return tipiComponentList.indexOf(node);
 	}
 
-	public TipiComponent addComponentInstance(TipiContext context, XMLElement inst, Object constraints) throws TipiException {
+	public TipiComponent addComponentInstance(TipiContext context,
+			XMLElement inst, Object constraints) throws TipiException {
 		// TODO add TipiEvent as parameter
-		TipiComponent ti = (context.instantiateComponent(inst, null, null,this));
+		TipiComponent ti = (context
+				.instantiateComponent(inst, null, null, this));
 		if (ti.getId() == null) {
 			ti.setId(myContext.generateComponentId(this, ti));
 		}
@@ -1515,13 +1597,14 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 	public void runAsyncInEventThread(Runnable r) {
 		myContext.runAsyncInEventThread(r);
 	}
-	
+
 	public TipiComponent findTipiComponentById(String id) {
-		
-		System.err.println("Component: "+getId()+" - "+getClass()+" looking for: "+id);
+
+		System.err.println("Component: " + getId() + " - " + getClass()
+				+ " looking for: " + id);
 		for (int i = 0; i < getChildCount(); i++) {
 			TipiComponent tc = getTipiComponent(i);
-			if(id.equals(tc.getId())) {
+			if (id.equals(tc.getId())) {
 				System.err.println("Target found!");
 				return tc;
 			}
@@ -1529,23 +1612,25 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 		for (int i = 0; i < getChildCount(); i++) {
 			TipiComponent tc = getTipiComponent(i);
 			TipiComponent tt = tc.findTipiComponentById(id);
-			if(tt!=null) {
+			if (tt != null) {
 				return tt;
 			}
 		}
 		return null;
 	}
 
-	public BaseAdapter createAdapter(TipiAction action, TipiEvent event)  {
-		String nameCap = getComponentType().substring(0,1).toUpperCase()+getComponentType().substring(1,getComponentType().length());
-		if(getExtension()==null) {
-			System.err.println("Can not create adapter for component: "+nameCap+". Extension unknown");
+	public BaseAdapter createAdapter(TipiAction action, TipiEvent event) {
+		String nameCap = getComponentType().substring(0, 1).toUpperCase()
+				+ getComponentType().substring(1, getComponentType().length());
+		if (getExtension() == null) {
+			System.err.println("Can not create adapter for component: "
+					+ nameCap + ". Extension unknown");
 		}
-		String adapterName = getExtension().toLowerCase()+"."+nameCap;
+		String adapterName = getExtension().toLowerCase() + "." + nameCap;
 
 		try {
 			Class<?> c = Class.forName(adapterName);
-			BaseAdapter b =  (BaseAdapter)c.newInstance();
+			BaseAdapter b = (BaseAdapter) c.newInstance();
 			b.setComponent(this);
 			b.setEvent(event);
 			b.setInvocation(action);

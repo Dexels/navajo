@@ -58,7 +58,8 @@ public class XMLParseException extends RuntimeException {
 	 * <code>NO_LINE</code> if the line number is unknown.
 	 * 
 	 * <dl>
-	 * <dt><b>Invariants:</b></dt> <dd>
+	 * <dt><b>Invariants:</b></dt>
+	 * <dd>
 	 * <ul>
 	 * <li><code>lineNr &gt 0 || lineNr == NO_LINE</code>
 	 * </ul>
@@ -81,7 +82,8 @@ public class XMLParseException extends RuntimeException {
 	 * 
 	 *            </dl>
 	 *            <dl>
-	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <dt><b>Preconditions:</b></dt>
+	 *            <dd>
 	 *            <ul>
 	 *            <li><code>message != null</code>
 	 *            </ul>
@@ -89,7 +91,8 @@ public class XMLParseException extends RuntimeException {
 	 *            </dl>
 	 * 
 	 *            <dl>
-	 *            <dt><b>Postconditions:</b></dt> <dd>
+	 *            <dt><b>Postconditions:</b></dt>
+	 *            <dd>
 	 *            <ul>
 	 *            <li>getLineNr() => NO_LINE
 	 *            </ul>
@@ -98,8 +101,9 @@ public class XMLParseException extends RuntimeException {
 	 *            <dl>
 	 */
 	public XMLParseException(String name, String message) {
-		super("XML Parse Exception during parsing of " + ((name == null) ? "the XML definition" : ("a " + name + " element")) + ": "
-				+ message);
+		super("XML Parse Exception during parsing of "
+				+ ((name == null) ? "the XML definition"
+						: ("a " + name + " element")) + ": " + message);
 		this.lineNr = XMLParseException.NO_LINE;
 	}
 
@@ -115,16 +119,19 @@ public class XMLParseException extends RuntimeException {
 	 * 
 	 *            </dl>
 	 *            <dl>
-	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <dt><b>Preconditions:</b></dt>
+	 *            <dd>
 	 *            <ul>
-	 *            <li><code>message != null</code> <li><code>lineNr &gt; 0
+	 *            <li><code>message != null</code>
+	 *            <li><code>lineNr &gt; 0
 	 *            </code>
 	 *            </ul>
 	 *            </dd>
 	 *            </dl>
 	 * 
 	 *            <dl>
-	 *            <dt><b>Postconditions:</b></dt> <dd>
+	 *            <dt><b>Postconditions:</b></dt>
+	 *            <dd>
 	 *            <ul>
 	 *            <li>getLineNr() => lineNr
 	 *            </ul>
@@ -133,15 +140,19 @@ public class XMLParseException extends RuntimeException {
 	 *            <dl>
 	 */
 	public XMLParseException(String name, int lineNr, String message) {
-		super("XML Parse Exception during parsing of " + ((name == null) ? "the XML definition" : ("a " + name + " element")) + " at line "
-				+ lineNr + ": " + message);
+		super("XML Parse Exception during parsing of "
+				+ ((name == null) ? "the XML definition"
+						: ("a " + name + " element")) + " at line " + lineNr
+				+ ": " + message);
 		this.lineNr = lineNr;
 	}
 
 	public XMLParseException(XMLElement source, String message) {
 		super("XML Parse Exception during parsing of "
-				+ ((source.getName() == null) ? "the XML definition" : ("a " + source.getName() + " element")) + " at line "
-				+ source.getLineNr() + ": " + message + " (" + source.getStartOffset() + ":" + source.getOffset() + ")");
+				+ ((source.getName() == null) ? "the XML definition" : ("a "
+						+ source.getName() + " element")) + " at line "
+				+ source.getLineNr() + ": " + message + " ("
+				+ source.getStartOffset() + ":" + source.getOffset() + ")");
 		this.lineNr = source.getLineNr();
 		this.offSet = source.getOffset();
 		this.source = source;

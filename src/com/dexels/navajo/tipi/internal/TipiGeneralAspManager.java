@@ -28,8 +28,8 @@ public class TipiGeneralAspManager implements TipiStorageManager {
 	public final String scriptPrefix;
 	// public final String authorId;
 	private String instanceId;
-	private  TipiContext myContext;
-	
+	private TipiContext myContext;
+
 	public static final String TYPE_SETTING = "TIPI_SETTING";
 
 	public TipiGeneralAspManager(String scriptPrefix) {
@@ -40,19 +40,25 @@ public class TipiGeneralAspManager implements TipiStorageManager {
 		Navajo reply = null;
 		try {
 			Navajo request = constructRequest(id);
-			reply = myContext.getClient().doSimpleSend(request, scriptPrefix + STORAGE_QUERY_SERVICE);
+			reply = myContext.getClient().doSimpleSend(request,
+					scriptPrefix + STORAGE_QUERY_SERVICE);
 			Message err = reply.getMessage("error");
 			if (err != null) {
 				System.err.println("SERVER ERROR: ");
 				err.write(System.err);
-				throw new TipiException("Server-side error while storing settings: " + err.toString());
+				throw new TipiException(
+						"Server-side error while storing settings: "
+								+ err.toString());
 			}
 		} catch (ClientException e) {
 			e.printStackTrace();
-			throw new TipiException("Client exception while storing settings: ", e);
+			throw new TipiException(
+					"Client exception while storing settings: ", e);
 		} catch (NavajoException e) {
 			e.printStackTrace();
-			throw new TipiException("Client side exception while preparing to store settings: ", e);
+			throw new TipiException(
+					"Client side exception while preparing to store settings: ",
+					e);
 		}
 
 		Message document = reply.getMessage("Document");
@@ -80,24 +86,31 @@ public class TipiGeneralAspManager implements TipiStorageManager {
 	public void setStorageDocument(String id, Navajo n) throws TipiException {
 		try {
 			Navajo request = constructUpdateRequest(id, n);
-			Navajo reply = myContext.getClient().doSimpleSend(request, scriptPrefix + STORAGE_UPDATE_SERVICE);
+			Navajo reply = myContext.getClient().doSimpleSend(request,
+					scriptPrefix + STORAGE_UPDATE_SERVICE);
 			Message err = reply.getMessage("error");
 			if (err != null) {
 				System.err.println("SERVER ERROR: ");
 				err.write(System.err);
-				throw new TipiException("Server-side error while storing settings: " + err.toString());
+				throw new TipiException(
+						"Server-side error while storing settings: "
+								+ err.toString());
 			}
 		} catch (ClientException e) {
 			e.printStackTrace();
-			throw new TipiException("Client exception while storing settings: ", e);
+			throw new TipiException(
+					"Client exception while storing settings: ", e);
 		} catch (NavajoException e) {
 			e.printStackTrace();
-			throw new TipiException("Client side exception while preparing to store settings: ", e);
+			throw new TipiException(
+					"Client side exception while preparing to store settings: ",
+					e);
 		}
 
 	}
 
-	private Navajo constructUpdateRequest(String id, Navajo contents) throws NavajoException {
+	private Navajo constructUpdateRequest(String id, Navajo contents)
+			throws NavajoException {
 		Navajo n = constructRequest(id);
 		Binary b = new Binary();
 		OutputStream baos = b.getOutputStream();
@@ -109,7 +122,8 @@ public class TipiGeneralAspManager implements TipiStorageManager {
 			e.printStackTrace();
 		}
 		Message document = n.getMessage("Document");
-		Property contentProp = NavajoFactory.getInstance().createProperty(n, "Data", Property.BINARY_PROPERTY, "", 0, "", Property.DIR_IN,
+		Property contentProp = NavajoFactory.getInstance().createProperty(n,
+				"Data", Property.BINARY_PROPERTY, "", 0, "", Property.DIR_IN,
 				null);
 		contentProp.setAnyValue(b);
 		document.addProperty(contentProp);
@@ -119,22 +133,30 @@ public class TipiGeneralAspManager implements TipiStorageManager {
 	private Navajo constructRequest(String id) throws NavajoException {
 		// TODO Clean up a bit. Only ObjectId and ClubIdentifier needed
 		Navajo n = NavajoFactory.getInstance().createNavajo();
-		Message document = NavajoFactory.getInstance().createMessage(n, "Document");
+		Message document = NavajoFactory.getInstance().createMessage(n,
+				"Document");
 		n.addMessage(document);
-		Property authorId = NavajoFactory.getInstance().createProperty(n, "AuthorId", Property.STRING_PROPERTY, this.instanceId, 0, "",
+		Property authorId = NavajoFactory.getInstance().createProperty(n,
+				"AuthorId", Property.STRING_PROPERTY, this.instanceId, 0, "",
 				Property.DIR_IN, null);
 		document.addProperty(authorId);
-		Property idProp = NavajoFactory.getInstance().createProperty(n, "ObjectId", Property.STRING_PROPERTY, id, 0, "", Property.DIR_IN,
+		Property idProp = NavajoFactory.getInstance().createProperty(n,
+				"ObjectId", Property.STRING_PROPERTY, id, 0, "",
+				Property.DIR_IN, null);
+		Property nameProp = NavajoFactory.getInstance().createProperty(n,
+				"Name", Property.STRING_PROPERTY, id, 0, "", Property.DIR_IN,
 				null);
-		Property nameProp = NavajoFactory.getInstance().createProperty(n, "Name", Property.STRING_PROPERTY, id, 0, "", Property.DIR_IN,
-				null);
-		Property documentId = NavajoFactory.getInstance().createProperty(n, "DocumentId", Property.STRING_PROPERTY, null, 0, "",
+		Property documentId = NavajoFactory.getInstance().createProperty(n,
+				"DocumentId", Property.STRING_PROPERTY, null, 0, "",
 				Property.DIR_IN, null);
-		Property objectType = NavajoFactory.getInstance().createProperty(n, "ObjectType", Property.STRING_PROPERTY, "SETTING", 0, "",
+		Property objectType = NavajoFactory.getInstance().createProperty(n,
+				"ObjectType", Property.STRING_PROPERTY, "SETTING", 0, "",
 				Property.DIR_IN, null);
-		Property description = NavajoFactory.getInstance().createProperty(n, "Description", Property.STRING_PROPERTY, "", 0, "",
+		Property description = NavajoFactory.getInstance().createProperty(n,
+				"Description", Property.STRING_PROPERTY, "", 0, "",
 				Property.DIR_IN, null);
-		Property mime = NavajoFactory.getInstance().createProperty(n, "MimeType", Property.STRING_PROPERTY, "text/xml", 0, "",
+		Property mime = NavajoFactory.getInstance().createProperty(n,
+				"MimeType", Property.STRING_PROPERTY, "text/xml", 0, "",
 				Property.DIR_IN, null);
 		document.addProperty(idProp);
 		document.addProperty(nameProp);
@@ -144,8 +166,9 @@ public class TipiGeneralAspManager implements TipiStorageManager {
 		document.addProperty(mime);
 		Message club = NavajoFactory.getInstance().createMessage(n, "Storage");
 		n.addMessage(club);
-		Property clubId = NavajoFactory.getInstance().createProperty(n, "DbIdentifier", Property.STRING_PROPERTY, this.instanceId, 0, "",
-				Property.DIR_IN, null);
+		Property clubId = NavajoFactory.getInstance().createProperty(n,
+				"DbIdentifier", Property.STRING_PROPERTY, this.instanceId, 0,
+				"", Property.DIR_IN, null);
 		club.addProperty(clubId);
 		return n;
 	}
@@ -157,7 +180,7 @@ public class TipiGeneralAspManager implements TipiStorageManager {
 
 	public void setContext(TipiContext tc) {
 		this.myContext = tc;
-		
+
 	}
 
 }

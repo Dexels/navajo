@@ -36,7 +36,8 @@ public class ShadowFilter {
 	public void setShadowNavajoName(String shadowNavajoName) {
 		String old = this.shadowNavajoName;
 		this.shadowNavajoName = shadowNavajoName;
-		propChange.firePropertyChange("shadowNavajoName", old, shadowNavajoName);
+		propChange
+				.firePropertyChange("shadowNavajoName", old, shadowNavajoName);
 	}
 
 	public String getSimpleFilter() {

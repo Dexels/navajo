@@ -39,23 +39,25 @@ public class GetResource extends FunctionInterface {
 	 * @see com.dexels.navajo.parser.FunctionInterface#evaluate()
 	 */
 	public Object evaluate() throws TMLExpressionException {
-		if(getOperands().size()==0) {
-			throw new TMLExpressionException(this, "GetResource NEEEDS arguments");
+		if (getOperands().size() == 0) {
+			throw new TMLExpressionException(this,
+					"GetResource NEEEDS arguments");
 		}
 
 		Object pp = getOperand(0);
 		if (pp == null) {
-			throw new TMLExpressionException(this, "Invalid operand: null context ");
+			throw new TMLExpressionException(this,
+					"Invalid operand: null context ");
 		}
-			if(pp instanceof TipiContext) {
-				TipiContext tt = (TipiContext)pp;
-				
-				String name = (String)getOperand(1);
-				return tt.getResourceURL(name);
-			}
-			throw new TMLExpressionException(this, "Invalid operand: " + pp.getClass().getName());
-	
-	
+		if (pp instanceof TipiContext) {
+			TipiContext tt = (TipiContext) pp;
+
+			String name = (String) getOperand(1);
+			return tt.getResourceURL(name);
+		}
+		throw new TMLExpressionException(this, "Invalid operand: "
+				+ pp.getClass().getName());
+
 	}
 
 }

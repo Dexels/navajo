@@ -23,7 +23,9 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class TipiPerformTipiMethod extends TipiAction {
-	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+	public void execute(TipiEvent event)
+			throws com.dexels.navajo.tipi.TipiException,
+			com.dexels.navajo.tipi.TipiBreakException {
 		TipiComponent t = null;
 		String name = null;
 		String path = null;
@@ -38,9 +40,12 @@ public class TipiPerformTipiMethod extends TipiAction {
 			t.performMethod(name, this, event);
 		} else {
 			myContext.debugTipiComponentTree(getComponent().getTipiParent(), 4);
-			System.err.println("My parent: "+getComponent().getPath());
-			System.err.println("My parentparent: "+getComponent().getTipiParent().getPath());
-			throw new TipiException("performTipiMethod: Can not locate tipicomponent name: " + path + " method: " + name);
+			System.err.println("My parent: " + getComponent().getPath());
+			System.err.println("My parentparent: "
+					+ getComponent().getTipiParent().getPath());
+			throw new TipiException(
+					"performTipiMethod: Can not locate tipicomponent name: "
+							+ path + " method: " + name);
 		}
 	}
 }

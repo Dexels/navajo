@@ -1,12 +1,10 @@
 package com.dexels.navajo.tipi;
 
-
-public class PropertyLinkRequest  {
+public class PropertyLinkRequest {
 	private String path;
 	private String aspect;
 	private String attributeName;
 
-	
 	public String getAttributeName() {
 		return attributeName;
 	}
@@ -27,10 +25,11 @@ public class PropertyLinkRequest  {
 		this.path = path;
 		this.aspect = aspect;
 	}
-	
+
 	public String getPropertyName() {
 		return path;
 	}
+
 	public void setPropertyName(String propertyName) {
 		this.path = propertyName;
 	}

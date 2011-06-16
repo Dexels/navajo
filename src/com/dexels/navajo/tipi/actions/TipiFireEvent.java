@@ -28,16 +28,20 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class TipiFireEvent extends TipiAction {
-	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+	public void execute(TipiEvent event)
+			throws com.dexels.navajo.tipi.TipiException,
+			com.dexels.navajo.tipi.TipiBreakException {
 		try {
-			TipiComponent tp = (TipiComponent) evaluate(getParameter("path").getValue(), event).value;
+			TipiComponent tp = (TipiComponent) evaluate(getParameter("path")
+					.getValue(), event).value;
 			if (tp != null) {
 				// System.err.println("ATTEMPTING TO DISPOSE: " + tp.getPath());
 			} else {
 				throw new TipiException("fireEvent: Component not found!");
 			}
 
-			String type = (String) evaluate(getParameter("type").getValue(), event).value;
+			String type = (String) evaluate(getParameter("type").getValue(),
+					event).value;
 			if (type != null) {
 				// System.err.println("ATTEMPTING TO DISPOSE: " + tp.getPath());
 			} else {

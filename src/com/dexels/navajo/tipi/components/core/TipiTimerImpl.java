@@ -21,7 +21,8 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @author not attributable
  * @version 1.0
  */
-public class TipiTimerImpl extends TipiHeadlessComponentImpl implements Runnable {
+public class TipiTimerImpl extends TipiHeadlessComponentImpl implements
+		Runnable {
 	private boolean isRunning;
 	private long interval = 1000; // standard is one second
 	private Thread t;
@@ -68,10 +69,10 @@ public class TipiTimerImpl extends TipiHeadlessComponentImpl implements Runnable
 		}
 	}
 
-
-
 	@Override
-	protected void performComponentMethod(String methodName, TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
+	protected void performComponentMethod(String methodName,
+			TipiComponentMethod compMeth, TipiEvent event)
+			throws TipiBreakException {
 		if ("start".equals(methodName)) {
 			start();
 		}
@@ -79,6 +80,5 @@ public class TipiTimerImpl extends TipiHeadlessComponentImpl implements Runnable
 			stop();
 		}
 	}
-	
-	
+
 }

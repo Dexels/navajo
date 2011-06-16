@@ -30,7 +30,8 @@ public abstract class TipiTypeParser {
 	 * @param event
 	 * @return
 	 */
-	public abstract Object parse(TipiComponent source, String expression, TipiEvent event);
+	public abstract Object parse(TipiComponent source, String expression,
+			TipiEvent event);
 
 	protected TipiContext myContext;
 

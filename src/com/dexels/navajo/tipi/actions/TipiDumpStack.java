@@ -21,7 +21,9 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class TipiDumpStack extends TipiAction {
-	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+	public void execute(TipiEvent event)
+			throws com.dexels.navajo.tipi.TipiException,
+			com.dexels.navajo.tipi.TipiBreakException {
 		System.err.println("JAVA SAYS:");
 		Thread.dumpStack();
 		System.err.println("TIPI SAYS:");
@@ -29,7 +31,8 @@ public class TipiDumpStack extends TipiAction {
 
 		System.err.println("Event params: ");
 		for (String s : event.getEventKeySet()) {
-			System.err.println("Param: " + s + " value: " + event.getEventParameter(s));
+			System.err.println("Param: " + s + " value: "
+					+ event.getEventParameter(s));
 
 		}
 	}

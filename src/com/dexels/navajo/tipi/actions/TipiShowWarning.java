@@ -15,7 +15,9 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 
 /** @todo Refactor, move to NavajoSwingTipi */
 public class TipiShowWarning extends TipiAction {
-	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+	public void execute(TipiEvent event)
+			throws com.dexels.navajo.tipi.TipiException,
+			com.dexels.navajo.tipi.TipiBreakException {
 		// String txt = getParameter("text").getValue();
 		final Operand op = getEvaluatedParameter("text", event);
 		Object oo = op.value;
