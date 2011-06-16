@@ -20,7 +20,6 @@ public class TipiMessagePanel extends TipiSwingDataComponentImpl implements
 	private Message myMessage;
 
 	public Message getMessage() {
-		// TODO Auto-generated method stub
 		return myMessage;
 	}
 
@@ -35,22 +34,10 @@ public class TipiMessagePanel extends TipiSwingDataComponentImpl implements
 			throw new TipiException("Loading with null Navajo! ");
 		}
 		myNavajo = n;
-		// FIXME Beware, hacked
-		if (true || "true".equals(myContext
-				.getSystemProperty("isNewNavajoLoading"))) {
+		{
 			for (TipiComponent tc : propertyComponentSet) {
 				tc.loadPropertiesFromMessage(myMessage);
 			}
-		} else {
-			for (TipiComponent tc : propertyComponentSet) {
-				tc.loadPropertiesFromMessage(myMessage);
-			}
-			loadProperties(n);
-			loadPropertiesFromNavajo(n);
-			loadMessages(n);
-			cascadeLoad(n, method);
-			doPerformOnLoad(method, n, true);
-			doLayout();
 		}
 
 	}
