@@ -2,7 +2,7 @@ package com.dexels.navajo.tipi.animation;
 
 public class TipiAnimationManager {
 
-	public static Class isAnimatable(Object start, Object end) {
+	public static Class<?> isAnimatable(Object start, Object end) {
 		if (start == null || end == null) {
 			return null;
 		}

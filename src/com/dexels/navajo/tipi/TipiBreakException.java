@@ -19,6 +19,10 @@ package com.dexels.navajo.tipi;
  * @version 1.0
  */
 public class TipiBreakException extends RuntimeException {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1615937745926482378L;
 	public static final int BREAK_BLOCK = 1;
 	public static final int BREAK_EVENT = 2;
 

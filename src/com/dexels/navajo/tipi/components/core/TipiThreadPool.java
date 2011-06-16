@@ -36,7 +36,7 @@ public class TipiThreadPool {
 	private final Map<TipiThread, String> threadStateMap = Collections.synchronizedMap(new TreeMap<TipiThread, String>());
 
 	private boolean running = true;
-	private Thread myShutdownThread = null;
+//	private Thread myShutdownThread = null;
 
 	// for use with echo
 
@@ -184,7 +184,7 @@ public class TipiThreadPool {
 
 
 	public void waitForAllThreads() {
-		myShutdownThread = Thread.currentThread();
+//		myShutdownThread = Thread.currentThread();
 		while(myGroup.activeCount()>1) {
 			synchronized (this) {
 				try {

@@ -42,7 +42,6 @@ public class TipiThread extends Thread implements Comparable<TipiThread> {
 		myPool.setThreadState(state);
 	}
 
-	@SuppressWarnings("null")
 	public void run() {
 		while (true) {
 			try {

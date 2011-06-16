@@ -1,19 +1,49 @@
 package com.dexels.navajo.tipi.components.core;
 
-import java.beans.*;
-import java.lang.reflect.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
-
-import javax.sound.midi.SysexMessage;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import tipi.TipiExtension;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.tipi.PropertyHandler;
+import com.dexels.navajo.tipi.PropertyLinkRequest;
+import com.dexels.navajo.tipi.PropertyValidatable;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.TipiComponentMethod;
+import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.TipiDataComponent;
+import com.dexels.navajo.tipi.TipiEventListener;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.TipiExecutable;
+import com.dexels.navajo.tipi.TipiHelper;
+import com.dexels.navajo.tipi.TipiLink;
+import com.dexels.navajo.tipi.TipiValue;
 import com.dexels.navajo.tipi.components.core.adapter.BaseAdapter;
-import com.dexels.navajo.tipi.internal.*;
-import com.dexels.navajo.tipi.tipixml.*;
+import com.dexels.navajo.tipi.internal.AttributeRef;
+import com.dexels.navajo.tipi.internal.MessageComponent;
+import com.dexels.navajo.tipi.internal.PropertyComponent;
+import com.dexels.navajo.tipi.internal.TipiAction;
+import com.dexels.navajo.tipi.internal.TipiEvent;
+import com.dexels.navajo.tipi.internal.TipiLayout;
+import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 /**
  * <p>

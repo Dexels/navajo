@@ -19,6 +19,11 @@ package com.dexels.navajo.tipi.components.core;
  */
 
 public class ThreadShutdownException extends Exception {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -144963206903068373L;
 	// public ThreadShutdownException() {
 	// }
 

@@ -52,7 +52,7 @@ public class TipiValue {
 			tv.selectionMap = new HashMap<String, String>(this.selectionMap);
 		}
 		
-		com.dexels.navajo.tipi.TipiLink a;
+//		com.dexels.navajo.tipi.TipiLink a;
 		return tv;
 	}
 

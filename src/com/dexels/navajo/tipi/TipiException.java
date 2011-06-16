@@ -18,6 +18,11 @@ package com.dexels.navajo.tipi;
  * @version 1.0
  */
 public class TipiException extends Exception {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4685485178072104480L;
+
 	public TipiException() {
 	}
 
