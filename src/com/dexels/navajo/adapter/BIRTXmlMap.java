@@ -4,44 +4,44 @@ package com.dexels.navajo.adapter;
 //import org.eclipse.birt.core.framework.Platform;
 //import org.eclipse.birt.report.engine.api.*;
 
-import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.Dispatcher;
-import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.NavajoConfig;
-import com.dexels.navajo.server.Parameters;
-import com.dexels.navajo.server.UserException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.StringTokenizer;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import com.dexels.navajo.birt.BirtUtils;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
-import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
-import com.dexels.navajo.document.nanoimpl.XMLElement;
-import com.dexels.navajo.document.nanoimpl.XMLParseException;
-import com.dexels.navajo.document.types.*;
-
-import java.util.*;
-import java.util.logging.Level;
-import java.io.*;
-import java.net.*;
-//import java.nio.charset.Charset;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.UserException;
 
 public class BIRTXmlMap implements Mappable {
 	private static final String DEFAULT_OUTPUT_FORMAT = "pdf";
-	private HashMap parameters = new HashMap();
+	private Map<String,Object> parameters = new HashMap<String,Object>();
 	private String reportDir = "reports/";
 	private String viewerReportDir = "reports/";
 	private String viewerUrl = "http://distel:8080/birt/run";
 
 	// private String engineDir = "birt-engine/";
 
-	private String directFile = null; // "c:/projects/sportlink-serv/navajo-tester/auxilary/reports/tempReport51567.rptdesign";
+//	private String directFile = null; // "c:/projects/sportlink-serv/navajo-tester/auxilary/reports/tempReport51567.rptdesign";
 	// private static final String CHART_HOME =
 	// "/home/orion/projects/NavajoBIRT/birt-runtime-2_1_2/ChartEngine";
 
@@ -95,7 +95,7 @@ public class BIRTXmlMap implements Mappable {
 
 	public void setParameterValue(Object o) {
 		if (parameters == null) {
-			parameters = new HashMap();
+			parameters = new HashMap<String,Object>();
 		}
 		parameters.put(parameterName, o);
 	}
@@ -149,7 +149,7 @@ public class BIRTXmlMap implements Mappable {
 	/*
 	 * For 'defined' reports, so the master page is left alone
 	 */
-	private Binary executeReport(String reportName, HashMap reportParams, Navajo input) throws NavajoException,
+	private Binary executeReport(String reportName, Map<String,Object> reportParams, Navajo input) throws NavajoException,
 			IOException {
 		Binary result = new Binary();
 		Binary reportDef = null;
@@ -207,8 +207,8 @@ public class BIRTXmlMap implements Mappable {
 		urlBuffer.append(getViewerUrl());
 		urlBuffer.append("/run?__report=" + fixedFile.getName());
 
-		for (Iterator iter = parameters.keySet().iterator(); iter.hasNext();) {
-			String element = (String) iter.next();
+		for (Iterator<String> iter = parameters.keySet().iterator(); iter.hasNext();) {
+			String element = iter.next();
 			String value = (String) parameters.get(element);
 			urlBuffer.append("&" + element + "=" + value);
 		}

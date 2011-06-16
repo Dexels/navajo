@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import org.w3c.dom.Document;
@@ -223,9 +224,9 @@ public class BirtUtils {
 	 * @param datasourceName
 	 */
 
-	private void parseArrayMessages(Document d, ArrayList messageList, String absolutePath, String datasourceName) {
+	private void parseArrayMessages(Document d, List<Message> messageList, String absolutePath, String datasourceName) {
 		for (int i = 0; i < messageList.size(); i++) {
-			Message current = (Message) messageList.get(i);
+			Message current = messageList.get(i);
 			String fullPath = current.getFullMessageName();
 			if (fullPath.startsWith("/")) {
 				fullPath = fullPath.substring(1);
@@ -233,8 +234,8 @@ public class BirtUtils {
 			if (current.getType().equals(Message.MSG_TYPE_ARRAY)) {
 				createDataSet(d, fullPath, datasourceName, current, absolutePath);
 			} else {
-				ArrayList aa = current.getAllMessages();
-				ArrayList pp = current.getAllProperties();
+				List<Message> aa = current.getAllMessages();
+				List<Property> pp = current.getAllProperties();
 				if (pp.size() > 0) {
 					createDataSet(d, fullPath, datasourceName, current, absolutePath);
 				}
@@ -276,31 +277,18 @@ public class BirtUtils {
 		} else {
 			first = sourceObject;
 		}
-		ArrayList props = first.getAllProperties();
+		List<Property> props = first.getAllProperties();
 		Element listprop = addProperty(d, odaDataSetTag, "list-property", "resultSet", null);
 		for (int i = 0; i < props.size(); i++) {
-			Property current = (Property) props.get(i);
+			Property current = props.get(i);
 			Element s = d.createElement("structure");
 			listprop.appendChild(s);
 			addProperty(d, s, "property", "position", "" + (i + 1));
 			addProperty(d, s, "property", "name", current.getName());
 			addProperty(d, s, "property", "nativeName", current.getName());
-			// TODO Check which types work well.
-			// addProperty(d, s, "property", "dataType", current.getType());
 
 			addProperty(d, s, "property", "dataType", getPropertyType(current, false));
-			// if(current.getDescription()!=null) {
-			// s = d.createElement("structure");
-			// listprop.appendChild(s);
-			// addProperty(d, s, "property", "position", ""+(i+1));
-			// addProperty(d, s, "property", "name",
-			// current.getName()+"_Description");
-			// addProperty(d, s, "property", "nativeName",
-			// current.getName()+"_Description");
-			// // TODO Check which types work well.
-			// addProperty(d, s, "property", "dataType", "String");
-			//				
-			// }
+
 
 			if (Property.BINARY_PROPERTY.equals(current.getType())) {
 				System.err.println("Binary found.");
@@ -320,7 +308,7 @@ public class BirtUtils {
 		addProperty(d, odaDataSetTag, "property", "queryText", createArrayMessageQueryText(props, service, sourceObject));
 	}
 
-	private String createArrayMessageQueryText(ArrayList props, String serviceName, Message arrayMessage) {
+	private String createArrayMessageQueryText(List<Property> props, String serviceName, Message arrayMessage) {
 		boolean isArray = arrayMessage.getType().equals(Message.MSG_TYPE_ARRAY);
 		String fixed = serviceName.replaceAll("/", "_");
 		StringBuffer sb = new StringBuffer();
@@ -336,7 +324,7 @@ public class BirtUtils {
 		sb.append("#");
 		// for each prop:
 		for (int i = 0; i < props.size(); i++) {
-			Property current = (Property) props.get(i);
+			Property current = props.get(i);
 			if (isArray) {
 				sb.append("{" + current.getName() + ";" + getPropertyType(current, true) + ";/@" + current.getName() + "}");
 			} else {
@@ -421,43 +409,7 @@ public class BirtUtils {
 		return n;
 	}
 
-	// public void buildReportFolder(File aux) {
-	// File tmlFolder = new File(aux,"tml");
-	// File reportFolder = new File(aux,"report");
-	// buildReport(tmlFolder,reportFolder,"");
-	//		
-	// }
 
-	// private void buildReport(File currentTml, File currentReport,String path,
-	// File reportTemplateFile) {
-	// File[] list = currentTml.listFiles();
-	// for (int i = 0; i < list.length; i++) {
-	// System.err.println("Current file: "+list[i].getAbsolutePath());
-	// if(list[i].isDirectory()) {
-	// File newReportFolder = new File(currentReport,list[i].getName());
-	// if(!newReportFolder.exists()) {
-	// newReportFolder.mkdirs();
-	// }
-	// buildReport(list[i],
-	// newReportFolder,path+list[i].getName(),reportTemplateFile);
-	// } else {
-	// String name = list[i].getName();
-	// if(name.endsWith(".tml")) {
-	// try {
-	// createEmptyReport(list[i],currentReport,
-	// name+".rptdesign",null,reportTemplateFile);
-	// } catch (IOException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// } catch (NavajoException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	//
-	// }
-	// }
-	// }
-	// }
 
 	public void createTableReport(InputStream reportTemplateStream, File reportFile, Navajo n, int left, int top, int right, int bottom,
 			boolean landscape) throws IOException, NavajoException {
@@ -465,9 +417,9 @@ public class BirtUtils {
 		// int bottom, boolean landscape) {
 		System.err.println("Margin: " + left + " top: " + top + " right: " + right + " bottom: " + bottom);
 		String serviceName = n.getHeader().getHeaderAttribute("sourceScript");
-		ArrayList pNames = new ArrayList();
-		ArrayList pSizes = new ArrayList();
-		ArrayList pTitles = new ArrayList();
+		List<String> pNames = new ArrayList<String>();
+		List<Integer> pSizes = new ArrayList<Integer>();
+		List<String> pTitles = new ArrayList<String>();
 		Property propNames = n.getProperty("__ReportDefinition/PropertyNames");
 		Property propSizes = n.getProperty("__ReportDefinition/PropertySizes");
 		Property propTitles = n.getProperty("__ReportDefinition/PropertyTitles");
@@ -566,15 +518,15 @@ public class BirtUtils {
 
 	private String locateArrayMessage(Navajo n) throws NavajoException {
 		ArrayList<Message> mm = n.getAllMessages();
-		for (Iterator iter = mm.iterator(); iter.hasNext();) {
-			Message m = (Message) iter.next();
+		for (Iterator<Message> iter = mm.iterator(); iter.hasNext();) {
+			Message m = iter.next();
 			if (Message.MSG_TYPE_ARRAY.equals(m.getType())) {
 				return m.getFullMessageName();
 			}
 		}
 		// two loops, for pre order:
-		for (Iterator iter = mm.iterator(); iter.hasNext();) {
-			Message m = (Message) iter.next();
+		for (Iterator<Message> iter = mm.iterator(); iter.hasNext();) {
+			Message m = iter.next();
 			String res = locateArrayMessage(m);
 			if (res != null) {
 				return res;
@@ -585,18 +537,18 @@ public class BirtUtils {
 	}
 
 	private String locateArrayMessage(Message in) {
-		ArrayList<Message> mm = in.getAllMessages();
-		for (Iterator iter = mm.iterator(); iter.hasNext();) {
+		List<Message> mm = in.getAllMessages();
+		for (Iterator<Message> iter = mm.iterator(); iter.hasNext();) {
 			
-			Message m = (Message) iter.next();
+			Message m = iter.next();
 			if (Message.MSG_TYPE_ARRAY.equals(m.getType())) {
 				return m.getFullMessageName();
 			}
 
 		}
 		// two loops, for breath first order:
-		for (Iterator iter = mm.iterator(); iter.hasNext();) {
-			Message m = (Message) iter.next();
+		for (Iterator<Message> iter = mm.iterator(); iter.hasNext();) {
+			Message m = iter.next();
 			String res = locateArrayMessage(m);
 			if (res != null) {
 				return res;
