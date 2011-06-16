@@ -64,15 +64,11 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 						TipiSwingExtension tse = new TipiSwingExtension();
 						ClassLoader classLoader = tse.getClass()
 								.getClassLoader();
-						System.err.println("Loader: " + classLoader.hashCode());
 						tse.setExtensionClassloader(classLoader);
-						System.err.println("goooo!");
 						instance = MainApplication
-								.runApp(new String[] { "tipiCodeBase=/Users/frank/Documents/workspace-osgi-temp/TipiExample/tipi/" });
-						System.err.println("INstance ready!");
+								.runApp(new String[] { "tipiCodeBase=/Users/frank/Documents/workspace-xtext/TipiExample/tipi/" });
 						instance.getCurrentContext().processRequiredIncludes(
 								tse);
-						System.err.println("Includes ready!");
 					} catch (XMLParseException e) {
 						e.printStackTrace();
 					} catch (IOException e) {
@@ -97,9 +93,6 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 						}
 					});
 				}
-				System.err
-						.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> "
-								+ event);
 			}
 		});
 		//
