@@ -45,7 +45,8 @@ import com.dexels.navajo.tipi.swingclient.components.StandardDialog;
  * @deprecated
  */
 
-public class CalendarPickerDialog extends StandardDialog implements CalendarManager {
+public class CalendarPickerDialog extends StandardDialog implements
+		CalendarManager {
 	/**
 	 * 
 	 */
@@ -71,6 +72,7 @@ public class CalendarPickerDialog extends StandardDialog implements CalendarMana
 		super(j);
 		init();
 	}
+
 	public CalendarPickerDialog(JDialog j) {
 		super(j);
 		init();
@@ -92,24 +94,30 @@ public class CalendarPickerDialog extends StandardDialog implements CalendarMana
 		calendar.getConstants().setColumnWidth(22);
 		calendar.getConstants().setRowHeight(22);
 		calendar.getConstants();
-		CalendarConstants.setColorScheme(CalendarConstants.COLORSCHEME_SPORTLINK);
+		CalendarConstants
+				.setColorScheme(CalendarConstants.COLORSCHEME_SPORTLINK);
 		calendar.rebuildUI();
 		setTitle("Selecteer datum");
 		setMode(DialogConstants.MODE_CLOSE);
 		iconButtonPanel.setButtonAlignment(FlowLayout.RIGHT);
-		//setMode(DialogConstants.MODE_OK_CANCEL);
+		// setMode(DialogConstants.MODE_OK_CANCEL);
 		calendar.setBorder(BorderFactory.createEtchedBorder());
 
-		nextMonthButton.setIcon(new ImageIcon(CalendarPickerDialog.class.getResource("next-small.gif")));
-		previousMonthButton.setIcon(new ImageIcon(CalendarPickerDialog.class.getResource("previous-small.gif")));
+		nextMonthButton.setIcon(new ImageIcon(CalendarPickerDialog.class
+				.getResource("next-small.gif")));
+		previousMonthButton.setIcon(new ImageIcon(CalendarPickerDialog.class
+				.getResource("previous-small.gif")));
 		nextMonthButton.setMargin(new Insets(0, 0, 0, 0));
 		previousMonthButton.setMargin(new Insets(0, 0, 0, 0));
 		controlMonthPanel.setLayout(new GridBagLayout());
-		controlMonthPanel.add(previousMonthButton, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST,
+		controlMonthPanel.add(previousMonthButton, new GridBagConstraints(0, 0,
+				1, 1, 0.0, 0.0, GridBagConstraints.WEST,
 				GridBagConstraints.NONE, new Insets(2, 2, 2, 2), 0, 0));
-		controlMonthPanel.add(monthLabel, new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
+		controlMonthPanel.add(monthLabel, new GridBagConstraints(1, 0, 1, 1,
+				1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
 				new Insets(2, 2, 2, 2), 0, 0));
-		controlMonthPanel.add(nextMonthButton, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE,
+		controlMonthPanel.add(nextMonthButton, new GridBagConstraints(2, 0, 1,
+				1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE,
 				new Insets(2, 2, 2, 2), 0, 0));
 		nextMonthButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -122,17 +130,22 @@ public class CalendarPickerDialog extends StandardDialog implements CalendarMana
 			}
 		});
 		monthLabel.setText(calendar.getMonthString());
-		
-		nextYearButton.setIcon(new ImageIcon(CalendarPickerDialog.class.getResource("next-small.gif")));
-		previousYearButton.setIcon(new ImageIcon(CalendarPickerDialog.class.getResource("previous-small.gif")));
+
+		nextYearButton.setIcon(new ImageIcon(CalendarPickerDialog.class
+				.getResource("next-small.gif")));
+		previousYearButton.setIcon(new ImageIcon(CalendarPickerDialog.class
+				.getResource("previous-small.gif")));
 		nextYearButton.setMargin(new Insets(0, 0, 0, 0));
 		previousYearButton.setMargin(new Insets(0, 0, 0, 0));
 		controlYearPanel.setLayout(new GridBagLayout());
-		controlYearPanel.add(previousYearButton, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, 
+		controlYearPanel.add(previousYearButton, new GridBagConstraints(0, 0,
+				1, 1, 0.0, 0.0, GridBagConstraints.WEST,
 				GridBagConstraints.NONE, new Insets(2, 2, 2, 2), 0, 0));
-		controlYearPanel.add(yearLabel, new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
+		controlYearPanel.add(yearLabel, new GridBagConstraints(1, 0, 1, 1, 1.0,
+				0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
 				new Insets(2, 2, 2, 2), 0, 0));
-		controlYearPanel.add(nextYearButton, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE,
+		controlYearPanel.add(nextYearButton, new GridBagConstraints(2, 0, 1, 1,
+				0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE,
 				new Insets(2, 2, 2, 2), 0, 0));
 		nextYearButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -145,15 +158,16 @@ public class CalendarPickerDialog extends StandardDialog implements CalendarMana
 			}
 		});
 		yearLabel.setText("" + calendar.getYear());
-		
+
 		calendar.setCalendarManager(this);
 		mainPanel.setPreferredSize(new Dimension(250, 250));
 		// setUndecorated(true);
-		SwingUtilities.invokeLater(new Runnable(){
+		SwingUtilities.invokeLater(new Runnable() {
 
 			public void run() {
-				((JComponent)getContentPane()).revalidate();
-			}});
+				((JComponent) getContentPane()).revalidate();
+			}
+		});
 	}
 
 	/** @todo Add day selection. Not a clue how to set a day. Ask Arnoud. */
@@ -173,7 +187,7 @@ public class CalendarPickerDialog extends StandardDialog implements CalendarMana
 
 	public void performAction(int add) {
 		if (add == 12) {
-			calendar.setYear(calendar.getYear()+1);
+			calendar.setYear(calendar.getYear() + 1);
 			calendar.repaint();
 		} else if (add == 1) {
 			if (calendar.getMonth() == 11) {
@@ -186,11 +200,11 @@ public class CalendarPickerDialog extends StandardDialog implements CalendarMana
 			}
 			calendar.previousMonth();
 		} else if (add == -12) {
-			calendar.setYear(calendar.getYear()-1);
+			calendar.setYear(calendar.getYear() - 1);
 			calendar.repaint();
 		}
 		monthLabel.setText(calendar.getMonthString());
-		yearLabel.setText(calendar.getYear()+"");
+		yearLabel.setText(calendar.getYear() + "");
 	}
 
 	/**
@@ -203,7 +217,7 @@ public class CalendarPickerDialog extends StandardDialog implements CalendarMana
 	 *       method
 	 */
 	public void fireCalendarEvent(CalendarEvent e) {
-		ArrayList<Day>  days = calendar.getSelectedDays();
+		ArrayList<Day> days = calendar.getSelectedDays();
 		if (days.size() > 0) {
 			Day d = days.get(0);
 			selected = d.getDate();

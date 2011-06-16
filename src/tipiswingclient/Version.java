@@ -23,17 +23,17 @@
  * ====================================================================
  */
 package tipiswingclient;
+
 /**
- *
- * 2.0.12: Added a nullcheck in the ConditionErrorParser.
- * 2.0.13: Fixed weeknumber problem in calendar.
- * 2.0.14: Fixed problem with message table filter. When user hits save button the filter is disabled.
- * 2.0.15: Now possible to open excel stuff in Linux.
- * 2.0.16: Added stopwatchtime. Fixed calendar bug.
- * 2.0.17: Refactored MessageTable / MessageTablePanel, changed column saving methods.
- *         needed by SwingTipi
- * 2.0.18: (Probably also a lot of other changes) Added setVisibleRowCount for picklists
- *         
+ * 
+ * 2.0.12: Added a nullcheck in the ConditionErrorParser. 2.0.13: Fixed
+ * weeknumber problem in calendar. 2.0.14: Fixed problem with message table
+ * filter. When user hits save button the filter is disabled. 2.0.15: Now
+ * possible to open excel stuff in Linux. 2.0.16: Added stopwatchtime. Fixed
+ * calendar bug. 2.0.17: Refactored MessageTable / MessageTablePanel, changed
+ * column saving methods. needed by SwingTipi 2.0.18: (Probably also a lot of
+ * other changes) Added setVisibleRowCount for picklists
+ * 
  */
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 
@@ -43,11 +43,11 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Tipi Swing Client";
 
-	//Included packages.
-	String [] includes = {"navajodocument.Version"};
+	// Included packages.
+	String[] includes = { "navajodocument.Version" };
 
 	public Version() {
-//		addIncludes(includes);
+		// addIncludes(includes);
 		setReleaseDate("2006-06-29");
 	}
 
@@ -76,12 +76,12 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 		return PRODUCTNAME;
 	}
 
-	public static void main(String [] args) {
+	public static void main(String[] args) {
 		Version v = new Version();
 		System.err.println(v.toString());
-		com.dexels.navajo.version.AbstractVersion [] d = v.getIncludePackages();
+		com.dexels.navajo.version.AbstractVersion[] d = v.getIncludePackages();
 		for (int i = 0; i < d.length; i++) {
-			System.err.println("\t"+d[i].toString());
+			System.err.println("\t" + d[i].toString());
 		}
 	}
 }

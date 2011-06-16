@@ -25,19 +25,21 @@ import com.dexels.navajo.document.Property;
  * @version 1.0
  */
 
-public class PropertyPasswordField extends JPasswordField implements PropertyControlled {
-
+public class PropertyPasswordField extends JPasswordField implements
+		PropertyControlled {
 
 	private static final long serialVersionUID = 8379730240791137369L;
 	public String textValue;
 	public Property initProperty = null;
+
 	// public ResourceBundle localResource;
 
 	// ConditionErrorParser cep = new ConditionErrorParser();
 
 	public PropertyPasswordField() {
 
-//		this.setMinimumSize(new Dimension(4, ComponentConstants.PREFERRED_HEIGHT));
+		// this.setMinimumSize(new Dimension(4,
+		// ComponentConstants.PREFERRED_HEIGHT));
 		this.addFocusListener(new java.awt.event.FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
@@ -45,7 +47,7 @@ public class PropertyPasswordField extends JPasswordField implements PropertyCon
 			}
 
 		});
-	
+
 		this.addFocusListener(new java.awt.event.FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
@@ -81,9 +83,8 @@ public class PropertyPasswordField extends JPasswordField implements PropertyCon
 		setText(textValue);
 		setEnabled(p.isDirIn());
 		setEditable(p.isDirIn());
-	
-	}
 
+	}
 
 	public void this_focusLost(FocusEvent e) {
 		textValue = new String(getPassword());

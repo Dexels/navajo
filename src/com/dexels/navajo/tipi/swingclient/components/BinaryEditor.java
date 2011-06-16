@@ -34,16 +34,16 @@ import com.dexels.navajo.dnd.BinaryTransferHandler;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
 
-public class BinaryEditor extends JPanel implements PropertyControlled, PropertyChangeListener, ActionListener {
+public class BinaryEditor extends JPanel implements PropertyControlled,
+		PropertyChangeListener, ActionListener {
 
-	
 	private static final long serialVersionUID = -2197427078497022344L;
 	private Property myProperty = null;
 	private JLabel myBinaryLabel = new JLabel();
 
 	JButton openButton = new JButton();
 	JButton clearButton = new JButton();
-//	JButton flipButton = new JButton();
+	// JButton flipButton = new JButton();
 	JTextField pathField = new JTextField(15);
 	private int maxImgWidth = 32;
 	private int maxImgHeight = 32;
@@ -52,60 +52,66 @@ public class BinaryEditor extends JPanel implements PropertyControlled, Property
 	public BinaryEditor() {
 		setLayout(new BorderLayout());
 		setTransferHandler(new BinaryTransferHandler(this));
-		
-//		myBinaryLabel.setBorderPainted(false);
-		//openButton.setIcon(new ImageIcon(getClass().getResource("add-filter.gif")));
+
+		// myBinaryLabel.setBorderPainted(false);
+		// openButton.setIcon(new
+		// ImageIcon(getClass().getResource("add-filter.gif")));
 		openButton.setText("Browse");
-		clearButton.setIcon(new ImageIcon(getClass().getResource("clear-filter.gif")));
-//		flipButton.setIcon(new ImageIcon(getClass().getResource("hide.gif")));
-		clearButton.setMargin(new Insets(0,0,0,0));
-//		flipButton.setMargin(new Insets(0,0,0,0));
-		openButton.setMargin(new Insets(0,0,0,0));
-//		myBinaryLabel.setMargin(new Insets(0,0,0,0));
-		myBinaryLabel.setPreferredSize(new Dimension(maxImgWidth,maxImgHeight));
-		myBinaryLabel.setMinimumSize(new Dimension(maxImgWidth,maxImgHeight));
+		clearButton.setIcon(new ImageIcon(getClass().getResource(
+				"clear-filter.gif")));
+		// flipButton.setIcon(new
+		// ImageIcon(getClass().getResource("hide.gif")));
+		clearButton.setMargin(new Insets(0, 0, 0, 0));
+		// flipButton.setMargin(new Insets(0,0,0,0));
+		openButton.setMargin(new Insets(0, 0, 0, 0));
+		// myBinaryLabel.setMargin(new Insets(0,0,0,0));
+		myBinaryLabel
+				.setPreferredSize(new Dimension(maxImgWidth, maxImgHeight));
+		myBinaryLabel.setMinimumSize(new Dimension(maxImgWidth, maxImgHeight));
 
 		add(myBinaryLabel, BorderLayout.WEST);
-//		JPanel mainPanel = new JPanel();
-		add(pathField,BorderLayout.CENTER);
-//		mainPanel.add(pathField);
-//		mainPanel.add(openButton);
+		// JPanel mainPanel = new JPanel();
+		add(pathField, BorderLayout.CENTER);
+		// mainPanel.add(pathField);
+		// mainPanel.add(openButton);
 		JToolBar buttonPanel = new JToolBar();
 		buttonPanel.setOpaque(false);
 		openButton.setOpaque(false);
 		clearButton.setOpaque(false);
-		add(buttonPanel,BorderLayout.EAST);
+		add(buttonPanel, BorderLayout.EAST);
 		buttonPanel.setFloatable(false);
 		buttonPanel.setBorderPainted(false);
-		buttonPanel.setLayout(new BoxLayout(buttonPanel,BoxLayout.X_AXIS));
+		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
 		buttonPanel.add(openButton);
 		buttonPanel.add(clearButton);
-//		buttonPanel.add(flipButton);
+		// buttonPanel.add(flipButton);
 		pathField.setEditable(false);
 		openButton.setBorderPainted(false);
 		clearButton.setBorderPainted(false);
-		openButton.addActionListener(new ActionListener(){
+		openButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				chooseFile();
-			}});
-		
-		clearButton.addActionListener(new ActionListener(){
+			}
+		});
+
+		clearButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				if(myProperty!=null) {
+				if (myProperty != null) {
 					System.err.println("Clearing property!");
-					myProperty.setAnyValue((Binary)null);
+					myProperty.setAnyValue((Binary) null);
 				} else {
 					System.err.println("No property set!");
 					setBinary(null);
-					
+
 				}
-			}});
-		
+			}
+		});
+
 		pathField.setTransferHandler(new BinaryTransferHandler(this));
-		
-//		flipButton.setVisible(false);
+
+		// flipButton.setVisible(false);
 	}
 
 	public Property getProperty() {
@@ -131,11 +137,11 @@ public class BinaryEditor extends JPanel implements PropertyControlled, Property
 	}
 
 	public void setBinaryValue(final Binary b) {
-		if(myProperty!=null) {
+		if (myProperty != null) {
 			myProperty.setAnyValue(b);
 		}
 	}
-	
+
 	public void setBinary(final Binary b) {
 		try {
 
@@ -158,8 +164,9 @@ public class BinaryEditor extends JPanel implements PropertyControlled, Property
 		}
 	}
 
-	public static ImageIcon scale(ImageInputStream infile, ImageOutputStream outfile, int width, int height, boolean keepAspect,
-			float quality) throws IOException {
+	public static ImageIcon scale(ImageInputStream infile,
+			ImageOutputStream outfile, int width, int height,
+			boolean keepAspect, float quality) throws IOException {
 
 		BufferedImage original = ImageIO.read(infile);
 		if (original == null) {
@@ -171,7 +178,8 @@ public class BinaryEditor extends JPanel implements PropertyControlled, Property
 
 	}
 
-	public static BufferedImage scale(int width, int height, boolean keepAspect, BufferedImage original) {
+	public static BufferedImage scale(int width, int height,
+			boolean keepAspect, BufferedImage original) {
 		System.err.println("width: " + width + " height: " + height);
 		int originalWidth = original.getWidth();
 		int originalHeight = original.getHeight();
@@ -190,16 +198,19 @@ public class BinaryEditor extends JPanel implements PropertyControlled, Property
 		}
 
 		// The scaling will be nice smooth with this filter
-		AreaAveragingScaleFilter scaleFilter = new AreaAveragingScaleFilter(Math.round(originalWidth / factorX), Math.round(originalHeight
-				/ factorY));
-		ImageProducer producer = new FilteredImageSource(original.getSource(), scaleFilter);
+		AreaAveragingScaleFilter scaleFilter = new AreaAveragingScaleFilter(
+				Math.round(originalWidth / factorX), Math.round(originalHeight
+						/ factorY));
+		ImageProducer producer = new FilteredImageSource(original.getSource(),
+				scaleFilter);
 		ImageGenerator generator = new ImageGenerator();
 		producer.startProduction(generator);
 		BufferedImage scaled = generator.getImage();
 		return scaled;
 	}
 
-	private final ImageIcon getScaled(BufferedImage icon, int maxWidth, int maxHeight) {
+	private final ImageIcon getScaled(BufferedImage icon, int maxWidth,
+			int maxHeight) {
 		BufferedImage bi = scale(maxWidth, maxHeight, false, icon);
 		if (icon == null) {
 			return null;
@@ -212,15 +223,16 @@ public class BinaryEditor extends JPanel implements PropertyControlled, Property
 	}
 
 	public void propertyChange(PropertyChangeEvent e) {
-//		System.err.println("Property change detected: "+e.getPropertyName()+" old: "+e.getOldValue()+" new: "+e.getNewValue());
+		// System.err.println("Property change detected: "+e.getPropertyName()+" old: "+e.getOldValue()+" new: "+e.getNewValue());
 		if ("value".equals(e.getPropertyName())) {
-//			Binary old = (Binary) e.getOldValue();
+			// Binary old = (Binary) e.getOldValue();
 			Binary newValue = (Binary) e.getNewValue();
-//			if (old != null && newValue != null) {
-//				System.err.println("Old size: " + old.getLength() + " new size: " + newValue.getLength());
-//			} else {
-//				System.err.println("Null detected!");
-//			}
+			// if (old != null && newValue != null) {
+			// System.err.println("Old size: " + old.getLength() + " new size: "
+			// + newValue.getLength());
+			// } else {
+			// System.err.println("Null detected!");
+			// }
 			setBinary(newValue);
 		}
 	}
@@ -231,9 +243,9 @@ public class BinaryEditor extends JPanel implements PropertyControlled, Property
 
 	public void setMaxImgHeight(int maxImgHeight) {
 		this.maxImgHeight = maxImgHeight;
-//		if (myProperty != null) {
-//			setProperty(myProperty);
-//		}
+		// if (myProperty != null) {
+		// setProperty(myProperty);
+		// }
 	}
 
 	public int getMaxImgWidth() {
@@ -242,9 +254,9 @@ public class BinaryEditor extends JPanel implements PropertyControlled, Property
 
 	public void setMaxImgWidth(int maxImgWidth) {
 		this.maxImgWidth = maxImgWidth;
-//		if (myProperty != null) {
-//			setProperty(myProperty);
-//		}
+		// if (myProperty != null) {
+		// setProperty(myProperty);
+		// }
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
@@ -254,7 +266,7 @@ public class BinaryEditor extends JPanel implements PropertyControlled, Property
 	private void chooseFile() {
 		try {
 			currentPath = null;
-			if(!"".equals(pathField.getText())) {
+			if (!"".equals(pathField.getText())) {
 				File current = new File(pathField.getText());
 				currentPath = current.getParentFile();
 			}
@@ -263,11 +275,10 @@ public class BinaryEditor extends JPanel implements PropertyControlled, Property
 			File f = jf.getSelectedFile();
 			if (f != null) {
 				Binary b = new Binary(f);
-				if(myProperty!=null) {
+				if (myProperty != null) {
 					myProperty.setAnyValue(b);
-//					setProperty(myProperty);	
+					// setProperty(myProperty);
 				}
-
 
 			}
 		} catch (Exception ex) {
@@ -276,19 +287,16 @@ public class BinaryEditor extends JPanel implements PropertyControlled, Property
 	}
 
 	private void setSyncBinary(final Binary b) {
-		if(b!=null) {
+		if (b != null) {
 			File file = b.getFile();
-			if(file!=null) {
+			if (file != null) {
 				pathField.setText(file.getAbsolutePath());
-				
+
 			} else {
 				pathField.setText("-");
 			}
 		}
 
-		
-		
-		
 		if (b == null || b.getLength() <= 0) {
 			pathField.setText("");
 			myBinaryLabel.setIcon(null);
@@ -309,7 +317,7 @@ public class BinaryEditor extends JPanel implements PropertyControlled, Property
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			 revalidate();
+			revalidate();
 			return;
 		}
 		myBinaryLabel.setText("?");

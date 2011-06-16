@@ -11,7 +11,8 @@ import javax.swing.SwingUtilities;
 
 import com.dexels.navajo.document.Property;
 
-public abstract class AbstractPropertyField extends JTextField implements FocusListener, PropertyChangeListener {
+public abstract class AbstractPropertyField extends JTextField implements
+		FocusListener, PropertyChangeListener {
 
 	/**
 	 * 
@@ -24,7 +25,7 @@ public abstract class AbstractPropertyField extends JTextField implements FocusL
 	protected abstract Object parseProperty(String text);
 
 	private boolean isEditing = false;
-	
+
 	public AbstractPropertyField() {
 		addFocusListener(this);
 		setOpaque(true);
@@ -37,41 +38,43 @@ public abstract class AbstractPropertyField extends JTextField implements FocusL
 	public boolean isEditing() {
 		return isEditing;
 	}
-	
-//	@Override
-//	public boolean isOpaque() {
-//		return true;
-//	}
+
+	// @Override
+	// public boolean isOpaque() {
+	// return true;
+	// }
 	public void setEditing(boolean b) {
 		isEditing = b;
 	}
-	
+
 	@Override
 	public void setEnabled(boolean b) {
 	}
 
 	public void setProperty(Property p) {
-		if(p!=myProperty) {
+		if (p != myProperty) {
 			if (myProperty != null) {
 				myProperty.removePropertyChangeListener(this);
 			}
 			setPropertyValue(p);
-			if(myProperty!=null) {
+			if (myProperty != null) {
 				myProperty.addPropertyChangeListener(this);
 			}
 		} else {
 			setPropertyValue(p);
 		}
-	
+
 	}
-/**
- * Similar to setProperty, only will not listen for property changes
- * @param p
- */
+
+	/**
+	 * Similar to setProperty, only will not listen for property changes
+	 * 
+	 * @param p
+	 */
 	public void setPropertyValue(Property p) {
 		myProperty = p;
 
-		if(myProperty==null) {
+		if (myProperty == null) {
 			setText("");
 			return;
 		}
@@ -80,27 +83,28 @@ public abstract class AbstractPropertyField extends JTextField implements FocusL
 		String s = getPresentationFormat(myProperty.getTypedValue());
 		setText(s);
 		setEditing(false);
-		if(hasFocus()) {
+		if (hasFocus()) {
 			editProperty();
 		}
 	}
-	
+
 	public void focusGained(FocusEvent e) {
 		editProperty();
-		}
+	}
 
 	public void editProperty() {
 		if (myProperty != null) {
 			try {
 				Runnable runAction = new Runnable() {
 					public void run() {
-						String editingFormat = getEditingFormat(myProperty.getTypedValue());
+						String editingFormat = getEditingFormat(myProperty
+								.getTypedValue());
 						setText(editingFormat);
 						selectAll();
 						setEditing(true);
 					}
 				};
-				if(SwingUtilities.isEventDispatchThread()) {
+				if (SwingUtilities.isEventDispatchThread()) {
 					runAction.run();
 				} else {
 					SwingUtilities.invokeAndWait(runAction);
@@ -116,7 +120,7 @@ public abstract class AbstractPropertyField extends JTextField implements FocusL
 	}
 
 	public void focusLost(FocusEvent e) {
-	
+
 		if (myProperty != null) {
 			updateProperty();
 		}
@@ -125,11 +129,11 @@ public abstract class AbstractPropertyField extends JTextField implements FocusL
 	}
 
 	protected void updateProperty() {
-		
-		if(!isEditing()) {
+
+		if (!isEditing()) {
 			return;
 		}
-		if(myProperty==null) {
+		if (myProperty == null) {
 			return;
 		}
 		Object value = parseProperty(getText());
@@ -154,11 +158,11 @@ public abstract class AbstractPropertyField extends JTextField implements FocusL
 					setText(s);
 				}
 			};
-			if(SwingUtilities.isEventDispatchThread()) {
+			if (SwingUtilities.isEventDispatchThread()) {
 				runAction.run();
 			} else {
 				SwingUtilities.invokeAndWait(runAction);
-			}			
+			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
@@ -172,8 +176,9 @@ public abstract class AbstractPropertyField extends JTextField implements FocusL
 		}
 		return newValue.toString();
 	}
+
 	public void update() {
 		updateProperty();
 	}
-	
+
 }

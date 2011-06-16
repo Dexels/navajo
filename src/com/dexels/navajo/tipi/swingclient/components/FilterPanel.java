@@ -56,7 +56,8 @@ import com.dexels.navajo.document.Selection;
 
 public class FilterPanel extends JPanel {
 	private static final long serialVersionUID = 4445177819384959544L;
-	static ResourceBundle res = ResourceBundle.getBundle("com.dexels.navajo.tipi.swingclient.components.filterpanelstrings");
+	static ResourceBundle res = ResourceBundle
+			.getBundle("com.dexels.navajo.tipi.swingclient.components.filterpanelstrings");
 	private JPanel flipPanel = new JPanel();
 	private JPanel columnPanel = new JPanel();
 	private JComboBox columnSelectBox = new JComboBox();
@@ -74,7 +75,7 @@ public class FilterPanel extends JPanel {
 	private JButton wordButton = new JButton();
 	private JButton emailButton = new JButton();
 
-	private HashMap<String,String> nameIdMap = new HashMap<String,String>();
+	private HashMap<String, String> nameIdMap = new HashMap<String, String>();
 	JComboBox operatorBox = new JComboBox();
 
 	private boolean babyMode = false;
@@ -83,8 +84,11 @@ public class FilterPanel extends JPanel {
 	GridBagLayout gridBagLayout1 = new GridBagLayout();
 
 	private String getMergedataFile() {
-		return System.getProperty("user.home") + System.getProperty("file.separator")
-				+ ((System.getProperty("os.name").toLowerCase().indexOf("windows") >= 0) ? "" : ".") + "sl-excel-export.csv";
+		return System.getProperty("user.home")
+				+ System.getProperty("file.separator")
+				+ ((System.getProperty("os.name").toLowerCase()
+						.indexOf("windows") >= 0) ? "" : ".")
+				+ "sl-excel-export.csv";
 	}
 
 	public FilterPanel() {
@@ -101,24 +105,29 @@ public class FilterPanel extends JPanel {
 		// columnPanel.setPreferredSize(new Dimension(150, 35));
 		this.setLayout(new BorderLayout());
 		columnsButton.setToolTipText(res.getString("changeColumnToolTip"));
-		columnsButton.setIcon(new ImageIcon(FilterPanel.class.getResource("column_preferences.png")));
+		columnsButton.setIcon(new ImageIcon(FilterPanel.class
+				.getResource("column_preferences.png")));
 		columnsButton.setMargin(new Insets(0, 0, 0, 0));
 		emailButton.setToolTipText("Email");
-		emailButton.setIcon(new ImageIcon(FilterPanel.class.getResource("mail_small.png")));
+		emailButton.setIcon(new ImageIcon(FilterPanel.class
+				.getResource("mail_small.png")));
 		emailButton.setMargin(new Insets(0, 0, 0, 0));
 		emailButton.setVisible(false);
 
-		columnsSaveButton.setIcon(new ImageIcon(FilterPanel.class.getResource("save.png")));
+		columnsSaveButton.setIcon(new ImageIcon(FilterPanel.class
+				.getResource("save.png")));
 		columnsSaveButton.setToolTipText(res.getString("saveToolTip"));
 		columnsSaveButton.setMargin(new Insets(0, 0, 0, 0));
 		columnsSaveButton.setVisible(false);
-		columnsSaveButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				columnsSaveButton_actionPerformed(e);
-			}
-		});
+		columnsSaveButton
+				.addActionListener(new java.awt.event.ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						columnsSaveButton_actionPerformed(e);
+					}
+				});
 
-		excelButton.setIcon(new ImageIcon(FilterPanel.class.getResource("excel.png")));
+		excelButton.setIcon(new ImageIcon(FilterPanel.class
+				.getResource("excel.png")));
 		excelButton.setToolTipText(res.getString("excelToolTip"));
 		excelButton.setMargin(new Insets(0, 0, 0, 0));
 		excelButton.setVisible(false);
@@ -141,7 +150,8 @@ public class FilterPanel extends JPanel {
 			}
 		});
 
-		wordButton.setIcon(new ImageIcon(FilterPanel.class.getResource("word.png")));
+		wordButton.setIcon(new ImageIcon(FilterPanel.class
+				.getResource("word.png")));
 		wordButton.setToolTipText(res.getString("wordToolTip"));
 		wordButton.setMargin(new Insets(0, 0, 0, 0));
 		wordButton.setVisible(false);
@@ -165,14 +175,16 @@ public class FilterPanel extends JPanel {
 		// valueField.setPreferredSize(new Dimension(80, 25));
 		// valueField.setText("");
 		addButton.setText("");
-		addButton.setIcon(new ImageIcon(FilterPanel.class.getResource("add-filter.gif")));
+		addButton.setIcon(new ImageIcon(FilterPanel.class
+				.getResource("add-filter.gif")));
 		addButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				addButton_actionPerformed(e);
 			}
 		});
 		clearButton.setText("");
-		clearButton.setIcon(new ImageIcon(FilterPanel.class.getResource("clear-filter.gif")));
+		clearButton.setIcon(new ImageIcon(FilterPanel.class
+				.getResource("clear-filter.gif")));
 		clearButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				clearButton_actionPerformed(e);
@@ -183,17 +195,23 @@ public class FilterPanel extends JPanel {
 				columnsButton_actionPerformed(e);
 			}
 		});
-		flipPanel.add(columnSelectBox, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
-				GridBagConstraints.HORIZONTAL, new Insets(1, 1, 1, 1), 0, 0));
-		flipPanel.add(operatorBox, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+		flipPanel.add(columnSelectBox, new GridBagConstraints(1, 0, 1, 1, 0.0,
+				0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
 				new Insets(1, 1, 1, 1), 0, 0));
-		flipPanel.add(valueField, new GridBagConstraints(3, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+		flipPanel.add(operatorBox, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0,
+				GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
 				new Insets(1, 1, 1, 1), 0, 0));
-		flipPanel.add(addButton, new GridBagConstraints(4, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
+		flipPanel.add(valueField, new GridBagConstraints(3, 0, 1, 1, 1.0, 0.0,
+				GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
 				new Insets(1, 1, 1, 1), 0, 0));
-		flipPanel.add(clearButton, new GridBagConstraints(5, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-				new Insets(1, 1, 1, 1), 0, 0));
-		flipPanel.add(filteredRowCountLabel, new GridBagConstraints(6, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
+		flipPanel.add(addButton, new GridBagConstraints(4, 0, 1, 1, 0.0, 0.0,
+				GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(
+						1, 1, 1, 1), 0, 0));
+		flipPanel.add(clearButton, new GridBagConstraints(5, 0, 1, 1, 0.0, 0.0,
+				GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(
+						1, 1, 1, 1), 0, 0));
+		flipPanel.add(filteredRowCountLabel, new GridBagConstraints(6, 0, 1, 1,
+				0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
 				new Insets(1, 1, 1, 1), 0, 0));
 		columnPanel.add(columnsSaveButton);
 		columnPanel.add(excelButton);
@@ -204,8 +222,10 @@ public class FilterPanel extends JPanel {
 	}
 
 	public void openLetter() {
-		templateDir = null;// SwingClient.getUserInterface().getPreference(10, null);
-		mergedataDir = null;// SwingClient.getUserInterface().getPreference(11, null);
+		templateDir = null;// SwingClient.getUserInterface().getPreference(10,
+							// null);
+		mergedataDir = null;// SwingClient.getUserInterface().getPreference(11,
+							// null);
 		JFileChooser fc = new JFileChooser();
 		fc.setDialogTitle("Open merge-template");
 		if (templateDir != null) {
@@ -219,7 +239,8 @@ public class FilterPanel extends JPanel {
 					data = myTable.getMessageAsPresentedOnTheScreen(true);
 				}
 				if (data != null) {
-					MergeUtils.openDocument(mergedataDir + "/merge.dat", data, fc.getSelectedFile().getPath());
+					MergeUtils.openDocument(mergedataDir + "/merge.dat", data,
+							fc.getSelectedFile().getPath());
 				}
 			}
 		}
@@ -263,7 +284,6 @@ public class FilterPanel extends JPanel {
 		loadColumns();
 	}
 
-
 	public void setIgnoreList(String[] list) {
 		ignoreList = list;
 	}
@@ -286,7 +306,8 @@ public class FilterPanel extends JPanel {
 			referenceRow = myTable.getSelectedRow();
 		}
 		referenceMessage = myTable.getMessageRow(referenceRow);
-		if (referenceMessage != null && myTable.getMessageModel().getColumnCount() != 0) {
+		if (referenceMessage != null
+				&& myTable.getMessageModel().getColumnCount() != 0) {
 			loadPanel();
 		}
 	}
@@ -298,7 +319,8 @@ public class FilterPanel extends JPanel {
 			if (propId != null) {
 				myTable.resetColorMap();
 				/** @todo Fix */
-				myTable.addPropertyFilter(propId, (Property) valueField.getProperty().clone(), ((OperatorItem) operatorBox
+				myTable.addPropertyFilter(propId, (Property) valueField
+						.getProperty().clone(), ((OperatorItem) operatorBox
 						.getSelectedItem()).value);
 				myTable.performFilters();
 				try {
@@ -310,7 +332,9 @@ public class FilterPanel extends JPanel {
 				myTable.getMessageModel().fireTableStructureChanged();
 				filterCount++;
 				setCountLabel(filterCount);
-				filteredRowCountLabel.setText("" + myTable.getMessageModel().getFilteredRecordCount() + " rijen");
+				filteredRowCountLabel.setText(""
+						+ myTable.getMessageModel().getFilteredRecordCount()
+						+ " rijen");
 			}
 		}
 	}
@@ -435,7 +459,7 @@ public class FilterPanel extends JPanel {
 		if (referenceMessage != null) {
 			String prop = (String) columnSelectBox.getSelectedItem();
 			String id = nameIdMap.get(prop);
-//			valueField.setHardEnabled(true);
+			// valueField.setHardEnabled(true);
 			Property p;
 			if (referenceMessage.getProperty(id) != null) {
 				p = (Property) referenceMessage.getProperty(id).clone();
@@ -459,7 +483,8 @@ public class FilterPanel extends JPanel {
 							s.add(sel);
 						}
 					}
-					Property q = NavajoFactory.getInstance().createProperty(dumm, id, "1", id, "in");
+					Property q = NavajoFactory.getInstance().createProperty(
+							dumm, id, "1", id, "in");
 					Iterator<Selection> it = s.iterator();
 					while (it.hasNext()) {
 						Selection qs = it.next();
@@ -488,10 +513,19 @@ public class FilterPanel extends JPanel {
 	}
 
 	private final void setupBabyFilter() {
-		operatorBox.setModel(new DefaultComboBoxModel(new Object[] { new OperatorItem(res.getString("operatorEquals"), "=="),
+		operatorBox
+				.setModel(new DefaultComboBoxModel(
+						new Object[] {
+								new OperatorItem(res
+										.getString("operatorEquals"), "=="),
 
-		new OperatorItem(res.getString("operatorContains"), "contains"), new OperatorItem(res.getString("operatorGreater"), ">"),
-				new OperatorItem(res.getString("operatorSmaller"), "<") }));
+								new OperatorItem(res
+										.getString("operatorContains"),
+										"contains"),
+								new OperatorItem(res
+										.getString("operatorGreater"), ">"),
+								new OperatorItem(res
+										.getString("operatorSmaller"), "<") }));
 
 		valueField.setPreferredSize(new Dimension(140, 20));
 		valueField.setLabelVisible(false);
@@ -500,14 +534,35 @@ public class FilterPanel extends JPanel {
 	}
 
 	private final void setupAdvancedFilter() {
-		operatorBox.setModel(new DefaultComboBoxModel(new Object[] { new OperatorItem(res.getString("operatorEquals"), "=="),
-				new OperatorItem(res.getString("operatorNotEquals"), "!="), new OperatorItem(res.getString("operatorGreater"), ">"),
-				new OperatorItem(res.getString("operatorSmaller"), "<"), new OperatorItem(res.getString("operatorSmallerEquals"), "<="),
-				new OperatorItem(res.getString("operatorGreaterEquals"), ">="),
-				new OperatorItem(res.getString("operatorStartsWith"), "startsWith"),
-				new OperatorItem(res.getString("operatorEndsWith"), "endsWith"),
-				new OperatorItem(res.getString("operatorContains"), "contains"),
-				new OperatorItem(res.getString("operatorRegularExpression"), "regularExpression") }));
+		operatorBox
+				.setModel(new DefaultComboBoxModel(
+						new Object[] {
+								new OperatorItem(res
+										.getString("operatorEquals"), "=="),
+								new OperatorItem(res
+										.getString("operatorNotEquals"), "!="),
+								new OperatorItem(res
+										.getString("operatorGreater"), ">"),
+								new OperatorItem(res
+										.getString("operatorSmaller"), "<"),
+								new OperatorItem(res
+										.getString("operatorSmallerEquals"),
+										"<="),
+								new OperatorItem(res
+										.getString("operatorGreaterEquals"),
+										">="),
+								new OperatorItem(res
+										.getString("operatorStartsWith"),
+										"startsWith"),
+								new OperatorItem(res
+										.getString("operatorEndsWith"),
+										"endsWith"),
+								new OperatorItem(res
+										.getString("operatorContains"),
+										"contains"),
+								new OperatorItem(
+										res.getString("operatorRegularExpression"),
+										"regularExpression") }));
 		valueField.setPreferredSize(new Dimension(140, 20));
 		valueField.setLabelVisible(false);
 		babyMode = false;

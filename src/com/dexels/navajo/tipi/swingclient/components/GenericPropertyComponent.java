@@ -81,7 +81,7 @@ public class GenericPropertyComponent extends JPanel {
 	private String forcedAlignment = null;
 
 	private String toolTipText;
-	
+
 	MultipleSelectionPropertyCheckboxGroup myMultiple = null;
 	MultipleSelectionPropertyList myMultipleList = null;
 	TextPropertyField myField = null;
@@ -118,7 +118,7 @@ public class GenericPropertyComponent extends JPanel {
 	private boolean isFocusable = false;
 	private final ArrayList<PropertyEventListener> myPropertyEventListeners = new ArrayList<PropertyEventListener>();
 	private boolean alwaysUseLabel = false;
-//	private Dimension myPreferredSize = null;
+	// private Dimension myPreferredSize = null;
 	private Component currentLabelIndentStrut = null;
 	private int forcedTotalWidth = -1;
 	private boolean showDatePicker = true;
@@ -146,12 +146,12 @@ public class GenericPropertyComponent extends JPanel {
 	}
 
 	protected JLabel getLabel() {
-		if(myLabel==null) {
+		if (myLabel == null) {
 			myLabel = new JLabel();
 		}
 		return myLabel;
 	}
-	
+
 	public void addPropertyKeyListener(KeyListener kl) {
 		myKeyListeners.add(kl);
 	}
@@ -225,8 +225,6 @@ public class GenericPropertyComponent extends JPanel {
 		}
 	}
 
-
-
 	public final Property getProperty() {
 		return myProperty;
 	}
@@ -239,7 +237,8 @@ public class GenericPropertyComponent extends JPanel {
 
 		if (myProperty != null) {
 			if (myPropertyChangeListener != null) {
-				myProperty.removePropertyChangeListener(myPropertyChangeListener);
+				myProperty
+						.removePropertyChangeListener(myPropertyChangeListener);
 			}
 		}
 		myProperty = p;
@@ -266,8 +265,6 @@ public class GenericPropertyComponent extends JPanel {
 		if (caps != null) {
 			setCapitalization(caps);
 		}
-		
-		
 
 		setPropFlag = true;
 		String description = p.getDescription();
@@ -290,13 +287,13 @@ public class GenericPropertyComponent extends JPanel {
 			PropertyField pf = (PropertyField) currentComponent;
 			pf.setForcedAlignment(forcedAlignment);
 		}
-		
+
 		String search = p.getSubType("search");
 		if (search != null) {
 			setSearch(search);
 		}
-		if(currentComponent!=null) {
-			if(toolTipText!=null) {
+		if (currentComponent != null) {
+			if (toolTipText != null) {
 				currentComponent.setToolTipText(toolTipText);
 			}
 		}
@@ -333,10 +330,12 @@ public class GenericPropertyComponent extends JPanel {
 		currentComponent = c;
 		// add(currentComponent, BorderLayout.CENTER);
 		if (verticalWeight) {
-			add(currentComponent, new GridBagConstraints(1, 0, 1, 1, 1, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(
-					0, 0, 0, 0), 0, 0));
+			add(currentComponent, new GridBagConstraints(1, 0, 1, 1, 1, 1.0,
+					GridBagConstraints.WEST, GridBagConstraints.BOTH,
+					new Insets(0, 0, 0, 0), 0, 0));
 		} else {
-			add(currentComponent, new GridBagConstraints(1, 0, 1, 1, 1, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+			add(currentComponent, new GridBagConstraints(1, 0, 1, 1, 1, 0.0,
+					GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
 					new Insets(0, 0, 0, 0), 0, 0));
 		}
 		if (valueStrut != null) {
@@ -366,20 +365,21 @@ public class GenericPropertyComponent extends JPanel {
 
 	public final void setLabel(final String s) {
 		myLabelText = s;
- 		if(getLabel().getParent()!=this) {
- 			add(getLabel(), new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0,
-					0, 0), 0, 0));
- 		} else {
- 			System.err.println("Already present!");
- 		}
-//		if (myLabel == null) {
-//			myLabel = new JLabel();
- 		getLabel().setVisible(true);
-			// myLabel.setVerticalAlignment(JLabel.CENTER_ALIGNMENT);
- 		getLabel().setOpaque(false);
-			// add(myLabel, BorderLayout.WEST);
- 		getLabel().setText(s);
-//		}
+		if (getLabel().getParent() != this) {
+			add(getLabel(), new GridBagConstraints(0, 0, 1, 1, 0, 0,
+					GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+					new Insets(0, 0, 0, 0), 0, 0));
+		} else {
+			System.err.println("Already present!");
+		}
+		// if (myLabel == null) {
+		// myLabel = new JLabel();
+		getLabel().setVisible(true);
+		// myLabel.setVerticalAlignment(JLabel.CENTER_ALIGNMENT);
+		getLabel().setOpaque(false);
+		// add(myLabel, BorderLayout.WEST);
+		getLabel().setText(s);
+		// }
 		if (labelWidth != 0) {
 			setLabelIndent(labelWidth);
 		}
@@ -391,20 +391,20 @@ public class GenericPropertyComponent extends JPanel {
 
 	public final void showLabel() {
 		showLabel = true;
-//		if (myLabel != null) {
-			getLabel().setVisible(showLabel);
-//		}
+		// if (myLabel != null) {
+		getLabel().setVisible(showLabel);
+		// }
 	}
 
 	public final void hideLabel() {
 		showLabel = false;
-//		if (myLabel != null) {
-//			remove(myLabel);
-//		}
+		// if (myLabel != null) {
+		// remove(myLabel);
+		// }
 		if (currentLabelIndentStrut != null) {
 			remove(currentLabelIndentStrut);
 		}
-//		myLabel = null;
+		// myLabel = null;
 	}
 
 	public final void setVerticalLabelAlignment(final int alignment) {
@@ -482,8 +482,6 @@ public class GenericPropertyComponent extends JPanel {
 		}
 	}
 
-
-
 	public void setLabelIndent(final int lindent) {
 		labelWidth = lindent;
 		if (getLabel() == null) {
@@ -495,7 +493,8 @@ public class GenericPropertyComponent extends JPanel {
 		}
 
 		currentLabelIndentStrut = Box.createHorizontalStrut(lindent);
-		add(currentLabelIndentStrut, new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+		add(currentLabelIndentStrut, new GridBagConstraints(0, 0, 1, 1, 0, 0,
+				GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
 				new Insets(0, 0, 0, 0), 0, 0));
 		// int height = getPreferredSize().height;
 
@@ -762,7 +761,8 @@ public class GenericPropertyComponent extends JPanel {
 	// }
 
 	private void createTipiField(Property p) {
-		String result = getFormatter().formatObject(p.getTypedValue(), p.getTypedValue().getClass());
+		String result = getFormatter().formatObject(p.getTypedValue(),
+				p.getTypedValue().getClass());
 		JLabel lh = new JLabel(result);
 		addPropertyComponent(lh);
 	}
@@ -793,7 +793,8 @@ public class GenericPropertyComponent extends JPanel {
 		addPropertyComponent(c, false);
 	}
 
-	protected final void addPropertyComponent(JComponent c, boolean verticalWeight) {
+	protected final void addPropertyComponent(JComponent c,
+			boolean verticalWeight) {
 		if (currentPropertyComponent != null) {
 			clearPropertyKeyListeners(currentPropertyComponent);
 		}
@@ -833,7 +834,8 @@ public class GenericPropertyComponent extends JPanel {
 					jj.setHorizontalAlignment(SwingConstants.CENTER);
 				}
 				if (limitFieldWidth > 0) {
-					System.err.println("Limiting field size to: " + limitFieldWidth);
+					System.err.println("Limiting field size to: "
+							+ limitFieldWidth);
 					// jj.setSize(new Dimension(limitFieldWidth,
 					// jj.getPreferredSize().height));
 					jj.setColumns(limitFieldWidth);
@@ -844,7 +846,8 @@ public class GenericPropertyComponent extends JPanel {
 			}
 		}
 
-		if (currentPropertyComponent != null && myProperty != null && !isFocusable) {
+		if (currentPropertyComponent != null && myProperty != null
+				&& !isFocusable) {
 			currentPropertyComponent.setFocusable(myProperty.isDirIn());
 		}
 	}
@@ -888,12 +891,13 @@ public class GenericPropertyComponent extends JPanel {
 	private final void createPropertyList(Property p) {
 		if (myMultipleList == null) {
 			myMultipleList = new MultipleSelectionPropertyList();
-			myMultipleList.addListSelectionListener(new ListSelectionListener() {
-				public void valueChanged(ListSelectionEvent e) {
-					myMultipleList_valueChanged(e);
-				}
+			myMultipleList
+					.addListSelectionListener(new ListSelectionListener() {
+						public void valueChanged(ListSelectionEvent e) {
+							myMultipleList_valueChanged(e);
+						}
 
-			});
+					});
 		}
 		if (visibleRowCount != 0) {
 			myMultipleList.setVisibleRowCount(visibleRowCount);
@@ -1142,11 +1146,12 @@ public class GenericPropertyComponent extends JPanel {
 					myPasswordField_focusLost(e);
 				}
 			});
-			myPasswordField.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					myPasswordField_actionPerformed(e);
-				}
-			});
+			myPasswordField
+					.addActionListener(new java.awt.event.ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							myPasswordField_actionPerformed(e);
+						}
+					});
 		}
 		myPasswordField.setProperty(p);
 		addPropertyComponent(myPasswordField);
@@ -1164,11 +1169,12 @@ public class GenericPropertyComponent extends JPanel {
 					myPasswordField_focusLost(e);
 				}
 			});
-			myHiddenField.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					myPasswordField_actionPerformed(e);
-				}
-			});
+			myHiddenField
+					.addActionListener(new java.awt.event.ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							myPasswordField_actionPerformed(e);
+						}
+					});
 		}
 		myHiddenField.setProperty(p);
 		addPropertyComponent(myHiddenField);
@@ -1230,20 +1236,22 @@ public class GenericPropertyComponent extends JPanel {
 				myRadioButtonField.setColumnMode(false);
 			}
 
-			myRadioButtonField.addFocusListener(new java.awt.event.FocusAdapter() {
-				public final void focusGained(FocusEvent e) {
-					myRadioButtonField_focusGained(e);
-				}
+			myRadioButtonField
+					.addFocusListener(new java.awt.event.FocusAdapter() {
+						public final void focusGained(FocusEvent e) {
+							myRadioButtonField_focusGained(e);
+						}
 
-				public final void focusLost(FocusEvent e) {
-					myRadioButtonField_focusLost(e);
-				}
-			});
-			myRadioButtonField.addActionListener(new java.awt.event.ActionListener() {
-				public final void actionPerformed(ActionEvent e) {
-					myRadioButtonField_actionPerformed(e);
-				}
-			});
+						public final void focusLost(FocusEvent e) {
+							myRadioButtonField_focusLost(e);
+						}
+					});
+			myRadioButtonField
+					.addActionListener(new java.awt.event.ActionListener() {
+						public final void actionPerformed(ActionEvent e) {
+							myRadioButtonField_actionPerformed(e);
+						}
+					});
 			// myRadioButtonField.add1 myRadioButtonField_itemStateChanged
 		}
 		myRadioButtonField.setProperty(p);
@@ -1253,20 +1261,22 @@ public class GenericPropertyComponent extends JPanel {
 	private final void createClockTimeField(Property p) {
 		if (myClockTimeField == null) {
 			myClockTimeField = new ClockTimeField();
-			myClockTimeField.addFocusListener(new java.awt.event.FocusAdapter() {
-				public final void focusGained(FocusEvent e) {
-					myClockTimeField_focusGained(e);
-				}
+			myClockTimeField
+					.addFocusListener(new java.awt.event.FocusAdapter() {
+						public final void focusGained(FocusEvent e) {
+							myClockTimeField_focusGained(e);
+						}
 
-				public final void focusLost(FocusEvent e) {
-					myClockTimeField_focusLost(e);
-				}
-			});
-			myClockTimeField.addActionListener(new java.awt.event.ActionListener() {
-				public final void actionPerformed(ActionEvent e) {
-					myClockTimeField_actionPerformed(e);
-				}
-			});
+						public final void focusLost(FocusEvent e) {
+							myClockTimeField_focusLost(e);
+						}
+					});
+			myClockTimeField
+					.addActionListener(new java.awt.event.ActionListener() {
+						public final void actionPerformed(ActionEvent e) {
+							myClockTimeField_actionPerformed(e);
+						}
+					});
 		}
 		if ("true".equals(p.getSubType("showseconds"))) {
 			myClockTimeField.showSeconds(true);
@@ -1280,20 +1290,22 @@ public class GenericPropertyComponent extends JPanel {
 	private final void createStopwatchTimeField(Property p) {
 		if (myStopwatchTimeField == null) {
 			myStopwatchTimeField = new StopwatchTimeField();
-			myStopwatchTimeField.addFocusListener(new java.awt.event.FocusAdapter() {
-				public final void focusGained(FocusEvent e) {
-					myStopwatchTimeField_focusGained(e);
-				}
+			myStopwatchTimeField
+					.addFocusListener(new java.awt.event.FocusAdapter() {
+						public final void focusGained(FocusEvent e) {
+							myStopwatchTimeField_focusGained(e);
+						}
 
-				public final void focusLost(FocusEvent e) {
-					myStopwatchTimeField_focusLost(e);
-				}
-			});
-			myStopwatchTimeField.addActionListener(new java.awt.event.ActionListener() {
-				public final void actionPerformed(ActionEvent e) {
-					myStopwatchTimeField_actionPerformed(e);
-				}
-			});
+						public final void focusLost(FocusEvent e) {
+							myStopwatchTimeField_focusLost(e);
+						}
+					});
+			myStopwatchTimeField
+					.addActionListener(new java.awt.event.ActionListener() {
+						public final void actionPerformed(ActionEvent e) {
+							myStopwatchTimeField_actionPerformed(e);
+						}
+					});
 		}
 		myStopwatchTimeField.setProperty(p);
 		addPropertyComponent(myStopwatchTimeField);
@@ -1350,12 +1362,14 @@ public class GenericPropertyComponent extends JPanel {
 		};
 
 		memoFieldScrollPane.getViewport().add(myMemoField);
-		memoFieldScrollPane.setHorizontalScrollBarPolicy(horizontalScrolls ? JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED
-				: JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		memoFieldScrollPane.setVerticalScrollBarPolicy(verticalScrolls ? JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED
-				: JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+		memoFieldScrollPane
+				.setHorizontalScrollBarPolicy(horizontalScrolls ? JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED
+						: JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		memoFieldScrollPane
+				.setVerticalScrollBarPolicy(verticalScrolls ? JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED
+						: JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		myMemoField.setProperty(p);
-		if(toolTipText!=null) {
+		if (toolTipText != null) {
 			myMemoField.setToolTipText(toolTipText);
 		}
 		addPropertyComponent(memoFieldScrollPane, true);
@@ -1562,7 +1576,8 @@ public class GenericPropertyComponent extends JPanel {
 	@SuppressWarnings("deprecation")
 	public void setEnabled(boolean value) {
 		if (myProperty != null) {
-			if (myProperty.getType().equals("selection") && !"+".equals(myProperty.getCardinality())) {
+			if (myProperty.getType().equals("selection")
+					&& !"+".equals(myProperty.getCardinality())) {
 				if (use_checkbox) {
 					if (myRadioButtonField != null) {
 						myRadioButtonField.setFocusable(value);
@@ -1577,7 +1592,8 @@ public class GenericPropertyComponent extends JPanel {
 				}
 				return;
 			}
-			if (myProperty.getType().equals("selection") && "+".equals(myProperty.getCardinality())) {
+			if (myProperty.getType().equals("selection")
+					&& "+".equals(myProperty.getCardinality())) {
 				if (use_checkbox) {
 					if (myMultiple != null) {
 						myMultiple.setFocusable(value);
@@ -1608,7 +1624,8 @@ public class GenericPropertyComponent extends JPanel {
 				return;
 			}
 
-			if (myProperty.getType().equals("string") && "true".equals(myProperty.getSubType("uri"))) {
+			if (myProperty.getType().equals("string")
+					&& "true".equals(myProperty.getSubType("uri"))) {
 				if (myURIField != null) {
 					myURIField.setFocusable(value);
 					myURIField.setEnabled(value);
@@ -1699,7 +1716,8 @@ public class GenericPropertyComponent extends JPanel {
 		myPropertyEventListeners.remove(pel);
 	}
 
-	protected final void firePropertyEvents(Property p, String eventType, boolean internalChange) {
+	protected final void firePropertyEvents(Property p, String eventType,
+			boolean internalChange) {
 		for (int i = 0; i < myPropertyEventListeners.size(); i++) {
 			PropertyEventListener current = myPropertyEventListeners.get(i);
 			current.propertyEventFired(p, eventType, internalChange);
@@ -1717,7 +1735,7 @@ public class GenericPropertyComponent extends JPanel {
 		}
 
 	}
-	
+
 	public void setSearch(String mode) {
 		mySearch = mode;
 		if (myField != null) {
@@ -1729,7 +1747,7 @@ public class GenericPropertyComponent extends JPanel {
 	public String getCapitalization() {
 		return myCapitalization;
 	}
-	
+
 	public String getSearch() {
 		return mySearch;
 	}
@@ -1762,8 +1780,9 @@ public class GenericPropertyComponent extends JPanel {
 		}
 		if (myMemoField != null) {
 			// No null check, if there is no scroll pane, it deserves to crash
-			memoFieldScrollPane.setVerticalScrollBarPolicy(verticalScrolls ? JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED
-					: JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+			memoFieldScrollPane
+					.setVerticalScrollBarPolicy(verticalScrolls ? JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED
+							: JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		}
 	}
 
@@ -1776,8 +1795,9 @@ public class GenericPropertyComponent extends JPanel {
 			myMultiple.setHorizontalScrolls(b);
 		}
 		if (myMemoField != null) {
-			memoFieldScrollPane.setHorizontalScrollBarPolicy(horizontalScrolls ? JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED
-					: JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+			memoFieldScrollPane
+					.setHorizontalScrollBarPolicy(horizontalScrolls ? JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED
+							: JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		}
 	}
 
@@ -1800,47 +1820,51 @@ public class GenericPropertyComponent extends JPanel {
 	// return getPreferredSize();
 	// }
 	public Dimension getMaximumSize() {
-		return new Dimension(super.getMaximumSize().width, super.getMaximumSize().height);
+		return new Dimension(super.getMaximumSize().width,
+				super.getMaximumSize().height);
 		// return super.getMaximumSize();
 	}
 
 	public Dimension getPreferredSize() {
-//		if (true) {
-			return limitTo(super.getPreferredSize(), getMaximumSize());
-//		}
-////		if (myProperty == null || currentComponent == null) {
-////			// System.err.println("no prop or no component");
-////		}
-//		Dimension labelDimension = null;
-//		if (showLabel && getLabel() != null) {
-//			labelDimension = getLabel().getPreferredSize();
-//			if (currentLabelIndentStrut != null) {
-//				labelDimension = new Dimension(Math.max(labelDimension.width, labelWidth), labelDimension.height);
-//			}
-//			if (labelDimension != null && labelWidth > labelDimension.width) {
-//				labelDimension.width = labelWidth;
-//			}
-//		}
-//		labelWidth = -1;
-//		Dimension componentDimension = currentComponent.getPreferredSize();
-//		if (componentDimension == null) {
-//			// System.err.println("Component without dimension");
-//			if (myPreferredSize != null) {
-//				return limitTo(new Dimension(myPreferredSize.width, super.getPreferredSize().height), getMaximumSize());
-//			}
-//			return limitTo(super.getPreferredSize(), getMaximumSize());
-//		}
-//		if (labelDimension != null) {
-//			int height = Math.max(labelDimension.height, componentDimension.height);
-//			int w = labelDimension.width + componentDimension.width;
-//			if (myPreferredSize != null) {
-//				w = myPreferredSize.width;
-//			}
-//
-//			return limitTo(new Dimension(w, height), getMaximumSize());
-//		} else {
-//			return limitTo(componentDimension, getMaximumSize());
-//		}
+		// if (true) {
+		return limitTo(super.getPreferredSize(), getMaximumSize());
+		// }
+		// // if (myProperty == null || currentComponent == null) {
+		// // // System.err.println("no prop or no component");
+		// // }
+		// Dimension labelDimension = null;
+		// if (showLabel && getLabel() != null) {
+		// labelDimension = getLabel().getPreferredSize();
+		// if (currentLabelIndentStrut != null) {
+		// labelDimension = new Dimension(Math.max(labelDimension.width,
+		// labelWidth), labelDimension.height);
+		// }
+		// if (labelDimension != null && labelWidth > labelDimension.width) {
+		// labelDimension.width = labelWidth;
+		// }
+		// }
+		// labelWidth = -1;
+		// Dimension componentDimension = currentComponent.getPreferredSize();
+		// if (componentDimension == null) {
+		// // System.err.println("Component without dimension");
+		// if (myPreferredSize != null) {
+		// return limitTo(new Dimension(myPreferredSize.width,
+		// super.getPreferredSize().height), getMaximumSize());
+		// }
+		// return limitTo(super.getPreferredSize(), getMaximumSize());
+		// }
+		// if (labelDimension != null) {
+		// int height = Math.max(labelDimension.height,
+		// componentDimension.height);
+		// int w = labelDimension.width + componentDimension.width;
+		// if (myPreferredSize != null) {
+		// w = myPreferredSize.width;
+		// }
+		//
+		// return limitTo(new Dimension(w, height), getMaximumSize());
+		// } else {
+		// return limitTo(componentDimension, getMaximumSize());
+		// }
 	}
 
 	public void setTextFieldColumns(int columnCount) {
@@ -1858,11 +1882,12 @@ public class GenericPropertyComponent extends JPanel {
 			return preferredSize;
 		}
 		if (forcedTotalWidth > -1) {
-			return new Dimension(forcedTotalWidth, Math.min(preferredSize.height, maximumSize.height));
+			return new Dimension(forcedTotalWidth, Math.min(
+					preferredSize.height, maximumSize.height));
 		}
-		return new Dimension(Math.min(preferredSize.width, maximumSize.width), Math.min(preferredSize.height, maximumSize.height));
+		return new Dimension(Math.min(preferredSize.width, maximumSize.width),
+				Math.min(preferredSize.height, maximumSize.height));
 	}
-
 
 	public void forceFieldAlignment(String forceFieldAlignment) {
 		this.forceFieldAlignment = forceFieldAlignment;
@@ -1985,10 +2010,13 @@ public class GenericPropertyComponent extends JPanel {
 	private void setComponentWidth() {
 		System.err.println("MONKEEEY: " + propertyWidth);
 		valueStrut = Box.createHorizontalStrut(propertyWidth);
-		add(valueStrut, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0,
-				0, 0, 0), propertyWidth, 0));
-		currentComponent.setMaximumSize(new Dimension(propertyWidth, Integer.MAX_VALUE));
-		valueStrut.setMaximumSize(new Dimension(propertyWidth, Integer.MAX_VALUE));
+		add(valueStrut, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
+				GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+				new Insets(0, 0, 0, 0), propertyWidth, 0));
+		currentComponent.setMaximumSize(new Dimension(propertyWidth,
+				Integer.MAX_VALUE));
+		valueStrut.setMaximumSize(new Dimension(propertyWidth,
+				Integer.MAX_VALUE));
 	}
 
 	public String getToolTipText() {
@@ -1996,11 +2024,11 @@ public class GenericPropertyComponent extends JPanel {
 	}
 
 	public void setToolTipText(String toolTipText) {
-		System.err.println("Setting tooltiptext: "+toolTipText);
+		System.err.println("Setting tooltiptext: " + toolTipText);
 		this.toolTipText = toolTipText;
 		super.setToolTipText(toolTipText);
-		if(currentComponent!=null) {
-				currentComponent.setToolTipText(toolTipText);
+		if (currentComponent != null) {
+			currentComponent.setToolTipText(toolTipText);
 		}
 	}
 

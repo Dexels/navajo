@@ -8,7 +8,8 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 
-public class PropertyBox extends BaseComboBox implements PropertyControlled, PropertyChangeListener {
+public class PropertyBox extends BaseComboBox implements PropertyControlled,
+		PropertyChangeListener {
 
 	private static final long serialVersionUID = 473768705535369366L;
 
@@ -18,24 +19,23 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled, Pro
 
 	public PropertyBox() {
 
-//		PropertyCellRenderer renderer2 = new PropertyCellRenderer();
-//		this.setRenderer(renderer2);
+		// PropertyCellRenderer renderer2 = new PropertyCellRenderer();
+		// this.setRenderer(renderer2);
 		this.addItemListener(new java.awt.event.ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				this_itemStateChanged(e);
 			}
 		});
-//		setBackground(Color.white);
+		// setBackground(Color.white);
 		setEditable(false);
 	}
-
 
 	public final Property getProperty() {
 		return myProperty;
 	}
 
 	public final void update() {
-		if(myProperty!=null) {
+		if (myProperty != null) {
 			lastSelection = myProperty.getTypedValue();
 		}
 	}
@@ -43,7 +43,7 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled, Pro
 	public final Object getLastSelection() {
 		return lastSelection;
 	}
-	
+
 	public final void loadProperty(Property p) {
 		lastSelection = p.getTypedValue();
 		try {
@@ -51,7 +51,8 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled, Pro
 				myProperty = p;
 				loadCombobox(p);
 			} else {
-				System.err.println("Attempting to load property box from non-selection property");
+				System.err
+						.println("Attempting to load property box from non-selection property");
 			}
 		} catch (NavajoException e1) {
 			e1.printStackTrace();
@@ -64,14 +65,13 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled, Pro
 	public void setEditable(boolean b) {
 		setEnabled(b);
 	}
-	
+
 	public void setTextEditingEnabled(boolean b) {
 		super.setEditable(b);
 	}
 
-
 	public final void setProperty(Property p) {
-		if(myProperty!=null) {
+		if (myProperty != null) {
 			myProperty.removePropertyChangeListener(this);
 		}
 		// TODO NULL stuff. How to reset the property to null?
@@ -86,7 +86,8 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled, Pro
 			return;
 		} else {
 			if (myProperty == null) {
-				System.err.println("Setting property to propertyBox without loading first!");
+				System.err
+						.println("Setting property to propertyBox without loading first!");
 				// return;
 			}
 
@@ -94,32 +95,31 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled, Pro
 				setToKey((p.getValue()).trim());
 			}
 			setEnabled(p.isDirIn());
-//			if (p.isDirOut()) {
-//				setForeground(Color.black);
-//				setBackground(SystemColor.control);
-//			}
+			// if (p.isDirOut()) {
+			// setForeground(Color.black);
+			// setBackground(SystemColor.control);
+			// }
 		}
 	}
-
 
 	private final void setSelectionProperty() throws NavajoException {
 		Selection s = (Selection) getSelectedItem();
 		if (s == null) {
 			return;
 		}
-		if ( myProperty != null ) {
+		if (myProperty != null) {
 			myProperty.setSelected(s);
 		}
 
 	}
-
 
 	public final Selection getSelectedSelection() {
 		Object o = super.getSelectedItem();
 		if (Selection.class.isInstance(o)) {
 			return (Selection) o;
 		}
-		System.err.println("Error: Can not return selection from box: Not of type Selection");
+		System.err
+				.println("Error: Can not return selection from box: Not of type Selection");
 		return null;
 
 	}
@@ -128,21 +128,21 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled, Pro
 		if (myProperty == null) {
 			System.err.println("Property box changed before it was set!");
 		}
-			try {
+		try {
 			setSelectionProperty();
 		} catch (NavajoException e1) {
 			e1.printStackTrace();
 		}
-	
-	
+
 	}
 
 	public void propertyChange(PropertyChangeEvent evt) {
-		if(evt.getSource().equals(myProperty)) {
-			System.err.println("change: "+evt.getOldValue()+" new: "+evt.getNewValue());
+		if (evt.getSource().equals(myProperty)) {
+			System.err.println("change: " + evt.getOldValue() + " new: "
+					+ evt.getNewValue());
 			setProperty(myProperty);
 		} else {
-			//huh?!
+			// huh?!
 			System.err.println("snappetniet");
 		}
 	}

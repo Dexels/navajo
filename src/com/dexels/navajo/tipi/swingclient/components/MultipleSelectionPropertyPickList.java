@@ -46,7 +46,8 @@ import com.dexels.navajo.document.base.BasePropertyImpl;
  * @version 1.0
  */
 
-public final class MultipleSelectionPropertyPickList extends JPanel implements PropertyControlled {
+public final class MultipleSelectionPropertyPickList extends JPanel implements
+		PropertyControlled {
 	private static final long serialVersionUID = -6853070214866368382L;
 	JScrollPane jScrollPane1 = new JScrollPane();
 	JScrollPane jScrollPane2 = new JScrollPane();
@@ -72,28 +73,38 @@ public final class MultipleSelectionPropertyPickList extends JPanel implements P
 		}
 	}
 
-
-
 	private final void jbInit() throws Exception {
 		this.setLayout(gridBagLayout1);
 		selectButton.setText("");
-		selectButton.addActionListener(new MultipleSelectionPropertyPickList_selectButton_actionAdapter(this));
+		selectButton
+				.addActionListener(new MultipleSelectionPropertyPickList_selectButton_actionAdapter(
+						this));
 		selectButton.setInputVerifier(null);
-		selectButton.setIcon(new ImageIcon(MultipleSelectionPropertyPickList.class.getResource("arrow_right.gif")));
+		selectButton.setIcon(new ImageIcon(
+				MultipleSelectionPropertyPickList.class
+						.getResource("arrow_right.gif")));
 		selectButton.setMargin(new Insets(2, 2, 2, 2));
-		deselectButton.setIcon(new ImageIcon(MultipleSelectionPropertyPickList.class.getResource("arrow_left.gif")));
+		deselectButton.setIcon(new ImageIcon(
+				MultipleSelectionPropertyPickList.class
+						.getResource("arrow_left.gif")));
 		deselectButton.setMargin(new Insets(2, 2, 2, 2));
-		deselectButton.addActionListener(new MultipleSelectionPropertyPickList_deselectButton_actionAdapter(this));
-		this.add(jScrollPane1, new GridBagConstraints(0, 0, 1, 2, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(
-				2, 2, 2, 2), -1000, 0));
+		deselectButton
+				.addActionListener(new MultipleSelectionPropertyPickList_deselectButton_actionAdapter(
+						this));
+		this.add(jScrollPane1, new GridBagConstraints(0, 0, 1, 2, 1.0, 1.0,
+				GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(
+						2, 2, 2, 2), -1000, 0));
 		jScrollPane1.getViewport().add(notSelectedList, null);
-		this.add(jScrollPane2, new GridBagConstraints(2, 0, 1, 2, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(
-				2, 2, 2, 2), -1000, 0));
+		this.add(jScrollPane2, new GridBagConstraints(2, 0, 1, 2, 1.0, 1.0,
+				GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(
+						2, 2, 2, 2), -1000, 0));
 		jScrollPane2.getViewport().add(selectedList, null);
-		this.add(selectButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(
-				2, 2, 2, 2), 0, 0));
-		this.add(deselectButton, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH, GridBagConstraints.NONE,
-				new Insets(2, 2, 2, 2), 0, 0));
+		this.add(selectButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
+				GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(
+						2, 2, 2, 2), 0, 0));
+		this.add(deselectButton, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
+				GridBagConstraints.NORTH, GridBagConstraints.NONE, new Insets(
+						2, 2, 2, 2), 0, 0));
 	}
 
 	/**
@@ -116,29 +127,34 @@ public final class MultipleSelectionPropertyPickList extends JPanel implements P
 	 *       com.dexels.navajo.swingclient.components.PropertyControlled method
 	 */
 	public final void setProperty(final Property p) {
-		if(myPropertyListener!=null && myProperty!=null) {
+		if (myPropertyListener != null && myProperty != null) {
 			myProperty.removePropertyChangeListener(myPropertyListener);
 			myPropertyListener = null;
 		}
-		myPropertyListener = new PropertyChangeListener(){
+		myPropertyListener = new PropertyChangeListener() {
 
 			public void propertyChange(PropertyChangeEvent evt) {
-				System.err.println("CHANGE DETECTED: "+evt.getPropertyName()+" old: "+evt.getOldValue()+" new: "+evt.getNewValue());
+				System.err.println("CHANGE DETECTED: " + evt.getPropertyName()
+						+ " old: " + evt.getOldValue() + " new: "
+						+ evt.getNewValue());
 				Thread.dumpStack();
-				System.err.println("OLDVALCLASS: "+evt.getOldValue().getClass());
-				System.err.println("NEWVALCLASS: "+evt.getNewValue().getClass());
+				System.err.println("OLDVALCLASS: "
+						+ evt.getOldValue().getClass());
+				System.err.println("NEWVALCLASS: "
+						+ evt.getNewValue().getClass());
 				BasePropertyImpl pp = (BasePropertyImpl) p;
 				try {
 					StringWriter stringWriter = new StringWriter();
 					pp.write(stringWriter);
-					System.err.println("s: "+stringWriter.toString());
+					System.err.println("s: " + stringWriter.toString());
 				} catch (NavajoException e) {
 					e.printStackTrace();
 				}
-			}};
-			p.addPropertyChangeListener(myPropertyListener);
-			
-			try {
+			}
+		};
+		p.addPropertyChangeListener(myPropertyListener);
+
+		try {
 			selectedModel.clear();
 			deselectedModel.clear();
 			myProperty = p;
@@ -166,13 +182,13 @@ public final class MultipleSelectionPropertyPickList extends JPanel implements P
 					}
 				}
 			} else {
-				System.err.println("WARNING: Setting a non-selection type property in MultipleSelectionPropertyPickList");
+				System.err
+						.println("WARNING: Setting a non-selection type property in MultipleSelectionPropertyPickList");
 			}
 		} catch (NavajoException e) {
 			e.printStackTrace();
 		}
 	}
-
 
 	public final void update() {
 	}
@@ -184,27 +200,29 @@ public final class MultipleSelectionPropertyPickList extends JPanel implements P
 			Selection s = (Selection) selectedInList[i];
 			ll.add(s.getValue());
 		}
-		
+
 		try {
-			ArrayList<Selection> alreadySelected = myProperty.getAllSelectedSelections();
+			ArrayList<Selection> alreadySelected = myProperty
+					.getAllSelectedSelections();
 			for (Selection selection : alreadySelected) {
 				ll.add(selection.getValue());
 			}
 			myProperty.setSelected(ll);
-			} catch (NavajoException e1) {
+		} catch (NavajoException e1) {
 			e1.printStackTrace();
 		}
 		buildListModel(myProperty);
 
 	}
 
-	private ArrayList<String> invertSelection(Property p, ArrayList<String> ll) throws NavajoException {
+	private ArrayList<String> invertSelection(Property p, ArrayList<String> ll)
+			throws NavajoException {
 		ArrayList<Selection> all = p.getAllSelectedSelections();
 		ArrayList<String> invList = new ArrayList<String>();
 		for (int i = 0; i < all.size(); i++) {
 			Selection s = all.get(i);
 			String value = s.getValue();
-			if(!ll.contains(value)) {
+			if (!ll.contains(value)) {
 				invList.add(value);
 			}
 		}
@@ -236,15 +254,22 @@ public final class MultipleSelectionPropertyPickList extends JPanel implements P
 			Navajo n = NavajoFactory.getInstance().createNavajo();
 			Message m = NavajoFactory.getInstance().createMessage(n, "test");
 			n.addMessage(m);
-			Property p = NavajoFactory.getInstance().createProperty(n, "Test", "+", "Test", "in");
+			Property p = NavajoFactory.getInstance().createProperty(n, "Test",
+					"+", "Test", "in");
 			m.addProperty(p);
 
-			Selection s1 = NavajoFactory.getInstance().createSelection(n, "n_Aap", "v_Aap", true);
-			Selection s2 = NavajoFactory.getInstance().createSelection(n, "n_Noot", "v_Noot", false);
-			Selection s3 = NavajoFactory.getInstance().createSelection(n, "n_Mies", "v_Mies", false);
-			Selection s4 = NavajoFactory.getInstance().createSelection(n, "n_Geit", "v_Geit", true);
-			Selection s5 = NavajoFactory.getInstance().createSelection(n, "n_Boot", "v_Boot", false);
-			Selection s6 = NavajoFactory.getInstance().createSelection(n, "n_Raket", "v_Raket", false);
+			Selection s1 = NavajoFactory.getInstance().createSelection(n,
+					"n_Aap", "v_Aap", true);
+			Selection s2 = NavajoFactory.getInstance().createSelection(n,
+					"n_Noot", "v_Noot", false);
+			Selection s3 = NavajoFactory.getInstance().createSelection(n,
+					"n_Mies", "v_Mies", false);
+			Selection s4 = NavajoFactory.getInstance().createSelection(n,
+					"n_Geit", "v_Geit", true);
+			Selection s5 = NavajoFactory.getInstance().createSelection(n,
+					"n_Boot", "v_Boot", false);
+			Selection s6 = NavajoFactory.getInstance().createSelection(n,
+					"n_Raket", "v_Raket", false);
 			p.addSelection(s1);
 			p.addSelection(s2);
 			p.addSelection(s3);
@@ -279,10 +304,12 @@ public final class MultipleSelectionPropertyPickList extends JPanel implements P
 
 }
 
-final class MultipleSelectionPropertyPickList_selectButton_actionAdapter implements java.awt.event.ActionListener {
+final class MultipleSelectionPropertyPickList_selectButton_actionAdapter
+		implements java.awt.event.ActionListener {
 	MultipleSelectionPropertyPickList adaptee;
 
-	MultipleSelectionPropertyPickList_selectButton_actionAdapter(MultipleSelectionPropertyPickList adaptee) {
+	MultipleSelectionPropertyPickList_selectButton_actionAdapter(
+			MultipleSelectionPropertyPickList adaptee) {
 		this.adaptee = adaptee;
 	}
 
@@ -291,10 +318,12 @@ final class MultipleSelectionPropertyPickList_selectButton_actionAdapter impleme
 	}
 }
 
-final class MultipleSelectionPropertyPickList_deselectButton_actionAdapter implements java.awt.event.ActionListener {
+final class MultipleSelectionPropertyPickList_deselectButton_actionAdapter
+		implements java.awt.event.ActionListener {
 	MultipleSelectionPropertyPickList adaptee;
 
-	MultipleSelectionPropertyPickList_deselectButton_actionAdapter(MultipleSelectionPropertyPickList adaptee) {
+	MultipleSelectionPropertyPickList_deselectButton_actionAdapter(
+			MultipleSelectionPropertyPickList adaptee) {
 		this.adaptee = adaptee;
 	}
 

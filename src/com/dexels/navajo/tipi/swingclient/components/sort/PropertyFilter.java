@@ -16,39 +16,40 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
+
 /**
  * @deprecated
  */
 @Deprecated
 public class PropertyFilter {
-  private Property myProperty;
-  private String myValue;
-  public PropertyFilter(Property p, String value) {
-    myProperty = p;
-    myValue = value;
-  }
+	private Property myProperty;
+	private String myValue;
 
-  public boolean compliesWith(Message m) {
-    Property p = m.getProperty(myProperty.getName());
-    if (p==null) {
-      return true;
-    }
-    if (myProperty.getType().equals(Property.SELECTION_PROPERTY)) {
-      Selection s = null;
-      try {
-        s = p.getSelectionByValue(myValue);
-      }
-      catch (NavajoException ex) {
-        ex.printStackTrace();
-        return true;
-      }
-      if (s!=null) {
-        return s.isSelected();
-      } else {
-        return false;
-      }
-    }
+	public PropertyFilter(Property p, String value) {
+		myProperty = p;
+		myValue = value;
+	}
 
-    return p.getValue().equals(myProperty.getValue());
-  }
+	public boolean compliesWith(Message m) {
+		Property p = m.getProperty(myProperty.getName());
+		if (p == null) {
+			return true;
+		}
+		if (myProperty.getType().equals(Property.SELECTION_PROPERTY)) {
+			Selection s = null;
+			try {
+				s = p.getSelectionByValue(myValue);
+			} catch (NavajoException ex) {
+				ex.printStackTrace();
+				return true;
+			}
+			if (s != null) {
+				return s.isSelected();
+			} else {
+				return false;
+			}
+		}
+
+		return p.getValue().equals(myProperty.getValue());
+	}
 }

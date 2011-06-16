@@ -80,7 +80,8 @@ public class MergeUtils {
 		}
 	}
 
-	public static void exportMergeData(String mergeFile, Message m, String delimiter) {
+	public static void exportMergeData(String mergeFile, Message m,
+			String delimiter) {
 		setMergeFile(mergeFile);
 		exportMergeData(m, delimiter);
 	}
@@ -116,7 +117,8 @@ public class MergeUtils {
 									value = "";
 								}
 								line = line + value + delimiter;
-							} else if (p.getType().equals(Property.DATE_PROPERTY)) {
+							} else if (p.getType().equals(
+									Property.DATE_PROPERTY)) {
 								String value = p.toString();
 								if ("null".equals(value) || value == null) {
 									value = "";
@@ -190,7 +192,8 @@ public class MergeUtils {
 			System.err.println("Sending mail: " + columnName);
 			List<String> recepients = new ArrayList<String>();
 			for (int i = 0; i < data.getArraySize(); i++) {
-				String address = data.getMessage(i).getProperty(columnName).getValue();
+				String address = data.getMessage(i).getProperty(columnName)
+						.getValue();
 				System.err.println("Got: " + address);
 				if (address != null && address.indexOf("@") > 0) {
 					System.err.println("Adding: " + address);
@@ -214,16 +217,16 @@ public class MergeUtils {
 
 	public static void openDocument(Binary b, String extensionHint) {
 		String extension = null;
-		if(extensionHint!=null) {
+		if (extensionHint != null) {
 			extension = b.getExtension();
 		} else {
 			extension = b.getExtension();
 		}
-		
+
 		System.err.println("Ext: " + extension);
 		try {
 			File f = File.createTempFile("datadump", "." + extension);
-			System.err.println("File: "+f.getAbsolutePath());
+			System.err.println("File: " + f.getAbsolutePath());
 			FileOutputStream fos = new FileOutputStream(f);
 			b.write(fos);
 			fos.flush();
@@ -240,40 +243,45 @@ public class MergeUtils {
 
 	public static void openDocument(String docFile) {
 		try {
-//			Process p = null;
+			// Process p = null;
 			if (System.getProperty("os.name").toLowerCase().indexOf("windows") >= 0) {
-				Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + docFile);
-			} else { 
-				if(System.getProperty("os.name").toLowerCase().indexOf("mac") >= 0) {
+				Runtime.getRuntime().exec(
+						"rundll32 url.dll,FileProtocolHandler " + docFile);
+			} else {
+				if (System.getProperty("os.name").toLowerCase().indexOf("mac") >= 0) {
 					Runtime.getRuntime().exec("open " + docFile);
-				} else{
-				// non-Windows platform, assume Linux/Unix
-				String[] cmd = new String[2];
+				} else {
+					// non-Windows platform, assume Linux/Unix
+					String[] cmd = new String[2];
 
-				if (docFile.toLowerCase().endsWith(".doc") || docFile.toLowerCase().endsWith(".rtf")
-						|| docFile.toLowerCase().endsWith(".xls") || docFile.toLowerCase().endsWith(".csv")
-						|| docFile.toLowerCase().endsWith(".ppt")) {
-					cmd[0] = "ooffice";
-				} else if (docFile.toLowerCase().endsWith(".txt")) {
-					cmd = new String[4]; // resize
-					cmd[0] = "xterm";
-					cmd[1] = "-e";
-					cmd[2] = "vi";
-				} else if (docFile.toLowerCase().endsWith(".jpg") || docFile.toLowerCase().endsWith(".gif")
-						|| docFile.toLowerCase().endsWith(".png") || docFile.toLowerCase().endsWith(".tif")
-						|| docFile.toLowerCase().endsWith(".tiff")) {
-					cmd[0] = "display";
-				} else if (docFile.toLowerCase().endsWith(".pdf")) {
-					cmd[0] = "xpdf";
-				} else { // we don't have a clue, try a plain web browser
-					cmd[0] = "mozilla";
-				}
+					if (docFile.toLowerCase().endsWith(".doc")
+							|| docFile.toLowerCase().endsWith(".rtf")
+							|| docFile.toLowerCase().endsWith(".xls")
+							|| docFile.toLowerCase().endsWith(".csv")
+							|| docFile.toLowerCase().endsWith(".ppt")) {
+						cmd[0] = "ooffice";
+					} else if (docFile.toLowerCase().endsWith(".txt")) {
+						cmd = new String[4]; // resize
+						cmd[0] = "xterm";
+						cmd[1] = "-e";
+						cmd[2] = "vi";
+					} else if (docFile.toLowerCase().endsWith(".jpg")
+							|| docFile.toLowerCase().endsWith(".gif")
+							|| docFile.toLowerCase().endsWith(".png")
+							|| docFile.toLowerCase().endsWith(".tif")
+							|| docFile.toLowerCase().endsWith(".tiff")) {
+						cmd[0] = "display";
+					} else if (docFile.toLowerCase().endsWith(".pdf")) {
+						cmd[0] = "xpdf";
+					} else { // we don't have a clue, try a plain web browser
+						cmd[0] = "mozilla";
+					}
 
-				cmd[(docFile.toLowerCase().endsWith(".txt")) ? 3 : 1] = docFile;
+					cmd[(docFile.toLowerCase().endsWith(".txt")) ? 3 : 1] = docFile;
 
-				if (cmd[0] != null) {
-					  Runtime.getRuntime().exec(cmd);
-				}
+					if (cmd[0] != null) {
+						Runtime.getRuntime().exec(cmd);
+					}
 				}
 			}
 		} catch (Exception e) {
