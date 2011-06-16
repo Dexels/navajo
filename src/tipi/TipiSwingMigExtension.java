@@ -1,11 +1,13 @@
 package tipi;
 
+import org.osgi.framework.BundleContext;
+
 import com.dexels.navajo.tipi.TipiContext;
 
 	public class TipiSwingMigExtension extends TipiAbstractXMLExtension  {
 
 		public TipiSwingMigExtension() {
-			loadXML();
+			loadDescriptor();
 		}
 
 		public void initialize(TipiContext tc) {
@@ -14,6 +16,15 @@ import com.dexels.navajo.tipi.TipiContext;
 		}
 
 
+
+		@Override
+		public void start(BundleContext context) throws Exception {
+			registerTipiExtension(context);
+		}
+
+		@Override
+		public void stop(BundleContext context) throws Exception {
+		}
 
 
 	}
