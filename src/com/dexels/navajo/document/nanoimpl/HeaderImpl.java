@@ -25,7 +25,9 @@ public final class HeaderImpl
     extends BaseHeaderImpl
     implements Header, NanoElement {
 
-    private String myRequestId;
+	private static final long serialVersionUID = 1344814182396525812L;
+
+	private String myRequestId;
     
     /**
      * @deprecated

@@ -10,14 +10,29 @@ package com.dexels.navajo.document.base;
  */
 
 //import nanoxml.*;
-import java.io.*;
-import java.util.*;
-import java.util.Map.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.StringTokenizer;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
 
 public abstract class BaseNode implements java.io.Serializable{
-  protected Navajo myDocRoot;
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8900993539784890274L;
+
+protected Navajo myDocRoot;
   
   public final static String XML_ESCAPE_DELIMITERS = "&'<>\"";
   //public final static String XML_ESCAPE_DELIMITERS = "";
@@ -234,10 +249,8 @@ public abstract class BaseNode implements java.io.Serializable{
 	}
 
 	public void printElementJSONTypeless(final Writer sw) throws IOException {
-		String tagName = getTagName();
-		Map<String, String> map = getAttributes();
-		List<? extends BaseNode> list = getChildren();
-		// all overridden
+		getAttributes();
+		getChildren();
 	}
  
 
@@ -263,8 +276,7 @@ public abstract class BaseNode implements java.io.Serializable{
   public boolean hasTextNode() {
       return false;
   }
-  @SuppressWarnings("unused")
-public void writeText(Writer w) throws IOException {
+  public void writeText(Writer w) throws IOException {
       // default impl. Only used for properties. 
        
   }

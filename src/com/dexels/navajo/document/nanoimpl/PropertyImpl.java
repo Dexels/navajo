@@ -25,7 +25,8 @@ public final class PropertyImpl
  
 
   
-  public PropertyImpl(Navajo n, String name, String type, String value, int i,
+	private static final long serialVersionUID = -4073905501650203609L;
+public PropertyImpl(Navajo n, String name, String type, String value, int i,
                       String desc, String direction) {
     super(n,name,type,value,i,desc,direction);
   }

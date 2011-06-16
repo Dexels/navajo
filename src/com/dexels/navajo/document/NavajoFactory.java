@@ -42,7 +42,7 @@ public abstract class NavajoFactory {
   private void readTypes() throws Exception {
 	  ClassLoader cl = getClass().getClassLoader();
 	  if(cl==null) {
-		  System.err.println("Bootstrap classloader detected!");
+		  logger.info("Bootstrap classloader detected!");
 		  cl = ClassLoader.getSystemClassLoader();
 	  }
 	 InputStream is = cl.getResourceAsStream("navajotypes.xml");
@@ -98,7 +98,7 @@ public abstract class NavajoFactory {
 				name = System.getProperty(
 				  "com.dexels.navajo.DocumentImplementation");
 			} catch (SecurityException e1) {
-				System.err.println("No permission. Using standard document impl.");
+				logger.warn("No permission. Using standard document impl.");
 				sbmode = true;
 			}
 			  if (name == null) {
@@ -118,7 +118,7 @@ public abstract class NavajoFactory {
 			  try {
 				impl.readTypes();
 			} catch (Exception e) {
-				e.printStackTrace(System.err);
+				logger.error("Error reading types ",e);
 				throw new RuntimeException("Could not instantiate NavajoDocument Factory, problem reading navajotypes.xml: " + e.getMessage());
 			}
 		  }
@@ -144,7 +144,7 @@ public abstract class NavajoFactory {
 			  if ( impl != null ) {
 				  String cls = impl.getClass().getName();
 				  if (!(className.equals(cls))) {
-					  System.err.println("NavajoFactory Warning: Getting instance, but current instance if different. Use resetImplementation.");
+					  logger.warn("NavajoFactory Warning: Getting instance, but current instance if different. Use resetImplementation.");
 				  }
 			  }
 			  return alternativeFactories.get(className);

@@ -17,6 +17,8 @@ import java.util.*;
  */
 public class FormatIdentification implements Serializable
 {
+
+	private static final long serialVersionUID = 7824735272127450235L;
 	private static List<FormatDescription> descriptions;
 	private static int minBufferSize;
 

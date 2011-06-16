@@ -9,6 +9,7 @@ import java.util.*;
  */
 public class FormatDescription implements Comparable<FormatDescription>, Serializable
 {
+	private static final long serialVersionUID = 7458016861702915795L;
 	private List<String> fileExtensions;
 	private String group;
 	private String longName;

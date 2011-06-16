@@ -29,7 +29,6 @@ import com.dexels.navajo.document.jaxpimpl.xml.*;
  *
  * @author Arjen Schoneveld (Dexels/Brentfield)
  * @version 0.1 (11/7/2000)
- * TODO: throw new Exceptions when neccessary.
  * ALSO PUT THE getAction() related messages in this class.
  */
 
@@ -46,11 +45,11 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
      */
     private  transient Document docBuffer;
 
-    private String documentName = "ANONYMOUS";
+//    private String documentName = "ANONYMOUS";
     private String myBodyDefinition = BODY_DEFINITION;
 
-    private transient Node messagePointer;
-    private transient Node propertyPointer;
+//    private transient Node messagePointer;
+//    private transient Node propertyPointer;
     private String errorDescription;
     private int errorNumber;
 
@@ -92,7 +91,7 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
     public NavajoImpl(Document d, String name, NavajoFactory nf) {
     	myFactory = nf;
         docBuffer = d;
-        documentName = name;
+//        documentName = name;
     }
 
     /**
@@ -920,26 +919,26 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
         return this.docBuffer;
     }
 
-    private Node getMethodByName(String aMethodName) {
-        if (docBuffer != null) {
-            Node myMethodsNode = XMLutils.findNode((Document) getMessageBuffer(), Navajo.METHODS_DEFINITION);
-
-            if (myMethodsNode == null) return null;
-            NodeList myMethodNodeList = myMethodsNode.getChildNodes();
-
-            for (int i = 0; i < myMethodNodeList.getLength(); i++) {
-                Node myNode = myMethodNodeList.item(i);
-
-                if (myNode.getNodeType() == Node.ELEMENT_NODE) {
-                    Element myElement = (Element) myNode;
-                    String myName = myElement.getAttribute(MethodImpl.METHOD_NAME);
-
-                    if (myName.equals(aMethodName)) return myElement;
-                }
-            }
-        }
-        return null;
-    }
+//    private Node getMethodByName(String aMethodName) {
+//        if (docBuffer != null) {
+//            Node myMethodsNode = XMLutils.findNode((Document) getMessageBuffer(), Navajo.METHODS_DEFINITION);
+//
+//            if (myMethodsNode == null) return null;
+//            NodeList myMethodNodeList = myMethodsNode.getChildNodes();
+//
+//            for (int i = 0; i < myMethodNodeList.getLength(); i++) {
+//                Node myNode = myMethodNodeList.item(i);
+//
+//                if (myNode.getNodeType() == Node.ELEMENT_NODE) {
+//                    Element myElement = (Element) myNode;
+//                    String myName = myElement.getAttribute(MethodImpl.METHOD_NAME);
+//
+//                    if (myName.equals(aMethodName)) return myElement;
+//                }
+//            }
+//        }
+//        return null;
+//    }
 
     public String toString() {
     	StringWriter writer = new StringWriter();
@@ -1200,7 +1199,6 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
 
 	public Message replaceMessage(Message prevMg, Message newMsg)
 			throws NavajoException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -1224,7 +1222,6 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
 	}
 
 	public Map<String, Message> getMessages() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

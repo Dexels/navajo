@@ -22,6 +22,7 @@ import com.dexels.navajo.document.*;
 
 public final class Memo extends NavajoType implements Comparable<Memo> {
 
+	private static final long serialVersionUID = 7984829191626051515L;
 	public final String contents;
 
 	public Memo(String s) {

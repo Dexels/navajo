@@ -16,7 +16,9 @@ import com.dexels.navajo.document.*;
  */
 public class BaseSelectionImpl extends BaseNode implements Selection{
 
-  protected String name ="";
+
+	private static final long serialVersionUID = 1548716501966033367L;
+protected String name ="";
   protected String value ="-1";
   protected boolean isSelected = false;
   private Property myProperty = null;

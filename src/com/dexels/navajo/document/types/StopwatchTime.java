@@ -17,7 +17,9 @@ public final class StopwatchTime
     extends NavajoType
     implements Comparable<StopwatchTime> {
 
-  long myMillis = 0;
+	private static final long serialVersionUID = -6257975668104174868L;
+
+long myMillis = 0;
 
   private static int HOURS_MILLIS = 3600000;
   private static int MINUTE_MILLIS = 60000;

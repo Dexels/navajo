@@ -24,7 +24,8 @@ public final class NavajoImpl extends BaseNavajoImpl implements Navajo, NanoElem
 //  private Map myDepSet = null;
 
   
-  public NavajoImpl(NavajoFactory nf) {
+	private static final long serialVersionUID = -9050668248449316054L;
+public NavajoImpl(NavajoFactory nf) {
 	  /** @todo Check.. */
 	  super(nf);  
 	  myHeader = (HeaderImpl)nf.createHeader(this,"","","",-1);

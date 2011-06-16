@@ -21,23 +21,23 @@ public final class SaxHandler implements DocHandler {
     private Navajo currentDocument=null;
     private final Stack<Message> messageStack = new Stack<Message>();
 //    private final ArrayList binaries = new ArrayList();
-    private String currentTag = null;
+//    private String currentTag = null;
     private BasePropertyImpl currentProperty = null;
     private BaseHeaderImpl currentHeader;
-    private BaseCallbackImpl currentCallback = null;
+//    private BaseCallbackImpl currentCallback = null;
     private Method currentMethod = null;
 
     public void reset() {
         currentDocument = null;
         messageStack.clear();
 //        binaries.clear();
-        currentTag = null;
+//        currentTag = null;
     }
 
       
     public final void startElement(String tag, Hashtable<String,String> h) throws Exception {
 //        System.err.println("starting element: "+tag+" attrs: "+h);
-        currentTag = tag;
+//        currentTag = tag;
         
         // Unescape all the shit.
         if (tag.equals("tml")) {
@@ -251,7 +251,7 @@ public final class SaxHandler implements DocHandler {
     		currentProperty.addSelection(s);
     	} else {
     		if ( currentProperty.getSelectionByValue(value) != null && selected == 1) {
-    		   ((BasePropertyImpl) currentProperty).setSelectedByValue(value);
+    		   currentProperty.setSelectedByValue(value);
     		} else {
     			Selection s = NavajoFactory.getInstance().createSelection(currentDocument, name, value, selected!=0);
     			currentProperty.addSelection(s);
@@ -446,11 +446,6 @@ public final class SaxHandler implements DocHandler {
         }
     }
 
-//    private void mergeMissingDefinitionProperties() {
-//        // TODO Auto-generated method stub
-//        
-//    }
-
     public final void endElement(String tag) throws Exception {
         if (tag.equals("tml")) {
          }
@@ -459,25 +454,19 @@ public final class SaxHandler implements DocHandler {
             messageStack.pop();
         }
         if (tag.equals("property")) {
-//            System.err.println("Property ended");
             currentProperty = null;
         }
         if (tag.equals("option")) {
         }
         if (tag.equals("method")) {
-//            currentMethod = null;
         }
         if (tag.equals("header")) {
-//            parseHeader(h);
             currentHeader = null;
         }
         if (tag.equals("transaction")) {
-//            parseTransaction(h);
         }
         if (tag.equals("callback")) {
-            currentCallback = null;
         }
-        currentTag = null;
     }
 
 

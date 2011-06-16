@@ -338,57 +338,57 @@ public class QDParser {
             exc("missing end tag", line, col);
     }
 
-    private static String displayMode(int mode) {
-        switch (mode) {
-        case 1:
-            return "TEXT";
-        case 2:
-            return "ENTITY";
-        case 3:
-            return "OPEN_TAG";
-        case 4:
-            return "CLOSE_TAG";
-        case 5:
-            return "START_TAG";
-        case 6:
-            return "ATTRIBUTE_LVALUE";
-        case 7:
-            return "QUOTE";
-        case 8:
-            return "IN_TAG";
-        case 9:
-            return "ATTRIBUTE_EQUAL";
-        case 10:
-            return "ATTRIBUTE_RVALUE";
-        case 11:
-            return "DONE";
-        case 12:
-            return "SINGLE_TAG";
-        case 13:
-            return "COMMENT";
-        case 14:
-            return "DOCTYPE";
-        case 15:
-            return "PRE";
-        case 16:
-            return "CDATA";
-
-        default:
-            break;
-        }
-        return null;
-    }
-
-    private static void showLookahead(PushbackReader r) throws IOException {
-        char[] c = new char[10];
-        r.read(c);
-        System.err.print("LOOKAHEAD: >");
-        for (int i = 0; i < c.length; i++) {
-            System.err.print(c[i]);
-        }
-        System.err.println("<\n");
-        r.unread(c);
-    }
+//    private static String displayMode(int mode) {
+//        switch (mode) {
+//        case 1:
+//            return "TEXT";
+//        case 2:
+//            return "ENTITY";
+//        case 3:
+//            return "OPEN_TAG";
+//        case 4:
+//            return "CLOSE_TAG";
+//        case 5:
+//            return "START_TAG";
+//        case 6:
+//            return "ATTRIBUTE_LVALUE";
+//        case 7:
+//            return "QUOTE";
+//        case 8:
+//            return "IN_TAG";
+//        case 9:
+//            return "ATTRIBUTE_EQUAL";
+//        case 10:
+//            return "ATTRIBUTE_RVALUE";
+//        case 11:
+//            return "DONE";
+//        case 12:
+//            return "SINGLE_TAG";
+//        case 13:
+//            return "COMMENT";
+//        case 14:
+//            return "DOCTYPE";
+//        case 15:
+//            return "PRE";
+//        case 16:
+//            return "CDATA";
+//
+//        default:
+//            break;
+//        }
+//        return null;
+//    }
+//
+//    private static void showLookahead(PushbackReader r) throws IOException {
+//        char[] c = new char[10];
+//        r.read(c);
+//        System.err.print("LOOKAHEAD: >");
+//        for (int i = 0; i < c.length; i++) {
+//            System.err.print(c[i]);
+//        }
+//        System.err.println("<\n");
+//        r.unread(c);
+//    }
 
     private static char nextChar(PushbackReader r) throws IOException {
         int c = r.read();

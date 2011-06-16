@@ -47,7 +47,10 @@ public class XMLParseException
     extends RuntimeException
 {
 
-    /**
+	private static final long serialVersionUID = -8258139549788931899L;
+
+
+	/**
      * Indicates that no line number has been associated with this exception.
      */
     public static final int NO_LINE = -1;

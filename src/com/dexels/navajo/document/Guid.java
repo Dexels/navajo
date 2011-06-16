@@ -28,7 +28,7 @@ import java.util.*;
 
 public final class Guid {
 
-	private final static String VERSION = "$Id$";
+//	private final static String VERSION = "$Id$";
 	
 	static final Random rand = new Random(System.currentTimeMillis() + 
 			 Math.abs( (System.class.hashCode() == Integer.MIN_VALUE ? 3213232 : System.class.hashCode() )));

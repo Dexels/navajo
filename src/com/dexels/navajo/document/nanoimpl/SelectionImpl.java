@@ -19,7 +19,8 @@ import com.dexels.navajo.document.base.*;
 @Deprecated
 public final class SelectionImpl extends BaseSelectionImpl implements Selection, NanoElement {
 
-   public SelectionImpl(Navajo n, String name, String value, boolean isSelected) {
+	private static final long serialVersionUID = -7226387613914169157L;
+public SelectionImpl(Navajo n, String name, String value, boolean isSelected) {
        super(n,name,value,isSelected);
   }
    public SelectionImpl(Navajo n, String name, String value, int isSelected) {

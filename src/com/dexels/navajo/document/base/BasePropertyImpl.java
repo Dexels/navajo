@@ -331,8 +331,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		firePropertyChanged(old, getTypedValue());
 	}
 
-	@SuppressWarnings("rawtypes")
-	private void setValue(ArrayList list){
+	private void setValue(List<?> list){
 		// first, determine content of list.
 		if(list.isEmpty()) {
 			// tricky. Will assume it is a selection property, for backward compatibility.
@@ -354,20 +353,19 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		
 	}
 
-	private void setListProperty(ArrayList list) {
+	private void setListProperty(List<?> list) {
 		tipiProperty = list;
 		setType(Property.LIST_PROPERTY);
 	}
 
-	private void setSelectionList(ArrayList<Selection> list) {
+	private void setSelectionList(List<?> list) {
 		ArrayList<String> values = new ArrayList<String>();
-		for (Selection s : list) {
-			values.add(s.getValue());
+		for (Object s : list) {
+			values.add(((Selection)s).getValue());
 		}
 		try {
 			setSelected(values);
 		} catch (NavajoException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		setType(Property.SELECTION_PROPERTY);
@@ -391,7 +389,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 					evaluatedType = o.type;
 					return o.value;
 				} catch (Throwable e) {
-					// TODO Auto-generated catch block
 					System.err.println("Exception while evaluating property: " + getFullPropertyName() + " expression: " + getValue());
 
 					// throw(e);
@@ -645,18 +642,18 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		throw new UnsupportedOperationException("Unsupported method. Please use setValue(Binary)");
 	}
 
-	private final void copyResource(OutputStream out, InputStream in) throws IOException {
-		BufferedInputStream bin = new BufferedInputStream(in);
-		BufferedOutputStream bout = new BufferedOutputStream(out);
-		byte[] buffer = new byte[1024];
-		int read;
-		while ((read = bin.read(buffer)) > -1) {
-			bout.write(buffer, 0, read);
-		}
-		bin.close();
-		bout.flush();
-		bout.close();
-	}
+//	private final void copyResource(OutputStream out, InputStream in) throws IOException {
+//		BufferedInputStream bin = new BufferedInputStream(in);
+//		BufferedOutputStream bout = new BufferedOutputStream(out);
+//		byte[] buffer = new byte[1024];
+//		int read;
+//		while ((read = bin.read(buffer)) > -1) {
+//			bout.write(buffer, 0, read);
+//		}
+//		bin.close();
+//		bout.flush();
+//		bout.close();
+//	}
 
 	public final void setValue(Binary b) {
 		setValue(b,true);
@@ -679,7 +676,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 	/**
 	 * @deprecated Not really deprecated but needs a less memory intensive
-	 *             rewrite. TODO (non-Javadoc)
+	 *             rewrite. 
 	 * @see com.dexels.navajo.document.Property#setValue(java.net.URL)
 	 */
 
@@ -858,7 +855,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 					myBinary = null;
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return;
@@ -1314,7 +1310,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	// Comparable ob2 = (Comparable)p.getAlternativeTypedValue();
 	// return ob1.compareTo(ob2);
 	// }
-	@SuppressWarnings("null")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public final int compareTo(Property p) {
 
 		try {
@@ -1427,6 +1423,8 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 	public final ArrayList<Selection> getAllSelectedSelections() {
 		ArrayList<Selection>  list = new ArrayList<Selection>() {
+			private static final long serialVersionUID = -2914783936108056853L;
+
 			public String toString() {
 				if(size()==0) {
 					return Selection.DUMMY_ELEMENT;
@@ -1771,8 +1769,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 
 	public void setSelected(Selection s, boolean selected) throws NavajoException {
-		// TODO Auto-generated method stub
-		// System.err.println("Wrning not really good");
 		List<Selection> l = new ArrayList<Selection>( getAllSelectedSelections());
 		for (Selection selection : getAllSelections()) {
 			if (selection.equals(s)) {
@@ -1820,7 +1816,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		return true;
 	}
 
-	public Enumeration children() {
+	public Enumeration<?> children() {
 		return null;
 	}
 	

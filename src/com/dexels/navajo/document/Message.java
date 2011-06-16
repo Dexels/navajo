@@ -140,6 +140,10 @@ public interface Message
    */
   public void setIndex(int i);
 
+ /**
+  * @deprecated
+  * @param condition
+  */
   public void setCondition(String condition);
 
   /**

@@ -627,7 +627,6 @@ public void setValue(URL url) {
 			 Selection s = NavajoFactory.getInstance().createSelection(getRootDoc(), l[i].getName(), l[i].getValue(), l[i].isSelected());
 			 this.addSelection(s);
 		 } catch (NavajoException e) {
-			 // TODO Auto-generated catch block
 			 e.printStackTrace();
 		 }
 	 }
@@ -698,7 +697,6 @@ public void setValue(URL url) {
         value = null;
       }
 
-        // TODO: typechecking (Optionally!)
         //if (getType().equals(Property.STRING_PROPERTY) || getType().equals(Property.MEMO_PROPERTY) || getType().equals(Property.PASSWORD_PROPERTY))
         //  ref.setAttribute(Property.PROPERTY_VALUE, XMLutils.XMLEscape(value));
         //else
@@ -953,7 +951,7 @@ public void setValue(URL url) {
  * This interface is needed to be able to create sortable tables
  */
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "unchecked", "rawtypes" })
 public final int compareTo(Property p)  {
     if (p==null) {
       return 0;
@@ -1213,24 +1211,20 @@ public Property cloneWithoutValue() {
 
 
 public void setSelected(Selection s, boolean selected) throws NavajoException {
-	// TODO Auto-generated method stub
 	throw new UnsupportedOperationException("setSelected");
 }
 
 public void addPropertyChangeListener(PropertyChangeListener p) {
-	// TODO Auto-generated method stub
 	throw new UnsupportedOperationException("addPropertyDataListener");
 	
 }
 
 public void removePropertyChangeListener(PropertyChangeListener p) {
-	// TODO Auto-generated method stub
 	throw new UnsupportedOperationException("removePropertyDataListener");
 	
 }
 
 public void forcePropertyChange() {
-	// TODO Auto-generated method stub
 	
 }
 

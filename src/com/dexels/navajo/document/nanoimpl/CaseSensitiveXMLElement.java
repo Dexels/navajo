@@ -8,7 +8,9 @@ import java.util.*;
 
 public class CaseSensitiveXMLElement extends XMLElement {
 
-	  public CaseSensitiveXMLElement(String name) {
+	private static final long serialVersionUID = -6830073001073118575L;
+
+	public CaseSensitiveXMLElement(String name) {
 		    super(new Hashtable<String,char[]>(),false,false);
 		    setName(name);
 	  }

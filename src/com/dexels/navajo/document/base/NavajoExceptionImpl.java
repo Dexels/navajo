@@ -14,7 +14,8 @@ import com.dexels.navajo.document.*;
 
 public final class NavajoExceptionImpl extends NavajoException {
   
-  public NavajoExceptionImpl() {
+	private static final long serialVersionUID = 4942222966862889552L;
+public NavajoExceptionImpl() {
   }
   public NavajoExceptionImpl(String message) {
     super(message);

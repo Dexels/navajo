@@ -15,7 +15,8 @@ import com.dexels.navajo.document.*;
 
 public final class Percentage extends NavajoType implements Comparable<Percentage> {
 
-  private Double value;
+	private static final long serialVersionUID = -4200780883826849390L;
+private Double value;
   private static NumberFormat nf = NumberFormat.getPercentInstance();
   static {
     nf.setMaximumFractionDigits(2);

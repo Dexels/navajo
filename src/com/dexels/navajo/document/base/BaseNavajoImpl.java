@@ -18,7 +18,8 @@ import com.dexels.navajo.document.*;
 
 public class BaseNavajoImpl extends BaseNode implements Navajo {
 
-  protected final BaseMessageImpl rootMessage;
+	private static final long serialVersionUID = 7765245678970907997L;
+	protected final BaseMessageImpl rootMessage;
   protected BaseHeaderImpl myHeader = null;
   protected final BaseMethodsImpl myMethods = new BaseMethodsImpl(this);
   protected int expiration = -1;
@@ -204,20 +205,18 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
 	  try {
 		this.write(sw);
 	} catch (NavajoException e) {
-		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
 	  return sw.toString();
   }
   
   public String persistenceKey() {
-      Navajo copy = (Navajo) this.copy();
+      Navajo copy = this.copy();
       copy.removeHeader();
       StringWriter sw = new StringWriter();
       try {
     	  copy.write(sw);
       } catch (NavajoException e) {
-    	  // TODO Auto-generated catch block
     	  e.printStackTrace();
       }
       return sw.toString().hashCode() + "";
@@ -406,7 +405,7 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
   public synchronized List<Property> refreshExpression() throws NavajoException{
     try {
 
-        Map depSet = NavajoFactory.getInstance().getExpressionEvaluator().createDependencyMap(this);
+    	Map<Property,List<Property>> depSet = NavajoFactory.getInstance().getExpressionEvaluator().createDependencyMap(this);
         return NavajoFactory.getInstance().getExpressionEvaluator().processRefreshQueue(depSet);
 
         

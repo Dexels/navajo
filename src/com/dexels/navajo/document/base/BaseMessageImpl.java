@@ -21,13 +21,16 @@ import javax.swing.tree.*;
 import com.dexels.navajo.document.*;
 
 public class BaseMessageImpl extends BaseNode implements Message, Comparable<Message>, TreeNode {
+
+	private static final long serialVersionUID = 4404496830881606856L;
+
 	protected String myName = "";
 
 	private String myType = "";
 
 	private String myMode = "";
 
-	private String myCondition = "";
+//	private String myCondition = "";
 
 	private int myIndex = -1;
 
@@ -88,7 +91,6 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 	}
 
 	public final void setCondition(String condition) {
-		myCondition = condition;
 	}
 
 	/**
@@ -296,82 +298,77 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		return new ArrayList<Property>(propertyList);
 	}
 
-	private final ArrayList<Property> getTotalPropertyList() {
-		System.err.println("Stack::: ");
-		Thread.dumpStack();
-		if (propertyList == null) {
-			propertyList = new ArrayList<Property>();
-		}
-		if (propertyMap == null) {
-			propertyMap = new TreeMap<String, Property>();
-		}
-		if (getArrayParentMessage() == null) {
-			return propertyList;
-		}
-		if (getArrayParentMessage().getDefinitionMessage() == null) {
-			return propertyList;
-		}
-		if (getArrayParentMessage().getDefinitionMessage() == this) {
-			return propertyList;
-		}
-		ArrayList<Property> resList = new ArrayList<Property>();
-		// resList.addAll(propertyList);
-		for (Iterator<Property> iter = getArrayParentMessage().getDefinitionMessage().getAllProperties().iterator(); iter.hasNext();) {
-			long ll = System.currentTimeMillis();
-			Property element = iter.next();
-			System.err.println("\n=========================\nGetting defprop: "+element.getName()+" : "+(System.currentTimeMillis()-ll));
-			if (element != null) {
-				Property local = propertyMap.get(element.getName());
-				if (local != null) {
-					mergeProperty(local, element);
-					System.err.println("Getting merge: "+(System.currentTimeMillis()-ll));
-				}
-				resList.add(getProperty(element.getName()).copy(getRootDoc()));
-				System.err.println("Getting add: "+(System.currentTimeMillis()-ll));
-			} else {
-				System.err.println("No merge: "+(System.currentTimeMillis()-ll));
-				
-			}
-		}
-		
-		for (Iterator<Property> iter = propertyList.iterator(); iter.hasNext();) {
-			Property element = iter.next();
-			if (!resList.contains(element)) {
-				resList.add(element);
-			}
-		}
-		return resList;
-	}
+//	private final List<Property> getTotalPropertyList() {
+//		Thread.dumpStack();
+//		if (propertyList == null) {
+//			propertyList = new ArrayList<Property>();
+//		}
+//		if (propertyMap == null) {
+//			propertyMap = new TreeMap<String, Property>();
+//		}
+//		if (getArrayParentMessage() == null) {
+//			return propertyList;
+//		}
+//		if (getArrayParentMessage().getDefinitionMessage() == null) {
+//			return propertyList;
+//		}
+//		if (getArrayParentMessage().getDefinitionMessage() == this) {
+//			return propertyList;
+//		}
+//		ArrayList<Property> resList = new ArrayList<Property>();
+//		for (Iterator<Property> iter = getArrayParentMessage().getDefinitionMessage().getAllProperties().iterator(); iter.hasNext();) {
+//			long ll = System.currentTimeMillis();
+//			Property element = iter.next();
+//			System.err.println("\n=========================\nGetting defprop: "+element.getName()+" : "+(System.currentTimeMillis()-ll));
+//			if (element != null) {
+//				Property local = propertyMap.get(element.getName());
+//				if (local != null) {
+//					mergeProperty(local, element);
+//					System.err.println("Getting merge: "+(System.currentTimeMillis()-ll));
+//				}
+//				resList.add(getProperty(element.getName()).copy(getRootDoc()));
+//				System.err.println("Getting add: "+(System.currentTimeMillis()-ll));
+//			}
+//		}
+//		
+//		for (Iterator<Property> iter = propertyList.iterator(); iter.hasNext();) {
+//			Property element = iter.next();
+//			if (!resList.contains(element)) {
+//				resList.add(element);
+//			}
+//		}
+//		return resList;
+//	}
 
-	private void mergeProperty(Property local, Property definition) {
-		long ll = System.currentTimeMillis();
-
-		System.err.println("    \n=========================\n    MERGING defprop: "+local.getName()+" : "+(System.currentTimeMillis()-ll));
-
-		if (local.getDescription() == null) {
-			local.setDescription(definition.getDescription());
-		}
-		System.err.println("    description: "+(System.currentTimeMillis()-ll));
-		if (local.getCardinality() == null) {
-			local.setCardinality(definition.getCardinality());
-		}
-		System.err.println("    cardinality: "+(System.currentTimeMillis()-ll));
-		if (local.getDirection() == null) {
-			local.setDirection(definition.getDirection());
-		}
-		System.err.println("    direction: "+(System.currentTimeMillis()-ll));
-
-		if (local.getType() == null) {
-			local.setType(definition.getType());
-		}
-		System.err.println("    type: "+(System.currentTimeMillis()-ll));
-
-		if (local.getValue() == null || "".equals(local.getValue())) {
-			local.setValue(definition.getValue());
-		}
-		System.err.println("    value: "+(System.currentTimeMillis()-ll));
-		System.err.println("==== END of Merge ==== ");
-	}
+//	private void mergeProperty(Property local, Property definition) {
+//		long ll = System.currentTimeMillis();
+//
+//		System.err.println("    \n=========================\n    MERGING defprop: "+local.getName()+" : "+(System.currentTimeMillis()-ll));
+//
+//		if (local.getDescription() == null) {
+//			local.setDescription(definition.getDescription());
+//		}
+//		System.err.println("    description: "+(System.currentTimeMillis()-ll));
+//		if (local.getCardinality() == null) {
+//			local.setCardinality(definition.getCardinality());
+//		}
+//		System.err.println("    cardinality: "+(System.currentTimeMillis()-ll));
+//		if (local.getDirection() == null) {
+//			local.setDirection(definition.getDirection());
+//		}
+//		System.err.println("    direction: "+(System.currentTimeMillis()-ll));
+//
+//		if (local.getType() == null) {
+//			local.setType(definition.getType());
+//		}
+//		System.err.println("    type: "+(System.currentTimeMillis()-ll));
+//
+//		if (local.getValue() == null || "".equals(local.getValue())) {
+//			local.setValue(definition.getValue());
+//		}
+//		System.err.println("    value: "+(System.currentTimeMillis()-ll));
+//		System.err.println("==== END of Merge ==== ");
+//	}
 
 	public final ArrayList<Property> getProperties(String regularExpression) throws NavajoException {
 
@@ -823,17 +820,13 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		        if (current == this) {
 					throw new RuntimeException("CYCLIC Message copy found!");
 				}
-				long l = System.currentTimeMillis();
 				Message cc = current.copy(n);
-				l = System.currentTimeMillis();
 				cp.addMessage(cc);
 			}
 		}
 
 		for (Property current : getAllProperties()) {
-			long l = System.currentTimeMillis();
 			Property copy = current.copy(n);
-			l = System.currentTimeMillis();
 
 			cp.addProperty(copy);
 		}
@@ -1178,10 +1171,6 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		return true;
 	}
 
-	private Message createEmptyMessage() {
-		return null;
-	}
-
 	public final Message getDefinitionMessage() {
 		return definitionMessage;
 	}
@@ -1268,7 +1257,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public final int compareTo(Message m) {
 		if (m != null) {
 			if (getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT)) {
@@ -1391,8 +1380,8 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 	 * the future, but there is a dependency in JTreeTable (NavajoSwingClient).
 	 */
 
-	public final Enumeration children() {
-		Vector v = new Vector(getAllProperties());
+	public final Enumeration<Object> children() {
+		Vector<Object> v = new Vector<Object>(getAllProperties());
 		if (messageList != null) {
 			v.addAll(messageList);
 		}
@@ -1441,7 +1430,6 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 	    
 	   
 	public void printElementJSONTypeless(final Writer sw) throws IOException {
-		String tagName = getTagName();
 		ArrayList<Message> messages = getAllMessages();
 		ArrayList<Property> properties = getAllProperties();
 

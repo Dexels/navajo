@@ -35,7 +35,7 @@ public class NavajoLaszloConverter {
 					System.err.println("WTF?!");
 				}
 				if(nn instanceof Text && nn!=null) {
-					Text t = (Text)nn;
+//					Text t = (Text)nn;
 				}
 				
 				if(nn instanceof Element) {
@@ -89,22 +89,6 @@ public class NavajoLaszloConverter {
 	public static void writeBirtXml(Message m, Writer w) {
 		Document d = createLaszloFromNavajo(m, false, null);
 		XMLDocumentUtils.write(d, w, false);
-//		
-//		  TransformerFactory tFactory =
-//			    TransformerFactory.newInstance();
-//			  Transformer transformer;
-//			try {
-//				transformer = tFactory.newTransformer();
-//				  DOMSource source = new DOMSource(d);
-//				  StreamResult result = new StreamResult(System.out);
-//				  transformer.transform(source, result); 
-//			} catch (TransformerConfigurationException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (TransformerException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
 
 	}
 

@@ -10,7 +10,9 @@ import java.io.*;
 
 public class Base64DecodingFinishedException extends IOException {
 
-    public Base64DecodingFinishedException(char[] data, int offset, int len) {
+	private static final long serialVersionUID = -2693614501104506907L;
+
+	public Base64DecodingFinishedException(char[] data, int offset, int len) {
         System.err.println("Base64 finished at: "+offset+" len: "+len);
     }
 

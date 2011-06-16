@@ -58,9 +58,9 @@ public static void main(String[] args) {
     String message ="aaaaap";
     if (regexp!=null) {
 //        String message = p.getSubType("regexp_error");
-        if (message==null) {
-            message="String format error!";
-        }
+//        if (message==null) {
+//            message="String format error!";
+//        }
 //        Pattern pat = Pattern.compile(regexp);
 //        Matcher mat = pat.matches(regexp, value);
         if (!Pattern.matches(regexp, value)) {

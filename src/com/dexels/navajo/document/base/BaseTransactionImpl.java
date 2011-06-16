@@ -4,6 +4,7 @@ import java.util.*;
 import com.dexels.navajo.document.*;
 
 public class BaseTransactionImpl extends BaseNode {
+	private static final long serialVersionUID = -6325965122672286543L;
 //  private ArrayList myRequiredMessages = new ArrayList();
 //  private String myName = "";
 //  private Message myParent = null;

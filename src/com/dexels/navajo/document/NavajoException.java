@@ -11,6 +11,9 @@ package com.dexels.navajo.document;
 
 public abstract class NavajoException extends Exception {
 
+	private static final long serialVersionUID = 8965495998372888144L;
+
+
 	public NavajoException(Throwable e) {
 		super(e);
 	}

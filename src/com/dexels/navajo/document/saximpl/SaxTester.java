@@ -19,7 +19,7 @@ public class SaxTester {
     public static final String JAXP = "com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl";
     public static final String QDSAX = "com.dexels.navajo.document.base.BaseNavajoFactoryImpl";
 
-    private static final int ITERATIONS = 1;
+//    private static final int ITERATIONS = 1;
     /**
      * @param args
      * @throws Exception 

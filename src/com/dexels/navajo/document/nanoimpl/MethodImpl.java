@@ -11,7 +11,8 @@ import com.dexels.navajo.document.base.*;
  */
 @Deprecated
 public final class MethodImpl extends BaseMethodImpl implements Method, NanoElement {
-  private ArrayList<Required> myRequiredMessages = new ArrayList<Required>();
+	private static final long serialVersionUID = -3937268809223829856L;
+private ArrayList<Required> myRequiredMessages = new ArrayList<Required>();
 
   public MethodImpl(Navajo n) {
     super(n);

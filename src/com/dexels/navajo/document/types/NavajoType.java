@@ -15,7 +15,8 @@ import com.dexels.navajo.document.*;
  */
 
 public abstract class NavajoType implements  Serializable {
-  private Map<String,String> subTypeMap = null;
+	private static final long serialVersionUID = -112880355087638085L;
+private Map<String,String> subTypeMap = null;
 
   public abstract boolean isEmpty();
   public NavajoType(String type) {

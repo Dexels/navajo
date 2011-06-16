@@ -11,6 +11,7 @@ import com.dexels.navajo.document.*;
  * <p>Company: </p>
  * @author not attributable
  * @version 1.0
+ * 
  */
 
 public final class ExpressionImpl

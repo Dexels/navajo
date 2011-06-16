@@ -41,7 +41,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 
     private transient File dataFile = null;
     private transient File lazySourceFile = null;
-    private transient InputStream lazyInputStream = null;
+//    private transient InputStream lazyInputStream = null;
     private String myRef = null;
     private String extension = null;
     
@@ -76,7 +76,8 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     public Binary(InputStream is, boolean lazy) {
         super(Property.BINARY_PROPERTY);
         if (lazy) {
-            lazyInputStream = is;
+        	throw new UnsupportedOperationException("Constructing lazy binary based on a stream. This is not working.");
+//            lazyInputStream = is;
         } else {
             try {
                 loadBinaryFromStream(is);
@@ -205,15 +206,15 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
         this.mimetype = guessContentType();
     }
     
-    private final void init(File f, boolean lazy) throws IOException {
-    	 expectedLength = f.length();
-         if (lazy) {
-             lazySourceFile = f;
-         } else {
-             loadBinaryFromStream(new FileInputStream(f));
-         }
-         this.mimetype = guessContentType();
-    }
+//    private final void init(File f, boolean lazy) throws IOException {
+//    	 expectedLength = f.length();
+//         if (lazy) {
+//             lazySourceFile = f;
+//         } else {
+//             loadBinaryFromStream(new FileInputStream(f));
+//         }
+//         this.mimetype = guessContentType();
+//    }
 
     /**
      * Construct a new Binary object from a byte array
@@ -300,32 +301,6 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
         this.mimetype = (mimetype == null || mimetype.equals("") ? guessContentType() : mimetype);
     }
 
-    /**
-     * Unbuffered, @deprecated
-     * @param out
-     * @param in
-     * @throws IOException
-     */
-    private void copyBase64Resource(Writer out, PushbackReader in) throws IOException {
-         long progress = 0;
-        int read;
-        int iterations = 0;
-        while ((read = in.read()) > -1) {
-            progress ++;
-            iterations++;
-            if (iterations % 100 == 0) {
-                NavajoFactory.getInstance().fireBinaryProgress("Reading data", progress, expectedLength);
-            }
-             if (read == '<') {
-                in.unread('<');
-                break;
-            } else {
-                out.write(read);
-            }
-        }
-        
-        out.flush();
-    }
 
     /**
      * Buffered
@@ -371,13 +346,6 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
         out.flush();
     }
 
-    private void debug(String prefix, char[] buffer, int offset, int length) {
-        System.err.print("Prefix: "+prefix+"DEBUG >");
-        for (int i = offset; i < length; i++) {
-            System.err.print(buffer[i]);
-        }
-        System.err.println("<");
-    }
 
     private int getIndexOf(char[] buffer, char c) {
         for (int i = 0; i < buffer.length; i++) {

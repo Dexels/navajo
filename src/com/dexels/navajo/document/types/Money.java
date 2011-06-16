@@ -20,10 +20,11 @@ public final class Money
     extends NavajoType
     implements Comparable<Money> {
 
-  private static final int INTERNAL_DECIMAL_PLACES = 4;
+	private static final long serialVersionUID = -6669128119091978210L;
+private static final int INTERNAL_DECIMAL_PLACES = 4;
 private Double value = null;
   private static DecimalFormat nf = new DecimalFormat("\u00A4 #,##0.00;\u00A4 -#,##0.00");
-  private static DecimalFormat nf_euro = new DecimalFormat("\u20AC #,##0.00;\u20AC -#,##0.00"); //in case of the NOKBUG
+//  private static DecimalFormat nf_euro = new DecimalFormat("\u20AC #,##0.00;\u20AC -#,##0.00"); //in case of the NOKBUG
   private static DecimalFormat internalTmlFormat = new DecimalFormat("0.00");
   private static NumberFormat editingFormat = NumberFormat.getInstance();
 

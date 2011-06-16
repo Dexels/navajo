@@ -27,7 +27,9 @@ public class MessageImpl
     implements Message, NanoElement {
 
     
-  public MessageImpl(Navajo n) {
+	private static final long serialVersionUID = 8315435096586830301L;
+
+public MessageImpl(Navajo n) {
     super(n);
    }
 
@@ -145,7 +147,7 @@ public class MessageImpl
         String childName = (String) child.getAttribute("name");
         String type = (String) child.getAttribute(MSG_TYPE);
         String index = (String) child.getAttribute(MSG_INDEX);
-        String mode = (String) child.getAttribute(MSG_MODE);
+//        String mode = (String) child.getAttribute(MSG_MODE);
 
         // Ok, now a simple implentation of the laziness check.
         MessageImpl msg = null;
@@ -184,7 +186,6 @@ public class MessageImpl
   public final void write(java.io.Writer writer) {
     try {
       toXml(null).write(writer);
-      // TODO REMOVE FLUSH?
       writer.flush();
     }
     catch (IOException ex) {
