@@ -112,7 +112,7 @@ public class MessageContentProvider extends LabelProvider implements IStructured
         if (columnIndex >= props.size()) {
             return "xxx";
         }
-        Property pp = (Property) props.get(columnIndex);
+        Property pp = props.get(columnIndex);
         if (Property.SELECTION_PROPERTY.equals(pp.getType())) {
             try {
                 

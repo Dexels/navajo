@@ -153,7 +153,7 @@ public class SwtFactory {
         String[] colNames = new String[al.size()];
         int count = 0;
         for (Iterator<Property> iter = al.iterator(); iter.hasNext();) {
-            final Property elt = (Property) iter.next();
+            final Property elt = iter.next();
             //            layout.addColumnData(new ColumnWeightData(33, 75, true));
             TableColumn tc = new TableColumn(tv.getTable(), SWT.LEFT);
             tc.setText(elt.getName());

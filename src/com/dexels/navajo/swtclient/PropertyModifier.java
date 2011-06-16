@@ -119,7 +119,7 @@ public class PropertyModifier implements ICellModifier {
 //                    System.err.println("VALUE:"+current.getValue());
 //                }
                for (int i = 0; i < al.size(); i++) {
-                    Selection current =  (Selection)al.get(i);
+                    Selection current =  al.get(i);
                     if (current.isSelected()) {
                         return new Integer(i+1);
                     }
@@ -187,7 +187,7 @@ public class PropertyModifier implements ICellModifier {
                     if (index==0) {
                         p.setSelected(new ArrayList<String>());
                     } else {
-                        Selection s = (Selection)al.get(index-1);
+                        Selection s = al.get(index-1);
                         p.setSelected(s);
                     }
                  } catch (NavajoException e) {

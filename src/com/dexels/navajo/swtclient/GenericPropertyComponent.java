@@ -572,7 +572,7 @@ public class GenericPropertyComponent {
 //            }
             boolean hasSel = false;
             for (int i = 0; i < al.size(); i++) {
-                Selection element = (Selection) al.get(i);
+                Selection element = al.get(i);
                 if (element.isSelected()) {
                     ttt.select(i );
                     hasSel = true;
@@ -587,7 +587,7 @@ public class GenericPropertyComponent {
                 public void widgetSelected(SelectionEvent e) {
 
                     for (int i = 0; i < al.size(); i++) {
-                        Selection element = (Selection) al.get(i);
+                        Selection element = al.get(i);
                         int index = ttt.getSelectionIndex();
                         element.setSelected(index  == i);
                         // ttt.add(element.getName());
@@ -614,7 +614,7 @@ public class GenericPropertyComponent {
         try {
             sel = myProperty.getAllSelections();
             for (Iterator<Selection> iter = sel.iterator(); iter.hasNext();) {
-                final Selection element = (Selection) iter.next();
+                final Selection element = iter.next();
                 final Button b = new Button(comp, SWT.CHECK);
                 b.setBackground(new Color(Display.getDefault(), 255, 255, 255));
                 b.setToolTipText(myProperty.getDescription());
