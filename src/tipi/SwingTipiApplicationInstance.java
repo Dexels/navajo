@@ -58,6 +58,9 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance {
 		context = new SwingTipiContext(this, null);
 		context.setAppletRoot(appletRoot);
 		context.setOtherRoot(otherRoot);
+
+		TipiSwingExtension.getInstance().getTipiExtensionRegistry().loadExtensions(context);
+		
 		SwingTipiUserInterface stui = new SwingTipiUserInterface(context);
 		SwingClient.setUserInterface(stui);
 		context.setDefaultTopLevel(new TipiScreen());
@@ -67,8 +70,8 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance {
 
 		context.processProperties(properties);
 
-		TipiSwingExtension tse = new TipiSwingExtension();
-		tse.initialize(context);
+//		TipiSwingExtension tse = new TipiSwingExtension();
+//		tse.initialize(context);
 
 		InputStream tipiResourceStream = context
 				.getTipiResourceStream(definitionPath);
@@ -96,7 +99,7 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance {
 			}
 		} else {
 			try {
-				context.parseStream(tipiResourceStream, definition, false, tse);
+				context.parseStream(tipiResourceStream, definition, false, null);
 				// context.switchToDefinition(definition);
 			} catch (XMLParseException e) {
 				e.printStackTrace();
