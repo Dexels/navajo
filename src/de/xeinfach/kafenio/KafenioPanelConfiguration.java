@@ -9,30 +9,30 @@ import de.xeinfach.kafenio.interfaces.KafenioPanelConfigurationInterface;
 import de.xeinfach.kafenio.util.LeanLogger;
 
 /**
- * Description: contains the KafenioPanel configuration, encapsulates the configuration of the
- * editor component.
- *  
+ * Description: contains the KafenioPanel configuration, encapsulates the
+ * configuration of the editor component.
+ * 
  * @author Karsten Pawlik
  */
-public class KafenioPanelConfiguration implements KafenioPanelConfigurationInterface {
-	
-	private static LeanLogger log = new LeanLogger("KafenioPanelConfiguration.class");
+public class KafenioPanelConfiguration implements
+		KafenioPanelConfigurationInterface {
+
+	private static LeanLogger log = new LeanLogger(
+			"KafenioPanelConfiguration.class");
 
 	public static final int STANDALONE_MODE = 0;
 	public static final int APPLET_MODE = 1;
 	public static final int JWS_MODE = 2;
 
-	private static String defaultToolbar1Items =
-		"NEW,OPEN,SAVE,SEPARATOR,CUT,COPY,PASTE,SEPARATOR,BOLD"
-		+ ",ITALIC,UNDERLINE,SEPARATOR,LEFT,CENTER,RIGHT,JUSTIFY"
-		+ ",SEPARATOR,STYLESELECT";
+	private static String defaultToolbar1Items = "NEW,OPEN,SAVE,SEPARATOR,CUT,COPY,PASTE,SEPARATOR,BOLD"
+			+ ",ITALIC,UNDERLINE,SEPARATOR,LEFT,CENTER,RIGHT,JUSTIFY"
+			+ ",SEPARATOR,STYLESELECT";
 
-	private static String defaultToolbar2Items =	
-		"ULIST,OLIST,SEPARATOR,DEINDENT,INDENT,SEPARATOR,ANCHOR"
-		+ ",SEPARATOR,IMAGE,SEPARATOR,CLEARFORMATS,SEPARATOR" 
-		+ ",VIEWSOURCE,SEPARATOR,STRIKE,SUPERSCRIPT,SUBSCRIPT" 
-		+ ",INSERTCHARACTER,SEPARATOR,FIND,COLOR,TABLE,SEPARATOR";
-	
+	private static String defaultToolbar2Items = "ULIST,OLIST,SEPARATOR,DEINDENT,INDENT,SEPARATOR,ANCHOR"
+			+ ",SEPARATOR,IMAGE,SEPARATOR,CLEARFORMATS,SEPARATOR"
+			+ ",VIEWSOURCE,SEPARATOR,STRIKE,SUPERSCRIPT,SUBSCRIPT"
+			+ ",INSERTCHARACTER,SEPARATOR,FIND,COLOR,TABLE,SEPARATOR";
+
 	private Object kafenioParent = null;
 	private String outputmode = null;
 	private String contentParameter = null;
@@ -46,19 +46,19 @@ public class KafenioPanelConfiguration implements KafenioPanelConfigurationInter
 	private boolean showMenuBar = true;
 	private boolean showToolbar2 = true;
 	private boolean showToolbar = true;
-	private String document = null; 
-	private String styleSheet = null; 
-	private String rawDocument = null; 
-	private URL urlStyleSheet = null; 
-	private boolean showViewSource = false; 
+	private String document = null;
+	private String styleSheet = null;
+	private String rawDocument = null;
+	private URL urlStyleSheet = null;
+	private boolean showViewSource = false;
 	private boolean showMenuIcons = true;
-	private String language = null; 
+	private String language = null;
 	private String country = null;
 	private boolean base64 = false;
-	private boolean debugMode = false; 
-	private String[] styleSheetFileList = null; 
+	private boolean debugMode = false;
+	private String[] styleSheetFileList = null;
 	private String codeBase = null;
-	private boolean applet = false; 
+	private boolean applet = false;
 	private Color bgcolor = null;
 	private Vector customMenuItems = null;
 	private Vector customToolBar1;
@@ -66,35 +66,36 @@ public class KafenioPanelConfiguration implements KafenioPanelConfigurationInter
 	private int mode = 0;
 	private Properties properties = new Properties();
 
-
-
 	/**
-	 * default constructor.creates a new instance of this class.
-	 * the default toolbars are loaded. (as proposed by yangyu)
+	 * default constructor.creates a new instance of this class. the default
+	 * toolbars are loaded. (as proposed by yangyu)
 	 */
 	public KafenioPanelConfiguration() {
 		customToolBar1 = parseToolbarItems(defaultToolbar1Items);
 		customToolBar2 = parseToolbarItems(defaultToolbar2Items);
 	}
-	
+
 	/**
-	 * @return returns true if Kafenio should be run in applet mode, false otherwise.
+	 * @return returns true if Kafenio should be run in applet mode, false
+	 *         otherwise.
 	 */
 	public boolean isApplet() {
 		return (mode == APPLET_MODE);
 	}
 
-    /**
-     * @return returns true if Kafenio should be run in web start mode, false otherwise.
-     */
-	public boolean isWebStart(){
+	/**
+	 * @return returns true if Kafenio should be run in web start mode, false
+	 *         otherwise.
+	 */
+	public boolean isWebStart() {
 		return (mode == JWS_MODE);
 	}
 
 	/**
-	 * @return returns true if Kafenio should be run in standalones mode, false otherwise.
+	 * @return returns true if Kafenio should be run in standalones mode, false
+	 *         otherwise.
 	 */
-	public boolean isStandalone(){
+	public boolean isStandalone() {
 		return (mode == STANDALONE_MODE);
 	}
 
@@ -106,30 +107,32 @@ public class KafenioPanelConfiguration implements KafenioPanelConfigurationInter
 	}
 
 	/**
-	 * @return returns the background color to be set. if not set, the default system value
-	 * is assumed.
+	 * @return returns the background color to be set. if not set, the default
+	 *         system value is assumed.
 	 */
 	public Color getBgcolor() {
 		return bgcolor;
 	}
 
 	/**
-	 * @return returns true if applet should be run in debug mode, false otherwise.
+	 * @return returns true if applet should be run in debug mode, false
+	 *         otherwise.
 	 */
 	public boolean isDebugMode() {
 		return debugMode;
 	}
 
 	/**
-	 * @return returns the applet's codebase (only applicable for isApplet() == true
+	 * @return returns the applet's codebase (only applicable for isApplet() ==
+	 *         true
 	 */
 	public String getCodeBase() {
 		return codeBase;
 	}
 
 	/**
-	 * @return returns the currently set countrycode. if not countrycode is set, the default
-	 * locale is assumed.
+	 * @return returns the currently set countrycode. if not countrycode is set,
+	 *         the default locale is assumed.
 	 */
 	public String getCountry() {
 		return country;
@@ -150,7 +153,8 @@ public class KafenioPanelConfiguration implements KafenioPanelConfigurationInter
 	}
 
 	/**
-	 * @return returns true if html source view should be displayed on startup, false otherwise
+	 * @return returns true if html source view should be displayed on startup,
+	 *         false otherwise
 	 */
 	public boolean isShowViewSource() {
 		return showViewSource;
@@ -193,135 +197,158 @@ public class KafenioPanelConfiguration implements KafenioPanelConfigurationInter
 
 	/**
 	 * sets the parameter that defines if Kafenio should be run as an applet.
-	 * @param newMode application mode-ID as specified by constants
+	 * 
+	 * @param newMode
+	 *            application mode-ID as specified by constants
 	 */
 	public void setMode(int newMode) {
 		mode = newMode;
 	}
 
 	/**
-	 * @param b true if base64 encoding should be used when reading the document into the editor.
+	 * @param b
+	 *            true if base64 encoding should be used when reading the
+	 *            document into the editor.
 	 */
 	public void setBase64(boolean b) {
 		base64 = b;
 	}
 
 	/**
-	 * @param color sets the applications background color.
+	 * @param color
+	 *            sets the applications background color.
 	 */
 	public void setBgcolor(Color color) {
 		bgcolor = color;
 	}
 
 	/**
-	 * @param color parses the string into a color object and then sets the applications background color.
+	 * @param color
+	 *            parses the string into a color object and then sets the
+	 *            applications background color.
 	 */
 	public void setBgcolor(String color) {
 		bgcolor = parseBgColor(color);
 	}
 
 	/**
-	 * @param b true if debug mode is enabled, false for debug mode disabled.
+	 * @param b
+	 *            true if debug mode is enabled, false for debug mode disabled.
 	 */
 	public void setDebugMode(boolean b) {
 		debugMode = b;
 	}
 
 	/**
-	 * @param string sets the applets codebase to the given value.
+	 * @param string
+	 *            sets the applets codebase to the given value.
 	 */
 	public void setCodeBase(String string) {
 		codeBase = string;
 	}
 
 	/**
-	 * @param string sets the countrycode to use. (i.e.: DE for germany or UK for united kingdom.
+	 * @param string
+	 *            sets the countrycode to use. (i.e.: DE for germany or UK for
+	 *            united kingdom.
 	 */
 	public void setCountry(String string) {
 		country = string;
 	}
 
 	/**
-	 * @param string sets the document text
+	 * @param string
+	 *            sets the document text
 	 */
 	public void setDocument(String string) {
 		document = string;
 	}
 
 	/**
-	 * @param b true if menu icons should be displayed, false otherwise.
+	 * @param b
+	 *            true if menu icons should be displayed, false otherwise.
 	 */
 	public void setShowMenuIcons(boolean b) {
 		showMenuIcons = b;
 	}
 
 	/**
-	 * @param b true if sourceview should be displayed, false otherwise.
+	 * @param b
+	 *            true if sourceview should be displayed, false otherwise.
 	 */
 	public void setShowViewSource(boolean b) {
 		showViewSource = b;
 	}
 
 	/**
-	 * @param string sets the language code to use. (i.e.: de for germany or UK for united kingdom)
+	 * @param string
+	 *            sets the language code to use. (i.e.: de for germany or UK for
+	 *            united kingdom)
 	 */
 	public void setLanguage(String string) {
 		language = string;
 	}
 
 	/**
-	 * @param string sets the raw document text
+	 * @param string
+	 *            sets the raw document text
 	 */
 	public void setRawDocument(String string) {
 		rawDocument = string;
 	}
 
 	/**
-	 * @param string sets the css stylesheet for the document.
+	 * @param string
+	 *            sets the css stylesheet for the document.
 	 */
 	public void setStyleSheet(String string) {
 		styleSheet = string;
 	}
 
 	/**
-	 * @param strings sets the css stylesheet files to use.
+	 * @param strings
+	 *            sets the css stylesheet files to use.
 	 */
 	public void setStyleSheetFileList(String[] strings) {
 		styleSheetFileList = strings;
 	}
 
 	/**
-	 * @param url sets the url to the stylesheet to use.
+	 * @param url
+	 *            sets the url to the stylesheet to use.
 	 */
 	public void setUrlStyleSheet(URL url) {
 		urlStyleSheet = url;
 	}
 
 	/**
- 	 * @return returns the current mode of the application as int value.
- 	 */
- 	public int getMode() {
+	 * @return returns the current mode of the application as int value.
+	 */
+	public int getMode() {
 		return mode;
 	}
-	
+
 	/**
-	 * @return returns vector that contains the keys of the 
-	 * menu items to be included in the menu bar.
+	 * @return returns vector that contains the keys of the menu items to be
+	 *         included in the menu bar.
 	 */
 	public Vector getCustomMenuItems() {
 		return customMenuItems;
 	}
 
 	/**
-	 * @param vector sets the menu items in a vector that contains the keys of the 
-	 * menu items to be included in the menu bar.
+	 * @param vector
+	 *            sets the menu items in a vector that contains the keys of the
+	 *            menu items to be included in the menu bar.
 	 */
 	public void setCustomMenuItems(Vector vector) {
 		customMenuItems = vector;
 	}
 
 	/**
-	 * @param menuItems parses the top-level menu items to be shown from the given string.
+	 * @param menuItems
+	 *            parses the top-level menu items to be shown from the given
+	 *            string.
 	 */
 	public void setCustomMenuItems(String menuItems) {
 		if (menuItems != null) {
@@ -330,21 +357,24 @@ public class KafenioPanelConfiguration implements KafenioPanelConfigurationInter
 	}
 
 	/**
-	 * @param b true if toolbar 1 is to be displayed.
+	 * @param b
+	 *            true if toolbar 1 is to be displayed.
 	 */
 	public void setShowToolbar(boolean b) {
 		showToolbar = b;
 	}
 
 	/**
-	 * @param b true if toolbar 1 is to be displayed.
+	 * @param b
+	 *            true if toolbar 1 is to be displayed.
 	 */
 	public void setShowToolbar2(boolean b) {
 		showToolbar2 = b;
 	}
 
 	/**
-	 * @param b true if menubar should be displayed.
+	 * @param b
+	 *            true if menubar should be displayed.
 	 */
 	public void setShowMenuBar(boolean b) {
 		showMenuBar = b;
@@ -372,14 +402,16 @@ public class KafenioPanelConfiguration implements KafenioPanelConfigurationInter
 	}
 
 	/**
-	 * @param string path to image folder
+	 * @param string
+	 *            path to image folder
 	 */
 	public void setImageDir(String string) {
 		imageDir = string;
 	}
 
 	/**
-	 * @param string path to file folder
+	 * @param string
+	 *            path to file folder
 	 */
 	public void setFileDir(String string) {
 		fileDir = string;
@@ -400,7 +432,8 @@ public class KafenioPanelConfiguration implements KafenioPanelConfigurationInter
 	}
 
 	/**
-	 * @param string sets the treepilot system id.
+	 * @param string
+	 *            sets the treepilot system id.
 	 */
 	public void setTreePilotSystemID(String string) {
 		treePilotSystemID = string;
@@ -414,8 +447,10 @@ public class KafenioPanelConfiguration implements KafenioPanelConfigurationInter
 	}
 
 	/**
-	 * @param string sets the servlet URL that is called when fetching image- or file information
-	 * for the insert anchor or insert image dialogs.
+	 * @param string
+	 *            sets the servlet URL that is called when fetching image- or
+	 *            file information for the insert anchor or insert image
+	 *            dialogs.
 	 */
 	public void setServletUrl(String string) {
 		servletUrl = string;
@@ -431,19 +466,23 @@ public class KafenioPanelConfiguration implements KafenioPanelConfigurationInter
 	/**
 	 * servlet mode can be either "java" or "cgi". default is "java".<BR>
 	 * if the standard tagging-servlet is used, servlet mode should be "java".<BR>
-	 * if you're using a php- or perl-script for file-input, the servlet mode should be "cgi".<BR>
-	 * <BR>interface description for mode <b>cgi:</b><BR>
+	 * if you're using a php- or perl-script for file-input, the servlet mode
+	 * should be "cgi".<BR>
+	 * <BR>
+	 * interface description for mode <b>cgi:</b><BR>
 	 * the script can take the following parameters:<BR>
 	 * <UL>
 	 * <LI><B>GetImages</B> i.e.: .../lister.cgi?GetImages=true</LI>
 	 * <LI><B>GetFiles:</B> i.e.: .../lister.cgi?GetFiles=true</LI>
-	 * <LI><B>FileExtensions (optional)</B> i.e.: .../lister.cgi?GetFiles=true&FileExtensions=.gif:.jpg:.jpeg:.png</LI>
+	 * <LI><B>FileExtensions (optional)</B> i.e.:
+	 * .../lister.cgi?GetFiles=true&FileExtensions=.gif:.jpg:.jpeg:.png</LI>
 	 * </UL>
 	 * the script must output a document of MIME-type text/plain.<BR>
-	 * the first line of the output defines the http-path to the root directory of your images and files.
-	 * each further line contains one relative file-path. 
-	 * the path is relative to the root specified in the first line.<BR>
-	 * <BR>i.e.:<BR>
+	 * the first line of the output defines the http-path to the root directory
+	 * of your images and files. each further line contains one relative
+	 * file-path. the path is relative to the root specified in the first line.<BR>
+	 * <BR>
+	 * i.e.:<BR>
 	 * physical path to images root directory: /usr/local/httpd/htdocs/images<BR>
 	 * http path to images root directory: http://www.mydomain.com/images<BR>
 	 * files in the images root directory: car.gif<BR>
@@ -460,24 +499,32 @@ public class KafenioPanelConfiguration implements KafenioPanelConfigurationInter
 	 * holiday2002/i.gif<BR>
 	 * holiday2002/mygirlfriend.gif<BR>
 	 * </tt>
-	 * @param newServletMode the current ServletMode (can be "cgi" or "java", case insensitive)
+	 * 
+	 * @param newServletMode
+	 *            the current ServletMode (can be "cgi" or "java", case
+	 *            insensitive)
 	 */
 	public void setServletMode(String newServletMode) {
-		if (newServletMode.equalsIgnoreCase("cgi") || newServletMode.equalsIgnoreCase("java")) {
+		if (newServletMode.equalsIgnoreCase("cgi")
+				|| newServletMode.equalsIgnoreCase("java")) {
 			servletMode = newServletMode;
-		} else if(newServletMode == null || "".equals(newServletMode) || "none".equalsIgnoreCase(newServletMode)) {
+		} else if (newServletMode == null || "".equals(newServletMode)
+				|| "none".equalsIgnoreCase(newServletMode)) {
 			servletMode = "cgi";
 		} else {
-			throw new IllegalArgumentException("Valid arguments: \"cgi\", \"java\", \"none\"");
+			throw new IllegalArgumentException(
+					"Valid arguments: \"cgi\", \"java\", \"none\"");
 		}
 	}
 
 	/**
-	 * @param string set url to post content to for saving documents on the web.
+	 * @param string
+	 *            set url to post content to for saving documents on the web.
 	 */
 	public void setPostUrl(String string) {
 		postUrl = string;
 	}
+
 	/**
 	 * @return returns the post url.
 	 */
@@ -493,7 +540,9 @@ public class KafenioPanelConfiguration implements KafenioPanelConfigurationInter
 	}
 
 	/**
-	 * @param string sets the content parameter. (the document to edit as string value)
+	 * @param string
+	 *            sets the content parameter. (the document to edit as string
+	 *            value)
 	 */
 	public void setContentParameter(String string) {
 		contentParameter = string;
@@ -508,11 +557,11 @@ public class KafenioPanelConfiguration implements KafenioPanelConfigurationInter
 
 	/**
 	 * sets the outputmode of the editor.<BR>
-	 * normal = output is standard plain-ascii html code
-	 * off = no content is posted at all
-	 * base64 = content is posted as base64 encoded ascii-string
+	 * normal = output is standard plain-ascii html code off = no content is
+	 * posted at all base64 = content is posted as base64 encoded ascii-string
 	 * 
-	 * @param string outputmode to set (can be "normal", "off" or "base64"
+	 * @param string
+	 *            outputmode to set (can be "normal", "off" or "base64"
 	 */
 	public void setOutputmode(String string) {
 		if ("normal".equalsIgnoreCase(string)) {
@@ -523,7 +572,6 @@ public class KafenioPanelConfiguration implements KafenioPanelConfigurationInter
 			outputmode = string.toUpperCase();
 		}
 	}
-	
 
 	/**
 	 * @return returns the outputmode as string.
@@ -533,7 +581,8 @@ public class KafenioPanelConfiguration implements KafenioPanelConfigurationInter
 	}
 
 	/**
-	 * @param parentApplet Parent of KafenioPanel
+	 * @param parentApplet
+	 *            Parent of KafenioPanel
 	 */
 	public void setKafenioParent(Object parentApplet) {
 		kafenioParent = parentApplet;
@@ -548,6 +597,7 @@ public class KafenioPanelConfiguration implements KafenioPanelConfigurationInter
 
 	/**
 	 * keys for the items are the constants from KafenioToolBar class
+	 * 
 	 * @return returns vector that contains all items as string for toolbar1
 	 */
 	public Vector getCustomToolBar1() {
@@ -556,6 +606,7 @@ public class KafenioPanelConfiguration implements KafenioPanelConfigurationInter
 
 	/**
 	 * keys for the items are the constants from KafenioToolBar class
+	 * 
 	 * @return returns vector that contains all items as string for toolbar 2
 	 */
 	public Vector getCustomToolBar2() {
@@ -564,7 +615,9 @@ public class KafenioPanelConfiguration implements KafenioPanelConfigurationInter
 
 	/**
 	 * keys for the items are the constants from KafenioToolBar class
-	 * @param vector vector that contains all items as string for toolbar 1
+	 * 
+	 * @param vector
+	 *            vector that contains all items as string for toolbar 1
 	 */
 	public void setCustomToolBar1(Vector vector) {
 		customToolBar1 = vector;
@@ -572,7 +625,10 @@ public class KafenioPanelConfiguration implements KafenioPanelConfigurationInter
 
 	/**
 	 * keys for the items are the constants from KafenioToolBar class
-	 * @param toolbarItems string that contains all items as space separated list for toolbar 1
+	 * 
+	 * @param toolbarItems
+	 *            string that contains all items as space separated list for
+	 *            toolbar 1
 	 */
 	public void setCustomToolBar1(String toolbarItems) {
 		if (toolbarItems != null) {
@@ -582,7 +638,9 @@ public class KafenioPanelConfiguration implements KafenioPanelConfigurationInter
 
 	/**
 	 * keys for the items are the constants from KafenioToolBar class
-	 * @param vector vector that contains all items as string for toolbar 2
+	 * 
+	 * @param vector
+	 *            vector that contains all items as string for toolbar 2
 	 */
 	public void setCustomToolBar2(Vector vector) {
 		customToolBar2 = vector;
@@ -590,7 +648,10 @@ public class KafenioPanelConfiguration implements KafenioPanelConfigurationInter
 
 	/**
 	 * keys for the items are the constants from KafenioToolBar class
-	 * @param toolbarItems string that contains all items as space separated list for toolbar 2
+	 * 
+	 * @param toolbarItems
+	 *            string that contains all items as space separated list for
+	 *            toolbar 2
 	 */
 	public void setCustomToolBar2(String toolbarItems) {
 		if (toolbarItems != null) {
@@ -603,40 +664,42 @@ public class KafenioPanelConfiguration implements KafenioPanelConfigurationInter
 	 */
 	public String toString() {
 		StringBuffer out = new StringBuffer();
-		out.append("codebase: "+getCodeBase());
-		out.append("\ncontent parameter: "+getContentParameter());
-		out.append("\ncountry: "+getCountry());
-		out.append("\ncustom menuitems: "+getCustomMenuItems());
-		out.append("\ntoolbar1: "+getCustomToolBar1());
-		out.append("\ntoolbar2: "+getCustomToolBar2());
-		out.append("\ndocument: "+getDocument());
-		out.append("\nfiledir: "+getFileDir());
-		out.append("\nimagedir: "+getImageDir());
-		out.append("\nparent: "+getKafenioParent());
-		out.append("\nlanguage: "+getLanguage());
-		out.append("\noutputmode: "+getOutputmode());
-		out.append("\npost url: "+getPostUrl());
-		out.append("\nraw document: "+getRawDocument());
-		out.append("\nservlet mode: "+getServletMode());
-		out.append("\nservlet url: "+getServletUrl());
-		out.append("\nstylesheet: "+getStyleSheet());
-		out.append("\nstylesheet file list: "+getStyleSheetFileList());
-		out.append("\ntreepilot sys id: "+getTreePilotSystemID());
-		out.append("\nstylesheet url: "+getUrlStyleSheet());
-		out.append("\nisApplet: "+isApplet());
-		out.append("\nisBase64: "+isBase64());
-		out.append("\nisDebugMode: "+isDebugMode());
-		out.append("\nisShowMenuBar: "+isShowMenuBar());
-		out.append("\nisShowMenuIcons: "+isShowMenuIcons());
-		out.append("\nisShowToolbar: "+isShowToolbar());
-		out.append("\nisShowToolbar2: "+isShowToolbar2());
-		out.append("\nisShowViewSource: "+isShowViewSource());
+		out.append("codebase: " + getCodeBase());
+		out.append("\ncontent parameter: " + getContentParameter());
+		out.append("\ncountry: " + getCountry());
+		out.append("\ncustom menuitems: " + getCustomMenuItems());
+		out.append("\ntoolbar1: " + getCustomToolBar1());
+		out.append("\ntoolbar2: " + getCustomToolBar2());
+		out.append("\ndocument: " + getDocument());
+		out.append("\nfiledir: " + getFileDir());
+		out.append("\nimagedir: " + getImageDir());
+		out.append("\nparent: " + getKafenioParent());
+		out.append("\nlanguage: " + getLanguage());
+		out.append("\noutputmode: " + getOutputmode());
+		out.append("\npost url: " + getPostUrl());
+		out.append("\nraw document: " + getRawDocument());
+		out.append("\nservlet mode: " + getServletMode());
+		out.append("\nservlet url: " + getServletUrl());
+		out.append("\nstylesheet: " + getStyleSheet());
+		out.append("\nstylesheet file list: " + getStyleSheetFileList());
+		out.append("\ntreepilot sys id: " + getTreePilotSystemID());
+		out.append("\nstylesheet url: " + getUrlStyleSheet());
+		out.append("\nisApplet: " + isApplet());
+		out.append("\nisBase64: " + isBase64());
+		out.append("\nisDebugMode: " + isDebugMode());
+		out.append("\nisShowMenuBar: " + isShowMenuBar());
+		out.append("\nisShowMenuIcons: " + isShowMenuIcons());
+		out.append("\nisShowToolbar: " + isShowToolbar());
+		out.append("\nisShowToolbar2: " + isShowToolbar2());
+		out.append("\nisShowViewSource: " + isShowViewSource());
 		return out.toString();
 	}
-	
+
 	/**
 	 * method to parse a space separated string into a vector.
-	 * @param aString the string to parse.
+	 * 
+	 * @param aString
+	 *            the string to parse.
 	 * @return returns a vector containing the parsed substrings.
 	 */
 	public Vector parseToolbarItems(String aString) {
@@ -644,17 +707,21 @@ public class KafenioPanelConfiguration implements KafenioPanelConfigurationInter
 		String[] buttons = null;
 		if (aString != null) {
 			buttons = KafenioPanel.tokenize(aString);
-			for (int i=0; i < buttons.length; i++) {
+			for (int i = 0; i < buttons.length; i++) {
 				tools.add(buttons[i].toLowerCase());
 			}
 		}
-		if (tools.size() > 0) return tools;
+		if (tools.size() > 0) {
+			return tools;
+		}
 		return null;
 	}
 
 	/**
 	 * parses the given string into a vector with sorted key-order.
-	 * @param menuString menu keys as string
+	 * 
+	 * @param menuString
+	 *            menu keys as string
 	 * @return returns a vector containing the menu keys.
 	 */
 	private Vector parseMenuItems(String menuString) {
@@ -663,9 +730,11 @@ public class KafenioPanelConfiguration implements KafenioPanelConfigurationInter
 			menuItemList = new Vector();
 			String[] menuItemsArray = null;
 			if (menuString != null) {
-				menuItemsArray = KafenioPanel.tokenize(menuString.toLowerCase());
-				for (int i=0; i < menuItemsArray.length; i++) {
-					if (KafenioMenuBar.getOrderedMenuKeys().contains(menuItemsArray[i])) {
+				menuItemsArray = KafenioPanel
+						.tokenize(menuString.toLowerCase());
+				for (int i = 0; i < menuItemsArray.length; i++) {
+					if (KafenioMenuBar.getOrderedMenuKeys().contains(
+							menuItemsArray[i])) {
 						menuItemList.add(menuItemsArray[i]);
 					}
 				}
@@ -675,9 +744,12 @@ public class KafenioPanelConfiguration implements KafenioPanelConfigurationInter
 	}
 
 	/**
-	 * @param bgColorString string that represents the color in RGB (i.e.: #FFFFFF for white.)
-	 * @return returns a Color object containing the background color. if the background-parameter was not set,
-	 * the system default (Color.gray) is returned.
+	 * @param bgColorString
+	 *            string that represents the color in RGB (i.e.: #FFFFFF for
+	 *            white.)
+	 * @return returns a Color object containing the background color. if the
+	 *         background-parameter was not set, the system default (Color.gray)
+	 *         is returned.
 	 */
 	public Color parseBgColor(String bgColorString) {
 		try {
@@ -689,32 +761,36 @@ public class KafenioPanelConfiguration implements KafenioPanelConfigurationInter
 	}
 
 	/**
-	 * @see de.xeinfach.kafenio.interfaces.KafenioPanelConfigurationInterface#setProperty(java.lang.String, java.lang.String)
+	 * @see de.xeinfach.kafenio.interfaces.KafenioPanelConfigurationInterface#setProperty(java.lang.String,
+	 *      java.lang.String)
 	 */
 	public void setProperty(String name, String value) {
-	    properties.setProperty(name, value); 
-	}
-	
-	/**
-	 * @see de.xeinfach.kafenio.interfaces.KafenioPanelConfigurationInterface#getProperty(java.lang.String)
-	 */
-	public String getProperty(String name) {               
-	    if(properties.getProperty(name) != null) {
-	        return properties.getProperty(name);
-	    } else {
-	        return "";
-	    }
+		properties.setProperty(name, value);
 	}
 
 	/**
-	 * @return Returns true if unicode support for exported text is turned on. default is false.
+	 * @see de.xeinfach.kafenio.interfaces.KafenioPanelConfigurationInterface#getProperty(java.lang.String)
+	 */
+	public String getProperty(String name) {
+		if (properties.getProperty(name) != null) {
+			return properties.getProperty(name);
+		} else {
+			return "";
+		}
+	}
+
+	/**
+	 * @return Returns true if unicode support for exported text is turned on.
+	 *         default is false.
 	 */
 	public boolean isUnicode() {
 		return unicode;
 	}
-	
+
 	/**
-	 * @param unicode if set to true, exported document text is in unicode format (no html-entities). default is false.
+	 * @param unicode
+	 *            if set to true, exported document text is in unicode format
+	 *            (no html-entities). default is false.
 	 */
 	public void setUnicode(boolean unicode) {
 		this.unicode = unicode;

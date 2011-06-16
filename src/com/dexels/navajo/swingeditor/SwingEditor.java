@@ -5,20 +5,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Enumeration;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
-import javax.swing.text.html.HTML.Tag;
 
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
@@ -33,6 +31,10 @@ import de.xeinfach.kafenio.component.ExtendedHTMLDocument;
  * 
  */
 public class SwingEditor extends KafenioPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2156410387429367534L;
 	private Property myProperty;
 	private ArrayList<Binary> attachments = new ArrayList<Binary>();
 
@@ -46,24 +48,25 @@ public class SwingEditor extends KafenioPanel {
 				// + evt.getNewValue());
 			}
 		});
-		getSourcePane().getDocument().addDocumentListener(new DocumentListener() {
+		getSourcePane().getDocument().addDocumentListener(
+				new DocumentListener() {
 
-			public void changedUpdate(DocumentEvent e) {
-				fireChange("change", e);
-			}
+					public void changedUpdate(DocumentEvent e) {
+						fireChange("change", e);
+					}
 
-			public void insertUpdate(DocumentEvent e) {
-				fireChange("insert", e);
-			}
+					public void insertUpdate(DocumentEvent e) {
+						fireChange("insert", e);
+					}
 
-			public void removeUpdate(DocumentEvent e) {
-				fireChange("remove", e);
-			}
+					public void removeUpdate(DocumentEvent e) {
+						fireChange("remove", e);
+					}
 
-			private void fireChange(String changeType, DocumentEvent e) {
+					private void fireChange(String changeType, DocumentEvent e) {
 
-			}
-		});
+					}
+				});
 	}
 
 	public ArrayList<Binary> getImages() {
@@ -119,7 +122,7 @@ public class SwingEditor extends KafenioPanel {
 					}
 				}
 			}
-			
+
 			String text = getDocumentText();
 			for (int i = 0; i < paths.size(); i++) {
 				text = replaceString(text, paths.get(i), "cid:attach-nr-" + i);
@@ -157,7 +160,8 @@ public class SwingEditor extends KafenioPanel {
 				ExtendedHTMLDocument extendedHtmlDoc = kp.getExtendedHtmlDoc();
 				String result;
 				try {
-					result = extendedHtmlDoc.getText(0, extendedHtmlDoc.getLength());
+					result = extendedHtmlDoc.getText(0,
+							extendedHtmlDoc.getLength());
 					System.err.println("Result: " + kp.getProcessedText());
 				} catch (BadLocationException e1) {
 					e1.printStackTrace();
@@ -168,7 +172,8 @@ public class SwingEditor extends KafenioPanel {
 		kp.addPropertyChangeListener(new PropertyChangeListener() {
 
 			public void propertyChange(PropertyChangeEvent evt) {
-				System.err.println("Log: " + evt.getPropertyName() + " val: " + evt.getNewValue());
+				System.err.println("Log: " + evt.getPropertyName() + " val: "
+						+ evt.getNewValue());
 
 			}
 		});

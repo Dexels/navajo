@@ -45,11 +45,11 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.JToolBar;
-import javax.swing.JOptionPane;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentEvent;
@@ -87,17 +87,23 @@ import de.xeinfach.kafenio.interfaces.KafenioPanelConfigurationInterface;
 import de.xeinfach.kafenio.interfaces.KafenioPanelInterface;
 import de.xeinfach.kafenio.urlfetch.URLFetch;
 import de.xeinfach.kafenio.util.Base64Codec;
-import de.xeinfach.kafenio.util.LeanLogger;
 import de.xeinfach.kafenio.util.HTMLTranslate;
+import de.xeinfach.kafenio.util.LeanLogger;
 import de.xeinfach.kafenio.util.Translatrix;
 import de.xeinfach.kafenio.util.Utils;
 
-/** 
- * Description: Main application class that creates a Java wysiwyg editor component
+/**
+ * Description: Main application class that creates a Java wysiwyg editor
+ * component
  * 
  * @author Karsten Pawlik, Howard Kistler
  */
-public class KafenioPanel extends JPanel implements ActionListener, KeyListener, DocumentListener, KafenioPanelInterface {
+public class KafenioPanel extends JPanel implements ActionListener,
+		KeyListener, DocumentListener, KafenioPanelInterface {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7121926091883563092L;
 	/* Constants. */
 	private static LeanLogger log = new LeanLogger("KafenioPanel.class");
 	private static ResourceBundle treepilotProperties;
@@ -112,7 +118,8 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 	private JMenuBar jMenuBar;
 	private JToolBar toolbar2;
 	private JToolBar toolbar1;
-	private Container kafenioParent; //implements KafenioContainerInterface or not. Most probably JDialog or JFrame.
+	private Container kafenioParent; // implements KafenioContainerInterface or
+										// not. Most probably JDialog or JFrame.
 	private KafenioMenuBar kafenioMenuBar;
 	private KafenioToolBar kafenioToolBar1;
 	private KafenioToolBar kafenioToolBar2;
@@ -133,12 +140,12 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 	protected boolean documentConfirmed = false;
 	private SecurityManager secManager;
 	private Translatrix translatrix;
-	
+
 	private int splitPos = 0;
-	private String lastSearchFindTerm     = null;
-	private String lastSearchReplaceTerm  = null;
+	private String lastSearchFindTerm = null;
+	private String lastSearchReplaceTerm = null;
 	private boolean lastSearchCaseSetting = false;
-	private boolean lastSearchTopSetting  = false;
+	private boolean lastSearchTopSetting = false;
 	private int indent = 0;
 	private Vector toolbars = new Vector();
 	private URLFetch urlFetcher = new URLFetch();
@@ -154,17 +161,19 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 
 	/**
 	 * Contructs a new KafenioPanel using the given configuration object.
-	 * @param config the configuration to use for creation.
+	 * 
+	 * @param config
+	 *            the configuration to use for creation.
 	 */
 	public KafenioPanel(KafenioPanelConfigurationInterface iConfiguration) {
 		super();
 		log.info("1");
-		kafenioConfig = (KafenioPanelConfiguration)iConfiguration;
+		kafenioConfig = (KafenioPanelConfiguration) iConfiguration;
 		log.info("12");
 
 		// Determine if system clipboard is available
 		secManager = System.getSecurityManager();
-		if(secManager != null) {
+		if (secManager != null) {
 			try {
 				secManager.checkSystemClipboardAccess();
 				sysClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
@@ -177,22 +186,24 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 			}
 		}
 		log.info("13");
-		
+
 		/* Localize for language */
 		translatrix = new Translatrix("de.xeinfach.kafenio.LanguageResources");
 		log.info("14");
-		Locale baseLocale = (Locale)null;
+		Locale baseLocale = (Locale) null;
 		log.info("15");
-		if(kafenioConfig.getLanguage() != null && kafenioConfig.getCountry() != null) {
+		if (kafenioConfig.getLanguage() != null
+				&& kafenioConfig.getCountry() != null) {
 			log.info("16");
-			baseLocale = new Locale(kafenioConfig.getLanguage(), kafenioConfig.getCountry());
+			baseLocale = new Locale(kafenioConfig.getLanguage(),
+					kafenioConfig.getCountry());
 			log.info("17");
 		}
 		translatrix.setLocale(baseLocale);
 		log.info("18");
-		
+
 		/* initialize all other components */
-		kafenioParent = (Container)kafenioConfig.getKafenioParent();
+		kafenioParent = (Container) kafenioConfig.getKafenioParent();
 		frameHandler = new Frame();
 		toolbarPanel = new JPanel();
 		kafenioActions = new KafenioPanelActions(this);
@@ -204,20 +215,24 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 
 		/* Load TreePilot properties */
 		try {
-			treepilotProperties = ResourceBundle.getBundle("de.xeinfach.kafenio.TreePilot");
-		} catch(MissingResourceException mre) {
-			log.error("MissingResourceException while loading treepilot file: " + mre.fillInStackTrace());
+			treepilotProperties = ResourceBundle
+					.getBundle("de.xeinfach.kafenio.TreePilot");
+		} catch (MissingResourceException mre) {
+			log.error("MissingResourceException while loading treepilot file: "
+					+ mre.fillInStackTrace());
 		}
-		
+
 		/* Create the editor kit, document, and stylesheet */
 		htmlPane = new JTextPane();
 		htmlKit = new ExtendedHTMLEditorKit();
 		try {
-			htmlDoc = (ExtendedHTMLDocument) (htmlKit.createDefaultDocument(new URL(getConfig().getCodeBase())));
+			htmlDoc = (ExtendedHTMLDocument) (htmlKit
+					.createDefaultDocument(new URL(getConfig().getCodeBase())));
 		} catch (Exception e) {
 			htmlDoc = (ExtendedHTMLDocument) (htmlKit.createDefaultDocument());
 		}
-		htmlDoc.putProperty("de.xeinfach.kafenio.docsource", getConfig().getCodeBase());
+		htmlDoc.putProperty("de.xeinfach.kafenio.docsource", getConfig()
+				.getCodeBase());
 		styleSheet = htmlDoc.getStyleSheet();
 		htmlKit.setDefaultCursor(new Cursor(Cursor.TEXT_CURSOR));
 
@@ -226,10 +241,10 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 		htmlPane.setDocument(htmlDoc);
 		htmlPane.setMargin(new Insets(0, 0, 0, 0));
 		htmlPane.addKeyListener(this);
-		
+
 		/* Create the source text area */
 		srcPane = new SyntaxPane();
-		srcPane.setBackground(new Color(255,255,255));
+		srcPane.setBackground(new Color(255, 255, 255));
 		srcPane.setSelectionColor(new Color(255, 192, 192));
 		srcPane.setText(htmlPane.getText());
 		srcPane.getDocument().addDocumentListener(this);
@@ -240,10 +255,13 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 				handleCaretPositionChange(ce);
 			}
 		});
-		htmlPane.getDocument().addUndoableEditListener(new CustomUndoableEditListener());
+		htmlPane.getDocument().addUndoableEditListener(
+				new CustomUndoableEditListener());
 
-		/* create menubar and toolbar objects before loading the document
-		 * (we need the styles-combo-box for registering a document) */
+		/*
+		 * create menubar and toolbar objects before loading the document (we
+		 * need the styles-combo-box for registering a document)
+		 */
 		kafenioMenuBar = new KafenioMenuBar(this);
 		kafenioToolBar1 = new KafenioToolBar(this);
 		kafenioToolBar2 = new KafenioToolBar(this);
@@ -251,44 +269,53 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 		/* create menubar */
 		if (getConfig().isShowMenuBar()) {
 			if (kafenioConfig.getCustomMenuItems() != null) {
-				jMenuBar = kafenioMenuBar.createCustomMenuBar(kafenioConfig.getCustomMenuItems());
+				jMenuBar = kafenioMenuBar.createCustomMenuBar(kafenioConfig
+						.getCustomMenuItems());
 			} else {
 				jMenuBar = kafenioMenuBar.createDefaultKafenioMenuBar();
 			}
-			kafenioMenuBar.getViewToolbarItem().setSelected(getConfig().isShowToolbar() || getConfig().isShowToolbar2());
-			kafenioMenuBar.getViewSourceItem().setSelected(getConfig().isShowViewSource());
+			kafenioMenuBar.getViewToolbarItem()
+					.setSelected(
+							getConfig().isShowToolbar()
+									|| getConfig().isShowToolbar2());
+			kafenioMenuBar.getViewSourceItem().setSelected(
+					getConfig().isShowViewSource());
 			if (kafenioParent != null) {
 				if (kafenioParent instanceof JDialog) {
-				    ((JDialog)kafenioParent).setJMenuBar(jMenuBar); 
+					((JDialog) kafenioParent).setJMenuBar(jMenuBar);
 				} else if (kafenioParent instanceof JFrame) {
-				    ((JFrame)kafenioParent).setJMenuBar(jMenuBar); 
+					((JFrame) kafenioParent).setJMenuBar(jMenuBar);
 				} else if (kafenioParent instanceof KafenioContainerInterface) {
-				    ((KafenioContainerInterface)kafenioParent).setJMenuBar(jMenuBar); 
+					((KafenioContainerInterface) kafenioParent)
+							.setJMenuBar(jMenuBar);
 				}
 			}
 		}
 
-		/* create toolbars */ 
+		/* create toolbars */
 		log.debug("config: " + getConfig());
 		toolbarPanel.setLayout(new BorderLayout());
 		toolbarPanel.setBackground(getConfig().getBgcolor());
 		// TODO: refactor code - duplicate method calls are used...
 		if (getConfig().isShowToolbar()) {
-			toolbar1 = kafenioToolBar1.createToolbar(getConfig().getCustomToolBar1(), getConfig().isShowToolbar());
+			toolbar1 = kafenioToolBar1.createToolbar(getConfig()
+					.getCustomToolBar1(), getConfig().isShowToolbar());
 			toolbarPanel.add(toolbar1, BorderLayout.NORTH);
 			toolbars.add(toolbar1);
 		}
 		if (getConfig().isShowToolbar2()) {
-			toolbar2 = kafenioToolBar2.createToolbar(getConfig().getCustomToolBar2(), getConfig().isShowToolbar2());
+			toolbar2 = kafenioToolBar2.createToolbar(getConfig()
+					.getCustomToolBar2(), getConfig().isShowToolbar2());
 			toolbarPanel.add(toolbar2, BorderLayout.SOUTH);
 			toolbars.add(toolbar2);
 		}
-		
+
 		/* Insert raw document, if exists */
 		String content = "<html><body></body></html>";
-		if(kafenioConfig.getRawDocument() != null && kafenioConfig.getRawDocument().length() > 0) {
-			if(kafenioConfig.isBase64()) {
-				content = Base64Codec.decode(kafenioConfig.getRawDocument()); 
+		if (kafenioConfig.getRawDocument() != null
+				&& kafenioConfig.getRawDocument().length() > 0) {
+			if (kafenioConfig.isBase64()) {
+				content = Base64Codec.decode(kafenioConfig.getRawDocument());
 			} else {
 				content = kafenioConfig.getRawDocument();
 			}
@@ -298,70 +325,78 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 		setDocumentText(content);
 		htmlPane.setCaretPosition(0);
 		htmlPane.getDocument().addDocumentListener(this);
-		
+
 		if (kafenioConfig.getStyleSheetFileList() != null) {
 			try {
-				loadStyleSheets(kafenioConfig.getStyleSheetFileList(), kafenioConfig.getCodeBase());
-			} catch(Exception e) {
-				log.warn("could not load stylesheet file list: " + e.fillInStackTrace());
+				loadStyleSheets(kafenioConfig.getStyleSheetFileList(),
+						kafenioConfig.getCodeBase());
+			} catch (Exception e) {
+				log.warn("could not load stylesheet file list: "
+						+ e.fillInStackTrace());
 			}
 		}
-		
+
 		/* Import CSS from reference, if exists */
-		if(kafenioConfig.getUrlStyleSheet() != null) {
-			String[] urlcss = new String[] {kafenioConfig.getUrlStyleSheet().toString()};
+		if (kafenioConfig.getUrlStyleSheet() != null) {
+			String[] urlcss = new String[] { kafenioConfig.getUrlStyleSheet()
+					.toString() };
 			try {
 				loadStyleSheets(urlcss, kafenioConfig.getCodeBase());
-			} catch(Exception e) {
-				log.warn("could not load stylesheet from url: " + e.fillInStackTrace());
+			} catch (Exception e) {
+				log.warn("could not load stylesheet from url: "
+						+ e.fillInStackTrace());
 			}
 		}
-		
+
 		/* Preload the specified HTML document, if exists */
-		if(kafenioConfig.getDocument() != null) {
+		if (kafenioConfig.getDocument() != null) {
 			File defHTML = new File(kafenioConfig.getDocument());
-			if(defHTML.exists()) {
+			if (defHTML.exists()) {
 				try {
 					openDocument(defHTML);
-				} catch(Exception e) {
-					log.error("Exception in preloading HTML document: " + e.fillInStackTrace());
+				} catch (Exception e) {
+					log.error("Exception in preloading HTML document: "
+							+ e.fillInStackTrace());
 				}
 			}
 		}
-		
+
 		/* Preload the specified CSS document, if exists */
-		if(kafenioConfig.getStyleSheet() != null) {
+		if (kafenioConfig.getStyleSheet() != null) {
 			File defCSS = new File(kafenioConfig.getStyleSheet());
-			if(defCSS.exists()) {
+			if (defCSS.exists()) {
 				try {
 					openStyleSheet(defCSS);
-				} catch(Exception e) {
-					log.error("Exception in preloading CSS stylesheet: " + e.fillInStackTrace());
+				} catch (Exception e) {
+					log.error("Exception in preloading CSS stylesheet: "
+							+ e.fillInStackTrace());
 				}
 			}
 		}
 
 		/* Create the scroll area for the text pane */
 		htmlScrollPane = new JScrollPane(htmlPane);
-		htmlScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		htmlScrollPane
+				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		htmlScrollPane.setPreferredSize(new Dimension(400, 400));
 		htmlScrollPane.setMinimumSize(new Dimension(128, 128));
-		
+
 		/* Create the scroll area for the source viewer */
 		srcScrollPane = new JScrollPane(srcPane);
-		srcScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		srcScrollPane
+				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		srcScrollPane.setPreferredSize(new Dimension(400, 100));
 		srcScrollPane.setMinimumSize(new Dimension(64, 64));
-		
+
 		mainPane = new JPanel();
 		mainPane.setLayout(new BorderLayout());
-		if(kafenioConfig.isShowViewSource()) {
+		if (kafenioConfig.isShowViewSource()) {
 			mainPane.add(srcScrollPane, BorderLayout.CENTER);
 		} else {
 			mainPane.add(htmlScrollPane, BorderLayout.CENTER);
 		}
 		registerDocumentStyles();
-		
+
 		/* Add the components to the app */
 		this.setLayout(new BorderLayout());
 		this.add(toolbarPanel, BorderLayout.NORTH);
@@ -373,35 +408,36 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 	 * @see de.xeinfach.kafenio.interfaces.KafenioPanelInterface#getTActions()
 	 */
 	public JMenuBar getJMenuBar() {
-	    return jMenuBar; 
+		return jMenuBar;
 	}
-	
+
 	/**
 	 * @see de.xeinfach.kafenio.interfaces.KafenioPanelInterface#getJToolBar1()
 	 */
 	public JToolBar getJToolBar1() {
-	    return toolbar1; 
+		return toolbar1;
 	}
-	
+
 	/**
 	 * @see de.xeinfach.kafenio.interfaces.KafenioPanelInterface#getJToolBar2()
 	 */
 	public JToolBar getJToolBar2() {
-	    return toolbar2; 
+		return toolbar2;
 	}
-	
+
 	/**
-	 * @param documentConfirmed true or false, default is false.
+	 * @param documentConfirmed
+	 *            true or false, default is false.
 	 */
 	public void setDocumentConfirmed(boolean documentConfirmed) {
-	    this.documentConfirmed = documentConfirmed; 
+		this.documentConfirmed = documentConfirmed;
 	}
-	
+
 	/**
 	 * @return returns the value of documentConfirmed. default is false.
 	 */
 	public boolean getDocumentConfirmed() {
-	    return documentConfirmed; 
+		return documentConfirmed;
 	}
 
 	/**
@@ -411,7 +447,7 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 		if (tActions == null) {
 			tActions = new Hashtable();
 			Action[] actionsArray = htmlPane.getActions();
-			for(int i = 0; i < actionsArray.length; i++) {
+			for (int i = 0; i < actionsArray.length; i++) {
 				Action a = actionsArray[i];
 				tActions.put(a.getValue(Action.NAME), a);
 			}
@@ -421,14 +457,16 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 
 	/**
 	 * adds the given url prefix to an image path
-	 * @param string url-prefix as string
+	 * 
+	 * @param string
+	 *            url-prefix as string
 	 * @return returns complete image path including url prefix.
 	 */
 	private String addURLPrefixToImagePath(String string) {
-		if (string != null 
-			&& (kafenioConfig.getCodeBase()!= null) && (kafenioConfig.getCodeBase().startsWith("http://")
-			|| kafenioConfig.getCodeBase().startsWith("file://"))) 
-		{
+		if (string != null
+				&& (kafenioConfig.getCodeBase() != null)
+				&& (kafenioConfig.getCodeBase().startsWith("http://") || kafenioConfig
+						.getCodeBase().startsWith("file://"))) {
 			StringBuffer textToParse = new StringBuffer(string);
 			String searchString = "src=\"";
 			// toString() for java 1.3 compatibility
@@ -436,14 +474,19 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 			int currentPosition;
 			while (nextPosition > -1) {
 				currentPosition = nextPosition + searchString.length();
-				if (! textToParse.substring(currentPosition + 4, currentPosition + 7).equalsIgnoreCase("://")) {
-					if (textToParse.substring(currentPosition, currentPosition + 1).equalsIgnoreCase("/")) {
-						textToParse.delete(currentPosition, currentPosition + 1);
+				if (!textToParse.substring(currentPosition + 4,
+						currentPosition + 7).equalsIgnoreCase("://")) {
+					if (textToParse.substring(currentPosition,
+							currentPosition + 1).equalsIgnoreCase("/")) {
+						textToParse
+								.delete(currentPosition, currentPosition + 1);
 					}
-					textToParse.insert(currentPosition, kafenioConfig.getCodeBase());
+					textToParse.insert(currentPosition,
+							kafenioConfig.getCodeBase());
 				}
 				// toString() for java 1.3 compatibility
-				nextPosition = textToParse.toString().indexOf(searchString, currentPosition + 1);
+				nextPosition = textToParse.toString().indexOf(searchString,
+						currentPosition + 1);
 				if (nextPosition == currentPosition) {
 					break;
 				}
@@ -456,26 +499,27 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 
 	/**
 	 * ActionListener method
-	 * @param ae an action event to handle  
+	 * 
+	 * @param ae
+	 *            an action event to handle
 	 */
 	public void actionPerformed(ActionEvent ae) {
 		try {
 			String command = ae.getActionCommand();
-			if(command.equals("newdoc")) {
-				SimpleInfoDialog sidAsk = 
-					new SimpleInfoDialog(	this, 
-											"", 
-											true, 
-											translatrix.getTranslationString("AskNewDocument"), 
-											SimpleInfoDialog.QUESTION);
+			if (command.equals("newdoc")) {
+				SimpleInfoDialog sidAsk = new SimpleInfoDialog(this, "", true,
+						translatrix.getTranslationString("AskNewDocument"),
+						SimpleInfoDialog.QUESTION);
 
 				String decision = sidAsk.getDecisionValue();
 
-				if(decision.equals(translatrix.getTranslationString("DialogAccept"))) {
-					if(styleSheet != null) {
+				if (decision.equals(translatrix
+						.getTranslationString("DialogAccept"))) {
+					if (styleSheet != null) {
 						htmlDoc = new ExtendedHTMLDocument(styleSheet);
 					} else {
-						htmlDoc = (ExtendedHTMLDocument)(htmlKit.createDefaultDocument());
+						htmlDoc = (ExtendedHTMLDocument) (htmlKit
+								.createDefaultDocument());
 					}
 
 					setDocumentText("<HTML><BODY></BODY></HTML>");
@@ -483,50 +527,50 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 					currentFile = null;
 					updateTitle();
 				}
-			} else if(command.equals("openhtml")) {
+			} else if (command.equals("openhtml")) {
 				openDocument(null);
-			} else if(command.equals("opencss")) {
+			} else if (command.equals("opencss")) {
 				openStyleSheet(null);
-			} else if(command.equals("openb64")) {
+			} else if (command.equals("openb64")) {
 				openDocumentBase64(null);
-			} else if(command.equals("save")) {
+			} else if (command.equals("save")) {
 				writeOut(currentFile);
 				updateTitle();
-			} else if(command.equals("saveas")) {
+			} else if (command.equals("saveas")) {
 				writeOut(null);
-			} else if(command.equals("savebody")) {
+			} else if (command.equals("savebody")) {
 				writeOutFragment("body");
-			} else if(command.equals("savecontent")) {
+			} else if (command.equals("savecontent")) {
 				postContent(getDocumentBody());
-			} else if(command.equals("savedocument")) {
+			} else if (command.equals("savedocument")) {
 				postContent(getDocumentText());
-			} else if(command.equals("confirmcontent")) {
-			    setAsConfirmedAndQuit();
-			} else if(command.equals("detachframe")) {
+			} else if (command.equals("confirmcontent")) {
+				setAsConfirmedAndQuit();
+			} else if (command.equals("detachframe")) {
 				detachFrame();
-			} else if(command.equals("savertf")) {
-				writeOutRTF((StyledDocument)(htmlPane.getStyledDocument()));
-			} else if(command.equals("saveb64")) {
+			} else if (command.equals("savertf")) {
+				writeOutRTF((StyledDocument) (htmlPane.getStyledDocument()));
+			} else if (command.equals("saveb64")) {
 				writeOutBase64(getDocumentText());
-			} else if(command.equals("textcut")) {
-				if(srcScrollPane.isShowing() && srcPane.hasFocus()) {
+			} else if (command.equals("textcut")) {
+				if (srcScrollPane.isShowing() && srcPane.hasFocus()) {
 					srcPane.cut();
 				} else {
 					htmlPane.cut();
 				}
-			} else if(command.equals("textcopy")) {
-				if(srcScrollPane.isShowing() && srcPane.hasFocus()) {
+			} else if (command.equals("textcopy")) {
+				if (srcScrollPane.isShowing() && srcPane.hasFocus()) {
 					srcPane.copy();
 				} else {
 					htmlPane.copy();
 				}
-			} else if(command.equals("textpaste")) {
-				if(srcScrollPane.isShowing() && srcPane.hasFocus()) {
+			} else if (command.equals("textpaste")) {
+				if (srcScrollPane.isShowing() && srcPane.hasFocus()) {
 					srcPane.paste();
 				} else {
 					htmlPane.paste();
 				}
-			} else if(command.equals("describe")) {
+			} else if (command.equals("describe")) {
 				log.debug("------------DOCUMENT------------");
 				log.debug("Content Type : " + htmlPane.getContentType());
 				log.debug("Editor Kit   : " + htmlPane.getEditorKit());
@@ -535,32 +579,34 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 				describeDocument(htmlPane.getStyledDocument());
 				log.debug("--------------------------------");
 				log.debug("");
-			} else if(command.equals("describecss")) {
+			} else if (command.equals("describecss")) {
 				log.debug("-----------STYLESHEET-----------");
 				log.debug("Stylesheet Rules");
 				Enumeration rules = styleSheet.getStyleNames();
-				while(rules.hasMoreElements()) {
-					String ruleName = (String)(rules.nextElement());
+				while (rules.hasMoreElements()) {
+					String ruleName = (String) (rules.nextElement());
 					Style styleRule = styleSheet.getStyle(ruleName);
 					log.debug(styleRule.toString());
 				}
 				log.debug("--------------------------------");
 				log.debug("");
-			} else if(command.equals("whattags")) {
+			} else if (command.equals("whattags")) {
 				log.debug("Caret Position : " + htmlPane.getCaretPosition());
 				AttributeSet attribSet = htmlPane.getCharacterAttributes();
 				Enumeration attribs = attribSet.getAttributeNames();
 				log.debug("Attributes     : ");
-				while(attribs.hasMoreElements()) {
+				while (attribs.hasMoreElements()) {
 					String attribName = attribs.nextElement().toString();
-					log.debug("                 " + attribName + " | " + attribSet.getAttribute(attribName));
+					log.debug("                 " + attribName + " | "
+							+ attribSet.getAttribute(attribName));
 				}
-			} else if(command.equals("toggletoolbar")) {
-				for (int i=0; i < toolbars.size(); i++) {
-					JToolBar jtb = (JToolBar)toolbars.get(i); 
-					jtb.setVisible(kafenioMenuBar.getViewToolbarItem().isSelected());
+			} else if (command.equals("toggletoolbar")) {
+				for (int i = 0; i < toolbars.size(); i++) {
+					JToolBar jtb = (JToolBar) toolbars.get(i);
+					jtb.setVisible(kafenioMenuBar.getViewToolbarItem()
+							.isSelected());
 				}
-			} else if(command.equals("viewsource")) {
+			} else if (command.equals("viewsource")) {
 				htmlScrollPane.setCursor(new Cursor(3));
 				srcScrollPane.setCursor(new Cursor(3));
 				htmlScrollPane.setCursor(new Cursor(3));
@@ -570,139 +616,158 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 				srcScrollPane.setCursor(new Cursor(0));
 				htmlScrollPane.setCursor(new Cursor(0));
 				setCursor(new Cursor(0));
-			} else if(command.equals("serialize")) {
-				serializeOut((HTMLDocument)(htmlPane.getDocument()));
-			} else if(command.equals("readfromser")) {
+			} else if (command.equals("serialize")) {
+				serializeOut((HTMLDocument) (htmlPane.getDocument()));
+			} else if (command.equals("readfromser")) {
 				serializeIn();
-			} else if(command.equals("inserttable")) {
-				String[] fieldNames = { "rows", "cols", "border", "cellspacing", "cellpadding", "width" };
-				String[] fieldTypes = { "text", "text", "text",   "text",        "text",        "text" };
-				insertTable((Hashtable)null, fieldNames, fieldTypes);
-			} else if(command.equals("inserttablerow")) {
+			} else if (command.equals("inserttable")) {
+				String[] fieldNames = { "rows", "cols", "border",
+						"cellspacing", "cellpadding", "width" };
+				String[] fieldTypes = { "text", "text", "text", "text", "text",
+						"text" };
+				insertTable((Hashtable) null, fieldNames, fieldTypes);
+			} else if (command.equals("inserttablerow")) {
 				insertTableRow();
-			} else if(command.equals("inserttablecolumn")) {
+			} else if (command.equals("inserttablecolumn")) {
 				insertTableColumn();
-			} else if(command.equals("deletetablerow")) {
+			} else if (command.equals("deletetablerow")) {
 				deleteTableRow();
-			} else if(command.equals("deletetablecolumn")) {
+			} else if (command.equals("deletetablecolumn")) {
 				deleteTableColumn();
-			} else if(command.equals("insertbreak")) {
+			} else if (command.equals("insertbreak")) {
 				insertBreak();
-			} else if(command.equals("insertlocalimage")) {
+			} else if (command.equals("insertlocalimage")) {
 				insertLocalImage(null);
-			} else if(command.equals("insertnbsp")) {
+			} else if (command.equals("insertnbsp")) {
 				insertNonbreakingSpace();
-			} else if(command.equals("insertform")) {
-				String[] fieldNames  = { "name", "method",   "enctype" };
-				String[] fieldTypes  = { "text", "combo",    "text" };
-				String[] fieldValues = { "",     "POST,GET", "text" };
-				insertFormElement(HTML.Tag.FORM, "form", (Hashtable)null, fieldNames, fieldTypes, fieldValues, true);
-			} else if(command.equals("inserttextfield")) {
+			} else if (command.equals("insertform")) {
+				String[] fieldNames = { "name", "method", "enctype" };
+				String[] fieldTypes = { "text", "combo", "text" };
+				String[] fieldValues = { "", "POST,GET", "text" };
+				insertFormElement(HTML.Tag.FORM, "form", (Hashtable) null,
+						fieldNames, fieldTypes, fieldValues, true);
+			} else if (command.equals("inserttextfield")) {
 				Hashtable htAttribs = new Hashtable();
 				htAttribs.put("type", "text");
 				String[] fieldNames = { "name", "value", "size", "maxlength" };
-				String[] fieldTypes = { "text", "text",  "text", "text" };
-				insertFormElement(HTML.Tag.INPUT, "input", htAttribs, fieldNames, fieldTypes, false);
-			} else if(command.equals("inserttextarea")) {
+				String[] fieldTypes = { "text", "text", "text", "text" };
+				insertFormElement(HTML.Tag.INPUT, "input", htAttribs,
+						fieldNames, fieldTypes, false);
+			} else if (command.equals("inserttextarea")) {
 				String[] fieldNames = { "name", "rows", "cols" };
 				String[] fieldTypes = { "text", "text", "text" };
-				insertFormElement(HTML.Tag.TEXTAREA, "textarea", (Hashtable)null, fieldNames, fieldTypes, true);
-			} else if(command.equals("insertcheckbox")) {
+				insertFormElement(HTML.Tag.TEXTAREA, "textarea",
+						(Hashtable) null, fieldNames, fieldTypes, true);
+			} else if (command.equals("insertcheckbox")) {
 				Hashtable htAttribs = new Hashtable();
 				htAttribs.put("type", "checkbox");
 				String[] fieldNames = { "name", "checked" };
 				String[] fieldTypes = { "text", "bool" };
-				insertFormElement(HTML.Tag.INPUT, "input", htAttribs, fieldNames, fieldTypes, false);
-			} else if(command.equals("insertradiobutton")) {
+				insertFormElement(HTML.Tag.INPUT, "input", htAttribs,
+						fieldNames, fieldTypes, false);
+			} else if (command.equals("insertradiobutton")) {
 				Hashtable htAttribs = new Hashtable();
 				htAttribs.put("type", "radio");
 				String[] fieldNames = { "name", "checked" };
 				String[] fieldTypes = { "text", "bool" };
-				insertFormElement(HTML.Tag.INPUT, "input", htAttribs, fieldNames, fieldTypes, false);
-			} else if(command.equals("insertpassword")) {
+				insertFormElement(HTML.Tag.INPUT, "input", htAttribs,
+						fieldNames, fieldTypes, false);
+			} else if (command.equals("insertpassword")) {
 				Hashtable htAttribs = new Hashtable();
 				htAttribs.put("type", "password");
 				String[] fieldNames = { "name", "value", "size", "maxlength" };
-				String[] fieldTypes = { "text", "text",  "text", "text" };
-				insertFormElement(HTML.Tag.INPUT, "input", htAttribs, fieldNames, fieldTypes, false);
-			} else if(command.equals("insertbutton")) {
+				String[] fieldTypes = { "text", "text", "text", "text" };
+				insertFormElement(HTML.Tag.INPUT, "input", htAttribs,
+						fieldNames, fieldTypes, false);
+			} else if (command.equals("insertbutton")) {
 				Hashtable htAttribs = new Hashtable();
 				htAttribs.put("type", "button");
 				String[] fieldNames = { "name", "value" };
 				String[] fieldTypes = { "text", "text" };
-				insertFormElement(HTML.Tag.INPUT, "input", htAttribs, fieldNames, fieldTypes, false);
-			} else if(command.equals("insertbuttonsubmit")) {
+				insertFormElement(HTML.Tag.INPUT, "input", htAttribs,
+						fieldNames, fieldTypes, false);
+			} else if (command.equals("insertbuttonsubmit")) {
 				Hashtable htAttribs = new Hashtable();
 				htAttribs.put("type", "submit");
 				String[] fieldNames = { "name", "value" };
 				String[] fieldTypes = { "text", "text" };
-				insertFormElement(HTML.Tag.INPUT, "input", htAttribs, fieldNames, fieldTypes, false);
-			} else if(command.equals("insertbuttonreset")) {
+				insertFormElement(HTML.Tag.INPUT, "input", htAttribs,
+						fieldNames, fieldTypes, false);
+			} else if (command.equals("insertbuttonreset")) {
 				Hashtable htAttribs = new Hashtable();
 				htAttribs.put("type", "reset");
 				String[] fieldNames = { "name", "value" };
 				String[] fieldTypes = { "text", "text" };
-				insertFormElement(HTML.Tag.INPUT, "input", htAttribs, fieldNames, fieldTypes, false);
-			} else if(command.equals("find")) {
-				doSearch((String)null, (String)null, false, lastSearchCaseSetting, lastSearchTopSetting, command);
-			} else if(command.equals("findagain")) {
-				doSearch(lastSearchFindTerm, (String)null, false, lastSearchCaseSetting, false, command);
-			} else if(command.equals("replace")) {
-				doSearch((String)null, (String)null, true, lastSearchCaseSetting, lastSearchTopSetting, command);
-			} else if(command.equals("exit")) {
+				insertFormElement(HTML.Tag.INPUT, "input", htAttribs,
+						fieldNames, fieldTypes, false);
+			} else if (command.equals("find")) {
+				doSearch((String) null, (String) null, false,
+						lastSearchCaseSetting, lastSearchTopSetting, command);
+			} else if (command.equals("findagain")) {
+				doSearch(lastSearchFindTerm, (String) null, false,
+						lastSearchCaseSetting, false, command);
+			} else if (command.equals("replace")) {
+				doSearch((String) null, (String) null, true,
+						lastSearchCaseSetting, lastSearchTopSetting, command);
+			} else if (command.equals("exit")) {
 				this.dispose();
-			} else if(command.equals("helpabout")) {
-				SimpleInfoDialog sidAbout = 
-					new SimpleInfoDialog(	this, 
-											translatrix.getTranslationString("About"), 
-											true, 
-											translatrix.getTranslationString("AboutMessage")
-											+ translatrix.getTranslationString("Contributors")
-											+ translatrix.getTranslationString("ContributorNames")
-											+ translatrix.getTranslationString("Version")
-											+ translatrix.getTranslationString("VersionNumber"), 
-											SimpleInfoDialog.INFO);
+			} else if (command.equals("helpabout")) {
+				SimpleInfoDialog sidAbout = new SimpleInfoDialog(
+						this,
+						translatrix.getTranslationString("About"),
+						true,
+						translatrix.getTranslationString("AboutMessage")
+								+ translatrix
+										.getTranslationString("Contributors")
+								+ translatrix
+										.getTranslationString("ContributorNames")
+								+ translatrix.getTranslationString("Version")
+								+ translatrix
+										.getTranslationString("VersionNumber"),
+						SimpleInfoDialog.INFO);
 			}
-		} catch(IOException ioe) {
-			log.error("IOException in actionPerformed method: " + ioe.fillInStackTrace());
-			SimpleInfoDialog sidAbout = 
-				new SimpleInfoDialog(	this, 
-										translatrix.getTranslationString("Error"), 
-										true, 
-										translatrix.getTranslationString("ErrorIOException"), 
-										SimpleInfoDialog.ERROR);
-		} catch(BadLocationException ble) {
-			log.error("BadLocationException in actionPerformed method: " + ble.fillInStackTrace());
-			SimpleInfoDialog sidAbout = 
-				new SimpleInfoDialog(	this, 
-										translatrix.getTranslationString("Error"), 
-										true, 
-										translatrix.getTranslationString("ErrorBadLocationException"), 
-										SimpleInfoDialog.ERROR);
-		} catch(NumberFormatException nfe) {
-			log.error("NumberFormatException in actionPerformed method: " + nfe.fillInStackTrace());
-			SimpleInfoDialog sidAbout = 
-				new SimpleInfoDialog(	this,
-										translatrix.getTranslationString("Error"),
-										true,
-										translatrix.getTranslationString("ErrorNumberFormatException"),
-										SimpleInfoDialog.ERROR);
-		} catch(ClassNotFoundException cnfe) {
-			log.error("ClassNotFound Exception in actionPerformed method: " + cnfe.fillInStackTrace());
-			SimpleInfoDialog sidAbout = 
-				new SimpleInfoDialog(	this,
-										translatrix.getTranslationString("Error"), 
-										true, 
-										translatrix.getTranslationString("ErrorClassNotFoundException "), 
-										SimpleInfoDialog.ERROR);
-		} catch(RuntimeException re) {
-			log.error("RuntimeException in actionPerformed method: " + re.fillInStackTrace());
-			SimpleInfoDialog sidAbout = 
-				new SimpleInfoDialog(	this, 
-										translatrix.getTranslationString("Error"), 
-										true, 
-										translatrix.getTranslationString("ErrorRuntimeException"), 
-										SimpleInfoDialog.ERROR);
+		} catch (IOException ioe) {
+			log.error("IOException in actionPerformed method: "
+					+ ioe.fillInStackTrace());
+			SimpleInfoDialog sidAbout = new SimpleInfoDialog(this,
+					translatrix.getTranslationString("Error"), true,
+					translatrix.getTranslationString("ErrorIOException"),
+					SimpleInfoDialog.ERROR);
+		} catch (BadLocationException ble) {
+			log.error("BadLocationException in actionPerformed method: "
+					+ ble.fillInStackTrace());
+			SimpleInfoDialog sidAbout = new SimpleInfoDialog(this,
+					translatrix.getTranslationString("Error"), true,
+					translatrix
+							.getTranslationString("ErrorBadLocationException"),
+					SimpleInfoDialog.ERROR);
+		} catch (NumberFormatException nfe) {
+			log.error("NumberFormatException in actionPerformed method: "
+					+ nfe.fillInStackTrace());
+			SimpleInfoDialog sidAbout = new SimpleInfoDialog(
+					this,
+					translatrix.getTranslationString("Error"),
+					true,
+					translatrix
+							.getTranslationString("ErrorNumberFormatException"),
+					SimpleInfoDialog.ERROR);
+		} catch (ClassNotFoundException cnfe) {
+			log.error("ClassNotFound Exception in actionPerformed method: "
+					+ cnfe.fillInStackTrace());
+			SimpleInfoDialog sidAbout = new SimpleInfoDialog(
+					this,
+					translatrix.getTranslationString("Error"),
+					true,
+					translatrix
+							.getTranslationString("ErrorClassNotFoundException "),
+					SimpleInfoDialog.ERROR);
+		} catch (RuntimeException re) {
+			log.error("RuntimeException in actionPerformed method: "
+					+ re.fillInStackTrace());
+			SimpleInfoDialog sidAbout = new SimpleInfoDialog(this,
+					translatrix.getTranslationString("Error"), true,
+					translatrix.getTranslationString("ErrorRuntimeException"),
+					SimpleInfoDialog.ERROR);
 		}
 	}
 
@@ -710,14 +775,17 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 	 * bridge method to detach the applet into a separate window and back.
 	 */
 	public void detachFrame() {
-	    if (kafenioParent != null && kafenioParent instanceof KafenioContainerInterface) {
-	        ((KafenioContainerInterface)kafenioParent).detachFrame();
+		if (kafenioParent != null
+				&& kafenioParent instanceof KafenioContainerInterface) {
+			((KafenioContainerInterface) kafenioParent).detachFrame();
 		}
 	}
 
 	/**
 	 * KeyListener method, handles the given KeyEvent
-	 * @param ke a KeyEvent to handle 
+	 * 
+	 * @param ke
+	 *            a KeyEvent to handle
 	 */
 	public void keyTyped(KeyEvent ke) {
 		log.debug("key-event caught: " + ke);
@@ -725,43 +793,50 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 		String selectedText;
 		int pos = this.getCaretPosition();
 		int repos = -1;
-		if(	ke.getKeyChar() == KeyEvent.VK_BACK_SPACE) {
+		if (ke.getKeyChar() == KeyEvent.VK_BACK_SPACE) {
 			try {
-				if(pos > 0) {
-					if((selectedText = htmlPane.getSelectedText()) != null) {
+				if (pos > 0) {
+					if ((selectedText = htmlPane.getSelectedText()) != null) {
 						htmlPane.replaceSelection("");
 						refreshOnUpdate();
 						return;
 					} else {
-						int sOffset = htmlDoc.getParagraphElement(pos).getStartOffset();
-						if(sOffset == htmlPane.getSelectionStart()) {
+						int sOffset = htmlDoc.getParagraphElement(pos)
+								.getStartOffset();
+						if (sOffset == htmlPane.getSelectionStart()) {
 							boolean content = true;
-							if(htmlUtils.checkParentsTag(HTML.Tag.LI)) {
+							if (htmlUtils.checkParentsTag(HTML.Tag.LI)) {
 								elem = htmlUtils.getListItemParent();
 								content = false;
 								int so = elem.getStartOffset();
 								int eo = elem.getEndOffset();
-								if(so + 1 < eo) {
-									char[] temp = htmlPane.getText(so, eo - so).toCharArray();
-									for(int i=0; i < temp.length; i++) {
-										if(!(Character.isWhitespace(temp[i]))) {
+								if (so + 1 < eo) {
+									char[] temp = htmlPane.getText(so, eo - so)
+											.toCharArray();
+									for (int i = 0; i < temp.length; i++) {
+										if (!(Character.isWhitespace(temp[i]))) {
 											content = true;
 										}
 									}
 								}
-								if(!content) {
-									Element listElement = elem.getParentElement();
+								if (!content) {
+									Element listElement = elem
+											.getParentElement();
 									htmlUtils.removeTag(elem, true);
 									this.setCaretPosition(sOffset - 1);
 									return;
 								} else {
-									htmlPane.setCaretPosition(htmlPane.getCaretPosition() - 1);
-									htmlPane.moveCaretPosition(htmlPane.getCaretPosition() - 2);
+									htmlPane.setCaretPosition(htmlPane
+											.getCaretPosition() - 1);
+									htmlPane.moveCaretPosition(htmlPane
+											.getCaretPosition() - 2);
 									htmlPane.replaceSelection("");
 									return;
 								}
-							} else if(htmlUtils.checkParentsTag(HTML.Tag.TABLE)) {
-								htmlPane.setCaretPosition(htmlPane.getCaretPosition() - 1);
+							} else if (htmlUtils
+									.checkParentsTag(HTML.Tag.TABLE)) {
+								htmlPane.setCaretPosition(htmlPane
+										.getCaretPosition() - 1);
 								ke.consume();
 								return;
 							}
@@ -771,19 +846,20 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 					}
 				}
 			} catch (BadLocationException ble) {
-				log.error("BadLocationException in keyTyped method: " + ble.fillInStackTrace());
-				SimpleInfoDialog sidAbout = 
-					new SimpleInfoDialog(	this, 
-											translatrix.getTranslationString("Error"), 
-											true, 
-											translatrix.getTranslationString("ErrorBadLocationException"), 
-											SimpleInfoDialog.ERROR);
+				log.error("BadLocationException in keyTyped method: "
+						+ ble.fillInStackTrace());
+				SimpleInfoDialog sidAbout = new SimpleInfoDialog(
+						this,
+						translatrix.getTranslationString("Error"),
+						true,
+						translatrix
+								.getTranslationString("ErrorBadLocationException"),
+						SimpleInfoDialog.ERROR);
 			}
-		} else if(ke.getKeyChar() == KeyEvent.VK_ENTER) {
+		} else if (ke.getKeyChar() == KeyEvent.VK_ENTER) {
 			try {
-				if(	htmlUtils.checkParentsTag(HTML.Tag.UL) 
-					| htmlUtils.checkParentsTag(HTML.Tag.OL)) 
-				{
+				if (htmlUtils.checkParentsTag(HTML.Tag.UL)
+						| htmlUtils.checkParentsTag(HTML.Tag.OL)) {
 					if (ke.isShiftDown()) {
 						log.debug("shift-enter pressed inside list item.");
 					} else {
@@ -791,44 +867,48 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 						elem = htmlUtils.getListItemParent();
 						int so = elem.getStartOffset();
 						int eo = elem.getEndOffset();
-						char[] temp = this.getTextPane().getText(so,eo-so).toCharArray();
+						char[] temp = this.getTextPane().getText(so, eo - so)
+								.toCharArray();
 						boolean content = false;
-	
-						for(int i=0;i<temp.length;i++) {
-							if(!Character.isWhitespace(temp[i])) {
+
+						for (int i = 0; i < temp.length; i++) {
+							if (!Character.isWhitespace(temp[i])) {
 								content = true;
 							}
 						}
-	
-						if(content) {
+
+						if (content) {
 							int end = -1;
 							int j = temp.length;
 							do {
 								j--;
-								if(Character.isLetterOrDigit(temp[j])) {
+								if (Character.isLetterOrDigit(temp[j])) {
 									end = j;
 								}
 							} while (end == -1 && j >= 0);
 							j = end;
 							do {
 								j++;
-								if(!Character.isSpaceChar(temp[j])) {
-									repos = j - end -1;
+								if (!Character.isSpaceChar(temp[j])) {
+									repos = j - end - 1;
 								}
 							} while (repos == -1 && j < temp.length);
-							if(repos == -1) {
+							if (repos == -1) {
 								repos = 0;
 							}
 						}
-						if(elem.getStartOffset() == elem.getEndOffset() || !content) {
+						if (elem.getStartOffset() == elem.getEndOffset()
+								|| !content) {
 							manageListElement(elem);
 						} else {
-							if(this.getCaretPosition() + 1 == elem.getEndOffset()) {
+							if (this.getCaretPosition() + 1 == elem
+									.getEndOffset()) {
 								insertListStyle(elem);
 								this.setCaretPosition(pos - repos);
 							} else {
 								int caret = this.getCaretPosition();
-								String tempString = this.getTextPane().getText(caret, eo - caret);
+								String tempString = this.getTextPane().getText(
+										caret, eo - caret);
 								this.getTextPane().select(caret, eo - 1);
 								this.getTextPane().replaceSelection("");
 								htmlUtils.insertListElement(tempString);
@@ -838,158 +918,185 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 						}
 					}
 				} else {
-					if(!ke.isShiftDown()){
-						getKafenioActions().getActionAddParagraph().actionPerformed(
-							new ActionEvent(ke.getSource(), 10, ""));
+					if (!ke.isShiftDown()) {
+						getKafenioActions()
+								.getActionAddParagraph()
+								.actionPerformed(
+										new ActionEvent(ke.getSource(), 10, ""));
 					}
 				}
 			} catch (BadLocationException ble) {
-				log.error("BadLocationException in keyTyped method: " + ble.fillInStackTrace());
-				SimpleInfoDialog sidAbout = 
-					new SimpleInfoDialog(	this, 
-											translatrix.getTranslationString("Error"), 
-											true, 
-											translatrix.getTranslationString("ErrorBadLocationException"), 
-											SimpleInfoDialog.ERROR);
+				log.error("BadLocationException in keyTyped method: "
+						+ ble.fillInStackTrace());
+				SimpleInfoDialog sidAbout = new SimpleInfoDialog(
+						this,
+						translatrix.getTranslationString("Error"),
+						true,
+						translatrix
+								.getTranslationString("ErrorBadLocationException"),
+						SimpleInfoDialog.ERROR);
 			} catch (IOException ioe) {
-				log.error("IOException in keyTyped method: " + ioe.fillInStackTrace());
-				SimpleInfoDialog sidAbout = 
-					new SimpleInfoDialog(	this, 
-											translatrix.getTranslationString("Error"), 
-											true, 
-											translatrix.getTranslationString("ErrorIOException"), 
-											SimpleInfoDialog.ERROR);
+				log.error("IOException in keyTyped method: "
+						+ ioe.fillInStackTrace());
+				SimpleInfoDialog sidAbout = new SimpleInfoDialog(this,
+						translatrix.getTranslationString("Error"), true,
+						translatrix.getTranslationString("ErrorIOException"),
+						SimpleInfoDialog.ERROR);
 			}
-		} else if(ke.getKeyChar() == KeyEvent.VK_SPACE) {
+		} else if (ke.getKeyChar() == KeyEvent.VK_SPACE) {
 			try {
 				int caret = this.getCaretPosition();
-				String tempString = this.getTextPane().getText(caret -1, 1);
-				if("&".equals(tempString)) {
+				String tempString = this.getTextPane().getText(caret - 1, 1);
+				if ("&".equals(tempString)) {
 					insertNonbreakingSpace();
 				}
 			} catch (BadLocationException ble) {
-				log.error("BadLocationException in keyTyped method: " + ble.fillInStackTrace());
-				SimpleInfoDialog sidAbout = 
-					new SimpleInfoDialog(	this, 
-											translatrix.getTranslationString("Error"), 
-											true, 
-											translatrix.getTranslationString("ErrorBadLocationException"), 
-											SimpleInfoDialog.ERROR);
+				log.error("BadLocationException in keyTyped method: "
+						+ ble.fillInStackTrace());
+				SimpleInfoDialog sidAbout = new SimpleInfoDialog(
+						this,
+						translatrix.getTranslationString("Error"),
+						true,
+						translatrix
+								.getTranslationString("ErrorBadLocationException"),
+						SimpleInfoDialog.ERROR);
 			} catch (IOException ioe) {
-				log.error("IOException in keyTyped method: " + ioe.fillInStackTrace());
-				SimpleInfoDialog sidAbout = 
-					new SimpleInfoDialog(	this, 
-											translatrix.getTranslationString("Error"), 
-											true, 
-											translatrix.getTranslationString("ErrorIOException"), 
-											SimpleInfoDialog.ERROR);
+				log.error("IOException in keyTyped method: "
+						+ ioe.fillInStackTrace());
+				SimpleInfoDialog sidAbout = new SimpleInfoDialog(this,
+						translatrix.getTranslationString("Error"), true,
+						translatrix.getTranslationString("ErrorIOException"),
+						SimpleInfoDialog.ERROR);
 			}
-		} else if (ke.getKeyChar() == KeyEvent.VK_ESCAPE &&
-		           getConfig().getProperty("escapeCloses").equals("true")) 
-		{
-		    getKafenioParent().hide();
+		} else if (ke.getKeyChar() == KeyEvent.VK_ESCAPE
+				&& getConfig().getProperty("escapeCloses").equals("true")) {
+			getKafenioParent().hide();
 		}
 	}
-	
+
 	/**
 	 * handles the given KeyEvent if key was pressed down (do nothing)
-	 * @param e a KeyEvent to handle
+	 * 
+	 * @param e
+	 *            a KeyEvent to handle
 	 */
-	public void keyPressed(KeyEvent e) {}
-	
+	public void keyPressed(KeyEvent e) {
+	}
+
 	/**
 	 * handles the given KeyEvent if key was released (do nothing)
-	 * @param e a KeyEvent to handle
+	 * 
+	 * @param e
+	 *            a KeyEvent to handle
 	 */
-	public void keyReleased(KeyEvent e) {}
+	public void keyReleased(KeyEvent e) {
+	}
 
 	/**
 	 * inserts a list item into the document at "element"'s position.
-	 * @param element the element to add the list to
-	 * @throws BadLocationException is thrown if something went wrong during insertion
-	 * @throws IOException is thrown if an io exception occured.
+	 * 
+	 * @param element
+	 *            the element to add the list to
+	 * @throws BadLocationException
+	 *             is thrown if something went wrong during insertion
+	 * @throws IOException
+	 *             is thrown if an io exception occured.
 	 */
-	public void insertListStyle(Element element) throws BadLocationException,IOException {
-		if(element.getParentElement().getName() == "ol") {
+	public void insertListStyle(Element element) throws BadLocationException,
+			IOException {
+		if (element.getParentElement().getName() == "ol") {
 			getKafenioActions().getActionListOrdered().actionPerformed(
-				new ActionEvent(new Object(), 0, "newListPoint"));
+					new ActionEvent(new Object(), 0, "newListPoint"));
 		} else {
 			getKafenioActions().getActionListUnordered().actionPerformed(
-				new ActionEvent(new Object(), 0, "newListPoint"));
+					new ActionEvent(new Object(), 0, "newListPoint"));
 		}
 	}
 
 	/**
 	 * handles a DocumentEvent if the document was changed
-	 * @param de DocumentEvent to handle 
+	 * 
+	 * @param de
+	 *            DocumentEvent to handle
 	 */
-	public void changedUpdate(DocumentEvent de)	{
-		handleDocumentChange(de); 
-	}
-	
-	/**
-	 * handles a DocumentEvent if a document was inserted
-	 * @param de DocumentEvent to handle 
-	 */
-	public void insertUpdate(DocumentEvent de)	{
-		handleDocumentChange(de); 
-	}
-	
-	/**
-	 * handles a DocumentEvent if the document was removed
-	 * @param de DocumentEvent to handle 
-	 */
-	public void removeUpdate(DocumentEvent de)	{
+	public void changedUpdate(DocumentEvent de) {
 		handleDocumentChange(de);
 	}
-	
+
+	/**
+	 * handles a DocumentEvent if a document was inserted
+	 * 
+	 * @param de
+	 *            DocumentEvent to handle
+	 */
+	public void insertUpdate(DocumentEvent de) {
+		handleDocumentChange(de);
+	}
+
+	/**
+	 * handles a DocumentEvent if the document was removed
+	 * 
+	 * @param de
+	 *            DocumentEvent to handle
+	 */
+	public void removeUpdate(DocumentEvent de) {
+		handleDocumentChange(de);
+	}
+
 	/**
 	 * implementation for Document Handler methods
-	 * @param de DocumentEvent to handle 
+	 * 
+	 * @param de
+	 *            DocumentEvent to handle
 	 */
 	public void handleDocumentChange(DocumentEvent de) {
 	}
 
-	/** 
+	/**
 	 * Method for setting a document as the current document for the text pane
 	 * and re-registering the controls and settings for it
-	 * @param newHtmlDoc new Html Document to register in the editor pane
+	 * 
+	 * @param newHtmlDoc
+	 *            new Html Document to register in the editor pane
 	 */
 	public void registerDocument(ExtendedHTMLDocument newHtmlDoc) {
 		htmlPane.setDocument(newHtmlDoc);
-		htmlPane.getDocument().addUndoableEditListener(new CustomUndoableEditListener());
+		htmlPane.getDocument().addUndoableEditListener(
+				new CustomUndoableEditListener());
 		htmlPane.getDocument().addDocumentListener(this);
 		purgeUndos();
 		registerDocumentStyles();
 	}
 
-	/** 
+	/**
 	 * Method for locating the available CSS style for the document and adding
 	 * them to the styles selector
 	 */
 	public void registerDocumentStyles() {
-		if(	kafenioToolBar1.getStyleSelector() == null
-			|| kafenioToolBar2.getStyleSelector() == null
-			|| htmlDoc == null) {
+		if (kafenioToolBar1.getStyleSelector() == null
+				|| kafenioToolBar2.getStyleSelector() == null
+				|| htmlDoc == null) {
 			return;
 		}
 		kafenioToolBar1.getStyleSelector().setEnabled(false);
 		kafenioToolBar1.getStyleSelector().removeAllItems();
-		kafenioToolBar1.getStyleSelector().addItem(translatrix.getTranslationString("NoCSSStyle"));
+		kafenioToolBar1.getStyleSelector().addItem(
+				translatrix.getTranslationString("NoCSSStyle"));
 		kafenioToolBar2.getStyleSelector().setEnabled(false);
 		kafenioToolBar2.getStyleSelector().removeAllItems();
-		kafenioToolBar2.getStyleSelector().addItem(translatrix.getTranslationString("NoCSSStyle"));
+		kafenioToolBar2.getStyleSelector().addItem(
+				translatrix.getTranslationString("NoCSSStyle"));
 		Vector cssClasses = new Vector();
 		Enumeration e = htmlDoc.getStyleNames();
-		while(e.hasMoreElements()) {
+		while (e.hasMoreElements()) {
 			String ce = e.nextElement().toString();
-			if(ce.length() > 0 && ce.charAt(0) == '.') {
+			if (ce.length() > 0 && ce.charAt(0) == '.') {
 				cssClasses.add(ce.substring(1));
 			}
 		}
 		Collections.sort(cssClasses);
-			 
-		for (int i=0; i < cssClasses.size(); i++) {
+
+		for (int i = 0; i < cssClasses.size(); i++) {
 			String name = (String) cssClasses.get(i);
 			kafenioToolBar1.getStyleSelector().addItem(name);
 			kafenioToolBar2.getStyleSelector().addItem(name);
@@ -998,49 +1105,51 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 		kafenioToolBar2.getStyleSelector().setEnabled(true);
 	}
 
-	/** 
+	/**
 	 * Method for inserting an HTML Table
 	 */
-	private void insertTable(Hashtable attribs, String[] fieldNames, String[] fieldTypes)
-		throws IOException, BadLocationException, RuntimeException, NumberFormatException
-	{
+	private void insertTable(Hashtable attribs, String[] fieldNames,
+			String[] fieldTypes) throws IOException, BadLocationException,
+			RuntimeException, NumberFormatException {
 		log.debug("starting insertTable action...");
 		int caretPos = htmlPane.getCaretPosition();
 		StringBuffer compositeElement = new StringBuffer("<TABLE");
-		if(attribs != null && attribs.size() > 0) {
+		if (attribs != null && attribs.size() > 0) {
 			Enumeration attribEntries = attribs.keys();
-			while(attribEntries.hasMoreElements()) {
-				Object entryKey   = attribEntries.nextElement();
+			while (attribEntries.hasMoreElements()) {
+				Object entryKey = attribEntries.nextElement();
 				Object entryValue = attribs.get(entryKey);
-				if(entryValue != null && entryValue != "") {
-					compositeElement.append(" " + entryKey + "=" + '"' + entryValue + '"');
+				if (entryValue != null && entryValue != "") {
+					compositeElement.append(" " + entryKey + "=" + '"'
+							+ entryValue + '"');
 				}
 			}
 		}
 		int rows = 0;
 		int cols = 0;
-		if(fieldNames != null && fieldNames.length > 0) {
-			PropertiesDialog propertiesDialog = 
-				new PropertiesDialog(	this, 
-										fieldNames, 
-										fieldTypes, 
-										translatrix.getTranslationString("FormDialogTitle"), 
-										true);
+		if (fieldNames != null && fieldNames.length > 0) {
+			PropertiesDialog propertiesDialog = new PropertiesDialog(this,
+					fieldNames, fieldTypes,
+					translatrix.getTranslationString("FormDialogTitle"), true);
 			String decision = propertiesDialog.getDecisionValue();
-			if(decision.equals(translatrix.getTranslationString("DialogCancel"))) {
+			if (decision.equals(translatrix
+					.getTranslationString("DialogCancel"))) {
 				propertiesDialog.dispose();
 				return;
 			} else {
-				for(int iter = 0; iter < fieldNames.length; iter++) {
+				for (int iter = 0; iter < fieldNames.length; iter++) {
 					String fieldName = fieldNames[iter];
-					String propValue = propertiesDialog.getFieldValue(fieldName);
-					if(propValue != null && propValue != "" && propValue.length() > 0) {
-						if(fieldName.equals("rows")) {
+					String propValue = propertiesDialog
+							.getFieldValue(fieldName);
+					if (propValue != null && propValue != ""
+							&& propValue.length() > 0) {
+						if (fieldName.equals("rows")) {
 							rows = Integer.parseInt(propValue);
-						} else if(fieldName.equals("cols")) {
+						} else if (fieldName.equals("cols")) {
 							cols = Integer.parseInt(propValue);
 						} else {
-							compositeElement.append(" " + fieldName + "=" + '"' + propValue + '"');
+							compositeElement.append(" " + fieldName + "=" + '"'
+									+ propValue + '"');
 						}
 					}
 				}
@@ -1048,80 +1157,84 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 			propertiesDialog.dispose();
 		}
 		compositeElement.append(">");
-		for(int i = 0; i < rows; i++) {
+		for (int i = 0; i < rows; i++) {
 			compositeElement.append("<TR>");
 
-			for(int j = 0; j < cols; j++) {
+			for (int j = 0; j < cols; j++) {
 				compositeElement.append("<TD></TD>");
 			}
 
 			compositeElement.append("</TR>");
 		}
 		compositeElement.append("</TABLE><P>&nbsp;<P>");
-		htmlKit.insertHTML(htmlDoc, caretPos, compositeElement.toString(), 0, 0, HTML.Tag.TABLE);
+		htmlKit.insertHTML(htmlDoc, caretPos, compositeElement.toString(), 0,
+				0, HTML.Tag.TABLE);
 		htmlPane.setCaretPosition(caretPos + 1);
 		refreshOnUpdate();
 	}
 
-	/** 
+	/**
 	 * Method for inserting a row into an HTML Table
 	 */
 	private void insertTableRow() {
 		int caretPos = htmlPane.getCaretPosition();
-		Element	element = htmlDoc.getCharacterElement(htmlPane.getCaretPosition());
+		Element element = htmlDoc.getCharacterElement(htmlPane
+				.getCaretPosition());
 		Element elementParent = element.getParentElement();
-		int startPoint  = -1;
+		int startPoint = -1;
 		int columnCount = -1;
-		while(elementParent != null && !elementParent.getName().equals("body")) {
-			if(elementParent.getName().equals("tr")) {
-				startPoint  = elementParent.getStartOffset();
+		while (elementParent != null && !elementParent.getName().equals("body")) {
+			if (elementParent.getName().equals("tr")) {
+				startPoint = elementParent.getStartOffset();
 				columnCount = elementParent.getElementCount();
 				break;
 			} else {
 				elementParent = elementParent.getParentElement();
 			}
 		}
-		if(startPoint > -1 && columnCount > -1) {
+		if (startPoint > -1 && columnCount > -1) {
 			htmlPane.setCaretPosition(startPoint);
 			StringBuffer sRow = new StringBuffer();
 			sRow.append("<TR>");
-			for(int i = 0; i < columnCount; i++) {
+			for (int i = 0; i < columnCount; i++) {
 				sRow.append("<TD></TD>");
 			}
 			sRow.append("</TR>");
-			ActionEvent actionEvent = new ActionEvent(htmlPane, 0, "insertTableRow");
-			new HTMLEditorKit.InsertHTMLTextAction(	"insertTableRow", 
-													sRow.toString(), 
-													HTML.Tag.TABLE, 
-													HTML.Tag.TR).actionPerformed(actionEvent);
+			ActionEvent actionEvent = new ActionEvent(htmlPane, 0,
+					"insertTableRow");
+			new HTMLEditorKit.InsertHTMLTextAction("insertTableRow",
+					sRow.toString(), HTML.Tag.TABLE, HTML.Tag.TR)
+					.actionPerformed(actionEvent);
 			refreshOnUpdate();
 			htmlPane.setCaretPosition(caretPos);
 		}
 	}
 
-	/** 
+	/**
 	 * Method for inserting a column into an HTML Table
 	 */
 	private void insertTableColumn() {
 		int caretPos = htmlPane.getCaretPosition();
-		Element	element = htmlDoc.getCharacterElement(htmlPane.getCaretPosition());
+		Element element = htmlDoc.getCharacterElement(htmlPane
+				.getCaretPosition());
 		Element elementParent = element.getParentElement();
 		int startPoint = -1;
-		int rowCount   = -1;
-		int cellOffset =  0;
-		while(elementParent != null && !elementParent.getName().equals("body")) {
-			if(elementParent.getName().equals("table")) {
+		int rowCount = -1;
+		int cellOffset = 0;
+		while (elementParent != null && !elementParent.getName().equals("body")) {
+			if (elementParent.getName().equals("table")) {
 				startPoint = elementParent.getStartOffset();
-				rowCount   = elementParent.getElementCount();
+				rowCount = elementParent.getElementCount();
 				break;
-			} else if(elementParent.getName().equals("tr")) {
+			} else if (elementParent.getName().equals("tr")) {
 				int rowStart = elementParent.getStartOffset();
 				int rowCells = elementParent.getElementCount();
-				for(int i = 0; i < rowCells; i++) {
+				for (int i = 0; i < rowCells; i++) {
 					Element currentCell = elementParent.getElement(i);
-					if(	htmlPane.getCaretPosition() >= currentCell.getStartOffset() 
-						&& htmlPane.getCaretPosition() <= currentCell.getEndOffset()) 
-					{
+					if (htmlPane.getCaretPosition() >= currentCell
+							.getStartOffset()
+							&& htmlPane.getCaretPosition() <= currentCell
+									.getEndOffset()) {
 						cellOffset = i;
 					}
 				}
@@ -1130,119 +1243,120 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 				elementParent = elementParent.getParentElement();
 			}
 		}
-		
-		if(startPoint > -1 && rowCount > -1) {
+
+		if (startPoint > -1 && rowCount > -1) {
 			htmlPane.setCaretPosition(startPoint);
 			String sCell = "<TD></TD>";
-			ActionEvent actionEvent = new ActionEvent(htmlPane, 0, "insertTableCell");
-			for(int i = 0; i < rowCount; i++) {
+			ActionEvent actionEvent = new ActionEvent(htmlPane, 0,
+					"insertTableCell");
+			for (int i = 0; i < rowCount; i++) {
 				Element row = elementParent.getElement(i);
 				Element whichCell = row.getElement(cellOffset);
 				htmlPane.setCaretPosition(whichCell.getStartOffset());
-				new HTMLEditorKit.InsertHTMLTextAction(	"insertTableCell", 
-														sCell, 
-														HTML.Tag.TR, 
-														HTML.Tag.TD, 
-														HTML.Tag.TH, 
-														HTML.Tag.TD).actionPerformed(actionEvent);
+				new HTMLEditorKit.InsertHTMLTextAction("insertTableCell",
+						sCell, HTML.Tag.TR, HTML.Tag.TD, HTML.Tag.TH,
+						HTML.Tag.TD).actionPerformed(actionEvent);
 			}
 			refreshOnUpdate();
 			htmlPane.setCaretPosition(caretPos);
 		}
 	}
 
-	/** 
+	/**
 	 * Method for inserting a cell into an HTML Table
 	 */
 	private void insertTableCell() {
 		String sCell = "<TD></TD>";
-		ActionEvent actionEvent = new ActionEvent(htmlPane, 0, "insertTableCell");
-		new HTMLEditorKit.InsertHTMLTextAction(	"insertTableCell", 
-												sCell, 
-												HTML.Tag.TR, 
-												HTML.Tag.TD, 
-												HTML.Tag.TH, 
-												HTML.Tag.TD).actionPerformed(actionEvent);
+		ActionEvent actionEvent = new ActionEvent(htmlPane, 0,
+				"insertTableCell");
+		new HTMLEditorKit.InsertHTMLTextAction("insertTableCell", sCell,
+				HTML.Tag.TR, HTML.Tag.TD, HTML.Tag.TH, HTML.Tag.TD)
+				.actionPerformed(actionEvent);
 		refreshOnUpdate();
 	}
 
-	/** 
+	/**
 	 * Method for deleting a row from an HTML Table
 	 */
 	private void deleteTableRow() throws BadLocationException {
 		int caretPos = htmlPane.getCaretPosition();
-		Element	element = htmlDoc.getCharacterElement(htmlPane.getCaretPosition());
+		Element element = htmlDoc.getCharacterElement(htmlPane
+				.getCaretPosition());
 		Element elementParent = element.getParentElement();
 		int startPoint = -1;
-		int endPoint   = -1;
-		while(elementParent != null && !elementParent.getName().equals("body")) {
-			if(elementParent.getName().equals("tr")) {
+		int endPoint = -1;
+		while (elementParent != null && !elementParent.getName().equals("body")) {
+			if (elementParent.getName().equals("tr")) {
 				startPoint = elementParent.getStartOffset();
-				endPoint   = elementParent.getEndOffset();
+				endPoint = elementParent.getEndOffset();
 				break;
 			} else {
 				elementParent = elementParent.getParentElement();
 			}
 		}
-		
-		if(startPoint > -1 && endPoint > startPoint) {
+
+		if (startPoint > -1 && endPoint > startPoint) {
 			htmlDoc.remove(startPoint, endPoint - startPoint);
 			htmlPane.setDocument(htmlDoc);
 			registerDocument(htmlDoc);
 			refreshOnUpdate();
-			if(caretPos >= htmlDoc.getLength()) {
+			if (caretPos >= htmlDoc.getLength()) {
 				caretPos = htmlDoc.getLength() - 1;
 			}
 			htmlPane.setCaretPosition(caretPos);
 		}
 	}
 
-	/** 
+	/**
 	 * Method for deleting a column from an HTML Table
 	 */
 	private void deleteTableColumn() throws BadLocationException {
 		int caretPos = htmlPane.getCaretPosition();
-		Element	element       = htmlDoc.getCharacterElement(htmlPane.getCaretPosition());
+		Element element = htmlDoc.getCharacterElement(htmlPane
+				.getCaretPosition());
 		Element elementParent = element.getParentElement();
-		Element	elementCell   = (Element)null;
-		Element	elementRow    = (Element)null;
-		Element	elementTable  = (Element)null;
+		Element elementCell = (Element) null;
+		Element elementRow = (Element) null;
+		Element elementTable = (Element) null;
 		// Locate the table, row, and cell location of the cursor
-		while(elementParent != null && !elementParent.getName().equals("body")) {
-			if(elementParent.getName().equals("td")) {
+		while (elementParent != null && !elementParent.getName().equals("body")) {
+			if (elementParent.getName().equals("td")) {
 				elementCell = elementParent;
-			} else if(elementParent.getName().equals("tr")) {
+			} else if (elementParent.getName().equals("tr")) {
 				elementRow = elementParent;
-			} else if(elementParent.getName().equals("table")) {
+			} else if (elementParent.getName().equals("table")) {
 				elementTable = elementParent;
 			}
 			elementParent = elementParent.getParentElement();
 		}
 		int whichColumn = -1;
-		if(elementCell != null && elementRow != null && elementTable != null) {
+		if (elementCell != null && elementRow != null && elementTable != null) {
 			// Find the column the cursor is in
-			for(int i = 0; i < elementRow.getElementCount(); i++) {
-				if(elementCell == elementRow.getElement(i)) {
+			for (int i = 0; i < elementRow.getElementCount(); i++) {
+				if (elementCell == elementRow.getElement(i)) {
 					whichColumn = i;
 				}
 			}
-			if(whichColumn > -1) {
-				// Iterate through the table rows, deleting cells from the indicated column
-				for(int i = 0; i < elementTable.getElementCount(); i++) {
-					elementRow  = elementTable.getElement(i);
+			if (whichColumn > -1) {
+				// Iterate through the table rows, deleting cells from the
+				// indicated column
+				for (int i = 0; i < elementTable.getElementCount(); i++) {
+					elementRow = elementTable.getElement(i);
 					if (elementRow.getElementCount() > whichColumn) {
 						elementCell = elementRow.getElement(whichColumn);
 					} else {
-						elementCell = elementRow.getElement(elementRow.getElementCount() - 1);
+						elementCell = elementRow.getElement(elementRow
+								.getElementCount() - 1);
 					}
 					int columnCellStart = elementCell.getStartOffset();
-					int columnCellEnd   = elementCell.getEndOffset();
-					htmlDoc.remove(columnCellStart, columnCellEnd - columnCellStart);
+					int columnCellEnd = elementCell.getEndOffset();
+					htmlDoc.remove(columnCellStart, columnCellEnd
+							- columnCellStart);
 				}
 				htmlPane.setDocument(htmlDoc);
 				registerDocument(htmlDoc);
 				refreshOnUpdate();
-				if(caretPos >= htmlDoc.getLength()) {
+				if (caretPos >= htmlDoc.getLength()) {
 					caretPos = htmlDoc.getLength() - 1;
 				}
 				htmlPane.setCaretPosition(caretPos);
@@ -1250,72 +1364,70 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 		}
 	}
 
-	/** 
+	/**
 	 * Method for inserting a break (BR) element
 	 */
-	private void insertBreak() throws IOException, BadLocationException, RuntimeException {
+	private void insertBreak() throws IOException, BadLocationException,
+			RuntimeException {
 		int caretPos = htmlPane.getCaretPosition();
 		htmlKit.insertHTML(htmlDoc, caretPos, "<BR>", 0, 0, HTML.Tag.BR);
 		htmlPane.setCaretPosition(caretPos + 1);
 	}
 
-	/** 
+	/**
 	 * Method for inserting a non-breaking space (&amp;nbsp;)
 	 */
-	private void insertNonbreakingSpace() throws IOException, BadLocationException, RuntimeException {
+	private void insertNonbreakingSpace() throws IOException,
+			BadLocationException, RuntimeException {
 		int caretPos = htmlPane.getCaretPosition();
 		htmlDoc.insertString(caretPos, "\240", htmlPane.getInputAttributes());
 		htmlPane.setCaretPosition(caretPos + 1);
 	}
 
-	/** 
+	/**
 	 * Method for inserting a form element
 	 */
-	private void insertFormElement(	HTML.Tag baseTag, 
-									String baseElement, 
-									Hashtable attribs, 
-									String[] fieldNames, 
-									String[] fieldTypes, 
-									String[] fieldValues, 
-									boolean hasClosingTag)
-		throws IOException, BadLocationException, RuntimeException
-	{
+	private void insertFormElement(HTML.Tag baseTag, String baseElement,
+			Hashtable attribs, String[] fieldNames, String[] fieldTypes,
+			String[] fieldValues, boolean hasClosingTag) throws IOException,
+			BadLocationException, RuntimeException {
 		int caretPos = htmlPane.getCaretPosition();
 		StringBuffer compositeElement = new StringBuffer("<" + baseElement);
-		if(attribs != null && attribs.size() > 0) {
+		if (attribs != null && attribs.size() > 0) {
 			Enumeration attribEntries = attribs.keys();
-			while(attribEntries.hasMoreElements()) {
-				Object entryKey   = attribEntries.nextElement();
+			while (attribEntries.hasMoreElements()) {
+				Object entryKey = attribEntries.nextElement();
 				Object entryValue = attribs.get(entryKey);
-				if(entryValue != null && entryValue != "") {
-					compositeElement.append(" " + entryKey + "=" + '"' + entryValue + '"');
+				if (entryValue != null && entryValue != "") {
+					compositeElement.append(" " + entryKey + "=" + '"'
+							+ entryValue + '"');
 				}
 			}
 		}
-		
-		if(fieldNames != null && fieldNames.length > 0) {
-			PropertiesDialog propertiesDialog = 
-				new PropertiesDialog(	this, 
-										fieldNames, 
-										fieldTypes, 
-										fieldValues, 
-										translatrix.getTranslationString("FormDialogTitle"), 
-										true);
+
+		if (fieldNames != null && fieldNames.length > 0) {
+			PropertiesDialog propertiesDialog = new PropertiesDialog(this,
+					fieldNames, fieldTypes, fieldValues,
+					translatrix.getTranslationString("FormDialogTitle"), true);
 			String decision = propertiesDialog.getDecisionValue();
-			if(decision.equals(translatrix.getTranslationString("DialogCancel"))) {
+			if (decision.equals(translatrix
+					.getTranslationString("DialogCancel"))) {
 				propertiesDialog.dispose();
 				return;
 			} else {
-				for(int iter = 0; iter < fieldNames.length; iter++) {
+				for (int iter = 0; iter < fieldNames.length; iter++) {
 					String fieldName = fieldNames[iter];
-					String propValue = propertiesDialog.getFieldValue(fieldName);
-					if(propValue != null && propValue.length() > 0) {
-						if(fieldName.equals("checked")) {
-							if(propValue.equals("true")) {
-								compositeElement.append(" " + fieldName + "=" + '"' + propValue + '"');
+					String propValue = propertiesDialog
+							.getFieldValue(fieldName);
+					if (propValue != null && propValue.length() > 0) {
+						if (fieldName.equals("checked")) {
+							if (propValue.equals("true")) {
+								compositeElement.append(" " + fieldName + "="
+										+ '"' + propValue + '"');
 							}
 						} else {
-							compositeElement.append(" " + fieldName + "=" + '"' + propValue + '"');
+							compositeElement.append(" " + fieldName + "=" + '"'
+									+ propValue + '"');
 						}
 					}
 				}
@@ -1323,155 +1435,156 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 			propertiesDialog.dispose();
 		}
 		// --- Convenience for editing, this makes the FORM visible
-		if(USE_FORM_INDICATOR && baseElement.equals("form")) {
-			compositeElement.append(" bgcolor=" + '"' + FORM_INDICATOR_COLOR + '"');
+		if (USE_FORM_INDICATOR && baseElement.equals("form")) {
+			compositeElement.append(" bgcolor=" + '"' + FORM_INDICATOR_COLOR
+					+ '"');
 		}
 		// --- END
 		compositeElement.append(">");
-		if(hasClosingTag) {
+		if (hasClosingTag) {
 			compositeElement.append("</" + baseElement + ">");
 		}
-		
-		if(baseTag == HTML.Tag.FORM) {
+
+		if (baseTag == HTML.Tag.FORM) {
 			compositeElement.append("<P>&nbsp;</P>");
 		}
-		htmlKit.insertHTML(htmlDoc, caretPos, compositeElement.toString(), 0, 0, baseTag);
+		htmlKit.insertHTML(htmlDoc, caretPos, compositeElement.toString(), 0,
+				0, baseTag);
 		refreshOnUpdate();
 	}
 
-	/** 
+	/**
 	 * Alternate method call for inserting a form element
-	 * @param baseTag html base tag to insert form into
-	 * @param baseElement base element to insert into form
-	 * @param attribs attributes
-	 * @param fieldNames names of the fields
-	 * @param fieldTypes types of the fields
-	 * @param hasClosingTag is there a closing tag?
+	 * 
+	 * @param baseTag
+	 *            html base tag to insert form into
+	 * @param baseElement
+	 *            base element to insert into form
+	 * @param attribs
+	 *            attributes
+	 * @param fieldNames
+	 *            names of the fields
+	 * @param fieldTypes
+	 *            types of the fields
+	 * @param hasClosingTag
+	 *            is there a closing tag?
 	 * @throws IOException
 	 * @throws BadLocationException
 	 * @throws RuntimeException
 	 */
-	private void insertFormElement(	HTML.Tag baseTag, 
-									String baseElement, 
-									Hashtable attribs, 
-									String[] fieldNames, 
-									String[] fieldTypes, 
-									boolean hasClosingTag)
-		throws IOException, BadLocationException, RuntimeException
-	{
-		insertFormElement(	baseTag, 
-							baseElement, 
-							attribs, 
-							fieldNames, 
-							fieldTypes, 
-							new String[fieldNames.length], 
-							hasClosingTag);
+	private void insertFormElement(HTML.Tag baseTag, String baseElement,
+			Hashtable attribs, String[] fieldNames, String[] fieldTypes,
+			boolean hasClosingTag) throws IOException, BadLocationException,
+			RuntimeException {
+		insertFormElement(baseTag, baseElement, attribs, fieldNames,
+				fieldTypes, new String[fieldNames.length], hasClosingTag);
 	}
 
-	/** 
+	/**
 	 * Method that handles initial list insertion and deletion
-	 * @param element list element to manage
+	 * 
+	 * @param element
+	 *            list element to manage
 	 */
 	public void manageListElement(Element element) {
 		Element h = htmlUtils.getListItemParent();
 		Element listElement = h.getParentElement();
-		if(h != null) {
+		if (h != null) {
 			htmlUtils.removeTag(h, true);
 		}
 	}
 
-	/** 
+	/**
 	 * Method to initiate a find/replace operation
-	 * @param searchFindTerm term to find
-	 * @param searchReplaceTerm string to replace found term with
-	 * @param bIsFindReplace was something replaced?
-	 * @param bCaseSensitive search case sensitive?
-	 * @param bStartAtTop start at top?
+	 * 
+	 * @param searchFindTerm
+	 *            term to find
+	 * @param searchReplaceTerm
+	 *            string to replace found term with
+	 * @param bIsFindReplace
+	 *            was something replaced?
+	 * @param bCaseSensitive
+	 *            search case sensitive?
+	 * @param bStartAtTop
+	 *            start at top?
 	 */
-	private void doSearch(	String searchFindTerm, 
-							String searchReplaceTerm, 
-							boolean bIsFindReplace, 
-							boolean bCaseSensitive, 
-							boolean bStartAtTop,
-							String command)
-	{
+	private void doSearch(String searchFindTerm, String searchReplaceTerm,
+			boolean bIsFindReplace, boolean bCaseSensitive,
+			boolean bStartAtTop, String command) {
 		boolean bReplaceAll = false;
 		JTextPane searchPane = htmlPane;
-		if(srcScrollPane.isShowing() || srcPane.hasFocus()) {
+		if (srcScrollPane.isShowing() || srcPane.hasFocus()) {
 			searchPane = srcPane;
 		}
-		
-		if(command.equals("find") || command.equals("replace")){
-		//if(searchFindTerm == null || (bIsFindReplace && searchReplaceTerm == null)) {
-			SearchDialog sdSearchInput = new SearchDialog(	this, 
-															translatrix.getTranslationString("SearchDialogTitle"), 
-															true, 
-															bIsFindReplace, 
-															bCaseSensitive, 
-															bStartAtTop,
-															searchFindTerm,
-															searchReplaceTerm);
-															
-			searchFindTerm    = sdSearchInput.getFindTerm();
+
+		if (command.equals("find") || command.equals("replace")) {
+			// if(searchFindTerm == null || (bIsFindReplace && searchReplaceTerm
+			// == null)) {
+			SearchDialog sdSearchInput = new SearchDialog(this,
+					translatrix.getTranslationString("SearchDialogTitle"),
+					true, bIsFindReplace, bCaseSensitive, bStartAtTop,
+					searchFindTerm, searchReplaceTerm);
+
+			searchFindTerm = sdSearchInput.getFindTerm();
 			searchReplaceTerm = sdSearchInput.getReplaceTerm();
-			bCaseSensitive    = sdSearchInput.getCaseSensitive();
-			bStartAtTop       = sdSearchInput.getStartAtTop();
-			bReplaceAll       = sdSearchInput.getReplaceAll();
+			bCaseSensitive = sdSearchInput.getCaseSensitive();
+			bStartAtTop = sdSearchInput.getStartAtTop();
+			bReplaceAll = sdSearchInput.getReplaceAll();
 		}
-		if(searchFindTerm != null && (!bIsFindReplace || searchReplaceTerm != null)) {
-			if(bReplaceAll) {
-				int results = findText(searchFindTerm, searchReplaceTerm, bCaseSensitive, 0);
+		if (searchFindTerm != null
+				&& (!bIsFindReplace || searchReplaceTerm != null)) {
+			if (bReplaceAll) {
+				int results = findText(searchFindTerm, searchReplaceTerm,
+						bCaseSensitive, 0);
 				int findOffset = 0;
-				if(results > -1) {
-					while(results > -1) {
+				if (results > -1) {
+					while (results > -1) {
 						findOffset = findOffset + searchReplaceTerm.length();
-						results = findText(searchFindTerm, searchReplaceTerm, bCaseSensitive, findOffset);
+						results = findText(searchFindTerm, searchReplaceTerm,
+								bCaseSensitive, findOffset);
 					}
 				} else {
-					SimpleInfoDialog sidWarn = 
-						new SimpleInfoDialog(	this, 
-												"", 
-												true, 
-												translatrix.getTranslationString("ErrorNoOccurencesFound") 
-												+ ":\n" 
-												+ searchFindTerm, 
-												SimpleInfoDialog.WARNING);
+					SimpleInfoDialog sidWarn = new SimpleInfoDialog(
+							this,
+							"",
+							true,
+							translatrix
+									.getTranslationString("ErrorNoOccurencesFound")
+									+ ":\n" + searchFindTerm,
+							SimpleInfoDialog.WARNING);
 				}
 			} else {
-				int results = 
-					findText(	searchFindTerm, 
-								searchReplaceTerm, 
-								bCaseSensitive, 
-								(bStartAtTop ? 0 : searchPane.getCaretPosition()));
-				if(results == -1) {
-					SimpleInfoDialog sidWarn = 
-						new SimpleInfoDialog(	this, 
-												"", 
-												true, 
-												translatrix.getTranslationString("ErrorNoMatchFound") 
-												+ ":\n" 
-												+ searchFindTerm, 
-												SimpleInfoDialog.WARNING);
+				int results = findText(searchFindTerm, searchReplaceTerm,
+						bCaseSensitive,
+						(bStartAtTop ? 0 : searchPane.getCaretPosition()));
+				if (results == -1) {
+					SimpleInfoDialog sidWarn = new SimpleInfoDialog(this, "",
+							true,
+							translatrix
+									.getTranslationString("ErrorNoMatchFound")
+									+ ":\n" + searchFindTerm,
+							SimpleInfoDialog.WARNING);
 				}
 			}
-			
+
 			lastSearchFindTerm = new String(searchFindTerm);
-			if(searchReplaceTerm != null) {
+			if (searchReplaceTerm != null) {
 				lastSearchReplaceTerm = new String(searchReplaceTerm);
 			} else {
-				lastSearchReplaceTerm = (String)null;
+				lastSearchReplaceTerm = (String) null;
 			}
 			lastSearchCaseSetting = bCaseSensitive;
-			lastSearchTopSetting  = bStartAtTop;
+			lastSearchTopSetting = bStartAtTop;
 		}
 	}
 
-	/** 
+	/**
 	 * Method for finding (and optionally replacing) a string in the text
 	 */
-	private int findText(String findTerm, String replaceTerm, boolean bCaseSenstive, int iOffset) {
+	private int findText(String findTerm, String replaceTerm,
+			boolean bCaseSenstive, int iOffset) {
 		JTextPane jtpFindSource;
-		if(srcScrollPane.isShowing() || srcPane.hasFocus()) {
+		if (srcScrollPane.isShowing() || srcPane.hasFocus()) {
 			jtpFindSource = srcPane;
 		} else {
 			jtpFindSource = htmlPane;
@@ -1480,70 +1593,77 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 		try {
 			Document baseDocument = jtpFindSource.getDocument();
 			if (bCaseSenstive) {
-				searchPlace = baseDocument.getText(0, baseDocument.getLength()).indexOf(findTerm, iOffset);
+				searchPlace = baseDocument.getText(0, baseDocument.getLength())
+						.indexOf(findTerm, iOffset);
 			} else {
-				searchPlace = 
-					baseDocument.getText(	0, 
-											baseDocument.getLength()).toLowerCase().indexOf(findTerm.toLowerCase(), 
-											iOffset);
+				searchPlace = baseDocument.getText(0, baseDocument.getLength())
+						.toLowerCase().indexOf(findTerm.toLowerCase(), iOffset);
 			}
-			
-			if(searchPlace > -1) {
-				if(replaceTerm != null) {
+
+			if (searchPlace > -1) {
+				if (replaceTerm != null) {
 					AttributeSet attribs = null;
-					if(baseDocument instanceof HTMLDocument) {
-						Element element = ((HTMLDocument)baseDocument).getCharacterElement(searchPlace);
+					if (baseDocument instanceof HTMLDocument) {
+						Element element = ((HTMLDocument) baseDocument)
+								.getCharacterElement(searchPlace);
 						attribs = element.getAttributes();
 					}
 					baseDocument.remove(searchPlace, findTerm.length());
-					baseDocument.insertString(searchPlace, replaceTerm, attribs);
-					jtpFindSource.setCaretPosition(searchPlace + replaceTerm.length());
+					baseDocument
+							.insertString(searchPlace, replaceTerm, attribs);
+					jtpFindSource.setCaretPosition(searchPlace
+							+ replaceTerm.length());
 					jtpFindSource.requestFocus();
-					jtpFindSource.select(searchPlace, searchPlace + replaceTerm.length());
+					jtpFindSource.select(searchPlace,
+							searchPlace + replaceTerm.length());
 				} else {
-					jtpFindSource.setCaretPosition(searchPlace + findTerm.length());
+					jtpFindSource.setCaretPosition(searchPlace
+							+ findTerm.length());
 					jtpFindSource.requestFocus();
-					jtpFindSource.select(searchPlace, searchPlace + findTerm.length());
+					jtpFindSource.select(searchPlace,
+							searchPlace + findTerm.length());
 				}
 			}
-		} catch(BadLocationException ble) {
-			log.error("BadLocationException in actionPerformed method: " + ble.fillInStackTrace());
-			SimpleInfoDialog sidAbout = 
-				new SimpleInfoDialog(	this, 
-										translatrix.getTranslationString("Error"), 
-										true, 
-										translatrix.getTranslationString("ErrorBadLocationException"), 
-										SimpleInfoDialog.ERROR);
+		} catch (BadLocationException ble) {
+			log.error("BadLocationException in actionPerformed method: "
+					+ ble.fillInStackTrace());
+			SimpleInfoDialog sidAbout = new SimpleInfoDialog(this,
+					translatrix.getTranslationString("Error"), true,
+					translatrix
+							.getTranslationString("ErrorBadLocationException"),
+					SimpleInfoDialog.ERROR);
 		}
 		return searchPlace;
 	}
 
 	// TODO: check the write methods!
-	/** 
+	/**
 	 * Method for inserting an image from a file
 	 */
-	private void insertLocalImage(File whatImage) throws IOException, BadLocationException, RuntimeException {
-		if(whatImage == null) {
-			whatImage = getImageFromChooser(".", 
-											MutableFilter.EXT_IMG, 
-											translatrix.getTranslationString("FiletypeIMG"));
+	private void insertLocalImage(File whatImage) throws IOException,
+			BadLocationException, RuntimeException {
+		if (whatImage == null) {
+			whatImage = getImageFromChooser(".", MutableFilter.EXT_IMG,
+					translatrix.getTranslationString("FiletypeIMG"));
 		}
-		if(whatImage != null) {
+		if (whatImage != null) {
 			int caretPos = htmlPane.getCaretPosition();
-			htmlKit.insertHTML(htmlDoc, caretPos, "<IMG SRC=\"" + whatImage + "\">", 0, 0, HTML.Tag.IMG);
+			htmlKit.insertHTML(htmlDoc, caretPos, "<IMG SRC=\"" + whatImage
+					+ "\">", 0, 0, HTML.Tag.IMG);
 			htmlPane.setCaretPosition(caretPos + 1);
 			refreshOnUpdate();
 		}
 	}
 
 	// TODO: check the write methods!
-	/** 
+	/**
 	 * Method for inserting a file (either image-file or a url)
+	 * 
 	 * @return returns the filecontents from the selected file
 	 */
 	public String insertFile() {
 		String selectedFile = null;
-		if(kafenioConfig.getServletUrl() != null) {
+		if (kafenioConfig.getServletUrl() != null) {
 			try {
 				Vector listData = new Vector();
 				if (kafenioConfig.getServletMode().equalsIgnoreCase("cgi")) {
@@ -1555,25 +1675,28 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 					} else {
 						joiner = "?";
 					}
-					URL theServlet = new URL(	kafenioConfig.getServletUrl() 
-												+ joiner 
-												+ "GetFiles=true&FileExtensions=" 
-												+ treepilotProperties.getString("ValidFileExtensions"));
-												
+					URL theServlet = new URL(
+							kafenioConfig.getServletUrl()
+									+ joiner
+									+ "GetFiles=true&FileExtensions="
+									+ treepilotProperties
+											.getString("ValidFileExtensions"));
+
 					URLConnection conn = theServlet.openConnection();
 					conn.setAllowUserInteraction(true);
 					conn.setDoOutput(false);
 					conn.setDoInput(true);
 					conn.setUseCaches(false);
-	
-					BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+					BufferedReader in = new BufferedReader(
+							new InputStreamReader(conn.getInputStream()));
 					String inputLine;
 
 					// read the directory prefix of the files
 					// from the first line
 					// i.e.: http://www.xeinfach.de/myimages
 					kafenioConfig.setFileDir(in.readLine());
-	
+
 					// ...all following lines contain file names and the
 					// path relative to the above prefix
 					// i.e.: /autum/leafs.gif
@@ -1583,46 +1706,47 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 						st = new StringTokenizer(inputLine, ";");
 						it = new Vector();
 						while (st.hasMoreTokens()) {
-								it.add(st.nextToken());
+							it.add(st.nextToken());
 						}
 						if (it.size() == 2) {
-							listData.add(new NameValuePair(it.get(0).toString(), it.get(1).toString()));
+							listData.add(new NameValuePair(
+									it.get(0).toString(), it.get(1).toString()));
 						} else if (it.size() == 1) {
 							listData.add(new NameValuePair(it.get(0).toString()));
-						} 
+						}
 					}
 					in.close();
-					
+
 					int caretPos = htmlPane.getCaretPosition();
 					if (listData != null && listData.size() > 0) {
-						FileDialog fileDialog = 
-							new FileDialog(	this, 
-											kafenioConfig.getFileDir() + kafenioConfig.getTreePilotSystemID(), 
-											listData, 
-											"File Chooser", 
-											true);
+						FileDialog fileDialog = new FileDialog(this,
+								kafenioConfig.getFileDir()
+										+ kafenioConfig.getTreePilotSystemID(),
+								listData, "File Chooser", true);
 						selectedFile = fileDialog.getSelectedFile();
 						fileDialog.dispose();
 					}
-				} else if(kafenioConfig.getServletMode().equalsIgnoreCase("java")) {	
+				} else if (kafenioConfig.getServletMode().equalsIgnoreCase(
+						"java")) {
 					String[] fileList = null;
-					URL theServlet = new URL(	kafenioConfig.getServletUrl() 
-												+ "?GetFiles=" 
-												+ kafenioConfig.getTreePilotSystemID()
-												+ "&FileExtensions=" 
-												+ treepilotProperties.getString("ValidFileExtensions"));
-								
+					URL theServlet = new URL(
+							kafenioConfig.getServletUrl()
+									+ "?GetFiles="
+									+ kafenioConfig.getTreePilotSystemID()
+									+ "&FileExtensions="
+									+ treepilotProperties
+											.getString("ValidFileExtensions"));
+
 					URLConnection conn = theServlet.openConnection();
-					ObjectInputStream in = new ObjectInputStream(conn.getInputStream());
+					ObjectInputStream in = new ObjectInputStream(
+							conn.getInputStream());
 					fileList = (String[]) in.readObject();
 					int caretPos = htmlPane.getCaretPosition();
-					if (fileList != null && fileList.length > 0) {	
-						FileDialog fileDialog = 
-							new FileDialog(	this, 
-											kafenioConfig.getFileDir() + kafenioConfig.getTreePilotSystemID(), 
-											fileList, 
-											"File Chooser", 
-											true);
+					if (fileList != null && fileList.length > 0) {
+						FileDialog fileDialog = new FileDialog(this,
+								kafenioConfig.getFileDir()
+										+ kafenioConfig.getTreePilotSystemID(),
+								fileList, "File Chooser", true);
 						selectedFile = fileDialog.getSelectedFile();
 						fileDialog.dispose();
 					}
@@ -1640,17 +1764,17 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 	}
 
 	// TODO: check the write methods!
-	/** 
+	/**
 	 * Method for saving text as a complete HTML document
 	 */
-	private void writeOut(File whatFile) throws IOException, BadLocationException {
-		if(whatFile == null) {
-			whatFile = getFileFromChooser(	".", 
-											JFileChooser.SAVE_DIALOG, 
-											MutableFilter.EXT_HTML, 
-											translatrix.getTranslationString("FiletypeHTML"));
+	private void writeOut(File whatFile) throws IOException,
+			BadLocationException {
+		if (whatFile == null) {
+			whatFile = getFileFromChooser(".", JFileChooser.SAVE_DIALOG,
+					MutableFilter.EXT_HTML,
+					translatrix.getTranslationString("FiletypeHTML"));
 		}
-		if(whatFile != null) {
+		if (whatFile != null) {
 			FileWriter fw = new FileWriter(whatFile);
 			fw.write(getDocumentText(), 0, getDocumentText().length());
 			fw.flush();
@@ -1662,16 +1786,16 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 	}
 
 	// TODO: check the write methods!
-	/** 
+	/**
 	 * Method for saving text as an HTML fragment
 	 */
-	private void writeOutFragment(String containingTag) throws IOException, BadLocationException {
-		File whatFile = getFileFromChooser(	".", 
-											JFileChooser.SAVE_DIALOG, 
-											MutableFilter.EXT_HTML, 
-											translatrix.getTranslationString("FiletypeHTML"));
-											
-		if(whatFile != null) {
+	private void writeOutFragment(String containingTag) throws IOException,
+			BadLocationException {
+		File whatFile = getFileFromChooser(".", JFileChooser.SAVE_DIALOG,
+				MutableFilter.EXT_HTML,
+				translatrix.getTranslationString("FiletypeHTML"));
+
+		if (whatFile != null) {
 			FileWriter fw = new FileWriter(whatFile);
 			String docContents = getSubText("body", srcPane.getText());
 			fw.write(docContents, 0, docContents.length());
@@ -1682,16 +1806,16 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 	}
 
 	// TODO: check the write methods!
-	/** 
+	/**
 	 * Method for saving text as an RTF document
 	 */
-	private void writeOutRTF(StyledDocument doc) throws IOException, BadLocationException {
-		File whatFile = getFileFromChooser(	".", 
-											JFileChooser.SAVE_DIALOG, 
-											MutableFilter.EXT_RTF, 
-											translatrix.getTranslationString("FiletypeRTF"));
-											
-		if(whatFile != null) {
+	private void writeOutRTF(StyledDocument doc) throws IOException,
+			BadLocationException {
+		File whatFile = getFileFromChooser(".", JFileChooser.SAVE_DIALOG,
+				MutableFilter.EXT_RTF,
+				translatrix.getTranslationString("FiletypeRTF"));
+
+		if (whatFile != null) {
 			FileOutputStream fos = new FileOutputStream(whatFile);
 			RTFEditorKit rtfKit = new RTFEditorKit();
 			rtfKit.write(fos, doc, 0, doc.getLength());
@@ -1702,16 +1826,16 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 	}
 
 	// TODO: check the write methods!
-	/** 
+	/**
 	 * Method for saving text as a Base64 encoded document
 	 */
-	private void writeOutBase64(String text) throws IOException, BadLocationException {
-		File whatFile = getFileFromChooser(	".", 
-											JFileChooser.SAVE_DIALOG, 
-											MutableFilter.EXT_BASE64, 
-											translatrix.getTranslationString("FiletypeB64"));
-											
-		if(whatFile != null) {
+	private void writeOutBase64(String text) throws IOException,
+			BadLocationException {
+		File whatFile = getFileFromChooser(".", JFileChooser.SAVE_DIALOG,
+				MutableFilter.EXT_BASE64,
+				translatrix.getTranslationString("FiletypeB64"));
+
+		if (whatFile != null) {
 			String base64text = Base64Codec.encode(text);
 			FileWriter fw = new FileWriter(whatFile);
 			fw.write(base64text, 0, base64text.length());
@@ -1722,30 +1846,31 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 	}
 
 	// TODO: check the write methods!
-	/** 
+	/**
 	 * Method to invoke loading HTML into the app from a file
 	 */
-	private void openDocument(File whatFile) throws IOException, BadLocationException {
-		if(whatFile == null) {
-			whatFile = getFileFromChooser(	".", 
-											JFileChooser.OPEN_DIALOG, 
-											MutableFilter.EXT_HTML, 
-											translatrix.getTranslationString("FiletypeHTML"));
+	private void openDocument(File whatFile) throws IOException,
+			BadLocationException {
+		if (whatFile == null) {
+			whatFile = getFileFromChooser(".", JFileChooser.OPEN_DIALOG,
+					MutableFilter.EXT_HTML,
+					translatrix.getTranslationString("FiletypeHTML"));
 		}
-		if(whatFile != null) {
+		if (whatFile != null) {
 			try {
 				loadDocument(whatFile, null);
-			} catch(ChangedCharSetException ccse) {
+			} catch (ChangedCharSetException ccse) {
 				String charsetType = ccse.getCharSetSpec().toLowerCase();
 				int pos = charsetType.indexOf("charset");
-				if(pos == -1) {
+				if (pos == -1) {
 					throw ccse;
 				}
-				
-				while(pos < charsetType.length() && charsetType.charAt(pos) != '=') {
+
+				while (pos < charsetType.length()
+						&& charsetType.charAt(pos) != '=') {
 					pos++;
 				}
-				
+
 				pos++; // Places file cursor past the equals sign (=)
 				String whatEncoding = charsetType.substring(pos).trim();
 				loadDocument(whatFile, whatEncoding);
@@ -1755,18 +1880,21 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 	}
 
 	// TODO: check the write methods!
-	/** 
-	 * Method for loading HTML document into the app from a file, including document encoding setting
+	/**
+	 * Method for loading HTML document into the app from a file, including
+	 * document encoding setting
 	 */
-	private void loadDocument(File whatFile, String whatEncoding) throws IOException, BadLocationException {
+	private void loadDocument(File whatFile, String whatEncoding)
+			throws IOException, BadLocationException {
 		Reader r = null;
 		currentFile = whatFile;
-		htmlDoc = (ExtendedHTMLDocument)(htmlKit.createDefaultDocument());
+		htmlDoc = (ExtendedHTMLDocument) (htmlKit.createDefaultDocument());
 		try {
-			if(whatEncoding == null) {
+			if (whatEncoding == null) {
 				r = new InputStreamReader(new FileInputStream(whatFile));
 			} else {
-				r = new InputStreamReader(new FileInputStream(whatFile), whatEncoding);
+				r = new InputStreamReader(new FileInputStream(whatFile),
+						whatEncoding);
 				htmlDoc.putProperty("IgnoreCharsetDirective", new Boolean(true));
 			}
 			htmlKit.read(r, htmlDoc, 0);
@@ -1775,36 +1903,37 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 			srcPane.setText(htmlPane.getText());
 			updateTitle();
 		} finally {
-			if(r != null) {
+			if (r != null) {
 				r.close();
 			}
 		}
 	}
 
 	// TODO: check the write methods!
-	/** 
+	/**
 	 * Method for loading a Base64 encoded document from a file
 	 */
-	private void openDocumentBase64(File whatFile) throws IOException, BadLocationException {
-		if(whatFile == null) {
-			whatFile = getFileFromChooser(	".", 
-											JFileChooser.OPEN_DIALOG, 
-											MutableFilter.EXT_BASE64, 
-											translatrix.getTranslationString("FiletypeB64"));
+	private void openDocumentBase64(File whatFile) throws IOException,
+			BadLocationException {
+		if (whatFile == null) {
+			whatFile = getFileFromChooser(".", JFileChooser.OPEN_DIALOG,
+					MutableFilter.EXT_BASE64,
+					translatrix.getTranslationString("FiletypeB64"));
 		}
-		if(whatFile != null) {
+		if (whatFile != null) {
 			FileReader fr = new FileReader(whatFile);
 			int nextChar = 0;
 			StringBuffer encodedText = new StringBuffer();
 			try {
-				while((nextChar = fr.read()) != -1) {
-					encodedText.append((char)nextChar);
+				while ((nextChar = fr.read()) != -1) {
+					encodedText.append((char) nextChar);
 				}
 				fr.close();
-				setDocumentText(addURLPrefixToImagePath(Base64Codec.decode(encodedText.toString())));
-				registerDocument((ExtendedHTMLDocument)(htmlPane.getDocument()));
+				setDocumentText(addURLPrefixToImagePath(Base64Codec
+						.decode(encodedText.toString())));
+				registerDocument((ExtendedHTMLDocument) (htmlPane.getDocument()));
 			} finally {
-				if(fr != null) {
+				if (fr != null) {
 					fr.close();
 				}
 			}
@@ -1812,19 +1941,18 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 	}
 
 	// TODO: check the write methods!
-	/** 
+	/**
 	 * Method for loading a Stylesheet-File into the app
 	 */
 	private void openStyleSheet(File fileCSS) throws IOException {
-		if(fileCSS == null) {
-			fileCSS = getFileFromChooser(	".", 
-											JFileChooser.OPEN_DIALOG, 
-											MutableFilter.EXT_CSS, 
-											translatrix.getTranslationString("FiletypeCSS"));
+		if (fileCSS == null) {
+			fileCSS = getFileFromChooser(".", JFileChooser.OPEN_DIALOG,
+					MutableFilter.EXT_CSS,
+					translatrix.getTranslationString("FiletypeCSS"));
 		}
-		if(fileCSS != null) {
+		if (fileCSS != null) {
 			String currDocText = htmlPane.getText();
-			htmlDoc = (ExtendedHTMLDocument)(htmlKit.createDefaultDocument());
+			htmlDoc = (ExtendedHTMLDocument) (htmlKit.createDefaultDocument());
 			styleSheet = htmlDoc.getStyleSheet();
 			URL cssUrl = fileCSS.toURL();
 			InputStream is = cssUrl.openStream();
@@ -1839,19 +1967,25 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 	}
 
 	// TODO: check the write methods!
-	/** 
-	 * Method for loading any number of Stylesheets from an array of URLs into the app
-	 * @param cssFiles filenames to load 
-	 * @param myCodeBase applet's codebase
-	 * @throws IOException an IOException
+	/**
+	 * Method for loading any number of Stylesheets from an array of URLs into
+	 * the app
+	 * 
+	 * @param cssFiles
+	 *            filenames to load
+	 * @param myCodeBase
+	 *            applet's codebase
+	 * @throws IOException
+	 *             an IOException
 	 */
-	private void loadStyleSheets(String[] cssFiles, String myCodeBase) throws IOException {
-		if(cssFiles != null) {
+	private void loadStyleSheets(String[] cssFiles, String myCodeBase)
+			throws IOException {
+		if (cssFiles != null) {
 			String currDocText = htmlPane.getText();
-			htmlDoc = (ExtendedHTMLDocument)(htmlKit.createDefaultDocument());
+			htmlDoc = (ExtendedHTMLDocument) (htmlKit.createDefaultDocument());
 			styleSheet = htmlDoc.getStyleSheet();
 			// try to load each file...
-			for (int i=0; i < cssFiles.length; i++) {
+			for (int i = 0; i < cssFiles.length; i++) {
 				log.debug("loading stylesheet file: " + cssFiles[i]);
 				boolean err = false;
 				// try to load the file
@@ -1866,18 +2000,23 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 					styleSheet.loadRules(br, cssUrl);
 					br.close();
 				} catch (Exception e1) {
-					// if file cannot be found, try again using the codebase in front.
-					log.debug("file could not be found, trying again using codebase: " + e1.fillInStackTrace());
+					// if file cannot be found, try again using the codebase in
+					// front.
+					log.debug("file could not be found, trying again using codebase: "
+							+ e1.fillInStackTrace());
 					try {
 						try {
 							br.close();
-						} catch (Exception exc2) {}
+						} catch (Exception exc2) {
+						}
 						try {
 							isr.close();
-						} catch (Exception e) {}
+						} catch (Exception e) {
+						}
 						try {
 							is.close();
-						} catch (Exception exc1) {}
+						} catch (Exception exc1) {
+						}
 						log.debug("done closing streams");
 						URL cssUrl = new URL(myCodeBase + cssFiles[i]);
 						is = cssUrl.openStream();
@@ -1886,34 +2025,46 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 						styleSheet.loadRules(br, cssUrl);
 						log.debug("done loading css file...");
 					} catch (Exception e2) {
-						log.warn("file could not be found: " + e2.fillInStackTrace());
+						log.warn("file could not be found: "
+								+ e2.fillInStackTrace());
 					} finally {
 						try {
 							br.close();
-						} catch (Exception exc2) {}
+						} catch (Exception exc2) {
+						}
 						try {
 							isr.close();
-						} catch (Exception e) {}
+						} catch (Exception e) {
+						}
 						try {
 							is.close();
-						} catch (Exception exc1) {}
+						} catch (Exception exc1) {
+						}
 					}
 				} finally {
 					try {
 						br.close();
-					} catch (Exception exc2) {}
+					} catch (Exception exc2) {
+					}
 					try {
 						isr.close();
-					} catch (Exception e) {}
+					} catch (Exception e) {
+					}
 					try {
 						is.close();
-					} catch (Exception exc1) {}
+					} catch (Exception exc1) {
+					}
 					log.debug("done closing streams");
 				}
 			}
-			if (styleSheet == null) htmlDoc = new ExtendedHTMLDocument();
-			else htmlDoc = new ExtendedHTMLDocument(styleSheet);
-			if (htmlDoc == null) htmlDoc = new ExtendedHTMLDocument();
+			if (styleSheet == null) {
+				htmlDoc = new ExtendedHTMLDocument();
+			} else {
+				htmlDoc = new ExtendedHTMLDocument(styleSheet);
+			}
+			if (htmlDoc == null) {
+				htmlDoc = new ExtendedHTMLDocument();
+			}
 			registerDocument(htmlDoc);
 			setDocumentText(currDocText);
 			refreshOnUpdate();
@@ -1921,20 +2072,22 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 	}
 
 	// TODO: check the write methods!
-	/** 
+	/**
 	 * Method for serializing the document out to a file
 	 * 
-	 * @param doc a HTMLDocument
-	 * @throws IOException an IOException
+	 * @param doc
+	 *            a HTMLDocument
+	 * @throws IOException
+	 *             an IOException
 	 */
 	public void serializeOut(HTMLDocument doc) throws IOException {
-		File whatFile = getFileFromChooser(	".", 
-											JFileChooser.SAVE_DIALOG, 
-											MutableFilter.EXT_SER, 
-											translatrix.getTranslationString("FiletypeSer"));
-											
-		if(whatFile != null) {
-			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(whatFile));
+		File whatFile = getFileFromChooser(".", JFileChooser.SAVE_DIALOG,
+				MutableFilter.EXT_SER,
+				translatrix.getTranslationString("FiletypeSer"));
+
+		if (whatFile != null) {
+			ObjectOutputStream oos = new ObjectOutputStream(
+					new FileOutputStream(whatFile));
 			oos.writeObject(doc);
 			oos.flush();
 			oos.close();
@@ -1943,77 +2096,83 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 	}
 
 	// TODO: check the write methods!
-	/** 
+	/**
 	 * Method for reading in a serialized document from a file
 	 * 
-	 * @throws IOException an io exception
-	 * @throws ClassNotFoundException is thrown if class was not found.
+	 * @throws IOException
+	 *             an io exception
+	 * @throws ClassNotFoundException
+	 *             is thrown if class was not found.
 	 */
 	public void serializeIn() throws IOException, ClassNotFoundException {
-		File whatFile = getFileFromChooser(	".", 
-											JFileChooser.OPEN_DIALOG, 
-											MutableFilter.EXT_SER, 
-											translatrix.getTranslationString("FiletypeSer"));
-											
-		if(whatFile != null) {
-			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(whatFile));
-			htmlDoc = (ExtendedHTMLDocument)(ois.readObject());
+		File whatFile = getFileFromChooser(".", JFileChooser.OPEN_DIALOG,
+				MutableFilter.EXT_SER,
+				translatrix.getTranslationString("FiletypeSer"));
+
+		if (whatFile != null) {
+			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(
+					whatFile));
+			htmlDoc = (ExtendedHTMLDocument) (ois.readObject());
 			ois.close();
 			registerDocument(htmlDoc);
 			refreshOnUpdate();
 		}
 	}
 
-	/** 
+	/**
 	 * Method for obtaining a File for input/output using a JFileChooser dialog
 	 */
-	private File getFileFromChooser(String startDir, int dialogType, String[] exts, String desc) {
+	private File getFileFromChooser(String startDir, int dialogType,
+			String[] exts, String desc) {
 		JFileChooser jfileDialog = new JFileChooser(startDir);
 		jfileDialog.setDialogType(dialogType);
 		jfileDialog.setFileFilter(new MutableFilter(exts, desc));
 		int optionSelected = JFileChooser.CANCEL_OPTION;
-		
-		if(dialogType == JFileChooser.OPEN_DIALOG) {
+
+		if (dialogType == JFileChooser.OPEN_DIALOG) {
 			optionSelected = jfileDialog.showOpenDialog(this);
-		} else if(dialogType == JFileChooser.SAVE_DIALOG) {
+		} else if (dialogType == JFileChooser.SAVE_DIALOG) {
 			optionSelected = jfileDialog.showSaveDialog(this);
 		} else {
 			optionSelected = jfileDialog.showOpenDialog(this);
 		}
-		
-		if(optionSelected == JFileChooser.APPROVE_OPTION) {
+
+		if (optionSelected == JFileChooser.APPROVE_OPTION) {
 			return jfileDialog.getSelectedFile();
 		}
-		return (File)null;
+		return (File) null;
 	}
 
-	/** 
-	 * Method for obtaining an Image for input using a custom JFileChooser dialog
+	/**
+	 * Method for obtaining an Image for input using a custom JFileChooser
+	 * dialog
 	 */
 	private File getImageFromChooser(String startDir, String[] exts, String desc) {
 		ImageFileChooser jImageDialog = new ImageFileChooser(startDir);
 		jImageDialog.setDialogType(JFileChooser.CUSTOM_DIALOG);
 		jImageDialog.setFileFilter(new MutableFilter(exts, desc));
-		jImageDialog.setDialogTitle(translatrix.getTranslationString("ImageDialogTitle"));
+		jImageDialog.setDialogTitle(translatrix
+				.getTranslationString("ImageDialogTitle"));
 		int optionSelected = JFileChooser.CANCEL_OPTION;
-		optionSelected = jImageDialog.showDialog(this, translatrix.getTranslationString("Insert"));
-		
-		if(optionSelected == JFileChooser.APPROVE_OPTION) {
+		optionSelected = jImageDialog.showDialog(this,
+				translatrix.getTranslationString("Insert"));
+
+		if (optionSelected == JFileChooser.APPROVE_OPTION) {
 			return jImageDialog.getSelectedFile();
 		}
-		
-		return (File)null;
+
+		return (File) null;
 	}
 
-	/** 
+	/**
 	 * Method for describing the node hierarchy of the document
 	 */
 	private void describeDocument(StyledDocument doc) {
 		Element[] elements = doc.getRootElements();
-		for(int i = 0; i < elements.length; i++) {
+		for (int i = 0; i < elements.length; i++) {
 			indent = INDENT_STEP;
-			for(int j = 0; j < indent; j++) { 
-				log.debug(" "); 
+			for (int j = 0; j < indent; j++) {
+				log.debug(" ");
 			}
 			log.debug(elements[i].toString());
 			traverseElement(elements[i]);
@@ -2021,10 +2180,12 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 		}
 	}
 
-	/** 
-	 * This method is used to tokenize multi-value parameter fields given in the applet
-	 *
-	 * @param input The string to tokenize
+	/**
+	 * This method is used to tokenize multi-value parameter fields given in the
+	 * applet
+	 * 
+	 * @param input
+	 *            The string to tokenize
 	 * @return An array containing each token of the input string
 	 */
 	public static String[] tokenize(String input) {
@@ -2041,14 +2202,14 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 		return output;
 	}
 
-	/** 
+	/**
 	 * Traverses nodes for the describing method
 	 */
 	private void traverseElement(Element element) {
 		indent += INDENT_STEP;
-		for(int i = 0; i < element.getElementCount(); i++) {
-			for(int j = 0; j < indent; j++) { 
-				log.debug(" "); 
+		for (int i = 0; i < element.getElementCount(); i++) {
+			for (int j = 0; j < indent; j++) {
+				log.debug(" ");
 			}
 			log.debug(element.getElement(i).toString());
 			traverseElement(element.getElement(i));
@@ -2056,99 +2217,109 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 		indent -= INDENT_STEP;
 	}
 
-	/** 
+	/**
 	 * Method to locate a node element by name
 	 */
-	private Element locateElementInDocument(StyledDocument doc, String elementName) {
+	private Element locateElementInDocument(StyledDocument doc,
+			String elementName) {
 		Element[] elements = doc.getRootElements();
-		for(int i = 0; i < elements.length; i++) {
-			if(elements[i].getName().equalsIgnoreCase(elementName)) {
+		for (int i = 0; i < elements.length; i++) {
+			if (elements[i].getName().equalsIgnoreCase(elementName)) {
 				return elements[i];
 			} else {
-				Element rtnElement = locateChildElementInDocument(elements[i], elementName);
-				if(rtnElement != null) {
+				Element rtnElement = locateChildElementInDocument(elements[i],
+						elementName);
+				if (rtnElement != null) {
 					return rtnElement;
 				}
 			}
 		}
-		return (Element)null;
+		return (Element) null;
 	}
 
-	/** 
+	/**
 	 * Traverses nodes for the locating method
 	 */
-	private Element locateChildElementInDocument(Element element, String elementName) {
-		for(int i = 0; i < element.getElementCount(); i++) {
-			if(element.getElement(i).getName().equalsIgnoreCase(elementName)) {
+	private Element locateChildElementInDocument(Element element,
+			String elementName) {
+		for (int i = 0; i < element.getElementCount(); i++) {
+			if (element.getElement(i).getName().equalsIgnoreCase(elementName)) {
 				return element.getElement(i);
 			}
 		}
-		return (Element)null;
+		return (Element) null;
 	}
 
 	/**
 	 * Can be used for setting different preferred sizes
+	 * 
 	 * @see de.xeinfach.kafenio.interfaces.KafenioPanelInterface#getHTMLScrollPane()
 	 */
 	public JScrollPane getHTMLScrollPane() {
-	    return htmlScrollPane; 
+		return htmlScrollPane;
 	}
-	
+
 	/**
 	 * @see de.xeinfach.kafenio.interfaces.KafenioPanelInterface#getSrcScrollPane()
 	 */
 	public JScrollPane getSrcScrollPane() {
-	    return srcScrollPane; 
-	}   
+		return srcScrollPane;
+	}
 
-	/** 
+	/**
 	 * Convenience method for obtaining the WYSIWYG JTextPane
+	 * 
 	 * @return returns the editor's HTML-view JTextPane
 	 */
 	public JTextPane getTextPane() {
 		return htmlPane;
 	}
 
-	/** 
+	/**
 	 * Convenience method for obtaining the Source JTextPane
+	 * 
 	 * @return returns the editor's Source-view JTextPane
 	 */
 	public JTextPane getSourcePane() {
 		return srcPane;
 	}
 
-	/** 
+	/**
 	 * Convenience method for obtaining the application's Frame
+	 * 
 	 * @return returns the editor applications Frame
 	 */
 	public Frame getFrame() {
 		return frameHandler;
 	}
 
-	/** 
+	/**
 	 * Convenience method for obtaining the current file handle
+	 * 
 	 * @return returns the File Object for the currently edited file.
 	 */
 	public static File getCurrentFile() {
 		return currentFile;
 	}
 
-	/** 
+	/**
 	 * Convenience method for obtaining the application name
+	 * 
 	 * @return returns the application name as string.
 	 */
 	public String getAppName() {
 		return APP_NAME;
 	}
 
-	/** 
+	/**
 	 * Convenience method for obtaining the document text
+	 * 
 	 * @return returns the document text as string.
 	 */
 	public String getDocumentText() {
 		String docContent = null;
 		updateBeforeSave();
-		if (kafenioConfig.isUnicode()){
+		if (kafenioConfig.isUnicode()) {
 			docContent = HTMLTranslate.decode(srcPane.getText());
 		} else {
 			docContent = srcPane.getText();
@@ -2160,8 +2331,8 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 	}
 
 	/**
-	 * updates the sourcePane with the text from the 
-	 * htmlPane if the sourcePane is currently not showing on screen
+	 * updates the sourcePane with the text from the htmlPane if the sourcePane
+	 * is currently not showing on screen
 	 */
 	private void updateBeforeSave() {
 		if (!srcPane.isShowing()) {
@@ -2170,13 +2341,17 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 	}
 
 	/**
-	 * Method for extracting that part of the original text that is
-	 * between the defined html-tag.<BR>
-	 * <BR>i.e.: if containingTag is "body" and originalText is 
-	 * <code>&lt;body&gt;blafaseltralala&lt;/body&gt;</code> the returned
-	 * String is "blafaseltralala".
-	 * @param containingTag html-tag without brackets
-	 * @param originalText complete text to scan for containing tags
+	 * Method for extracting that part of the original text that is between the
+	 * defined html-tag.<BR>
+	 * <BR>
+	 * i.e.: if containingTag is "body" and originalText is
+	 * <code>&lt;body&gt;blafaseltralala&lt;/body&gt;</code> the returned String
+	 * is "blafaseltralala".
+	 * 
+	 * @param containingTag
+	 *            html-tag without brackets
+	 * @param originalText
+	 *            complete text to scan for containing tags
 	 * @return returns the text between the given html-tags.
 	 */
 	private String getSubText(String containingTag, String originalText) {
@@ -2185,17 +2360,23 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 				originalText = HTMLTranslate.decode(originalText);
 			}
 			String docTextCase = originalText.toLowerCase();
-			int tagStart       = docTextCase.indexOf("<" + containingTag.toLowerCase());
-			int tagStartClose  = docTextCase.indexOf(">", tagStart) + 1;
-			String closeTag    = "</" + containingTag.toLowerCase() + ">";
-			int tagEndOpen     = docTextCase.indexOf(closeTag);
-			if(tagStartClose < 0) { tagStartClose = 0; }
-			if(tagEndOpen < 0 || tagEndOpen > docTextCase.length()) { tagEndOpen = docTextCase.length(); }
+			int tagStart = docTextCase.indexOf("<"
+					+ containingTag.toLowerCase());
+			int tagStartClose = docTextCase.indexOf(">", tagStart) + 1;
+			String closeTag = "</" + containingTag.toLowerCase() + ">";
+			int tagEndOpen = docTextCase.indexOf(closeTag);
+			if (tagStartClose < 0) {
+				tagStartClose = 0;
+			}
+			if (tagEndOpen < 0 || tagEndOpen > docTextCase.length()) {
+				tagEndOpen = docTextCase.length();
+			}
 			return originalText.substring(tagStartClose, tagEndOpen);
 		} else {
 			return "";
 		}
 	}
+
 	/**
 	 * quits without saving.
 	 */
@@ -2205,8 +2386,9 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 	}
 
 	/**
-	 * posts the content body either as plain-urlencoded ascii text or base64 encoded to a
-	 * given server-URL
+	 * posts the content body either as plain-urlencoded ascii text or base64
+	 * encoded to a given server-URL
+	 * 
 	 * @return returns true if successful, false otherwise.
 	 */
 	public boolean postContentBody() {
@@ -2214,9 +2396,11 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 	}
 
 	/**
-	 * posts the content body either as plain-urlencoded ascii text or base64 encoded to a
-	 * given server-URL
-	 * @param contentToPost the content to post.
+	 * posts the content body either as plain-urlencoded ascii text or base64
+	 * encoded to a given server-URL
+	 * 
+	 * @param contentToPost
+	 *            the content to post.
 	 * @return returns true if successful, false otherwise.
 	 */
 	public boolean postContent(String contentToPost) {
@@ -2228,35 +2412,38 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 				try {
 					bodyContent = URLEncoder.encode(contentToPost, "UTF-8");
 				} catch (Throwable e) {
-					// if system property cannot be read, encode using old encode() method.
+					// if system property cannot be read, encode using old
+					// encode() method.
 					bodyContent = URLEncoder.encode(contentToPost);
 				}
 			}
-			urlFetcher.setPOSTData(getConfig().getContentParameter()+"="+bodyContent);
+			urlFetcher.setPOSTData(getConfig().getContentParameter() + "="
+					+ bodyContent);
 			urlFetcher.setURL(new URL(getConfig().getPostUrl()));
 			urlFetcher.fetch();
 			if (!(urlFetcher.getHTTPStatusCode() == 200)) {
-				log.warn("Posting content to " 
-									+ getConfig().getPostUrl() 
-									+ " failed. Server Status Code was: " 
-									+ urlFetcher.getResponseStatus());
+				log.warn("Posting content to " + getConfig().getPostUrl()
+						+ " failed. Server Status Code was: "
+						+ urlFetcher.getResponseStatus());
 				return false;
 			} else {
-				log.info(	"Content successfully posted to: "
-									+ getConfig().getPostUrl() 
-									+ ". Server Status Code was: " 
-									+ urlFetcher.getResponseStatus());
+				log.info("Content successfully posted to: "
+						+ getConfig().getPostUrl()
+						+ ". Server Status Code was: "
+						+ urlFetcher.getResponseStatus());
 				return true;
 			}
 		} catch (Exception e) {
-			log.error("an error occured while posting content to: " + getConfig().getPostUrl());
+			log.error("an error occured while posting content to: "
+					+ getConfig().getPostUrl());
 			return false;
-		} 
+		}
 	}
 
-	/** 
-	 * Convenience method for obtaining the document text
-	 * contained within the BODY tags (a common request)
+	/**
+	 * Convenience method for obtaining the document text contained within the
+	 * BODY tags (a common request)
+	 * 
 	 * @return the document's body as html-text
 	 */
 	public String getDocumentBody() {
@@ -2270,69 +2457,82 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 
 	/**
 	 * deletes all ocurrences of the codebase within html-tags.
-	 * @param string html-code
+	 * 
+	 * @param string
+	 *            html-code
 	 * @return returns the input string with relative urls.
 	 */
 	private String replaceAbsoluteUrls(String string) {
 		try {
 			if (codeBasePattern == null && getConfig().getCodeBase() != null) {
-				codeBasePattern = new gnu.regexp.RE("\"" + getConfig().getCodeBase());
+				codeBasePattern = new gnu.regexp.RE("\""
+						+ getConfig().getCodeBase());
 			}
 			log.debug("replacing codebase: \"" + getConfig().getCodeBase());
-			
+
 			return codeBasePattern.substituteAll(string, "\"");
 		} catch (Exception e) {
-			log.warn("An error ocurred while creating relative urls: " + e.fillInStackTrace());
+			log.warn("An error ocurred while creating relative urls: "
+					+ e.fillInStackTrace());
 			return string;
 		}
 	}
 
-	/** 
-	 * Convenience method for setting the document text
-	 * contains hack around JDK bug 4799813
-	 * see http://developer.java.sun.com/developer/bugParade/bugs/4799813.html
-	 * regression in 1.4.x, to be fixed in 1.5
-	 * When setting the text to be "&amp; footext", it becomes "&amp;footext" (space disappears)
-	 * same ocurrs for "&lt;/a&gt; &amp;amp;", it becomes "&lt;/a&gt;&amp;amp;" (space disappears)
-	 * with the hack it now does not occur anymore.
-	 * @param sText the html-text of the document
+	/**
+	 * Convenience method for setting the document text contains hack around JDK
+	 * bug 4799813 see
+	 * http://developer.java.sun.com/developer/bugParade/bugs/4799813.html
+	 * regression in 1.4.x, to be fixed in 1.5 When setting the text to be
+	 * "&amp; footext", it becomes "&amp;footext" (space disappears) same ocurrs
+	 * for "&lt;/a&gt; &amp;amp;", it becomes "&lt;/a&gt;&amp;amp;" (space
+	 * disappears) with the hack it now does not occur anymore.
+	 * 
+	 * @param sText
+	 *            the html-text of the document
 	 */
 	public void setDocumentText(String sText) {
 		try {
-			if( System.getProperty("java.version").substring(0,3).equals("1.4") ) {
-				if (pattern1 == null)
-					pattern1 = new gnu.regexp.RE("(&\\w+;|&#\\d+;)(\\s|&#160;|&nbsp;)(?=<|&\\w+;|&#\\d+;)");
-				sText=pattern1.substituteAll(sText,"$1&#160;$3");
-				if (pattern2 == null)
-					pattern2 = new gnu.regexp.RE("<(/[^>])>(\\s|&#160;|&nbsp;|\\n\\s+)(?!&#160;)(&\\w+;|&#\\d+;)");
-				sText=pattern2.substituteAll(sText,"<$1>&#160;$3$4");
+			if (System.getProperty("java.version").substring(0, 3)
+					.equals("1.4")) {
+				if (pattern1 == null) {
+					pattern1 = new gnu.regexp.RE(
+							"(&\\w+;|&#\\d+;)(\\s|&#160;|&nbsp;)(?=<|&\\w+;|&#\\d+;)");
+				}
+				sText = pattern1.substituteAll(sText, "$1&#160;$3");
+				if (pattern2 == null) {
+					pattern2 = new gnu.regexp.RE(
+							"<(/[^>])>(\\s|&#160;|&nbsp;|\\n\\s+)(?!&#160;)(&\\w+;|&#\\d+;)");
+				}
+				sText = pattern2.substituteAll(sText, "<$1>&#160;$3$4");
 			}
 		} catch (gnu.regexp.REException ree) {
-			log.error("gnu.regexp.REException in setDocumentText: " + ree.fillInStackTrace());
+			log.error("gnu.regexp.REException in setDocumentText: "
+					+ ree.fillInStackTrace());
 		}
 		htmlPane.setText(HTMLTranslate.decode(addURLPrefixToImagePath(sText)));
 		srcPane.setText(htmlPane.getText());
 	}
 
-	/** 
+	/**
 	 * Convenience method for obtaining the document title
 	 */
 	private void updateTitle() {
-		frameHandler.setTitle(APP_NAME + (currentFile == null ? "" : " - " + currentFile.getName()));
+		frameHandler.setTitle(APP_NAME
+				+ (currentFile == null ? "" : " - " + currentFile.getName()));
 	}
 
-	/** 
+	/**
 	 * Convenience method for clearing out the UndoManager
 	 */
 	public void purgeUndos() {
-		if(undoManager != null) {
+		if (undoManager != null) {
 			undoManager.discardAllEdits();
 			undoAction.updateUndoState();
 			redoAction.updateRedoState();
 		}
 	}
 
-	/** 
+	/**
 	 * Convenience method for refreshing and displaying changes
 	 */
 	public void refreshOnUpdate() {
@@ -2340,42 +2540,49 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 		validate();
 	}
 
-	/** 
+	/**
 	 * Convenience method for deallocating the app resources
 	 */
 	public void dispose() {
 		quitApp();
-//		frameHandler.dispose();
-//		System.exit(0);
+		// frameHandler.dispose();
+		// System.exit(0);
 	}
 
-	/** 
+	/**
 	 * Convenience method for fetching icon images from jar file
-	 * @param iconName name of the icon without "HK.gif" at the end
+	 * 
+	 * @param iconName
+	 *            name of the icon without "HK.gif" at the end
 	 * @return returns image as ImageIcon
 	 */
 	public ImageIcon getKafenioIcon(String iconName) {
 		log.debug("trying to fetch icon: " + iconName);
-		return new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getResource(	"/" 
-																							+ iconName 
-																							+ "HK.gif")));
+		return new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+				getClass().getResource("/" + iconName + "HK.gif")));
 	}
 
 	/**
-	 * returns an ImageIcon if isShowMenuIcons() returns true or null if false is returned.
-	 * @param iconName name of the icon without "HK.gif" at the end.
-	 * @return returns an ImageIcon if isShowMenuIcons() returns true or null if false is returned.
+	 * returns an ImageIcon if isShowMenuIcons() returns true or null if false
+	 * is returned.
+	 * 
+	 * @param iconName
+	 *            name of the icon without "HK.gif" at the end.
+	 * @return returns an ImageIcon if isShowMenuIcons() returns true or null if
+	 *         false is returned.
 	 */
 	public ImageIcon getMenuIcon(String iconName) {
-		if (kafenioConfig.isShowMenuIcons()) return getKafenioIcon(iconName);
+		if (kafenioConfig.isShowMenuIcons()) {
+			return getKafenioIcon(iconName);
+		}
 		return null;
 	}
 
-	/** 
+	/**
 	 * Convenience method for toggling source window visibility
 	 */
 	public void toggleSourceWindow() {
-		if(!srcScrollPane.isShowing()) {
+		if (!srcScrollPane.isShowing()) {
 			srcPane.setText(htmlPane.getText());
 			mainPane.removeAll();
 			mainPane.add(srcScrollPane, BorderLayout.CENTER);
@@ -2386,32 +2593,34 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 		}
 		repaint();
 		validate();
-		kafenioMenuBar.getViewSourceItem().setSelected(srcScrollPane.isShowing());
+		kafenioMenuBar.getViewSourceItem().setSelected(
+				srcScrollPane.isShowing());
 	}
 
 	/**
 	 * Searches the specified element for CLASS attribute setting
 	 * 
-	 * @param element element to find style for
+	 * @param element
+	 *            element to find style for
 	 * @return returns the corresponding style.
 	 */
 	private String findStyle(Element element) {
 		AttributeSet as = element.getAttributes();
-		if(as == null) {
+		if (as == null) {
 			return null;
 		}
 		Object val = as.getAttribute(HTML.Attribute.CLASS);
-		if(val != null && (val instanceof String)) {
-			return (String)val;
+		if (val != null && (val instanceof String)) {
+			return (String) val;
 		}
-		for(Enumeration e = as.getAttributeNames(); e.hasMoreElements();) {
+		for (Enumeration e = as.getAttributeNames(); e.hasMoreElements();) {
 			Object key = e.nextElement();
-			if(key instanceof HTML.Tag) {
-				AttributeSet eas = (AttributeSet)(as.getAttribute(key));
-				if(eas != null) {
+			if (key instanceof HTML.Tag) {
+				AttributeSet eas = (AttributeSet) (as.getAttribute(key));
+				if (eas != null) {
 					val = eas.getAttribute(HTML.Attribute.CLASS);
-					if(val != null) {
-						return (String)val;
+					if (val != null) {
+						return (String) val;
 					}
 				}
 			}
@@ -2420,46 +2629,50 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 		return null;
 	}
 
-	/** 
-	 * Handles caret tracking and related events, such as displaying the current style
-	 * of the text under the caret
-	 * @param ce the CaretEvent to handle
+	/**
+	 * Handles caret tracking and related events, such as displaying the current
+	 * style of the text under the caret
+	 * 
+	 * @param ce
+	 *            the CaretEvent to handle
 	 */
 	private void handleCaretPositionChange(CaretEvent ce) {
 		int caretPos = ce.getDot();
-		Element	element = htmlDoc.getCharacterElement(caretPos);
-		if(element == null) {
+		Element element = htmlDoc.getCharacterElement(caretPos);
+		if (element == null) {
 			return;
 		}
 		String style = null;
 		Vector vcStyles = new Vector();
-		while(element != null) {
-			if(style == null) {
+		while (element != null) {
+			if (style == null) {
 				style = findStyle(element);
 			}
 			vcStyles.add(element);
 			element = element.getParentElement();
 		}
 		int stylefound = -1;
-		if(style != null) {
-			for(int i = 0; i < kafenioToolBar1.getStyleSelector().getItemCount(); i++) {
-				String in = (String)(kafenioToolBar1.getStyleSelector().getItemAt(i));
-				if(in.equalsIgnoreCase(style)) {
+		if (style != null) {
+			for (int i = 0; i < kafenioToolBar1.getStyleSelector()
+					.getItemCount(); i++) {
+				String in = (String) (kafenioToolBar1.getStyleSelector()
+						.getItemAt(i));
+				if (in.equalsIgnoreCase(style)) {
 					stylefound = i;
 					break;
 				}
 			}
 		}
-		if(stylefound > -1) {
+		if (stylefound > -1) {
 			Action ac = kafenioToolBar1.getStyleSelector().getAction();
 			ac.setEnabled(false);
 			kafenioToolBar1.getStyleSelector().setSelectedIndex(stylefound);
 			ac.setEnabled(true);
 		} else {
-		    try {
-                kafenioToolBar1.getStyleSelector().setSelectedIndex(0);
-            } catch (Exception e) {
-            }
+			try {
+				kafenioToolBar1.getStyleSelector().setSelectedIndex(0);
+			} catch (Exception e) {
+			}
 		}
 	}
 
@@ -2467,9 +2680,9 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 	 * @return returns the currently used ExtendedHTMLDocument Object
 	 */
 	public ExtendedHTMLDocument getExtendedHtmlDoc() {
-		return (ExtendedHTMLDocument)htmlDoc;
+		return (ExtendedHTMLDocument) htmlDoc;
 	}
-	
+
 	/**
 	 * @return returns the currently used ExtendedHTMLEditorKit Object.
 	 */
@@ -2481,9 +2694,9 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 	 * @see de.xeinfach.kafenio.interfaces.KafenioPanelInterface#getHTMLEditorKit()
 	 */
 	public HTMLEditorKit getHTMLEditorKit() {
-	    return (HTMLEditorKit)htmlKit;
+		return (HTMLEditorKit) htmlKit;
 	}
-	
+
 	/**
 	 * @return returns the current caret position
 	 */
@@ -2493,7 +2706,9 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 
 	/**
 	 * sets the new caret position
-	 * @param newPositon new position of the caret.
+	 * 
+	 * @param newPositon
+	 *            new position of the caret.
 	 */
 	public void setCaretPosition(int newPositon) {
 		boolean end = true;
@@ -2505,31 +2720,32 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 				end = false;
 				newPositon--;
 			}
-		} while(!end && newPositon >= 0);
+		} while (!end && newPositon >= 0);
 	}
 
-/* accessor methods*/
+	/* accessor methods */
 	/**
 	 * @return returns the parent KafenioContainerInterface of this Class
 	 */
 	public Container getKafenioParent() {
 		return kafenioParent;
 	}
-	
+
 	/**
-	 * @param newApplet parent KafenioContainerInterface
+	 * @param newApplet
+	 *            parent KafenioContainerInterface
 	 */
 	public void setKafenioParent(Window newParent) {
 		kafenioParent = newParent;
 	}
-	
+
 	/**
 	 * @return returns redo action
 	 */
 	public RedoAction getRedoAction() {
 		return redoAction;
 	}
-	
+
 	/**
 	 * @return returns undo action
 	 */
@@ -2538,12 +2754,13 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 	}
 
 	/**
-	 * @return returns a java.awt.datatransfer.Clipboard object, null if clipboard is not available.
+	 * @return returns a java.awt.datatransfer.Clipboard object, null if
+	 *         clipboard is not available.
 	 */
 	public java.awt.datatransfer.Clipboard getSysClipboard() {
 		return sysClipboard;
 	}
-		
+
 	/**
 	 * @return returns the current configuration.
 	 */
@@ -2553,13 +2770,14 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 
 	/**
 	 * @return returns the translatrix-component for this editor component
-	 * @param stringToTranslate the string that is to be translated.
+	 * @param stringToTranslate
+	 *            the string that is to be translated.
 	 */
 	public String getTranslation(String stringToTranslate) {
 		try {
-		    return translatrix.getTranslationString(stringToTranslate); 
+			return translatrix.getTranslationString(stringToTranslate);
 		} catch (Exception ex) {
-		    return stringToTranslate; 
+			return stringToTranslate;
 		}
 	}
 
@@ -2569,13 +2787,13 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 	public KafenioPanelActions getKafenioActions() {
 		return kafenioActions;
 	}
-	
-/* Inner Classes --------------------------------------------- */
 
-	/** 
+	/* Inner Classes --------------------------------------------- */
+
+	/**
 	 * Class for implementing Undo as an autonomous action
 	 */
-	class UndoAction extends AbstractAction {		
+	class UndoAction extends AbstractAction {
 		/**
 		 * creates a new UndoAction Object.
 		 */
@@ -2590,8 +2808,9 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 		public void actionPerformed(ActionEvent e) {
 			try {
 				undoManager.undo();
-			} catch(CannotUndoException ex) {
-				log.warn("Exception while performing undo: " + ex.fillInStackTrace());
+			} catch (CannotUndoException ex) {
+				log.warn("Exception while performing undo: "
+						+ ex.fillInStackTrace());
 			}
 			updateUndoState();
 			redoAction.updateRedoState();
@@ -2601,20 +2820,22 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 		 * updates the undo state
 		 */
 		protected void updateUndoState() {
-			if(undoManager.canUndo()) {
+			if (undoManager.canUndo()) {
 				setEnabled(true);
-				putValue(Action.SHORT_DESCRIPTION, undoManager.getUndoPresentationName());
+				putValue(Action.SHORT_DESCRIPTION,
+						undoManager.getUndoPresentationName());
 			} else {
 				setEnabled(false);
-				putValue(Action.SHORT_DESCRIPTION, translatrix.getTranslationString("Undo"));
+				putValue(Action.SHORT_DESCRIPTION,
+						translatrix.getTranslationString("Undo"));
 			}
 		}
 	}
 
-	/** 
+	/**
 	 * Class for implementing Redo as an autonomous action
 	 */
-	class RedoAction extends AbstractAction {		
+	class RedoAction extends AbstractAction {
 		/**
 		 * creates a new RedoAction Object
 		 */
@@ -2629,8 +2850,9 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 		public void actionPerformed(ActionEvent e) {
 			try {
 				undoManager.redo();
-			} catch(CannotUndoException ex) {
-				log.warn("Exception while performing redo: " + ex.fillInStackTrace());
+			} catch (CannotUndoException ex) {
+				log.warn("Exception while performing redo: "
+						+ ex.fillInStackTrace());
 			}
 			updateRedoState();
 			undoAction.updateUndoState();
@@ -2640,18 +2862,21 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 		 * updates the redo state
 		 */
 		protected void updateRedoState() {
-			if(undoManager.canRedo()) {
+			if (undoManager.canRedo()) {
 				setEnabled(true);
-				putValue(Action.SHORT_DESCRIPTION, undoManager.getRedoPresentationName());
+				putValue(Action.SHORT_DESCRIPTION,
+						undoManager.getRedoPresentationName());
 			} else {
 				setEnabled(false);
-				putValue(Action.SHORT_DESCRIPTION, translatrix.getTranslationString("Redo"));
+				putValue(Action.SHORT_DESCRIPTION,
+						translatrix.getTranslationString("Redo"));
 			}
 		}
 	}
 
-	/** 
-	 * Class for implementing the Undo listener to handle the Undo and Redo tActions
+	/**
+	 * Class for implementing the Undo listener to handle the Undo and Redo
+	 * tActions
 	 */
 	class CustomUndoableEditListener implements UndoableEditListener {
 
@@ -2668,14 +2893,11 @@ public class KafenioPanel extends JPanel implements ActionListener, KeyListener,
 	/**
 	 * ask for confirmation if there are unsaved changes.
 	 */
-	public void quitApp(){
-		if(undoManager.canUndo()){
-			if (JOptionPane.showConfirmDialog(	getParent(), 
-												translatrix.getTranslationString("QuitWithoutSave"), 
-												"", 
-												JOptionPane.YES_NO_OPTION, 
-												JOptionPane.QUESTION_MESSAGE) == 0) 
-			{
+	public void quitApp() {
+		if (undoManager.canUndo()) {
+			if (JOptionPane.showConfirmDialog(getParent(),
+					translatrix.getTranslationString("QuitWithoutSave"), "",
+					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == 0) {
 				System.exit(0);
 			}
 		} else {
