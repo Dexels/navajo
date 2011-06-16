@@ -301,7 +301,8 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 		for (String currentPropertyPath : allLinks) {
 			Property p = n.getProperty(currentPropertyPath);
 			Set<PropertyLinkRequest> attributes = linkMap.get(currentPropertyPath);
-			PropertyHandler ph = new PropertyHandler(this,p,attributes);
+//			PropertyHandler ph = 
+			new PropertyHandler(this,p,attributes);
 		}
 	}
 	
@@ -309,7 +310,8 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 		for (String currentPropertyPath : allLinks) {
 			Property p = m.getProperty(currentPropertyPath);
 			Set<PropertyLinkRequest> attributes = linkMap.get(currentPropertyPath);
-			PropertyHandler ph = new PropertyHandler(this,p,attributes);
+//			PropertyHandler ph = 
+			new PropertyHandler(this,p,attributes);
 		}
 	}
 	
@@ -1542,7 +1544,7 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 		String adapterName = getExtension().toLowerCase()+"."+nameCap;
 
 		try {
-			Class c = Class.forName(adapterName);
+			Class<?> c = Class.forName(adapterName);
 			BaseAdapter b =  (BaseAdapter)c.newInstance();
 			b.setComponent(this);
 			b.setEvent(event);

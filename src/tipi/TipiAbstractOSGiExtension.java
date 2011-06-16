@@ -6,8 +6,6 @@ import org.osgi.framework.ServiceReference;
 
 import tipipackage.ITipiExtensionRegistry;
 
-import com.dexels.navajo.version.INavajoBundleManager;
-
 public abstract class TipiAbstractOSGiExtension implements TipiExtension,BundleActivator {
 
 	private BundleContext context = null;

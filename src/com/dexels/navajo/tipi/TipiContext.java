@@ -210,7 +210,7 @@ public abstract class TipiContext implements ITipiExtensionContainer {
 		Iterator<TipiExtension> iter = ServiceRegistry.lookupProviders(TipiExtension.class);
 		List<TipiExtension> extensionList = new LinkedList<TipiExtension>();
 		while (iter.hasNext()) {
-			TipiExtension tipiExtension = (TipiExtension) iter.next();
+			TipiExtension tipiExtension = iter.next();
 			extensionList.add(tipiExtension);
 		}
 		initializeContext(myApplication, extensionList, parent);

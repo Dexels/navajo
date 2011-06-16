@@ -14,12 +14,13 @@ public class FunctionTest {
 	}
 	
 
+	@SuppressWarnings("unchecked")
 	private FunctionInterface instantiateFunction(String name) throws TMLExpressionException {
-		Class cc;
+		Class<FunctionInterface> cc;
 		try {
-			cc = Class.forName(name);
+			cc = (Class<FunctionInterface>) Class.forName(name);
 
-			FunctionInterface fi = (FunctionInterface) cc.newInstance();
+			FunctionInterface fi = cc.newInstance();
 			fi.reset();
 			return fi;
 		} catch (Exception e) {

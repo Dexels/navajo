@@ -22,7 +22,7 @@ public class ScriptingTipi extends AbstractTipiTest {
 //		} catch (InterruptedException e) {
 //		}
 		getContext().shutdown();
-		String xx = getContext().getInfoBuffer();
+//		String xx = getContext().getInfoBuffer();
 //		assertEquals("event1\nevent2\n0.99\n",xx);
 
 	}

@@ -4,10 +4,9 @@
  */
 package com.dexels.navajo.functions;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.parser.*;
+import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.tipi.TipiContext;
-import com.dexels.navajo.tipi.internal.*;
 
 /**
  * @author frank

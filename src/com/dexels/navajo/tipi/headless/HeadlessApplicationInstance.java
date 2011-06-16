@@ -1,14 +1,19 @@
 package com.dexels.navajo.tipi.headless;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.StringTokenizer;
 
 import tipi.TipiCoreExtension;
 import tipi.TipiExtension;
 
-import navajo.ExtensionDefinition;
-
-import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.TipiScreen;
 import com.dexels.navajo.tipi.internal.FileResourceLoader;
 
 

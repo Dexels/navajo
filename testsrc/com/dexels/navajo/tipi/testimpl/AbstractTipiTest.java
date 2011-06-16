@@ -1,12 +1,12 @@
 package com.dexels.navajo.tipi.testimpl;
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.Map;
 
-import junit.framework.*;
+import junit.framework.TestCase;
 
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.headless.*;
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.headless.HeadlessApplicationInstance;
+import com.dexels.navajo.tipi.headless.HeadlessTipiContext;
 
 public class AbstractTipiTest extends TestCase {
 

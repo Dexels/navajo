@@ -1,6 +1,5 @@
 package com.dexels.navajo.tipi.internal;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
