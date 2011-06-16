@@ -3,11 +3,12 @@ Bundle-SymbolicName: com.dexels.navajo.tipi.swing
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.43.qualifier
-Bundle-Activator: navajoswingtipi.Version
+Bundle-Activator: tipi.TipiSwingExtension
 Export-Package: com.dexels.navajo.dnd,
  com.dexels.navajo.swingclient.ui,
  com.dexels.navajo.tipi.components.swingimpl,
  com.dexels.navajo.tipi.components.swingimpl.parsers,
+ com.dexels.navajo.tipi.components.swingimpl.swing,
  com.dexels.navajo.tipi.swingclient,
  com.dexels.navajo.tipi.swingclient.components,
  com.dexels.navajo.tipi.swingclient.components.calendar,
@@ -16,6 +17,7 @@ Export-Package: com.dexels.navajo.dnd,
  org.jdesktop.animation.timing,
  org.jdesktop.animation.timing.interpolation,
  org.jdesktop.animation.transitions,
+ tipi,
  tipiswingclient
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.document,
@@ -24,10 +26,12 @@ Require-Bundle: com.dexels.navajo.document,
  com.dexels.navajo.core,
  com.dexels.navajo.tipi.swingclient,
  com.dexels.navajo.tipi.swing.deps,
- com.dexels.navajo.version
+ com.dexels.navajo.version,
+ org.slf4j.api;bundle-version="1.6.1"
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: classes/,
  lib/AnimatedTransitions.jar,
  lib/TimingFramework.jar,
  .
 Import-Package: org.osgi.framework;version="1.5.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
