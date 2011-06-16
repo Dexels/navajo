@@ -358,7 +358,7 @@ public class CustomDataSetWizardPage extends DataSetWizardPage
         if( paramDesign.getParameterDefinitions().size() > 0 )
         {
             ParameterDefinition paramDef = 
-                (ParameterDefinition) paramDesign.getParameterDefinitions().get( 0 );
+                paramDesign.getParameterDefinitions().get( 0 );
             if( paramDef != null )
                 paramDef.setDefaultScalarValue( "dummy default value" );
         }
