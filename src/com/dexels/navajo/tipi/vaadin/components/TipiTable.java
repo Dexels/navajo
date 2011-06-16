@@ -73,37 +73,7 @@ public class TipiTable extends TipiVaadinComponentImpl {
 		 table.setVisibleColumns(visibleColumns.toArray());
 	}
 
-	private Object[] createRow(Message message) {
-		List result = new ArrayList();
-		List<Property> allProps = message.getAllProperties();
-		for (Property property : allProps) {
-			result.add(property.getTypedValue());
-		}
-		return result.toArray();
-	}
-
-	private void setupHeaders(Message m) {
-		Message def = getModelMessage(m);
-		System.err.println("Setup header");
-		try {
-			def.write(System.err);
-		} catch (NavajoException e) {
-			e.printStackTrace();
-		}
-
-		List<Property> allProps = def.getAllProperties();
-		for (Property property : allProps) {
-			String label = property.getDescription();
-			if(label==null || "".equals(label)) {
-				label = property.getName();
-			}
-			Class<?> cls = NavajoFactory.getInstance().getJavaType(property.getType());
-			if(cls==null) {
-				cls = String.class;
-			}
-			table.addContainerProperty(label, cls, null);
-		}
-	}
+	
 
 	private Message getModelMessage(Message m) {
 		Message def = m.getDefinitionMessage();
@@ -119,7 +89,6 @@ public class TipiTable extends TipiVaadinComponentImpl {
 
 	public void setComponentValue(final String name, final Object object) {
 		    super.setComponentValue(name, object);
-			Component v = getVaadinContainer();
 		        if (name.equals("messagepath")) {
 		        	this.messagepath = (String)object;
 		        }
@@ -138,12 +107,12 @@ public class TipiTable extends TipiVaadinComponentImpl {
 
 	private IndexedContainer createMessageContainer(Message m) {
 		IndexedContainer icc = new IndexedContainer();
+		visibleColumns = new ArrayList<String>();
 		Message model = getModelMessage(m);
 		if(model==null) {
 			return null;
 		}
 		List<Property> allProps = model.getAllProperties();
-		visibleColumns = new ArrayList<String>();
 		for (Property property : allProps) {
 //			String label = property.getDescription();
 //			if(label==null || "".equals(label)) {
