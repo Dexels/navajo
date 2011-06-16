@@ -15,6 +15,19 @@
 
 	</tipiclass>
 
+    <tipiclass class="TipiBrowser" name="browser" package="com.dexels.navajo.tipi.vaadin.components" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad"/>
+            <event name="onGeneratedErrors"/>
+        </events>
+        <values>
+            <value direction="in" name="visible" type="boolean"/>
+            <value direction="inout" name="url" type="string"/>
+        </values>
+        <methods/>
+    </tipiclass>
+
 	<tipiclass addtocontainer="true" implements="basecomponent,datacomponent" class="TipiLabel" module="component"
 		name="label" childcount="0" package="com.dexels.navajo.tipi.vaadin.components" propertycomponent="false" studio-icon="button.gif"
 		type="component">

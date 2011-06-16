@@ -63,7 +63,12 @@ public class TipiOpenBrowser extends TipiVaadinActionImpl {
 //				        }
 //				   };
 				getVaadinApplication().getMainWindow().open(fr,"_blank");
-				    
+
+//				URL url = new URL("http://dev.vaadin.com/");
+//				Embedded browser = new Embedded("", new ExternalResource(url));
+//				browser.setType(Embedded.TYPE_BROWSER);
+//				main.addComponent(browser);				
+				
 			}
 		}
     }
