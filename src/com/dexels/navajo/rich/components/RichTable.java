@@ -13,6 +13,7 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.swingclient.components.*;
 
 public class RichTable extends JTable {
+	private static final long serialVersionUID = 8410643859568166908L;
 	private MessageTableModel myModel = new MessageTableModel();
 	Animator anim;
 

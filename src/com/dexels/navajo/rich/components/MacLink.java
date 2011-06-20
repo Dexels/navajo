@@ -11,6 +11,7 @@ import org.jdesktop.animation.timing.*;
 import org.jdesktop.animation.timing.interpolation.*;
 
 public class MacLink extends JButton {
+	private static final long serialVersionUID = 1255500418653413653L;
 	private float min_scale = 0.5f;
 	private float scale = 0.5f;
 	private float max_scale = 1.0f;

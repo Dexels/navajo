@@ -1,19 +1,23 @@
 package com.dexels.navajo.rich.components;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.LinearGradientPaint;
+import java.awt.Point;
+import java.awt.Polygon;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.Shape;
+import java.awt.Transparency;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
-import java.awt.image.Raster;
-import java.io.File;
 import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
@@ -21,18 +25,18 @@ import org.jdesktop.animation.timing.interpolation.PropertySetter;
 
 public class PeelImagePanel extends JPanel {
 
+	private static final long serialVersionUID = -3731847583252859896L;
 	private Point peelLoc = new Point(1, 1);
 	private Point animationOrigin;
 	private Point flipOverTarget;
 	private Point animTarget;
-	private BufferedImage foregroundImage, backgroundImage, back, currentFront, currentBack;
+	private BufferedImage back, currentFront, currentBack;
 	private Color backSideColor = null;
 	BufferedImage backSideImage = null;
 	private Rectangle prevBounds;
 	private boolean isDragging = false;
 	public boolean isAnimating = false;
 	private boolean flipOver = false;
-	private boolean flipNow = false;
 	private boolean isPeeling = false;
 	private double mouseDistance = 0.0;
 	private double max_mouseDistance = 100.0;
@@ -94,10 +98,9 @@ public class PeelImagePanel extends JPanel {
 					animateBack();
 				}
 			}
-		});
 
-		addMouseMotionListener(new MouseMotionAdapter() {
-			public void mouseExited(MouseEvent e) {
+			@Override
+			public void mouseExited(MouseEvent arg0) {
 				if (isDragging) {
 					isDragging = false;
 					peelLoc.x = 1;
@@ -105,7 +108,10 @@ public class PeelImagePanel extends JPanel {
 					// repaint();
 				}
 			}
+			
 		});
+
+	
 
 		setBackground(Color.white);
 	}
@@ -161,14 +167,12 @@ public class PeelImagePanel extends JPanel {
 		c1.print(b1g);
 		b1g.dispose();
 		currentFront = b1;
-		foregroundImage = currentFront;
 
 		c1.setVisible(false);
 		c2.setVisible(true);
 		c2.print(b2g);
 		b2g.dispose();
 		currentBack = b2;
-		backgroundImage = currentBack;
 
 		c1.setVisible(true);
 		c2.setVisible(false);
@@ -232,7 +236,7 @@ public class PeelImagePanel extends JPanel {
 			double dy = locFrom.y - peelLoc.y;
 			double rc = dy / dx;
 			// Find B
-			double b = -rc * peelLoc.x + peelLoc.y;
+//			double b = -rc * peelLoc.x + peelLoc.y;
 			// y = rc*x + b
 
 			double dpx = peelLoc.x + (locFrom.x - peelLoc.x) / 2.0;
@@ -256,7 +260,7 @@ public class PeelImagePanel extends JPanel {
 			g2.drawImage(clippedImage, 0, 0, bnds.width, bnds.height, null);
 
 			if (((int) dpx != peelLoc.x) && ((int) dpy != peelLoc.y)) {
-				LinearGradientPaint gpBounds = new LinearGradientPaint((float) peelLoc.x, (float) peelLoc.y, (float) dpx, (float) dpy, new float[] { 0.0f, 1.0f }, new Color[] { new Color(1.0f, 1.0f, 1.0f, 0.0f), new Color(0.0f, 0.0f, 0.0f, 0.5f) });
+				LinearGradientPaint gpBounds = new LinearGradientPaint(peelLoc.x, peelLoc.y, (float) dpx, (float) dpy, new float[] { 0.0f, 1.0f }, new Color[] { new Color(1.0f, 1.0f, 1.0f, 0.0f), new Color(0.0f, 0.0f, 0.0f, 0.5f) });
 				g2.setPaint(gpBounds);
 				g2.fill(bnds);
 			}
@@ -310,7 +314,7 @@ public class PeelImagePanel extends JPanel {
 				g2.setClip(clip);
 
 				if (((int) dpx != peelLoc.x) && ((int) dpy != peelLoc.y)) {
-					LinearGradientPaint gpPeel = new LinearGradientPaint((float) peelLoc.x, (float) peelLoc.y, (float) dpx, (float) dpy, new float[] { 0.0f, 0.7f, 0.9f, 1.0f }, new Color[] { new Color(0.0f, 0.0f, 0.0f, 0.1f), new Color(0.0f, 0.0f, 0.0f, 0.1f), new Color(0.0f, 0.0f, 0.0f, 0.2f),
+					LinearGradientPaint gpPeel = new LinearGradientPaint(peelLoc.x, peelLoc.y, (float) dpx, (float) dpy, new float[] { 0.0f, 0.7f, 0.9f, 1.0f }, new Color[] { new Color(0.0f, 0.0f, 0.0f, 0.1f), new Color(0.0f, 0.0f, 0.0f, 0.1f), new Color(0.0f, 0.0f, 0.0f, 0.2f),
 							new Color(1.0f, 1.0f, 1.0f, 0.5f) });
 					g2.setPaint(gpPeel);
 					g2.fill(p);
@@ -345,7 +349,6 @@ public class PeelImagePanel extends JPanel {
 				isPeeling = false;
 				if (flipOver) {
 					try {
-						flipNow = true;
 						repaint();
 						firePeelComplete(true);
 					} catch (Exception e) {

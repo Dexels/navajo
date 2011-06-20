@@ -12,6 +12,7 @@ import org.jdesktop.animation.timing.*;
 import org.jdesktop.animation.timing.interpolation.*;
 
 public class PerspectiveImagePanel extends JPanel {
+	private static final long serialVersionUID = -7178013826296851126L;
 	BufferedImage img, img1, img2;
 	public int angle = 0;
 	private int previousAngle;

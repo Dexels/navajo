@@ -12,6 +12,8 @@ import org.jdesktop.animation.timing.interpolation.*;
  * @author Frank
  */
 public class SpringGlassPane extends JComponent {
+	private static final long serialVersionUID = -8074977656836966730L;
+
 	private static final float MAGNIFY_FACTOR = 2.5f;
 
 	private Rectangle bounds;

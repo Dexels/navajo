@@ -7,6 +7,7 @@ import javax.swing.*;
 import org.jdesktop.animation.transitions.*;
 
 public class DoubleSidedFrame extends JComponent {
+	private static final long serialVersionUID = 4291340054525975327L;
 	JComponent frontSide, backSide;
 	ScreenTransition flipFront, flipBack;
 

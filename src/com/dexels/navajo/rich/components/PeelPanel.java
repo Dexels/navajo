@@ -1,18 +1,27 @@
 package com.dexels.navajo.rich.components;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 public class PeelPanel extends JPanel implements PeelListener{
 	
+	private static final long serialVersionUID = -6727304647628662379L;
 	private int direction = 1;
 	private PeelImagePanel animationPanel = new PeelImagePanel();
 	private ArrayList<JComponent> components = new ArrayList<JComponent>();

@@ -11,6 +11,7 @@ import org.jdesktop.animation.timing.*;
 import org.jdesktop.animation.timing.interpolation.*;
 
 public class DesktopButton extends JButton {
+	private static final long serialVersionUID = 2510421764465922070L;
 	private ImageIcon myIcon;
 	private int reflectionSize = 12;
 	private boolean mouseover = false;

@@ -6,6 +6,7 @@ import java.awt.image.*;
 import javax.swing.*;
 
 public class MacBar extends JPanel {
+	private static final long serialVersionUID = 7984666863325213478L;
 	public final static String BAR_TOP = "top";
 	public final static String BAR_BOTTOM = "bottom";
 	public final static String BAR_LEFT = "left";

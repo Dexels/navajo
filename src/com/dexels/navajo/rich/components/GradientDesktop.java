@@ -8,6 +8,7 @@ import javax.imageio.*;
 import javax.swing.*;
 
 public class GradientDesktop extends JDesktopPane {
+	private static final long serialVersionUID = -5417581376879157911L;
 	BufferedImage gradientImage = null;
 	TipiGradientPaint myPaint = new TipiGradientPaint("north", new Color(120, 160, 205), Color.black);
 

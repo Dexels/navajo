@@ -11,6 +11,7 @@ import org.jdesktop.animation.timing.*;
 import org.jdesktop.animation.timing.interpolation.*;
 
 public class GreyFadeButton extends JButton {
+	private static final long serialVersionUID = -1398402298055285867L;
 	private float start_factor = 1.0f;
 	private float factor = 1.0f;
 	private ImageIcon myIcon;

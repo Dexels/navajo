@@ -6,6 +6,7 @@ import java.util.*;
 import javax.swing.*;
 
 public class FlipPanel extends JPanel {
+	private static final long serialVersionUID = -9109133023641397033L;
 	private int direction = PerspectiveTransform.FLIP_LEFT;
 	private PerspectiveImagePanel animationPanel = new PerspectiveImagePanel();
 	private ArrayList<JComponent> components = new ArrayList<JComponent>();

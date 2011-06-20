@@ -7,6 +7,7 @@ import java.awt.image.*;
 import javax.swing.*;
 
 public class LushContainer extends JPanel {
+	private static final long serialVersionUID = 8026805875859172469L;
 	private float opacity = 0.5f;
 	private int arc = 20;
 	private Color borderColor = Color.white;
