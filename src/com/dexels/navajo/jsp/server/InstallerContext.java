@@ -9,10 +9,6 @@ import javax.servlet.jsp.PageContext;
 import com.dexels.navajo.server.listener.NavajoContextListener;
 public class InstallerContext {
 	private PageContext pageContext;
-//	private Map<String,String> systemContexts = new HashMap<String, String>();
-//	private String currentContext;
-	
-	private NavajoContextListener contextStarter = new NavajoContextListener();
 	
 	/**
 	 * Returns if the location dictated by this context is plausible
@@ -46,7 +42,7 @@ public class InstallerContext {
 	 * Call this after a fresh install (because in that case the context initialization has been skipped)
 	 */
 	public void initialize() {
-		contextStarter.initializeContext(getPageContext().getServletContext(),null);
+		NavajoContextListener.initializeContext(getPageContext().getServletContext(),null);
 	}
 	
 	public String getContextPath() {

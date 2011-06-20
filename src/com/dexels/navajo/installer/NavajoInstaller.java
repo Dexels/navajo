@@ -12,8 +12,6 @@ import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 
-import com.dexels.navajo.installer.helper.ProjectHelper2;
-
 public class NavajoInstaller {
 	public static String callAnt(File buildFile, File baseDir, Map<String,String> userProperties) throws IOException {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
