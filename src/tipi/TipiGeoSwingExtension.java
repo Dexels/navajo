@@ -5,7 +5,7 @@ import com.dexels.navajo.tipi.TipiContext;
 	public class TipiGeoSwingExtension extends TipiAbstractXMLExtension  {
 
 		public TipiGeoSwingExtension() {
-			loadXML();
+			loadDescriptor();
 		}
 
 		public void initialize(TipiContext tc) {

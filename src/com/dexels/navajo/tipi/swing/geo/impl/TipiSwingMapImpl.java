@@ -9,6 +9,7 @@ import com.dexels.navajo.tipi.swing.geo.impl.tilefactory.*;
 
 public class TipiSwingMapImpl extends JXMapKit {
 	
+	private static final long serialVersionUID = 3381042625940446945L;
 	protected GeoPosition myCenter = null;
 	protected int myZoom = 0;
 	// need this ugly construction to prevent the change in factory to reset the location + zoomlevel.
