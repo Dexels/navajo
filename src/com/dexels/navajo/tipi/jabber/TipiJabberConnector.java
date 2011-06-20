@@ -1,23 +1,44 @@
 package com.dexels.navajo.tipi.jabber;
 
-import java.io.*;
-import java.security.AccessControlException;
-import java.util.*;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
 
-import org.jivesoftware.smack.*;
-import org.jivesoftware.smack.filter.*;
-import org.jivesoftware.smack.packet.*;
+import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.PacketListener;
+import org.jivesoftware.smack.Roster;
+import org.jivesoftware.smack.RosterEntry;
+import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
-import org.jivesoftware.smack.packet.Message.*;
-import org.jivesoftware.smackx.muc.*;
+import org.jivesoftware.smack.packet.Message.Type;
+import org.jivesoftware.smack.packet.Packet;
+import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smackx.muc.HostedRoom;
+import org.jivesoftware.smackx.muc.MultiUserChat;
+import org.jivesoftware.smackx.muc.Occupant;
+import org.jivesoftware.smackx.muc.RoomInfo;
 
-import com.dexels.navajo.client.*;
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.client.NavajoClientFactory;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.jabber.JabberUtils;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.core.*;
-import com.dexels.navajo.tipi.connectors.*;
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiComponentMethod;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.components.core.ShutdownListener;
+import com.dexels.navajo.tipi.connectors.TipiBaseConnector;
+import com.dexels.navajo.tipi.connectors.TipiConnector;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 
 public class TipiJabberConnector extends TipiBaseConnector implements TipiConnector {
 
@@ -184,7 +205,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 				// System.err.println("Adding: " + occ
 				// +" in TipiJabberConnector");
 				Occupant oc = myMultiUserChat.getOccupant(occ);
-				Presence pres = myMultiUserChat.getOccupantPresence(occ);
+//				Presence pres = myMultiUserChat.getOccupantPresence(occ);
 				com.dexels.navajo.document.Message user = NavajoFactory.getInstance().createMessage(n, "User", com.dexels.navajo.document.Message.MSG_TYPE_ARRAY_ELEMENT);
 				Property userName = NavajoFactory.getInstance().createProperty(n, "Name", "string", oc.getNick(), 128, "Naam", Property.DIR_OUT);
 				Property userJid = NavajoFactory.getInstance().createProperty(n, "Jid", "string", oc.getJid(), 128, "Jid", Property.DIR_OUT);
@@ -252,7 +273,6 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 		try {
 			Thread.sleep(20000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
