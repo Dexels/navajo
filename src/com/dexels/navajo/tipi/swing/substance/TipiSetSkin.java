@@ -1,17 +1,17 @@
 package com.dexels.navajo.tipi.swing.substance;
 
-import java.awt.*;
-import java.util.*;
+import java.awt.Frame;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
 
-import org.jvnet.substance.*;
-import org.jvnet.substance.skin.*;
+import org.jvnet.substance.SubstanceLookAndFeel;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.swingimpl.*;
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.components.swingimpl.SwingTipiContext;
+import com.dexels.navajo.tipi.internal.TipiAction;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 
 public class TipiSetSkin extends TipiAction {
 
@@ -40,32 +40,16 @@ public class TipiSetSkin extends TipiAction {
 		try {
 			SubstanceLookAndFeel.setSkin("org.jvnet.substance.skin.BusinessSkin");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	private void setSubstanceSkin(String value) {
-//		Map<String,SkinInfo> ss =  SubstanceLookAndFeel.getAllSkins();
 	
 		SubstanceLookAndFeel.setSkin(value);
 
 		Frame[] f = Frame.getFrames();
-//		try {
-//			UIManager.setLookAndFeel(value);
-//		} catch (UnsupportedLookAndFeelException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (ClassNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (InstantiationException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IllegalAccessException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+
 		if (((SwingTipiContext) myContext).getAppletRoot() != null) {
 		} else {
 			for (int i = 0; i < f.length; i++) {

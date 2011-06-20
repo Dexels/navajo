@@ -1,17 +1,20 @@
 package com.dexels.navajo.tipi.swing.substance;
 
-import java.awt.*;
-import java.util.*;
+import java.util.Map;
 
-import javax.swing.*;
+import org.jvnet.substance.SubstanceLookAndFeel;
+import org.jvnet.substance.skin.SkinInfo;
 
-import org.jvnet.substance.*;
-import org.jvnet.substance.skin.*;
-
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.swingimpl.*;
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.internal.TipiAction;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 
 public class LoadSkins extends TipiAction {
 
@@ -25,40 +28,6 @@ public class LoadSkins extends TipiAction {
 			throw new TipiException("Error loading substance skins!",e);
 		}
 		
-	}
-
-	private void setDefaultSkin() {
-		try {
-			SubstanceLookAndFeel.setSkin("org.jvnet.substance.skin.BusinessSkin");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	private void setSubstanceSkin(String value) {
-		Map<String,SkinInfo> ss =  SubstanceLookAndFeel.getAllSkins();
-		for (String name : ss.keySet()) {
-			System.err.println("Name: "+name);
-		}
-		
-		
-		SubstanceLookAndFeel.setSkin(value);
-
-		Frame[] f = Frame.getFrames();
-		try {
-			UIManager.setLookAndFeel(new SubstanceBusinessLookAndFeel());
-		} catch (UnsupportedLookAndFeelException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		if (((SwingTipiContext) myContext).getAppletRoot() != null) {
-		} else {
-			for (int i = 0; i < f.length; i++) {
-				SwingUtilities.updateComponentTreeUI(f[i]);
-			}
-		}
-
 	}
 
 	private Property createSkinProperty(Navajo rootDoc) throws NavajoException {
@@ -81,11 +50,7 @@ public class LoadSkins extends TipiAction {
 		return n;
 	}
 	
-	private void injectSkinNavajo() throws NavajoException {
-		Navajo n = createSkinNavajo();
-		myContext.injectNavajo("Skins", n);
-	}
-	
+
 	public static 			void main(String[] args) throws NavajoException {
 		
 		Navajo n = new LoadSkins().createSkinNavajo();

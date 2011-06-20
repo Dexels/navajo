@@ -1,15 +1,17 @@
 package tipi;
 
-import java.util.*;
-
-import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.TipiContext;
 
 public class TipiSubstanceExtension extends TipiAbstractXMLExtension implements TipiExtension {
 
-//	public void initialize(TipiContext tc) {
-//		// Do nothing
-// 
-//	}
+	public TipiSubstanceExtension() {
+		loadDescriptor();
+	}
+	
+	public void initialize(TipiContext tc) {
+		// Do nothing
+ 
+	}
 
 
 //
