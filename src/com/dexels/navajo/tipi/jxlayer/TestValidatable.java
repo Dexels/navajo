@@ -1,11 +1,19 @@
 package com.dexels.navajo.tipi.jxlayer;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Graphics2D;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
-import org.jdesktop.jxlayer.*;
-import org.jdesktop.jxlayer.plaf.*;
+import org.jdesktop.jxlayer.JXLayer;
+import org.jdesktop.jxlayer.plaf.AbstractLayerUI;
 
 public class TestValidatable {
 

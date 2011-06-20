@@ -31,18 +31,49 @@
 
 package com.dexels.navajo.tipi.jxlayer.impl;
 
-import com.jhlabs.image.BlurFilter;
-import com.jhlabs.image.EmbossFilter;
+import java.awt.BorderLayout;
+import java.awt.Cursor;
+import java.awt.FlowLayout;
+import java.awt.Graphics2D;
+import java.awt.GridBagLayout;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
+import java.awt.geom.Ellipse2D;
+
+import javax.swing.AbstractAction;
+import javax.swing.AbstractButton;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
+
 import org.jdesktop.jxlayer.JXLayer;
 import org.jdesktop.jxlayer.plaf.effect.BufferedImageOpEffect;
 import org.jdesktop.jxlayer.plaf.effect.LayerEffect;
 import org.jdesktop.jxlayer.plaf.ext.LockableUI;
 import org.jdesktop.swingx.painter.BusyPainter;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.geom.Ellipse2D;
+import com.jhlabs.image.BlurFilter;
+import com.jhlabs.image.EmbossFilter;
 
 /**
  * A demo to show the abilities of the {@link LockableUI}.
@@ -50,7 +81,8 @@ import java.awt.geom.Ellipse2D;
  * @see BusyPainterUI  
  */
 public class LockableDemo extends JFrame {
-    private JXLayer<JComponent> layer;
+	private static final long serialVersionUID = -5387265566029372599L;
+	private JXLayer<JComponent> layer;
     private LockableUI blurUI = 
             new LockableUI(new BufferedImageOpEffect(new BlurFilter()));
     private EnhancedLockableUI embossUI = 
@@ -60,7 +92,10 @@ public class LockableDemo extends JFrame {
     private JCheckBoxMenuItem disablingItem =
             new JCheckBoxMenuItem(new AbstractAction("Lock the layer") {
 
-                public void actionPerformed(ActionEvent e) {
+				private static final long serialVersionUID = -7386927058339554254L;
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
                     blurItem.setEnabled(!disablingItem.isSelected());
                     embossItem.setEnabled(!disablingItem.isSelected());
                     busyPainterItem.setEnabled(!disablingItem.isSelected());
@@ -91,7 +126,8 @@ public class LockableDemo extends JFrame {
 
     public static void main(String[] args) throws Exception {
         SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 new LockableDemo().setVisible(true);
             }
         });
@@ -121,7 +157,8 @@ public class LockableDemo extends JFrame {
         group.add(busyPainterItem);
 
         ItemListener menuListener = new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
+            @Override
+			public void itemStateChanged(ItemEvent e) {
                 if (blurItem.isSelected()) {
                     layer.setUI(blurUI);
                 } else if (embossItem.isSelected()) {
@@ -137,7 +174,8 @@ public class LockableDemo extends JFrame {
         busyPainterItem.addItemListener(menuListener);
         
         embossUI.getUnlockButton().addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 disablingItem.doClick();
             }
         });
@@ -156,7 +194,8 @@ public class LockableDemo extends JFrame {
         JButton button = new JButton("Have a nice day");
         button.setMnemonic('H');
         button.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(LockableDemo.this,
                         "actionPerformed");
             }
@@ -203,7 +242,8 @@ public class LockableDemo extends JFrame {
         public EnhancedLockableUI(LayerEffect... lockedEffects) {
             super(lockedEffects);
             unlockButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
+                @Override
+				public void actionPerformed(ActionEvent e) {
                     setLocked(false);
                 }
             });
@@ -233,7 +273,8 @@ public class LockableDemo extends JFrame {
             l.getGlassPane().remove(unlockButton);
         }
 
-        public void setLocked(boolean isLocked) {
+        @Override
+		public void setLocked(boolean isLocked) {
             super.setLocked(isLocked);
             unlockButton.setVisible(isLocked);
         }
@@ -252,7 +293,8 @@ public class LockableDemo extends JFrame {
 
         public BusyPainterUI() {
             busyPainter = new BusyPainter<JComponent>() {
-                protected void doPaint(Graphics2D g, JComponent object,
+                @Override
+				protected void doPaint(Graphics2D g, JComponent object,
                                        int width, int height) {
                     // centralize the effect
                     Rectangle r = getTrajectory().getBounds();
@@ -287,7 +329,8 @@ public class LockableDemo extends JFrame {
 
         // Change the frame for the busyPainter
         // and mark BusyPainterUI as dirty 
-        public void actionPerformed(ActionEvent e) {
+        @Override
+		public void actionPerformed(ActionEvent e) {
             frameNumber = (frameNumber + 1) % 8;
             busyPainter.setFrame(frameNumber);
             // this will repaint the layer

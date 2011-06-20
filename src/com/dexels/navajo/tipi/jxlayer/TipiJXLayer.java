@@ -1,19 +1,25 @@
 package com.dexels.navajo.tipi.jxlayer;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
-import org.jdesktop.jxlayer.*;
-import org.jdesktop.jxlayer.plaf.*;
-import org.jdesktop.jxlayer.plaf.effect.*;
-import org.jdesktop.jxlayer.plaf.ext.*;
+import org.jdesktop.jxlayer.JXLayer;
+import org.jdesktop.jxlayer.plaf.AbstractLayerUI;
+import org.jdesktop.jxlayer.plaf.effect.BufferedImageOpEffect;
+import org.jdesktop.jxlayer.plaf.ext.LockableUI;
 
-import com.dexels.navajo.tipi.components.swingimpl.*;
-import com.jhlabs.image.*;
+import com.dexels.navajo.tipi.components.swingimpl.TipiSwingDataComponentImpl;
+import com.jhlabs.image.BlurFilter;
 
 public class TipiJXLayer extends TipiSwingDataComponentImpl {
 
+	@Override
 	public Object createContainer() {
 		JPanel p = new JPanel();
 
@@ -65,6 +71,7 @@ public class TipiJXLayer extends TipiSwingDataComponentImpl {
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 
+			@Override
 			public void run() {
 				JButton aaaaap = new JButton("MONEKEY");
 //				JPanel gorrila = new JPanel();

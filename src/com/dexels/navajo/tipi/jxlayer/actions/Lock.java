@@ -1,19 +1,22 @@
 package com.dexels.navajo.tipi.jxlayer.actions;
 
-import java.awt.*;
+import java.awt.Container;
 
-import javax.swing.*;
+import javax.swing.JComponent;
 
-import org.jdesktop.jxlayer.*;
-import org.jdesktop.jxlayer.plaf.*;
-import org.jdesktop.jxlayer.plaf.effect.*;
-import org.jdesktop.jxlayer.plaf.ext.*;
+import org.jdesktop.jxlayer.JXLayer;
+import org.jdesktop.jxlayer.plaf.LayerUI;
+import org.jdesktop.jxlayer.plaf.effect.BufferedImageOpEffect;
+import org.jdesktop.jxlayer.plaf.ext.LockableUI;
 
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.swingimpl.*;
-import com.dexels.navajo.tipi.internal.*;
-import com.dexels.navajo.tipi.jxlayer.impl.*;
-import com.jhlabs.image.*;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.components.swingimpl.SwingTipiContext;
+import com.dexels.navajo.tipi.internal.TipiAction;
+import com.dexels.navajo.tipi.internal.TipiEvent;
+import com.dexels.navajo.tipi.jxlayer.impl.BusyPainterUI;
+import com.jhlabs.image.BlurFilter;
 
 public class Lock extends TipiAction {
 
@@ -36,6 +39,7 @@ public class Lock extends TipiAction {
 		
 		stc.runSyncInEventThread(new Runnable(){
 
+			@Override
 			@SuppressWarnings("unchecked")
 			public void run() {
 				JComponent jc = (JComponent)container;

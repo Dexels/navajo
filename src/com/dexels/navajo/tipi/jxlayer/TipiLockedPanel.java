@@ -1,24 +1,27 @@
 package com.dexels.navajo.tipi.jxlayer;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.LayoutManager;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
-import org.jdesktop.jxlayer.*;
-import org.jdesktop.jxlayer.plaf.effect.*;
-import org.jdesktop.jxlayer.plaf.ext.*;
+import org.jdesktop.jxlayer.JXLayer;
+import org.jdesktop.jxlayer.plaf.effect.BufferedImageOpEffect;
+import org.jdesktop.jxlayer.plaf.ext.LockableUI;
 
-
-import com.dexels.navajo.tipi.components.swingimpl.*;
-import com.dexels.navajo.tipi.jxlayer.impl.*;
-import com.jhlabs.image.*;
+import com.dexels.navajo.tipi.components.swingimpl.TipiSwingDataComponentImpl;
+import com.dexels.navajo.tipi.jxlayer.impl.BusyPainterUI;
+import com.jhlabs.image.BlurFilter;
 
 public class TipiLockedPanel extends TipiSwingDataComponentImpl {
 
 	private JPanel myPanel;
 	private LockableUI blurUI;
 
+	@Override
 	public Object createContainer() {
 		myPanel = new JPanel();
 		JXLayer<JComponent> layer = new JXLayer<JComponent>(myPanel);
@@ -33,6 +36,7 @@ public class TipiLockedPanel extends TipiSwingDataComponentImpl {
 	@Override
 	public void removeFromContainer(final Object c) {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				myPanel.remove((Component) c);
 			}
@@ -42,6 +46,7 @@ public class TipiLockedPanel extends TipiSwingDataComponentImpl {
 	@Override
 	public void setContainerLayout(final Object layout) {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				myPanel.setLayout((LayoutManager) layout);
 			}
@@ -51,6 +56,7 @@ public class TipiLockedPanel extends TipiSwingDataComponentImpl {
 	@Override
 	public void addToContainer(final Object c, final Object constraints) {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				myPanel.add((Component) c, constraints);
 			}
@@ -63,6 +69,7 @@ public class TipiLockedPanel extends TipiSwingDataComponentImpl {
 		if (name.equals("lock")) {
 			final boolean lck = ((Boolean) object).booleanValue();
 			SwingUtilities.invokeLater(new Runnable() {
+				@Override
 				public void run() {
 					blurUI.setLocked(lck);
 					System.err.println("Setting lock: "+lck);

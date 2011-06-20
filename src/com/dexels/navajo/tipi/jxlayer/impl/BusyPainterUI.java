@@ -1,14 +1,17 @@
 package com.dexels.navajo.tipi.jxlayer.impl;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.geom.*;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.geom.Ellipse2D;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.Timer;
 
-import org.jdesktop.jxlayer.*;
-import org.jdesktop.jxlayer.plaf.ext.*;
-import org.jdesktop.swingx.painter.*;
+import org.jdesktop.jxlayer.JXLayer;
+import org.jdesktop.jxlayer.plaf.ext.LockableUI;
+import org.jdesktop.swingx.painter.BusyPainter;
 
 public class BusyPainterUI extends LockableUI implements ActionListener{
 	  private BusyPainter<JComponent> busyPainter;
@@ -17,7 +20,8 @@ public class BusyPainterUI extends LockableUI implements ActionListener{
 
       public BusyPainterUI() {
           busyPainter = new BusyPainter<JComponent>() {
-              protected void doPaint(Graphics2D g, JComponent object,
+              @Override
+			protected void doPaint(Graphics2D g, JComponent object,
                                      int width, int height) {
                   // centralize the effect
                   Rectangle r = getTrajectory().getBounds();
@@ -52,7 +56,8 @@ public class BusyPainterUI extends LockableUI implements ActionListener{
 
       // Change the frame for the busyPainter
       // and mark BusyPainterUI as dirty 
-      public void actionPerformed(ActionEvent e) {
+      @Override
+	public void actionPerformed(ActionEvent e) {
           frameNumber = (frameNumber + 1) % 8;
           busyPainter.setFrame(frameNumber);
           // this will repaint the layer
