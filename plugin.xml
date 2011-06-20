@@ -13,7 +13,7 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <package
             uri="http://expression/1.0"
-            class="expression.ExpressionPackage"
+            class="com.dexels.navajo.dsl.model.expression.ExpressionPackage"
             genModel="model/Expression.genmodel"/>
    </extension>
 
