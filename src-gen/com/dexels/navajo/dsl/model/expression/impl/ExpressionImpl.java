@@ -6,28 +6,24 @@
  */
 package com.dexels.navajo.dsl.model.expression.impl;
 
-import com.dexels.navajo.dsl.model.expression.Expression;
-import com.dexels.navajo.dsl.model.expression.ExpressionPackage;
-import com.dexels.navajo.dsl.model.expression.PathSequence;
-
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
+
+import com.dexels.navajo.dsl.model.expression.Expression;
+import com.dexels.navajo.dsl.model.expression.ExpressionPackage;
+import com.dexels.navajo.dsl.model.expression.PathSequence;
 
 /**
  * <!-- begin-user-doc -->

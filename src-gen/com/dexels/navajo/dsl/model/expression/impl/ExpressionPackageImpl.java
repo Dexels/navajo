@@ -6,6 +6,12 @@
  */
 package com.dexels.navajo.dsl.model.expression.impl;
 
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.impl.EPackageImpl;
+
 import com.dexels.navajo.dsl.model.expression.ExistsTmlReference;
 import com.dexels.navajo.dsl.model.expression.Expression;
 import com.dexels.navajo.dsl.model.expression.ExpressionFactory;
@@ -18,13 +24,6 @@ import com.dexels.navajo.dsl.model.expression.PathSequence;
 import com.dexels.navajo.dsl.model.expression.ReferenceParams;
 import com.dexels.navajo.dsl.model.expression.TmlReference;
 import com.dexels.navajo.dsl.model.expression.TopLevel;
-
-import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EReference;
-
-import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
  * <!-- begin-user-doc -->

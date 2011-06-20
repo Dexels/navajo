@@ -6,15 +6,24 @@
  */
 package com.dexels.navajo.dsl.model.expression.impl;
 
-import com.dexels.navajo.dsl.model.expression.*;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
+
+import com.dexels.navajo.dsl.model.expression.ExistsTmlReference;
+import com.dexels.navajo.dsl.model.expression.Expression;
+import com.dexels.navajo.dsl.model.expression.ExpressionFactory;
+import com.dexels.navajo.dsl.model.expression.ExpressionPackage;
+import com.dexels.navajo.dsl.model.expression.FunctionCall;
+import com.dexels.navajo.dsl.model.expression.FunctionOperands;
+import com.dexels.navajo.dsl.model.expression.MapGetReference;
+import com.dexels.navajo.dsl.model.expression.Operation;
+import com.dexels.navajo.dsl.model.expression.PathSequence;
+import com.dexels.navajo.dsl.model.expression.ReferenceParams;
+import com.dexels.navajo.dsl.model.expression.TmlReference;
+import com.dexels.navajo.dsl.model.expression.TopLevel;
 
 /**
  * <!-- begin-user-doc -->

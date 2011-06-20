@@ -6,18 +6,15 @@
  */
 package com.dexels.navajo.dsl.model.expression.impl;
 
-import com.dexels.navajo.dsl.model.expression.ExpressionPackage;
-import com.dexels.navajo.dsl.model.expression.PathSequence;
-
 import java.util.Collection;
 
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
+
+import com.dexels.navajo.dsl.model.expression.ExpressionPackage;
+import com.dexels.navajo.dsl.model.expression.PathSequence;
 
 /**
  * <!-- begin-user-doc -->

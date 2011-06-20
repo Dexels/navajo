@@ -6,17 +6,15 @@
  */
 package com.dexels.navajo.dsl.model.expression.impl;
 
-import com.dexels.navajo.dsl.model.expression.Expression;
-import com.dexels.navajo.dsl.model.expression.ExpressionPackage;
-import com.dexels.navajo.dsl.model.expression.FunctionOperands;
-
 import java.util.Collection;
 
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+
+import com.dexels.navajo.dsl.model.expression.Expression;
+import com.dexels.navajo.dsl.model.expression.ExpressionPackage;
+import com.dexels.navajo.dsl.model.expression.FunctionOperands;
 
 /**
  * <!-- begin-user-doc -->

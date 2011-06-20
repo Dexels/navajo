@@ -6,20 +6,10 @@
  */
 package com.dexels.navajo.dsl.model.expression.impl;
 
-import com.dexels.navajo.dsl.model.expression.ExistsTmlReference;
-import com.dexels.navajo.dsl.model.expression.ExpressionPackage;
-
-import java.util.Collection;
-
-import org.eclipse.emf.common.notify.Notification;
-
-import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
-import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
+import com.dexels.navajo.dsl.model.expression.ExistsTmlReference;
+import com.dexels.navajo.dsl.model.expression.ExpressionPackage;
 
 /**
  * <!-- begin-user-doc -->
