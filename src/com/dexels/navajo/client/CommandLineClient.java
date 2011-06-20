@@ -5,11 +5,14 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+@Deprecated
 
+/**
+ * It doesnt seem to be used or be in any kind of production environment.
+ */
 public class CommandLineClient {
 
 	  public CommandLineClient() {
@@ -17,7 +20,7 @@ public class CommandLineClient {
 
 	  public CommandLineClient(String input){
 	    try{
-	      BufferedReader inputMsg = new BufferedReader(new FileReader(new File(input)));
+//	      BufferedReader inputMsg = new BufferedReader(new FileReader(new File(input)));
 
 	      URL processURL = new URL("http://penelope1.dexels.com/sportlink/knhb/servlet/Postman");
 
@@ -28,9 +31,9 @@ public class CommandLineClient {
 	      conn.setUseCaches(false);
 	      //PrintWriter out = new PrintWriter(conn.getOutputStream());
 
-	      StringWriter sw = new StringWriter();
+//	      StringWriter sw = new StringWriter();
 	      BufferedReader br = new BufferedReader(new FileReader(new File(input)));
-	      String line = "";
+//	      String line = "";
 	      char[] buffer = new char[1024];
 	      int read = 0;
 
@@ -59,7 +62,7 @@ public class CommandLineClient {
 
 	  public static void main(String args[]){
 	    try{
-	    	CommandLineClient tc = new CommandLineClient("/home/arjen/aap.xml");
+	    	new CommandLineClient("/home/arjen/aap.xml");
 	    }catch(Exception e){
 	      e.printStackTrace();
 	    }

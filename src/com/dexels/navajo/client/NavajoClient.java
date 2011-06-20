@@ -8,21 +8,57 @@
  */
 package com.dexels.navajo.client;
 
-import java.io.*;
-import java.net.*;
-import java.security.*;
-import java.text.*;
-import java.util.*;
-import java.util.Map.*;
-import java.util.zip.GZIPInputStream;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.UnknownHostException;
+import java.security.KeyStore;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Random;
+import java.util.Set;
 
-import javax.net.ssl.*;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.X509TrustManager;
 
 import com.dexels.navajo.client.push.NavajoPushSession;
-import com.dexels.navajo.client.serverasync.*;
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.types.*;
-import com.jcraft.jzlib.*;
+import com.dexels.navajo.client.serverasync.ServerAsyncRunner;
+import com.dexels.navajo.document.Guid;
+import com.dexels.navajo.document.Header;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.types.Binary;
+import com.jcraft.jzlib.JZlib;
+import com.jcraft.jzlib.ZInputStream;
+import com.jcraft.jzlib.ZOutputStream;
 
 class MyX509TrustManager implements X509TrustManager {
   public java.security.cert.X509Certificate[] getAcceptedIssuers() {
@@ -65,10 +101,9 @@ public class NavajoClient implements ClientInterface {
   
   private final List<BroadcastListener> broadcastListeners = Collections.synchronizedList(new ArrayList<BroadcastListener>());
   
-  private NavajoPushSession pushSession = null;
+//  private NavajoPushSession pushSession = null;
   
   protected int protocol = HTTP_PROTOCOL;
-  private boolean useLazyMessaging = true;
   private ErrorResponder myResponder;
   private boolean setSecure = false;
   private SSLSocketFactory sslFactory = null;
@@ -659,7 +694,7 @@ public class NavajoClient implements ClientInterface {
     	}
     }
 
-    String contentEncoding = con.getContentEncoding();
+//    String contentEncoding = con.getContentEncoding();
     //System.err.println("Content encoding: "+contentEncoding);
 
     
@@ -1818,7 +1853,6 @@ public final void switchServer(boolean force) {
 			Property p = NavajoFactory.getInstance().createProperty(init, "ApplicationId", Property.STRING_PROPERTY, agentId, 0, "aap", Property.DIR_IN);
 			m.addProperty(p);
 		} catch (NavajoException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		Navajo n = null;
@@ -1839,11 +1873,11 @@ public final void switchServer(boolean force) {
 		return true;
 	}
 
+	@SuppressWarnings("unchecked")
 	private void processPushNavajo(Navajo n,String agentId) {
 		try {
 			n.write(System.err);
 		} catch (NavajoException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		String pushImpl = (String) n.getProperty("SessionParameters/PushbackHandler").getTypedValue();

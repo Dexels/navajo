@@ -1,6 +1,6 @@
 package com.dexels.navajo.client;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Message;
 /**
  * <p>Title: </p>
  * <p>Description: </p>

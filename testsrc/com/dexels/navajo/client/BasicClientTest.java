@@ -1,10 +1,8 @@
 package com.dexels.navajo.client;
 
-import com.dexels.navajo.client.ClientInterface;
-import com.dexels.navajo.client.NavajoClientFactory;
-import com.dexels.navajo.document.Navajo;
-
 import junit.framework.TestCase;
+
+import com.dexels.navajo.document.Navajo;
 
 /**
  * Tests to be run an an active cluster of Navajo Instances.

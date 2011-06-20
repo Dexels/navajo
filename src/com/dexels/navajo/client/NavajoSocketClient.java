@@ -6,12 +6,21 @@
  */
 package com.dexels.navajo.client;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.StringTokenizer;
 
-import com.dexels.navajo.client.queueimpl.*;
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.client.queueimpl.ClientQueueImpl;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
 
 /**
  * @author Administrator

@@ -1,5 +1,5 @@
 package com.dexels.navajo.client;
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Navajo;
 
 /**
  * <p>Title: ResponseListener</p>

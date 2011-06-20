@@ -12,7 +12,8 @@ package com.dexels.navajo.client;
 
 public class ClientException extends Exception {
 
-    private int code;
+   private static final long serialVersionUID = 75302782005830988L;
+	private int code;
     private int level;
     private String message;
 

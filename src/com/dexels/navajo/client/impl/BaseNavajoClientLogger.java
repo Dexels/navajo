@@ -4,10 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-
-import javax.swing.text.DateFormatter;
 
 import com.dexels.navajo.client.logger.ClientLogger;
 import com.dexels.navajo.document.Navajo;

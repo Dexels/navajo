@@ -1,7 +1,7 @@
 package com.dexels.navajo.client.impl;
-import com.dexels.navajo.document.*;
-
-import com.dexels.navajo.client.*;
+import com.dexels.navajo.client.ConditionErrorHandler;
+import com.dexels.navajo.client.ResponseListener;
+import com.dexels.navajo.document.Navajo;
 /**
  * <p>Title: </p>
  * <p>Description: </p>

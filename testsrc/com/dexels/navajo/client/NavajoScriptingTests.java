@@ -3,15 +3,14 @@ package com.dexels.navajo.client;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import junit.framework.Assert;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
-
-import junit.framework.Assert;
 
 public class NavajoScriptingTests extends BasicClientTest {
 
@@ -174,8 +173,8 @@ public class NavajoScriptingTests extends BasicClientTest {
 		Assert.assertEquals(fl.getProperty("FilledMultipleSelection").getAllSelections().size(), 3);
 		Assert.assertEquals(fl.getProperty("FilledMultipleSelection").getAllSelectedSelections().size(), 2);
 		Assert.assertEquals(fl.getProperty("FilledMultipleSelection").getSelected().getValue(), "val1");
-		Assert.assertEquals(((Selection) fl.getProperty("FilledMultipleSelection").getAllSelections().get(0)).getName(), "name1");
-		Assert.assertEquals(((Selection) fl.getProperty("FilledMultipleSelection").getAllSelections().get(1)).getName(), "name2");
+		Assert.assertEquals(fl.getProperty("FilledMultipleSelection").getAllSelections().get(0).getName(), "name1");
+		Assert.assertEquals(fl.getProperty("FilledMultipleSelection").getAllSelections().get(1).getName(), "name2");
 		
 		Assert.assertEquals(fl.getProperty("ConstructedSelection").getAllSelections().size(), 4);
 		Assert.assertEquals(fl.getProperty("ConstructedSelection").getAllSelectedSelections().size(), 1);
@@ -230,7 +229,7 @@ public class NavajoScriptingTests extends BasicClientTest {
 	
 	public void testPropertyTypes() throws Exception {
 		
-		Navajo b = myClient.doSimpleSend(input, "tests/ProcessTestProperties");
+		myClient.doSimpleSend(input, "tests/ProcessTestProperties");
 		Navajo result = myClient.doSimpleSend(input, "tests/ProcessTestFields");
 		
 		ArrayList<Message> allMessages = result.getAllMessages();

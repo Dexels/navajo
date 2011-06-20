@@ -1,15 +1,30 @@
 package com.dexels.navajo.jabber;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
-import org.jivesoftware.smack.*;
+import org.jivesoftware.smack.Chat;
+import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.MessageListener;
+import org.jivesoftware.smack.PacketListener;
+import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.packet.Presence;
-import org.jivesoftware.smackx.*;
-import org.jivesoftware.smackx.muc.*;
+import org.jivesoftware.smackx.Form;
+import org.jivesoftware.smackx.FormField;
+import org.jivesoftware.smackx.muc.HostedRoom;
+import org.jivesoftware.smackx.muc.MultiUserChat;
+import org.jivesoftware.smackx.muc.Occupant;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
 
 public class JabberUtils {
 	
@@ -257,64 +272,64 @@ public class JabberUtils {
 		return nickName;
 	}
 
-	private static void registerRoomListeners(String nickName,
-			final MultiUserChat muc, final Set<String> occupants) {
-		muc.addParticipantStatusListener(new ParticipantStatusListener() {
-			public void adminGranted(String arg0) {
-			}
-
-			public void adminRevoked(String arg0) {
-			}
-
-			public void banned(String arg0, String arg1, String arg2) {
-			}
-
-			public void joined(String j) {
-				System.err.println("JOINED: " + j);
-				System.err.println("occupants: " + occupants);
-				occupants.add(j);
-				Navajo n = postRoomUpdate(occupants);
-			}
-
-			public void kicked(String arg0, String arg1, String arg2) {
-			}
-
-			public void left(String j) {
-				System.err.println("LEFT:" + j);
-				occupants.remove(j);
-				Navajo n = postRoomUpdate(occupants);
-
-			}
-
-			public void membershipGranted(String membershipGranted) {
-				System.err.println("membershipGranted: " + membershipGranted);
-			}
-
-			public void membershipRevoked(String membershipRevoked) {
-			}
-
-			public void moderatorGranted(String moderatorGranted) {
-			}
-
-			public void moderatorRevoked(String moderatorRevoked) {
-			}
-
-			public void nicknameChanged(String arg0, String arg1) {
-			}
-
-			public void ownershipGranted(String arg0) {
-			}
-
-			public void ownershipRevoked(String arg0) {
-			}
-
-			public void voiceGranted(String arg0) {
-			}
-
-			public void voiceRevoked(String arg0) {
-			}
-		});
-	}
+//	private static void registerRoomListeners(String nickName,
+//			final MultiUserChat muc, final Set<String> occupants) {
+//		muc.addParticipantStatusListener(new ParticipantStatusListener() {
+//			public void adminGranted(String arg0) {
+//			}
+//
+//			public void adminRevoked(String arg0) {
+//			}
+//
+//			public void banned(String arg0, String arg1, String arg2) {
+//			}
+//
+//			public void joined(String j) {
+//				System.err.println("JOINED: " + j);
+//				System.err.println("occupants: " + occupants);
+//				occupants.add(j);
+//				Navajo n = postRoomUpdate(occupants);
+//			}
+//
+//			public void kicked(String arg0, String arg1, String arg2) {
+//			}
+//
+//			public void left(String j) {
+//				System.err.println("LEFT:" + j);
+//				occupants.remove(j);
+//				Navajo n = postRoomUpdate(occupants);
+//
+//			}
+//
+//			public void membershipGranted(String membershipGranted) {
+//				System.err.println("membershipGranted: " + membershipGranted);
+//			}
+//
+//			public void membershipRevoked(String membershipRevoked) {
+//			}
+//
+//			public void moderatorGranted(String moderatorGranted) {
+//			}
+//
+//			public void moderatorRevoked(String moderatorRevoked) {
+//			}
+//
+//			public void nicknameChanged(String arg0, String arg1) {
+//			}
+//
+//			public void ownershipGranted(String arg0) {
+//			}
+//
+//			public void ownershipRevoked(String arg0) {
+//			}
+//
+//			public void voiceGranted(String arg0) {
+//			}
+//
+//			public void voiceRevoked(String arg0) {
+//			}
+//		});
+//	}
 
 	protected static Navajo postRoomUpdate(Set<String> occupants) {
 		try {
@@ -381,8 +396,7 @@ public class JabberUtils {
 
 		for (HostedRoom hostedRoom : c) {
 			System.err.println("room =" + hostedRoom.getName());
-			RoomInfo info = MultiUserChat.getRoomInfo(connection, hostedRoom
-					.getJid());
+//			RoomInfo info = MultiUserChat.getRoomInfo(connection, hostedRoom.getJid());
 
 			MultiUserChat myMultiuserChat = new MultiUserChat(connection,
 					hostedRoom.getJid());

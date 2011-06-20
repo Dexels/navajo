@@ -1,7 +1,5 @@
 package com.dexels.navajo.client;
 
-import java.util.*;
-
 import com.dexels.navajo.client.impl.BaseNavajoClientLogger;
 import com.dexels.navajo.client.logger.ClientLogger;
 

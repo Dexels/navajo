@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
@@ -296,7 +295,7 @@ public class NQLContext {
 
 	public static void main(String[] args) throws NavajoException, ClientException, IOException {
 		NQLContext nq = new NQLContext();
-		StringWriter sw = new StringWriter();
+//		StringWriter sw = new StringWriter();
 		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		nq.setCallback(new OutputCallback(){
 

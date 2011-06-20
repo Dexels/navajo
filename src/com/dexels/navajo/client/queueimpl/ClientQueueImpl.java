@@ -1,10 +1,10 @@
 package com.dexels.navajo.client.queueimpl;
 
-import com.dexels.navajo.client.NavajoClient;
-import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.client.ResponseListener;
-import com.dexels.navajo.client.ConditionErrorHandler;
 import com.dexels.navajo.client.ClientException;
+import com.dexels.navajo.client.ConditionErrorHandler;
+import com.dexels.navajo.client.NavajoClient;
+import com.dexels.navajo.client.ResponseListener;
+import com.dexels.navajo.document.Navajo;
 
 /**
  * <p>Title: </p>

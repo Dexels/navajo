@@ -1,6 +1,6 @@
 package com.dexels.navajo.client;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Navajo;
 
 /**
  * The ServerAsyncListener interface is used by the ServerAsyncRunner. It provides the interface through which the Runner

@@ -8,11 +8,13 @@ package com.dexels.navajo.client;
  * @author not attributable
  * @version 1.0
  */
-import java.io.*;
-import java.net.*;
+import java.io.InputStream;
+import java.net.URL;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.types.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.types.Binary;
 
 /**
  * See NavajoClient for an explanation of all methods

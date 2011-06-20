@@ -1,7 +1,10 @@
 package com.dexels.navajo.client.serverasync;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.client.*;
+import com.dexels.navajo.client.ClientException;
+import com.dexels.navajo.client.ClientInterface;
+import com.dexels.navajo.client.ServerAsyncListener;
+import com.dexels.navajo.document.Header;
+import com.dexels.navajo.document.Navajo;
 
 /**
  * The ServerAsyncRunner is the class that controls the execution of webservices that have asynchronous compponents. ie. that don't give
@@ -25,7 +28,7 @@ public class ServerAsyncRunner
   private volatile boolean kill = false;
   int prev_progress = 0;
   long prev_time = 0;
-  private int serverIndex = 0;
+//  private int serverIndex = 0;
   private final static int MAX_POLLING_INTERVAL = 30000;
 
 
@@ -45,7 +48,7 @@ public class ServerAsyncRunner
     myListener = listener;
     myClientId = clientId;
     myPollingInterval = pollingInterval;
-    serverIndex = client.getAsyncServerIndex();
+//    serverIndex = client.getAsyncServerIndex();
     if (in.getHeader() != null) {
       in.getHeader().removeCallBackPointers();
     }
@@ -204,13 +207,6 @@ public class ServerAsyncRunner
     return h.isCallBackFinished();
   }
 
-  private double getProgress(Navajo n) {
-    Header h = n.getHeader();
-    if (h == null) {
-      return -1;
-    }
-    return h.getCallBackProgress();
-  }
 
   /**
    * Kill the ServerAsyncRunner

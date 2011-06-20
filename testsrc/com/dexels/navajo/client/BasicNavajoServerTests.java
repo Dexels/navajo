@@ -1,14 +1,7 @@
 package com.dexels.navajo.client;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
-import com.dexels.navajo.client.ClientException;
-import com.dexels.navajo.client.ClientInterface;
-import com.dexels.navajo.client.ConditionErrorHandler;
-import com.dexels.navajo.client.NavajoClient;
-import com.dexels.navajo.client.NavajoClientFactory;
-import com.dexels.navajo.client.ServerAsyncListener;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;

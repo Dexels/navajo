@@ -1,9 +1,13 @@
 package com.dexels.navajo.client.impl;
 
-import com.dexels.navajo.document.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.dexels.navajo.client.*;
+import com.dexels.navajo.client.ClientException;
+import com.dexels.navajo.client.ClientInterface;
+import com.dexels.navajo.client.ConditionErrorHandler;
+import com.dexels.navajo.client.ResponseListener;
+import com.dexels.navajo.document.Navajo;
 
 //import com.dexels.sportlink.client.swing.*;
 //import com.dexels.navajo.swingclient.components.*;
