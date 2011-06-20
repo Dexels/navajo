@@ -62,7 +62,7 @@ public class TipiRssComponent extends TipiBaseConnector implements TipiConnector
 		n.addMethod(mm);
 		return n;
 	}
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private Navajo getRssNavajo(Channel c, String service) throws NavajoException {
 		Navajo n = NavajoFactory.getInstance().createNavajo();
 			Header h =NavajoFactory.getInstance().createHeader(n, service, "unknown","unknown", -1);
