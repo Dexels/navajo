@@ -5,7 +5,7 @@ import com.dexels.navajo.tipi.TipiContext;
 	public class TipiRichExtension extends TipiAbstractXMLExtension  {
 
 		public TipiRichExtension() {
-			loadXML();
+			loadDescriptor();
 		}
 
 		public void initialize(TipiContext tc) {

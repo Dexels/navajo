@@ -9,7 +9,7 @@ import com.dexels.navajo.tipi.internal.*;
 
 public class TipiPeelPanel extends TipiPanel {
 	private PeelPanel myPanel;
-	private int speed = 750;
+//	private int speed = 750;
 
 	public TipiPeelPanel() {
 
