@@ -47,6 +47,7 @@ public class TmlContinuationServlet extends HttpServlet implements SchedulableSe
 	}
 
 
+	@SuppressWarnings("unused")
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
