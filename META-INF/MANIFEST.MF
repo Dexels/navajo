@@ -9,8 +9,10 @@ Require-Bundle: com.dexels.navajo.document,
  com.dexels.navajo.core,
  com.dexels.navajo.version,
  com.dexels.navajo.tipi.swing;bundle-version="1.0.41",
- com.dexels.navajo.tipi.swingx;bundle-version="1.0.0"
+ com.dexels.navajo.tipi.swing.swingx;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  lib/filters.jar,
  lib/jxlayer.jar
+Bundle-Activator: tipi.TipiJxLayerExtension
+Import-Package: org.osgi.framework;version="1.5.0"
