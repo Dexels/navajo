@@ -34,10 +34,8 @@ public class PhotoManager {
     		try {
 				instance = new PhotoManager();
 			} catch (ParserConfigurationException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
     	}
@@ -165,8 +163,8 @@ public class PhotoManager {
     @SuppressWarnings("unchecked")
 	public List<Photo>  getUrls(PhotoList pl) {
     	List<Photo> al = new ArrayList<Photo>();
-    	for (Iterator iterator = pl.iterator(); iterator.hasNext();) {
-			Photo p = (Photo) iterator.next();
+    	for (Iterator<Photo> iterator = pl.iterator(); iterator.hasNext();) {
+			Photo p = iterator.next();
 			al.add(p);
     	}
     	return al;
