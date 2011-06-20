@@ -7,7 +7,6 @@ import com.dexels.navajo.tipi.TipiContext;
 	public class TipiSwingMigExtension extends TipiAbstractXMLExtension  {
 
 		public TipiSwingMigExtension() {
-			loadDescriptor();
 		}
 
 		public void initialize(TipiContext tc) {
