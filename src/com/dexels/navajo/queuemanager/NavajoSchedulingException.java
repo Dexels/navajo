@@ -3,6 +3,7 @@ package com.dexels.navajo.queuemanager;
 
 public class NavajoSchedulingException extends Exception {
 	
+	private static final long serialVersionUID = -4663637851802409047L;
 	private int reason = UNKNOWN;
 	
 	public int getReason() {

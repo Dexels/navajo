@@ -2,10 +2,7 @@ package com.dexels.navajo.server.listener.http.schedulers.priority;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -21,9 +18,7 @@ import com.dexels.navajo.queuemanager.NavajoSchedulingException;
 import com.dexels.navajo.queuemanager.QueueManager;
 import com.dexels.navajo.queuemanager.api.InputContext;
 import com.dexels.navajo.queuemanager.api.QueueContext;
-import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.server.listener.http.TmlScheduler;
 import com.dexels.navajo.server.resource.ResourceCheckerManager;
@@ -248,26 +243,26 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		return getDefaultQueue();
 	}
 	
-	private final RequestQueue findPoolWithShortestQueue() {
-		// Check system.
-		int sys = getSystemQueueSize();
-		int fast = getFastQueueSize();
-		int normal = getNormalQueueSize();
-		
-		if ( sys < fast ) { // sys queue is smaller than fast.
-			if ( sys < normal ) { // if also smaller than normal, it must be the smallest.
-				return systemPool;
-			} else {
-				return normalPool; // normal must be the smallest.
-			}
-		} else { // fast queue is smaller than system.
-			if ( fast < normal ) { // if also smaller than normal, it must be the smallest.
-				return fastPool;
-			} else {
-				return normalPool; // normal must be the smallest.
-			}
-		}
-	}
+//	private final RequestQueue findPoolWithShortestQueue() {
+//		// Check system.
+//		int sys = getSystemQueueSize();
+//		int fast = getFastQueueSize();
+//		int normal = getNormalQueueSize();
+//		
+//		if ( sys < fast ) { // sys queue is smaller than fast.
+//			if ( sys < normal ) { // if also smaller than normal, it must be the smallest.
+//				return systemPool;
+//			} else {
+//				return normalPool; // normal must be the smallest.
+//			}
+//		} else { // fast queue is smaller than system.
+//			if ( fast < normal ) { // if also smaller than normal, it must be the smallest.
+//				return fastPool;
+//			} else {
+//				return normalPool; // normal must be the smallest.
+//			}
+//		}
+//	}
 	
 //	private final RequestQueue determineThreadPool(TmlRunnable myRunner, boolean priority) throws IOException {
 //		

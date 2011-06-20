@@ -91,7 +91,8 @@ public class QueueManager {
         		scriptFile = new File(scriptDir,script);
         	}
 			FileReader fr = new FileReader(scriptFile);
-			Object result = engine.eval(fr);
+			// not interested in the result
+			engine.eval(fr);
 			//System.err.println("Result: "+result);
 			fr.close();
 			

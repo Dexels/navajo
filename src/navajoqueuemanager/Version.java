@@ -24,8 +24,6 @@
  */
 package navajoqueuemanager;
 
-import com.dexels.navajo.queuemanager.NavajoQueueScopeManager;
-import com.dexels.navajo.queuemanager.QueueManager;
 
 
 
