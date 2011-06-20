@@ -1,13 +1,11 @@
 package tipi;
 
-import java.util.*;
-
-import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.TipiContext;
 
 public class TipiRubyExtension extends TipiAbstractXMLExtension implements TipiExtension {
 
 	public TipiRubyExtension() {
-		loadXML();
+		loadDescriptor();
 	}
 
 	public void initialize(TipiContext tc) {
