@@ -1,8 +1,8 @@
 Bundle-Name: Navajo Tipi Swinglabs extension
-Bundle-SymbolicName: com.dexels.navajo.tipi.swingx
+Bundle-SymbolicName: com.dexels.navajo.tipi.swing.swingx
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.1.qualifier
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.document,
  com.dexels.navajo.client,
@@ -13,5 +13,8 @@ Require-Bundle: com.dexels.navajo.document,
  com.dexels.navajo.version,
  com.dexels.navajo.tipi.swing;bundle-version="1.0.41"
 Bundle-ActivationPolicy: lazy
-Bundle-ClassPath: lib/swingx.jar
-Export-Package: org.jdesktop.swingx.painter
+Bundle-ClassPath: .,lib/swingx.jar
+Export-Package: org.jdesktop.swingx.painter,
+ tipi
+Bundle-Activator: tipi.TipiSwingXExtension
+Import-Package: org.osgi.framework;version="1.5.0"

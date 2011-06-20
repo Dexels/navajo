@@ -12,6 +12,8 @@ import org.jdesktop.swingx.*;
 import com.dexels.navajo.document.types.*;
 
 public class TipiJXHyperlinkImpl extends JXHyperlink {
+	private static final long serialVersionUID = -4871054910728952972L;
+
 	public void setIconUrl(Object u) {
 		setIcon(getIcon(u));
 	}
@@ -30,7 +32,6 @@ public class TipiJXHyperlinkImpl extends JXHyperlink {
 				ImageIcon ii = new ImageIcon(i);
 				return ii;
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
