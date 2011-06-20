@@ -9,4 +9,5 @@ Require-Bundle: com.dexels.navajo.tipi;bundle-version="1.0.43",
  com.dexels.navajo.tipi.swing;bundle-version="1.0.41",
  com.dexels.navajo.document;bundle-version="1.0.3",
  com.dexels.navajo.version;bundle-version="1.0.6"
-Bundle-ClassPath: lib/substance5_1.jar
+Bundle-ClassPath: .,lib/substance5_1.jar
+Bundle-Activator: tipi.TipiSubstanceExtension
