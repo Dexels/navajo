@@ -8,18 +8,19 @@ import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.listeners.TmlRunnable;
 import com.dexels.navajo.server.listener.http.impl.BaseServiceRunner;
 
 public class TmlStandardRunner extends BaseServiceRunner implements TmlRunnable {
 
-	private  Navajo inputDoc;
-	private  HashMap<String,Object> attributes = new HashMap<String,Object>();
-	
-	public  TmlStandardRunner(HttpServletRequest request,Navajo inputDoc, HttpServletResponse response,  String sendEncoding, String recvEncoding, Object cert) {
-		super(request, response,sendEncoding,recvEncoding,cert);
+	private Navajo inputDoc;
+	private HashMap<String, Object> attributes = new HashMap<String, Object>();
+
+	public TmlStandardRunner(HttpServletRequest request, Navajo inputDoc,
+			HttpServletResponse response, String sendEncoding,
+			String recvEncoding, Object cert) {
+		super(request, response, sendEncoding, recvEncoding, cert);
 		this.inputDoc = inputDoc;
 		attributes.put("httpRequest", request);
 	}
@@ -40,7 +41,8 @@ public class TmlStandardRunner extends BaseServiceRunner implements TmlRunnable 
 
 	@Override
 	public OutputStream getRequestOutputStream() throws IOException {
-		throw new UnsupportedOperationException("Request outputstreams are disabled on standard sychronous connectors");
+		throw new UnsupportedOperationException(
+				"Request outputstreams are disabled on standard sychronous connectors");
 	}
 
 	@Override
@@ -59,9 +61,9 @@ public class TmlStandardRunner extends BaseServiceRunner implements TmlRunnable 
 	}
 
 	@Override
-	public void setResponseNavajo(Navajo n)  {
+	public void setResponseNavajo(Navajo n) {
 		inputDoc = n;
-		
+
 	}
 
 	@Override

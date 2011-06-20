@@ -15,38 +15,46 @@ import com.dexels.navajo.document.NavajoException;
 
 public class NqlServlet extends HttpServlet {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1365612001727053259L;
+
 	@Override
-	protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
+	protected void doGet(final HttpServletRequest req,
+			final HttpServletResponse resp) throws ServletException,
+			IOException {
 		String username = req.getParameter("username");
 		String password = req.getParameter("password");
 		String server = req.getParameter("server");
 		String query = req.getParameter("query");
 		String ping = req.getParameter("ping");
-		
-		if(ping!=null) {
-			if(!checkPing(username,password,req,resp)) {
+
+		if (ping != null) {
+			if (!checkPing(username, password, req, resp)) {
 				throw new ServletException("ping failed.");
 			}
 			return;
 		}
-		System.err.println("ServerName: "+req.getServerName());
-		System.err.println("getServerPort: "+req.getServerPort());
-		System.err.println("getContextPath: "+req.getContextPath());
+		System.err.println("ServerName: " + req.getServerName());
+		System.err.println("getServerPort: " + req.getServerPort());
+		System.err.println("getContextPath: " + req.getContextPath());
 		NQLContext nc = new NQLContext();
-		nc.setupClient(server, username, password,req.getServerName(),req.getServerPort(),req.getContextPath());
-		
+		nc.setupClient(server, username, password, req.getServerName(),
+				req.getServerPort(), req.getContextPath());
+
 		nc.setCallback(new OutputCallback() {
-			
+
 			public void setOutputType(String mime) {
 				resp.setContentType(mime);
 			}
-			
+
 			public void setContentLength(long l) {
 				resp.setContentLength((int) l);
 				resp.setHeader("Accept-Ranges", "none");
 				resp.setHeader("Connection", "close");
 			}
-			
+
 			public OutputStream getOutputStream() {
 				try {
 					return resp.getOutputStream();
@@ -65,12 +73,15 @@ public class NqlServlet extends HttpServlet {
 		}
 		resp.getOutputStream().flush();
 		resp.getOutputStream().close();
-//		String
+		// String
 	}
 
-	private boolean checkPing(String username, String password, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+	private boolean checkPing(String username, String password,
+			HttpServletRequest req, HttpServletResponse resp)
+			throws IOException {
 		resp.setContentType("text/plain");
-		resp.getWriter().write("Hi "+username+" looks like we're in business!\nPING OK\n");
+		resp.getWriter().write(
+				"Hi " + username + " looks like we're in business!\nPING OK\n");
 		return true;
 	}
 

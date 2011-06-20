@@ -15,7 +15,6 @@ import org.w3c.dom.Document;
 
 import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.document.Header;
-import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
@@ -43,43 +42,49 @@ import com.dexels.navajo.server.DispatcherInterface;
  * This servlet handles HTTP POST requests. The HTTP POST body is assumed to
  * contain a TML document. The TML document is processed by the dispatcher the
  * resulting TML document is send back as a reply.
- * @slightly deprecated 
+ * 
+ * @slightly deprecated
  * @deprecated
  * 
- * Use NavajoFilterServlet based solution now
+ *             Use NavajoFilterServlet based solution now
  * 
  */
 
+@Deprecated
 public final class TmlHttpLaszloServlet extends TmlHttpServlet {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6716143312109383514L;
 
 	public TmlHttpLaszloServlet() {
 	}
-	
-	
-	
 
 	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
 		super.doGet(request, response);
 	}
-	
+
 	@Override
+	protected void writeOutput(Navajo resultMessage,
+			java.io.OutputStreamWriter out, String serviceName)
+			throws NavajoException {
+		// resultMessage.write(out);
 
-	protected void writeOutput(Navajo resultMessage, java.io.OutputStreamWriter out, String serviceName) throws NavajoException {
-//		resultMessage.write(out);
-
-		Document laszlo = NavajoLaszloConverter.createLaszloFromNavajo(resultMessage,serviceName);
+		Document laszlo = NavajoLaszloConverter.createLaszloFromNavajo(
+				resultMessage, serviceName);
 		StringWriter sw = new StringWriter();
-		XMLDocumentUtils.write(laszlo,sw,false);
-		System.err.println("Laszlo created: "+sw.toString());
+		XMLDocumentUtils.write(laszlo, sw, false);
+		System.err.println("Laszlo created: " + sw.toString());
 		try {
 			out.write(sw.toString());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-//		XMLDocumentUtils.write(laszlo,out,false);
+		// XMLDocumentUtils.write(laszlo,out,false);
 	}
-
 
 	/**
 	 * Handle a request.
@@ -89,19 +94,23 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	public final void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	public final void doPost(HttpServletRequest request,
+			HttpServletResponse response) throws IOException, ServletException {
 
 		Date created = new java.util.Date();
 		long start = created.getTime();
 
 		// System.err.println("in doPost() thread = " +
-		// Thread.currentThread().hashCode() + ", " + request.getContentType() + ",
+		// Thread.currentThread().hashCode() + ", " + request.getContentType() +
+		// ",
 		// " + request.getContentLength() + ", " + request.getMethod() + ", " +
 		// request.getRemoteUser());
 		String sendEncoding = request.getHeader("Accept-Encoding");
 		String recvEncoding = request.getHeader("Content-Encoding");
-		boolean useSendCompression = ((sendEncoding != null) && (sendEncoding.indexOf("zip") != -1));
-		boolean useRecvCompression = ((recvEncoding != null) && (recvEncoding.indexOf("zip") != -1));
+		boolean useSendCompression = ((sendEncoding != null) && (sendEncoding
+				.indexOf("zip") != -1));
+		boolean useRecvCompression = ((recvEncoding != null) && (recvEncoding
+				.indexOf("zip") != -1));
 
 		DispatcherInterface dis = null;
 		BufferedInputStream is = null;
@@ -110,7 +119,8 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 			Navajo in = null;
 
 			if (useRecvCompression) {
-				java.util.zip.GZIPInputStream unzip = new java.util.zip.GZIPInputStream(request.getInputStream());
+				java.util.zip.GZIPInputStream unzip = new java.util.zip.GZIPInputStream(
+						request.getInputStream());
 				is = new BufferedInputStream(unzip);
 				in = NavajoLaszloConverter.createNavajoFromLaszlo(is);
 			} else {
@@ -133,41 +143,83 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 			String serviceName = header.getRPCName();
 			// Create dispatcher object.
 			// TODO I don't really understand what's happening here
-			dis = DispatcherFactory.getInstance(configurationPath,null, new com.dexels.navajo.server.FileInputStreamReader(),null);
-			
-			 String servletContextRootPath = getServletContext().getRealPath("");
+			dis = DispatcherFactory.getInstance(configurationPath, null,
+					new com.dexels.navajo.server.FileInputStreamReader(), null);
+
+//			String servletContextRootPath = getServletContext().getRealPath("");
 
 			// Check for certificate.
-			Object certObject = request.getAttribute("javax.servlet.request.X509Certificate");
+			Object certObject = request
+					.getAttribute("javax.servlet.request.X509Certificate");
 
 			// Call Dispatcher with parsed TML document as argument.
-//			System.err.println("Dispatching now!");
-			Header h = in .getHeader();
-			//h.write(System.err);
-			
-			Navajo outDoc = dis.handle(in, certObject, new ClientInfo(request.getRemoteAddr(), "unknown", recvEncoding, pT, useRecvCompression, useSendCompression, request.getContentLength(), created));
-//			outDoc.write(System.err);
-			
-			if ( h != null && outDoc != null && outDoc.getHeader() != null && !Dispatcher.isSpecialwebservice(in.getHeader().getRPCName())) {
-				System.err.println("LASZLOSERVLET: (" + dis.getApplicationId() + "): " + new java.util.Date() + ": " + outDoc.getHeader().getHeaderAttribute("accessId") + ":" + in.getHeader().getRPCName() + "(" + in.getHeader().getRPCUser() + "):" + ( System.currentTimeMillis() - start ) + " ms. (st=" + 
-						( outDoc.getHeader().getHeaderAttribute("serverTime") + ",rpt=" + outDoc.getHeader().getHeaderAttribute("requestParseTime") + ",at=" + outDoc.getHeader().getHeaderAttribute("authorisationTime") + ",pt=" + 
-								outDoc.getHeader().getHeaderAttribute("processingTime") + ",tc=" + outDoc.getHeader().getHeaderAttribute("threadCount") + ",cpu=" + outDoc.getHeader().getHeaderAttribute("cpuload") +  ")" + " (" + sendEncoding + "/" + recvEncoding + ")" ));
+			// System.err.println("Dispatching now!");
+			Header h = in.getHeader();
+			// h.write(System.err);
+
+			Navajo outDoc = dis.handle(in, certObject,
+					new ClientInfo(request.getRemoteAddr(), "unknown",
+							recvEncoding, pT, useRecvCompression,
+							useSendCompression, request.getContentLength(),
+							created));
+			// outDoc.write(System.err);
+
+			if (h != null
+					&& outDoc != null
+					&& outDoc.getHeader() != null
+					&& !Dispatcher.isSpecialwebservice(in.getHeader()
+							.getRPCName())) {
+				System.err.println("LASZLOSERVLET: ("
+						+ dis.getApplicationId()
+						+ "): "
+						+ new java.util.Date()
+						+ ": "
+						+ outDoc.getHeader().getHeaderAttribute("accessId")
+						+ ":"
+						+ in.getHeader().getRPCName()
+						+ "("
+						+ in.getHeader().getRPCUser()
+						+ "):"
+						+ (System.currentTimeMillis() - start)
+						+ " ms. (st="
+						+ (outDoc.getHeader().getHeaderAttribute("serverTime")
+								+ ",rpt="
+								+ outDoc.getHeader().getHeaderAttribute(
+										"requestParseTime")
+								+ ",at="
+								+ outDoc.getHeader().getHeaderAttribute(
+										"authorisationTime")
+								+ ",pt="
+								+ outDoc.getHeader().getHeaderAttribute(
+										"processingTime")
+								+ ",tc="
+								+ outDoc.getHeader().getHeaderAttribute(
+										"threadCount")
+								+ ",cpu="
+								+ outDoc.getHeader().getHeaderAttribute(
+										"cpuload") + ")" + " (" + sendEncoding
+								+ "/" + recvEncoding + ")"));
 			}
-			  
-	        long sendStart = System.currentTimeMillis();
+
+//			long sendStart = System.currentTimeMillis();
 			if (useSendCompression) {
 				response.setContentType("text/xml; charset=UTF-8");
 				response.setHeader("Content-Encoding", "gzip");
-				java.util.zip.GZIPOutputStream gzipout = new java.util.zip.GZIPOutputStream(response.getOutputStream());
+				java.util.zip.GZIPOutputStream gzipout = new java.util.zip.GZIPOutputStream(
+						response.getOutputStream());
 
-				Document laszlo = NavajoLaszloConverter.createLaszloFromNavajo(outDoc,serviceName);
-				XMLDocumentUtils.write(laszlo, new OutputStreamWriter(gzipout), false);
+				Document laszlo = NavajoLaszloConverter.createLaszloFromNavajo(
+						outDoc, serviceName);
+				XMLDocumentUtils.write(laszlo, new OutputStreamWriter(gzipout),
+						false);
 				gzipout.close();
 			} else {
 				response.setContentType("text/xml; charset=UTF-8");
-				OutputStream out = (OutputStream) response.getOutputStream();
-				Document laszlo = NavajoLaszloConverter.createLaszloFromNavajo(outDoc,serviceName);
-				XMLDocumentUtils.write(laszlo, new OutputStreamWriter(out),false);
+				OutputStream out = response.getOutputStream();
+				Document laszlo = NavajoLaszloConverter.createLaszloFromNavajo(
+						outDoc, serviceName);
+				XMLDocumentUtils.write(laszlo, new OutputStreamWriter(out),
+						false);
 				out.close();
 			}
 		} catch (Throwable e) {
@@ -176,54 +228,63 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 		}
 	}
 
-
-	
-	
 	public static void main(String[] args) {
-		System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.base.BaseNavajoFactoryImpl");
-		NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
-		NavajoClientFactory.getClient().setServerUrl("penelope1.dexels.com/sportlink/test/knvb/Comet");
+		System.setProperty("com.dexels.navajo.DocumentImplementation",
+				"com.dexels.navajo.document.base.BaseNavajoFactoryImpl");
+		NavajoFactory.getInstance().setExpressionEvaluator(
+				new DefaultExpressionEvaluator());
+		NavajoClientFactory.getClient().setServerUrl(
+				"penelope1.dexels.com/sportlink/test/knvb/Comet");
 		NavajoClientFactory.getClient().setUsername("ROOT");
 		NavajoClientFactory.getClient().setPassword("R20T");
 		try {
-			Navajo init = NavajoClientFactory.getClient().doSimpleSend("club/InitSearchClubs");
+			Navajo init = NavajoClientFactory.getClient().doSimpleSend(
+					"club/InitSearchClubs");
 			init.getProperty("ClubSearch/ClubName").setValue("veld");
-			NavajoLaszloConverter.dumpNavajoLaszloStyle(init,"kip.xml","club/InitSearchClubs");
-			
+			NavajoLaszloConverter.dumpNavajoLaszloStyle(init, "kip.xml",
+					"club/InitSearchClubs");
+
 			StringWriter sw = new StringWriter();
-			NavajoLaszloConverter.writeBirtXml(init.getMessage("ClubSearch"), sw);
+			NavajoLaszloConverter.writeBirtXml(init.getMessage("ClubSearch"),
+					sw);
 			System.err.println(sw.toString());
-			
-			Navajo n = NavajoClientFactory.getClient().doSimpleSend(init, "club/ProcessSearchClubs");
-			NavajoLaszloConverter.dumpNavajoLaszloStyle(n,"aap.xml","club/ProcessSearchClubs");
-			
-			init = NavajoClientFactory.getClient().doSimpleSend("club/InitUpdateClub");
+
+			Navajo n = NavajoClientFactory.getClient().doSimpleSend(init,
+					"club/ProcessSearchClubs");
+			NavajoLaszloConverter.dumpNavajoLaszloStyle(n, "aap.xml",
+					"club/ProcessSearchClubs");
+
+			init = NavajoClientFactory.getClient().doSimpleSend(
+					"club/InitUpdateClub");
 			init.getProperty("Club/ClubIdentifier").setValue("BBFW63X");
-			n = NavajoClientFactory.getClient().doSimpleSend(init, "club/ProcessQueryClub");
-			NavajoLaszloConverter.dumpNavajoLaszloStyle(n,"noot.xml","club/ProcessQueryClub");
+			n = NavajoClientFactory.getClient().doSimpleSend(init,
+					"club/ProcessQueryClub");
+			NavajoLaszloConverter.dumpNavajoLaszloStyle(n, "noot.xml",
+					"club/ProcessQueryClub");
 
 			// ----------------------------------------------
 
-//			Node root = d.getFirstChild();
-//			Navajo nav = NavajoFactory.getInstance().createNavajo();
-//			if (root != null) {
-//				String rpc_name = root.getNodeName();
-//				rpc_name = rpc_name.replaceAll("_", "/");
-//				Node tml = root.getFirstChild();
-//
-//				String rpc_usr = ((Element) tml).getAttribute("rpc_usr");
-//				String rpc_pwd = ((Element) tml).getAttribute("rpc_pwd");
-//
-//				Header h = NavajoFactory.getInstance().createHeader(nav, rpc_name, rpc_usr, rpc_pwd, -1);
-//				nav.addHeader(h);
-//
-//				NodeList children = tml.getChildNodes();
-//				for (int i = 0; i < children.getLength(); i++) {
-//					Node noot = children.item(i);
-//					t.createMessageFromLaszlo(noot, nav, null);
-//				}
-//			}
-//			nav.write(System.err);
+			// Node root = d.getFirstChild();
+			// Navajo nav = NavajoFactory.getInstance().createNavajo();
+			// if (root != null) {
+			// String rpc_name = root.getNodeName();
+			// rpc_name = rpc_name.replaceAll("_", "/");
+			// Node tml = root.getFirstChild();
+			//
+			// String rpc_usr = ((Element) tml).getAttribute("rpc_usr");
+			// String rpc_pwd = ((Element) tml).getAttribute("rpc_pwd");
+			//
+			// Header h = NavajoFactory.getInstance().createHeader(nav,
+			// rpc_name, rpc_usr, rpc_pwd, -1);
+			// nav.addHeader(h);
+			//
+			// NodeList children = tml.getChildNodes();
+			// for (int i = 0; i < children.getLength(); i++) {
+			// Node noot = children.item(i);
+			// t.createMessageFromLaszlo(noot, nav, null);
+			// }
+			// }
+			// nav.write(System.err);
 			System.err.println("Ok, done");
 		} catch (Exception e) {
 			e.printStackTrace();

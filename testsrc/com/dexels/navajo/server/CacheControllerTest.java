@@ -88,8 +88,9 @@ public class CacheControllerTest extends TestCase {
 	
 	protected void setUp() throws Exception {
 		super.setUp();
-		DispatcherFactory df = new DispatcherFactory(new TestDispatcher(new TestNavajoConfig()));
-		df.getInstance().setUseAuthorisation(false);
+		new DispatcherFactory(new TestDispatcher(new TestNavajoConfig()));
+		// injected the dispatcher
+		DispatcherFactory.getInstance().setUseAuthorisation(false);
 		createCacheConfig();
 	}
 

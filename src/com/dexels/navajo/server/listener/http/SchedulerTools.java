@@ -7,13 +7,13 @@ import com.dexels.navajo.server.listener.http.schedulers.DummyScheduler;
 
 public class SchedulerTools {
 
-
 	@SuppressWarnings("unchecked")
 	public static TmlScheduler createScheduler(HttpServlet servlet) {
 		String schedulerName = servlet.getInitParameter("schedulerClass");
-		if(schedulerName!=null) {
+		if (schedulerName != null) {
 			try {
-				Class<TmlScheduler> cc = (Class<TmlScheduler>) Class.forName(schedulerName);
+				Class<TmlScheduler> cc = (Class<TmlScheduler>) Class
+						.forName(schedulerName);
 				TmlScheduler scheduler = cc.newInstance();
 				SchedulerRegistry.setScheduler(scheduler);
 				scheduler.initialize(servlet);
@@ -26,8 +26,8 @@ public class SchedulerTools {
 				e.printStackTrace();
 			}
 		}
-		
+
 		return new DummyScheduler();
 	}
-	
+
 }

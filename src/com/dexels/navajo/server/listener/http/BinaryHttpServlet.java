@@ -1,13 +1,16 @@
 package com.dexels.navajo.server.listener.http;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.dexels.navajo.document.*;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.server.*;
 
 /**
  * Title:        Navajo
@@ -30,6 +33,10 @@ import com.dexels.navajo.server.*;
 
 public final class BinaryHttpServlet extends HttpServlet {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1777790776513645459L;
 	private String binaryPath;
 
 	public BinaryHttpServlet() {
@@ -70,7 +77,7 @@ public final class BinaryHttpServlet extends HttpServlet {
 		String instance = request.getParameter("applicationInstance");
 		File binaryFolder = new File(binaryPath);
 		File handleFile = null;
-		if (handle==null) {
+		if (handle == null) {
 			throw new ServletException("No handle present!");
 		}
 		if (instance != null && !"".equals(instance)) {

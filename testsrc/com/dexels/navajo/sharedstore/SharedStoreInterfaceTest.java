@@ -52,8 +52,8 @@ public class SharedStoreInterfaceTest extends TestCase {
 	
 	
 	public void setUp() throws Exception {
-		DispatcherFactory df = new DispatcherFactory(new Dispatcher(new TestNavajoConfig()));
-		df.getInstance().setUseAuthorisation(false);
+		new DispatcherFactory(new Dispatcher(new TestNavajoConfig()));
+		DispatcherFactory.getInstance().setUseAuthorisation(false);
 		si = SharedStoreFactory.getInstance();
 	}
 
@@ -77,8 +77,8 @@ public class SharedStoreInterfaceTest extends TestCase {
 	}
 
 	public static void main(String [] args) throws Exception {
-		DispatcherFactory df = new DispatcherFactory(new Dispatcher(new TestNavajoConfig()));
-		df.getInstance().setUseAuthorisation(false);
+		new DispatcherFactory(new Dispatcher(new TestNavajoConfig()));
+		DispatcherFactory.getInstance().setUseAuthorisation(false);
 		SharedStoreInterfaceTest t = new SharedStoreInterfaceTest();
 		t.setUp();
 		t.testLockStringStringStringIntBoolean();
@@ -111,7 +111,6 @@ public class SharedStoreInterfaceTest extends TestCase {
 						si.store("myparent", "mystoredobject"+index, objects[index], false, true);
 						locks++;
 					} catch (SharedStoreException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -165,7 +164,6 @@ public class SharedStoreInterfaceTest extends TestCase {
 						si.store("myparent", "mystoredobject"+index, objects[index], false, false);
 						locks++;
 					} catch (SharedStoreException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -232,7 +230,7 @@ public class SharedStoreInterfaceTest extends TestCase {
 
 	
 	public void testLockStringStringStringIntBoolean() throws Exception {
-		SharedStoreLock ssl = si.lock("myparent", "mylockfile", "owner1", SharedFileStore.READ_WRITE_LOCK, false);
+		si.lock("myparent", "mylockfile", "owner1", SharedFileStore.READ_WRITE_LOCK, false);
 		Assert.assertTrue(new File("/tmp/sharedstore/owner1_myparent_mylockfile.lock").exists());
 	}
 	
@@ -461,7 +459,7 @@ public class SharedStoreInterfaceTest extends TestCase {
 		si.storeText("myparent", "mytext", "some text", false, false);
 		exception = false;
 		try {
-			Object o4 = si.get("myparent", "mytext");
+			si.get("myparent", "mytext");
 		} catch (Exception e) {
 			exception = true;
 		}

@@ -1,7 +1,5 @@
 package com.dexels.navajo.server.listener.http.schedulers;
 
-import java.util.concurrent.ThreadPoolExecutor;
-
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,7 +14,7 @@ public class DummyScheduler implements TmlScheduler {
 	public void initialize(HttpServlet servlet) {
 
 	}
-	
+
 	@Override
 	public boolean checkNavajo(Navajo input) {
 		return true;
@@ -26,8 +24,6 @@ public class DummyScheduler implements TmlScheduler {
 	public int getTimeout() {
 		return 0;
 	}
-
-
 
 	@Override
 	public boolean preCheckRequest(HttpServletRequest request) {
@@ -41,7 +37,8 @@ public class DummyScheduler implements TmlScheduler {
 
 	@Override
 	public void submit(TmlRunnable myRunner, boolean retry) {
-		throw new UnsupportedOperationException("Can not schedule using DummyScheduler");
+		throw new UnsupportedOperationException(
+				"Can not schedule using DummyScheduler");
 	}
 
 	@Override
@@ -51,14 +48,14 @@ public class DummyScheduler implements TmlScheduler {
 
 	@Override
 	public void shutdownScheduler() {
-		
+
 	}
 
 	@Override
 	public RequestQueue getDefaultQueue() {
-		throw new UnsupportedOperationException("Can not getGenericPool using DummyScheduler");
+		throw new UnsupportedOperationException(
+				"Can not getGenericPool using DummyScheduler");
 
 	}
-
 
 }

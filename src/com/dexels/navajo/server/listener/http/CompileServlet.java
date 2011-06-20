@@ -2,81 +2,77 @@ package com.dexels.navajo.server.listener.http;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.StringWriter;
-import java.util.Enumeration;
-import java.util.StringTokenizer;
 import java.util.logging.Level;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.w3c.dom.Document;
-
-import com.dexels.navajo.document.Header;
-import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
-import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.document.NavajoLaszloConverter;
-import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.Selection;
-import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import com.dexels.navajo.mapping.CompiledScript;
 import com.dexels.navajo.mapping.compiler.TslCompiler;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.DispatcherInterface;
-import com.dexels.navajo.server.FatalException;
 import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.util.AuditLog;
 
+@Deprecated
 public class CompileServlet extends HttpServlet implements Servlet {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9070062352955050654L;
+
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	     DispatcherInterface dis = DispatcherFactory.getInstance();
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		DispatcherFactory.getInstance();
 	}
 
-	public static CompiledScript compileScript(Access a, String serviceName, StringBuffer compilerErrors) throws Exception {
-   	
-		NavajoConfigInterface properties = DispatcherFactory.getInstance().getNavajoConfig();
-		TslCompiler tslCompiler = new com.dexels.navajo.mapping.compiler.TslCompiler(properties.getClassloader());
+	public static CompiledScript compileScript(Access a, String serviceName,
+			StringBuffer compilerErrors) throws Exception {
 
-		String prefix = serviceName.substring(0,serviceName.lastIndexOf("/"));
-		String script = serviceName.substring(serviceName.lastIndexOf("/")+1,serviceName.length());
+		NavajoConfigInterface properties = DispatcherFactory.getInstance()
+				.getNavajoConfig();
+		TslCompiler tslCompiler = new com.dexels.navajo.mapping.compiler.TslCompiler(
+				properties.getClassloader());
+
+		String prefix = serviceName.substring(0, serviceName.lastIndexOf("/"));
+		String script = serviceName.substring(serviceName.lastIndexOf("/") + 1,
+				serviceName.length());
 
 		File sourceDir = new File(properties.getScriptPath());
-		File packageDir = new File(sourceDir,prefix);
-		File sourceFile = new File(packageDir,script+".xml");
-		
+		File packageDir = new File(sourceDir, prefix);
+		File sourceFile = new File(packageDir, script + ".xml");
+
 		try {
-			
-			
-			tslCompiler.compileScript(serviceName, properties.getScriptPath(), properties.getCompiledScriptPath(), prefix, properties.getConfigPath());
-			//compilerErrors.append(recompileJava(a, sourceFileName, sourceFile, serviceName.replaceAll("/","."), targetFile,serviceName));
+
+			tslCompiler.compileScript(serviceName, properties.getScriptPath(),
+					properties.getCompiledScriptPath(), prefix,
+					properties.getConfigPath());
+			// compilerErrors.append(recompileJava(a, sourceFileName,
+			// sourceFile, serviceName.replaceAll("/","."),
+			// targetFile,serviceName));
 
 		} catch (SystemException ex) {
 			sourceFile.delete();
-			AuditLog.log(AuditLog.AUDIT_MESSAGE_SCRIPTCOMPILER, ex.getMessage(), Level.SEVERE, a.accessID);
+			AuditLog.log(AuditLog.AUDIT_MESSAGE_SCRIPTCOMPILER,
+					ex.getMessage(), Level.SEVERE, a.accessID);
 			throw ex;
 		}
-		
+
 		return null;
 	}
 
-
 	public static void main(String[] args) {
 		String aap = "aap/noot/mies";
-		String prefix = aap.substring(0,aap.lastIndexOf("/"));
-		String script = aap.substring(aap.lastIndexOf("/")+1,aap.length());
-		System.err.println("aap: "+aap);
-		System.err.println("prefix: "+prefix);
-		System.err.println("script: "+script);
+		String prefix = aap.substring(0, aap.lastIndexOf("/"));
+		String script = aap.substring(aap.lastIndexOf("/") + 1, aap.length());
+		System.err.println("aap: " + aap);
+		System.err.println("prefix: " + prefix);
+		System.err.println("script: " + script);
 	}
 }
-	

@@ -12,59 +12,59 @@ import com.dexels.navajo.server.listener.http.AsyncRequest;
 
 public abstract class BaseFileRequest implements AsyncRequest {
 
-
-   private OutputStream os = null; // = new ByteArrayOutputStream();
-//	private int readCount = 0;
+	private OutputStream os = null; // = new ByteArrayOutputStream();
+	// private int readCount = 0;
 	private int contentLength;
 	private File tempFile;
-	  
-  protected BaseFileRequest() {
-	  try {
-		tempFile = File.createTempFile("navajoRequest_", ".xml");
-		  os = new FileOutputStream(tempFile);
-		  System.err.println("Created tempfile: "+tempFile.getAbsolutePath());
-	} catch (FileNotFoundException e) {
-		e.printStackTrace();
-		
-	} catch (IOException e) {
-		e.printStackTrace();
+
+	protected BaseFileRequest() {
+		try {
+			tempFile = File.createTempFile("navajoRequest_", ".xml");
+			os = new FileOutputStream(tempFile);
+			System.err.println("Created tempfile: "
+					+ tempFile.getAbsolutePath());
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
-  }
-    
+
 	public void appendData(byte[] buffer, int length) throws IOException {
 		getRequestOutputStream().write(buffer, 0, length);
-//		getRequestOutputStream().flush();
+		// getRequestOutputStream().flush();
 
 	}
-//
-//	public int getReadCount() {
-//		return readCount;
-//	}
-//
-//
-//	public void setReadCount(int readCount) {
-//		this.readCount = readCount;
-//	}
-//	
-//   
+
+	//
+	// public int getReadCount() {
+	// return readCount;
+	// }
+	//
+	//
+	// public void setReadCount(int readCount) {
+	// this.readCount = readCount;
+	// }
+	//
+	//
 	public OutputStream getRequestOutputStream() throws IOException {
 		return os;
 	}
-	
-	
+
 	public InputStream getRequestInputStream() throws IOException {
 		getRequestOutputStream().flush();
 		getRequestOutputStream().close();
-		System.err.println("Getting file: "+tempFile.getAbsolutePath());
+		System.err.println("Getting file: " + tempFile.getAbsolutePath());
 		FileInputStream fis = new FileInputStream(tempFile);
-//		 return new ByteArrayInputStream(os.toByteArray());
+		// return new ByteArrayInputStream(os.toByteArray());
 		return fis;
 	}
+
 	@Override
 	public void dumpBuffer() {
 
 	}
-	
 
 	public int getRequestSize() {
 		return this.contentLength;
@@ -77,6 +77,5 @@ public abstract class BaseFileRequest implements AsyncRequest {
 	public void submitComplete() {
 		// TODO Delete temp file!
 	}
-
 
 }

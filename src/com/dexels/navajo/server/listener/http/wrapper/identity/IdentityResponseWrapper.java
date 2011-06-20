@@ -19,26 +19,30 @@ public class IdentityResponseWrapper implements NavajoResponseWrapper {
 
 	@Override
 	public void processResponse(HttpServletRequest originalRequest,
-			Navajo indoc, Navajo outDoc,
-			HttpServletResponse originalResponse) throws IOException {
+			Navajo indoc, Navajo outDoc, HttpServletResponse originalResponse)
+			throws IOException {
 
 		String sendEncoding = originalRequest.getHeader("Accept-Encoding");
-		boolean useSendCompression = ((sendEncoding != null) && (sendEncoding.indexOf("zip") != -1));
-		
-//		Navajo indoc = wrappedRequest.getInputNavajo();
-//		Navajo outDoc = wrappedResponse.getResponseNavajo();
-		
+		boolean useSendCompression = ((sendEncoding != null) && (sendEncoding
+				.indexOf("zip") != -1));
+
+		// Navajo indoc = wrappedRequest.getInputNavajo();
+		// Navajo outDoc = wrappedResponse.getResponseNavajo();
+
 		if (useSendCompression) {
 			originalResponse.setContentType("text/xml; charset=UTF-8");
 			originalResponse.setHeader("Content-Encoding", "gzip");
-			java.util.zip.GZIPOutputStream gzipout = new java.util.zip.GZIPOutputStream(originalResponse.getOutputStream());
+			java.util.zip.GZIPOutputStream gzipout = new java.util.zip.GZIPOutputStream(
+					originalResponse.getOutputStream());
 
-			Document laszlo = NavajoLaszloConverter.createLaszloFromNavajo(outDoc,indoc.getHeader().getRPCName());
-			XMLDocumentUtils.write(laszlo, new OutputStreamWriter(gzipout), false);
+			Document laszlo = NavajoLaszloConverter.createLaszloFromNavajo(
+					outDoc, indoc.getHeader().getRPCName());
+			XMLDocumentUtils.write(laszlo, new OutputStreamWriter(gzipout),
+					false);
 			gzipout.close();
 		} else {
 			originalResponse.setContentType("text/xml; charset=UTF-8");
-			OutputStream out = (OutputStream) originalResponse.getOutputStream();
+			OutputStream out = originalResponse.getOutputStream();
 			try {
 				outDoc.write(out);
 			} catch (NavajoException e) {

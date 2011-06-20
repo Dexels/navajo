@@ -1,5 +1,7 @@
 package com.dexels.navajo.persistence.impl;
 
+import junit.framework.Assert;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
@@ -10,11 +12,8 @@ import com.dexels.navajo.persistence.PersistenceManagerFactory;
 import com.dexels.navajo.server.CacheController;
 import com.dexels.navajo.server.CacheControllerTest;
 import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.test.TestDispatcher;
 import com.dexels.navajo.server.test.TestNavajoConfig;
-
-import junit.framework.Assert;
 
 class TestConstructor1 implements Constructor {
 
@@ -65,8 +64,8 @@ public class PersistenceManagerImplTest extends CacheControllerTest {
 		pm.clearCache();
 		TestNavajoConfig tnc = new TestNavajoConfig();
 		tnc.setMyPersistenceManager(pm);
-		DispatcherFactory df = new DispatcherFactory(new TestDispatcher(new TestNavajoConfig()));
-		df.getInstance().setUseAuthorisation(false);
+		new DispatcherFactory(new TestDispatcher(new TestNavajoConfig()));
+		DispatcherFactory.getInstance().setUseAuthorisation(false);
 	}
 
 	protected void tearDown() throws Exception {
@@ -90,7 +89,7 @@ public class PersistenceManagerImplTest extends CacheControllerTest {
 		TestConstructor1 tc1 = new TestConstructor1(tp);
 		TestConstructor2 tc2 = new TestConstructor2(tp);
 		
-		PersistenceManager pm =   (PersistenceManagerImpl) DispatcherFactory.getInstance().getNavajoConfig().getPersistenceManager();
+		PersistenceManager pm =   DispatcherFactory.getInstance().getNavajoConfig().getPersistenceManager();
 		
 		Navajo tp2 = (Navajo) pm.get(tc1,  "TestKey" , "MyTestWebservice", 434343,  true);
 		Navajo tp3 = (Navajo) pm.get(tc2,  "TestKey" , "MyTestWebservice", 434343,  true);
@@ -209,6 +208,7 @@ public class PersistenceManagerImplTest extends CacheControllerTest {
 		Assert.assertTrue(exception);
 	}
 
+	@SuppressWarnings("unused")
 	public void testIsCached() throws Exception {
 		
 		final PersistenceManagerImpl pm = (PersistenceManagerImpl) DispatcherFactory.getInstance().getNavajoConfig().getPersistenceManager();
@@ -222,6 +222,7 @@ public class PersistenceManagerImplTest extends CacheControllerTest {
 		
 	}
 
+	@SuppressWarnings("unused")
 	public void testSetDoClear() throws Exception {
 		final PersistenceManagerImpl pm =  (PersistenceManagerImpl) DispatcherFactory.getInstance().getNavajoConfig().getPersistenceManager();
 		

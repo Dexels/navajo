@@ -15,7 +15,7 @@ public class DispatcherTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		TribeManagerFactory.useTestVersion();
-		DispatcherFactory df = new DispatcherFactory(new Dispatcher(new TestNavajoConfig()));
+		new DispatcherFactory(new Dispatcher(new TestNavajoConfig()));
 	}
 
 	protected void tearDown() throws Exception {

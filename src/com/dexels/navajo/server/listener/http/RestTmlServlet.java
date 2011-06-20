@@ -1,7 +1,6 @@
 package com.dexels.navajo.server.listener.http;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.Enumeration;
 import java.util.StringTokenizer;
 
@@ -33,19 +32,27 @@ import com.dexels.navajo.server.FatalException;
  */
 public class RestTmlServlet extends HttpServlet implements Servlet {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8550857560638790482L;
+
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
 		callDirect(req, resp);
 	}
 
-	private final void callDirect(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private final void callDirect(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 
 		String service = request.getParameter("service");
-		String type = request.getParameter("type");
+//		String type = request.getParameter("type");
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 
-		System.err.println(">in callDirect(): service = " + service + ", username = " + username + " class: "
+		System.err.println(">in callDirect(): service = " + service
+				+ ", username = " + username + " class: "
 				+ getClass().getName());
 
 		if (service == null) {
@@ -64,62 +71,67 @@ public class RestTmlServlet extends HttpServlet implements Servlet {
 			System.err.println("server = " + request.getServerName());
 			System.err.println("port = " + request.getServerPort());
 			System.err.println("contentlength = " + request.getContentLength());
-			Enumeration enm = request.getHeaderNames();
+			Enumeration<String> enm = request.getHeaderNames();
 			while (enm.hasMoreElements()) {
-				String key = (String) enm.nextElement();
+				String key = enm.nextElement();
 				String header = request.getHeader(key);
 				System.err.println(">>" + key + "=" + header);
 			}
 			return;
 		}
-		
+
 		Navajo tbMessage;
 		try {
 			tbMessage = constructFromRequest(request);
-			Header header =  constructHeader(tbMessage, service, username, password, -1);
-		     tbMessage.addHeader(header);
-		     DispatcherInterface dis = DispatcherFactory.getInstance();
-		     if(dis==null) {
-		   	  throw new ServletException("Navajo Server not initialized!");
-		     }
-		   Navajo resultMessage = dis.removeInternalMessages(dis.handle(tbMessage));  
-		   response.setContentType("text/xml");
-		   ServletOutputStream outputStream = response.getOutputStream();
+			Header header = constructHeader(tbMessage, service, username,
+					password, -1);
+			tbMessage.addHeader(header);
+			DispatcherInterface dis = DispatcherFactory.getInstance();
+			if (dis == null) {
+				throw new ServletException("Navajo Server not initialized!");
+			}
+			Navajo resultMessage = dis.removeInternalMessages(dis
+					.handle(tbMessage));
+			response.setContentType("text/xml");
+			ServletOutputStream outputStream = response.getOutputStream();
 
-	    	  java.io.OutputStreamWriter out = new java.io.OutputStreamWriter(outputStream,"UTF-8");
-	    	  response.setContentType("text/xml; charset=UTF-8");
-	    	  writeOutput(resultMessage, out, service);
-	    //	  resultMessage.write(out);
-	    	  out.flush();
-	    	  out.close();
+			java.io.OutputStreamWriter out = new java.io.OutputStreamWriter(
+					outputStream, "UTF-8");
+			response.setContentType("text/xml; charset=UTF-8");
+			writeOutput(resultMessage, out, service);
+			// resultMessage.write(out);
+			out.flush();
+			out.close();
 
 		} catch (NavajoException e) {
 			e.printStackTrace();
 		} catch (FatalException e) {
 			e.printStackTrace();
 		}
-	
-	}
-	
-	
 
-	protected void writeOutput(Navajo resultMessage, java.io.OutputStreamWriter out, String serviceName) throws NavajoException {
-		Document laszlo = NavajoLaszloConverter.createLaszloFromNavajo(resultMessage,"navajoDataSource");
-		
-		XMLDocumentUtils.write(laszlo,out,false);
 	}
 
+	protected void writeOutput(Navajo resultMessage,
+			java.io.OutputStreamWriter out, String serviceName)
+			throws NavajoException {
+		Document laszlo = NavajoLaszloConverter.createLaszloFromNavajo(
+				resultMessage, "navajoDataSource");
 
-	
-	  protected Header constructHeader(Navajo tbMessage, String service, String username, String password, long expirationInterval) {
-		  return NavajoFactory.getInstance().createHeader(tbMessage,service, username, password, expirationInterval);
-	  }
-	  
-	private final Navajo constructFromRequest(HttpServletRequest request) throws NavajoException {
+		XMLDocumentUtils.write(laszlo, out, false);
+	}
+
+	protected Header constructHeader(Navajo tbMessage, String service,
+			String username, String password, long expirationInterval) {
+		return NavajoFactory.getInstance().createHeader(tbMessage, service,
+				username, password, expirationInterval);
+	}
+
+	private final Navajo constructFromRequest(HttpServletRequest request)
+			throws NavajoException {
 
 		Navajo result = NavajoFactory.getInstance().createNavajo();
 
-		Enumeration all = request.getParameterNames();
+		Enumeration<String> all = request.getParameterNames();
 
 		// Construct TML document from request parameters.
 		while (all.hasMoreElements()) {
@@ -127,33 +139,36 @@ public class RestTmlServlet extends HttpServlet implements Servlet {
 
 			if (parameter.indexOf("/") != -1) {
 
-				StringTokenizer typedParameter = new StringTokenizer(parameter, "|");
+				StringTokenizer typedParameter = new StringTokenizer(parameter,
+						"|");
 
 				String propertyName = typedParameter.nextToken();
-				// Check for date property.
-				// TODO...
-				// Check for array message.
-				// TODO...
-
-				String type = (typedParameter.hasMoreTokens() ? typedParameter.nextToken() : Property.STRING_PROPERTY);
+				
+				String type = (typedParameter.hasMoreTokens() ? typedParameter
+						.nextToken() : Property.STRING_PROPERTY);
 
 				String value = request.getParameter(parameter);
 
-				Message msg = com.dexels.navajo.mapping.MappingUtils.getMessageObject(parameter, null, false, result, false, "", -1);
-				String propName = com.dexels.navajo.mapping.MappingUtils.getStrippedPropertyName(propertyName);
+				Message msg = com.dexels.navajo.mapping.MappingUtils
+						.getMessageObject(parameter, null, false, result,
+								false, "", -1);
+				String propName = com.dexels.navajo.mapping.MappingUtils
+						.getStrippedPropertyName(propertyName);
 				Property prop = null;
 
 				if (propName.indexOf(":") == -1) {
-					prop = NavajoFactory.getInstance().createProperty(result, propName, type, value, 0, "", Property.DIR_IN);
+					prop = NavajoFactory.getInstance().createProperty(result,
+							propName, type, value, 0, "", Property.DIR_IN);
 					msg.addProperty(prop);
 				} else {
 					StringTokenizer selProp = new StringTokenizer(propName, ":");
 					propertyName = selProp.nextToken();
-					String selectionField = selProp.nextToken();
+					selProp.nextToken();
 
 					prop = msg.getProperty(propertyName);
 					if (prop == null) {
-						prop = NavajoFactory.getInstance().createProperty(result, propertyName, "+", "", Property.DIR_IN);
+						prop = NavajoFactory.getInstance().createProperty(
+								result, propertyName, "+", "", Property.DIR_IN);
 						msg.addProperty(prop);
 					} else {
 						prop.setType(Property.SELECTION_PROPERTY);
@@ -163,7 +178,8 @@ public class RestTmlServlet extends HttpServlet implements Servlet {
 					StringTokenizer allValues = new StringTokenizer(value, ",");
 					while (allValues.hasMoreTokens()) {
 						String val = allValues.nextToken();
-						Selection sel = NavajoFactory.getInstance().createSelection(result, val, val, true);
+						Selection sel = NavajoFactory.getInstance()
+								.createSelection(result, val, val, true);
 						prop.addSelection(sel);
 					}
 				}

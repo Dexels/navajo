@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.dexels.navajo.document.Navajo;
 
 public interface NavajoRequestWrapper {
-	public Navajo processRequestFilter(HttpServletRequest request) throws ServletException, IOException;
+	public Navajo processRequestFilter(HttpServletRequest request)
+			throws ServletException, IOException;
 
 }

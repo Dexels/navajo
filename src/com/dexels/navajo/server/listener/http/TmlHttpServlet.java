@@ -1,19 +1,38 @@
 package com.dexels.navajo.server.listener.http;
 
-import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.StringTokenizer;
 
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.types.*;
-import com.dexels.navajo.server.*;
-import com.dexels.navajo.server.enterprise.xmpp.JabberWorkerFactory;
-import com.dexels.navajo.server.enterprise.xmpp.JabberWorkerInterface;
+import com.dexels.navajo.document.Header;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.server.ClientInfo;
+import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.DispatcherInterface;
+import com.dexels.navajo.server.FatalException;
 import com.jcraft.jzlib.JZlib;
 import com.jcraft.jzlib.ZInputStream;
 import com.jcraft.jzlib.ZOutputStream;
@@ -31,10 +50,10 @@ import com.jcraft.jzlib.ZOutputStream;
  */
 
 /**
- * This servlet handles HTTP POST requests.
- * The HTTP POST body is assumed to contain a TML document.
- * The TML document is processed by the dispatcher the resulting TML document is send back as a reply.
- *
+ * This servlet handles HTTP POST requests. The HTTP POST body is assumed to
+ * contain a TML document. The TML document is processed by the dispatcher the
+ * resulting TML document is send back as a reply.
+ * 
  */
 
 public class TmlHttpServlet extends BaseNavajoServlet {
@@ -48,14 +67,16 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 
 	public static final String DEFAULT_SERVER_XML = "config/server.xml";
 
-	private static boolean streamingMode = true; 
+	private static boolean streamingMode = true;
 	private static long logfileIndex = 0;
 	private static long bytesWritten = 0;
 
-	public TmlHttpServlet() {}
+	public TmlHttpServlet() {
+	}
 
 	protected void finalize() {
-		System.err.println("In TmlHttpServlet finalize(), thread = " + Thread.currentThread().hashCode());
+		System.err.println("In TmlHttpServlet finalize(), thread = "
+				+ Thread.currentThread().hashCode());
 		try {
 			super.finalize();
 		} catch (Throwable e) {
@@ -63,16 +84,18 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 		}
 	}
 
-	protected void writeOutput(Navajo resultMessage, java.io.OutputStreamWriter out, String serviceName) throws NavajoException {
+	protected void writeOutput(Navajo resultMessage,
+			java.io.OutputStreamWriter out, String serviceName)
+			throws NavajoException {
 		resultMessage.write(out);
 	}
-	
-	private final Navajo constructFromRequest(HttpServletRequest request) throws
-	NavajoException {
+
+	private final Navajo constructFromRequest(HttpServletRequest request)
+			throws NavajoException {
 
 		Navajo result = NavajoFactory.getInstance().createNavajo();
 
-		Enumeration all = request.getParameterNames();
+		Enumeration<String> all = request.getParameterNames();
 
 		// Construct TML document from request parameters.
 		while (all.hasMoreElements()) {
@@ -80,43 +103,38 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 
 			if (parameter.indexOf("/") != -1) {
 
-				StringTokenizer typedParameter = new StringTokenizer(parameter, "|");
+				StringTokenizer typedParameter = new StringTokenizer(parameter,
+						"|");
 
 				String propertyName = typedParameter.nextToken();
-				// Check for date property.
-				// TODO...
-				// Check for array message.
-				// TODO...
 
-				String type = (typedParameter.hasMoreTokens() ?
-						typedParameter.nextToken() : Property.STRING_PROPERTY);
+				String type = (typedParameter.hasMoreTokens() ? typedParameter
+						.nextToken() : Property.STRING_PROPERTY);
 
 				String value = request.getParameter(parameter);
 
-				Message msg = com.dexels.navajo.mapping.MappingUtils.getMessageObject(
-						parameter, null,
-						false, result, false, "", -1);
-				String propName = com.dexels.navajo.mapping.MappingUtils.
-				getStrippedPropertyName(propertyName);
+				Message msg = com.dexels.navajo.mapping.MappingUtils
+						.getMessageObject(parameter, null, false, result,
+								false, "", -1);
+				String propName = com.dexels.navajo.mapping.MappingUtils
+						.getStrippedPropertyName(propertyName);
 				Property prop = null;
 
 				if (propName.indexOf(":") == -1) {
-					prop = NavajoFactory.getInstance().createProperty(result, propName,
-							type, value, 0, "", Property.DIR_IN);
+					prop = NavajoFactory.getInstance().createProperty(result,
+							propName, type, value, 0, "", Property.DIR_IN);
 					msg.addProperty(prop);
-				}
-				else {
+				} else {
 					StringTokenizer selProp = new StringTokenizer(propName, ":");
 					propertyName = selProp.nextToken();
-					String selectionField = selProp.nextToken();
+					selProp.nextToken();
 
 					prop = msg.getProperty(propertyName);
 					if (prop == null) {
-						prop = NavajoFactory.getInstance().createProperty(result,
-								propertyName, "+", "", Property.DIR_IN);
+						prop = NavajoFactory.getInstance().createProperty(
+								result, propertyName, "+", "", Property.DIR_IN);
 						msg.addProperty(prop);
-					}
-					else {
+					} else {
 						prop.setType(Property.SELECTION_PROPERTY);
 						prop.setCardinality("+");
 					}
@@ -124,8 +142,8 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 					StringTokenizer allValues = new StringTokenizer(value, ",");
 					while (allValues.hasMoreTokens()) {
 						String val = allValues.nextToken();
-						Selection sel = NavajoFactory.getInstance().createSelection(result,
-								val, val, true);
+						Selection sel = NavajoFactory.getInstance()
+								.createSelection(result, val, val, true);
 						prop.addSelection(sel);
 					}
 				}
@@ -135,24 +153,27 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 		return result;
 	}
 
-	protected Header constructHeader(Navajo tbMessage, String service, String username, String password, long expirationInterval) {
-		return NavajoFactory.getInstance().createHeader(tbMessage,service, username, password, expirationInterval);
+	protected Header constructHeader(Navajo tbMessage, String service,
+			String username, String password, long expirationInterval) {
+		return NavajoFactory.getInstance().createHeader(tbMessage, service,
+				username, password, expirationInterval);
 	}
 
 	private final void callDirect(HttpServletRequest request,
-			HttpServletResponse response) throws
-			ServletException, IOException {
+			HttpServletResponse response) throws ServletException, IOException {
 
 		String service = request.getParameter("service");
 		String type = request.getParameter("type");
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 
-		System.err.println("in callDirect(): service = " + service + ", username = " + username);
+		System.err.println("in callDirect(): service = " + service
+				+ ", username = " + username);
 
 		if (service == null) {
 
-			//System.err.println("Empty service specified, request originating from " + request.getRemoteHost());
+			// System.err.println("Empty service specified, request originating from "
+			// + request.getRemoteHost());
 			System.err.println("thread = " + Thread.currentThread().hashCode());
 			System.err.println("path = " + request.getPathInfo());
 			System.err.println("query = " + request.getQueryString());
@@ -165,25 +186,27 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 			System.err.println("server = " + request.getServerName());
 			System.err.println("port = " + request.getServerPort());
 			System.err.println("contentlength = " + request.getContentLength());
-			Enumeration enm = request.getHeaderNames();
+			Enumeration<String> enm = request.getHeaderNames();
 			while (enm.hasMoreElements()) {
-				String key = (String) enm.nextElement();
+				String key = enm.nextElement();
 				String header = request.getHeader(key);
 				System.err.println(">>" + key + "=" + header);
 			}
 			return;
 		}
 
-
 		if (username == null) {
 			username = "empty";
 			password = "";
-			//logger.log(Priority.FATAL, "Empty service specified, request originating from " + request.getRemoteHost());
-			//System.err.println("Empty service specified, request originating from " + request.getRemoteHost());
-			//    return;
+			// logger.log(Priority.FATAL,
+			// "Empty service specified, request originating from " +
+			// request.getRemoteHost());
+			// System.err.println("Empty service specified, request originating from "
+			// + request.getRemoteHost());
+			// return;
 		}
 
-		if ( (type == null) || (type.equals(""))) {
+		if ((type == null) || (type.equals(""))) {
 			type = "xml";
 
 		}
@@ -195,15 +218,14 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 		long expirationInterval = -1;
 		String expiration = request.getParameter("expiration");
 
-		if ( (expiration == null) || (expiration.equals(""))) {
+		if ((expiration == null) || (expiration.equals(""))) {
 			expirationInterval = -1;
-		}
-		else {
+		} else {
 			try {
 				expirationInterval = Long.parseLong(expiration);
-			}
-			catch (Exception e) {
-				//System.out.println("invalid expiration interval: " + expiration);
+			} catch (Exception e) {
+				// System.out.println("invalid expiration interval: " +
+				// expiration);
 			}
 		}
 
@@ -218,26 +240,29 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 			dis = initDispatcher();
 
 			tbMessage = constructFromRequest(request);
-			Header header =  constructHeader(tbMessage, service, username, password, expirationInterval);
+			Header header = constructHeader(tbMessage, service, username,
+					password, expirationInterval);
 			tbMessage.addHeader(header);
-			Navajo resultMessage = dis.removeInternalMessages(dis.handle(tbMessage));
-			//System.err.println(resultMessage.toString());
-			//resultMessage.write(out);
+			Navajo resultMessage = dis.removeInternalMessages(dis
+					.handle(tbMessage));
+			// System.err.println(resultMessage.toString());
+			// resultMessage.write(out);
 			String dataPath = request.getParameter("dataPath");
-			if(dataPath!=null) {
+			if (dataPath != null) {
 				Property bin = resultMessage.getProperty(dataPath);
-				if(bin==null ) {
-					java.io.OutputStreamWriter out = new java.io.OutputStreamWriter(outputStream,"UTF-8");
+				if (bin == null) {
+					java.io.OutputStreamWriter out = new java.io.OutputStreamWriter(
+							outputStream, "UTF-8");
 					response.setContentType("text/xml; charset=UTF-8");
 					resultMessage.write(out);
 					out.flush();
 					out.close();
 				} else {
 					// Will throw cce when not a binary?
-					if ( bin.getTypedValue() instanceof Binary ) {
+					if (bin.getTypedValue() instanceof Binary) {
 						Binary b = (Binary) bin.getTypedValue();
 						response.setContentType(b.getMimeType());
-						if ( b.getLength() > 0 ) {
+						if (b.getLength() > 0) {
 							response.setContentLength((int) b.getLength());
 							response.setHeader("Accept-Ranges", "none");
 							response.setHeader("Connection", "close");
@@ -249,42 +274,42 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 					outputStream.flush();
 				}
 			} else {
-				java.io.OutputStreamWriter out = new java.io.OutputStreamWriter(outputStream,"UTF-8");
+				java.io.OutputStreamWriter out = new java.io.OutputStreamWriter(
+						outputStream, "UTF-8");
 				response.setContentType("text/xml; charset=UTF-8");
 				resultMessage.write(out);
 				out.flush();
 				out.close();
 			}
 
-
-		}
-		catch (Exception ce) {
+		} catch (Exception ce) {
 			ce.printStackTrace();
 			System.err.println(ce.getMessage());
-		}
-		finally {
+		} finally {
 			outputStream.close();
 			dis = null;
 		}
 	}
-	
+
 	/**
 	 * URL based webservice requests.
-	 *
+	 * 
 	 * @param request
 	 * @param response
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
 
 		// Check for streamingmode toggle.
-		if ( request.getParameter("streaming") != null && request.getParameter("streaming").equals("no")) {
+		if (request.getParameter("streaming") != null
+				&& request.getParameter("streaming").equals("no")) {
 			streamingMode = false;
 			PrintWriter pw = new PrintWriter(response.getWriter());
 			pw.write("Switched off streaming mode");
 			pw.close();
-		} else if ( request.getParameter("streaming") != null ) {
+		} else if (request.getParameter("streaming") != null) {
 			streamingMode = true;
 			PrintWriter pw = new PrintWriter(response.getWriter());
 			pw.write("Switched on streaming mode");
@@ -293,17 +318,18 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 			callDirect(request, response);
 		}
 	}
-	
+
 	/**
 	 * Handle a request.
-	 *
+	 * 
 	 * @param request
 	 * @param response
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		
+	public void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
+
 		Date created = new java.util.Date();
 		long start = created.getTime();
 
@@ -317,38 +343,49 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 
 			Navajo in = null;
 
-
 			if (streamingMode) {
-				if ( sendEncoding != null && sendEncoding.equals(COMPRESS_JZLIB)) {			 
-					r = new BufferedReader(new java.io.InputStreamReader(new ZInputStream(request.getInputStream())));
-				} else if ( sendEncoding != null && sendEncoding.equals(COMPRESS_GZIP)) {
-					r = new BufferedReader(new java.io.InputStreamReader(new java.util.zip.GZIPInputStream(request.getInputStream()), "UTF-8")); 
-				}
-				else {
+				if (sendEncoding != null && sendEncoding.equals(COMPRESS_JZLIB)) {
+					r = new BufferedReader(new java.io.InputStreamReader(
+							new ZInputStream(request.getInputStream())));
+				} else if (sendEncoding != null
+						&& sendEncoding.equals(COMPRESS_GZIP)) {
+					r = new BufferedReader(new java.io.InputStreamReader(
+							new java.util.zip.GZIPInputStream(
+									request.getInputStream()), "UTF-8"));
+				} else {
 					r = new BufferedReader(request.getReader());
 				}
 				in = NavajoFactory.getInstance().createNavajo(r);
 				r.close();
 				r = null;
 			} else {
-				System.err.println("Warning: Using non-streaming mode for " + request.getRequestURI() + ", file written: " + logfileIndex + ", total size: " + bytesWritten);
+				System.err.println("Warning: Using non-streaming mode for "
+						+ request.getRequestURI() + ", file written: "
+						+ logfileIndex + ", total size: " + bytesWritten);
 				InputStream is = request.getInputStream();
 				ByteArrayOutputStream bos = new ByteArrayOutputStream();
 				copyResource(bos, is);
 				is.close();
 				bos.close();
-				byte [] bytes = bos.toByteArray();
+				byte[] bytes = bos.toByteArray();
 				try {
-					if ( sendEncoding != null && sendEncoding.equals(COMPRESS_JZLIB)) {			 
-						r = new BufferedReader(new java.io.InputStreamReader(new ZInputStream(new ByteArrayInputStream(bytes))));
-					} else if ( sendEncoding != null && sendEncoding.equals(COMPRESS_GZIP)) {
-						r = new BufferedReader(new java.io.InputStreamReader(new java.util.zip.GZIPInputStream(new ByteArrayInputStream(bytes)), "UTF-8")); 
-					}
-					else {
-						r = new BufferedReader(new java.io.InputStreamReader(new ByteArrayInputStream(bytes)));
+					if (sendEncoding != null
+							&& sendEncoding.equals(COMPRESS_JZLIB)) {
+						r = new BufferedReader(new java.io.InputStreamReader(
+								new ZInputStream(
+										new ByteArrayInputStream(bytes))));
+					} else if (sendEncoding != null
+							&& sendEncoding.equals(COMPRESS_GZIP)) {
+						r = new BufferedReader(new java.io.InputStreamReader(
+								new java.util.zip.GZIPInputStream(
+										new ByteArrayInputStream(bytes)),
+								"UTF-8"));
+					} else {
+						r = new BufferedReader(new java.io.InputStreamReader(
+								new ByteArrayInputStream(bytes)));
 					}
 					in = NavajoFactory.getInstance().createNavajo(r);
-					if ( in == null ) {
+					if (in == null) {
 						throw new Exception("Invalid Navajo");
 					}
 					r.close();
@@ -357,13 +394,15 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 					// Write request to temp file.
 					File f = DispatcherFactory.getInstance().getTempDir();
 
-					if ( f != null ) {
+					if (f != null) {
 						bytesWritten += bytes.length;
 						logfileIndex++;
-						FileOutputStream fos = new FileOutputStream(new File(f, "request-" + logfileIndex));
+						FileOutputStream fos = new FileOutputStream(new File(f,
+								"request-" + logfileIndex));
 						copyResource(fos, new ByteArrayInputStream(bytes));
 						fos.close();
-						PrintWriter fw = new PrintWriter(new FileWriter(new File(f, "exception-" + logfileIndex)));
+						PrintWriter fw = new PrintWriter(new FileWriter(
+								new File(f, "exception-" + logfileIndex)));
 						t.printStackTrace(fw);
 						fw.flush();
 						fw.close();
@@ -387,32 +426,45 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 			}
 
 			dis = initDispatcher();
-			if(dis==null) {
-				System.err.println("SERIOUS: No dispatcher found. The navajo context did not initialize properly, check the logs to find out why!");
+			if (dis == null) {
+				System.err
+						.println("SERIOUS: No dispatcher found. The navajo context did not initialize properly, check the logs to find out why!");
 				return;
 			}
 			// Check for certificate.
-			Object certObject = request.getAttribute( "javax.servlet.request.X509Certificate");
+			Object certObject = request
+					.getAttribute("javax.servlet.request.X509Certificate");
 
 			// Call Dispatcher with parsed TML document as argument.
-			Navajo outDoc = dis.removeInternalMessages(dis.handle(in, certObject, 
+			Navajo outDoc = dis.removeInternalMessages(dis.handle(
+					in,
+					certObject,
 					new ClientInfo(request.getRemoteAddr(), "unknown",
-							recvEncoding, pT, ( recvEncoding != null && ( recvEncoding.equals(COMPRESS_GZIP) || recvEncoding.equals(COMPRESS_JZLIB))), 
-							( sendEncoding != null && ( sendEncoding.equals(COMPRESS_GZIP) || sendEncoding.equals(COMPRESS_JZLIB))), 
-							request.getContentLength(), created)));
+							recvEncoding, pT,
+							(recvEncoding != null && (recvEncoding
+									.equals(COMPRESS_GZIP) || recvEncoding
+									.equals(COMPRESS_JZLIB))),
+							(sendEncoding != null && (sendEncoding
+									.equals(COMPRESS_GZIP) || sendEncoding
+									.equals(COMPRESS_JZLIB))), request
+									.getContentLength(), created)));
 
 			response.setContentType("text/xml; charset=UTF-8");
 			response.setHeader("Accept-Ranges", "none");
 			response.setHeader("Connection", "close");
 
-			if ( recvEncoding != null && recvEncoding.equals(COMPRESS_JZLIB)) {		
+			if (recvEncoding != null && recvEncoding.equals(COMPRESS_JZLIB)) {
 				response.setHeader("Content-Encoding", COMPRESS_JZLIB);
-				out = new BufferedWriter(new OutputStreamWriter(new ZOutputStream(response.getOutputStream(), JZlib.Z_BEST_SPEED), "UTF-8"));
-			} else if ( recvEncoding != null && recvEncoding.equals(COMPRESS_GZIP)) {
+				out = new BufferedWriter(new OutputStreamWriter(
+						new ZOutputStream(response.getOutputStream(),
+								JZlib.Z_BEST_SPEED), "UTF-8"));
+			} else if (recvEncoding != null
+					&& recvEncoding.equals(COMPRESS_GZIP)) {
 				response.setHeader("Content-Encoding", COMPRESS_GZIP);
-				out = new BufferedWriter(new OutputStreamWriter(new java.util.zip.GZIPOutputStream(response.getOutputStream()), "UTF-8"));
-			}
-			else {
+				out = new BufferedWriter(new OutputStreamWriter(
+						new java.util.zip.GZIPOutputStream(
+								response.getOutputStream()), "UTF-8"));
+			} else {
 				out = new BufferedWriter(response.getWriter());
 			}
 
@@ -420,30 +472,60 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 			out.flush();
 			out.close();
 
-			if ( in != null && in.getHeader() != null && outDoc != null && outDoc.getHeader() != null && !Dispatcher.isSpecialwebservice(in.getHeader().getRPCName())) {
-				System.err.println("(" + dis.getApplicationId() + "): " + new java.util.Date() + ": " + outDoc.getHeader().getHeaderAttribute("accessId") + ":" + in.getHeader().getRPCName() + "(" + in.getHeader().getRPCUser() + "):" + ( System.currentTimeMillis() - start ) + " ms. (st=" + 
-						( outDoc.getHeader().getHeaderAttribute("serverTime") + ",rpt=" + outDoc.getHeader().getHeaderAttribute("requestParseTime") + ",at=" + outDoc.getHeader().getHeaderAttribute("authorisationTime") + ",pt=" + 
-								outDoc.getHeader().getHeaderAttribute("processingTime") + ",tc=" + outDoc.getHeader().getHeaderAttribute("threadCount") + ",cpu=" + outDoc.getHeader().getHeaderAttribute("cpuload") +  ")" + " (" + sendEncoding + "/" + recvEncoding + ")" ));
+			if (in != null
+					&& in.getHeader() != null
+					&& outDoc != null
+					&& outDoc.getHeader() != null
+					&& !Dispatcher.isSpecialwebservice(in.getHeader()
+							.getRPCName())) {
+				System.err.println("("
+						+ dis.getApplicationId()
+						+ "): "
+						+ new java.util.Date()
+						+ ": "
+						+ outDoc.getHeader().getHeaderAttribute("accessId")
+						+ ":"
+						+ in.getHeader().getRPCName()
+						+ "("
+						+ in.getHeader().getRPCUser()
+						+ "):"
+						+ (System.currentTimeMillis() - start)
+						+ " ms. (st="
+						+ (outDoc.getHeader().getHeaderAttribute("serverTime")
+								+ ",rpt="
+								+ outDoc.getHeader().getHeaderAttribute(
+										"requestParseTime")
+								+ ",at="
+								+ outDoc.getHeader().getHeaderAttribute(
+										"authorisationTime")
+								+ ",pt="
+								+ outDoc.getHeader().getHeaderAttribute(
+										"processingTime")
+								+ ",tc="
+								+ outDoc.getHeader().getHeaderAttribute(
+										"threadCount")
+								+ ",cpu="
+								+ outDoc.getHeader().getHeaderAttribute(
+										"cpuload") + ")" + " (" + sendEncoding
+								+ "/" + recvEncoding + ")"));
 			}
 
 			out = null;
 
-		}
-		catch (Throwable e) {
+		} catch (Throwable e) {
 			e.printStackTrace(System.err);
 			dumHttp(request, -1, null);
-			if ( e instanceof  FatalException ) {
+			if (e instanceof FatalException) {
 				FatalException fe = (FatalException) e;
-				if ( fe.getMessage().equals("500.13")) {
+				if (fe.getMessage().equals("500.13")) {
 					// Server too busy.
 					throw new ServletException("500.13");
 				}
 			}
 			throw new ServletException(e);
-		}
-		finally {
+		} finally {
 			dis = null;
-			if (r!=null) {
+			if (r != null) {
 				try {
 					r.close();
 				} catch (Exception e) {

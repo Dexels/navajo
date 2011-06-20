@@ -26,16 +26,13 @@ package navajolisteners;
 
 import com.dexels.navajo.listeners.SchedulerRegistry;
 
-
-
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 
-		
-	//	 Included packages.
-	
+	// Included packages.
+
 	public Version() {
-//		javax.mail.Address a;
-//		setReleaseDate(RELEASEDATE);
+		// javax.mail.Address a;
+		// setReleaseDate(RELEASEDATE);
 	}
 
 	@Override
@@ -44,9 +41,5 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 		super.shutdown();
 		SchedulerRegistry.setScheduler(null);
 	}
-	
-	
-	
 
 }
-

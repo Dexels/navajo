@@ -10,12 +10,15 @@ import com.dexels.navajo.document.Navajo;
 public interface NavajoResponseWrapper {
 	/**
 	 * @param originalRequest
-	 * @param wrappedRequest could be null, if no inputFilter has been supplied
-	 * @param wrappedResponse could be null, if no outputFilter has been supplied
+	 * @param wrappedRequest
+	 *            could be null, if no inputFilter has been supplied
+	 * @param wrappedResponse
+	 *            could be null, if no outputFilter has been supplied
 	 * @param originalResponse
-	 * @throws IOException 
+	 * @throws IOException
 	 */
-	public void processResponse(HttpServletRequest originalRequest, Navajo indoc, Navajo outdoc ,
-			HttpServletResponse originalResponse) throws IOException;
+	public void processResponse(HttpServletRequest originalRequest,
+			Navajo indoc, Navajo outdoc, HttpServletResponse originalResponse)
+			throws IOException;
 
 }
