@@ -2,7 +2,7 @@ Bundle-Name: Navajo Tipi Jabber extension
 Bundle-SymbolicName: com.dexels.navajo.tipi.jabber
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.7.qualified
+Bundle-Version: 1.0.7.qualifier
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.document,
  com.dexels.navajo.tipi,
@@ -13,3 +13,5 @@ Bundle-ClassPath: .,
  lib/smack.jar,
  lib/smackx.jar
 Bundle-ActivationPolicy: lazy
+Bundle-Activator: tipi.TipiJabberExtension
+Import-Package: org.osgi.framework;version="1.5.0"
