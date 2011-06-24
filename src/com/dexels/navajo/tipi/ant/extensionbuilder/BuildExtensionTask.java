@@ -1,13 +1,10 @@
 package com.dexels.navajo.tipi.ant.extensionbuilder;
 
 import java.io.File;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.apache.tools.ant.BuildException;
 
 import com.dexels.navajo.tipi.extensionmanager.ExtensionActions;
-import com.dexels.navajo.tipi.util.XMLElement;
 
 
 public class BuildExtensionTask extends org.apache.tools.ant.Task {

@@ -6,11 +6,13 @@
  */
 package org.dexels.utils;
 
-import java.io.*;
+import java.io.IOException;
 
 public class Base64DecodingFinishedException extends IOException {
+	
+	private static final long serialVersionUID = -2693614501104506907L;
 
-    public Base64DecodingFinishedException(char[] data, int offset, int len) {
+	public Base64DecodingFinishedException(char[] data, int offset, int len) {
         System.err.println("Base64 finished at: "+offset+" len: "+len);
     }
 

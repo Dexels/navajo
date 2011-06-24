@@ -6,13 +6,25 @@
  */
 package com.sun.tools.apache.ant.pack200;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.jar.JarFile;
+import java.util.jar.JarOutputStream;
+import java.util.jar.Pack200;
+import java.util.jar.Pack200.Packer;
+import java.util.zip.GZIPOutputStream;
+
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.taskdefs.*;
-import java.util.*;
-import java.io.*;
-import java.util.jar.*;
-import java.util.zip.*;
-import java.util.jar.Pack200.*;
+import org.apache.tools.ant.taskdefs.Pack;
 
 /**
  * An optional ant Task which emulates the Command Line Interface pack200(1).
@@ -172,7 +184,7 @@ public class Pack200Task extends Pack {
 		Properties pFile = new Properties();
 		pFile.load(is);
 		is.close();
-		for (Map.Entry me : pFile.entrySet()) 
+		for (Map.Entry<Object,Object> me : pFile.entrySet()) 
 		   pkr.properties().put((String) me.getKey(), 
 				(String) me.getValue());
 	    }
@@ -210,7 +222,7 @@ public class Pack200Task extends Pack {
 		    Properties pFile = new Properties();
 		    pFile.load(pc_is);
 		    pc_is.close();	
-		    for (Map.Entry me : pFile.entrySet()) {
+		    for (Map.Entry<Object,Object> me : pFile.entrySet()) {
 		        unpkr.properties().put((String)me.getKey(), (String)me.getValue());
 		    }
 		}

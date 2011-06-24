@@ -1,17 +1,11 @@
 package com.dexels.navajo.tipi.ant.projectbuilder;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.tools.ant.BuildException;
 
-import com.dexels.navajo.tipi.projectbuilder.BaseJnlpBuilder;
 import com.dexels.navajo.tipi.projectbuilder.JnlpDeployer;
-import com.dexels.navajo.tipi.projectbuilder.LocalJnlpBuilder;
-import com.dexels.navajo.tipi.projectbuilder.XsdBuilder;
 
 
 public class TipiBuildDeployJnlp  extends org.apache.tools.ant.Task {

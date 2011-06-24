@@ -2,14 +2,10 @@ package com.dexels.navajo.tipi.ant.extensionbuilder;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.apache.tools.ant.BuildException;
 
 import com.dexels.navajo.tipi.extensionmanager.ExtensionActions;
-import com.dexels.navajo.tipi.util.XMLElement;
 
 
 public class BuildTipiBeansTask extends org.apache.tools.ant.Task {
