@@ -3,9 +3,7 @@ package com.dexels.navajo.tipi.charting;
 import java.awt.GridBagConstraints;
 
 import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
 
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
 
 public abstract class TipiChart extends TipiDataComponentImpl {

@@ -2,45 +2,22 @@ package com.dexels.navajo.tipi.charting;
 
 
 import java.awt.Color;
-import java.awt.Paint;
-import java.io.InputStream;
-import java.io.StringReader;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
 
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.Plot;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
-import org.jfree.data.category.CategoryDataset;
-import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.data.time.Day;
-import org.jfree.data.time.Hour;
 import org.jfree.data.time.Millisecond;
-import org.jfree.data.time.Minute;
-import org.jfree.data.time.Month;
 import org.jfree.data.time.RegularTimePeriod;
-import org.jfree.data.time.Second;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
-import org.jfree.data.time.TimeSeriesDataItem;
-import org.jfree.data.time.Week;
-import org.jfree.data.xml.DatasetReader;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.Selection;
-import com.dexels.navajo.document.types.ClockTime;
-import com.dexels.navajo.document.types.StopwatchTime;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
-import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
 
 public class TipiTimeChart extends TipiChart {
 
