@@ -28,14 +28,21 @@
 
 package de.matthiasmann.p200ant;
 
+import static java.util.jar.Pack200.Packer.FALSE;
+import static java.util.jar.Pack200.Packer.KEEP;
+import static java.util.jar.Pack200.Packer.KEEP_FILE_ORDER;
+import static java.util.jar.Pack200.Packer.LATEST;
+import static java.util.jar.Pack200.Packer.MODIFICATION_TIME;
+import static java.util.jar.Pack200.Packer.SEGMENT_LIMIT;
+import static java.util.jar.Pack200.Packer.TRUE;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Task;
 
-import static java.util.jar.Pack200.Packer.*;
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 
 /**

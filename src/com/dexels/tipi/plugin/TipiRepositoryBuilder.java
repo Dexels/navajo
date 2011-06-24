@@ -1,19 +1,15 @@
 package com.dexels.tipi.plugin;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
 import java.util.StringTokenizer;
 
-import org.eclipse.ant.core.AntRunner;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -45,7 +41,6 @@ import com.dexels.navajo.tipi.projectbuilder.XsdBuilder;
 import com.dexels.navajo.tipi.projectbuilder.impl.TipiLocalJnlpProjectBuilder;
 import com.dexels.navajo.tipi.projectbuilder.impl.TipiRemoteJnlpProjectBuilder;
 import com.dexels.navajo.tipi.projectbuilder.impl.TipiWebProjectBuilder;
-import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.util.XMLElement;
 
 public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
