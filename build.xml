@@ -1,0 +1,37 @@
+<project default="publish" name="TipiVaadinDeploy" basedir=".">
+
+	<target name="clean">
+		<delete dir="WEB-INF/eclipse"/>
+	</target>
+	<target name="downloadproduct" depends="clean">
+		<copy todir="WEB-INF" overwrite="true">
+			<fileset dir="/Users/frank/Desktop/dump8/">
+				<include name="eclipse/configuration/**" />
+				<include name="eclipse/plugins/**" />
+			</fileset>
+		</copy>
+		<copy todir="WEB-INF/eclipse" overwrite="true">
+			<fileset dir=".">
+				<include name="launch.ini" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="archive" description="description" depends="downloadproduct">
+		<war destfile="TipiVaadin.war">
+			<fileset dir=".">
+				<include name="WEB-INF/**/*" />
+				<include name="index.htm" />
+			</fileset>
+		</war>
+
+	</target>
+
+	<target name="publish" depends="archive">
+		<copy todir="/Library/Tomcat7_0_8/webapps/" file="TipiVaadin.war">
+
+		</copy>
+	</target>
+
+
+</project>
