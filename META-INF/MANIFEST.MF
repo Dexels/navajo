@@ -17,4 +17,5 @@ Require-Bundle: com.dexels.navajo.client,
 Export-Package: com.dexels.navajo.server.listener.http.continuation
 Import-Package: javax.servlet;version="2.5.0",
  javax.servlet.http,
- org.eclipse.jetty.continuation
+ org.eclipse.jetty.continuation,
+ org.osgi.framework;version="1.5.0"
