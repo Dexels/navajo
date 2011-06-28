@@ -3,16 +3,17 @@ package com.dexels.navajo.tipi.vaadin.application;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.LinkedList;
-import java.util.List;
 
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import navajo.ExtensionDefinition;
 import tipi.TipiApplicationInstance;
-import tipi.TipiExtension;
 import tipi.TipiVaadinExtension;
 
 import com.dexels.navajo.tipi.TipiContext;
@@ -31,11 +32,15 @@ public class TipiVaadinApplication extends Application implements
 	private ServletContext servletContext;
 	private HttpServletRequest request;
 	private HttpServletResponse response;
+	private File installationFolder;
 
+	private static final Logger logger = LoggerFactory.getLogger(TipiVaadinApplication.class);
+	
 	@Override
 	public void init() {
 
-		setTheme("runo");
+		logger.debug("Theme hardcoded to oao. TODO fix");
+		setTheme("oao");
 		final Window mainWindow = new Window("Tipi Vaadin");
 		setMainWindow(mainWindow);
 		try {
@@ -46,13 +51,13 @@ public class TipiVaadinApplication extends Application implements
 //		checkForExtensions();
 	}
 
-	private void checkForExtensions() {
-		File extensions = new File(getInstallationFolder(),"extensions");
-		TipiVaadinExtension.getInstance().installAllExtensions(extensions);
-		
-//		installAllExtensions(TipiVaadinExtension.getInstance().getBundleContext(),extensions);
-	}
 
+
+	private void checkForExtensions() throws IOException {
+		File installationFolder = getInstallationFolder();
+		logger.info("Loading extensions in: ",installationFolder.getAbsolutePath());
+		TipiVaadinExtension.getInstance().initialializeExtension(installationFolder);
+	}
 	
 
 	@Override
@@ -72,24 +77,21 @@ public class TipiVaadinApplication extends Application implements
 
 	@Override
 	public TipiContext createContext() throws IOException {
-		// TODO Rewrite to OSGi resolution
-		List<TipiExtension> preload = new LinkedList<TipiExtension>();
-//		preload.add(new TipiCoreExtension());
-//		TipiVaadinExtension tipiVaadinExtension = new TipiVaadinExtension();
-//		preload.add(tipiVaadinExtension);
-
-		// preload with empty list is ok
-		VaadinTipiContext va = new VaadinTipiContext(this, preload);
-		va.setMainWindow(getMainWindow());
-
-		va.setContextName(this.servletContext.getContextPath());
+		try {
+			setupInstallationFolder();
+		} catch (ServletException e1) {
+			throw new IOException("Error resolving tipi installation directory.",e1);
+		}
 
 		checkForExtensions();
-		System.err.println("Vaadin context:"+va.hashCode());
 		TipiVaadinExtension.getInstance().getTipiExtensionRegistry().debugExtensions();
+
+		VaadinTipiContext va = new VaadinTipiContext(this);
+		va.setMainWindow(getMainWindow());
+		va.setContextName(this.servletContext.getContextPath());
+
 		TipiVaadinExtension.getInstance().getTipiExtensionRegistry().loadExtensions(va);
 		
-		// FIX multi parsing the core classdefs!
 		
 		((BrowserCookieManager)va.getCookieManager()).setRequest(request);
 		((BrowserCookieManager)va.getCookieManager()).setResponse(response);
@@ -139,11 +141,23 @@ public class TipiVaadinApplication extends Application implements
 	}
 
 	public File getInstallationFolder() {
-		return new File(
-				InstallationPathResolver
-						.getInstallationPath(this.servletContext));
+		return this.installationFolder;
 	}
-
+	
+	private void setupInstallationFolder() throws ServletException {
+		String installationPath = InstallationPathResolver
+				.getInstallationPath(this.servletContext);
+		this.installationFolder =  new File(
+				installationPath);
+	}
+//
+//	public String setupInstallationFolder(String contextPath) throws ServletException, IOException {
+//		String installationPath = InstallationPathResolver
+//				.getInstallationFromPath(contextPath);
+//		this.installationFolder =  new File(
+//				installationPath);
+//	}
+	
 	@Override
 	public void onRequestStart(HttpServletRequest request, HttpServletResponse response) {
 		this.request = request;

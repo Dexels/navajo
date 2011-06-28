@@ -1,13 +1,11 @@
 package com.dexels.navajo.tipi.vaadin;
 
 import java.io.File;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import tipi.TipiApplicationInstance;
-import tipi.TipiExtension;
 
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiContext;
@@ -26,12 +24,12 @@ public class VaadinTipiContext extends TipiContext {
 
 	private String contextName = null;
 	
-	public VaadinTipiContext(TipiApplicationInstance myApplication,
-			List<TipiExtension> preload) {
-		super(myApplication, preload, null);
+	public VaadinTipiContext(TipiApplicationInstance myApplication) {
+		super(myApplication, null);
 		
 		
 		File install = getVaadinApplication().getInstallationFolder();
+		logger.info("Using install: "+install.getAbsolutePath());
 		File tipi = new File(install,"tipi");
 		File resource = new File(install,"resource");
 		setTipiResourceLoader(new FileResourceLoader(tipi));

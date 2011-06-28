@@ -8,28 +8,37 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 
-class InstallationPathResolver {
+public class InstallationPathResolver {
 
-	public static String getInstallationPath(ServletContext context) {
+	public static String getInstallationPath(ServletContext context) throws ServletException {
 		String force = context.getInitParameter("forcedTipiPath");
 		if(force!=null) {
 			return force;
 		} else {
 			try {
-				Map<String,String> systemContexts = loadSystemContexts();
+				
 				String fullContext = context.getContextPath();
-				System.err.println("Context path: "+fullContext.length());
-				String contextPath = fullContext.startsWith("/")?fullContext.substring(1):fullContext;
-				if(contextPath.isEmpty()) {
-					contextPath="~";
-				}
-				return getInstallationPath(systemContexts, contextPath);
+
+				return getInstallationFromPath(fullContext);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 		return null;
+	}
+
+
+
+	public static String getInstallationFromPath(String fullContext) throws IOException, ServletException {
+		Map<String,String> systemContexts = loadSystemContexts();
+		System.err.println("Context path: "+fullContext.length());
+		String contextPath = fullContext.startsWith("/")?fullContext.substring(1):fullContext;
+		if(contextPath.isEmpty()) {
+			contextPath="~";
+		}
+		return getInstallationPath(systemContexts, contextPath);
 	}
 	
 	private static Map<String,String> loadSystemContexts() throws IOException {
@@ -56,8 +65,9 @@ class InstallationPathResolver {
 	
 	/**
 	 * Only used when the path is not forced.
+	 * @throws ServletException 
 	 */
-	private static String getInstallationPath(Map<String,String> systemContexts,String contextPath) {
+	private static String getInstallationPath(Map<String,String> systemContexts,String contextPath) throws ServletException {
 		String engineInstance = System.getProperty("com.dexels.tipi.EngineInstance");
 		String key = contextPath;
 		if(engineInstance!=null) {
@@ -65,9 +75,20 @@ class InstallationPathResolver {
 		}
 		String result = systemContexts.get(key);
 		if(result!=null) {
+			System.err.println("Path "+contextPath+" resolved: "+result);
 			return result;
 		}
-		return systemContexts.get(contextPath);
+		String resolvedPath = systemContexts.get(contextPath);
+		if(resolvedPath==null) {
+			if(engineInstance!=null) {
+				throw new ServletException("No context found at: "+contextPath+"@"+engineInstance);
+			} else {
+				throw new ServletException("No context found at: "+contextPath);
+				
+			}
+
+		}
+		return resolvedPath;
 	}
 	
 }

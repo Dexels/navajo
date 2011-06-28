@@ -1,5 +1,6 @@
 package tipi;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.osgi.framework.BundleContext;
@@ -17,21 +18,28 @@ public class TipiVaadinExtension extends TipiAbstractXMLExtension implements Tip
 	
 	private BundleContext context;
 	
-	
+	private File installationFolder = null;
+		
+	public void initialializeExtension(File installationFolder) {
+		// This method will be called multiple times. It should only be done one for every extension directory.
+		// OTOH, OSGi should be safe for this and simply refuse to re-add an extension
+		this.installationFolder = installationFolder;
+		File extensions = new File(installationFolder, "extensions");
+		TipiVaadinExtension.getInstance().installAllExtensions(extensions);
+	}
+
 	public BundleContext getBundleContext() {
 		return context;
 	}
 
 	public TipiVaadinExtension() throws XMLParseException,
 			IOException {
-		loadDescriptor();
 		instance = this;
 	}
 
 	@Override
 	public void start(BundleContext context) throws Exception {
 		this.context = context;
-		logger.info("Registering VAADIN ");
 		registerTipiExtension(context);
 		
 	}
@@ -48,6 +56,11 @@ public class TipiVaadinExtension extends TipiAbstractXMLExtension implements Tip
 	public static TipiVaadinExtension getInstance() {
 		return instance;
 	}
+
+	public File getInstallationFolder() {
+		return this.installationFolder;
+	}
+	
 	
 //
 //	@Override
