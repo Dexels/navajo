@@ -3,7 +3,6 @@
 
 <product name="Tipi Vaadin" uid="com.dexels.navajo.tipi.vaadin" application="org.eclipse.ui.ide.workbench" version="1.0.1" useFeatures="false" includeLaunchers="false">
 
-
    <configIni use="default">
    </configIni>
 
@@ -15,7 +14,6 @@
 
    <windowImages/>
 
-
    <launcher>
       <solaris/>
       <win useIco="false">
@@ -23,10 +21,8 @@
       </win>
    </launcher>
 
-
    <vm>
    </vm>
-
 
    <plugins>
       <plugin id="ch.qos.logback.classic"/>
@@ -41,25 +37,28 @@
       <plugin id="com.dexels.navajo.tipi.vaadin.bridged"/>
       <plugin id="com.dexels.navajo.version"/>
       <plugin id="com.vaadin"/>
-      <plugin id="javax.servlet"/>
       <plugin id="javax.transaction" fragment="true"/>
+      <plugin id="org.apache.felix.webconsole"/>
+      <plugin id="org.eclipse.core.runtime.compatibility.registry" fragment="true"/>
       <plugin id="org.eclipse.equinox.common"/>
       <plugin id="org.eclipse.equinox.ds"/>
       <plugin id="org.eclipse.equinox.event"/>
-      <plugin id="org.eclipse.equinox.http.jetty"/>
       <plugin id="org.eclipse.equinox.http.registry"/>
       <plugin id="org.eclipse.equinox.http.servlet"/>
       <plugin id="org.eclipse.equinox.http.servletbridge"/>
       <plugin id="org.eclipse.equinox.io"/>
       <plugin id="org.eclipse.equinox.log"/>
       <plugin id="org.eclipse.equinox.preferences"/>
+      <plugin id="org.eclipse.equinox.registry"/>
       <plugin id="org.eclipse.equinox.servletbridge"/>
+      <plugin id="org.eclipse.equinox.servletbridge.extensionbundle" fragment="true"/>
+      <plugin id="org.eclipse.equinox.transforms.hook" fragment="true"/>
       <plugin id="org.eclipse.equinox.util"/>
+      <plugin id="org.eclipse.equinox.weaving.hook" fragment="true"/>
       <plugin id="org.eclipse.osgi"/>
       <plugin id="org.eclipse.osgi.services"/>
       <plugin id="org.hamcrest.core"/>
       <plugin id="org.junit"/>
-      <plugin id="org.mortbay.jetty.server"/>
       <plugin id="org.mortbay.jetty.util"/>
       <plugin id="org.slf4j.api"/>
    </plugins>
@@ -76,11 +75,12 @@
       <plugin id="com.dexels.navajo.tipi.vaadin.bridged" autoStart="true" startLevel="4" />
       <plugin id="com.dexels.navajo.version" autoStart="true" startLevel="3" />
       <plugin id="com.vaadin" autoStart="true" startLevel="2" />
+      <plugin id="org.apache.felix.webconsole" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="3" />
       <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="3" />
       <plugin id="org.eclipse.equinox.event" autoStart="true" startLevel="3" />
-      <plugin id="org.eclipse.equinox.http.jetty" autoStart="true" startLevel="3" />
       <plugin id="org.eclipse.equinox.http.servlet" autoStart="true" startLevel="3" />
+      <plugin id="org.eclipse.equinox.http.servletbridge" autoStart="true" startLevel="3" />
       <plugin id="org.eclipse.equinox.io" autoStart="true" startLevel="3" />
       <plugin id="org.eclipse.equinox.log" autoStart="true" startLevel="3" />
       <plugin id="org.eclipse.equinox.preferences" autoStart="true" startLevel="3" />

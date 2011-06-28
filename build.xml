@@ -2,6 +2,7 @@
 
 	<target name="clean">
 		<delete dir="WEB-INF/eclipse"/>
+		<delete dir="WEB-INF/lib"/>
 	</target>
 	<target name="downloadproduct" depends="clean">
 		<copy todir="WEB-INF" overwrite="true">
@@ -10,11 +11,22 @@
 				<include name="eclipse/plugins/**" />
 			</fileset>
 		</copy>
+		<copy todir="WEB-INF/lib" overwrite="true">
+			<fileset dir="/Users/frank/Desktop/dump8/eclipse/plugins">
+				<include name="org.eclipse.equinox.servletbridge_*" />
+			</fileset>
+		</copy>
+		
 		<copy todir="WEB-INF/eclipse" overwrite="true">
 			<fileset dir=".">
 				<include name="launch.ini" />
 			</fileset>
 		</copy>
+		<copy todir="WEB-INF" overwrite="true">
+			<fileset dir=".">
+				<include name="web.xml" />
+			</fileset>
+		</copy>		
 	</target>
 
 	<target name="archive" description="description" depends="downloadproduct">
@@ -28,7 +40,7 @@
 	</target>
 
 	<target name="publish" depends="archive">
-		<copy todir="/Library/Tomcat7_0_8/webapps/" file="TipiVaadin.war">
+		<copy todir="/Library/apache-tomcat-7.0.16/webapps/" file="TipiVaadin.war">
 
 		</copy>
 	</target>
