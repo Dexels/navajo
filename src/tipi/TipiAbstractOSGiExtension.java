@@ -49,15 +49,15 @@ public abstract class TipiAbstractOSGiExtension implements TipiExtension,
 		return reg;
 	}
 
-	@Override
-	public void start(BundleContext context) throws Exception {
-		registerTipiExtension(context);
-	}
-
-	@Override
-	public void stop(BundleContext context) throws Exception {
-
-	}
+//	@Override
+//	public void start(BundleContext context) throws Exception {
+//		registerTipiExtension(context);
+//	}
+//
+//	@Override
+//	public void stop(BundleContext context) throws Exception {
+//
+//	}
 	
 	public BundleContext getBundleContext() {
 		return context;
@@ -78,6 +78,7 @@ public abstract class TipiAbstractOSGiExtension implements TipiExtension,
 			installExtension(file);
 		}
 	}
+
 	
 	public void installExtension( File library) {
 		List<Bundle> loaded = new LinkedList<Bundle>();
