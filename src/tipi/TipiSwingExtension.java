@@ -17,7 +17,6 @@ public class TipiSwingExtension extends TipiAbstractXMLExtension implements
 
 	
 	public TipiSwingExtension() throws XMLParseException, IOException {
-		loadDescriptor();
 		instance = this;
 	}
 
