@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SwingTipi depenencies
 Bundle-SymbolicName: com.dexels.navajo.tipi.swing.deps
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: javaws.jar,
  AnimatedTransitions.jar,
  TimingFramework.jar
