@@ -215,13 +215,13 @@ public abstract class TipiContext implements ITipiExtensionContainer {
 		initializeContext(myApplication, extensionList, parent);
 	}
 
-	public TipiContext(TipiApplicationInstance myApplication,
-			List<TipiExtension> preload, TipiContext parent) {
-		this.myApplication = myApplication;
-
-		// this();
-		initializeContext(myApplication, preload, parent);
-	}
+//	public TipiContext(TipiApplicationInstance myApplication,
+//			List<TipiExtension> preload, TipiContext parent) {
+//		this.myApplication = myApplication;
+//
+//		// this();
+//		initializeContext(myApplication, preload, parent);
+//	}
 
 	private void initializeContext(TipiApplicationInstance myApplication,
 			List<TipiExtension> preload, TipiContext parent) {
