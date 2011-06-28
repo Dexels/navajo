@@ -189,7 +189,7 @@ public class TslSemanticHighlightingCalculator implements
 		EList<LeafNode> leafNodes = node.getLeafNodes();
 		if(index<0) {
 			ind = -1;
-			int current = leafNodes.size() + index;
+//			int current = leafNodes.size() + index;
 			for(int i = leafNodes.size()-1; i>=0;i--) {
 				LeafNode nn = node.getLeafNodes().get(i);
 				if(!nn.isHidden()) {

@@ -9,16 +9,10 @@ import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfiguration;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.ISemanticHighlightingCalculator;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.antlr.AbstractAntlrTokenToAttributeIdMapper;
 
-import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.dsl.expression.proposals.INavajoContextProvider;
 import com.dexels.navajo.dsl.tsl.ui.highlighting.TslHighlightingConfiguration;
 import com.dexels.navajo.dsl.tsl.ui.highlighting.TslLexicalHighlightingMapper;
 import com.dexels.navajo.dsl.tsl.ui.highlighting.TslSemanticHighlightingCalculator;
-import com.dexels.navajo.dsl.tsl.ui.internal.TslActivator;
 import com.dexels.navajo.dsl.tsl.ui.outline.TslTransformer;
-import com.dexels.navajo.studio.eclipse.INavajoActivityListener;
-import com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin;
-import com.google.inject.Injector;
 
 /**
  * Use this class to register components to be used within the IDE.
