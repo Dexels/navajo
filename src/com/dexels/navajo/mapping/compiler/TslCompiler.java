@@ -2205,13 +2205,15 @@ public String mapNode(int ident, Element n) throws Exception {
       //
     } else if (n.getNodeName().equals("antimessage")) {
     	  
+    	Message m;
+    	
     	  String messageName = ((Element) n).getAttribute("name");
-    	  result.append(printIdent(ident) + "if ( currentOutMsg != null ) {\n");
-    	  result.append(printIdent(ident+2) + "   currentOutMsg.removeMessage(\"" + messageName + "\");\n");
+    	  result.append(printIdent(ident) + "if ( currentOutMsg != null && currentOutMsg.getMessage(\"" + messageName + "\") != null ) {\n");
+    	  result.append(printIdent(ident+2) + "   currentOutMsg.removeMessage(currentOutMsg.getMessage(\"" + messageName + "\"));\n");
     	  result.append(printIdent(ident) + "} else \n");
     	  result.append(printIdent(ident) + "if (access.getOutputDoc().getMessage(\"" + messageName + "\") != null) { \n");
     	  result.append(printIdent(ident+2) + "access.getOutputDoc().removeMessage(\"" + messageName + "\");\n");   	  
-    	  result.append(printIdent(ident) + "} else \n");
+    	  result.append(printIdent(ident) + "}\n");
     }
     else if (n.getNodeName().equals("methods")) {
       result.append(methodsNode(ident, (Element) n));
