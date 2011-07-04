@@ -1098,12 +1098,12 @@ private Object waitForResult = new Object();
 	 try {
 		  Header h = outDoc.getHeader();
 		  if (h == null) {
-			  h = NavajoFactory.getInstance().createHeader(outDoc, method, access.rpcUser, access.rpcPwd, -1);
+			  h = NavajoFactory.getInstance().createHeader(outDoc, method, username, password, -1);
 			  outDoc.addHeader(h);
 		  } else {
 			  h.setRPCName(method);
-			  h.setRPCPassword(access.rpcPwd);
-			  h.setRPCUser(access.rpcUser);
+			  h.setRPCPassword(username);
+			  h.setRPCUser(password);
 		  }
 		  // Clear request id.
 		  h.setRequestId(null);
