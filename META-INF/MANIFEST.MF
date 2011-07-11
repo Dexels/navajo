@@ -26,12 +26,11 @@ Export-Package: com.dexels.navajo.client;uses:="javax.servlet,javax.servlet.http
  dexels,
  navajolisteners;uses:="dexels"
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.client;bundle-version="3.0.4",
- com.dexels.navajo.core,
+Require-Bundle: com.dexels.navajo.core,
+ com.dexels.navajo.client;bundle-version="3.0.5",
  com.dexels.navajo.document;bundle-version="1.0.0",
- com.dexels.navajo.version;bundle-version="1.0.7"
-Import-Package: javax.servlet;version="2.5.0",
- javax.servlet.http,
- junit.framework,
+ com.dexels.navajo.version;bundle-version="1.0.7",
+ javax.servlet;bundle-version="2.5.0"
+Import-Package: junit.framework,
  org.osgi.framework;version="1.5.0"
 Bundle-ActivationPolicy: lazy
