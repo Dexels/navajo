@@ -938,4 +938,9 @@ public void writeJSON(Writer writer) throws IOException {
 	throw new UnsupportedOperationException("No JSON output in JaxpImpl");
 }
 
+@Override
+public Message instantiateFromDefinition() {
+	return null;
+}
+
 }

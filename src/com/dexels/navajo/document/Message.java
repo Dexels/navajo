@@ -357,6 +357,13 @@ public interface Message
    */
   public Message copy(Navajo n);
 
+  
+  /**
+   * Create and add a new element, based on the definition message
+   * @return
+   */
+  public Message instantiateFromDefinition();
+  
   /**
    * Copies a message to a new (empty) Navajo document.
    * NOTE that the copied message is added to the newly created Navajo object(!)

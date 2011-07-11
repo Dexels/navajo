@@ -978,6 +978,13 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		return startIndex;
 	}
 
+	
+	public Message instantiateFromDefinition() {
+		Message copy = getDefinitionMessage().copy(this.getRootDoc());
+		addElement(copy);
+		return copy;
+	}
+	
 	public final int getEndIndex() {
 		return endIndex;
 	}
