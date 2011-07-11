@@ -2,6 +2,8 @@ package tipi;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,6 +12,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.PropertyResourceBundle;
 import java.util.StringTokenizer;
+import java.util.Map.Entry;
 
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
@@ -43,6 +46,54 @@ public abstract class BaseTipiApplicationInstance implements TipiApplicationInst
 	}
 
 	// Utilities:
+	
+	public static void processSettings(String deploy, String profile,  File installationFolder, TipiContext context) throws IOException {
+
+//		Map<String, String> bundleValues = getBundleMap("tipi.properties");
+//		String deploy = bundleValues.get("deploy");
+		File settings = new File(installationFolder,"settings");
+
+		Map<String, String> bundleValues = getBundleMap("arguments.properties",installationFolder);
+		File profileProperties = new File(settings,"profiles/"+profile+".properties");
+		if(profileProperties.exists()) {
+			Map<String, String> profileValues = getBundleMap("profiles/"+profile+".properties",installationFolder);
+			bundleValues.putAll(profileValues);
+		} else {
+			System.err.println("No profile bundles present.");
+		}
+		System.err.println("Settings: "+bundleValues);
+		Map<String,String> resolvedValues = new HashMap<String, String>();
+		for (Entry<String,String> entry : bundleValues.entrySet()) {
+			if(entry.getKey().indexOf("/")<0) {
+				resolvedValues.put(entry.getKey(), entry.getValue());
+			} else {
+				String[] elts = entry.getKey().split("/");
+				if(elts[0].equals(deploy)) {
+					resolvedValues.put(elts[1], entry.getValue());
+				}
+			}
+			
+		}
+		System.err.println("RESOLVED TO: "+resolvedValues);
+		for (Entry<String,String> entry : resolvedValues.entrySet()) {
+			context.setSystemProperty(entry.getKey(), entry.getValue());
+		}	
+//		return resolvedValues;
+	}
+
+	public static Map<String, String> getBundleMap(String path, File installationFolder) throws FileNotFoundException, IOException {
+		File settings = new File(installationFolder,"settings");
+		FileReader argReader = new FileReader(new File(settings,path));
+		Map<String,String> bundleValues = new HashMap<String, String>();
+		PropertyResourceBundle prb = new PropertyResourceBundle(argReader);
+		for (String key : prb.keySet()) {
+			bundleValues.put(key, prb.getString(key));
+		}
+		return bundleValues;
+	}
+
+
+
 
 	protected Map<String, String> parseProperties(String gsargs)
 			throws IOException {
