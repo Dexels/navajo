@@ -48,8 +48,6 @@ public abstract class TipiLayout {
 		myComponent = tc;
 	}
 
-	// public abstract void instantiateLayout(TipiContext context, Tipi t,
-	// XMLElement def);
 	public abstract void createLayout() throws TipiException;
 
 	protected abstract void loadLayout(XMLElement def, TipiComponent current)
@@ -99,21 +97,6 @@ public abstract class TipiLayout {
 		myLayout = l;
 	}
 
-	//
-	// private final void loadValues(XMLElement values) {
-	// List<XMLElement> children = values.getChildren();
-	// for (int i = 0; i < children.size(); i++) {
-	// XMLElement xx = children.get(i);
-	// String valueName = xx.getStringAttribute("name");
-	// TipiValue tv = new TipiValue(myComponent);
-	// tv.load(xx);
-	// componentValues.put(valueName, tv);
-	// if (tv.getValue() != null && !"".equals(tv.getValue())) {
-	// setValue(tv.getName(), tv);
-	// }
-	// }
-	// }
-
 	public void childAdded(Object c) {
 	}
 
@@ -121,5 +104,9 @@ public abstract class TipiLayout {
 		// Not implemented, called after creating layout, override if further
 		// action is needed
 
+	}
+
+	public void addToLayout(Object component, Object constraints) {
+		
 	}
 }
