@@ -8,6 +8,9 @@ import java.util.*;
 
 import javax.swing.tree.TreeNode;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.types.*;
 
@@ -40,6 +43,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	private static final long serialVersionUID = 5167262782916246791L;
 	protected String myName;
 	protected String myValue = null;
+	private static final Logger logger = LoggerFactory.getLogger(Property.class);
 
 	@SuppressWarnings("serial")
 	protected final ArrayList<BaseSelectionImpl> selectionList = new ArrayList<BaseSelectionImpl>() {
@@ -1064,6 +1068,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 	public final void setSelected(Selection s) {
 		if (selectionList == null) {
+			logger.warn("setSelected(selection) got null input"); 
 			return;
 		}
 		List<Selection> old;
