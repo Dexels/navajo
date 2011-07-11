@@ -71,9 +71,11 @@ public abstract class TipiAbstractOSGiExtension implements TipiExtension,
 				return name.endsWith(".jar");
 			}
 		});
-		
+		if(list==null) {
+			logger.info("No extension dir found ("+extensionDir.getAbsolutePath()+"). Resuming.");
+			return;
+		}
 		// TODO Refactor to agnostic impl
-		System.err.println("FIles #"+list.length);
 		for (File file : list) {
 			installExtension(file);
 		}
