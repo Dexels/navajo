@@ -62,6 +62,7 @@ public class TipiInsertMessage extends TipiAction {
 		// TODO: Perhaps refactor into NavajoDocument
 		Message copy = definitionMessage.copy(arrayMessage.getRootDoc());
 		copy.setType("");
+		// TODO: Seems redundant. Message#copy does this
 		List<Property> al = definitionMessage.getAllProperties();
 		for (Iterator<Property> iter = al.iterator(); iter.hasNext();) {
 			Property element = iter.next();
