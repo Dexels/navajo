@@ -36,9 +36,8 @@ public class VaadinComponent {
 			Hashtable<String,String> ht = new Hashtable<String,String>();
 			ht.put("application", "com.dexels.navajo.tipi.vaadin.application.TipiVaadinApplication");
 //			httpService.registerServlet(SERVLET_ALIAS, servlet, ht, null);
-			
-			String path = InstallationPathResolver.getInstallationFromPath("/oao");
-			System.err.println("USING CONTEXT PATH: "+path);
+			// TODO Fix hardcoded stuff
+			String path = InstallationPathResolver.getInstallationFromPath("/oao").get(0);
 			VaadinFileServlet vfs = new VaadinFileServlet(path);
 			//httpService.registerResources("/VAADIN", path+"/VAADIN", commonContext);
 			httpService.registerServlet("/VAADIN", vfs, null, commonContext);
