@@ -603,7 +603,6 @@ public class NavajoClient implements ClientInterface {
     else {
       url = new URL("http://" + name );
     }
-    System.err.println("Opening connection to url: "+url.toString());
     HttpURLConnection con = null;
     if (sslFactory == null) {
       con = (HttpURLConnection) url.openConnection();
@@ -653,7 +652,6 @@ public class NavajoClient implements ClientInterface {
     } catch (Throwable e) {
      	System.err.println("setChunkedStreamingMode does not exist, upgrade to java 1.5+");
     }
-    System.err.println("Headers complete");
     if (useCompression) {
     	con.setRequestProperty("Accept-Encoding", "jzlib");
     	con.setRequestProperty("Content-Encoding", "jzlib");
