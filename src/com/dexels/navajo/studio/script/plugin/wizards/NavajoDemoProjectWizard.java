@@ -72,6 +72,7 @@ public class NavajoDemoProjectWizard extends Wizard implements INewWizard {
 	 * Adding the page to the wizard.
 	 */
 
+	@Override
 	public void addPages() {
 		page = new WizardNewProjectCreationPage("Create a demo project");
 		addPage(page);
@@ -81,6 +82,7 @@ public class NavajoDemoProjectWizard extends Wizard implements INewWizard {
 	 * This method is called when 'Finish' button is pressed in the wizard. We
 	 * will create an operation and run it using wizard as execution context.
 	 */
+	@Override
 	public boolean performFinish() {
 		final String projectName = page.getProjectName();
 		IRunnableWithProgress op = new IRunnableWithProgress() {
@@ -232,7 +234,8 @@ public class NavajoDemoProjectWizard extends Wizard implements INewWizard {
 				});
 			Job j;
 			j = new Job("Recompiling new project...") {
-	            protected IStatus run(IProgressMonitor monitor) {
+	            @Override
+				protected IStatus run(IProgressMonitor monitor) {
 	            	try {
 						touchRecursive(ipp,monitor);
 					} catch (CoreException e) {
@@ -317,7 +320,7 @@ public class NavajoDemoProjectWizard extends Wizard implements INewWizard {
 		if (!(selection instanceof IStructuredSelection)) {
 			return;
 		}
-		IStructuredSelection iss = (IStructuredSelection) selection;
+		IStructuredSelection iss = selection;
 		Object oss = iss.getFirstElement();
 		if (!(oss instanceof IResource)) {
 			return;
@@ -333,7 +336,7 @@ public class NavajoDemoProjectWizard extends Wizard implements INewWizard {
 			IResource[] ir =  icc.members();
 		    for (int i = 0; i < ir.length; i++) {
 	          if (ir[i] instanceof IFolder) {
-	              touchRecursive(((IFolder)ir[i]),monitor);
+	              touchRecursive((ir[i]),monitor);
 	          }  else {
 		          ir[i].touch(monitor);
 	          }

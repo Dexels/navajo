@@ -9,6 +9,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.preference.ListEditor;
 import org.eclipse.jface.util.Assert;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -110,7 +111,8 @@ public class ListFieldEditor extends ListEditor implements NavajoPluginResources
     /*
      * (non-Javadoc) Method declared on FieldEditor.
      */
-    protected void adjustForNumColumns(int numColumns) {
+    @Override
+	protected void adjustForNumColumns(int numColumns) {
         Control control = getLabelControl();
         ((GridData) control.getLayoutData()).horizontalSpan = numColumns;
         ((GridData) list.getLayoutData()).horizontalSpan = numColumns - 1;
@@ -123,11 +125,11 @@ public class ListFieldEditor extends ListEditor implements NavajoPluginResources
      *            the box for the buttons
      */
     protected void createButtons(Composite buttonBox) {
-        addButton = createPushButton(buttonBox, PREF_PAGE_ADDBUTTON_LABEL); //$NON-NLS-1$
-        removeButton = createPushButton(buttonBox, PREF_PAGE_REMOVEBUTTON_LABEL); //$NON-NLS-1$
-        updateButton = createPushButton(buttonBox, PREF_PAGE_UPDATEBUTTON_LABEL); //$NON-NLS-1$
-        upButton = createPushButton(buttonBox, PREF_PAGE_UPBUTTON_LABEL); //$NON-NLS-1$
-        downButton = createPushButton(buttonBox, PREF_PAGE_DOWNBUTTON_LABEL); //$NON-NLS-1$
+        addButton = createPushButton(buttonBox, PREF_PAGE_ADDBUTTON_LABEL); 
+        removeButton = createPushButton(buttonBox, PREF_PAGE_REMOVEBUTTON_LABEL); 
+        updateButton = createPushButton(buttonBox, PREF_PAGE_UPDATEBUTTON_LABEL); 
+        upButton = createPushButton(buttonBox, PREF_PAGE_UPBUTTON_LABEL); 
+        downButton = createPushButton(buttonBox, PREF_PAGE_DOWNBUTTON_LABEL); 
     }
 
     /**
@@ -155,9 +157,11 @@ public class ListFieldEditor extends ListEditor implements NavajoPluginResources
     /**
      * Creates a selection listener.
      */
-    public void createSelectionListener() {
+    @Override
+	public void createSelectionListener() {
         selectionListener = new SelectionAdapter() {
-            public void widgetSelected(SelectionEvent event) {
+            @Override
+			public void widgetSelected(SelectionEvent event) {
                 Widget widget = event.widget;
                 if (widget == addButton) {
                     addPressed();
@@ -179,7 +183,8 @@ public class ListFieldEditor extends ListEditor implements NavajoPluginResources
     /*
      * (non-Javadoc) Method declared on FieldEditor.
      */
-    protected void doFillIntoGrid(Composite parent, int numColumns) {
+    @Override
+	protected void doFillIntoGrid(Composite parent, int numColumns) {
 
         Control control = getLabelControl(parent);
         GridData gd = new GridData();
@@ -188,22 +193,23 @@ public class ListFieldEditor extends ListEditor implements NavajoPluginResources
 
         list = getListControl(parent);
         gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.verticalAlignment = gd.FILL;
+        gd.verticalAlignment = GridData.FILL;
         gd.horizontalSpan = numColumns - 1;
-        gd.horizontalAlignment = gd.FILL;
+        gd.horizontalAlignment = GridData.FILL;
         gd.grabExcessHorizontalSpace = true;
         list.setLayoutData(gd);
 
         buttonBox = getButtonBoxControl(parent);
         gd = new GridData();
-        gd.verticalAlignment = gd.BEGINNING;
+        gd.verticalAlignment = GridData.BEGINNING;
         buttonBox.setLayoutData(gd);
     }
 
     /*
      * (non-Javadoc) Method declared on FieldEditor.
      */
-    protected void doLoad() {
+    @Override
+	protected void doLoad() {
         if (list != null) {
             String s = getPreferenceStore().getString(getPreferenceName());
             String[] array = parseString(s);
@@ -216,7 +222,8 @@ public class ListFieldEditor extends ListEditor implements NavajoPluginResources
     /*
      * (non-Javadoc) Method declared on FieldEditor.
      */
-    protected void doLoadDefault() {
+    @Override
+	protected void doLoadDefault() {
         if (list != null) {
             list.removeAll();
             String s = getPreferenceStore().getDefaultString(getPreferenceName());
@@ -230,7 +237,8 @@ public class ListFieldEditor extends ListEditor implements NavajoPluginResources
     /*
      * (non-Javadoc) Method declared on FieldEditor.
      */
-    protected void doStore() {
+    @Override
+	protected void doStore() {
         String s = createList(list.getItems());
         if (s != null)
             getPreferenceStore().setValue(getPreferenceName(), s);
@@ -251,7 +259,8 @@ public class ListFieldEditor extends ListEditor implements NavajoPluginResources
      *            the parent control
      * @return the button box
      */
-    public Composite getButtonBoxControl(Composite parent) {
+    @Override
+	public Composite getButtonBoxControl(Composite parent) {
         if (buttonBox == null) {
             buttonBox = new Composite(parent, SWT.NULL);
             GridLayout layout = new GridLayout();
@@ -287,7 +296,8 @@ public class ListFieldEditor extends ListEditor implements NavajoPluginResources
      *            the parent control
      * @return the list control
      */
-    public List getListControl(Composite parent) {
+    @Override
+	public List getListControl(Composite parent) {
         if (list == null) {
             list = new List(parent, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL);
             list.addSelectionListener(getSelectionListener());
@@ -305,7 +315,8 @@ public class ListFieldEditor extends ListEditor implements NavajoPluginResources
     /*
      * (non-Javadoc) Method declared on FieldEditor.
      */
-    public int getNumberOfControls() {
+    @Override
+	public int getNumberOfControls() {
         return 2;
     }
 
@@ -330,7 +341,8 @@ public class ListFieldEditor extends ListEditor implements NavajoPluginResources
      * 
      * @return the shell
      */
-    protected Shell getShell() {
+    @Override
+	protected Shell getShell() {
         if (addButton == null)
             return null;
         return addButton.getShell();
@@ -351,7 +363,8 @@ public class ListFieldEditor extends ListEditor implements NavajoPluginResources
     /**
      * Notifies that the list selection has changed.
      */
-    protected void selectionChanged() {
+    @Override
+	protected void selectionChanged() {
 
         int index = list.getSelectionIndex();
         int size = list.getItemCount();
@@ -364,7 +377,8 @@ public class ListFieldEditor extends ListEditor implements NavajoPluginResources
     /*
      * (non-Javadoc) Method declared on FieldEditor.
      */
-    public void setFocus() {
+    @Override
+	public void setFocus() {
         if (list != null) {
             list.setFocus();
         }
@@ -412,7 +426,8 @@ public class ListFieldEditor extends ListEditor implements NavajoPluginResources
      * @see #parseString
      */
 
-    protected String createList(String[] items) {
+    @Override
+	protected String createList(String[] items) {
         StringBuffer path = new StringBuffer("");
 
         for (int i = 0; i < items.length; i++) {
@@ -430,7 +445,8 @@ public class ListFieldEditor extends ListEditor implements NavajoPluginResources
      * 
      * @return a new item
      */
-    protected String getNewInputObject() {
+    @Override
+	protected String getNewInputObject() {
 
         String defaultValue = "";
         if (list.getSelection().length != 0) {
@@ -440,7 +456,7 @@ public class ListFieldEditor extends ListEditor implements NavajoPluginResources
         InputDialog dialog = new InputDialog(getShell(), "New Tomcat JVM paramater", "Enter a JVM parameter", defaultValue, null);
         String param = null;
         int dialogCode = dialog.open();
-        if (dialogCode == InputDialog.OK) {
+        if (dialogCode == Window.OK) {
             param = dialog.getValue();
             if (param != null) {
                 param = param.trim();
@@ -463,8 +479,9 @@ public class ListFieldEditor extends ListEditor implements NavajoPluginResources
      * @return an array of <code>String</code>
      * @see #createList
      */
-    protected String[] parseString(String stringList) {
-        StringTokenizer st = new StringTokenizer(stringList, NavajoPluginResources.PREF_PAGE_LIST_SEPARATOR); //$NON-NLS-1$
+    @Override
+	protected String[] parseString(String stringList) {
+        StringTokenizer st = new StringTokenizer(stringList, NavajoPluginResources.PREF_PAGE_LIST_SEPARATOR); 
         ArrayList v = new ArrayList();
         while (st.hasMoreTokens()) {
             v.add(URLDecoder.decode(st.nextToken()));

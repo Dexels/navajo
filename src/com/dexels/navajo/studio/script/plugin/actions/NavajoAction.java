@@ -3,8 +3,6 @@ package com.dexels.navajo.studio.script.plugin.actions;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-import com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin;
-
 /**
  * Our sample action implements workbench action delegate. The action proxy will
  * be created by the workbench and shown in the UI. When the user tries to use

@@ -78,7 +78,8 @@ public class ComboFieldEditor extends FieldEditor {
     /*
      * @see FieldEditor#adjustForNumColumns(int)
      */
-    protected void adjustForNumColumns(int numColumns) {
+    @Override
+	protected void adjustForNumColumns(int numColumns) {
         Control control = getLabelControl();
         if (control != null) {
             ((GridData) control.getLayoutData()).horizontalSpan = numColumns;
@@ -89,7 +90,8 @@ public class ComboFieldEditor extends FieldEditor {
     /*
      * @see FieldEditor#doFillIntoGrid(Composite, int)
      */
-    protected void doFillIntoGrid(Composite parent, int numColumns) {
+    @Override
+	protected void doFillIntoGrid(Composite parent, int numColumns) {
         Control control = getLabelControl(parent);
         GridData gd = new GridData();
         gd.horizontalSpan = numColumns;
@@ -103,21 +105,24 @@ public class ComboFieldEditor extends FieldEditor {
     /*
      * @see FieldEditor#doLoad()
      */
-    protected void doLoad() {
+    @Override
+	protected void doLoad() {
         updateComboForValue(getPreferenceStore().getString(getPreferenceName()));
     }
 
     /*
      * @see FieldEditor#doLoadDefault()
      */
-    protected void doLoadDefault() {
+    @Override
+	protected void doLoadDefault() {
         updateComboForValue(getPreferenceStore().getDefaultString(getPreferenceName()));
     }
 
     /*
      * @see FieldEditor#doStore()
      */
-    protected void doStore() {
+    @Override
+	protected void doStore() {
         if (fValue == null) {
             getPreferenceStore().setToDefault(getPreferenceName());
             return;
@@ -129,7 +134,8 @@ public class ComboFieldEditor extends FieldEditor {
     /*
      * @see FieldEditor#getNumberOfControls()
      */
-    public int getNumberOfControls() {
+    @Override
+	public int getNumberOfControls() {
         return 2;
     }
 
@@ -144,7 +150,8 @@ public class ComboFieldEditor extends FieldEditor {
             }
             fCombo.setFont(parent.getFont());
             fCombo.addSelectionListener(new SelectionAdapter() {
-                public void widgetSelected(SelectionEvent evt) {
+                @Override
+				public void widgetSelected(SelectionEvent evt) {
                     String oldValue = fValue;
                     String name = fCombo.getText();
                     fValue = getValueForName(name);

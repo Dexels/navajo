@@ -27,7 +27,8 @@ import org.eclipse.jface.text.source.SourceViewerConfiguration;
  */
 //public class TslConfiguration {
     public class TslConfiguration extends SourceViewerConfiguration {
-        public IPresentationReconciler getPresentationReconciler(
+        @Override
+		public IPresentationReconciler getPresentationReconciler(
            ISourceViewer sourceViewer) {
            PresentationReconciler pr = 
               new PresentationReconciler();
@@ -38,7 +39,8 @@ import org.eclipse.jface.text.source.SourceViewerConfiguration;
            pr.setDamager(ddr, IDocument.DEFAULT_CONTENT_TYPE);
            return pr;
         }
-        public IContentAssistant getContentAssistant(ISourceViewer sv) {
+        @Override
+		public IContentAssistant getContentAssistant(ISourceViewer sv) {
            ContentAssistant ca = new ContentAssistant();
            IContentAssistProcessor cap = new TslCompletionProcessor();
            ca.setContentAssistProcessor(cap, 
@@ -47,7 +49,8 @@ import org.eclipse.jface.text.source.SourceViewerConfiguration;
               getInformationControlCreator(sv));
            return ca;
         }
-        public ITextHover getTextHover(ISourceViewer sv, 
+        @Override
+		public ITextHover getTextHover(ISourceViewer sv, 
            String contentType) {
             
               return new ITextHover() {

@@ -25,7 +25,6 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -38,9 +37,7 @@ import org.eclipse.debug.core.Launch;
 import org.eclipse.debug.core.model.ISourceLocator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorRegistry;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PartInitException;
@@ -156,7 +153,8 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
     private TslMetaDataHandler metaDataHandler = new TslMetaDataHandler();
    
     /** @deprecated */
-    private Launch currentScriptLaunch = null;
+    @Deprecated
+	private Launch currentScriptLaunch = null;
 
     private NavajoNature myNature = null;
 
@@ -1031,26 +1029,6 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         return dd.exists();
     }
 
-     public void reportProblem(final String msg, final IResource loc, final int start, final int end, final TslCompileException tce) throws CoreException {
-        Map m = new HashMap();
-        if (tce!=null) {
-            m.put("tslCompileException", tce);
-        }
-//        m.put("aap", "noot");
-        MarkerUtilities.setMessage(m,  msg + ": ");
-        m.put(IMarker.SEVERITY, new Integer( IMarker.SEVERITY_ERROR ));
-        if (tce!=null) {
-            MarkerUtilities.setCharStart(m, tce.getStartOffset());
-            MarkerUtilities.setCharEnd(m, tce.getEndOffset());
-            
-            m.put("code", new Integer(tce.getCode()));
-        }
-//        MarkerUtilities.createMarker(loc, m, "com.dexels.plugin.tslproblemmarker");
-        MarkerUtilities.createMarker(loc, m, "com.dexels.plugin.TslMarker");
-
-//        IMarker[] imm =  loc.findMarkers("com.dexels.plugin.tslproblemmarker", false, IResource.DEPTH_INFINITE);
-//        System.err.println("immsize: "+imm.length+"imm::: "+imm[0].getAttributes());
-             }
 
 
     public void setTmlBrowser(TmlBrowser tv) {

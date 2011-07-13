@@ -108,7 +108,8 @@ public class DynamicClassLoader extends MultiClassLoader {
     /**
      * Use clearCache() to clear the Class cache, allowing a re-load of new jar files.
      */
-    public final void clearCache() {
+    @Override
+	public final void clearCache() {
         clearJarResources();
       super.clearCache();
       System.err.println("MESSAGE: clearCache() called in NavajoClassLoader");
@@ -136,7 +137,8 @@ public class DynamicClassLoader extends MultiClassLoader {
      * @return
      * @throws ClassNotFoundException
      */
-    public final Class getCompiledNavaScript(String script) throws ClassNotFoundException {
+    @Override
+	public final Class getCompiledNavaScript(String script) throws ClassNotFoundException {
 
       String className = script;
 
@@ -158,12 +160,12 @@ public class DynamicClassLoader extends MultiClassLoader {
             File fi = new File(classFileName);
             FileInputStream fis = new FileInputStream(fi);
             int size = (int) fi.length();
-            byte[] b = new byte[ (int) size];
+            byte[] b = new byte[ size];
             int rb = 0;
             int chunk = 0;
 
-            while ( ( (int) size - rb) > 0) {
-              chunk = fis.read(b, rb, (int) size - rb);
+            while ( ( size - rb) > 0) {
+              chunk = fis.read(b, rb, size - rb);
               if (chunk == -1) {
                 break;
               }
@@ -186,12 +188,14 @@ public class DynamicClassLoader extends MultiClassLoader {
     /**
      * Always use this method to load a class. It uses the cache first before retrieving the class from a jar resource.
      */
-    public Class getClass(String className) throws ClassNotFoundException {
+    @Override
+	public Class getClass(String className) throws ClassNotFoundException {
     	//System.err.println("in getClass("+className+")");
         return Class.forName(className, false, this);
     }
 
-    public File [] getJarFiles(String path, boolean beta) {
+    @Override
+	public File [] getJarFiles(String path, boolean beta) {
          File f = new File(adapterPath);
          File [] files = null;
          if (beta)
@@ -233,7 +237,8 @@ public class DynamicClassLoader extends MultiClassLoader {
 
     }
 
-    public InputStream getResourceAsStream(String name) {
+    @Override
+	public InputStream getResourceAsStream(String name) {
 
       //System.err.println("in NavajoClassLoader (v2). getResourceAsStream(" + name + ")");
       initializeJarResources();
@@ -269,7 +274,8 @@ public class DynamicClassLoader extends MultiClassLoader {
      * This method loads the class from a jar file.
      * Beta jars are supported if the beta flag is on.
      */
-    protected byte[] loadClassBytes(String className) {
+    @Override
+	protected byte[] loadClassBytes(String className) {
 
         //System.err.println("NavajoClassLoader: in loadClassBytes(), className = " + className);
         // Support the MultiClassLoader's class name munging facility.
@@ -332,7 +338,8 @@ public class DynamicClassLoader extends MultiClassLoader {
 
     }
 
-    public void finalize() {
+    @Override
+	public void finalize() {
         //System.out.println("In NavajoClassLoader finalize(): Killing class loader");
     }
 

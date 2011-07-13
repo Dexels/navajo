@@ -130,7 +130,8 @@ public class ServerEntry {
 	        return b;
 	}
     
-    public String toString() {
+    @Override
+	public String toString() {
         return name;
     }
 

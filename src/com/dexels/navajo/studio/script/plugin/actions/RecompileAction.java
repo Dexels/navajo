@@ -41,7 +41,8 @@ public class RecompileAction extends BaseNavajoAction {
     public void run(IAction action) {
             new WorkspaceJob("Recompiling..."){
 
-               public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+               @Override
+			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
                    try {
                        
                        for (Iterator iter = selectionList.iterator(); iter.hasNext();) {

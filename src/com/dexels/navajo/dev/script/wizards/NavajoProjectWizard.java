@@ -1,19 +1,10 @@
 package com.dexels.navajo.dev.script.wizards;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.core.runtime.*;
-import org.eclipse.jface.operation.*;
-import java.lang.reflect.InvocationTargetException;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.CoreException;
-import java.io.*;
 import org.eclipse.ui.*;
-import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 
 /**
@@ -43,6 +34,7 @@ public class NavajoProjectWizard extends BasicNewProjectResourceWizard implement
 	 * Adding the page to the wizard.
 	 */
 
+	@Override
 	public void addPages() {
 		super.addPages();
 //		page = new SampleNewWizardPage(selection);
@@ -54,6 +46,7 @@ public class NavajoProjectWizard extends BasicNewProjectResourceWizard implement
 //	 * the wizard. We will create an operation and run it
 //	 * using wizard as execution context.
 //	 */
+	@Override
 	public boolean performFinish() {
 		return super.performFinish();
 //		IProject ip = getNewProject();
@@ -152,6 +145,7 @@ public class NavajoProjectWizard extends BasicNewProjectResourceWizard implement
 	 * we can initialize from it.
 	 * @see IWorkbenchWizard#init(IWorkbench, IStructuredSelection)
 	 */
+	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		super.init(workbench, selection);
 		this.selection = selection;

@@ -27,7 +27,8 @@ public abstract class BaseNavajoView extends ViewPart {
     private IContextActivation currentActivation = null;
     
 
-    public void init(final IViewSite site) throws PartInitException {
+    @Override
+	public void init(final IViewSite site) throws PartInitException {
         super.init(site);
         final BaseNavajoView me = this;
         NavajoScriptPluginPlugin plugin = NavajoScriptPluginPlugin.getDefault();

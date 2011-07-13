@@ -90,7 +90,8 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
     
     
   
-    public void createPartControl(Composite parent) {
+    @Override
+	public void createPartControl(Composite parent) {
     	
     	
 //        myParent = parent;
@@ -138,7 +139,8 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
         assistant.install(myService);        
         
         myService.getControl().addKeyListener(new KeyAdapter() {
-            public void keyPressed(KeyEvent e)
+            @Override
+			public void keyPressed(KeyEvent e)
             {
              switch(e.keyCode)
             {
@@ -304,7 +306,8 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
                 }
                 Job j = new Job("Running "+currentService+" on "+se.getServer()){
 
-                    protected IStatus run(IProgressMonitor monitor) {
+                    @Override
+					protected IStatus run(IProgressMonitor monitor) {
                         try {
                             myCurrentNavajo = se.runProcess(currentService,sourceNavajo);
                             setNavajo(myCurrentNavajo, currentService);
@@ -323,7 +326,8 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
     }
 
     
-    public void dispose() {
+    @Override
+	public void dispose() {
     	if(formComposite!=null) {
             formComposite.removeNavajoScriptListener(this);
     	}
@@ -336,8 +340,8 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
             return;
          }
          System.err.println(">>> "+historyList);
-       String current = (String)historyList.pop();
-        String nn = (String)historyList.pop();
+       String current = historyList.pop();
+        String nn = historyList.pop();
         System.err.println("BACKING TO: "+nn+" current: "+currentService);
          System.err.println(">>> "+historyList);
 //         while (nn.equals(currentService) && !historyList.isEmpty()) {
@@ -347,7 +351,7 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
 //             System.err.println("Could not find anything decent on the historystack");
 //             return;
 //        }
-         Navajo n = (Navajo)scriptMap.get(nn);
+         Navajo n = scriptMap.get(nn);
          if (n!=null) {
 //            scriptMap.put(current, myCurrentNavajo);
             setNavajo(n, nn);
@@ -363,9 +367,9 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
             return;
         }
         System.err.println("FUTURELIST: "+futureList);
-        String nn = (String)futureList.pop();
+        String nn = futureList.pop();
         System.err.println("IN FORWARD: going to script: "+nn);
-        Navajo n = (Navajo)scriptMap.get(nn);
+        Navajo n = scriptMap.get(nn);
         if (n!=null) {
             historyList.push(currentService);
 //           scriptMap.put(currentService, myCurrentNavajo);
@@ -393,7 +397,8 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
          lastInit = script;
         Job j = new Job("Running "+script+" on "+se.getServer()){
 
-            protected IStatus run(IProgressMonitor monitor) {
+            @Override
+			protected IStatus run(IProgressMonitor monitor) {
                 try {
                     myCurrentNavajo = se.runInit(script);
                     setNavajo(myCurrentNavajo, script);
@@ -414,7 +419,8 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
      * 
      * @see org.eclipse.ui.IWorkbenchPart#setFocus()
      */
-    public void setFocus() {
+    @Override
+	public void setFocus() {
         // TODO Auto-generated method stub
     }
 
@@ -478,7 +484,7 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
     }
 
     public Navajo getNavajo() {
-        return (Navajo)scriptMap.get(historyList.peek());
+        return scriptMap.get(historyList.peek());
     }
 
     public String getService() {

@@ -7,7 +7,6 @@
 package com.dexels.navajo.studio.script.plugin.editors;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -17,7 +16,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -25,7 +23,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.debug.core.DebugException;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -138,6 +135,7 @@ public class TmlFormComposite extends Composite {
 		myForm.setBackground(FORM_BACKGROUND_COLOR);
 		kit.getHyperlinkGroup().setBackground(LINK_BACKGROUND_COLOR);
 		myForm.getBody().addMouseListener(new MouseAdapter() {
+			@Override
 			public void mouseDown(MouseEvent e) {
 				// System.err.println("CLICK!");
 				if (e.button == 3) {
@@ -290,6 +288,7 @@ public class TmlFormComposite extends Composite {
 				Hyperlink h = getKit().createHyperlink(headerRow, "Print as birt", SWT.NONE);
 				h.addHyperlinkListener(new HyperlinkAdapter(){
 
+					@Override
 					public void linkActivated(HyperlinkEvent e) {
 						List<Property> props = reference.getAllProperties();
 							final String[] names = new String[props.size()];
@@ -340,6 +339,7 @@ public class TmlFormComposite extends Composite {
 
 	protected void printBirtMessage(final Message element, final HyperlinkEvent e, final String[] propertyNames, final String[] propertyTitles, final int[] columnWidths) {
 		Job j = new Job("Running Navajo...") {
+			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
 					Navajo cp = NavajoFactory.getInstance().createNavajo();
@@ -363,6 +363,7 @@ public class TmlFormComposite extends Composite {
 
 	private void setupMenuListener(Composite c) {
 		c.addMouseListener(new MouseAdapter() {
+			@Override
 			public void mouseDown(MouseEvent e) {
 				if (e.button != 1) {
 					// popup.setVisible(true);
@@ -408,7 +409,7 @@ public class TmlFormComposite extends Composite {
 			birtSection.dispose();
 		}
 
-		birtSection = getKit().createSection(getForm().getBody(), Section.TITLE_BAR);
+		birtSection = getKit().createSection(getForm().getBody(), ExpandableComposite.TITLE_BAR);
 		birtSection.setText("BIRT:");
 		Composite list = getKit().createComposite(birtSection);
 		addBirtHref(list, n);
@@ -433,7 +434,7 @@ public class TmlFormComposite extends Composite {
 			methodSection.dispose();
 		}
 		hg.setBackground(new Color(mainMessageContainer.getDisplay(), 255, 255, 255));
-		methodSection = getKit().createSection(getForm().getBody(), Section.TITLE_BAR);
+		methodSection = getKit().createSection(getForm().getBody(), ExpandableComposite.TITLE_BAR);
 		methodSection.setText("Methods:");
 		setupMenuListener(methodSection);
 		Composite list = getKit().createComposite(methodSection);
@@ -454,6 +455,7 @@ public class TmlFormComposite extends Composite {
 			TableWrapData tdd = new TableWrapData();
 			hl.setLayoutData(tdd);
 			hl.addHyperlinkListener(new HyperlinkAdapter() {
+				@Override
 				public void linkActivated(HyperlinkEvent e) {
 					try {
 						runHref(myCurrentNavajo, element.getName(), e, false, scriptName);
@@ -504,9 +506,9 @@ public class TmlFormComposite extends Composite {
 		layout.numColumns = 2;
 		list.setLayout(new FillLayout(SWT.HORIZONTAL));
 
-		Section performanceSection = getKit().createSection(list, Section.TITLE_BAR);
+		Section performanceSection = getKit().createSection(list, ExpandableComposite.TITLE_BAR);
 		performanceSection.setText("Performance:");
-		Section transactionSection = getKit().createSection(list, Section.TITLE_BAR);
+		Section transactionSection = getKit().createSection(list, ExpandableComposite.TITLE_BAR);
 		transactionSection.setText("Transaction:");
 
 		// TableWrapData td3 = new TableWrapData(TableWrapData.FILL_GRAB,
@@ -570,6 +572,7 @@ public class TmlFormComposite extends Composite {
 		tdd = new TableWrapData();
 		hcreate.setLayoutData(tdd);
 		hcreate.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				createBirt(myCurrentName);
 			}
@@ -579,6 +582,7 @@ public class TmlFormComposite extends Composite {
 		tdd = new TableWrapData();
 		hl.setLayoutData(tdd);
 		hl.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				runBirtReport(birtCombo, e);
 		
@@ -589,6 +593,7 @@ public class TmlFormComposite extends Composite {
 		tdd = new TableWrapData();
 		h3.setLayoutData(tdd);
 		h3.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				Navajo copiedNavajo = n.copy();
 				try {
@@ -611,6 +616,7 @@ public class TmlFormComposite extends Composite {
 		// TableWrapData(TableWrapData.LEFT,TableWrapData.TOP));
 		// hl.setBackground(new Color(Display.getCurrent(), 220, 220, 240));
 		hl.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				try {
 
@@ -658,6 +664,7 @@ public class TmlFormComposite extends Composite {
 //		if (myServerEntry != null) {
 			Job j = new Job("Running Navajo...") {
 
+				@Override
 				protected IStatus run(IProgressMonitor monitor) {
 					try {
 						Navajo output = null;

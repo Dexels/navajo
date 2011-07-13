@@ -45,7 +45,8 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
      * 
      */
 
-    protected void startupOnInitialize() {
+    @Override
+	protected void startupOnInitialize() {
         if (getProject() == null) {
             System.err.println("Builder project null.");
         } else {
@@ -63,7 +64,8 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
      * @see org.eclipse.core.resources.IncrementalProjectBuilder#build(int,
      *      java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
      */
-    protected IProject[] build(final int kind, Map args, IProgressMonitor monitor) throws CoreException {
+    @Override
+	protected IProject[] build(final int kind, Map args, IProgressMonitor monitor) throws CoreException {
 //                ClassProvider provider = NavajoScriptPluginPlugin.getDefault().getClassProvider(getProject(),false);
                 buildScripts(kind, monitor);
         return null;
@@ -424,6 +426,7 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
 
    
 
+		@Override
 		public String toString() {
             return "Script: " + script + " package: " + scriptPackage + " compileDir: " + compileDir + " scriptDir: " + scriptDir;
         }

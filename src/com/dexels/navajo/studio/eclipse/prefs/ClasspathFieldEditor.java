@@ -85,20 +85,23 @@ public class ClasspathFieldEditor extends ListFieldEditor implements NavajoPlugi
         return dir;
     }
 
-    protected void createButtons(Composite buttonBox) {
-        addJarZipButton = createPushButton(buttonBox, PREF_PAGE_ADDJARZIPBUTTON_LABEL);//$NON-NLS-1$
-        addDirButton = createPushButton(buttonBox, PREF_PAGE_ADDDIRBUTTON_LABEL);//$NON-NLS-1$
-        removeButton = createPushButton(buttonBox, PREF_PAGE_REMOVEBUTTON_LABEL);//$NON-NLS-1$
-        upButton = createPushButton(buttonBox, PREF_PAGE_UPBUTTON_LABEL);//$NON-NLS-1$
-        downButton = createPushButton(buttonBox, PREF_PAGE_DOWNBUTTON_LABEL);//$NON-NLS-1$
+    @Override
+	protected void createButtons(Composite buttonBox) {
+        addJarZipButton = createPushButton(buttonBox, PREF_PAGE_ADDJARZIPBUTTON_LABEL);
+        addDirButton = createPushButton(buttonBox, PREF_PAGE_ADDDIRBUTTON_LABEL);
+        removeButton = createPushButton(buttonBox, PREF_PAGE_REMOVEBUTTON_LABEL);
+        upButton = createPushButton(buttonBox, PREF_PAGE_UPBUTTON_LABEL);
+        downButton = createPushButton(buttonBox, PREF_PAGE_DOWNBUTTON_LABEL);
     }
 
     /**
      * Creates a selection listener.
      */
-    public void createSelectionListener() {
+    @Override
+	public void createSelectionListener() {
         selectionListener = new SelectionAdapter() {
-            public void widgetSelected(SelectionEvent event) {
+            @Override
+			public void widgetSelected(SelectionEvent event) {
                 Widget widget = event.widget;
                 if (widget == addJarZipButton) {
                     addJarZipPressed();

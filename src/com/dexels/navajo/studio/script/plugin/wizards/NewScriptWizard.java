@@ -60,7 +60,8 @@ public class NewScriptWizard extends Wizard implements INewWizard {
      * Adding the page to the wizard.
      */
 
-    public void addPages() {
+    @Override
+	public void addPages() {
         page = new NewScriptWizardPage(selection);
         addPage(page);
     }
@@ -69,7 +70,8 @@ public class NewScriptWizard extends Wizard implements INewWizard {
      * This method is called when 'Finish' button is pressed in the wizard. We
      * will create an operation and run it using wizard as execution context.
      */
-    public boolean performFinish() {
+    @Override
+	public boolean performFinish() {
         final String scriptName = page.getScriptName();
         //		final String fileName = page.getFileName();
         IRunnableWithProgress op = new IRunnableWithProgress() {
@@ -217,7 +219,7 @@ public class NewScriptWizard extends Wizard implements INewWizard {
         if (!(selection instanceof IStructuredSelection)) {
             return;
         }
-        IStructuredSelection iss = (IStructuredSelection) selection;
+        IStructuredSelection iss = selection;
         Object oss = iss.getFirstElement();
         if (!(oss instanceof IResource)) {
             return;

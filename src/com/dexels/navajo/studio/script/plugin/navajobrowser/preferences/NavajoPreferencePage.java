@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -81,7 +82,8 @@ public class NavajoPreferencePage extends PreferencePage implements IWorkbenchPr
     public void init(IWorkbench workbench) {
     }
 
-    public Control createContents(Composite parent) {
+    @Override
+	public Control createContents(Composite parent) {
         myParent = parent;
         formToolKit = new FormToolkit(parent.getDisplay());
         formToolKit.setBackground(new Color(Display.getCurrent(),220,220,240));
@@ -91,12 +93,12 @@ public class NavajoPreferencePage extends PreferencePage implements IWorkbenchPr
         formToolKit = new FormToolkit(parent.getDisplay());
         myForm.setLayoutData(new GridData(GridData.FILL,GridData.FILL,true,true));
         myForm.getBody().setLayout(new FillLayout(SWT.VERTICAL));
-        navajoSection = formToolKit.createSection(myForm.getBody(), Section.TITLE_BAR | Section.TWISTIE);
+        navajoSection = formToolKit.createSection(myForm.getBody(), ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
         navajoSection.setText("Navajo entries:");
         navajoSection.setExpanded(true);
                 
         createNavajoParts();
-        tmlBrowserSection = formToolKit.createSection(myForm.getBody(), Section.TITLE_BAR | Section.TWISTIE);
+        tmlBrowserSection = formToolKit.createSection(myForm.getBody(), ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
         tmlBrowserSection.setText("Navajo browser entries:");
 
   
@@ -106,7 +108,8 @@ public class NavajoPreferencePage extends PreferencePage implements IWorkbenchPr
         return myForm.getBody();
     }
 
-    protected void performApply() {
+    @Override
+	protected void performApply() {
           super.performApply();
 //          IStructuredSelection iss = (IStructuredSelection)defaultProjectSelector.getSelection();
 //          if (iss==null || iss.isEmpty()) {
@@ -128,7 +131,8 @@ public class NavajoPreferencePage extends PreferencePage implements IWorkbenchPr
         
     }
 
-    public boolean performOk() {
+    @Override
+	public boolean performOk() {
          boolean b = super.performOk();
         commitDefaultProject();
         return b;
@@ -184,7 +188,7 @@ public class NavajoPreferencePage extends PreferencePage implements IWorkbenchPr
         selector.getCombo().addSelectionListener(new SelectionListener(){
             public void widgetSelected(SelectionEvent e) {
                 int index = selector.getCombo().getSelectionIndex();
-                ServerEntry se = (ServerEntry)NavajoScriptPluginPlugin.getDefault().getServerEntries().get(index);
+                ServerEntry se = NavajoScriptPluginPlugin.getDefault().getServerEntries().get(index);
                 nameField.setText(se.getName());
                 serverField.setText(se.getServer());
                 usernameField.setText(se.getUsername());

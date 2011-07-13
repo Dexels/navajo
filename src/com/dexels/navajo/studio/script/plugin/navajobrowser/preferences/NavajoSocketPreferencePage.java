@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -41,7 +42,8 @@ public class NavajoSocketPreferencePage extends PreferencePage implements IWorkb
     private Text passwordText;
     private Text portText;
 
-    public Control createContents(Composite parent) {
+    @Override
+	public Control createContents(Composite parent) {
         myParent = parent;
         formToolKit = new FormToolkit(parent.getDisplay());
         formToolKit.setBackground(new Color(Display.getCurrent(),220,220,240));
@@ -51,7 +53,7 @@ public class NavajoSocketPreferencePage extends PreferencePage implements IWorkb
         formToolKit = new FormToolkit(parent.getDisplay());
         myForm.setLayoutData(new GridData(GridData.FILL,GridData.FILL,true,true));
         myForm.getBody().setLayout(new FillLayout(SWT.VERTICAL));
-        remoteSocketSection = formToolKit.createSection(myForm.getBody(), Section.TITLE_BAR | Section.TWISTIE);
+        remoteSocketSection = formToolKit.createSection(myForm.getBody(), ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
         remoteSocketSection.setText("Navajo socket settings:");
 
         panel = formToolKit.createComposite(remoteSocketSection);
@@ -76,11 +78,13 @@ public class NavajoSocketPreferencePage extends PreferencePage implements IWorkb
         return myForm.getBody();
     }
 
-    public boolean okToLeave() {
+    @Override
+	public boolean okToLeave() {
        
         return super.okToLeave();
     }
-    public boolean performOk() {
+    @Override
+	public boolean performOk() {
         IPreferenceStore ipp = NavajoScriptPluginPlugin.getDefault().getPreferenceStore();
         if ("".equals(serverUrlText.getText())) {
             NavajoScriptPluginPlugin.getDefault().showError("Server URL is required!");

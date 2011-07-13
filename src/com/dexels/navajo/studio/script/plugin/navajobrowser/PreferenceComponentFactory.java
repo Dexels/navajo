@@ -33,7 +33,8 @@ public class PreferenceComponentFactory {
 class ProjectViewLabelProvider extends LabelProvider implements ILabelProvider {
 
 
-    public String getText(Object element) {
+    @Override
+	public String getText(Object element) {
         IProject ip = (IProject)element;
         return ip.getName();
     }
