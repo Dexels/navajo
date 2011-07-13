@@ -1,9 +1,10 @@
 package com.dexels.navajo.tipi.vaadin.components;
 
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
-import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Window.ResizeEvent;
 
 public class TipiWindow extends TipiVaadinComponentImpl {
 
@@ -11,18 +12,45 @@ public class TipiWindow extends TipiVaadinComponentImpl {
 
 	@Override
 	public Object createContainer() {
-		window = new Window();
+		VerticalLayout componentContainer = new VerticalLayout();
+		componentContainer.setSizeFull();
+		componentContainer.setMargin(true);
+		window = new Window("",componentContainer);
 		window.setPositionX(30);
 		window.setPositionY(30);
-		window.setWidth(200, Sizeable.UNITS_PIXELS);
-		window.setHeight(200, Sizeable.UNITS_PIXELS);
+//		window.setWidth(200, Sizeable.UNITS_PIXELS);
+//		window.setHeight(200, Sizeable.UNITS_PIXELS);
+
+//		window.addListener(new Window.ResizeListener() {
+//			
+//			private static final long serialVersionUID = 1L;
+//
+//			@Override
+//			public void windowResized(ResizeEvent e) {
+//				if(getLayout()!=null) {
+//					Component cc = (Component) getLayout().getLayout();
+//					cc.setWidth (e.getWindow().getWidth(),e.getWindow().getWidthUnits());
+//					cc.setHeight (e.getWindow().getHeight(),e.getWindow().getHeightUnits());
+//				}
+//			}
+//		});
 		getVaadinApplication().getMainWindow().addWindow(window);
 		return window;
 	}
 
 	
 	
+	
 	  @Override
+	public void disposeComponent() {
+		super.disposeComponent();
+		getVaadinApplication().getMainWindow().removeWindow(window);
+	}
+
+
+
+
+	@Override
 	public void addToContainer(Object c, Object constraints) {
 		  
 		  super.addToContainer(c, constraints);

@@ -26,7 +26,7 @@ public class TipiLabel extends TipiVaadinComponentImpl {
 		    super.setComponentValue(name, object);
 			Component v = getVaadinContainer();
 		        if (name.equals("text")) {
-		          v.setCaption( (String) object);
+		          v.setCaption( ""+ object);
 		        }
 		        if ("icon".equals(name)) {
 	                v.setIcon( getResource(object));

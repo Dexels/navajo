@@ -42,7 +42,7 @@ public class VaadinFileServlet extends HttpServlet {
 
 		// Define base path somehow. You can define it as init-param of the
 		// servlet.
-		this.filePath = InstallationPathResolver.getInstallationPath(getServletContext());
+		this.filePath = InstallationPathResolver.getInstallationPath(getServletContext()).get(0);
 
 		// In a Windows environment with the Applicationserver running on the
 		// c: volume, the above path is exactly the same as "c:\files".

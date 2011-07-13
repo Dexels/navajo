@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi.vaadin.layout;
 
 import com.dexels.navajo.tipi.TipiValue;
 import com.dexels.navajo.tipi.components.core.TipiLayoutImpl;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 
 /**
@@ -27,4 +28,8 @@ public class TipiFlowLayout
   protected void setValue(String name, TipiValue tv) {
     throw new UnsupportedOperationException("Not implemented.");
   }
+  
+	public void addToLayout(Object component, Object constraints) {
+		layout.addComponent((Component) component);
+	}
 }

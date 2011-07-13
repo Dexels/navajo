@@ -5,17 +5,20 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 public class InstallationPathResolver {
 
-	public static String getInstallationPath(ServletContext context) throws ServletException {
+	public static List<String> getInstallationPath(ServletContext context) throws ServletException {
 		String force = context.getInitParameter("forcedTipiPath");
 		if(force!=null) {
-			return force;
+			return parseContext(force);
 		} else {
 			try {
 				
@@ -31,9 +34,8 @@ public class InstallationPathResolver {
 
 
 
-	public static String getInstallationFromPath(String fullContext) throws IOException, ServletException {
+	public static List<String> getInstallationFromPath(String fullContext) throws IOException, ServletException {
 		Map<String,String> systemContexts = loadSystemContexts();
-		System.err.println("Context path: "+fullContext.length());
 		String contextPath = fullContext.startsWith("/")?fullContext.substring(1):fullContext;
 		if(contextPath.isEmpty()) {
 			contextPath="~";
@@ -67,19 +69,20 @@ public class InstallationPathResolver {
 	 * Only used when the path is not forced.
 	 * @throws ServletException 
 	 */
-	private static String getInstallationPath(Map<String,String> systemContexts,String contextPath) throws ServletException {
+	private static List<String> getInstallationPath(Map<String,String> systemContexts,String contextPath) throws ServletException {
 		String engineInstance = System.getProperty("com.dexels.tipi.EngineInstance");
 		String key = contextPath;
+		// Check WITH engine instance first
 		if(engineInstance!=null) {
 			key = contextPath+"@"+engineInstance;
 		}
 		String result = systemContexts.get(key);
 		if(result!=null) {
 			System.err.println("Path "+contextPath+" resolved: "+result);
-			return result;
+			return parseContext(result);
 		}
-		String resolvedPath = systemContexts.get(contextPath);
-		if(resolvedPath==null) {
+		result = systemContexts.get(contextPath);
+		if(result==null) {
 			if(engineInstance!=null) {
 				throw new ServletException("No context found at: "+contextPath+"@"+engineInstance);
 			} else {
@@ -88,7 +91,17 @@ public class InstallationPathResolver {
 			}
 
 		}
-		return resolvedPath;
+		return parseContext(result);
 	}
 	
+	private static List<String> parseContext(String context) {
+		StringTokenizer st = new StringTokenizer(context, "|");
+		List<String> result = new LinkedList<String>();
+		while (st.hasMoreTokens()) {
+			String part =st.nextToken();
+			result.add(part);
+			
+		}
+		return result;
+	}
 }

@@ -14,8 +14,9 @@ public class TipiFrame extends TipiVaadinComponentImpl {
 		VaadinTipiContext context = (VaadinTipiContext) getContext();
 		TipiVaadinApplication app =  (TipiVaadinApplication) context.getApplicationInstance();
 		this.mainWindow = app.getMainWindow();
-		mainWindow.setSizeFull();
-		
+//		mainWindow.setSizeFull();
+//		mainWindow.setWidth("640px");
+//		mainWindow.setHeight("480px");
 		return this.mainWindow;
 	}
 

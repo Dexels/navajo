@@ -17,20 +17,37 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 	
 	protected ComponentContainer layoutComponent;
 	
+	
+	
+	@Override
+	public void setContainer(Object c) {
+		super.setContainer(c);
+		if(!(c instanceof Component)) {
+			throw new IllegalArgumentException("Can not remove non-vaadin component from component: "+c);
+		}
+		Component comp = getVaadinContainer();
+		comp.setDebugId(getPath());
+	}
+
 	// TODO Deal with layout at some point, ignore for now
 	@Override
 	public void setContainerLayout(Object layout) {
 		this.layoutComponent = (ComponentContainer) layout;
 		super.setContainerLayout(layout);
+		ComponentContainer oo = (ComponentContainer) getVaadinContainer();
+		oo.addComponent(this.layoutComponent);
+		this.layoutComponent.setSizeFull();
 	}
 
 	@Override
 	public void removeFromContainer(Object c) {
-		super.removeFromContainer(c);
+//		super.removeFromContainer(c);
 		if(!(c instanceof Component)) {
 			throw new IllegalArgumentException("Can not remove non-vaadin component from component: "+c);
 		}
-
+		if(this.layoutComponent!=null) {
+			removeFromLayoutContainer((Component)c);
+		}
 		Component comp = getVaadinContainer();
 		if(comp instanceof ComponentContainer) {
 			ComponentContainer cc = (ComponentContainer)comp;
@@ -39,12 +56,21 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 			throw new IllegalArgumentException("Can not remove n component from non-vaadin container: "+comp);
 		}	}
 
+	
+	private void removeFromLayoutContainer(Component c) {
+		this.layoutComponent.removeComponent(c);
+	}
+
 	@Override
 	public void addToContainer(Object c, Object constraints) {
 		if(!(c instanceof Component)) {
 			throw new IllegalArgumentException("Can not add non-vaadin component to component: "+c);
 		}
-
+		if(this.layoutComponent!=null) {
+			System.err.println("Layout detected, adding to layout...");
+			addToLayoutContainer((Component)c,constraints);
+			return;
+		}
 		Component comp = getVaadinContainer();
 		if(comp instanceof ComponentContainer) {
 			addToVaadinContainer((ComponentContainer)comp, (Component)c, constraints);
@@ -54,6 +80,11 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 		
 	}
 	
+	private void addToLayoutContainer(Component c, Object constraints) {
+		getLayout().addToLayout(c, constraints);
+//		this.layoutComponent.add
+	}
+
 	protected void addToVaadinContainer(ComponentContainer currentContainer, Component component, Object constraints) {
 		currentContainer.addComponent(component);
 		
@@ -88,12 +119,42 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 				return stream;
 			}
 		};
-		StreamResource sr = new StreamResource(s, "unknown", getVaadinApplication());
+		StreamResource sr = new StreamResource(s, u.toString(), getVaadinApplication());
 		return sr;
 	}
 
+	@Override
+	protected void setComponentValue(String name, Object object) {
+		if(name.equals("style")) {
+			getActualVaadinComponent().addStyleName(""+object);
+		}
+		if(name.equals("visible")) {
+			System.err.println("SETTTING VISIBLE TO: "+object);
+			Boolean b = (Boolean) object;
+			getActualVaadinComponent().setVisible(b);
+		}
+		if(name.equals("enabled")) {
+			Boolean b = (Boolean) object;
+			getActualVaadinComponent().setEnabled(b);
+		}
+
+		super.setComponentValue(name, object);
+	}
+	
+	@Override
+	protected Object getComponentValue(String name) {
+		if(name.equals("style")) {
+			return getActualVaadinComponent().getStyleName();
+		}
+		return super.getComponentValue(name);
+	}
+	
 	public Component getVaadinContainer() {
 		return (Component) getContainer();
+	}
+
+	public Component getActualVaadinComponent() {
+		return (Component) getActualComponent();
 	}
 
 	public TipiVaadinApplication getVaadinApplication() {
