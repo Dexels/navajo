@@ -2,6 +2,9 @@ package com.dexels.navajo.tipi.vaadin.embedded;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.StringTokenizer;
 
 import javax.servlet.ServletException;
 
@@ -16,30 +19,7 @@ import org.eclipse.jetty.util.resource.Resource;
 import org.osgi.framework.Bundle;
 
 import com.dexels.navajo.tipi.vaadin.application.InstallationPathResolver;
-import com.dexels.navajo.tipi.vaadin.application.TipiVaadinApplication;
 import com.dexels.navajo.tipi.vaadin.application.servlet.TipiVaadinServlet;
-//<context-param>
-//<description>
-//Vaadin production mode</description>
-//<param-name>productionMode</param-name>
-//<param-value>false</param-value>
-//</context-param>
-//<servlet>
-//<servlet-name>Vaadintest Application</servlet-name>
-//<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
-//<init-param>
-//	<description>
-//	Vaadin application class to start</description>
-//	<param-name>application</param-name>
-//	<param-value>com.dexels.vaadintest.VaadinApplication</param-value>
-//</init-param>
-//<init-param>
-//	<description>
-//	Application widgetset</description>
-//	<param-name>widgetset</param-name>
-//	<param-value>com.dexels.vaadintest.widgetset.VaadintestWidgetset</param-value>
-//</init-param>
-//</servlet>
 
 
 
@@ -50,34 +30,80 @@ public class JettyServer {
 		SelectChannelConnector connector = new SelectChannelConnector();
 		connector.setPort(port);
 		jettyServer.addConnector(connector);
+		HandlerList handlers = new HandlerList();
+		
+		StringTokenizer tokenizeContext = new StringTokenizer(contextPath,",");
+		List<String> contexts = new LinkedList<String>();
+		while (tokenizeContext.hasMoreTokens()) {
+			String context = tokenizeContext.nextToken();
+			contexts.add(context);
+			addVaadinContext(context, bundle, jettyServer, handlers);
+			
+		}
+
+		
+		
+
+		
+		jettyServer.setHandler(handlers);
+
+
+//		handlers.setHandlers(new Handler[] {webAppContext,resource_handler });
+
+		//		VaadinFileServlet vaadinFile = new VaadinFileServlet();
+//		ServletHolder s2 = new ServletHolder(vaadinFile);
+
+
+
+		//		webAppContext.addServlet(s2,"/*");
+
+		try {
+			jettyServer.start();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.err.println("Started: "+contexts.size()+" contexts.");
+		int i = 1;
+		for (String context : contexts) {
+			
+			System.err.println("Context #"+i+". Open with:\nhttp://localhost:"+port+context+"/app\n");
+			i++;
+		}
+
+	}
+
+	private void addVaadinContext(final String contextPath, final Bundle bundle, Server jettyServer,
+			HandlerList handlers) {
 		ServletContextHandler webAppContext = new ServletContextHandler(jettyServer,contextPath,true,false);
 		webAppContext.setClassLoader(Thread.currentThread().getContextClassLoader());
-		Handler[] a =  webAppContext.getHandlers();
+		TipiVaadinServlet vaadin = new TipiVaadinServlet();
+		ServletHolder sh = new ServletHolder(vaadin);
+		sh.setInitParameter("application", "com.dexels.navajo.tipi.vaadin.application.TipiVaadinApplication");
+		// Jetty style, OSGi style would be /app/
+		webAppContext.addServlet(sh,"/app/*");
+
+		
 		ResourceHandler resource_handler = new ResourceHandler() {
 
 			@Override
 			public Resource getResource(String s) throws MalformedURLException {
-				System.err.println("Getting resource: "+s);
-				System.err.println("Context path: "+contextPath);
+//				System.err.println("Getting resource: "+s);
 				if(s.startsWith(contextPath)) {
-					System.err.println("Cropping");
+//					System.err.println("Cropping");
 					s = s.substring(contextPath.length());
 				}
-				System.err.println("clipped to: "+s);
 				if(s==null || s.isEmpty()) {
 					return null;
 				}
 				Resource r =  super.getResource(s);
 				if(!r.exists()) {
 					System.err.println("Not found. trying to resole class: "+s);
-					ClassLoader cl = TipiVaadinApplication.class.getClassLoader();
 					Resource ur=null;
 					try {
 						ur = Resource.newResource(bundle.getResource(s));
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-//						Resource ur = Resource.newClassPathResource(s.substring(1),true,true);
 						if(ur!=null) {
 							System.err.println("Name: "+ur.getName()+" found: "+ur.exists());
 							System.err.println(":: "+ur.length()+" mod: "+ur.lastModified());
@@ -102,7 +128,7 @@ public class JettyServer {
 		
 		String installationFolder;
 		try {
-			installationFolder = InstallationPathResolver.getInstallationFromPath(contextPath);
+			installationFolder = InstallationPathResolver.getInstallationFromPath(contextPath).get(0);
 			System.err.println("Resolved install: "+installationFolder);
 			resource_handler.setResourceBase(installationFolder);
 		} catch (IOException e1) {
@@ -110,33 +136,7 @@ public class JettyServer {
 		} catch (ServletException e1) {
 			e1.printStackTrace();
 		}
-
-//		webAppContext.add
-		
-		HandlerList handlers = new HandlerList();
-//		handlers.setHandlers(new Handler[] {webAppContext });
-		handlers.setHandlers(new Handler[] {webAppContext,resource_handler });
-		jettyServer.setHandler(handlers);
-//		Resource r = webAppContext.getBaseResource();
-//		System.err.println("R: "+r);
-		//		
-
-//		VaadinFileServlet vaadinFile = new VaadinFileServlet();
-//		ServletHolder s2 = new ServletHolder(vaadinFile);
-
-
-		TipiVaadinServlet vaadin = new TipiVaadinServlet();
-		ServletHolder sh = new ServletHolder(vaadin);
-		sh.setInitParameter("application", "com.dexels.navajo.tipi.vaadin.application.TipiVaadinApplication");
-		webAppContext.addServlet(sh,"/app/");
-//		webAppContext.addServlet(s2,"/*");
-
-		try {
-			jettyServer.start();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-
+		handlers.addHandler(webAppContext);
+		handlers.addHandler(resource_handler);
 	}
 }

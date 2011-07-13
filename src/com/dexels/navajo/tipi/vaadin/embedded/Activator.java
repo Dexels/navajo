@@ -9,7 +9,8 @@ public class Activator implements BundleActivator {
 
 	private static BundleContext context;
 
-	private final String CONTEXTPATH = "/oao";
+	private final static String DEFAULTCONTEXTPATH = "/oao";
+	private final static int DEFAULTPORT = 9090;
 
 	
 	static BundleContext getContext() {
@@ -24,8 +25,19 @@ public class Activator implements BundleActivator {
 		Activator.context = bundleContext;
 		URL u = bundleContext.getBundle().getResource("VAADIN/themes/base/styles.css");
 		System.err.println("u: "+u);
+		String portString = System.getProperty("tipi.vaadin.embedded.port");
+		int port;
+		if (portString==null) {
+			port = DEFAULTPORT;
+		} else {
+			port = Integer.parseInt(portString);
+		}
+		String context = System.getProperty("tipi.vaadin.contextpath");
+		if(context==null) {
+			context = DEFAULTCONTEXTPATH;
+		}
 		JettyServer js = new JettyServer();
-		js.init(9090,CONTEXTPATH,bundleContext.getBundle());
+		js.init(port,context,bundleContext.getBundle());
 	}
 
 	/*
