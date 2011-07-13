@@ -79,7 +79,8 @@ abstract class BaseTipiParser extends TipiTypeParser {
 				myContext.showInternalError(
 						"No navajo found, while looking for path: " + path
 								+ " Available: " + myContext.getNavajoNames(),
-						new Exception());
+						new Exception("No navajo found, while looking for path: " + path
+								+ " Available: " + myContext.getNavajoNames()));
 				return null;
 			}
 		}
