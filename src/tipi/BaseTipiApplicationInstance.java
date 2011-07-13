@@ -75,6 +75,9 @@ public abstract class BaseTipiApplicationInstance implements TipiApplicationInst
 			
 		}
 		System.err.println("RESOLVED TO: "+resolvedValues);
+		resolvedValues.put("tipi.deploy", deploy);
+		resolvedValues.put("tipi.profile", profile);
+		
 		for (Entry<String,String> entry : resolvedValues.entrySet()) {
 			context.setSystemProperty(entry.getKey(), entry.getValue());
 		}	
