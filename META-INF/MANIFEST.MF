@@ -23,3 +23,10 @@ Export-Package: com.dexels.navajo.tipi.vaadin,
  com.dexels.navajo.tipi.vaadin.components.base,
  com.dexels.navajo.tipi.vaadin.components.grid,
  tipi
+Bundle-ClassPath: lib/borderlayout-0.3.jar,
+ lib/confirmdialog-1.1.1.jar,
+ lib/ContextMenu3.1.0.jar,
+ lib/PagedTable-0.6.2.jar,
+ lib/vaadin-tinymce-1.4.jar,
+ lib/vaadin-chameleon-theme-1.1.0.jar,
+ .
