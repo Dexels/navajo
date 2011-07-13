@@ -74,10 +74,11 @@ public class TipiTable extends TipiVaadinComponentImpl {
 
 	
 	private Message getSelectedMessage() {
-		selectedIndex = (Integer)selectedId;
 		if(selectedId==null) {
 			selectedIndex = -1;
+			return null;
 		}
+		selectedIndex = (Integer)selectedId;
 		MessageBridge mb = (MessageBridge) messageBridge.getItem(selectedId);
 		if(mb==null) {
 			return null;
