@@ -1,6 +1,6 @@
 package com.dexels.navajo.server;
 
-import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 import java.io.File;
@@ -19,7 +19,7 @@ import com.dexels.navajo.events.types.NavajoCompileScriptEvent;
 /**
  * Title:        Navajo
  * Description:
- * Copyright:    Copyright (c) 2001 - 2008
+ * Copyright:    Copyright (c) 2001 - 2011
  * Company:      Dexels
  * @author Arjen Schoneveld en Martin Bergman
  * @version $Id$
@@ -45,8 +45,7 @@ import com.dexels.navajo.events.types.NavajoCompileScriptEvent;
 
 public final class GenericHandler extends ServiceHandler {
 
-    @SuppressWarnings("unchecked")
-	private static HashMap<String,NavajoClassSupplier> loadedClasses = null;
+    private static ConcurrentHashMap<String,NavajoClassSupplier> loadedClasses = null;
 
     private static Object mutex1 = new Object();
     private static Object mutex2 = new Object();
@@ -61,15 +60,14 @@ public final class GenericHandler extends ServiceHandler {
     	}
     }
     
-    @SuppressWarnings("unchecked")
-	public GenericHandler() {
+    public GenericHandler() {
 
     	boolean finishedSync = false;
     	
     	if (loadedClasses == null)
     		synchronized ( mutex1 ) {
     			if ( !finishedSync ) {
-    				loadedClasses = new HashMap();
+    				loadedClasses = new ConcurrentHashMap<String, NavajoClassSupplier>();
     				finishedSync = true;
     			}
     		}
@@ -77,8 +75,9 @@ public final class GenericHandler extends ServiceHandler {
 
     @SuppressWarnings("unchecked")
 	public static void doClearCache() {
+       loadedClasses.clear();
        loadedClasses = null;
-       loadedClasses = new HashMap();
+       loadedClasses = new ConcurrentHashMap<String, NavajoClassSupplier>();
     }
 
     private final static CompiledScript getCompiledScript(Access a, String className,File scriptFile,String scriptName) throws Exception {
@@ -219,12 +218,6 @@ public final class GenericHandler extends ServiceHandler {
 			return null;
 		}
 		
-		
-		
-		// TODO beware, scripts can be null
-//		for (File file : scripts) {
-//			System.err.println("Script: " + file.getName());
-//		}
 		if (scripts.length > 1) {
 			System.err.println("Warning, multiple candidates. Assuming the first: " + scripts[0].getName());
 		}
@@ -233,17 +226,7 @@ public final class GenericHandler extends ServiceHandler {
 			return null;
 		}
 		String classFileName = null;
-		String className = "com.dexels.navajo.server.scriptengine.GenericScriptEngine";
-    	//    	sourceFileName = ( scriptFile != null ? DispatcherFactory.getInstance().getNavajoConfig().getCompiledScriptPath() : DispatcherFactory.getInstance().getNavajoConfig().getScriptPath() )
-//    			             + "/" + pathPrefix + serviceName + ".java";
-//    	System.err.println("in getScriptPathServiceNameAndScriptFile()");
-//    	System.err.println("pathPrefix = " + pathPrefix);
-//    	System.err.println("serviceName = " + serviceName);
-//    	System.err.println("scriptFile = " + scripts[0]);
-//    	System.err.println("sourceFileName = " + scripts[0].getName());
-//    	System.err.println("classFileName = " + classFileName);
-//    	System.err.println("className = " + className);
-    	
+		String className = "com.dexels.navajo.server.scriptengine.GenericScriptEngine";    	
     	
     	return new Object[]{pathPrefix,serviceName,scriptFile,sourceFileName,scripts[0],className,classFileName,null,false};
 
@@ -283,7 +266,11 @@ public final class GenericHandler extends ServiceHandler {
          	newLoader = new NavajoClassLoader(null, DispatcherFactory.getInstance().getNavajoConfig().getCompiledScriptPath(), 
          			( isBetaUser ? DispatcherFactory.getInstance().getNavajoConfig().getBetaClassLoader() : 
          				DispatcherFactory.getInstance().getNavajoConfig().getClassloader() ) );
-         	loadedClasses.put(className, newLoader);
+         	// Use concurrent hashmap: if key exists, return existing classloader.
+         	NavajoClassSupplier ncs = loadedClasses.putIfAbsent(className, newLoader);
+         	if ( ncs != null ) {
+         		return ncs;
+         	}
          }
          return newLoader;
     }
