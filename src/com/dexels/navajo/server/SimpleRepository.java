@@ -61,10 +61,12 @@ public class SimpleRepository implements Repository {
 		try {
 			ResourceBundle rb = ResourceBundle.getBundle("application");
 			parseBundle(method, username, inMessage, extraParams, rb);
-
+			
 		} catch (MissingResourceException e) {
+			
+			InputStream stream = null;
 			try {
-				InputStream stream = config.getResourceBundle("application");
+				stream = config.getResourceBundle("application");
 				if(stream==null) {
 					System.err.println("Also not found, no globals then.");
 					return;
@@ -75,6 +77,13 @@ public class SimpleRepository implements Repository {
 			} catch (IOException e1) {
 				System.err.println("Still can not open resource bundle. Also no big deal, I guess");
 				e1.printStackTrace();
+			} finally {
+				if ( stream != null ) {
+					try {
+						stream.close();
+					} catch (IOException e1) {
+					}
+				}
 			}
 		}
 	}
