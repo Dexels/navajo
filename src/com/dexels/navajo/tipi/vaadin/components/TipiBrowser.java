@@ -1,12 +1,16 @@
 package com.dexels.navajo.tipi.vaadin.components;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.FileResource;
+import com.vaadin.terminal.StreamResource;
+import com.vaadin.terminal.StreamResource.StreamSource;
 import com.vaadin.ui.Embedded;
 
 
@@ -47,9 +51,25 @@ public class TipiBrowser extends TipiVaadinComponentImpl {
         	String bare = ""+object;
         	setUrl(bare);
         }
+        if ("binary".equals(name)) {
+        	setBinary((Binary)object);
+        }
         super.setComponentValue(name, object);
     }
 
+
+	@SuppressWarnings("serial")
+	private void setBinary(final Binary binary) {
+		System.err.println("Setting binary content. Length:  "+binary.getLength());
+		StreamResource sr = new StreamResource(new StreamSource() {
+			
+			@Override
+			public InputStream getStream() {
+				return binary.getDataAsStream();
+			}
+		},"mail.html",getVaadinApplication());
+		browser.setSource(sr);
+	}
 
 	private void setUrl(String url) {
 		try {
