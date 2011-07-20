@@ -2,11 +2,8 @@ package com.dexels.navajo.tipi.vaadin.document;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Selection;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;

@@ -10,9 +10,9 @@ import com.vaadin.data.Property;
 
 public class ValuePropertyBridge implements Property, Property.ValueChangeNotifier {
 	private static final long serialVersionUID = -5696589046516267159L;
-	private final com.dexels.navajo.document.Property src;
 	private final String originalType;
 	private final Map<ValueChangeListener,PropertyChangeListener> listenerMap = new HashMap<ValueChangeListener,PropertyChangeListener>();
+	private final com.dexels.navajo.document.Property src;
 	
 	public ValuePropertyBridge(com.dexels.navajo.document.Property src) {
 		this.src = src;
@@ -86,7 +86,6 @@ public class ValuePropertyBridge implements Property, Property.ValueChangeNotifi
 		PropertyChangeListener pcl = listenerMap.get(listener);
 		listenerMap.remove(listener);
 		src.removePropertyChangeListener(pcl);
-		
 	}
 
 }
