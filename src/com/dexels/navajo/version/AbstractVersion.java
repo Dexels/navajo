@@ -12,7 +12,11 @@ public abstract class AbstractVersion extends BaseVersion implements BundleActiv
 	protected BundleContext context = null;
 	public void start(BundleContext bc) throws Exception {
 		context = bc;
-		logger.info("Bundle started: "+bc.getBundle().toString());
+		if(bc==null) {
+			logger.info("Bundle started in non-osgi environment: "+getClass().getName());
+		} else {
+			logger.info("Bundle started: "+bc.getBundle().toString());
+		}
 	}
 
 	public void stop(BundleContext arg0) throws Exception {
