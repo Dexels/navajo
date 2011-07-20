@@ -182,6 +182,7 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 	}
 
 
+	@SuppressWarnings("unused")
 	private void createRadioButtonGroup() {
 		try {
 			OptionGroup o = new OptionGroup("", property.getAllSelections());
@@ -266,6 +267,7 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 		description.setVisible(false);
 	}
 
+	@SuppressWarnings("unused")
 	private boolean isTextualProperty(com.dexels.navajo.document.Property p) {
 		if(com.dexels.navajo.document.Property.SELECTION_PROPERTY.equals(p.getType())) {
 			return false;
