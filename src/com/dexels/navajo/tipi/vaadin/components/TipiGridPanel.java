@@ -53,18 +53,18 @@ public class TipiGridPanel extends TipiVaadinComponentImpl {
         updateAvailability(currentx, currenty, currentx + myData.getColumnSpan(), currenty + myData.getRowSpan());
 		int endcolumn = myData.getColumnSpan()-1+currentx;
 		int endrow = myData.getRowSpan()-1+currenty;
-		System.err.println("Adding to grid: width: "+gridwidth+" currentx: "+currentx+" currenty: "+currenty+" endcolumn: "+endcolumn+" endrow: "+endrow);
-		System.err.println("Detected grid width: "+gridLayout.getColumns());
-		System.err.println("Detected grid height: "+gridLayout.getRows());
+//		System.err.println("Adding to grid: width: "+gridwidth+" currentx: "+currentx+" currenty: "+currenty+" endcolumn: "+endcolumn+" endrow: "+endrow);
+//		System.err.println("Detected grid width: "+gridLayout.getColumns());
+//		System.err.println("Detected grid height: "+gridLayout.getRows());
 		if(endrow>=gridLayout.getRows()) {
 			gridLayout.setRows(endrow+1);
 		}
-		System.err.println("Now Detected grid width: "+gridLayout.getColumns());
-		System.err.println("Now Detected grid height: "+gridLayout.getRows());
+//		System.err.println("Now Detected grid width: "+gridLayout.getColumns());
+//		System.err.println("Now Detected grid height: "+gridLayout.getRows());
 		gridLayout.addComponent(component, currentx, currenty,endcolumn,endrow);
 		gridLayout.setComponentAlignment(component, myData.getAlignment());
 		int currentWidth = myWidths.get(currentx);
-		System.err.println("Setting width: "+currentWidth);
+//		System.err.println("Setting width: "+currentWidth);
 		component.setWidth(currentWidth,Sizeable.UNITS_PIXELS);
         advance();
 	}
