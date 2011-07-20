@@ -5,12 +5,6 @@ import java.util.List;
 
 import navajo.ExtensionDefinition;
 
-/**
- * Reference to the XML definition file for this set of adapters defined in this project.
- * 
- * @author arjen
- *
- */
 public class NavajoCoreAdapterLibrary implements ExtensionDefinition {
 
 	
@@ -37,7 +31,7 @@ public class NavajoCoreAdapterLibrary implements ExtensionDefinition {
 	}
 
 	public String getId() {
-		return "NavajoAdapters";
+		return "Navajo";
 	}
 
 	public String[] getIncludes() {
@@ -53,7 +47,7 @@ public class NavajoCoreAdapterLibrary implements ExtensionDefinition {
 	}
 
 	public String getProjectName() {
-		return null;
+		return "Navajo";
 	}
 
 	public List<String> getRequiredExtensions() {
