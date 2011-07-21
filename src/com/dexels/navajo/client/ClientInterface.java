@@ -111,17 +111,6 @@ public void init(URL config) throws ClientException;
 
   public int getPending();
 
-
-  public void setClientProperty(String key, Object value);
-
-  public Object getClientProperty(String key);
-
-  public ErrorResponder getErrorHandler();
-
-  public void setErrorHandler(ErrorResponder e);
-
-  public void displayException(Exception e);
-
   public void setSecure(String keystore, String storepass, boolean useSecurity) throws ClientException;
 
   public void setSecure(InputStream keystore, String storepass, boolean useSecurity) throws ClientException;

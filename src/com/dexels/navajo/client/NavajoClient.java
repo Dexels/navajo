@@ -32,6 +32,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -89,22 +90,20 @@ public class NavajoClient implements ClientInterface {
   
   private final Random randomize = new Random(System.currentTimeMillis());
   // Threadsafe collections:
-  private Map<String,Message> globalMessages = new HashMap<String,Message>();
-  private Map<String,Navajo> serviceCache = new HashMap<String,Navajo>();
+  private final Map<String,Message> globalMessages = new HashMap<String,Message>();
+  private final Map<String,Navajo> serviceCache = new HashMap<String,Navajo>();
 
-  private Object serviceCacheMutex = new Object();
+  // use something serializable
+  private final Object serviceCacheMutex = new LinkedList<String>();
   
-  private Set<String> cachedServiceNameMap = new HashSet<String>();
-  private Map<String,ServerAsyncRunner> asyncRunnerMap = Collections.synchronizedMap(new HashMap<String,ServerAsyncRunner>());
-  private Map<String,Object> propertyMap = Collections.synchronizedMap(new HashMap<String,Object>());
-  private List<ActivityListener> myActivityListeners = Collections.synchronizedList(new ArrayList<ActivityListener>());
-  
+  private final Set<String> cachedServiceNameMap = new HashSet<String>();
+  private final Map<String,ServerAsyncRunner> asyncRunnerMap = Collections.synchronizedMap(new HashMap<String,ServerAsyncRunner>());
+  private final List<ActivityListener> myActivityListeners = Collections.synchronizedList(new ArrayList<ActivityListener>());
   private final List<BroadcastListener> broadcastListeners = Collections.synchronizedList(new ArrayList<BroadcastListener>());
   
 //  private NavajoPushSession pushSession = null;
   
   protected int protocol = HTTP_PROTOCOL;
-  private ErrorResponder myResponder;
   private boolean setSecure = false;
   private SSLSocketFactory sslFactory = null;
   //private String keystore, passphrase;
@@ -976,11 +975,7 @@ public class NavajoClient implements ClientInterface {
 					  }
 				  }
 
-				  if (myResponder != null) {
-					  myResponder.check(n);
-					  myResponder.checkForAuthentication(n);
-					  myResponder.checkForAuthorization(n);
-				  }
+
 				  fireActivityChanged(false, method, getQueueSize(), getActiveThreads(), 0);
 
 				  if (cachedServiceNameMap.contains(method)) {
@@ -1010,6 +1005,7 @@ public class NavajoClient implements ClientInterface {
   }
 
 
+  @Deprecated
   private final void fireBroadcastEvents(final Navajo n) {
 	  
 	  if (n==null) {
@@ -1279,49 +1275,8 @@ private final Navajo retryTransaction(String server, Navajo out, boolean useComp
     return doSimpleSend(NavajoFactory.getInstance().createNavajo(), method, expirationInterval);
   }
 
-  /**
-   * Store a NavajoClient property
-   * @param key String
-   * @param value Object
-   */
-  public final void setClientProperty(String key, Object value) {
-    propertyMap.put(key, value);
-  }
 
-  /**
-   * Get a NavajoClient property
-   * @param key String
-   * @return Object
-   */
-  public final Object getClientProperty(String key) {
-    return propertyMap.get(key);
-  }
 
-  /**
-   * Return this NavajoClient's ErrorHandler
-   * @return ErrorResponder
-   */
-  public final ErrorResponder getErrorHandler() {
-    return myResponder;
-  }
-
-  /**
-   * Set the ErrorHandler
-   * @param e ErrorResponder
-   */
-  public final void setErrorHandler(ErrorResponder e) {
-    myResponder = e;
-  }
-
-  /**
-   * Send the given Exception to the ErrorHandler
-   * @param e Exception
-   */
-  public final void displayException(Exception e) {
-    if (myResponder != null) {
-      myResponder.check(e);
-    }
-  }
 
   /**
    * Add activitylistener
@@ -1359,6 +1314,7 @@ private final Navajo retryTransaction(String server, Navajo out, boolean useComp
   /**
    * Add broadcastlistener
    * @param al ActivityListener
+   * @deprecated
    */
   public final void addBroadcastListener(BroadcastListener al) {
     broadcastListeners.add(al);
@@ -1367,8 +1323,10 @@ private final Navajo retryTransaction(String server, Navajo out, boolean useComp
   /**
    * Remove broadcastlistener
    * @param al ActivityListener
+   * @deprecated
    */
   public final void removeBroadcastListener(BroadcastListener al) {
+	  
 	  broadcastListeners.remove(al);
   }
 
