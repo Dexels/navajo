@@ -4,10 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.List;
 
-public class ClassPathResourceLoader implements TipiResourceLoader {
+public class ClassPathResourceLoader implements TipiResourceLoader, Serializable{
 
 	public URL getResourceURL(String location) throws IOException {
 

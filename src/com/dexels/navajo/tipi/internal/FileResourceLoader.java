@@ -11,6 +11,7 @@ import java.util.List;
 
 public class FileResourceLoader extends ClassPathResourceLoader {
 
+	private static final long serialVersionUID = -3138445157642602156L;
 	private File baseFile;
 
 	public FileResourceLoader(File baseFile) {

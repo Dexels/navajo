@@ -1,6 +1,7 @@
 package tipipackage;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,6 +29,10 @@ public class TipiExtensionRegistry implements ITipiExtensionRegistry, Serializab
 		for (TipiExtension te : registeredExtensions) {
 			System.err.println("Registered extension: " + te.getId());
 		}
+	}
+	
+	public List<TipiExtension> getExtensionList() {
+		return new ArrayList<TipiExtension>(registeredExtensions);
 	}
 
 }
