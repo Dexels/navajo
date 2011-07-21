@@ -5,6 +5,7 @@ Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.10.qualifier
 Bundle-Activator: com.dexels.navajo.version.NavajoBundleManager
 Export-Package: com.dexels.navajo.version,
+ dexels,
  navajo
 Bundle-Vendor: Dexels
 Bundle-ClassPath: .

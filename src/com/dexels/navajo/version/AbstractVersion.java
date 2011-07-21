@@ -57,10 +57,6 @@ public abstract class AbstractVersion extends BaseVersion implements BundleActiv
 		logger.info("Shutting down bundle: "+getClass().getName());
 	}
 	
-	public static double getRandom() {
-		// Silly, was getting paranoid. Can be removed now.
-		return Math.random();
-	}
 
 	  @SuppressWarnings("unchecked")
 	public static void shutdownNavajoExtension(String name) {

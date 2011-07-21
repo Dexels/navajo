@@ -58,7 +58,7 @@ public abstract class BaseVersion implements Comparable<AbstractVersion> {
 	public abstract String getVendor();
 	
 	// List of versions of included packages.
-	public ArrayList<AbstractVersion> includedPackages = new ArrayList<AbstractVersion>();
+	private ArrayList<AbstractVersion> includedPackages = new ArrayList<AbstractVersion>();
 	
 	private String specialVersion = null;
 	
@@ -92,7 +92,7 @@ public abstract class BaseVersion implements Comparable<AbstractVersion> {
 		
 	}
 	
-	public void addInclude(String versionClass) {
+	private void addInclude(String versionClass) {
 		try {
 			Class<?> c = Class.forName(versionClass);
 			AbstractVersion v = (AbstractVersion) c.newInstance();
