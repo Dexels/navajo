@@ -1,14 +1,16 @@
 package com.dexels.navajo.functions;
 
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
 import navajo.ExtensionDefinition;
 
-public class StandardFunctionDefinitions implements ExtensionDefinition {
+public class StandardFunctionDefinitions implements ExtensionDefinition, Serializable {
 
-	private ClassLoader extensionClassLoader = null;
+	private static final long serialVersionUID = -395464699372981482L;
+	private transient ClassLoader extensionClassLoader = null;
 
 	public InputStream getDefinitionAsStream() {
 		return getClass().getClassLoader().getResourceAsStream("com/dexels/navajo/functions/functions.xml");
