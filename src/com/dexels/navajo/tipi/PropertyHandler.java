@@ -47,7 +47,7 @@ public class PropertyHandler implements PropertyChangeListener {
 		}
 	}
 
-	public void initProperty(Property p) {
+	private void initProperty(Property p) {
 		updateAspect("description", p.getTypedValue());
 		updateAspect("value", p.getTypedValue());
 		updateAspect("length", p.getLength());
