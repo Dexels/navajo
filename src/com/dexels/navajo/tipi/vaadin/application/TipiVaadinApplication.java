@@ -60,6 +60,18 @@ public class TipiVaadinApplication extends Application implements
 		componentContainer.setSizeFull();
 		final Window mainWindow = new Window("Tipi Vaadin",componentContainer);
 		setMainWindow(mainWindow);
+		if(cloudMode) {
+//			extensionRegistry = new TipiExtensionRegistry();
+			TipiCoreExtension tce = new TipiCoreExtension();
+			TipiVaadinExtension tve = new TipiVaadinExtension();
+			tce.loadDescriptor();
+			tve.loadDescriptor();
+			// special case for TipiCoreExtension, as it is not the bundle activator
+			// TODO Maybe refactor
+			extensionRegistry.registerTipiExtension(tce);
+			extensionRegistry.registerTipiExtension(tve);
+		}
+
 		try {
 			setCurrentContext(createContext());
 		} catch (Exception e) {
@@ -73,15 +85,6 @@ public class TipiVaadinApplication extends Application implements
 			}
 		});
 		
-		if(cloudMode) {
-//			extensionRegistry = new TipiExtensionRegistry();
-			TipiCoreExtension tce = new TipiCoreExtension();
-			TipiVaadinExtension tve = new TipiVaadinExtension();
-			// special case for TipiCoreExtension, as it is not the bundle activator
-			// TODO Maybe refactor
-			extensionRegistry.registerTipiExtension(tce);
-			extensionRegistry.registerTipiExtension(tve);
-		}
 		System.err.println("END OF INIT");
 //		checkForExtensions();
 	}
@@ -126,7 +129,7 @@ public class TipiVaadinApplication extends Application implements
 		}
 	
 
-		VaadinTipiContext va = new VaadinTipiContext(this);
+		VaadinTipiContext va = new VaadinTipiContext(this, extensionRegistry.getExtensionList());
 		if(cloudMode) {
 			extensionRegistry.loadExtensions(va);
 		}
@@ -148,6 +151,8 @@ public class TipiVaadinApplication extends Application implements
 
 		if(!cloudMode) {
 			instance.getTipiExtensionRegistry().loadExtensions(va);
+		} else {
+			extensionRegistry.loadExtensions(va);
 		}
 		
 		

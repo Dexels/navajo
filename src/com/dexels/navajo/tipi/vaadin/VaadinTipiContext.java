@@ -1,11 +1,13 @@
 package com.dexels.navajo.tipi.vaadin;
 
 import java.io.File;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import tipi.TipiApplicationInstance;
+import tipi.TipiExtension;
 
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiContext;
@@ -26,8 +28,8 @@ public class VaadinTipiContext extends TipiContext {
 
 	private String contextName = null;
 	
-	public VaadinTipiContext(TipiApplicationInstance myApplication) {
-		super(myApplication, null);
+	public VaadinTipiContext(TipiApplicationInstance myApplication, List<TipiExtension> extensionList) {
+		super(myApplication, extensionList, null);
 		
 		
 		File install = getVaadinApplication().getInstallationFolder();
