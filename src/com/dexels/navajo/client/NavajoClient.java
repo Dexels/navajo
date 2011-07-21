@@ -12,8 +12,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -23,7 +21,6 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
-import java.security.KeyStore;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,14 +36,6 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.X509TrustManager;
-
 import com.dexels.navajo.client.push.NavajoPushSession;
 import com.dexels.navajo.client.serverasync.ServerAsyncRunner;
 import com.dexels.navajo.document.Guid;
@@ -61,17 +50,17 @@ import com.jcraft.jzlib.JZlib;
 import com.jcraft.jzlib.ZInputStream;
 import com.jcraft.jzlib.ZOutputStream;
 
-class MyX509TrustManager implements X509TrustManager {
-  public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-    return null;
-  }
-
-  public final void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {
-  }
-
-  public final void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {
-  }
-}
+//class MyX509TrustManager implements X509TrustManager {
+//  public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+//    return null;
+//  }
+//
+//  public final void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {
+//  }
+//
+//  public final void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {
+//  }
+//}
 
 public class NavajoClient implements ClientInterface {
 
@@ -105,7 +94,7 @@ public class NavajoClient implements ClientInterface {
   
   protected int protocol = HTTP_PROTOCOL;
   private boolean setSecure = false;
-  private SSLSocketFactory sslFactory = null;
+//  private SSLSocketFactory sslFactory = null;
   //private String keystore, passphrase;
   private long retryInterval = 1000; // default retry interval is 500 milliseconds
   private int retryAttempts = 4; // default four retry attempts
@@ -449,59 +438,6 @@ public class NavajoClient implements ClientInterface {
     return doSimpleSend(out, getCurrentHost(), method, username, password, expirationInterval, allowCompression , false);
   }
 
-  /**
-   * Sets whether this NavajoClient uses a secure(https) or insecure(http) connection.
-   * Required is a keystore and passphrase
-   * @param keystore String
-   * @param passphrase String
-   * @param useSecurity boolean
-   * @throws ClientException
-   */
-  public final void setSecure(String keystore, String passphrase, boolean useSecurity) throws ClientException {
-    setSecure = useSecurity;
-    try {
-      setSecure(new FileInputStream(new File(keystore)), passphrase, useSecurity);
-    }
-    catch (java.io.FileNotFoundException fnfe) {
-      fnfe.printStackTrace(System.err);
-      //throw new ClientException(-1, -1, fnfe.getMessage());
-    }
-  }
-
-  /**
-   * Sets whether this NavajoClient uses a secure(https) or insecure(http) connection.
-   * Required is a keystore from an InputStream and passphrase
-   * @param keystore InputStream to keystore resource.
-   * @param passphrase passphrase to keystore resource.
-   * @param useSecurity if true TLS security is enabled.
-   * @throws ClientException
-   */
-  public final void setSecure(InputStream keystore, String passphrase, boolean useSecurity) throws ClientException {
-    setSecure = useSecurity;
-    //System.err.println("------------------------------------------------>>>>>> Calling latest VERSION OF setScure!?");
-    if (sslFactory == null) {
-
-      try {
-        SSLContext ctx;
-        KeyManagerFactory kmf;
-        KeyStore ks;
-        char[] passphraseArray = passphrase.toCharArray();
-        ctx = SSLContext.getInstance("TLS");
-        kmf = KeyManagerFactory.getInstance("SunX509");
-        ks = KeyStore.getInstance("JKS");
-        ks.load(keystore, passphraseArray);
-        kmf.init(ks, passphraseArray);
-        ctx.init(kmf.getKeyManagers(), new MyX509TrustManager[] {new MyX509TrustManager()}
-                 , null);
-        sslFactory = ctx.getSocketFactory();
-      }
-      catch (Exception e) {
-        e.printStackTrace(System.err);
-        // throw new ClientException(-1, -1, e.getMessage());
-      }
-      //this.passphrase = passphrase;
-    }
-  }
 
   /**
    * Internal function for creating a URLConnection based on this Client's security settings
@@ -519,14 +455,7 @@ public class NavajoClient implements ClientInterface {
 //    }
     //System.err.println("in doTransaction: opening url: " + url.toString());
 	  HttpURLConnection con = null;
-    if (sslFactory == null) {
       con = (HttpURLConnection) url.openConnection();
-    }
-    else {
-      HttpsURLConnection urlcon = (HttpsURLConnection) url.openConnection();
-      urlcon.setSSLSocketFactory(sslFactory);
-      con = urlcon;
-    }
     con.setDoOutput(true);
     con.setDoInput(true);
     con.setUseCaches(false);
@@ -591,7 +520,7 @@ public class NavajoClient implements ClientInterface {
    * @param useCompression boolean
    */
   
-  protected Navajo doTransaction(String name, Navajo d, boolean useCompression, boolean forcePreparseProxy) throws IOException, NavajoException, javax.net.ssl.SSLHandshakeException {
+  protected Navajo doTransaction(String name, Navajo d, boolean useCompression, boolean forcePreparseProxy) throws IOException, NavajoException {
     URL url;
     //useCompression = false;
     
@@ -603,29 +532,9 @@ public class NavajoClient implements ClientInterface {
       url = new URL("http://" + name );
     }
     HttpURLConnection con = null;
-    if (sslFactory == null) {
       con = (HttpURLConnection) url.openConnection();
       con.setRequestMethod("POST");
-    }
-    else {
-      HttpsURLConnection urlcon = (HttpsURLConnection) url.openConnection();
-      urlcon.setSSLSocketFactory(sslFactory);
-      con = urlcon;
-      urlcon.setHostnameVerifier(new HostnameVerifier() {
-    	  public boolean verify(String hostname, SSLSession session) {
-    		  return true;
-    	  }
-      });
-    }
-   
-    try {
-    	java.lang.reflect.Method timeout = con.getClass().getMethod("setConnectTimeout", new Class[]{int.class});
-    	timeout.invoke( con, new Object[]{new Integer(CONNECT_TIMEOUT)});
-    }catch (SecurityException e) {
-    }
-    catch (Throwable e) {
-     	System.err.println("setConnectTimeout does not exist, upgrade to java 1.5+");
-    }
+      con.setConnectTimeout(CONNECT_TIMEOUT);
     
     // Omit fancy http stuff for now
     con.setDoOutput(true);
@@ -890,10 +799,6 @@ public class NavajoClient implements ClientInterface {
 						  throw new Exception("Empty Navajo received");
 					  }
 				  }
-				  catch (javax.net.ssl.SSLException ex) {
-					  n = NavajoFactory.getInstance().createNavajo();
-					  generateConnectionError(n, 666666, "Wrong certificate or ssl connection problem: " + ex.getMessage());
-				  }
 				  catch (java.net.UnknownHostException uhe) {
 					  n = NavajoFactory.getInstance().createNavajo();
 					  generateConnectionError(n, 7777777, "Unknown host: " + uhe.getMessage());
@@ -1083,9 +988,6 @@ private final Navajo retryTransaction(String server, Navajo out, boolean useComp
     	Navajo doc = doTransaction(server, out, useCompression, allowPreparseProxy);
     	System.err.println("It worked!  the inputstream is: " + in);
     	return doc;
-    }
-    catch (javax.net.ssl.SSLException ex) {
-    	generateConnectionError(n, 666666, "Wrong certificate or ssl connection problem: " + ex.getMessage());
     }
     catch (java.net.UnknownHostException uhe) {
     	generateConnectionError(n, 7777777, "Unknown host: " + uhe.getMessage());

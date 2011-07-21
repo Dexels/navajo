@@ -111,10 +111,6 @@ public void init(URL config) throws ClientException;
 
   public int getPending();
 
-  public void setSecure(String keystore, String storepass, boolean useSecurity) throws ClientException;
-
-  public void setSecure(InputStream keystore, String storepass, boolean useSecurity) throws ClientException;
-
   public void addActivityListener(ActivityListener al);
 
   public void removeActivityListener(ActivityListener al);
