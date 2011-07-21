@@ -1,5 +1,7 @@
 package tipipackage;
 
+import java.util.List;
+
 import tipi.TipiExtension;
 
 public interface ITipiExtensionRegistry {
@@ -8,4 +10,6 @@ public interface ITipiExtensionRegistry {
 	public void loadExtensions(ITipiExtensionContainer context);
 
 	public void debugExtensions();
+
+	public List<TipiExtension> getExtensionList();
 }

@@ -1,14 +1,17 @@
 package tipi;
 
+import java.io.Serializable;
+
 import org.osgi.framework.BundleContext;
 
 import com.dexels.navajo.tipi.TipiContext;
 
-public class TipiCoreExtension extends TipiAbstractXMLExtension {
+public class TipiCoreExtension extends TipiAbstractXMLExtension implements Serializable {
+
+	private static final long serialVersionUID = -1916256809513988908L;
 
 	public TipiCoreExtension() {
 		super();
-		// loadXML("tipi/TipiExtension.xml");
 	}
 
 	public void initialize(TipiContext tc) {
