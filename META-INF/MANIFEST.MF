@@ -76,3 +76,4 @@ Import-Package: junit.framework,
  org.osgi.util.tracker;version="1.4.0",
  org.slf4j
 Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
