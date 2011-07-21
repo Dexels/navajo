@@ -32,8 +32,8 @@ public class TipiVaadinExtension extends TipiAbstractXMLExtension implements Tip
 		return context;
 	}
 
-	public TipiVaadinExtension() throws XMLParseException,
-			IOException {
+	public TipiVaadinExtension() 
+			 {
 		instance = this;
 	}
 
