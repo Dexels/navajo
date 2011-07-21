@@ -17,6 +17,8 @@ import com.vaadin.ui.Window.Notification;
 
 public class VaadinTipiContext extends TipiContext {
  
+	private static final long serialVersionUID = -5277282822136332687L;
+
 	private static Logger logger = LoggerFactory.getLogger(VaadinTipiContext.class);
 	
 	private Window mainWindow;
@@ -40,7 +42,17 @@ public class VaadinTipiContext extends TipiContext {
 	}
 
 
-	
+
+	/**
+	 * Maybe we can loosen up this constraint, at some point, but for now: GAE doesn't like it.
+	 */
+	@Override
+	public int getPoolSize() {
+		return 0;
+	}
+
+
+
 	@Override
 	public void exit() {
 		// TODO Auto-generated method stub

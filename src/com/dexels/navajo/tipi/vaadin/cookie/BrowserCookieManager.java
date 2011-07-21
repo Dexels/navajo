@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.vaadin.cookie;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -8,9 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.dexels.navajo.tipi.internal.cookie.CookieManager;
 
-public class BrowserCookieManager implements CookieManager {
-	private HttpServletRequest request;
-	private HttpServletResponse response;
+public class BrowserCookieManager implements CookieManager, Serializable {
+	private transient HttpServletRequest request;
+	private transient HttpServletResponse response;
 
 	private Cookie createCookie(String s) {
 		Cookie cc = new Cookie(s, "");
