@@ -1,10 +1,8 @@
 package com.dexels.navajo.tipi;
 
-import java.awt.Window;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -28,7 +26,6 @@ import java.util.StringTokenizer;
 import javax.imageio.spi.ServiceRegistry;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
-import javax.swing.RootPaneContainer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -213,6 +210,11 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 	public TipiContext(TipiApplicationInstance myApplication, TipiContext parent) {
 		this.myApplication = myApplication;
+		List<TipiExtension> extensionList = getExtensionFromServiceEnumeration();
+		initializeContext(myApplication, extensionList, parent);
+	}
+
+	protected List<TipiExtension> getExtensionFromServiceEnumeration() {
 		List<TipiExtension> extensionList = listExtensions();
 		initializeContext(myApplication, extensionList, parent);
 	}
@@ -2367,16 +2369,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		tipiComponentMap.put(name, xe);
 	}
 
-	public void storeComponentTree(String name) {
-		try {
-			FileWriter fw = new FileWriter(name);
-			getComponentTree().write(fw);
-			fw.flush();
-			fw.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	public void performAction(final TipiEvent te,
 			TipiExecutable parentExecutable, TipiEventListener listener) {
@@ -2536,21 +2528,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		};
 		shutdownThread.start();
 
-		// TODO: Move this to swingtipi or something
-		if (getTopLevel() instanceof RootPaneContainer) {
-			RootPaneContainer rpc = (RootPaneContainer) getTopLevel();
-			System.err.println("Doing allright!");
-			if (rpc instanceof Window) {
-				Window w = (Window) rpc;
-				w.setVisible(false);
-				w.dispose();
-				System.err.println("Ciao!");
-			}
 
-		} else {
-			System.err
-					.println("NEED REFACTOR in TIPICONTEXT, around line 2230.");
-		}
 
 	}
 
