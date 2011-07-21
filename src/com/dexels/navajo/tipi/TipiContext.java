@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
@@ -28,6 +29,9 @@ import javax.imageio.spi.ServiceRegistry;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.swing.RootPaneContainer;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import navajo.ExtensionDefinition;
 import tipi.TipiApplicationInstance;
@@ -100,7 +104,11 @@ import com.dexels.navajo.tipi.validation.TipiValidationDecorator;
  * @author not attributable
  * @version 1.0
  */
-public abstract class TipiContext implements ITipiExtensionContainer {
+public abstract class TipiContext implements ITipiExtensionContainer, Serializable {
+
+	
+	private static final Logger logger = LoggerFactory.getLogger(TipiContext.class);
+	private static final long serialVersionUID = 2077449402941300665L;
 
 	public abstract void runSyncInEventThread(Runnable r);
 
@@ -201,18 +209,27 @@ public abstract class TipiContext implements ITipiExtensionContainer {
 
 	protected final TipiApplicationInstance myApplication;
 
-	private ScriptEngineManager scriptManager;
+	private transient ScriptEngineManager scriptManager;
 
 	public TipiContext(TipiApplicationInstance myApplication, TipiContext parent) {
 		this.myApplication = myApplication;
-		Iterator<TipiExtension> iter = ServiceRegistry
-				.lookupProviders(TipiExtension.class);
-		List<TipiExtension> extensionList = new LinkedList<TipiExtension>();
-		while (iter.hasNext()) {
-			TipiExtension tipiExtension = iter.next();
-			extensionList.add(tipiExtension);
-		}
+		List<TipiExtension> extensionList = listExtensions();
 		initializeContext(myApplication, extensionList, parent);
+	}
+
+	private List<TipiExtension> listExtensions() {
+		List<TipiExtension> extensionList = new LinkedList<TipiExtension>();
+		try {
+			Iterator<TipiExtension> iter = ServiceRegistry
+					.lookupProviders(TipiExtension.class);
+			while (iter.hasNext()) {
+				TipiExtension tipiExtension = iter.next();
+				extensionList.add(tipiExtension);
+			}
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		return extensionList;
 	}
 
 //	public TipiContext(TipiApplicationInstance myApplication,
@@ -472,7 +489,9 @@ public abstract class TipiContext implements ITipiExtensionContainer {
 		return poolSize;
 	}
 
+	@Deprecated
 	public void setClassLoader(ClassLoader cl) {
+		logger.warn("Deprecation: Setting classloader in TipiContext is bad.");
 		tipiClassLoader = cl;
 	}
 
@@ -1095,7 +1114,12 @@ public abstract class TipiContext implements ITipiExtensionContainer {
 		String extension = null;
 
 		if (tipiExtension != null) {
-			extension = tipiExtension.getProjectName().toLowerCase();
+			String projectName = tipiExtension.getProjectName();
+			if(projectName==null) {
+				extension = "unknown";
+			} else {
+				extension = projectName.toLowerCase();
+			}
 		}
 		if (isLazy) {
 			if (definition == null) {
