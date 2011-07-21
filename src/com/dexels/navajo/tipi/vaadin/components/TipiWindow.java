@@ -4,7 +4,6 @@ import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Window.ResizeEvent;
 
 public class TipiWindow extends TipiVaadinComponentImpl {
 

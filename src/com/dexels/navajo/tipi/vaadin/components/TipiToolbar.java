@@ -9,7 +9,8 @@ public class TipiToolbar extends TipiVaadinComponentImpl {
 	public Object createContainer() {
 		HorizontalLayout horizontalLayout = new HorizontalLayout();
 		horizontalLayout.setWidth("100%");
-		horizontalLayout.setMargin(true);
+//		horizontalLayout.setMargin(false);
+		horizontalLayout.setMargin(true, false, true, false);
 		return horizontalLayout;
 	}
 
