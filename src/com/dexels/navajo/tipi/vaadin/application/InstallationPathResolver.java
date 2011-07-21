@@ -13,8 +13,13 @@ import java.util.StringTokenizer;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class InstallationPathResolver {
 
+	private static final Logger logger = LoggerFactory.getLogger(InstallationPathResolver.class); 
+	
 	public static List<String> getInstallationPath(ServletContext context) throws ServletException {
 		String force = context.getInitParameter("forcedTipiPath");
 		if(force!=null) {
@@ -48,6 +53,7 @@ public class InstallationPathResolver {
 		File navajo = new File(home,"tipi.properties");
 		Map<String,String> systemContexts = new HashMap<String, String>();
 		if(!navajo.exists()) {
+			logger.warn("No tipi.properties found at: "+navajo.getAbsolutePath());
 			return systemContexts;
 		}
 		BufferedReader br = new BufferedReader(new FileReader(navajo));
