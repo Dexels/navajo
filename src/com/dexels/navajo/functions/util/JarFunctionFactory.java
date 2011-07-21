@@ -123,8 +123,7 @@ public class JarFunctionFactory extends FunctionFactoryInterface {
 				ExtensionDefinition ed = (ExtensionDefinition) iter.next();
 				readDefinitionFile(fuds, ed);
 			}
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
+		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 	}
