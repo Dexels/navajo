@@ -1,5 +1,7 @@
 package com.dexels.navajo.client;
 
+import java.io.Serializable;
+
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -9,6 +11,6 @@ package com.dexels.navajo.client;
  * @version 1.0
  */
 
-public interface ActivityListener {
+public interface ActivityListener extends Serializable {
   public void setWaiting(boolean b, String service, int asyncQueueSize, int activeThreadCount, long millis);
 }

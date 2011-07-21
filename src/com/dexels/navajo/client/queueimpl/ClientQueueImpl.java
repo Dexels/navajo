@@ -1,5 +1,7 @@
 package com.dexels.navajo.client.queueimpl;
 
+import java.io.Serializable;
+
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.ConditionErrorHandler;
 import com.dexels.navajo.client.NavajoClient;
@@ -15,9 +17,10 @@ import com.dexels.navajo.document.Navajo;
  * @version 1.0
  */
 
-public class ClientQueueImpl extends NavajoClient {
+public class ClientQueueImpl extends NavajoClient implements Serializable {
 
-  private ThreadPool myPool = null;
+	private static final long serialVersionUID = -5935586380968357878L;
+	private transient ThreadPool myPool = null;
 
   public ClientQueueImpl() {
   }
