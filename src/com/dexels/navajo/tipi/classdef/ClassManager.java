@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.classdef;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,7 +15,9 @@ import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
-public final class ClassManager {
+public final class ClassManager implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	protected final Map<String, XMLElement> tipiClassDefMap = new HashMap<String, XMLElement>();
 	private final TipiContext myContext;
 	protected final Map<String, List<String>> unresolvedExtensions = new HashMap<String, List<String>>();

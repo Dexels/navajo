@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.components.core;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -63,7 +64,9 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  * @version 1.0
  */
 public abstract class TipiComponentImpl implements TipiEventListener,
-		TipiComponent, TipiLink {
+		TipiComponent, TipiLink, Serializable {
+	private static final long serialVersionUID = -4241997420431509085L;
+
 	public abstract Object createContainer();
 
 	private Object myContainer = null;

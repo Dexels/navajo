@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.classdef;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -11,7 +12,12 @@ import java.util.Stack;
 import com.dexels.navajo.tipi.tipixml.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
-public class ClassModel {
+public class ClassModel implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4733342095757720794L;
+
 	private final Map<String, XMLElement> values = new HashMap<String, XMLElement>();
 
 	private final Map<String, XMLElement> events = new HashMap<String, XMLElement>();

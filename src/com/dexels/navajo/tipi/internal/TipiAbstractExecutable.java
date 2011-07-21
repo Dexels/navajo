@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.internal;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +17,9 @@ import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiExecutable;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
-public abstract class TipiAbstractExecutable implements TipiExecutable {
+public abstract class TipiAbstractExecutable implements TipiExecutable, Serializable {
+	
+	private static final long serialVersionUID = -4758113933333433484L;
 	private TipiEvent myEvent = null;
 	private TipiComponent myComponent;
 	protected TipiContext myContext;

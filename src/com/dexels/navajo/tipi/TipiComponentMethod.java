@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,9 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  * @author unascribed
  * @version 1.0
  */
-public class TipiComponentMethod {
+public class TipiComponentMethod implements Serializable {
+
+	private static final long serialVersionUID = -1549010350317406362L;
 	private Map<String, TipiValue> myArgs = new HashMap<String, TipiValue>();
 	// private Map myInstanceArgs = new HashMap();
 	private TipiAction myTipiAction = null;

@@ -35,6 +35,9 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  * @version 1.0
  */
 public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable {
+
+	private static final long serialVersionUID = -8972032383856365808L;
+
 	private String myEventName;
 
 	private Runnable afterEvent = null;

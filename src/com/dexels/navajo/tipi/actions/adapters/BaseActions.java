@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.actions.adapters;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import com.dexels.navajo.tipi.TipiComponent;
@@ -8,7 +9,10 @@ import com.dexels.navajo.tipi.actions.TipiActionFactory;
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
-public abstract class BaseActions {
+public abstract class BaseActions implements Serializable {
+
+	private static final long serialVersionUID = -1962785060353421381L;
+
 	protected TipiComponent myComponent;
 
 	protected TipiAction invocation;

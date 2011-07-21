@@ -1,5 +1,7 @@
 package com.dexels.navajo.tipi;
 
+import java.io.Serializable;
+
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
 /**
@@ -19,7 +21,7 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @author not attributable
  * @version 1.0
  */
-public interface TipiHelper {
+public interface TipiHelper extends Serializable {
 	public void initHelper(TipiComponent tc);
 
 	public void setComponentValue(String name, Object object);

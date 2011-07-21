@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +31,7 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  * @author not attributable
  * @version 1.0
  */
-public interface TipiComponent extends TipiEventListener, TipiLink {
+public interface TipiComponent extends TipiEventListener, TipiLink, Serializable {
 	public void removeFromContainer(Object c);
 
 	public void addToContainer(Object c, Object constraints);

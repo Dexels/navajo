@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.internal;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +28,9 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  * @author not attributable
  * @version 1.0
  */
-public abstract class TipiLayout {
+public abstract class TipiLayout implements Serializable {
+	
+	private static final long serialVersionUID = 8445083364328578081L;
 	protected Map<String, TipiValue> componentValues = new HashMap<String, TipiValue>();
 	protected String layoutName = null;
 	protected Object myLayout;

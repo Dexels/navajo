@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.components.core;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -33,7 +34,8 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @author not attributable
  * @version 1.0
  */
-public class TipiThreadPool {
+public class TipiThreadPool implements Serializable {
+	private static final long serialVersionUID = -5572531351084195337L;
 	private int poolSize = 1;
 	private final ThreadGroup myGroup = new ThreadGroup("TipiThreadGroup");
 	// private final Set myThreadSet = Collections.synchronizedSet(new

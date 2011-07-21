@@ -1,6 +1,10 @@
 package com.dexels.navajo.tipi;
 
-public class PropertyLinkRequest {
+import java.io.Serializable;
+
+public class PropertyLinkRequest implements Serializable {
+
+	private static final long serialVersionUID = -3157885651903091137L;
 	private String path;
 	private String aspect;
 	private String attributeName;

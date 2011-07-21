@@ -3,14 +3,16 @@ package com.dexels.navajo.tipi.internal;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
-public class HttpResourceLoader extends ClassPathResourceLoader {
+public class HttpResourceLoader extends ClassPathResourceLoader implements Serializable {
 
+	private static final long serialVersionUID = 2074289039171755441L;
 	private final URL baseURL;
 
 	public HttpResourceLoader(String baseLocation) throws MalformedURLException {

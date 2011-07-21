@@ -1,5 +1,7 @@
 package com.dexels.navajo.tipi;
 
+import java.io.Serializable;
+
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
 /**
@@ -19,7 +21,8 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @author not attributable
  * @version 1.0
  */
-public abstract class TipiTypeParser {
+public abstract class TipiTypeParser implements Serializable {
+	private static final long serialVersionUID = 2334330060374132936L;
 	private Class<?> myReturnType = null;
 
 	/**

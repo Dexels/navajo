@@ -1,5 +1,5 @@
 package com.dexels.navajo.tipi.components.core;
-
+@Deprecated
 public abstract class TipiFormatter {
 	public abstract Class<?> getType();
 

@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.internal;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
@@ -32,7 +33,9 @@ import com.dexels.navajo.tipi.TipiErrorHandler;
  * @author not attributable
  * @version 1.0
  */
-public class BaseTipiErrorHandler implements TipiErrorHandler {
+public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
+
+	private static final long serialVersionUID = -2568512270962339576L;
 	private String errorMessage;
 	private TipiContext context;
 	private ResourceBundle errorMessageBundle;

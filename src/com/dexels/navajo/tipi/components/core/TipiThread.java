@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.components.core;
 
+import java.io.Serializable;
 import java.util.Stack;
 
 import com.dexels.navajo.tipi.TipiBreakException;
@@ -25,7 +26,8 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @author not attributable
  * @version 1.0
  */
-public class TipiThread extends Thread implements Comparable<TipiThread> {
+public class TipiThread extends Thread implements Comparable<TipiThread>, Serializable {
+	private static final long serialVersionUID = -7602042966828454154L;
 	public static final String IDLE = "idle";
 	public static final String BUSY = "busy";
 	public static final String WAITING = "waiting";

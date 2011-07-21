@@ -1,12 +1,14 @@
 package tipipackage;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
 import tipi.TipiExtension;
 
-public class TipiExtensionRegistry implements ITipiExtensionRegistry {
+public class TipiExtensionRegistry implements ITipiExtensionRegistry, Serializable {
 
+	private static final long serialVersionUID = 3925646413574906584L;
 	private final List<TipiExtension> registeredExtensions = new LinkedList<TipiExtension>();
 
 	@Override

@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -28,7 +29,10 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  * @author not attributable
  * @version 1.0
  */
-public class TipiValue {
+public class TipiValue implements Serializable {
+
+	private static final long serialVersionUID = 3803476438347607550L;
+
 	private String name = null;
 
 	private String type = null;

@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.actions;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -31,7 +32,9 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  * the allowed/required ones will be the same for every action this factory
  * instance can create.
  */
-public class TipiActionFactory {
+public class TipiActionFactory implements Serializable {
+	
+	private static final long serialVersionUID = 6130577853312463090L;
 	protected String myName = null;
 	protected Map<String, TipiValue> myDefinedParams = new HashMap<String, TipiValue>();
 	protected TipiContext myContext = null;

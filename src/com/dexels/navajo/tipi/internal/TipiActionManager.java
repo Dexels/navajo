@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.internal;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +26,9 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  * presented to this manager, and it will create an ActionFactory for each
  * different action type.
  */
-public class TipiActionManager {
+public class TipiActionManager implements Serializable {
+	
+	private static final long serialVersionUID = -1280464136835192795L;
 	private final Map<String, TipiActionFactory> actionFactoryMap = new HashMap<String, TipiActionFactory>();
 
 	public TipiActionManager() {

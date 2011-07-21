@@ -1,8 +1,14 @@
 package com.dexels.navajo.tipi.internal;
 
+import java.io.Serializable;
+
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
-public class TipiStackElement {
+public class TipiStackElement implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5599683663955830486L;
 	private String title;
 	private int lineNr;
 	private TipiStackElement parent;

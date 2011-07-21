@@ -1,6 +1,8 @@
 package com.dexels.navajo.tipi.validation;
 
-public interface TipiValidationDecorator {
+import java.io.Serializable;
+
+public interface TipiValidationDecorator extends Serializable {
 	public void setValidation(boolean state, String expression,
 			TipiValidatableComponent component);
 }
