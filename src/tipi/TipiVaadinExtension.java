@@ -35,6 +35,7 @@ public class TipiVaadinExtension extends TipiAbstractXMLExtension implements Tip
 	public TipiVaadinExtension() 
 			 {
 		instance = this;
+		loadDescriptor();
 	}
 
 	@Override
