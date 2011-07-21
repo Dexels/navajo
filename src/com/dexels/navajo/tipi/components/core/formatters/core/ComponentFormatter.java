@@ -2,7 +2,7 @@ package com.dexels.navajo.tipi.components.core.formatters.core;
 
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.components.core.TipiFormatter;
-
+@Deprecated
 public class ComponentFormatter extends TipiFormatter {
 
 	@Override
