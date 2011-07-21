@@ -20,7 +20,7 @@ public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension
 	private String id = null;
 	private String requiresMain = null;
 	private String description = null;
-	private String project = null;
+	private String project = "";
 
 	private ClassLoader extensionClassLoader;
 	private boolean isMain;
