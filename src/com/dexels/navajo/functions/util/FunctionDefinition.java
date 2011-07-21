@@ -1,12 +1,15 @@
 package com.dexels.navajo.functions.util;
 
 
+import java.io.Serializable;
+
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 
 import navajo.ExtensionDefinition;
 
-public final class FunctionDefinition {
+public final class FunctionDefinition implements Serializable {
 
+	private static final long serialVersionUID = 8105107847721249814L;
 	// = fully qualified class name, actually
 	private final String object;
 	private final String description;

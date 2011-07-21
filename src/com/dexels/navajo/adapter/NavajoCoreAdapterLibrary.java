@@ -8,7 +8,8 @@ import navajo.ExtensionDefinition;
 public class NavajoCoreAdapterLibrary implements ExtensionDefinition {
 
 	
-	private ClassLoader extensionClassLoader = null;
+	private static final long serialVersionUID = 3364296653069922647L;
+	private transient ClassLoader extensionClassLoader = null;
 	
 	public InputStream getDefinitionAsStream() {
 		return getClass().getClassLoader().getResourceAsStream("com/dexels/navajo/adapter/coreadapters.xml");
