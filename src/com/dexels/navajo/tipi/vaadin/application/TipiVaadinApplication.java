@@ -3,6 +3,9 @@ package com.dexels.navajo.tipi.vaadin.application;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -17,7 +20,10 @@ import org.slf4j.LoggerFactory;
 
 import tipi.BaseTipiApplicationInstance;
 import tipi.TipiApplicationInstance;
+import tipi.TipiCoreExtension;
 import tipi.TipiVaadinExtension;
+import tipipackage.ITipiExtensionRegistry;
+import tipipackage.TipiExtensionRegistry;
 
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
@@ -31,17 +37,20 @@ import com.vaadin.ui.Window.CloseEvent;
 
 @SuppressWarnings("serial")
 public class TipiVaadinApplication extends Application implements
-		TipiApplicationInstance,HttpServletRequestListener {
+		TipiApplicationInstance,HttpServletRequestListener,Serializable {
 
 	private VaadinTipiContext myContext;
-	private ServletContext servletContext;
-	private HttpServletRequest request;
-	private HttpServletResponse response;
+	private transient ServletContext servletContext;
+	private transient HttpServletRequest request;
+	private transient HttpServletResponse response;
 	private File installationFolder;
 	private String applicationProfile;
 	private String applicationDeploy;
 
 	private static final Logger logger = LoggerFactory.getLogger(TipiVaadinApplication.class);
+	
+	private final boolean cloudMode = true;
+	private final TipiExtensionRegistry extensionRegistry = new TipiExtensionRegistry();
 	
 	@Override
 	public void init() {
@@ -63,6 +72,17 @@ public class TipiVaadinApplication extends Application implements
 				System.err.println("Window close detected: TODO: Handle + close session");
 			}
 		});
+		
+		if(cloudMode) {
+//			extensionRegistry = new TipiExtensionRegistry();
+			TipiCoreExtension tce = new TipiCoreExtension();
+			TipiVaadinExtension tve = new TipiVaadinExtension();
+			// special case for TipiCoreExtension, as it is not the bundle activator
+			// TODO Maybe refactor
+			extensionRegistry.registerTipiExtension(tce);
+			extensionRegistry.registerTipiExtension(tve);
+		}
+		System.err.println("END OF INIT");
 //		checkForExtensions();
 	}
 
@@ -92,15 +112,24 @@ public class TipiVaadinApplication extends Application implements
 
 	@Override
 	public TipiContext createContext() throws IOException {
+		
 		try {
+			logger.info("Entering file-based mode");
 			setupInstallationFolder();
 		} catch (ServletException e1) {
 			throw new IOException("Error resolving tipi installation directory.",e1);
 		}
-		checkForExtensions();
-		TipiVaadinExtension.getInstance().getTipiExtensionRegistry().debugExtensions();
+		TipiVaadinExtension instance = TipiVaadinExtension.getInstance();
+		if(!cloudMode) {
+			checkForExtensions();
+			instance.getTipiExtensionRegistry().debugExtensions();
+		}
+	
 
 		VaadinTipiContext va = new VaadinTipiContext(this);
+		if(cloudMode) {
+			extensionRegistry.loadExtensions(va);
+		}
 		try {
 			BaseTipiApplicationInstance.processSettings(applicationDeploy,applicationProfile,installationFolder,va);
 		} catch (IOException e1) {
@@ -117,7 +146,9 @@ public class TipiVaadinApplication extends Application implements
 		va.setMainWindow(getMainWindow());
 		va.setContextName(this.servletContext.getContextPath());
 
-		TipiVaadinExtension.getInstance().getTipiExtensionRegistry().loadExtensions(va);
+		if(!cloudMode) {
+			instance.getTipiExtensionRegistry().loadExtensions(va);
+		}
 		
 		
 		((BrowserCookieManager)va.getCookieManager()).setRequest(request);
@@ -125,7 +156,7 @@ public class TipiVaadinApplication extends Application implements
 
 		
 		try {
-			loadTipi(va, "start.xml", TipiVaadinExtension.getInstance());
+			loadTipi(va, "start.xml", instance);
 		} catch (TipiException e) {
 			e.printStackTrace();
 		}
@@ -218,21 +249,33 @@ public class TipiVaadinApplication extends Application implements
 	}
 	
 	private void setupInstallationFolder() throws ServletException {
-		List<String> installationSettings = InstallationPathResolver
-				.getInstallationPath(this.servletContext);
 		
-		String installationPath = installationSettings.get(0);
-		if(installationSettings.size()>1) {
-			this.applicationDeploy = installationSettings.get(1);
+		if(cloudMode) {
+			this.applicationProfile = "knvb";
+			this.applicationDeploy = "test";
+			this.installationFolder = new File(servletContext.getRealPath("/application"));
+			logger.info("Application dir resolved to: "+installationFolder.getAbsolutePath());
+		} else {
+			List<String> installationSettings = InstallationPathResolver
+					.getInstallationPath(this.servletContext);
+			
+			String installationPath = installationSettings.get(0);
+			if(installationSettings.size()>1) {
+				this.applicationDeploy = installationSettings.get(1);
+			}
+			if(installationSettings.size()>2) {
+				this.applicationProfile = installationSettings.get(2);
+			}
+			this.installationFolder =  new File(
+					installationPath);
 		}
-		if(installationSettings.size()>2) {
-			this.applicationProfile = installationSettings.get(2);
-		}
-		this.installationFolder =  new File(
-				installationPath);
-//		if()
 	}
-//
+
+
+	
+
+	
+	//
 //	public String setupInstallationFolder(String contextPath) throws ServletException, IOException {
 //		String installationPath = InstallationPathResolver
 //				.getInstallationFromPath(contextPath);
