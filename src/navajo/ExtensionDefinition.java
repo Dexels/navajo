@@ -1,9 +1,10 @@
 package navajo;
 
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.List;
 
-public interface ExtensionDefinition {
+public interface ExtensionDefinition extends Serializable {
 
 	public InputStream getDefinitionAsStream();
 	/**
