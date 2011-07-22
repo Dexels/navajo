@@ -1,18 +1,45 @@
 package com.dexels.navajo.document.base;
 
-import java.beans.*;
-import java.io.*;
-import java.net.*;
-import java.text.*;
-import java.util.*;
-
-import javax.swing.tree.TreeNode;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.io.Writer;
+import java.net.URL;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.types.*;
+import com.dexels.navajo.document.ExpressionChangedException;
+import com.dexels.navajo.document.ExpressionTag;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.PropertyTypeChecker;
+import com.dexels.navajo.document.PropertyTypeException;
+import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.document.types.ClockTime;
+import com.dexels.navajo.document.types.Money;
+import com.dexels.navajo.document.types.Percentage;
+import com.dexels.navajo.document.types.StopwatchTime;
 
 /**
  * <p>
@@ -36,7 +63,7 @@ import com.dexels.navajo.document.types.*;
  * @version 1.0
  */
 
-public class BasePropertyImpl extends BaseNode implements Property, Comparable<Property>, TreeNode {
+public class BasePropertyImpl extends BaseNode implements Property, Comparable<Property> {
 	/**
 	 * 
 	 */
@@ -1048,6 +1075,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		} else if (getType().equals(Property.SELECTION_PROPERTY)) {
 			return this.getSelected().getName();
 		} else if (getType().equals(Property.BOOLEAN_PROPERTY)) {
+			if(getValue()==null) {
+				return null;
+			}
 			if (Locale.getDefault().getLanguage().equals("nl")) {
 				return (getValue().equals("true") ? "ja" : "nee");
 			} else {
@@ -1823,18 +1853,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 	public Enumeration<?> children() {
 		return null;
-	}
-	
-	public TreeNode getChildAt(int childIndex) {
-		return null;
-	}
-
-	public TreeNode getParent() {
-		return (TreeNode) getParentMessage();
-	}
-
-	public int getIndex(TreeNode node) {
-		return 0;
 	}
 	
 	public void printElementJSONTypeless(final Writer sw) throws IOException {
