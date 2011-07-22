@@ -10,17 +10,34 @@ package com.dexels.navajo.document.base;
  * @version 1.0
  */
 
-import java.beans.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.*;
-import java.util.regex.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
+import java.util.TreeMap;
+import java.util.Vector;
+import java.util.regex.Pattern;
 
-import javax.swing.tree.*;
+import com.dexels.navajo.document.ExpressionChangedException;
+import com.dexels.navajo.document.ExpressionEvaluator;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.MessageMappable;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
 
-import com.dexels.navajo.document.*;
-
-public class BaseMessageImpl extends BaseNode implements Message, Comparable<Message>, TreeNode {
+public class BaseMessageImpl extends BaseNode implements Message, Comparable<Message> {
 
 	private static final long serialVersionUID = 4404496830881606856L;
 
@@ -1256,13 +1273,6 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		return getAllProperties().size() + (messageList != null ? messageList.size() : 0);
 	}
 
-	public final TreeNode getChildAt(int childIndex) {
-		if (messageList != null && childIndex >= getAllProperties().size()) {
-			return (TreeNode) messageList.get(childIndex - getAllProperties().size());
-		} else {
-			return (TreeNode) getAllProperties().get(childIndex);
-		}
-	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public final int compareTo(Message m) {
@@ -1395,21 +1405,6 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		return v.elements();
 	}
 
-	public final int getIndex(TreeNode t) {
-		for (int i = 0; i < getAllProperties().size(); i++) {
-			if (getAllProperties().get(i) == t) {
-				return i;
-			}
-		}
-		if (messageList != null) {
-			for (int i = 0; i < messageList.size(); i++) {
-				if (messageList.get(i) == t) {
-					return i;
-				}
-			}
-		}
-		return 0;
-	}
 
 	public final boolean isLeaf() {
 		if (messageList == null) {
@@ -1422,9 +1417,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		return true;
 	}
 
-	public final TreeNode getParent() {
-		return (TreeNode) getArrayParentMessage();
-	}
+
 
 	    public void write(Writer w){
 	    	try{
