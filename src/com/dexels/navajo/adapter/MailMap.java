@@ -86,9 +86,11 @@ public class MailMap implements MailMapInterface, Mappable, HasDependentResource
     public void kill() {}
 
     public void load(Access access) throws MappableException {
-        doc = access.getInDoc();
-        myNavajo = access.getInDoc();
-		myAccess = access;
+    	if ( access != null ) {
+    		doc = access.getInDoc();
+    		myNavajo = access.getInDoc();
+    		myAccess = access;
+    	}
     }
 
     public Binary[] getAttachments(){
