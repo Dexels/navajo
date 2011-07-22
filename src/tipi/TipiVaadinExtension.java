@@ -16,7 +16,7 @@ public class TipiVaadinExtension extends TipiAbstractXMLExtension implements Tip
 	
 	private static TipiVaadinExtension instance = null;
 	
-	private BundleContext context;
+	private transient BundleContext context;
 	
 	private File installationFolder = null;
 		
