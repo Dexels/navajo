@@ -1,14 +1,25 @@
 package com.dexels.navajo.document.base;
-import java.io.*;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.Serializable;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.ExpressionTag;
+import com.dexels.navajo.document.FieldTag;
+import com.dexels.navajo.document.Header;
+import com.dexels.navajo.document.MapTag;
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Method;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.ParamTag;
+import com.dexels.navajo.document.Point;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.json.JSONParser;
-import com.dexels.navajo.document.saximpl.*;
-import com.dexels.navajo.document.saximpl.qdxml.*;
+import com.dexels.navajo.document.saximpl.SaxHandler;
+import com.dexels.navajo.document.saximpl.qdxml.QDParser;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -21,9 +32,6 @@ import com.dexels.navajo.document.saximpl.qdxml.*;
 public class BaseNavajoFactoryImpl extends NavajoFactory implements Serializable {
 	//  private final SaxHandler saxHandler;
 
-	Logger instanceLog = LoggerFactory.getLogger("NavajoLog");
-	
-	
 	private static final long serialVersionUID = -4927821415020342916L;
 
 	public BaseNavajoFactoryImpl() {
