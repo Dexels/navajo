@@ -180,23 +180,9 @@ public final class ASTTmlNode extends SimpleNode {
             }
               
               
-              String type = prop.getType();
-         
-              /**
-               * <String> property.getValue() should not be performed on binary properties
-               */
-              if(type.equals(Property.BINARY_PROPERTY)) {
-                  
-                  Binary data = (Binary) prop.getTypedValue();
-                  //System.err.println("GETTING BINARY PROPERTY...., data = " + data);
-                  resultList.add(data);
-                  continue;
-                }  
+            String type = prop.getType();
               
-            String value = prop.getValue();
-            // Determine type
-       
-//            System.out.println("in ASTTmlNode(), VALUE FOR " + prop.getName() + " = " + value + " (type = " + type + ")");
+            Object value = prop.getTypedValue();
 
             if (value == null && !type.equals(Property.SELECTION_PROPERTY)) {  // If value attribute does not exist AND property is not selection property assume null value
                resultList.add(null);
@@ -230,118 +216,8 @@ public final class ASTTmlNode extends SimpleNode {
                     }
                 }
             } else
-            if (type.equals(Property.MONEY_PROPERTY)) {
-              if (value.equals(""))
-                resultList.add(null);
-              else {
-                try {
-                  double d = Double.parseDouble(value);
-                  Money m = new Money(d);
-                  if (m.toString() != null) {
-                    resultList.add(new Money(d));
-                  } else {
-                    resultList.add(null);
-                  }
-                } catch (Throwable t) {
-                  throw new TMLExpressionException("Could not parse money property: " + value);
-                }
-              }
-            } else
-            if (type.equals(Property.PERCENTAGE_PROPERTY)) {
-               if (value.equals(""))
-                 resultList.add(null);
-               else {
-                 try {
-                   Percentage m = new Percentage(value);
-                   if (m.toString() != null) {
-                     resultList.add(new Percentage(value));
-                   } else {
-                     resultList.add(null);
-                   }
-                 } catch (Throwable t) {
-                   throw new TMLExpressionException("Could not parse money property: " + value);
-                 }
-               }
-             } else
-
-            if (type.equals(Property.CLOCKTIME_PROPERTY)) {
-              if (value.equals(""))
-                resultList.add(null);
-              else {
-                try {
-                  ClockTime ct = new ClockTime(value);
-                  if (ct.calendarValue() != null) {
-                    resultList.add(new ClockTime(value));
-                  } else {
-                    resultList.add(null);
-                  }
-                } catch (Throwable t) {
-                  throw new TMLExpressionException("Could not parse clocktime property: " + value);
-                }
-              }
-
-            } else
-                if (type.equals(Property.STOPWATCHTIME_PROPERTY)) {
-                    if (value.equals(""))
-                      resultList.add(null);
-                    else {
-                      try {
-                        if (value != null) {
-                          resultList.add(new StopwatchTime(value));
-                        } else {
-                          resultList.add(null);
-                        }
-                      } catch (Throwable t) {
-                        throw new TMLExpressionException("Could not parse StopwatchTime property: " + value);
-                      }
-                    }
-
-                  } else
-            if (type.equals(Property.BOOLEAN_PROPERTY)) {
-                if (value.equals(""))
-                  resultList.add(null);
-                else {
-                  try {
-                    resultList.add(Boolean.valueOf(value.equals(Property.TRUE)));
-                  }
-                  catch (Exception e) {
-                    throw new TMLExpressionException(e.getMessage());
-                  }
-                }
-            } else
-            if (type.equals(Property.INTEGER_PROPERTY)) {
-              if (value.equals(""))
-                  resultList.add(null);
-                else {
-                  try {
-                    resultList.add(new Integer(value));
-                  }
-                  catch (Exception e) {
-                    throw new TMLExpressionException("Could not parse integer value: " +
-                                                     e.getMessage());
-                  }
-                }
-            } else if (type.equals(Property.FLOAT_PROPERTY)) {
-              if (value.equals(""))
-                  resultList.add(null);
-                else {
-                  try {
-                    resultList.add(new Double(value));
-                  }
-                  catch (Exception e) {
-                    throw new TMLExpressionException("Could not parse float value: " +
-                                                     e.getMessage());
-                  }
-                }
-            } else if (type.equals(Property.STRING_PROPERTY)) {
-                try {
-                    resultList.add(value);
-                } catch (Exception e) {
-                    throw new TMLExpressionException(e.getMessage());
-                }
-            } else if (type.equals(Property.DATE_PROPERTY)) {
-
-                if (value.equals(""))
+            if (type.equals(Property.DATE_PROPERTY)) {
+                if (value == null )
                   resultList.add(null);
                 else {
                   if (!option.equals("")) {
@@ -392,8 +268,6 @@ public final class ASTTmlNode extends SimpleNode {
                       resultList.add(a);
                     }
                     catch (java.lang.Exception pe) {
-                      //pe.printStackTrace();
-                      //System.out.println("Invalid date given: " + value);
                       resultList.add(null);
                     }
                   }
@@ -406,7 +280,6 @@ public final class ASTTmlNode extends SimpleNode {
                 } catch (Exception e) {
                     throw new TMLExpressionException(e.getMessage());
                 }
-                //throw new TMLExpressionException("Unknown TML type specified: " + type);
             }
         }
 
