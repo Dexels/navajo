@@ -546,9 +546,9 @@ private Object waitForResult = new Object();
 		  
 		  if (server != null) { // External request.
 			  NavajoClient nc = new NavajoClient();
-			  if (keyStore != null) {
-				  nc.setSecure(keyStore, keyPassword, true);
-			  }
+//			  if (keyStore != null) {
+//				  nc.setSecure(keyStore, keyPassword, true);
+//			  }
 			  if ( trigger == null ) {
 				  inDoc = nc.doSimpleSend(outDoc, server, method, username, password, -1, true, false);
 			  } else {
