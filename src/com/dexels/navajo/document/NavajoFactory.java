@@ -101,6 +101,15 @@ public abstract class NavajoFactory {
 				logger.warn("No permission. Using standard document impl.");
 				sbmode = true;
 			}
+			try {
+				String cloudMode = System.getProperty("tipi.cloudMode");
+				if("true".equals(cloudMode)) {
+					sbmode = true;
+				}
+			} catch (Throwable e1) {
+				e1.printStackTrace();
+			}
+			
 			  if (name == null) {
 				  name = "com.dexels.navajo.document.base.BaseNavajoFactoryImpl";
 				  impl = new BaseNavajoFactoryImpl();

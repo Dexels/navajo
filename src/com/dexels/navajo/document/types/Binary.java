@@ -7,6 +7,8 @@ import java.util.*;
 import metadata.*;
 
 import org.dexels.utils.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.saximpl.qdxml.*;
@@ -61,6 +63,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     
     private final static HashMap<String,Binary> persistedBinaries = new HashMap<String,Binary>();
     
+    private static final Logger logger = LoggerFactory.getLogger(Binary.class);
     /**
      * Construct a new Binary object with data from an InputStream It does close
      * the stream. I don't like it, but as yet I don't see any situation where
@@ -86,10 +89,12 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
             }
             this.mimetype = guessContentType();
         }
+        logger.warn("Instantiating binary with sandbox: "+NavajoFactory.getInstance().isSandboxMode());
      }    
     
     public Binary() {
         super(Property.BINARY_PROPERTY);
+        logger.warn("Instantiating binary with sandbox: "+NavajoFactory.getInstance().isSandboxMode());
      }    
     
     
