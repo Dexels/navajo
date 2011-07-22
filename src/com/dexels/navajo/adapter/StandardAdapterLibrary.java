@@ -14,7 +14,8 @@ import navajo.ExtensionDefinition;
 public class StandardAdapterLibrary implements ExtensionDefinition {
 
 	
-	private ClassLoader extensionClassLoader = null;
+	private static final long serialVersionUID = 5195100848450458590L;
+	private transient ClassLoader extensionClassLoader = null;
 	
 	public InputStream getDefinitionAsStream() {
 		return getClass().getClassLoader().getResourceAsStream("com/dexels/navajo/adapter/adapters.xml");
