@@ -5,6 +5,7 @@ import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.dexels.navajo.document.notifier.SerializablePropertyChangeListener;
 import com.vaadin.data.Property;
 
 public class PropertyAspectProperty implements Property, Property.ValueChangeNotifier {
@@ -87,7 +88,9 @@ public class PropertyAspectProperty implements Property, Property.ValueChangeNot
 	}
 
 	public void addListener(final ValueChangeListener listener) {
-		PropertyChangeListener pcl = new PropertyChangeListener() {
+		PropertyChangeListener pcl = new SerializablePropertyChangeListener() {
+			private static final long serialVersionUID = 8111170361221092581L;
+
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 				System.err.println("VAADIN-side property change: "+evt.getOldValue()+" to "+evt.getNewValue()+" property-property: "+evt.getPropertyName());

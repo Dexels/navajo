@@ -4,6 +4,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.notifier.SerializablePropertyChangeListener;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiEventListener;
 import com.dexels.navajo.tipi.TipiException;
@@ -78,8 +79,10 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 		}
 		this.property = p;
 
-		myChangeListener = new PropertyChangeListener() {
+		myChangeListener = new SerializablePropertyChangeListener() {
 			
+			private static final long serialVersionUID = -2164154865756231662L;
+
 			@Override
 			public void propertyChange(PropertyChangeEvent pce) {
 				refreshPropertyValue();

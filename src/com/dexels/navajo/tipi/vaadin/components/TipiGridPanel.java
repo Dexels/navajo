@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.vaadin.components;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -254,8 +255,11 @@ public class TipiGridPanel extends TipiVaadinComponentImpl {
 	        return false;
 	    }
 
-	    class Coordinate {
-	        public int x;
+	    class Coordinate implements Serializable {
+	        
+	    	private static final long serialVersionUID = -1568182756938385054L;
+
+			public int x;
 
 	        public int y;
 

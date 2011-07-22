@@ -1,8 +1,10 @@
 package com.dexels.navajo.tipi.vaadin.application;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -49,12 +51,16 @@ public class TipiVaadinApplication extends Application implements
 
 	private static final Logger logger = LoggerFactory.getLogger(TipiVaadinApplication.class);
 	
-	private final boolean cloudMode = true;
+	private boolean cloudMode = true;
 	private final TipiExtensionRegistry extensionRegistry = new TipiExtensionRegistry();
 	
 	@Override
 	public void init() {
 
+		String cloudModeString = System.getProperty("tipi.cloudMode");
+		if("false".equals(cloudModeString)) {
+			cloudMode = false;
+		}
 
 		VerticalLayout componentContainer = new VerticalLayout();
 		componentContainer.setSizeFull();
@@ -85,8 +91,16 @@ public class TipiVaadinApplication extends Application implements
 			}
 		});
 		
-		System.err.println("END OF INIT");
 //		checkForExtensions();
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		try {
+			ObjectOutputStream oos = new ObjectOutputStream(baos);
+			oos.writeObject(this);
+		} catch (Throwable e1) {
+			
+			e1.printStackTrace();
+		}
+		System.err.println("END OF INIT");
 	}
 
 

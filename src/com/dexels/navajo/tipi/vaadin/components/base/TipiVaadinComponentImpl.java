@@ -8,6 +8,7 @@ import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
 import com.dexels.navajo.tipi.vaadin.VaadinTipiContext;
 import com.dexels.navajo.tipi.vaadin.application.TipiVaadinApplication;
+import com.dexels.navajo.tipi.vaadin.components.io.InputStreamSource;
 import com.vaadin.terminal.StreamResource;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -15,7 +16,9 @@ import com.vaadin.ui.ComponentContainer;
 public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 
 	
+	private static final long serialVersionUID = -304628775000480212L;
 	protected ComponentContainer layoutComponent;
+	private InputStream stream;
 	
 	
 	
@@ -90,13 +93,12 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 		
 	}
 	
-	@SuppressWarnings("serial")
 	public StreamResource getResource(Object u) {
 		 if(u==null) {
 			 return null;
 		 }
 		 InputStream is = null;
-		 if(u instanceof URL) {
+		if(u instanceof URL) {
 			 System.err.println("URL: "+u);
 			 try {
 				is = ((URL) u).openStream();
@@ -111,15 +113,8 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 		 if(is==null) {
 			 return null;
 		 }
-		 final InputStream stream = is; 
-		 StreamResource.StreamSource s = new StreamResource.StreamSource() {
-			
-			@Override
-			public InputStream getStream() {
-				return stream;
-			}
-		};
-		StreamResource sr = new StreamResource(s, u.toString(), getVaadinApplication());
+		 InputStreamSource s = new InputStreamSource(is);
+		 StreamResource sr = new StreamResource(s, u.toString(), getVaadinApplication());
 		return sr;
 	}
 

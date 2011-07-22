@@ -6,12 +6,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.notifier.SerializablePropertyChangeListener;
 import com.vaadin.data.Property;
 
 public class ValuePropertyBridge implements Property, Property.ValueChangeNotifier {
 	private static final long serialVersionUID = -5696589046516267159L;
 	private final String originalType;
-	private final Map<ValueChangeListener,PropertyChangeListener> listenerMap = new HashMap<ValueChangeListener,PropertyChangeListener>();
+	private final Map<ValueChangeListener,SerializablePropertyChangeListener> listenerMap = new HashMap<ValueChangeListener,SerializablePropertyChangeListener>();
 	private final com.dexels.navajo.document.Property src;
 	
 	public ValuePropertyBridge(com.dexels.navajo.document.Property src) {
@@ -62,7 +63,9 @@ public class ValuePropertyBridge implements Property, Property.ValueChangeNotifi
 	}
 	@Override
 	public void addListener(final ValueChangeListener listener) {
-		PropertyChangeListener pcl = new PropertyChangeListener() {
+		SerializablePropertyChangeListener pcl = new SerializablePropertyChangeListener() {
+			private static final long serialVersionUID = -2846215480574110535L;
+
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 				System.err.println("VAADIN-side property change: "+evt.getOldValue()+" to "+evt.getNewValue()+" property-property: "+evt.getPropertyName());
