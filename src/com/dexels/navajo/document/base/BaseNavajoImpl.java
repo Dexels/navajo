@@ -499,27 +499,6 @@ public void read(Reader stream) throws NavajoException {
      
 }
 
-/*
- * Creates a reader for this Navajo. 
- * It uses files in the background.
- * Don't forget to close the reader!
- */
-
-public Reader createReader() throws NavajoException, IOException{
-    final File f = File.createTempFile("navajoHTML", ".tml");
-    //f.deleteOnExit();
-    FileWriter fw = new FileWriter(f);
-    write(fw);
-    fw.flush();
-    fw.close();
-    FileReader fr = new FileReader(f) {
-        public void close() throws IOException {
-            super.close();
-            f.delete();
-        };
-    }; 
-    return fr;
-}
 
 public void disposeReader(Reader r) {
     

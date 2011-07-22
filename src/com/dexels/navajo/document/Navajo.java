@@ -293,19 +293,7 @@ public interface Navajo
    */
   public void write(java.io.OutputStream stream) throws NavajoException;
 
-  /**
-   * Read a Navajo object from the given reader
-   * @param stream Reader
-   * @throws NavajoException
-   */
-  public void read(java.io.Reader stream) throws NavajoException;
 
-  /**
-   * Read a navajo object from the given inputstream
-   * @param stream InputStream
-   * @throws NavajoException
-   */
-  public void read(java.io.InputStream stream) throws NavajoException;
 
   /**
    * Remove this Navajo objects' header.
