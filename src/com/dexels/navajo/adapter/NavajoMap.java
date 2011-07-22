@@ -1095,15 +1095,15 @@ private Object waitForResult = new Object();
   
   public void run()  {
 
-	 try {
+	  try {
 		  Header h = outDoc.getHeader();
 		  if (h == null) {
 			  h = NavajoFactory.getInstance().createHeader(outDoc, method, username, password, -1);
 			  outDoc.addHeader(h);
 		  } else {
 			  h.setRPCName(method);
-			  h.setRPCPassword(username);
-			  h.setRPCUser(password);
+			  h.setRPCPassword(password);
+			  h.setRPCUser(username);
 		  }
 		  // Clear request id.
 		  h.setRequestId(null);
