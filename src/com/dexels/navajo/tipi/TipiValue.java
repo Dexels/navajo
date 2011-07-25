@@ -6,6 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
@@ -32,7 +35,7 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
 public class TipiValue implements Serializable {
 
 	private static final long serialVersionUID = 3803476438347607550L;
-
+	private static final Logger logger = LoggerFactory.getLogger(TipiValue.class);
 	private String name = null;
 
 	private String type = null;
@@ -145,10 +148,14 @@ public class TipiValue implements Serializable {
 		return toXml().toString();
 	}
 
-	public XMLElement toXml() {
+	private XMLElement toXml() {
 		XMLElement xe = new CaseSensitiveXMLElement();
 		xe.setName("value");
-		xe.setAttribute("name", name);
+		if(name!=null) {
+			xe.setAttribute("name", name);
+//		} else {
+//			logger.warn("Converting TipiValue without name to xml! value: "+value+" type: "+type);
+		}
 		if (value != null) {
 			xe.setAttribute("value", value);
 		}

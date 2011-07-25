@@ -5,9 +5,11 @@ import java.beans.PropertyChangeListener;
 import java.util.Set;
 
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.notifier.SerializablePropertyChangeListener;
 
-public class PropertyHandler implements PropertyChangeListener {
+public class PropertyHandler implements SerializablePropertyChangeListener {
 
+	private static final long serialVersionUID = -5924246809125982153L;
 	private Property myProperty;
 	private Set<PropertyLinkRequest> myMapping;
 	private final TipiComponent myComponent;
