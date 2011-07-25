@@ -14,7 +14,8 @@ Require-Bundle: com.dexels.navajo.tipi;bundle-version="1.0.43",
  com.dexels.navajo.document;bundle-version="1.0.5",
  com.dexels.navajo.version;bundle-version="1.0.10",
  org.slf4j.api;bundle-version="1.6.1",
- com.vaadin;bundle-version="6.6.1"
+ com.vaadin;bundle-version="6.6.1",
+ com.dexels.navajo.client;bundle-version="3.0.5"
 Export-Package: com.dexels.navajo.tipi.vaadin,
  com.dexels.navajo.tipi.vaadin.actions.base,
  com.dexels.navajo.tipi.vaadin.application,
