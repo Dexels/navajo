@@ -27,6 +27,7 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.base.BasePropertyImpl;
+import com.dexels.navajo.document.notifier.SerializablePropertyChangeListener;
 
 /**
  * <p>
@@ -131,7 +132,9 @@ public final class MultipleSelectionPropertyPickList extends JPanel implements
 			myProperty.removePropertyChangeListener(myPropertyListener);
 			myPropertyListener = null;
 		}
-		myPropertyListener = new PropertyChangeListener() {
+		myPropertyListener = new SerializablePropertyChangeListener() {
+
+			private static final long serialVersionUID = 5612713468556136254L;
 
 			public void propertyChange(PropertyChangeEvent evt) {
 				System.err.println("CHANGE DETECTED: " + evt.getPropertyName()

@@ -35,6 +35,7 @@ import javax.swing.event.ListSelectionListener;
 
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.notifier.SerializablePropertyChangeListener;
 import com.dexels.navajo.document.types.TypeFormatter;
 
 /**
@@ -245,7 +246,9 @@ public class GenericPropertyComponent extends JPanel {
 		if (p == null) {
 			return;
 		}
-		myPropertyChangeListener = new PropertyChangeListener() {
+		myPropertyChangeListener = new SerializablePropertyChangeListener() {
+
+			private static final long serialVersionUID = -2232067207475872106L;
 
 			public void propertyChange(final PropertyChangeEvent evt) {
 				if (evt.getPropertyName().equals("description")) {
