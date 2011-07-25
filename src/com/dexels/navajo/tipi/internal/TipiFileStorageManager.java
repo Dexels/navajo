@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -19,10 +20,11 @@ import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiStorageManager;
 
-public class TipiFileStorageManager implements TipiStorageManager {
+public class TipiFileStorageManager implements TipiStorageManager, Serializable {
 
 	// can be null
 
+	private static final long serialVersionUID = -5542607178184878467L;
 	private final boolean debugMode = true;
 	private final File savingFolder;
 	private String instanceId = "default";

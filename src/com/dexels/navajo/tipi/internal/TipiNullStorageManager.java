@@ -6,12 +6,16 @@
  */
 package com.dexels.navajo.tipi.internal;
 
+import java.io.Serializable;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiStorageManager;
 
-public class TipiNullStorageManager implements TipiStorageManager {
+public class TipiNullStorageManager implements TipiStorageManager, Serializable {
+
+	private static final long serialVersionUID = -5812574497740827700L;
 
 	public Navajo getStorageDocument(String id) throws TipiException {
 		System.err.println("TipiNullStorageManager: Asked for: " + id);

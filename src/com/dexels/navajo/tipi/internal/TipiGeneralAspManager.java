@@ -9,6 +9,7 @@ package com.dexels.navajo.tipi.internal;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.document.Message;
@@ -21,8 +22,9 @@ import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiStorageManager;
 
-public class TipiGeneralAspManager implements TipiStorageManager {
+public class TipiGeneralAspManager implements TipiStorageManager, Serializable {
 
+	private static final long serialVersionUID = 6208612779791555408L;
 	public static final String STORAGE_UPDATE_SERVICE = "ProcessUpdateBinary";
 	public static final String STORAGE_QUERY_SERVICE = "ProcessQueryBinary";
 	public final String scriptPrefix;
