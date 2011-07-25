@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.actions;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
@@ -14,7 +15,7 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 /**
  * <p>
  * Title:
- * </p>
+ * </p>	
  * <p>
  * Description:
  * </p>
@@ -44,10 +45,11 @@ public class TipiDumpNavajo extends TipiAction {
 		try {
 			// if (evalTipi == null) {
 			if (file != null) {
+				// TODO Add check for sandbox/GAE mode
 				File f = new File(file);
 				// myContext.showInfo("Dumping navajo in file: "+f.getAbsolutePath
 				// (),"aapje");
-				w = new PrintStream(new FileOutputStream(f));
+				w = createWriter(f);
 			} else {
 				w = System.err;
 			}
@@ -77,5 +79,9 @@ public class TipiDumpNavajo extends TipiAction {
 			}
 		}
 
+	}
+
+	protected PrintStream createWriter(File f) throws IOException {
+		return new PrintStream(new FileOutputStream(f));
 	}
 }
