@@ -4,6 +4,8 @@ import java.io.InputStream;
 
 abstract class AbstractTipiExtension extends TipiAbstractOSGiExtension
 		implements TipiExtension {
+
+	@Override
 	public int compareTo(TipiExtension o) {
 		return getId().compareTo(o.getId());
 	}
