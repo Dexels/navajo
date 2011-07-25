@@ -80,7 +80,7 @@ public class ScriptIntrospection {
 		try {
 			Access a = new Access();
 			a.rpcName = script;
-			myCompiledScript = gh.compileScript(a, compilerErrors);
+			myCompiledScript = GenericHandler.compileScript(a, compilerErrors);
 		} catch (Throwable t) {
 			errors = compilerErrors.toString();
 			if ( errors.equals("" )) {
@@ -95,11 +95,13 @@ public class ScriptIntrospection {
 		cvs = new CVSVersionControl(new File(DispatcherFactory.getInstance().getNavajoConfig().getScriptPath() + "/" + script + ".xml"));
 	}
 	
+	@SuppressWarnings("unused")
 	private final void printAllDependencies(int indent, Class specific) {
 		ArrayList<Dependency> dependencies = myCompiledScript.getDependentObjects();
 		showDependencies(indent, dependencies, specific, specific);
 	}
 	
+	@SuppressWarnings("unused")
 	private final void printAllDependencies(int indent) throws Exception {
 		
 		if ( getCompiledScript() == null ) {
@@ -117,6 +119,7 @@ public class ScriptIntrospection {
 		System.err.println("================================================");
 	}
 	
+	@SuppressWarnings("unused")
 	private final void printVersionInfo() {
 		if ( cvs == null ) {
 			return;
@@ -138,6 +141,7 @@ public class ScriptIntrospection {
 		return sb.toString();
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private final void showDependencies(int indent, ArrayList<Dependency> deps, Class check, Class subCheck)  {
 		for (int i = 0; i < deps.size(); i++) {
 			Dependency dep = deps.get(i);

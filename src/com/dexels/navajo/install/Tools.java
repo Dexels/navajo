@@ -9,12 +9,22 @@ package com.dexels.navajo.install;
  * @version 1.0
  */
 
-import java.io.*;
-import java.util.*;
-import java.util.Map.Entry;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 
-import javax.xml.parsers.*;
-import org.w3c.dom.*;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import com.dexels.navajo.document.NavajoException;
 
 public class Tools {
 
@@ -92,7 +102,7 @@ public class Tools {
         NodeList list = d.getChildNodes();
 
         for (int i = 0; i < list.getLength(); i++) {
-            Node n = (Node) list.item(i);
+            Node n = list.item(i);
 
             result.append(printElement(n));
         }
@@ -124,40 +134,6 @@ public class Tools {
         return null;
     }
 
-    private static String searchAndReplace(String text, String tag, String replace) {
-
-        StringBuffer result;
-        String before = "", last = "";
-        int start, end;
-
-        result = new StringBuffer();
-
-        start = 0;
-        end = -1;
-
-        start = text.indexOf(tag, end);
-
-        if (start == -1)
-            return text;
-
-        while (start != -1) {
-
-            before = text.substring(end + 1, start);
-            end = text.indexOf("}", start);
-
-            result.append(before);
-            result.append(replace);
-
-            start = text.indexOf(tag, end);
-            if (start == -1)
-                last = text.substring(end + 1, text.length());
-            result.append(last);
-        }
-
-        return result.toString();
-
-    }
-
     /**
      * Create an XML document from a file.
      *
@@ -187,46 +163,7 @@ public class Tools {
 
     }
 
-    /**
-     * This method copies fileIn to fileOut while replacing tokens with a value.
-     * Tokens are named: ${<TOKEN_NAME>} and are stored in a hashmap tokens as key-value pairs.
-     *
-     * @param fileIn
-     * @param fileOut
-     * @param tokens
-     */
-    @SuppressWarnings("unchecked")
-	public static void copyAndReplaceTokens(String fileIn, String fileOut, HashMap tokens) throws IOException, FileNotFoundException {
 
-    	
-        BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(new FileInputStream(new File(fileIn))));
-        try {
-        FileWriter fos = new FileWriter(new File(fileOut));
-
-        String line = "";
-
-        while ((line = reader.readLine()) != null) {
-            if (tokens != null) {
-                Iterator<Entry<String,String>> allTokens = tokens.entrySet().iterator();
-
-                while (allTokens.hasNext()) {
-                	Entry<String,String> e = allTokens.next();
-                    String token = e.getKey().toString();
-                    String value = e.getValue().toString();
-
-                    line = searchAndReplace(line, "{" + token + "}", value);
-                }
-            }
-            fos.write(line + "\n");
-        }
-        fos.close();
-        } finally {
-        	if ( reader != null ) {
-        		reader.close();
-        	}
-        }
-
-    }
 
     /**
      * This method extract a jar file to a specified directory.
