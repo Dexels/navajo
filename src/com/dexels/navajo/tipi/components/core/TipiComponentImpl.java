@@ -23,6 +23,7 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.document.notifier.SerializablePropertyChangeListener;
 import com.dexels.navajo.tipi.PropertyHandler;
 import com.dexels.navajo.tipi.PropertyLinkRequest;
 import com.dexels.navajo.tipi.PropertyValidatable;
@@ -759,7 +760,9 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 					+ " conainerProperty: " + containerPropertyName, e);
 		}
 
-		PropertyChangeListener propListener = new PropertyChangeListener() {
+		PropertyChangeListener propListener = new SerializablePropertyChangeListener() {
+
+			private static final long serialVersionUID = -506166614251050065L;
 
 			public void propertyChange(PropertyChangeEvent e) {
 				Object value = e.getNewValue();
