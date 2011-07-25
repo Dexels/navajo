@@ -1,11 +1,13 @@
 package com.dexels.navajo.tipi.vaadin.application.servlet;
 
+import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.dexels.navajo.tipi.vaadin.application.TipiVaadinApplication;
 import com.vaadin.Application;
-import com.vaadin.terminal.gwt.server.ApplicationServlet;
 import com.vaadin.terminal.gwt.server.GAEApplicationServlet;
 
 public class TipiVaadinGaeServlet extends GAEApplicationServlet {
@@ -23,5 +25,13 @@ public class TipiVaadinGaeServlet extends GAEApplicationServlet {
 		// add request data?
 		return tipiApplication;
 	}
+
+	@Override
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+			IOException {
+		super.service(request, response);
+	}
+	
+	
 
 }

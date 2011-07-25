@@ -13,6 +13,10 @@ import com.vaadin.terminal.StreamResource;
 public abstract class TipiVaadinActionImpl extends TipiAction {
 
 	
+	private static final long serialVersionUID = 5997392321011697285L;
+
+
+	// TODO Use version in TipiVaadinComponentIml
 	@SuppressWarnings("serial")
 	public StreamResource getResource(Object u) {
 		 if(u==null) {
@@ -41,8 +45,10 @@ public abstract class TipiVaadinActionImpl extends TipiAction {
 			public InputStream getStream() {
 				return stream;
 			}
+			
+			
 		};
-		StreamResource sr = new StreamResource(s, "unknown", getVaadinApplication());
+		StreamResource sr = new StreamResource(s, ""+u, getVaadinApplication());
 		return sr;
 	}
 
