@@ -1,18 +1,16 @@
 package tipi;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.osgi.framework.BundleContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.TipiContext;
-import com.dexels.navajo.tipi.tipixml.XMLParseException;
 
 public class TipiVaadinExtension extends TipiAbstractXMLExtension implements TipiExtension {
 
-	private static final Logger logger = LoggerFactory.getLogger(TipiVaadinExtension.class); 
+	private static final long serialVersionUID = 6145737357886902779L;
+
+//	private static final Logger logger = LoggerFactory.getLogger(TipiVaadinExtension.class); 
 	
 	private static TipiVaadinExtension instance = null;
 	

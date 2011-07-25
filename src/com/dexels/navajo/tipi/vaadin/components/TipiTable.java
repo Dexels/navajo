@@ -26,6 +26,7 @@ import com.vaadin.ui.Table;
 
 public class TipiTable extends TipiVaadinComponentImpl {
 
+	private static final long serialVersionUID = 1440706945170166712L;
 	private Table table;
 	private String messagepath;
 	private final List<String> visibleColumns = new ArrayList<String>();

@@ -5,6 +5,7 @@ import com.vaadin.ui.TextArea;
 
 public class TipiMemo extends TipiVaadinComponentImpl {
 
+	private static final long serialVersionUID = 8935212015368949120L;
 	private TextArea textArea;
 	@Override
 	public Object createContainer() {

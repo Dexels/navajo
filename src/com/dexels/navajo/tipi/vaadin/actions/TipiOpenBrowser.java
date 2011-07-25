@@ -25,7 +25,9 @@ import com.vaadin.terminal.FileResource;
  */
 public class TipiOpenBrowser extends TipiVaadinActionImpl {
 
-    /*
+   private static final long serialVersionUID = -7235686945038762814L;
+
+	/*
      * (non-Javadoc)
      * 
      * @see com.dexels.navajo.tipi.internal.TipiAction#execute(com.dexels.navajo.tipi.internal.TipiEvent)

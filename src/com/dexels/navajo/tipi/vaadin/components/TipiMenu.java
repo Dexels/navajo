@@ -28,6 +28,7 @@ import com.vaadin.ui.MenuBar.MenuItem;
 
 public class TipiMenu extends TipiVaadinComponentImpl {
 	
+	private static final long serialVersionUID = 1811897469708468275L;
 	private MenuItem menuItem;
 	
     public TipiMenu() {

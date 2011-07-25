@@ -10,12 +10,15 @@ import com.vaadin.ui.Component;
 
 public class TipiButton extends TipiVaadinComponentImpl {
 
-	@SuppressWarnings("serial")
+	private static final long serialVersionUID = -6229336672215273524L;
+
 	@Override
 	public Object createContainer() {
 		Button button = new Button();
 		button.addListener(new ClickListener() {
 			
+			private static final long serialVersionUID = 6451608629231086440L;
+
 			@Override
 			public void buttonClick(ClickEvent event) {
 				try {

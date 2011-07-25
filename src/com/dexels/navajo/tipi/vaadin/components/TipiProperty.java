@@ -34,6 +34,7 @@ import com.vaadin.ui.TwinColSelect;
 
 public class TipiProperty extends TipiVaadinComponentImpl implements PropertyComponent {
 
+	private static final long serialVersionUID = 142570190396385078L;
 	private Label description;
 	private Component value;
 	private com.dexels.navajo.document.Property property;

@@ -7,6 +7,7 @@ import com.vaadin.ui.Window;
 
 public class TipiFrame extends TipiVaadinComponentImpl {
 
+	private static final long serialVersionUID = -8797775838239790407L;
 	private Window mainWindow;
 
 	@Override

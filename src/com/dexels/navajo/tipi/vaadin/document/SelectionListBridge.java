@@ -118,5 +118,9 @@ public class SelectionListBridge implements Container {
 	public boolean removeAllItems() throws UnsupportedOperationException {
 		throw new UnsupportedOperationException("Can not remove all messages. Didn't implement it. ");
 	}
+	
+	public com.dexels.navajo.document.Property getSource() {
+		return src;
+	}
 
 }

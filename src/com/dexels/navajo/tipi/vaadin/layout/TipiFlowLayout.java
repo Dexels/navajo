@@ -16,6 +16,7 @@ import com.vaadin.ui.HorizontalLayout;
  */
 public class TipiFlowLayout
     extends TipiLayoutImpl {
+	private static final long serialVersionUID = 863989359860579158L;
 	HorizontalLayout layout = null;
   public TipiFlowLayout() {
   }

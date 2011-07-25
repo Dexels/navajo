@@ -6,6 +6,7 @@ import com.vaadin.ui.Label;
 
 public class TipiLabel extends TipiVaadinComponentImpl {
 
+	private static final long serialVersionUID = 1561760767992331660L;
 	private Label label;
 
 	@Override

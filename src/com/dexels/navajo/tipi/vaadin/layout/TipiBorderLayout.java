@@ -18,6 +18,8 @@ import com.vaadin.ui.Component;
  */
 public class TipiBorderLayout
     extends TipiLayoutImpl {
+	private static final long serialVersionUID = 157789680391171301L;
+
 	BorderLayout layout = null;
 	
 	private final Map<BorderLayout.Constraint,Integer> sizeMap= new HashMap<BorderLayout.Constraint, Integer>();

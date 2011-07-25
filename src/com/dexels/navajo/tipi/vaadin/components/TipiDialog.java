@@ -9,6 +9,7 @@ import com.vaadin.ui.Window;
 
 public class TipiDialog extends TipiVaadinComponentImpl {
 
+	private static final long serialVersionUID = 5476906786366044908L;
 	private Window dialog;
 
 	@Override

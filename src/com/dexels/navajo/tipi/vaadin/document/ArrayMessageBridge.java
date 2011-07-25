@@ -146,7 +146,7 @@ public class ArrayMessageBridge implements Container {
 
 	@Override
 	public boolean removeItem(Object itemId) throws UnsupportedOperationException {
-		Item mb = messageMap.get(itemId);
+//		Item mb = messageMap.get(itemId);
 		messageMap.remove(itemId);
 //		Message mm = mb.getSource();
 //		if(mm!=null) {

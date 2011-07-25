@@ -11,13 +11,11 @@ import com.vaadin.data.Property;
 
 public class ValuePropertyBridge implements Property, Property.ValueChangeNotifier {
 	private static final long serialVersionUID = -5696589046516267159L;
-	private final String originalType;
 	private final Map<ValueChangeListener,SerializablePropertyChangeListener> listenerMap = new HashMap<ValueChangeListener,SerializablePropertyChangeListener>();
 	private final com.dexels.navajo.document.Property src;
 	
 	public ValuePropertyBridge(com.dexels.navajo.document.Property src) {
 		this.src = src;
-		originalType = src.getType();
 	}
 	
 	@Override

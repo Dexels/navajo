@@ -1,11 +1,15 @@
 package com.dexels.navajo.tipi.vaadin.application;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
+import java.net.URL;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -13,6 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import metadata.FormatIdentification;
 import navajo.ExtensionDefinition;
 
 import org.slf4j.Logger;
@@ -24,20 +29,25 @@ import tipi.TipiCoreExtension;
 import tipi.TipiVaadinExtension;
 import tipipackage.TipiExtensionRegistry;
 
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.vaadin.VaadinTipiContext;
+import com.dexels.navajo.tipi.vaadin.components.io.BufferedInputStreamSource;
+import com.dexels.navajo.tipi.vaadin.components.io.URLInputStreamSource;
 import com.dexels.navajo.tipi.vaadin.cookie.BrowserCookieManager;
 import com.vaadin.Application;
+import com.vaadin.terminal.StreamResource;
+import com.vaadin.terminal.StreamResource.StreamSource;
 import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 
-@SuppressWarnings("serial")
 public class TipiVaadinApplication extends Application implements TipiApplicationInstance, HttpServletRequestListener,
 		Serializable {
 
+	private static final long serialVersionUID = -5962249453869298788L;
 	private VaadinTipiContext myContext;
 	private transient ServletContext servletContext;
 	private transient HttpServletRequest request;
@@ -45,10 +55,10 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 	private File installationFolder;
 	private String applicationProfile;
 	private String applicationDeploy;
+	private String lastMimeType;
 
 	private static final Logger logger = LoggerFactory.getLogger(TipiVaadinApplication.class);
 
-	private boolean cloudMode = true;
 	private final TipiExtensionRegistry extensionRegistry = new TipiExtensionRegistry();
 
 	private boolean isRunningInGae = false;
@@ -90,6 +100,8 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 				e.printStackTrace();
 			}
 			mainWindow.addListener(new Window.CloseListener() {
+
+				private static final long serialVersionUID = 1604878118381797590L;
 
 				@Override
 				public void windowClose(CloseEvent e) {
@@ -148,7 +160,7 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 			throw new IOException("Error resolving tipi installation directory.", e1);
 		}
 		TipiVaadinExtension instance = TipiVaadinExtension.getInstance();
-		if (!cloudMode) {
+		if (!isRunningInGae) {
 			checkForExtensions();
 			instance.getTipiExtensionRegistry().debugExtensions();
 		}
@@ -160,8 +172,8 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 			e2.printStackTrace();
 			return null;
 		}
-		logger.debug("VaadinTipiContext created. Cloudmode: "+cloudMode);
-		if (cloudMode) {
+		logger.debug("VaadinTipiContext created. Cloudmode: "+isRunningInGae);
+		if (isRunningInGae) {
 			extensionRegistry.loadExtensions(va);
 		}
 		try {
@@ -181,7 +193,7 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 		va.setMainWindow(getMainWindow());
 		va.setContextName(this.servletContext.getContextPath());
 
-		if (!cloudMode) {
+		if (!isRunningInGae) {
 			instance.getTipiExtensionRegistry().loadExtensions(va);
 		} else {
 			extensionRegistry.loadExtensions(va);
@@ -314,7 +326,7 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 
 	private void setupInstallationFolder() throws ServletException {
 
-		if (cloudMode) {
+		if (isRunningInGae) {
 			this.applicationProfile = "knvb";
 			this.applicationDeploy = "test";
 			this.installationFolder = new File(servletContext.getRealPath("/application"));
@@ -346,10 +358,93 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 	public void onRequestStart(HttpServletRequest request, HttpServletResponse response) {
 		this.request = request;
 		this.response = response;
+		if(getCurrentContext()!=null) {
+			if(getCurrentContext().getCookieManager()!=null) {
+				((BrowserCookieManager) getCurrentContext().getCookieManager()).setRequest(request);
+				((BrowserCookieManager) getCurrentContext().getCookieManager()).setResponse(response);
+			}
+		}
+
 	}
 
 	@Override
 	public void onRequestEnd(HttpServletRequest request, HttpServletResponse response) {
-
+		// clean up request refs? Also in CookieManager?
 	}
+
+
+	
+	public StreamResource getResource(Object u) {
+		if (u == null) {
+			return null;
+		}
+		StreamSource is = null;
+		if (u instanceof URL) {
+			System.err.println("URL: " + u);
+			if (isRunningInGae()) {
+				try {
+					is = resolve((URL) u);
+					
+				} catch (IOException e) {
+					e.printStackTrace();
+					return null;
+				}
+			} else {
+					is = new URLInputStreamSource((URL) u);
+			}
+		}
+		if (u instanceof Binary) {
+			lastMimeType = ((Binary)u).guessContentType();
+		}
+		if (is == null) {
+			return null;
+		}
+		
+		StreamResource sr = new StreamResource(is, ""+u,this);
+		
+		
+//		getVaadinApplication().getMainWindow().
+		sr.setMIMEType(lastMimeType);
+		System.err.println("Stream resource created: " + u.toString()+" mime: "+lastMimeType);
+
+		return sr;
+	}
+
+	private StreamSource resolve(URL u) throws IOException {
+		return new URLInputStreamSource(u);
+	}
+	
+	@SuppressWarnings("unused")
+	private StreamSource resolveAndBuffer(URL u) throws IOException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		InputStream is = u.openStream();
+		copyResource(baos, is);
+		byte[] byteArray = baos.toByteArray();
+		this.lastMimeType = FormatIdentification.identify(byteArray).getMimeType();
+		System.err.println("Bytes buffered: "+byteArray.length);
+		return new BufferedInputStreamSource(byteArray);
+	}
+	
+	protected final void copyResource(OutputStream out, InputStream in) throws IOException {
+		BufferedInputStream bin = new BufferedInputStream(in);
+		BufferedOutputStream bout = new BufferedOutputStream(out);
+		byte[] buffer = new byte[1024];
+		int read = -1;
+		boolean ready = false;
+		while (!ready) {
+			read = bin.read(buffer);
+			if (read > -1) {
+				bout.write(buffer, 0, read);
+			}
+			if (read <= -1) {
+				ready = true;
+			}
+		}
+		bin.close();
+		bout.flush();
+		bout.close();
+	}
+	
+	
+	
 }

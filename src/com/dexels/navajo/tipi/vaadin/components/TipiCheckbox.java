@@ -11,15 +11,21 @@ import com.vaadin.ui.CheckBox;
 
 
 public class TipiCheckbox extends TipiVaadinComponentImpl {
-	  private CheckBox myButton;
+	private static final long serialVersionUID = 6085520508083912004L;
+
+	private CheckBox myButton;
 
 	  private boolean iAmEnabled = true;
 
-	  @SuppressWarnings("serial")
 	public Object createContainer() {
 	    myButton = new CheckBox();
 	    myButton.addListener(new ClickListener() {
 			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 2756679049468073536L;
+
 			@Override
 			public void buttonClick(ClickEvent event) {
 				try {

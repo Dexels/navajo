@@ -23,7 +23,10 @@ import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
  */
  
 public class TipiScreen extends TipiDataComponentImpl {
-    public TipiScreen(TipiContext tc) {
+    
+	private static final long serialVersionUID = -6832475289705107584L;
+
+	public TipiScreen(TipiContext tc) {
     	setContext(tc);
         setId("init");
     }

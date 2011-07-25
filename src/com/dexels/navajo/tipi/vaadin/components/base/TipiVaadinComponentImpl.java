@@ -1,25 +1,9 @@
 package com.dexels.navajo.tipi.vaadin.components.base;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-
-import metadata.FormatDescription;
-import metadata.FormatIdentification;
-
-import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
 import com.dexels.navajo.tipi.vaadin.VaadinTipiContext;
 import com.dexels.navajo.tipi.vaadin.application.TipiVaadinApplication;
-import com.dexels.navajo.tipi.vaadin.components.io.BufferedInputStreamSource;
-import com.dexels.navajo.tipi.vaadin.components.io.URLInputStreamSource;
-import com.vaadin.terminal.StreamResource;
-import com.vaadin.terminal.StreamResource.StreamSource;
+import com.vaadin.terminal.Resource;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 
@@ -28,8 +12,6 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 	
 	private static final long serialVersionUID = -304628775000480212L;
 	protected ComponentContainer layoutComponent;
-	private InputStream stream;
-	private String lastMimeType;
 	
 	
 	
@@ -43,7 +25,6 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 		comp.setDebugId(getPath());
 	}
 
-	// TODO Deal with layout at some point, ignore for now
 	@Override
 	public void setContainerLayout(Object layout) {
 		this.layoutComponent = (ComponentContainer) layout;
@@ -103,77 +84,7 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 		currentContainer.addComponent(component);
 		
 	}
-	
-	public StreamResource getResource(Object u) {
-		System.err.println("Getting resource: "+u);
-		//		String mimeType = null;
-		if (u == null) {
-			return null;
-		}
-		StreamSource is = null;
-		if (u instanceof URL) {
-			System.err.println("URL: " + u);
-			if (getVaadinApplication().isRunningInGae()) {
-				try {
-					is = resolve((URL) u);
-					
-				} catch (IOException e) {
-					e.printStackTrace();
-					return null;
-				}
-			} else {
-					is = new URLInputStreamSource((URL) u);
-			}
-		}
-		if (u instanceof Binary) {
-			lastMimeType = ((Binary)u).guessContentType();
-		}
-		if (is == null) {
-			return null;
-		}
-		
-		StreamResource sr = new StreamResource(is, ""+u, getVaadinApplication());
-		
-		
-//		getVaadinApplication().getMainWindow().
-		sr.setMIMEType(lastMimeType);
-		System.err.println("Stream resource created: " + u.toString()+" mime: "+lastMimeType);
 
-		return sr;
-	}
-
-	private StreamSource resolve(URL u) throws IOException {
-		return new URLInputStreamSource(u);
-	}
-	private StreamSource resolveAndBuffer(URL u) throws IOException {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		InputStream is = u.openStream();
-		copyResource(baos, is);
-		byte[] byteArray = baos.toByteArray();
-		this.lastMimeType = FormatIdentification.identify(byteArray).getMimeType();
-		System.err.println("Bytes buffered: "+byteArray.length);
-		return new BufferedInputStreamSource(byteArray);
-	}
-	
-	protected final void copyResource(OutputStream out, InputStream in) throws IOException {
-		BufferedInputStream bin = new BufferedInputStream(in);
-		BufferedOutputStream bout = new BufferedOutputStream(out);
-		byte[] buffer = new byte[1024];
-		int read = -1;
-		boolean ready = false;
-		while (!ready) {
-			read = bin.read(buffer);
-			if (read > -1) {
-				bout.write(buffer, 0, read);
-			}
-			if (read <= -1) {
-				ready = true;
-			}
-		}
-		bin.close();
-		bout.flush();
-		bout.close();
-	}
 	@Override
 	protected void setComponentValue(String name, Object object) {
 		if(name.equals("style")) {
@@ -210,5 +121,9 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 	public TipiVaadinApplication getVaadinApplication() {
 		VaadinTipiContext c = (VaadinTipiContext) getContext();
 		return c.getVaadinApplication();
+	}
+	
+	protected Resource getResource(Object any) {
+		return getVaadinApplication().getResource(any);
 	}
 }

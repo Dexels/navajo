@@ -54,5 +54,9 @@ public class PropertyItem implements Item {
 	public boolean removeItemProperty(Object id) throws UnsupportedOperationException {
 		throw new UnsupportedOperationException("Can not remove properties from Property item!");
 	}
+	
+	public Property getSource() {
+		return src;
+	}
 
 }

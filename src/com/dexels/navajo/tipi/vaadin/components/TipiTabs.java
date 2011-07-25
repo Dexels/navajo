@@ -13,6 +13,7 @@ import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 
 public class TipiTabs extends TipiVaadinComponentImpl {
 
+	private static final long serialVersionUID = 7553386753198407974L;
 	private TabSheet tabSheet;
 
 	@Override

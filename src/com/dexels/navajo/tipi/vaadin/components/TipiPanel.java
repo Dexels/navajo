@@ -6,6 +6,7 @@ import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.VerticalLayout;
 
 public class TipiPanel extends TipiVaadinComponentImpl {
+	private static final long serialVersionUID = 5587251071656604056L;
 
 	@Override
 	public Object createContainer() {

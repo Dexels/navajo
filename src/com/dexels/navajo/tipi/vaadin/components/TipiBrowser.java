@@ -33,6 +33,7 @@ import com.vaadin.ui.Embedded;
  */
 
 public class TipiBrowser extends TipiVaadinComponentImpl {
+	private static final long serialVersionUID = 6384086271954436821L;
 	Embedded browser = null;
 
 	public TipiBrowser() {
@@ -58,11 +59,12 @@ public class TipiBrowser extends TipiVaadinComponentImpl {
     }
 
 
-	@SuppressWarnings("serial")
 	private void setBinary(final Binary binary) {
 		System.err.println("Setting binary content. Length:  "+binary.getLength());
 		StreamResource sr = new StreamResource(new StreamSource() {
 			
+			private static final long serialVersionUID = -352043364387051337L;
+
 			@Override
 			public InputStream getStream() {
 				return binary.getDataAsStream();

@@ -22,6 +22,7 @@ import com.vaadin.ui.GridLayout;
 
 public class TipiGridPanel extends TipiVaadinComponentImpl {
 
+	private static final long serialVersionUID = 2024561392168539561L;
 	private GridLayout gridLayout;
 	private final List<Integer> myWidths = new ArrayList<Integer>();
 	private int gridwidth = 0;

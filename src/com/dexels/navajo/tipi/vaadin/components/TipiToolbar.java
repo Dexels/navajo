@@ -5,6 +5,8 @@ import com.vaadin.ui.HorizontalLayout;
 
 public class TipiToolbar extends TipiVaadinComponentImpl {
 
+	private static final long serialVersionUID = 4060634934285508125L;
+
 	@Override
 	public Object createContainer() {
 		HorizontalLayout horizontalLayout = new HorizontalLayout();

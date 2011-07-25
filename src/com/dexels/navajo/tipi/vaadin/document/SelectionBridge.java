@@ -13,14 +13,14 @@ public class SelectionBridge implements Item {
 
 	private static final long serialVersionUID = 7739272635668740519L;
 	private final Selection src;
-	private final com.dexels.navajo.document.Property parent;
+//	private final com.dexels.navajo.document.Property parent;
 	private final ObjectProperty<String> name;
 	private final ObjectProperty<String> value;
 	private final ObjectProperty<Boolean> isSelected;
 	
 	public SelectionBridge(com.dexels.navajo.document.Property parent, Selection src) {
 		this.src = src;
-		this.parent = parent;
+//		this.parent = parent;
 		name = new ObjectProperty<String>(src.getName(),String.class,true);
 		value = new ObjectProperty<String>(src.getValue(),String.class,true);
 		isSelected = new ObjectProperty<Boolean>(new Boolean(src.isSelected()),Boolean.class,false);

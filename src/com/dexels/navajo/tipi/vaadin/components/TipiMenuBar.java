@@ -5,6 +5,7 @@ import com.vaadin.ui.MenuBar;
 
 public class TipiMenuBar extends TipiVaadinComponentImpl {
 
+	private static final long serialVersionUID = -8349418175376948993L;
 	private MenuBar menuBar;
 
 	public TipiMenuBar() {

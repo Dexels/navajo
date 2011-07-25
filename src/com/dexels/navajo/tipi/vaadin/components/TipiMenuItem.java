@@ -9,27 +9,17 @@ import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 
-
 /**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * <p>
- * Company:
- * </p>
  * 
- * @author Frank Lyaruu
- * @version 1.0
+ * @author frank
+ *
  */
-
 public class TipiMenuItem extends TipiVaadinComponentImpl {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1259593529870514964L;
 	private MenuItem menuItem;
 	
     public TipiMenuItem() {
@@ -39,13 +29,15 @@ public class TipiMenuItem extends TipiVaadinComponentImpl {
 		super.replaceContainer(c);
 	}
     
-    @SuppressWarnings("serial")
+    
 	public Object createContainer() {
     	TipiComponent parent = getTipiParent();
 		Object parentMenu = parent.getContainer();
 		if(parentMenu instanceof MenuItem) {
 			MenuItem mbb = (MenuItem)parentMenu;
 			menuItem = mbb.addItem("", new Command() {
+				private static final long serialVersionUID = 8498865671721012500L;
+
 				@Override
 				public void menuSelected(MenuItem selectedItem) {
 			        try {

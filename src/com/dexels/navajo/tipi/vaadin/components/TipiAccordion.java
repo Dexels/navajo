@@ -14,6 +14,7 @@ import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 
 public class TipiAccordion extends TipiVaadinComponentImpl {
 
+	private static final long serialVersionUID = 7459432694853380651L;
 	private Accordion accordion;
 
 	@Override

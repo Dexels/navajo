@@ -11,6 +11,7 @@ import com.vaadin.data.Property;
 
 public class CompositeArrayContainer extends ArrayMessageBridge {
 
+	private static final long serialVersionUID = -3613726223172237777L;
 	private CompositeMessageBridge definitionMessage;
 
 	
@@ -57,7 +58,7 @@ public class CompositeArrayContainer extends ArrayMessageBridge {
 
 				StringTokenizer st = new StringTokenizer(column,"@");
 				String propertyName = st.nextToken();
-				String propertyAspect = st.nextToken();
+//				String propertyAspect = st.nextToken();
 
 				Property pp =  definitionMessage.getItemProperty(propertyName+"@value");
 				if(pp!=null) {

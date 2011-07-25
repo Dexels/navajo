@@ -4,6 +4,7 @@ import com.vaadin.data.Property;
 
 public class AdHocProperty implements Property {
 
+	private static final long serialVersionUID = -2927504254364457100L;
 	private final Class<?> type;
 	private Object value;
 

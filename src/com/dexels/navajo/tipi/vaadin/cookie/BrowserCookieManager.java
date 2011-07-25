@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.dexels.navajo.tipi.internal.cookie.CookieManager;
 
 public class BrowserCookieManager implements CookieManager, Serializable {
+	private static final long serialVersionUID = 8084634201430716891L;
 	private transient HttpServletRequest request;
 	private transient HttpServletResponse response;
 

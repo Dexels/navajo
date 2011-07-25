@@ -24,7 +24,9 @@ import com.vaadin.terminal.URIHandler;
  */
 public class TipiOpenBinary extends TipiVaadinActionImpl {
 
-    /*
+	private static final long serialVersionUID = -6166751362772736306L;
+
+	/*
      * (non-Javadoc)
      * 
      * @see com.dexels.navajo.tipi.internal.TipiAction#execute(com.dexels.navajo.tipi.internal.TipiEvent)
