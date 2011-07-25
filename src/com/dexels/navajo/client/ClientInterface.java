@@ -185,4 +185,11 @@ public void setCurrentHost(String host);
 public boolean attemptPushRegistration(String agentId);
 	
 public void setAllowCompression(boolean allowCompression);
+
+/**
+ * Created to force the client to encode the request using Gzip (GAE related)
+ * @param forceGzip
+ */
+public void setForceGzip(boolean forceGzip);
+
 }
