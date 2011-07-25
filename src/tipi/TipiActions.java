@@ -6,6 +6,8 @@ import com.dexels.navajo.tipi.actions.adapters.BaseActions;
 
 public class TipiActions extends BaseActions {
 
+	private static final long serialVersionUID = -6504263620597967678L;
+
 	public void unloadNavajo(String service) throws TipiException,
 			TipiBreakException {
 		java.util.Map<String, Object> parameters = new java.util.HashMap<String, Object>();
