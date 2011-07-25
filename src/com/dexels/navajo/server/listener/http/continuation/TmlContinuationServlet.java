@@ -88,6 +88,10 @@ public class TmlContinuationServlet extends HttpServlet implements SchedulableSe
 	
 	protected final Navajo parseInputNavajo(HttpServletRequest request) throws IOException, UnsupportedEncodingException {
 		InputStream is = request.getInputStream();
+		// TODO This is a bug: Accept encoding is what encoding the client will accept in the
+		// response. Here it is used as the Content Encoding of the request.
+		// Not a problem as long as it is the same, but needs to be fixed.
+		// http://spiritus.dexels.nl:6070/browse/NAVAJO-29
 		String sendEncoding = request.getHeader("Accept-Encoding");
 
 		BufferedReader r;
