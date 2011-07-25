@@ -19,7 +19,7 @@ import tipipackage.ITipiExtensionRegistry;
 public abstract class TipiAbstractOSGiExtension implements TipiExtension,
 		BundleActivator {
 
-	private BundleContext context = null;
+	private transient BundleContext context = null;
 	private static final Logger logger = LoggerFactory.getLogger(TipiAbstractOSGiExtension.class); 
 
 	protected void registerTipiExtension(BundleContext context)

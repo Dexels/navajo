@@ -7,6 +7,9 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.tipixml.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 import com.dexels.navajo.tipi.tipixml.XMLParseException;
@@ -14,6 +17,7 @@ import com.dexels.navajo.tipi.tipixml.XMLParseException;
 public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension
 		implements TipiExtension {
 
+	private static final long serialVersionUID = 4653876721511905248L;
 	private final List<String> thirdPartyList = new ArrayList<String>();
 	private final List<String> includes = new ArrayList<String>();
 	private final List<String> requires = new ArrayList<String>();
@@ -21,8 +25,10 @@ public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension
 	private String requiresMain = null;
 	private String description = null;
 	private String project = "";
+	
+	private final static Logger logger = LoggerFactory.getLogger(TipiAbstractXMLExtension.class);
 
-	private ClassLoader extensionClassLoader;
+//	private transient ClassLoader extensionClassLoader;
 	private boolean isMain;
 
 	public TipiAbstractXMLExtension() {
@@ -30,19 +36,14 @@ public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension
 
 	public final void loadDescriptor() {
 		String xmlName = "tipi/" + getClass().getSimpleName() + ".xml";
+		logger.info("Loading TipiExtension: "+xmlName);
 		loadXML(xmlName);
 		// Added for Vaadin (OSGi, actually)
 		setExtensionClassloader(getClass().getClassLoader());
 	}
 
-	/**
-	 * @deprecated Use loadDescriptor
-	 */
-	protected final void loadXML() {
-		loadDescriptor();
-	}
 
-	protected void loadXML(String xmlName) {
+	private void loadXML(String xmlName) {
 		try {
 			InputStream is = getClass().getClassLoader().getResourceAsStream(
 					xmlName);
@@ -142,11 +143,11 @@ public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension
 
 	@Override
 	public ClassLoader getExtensionClassloader() {
-		return extensionClassLoader;
+		return getClass().getClassLoader();
 	}
 
 	public void setExtensionClassloader(ClassLoader extensionClassLoader) {
-		this.extensionClassLoader = extensionClassLoader;
+		logger.info("Ignoring setExtensionClassLoader");
 	}
 
 }

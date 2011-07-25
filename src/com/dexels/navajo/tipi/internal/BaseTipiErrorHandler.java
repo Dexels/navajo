@@ -38,7 +38,7 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 	private static final long serialVersionUID = -2568512270962339576L;
 	private String errorMessage;
 	private TipiContext context;
-	private ResourceBundle errorMessageBundle;
+	private transient ResourceBundle errorMessageBundle;
 
 	public BaseTipiErrorHandler() {
 		// initResource();
@@ -98,11 +98,12 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 	private String getConditionErrorDescription(String id, Message current) {
 		// String description = id;
 		try {
-			if (errorMessageBundle != null) {
-				String found = errorMessageBundle.getString(id);
-				if (found != null) {
-					return found;
-				}
+			if(errorMessageBundle==null) {
+				initResource();
+			}
+			String found = errorMessageBundle.getString(id);
+			if (found != null) {
+				return found;
 			}
 		} catch (MissingResourceException ex) {
 			System.err
