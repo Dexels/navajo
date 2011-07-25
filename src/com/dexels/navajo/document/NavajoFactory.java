@@ -102,6 +102,7 @@ public abstract class NavajoFactory {
 				sbmode = true;
 			}
 			try {
+				// TODO Don't use system properties, really detect GAE
 				String cloudMode = System.getProperty("tipi.cloudMode");
 				if("true".equals(cloudMode)) {
 					sbmode = true;
