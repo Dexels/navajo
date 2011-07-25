@@ -100,10 +100,6 @@
       <param name="locale" type="string" required="true" />
       <param name="context" type="string" />
    </tipiaction>
-   <tipiaction name="setHTTPS" class="TipiSetHTTPS" package="com.dexels.navajo.tipi.actions">
-      <param name="keystore" type="binary" />
-      <param name="passphrase" type="string" />
-   </tipiaction>
    <tipiaction name="execute" class="TipiRuntime" package="com.dexels.navajo.tipi.actions">
       <param name="command" type="string" required="true" />
    </tipiaction>
