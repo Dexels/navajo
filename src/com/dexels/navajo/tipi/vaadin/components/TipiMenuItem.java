@@ -44,13 +44,11 @@ public class TipiMenuItem extends TipiVaadinComponentImpl {
     	TipiComponent parent = getTipiParent();
 		Object parentMenu = parent.getContainer();
 		if(parentMenu instanceof MenuItem) {
-			System.err.println("PARENT ITEM FOUND ADDING MENU ITEM");
 			MenuItem mbb = (MenuItem)parentMenu;
 			menuItem = mbb.addItem("", new Command() {
 				@Override
 				public void menuSelected(MenuItem selectedItem) {
 			        try {
-			        	System.err.println("Menu selected!");
 						performTipiEvent("onActionPerformed", null, true);
 					} catch (TipiBreakException e) {
 						e.printStackTrace();
@@ -89,6 +87,6 @@ public class TipiMenuItem extends TipiVaadinComponentImpl {
 //        super.setComponentValue(name, object);
     }
     public void addToContainer(Object c, Object constraints) {
-    	System.err.println("Warning: adding to menuitem!");
+    	//Ignoring adding to menuitem
     }
 }
