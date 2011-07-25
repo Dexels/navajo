@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
@@ -35,6 +36,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
+import java.util.zip.GZIPOutputStream;
 
 import com.dexels.navajo.client.push.NavajoPushSession;
 import com.dexels.navajo.client.serverasync.ServerAsyncRunner;
@@ -62,9 +64,10 @@ import com.jcraft.jzlib.ZOutputStream;
 //  }
 //}
 
-public class NavajoClient implements ClientInterface {
+public class NavajoClient implements ClientInterface, Serializable {
 
-  public static final int DIRECT_PROTOCOL = 0;
+	private static final long serialVersionUID = -7848349362973607161L;
+public static final int DIRECT_PROTOCOL = 0;
   public static final int HTTP_PROTOCOL = 1;
   public static final int CONNECT_TIMEOUT = 5000;
   
@@ -113,12 +116,15 @@ public class NavajoClient implements ClientInterface {
   private final String mySessionToken;
   private final Map<String,Long> disabledServers = new HashMap<String,Long>();
 
+
   private long lastActivity;
 	private int keepAliveDelay;
 	private int globalRetryCounter = 0;
 	private String localeCode = null;
 	private String subLocale;
 	private boolean allowCompression = true;
+	private boolean forceGzip = false;
+
 //	private static boolean silent = true;
 //	  
 //  private boolean killed = false;
@@ -554,13 +560,18 @@ public class NavajoClient implements ClientInterface {
     }
     try {
     	java.lang.reflect.Method chunked = con.getClass().getMethod("setChunkedStreamingMode", new Class[]{int.class});
-    	chunked.invoke( con, new Object[]{new Integer(1024)});
-    	con.setRequestProperty("Transfer-Encoding", "chunked" );
+    	// skip it for GAE
+    	if(!forceGzip) {
+        	chunked.invoke( con, new Object[]{new Integer(1024)});
+        	con.setRequestProperty("Transfer-Encoding", "chunked" );
+    	}
     } catch (SecurityException e) {
     } catch (Throwable e) {
+    	e.printStackTrace();
      	System.err.println("setChunkedStreamingMode does not exist, upgrade to java 1.5+");
     }
     if (useCompression) {
+    	System.err.println("Compression: "+useCompression);
     	con.setRequestProperty("Accept-Encoding", "jzlib");
     	con.setRequestProperty("Content-Encoding", "jzlib");
     	//con.connect();
@@ -585,8 +596,16 @@ public class NavajoClient implements ClientInterface {
     	BufferedWriter os = null;
     	try {
 //    		System.err.println("Using no compression!");
-    		os = new BufferedWriter(new OutputStreamWriter(con.getOutputStream(), "UTF-8"));
+    		if(forceGzip) {
+    	    	con.setRequestProperty("Accept-Encoding", "gzip");
+        		os = new BufferedWriter(new OutputStreamWriter(new GZIPOutputStream(con.getOutputStream()), "UTF-8"));
+
+    		} else {
+        		os = new BufferedWriter(new OutputStreamWriter(con.getOutputStream(), "UTF-8"));
+    		}
 //    		os.write("apenootjes");
+    		
+    		
     		d.write(os, condensed, d.getHeader().getRPCName());    	
     	} finally {
     		if ( os != null ) {
@@ -1758,6 +1777,11 @@ public final void switchServer(boolean force) {
 		this.allowCompression = allowCompression;
 	}
 
+	public void setForceGzip(boolean forceGzip) {
+		this.forceGzip = forceGzip;
+	}
+
+	
 	public static void main(String [] args) throws Exception {
 		NavajoClient nc = new NavajoClient();
 //		nc.setServerUrl("penelope1.dexels.com/sportlink/knvb/servlet/Postman");
