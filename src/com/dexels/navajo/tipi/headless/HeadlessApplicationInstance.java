@@ -60,7 +60,7 @@ public class HeadlessApplicationInstance {
 		if (tipiResourceStream == null) {
 			System.err.println("Error starting up: Can not load tipi");
 		} else {
-			context.parseStream(tipiResourceStream, definition, false, ed);
+			context.parseStream(tipiResourceStream,ed);
 			context.switchToDefinition(definition);
 		}
 		return context;
