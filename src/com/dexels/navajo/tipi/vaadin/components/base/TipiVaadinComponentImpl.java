@@ -1,15 +1,25 @@
 package com.dexels.navajo.tipi.vaadin.components.base;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
+
+import metadata.FormatDescription;
+import metadata.FormatIdentification;
 
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
 import com.dexels.navajo.tipi.vaadin.VaadinTipiContext;
 import com.dexels.navajo.tipi.vaadin.application.TipiVaadinApplication;
-import com.dexels.navajo.tipi.vaadin.components.io.InputStreamSource;
+import com.dexels.navajo.tipi.vaadin.components.io.BufferedInputStreamSource;
+import com.dexels.navajo.tipi.vaadin.components.io.URLInputStreamSource;
 import com.vaadin.terminal.StreamResource;
+import com.vaadin.terminal.StreamResource.StreamSource;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 
@@ -19,6 +29,7 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 	private static final long serialVersionUID = -304628775000480212L;
 	protected ComponentContainer layoutComponent;
 	private InputStream stream;
+	private String lastMimeType;
 	
 	
 	
@@ -94,37 +105,81 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 	}
 	
 	public StreamResource getResource(Object u) {
-		 if(u==null) {
-			 return null;
-		 }
-		 InputStream is = null;
-		if(u instanceof URL) {
-			 System.err.println("URL: "+u);
-			 try {
-				is = ((URL) u).openStream();
-			} catch (IOException e) {
-				e.printStackTrace();
-				return null;
+		System.err.println("Getting resource: "+u);
+		//		String mimeType = null;
+		if (u == null) {
+			return null;
+		}
+		StreamSource is = null;
+		if (u instanceof URL) {
+			System.err.println("URL: " + u);
+			if (getVaadinApplication().isRunningInGae()) {
+				try {
+					is = resolve((URL) u);
+					
+				} catch (IOException e) {
+					e.printStackTrace();
+					return null;
+				}
+			} else {
+					is = new URLInputStreamSource((URL) u);
 			}
-		 }
-		 if(u instanceof Binary) {
-			 is = ((Binary) u).getDataAsStream();
-		 }
-		 if(is==null) {
-			 return null;
-		 }
-		 InputStreamSource s = new InputStreamSource(is);
-		 StreamResource sr = new StreamResource(s, u.toString(), getVaadinApplication());
+		}
+		if (u instanceof Binary) {
+			lastMimeType = ((Binary)u).guessContentType();
+		}
+		if (is == null) {
+			return null;
+		}
+		
+		StreamResource sr = new StreamResource(is, ""+u, getVaadinApplication());
+		
+		
+//		getVaadinApplication().getMainWindow().
+		sr.setMIMEType(lastMimeType);
+		System.err.println("Stream resource created: " + u.toString()+" mime: "+lastMimeType);
+
 		return sr;
 	}
 
+	private StreamSource resolve(URL u) throws IOException {
+		return new URLInputStreamSource(u);
+	}
+	private StreamSource resolveAndBuffer(URL u) throws IOException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		InputStream is = u.openStream();
+		copyResource(baos, is);
+		byte[] byteArray = baos.toByteArray();
+		this.lastMimeType = FormatIdentification.identify(byteArray).getMimeType();
+		System.err.println("Bytes buffered: "+byteArray.length);
+		return new BufferedInputStreamSource(byteArray);
+	}
+	
+	protected final void copyResource(OutputStream out, InputStream in) throws IOException {
+		BufferedInputStream bin = new BufferedInputStream(in);
+		BufferedOutputStream bout = new BufferedOutputStream(out);
+		byte[] buffer = new byte[1024];
+		int read = -1;
+		boolean ready = false;
+		while (!ready) {
+			read = bin.read(buffer);
+			if (read > -1) {
+				bout.write(buffer, 0, read);
+			}
+			if (read <= -1) {
+				ready = true;
+			}
+		}
+		bin.close();
+		bout.flush();
+		bout.close();
+	}
 	@Override
 	protected void setComponentValue(String name, Object object) {
 		if(name.equals("style")) {
 			getActualVaadinComponent().addStyleName(""+object);
 		}
 		if(name.equals("visible")) {
-			System.err.println("SETTTING VISIBLE TO: "+object);
 			Boolean b = (Boolean) object;
 			getActualVaadinComponent().setVisible(b);
 		}
