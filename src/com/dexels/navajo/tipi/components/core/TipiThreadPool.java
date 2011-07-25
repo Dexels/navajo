@@ -37,7 +37,7 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 public class TipiThreadPool implements Serializable {
 	private static final long serialVersionUID = -5572531351084195337L;
 	private int poolSize = 1;
-	private final ThreadGroup myGroup = new ThreadGroup("TipiThreadGroup");
+	private transient  ThreadGroup myGroup = null;
 	// private final Set myThreadSet = Collections.synchronizedSet(new
 	// HashSet());
 	private final Map<TipiThread, Stack<TipiExecutable>> eventStackMap = new HashMap<TipiThread, Stack<TipiExecutable>>();
@@ -57,6 +57,10 @@ public class TipiThreadPool implements Serializable {
 	// for use with echo
 
 	public TipiThreadPool(TipiContext context, int initSize) {
+		System.err.println("Creating group with size: "+initSize);
+		if(initSize > 0) {
+			myGroup = new ThreadGroup("TipiThreadGroup");
+		}
 		this.poolSize = initSize;
 		myContext = context;
 		String maxThreads = context
@@ -144,7 +148,12 @@ public class TipiThreadPool implements Serializable {
 			// For echo:
 			try {
 				System.err.println("Linear enqueue!");
-				exe.getEvent().performAction(exe.getEvent(), exe.getEvent(), 0);
+				if(exe.getEvent()!=null) {
+					exe.getEvent().performAction(exe.getEvent(), exe.getEvent(), 0);
+				} else {
+					System.err.println("New enqueue path");
+					exe.performAction(null, null, 0);
+				}
 				exe.performAction(null, null, 0);
 			} catch (TipiBreakException e) {
 				e.printStackTrace();
