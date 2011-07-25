@@ -47,6 +47,8 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     private String myRef = null;
     private String extension = null;
     
+    private byte[] inMemory = null;
+    
     public final static String MSEXCEL = "application/msexcel";
 
     public final static String MSWORD = "application/msword";
@@ -167,7 +169,10 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 		}
         expectedLength = fileSize;
 
-        if ( this.mimetype == null ) {
+    	if(NavajoFactory.getInstance().isSandboxMode()) {
+    		inMemory = ((ByteArrayOutputStream)fos).toByteArray();
+    	}
+    	if ( this.mimetype == null ) {
         	this.mimetype = getSubType("mime");
         	this.mimetype = (mimetype == null || mimetype.equals("") ? guessContentType() : mimetype);
         }
@@ -176,7 +181,6 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 
     private OutputStream createTempFileOutputStream() throws IOException, FileNotFoundException {
     	if(NavajoFactory.getInstance().isSandboxMode()) {
-    		dataFile = NavajoFactory.getInstance().createStorageHandle();
     		ByteArrayOutputStream baos = new ByteArrayOutputStream() {
     			public void close() {
     				try {
@@ -184,9 +188,10 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-	    			NavajoFactory.getInstance().storeHandle(dataFile.getName(), toByteArray());
+	    			inMemory = toByteArray();
     			}
     		};
+    		
     		return baos;
     	} else {
             dataFile = File.createTempFile("binary_object", "navajo", NavajoFactory.getInstance().getTempDir());
@@ -232,6 +237,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
         super(Property.BINARY_PROPERTY);
         //Thread.dumpStack();
 
+        // TODO: For sandbox, set inMemory directly to data
         if (data != null) {
             try {
                 OutputStream fos = createTempFileOutputStream();
@@ -409,7 +415,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
             }
             if ( f != null ) {
             	if(NavajoFactory.getInstance().isSandboxMode()) {
-                	currentFormatDescription = metadata.FormatIdentification.identify(NavajoFactory.getInstance().getHandle(f.getName()));
+                	currentFormatDescription = metadata.FormatIdentification.identify(inMemory);
             	} else {
                 	currentFormatDescription = metadata.FormatIdentification.identify(f);
             	}
@@ -460,44 +466,36 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
      */
     public final byte[] getData() {
 
-    	if (NavajoFactory.getInstance().isSandboxMode()) {
-			if(dataFile==null) {
-				return null;
-			} else {
-				byte[] bb= NavajoFactory.getInstance().getHandle(dataFile.getName());
-				return bb;
-			}
-		} else {
-	        RandomAccessFile in = null;
-
-	        File file = null;
-	        if (lazySourceFile != null) {
-	            file = lazySourceFile;
-	        } else {
-	            file = dataFile;
-	        }
-	        try {
-	            if (file != null) {
-	                in = new RandomAccessFile(file, "r");
-	                byte[] data = new byte[(int) file.length()];// + 1 ];
-	                in.readFully(data);
-	                return data;
-	            }
-	        } catch (Exception e) {
-	            e.printStackTrace(System.err);
-	        } finally {
-	            try {
-	                if (in != null) {
-	                    in.close();
-	                }
-	            } catch (IOException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	        return null;
+		if (inMemory != null) {
+			return inMemory;
 		}
-    	
-    	// return this.data;
+
+		File file = null;
+		if (lazySourceFile != null) {
+			file = lazySourceFile;
+		} else {
+			file = dataFile;
+		}
+		RandomAccessFile in = null;
+		try {
+			if (file != null) {
+				in = new RandomAccessFile(file, "r");
+				byte[] data = new byte[(int) file.length()];// + 1 ];
+				in.readFully(data);
+				return data;
+			}
+		} catch (Exception e) {
+			e.printStackTrace(System.err);
+		} finally {
+			try {
+				if (in != null) {
+					in.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
 
     }
 
@@ -546,10 +544,14 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     }
     
     public final InputStream getDataAsStream() {
-    	if (NavajoFactory.getInstance().isSandboxMode()) {
-    		ByteArrayInputStream bais = new ByteArrayInputStream(NavajoFactory.getInstance().getHandle(dataFile.getName()));
-    		return bais;
-    	} else {
+//    	if (NavajoFactory.getInstance().isSandboxMode()) {
+//    		ByteArrayInputStream bais = new ByteArrayInputStream(NavajoFactory.getInstance().getHandle(dataFile.getName()));
+//    		return bais;
+//    	} else {
+    		if(inMemory!=null) {
+    			System.err.println("Binary: in memory detected bytes: "+inMemory.length);
+    			return new ByteArrayInputStream(inMemory);
+    		}
 	        if (lazySourceFile != null) {
 	            try {
 	                return new FileInputStream(lazySourceFile);
@@ -568,7 +570,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 	        } else {
 	            return null;
 	        }
-		}
+//		}
     }
 
     /**
