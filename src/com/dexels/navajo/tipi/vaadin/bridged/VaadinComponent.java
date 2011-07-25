@@ -1,6 +1,5 @@
 package com.dexels.navajo.tipi.vaadin.bridged;
 
-import java.io.IOException;
 import java.util.Hashtable;
 
 import javax.servlet.ServletException;
@@ -10,7 +9,6 @@ import org.osgi.service.http.HttpContext;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
 
-import com.dexels.navajo.tipi.vaadin.application.InstallationPathResolver;
 import com.dexels.navajo.tipi.vaadin.application.servlet.TipiVaadinServlet;
 
 public class VaadinComponent {
@@ -36,17 +34,13 @@ public class VaadinComponent {
 			Hashtable<String,String> ht = new Hashtable<String,String>();
 			ht.put("application", "com.dexels.navajo.tipi.vaadin.application.TipiVaadinApplication");
 //			httpService.registerServlet(SERVLET_ALIAS, servlet, ht, null);
-			// TODO Fix hardcoded stuff
-			String path = InstallationPathResolver.getInstallationFromPath("/oao").get(0);
-			VaadinFileServlet vfs = new VaadinFileServlet(path);
+			VaadinFileServlet vfs = new VaadinFileServlet();
 			//httpService.registerResources("/VAADIN", path+"/VAADIN", commonContext);
 			httpService.registerServlet("/VAADIN", vfs, null, commonContext);
 			httpService.registerServlet(SERVLET_ALIAS, servlet, ht, commonContext);
 		} catch (ServletException e) {
 			e.printStackTrace();
 		} catch (NamespaceException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

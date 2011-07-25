@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,16 +18,45 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.tipi.vaadin.application.InstallationPathResolver;
+
 public class VaadinFileServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -8585205923703499272L;
 	private String path = null;
 	private static final Logger logger = LoggerFactory.getLogger(VaadinFileServlet.class); 
-	public VaadinFileServlet(String path) {
+	public VaadinFileServlet() {
+	}
+
+	public void setPath(String path) {
 		this.path = path;
 	}
 
-	
+
+
+
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		System.err.println("INITIALIZING VAADINFIL. cn: "+config.getServletContext().getServletContextName());
+		String contextPath = config.getServletContext().getContextPath();
+		if(contextPath.endsWith("null")) {
+			contextPath = contextPath.substring(0,contextPath.length()-4);
+		}
+		System.err.println("INITIALIZING VAADINFIL. cp: "+contextPath);
+		System.err.println("INITIALIZING VAADINFIL. info: "+config.getServletContext().getServerInfo());
+		try {
+			String path = InstallationPathResolver.getInstallationFromPath(contextPath).get(0);
+			setPath(path);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		super.init(config);
+	}
+
+
+
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		File f = new File(path);
