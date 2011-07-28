@@ -67,6 +67,12 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
       TIPI_PROPERTY, BINARY_PROPERTY, EXPRESSION_PROPERTY, PERCENTAGE_PROPERTY, STOPWATCHTIME_PROPERTY, LIST_PROPERTY
   };
 
+  
+  // maybe DATE_PATTERN_PROPERTY?
+  public static final String[] STRING_DATA_TYPES = new String[] {
+	  STRING_PROPERTY,MEMO_PROPERTY,PASSWORD_PROPERTY
+  };
+  
   //Binary data properties.
   //I am not sure what to do with these. Not supported by the studio
   /*

@@ -72,8 +72,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	protected String myValue = null;
 	private static final Logger logger = LoggerFactory.getLogger(Property.class);
 
-	@SuppressWarnings("serial")
 	protected final ArrayList<BaseSelectionImpl> selectionList = new ArrayList<BaseSelectionImpl>() {
+		private static final long serialVersionUID = 2460743050491944290L;
+
 		public String toString() {
 			if(size()==0) {
 				return Selection.DUMMY_ELEMENT;
@@ -276,6 +277,15 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		return evaluatedValue;
 	}
 
+	private boolean isStringType(String type) {
+		for (String c : STRING_DATA_TYPES) {
+			if(c.equals(type)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public final void clearValue() {
 		//setValue((String) null);
 		Object o  = getTypedValue();
@@ -350,7 +360,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			return;
 		}		
 		if (o instanceof String) {
-			setType(Property.STRING_PROPERTY);
+			if(!isStringType(getType())) {
+				setType(Property.STRING_PROPERTY);
+			}
 			setValue((String) o);
 			return;
 		}
@@ -1123,7 +1135,11 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 //		if(!old.equals(current))
 		
 		List<Selection> newValue = getAllSelectedSelections();
+
 		boolean isEqual = isEqual(old, newValue);
+		System.err.println("OLD: "+old);
+		System.err.println("NEW: "+newValue);
+		System.err.println("isEqual: "+isEqual);
 		if(!isEqual) { 
 			firePropertyChanged("selection", old,newValue);
 		}
