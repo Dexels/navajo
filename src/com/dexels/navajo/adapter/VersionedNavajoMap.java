@@ -17,6 +17,7 @@ package com.dexels.navajo.adapter;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.document.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class VersionedNavajoMap extends NavajoMap {
 
@@ -39,9 +40,9 @@ public class VersionedNavajoMap extends NavajoMap {
              Property.DIR_IN);
          confirm.addProperty(b);
 
-         ArrayList allMethods = ((com.dexels.navajo.document.jaxpimpl.NavajoImpl) inMessage).getAllMethods(inMessage.getMessageBuffer());
+         List<Method> allMethods = inMessage.getAllMethods();
          for (int i = 0; i < allMethods.size(); i++) {
-           Method m = (Method) allMethods.get(i);
+           Method m = allMethods.get(i);
            System.err.println("Adding method: " + m.getName());
            Method a = NavajoFactory.getInstance().createMethod(currentOutDoc,
                m.getName(), "");
@@ -72,7 +73,7 @@ public class VersionedNavajoMap extends NavajoMap {
   public static void main(String [] args) throws Exception {
      Navajo n = NavajoFactory.getInstance().createNavajo(new java.io.FileInputStream("/home/arjen/@@.tml"));
      n.write(System.err);
-     ArrayList l = ((com.dexels.navajo.document.jaxpimpl.NavajoImpl) n).getAllMethods(n.getMessageBuffer());
+     ArrayList l = n.getAllMethods();
      System.err.println("l = " + l.size());
      System.exit(1);
   }
