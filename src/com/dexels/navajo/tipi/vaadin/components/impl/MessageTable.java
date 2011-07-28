@@ -14,7 +14,6 @@ public class MessageTable extends Table {
 	private static final SimpleDateFormat dateFormat3 = new SimpleDateFormat( com.dexels.navajo.document.Property.DATE_FORMAT3 );
 
 	public MessageTable() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public MessageTable(String caption) {
