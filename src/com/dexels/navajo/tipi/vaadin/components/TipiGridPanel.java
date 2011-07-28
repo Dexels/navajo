@@ -132,9 +132,7 @@ public class TipiGridPanel extends TipiVaadinComponentImpl {
 		}
 
 		   private void setProperty(String key, String value, GridLayoutData myData) {
-		    	System.err.println("Setting layoutdata: "+key+" value: "+value);
 		    	if ("align".equals(key)) {
-		        	System.err.println("Alignment: "+value);
 		            myData.setAlignment(parseAlignment(value));
 		        }
 		        if ("padding".equals(key)) {

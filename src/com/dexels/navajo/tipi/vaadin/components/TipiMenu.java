@@ -70,6 +70,5 @@ public class TipiMenu extends TipiVaadinComponentImpl {
         super.setComponentValue(name, object);
     }
     public void addToContainer(Object c, Object constraints) {
-    	System.err.println("Warning: adding to menuitem!");
     }
 }
