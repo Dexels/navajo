@@ -62,7 +62,6 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 			throw new IllegalArgumentException("Can not add non-vaadin component to component: "+c);
 		}
 		if(this.layoutComponent!=null) {
-			System.err.println("Layout detected, adding to layout...");
 			addToLayoutContainer((Component)c,constraints);
 			return;
 		}
@@ -97,6 +96,10 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 		if(name.equals("enabled")) {
 			Boolean b = (Boolean) object;
 			getActualVaadinComponent().setEnabled(b);
+		}
+		if(name.equals("border")) {
+			String b = (String) object;
+			getActualVaadinComponent().setCaption(b);
 		}
 
 		super.setComponentValue(name, object);
