@@ -41,9 +41,9 @@ public class TipiBrowser extends TipiVaadinComponentImpl {
 
 	public Object createContainer() {
 
-		browser = new Embedded("Embedded browser");
+		browser = new Embedded();
 		browser.setType(Embedded.TYPE_BROWSER);
-
+		browser.setImmediate(true);
 		return browser;
 	}
 
@@ -51,6 +51,8 @@ public class TipiBrowser extends TipiVaadinComponentImpl {
         if ("url".equals(name)) {
         	String bare = ""+object;
         	setUrl(bare);
+        	
+        	return;
         }
         if ("binary".equals(name)) {
         	setBinary((Binary)object);
@@ -78,6 +80,7 @@ public class TipiBrowser extends TipiVaadinComponentImpl {
 			URL u = new URL(url);
 			ExternalResource er = new ExternalResource(u);
 			browser.setSource(er);
+			browser.requestRepaint();
 		} catch (MalformedURLException e) {
 			System.err.println("Not a regular url. Trying file: "+url);
 			File base = getVaadinApplication().getInstallationFolder();
