@@ -4,12 +4,14 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.notifier.SerializablePropertyChangeListener;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiEventListener;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.internal.PropertyComponent;
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
+import com.dexels.navajo.tipi.vaadin.document.SelectionBridge;
 import com.dexels.navajo.tipi.vaadin.document.SelectionListBridge;
 import com.dexels.navajo.tipi.vaadin.document.ValuePropertyBridge;
 import com.vaadin.data.Container.PropertySetChangeEvent;
@@ -19,15 +21,17 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.terminal.Sizeable;
+import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.PasswordField;
+import com.vaadin.ui.Select;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.TwinColSelect;
@@ -45,6 +49,10 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 	private PropertyChangeListener myChangeListener = null;
 	private boolean showLabel = false;
 	private boolean forceReadOnly;
+	private Integer width;
+	private String selectiontype = "combo";
+	private int memoColumnCount = 40;
+	private int memoRowCount = 5;
 	
 	@Override
 	public Object createContainer() {
@@ -86,14 +94,19 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 
 			@Override
 			public void propertyChange(PropertyChangeEvent pce) {
-				refreshPropertyValue();
+				if(!"selection".equals(pce.getPropertyName())) {
+					refreshPropertyValue();
+				}
 			}
 		};
 
 		this.property.addPropertyChangeListener(myChangeListener);
 		
 		this.refreshPropertyValue();
-	
+		if(this.width!=null) {
+			value.setWidth(this.width, Sizeable.UNITS_PIXELS);
+		}
+
 			//		value.setCaption("Caption: "+p.getDescription());
 	}
 	protected void refreshPropertyValue() {
@@ -114,7 +127,11 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 		}
 		if(com.dexels.navajo.document.Property.SELECTION_PROPERTY.equals(property.getType())) {
 			// create selection property
-			createSelectionProperty();
+			try {
+				createSelectionProperty();
+			} catch (NavajoException e) {
+				e.printStackTrace();
+			}
 		}
 		if(com.dexels.navajo.document.Property.DATE_PROPERTY.equals(property.getType())) {
 			// create date property
@@ -154,57 +171,78 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 		addPropertyComponent(df);
 		container.addComponent(df);
 	}
-	private void createSelectionProperty() {
+	private void createSelectionProperty() throws NavajoException {
 		if(com.dexels.navajo.document.Property.CARDINALITY_MULTIPLE.equals(property.getCardinality())) {
-			// TODO Add list selection and checkboxes
-			try {
-				value = new TwinColSelect("caption",property.getAllSelections());
-				addPropertyComponent(value);
-				TwinColSelect t = (TwinColSelect)value;
-				t.addListener(new PropertySetChangeListener() {
-					
-		
-					/**
-					 * 
-					 */
-					private static final long serialVersionUID = 1L;
+			createMultiSelect();
+		} else {
+			createSingleCardinality();
+		}
+	}
 
-					@Override
-					public void containerPropertySetChange(PropertySetChangeEvent event) {
-						System.err.println("CHAAAANGE");
-					}
-				});
-				//				value.set;
-
-			} catch (NavajoException e) {
-				e.printStackTrace();
+	protected void createMultiSelect() throws NavajoException {
+		SelectionListBridge selectionListBridge = new SelectionListBridge(property);
+		if("picklist".equals(selectiontype)) {
+			value = new TwinColSelect("caption",property.getAllSelections());
+		} else {
+			if("list".equals(selectiontype)) {
+				value = new ListSelect("",selectionListBridge);
+				((ListSelect)value).setMultiSelect(true);
+			} else {
+				value = new OptionGroup("",selectionListBridge);
+				((OptionGroup)value).setMultiSelect(true);
 			}
+		}
+		addPropertyComponent(value);
+		AbstractSelect t = (AbstractSelect)value;
+		t.addListener(new PropertySetChangeListener() {
 			
-			return;
-		}
-		createComboBox();
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void containerPropertySetChange(PropertySetChangeEvent event) {
+				System.err.println("CHAAAANGE");
+			}
+		});
 	}
 
 
-	@SuppressWarnings("unused")
-	private void createRadioButtonGroup() {
-		try {
-			OptionGroup o = new OptionGroup("", property.getAllSelections());
-			value = o;
-			container.addComponent(o);
-//			o.addListener()
-		} catch (NavajoException e) {
-			e.printStackTrace();
-		}
 
-	}
-	
-	private void createComboBox() {
-			value = new ComboBox("",new SelectionListBridge(property));
+	private void createSingleCardinality() {
+			SelectionListBridge selectionListBridge = new SelectionListBridge(property);
+//			SelectedItemValuePropertyBridge sivp = new SelectedItemValuePropertyBridge(property);
+			value = new Select("",selectionListBridge);
+			if("radio".equals(selectiontype)) {
+				value = new OptionGroup("",selectionListBridge);
+			} else {
+				value = new Select("",selectionListBridge);
+			}
+			final AbstractSelect t = (AbstractSelect)value;
+			
+			property.addPropertyChangeListener(new SerializablePropertyChangeListener() {
+				
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void propertyChange(PropertyChangeEvent pce) {
+					if(pce.getPropertyName().equals("selection")) {
+						System.err.println("Selection changed!");
+					}
+				}
+			});
+			
 //			value = new OptionGroup("Combo:",new SelectionListBridge(property));
-			final ComboBox t = (ComboBox)value;
 			t.setImmediate(true);
 			addPropertyComponent(value);
+			SelectionBridge selected = selectionListBridge.getSelected();
+			if(selected!=null) {
+				Property selectedName = selected.getItemProperty("name");
+				t.setValue(selectedName.getValue());
+			}
+			
 			t.addListener(new Property.ValueChangeListener() {
 				
 				private static final long serialVersionUID = 1696480526302969095L;
@@ -212,8 +250,13 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 				@Override
 				public void valueChange(ValueChangeEvent event) {
 					try {
-						System.err.println("Value: "+event.getProperty().getValue());
-						property.setSelected(property.getSelection((String) (event.getProperty().getValue())));
+						System.err.println("Value: "+event.getProperty());
+//						t.setValue(newValue)
+						Selection ss = property.getSelection((String) event.getProperty().getValue());
+						System.err.println("Sel: "+ss);
+						property.setSelected(ss);
+//						property.setSelected(((SelectionBridge)event.getProperty().getValue()).getSource());
+//						property.setSelected(property.getSelection((String) (event.getProperty().getValue())));
 						performTipiEvent("onValueChanged", null, true);
 					} catch (TipiBreakException e) {
 						e.printStackTrace();
@@ -236,8 +279,9 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 			p = new PasswordField(new ValuePropertyBridge(property));
 		} else {
 			if(com.dexels.navajo.document.Property.MEMO_PROPERTY.equals(property.getType())) {
-				// TODO Test
 				p = new TextArea(new ValuePropertyBridge(property));
+				p.setColumns(this.memoColumnCount);
+				((TextArea)p).setRows(this.memoRowCount);
 			} else {
 				p = new TextField(new ValuePropertyBridge(property));
 							
@@ -302,6 +346,9 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 		if(name.equals("alwaysUseLabel")) {
 			this.forceReadOnly  = (Boolean)object;
 		}		
+		if(name.equals("selectiontype")) {
+			this.selectiontype   = (String)object;
+		}		
 		if(name.equals("showlabel")) {
 			this.showLabel  = (Boolean)object;
 		}
@@ -313,7 +360,22 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 			this.label_indent = (Integer) object;
 			description.setWidth(this.label_indent, Sizeable.UNITS_PIXELS);
 		}
+		if(name.toLowerCase().equals("memoColumnCount")) {
+			this.memoColumnCount = (Integer) object;
+		}
+		if(name.toLowerCase().equals("memoRowCount")) {
+			this.memoRowCount = (Integer) object;
+		}
 
+		if(name.toLowerCase().equals("width")) {
+			this.width = (Integer) object;
+			if(value!=null) {
+				value.setWidth(this.width, Sizeable.UNITS_PIXELS);
+				
+			}
+		}
+
+		
 		if(name.equals("visible")) {
 			this.container.setVisible((Boolean)object);
 		}
