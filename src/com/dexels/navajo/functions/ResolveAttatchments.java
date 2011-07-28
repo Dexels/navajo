@@ -15,9 +15,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.parser.*;
+import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.parser.TMLExpressionException;
+
 
 public class ResolveAttatchments extends FunctionInterface {
 
@@ -74,7 +74,7 @@ public class ResolveAttatchments extends FunctionInterface {
 			return result;
 		}
 		
-		fixImageTags(doc, new ArrayList(), expression);
+		fixImageTags(doc, new ArrayList<Element>(), expression);
 
 		StringWriter sw = new StringWriter();
 		try {
@@ -96,14 +96,14 @@ public class ResolveAttatchments extends FunctionInterface {
 	}
 
 	
-	public  void fixImageTags(Node n, List imageTagList, String expression) {
+	public  void fixImageTags(Node n, List<Element> imageTagList, String expression) {
 		// System.err.println("Checking image tag: "+n.getNodeName());
 		// System.err.println("Checking image type: "+n.getNodeType());
 		// System.err.println("Checking image value: "+n.getNodeValue());
 		if (n instanceof Document) {
 			NodeList v = n.getChildNodes();
 			for (int i = 0; i < v.getLength(); i++) {
-				Node element = (Node) v.item(i);
+				Node element = v.item(i);
 				fixImageTags(element, imageTagList, expression);
 			}
 		}
@@ -116,7 +116,7 @@ public class ResolveAttatchments extends FunctionInterface {
 			}
 			NodeList v = x.getChildNodes();
 			for (int i = 0; i < v.getLength(); i++) {
-				Node element = (Node) v.item(i);
+				Node element = v.item(i);
 				fixImageTags(element, imageTagList,expression);
 			}
 		}

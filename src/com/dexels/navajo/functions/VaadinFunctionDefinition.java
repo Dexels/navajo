@@ -1,7 +1,6 @@
 package com.dexels.navajo.functions;
 
 import java.io.InputStream;
-import java.util.LinkedList;
 import java.util.List;
 
 import navajo.ExtensionDefinition;
