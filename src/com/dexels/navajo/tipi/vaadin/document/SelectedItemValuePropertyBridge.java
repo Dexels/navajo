@@ -5,22 +5,36 @@ import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.notifier.SerializablePropertyChangeListener;
 import com.vaadin.data.Property;
 
-public class ValuePropertyBridge implements Property, Property.ValueChangeNotifier {
+public class SelectedItemValuePropertyBridge implements Property, Property.ValueChangeNotifier {
 	private static final long serialVersionUID = -5696589046516267159L;
 	private final Map<ValueChangeListener,SerializablePropertyChangeListener> listenerMap = new HashMap<ValueChangeListener,SerializablePropertyChangeListener>();
 	private final com.dexels.navajo.document.Property src;
 	
-	public ValuePropertyBridge(com.dexels.navajo.document.Property src) {
+	public SelectedItemValuePropertyBridge(com.dexels.navajo.document.Property src) {
 		this.src = src;
+		if(!com.dexels.navajo.document.Property.SELECTION_PROPERTY.equals(src.getType())) {
+			throw new UnsupportedOperationException("Can not create a SelectedItemValuePropertyBridge with a non selection property.");
+		}
 	}
 	
 	@Override
 	public Object getValue() {
-		return src.getTypedValue();
+		try {
+			Selection selected = src.getSelected();
+			if(selected!=null) {
+				return selected.getValue();
+			}
+			return null;
+		} catch (NavajoException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	@Override
@@ -28,12 +42,14 @@ public class ValuePropertyBridge implements Property, Property.ValueChangeNotifi
 		if(src.isDirOut()) {
 			throw new ReadOnlyException();
 		}
-		String oldType = src.getType();
-		src.setAnyValue(newValue);
-		String newType = src.getType();
-		if(!oldType.equals(newType)) {
-			System.err.println("TYPE CHANGED. BAD NEWS. OLD: "+oldType+" new: "+newType);
+		try {
+			Selection found = src.getSelectionByValue((String) newValue);
+			src.setSelected(found);
+		} catch (NavajoException e) {
+			e.printStackTrace();
+			throw new ConversionException("Problem resolving selected property.");
 		}
+
 	}
 
 	@Override
@@ -68,7 +84,7 @@ public class ValuePropertyBridge implements Property, Property.ValueChangeNotifi
 
 					@Override
 					public Property getProperty() {
-						return ValuePropertyBridge.this;
+						return SelectedItemValuePropertyBridge.this;
 					}
 				});
 			}

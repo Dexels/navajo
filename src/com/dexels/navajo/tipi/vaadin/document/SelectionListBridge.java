@@ -69,6 +69,16 @@ public class SelectionListBridge implements Container {
 		return mb.getItemProperty(propertyId);
 	}
 
+	public SelectionBridge getSelected() {
+		for (Object n : selectionList) {
+			SelectionBridge sb = selectionMap.get(n);
+			if(sb.isSelected()) {
+				return sb;
+			}
+		}
+		return null;
+	}
+	
 	@Override
 	public Class<?> getType(Object propertyId) {
 		
@@ -77,7 +87,7 @@ public class SelectionListBridge implements Container {
 
 	@Override
 	public int size() {
-		System.err.println("Getting size: "+selectionMap);
+		System.err.println("Getting size: "+selectionMap.size());
 		return selectionMap.size();
 	}
 

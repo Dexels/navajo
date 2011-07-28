@@ -48,6 +48,10 @@ public class SelectionBridge implements Item {
 		return null;
 	}
 
+	public boolean isSelected() {
+		return isSelected.getValue();
+	}
+	
 	@Override
 	public Collection<?> getItemPropertyIds() {
 		List<String> res = new ArrayList<String>();

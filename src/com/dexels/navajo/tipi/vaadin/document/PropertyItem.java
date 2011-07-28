@@ -18,7 +18,7 @@ public class PropertyItem implements Item {
 	private final String[] aspects = new String[]{Property.PROPERTY_VALUE,Property.PROPERTY_TYPE,Property.PROPERTY_DESCRIPTION,Property.PROPERTY_CARDINALITY,Property.PROPERTY_DIRECTION,Property.PROPERTY_LENGTH};
 	private final Collection<Object> aspectCollection = new ArrayList<Object>();
 	
-	private final ValuePropertyBridge valueProperty;
+	private final com.vaadin.data.Property valueProperty;
 	
 	public PropertyItem(Property src) {
 		this.src = src;
@@ -27,14 +27,19 @@ public class PropertyItem implements Item {
 			aspectMap.put(aspect, asp);
 			aspectCollection.add(aspect);
 		}
-		this.valueProperty = new ValuePropertyBridge(src);
-		aspectMap.put(Property.PROPERTY_VALUE, this.valueProperty);
+		if(Property.SELECTION_PROPERTY.equals(src.getType())) {
+			this.valueProperty = new SelectedItemValuePropertyBridge(src);
+			aspectMap.put(Property.PROPERTY_VALUE, this.valueProperty);
+		} else {
+			this.valueProperty = new ValuePropertyBridge(src);
+			aspectMap.put(Property.PROPERTY_VALUE, this.valueProperty);
+		}
 	}
 
 	@Override
 	public com.vaadin.data.Property getItemProperty(Object id) {
-		System.err.println("GETTING: "+id);
 		if(Property.PROPERTY_VALUE.equals(id)) {
+			System.err.println("");
 			return this.valueProperty;
 		}
 		return aspectMap.get(id);

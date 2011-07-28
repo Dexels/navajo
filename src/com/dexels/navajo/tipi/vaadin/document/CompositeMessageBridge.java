@@ -33,7 +33,6 @@ public class CompositeMessageBridge extends CompositeItem implements Item {
 	
 	@Override
 	public Property getItemProperty(Object id) {
-		System.err.println("ID: "+id);
 		StringTokenizer st = new StringTokenizer((String) id,"@");
 		String propertyName = st.nextToken();
 		String propertyAspect = st.nextToken();

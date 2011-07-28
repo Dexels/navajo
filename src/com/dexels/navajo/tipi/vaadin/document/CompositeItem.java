@@ -35,7 +35,6 @@ public abstract class CompositeItem implements Item {
 				results.add(entry.getKey()+"@"+subItemId);
 			}
 		}
-		System.err.println("ITEMIDS: "+results);
 		return results;
 	}
 	

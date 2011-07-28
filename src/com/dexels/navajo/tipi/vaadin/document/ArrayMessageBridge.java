@@ -146,24 +146,15 @@ public class ArrayMessageBridge implements Container {
 
 	@Override
 	public boolean removeItem(Object itemId) throws UnsupportedOperationException {
-//		Item mb = messageMap.get(itemId);
 		messageMap.remove(itemId);
-//		Message mm = mb.getSource();
-//		if(mm!=null) {
-//			src.removeMessage(mm);
-//			return true;
-//		}
-//		return false;
 		throw new UnsupportedOperationException("Cant do this just yet.");
 	}
 
 	@Override
 	public boolean addContainerProperty(Object propertyId, Class<?> type, Object defaultValue)
 			throws UnsupportedOperationException {
-		System.err.println("ADDING CONTAINER PROPERTY: "+propertyId+" type: "+type+" def: "+defaultValue);
 		Property p = new AdHocProperty(defaultValue, type);
 		containerProperties.put(propertyId, p);
-//		throw new UnsupportedOperationException("Can not add properties to container using VAADIN data model!");
 		return true;
 	}
 

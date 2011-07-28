@@ -48,37 +48,21 @@ public class CompositeArrayContainer extends ArrayMessageBridge {
 		// If no column names have been defined, try do generate a list based on the example message
 		
 		List<Object> columnHeaders = new ArrayList<Object>();
-//		if(m==null) {
-//			return visibleColumns;
-//		}
-		System.err.println("VisibleColumns: "+visibleColumns);
 		
 		if(visibleColumns!=null) {
 			for (String column : visibleColumns) {
 
 				StringTokenizer st = new StringTokenizer(column,"@");
 				String propertyName = st.nextToken();
-//				String propertyAspect = st.nextToken();
 
-				Property pp =  definitionMessage.getItemProperty(propertyName+"@value");
-				if(pp!=null) {
-					System.err.println("pp: "+pp.getValue());
-				}
+//				Property pp =  definitionMessage.getItemProperty(propertyName+"@value");
+//				if(pp!=null) {
+//					System.err.println("pp: "+pp.getValue());
+//				}
 				columnHeaders.add(propertyName+"@value");
 			}
 			return columnHeaders;
-//			return cmb.getItemPropertyIds();
-//			return visibleColumns;
 		}
-
-		
-//		if(m==null) {
-//			return columnHeaders;
-//		}
-//		List<com.dexels.navajo.document.Property> props = m.getAllProperties();
-//		for (com.dexels.navajo.document.Property property : props) {
-//			columnHeaders.add(property.getName());
-//		}
 		return columnHeaders;
 	}
 
