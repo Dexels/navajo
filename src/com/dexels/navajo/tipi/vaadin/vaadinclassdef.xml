@@ -31,6 +31,10 @@
 			<description>
 			</description>
 		</value>
+         <value direction="in" name="border" type="string"  >
+			<description>
+			</description>
+		</value>
          <value direction="in" name="style" type="string"  >
 			<description>
 				Maps to VAADIN style
@@ -156,6 +160,9 @@
 			<value direction="in" name="y" type="integer" />
 			<value direction="in" name="h" type="float" />
 			<value direction="in" name="w" type="float" />
+			<value direction="in" name="closable" type="boolean" />
+			<value direction="in" name="resizable" type="boolean" />
+			
 		</values>
 		<methods>
 			<method name="show" />
@@ -176,10 +183,38 @@
 			<value direction="in" name="y" type="integer" />
 			<value direction="in" name="h" type="float" />
 			<value direction="in" name="w" type="float" />
+			<value direction="in" name="closable" type="boolean" />
+			<value direction="in" name="resizable" type="boolean" />
 		</values>
 		<methods>
 		</methods>
 	</tipiclass>
+
+
+    <tipiclass addtocontainer="true" childcount="1" class="TipiScroll" layoutmanager="false"
+        module="container" name="scroll" package="com.dexels.navajo.tipi.vaadin.components"
+        studio-icon="scroll.gif" type="tipi">
+        <events>
+            <event name="onInstantiate"/>
+        </events>
+        <values>
+            <value direction="inout" name="horizontal_policy" type="selection">
+                <option description="As needed" value="as_needed"/>
+                <option description="Always" value="always"/>
+                <option description="Never" value="never"/>
+            </value>
+            <value direction="inout" name="vertical_policy" type="selection">
+                <option description="As needed" value="as_needed"/>
+                <option description="Always" value="always"/>
+                <option description="Never" value="never"/>
+            </value>
+            <value direction="in" name="w" type="integer"/>
+    	    <value direction="in" name="h" type="integer"/>
+            <value direction="in" name="style" type="string"/>
+    	    
+        </values>
+        <methods/>
+    </tipiclass>
 
 
 	<tipiclass class="TipiGridPanel" name="gridpanel" implements="basecomponent,datacomponent,vaadincomponent"  package="com.dexels.navajo.tipi.vaadin.components"
@@ -404,6 +439,103 @@
         </methods>
     </tipiclass>
    
+   
+       <tipiclass addtocontainer="true" childcount="*" class="TipiQuestion" layoutmanager="true" implements="basecomponent,datacomponent,vaadincomponent"
+        module="data" name="tipiquestion" package="com.dexels.navajo.tipi.vaadin.components"
+        studio-icon="tipitable.gif" type="tipi">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad">
+                <param name="service" type="string"/>
+            </event>
+              <!-- todo: implement -->
+            <event name="onValueChanged"/>
+        </events>
+        <values>
+            <value direction="inout" name="messagePath" type="string"/>
+            <value direction="inout" name="questionDefinitionName" type="string"/>
+            <value direction="inout" name="questionGroupPath" type="object"/>
+            <value direction="inout" name="columnWidth" type="string"/>
+            <value direction="in" name="subQuestionPath" type="string"/>
+      </values>
+        <methods>
+            <method name="print"/>
+            <method name="selectNext"/>
+            <method name="selectPrevious"/>
+            <method name="selectFirst"/>
+            <method name="selectLast"/>
+               </methods>
+    </tipiclass>
+    <tipiclass addtocontainer="true" childcount="*" class="TipiQuestionGroup" layoutmanager="true"  implements="basecomponent,datacomponent,vaadincomponent"
+        module="data" name="tipiquestiongroup" package="com.dexels.navajo.tipi.vaadin.components"
+        studio-icon="tipitable.gif" type="tipi">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad">
+                <param name="service" type="string"/>
+            </event>
+        </events>
+        <values>
+            <value direction="inout" name="messagePath" type="string"/>
+            <value direction="inout" name="questionDefinitionName" type="string"/>
+            <value direction="inout" name="questionGroupDefinitionName" type="string"/>
+            <value direction="in" name="valid" type="boolean"/>
+            <value direction="out" name="description" type="string"/>
+            <value direction="inout" name="columnWidth" type="string"/>
+			<!-- The component the actual questions will be added to-->
+            <value direction="inout" name="subComponent" type="string"/>
+            <!-- with the following constraint -->
+            <value direction="inout" name="subConstraint" type="string"/>
+            <value direction="in" name="subQuestionPath" type="string"/>            
+    </values>
+    </tipiclass>
+
+ 
+    
+    <tipiclass addtocontainer="true" childcount="*" class="TipiTabbedQuestionList" layoutmanager="true"  implements="basecomponent,datacomponent,vaadincomponent"
+        module="data" name="tipitabbedquestionlist" package="com.dexels.navajo.tipi.vaadin.components"
+        studio-icon="tipitable.gif" type="tipi">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad">
+                <param name="service" type="string"/>
+            </event>
+            <event name="onValidationChanged">
+                <param name="valid" type="boolean"/>
+            </event>
+        </events>
+        <values>
+            <value direction="in" name="messagePath" type="string"/>
+            <value direction="in" name="questionDefinitionName" type="string"/>
+            <value direction="in" name="questionGroupDefinitionName" type="string"/>
+            <value direction="in" name="valid" type="boolean"/>
+            <value direction="out" name="currentPage" type="integer"/>
+        </values>
+        <methods>
+            <method name="flatten">
+                <param name="serviceName" type="string"/>
+                <param name="serviceUrl" type="string"/>
+                <param name="pincode" type="string"/>
+                <param name="keystore" type="string"/>
+                <param name="keypass" type="string"/>
+            </method>
+            <method name="print">
+                <param name="printJob" type="object"/>
+                <param name="header" type="string"/>
+                <param name="footer" type="string"/>
+            </method>
+            <method name="printpreview">
+                <param name="printJob" type="object"/>
+                <param name="header" type="string"/>
+                <param name="footer" type="string"/>
+            </method>
+        </methods>
+    </tipiclass>    
+
+   
+   
+   
+   
 
 
 	<tipiaction name="openBinary" class="TipiOpenBinary" package="com.dexels.navajo.tipi.vaadin.actions">
@@ -424,5 +556,11 @@
 
 	<tipiclass class="TipiBorderLayout" name="border" package="com.dexels.navajo.tipi.vaadin.layout" type="layout" />
 	<tipiclass class="TipiFlowLayout" name="flow" package="com.dexels.navajo.tipi.vaadin.layout" type="layout" />
+
+
+   <tipi-parser name="border" parser="com.dexels.navajo.tipi.vaadin.components.parsers.BorderParser" type="java.lang.String" />
+
+
+
 
 </tid>

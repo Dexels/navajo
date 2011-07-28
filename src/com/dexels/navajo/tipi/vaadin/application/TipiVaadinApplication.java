@@ -11,6 +11,8 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -33,6 +35,7 @@ import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.vaadin.VaadinTipiContext;
+import com.dexels.navajo.tipi.vaadin.application.eval.EvalHandler;
 import com.dexels.navajo.tipi.vaadin.components.io.BufferedInputStreamSource;
 import com.dexels.navajo.tipi.vaadin.components.io.URLInputStreamSource;
 import com.dexels.navajo.tipi.vaadin.cookie.BrowserCookieManager;
@@ -62,6 +65,7 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 	private final TipiExtensionRegistry extensionRegistry = new TipiExtensionRegistry();
 
 	private boolean isRunningInGae = false;
+	private transient Timer shutdownTimer = null;
 	
 
 	@Override
@@ -79,12 +83,15 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 			componentContainer.setSizeFull();
 			final Window mainWindow = new Window("Tipi Vaadin", componentContainer);
 			setMainWindow(mainWindow);
+			EvalHandler eval = new EvalHandler(this);
+			mainWindow.addParameterHandler(eval);
+			mainWindow.addURIHandler(eval);
 			if (isRunningInGae()) {
 				// extensionRegistry = new TipiExtensionRegistry();
 				TipiCoreExtension tce = new TipiCoreExtension();
 				TipiVaadinExtension tve = new TipiVaadinExtension();
-				tce.loadDescriptor();
-				tve.loadDescriptor();
+//				tce.loadDescriptor();
+//				tve.loadDescriptor();
 				// special case for TipiCoreExtension, as it is not the bundle
 				// activator
 				// TODO Maybe refactor
@@ -105,17 +112,42 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 
 				@Override
 				public void windowClose(CloseEvent e) {
-					System.err.println("Window close detected: TODO: Handle + close session");
+					System.err.println("WINDOW CLOSE EVENT DETECTED!");
+					handleWindowClose();
+					
 				}
 			});
 
 			// checkForExtensions();
 //			testSerializability(this);
-			System.err.println("END OF INIT");
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
 	}
+
+	protected void handleWindowClose() {
+		if(!isRunningInGae()) {
+			 shutdownTimer  = new Timer("DisconnectTimer",true);
+			 shutdownTimer.schedule(new TimerTask(){
+
+				@Override
+				public void run() {
+					System.err.println("Shutdown firing!");
+					getCurrentContext().shutdown();
+					close();
+					logger.info("Shutting down instance. Goodbye");
+				}}, 10000);
+		}
+	}
+
+	private void cancelShutdownTimer() {
+		if(shutdownTimer!=null) {
+			logger.info("Assuming reload. Cancelling shutdown.");
+			shutdownTimer.cancel();
+			shutdownTimer = null;
+		}
+	}
+
 
 	protected void testSerializability(Object element) {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -304,6 +336,10 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 	public void dispose(TipiContext t) {
 
 	}
+	
+	public void setEvalUrl(URL context, String relativeUri) {
+		((VaadinTipiContext)getCurrentContext()).setEvalUrl(context, relativeUri);
+	}
 
 	@Override
 	public String getDefinition() {
@@ -365,7 +401,14 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 			}
 		}
 
+		if(!isRunningInGae()) {
+			cancelShutdownTimer();
+		}
 	}
+
+
+
+
 
 	@Override
 	public void onRequestEnd(HttpServletRequest request, HttpServletResponse response) {
@@ -444,6 +487,7 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 		bout.flush();
 		bout.close();
 	}
+
 	
 	
 	

@@ -1,6 +1,10 @@
 package com.dexels.navajo.tipi.vaadin;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -24,9 +28,10 @@ public class VaadinTipiContext extends TipiContext {
 	private static Logger logger = LoggerFactory.getLogger(VaadinTipiContext.class);
 	
 	private Window mainWindow;
-
-
+	private URL evalUrl;
 	private String contextName = null;
+	private final java.util.Random randomizer = new java.util.Random(System.currentTimeMillis());
+
 	
 	public VaadinTipiContext(TipiApplicationInstance myApplication, List<TipiExtension> extensionList) {
 		super(myApplication, extensionList, null);
@@ -135,5 +140,34 @@ public class VaadinTipiContext extends TipiContext {
 		return (TipiVaadinApplication) this.getApplicationInstance();
 	}
 
+
+
+	public URL getEvalUrl(String expression) {
+		try {
+			String encoded = URLEncoder.encode(expression,"UTF-8");
+			URL eval = new URL(evalUrl,"eval");
+			String s = eval.toString()+"?rdm="+randomizer.nextLong()+"&evaluate="+encoded;
+			return new URL(s);
+
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public void setEvalUrl(URL context, String relativeUri) {
+		try {
+			evalUrl = new URL(context,relativeUri);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		
+	}	
 	
+	public String createExpressionUrl(String expression) {
+		return getEvalUrl(expression).toString();
+	}
+
 }
