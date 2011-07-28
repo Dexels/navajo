@@ -18,7 +18,8 @@ public class TipiWindow extends TipiVaadinComponentImpl {
 		window = new Window("",componentContainer);
 		window.setPositionX(30);
 		window.setPositionY(30);
-//		window.setWidth(200, Sizeable.UNITS_PIXELS);
+		window.setScrollable(true);
+		//		window.setWidth(200, Sizeable.UNITS_PIXELS);
 //		window.setHeight(200, Sizeable.UNITS_PIXELS);
 
 //		window.addListener(new Window.ResizeListener() {
@@ -82,6 +83,12 @@ public class TipiWindow extends TipiVaadinComponentImpl {
 		        }
 		        if ("visible".equals(name)) {
 		        	window.setVisible((Boolean) object);
+		        }
+		        if ("closable".equals(name)) {
+		        	window.setClosable((Boolean) object);
+		        }
+		        if ("resizable".equals(name)) {
+		        	window.setResizable((Boolean) object);
 		        }
 
 		       

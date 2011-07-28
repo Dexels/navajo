@@ -51,8 +51,12 @@ public class TipiDialog extends TipiVaadinComponentImpl {
 		        if ("y".equals(name)) {
 		        	dialog.setPositionY((Integer) object);
 		        }
-
-		       
+		        if ("closable".equals(name)) {
+		        	dialog.setClosable((Boolean) object);
+		        }
+		        if ("resizable".equals(name)) {
+		        	dialog.setResizable((Boolean) object);
+		        }
 		  }
 	
 	    protected synchronized void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
