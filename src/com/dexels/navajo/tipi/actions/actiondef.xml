@@ -254,10 +254,6 @@
       <param name="context" type="context" required="false" />
       <param name="service" type="string" required="false" />
    </tipiaction>
-   <tipiaction name="loadExtensions" class="TipiLoadExtensions" package="com.dexels.navajo.tipi.actions">
-      <param name="context" type="context" required="false" />
-      <param name="service" type="string" required="false" />
-   </tipiaction>
    <tipiaction name="declareAlias" class="TipiDeclareAlias" package="com.dexels.navajo.tipi.actions">
       <param name="name" type="string" required="true" />
       <param name="value" type="string" required="true" />
