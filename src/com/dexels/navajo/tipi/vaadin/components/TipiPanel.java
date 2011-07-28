@@ -10,7 +10,8 @@ public class TipiPanel extends TipiVaadinComponentImpl {
 
 	@Override
 	public Object createContainer() {
-		return new VerticalLayout();
+		Component panel = new VerticalLayout();
+		return panel;
 	}
 
 	@Override
