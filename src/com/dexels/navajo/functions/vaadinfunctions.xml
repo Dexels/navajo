@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<functiondef>
+    <function name="CreateEchoMailUrl" class="com.dexels.navajo.functions.CreateEchoMailUrl">
+        <description>.</description>
+        <input>context,navajo</input>
+        <result>string</result>
+    </function>
+
+    <function name="StripBody" class="com.dexels.navajo.functions.StripBody">
+        <description>Get the next month as a date object, where supplied integer is an offset for the current year.</description>
+        <input>string</input>
+        <result>string</result>
+    </function>
+    <function name="CreateEchoUrl" class="com.dexels.navajo.functions.CreateEchoUrl">
+        <description>Get the next month as a date object, where supplied integer is an offset for the current year.</description>
+        <input>context,string</input>
+        <result>string</result>
+    </function>
+</functiondef>
