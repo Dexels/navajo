@@ -62,7 +62,6 @@ import com.dexels.navajo.tipi.components.core.TipiThread;
 import com.dexels.navajo.tipi.components.core.TipiThreadPool;
 import com.dexels.navajo.tipi.connectors.HttpNavajoConnector;
 import com.dexels.navajo.tipi.connectors.TipiConnector;
-import com.dexels.navajo.tipi.extension.ExtensionManager;
 import com.dexels.navajo.tipi.internal.BaseTipiErrorHandler;
 import com.dexels.navajo.tipi.internal.ClassPathResourceLoader;
 import com.dexels.navajo.tipi.internal.DescriptionProvider;
@@ -632,13 +631,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		String cfg = (String) attemptGenericEvaluate(config.getStringAttribute(
 				"config", "'server.xml'"));
 		setSystemProperty("tipi.client.config", cfg, false);
-		Object secure = attemptGenericEvaluate(config.getStringAttribute(
-				"secure", "false"));
-		boolean secureBoolean = false;
-		if (secure != null && secure instanceof Boolean) {
-			setSystemProperty("tipi.client.secure", "" + secure, false);
-			secureBoolean = ((Boolean) secure).booleanValue();
-		}
 
 		String locale = (String) attemptGenericEvaluate(config
 				.getStringAttribute("locale", "'en'"));
@@ -1679,12 +1671,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		topScreen = tc;
 	}
 
-	public void closeAll() {
-		tipiComponentMap.clear();
-		tipiInstanceMap.clear();
-		// tipiClassMap.clear();
-		getClassManager().clearClassMap();
-	}
+
 
 	public void switchToDefinition(String name) throws TipiException {
 		clearTopScreen();
@@ -2465,22 +2452,30 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	public void shutdown() {
 		// prevent multishutdown
 		if (contextShutdown) {
+			logger.warn("Already shutting down. Please stand by.");
 			return;
 		}
 
 		if (myThreadPool != null) {
+			logger.info("Shutting down threadpool. # of poolthreads: "+getPoolSize());
 			myThreadPool.shutdown();
 		}
+		
 		for (ShutdownListener s : shutdownListeners) {
 			s.contextShutdown();
 		}
 		contextShutdown = true;
-		Thread shutdownThread = new Thread("TipiShutdown") {
-			public void run() {
-				myThreadPool.waitForAllThreads();
-			}
-		};
-		shutdownThread.start();
+		if(getPoolSize()>0) {
+			Thread shutdownThread = new Thread("TipiShutdown") {
+				public void run() {
+					myThreadPool.waitForAllThreads();
+					logger.info("done.");
+
+				}
+			};
+			logger.info("Blocking until all threads are gone...");
+			shutdownThread.start();
+		}
 
 
 
@@ -2856,68 +2851,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		return n;
 	}
 
-	public Navajo createExtensionNavajo() throws NavajoException {
-		// Overview/InjectionName
-		Navajo n = NavajoFactory.getInstance().createNavajo();
-		n.addHeader(NavajoFactory.getInstance().createHeader(n, "Extension",
-				"", "", -1));
-		Message overview = NavajoFactory.getInstance().createMessage(n,
-				"Overview");
-		n.addMessage(overview);
-		Property overviewProperty = NavajoFactory.getInstance().createProperty(
-				n, "Overview", Property.CARDINALITY_MULTIPLE, "",
-				Property.DIR_OUT);
-		overview.addProperty(overviewProperty);
-
-		for (TipiExtension te : coreExtensionList) {
-			Selection s = NavajoFactory.getInstance().createSelection(n,
-					te.getDescription(), te.getId(), false);
-			overviewProperty.addSelection(s);
-		}
-
-		Property connectors = NavajoFactory.getInstance().createProperty(n,
-				"DevelopConnector", Property.CARDINALITY_SINGLE, "",
-				Property.DIR_IN);
-		overview.addProperty(connectors);
-		Property injection = NavajoFactory.getInstance().createProperty(n,
-				"InjectionName", Property.STRING_PROPERTY, "", 0,
-				"Injection name", Property.DIR_IN);
-		overview.addProperty(injection);
-		for (String conString : tipiConnectorMap.keySet()) {
-			Selection s = NavajoFactory.getInstance().createSelection(n,
-					conString, conString,
-					conString.equals(getDefaultConnector().getConnectorId()));
-			connectors.addSelection(s);
-		}
-		for (TipiExtension te : coreExtensionList) {
-			Selection s = NavajoFactory.getInstance().createSelection(n,
-					te.getDescription(), te.getId(), false);
-			overviewProperty.addSelection(s);
-		}
-
-		for (TipiExtension te : mainExtensionList) {
-			Selection s = NavajoFactory.getInstance().createSelection(n,
-					te.getDescription(), te.getId(), false);
-			overviewProperty.addSelection(s);
-		}
-		for (TipiExtension te : optionalExtensionList) {
-			Selection s = NavajoFactory.getInstance().createSelection(n,
-					te.getDescription(), te.getId(), false);
-			overviewProperty.addSelection(s);
-		}
-		ExtensionManager
-				.addExtensionMessage(this, n, coreExtensionList, "Core");
-		ExtensionManager
-				.addExtensionMessage(this, n, mainExtensionList, "Main");
-		ExtensionManager.addExtensionMessage(this, n, optionalExtensionList,
-				"Options");
-
-		ExtensionManager
-				.addConnectorMessage(this, n, tipiConnectorMap.keySet());
-
-		return n;
-	}
-
+	
 	public void link(final Property master, final Property slave) {
 
 		if (master == slave) {

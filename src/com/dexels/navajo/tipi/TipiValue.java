@@ -6,9 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
@@ -35,7 +32,7 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
 public class TipiValue implements Serializable {
 
 	private static final long serialVersionUID = 3803476438347607550L;
-	private static final Logger logger = LoggerFactory.getLogger(TipiValue.class);
+//	private static final Logger logger = LoggerFactory.getLogger(TipiValue.class);
 	private String name = null;
 
 	private String type = null;
@@ -219,18 +216,18 @@ public class TipiValue implements Serializable {
 		return required;
 	}
 
-	public boolean isValidSelectionValue(String selectionValue) {
-		if (selectionMap != null) {
-			if (selectionMap.get(selectionValue) != null) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public String getSelectionDescription(String selectionValue) {
-		return selectionMap.get(selectionValue);
-	}
+//	public boolean isValidSelectionValue(String selectionValue) {
+//		if (selectionMap != null) {
+//			if (selectionMap.get(selectionValue) != null) {
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
+//
+//	public String getSelectionDescription(String selectionValue) {
+//		return selectionMap.get(selectionValue);
+//	}
 
 	public String getValidSelectionValues() {
 		String values = "";

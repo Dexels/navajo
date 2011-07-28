@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.tipi.internal.TipiEvent;
-import com.dexels.navajo.tipi.internal.TipiLayout;
 
 /**
  * <p>
@@ -43,15 +42,7 @@ public interface TipiDataComponent extends TipiComponent {
 
 	public List<String> getServices();
 
-	public void addService(String service);
-
-	public void removeService(String service);
-
-	public void clearProperties();
-
 	public boolean loadErrors(Navajo n, String method);
-
-	public void replaceLayout(TipiLayout tl);
 
 	public void refreshLayout();
 

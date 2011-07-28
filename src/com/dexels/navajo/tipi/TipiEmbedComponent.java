@@ -26,6 +26,7 @@ import com.dexels.navajo.tipi.internal.ZipResourceLoader;
 
 public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 
+	private static final long serialVersionUID = 2148011051191091478L;
 	private static final String TIPLET_PROPERTY_PATH = null;
 	private static final String NAVAJO_MESSAGE_PATH = null;
 	private static final String NAVAJO_PROPERTY_NAME = null;

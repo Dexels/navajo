@@ -46,7 +46,7 @@ public interface TipiComponent extends TipiEventListener, TipiLink, Serializable
 
 	public void initContainer();
 
-	public void deregisterEvent(TipiEvent e);
+//	public void deregisterEvent(TipiEvent e);
 
 	public void setName(String name);
 
@@ -94,10 +94,10 @@ public interface TipiComponent extends TipiEventListener, TipiLink, Serializable
 	public void performMethod(String methodName, TipiAction invocation,
 			TipiEvent event) throws TipiBreakException;
 
-	public void performMethod(String methodName, Map<String, Object> params,
-			TipiAction invocation, TipiEvent event);
-
-	public TipiComponentMethod getTipiComponentMethod(String methodName);
+//	public void performMethod(String methodName, Map<String, Object> params,
+//			TipiAction invocation, TipiEvent event);
+//
+//	public TipiComponentMethod getTipiComponentMethod(String methodName);
 
 	public TipiComponent getTipiComponentByPath(String path);
 
@@ -160,7 +160,6 @@ public interface TipiComponent extends TipiEventListener, TipiLink, Serializable
 
 	public void removeTipiEvent(TipiEvent e);
 
-	public void refreshParent();
 
 	public boolean performTipiEvent(String type, Map<String, Object> event,
 			boolean sync) throws TipiException, TipiBreakException;
@@ -177,9 +176,9 @@ public interface TipiComponent extends TipiEventListener, TipiLink, Serializable
 
 	public void resetComponentValidationStateByRule(String id);
 
-	public boolean hasConditionErrors();
-
-	public int getIndex(TipiComponent node);
+//	public boolean hasConditionErrors();
+//
+//	public int getIndex(TipiComponent node);
 
 	public boolean hasPath(String path, TipiEvent event);
 
@@ -195,7 +194,7 @@ public interface TipiComponent extends TipiEventListener, TipiLink, Serializable
 
 	public void addHelper(TipiHelper th);
 
-	public void removeHelper(TipiHelper th);
+//	public void removeHelper(TipiHelper th);
 
 	public int getChildCount();
 

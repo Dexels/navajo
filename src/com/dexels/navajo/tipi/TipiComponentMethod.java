@@ -63,10 +63,7 @@ public class TipiComponentMethod implements Serializable {
 		myTipiAction = instance;
 	}
 
-	public void performMethod(TipiComponent source, TipiComponent current,
-			XMLElement invocation) {
-		System.err.println("Unimplemented method!");
-	}
+
 
 	public TipiValue getParameter(String name) {
 		System.err.println("My action: " + myTipiAction);
@@ -90,10 +87,6 @@ public class TipiComponentMethod implements Serializable {
 
 	public TipiAction getAction() {
 		return myTipiAction;
-	}
-
-	public boolean checkFormat(String name, XMLElement invocation) {
-		return true;
 	}
 
 	public Object getEvaluatedParameterValue(String string, TipiEvent event) {
