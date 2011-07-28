@@ -1,9 +1,12 @@
 <project default="publish" name="TipiVaadinDeploy" basedir=".">
 
 	<target name="clean">
-		<delete dir="WEB-INF/eclipse"/>
-		<delete dir="WEB-INF/lib"/>
+		<delete dir="WEB-INF/eclipse" />
+		<delete dir="WEB-INF/lib" />
 	</target>
+	
+	<property name="deployPath" value="/Library/apache-tomcat-7.0.16/webapps"/>
+	
 	<target name="downloadproduct" depends="clean">
 		<copy todir="WEB-INF" overwrite="true">
 			<fileset dir="/Users/frank/Desktop/dump8/">
@@ -16,7 +19,7 @@
 				<include name="org.eclipse.equinox.servletbridge_*" />
 			</fileset>
 		</copy>
-		
+
 		<copy todir="WEB-INF/eclipse" overwrite="true">
 			<fileset dir=".">
 				<include name="launch.ini" />
@@ -26,7 +29,7 @@
 			<fileset dir=".">
 				<include name="web.xml" />
 			</fileset>
-		</copy>		
+		</copy>
 	</target>
 
 	<target name="archive" description="description" depends="downloadproduct">
@@ -40,11 +43,12 @@
 	</target>
 
 	<target name="publish" depends="archive">
-		<copy todir="/Library/apache-tomcat-7.0.16/webapps/" file="TipiVaadin.war">
+		<copy file="TipiVaadin.war" tofile="${deployPath}/knvb#test#oao.war" />
+		<copy file="TipiVaadin.war" tofile="${deployPath}/knhb#test#oao.war" />
+		<copy file="TipiVaadin.war" tofile="${deployPath}/knkv#test#oao.war" />
 
-		</copy>
-		<delete verbose="true" dir="/Users/frank/Desktop/dump8/eclipse">
-		</delete>
+		<!--		<delete verbose="true" dir="/Users/frank/Desktop/dump8/eclipse">
+		</delete>-->
 	</target>
 
 
