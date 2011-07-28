@@ -571,7 +571,6 @@ public static final int DIRECT_PROTOCOL = 0;
      	System.err.println("setChunkedStreamingMode does not exist, upgrade to java 1.5+");
     }
     if (useCompression) {
-    	System.err.println("Compression: "+useCompression);
     	con.setRequestProperty("Accept-Encoding", "jzlib");
     	con.setRequestProperty("Content-Encoding", "jzlib");
     	//con.connect();
