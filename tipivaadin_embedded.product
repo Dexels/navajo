@@ -9,7 +9,7 @@
 
    <launcherArgs>
       <programArgs>-consoleLog -console</programArgs>
-      <vmArgs>-Declipse.ignoreApp=true -Dosgi.noShutdown=true -Dorg.osgi.service.http.port=8080 -Dtipi.vaadin.embedded.port=9091 -Dtipi.vaadin.contextpath=/oao</vmArgs>
+      <vmArgs>-Declipse.ignoreApp=true -Dosgi.noShutdown=true -Dorg.osgi.service.http.port=8080 -Dtipi.vaadin.embedded.port=9091 -Dtipi.vaadin.contextpath=/knvb_test_oao -Dtipi.cloudMode=false</vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
    </launcherArgs>
 
@@ -25,8 +25,8 @@
 
 
    <vm>
+      <macos include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6</macos>
    </vm>
-
 
    <plugins>
       <plugin id="ch.qos.logback.classic"/>

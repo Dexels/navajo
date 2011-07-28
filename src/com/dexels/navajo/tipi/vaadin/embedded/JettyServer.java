@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.vaadin.embedded;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -17,6 +18,15 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.resource.Resource;
 import org.osgi.framework.Bundle;
+import org.slf4j.ILoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.joran.JoranConfigurator;
+import ch.qos.logback.core.Context;
+import ch.qos.logback.core.joran.spi.JoranException;
+import ch.qos.logback.core.util.StatusPrinter;
 
 import com.dexels.navajo.tipi.vaadin.application.InstallationPathResolver;
 import com.dexels.navajo.tipi.vaadin.application.servlet.TipiVaadinServlet;
@@ -25,13 +35,31 @@ import com.dexels.navajo.tipi.vaadin.application.servlet.TipiVaadinServlet;
 
 public class JettyServer {
 	
+	private static final Logger logger = LoggerFactory.getLogger(JettyServer.class);
 	public void init(int port,final String contextPath, final Bundle bundle) {
 		Server jettyServer = new Server();
 		SelectChannelConnector connector = new SelectChannelConnector();
 		connector.setPort(port);
 		jettyServer.addConnector(connector);
 		HandlerList handlers = new HandlerList();
-		
+		System.err.println("\nAAAAAAAAAAAAAAAAAAA: "+System.getProperty("logback.configurationFile"));
+//		URL u = 
+		LoggerContext lc =(LoggerContext)LoggerFactory.getILoggerFactory();
+
+		StatusPrinter.print(lc);
+	    
+	    try {
+	      JoranConfigurator configurator = new JoranConfigurator();
+	      configurator.setContext(lc);
+	      // the context was probably already configured by default configuration 
+	      // rules
+	      lc.reset(); 
+	      configurator.doConfigure(getClass().getClassLoader().getResource("com/dexels/navajo/tipi/vaadin/embedded/logback.xml"));
+			StatusPrinter.print(lc);
+
+	    } catch (JoranException je) {
+	       je.printStackTrace();
+	    }
 		StringTokenizer tokenizeContext = new StringTokenizer(contextPath,",");
 		List<String> contexts = new LinkedList<String>();
 		while (tokenizeContext.hasMoreTokens()) {
@@ -97,7 +125,6 @@ public class JettyServer {
 				}
 				Resource r =  super.getResource(s);
 				if(!r.exists()) {
-					System.err.println("Not found. trying to resole class: "+s);
 					Resource ur=null;
 					try {
 						ur = Resource.newResource(bundle.getResource(s));
@@ -109,9 +136,6 @@ public class JettyServer {
 							System.err.println(":: "+ur.length()+" mod: "+ur.lastModified());
 							System.err.println("Resolved!!! returning...");
 							return ur;
-							
-						} else {
-							System.err.println("Not found");
 						}
 				}
 				return r;
