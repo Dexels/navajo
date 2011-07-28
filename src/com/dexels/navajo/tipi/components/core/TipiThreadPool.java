@@ -216,6 +216,9 @@ public class TipiThreadPool implements Serializable {
 
 	public void waitForAllThreads() {
 		// myShutdownThread = Thread.currentThread();
+		if(myGroup==null) {
+			return;
+		}
 		while (myGroup.activeCount() > 1) {
 			synchronized (this) {
 				try {
