@@ -1,9 +1,18 @@
 package tipi;
 
 import java.io.File;
+import java.util.Properties;
+
+import navajo.ExtensionDefinition;
 
 import org.osgi.framework.BundleContext;
 
+import com.dexels.navajo.functions.StandardFunctionDefinitions;
+import com.dexels.navajo.functions.VaadinFunctionDefinition;
+import com.dexels.navajo.functions.util.FunctionDefinition;
+import com.dexels.navajo.functions.util.FunctionFactoryFactory;
+import com.dexels.navajo.functions.util.FunctionFactoryInterface;
+import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.tipi.TipiContext;
 
 public class TipiVaadinExtension extends TipiAbstractXMLExtension implements TipiExtension {
@@ -36,13 +45,30 @@ public class TipiVaadinExtension extends TipiAbstractXMLExtension implements Tip
 		loadDescriptor();
 	}
 
-	@Override
-	public void start(BundleContext context) throws Exception {
-		this.context = context;
+	public void start(BundleContext bc) throws Exception {
+		this.context = bc;
 		registerTipiExtension(context);
+		FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
+		fi.init();
+		fi.clearFunctionNames();
+		ExtensionDefinition extensionDef = new VaadinFunctionDefinition();
+		fi.injectExtension(extensionDef);
+//		System.err.println("Detected functions: "+fi.getFunctionNames());
+		for (String functionName : fi.getFunctionNames(extensionDef)) {
+			FunctionDefinition fd = fi.getDef(extensionDef,functionName);
+			 Properties props = new Properties();
+			 props.put("functionName", functionName);
+			 props.put("functionDefinition", fd);
+			 System.err.println("Adding function name...: "+functionName);
+			context.registerService(FunctionInterface.class.getName(), fi.instantiateFunctionClass(fd,getClass().getClassLoader()), props);
+		}
 		
+//	        props.put("Language", "English");
+//	        context.registerService(
+//	            DictionaryService.class.getName(), new DictionaryImpl(), props);
 	}
 
+	
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		
