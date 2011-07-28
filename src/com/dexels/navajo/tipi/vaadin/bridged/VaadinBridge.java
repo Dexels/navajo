@@ -12,11 +12,6 @@ public class VaadinBridge extends HttpServlet {
 
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String pathInfo = req.getPathInfo();
-		System.err.println(">>>>>PAAAATH: "+pathInfo);
-		if(pathInfo.startsWith("/VAADIN")) {
-			System.err.println("VAADIN Spul:");
-		}
 		super.service(req, resp);
 	}
 
