@@ -9,7 +9,7 @@ import navajo.ExtensionDefinition;
 
 public class StandardFunctionDefinitions implements ExtensionDefinition, Serializable {
 
-	private static final long serialVersionUID = -395464699372981482L;
+	private static final long serialVersionUID = -3429274998043371128L;
 	private transient ClassLoader extensionClassLoader = null;
 
 	public InputStream getDefinitionAsStream() {
