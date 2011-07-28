@@ -30,6 +30,7 @@ public class TipiTable extends TipiVaadinComponentImpl {
 	private Table table;
 	private String messagepath;
 	private final List<String> visibleColumns = new ArrayList<String>();
+	private final Map<String,Integer> columnSizes = new HashMap<String,Integer>();
 //	private final Map<Object, Message> messageMap = new HashMap<Object, Message>();
 	private Object selectedId = null;
 	private Container messageBridge;
@@ -40,6 +41,7 @@ public class TipiTable extends TipiVaadinComponentImpl {
 	@Override
 	public Object createContainer() {
 		table = new MessageTable();
+		table.setStyleName("striped");
 //		table.setRowHeaderMode(Table.ROW_HEADER_MODE_ID);
 		table.setSelectable(true);
 		table.setImmediate(true);
@@ -163,6 +165,10 @@ public class TipiTable extends TipiVaadinComponentImpl {
 			}
 			
 			table.addContainerProperty(col+"@value",type,null, label, null,alignment);
+			int size = columnSizes.get(col);
+			if(size>=0) {
+				table.setColumnWidth(col+"@value", size);
+			}
 		}
 		//		debugContainer(amb);
 		return amb;
@@ -222,8 +228,8 @@ public class TipiTable extends TipiVaadinComponentImpl {
 						}
 						String name = (String) child.getAttribute("name");
 						String editableString = (String) child.getAttribute("editable");
-//						int size = child.getIntAttribute("size", -1);
-
+						int size = child.getIntAttribute("size", -1);
+						columnSizes.put(name,size);
 						boolean editable = "true".equals(editableString);
 //						colDefs = true;
 						visibleColumns.add(name);
