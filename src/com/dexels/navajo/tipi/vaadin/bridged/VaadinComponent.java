@@ -12,7 +12,7 @@ import org.osgi.service.http.NamespaceException;
 import com.dexels.navajo.tipi.vaadin.application.servlet.TipiVaadinServlet;
 
 public class VaadinComponent {
-	private static final String SERVLET_ALIAS = "/app";
+	private static final String SERVLET_ALIAS = "/";
 	private HttpService httpService;
 
 	public void setHttpService(HttpService httpService) {
