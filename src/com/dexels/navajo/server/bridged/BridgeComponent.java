@@ -9,7 +9,6 @@ import org.osgi.service.http.HttpService;
 
 import com.dexels.navajo.server.listener.NavajoContextListener;
 import com.dexels.navajo.server.listener.http.TmlHttpServlet;
-import org.eclipse.equinox.jsp.jasper.JspServlet;
 
 public class BridgeComponent {
 
@@ -31,8 +30,8 @@ public class BridgeComponent {
 			HttpContext cc = httpService.createDefaultHttpContext();
 //			HttpContext commonContext = new BundleEntryHttpContext(context.getBundle(), "/web"); //$NON-NLS-1$
 			httpService.registerResources("/jsp-examples", "/", cc); //$NON-NLS-1$ //$NON-NLS-2$
-			Servlet adaptedJspServlet = new JspServlet(bundleContext.getBundle(), "/web");  //$NON-NLS-1$//$NON-NLS-2$
-			httpService.registerServlet("*.jsp", adaptedJspServlet, null, cc); //$NON-NLS-1$
+//			Servlet adaptedJspServlet = new JspServlet(bundleContext.getBundle(), "/web");  //$NON-NLS-1$//$NON-NLS-2$
+//			httpService.registerServlet("*.jsp", adaptedJspServlet, null, cc); //$NON-NLS-1$
 
 			System.out.println("Staring up sevlet at " + SERVLET_ALIAS);
 			TmlHttpServlet servlet = new TmlHttpServlet();

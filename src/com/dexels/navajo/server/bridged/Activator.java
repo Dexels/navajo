@@ -2,6 +2,8 @@ package com.dexels.navajo.server.bridged;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+import org.osgi.service.http.HttpService;
 
 public class Activator implements BundleActivator {
 
@@ -22,11 +24,11 @@ public class Activator implements BundleActivator {
 		serviceTracker = new HttpServiceTracker(context);
 	    serviceTracker.open();
 	    
-//		ServiceReference sr = bundleContext.getServiceReference("org.osgi.service.http.HttpService");
-//		HttpService o = (HttpService) bundleContext.getService(sr);
-//		BridgeComponent bc = new BridgeComponent();
-//		bc.setHttpService(o);
-//		bc.startup();
+		ServiceReference sr = bundleContext.getServiceReference("org.osgi.service.http.HttpService");
+		HttpService o = (HttpService) bundleContext.getService(sr);
+		BridgeComponent bc = new BridgeComponent();
+		bc.setHttpService(o);
+		bc.startup();
 	}
 
 	

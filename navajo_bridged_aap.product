@@ -1,20 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product useFeatures="false" includeLaunchers="false">
-
+<product uid="com.dexels.navajo.server.bridged" useFeatures="false" includeLaunchers="false">
 
    <configIni use="default">
    </configIni>
 
    <launcherArgs>
-      <programArgs>-consoleLog -console</programArgs>
-      <vmArgs>-Declipse.ignoreApp=true -Dosgi.noShutdown=true -Dorg.osgi.service.http.port=8080</vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
    </launcherArgs>
-
-   <windowImages/>
-
 
    <launcher>
       <solaris/>
@@ -22,7 +16,6 @@
          <bmp/>
       </win>
    </launcher>
-
 
    <vm>
    </vm>
@@ -33,15 +26,27 @@
       <plugin id="ch.qos.logback.slf4j" fragment="true"/>
       <plugin id="com.dexels.navajo.adapters"/>
       <plugin id="com.dexels.navajo.client"/>
+      <plugin id="com.dexels.navajo.client.async"/>
+      <plugin id="com.dexels.navajo.client.deps"/>
       <plugin id="com.dexels.navajo.core"/>
       <plugin id="com.dexels.navajo.document"/>
       <plugin id="com.dexels.navajo.function"/>
+      <plugin id="com.dexels.navajo.jsp"/>
+      <plugin id="com.dexels.navajo.jsp.server"/>
       <plugin id="com.dexels.navajo.listeners"/>
-      <plugin id="com.dexels.navajo.server.bridged"/>
+      <plugin id="com.dexels.navajo.listeners.continuations"/>
+      <plugin id="com.dexels.navajo.queuemanager"/>
+      <plugin id="com.dexels.navajo.rhino"/>
       <plugin id="com.dexels.navajo.version"/>
+      <plugin id="javax.servlet"/>
+      <plugin id="javax.servlet.jsp"/>
       <plugin id="javax.transaction" fragment="true"/>
       <plugin id="org.apache.ant"/>
-      <plugin id="org.apache.commons.logging"/>
+      <plugin id="org.eclipse.core.contenttype"/>
+      <plugin id="org.eclipse.core.jobs"/>
+      <plugin id="org.eclipse.core.runtime"/>
+      <plugin id="org.eclipse.core.runtime.compatibility.registry" fragment="true"/>
+      <plugin id="org.eclipse.equinox.app"/>
       <plugin id="org.eclipse.equinox.common"/>
       <plugin id="org.eclipse.equinox.ds"/>
       <plugin id="org.eclipse.equinox.event"/>
@@ -50,10 +55,18 @@
       <plugin id="org.eclipse.equinox.http.servletbridge"/>
       <plugin id="org.eclipse.equinox.io"/>
       <plugin id="org.eclipse.equinox.log"/>
+      <plugin id="org.eclipse.equinox.preferences"/>
       <plugin id="org.eclipse.equinox.registry"/>
       <plugin id="org.eclipse.equinox.servletbridge"/>
       <plugin id="org.eclipse.equinox.servletbridge.extensionbundle" fragment="true"/>
+      <plugin id="org.eclipse.equinox.transforms.hook" fragment="true"/>
       <plugin id="org.eclipse.equinox.util"/>
+      <plugin id="org.eclipse.equinox.weaving.hook" fragment="true"/>
+      <plugin id="org.eclipse.jetty.client"/>
+      <plugin id="org.eclipse.jetty.continuation"/>
+      <plugin id="org.eclipse.jetty.http"/>
+      <plugin id="org.eclipse.jetty.io"/>
+      <plugin id="org.eclipse.jetty.util"/>
       <plugin id="org.eclipse.osgi"/>
       <plugin id="org.eclipse.osgi.services"/>
       <plugin id="org.hamcrest.core"/>
@@ -61,22 +74,5 @@
       <plugin id="org.slf4j.api"/>
    </plugins>
 
-   <configurations>
-      <plugin id="ch.qos.logback.classic" autoStart="true" startLevel="0" />
-      <plugin id="ch.qos.logback.core" autoStart="true" startLevel="0" />
-      <plugin id="com.dexels.navajo.adapters" autoStart="true" startLevel="0" />
-      <plugin id="com.dexels.navajo.client" autoStart="true" startLevel="0" />
-      <plugin id="com.dexels.navajo.core" autoStart="true" startLevel="0" />
-      <plugin id="com.dexels.navajo.document" autoStart="true" startLevel="0" />
-      <plugin id="com.dexels.navajo.function" autoStart="true" startLevel="0" />
-      <plugin id="com.dexels.navajo.listeners" autoStart="true" startLevel="0" />
-      <plugin id="com.dexels.navajo.server.bridged" autoStart="true" startLevel="5" />
-      <plugin id="com.dexels.navajo.version" autoStart="true" startLevel="0" />
-      <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
-      <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="0" />
-      <plugin id="org.eclipse.osgi" autoStart="true" startLevel="-1" />
-      <plugin id="org.eclipse.osgi.services" autoStart="false" startLevel="2" />
-      <plugin id="org.slf4j.api" autoStart="true" startLevel="2" />
-   </configurations>
 
 </product>
