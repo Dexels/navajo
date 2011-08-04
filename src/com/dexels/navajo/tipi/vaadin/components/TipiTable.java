@@ -31,6 +31,7 @@ public class TipiTable extends TipiVaadinComponentImpl {
 	private String messagepath;
 	private final List<String> visibleColumns = new ArrayList<String>();
 	private final Map<String,Integer> columnSizes = new HashMap<String,Integer>();
+	private final Map<String,String> columnLabels = new HashMap<String,String>();
 //	private final Map<Object, Message> messageMap = new HashMap<Object, Message>();
 	private Object selectedId = null;
 	private Container messageBridge;
@@ -152,10 +153,13 @@ public class TipiTable extends TipiVaadinComponentImpl {
 			return null;
 		}
 		for (String col : visibleColumns) {
-			String label = amb.getPropertyAspect(col+"@description");
+			String label = columnLabels.get(col);
 			if(label==null) {
-				System.err.println("No description checking name: "+col+"@name");
-				label = amb.getPropertyAspect(col+"@name");
+				label = amb.getPropertyAspect(col+"@description");
+				if(label==null) {
+					System.err.println("No description checking name: "+col+"@name");
+					label = amb.getPropertyAspect(col+"@name");
+				}
 			}
 			Class<?> type = NavajoFactory.getInstance().getJavaType(amb.getPropertyAspect(col+"@type"));
 			String alignment = Table.ALIGN_LEFT;
@@ -218,15 +222,15 @@ public class TipiTable extends TipiVaadinComponentImpl {
 					if (child.getName().equals("column")) {
 						Operand o = evaluate(child.getStringAttribute("label"), TipiTable.this, null);
 						String label = null;
+						String name = (String) child.getAttribute("name");
 						if (o == null) {
-							label = "";
+							label = null;
 						} else {
 							label = (String) o.value;
-							if (label == null) {
-								label = "";
-							}
 						}
-						String name = (String) child.getAttribute("name");
+						if(label!=null) {
+							columnLabels.put(name, label);
+						}
 						String editableString = (String) child.getAttribute("editable");
 						int size = child.getIntAttribute("size", -1);
 						columnSizes.put(name,size);
