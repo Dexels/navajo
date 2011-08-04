@@ -9,6 +9,7 @@ import org.osgi.service.http.HttpService;
 
 import com.dexels.navajo.server.listener.NavajoContextListener;
 import com.dexels.navajo.server.listener.http.TmlHttpServlet;
+import com.dexels.navajo.server.listener.nql.NqlServlet;
 
 public class BridgeComponent {
 
@@ -23,9 +24,6 @@ public class BridgeComponent {
 	public void setHttpService(HttpService httpService) {
 		System.err.println("Injecting HTTP service");
 		this.httpService = httpService;
-	}
-
-	public void startup() {
 		try {
 			HttpContext cc = httpService.createDefaultHttpContext();
 //			HttpContext commonContext = new BundleEntryHttpContext(context.getBundle(), "/web"); //$NON-NLS-1$
@@ -35,7 +33,10 @@ public class BridgeComponent {
 
 			System.out.println("Staring up sevlet at " + SERVLET_ALIAS);
 			TmlHttpServlet servlet = new TmlHttpServlet();
-			httpService.registerServlet(SERVLET_ALIAS, servlet, null, null);
+			httpService.registerServlet(SERVLET_ALIAS, servlet, null, cc);
+			NqlServlet ns = new NqlServlet();
+			httpService.registerServlet("/Nql", ns, null, cc);
+			
 			NavajoContextListener.initializeContext(servlet.getServletContext(), null);
 			System.err.println("Context initialized!");
 		} catch (ServletException e) {
@@ -43,6 +44,10 @@ public class BridgeComponent {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void startup() {
+
 	}
 
 	public void shutdown() {
