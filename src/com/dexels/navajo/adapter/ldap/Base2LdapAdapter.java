@@ -142,17 +142,9 @@ public class Base2LdapAdapter implements Mappable {
 		init.getProperty("Club/ClubIdentifier").setValue(clubId);
 		init.getProperty("Club/LastName").setValue("");
 
-//		DirContext context = getContext(rootDn);
-//		DirContext clubsContext = (DirContext) context.lookup("o=clubs");
 
 		Map constants = new HashMap();
 		final Navajo process2 = NavajoClientFactory.getClient().doSimpleSend(init, "club/ProcessQueryClub");
-//		try {
-//			process2.write(System.err);
-//		} catch (NavajoException e2) {
-//			// TODO Auto-generated catch block
-//			e2.printStackTrace();
-//		}
 		Message clubD = process2.getMessage("ClubData");
 		DirContext organization = insertOrganization(clubsContext, clubD, constants);
 		final Navajo process = NavajoClientFactory.getClient().doSimpleSend(init, "member/ProcessQueryAllMembersPerClub");
