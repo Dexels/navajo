@@ -11,9 +11,24 @@
         De afhankelijkheidsrelatie is weer een 'predicate'. De 'name' van een submessage moet dan ook worden
         geinterpreteerd als 'predicate'. 
          -->
+   	<!-- Some relationship table -->
+   		<!-- Consider membership attributes: relation start, end? -->
+		<relation name="clubMembership" subject="person" object="organization" cardinality="+:+"/>
+		<relation name="subOrganization" subject="organization" object="organization" cardinality="+:1"/>
+
+		<message name="Person" entity="person:/[PersonId]">
+            <property name="PersonId" type="string" value="CHGP12Y"/>
+            <property name="MemberOf" type="resource" value="organization:/BBFW63X" relationship="clubMembership"/>
+			<property name="RelationStart" value="2010-08-02" type="date" relationshipAttribute="clubMembership:startDate"/>
+     
+			....
+		</message>         
+
+
+
         <!-- Ik schrijf bewust (has)Name in voorbeeld om aan te geven dat bij 'literals' 'has' impliciet
              kan worden gelezen -->
-        <message name="class:Person" resource="knvb:person/CHGP12Y"> <!-- CHGP12Y is unieke relatiecode -->
+	     <message name="class:Person" resource="knvb:person/CHGP12Y"> <!-- CHGP12Y is unieke relatiecode -->
             <property name="(has)LastName" type="string" value="'Bergman'"/>
             <property name="(has)FirstName" type="string" value="'Martin'"/>
             <property name="MemberOf" type="resource" value="knvb:club/BBFW63X"/>
