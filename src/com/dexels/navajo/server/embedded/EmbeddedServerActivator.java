@@ -56,25 +56,8 @@ public class EmbeddedServerActivator extends AbstractUIPlugin {
 		super.start(context);
 //		context.installBundle("bla");
 		plugin = this;
-		touchNavajoParts(context);
 //		   getB	"com.dexels.navajo.dsl.expression.ui.contentassist.NavajoExpressionProposalProvider"
 		
-	}
-
-	private void touchNavajoParts(BundleContext context) {
-		System.err.println("Navajo embedded server activating!");
-		navajodocument.Version.getRandom();
-		navajoclient.Version.getRandom();
-		navajolisteners.Version.getRandom();
-		navajo.Version.getRandom();
-		navajorhino.Version.getRandom();
-		navajoadapters.Version.getRandom();
-		navajofunctions.Version.getRandom();
-		navajoenterprise.Version.getRandom();
-		navajoenterpriseadapters.Version.getRandom();
-		navajoenterpriselisteners.Version.getRandom();
-//		NavajoExpressionRuntimeModule a;
-		System.err.println("Touch complete!");
 	}
 
 	/*
