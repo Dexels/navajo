@@ -47,7 +47,7 @@ public class ValuePropertyBridge implements Property, Property.ValueChangeNotifi
 	}
 
 	public String toString() {
-		return ""+getValue();
+		return (String) getValue();
 	}
 	
 	@Override
