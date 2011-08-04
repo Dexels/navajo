@@ -3,18 +3,16 @@
 
 <product useFeatures="false" includeLaunchers="false">
 
-
    <configIni use="default">
    </configIni>
 
    <launcherArgs>
-      <programArgs>-consoleLog -console</programArgs>
-      <vmArgs>-Declipse.ignoreApp=true -Dosgi.noShutdown=true -Dorg.osgi.service.http.port=8080</vmArgs>
+      <programArgs>-consoleLog -console 2401</programArgs>
+      <vmArgs>-Dosgi.console=2401 -Declipse.ignoreApp=true -Dosgi.noShutdown=true -Dorg.osgi.service.http.port=8080</vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
    </launcherArgs>
 
    <windowImages/>
-
 
    <launcher>
       <solaris/>
@@ -22,7 +20,6 @@
          <bmp/>
       </win>
    </launcher>
-
 
    <vm>
    </vm>
@@ -40,7 +37,6 @@
       <plugin id="com.dexels.navajo.server.bridged"/>
       <plugin id="com.dexels.navajo.version"/>
       <plugin id="javax.transaction" fragment="true"/>
-      <plugin id="org.apache.ant"/>
       <plugin id="org.apache.commons.logging"/>
       <plugin id="org.eclipse.equinox.common"/>
       <plugin id="org.eclipse.equinox.ds"/>
@@ -51,7 +47,6 @@
       <plugin id="org.eclipse.equinox.io"/>
       <plugin id="org.eclipse.equinox.log"/>
       <plugin id="org.eclipse.equinox.registry"/>
-      <plugin id="org.eclipse.equinox.servletbridge"/>
       <plugin id="org.eclipse.equinox.servletbridge.extensionbundle" fragment="true"/>
       <plugin id="org.eclipse.equinox.util"/>
       <plugin id="org.eclipse.osgi"/>
@@ -64,7 +59,7 @@
    <configurations>
       <plugin id="ch.qos.logback.classic" autoStart="true" startLevel="0" />
       <plugin id="ch.qos.logback.core" autoStart="true" startLevel="0" />
-      <plugin id="com.dexels.navajo.adapters" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.adapters" autoStart="true" startLevel="5" />
       <plugin id="com.dexels.navajo.client" autoStart="true" startLevel="0" />
       <plugin id="com.dexels.navajo.core" autoStart="true" startLevel="0" />
       <plugin id="com.dexels.navajo.document" autoStart="true" startLevel="0" />
@@ -75,7 +70,7 @@
       <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.osgi" autoStart="true" startLevel="-1" />
-      <plugin id="org.eclipse.osgi.services" autoStart="false" startLevel="2" />
+      <plugin id="org.eclipse.osgi.services" autoStart="true" startLevel="2" />
       <plugin id="org.slf4j.api" autoStart="true" startLevel="2" />
    </configurations>
 
