@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi.components.swingimpl;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
+import java.awt.Window;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -405,6 +406,24 @@ public class SwingTipiContext extends TipiContext {
 		}
 	}
 
+	public void shutdown() {
+		super.shutdown();
+		// TODO: Move this to swingtipi or something
+		if (getTopLevel() instanceof RootPaneContainer) {
+			RootPaneContainer rpc = (RootPaneContainer) getTopLevel();
+			System.err.println("Doing allright!");
+			if (rpc instanceof Window) {
+				Window w = (Window) rpc;
+				w.setVisible(false);
+				w.dispose();
+				System.err.println("Ciao!");
+			}
+
+		} else {
+			System.err
+					.println("NEED REFACTOR in TIPICONTEXT, around line 2230.");
+		}
+	}
 	public void setDefaultDesktop(TipiSwingDesktop jp) {
 		defaultDesktop = jp;
 
