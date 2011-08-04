@@ -21,7 +21,7 @@ import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiStorageManager;
 
 public class TipiCookieStorageManager implements TipiStorageManager {
-
+// not serializable, I don't think it makes sense to make it serializable
 //	private TipiContext myContext;
 	PersistenceService ps;
 	BasicService bs;

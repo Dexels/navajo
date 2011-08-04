@@ -25,6 +25,7 @@ import javax.swing.WindowConstants;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 
+import com.dexels.navajo.document.notifier.SerializablePropertyChangeListener;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiException;
@@ -55,6 +56,8 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  * @version 1.0
  */
 public class TipiDialog extends TipiSwingDataComponentImpl {
+
+	private static final long serialVersionUID = 8645510349158311190L;
 	private boolean modal = false;
 	@SuppressWarnings("unused")
 	private boolean decorated = true;
@@ -91,7 +94,9 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 			throws TipiException {
 		super.instantiateComponent(instance, classdef);
 		getAttributeProperty("h").addPropertyChangeListener(
-				new PropertyChangeListener() {
+				new SerializablePropertyChangeListener() {
+					private static final long serialVersionUID = -6759912965035092081L;
+
 					public void propertyChange(final PropertyChangeEvent evt) {
 						runSyncInEventThread(new Runnable() {
 							public void run() {
@@ -101,7 +106,9 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 					}
 				});
 		getAttributeProperty("w").addPropertyChangeListener(
-				new PropertyChangeListener() {
+				new SerializablePropertyChangeListener() {
+					private static final long serialVersionUID = -328558635748778593L;
+
 					public void propertyChange(final PropertyChangeEvent evt) {
 						runSyncInEventThread(new Runnable() {
 							public void run() {
@@ -111,7 +118,9 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 					}
 				});
 		getAttributeProperty("x").addPropertyChangeListener(
-				new PropertyChangeListener() {
+				new SerializablePropertyChangeListener() {
+					private static final long serialVersionUID = 1768826439432626245L;
+
 					public void propertyChange(final PropertyChangeEvent evt) {
 						runSyncInEventThread(new Runnable() {
 							public void run() {
@@ -121,7 +130,9 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 					}
 				});
 		getAttributeProperty("y").addPropertyChangeListener(
-				new PropertyChangeListener() {
+				new SerializablePropertyChangeListener() {
+					private static final long serialVersionUID = 6549320305985952129L;
+
 					public void propertyChange(final PropertyChangeEvent evt) {
 						runSyncInEventThread(new Runnable() {
 							public void run() {

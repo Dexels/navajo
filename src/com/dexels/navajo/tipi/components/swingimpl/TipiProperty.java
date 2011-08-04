@@ -25,6 +25,8 @@ import com.dexels.navajo.tipi.swingclient.components.PropertyEventListener;
 
 public class TipiProperty extends TipiSwingComponentImpl implements
 		PropertyComponent, PropertyChangeListener, PropertyEventListener {
+	
+	private static final long serialVersionUID = 8034864905090272048L;
 	private Property myProperty = null;
 	private Object myPropertyValue = null;
 	private List<TipiEventListener> myListeners = new ArrayList<TipiEventListener>();
