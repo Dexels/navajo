@@ -99,7 +99,7 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance {
 			}
 		} else {
 			try {
-				context.parseStream(tipiResourceStream, definition, false, null);
+				context.parseStream(tipiResourceStream, null);
 				// context.switchToDefinition(definition);
 			} catch (XMLParseException e) {
 				e.printStackTrace();

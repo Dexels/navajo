@@ -65,7 +65,7 @@ public class SwingEmbeddedContext extends SwingTipiContext {
 			throws XMLParseException, IOException, TipiException {
 		// public void parseStream(InputStream in, String sourceName, boolean
 		// studioMode) throws IOException, XMLParseException, TipiException {
-		parseStream(getTipiResourceStream(def), name, false, ed);
+		parseStream(getTipiResourceStream(def),  ed);
 		switchToDefinition(name);
 	}
 
