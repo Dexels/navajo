@@ -75,7 +75,10 @@ public final class GenericHandler extends ServiceHandler {
 
     @SuppressWarnings("unchecked")
 	public static void doClearCache() {
-       loadedClasses.clear();
+    	// fix ugly shutdown npe in some cases
+    	if(loadedClasses!=null) {
+        	loadedClasses.clear();
+    	}
        loadedClasses = null;
        loadedClasses = new ConcurrentHashMap<String, NavajoClassSupplier>();
     }
