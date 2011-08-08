@@ -52,7 +52,4 @@
 		<div class="info"><c:import url="/tml/manager/scripttree.jsp" />
 		</div>
 
-		<h3>Navajo scripts</h3>
-		<div class="info"><c:import url="/tml/manager/navajoscripttree.jsp" />
-		</div>
 
