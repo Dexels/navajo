@@ -120,6 +120,9 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
    }
 
   public Message addMessage(Message m) {
+	 if(m==null) {
+		 throw new NullPointerException("Can not add null message to Navajo object");
+	 }
 //      System.err.println("ADDING MESSAGE");
     rootMessage.addMessage(m);
     return m;

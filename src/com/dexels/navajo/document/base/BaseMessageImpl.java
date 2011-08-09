@@ -166,6 +166,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 	}
 
 	public Message addMessage(Message m) {
+		// Would prefer to throw a NPE TODO do it.
 		if (m == null) {
 			return null;
 		}
@@ -254,13 +255,19 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		}
 
 		BasePropertyImpl p = (BasePropertyImpl) q;
-		if (propertyMap.get(p.getName()) == null) {
+		Property oldProperty = propertyMap.get(p.getName());
+		if(oldProperty == q) {
+			// ignore
+			return;
+		}
+		if (oldProperty == null) {
 			propertyList.add(q);
 			propertyMap.put(p.getName(), p);
 			p.setParent(this);
 		} else {
-			this.removeProperty(propertyMap.get(p.getName()));
-			addProperty(q);
+			this.removeProperty(oldProperty);
+			propertyList.add(q);
+			propertyMap.put(p.getName(), p);
 		}
 		initPropertyFromDefinition(q);
 	}
@@ -997,7 +1004,13 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
 	
 	public Message instantiateFromDefinition() {
-		Message copy = getDefinitionMessage().copy(this.getRootDoc());
+		Message copy = null;
+		if(getDefinitionMessage()!=null) {
+			copy = getDefinitionMessage().copy(this.getRootDoc());
+		} else {
+			copy = NavajoFactory.getInstance().createMessage(getRootDoc(), getName(),MSG_TYPE_ARRAY_ELEMENT);
+		}
+		
 		addElement(copy);
 		return copy;
 	}
