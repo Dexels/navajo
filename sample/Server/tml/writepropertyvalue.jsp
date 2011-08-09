@@ -82,9 +82,11 @@
 						<c:choose>
 							<c:when test="${navajoContext.property.value=='true'}">
 								<input type="checkbox" name="${navajoContext.propertyPath}" checked="checked"/>
+								<input type="hidden" name="${navajoContext.propertyPath}" value="off">
 							</c:when>
 							<c:otherwise>
 								<input type="checkbox" name="${navajoContext.propertyPath}"/>
+								<input type="hidden" name="${navajoContext.propertyPath}" value="off">
 							</c:otherwise>
 						</c:choose>
 					</c:when>
