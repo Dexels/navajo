@@ -5,8 +5,13 @@ import java.util.Enumeration;
 import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class PostHandlerTag extends BaseNavajoTag {
 
+	
+	private final static Logger logger = LoggerFactory.getLogger(PostHandlerTag.class);
 	
 	public int doStartTag() throws JspException {
 
