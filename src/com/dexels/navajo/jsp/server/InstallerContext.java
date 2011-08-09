@@ -69,8 +69,7 @@ public class InstallerContext {
 	 */
 	private static String getInstallationPath(
 			Map<String, String> systemContexts, String contextPath) {
-		String engineInstance = System
-				.getProperty("com.dexels.navajo.server.EngineInstance");
+		String engineInstance = getEngineInstance();
 		String key = contextPath;
 		if (engineInstance != null) {
 			key = contextPath + "@" + engineInstance;
@@ -80,6 +79,12 @@ public class InstallerContext {
 			return result;
 		}
 		return systemContexts.get(contextPath);
+	}
+
+	private static String getEngineInstance() {
+		String engineInstance = System
+				.getProperty("com.dexels.navajo.server.EngineInstance");
+		return engineInstance;
 	}
 
 	private static Map<String, String> loadSystemContexts() throws IOException {
