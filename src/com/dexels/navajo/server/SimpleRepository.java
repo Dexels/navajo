@@ -14,6 +14,9 @@ import java.io.InputStream;
 import java.util.*;
 import java.util.Map.Entry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.*;
 
 public class SimpleRepository implements Repository {
@@ -23,6 +26,8 @@ public class SimpleRepository implements Repository {
 	// name of the message containing globals
 	public static final String GLOBALSMSGNAME = "__globals__";
 
+	private static final Logger logger = LoggerFactory.getLogger(SimpleRepository.class);
+	
 	public SimpleRepository() {
 	}
 
@@ -68,14 +73,14 @@ public class SimpleRepository implements Repository {
 			try {
 				stream = config.getResourceBundle("application");
 				if(stream==null) {
-					System.err.println("Also not found, no globals then.");
+					logger.debug("Also not found, no globals then.");
 					return;
 				}
 				PropertyResourceBundle prb = new PropertyResourceBundle(stream);
 				parseBundle(method, username, inMessage, extraParams, prb);
 
 			} catch (IOException e1) {
-				System.err.println("Still can not open resource bundle. Also no big deal, I guess");
+				logger.debug("Still can not open resource bundle. Also no big deal, I guess");
 				e1.printStackTrace();
 			} finally {
 				if ( stream != null ) {
