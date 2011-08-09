@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.client.NavajoClientFactory;
@@ -22,6 +25,8 @@ public class NavajoContext {
 	private final Map<Navajo, String> myInverseNavajoMap = new HashMap<Navajo, String>();
 	private final Stack<Object> myElementStack = new Stack<Object>();
 	private boolean debugAll;
+	
+	private static final Logger logger = LoggerFactory.getLogger(NavajoContext.class);
 
 	public NavajoContext() {
 		//System.err.println("New navajo context");
@@ -44,6 +49,13 @@ public class NavajoContext {
 
 	public String getServiceName(Navajo n) {
 		return myInverseNavajoMap.get(n);
+	}
+	
+	// used by the JSP Tester
+	public String getEngineInstance() {
+		String instanceName = System.getProperty("com.dexels.navajo.server.EngineInstance");
+		
+		return instanceName;
 	}
 	
 	public void callService(String service, Navajo input)
@@ -378,7 +390,15 @@ public class NavajoContext {
 		String path = keyVal[1];
 		Navajo n = getNavajo(navajo);
 		Property p = n.getProperty(path);
-		p.setValue(value);
+		if(Property.BOOLEAN_PROPERTY.equals(p.getType()) ) {
+			if ("on".equals(value)) {
+				p.setAnyValue(true);
+			} else {
+				p.setAnyValue(false);
+			}
+		} else {
+			p.setValue(value);
+		}
 	}
 
 
