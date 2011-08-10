@@ -18,19 +18,24 @@
 
 package com.dexels.navajo.functions.scale;
 
-import java.io.*;
-import java.util.*;
-import java.awt.*;
-import java.awt.geom.*;
-import java.awt.image.*;
-import javax.imageio.*;
-import javax.imageio.metadata.*;
-import javax.imageio.plugins.jpeg.*;
-import javax.imageio.spi.*;
-import javax.imageio.stream.*;
+//import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.AreaAveragingScaleFilter;
+import java.awt.image.BufferedImage;
+import java.awt.image.FilteredImageSource;
+import java.awt.image.ImageProducer;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.types.*;
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriter;
+import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
+import javax.imageio.stream.ImageInputStream;
+import javax.imageio.stream.ImageOutputStream;
+
+import com.dexels.navajo.document.types.Binary;
 
 /**
  * Class to demonstrate a way to scale an image without the
@@ -201,15 +206,15 @@ public class ImageScaler {
    * @param image the Image to convert to a BufferedImage
    * @return the BufferedImage the Image has been converted to
    */
-  public static BufferedImage convert(Image image) {
-    BufferedImage bi = new BufferedImage(image.getWidth(null),
-                                         image.getHeight(null),
-                                         BufferedImage.TYPE_INT_RGB);
-    Graphics g = bi.getGraphics();
-    g.drawImage(image, 0, 0, null);
-    g.dispose();
-    return bi;
-  }
+//  public static BufferedImage convert(Image image) {
+//    BufferedImage bi = new BufferedImage(image.getWidth(null),
+//                                         image.getHeight(null),
+//                                         BufferedImage.TYPE_INT_RGB);
+//    Graphics g = bi.getGraphics();
+//    g.drawImage(image, 0, 0, null);
+//    g.dispose();
+//    return bi;
+//  }
 
   /**
    * Just for testing...

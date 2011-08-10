@@ -13,9 +13,10 @@
 package com.dexels.navajo.functions.scale;
 
 // Standard imports
-import java.awt.image.*;
-
-import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.ImageConsumer;
+import java.awt.image.WritableRaster;
 import java.util.Hashtable;
 
 // Application specific imports
