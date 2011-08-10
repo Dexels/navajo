@@ -130,8 +130,8 @@
 		</war>
 		<echo message="War complete. Deploying to Tomcat: ${navajoTomcatServerManager}"/>
 
-	<deploy url="${navajoTomcatServerManager}" update="true" username="${navajoTomcatUser}" password="${navajoTomcatPassword}" path="/${deployContextName}" war="${distribution}/${deployname}.war" />
-		<!--
+		<!--	<deploy url="${navajoTomcatServerManager}" update="true" username="${navajoTomcatUser}" password="${navajoTomcatPassword}" path="/${deployContextName}" war="${distribution}/${deployname}.war" />
+		
 		<deploy url="http://10.10.10.151/manager/text/" update="true" username="${navajoTomcatUser}" password="${navajoTomcatPassword}" path="/sportlink/test/knvb" war="${distribution}/${deployname}.war" />
 -->
 	</target>
@@ -150,7 +150,7 @@
 
 	
 	<target name="publish" depends="deploy,upload">
-	<!--		<copy tofile="/Library/jetty-hightide-8.0.0.M2/webapps/NavajoJetty.war" file="${distribution}/${deployname}.war"/>-->
-	</target>
+		<copy todir="/Library/apache-tomcat-7.0.16/webapps/" file="${distribution}/${deployname}.war"/>
+ 	</target>
 </project>
 <!-- EOF: $RCSfile$ -->
