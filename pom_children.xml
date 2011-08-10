@@ -11,6 +11,7 @@
 	<modules>
 		<module>../DexelsVersionControl</module>
 		<module>../com.dexels.navajo.tipi.swt.client</module>
+		<module>../com.dexels.navajo.server.embedded</module>
 		<module>../NavajoBIRT</module>
 		<module>../NavajoScriptPlugin</module>
 	</modules>
