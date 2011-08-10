@@ -11,7 +11,7 @@ public class TipiChartingExtension extends TipiAbstractXMLExtension implements T
 
 	public TipiChartingExtension() throws XMLParseException,
 			IOException {
-		loadDescriptor();
+// NO		loadDescriptor();
 	}
 
 	public void initialize(TipiContext tc) {
