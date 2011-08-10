@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp spec="1.0+" codebase="file:///Users/frank/Documents/workspace-xtext/com.dexels.navajo.tipi.swing.application/" href="product.jnlp">
+	<!-- URL to the site containing the jnlp application. It should match the value used on  export. Href, the name of this file -->
+	<information>
+		<!-- user readable name of the application -->
+		<title>Person Manager (A dynamic Swing OSGi demo)</title>
+		<!-- vendor name -->
+		<vendor>Kai Tšdter</vendor>
+		<!-- vendor homepage -->
+		<homepage href="https://max-server.myftp.org/trac/pm" />
+		<!-- product description -->
+		<description>Person Manager is a demo application to demonstrate best practices when it comes to dynamic OSGi based applications</description>
+		<icon kind="splash" href="splash.gif" />
+	</information>
+
+	<!--request all permissions from the application. This does not change-->
+	<security>
+		<all-permissions />
+	</security>
+
+	<!-- The name of the main class to execute. This does not change-->
+	<application-desc main-class="org.eclipse.equinox.launcher.WebStartMain">
+		<argument>-nosplash</argument>
+	</application-desc>
+
+	<resources>
+		<!-- Reference to the launcher jar. The version segment must be updated to the version being used-->
+		<jar href="lib/org.eclipse.equinox.launcher_1.1.1.R36x_v20101122_1400.jar" />
+
+		<!-- Reference to all the plugins and features constituting the application -->
+		<!-- Here we are referring to the wrapper feature since it transitively refers to all the other plug-ins  necessary -->
+		<extension name="Wrapper feature" href="http://localhost/Navajo/com.dexels.navajo.tipi.feature_1.0.44.jnlp" />
+
+		<!-- Information usually specified in the config.ini -->
+		<property name="osgi.configuration.area" value="@user.home/.pm/webstart" />
+<!--
+		<property name="osgi.bundles" value="slf4j.api@start,slf4j.simple@start,org.springframework.bundle.osgi.extender@start,org.springframework.bundle.spring.context@start,org.springframework.bundle.spring.beans@start,org.springframework.bundle.spring.core@start,org.eclipse.equinox.ds@start,com.springsource.slf4j.org.apache.commons.logging@start,com.springsource.org.aopalliance@start,org.springframework.osgi.log4j.osgi@start,com.springsource.slf4j.api@start,org.eclipse.equinox.util@start,org.springframework.bundle.osgi.io@start,org.springframework.bundle.osgi.core@start,org.springframework.bundle.spring.aop@start,org.eclipse.osgi.services@start,com.springsource.slf4j.log4j@start,com.siemens.ct.pm.ui.views.treeview.ds@start,com.siemens.ct.pm.ui.views.tableview.ds@start,com.siemens.ct.pm.ui.actions.save@start,com.siemens.ct.pm.application@start,com.siemens.ct.pm.model@start,com.siemens.ct.pm.log4j@start,com.siemens.ct.pm.model.basic@start,com.siemens.ct.pm.ui.actions.person@start,com.siemens.ct.pm.ui.views.treeview.dm@start,com.siemens.ct.pm.model.minimal@start,com.siemens.ct.pm.ui.views.bundleview@start,com.siemens.ct.pm.ui.actions.vcard@start,com.siemens.ct.pm.extender@start,com.siemens.ct.pm.ui.views.treeview.pb@start,org.ops4j.peaberry@start,com.google.inject@start,org.apache.felix.ipojo@start,com.siemens.ct.pm.ui.views.treeview.ipojo@start,org.apache.felix.org.apache.felix.ipojo.annotations@start" />
+-->
+		<property name="osgi.bundles" value=" com.google.inject@start, com.siemens.ct.pm.application@start, com.siemens.ct.pm.extender@start, com.siemens.ct.pm.log4j@start, com.siemens.ct.pm.model@start, com.siemens.ct.pm.model.basic@start, com.siemens.ct.pm.model.minimal@start, com.siemens.ct.pm.ui.actions.person@start, com.siemens.ct.pm.ui.actions.save@start, com.siemens.ct.pm.ui.actions.vcard@start, com.siemens.ct.pm.ui.views.bundleview@start, com.siemens.ct.pm.ui.views.tableview.ds@start, com.siemens.ct.pm.ui.views.treeview@start, com.siemens.ct.pm.ui.views.treeview.dm@start, com.siemens.ct.pm.ui.views.treeview.ds@start, com.siemens.ct.pm.ui.views.treeview.ipojo@start, com.siemens.ct.pm.ui.views.treeview.pb@start, com.springsource.org.aopalliance@start, com.springsource.org.apache.log4j@start, com.springsource.slf4j.api@start, com.springsource.slf4j.log4j@start, com.springsource.slf4j.org.apache.commons.logging@start, org.apache.felix.ipojo@start, org.apache.felix.ipojo.arch@start, org.apache.felix.org.apache.felix.ipojo.annotations@start, org.eclipse.equinox.ds@start, org.eclipse.equinox.ds.source@start, org.eclipse.equinox.launcher@start, org.eclipse.equinox.launcher.source@start, org.eclipse.equinox.util@start, org.eclipse.equinox.util.source@start, org.eclipse.osgi@start, org.eclipse.osgi.services@start, org.eclipse.osgi.services.source@start, org.eclipse.osgi.source@start, org.ops4j.peaberry@start, org.springframework.aop@start, org.springframework.asm@start, org.springframework.beans@start, org.springframework.context@start, org.springframework.core@start, org.springframework.expression@start, org.springframework.osgi.core@start, org.springframework.osgi.extender@start, org.springframework.osgi.io@start" />
+        <property name="osgi.noShutdown" value="true" />
+		<property name="eclipse.ignoreApp" value="true" />
+		<property name="org.osgi.framework.bootdelegation" value="*" />
+	</resources>
+
+	<!-- Indicate on a platform basis which JRE to use -->
+	<resources os="Mac">
+		<j2se version="1.6+" java-vm-args="-XstartOnFirstThread" />
+	</resources>
+	<resources os="Windows">
+		<j2se version="1.6+" />
+	</resources>
+	<resources os="Linux">
+		<j2se version="1.6+" />
+	</resources>
+</jnlp>
