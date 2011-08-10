@@ -9,7 +9,6 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>../DexelsVersionControl</module>
 		<module>../com.dexels.navajo.tipi.swt.client</module>
 		<module>../com.dexels.navajo.server.embedded</module>
 		<module>../com.dexels.navajo.dsl.dev.integration</module>
