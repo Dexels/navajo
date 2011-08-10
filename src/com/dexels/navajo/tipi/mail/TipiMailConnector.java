@@ -58,7 +58,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 	private int pageSize = 0;
 	private int currentPage = 1;
 	
-	private final transient Timer disconnectTimer = new Timer("DisconnectTimer",true);
+	private transient Timer disconnectTimer = new Timer("DisconnectTimer",true);
 	
 
 	public void doTransaction(Navajo n, String service, String destination) throws TipiBreakException, TipiException {
@@ -121,7 +121,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		if(disconnectTimeout > 0) {
 			disconnectTimer.cancel();
 			// I _think_ this is not necessary
-//			disconnectTimer = new Timer("DisconnectTimer",true);
+			disconnectTimer = new Timer("DisconnectTimer",true);
 			disconnectTimer.schedule(new TimerTask(){
 
 				@Override
