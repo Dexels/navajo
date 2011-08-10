@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.dexels.navajo.core</groupId>
+	<artifactId>com.dexels.navajo.server.aggr</artifactId>
+	<version>1.0.1</version>
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>../NavajoTipi</module>
+		<module>../TipiFacilityOccpation</module>
+		<module>../TipiFlickr</module>
+		<module>../TipiGeoSwing</module>
+		<module>../TipiJabber</module>
+		<module>../TipiJxLayer</module>
+		<module>../TipiMail</module>
+		<module>../TipiRss</module>
+		<module>../TipiRuby</module>
+		<module>../TipiSubstance</module>
+		<module>../NavajoSwingTipi</module>
+		<module>../com.dexels.navajo.tipi.swing.application</module>
+		<module>../NavajoRichTipi</module>
+		<module>../TipiSwingMig</module>
+		<module>../TipiSwingClient</module>
+		<module>../TipiSwingEditor</module>
+		<module>../TipiSwingX</module>
+		<module>../com.dexels.navajo.tipi.vaadin</module>
+
+	</modules>
+</project>

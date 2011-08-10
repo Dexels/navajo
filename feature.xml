@@ -104,12 +104,6 @@
          unpack="false"/>
 
    <plugin
-         id="com.dexels.navajo.tipi.swing.deps"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="com.dexels.navajo.tipi.swing.mig"
          download-size="0"
          install-size="0"
