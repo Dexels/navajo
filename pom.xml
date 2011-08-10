@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>com.dexels.navajo.core</groupId>
 		<artifactId>com.dexels.navajo.super</artifactId>
-		<version>1.0.0</version>
+		<version>1.0.2.qualifier</version>
 		<relativePath>../com.dexels.repository/superpom.xml</relativePath>
 	</parent>
 </project>
