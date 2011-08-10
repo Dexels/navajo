@@ -12,9 +12,6 @@
    <feature url="features/com.dexels.navajo.birt.oda.feature_1.0.2.qualifier.jar" id="com.dexels.navajo.birt.oda.feature" version="1.0.2.qualifier">
       <category name="Navajo SDK"/>
    </feature>
-   <feature url="features/com.dexels.navajo.language.feature_1.0.2.qualifier.jar" id="com.dexels.navajo.language.feature" version="1.0.2.qualifier">
-      <category name="Navajo SDK"/>
-   </feature>
    <feature url="features/com.dexels.navajo.server.embedded.feature_1.0.1.qualifier.jar" id="com.dexels.navajo.server.embedded.feature" version="1.0.1.qualifier">
       <category name="Navajo SDK"/>
    </feature>
