@@ -27,6 +27,7 @@
 		<module>../NavajoSwingEditor</module>
 		<module>../TipiSwingEditor</module>
 		<module>../TipiSwingX</module>
+		<module>../TipiCharting</module>
 		<module>../TipiSvgBatik</module>
 		<module>../TipiSwingDocking</module>
 		<module>../com.dexels.navajo.tipi.swing.deps</module>
