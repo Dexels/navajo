@@ -12,9 +12,6 @@
    <feature url="features/com.dexels.navajo.server.embedded.feature_1.0.1.qualifier.jar" id="com.dexels.navajo.server.embedded.feature" version="1.0.1.qualifier">
       <category name="Navajo SDK"/>
    </feature>
-   <feature url="features/com.dexels.navajo.tipi.vaadin.feature_0.1.0.qualifier.jar" id="com.dexels.navajo.tipi.vaadin.feature" version="0.1.0.qualifier">
-      <category name="Tipi"/>
-   </feature>
    <feature url="features/com.dexels.navajo.dev_2.0.4.qualifier.jar" id="com.dexels.navajo.dev" version="2.0.4.qualifier">
       <category name="Navajo SDK"/>
    </feature>
