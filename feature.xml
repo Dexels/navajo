@@ -156,4 +156,17 @@
          install-size="0"
          version="0.0.0"/>
 
+   <plugin
+         id="com.dexels.navajo.tipi.svg"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="com.dexels.navajo.rich.client"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
 </feature>

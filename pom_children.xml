@@ -20,6 +20,7 @@
 		<module>../TipiRuby</module>
 		<module>../TipiSubstance</module>
 		<module>../NavajoSwingTipi</module>
+		<module>../NavajoRichClient</module>
 		<module>../NavajoRichTipi</module>
 		<module>../TipiSwingMig</module>
 		<module>../TipiSwingClient</module>
