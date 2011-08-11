@@ -1,8 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project default="feature_export" name="build" basedir=".">
-	<echo message="${basedir}"></echo>
-	<target name="feature_export" >
-		<p2.publish.featuresAndBundles repository="file://Users/frank/Desktop/navajotarget" publishArtifacts="true"  compress="true" append="false" source="/Users/frank/Documents/workspace-xtext/com.dexels.target/">
+<project default="upload" name="build" basedir=".">
+	<property file="build.properties" />
+
+	<echo message="${basedir}">
+	</echo>
+	<target name="feature_export">
+		<delete>
+			<fileset dir="${basedir}/p2">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+
+		<p2.publish.featuresAndBundles repository="file://${basedir}/p2" publishArtifacts="true" compress="true" append="false" source="${basedir}/3rdparty">
 		</p2.publish.featuresAndBundles>
+	</target>
+	
+	<target name="upload" depends="feature_export">
+		<echo message="Server: ${navajoScpUser}@${navajoScpServer}:${navajoScpPath}"></echo>
+		<scp trust="true"  sftp="true" verbose="true" password="${navajoScpPassword}" todir="${navajoScpUser}@${navajoScpServer}:${navajoScpPath}">
+			<fileset dir="${basedir}/p2">
+				<include name="**/*" />
+			</fileset>
+		</scp>
 	</target>
 </project>
