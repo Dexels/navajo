@@ -103,7 +103,7 @@ public class TipiEchoInstance extends ApplicationInstance implements TipiApplica
 		InputStream in = newContext.getTipiResourceStream(fileName);
 
 		if(in!=null) {
-			newContext.parseStream(in, "startup", false,ed);
+			newContext.parseStream(in,ed);
 			newContext.switchToDefinition("startup");
 			in.close();
 			 

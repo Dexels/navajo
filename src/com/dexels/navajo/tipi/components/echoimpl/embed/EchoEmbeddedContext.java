@@ -50,7 +50,7 @@ public class EchoEmbeddedContext extends EchoTipiContext {
 	public void loadDefinition(String def, String name) throws XMLParseException, IOException, TipiException {
 		// public void parseStream(InputStream in, String sourceName, boolean
 		// studioMode) throws IOException, XMLParseException, TipiException {
-		parseStream(getTipiResourceStream(def), name, false, new TipiEchoExtension());
+		parseStream(getTipiResourceStream(def), new TipiEchoExtension());
 		switchToDefinition(name);
 	}
 
