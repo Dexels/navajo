@@ -27,6 +27,7 @@
 		<module>../TipiSwingX</module>
 		<module>../TipiSvgBatik</module>
 		<module>../TipiSwingDocking</module>
+		<module>../com.dexels.navajo.tipi.swing.deps</module>
 		<module>../com.dexels.navajo.tipi.vaadin</module>
 	</modules>
 </project>
