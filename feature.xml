@@ -144,4 +144,10 @@
          install-size="0"
          version="0.0.0"/>
 
+   <plugin
+         id="com.dexels.navajo.tipi.swing.docking"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
 </feature>

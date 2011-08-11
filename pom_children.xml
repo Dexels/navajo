@@ -25,6 +25,7 @@
 		<module>../TipiSwingClient</module>
 		<module>../TipiSwingEditor</module>
 		<module>../TipiSwingX</module>
+		<module>../TipiSwingDocking</module>
 		<module>../com.vaadin</module>
 		<module>../com.dexels.navajo.tipi.vaadin</module>
 
