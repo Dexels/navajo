@@ -6,23 +6,23 @@
    <feature url="features/com.dexels.navajo.server.feature_1.0.4.qualifier.jar" id="com.dexels.navajo.server.feature" version="1.0.4.qualifier">
       <category name="Navajo"/>
    </feature>
-   <feature url="features/com.dexels.navajo.server.enterprise.feature_1.0.3.qualifier.jar" id="com.dexels.navajo.server.enterprise.feature" version="1.0.3.qualifier">
-      <category name="Navajo Enterprise"/>
-   </feature>
    <feature url="features/com.dexels.navajo.birt.oda.feature_1.0.2.qualifier.jar" id="com.dexels.navajo.birt.oda.feature" version="1.0.2.qualifier">
       <category name="Navajo SDK"/>
    </feature>
    <feature url="features/com.dexels.navajo.server.embedded.feature_1.0.1.qualifier.jar" id="com.dexels.navajo.server.embedded.feature" version="1.0.1.qualifier">
       <category name="Navajo SDK"/>
    </feature>
-   <feature url="features/com.dexels.navajo.tipi.feature_1.0.43.jar" id="com.dexels.navajo.tipi.feature" version="1.0.43">
-      <category name="Tipi"/>
-   </feature>
    <feature url="features/com.dexels.navajo.tipi.vaadin.feature_0.1.0.qualifier.jar" id="com.dexels.navajo.tipi.vaadin.feature" version="0.1.0.qualifier">
       <category name="Tipi"/>
    </feature>
    <feature url="features/com.dexels.navajo.dev_2.0.4.qualifier.jar" id="com.dexels.navajo.dev" version="2.0.4.qualifier">
       <category name="Navajo SDK"/>
+   </feature>
+   <feature url="features/com.dexels.navajo.server.enterprise.feature_1.0.3.qualifier.jar" id="com.dexels.navajo.server.enterprise.feature" version="1.0.3.qualifier">
+      <category name="Navajo Enterprise"/>
+   </feature>
+   <feature url="features/com.dexels.navajo.tipi.feature_1.0.44.qualifier.jar" id="com.dexels.navajo.tipi.feature" version="1.0.44.qualifier">
+      <category name="Tipi"/>
    </feature>
    <category-def name="Navajo" label="NavajoCore"/>
    <category-def name="Navajo SDK" label="Navajo SDK"/>
