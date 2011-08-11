@@ -9,7 +9,8 @@ import com.dexels.navajo.tipi.swing.svg.*;
 
 public abstract class SvgBaseComponent extends JPanel {
 
-	
+	private static final long serialVersionUID = -8959454381281777590L;
+
 	public SvgBaseComponent() {
 		setOpaque(false);
 	}

@@ -30,7 +30,7 @@ public class ViewBoxTest extends WindowAdapter implements
         frame = new JFrame("ViewBoxTest: "
           + url.substring(url.lastIndexOf('/') + 1));
         canvas = new JSVGCanvas(null, true, true);
-        canvas.setDocumentState(JSVGCanvas.ALWAYS_DYNAMIC);
+        canvas.setDocumentState(AbstractJSVGComponent.ALWAYS_DYNAMIC);
         canvas.addSVGDocumentLoaderListener(this);
         canvas.addGVTTreeBuilderListener(this);
         canvas.addGVTTreeRendererListener(this);
@@ -52,7 +52,8 @@ public class ViewBoxTest extends WindowAdapter implements
         UpdateManager updateManager = canvas.getUpdateManager();
         updateManager.getUpdateRunnableQueue().invokeLater(
           new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 try {
                     rable.run();
                 } catch (Throwable t) {
@@ -70,7 +71,8 @@ public class ViewBoxTest extends WindowAdapter implements
 
         // Create mutator
         final Runnable mutator = new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 SVGElement svg = (SVGElement)dom.getDocumentElement();
                 String oldViewBox = svg.getAttribute("viewBox");
                 String newViewBox = oldViewBox + " ";
@@ -82,7 +84,8 @@ public class ViewBoxTest extends WindowAdapter implements
 
         // Start thread to pause and then mutate
         new Thread() {
-            public void run() {
+            @Override
+			public void run() {
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
@@ -94,7 +97,8 @@ public class ViewBoxTest extends WindowAdapter implements
 
     public void showFrame() {
         SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 frame.getContentPane().add(canvas);
                 // NOTE: change size this to see different effects
                 frame.setPreferredSize(new java.awt.Dimension(800, 800));
@@ -113,118 +117,143 @@ public class ViewBoxTest extends WindowAdapter implements
 
     // SVGDocumentLoaderListener methods
 
-    public void documentLoadingStarted(SVGDocumentLoaderEvent e) {
+    @Override
+	public void documentLoadingStarted(SVGDocumentLoaderEvent e) {
         log.debug("Document loading started");
     }
 
-    public void documentLoadingCompleted(SVGDocumentLoaderEvent e) {
+    @Override
+	public void documentLoadingCompleted(SVGDocumentLoaderEvent e) {
         log.debug("Document loading completed");
     }
 
-    public void documentLoadingCancelled(SVGDocumentLoaderEvent e) {
+    @Override
+	public void documentLoadingCancelled(SVGDocumentLoaderEvent e) {
         log.debug("Document loading canceled");
     }
 
-    public void documentLoadingFailed(SVGDocumentLoaderEvent e) {
+    @Override
+	public void documentLoadingFailed(SVGDocumentLoaderEvent e) {
         log.debug("Document loading failed: " + e);
         cancel();
     }
 
     // GVTTreeBuilderListener methods
 
-    public void gvtBuildStarted(GVTTreeBuilderEvent e) {
+    @Override
+	public void gvtBuildStarted(GVTTreeBuilderEvent e) {
         log.debug("GVT build started");
     }
 
-    public void gvtBuildCompleted(GVTTreeBuilderEvent e) {
+    @Override
+	public void gvtBuildCompleted(GVTTreeBuilderEvent e) {
         log.debug("GVT build completed");
         showFrame();
     }
 
-    public void gvtBuildCancelled(GVTTreeBuilderEvent e) {
+    @Override
+	public void gvtBuildCancelled(GVTTreeBuilderEvent e) {
         log.debug("GVT build canceled");
     }
 
-    public void gvtBuildFailed(GVTTreeBuilderEvent e) {
+    @Override
+	public void gvtBuildFailed(GVTTreeBuilderEvent e) {
         log.debug("GVT build failed: " + e);
         cancel();
     }
 
     // GVTTreeRendererListener methods
 
-    public void gvtRenderingPrepare(GVTTreeRendererEvent e) {
+    @Override
+	public void gvtRenderingPrepare(GVTTreeRendererEvent e) {
         log.debug("GVT rendering preparing");
     }
 
-    public void gvtRenderingStarted(GVTTreeRendererEvent e) {
+    @Override
+	public void gvtRenderingStarted(GVTTreeRendererEvent e) {
         log.debug("GVT rendering started");
     }
 
-    public void gvtRenderingCompleted(GVTTreeRendererEvent e) {
+    @Override
+	public void gvtRenderingCompleted(GVTTreeRendererEvent e) {
         log.debug("GVT rendering complete");
         ready();
     }
 
-    public void gvtRenderingCancelled(GVTTreeRendererEvent e) {
+    @Override
+	public void gvtRenderingCancelled(GVTTreeRendererEvent e) {
         log.debug("GVT rendering canceled");
     }
 
-    public void gvtRenderingFailed(GVTTreeRendererEvent e) {
+    @Override
+	public void gvtRenderingFailed(GVTTreeRendererEvent e) {
         log.debug("GVT rendering failed: " + e);
         cancel();
     }
 
     // SVGLoadEventDispatcherListener methods
 
-    public void svgLoadEventDispatchCancelled(SVGLoadEventDispatcherEvent e) {
+    @Override
+	public void svgLoadEventDispatchCancelled(SVGLoadEventDispatcherEvent e) {
         log.debug("Load event dispatch cancelled");
     }
 
-    public void svgLoadEventDispatchCompleted(SVGLoadEventDispatcherEvent e) {
+    @Override
+	public void svgLoadEventDispatchCompleted(SVGLoadEventDispatcherEvent e) {
         log.debug("Load event dispatch completed");
     }
 
-    public void svgLoadEventDispatchFailed(SVGLoadEventDispatcherEvent e) {
+    @Override
+	public void svgLoadEventDispatchFailed(SVGLoadEventDispatcherEvent e) {
         log.debug("Load event dispatch failed: " + e);
     }
 
-    public void svgLoadEventDispatchStarted(SVGLoadEventDispatcherEvent e) {
+    @Override
+	public void svgLoadEventDispatchStarted(SVGLoadEventDispatcherEvent e) {
         log.debug("Load event dispatch started");
     }
 
     // UpdateManagerListener
 
-    public void managerStarted(UpdateManagerEvent e) {
+    @Override
+	public void managerStarted(UpdateManagerEvent e) {
         log.debug("Update manager started");
     }
 
-    public void managerSuspended(UpdateManagerEvent e) {
+    @Override
+	public void managerSuspended(UpdateManagerEvent e) {
         log.debug("Update manager suspended");
     }
 
-    public void managerResumed(UpdateManagerEvent e) {
+    @Override
+	public void managerResumed(UpdateManagerEvent e) {
         log.debug("Update manager resumed");
     }
 
-    public void managerStopped(UpdateManagerEvent e) {
+    @Override
+	public void managerStopped(UpdateManagerEvent e) {
         log.debug("Update manager stopped");
     }
 
-    public void updateStarted(UpdateManagerEvent e) {
+    @Override
+	public void updateStarted(UpdateManagerEvent e) {
         //log.debug("Update manager started");
     }
 
-    public void updateCompleted(UpdateManagerEvent e) {
+    @Override
+	public void updateCompleted(UpdateManagerEvent e) {
         //log.debug("Update manager completed");
     }
 
-    public void updateFailed(UpdateManagerEvent e) {
+    @Override
+	public void updateFailed(UpdateManagerEvent e) {
         log.debug("Update manager failed: " + e);
     }
 
     // WindowListener methods
 
-    public void windowClosing(WindowEvent e) {
+    @Override
+	public void windowClosing(WindowEvent e) {
         System.exit(0);
     }
 
@@ -245,7 +274,7 @@ public class ViewBoxTest extends WindowAdapter implements
         }
         File file = new File(args[0]);
         if (file.exists())
-            args[0] = file.toURL().toString();
+            args[0] = file.toURI().toURL().toString();
         new ViewBoxTest(args[0]).go();
     }
 }

@@ -26,6 +26,7 @@ public class TipiSlideshowComponent extends TipiSvgComponent {
 				updateDom(svgPanel.getDocument(),loadUrl);
 				svgPanel.runInUpdateQueue(new Runnable(){
 
+					@Override
 					public void run() {
 						svgPanel.fireAnimation("animin");
 						
@@ -51,10 +52,12 @@ public class TipiSlideshowComponent extends TipiSvgComponent {
 			svgPanel.fireAnimation("animout");
 			Thread t = new Thread(new Runnable(){
 
+				@Override
 				public void run() {
 //					final String uu = loadUrl(myTag);
 					if(myTag!=null) {
 						svgPanel.runInUpdateQueue(new Runnable(){
+								@Override
 								public void run() {
 								updateDom(svgPanel.getDocument(),myTag);
 								
@@ -70,6 +73,7 @@ public class TipiSlideshowComponent extends TipiSvgComponent {
 			svgPanel.fireAnimation("animout");
 			Thread t = new Thread(new Runnable(){
 
+				@Override
 				public void run() {
 					final String uu = (String)object;
 					try {
@@ -79,6 +83,7 @@ public class TipiSlideshowComponent extends TipiSvgComponent {
 					}
 					svgPanel.runInUpdateQueue(new Runnable(){
 
+						@Override
 						public void run() {
 							updateDom(svgPanel.getDocument(),uu);
 							
@@ -97,6 +102,7 @@ public class TipiSlideshowComponent extends TipiSvgComponent {
 			svgPanel.moveToFirst("picture");
 			svgPanel.runInUpdateQueue(new Runnable() {
 
+				@Override
 				public void run() {
 					svgPanel.fireAnimation("animin");
 				}

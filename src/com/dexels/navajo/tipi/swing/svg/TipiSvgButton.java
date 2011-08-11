@@ -13,10 +13,12 @@ public class TipiSvgButton extends TipiSvgComponent implements
 
 	private String buttonText = null;
 	
+	@Override
 	public Object createContainer() {
 		Object o = super.createContainer();
 		myComponent.addSvgDocumentListener(new SvgDocumentAdapter(){
 
+			@Override
 			public void onDocumentLoadingFinished() {
 				myComponent.setTextContent("buttontext",buttonText);
 	}
@@ -28,6 +30,7 @@ public class TipiSvgButton extends TipiSvgComponent implements
 	
 	
 	
+	@Override
 	protected void setComponentValue(String name, Object object) {
 		super.setComponentValue(name, object);
 		if (name.equals("image")) {
@@ -68,6 +71,7 @@ public class TipiSvgButton extends TipiSvgComponent implements
 
 
 
+	@Override
 	public void onActivate(String targetId) {
 		try {
 			performTipiEvent("onActionPerformed", null, false);

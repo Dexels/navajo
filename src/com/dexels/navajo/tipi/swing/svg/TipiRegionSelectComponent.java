@@ -28,6 +28,7 @@ public class TipiRegionSelectComponent extends TipiSvgComponent {
 		comboBox = new JComboBox(regions);
 		lp.add(comboBox,BorderLayout.SOUTH);
 		comboBox.addItemListener(new ItemListener(){
+			@Override
 			public void itemStateChanged(ItemEvent e) {
 				String sel = (String) e.getItem();
 				if(e.getStateChange()==ItemEvent.SELECTED) {
@@ -79,6 +80,7 @@ public class TipiRegionSelectComponent extends TipiSvgComponent {
 	public void onClick(final String targetId) {
 		super.onClick(targetId);
 			SwingUtilities.invokeLater(new Runnable(){
+			@Override
 			public void run() {
 				comboBox.setSelectedItem(targetId);
 			}});

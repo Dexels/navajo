@@ -27,23 +27,27 @@ public class SvgDocumentAdapter implements SvgDocumentListener {
     /**
      * Called when the loading of a document was started.
      */
-    public void onDocumentLoadingStarted(){};
+    @Override
+	public void onDocumentLoadingStarted(){};
 
     /**
      * Called when the loading of a document was completed.
      */
-    public void onDocumentLoadingFinished() {
+    @Override
+	public void onDocumentLoadingFinished() {
 	}
 
     /**
      * Called when the loading of a document was cancelled.
      */
-    public void onDocumentLoadingCancelled() {
+    @Override
+	public void onDocumentLoadingCancelled() {
 	}
 
     /**
      * Called when the loading of a document has failed.
      */
-    public void onDocumentLoadingFailed() {
+    @Override
+	public void onDocumentLoadingFailed() {
 	}
 }

@@ -14,11 +14,13 @@ public class TipiSvgPropertyComponent extends TipiSvgComponent implements Proper
 	private String propertyName = null;
 	private Property myProperty = null;
 	
+	@Override
 	public Object createContainer() {
 		super.createContainer();
 		getSvgComponent().addSvgDocumentListener(new SvgDocumentAdapter(){
 
 
+			@Override
 			public void onDocumentLoadingFinished() {
 				if(myProperty!=null) {
 					try {
@@ -33,6 +35,7 @@ public class TipiSvgPropertyComponent extends TipiSvgComponent implements Proper
 		});
 		getSvgComponent().addSvgMouseListener(new SvgMouseListener(){
 
+			@Override
 			public void onActivate(String targetId) {
 				if(myProperty!=null) {
 					try {
@@ -46,24 +49,30 @@ public class TipiSvgPropertyComponent extends TipiSvgComponent implements Proper
 				}
 			}
 
+			@Override
 			public void onClick(String targetId) {
 			}
 
+			@Override
 			public void onMouseDown(String targetId) {
 				
 			}
 
+			@Override
 			public void onMouseMove(String targetId) {
 			}
 
+			@Override
 			public void onMouseOut(String targetId) {
 			}
 
+			@Override
 			public void onMouseOver(String targetId) {
 				System.err.println("Over: "+targetId);
 				
 			}
 
+			@Override
 			public void onMouseUp(String targetId) {
 				
 			}});
@@ -82,19 +91,23 @@ public class TipiSvgPropertyComponent extends TipiSvgComponent implements Proper
 		return (SvgBatikComponent) myComponent;
 	}
 
+	@Override
 	public void addTipiEventListener(TipiEventListener listener) {
 //		
 	}
 
 	
+	@Override
 	public Property getProperty() {
 		return myProperty;
 	}
 
+	@Override
 	public String getPropertyName() {
 		return propertyName;
 	}
 
+	@Override
 	public void setProperty(final Property p) {
 		if(myProperty == p) {
 			System.err.println("Set property.... ");
@@ -132,9 +145,11 @@ public class TipiSvgPropertyComponent extends TipiSvgComponent implements Proper
 		}
 	}
 
+	@Override
 	public void propertyChange( PropertyChangeEvent evt) {
 		getSvgComponent().runInUpdateQueue(new Runnable(){
 
+			@Override
 			public void run() {
 				try {
 					updateProperty(myProperty);

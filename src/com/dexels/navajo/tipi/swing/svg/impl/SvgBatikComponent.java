@@ -27,6 +27,8 @@ import org.w3c.dom.svg.*;
 import com.dexels.navajo.tipi.swing.svg.*;
 
 public class SvgBatikComponent extends SvgBaseComponent {
+
+	private static final long serialVersionUID = 8507026263039278186L;
 	public final JSVGCanvas svgCanvas;
 	private final ArrayList<SvgAnimationListener> mySvgAnimationListeners = new ArrayList<SvgAnimationListener>();
 	private final ArrayList<SvgMouseListener> mySvgMouseListeners = new ArrayList<SvgMouseListener>();
@@ -64,17 +66,21 @@ public class SvgBatikComponent extends SvgBaseComponent {
 		add(svgCanvas, BorderLayout.CENTER);
 		addComponentListener(new ComponentListener() {
 
+			@Override
 			public void componentHidden(ComponentEvent e) {
 			}
 
+			@Override
 			public void componentMoved(ComponentEvent e) {
 			}
 
+			@Override
 			public void componentResized(ComponentEvent e) {
 				doLayout();
 				repaint();
 			}
 
+			@Override
 			public void componentShown(ComponentEvent e) {
 				repaint();
 			}
@@ -94,13 +100,13 @@ public class SvgBatikComponent extends SvgBaseComponent {
 		inputMap.put(key, SCROLL_UP_ACTION);
 		key = KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0);
 		inputMap.put(key, SCROLL_DOWN_ACTION);
-		key = KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.SHIFT_MASK);
+		key = KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, InputEvent.SHIFT_MASK);
 		inputMap.put(key, FAST_SCROLL_RIGHT_ACTION);
-		key = KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.SHIFT_MASK);
+		key = KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, InputEvent.SHIFT_MASK);
 		inputMap.put(key, FAST_SCROLL_LEFT_ACTION);
-		key = KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.SHIFT_MASK);
+		key = KeyStroke.getKeyStroke(KeyEvent.VK_UP, InputEvent.SHIFT_MASK);
 		inputMap.put(key, FAST_SCROLL_UP_ACTION);
-		key = KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.SHIFT_MASK);
+		key = KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, InputEvent.SHIFT_MASK);
 		inputMap.put(key, FAST_SCROLL_DOWN_ACTION);
 
 	}
@@ -118,6 +124,8 @@ public class SvgBatikComponent extends SvgBaseComponent {
 	}
 
 	public class ScrollEvent extends AbstractAction {
+		
+		private static final long serialVersionUID = 1007950559250199520L;
 		String direction = "";
 		int amount = 0;
 
@@ -126,6 +134,7 @@ public class SvgBatikComponent extends SvgBaseComponent {
 			this.amount = amount;
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			
 			if (svgCanvas == null) {
@@ -165,17 +174,20 @@ public class SvgBatikComponent extends SvgBaseComponent {
 		}
 	}
 
+	@Override
 	public void setPreferredSize(Dimension d) {
 		myPrefsize = d;
 		svgCanvas.setPreferredSize(d);
 		doLayout();
 	}
 
+	@Override
 	public Dimension getPreferredSize() {
 		Dimension preferredSize = super.getPreferredSize();
 		return preferredSize;
 	}
 
+	@Override
 	public void setBounds(Rectangle r) {
 		super.setBounds(r);
 		if (svgCanvas != null) {
@@ -191,6 +203,7 @@ public class SvgBatikComponent extends SvgBaseComponent {
 		}
 	}
 
+	@Override
 	public void setSize(Dimension d) {
 		super.setSize(d);
 		System.err.println("SETTING SIZE: " + d);
@@ -205,6 +218,7 @@ public class SvgBatikComponent extends SvgBaseComponent {
 		svgCanvas.setDocument(doc);
 	}
 
+	@Override
 	public void fireAnimation(String animId) {
 		SVGOMAnimationElement ee = (SVGOMAnimationElement) svgCanvas.getSVGDocument().getElementById(animId);
 		UpdateManager um = svgCanvas.getUpdateManager();
@@ -217,12 +231,14 @@ public class SvgBatikComponent extends SvgBaseComponent {
 	public void init() {
 		svgCanvas.setBackground(new Color(0x0, true));
 		svgCanvas.setOpaque(false);
-		svgCanvas.setDocumentState(JSVGCanvas.ALWAYS_DYNAMIC);
+		svgCanvas.setDocumentState(AbstractJSVGComponent.ALWAYS_DYNAMIC);
 		svgCanvas.addSVGDocumentLoaderListener(new SVGDocumentLoaderAdapter() {
+			@Override
 			public void documentLoadingStarted(SVGDocumentLoaderEvent e) {
 				fireDocumentLoadingStarted();
 			}
 
+			@Override
 			public void documentLoadingCompleted(SVGDocumentLoaderEvent e) {
 				if (myRegisteredIdList != null && e.getSVGDocument() != null) {
 					StringTokenizer st = new StringTokenizer(myRegisteredIdList, ",");
@@ -256,6 +272,7 @@ public class SvgBatikComponent extends SvgBaseComponent {
 
 	}
 
+	@Override
 	public void init(URL u) {
 		init();
 		svgCanvas.setURI(u.toString());
@@ -264,6 +281,7 @@ public class SvgBatikComponent extends SvgBaseComponent {
 	protected void registerAnimationEvents(SVGElement ee) {
 		((EventTarget) ee).addEventListener("endEvent", new EventListener() {
 
+			@Override
 			public void handleEvent(Event oy) {
 				String targetId = ((AnimationTarget) oy.getCurrentTarget()).getElement().getAttribute("id");
 				String animationId = ((AnimationTarget) oy.getTarget()).getElement().getAttribute("id");
@@ -273,6 +291,7 @@ public class SvgBatikComponent extends SvgBaseComponent {
 			}
 		}, true);
 		((EventTarget) ee).addEventListener("beginEvent", new EventListener() {
+			@Override
 			public void handleEvent(Event oy) {
 				String targetId = ((AnimationTarget) oy.getCurrentTarget()).getElement().getAttribute("id");
 				String animationId = ((AnimationTarget) oy.getTarget()).getElement().getAttribute("id");
@@ -283,6 +302,7 @@ public class SvgBatikComponent extends SvgBaseComponent {
 
 	protected void registerEvents(SVGElement ee) {
 		((EventTarget) ee).addEventListener("click", new EventListener() {
+			@Override
 			public void handleEvent(Event oy) {
 				String targetId = ((SVGElement) oy.getCurrentTarget()).getAttribute("id");
 				fireOnMouseClick(targetId);
@@ -290,12 +310,14 @@ public class SvgBatikComponent extends SvgBaseComponent {
 		}, true);
 
 		((EventTarget) ee).addEventListener("mouseup", new EventListener() {
+			@Override
 			public void handleEvent(Event oy) {
 				String targetId = ((SVGElement) oy.getCurrentTarget()).getAttribute("id");
 				fireOnMouseUp(targetId);
 			}
 		}, true);
 		((EventTarget) ee).addEventListener("mousedown", new EventListener() {
+			@Override
 			public void handleEvent(Event oy) {
 				String currentId = ((SVGElement) oy.getCurrentTarget()).getAttribute("id");
 				String targetId = ((AnimationTarget) oy.getTarget()).getElement().getAttribute("id");
@@ -304,24 +326,28 @@ public class SvgBatikComponent extends SvgBaseComponent {
 			}
 		}, true);
 		((EventTarget) ee).addEventListener("mouseover", new EventListener() {
+			@Override
 			public void handleEvent(Event oy) {
 				String targetId = ((SVGElement) oy.getCurrentTarget()).getAttribute("id");
 				fireOnMouseOver(targetId);
 			}
 		}, true);
 		((EventTarget) ee).addEventListener("mouseout", new EventListener() {
+			@Override
 			public void handleEvent(Event oy) {
 				String targetId = ((SVGElement) oy.getCurrentTarget()).getAttribute("id");
 				fireOnMouseOut(targetId);
 			}
 		}, true);
 		((EventTarget) ee).addEventListener("mousemove", new EventListener() {
+			@Override
 			public void handleEvent(Event oy) {
 				String targetId = ((SVGElement) oy.getCurrentTarget()).getAttribute("id");
 				fireOnMouseMove(targetId);
 			}
 		}, true);
 		((EventTarget) ee).addEventListener("DOMActivate", new EventListener() {
+			@Override
 			public void handleEvent(Event oy) {
 				System.err.println("DOMActivate!");
 				String targetId = ((SVGElement) oy.getCurrentTarget()).getAttribute("id");
@@ -405,12 +431,6 @@ public class SvgBatikComponent extends SvgBaseComponent {
 			System.err.println("Can not register id: " + id);
 			Thread.dumpStack();
 			return;
-		}
-		if( doc==null) {
-			System.err.println("Document null Can not register id: "+id);
-			Thread.dumpStack();
-			return;
-			
 		}
 		SVGElement ee = (SVGElement) doc.getElementById(id);
 		if (ee == null) {

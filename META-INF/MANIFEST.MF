@@ -2,28 +2,28 @@ Bundle-Name: Navajo Tipi Svg Library (Batik)
 Bundle-SymbolicName: com.dexels.navajo.tipi.svg
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.2.qualifier
+Bundle-Version: 1.0.3.qualifier
 Bundle-Vendor: Dexels
 Import-Package: org.osgi.framework;version="1.5.0"
 Require-Bundle: com.dexels.navajo.tipi;bundle-version="1.0.43",
  com.dexels.navajo.tipi.swing;bundle-version="1.0.41",
  com.dexels.navajo.document;bundle-version="1.0.3",
- com.dexels.navajo.version;bundle-version="1.0.6"
+ com.dexels.navajo.version;bundle-version="1.0.6",
+ org.apache.batik.css;bundle-version="1.6.0",
+ org.apache.batik.dom;bundle-version="1.6.0",
+ org.apache.batik.dom.svg;bundle-version="1.6.0",
+ org.apache.batik.parser;bundle-version="1.6.0",
+ org.apache.batik.svggen;bundle-version="1.6.0",
+ org.apache.batik.transcoder;bundle-version="1.6.0",
+ org.apache.batik.util;bundle-version="1.6.0",
+ org.apache.batik.util.gui;bundle-version="1.6.0",
+ org.apache.batik.xml;bundle-version="1.6.0",
+ org.w3c.dom.smil;bundle-version="1.0.1",
+ org.w3c.dom.svg;bundle-version="1.1.0",
+ org.apache.batik.bridge;bundle-version="1.6.0",
+ org.apache.batik.ext.awt;bundle-version="1.6.0",
+ org.apache.batik.pdf;bundle-version="1.6.0",
+ org.apache.log4j;bundle-version="1.2.15",
+ org.apache.batik.swing;bundle-version="1.7.0"
 Bundle-ClassPath: lib/batik-swing.jar,
- lib/batik-anim.jar,
- lib/batik-awt-util.jar,
- lib/batik-bridge.jar,
- lib/batik-css.jar,
- lib/batik-dom.jar,
- lib/batik-ext.jar,
- lib/batik-gui-util.jar,
- lib/batik-gvt.jar,
- lib/batik-parser.jar,
- lib/batik-script.jar,
- lib/batik-svg-dom.jar,
- lib/batik-util.jar,
- lib/batik-xml.jar,
- lib/js.jar,
- lib/log4j-1_2_4.jar,
- lib/xml-apis-ext.jar,
- lib/xml-apis.jar
+ lib/batik-anim.jar

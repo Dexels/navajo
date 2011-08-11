@@ -63,6 +63,7 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 		((SvgBatikComponent)myComponent).setDocument(doc);
 	}
 
+	@Override
 	public Object createContainer() {
 		myComponent = new SvgBatikComponent();
 		myComponent.addSvgAnimationListener(this);
@@ -70,6 +71,7 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 		myComponent.addSvgMouseListener(this);
 		myComponent.addSvgDocumentListener(new SvgDocumentAdapter(){
 
+			@Override
 			public void onDocumentLoadingFinished() {
 				System.err.println("Loading finished detected@");
 				myComponent.setRegisteredIds(registeredIds);
@@ -83,6 +85,7 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 		myComponent.setAttribute(xlinkNS, id, attributeName, value);
 	}
 	
+	@Override
 	public void onClick(String targetId) {
 		System.err.println("On click detected!");
 		Map<String,Object> m = new HashMap<String,Object>();
@@ -94,6 +97,7 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 		}
 	}
 
+	@Override
 	public void onMouseDown(String targetId) {
 		System.err.println("mouse down!");
 		Map<String,Object> m = new HashMap<String,Object>();
@@ -106,6 +110,7 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 		}
 	}
 	
+	@Override
 	public void onActivate(String targetId) {
 		System.err.println("Activate!!!!!!");
 		Map<String,Object> m = new HashMap<String,Object>();
@@ -118,6 +123,7 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 		}
 	}
 
+	@Override
 	public void onMouseMove(String targetId) {
 		System.err.println("Sauspan!");
 		Map<String,Object> m = new HashMap<String,Object>();
@@ -129,6 +135,7 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 		}
 	}
 
+	@Override
 	public void onMouseOut(String targetId) {
 		Map<String,Object> m = new HashMap<String,Object>();
 		m.put("id", targetId);
@@ -139,6 +146,7 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 		}
 	}
 
+	@Override
 	public void onMouseOver(String targetId) {
 		Map<String,Object> m = new HashMap<String,Object>();
 		m.put("id", targetId);
@@ -149,6 +157,7 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 		}
 	}
 
+	@Override
 	public void onMouseUp(String targetId) {
 		System.err.println("mouse up!");
 		Map<String,Object> m = new HashMap<String,Object>();
@@ -160,6 +169,7 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 		}
 	}
 
+	@Override
 	public void onAnimationEnded(String animationId, String targetId) {
 		System.err.print("*");
 		//Thread.dumpStack();
@@ -177,6 +187,7 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 
 	
 
+	@Override
 	public void onAnimationStarted(String animationId, String targetId) {
 		Map<String,Object> m = new HashMap<String,Object>();
 		m.put("id", animationId);
