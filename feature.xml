@@ -2,7 +2,7 @@
 <feature
       id="com.dexels.navajo.tipi.feature"
       label="Tipi Core Feature"
-      version="1.0.44"
+      version="1.0.44.qualifier"
       provider-name="Dexels">
 
    <description url="http://www.example.com/description">
@@ -97,13 +97,6 @@
          unpack="false"/>
 
    <plugin
-         id="com.dexels.navajo.tipi.swing.application"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="com.dexels.navajo.tipi.swing.mig"
          download-size="0"
          install-size="0"
@@ -144,5 +137,11 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
+   <plugin
+         id="com.dexels.navajo.tipi.charting"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
 </feature>

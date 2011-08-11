@@ -20,12 +20,12 @@
 		<module>../TipiRuby</module>
 		<module>../TipiSubstance</module>
 		<module>../NavajoSwingTipi</module>
-		<module>../com.dexels.navajo.tipi.swing.application</module>
 		<module>../NavajoRichTipi</module>
 		<module>../TipiSwingMig</module>
 		<module>../TipiSwingClient</module>
 		<module>../TipiSwingEditor</module>
 		<module>../TipiSwingX</module>
+		<module>../com.vaadin</module>
 		<module>../com.dexels.navajo.tipi.vaadin</module>
 
 	</modules>
