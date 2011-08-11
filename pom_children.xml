@@ -24,6 +24,7 @@
 		<module>../NavajoRichTipi</module>
 		<module>../TipiSwingMig</module>
 		<module>../TipiSwingClient</module>
+		<module>../NavajoSwingEditor</module>
 		<module>../TipiSwingEditor</module>
 		<module>../TipiSwingX</module>
 		<module>../TipiSvgBatik</module>
