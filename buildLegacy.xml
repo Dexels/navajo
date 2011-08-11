@@ -29,8 +29,8 @@
 	Set to true to call the build scripts on all dependencies too.
 	Not very efficient, but thorough.
 	-->
-	<property name="recursivebuild" value="false"/>
-
+	<property name="recursivebuild" value="true"/>
+	<property name="doUploadTipi" value="true"/>
 	<!--
 	Create a zip-file of the binary jar, and all its dependencies.
 	-->
