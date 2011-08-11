@@ -99,7 +99,7 @@
 			</and>
 			<then>
 				<echo message="Calling build on: ${currentdep}"/>
-				<ant dir="../${currentdep}" antfile="build.xml" inheritall="false">
+				<ant dir="../${currentdep}" antfile="buildLegacy.xml" inheritall="false">
 				</ant>
 			</then>
 			<else>
