@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="feature_export" name="build" basedir=".">
+	<echo message="${basedir}"></echo>
+	<target name="feature_export" >
+		<p2.publish.featuresAndBundles repository="file://Users/frank/Desktop/navajotarget" publishArtifacts="true"  compress="true" append="false" source="/Users/frank/Documents/workspace-xtext/com.dexels.target/">
+		</p2.publish.featuresAndBundles>
+	</target>
+</project>
