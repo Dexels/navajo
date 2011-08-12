@@ -19,6 +19,7 @@
 		<module>../com.dexels.navajo.dsl.tsl</module>
 		<module>../com.dexels.navajo.dsl.tsl.ui</module>
 		<module>../com.dexels.navajo.dsl.navajomanager</module>
+		<module>../com.dexels.navajo.tools.wsdl</module>
 		<module>../NavajoBIRT</module>
 		<module>../NavajoScriptPlugin</module>
 	</modules>
