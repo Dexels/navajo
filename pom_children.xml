@@ -15,6 +15,5 @@
 		<module>../Navajo</module>
 		<module>../NavajoAsyncClient</module>
 		<module>../NavajoFunctions</module>
-		<module>../com.dexels.navajo.client.deps</module>
 	</modules>
 </project>
