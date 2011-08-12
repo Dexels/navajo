@@ -47,6 +47,7 @@ Export-Package: com.dexels.navajo.adapter,
  com.dexels.navajo.server.jmx;uses:="javax.management.monitor,javax.management.openmbean,javax.management",
  com.dexels.navajo.server.monitoring;uses:="javax.management",
  com.dexels.navajo.server.resource;uses:="junit.framework,com.dexels.navajo.server,com.dexels.navajo.mapping",
+ com.dexels.navajo.server.statistics,
  com.dexels.navajo.server.test;
   uses:="com.dexels.navajo.listeners,
    com.dexels.navajo.lockguard,
@@ -66,7 +67,8 @@ Export-Package: com.dexels.navajo.adapter,
   uses:="com.dexels.navajo.server,
    com.dexels.navajo.mapping,
    org.w3c.dom,
-   com.dexels.navajo.document",navajo;uses:="com.dexels.navajo.version,org.osgi.framework",
+   com.dexels.navajo.document",
+ navajo;uses:="com.dexels.navajo.version,org.osgi.framework",
  org.dexels.utils;uses:="com.dexels.navajo.loader"
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.document,
