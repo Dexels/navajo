@@ -9,6 +9,8 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.jsp.PageContext;
+
+import com.dexels.navajo.server.listener.NavajoContextListener;
 public class InstallerContext {
 	private PageContext pageContext;
 	
@@ -45,7 +47,7 @@ public class InstallerContext {
 	 */
 	public void initialize() {
 		//TODO fix!
-		//initializeContext(getPageContext().getServletContext(),null);
+		NavajoContextListener.initializeContext(getPageContext().getServletContext(),null);
 	}
 	
 	public String getContextPath() {
