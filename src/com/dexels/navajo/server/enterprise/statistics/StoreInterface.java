@@ -1,9 +1,12 @@
 package com.dexels.navajo.server.enterprise.statistics;
 
+import java.util.Map;
+import java.util.Set;
+
+import com.dexels.navajo.events.types.AuditLogEvent;
 import com.dexels.navajo.mapping.AsyncMappable;
 import com.dexels.navajo.server.Access;
-import java.util.Set;
-import java.util.Map;
+import com.dexels.navajo.server.statistics.TodoItem;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -46,14 +49,14 @@ public interface StoreInterface {
    *
    * @param a
    */
-  public int storeAccess(final Map accessMap);
+  public int storeAccess(final Map<String,TodoItem> accessMap);
   
   /**
    * Method to store multiple access objects in the (persistent) Navajo store.
    *
    * @param a
    */
-  public void storeAuditLogs(final Set auditLogSet);
+  public void storeAuditLogs(final Set<AuditLogEvent> auditLogSet);
 
   /**
    * Set the url for the database.
@@ -67,7 +70,7 @@ public interface StoreInterface {
    *
    * @param m
    */
-  public void setDatabaseParameters(Map m);
+  public void setDatabaseParameters(Map<String,String> m);
 
 public void shutdown();
 }
