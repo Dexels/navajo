@@ -37,51 +37,5 @@ package tipiswingclient;
  */
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 
-	public static final int MAJOR = 2;
-	public static final int MINOR = 0;
-	public static final int PATCHLEVEL = 1;
-	public static final String VENDOR = "Dexels";
-	public static final String PRODUCTNAME = "Tipi Swing Client";
 
-	// Included packages.
-	String[] includes = { "navajodocument.Version" };
-
-	public Version() {
-		// addIncludes(includes);
-		setReleaseDate("2006-06-29");
-	}
-
-	@Override
-	public int getMajor() {
-		return MAJOR;
-	}
-
-	@Override
-	public int getMinor() {
-		return MINOR;
-	}
-
-	@Override
-	public int getPatchLevel() {
-		return PATCHLEVEL;
-	}
-
-	@Override
-	public String getVendor() {
-		return VENDOR;
-	}
-
-	@Override
-	public String getProductName() {
-		return PRODUCTNAME;
-	}
-
-	public static void main(String[] args) {
-		Version v = new Version();
-		System.err.println(v.toString());
-		com.dexels.navajo.version.AbstractVersion[] d = v.getIncludePackages();
-		for (int i = 0; i < d.length; i++) {
-			System.err.println("\t" + d[i].toString());
-		}
-	}
 }
