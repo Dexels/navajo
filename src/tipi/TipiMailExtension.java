@@ -6,6 +6,8 @@ import com.dexels.navajo.tipi.TipiContext;
 
 public class TipiMailExtension extends TipiAbstractXMLExtension implements TipiExtension {
 
+
+	private static final long serialVersionUID = -8495583222148257940L;
 	private static TipiMailExtension instance = null;
 	
 	public static TipiMailExtension getInstance() {
