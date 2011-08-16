@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<GroundOverlay>
+  <name>Statistics</name>
+  <color>7fffffff</color>
+  <drawOrder>1</drawOrder>
+  <Icon>
+    <href>http://spiritus.dexels.nl:9080/overlay.png?line1=Inwoners:%202012312&amp;fontsize=20&lh=20</href>					      
+  </Icon>
+  <LatLonBox>
+    <north>52.70020051684314</north>
+    <south>52.59530828586414</south>
+    <east>5.03807842900082</east>
+    <west>4.86328295133534</west>
+    <rotation>0</rotation>
+  </LatLonBox>
+</GroundOverlay>
+</kml>

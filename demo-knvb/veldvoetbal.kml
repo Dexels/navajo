@@ -16,7 +16,7 @@
         </Region>	
 	  <name>Gemeente</name>
 	  <Link>
-	    <href>http://spiritus.dexels.nl:9080/statistics/gemeente.jsp</href>
+	    <href>http://spiritus.dexels.nl:7080/gea/statistics/gemeente.jsp</href>
 	    <viewRefreshMode>onStop</viewRefreshMode>
 	    <viewRefreshTime>1</viewRefreshTime>	    	    
 	    <viewBoundScale>1.5</viewBoundScale>	    

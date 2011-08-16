@@ -195,14 +195,20 @@ public class KMLMap extends AbstractKMLMap implements Mappable {
 		try {
 //			Test t = new Test();
 //			hm.inMessage = t.createTestMessage();
-			FileInputStream fis = new FileInputStream("InitGenerateClubDataKnkv.tml");
+			FileInputStream fis = new FileInputStream("InitGenerateClubDataKnvb.tml");
 			Navajo n = NavajoFactory.getInstance().createNavajo(fis);
 			fis.close();
 			hm.inMessage = n;
+//			try{
+//				n.write(System.err);
+//			}catch(Exception e){
+//				System.err.println("Null navajo");
+//			}
 			
-//			XMLElement xxx = hm.createPointKmlFile(hm.inMessage, "Clubs");
-//
-//			File res = new File("clubs.kml");
+			File xxx = hm.createPointKmlFile(hm.inMessage, "Clubs");
+			
+			System.err.println("Saved file: " + xxx.getAbsolutePath());
+			//File res = new File("c:/clubs.kml");
 //			FileWriter fw = new FileWriter(res);
 //			xxx.write(fw);
 //			fw.flush();
