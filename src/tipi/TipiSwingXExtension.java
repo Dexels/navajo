@@ -7,6 +7,8 @@ import com.dexels.navajo.tipi.TipiContext;
 
 	public class TipiSwingXExtension extends TipiAbstractXMLExtension implements BundleActivator {
 
+		private static final long serialVersionUID = 952751902858599229L;
+
 		public TipiSwingXExtension() {
 //			loadDescriptor();
 		}
