@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import tipipackage.ITipiExtensionRegistry;
+import tipipackage.TipiExtensionRegistry;
 
 public abstract class TipiAbstractOSGiExtension implements TipiExtension,
 		BundleActivator {
@@ -23,17 +24,26 @@ public abstract class TipiAbstractOSGiExtension implements TipiExtension,
 	private transient BundleContext context = null;
 	private static final Logger logger = LoggerFactory.getLogger(TipiAbstractOSGiExtension.class); 
 
+	private static final TipiExtensionRegistry nonOSGiRegistry = new TipiExtensionRegistry();
+	
+	
+	
 	protected void registerTipiExtension(BundleContext context)
 			throws Exception {
 		this.context = context;
 		logger.info("Registering tipi extension: "+getClass().getName());
 		loadDescriptor();
-		ServiceReference refs = context
-				.getServiceReference(ITipiExtensionRegistry.class.getName());
-		ITipiExtensionRegistry reg = (ITipiExtensionRegistry) context
-				.getService(refs);
+		ITipiExtensionRegistry reg = null;
+		if(context==null) {
+			reg = nonOSGiRegistry;
+		} else {
+			ServiceReference refs = context
+					.getServiceReference(ITipiExtensionRegistry.class.getName());
+			reg = (ITipiExtensionRegistry) context
+					.getService(refs);
+			
+		}
 		reg.registerTipiExtension(this);
-
 	}
 
 	protected void deregisterTipiExtension(BundleContext context)
@@ -43,6 +53,9 @@ public abstract class TipiAbstractOSGiExtension implements TipiExtension,
 	}	
 	
 	public ITipiExtensionRegistry getTipiExtensionRegistry() {
+		if(context==null) {
+			return nonOSGiRegistry;
+		}
 		ServiceReference refs = context
 				.getServiceReference(ITipiExtensionRegistry.class.getName());
 		ITipiExtensionRegistry reg = (ITipiExtensionRegistry) context
