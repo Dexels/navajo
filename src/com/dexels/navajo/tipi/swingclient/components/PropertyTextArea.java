@@ -82,9 +82,6 @@ public class PropertyTextArea extends JTextArea implements PropertyControlled {
 		}
 	}
 
-	@Override
-	public Dimension getMinimumSize() {
-		return getPreferredSize();
-	}
+
 
 }
