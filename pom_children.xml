@@ -32,5 +32,6 @@
 		<module>../TipiSwingDocking</module>
 		<module>../com.dexels.navajo.tipi.swing.deps</module>
 		<module>../com.dexels.navajo.tipi.vaadin</module>
+		<module>../TipiCobraBrowser</module>
 	</modules>
 </project>
