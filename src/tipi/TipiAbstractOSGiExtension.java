@@ -19,6 +19,7 @@ import tipipackage.ITipiExtensionRegistry;
 public abstract class TipiAbstractOSGiExtension implements TipiExtension,
 		BundleActivator {
 
+	private static final long serialVersionUID = 7871411864902044319L;
 	private transient BundleContext context = null;
 	private static final Logger logger = LoggerFactory.getLogger(TipiAbstractOSGiExtension.class); 
 
