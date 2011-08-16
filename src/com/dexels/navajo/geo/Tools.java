@@ -2,6 +2,10 @@ package com.dexels.navajo.geo;
 
 public class Tools {
 
+	public Tools(){
+		
+	}
+	
 	private static final double EARTHRADIUS = 6365;
 
 	/**
