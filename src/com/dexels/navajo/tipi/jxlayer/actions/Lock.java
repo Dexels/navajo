@@ -20,6 +20,8 @@ import com.jhlabs.image.BlurFilter;
 
 public class Lock extends TipiAction {
 
+	private static final long serialVersionUID = 2449939873779364275L;
+
 	@Override
 	protected void execute(TipiEvent event) throws TipiBreakException, TipiException {
 		SwingTipiContext stc = (SwingTipiContext)myContext;

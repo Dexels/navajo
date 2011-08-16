@@ -6,6 +6,8 @@ import com.dexels.navajo.tipi.TipiContext;
 
 public class TipiJxLayerExtension extends TipiAbstractXMLExtension implements TipiExtension {
 
+	private static final long serialVersionUID = 4875391482415045916L;
+
 	@Override
 	public void initialize(TipiContext tc) {
 	//	tc.getTipiValidationDecorator(new JxValidationDecorator());

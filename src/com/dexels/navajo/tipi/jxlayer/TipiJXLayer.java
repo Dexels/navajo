@@ -19,6 +19,8 @@ import com.jhlabs.image.BlurFilter;
 
 public class TipiJXLayer extends TipiSwingDataComponentImpl {
 
+	private static final long serialVersionUID = 117594315048385986L;
+
 	@Override
 	public Object createContainer() {
 		JPanel p = new JPanel();

@@ -18,6 +18,7 @@ import com.jhlabs.image.BlurFilter;
 
 public class TipiLockedPanel extends TipiSwingDataComponentImpl {
 
+	private static final long serialVersionUID = 8221840436194974384L;
 	private JPanel myPanel;
 	private LockableUI blurUI;
 
