@@ -44,17 +44,17 @@
 	Create a zip-file of the binary jar, and all its dependencies.
 	-->
 
-	<property name="createbinaryzip" value="true" />
+	<property name="createbinaryzip" value="false" />
 	<!--
 	Create a zip-file of the source and the test source
 	-->
-	<property name="createsourcezip" value="true" />
+	<property name="createbinaryzip" value="false" />
 
 	<!--
 		Upload all distribution files to a repository (using SCP) Edit the build.properties file in DexelsVersionControl for
 		locations / credentials.
 	-->
-	<property name="uploaddownloads" value="true" />
+	<property name="uploaddownloads" value="false" />
 
 	<!--
 		Build javadoc files of this project. Not all that useful, as it will not 'link' to other project's javadoc. TODO:
