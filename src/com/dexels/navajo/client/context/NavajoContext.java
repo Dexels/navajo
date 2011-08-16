@@ -97,7 +97,14 @@ public class NavajoContext {
 		return myNavajoMap.containsKey(name);
 	}
 	
-	
+	public boolean getHasChildren(){
+		try{
+			Message top = getMessage();
+			return top.getMessages().size() > 0;
+		}catch(Exception ex){
+			return false;
+		}
+	}
 	
 
 	public int getStackSize() {
