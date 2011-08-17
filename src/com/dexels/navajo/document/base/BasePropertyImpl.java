@@ -289,7 +289,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	public final void clearValue() {
 		//setValue((String) null);
 		Object o  = getTypedValue();
-		
+		tipiProperty = null;
 		// Similar to setAnyValue, only here the type will be determined based on the current type,
 		// not on the new type.
 		// This is still important for firing update events
