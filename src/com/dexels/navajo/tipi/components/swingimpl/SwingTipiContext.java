@@ -35,6 +35,7 @@ import org.jdesktop.animation.transitions.ScreenTransition;
 import org.jdesktop.animation.transitions.TransitionTarget;
 
 import tipi.SwingTipiApplicationInstance;
+import tipi.TipiExtension;
 
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.tipi.TipiActivityListener;
@@ -94,9 +95,9 @@ public class SwingTipiContext extends TipiContext {
 
 	private RootPaneContainer myOtherRoot;
 
-	public SwingTipiContext(SwingTipiApplicationInstance instance,
+	public SwingTipiContext(SwingTipiApplicationInstance instance,List<TipiExtension> extensionList,
 			SwingTipiContext parentContext) {
-		super(instance, parentContext);
+		super(instance,extensionList, parentContext);
 		// Don't think it is right here
 		try {
 			Locale.setDefault(new Locale("nl", "NL"));

@@ -55,11 +55,13 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance {
 			definitionPath = definition;
 		}
 		SwingTipiContext context = null;
-		context = new SwingTipiContext(this, null);
+		List<TipiExtension> ll = TipiSwingExtension.getInstance().getTipiExtensionRegistry().getExtensionList();
+		
+		context = new SwingTipiContext(this,ll, null);
 		context.setAppletRoot(appletRoot);
 		context.setOtherRoot(otherRoot);
 
-		TipiSwingExtension.getInstance().getTipiExtensionRegistry().loadExtensions(context);
+//		TipiSwingExtension.getInstance().getTipiExtensionRegistry().loadExtensions(context);
 		
 		SwingTipiUserInterface stui = new SwingTipiUserInterface(context);
 		SwingClient.setUserInterface(stui);
