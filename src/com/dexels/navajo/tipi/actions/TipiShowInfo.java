@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.actions;
 
+import java.io.StringWriter;
+
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
@@ -25,6 +28,13 @@ public class TipiShowInfo extends TipiAction {
 				result = "Null value!";
 			}
 		} else {
+			if(oo instanceof Message) {
+				Message m = (Message)oo;
+				StringWriter sw = new StringWriter();
+				m.write(sw);
+				result = sw.toString();
+			}
+	
 			result = oo.toString();
 		}
 		final String txt = result.replaceAll("\n", " ");
