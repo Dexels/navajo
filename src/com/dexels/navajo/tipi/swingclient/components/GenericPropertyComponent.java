@@ -1375,6 +1375,8 @@ public class GenericPropertyComponent extends JPanel {
 		if (toolTipText != null) {
 			myMemoField.setToolTipText(toolTipText);
 		}
+		// TODO might leak listeners! Investigate..
+		setPropertyKeyListeners(myMemoField);
 		addPropertyComponent(memoFieldScrollPane, true);
 	}
 
