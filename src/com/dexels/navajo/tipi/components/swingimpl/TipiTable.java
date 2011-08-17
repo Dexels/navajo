@@ -88,9 +88,13 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 		mm.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				if (!e.getValueIsAdjusting()) {
+					
 					messageTableSelectionChanged(e);
+					Message selectedMessage = mm.getSelectedMessage();
 					getAttributeProperty("selectedMessage").setAnyValue(
-							mm.getSelectedMessage());
+							selectedMessage);
+					Object typedValue = getAttributeProperty("selectedMessage").getTypedValue();
+					System.err.println("Atr: "+typedValue);
 				}
 			}
 		});
