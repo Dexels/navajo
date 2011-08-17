@@ -304,5 +304,13 @@
       <param name="engine" type="string" required="true" />
       <param name="script" type="resource" required="true" />
    </tipiaction>
+   
+  <tipiaction name="composeMail" class="TipiComposeMail" package="com.dexels.navajo.tipi.actions">
+      <param name="recipientProperty" type="string" required="true" />
+      <param name="recipientList" type="message" required="true" />
+      <param name="subject" type="string" required="true" />
+      <param name="body" type="string" required="true" />
+   </tipiaction>
+   
 
 </tid>
