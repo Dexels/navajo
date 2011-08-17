@@ -36,7 +36,7 @@ public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension
 
 	public final void loadDescriptor() {
 		String xmlName = "tipi/" + getClass().getSimpleName() + ".xml";
-		logger.info("Loading TipiExtension: "+xmlName);
+//		logger.info("Loading TipiExtension: "+xmlName);
 		loadXML(xmlName);
 		// Added for Vaadin (OSGi, actually)
 		setExtensionClassloader(getClass().getClassLoader());
@@ -147,7 +147,7 @@ public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension
 	}
 
 	public void setExtensionClassloader(ClassLoader extensionClassLoader) {
-		logger.info("Ignoring setExtensionClassLoader");
+//		logger.info("Ignoring setExtensionClassLoader");
 	}
 
 }

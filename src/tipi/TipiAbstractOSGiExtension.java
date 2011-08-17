@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import tipipackage.ITipiExtensionRegistry;
+import tipipackage.NonOSGiExtensionRegistry;
 import tipipackage.TipiExtensionRegistry;
 
 public abstract class TipiAbstractOSGiExtension implements TipiExtension,
@@ -24,7 +25,7 @@ public abstract class TipiAbstractOSGiExtension implements TipiExtension,
 	private transient BundleContext context = null;
 	private static final Logger logger = LoggerFactory.getLogger(TipiAbstractOSGiExtension.class); 
 
-	private static final TipiExtensionRegistry nonOSGiRegistry = new TipiExtensionRegistry();
+	private static final TipiExtensionRegistry nonOSGiRegistry = new NonOSGiExtensionRegistry();
 	
 	
 	

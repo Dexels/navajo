@@ -225,6 +225,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			while (iter.hasNext()) {
 				TipiExtension tipiExtension = iter.next();
 				extensionList.add(tipiExtension);
+//				tipiExtension.loadDescriptor();
 			}
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -1049,6 +1050,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 					+ " has no includes!");
 			return;
 		}
+		System.err.println("Processing includes");
+//		Thread.dumpStack();
 		for (int i = 0; i < ss.length; i++) {
 			System.err.println("Adding include: " + ss[i]);
 			includes.add(ss[i]);
