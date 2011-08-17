@@ -17,6 +17,8 @@ import javax.swing.RepaintManager;
 import javax.swing.RootPaneContainer;
 import javax.swing.SwingUtilities;
 
+import tipipackage.TipiExtensionRegistry;
+
 import com.dexels.navajo.tipi.components.swingimpl.TipiApplet;
 import com.dexels.navajo.tipi.swingclient.components.CheckThreadViolationRepaintManager;
 
@@ -28,6 +30,13 @@ public class MainApplication {
 	static public void main(String[] args) throws Exception {
 		// TODO Refactor Formatters in NavajoFactory, so this can be done later.
 		// TODO This is more urgent due to the OSGi loading
+		TipiCoreExtension tce = new TipiCoreExtension();
+		tce.loadDescriptor();
+		tce.getTipiExtensionRegistry().registerTipiExtension(tce);
+		TipiSwingExtension tse = new TipiSwingExtension();
+		tse.loadDescriptor();
+		tse.getTipiExtensionRegistry().registerTipiExtension(tse);
+		
 		SwingTipiApplicationInstance instance = runApp(args);
 		instance.getCurrentContext().switchToDefinition(
 				instance.getDefinition());
@@ -92,14 +101,14 @@ public class MainApplication {
 
 				public void run() {
 					try {
-						if (studioMode) {
-							myApplication = new SwingTipiApplicationInstance(
-									"develop", "tipi/develop.xml", arrrgs,
-									appletRoot, otherRoot);
-							// SwingTipiContext s = initialize("develop",
-							// "tipi/develop.xml", arrrgs, null, null);
-
-						} else {
+//						if (studioMode) {
+//							myApplication = new SwingTipiApplicationInstance(
+//									"develop", "tipi/develop.xml", arrrgs,
+//									appletRoot, otherRoot);
+//							// SwingTipiContext s = initialize("develop",
+//							// "tipi/develop.xml", arrrgs, null, null);
+//
+//						} else {
 							if (def == null) {
 								myApplication = new SwingTipiApplicationInstance(
 										"init", "init.xml", arrrgs, appletRoot,
@@ -115,9 +124,11 @@ public class MainApplication {
 											appletRoot, otherRoot);
 								}
 							}
-						}
+//						}
 
 						if (myApplication != null) {
+							new TipiSwingExtension();
+							
 							myApplication.startup();
 							String deff = def;
 							if (deff == null) {
