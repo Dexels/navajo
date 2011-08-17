@@ -707,19 +707,10 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		return m.getMessage(index);
 	}
 
-	public final void removeChildMessage(Message msg) {
+	public final void removeChildMessage(Message child) {
 		if (messageList == null || messageMap == null) {
 			return;
 		}
-		if ( msg.getParentMessage() != null ) {
-			BaseMessageImpl parent = ((BaseMessageImpl) msg.getParentMessage());
-			parent.deleteDirectChildMessage(msg);
-		} else {
-			deleteDirectChildMessage(msg);
-		}
-	}
-
-	private final void deleteDirectChildMessage(Message child) {
 		messageList.remove(child);
 		messageMap.remove(child.getName());
 	}
