@@ -90,8 +90,9 @@ public class TipiHelpView extends ViewPart {
 				e.printStackTrace();
 			}
 		}
-		ProjectList pr = new ProjectList(myProjects);
-//		combo.setContentProvider(pr);
+//		ProjectList pr = new ProjectList(myProjects);
+
+		//		combo.setContentProvider(pr);
 //		combo.setLabelProvider(pr);
 //		pr.inputChanged(combo, oldInput, newInput)
 	//	System.err.println(">>>"+combo.getElementAt(0));

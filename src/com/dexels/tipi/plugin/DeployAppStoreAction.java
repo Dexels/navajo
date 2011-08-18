@@ -12,7 +12,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
@@ -22,10 +21,10 @@ import com.dexels.navajo.tipi.ant.AntRun;
 public class DeployAppStoreAction implements IObjectActionDelegate {
 
 	private ISelection selection;
-	private Combo templateCombo = null;
 
-	private String selectedTemplate = null;
-	private boolean includeJarsSelected;
+//	private Combo templateCombo = null;
+//	private String selectedTemplate = null;
+//	private boolean includeJarsSelected;
 
 	/*
 	 * (non-Javadoc)
@@ -38,10 +37,11 @@ public class DeployAppStoreAction implements IObjectActionDelegate {
 //	  <property name="tipiServerPassword" value="pw"/>
 //	  <property name="tipiServerApplication" value="${ant.project.name}"/>
 
+	@SuppressWarnings("unchecked")
 	public void run(IAction action) {
 		try {
 		if (selection instanceof IStructuredSelection) {
-			for (Iterator it = ((IStructuredSelection) selection).iterator(); it.hasNext();) {
+			for (Iterator<IStructuredSelection> it = ((IStructuredSelection) selection).iterator(); it.hasNext();) {
 				Object element = it.next();
 				IProject project = null;
 				if (element instanceof IProject) {

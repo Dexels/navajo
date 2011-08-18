@@ -102,7 +102,8 @@ public class P200AntTask extends Task {
         filesets.add(set);
     }
 
-    public void execute() throws BuildException {
+    @SuppressWarnings("unused")
+	public void execute() throws BuildException {
         validate();
         
         ArrayList<File> files = new ArrayList<File>();

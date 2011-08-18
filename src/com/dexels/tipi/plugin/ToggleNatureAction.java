@@ -1,17 +1,12 @@
 package com.dexels.tipi.plugin;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.ResourceBundle;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
@@ -20,7 +15,6 @@ import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
@@ -30,7 +24,7 @@ import com.dexels.navajo.tipi.projectbuilder.ClientActions;
 public class ToggleNatureAction implements IObjectActionDelegate {
 
 	private ISelection selection;
-	private Combo templateCombo = null;
+//	private Combo templateCombo = null;
 
 	private String selectedTemplate = null;
 	/*
@@ -38,9 +32,10 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 	 * 
 	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
 	 */
+	@SuppressWarnings("unchecked")
 	public void run(IAction action) {
 		if (selection instanceof IStructuredSelection) {
-			for (Iterator it = ((IStructuredSelection) selection).iterator(); it
+			for (Iterator<IStructuredSelection> it = ((IStructuredSelection) selection).iterator(); it
 					.hasNext();) {
 				Object element = it.next();
 				IProject project = null;
@@ -174,14 +169,14 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 //		fw.close();
 //	}	
 	
-	private void createDemoFiles(String repository,String developmentRepository, IProject project, String templateName,IProgressMonitor monitor) throws CoreException, IOException {
-			ClientActions.downloadDemoFiles(developmentRepository, project.getLocation().toFile(),templateName);
-			File f = new File(project.getLocation().toFile(),"settings/tipi.properties");
-			FileWriter fw = new FileWriter(f,true);
-			fw.write("repository="+repository+"\n");
-			fw.flush();
-			fw.close();
-			project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
-	}
+//	private void createDemoFiles(String repository,String developmentRepository, IProject project, String templateName,IProgressMonitor monitor) throws CoreException, IOException {
+//			ClientActions.downloadDemoFiles(developmentRepository, project.getLocation().toFile(),templateName);
+//			File f = new File(project.getLocation().toFile(),"settings/tipi.properties");
+//			FileWriter fw = new FileWriter(f,true);
+//			fw.write("repository="+repository+"\n");
+//			fw.flush();
+//			fw.close();
+//			project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
+//	}
 
 }

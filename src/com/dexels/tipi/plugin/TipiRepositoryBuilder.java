@@ -10,7 +10,6 @@ import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
 import java.util.StringTokenizer;
 
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -97,6 +96,7 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 
 //	private static final String MARKER_TYPE = "TipiPlugin.xmlProblem";
 
+	@SuppressWarnings("rawtypes")
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor)
 			throws CoreException {
 		if (kind == FULL_BUILD) {
@@ -125,7 +125,7 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 		
 		if ( resource.getName().equals("tipi.properties") || resource.getName().equals("arguments.properties") || resource.getParent().equals(profilesFolder)) {
 			IFile file = (IFile) resource;
-			IContainer ic = file.getProject();
+//			IContainer ic = file.getProject();
 			//if(ic instanceof IProject) {
 				if(!file.isSynchronized(IResource.DEPTH_INFINITE)) {
 					try {
@@ -336,7 +336,7 @@ private void buildClassPath(IProject project, String repository, String extensio
 
 	private void downloadExtensionJars(File projectPath, String extensions,String repository, boolean onlyProxy, boolean clean, String buildType, boolean useVersioning) throws IOException {
 		StringTokenizer st = new StringTokenizer(extensions, ",");
-		Map<String,List<String>> repDefinition= ClientActions.getExtensions(repository);
+//		Map<String,List<String>> repDefinition= ClientActions.getExtensions(repository);
 		while (st.hasMoreTokens()) {
 			try {
 				String token = st.nextToken();
