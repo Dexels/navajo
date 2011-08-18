@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: TipiPlugin Plug-in
 Bundle-SymbolicName: com.dexels.navajo.dev.tipi;singleton:=true
-Bundle-Version: 1.0.13
+Bundle-Version: 1.0.14
 Bundle-Vendor: Dexels
 Require-Bundle: org.eclipse.core.resources,
  org.eclipse.core.runtime,
