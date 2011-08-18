@@ -7,7 +7,6 @@ import navajo.ExtensionDefinition;
 
 import org.osgi.framework.BundleContext;
 
-import com.dexels.navajo.functions.StandardFunctionDefinitions;
 import com.dexels.navajo.functions.VaadinFunctionDefinition;
 import com.dexels.navajo.functions.util.FunctionDefinition;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;

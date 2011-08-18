@@ -115,7 +115,7 @@ public class TipiGridPanel extends TipiVaadinComponentImpl {
 		protected void parseColumns(String sizes) {
 			StringTokenizer st = new StringTokenizer(sizes);
 			myWidths.clear();
-			int count = 0;
+//			int count = 0;
 			while (st.hasMoreTokens()) {
 				String element = (String) st.nextElement();
 	            if (!element.endsWith("*")) {
@@ -126,7 +126,7 @@ public class TipiGridPanel extends TipiVaadinComponentImpl {
 	            int val = new Integer(element).intValue();
 				myWidths.add(new Integer(val));
 //				addColumnStrut(count, val);
-				count++;
+//				count++;
 			}
 	        gridwidth = myWidths.size();
 		}
