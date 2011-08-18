@@ -32,9 +32,6 @@ public class XMLExtension  {
 	protected void loadXML(File xmlName)  {
 		try {
 			InputStream is = new FileInputStream(xmlName);
-			if(is==null) {
-				throw new IllegalArgumentException("Problem loading extension: "+xmlName);
-			}
 			Reader r = new InputStreamReader(is);
 			XMLElement xx = new CaseSensitiveXMLElement();
 			xx.parseFromReader(r);

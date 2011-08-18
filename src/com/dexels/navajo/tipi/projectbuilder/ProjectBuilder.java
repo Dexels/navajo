@@ -204,7 +204,7 @@ public class ProjectBuilder {
 		fr.close();
 		Enumeration<String> eb = p.getKeys();
 		while (eb.hasMoreElements()) {
-			String string = (String) eb.nextElement();
+			String string = eb.nextElement();
 			params.put(string, p.getString(string));
 		}
 		System.err.println("params: " + params);

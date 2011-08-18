@@ -69,8 +69,6 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 		for (String string : toBeRemoved) {
 			xmlMap.remove(string);
 		}
-		// TODO Auto-generated method stub
-		
 	}
 
 
@@ -166,12 +164,12 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 
 			osw.write("\n");
 
-			XMLElement description = element.getChildByTagName("description");
-			String desc = description==null?"":description.getContent();
-			XMLElement input = element.getChildByTagName("input");
-			String inp = input==null?"":input.getContent();
-			XMLElement result = element.getChildByTagName("result");
-			String res = result==null?"":result.getContent();
+//			XMLElement description = element.getChildByTagName("description");
+//			String desc = description==null?"":description.getContent();
+//			XMLElement input = element.getChildByTagName("input");
+//			String inp = input==null?"":input.getContent();
+//			XMLElement result = element.getChildByTagName("result");
+//			String res = result==null?"":result.getContent();
 
 
 			osw.flush();
@@ -237,7 +235,6 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 			osw.write("| [[tipidoc:" + id + ":details|" + id + "]] |  version: " + currentVersion + " | " + components + " | " + actions + " | " + functions + " | " + types +" | " + javadoc +  "  |\n");
 			
 		}
-		// TODO DISABLED FOR NOW
 //		System.err.println("Extensiojn lost"+extension);
 //		for (String ext : extension) {
 			createExtensionDetails(repository, new File(getOutputDir().getParentFile(),"definition.xml"),extension,version);
@@ -259,6 +256,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 
 	
 	
+	@SuppressWarnings("deprecation")
 	private void createExtensionDetails(URL repository, File inputFile, String extension,String version) throws IOException {
 
 		OutputStream os = writeResource(extension + "/details.txt");
@@ -336,11 +334,11 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 		os.close();
 	}
 
-
-	private void createExtensionDetails(String extension) throws IOException {
-		
-
-	}
+//
+//	private void createExtensionDetails(String extension) throws IOException {
+//		
+//
+//	}
 	
 	
 	private void processTypeHeaders(String extension, List<XMLElement> list) throws IOException {
@@ -739,23 +737,6 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 	}
 
 	private void appendDescriptorTag(Writer w, String prefix,XMLElement element) throws IOException {
-		if (element == null) {
-			return;
-		}
-		StringBuffer sb = new StringBuffer();
-		String s  = element.getContent().trim();
-		s = s.replaceAll("\t", "");
-		s = s.replaceAll("\n", " ");
-		s = s.replaceAll("\\\\[ \n\t]*", "\n");
-		String[] part = s.split("\n");
-		for (String string : part) {
-			if(string.length()>0) {
-				w.write(prefix+string + "\n");
-				
-			}
-			
-		}
-		//		w.write("<div class='" + cssClass + "'>" + element.getContent() + "</div>");
 
 	}
 

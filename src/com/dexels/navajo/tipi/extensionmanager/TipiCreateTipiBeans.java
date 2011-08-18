@@ -71,7 +71,6 @@ public class TipiCreateTipiBeans extends ExtensionClassdefProcessor {
 			createActionClass(extension, javaDir, allActions);
 			createFunctionClass(extension, javaDir, allFunctions);
 		} catch (Throwable e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 //		System.err.println("All functions: "+allFunctions);
@@ -272,7 +271,6 @@ private void createFunctions(String extension, Writer writer, List<XMLElement> a
 }
 
 	private void createComponent(XMLElement component, StringBuffer content) {
-	// TODO Auto-generated method stub
 	if(component.getStringAttribute("name").equals("label")) {
 		System.err.println(component.toString());
 	}
@@ -456,7 +454,7 @@ private void appendValue(XMLElement value, StringBuffer content) {
 
 public static void main(String[] args) throws IOException {
 
-	URL adapterFile = TipiCreateTipiBeans.class.getResource("Adapter.template");
+//	URL adapterFile = TipiCreateTipiBeans.class.getResource("Adapter.template");
 	URL actionsFile = TipiCreateTipiBeans.class.getResource("Actions.template");
 	URL template = TipiCreateTipiBeans.class.getResource("functions.xml");
 	InputStreamReader isr = new InputStreamReader(template.openStream());

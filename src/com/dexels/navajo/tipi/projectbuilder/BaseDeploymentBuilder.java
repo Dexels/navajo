@@ -28,7 +28,7 @@ public abstract class BaseDeploymentBuilder {
 		fr.close();
 		Enumeration<String> eb = p.getKeys();
 		while (eb.hasMoreElements()) {
-			String string = (String) eb.nextElement();
+			String string = eb.nextElement();
 			params.put(string, p.getString(string));
 		}
 
@@ -41,7 +41,7 @@ public abstract class BaseDeploymentBuilder {
 				fr.close();
 				eb = p.getKeys();
 				while (eb.hasMoreElements()) {
-					String string = (String) eb.nextElement();
+					String string = eb.nextElement();
 					params.put(string, p.getString(string));
 				}
 			}
