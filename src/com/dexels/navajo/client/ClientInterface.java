@@ -8,7 +8,6 @@ package com.dexels.navajo.client;
  * @author not attributable
  * @version 1.0
  */
-import java.io.InputStream;
 import java.net.URL;
 
 import com.dexels.navajo.document.Message;

@@ -4,9 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.client.NavajoClientFactory;
@@ -26,7 +23,7 @@ public class NavajoContext {
 	private final Stack<Object> myElementStack = new Stack<Object>();
 	private boolean debugAll;
 	
-	private static final Logger logger = LoggerFactory.getLogger(NavajoContext.class);
+//	private static final Logger logger = LoggerFactory.getLogger(NavajoContext.class);
 
 	public NavajoContext() {
 		//System.err.println("New navajo context");

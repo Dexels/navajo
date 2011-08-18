@@ -70,7 +70,8 @@ public class SimpleClient extends Thread {
 
     }
 
-    public static void main(String args[]) throws Exception {
+    @SuppressWarnings("unused")
+	public static void main(String args[]) throws Exception {
 
         int totalThreads = (System.getProperty("threads") != null) ?
                             Integer.parseInt(System.getProperty("threads")) + 1 : 25;
