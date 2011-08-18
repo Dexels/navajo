@@ -2,14 +2,12 @@ package com.dexels.navajo.tipi.vaadin.embedded;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
 
 import javax.servlet.ServletException;
 
-import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
@@ -18,13 +16,10 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.resource.Resource;
 import org.osgi.framework.Bundle;
-import org.slf4j.ILoggerFactory;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
-import ch.qos.logback.core.Context;
 import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.util.StatusPrinter;
 
@@ -35,7 +30,7 @@ import com.dexels.navajo.tipi.vaadin.application.servlet.TipiVaadinServlet;
 
 public class JettyServer {
 	
-	private static final Logger logger = LoggerFactory.getLogger(JettyServer.class);
+//	private static final Logger logger = LoggerFactory.getLogger(JettyServer.class);
 	public void init(int port,final String contextPath, final Bundle bundle) {
 		Server jettyServer = new Server();
 		SelectChannelConnector connector = new SelectChannelConnector();
