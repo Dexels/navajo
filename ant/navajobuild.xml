@@ -325,7 +325,7 @@
 		<antcall target="afterdeploy"/>
 		<antcall target="cleanup"></antcall>
 		<if>
-			<equals arg1="${uploaddownloads}" arg2="true"/>
+			<equals arg1="${uploaddownloads}" arg2="false"/>
 			<then>
 				<antcall target="upload"></antcall>
 			</then>
@@ -367,12 +367,19 @@
 	</target>
 
 	<target name="upload" >
+		<if>
+			<equals arg1="${doUploadTipi}" arg2="true"/>
+			<then>
+				<scp trust="true"  sftp="true" verbose="true" password="${navajoScpPassword}" todir="${deployRoot}">
+					<fileset dir="${distribution}">
+						<include name="**" />
+					</fileset>
+				</scp>			
+			</then>
+		</if>
 
-		<scp trust="true"  sftp="true" verbose="true" password="${navajoScpPassword}" todir="${deployRoot}">
-			<fileset dir="${distribution}">
-				<include name="**" />
-			</fileset>
-		</scp>
+
+
 	</target>
 
 	<target name="onlyarchive" depends="resource">
