@@ -18,7 +18,7 @@
    <feature url="features/com.dexels.navajo.server.enterprise.feature_1.0.3.qualifier.jar" id="com.dexels.navajo.server.enterprise.feature" version="1.0.3.qualifier">
       <category name="Navajo Enterprise"/>
    </feature>
-   <feature url="features/com.dexels.navajo.tipi.feature_1.0.45.qualifier.jar" id="com.dexels.navajo.tipi.feature" version="1.0.44.qualifier">
+   <feature url="features/com.dexels.navajo.tipi.feature_1.0.45.qualifier.jar" id="com.dexels.navajo.tipi.feature" version="1.0.45.qualifier">
       <category name="Tipi"/>
    </feature>
    <category-def name="Navajo" label="NavajoCore"/>
