@@ -7,6 +7,8 @@ import org.jfree.chart.ChartPanel;
 import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
 
 public abstract class TipiChart extends TipiDataComponentImpl {
+
+	private static final long serialVersionUID = -957662862872135436L;
 	protected ChartPanel myChart;
 	protected String xAxis;
 	protected String series;

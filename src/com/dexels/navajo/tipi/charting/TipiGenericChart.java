@@ -22,6 +22,8 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 
 public class TipiGenericChart extends TipiSwingDataComponentImpl {
 
+	private static final long serialVersionUID = 1761254226090465659L;
+
 	protected ChartPanel myChart;
 	
 	private String series = "Sex";
@@ -44,6 +46,7 @@ public class TipiGenericChart extends TipiSwingDataComponentImpl {
 		super.loadData(n, method);
 	}	
 	
+	@SuppressWarnings("rawtypes")
 	public JFreeChart createChart(Navajo n) {
 	    try {
 
@@ -52,16 +55,16 @@ public class TipiGenericChart extends TipiSwingDataComponentImpl {
 	      DefaultCategoryDataset dataSet = new DefaultCategoryDataset();
 	      DefaultPieDataset pieDataSet = new DefaultPieDataset();
 
-	      HashSet seriesSet = new HashSet();
+	      HashSet<Comparable> seriesSet = new HashSet<Comparable>();
 	      
 	      for ( int i = 0; i < stats.getArraySize(); i++ ) {
 	    	  Message row = stats.getMessage(i);
-	    	  Object seriesProp = row.getProperty(series).getTypedValue();
+	    	  Comparable seriesProp = (Comparable) row.getProperty(series).getTypedValue();
 	    	  seriesSet.add(seriesProp);
-	    	  Object catProp = row.getProperty(category).getTypedValue();
+	    	  Comparable catProp = (Comparable) row.getProperty(category).getTypedValue();
 	    	  Number valueProp = (Number) row.getProperty(value).getTypedValue();
-	    	  dataSet.addValue(valueProp, (Comparable) seriesProp, (Comparable) catProp);
-	    	  pieDataSet.setValue((Comparable) catProp, valueProp);
+	    	  dataSet.addValue(valueProp, seriesProp, catProp);
+	    	  pieDataSet.setValue(catProp, valueProp);
 	      }
 	         
 	      boolean hasMultipleSeries = seriesSet.size() > 1;

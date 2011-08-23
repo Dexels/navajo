@@ -21,6 +21,7 @@ import com.dexels.navajo.tipi.TipiException;
 
 public class TipiTimeChart extends TipiChart {
 
+	private static final long serialVersionUID = -8579552742186344850L;
 	private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");	
 
 	@Override

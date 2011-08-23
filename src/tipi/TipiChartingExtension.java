@@ -9,6 +9,11 @@ import com.dexels.navajo.tipi.tipixml.XMLParseException;
 
 public class TipiChartingExtension extends TipiAbstractXMLExtension implements TipiExtension {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5107021813164792108L;
+
 	public TipiChartingExtension() throws XMLParseException,
 			IOException {
 // NO		loadDescriptor();

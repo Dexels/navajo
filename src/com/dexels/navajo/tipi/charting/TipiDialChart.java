@@ -34,6 +34,8 @@ import com.dexels.navajo.tipi.components.swingimpl.parsers.TipiGradientPaint;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
 public class TipiDialChart extends TipiChart {
+
+	private static final long serialVersionUID = -5657434586825857241L;
 	private JPanel myContainer;
 	private DefaultValueDataset ds = new DefaultValueDataset(0);
 	private int size = 200;
