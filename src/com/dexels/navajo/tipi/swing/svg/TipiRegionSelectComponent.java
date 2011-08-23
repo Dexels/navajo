@@ -11,6 +11,8 @@ import com.dexels.navajo.tipi.swing.svg.impl.*;
 
 public class TipiRegionSelectComponent extends TipiSvgComponent {
 
+	private static final long serialVersionUID = -2378487213551624720L;
+
 	String[] regions = new String[] {
 			"Groningen","Friesland","Drenthe","Overijssel","Gelderland","NoordHolland","ZuidHolland","Utrecht","NoordBrabant","Zeeland","Flevoland","Limburg"
 	};

@@ -14,7 +14,7 @@ import com.dexels.navajo.tipi.swing.svg.impl.*;
 public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 		SvgMouseListener, SvgAnimationListener {
 
-
+	private static final long serialVersionUID = -4356555280537206804L;
 	protected SvgBaseComponent myComponent = null;
 	protected String registeredIds;
 

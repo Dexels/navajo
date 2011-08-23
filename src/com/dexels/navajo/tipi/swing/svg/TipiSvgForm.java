@@ -12,6 +12,7 @@ import com.dexels.navajo.tipi.internal.*;
 public class TipiSvgForm extends TipiSvgComponent implements
 		SvgMouseListener, SvgAnimationListener {
 
+	private static final long serialVersionUID = 5653906058740273745L;
 	private int width=50;
 	private int height=20;
 

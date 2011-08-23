@@ -6,8 +6,7 @@ import com.dexels.navajo.tipi.swing.svg.impl.*;
 
 public class TipiSlideshowComponent extends TipiSvgComponent {
 
-	 
-	
+	private static final long serialVersionUID = 2837382272551633918L;
 	private SvgBatikComponent svgPanel;
 	private String myTag = null;
 	@Override

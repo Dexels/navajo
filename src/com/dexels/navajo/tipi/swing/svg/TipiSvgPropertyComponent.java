@@ -11,6 +11,7 @@ import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.tipi.swing.svg.impl.*;
 
 public class TipiSvgPropertyComponent extends TipiSvgComponent implements PropertyComponent, PropertyChangeListener {
+	private static final long serialVersionUID = 711068173062950509L;
 	private String propertyName = null;
 	private Property myProperty = null;
 	

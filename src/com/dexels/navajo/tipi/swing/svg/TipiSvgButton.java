@@ -8,6 +8,7 @@ import com.dexels.navajo.tipi.*;
 public class TipiSvgButton extends TipiSvgComponent implements
 		SvgMouseListener, SvgAnimationListener {
 
+	private static final long serialVersionUID = 9092120010940830449L;
 	private int width=50;
 	private int height=20;
 
