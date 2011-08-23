@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 public class PostHandlerTag extends BaseNavajoTag {
 
 	
+	@SuppressWarnings("unused")
 	private final static Logger logger = LoggerFactory.getLogger(PostHandlerTag.class);
 	
 	public int doStartTag() throws JspException {
