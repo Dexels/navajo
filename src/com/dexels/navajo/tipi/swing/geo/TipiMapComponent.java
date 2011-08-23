@@ -18,6 +18,7 @@ import com.dexels.navajo.tipi.swing.geo.impl.*;
 
 public class TipiMapComponent extends TipiSwingDataComponentImpl {
 
+	private static final long serialVersionUID = 3180381518976209467L;
 	// double lon,lat;
 	String mapFactory;
 	int zoom;

@@ -6,6 +6,8 @@ import com.dexels.navajo.tipi.TipiContext;
 
 	public class TipiGeoSwingExtension extends TipiAbstractXMLExtension  {
 
+		private static final long serialVersionUID = 4050686070739379048L;
+
 		public TipiGeoSwingExtension() {
 		}
 
