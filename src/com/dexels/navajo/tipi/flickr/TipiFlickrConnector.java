@@ -12,6 +12,8 @@ import com.dexels.navajo.tipi.connectors.*;
 
 public class TipiFlickrConnector extends TipiBaseConnector {
 
+	private static final long serialVersionUID = -8354461877702188904L;
+
 
 	public TipiFlickrConnector() {
 		System.err.println("FLICKR INSTANTIATED!");

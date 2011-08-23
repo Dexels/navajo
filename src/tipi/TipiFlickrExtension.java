@@ -6,6 +6,8 @@ import com.dexels.navajo.tipi.TipiContext;
 
 	public class TipiFlickrExtension extends TipiAbstractXMLExtension  {
 
+		private static final long serialVersionUID = 4369274770461702308L;
+
 		public TipiFlickrExtension() {
 		}
 
