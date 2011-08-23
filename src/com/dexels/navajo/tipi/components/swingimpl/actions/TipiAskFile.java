@@ -25,6 +25,8 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public class TipiAskFile extends TipiAction {
 
+	private static final long serialVersionUID = -18547321878009976L;
+
 	/*
 	 * (non-Javadoc)
 	 * 

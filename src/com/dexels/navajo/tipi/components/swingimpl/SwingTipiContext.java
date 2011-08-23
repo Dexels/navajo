@@ -77,6 +77,9 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  * @version 1.0
  */
 public class SwingTipiContext extends TipiContext {
+
+	private static final long serialVersionUID = -538400075423823232L;
+
 	private TipiSwingSplash splash;
 
 	private final Set<Thread> threadSet = Collections
