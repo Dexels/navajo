@@ -6,6 +6,9 @@ import com.dexels.navajo.tipi.TipiContext;
 
 public class TipiRssExtension extends TipiAbstractXMLExtension implements TipiExtension {
 
+
+	private static final long serialVersionUID = -6275880208619775468L;
+
 	public TipiRssExtension() {
 	}
 	

@@ -20,6 +20,8 @@ public class TipiRssComponent extends TipiBaseConnector implements TipiConnector
 	//http://search-result.com/directhit/xml/NL_algemeen.xml
 
 
+	private static final long serialVersionUID = -5204169989328717042L;
+
 	protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
 		super.performComponentMethod(name, compMeth, event);
 	}
