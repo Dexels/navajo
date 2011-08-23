@@ -5,6 +5,7 @@ import org.osgi.framework.BundleContext;
 import com.dexels.navajo.tipi.TipiContext;
 
 public class TipiSwingEditorExtension extends TipiAbstractXMLExtension implements TipiExtension {
+	private static final long serialVersionUID = 854576126360753155L;
 
 	public void initialize(TipiContext tc) {
 		// Do nothing

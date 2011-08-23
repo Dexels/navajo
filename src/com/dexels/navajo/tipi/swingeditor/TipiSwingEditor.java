@@ -28,7 +28,8 @@ import de.xeinfach.kafenio.util.LeanLogger;
  *
  */
 public class TipiSwingEditor extends TipiSwingDataComponentImpl  {
-	//http://search-result.com/directhit/xml/NL_algemeen.xml
+
+	private static final long serialVersionUID = -8714674791523166811L;
 	private KafenioPanel myEditor = null;
 
 	protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) {
