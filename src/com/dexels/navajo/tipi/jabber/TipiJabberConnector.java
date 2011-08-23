@@ -42,6 +42,7 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 
 public class TipiJabberConnector extends TipiBaseConnector implements TipiConnector {
 
+	private static final long serialVersionUID = 1969154253419166142L;
 	protected String server = "";
 	protected int port = 5222;
 	protected String chatDomain = "";
