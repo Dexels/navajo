@@ -2,12 +2,10 @@ package com.dexels.navajo.tipi.cobra;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -17,7 +15,6 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.lobobrowser.html.gui.HtmlPanel;
 import org.lobobrowser.html.parser.DocumentBuilderImpl;
 import org.lobobrowser.html.parser.InputSourceImpl;
 import org.lobobrowser.html.test.SimpleUserAgentContext;
@@ -26,7 +23,6 @@ import org.xml.sax.SAXException;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.cobra.impl.NavajoHtmlRendererContext;
 import com.dexels.navajo.tipi.cobra.impl.TipiHtmlPanel;
@@ -34,6 +30,7 @@ import com.dexels.navajo.tipi.components.swingimpl.TipiSwingDataComponentImpl;
 
 public class TipiCobraBrowser extends TipiSwingDataComponentImpl {
 
+	private static final long serialVersionUID = 2950228008172758098L;
 	private TipiHtmlPanel myItem;
 	private SimpleUserAgentContext localContext;
 	private NavajoHtmlRendererContext renderingContext;

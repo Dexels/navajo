@@ -1,6 +1,5 @@
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.util.logging.Level;
@@ -8,15 +7,16 @@ import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 
-import org.lobobrowser.html.parser.*;
-import org.lobobrowser.html.test.*;
-import org.lobobrowser.html.gui.*;
-import org.lobobrowser.html.*;
-import org.w3c.dom.*;
+import org.lobobrowser.html.UserAgentContext;
+import org.lobobrowser.html.gui.HtmlPanel;
+import org.lobobrowser.html.parser.DocumentBuilderImpl;
+import org.lobobrowser.html.parser.InputSourceImpl;
+import org.lobobrowser.html.test.SimpleHtmlRendererContext;
+import org.lobobrowser.html.test.SimpleUserAgentContext;
+import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import com.dexels.navajo.tipi.cobra.impl.NavajoHtmlRendererContext;
-import com.dexels.navajo.tipi.components.swingimpl.swing.TipiEditorPane;
 
 public class Test {
 

@@ -5,6 +5,7 @@ import org.lobobrowser.html.gui.HtmlPanel;
 
 public class TipiHtmlPanel extends HtmlPanel {
 
+	private static final long serialVersionUID = 3001386950352936792L;
 	private NavajoHtmlRendererContext renderingContext = null;
 	
 	public NavajoHtmlRendererContext getRenderingContext() {

@@ -1,12 +1,12 @@
 package tipi;
 
-import java.util.*;
-
 import org.osgi.framework.BundleContext;
 
-import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.TipiContext;
 
 public class TipiCobraBrowserExtension extends TipiAbstractXMLExtension implements TipiExtension {
+
+	private static final long serialVersionUID = 7583833143760663335L;
 
 	public TipiCobraBrowserExtension() {
 		

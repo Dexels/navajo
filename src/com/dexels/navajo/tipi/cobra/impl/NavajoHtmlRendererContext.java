@@ -10,7 +10,6 @@ import org.lobobrowser.html.test.SimpleHtmlRendererContext;
 import org.w3c.dom.html2.HTMLElement;
 
 import com.dexels.navajo.tipi.TipiBreakException;
-import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.cobra.TipiCobraBrowser;
 
