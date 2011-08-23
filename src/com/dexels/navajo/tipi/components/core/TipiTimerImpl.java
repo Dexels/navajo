@@ -23,6 +23,7 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public class TipiTimerImpl extends TipiHeadlessComponentImpl implements
 		Runnable {
+	private static final long serialVersionUID = 4898398670800512047L;
 	private boolean isRunning;
 	private long interval = 1000; // standard is one second
 	private Thread t;

@@ -24,6 +24,8 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public class TipiHeadlessButton extends TipiComponentImpl {
 
+
+	private static final long serialVersionUID = 1303880032767792070L;
 	private boolean enabled = true;
 
 	@Override

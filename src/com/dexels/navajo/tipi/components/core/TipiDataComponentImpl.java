@@ -43,6 +43,7 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  */
 public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 		TipiDataComponent {
+	private static final long serialVersionUID = -8051817615319907555L;
 	private final List<String> myServices = new ArrayList<String>();
 	protected String myMethod;
 	protected final Set<TipiComponent> propertyComponentSet = new HashSet<TipiComponent>();

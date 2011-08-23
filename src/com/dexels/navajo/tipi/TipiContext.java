@@ -27,10 +27,11 @@ import javax.imageio.spi.ServiceRegistry;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
+import navajo.ExtensionDefinition;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import navajo.ExtensionDefinition;
 import tipi.TipiApplicationInstance;
 import tipi.TipiCoreExtension;
 import tipi.TipiExtension;
@@ -47,7 +48,6 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.notifier.SerializablePropertyChangeListener;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.functions.util.FunctionDefinition;
@@ -357,11 +357,9 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		coreExtensionList = new ArrayList<TipiExtension>();
 		mainExtensionList = new ArrayList<TipiExtension>();
 		optionalExtensionList = new ArrayList<TipiExtension>();
-		int count = 0;
 		while (tt.hasNext()) {
 			TipiExtension element = tt.next();
 			extensionMap.put(element.getId(), element);
-			count++;
 			if (element.requiresMainImplementation() == null
 					&& !element.isMainImplementation()) {
 				coreExtensionList.add(element);

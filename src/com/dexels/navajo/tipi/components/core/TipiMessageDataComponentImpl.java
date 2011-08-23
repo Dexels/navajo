@@ -11,6 +11,7 @@ import com.dexels.navajo.tipi.internal.PropertyComponent;
 public abstract class TipiMessageDataComponentImpl extends
 		TipiDataComponentImpl implements MessageComponent {
 
+	private static final long serialVersionUID = 3422365943982271264L;
 	private String myMessageName = null;
 	private Message myMessage;
 

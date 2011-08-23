@@ -18,4 +18,6 @@ package com.dexels.navajo.tipi.components.core;
  * @version 1.0
  */
 public class TipiMessageStoreImpl extends TipiHeadlessDataComponentImpl {
+
+	private static final long serialVersionUID = 2433381488261596497L;
 }

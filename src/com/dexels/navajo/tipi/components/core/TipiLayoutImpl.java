@@ -24,6 +24,8 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  * @version 1.0
  */
 public abstract class TipiLayoutImpl extends TipiLayout {
+
+	private static final long serialVersionUID = 4380200289873893303L;
 	protected XMLElement myInstanceElement;
 
 	protected Object parseConstraint(String text, int index) {

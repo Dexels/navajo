@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Set;
 
 import com.dexels.navajo.document.Property;

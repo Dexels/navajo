@@ -22,6 +22,9 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  * @version 1.0
  */
 public class TipiHeadlessFrame extends TipiDataComponentImpl {
+
+	private static final long serialVersionUID = 8708472273371762323L;
+
 	public TipiHeadlessFrame() {
 	}
 
