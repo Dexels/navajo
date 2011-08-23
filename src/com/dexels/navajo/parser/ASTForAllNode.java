@@ -7,7 +7,6 @@ import java.util.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.mapping.MappableTreeNode;
 
-@SuppressWarnings("unchecked")
 public final class ASTForAllNode extends SimpleNode {
 
     String functionName;
@@ -36,14 +35,14 @@ public final class ASTForAllNode extends SimpleNode {
             matchAll = false;
 
 
-        Object a = (Object) jjtGetChild(0).interpret();
+        Object a = jjtGetChild(0).interpret();
 
         String msgList = (String) a;
 
-        Object b = (Object) jjtGetChild(1).interpret();
+        Object b = jjtGetChild(1).interpret();
 
         try {
-                ArrayList list = null;
+                ArrayList<Message> list = null;
 
                 if (parentMsg == null) {
                   list = doc.getMessages(msgList);

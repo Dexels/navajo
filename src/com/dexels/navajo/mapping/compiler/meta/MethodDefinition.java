@@ -11,7 +11,6 @@ import java.util.Vector;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 
-@SuppressWarnings("unchecked")
 public class MethodDefinition {
 
 	private String name;
@@ -29,9 +28,9 @@ public class MethodDefinition {
 		HashMap<String, ParameterDefinition> params = new HashMap<String, ParameterDefinition>();
 		
 		String name = (String) e.getAttribute("name");
-		Vector paramV = e.getChildren();
+		Vector<XMLElement> paramV = e.getChildren();
 		for ( int i = 0; i < paramV.size(); i++ ) {
-			XMLElement c = (XMLElement) paramV.get(i);
+			XMLElement c = paramV.get(i);
 			ParameterDefinition pd = ParameterDefinition.parseDef(c, i);
 			params.put(pd.getName(), pd);
 		}
@@ -44,7 +43,7 @@ public class MethodDefinition {
 		return parameters.get(name);
 	}
 	
-	public Set getParameters() {
+	public Set<String> getParameters() {
 		return parameters.keySet();
 	}
 	

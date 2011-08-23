@@ -58,7 +58,7 @@ public class SQLFieldDependency extends AdapterFieldDependency {
 		}
 		
 		sqlDepArray = new SQLFieldDependency[sqlDeps.size()];
-		sqlDepArray = (SQLFieldDependency []) sqlDeps.toArray(sqlDepArray);
+		sqlDepArray = sqlDeps.toArray(sqlDepArray);
 		
 	}
 	

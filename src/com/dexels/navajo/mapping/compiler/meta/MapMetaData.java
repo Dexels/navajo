@@ -33,7 +33,6 @@ import com.dexels.navajo.util.AuditLog;
  * @author arjen
  *
  */
-@SuppressWarnings("unchecked")
 public class MapMetaData {
 
 	protected final HashMap<String, MapDefinition> maps = new HashMap<String, MapDefinition>();
@@ -62,7 +61,7 @@ public class MapMetaData {
 			}
 			
 			try {
-				Iterator iter = ServiceRegistry.lookupProviders(Class.forName("navajo.ExtensionDefinition", true, myClassLoader), 
+				Iterator<?> iter = ServiceRegistry.lookupProviders(Class.forName("navajo.ExtensionDefinition", true, myClassLoader), 
 						                                        myClassLoader);
 				while(iter.hasNext()) {
 					ExtensionDefinition ed = (ExtensionDefinition) iter.next();
@@ -76,11 +75,11 @@ public class MapMetaData {
 					
 				
 					if ( config.getName().equals("adapterdef")) {
-						Vector allmaps = config.getElementsByTagName("map");
+						Vector<XMLElement> allmaps = config.getElementsByTagName("map");
 						//System.err.println("Found " + allmaps.size() + " map definitions");
 						for ( int i = 0; i < allmaps.size(); i++ ) {
-							XMLElement map = (XMLElement) allmaps.get(i);
-							MapDefinition md = addMapDefinition(map);
+							XMLElement map = allmaps.get(i);
+							addMapDefinition(map);
 						}
 					}
 					
@@ -170,7 +169,7 @@ public class MapMetaData {
 		
 		// Remember tsl attributes.
 		HashMap<String,String> tslAttributes = new HashMap<String, String>();
-		Iterator all = in.enumerateAttributeNames();
+		Iterator<String> all = in.enumerateAttributeNames();
 		while ( all.hasNext() ) {
 			String name = all.next().toString();
 			String value = in.getAttribute(name)+"";
@@ -208,6 +207,7 @@ public class MapMetaData {
 		
 	}
 	
+	@SuppressWarnings("unused")
 	public static void main(String [] args) throws Exception {
 		
 		DispatcherFactory df = new DispatcherFactory(new TestDispatcher(new TestNavajoConfig()));

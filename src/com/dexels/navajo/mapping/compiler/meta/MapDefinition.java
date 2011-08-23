@@ -14,7 +14,6 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
  * @author arjen
  *
  */
-@SuppressWarnings("unchecked")
 public class MapDefinition {
 
 	public String tagName;
@@ -31,7 +30,7 @@ public class MapDefinition {
 	protected HashMap<String, ValueDefinition> values = new HashMap<String, ValueDefinition>();
 	protected HashMap<String, MethodDefinition> methods = new HashMap<String, MethodDefinition>();
 	
-	public Set getValueDefinitions() {
+	public Set<String> getValueDefinitions() {
 		return values.keySet();
 	}
 	
@@ -39,7 +38,7 @@ public class MapDefinition {
 		return values.get(name);
 	}
 	
-	public Set getMethodDefinitions() {
+	public Set<String> getMethodDefinitions() {
 		return methods.keySet();
 	}
 	
@@ -83,18 +82,18 @@ public class MapDefinition {
 		}
 		XMLElement valuesTag = e.getElementByTagName("values");
 		if ( valuesTag != null ) {
-			Vector ch = valuesTag.getChildren();
+			Vector<XMLElement> ch = valuesTag.getChildren();
 			for ( int i = 0; i < ch.size(); i++ ) {
-				XMLElement v = (XMLElement) ch.get(i);
+				XMLElement v = ch.get(i);
 				ValueDefinition vd = ValueDefinition.parseDef(v);
 				md.values.put(vd.getName(), vd);
 			}
 		}
 		XMLElement methodsTag = e.getElementByTagName("methods");
 		if ( methodsTag != null ) {
-			Vector ch = methodsTag.getChildren();
+			Vector<XMLElement> ch = methodsTag.getChildren();
 			for ( int i = 0; i < ch.size(); i++ ) {
-				XMLElement v = (XMLElement) ch.get(i);
+				XMLElement v = ch.get(i);
 				MethodDefinition mdef = MethodDefinition.parseDef(v);
 				md.methods.put(mdef.getName(), mdef);
 			}
@@ -137,9 +136,9 @@ public class MapDefinition {
 					fieldElt.setAttribute("condition", condition);
 				}
 
-				Vector values = child.getChildren();
+				Vector<XMLElement> values = child.getChildren();
 				for (int val = 0; val < values.size(); val++) {
-					XMLElement xec = (XMLElement) values.get(val);
+					XMLElement xec = values.get(val);
 
 					XMLElement expressionElt = new TSLElement(child, "expression");
 					String valueCondition = (String) xec.getAttribute("condition");
@@ -172,8 +171,7 @@ public class MapDefinition {
 				if ( vd == null ) {
 					throw new MetaCompileException(filename, child, "Could not find definition for setter: " + field);
 				}
-				XMLElement remainder = null;
-				remainder = vd.generateCode(child, setterValue, isTextNode, condition, mout, true, filename );
+				vd.generateCode(child, setterValue, isTextNode, condition, mout, true, filename );
 
 			}
 		}
@@ -242,9 +240,9 @@ public class MapDefinition {
 		}
 		
 		// Parse children tags.
-		Vector v = in.getChildren();
+		Vector<XMLElement> v = in.getChildren();
 		for ( int i = 0; i < v.size(); i++ ) {
-			XMLElement child = (XMLElement) v.get(i);
+			XMLElement child = v.get(i);
 			// Case I: a non-primitive map ref construct:
 			// <field><map ref=""> or <message><map ref=""> or <property><map ref="">
 			// or <param type="array"><map ref="">
