@@ -7,6 +7,9 @@ import com.dexels.navajo.tipi.TipiContext;
 
 public class TipiSubstanceExtension extends TipiAbstractXMLExtension implements TipiExtension, BundleActivator {
 
+
+	private static final long serialVersionUID = 5307279111204698579L;
+
 	public TipiSubstanceExtension() {
 //		loadDescriptor();
 		System.err.println("Created: TipiSubstanceExtension");

@@ -12,6 +12,8 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 
 public class TipiSetTheme extends TipiAction {
 
+	private static final long serialVersionUID = 7162024086267040701L;
+
 	protected void execute(TipiEvent event) throws TipiBreakException, TipiException {
 		final Operand valueOp = getEvaluatedParameter("value", event);
 

@@ -15,6 +15,8 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 
 public class TipiSetSkin extends TipiAction {
 
+	private static final long serialVersionUID = -461311020707210415L;
+
 	protected void execute(TipiEvent event) throws TipiBreakException, TipiException {
 		final Operand valueOp = getEvaluatedParameter("value", event);
 		myContext.runSyncInEventThread(new Runnable(){

@@ -18,6 +18,9 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 
 public class LoadSkins extends TipiAction {
 
+	private static final long serialVersionUID = 5481600392557969470L;
+
+
 	protected void execute(TipiEvent event) throws TipiBreakException, TipiException {
 		String serviceName = (String) getEvaluatedParameterValue("service", event);
 		try {
