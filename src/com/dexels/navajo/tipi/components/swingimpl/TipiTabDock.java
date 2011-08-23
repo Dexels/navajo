@@ -6,13 +6,18 @@ import javax.swing.ImageIcon;
 
 import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiDockable;
-import com.javadocking.dock.*;
-import com.javadocking.dockable.*;
-import com.javadocking.dockable.action.*;
-import com.javadocking.event.DockingEvent;
-import com.javadocking.event.DockingListener;
+import com.javadocking.dock.Position;
+import com.javadocking.dock.TabDock;
+import com.javadocking.dockable.DefaultDockable;
+import com.javadocking.dockable.Dockable;
+import com.javadocking.dockable.DockableState;
+import com.javadocking.dockable.DockingMode;
+import com.javadocking.dockable.StateActionDockable;
+import com.javadocking.dockable.action.DefaultDockableStateActionFactory;
 
 public class TipiTabDock extends TipiDataComponentImpl {
+	
+	private static final long serialVersionUID = 3923115370762305969L;
 	TabDock myTabDock;
 
 	public Object createContainer() {

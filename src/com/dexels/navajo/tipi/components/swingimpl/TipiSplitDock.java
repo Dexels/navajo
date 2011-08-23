@@ -1,21 +1,12 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.awt.Component;
-
-import javax.swing.ImageIcon;
-
 import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
-import com.dexels.navajo.tipi.components.swingimpl.swing.TipiDockable;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingSplitDock;
 import com.javadocking.dock.Dock;
 import com.javadocking.dock.Position;
-import com.javadocking.dock.SplitDock;
-import com.javadocking.dock.TabDock;
-import com.javadocking.dockable.DefaultDockable;
-import com.javadocking.dockable.Dockable;
-import com.javadocking.dockable.DockingMode;
 
 public class TipiSplitDock extends TipiDataComponentImpl {
+	private static final long serialVersionUID = -5637640238588319570L;
 	TipiSwingSplitDock mySplitDock;
 
 	public Object createContainer() {

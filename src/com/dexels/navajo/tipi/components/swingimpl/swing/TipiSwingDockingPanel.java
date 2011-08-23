@@ -7,6 +7,8 @@ import javax.swing.JPanel;
 import com.javadocking.dockable.Dockable;
 
 public class TipiSwingDockingPanel extends JPanel implements TipiDockable{
+
+	private static final long serialVersionUID = -4033427231601365932L;
 	private URL myIcon;
 	private String title;
 	private String description = "";

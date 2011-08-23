@@ -1,6 +1,5 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.awt.Container;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 
@@ -12,20 +11,23 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiDockable;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingSplitDock;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.javadocking.DockingManager;
-import com.javadocking.dock.*;
-import com.javadocking.dockable.*;
+import com.javadocking.dock.Dock;
+import com.javadocking.dock.Position;
+import com.javadocking.dockable.Dockable;
+import com.javadocking.dockable.DockableState;
 import com.javadocking.dockable.action.DefaultDockableStateAction;
 import com.javadocking.model.DockModel;
 import com.javadocking.model.FloatDockModel;
-import com.javadocking.util.LookAndFeelUtil;
 
 public class TipiDockingPanel extends TipiPanel {
+
+	private static final long serialVersionUID = 2055356408721147231L;
 	DockModel dockModel;
 	TipiSwingSplitDock myContainer;
 	@Override
 	
 	public Object createContainer() {
-		Container container = (Container)super.createContainer();
+//		Container container = (Container)super.createContainer();
 //		return container;
 		myContainer = new TipiSwingSplitDock(this);
 		return myContainer;
@@ -90,7 +92,6 @@ public class TipiDockingPanel extends TipiPanel {
 
 	@Override
 	public void setContainerLayout(Object layout) {
-		// TODO Auto-generated method stub
 		super.setContainerLayout(layout);
 	}
 
