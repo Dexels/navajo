@@ -6,6 +6,8 @@ import com.dexels.navajo.tipi.TipiContext;
 
 	public class TipiSwingMigExtension extends TipiAbstractXMLExtension  {
 
+		private static final long serialVersionUID = 3084757226054543075L;
+
 		public TipiSwingMigExtension() {
 		}
 

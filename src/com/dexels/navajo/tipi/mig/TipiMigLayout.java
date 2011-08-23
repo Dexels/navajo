@@ -19,7 +19,9 @@ import com.dexels.navajo.tipi.components.core.TipiLayoutImpl;
  */
 public class TipiMigLayout
     extends TipiLayoutImpl {
-   public TipiMigLayout() {
+	private static final long serialVersionUID = 7200147765607642561L;
+
+public TipiMigLayout() {
   }
 
   public void createLayout() {
