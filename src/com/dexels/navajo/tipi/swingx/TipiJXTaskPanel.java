@@ -13,6 +13,8 @@ import com.dexels.navajo.tipi.components.swingimpl.*;
 
 public class TipiJXTaskPanel extends TipiSwingDataComponentImpl {
 
+	private static final long serialVersionUID = 4286296189739122400L;
+
 	@Override
 	public Object createContainer() {
 		JXTaskPaneContainer p = new JXTaskPaneContainer();

@@ -9,6 +9,8 @@ import com.dexels.navajo.tipi.components.swingimpl.*;
 
 public class TipiTipPanel extends TipiSwingDataComponentImpl {
 
+	
+	private static final long serialVersionUID = 8655363825407388712L;
 	private TipOfTheDayModel tipModel;
 
 	@Override

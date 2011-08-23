@@ -15,6 +15,10 @@ import com.dexels.navajo.tipi.swingclient.components.*;
 
 public class TipiExtendedTable extends TipiSwingDataComponentImpl {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1924180960988641513L;
 	private JXTable myTable = null;
 
 	@Override

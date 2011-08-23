@@ -16,6 +16,8 @@ import com.dexels.navajo.tipi.components.swingimpl.*;
 
 public class TipiJXHyperlink extends TipiSwingDataComponentImpl {
 
+	private static final long serialVersionUID = 7386071333508347015L;
+
 	@Override
 	public Object createContainer() {
 		JXHyperlink p = new JXHyperlink();

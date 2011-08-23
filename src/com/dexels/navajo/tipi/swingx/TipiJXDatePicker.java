@@ -9,6 +9,8 @@ import com.dexels.navajo.tipi.components.swingimpl.*;
 
 public class TipiJXDatePicker extends TipiSwingDataComponentImpl {
 
+	private static final long serialVersionUID = -1234730396121068829L;
+
 	@Override
 	public Object createContainer() {
 		JXDatePicker p = new JXDatePicker();
