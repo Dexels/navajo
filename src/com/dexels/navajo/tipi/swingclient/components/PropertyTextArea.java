@@ -1,6 +1,5 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import java.awt.Dimension;
 import java.awt.event.FocusEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
