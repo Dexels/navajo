@@ -8,6 +8,9 @@ import javax.swing.*;
 import com.dexels.navajo.tipi.components.swingimpl.*;
 
 public class TipiLayeredPanel extends TipiPanel {
+
+	private static final long serialVersionUID = -1989798226251005367L;
+
 	// private int totalResize = 0;
 	public Object createContainer() {
 		final JLayeredPane myPanel = new JLayeredPane();

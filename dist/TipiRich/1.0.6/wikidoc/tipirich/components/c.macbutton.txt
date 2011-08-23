@@ -1,0 +1,23 @@
+==== Component: macbutton (type: component) ====
+ [[..componentlist|(Back to componentlist)]]
+=== Values === 
+  *[[tipidoc:TipiEcho:types:color|color]] : background (writable) 
+  *[[tipidoc:TipiEcho:types:color|color]] : foreground (writable) 
+  *[[tipidoc:TipiEcho:types:border|border]] : border (writable) 
+  *[[tipidoc:Tipi:types:string|string]] : text (writable) 
+  *[[tipidoc:Tipi:types:integer|integer]] : defaultSize (writable) 
+  *[[tipidoc:Tipi:types:string|string]] : tooltiptext (writable) 
+  *[[tipidoc:Tipi:types:url|url]] : icon (writable) 
+  *[[tipidoc:Tipi:types:boolean|boolean]] : showSpring (writable) 
+=== Methods ===
+== Method: macbutton.flip ==
+=== Events ===
+== Event: onInstantiate ==
+== Event: onActionPerformed ==
+== Event: onLoad ==
+      *[[tipidoc:Tipi:types:string|string]] : service
+
+------
+
+[[tipiremarks:TipiRich:macbutton|Remarks & demo code for macbutton]]
+[[classdefmacbutton|XML Definition]]

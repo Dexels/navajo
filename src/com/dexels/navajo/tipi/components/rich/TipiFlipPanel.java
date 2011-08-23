@@ -8,6 +8,8 @@ import com.dexels.navajo.tipi.components.swingimpl.*;
 import com.dexels.navajo.tipi.internal.*;
 
 public class TipiFlipPanel extends TipiPanel {
+
+	private static final long serialVersionUID = 2849056634148698485L;
 	private FlipPanel myPanel;
 	private int speed = 750;
 

@@ -1,0 +1,31 @@
+<code xml>
+<tipiclass name="desktopbutton" module="container" addtocontainer="true" class="TipiDesktopButton" childcount="0" layoutmanager="false" type="component" package="com.dexels.navajo.tipi.components.rich" extension="TipiRich" studio-icon="tabs.gif">
+    <events>
+        <event name="onInstantiate"/>
+        <event name="onActionPerformed"/>
+        <event name="onLoad">
+            <param name="service" type="string"/>
+        </event>
+    </events>
+    <values>
+        <value name="background" type="color" property="background" direction="in"/>
+        <value name="foreground" type="color" property="foreground" direction="in"/>
+        <value name="border" type="border" direction="in"/>
+        <value name="text" type="string" property="text" direction="in"/>
+        <value name="subtext" type="string" property="subText" direction="in"/>
+        <value name="icon" type="url" property="iconUrl" direction="in"/>
+        <value name="opaque" type="boolean" property="opaque" direction="in"/>
+        <value name="showSpring" type="boolean" property="showSpring" direction="in"/>
+        <value name="enabled" type="boolean" property="enabled" direction="in"/>
+        <value name="tooltip" type="string" property="toolTipText" direction="in"/>
+        <value name="textfont" type="resource" property="textFont" direction="in"/>
+        <value name="subtextfont" type="resource" property="subTextFont" direction="in"/>
+        <value name="visible" type="boolean" property="visible" direction="in"/>
+        <value name="opacity" type="float" property="opacity" direction="in"/>
+        <value name="speed" type="integer" property="speed" direction="in"/>
+    </values>
+    <methods>
+        <method name="flip"/>
+    </methods>
+</tipiclass>
+</code>

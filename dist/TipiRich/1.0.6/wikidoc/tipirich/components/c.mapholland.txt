@@ -1,0 +1,22 @@
+==== Component: mapholland (type: tipi) ====
+ [[..componentlist|(Back to componentlist)]]
+=== Values === 
+  *[[tipidoc:TipiEcho:types:color|color]] : background (writable) 
+  *[[tipidoc:TipiEcho:types:color|color]] : foreground (writable) 
+  *[[tipidoc:TipiEcho:types:border|border]] : border (writable) 
+  *[[tipidoc:Tipi:types:float|float]] : opacity (writable) 
+=== Events ===
+== Event: onInstantiate ==
+== Event: onLoad ==
+      *[[tipidoc:Tipi:types:string|string]] : service
+== Event: onLocation ==
+      *[[tipidoc:Tipi:types:string|string]] : clubid
+      *[[tipidoc:Tipi:types:string|string]] : clubname
+      *[[tipidoc:Tipi:types:string|string]] : union
+      *[[tipidoc:Tipi:types:float|float]] : lat
+      *[[tipidoc:Tipi:types:float|float]] : lon
+
+------
+
+[[tipiremarks:TipiRich:mapholland|Remarks & demo code for mapholland]]
+[[classdefmapholland|XML Definition]]

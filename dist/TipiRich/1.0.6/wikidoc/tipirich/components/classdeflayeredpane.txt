@@ -1,0 +1,12 @@
+<code xml>
+<tipiclass name="layeredpane" module="container" addtocontainer="true" class="TipiLayeredPanel" childcount="*" layoutmanager="false" type="tipi" package="com.dexels.navajo.tipi.components.rich" extension="TipiRich" studio-icon="tabs.gif">
+    <events>
+        <event name="onInstantiate"/>
+        <event name="onLoad">
+            <param name="service" type="string"/>
+        </event>
+    </events>
+    <values/>
+    <methods/>
+</tipiclass>
+</code>

@@ -1,0 +1,15 @@
+<jnlp spec="1.0+" href="TipiRich.jnlp" codebase="http://spiritus.dexels.nl:41766/Tipi/Extensions/TipiRich/1.0.6">
+    <information>
+        <vendor>Dexels</vendor>
+        <homepage>http://www.dexels.com</homepage>
+        <title>Tipi Rich UI Library</title>
+    </information>
+    <security>
+        <all-permissions/>
+    </security>
+    <resources>
+        <jar main="false" href="lib/TipiRichClient.jar"/>
+        <jar main="false" href="lib/TipiRich.jar"/>
+    </resources>
+    <component-desc/>
+</jnlp>

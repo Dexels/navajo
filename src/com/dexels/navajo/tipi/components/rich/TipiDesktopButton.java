@@ -6,6 +6,7 @@ import com.dexels.navajo.tipi.components.swingimpl.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
 public class TipiDesktopButton extends TipiButton {
+	private static final long serialVersionUID = 7153858395461227871L;
 	private DesktopButton myButton;
 
 	public Object createContainer() {

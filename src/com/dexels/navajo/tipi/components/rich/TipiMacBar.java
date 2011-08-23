@@ -6,6 +6,8 @@ import com.dexels.navajo.rich.components.*;
 import com.dexels.navajo.tipi.components.swingimpl.*;
 
 public class TipiMacBar extends TipiPanel {
+
+	private static final long serialVersionUID = 4021914601392479783L;
 	private MacBar myPanel;
 
 	public Object createContainer() {

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tid errorhandler="error">
+   <tipiclass addtocontainer="true" childcount="*" class="TipiFlipPanel" layoutmanager="false" module="container" name="flip" package="com.dexels.navajo.tipi.components.rich" studio-icon="tabs.gif" type="tipi">
+      <events>
+         <event name="onInstantiate"/>
+         <event name="onLoad">
+            <param name="service" type="string"/>
+         </event>
+      </events>
+      <values>
+         <value direction="in" name="background" type="color"/>
+         <value direction="in" name="foreground" type="color"/>
+         <value direction="in" name="border" type="border"/>
+         <value direction="in" name="speed" type="integer" property="speed"/>
+         <value direction="in" name="direction" type="string" property="direction"/>
+         <value direction="in" name="visible" type="boolean" property="visible"/>
+      </values>
+      <methods>
+         <method name="flip"/>
+         <method name="flipBackwards"/>
+      </methods>
+   </tipiclass>
+   <tipiclass addtocontainer="true" childcount="*" class="TipiPeelPanel" layoutmanager="false" module="container" name="peelpanel" package="com.dexels.navajo.tipi.components.rich" studio-icon="tabs.gif" type="tipi">
+      <events>
+         <event name="onInstantiate"/>
+         <event name="onLoad">
+            <param name="service" type="string"/>
+         </event>
+      </events>
+      <values>
+         <value direction="in" name="backsidecolor" type="color" property="backSideColor"/>
+         <value direction="in" name="backsideimage" type="resource" property="backSideImage"/>
+         <value direction="in" name="visible" type="boolean" property="visible"/>
+      </values>
+      <methods/>
+   </tipiclass>
+   <tipiclass addtocontainer="true" childcount="*" class="TipiRichPanel" layoutmanager="true" module="container" name="richtipi" package="com.dexels.navajo.tipi.components.rich" studio-icon="tabs.gif" type="tipi">
+      <events>
+         <event name="onInstantiate"/>
+         <event name="onLoad">
+            <param name="service" type="string"/>
+         </event>
+      </events>
+      <values>
+         <value direction="in" name="background" type="color" property="background"/>
+         <value direction="in" name="foreground" type="color" property="foreground"/>
+         <value direction="in" name="border" type="border"/>
+         <value direction="in" name="opacity" type="float" property="opacity"/>
+         <value direction="in" name="bordersize" type="float" property="borderWidth"/>
+         <value direction="in" name="arc" type="integer" property="arcWidth"/>
+      </values>
+      <methods/>
+   </tipiclass>
+   <tipiclass addtocontainer="true" childcount="*" class="TipiLayeredPanel" layoutmanager="false" module="container" name="layeredpane" package="com.dexels.navajo.tipi.components.rich" studio-icon="tabs.gif" type="tipi">
+      <events>
+         <event name="onInstantiate"/>
+         <event name="onLoad">
+            <param name="service" type="string"/>
+         </event>
+      </events>
+      <values>
+      </values>
+      <methods/>
+   </tipiclass>
+   
+   
+   
+   <tipiclass addtocontainer="true" childcount="0" class="TipiMapHollandPanel" layoutmanager="false" module="container" name="mapholland" package="com.dexels.navajo.tipi.components.rich" studio-icon="tabs.gif" type="tipi">
+      <events>
+         <event name="onInstantiate"/>
+         <event name="onLoad">
+            <param name="service" type="string"/>
+         </event>
+         <event name="onLocation">
+            <param name="clubid" type="string"/>
+            <param name="clubname" type="string"/>
+            <param name="union" type="string"/>
+            <param name="lat" type="float"/>
+            <param name="lon" type="float"/>
+         </event>
+      </events>
+      <values>
+         <value direction="in" name="background" type="color" property="background"/>
+         <value direction="in" name="foreground" type="color"/>
+         <value direction="in" name="border" type="border"/>
+         <value direction="in" name="opacity" type="float" property="opacity"/>
+      </values>
+      <methods/>
+   </tipiclass>
+   <tipiclass addtocontainer="true" childcount="*" class="TipiMacBar" layoutmanager="false" module="container" name="macbar" package="com.dexels.navajo.tipi.components.rich" studio-icon="tabs.gif" type="tipi">
+      <events>
+         <event name="onInstantiate"/>
+         <event name="onLoad">
+            <param name="service" type="string"/>
+         </event>
+      </events>
+      <values>
+         <value direction="in" name="background" type="color" property="background"/>
+      </values>
+      <methods/>
+   </tipiclass>
+   <tipiclass addtocontainer="true" childcount="0" class="TipiDesktopButton" layoutmanager="false" module="container" name="desktopbutton" package="com.dexels.navajo.tipi.components.rich" studio-icon="tabs.gif" type="component">
+      <events>
+         <event name="onInstantiate"/>
+         <event name="onActionPerformed"/>
+         <event name="onLoad">
+            <param name="service" type="string"/>
+         </event>
+      </events>
+      <values>
+         <value direction="in" name="background" type="color" property="background"/>
+         <value direction="in" name="foreground" type="color" property="foreground"/>
+         <value direction="in" name="border" type="border"/>
+         <value direction="in" name="text" type="string" property="text"/>
+         <value direction="in" name="subtext" type="string" property="subText"/>
+         <value direction="in" name="icon" type="url" property="iconUrl"/>
+         <value direction="in" name="opaque" type="boolean" property="opaque"/>
+         <value direction="in" name="showSpring" type="boolean" property="showSpring"/>
+         <value direction="in" name="enabled" type="boolean" property="enabled"/>
+         <value direction="in" name="tooltip" type="string" property="toolTipText"/>
+         <value direction="in" name="textfont" type="resource" property="textFont"/>
+         <value direction="in" name="subtextfont" type="resource" property="subTextFont"/>
+         <value direction="in" name="visible" type="boolean" property="visible"/>
+         <value direction="in" name="opacity" type="float" property="opacity"/>
+         <value direction="in" name="speed" type="integer" property="speed"/>
+      </values>
+      <methods>
+         <method name="flip"/>
+      </methods>
+   </tipiclass>
+   <tipiclass addtocontainer="true" childcount="0" class="TipiMacLink" layoutmanager="false" module="container" name="macbutton" package="com.dexels.navajo.tipi.components.rich" studio-icon="tabs.gif" type="component">
+      <events>
+         <event name="onInstantiate"/>
+         <event name="onActionPerformed"/>
+         <event name="onLoad">
+            <param name="service" type="string"/>
+         </event>
+      </events>
+      <values>
+         <value direction="in" name="background" type="color"/>
+         <value direction="in" name="foreground" type="color"/>
+         <value direction="in" name="border" type="border"/>
+         <value direction="in" name="text" type="string" property="text"/>
+         <value direction="in" name="defaultSize" type="integer" property="defaultSize"/>
+         <value direction="in" name="tooltiptext" type="string" property="toolTipText"/>
+         <value direction="in" name="icon" type="url" property="iconUrl"/>
+         <value direction="in" name="showSpring" type="boolean" property="showSpring"/>
+      </values>
+      <methods>
+         <method name="flip"/>
+      </methods>
+   </tipiclass>
+   
+  
+</tid>

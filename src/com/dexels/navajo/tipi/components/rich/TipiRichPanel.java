@@ -8,6 +8,8 @@ import com.dexels.navajo.rich.components.*;
 import com.dexels.navajo.tipi.components.swingimpl.*;
 
 public class TipiRichPanel extends TipiPanel {
+
+	private static final long serialVersionUID = -4426671631853552634L;
 	private LushContainer myPanel;
 	private JPanel actualPanel = new JPanel();
 	private GridBagLayout gridBagLayout;
