@@ -6,6 +6,8 @@ import com.dexels.navajo.tipi.TipiContext;
 
 public class TipiRubyExtension extends TipiAbstractXMLExtension implements TipiExtension {
 
+	private static final long serialVersionUID = -1716188511412526400L;
+
 	public TipiRubyExtension() {
 	}
 
