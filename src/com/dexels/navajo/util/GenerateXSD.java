@@ -1,7 +1,6 @@
 package com.dexels.navajo.util;
 
 import java.io.BufferedWriter;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
@@ -33,9 +32,9 @@ public class GenerateXSD {
 			x.addChild(typex);
 			// Add parameters.
 			int count = 0;
-			Iterator params =  MapMetaData.getInstance().getMapDefinition(adapterName).getMethodDefinition(method).getParameters().iterator();
+			Iterator<String> params =  MapMetaData.getInstance().getMapDefinition(adapterName).getMethodDefinition(method).getParameters().iterator();
 			while ( params.hasNext() ) {
-				ParameterDefinition pd = MapMetaData.getInstance().getMapDefinition(adapterName).getMethodDefinition(method).getParameterDefinition((String) params.next());
+				ParameterDefinition pd = MapMetaData.getInstance().getMapDefinition(adapterName).getMethodDefinition(method).getParameterDefinition(params.next());
 				
 				if ( !pd.getRequired().equals("automatic") ) {
 					CaseSensitiveXMLElement xp = new CaseSensitiveXMLElement("xs:attribute");
@@ -59,7 +58,7 @@ public class GenerateXSD {
 		Iterator setters = MapMetaData.getInstance().getMapDefinition(adapterName).getValueDefinitions().iterator();
 		while ( setters.hasNext() ) {
 			CaseSensitiveXMLElement x = new CaseSensitiveXMLElement("xs:element");
-			ValueDefinition vd = (ValueDefinition) MapMetaData.getInstance().getMapDefinition(adapterName).getValueDefinition((String) setters.next());
+			ValueDefinition vd = MapMetaData.getInstance().getMapDefinition(adapterName).getValueDefinition((String) setters.next());
 			x.setAttribute("type", ( vd.getDirection().equals("out") ? "MapType": "SetterType") );
 			x.setAttribute("name", adapterName + "." + vd.getName());
 			choice.addChild(x);
