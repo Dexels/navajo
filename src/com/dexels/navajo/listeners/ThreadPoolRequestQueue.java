@@ -25,12 +25,14 @@ public class ThreadPoolRequestQueue extends RequestQueue {
 		ThreadPoolExecutor t = (ThreadPoolExecutor) Executors.newFixedThreadPool(nrThreads);
 		
 		t.setCorePoolSize(nrThreads);
+		
 		t.setMaximumPoolSize(nrThreads);
         t.setThreadFactory(new NamedThreadFactory(id) {
 			
 			public Thread newThread(Runnable r) {
 				Thread t = super.newThread(r);
 				t.setPriority(priority);
+				t.setDaemon(true);
 				return t;
 			}
 		});
