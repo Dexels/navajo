@@ -10,6 +10,9 @@ import java.util.Set;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.listeners.RequestQueue;
 import com.dexels.navajo.listeners.ThreadPoolRequestQueue;
@@ -28,7 +31,7 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 	
 	private static final int DEFAULT_POOL_SIZE = 15;
 	private static final int DEFAULT_MAXBACKLOG = 500;
-	
+	private static final Logger logger = LoggerFactory.getLogger(PriorityThreadPoolScheduler.class);
 	private RequestQueue normalPool;
 	private RequestQueue priorityPool;
 	private RequestQueue systemPool;
@@ -373,7 +376,7 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 	
 	@Override
 	public final void run(TmlRunnable myRunner) {
-		System.err.println("Warning: Synchronously running script in ThreadPool based connector!");
+		logger.info("Warning: Synchronously running script in ThreadPool based connector!");
 		myRunner.setCommitted(true);
 		myRunner.setScheduledAt(System.currentTimeMillis());
 		myRunner.run();
@@ -397,6 +400,8 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		priorityPool.shutDownQueue();
 		fastPool.shutDownQueue();
 		slowPool.shutDownQueue();
+		
+		logger.info("Shutdown complete");
 	}
 
 	@Override
