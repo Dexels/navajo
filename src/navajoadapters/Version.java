@@ -1,6 +1,7 @@
 package navajoadapters;
 
-import java.util.Properties;
+import java.util.Dictionary;
+import java.util.Hashtable;
 
 import org.dexels.grus.GrusManager;
 import org.osgi.framework.BundleContext;
@@ -103,7 +104,7 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 		//		System.err.println("Detected functions: "+fi.getFunctionNames());
 		for (String functionName : fi.getFunctionNames(extensionDef)) {
 			FunctionDefinition fd = fi.getDef(extensionDef, functionName);
-			Properties props = new Properties();
+			 Dictionary<String, Object> props = new Hashtable<String, Object>();
 			props.put("functionName", functionName);
 			props.put("functionDefinition", fd);
 			context.registerService(FunctionInterface.class.getName(), fi
@@ -118,9 +119,9 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 //			FunctionDefinition fd = fi.getDef(extensionDef, adapterName);
 			
 			String adapterClass = fi.getAdapterClass(adapterName,library);
-			Class c = Class.forName(adapterClass);
+			Class<?> c = Class.forName(adapterClass);
 			
-			 Properties props = new Properties();
+			 Dictionary<String, Object> props = new Hashtable<String, Object>();
 			 props.put("adapterName", adapterName);
 			 props.put("adapterClass", c.getName());
 			 props.put("functionDefinition", fd);
