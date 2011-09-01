@@ -24,6 +24,8 @@
  */
 package navajofunctions;
 
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.Properties;
 
 import org.osgi.framework.BundleContext;
@@ -72,7 +74,7 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 //		System.err.println("Detected functions: "+fi.getFunctionNames());
 		for (String functionName : fi.getFunctionNames(extensionDef)) {
 			FunctionDefinition fd = fi.getDef(extensionDef,functionName);
-			 Properties props = new Properties();
+			 Dictionary<String, Object> props = new Hashtable<String, Object>();
 			 props.put("functionName", functionName);
 			 props.put("functionDefinition", fd);
 			context.registerService(FunctionInterface.class.getName(), fi.instantiateFunctionClass(fd,getClass().getClassLoader()), props);
