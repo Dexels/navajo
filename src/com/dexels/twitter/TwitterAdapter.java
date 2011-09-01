@@ -2,15 +2,11 @@ package com.dexels.twitter;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.URI;
 import java.util.Date;
 import java.util.List;
-
-import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.server.UserException;
 
 import winterwell.jtwitter.OAuthSignpostClient;
 import winterwell.jtwitter.Twitter;
@@ -18,13 +14,16 @@ import winterwell.jtwitter.Twitter.Message;
 import winterwell.jtwitter.Twitter.Status;
 import winterwell.jtwitter.Twitter.User;
 
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.server.UserException;
+
 public class TwitterAdapter {
 	private Twitter twit;
-	private String username, password, status;
+	private String username, password; //, status;
 	private String currentUser;
 	private String token1;
 	private String token2;
-	private Binary signPost;
+//	private Binary signPost;
 	
 	private OAuthSignpostClient mySignPost = null; 
 		
@@ -328,7 +327,7 @@ public class TwitterAdapter {
 		
 		oauthClient.authorizeDesktop();
 		// get the pin
-		String v = oauthClient.askUser("Please enter the verification PIN from Twitter");
+		String v = OAuthSignpostClient.askUser("Please enter the verification PIN from Twitter");
 		oauthClient.setAuthorizationCode(v);
 		// Store the authorisation token details for future use
 		String[] accessToken = oauthClient.getAccessToken();

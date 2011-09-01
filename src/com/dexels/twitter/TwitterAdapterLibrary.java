@@ -13,22 +13,21 @@ import navajo.ExtensionDefinition;
  */
 public class TwitterAdapterLibrary implements ExtensionDefinition {
 
+	private static final long serialVersionUID = 3696843876065384135L;
+
 	public InputStream getDefinitionAsStream() {
 		return getClass().getClassLoader().getResourceAsStream("com/dexels/twitter/adapter.xml");
 	}
 
 	public String getConnectorId() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public List<String> getDependingProjectUrls() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public String getDeploymentDescriptor() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -46,44 +45,36 @@ public class TwitterAdapterLibrary implements ExtensionDefinition {
 	}
 
 	public List<String> getLibraryJars() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public List<String> getMainJars() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public String getProjectName() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public List<String> getRequiredExtensions() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public boolean isMainImplementation() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public String requiresMainImplementation() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public ClassLoader getExtensionClassloader() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void setExtensionClassloader(ClassLoader extClassloader) {
-		// TODO Auto-generated method stub
 		
 	}
 
