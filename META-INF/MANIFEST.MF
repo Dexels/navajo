@@ -1,0 +1,18 @@
+Bundle-Name: Navajo KML Adapters
+Bundle-SymbolicName: com.dexels.navajo.kml
+Bundle-Description: Core version manager
+Bundle-ManifestVersion: 2
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Dexels
+Import-Package: junit.framework,
+ org.osgi.framework;version="1.5.0"
+Bundle-ActivationPolicy: lazy
+Require-Bundle: com.dexels.navajo.adapters;bundle-version="1.0.5",
+ com.dexels.navajo.core;bundle-version="2.9.4",
+ com.dexels.navajo.listeners;bundle-version="3.1.5",
+ com.dexels.navajo.version;bundle-version="1.0.10"
+Bundle-ClassPath: lib/milStd2525_png.jar,
+ lib/omcorba.jar,
+ lib/omj3d.jar,
+ lib/omsvg.jar,
+ lib/openmap.jar
