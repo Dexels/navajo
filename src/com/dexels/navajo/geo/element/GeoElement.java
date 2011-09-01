@@ -1,9 +1,11 @@
 package com.dexels.navajo.geo.element;
 
-import java.io.*;
-import java.util.*;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.dexels.navajo.document.nanoimpl.*;
+import com.dexels.navajo.document.nanoimpl.XMLElement;
 
 public abstract class GeoElement {
 	String id = null;

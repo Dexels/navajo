@@ -1,16 +1,42 @@
 package com.dexels.navajo.geo.impl;
 
-import java.awt.*;
-import java.io.*;
-import java.util.*;
+import java.awt.Dimension;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.zip.*;
+import java.util.Map;
+import java.util.Random;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.nanoimpl.*;
-import com.dexels.navajo.document.types.*;
-import com.dexels.navajo.geo.*;
-import com.dexels.navajo.geo.color.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
+import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.navajo.document.nanoimpl.XMLParseException;
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.geo.GeoColorizer;
+import com.dexels.navajo.geo.LegendCreator;
+import com.dexels.navajo.geo.color.BlackWhiteColorizer;
+import com.dexels.navajo.geo.color.BlueRedGeoColorizer;
+import com.dexels.navajo.geo.color.HueGeoColorizer;
+import com.dexels.navajo.geo.color.RedGeoColorizer;
+import com.dexels.navajo.geo.color.WhiteBlackColorizer;
+import com.dexels.navajo.geo.color.WhiteOrangeColorizer;
+import com.dexels.navajo.geo.color.WhiteRedColorizer;
 
 public abstract class AbstractKMLMap {
 

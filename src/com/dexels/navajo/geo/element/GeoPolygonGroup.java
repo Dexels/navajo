@@ -1,9 +1,17 @@
 package com.dexels.navajo.geo.element;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import com.dexels.navajo.document.nanoimpl.*;
+import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
+import com.dexels.navajo.document.nanoimpl.XMLElement;
 
 public class GeoPolygonGroup extends GeoElement {
 	private final List<GeoPolygon> myPolygons = new ArrayList<GeoPolygon>();

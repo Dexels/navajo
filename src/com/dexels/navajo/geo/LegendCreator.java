@@ -1,13 +1,16 @@
 package com.dexels.navajo.geo;
 
-import java.awt.*;
-import java.awt.image.*;
-import java.io.*;
-import java.text.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.text.NumberFormat;
 
-import javax.imageio.*;
+import javax.imageio.ImageIO;
 
-import com.dexels.navajo.geo.color.*;
+import com.dexels.navajo.geo.color.BlueRedGeoColorizer;
 
 public class LegendCreator {
 

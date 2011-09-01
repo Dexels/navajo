@@ -1,6 +1,7 @@
 package com.dexels.navajo.geo.element;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GeoPointStore {
 

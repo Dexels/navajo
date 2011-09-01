@@ -1,8 +1,8 @@
 package com.dexels.navajo.geo.color;
 
-import java.awt.*;
+import java.awt.Color;
 
-import com.dexels.navajo.geo.*;
+import com.dexels.navajo.geo.GeoColorizer;
 
 public class HueGeoColorizer implements GeoColorizer {
 

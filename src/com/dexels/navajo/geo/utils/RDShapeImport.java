@@ -5,17 +5,18 @@ import java.io.File;
 import java.io.FileWriter;
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.List;
 
 import com.bbn.openmap.dataAccess.shape.DbfFile;
 import com.bbn.openmap.io.BinaryFile;
-import com.bbn.openmap.layer.shape.*;
+import com.bbn.openmap.layer.shape.ESRIBoundingBox;
+import com.bbn.openmap.layer.shape.ESRIPoint;
+import com.bbn.openmap.layer.shape.ESRIPoly;
 import com.bbn.openmap.layer.shape.ESRIPoly.ESRIFloatPoly;
-import com.dexels.navajo.client.ConditionErrorHandler;
+import com.bbn.openmap.layer.shape.ESRIPolygonRecord;
+import com.bbn.openmap.layer.shape.ESRIRecord;
+import com.bbn.openmap.layer.shape.ShapeFile;
 import com.dexels.navajo.client.NavajoClientFactory;
-import com.dexels.navajo.client.ResponseListener;
 import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.types.Binary;
 
 public class RDShapeImport {

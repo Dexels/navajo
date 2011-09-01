@@ -1,8 +1,9 @@
 package com.dexels.navajo.geo.element;
 
-import java.util.*;
+import java.util.StringTokenizer;
 
-import com.dexels.navajo.document.nanoimpl.*;
+import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
+import com.dexels.navajo.document.nanoimpl.XMLElement;
 
 public class GeoPoint extends GeoElement {
 	public static final double MIN_DISTANCE = 0.00001;

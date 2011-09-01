@@ -1,6 +1,6 @@
 package com.dexels.navajo.geo;
 
-import java.awt.*;
+import java.awt.Color;
 
 public interface GeoColorizer {
 	public String createGeoColorString(double value, double min, double max);

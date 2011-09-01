@@ -1,19 +1,27 @@
 package com.dexels.navajo.geo;
 
-import java.io.*;
-import java.util.zip.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
-import metadata.*;
+import metadata.FormatDescription;
 
-import com.dexels.navajo.adapters.*;
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.nanoimpl.*;
-import com.dexels.navajo.document.types.*;
-import com.dexels.navajo.geo.impl.*;
-import com.dexels.navajo.geo.renderer.*;
-import com.dexels.navajo.geo.zipcode.*;
-import com.dexels.navajo.mapping.*;
-import com.dexels.navajo.server.*;
+import com.dexels.navajo.adapters.NavajoSvgRenderAdapter;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.nanoimpl.XMLParseException;
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.geo.impl.AbstractKMLMap;
+import com.dexels.navajo.geo.renderer.SvgRenderer;
+import com.dexels.navajo.geo.zipcode.Gemeente2Population;
+import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.UserException;
 
 public class KMLMap extends AbstractKMLMap implements Mappable {
 
@@ -128,7 +136,6 @@ public class KMLMap extends AbstractKMLMap implements Mappable {
 		return null;
 	}
 	
-	@SuppressWarnings("null")
 	public Binary getSvgData() throws IOException {
 		if(myKmzData==null) {
 			getKmlData();

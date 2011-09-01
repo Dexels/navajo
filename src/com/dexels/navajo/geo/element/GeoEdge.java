@@ -1,7 +1,8 @@
 package com.dexels.navajo.geo.element;
 
 
-import com.dexels.navajo.document.nanoimpl.*;
+import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
+import com.dexels.navajo.document.nanoimpl.XMLElement;
 
 public class GeoEdge extends GeoElement {
 	public GeoPoint a,b;

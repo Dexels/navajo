@@ -1,8 +1,12 @@
 package com.dexels.navajo.geo.element;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.StringTokenizer;
 
-import com.dexels.navajo.document.nanoimpl.*;
+import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
+import com.dexels.navajo.document.nanoimpl.XMLElement;
 
 public class GeoPolygon extends GeoElement {
 	// private List<GeoEdge> myEdges = new ArrayList<GeoEdge>();

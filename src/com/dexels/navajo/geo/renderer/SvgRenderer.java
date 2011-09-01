@@ -1,11 +1,27 @@
 package com.dexels.navajo.geo.renderer;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
-import com.dexels.navajo.adapters.*;
-import com.dexels.navajo.document.nanoimpl.*;
-import com.dexels.navajo.document.types.*;
+import com.dexels.navajo.adapters.NavajoSvgRenderAdapter;
+import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
+import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.navajo.document.nanoimpl.XMLParseException;
+import com.dexels.navajo.document.types.Binary;
 
 public class SvgRenderer {
 
