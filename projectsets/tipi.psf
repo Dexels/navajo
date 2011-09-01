@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<psf version="2.0">
+<provider id="org.eclipse.team.cvs.core.cvsnature">
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,com.dexels.navajo.tipi.feature,com.dexels.navajo.tipi.feature"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,com.dexels.navajo.tipi.swing.application,com.dexels.navajo.tipi.swing.application"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,com.dexels.navajo.tipi.swing.deps,com.dexels.navajo.tipi.swing.deps"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,com.dexels.navajo.tipi.swt.client,com.dexels.navajo.tipi.swt.client"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,com.dexels.navajo.tipi.vaadin,com.dexels.navajo.tipi.vaadin"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,com.dexels.navajo.tipi.vaadin.bridged,com.dexels.navajo.tipi.vaadin.bridged"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,com.dexels.navajo.tipi.vaadin.bridged.deploy,com.dexels.navajo.tipi.vaadin.bridged.deploy"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,com.dexels.navajo.tipi.vaadin.embedded,com.dexels.navajo.tipi.vaadin.embedded"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,com.dexels.navajo.tipi.vaadin.feature,com.dexels.navajo.tipi.vaadin.feature"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,NavajoEchoClient,NavajoEchoClient"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,NavajoEchoTipi,NavajoEchoTipi"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,NavajoRichClient,NavajoRichClient"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,NavajoRichTipi,NavajoRichTipi"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,NavajoSwingTipi,NavajoSwingTipi"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,NavajoTipi,NavajoTipi"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,TipiCharting,TipiCharting"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,TipiCobraBrowser,TipiCobraBrowser"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,TipiFacilityOccpation,TipiFacilityOccpation"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,TipiFlickr,TipiFlickr"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,TipiGeoSwing,TipiGeoSwing"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,TipiJabber,TipiJabber"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,TipiJxLayer,TipiJxLayer"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,TipiMail,TipiMail"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,TipiRss,TipiRss"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,TipiRuby,TipiRuby"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,TipiSubstance,TipiSubstance"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,TipiSvgBatik,TipiSvgBatik"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,TipiSwingClient,TipiSwingClient"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,TipiSwingDocking,TipiSwingDocking"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,TipiSwingEditor,TipiSwingEditor"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,TipiSwingMig,TipiSwingMig"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,TipiSwingX,TipiSwingX"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,NavajoSwingEditor,NavajoSwingEditor"/>
+</provider>
+</psf>
