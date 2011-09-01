@@ -1,7 +1,11 @@
 package com.dexels.navajo.plugin.workflow.parts;
 
-import org.eclipse.draw2d.*;
-import org.eclipse.draw2d.geometry.*;
+import org.eclipse.draw2d.BorderLayout;
+import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.Figure;
+import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.Label;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.widgets.Display;

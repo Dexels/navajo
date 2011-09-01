@@ -6,12 +6,17 @@
  */
 package com.dexels.navajo.workflow.util;
 
-import com.dexels.navajo.workflow.*;
-
 import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+
+import com.dexels.navajo.workflow.Param;
+import com.dexels.navajo.workflow.State;
+import com.dexels.navajo.workflow.Task;
+import com.dexels.navajo.workflow.Transition;
+import com.dexels.navajo.workflow.Workflow;
+import com.dexels.navajo.workflow.WorkflowPackage;
 
 /**
  * <!-- begin-user-doc -->

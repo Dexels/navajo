@@ -1,12 +1,6 @@
 package workflowgef.editors;
 
 
-import java.io.StringWriter;
-import java.text.Collator;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.StringTokenizer;
-
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -182,9 +176,7 @@ public class WorkflowGefEditor extends MultiPageEditorPart implements IResourceC
 	 */
 	protected void pageChange(int newPageIndex) {
 		super.pageChange(newPageIndex);
-		if (newPageIndex == 2) {
-			sortWords();
-		}
+
 	}
 	/**
 	 * Closes all project files on project close.
@@ -218,27 +210,5 @@ public class WorkflowGefEditor extends MultiPageEditorPart implements IResourceC
 			text.setFont(font);
 		}
 	}
-	/**
-	 * Sorts the words in page 0, and shows them in page 2.
-	 */
-	void sortWords() {
 
-		String editorText =
-			editor.getDocumentProvider().getDocument(editor.getEditorInput()).get();
-
-		StringTokenizer tokenizer =
-			new StringTokenizer(editorText, " \t\n\r\f!@#\u0024%^&*()-_=+`~[]{};:'\",.<>/?|\\");
-		ArrayList editorWords = new ArrayList();
-		while (tokenizer.hasMoreTokens()) {
-			editorWords.add(tokenizer.nextToken());
-		}
-
-		Collections.sort(editorWords, Collator.getInstance());
-		StringWriter displayText = new StringWriter();
-		for (int i = 0; i < editorWords.size(); i++) {
-			displayText.write(((String) editorWords.get(i)));
-			displayText.write(System.getProperty("line.separator"));
-		}
-		text.setText(displayText.toString());
-	}
 }

@@ -13,12 +13,10 @@ package com.dexels.navajo.plugin.workflow.parts;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import org.eclipse.swt.graphics.Image;
-
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.editparts.AbstractTreeEditPart;
+import org.eclipse.swt.graphics.Image;
 
-import com.dexels.navajo.plugin.workflow.model.StateElement;
 import com.dexels.navajo.plugin.workflow.model.TransitionElement;
 import com.dexels.navajo.plugin.workflow.model.WorkflowModelElement;
 

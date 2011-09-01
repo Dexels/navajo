@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -20,7 +19,6 @@ import org.eclipse.draw2d.geometry.Point;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLParseException;
-import com.dexels.navajo.plugin.workflow.ShapesEditorActionBarContributor;
 
 public class WorkflowElement extends WorkflowModelElement {
 	/** Property ID to use when a child is added to this diagram. */

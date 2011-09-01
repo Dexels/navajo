@@ -15,35 +15,21 @@ import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import org.eclipse.draw2d.ChopboxAnchor;
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.ConnectionAnchor;
-import org.eclipse.draw2d.Ellipse;
-import org.eclipse.draw2d.EllipseAnchor;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.Label;
-import org.eclipse.draw2d.RectangleFigure;
-import org.eclipse.draw2d.RoundedRectangle;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
-
 import org.eclipse.gef.ConnectionEditPart;
-import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.NodeEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
-import org.eclipse.gef.editpolicies.ContainerEditPolicy;
 import org.eclipse.gef.editpolicies.GraphicalNodeEditPolicy;
-import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateConnectionRequest;
-import org.eclipse.gef.requests.CreateRequest;
-import org.eclipse.gef.requests.GroupRequest;
 import org.eclipse.gef.requests.ReconnectRequest;
 
 import com.dexels.navajo.plugin.workflow.model.StateElement;
-import com.dexels.navajo.plugin.workflow.model.TaskElement;
 import com.dexels.navajo.plugin.workflow.model.TransitionElement;
 import com.dexels.navajo.plugin.workflow.model.WorkflowModelElement;
 import com.dexels.navajo.plugin.workflow.model.commands.ConnectionCreateCommand;

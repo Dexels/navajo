@@ -14,9 +14,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 
-import org.eclipse.draw2d.AutomaticRouter;
-import org.eclipse.draw2d.BendpointConnectionRouter;
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.ConnectionLayer;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FreeformLayer;
@@ -25,7 +22,6 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.ShortestPathConnectionRouter;
 import org.eclipse.draw2d.geometry.Rectangle;
-
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.LayerConstants;
@@ -35,7 +31,6 @@ import org.eclipse.gef.editpolicies.RootComponentEditPolicy;
 import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
-import org.eclipse.swt.graphics.Color;
 
 import com.dexels.navajo.plugin.workflow.model.StateElement;
 import com.dexels.navajo.plugin.workflow.model.WorkflowElement;

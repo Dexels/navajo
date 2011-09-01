@@ -10,15 +10,13 @@
  *******************************************************************************/
 package com.dexels.navajo.plugin.workflow.parts;
 
-import org.eclipse.swt.graphics.Color;
-
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
-
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
+import org.eclipse.swt.graphics.Color;
 
 
 /**

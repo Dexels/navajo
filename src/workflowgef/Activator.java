@@ -4,8 +4,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-import com.dexels.navajo.plugin.workflow.ShapesPlugin;
-
 /**
  * The activator class controls the plug-in life cycle
  */

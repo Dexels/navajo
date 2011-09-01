@@ -6,7 +6,6 @@ import java.util.Vector;
 
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.views.properties.ComboBoxPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 

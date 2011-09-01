@@ -11,11 +11,9 @@
 package com.dexels.navajo.plugin.workflow.model.commands;
 
 import org.eclipse.draw2d.geometry.Rectangle;
-
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
-
 
 import com.dexels.navajo.plugin.workflow.model.StateElement;
 

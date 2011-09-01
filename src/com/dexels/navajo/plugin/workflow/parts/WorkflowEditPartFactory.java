@@ -13,7 +13,6 @@ package com.dexels.navajo.plugin.workflow.parts;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
 
-
 import com.dexels.navajo.plugin.workflow.model.StateElement;
 import com.dexels.navajo.plugin.workflow.model.TaskElement;
 import com.dexels.navajo.plugin.workflow.model.TransitionElement;

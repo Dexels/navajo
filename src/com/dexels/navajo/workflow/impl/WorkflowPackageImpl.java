@@ -6,6 +6,12 @@
  */
 package com.dexels.navajo.workflow.impl;
 
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.impl.EPackageImpl;
+
 import com.dexels.navajo.workflow.Param;
 import com.dexels.navajo.workflow.State;
 import com.dexels.navajo.workflow.Task;
@@ -13,13 +19,6 @@ import com.dexels.navajo.workflow.Transition;
 import com.dexels.navajo.workflow.Workflow;
 import com.dexels.navajo.workflow.WorkflowFactory;
 import com.dexels.navajo.workflow.WorkflowPackage;
-
-import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EReference;
-
-import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
  * <!-- begin-user-doc -->

@@ -15,10 +15,8 @@ import java.beans.PropertyChangeListener;
 
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.PolygonDecoration;
 import org.eclipse.draw2d.PolylineConnection;
-
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editparts.AbstractConnectionEditPart;
@@ -26,9 +24,7 @@ import org.eclipse.gef.editpolicies.ConnectionEditPolicy;
 import org.eclipse.gef.editpolicies.ConnectionEndpointEditPolicy;
 import org.eclipse.gef.requests.GroupRequest;
 
-
 import com.dexels.navajo.plugin.workflow.model.TransitionElement;
-import com.dexels.navajo.plugin.workflow.model.WorkflowElement;
 import com.dexels.navajo.plugin.workflow.model.WorkflowModelElement;
 import com.dexels.navajo.plugin.workflow.model.commands.ConnectionDeleteCommand;
 

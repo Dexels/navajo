@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.dexels.navajo.plugin.workflow;
 
-import org.eclipse.jface.resource.ImageDescriptor;
-
 import org.eclipse.gef.palette.CombinedTemplateCreationEntry;
 import org.eclipse.gef.palette.ConnectionCreationToolEntry;
 import org.eclipse.gef.palette.MarqueeToolEntry;
@@ -24,6 +22,7 @@ import org.eclipse.gef.palette.PanningSelectionToolEntry;
 import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.requests.CreationFactory;
 import org.eclipse.gef.requests.SimpleFactory;
+import org.eclipse.jface.resource.ImageDescriptor;
 
 import com.dexels.navajo.plugin.workflow.model.StateElement;
 import com.dexels.navajo.plugin.workflow.model.TransitionElement;

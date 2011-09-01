@@ -12,7 +12,6 @@ package com.dexels.navajo.plugin.workflow.model.commands;
 
 import org.eclipse.gef.commands.Command;
 
-
 import com.dexels.navajo.plugin.workflow.model.TransitionElement;
 
 /**
