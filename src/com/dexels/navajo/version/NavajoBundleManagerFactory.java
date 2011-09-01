@@ -11,7 +11,7 @@ public class NavajoBundleManagerFactory {
 	}
 	
 	public static INavajoBundleManager getInstance() {
-		ServiceReference refs = myContext.getServiceReference(INavajoBundleManager.class.getName());
-		return (INavajoBundleManager) myContext.getService(refs);
+		ServiceReference<INavajoBundleManager> refs = myContext.getServiceReference(INavajoBundleManager.class);
+		return myContext.getService(refs);
 	}
 }
