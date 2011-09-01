@@ -28,6 +28,10 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  * @version 1.0
  */
 public class TipiActionBlock extends TipiAbstractExecutable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -744796253414327618L;
 	private boolean multithread = false;
 
 	public TipiActionBlock(TipiContext tc) {

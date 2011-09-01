@@ -8,6 +8,11 @@ import com.dexels.navajo.tipi.internal.cache.CacheManager;
 
 public abstract class CachedResourceLoader extends ClassPathResourceLoader {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6716569339779493458L;
+
 	public abstract CacheManager getCacheManager();
 
 	public InputStream getResourceStream(String location) throws IOException {

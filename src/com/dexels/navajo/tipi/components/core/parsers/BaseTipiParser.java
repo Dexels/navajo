@@ -11,6 +11,10 @@ import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiTypeParser;
 
 abstract class BaseTipiParser extends TipiTypeParser {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9187081393823143951L;
 	private static final String TIPI_HOME_SYMBOL = "~";
 
 	protected TipiDataComponent getTipiByPath(TipiComponent source, String path) {

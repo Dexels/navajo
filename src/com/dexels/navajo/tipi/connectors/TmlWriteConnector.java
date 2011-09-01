@@ -11,6 +11,11 @@ import com.dexels.navajo.tipi.TipiException;
 
 public class TmlWriteConnector extends TipiBaseConnector {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5080826465209597730L;
+
 	// assume a load:
 	public void doTransaction(Navajo input, String service)
 			throws TipiBreakException, TipiException {

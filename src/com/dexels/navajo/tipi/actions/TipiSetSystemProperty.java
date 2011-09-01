@@ -23,6 +23,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 
 public class TipiSetSystemProperty extends TipiAction {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2528847214946786108L;
+
 	public TipiSetSystemProperty() {
 	}
 

@@ -24,6 +24,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 @Deprecated
 public class TipiDisposePath extends TipiAction {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1778781089671484309L;
+
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {

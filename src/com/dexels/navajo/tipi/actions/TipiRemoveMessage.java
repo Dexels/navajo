@@ -33,6 +33,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 // <param name="message" type="message" required="true"/>
 // </tipiaction>
 public class TipiRemoveMessage extends TipiAction {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7956701750993369325L;
+
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {

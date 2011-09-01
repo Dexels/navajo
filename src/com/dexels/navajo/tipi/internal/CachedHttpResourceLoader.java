@@ -10,6 +10,10 @@ import com.dexels.navajo.tipi.internal.cache.impl.HttpRemoteStorage;
 
 public class CachedHttpResourceLoader extends CachedResourceLoader {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3322463272837679890L;
 	protected final CacheManager cache;
 
 	public CachedHttpResourceLoader(File baseDir, URL baseUrl) {

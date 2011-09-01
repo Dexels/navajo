@@ -15,6 +15,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 
 /** @todo Refactor, move to NavajoSwingTipi */
 public class TipiShowError extends TipiAction {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -138337054456517828L;
+
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {

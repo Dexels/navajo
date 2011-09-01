@@ -22,6 +22,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class PropertyRefParser extends BaseTipiParser {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6380517741454351672L;
+
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		// return new PropertyRef(getPropertyByPath(source, expression));
 		if (expression.startsWith("!")) {

@@ -15,6 +15,10 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 /** @todo Refactor, move to NavajoSwingTipi */
 public class TipiShowQuestion extends TipiAction {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6263991376950108031L;
 	int response = 0;
 
 	public void execute(TipiEvent event)

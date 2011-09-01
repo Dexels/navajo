@@ -22,6 +22,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class CookieRefParser extends TipiTypeParser {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4711032717460257704L;
+
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		CookieRef cookieRef = new CookieRef(expression, myContext);
 		System.err.println("CookieRef parsed succesfully");

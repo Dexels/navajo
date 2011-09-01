@@ -23,6 +23,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public final class TipiSetCookie extends TipiAction {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5093937798517391321L;
+
 	public final void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {

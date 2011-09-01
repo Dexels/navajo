@@ -23,6 +23,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class PropertyParser extends BaseTipiParser {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8160207631197417713L;
+
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		return getPropertyValue(source, expression);
 	}

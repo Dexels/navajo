@@ -38,6 +38,11 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  * @deprecated
  */
 public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5862387049579716030L;
+
 	private String messagePath = null;
 
 	private String questionDefinitionName = null;

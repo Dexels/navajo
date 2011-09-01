@@ -24,6 +24,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 
 public class GlobalRefParser extends TipiTypeParser {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8010662840580860429L;
+
 	public GlobalRefParser() {
 	}
 

@@ -50,6 +50,10 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 
 public class TipiConvertTipi extends TipiAction {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2763921234336481301L;
 	private int count = 0;
 
 	public TipiConvertTipi() {

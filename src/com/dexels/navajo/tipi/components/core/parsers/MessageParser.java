@@ -25,6 +25,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class MessageParser extends BaseTipiParser {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9083510332113488333L;
+
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		if (expression.indexOf(":") != -1) {
 			StringTokenizer st = new StringTokenizer(expression, ":");

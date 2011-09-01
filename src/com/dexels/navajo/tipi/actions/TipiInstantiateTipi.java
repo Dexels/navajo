@@ -31,6 +31,11 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  * @version 1.0
  */
 public class TipiInstantiateTipi extends TipiAction {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3700828606138276145L;
+
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {

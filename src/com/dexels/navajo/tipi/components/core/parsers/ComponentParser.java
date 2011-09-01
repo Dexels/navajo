@@ -21,6 +21,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class ComponentParser extends BaseTipiParser {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5584565910100210484L;
+
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		return getTipiComponent(source, expression);
 	}

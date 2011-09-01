@@ -23,6 +23,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 
 public class BooleanParser extends TipiTypeParser {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1265819627526140970L;
+
 	public BooleanParser() {
 	}
 

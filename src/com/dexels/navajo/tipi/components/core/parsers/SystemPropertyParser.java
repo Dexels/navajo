@@ -24,6 +24,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 
 public class SystemPropertyParser extends TipiTypeParser {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7821059029977948572L;
+
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		String result = myContext.getSystemProperty(expression);
 		return result;

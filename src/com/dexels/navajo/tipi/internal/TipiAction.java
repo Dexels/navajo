@@ -17,6 +17,11 @@ import com.dexels.navajo.tipi.actions.TipiActionFactory;
 public abstract class TipiAction extends TipiAbstractExecutable {
 	// protected TipiContext myContext;
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5471018027422398769L;
+
 	protected TipiActionFactory myActionFactory;
 
 	// protected TipiEvent myEvent;

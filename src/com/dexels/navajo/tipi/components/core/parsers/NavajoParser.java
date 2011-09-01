@@ -25,6 +25,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 
 public class NavajoParser extends TipiTypeParser {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5653243583919826647L;
+
 	public NavajoParser() {
 	}
 

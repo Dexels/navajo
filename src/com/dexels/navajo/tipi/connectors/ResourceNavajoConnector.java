@@ -11,6 +11,11 @@ import com.dexels.navajo.tipi.TipiException;
 
 public class ResourceNavajoConnector extends TipiBaseConnector {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8280248652467748667L;
+
 	// assume a load:
 	public void doTransaction(Navajo input, String service)
 			throws TipiBreakException, TipiException {

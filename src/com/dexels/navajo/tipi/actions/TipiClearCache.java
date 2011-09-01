@@ -21,6 +21,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class TipiClearCache extends TipiAction {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5928058510320346138L;
+
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {

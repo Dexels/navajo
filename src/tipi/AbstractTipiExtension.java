@@ -5,6 +5,11 @@ import java.io.InputStream;
 abstract class AbstractTipiExtension extends TipiAbstractOSGiExtension
 		implements TipiExtension {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8157173128256170441L;
+
 	@Override
 	public int compareTo(TipiExtension o) {
 		return getId().compareTo(o.getId());

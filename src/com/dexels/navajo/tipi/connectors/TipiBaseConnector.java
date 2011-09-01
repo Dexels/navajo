@@ -12,6 +12,11 @@ public abstract class TipiBaseConnector extends TipiHeadlessComponentImpl
 	// protected final Map<String,TipiValue> myEntrypoints = new HashMap<String,
 	// TipiValue>();
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6781839214790284978L;
+
 	public final void doTransaction() throws TipiBreakException, TipiException {
 		doTransaction(null, null, null);
 	}

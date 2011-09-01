@@ -22,6 +22,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class TipiDebugOutput extends TipiAction {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1427497523393178499L;
+
 	public TipiDebugOutput() {
 	}
 

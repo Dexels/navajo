@@ -15,6 +15,10 @@ import com.dexels.navajo.document.types.Binary;
 
 public class ZipResourceLoader extends ClassPathResourceLoader {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7241870701017818845L;
 	// private final Navajo navajoDefinition;
 	// private final Property tipiDef;
 	private File tipiDefFile;

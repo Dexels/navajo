@@ -6,6 +6,10 @@ import java.net.URL;
 
 public class TmlResourceLoader extends ClassPathResourceLoader {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -690976439637837136L;
 	private ZipResourceLoader myZipResourceLoader;
 	private String myPrefix;
 

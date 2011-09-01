@@ -22,6 +22,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class AttributeRefParser extends BaseTipiParser {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8285931156529653085L;
+
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		return getAttributeRefByPath(source, expression);
 	}

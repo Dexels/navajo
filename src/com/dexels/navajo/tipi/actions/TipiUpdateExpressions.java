@@ -27,6 +27,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 
 public class TipiUpdateExpressions extends TipiAction {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2531683225628530263L;
+
 	public TipiUpdateExpressions() {
 	}
 

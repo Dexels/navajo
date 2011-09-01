@@ -29,6 +29,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 @Deprecated
 public class TipiPerformMethod extends TipiAction {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7239703108775917663L;
+
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {

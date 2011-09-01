@@ -25,6 +25,11 @@ import com.dexels.navajo.tipi.internal.TipiReference;
  */
 public final class TipiSet extends TipiAction {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2911787602531330195L;
+
 	public final void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {

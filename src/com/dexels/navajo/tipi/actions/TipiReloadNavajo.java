@@ -27,6 +27,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 
 @Deprecated
 public class TipiReloadNavajo extends TipiAction {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7809531027401231070L;
+
 	public TipiReloadNavajo() {
 	}
 

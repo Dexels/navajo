@@ -24,6 +24,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 
 public class AliasParser extends BaseTipiParser {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8640653767113050463L;
+
 	private String findAlias(TipiComponent current, String expression) {
 		if (current == null) {
 			return null;

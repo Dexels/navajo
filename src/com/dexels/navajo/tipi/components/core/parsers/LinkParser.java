@@ -24,6 +24,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class LinkParser extends BaseTipiParser {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9168306770936378642L;
+
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		StringTokenizer st = new StringTokenizer(expression, ":");
 		String path = st.nextToken();

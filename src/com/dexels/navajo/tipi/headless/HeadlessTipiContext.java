@@ -12,6 +12,10 @@ import com.dexels.navajo.tipi.internal.BaseTipiErrorHandler;
 
 public class HeadlessTipiContext extends TipiContext {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4000625714811093584L;
 	StringBuffer infoBuffer = new StringBuffer();
 	Queue<String> infoQueue = new LinkedList<String>();
 

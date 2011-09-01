@@ -31,6 +31,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 // <param name="message" type="message" required="true"/>
 // </tipiaction>
 public class TipiInsertArrayElement extends TipiAction {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -500931972454976551L;
+
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {

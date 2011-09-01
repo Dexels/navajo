@@ -8,6 +8,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 
 public final class TipiReboot extends TipiAction {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2399789386165874229L;
+
 	public final void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {

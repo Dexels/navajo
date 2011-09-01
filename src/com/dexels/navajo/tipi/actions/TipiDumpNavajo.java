@@ -2,7 +2,6 @@ package com.dexels.navajo.tipi.actions;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
@@ -30,6 +29,8 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class TipiDumpNavajo extends TipiAction {
+	private static final long serialVersionUID = -4736771823288001142L;
+
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {

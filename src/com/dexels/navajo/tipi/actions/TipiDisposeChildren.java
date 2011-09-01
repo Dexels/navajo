@@ -27,6 +27,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class TipiDisposeChildren extends TipiAction {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8311106046281479945L;
+
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {

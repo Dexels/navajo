@@ -23,6 +23,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class TipiDeleteCache extends TipiAction {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2533260629102953644L;
+
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {

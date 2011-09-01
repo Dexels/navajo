@@ -10,6 +10,11 @@ import java.util.List;
 
 public class ClassPathResourceLoader implements TipiResourceLoader, Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7334859258749849005L;
+
 	public URL getResourceURL(String location) throws IOException {
 
 		return getClassResourceURL(location);

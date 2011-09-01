@@ -31,6 +31,10 @@ import com.dexels.navajo.tipi.TipiException;
  */
 public class TipiShadowFilterImpl extends TipiBaseConnector {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3376978228010446775L;
 	protected String messagePath = null;
 	protected final List<PropertyFilter> propertyFilters = new ArrayList<PropertyFilter>();
 

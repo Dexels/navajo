@@ -30,6 +30,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 
 /** @todo Refactor, move to NavajoSwingTipi */
 public class TipiRunScript extends TipiAction {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1644143195033337886L;
+
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {

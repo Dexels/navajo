@@ -38,6 +38,10 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6411968075446267733L;
 	protected String messagePath = null;
 	protected String questionDefinitionName = null;
 	protected String questionGroupDefinitionName = null;
