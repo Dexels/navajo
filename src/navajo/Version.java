@@ -1,6 +1,7 @@
 package navajo;
 
-import java.util.Properties;
+import java.util.Dictionary;
+import java.util.Hashtable;
 
 import org.osgi.framework.BundleContext;
 
@@ -235,9 +236,9 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 		for(String adapterName: fi.getAdapterNames(library)) {
 
 			String adapterClass = fi.getAdapterClass(adapterName,library);
-			Class c = Class.forName(adapterClass);
+			Class<?> c = Class.forName(adapterClass);
 
-			 Properties props = new Properties();
+			 Dictionary<String, Object> props = new Hashtable<String, Object>();
 			 System.err.println("Registering adapter: "+adapterName + "class: "+adapterClass);
 			 props.put("adapterName", adapterName);
 			 props.put("adapterClass", c.getName());
