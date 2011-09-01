@@ -29,7 +29,7 @@
 						<configuration>
 							<artifacts>
 								<artifact>
-									<file>navajo_target.target</file>
+									<file>sliced.target</file>
 									<type>target</type>
 									<classifier>navajo_target</classifier>
 								</artifact>
