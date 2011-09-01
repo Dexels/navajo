@@ -8,15 +8,24 @@
 	<version>1.0.0</version>
 	<packaging>pom</packaging>
 	<properties>
-		<tycho-version>0.13.0</tycho-version>
+		<tycho-version>0.13.0-SNAPSHOT</tycho-version>
 		<tycho-groupid>org.eclipse.tycho</tycho-groupid>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-	
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>tycho</id>
+			<url>http://repository.sonatype.org/content/groups/sonatype-public-grid</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
 	<build>
 		<plugins>
-		<!--				-->	
-		
+			<!-- -->
+
 			<plugin>
 				<groupId>${tycho-groupid}</groupId>
 				<artifactId>target-platform-configuration</artifactId>
@@ -61,28 +70,10 @@
 				<groupId>${tycho-groupid}</groupId>
 				<artifactId>tycho-p2-director-plugin</artifactId>
 				<version>${tycho-version}</version>
-				<!-- <executions>
-					<execution>
-						<id>materialize-products</id>
-						<goals>
-							<goal>materialize-products</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>archive-products</id>
-						<goals>
-							<goal>archive-products</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<products>
-						<product>
-							<id>navajo</id>
-						</product>
-					</products>
-				</configuration>
-				  -->
+				<!-- <executions> <execution> <id>materialize-products</id> <goals> <goal>materialize-products</goal> 
+					</goals> </execution> <execution> <id>archive-products</id> <goals> <goal>archive-products</goal> 
+					</goals> </execution> </executions> <configuration> <products> <product> 
+					<id>navajo</id> </product> </products> </configuration> -->
 			</plugin>
 		</plugins>
 
