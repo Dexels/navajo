@@ -12,6 +12,7 @@
 	<property file="build.properties" />
 <!--	<property name="basicdeploy" value="DexelsVersionControl,NavajoDocument,NavajoClient,Navajo,NavajoListeners,NavajoAdapters,NavajoJsp,NavajoJspServer,NavajoFunctions" />-->
 	<property name="basicdeploy" value="DexelsVersionControl,NavajoDocument,NavajoQueueManager,NavajoClient,Navajo,NavajoListeners,NavajoAdapters,NavajoJsp,NavajoJspServer,NavajoFunctions,NavajoEnterprise,NavajoEnterpriseAdapters,NavajoEnterpriseListeners,NavajoAsyncClient,NavajoListenersContinuations,NavajoRhino,NavajoMongoAdapters,NavajoMongoStore" />
+	<property name="localbasicdeploy" value="DexelsVersionControl,NavajoDocument,NavajoQueueManager,NavajoClient,Navajo,NavajoListeners,NavajoAdapters,NavajoJsp,NavajoJspServer,NavajoFunctions,NavajoEnterprise,NavajoEnterpriseAdapters,NavajoEnterpriseListeners,NavajoAsyncClient,NavajoListenersContinuations,NavajoRhino,com.dexels.navajo.mongo,com.dexels.navajo.mongo.navajostore" />
 	<property name="enterprisedeploy" value="NavajoEnterprise,NavajoEnterpriseAdapters,NavajoEnterpriseListeners" />
 
 	
@@ -92,7 +93,7 @@
 			<equals arg1="${buildSource}" arg2="local"/>
 			<then>
 				<ant antfile="build.xml" target="gatherlocal">
-					<property name="currentdeploy" value="${basicdeploy}"/>
+					<property name="currentdeploy" value="${localbasicdeploy}"/>
 				</ant>
 			</then>
 			<else>
@@ -129,8 +130,8 @@
 		 	</fileset>
 		</war>
 		<echo message="War complete. Deploying to Tomcat: ${navajoTomcatServerManager}"/>
-
-		<!--	<deploy url="${navajoTomcatServerManager}" update="true" username="${navajoTomcatUser}" password="${navajoTomcatPassword}" path="/${deployContextName}" war="${distribution}/${deployname}.war" />
+		<!--
+			<deploy url="${navajoTomcatServerManager}" update="true" username="${navajoTomcatUser}" password="${navajoTomcatPassword}" path="/${deployContextName}" war="${distribution}/${deployname}.war" />
 		
 		<deploy url="http://10.10.10.151/manager/text/" update="true" username="${navajoTomcatUser}" password="${navajoTomcatPassword}" path="/sportlink/test/knvb" war="${distribution}/${deployname}.war" />
 -->
