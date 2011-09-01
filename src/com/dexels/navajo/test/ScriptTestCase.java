@@ -126,9 +126,9 @@ public abstract class ScriptTestCase extends BareTestCase {
 			} catch (NavajoException e) {
 				e.printStackTrace();
 			}
-			for (Message element : message.getAllMessages()) {
-//				super.
-			}
+//			for (Message element : message.getAllMessages()) {
+////				super.
+//			}
 			fail("Condition error found: "+getPropertyValue("ConditionErrors@0/Description")+"\nFailedExpression: "+getPropertyValue("ConditionErrors@0/FailedExpression")+"\n");
 		}
 //		assertNull(message);

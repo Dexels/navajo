@@ -5,8 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-import javax.sound.midi.SysexMessage;
-
 public class ScriptTestCreator {
 
 	public void create(File scriptDir, File outputDir) {
@@ -40,7 +38,7 @@ public class ScriptTestCreator {
 	}	
 
 	private void createFile(File in, String ame, File outputDir) {
-		File inFolder = in.getParentFile();
+//		File inFolder = in.getParentFile();
 		String packagee = null;
 		String className = null;
 		File destFolder = null;

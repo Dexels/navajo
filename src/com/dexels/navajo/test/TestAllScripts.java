@@ -1,13 +1,11 @@
 package com.dexels.navajo.test;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 
-import junit.framework.Test;
+import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 public class TestAllScripts extends TestSuite {
@@ -20,6 +18,7 @@ public class TestAllScripts extends TestSuite {
 		return ts;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static void loadAllTests(TestSuite ts, InputStream is) {
 		try {
 
@@ -30,7 +29,7 @@ public class TestAllScripts extends TestSuite {
 			do {
 				System.err.println("Adding: " + line);
 				try {
-					Class c = Class.forName(line);
+					Class<? extends TestCase> c = (Class<? extends TestCase>) Class.forName(line);
 					ts.addTestSuite(c);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -39,7 +38,6 @@ public class TestAllScripts extends TestSuite {
 
 			} while (line != null);
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	}
