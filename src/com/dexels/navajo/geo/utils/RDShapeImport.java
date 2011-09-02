@@ -41,6 +41,7 @@ public class RDShapeImport {
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	public void parseData(boolean storeBoundingBox) {
 		try {
 			ESRIRecord record = null;

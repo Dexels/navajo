@@ -207,7 +207,7 @@ public abstract class AbstractKMLMap {
 		return res;
 	}
 
-	private XMLElement createCirclePlacemark(Message message) {
+	protected XMLElement createCirclePlacemark(Message message) {
 
 		int members =  Integer.parseInt(message.getProperty("MemberCount").getValue());
 
@@ -311,7 +311,7 @@ public abstract class AbstractKMLMap {
 		// Introspect other properties.
 		StringBuffer descr = new StringBuffer();
 		ArrayList<Property> properties = message.getAllProperties();
-		for (Iterator iterator = properties.iterator(); iterator.hasNext();) {
+		for (Iterator<Property> iterator = properties.iterator(); iterator.hasNext();) {
 			Property property = (Property) iterator.next();
 			if (!(property.getName().equals("Longitude") || property.getName().equals("Latitude") || property.getName().equals("Id") || property.getName().equals("Name"))) {
 				descr.append(property.getDescription() + ": " + property.getValue() + "<br/>");
