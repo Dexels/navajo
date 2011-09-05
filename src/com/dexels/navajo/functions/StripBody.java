@@ -1,11 +1,11 @@
 package com.dexels.navajo.functions;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
-import org.w3c.tidy.*;
-
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.parser.*;
+import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.parser.TMLExpressionException;
 
 public class StripBody extends FunctionInterface {
 
@@ -29,7 +29,8 @@ public class StripBody extends FunctionInterface {
 
 		
 		s = bodyStrip(s);
-		s = tidyString(s);
+//		s = tidyString(s);
+		System.err.println("WARNING: Tidy disabled!");
 		s = bodyStrip(s);
 		
 		System.err.println("final Result: " + s);
@@ -47,21 +48,21 @@ public class StripBody extends FunctionInterface {
 		return s;
 	}
 
-	public String tidyString(String s) {
-		ByteArrayInputStream bais = new ByteArrayInputStream(s.getBytes());
-		Tidy t = new Tidy();
-		t.setXmlOut(true);
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		t.parse(bais, baos);
-		
-		try {
-			s = new String(baos.toByteArray(),"UTF8");
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return s;
-	}
+//	public String tidyString(String s) {
+//		ByteArrayInputStream bais = new ByteArrayInputStream(s.getBytes());
+//		Tidy t = new Tidy();
+//		t.setXmlOut(true);
+//		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//		t.parse(bais, baos);
+//		
+//		try {
+//			s = new String(baos.toByteArray(),"UTF8");
+//		} catch (UnsupportedEncodingException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return s;
+//	}
 
 	public static void main(String[] args) throws IOException {
 		StripBody sp = new StripBody();
@@ -77,7 +78,7 @@ public class StripBody extends FunctionInterface {
 		} while (line != null);
 
 		ss = sp.stripBody(sb.toString());
-		ss = sp.tidyString(ss);
+//		ss = sp.tidyString(ss);
 		ss = sp.stripBody(ss);
 		System.err.println("SS: "+ss);
 		fr.close();

@@ -2,14 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/NavajoTipi"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/NavajoEchoClient"/>
-	<classpathentry exported="true" kind="lib" path="lib/Tidy.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/iText.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/DexelsVersionControl"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Navajo"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/NavajoClient"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/NavajoDocument"/>
-	<classpathentry kind="lib" path="/DexelsVersionControl/lib/osgi.jar"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

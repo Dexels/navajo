@@ -3,7 +3,6 @@ package com.dexels.navajo.tipi.components.echoimpl;
 import java.io.*;
 import java.net.*;
 
-import org.w3c.tidy.*;
 
 import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.functions.*;
@@ -61,7 +60,8 @@ public class TipiHtmlLabel extends TipiEchoComponentImpl {
 				
 				
 				text = sb.bodyStrip(text);
-				text = sb.tidyString(text);
+//				text = sb.tidyString(text);
+				System.err.println("WARNING Tidy disabled!");
 				text = sb.bodyStrip(text);
 				
 				
