@@ -26,7 +26,7 @@ import com.dexels.navajo.document.lazy.*;
  * @version 1.0
  */
 
-public class MessageTableModel extends DefaultTableModel implements MessageListener {
+public class MessageTableModel extends DefaultTableModel  {
 
     // private ArrayList myColumnIds = new ArrayList();
     //
