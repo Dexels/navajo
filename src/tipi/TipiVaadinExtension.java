@@ -1,7 +1,8 @@
 package tipi;
 
 import java.io.File;
-import java.util.Properties;
+import java.util.Dictionary;
+import java.util.Hashtable;
 
 import navajo.ExtensionDefinition;
 
@@ -55,7 +56,7 @@ public class TipiVaadinExtension extends TipiAbstractXMLExtension implements Tip
 //		System.err.println("Detected functions: "+fi.getFunctionNames());
 		for (String functionName : fi.getFunctionNames(extensionDef)) {
 			FunctionDefinition fd = fi.getDef(extensionDef,functionName);
-			 Properties props = new Properties();
+			 Dictionary<String, Object> props = new Hashtable<String, Object>();
 			 props.put("functionName", functionName);
 			 props.put("functionDefinition", fd);
 			 System.err.println("Adding function name...: "+functionName);
