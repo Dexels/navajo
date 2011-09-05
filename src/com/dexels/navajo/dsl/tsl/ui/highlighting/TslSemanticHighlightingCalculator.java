@@ -1,14 +1,19 @@
 package com.dexels.navajo.dsl.tsl.ui.highlighting;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.EcoreUtil2;
-import org.eclipse.xtext.parsetree.CompositeNode;
-import org.eclipse.xtext.parsetree.LeafNode;
-import org.eclipse.xtext.parsetree.NodeAdapter;
-import org.eclipse.xtext.parsetree.NodeUtil;
+//import org.eclipse.xtext.parsetree.CompositeNode;
+import org.eclipse.xtext.nodemodel.ICompositeNode;
+import org.eclipse.xtext.nodemodel.ILeafNode;
+import org.eclipse.xtext.nodemodel.impl.CompositeNode;
+import org.eclipse.xtext.nodemodel.impl.LeafNode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
+//import org.eclipse.xtext.nodemodel.impl.NodeAdapter;
+//import org.eclipse.xtext.nodemodel.impl.NodeUtil;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightedPositionAcceptor;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.ISemanticHighlightingCalculator;
@@ -156,9 +161,8 @@ public class TslSemanticHighlightingCalculator implements
 	}
 
 	private void highlightAllLeaves(IHighlightedPositionAcceptor acceptor, EObject m, String highlightId) {
-		NodeAdapter adapter = NodeUtil.getNodeAdapter(m);
-		CompositeNode node = adapter.getParserNode();
-		for (LeafNode nn : node.getLeafNodes()) {
+		ICompositeNode node = NodeModelUtils.findActualNodeFor(m);
+		for (ILeafNode nn : node.getLeafNodes()) {
 			acceptor.addPosition(nn.getOffset(), nn.getLength(),  highlightId);
 		}
 	}
@@ -182,16 +186,22 @@ public class TslSemanticHighlightingCalculator implements
 	 * @param highlightId
 	 */
 	private void highlightLeafWithIndex(int index, IHighlightedPositionAcceptor acceptor, EObject m, String highlightId) {
-		NodeAdapter adapter = NodeUtil.getNodeAdapter(m);
-		CompositeNode node = adapter.getParserNode();
+		ICompositeNode node = NodeModelUtils.findActualNodeFor(m);
+//		CompositeNode node = adapter.getParserNode();
 		//LeafNode nn = node.getLeafNodes().get(0);
 		int ind = 0;
-		EList<LeafNode> leafNodes = node.getLeafNodes();
+		Iterable<ILeafNode> nodL = node.getLeafNodes();
+		List<ILeafNode> leafNodes = new ArrayList<ILeafNode>();
+		for (ILeafNode iLeafNode : nodL) {
+			leafNodes.add(iLeafNode);
+		}
+//		EList<LeafNode> leafNodes = node.getLeafNodes();
+		
 		if(index<0) {
 			ind = -1;
 //			int current = leafNodes.size() + index;
 			for(int i = leafNodes.size()-1; i>=0;i--) {
-				LeafNode nn = node.getLeafNodes().get(i);
+				ILeafNode nn = leafNodes.get(i);
 				if(!nn.isHidden()) {
 					if(ind==index) {
 						acceptor.addPosition(nn.getOffset(), nn.getLength(),  highlightId);
@@ -202,7 +212,7 @@ public class TslSemanticHighlightingCalculator implements
 			}
 		}
 
-		for(LeafNode nn: leafNodes) {
+		for(ILeafNode nn: leafNodes) {
 			if(!nn.isHidden()) {
 				if(ind==index) {
 					acceptor.addPosition(nn.getOffset(), nn.getLength(),  highlightId);

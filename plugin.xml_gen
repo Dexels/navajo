@@ -139,6 +139,12 @@
 
 
 
+   <extension
+         point="org.eclipse.xtext.builder.participant">
+      <participant
+            class="com.dexels.navajo.dsl.tsl.ui.TslExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant">
+      </participant>
+   </extension>
 
 	<!-- Quick Outline -->
 	<extension
@@ -181,16 +187,5 @@
       </markerResolutionGenerator>
    </extension>
 
-   <extension
-         point="org.eclipse.ui.newWizards">
-      <wizard
-            category="org.eclipse.xtext.projectwiz"
-            class="com.dexels.navajo.dsl.tsl.ui.TslExecutableExtensionFactory:com.dexels.navajo.dsl.tsl.ui.wizard.TslNewProjectWizard"
-            icon="icons/editor.gif"
-            id="com.dexels.navajo.dsl.tsl.ui.wizard.TslNewProjectWizard"
-            name="Tsl Project"
-            project="true">
-      </wizard>
-   </extension>
 
 </plugin>

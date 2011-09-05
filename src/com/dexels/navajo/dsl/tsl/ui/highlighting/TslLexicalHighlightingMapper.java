@@ -1,7 +1,7 @@
 package com.dexels.navajo.dsl.tsl.ui.highlighting;
 
 import org.eclipse.xtext.ui.editor.syntaxcoloring.DefaultHighlightingConfiguration;
-import org.eclipse.xtext.ui.editor.syntaxcoloring.antlr.AbstractAntlrTokenToAttributeIdMapper;
+import org.eclipse.xtext.ui.editor.syntaxcoloring.AbstractAntlrTokenToAttributeIdMapper;
 
 public class TslLexicalHighlightingMapper extends AbstractAntlrTokenToAttributeIdMapper {
 

@@ -4,15 +4,13 @@
 package com.dexels.navajo.dsl.tsl.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.xtext.ui.editor.outline.transformer.ISemanticModelTransformer;
+import org.eclipse.xtext.ui.editor.syntaxcoloring.AbstractAntlrTokenToAttributeIdMapper;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfiguration;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.ISemanticHighlightingCalculator;
-import org.eclipse.xtext.ui.editor.syntaxcoloring.antlr.AbstractAntlrTokenToAttributeIdMapper;
 
 import com.dexels.navajo.dsl.tsl.ui.highlighting.TslHighlightingConfiguration;
 import com.dexels.navajo.dsl.tsl.ui.highlighting.TslLexicalHighlightingMapper;
 import com.dexels.navajo.dsl.tsl.ui.highlighting.TslSemanticHighlightingCalculator;
-import com.dexels.navajo.dsl.tsl.ui.outline.TslTransformer;
 
 /**
  * Use this class to register components to be used within the IDE.
@@ -43,10 +41,10 @@ public class TslUiModule extends
 		return TslLexicalHighlightingMapper.class ;
 	}
 
-	  @Override
-	  public Class<? extends ISemanticModelTransformer> 
-	  	 bindISemanticModelTransformer() {
-	    return TslTransformer.class;
-	  }
+//	  @Override
+//	  public Class<? extends ISemanticModelTransformer> 
+//	  	 bindISemanticModelTransformer() {
+//	    return TslTransformer.class;
+//	  }
 	
 }

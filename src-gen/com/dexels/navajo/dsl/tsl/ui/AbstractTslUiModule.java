@@ -24,18 +24,8 @@ public abstract class AbstractTslUiModule extends DefaultUiModule {
 	}
 
 	// contributed by org.eclipse.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment
-	public Class<? extends org.eclipse.jface.text.rules.ITokenScanner> bindITokenScanner() {
-		return org.eclipse.xtext.ui.editor.syntaxcoloring.antlr.AntlrTokenScanner.class;
-	}
-
-	// contributed by org.eclipse.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment
 	public Class<? extends org.eclipse.xtext.ui.editor.contentassist.IProposalConflictHelper> bindIProposalConflictHelper() {
 		return org.eclipse.xtext.ui.editor.contentassist.antlr.AntlrProposalConflictHelper.class;
-	}
-
-	// contributed by org.eclipse.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment
-	public Class<? extends org.eclipse.xtext.ui.editor.IDamagerRepairer> bindIDamagerRepairer() {
-		return org.eclipse.xtext.ui.editor.FastDamagerRepairer.class;
 	}
 
 	// contributed by org.eclipse.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment
@@ -49,13 +39,13 @@ public abstract class AbstractTslUiModule extends DefaultUiModule {
 	}
 
 	// contributed by org.eclipse.xtext.generator.exporting.QualifiedNamesFragment
-	public Class<? extends org.eclipse.xtext.ui.editor.contentassist.PrefixMatcher> bindPrefixMatcher() {
-		return org.eclipse.xtext.ui.editor.contentassist.FQNPrefixMatcher.class;
+	public Class<? extends org.eclipse.xtext.ui.refactoring.IDependentElementsCalculator> bindIDependentElementsCalculator() {
+		return org.eclipse.xtext.ui.refactoring.impl.DefaultDependentElementsCalculator.class;
 	}
 
 	// contributed by org.eclipse.xtext.generator.builder.BuilderIntegrationFragment
 	public void configureIResourceDescriptionsBuilderScope(com.google.inject.Binder binder) {
-		binder.bind(org.eclipse.xtext.resource.IResourceDescriptions.class).annotatedWith(com.google.inject.name.Names.named(org.eclipse.xtext.scoping.impl.AbstractGlobalScopeProvider.NAMED_BUILDER_SCOPE)).to(org.eclipse.xtext.builder.builderState.ShadowingResourceDescriptions.class);
+		binder.bind(org.eclipse.xtext.resource.IResourceDescriptions.class).annotatedWith(com.google.inject.name.Names.named(org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider.NAMED_BUILDER_SCOPE)).to(org.eclipse.xtext.builder.clustering.CurrentDescriptions.ResourceSetAware.class);
 	}
 
 	// contributed by org.eclipse.xtext.generator.builder.BuilderIntegrationFragment
@@ -73,6 +63,16 @@ public abstract class AbstractTslUiModule extends DefaultUiModule {
 		return org.eclipse.xtext.builder.impl.PersistentDataAwareDirtyResource.class;
 	}
 
+	// contributed by org.eclipse.xtext.generator.generator.GeneratorFragment
+	public Class<? extends org.eclipse.xtext.builder.IXtextBuilderParticipant> bindIXtextBuilderParticipant() {
+		return org.eclipse.xtext.builder.JavaProjectBasedBuilderParticipant.class;
+	}
+
+	// contributed by org.eclipse.xtext.generator.generator.GeneratorFragment
+	public org.eclipse.core.resources.IWorkspaceRoot bindIWorkspaceRootToInstance() {
+		return org.eclipse.core.resources.ResourcesPlugin.getWorkspace().getRoot();
+	}
+
 	// contributed by org.eclipse.xtext.ui.generator.labeling.LabelProviderFragment
 	public Class<? extends org.eclipse.jface.viewers.ILabelProvider> bindILabelProvider() {
 		return com.dexels.navajo.dsl.tsl.ui.labeling.TslLabelProvider.class;
@@ -83,14 +83,14 @@ public abstract class AbstractTslUiModule extends DefaultUiModule {
 		binder.bind(org.eclipse.jface.viewers.ILabelProvider.class).annotatedWith(org.eclipse.xtext.ui.resource.ResourceServiceDescriptionLabelProvider.class).to(com.dexels.navajo.dsl.tsl.ui.labeling.TslDescriptionLabelProvider.class);
 	}
 
-	// contributed by org.eclipse.xtext.ui.generator.outline.TransformerFragment
-	public Class<? extends org.eclipse.xtext.ui.editor.outline.transformer.ISemanticModelTransformer> bindISemanticModelTransformer() {
-		return com.dexels.navajo.dsl.tsl.ui.outline.TslTransformer.class;
+	// contributed by org.eclipse.xtext.ui.generator.outline.OutlineTreeProviderFragment
+	public Class<? extends org.eclipse.xtext.ui.editor.outline.IOutlineTreeProvider> bindIOutlineTreeProvider() {
+		return com.dexels.navajo.dsl.tsl.ui.outline.TslOutlineTreeProvider.class;
 	}
 
-	// contributed by org.eclipse.xtext.ui.generator.outline.OutlineNodeAdapterFactoryFragment
-	public Class<? extends org.eclipse.xtext.ui.editor.outline.actions.IContentOutlineNodeAdapterFactory> bindIContentOutlineNodeAdapterFactory() {
-		return com.dexels.navajo.dsl.tsl.ui.outline.TslOutlineNodeAdapterFactory.class;
+	// contributed by org.eclipse.xtext.ui.generator.outline.OutlineTreeProviderFragment
+	public Class<? extends org.eclipse.xtext.ui.editor.outline.impl.IOutlineTreeStructureProvider> bindIOutlineTreeStructureProvider() {
+		return com.dexels.navajo.dsl.tsl.ui.outline.TslOutlineTreeProvider.class;
 	}
 
 	// contributed by org.eclipse.xtext.ui.generator.quickfix.QuickfixProviderFragment
@@ -123,9 +123,69 @@ public abstract class AbstractTslUiModule extends DefaultUiModule {
 		binder.bind(org.eclipse.xtext.ui.editor.contentassist.antlr.internal.Lexer.class).annotatedWith(com.google.inject.name.Names.named(org.eclipse.xtext.ui.LexerUIBindings.CONTENT_ASSIST)).to(com.dexels.navajo.dsl.tsl.ui.contentassist.antlr.internal.InternalTslLexer.class);
 	}
 
-	// contributed by org.eclipse.xtext.ui.generator.projectWizard.SimpleProjectWizardFragment
-	public Class<? extends org.eclipse.xtext.ui.wizard.IProjectCreator> bindIProjectCreator() {
-		return com.dexels.navajo.dsl.tsl.ui.wizard.TslProjectCreator.class;
+	// contributed by org.eclipse.xtext.generator.types.TypesGeneratorFragment
+	public java.lang.ClassLoader bindClassLoaderToInstance() {
+		return getClass().getClassLoader();
+	}
+
+	// contributed by org.eclipse.xtext.generator.types.TypesGeneratorFragment
+	public Class<? extends org.eclipse.xtext.common.types.access.IJvmTypeProvider.Factory> bindIJvmTypeProvider$Factory() {
+		return org.eclipse.xtext.common.types.access.jdt.JdtTypeProviderFactory.class;
+	}
+
+	// contributed by org.eclipse.xtext.generator.types.TypesGeneratorFragment
+	public Class<? extends org.eclipse.xtext.common.types.xtext.AbstractTypeScopeProvider> bindAbstractTypeScopeProvider() {
+		return org.eclipse.xtext.common.types.xtext.ui.JdtBasedSimpleTypeScopeProvider.class;
+	}
+
+	// contributed by org.eclipse.xtext.generator.types.TypesGeneratorFragment
+	public Class<? extends org.eclipse.xtext.common.types.xtext.ui.ITypesProposalProvider> bindITypesProposalProvider() {
+		return org.eclipse.xtext.common.types.xtext.ui.JdtTypesProposalProvider.class;
+	}
+
+	// contributed by org.eclipse.xtext.generator.types.TypesGeneratorFragment
+	public Class<? extends org.eclipse.xtext.common.types.access.jdt.IJavaProjectProvider> bindIJavaProjectProvider() {
+		return org.eclipse.xtext.common.types.xtext.ui.XtextResourceSetBasedProjectProvider.class;
+	}
+
+	// contributed by org.eclipse.xtext.generator.types.TypesGeneratorFragment
+	public Class<? extends org.eclipse.xtext.ui.editor.hyperlinking.IHyperlinkHelper> bindIHyperlinkHelper() {
+		return org.eclipse.xtext.common.types.xtext.ui.TypeAwareHyperlinkHelper.class;
+	}
+
+	// contributed by org.eclipse.xtext.generator.types.TypesGeneratorFragment
+	public Class<? extends org.eclipse.xtext.ui.editor.contentassist.PrefixMatcher> bindPrefixMatcher() {
+		return org.eclipse.xtext.ui.editor.contentassist.FQNPrefixMatcher.class;
+	}
+
+	// contributed by org.eclipse.xtext.generator.types.TypesGeneratorFragment
+	public Class<? extends org.eclipse.xtext.ui.editor.contentassist.AbstractJavaBasedContentProposalProvider.ReferenceProposalCreator> bindAbstractJavaBasedContentProposalProvider$ReferenceProposalCreator() {
+		return org.eclipse.xtext.common.types.xtext.ui.TypeAwareReferenceProposalCreator.class;
+	}
+
+	// contributed by org.eclipse.xtext.ui.generator.templates.CodetemplatesGeneratorFragment
+	public com.google.inject.Provider<org.eclipse.xtext.ui.codetemplates.ui.preferences.TemplatesLanguageConfiguration> provideTemplatesLanguageConfiguration() {
+		return org.eclipse.xtext.ui.codetemplates.ui.AccessibleCodetemplatesActivator.getTemplatesLanguageConfigurationProvider();
+	}
+
+	// contributed by org.eclipse.xtext.ui.generator.templates.CodetemplatesGeneratorFragment
+	public com.google.inject.Provider<org.eclipse.xtext.ui.codetemplates.ui.registry.LanguageRegistry> provideLanguageRegistry() {
+		return org.eclipse.xtext.ui.codetemplates.ui.AccessibleCodetemplatesActivator.getLanguageRegistry();
+	}
+
+	// contributed by org.eclipse.xtext.ui.generator.templates.CodetemplatesGeneratorFragment
+	@org.eclipse.xtext.service.SingletonBinding(eager=true)	public Class<? extends org.eclipse.xtext.ui.codetemplates.ui.registry.LanguageRegistrar> bindLanguageRegistrar() {
+		return org.eclipse.xtext.ui.codetemplates.ui.registry.LanguageRegistrar.class;
+	}
+
+	// contributed by org.eclipse.xtext.ui.generator.templates.CodetemplatesGeneratorFragment
+	public Class<? extends org.eclipse.xtext.ui.editor.templates.XtextTemplatePreferencePage> bindXtextTemplatePreferencePage() {
+		return org.eclipse.xtext.ui.codetemplates.ui.preferences.AdvancedTemplatesPreferencePage.class;
+	}
+
+	// contributed by org.eclipse.xtext.ui.generator.templates.CodetemplatesGeneratorFragment
+	public Class<? extends org.eclipse.xtext.ui.codetemplates.ui.partialEditing.IPartialContentAssistParser> bindIPartialContentAssistParser() {
+		return com.dexels.navajo.dsl.tsl.ui.contentassist.antlr.PartialTslContentAssistParser.class;
 	}
 
 
