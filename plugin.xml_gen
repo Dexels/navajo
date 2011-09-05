@@ -139,6 +139,12 @@
 
 
 
+   <extension
+         point="org.eclipse.xtext.builder.participant">
+      <participant
+            class="com.dexels.navajo.dsl.expression.ui.NavajoExpressionExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant">
+      </participant>
+   </extension>
 
 	<!-- Quick Outline -->
 	<extension
@@ -180,5 +186,6 @@
             class="com.dexels.navajo.dsl.expression.ui.NavajoExpressionExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator">
       </markerResolutionGenerator>
    </extension>
+
 
 </plugin>
