@@ -19,8 +19,11 @@ Require-Bundle: org.eclipse.xtext;bundle-version="1.0.1",
  org.antlr.runtime,
  com.dexels.navajo.dsl.expression.model;bundle-version="1.0.0",
  com.dexels.navajo.document;bundle-version="1.0.4",
- com.dexels.navajo.version;bundle-version="1.0.6"
-Import-Package: org.apache.log4j
+ com.dexels.navajo.version;bundle-version="1.0.6",
+ org.eclipse.xtext.common.types
+Import-Package: org.apache.log4j,
+ org.eclipse.xtext.xbase.lib,
+ org.eclipse.xtext.xtend2.lib
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: com.dexels.navajo.dsl.expression,
  com.dexels.navajo.dsl.expression.formatting,

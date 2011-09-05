@@ -753,7 +753,7 @@ public class NavajoExpressionGrammarAccess extends AbstractGrammarElementFinder 
 		private final RuleCall cIDTerminalRuleCall = (RuleCall)rule.eContents().get(1);
 		
 		//// Keep this one in place so it will create a node for the code completion
-		//FunctionName returns ecore::EString:
+		//FunctionName:
 		//	ID;
 		public ParserRule getRule() { return rule; }
 
@@ -928,18 +928,16 @@ public class NavajoExpressionGrammarAccess extends AbstractGrammarElementFinder 
 		private final RuleCall cParametersDateLiteralParserRuleCall_12_0 = (RuleCall)cParametersAssignment_12.eContents().get(0);
 		
 		//Literal returns Expression:
-		//	{Expression} NUMBER // TODO Add float
-		//	| valueString=LITERALSTRING | operations+=FORALL "(" valueString=LITERALSTRING "," parameters+=OrExpression ")" |
-		//	parameters+=FunctionCall | expressionType="{" parameters+=OrExpression? ("," parameters+=OrExpression)* "}" |
-		//	elements+=NULL | elements+=TODAY | elements+=TRUE | elements+=FALSE | parameters+=TmlExpression |
-		//	parameters+=ExistsTmlExpression | parameters+=MapGetReference | parameters+=DateLiteral;
+		//	{Expression} NUMBER | valueString=LITERALSTRING | operations+=FORALL "(" valueString=LITERALSTRING ","
+		//	parameters+=OrExpression ")" | parameters+=FunctionCall | expressionType="{" parameters+=OrExpression? (","
+		//	parameters+=OrExpression)* "}" | elements+=NULL | elements+=TODAY | elements+=TRUE | elements+=FALSE |
+		//	parameters+=TmlExpression | parameters+=ExistsTmlExpression | parameters+=MapGetReference | parameters+=DateLiteral;
 		public ParserRule getRule() { return rule; }
 
-		//{Expression} NUMBER // TODO Add float
-		//| valueString=LITERALSTRING | operations+=FORALL "(" valueString=LITERALSTRING "," parameters+=OrExpression ")" |
-		//parameters+=FunctionCall | expressionType="{" parameters+=OrExpression? ("," parameters+=OrExpression)* "}" |
-		//elements+=NULL | elements+=TODAY | elements+=TRUE | elements+=FALSE | parameters+=TmlExpression |
-		//parameters+=ExistsTmlExpression | parameters+=MapGetReference | parameters+=DateLiteral
+		//{Expression} NUMBER | valueString=LITERALSTRING | operations+=FORALL "(" valueString=LITERALSTRING ","
+		//parameters+=OrExpression ")" | parameters+=FunctionCall | expressionType="{" parameters+=OrExpression? (","
+		//parameters+=OrExpression)* "}" | elements+=NULL | elements+=TODAY | elements+=TRUE | elements+=FALSE |
+		//parameters+=TmlExpression | parameters+=ExistsTmlExpression | parameters+=MapGetReference | parameters+=DateLiteral
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//{Expression} NUMBER
@@ -1402,7 +1400,7 @@ public class NavajoExpressionGrammarAccess extends AbstractGrammarElementFinder 
 	}
 
 	//// Keep this one in place so it will create a node for the code completion
-	//FunctionName returns ecore::EString:
+	//FunctionName:
 	//	ID;
 	public FunctionNameElements getFunctionNameAccess() {
 		return (pFunctionName != null) ? pFunctionName : (pFunctionName = new FunctionNameElements());
@@ -1440,11 +1438,10 @@ public class NavajoExpressionGrammarAccess extends AbstractGrammarElementFinder 
 	}
 
 	//Literal returns Expression:
-	//	{Expression} NUMBER // TODO Add float
-	//	| valueString=LITERALSTRING | operations+=FORALL "(" valueString=LITERALSTRING "," parameters+=OrExpression ")" |
-	//	parameters+=FunctionCall | expressionType="{" parameters+=OrExpression? ("," parameters+=OrExpression)* "}" |
-	//	elements+=NULL | elements+=TODAY | elements+=TRUE | elements+=FALSE | parameters+=TmlExpression |
-	//	parameters+=ExistsTmlExpression | parameters+=MapGetReference | parameters+=DateLiteral;
+	//	{Expression} NUMBER | valueString=LITERALSTRING | operations+=FORALL "(" valueString=LITERALSTRING ","
+	//	parameters+=OrExpression ")" | parameters+=FunctionCall | expressionType="{" parameters+=OrExpression? (","
+	//	parameters+=OrExpression)* "}" | elements+=NULL | elements+=TODAY | elements+=TRUE | elements+=FALSE |
+	//	parameters+=TmlExpression | parameters+=ExistsTmlExpression | parameters+=MapGetReference | parameters+=DateLiteral;
 	public LiteralElements getLiteralAccess() {
 		return (pLiteral != null) ? pLiteral : (pLiteral = new LiteralElements());
 	}
