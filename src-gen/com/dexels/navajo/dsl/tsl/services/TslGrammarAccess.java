@@ -151,7 +151,7 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cIDTerminalRuleCall = (RuleCall)rule.eContents().get(1);
 		
 		//// might need to add a lot more kywords here 'message' | 'comment' 
-		//AttributeName returns ecore::EString:
+		//AttributeName:
 		//	ID;
 		public ParserRule getRule() { return rule; }
 
@@ -1011,7 +1011,7 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "MapId");
 		private final RuleCall cIDTerminalRuleCall = (RuleCall)rule.eContents().get(1);
 		
-		//MapId returns ecore::EString:
+		//MapId:
 		//	ID;
 		public ParserRule getRule() { return rule; }
 
@@ -2166,7 +2166,7 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 	} 
 
 	//// might need to add a lot more kywords here 'message' | 'comment' 
-	//AttributeName returns ecore::EString:
+	//AttributeName:
 	//	ID;
 	public AttributeNameElements getAttributeNameAccess() {
 		return (pAttributeName != null) ? pAttributeName : (pAttributeName = new AttributeNameElements());
@@ -2289,7 +2289,7 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 		return getMapAccess().getRule();
 	}
 
-	//MapId returns ecore::EString:
+	//MapId:
 	//	ID;
 	public MapIdElements getMapIdAccess() {
 		return (pMapId != null) ? pMapId : (pMapId = new MapIdElements());
@@ -2687,7 +2687,7 @@ public class TslGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//// Keep this one in place so it will create a node for the code completion
-	//FunctionName returns ecore::EString:
+	//FunctionName:
 	//	ID;
 	public NavajoExpressionGrammarAccess.FunctionNameElements getFunctionNameAccess() {
 		return gaNavajoExpression.getFunctionNameAccess();

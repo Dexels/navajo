@@ -9,8 +9,10 @@ var file.extensions = "tsl"
 var projectName = "com.dexels.navajo.dsl.tsl"
 var runtimeProject = "../${projectName}"
 
+
 Workflow {
     bean = StandaloneSetup {
+	    scanClassPath = true
 		platformUri = "${runtimeProject}/.."
 	}
 
@@ -25,6 +27,7 @@ Workflow {
 	component = Generator {
 		pathRtProject = runtimeProject
 		pathUiProject = "${runtimeProject}.ui"
+		pathTestProject = "${runtimeProject}.tests"
 		projectNameRt = projectName
 		projectNameUi = "${projectName}.ui"
 		language = {
@@ -36,15 +39,11 @@ Workflow {
 
 			// generates Java API for the generated EPackages 
 			fragment = ecore.EcoreGeneratorFragment {
-			// referencedGenModels = "uri to genmodel, uri to next genmodel"
-				 referencedGenModels="platform:/resource/com.dexels.navajo.dsl.expression.model/model/Expression.genmodel"
-// 				referencedGenModels="classpath:/com/dexels/navajo/dsl/expression/NavajoExpression.genmodel"
-
+			// referencedGenModels = "
+			// 	platform:/resource/org.eclipse.xtext.xbase/model/Xbase.genmodel,
+			// 	platform:/resource/org.eclipse.xtext.common.types/model/JavaVMTypes.genmodel
+			// "
 			}
-//fragment = org.eclipse.xtext.generator.ecore.EcoreGeneratorFragment {
-//  genModels =
-//    "platform:/resource/my.project/src/my/pack/SecretCompartments.genmodel"
-//}
 
 			// the serialization component
 			fragment = parseTreeConstructor.ParseTreeConstructorFragment {}
@@ -56,16 +55,15 @@ Workflow {
 
 			// The antlr parser generator fragment.
 			fragment = parser.antlr.XtextAntlrGeneratorFragment {
-//			  options = {
-//					backtrack = true
-//				}
+			//  options = {
+			//		backtrack = true
+			//	}
 			}
-
+			
 			// java-based API for validation 
 			fragment = validation.JavaValidatorFragment {
 				composedCheck = "org.eclipse.xtext.validation.ImportUriValidator"
-				//composedCheck = "org.eclipse.xtext.validation.NamesAreUniqueValidator"
-				// registerForImportedPackages = true
+				composedCheck = "org.eclipse.xtext.validation.NamesAreUniqueValidator"
 			}
 
 			// scoping and exporting API
@@ -77,6 +75,12 @@ Workflow {
 			fragment = exporting.QualifiedNamesFragment {}
 			fragment = builder.BuilderIntegrationFragment {}
 
+			// generator API
+			fragment = generator.GeneratorFragment {
+				generateMwe = true
+				generateJavaMain = true
+			}
+			
 			// formatter API 
 			fragment = formatting.FormatterFragment {}
 
@@ -84,8 +88,7 @@ Workflow {
 			fragment = labeling.LabelProviderFragment {}
 
 			// outline API 
-			fragment = outline.TransformerFragment {}
-			fragment = outline.OutlineNodeAdapterFactoryFragment {}
+			fragment = outline.OutlineTreeProviderFragment {}
 			fragment = outline.QuickOutlineFragment {}
 
 			// quickfix API 
@@ -93,15 +96,39 @@ Workflow {
 
 			// content assist API  
 			fragment = contentAssist.JavaBasedContentAssistFragment {}
-
+			
 			// generates a more lightweight Antlr parser and lexer tailored for content assist  
 			fragment = parser.antlr.XtextAntlrUiGeneratorFragment {}
 
+			// generates junit test support classes into Generator#pathTestProject
+			fragment = junit.Junit4Fragment {}
+
 			// project wizard (optional) 
-			 fragment = projectWizard.SimpleProjectWizardFragment {
-			 		generatorProjectName = "${projectName}.generator" 
-					modelFileExtension = file.extensions
-			 }
+			// fragment = projectWizard.SimpleProjectWizardFragment {
+			// 		generatorProjectName = "${projectName}"
+			//		modelFileExtension = file.extensions
+			// }
+
+			// provides the necessary bindings for java types integration
+			fragment = types.TypesGeneratorFragment {}
+
+			// generates the required bindings only if the grammar inherits from Xbase
+			fragment = xbase.XbaseGeneratorFragment {}
+			
+			// provides a preference page for template proposals 
+			fragment = templates.CodetemplatesGeneratorFragment {}
+
+			// rename refactoring
+            // fragment = refactoring.RefactorElementNameFragment {}
+
+            // provides a compare view
+            // fragment = compare.CompareFragment {
+            //    fileExtensions = file.extensions
+            // }
+
+            // Serializer 2.0
+            // fragment = serializer.SerializerFragment {}
 		}
 	}
 }
+
