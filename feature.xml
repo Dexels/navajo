@@ -18,21 +18,21 @@
    </license>
 
    <plugin
-         id="com.dexels.navajo.dev.tipi"
+         id="com.dexels.navajo.tipi.dev.ant"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="com.dexels.navajo.tipi.build.ant"
+         id="com.dexels.navajo.tipi.dev.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="com.dexels.navajo.tipi.build.core"
+         id="com.dexels.navajo.tipi.dev.plugin"
          download-size="0"
          install-size="0"
          version="0.0.0"
