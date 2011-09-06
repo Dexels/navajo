@@ -3,13 +3,10 @@ package com.dexels.navajo.dsl.tsl.validation;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
@@ -17,17 +14,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.validation.Check;
 
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.dsl.expression.proposals.AdapterProposal;
 import com.dexels.navajo.dsl.expression.proposals.INavajoContextProvider;
-import com.dexels.navajo.dsl.model.tsl.Element;
-import com.dexels.navajo.dsl.model.tsl.ExpressionTag;
-import com.dexels.navajo.dsl.model.tsl.Field;
-import com.dexels.navajo.dsl.model.tsl.Map;
-import com.dexels.navajo.dsl.model.tsl.Message;
-import com.dexels.navajo.dsl.model.tsl.Option;
-import com.dexels.navajo.dsl.model.tsl.Param;
-import com.dexels.navajo.dsl.model.tsl.PossibleExpression;
-import com.dexels.navajo.dsl.model.tsl.Property;
 import com.dexels.navajo.dsl.model.tsl.Tml;
 import com.dexels.navajo.dsl.model.tsl.TslPackage;
 import com.google.inject.Inject;
@@ -255,18 +242,18 @@ public class TslJavaValidator extends AbstractTslJavaValidator {
 //	}
 //
 //	
-	private java.util.Map<String,String> createAttributeMap(EList<PossibleExpression> aa) {
-		java.util.Map<String,String> result = new HashMap<String, String>();
-		for (PossibleExpression attribute : aa) {
-			
-			String value = attribute.getValue();
-			if(value==null) {
-				value = attribute.getExpressionValue().toString();
-			}
-			result.put(attribute.getKey(), value);
-		}
-		return result;
-	}
+//	private java.util.Map<String,String> createAttributeMap(EList<PossibleExpression> aa) {
+//		java.util.Map<String,String> result = new HashMap<String, String>();
+//		for (PossibleExpression attribute : aa) {
+//			
+//			String value = attribute.getValue();
+//			if(value==null) {
+//				value = attribute.getExpressionValue().toString();
+//			}
+//			result.put(attribute.getKey(), value);
+//		}
+//		return result;
+//	}
 
 //
 //	private void validateAttribute(String tagName, EList<PossibleExpression> eList, String attributeName,List<String> allowedValues, boolean isError) {
@@ -374,22 +361,22 @@ public class TslJavaValidator extends AbstractTslJavaValidator {
 //
 //	}
 //	
-	private PossibleExpression getExpressionByName(String name, EList<PossibleExpression> list) {
-		for (PossibleExpression attribute : list) {
-			if(attribute.getKey().equals(name)) {
-				return attribute;
-			}
-		}
-		return null;
-	}
-	
-	private boolean contains(String[] l, String e) {
-		for (String c : l) {
-			if(c.equals(e)) {
-				return true;
-			}
-		}
-		return false;
-	}
+//	private PossibleExpression getExpressionByName(String name, EList<PossibleExpression> list) {
+//		for (PossibleExpression attribute : list) {
+//			if(attribute.getKey().equals(name)) {
+//				return attribute;
+//			}
+//		}
+//		return null;
+//	}
+//	
+//	private boolean contains(String[] l, String e) {
+//		for (String c : l) {
+//			if(c.equals(e)) {
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
 	
 }

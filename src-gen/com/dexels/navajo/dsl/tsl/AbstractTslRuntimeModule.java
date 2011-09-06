@@ -124,10 +124,10 @@ public abstract class AbstractTslRuntimeModule extends DefaultRuntimeModule {
 		binder.bind(org.eclipse.xtext.resource.IResourceDescriptions.class).annotatedWith(com.google.inject.name.Names.named(org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider.NAMED_BUILDER_SCOPE)).to(org.eclipse.xtext.resource.impl.ResourceSetBasedResourceDescriptions.class);
 	}
 
-	// contributed by org.eclipse.xtext.generator.generator.GeneratorFragment
-	public Class<? extends org.eclipse.xtext.generator.IGenerator> bindIGenerator() {
-		return com.dexels.navajo.dsl.tsl.generator.TslGenerator.class;
-	}
+//	// contributed by org.eclipse.xtext.generator.generator.GeneratorFragment
+//	public Class<? extends org.eclipse.xtext.generator.IGenerator> bindIGenerator() {
+//		return com.dexels.navajo.dsl.tsl.generator.TslGenerator.class;
+//	}
 
 	// contributed by org.eclipse.xtext.generator.formatting.FormatterFragment
 	public Class<? extends org.eclipse.xtext.formatting.IFormatter> bindIFormatter() {
