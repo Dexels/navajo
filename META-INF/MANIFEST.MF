@@ -9,7 +9,8 @@ Require-Bundle: com.dexels.navajo.tipi.echo.client;bundle-version="1.0.1",
  com.dexels.navajo.tipi;bundle-version="1.0.63",
  com.dexels.navajo.document;bundle-version="2.0.1",
  com.dexels.navajo.core;bundle-version="2.9.4",
- com.dexels.navajo.client;bundle-version="3.0.6"
+ com.dexels.navajo.client;bundle-version="3.0.6",
+ javax.servlet;bundle-version="2.5.0"
 Bundle-ActivationPolicy: lazy
 Export-Package: com.dexels.navajo.functions,
  com.dexels.navajo.tipi.actions,
@@ -28,11 +29,7 @@ Export-Package: com.dexels.navajo.functions,
  dexels,
  org.w3c.tidy,
  tipi
-Import-Package: javax.servlet;version="2.5.0",
- javax.servlet.http;version="2.5.0",
- junit.framework;resolution:=optional,
- org.osgi.framework;version="1.5.0",
+Import-Package: org.osgi.framework;version="1.5.0",
  org.slf4j;version="1.6.1"
-Bundle-ClassPath: .,
- lib/iText.jar
+Bundle-ClassPath: lib/iText.jar
 
