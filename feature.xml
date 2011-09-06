@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="com.dexels.navajo.dev"
+      id="com.dexels.navajo.dev.feature"
       label="Navajo Development Plugin"
       version="2.0.4.qualifier"
       provider-name="Dexels">
