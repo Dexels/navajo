@@ -36,6 +36,7 @@ public class TwitterAdapter {
 	}
 	
 	// This will not work as expected. the Status class is a final static subclass
+	@SuppressWarnings("deprecation")
 	public TwitterStatus getStatus(){
 		if (twit == null) {
 			twit = new Twitter(username, password);
@@ -143,6 +144,7 @@ public class TwitterAdapter {
 		return twu;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public TwitterUser[] getFriends(){
 		List<User> users;
 		if(currentUser == null){
@@ -158,6 +160,7 @@ public class TwitterAdapter {
 		return twu;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public TwitterStatus[] getFriendsTimeline(){
 		List<Status> timeline = twit.getFriendsTimeline();		
 		TwitterStatus[] tws = new TwitterStatus[timeline.size()];
