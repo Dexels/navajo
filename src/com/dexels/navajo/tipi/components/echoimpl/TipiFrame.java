@@ -1,20 +1,18 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
 //import tucana.echo2.app.ModalDimmer;
-import nextapp.echo2.app.*;
-import nextapp.echo2.app.layout.GridLayoutData;
+import nextapp.echo2.app.Color;
+import nextapp.echo2.app.Component;
+import nextapp.echo2.app.ContentPane;
+import nextapp.echo2.app.Extent;
+import nextapp.echo2.app.Insets;
+import nextapp.echo2.app.LayoutData;
+import nextapp.echo2.app.SplitPane;
+import nextapp.echo2.app.Window;
+import nextapp.echo2.app.WindowPane;
 import nextapp.echo2.extras.app.MenuBarPane;
-import nextapp.echo2.extras.app.menu.DefaultMenuModel;
-import nextapp.echo2.extras.app.menu.DefaultOptionModel;
 
-import com.dexels.navajo.tipi.components.echoimpl.impl.*;
-import com.dexels.navajo.tipi.components.echoimpl.impl.layout.EchoLayoutImpl;
-import com.dexels.navajo.tipi.components.echoimpl.parsers.*;
-
-import echopointng.ContainerEx;
-import echopointng.MenuBar;
-import echopointng.able.Positionable;
-import echopointng.able.Sizeable;
+import com.dexels.navajo.tipi.components.echoimpl.impl.GradientContentPane;
 
 /**
  * <p>

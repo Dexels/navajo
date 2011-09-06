@@ -1,8 +1,11 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import java.util.*;
-
-import com.dexels.navajo.tipi.tipixml.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 import nextapp.echo2.app.Alignment;
 import nextapp.echo2.app.Border;
@@ -12,9 +15,11 @@ import nextapp.echo2.app.Extent;
 import nextapp.echo2.app.Grid;
 import nextapp.echo2.app.Insets;
 import nextapp.echo2.app.Label;
-import nextapp.echo2.app.LayoutData;
 import nextapp.echo2.app.PaneContainer;
 import nextapp.echo2.app.layout.GridLayoutData;
+
+import com.dexels.navajo.tipi.tipixml.XMLElement;
+
 import echopointng.ContainerEx;
 import echopointng.GroupBox;
 import echopointng.able.Sizeable;

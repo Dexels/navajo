@@ -1,16 +1,6 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import nextapp.echo2.app.Border;
-import nextapp.echo2.app.Color;
-import nextapp.echo2.app.Component;
-import nextapp.echo2.app.ContentPane;
-import nextapp.echo2.app.Extent;
-import nextapp.echo2.app.Insets;
-import nextapp.echo2.app.Label;
-import echopointng.ContainerEx;
 import echopointng.GroupBox;
-import echopointng.LabelEx;
-import echopointng.able.Positionable;
 
 /**
  * <p>

@@ -1,14 +1,10 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import java.net.*;
+import java.net.URL;
 
-import com.dexels.navajo.tipi.components.echoimpl.parsers.ColorParser;
-
-import echopointng.*;
-import echopointng.image.*;
-import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Label;
-import nextapp.echo2.app.ResourceImageReference;
+import echopointng.LabelEx;
+import echopointng.image.URLImageReference;
 
 /**
  * <p>

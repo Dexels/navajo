@@ -1,8 +1,8 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
 import nextapp.echo2.app.Component;
-import nextapp.echo2.extras.app.*;
-import nextapp.echo2.extras.app.layout.*;
+import nextapp.echo2.extras.app.AccordionPane;
+import nextapp.echo2.extras.app.layout.AccordionPaneLayoutData;
 
 public class TipiAccordionPane extends TipiEchoDataComponentImpl {
     private AccordionPane myAccordionPane;

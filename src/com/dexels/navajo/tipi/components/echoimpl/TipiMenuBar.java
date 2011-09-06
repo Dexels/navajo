@@ -1,19 +1,13 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import com.dexels.navajo.tipi.TipiComponent;
-import com.dexels.navajo.tipi.TipiException;
-
 import nextapp.echo2.app.event.ActionEvent;
 import nextapp.echo2.app.event.ActionListener;
 import nextapp.echo2.extras.app.MenuBarPane;
 import nextapp.echo2.extras.app.menu.DefaultMenuModel;
-import nextapp.echo2.extras.app.menu.DefaultOptionModel;
-import nextapp.echo2.extras.app.menu.DefaultRadioOptionModel;
-import nextapp.echo2.extras.app.menu.DefaultToggleOptionModel;
 import nextapp.echo2.extras.app.menu.ItemModel;
-import nextapp.echo2.extras.app.menu.MenuModel;
-import nextapp.echo2.extras.app.menu.SeparatorModel;
-import echopointng.MenuBar;
+
+import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.TipiException;
 
 /**
  * <p>

@@ -1,16 +1,21 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import java.net.*;
-import java.util.*;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
-import nextapp.echo2.app.*;
-import nextapp.echo2.app.event.*;
+import nextapp.echo2.app.Alignment;
+import nextapp.echo2.app.CheckBox;
+import nextapp.echo2.app.Style;
+import nextapp.echo2.app.event.ActionEvent;
+import nextapp.echo2.app.event.ActionListener;
 
-import com.dexels.navajo.echoclient.components.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.echoimpl.helpers.*;
+import com.dexels.navajo.echoclient.components.Styles;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.TipiHelper;
+import com.dexels.navajo.tipi.components.echoimpl.helpers.EchoTipiHelper;
 
-import echopointng.image.*;
+import echopointng.image.URLImageReference;
 
 /**
  * <p>Title: </p>

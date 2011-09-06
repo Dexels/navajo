@@ -1,8 +1,7 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
 import nextapp.echo2.app.Component;
-import nextapp.echo2.extras.app.*;
-import nextapp.echo2.extras.app.layout.*;
+import nextapp.echo2.extras.app.TransitionPane;
 
 public class TipiTransitionPane extends TipiEchoDataComponentImpl {
     @Override

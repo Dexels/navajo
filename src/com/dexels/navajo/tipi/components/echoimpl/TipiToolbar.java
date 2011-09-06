@@ -1,11 +1,10 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import com.dexels.navajo.tipi.components.echoimpl.impl.ToolbarImpl;
-import com.dexels.navajo.tipi.components.echoimpl.impl.layout.EchoLayoutImpl;
+import nextapp.echo2.app.Component;
+import nextapp.echo2.app.Insets;
+import nextapp.echo2.app.layout.RowLayoutData;
 
-import nextapp.echo2.app.*;
-import nextapp.echo2.app.layout.*;
-import echopointng.ContainerEx;
+import com.dexels.navajo.tipi.components.echoimpl.impl.ToolbarImpl;
 
 public class TipiToolbar extends TipiEchoDataComponentImpl {
     private ToolbarImpl myRow;

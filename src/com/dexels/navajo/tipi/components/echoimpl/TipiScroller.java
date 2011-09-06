@@ -1,13 +1,7 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import java.awt.*;
-
-import com.dexels.navajo.tipi.TipiException;
-
-import nextapp.echo2.app.*;
-
-import echopointng.*;
-import echopointng.able.*;
+import nextapp.echo2.app.Extent;
+import echopointng.ContainerEx;
 
 /**
  * <p>

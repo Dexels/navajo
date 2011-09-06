@@ -1,24 +1,32 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import java.io.*;
-import java.net.*;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 
-import nextapp.echo2.app.*;
-import nextapp.echo2.webcontainer.*;
-import nextapp.echo2.webcontainer.command.*;
-import nextapp.echo2.webrender.*;
+import nextapp.echo2.app.ApplicationInstance;
+import nextapp.echo2.app.TaskQueueHandle;
+import nextapp.echo2.app.Window;
+import nextapp.echo2.webcontainer.ContainerContext;
+import nextapp.echo2.webrender.Connection;
+import nextapp.echo2.webrender.WebRenderServlet;
 
-import com.dexels.navajo.client.NavajoClientFactory;
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.echoimpl.impl.*;
-import com.dexels.navajo.tipi.internal.*;
-import com.dexels.navajo.tipi.tipixml.XMLElement;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.TipiExecutable;
+import com.dexels.navajo.tipi.components.echoimpl.impl.BrowserCookieManager;
+import com.dexels.navajo.tipi.internal.BaseTipiErrorHandler;
+import com.dexels.navajo.tipi.internal.FileResourceLoader;
+import com.dexels.navajo.tipi.internal.HttpResourceLoader;
 
 import echopointng.command.JavaScriptEval;
 

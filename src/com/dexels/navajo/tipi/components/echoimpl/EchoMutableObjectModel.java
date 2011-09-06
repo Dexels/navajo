@@ -1,9 +1,9 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import com.dexels.navajo.tipi.TipiComponent;
-
 import nextapp.echo2.app.ImageReference;
 import nextapp.echo2.extras.app.menu.OptionModel;
+
+import com.dexels.navajo.tipi.TipiComponent;
 
 public class EchoMutableObjectModel implements OptionModel {
 

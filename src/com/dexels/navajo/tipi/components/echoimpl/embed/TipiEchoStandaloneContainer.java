@@ -1,13 +1,18 @@
 package com.dexels.navajo.tipi.components.echoimpl.embed;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import navajo.ExtensionDefinition;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.echoimpl.*;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.TipiStandaloneToplevelContainer;
+import com.dexels.navajo.tipi.components.echoimpl.EchoTipiContext;
+import com.dexels.navajo.tipi.components.echoimpl.TipiEchoInstance;
 
 /**
  * <p>Title: </p>

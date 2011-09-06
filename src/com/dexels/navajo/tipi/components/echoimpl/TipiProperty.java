@@ -5,20 +5,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import nextapp.echo2.app.Component;
-import nextapp.echo2.app.ContentPane;
 import nextapp.echo2.app.LayoutData;
 import nextapp.echo2.app.Style;
 
 import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.echoclient.components.EchoPropertyComponent;
 import com.dexels.navajo.echoclient.components.PropertyEventListener;
 import com.dexels.navajo.echoclient.components.Styles;
-
 import com.dexels.navajo.tipi.TipiEventListener;
-
 import com.dexels.navajo.tipi.internal.PropertyComponent;
 
 import echopointng.ContainerEx;

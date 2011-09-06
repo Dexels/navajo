@@ -1,14 +1,10 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import com.dexels.navajo.tipi.TipiComponent;
-
-import nextapp.echo2.app.Column;
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.Extent;
 import nextapp.echo2.app.Grid;
-import nextapp.echo2.app.Row;
-import echopointng.ContainerEx;
-import echopointng.TabbedPane;
+
+import com.dexels.navajo.tipi.TipiComponent;
 
 /**
  * <p>

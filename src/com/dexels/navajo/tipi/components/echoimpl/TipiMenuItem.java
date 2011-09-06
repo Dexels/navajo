@@ -4,11 +4,6 @@ import java.net.URL;
 
 import com.dexels.navajo.tipi.TipiException;
 
-import nextapp.echo2.app.ResourceImageReference;
-import nextapp.echo2.extras.app.menu.DefaultOptionModel;
-import nextapp.echo2.extras.app.menu.ItemModel;
-import nextapp.echo2.extras.app.menu.OptionModel;
-import echopointng.MenuItem;
 import echopointng.image.URLImageReference;
 
 /**

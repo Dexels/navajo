@@ -1,30 +1,36 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.StringTokenizer;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.sound.midi.SysexMessage;
-
-import tipi.TipiApplicationInstance;
-import tipi.TipiEchoExtension;
 
 import navajo.ExtensionDefinition;
-import nextapp.echo2.app.*;
+import nextapp.echo2.app.ApplicationInstance;
+import nextapp.echo2.app.Style;
+import nextapp.echo2.app.Window;
+import nextapp.echo2.app.WindowPane;
 import nextapp.echo2.webcontainer.ContainerContext;
 import nextapp.echo2.webcontainer.command.BrowserRedirectCommand;
 import nextapp.echo2.webrender.Connection;
 import nextapp.echo2.webrender.WebRenderServlet;
+import tipi.TipiApplicationInstance;
+import tipi.TipiEchoExtension;
 
 import com.dexels.navajo.echoclient.components.Styles;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
-import com.dexels.navajo.tipi.components.echoimpl.impl.*;
 
 /**
  * <p>

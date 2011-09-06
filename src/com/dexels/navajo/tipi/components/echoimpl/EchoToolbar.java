@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
 import nextapp.echo2.app.Row;
-import nextapp.echo2.app.layout.RowLayoutData;
 
 /**
  * <p>

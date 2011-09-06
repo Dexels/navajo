@@ -1,17 +1,14 @@
 package com.dexels.navajo.tipi.components.echoimpl.impl.layout;
 
-import com.dexels.navajo.tipi.components.echoimpl.TipiEchoDataComponentImpl;
-
-import echopointng.ContainerEx;
-
-import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Column;
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.Extent;
-import nextapp.echo2.app.Grid;
 import nextapp.echo2.app.LayoutData;
 import nextapp.echo2.app.PaneContainer;
-import nextapp.echo2.app.SplitPane;
+
+import com.dexels.navajo.tipi.components.echoimpl.TipiEchoDataComponentImpl;
+
+import echopointng.ContainerEx;
 
 public class EchoVerticalBoxLayoutImpl extends EchoLayoutImpl {
 

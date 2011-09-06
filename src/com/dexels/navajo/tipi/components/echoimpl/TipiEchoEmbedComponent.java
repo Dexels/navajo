@@ -1,12 +1,12 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import java.net.*;
+import nextapp.echo2.app.Color;
+import nextapp.echo2.app.Component;
 
-import nextapp.echo2.app.*;
-import nextapp.echo2.webcontainer.*;
-
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.echoimpl.embed.*;
+import com.dexels.navajo.tipi.TipiEmbedComponent;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.components.echoimpl.embed.TipiEchoStandaloneContainer;
+import com.dexels.navajo.tipi.components.echoimpl.embed.TipiEchoStandaloneToplevel;
 
 public class TipiEchoEmbedComponent extends TipiEmbedComponent {
 

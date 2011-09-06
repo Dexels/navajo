@@ -1,9 +1,10 @@
 package com.dexels.navajo.tipi.components.echoimpl.impl.layout;
 
-import java.util.*;
+import java.util.StringTokenizer;
 
-import nextapp.echo2.app.*;
-import nextapp.echo2.app.layout.*;
+import nextapp.echo2.app.Component;
+import nextapp.echo2.app.Insets;
+import nextapp.echo2.app.layout.GridLayoutData;
 
 /**
  * <p>Title: </p>

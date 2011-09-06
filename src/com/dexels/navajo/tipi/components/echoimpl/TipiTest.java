@@ -1,21 +1,15 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import nextapp.echo2.app.*;
+import nextapp.echo2.app.Component;
+import nextapp.echo2.app.Extent;
+import nextapp.echo2.app.Grid;
 
 import com.dexels.navajo.tipi.TipiComponent;
-import com.dexels.navajo.tipi.TipiComponentMethod;
-import com.dexels.navajo.tipi.TipiHelper;
-import com.dexels.navajo.tipi.components.echoimpl.helpers.EchoTipiHelper;
-import com.dexels.navajo.tipi.components.echoimpl.parsers.*;
-import com.dexels.navajo.tipi.internal.TipiEvent;
 
-import echopointng.ButtonEx;
 import echopointng.ContainerEx;
 import echopointng.LabelEx;
 import echopointng.TabbedPane;

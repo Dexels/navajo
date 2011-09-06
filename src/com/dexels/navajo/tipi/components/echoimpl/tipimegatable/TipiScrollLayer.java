@@ -1,10 +1,16 @@
 package com.dexels.navajo.tipi.components.echoimpl.tipimegatable;
 
-import com.dexels.navajo.tipi.tipixml.*;
-import com.dexels.navajo.document.*;
-import java.util.*;
+import java.util.Stack;
 
-import nextapp.echo2.app.*;
+import nextapp.echo2.app.Column;
+import nextapp.echo2.app.Component;
+import nextapp.echo2.app.Font;
+
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 /**
  * <p>

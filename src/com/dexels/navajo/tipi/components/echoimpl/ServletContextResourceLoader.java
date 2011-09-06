@@ -1,11 +1,10 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import java.io.*;
-import java.net.*;
+import java.io.File;
 
-import javax.servlet.*;
+import javax.servlet.ServletContext;
 
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.internal.FileResourceLoader;
 
 public class ServletContextResourceLoader extends FileResourceLoader {
 

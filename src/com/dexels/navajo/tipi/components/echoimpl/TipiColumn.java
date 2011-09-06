@@ -2,7 +2,6 @@ package com.dexels.navajo.tipi.components.echoimpl;
 
 import nextapp.echo2.app.Column;
 import nextapp.echo2.app.Component;
-import echopointng.ContainerEx;
 
 public class TipiColumn extends TipiEchoDataComponentImpl {
     private Column myColumn;

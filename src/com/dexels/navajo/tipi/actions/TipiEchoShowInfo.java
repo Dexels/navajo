@@ -1,13 +1,8 @@
 package com.dexels.navajo.tipi.actions;
 
-import nextapp.echo2.app.*;
-
 import com.dexels.navajo.document.Operand;
-import com.dexels.navajo.tipi.components.echoimpl.impl.TipiOptionPane;
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
-
-import echopointng.command.*;
 
 /**
  * <p>

@@ -1,8 +1,5 @@
 package com.dexels.navajo.tipi.components.echoimpl.parsers;
 
-import java.util.StringTokenizer;
-
-
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiTypeParser;
 import com.dexels.navajo.tipi.internal.TipiEvent;

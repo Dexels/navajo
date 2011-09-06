@@ -1,18 +1,12 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import java.net.*;
-import java.util.*;
-import java.awt.*;
-import java.awt.event.*;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiComponentMethod;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 
-import javax.swing.*;
-import javax.swing.text.*;
-
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.internal.*;
-
-import echopointng.*;
+import echopointng.SelectFieldEx;
 
 /**
  * <p>

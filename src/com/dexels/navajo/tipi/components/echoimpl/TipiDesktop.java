@@ -1,8 +1,10 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import nextapp.echo2.app.*;
+import nextapp.echo2.app.Color;
+import nextapp.echo2.app.ContentPane;
+import nextapp.echo2.app.Style;
 
-import com.dexels.navajo.echoclient.components.*;
+import com.dexels.navajo.echoclient.components.Styles;
 
 /**
  * <p>

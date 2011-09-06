@@ -2,16 +2,16 @@ package com.dexels.navajo.tipi.components.echoimpl;
 
 import java.net.URL;
 
-import com.dexels.navajo.echoclient.components.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.echoimpl.impl.*;
-import com.dexels.navajo.tipi.components.echoimpl.parsers.*;
-import com.dexels.navajo.tipi.internal.TipiEvent;
-
-import nextapp.echo2.app.*;
+import nextapp.echo2.app.Button;
 import nextapp.echo2.app.event.ActionEvent;
 import nextapp.echo2.app.event.ActionListener;
-import echopointng.*;
+
+import com.dexels.navajo.echoclient.components.ButtonImpl;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiComponentMethod;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.internal.TipiEvent;
+
 import echopointng.image.URLImageReference;
 
 /**

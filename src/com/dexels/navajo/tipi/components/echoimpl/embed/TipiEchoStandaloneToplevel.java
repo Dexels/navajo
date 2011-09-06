@@ -1,9 +1,11 @@
 package com.dexels.navajo.tipi.components.echoimpl.embed;
 
-import nextapp.echo2.app.*;
+import nextapp.echo2.app.Component;
+import nextapp.echo2.app.ContentPane;
 
-import com.dexels.navajo.tipi.components.echoimpl.*;
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.components.echoimpl.BorderLayout;
+import com.dexels.navajo.tipi.components.echoimpl.TipiPanel;
+import com.dexels.navajo.tipi.internal.TipiLayout;
 
 /**
  * <p>Title: </p>

@@ -2,7 +2,8 @@ package com.dexels.navajo.tipi.actions;
 
 import nextapp.echo2.app.ApplicationInstance;
 import nextapp.echo2.app.Command;
-import nextapp.echo2.webcontainer.command.*;
+import nextapp.echo2.webcontainer.command.BrowserOpenWindowCommand;
+import nextapp.echo2.webcontainer.command.BrowserRedirectCommand;
 
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.tipi.TipiBreakException;

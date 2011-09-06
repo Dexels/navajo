@@ -1,11 +1,15 @@
 package com.dexels.navajo.tipi.components.echoimpl.helpers;
 
-import nextapp.echo2.app.*;
+import nextapp.echo2.app.Border;
+import nextapp.echo2.app.Color;
+import nextapp.echo2.app.Component;
+import nextapp.echo2.app.Font;
 
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.TipiHelper;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 
-import echopointng.able.*;
+import echopointng.able.Borderable;
 
 /**
  * <p>

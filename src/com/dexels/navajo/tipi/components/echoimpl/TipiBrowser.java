@@ -1,19 +1,7 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import java.io.*;
-import java.net.*;
-
-
-import com.dexels.navajo.document.types.*;
-import com.dexels.navajo.functions.*;
-import com.dexels.navajo.tipi.components.echoimpl.parsers.ColorParser;
-
-import echopointng.*;
-import echopointng.image.*;
-import echopointng.template.*;
-import nextapp.echo2.app.Color;
-import nextapp.echo2.app.Label;
-import nextapp.echo2.app.ResourceImageReference;
+import echopointng.TemplatePanel;
+import echopointng.template.StringTemplateDataSource;
 
 /**
  * <p>

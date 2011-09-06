@@ -1,6 +1,9 @@
 package com.dexels.navajo.functions;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,9 +18,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.parser.*;
+import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.parser.TMLExpressionException;
 
 public class ResolveAttatchments extends FunctionInterface {
 

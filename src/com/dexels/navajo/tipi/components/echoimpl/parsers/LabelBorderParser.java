@@ -10,8 +10,6 @@ import com.dexels.navajo.tipi.TipiTypeParser;
 import com.dexels.navajo.tipi.internal.DescriptionProvider;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
-import echopointng.able.Expandable;
-
 /**
  * <p>
  * Title:

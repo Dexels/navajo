@@ -1,9 +1,8 @@
 package com.dexels.navajo.tipi.components.echoimpl.parsers;
 
 
-import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.internal.TipiReference;
-import com.dexels.navajo.document.*;
 
 /**
  * <p>

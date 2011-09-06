@@ -1,8 +1,9 @@
 package com.dexels.navajo.tipi.components.echoimpl.impl;
 
-import com.dexels.navajo.echoclient.components.*;
+import nextapp.echo2.app.ContentPane;
+import nextapp.echo2.app.Style;
 
-import nextapp.echo2.app.*;
+import com.dexels.navajo.echoclient.components.Styles;
 
 public class GradientContentPane extends ContentPane {
 

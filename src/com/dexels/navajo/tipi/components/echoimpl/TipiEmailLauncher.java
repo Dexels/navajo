@@ -4,15 +4,9 @@
  */
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 

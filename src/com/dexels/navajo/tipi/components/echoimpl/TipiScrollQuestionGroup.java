@@ -6,12 +6,7 @@
  */
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import nextapp.echo2.app.*;
-import nextapp.echo2.webcontainer.*;
-
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.question.*;
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.components.question.TipiBaseQuestionGroup;
 
 public class TipiScrollQuestionGroup extends TipiBaseQuestionGroup {
 

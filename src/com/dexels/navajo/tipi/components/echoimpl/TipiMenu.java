@@ -2,17 +2,9 @@ package com.dexels.navajo.tipi.components.echoimpl;
 
 import java.net.URL;
 
-import echopointng.image.URLImageReference;
-
-import nextapp.echo2.app.ResourceImageReference;
-import nextapp.echo2.extras.app.MenuBarPane;
 import nextapp.echo2.extras.app.menu.DefaultMenuModel;
-import nextapp.echo2.extras.app.menu.DefaultOptionModel;
-import nextapp.echo2.extras.app.menu.DefaultRadioOptionModel;
-import nextapp.echo2.extras.app.menu.DefaultToggleOptionModel;
 import nextapp.echo2.extras.app.menu.ItemModel;
-import nextapp.echo2.extras.app.menu.MenuModel;
-import nextapp.echo2.extras.app.menu.SeparatorModel;
+import echopointng.image.URLImageReference;
 
 /**
  * <p>

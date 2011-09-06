@@ -1,10 +1,17 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import tucana.echo2.app.*;
-import nextapp.echo2.app.*;
-import nextapp.echo2.app.Font.Typeface;
+import nextapp.echo2.app.Color;
+import nextapp.echo2.app.Component;
+import nextapp.echo2.app.ContentPane;
+import nextapp.echo2.app.Extent;
+import nextapp.echo2.app.Font;
+import nextapp.echo2.app.LayoutData;
+import nextapp.echo2.app.Style;
+import nextapp.echo2.app.Window;
+import nextapp.echo2.app.WindowPane;
 import nextapp.echo2.app.event.WindowPaneEvent;
 import nextapp.echo2.app.event.WindowPaneListener;
+import tucana.echo2.app.ModalDimmer;
 
 import com.dexels.navajo.echoclient.components.Styles;
 import com.dexels.navajo.tipi.TipiBreakException;
@@ -13,10 +20,10 @@ import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiHelper;
 import com.dexels.navajo.tipi.components.echoimpl.helpers.EchoTipiHelper;
-import com.dexels.navajo.tipi.components.echoimpl.parsers.*;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
-import echopointng.*;
+import echopointng.ContentPaneEx;
+import echopointng.LightBox;
 
 /**
  * <p>

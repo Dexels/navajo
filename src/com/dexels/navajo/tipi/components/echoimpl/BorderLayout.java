@@ -7,11 +7,15 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
 //import echopointng.*;
-import nextapp.echo2.app.*;
-import nextapp.echo2.app.event.*;
-import nextapp.echo2.app.table.*;
-import nextapp.echo2.app.text.*;
-import nextapp.echo2.app.layout.*;
+import nextapp.echo2.app.Column;
+import nextapp.echo2.app.Component;
+import nextapp.echo2.app.ContentPane;
+import nextapp.echo2.app.Extent;
+import nextapp.echo2.app.Insets;
+import nextapp.echo2.app.Label;
+import nextapp.echo2.app.Row;
+import nextapp.echo2.app.SplitPane;
+import nextapp.echo2.app.layout.SplitPaneLayoutData;
 
 public class BorderLayout extends SplitPane {
 

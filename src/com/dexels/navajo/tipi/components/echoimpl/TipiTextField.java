@@ -1,8 +1,6 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
 import nextapp.echo2.app.TextField;
-import nextapp.echo2.app.event.ActionEvent;
-import nextapp.echo2.app.event.ActionListener;
 
 /**
  * <p>

@@ -1,18 +1,11 @@
 package com.dexels.navajo.tipi.actions;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.Map;
 
-import javax.servlet.http.Cookie;
-
-import nextapp.echo2.app.ApplicationInstance;
-import nextapp.echo2.app.Command;
-import nextapp.echo2.webcontainer.ContainerContext;
-import nextapp.echo2.webcontainer.command.BrowserOpenWindowCommand;
-import nextapp.echo2.webcontainer.command.BrowserSetCookieCommand;
-
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.parser.*;
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.tipi.internal.TipiAction;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 
 /**
  * <p>

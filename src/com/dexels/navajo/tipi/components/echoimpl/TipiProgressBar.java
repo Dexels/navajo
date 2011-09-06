@@ -1,11 +1,6 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import java.net.URL;
-
-import nextapp.echo2.app.*;
-import echopointng.ContainerEx;
 import echopointng.ProgressBar;
-import echopointng.image.URLImageReference;
 
 
 

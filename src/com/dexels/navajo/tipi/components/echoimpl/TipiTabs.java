@@ -6,17 +6,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import nextapp.echo2.app.*;
-import nextapp.echo2.app.event.ChangeEvent;
-import nextapp.echo2.app.event.ChangeListener;
+import nextapp.echo2.app.Component;
 import nextapp.echo2.extras.app.TabPane;
-import nextapp.echo2.extras.app.layout.TabPaneLayoutData;
 
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiComponentMethod;
-import com.dexels.navajo.tipi.TipiHelper;
-import com.dexels.navajo.tipi.components.echoimpl.helpers.EchoTipiHelper;
-import com.dexels.navajo.tipi.components.echoimpl.parsers.*;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
 /**

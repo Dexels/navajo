@@ -1,17 +1,23 @@
 package com.dexels.navajo.tipi.components.echoimpl.tipimegatable;
 
-import com.dexels.navajo.tipi.components.echoimpl.impl.*;
-import com.dexels.navajo.tipi.tipixml.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
 
-import java.util.*;
+import nextapp.echo2.app.Component;
+import nextapp.echo2.app.event.ActionEvent;
+import nextapp.echo2.app.event.ActionListener;
 
-import nextapp.echo2.app.*;
-import nextapp.echo2.app.event.*;
-//import com.dexels.navajo.swingclient.components.*;
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.echoclient.components.MessageTable;
-import com.dexels.navajo.parser.*;
-import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 /**
  * <p>

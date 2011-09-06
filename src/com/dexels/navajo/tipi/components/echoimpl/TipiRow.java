@@ -1,7 +1,7 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import nextapp.echo2.app.*;
-import echopointng.ContainerEx;
+import nextapp.echo2.app.Component;
+import nextapp.echo2.app.Row;
 
 public class TipiRow extends TipiEchoDataComponentImpl {
     private Row myRow;

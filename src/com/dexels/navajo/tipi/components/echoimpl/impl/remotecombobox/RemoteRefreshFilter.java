@@ -1,6 +1,6 @@
 package com.dexels.navajo.tipi.components.echoimpl.impl.remotecombobox;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Navajo;
 
  
 public interface RemoteRefreshFilter {

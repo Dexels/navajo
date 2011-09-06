@@ -1,18 +1,7 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import com.dexels.navajo.tipi.components.core.*;
-import com.dexels.navajo.tipi.components.question.*;
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.actions.*;
-import java.util.*;
-import com.dexels.navajo.tipi.internal.*;
-import java.io.*;
-import java.awt.*;
-import java.awt.print.*;
-
-import nextapp.echo2.app.*;
-import nextapp.echo2.webcontainer.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.tipi.components.question.TipiBaseQuestionList;
 
 /**
  * <p>

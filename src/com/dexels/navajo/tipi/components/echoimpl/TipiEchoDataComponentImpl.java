@@ -1,28 +1,20 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import java.lang.reflect.*;
-
-import javax.swing.*;
-
-import nextapp.echo2.app.*;
-import nextapp.echo2.webcontainer.*;
+import nextapp.echo2.app.Border;
+import nextapp.echo2.app.Component;
+import nextapp.echo2.app.LayoutData;
+import nextapp.echo2.app.WindowPane;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.echoclient.components.*;
+import com.dexels.navajo.echoclient.components.Styles;
 import com.dexels.navajo.tipi.TipiBreakException;
-import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiHelper;
 import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
-import com.dexels.navajo.tipi.components.core.TipiLayoutImpl;
 import com.dexels.navajo.tipi.components.echoimpl.helpers.EchoTipiHelper;
-import com.dexels.navajo.tipi.components.echoimpl.impl.TipiLayoutManager;
 import com.dexels.navajo.tipi.components.echoimpl.impl.layout.EchoLayoutImpl;
-import com.dexels.navajo.tipi.components.echoimpl.parsers.*;
-import com.dexels.navajo.tipi.internal.TipiLayout;
 
-import echopointng.ExtentEx;
-import echopointng.able.*;
+import echopointng.able.Borderable;
 
 /**
  * <p>

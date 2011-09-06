@@ -1,10 +1,14 @@
 package com.dexels.navajo.tipi.components.echoimpl.impl.layout;
 
-import nextapp.echo2.app.*;
+import nextapp.echo2.app.Component;
+import nextapp.echo2.app.Extent;
+import nextapp.echo2.app.Grid;
+import nextapp.echo2.app.LayoutData;
+import nextapp.echo2.app.PaneContainer;
 
-import com.dexels.navajo.tipi.components.echoimpl.*;
+import com.dexels.navajo.tipi.components.echoimpl.TipiEchoDataComponentImpl;
 
-import echopointng.*;
+import echopointng.ContainerEx;
 
 public class EchoGridLayoutImpl extends EchoLayoutImpl {
 

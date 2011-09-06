@@ -1,17 +1,12 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import nextapp.echo2.app.Column;
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.ContentPane;
 import nextapp.echo2.app.PaneContainer;
-import nextapp.echo2.app.Row;
-import nextapp.echo2.app.SplitPane;
 import nextapp.echo2.app.layout.ColumnLayoutData;
 
 import com.dexels.navajo.tipi.TipiValue;
 import com.dexels.navajo.tipi.components.core.TipiLayoutImpl;
-
-import echopointng.able.Sizeable;
 
 /**
  * <p>

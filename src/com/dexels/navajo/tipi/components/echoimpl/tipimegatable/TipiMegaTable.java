@@ -1,22 +1,28 @@
 package com.dexels.navajo.tipi.components.echoimpl.tipimegatable;
 
-import com.dexels.navajo.tipi.components.core.*;
-import com.dexels.navajo.tipi.components.echoimpl.*;
-import com.dexels.navajo.tipi.components.echoimpl.impl.*;
-
-import java.util.*;
-import com.dexels.navajo.tipi.tipixml.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.echoclient.components.MessageTable;
-import com.dexels.navajo.tipi.internal.*;
-import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Stack;
 
-import nextapp.echo2.app.*;
+import nextapp.echo2.app.Column;
+import nextapp.echo2.app.Component;
 
-import java.awt.print.*;
-import java.awt.geom.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.echoclient.components.MessageTable;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiComponentMethod;
+import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.components.echoimpl.TipiEchoDataComponentImpl;
+import com.dexels.navajo.tipi.internal.TipiEvent;
+import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 /**
  * <p>

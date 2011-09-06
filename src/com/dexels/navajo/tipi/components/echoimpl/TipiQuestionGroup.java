@@ -1,14 +1,10 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import nextapp.echo2.app.*;
-import nextapp.echo2.webcontainer.*;
+import nextapp.echo2.app.Color;
+import nextapp.echo2.app.Column;
+import nextapp.echo2.app.Component;
 
-import com.dexels.navajo.tipi.components.core.*;
-import com.dexels.navajo.tipi.components.question.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.document.*;
-
-import com.dexels.navajo.tipi.actions.*;
+import com.dexels.navajo.tipi.components.question.TipiBaseQuestionGroup;
 
 /**
  * <p>

@@ -1,10 +1,12 @@
 package com.dexels.navajo.tipi.components.echoimpl.impl.layout;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-import nextapp.echo2.app.*;
+import nextapp.echo2.app.Component;
 
-import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.TipiComponent;
 
 public abstract class EchoLayoutImpl {
 	

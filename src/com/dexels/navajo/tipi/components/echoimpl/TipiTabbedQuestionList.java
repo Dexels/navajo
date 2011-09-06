@@ -6,23 +6,28 @@
  */
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import java.beans.*;
-import java.net.*;
+import nextapp.echo2.app.Color;
+import nextapp.echo2.app.Component;
+import nextapp.echo2.app.Extent;
+import nextapp.echo2.app.Font;
+import nextapp.echo2.app.ImageReference;
+import nextapp.echo2.app.Style;
 
-import javax.swing.*;
-
-import nextapp.echo2.app.*;
-import nextapp.echo2.webcontainer.*;
-
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.echoclient.components.Styles;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.echoimpl.helpers.*;
-import com.dexels.navajo.tipi.components.question.*;
+import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.TipiHelper;
+import com.dexels.navajo.tipi.components.echoimpl.helpers.EchoTipiHelper;
+import com.dexels.navajo.tipi.components.question.TipiBaseQuestionGroup;
+import com.dexels.navajo.tipi.components.question.TipiBaseQuestionList;
 
-import echopointng.*;
-import echopointng.image.*;
-import echopointng.tabbedpane.*;
+import echopointng.ButtonEx;
+import echopointng.TabbedPane;
+import echopointng.image.URLImageReference;
+import echopointng.tabbedpane.DefaultTabModel;
 
 public class TipiTabbedQuestionList extends TipiBaseQuestionList {
 //    private Component lastSelectedTab = null;

@@ -1,14 +1,18 @@
 package com.dexels.navajo.tipi.components.echoimpl.tipimegatable;
 
-import com.dexels.navajo.tipi.tipixml.*;
-import com.dexels.navajo.document.*;
+import java.util.Stack;
 
-import echopointng.*;
-import echopointng.tabbedpane.*;
+import nextapp.echo2.app.Column;
+import nextapp.echo2.app.Component;
 
-import java.util.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.tipi.tipixml.XMLElement;
 
-import nextapp.echo2.app.*;
+import echopointng.TabbedPane;
+import echopointng.tabbedpane.DefaultTabModel;
 
 /**
  * <p>

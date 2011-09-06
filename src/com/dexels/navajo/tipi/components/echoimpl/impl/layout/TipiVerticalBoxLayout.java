@@ -1,13 +1,10 @@
 package com.dexels.navajo.tipi.components.echoimpl.impl.layout;
 
-import java.awt.*;
-
-import nextapp.echo2.app.layout.GridLayoutData;
-
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.core.*;
-
-import com.dexels.navajo.tipi.tipixml.*;
+import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.TipiValue;
+import com.dexels.navajo.tipi.components.core.TipiLayoutImpl;
+import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 /**
  * <p>Title: </p>

@@ -2,12 +2,12 @@ package com.dexels.navajo.tipi.components.echoimpl.impl.layout;
 
 import java.util.StringTokenizer;
 
-import com.dexels.navajo.tipi.components.echoimpl.TipiEchoDataComponentImpl;
-
 import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.Extent;
 import nextapp.echo2.app.SplitPane;
+
+import com.dexels.navajo.tipi.components.echoimpl.TipiEchoDataComponentImpl;
 
 public class EchoBorderLayoutImpl extends EchoLayoutImpl {
 

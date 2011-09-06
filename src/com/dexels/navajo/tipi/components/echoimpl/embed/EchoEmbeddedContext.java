@@ -1,13 +1,14 @@
 package com.dexels.navajo.tipi.components.echoimpl.embed;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.util.List;
 
 import tipi.TipiEchoExtension;
 
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.echoimpl.*;
-import com.dexels.navajo.tipi.tipixml.*;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.components.echoimpl.EchoTipiContext;
+import com.dexels.navajo.tipi.components.echoimpl.TipiEchoInstance;
+import com.dexels.navajo.tipi.tipixml.XMLParseException;
 
 /**
  * <p>
