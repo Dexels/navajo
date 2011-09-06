@@ -4,9 +4,9 @@ Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.26.qualifier
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.version;bundle-version="1.0.10",
+Require-Bundle: com.dexels.navajo.tipi.echo.client;bundle-version="1.0.1",
+ com.dexels.navajo.version;bundle-version="1.0.10",
  com.dexels.navajo.tipi;bundle-version="1.0.63",
- com.dexels.navajo.tipi.echo.client;bundle-version="1.0.1",
  com.dexels.navajo.document;bundle-version="2.0.1",
  com.dexels.navajo.core;bundle-version="2.9.4",
  com.dexels.navajo.client;bundle-version="3.0.6"
