@@ -19,7 +19,6 @@
 
    <requires>
       <import feature="com.dexels.navajo.core.feature" version="1.0.7.qualifier"/>
-      <import feature="com.dexels.navajo.tipi.feature" version="1.0.43"/>
    </requires>
 
    <plugin
@@ -31,6 +30,13 @@
 
    <plugin
          id="com.dexels.navajo.tipi.vaadin.embedded"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.dexels.navajo.tipi"
          download-size="0"
          install-size="0"
          version="0.0.0"
