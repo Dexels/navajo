@@ -1,12 +1,15 @@
 package com.dexels.navajo.echoclient.components;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
-import nextapp.echo2.app.list.*;
-import nextapp.echo2.app.table.*;
+import nextapp.echo2.app.list.ListSelectionModel;
+import nextapp.echo2.app.table.DefaultTableModel;
+import nextapp.echo2.app.table.TableColumnModel;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.lazy.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Property;
 
 /**
  * <p>

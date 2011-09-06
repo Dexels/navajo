@@ -29,7 +29,7 @@
 
 package com.dexels.navajo.echoclient.components;
 
-import java.io.*;
+import java.io.InputStream;
 
 import nextapp.echo2.app.ImageReference;
 import nextapp.echo2.app.ResourceImageReference;

@@ -1,18 +1,43 @@
 package com.dexels.navajo.echoclient.components;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
-import nextapp.echo2.app.*;
-import nextapp.echo2.app.event.*;
-import nextapp.echo2.app.list.*;
-import nextapp.echo2.app.table.*;
+import nextapp.echo2.app.Color;
+import nextapp.echo2.app.Extent;
+import nextapp.echo2.app.RadioButton;
+import nextapp.echo2.app.event.ActionEvent;
+import nextapp.echo2.app.event.ActionListener;
+import nextapp.echo2.app.event.ChangeEvent;
+import nextapp.echo2.app.event.ChangeListener;
+import nextapp.echo2.app.list.DefaultListSelectionModel;
+import nextapp.echo2.app.list.ListSelectionModel;
+import nextapp.echo2.app.table.AbstractTableModel;
+import nextapp.echo2.app.table.DefaultTableColumnModel;
+import nextapp.echo2.app.table.TableCellRenderer;
+import nextapp.echo2.app.table.TableColumn;
+import nextapp.echo2.app.table.TableColumnModel;
 
-import com.dexels.navajo.client.*;
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.types.*;
-import com.dexels.navajo.echoclient.components.PageNavigator.*;
+import com.dexels.navajo.client.NavajoClientFactory;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.echoclient.components.PageNavigator.PageIndexChangeEvent;
+import com.dexels.navajo.echoclient.components.PageNavigator.PageIndexChangeListener;
 
-import echopointng.table.*;
+import echopointng.table.DefaultPageableSortableTableModel;
+import echopointng.table.DefaultSortableTableModel;
+import echopointng.table.PageableSortableTable;
+import echopointng.table.SortableTableColumn;
+import echopointng.table.SortableTableHeaderRenderer;
 
 public class MessageTable extends PageableSortableTable implements PageIndexChangeListener {
 	private static final int DEFAULT_ROWS_PER_PAGE = 20;

@@ -28,11 +28,19 @@
  */
 package com.dexels.navajo.echoclient.components;
 
-import nextapp.echo2.app.*;
-import nextapp.echo2.app.event.*;
-import nextapp.echo2.app.layout.*;
-import nextapp.echo2.app.table.*;
-import echopointng.table.*;
+import nextapp.echo2.app.Button;
+import nextapp.echo2.app.Component;
+import nextapp.echo2.app.Extent;
+import nextapp.echo2.app.ImageReference;
+import nextapp.echo2.app.LayoutData;
+import nextapp.echo2.app.ResourceImageReference;
+import nextapp.echo2.app.Table;
+import nextapp.echo2.app.event.ActionEvent;
+import nextapp.echo2.app.event.ActionListener;
+import nextapp.echo2.app.layout.TableLayoutData;
+import nextapp.echo2.app.table.TableCellRenderer;
+import echopointng.table.DefaultSortableTableModel;
+import echopointng.table.SortableTableModel;
 
 /**
  * Default renderer for <code>SortableTableModel</code> backed Tables.

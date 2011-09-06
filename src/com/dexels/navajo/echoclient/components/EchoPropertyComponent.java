@@ -1,25 +1,68 @@
 package com.dexels.navajo.echoclient.components;
 
-import java.beans.*;
-import java.io.*;
-import java.text.*;
-import java.util.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.StringWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.TooManyListenersException;
 
-import nextapp.echo2.app.*;
-import nextapp.echo2.app.event.*;
-import nextapp.echo2.app.filetransfer.*;
-import nextapp.echo2.app.layout.*;
-import nextapp.echo2.app.list.*;
-import nextapp.echo2.app.table.*;
-import nextapp.echo2.app.text.*;
+import nextapp.echo2.app.Alignment;
+import nextapp.echo2.app.Button;
+import nextapp.echo2.app.CheckBox;
+import nextapp.echo2.app.Color;
+import nextapp.echo2.app.Column;
+import nextapp.echo2.app.Component;
+import nextapp.echo2.app.Extent;
+import nextapp.echo2.app.Grid;
+import nextapp.echo2.app.Insets;
+import nextapp.echo2.app.Label;
+import nextapp.echo2.app.LayoutData;
+import nextapp.echo2.app.PasswordField;
+import nextapp.echo2.app.RadioButton;
+import nextapp.echo2.app.Style;
+import nextapp.echo2.app.Table;
+import nextapp.echo2.app.TextArea;
+import nextapp.echo2.app.event.ActionEvent;
+import nextapp.echo2.app.event.ActionListener;
+import nextapp.echo2.app.event.ChangeEvent;
+import nextapp.echo2.app.event.ChangeListener;
+import nextapp.echo2.app.event.DocumentEvent;
+import nextapp.echo2.app.event.DocumentListener;
+import nextapp.echo2.app.filetransfer.UploadEvent;
+import nextapp.echo2.app.filetransfer.UploadListener;
+import nextapp.echo2.app.filetransfer.UploadSelect;
+import nextapp.echo2.app.layout.ColumnLayoutData;
+import nextapp.echo2.app.layout.GridLayoutData;
+import nextapp.echo2.app.list.ListSelectionModel;
+import nextapp.echo2.app.table.TableCellRenderer;
+import nextapp.echo2.app.text.StringDocument;
+import nextapp.echo2.app.text.TextComponent;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.base.*;
-import com.dexels.navajo.document.types.*;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.document.base.BasePropertyImpl;
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.document.types.ClockTime;
+import com.dexels.navajo.document.types.Money;
+import com.dexels.navajo.document.types.Percentage;
+import com.dexels.navajo.document.types.StopwatchTime;
 
-import echopointng.*;
-import echopointng.able.*;
-import echopointng.table.*;
+import echopointng.DateField;
+import echopointng.LabelEx;
+import echopointng.ListBoxEx;
+import echopointng.SelectFieldEx;
+import echopointng.able.Sizeable;
+import echopointng.table.DefaultPageableSortableTableModel;
 
 public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 

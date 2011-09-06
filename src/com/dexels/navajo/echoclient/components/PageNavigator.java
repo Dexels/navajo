@@ -29,13 +29,18 @@
 
 package com.dexels.navajo.echoclient.components;
 
-import java.io.*;
-import java.util.*;
+import java.io.Serializable;
+import java.util.EventListener;
+import java.util.EventObject;
 
-import nextapp.echo2.app.*;
-import nextapp.echo2.app.event.*;
+import nextapp.echo2.app.Button;
+import nextapp.echo2.app.Extent;
+import nextapp.echo2.app.Label;
+import nextapp.echo2.app.Row;
+import nextapp.echo2.app.event.ActionEvent;
+import nextapp.echo2.app.event.ActionListener;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.NavajoException;
 
 /**
  * A component which provides navigation between pages.

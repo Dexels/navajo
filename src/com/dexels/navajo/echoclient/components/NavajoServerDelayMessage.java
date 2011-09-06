@@ -6,14 +6,21 @@
  */
 package com.dexels.navajo.echoclient.components;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
-import nextapp.echo2.app.util.*;
-import nextapp.echo2.webcontainer.*;
-import nextapp.echo2.webrender.*;
-import nextapp.echo2.webrender.output.*;
+import nextapp.echo2.app.util.Uid;
+import nextapp.echo2.webcontainer.ContainerContext;
+import nextapp.echo2.webrender.Connection;
+import nextapp.echo2.webrender.ContentType;
+import nextapp.echo2.webrender.ServerDelayMessage;
+import nextapp.echo2.webrender.Service;
+import nextapp.echo2.webrender.WebRenderServlet;
+import nextapp.echo2.webrender.output.XmlDocument;
 
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 public class NavajoServerDelayMessage extends ServerDelayMessage {
 

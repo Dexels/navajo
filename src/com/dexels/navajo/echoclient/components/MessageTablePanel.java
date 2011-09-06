@@ -1,13 +1,18 @@
 package com.dexels.navajo.echoclient.components;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
-import nextapp.echo2.app.*;
-import nextapp.echo2.app.event.*;
-import nextapp.echo2.extras.app.*;
+import nextapp.echo2.app.Extent;
+import nextapp.echo2.app.SplitPane;
+import nextapp.echo2.app.Style;
+import nextapp.echo2.app.event.ActionListener;
+import nextapp.echo2.extras.app.TransitionPane;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.echoclient.components.PageNavigator.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.echoclient.components.PageNavigator.PageIndexChangeEvent;
+import com.dexels.navajo.echoclient.components.PageNavigator.PageIndexChangeListener;
 
 public class MessageTablePanel extends SplitPane {
 	private PageNavigator pageNavigator;

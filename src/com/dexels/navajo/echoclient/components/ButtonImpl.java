@@ -6,7 +6,9 @@
  */
 package com.dexels.navajo.echoclient.components;
 
-import nextapp.echo2.app.*;
+import nextapp.echo2.app.Button;
+import nextapp.echo2.app.ImageReference;
+import nextapp.echo2.app.Style;
 
 public class ButtonImpl extends Button {
 
