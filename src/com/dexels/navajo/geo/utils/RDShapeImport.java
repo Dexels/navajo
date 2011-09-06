@@ -3,7 +3,6 @@ package com.dexels.navajo.geo.utils;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.sql.Date;
 import java.util.ArrayList;
 
 import com.bbn.openmap.dataAccess.shape.DbfFile;
@@ -46,10 +45,6 @@ public class RDShapeImport {
 		try {
 			ESRIRecord record = null;
 			int count = 0;
-			int total = db.getRowCount();
-			
-			long start = System.currentTimeMillis();
-			
 //			File csv = new File("c:/gemeente.csv");
 //			BufferedWriter fw = new BufferedWriter(new FileWriter(csv));
 			
@@ -57,7 +52,7 @@ public class RDShapeImport {
 				// Record numbers??
 				ArrayList data = (ArrayList) db.getRecord(record.getRecordNumber()-1);
 								
-				Object val = db.getValueAt(count, 0);
+				db.getValueAt(count, 0);
 				count++;
 				String id = (String)data.get(0);
 
@@ -94,16 +89,7 @@ public class RDShapeImport {
 						}						
 					}
 					
-					long now = System.currentTimeMillis();
-					long records_time = now - start;
 					
-					double avg_record_time = records_time / (count+1);
-					int remaining = total - count + 1;
-					int remaining_time = (int)(remaining * avg_record_time);					
-					long target = now + remaining_time;
-					
-					Date eta = new Date(target);					
-					System.err.println("---> Finished record: " + count + "/" + total + ", ETA: " + eta.toGMTString());
 				}	
 				fw.flush();
 				fw.close();
@@ -183,20 +169,6 @@ public class RDShapeImport {
 		}
 	}
 
-	private void storePolygonPoints(String shapeId, int polygonId, double lat, double lon) {
-		try{
-			Message params = NavajoClientFactory.getClient().doSimpleSend("geospatial/InitInsertCBSPolyPoint", "Parameters");
-			if(params != null){
-				params.getProperty("ShapeId").setValue(shapeId);
-				params.getProperty("PolygonId").setValue(polygonId);
-				params.getProperty("Lon").setValue(lon);
-				params.getProperty("Lat").setValue(lat);
-				NavajoClientFactory.getClient().doSimpleSend(params.getRootDoc(), "geospatial/ProcessInsertCBSPolyPoint");
-			}
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-	}
 
 	public static void main(String[] args) {
 		RDShapeImport rdsi = new RDShapeImport("c:/cbs/brt_2010_gn1");

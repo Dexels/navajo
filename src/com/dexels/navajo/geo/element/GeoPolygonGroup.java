@@ -21,7 +21,6 @@ public class GeoPolygonGroup extends GeoElement {
 	Map<GeoPolygon, Set<GeoPoint>> ownershipMap = new HashMap<GeoPolygon, Set<GeoPoint>>();
 	Map<GeoPoint, Set<GeoPolygon>> invOwnershipMap = new HashMap<GeoPoint, Set<GeoPolygon>>();
 
-	private int joinSequence = 0;
 	private int reverseStack = 0;
 
 	public GeoPolygonGroup(List<GeoPolygon> a, String name) throws GeoException {
@@ -34,11 +33,9 @@ public class GeoPolygonGroup extends GeoElement {
 		XMLElement template = new CaseSensitiveXMLElement();
 		template.parseFromStream(getClass().getResourceAsStream("template.kml"));
 		XMLElement doc = template.getElementByTagName("Document");
-		int count = 0;
 		for (GeoPolygon g : myPolygons) {
 			XMLElement x = g.createPlaceMark();
 			doc.addChild(x);
-			count++;
 		}
 		return template;
 	}
@@ -143,16 +140,13 @@ public class GeoPolygonGroup extends GeoElement {
 	}
 
 	private List<GeoPolygon> createOutlinePoly() throws GeoException {
-		int changeCount = 0;
 		// dumpMe("debu_baInit.kml");
 		List<GeoPolygon> polys = new LinkedList<GeoPolygon>(myPolygons);
 		boolean complete = false;
 		System.err.println("# of poly's: " + polys.size());
 		while (!complete) {
 			try {
-				int outer = 0;
 				for (GeoPolygon g : polys) {
-					int inner = 0;
 					for (GeoPolygon h : polys) {
 						if (g != h) {
 							// System.err.println("Checking: "+inner+"/"+outer);
@@ -161,7 +155,6 @@ public class GeoPolygonGroup extends GeoElement {
 								polys.remove(g);
 								// dumpMe("debu_ba"+changeCount+".kml");
 
-								changeCount++;
 								throw new GeoChangeException("joined  poly. Remaining: " + polys.size());
 							}
 							boolean shared = g.hasSharedPoints(h);
@@ -192,16 +185,13 @@ public class GeoPolygonGroup extends GeoElement {
 								System.err.println("RESULT CLOCKWISITY: " + resultClockwise);
 								polys.remove(g);
 								polys.remove(h);
-								changeCount++;
 								throw new GeoChangeException("joined  poly. Remaining: " + polys.size());
 							}
 						}
-						inner++;
 					}
 
 					// polyCount++;
 
-					outer++;
 
 				}
 				complete = true;
@@ -285,7 +275,6 @@ public class GeoPolygonGroup extends GeoElement {
 				return null;
 			}
 			
-			joinSequence++;
 
 			reverseStack--;
 			return join;

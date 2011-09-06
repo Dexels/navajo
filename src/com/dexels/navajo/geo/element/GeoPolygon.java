@@ -163,7 +163,6 @@ public class GeoPolygon extends GeoElement {
 
 	public List<XMLElement> createPlaceMarkList() {
 		List<XMLElement> result = new ArrayList<XMLElement>();
-		int index = 0;
 		result.add(createElement());
 		System.err.println("Creating debug. stating points: " + myStartPoints.size());
 		for (GeoPoint g : myStartPoints) {
@@ -171,7 +170,6 @@ public class GeoPolygon extends GeoElement {
 
 			XMLElement xx = gg.createPlaceMark();
 			result.add(xx);
-			index++;
 		}
 		result.add(createPlaceMark());
 
