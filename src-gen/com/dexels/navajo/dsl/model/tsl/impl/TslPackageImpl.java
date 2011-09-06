@@ -6,8 +6,13 @@
  */
 package com.dexels.navajo.dsl.model.tsl.impl;
 
-import com.dexels.navajo.dsl.model.expression.ExpressionPackage;
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.impl.EPackageImpl;
 
+import com.dexels.navajo.dsl.model.expression.ExpressionPackage;
 import com.dexels.navajo.dsl.model.tsl.Break;
 import com.dexels.navajo.dsl.model.tsl.Check;
 import com.dexels.navajo.dsl.model.tsl.Comment;
@@ -28,14 +33,7 @@ import com.dexels.navajo.dsl.model.tsl.Required;
 import com.dexels.navajo.dsl.model.tsl.Tml;
 import com.dexels.navajo.dsl.model.tsl.TslFactory;
 import com.dexels.navajo.dsl.model.tsl.TslPackage;
-
 import com.dexels.navajo.dsl.model.tsl.Validations;
-import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EReference;
-
-import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
  * <!-- begin-user-doc -->

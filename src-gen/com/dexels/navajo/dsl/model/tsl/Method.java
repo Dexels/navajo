@@ -6,7 +6,6 @@
  */
 package com.dexels.navajo.dsl.model.tsl;
 
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->

@@ -6,15 +6,33 @@
  */
 package com.dexels.navajo.dsl.model.tsl.impl;
 
-import com.dexels.navajo.dsl.model.tsl.*;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
+
+import com.dexels.navajo.dsl.model.tsl.Break;
+import com.dexels.navajo.dsl.model.tsl.Check;
+import com.dexels.navajo.dsl.model.tsl.Comment;
+import com.dexels.navajo.dsl.model.tsl.DebugTag;
+import com.dexels.navajo.dsl.model.tsl.Element;
+import com.dexels.navajo.dsl.model.tsl.ExpressionTag;
+import com.dexels.navajo.dsl.model.tsl.Field;
+import com.dexels.navajo.dsl.model.tsl.Map;
+import com.dexels.navajo.dsl.model.tsl.MapMethod;
+import com.dexels.navajo.dsl.model.tsl.Message;
+import com.dexels.navajo.dsl.model.tsl.Method;
+import com.dexels.navajo.dsl.model.tsl.Methods;
+import com.dexels.navajo.dsl.model.tsl.Option;
+import com.dexels.navajo.dsl.model.tsl.Param;
+import com.dexels.navajo.dsl.model.tsl.PossibleExpression;
+import com.dexels.navajo.dsl.model.tsl.Property;
+import com.dexels.navajo.dsl.model.tsl.Required;
+import com.dexels.navajo.dsl.model.tsl.Tml;
+import com.dexels.navajo.dsl.model.tsl.TslFactory;
+import com.dexels.navajo.dsl.model.tsl.TslPackage;
+import com.dexels.navajo.dsl.model.tsl.Validations;
 
 /**
  * <!-- begin-user-doc -->

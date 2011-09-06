@@ -6,24 +6,18 @@
  */
 package com.dexels.navajo.dsl.model.tsl.impl;
 
-import com.dexels.navajo.dsl.model.tsl.Methods;
-import com.dexels.navajo.dsl.model.tsl.PossibleExpression;
-import com.dexels.navajo.dsl.model.tsl.Tml;
-import com.dexels.navajo.dsl.model.tsl.TslPackage;
-
-import org.eclipse.emf.common.notify.Notification;
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+
+import com.dexels.navajo.dsl.model.tsl.Methods;
+import com.dexels.navajo.dsl.model.tsl.Tml;
+import com.dexels.navajo.dsl.model.tsl.TslPackage;
 
 /**
  * <!-- begin-user-doc -->

@@ -6,7 +6,6 @@
  */
 package com.dexels.navajo.dsl.model.tsl;
 
-import org.eclipse.emf.common.util.EList;
 
 /**
  * <!-- begin-user-doc -->

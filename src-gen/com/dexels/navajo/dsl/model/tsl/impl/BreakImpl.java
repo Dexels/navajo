@@ -6,10 +6,10 @@
  */
 package com.dexels.navajo.dsl.model.tsl.impl;
 
+import org.eclipse.emf.ecore.EClass;
+
 import com.dexels.navajo.dsl.model.tsl.Break;
 import com.dexels.navajo.dsl.model.tsl.TslPackage;
-
-import org.eclipse.emf.ecore.EClass;
 
 /**
  * <!-- begin-user-doc -->
