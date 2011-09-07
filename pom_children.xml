@@ -9,9 +9,9 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>../NavajoTipi</module>
 		<module>../NavajoSwingTipi</module>
 		<module>../TipiSwingClient</module>
 		<module>../com.dexels.navajo.tipi.swing.deps</module>
+		<module>../com.dexels.navajo.tipi.swing.application</module>
 	</modules>
 </project>
