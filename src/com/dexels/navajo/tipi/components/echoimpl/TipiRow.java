@@ -4,7 +4,8 @@ import nextapp.echo2.app.Component;
 import nextapp.echo2.app.Row;
 
 public class TipiRow extends TipiEchoDataComponentImpl {
-    private Row myRow;
+	private static final long serialVersionUID = -408069195341249869L;
+	private Row myRow;
 
     public Object createContainer() {
         myRow = new Row();

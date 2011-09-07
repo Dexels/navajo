@@ -76,7 +76,7 @@ public class ResolveAttatchments extends FunctionInterface {
 			return result;
 		}
 		
-		fixImageTags(doc, new ArrayList(), expression);
+		fixImageTags(doc, new ArrayList<Element>(), expression);
 
 		StringWriter sw = new StringWriter();
 		try {
@@ -98,7 +98,7 @@ public class ResolveAttatchments extends FunctionInterface {
 	}
 
 	
-	public  void fixImageTags(Node n, List imageTagList, String expression) {
+	public  void fixImageTags(Node n, List<Element> imageTagList, String expression) {
 		// System.err.println("Checking image tag: "+n.getNodeName());
 		// System.err.println("Checking image type: "+n.getNodeType());
 		// System.err.println("Checking image value: "+n.getNodeValue());

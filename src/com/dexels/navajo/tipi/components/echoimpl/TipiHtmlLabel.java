@@ -25,6 +25,7 @@ import echopointng.template.StringTemplateDataSource;
  */
 
 public class TipiHtmlLabel extends TipiEchoComponentImpl {
+	private static final long serialVersionUID = -8653909694723257928L;
 	private TemplatePanel templatePanel = null;
 
 	public TipiHtmlLabel() {
@@ -66,19 +67,6 @@ public class TipiHtmlLabel extends TipiEchoComponentImpl {
         super.setComponentValue(name, object);
     }
 
-	private String stripBody(String s) {
-		int startIndex = s.indexOf("<body");
-		if (startIndex != -1) {
-			startIndex = s.indexOf(">", startIndex + ("<body".length()));
-		}
-		s = s.substring(startIndex + 1);
-		int endIndex = s.indexOf("</body>");
-		s = s.substring(0, endIndex);
-		System.err.println("Result: " + s);
-
-		// return "<h3>aap</h3><br/> bla bla bla <br/>";
-		return s;
-	}
 
 	private void setText(String bare) {
 		String emb = "<div xmlns='http://www.w3.org/1999/xhtml'>" + bare + "</div>";

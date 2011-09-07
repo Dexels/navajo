@@ -22,7 +22,8 @@ import echopointng.GroupBox;
 
 public class TipiTitlePanel extends TipiPanel {
 
-    private GroupBox myContainer;
+	private static final long serialVersionUID = 7825287651695595489L;
+	private GroupBox myContainer;
 
 	public TipiTitlePanel() {
     }

@@ -22,6 +22,8 @@ import echopointng.template.StringTemplateDataSource;
  */
 
 public class TipiBrowser extends TipiEchoComponentImpl {
+
+	private static final long serialVersionUID = -2100965334468724226L;
 	private TemplatePanel templatePanel = null;
 
 	public TipiBrowser() {

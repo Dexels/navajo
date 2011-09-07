@@ -8,7 +8,9 @@ import com.dexels.navajo.tipi.components.core.TipiLayoutImpl;
 
 public class TipiFlowLayout extends TipiLayoutImpl {
 
-    public void createLayout() throws TipiException {
+	private static final long serialVersionUID = 5911721063631611697L;
+
+	public void createLayout() throws TipiException {
         // myComponent.setContainerLayout(new Row());
         setLayout(new Row());
     }

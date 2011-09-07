@@ -22,10 +22,12 @@ import com.dexels.navajo.tipi.components.question.TipiBaseQuestionGroup;
  * 
  * @author not attributable
  * @version 1.0
+ * @deprecated
  */
 
 public class TipiQuestionGroup extends TipiBaseQuestionGroup {
-    private Column myColumn;
+	private static final long serialVersionUID = -1163029880650425912L;
+	private Column myColumn;
 
     public Object createContainer() {
         myColumn = new Column();

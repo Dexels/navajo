@@ -16,11 +16,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 
 public class TipiInjectEmail extends TipiAction {
 
-	// navajo
-	// name
-	// URL template
-	
-	
+	private static final long serialVersionUID = -4545529880859492751L;
+
+
+
+
 	protected void execute(TipiEvent event) throws TipiBreakException, TipiException {
 		Navajo input = (Navajo) getEvaluatedParameter("navajo", event);
 		Navajo inputCopy = input.copy();

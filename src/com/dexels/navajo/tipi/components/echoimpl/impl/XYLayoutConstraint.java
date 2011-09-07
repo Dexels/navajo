@@ -3,7 +3,9 @@ package com.dexels.navajo.tipi.components.echoimpl.impl;
 import nextapp.echo2.app.LayoutData;
 
 public class XYLayoutConstraint implements LayoutData {
-    private final int x, y, w, h;
+
+	private static final long serialVersionUID = 7384374383237445877L;
+	private final int x, y, w, h;
 
     public XYLayoutConstraint(int x, int y, int w, int h) {
         this.x = x;

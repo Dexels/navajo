@@ -5,7 +5,9 @@ import nextapp.echo2.extras.app.AccordionPane;
 import nextapp.echo2.extras.app.layout.AccordionPaneLayoutData;
 
 public class TipiAccordionPane extends TipiEchoDataComponentImpl {
-    private AccordionPane myAccordionPane;
+
+	private static final long serialVersionUID = 1490588147131707952L;
+	private AccordionPane myAccordionPane;
 
     public Object createContainer() {
         myAccordionPane = new AccordionPane();

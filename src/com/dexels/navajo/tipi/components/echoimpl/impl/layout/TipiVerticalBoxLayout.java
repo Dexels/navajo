@@ -16,7 +16,7 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  */
 public class TipiVerticalBoxLayout
     extends TipiLayoutImpl {
-  private XMLElement myDefinition = null;
+	private static final long serialVersionUID = -3685527434986678220L;
   private EchoVerticalBoxLayoutImpl echoVerticalBx;
  
   public TipiVerticalBoxLayout() {
@@ -31,7 +31,6 @@ public class TipiVerticalBoxLayout
  
   
   public void loadLayout(XMLElement def, TipiComponent t) throws TipiException {
-	// TODO Auto-generated method stub
 	super.loadLayout(def, t);
 }
 

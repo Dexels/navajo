@@ -4,7 +4,9 @@ import nextapp.echo2.app.Column;
 import nextapp.echo2.app.Component;
 
 public class TipiColumn extends TipiEchoDataComponentImpl {
-    private Column myColumn;
+
+	private static final long serialVersionUID = -7956286824574976318L;
+	private Column myColumn;
 
     public Object createContainer() {
         myColumn = new Column();

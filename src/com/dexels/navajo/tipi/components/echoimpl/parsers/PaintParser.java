@@ -25,7 +25,9 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class PaintParser extends TipiTypeParser {
-    public Object parse(TipiComponent source, String expression, TipiEvent event) {
+	private static final long serialVersionUID = -1284609774746721655L;
+
+	public Object parse(TipiComponent source, String expression, TipiEvent event) {
         return new Color(255,255,255);
     }
 }

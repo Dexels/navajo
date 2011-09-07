@@ -2,7 +2,6 @@ package com.dexels.navajo.tipi.components.echoimpl.tipimegatable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -47,27 +46,11 @@ public class TipiTableLayer extends TipiTableBaseLayer {
 
     private final Map myTypeMap = new HashMap();
 
-    private String remarkBorder = null;
-
-    private boolean columnsButtonVisible = false;
-
-    private boolean filtersVisible = false;
-
-    private boolean useScrollBars = true;
-
-    private boolean headerVisible = true;
-
-    private boolean readOnly = true;
-
-    private boolean sortable = true;
-
-    private int rowHeight = 16;
 
     private final Map aggregateMap = new HashMap();
 
     private final Map columnDividers = new HashMap();
 
-    private final ArrayList conditionalRemarks = new ArrayList();
 
     public TipiTableLayer(TipiMegaTable tmt) {
         super(tmt);
@@ -81,13 +64,12 @@ public class TipiTableLayer extends TipiTableBaseLayer {
         columnTypes.clear();
         myTypeMap.clear();
         // flushAggregateValues();
-        columnsButtonVisible = elt.getBooleanAttribute("columnsButtonVisible", "true", "false", false);
-        filtersVisible = elt.getBooleanAttribute("filtersVisible", "true", "false", false);
-        useScrollBars = elt.getBooleanAttribute("useScrollBars", "true", "false", true);
-        headerVisible = elt.getBooleanAttribute("headerVisible", "true", "false", true);
-        sortable = elt.getBooleanAttribute("sortable", "true", "false", true);
-
-        readOnly = elt.getBooleanAttribute("readOnly", "true", "false", false);
+//        columnsButtonVisible = elt.getBooleanAttribute("columnsButtonVisible", "true", "false", false);
+//        filtersVisible = elt.getBooleanAttribute("filtersVisible", "true", "false", false);
+//        useScrollBars = elt.getBooleanAttribute("useScrollBars", "true", "false", true);
+//        headerVisible = elt.getBooleanAttribute("headerVisible", "true", "false", true);
+//        sortable = elt.getBooleanAttribute("sortable", "true", "false", true);
+//        readOnly = elt.getBooleanAttribute("readOnly", "true", "false", false);
         List<XMLElement> children = elt.getChildren();
         for (int i = 0; i < children.size(); i++) {
             XMLElement child = children.get(i);
@@ -175,14 +157,14 @@ public class TipiTableLayer extends TipiTableBaseLayer {
         currentPanel.add(mtp);
         // mtp.setFooterRenderer(myFooterRenderer);
         // setupTable(mtp);
-        int i = 0;
-        for (Iterator iter = columnTypes.iterator(); iter.hasNext();) {
-            String item = (String) iter.next();
+//        int i = 0;
+//        for (Iterator iter = columnTypes.iterator(); iter.hasNext();) {
+//            String item = (String) iter.next();
             // mtp.setTypeHint( (String) columnName.get(i), item);
             // System.err.println("Setting type hint: " + (String)
             // columnName.get(i) + " - " + item);
-            i++;
-        }
+//            i++;
+//        }
         // final RemarkPanel remarkPanel = createRemarkPanel(inbetweenPanel,
         // current, mtp);
         // myTable.addTableInstance(mtp, myFooterRenderer, remarkPanel, this);
@@ -193,7 +175,9 @@ public class TipiTableLayer extends TipiTableBaseLayer {
         // aggregateMap.get(item));
         // }
         mtp.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+			private static final long serialVersionUID = -907926333909134624L;
+
+			public void actionPerformed(ActionEvent e) {
                 Map m = new HashMap();
                 m.put("table", mtp);
                 m.put("selected", mtp.getSelectedMessage());

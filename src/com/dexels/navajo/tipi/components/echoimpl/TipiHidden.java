@@ -22,7 +22,10 @@ import echopointng.LabelEx;
  */
 
 public class TipiHidden extends TipiEchoComponentImpl {
-    public TipiHidden() {
+
+	private static final long serialVersionUID = 5400920173404016751L;
+
+	public TipiHidden() {
     }
 
     public Object createContainer() {
@@ -34,8 +37,6 @@ public class TipiHidden extends TipiEchoComponentImpl {
     }
 
     protected void setComponentValue(String name, Object object) {
-        Label b = (Label) getContainer();
-      
         super.setComponentValue(name, object);
     }
 

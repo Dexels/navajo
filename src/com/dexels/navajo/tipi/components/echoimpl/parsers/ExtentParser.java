@@ -24,7 +24,10 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class ExtentParser extends TipiTypeParser {
-    public Object parse(TipiComponent source, String expression, TipiEvent event) {
+
+	private static final long serialVersionUID = -6805791781228083175L;
+
+	public Object parse(TipiComponent source, String expression, TipiEvent event) {
         return parseExtent(expression);
     }
 
@@ -72,7 +75,6 @@ public class ExtentParser extends TipiTypeParser {
 
     private static Extent parsePixels(String s) {
         int px = Integer.parseInt(s);
-        // TODO Auto-generated method stub
         return new Extent(px, Extent.PX);
     }
 

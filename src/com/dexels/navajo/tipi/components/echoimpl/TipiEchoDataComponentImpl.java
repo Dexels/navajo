@@ -36,7 +36,8 @@ import echopointng.able.Borderable;
 
 public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
 
-    // protected TipiLayout layout = null;
+	private static final long serialVersionUID = 7667250219752801160L;
+	// protected TipiLayout layout = null;
     protected EchoLayoutImpl layoutComponent;
 
     public TipiEchoDataComponentImpl() {
@@ -88,7 +89,7 @@ public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
 		        	layoutComponent.addChildComponent(child, constraints);
 		        } else {
 		            if (child instanceof WindowPane) {
-		                TipiScreen s = (TipiScreen) getContext().getDefaultTopLevel();
+//		                TipiScreen s = (TipiScreen) getContext().getDefaultTopLevel();
 		                cc.add(child);
 		            } else {
 		                cc.add(child);

@@ -2,9 +2,6 @@ package com.dexels.navajo.tipi.components.echoimpl;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.ContentPane;
@@ -40,17 +37,9 @@ import com.dexels.navajo.tipi.components.echoimpl.helpers.EchoTipiHelper;
  * @version 1.0
  */
 public class TipiTabsExtra extends TipiEchoDataComponentImpl {
-    private ArrayList tipiList = new ArrayList();
-
-    private ArrayList methodList = new ArrayList();
-
-    private Map tipiMap = new HashMap();
-
-    private TipiComponent selectedComponent = null;
+	private static final long serialVersionUID = -4745609817544745245L;
 
     private Component lastSelectedTab = null;
-
-//    private DefaultTabModel defaultTabModel = null;
 
     private TabPane myTabbedPane;
 
@@ -76,7 +65,6 @@ public class TipiTabsExtra extends TipiEchoDataComponentImpl {
 					try {
 						me.performTipiEvent("onTabChanged", null, false);
 					} catch (TipiException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 //                lastSelectedTab = jt.getSelectedComponent();
@@ -143,7 +131,6 @@ public class TipiTabsExtra extends TipiEchoDataComponentImpl {
             return new Integer(myTabbedPane.getActiveTabIndex());
         }
         if (name.equals("lastselectedindex")) {
-            TipiComponent tc = getChildByContainer(lastSelectedTab);
             return new Integer(getIndexOfTab(lastSelectedTab));
         }
 

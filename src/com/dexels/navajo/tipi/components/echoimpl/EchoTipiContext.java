@@ -3,8 +3,6 @@ package com.dexels.navajo.tipi.components.echoimpl;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -49,8 +47,9 @@ import echopointng.command.JavaScriptEval;
  */
 
 public class EchoTipiContext extends TipiContext {
-//    private ApplicationInstance myServerContext;
-    private static int instanceCount = 0;
+	private static final long serialVersionUID = -958549676651346217L;
+
+	//    private ApplicationInstance myServerContext;
     
     private int zIndexCounter = 0;
 
@@ -60,10 +59,6 @@ public class EchoTipiContext extends TipiContext {
     private final TipiEchoInstance myInstance;
     public EchoTipiContext(TipiEchoInstance t, EchoTipiContext parentContext) {
      	super(t, parentContext);
-//   	 if(1==1) {
-//      	 throw new RuntimeException("Echo implementation broken, refactor TipiEchoInstance");
-//   	 }
-    	instanceCount++;
     	myInstance = t;
 		ContainerContext context =(ContainerContext) t.getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
     	Map parameterMap =  context.getInitialRequestParameterMap();
@@ -108,7 +103,6 @@ public class EchoTipiContext extends TipiContext {
 
    
     public void finalize() {
-    	instanceCount--;
     	 Window w = (Window) getTopLevel();
     	 w.dispose();
     }
@@ -268,8 +262,6 @@ public class EchoTipiContext extends TipiContext {
     }
 
     public File getDynamicResourceBaseDir() {
-        Connection con = WebRenderServlet.getActiveConnection();
-        String contextname = con.getRequest().getContextPath();
         String pathString = "/dynamic";
         String realPath = getServletContext().getRealPath(pathString);
 		File ff = new File(realPath);
@@ -279,12 +271,6 @@ public class EchoTipiContext extends TipiContext {
         return ff;
     }
 
-    public void debugLog(String category, String event) {
-     
-        long stamp = System.currentTimeMillis()-startTime;
-        SimpleDateFormat inputFormat1 = new SimpleDateFormat("HH:mm:ss S");
-        Date d = new Date(stamp);
-      }
     public ServletContext getServletContext() {
  
         ApplicationInstance app = ApplicationInstance.getActive();

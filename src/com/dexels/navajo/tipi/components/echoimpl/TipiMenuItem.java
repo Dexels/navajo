@@ -25,7 +25,11 @@ import echopointng.image.URLImageReference;
  */
 
 public class TipiMenuItem extends TipiEchoComponentImpl {
-    public TipiMenuItem() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 9163793783532263272L;
+	public TipiMenuItem() {
     }
 
     public Object createContainer() {

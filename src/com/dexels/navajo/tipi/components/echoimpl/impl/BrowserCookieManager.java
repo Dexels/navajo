@@ -19,7 +19,6 @@ public class BrowserCookieManager implements CookieManager {
 		return cc;
 	}
 
-	// TODO refactor into cookiemanager
 	public void setCookie(String name, String value) {
 		Cookie cc = getBrowserCookie(name);
 		if (cc == null) {
@@ -30,7 +29,6 @@ public class BrowserCookieManager implements CookieManager {
 		ApplicationInstance.getActive().enqueueCommand(bs);
 	}
 	
-	// TODO refactor into cookiemanager
 	public Cookie getBrowserCookie(String s) {
 		ContainerContext containerContext = (ContainerContext) ApplicationInstance.getActive().getContextProperty(
 				ContainerContext.CONTEXT_PROPERTY_NAME);
@@ -63,9 +61,8 @@ public class BrowserCookieManager implements CookieManager {
 	}
 
 	public void deleteCookies() throws IOException {
-		ContainerContext containerContext = (ContainerContext) ApplicationInstance.getActive().getContextProperty(
-				ContainerContext.CONTEXT_PROPERTY_NAME);
-		Cookie[] cc = containerContext.getCookies();
+//		ContainerContext containerContext = (ContainerContext) ApplicationInstance.getActive().getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
+//		Cookie[] cc = containerContext.getCookies();
 		System.err.println("Warning: Echo cookie deletion not implemented");
 	}
 

@@ -44,7 +44,9 @@ import echopointng.able.Sizeable;
 
 public class TipiGridPanel extends TipiEchoDataComponentImpl {
 
-    private Grid gridComponent;
+	private static final long serialVersionUID = -3352759730817458879L;
+
+	private Grid gridComponent;
 
      private GroupBox myContainer;
     // private GroupBox myBox;
@@ -246,7 +248,6 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
         
         if ("border".equals(name)) {
           	System.err.println("SET_BORDER_GRIDPANEL: "+object);
-            Component parent = gridComponent.getParent();
             if(object instanceof String) {
                 myContainer.setTitleLabel(new Label(""+object));
                 myContainer.setBorder(myBorder);
@@ -304,7 +305,6 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
     }
 
     private void setFixed(int count) {
-        // TODO Auto-generated method stub
         // whaever
     }
 

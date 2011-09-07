@@ -132,11 +132,6 @@ public class CreateEchoMailUrl extends FunctionInterface {
 
 
 
-
-	private String createUrl(String templateUrl, String text) {
-		return templateUrl.replaceAll("__REPLACE__", text);
-	}
-
 	
 	private int getPartIndexOfAttach(String attach) {
 		try {

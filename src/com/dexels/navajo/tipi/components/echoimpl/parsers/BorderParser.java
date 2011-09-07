@@ -27,7 +27,9 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class BorderParser extends TipiTypeParser {
-    public Object parse(TipiComponent source, String expression, TipiEvent event) {
+	private static final long serialVersionUID = -1017113073986344337L;
+
+	public Object parse(TipiComponent source, String expression, TipiEvent event) {
         return parseBorder(expression);
     }
 //    private Object parseBorder(String s) {

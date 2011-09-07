@@ -23,7 +23,10 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 
 public class TipiEchoExit extends TipiAction {
-    public TipiEchoExit() {
+
+	private static final long serialVersionUID = 3291088681688700176L;
+
+	public TipiEchoExit() {
     }
 
     public void execute(TipiEvent e) {

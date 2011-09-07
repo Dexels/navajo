@@ -10,6 +10,8 @@ import com.dexels.navajo.tipi.components.echoimpl.embed.TipiEchoStandaloneToplev
 
 public class TipiEchoEmbedComponent extends TipiEmbedComponent {
 
+
+	private static final long serialVersionUID = -588381253551933691L;
 	private TipiEchoStandaloneToplevel tet;
 
 	public TipiEchoEmbedComponent() {
@@ -28,17 +30,13 @@ public class TipiEchoEmbedComponent extends TipiEmbedComponent {
 	public void setComponentValue(String name, Object value) {
 
 		if (name.equals("tipiCodeBase")) {
-			// try {
-			String tipiCodeBase = (String) value;
+//			String tipiCodeBase = (String) value;
 			stc.getContext().setTipiResourceLoader(getContext().getTipiResourceLoader());
 			return;
-			// } catch (MalformedURLException e) {
-			// e.printStackTrace();
-			// }
 		}
 		if (name.equals("resourceCodeBase")) {
 			// try {
-			String resourceCodeBase = (String) value;
+//			String resourceCodeBase = (String) value;
 			stc.getContext().setGenericResourceLoader(getContext().getGenericResourceLoader());
 			return;
 			// } catch (MalformedURLException e) {
@@ -53,7 +51,7 @@ public class TipiEchoEmbedComponent extends TipiEmbedComponent {
 		System.err.println("Switching to def: " + nameVal);
 		try {
 			stc.getContext().switchToDefinition(nameVal);
-			Component topLevel = (Component) stc.getContext().getTopLevel();
+//			Component topLevel = (Component) stc.getContext().getTopLevel();
 		} catch (TipiException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

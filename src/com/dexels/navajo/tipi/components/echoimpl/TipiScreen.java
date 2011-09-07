@@ -26,7 +26,7 @@ import com.dexels.navajo.tipi.TipiContext;
  */
  
 public class TipiScreen extends TipiEchoDataComponentImpl {
-    // private Map componentMap = new HashMap();
+	private static final long serialVersionUID = -7390275807974040579L;
     public TipiScreen() {
         setId("init");
     }

@@ -33,7 +33,9 @@ import echopointng.image.URLImageReference;
  */
 
 public class TipiButton extends TipiEchoComponentImpl {
-    private Button myButton;
+  
+	private static final long serialVersionUID = -4423443422594659998L;
+	private Button myButton;
 
     public TipiButton() {
     }
@@ -44,11 +46,12 @@ public class TipiButton extends TipiEchoComponentImpl {
 //        myButton.setTextAlignment(new Alignment(Alignment.CENTER, Alignment.DEFAULT));
 //        myButton.setAlignment(new Alignment(Alignment.CENTER, Alignment.DEFAULT));
         myButton.addActionListener(new ActionListener(){
+			private static final long serialVersionUID = 9170319735538270910L;
+
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					performTipiEvent("onActionPerformed",null, false);
 				} catch (TipiException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}});

@@ -13,6 +13,8 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 
 public class TipiOpenBrowser extends TipiAction {
 
+	private static final long serialVersionUID = -4683456247058589772L;
+
 	protected void execute(TipiEvent event) throws TipiBreakException, TipiException {
 		Operand url = getEvaluatedParameter("url", event);
 		Operand newWindow = getEvaluatedParameter("newWindow", event);

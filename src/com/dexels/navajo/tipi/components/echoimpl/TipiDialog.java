@@ -4,14 +4,12 @@ import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.ContentPane;
 import nextapp.echo2.app.Extent;
-import nextapp.echo2.app.Font;
 import nextapp.echo2.app.LayoutData;
 import nextapp.echo2.app.Style;
 import nextapp.echo2.app.Window;
 import nextapp.echo2.app.WindowPane;
 import nextapp.echo2.app.event.WindowPaneEvent;
 import nextapp.echo2.app.event.WindowPaneListener;
-import tucana.echo2.app.ModalDimmer;
 
 import com.dexels.navajo.echoclient.components.Styles;
 import com.dexels.navajo.tipi.TipiBreakException;
@@ -43,13 +41,13 @@ import echopointng.LightBox;
  * @version 1.0
  */
 public class TipiDialog extends TipiEchoDataComponentImpl {
-    private boolean disposed = false;
+	private static final long serialVersionUID = 686157003404928933L;
+
 
     private WindowPane myWindow = null;
 
     private boolean modal = false;
 
-    private boolean decorated = true;
 
     private boolean showing = false;
 
@@ -58,22 +56,11 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
     int x = 0, y = 0, w = 0, h = 0;
 
     // private Rectangle myBounds = new Rectangle(0, 0, 0, 0);
-    private boolean studioMode = false;
-
     private boolean closable = false;
 
     private boolean resizable = true;
     private ContentPane innerContainer;
 
-    private int headerheight = 25;
-    private int leftheaderinset = 0;
-    private int topheaderinset = 0;
-    private int rightheaderinset = 0;
-    private int bottomheaderinset = 0;
-    
-    private Color headerforeground = null;
-    private Color headerbackground = null;
-    private Font headerfont = null;
 
 	private String myTitle;
 
@@ -108,7 +95,9 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
             paneEx.add(lightBox);
 
             myWindow.addWindowPaneListener(new WindowPaneListener() {
-                public void windowPaneClosing(WindowPaneEvent arg0) {
+				private static final long serialVersionUID = 4646592879205026448L;
+
+				public void windowPaneClosing(WindowPaneEvent arg0) {
                     myWindow_internalFrameClosed(arg0);
                     lightBox.hide();
                 }
@@ -132,20 +121,21 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
     
     // }
     private final void dialog_windowClosing(WindowPaneEvent e) {
-        WindowPane d = (WindowPane) e.getSource();
+//        WindowPane d = (WindowPane) e.getSource();
         try {
             performTipiEvent("onWindowClosed", null, true);
         } catch (TipiException ex) {
             ex.printStackTrace();
         }
         myContext.disposeTipiComponent(this);
-        disposed = true;
     }
 
     protected void createWindowListener(WindowPane d) {
         d.setDefaultCloseOperation(WindowPane.DO_NOTHING_ON_CLOSE);
         d.addWindowPaneListener(new WindowPaneListener() {
-            public void windowPaneClosing(WindowPaneEvent arg0) {
+			private static final long serialVersionUID = -6015877461943700892L;
+
+			public void windowPaneClosing(WindowPaneEvent arg0) {
                 dialog_windowClosing(arg0);
             }
         });
@@ -159,10 +149,10 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
             modal = ((Boolean) object).booleanValue();
             return;
         }
-        if (name.equals("decorated")) {
-            decorated = ((Boolean) object).booleanValue();
-            return;
-        }
+//        if (name.equals("decorated")) {
+//            decorated = ((Boolean) object).booleanValue();
+//            return;
+//        }
         if (name.equals("title")) {
             title = object.toString();
             return;
@@ -257,7 +247,7 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
 
     private final void constructStandardDialog() {
         TipiScreen s = (TipiScreen) getContext().getDefaultTopLevel();
-        ModalDimmer m = new ModalDimmer();
+//        ModalDimmer m = new ModalDimmer();
         final Window win = (Window) s.getTopLevel();
         
   //        win.getContent().add(lb);
@@ -388,7 +378,6 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
             	myWindow = null;
             }
             myContext.disposeTipiComponent(me);
-            disposed = true;
         }
     }
 

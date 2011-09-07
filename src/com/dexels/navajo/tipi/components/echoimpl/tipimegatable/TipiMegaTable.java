@@ -43,12 +43,14 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  */
 
 public class TipiMegaTable extends TipiEchoDataComponentImpl {
-    public TipiMegaTable() {
+
+	private static final long serialVersionUID = 2852890344321360837L;
+
+	public TipiMegaTable() {
     }
 
     private Component myPanel = null;
 
-    private boolean useTabs = true;
 
     private final Stack layers = new Stack();
 
@@ -59,7 +61,6 @@ public class TipiMegaTable extends TipiEchoDataComponentImpl {
     // private final Map footerRendererMap = new HashMap();
     // private final Map remarkPanelMap = new HashMap();
 
-    private int page = 0;
 
     // private String myMethod = null;
 
@@ -85,7 +86,6 @@ public class TipiMegaTable extends TipiEchoDataComponentImpl {
             return;
         }
         TipiTableBaseLayer tmtl = (TipiTableBaseLayer) layers.peek();
-        List updates = null;
         if (tmtl != null) {
             String path = tmtl.getMessagePath();
             if (path != null) {
@@ -95,7 +95,7 @@ public class TipiMegaTable extends TipiEchoDataComponentImpl {
                         // Often this should be enough, but not for the
                         // financial forms.
                         // m.refreshExpression();
-                        updates = myNavajo.refreshExpression();
+                        myNavajo.refreshExpression();
                     } catch (NavajoException ex) {
                         ex.printStackTrace();
                     }
@@ -107,7 +107,7 @@ public class TipiMegaTable extends TipiEchoDataComponentImpl {
             }
         }
         for (int i = 0; i < tableInstances.size(); i++) {
-            final MessageTable mtp = (MessageTable) tableInstances.get(i);
+//            final MessageTable mtp = (MessageTable) tableInstances.get(i);
             // mtp.updateProperties(updates);
         }
     }
@@ -127,7 +127,8 @@ public class TipiMegaTable extends TipiEchoDataComponentImpl {
    
 
     // unchamged
-    public void flatten(String serviceName, String hostUrl, String username, String password, String pincode, String keystore, String keypass)
+    @SuppressWarnings("deprecation")
+	public void flatten(String serviceName, String hostUrl, String username, String password, String pincode, String keystore, String keypass)
             throws NavajoException, TipiException, TipiBreakException {
         Navajo out = NavajoFactory.getInstance().createNavajo();
         Message outResult = NavajoFactory.getInstance().createMessage(out, "Answers", Message.MSG_TYPE_ARRAY);
@@ -267,27 +268,14 @@ public class TipiMegaTable extends TipiEchoDataComponentImpl {
         }
     }
 
-    private final void reload() throws TipiBreakException {
-        try {
-            if (myNavajo != null) {
-                loadData(getNavajo(), getCurrentMethod());
-            } else {
-                System.err.println("Can not reload, no navajo!");
-            }
-        } catch (TipiException ex) {
-            ex.printStackTrace();
-        }
-    }
-
     public void loadData(final Navajo n, String method) throws TipiException, TipiBreakException {
         myPanel.removeAll();
         // footerRendererMap.clear();
         tableInstances.clear();
         Stack currentLayers = (Stack) layers.clone();
-        Message current = null;
         TipiTableBaseLayer tmtl = (TipiTableBaseLayer) currentLayers.pop();
 
-        current = n.getMessage(tmtl.getMessagePath());
+//        current = n.getMessage(tmtl.getMessagePath());
         tmtl.loadData(n, null, currentLayers, myPanel);
 
         super.loadData(n, method);

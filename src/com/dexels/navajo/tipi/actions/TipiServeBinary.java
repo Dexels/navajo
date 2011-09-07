@@ -40,6 +40,9 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 
 public class TipiServeBinary extends TipiAction {
+
+	private static final long serialVersionUID = 1048386067132114825L;
+
 	public TipiServeBinary() {
 	}
 

@@ -22,6 +22,8 @@ import echopointng.ContainerEx;
  */
 
 public class TipiScroller extends TipiPanel {
+	private static final long serialVersionUID = -4520969021281014402L;
+
 	public TipiScroller() {
 	}
 

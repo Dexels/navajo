@@ -32,12 +32,10 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @todo Need to refactor menus in internalframes. Now still uses the old mode
  *       Frank
  */
-public final class TipiWindow
-// extends DefaultTipi {
-        extends TipiEchoDataComponentImpl {
-    private WindowPane myWindow;
+public final class TipiWindow extends TipiEchoDataComponentImpl {
+	private static final long serialVersionUID = 6587665353415100107L;
 
-    private String myMenuBar = "";
+	private WindowPane myWindow;
 
     private String myTitle;
 
@@ -73,7 +71,9 @@ public final class TipiWindow
         innerContainer = new ContentPane();
         myWindow.add(innerContainer);
         myWindow.addWindowPaneListener(new WindowPaneListener() {
-            public void windowPaneClosing(WindowPaneEvent arg0) {
+			private static final long serialVersionUID = -7801798962303929157L;
+
+			public void windowPaneClosing(WindowPaneEvent arg0) {
                 myWindow_internalFrameClosed(arg0);
             }
         });

@@ -40,7 +40,9 @@ import echopointng.GroupBox;
 
 public class TipiProperty extends TipiEchoComponentImpl implements PropertyComponent, PropertyEventListener {
 
-    private Property myProperty = null;
+	private static final long serialVersionUID = 4332642289511254900L;
+
+	private Property myProperty = null;
 
     private String myPropertyName = null;
 
@@ -350,12 +352,6 @@ public class TipiProperty extends TipiEchoComponentImpl implements PropertyCompo
     public void checkForConditionErrors(Message m) {
         // err.. implement?
     }
-//
-//	public void processStyles() {
-//		// TODO Auto-generated method stub
-//		super.processStyles();
-//
-//	}
 
 
 }

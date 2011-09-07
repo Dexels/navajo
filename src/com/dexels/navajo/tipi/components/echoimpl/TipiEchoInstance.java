@@ -14,7 +14,6 @@ import java.util.StringTokenizer;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import navajo.ExtensionDefinition;
 import nextapp.echo2.app.ApplicationInstance;
@@ -51,15 +50,18 @@ import com.dexels.navajo.tipi.TipiException;
  */
 
 public class TipiEchoInstance extends ApplicationInstance implements TipiApplicationInstance {
+
+	private static final long serialVersionUID = 4880562953035112989L;
+
 	private TipiContext context;
 
 	private String tipiDef = null;
 
-	private String tipiDir = null;
+//	private String tipiDir = null;
 
 	private ServletConfig myServletConfig;
 
-	private String resourceDir;
+//	private String resourceDir;
 
 	private ServletContext myServletContext;
 
@@ -90,8 +92,7 @@ public class TipiEchoInstance extends ApplicationInstance implements TipiApplica
 
 	public void exitToUrl() throws MalformedURLException {
 		enqueueCommand(new BrowserRedirectCommand(getLogoutUrl().toString()));
-		ContainerContext containerContext = (ContainerContext) getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
-		final HttpSession session = containerContext.getSession();
+//		ContainerContext containerContext = (ContainerContext) getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
 	}
 
 	public final void startup() throws IOException {

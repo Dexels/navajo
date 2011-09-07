@@ -17,7 +17,6 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.echoclient.components.Styles;
-import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiHelper;
 import com.dexels.navajo.tipi.components.echoimpl.helpers.EchoTipiHelper;
@@ -28,11 +27,20 @@ import echopointng.ButtonEx;
 import echopointng.TabbedPane;
 import echopointng.image.URLImageReference;
 import echopointng.tabbedpane.DefaultTabModel;
-
+/**
+ * 
+ * @author frank
+ * @deprecated
+ */
 public class TipiTabbedQuestionList extends TipiBaseQuestionList {
 //    private Component lastSelectedTab = null;
 
-    private DefaultTabModel defaultTabModel = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -9212569710207074092L;
+
+	private DefaultTabModel defaultTabModel = null;
 
     private TabbedPane myTabbedPane;
 
@@ -44,17 +52,15 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
     private Style invalidStyle;
     
     protected Object getGroupConstraints(Message groupMessage) {
-        // TODO Auto-generated method stub
-        Property name = groupMessage.getProperty("Name");
-        if (name != null) {
-            if (name.getValue() == null) {
-                return "Unknown tab";
-            }
-        } else {
-            return name.getValue();
-
-        }
-        return name.getValue();
+		Property name = groupMessage.getProperty("Name");
+		if (name != null) {
+			if (name.getValue() == null) {
+				return "Unknown tab";
+			} else {
+				return name.getValue();
+			}
+		}
+		return "Unknown tab";
     }
     public void loadData(final Navajo n,final String method) throws TipiException {
         clearQuestions();
@@ -79,7 +85,6 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
 //    }
     
     public Object createContainer() {
-        final TipiComponent me = this;
         myTabbedPane = new TabbedPane();
         myTabbedPane.setStyleName("Default");
         
@@ -156,14 +161,6 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
     }
     
     protected void clearQuestions() {
-        // TODO Auto-generated method stub
-
-//        if (myTabbedPane != null) {
-//            while (myTabbedPane.getComponentCount() > 0) {
-//                myTabbedPane.remove(0);
-//            }
-//        }
-
         while (defaultTabModel.size() > 0) {
             defaultTabModel.removeTabAt(0);
             
@@ -173,7 +170,6 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
    
     
     public void removeFromContainer(Object c) {
-		// TODO Auto-generated method stub
 		super.removeFromContainer(c);
 	}
 	public void setGroupValid(boolean valid, TipiBaseQuestionGroup group) {

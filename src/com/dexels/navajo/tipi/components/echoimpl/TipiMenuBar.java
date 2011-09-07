@@ -28,7 +28,8 @@ import com.dexels.navajo.tipi.TipiException;
  */
 
 public class TipiMenuBar extends TipiEchoDataComponentImpl {
-    private DefaultMenuModel defaultMenuModel;
+	private static final long serialVersionUID = -3747839523676117308L;
+	private DefaultMenuModel defaultMenuModel;
 
 	public TipiMenuBar() {
     }
@@ -52,8 +53,9 @@ public class TipiMenuBar extends TipiEchoDataComponentImpl {
       b.setProperty("tipi", this);
       b.addActionListener(new ActionListener(){
 
+		private static final long serialVersionUID = -4082030215532682456L;
+
 		public void actionPerformed(ActionEvent e) {
-			Object source = e.getSource();
 			String path = e.getActionCommand();
 //			String pp = path.substring("component:/".length(),path.length());
 			System.err.println("EVENT::::::: "+path);

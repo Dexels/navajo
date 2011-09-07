@@ -8,8 +8,7 @@ import com.dexels.navajo.tipi.internal.FileResourceLoader;
 
 public class ServletContextResourceLoader extends FileResourceLoader {
 
-	private final ServletContext servletContext;
-	private final String prefix;
+	private static final long serialVersionUID = -2895275193644899925L;
 	public ServletContextResourceLoader(ServletContext myContext,String prefix) {
 		super(null);
 		String prefixPath = myContext.getRealPath(prefix);
@@ -19,8 +18,6 @@ public class ServletContextResourceLoader extends FileResourceLoader {
 			System.err.println("whooooops");
 		}
 		setBaseFile(prefixDir);
-		this.servletContext = myContext;
-		this.prefix = prefix;
 	}
 
 }

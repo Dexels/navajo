@@ -25,7 +25,10 @@ import com.dexels.navajo.tipi.components.echoimpl.impl.layout.TipiEchoGridBagCon
  */
 
 public class TipiEchoGridBagLayout extends TipiLayoutImpl {
-    public TipiEchoGridBagLayout() {
+
+	private static final long serialVersionUID = -543288866058083873L;
+
+	public TipiEchoGridBagLayout() {
     }
 
     protected void setValue(String name, TipiValue tv) {

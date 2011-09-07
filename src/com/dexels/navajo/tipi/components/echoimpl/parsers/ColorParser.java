@@ -24,7 +24,9 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class ColorParser extends TipiTypeParser {
-    public Object parse(TipiComponent source, String expression, TipiEvent event) {
+	private static final long serialVersionUID = 7016724125605215871L;
+
+	public Object parse(TipiComponent source, String expression, TipiEvent event) {
         return parseColor(expression);
     }
 

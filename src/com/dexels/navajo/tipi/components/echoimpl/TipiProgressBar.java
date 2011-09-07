@@ -5,7 +5,8 @@ import echopointng.ProgressBar;
 
 
 public class TipiProgressBar extends TipiEchoDataComponentImpl {
-    private ProgressBar myBar;
+	private static final long serialVersionUID = -39973562290542420L;
+	private ProgressBar myBar;
 
     public Object createContainer() {
     	myBar = new ProgressBar();

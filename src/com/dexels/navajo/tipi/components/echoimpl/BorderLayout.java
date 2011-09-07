@@ -19,6 +19,7 @@ import nextapp.echo2.app.layout.SplitPaneLayoutData;
 
 public class BorderLayout extends SplitPane {
 
+   private static final long serialVersionUID = 7873461777669730836L;
    public static final String NORTH  = "0";
    public static final String SOUTH  = "1";
    public static final String EAST   = "2";

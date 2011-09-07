@@ -83,14 +83,18 @@ public class TipiOptionPane {
         wp.setDefaultCloseOperation(WindowPane.DISPOSE_ON_CLOSE);
 
         yesButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
+			private static final long serialVersionUID = -6958906299773757265L;
+
+			public void actionPerformed(ActionEvent ae) {
                 wp.dispose();
                 w.getContent().remove(wp);
             }
         });
         yesButton.setText(yes);
         noButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
+			private static final long serialVersionUID = 6528874691893715452L;
+
+			public void actionPerformed(ActionEvent ae) {
                 wp.dispose();
                 w.getContent().remove(wp);
                 // throw new TipiBreakException();

@@ -4,7 +4,6 @@ import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.Extent;
 import nextapp.echo2.app.LayoutData;
-import nextapp.echo2.app.event.WindowPaneEvent;
 
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiHelper;
@@ -30,10 +29,9 @@ import echopointng.able.Positionable;
 public final class TipiFixedPane
 // extends DefaultTipi {
         extends TipiEchoDataComponentImpl {
-    // private WindowPane myWindow;
-    private String myMenuBar = "";
+	private static final long serialVersionUID = -8874526687450129402L;
 
-    private String myTitle;
+	// private WindowPane myWindow;
 
     private ContainerEx innerContainer;
 
@@ -57,10 +55,6 @@ public final class TipiFixedPane
             return new Boolean(innerContainer.isVisible());
         }
         return super.getComponentValue(name);
-    }
-
-    private final void myWindow_internalFrameClosed(WindowPaneEvent arg0) {
-        // myContext.disposeTipi(this);
     }
 
     public void addToContainer(final Object c, final Object constraints) {

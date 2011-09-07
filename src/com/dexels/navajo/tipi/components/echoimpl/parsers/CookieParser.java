@@ -24,7 +24,9 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class CookieParser extends TipiTypeParser {
-    public Object parse(TipiComponent source, String expression, TipiEvent event) {
+	private static final long serialVersionUID = 5256119276821274061L;
+
+	public Object parse(TipiComponent source, String expression, TipiEvent event) {
         return parseCookie(expression);
     }
 //    private Object parseBorder(String s) {

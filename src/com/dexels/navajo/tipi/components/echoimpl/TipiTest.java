@@ -1,15 +1,7 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import nextapp.echo2.app.Component;
 import nextapp.echo2.app.Extent;
 import nextapp.echo2.app.Grid;
-
-import com.dexels.navajo.tipi.TipiComponent;
-
 import echopointng.ContainerEx;
 import echopointng.LabelEx;
 import echopointng.TabbedPane;
@@ -33,15 +25,7 @@ import echopointng.tabbedpane.DefaultTabModel;
  * @version 1.0
  */
 public class TipiTest extends TipiEchoDataComponentImpl {
-    private ArrayList tipiList = new ArrayList();
-
-    private ArrayList methodList = new ArrayList();
-
-    private Map tipiMap = new HashMap();
-
-    private TipiComponent selectedComponent = null;
-
-    private Component lastSelectedTab = null;
+	private static final long serialVersionUID = -4743890527821065166L;
 
     private DefaultTabModel defaultTabModel = null;
 

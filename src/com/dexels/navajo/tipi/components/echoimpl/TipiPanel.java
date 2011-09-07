@@ -26,7 +26,8 @@ import echopointng.GroupBox;
 
 public class TipiPanel extends TipiEchoDataComponentImpl {
 
-    private ContentPane myContainer;
+	private static final long serialVersionUID = 5875923124427412379L;
+	private ContentPane myContainer;
 //    private ContainerEx myContentPane;
 
 	public TipiPanel() {

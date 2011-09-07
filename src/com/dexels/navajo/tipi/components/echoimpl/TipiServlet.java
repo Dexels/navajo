@@ -35,7 +35,8 @@ import com.dexels.navajo.document.types.Binary;
 
 public class TipiServlet extends WebContainerServlet {
 
-    private TipiEchoInstance tipiInstance = null;
+	private static final long serialVersionUID = -5781613924406447203L;
+	private TipiEchoInstance tipiInstance = null;
 
 	static {
         // echopoint.ui.Installer.register();

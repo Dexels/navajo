@@ -16,7 +16,7 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  */
 public class TipiGridLayout
     extends TipiLayoutImpl {
-  private XMLElement myDefinition = null;
+	private static final long serialVersionUID = 6706479367509952989L;
   private EchoGridLayoutImpl echoGridLayoutImpl;
  
   public TipiGridLayout() {
@@ -31,7 +31,6 @@ public class TipiGridLayout
  
   
   public void loadLayout(XMLElement def, TipiComponent t) throws TipiException {
-	// TODO Auto-generated method stub
 	super.loadLayout(def, t);
 }
 

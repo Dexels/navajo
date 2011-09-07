@@ -8,9 +8,19 @@ package com.dexels.navajo.tipi.components.echoimpl;
 
 import com.dexels.navajo.tipi.components.question.TipiBaseQuestionGroup;
 
+/**
+ * 
+ * @author frank
+ *@deprecated
+ */
 public class TipiScrollQuestionGroup extends TipiBaseQuestionGroup {
 
-    public Object createContainer() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -4333687907745383806L;
+
+	public Object createContainer() {
         // jp = new JScrollPane();
         // jp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         // jp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);

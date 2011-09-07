@@ -28,7 +28,9 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class FontParser extends TipiTypeParser {
-    public Object parse(TipiComponent source, String expression, TipiEvent event) {
+	private static final long serialVersionUID = 5051820348208927410L;
+
+	public Object parse(TipiComponent source, String expression, TipiEvent event) {
         return parseFont(expression);
     }
 
@@ -41,11 +43,7 @@ public class FontParser extends TipiTypeParser {
         int size = Integer.parseInt(str.nextToken());
         int style = Integer.parseInt(str.nextToken());
         // try logical:
-        Font f = new Font(new Typeface(name), style, new Extent(size));
-        if (f != null) {
-            return f;
-        }
-        return null;
+       return new Font(new Typeface(name), style, new Extent(size));
     }
 
 }

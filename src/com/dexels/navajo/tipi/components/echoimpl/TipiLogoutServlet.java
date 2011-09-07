@@ -27,7 +27,9 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class TipiLogoutServlet extends HttpServlet {
 
-	 protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private static final long serialVersionUID = -390870560218888712L;
+
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	  request.getSession().invalidate();
 	  String destination =  request.getParameter("destination");
 	  if(destination==null) {

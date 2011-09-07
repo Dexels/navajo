@@ -26,9 +26,12 @@ import echopointng.SelectFieldEx;
  * @version 1.0
  */
 public class TipiAjaxCombobox extends TipiEchoDataComponentImpl {
+
+	private static final long serialVersionUID = 1271208183816280271L;
+
 	private SelectFieldEx myCombo;
 
-	private String currentSelection = null;
+//	private String currentSelection = null;
 
 	public Object createContainer() {
 		myCombo = new SelectFieldEx();
@@ -60,7 +63,6 @@ public class TipiAjaxCombobox extends TipiEchoDataComponentImpl {
 //					m.put("value", sel);
 //					performTipiEvent("onSelect", m, false);
 //				} catch (TipiException e) {
-//					// TODO Auto-generated catch block
 //					e.printStackTrace();
 //				}
 //			}
@@ -76,7 +78,6 @@ public class TipiAjaxCombobox extends TipiEchoDataComponentImpl {
 //					m.put("value", sel);
 //					performTipiEvent("onEnter", m, false);
 //				} catch (TipiException e) {
-//					// TODO Auto-generated catch block
 //					e.printStackTrace();
 //				}
 //			}
@@ -90,7 +91,6 @@ public class TipiAjaxCombobox extends TipiEchoDataComponentImpl {
 		// does not appear to work...
 //		editor.addFocusListener(new FocusListener(){
 //			public void focusGained(FocusEvent arg0) {
-//				// TODO Auto-generated method stub
 //				
 //			}
 //
@@ -136,8 +136,8 @@ public class TipiAjaxCombobox extends TipiEchoDataComponentImpl {
 	
 	protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) {
 		if ("updateCombo".equals(name)) {
-			String evalText = (String) compMeth.getEvaluatedParameter("text", event).value;
-			Navajo evalNavajo = (Navajo) compMeth.getEvaluatedParameter("navajo", event).value;
+//			String evalText = (String) compMeth.getEvaluatedParameter("text", event).value;
+//			Navajo evalNavajo = (Navajo) compMeth.getEvaluatedParameter("navajo", event).value;
 //			myCombo.loadData(evalNavajo, evalText);
 		}
 	}

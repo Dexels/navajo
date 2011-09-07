@@ -9,6 +9,8 @@ import com.dexels.navajo.tipi.tipixml.XMLParseException;
 
 public class TipiEchoExtension extends TipiAbstractXMLExtension implements TipiExtension {
 
+	private static final long serialVersionUID = -6095356723833425401L;
+
 	public TipiEchoExtension() throws XMLParseException, IOException {
 	}
 

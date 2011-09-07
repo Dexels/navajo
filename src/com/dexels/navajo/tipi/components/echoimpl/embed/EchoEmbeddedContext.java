@@ -29,6 +29,8 @@ import com.dexels.navajo.tipi.tipixml.XMLParseException;
  */
 
 public class EchoEmbeddedContext extends EchoTipiContext {
+
+	private static final long serialVersionUID = -6564389487110659275L;
 	TipiEchoStandaloneToplevel top = new TipiEchoStandaloneToplevel();
 	
 	public EchoEmbeddedContext(TipiEchoInstance instance, EchoTipiContext parentContext) {

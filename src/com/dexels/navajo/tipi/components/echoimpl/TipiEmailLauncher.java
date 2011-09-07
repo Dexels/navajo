@@ -18,7 +18,8 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 
 public class TipiEmailLauncher extends TipiEchoDataComponentImpl {
 
-    private Message recipient = null;
+	private static final long serialVersionUID = -3833165821431412062L;
+	private Message recipient = null;
     private String propertyName;
     private String clubName;
 
@@ -58,13 +59,14 @@ public class TipiEmailLauncher extends TipiEchoDataComponentImpl {
                     EmailString = EmailString + EmailAddress + ",";
                 }
             }
+            // In echo, this is kinda ridiculous, right?
             if (recipientsFound) {
                 EmailString = EmailString.substring(0, (EmailString.length() - 1));
                 EmailString = EmailString + "?subject=" + Subject;
                 System.err.println("Generated email string: " + EmailString);
                 String cmd = "rundll32 url.dll,FileProtocolHandler " + EmailString;
                 try {
-                    Process p = Runtime.getRuntime().exec(cmd);
+                    Runtime.getRuntime().exec(cmd);
                 } catch (IOException ex) {
                     System.err.println("Could not launch rundll32");
                 }

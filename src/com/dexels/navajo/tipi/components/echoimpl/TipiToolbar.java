@@ -7,7 +7,8 @@ import nextapp.echo2.app.layout.RowLayoutData;
 import com.dexels.navajo.tipi.components.echoimpl.impl.ToolbarImpl;
 
 public class TipiToolbar extends TipiEchoDataComponentImpl {
-    private ToolbarImpl myRow;
+	private static final long serialVersionUID = 3927529949578898047L;
+	private ToolbarImpl myRow;
 
     public Object createContainer() {
         // ContainerEx myContainer = new ContainerEx();

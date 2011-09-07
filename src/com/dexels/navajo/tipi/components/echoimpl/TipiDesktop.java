@@ -26,7 +26,8 @@ import com.dexels.navajo.echoclient.components.Styles;
 
 public class TipiDesktop extends TipiEchoDataComponentImpl {
 
-    private ContentPane myContainer;
+	private static final long serialVersionUID = 7088091255359938129L;
+	private ContentPane myContainer;
 
 	public TipiDesktop() {
     }

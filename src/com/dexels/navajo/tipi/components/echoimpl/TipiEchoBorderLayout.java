@@ -1,8 +1,5 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import nextapp.echo2.app.Component;
-import nextapp.echo2.app.ContentPane;
-import nextapp.echo2.app.PaneContainer;
 import nextapp.echo2.app.layout.ColumnLayoutData;
 
 import com.dexels.navajo.tipi.TipiValue;
@@ -27,7 +24,8 @@ import com.dexels.navajo.tipi.components.core.TipiLayoutImpl;
  */
 
 public class TipiEchoBorderLayout extends TipiLayoutImpl {
-    private boolean splitmode = false;
+
+	private static final long serialVersionUID = 4698163614399461888L;
 
 	public TipiEchoBorderLayout() {
     }
@@ -40,11 +38,9 @@ public class TipiEchoBorderLayout extends TipiLayoutImpl {
     }
 
     public void createLayout() throws com.dexels.navajo.tipi.TipiException {
-    	Component parent = (Component) myComponent.getContainer();
-    	if(parent instanceof PaneContainer) {
-    		splitmode  = true;
-    	}
-    	ContentPane p;
+//    	Component parent = (Component) myComponent.getContainer();
+
+//    	ContentPane p;
 //    	if(splitmode) {
 //        	myLayout = new SplitPane(SplitPane.ORIENTATION_VERTICAL);
 //    	} else {

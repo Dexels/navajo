@@ -4,12 +4,9 @@ import java.util.Stack;
 
 import nextapp.echo2.app.Column;
 import nextapp.echo2.app.Component;
-import nextapp.echo2.app.Font;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.Operand;
-import com.dexels.navajo.document.Property;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 /**
@@ -31,11 +28,6 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  */
 public class TipiScrollLayer extends TipiTableBaseLayer {
     // private int direction = BoxLayout.Y_AXIS;
-    private boolean scroll = false;
-
-    private Font titleFont = null;
-
-    private String titleFontString = null;
 
     public TipiScrollLayer(TipiMegaTable tmt) {
         super(tmt);
@@ -65,7 +57,7 @@ public class TipiScrollLayer extends TipiTableBaseLayer {
         // ex.printStackTrace();
         // }
         // }
-        scroll = elt.getBooleanAttribute("scroll", "true", "false", false);
+//        scroll = elt.getBooleanAttribute("scroll", "true", "false", false);
     }
 
     public void loadData(final Navajo n, Message current, Stack layerStack, final Component currentPanel) {
@@ -88,17 +80,17 @@ public class TipiScrollLayer extends TipiTableBaseLayer {
         currentPanel.add(jt);
         for (int i = 0; i < msg.getArraySize(); i++) {
             Message cc = msg.getMessage(i);
-            String title = null;
-            Operand titleOperand = myTable.getContext().evaluate(titleProperty, myTable, null, cc.getRootDoc(), cc);
-            if (titleOperand == null) {
-                Property titleProp = cc.getProperty(titleProperty);
-                title = "";
-                if (titleProp != null) {
-                    title = titleProp.getValue();
-                }
-            } else {
-                title = "" + titleOperand.value;
-            }
+//            String title = null;
+//            Operand titleOperand = myTable.getContext().evaluate(titleProperty, myTable, null, cc.getRootDoc(), cc);
+//            if (titleOperand == null) {
+//                Property titleProp = cc.getProperty(titleProperty);
+//                title = "";
+//                if (titleProp != null) {
+//                    title = titleProp.getValue();
+//                }
+//            } else {
+//                title = "" + titleOperand.value;
+//            }
             // if (titleProp!=null) {
             // System.err.println("*********\nDEPRECATED: You used only a
             // propertyname as title in your scroll layer, in TipiMegaTabel\nYou

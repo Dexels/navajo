@@ -52,6 +52,8 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 public class TipiTable extends TipiEchoDataComponentImpl {
 
+	private static final long serialVersionUID = -4234956709132417887L;
+
 	private String messagePath = "";
 
 	private boolean colDefs = false;
@@ -90,6 +92,8 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 		myTable.setStyle(ss);
 		myTable.setRolloverEnabled(false);
 		myTable.addSelectionListener(new ActionListener() {
+			private static final long serialVersionUID = -3218241207990092875L;
+
 			public void actionPerformed(ActionEvent e) {
 				try {
 					Map<String, Object> tempMap = new HashMap<String, Object>();
@@ -123,6 +127,8 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 
 		pageNavigator.addPageIndexChangeListener(new PageIndexChangeListener() {
 
+			private static final long serialVersionUID = -8643909225593543019L;
+
 			public void pageIndexChanged(PageIndexChangeEvent e) {
 				int newPage = e.getNewPageIndex();
 				if (newPage == currentTableIndex) {
@@ -142,6 +148,8 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 			}
 		});
 		myTable.addPrintListener(new ActionListener(){
+
+			private static final long serialVersionUID = -7088300192975076406L;
 
 			public void actionPerformed(ActionEvent ae) {
 				printTable((Binary) ae.getSource());
@@ -270,14 +278,8 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 						// mm.messageChanged();
 					}
 					if (child.getName().equals("column-attribute")) {
-						String name = (String) child.getAttribute("name");
-						String type = (String) child.getAttribute("type");
-						// if (name != null && type != null && !name.equals("")
-						// &&
-						// !type.equals("")) {
-						// columnAttributes.put(name,
-						// cap.parseAttribute(child));
-						// }
+//						String name = (String) child.getAttribute("name");
+//						String type = (String) child.getAttribute("type");
 					}
 				}
 				mm.setSelectionEnabled(!editableColumnsFound);
@@ -339,7 +341,6 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 					b = getTableReport("pdf", "horizontal", new int[] { 10, 10, 10, 10 });
 					printTable(b);
 				} catch (NavajoException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

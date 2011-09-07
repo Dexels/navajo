@@ -18,7 +18,7 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  */
 public class TipiBorderLayout
     extends TipiLayoutImpl {
-  private XMLElement myDefinition = null;
+	private static final long serialVersionUID = -3861071282137448373L;
   private EchoBorderLayoutImpl echoBorderLayoutImpl;
  
   public TipiBorderLayout() {
@@ -49,7 +49,6 @@ public class TipiBorderLayout
 
   
   public void loadLayout(XMLElement def, TipiComponent t) throws TipiException {
-	// TODO Auto-generated method stub
 	super.loadLayout(def, t);
 }
 

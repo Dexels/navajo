@@ -27,9 +27,12 @@ import echopointng.image.URLImageReference;
  */
 
 public class TipiCheckbox extends TipiEchoComponentImpl {
-  private CheckBox myButton;
 
-  private boolean iAmEnabled = true;
+	private static final long serialVersionUID = 7429128639740380936L;
+
+private CheckBox myButton;
+
+//  private boolean iAmEnabled = true;
 
   public Object createContainer() {
     myButton = new CheckBox();
@@ -42,7 +45,7 @@ public class TipiCheckbox extends TipiEchoComponentImpl {
     addHelper(th);
     myButton.addActionListener(new ActionListener(){
 
-	
+		private static final long serialVersionUID = -7214589080218807793L;
 
 		public void actionPerformed(ActionEvent arg0) {
 			try {
@@ -52,7 +55,6 @@ public class TipiCheckbox extends TipiEchoComponentImpl {
 				System.err.println("Checkbox clicked!");
 				getAttributeProperty("selected").setAnyValue(myButton.isSelected());
 			} catch (TipiException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -75,7 +77,8 @@ public class TipiCheckbox extends TipiEchoComponentImpl {
             }
         }        if (name.equals("enabled")) {
           // Just for the record.
-          iAmEnabled = ((Boolean)object).booleanValue();
+//          iAmEnabled = ((Boolean)object).booleanValue();
+        	myButton.setEnabled(((Boolean)object).booleanValue());
         }
         if (name.equals("selected")) {
           myButton.setSelected(((Boolean)object).booleanValue());

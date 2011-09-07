@@ -30,7 +30,10 @@ import echopointng.able.Borderable;
 
 public abstract class TipiEchoComponentImpl extends TipiComponentImpl {
 
-    public TipiEchoComponentImpl() {
+	private static final long serialVersionUID = 2792520352274586810L;
+
+
+	public TipiEchoComponentImpl() {
         TipiHelper th = new EchoTipiHelper();
         th.initHelper(this);
         addHelper(th);

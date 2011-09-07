@@ -21,7 +21,9 @@ import nextapp.echo2.app.TextArea;
  */
 
 public class TipiTextArea extends TipiEchoComponentImpl {
-    public TipiTextArea() {
+	private static final long serialVersionUID = 568076805655127962L;
+
+	public TipiTextArea() {
     }
 
     public Object createContainer() {
@@ -51,14 +53,14 @@ public class TipiTextArea extends TipiEchoComponentImpl {
             return;
         }
         if ("w".equals(id)) {
-            TextArea t = (TextArea) getContainer();
-            int w = ((Integer) value).intValue();
+//            TextArea t = (TextArea) getContainer();
+//            int w = ((Integer) value).intValue();
             // t.setColumns(w);
             return;
         }
         if ("h".equals(id)) {
-            TextArea t = (TextArea) getContainer();
-            int h = ((Integer) value).intValue();
+//            TextArea t = (TextArea) getContainer();
+//            int h = ((Integer) value).intValue();
             // t.setRows(h);
             return;
         }

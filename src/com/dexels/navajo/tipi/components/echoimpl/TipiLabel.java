@@ -25,7 +25,12 @@ import echopointng.image.URLImageReference;
  */
 
 public class TipiLabel extends TipiEchoComponentImpl {
-    public TipiLabel() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2855077377301927835L;
+
+	public TipiLabel() {
     }
 
     public Object createContainer() {

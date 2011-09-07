@@ -4,7 +4,10 @@ import nextapp.echo2.app.Component;
 import nextapp.echo2.extras.app.TransitionPane;
 
 public class TipiTransitionPane extends TipiEchoDataComponentImpl {
-    @Override
+
+	private static final long serialVersionUID = 6114605169396560100L;
+
+	@Override
 	protected void setComponentValue(String name, Object object) {
     	if("duration".equals(name)) {
     		myTransitionPane.setDuration((Integer)object);

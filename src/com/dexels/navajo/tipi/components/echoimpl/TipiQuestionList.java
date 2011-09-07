@@ -19,17 +19,18 @@ import com.dexels.navajo.tipi.components.question.TipiBaseQuestionList;
  * 
  * @author not attributable
  * @version 1.0
+ * @deprecated
  */
 public class TipiQuestionList extends TipiBaseQuestionList {
-    // private String messagePath = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -5101521294168485042L;
+
+	// private String messagePath = null;
     // private String questionDefinitionName = null;
     // private String questionGroupDefinitionName = null;
     //  
-    private static final String MODE_TABS = "tabs";
-
-    private static final String MODE_PANEL = "panel";
-
-    private String groupMode = MODE_PANEL;
 
     public TipiQuestionList() {
     }
@@ -43,7 +44,6 @@ public class TipiQuestionList extends TipiBaseQuestionList {
 
  
     public Object createContainer() {
-        // TODO FIX AND TEST
         return null;
     }
 

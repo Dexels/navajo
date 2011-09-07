@@ -34,8 +34,10 @@ import com.dexels.navajo.tipi.components.echoimpl.impl.GradientContentPane;
 
 public class TipiFrame extends TipiEchoDataComponentImpl {
 
+	private static final long serialVersionUID = 6160466201795861752L;
 
-    private Window myWindow;
+
+	private Window myWindow;
 
 
     private ContentPane contentPane;

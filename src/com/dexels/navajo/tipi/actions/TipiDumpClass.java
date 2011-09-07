@@ -1,9 +1,5 @@
 package com.dexels.navajo.tipi.actions;
 
-import java.util.Iterator;
-import java.util.Map;
-
-import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
@@ -26,15 +22,17 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public final class TipiDumpClass extends TipiAction {
 
+	private static final long serialVersionUID = -3476765938740552778L;
+
 	public final void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
 
-		Map m = myContext.getTipiClassDefMap();
-		for (Iterator iter = m.keySet().iterator(); iter.hasNext();) {
-			String element = (String) iter.next();
-			
-		}
-		Operand nameO = getEvaluatedParameter("name", event);
-		Operand valueO = getEvaluatedParameter("value", event);
+//		Map<String,XMLElement> m = myContext.getTipiClassDefMap();
+//		for (Iterator<String> iter = m.keySet().iterator(); iter.hasNext();) {
+//			String element = (String) iter.next();
+//			
+//		}
+//		Operand nameO = getEvaluatedParameter("name", event);
+//		Operand valueO = getEvaluatedParameter("value", event);
 		
 	}
 

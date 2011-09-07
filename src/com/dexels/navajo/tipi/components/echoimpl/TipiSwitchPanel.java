@@ -26,7 +26,8 @@ import com.dexels.navajo.tipi.TipiComponent;
 
 public class TipiSwitchPanel extends TipiEchoDataComponentImpl {
 
-    private Grid myContainer;
+	private static final long serialVersionUID = 1364930474515928307L;
+	private Grid myContainer;
 
     public TipiSwitchPanel() {
     }

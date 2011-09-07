@@ -32,7 +32,9 @@ import echopointng.ContainerEx;
 
 public class StrangeTipiGridPanel extends TipiEchoDataComponentImpl {
 
-    private Grid gridComponent;
+	private static final long serialVersionUID = -7823410780809165393L;
+
+	private Grid gridComponent;
 
     private ContainerEx myContainer;
 

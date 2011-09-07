@@ -21,7 +21,10 @@ import nextapp.echo2.app.Row;
  */
 
 public class EchoToolbar extends TipiEchoDataComponentImpl {
-    public EchoToolbar() {
+
+	private static final long serialVersionUID = -4081486409192403268L;
+
+	public EchoToolbar() {
     }
 
     public Object createContainer() {

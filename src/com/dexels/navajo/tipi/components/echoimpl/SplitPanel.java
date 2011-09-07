@@ -23,7 +23,9 @@ import nextapp.echo2.app.SplitPane;
 
 public class SplitPanel extends TipiEchoDataComponentImpl {
 
-    public SplitPanel() { 
+	private static final long serialVersionUID = -6472904121224493799L;
+
+	public SplitPanel() { 
     }
 
     public Object createContainer() {

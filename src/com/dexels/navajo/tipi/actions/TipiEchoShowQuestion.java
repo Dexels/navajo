@@ -24,7 +24,10 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 
 public class TipiEchoShowQuestion extends TipiAction {
-    public TipiEchoShowQuestion() {
+
+	private static final long serialVersionUID = 3346311371242713545L;
+
+	public TipiEchoShowQuestion() {
     }
 
     protected void execute(TipiEvent e) throws com.dexels.navajo.tipi.TipiBreakException, com.dexels.navajo.tipi.TipiException {

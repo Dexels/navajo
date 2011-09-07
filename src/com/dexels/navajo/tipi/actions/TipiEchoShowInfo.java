@@ -23,14 +23,14 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 
 public class TipiEchoShowInfo extends TipiAction {
-    public TipiEchoShowInfo() {
+
+	private static final long serialVersionUID = 6946313514268068467L;
+
+	public TipiEchoShowInfo() {
     }
 
     protected void execute(TipiEvent e) throws com.dexels.navajo.tipi.TipiBreakException, com.dexels.navajo.tipi.TipiException {
         Operand text = getEvaluatedParameter("text", e);
-
-        // TipiOptionPane.showInfo(myContext, (String) text.value, "Info:",
-        // "Close");
         myContext.showInfo(""+text.value, "Info");
 
     }

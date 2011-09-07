@@ -21,7 +21,9 @@ import nextapp.echo2.app.TextField;
  */
 
 public class TipiTextField extends TipiEchoComponentImpl {
-    public TipiTextField() {
+	private static final long serialVersionUID = 5579720008151004727L;
+
+	public TipiTextField() {
     }
 
     public Object createContainer() {

@@ -13,13 +13,14 @@ import com.dexels.navajo.tipi.components.echoimpl.impl.XYLayoutConstraint;
 
 public class TipiXYLayout extends TipiLayoutImpl {
 
-    public void createLayout() throws TipiException {
+	private static final long serialVersionUID = 4931037555706795046L;
+
+	public void createLayout() throws TipiException {
         // myComponent.setContainerLayout(new Row());
         setLayout(new XYLayout());
     }
 
     public Object getDefaultConstraint(TipiComponent tc, int index) {
-        // TODO Auto-generated method stub
         return super.getDefaultConstraint(tc, index);
     }
 
