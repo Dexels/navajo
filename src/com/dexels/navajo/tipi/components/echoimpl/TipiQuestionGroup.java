@@ -25,6 +25,7 @@ import com.dexels.navajo.tipi.components.question.TipiBaseQuestionGroup;
  * @deprecated
  */
 
+@Deprecated
 public class TipiQuestionGroup extends TipiBaseQuestionGroup {
 	private static final long serialVersionUID = -1163029880650425912L;
 	private Column myColumn;

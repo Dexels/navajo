@@ -13,6 +13,7 @@ import com.dexels.navajo.tipi.components.question.TipiBaseQuestionGroup;
  * @author frank
  *@deprecated
  */
+@Deprecated
 public class TipiScrollQuestionGroup extends TipiBaseQuestionGroup {
 
     /**

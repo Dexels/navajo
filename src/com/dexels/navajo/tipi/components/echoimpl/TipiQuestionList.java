@@ -21,6 +21,7 @@ import com.dexels.navajo.tipi.components.question.TipiBaseQuestionList;
  * @version 1.0
  * @deprecated
  */
+@Deprecated
 public class TipiQuestionList extends TipiBaseQuestionList {
     /**
 	 * 

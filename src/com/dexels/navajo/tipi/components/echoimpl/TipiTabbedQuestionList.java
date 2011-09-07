@@ -32,6 +32,7 @@ import echopointng.tabbedpane.DefaultTabModel;
  * @author frank
  * @deprecated
  */
+@Deprecated
 public class TipiTabbedQuestionList extends TipiBaseQuestionList {
 //    private Component lastSelectedTab = null;
 

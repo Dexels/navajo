@@ -105,7 +105,7 @@ public class ResolveAttatchments extends FunctionInterface {
 		if (n instanceof Document) {
 			NodeList v = n.getChildNodes();
 			for (int i = 0; i < v.getLength(); i++) {
-				Node element = (Node) v.item(i);
+				Node element = v.item(i);
 				fixImageTags(element, imageTagList, expression);
 			}
 		}
@@ -118,7 +118,7 @@ public class ResolveAttatchments extends FunctionInterface {
 			}
 			NodeList v = x.getChildNodes();
 			for (int i = 0; i < v.getLength(); i++) {
-				Node element = (Node) v.item(i);
+				Node element = v.item(i);
 				fixImageTags(element, imageTagList,expression);
 			}
 		}

@@ -62,6 +62,7 @@ public class TipiTabsExtra extends TipiEchoDataComponentImpl {
              */
             	
             	if(evt.getPropertyName().equals(TabPane.ACTIVE_TAB_INDEX_CHANGED_PROPERTY))
+				 {
 					try {
 						me.performTipiEvent("onTabChanged", null, false);
 					} catch (TipiException e) {
@@ -69,6 +70,7 @@ public class TipiTabsExtra extends TipiEchoDataComponentImpl {
 					}
 //                lastSelectedTab = jt.getSelectedComponent();
 //                lastSelectedTab.doLayout();
+				}
             }
             });
         return myTabbedPane;
