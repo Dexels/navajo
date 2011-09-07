@@ -257,7 +257,6 @@ public class MessageTableModel extends DefaultTableModel {
 	// }
 
 	// public int getRowCount() {
-	// // TODO Auto-generated method stub
 	// return myMessage.getArraySize();
 	// }
 	//

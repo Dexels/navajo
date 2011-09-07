@@ -47,7 +47,6 @@ public class BinaryPropertyImage extends StreamImageReference {
 
 	@Override
 	public String getContentType() {
-		// TODO Auto-generated method stub
 		if (myBinary == null) {
 
 			return "image/gif";
