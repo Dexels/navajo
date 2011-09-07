@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="com.dexels.navajo.tipi.mail.feature"
+      label="POP based mail client for tipi"
+      version="1.0.21.qualifier"
+      provider-name="Dexels">
+
+   <description url="http://www.example.com/description">
+      [Enter Feature Description here.]
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <plugin
+         id="com.dexels.navajo.tipi.mail"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
