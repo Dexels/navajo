@@ -28,36 +28,35 @@ public class TaskFigure extends Figure {
 	protected boolean initialState = false;
 	protected boolean finalState = false;
 
-	
-	public TaskFigure(TaskElement s)
-	{
-	    super();
+	public TaskFigure(TaskElement s) {
+		super();
 
-	    // Add the label
-	    BorderLayout layout = new BorderLayout();
-	    layout.setHorizontalSpacing(4);
-	    layout.setVerticalSpacing(4);
-	    setLayoutManager(layout);
-	    label.setForegroundColor(ColorConstants.black);
-	    add(label, BorderLayout.BOTTOM);
+		// Add the label
+		BorderLayout layout = new BorderLayout();
+		layout.setHorizontalSpacing(4);
+		layout.setVerticalSpacing(4);
+		setLayoutManager(layout);
+		label.setForegroundColor(ColorConstants.black);
+		add(label, BorderLayout.BOTTOM);
 
-	    // Lazily instanciate the shared colors
-	   
-	        Device device = Display.getCurrent();
-	        fgColor = new Color(device, 170, 170, 170);
-	        bgColor = new Color(device, 250, 250, 250);
-	   
-	    // Init
-	  //  setInitialState(initialState);
-	  //  setFinalState(finalState);
-//	    setTaskElement(s);
+		// Lazily instanciate the shared colors
+
+		Device device = Display.getCurrent();
+		fgColor = new Color(device, 170, 170, 170);
+		bgColor = new Color(device, 250, 250, 250);
+
+		// Init
+		// setInitialState(initialState);
+		// setFinalState(finalState);
+		// setTaskElement(s);
 	}
-	
+
 	public void setTaskElement(TaskElement se) {
-		label.setText(se.getRequest()+" - "+ se.getService());
-		
+		label.setText(se.getRequest() + " - " + se.getService());
+
 	}
-	
+
+	@Override
 	protected void paintFigure(Graphics graphics) {
 		// Inits
 		super.paintFigure(graphics);
@@ -67,10 +66,11 @@ public class TaskFigure extends Figure {
 
 		// Shadow / experimental
 		graphics.setBackgroundColor(shadowColor);
-//		graphics.fillRoundRectangle(bounds.getTranslated(4, 4), sround, sround);
+		// graphics.fillRoundRectangle(bounds.getTranslated(4, 4), sround,
+		// sround);
 
 		// Drawings
-		
+
 		graphics.setForegroundColor(fgColor);
 		graphics.setBackgroundColor(bgColor);
 		graphics.fillRoundRectangle(bounds, round, round);
@@ -84,5 +84,4 @@ public class TaskFigure extends Figure {
 		graphics.restoreState();
 	}
 
-	
 }

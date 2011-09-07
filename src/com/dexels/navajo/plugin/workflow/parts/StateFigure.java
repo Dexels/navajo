@@ -28,64 +28,61 @@ public class StateFigure extends Figure {
 	protected boolean initialState = false;
 	protected boolean finalState = false;
 
-	
-	public StateFigure(StateElement s)
-	{
-	    super();
+	public StateFigure(StateElement s) {
+		super();
 
-	    // Add the label
-	    BorderLayout layout = new BorderLayout();
-	    layout.setHorizontalSpacing(4);
-	    layout.setVerticalSpacing(4);
-	    setLayoutManager(layout);
-	    label.setForegroundColor(ColorConstants.black);
-	    add(label, BorderLayout.CENTER);
+		// Add the label
+		BorderLayout layout = new BorderLayout();
+		layout.setHorizontalSpacing(4);
+		layout.setVerticalSpacing(4);
+		setLayoutManager(layout);
+		label.setForegroundColor(ColorConstants.black);
+		add(label, BorderLayout.CENTER);
 
-	    // Lazily instanciate the shared colors
-	    if (initialFgColor == null)
-	    {
-	        Device device = Display.getCurrent();
-	        initialFgColor = new Color(device, 170, 170, 170);
-	        initialBgColor = new Color(device, 250, 250, 250);
-	        normalFgColor = new Color(device, 175, 175, 149);
-	        normalBgColor = new Color(device, 255, 255, 229);
-	        finalFgColor = new Color(device, 149, 175, 151);
-	        finalBgColor = new Color(device, 229, 255, 231);
-	        shadowColor = new Color(device, 230, 230, 230);
-	    }
+		// Lazily instanciate the shared colors
+		if (initialFgColor == null) {
+			Device device = Display.getCurrent();
+			initialFgColor = new Color(device, 170, 170, 170);
+			initialBgColor = new Color(device, 250, 250, 250);
+			normalFgColor = new Color(device, 175, 175, 149);
+			normalBgColor = new Color(device, 255, 255, 229);
+			finalFgColor = new Color(device, 149, 175, 151);
+			finalBgColor = new Color(device, 229, 255, 231);
+			shadowColor = new Color(device, 230, 230, 230);
+		}
 
-	    // Init
-	  //  setInitialState(initialState);
-	  //  setFinalState(finalState);
-	    setStateElement(s);
+		// Init
+		// setInitialState(initialState);
+		// setFinalState(finalState);
+		setStateElement(s);
 	}
-	
+
 	public void setStateElement(StateElement se) {
 		initialState = "init".equals(se.getId());
 		finalState = "null".equals(se.getId());
-	
-		
+
 		if (finalState) {
 			label.setText("Finished");
 		} else {
 			label.setText(se.getId());
 		}
-		
-		if(initialState) {
+
+		if (initialState) {
 			fgColor = initialFgColor;
 			bgColor = initialBgColor;
 		} else {
-			if(finalState) {
+			if (finalState) {
 				fgColor = finalFgColor;
 				bgColor = finalBgColor;
 			} else {
 				fgColor = normalFgColor;
 				bgColor = normalBgColor;
-		
+
 			}
 		}
 	}
-	
+
+	@Override
 	protected void paintFigure(Graphics graphics) {
 		// Inits
 		super.paintFigure(graphics);
@@ -98,8 +95,7 @@ public class StateFigure extends Figure {
 		graphics.fillRoundRectangle(bounds.getTranslated(4, 4), sround, sround);
 
 		// Drawings
-		
-		
+
 		graphics.setForegroundColor(fgColor);
 		graphics.setBackgroundColor(bgColor);
 		graphics.fillRoundRectangle(bounds, round, round);
@@ -113,5 +109,4 @@ public class StateFigure extends Figure {
 		graphics.restoreState();
 	}
 
-	
 }

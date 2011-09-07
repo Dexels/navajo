@@ -29,83 +29,92 @@ import com.dexels.navajo.plugin.workflow.model.TransitionElement;
 
 /**
  * Utility class that can create a GEF Palette.
- * @see #createPalette() 
+ * 
+ * @see #createPalette()
  * @author Elias Volanakis
  */
 final class WorkflowEditorPaletteFactory {
 
-/** Preference ID used to persist the palette location. */
-private static final String PALETTE_DOCK_LOCATION = "ShapesEditorPaletteFactory.Location";
-/** Preference ID used to persist the palette size. */
-private static final String PALETTE_SIZE = "ShapesEditorPaletteFactory.Size";
-/** Preference ID used to persist the flyout palette's state. */
-private static final String PALETTE_STATE = "ShapesEditorPaletteFactory.State";
+	/** Preference ID used to persist the palette location. */
+	private static final String PALETTE_DOCK_LOCATION = "ShapesEditorPaletteFactory.Location";
+	/** Preference ID used to persist the palette size. */
+	private static final String PALETTE_SIZE = "ShapesEditorPaletteFactory.Size";
+	/** Preference ID used to persist the flyout palette's state. */
+	private static final String PALETTE_STATE = "ShapesEditorPaletteFactory.State";
 
-/** Create the "Shapes" drawer. */
-private static PaletteContainer createShapesDrawer() {
-	PaletteDrawer componentsDrawer = new PaletteDrawer("Shapes");
+	/** Create the "Shapes" drawer. */
+	private static PaletteContainer createShapesDrawer() {
+		PaletteDrawer componentsDrawer = new PaletteDrawer("Shapes");
 
-	CombinedTemplateCreationEntry component = new CombinedTemplateCreationEntry(
-			"State", 
-			"Create an state", 
-			StateElement.class,
-			new SimpleFactory(StateElement.class), 
-			ImageDescriptor.createFromFile(WorkflowEditorPaletteFactory.class, "icons/ellipse16.gif"), 
-			ImageDescriptor.createFromFile(WorkflowEditorPaletteFactory.class, "icons/ellipse24.gif"));
-	componentsDrawer.add(component);
+		CombinedTemplateCreationEntry component = new CombinedTemplateCreationEntry(
+				"State", "Create an state", StateElement.class,
+				new SimpleFactory(StateElement.class),
+				ImageDescriptor.createFromFile(
+						WorkflowEditorPaletteFactory.class,
+						"icons/ellipse16.gif"), ImageDescriptor.createFromFile(
+						WorkflowEditorPaletteFactory.class,
+						"icons/ellipse24.gif"));
+		componentsDrawer.add(component);
 
+		return componentsDrawer;
+	}
 
-	return componentsDrawer;
-}
-	
-/**
- * Creates the PaletteRoot and adds all palette elements.
- * Use this factory method to create a new palette for your graphical editor.
- * @return a new PaletteRoot
- */
-static PaletteRoot createPalette() {
-	PaletteRoot palette = new PaletteRoot();
-	palette.add(createToolsGroup(palette));
-	palette.add(createShapesDrawer());
-	return palette;
-}
+	/**
+	 * Creates the PaletteRoot and adds all palette elements. Use this factory
+	 * method to create a new palette for your graphical editor.
+	 * 
+	 * @return a new PaletteRoot
+	 */
+	static PaletteRoot createPalette() {
+		PaletteRoot palette = new PaletteRoot();
+		palette.add(createToolsGroup(palette));
+		palette.add(createShapesDrawer());
+		return palette;
+	}
 
-/** Create the "Tools" group. */
-private static PaletteContainer createToolsGroup(PaletteRoot palette) {
-	PaletteGroup toolGroup = new PaletteGroup("Tools");
+	/** Create the "Tools" group. */
+	private static PaletteContainer createToolsGroup(PaletteRoot palette) {
+		PaletteGroup toolGroup = new PaletteGroup("Tools");
 
-	// Add a selection tool to the group
-	ToolEntry tool = new PanningSelectionToolEntry();
-	toolGroup.add(tool);
-	palette.setDefaultEntry(tool);
-	
-	// Add a marquee tool to the group
-	toolGroup.add(new MarqueeToolEntry());
+		// Add a selection tool to the group
+		ToolEntry tool = new PanningSelectionToolEntry();
+		toolGroup.add(tool);
+		palette.setDefaultEntry(tool);
 
-	// Add a (unnamed) separator to the group
-	toolGroup.add(new PaletteSeparator());
+		// Add a marquee tool to the group
+		toolGroup.add(new MarqueeToolEntry());
 
-	// Add (solid-line) connection tool 
-	tool = new ConnectionCreationToolEntry(
-			"State transition",
-			"Create a transition between states",
-			new CreationFactory() {
-				public Object getNewObject() { return null; }
-				// see ShapeEditPart#createEditPolicies() 
-				// this is abused to transmit the desired line style 
-				public Object getObjectType() { return TransitionElement.SOLID_CONNECTION; }
-			},
-			ImageDescriptor.createFromFile(WorkflowEditorPaletteFactory.class, "icons/connection_s16.gif"),
-			ImageDescriptor.createFromFile(WorkflowEditorPaletteFactory.class, "icons/connection_s24.gif"));
-	toolGroup.add(tool);
+		// Add a (unnamed) separator to the group
+		toolGroup.add(new PaletteSeparator());
 
+		// Add (solid-line) connection tool
+		tool = new ConnectionCreationToolEntry("State transition",
+				"Create a transition between states", new CreationFactory() {
+					@Override
+					public Object getNewObject() {
+						return null;
+					}
 
-	return toolGroup;
-}
+					// see ShapeEditPart#createEditPolicies()
+					// this is abused to transmit the desired line style
+					@Override
+					public Object getObjectType() {
+						return TransitionElement.SOLID_CONNECTION;
+					}
+				}, ImageDescriptor.createFromFile(
+						WorkflowEditorPaletteFactory.class,
+						"icons/connection_s16.gif"),
+				ImageDescriptor.createFromFile(
+						WorkflowEditorPaletteFactory.class,
+						"icons/connection_s24.gif"));
+		toolGroup.add(tool);
 
-/** Utility class. */
-private WorkflowEditorPaletteFactory() {
-	// Utility class
-}
+		return toolGroup;
+	}
+
+	/** Utility class. */
+	private WorkflowEditorPaletteFactory() {
+		// Utility class
+	}
 
 }

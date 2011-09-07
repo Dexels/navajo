@@ -31,12 +31,12 @@ public class TaskElement extends WorkflowModelElement {
 	 * descriptor).
 	 */
 	/** Property ID to use when the location of this shape is modified. */
-//	private static final long serialVersionUID = 1;
+	// private static final long serialVersionUID = 1;
 	/** Property ID to use then the size of this shape is modified. */
 	/** Property ID to use when the list of outgoing connections is modified. */
-//	public static final String SOURCE_CONNECTIONS_PROP = "Shape.SourceConn";
+	// public static final String SOURCE_CONNECTIONS_PROP = "Shape.SourceConn";
 	/** Property ID to use when the list of incoming connections is modified. */
-//	public static final String TARGET_CONNECTIONS_PROP = "Shape.TargetConn";
+	// public static final String TARGET_CONNECTIONS_PROP = "Shape.TargetConn";
 	/**
 	 * ID for the Width property value (used for by the corresponding property
 	 * descriptor).
@@ -46,8 +46,8 @@ public class TaskElement extends WorkflowModelElement {
 	public static final String SERVICE_PROP = "Task.service";
 
 	/** Location of this shape. */
-	private Point location = new Point((int) (Math.random() * 200), (int) (Math
-			.random() * 200));
+	private Point location = new Point((int) (Math.random() * 200),
+			(int) (Math.random() * 200));
 	/** Size of this shape. */
 	private Dimension size = new Dimension(100, 50);
 	/** List of outgoing Connections. */
@@ -73,7 +73,9 @@ public class TaskElement extends WorkflowModelElement {
 	 * Initializes the property descriptors array.
 	 * 
 	 * @see #getPropertyDescriptors()
+	 * 
 	 * @see #getPropertyValue(Object)
+	 * 
 	 * @see #setPropertyValue(Object, Object)
 	 */
 	static {
@@ -139,6 +141,7 @@ public class TaskElement extends WorkflowModelElement {
 	 * @see #getPropertyValue(Object)
 	 * @see #setPropertyValue(Object, Object)
 	 */
+	@Override
 	public IPropertyDescriptor[] getPropertyDescriptors() {
 		return descriptors;
 	}
@@ -153,6 +156,7 @@ public class TaskElement extends WorkflowModelElement {
 	 * @see #descriptors
 	 * @see #getPropertyDescriptors()
 	 */
+	@Override
 	public Object getPropertyValue(Object propertyId) {
 		if (NAVAJO_PROP.equals(propertyId)) {
 			return navajo;
@@ -183,6 +187,7 @@ public class TaskElement extends WorkflowModelElement {
 	 * @see #descriptors
 	 * @see #getPropertyDescriptors()
 	 */
+	@Override
 	public void setPropertyValue(Object propertyId, Object value) {
 		if (NAVAJO_PROP.equals(propertyId)) {
 			navajo = (String) value;
@@ -201,13 +206,14 @@ public class TaskElement extends WorkflowModelElement {
 		}
 	}
 
+	@Override
 	public String toString() {
 		return navajo + "->" + service;
 	}
 
 	public void setState(StateElement stateElement) {
 		myState = stateElement;
-		
+
 	}
 
 	public String getRequest() {

@@ -15,17 +15,19 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
 
 public class StateElement extends WorkflowModelElement {
 
-	
-	
-	/** 
-	 * A static array of property descriptors.
-	 * There is one IPropertyDescriptor entry per editable property.
+	/**
+	 * A static array of property descriptors. There is one IPropertyDescriptor
+	 * entry per editable property.
+	 * 
 	 * @see #getPropertyDescriptors()
 	 * @see #getPropertyValue(Object)
 	 * @see #setPropertyValue(Object, Object)
 	 */
 	private static IPropertyDescriptor[] descriptors;
-	/** ID for the Height property value (used for by the corresponding property descriptor). */
+	/**
+	 * ID for the Height property value (used for by the corresponding property
+	 * descriptor).
+	 */
 	private static final String HEIGHT_PROP = "Shape.Height";
 	/** Property ID to use when the location of this shape is modified. */
 	public static final String LOCATION_PROP = "Shape.Location";
@@ -36,20 +38,28 @@ public class StateElement extends WorkflowModelElement {
 	public static final String SOURCE_CONNECTIONS_PROP = "Shape.SourceConn";
 	/** Property ID to use when the list of incoming connections is modified. */
 	public static final String TARGET_CONNECTIONS_PROP = "Shape.TargetConn";
-	/** ID for the Width property value (used for by the corresponding property descriptor). */
+	/**
+	 * ID for the Width property value (used for by the corresponding property
+	 * descriptor).
+	 */
 	private static final String WIDTH_PROP = "Shape.Width";
 
-	/** ID for the X property value (used for by the corresponding property descriptor).  */
+	/**
+	 * ID for the X property value (used for by the corresponding property
+	 * descriptor).
+	 */
 	private static final String XPOS_PROP = "Shape.xPos";
-	/** ID for the Y property value (used for by the corresponding property descriptor).  */
+	/**
+	 * ID for the Y property value (used for by the corresponding property
+	 * descriptor).
+	 */
 	private static final String YPOS_PROP = "Shape.yPos";
-	
 
 	public static final String ID_PROP = "State.id";
 
-	
 	/** Location of this shape. */
-	private Point location = new Point((int)(Math.random()*200), (int)(Math.random()*200));
+	private Point location = new Point((int) (Math.random() * 200),
+			(int) (Math.random() * 200));
 	/** Size of this shape. */
 	private Dimension size = new Dimension(100, 50);
 	/** List of outgoing Connections. */
@@ -57,7 +67,6 @@ public class StateElement extends WorkflowModelElement {
 	/** List of incoming Connections. */
 	private List targetConnections = new ArrayList();
 
-	
 	private List tasks = new ArrayList();
 
 	private XMLElement myElement;
@@ -65,55 +74,58 @@ public class StateElement extends WorkflowModelElement {
 	private WorkflowElement root = null;
 
 	private String id = null;
-	
+
 	public StateElement() {
 		id = "new";
 	}
-	
-	
-	
+
 	public void setRoot(WorkflowElement root) {
 		this.root = root;
 	}
 
 	/*
 	 * Initializes the property descriptors array.
+	 * 
 	 * @see #getPropertyDescriptors()
+	 * 
 	 * @see #getPropertyValue(Object)
+	 * 
 	 * @see #setPropertyValue(Object, Object)
 	 */
 	static {
-		descriptors = new IPropertyDescriptor[] { 
-//				new TextPropertyDescriptor(XPOS_PROP, "X"), // id and description pair
-//				new TextPropertyDescriptor(YPOS_PROP, "Y"),
-//				new TextPropertyDescriptor(WIDTH_PROP, "Width"),
-//				new TextPropertyDescriptor(HEIGHT_PROP, "Height"),
-				new TextPropertyDescriptor(ID_PROP, "Id"),
-				
-				
+		descriptors = new IPropertyDescriptor[] {
+		// new TextPropertyDescriptor(XPOS_PROP, "X"), // id and description
+		// pair
+		// new TextPropertyDescriptor(YPOS_PROP, "Y"),
+		// new TextPropertyDescriptor(WIDTH_PROP, "Width"),
+		// new TextPropertyDescriptor(HEIGHT_PROP, "Height"),
+		new TextPropertyDescriptor(ID_PROP, "Id"),
+
 		};
 		// use a custom cell editor validator for all four array entries
-//		for (int i = 0; i < 4; i++) {
-//			((PropertyDescriptor) descriptors[i]).setValidator(new ICellEditorValidator() {
-//				public String isValid(Object value) {
-//					int intValue = -1;
-//					try {
-//						intValue = Integer.parseInt((String) value);
-//					} catch (NumberFormatException exc) {
-//						return "Not a number";
-//					}
-//					return (intValue >= 0) ? null : "Value must be >=  0";
-//				}
-//			});
-//		}
+		// for (int i = 0; i < 4; i++) {
+		// ((PropertyDescriptor) descriptors[i]).setValidator(new
+		// ICellEditorValidator() {
+		// public String isValid(Object value) {
+		// int intValue = -1;
+		// try {
+		// intValue = Integer.parseInt((String) value);
+		// } catch (NumberFormatException exc) {
+		// return "Not a number";
+		// }
+		// return (intValue >= 0) ? null : "Value must be >=  0";
+		// }
+		// });
+		// }
 	} // static
-
-
 
 	/**
 	 * Add an incoming or outgoing connection to this shape.
-	 * @param conn a non-null connection instance
-	 * @throws IllegalArgumentException if the connection is null or has not distinct endpoints
+	 * 
+	 * @param conn
+	 *            a non-null connection instance
+	 * @throws IllegalArgumentException
+	 *             if the connection is null or has not distinct endpoints
 	 */
 	void addConnection(TransitionElement conn) {
 		if (conn == null || conn.getSource() == conn.getTarget()) {
@@ -128,10 +140,9 @@ public class StateElement extends WorkflowModelElement {
 		}
 	}
 
-
-
 	/**
 	 * Return the Location of this shape.
+	 * 
 	 * @return a non-null location instance
 	 */
 	public Point getLocation() {
@@ -139,28 +150,36 @@ public class StateElement extends WorkflowModelElement {
 	}
 
 	public String getId() {
-		return id ;
+		return id;
 	}
-	
+
 	/**
 	 * Returns an array of IPropertyDescriptors for this shape.
-	 * <p>The returned array is used to fill the property view, when the edit-part corresponding
-	 * to this model element is selected.</p>
+	 * <p>
+	 * The returned array is used to fill the property view, when the edit-part
+	 * corresponding to this model element is selected.
+	 * </p>
+	 * 
 	 * @see #descriptors
 	 * @see #getPropertyValue(Object)
 	 * @see #setPropertyValue(Object, Object)
 	 */
+	@Override
 	public IPropertyDescriptor[] getPropertyDescriptors() {
 		return descriptors;
 	}
 
 	/**
 	 * Return the property value for the given propertyId, or null.
-	 * <p>The property view uses the IDs from the IPropertyDescriptors array 
-	 * to obtain the value of the corresponding properties.</p>
+	 * <p>
+	 * The property view uses the IDs from the IPropertyDescriptors array to
+	 * obtain the value of the corresponding properties.
+	 * </p>
+	 * 
 	 * @see #descriptors
 	 * @see #getPropertyDescriptors()
 	 */
+	@Override
 	public Object getPropertyValue(Object propertyId) {
 		if (XPOS_PROP.equals(propertyId)) {
 			return Integer.toString(location.x);
@@ -183,6 +202,7 @@ public class StateElement extends WorkflowModelElement {
 
 	/**
 	 * Return the Size of this shape.
+	 * 
 	 * @return a non-null Dimension instance
 	 */
 	public Dimension getSize() {
@@ -205,8 +225,11 @@ public class StateElement extends WorkflowModelElement {
 
 	/**
 	 * Remove an incoming or outgoing connection from this shape.
-	 * @param conn a non-null connection instance
-	 * @throws IllegalArgumentException if the parameter is null
+	 * 
+	 * @param conn
+	 *            a non-null connection instance
+	 * @throws IllegalArgumentException
+	 *             if the parameter is null
 	 */
 	void removeConnection(TransitionElement conn) {
 		if (conn == null) {
@@ -223,8 +246,11 @@ public class StateElement extends WorkflowModelElement {
 
 	/**
 	 * Set the Location of this shape.
-	 * @param newLocation a non-null Point instance
-	 * @throws IllegalArgumentException if the parameter is null
+	 * 
+	 * @param newLocation
+	 *            a non-null Point instance
+	 * @throws IllegalArgumentException
+	 *             if the parameter is null
 	 */
 	public void setLocation(Point newLocation) {
 		if (newLocation == null) {
@@ -235,13 +261,17 @@ public class StateElement extends WorkflowModelElement {
 	}
 
 	/**
-	 * Set the property value for the given property id.
-	 * If no matching id is found, the call is forwarded to the superclass.
-	 * <p>The property view uses the IDs from the IPropertyDescriptors array to set the values
-	 * of the corresponding properties.</p>
+	 * Set the property value for the given property id. If no matching id is
+	 * found, the call is forwarded to the superclass.
+	 * <p>
+	 * The property view uses the IDs from the IPropertyDescriptors array to set
+	 * the values of the corresponding properties.
+	 * </p>
+	 * 
 	 * @see #descriptors
 	 * @see #getPropertyDescriptors()
 	 */
+	@Override
 	public void setPropertyValue(Object propertyId, Object value) {
 		if (XPOS_PROP.equals(propertyId)) {
 			int x = Integer.parseInt((String) value);
@@ -256,7 +286,7 @@ public class StateElement extends WorkflowModelElement {
 			int width = Integer.parseInt((String) value);
 			setSize(new Dimension(width, size.height));
 		} else if (ID_PROP.equals(propertyId)) {
-			
+
 			id = (String) value;
 		} else {
 			super.setPropertyValue(propertyId, value);
@@ -264,9 +294,10 @@ public class StateElement extends WorkflowModelElement {
 	}
 
 	/**
-	 * Set the Size of this shape.
-	 * Will not modify the size if newSize is null.
-	 * @param newSize a non-null Dimension instance or null
+	 * Set the Size of this shape. Will not modify the size if newSize is null.
+	 * 
+	 * @param newSize
+	 *            a non-null Dimension instance or null
 	 */
 	public void setSize(Dimension newSize) {
 		if (newSize != null) {
@@ -277,44 +308,43 @@ public class StateElement extends WorkflowModelElement {
 
 	public void load(XMLElement st) {
 		myElement = st;
-		if(myElement!=null) {
+		if (myElement != null) {
 			id = myElement.getStringAttribute("id");
 		}
 	}
 
 	public void loadState() {
-		if(myElement==null) {
+		if (myElement == null) {
 			return;
 		}
 		Vector transitions = myElement.getChildren();
 		for (int i = 0; i < transitions.size(); i++) {
-			XMLElement currentChild = (XMLElement)transitions.get(i);
+			XMLElement currentChild = (XMLElement) transitions.get(i);
 			if (currentChild.getName().equals("transition")) {
-				
-				
+
 				String id = currentChild.getStringAttribute("nextstate");
 				StateElement dest = root.getShape(id);
 				try {
-					TransitionElement s = new TransitionElement(this,dest);
+					TransitionElement s = new TransitionElement(this, dest);
 					s.load(currentChild);
-				
+
 				} catch (Throwable e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			//	addConnection(s);
+				// addConnection(s);
 			} else {
-				if(currentChild.getName().equals("task")) {
+				if (currentChild.getName().equals("task")) {
 					TaskElement te = new TaskElement();
 					te.setRoot(root);
 					te.load(currentChild);
 					te.setState(this);
 					tasks.add(te);
 				}
-		
+
 			}
 		}
-		setSize(new Dimension(150,30*tasks.size()+50));
+		setSize(new Dimension(150, 30 * tasks.size() + 50));
 	}
 
 	public Image getIcon() {
@@ -325,43 +355,39 @@ public class StateElement extends WorkflowModelElement {
 		this.id = id;
 	}
 
+	@Override
 	public String toString() {
-		if(id==null) {
+		if (id == null) {
 			return "Finished";
 		}
-		if(id.equals("null")) {
+		if (id.equals("null")) {
 			return "Finished";
 		}
 		return id;
 	}
-	
+
 	public List getChildren() {
 		return sourceConnections;
 	}
-
-
 
 	public List getTasks() {
 		// TODO Auto-generated method stub
 		return tasks;
 	}
 
-	
-
-
 	public XMLElement toXml() {
 		XMLElement xe = new CaseSensitiveXMLElement();
 		xe.setName("state");
 		for (int i = 0; i < tasks.size(); i++) {
-			TaskElement st = (TaskElement)tasks.get(i);
+			TaskElement st = (TaskElement) tasks.get(i);
 			xe.addChild(st.toXml());
 		}
 		for (int i = 0; i < sourceConnections.size(); i++) {
-			TransitionElement st = (TransitionElement)sourceConnections.get(i);
+			TransitionElement st = (TransitionElement) sourceConnections.get(i);
 			xe.addChild(st.toXml());
 		}
 		xe.setAttribute("id", id);
 		return xe;
 	}
-	
+
 }

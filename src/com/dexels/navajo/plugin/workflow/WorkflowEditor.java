@@ -46,19 +46,17 @@ public class WorkflowEditor extends GraphicalEditorWithFlyoutPalette {
 
 	@Override
 	protected PaletteRoot getPaletteRoot() {
-		if (PALETTE_MODEL == null)
+		if (PALETTE_MODEL == null) {
 			PALETTE_MODEL = WorkflowEditorPaletteFactory.createPalette();
+		}
 		return PALETTE_MODEL;
 	}
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		diagram.doSave(currentFile,monitor);
-		
-	}
-	
-	
+		diagram.doSave(currentFile, monitor);
 
+	}
 
 	public WorkflowEditor() {
 		setEditDomain(new DefaultEditDomain(this));
@@ -76,6 +74,7 @@ public class WorkflowEditor extends GraphicalEditorWithFlyoutPalette {
 	 * 
 	 * @see org.eclipse.gef.ui.parts.GraphicalEditor#configureGraphicalViewer()
 	 */
+	@Override
 	protected void configureGraphicalViewer() {
 		super.configureGraphicalViewer();
 
@@ -94,21 +93,26 @@ public class WorkflowEditor extends GraphicalEditorWithFlyoutPalette {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gef.ui.parts.GraphicalEditor#commandStackChanged(java.util.EventObject)
+	 * @see
+	 * org.eclipse.gef.ui.parts.GraphicalEditor#commandStackChanged(java.util
+	 * .EventObject)
 	 */
+	@Override
 	public void commandStackChanged(EventObject event) {
 		firePropertyChange(IEditorPart.PROP_DIRTY);
 		super.commandStackChanged(event);
 	}
 
-
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette#createPaletteViewerProvider()
+	 * @see org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette#
+	 * createPaletteViewerProvider()
 	 */
+	@Override
 	protected PaletteViewerProvider createPaletteViewerProvider() {
 		return new PaletteViewerProvider(getEditDomain()) {
+			@Override
 			protected void configurePaletteViewer(PaletteViewer viewer) {
 				super.configurePaletteViewer(viewer);
 				// create a drag source listener for this palette viewer
@@ -118,9 +122,8 @@ public class WorkflowEditor extends GraphicalEditorWithFlyoutPalette {
 				// CombinatedTemplateCreationEntries
 				// from the palette into the editor
 				// @see ShapesEditor#createTransferDropTargetListener()
-				viewer
-						.addDragSourceListener(new TemplateTransferDragSourceListener(
-								viewer));
+				viewer.addDragSourceListener(new TemplateTransferDragSourceListener(
+						viewer));
 			}
 		};
 	}
@@ -134,15 +137,18 @@ public class WorkflowEditor extends GraphicalEditorWithFlyoutPalette {
 	 */
 	private TransferDropTargetListener createTransferDropTargetListener() {
 		return new TemplateTransferDropTargetListener(getGraphicalViewer()) {
+			@Override
 			protected CreationFactory getFactory(Object template) {
 				return new SimpleFactory((Class) template);
 			}
 		};
 	}
 
+	@Override
 	public Object getAdapter(Class type) {
-		if (type.isAssignableFrom(ContentOutlinePage.class))
+		if (type.isAssignableFrom(ContentOutlinePage.class)) {
 			return new ShapesOutlinePage(new TreeViewer());
+		}
 		return super.getAdapter(type);
 	}
 
@@ -161,6 +167,7 @@ public class WorkflowEditor extends GraphicalEditorWithFlyoutPalette {
 	 * 
 	 * @see org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette#initializeGraphicalViewer()
 	 */
+	@Override
 	protected void initializeGraphicalViewer() {
 		super.initializeGraphicalViewer();
 		GraphicalViewer viewer = getGraphicalViewer();
@@ -175,6 +182,7 @@ public class WorkflowEditor extends GraphicalEditorWithFlyoutPalette {
 	 * 
 	 * @see org.eclipse.ui.ISaveablePart#isSaveAsAllowed()
 	 */
+	@Override
 	public boolean isSaveAsAllowed() {
 		return true;
 	}
@@ -184,6 +192,7 @@ public class WorkflowEditor extends GraphicalEditorWithFlyoutPalette {
 	 * 
 	 * @see org.eclipse.ui.part.EditorPart#setInput(org.eclipse.ui.IEditorInput)
 	 */
+	@Override
 	protected void setInput(IEditorInput input) {
 		super.setInput(input);
 		try {
@@ -216,8 +225,11 @@ public class WorkflowEditor extends GraphicalEditorWithFlyoutPalette {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see org.eclipse.ui.part.IPage#createControl(org.eclipse.swt.widgets.Composite)
+		 * @see
+		 * org.eclipse.ui.part.IPage#createControl(org.eclipse.swt.widgets.Composite
+		 * )
 		 */
+		@Override
 		public void createControl(Composite parent) {
 			// create outline viewer page
 			getViewer().createControl(parent);
@@ -249,6 +261,7 @@ public class WorkflowEditor extends GraphicalEditorWithFlyoutPalette {
 		 * 
 		 * @see org.eclipse.ui.part.IPage#dispose()
 		 */
+		@Override
 		public void dispose() {
 			// unhook outline viewer
 			getSelectionSynchronizer().removeViewer(getViewer());
@@ -261,6 +274,7 @@ public class WorkflowEditor extends GraphicalEditorWithFlyoutPalette {
 		 * 
 		 * @see org.eclipse.ui.part.IPage#getControl()
 		 */
+		@Override
 		public Control getControl() {
 			return getViewer().getControl();
 		}
@@ -268,6 +282,7 @@ public class WorkflowEditor extends GraphicalEditorWithFlyoutPalette {
 		/**
 		 * @see org.eclipse.ui.part.IPageBookViewPage#init(org.eclipse.ui.part.IPageSite)
 		 */
+		@Override
 		public void init(IPageSite pageSite) {
 			super.init(pageSite);
 			ActionRegistry registry = getActionRegistry();

@@ -32,8 +32,11 @@ class ShapeComponentEditPolicy extends ComponentEditPolicy {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gef.editpolicies.ComponentEditPolicy#createDeleteCommand(org.eclipse.gef.requests.GroupRequest)
+	 * @see
+	 * org.eclipse.gef.editpolicies.ComponentEditPolicy#createDeleteCommand(
+	 * org.eclipse.gef.requests.GroupRequest)
 	 */
+	@Override
 	protected Command createDeleteCommand(GroupRequest deleteRequest) {
 		Object parent = getHost().getParent().getModel();
 		Object child = getHost().getModel();
@@ -53,11 +56,10 @@ class ShapeComponentEditPolicy extends ComponentEditPolicy {
 	@Override
 	public boolean understandsRequest(Request req) {
 		// TODO Auto-generated method stub
-		System.err.println("Understands targed: "+req.getType());
-		System.err.println("Req: "+req.getClass());
+		System.err.println("Understands targed: " + req.getType());
+		System.err.println("Req: " + req.getClass());
 		return true;
-//		return super.understandsRequest(req);
+		// return super.understandsRequest(req);
 	}
-
 
 }

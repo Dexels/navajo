@@ -26,97 +26,107 @@ import org.eclipse.jface.resource.ImageDescriptor;
 
 import com.dexels.navajo.plugin.workflow.model.StateElement;
 import com.dexels.navajo.plugin.workflow.model.TransitionElement;
- 
+
 /**
  * Utility class that can create a GEF Palette.
- * @see #createPalette() 
+ * 
+ * @see #createPalette()
  * @author Elias Volanakis
  */
 final class ShapesEditorPaletteFactory {
 
-/** Preference ID used to persist the palette location. */
-private static final String PALETTE_DOCK_LOCATION = "ShapesEditorPaletteFactory.Location";
-/** Preference ID used to persist the palette size. */
-private static final String PALETTE_SIZE = "ShapesEditorPaletteFactory.Size";
-/** Preference ID used to persist the flyout palette's state. */
-private static final String PALETTE_STATE = "ShapesEditorPaletteFactory.State";
+	/** Preference ID used to persist the palette location. */
+	private static final String PALETTE_DOCK_LOCATION = "ShapesEditorPaletteFactory.Location";
+	/** Preference ID used to persist the palette size. */
+	private static final String PALETTE_SIZE = "ShapesEditorPaletteFactory.Size";
+	/** Preference ID used to persist the flyout palette's state. */
+	private static final String PALETTE_STATE = "ShapesEditorPaletteFactory.State";
 
-/** Create the "Shapes" drawer. */
-private static PaletteContainer createShapesDrawer() {
-	PaletteDrawer componentsDrawer = new PaletteDrawer("State");
+	/** Create the "Shapes" drawer. */
+	private static PaletteContainer createShapesDrawer() {
+		PaletteDrawer componentsDrawer = new PaletteDrawer("State");
 
-	CombinedTemplateCreationEntry component = new CombinedTemplateCreationEntry(
-			"State", 
-			"Create a new State", 
-			StateElement.class,
-			new SimpleFactory(StateElement.class), 
-			ImageDescriptor.createFromFile(ShapesPlugin.class, "icons/ellipse16.gif"), 
-			ImageDescriptor.createFromFile(ShapesPlugin.class, "icons/ellipse24.gif"));
-	componentsDrawer.add(component);
-	return componentsDrawer;
-}
-	
-/**
- * Creates the PaletteRoot and adds all palette elements.
- * Use this factory method to create a new palette for your graphical editor.
- * @return a new PaletteRoot
- */
-static PaletteRoot createPalette() {
-	PaletteRoot palette = new PaletteRoot();
-	palette.add(createToolsGroup(palette));
-	palette.add(createShapesDrawer());
-	return palette;
-}
+		CombinedTemplateCreationEntry component = new CombinedTemplateCreationEntry(
+				"State", "Create a new State", StateElement.class,
+				new SimpleFactory(StateElement.class),
+				ImageDescriptor.createFromFile(ShapesPlugin.class,
+						"icons/ellipse16.gif"), ImageDescriptor.createFromFile(
+						ShapesPlugin.class, "icons/ellipse24.gif"));
+		componentsDrawer.add(component);
+		return componentsDrawer;
+	}
 
-/** Create the "Tools" group. */
-private static PaletteContainer createToolsGroup(PaletteRoot palette) {
-	PaletteGroup toolGroup = new PaletteGroup("Transitions");
+	/**
+	 * Creates the PaletteRoot and adds all palette elements. Use this factory
+	 * method to create a new palette for your graphical editor.
+	 * 
+	 * @return a new PaletteRoot
+	 */
+	static PaletteRoot createPalette() {
+		PaletteRoot palette = new PaletteRoot();
+		palette.add(createToolsGroup(palette));
+		palette.add(createShapesDrawer());
+		return palette;
+	}
 
-	// Add a selection tool to the group
-	ToolEntry tool = new PanningSelectionToolEntry();
-	toolGroup.add(tool);
-	palette.setDefaultEntry(tool);
-	
-	// Add a marquee tool to the group
-	toolGroup.add(new MarqueeToolEntry());
+	/** Create the "Tools" group. */
+	private static PaletteContainer createToolsGroup(PaletteRoot palette) {
+		PaletteGroup toolGroup = new PaletteGroup("Transitions");
 
-	// Add a (unnamed) separator to the group
-	toolGroup.add(new PaletteSeparator());
+		// Add a selection tool to the group
+		ToolEntry tool = new PanningSelectionToolEntry();
+		toolGroup.add(tool);
+		palette.setDefaultEntry(tool);
 
-	// Add (solid-line) connection tool 
-	tool = new ConnectionCreationToolEntry(
-			"Transition",
-			"Create a Transition",
-			new CreationFactory() {
-				public Object getNewObject() { return null; }
-				// see ShapeEditPart#createEditPolicies() 
-				// this is abused to transmit the desired line style 
-				public Object getObjectType() { return TransitionElement.SOLID_CONNECTION; }
-			},
-			ImageDescriptor.createFromFile(ShapesPlugin.class, "icons/connection_s16.gif"),
-			ImageDescriptor.createFromFile(ShapesPlugin.class, "icons/connection_s24.gif"));
-	toolGroup.add(tool);
-	
-	// Add (dashed-line) connection tool
-//	tool = new ConnectionCreationToolEntry(
-//			"Dashed connection",
-//			"Create a dashed-line connection",
-//			new CreationFactory() {
-//				public Object getNewObject() { return null; }
-//				// see ShapeEditPart#createEditPolicies()
-//				// this is abused to transmit the desired line style 
-//				public Object getObjectType() { return TransitionElement.DASHED_CONNECTION; }
-//			},
-//			ImageDescriptor.createFromFile(ShapesPlugin.class, "icons/connection_d16.gif"),
-//			ImageDescriptor.createFromFile(ShapesPlugin.class, "icons/connection_d24.gif"));
-//	toolGroup.add(tool);
+		// Add a marquee tool to the group
+		toolGroup.add(new MarqueeToolEntry());
 
-	return toolGroup;
-}
+		// Add a (unnamed) separator to the group
+		toolGroup.add(new PaletteSeparator());
 
-/** Utility class. */
-private ShapesEditorPaletteFactory() {
-	// Utility class
-}
+		// Add (solid-line) connection tool
+		tool = new ConnectionCreationToolEntry("Transition",
+				"Create a Transition", new CreationFactory() {
+					@Override
+					public Object getNewObject() {
+						return null;
+					}
+
+					// see ShapeEditPart#createEditPolicies()
+					// this is abused to transmit the desired line style
+					@Override
+					public Object getObjectType() {
+						return TransitionElement.SOLID_CONNECTION;
+					}
+				}, ImageDescriptor.createFromFile(ShapesPlugin.class,
+						"icons/connection_s16.gif"),
+				ImageDescriptor.createFromFile(ShapesPlugin.class,
+						"icons/connection_s24.gif"));
+		toolGroup.add(tool);
+
+		// Add (dashed-line) connection tool
+		// tool = new ConnectionCreationToolEntry(
+		// "Dashed connection",
+		// "Create a dashed-line connection",
+		// new CreationFactory() {
+		// public Object getNewObject() { return null; }
+		// // see ShapeEditPart#createEditPolicies()
+		// // this is abused to transmit the desired line style
+		// public Object getObjectType() { return
+		// TransitionElement.DASHED_CONNECTION; }
+		// },
+		// ImageDescriptor.createFromFile(ShapesPlugin.class,
+		// "icons/connection_d16.gif"),
+		// ImageDescriptor.createFromFile(ShapesPlugin.class,
+		// "icons/connection_d24.gif"));
+		// toolGroup.add(tool);
+
+		return toolGroup;
+	}
+
+	/** Utility class. */
+	private ShapesEditorPaletteFactory() {
+		// Utility class
+	}
 
 }

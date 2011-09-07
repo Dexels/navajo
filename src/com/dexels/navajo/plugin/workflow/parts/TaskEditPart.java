@@ -48,8 +48,8 @@ class TaskEditPart extends AbstractGraphicalEditPart implements
 	 * Upon activation, attach to the model element as a property change
 	 * listener.
 	 */
-	
-	
+
+	@Override
 	public void activate() {
 		if (!isActive()) {
 			super.activate();
@@ -62,24 +62,29 @@ class TaskEditPart extends AbstractGraphicalEditPart implements
 	 * 
 	 * @see org.eclipse.gef.editparts.AbstractEditPart#createEditPolicies()
 	 */
-//	protected void createEditPolicies() {
-//		// allow removal of the associated model element
-//		installEditPolicy(EditPolicy.COMPONENT_ROLE,
-//				new ShapeComponentEditPolicy());
-//		// allow the creation of connections and
-//		// and the reconnection of connections between Shape instances
-//
-//	}
+	// protected void createEditPolicies() {
+	// // allow removal of the associated model element
+	// installEditPolicy(EditPolicy.COMPONENT_ROLE,
+	// new ShapeComponentEditPolicy());
+	// // allow the creation of connections and
+	// // and the reconnection of connections between Shape instances
+	//
+	// }
+	@Override
 	protected void createEditPolicies() {
 		// allow removal of the associated model element
-//		installEditPolicy(EditPolicy.COMPONENT_ROLE, new ShapeComponentEditPolicy());
-		installEditPolicy(EditPolicy.COMPONENT_ROLE, new ContainerHighlightEditPolicy());
+		// installEditPolicy(EditPolicy.COMPONENT_ROLE, new
+		// ShapeComponentEditPolicy());
+		installEditPolicy(EditPolicy.COMPONENT_ROLE,
+				new ContainerHighlightEditPolicy());
 	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#createFigure()
 	 */
+	@Override
 	protected IFigure createFigure() {
 		if (getModel() instanceof TaskElement) {
 			TaskElement task = (TaskElement) getModel();
@@ -88,14 +93,14 @@ class TaskEditPart extends AbstractGraphicalEditPart implements
 			tf.setSize(new Dimension(100, 30));
 			return tf;
 		}
-		
+
 		// IFigure f = createFigureForModel();
 		// f.setOpaque(false); // non-transparent figure
 		// // f.setBackgroundColor(ColorConstants.yellow);
 		// //f.setToolTip(new Label("Hoei"));
 		// return f;
 		Ellipse ellipse = new Ellipse();
-		ellipse.setSize(100,30);
+		ellipse.setSize(100, 30);
 		return ellipse;
 	}
 
@@ -103,6 +108,7 @@ class TaskEditPart extends AbstractGraphicalEditPart implements
 	 * Upon deactivation, detach from the model element as a property change
 	 * listener.
 	 */
+	@Override
 	public void deactivate() {
 		if (isActive()) {
 			super.deactivate();
@@ -117,11 +123,12 @@ class TaskEditPart extends AbstractGraphicalEditPart implements
 
 	protected ConnectionAnchor getConnectionAnchor() {
 		if (anchor == null) {
-			if (getModel() instanceof StateElement)
+			if (getModel() instanceof StateElement) {
 				anchor = new ChopboxAnchor(getFigure());
-			else
+			} else {
 				// if Shapes gets extended the conditions above must be updated
 				throw new IllegalArgumentException("unexpected model");
+			}
 		}
 		return anchor;
 	}
@@ -129,8 +136,11 @@ class TaskEditPart extends AbstractGraphicalEditPart implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gef.NodeEditPart#getSourceConnectionAnchor(org.eclipse.gef.ConnectionEditPart)
+	 * @see
+	 * org.eclipse.gef.NodeEditPart#getSourceConnectionAnchor(org.eclipse.gef
+	 * .ConnectionEditPart)
 	 */
+	@Override
 	public ConnectionAnchor getSourceConnectionAnchor(
 			ConnectionEditPart connection) {
 		return getConnectionAnchor();
@@ -139,8 +149,11 @@ class TaskEditPart extends AbstractGraphicalEditPart implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gef.NodeEditPart#getSourceConnectionAnchor(org.eclipse.gef.Request)
+	 * @see
+	 * org.eclipse.gef.NodeEditPart#getSourceConnectionAnchor(org.eclipse.gef
+	 * .Request)
 	 */
+	@Override
 	public ConnectionAnchor getSourceConnectionAnchor(Request request) {
 		return getConnectionAnchor();
 	}
@@ -148,8 +161,11 @@ class TaskEditPart extends AbstractGraphicalEditPart implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gef.NodeEditPart#getTargetConnectionAnchor(org.eclipse.gef.ConnectionEditPart)
+	 * @see
+	 * org.eclipse.gef.NodeEditPart#getTargetConnectionAnchor(org.eclipse.gef
+	 * .ConnectionEditPart)
 	 */
+	@Override
 	public ConnectionAnchor getTargetConnectionAnchor(
 			ConnectionEditPart connection) {
 		return getConnectionAnchor();
@@ -158,8 +174,11 @@ class TaskEditPart extends AbstractGraphicalEditPart implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gef.NodeEditPart#getTargetConnectionAnchor(org.eclipse.gef.Request)
+	 * @see
+	 * org.eclipse.gef.NodeEditPart#getTargetConnectionAnchor(org.eclipse.gef
+	 * .Request)
 	 */
+	@Override
 	public ConnectionAnchor getTargetConnectionAnchor(Request request) {
 		return getConnectionAnchor();
 	}
@@ -167,8 +186,10 @@ class TaskEditPart extends AbstractGraphicalEditPart implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.
+	 * PropertyChangeEvent)
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		String prop = evt.getPropertyName();
 		if (StateElement.SIZE_PROP.equals(prop)
@@ -183,11 +204,12 @@ class TaskEditPart extends AbstractGraphicalEditPart implements
 			// if(myFigure!=null) {
 			// myFigure.setStateElement((StateElement) getModel());
 			// refreshVisuals();
-			//	
+			//
 			// }
 		}
 	}
 
+	@Override
 	protected void refreshVisuals() {
 		// notify parent container of changed position & location
 		// if this line is removed, the XYLayoutManager used by the parent
@@ -195,7 +217,9 @@ class TaskEditPart extends AbstractGraphicalEditPart implements
 		// (the Figure of the ShapesDiagramEditPart), will not know the bounds
 		// of this figure
 		// and will not draw it correctly.
-//		 Rectangle bounds = new Rectangle(getCastedModel().getLocation(),getCastedModel().getSize());
-	//	 ((GraphicalEditPart) getParent()).setLayoutConstraint(this,getFigure(), bounds);
+		// Rectangle bounds = new
+		// Rectangle(getCastedModel().getLocation(),getCastedModel().getSize());
+		// ((GraphicalEditPart)
+		// getParent()).setLayoutConstraint(this,getFigure(), bounds);
 	}
 }

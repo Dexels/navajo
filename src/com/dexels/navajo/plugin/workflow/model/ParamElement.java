@@ -26,7 +26,6 @@ public class ParamElement extends WorkflowModelElement {
 
 	private XMLElement myElement;
 
-	
 	private String name = null;
 	private String expression = null;
 
@@ -35,13 +34,11 @@ public class ParamElement extends WorkflowModelElement {
 	public static final String NAME_PROP = "Name.name";
 	public static final String EXPRESSION_PROP = "Param.expression";
 
-	
 	public ParamElement() {
 		name = "Unparked";
 		expression = "true";
 	}
 
-	
 	static {
 		descriptors = new IPropertyDescriptor[] {
 				new TextPropertyDescriptor(NAME_PROP, "Name"),
@@ -64,6 +61,7 @@ public class ParamElement extends WorkflowModelElement {
 	public Image getIcon() {
 		return RECTANGLE_ICON;
 	}
+
 	/**
 	 * Returns an array of IPropertyDescriptors for this shape.
 	 * <p>
@@ -75,6 +73,7 @@ public class ParamElement extends WorkflowModelElement {
 	 * @see #getPropertyValue(Object)
 	 * @see #setPropertyValue(Object, Object)
 	 */
+	@Override
 	public IPropertyDescriptor[] getPropertyDescriptors() {
 		return descriptors;
 	}
@@ -89,6 +88,7 @@ public class ParamElement extends WorkflowModelElement {
 	 * @see #descriptors
 	 * @see #getPropertyDescriptors()
 	 */
+	@Override
 	public Object getPropertyValue(Object propertyId) {
 		if (NAME_PROP.equals(propertyId)) {
 			return name;
@@ -99,6 +99,7 @@ public class ParamElement extends WorkflowModelElement {
 		return super.getPropertyValue(propertyId);
 	}
 
+	@Override
 	public void setPropertyValue(Object propertyId, Object value) {
 		if (NAME_PROP.equals(propertyId)) {
 			expression = (String) value;
@@ -114,16 +115,16 @@ public class ParamElement extends WorkflowModelElement {
 		if (myElement != null) {
 			name = myElement.getStringAttribute("name");
 			XMLElement e = myElement.getElementByTagName("expression");
-			if(e!=null) {
+			if (e != null) {
 				expression = e.getStringAttribute("value");
 			}
 		}
 	}
 
+	@Override
 	public String toString() {
 		return name + ": " + expression;
 	}
-
 
 	public String getName() {
 		// TODO Auto-generated method stub
@@ -145,7 +146,7 @@ public class ParamElement extends WorkflowModelElement {
 			XMLElement x = new CaseSensitiveXMLElement();
 			x.setName("expression");
 			xe.addChild(x);
-			x.setAttribute("value",expression);
+			x.setAttribute("value", expression);
 		}
 		return xe;
 	}
@@ -153,7 +154,7 @@ public class ParamElement extends WorkflowModelElement {
 	public void setTransition(TransitionElement transitionElement) {
 		// TODO Auto-generated method stub
 		myTransitionElement = transitionElement;
-		
+
 	}
 
 }

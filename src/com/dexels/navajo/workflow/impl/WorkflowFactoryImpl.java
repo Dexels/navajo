@@ -21,35 +21,36 @@ import com.dexels.navajo.workflow.WorkflowFactory;
 import com.dexels.navajo.workflow.WorkflowPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model <b>Factory</b>.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!--
+ * end-user-doc -->
+ * 
  * @generated
  */
-public class WorkflowFactoryImpl extends EFactoryImpl implements WorkflowFactory {
+public class WorkflowFactoryImpl extends EFactoryImpl implements
+		WorkflowFactory {
 	/**
-	 * Creates the default factory implementation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Creates the default factory implementation. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public static WorkflowFactory init() {
 		try {
-			WorkflowFactory theWorkflowFactory = (WorkflowFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.dexels.com/navajo/workflow"); 
+			WorkflowFactory theWorkflowFactory = (WorkflowFactory) EPackage.Registry.INSTANCE
+					.getEFactory("http://www.dexels.com/navajo/workflow");
 			if (theWorkflowFactory != null) {
 				return theWorkflowFactory;
 			}
-		}
-		catch (Exception exception) {
+		} catch (Exception exception) {
 			EcorePlugin.INSTANCE.log(exception);
 		}
 		return new WorkflowFactoryImpl();
 	}
 
 	/**
-	 * Creates an instance of the factory.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Creates an instance of the factory. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public WorkflowFactoryImpl() {
@@ -57,85 +58,97 @@ public class WorkflowFactoryImpl extends EFactoryImpl implements WorkflowFactory
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			case WorkflowPackage.WORKFLOW: return createWorkflow();
-			case WorkflowPackage.STATE: return createState();
-			case WorkflowPackage.TRANSITION: return createTransition();
-			case WorkflowPackage.PARAM: return createParam();
-			case WorkflowPackage.TASK: return createTask();
-			default:
-				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+		case WorkflowPackage.WORKFLOW:
+			return createWorkflow();
+		case WorkflowPackage.STATE:
+			return createState();
+		case WorkflowPackage.TRANSITION:
+			return createTransition();
+		case WorkflowPackage.PARAM:
+			return createParam();
+		case WorkflowPackage.TASK:
+			return createTask();
+		default:
+			throw new IllegalArgumentException("The class '" + eClass.getName()
+					+ "' is not a valid classifier");
 		}
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public Workflow createWorkflow() {
 		WorkflowImpl workflow = new WorkflowImpl();
 		return workflow;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public State createState() {
 		StateImpl state = new StateImpl();
 		return state;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public Transition createTransition() {
 		TransitionImpl transition = new TransitionImpl();
 		return transition;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public Param createParam() {
 		ParamImpl param = new ParamImpl();
 		return param;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public Task createTask() {
 		TaskImpl task = new TaskImpl();
 		return task;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public WorkflowPackage getWorkflowPackage() {
-		return (WorkflowPackage)getEPackage();
+		return (WorkflowPackage) getEPackage();
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @deprecated
 	 * @generated
 	 */
@@ -144,4 +157,4 @@ public class WorkflowFactoryImpl extends EFactoryImpl implements WorkflowFactory
 		return WorkflowPackage.eINSTANCE;
 	}
 
-} //WorkflowFactoryImpl
+} // WorkflowFactoryImpl

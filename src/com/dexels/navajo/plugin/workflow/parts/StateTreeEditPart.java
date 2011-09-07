@@ -22,9 +22,11 @@ import com.dexels.navajo.plugin.workflow.model.WorkflowModelElement;
 
 /**
  * TreeEditPart used for Shape instances (more specific for EllipticalShape and
- * RectangularShape instances). This is used in the Outline View of the ShapesEditor.
- * <p>This edit part must implement the PropertyChangeListener interface, 
- * so it can be notified of property changes in the corresponding model element.
+ * RectangularShape instances). This is used in the Outline View of the
+ * ShapesEditor.
+ * <p>
+ * This edit part must implement the PropertyChangeListener interface, so it can
+ * be notified of property changes in the corresponding model element.
  * </p>
  * 
  * @author Elias Volanakis
@@ -32,64 +34,86 @@ import com.dexels.navajo.plugin.workflow.model.WorkflowModelElement;
 class StateTreeEditPart extends AbstractTreeEditPart implements
 		PropertyChangeListener {
 
-/**
- * Create a new instance of this edit part using the given model element.
- * @param model a non-null Shapes instance
- */
-StateTreeEditPart(StateElement model) {
-	super(model);
-}
-
-/**
- * Upon activation, attach to the model element as a property change listener.
- */
-public void activate() {
-	if (!isActive()) {
-		super.activate();
-		((WorkflowModelElement) getModel()).addPropertyChangeListener(this);
+	/**
+	 * Create a new instance of this edit part using the given model element.
+	 * 
+	 * @param model
+	 *            a non-null Shapes instance
+	 */
+	StateTreeEditPart(StateElement model) {
+		super(model);
 	}
-}
 
-/* (non-Javadoc)
- * @see org.eclipse.gef.editparts.AbstractTreeEditPart#createEditPolicies()
- */
-protected void createEditPolicies() {
-	// allow removal of the associated model element
-	installEditPolicy(EditPolicy.COMPONENT_ROLE, new ShapeComponentEditPolicy());
-}
-
-/**
- * Upon deactivation, detach from the model element as a property change listener.
- */
-public void deactivate() {
-	if (isActive()) {
-		super.deactivate();
-		((WorkflowModelElement) getModel()).removePropertyChangeListener(this);
+	/**
+	 * Upon activation, attach to the model element as a property change
+	 * listener.
+	 */
+	@Override
+	public void activate() {
+		if (!isActive()) {
+			super.activate();
+			((WorkflowModelElement) getModel()).addPropertyChangeListener(this);
+		}
 	}
-}
 
-private StateElement getCastedModel() {
-	return (StateElement) getModel();
-}
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.gef.editparts.AbstractTreeEditPart#createEditPolicies()
+	 */
+	@Override
+	protected void createEditPolicies() {
+		// allow removal of the associated model element
+		installEditPolicy(EditPolicy.COMPONENT_ROLE,
+				new ShapeComponentEditPolicy());
+	}
 
-/* (non-Javadoc)
- * @see org.eclipse.gef.editparts.AbstractTreeEditPart#getImage()
- */
-protected Image getImage() {
-	return getCastedModel().getIcon();
-}
- 
-/* (non-Javadoc)
- * @see org.eclipse.gef.editparts.AbstractTreeEditPart#getText()
- */
-protected String getText() {
-	return getCastedModel().toString();
-}
+	/**
+	 * Upon deactivation, detach from the model element as a property change
+	 * listener.
+	 */
+	@Override
+	public void deactivate() {
+		if (isActive()) {
+			super.deactivate();
+			((WorkflowModelElement) getModel())
+					.removePropertyChangeListener(this);
+		}
+	}
 
-/* (non-Javadoc)
- * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
- */
-public void propertyChange(PropertyChangeEvent evt) {
-	refreshVisuals(); // this will cause an invocation of getImage() and getText(), see below
-}
+	private StateElement getCastedModel() {
+		return (StateElement) getModel();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.gef.editparts.AbstractTreeEditPart#getImage()
+	 */
+	@Override
+	protected Image getImage() {
+		return getCastedModel().getIcon();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.gef.editparts.AbstractTreeEditPart#getText()
+	 */
+	@Override
+	protected String getText() {
+		return getCastedModel().toString();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.
+	 * PropertyChangeEvent)
+	 */
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		refreshVisuals(); // this will cause an invocation of getImage() and
+							// getText(), see below
+	}
 }

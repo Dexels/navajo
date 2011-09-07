@@ -20,43 +20,50 @@ import com.dexels.navajo.plugin.workflow.model.WorkflowElement;
 
 /**
  * Factory that maps model elements to edit parts.
+ * 
  * @author Elias Volanakis
  */
 public class WorkflowEditPartFactory implements EditPartFactory {
 
-/*
- * (non-Javadoc)
- * @see org.eclipse.gef.EditPartFactory#createEditPart(org.eclipse.gef.EditPart, java.lang.Object)
- */
-public EditPart createEditPart(EditPart context, Object modelElement) {
-	// get EditPart for model element
-	EditPart part = getPartForElement(modelElement);
-	// store model element in EditPart
-	part.setModel(modelElement);
-	return part;
-}
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.gef.EditPartFactory#createEditPart(org.eclipse.gef.EditPart,
+	 * java.lang.Object)
+	 */
+	@Override
+	public EditPart createEditPart(EditPart context, Object modelElement) {
+		// get EditPart for model element
+		EditPart part = getPartForElement(modelElement);
+		// store model element in EditPart
+		part.setModel(modelElement);
+		return part;
+	}
 
-/**
- * Maps an object to an EditPart. 
- * @throws RuntimeException if no match was found (programming error)
- */
-private EditPart getPartForElement(Object modelElement) {
-	if (modelElement instanceof WorkflowElement) {
-		return new DiagramEditPart();
+	/**
+	 * Maps an object to an EditPart.
+	 * 
+	 * @throws RuntimeException
+	 *             if no match was found (programming error)
+	 */
+	private EditPart getPartForElement(Object modelElement) {
+		if (modelElement instanceof WorkflowElement) {
+			return new DiagramEditPart();
+		}
+		if (modelElement instanceof StateElement) {
+			return new StateEditPart();
+		}
+		if (modelElement instanceof TransitionElement) {
+			return new TransitionEditPart();
+		}
+		if (modelElement instanceof TaskElement) {
+			return new TaskEditPart();
+		}
+
+		throw new RuntimeException("Can't create part for model element: "
+				+ ((modelElement != null) ? modelElement.getClass().getName()
+						: "null"));
 	}
-	if (modelElement instanceof StateElement) {
-		return new StateEditPart();
-	}
-	if (modelElement instanceof TransitionElement) {
-		return new TransitionEditPart();
-	}
-	if (modelElement instanceof TaskElement) {
-		return new TaskEditPart();
-	}
-	
-	throw new RuntimeException(
-			"Can't create part for model element: "
-			+ ((modelElement != null) ? modelElement.getClass().getName() : "null"));
-}
 
 }

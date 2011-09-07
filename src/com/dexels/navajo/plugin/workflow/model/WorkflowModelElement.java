@@ -10,8 +10,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 
-public abstract class WorkflowModelElement implements IPropertySource
-		 {
+public abstract class WorkflowModelElement implements IPropertySource {
 	/** An empty property descriptor. */
 	private static final IPropertyDescriptor[] EMPTY_ARRAY = new IPropertyDescriptor[0];
 	protected static final Image ELLIPSE_ICON = createImage("icons/ellipse16.gif");
@@ -72,6 +71,7 @@ public abstract class WorkflowModelElement implements IPropertySource
 	 * 
 	 * @return this instance
 	 */
+	@Override
 	public Object getEditableValue() {
 		return this;
 	}
@@ -80,6 +80,7 @@ public abstract class WorkflowModelElement implements IPropertySource
 	 * Children should override this. The default implementation returns an
 	 * empty array.
 	 */
+	@Override
 	public IPropertyDescriptor[] getPropertyDescriptors() {
 		return EMPTY_ARRAY;
 	}
@@ -87,6 +88,7 @@ public abstract class WorkflowModelElement implements IPropertySource
 	/**
 	 * Children should override this. The default implementation returns null.
 	 */
+	@Override
 	public Object getPropertyValue(Object id) {
 		return null;
 	}
@@ -94,6 +96,7 @@ public abstract class WorkflowModelElement implements IPropertySource
 	/**
 	 * Children should override this. The default implementation returns false.
 	 */
+	@Override
 	public boolean isPropertySet(Object id) {
 		return false;
 	}
@@ -125,6 +128,7 @@ public abstract class WorkflowModelElement implements IPropertySource
 	/**
 	 * Children should override this. The default implementation does nothing.
 	 */
+	@Override
 	public void resetPropertyValue(Object id) {
 		// do nothing
 	}
@@ -132,12 +136,14 @@ public abstract class WorkflowModelElement implements IPropertySource
 	/**
 	 * Children should override this. The default implementation does nothing.
 	 */
+	@Override
 	public void setPropertyValue(Object id, Object value) {
 		// do nothing
 	}
-	
+
 	protected static Image createImage(String name) {
-		InputStream stream = StateElement.class.getClassLoader().getResourceAsStream(name);
+		InputStream stream = StateElement.class.getClassLoader()
+				.getResourceAsStream(name);
 		Image image = new Image(null, stream);
 		try {
 			stream.close();
@@ -145,5 +151,5 @@ public abstract class WorkflowModelElement implements IPropertySource
 		}
 		return image;
 	}
-	
+
 }

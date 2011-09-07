@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.geometry.Point;
@@ -126,8 +127,8 @@ public class WorkflowElement extends WorkflowModelElement {
 		try {
 			ByteArrayInputStream bais = new ByteArrayInputStream(x.toString()
 					.getBytes("UTF-8"));
-			f.setContents(bais, IFile.KEEP_HISTORY, ip);
-			
+			f.setContents(bais, IResource.KEEP_HISTORY, ip);
+
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
