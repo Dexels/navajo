@@ -39,7 +39,6 @@ import nextapp.echo2.app.event.ActionEvent;
 import nextapp.echo2.app.event.ActionListener;
 import nextapp.echo2.app.layout.TableLayoutData;
 import nextapp.echo2.app.table.TableCellRenderer;
-import echopointng.table.DefaultSortableTableModel;
 import echopointng.table.SortableTableModel;
 
 /**
@@ -49,90 +48,112 @@ import echopointng.table.SortableTableModel;
  */
 public class MessageTableHeaderRenderer implements TableCellRenderer {
 
-    private static final ImageReference upArrowImage = new ResourceImageReference("/echopointng/resource/images/ArrowUp.gif");
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8746797472974170209L;
 
-    private static final ImageReference downArrowImage = new ResourceImageReference("/echopointng/resource/images/ArrowDown.gif");
+	private static final ImageReference upArrowImage = new ResourceImageReference(
+			"/echopointng/resource/images/ArrowUp.gif");
 
-    /**
-     * @see nextapp.echo2.app.table.TableCellRenderer#getTableCellRendererComponent(nextapp.echo2.app.Table,
-     *      java.lang.Object, int, int)
-     */
-    public Component getTableCellRendererComponent(Table table, Object value, int column, int row) {
-        SortableTableModel model = (SortableTableModel) table.getModel();
-        MessageTable mt = (MessageTable)table;
-        return getSortButton(mt,(String) value, column,  model, (MessageTable) table);
-    }
+	private static final ImageReference downArrowImage = new ResourceImageReference(
+			"/echopointng/resource/images/ArrowDown.gif");
 
-    protected Button getSortButton(MessageTable mt, String label, int column, SortableTableModel model, MessageTable table) {
-    	TableHeaderImpl button = new TableHeaderImpl(label);
-//        Color color = mt.getHeaderForeground();
-//        if (color!=null) {
-//            button.setForeground(color);
-//        }
-//        color = mt.getHeaderBackground();
-//        if (color!=null) {
-//            button.setForeground(color);
-//        }
-//        color = mt.getHeaderPressedBackground();
-//        if (color!=null) {
-//            button.setPressedBackground(color);
-//        }
-//        color = mt.getHeaderPressedForeground();
-//        if (color!=null) {
-//            button.setPressedForeground(color);
-//        }
-//        color = mt.getHeaderRolloverBackground();
-//        if (color!=null) {
-//            button.setRolloverBackground(color);
-//        }
-//        color = mt.getHeaderRolloverForeground();
-//        if (color!=null) {
-//            button.setRolloverForeground(color);
-//        }
-//        
-        button.addActionListener(getSortButtonListener(column, model));
-//        button.setLayoutData(getLayoutData());
-//        button.setInsets(new Insets(2, 0, 0, 0));
-//        
-//        button.setTextPosition(new Alignment(Alignment.CENTER, Alignment.DEFAULT));
-//        
-        
-//        int colsize = table.getColumnSize(column).getValue()-2;
-//        button.setWidth(new Extent(colsize, Extent.PX));
-        
-        button.setHeight(new Extent(mt.getHeaderHeight(), Extent.PX));
+	/**
+	 * @see nextapp.echo2.app.table.TableCellRenderer#getTableCellRendererComponent(nextapp.echo2.app.Table,
+	 *      java.lang.Object, int, int)
+	 */
+	@Override
+	public Component getTableCellRendererComponent(Table table, Object value,
+			int column, int row) {
+		SortableTableModel model = (SortableTableModel) table.getModel();
+		MessageTable mt = (MessageTable) table;
+		return getSortButton(mt, (String) value, column, model,
+				(MessageTable) table);
+	}
 
-        ImageReference icon = null;
-        if (model.getCurrentSortColumn() == column) {
-        	
-        	if (model.getSortDirective(column)==DefaultSortableTableModel.ASCENDING) {
-                icon = upArrowImage;
-            } else {
-                icon = downArrowImage;
-            }
-            button.setIcon(icon);
-        }
+	protected Button getSortButton(MessageTable mt, String label, int column,
+			SortableTableModel model, MessageTable table) {
+		TableHeaderImpl button = new TableHeaderImpl(label);
+		// Color color = mt.getHeaderForeground();
+		// if (color!=null) {
+		// button.setForeground(color);
+		// }
+		// color = mt.getHeaderBackground();
+		// if (color!=null) {
+		// button.setForeground(color);
+		// }
+		// color = mt.getHeaderPressedBackground();
+		// if (color!=null) {
+		// button.setPressedBackground(color);
+		// }
+		// color = mt.getHeaderPressedForeground();
+		// if (color!=null) {
+		// button.setPressedForeground(color);
+		// }
+		// color = mt.getHeaderRolloverBackground();
+		// if (color!=null) {
+		// button.setRolloverBackground(color);
+		// }
+		// color = mt.getHeaderRolloverForeground();
+		// if (color!=null) {
+		// button.setRolloverForeground(color);
+		// }
+		//
+		button.addActionListener(getSortButtonListener(column, model));
+		// button.setLayoutData(getLayoutData());
+		// button.setInsets(new Insets(2, 0, 0, 0));
+		//
+		// button.setTextPosition(new Alignment(Alignment.CENTER,
+		// Alignment.DEFAULT));
+		//
 
-        return button;
-    }
+		// int colsize = table.getColumnSize(column).getValue()-2;
+		// button.setWidth(new Extent(colsize, Extent.PX));
 
-    protected LayoutData getLayoutData() {
-        TableLayoutData data = new TableLayoutData();
-        // data.setBackground(new Color(175,175,239));
-        return data;
-    }
+		button.setHeight(new Extent(mt.getHeaderHeight(), Extent.PX));
 
-    protected ActionListener getSortButtonListener(final int column, final SortableTableModel model) {
-        return new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            	System.err.println("Boioioioin!");
-                int currentSort = model.getCurrentSortColumn();
-                int ascending = SortableTableModel.ASCENDING;
-                if(currentSort>=0) {
-                    ascending = model.getSortDirective(currentSort);
-                }
-                model.sortByColumn(column, ascending==SortableTableModel.ASCENDING?SortableTableModel.DESCENDING:SortableTableModel.ASCENDING);
-            }
-        };
-    }
+		ImageReference icon = null;
+		if (model.getCurrentSortColumn() == column) {
+
+			if (model.getSortDirective(column) == SortableTableModel.ASCENDING) {
+				icon = upArrowImage;
+			} else {
+				icon = downArrowImage;
+			}
+			button.setIcon(icon);
+		}
+
+		return button;
+	}
+
+	protected LayoutData getLayoutData() {
+		TableLayoutData data = new TableLayoutData();
+		// data.setBackground(new Color(175,175,239));
+		return data;
+	}
+
+	protected ActionListener getSortButtonListener(final int column,
+			final SortableTableModel model) {
+		return new ActionListener() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -5681197561161929673L;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.err.println("Boioioioin!");
+				int currentSort = model.getCurrentSortColumn();
+				int ascending = SortableTableModel.ASCENDING;
+				if (currentSort >= 0) {
+					ascending = model.getSortDirective(currentSort);
+				}
+				model.sortByColumn(
+						column,
+						ascending == SortableTableModel.ASCENDING ? SortableTableModel.DESCENDING
+								: SortableTableModel.ASCENDING);
+			}
+		};
+	}
 }

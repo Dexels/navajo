@@ -9,5 +9,6 @@ package com.dexels.navajo.echoclient.components;
 import com.dexels.navajo.document.Property;
 
 public interface TableEditorListener {
-   public void propertyChanged(Property p, String eventType, int column, int row);
+	public void propertyChanged(Property p, String eventType, int column,
+			int row);
 }

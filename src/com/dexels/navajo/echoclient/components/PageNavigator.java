@@ -48,10 +48,16 @@ import com.dexels.navajo.document.NavajoException;
 public class PageNavigator extends Row {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2445605624264163792L;
+
+	/**
 	 * An <code>EventListener</code> to provide notification of page index
 	 * changes.
 	 */
-	public static interface PageIndexChangeListener extends EventListener, Serializable {
+	public static interface PageIndexChangeListener extends EventListener,
+			Serializable {
 
 		/**
 		 * Provides notification of a page index change.
@@ -68,6 +74,10 @@ public class PageNavigator extends Row {
 	 */
 	public class PageIndexChangeEvent extends EventObject {
 
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 6684128956754164585L;
 		private int newPageIndex;
 
 		/**
@@ -101,8 +111,7 @@ public class PageNavigator extends Row {
 	 */
 	public PageNavigator() {
 		super();
-		
-		
+
 	}
 
 	public void initialize() {
@@ -112,6 +121,12 @@ public class PageNavigator extends Row {
 		previousPageButton.setRolloverEnabled(true);
 		previousPageButton.setRolloverIcon(Styles.ICON_24_LEFT_ARROW_ROLLOVER);
 		previousPageButton.addActionListener(new ActionListener() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -967186369832202380L;
+
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				setPageIndex(getPageIndex() - 1);
 			}
@@ -127,17 +142,17 @@ public class PageNavigator extends Row {
 
 		pageField = new Label();
 		pageField.setStyleName("PageNavigator.PageField");
-//		pageField.setWidth(new Extent(4, Extent.EX));
+		// pageField.setWidth(new Extent(4, Extent.EX));
 		pageField.setText("1");
-//		pageField.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent e) {
-//				try {
-//					setPageIndex(Integer.parseInt(pageField.getText()) - 1);
-//				} catch (NumberFormatException ex) {
-//					setPageIndex(getPageIndex());
-//				}
-//			}
-//		});
+		// pageField.addActionListener(new ActionListener() {
+		// public void actionPerformed(ActionEvent e) {
+		// try {
+		// setPageIndex(Integer.parseInt(pageField.getText()) - 1);
+		// } catch (NumberFormatException ex) {
+		// setPageIndex(getPageIndex());
+		// }
+		// }
+		// });
 		entryRow.add(pageField);
 
 		Label prepositionLabel = new Label("Totaal:");
@@ -150,17 +165,30 @@ public class PageNavigator extends Row {
 		nextPageButton.setRolloverEnabled(true);
 		nextPageButton.setRolloverIcon(Styles.ICON_24_RIGHT_ARROW_ROLLOVER);
 		nextPageButton.addActionListener(new ActionListener() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -7550564950228140160L;
+
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				setPageIndex(getPageIndex() + 1);
 			}
 		});
 		add(nextPageButton);
-		
+
 		Button printButton = new Button("Print");
 		printButton.addActionListener(new ActionListener() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -8177043022109815038L;
+
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					myTable.getTableReport("pdf", "horizontal", new int[]{5,5,5,5});
+					myTable.getTableReport("pdf", "horizontal", new int[] { 5,
+							5, 5, 5 });
 				} catch (NavajoException e1) {
 					e1.printStackTrace();
 				}
@@ -172,7 +200,7 @@ public class PageNavigator extends Row {
 	public void setTable(MessageTable table) {
 		myTable = table;
 	}
-	
+
 	/**
 	 * Adds a listener to be notified of page index changes.
 	 * 
@@ -188,8 +216,10 @@ public class PageNavigator extends Row {
 	 * changed.
 	 */
 	private void firePageIndexChanged() {
-		EventListener[] listeners = getEventListenerList().getListeners(PageIndexChangeListener.class);
-		System.err.println("Firing index changed... Listeners count: "+listeners.length);
+		EventListener[] listeners = getEventListenerList().getListeners(
+				PageIndexChangeListener.class);
+		System.err.println("Firing index changed... Listeners count: "
+				+ listeners.length);
 		PageIndexChangeEvent e = new PageIndexChangeEvent(getPageIndex());
 		for (int i = 0; i < listeners.length; ++i) {
 			((PageIndexChangeListener) listeners[i]).pageIndexChanged(e);
@@ -231,11 +261,12 @@ public class PageNavigator extends Row {
 	 *            the new page index
 	 */
 	public void setPageIndex(int pageIndex) {
-		System.err.println("Setting to pageIndex: "+pageIndex+" totalPages: "+totalPages);
+		System.err.println("Setting to pageIndex: " + pageIndex
+				+ " totalPages: " + totalPages);
 		if (pageIndex < 0) {
 			pageIndex = 0;
 		}
-		if(totalPages <= 1) {
+		if (totalPages <= 1) {
 			pageIndex = 0;
 		}
 		if (pageIndex > 0 && pageIndex > totalPages - 1) {

@@ -22,18 +22,25 @@ import nextapp.echo2.app.TextField;
  */
 
 public class TipiEchoTextField extends TextField {
-    public TipiEchoTextField() {
-        super();
-		Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(this.getClass(), "Default");
-        setStyle(ss);
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5412559615666842083L;
+
+	public TipiEchoTextField() {
+		super();
+		Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(this.getClass(),
+				"Default");
+		setStyle(ss);
 
 	}
 
-    public TipiEchoTextField(String text) {
-        super();
-		Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(this.getClass(), "Default");
-        setStyle(ss);
+	public TipiEchoTextField(String text) {
+		super();
+		Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(this.getClass(),
+				"Default");
+		setStyle(ss);
 		setText(text);
-    }
+	}
 
 }

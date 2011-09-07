@@ -54,15 +54,19 @@ public class Styles {
 
 	public static final void loadStyleSheet(InputStream is) {
 		try {
-			DEFAULT_STYLE_SHEET = StyleSheetLoader.load(is, Thread.currentThread().getContextClassLoader());
-			if(DEFAULT_STYLE_SHEET!=null) {
+			DEFAULT_STYLE_SHEET = StyleSheetLoader.load(is, Thread
+					.currentThread().getContextClassLoader());
+			if (DEFAULT_STYLE_SHEET != null) {
 				// all is well
 				return;
 			}
 			// fallback:
-			DEFAULT_STYLE_SHEET = StyleSheetLoader.load(STYLE_PATH + "Default.stylesheet", Thread.currentThread().getContextClassLoader());
+			DEFAULT_STYLE_SHEET = StyleSheetLoader.load(STYLE_PATH
+					+ "Default.stylesheet", Thread.currentThread()
+					.getContextClassLoader());
 			if (DEFAULT_STYLE_SHEET != null) {
-				System.err.println("LOADED STYLESHEET: " + DEFAULT_STYLE_SHEET.toString());
+				System.err.println("LOADED STYLESHEET: "
+						+ DEFAULT_STYLE_SHEET.toString());
 			} else {
 				throw new RuntimeException("Stylesheet missing!");
 
@@ -77,39 +81,66 @@ public class Styles {
 	}
 
 	// Images
-	public static final ImageReference NEXTAPP_LOG_IMAGE = new ResourceImageReference(IMAGE_PATH + "NextAppLogo.png");
-	public static final ImageReference ECHO2_IMAGE = new ResourceImageReference(IMAGE_PATH + "Echo2.png");
-	public static final ImageReference SPORTLINK_IMAGE = new ResourceImageReference(IMAGE_PATH + "sportlinklogo.gif");
-	public static final ImageReference DEXELS_IMAGE = new ResourceImageReference(IMAGE_PATH + "logodexels.gif");
-	public static final ImageReference DEXELS_BACKGROUND = new ResourceImageReference(IMAGE_PATH + "dexbackground.png");
-	public static final ImageReference WEBMAIL_EXAMPLE_IMAGE = new ResourceImageReference(IMAGE_PATH + "WebMailExample.png");
-	public static final ImageReference ICON_24_LEFT_ARROW = new ResourceImageReference(IMAGE_PATH + "navigate_left.png");
-	public static final ImageReference ICON_24_RIGHT_ARROW = new ResourceImageReference(IMAGE_PATH + "navigate_right.png");
-	public static final ImageReference ICON_24_LEFT_ARROW_DISABLED = new ResourceImageReference(IMAGE_PATH + "navigate_left.png");
-	public static final ImageReference ICON_24_RIGHT_ARROW_DISABLED = new ResourceImageReference(IMAGE_PATH + "navigate_right.png");
-	public static final ImageReference ICON_24_LEFT_ARROW_ROLLOVER = new ResourceImageReference(IMAGE_PATH + "navigate_left.png");
-	public static final ImageReference ICON_24_RIGHT_ARROW_ROLLOVER = new ResourceImageReference(IMAGE_PATH + "navigate_right.png");
+	public static final ImageReference NEXTAPP_LOG_IMAGE = new ResourceImageReference(
+			IMAGE_PATH + "NextAppLogo.png");
+	public static final ImageReference ECHO2_IMAGE = new ResourceImageReference(
+			IMAGE_PATH + "Echo2.png");
+	public static final ImageReference SPORTLINK_IMAGE = new ResourceImageReference(
+			IMAGE_PATH + "sportlinklogo.gif");
+	public static final ImageReference DEXELS_IMAGE = new ResourceImageReference(
+			IMAGE_PATH + "logodexels.gif");
+	public static final ImageReference DEXELS_BACKGROUND = new ResourceImageReference(
+			IMAGE_PATH + "dexbackground.png");
+	public static final ImageReference WEBMAIL_EXAMPLE_IMAGE = new ResourceImageReference(
+			IMAGE_PATH + "WebMailExample.png");
+	public static final ImageReference ICON_24_LEFT_ARROW = new ResourceImageReference(
+			IMAGE_PATH + "navigate_left.png");
+	public static final ImageReference ICON_24_RIGHT_ARROW = new ResourceImageReference(
+			IMAGE_PATH + "navigate_right.png");
+	public static final ImageReference ICON_24_LEFT_ARROW_DISABLED = new ResourceImageReference(
+			IMAGE_PATH + "navigate_left.png");
+	public static final ImageReference ICON_24_RIGHT_ARROW_DISABLED = new ResourceImageReference(
+			IMAGE_PATH + "navigate_right.png");
+	public static final ImageReference ICON_24_LEFT_ARROW_ROLLOVER = new ResourceImageReference(
+			IMAGE_PATH + "navigate_left.png");
+	public static final ImageReference ICON_24_RIGHT_ARROW_ROLLOVER = new ResourceImageReference(
+			IMAGE_PATH + "navigate_right.png");
 	// public static final ImageReference ICON_24_EXIT = new
 	// ResourceImageReference(IMAGE_PATH + "Icon24Exit.gif");
-	public static final ImageReference ICON_24_EXIT = new ResourceImageReference(IMAGE_PATH + "exit.png");
-	public static final ImageReference ICON_24_SUBSCRIPTIONS = new ResourceImageReference(IMAGE_PATH + "note.png");
-	public static final ImageReference ICON_24_ADD_SUBSCRIPTION = new ResourceImageReference(IMAGE_PATH + "note_add.png");
-	public static final ImageReference ICON_24_UPDATE_SUBSCRIPTION = new ResourceImageReference(IMAGE_PATH + "note_new.png");
-	public static final ImageReference ICON_24_DELETE_SUBSCRIPTION = new ResourceImageReference(IMAGE_PATH + "note_delete.png");
-	public static final ImageReference ICON_24_ADD_ADDRESS = new ResourceImageReference(IMAGE_PATH + "mail_add.png");
-	public static final ImageReference ICON_24_DELETE_ADDRESS = new ResourceImageReference(IMAGE_PATH + "mail_delete.png");
-	public static final ImageReference ICON_24_ADDRESSES = new ResourceImageReference(IMAGE_PATH + "mail.png");
-	public static final ImageReference ICON_24_EDIT_PASSWORD = new ResourceImageReference(IMAGE_PATH + "id_card.png");
-	public static final ImageReference ICON_24_MAIL_REPLY = new ResourceImageReference(IMAGE_PATH + "Icon24MailReply.gif");
+	public static final ImageReference ICON_24_EXIT = new ResourceImageReference(
+			IMAGE_PATH + "exit.png");
+	public static final ImageReference ICON_24_SUBSCRIPTIONS = new ResourceImageReference(
+			IMAGE_PATH + "note.png");
+	public static final ImageReference ICON_24_ADD_SUBSCRIPTION = new ResourceImageReference(
+			IMAGE_PATH + "note_add.png");
+	public static final ImageReference ICON_24_UPDATE_SUBSCRIPTION = new ResourceImageReference(
+			IMAGE_PATH + "note_new.png");
+	public static final ImageReference ICON_24_DELETE_SUBSCRIPTION = new ResourceImageReference(
+			IMAGE_PATH + "note_delete.png");
+	public static final ImageReference ICON_24_ADD_ADDRESS = new ResourceImageReference(
+			IMAGE_PATH + "mail_add.png");
+	public static final ImageReference ICON_24_DELETE_ADDRESS = new ResourceImageReference(
+			IMAGE_PATH + "mail_delete.png");
+	public static final ImageReference ICON_24_ADDRESSES = new ResourceImageReference(
+			IMAGE_PATH + "mail.png");
+	public static final ImageReference ICON_24_EDIT_PASSWORD = new ResourceImageReference(
+			IMAGE_PATH + "id_card.png");
+	public static final ImageReference ICON_24_MAIL_REPLY = new ResourceImageReference(
+			IMAGE_PATH + "Icon24MailReply.gif");
 	// public static final ImageReference ICON_24_REFRESH = new
 	// ResourceImageReference(IMAGE_PATH + "Icon24Refresh.gif");
-	public static final ImageReference ICON_24_REFRESH = new ResourceImageReference(IMAGE_PATH + "recycle.png");
-	public static final ImageReference ICON_24_DELETE = new ResourceImageReference(IMAGE_PATH + "garbage.png");
-	public static final ImageReference ICON_24_MAIL_COMPOSE = new ResourceImageReference(IMAGE_PATH + "Icon24MailCompose.gif");
+	public static final ImageReference ICON_24_REFRESH = new ResourceImageReference(
+			IMAGE_PATH + "recycle.png");
+	public static final ImageReference ICON_24_DELETE = new ResourceImageReference(
+			IMAGE_PATH + "garbage.png");
+	public static final ImageReference ICON_24_MAIL_COMPOSE = new ResourceImageReference(
+			IMAGE_PATH + "Icon24MailCompose.gif");
 	// public static final ImageReference ICON_24_NO = new
 	// ResourceImageReference(IMAGE_PATH + "Icon24No.gif");
-	public static final ImageReference ICON_24_NO = new ResourceImageReference(IMAGE_PATH + "navigate_cross_red.png");
+	public static final ImageReference ICON_24_NO = new ResourceImageReference(
+			IMAGE_PATH + "navigate_cross_red.png");
 	// public static final ImageReference ICON_24_YES = new
 	// ResourceImageReference(IMAGE_PATH + "Icon24Yes.gif");
-	public static final ImageReference ICON_24_YES = new ResourceImageReference(IMAGE_PATH + "navigate_check_green.png");
+	public static final ImageReference ICON_24_YES = new ResourceImageReference(
+			IMAGE_PATH + "navigate_check_green.png");
 }
