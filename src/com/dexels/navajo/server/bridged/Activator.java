@@ -24,7 +24,7 @@ public class Activator implements BundleActivator {
 		serviceTracker = new HttpServiceTracker(context);
 	    serviceTracker.open();
 	    
-		ServiceReference sr = bundleContext.getServiceReference("org.osgi.service.http.HttpService");
+		ServiceReference<HttpService> sr = (ServiceReference<HttpService>) bundleContext.getServiceReference("org.osgi.service.http.HttpService");
 		HttpService o = (HttpService) bundleContext.getService(sr);
 		BridgeComponent bc = new BridgeComponent();
 		bc.setHttpService(o);
