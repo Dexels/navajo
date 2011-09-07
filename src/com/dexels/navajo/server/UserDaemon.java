@@ -2,7 +2,6 @@ package com.dexels.navajo.server;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import com.dexels.navajo.document.Message;
@@ -19,7 +18,7 @@ import com.dexels.navajo.util.AuditLog;
 public class UserDaemon extends GenericThread {
 
 	private static HashMap<String, UserDaemon> userServices = new HashMap<String,UserDaemon>();
-	private int sleepTime;
+//	private int sleepTime;
 	
 	public static void startService(UserDaemon userService) {
 		if (!userServices.containsKey(userService.getMyId()) ) {
@@ -36,6 +35,7 @@ public class UserDaemon extends GenericThread {
 		return userServices.get(id);
 	}
 	
+	@SuppressWarnings("unchecked")
 	protected static void startup() {
 		// Read XML config with user services.
 	    /*
@@ -67,7 +67,7 @@ public class UserDaemon extends GenericThread {
 					// Make sure to intialize instance!
 					ClassLoader cl = DispatcherFactory.getInstance().getNavajoConfig().getClassloader();
 					try {
-						Class c = Class.forName(className.getValue(), true,cl);
+						Class<? extends UserDaemon> c = (Class<? extends UserDaemon>) Class.forName(className.getValue(), true,cl);
 						UserDaemon ud = (UserDaemon) c.newInstance();
 						ud.setSleepTime(Integer.parseInt(sleepTime.getValue()));
 						startService(ud);

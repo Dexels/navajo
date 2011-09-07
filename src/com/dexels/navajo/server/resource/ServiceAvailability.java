@@ -23,6 +23,8 @@ public class ServiceAvailability {
 	 */
 	private int health = STATUS_OK;
 	private String webservice;
+
+
 	private int MIN_WAITING_TIME = 100;
 	private int waitingTime = MIN_WAITING_TIME;
 	public String [] unavailableResources = new String[]{};
@@ -71,6 +73,10 @@ public class ServiceAvailability {
 	 */
 	public int getWaitingTime() {
 		return ( waitingTime > MIN_WAITING_TIME ? waitingTime : MIN_WAITING_TIME );
+	}
+	
+	public String getWebservice() {
+		return webservice;
 	}
 	
 	/**

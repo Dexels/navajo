@@ -18,7 +18,7 @@ public class GetRemoteObjectAnswer extends Answer {
 		super(request);
 		
 		if ( o instanceof SoftReference<?>) {
-			myObject = ((SoftReference) o).get();
+			myObject = ((SoftReference<?>) o).get();
 			isSoftReference = true;
 		} else {
 			myObject = o;
@@ -35,7 +35,7 @@ public class GetRemoteObjectAnswer extends Answer {
 		if ( !isSoftReference ) {
 			return myObject;
 		} else {
-			return new SoftReference(myObject);
+			return new SoftReference<Object>(myObject);
 		}
 	}
 

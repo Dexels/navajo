@@ -20,7 +20,6 @@ public class SNMPManager implements CompositeData {
 	public static final String V1 = "V1";
 	public static final String V2 = "V2";
 	
-	@SuppressWarnings("unchecked")
 	private HashMap items = new HashMap();
 	
 	@SuppressWarnings("unchecked")
@@ -100,7 +99,6 @@ public class SNMPManager implements CompositeData {
 					new OpenType[]{SimpleType.STRING, SimpleType.INTEGER, SimpleType.STRING}
 					);
 		} catch (OpenDataException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

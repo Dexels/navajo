@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
-
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
 import javax.management.ListenerNotFoundException;
@@ -28,14 +27,11 @@ import javax.management.NotificationListener;
 import javax.management.ObjectName;
 import javax.management.monitor.GaugeMonitor;
 import javax.management.monitor.Monitor;
-import javax.management.monitor.MonitorNotification;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.rmi.RMIConnector;
 import javax.management.remote.rmi.RMIServer;
 
-import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.util.AuditLog;
 
 public final class JMXHelper  {

@@ -17,7 +17,6 @@ import com.dexels.navajo.lockguard.LockManager;
 import com.dexels.navajo.mapping.AsyncStore;
 import com.dexels.navajo.persistence.PersistenceManager;
 import com.dexels.navajo.persistence.PersistenceManagerFactory;
-import com.dexels.navajo.persistence.impl.PersistenceManagerImpl;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.Repository;
@@ -32,7 +31,7 @@ public class TestNavajoConfig implements NavajoConfigInterface {
 	String group = "testgroup";
 	
 	private PersistenceManager myPersistenceManager;
-	private Repository myRepository;
+//	private Repository myRepository;
 	private NavajoClassSupplier myClassloader;
 	private StatisticsRunnerInterface myStatisticsRunner;
 	
@@ -75,7 +74,7 @@ public class TestNavajoConfig implements NavajoConfigInterface {
 	}
 
 	public double getCurrentCPUload() {
-		// TODO Auto-generated method stub
+		
 		return 0;
 	}
 
@@ -87,9 +86,9 @@ public class TestNavajoConfig implements NavajoConfigInterface {
 		this.myPersistenceManager = myPersistenceManager;
 	}
 
-	public void setMyRepository(Repository myRepository) {
-		this.myRepository = myRepository;
-	}
+//	public void setMyRepository(Repository myRepository) {
+//		this.myRepository = myRepository;
+//	}
 
 	public void writeConfig(String name, Navajo conf) throws IOException {
 		File f = getTempFile(name);
@@ -98,7 +97,6 @@ public class TestNavajoConfig implements NavajoConfigInterface {
 		try {
 			conf.write(fw);
 		} catch (NavajoException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		fw.close();
@@ -121,17 +119,17 @@ public class TestNavajoConfig implements NavajoConfigInterface {
 	}
 
 	public String getAdapterPath() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	public AsyncStore getAsyncStore() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	public float getAsyncTimeout() {
-		// TODO Auto-generated method stub
+		
 		return 0;
 	}
 
@@ -140,122 +138,122 @@ public class TestNavajoConfig implements NavajoConfigInterface {
 	}
 
 	public String getBetaUser() {
-		// TODO Auto-generated method stub
+		
 		return "beta";
 	}
 
 	public String getCompiledScriptPath() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	public String getDbPath() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	public DescriptionProviderInterface getDescriptionProvider() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	public int getMonitorExceedTotaltime() {
-		// TODO Auto-generated method stub
+		
 		return 0;
 	}
 
 	public String getMonitorUsers() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	public String getMonitorWebservices() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	public HashMap<String, String> getProperties() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	public String getResourcePath() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	public String getScriptPath() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	public boolean isAsyncEnabled() {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
 	public boolean isEnableStatisticsRunner() {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
 	public boolean isIntegrityWorkerEnabled() {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
 	public boolean isLockManagerEnabled() {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
 	public boolean isMonitorOn() {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
 	public boolean isStatisticsRunnerEnabled() {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
 	public void setMonitorExceedTotaltime(int monitorExceedTotaltime) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
 	public void setMonitorOn(boolean b) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
 	public void setMonitorUsers(String monitorUsers) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
 	public void setMonitorWebservices(String monitorWebservices) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
 	public void setStatisticsRunnerEnabled(boolean b) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
 	public boolean needsFullAccessLog(Access a) {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
 	public InputStream getScript(String name) throws IOException {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	public void doClearCache() {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
@@ -265,57 +263,57 @@ public class TestNavajoConfig implements NavajoConfigInterface {
 	}
 
 	public boolean isCompileScripts() {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
 	public File getJarFolder() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	public String getClassPath() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	public void doClearScriptCache() {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
 	public WorkerInterface getIntegrityWorker() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	public LockManager getLockManager() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	public int getMaxAccessSetSize() {
-		// TODO Auto-generated method stub
+		
 		return 0;
 	}
 
 	public void setRepository(Repository newRepository) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
 	public void startJabber() {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
 	public void startStatisticsRunner() {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
 	public void startTaskRunner() {
-		// TODO Auto-generated method stub	
+			
 	}
 	
 	public static void main(String [] args) throws Exception {
@@ -332,22 +330,22 @@ public class TestNavajoConfig implements NavajoConfigInterface {
 	}
 
 	public Message getMessage(String msg) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	public InputStream getResourceBundle(String name) throws IOException {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	public String getCompilationLanguage() {
-		// TODO Auto-generated method stub
+		
 		return "javascript";
 	}
 
 	public File getContextRoot() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 

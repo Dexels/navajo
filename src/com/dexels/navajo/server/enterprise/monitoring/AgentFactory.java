@@ -28,8 +28,8 @@ public class AgentFactory {
 				
 				if ( instance == null ) {
 					try {
-						Class c = Class.forName(className);
-						AgentInterface dummy = (AgentInterface) c.newInstance();
+						Class<? extends AgentInterface> c = (Class<? extends AgentInterface>) Class.forName(className);
+						AgentInterface dummy = c.newInstance();
 						Method m = c.getMethod("getInstance", (Class []) null);
 						instance = (AgentInterface) m.invoke(dummy, (Object []) null);
 					} catch (Throwable e) {

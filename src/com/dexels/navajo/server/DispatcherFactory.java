@@ -10,13 +10,7 @@ import javax.script.ScriptEngineManager;
 
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.events.NavajoEventRegistry;
-import com.dexels.navajo.server.enterprise.monitoring.AgentFactory;
-import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerFactory;
-import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
-import com.dexels.navajo.server.enterprise.xmpp.JabberWorkerFactory;
 import com.dexels.navajo.server.jmx.JMXHelper;
-import com.dexels.navajo.util.AuditLog;
 
 public class DispatcherFactory {
 

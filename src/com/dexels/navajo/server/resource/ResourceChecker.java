@@ -47,12 +47,13 @@ public class ResourceChecker {
 	protected ResourceChecker(String webservice) {
 
 		this.webservice = webservice;
-		GenericHandler gh = new GenericHandler();
+		// Don't know if this is needed
+		new GenericHandler();
 		StringBuffer compilerErrors = new StringBuffer();
 		try {
 			Access a = new Access();
 			a.rpcName = webservice;
-			this.myCompiledScript = gh.compileScript(a, compilerErrors);
+			this.myCompiledScript = GenericHandler.compileScript(a, compilerErrors);
 			if ( myCompiledScript == null ) {
 				System.err.println("ResourceChecker: Could not find compiledscript for: " + webservice);
 			} else {
@@ -63,6 +64,7 @@ public class ResourceChecker {
 		}
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public final void init() {
 
 		if ( myCompiledScript.getDependentObjects() == null ) {
