@@ -17,6 +17,11 @@
       [Enter License Description here.]
    </license>
 
+   <requires>
+      <import feature="com.dexels.navajo.tipi.feature" version="1.0.45.qualifier"/>
+      <import plugin="com.dexels.navajo.core"/>
+   </requires>
+
    <plugin
          id="com.dexels.navajo.tipi.echo"
          download-size="0"

@@ -11,6 +11,5 @@
 	<modules>
 		<module>../NavajoEchoTipi</module>
 		<module>../NavajoEchoClient</module>
-		<module>../NavajoTipi</module>
 	</modules>
 </project>
