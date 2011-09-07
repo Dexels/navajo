@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?artifactRepository version='1.1.0'?>
+<artifacts size='1'>
+  <artifact classifier='osgi.bundle' id='com.dexels.navajo.workflow.editor' version='1.0.0.201109070930'>
+    <properties size='6'>
+      <property name='artifact.size' value='111159'/>
+      <property name='download.size' value='111159'/>
+      <property name='download.md5' value='436fdd5fbcefe81b47377b80ea4b69a3'/>
+      <property name='maven-groupId' value='com.dexels.navajo.core'/>
+      <property name='maven-artifactId' value='com.dexels.navajo.workflow.editor'/>
+      <property name='maven-version' value='1.0.0.qualifier'/>
+    </properties>
+  </artifact>
+</artifacts>
