@@ -10,28 +10,5 @@
 
 	<modules>
 		<module>../NavajoTipi</module>
-		<module>../TipiFacilityOccpation</module>
-		<module>../TipiFlickr</module>
-		<module>../TipiGeoSwing</module>
-		<module>../TipiJabber</module>
-		<module>../TipiJxLayer</module>
-		<module>../TipiMail</module>
-		<module>../TipiRss</module>
-		<module>../TipiRuby</module>
-		<module>../TipiSubstance</module>
-		<module>../NavajoSwingTipi</module>
-		<module>../NavajoRichClient</module>
-		<module>../NavajoRichTipi</module>
-		<module>../TipiSwingMig</module>
-		<module>../TipiSwingClient</module>
-		<module>../NavajoSwingEditor</module>
-		<module>../TipiSwingEditor</module>
-		<module>../TipiSwingX</module>
-		<module>../TipiCharting</module>
-		<module>../TipiSvgBatik</module>
-		<module>../TipiSwingDocking</module>
-		<module>../com.dexels.navajo.tipi.swing.deps</module>
-		<module>../com.dexels.navajo.tipi.vaadin</module>
-		<module>../TipiCobraBrowser</module>
 	</modules>
 </project>
