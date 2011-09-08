@@ -53,6 +53,9 @@ import javax.servlet.http.HttpServletResponse;
  * A class used to encapsulate a file response, and
  * factory methods to create some common types.
  */
+
+@SuppressWarnings({"unused" })
+
 abstract public class DownloadResponse {    
     private static final String HEADER_LASTMOD      = "Last-Modified";    
     private static final String HEADER_JNLP_VERSION = "x-java-jnlp-version-id";

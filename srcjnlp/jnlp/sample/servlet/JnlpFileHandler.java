@@ -66,6 +66,9 @@ import org.w3c.dom.NodeList;
 /* The JNLP file handler implements a class that keeps
  * track of JNLP files and their specializations
  */
+
+@SuppressWarnings({ "unchecked", "unused","rawtypes","deprecation" })
+
 public class JnlpFileHandler {
     private static final String JNLP_MIME_TYPE = "application/x-java-jnlp-file";
     private static final String HEADER_LASTMOD = "Last-Modified";

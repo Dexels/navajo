@@ -67,6 +67,8 @@ import java.util.jar.JarOutputStream;
  *
  * @version 1.13, 06/26/03
  */
+@SuppressWarnings({ "unchecked", "unused","rawtypes" })
+
 public class JarDiff implements JarDiffConstants {
     private static final int DEFAULT_READ_SIZE = 2048;
     private static byte[] newBytes = new byte[DEFAULT_READ_SIZE];
@@ -89,7 +91,7 @@ public class JarDiff implements JarDiffConstants {
      * Creates a patch from the two passed in files, writing the result
      * to <code>os</code>.
      */
-    public static void createPatch(String oldPath, String newPath,
+	public static void createPatch(String oldPath, String newPath,
                             OutputStream os, boolean minimal) throws IOException{
         JarFile2 oldJar = new JarFile2(oldPath);
         JarFile2 newJar = new JarFile2(newPath);

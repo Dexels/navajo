@@ -56,6 +56,7 @@ import javax.servlet.ServletContext;
  *     - lastModified date of WAR file resource
  * 
  */
+
 public class JnlpResource {       
     private static final String JNLP_MIME_TYPE      = "application/x-java-jnlp-file";
     private static final String JAR_MIME_TYPE       = "application/x-java-archive";
@@ -92,7 +93,7 @@ public class JnlpResource {
     private long   _lastModified;    // Last modified in WAR file
     private String _mimeType;        // Mime-type for resource
     private String _returnVersionId; // Version Id to return
-    private String _encoding;        // Accept encoding
+//    private String _encoding;        // Accept encoding
     
     public JnlpResource(ServletContext context, String path) { 
 	this(context, null, null, null, null, null, path, null); 
@@ -120,7 +121,7 @@ public class JnlpResource {
 			String returnVersionId,
 			String encoding) {	
 	// Matching arguments
-	_encoding = encoding;
+//	_encoding = encoding;
 	_name = name;
 	_versionId = versionId;	
 	_osList = osList;

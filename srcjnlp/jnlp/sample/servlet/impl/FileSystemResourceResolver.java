@@ -2,14 +2,13 @@ package jnlp.sample.servlet.impl;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import jnlp.sample.servlet.ResourceResolver;
 
 public class FileSystemResourceResolver implements ResourceResolver {
    private static final String JNLP_MIME_TYPE      = "application/x-java-jnlp-file";
-   private static final String JAR_MIME_TYPE       = "application/x-java-archive";
+//   private static final String JAR_MIME_TYPE       = "application/x-java-archive";
 
    private static final String JAR_MIME_TYPE_NEW   = "application/java-archive";
    

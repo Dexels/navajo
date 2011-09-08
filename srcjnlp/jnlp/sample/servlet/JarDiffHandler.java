@@ -53,6 +53,8 @@ import jnlp.sample.util.VersionString;
  * A class that generates and caches information about JarDiff files
  *
  */
+@SuppressWarnings({ "unchecked","rawtypes" })
+
 public class JarDiffHandler {
     // Default size of download buffer
     private static final int BUF_SIZE = 32 * 1024;

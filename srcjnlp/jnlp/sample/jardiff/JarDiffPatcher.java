@@ -66,6 +66,8 @@ import java.util.zip.ZipEntry;
  *
  * @version 1.11, 06/26/03
  */
+@SuppressWarnings({ "unchecked", "unused","rawtypes" })
+
 public class JarDiffPatcher implements JarDiffConstants, Patcher {
     private static final int DEFAULT_READ_SIZE = 2048;
     private static byte[] newBytes = new byte[DEFAULT_READ_SIZE];
@@ -76,7 +78,7 @@ public class JarDiffPatcher implements JarDiffConstants, Patcher {
 	return JarDiff.getResources();
     }
     
-    public void applyPatch(Patcher.PatchDelegate delegate, String oldJarPath,
+	public void applyPatch(Patcher.PatchDelegate delegate, String oldJarPath,
                            String jarDiffPath, OutputStream result) throws IOException {
             File oldFile = new File(oldJarPath);
             File diffFile = new File(jarDiffPath);

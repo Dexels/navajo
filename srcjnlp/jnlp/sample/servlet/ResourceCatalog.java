@@ -51,6 +51,8 @@ import jnlp.sample.util.VersionString;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXParseException;
 
+@SuppressWarnings({ "unchecked", "unused","rawtypes" })
+
 public class ResourceCatalog {
     public static final String VERSION_XML_FILENAME = "version.xml";
     

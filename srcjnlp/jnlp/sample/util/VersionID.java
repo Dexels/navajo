@@ -46,6 +46,8 @@ import java.util.Arrays;
  *  be used when stored with a VersionString
  *
  */
+@SuppressWarnings({ "unchecked", "rawtypes" })
+
 public class VersionID implements Comparable {
     private String[] _tuple;   // Array of Integer or String objects
     private boolean  _usePrefixMatch;   // star (*) prefix
@@ -58,7 +60,7 @@ public class VersionID implements Comparable {
 	_usePrefixMatch  = false;
 	_useGreaterThan = false;
 	_isCompound = false;
-	if (str == null && str.length() == 0) {
+	if (str == null ) {
 	    _tuple = new String[0];
 	    return;
 	}

@@ -169,8 +169,8 @@ public class Logger {
     /** Helper function that applies the messageArguments to a message from the resource object */
     private String applyPattern(String key, Object[] messageArguments) {
         String message = getString(key);
-        MessageFormat formatter = new MessageFormat(message);
-        String output = formatter.format(message, messageArguments);
+//        MessageFormat formatter = new MessageFormat(message);
+        String output = MessageFormat.format(message, messageArguments);
         return output;
     }
     

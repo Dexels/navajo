@@ -45,6 +45,8 @@ import java.util.StringTokenizer;
  *  (version-id ('+'?) ' ') *
  *
  */
+@SuppressWarnings({ "unchecked", "rawtypes" })
+
 public class VersionString {
     private ArrayList _versionIds;
     

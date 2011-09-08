@@ -41,14 +41,11 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.dexels.navajo.tipi.TipiAdminServlet;
 
 import jnlp.sample.servlet.impl.FileSystemResourceResolver;
 
@@ -70,9 +67,13 @@ import jnlp.sample.servlet.impl.FileSystemResourceResolver;
  *
  * @version 1.8 01/23/03
  */
+@SuppressWarnings({  "unused","rawtypes" })
+
 public class JnlpDownloadServlet extends HttpServlet {
     
-    // Localization
+	private static final long serialVersionUID = -351516869579920417L;
+
+	// Localization
     private static ResourceBundle  _resourceBundle = null; 
     
     // Servlet configuration

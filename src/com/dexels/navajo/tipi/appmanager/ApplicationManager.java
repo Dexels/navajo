@@ -114,6 +114,6 @@ private ServletContext context = null;
 		ApplicationManager m = new ApplicationManager();
 		m.setAppsFolder(new File("WebContent"));
 		List<ApplicationStatus> apps = m.getApplications();
-//		System.err.println("Appcount: "+apps.size());
+		System.err.println("Appcount: "+apps.size());
 	}
 }

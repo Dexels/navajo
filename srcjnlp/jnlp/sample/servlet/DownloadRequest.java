@@ -45,6 +45,8 @@ import javax.servlet.http.HttpServletRequest;
  * The DownloadRequest incapsulates all the data in a request
  * SQE: We need to address query string
  */
+@SuppressWarnings({ "unchecked", "rawtypes" })
+
 public class DownloadRequest {
     // Arguments
     private static final String ARG_ARCH                = "arch";

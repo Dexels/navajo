@@ -29,7 +29,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.dexels.navajo.tipi.appmanager.ApplicationStatus;
 import com.dexels.navajo.tipi.projectbuilder.ClientActions;
 import com.dexels.navajo.tipi.projectbuilder.ProjectBuilder;
 import com.dexels.navajo.tipi.projectbuilder.XsdBuilder;
@@ -393,13 +392,11 @@ public class TipiAdminServlet extends HttpServlet {
 			copyResource(response.getOutputStream(), new FileInputStream(new File(currentAppdir,"tipi/tipi.xsd")));
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	private void download(String application, File appDir, HttpServletResponse response) throws IOException {
-		// TODO Auto-generated method stub
 		// application/x-zip-compressed
 		response.setContentType("application/x-zip-compressed");
 		response.setHeader("Content-Disposition", "attachment; filename=\"" + application + ".zip" + "\"");
@@ -431,8 +428,6 @@ public class TipiAdminServlet extends HttpServlet {
 	
 
 	private void downloadDeploy(String application, String deploy, String profile, File appDir, HttpServletResponse response) throws IOException {
-		// TODO Auto-generated method stub
-		// application/x-zip-compressed
 		response.setContentType("application/x-zip-compressed");
 		String fileName = application;
 		if(deploy!=null) {
@@ -526,7 +521,6 @@ public class TipiAdminServlet extends HttpServlet {
 				props.put("managerUsername", tipiProps.get("managerUsername"));
 				props.put("managerPassword", tipiProps.get("managerPassword"));
 				props.put("tipiAppstore", "true");
-				// TODO should be done for all properties
 				props.put("applicationContext", processProfileData(tipiProps.get("applicationContext"),profile));
 				// 
 				

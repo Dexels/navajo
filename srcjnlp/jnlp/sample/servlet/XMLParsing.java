@@ -48,6 +48,8 @@ import org.w3c.dom.Text;
 /** Contains handy methods for looking up information
  *  stored in XMLNodes.
  */
+@SuppressWarnings({ "unchecked", "rawtypes" })
+
 public class XMLParsing {
        
     public static XMLNode convert(Node n) {

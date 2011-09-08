@@ -41,7 +41,9 @@ package jnlp.sample.servlet;
  *  the message that should be returned in the HTTP respond
  */
 public class ErrorResponseException extends Exception {
-    private DownloadResponse _downloadResponse;
+    
+	private static final long serialVersionUID = -2901864463591877732L;
+	private DownloadResponse _downloadResponse;
     
     public ErrorResponseException(DownloadResponse downloadResponse) {
 	_downloadResponse = downloadResponse;
