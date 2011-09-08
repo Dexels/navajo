@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="com.dexels.navajo.tipi.swing.mig.feature"
-      label="Jabber tools for Tipi"
+      label="Tipi Swing MigLayout integration"
       version="1.0.0.qualifier"
       provider-name="Dexels">
 
