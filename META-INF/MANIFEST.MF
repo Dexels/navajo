@@ -1,5 +1,5 @@
 Bundle-Name: Navajo Swing Editor
-Bundle-SymbolicName: com.dexels.navajo.swingeditor
+Bundle-SymbolicName: com.dexels.navajo.swing.editor
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.1.1.qualifier
