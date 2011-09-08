@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="com.dexels.navajo.tipi.swing.editor.feature"
-      label="Jabber tools for Tipi"
+      label="Tipi Swing Rich Text / HTML Editor"
       version="1.0.0.qualifier"
       provider-name="Dexels">
 
@@ -18,14 +18,14 @@
    </license>
 
    <plugin
-         id="com.dexels.navajo.swingeditor"
+         id="com.dexels.navajo.tipi.swing.editor"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="com.dexels.navajo.tipi.swingeditor"
+         id="com.dexels.navajo.swing.editor"
          download-size="0"
          install-size="0"
          version="0.0.0"
