@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="com.dexels.navajo.tipi.swing.docking.feature"
-      label="Jabber tools for Tipi"
+      label="Tipi Swing Docking framework"
       version="1.0.0.qualifier"
       provider-name="Dexels">
 
