@@ -1,5 +1,5 @@
 
-cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.workflow.editor /home/cvs/ccom.dexels.navajo.workflow.editor
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.workflow.editor /home/cvs/com.dexels.navajo.workflow.editor
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.workflow.editor.gmf /home/cvs/com.dexels.navajo.workflow.editor.gmf
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.workflow.feature /home/cvs/com.dexels.navajo.workflow.feature
 
