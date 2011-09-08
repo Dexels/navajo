@@ -36,14 +36,14 @@
          version="0.0.0"/>
 
    <plugin
-         id="com.dexels.navajo.tipi.swingclient"
+         id="com.dexels.navajo.tipi.swing.application"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="com.dexels.navajo.tipi.swing.application"
+         id="com.dexels.navajo.tipi.swing.client"
          download-size="0"
          install-size="0"
          version="0.0.0"
