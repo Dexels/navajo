@@ -1,0 +1,10 @@
+author_transforms={
+    'frank' : ('Frank Lyaruu', 'frank@dexels.com'),
+    'arjen' : ('Arjen Schoneveld', 'arjen@dexels.com'),
+    'mbergman' : ('Martin Bergman', 'mbergman@dexels.com'),
+    'arnoud' : ('Arnoud Philip', 'aphilip@dexels.com'),
+    'matthijs' : ('Matthijs Philip', 'matthijs@dexels.com'),
+    'jarno' : ('Jarno Posthumus', 'jarnok@dexels.com'),
+
+    'cvs2hg' : ('Frank Lyaruu', 'frank@dexels.com'),
+    }
