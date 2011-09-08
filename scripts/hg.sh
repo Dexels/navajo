@@ -1,27 +1,9 @@
 
 
-
-# Tipi Core
-cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi /home/cvs/NavajoTipi
-cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.feature /home/cvs/com.dexels.navajo.tipi.feature
-
-# Tipi Swing
-cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.swing /home/cvs/NavajoSwingTipi
-cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.swing.client /home/cvs/TipiSwingClient
-cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.swing.deps /home/cvs/com.dexels.navajo.tipi.swing.deps
-cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.swing.feature /home/cvs/com.dexels.navajo.tipi.swing.feature
-cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.swing.application /home/cvs/com.dexels.navajo.tipi.swing.application
-
-
-# Tipi Echo
-cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.echo /home/cvs/NavajoEchoTipi
-cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.echo.client /home/cvs/NavajoEchoClient
-cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.echo.feature /home/cvs/com.dexels.navajo.tipi.echo.feature
-
 #Tipi Vaadin
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.vaadin /home/cvs/com.dexels.navajo.tipi.vaadin
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.vaadin.bridged /home/cvs/com.dexels.navajo.tipi.vaadin.bridged
-cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.vaadin.deploy /home/cvs/com.dexels.navajo.tipi.vaadin.deploy
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.vaadin.bridged.deploy /home/cvs/com.dexels.navajo.tipi.vaadin.bridged.deploy
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.vaadin.feature /home/cvs/com.dexels.navajo.tipi.vaadin.feature
 
 
@@ -214,4 +196,23 @@ cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.server /home/cvs/NavajoServer
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.server.bridged /home/cvs/com.dexels.navajo.server.bridged
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.server.bridged.deploy /home/cvs/com.dexels.navajo.server.bridged.deploy
+
+
+
+# Tipi Core
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi /home/cvs/NavajoTipi
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.feature /home/cvs/com.dexels.navajo.tipi.feature
+
+# Tipi Swing
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.swing /home/cvs/NavajoSwingTipi
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.swing.client /home/cvs/TipiSwingClient
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.swing.deps /home/cvs/com.dexels.navajo.tipi.swing.deps
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.swing.feature /home/cvs/com.dexels.navajo.tipi.swing.feature
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.swing.application /home/cvs/com.dexels.navajo.tipi.swing.application
+
+
+# Tipi Echo
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.echo /home/cvs/NavajoEchoTipi
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.echo.client /home/cvs/NavajoEchoClient
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.echo.feature /home/cvs/com.dexels.navajo.tipi.echo.feature
 
