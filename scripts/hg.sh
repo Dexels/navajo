@@ -10,7 +10,7 @@ cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo
 
 #cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/org.jgroups /home/cvs/org.jgroups
 #cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/org.kjkoster.zapcat /home/cvs/org.kjkoster.zapcat
-cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.enterprise.feature /home/cvs/com.dexels.navajo.enterprise.feature
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.enterprise.feature /home/cvs/com.dexels.navajo.server.enterprise.feature
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.enterprise.listeners /home/cvs/NavajoEnterpriseListeners
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.enterprise.adapters /home/cvs/NavajoEnterpriseAdapters
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.enterprise /home/cvs/NavajoEnterprise
