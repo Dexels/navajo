@@ -1,9 +1,3 @@
-
-cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.workflow.editor /home/cvs/com.dexels.navajo.workflow.editor
-cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.workflow.editor.gmf /home/cvs/com.dexels.navajo.workflow.editor.gmf
-cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.workflow.feature /home/cvs/com.dexels.navajo.workflow.feature
-
-
 ######## ORIGINAL START
 
 #Global
@@ -18,7 +12,8 @@ cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.version /home/cvs/DexelsVersionControl
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.document /home/cvs/NavajoDocument
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.client /home/cvs/NavajoClient
-cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.core /home/cvs/NavajoFunctions
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.core /home/cvs/Navajo
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.function /home/cvs/NavajoFunctions
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.client.async /home/cvs/NavajoAsyncClient
 
 
@@ -90,10 +85,10 @@ cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.feature /home/cvs/com.dexels.navajo.tipi.feature
 
 # Tipi Swing
-cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.swing /home/cvs/NavajoSwingTipi
-cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.swing.client /home/cvs/TipiSwingClient
-cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.swing.deps /home/cvs/com.dexels.navajo.tipi.swing.deps
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.swing.feature /home/cvs/com.dexels.navajo.tipi.swing.feature
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.swing.client /home/cvs/TipiSwingClient
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.swing /home/cvs/NavajoSwingTipi
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.swing.deps /home/cvs/com.dexels.navajo.tipi.swing.deps
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.swing.application /home/cvs/com.dexels.navajo.tipi.swing.application
 
 
@@ -107,6 +102,7 @@ cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo
 #Tipi Vaadin
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.vaadin /home/cvs/com.dexels.navajo.tipi.vaadin
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.vaadin.bridged /home/cvs/com.dexels.navajo.tipi.vaadin.bridged
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.vaadin.embedded /home/cvs/com.dexels.navajo.tipi.vaadin.embedded
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.vaadin.bridged.deploy /home/cvs/com.dexels.navajo.tipi.vaadin.bridged.deploy
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.vaadin.feature /home/cvs/com.dexels.navajo.tipi.vaadin.feature
 
@@ -216,5 +212,11 @@ cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.sportlink.tools.geo /home/cvs/NavajoGeoTools
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.kml /home/cvs/NavajoKmlAdapter
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.geo.feature /home/cvs/com.dexels.navajo.geo.feature
+
+
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.workflow.editor /home/cvs/com.dexels.navajo.workflow.editor
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.workflow.editor.gmf /home/cvs/com.dexels.navajo.workflow.editor.gmf
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.workflow.feature /home/cvs/com.dexels.navajo.workflow.feature
+
 
 
