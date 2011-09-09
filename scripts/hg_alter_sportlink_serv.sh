@@ -1,4 +1,5 @@
 # Alter repository:
+
 cd /home/mercurial/repo/com.sportlink.serv
 hg remove META-INF
 hg remove *.library
