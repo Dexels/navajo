@@ -1,4 +1,4 @@
-/home/mercurial/repo/com.sportlink.serv
+cd /home/mercurial/repo/com.sportlink.serv
 hg remove META-INF
 hg remove *.library
 hg remove *.jpx
