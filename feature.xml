@@ -51,13 +51,6 @@
          unpack="false"/>
 
    <plugin
-         id="com.dexels.navajo.dsl.dev.integration"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="com.dexels.navajo.dsl.expression"
          download-size="0"
          install-size="0"
@@ -101,6 +94,13 @@
 
    <plugin
          id="com.dexels.navajo.dsl.tsl.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.dexels.navajo.dsl.integration"
          download-size="0"
          install-size="0"
          version="0.0.0"
