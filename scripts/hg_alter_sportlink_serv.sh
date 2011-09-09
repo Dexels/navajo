@@ -2,7 +2,7 @@
 
 echo "Altering Serv"
 
-cd /home/mercurial/repo/com.sportlink.serv
+cd $WORKSPACE
 hg remove META-INF
 hg remove *.library
 hg remove *.jpx
