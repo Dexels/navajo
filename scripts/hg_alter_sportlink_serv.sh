@@ -43,7 +43,7 @@ hg mv navajo-tester/auxilary/config .
 hg mv navajo-tester/auxilary/reports .
 
 
-hg mv navajo-tester/auxilaryauthorization .
+hg mv navajo-tester/auxilary/authorization .
 hg mv navajo-tester/auxilary/conditions/ErrorCodes.dat conditions/ErrorCodes.dat .
 hg mv navajo-tester/auxilary/templates .
 
