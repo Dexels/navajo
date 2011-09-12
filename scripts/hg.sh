@@ -44,7 +44,8 @@ cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.dsl.tsl.ui /home/cvs/com.dexels.navajo.dsl.tsl.ui
 
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.dsl.integration /home/cvs/com.dexels.navajo.dsl.dev.integration
-cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.language.feature /home/cvs/com.dexels.navajo.language.feature
+
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.dsl.feature /home/cvs/com.dexels.navajo.language.feature
 
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.dexels.navajo.tipi.remotetest /home/cvs/NavajoRemoteTestLibrary
 # remote test feature?
