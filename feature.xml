@@ -17,11 +17,6 @@
       [Enter License Description here.]
    </license>
 
-   <requires>
-      <import feature="org.eclipse.xtext.runtime" version="1.0.1.v201008251220"/>
-      <import feature="org.eclipse.xtext.ui" version="1.0.1.v201008251220"/>
-   </requires>
-
    <plugin
          id="com.dexels.navajo.dsl.expression"
          download-size="0"
