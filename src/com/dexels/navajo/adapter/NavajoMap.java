@@ -1086,9 +1086,7 @@ private Object waitForResult = new Object();
 	      }
 		  
 	  } finally {
-		   synchronized (waitForResult) {
-			  waitForResult.notify();
-		  }
+		  waitForResult();
 	  }  
 	 
   }
@@ -1110,12 +1108,13 @@ private Object waitForResult = new Object();
 		  h.setHeaderAttribute("parentaccessid", access.accessID);
 
 		  inDoc = DispatcherFactory.getInstance().handle(outDoc, true);
+		  serviceFinished = true;
+		  serviceCalled = true;
 		  continueAfterRun();
 		  
 	 } catch (Exception e) {
 		 setException(e);
 	  } finally {
-		  serviceFinished = true;
 		  setIsFinished();
 	  }
 
