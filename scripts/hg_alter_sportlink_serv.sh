@@ -2,7 +2,7 @@
 
 echo "Altering Serv"
 
-cd $WORKSPACE
+cd $WORKSPACE/com.sportlink.serv
 hg remove META-INF
 hg remove *.library
 hg remove *.jpx
