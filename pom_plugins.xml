@@ -11,7 +11,7 @@
 	<modules>
 		<module>../com.dexels.navajo.tipi.swt.client</module>
 		<module>../com.dexels.navajo.server.embedded</module>
-		<module>../com.dexels.navajo.dev.integration</module>
+		<module>../com.dexels.navajo.dsl.integration</module>
 		<module>../com.dexels.navajo.birt.push</module>
 		<module>../com.dexels.navajo.dev.script</module>
 
