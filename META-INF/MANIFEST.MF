@@ -1,5 +1,5 @@
 Bundle-Name: Navajo Tipi Svg Library (Batik)
-Bundle-SymbolicName: com.dexels.navajo.tipi.svg
+Bundle-SymbolicName: com.dexels.navajo.tipi.swing.svg
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.4.qualifier
@@ -16,10 +16,10 @@ Require-Bundle: com.dexels.navajo.tipi;bundle-version="1.0.43",
  org.apache.batik.svggen;bundle-version="1.6.0",
  org.apache.batik.transcoder;bundle-version="1.6.0",
  org.apache.batik.util;bundle-version="1.6.0",
- org.apache.batik.util.gui;bundle-version="1.6.0",
- org.apache.batik.xml;bundle-version="1.6.0",
- org.w3c.dom.smil;bundle-version="1.0.1",
- org.w3c.dom.svg;bundle-version="1.1.0",
+ org.apache.batik.util.gui,
+ org.apache.batik.xml,
+ org.w3c.dom.smil,
+ org.w3c.dom.svg,
  org.apache.batik.bridge;bundle-version="1.6.0",
  org.apache.batik.ext.awt;bundle-version="1.6.0",
  org.apache.batik.pdf;bundle-version="1.6.0",
