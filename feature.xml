@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="com.dexels.navajo.workflow.feature"
+      id="com.dexels.navajo.workflow.editor.feature"
       label="Navajo Workflow Editor (GEF)"
       version="1.0.0.qualifier"
       provider-name="Dexels">
