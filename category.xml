@@ -24,9 +24,6 @@
    <feature url="features/com.dexels.navajo.dev.feature_2.0.4.qualifier.jar" id="com.dexels.navajo.dev.feature" version="2.0.4.qualifier">
       <category name="Navajo SDK"/>
    </feature>
-   <feature url="features/com.dexels.navajo.workflow.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.workflow.feature" version="1.0.0.qualifier">
-      <category name="Navajo SDK"/>
-   </feature>
    <feature url="features/com.dexels.navajo.server.embedded.feature_1.0.1.qualifier.jar" id="com.dexels.navajo.server.embedded.feature" version="1.0.1.qualifier">
       <category name="Navajo SDK"/>
    </feature>
@@ -90,10 +87,20 @@
    <feature url="features/com.dexels.navajo.mongo.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.mongo.feature" version="1.0.0.qualifier">
       <category name="Navajo Enterprise"/>
    </feature>
+   <feature url="features/com.dexels.navajo.workflow.editor.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.workflow.editor.feature" version="1.0.0.qualifier">
+      <category name="Navajo SDK"/>
+   </feature>
+   <feature url="features/com.dexels.navajo.tipi.dev.feature_0.1.0.qualifier.jar" id="com.dexels.navajo.tipi.dev.feature" version="0.1.0.qualifier">
+      <category name="Tipi SDK"/>
+   </feature>
+   <feature url="features/com.dexels.navajo.language.feature_1.0.2.qualifier.jar" id="com.dexels.navajo.language.feature" version="1.0.2.qualifier">
+      <category name="Navajo SDK"/>
+   </feature>
    <category-def name="Navajo" label="NavajoCore"/>
    <category-def name="Navajo SDK" label="Navajo SDK"/>
    <category-def name="Navajo Enterprise" label="Navajo Enterprise"/>
    <category-def name="Navajo Optional Packages" label="Navajo Optional Packages"/>
    <category-def name="Tipi" label="Tipi"/>
    <category-def name="TipiOptional" label="Tipi optional packages"/>
+   <category-def name="Tipi SDK" label="Tipi SDK"/>
 </site>
