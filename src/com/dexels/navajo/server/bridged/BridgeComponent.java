@@ -1,6 +1,5 @@
 package com.dexels.navajo.server.bridged;
 
-import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 
 import org.osgi.framework.BundleContext;
@@ -14,16 +13,16 @@ import com.dexels.navajo.server.listener.nql.NqlServlet;
 public class BridgeComponent {
 
 	private static final String SERVLET_ALIAS = "/Postman";
-	private HttpService httpService = null;
-	private BundleContext bundleContext = null;
+//	private HttpService httpService = null;
+//	private BundleContext bundleContext = null;
 
 	public void setBundleContext(BundleContext bundleContext) {
-		this.bundleContext = bundleContext;
+//		this.bundleContext = bundleContext;
 	}
 
 	public void setHttpService(HttpService httpService) {
 		System.err.println("Injecting HTTP service");
-		this.httpService = httpService;
+//		this.httpService = httpService;
 		try {
 			HttpContext cc = httpService.createDefaultHttpContext();
 //			HttpContext commonContext = new BundleEntryHttpContext(context.getBundle(), "/web"); //$NON-NLS-1$
