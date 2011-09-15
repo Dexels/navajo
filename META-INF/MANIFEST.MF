@@ -21,10 +21,10 @@ Require-Bundle: com.dexels.navajo.document,
  com.dexels.navajo.client,
  com.dexels.navajo.tipi,
  com.dexels.navajo.core,
- com.dexels.navajo.tipi.swingclient,
  com.dexels.navajo.tipi.swing.deps,
  com.dexels.navajo.version,
- org.slf4j.api;bundle-version="1.6.1"
+ org.slf4j.api;bundle-version="1.6.1",
+ com.dexels.navajo.tipi.swing.client;bundle-version="1.0.3"
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
 Import-Package: org.osgi.framework;version="1.5.0"
