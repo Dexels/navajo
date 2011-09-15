@@ -108,7 +108,7 @@ public class SwingEditor extends KafenioPanel {
 			HTMLDocument.Iterator it = doc.getIterator(HTML.getTag("img"));
 			AttributeSet attributes = it.getAttributes();
 			if (attributes != null) {
-				Enumeration names = attributes.getAttributeNames();
+				Enumeration<?> names = attributes.getAttributeNames();
 				while (names.hasMoreElements()) {
 					Object name = names.nextElement();
 					Object value = attributes.getAttribute(name);
@@ -163,6 +163,7 @@ public class SwingEditor extends KafenioPanel {
 					result = extendedHtmlDoc.getText(0,
 							extendedHtmlDoc.getLength());
 					System.err.println("Result: " + kp.getProcessedText());
+					System.err.println("Result2: "+result);
 				} catch (BadLocationException e1) {
 					e1.printStackTrace();
 				}
