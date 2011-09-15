@@ -10,5 +10,6 @@
 
 	<modules>
 		<module>../com.dexels.navajo.swing.editor</module>
+		<module>../com.dexels.navajo.tipi.swing.editor</module>
 	</modules>
 </project>
