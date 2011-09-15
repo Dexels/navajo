@@ -40,7 +40,7 @@ public class RemoteSourceIntrospection {
 			InputStream stdout = new StreamGobbler(sess.getStdout());
 			BufferedReader br = new BufferedReader(new InputStreamReader(stdout));
 //			System.err.println("Retrieving file information..");
-			String currentPath = path;
+//			String currentPath = path;
 			String subPath = "";
 			while (true) {
 				String line = br.readLine();
@@ -49,7 +49,7 @@ public class RemoteSourceIntrospection {
 				
 				if(line.startsWith("./")){
 					subPath = line.substring(1, line.indexOf(":"));
-					currentPath = path + line.substring(1, line.indexOf(":"));
+//					currentPath = path + line.substring(1, line.indexOf(":"));
 				}
 				String file = line.substring(line.lastIndexOf(" ") + 1);
 				if(file.endsWith(extention)){

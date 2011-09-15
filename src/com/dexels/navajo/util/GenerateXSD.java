@@ -22,10 +22,10 @@ public class GenerateXSD {
 	
 	private void generateMethods(XMLElement choice, String adapterName) throws Exception {
 		// Generate methods.
-		Iterator methods = MapMetaData.getInstance().getMapDefinition(adapterName).getMethodDefinitions().iterator();
+		Iterator<String> methods = MapMetaData.getInstance().getMapDefinition(adapterName).getMethodDefinitions().iterator();
 		while ( methods.hasNext() ) {
 			CaseSensitiveXMLElement x = new CaseSensitiveXMLElement("xs:element");
-			String method = (String) methods.next();
+			String method = methods.next();
 			x.setAttribute("name", adapterName + "." + method);
 			choice.addChild(x);
 			CaseSensitiveXMLElement typex = new CaseSensitiveXMLElement("xs:complexType");
@@ -55,10 +55,10 @@ public class GenerateXSD {
 	
 	private void generateSetters(XMLElement type, XMLElement choice, String adapterName, boolean addAsAttribute) throws Exception {
 		// Generate setters.
-		Iterator setters = MapMetaData.getInstance().getMapDefinition(adapterName).getValueDefinitions().iterator();
+		Iterator<String> setters = MapMetaData.getInstance().getMapDefinition(adapterName).getValueDefinitions().iterator();
 		while ( setters.hasNext() ) {
 			CaseSensitiveXMLElement x = new CaseSensitiveXMLElement("xs:element");
-			ValueDefinition vd = MapMetaData.getInstance().getMapDefinition(adapterName).getValueDefinition((String) setters.next());
+			ValueDefinition vd = MapMetaData.getInstance().getMapDefinition(adapterName).getValueDefinition(setters.next());
 			x.setAttribute("type", ( vd.getDirection().equals("out") ? "MapType": "SetterType") );
 			x.setAttribute("name", adapterName + "." + vd.getName());
 			choice.addChild(x);
@@ -197,9 +197,9 @@ public class GenerateXSD {
 		
 		
 		MapMetaData mmd = MapMetaData.getInstance();
-		Set maps = mmd.getMapDefinitions();
+		Set<String> maps = mmd.getMapDefinitions();
 		
-		Iterator all = maps.iterator();
+		Iterator<String> all = maps.iterator();
 		while ( all.hasNext() ) {
 			
 			String mappie = (String) all.next();
@@ -258,7 +258,7 @@ public class GenerateXSD {
 	public static void main(String [] args) throws Exception {
 		
 		//String baseXSD = "/home/arjen/projecten/Navajo/schemas/basenavascript.xsd"; // args[0];
-		MapMetaData mmd = MapMetaData.getInstance();
+//		MapMetaData mmd = MapMetaData.getInstance();
 		
 		GenerateXSD xsd = new GenerateXSD();
 		String result = xsd.generateXSD();

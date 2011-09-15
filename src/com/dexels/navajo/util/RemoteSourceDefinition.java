@@ -3,14 +3,12 @@ package com.dexels.navajo.util;
 import java.util.ArrayList;
 
 public class RemoteSourceDefinition {
-	private String path;
 	private String fileName;
 	private String sourceLocation;
 	private ArrayList<ScriptDefinition> callList = new ArrayList<ScriptDefinition>();
 	private ArrayList<ScriptDefinition> readList = new ArrayList<ScriptDefinition>();
 	
 	public RemoteSourceDefinition(String path, String fileName) {
-		this.path = path;
 		this.fileName = fileName;
 		sourceLocation = path + fileName;
 	}

@@ -45,7 +45,6 @@ public class ScriptIntrospection {
 			initializeDispatcher(rootPath);
 			this.script = script;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -61,8 +60,6 @@ public class ScriptIntrospection {
 				throw NavajoFactory.getInstance().createNavajoException(e);
 			}
 			
-			//TODO Warning, added rootPath as servletContainer root, don't think it is a problem, but didn't know how to check
-
 			NavajoConfig nc = new NavajoConfig(new com.dexels.navajo.server.FileInputStreamReader(), 
 					(NavajoClassSupplier) null,
 					configurationUrl.openStream(), rootPath,rootPath); 
@@ -73,9 +70,9 @@ public class ScriptIntrospection {
 	}
 	
 	private void initializeScript(String script) {
-		GenericHandler gh = new GenericHandler();
+//		GenericHandler gh = new GenericHandler();
 		StringBuffer compilerErrors = new StringBuffer();
-		String error = "";
+//		String error = "";
 		try {
 			Access a = new Access();
 			a.rpcName = script;
@@ -94,7 +91,7 @@ public class ScriptIntrospection {
 		cvs = new CVSVersionControl(new File(DispatcherFactory.getInstance().getNavajoConfig().getScriptPath() + "/" + script + ".xml"));
 	}
 	
-	@SuppressWarnings("unused")
+	@SuppressWarnings({"unused","rawtypes"})
 	private final void printAllDependencies(int indent, Class specific) {
 		ArrayList<Dependency> dependencies = myCompiledScript.getDependentObjects();
 		showDependencies(indent, dependencies, specific, specific);
