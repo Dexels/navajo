@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
    <feature url="features/com.dexels.navajo.core.feature_1.0.7.qualifier.jar" id="com.dexels.navajo.core.feature" version="1.0.7.qualifier">
-      <category name="Navajo"/>
+      <category name="Navajo Core"/>
    </feature>
    <feature url="features/com.dexels.navajo.server.feature_1.0.4.qualifier.jar" id="com.dexels.navajo.server.feature" version="1.0.4.qualifier">
-      <category name="Navajo"/>
+      <category name="Navajo Core"/>
    </feature>
    <feature url="features/com.dexels.navajo.twitter.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.twitter.feature" version="1.0.0.qualifier">
       <category name="Navajo Optional Packages"/>
    </feature>
    <feature url="features/com.dexels.navajo.geo.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.geo.feature" version="1.0.0.qualifier">
-      <category name="Navajo Optional Packages"/>
-   </feature>
-   <feature url="features/com.dexels.navajo.wsdl.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.wsdl.feature" version="1.0.0.qualifier">
       <category name="Navajo Optional Packages"/>
    </feature>
    <feature url="features/com.dexels.thirdparty.feature_1.0.0.qualifier.jar" id="com.dexels.thirdparty.feature" version="1.0.0.qualifier">
@@ -96,7 +93,16 @@
    <feature url="features/com.dexels.navajo.language.feature_1.0.2.qualifier.jar" id="com.dexels.navajo.language.feature" version="1.0.2.qualifier">
       <category name="Navajo SDK"/>
    </feature>
-   <category-def name="Navajo" label="NavajoCore"/>
+   <feature url="features/com.dexels.navajo.wsdl.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.wsdl.feature" version="1.0.0.qualifier">
+      <category name="Navajo Enterprise"/>
+   </feature>
+   <feature url="features/com.dexels.navajo.test.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.test.feature" version="1.0.0.qualifier">
+      <category name="Navajo SDK"/>
+   </feature>
+   <feature url="features/com.dexels.navajo.other.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.other.feature" version="1.0.0.qualifier">
+      <category name="Navajo Core"/>
+   </feature>
+   <category-def name="Navajo Core" label="NavajoCore"/>
    <category-def name="Navajo SDK" label="Navajo SDK"/>
    <category-def name="Navajo Enterprise" label="Navajo Enterprise"/>
    <category-def name="Navajo Optional Packages" label="Navajo Optional Packages"/>
