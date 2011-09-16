@@ -9,6 +9,6 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>../com.dexels.navajo.remotetest</module>
+		<module>../com.dexels.navajo.test.remote</module>
 	</modules>
 </project>
