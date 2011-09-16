@@ -12,9 +12,6 @@
    <feature url="features/com.dexels.navajo.geo.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.geo.feature" version="1.0.0.qualifier">
       <category name="Navajo Optional Packages"/>
    </feature>
-   <feature url="features/com.dexels.thirdparty.feature_1.0.0.qualifier.jar" id="com.dexels.thirdparty.feature" version="1.0.0.qualifier">
-      <category name="Navajo Optional Packages"/>
-   </feature>
    <feature url="features/com.dexels.navajo.enterprise.feature_1.0.3.qualifier.jar" id="com.dexels.navajo.enterprise.feature" version="1.0.3.qualifier">
       <category name="Navajo Enterprise"/>
    </feature>
