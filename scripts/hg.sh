@@ -189,7 +189,7 @@ cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo
 #Legacy
 #sportlink client
 #sportlink serv
-cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.sportlink.client /home/cvs/sportlink-clnt-v2
+	cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.sportlink.client /home/cvs/sportlink-clnt-v2
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.sportlink.serv /home/cvs/sportlink-serv
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.sportlink.adapters /home/cvs/sportlink-adapters
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.sportlink.crystal /home/cvs/sportlink-serv-crystal
@@ -199,6 +199,8 @@ cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo
 
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/tipi.sportlink.club /home/cvs/SportlinkClub
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/tipi.sportlink.officialportal /home/cvs/SportlinkOfficialPortal
+
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/repo/com.sportlink.swing.client /home/cvs/NavajoSwingClient
 
 
 
