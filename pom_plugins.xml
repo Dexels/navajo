@@ -15,5 +15,6 @@
 		<module>../com.dexels.navajo.jsp.server</module>
 		<module>../com.dexels.navajo.queuemanager</module>
 		<module>../com.dexels.navajo.rhino</module>
+		<module>../com.dexels.navajo.adapters</module>
 	</modules>
 </project>
