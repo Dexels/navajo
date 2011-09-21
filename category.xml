@@ -18,9 +18,6 @@
    <feature url="features/com.dexels.navajo.dev.feature_2.0.4.qualifier.jar" id="com.dexels.navajo.dev.feature" version="2.0.4.qualifier">
       <category name="Navajo SDK"/>
    </feature>
-   <feature url="features/com.dexels.navajo.server.embedded.feature_1.0.1.qualifier.jar" id="com.dexels.navajo.server.embedded.feature" version="1.0.1.qualifier">
-      <category name="Navajo SDK"/>
-   </feature>
    <feature url="features/com.dexels.navajo.tipi.swing.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.tipi.swing.feature" version="1.0.0.qualifier">
       <category name="Tipi"/>
    </feature>
@@ -97,7 +94,7 @@
       <category name="Navajo SDK"/>
    </feature>
    <feature url="features/com.dexels.navajo.other.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.other.feature" version="1.0.0.qualifier">
-      <category name="Navajo Core"/>
+      <category name="Navajo Optional Packages"/>
    </feature>
    <category-def name="Navajo Core" label="NavajoCore"/>
    <category-def name="Navajo SDK" label="Navajo SDK"/>
