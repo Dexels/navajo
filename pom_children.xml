@@ -12,6 +12,5 @@
 		<module>../com.dexels.navajo.tipi.swt.client</module>
 		<module>../NavajoBIRT</module>
 		<module>../NavajoScriptPlugin</module>
-		<module>../com.dexels.navajo.server.embedded</module>
 	</modules>
 </project>
