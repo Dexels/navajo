@@ -16,5 +16,6 @@
 		<module>../com.dexels.navajo.dsl.tsl</module>
 		<module>../com.dexels.navajo.dsl.tsl.ui</module>
 		<module>../com.dexels.navajo.dsl.navajomanager</module>
+		<module>../com.dexels.navajo.dsl.integration</module>
 	</modules>
 </project>
