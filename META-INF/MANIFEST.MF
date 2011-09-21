@@ -8,11 +8,11 @@ Require-Bundle: com.dexels.navajo.document,
  com.dexels.navajo.client,
  com.dexels.navajo.tipi,
  com.dexels.navajo.core,
- com.dexels.navajo.tipi.swingclient,
  com.dexels.navajo.tipi.swing.deps,
  com.dexels.navajo.version,
  com.dexels.navajo.tipi.swing;bundle-version="1.0.41",
- com.dexels.navajo.tipi.swing.swingx;bundle-version="1.0.0"
+ com.dexels.navajo.tipi.swing.swingx;bundle-version="1.0.0",
+ com.dexels.navajo.tipi.swing.client;bundle-version="1.0.3"
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/swingx-ws.jar
 Bundle-Activator: tipi.TipiGeoSwingExtension
