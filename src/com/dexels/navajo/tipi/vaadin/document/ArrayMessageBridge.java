@@ -35,7 +35,6 @@ public class ArrayMessageBridge implements Container {
 		int i = 0;
 		for (Message message : messages) {
 			Item pb = createItemFromMessage(message);
-			System.err.println("Mapping message to: "+i);
 			messageMap.put(new Integer(i), pb);
 			i++;
 		}

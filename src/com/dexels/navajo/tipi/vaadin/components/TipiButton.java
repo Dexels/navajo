@@ -33,13 +33,6 @@ public class TipiButton extends TipiVaadinComponentImpl {
 		return button;
 	}
 
-//	public void setIcon(Object u) {
-//		Button b = (Button) getVaadinContainer();
-//		System.err.println("Setting icon to: "+u);
-//		Resource r = getResource(u);
-//		b.setIcon(r);
-//	}
-
 	  public void setComponentValue(final String name, final Object object) {
 		    super.setComponentValue(name, object);
 			Component v = getVaadinContainer();

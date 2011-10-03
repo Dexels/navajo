@@ -70,7 +70,7 @@ public class ResolveAttatchments extends FunctionInterface {
 		}
 
 		if (doc == null) {
-			System.err.println("Oh dear!");
+//			System.err.println("Oh dear!");
 			return result;
 		}
 		
@@ -97,9 +97,6 @@ public class ResolveAttatchments extends FunctionInterface {
 
 	
 	public  void fixImageTags(Node n, List<Element> imageTagList, String expression) {
-		// System.err.println("Checking image tag: "+n.getNodeName());
-		// System.err.println("Checking image type: "+n.getNodeType());
-		// System.err.println("Checking image value: "+n.getNodeValue());
 		if (n instanceof Document) {
 			NodeList v = n.getChildNodes();
 			for (int i = 0; i < v.getLength(); i++) {
@@ -110,7 +107,6 @@ public class ResolveAttatchments extends FunctionInterface {
 		if (n instanceof Element) {
 			Element x = (Element) n;
 			if (x.getTagName().equals("img")) {
-				// System.err.println("Found image tag! ");
 				x.setAttribute("src", convertImgSrc(imageTagList.size(), expression));
 				imageTagList.add(x);
 			}

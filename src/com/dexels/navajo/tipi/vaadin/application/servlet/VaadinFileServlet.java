@@ -53,7 +53,6 @@ public class VaadinFileServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		// Get requested file by path info.
 		String requestedFile = request.getPathInfo();
-
 		// Check if file is actually supplied to the request URI.
 		if (requestedFile == null) {
 			// Do your thing if the file is not supplied to the request URI.
@@ -65,9 +64,11 @@ public class VaadinFileServlet extends HttpServlet {
 
 		// Decode the file name (might contain spaces and on) and prepare file
 		// object.
-		File file = new File(filePath,
+		
+		File vaadinPath = new File(filePath,"VAADIN");
+		File file = new File(vaadinPath,
 				URLDecoder.decode(requestedFile, "UTF-8"));
-
+		System.err.println("Resolved: "+file.getAbsolutePath());
 		// Check if file actually exists in filesystem.
 		if (!file.exists()) {
 			// Do your thing if the file appears to be non-existing.
@@ -93,8 +94,8 @@ public class VaadinFileServlet extends HttpServlet {
 		response.setBufferSize(DEFAULT_BUFFER_SIZE);
 		response.setContentType(contentType);
 		response.setHeader("Content-Length", String.valueOf(file.length()));
-		response.setHeader("Content-Disposition", "attachment; filename=\""
-				+ file.getName() + "\"");
+//		response.setHeader("Content-Disposition", "attachment; filename=\""
+//				+ file.getName() + "\"");
 
 		// Prepare streams.
 		BufferedInputStream input = null;

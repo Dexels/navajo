@@ -42,27 +42,9 @@ public class TipiOpenBrowser extends TipiVaadinActionImpl {
 			// ... so u might be a file:
 			File base = getVaadinApplication().getInstallationFolder();
 			File fil = new File(base,""+url);
-			System.err.println("Trying file: "+fil);
 			if(fil.exists()) {
-				System.err.println("Found!");
 				final FileResource fr = new FileResource(fil,getVaadinApplication());
-//				  URIHandler uriHandler = new URIHandler() {
-//				        public DownloadStream handleURI(URL context,
-//				                                        String relativeUri) {
-//				            // Do something here
-//				            System.out.println("handleURI=" + relativeUri+" context: "+relativeUri);
-//
-//				            // Should be null unless providing dynamic data.
-//				            return fr.getStream();
-//				        }
-//				   };
 				getVaadinApplication().getMainWindow().open(fr,"_blank");
-
-//				URL url = new URL("http://dev.vaadin.com/");
-//				Embedded browser = new Embedded("", new ExternalResource(url));
-//				browser.setType(Embedded.TYPE_BROWSER);
-//				main.addComponent(browser);				
-				
 			}
 		}
     }

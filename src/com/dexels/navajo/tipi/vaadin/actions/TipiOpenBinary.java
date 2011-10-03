@@ -33,6 +33,10 @@ public class TipiOpenBinary extends TipiVaadinActionImpl {
      */
     protected void execute(TipiEvent event) throws TipiBreakException, TipiException {
         final Binary b  = (Binary) getEvaluatedParameterValue("binary", event);
+        if(b==null) {
+        	System.err.println("No binary found");
+        	return;
+        }
 //			
 			  URIHandler uriHandler = new URIHandler() {
 				private static final long serialVersionUID = 1L;
@@ -48,20 +52,4 @@ public class TipiOpenBinary extends TipiVaadinActionImpl {
 			    };
 			    getVaadinApplication().getMainWindow().addURIHandler(uriHandler);
     }
-
-//    private void showWindow(StreamResource resource) {
-//    	Window window = new Window();
-//        ((VerticalLayout) window.getContent()).setSizeFull();
-//        window.setResizable(true);
-//        window.setWidth("800");
-//        window.setHeight("600");
-//        window.center();
-//        Embedded e = new Embedded();
-//        e.setSizeFull();
-//        e.setType(Embedded.TYPE_BROWSER);
-//        resource.setMIMEType("text/html");
-//        e.setSource(resource);
-//        window.addComponent(e);
-//        getVaadinApplication().getMainWindow().addWindow(window);
-//    }
 }

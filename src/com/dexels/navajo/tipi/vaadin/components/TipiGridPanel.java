@@ -55,18 +55,12 @@ public class TipiGridPanel extends TipiVaadinComponentImpl {
         updateAvailability(currentx, currenty, currentx + myData.getColumnSpan(), currenty + myData.getRowSpan());
 		int endcolumn = myData.getColumnSpan()-1+currentx;
 		int endrow = myData.getRowSpan()-1+currenty;
-//		System.err.println("Adding to grid: width: "+gridwidth+" currentx: "+currentx+" currenty: "+currenty+" endcolumn: "+endcolumn+" endrow: "+endrow);
-//		System.err.println("Detected grid width: "+gridLayout.getColumns());
-//		System.err.println("Detected grid height: "+gridLayout.getRows());
 		if(endrow>=gridLayout.getRows()) {
 			gridLayout.setRows(endrow+1);
 		}
-//		System.err.println("Now Detected grid width: "+gridLayout.getColumns());
-//		System.err.println("Now Detected grid height: "+gridLayout.getRows());
 		gridLayout.addComponent(component, currentx, currenty,endcolumn,endrow);
 		gridLayout.setComponentAlignment(component, myData.getAlignment());
 		int currentWidth = myWidths.get(currentx);
-//		System.err.println("Setting width: "+currentWidth);
 		component.setWidth(currentWidth,Sizeable.UNITS_PIXELS);
         advance();
 	}
@@ -80,7 +74,7 @@ public class TipiGridPanel extends TipiVaadinComponentImpl {
 		  if (ss==null && def != null) {
             ss = def.getStringAttribute("columnWidth");
         }
-          if (ss!=null) {
+        if (ss!=null) {
               parseColumns(ss.substring(1,ss.length()-1));
         } else {
             System.err.println("oh dear, no columnwidth");
@@ -98,7 +92,6 @@ public class TipiGridPanel extends TipiVaadinComponentImpl {
 	        try {
 				while (st.hasMoreTokens()) {
 				    String next = st.nextToken();
-				    // System.err.println("NEEXT: "+next);
 				    StringTokenizer current = new StringTokenizer(next, ":");
 				    String key = current.nextToken();
 				    String value = current.nextToken();
@@ -233,11 +226,9 @@ public class TipiGridPanel extends TipiVaadinComponentImpl {
 
 	    private void advance() {
 	        while (isOccupied(currentx, currenty)) {
-//	        	System.err.println("Currentx: "+currentx+" currenty: "+currenty+" gridwidth: "+gridwidth);
 	            if (currentx >= gridwidth - 1) {
 	                currentx = 0;
 	                currenty++;
-//	                System.err.println("Advancing row. Row now: "+currenty);
 	            } else {
 	                currentx++;
 	            }
@@ -275,7 +266,6 @@ public class TipiGridPanel extends TipiVaadinComponentImpl {
 	                return false;
 	            }
 	            Coordinate c = (Coordinate) o;
-	            // System.err.println("Comparing: "+this+" and "+c);
 	            return c.x == x && c.y == y;
 	        }
 

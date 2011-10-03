@@ -2,18 +2,18 @@
 
 <functiondef>
     <function name="CreateEchoMailUrl" class="com.dexels.navajo.functions.CreateEchoMailUrl">
-        <description>.</description>
+        <description>Good question</description>
         <input>context,navajo</input>
         <result>string</result>
     </function>
 
     <function name="StripBody" class="com.dexels.navajo.functions.StripBody">
-        <description>Get the next month as a date object, where supplied integer is an offset for the current year.</description>
+        <description>Strips an html string, removing body tags and everything outside it</description>
         <input>string</input>
         <result>string</result>
     </function>
     <function name="CreateEchoUrl" class="com.dexels.navajo.functions.CreateEchoUrl">
-        <description>Get the next month as a date object, where supplied integer is an offset for the current year.</description>
+        <description>Create an adressable entry for an expression</description>
         <input>context,string</input>
         <result>string</result>
     </function>

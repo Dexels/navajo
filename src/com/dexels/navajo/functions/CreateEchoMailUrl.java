@@ -41,7 +41,6 @@ public class CreateEchoMailUrl extends FunctionInterface {
 		try {
 			String result = createNavajoUrl(ee,navajoName, inputCopy);
 			ee.injectNavajo(navajoName, inputCopy);
-			inputCopy.write(System.err);
 			return result;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -138,7 +137,6 @@ public class CreateEchoMailUrl extends FunctionInterface {
 		try {
 			String[] sp = attach.split("-");
 			int index = Integer.parseInt(sp[sp.length-1]);
-			System.err.println("Index: "+index);
 			return index;
 		} catch (Throwable e) {
 			e.printStackTrace();

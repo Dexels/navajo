@@ -32,7 +32,6 @@ public class TipiCheckbox extends TipiVaadinComponentImpl {
 					Map<String,Object> m = new HashMap<String, Object>();
 					m.put("value", myButton.getValue());
 					performTipiEvent("onSelectionChanged", m, false);
-					System.err.println("Checkbox clicked!");
 					getAttributeProperty("selected").setAnyValue( myButton.getValue());
 				} catch (TipiException e) {
 					e.printStackTrace();

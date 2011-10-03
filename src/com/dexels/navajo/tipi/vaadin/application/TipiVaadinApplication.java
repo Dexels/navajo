@@ -28,8 +28,8 @@ import org.slf4j.LoggerFactory;
 import tipi.BaseTipiApplicationInstance;
 import tipi.TipiApplicationInstance;
 import tipi.TipiCoreExtension;
-import tipi.TipiVaadinExtension;
 import tipipackage.TipiExtensionRegistry;
+import tipivaadin.TipiVaadinExtension;
 
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.TipiContext;
@@ -154,7 +154,6 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 		try {
 			ObjectOutputStream oos = new ObjectOutputStream(baos);
 			oos.writeObject(element);
-			System.err.println("Serializability done: " + baos.size());
 		} catch (Throwable e1) {
 
 			e1.printStackTrace();
@@ -269,52 +268,6 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 		}
 		
 	}
-	// private Map<String, String> processSettings(String deploy, String
-	// profile, File installationFolder) throws IOException {
-	//
-	// // Map<String, String> bundleValues = getBundleMap("tipi.properties");
-	// // String deploy = bundleValues.get("deploy");
-	// File settings = new File(installationFolder,"settings");
-	//
-	// Map<String, String> bundleValues = getBundleMap("arguments.properties");
-	// File profileProperties = new
-	// File(settings,"profiles/"+profile+".properties");
-	// if(profileProperties.exists()) {
-	// Map<String, String> profileValues =
-	// getBundleMap("profiles/"+profile+".properties");
-	// bundleValues.putAll(profileValues);
-	// } else {
-	// System.err.println("No profile bundles present.");
-	// }
-	// System.err.println("Settings: "+bundleValues);
-	// Map<String,String> resolvedValues = new HashMap<String, String>();
-	// for (Entry<String,String> entry : bundleValues.entrySet()) {
-	// if(entry.getKey().indexOf("/")<0) {
-	// resolvedValues.put(entry.getKey(), entry.getValue());
-	// } else {
-	// String[] elts = entry.getKey().split("/");
-	// if(elts[0].equals(deploy)) {
-	// resolvedValues.put(elts[1], entry.getValue());
-	// }
-	// }
-	//
-	// }
-	// System.err.println("RESOLVED TO: "+resolvedValues);
-	// return resolvedValues;
-	// }
-
-	//
-	// private Map<String, String> getBundleMap(String path) throws
-	// FileNotFoundException, IOException {
-	// File settings = new File(installationFolder,"settings");
-	// FileReader argReader = new FileReader(new File(settings,path));
-	// Map<String,String> bundleValues = new HashMap<String, String>();
-	// PropertyResourceBundle prb = new PropertyResourceBundle(argReader);
-	// for (String key : prb.keySet()) {
-	// bundleValues.put(key, prb.getString(key));
-	// }
-	// return bundleValues;
-	// }
 
 	public void loadTipi(TipiContext newContext, String fileName, ExtensionDefinition ed) throws IOException,
 			TipiException {
@@ -423,7 +376,6 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 		}
 		StreamSource is = null;
 		if (u instanceof URL) {
-			System.err.println("URL: " + u);
 			if (isRunningInGae()) {
 				try {
 					is = resolve((URL) u);
@@ -464,7 +416,6 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 		copyResource(baos, is);
 		byte[] byteArray = baos.toByteArray();
 		this.lastMimeType = FormatIdentification.identify(byteArray).getMimeType();
-		System.err.println("Bytes buffered: "+byteArray.length);
 		return new BufferedInputStreamSource(byteArray);
 	}
 	

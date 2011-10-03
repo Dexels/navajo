@@ -34,7 +34,6 @@ public class SelectionBridge implements Item {
 	
 	@Override
 	public Property getItemProperty(Object id) {
-		System.err.println("GETTING PROP: "+id);
 		if(id==Selection.SELECTION_NAME) {
 			return name;
 		}

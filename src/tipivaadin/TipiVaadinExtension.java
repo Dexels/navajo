@@ -1,4 +1,4 @@
-package tipi;
+package tipivaadin;
 
 import java.io.File;
 import java.util.Dictionary;
@@ -7,6 +7,11 @@ import java.util.Hashtable;
 import navajo.ExtensionDefinition;
 
 import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import tipi.TipiAbstractXMLExtension;
+import tipi.TipiExtension;
 
 import com.dexels.navajo.functions.VaadinFunctionDefinition;
 import com.dexels.navajo.functions.util.FunctionDefinition;
@@ -19,7 +24,7 @@ public class TipiVaadinExtension extends TipiAbstractXMLExtension implements Tip
 
 	private static final long serialVersionUID = 6145737357886902779L;
 
-//	private static final Logger logger = LoggerFactory.getLogger(TipiVaadinExtension.class); 
+	private static final Logger logger = LoggerFactory.getLogger(TipiVaadinExtension.class); 
 	
 	private static TipiVaadinExtension instance = null;
 	
@@ -47,13 +52,13 @@ public class TipiVaadinExtension extends TipiAbstractXMLExtension implements Tip
 
 	public void start(BundleContext bc) throws Exception {
 		this.context = bc;
+		logger.info("Starting vaadin tipi bundle");
 		registerTipiExtension(context);
 		FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
 		fi.init();
 		fi.clearFunctionNames();
 		ExtensionDefinition extensionDef = new VaadinFunctionDefinition();
 		fi.injectExtension(extensionDef);
-//		System.err.println("Detected functions: "+fi.getFunctionNames());
 		for (String functionName : fi.getFunctionNames(extensionDef)) {
 			FunctionDefinition fd = fi.getDef(extensionDef,functionName);
 			 Dictionary<String, Object> props = new Hashtable<String, Object>();

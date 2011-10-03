@@ -18,7 +18,6 @@ public class CreateEchoUrl extends FunctionInterface {
 		VaadinTipiContext ee = (VaadinTipiContext)getOperand(0);
 		String expression = (String)getOperand(1);
 		String result = ee.createExpressionUrl(expression);
-		System.err.println("Result: "+result);
 		return result;
 	}
 

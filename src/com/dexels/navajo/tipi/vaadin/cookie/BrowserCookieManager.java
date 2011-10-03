@@ -36,7 +36,6 @@ public class BrowserCookieManager implements CookieManager, Serializable {
 		if (cc == null) {
 			cc = createCookie(name);
 		}
-		System.err.println("Adding cookie!");
 		cc.setValue(value);
 		response.addCookie(cc);
 	}

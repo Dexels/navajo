@@ -46,9 +46,7 @@ public class EvalHandler implements URIHandler, ParameterHandler {
 
 		try {
 			String eval = evals[0];
-			System.err.println("Raw eval: "+eval);
 			String decoded = URLDecoder.decode(eval, "UTF-8");
-			System.err.println("Decoded: "+eval);
 			Operand o = null;
 			o = application.getCurrentContext().evaluate(decoded, application.getCurrentContext().getDefaultTopLevel(),
 					null);

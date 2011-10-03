@@ -49,7 +49,6 @@ public class SelectionListBridge implements Container {
 	}
 	@Override
 	public Item getItem(Object itemId) {
-		System.err.println("Getting item: "+itemId);
 		return selectionMap.get(itemId);
 	}
 
@@ -87,7 +86,6 @@ public class SelectionListBridge implements Container {
 
 	@Override
 	public int size() {
-		System.err.println("Getting size: "+selectionMap.size());
 		return selectionMap.size();
 	}
 

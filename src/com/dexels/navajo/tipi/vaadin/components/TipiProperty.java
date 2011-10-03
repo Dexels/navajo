@@ -250,13 +250,8 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 				@Override
 				public void valueChange(ValueChangeEvent event) {
 					try {
-						System.err.println("Value: "+event.getProperty());
-//						t.setValue(newValue)
 						Selection ss = property.getSelection((String) event.getProperty().getValue());
-						System.err.println("Sel: "+ss);
 						property.setSelected(ss);
-//						property.setSelected(((SelectionBridge)event.getProperty().getValue()).getSource());
-//						property.setSelected(property.getSelection((String) (event.getProperty().getValue())));
 						performTipiEvent("onValueChanged", null, true);
 					} catch (TipiBreakException e) {
 						e.printStackTrace();

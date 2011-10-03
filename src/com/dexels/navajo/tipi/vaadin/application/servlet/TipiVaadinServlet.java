@@ -25,7 +25,6 @@ public class TipiVaadinServlet extends ApplicationServlet {
 
 	@Override
 	public void init(ServletConfig servletConfig) throws ServletException {
-		System.err.println("Init detected!");
 		super.init(servletConfig);
 	}
 
@@ -46,7 +45,6 @@ public class TipiVaadinServlet extends ApplicationServlet {
 
      	HttpSession hs = request.getSession();
      	hs.setAttribute("tipiInstance",tipiApplication);
-     	System.err.println("INST: "+tipiApplication);
 		// add request data?
 		return tipiApplication;
 	}
@@ -57,7 +55,6 @@ public class TipiVaadinServlet extends ApplicationServlet {
 			throws IOException, ServletException {
 		
 		String eval = request.getParameter("evaluate");
-		System.err.println("EVAAAAL: "+eval);
 		if(eval==null) {
 			super.doGet(request, response);
 			return;

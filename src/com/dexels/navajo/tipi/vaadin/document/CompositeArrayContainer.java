@@ -55,10 +55,6 @@ public class CompositeArrayContainer extends ArrayMessageBridge {
 				StringTokenizer st = new StringTokenizer(column,"@");
 				String propertyName = st.nextToken();
 
-//				Property pp =  definitionMessage.getItemProperty(propertyName+"@value");
-//				if(pp!=null) {
-//					System.err.println("pp: "+pp.getValue());
-//				}
 				columnHeaders.add(propertyName+"@value");
 			}
 			return columnHeaders;

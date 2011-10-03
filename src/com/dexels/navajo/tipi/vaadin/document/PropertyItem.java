@@ -39,7 +39,6 @@ public class PropertyItem implements Item {
 	@Override
 	public com.vaadin.data.Property getItemProperty(Object id) {
 		if(Property.PROPERTY_VALUE.equals(id)) {
-			System.err.println("");
 			return this.valueProperty;
 		}
 		return aspectMap.get(id);
