@@ -67,7 +67,6 @@ public abstract class FunctionFactoryInterface {
 				try {
 					semaphore.wait(1000);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -154,11 +153,12 @@ public abstract class FunctionFactoryInterface {
 		adapterConfig.clear();
 	}
 
+	@SuppressWarnings("unchecked")
 	public FunctionInterface getInstance(final ClassLoader cl, final String functionName) throws TMLExpressionException {
 		// This method is only used for non osgi resolution
 		try {
 			FunctionDefinition fd = getDef(functionName);
-			Class myClass = Class.forName(fd.getObject(), true, cl);
+			Class<FunctionInterface> myClass = (Class<FunctionInterface>) Class.forName(fd.getObject(), true, cl);
 			FunctionInterface fi =(FunctionInterface) myClass.newInstance();
 			if (!fi.isInitialized()) {
 				fi.setTypes(fd.getInputParams(), fd.getResultParam());
@@ -167,7 +167,7 @@ public abstract class FunctionFactoryInterface {
 		} catch (Exception e) {
 			// Try legacy mode.
 			try {
-				Class myClass = Class.forName("com.dexels.navajo.functions."+functionName, true, cl);
+				Class<FunctionInterface> myClass = (Class<FunctionInterface>) Class.forName("com.dexels.navajo.functions."+functionName, true, cl);
 				FunctionInterface fi = (FunctionInterface) myClass.newInstance();
 				if (!fi.isInitialized()) {
 					fi.setTypes(null, null);
@@ -231,6 +231,7 @@ public abstract class FunctionFactoryInterface {
 	public void setInitializing(boolean initializing) {
 		this.initializing = initializing;
 	}
+	@SuppressWarnings("unchecked")
 	public FunctionInterface instantiateFunctionClass(FunctionDefinition fd, ClassLoader classLoader) {
 		try {
 			Class<? extends FunctionInterface> clz = (Class<? extends FunctionInterface>) Class.forName(fd.getObject(),true,classLoader);
@@ -238,10 +239,8 @@ public abstract class FunctionFactoryInterface {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;

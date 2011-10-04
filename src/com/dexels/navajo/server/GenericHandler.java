@@ -73,7 +73,6 @@ public final class GenericHandler extends ServiceHandler {
     		}
     }
 
-    @SuppressWarnings("unchecked")
 	public static void doClearCache() {
     	// fix ugly shutdown npe in some cases
     	if(loadedClasses!=null) {
