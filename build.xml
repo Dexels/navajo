@@ -15,7 +15,7 @@
 			</fileset>
 		</copy>
 		<copy todir="WEB-INF/lib" overwrite="true">
-			<fileset dir="/Users/frank/Desktop/dump8/eclipse/plugins">
+			<fileset dir="/Users/frank/Desktop/dump8/plugins">
 				<include name="org.eclipse.equinox.servletbridge_*" />
 			</fileset>
 		</copy>
