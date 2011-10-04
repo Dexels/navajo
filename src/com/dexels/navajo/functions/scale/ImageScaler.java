@@ -27,6 +27,7 @@ import java.awt.image.ImageProducer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Iterator;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -154,7 +155,7 @@ public class ImageScaler {
     	JPEGImageWriteParam param = new JPEGImageWriteParam(null);
     	param.setCompressionMode(JPEGImageWriteParam.MODE_EXPLICIT);
     	param.setCompressionQuality(quality);
-    	java.util.Iterator it = ImageIO.getImageWritersBySuffix("jpg");
+    	Iterator<ImageWriter> it = ImageIO.getImageWritersBySuffix("jpg");
     	writer = (ImageWriter)it.next();
     	writer.setOutput(outfile);
     	IIOImage iioi = new IIOImage(scaled, null, null); 
