@@ -68,12 +68,13 @@ Export-Package: com.dexels.navajo.adapter,
    com.dexels.navajo.mapping,
    org.w3c.dom,
    com.dexels.navajo.document",
- navajo;uses:="com.dexels.navajo.version,org.osgi.framework",
  org.dexels.utils;uses:="com.dexels.navajo.loader"
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.document,
  com.dexels.navajo.version
-Import-Package: junit.framework,
+Import-Package: javax.imageio,
+ javax.imageio.spi,
+ junit.framework,
  org.osgi.framework;version="1.5.0",
  org.osgi.util.tracker;version="1.4.0",
  org.slf4j
