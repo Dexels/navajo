@@ -25,7 +25,7 @@ Export-Package: com.dexels.navajo.client,
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.document,
  com.dexels.navajo.version
-Import-Package: junit.framework,
+Import-Package: junit.framework;resolution:=optional,
  org.osgi.framework;version="1.5.0",
  org.slf4j;version="1.6.1"
 Bundle-ActivationPolicy: lazy
