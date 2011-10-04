@@ -13,7 +13,11 @@ Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.document;bundle-version="1.0.0",
  com.dexels.navajo.core;bundle-version="2.9.0",
  com.dexels.navajo.version;bundle-version="1.0.6"
-Import-Package: junit.framework,
+Import-Package: javax.imageio,
+ javax.imageio.plugins.jpeg,
+ javax.imageio.stream,
+ javax.swing,
+ junit.framework,
  org.osgi.framework,
  org.slf4j;version="1.6.1"
 Bundle-ActivationPolicy: lazy
