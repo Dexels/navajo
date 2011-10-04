@@ -29,7 +29,12 @@ Export-Package: com.dexels.navajo.functions,
  dexels,
  org.w3c.tidy,
  tipi
-Import-Package: org.osgi.framework;version="1.5.0",
- org.slf4j;version="1.6.1"
+Import-Package: javax.xml.parsers,
+ javax.xml.transform,
+ javax.xml.transform.dom,
+ javax.xml.transform.stream,
+ org.osgi.framework;version="1.5.0",
+ org.slf4j;version="1.6.1",
+ org.w3c.dom
 Bundle-ClassPath: lib/iText.jar
 
