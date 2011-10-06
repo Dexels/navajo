@@ -37,8 +37,6 @@ public class JettyServer {
 		connector.setPort(port);
 		jettyServer.addConnector(connector);
 		HandlerList handlers = new HandlerList();
-		System.err.println("\nAAAAAAAAAAAAAAAAAAA: "+System.getProperty("logback.configurationFile"));
-//		URL u = 
 		LoggerContext lc =(LoggerContext)LoggerFactory.getILoggerFactory();
 
 		StatusPrinter.print(lc);
