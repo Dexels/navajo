@@ -46,7 +46,7 @@ public class MessageTable extends Table {
           }
           if(v instanceof Boolean) {
         	  boolean b = (Boolean)v;
-        	  return b?"jazeker":"echt niet";
+        	  return b?"ja":"nee";
           }
           return super.formatPropertyValue(rowId, colId, property);
       }

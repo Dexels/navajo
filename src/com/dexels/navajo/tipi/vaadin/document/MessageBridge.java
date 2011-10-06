@@ -27,6 +27,10 @@ public class MessageBridge implements Item {
 			propertyMap.put(property.getName(), pb);
 		}
 	}
+
+	public int getIndex() {
+		return src.getIndex();
+	}
 	
 	@Override
 	public Property getItemProperty(Object id) {

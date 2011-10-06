@@ -20,7 +20,6 @@ public class AdHocProperty implements Property {
 
 	@Override
 	public void setValue(Object newValue) throws ReadOnlyException, ConversionException {
-		// TODO Auto-generated method stub
 		this.value = newValue;
 	}
 

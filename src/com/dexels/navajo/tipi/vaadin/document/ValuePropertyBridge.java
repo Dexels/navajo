@@ -47,7 +47,11 @@ public class ValuePropertyBridge implements Property, Property.ValueChangeNotifi
 	}
 
 	public String toString() {
-		return (String) getValue();
+		Object o = getValue();
+		if(o==null) {
+			return "";
+		}
+		return ""+ o;
 	}
 	
 	@Override
@@ -85,3 +89,5 @@ public class ValuePropertyBridge implements Property, Property.ValueChangeNotifi
 	}
 
 }
+//vaadin.document.ValuePropertyBridge.toString(ValuePropertyBridge.java:50)
+//at com.vaadin.ui.AbstractField.setPrope
