@@ -3,7 +3,7 @@ package com.dexels.navajo.tipi.vaadin.components;
 
 import com.dexels.navajo.tipi.components.question.TipiBaseQuestionGroup;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Panel;
 
 /**
  * <p>
@@ -27,10 +27,13 @@ import com.vaadin.ui.VerticalLayout;
 public class TipiQuestionGroup extends TipiBaseQuestionGroup {
 
 	private static final long serialVersionUID = -2453065163545438139L;
-	private VerticalLayout myColumn;
+	private Panel myColumn;
 
     public Object createContainer() {
-        myColumn = new VerticalLayout();
+        myColumn = new Panel();
+//        com.vaadin.ui.
+        myColumn.setScrollable(true);
+      
         return myColumn;
     }
 
