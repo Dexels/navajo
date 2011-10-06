@@ -11,7 +11,7 @@
 
   <logger name="org.eclipse.jetty.util.log" level="WARNING" />
 
-  <root level="DEBUG">
+  <root level="INFO">
     <appender-ref ref="STDOUT" />
   </root>
 
