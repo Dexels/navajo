@@ -12,3 +12,4 @@ Bundle-ClassPath: .,
  lib/rssutils.jar
 Import-Package: org.osgi.framework;version="1.5.0"
 Bundle-Activator: tipi.TipiRssExtension
+Export-Package: com.dexels.navajo.tipi.rss
