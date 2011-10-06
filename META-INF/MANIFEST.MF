@@ -16,3 +16,5 @@ Bundle-ClassPath: .,
  lib/jxlayer.jar
 Bundle-Activator: tipi.TipiJxLayerExtension
 Import-Package: org.osgi.framework;version="1.5.0"
+Export-Package: com.dexels.navajo.tipi.jxlayer,
+ com.dexels.navajo.tipi.jxlayer.actions
