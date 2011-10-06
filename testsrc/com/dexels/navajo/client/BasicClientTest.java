@@ -26,11 +26,14 @@ public class BasicClientTest extends TestCase {
 		myClient = NavajoClientFactory.getClient();
 		// Use manual load balancing in order to fully control scenario's to enable/disable servers.
 		myClient.setLoadBalancingMode(ClientInterface.LBMODE_MANUAL);
-		myClient.setServers(new String[]{"spiritus.dexels.nl:8080/NavajoServerContext/Postman"});
-		myClient.setCurrentHost("spiritus.dexels.nl:8080/NavajoServerContext/Postman");
+		myClient.setServers(new String[]{"localhost:4444/aaap"});
+		myClient.setCurrentHost("localhost:4444/aaap");
 		received = null;
 		finished = false;
 		System.err.println("=======================================================================================");
+		myClient.setUsername("bert");
+		myClient.setPassword("bert");
+		myClient.doSimpleSend("Tralalala");
 	}
 
 	protected void tearDown() throws Exception {
