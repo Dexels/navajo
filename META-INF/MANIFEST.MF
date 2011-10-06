@@ -16,4 +16,11 @@ Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.document,
  com.dexels.navajo.client;bundle-version="1.0.0",
  com.dexels.navajo.version;bundle-version="1.0.7"
-Import-Package: org.osgi.framework;version="1.5.0"
+Import-Package: javax.swing,
+ javax.swing.border,
+ javax.swing.event,
+ javax.swing.plaf.basic,
+ javax.swing.table,
+ javax.swing.text,
+ org.osgi.framework;version="1.6.0",
+ org.slf4j;version="1.6.1"
