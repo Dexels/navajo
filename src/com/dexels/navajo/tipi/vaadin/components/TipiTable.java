@@ -18,10 +18,12 @@ import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
 import com.dexels.navajo.tipi.vaadin.components.impl.MessageTable;
+import com.dexels.navajo.tipi.vaadin.components.impl.TmlTableFieldFactory;
 import com.dexels.navajo.tipi.vaadin.document.CompositeArrayContainer;
 import com.dexels.navajo.tipi.vaadin.document.CompositeMessageBridge;
 import com.vaadin.data.Container;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.event.ItemClickEvent;
 import com.vaadin.ui.Table;
 
 public class TipiTable extends TipiVaadinComponentImpl {
@@ -30,6 +32,7 @@ public class TipiTable extends TipiVaadinComponentImpl {
 	private Table table;
 	private String messagepath;
 	private final List<String> visibleColumns = new ArrayList<String>();
+	private final List<String> editableColumns = new ArrayList<String>();
 	private final Map<String,Integer> columnSizes = new HashMap<String,Integer>();
 	private final Map<String,String> columnLabels = new HashMap<String,String>();
 //	private final Map<Object, Message> messageMap = new HashMap<Object, Message>();
@@ -46,9 +49,15 @@ public class TipiTable extends TipiVaadinComponentImpl {
 //		table.setRowHeaderMode(Table.ROW_HEADER_MODE_ID);
 		table.setSelectable(true);
 		table.setImmediate(true);
+		
 //		table.setPageLength(5);
 //		table.setHeight("100px");
-//		table.setSizeFull();
+		table.setSortDisabled(false);
+		table.setColumnReorderingAllowed(true);
+		table.setEditable(true);
+		table.setColumnCollapsingAllowed(true);
+		table.setTableFieldFactory(new TmlTableFieldFactory());
+		 //		table.setSizeFull();
 		table.addListener(new Table.ValueChangeListener() {
 
 			private static final long serialVersionUID = 1L;
@@ -74,6 +83,34 @@ public class TipiTable extends TipiVaadinComponentImpl {
 
 
 		});
+		
+		table.addListener(new ItemClickEvent.ItemClickListener() {
+			private static final long serialVersionUID = 2068314108919135281L;
+
+			public void itemClick(ItemClickEvent event) {
+				if (event.isDoubleClick()) {
+					System.err.println("Dblclicked message!" + table.getValue());
+					selectedId = table.getValue();
+					Message selectedM = getSelectedMessage();
+					if(selectedM!=null) {
+						selectedM.write(System.err);
+					}
+					Map<String, Object> tempMap = new HashMap<String, Object>();
+					// TODO fix
+					tempMap.put("selectedIndex", selectedIndex);
+					tempMap.put("selectedMessage", selectedM);
+					try {
+						performTipiEvent("onActionPerformed", tempMap, false);
+					} catch (TipiBreakException e) {
+						e.printStackTrace();
+					} catch (TipiException e) {
+						e.printStackTrace();
+					}
+
+				}
+			}
+		});
+		
 		return table;
 	}
 
@@ -144,10 +181,14 @@ public class TipiTable extends TipiVaadinComponentImpl {
 
 	
 	private Container createMessageContainer(Message m) {
-		CompositeArrayContainer amb = new CompositeArrayContainer(m,visibleColumns);
 		if(m==null) {
 			return null;
 		}
+		System.err.println("COL: "+visibleColumns+" EDIT: "+editableColumns+" columnsizes: "+columnSizes);
+		CompositeArrayContainer amb = new CompositeArrayContainer(m,visibleColumns,editableColumns,columnSizes);
+		int rows = amb.getItemIds().size();
+		System.err.println("ROWS: "+rows+" msgrows: "+m.getArraySize());
+
 		Message exa = amb.getExampleMessage();
 		if(exa==null) {
 			return null;
@@ -164,10 +205,11 @@ public class TipiTable extends TipiVaadinComponentImpl {
 			Class<?> type = NavajoFactory.getInstance().getJavaType(amb.getPropertyAspect(col+"@type"));
 			String alignment = Table.ALIGN_LEFT;
 			
+			
 			if(type!=null && type.isAssignableFrom(Number.class)) {
 				alignment = Table.ALIGN_RIGHT;
 			}
-			
+			System.err.println("Adding container property: "+col);
 			table.addContainerProperty(col+"@value",type,null, label, null,alignment);
 			int size = columnSizes.get(col);
 			if(size>=0) {
@@ -231,13 +273,16 @@ public class TipiTable extends TipiVaadinComponentImpl {
 						if(label!=null) {
 							columnLabels.put(name, label);
 						}
-						String editableString = (String) child.getAttribute("editable");
 						int size = child.getIntAttribute("size", -1);
 						columnSizes.put(name,size);
+						String editableString = (String) child.getAttribute("editable");
 						boolean editable = "true".equals(editableString);
 //						colDefs = true;
 						visibleColumns.add(name);
-//						mm.addColumn(name, label, editable, size);
+						if(editable) {
+							editableColumns.add(name);
+						}
+						//						mm.addColumn(name, label, editable, size);
 						editableColumnsFound = editableColumnsFound || editable;
 					}
 					if (child.getName().equals("column-attribute")) {
@@ -245,9 +290,11 @@ public class TipiTable extends TipiVaadinComponentImpl {
 //						String type = (String) child.getAttribute("type");
 					}
 				}
+				if(!editableColumnsFound) {
+					editableColumns.addAll(visibleColumns);
+				}
 			}
 		});
-
 	}
 
 }

@@ -17,16 +17,41 @@ import com.vaadin.data.Property;
 public class ArrayMessageBridge implements Container, Container.Sortable {
 
 	private static final long serialVersionUID = -6228404246238997251L;
-	private final Message src;
+	private Message src;
 	protected List<String> visibleColumns;
+	protected List<String> editableColumns;
 	
 	private final Map<Object,Item> messageMap = new HashMap<Object,Item>();
 	
 	private final Map<Object, Property> containerProperties = new HashMap<Object, Property>();
 	private final List<Message> sorted = new ArrayList<Message>();
 	private final List<Integer> sortedIndexes = new ArrayList<Integer>();
+	private Map<String, Integer> columnSizes;
 	
-	public ArrayMessageBridge(Message src) {
+//	public ArrayMessageBridge(Message src) {
+//
+//		initialize(src);
+//		this.visibleColumns = null;
+//	}
+//	
+	public ArrayMessageBridge(Message m, List<String> visibleColumns, List<String> editableColumns, Map<String, Integer> columnSizes) {
+		initialize(m, visibleColumns, editableColumns,columnSizes);
+	}
+
+	public Integer getSizeForColumn(String name) {
+		String[] split = name.split("@");
+		String propertyName = split[0];
+		System.err.println("Getting size for column: "+propertyName+" >>>>> "+columnSizes);
+		if(columnSizes==null) {
+			System.err.println("but none found.");
+			return null;
+		}
+		Integer integer = columnSizes.get(propertyName);
+		System.err.println("resolved to: "+integer);
+		return integer;
+	}
+	
+	private void initialize(Message src) {
 		this.src = src;
 		if(src==null) {
 			return;
@@ -34,32 +59,34 @@ public class ArrayMessageBridge implements Container, Container.Sortable {
 		if(!Message.MSG_TYPE_ARRAY.equals(src.getType())) {
 			throw new UnsupportedOperationException("Can not bridge an non-array message to a container");
 		}
-		// TODO rewrite to laziness
 		List<com.dexels.navajo.document.Message> messages = src.getAllMessages();
-		int i = 0;
 		for (Message message : messages) {
-			Item pb = createItemFromMessage(message);
-			Integer integer = new Integer(i);
-			messageMap.put(integer, pb);
 			sorted.add(message);
 			sortedIndexes.add(message.getIndex());
-			i++;
 		}
-		this.visibleColumns = null;
 	}
 
-	public ArrayMessageBridge(Message m, List<String> visibleColumns) {
-		this(m);
+	private void initialize(Message m, List<String> visibleColumns, List<String> editableColumns, Map<String, Integer> columnSizes) {
 		this.visibleColumns = visibleColumns;		
+		this.editableColumns = editableColumns;		
+		this.columnSizes = columnSizes;
+		initialize(m);
+	}
+
+	protected Item createItemFromMessage(Message message, List<String> visibleColumns, List<String> editableColumns) {
+		return new CompositeMessageBridge(message,editableColumns);
 	}
 	
-	
-	protected Item createItemFromMessage(Message message) {
-		return new MessageBridge(message);
-	}
 	@Override
 	public Item getItem(Object itemId) {
-		return messageMap.get(itemId);
+		Item item = messageMap.get(itemId);
+		Integer id = (Integer) itemId;
+		if(item==null) {
+			Item pb = createItemFromMessage(src.getMessage(id),visibleColumns,editableColumns);
+			messageMap.put(id, pb);
+			return pb;
+		}
+		return item;
 	}
 
 	protected void addVisibleColumn(String columnId) {
@@ -109,7 +136,7 @@ public class ArrayMessageBridge implements Container, Container.Sortable {
 
 	@Override
 	public Property getContainerProperty(Object itemId, Object propertyId) {
-		Item mb = messageMap.get(itemId);
+		Item mb = getItem(itemId);
 		return mb.getItemProperty(propertyId);
 	}
 
@@ -120,12 +147,16 @@ public class ArrayMessageBridge implements Container, Container.Sortable {
 
 	@Override
 	public int size() {
-		return messageMap.size();
+		return src.getArraySize();
 	}
 
 	@Override
 	public boolean containsId(Object itemId) {
-		return messageMap.containsKey(itemId);
+		Integer i = (Integer) itemId;
+		if(i>=0 && i<src.getArraySize()) {
+			return true;
+		}
+		return false;
 	}
 
 	// Untested from here on:
@@ -138,7 +169,7 @@ public class ArrayMessageBridge implements Container, Container.Sortable {
 		}
 		Message itt = src.instantiateFromDefinition();
 		itt.setIndex((Integer)itemId);
-		Item messageBridge = createItemFromMessage(itt);
+		Item messageBridge = createItemFromMessage(itt,visibleColumns,editableColumns);
 		messageMap.put(itt.getIndex(), messageBridge);
 		return messageBridge;
 	}
@@ -146,7 +177,7 @@ public class ArrayMessageBridge implements Container, Container.Sortable {
 	@Override
 	public Object addItem() throws UnsupportedOperationException {
 		Message itt = src.instantiateFromDefinition();
-		Item messageBridge = createItemFromMessage(itt);
+		Item messageBridge = createItemFromMessage(itt,visibleColumns,editableColumns);
 		messageMap.put(itt.getIndex(), messageBridge);
 		return messageBridge;
 	}

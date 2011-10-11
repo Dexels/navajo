@@ -32,6 +32,9 @@ public class SelectionBridge implements Item {
 		
 	}
 	
+	public boolean isSelectedBool() {
+		return src.isSelected();
+	}
 	@Override
 	public Property getItemProperty(Object id) {
 		if(id==Selection.SELECTION_NAME) {

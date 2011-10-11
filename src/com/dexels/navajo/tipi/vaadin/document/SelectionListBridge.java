@@ -47,14 +47,44 @@ public class SelectionListBridge implements Container {
 			e.printStackTrace();
 		}
 	}
+	
+	public void select(String newValue) {
+		src.setSelected(newValue);
+	}
+
+	
 	@Override
 	public Item getItem(Object itemId) {
 		return selectionMap.get(itemId);
 	}
 
+	public Selection getSelection(String selectionName) {
+		SelectionBridge sb = selectionMap.get(selectionName);
+		return sb.getSource();
+	}
+	
+	public SelectionBridge getSelectionBridge(String selectionName) {
+		SelectionBridge sb = selectionMap.get(selectionName);
+		return sb;
+	}
+	
+	public SelectionBridge getSelectionBridge() {
+		Selection ssss = src.getSelected();
+		if(ssss!=null) {
+			SelectionBridge sb = selectionMap.get(ssss.getName());
+			return sb;
+		}
+		return null;
+	}
+
+	
 	@Override
 	public Collection<?> getContainerPropertyIds() {
-		return new HashSet<Object>();
+		HashSet<Object> selected = new HashSet<Object>();
+		selected.add(Selection.SELECTION_NAME);
+		selected.add(Selection.SELECTION_SELECTED);
+		selected.add(Selection.SELECTION_VALUE);
+		return selected;
 	}
 
 	@Override
@@ -130,5 +160,7 @@ public class SelectionListBridge implements Container {
 	public com.dexels.navajo.document.Property getSource() {
 		return src;
 	}
+
+
 
 }

@@ -2,7 +2,9 @@ package com.dexels.navajo.tipi.vaadin.document;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.dexels.navajo.document.NavajoException;
@@ -15,22 +17,36 @@ public class SelectedItemValuePropertyBridge implements Property, Property.Value
 	private static final long serialVersionUID = -5696589046516267159L;
 	private final Map<ValueChangeListener,SerializablePropertyChangeListener> listenerMap = new HashMap<ValueChangeListener,SerializablePropertyChangeListener>();
 	private final com.dexels.navajo.document.Property src;
+	private final boolean editable;
+
+	private final List<SelectionBridge> selections = new ArrayList<SelectionBridge>();
+	private SelectionListBridge selectionListBridge;
 	
-	public SelectedItemValuePropertyBridge(com.dexels.navajo.document.Property src) {
+	public SelectedItemValuePropertyBridge(com.dexels.navajo.document.Property src, boolean editable) {
 		this.src = src;
+		this.editable = editable;
 		if(!com.dexels.navajo.document.Property.SELECTION_PROPERTY.equals(src.getType())) {
 			throw new UnsupportedOperationException("Can not create a SelectedItemValuePropertyBridge with a non selection property.");
 		}
+		Selection s= src.getSelected();
+
+		for (Selection sel : src.getAllSelections()) {
+			SelectionBridge sb = new SelectionBridge(src, sel);
+			selections.add(sb);
+		}
 	}
 	
+	
+	public SelectionListBridge createListBridge() {
+		selectionListBridge = new SelectionListBridge(src);
+		return selectionListBridge;
+	}
 	@Override
 	public Object getValue() {
 		try {
-			Selection selected = src.getSelected();
-			if(selected!=null) {
-				return selected.getValue();
-			}
-			return null;
+//			Selection selected = src.getSelected();
+//			return selected;
+			return selectionListBridge.getSelectionBridge();
 		} catch (NavajoException e) {
 			e.printStackTrace();
 		}
@@ -39,12 +55,12 @@ public class SelectedItemValuePropertyBridge implements Property, Property.Value
 
 	@Override
 	public void setValue(Object newValue) throws ReadOnlyException, ConversionException {
-		if(src.isDirOut()) {
+		if(src.isDirOut() || !editable) {
 			throw new ReadOnlyException();
 		}
 		try {
-			Selection found = src.getSelectionByValue((String) newValue);
-			src.setSelected(found);
+//			selectionListBridge.select((String) newValue);
+			src.setSelected((Selection)newValue);
 		} catch (NavajoException e) {
 			e.printStackTrace();
 			throw new ConversionException("Problem resolving selected property.");
@@ -59,7 +75,7 @@ public class SelectedItemValuePropertyBridge implements Property, Property.Value
 
 	@Override
 	public boolean isReadOnly() {
-		return src.isDirOut();
+		return src.isDirOut() || !editable;
 	}
 
 	public String toString() {

@@ -10,13 +10,14 @@ import com.vaadin.data.Property;
 public class CompositeMessageBridge extends CompositeItem implements Item {
 
 	private static final long serialVersionUID = -8870100156134809791L;
-
+	private List<String> editableList = null;
 	private final Message src;
 	
 //	private final Map<Object,PropertyItem> propertyMap = new HashMap<Object,PropertyItem>();
 	
-	public CompositeMessageBridge(Message src) {
+	public CompositeMessageBridge(Message src, List<String> editableList) {
 		super();
+		this.editableList = editableList;
 		this.src = src;
 		if(src==null) {
 			return;
@@ -26,8 +27,15 @@ public class CompositeMessageBridge extends CompositeItem implements Item {
 		}
 		List<com.dexels.navajo.document.Property> properties = src.getAllProperties();
 		for (com.dexels.navajo.document.Property property : properties) {
-			PropertyItem pi = new PropertyItem(property);
-			addItem(property.getName(),pi);
+			if(editableList!=null) {
+				boolean edit = editableList.contains(property.getName());
+				
+				PropertyItem pi = new PropertyItem(property,edit);
+				addItem(property.getName(),pi);
+			} else {
+				PropertyItem pi = new PropertyItem(property,true);
+				addItem(property.getName(),pi);
+			}
 		}
 	}
 	

@@ -1,7 +1,9 @@
 package com.dexels.navajo.tipi.vaadin.components;
 
 import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -47,4 +49,21 @@ public class TipiButton extends TipiVaadinComponentImpl {
 	                v.setStyleName((String)object);
 		        }
 	  }
+
+	@Override
+	protected void performComponentMethod(String name,
+			TipiComponentMethod compMeth, TipiEvent event)
+			throws TipiBreakException {
+		super.performComponentMethod(name, compMeth, event);
+		if(name.equals("fireAction")) {
+			try {
+				performTipiEvent("onActionPerformed", null, true);
+			} catch (TipiException e) {
+				e.printStackTrace();
+			}
+
+		}
+	}
+	  
+	  
 }

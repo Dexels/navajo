@@ -46,6 +46,16 @@ public class TipiQuestion extends TipiBaseQuestion {
 
     public void setValid(boolean b, String msg) {
     	System.err.println("Setting valid: "+b+" msg: "+msg);
+    	if(b) {
+    		myColumn.setCaption("");
+    	} else {
+        	myColumn.setCaption(msg);
+    	}
+    	if (b) {
+			myColumn.removeStyleName("invalidQuestion");
+		} else {
+			myColumn.addStyleName("invalidQuestion");
+		}
     }
    
 

@@ -20,7 +20,7 @@ public class PropertyItem implements Item {
 	
 	private final com.vaadin.data.Property valueProperty;
 	
-	public PropertyItem(Property src) {
+	public PropertyItem(Property src, boolean editable) {
 		this.src = src;
 		for (String aspect : aspects) {
 			PropertyAspectProperty asp = new PropertyAspectProperty(src,aspect);
@@ -28,10 +28,11 @@ public class PropertyItem implements Item {
 			aspectCollection.add(aspect);
 		}
 		if(Property.SELECTION_PROPERTY.equals(src.getType())) {
-			this.valueProperty = new SelectedItemValuePropertyBridge(src);
+			this.valueProperty = new SelectedItemValuePropertyBridge(src,editable);
 			aspectMap.put(Property.PROPERTY_VALUE, this.valueProperty);
 		} else {
-			this.valueProperty = new ValuePropertyBridge(src);
+			// TODO: Support read-only forcing?
+			this.valueProperty = new ValuePropertyBridge(src,editable);
 			aspectMap.put(Property.PROPERTY_VALUE, this.valueProperty);
 		}
 	}
