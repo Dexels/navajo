@@ -1,7 +1,8 @@
 <tid>
-	<tipiclass implements="basecomponent,datacomponent,vaadincomponent" addtocontainer="true" class="TipiButton" module="component"
-		name="button" childcount="0" package="com.dexels.navajo.tipi.vaadin.components" propertycomponent="false" studio-icon="button.gif"
-		type="component">
+	<tipiclass implements="basecomponent,datacomponent,vaadincomponent"
+		addtocontainer="true" class="TipiButton" module="component" name="button"
+		childcount="0" package="com.dexels.navajo.tipi.vaadin.components"
+		propertycomponent="false" studio-icon="button.gif" type="component">
 		<events>
 			<event name="onActionPerformed" />
 		</events>
@@ -14,6 +15,10 @@
 			<value direction="in" name="visible" type="boolean" />
 			<value direction="in" name="enabled" type="boolean" />
 		</values>
+		<methods>
+			<method name="fireAction" />
+		</methods>
+
 
 	</tipiclass>
 
@@ -348,7 +353,10 @@
 	<tipiclass class="TipiTable" implements="basecomponent,datacomponent,vaadincomponent" name="tipitable" package="com.dexels.navajo.tipi.vaadin.components" type="tipi"
 		childcount="0" layoutmanager="false" addtocontainer="true" customstructure="true">
 		<events>
-			<event name="onActionPerformed" />
+			<event name="onActionPerformed">
+				<param name="selectedMessage" type="message" />
+				<param name="selectedIndex" type="integer" />
+			</event>
 			<event name="onSelectionChanged">
 				<param name="selectedMessage" type="message" />
 				<param name="selectedIndex" type="integer" />
