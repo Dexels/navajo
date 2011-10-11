@@ -53,6 +53,7 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 	private String selectiontype = "combo";
 	private int memoColumnCount = 40;
 	private int memoRowCount = 5;
+	private ValuePropertyBridge currentDataSource;
 	
 	@Override
 	public Object createContainer() {
@@ -95,7 +96,8 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 			@Override
 			public void propertyChange(PropertyChangeEvent pce) {
 				if(!"selection".equals(pce.getPropertyName())) {
-					refreshPropertyValue();
+					System.err.println("DIF: "+pce.getOldValue()+" new: "+pce.getNewValue());
+//					refreshPropertyValue();
 				}
 			}
 		};
@@ -157,7 +159,8 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 	}
 
 	private void createDateProperty() {
-		DateField df = new DateField(new ValuePropertyBridge(property));
+		currentDataSource = new ValuePropertyBridge(property,!forceReadOnly);
+		DateField df = new DateField(currentDataSource);
 		df.setDateFormat("dd-MM-yyyy");
 		df.setImmediate(true);
 		value = df;
@@ -165,7 +168,8 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 		container.addComponent(df);
 	}
 	private void createBooleanProperty() {
-		CheckBox df = new CheckBox("",new ValuePropertyBridge(property));
+		currentDataSource = new ValuePropertyBridge(property,!forceReadOnly);
+		CheckBox df = new CheckBox("",currentDataSource);
 		df.setImmediate(true);
 		value = df;
 		addPropertyComponent(df);
@@ -213,8 +217,6 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 
 	private void createSingleCardinality() {
 			SelectionListBridge selectionListBridge = new SelectionListBridge(property);
-//			SelectedItemValuePropertyBridge sivp = new SelectedItemValuePropertyBridge(property);
-			value = new Select("",selectionListBridge);
 			if("radio".equals(selectiontype)) {
 				value = new OptionGroup("",selectionListBridge);
 			} else {
@@ -270,16 +272,18 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 	}
 	private void createTextualProperty() {
 		AbstractTextField p = null;
+//		System.err.println("Forcereadonly: "+forceReadOnly);
+		currentDataSource = new ValuePropertyBridge(property,!forceReadOnly);
 		if(com.dexels.navajo.document.Property.PASSWORD_PROPERTY.equals(property.getType())) {
-			p = new PasswordField(new ValuePropertyBridge(property));
+			p = new PasswordField(currentDataSource);
 		} else {
 			if(com.dexels.navajo.document.Property.MEMO_PROPERTY.equals(property.getType())) {
-				p = new TextArea(new ValuePropertyBridge(property));
+				p = new TextArea(currentDataSource);
 				p.setColumns(this.memoColumnCount);
 				((TextArea)p).setRows(this.memoRowCount);
 			} else {
-				p = new TextField(new ValuePropertyBridge(property));
-							
+				p = new TextField(currentDataSource);
+				p.setSizeUndefined();
 			}
 		
 		}
@@ -340,6 +344,9 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 		}
 		if(name.equals("alwaysUseLabel")) {
 			this.forceReadOnly  = (Boolean)object;
+			if(currentDataSource!=null) {
+				currentDataSource.setReadOnly(this.forceReadOnly);
+			}
 		}		
 		if(name.equals("selectiontype")) {
 			this.selectiontype   = (String)object;
