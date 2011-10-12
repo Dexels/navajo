@@ -36,13 +36,33 @@ public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension
 
 	public final void loadDescriptor() {
 		String xmlName = "tipi/" + getClass().getSimpleName() + ".xml";
-		logger.debug("Loading TipiExtension: "+xmlName);
-		loadXML(xmlName);
+//		logger.debug("Loading TipiExtension: "+xmlName);
+		loadXMLClass(getClass().getSimpleName() + ".xml");
 		// Added for Vaadin (OSGi, actually)
 		setExtensionClassloader(getClass().getClassLoader());
 	}
 
-
+	private void loadXMLClass(String xmlName) {
+		try {
+			System.err.println("loading: "+xmlName);
+			InputStream is = getClass().getResourceAsStream(
+					xmlName);
+			if (is == null) {
+				throw new IllegalArgumentException(
+						"Problem loading extension: " + xmlName);
+			}
+			Reader r = new InputStreamReader(is);
+			XMLElement xx = new CaseSensitiveXMLElement();
+			xx.parseFromReader(r);
+			r.close();
+			is.close();
+			loadXML(xx);
+		} catch (XMLParseException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	private void loadXML(String xmlName) {
 		try {
 			InputStream is = getClass().getClassLoader().getResourceAsStream(
@@ -62,7 +82,6 @@ public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	private void loadXML(XMLElement xx) {

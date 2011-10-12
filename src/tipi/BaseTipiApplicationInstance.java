@@ -79,6 +79,7 @@ public abstract class BaseTipiApplicationInstance implements TipiApplicationInst
 		resolvedValues.put("tipi.profile", profile);
 		
 		for (Entry<String,String> entry : resolvedValues.entrySet()) {
+			System.err.println("Setting: "+entry.getKey());
 			context.setSystemProperty(entry.getKey(), entry.getValue());
 		}	
 //		return resolvedValues;

@@ -29,6 +29,7 @@ public abstract class TipiAbstractOSGiExtension implements TipiExtension,
 	
 	
 	
+	@SuppressWarnings("unchecked")
 	protected void registerTipiExtension(BundleContext context)
 			throws Exception {
 		this.context = context;
@@ -38,7 +39,7 @@ public abstract class TipiAbstractOSGiExtension implements TipiExtension,
 		if(context==null) {
 			reg = nonOSGiRegistry;
 		} else {
-			ServiceReference refs = context
+			ServiceReference<? extends ITipiExtensionRegistry> refs = (ServiceReference<? extends ITipiExtensionRegistry>) context
 					.getServiceReference(ITipiExtensionRegistry.class.getName());
 			reg = (ITipiExtensionRegistry) context
 					.getService(refs);
@@ -53,11 +54,12 @@ public abstract class TipiAbstractOSGiExtension implements TipiExtension,
 		// deregister
 	}	
 	
+	@SuppressWarnings("unchecked")
 	public ITipiExtensionRegistry getTipiExtensionRegistry() {
 		if(context==null) {
 			return nonOSGiRegistry;
 		}
-		ServiceReference refs = context
+		ServiceReference<? extends ITipiExtensionRegistry> refs = (ServiceReference<? extends ITipiExtensionRegistry>) context
 				.getServiceReference(ITipiExtensionRegistry.class.getName());
 		ITipiExtensionRegistry reg = (ITipiExtensionRegistry) context
 				.getService(refs);

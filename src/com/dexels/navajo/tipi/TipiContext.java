@@ -583,17 +583,18 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 				+ " overwrite: " + overwrite);
 		systemPropertyMap.put(name, value);
 
-		try {
-			if (System.getProperty(name) != null) {
-				if (overwrite) {
-					System.setProperty(name, value);
-				}
-			} else {
-				System.setProperty(name, value);
-			}
-		} catch (SecurityException e) {
-			// System.err.println("No system propery access allowed.");
-		}
+		// no reason to actually change system properties, right?
+//		try {
+//			if (System.getProperty(name) != null) {
+//				if (overwrite) {
+//					System.setProperty(name, value);
+//				}
+//			} else {
+//				System.setProperty(name, value);
+//			}
+//		} catch (SecurityException e) {
+//			// System.err.println("No system propery access allowed.");
+//		}
 	}
 
 	public final void setSystemPropertyLocal(String name, String value) {

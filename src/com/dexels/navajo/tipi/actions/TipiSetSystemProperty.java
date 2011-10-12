@@ -36,10 +36,15 @@ public class TipiSetSystemProperty extends TipiAction {
 			com.dexels.navajo.tipi.TipiException {
 		Operand name = getEvaluatedParameter("name", event);
 		Operand value = getEvaluatedParameter("value", event);
-		if (name == null || value == null) {
+		if (name == null) {
 			return;
 		}
-		System.setProperty(name.value.toString(), value.value.toString());
+		if (value == null) {
+			getContext().setSystemProperty(name.value.toString(), null);
+			return;
+		}
+		getContext().setSystemProperty(name.value.toString(), value.value.toString());
+//		System.setProperty(name.value.toString(), value.value.toString());
 	}
 
 }
