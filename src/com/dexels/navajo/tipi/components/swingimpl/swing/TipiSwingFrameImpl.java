@@ -85,6 +85,7 @@ public class TipiSwingFrameImpl extends JFrame implements TopLevel,
 
 					public void setupNextScreen() {
 						try {
+							// TODO I think this isn't correct, no conditions are checked, right?
 							for (int i = 0; i < te.getExecutableChildCount(); i++) {
 								TipiExecutable current = te
 										.getExecutableChild(i);
