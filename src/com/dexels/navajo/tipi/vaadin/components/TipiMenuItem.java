@@ -76,6 +76,12 @@ public class TipiMenuItem extends TipiVaadinComponentImpl {
                 System.err.println("Can not set button icon: I guess it failed to parse (TipiButton)");
             }
         }
+    	if ("visible".equals(name)) {
+            menuItem.setVisible((Boolean) object);
+        }
+    	if ("style".equals(name)) {
+            menuItem.setStyleName((String)object);
+        }
 //        super.setComponentValue(name, object);
     }
     public void addToContainer(Object c, Object constraints) {
