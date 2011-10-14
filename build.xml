@@ -6,16 +6,17 @@
 	</target>
 	
 	<property name="deployPath" value="/Library/apache-tomcat-7.0.16/webapps"/>
+	<property name="exportPath" value="/Users/frank/Desktop/dump_product/"/>
 	
 	<target name="downloadproduct" depends="clean">
 		<copy todir="WEB-INF" overwrite="true">
-			<fileset dir="/Users/frank/Desktop/dump8/">
+			<fileset dir="${exportPath}">
 				<include name="eclipse/configuration/**" />
 				<include name="eclipse/plugins/**" />
 			</fileset>
 		</copy>
 		<copy todir="WEB-INF/lib" overwrite="true">
-			<fileset dir="/Users/frank/Desktop/dump8/plugins">
+			<fileset dir="${exportPath}eclipse/plugins">
 				<include name="org.eclipse.equinox.servletbridge_*" />
 			</fileset>
 		</copy>
@@ -46,6 +47,7 @@
 		<copy file="TipiVaadin.war" tofile="${deployPath}/knvb#test#oao.war" />
 		<copy file="TipiVaadin.war" tofile="${deployPath}/knhb#test#oao.war" />
 		<copy file="TipiVaadin.war" tofile="${deployPath}/knkv#test#oao.war" />
+		<copy file="TipiVaadin.war" tofile="${deployPath}/nhvdwf.war" />
 
 		<!--		<delete verbose="true" dir="/Users/frank/Desktop/dump8/eclipse">
 		</delete>-->

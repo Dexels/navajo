@@ -38,7 +38,6 @@
       <plugin id="com.dexels.navajo.version"/>
       <plugin id="com.vaadin"/>
       <plugin id="javax.transaction" fragment="true"/>
-      <plugin id="org.apache.felix.webconsole"/>
       <plugin id="org.eclipse.core.runtime.compatibility.registry" fragment="true"/>
       <plugin id="org.eclipse.equinox.common"/>
       <plugin id="org.eclipse.equinox.ds"/>
@@ -75,7 +74,6 @@
       <plugin id="com.dexels.navajo.tipi.vaadin.bridged" autoStart="true" startLevel="4" />
       <plugin id="com.dexels.navajo.version" autoStart="true" startLevel="3" />
       <plugin id="com.vaadin" autoStart="true" startLevel="2" />
-      <plugin id="org.apache.felix.webconsole" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="3" />
       <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="3" />
       <plugin id="org.eclipse.equinox.event" autoStart="true" startLevel="3" />

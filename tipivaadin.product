@@ -29,7 +29,7 @@
       <plugin id="ch.qos.logback.core"/>
       <plugin id="ch.qos.logback.slf4j" fragment="true"/>
       <plugin id="com.dexels.navajo.client"/>
-      <plugin id="com.dexels.navajo.client.deps"/>
+      <plugin id="com.dexels.navajo.client.deps" fragment=""/>
       <plugin id="com.dexels.navajo.core"/>
       <plugin id="com.dexels.navajo.document"/>
       <plugin id="com.dexels.navajo.function"/>
@@ -72,7 +72,7 @@
       <plugin id="org.eclipse.jetty.util"/>
       <plugin id="org.eclipse.jetty.webapp"/>
       <plugin id="org.eclipse.jetty.xml"/>
-      <plugin id="org.eclipse.net4j.jms.api"/>
+      <plugin id="org.eclipse.net4j.jms.api" fragment=""/>
       <plugin id="org.eclipse.osgi"/>
       <plugin id="org.eclipse.osgi.services"/>
       <plugin id="org.eclipse.update.configurator"/>
@@ -92,7 +92,6 @@
       <plugin id="com.dexels.navajo.function" autoStart="true" startLevel="0" />
       <plugin id="com.dexels.navajo.tipi" autoStart="true" startLevel="3" />
       <plugin id="com.dexels.navajo.tipi.mail" autoStart="true" startLevel="0" />
-      <plugin id="com.dexels.navajo.tipi.ruby" autoStart="true" startLevel="0" />
       <plugin id="com.dexels.navajo.tipi.vaadin" autoStart="true" startLevel="0" />
       <plugin id="com.dexels.navajo.tipi.vaadin.embedded" autoStart="true" startLevel="0" />
       <plugin id="com.dexels.navajo.version" autoStart="true" startLevel="0" />
