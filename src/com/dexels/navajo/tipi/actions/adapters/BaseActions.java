@@ -3,8 +3,10 @@ package com.dexels.navajo.tipi.actions.adapters;
 import java.io.Serializable;
 import java.util.Map;
 
+import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.TipiSuspendException;
 import com.dexels.navajo.tipi.actions.TipiActionFactory;
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
@@ -27,7 +29,7 @@ public abstract class BaseActions implements Serializable {
 	}
 
 	public void performAction(String actionName, Map<String, Object> parameters)
-			throws TipiException {
+			throws TipiException, TipiBreakException, TipiSuspendException {
 		TipiActionFactory aa = getComponent().getContext().getActionManager()
 				.getActionFactory(actionName);
 		TipiAction rr = aa.createAction(getComponent());

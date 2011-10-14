@@ -1,5 +1,7 @@
 package com.dexels.navajo.tipi;
 
+import java.util.List;
+
 import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.internal.TipiStackElement;
 
@@ -19,7 +21,7 @@ public interface TipiExecutable {
 	// public void performAction(TipiEvent te) throws TipiBreakException,
 	// TipiException;
 	public void performAction(TipiEvent te, TipiExecutable parent, int index)
-			throws TipiBreakException, TipiException;
+			throws TipiBreakException, TipiException, TipiSuspendException;
 
 	// public int getExecutableChildCount();
 
@@ -42,4 +44,16 @@ public interface TipiExecutable {
 	public void setStackElement(TipiStackElement myStackElement);
 
 	public void dumpStack(String message);
+
+	public void setExecutionIndex(int i);
+
+	public int getExecutionIndex();
+
+	public List<TipiExecutable> getExecutables();
+	public void continueAction(TipiEvent original)
+			throws TipiBreakException, TipiException, TipiSuspendException ;
+
+	public void setParent(TipiExecutable tipiAbstractExecutable);
+	public TipiExecutable getParent();
+	public int getExeIndex(TipiExecutable child);
 }

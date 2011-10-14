@@ -3060,11 +3060,13 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 	public void doActions(TipiEvent te, TipiComponent comp,
 			TipiExecutable executableParent, List<TipiExecutable> exe)
-			throws TipiBreakException {
+			throws TipiBreakException, TipiSuspendException {
 		try {
 			int i = 0;
 			for (TipiExecutable current : exe) {
-				current.performAction(te, executableParent, i++);
+				executableParent.setExecutionIndex(i);
+				current.performAction(te, executableParent, i);
+				i++;
 			}
 
 		} catch (TipiException ex) {
@@ -3072,6 +3074,21 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		}
 	}
 
+//	public void continueActions(TipiEvent te, TipiComponent comp,
+//			TipiExecutable executableParent, List<TipiExecutable> exe)
+//			throws TipiBreakException, TipiSuspendException {
+//		try {
+//			int start = executableParent.getExecutionIndex();
+//			for (int i = start; i<exe.size(); i++) {
+//				executableParent.setExecutionIndex(i);
+//				TipiExecutable current = exe.get(i);
+//				current.continueAction(te, executableParent, i);
+//				i++;
+//			}
+//		} catch (TipiException ex) {
+//			ex.printStackTrace();
+//		}
+//	}
 	/**
 	 * Parses an connector instance
 	 * 

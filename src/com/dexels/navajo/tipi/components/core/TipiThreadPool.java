@@ -15,6 +15,7 @@ import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiEventListener;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiExecutable;
+import com.dexels.navajo.tipi.TipiSuspendException;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
 /**
@@ -157,6 +158,7 @@ public class TipiThreadPool implements Serializable {
 				exe.performAction(null, null, 0);
 			} catch (TipiBreakException e) {
 				e.printStackTrace();
+			} catch (TipiSuspendException e) {
 			}
 		} else {
 			synchronized (myWaitingQueue) {

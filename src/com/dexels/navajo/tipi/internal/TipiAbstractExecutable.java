@@ -15,6 +15,7 @@ import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiExecutable;
+import com.dexels.navajo.tipi.TipiSuspendException;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 public abstract class TipiAbstractExecutable implements TipiExecutable, Serializable {
@@ -25,11 +26,13 @@ public abstract class TipiAbstractExecutable implements TipiExecutable, Serializ
 	protected TipiContext myContext;
 	private TipiStackElement stackElement = null;
 	private String myCondition = "";
-
+	
 	private Map<String, String> eventPropertyMap = new HashMap<String, String>();
 
 	private final List<TipiExecutable> myExecutables = new ArrayList<TipiExecutable>();
-
+	private int currentIndex = 0;
+	private TipiExecutable myParent;
+	
 	public TipiAbstractExecutable(TipiContext tc) {
 		myContext = tc;
 	}
@@ -37,6 +40,17 @@ public abstract class TipiAbstractExecutable implements TipiExecutable, Serializ
 	public TipiAbstractExecutable() {
 	}
 
+	@Override
+	public void setExecutionIndex(int i) {
+		currentIndex = i;
+	}
+
+	@Override
+	public int getExecutionIndex() {
+		return currentIndex;
+	}
+
+	
 	public String getExpression() {
 		return myCondition;
 	}
@@ -54,10 +68,11 @@ public abstract class TipiAbstractExecutable implements TipiExecutable, Serializ
 	}
 
 	public void appendTipiExecutable(TipiExecutable tp) {
+		tp.setParent(this);
 		myExecutables.add(tp);
 	}
 
-	protected List<TipiExecutable> getExecutables() {
+	public List<TipiExecutable> getExecutables() {
 		return myExecutables;
 	}
 
@@ -211,5 +226,44 @@ public abstract class TipiAbstractExecutable implements TipiExecutable, Serializ
 
 	public TipiContext getContext() {
 		return myContext;
+	}
+	
+	@Override
+	public void continueAction(TipiEvent original)
+			throws TipiBreakException, TipiException, TipiSuspendException {
+//		System.err.println(":::: "+stack);
+//		TipiExecutable me = stack.firstElement();
+		
+		
+		if(getParent()!=null) {
+			int ind = getParent().getExeIndex(this);
+			if(ind<0) {
+				System.err.println("Rolling on");
+//				throw new IllegalStateException("No such exe");
+				return;
+			}
+			List<TipiExecutable> ll = getParent().getExecutables();
+			for (int i = ind+1; i < ll.size(); i++) {
+				TipiExecutable current = ll.get(i);
+//				getParent().performAction(original, getParent().getParent(), i);
+				current.performAction(original, getParent(), i);
+			}
+			getParent().continueAction(original);
+		}
+
+	}
+	
+	@Override
+	public int getExeIndex(TipiExecutable child) {
+		return getExecutables().indexOf(child);
+	}
+
+	
+	public void setParent(TipiExecutable tipiAbstractExecutable) {
+		this.myParent = tipiAbstractExecutable;
+	}
+	
+	public TipiExecutable getParent() {
+		return this.myParent;
 	}
 }

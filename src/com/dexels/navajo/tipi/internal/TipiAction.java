@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi.internal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -11,6 +12,7 @@ import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiExecutable;
+import com.dexels.navajo.tipi.TipiSuspendException;
 import com.dexels.navajo.tipi.TipiValue;
 import com.dexels.navajo.tipi.actions.TipiActionFactory;
 
@@ -56,7 +58,7 @@ public abstract class TipiAction extends TipiAbstractExecutable {
 
 	// protected TipiCondition myCondition;
 	protected abstract void execute(TipiEvent event) throws TipiBreakException,
-			TipiException;
+			TipiException,TipiSuspendException;
 
 	// protected TipiActionBlock myActionBlock;
 
@@ -73,7 +75,7 @@ public abstract class TipiAction extends TipiAbstractExecutable {
 	}
 
 	public void performAction(TipiEvent te, TipiExecutable parent, int index)
-			throws TipiBreakException, TipiException {
+			throws TipiBreakException, TipiException, TipiSuspendException {
 		myContext.debugLog("action", myType);
 		setEvent(te);
 		if (getComponent().isDisposed()) {
@@ -90,6 +92,9 @@ public abstract class TipiAction extends TipiAbstractExecutable {
 
 		try {
 			execute(te);
+		} catch (TipiSuspendException e) {
+			// hide
+			throw e;
 		} catch (Throwable e) {
 			dumpStack(e.getMessage());
 			if (e instanceof RuntimeException) {
@@ -187,5 +192,27 @@ public abstract class TipiAction extends TipiAbstractExecutable {
 	public String getText() {
 		return myTextNode;
 	}
+	
+	private void constructStack(Stack<TipiExecutable> tex) {
+		
+		tex.push(this);
+		System.err.println("pushed: "+this);
+		TipiExecutable par = getParent();
+		while(par!=null) {
+			tex.push(par);
+			System.err.println("pushed parent: "+par);
+			par = par.getParent();
+		}
+	}
 
+	protected Stack<TipiExecutable> constructStack() {
+		 Stack<TipiExecutable> tex = new Stack<TipiExecutable>();
+		 constructStack(tex);
+		 return tex;
+	}
+	
+	protected void suspend() throws TipiSuspendException {
+		TipiSuspendException tse = new TipiSuspendException(getEvent(), constructStack());
+		throw tse;
+	}
 }

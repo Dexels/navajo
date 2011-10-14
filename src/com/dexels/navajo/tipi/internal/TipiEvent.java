@@ -14,6 +14,7 @@ import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiEventListener;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiExecutable;
+import com.dexels.navajo.tipi.TipiSuspendException;
 import com.dexels.navajo.tipi.TipiValue;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
@@ -188,6 +189,8 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable 
 					"enqueueing (in event) async event: " + localEvent);
 			getComponent().getContext().performAction(localEvent,
 					parentExecutable, listener);
+		} catch (TipiSuspendException e) {
+			// ignore
 		} catch (Throwable ex) {
 			ex.printStackTrace();
 		}
@@ -254,6 +257,9 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable 
 				current.performAction(localInstance, executableParent, i);
 
 			}
+		} catch (TipiSuspendException e) {
+			// ignore
+			throw e;
 		} catch (TipiBreakException e) {
 			System.err.println("break detected");
 			throw e;
@@ -281,7 +287,7 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable 
 	}
 
 	public String toString() {
-		return "TIpiEvent: " + myEventName + " - " + " comp: " + getComponent();
+		return "TipiEvent: " + myEventName + " - " + " comp: " + getComponent();
 	}
 
 	// This actually has a good reason
@@ -300,5 +306,8 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable 
 	public void setAfterEvent(Runnable afterEvent) {
 		this.afterEvent = afterEvent;
 	}
+
+
+
 
 }
