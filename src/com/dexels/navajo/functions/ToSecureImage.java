@@ -33,7 +33,7 @@ public class ToSecureImage extends FunctionInterface{
   private final int width = 150;
   private final int height = 30;
   private String str;
-  Component observer = new Label();
+//  Component observer = new Label();
   Random rnd = new Random();
 
 
@@ -96,7 +96,7 @@ public class ToSecureImage extends FunctionInterface{
 
         g2.setColor(Color.gray);
         g2.drawRect(0,0,2*(int)Math.ceil(bi_width)-1,2*(int)Math.ceil(bi_height)-1);
-        g.drawImage(bi, xpos, ypos, observer);
+        g.drawImage(bi, xpos, ypos, null);
         xpos += f.getStringBounds(s, g.getFontRenderContext()).getWidth() + 4;
 
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
@@ -130,7 +130,7 @@ public class ToSecureImage extends FunctionInterface{
       // Tests.
       ToSecureImage tm = new ToSecureImage();
       tm.reset();
-      tm.insertOperand(new String("Schandknaep"));
+      tm.insertOperand(new String("Alles is doch quatch"));
       Binary b = (Binary) tm.evaluate();
 
       // Using expressions.
@@ -139,12 +139,12 @@ public class ToSecureImage extends FunctionInterface{
       System.out.println("o = " + o.value);
       System.out.println("type = " + o.type);
 
-      FileOutputStream fos = new FileOutputStream(new java.io.File("/home/arjen/aepenoot.png"));
+      FileOutputStream fos = new FileOutputStream(new java.io.File("aepenoot.png"));
       fos.write(b.getData());
       fos.flush();
       fos.close();
 
-      FileOutputStream fs = new FileOutputStream(new java.io.File("/home/arjen/noteaep.png"));
+      FileOutputStream fs = new FileOutputStream(new java.io.File("noteaep.png"));
       Binary c = (Binary)o.value;
       fs.write(c.getData());
       fs.flush();
