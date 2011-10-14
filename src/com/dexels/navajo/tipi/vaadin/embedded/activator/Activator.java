@@ -1,9 +1,11 @@
-package com.dexels.navajo.tipi.vaadin.embedded;
+package com.dexels.navajo.tipi.vaadin.embedded.activator;
 
 import java.net.URL;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+
+import com.dexels.navajo.tipi.vaadin.embedded.JettyServer;
 
 public class Activator implements BundleActivator {
 
@@ -25,6 +27,7 @@ public class Activator implements BundleActivator {
 		Activator.context = bundleContext;
 		URL u = bundleContext.getBundle().getResource("VAADIN/themes/base/styles.css");
 		System.err.println("u: "+u);
+
 		String portString = System.getProperty("tipi.vaadin.embedded.port");
 		int port;
 		if (portString==null) {
@@ -36,6 +39,7 @@ public class Activator implements BundleActivator {
 		if(context==null) {
 			context = DEFAULTCONTEXTPATH;
 		}
+		System.err.println("CONTEXT: "+context);
 		JettyServer js = new JettyServer();
 		js.init(port,context,bundleContext.getBundle());
 	}
