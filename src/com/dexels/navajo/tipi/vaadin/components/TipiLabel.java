@@ -15,13 +15,13 @@ public class TipiLabel extends TipiVaadinComponentImpl {
 		return label;
 	}
 
-	public void setText(String s) {
-		label.setCaption(s);
-	}
-
-	public String getText() {
-		return label.getCaption();
-	}
+//	public void setText(String s) {
+//		label.setCaption(s);
+//	}
+//
+//	public String getText() {
+//		return label.getCaption();
+//	}
 	
 	  public void setComponentValue(final String name, final Object object) {
 		    super.setComponentValue(name, object);
