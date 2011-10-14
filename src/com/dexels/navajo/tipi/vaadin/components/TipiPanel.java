@@ -20,5 +20,15 @@ public class TipiPanel extends TipiVaadinComponentImpl {
 		component.setWidth("100%");
 	}
 
-	
+
+	  public void setComponentValue(final String name, final Object object) {
+		    super.setComponentValue(name, object);
+			Component v = getVaadinContainer();
+
+		        if ("logo".equals(name)) {
+	                v.setIcon( getResource(object));
+		        }
+
+	  }
+
 }

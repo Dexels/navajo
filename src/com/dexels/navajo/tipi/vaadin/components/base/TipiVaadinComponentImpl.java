@@ -1,11 +1,15 @@
 package com.dexels.navajo.tipi.vaadin.components.base;
 
+import org.vaadin.peter.contextmenu.ContextMenu;
+
 import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
 import com.dexels.navajo.tipi.vaadin.VaadinTipiContext;
 import com.dexels.navajo.tipi.vaadin.application.TipiVaadinApplication;
 import com.vaadin.terminal.Resource;
+import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.MenuBar;
 
 public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 
@@ -58,6 +62,9 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 
 	@Override
 	public void addToContainer(Object c, Object constraints) {
+		if(c instanceof ContextMenu) {
+			System.err.println("Register context");
+		}
 		if(!(c instanceof Component)) {
 			throw new IllegalArgumentException("Can not add non-vaadin component to component: "+c);
 		}
@@ -67,7 +74,15 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 		}
 		Component comp = getVaadinContainer();
 		if(comp instanceof ComponentContainer) {
-			addToVaadinContainer((ComponentContainer)comp, (Component)c, constraints);
+			if(comp instanceof AbstractOrderedLayout && c instanceof MenuBar) {
+				
+				AbstractOrderedLayout currentContainer = (AbstractOrderedLayout)comp;
+				currentContainer.addComponentAsFirst((Component)c);
+
+			} else {
+				addToVaadinContainer((ComponentContainer)comp, (Component)c, constraints);
+				
+			}
 		} else {
 			throw new IllegalArgumentException("Can not add n component to non-vaadin container: "+comp);
 		}
@@ -101,6 +116,12 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 			String b = (String) object;
 			getActualVaadinComponent().setCaption(b);
 		}
+        if ("icon".equals(name)) {
+        	getActualVaadinComponent().setIcon( getResource(object));
+        }
+        if ("text".equals(name)) {
+        	getActualVaadinComponent().setCaption( ""+ object);
+        }
 
 		super.setComponentValue(name, object);
 	}
@@ -110,6 +131,23 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 		if(name.equals("style")) {
 			return getActualVaadinComponent().getStyleName();
 		}
+		if(name.equals("visible")) {
+			return getActualVaadinComponent().isVisible();
+		}
+		if(name.equals("enabled")) {
+			return getActualVaadinComponent().isVisible();
+		}
+		if(name.equals("border")) {
+			return getActualVaadinComponent().getCaption();
+		}
+		if(name.equals("icon")) {
+			// don't think this works TODO
+			return getActualVaadinComponent().getIcon();
+		}
+		if(name.equals("text")) {
+			return getActualVaadinComponent().getCaption();
+		}
+		
 		return super.getComponentValue(name);
 	}
 	

@@ -90,6 +90,11 @@ public class TipiWindow extends TipiVaadinComponentImpl {
 		        if ("resizable".equals(name)) {
 		        	window.setResizable((Boolean) object);
 		        }
+		        if ("selected".equals(name)) {
+		        	if(window.getParent()!=null) {
+			        	window.bringToFront();
+		        	}
+		        }
 
 		       
 		  }

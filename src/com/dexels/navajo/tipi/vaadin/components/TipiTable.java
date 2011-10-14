@@ -209,12 +209,14 @@ public class TipiTable extends TipiVaadinComponentImpl {
 			if(type!=null && type.isAssignableFrom(Number.class)) {
 				alignment = Table.ALIGN_RIGHT;
 			}
-			System.err.println("Adding container property: "+col);
-			table.addContainerProperty(col+"@value",type,null, label, null,alignment);
+//			System.err.println("Adding container property: "+col);
+//			table.addContainerProperty(col+"@value",type,null, label, null,alignment);
+			table.setColumnAlignment(col+"@value", alignment);
 			int size = columnSizes.get(col);
 			if(size>=0) {
 				table.setColumnWidth(col+"@value", size);
 			}
+			table.setColumnHeader(col+"@value", label);
 		}
 		//		debugContainer(amb);
 		return amb;

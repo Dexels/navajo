@@ -34,6 +34,7 @@ public class TmlTableFieldFactory extends DefaultFieldFactory {
 		CompositeArrayContainer cac = (CompositeArrayContainer)container;
 		Integer size = cac.getSizeForColumn((String) propertyId);
 		Property property = message.getItemProperty(propertyId);
+		System.err.println("PROPERTYID: "+propertyId);
 		if(property instanceof SelectedItemValuePropertyBridge) {
 			SelectedItemValuePropertyBridge cmb = (SelectedItemValuePropertyBridge)property;
 			return createDropdownBox(cmb);
@@ -42,7 +43,7 @@ public class TmlTableFieldFactory extends DefaultFieldFactory {
 		Field createdField = super.createField(container, itemId, propertyId, uiContext);
 		createdField.setCaption("");
 		if(size!=null) {
-			System.err.println("Setting size: "+size);
+//			System.err.println("Setting size: "+size);
 			createdField.setWidth(mt.getColumnWidth(propertyId),Sizeable.UNITS_PIXELS);
 			;
 			
@@ -52,21 +53,35 @@ public class TmlTableFieldFactory extends DefaultFieldFactory {
 
 	private Field createDropdownBox(SelectedItemValuePropertyBridge cmb) {
 		SelectionListBridge slb = cmb.createListBridge();
-		SelectionBridge found = null;
+		Object found = null;
 		for (Object ii : slb.getItemIds()) {
 			SelectionBridge iii = (SelectionBridge) slb.getItem(ii);
 			if(iii.isSelectedBool()) {
-				found = iii;
+				found = ii;
 			}
+			
 		}
 		final AbstractSelect select = new NativeSelect("Omm", slb);
 		select.setImmediate(true);
-		select.setPropertyDataSource(cmb);
-//		cmb.setValue(slb.getSource().getSelected());
-		if(found!=null) {
-			System.err.println("SELECTED!");
-			select.select(found);
+		SelectionBridge selected = slb.getSelected();
+		if(selected!=null) {
+			Property selectedName = selected.getItemProperty("name");
+			select.setValue(selectedName.getValue());
+		}
+		
 
+//		select.setItemCaptionMode(Select.ITEM_CAPTION_MODE_PROPERTY);
+//		select.setItemCaptionPropertyId("name");
+//		select.setPropertyDataSource(cmb);
+//		cmb.setValue(slb.getSource().getSelected());
+		Item id = select.getItem(0);
+		
+		if(found!=null) {
+//			System.err.println("SELECTED!");
+//			Thread.dumpStack();
+//			select.select(found);
+//			System.err.println("");
+			select.select(id);
 		}
 		select.addListener(new Property.ValueChangeListener() {
 

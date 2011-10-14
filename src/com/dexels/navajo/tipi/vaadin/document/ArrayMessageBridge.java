@@ -41,13 +41,13 @@ public class ArrayMessageBridge implements Container, Container.Sortable {
 	public Integer getSizeForColumn(String name) {
 		String[] split = name.split("@");
 		String propertyName = split[0];
-		System.err.println("Getting size for column: "+propertyName+" >>>>> "+columnSizes);
+//		System.err.println("Getting size for column: "+propertyName+" >>>>> "+columnSizes);
 		if(columnSizes==null) {
-			System.err.println("but none found.");
+//			System.err.println("but none found.");
 			return null;
 		}
 		Integer integer = columnSizes.get(propertyName);
-		System.err.println("resolved to: "+integer);
+//		System.err.println("resolved to: "+integer);
 		return integer;
 	}
 	
@@ -129,8 +129,6 @@ public class ArrayMessageBridge implements Container, Container.Sortable {
 	}
 	@Override
 	public Collection<?> getItemIds() {
-
-		System.err.println("IDLIST: "+sortedIndexes);
 		return sortedIndexes;
 	}
 

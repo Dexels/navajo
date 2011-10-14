@@ -60,7 +60,8 @@ public class SelectedItemValuePropertyBridge implements Property, Property.Value
 		}
 		try {
 //			selectionListBridge.select((String) newValue);
-			src.setSelected((Selection)newValue);
+			Selection ss = src.getSelection((String)newValue);
+			src.setSelected(ss);
 		} catch (NavajoException e) {
 			e.printStackTrace();
 			throw new ConversionException("Problem resolving selected property.");
