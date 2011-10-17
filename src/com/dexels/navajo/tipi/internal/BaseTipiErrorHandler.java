@@ -65,6 +65,9 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 		if (n != null) {
 			Message error = n.getMessage("error");
 			Message conditions = n.getMessage("ConditionErrors");
+			Message authentication = n.getMessage("AuthenticationError");
+			Message authorization = n.getMessage("AuthorizationError");
+			
 			if (error != null) {
 				errorMessage = error.getProperty("message").getValue();
 				return errorMessage;
@@ -86,6 +89,24 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 				}
 				// System.err.println("Message: "+errorMessage);
 				// Thread.dumpStack();
+				return errorMessage;
+			} else if(authentication!=null) {
+//				  <message name="AuthenticationError" type="simple">
+//			      <property description="Message" direction="out" name="Message" value="Invalid password" type="string"/>
+//			      <property description="User" direction="out" name="User" value="BNSY933" type="string"/>
+//			      <property description="User" direction="out" name="Webservice" value="member/InitUpdateMember" type="string"/>
+//			   </message>				
+				errorMessage = "Authentication error: "+authentication.getProperty("Message").getTypedValue()+" user: "+authentication.getProperty("User").getTypedValue()
+						+" webservice: "+authentication.getProperty("Webservice").getTypedValue();
+				return errorMessage;
+			} else if(authorization!=null) {
+//				   <message name="AuthorizationError" type="simple">
+//				      <property description="Message" direction="out" name="Message" value="Not authorized" type="string"/>
+//				      <property description="User" direction="out" name="User" value="BNSY933" type="string"/>
+//				      <property description="User" direction="out" name="Webservice" value="officialportal/ProcessQueryToDoList" type="string"/>
+//				   </message>			
+				errorMessage = "Authorization error: "+authorization.getProperty("Message").getTypedValue()+" user: "+authorization.getProperty("User").getTypedValue()
+						+" webservice: "+authorization.getProperty("Webservice").getTypedValue();
 				return errorMessage;
 			} else {
 				return null;
