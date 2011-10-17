@@ -32,6 +32,8 @@ import javax.management.remote.rmi.RMIConnector;
 import javax.management.remote.rmi.RMIServer;
 
 import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.DispatcherInterface;
+import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.util.AuditLog;
 
 public final class JMXHelper  {
@@ -54,6 +56,7 @@ public final class JMXHelper  {
 	private static HashSet<Monitor> monitors = new HashSet<Monitor>();
 	private static HashSet<ObjectName> mbeans = new HashSet<ObjectName>();
 
+	
 	private static Map<Monitor,List<NotificationListener>> listenerMap = new HashMap<Monitor, List<NotificationListener>>();
 	private RMIServer getRMIServer(String hostName, int port) throws IOException {
 
@@ -81,7 +84,7 @@ public final class JMXHelper  {
 				monitor.stop();
 				deregisterListenersForMonitor(monitor);
 			} catch (Exception e) {
-				e.printStackTrace(System.err);
+				AuditLog.log("JMX", "Error deregistering monitor",e, Level.SEVERE);
 			}
 			AuditLog.log("JMX", "Stopped JMX Monitor: " + monitor.getClass().getName(), Level.WARNING);
 		}
@@ -102,7 +105,7 @@ public final class JMXHelper  {
 		listenerMap.clear();
 		mbeans.clear();
 		monitors.clear();
-		System.err.println("ALL BEANS DEREGISTERED. BEANCOUNT: "+mbs.getMBeanCount());
+		AuditLog.log("JMX", "ALL BEANS DEREGISTERED. BEANCOUNT: "+mbs.getMBeanCount(),Level.INFO);
 	}
 	
 	
@@ -115,7 +118,7 @@ public final class JMXHelper  {
 			conn = null;
 			//System.err.println("Disconnected JMX.");
 		} catch (IOException e) {
-			e.printStackTrace(System.err);
+			AuditLog.log("JMX", "Error disconnecting jmx",e, Level.SEVERE);
 		}
 	}
 	 
@@ -140,7 +143,7 @@ public final class JMXHelper  {
 			
 			return conn;
 		} catch (Exception e) {
-			e.printStackTrace(System.err);
+			AuditLog.log("JMX", "Error getting server connection",e, Level.SEVERE);
 			return null;
 		}
 	}
@@ -169,8 +172,7 @@ public final class JMXHelper  {
 			}
 		
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			AuditLog.log("JMX", "Error getting server connection",e, Level.SEVERE);
 		} 
 	
 		return myThread;
@@ -179,7 +181,15 @@ public final class JMXHelper  {
 	public final static ObjectName getObjectName(String domain, String type) {
 		if ( applicationPrefix == null ) {
 			synchronized ( NAVAJO_DOMAIN ) {
-				applicationPrefix = DispatcherFactory.getInstance().getNavajoConfig().getInstanceName();
+				DispatcherInterface instance = DispatcherFactory.getInstance();
+				if(instance==null) {
+					throw new RuntimeException("Navajo instance not started. Is navajo context listener valid? Check web.xml");
+				}
+				NavajoConfigInterface navajoConfig = instance.getNavajoConfig();
+				if(navajoConfig==null) {
+					throw new RuntimeException("Navajo instance not started. Is navajo context listener valid? Check web.xml");
+				}
+				applicationPrefix = navajoConfig.getInstanceName();
 				if ( applicationPrefix  == null ) {
 					applicationPrefix = "unnamedapplication";
 				} 
