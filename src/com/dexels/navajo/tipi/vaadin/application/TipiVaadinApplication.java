@@ -31,6 +31,10 @@ import tipi.TipiCoreExtension;
 import tipipackage.TipiExtensionRegistry;
 import tipivaadin.TipiVaadinExtension;
 
+import com.dexels.navajo.client.sessiontoken.SessionTokenFactory;
+import com.dexels.navajo.client.sessiontoken.SessionTokenProvider;
+import com.dexels.navajo.client.systeminfo.SystemInfoFactory;
+import com.dexels.navajo.client.systeminfo.SystemInfoProvider;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
@@ -43,6 +47,8 @@ import com.vaadin.Application;
 import com.vaadin.terminal.StreamResource;
 import com.vaadin.terminal.StreamResource.StreamSource;
 import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
+import com.vaadin.terminal.gwt.server.WebApplicationContext;
+import com.vaadin.terminal.gwt.server.WebBrowser;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
@@ -77,6 +83,60 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 
 
 	protected void actualInit() {
+		final WebApplicationContext context = ((WebApplicationContext) getContext());
+		
+		SessionTokenFactory.setSessionTokenProvider(new SessionTokenProvider() {
+			@Override
+			public String getSessionToken() {
+				return context.getHttpSession().getId();
+			}
+		});
+
+		final WebBrowser wb = context.getBrowser(); //.getBrowserApplication();
+		SystemInfoFactory.setSystemInfoProvider(new SystemInfoProvider() {
+			
+			@Override
+			public void init() {
+				
+			}
+			
+			@Override
+			public String getOsVersion() {
+				
+				return null;
+			}
+			
+			@Override
+			public String getOsArch() {
+				return null;
+			}
+			
+			@Override
+			public String getOs() {
+				return null;
+			}
+			
+			@Override
+			public long getMaxMem() {
+				return 0;
+			}
+			
+			@Override
+			public String getJavaVersion() {
+				return null;
+			}
+			
+			@Override
+			public int getCpuCount() {
+				return -1;
+			}
+			
+			public String toString() {
+				return wb.getBrowserApplication();
+				
+			}
+		});
+		
 		try {
 
 			VerticalLayout componentContainer = new VerticalLayout();
