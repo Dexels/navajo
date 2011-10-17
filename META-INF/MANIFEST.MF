@@ -4,7 +4,8 @@ Bundle-Description: Core version manager
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Dexels
-Import-Package: junit.framework,
+Import-Package: javax.imageio,
+ junit.framework,
  org.osgi.framework;version="1.5.0"
 Bundle-ActivationPolicy: lazy
 Require-Bundle: com.dexels.navajo.adapters;bundle-version="1.0.5",
