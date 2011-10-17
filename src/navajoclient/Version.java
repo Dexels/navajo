@@ -25,7 +25,8 @@
 package navajoclient;
 
 import com.dexels.navajo.client.NavajoClientFactory;
-import com.dexels.navajo.client.SystemInfo;
+import com.dexels.navajo.client.sessiontoken.SessionTokenFactory;
+import com.dexels.navajo.client.systeminfo.SystemInfoFactory;
 
 /**
  * VERSION HISTORY
@@ -93,7 +94,8 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	@Override
 	public void shutdown() {
 		NavajoClientFactory.resetClient();
-		SystemInfo.clearInstance();
+		SessionTokenFactory.clearInstance();
+		SystemInfoFactory.clearInstance();
 		super.shutdown();
 	}
 	

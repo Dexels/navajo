@@ -3,7 +3,7 @@ Bundle-Name: Navajo Client
 Bundle-SymbolicName: com.dexels.navajo.client
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 3.0.6.qualifier
+Bundle-Version: 3.0.7.qualifier
 Bundle-Activator: navajoclient.Version
 Bundle-ClassPath: .,
  lib/jzlib.jar,
@@ -13,6 +13,8 @@ Export-Package: com.dexels.navajo.client,
  com.dexels.navajo.client.context,
  com.dexels.navajo.client.logger,
  com.dexels.navajo.client.nql,
+ com.dexels.navajo.client.sessiontoken,
+ com.dexels.navajo.client.systeminfo,
  com.dexels.navajo.jabber,
  com.jcraft.jzlib,
  dexels,
