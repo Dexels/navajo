@@ -32,7 +32,7 @@ public class ClientQueueImpl extends NavajoClient implements Serializable {
 		myPool = new ThreadPool(this);
 	}
 	
-    Runnable r = new Runnable() {
+    final Runnable r = new Runnable() {
 
       final Navajo nc = in.copy();
       final ResponseListener rc = response;
