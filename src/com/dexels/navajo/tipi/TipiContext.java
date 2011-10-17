@@ -1752,36 +1752,12 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		return (TipiDataComponent) tc;
 	}
 
-	/**
-	 * @deprecated
-	 */
-
-	@Deprecated
-	public Navajo doSimpleSend(Navajo n, String service,
-			ConditionErrorHandler ch, long expirtationInterval, String hosturl,
-			String username, String password, boolean breakOnError)
-			throws TipiBreakException {
-		return doSimpleSend(n, service, ch, expirtationInterval, hosturl,
-				username, password, null, null, breakOnError);
-	}
-
-	/**
-	 * @deprecated
-	 */
-
-	@Deprecated
-	public Navajo doSimpleSend(Navajo n, String service,
-			ConditionErrorHandler ch, String clientName, boolean breakOnError)
-			throws TipiBreakException {
-		return doSimpleSend(n, service, ch, -1, null, null, null, null, null,
-				breakOnError);
-	}
 
 	/**
 	 * @deprecated
 	 */
 	@Deprecated
-	public Navajo doSimpleSend(Navajo n, String service,
+	private Navajo doSimpleSend(Navajo n, String service,
 			ConditionErrorHandler ch, long expirtationInterval, String hosturl,
 			String username, String password, String keystore, String keypass,
 			boolean breakOnError) throws TipiBreakException {
@@ -1801,25 +1777,10 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		Navajo reply = null;
 		try {
 			if (hosturl != null && !"".equals(hosturl)) {
-				if ("direct".equals(getClient().getClientName())) {
-					clientInterface.setServerUrl(hosturl);
-					// System.err.println("Specifically sending to: "+hosturl);
-					clientInterface.setUsername(username);
-					clientInterface.setPassword(password);
-
-					reply = clientInterface.doSimpleSend(n, service, ch,
-							expirtationInterval);
-					debugLog("data",
-							"simpleSend to host (diverted from directclient): "
-									+ hosturl + " username: " + username
-									+ " password: " + password + " method: "
-									+ service);
-				} else {
 					System.err.println("CONNECTING TO: " + navajoServer);
 					hosturl = navajoServer;
 					username = navajoUsername;
 					password = navajoPassword;
-
 					String url = getClient().getServerUrl();
 					getClient().setServerUrl(hosturl);
 					getClient().setUsername(username);
@@ -1830,8 +1791,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 					debugLog("data", "simpleSend to host: " + hosturl
 							+ " username: " + username + " password: "
 							+ password + " method: " + service);
-				}
-
 			} else {
 				reply = getClient().doSimpleSend(n, service, ch,
 						expirtationInterval);
@@ -1860,15 +1819,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		return reply;
 	}
 
-	@Deprecated
-	public void performTipiMethod(TipiDataComponent t, Navajo n,
-			String tipiDestinationPath, String method, boolean breakOnError,
-			TipiEvent event, long expirationInterval, String hosturl,
-			String username, String password) throws TipiBreakException {
-		performTipiMethod(t, n, tipiDestinationPath, method, breakOnError,
-				event, expirationInterval, hosturl, username, password, null,
-				null);
-	}
 
 	@Deprecated
 	public void performTipiMethod(TipiDataComponent t, Navajo n,
@@ -3126,6 +3076,10 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		if (result.getMessage("ConditionErrors") != null) {
 			return true;
 		}
+		if (result.getMessage("AuthenticationError") != null) {
+			return true;
+		}
+		
 		return false;
 	}
 
