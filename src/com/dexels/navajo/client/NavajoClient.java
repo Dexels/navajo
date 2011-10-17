@@ -18,10 +18,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,6 +38,10 @@ import java.util.zip.GZIPOutputStream;
 
 import com.dexels.navajo.client.push.NavajoPushSession;
 import com.dexels.navajo.client.serverasync.ServerAsyncRunner;
+import com.dexels.navajo.client.sessiontoken.SessionTokenFactory;
+import com.dexels.navajo.client.sessiontoken.SessionTokenProvider;
+import com.dexels.navajo.client.systeminfo.SystemInfoFactory;
+import com.dexels.navajo.client.systeminfo.SystemInfoProvider;
 import com.dexels.navajo.document.Guid;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
@@ -113,7 +115,6 @@ public static final int DIRECT_PROTOCOL = 0;
   private final HashMap<String,String> comparedServicesQueryToUpdateMap = new HashMap<String,String>();
   private final HashMap<String,String> comparedServicesUpdateToQueryMap = new HashMap<String,String>();
   private final Set<Map<String,String>> piggyBackData = new HashSet<Map<String,String>>();
-  private final String mySessionToken;
   private final Map<String,Long> disabledServers = new HashMap<String,Long>();
 
 
@@ -124,6 +125,8 @@ public static final int DIRECT_PROTOCOL = 0;
 	private String subLocale;
 	private boolean allowCompression = true;
 	private boolean forceGzip = false;
+	private SystemInfoProvider systemInfoProvider;
+	private SessionTokenProvider sessionTokenProvider;
 
 //	private static boolean silent = true;
 //	  
@@ -197,23 +200,12 @@ public static final int DIRECT_PROTOCOL = 0;
    * Default constructor
    */
   public NavajoClient() {
-	  String token = null;
-	  try {
-		token = NavajoClient.createSessionToken();
-	} catch (UnknownHostException e) {
-	
-		e.printStackTrace();
-	}
-	if (token!=null) {
-		mySessionToken = token;
-	} else {
-		mySessionToken = "OHDEAR|OHDEAR|OHDEAR|OHDEAR|OHDEAR";		
+
 	}
 
 	
 	  //instances++;
 	  //System.err.println("NavajoClient instances: " + instances);
-  }
 
   /**
    * Construct a NavajoClient with a given protocol
@@ -224,13 +216,6 @@ public static final int DIRECT_PROTOCOL = 0;
     this.protocol = protocol;
   }
 
-  
-  public final String getSessionToken() {
-	  if(mySessionToken==null) {
-		  return "";
-	  }
-		  return mySessionToken;
-  }
   
   /**
    * Not used
@@ -768,9 +753,9 @@ public static final int DIRECT_PROTOCOL = 0;
 		  }
 		  // ALWAY SET REQUEST ID AT THIS POINT.
 		  header.setRequestId( Guid.create() );
-		  String sessionToken = getSessionToken();
+		  String sessionToken = getSessionTokenProvider().getSessionToken();
 		header.setHeaderAttribute("clientToken", sessionToken);
-		  header.setHeaderAttribute("clientInfo", SystemInfo.getSystemInfo().toString());
+		  header.setHeaderAttribute("clientInfo", getSystemInfoProvider().toString());
 		  // ========= Adding globalMessages
 		  Iterator<Entry<String,Message>> entries = globalMessages.entrySet().iterator();
 		  while (entries.hasNext()) {
@@ -813,6 +798,9 @@ public static final int DIRECT_PROTOCOL = 0;
 
 				  try {	
 					  n = doTransaction(server, out, useCompression, allowPreparseProxy);
+//					  System.err.println("SENT TO SERVER: ");
+//					  out.write(System.err);
+
 					  if ( n == null ) {
 						  throw new Exception("Empty Navajo received");
 					  }
@@ -1358,29 +1346,7 @@ private final Navajo retryTransaction(String server, Navajo out, boolean useComp
   }
 
   
-  // Ultra defensive for app engines.
-  public static String createSessionToken() throws UnknownHostException {
-		String userName = null;
-		try {
-			userName = System.getProperty("user.name");
-		} catch (SecurityException e) {
-			userName = "UnknownUser";
-		}
 
-		String fabricatedToken = null;
-		
-		try {
-			fabricatedToken = userName + "|" + (InetAddress.getLocalHost().getHostAddress())
-					+ "|" + (InetAddress.getLocalHost().getHostName()) + "|"
-					+ (System.currentTimeMillis());
-		} catch (Throwable e) {
-//			e.printStackTrace();
-			System.err.println("Session failed!");
-			fabricatedToken="unknown session";
-		}
-		return fabricatedToken;
-	}
-  
  
 
 public void destroy() {
@@ -1780,7 +1746,28 @@ public final void switchServer(boolean force) {
 		this.forceGzip = forceGzip;
 	}
 
+	public SystemInfoProvider getSystemInfoProvider() {
+		if(this.systemInfoProvider==null) {
+			return SystemInfoFactory.getSystemInfo();
+		}
+		return systemInfoProvider;
+	}
 	
+	public void setSystemInfoProvider(SystemInfoProvider sip) {
+		this.systemInfoProvider = sip;
+	}	
+	
+	public SessionTokenProvider getSessionTokenProvider() {
+		if(sessionTokenProvider==null) {
+			return SessionTokenFactory.getSessionTokenProvider();
+		}
+		return this.sessionTokenProvider;
+	}
+	
+	public void setSessionTokenProvider(SessionTokenProvider stp) {
+		this.sessionTokenProvider = stp;
+	}
+ 
 	public static void main(String [] args) throws Exception {
 		NavajoClient nc = new NavajoClient();
 //		nc.setServerUrl("penelope1.dexels.com/sportlink/knvb/servlet/Postman");

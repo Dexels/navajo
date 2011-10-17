@@ -99,14 +99,14 @@ public class NavajoClientFactory {
   }
 
   
-  /**
-   * Create a direct client. A direct client does not require a webserver and can be used in standalone applications
-   * @param u URL
-   * @return ClientInterface
-   */
-  public synchronized static ClientInterface createDirectClient(String rootPath, String serverXmlRelativePath) {
-    return createClient("com.dexels.navajo.client.impl.DirectClientImpl",rootPath, serverXmlRelativePath);
-  }
+//  /**
+//   * Create a direct client. A direct client does not require a webserver and can be used in standalone applications
+//   * @param u URL
+//   * @return ClientInterface
+//   */
+//  public synchronized static ClientInterface createDirectClient(String rootPath, String serverXmlRelativePath) {
+//    return createClient("com.dexels.navajo.client.impl.DirectClientImpl",rootPath, serverXmlRelativePath);
+//  }
 
 //  /**
 //   * Create a queue client
