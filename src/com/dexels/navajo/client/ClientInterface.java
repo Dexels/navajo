@@ -10,6 +10,10 @@ package com.dexels.navajo.client;
  */
 import java.net.URL;
 
+import com.dexels.navajo.client.sessiontoken.SessionTokenFactory;
+import com.dexels.navajo.client.sessiontoken.SessionTokenProvider;
+import com.dexels.navajo.client.systeminfo.SystemInfoFactory;
+import com.dexels.navajo.client.systeminfo.SystemInfoProvider;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -60,7 +64,6 @@ public interface ClientInterface {
   public void doAsyncSend(Navajo in, String method, ResponseListener response, ConditionErrorHandler v) throws ClientException;
 
   public void doAsyncSend(Navajo in, String method, ResponseListener response, String responseId, ConditionErrorHandler v) throws ClientException;
-  public String getSessionToken();
   /*
  * @deprecated
  * @param config
@@ -146,6 +149,11 @@ public void setServers(String[] servers);
 
 public Binary getArrayMessageReport(Message m, String[] propertyNames,String[] propertyTitles, int[] columnWidths, String format) throws NavajoException;
 public Binary getArrayMessageReport(Message m, String[] propertyNames, String[] propertyTitles, int[] columnWidths, String format, String orientation, int[] margins) throws NavajoException;
+
+	public SystemInfoProvider getSystemInfoProvider();
+	public void setSystemInfoProvider(SystemInfoProvider sip);
+	public SessionTokenProvider getSessionTokenProvider();
+	public void setSessionTokenProvider(SessionTokenProvider stp);
 
 
 /**
