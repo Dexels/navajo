@@ -67,6 +67,34 @@ public final class AuditLog implements Mappable {
 		}
 		instanceLog.info(message, subsystem);
 	}
+
+	// TODO Ignoring subsystem now, fix?
+	private static final void logToSlf(String instanceName,String message, Throwable exception, String subsystem, Level l) {
+		Logger instanceLog = LoggerFactory.getLogger("NavajoLog:"+instanceName);
+		if(Level.INFO.equals(l)) {
+			instanceLog.info(message,exception);
+			return;
+		}
+		if(Level.SEVERE.equals(l)) {
+			instanceLog.error(message, exception);
+			return;
+		}
+		if(Level.WARNING.equals(l)) {
+			instanceLog.warn(message, exception);
+			return;
+		}
+		instanceLog.info(message, exception);
+	}
+
+	public final static void log(final String subsystem, String message, final Throwable exception, Level level) {
+		if ( instanceName == null && DispatcherFactory.getInstance() != null ) {
+			instanceName = DispatcherFactory.getInstance().getNavajoConfig().getInstanceName();
+		}
+		logToSlf(instanceName,message,exception, subsystem, level);
+//		logger.log(level, instanceName + ":" + subsystem + message);
+		// TODO post exceptions as events too?
+//		NavajoEventRegistry.getInstance().publishEvent(new AuditLogEvent(subsystem.toUpperCase(), message, level));
+	}
 	
 	public final static void log(final String subsystem, final String message, Level level) {
 		if ( instanceName == null && DispatcherFactory.getInstance() != null ) {
