@@ -26,7 +26,7 @@ import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.jivesoftware.smackx.muc.Occupant;
 import org.jivesoftware.smackx.muc.RoomInfo;
 
-import com.dexels.navajo.client.NavajoClientFactory;
+import com.dexels.navajo.client.sessiontoken.SessionTokenFactory;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
@@ -124,7 +124,9 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 		if (doLogin) {
 			// System.err.println("W00t! " +
 //			 NavajoClientFactory.getClient().getSessionToken());
-			connection.login(username, password, NavajoClientFactory.getClient().getSessionToken());
+			
+			// TODO resolve this static problem
+			connection.login(username, password, SessionTokenFactory.getSessionTokenProvider().getSessionToken());
 			// System.err.println("W11t!");
 			/*
 			 * postRoster(connection.getRoster());
