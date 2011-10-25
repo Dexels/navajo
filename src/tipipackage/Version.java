@@ -37,7 +37,7 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
-		TipiExtensionRegistry ter = new TipiExtensionRegistry();
+		ITipiExtensionRegistry ter = new TipiOSGiWhiteboardExtensionProvider(bc);
 		context.registerService(ITipiExtensionRegistry.class.getName(), ter,
 				null);
 
