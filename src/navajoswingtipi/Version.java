@@ -53,49 +53,49 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 		System.err.println("Starting swing tipi");
 		super.start(bc);
 
-		bc.addFrameworkListener(new FrameworkListener() {
+//		bc.addFrameworkListener(new FrameworkListener() {
+//
+//			private SwingTipiApplicationInstance instance;
 
-			private SwingTipiApplicationInstance instance;
-
-			@Override
-			public void frameworkEvent(FrameworkEvent event) {
-				if (FrameworkEvent.STARTED == event.getType()) {
-					try {
-						TipiSwingExtension tse = new TipiSwingExtension();
-						ClassLoader classLoader = tse.getClass()
-								.getClassLoader();
-						tse.setExtensionClassloader(classLoader);
-						instance = MainApplication
-								.runApp(new String[] { "tipiCodeBase=/Users/frank/Documents/workspace-xtext/TipiExample/tipi/" });
-						instance.getCurrentContext().processRequiredIncludes(
-								tse);
-					} catch (XMLParseException e) {
-						e.printStackTrace();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					SwingUtilities.invokeLater(new Runnable() {
-
-						@Override
-						public void run() {
-							try {
-								instance.getCurrentContext()
-										.switchToDefinition(
-												instance.getDefinition());
-							} catch (TipiException e) {
-								e.printStackTrace();
-							}
-							System.err.println("Creating test frame");
-							JFrame mm = new JFrame("bbbbbb");
-							mm.setBounds(100, 100, 200, 200);
-							mm.setVisible(true);
-							System.err.println("Created test frame");
-						}
-					});
-				}
-			}
-		});
-		//
+//			@Override
+//			public void frameworkEvent(FrameworkEvent event) {
+//				if (FrameworkEvent.STARTED == event.getType()) {
+//					try {
+//						TipiSwingExtension tse = new TipiSwingExtension();
+//						ClassLoader classLoader = tse.getClass()
+//								.getClassLoader();
+//						tse.setExtensionClassloader(classLoader);
+//						instance = MainApplication
+//								.runApp(new String[] { "tipiCodeBase=/Users/frank/Documents/workspace-xtext/TipiExample/tipi/" });
+//						instance.getCurrentContext().processRequiredIncludes(
+//								tse);
+//					} catch (XMLParseException e) {
+//						e.printStackTrace();
+//					} catch (IOException e) {
+//						e.printStackTrace();
+//					}
+//					SwingUtilities.invokeLater(new Runnable() {
+//
+//						@Override
+//						public void run() {
+//							try {
+//								instance.getCurrentContext()
+//										.switchToDefinition(
+//												instance.getDefinition());
+//							} catch (TipiException e) {
+//								e.printStackTrace();
+//							}
+//							System.err.println("Creating test frame");
+//							JFrame mm = new JFrame("bbbbbb");
+//							mm.setBounds(100, 100, 200, 200);
+//							mm.setVisible(true);
+//							System.err.println("Created test frame");
+//						}
+//					});
+//				}
+//			}
+//		});
+//		//
 		//
 	}
 
