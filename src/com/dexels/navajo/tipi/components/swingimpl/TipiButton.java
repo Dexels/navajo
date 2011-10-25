@@ -43,6 +43,8 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public class TipiButton extends TipiSwingComponentImpl {
 
+	private static final long serialVersionUID = -6376459170529922811L;
+
 	private boolean iAmEnabled = true;
 
 	private AbstractAction buttonAction;
@@ -51,9 +53,6 @@ public class TipiButton extends TipiSwingComponentImpl {
 		final TipiSwingButton myButton = new TipiSwingButton(this);
 		buttonAction = new AbstractAction("onActionPerformed") {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 706723341030407319L;
 
 			public void actionPerformed(ActionEvent e) {
@@ -95,14 +94,6 @@ public class TipiButton extends TipiSwingComponentImpl {
 				if (name.equals("accelerator")) {
 					setAccelerator((String) object);
 				}
-
-				// if(name.equals("vertical")) {
-				// if(Boolean.TRUE.equals(object)) {
-				// ((TipiSwingButton)getContainer()).setVertical(true);
-				// }
-				// }
-				// Don't need to setDragCategory: It will pull from the prop as
-				// necessary
 			}
 		});
 	}
