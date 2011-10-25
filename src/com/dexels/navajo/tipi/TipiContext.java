@@ -53,8 +53,11 @@ import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.functions.util.FunctionDefinition;
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 import com.dexels.navajo.parser.Expression;
+import com.dexels.navajo.tipi.actionmanager.IActionManager;
+import com.dexels.navajo.tipi.actionmanager.TipiActionManager;
 import com.dexels.navajo.tipi.actions.TipiInstantiateTipi;
 import com.dexels.navajo.tipi.classdef.ClassManager;
+import com.dexels.navajo.tipi.classdef.IClassManager;
 import com.dexels.navajo.tipi.components.core.ShutdownListener;
 import com.dexels.navajo.tipi.components.core.ThreadActivityListener;
 import com.dexels.navajo.tipi.components.core.TipiComponentImpl;
@@ -70,7 +73,6 @@ import com.dexels.navajo.tipi.internal.HttpResourceLoader;
 import com.dexels.navajo.tipi.internal.RemoteDescriptionProvider;
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiActionBlock;
-import com.dexels.navajo.tipi.internal.TipiActionManager;
 import com.dexels.navajo.tipi.internal.TipiAnonymousAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.internal.TipiFileStorageManager;
@@ -151,7 +153,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	 * Lists the toplevel components in the current implementation
 	 */
 	// protected final ArrayList<Object> rootPaneList = new ArrayList<Object>();
-	private final TipiActionManager myActionManager = new TipiActionManager();
+	private IActionManager myActionManager = new TipiActionManager();
 
 	protected final List<TipiActivityListener> myActivityListeners = new ArrayList<TipiActivityListener>();
 	private final List<TipiNavajoListener> navajoListenerList = new ArrayList<TipiNavajoListener>();
@@ -163,9 +165,9 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	protected TipiThreadPool myThreadPool;
 	protected TipiComponent topScreen = null;
 	protected int poolSize = 6;
-	private final Map<String, TipiTypeParser> parserInstanceMap = new HashMap<String, TipiTypeParser>();
+//	private final Map<String, TipiTypeParser> parserInstanceMap = new HashMap<String, TipiTypeParser>();
 	protected TipiStorageManager myStorageManager = null;
-	protected final ClassManager classManager = new ClassManager(this);
+	protected IClassManager classManager = new ClassManager(this);
 	protected final Stack<DescriptionProvider> descriptionProviderStack = new Stack<DescriptionProvider>();
 	protected final Map<String, Object> globalMap = new HashMap<String, Object>();
 	protected final long startTime = System.currentTimeMillis();
@@ -173,7 +175,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	private TipiResourceLoader tipiResourceLoader;
 	private TipiResourceLoader genericResourceLoader;
 
-	// for now...
+	// for now... TODO something more elegant
 	public final Map<String, String> systemPropertyMap = new HashMap<String, String>();
 
 	private Object myToplevelContainer;
@@ -206,9 +208,12 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 	private transient ScriptEngineManager scriptManager;
 
+	private boolean osgiMode;
+
 	public TipiContext(TipiApplicationInstance myApplication, TipiContext parent) {
 		this.myApplication = myApplication;
 		List<TipiExtension> extensionList = getExtensionFromServiceEnumeration();
+		
 		initializeContext(myApplication, extensionList, parent);
 	}
 
@@ -289,7 +294,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		return myApplication;
 	}
 
-	public final ClassManager getClassManager() {
+	public final IClassManager getClassManager() {
 		return classManager;
 	}
 
@@ -353,6 +358,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		}
 	}
 
+	// TODO Refactor this to AppInstance
 	private void initializeExtensions(Iterator<TipiExtension> tt) {
 		coreExtensionList = new ArrayList<TipiExtension>();
 		mainExtensionList = new ArrayList<TipiExtension>();
@@ -534,9 +540,9 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	//
 	// }
 
-	public Map<String, XMLElement> getTipiClassDefMap() {
-		return getClassManager().getClassMap();
-	}
+//	public Map<String, XMLElement> getTipiClassDefMap() {
+//		return getClassManager().getClassMap();
+//	}
 
 	// public Map getTipiDefinitionMap() {
 	// return tipiComponentMap;
@@ -546,7 +552,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		tipiInstanceMap.clear();
 		tipiComponentMap.clear();
 		// tipiClassMap.clear();
-		getClassManager().clearClassMap();
+//		getClassManager().clearClassMap();
 		clearTopScreen();
 
 		eHandler = null;
@@ -765,14 +771,26 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		}
 
 		if (childName.equals("tipiclass")) {
-			getClassManager().addTipiClassDefinition(child, ed);
+			try {
+				getClassManager().addTipiClassDefinition(child, ed);
+			} catch (ClassNotFoundException e) {
+				throw new TipiException("Class loading problem while getting classdef: "+child,e);
+			} catch (InstantiationException e) {
+				throw new TipiException("Class instantiation problem while getting classdef: "+child,e);
+			} catch (IllegalAccessException e) {
+				throw new TipiException("Class access problem while getting classdef: "+child,e);
+			}
 			if (extension != null) {
 				child.setAttribute("extension", extension);
 			}
 			return;
 		}
 		if (childName.equals("tipiaction")) {
-			addActionDefinition(child, ed);
+			try {
+				getActionManager().addAction(child, ed);
+			} catch (ClassNotFoundException e) {
+				throw new TipiException("Error loading action: "+child,e);
+			}
 			return;
 		}
 		if (childName.equals("tipi-include")) {
@@ -782,7 +800,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			return;
 		}
 		if (childName.equals("tipi-parser")) {
-			parseParser(child);
+			getClassManager().parseParser(child);
 			return;
 		}
 
@@ -919,15 +937,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		}
 		if (childName.equals("tipi") || childName.equals("component")
 				|| childName.equals("definition")) {
-			// THIS... IS.. SILLY!
-			// if (getTipiDefinition(childName) != null) {
-			// System.err.println(">>>>>>>>>>>>>>>>> SKIPPING ALREADY DEFINED: "
-			// + childName);
-			// } else {
 			testDefinition(child);
 			addComponentDefinition(child);
-
-			// }
 		}
 	}
 
@@ -1182,10 +1193,13 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		return myActionManager.instantiateAction(definition, parent, parentExe);
 	}
 
-	public TipiActionManager getActionManager() {
+	public IActionManager getActionManager() {
 		return myActionManager;
 	}
 
+	public void setActionManager(IActionManager man) {
+		this.myActionManager = man;
+	}
 	public TipiLayout instantiateLayout(XMLElement instance, TipiComponent cc)
 			throws TipiException {
 
@@ -1204,7 +1218,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		if (tl == null) {
 			return null;
 		}
-		XMLElement xx = getClassManager().getClassMap().get(type);
+		XMLElement xx = getClassManager().getAssembledClassDef(type);
 		tl.setComponent(cc);
 		tl.setName(type);
 		tl.setClassDef(xx);
@@ -1261,26 +1275,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			throw new TipiException(
 					"Problems instantiating TipiComponent class: "
 							+ definition.toString());
-		}
-	}
-
-	public TipiComponent reloadComponent(TipiComponent comp,
-			XMLElement definition, XMLElement instance, TipiEvent event)
-			throws TipiException {
-		String clas = definition.getStringAttribute("class", "");
-		if (clas == null || "".equals(clas)) {
-			clas = definition.getStringAttribute("type", "");
-		}
-		if (!clas.equals("")) {
-			comp.load(definition, instance, this);
-			XMLElement classDef = getClassManager().getClassDef(clas);
-			comp.loadEventsDefinition(this, definition, classDef);
-			comp.loadMethodDefinitions(this, definition, classDef);
-			comp.loadStartValues(definition, event);
-			return comp;
-		} else {
-			throw new TipiException("Problems reloading TipiComponent class: "
-					+ definition.toString());
 		}
 	}
 
@@ -1442,14 +1436,13 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			TipiComponent tc = (TipiComponent) o;
 			tc.setContext(this);
 			tc.setParent(parent);
+			if(parent!=null) {
+				tc.setParentContainer(parent.getContainer());
+			}
 			if (tc.getId() == null) {
 				tc.setId(generateComponentId(null, tc));
 			}
-			// tc.setContainer(tc.createContainer());
-			tc.setPropertyComponent(classDef.getBooleanAttribute(
-					"propertycomponent", "true", "false", false));
-			// tc.setStudioElement(instance.getBooleanAttribute("studioelement",
-			// "true", "false", false));
+			tc.setPropertyComponent(classDef.getBooleanAttribute("propertycomponent", "true", "false", false));
 			tc.initContainer();
 			tc.instantiateComponent(instance, classDef);
 			if (tipiDefinition != null) {
@@ -1465,9 +1458,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 				boolean isDefaultConnector = instance.getBooleanAttribute(
 						"default", "true", "false", false);
 				if (!(tc instanceof TipiConnector)) {
-					showInternalError("Error: Component: "
-							+ className
-							+ " is registered as a component, but it does not implement TipiConnector!");
+					showInternalError("Error: Component: "+ className + " is registered as a component, but it does not implement TipiConnector!");
 				} else {
 					registerConnector((TipiConnector) tc);
 					if (isDefaultConnector) {
@@ -1477,8 +1468,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			}
 
 			return tc;
-		} else {
-			// System.err.println("Not a TIPICOMPONENT!!");
 		}
 		if (TipiLayout.class.isInstance(o)) {
 			TipiLayout tl = (TipiLayout) o;
@@ -1517,12 +1506,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 	// public Iterator<String> getTipiClassDefIterator() {
 	// return tipiClassDefMap.keySet().iterator();
-	// }
-
-	public void addActionDefinition(XMLElement xe, ExtensionDefinition ed)
-			throws TipiException {
-		myActionManager.addAction(xe, this, ed);
-	}
 
 	public void addTipiInstance(String service, TipiDataComponent instance) {
 		if (tipiInstanceMap.containsKey(service)) {
@@ -1677,12 +1660,10 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 	public void switchToDefinition(String name) throws TipiException {
 		clearTopScreen();
-		System.err.println("Switching!!!");
 		setSplashInfo("Starting application: " + name);
 		XMLElement componentDefinition = null; //
 		componentDefinition = getComponentDefinition(name);
 		// fallback to init:
-		System.err.println("COM: " + componentDefinition);
 		if (componentDefinition == null) {
 			componentDefinition = getComponentDefinition("init");
 		}
@@ -1696,7 +1677,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		componentDefinition.setAttribute("id", "init");
 		TipiComponent tc = instantiateComponent(componentDefinition, null,
 				null, null);
-		System.err.println("Created component: " + tc);
 		tc.commitToUi();
 
 		try {
@@ -2103,7 +2083,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 									+ expression);
 				}
 				rest = path.substring(protocol.length() + 2);
-				obj = parse(tc, protocol, rest, event);
+				obj = getClassManager().parse(tc, protocol, rest, event);
 				// if (true) {
 				return obj;
 				// }
@@ -2116,68 +2096,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			return expression;
 		}
 		return obj;
-	}
-
-	@SuppressWarnings("unchecked")
-	private final void parseParser(XMLElement xe) {
-		String name = xe.getStringAttribute("name");
-		String parserClass = xe.getStringAttribute("parser");
-		String classType = xe.getStringAttribute("type");
-		Class<TipiTypeParser> pClass = null;
-		try {
-			pClass = (Class<TipiTypeParser>) Class.forName(parserClass, true,
-					getClassLoader());
-		} catch (ClassNotFoundException ex) {
-			System.err
-					.println("Error loading class for parser: " + parserClass);
-			return;
-		}
-		TipiTypeParser ttp = null;
-		try {
-			ttp = pClass.newInstance();
-		} catch (IllegalAccessException ex1) {
-			System.err.println("Error instantiating class for parser: "
-					+ parserClass);
-			ex1.printStackTrace();
-			return;
-		} catch (InstantiationException ex1) {
-			System.err.println("Error instantiating class for parser: "
-					+ parserClass);
-			ex1.printStackTrace();
-			return;
-		}
-		ttp.setContext(this);
-		try {
-			Class<?> cc = Class.forName(classType, true, getClassLoader());
-			ttp.setReturnType(cc);
-		} catch (ClassNotFoundException ex) {
-			System.err.println("Error verifying return type class for parser: "
-					+ classType);
-			return;
-		}
-		parserInstanceMap.put(name, ttp);
-	}
-
-	public Object parse(TipiComponent source, String name, String expression,
-			TipiEvent te) {
-		TipiTypeParser ttp = parserInstanceMap.get(name);
-		if (ttp == null) {
-			System.err.println("Unknown type: " + name);
-			return null;
-		}
-		Object o = ttp.parse(source, expression, te);
-		Class<?> c = ttp.getReturnType();
-		if (o != null && !c.isInstance(o)) {
-			throw new IllegalArgumentException(
-					"Wrong type returned. Expected: " + c + "\nfound: "
-							+ o.getClass() + "\nWas parsing expression: "
-							+ expression + "\nUsing parser: " + name);
-		}
-		return o;
-	}
-
-	public boolean isValidType(String name) {
-		return parserInstanceMap.containsKey(name);
 	}
 
 	private boolean exists(TipiComponent source, String path) {
@@ -2764,14 +2682,14 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		return stateNavajo;
 	}
 
-	public Navajo createComponentNavajo() throws NavajoException {
+	public Navajo createComponentNavajo() throws NavajoException, TipiException {
 
 		Navajo n = NavajoFactory.getInstance().createNavajo();
 		Message tipiClasses = NavajoFactory.getInstance().createMessage(n,
 				"TipiClass", Message.MSG_TYPE_ARRAY);
 		n.addMessage(tipiClasses);
 		for (String s : getClassManager().getClassNameSet()) {
-			XMLElement xx = getClassManager().getClassDef(s);
+			XMLElement xx = getClassManager().getAssembledClassDef(s);
 			String type = xx.getStringAttribute("type");
 			if (xx.getName().equals("tipiclass")
 					&& ("tipi".equals(type) || "component".equals(type))) {
@@ -3193,6 +3111,19 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			scriptManager = new javax.script.ScriptEngineManager();
 		}
 		return scriptManager.getEngineByName(engine);
+	}
+	
+//	public void setBundleContext(BundleContext context) {
+//		this.bundleContext  = context;
+//	}
+	public void setClassManager(IClassManager classManager) {
+		this.classManager = classManager;
+		
+	}
+
+
+	public void setOSGiMode(boolean b) {
+		this.osgiMode = b;
 	}
 
 }
