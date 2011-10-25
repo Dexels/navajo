@@ -31,13 +31,13 @@ public class LabelBorderParser extends TipiTypeParser {
 	private static final long serialVersionUID = 7206185842548108711L;
 
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
-        return parseBorder(expression);
+        return parseBorder(expression,source);
     }
 //    private Object parseBorder(String s) {
 //        return parseBorder(s);
 //    }
 
-    public Object parseBorder(String s) {
+    public Object parseBorder(String s, TipiComponent source) {
         if(s==null) {
             return null;
         }
@@ -80,13 +80,13 @@ public class LabelBorderParser extends TipiTypeParser {
         }
         if ("titled".equals(borderName)) {
         	System.err.println("RETURNING TITLED BORDER: "+title);
-        	 DescriptionProvider dp = myContext.getDescriptionProvider();
+        	 DescriptionProvider dp = source.getContext().getDescriptionProvider();
 	
 	       	  if (dp==null) {
 	       		  
 	       		  return "["+title+"]";
 	       	} else {
-	       		return myContext.XMLUnescape(dp.getDescription(title));
+	       		return source.getContext().XMLUnescape(dp.getDescription(title));
 	       	}
           
             

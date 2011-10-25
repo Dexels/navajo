@@ -27,7 +27,7 @@ public class CookieRefParser extends TipiTypeParser {
 	private static final long serialVersionUID = -366656459338848632L;
 
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
-        return new CookieRef(expression,myContext);
+        return new CookieRef(expression,source.getContext());
    }
 
     

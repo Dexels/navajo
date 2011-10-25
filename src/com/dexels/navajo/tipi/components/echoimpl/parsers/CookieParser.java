@@ -27,17 +27,17 @@ public class CookieParser extends TipiTypeParser {
 	private static final long serialVersionUID = 5256119276821274061L;
 
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
-        return parseCookie(expression);
+        return parseCookie(expression,source);
     }
 //    private Object parseBorder(String s) {
 //        return parseBorder(s);
 //    }
 
-    public Object parseCookie(String s) {
+    public Object parseCookie(String s,TipiComponent source) {
     	 if(s==null) {
             return null;
         }
-    	 return myContext.getCookie(s);
+    	 return source.getContext().getCookie(s);
 //        Command c = new Command(){};
 //        ContainerContext containerContext = (ContainerContext) ((EchoTipiContext)myContext).getInstance().getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
 //        if(containerContext==null) {
