@@ -33,6 +33,8 @@ import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 import org.jdesktop.animation.transitions.ScreenTransition;
 import org.jdesktop.animation.transitions.TransitionTarget;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import tipi.SwingTipiApplicationInstance;
 import tipi.TipiExtension;
@@ -44,6 +46,7 @@ import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiExecutable;
 import com.dexels.navajo.tipi.animation.TipiAnimationManager;
+import com.dexels.navajo.tipi.classdef.OSGiClassManager;
 import com.dexels.navajo.tipi.components.swingimpl.cookie.impl.JnlpCookieManager;
 import com.dexels.navajo.tipi.components.swingimpl.formatters.PropertyAnimator;
 import com.dexels.navajo.tipi.components.swingimpl.jnlp.WebStartProxy;
@@ -98,6 +101,8 @@ public class SwingTipiContext extends TipiContext {
 
 	private RootPaneContainer myOtherRoot;
 
+	private static final Logger logger = LoggerFactory.getLogger(SwingTipiContext.class);
+	
 	public SwingTipiContext(SwingTipiApplicationInstance instance,List<TipiExtension> extensionList,
 			SwingTipiContext parentContext) {
 		super(instance,extensionList, parentContext);
@@ -223,6 +228,7 @@ public class SwingTipiContext extends TipiContext {
 
 	public void setSplashInfo(final String info) {
 		// System.err.println("Splash: "+info);
+		logger.info("Splash: "+info);
 		if (getAppletRoot() != null) {
 			getAppletRoot().showStatus(info);
 		} else {
@@ -760,4 +766,7 @@ public class SwingTipiContext extends TipiContext {
 	public void showFatalStartupError(String message) {
 		showError(message, "Fatal startup error!");
 	}
+
+
+
 }

@@ -116,9 +116,10 @@ public class TipiApplet extends JApplet {
 			// throw new
 			// IllegalArgumentException("Missing argument: Add 'init' argument to applet.");
 		}
+		// TODO Add support for a bundleContext
 		try {
 			MainApplication
-					.initializeSwingApplication(false, arguments, init, this,
+					.initializeSwingApplication(null, arguments, init, this,
 							null);
 		} catch (Exception e) {
 			e.printStackTrace();

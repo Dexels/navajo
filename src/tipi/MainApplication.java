@@ -17,8 +17,11 @@ import javax.swing.RepaintManager;
 import javax.swing.RootPaneContainer;
 import javax.swing.SwingUtilities;
 
-import tipipackage.TipiExtensionRegistry;
+import org.osgi.framework.BundleContext;
 
+import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.application.InstallationPathResolver;
 import com.dexels.navajo.tipi.components.swingimpl.TipiApplet;
 import com.dexels.navajo.tipi.swingclient.components.CheckThreadViolationRepaintManager;
 
@@ -42,7 +45,28 @@ public class MainApplication {
 				instance.getDefinition());
 	}
 
-	public static SwingTipiApplicationInstance runApp(String[] args) {
+	public static SwingTipiApplicationInstance runApp(BundleContext bc, String applicationContext) throws IOException, TipiException {
+		List<String> installationSettings = InstallationPathResolver.getInstallationFromPath(applicationContext);
+		String installationPath = installationSettings.get(0);
+		String applicationDeploy = null;
+		String applicationProfile = null;
+		if (installationSettings.size() > 1) {
+			applicationDeploy = installationSettings.get(1);
+		}
+		if (installationSettings.size() > 2) {
+			applicationProfile = installationSettings.get(2);
+		}
+
+		SwingTipiApplicationInstance stai = new SwingTipiApplicationInstance(applicationContext,bc);
+//		public static void processSettings(String deploy, String profile,  File installationFolder, TipiContext context) throws IOException {
+		File installationFolder = new File(installationPath);
+		BaseTipiApplicationInstance.processSettings(applicationDeploy, applicationProfile, installationFolder, stai);
+		stai.setInstallationFolder(installationFolder);
+		return stai;
+	}
+	
+	public static SwingTipiApplicationInstance runApp( String[] args) {
+		System.err.println("Startup NONOSGi");
 		try {
 			Locale.setDefault(new Locale("nl", "NL"));
 		} catch (SecurityException se) {
@@ -61,28 +85,10 @@ public class MainApplication {
 
 			}
 		}
-		return initializeSwingApplication(checkStudio(), arrrgs, definition,
+		return initializeSwingApplication(null,arrrgs, definition,
 				null, null);
 	}
 
-	/**
-	 * @return
-	 */
-	private static boolean checkStudio() {
-		boolean studio = false;
-		try {
-			Class.forName("tipi.TipiToolsExtension");
-			String s = System.getProperty("studio");
-			if (s != null) {
-				studio = s.equals("true");
-			}
-			// System.err.println("Tipi studio found, but disabled for now");
-			// studio = true;
-		} catch (ClassNotFoundException e) {
-			studio = false;
-		}
-		return studio;
-	}
 
 	/**
 	 * @param studioMode
@@ -90,25 +96,21 @@ public class MainApplication {
 	 * @param def
 	 */
 	public static SwingTipiApplicationInstance initializeSwingApplication(
-			final boolean studioMode, final List<String> arrrgs,
+			final BundleContext bundleContext,
+			final List<String> arrrgs,
 			final String def, final TipiApplet appletRoot,
 			final RootPaneContainer otherRoot) {
 
 		RepaintManager
 				.setCurrentManager(new CheckThreadViolationRepaintManager());
 		try {
+			if(SwingUtilities.isEventDispatchThread()) {
+				System.err.println("Already in EDT. This is going to cause problems.");
+			}
 			SwingUtilities.invokeAndWait(new Runnable() {
 
 				public void run() {
 					try {
-//						if (studioMode) {
-//							myApplication = new SwingTipiApplicationInstance(
-//									"develop", "tipi/develop.xml", arrrgs,
-//									appletRoot, otherRoot);
-//							// SwingTipiContext s = initialize("develop",
-//							// "tipi/develop.xml", arrrgs, null, null);
-//
-//						} else {
 							if (def == null) {
 								myApplication = new SwingTipiApplicationInstance(
 										"init", "init.xml", arrrgs, appletRoot,
@@ -125,9 +127,10 @@ public class MainApplication {
 								}
 							}
 //						}
-
+					// set bundle context, could be null, though
+					myApplication.setBundleContext(bundleContext);
 						if (myApplication != null) {
-							new TipiSwingExtension();
+//							new TipiSwingExtension();
 							
 							myApplication.startup();
 							String deff = def;
