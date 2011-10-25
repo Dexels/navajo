@@ -24,10 +24,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLParseException;
-import com.dexels.navajo.functions.XmlUnescape;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
 import com.dexels.navajo.mapping.compiler.meta.MissingParameterException;
 
@@ -429,7 +429,7 @@ public class BasicScriptCompiler implements ScriptCompiler {
 			throws IOException {
 		String conditionExpression = current.getContent().trim()
 				.replaceAll("\n", "\\\\\n");
-		String unesc = XmlUnescape.XMLUnescape(conditionExpression);
+		String unesc = XMLutils.XMLUnescape(conditionExpression);
 		int code = current.getIntAttribute("code");
 		String description = current.getStringAttribute("description");
 
@@ -688,13 +688,13 @@ public class BasicScriptCompiler implements ScriptCompiler {
 		if (children.isEmpty()) {
 			String contentExpression = expr.getContent().trim()
 					.replaceAll("\n", "\\\\\n");
-			String unesc = XmlUnescape.XMLUnescape(contentExpression);
+			String unesc = XMLutils.XMLUnescape(contentExpression);
 			return "\"" + unesc + "\"";
 		}
 		XMLElement valueTag = expr.getFirstChild();
 		String contentExpression = valueTag.getContent().trim()
 				.replaceAll("\n", "\\\\\n");
-		String unesc = XmlUnescape.XMLUnescape(contentExpression);
+		String unesc = XMLutils.XMLUnescape(contentExpression);
 		return "evaluateNavajo(\"" + unesc + "\")";
 
 	}

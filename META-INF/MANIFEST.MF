@@ -17,7 +17,6 @@ Require-Bundle: com.dexels.navajo.document;bundle-version="1.0.0",
  com.dexels.navajo.core;bundle-version="2.9.0",
  com.dexels.navajo.client;bundle-version="1.0.1",
  com.dexels.navajo.adapters;bundle-version="1.0.0",
- com.dexels.navajo.function;bundle-version="2.0.2",
  com.dexels.navajo.version;bundle-version="1.0.9"
 Bundle-ClassPath: lib/js.jar,
  .
