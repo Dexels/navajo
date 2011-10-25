@@ -8,14 +8,14 @@ import javax.imageio.spi.ServiceRegistry;
 
 import tipi.TipiExtension;
 
-public class NonOSGiExtensionRegistry extends TipiExtensionRegistry {
+public class TipiJarServiceExtensionProvider extends TipiManualExtensionRegistry {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 5065605262245351282L;
 
-	public NonOSGiExtensionRegistry() {
+	public TipiJarServiceExtensionProvider() {
 		List<TipiExtension> ll = listExtensions();
 		for (TipiExtension tipiExtension : ll) {
 			tipiExtension.loadDescriptor();
