@@ -32,7 +32,7 @@ public class ContextParser extends TipiTypeParser {
 	}
 
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
-		return myContext;
+		return source.getContext();
 	}
 
 }

@@ -56,6 +56,6 @@ public class NavajoParser extends TipiTypeParser {
 			}
 			return tc.getValue(attribute);
 		}
-		return myContext.getNavajo(expression);
+		return source.getContext().getNavajo(expression);
 	}
 }

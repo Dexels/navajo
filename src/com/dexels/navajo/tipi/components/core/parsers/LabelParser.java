@@ -33,13 +33,13 @@ public class LabelParser extends TipiTypeParser {
 	}
 
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
-		DescriptionProvider dp = myContext.getDescriptionProvider();
+		DescriptionProvider dp = source.getContext().getDescriptionProvider();
 
 		if (dp == null) {
 
 			return "[" + expression + "]";
 		} else {
-			return myContext.XMLUnescape(dp.getDescription(expression));
+			return source.getContext().XMLUnescape(dp.getDescription(expression));
 		}
 	}
 

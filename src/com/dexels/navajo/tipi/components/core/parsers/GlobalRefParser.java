@@ -33,7 +33,7 @@ public class GlobalRefParser extends TipiTypeParser {
 	}
 
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
-		return new GlobalRef(expression, myContext);
+		return new GlobalRef(expression, source.getContext());
 	}
 
 }

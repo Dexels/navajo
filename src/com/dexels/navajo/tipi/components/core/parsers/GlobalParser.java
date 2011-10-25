@@ -32,7 +32,7 @@ public class GlobalParser extends TipiTypeParser {
 	}
 
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
-		return myContext.getGlobalValue(expression);
+		return source.getContext().getGlobalValue(expression);
 	}
 
 }

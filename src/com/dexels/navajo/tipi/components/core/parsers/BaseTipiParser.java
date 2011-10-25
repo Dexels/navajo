@@ -38,7 +38,7 @@ abstract class BaseTipiParser extends TipiTypeParser {
 		if (path.startsWith(".")) { // Relative path
 			return source.getTipiComponentByPath(path);
 		}
-		return myContext.getTipiComponentByPath(path);
+		return source.getContext().getTipiComponentByPath(path);
 	}
 
 	protected Object getAttributePropertyValueByPath(TipiComponent source,
@@ -74,17 +74,17 @@ abstract class BaseTipiParser extends TipiTypeParser {
 				n = source.getNearestNavajo();
 			} else {
 				String navajo = counter.nextToken();
-				n = myContext.getNavajo(navajo);
+				n = source.getContext().getNavajo(navajo);
 			}
 			String propertyPath = counter.nextToken();
 			if (n != null) {
 				return n.getProperty(propertyPath);
 			} else {
-				myContext.showInternalError(
+				source.getContext().showInternalError(
 						"No navajo found, while looking for path: " + path
-								+ " Available: " + myContext.getNavajoNames(),
+								+ " Available: " + source.getContext().getNavajoNames(),
 						new Exception("No navajo found, while looking for path: " + path
-								+ " Available: " + myContext.getNavajoNames()));
+								+ " Available: " + source.getContext().getNavajoNames()));
 				return null;
 			}
 		}
@@ -112,7 +112,7 @@ abstract class BaseTipiParser extends TipiTypeParser {
 		if (tokencount == 2) {
 			String navajo = counter.nextToken();
 			String messagePath = counter.nextToken();
-			Navajo n = myContext.getNavajo(navajo);
+			Navajo n = source.getContext().getNavajo(navajo);
 			if (n != null) {
 				return n.getMessage(messagePath);
 			} else {

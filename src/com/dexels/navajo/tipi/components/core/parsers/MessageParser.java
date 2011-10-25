@@ -35,7 +35,7 @@ public class MessageParser extends BaseTipiParser {
 			StringTokenizer st = new StringTokenizer(expression, ":");
 			String navajo = st.nextToken();
 			String path = st.nextToken();
-			Navajo nn = myContext.getNavajo(navajo);
+			Navajo nn = source.getContext().getNavajo(navajo);
 			try {
 				Message myMessage = nn.getMessage(path);
 				return myMessage;
