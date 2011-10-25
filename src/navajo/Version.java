@@ -232,14 +232,12 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 		NavajoCoreAdapterLibrary library = new NavajoCoreAdapterLibrary();
 		fi.injectExtension(library);
-		System.err.println("Adapterlib injected!");
 		for(String adapterName: fi.getAdapterNames(library)) {
 
 			String adapterClass = fi.getAdapterClass(adapterName,library);
 			Class<?> c = Class.forName(adapterClass);
 
 			 Dictionary<String, Object> props = new Hashtable<String, Object>();
-			 System.err.println("Registering adapter: "+adapterName + "class: "+adapterClass);
 			 props.put("adapterName", adapterName);
 			 props.put("adapterClass", c.getName());
 			if(adapterClass!=null) {
