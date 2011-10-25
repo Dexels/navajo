@@ -896,7 +896,7 @@ private Object waitForResult = new Object();
       String propName = p.getName();
       msg.addProperty(p);
     } catch (Exception e) {
-      throw new UserException(-1, e.getMessage());
+      throw new UserException(-1, e.getMessage(),e);
     }
 
   }
