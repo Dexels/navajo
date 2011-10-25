@@ -17,36 +17,13 @@
       [Enter License Description here.]
    </license>
 
+   <requires>
+      <import feature="com.dexels.navajo.core.feature" version="1.0.7.qualifier"/>
+      <import feature="com.dexels.navajo.server.feature" version="1.0.4.qualifier"/>
+   </requires>
+
    <plugin
          id="org.eclipse.jetty.server"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.dexels.navajo.document"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.dexels.navajo.client"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.dexels.navajo.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.hamcrest.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -67,21 +44,7 @@
          unpack="false"/>
 
    <plugin
-         id="com.dexels.navajo.version"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.jetty.ajp"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.dexels.navajo.listeners"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -102,21 +65,7 @@
          unpack="false"/>
 
    <plugin
-         id="com.dexels.navajo.listeners.continuations"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.jetty.util"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.dexels.navajo.adapters"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -144,14 +93,14 @@
          unpack="false"/>
 
    <plugin
-         id="com.dexels.navajo.function"
+         id="org.eclipse.jetty.http"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.jetty.http"
+         id="com.dexels.navajo.server.embedded"
          download-size="0"
          install-size="0"
          version="0.0.0"
