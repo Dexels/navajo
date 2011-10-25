@@ -24,6 +24,8 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public class TipiSuspendException extends RuntimeException {
 
+	private static final long serialVersionUID = -2971767727074056454L;
+
 	public TipiSuspendException(TipiEvent sourceEvent, Stack<TipiExecutable> continuationSource) {
 		
 	}
