@@ -146,6 +146,10 @@ public class XMLElement implements java.io.Serializable {
 	 */
 	private Map<String, String> attributes;
 
+
+	private transient Map<String, Object> objectAttributes;
+
+	
 	/**
 	 * Child elements of the element.
 	 * 
@@ -682,7 +686,31 @@ public class XMLElement implements java.io.Serializable {
 		}
 		this.attributes.put(name, value.toString());
 	}
+	
+	
+	/**
+	 * Attaches a java object to this class, this object wont be serialized with XML
+	 * @param name
+	 * @param value
+	 */
+	public void setObjectAttribute(String name, Object value) {
+		if(objectAttributes==null) {
+			objectAttributes = new HashMap<String, Object>();
+		}
+		objectAttributes.put(name, value);
+	}
 
+/**
+ * Get an object attribute
+ * @param name
+ * @return
+ */
+	public Object getObjectAttribute(String name) {
+		if(objectAttributes==null) {
+			return null;
+		}
+		return objectAttributes.get(name);
+	}
 	/**
 	 * Adds or modifies an attribute.
 	 * 
