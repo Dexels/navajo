@@ -77,6 +77,8 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 			 Dictionary<String, Object> props = new Hashtable<String, Object>();
 			 props.put("functionName", functionName);
 			 props.put("functionDefinition", fd);
+			 props.put("type", "function");
+//			 System.err.println("Registering function...: "+functionName);
 			context.registerService(FunctionInterface.class.getName(), fi.instantiateFunctionClass(fd,getClass().getClassLoader()), props);
 		}
 		
