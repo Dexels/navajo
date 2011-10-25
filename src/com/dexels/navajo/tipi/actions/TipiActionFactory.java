@@ -9,7 +9,6 @@ import java.util.Map;
 import navajo.ExtensionDefinition;
 
 import com.dexels.navajo.tipi.TipiComponent;
-import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiExecutable;
 import com.dexels.navajo.tipi.TipiValue;
@@ -37,7 +36,6 @@ public class TipiActionFactory implements Serializable {
 	private static final long serialVersionUID = 6130577853312463090L;
 	protected String myName = null;
 	protected Map<String, TipiValue> myDefinedParams = new HashMap<String, TipiValue>();
-	protected TipiContext myContext = null;
 	private Class<?> myActionClass = null;
 
 	public TipiActionFactory() {
@@ -48,8 +46,8 @@ public class TipiActionFactory implements Serializable {
 	// throw new java.lang.UnsupportedOperationException("Method
 	// getActionParameter() not yet implemented.");
 	// }
-	public void load(XMLElement actionDef, TipiContext context,
-			ExtensionDefinition ed) throws TipiException {
+	public void load(XMLElement actionDef,
+			ExtensionDefinition ed) throws ClassNotFoundException {
 		if (actionDef == null || !actionDef.getName().equals("tipiaction")) {
 			throw new IllegalArgumentException(
 					"Can not instantiate tipi action.");
@@ -58,24 +56,15 @@ public class TipiActionFactory implements Serializable {
 		myName = (String) actionDef.getAttribute("name");
 		String clas = (String) actionDef.getAttribute("class");
 		String fullDef = pack + "." + clas;
-		context.setSplashInfo("Adding action: " + fullDef + " for extension: "
-				+ ed);
+		
 		// System.err.println("Adding action: " + fullDef);
 		// context.setSplashInfo("Adding action: " + fullDef);
-		ClassLoader extensionLoader = ed.getExtensionClassloader();
-		if (extensionLoader == null) {
-			extensionLoader = getClass().getClassLoader();
-		}
-		try {
-			myActionClass = Class.forName(fullDef, true, extensionLoader);
-		} catch (ClassNotFoundException ex) {
-			System.err.println("Trouble loading action class: " + fullDef);
-			System.err.println("Classloader: " + extensionLoader);
-			System.err.println("Exension: " + ed);
-			throw new TipiException("Trouble loading action class: " + fullDef,
-					ex);
-		}
-		myContext = context;
+//		ClassLoader extensionLoader = ed.getExtensionClassloader();
+//		if (extensionLoader == null) {
+//			extensionLoader = getClass().getClassLoader();
+//		}
+		myActionClass = Class.forName(fullDef, true, ed.getClass().getClassLoader());
+
 		List<XMLElement> children = actionDef.getChildren();
 		for (int i = 0; i < children.size(); i++) {
 			XMLElement currentParam = children.get(i);
@@ -218,7 +207,7 @@ public class TipiActionFactory implements Serializable {
 					+ " problem: " + ex.getMessage());
 		}
 
-		newAction.setContext(myContext);
+		newAction.setContext(tc.getContext());
 		newAction.setComponent(tc);
 		newAction.setType(myName);
 		return newAction;
