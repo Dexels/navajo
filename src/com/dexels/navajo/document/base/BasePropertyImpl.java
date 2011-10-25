@@ -1137,9 +1137,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		List<Selection> newValue = getAllSelectedSelections();
 
 		boolean isEqual = isEqual(old, newValue);
-		System.err.println("OLD: "+old);
-		System.err.println("NEW: "+newValue);
-		System.err.println("isEqual: "+isEqual);
+//		System.err.println("OLD: "+old);
+//		System.err.println("NEW: "+newValue);
+//		System.err.println("isEqual: "+isEqual);
 		if(!isEqual) { 
 			firePropertyChanged("selection", old,newValue);
 		}
