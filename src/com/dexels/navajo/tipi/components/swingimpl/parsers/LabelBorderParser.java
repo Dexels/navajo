@@ -28,11 +28,14 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class LabelBorderParser extends TipiTypeParser {
+
+	private static final long serialVersionUID = -6929897138501606067L;
+
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
-		return parseBorder(expression);
+		return parseBorder(expression,source);
 	}
 
-	private Border parseBorder(String s) {
+	private Border parseBorder(String s, TipiComponent source) {
 		StringTokenizer st = new StringTokenizer(s, "-");
 		String borderName = st.nextToken();
 		if ("etched".equals(borderName)) {
@@ -47,12 +50,12 @@ public class LabelBorderParser extends TipiTypeParser {
 		if ("titled".equals(borderName)) {
 			String title = st.nextToken();
 			System.err.println("CREATING (LABEL) TITLED BORDER: " + title);
-			DescriptionProvider dp = myContext.getDescriptionProvider();
+			DescriptionProvider dp = source.getContext().getDescriptionProvider();
 
 			if (dp == null) {
 				return BorderFactory.createTitledBorder("[" + title + "]");
 			} else {
-				return BorderFactory.createTitledBorder(myContext
+				return BorderFactory.createTitledBorder(source.getContext()
 						.XMLUnescape(dp.getDescription(title)));
 			}
 		}
