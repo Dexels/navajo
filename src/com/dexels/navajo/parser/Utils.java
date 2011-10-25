@@ -25,20 +25,24 @@ package com.dexels.navajo.parser;
  * ====================================================================
  */
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
-import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.document.types.Money;
-import com.dexels.navajo.document.types.ClockTime;
-import com.dexels.navajo.document.types.Percentage;
-import com.dexels.navajo.document.types.StopwatchTime;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.document.types.ClockTime;
+import com.dexels.navajo.document.types.Money;
+import com.dexels.navajo.document.types.Percentage;
+import com.dexels.navajo.document.types.StopwatchTime;
 
 
 public final class Utils extends Exception {
 
-    public Utils() {}
+   private static final long serialVersionUID = -5520295170789410974L;
+
+	public Utils() {}
 
     public final static int MILLIS_IN_DAY = 24 * 60 * 60 * 1000;
 
@@ -133,6 +137,7 @@ public final class Utils extends Exception {
             throw new TMLExpressionException("Invalid type: " + o.getClass().getName());
     }
 
+    // TODO This method fails for binaries.
     public final static String getStringValue(Object o) throws TMLExpressionException {
         if (o instanceof Integer)
             return (((Integer) o).intValue() + "");
