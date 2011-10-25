@@ -188,9 +188,9 @@ public class ServerInstanceImpl implements ServerInstance {
 	private void startServer(final String projectName, Listener lifecycleListener) throws Exception, InterruptedException {
 		System.err.println("Project name: "+projectName);
 		IProject navajoProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+		File file = navajoProject.getLocation().toFile();
 
 		INavajoBundleManager instance = NavajoBundleManager.getInstance();
-		File file = navajoProject.getLocation().toFile();
 		instance.loadAdapterPackages(file);
 		
 		initializeServer(navajoProject);
