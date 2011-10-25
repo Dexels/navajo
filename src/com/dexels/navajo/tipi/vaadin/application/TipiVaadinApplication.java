@@ -15,7 +15,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -28,7 +27,7 @@ import org.slf4j.LoggerFactory;
 import tipi.BaseTipiApplicationInstance;
 import tipi.TipiApplicationInstance;
 import tipi.TipiCoreExtension;
-import tipipackage.TipiExtensionRegistry;
+import tipipackage.TipiManualExtensionRegistry;
 import tipivaadin.TipiVaadinExtension;
 
 import com.dexels.navajo.client.sessiontoken.SessionTokenFactory;
@@ -61,6 +60,8 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 	private transient ServletContext servletContext;
 	private transient HttpServletRequest request;
 	private transient HttpServletResponse response;
+	
+	// TODO: Refactor to URL
 	private File installationFolder;
 	private String applicationProfile;
 	private String applicationDeploy;
@@ -68,7 +69,7 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 
 	private static final Logger logger = LoggerFactory.getLogger(TipiVaadinApplication.class);
 
-	private final TipiExtensionRegistry extensionRegistry = new TipiExtensionRegistry();
+	private final TipiManualExtensionRegistry extensionRegistry = new TipiManualExtensionRegistry();
 
 	private boolean isRunningInGae = false;
 	private transient Timer shutdownTimer = null;
@@ -247,7 +248,7 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 		try {
 			logger.info("Entering file-based mode");
 			setupInstallationFolder();
-		} catch (ServletException e1) {
+		} catch (TipiException e1) {
 			throw new IOException("Error resolving tipi installation directory.", e1);
 		}
 		TipiVaadinExtension instance = TipiVaadinExtension.getInstance();
@@ -373,7 +374,7 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 		return this.installationFolder;
 	}
 
-	private void setupInstallationFolder() throws ServletException {
+	private void setupInstallationFolder() throws TipiException {
 
 		if (isRunningInGae) {
 			this.applicationProfile = "knvb";
@@ -381,8 +382,7 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 			this.installationFolder = new File(servletContext.getRealPath("/application"));
 			logger.info("Application dir resolved to: " + installationFolder.getAbsolutePath());
 		} else {
-			List<String> installationSettings = InstallationPathResolver.getInstallationPath(this.servletContext);
-
+			List<String> installationSettings = VaadinInstallationPathResolver.getInstallationPath(this.servletContext);
 			String installationPath = installationSettings.get(0);
 			if (installationSettings.size() > 1) {
 				this.applicationDeploy = installationSettings.get(1);
