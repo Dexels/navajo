@@ -28,7 +28,7 @@ public class Activator implements BundleActivator {
 		System.err.println("<<<<<<<<<<Starting swing tipi");
 		Activator.context = bc;
 
-		instance = TipiSwingWrapper.runApp(new String[] { "tipiCodeBase=/Users/frank/Documents/workspace-xtext/TipiExample/tipi/" });
+		instance = TipiSwingWrapper.runApp(bc,"club");
 		SwingUtilities.invokeLater(new Runnable() {
 
 			@Override
