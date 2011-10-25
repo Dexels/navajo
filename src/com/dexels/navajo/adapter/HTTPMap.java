@@ -24,28 +24,24 @@
  */
 package com.dexels.navajo.adapter;
 
-import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
 
-import com.dexels.navajo.server.enterprise.queue.Queuable;
-import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueInterface;
-import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueFactory;
+import javax.net.ssl.HttpsURLConnection;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.server.enterprise.queue.Queuable;
+import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueFactory;
 import com.dexels.navajo.util.AuditLog;
 
 public class HTTPMap implements Mappable, Queuable {
@@ -120,8 +116,17 @@ public class HTTPMap implements Mappable, Queuable {
 			AuditLog.log("HTTPMap", "WARNING: More than 100 waiting HTTP requests", Level.WARNING, myAccess.accessID);
 		}
 		try {
+
 			AuditLog.log("HTTPMap", "About to send to: " + url, Level.INFO, myAccess.accessID);
-			URL u = new URL("http://" + url);
+			URL u = null;
+			if(!url.startsWith("http://") && (!url.startsWith("https://"))) {
+				AuditLog.log("HTTPMap", "No protocol. Always prepend protocol. Assuming http.",Level.WARNING);
+				u = new URL("http://" + url);
+			} else {
+				u = new URL(url);
+			}
+			
+			
 			HttpURLConnection con = null;
 			con = (HttpURLConnection) u.openConnection();
 			con.setConnectTimeout(connectTimeOut);
@@ -245,29 +250,14 @@ public class HTTPMap implements Mappable, Queuable {
 	
 	public static void main(String [] args) throws Exception {
 		// 82.94.253.174/dexels_interface?method=pushKNVBData 
+		URL url = new URL("https://source.dexels.com");
+//		HttpsURLConnection conn = (HttpsURLConnection)url.openConnection();
 		
-		String test = "<xml>" +
-		"<wedstrijd>" +
-		"<district>Zuid</district>" +
-		"<wednr>433</wednr>" +
-		"<thuisid>2085</thuisid>" +
-		"<thuisteam>74013</thuisteam>" +
-		"<uitid>234</uitid>" +
-		"<uitteam>242542</uitteam>" +
-		"<datum>2006-07-08</datum>" +
-		"<tijd>16:00</tijd>" +
-		"<thuisscore>1</thuisscore>" +
-		"<uitscore>4</uitscore>" +
-		"<thuisscoreverl>1</thuisscoreverl>" +
-		"<uitscoreverl>4</uitscoreverl>" +
-		"<thuispen>13</thuispen>" +
-		"<uitpen>43</uitpen>" +
-		"<status>afg</status>" +
-		"</wedstrijd>" +
-		"</xml>";
 		
 		HTTPMap hm = new HTTPMap();
-		hm.setUrl("ws.geonames.org/findNearByWeatherXML?lat=43&lng=-2");
+		hm.myAccess = new Access();
+//		hm.setUrl("ws.geonames.org/findNearByWeatherXML?lat=43&lng=22");
+		hm.setUrl("google.com/");
 		hm.setMethod("GET");
 		hm.setDoSend(true);
 		
@@ -275,7 +265,7 @@ public class HTTPMap implements Mappable, Queuable {
 		System.err.println(tr);
 		Binary b = hm.getResult();
 		
-		FileOutputStream fos = new FileOutputStream("/home/arjen/testje");
+		FileOutputStream fos = new FileOutputStream("/Users/frank/testje");
 		b.write(fos);
 		fos.close();	
 		
