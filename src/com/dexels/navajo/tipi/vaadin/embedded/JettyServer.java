@@ -23,7 +23,8 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.util.StatusPrinter;
 
-import com.dexels.navajo.tipi.vaadin.application.InstallationPathResolver;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.application.InstallationPathResolver;
 import com.dexels.navajo.tipi.vaadin.application.servlet.TipiVaadinServlet;
 
 
@@ -150,7 +151,7 @@ public class JettyServer {
 			resource_handler.setResourceBase(installationFolder);
 		} catch (IOException e1) {
 			e1.printStackTrace();
-		} catch (ServletException e1) {
+		} catch (TipiException e1) {
 			e1.printStackTrace();
 		}
 		handlers.addHandler(webAppContext);
