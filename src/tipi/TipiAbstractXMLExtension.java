@@ -41,7 +41,6 @@ public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension
 
 	private void loadXMLClass(String xmlName) {
 		try {
-			System.err.println("loading: "+xmlName);
 			InputStream is = getClass().getResourceAsStream(
 					xmlName);
 			if (is == null) {
