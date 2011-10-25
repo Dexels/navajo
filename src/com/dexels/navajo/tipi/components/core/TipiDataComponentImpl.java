@@ -167,7 +167,6 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 		}
 		myNavajo = n;
 
-		// System.err.println("Loading. # of componentS: "+propertyComponentSet.size()+" loading: "+getPath()
 		// );
 		for (TipiComponent tc : propertyComponentSet) {
 			tc.loadPropertiesFromNavajo(n);

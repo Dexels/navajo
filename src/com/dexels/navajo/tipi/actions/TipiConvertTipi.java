@@ -50,11 +50,8 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 
 public class TipiConvertTipi extends TipiAction {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 2763921234336481301L;
-	private int count = 0;
 
 	public TipiConvertTipi() {
 	}
@@ -236,13 +233,6 @@ public class TipiConvertTipi extends TipiAction {
 		}
 		if (element.getNodeName().equals("event")) {
 			if (element.getAttribute("type") != null) {
-				if ("onActionPerformed".equals(element.getAttribute("type"))) {
-					System.err.println(">>>>>>>>Elements: "
-							+ element.getAttribute("type") + " count: "
-							+ count++);
-				}
-				// System.err.println("EventElements:
-				// "+element.getAttribute("type"));
 				Element e = cloneElementWithNewName(d, element,
 						element.getAttribute("type"));
 				// e.setAttribute("apekool","hoera");
