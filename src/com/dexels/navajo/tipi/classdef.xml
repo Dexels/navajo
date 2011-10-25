@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.navajo.nl/classdef_schema.xsd">
 
+	<!-- Odd way to do this, deprecated? -->
    <tipi-include location="com/dexels/navajo/tipi/actions/actiondef.xml" />
    
    
