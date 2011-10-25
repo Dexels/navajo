@@ -13,7 +13,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.dexels.navajo.tipi.vaadin.application.InstallationPathResolver;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.vaadin.application.VaadinInstallationPathResolver;
 
 /**
  * The File servlet for serving from absolute path.
@@ -42,7 +43,11 @@ public class VaadinFileServlet extends HttpServlet {
 
 		// Define base path somehow. You can define it as init-param of the
 		// servlet.
-		this.filePath = InstallationPathResolver.getInstallationPath(getServletContext()).get(0);
+		try {
+			this.filePath = VaadinInstallationPathResolver.getInstallationPath(getServletContext()).get(0);
+		} catch (TipiException e) {
+			throw new ServletException("Error resolving Tipi installation path. ",e);
+		}
 
 		// In a Windows environment with the Applicationserver running on the
 		// c: volume, the above path is exactly the same as "c:\files".
