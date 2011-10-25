@@ -72,5 +72,7 @@ public interface StoreInterface {
    */
   public void setDatabaseParameters(Map<String,String> m);
 
-public void shutdown();
+  public void initialize();
+  
+  public void shutdown();
 }
