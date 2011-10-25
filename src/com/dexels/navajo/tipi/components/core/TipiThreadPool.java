@@ -58,7 +58,6 @@ public class TipiThreadPool implements Serializable {
 	// for use with echo
 
 	public TipiThreadPool(TipiContext context, int initSize) {
-		System.err.println("Creating group with size: "+initSize);
 		if(initSize > 0) {
 			myGroup = new ThreadGroup("TipiThreadGroup");
 		}
