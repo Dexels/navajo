@@ -48,23 +48,6 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.internal.TipiLayout;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
 public abstract class TipiComponentImpl implements TipiEventListener,
 		TipiComponent, TipiLink, Serializable {
 	private static final long serialVersionUID = -4241997420431509085L;
@@ -72,6 +55,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 	public abstract Object createContainer();
 
 	private Object myContainer = null;
+	private Object myParentContainer = null;
 	private Object myConstraints;
 	protected TipiContext myContext = null;
 	protected Navajo myNavajo = null;
@@ -186,6 +170,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 
 	public void initContainer() {
 		if (getContainer() == null) {
+			System.err.println(">>>>> "+getParentContainer());
 			setContainer(createContainer());
 		}
 	}
@@ -263,7 +248,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		}
 		String type = tv.getType();
 
-		if ((myContext.isValidType(type))) {
+		if ((myContext.getClassManager().isValidType(type))) {
 			try {
 				// if (!defaultValue) {
 				// detectedExpressions.put(name, expression);
@@ -360,20 +345,8 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		Object propval = getAttributeProperty(name).getTypedValue();
 		Object oo = getComponentValue(name);
 		if (oo == null) {
-			// if (propval != null) {
-			// System.err.println("Value mismatch detected in: " + getClass() +
-			// " attribute: " + name + " class: " + propval.getClass());
-			// System.err.println("Component says null, property says: " +
-			// propval);
-			// } else {
-			// return null;
-			// }
 		} else {
 			if (!oo.equals(propval)) {
-				// System.err.println("Value mismatch detected in: " +
-				// getClass() + " attribute: " + name);
-				// System.err.println("Component says " + oo +
-				// ", property says: " + propval);
 				getAttributeProperty(name).setAnyValue(oo);
 			}
 		}
@@ -391,33 +364,6 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 	private Property createAttributeProperty(TipiValue tv) {
 		return tv.createProperty();
 	}
-
-	//
-	// public String getStringValue(String name) {
-	// TipiValue tv = componentValues.get(name);
-	// if (tv == null) {
-	// throw new UnsupportedOperationException("Getting value: " + name +
-	// " in: " + getClass() + " is not supported!");
-	// }
-	// Object obj = getComponentValue(name);
-	// if (obj != null) {
-	// String result = myContext.toString(this, tv.getType(), obj);
-	// if (result != null) {
-	// return result;
-	// }
-	//
-	// return obj.toString();
-	// }
-	// return null;
-	// }
-
-	// public String getExpression(String name) {
-	// return detectedExpressions.get(name);
-	// }
-
-	// public TipiValue getTipiValue(String name) {
-	// return componentValues.get(name);
-	// }
 
 	/**
 	 * Loads an event definition from the component definition
@@ -493,9 +439,6 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		setName(name);
 		if (id == null || id.equals("")) {
 			myId = name;
-			// throw new RuntimeException("Component has no id at:
-			// "+instance.getLineNr()+" current
-			// class:"+getClass()+"\n>"+instance.toString());
 		} else {
 			myId = id;
 		}
@@ -549,28 +492,8 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 	}
 
 	public void setId(String id) {
-		// System.err.println("CHANGING ID. FROM: "+myId+" to: "+id+".........
-		// VERIFYING PARENT. ");
-		// if (getTipiParent() != null) {
-		// getTipiParent().updateId(this, myId, id);
-		// }
 		myId = id;
 	}
-
-	// public void updateId(TipiComponent tc, String oldId, String id) {
-	// if (!tipiComponentMap.containsValue(tc)) {
-	// System.err.println("!!!!!!   Can not update id: Component not found.");
-	// }
-	// if (!tipiComponentList.contains(tc)) {
-	// System.err.println("!!!!!!   Can not update id: Component not found in list.");
-	// }
-	// if (!tipiComponentMap.containsKey(oldId)) {
-	// System.err.println("!!!!!!   Can not update id: Component not found in map.");
-	// }
-	// tipiComponentMap.remove(oldId);
-	// tipiComponentMap.put(id, tc);
-	//
-	// }
 
 	private final void removeChildComponent(TipiComponent tc) {
 		if (!tipiComponentMap.containsValue(tc)) {
@@ -1427,7 +1350,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		if (path.equals("*")) {
 			return true;
 		}
-		TipiComponent tc = (TipiComponent) myContext.parse(this, "component",
+		TipiComponent tc = (TipiComponent) myContext.getClassManager().parse(this, "component",
 				path, event);
 		// TipiPathParser tp = new TipiPathParser(this, myContext, path);
 		return tc == this;
@@ -1653,4 +1576,14 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		}
 		return null;
 	}
+	
+	public Object getParentContainer() {
+		return myParentContainer;
+	}
+	
+	public void setParentContainer(Object c) {
+		myParentContainer = c;
+	}
+
+	
 }

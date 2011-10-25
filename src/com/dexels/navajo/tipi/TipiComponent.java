@@ -169,9 +169,12 @@ public interface TipiComponent extends TipiEventListener, TipiLink, Serializable
 	public String getName();
 
 	public Object getContainer();
-
 	public void setContainer(Object c);
 
+	public Object getParentContainer();
+	public void setParentContainer(Object c);
+
+	
 	public void setCursor(int cursorid);
 
 	// public void checkValidation(Message msg);
