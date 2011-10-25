@@ -37,7 +37,6 @@ public class TipiArrayPanel extends TipiVaadinComponentImpl {
 	@Override
 	public void loadData(Navajo n, String method) throws TipiException,
 			TipiBreakException {
-		System.err.println("Message path loading: " + messagePath);
 		loadArrayData(n, method, messagePath);
 		super.loadData(n, method);
 		doLayout();
