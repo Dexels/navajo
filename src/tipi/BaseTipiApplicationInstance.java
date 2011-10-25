@@ -14,13 +14,16 @@ import java.util.NoSuchElementException;
 import java.util.PropertyResourceBundle;
 import java.util.StringTokenizer;
 
+import tipipackage.ITipiExtensionContainer;
+
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 
 public abstract class BaseTipiApplicationInstance implements TipiApplicationInstance {
 
 	private TipiContext currentContext;
-
+	private File installationFolder = null;
+	
 	public TipiContext getCurrentContext() {
 		return currentContext;
 	}
@@ -32,7 +35,6 @@ public abstract class BaseTipiApplicationInstance implements TipiApplicationInst
 	public final void startup() throws IOException, TipiException {
 		TipiContext context = createContext();
 		setCurrentContext(context);
-		// context.switchToDefinition(getDefinition());
 	}
 
 	public void dispose(TipiContext t) {
@@ -47,7 +49,7 @@ public abstract class BaseTipiApplicationInstance implements TipiApplicationInst
 
 	// Utilities:
 	
-	public static void processSettings(String deploy, String profile,  File installationFolder, TipiContext context) throws IOException {
+	public static void processSettings(String deploy, String profile,  File installationFolder, ITipiExtensionContainer extensionContainer) throws IOException {
 
 //		Map<String, String> bundleValues = getBundleMap("tipi.properties");
 //		String deploy = bundleValues.get("deploy");
@@ -78,9 +80,11 @@ public abstract class BaseTipiApplicationInstance implements TipiApplicationInst
 		resolvedValues.put("tipi.deploy", deploy);
 		resolvedValues.put("tipi.profile", profile);
 		
+
+		// TODO Store these somewhere else
 		for (Entry<String,String> entry : resolvedValues.entrySet()) {
 			System.err.println("Setting: "+entry.getKey());
-			context.setSystemProperty(entry.getKey(), entry.getValue());
+			extensionContainer.setSystemProperty(entry.getKey(), entry.getValue());
 		}	
 //		return resolvedValues;
 	}
@@ -112,7 +116,11 @@ public abstract class BaseTipiApplicationInstance implements TipiApplicationInst
 
 	protected Map<String, String> parseProperties(List<String> args)
 			throws IOException {
+		
 		Map<String, String> result = new HashMap<String, String>();
+		if(args==null) {
+			return result;
+		}
 		int index = 0;
 		for (String current : args) {
 			if (current.indexOf("=") != -1) {

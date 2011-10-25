@@ -15,8 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import tipipackage.ITipiExtensionRegistry;
-import tipipackage.NonOSGiExtensionRegistry;
-import tipipackage.TipiExtensionRegistry;
+import tipipackage.TipiJarServiceExtensionProvider;
 
 public abstract class TipiAbstractOSGiExtension implements TipiExtension,
 		BundleActivator {
@@ -25,7 +24,7 @@ public abstract class TipiAbstractOSGiExtension implements TipiExtension,
 	private transient BundleContext context = null;
 	private static final Logger logger = LoggerFactory.getLogger(TipiAbstractOSGiExtension.class); 
 
-	private static final TipiExtensionRegistry nonOSGiRegistry = new NonOSGiExtensionRegistry();
+	private static final ITipiExtensionRegistry nonOSGiRegistry = new TipiJarServiceExtensionProvider();
 	
 	
 	
@@ -36,18 +35,27 @@ public abstract class TipiAbstractOSGiExtension implements TipiExtension,
 		logger.info("Registering tipi extension: "+getClass().getName());
 		loadDescriptor();
 		ITipiExtensionRegistry reg = null;
+		
+//		registerWhiteBoardExtension();
 		if(context==null) {
 			reg = nonOSGiRegistry;
+			reg.registerTipiExtension(this);
 		} else {
+			ServiceRegistration.registerWhiteBoardExtension(this,context);
+			// Actually, only for non-whiteboard, but it still should work.
+			
+			/* DEPRECATED!
 			ServiceReference<? extends ITipiExtensionRegistry> refs = (ServiceReference<? extends ITipiExtensionRegistry>) context
 					.getServiceReference(ITipiExtensionRegistry.class.getName());
-			reg = (ITipiExtensionRegistry) context
-					.getService(refs);
-			
+			reg = (ITipiExtensionRegistry) context.getService(refs);
+			reg.registerTipiExtension(this);
+			*/
 		}
-		reg.registerTipiExtension(this);
 	}
 
+
+	
+	
 	protected void deregisterTipiExtension(BundleContext context)
 			throws Exception {
 ///		this.context = context;
