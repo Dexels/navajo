@@ -18,7 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.tipi.vaadin.application.InstallationPathResolver;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.application.InstallationPathResolver;
 
 public class VaadinFileServlet extends HttpServlet {
 
@@ -37,18 +38,18 @@ public class VaadinFileServlet extends HttpServlet {
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
-		System.err.println("INITIALIZING VAADINFIL. cn: "+config.getServletContext().getServletContextName());
 		String contextPath = config.getServletContext().getContextPath();
+		// Why was this?
 		if(contextPath.endsWith("null")) {
 			contextPath = contextPath.substring(0,contextPath.length()-4);
 		}
-		System.err.println("INITIALIZING VAADINFIL. cp: "+contextPath);
-		System.err.println("INITIALIZING VAADINFIL. info: "+config.getServletContext().getServerInfo());
 		try {
 			String path = InstallationPathResolver.getInstallationFromPath(contextPath).get(0);
 			setPath(path);
+		} catch (TipiException e) {
+			throw new ServletException("Problem resolving context path: "+contextPath, e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new ServletException("Problem resolving context path: "+contextPath, e);
 		}
 
 		super.init(config);
