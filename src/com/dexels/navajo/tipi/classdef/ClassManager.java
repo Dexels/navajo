@@ -12,25 +12,31 @@ import navajo.ExtensionDefinition;
 
 import com.dexels.navajo.functions.util.FunctionDefinition;
 import com.dexels.navajo.tipi.TipiContext;
-import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
-public final class ClassManager implements Serializable {
+public final class ClassManager extends BaseClassManager implements Serializable, IClassManager {
 	
 	private static final long serialVersionUID = 1L;
-	protected final Map<String, XMLElement> tipiClassDefMap = new HashMap<String, XMLElement>();
-	private final TipiContext myContext;
-	protected final Map<String, List<String>> unresolvedExtensions = new HashMap<String, List<String>>();
+	private final Map<String, XMLElement> tipiClassDefMap = new HashMap<String, XMLElement>();
+	private final Map<String, List<String>> unresolvedExtensions = new HashMap<String, List<String>>();
 	private final Map<String, XMLElement> interfaceMap = new HashMap<String, XMLElement>();
 	private final Map<String, FunctionDefinition> functionDefinitionMap = new HashMap<String, FunctionDefinition>();
-
 	private final Map<String, ExtensionDefinition> extensionMapper = new HashMap<String, ExtensionDefinition>();
 
 	public ClassManager(TipiContext context) {
+		super(context);
 		assert (context != null);
-		myContext = context;
 	}
 
+	@Override
+	public ExtensionDefinition getExtension(String extensionName) {
+		return extensionMapper.get(extensionName);
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.dexels.navajo.tipi.classdef.IClassManager#getClassDef(java.lang.String)
+	 */
+	@Override
 	public XMLElement getClassDef(String name) {
 		XMLElement xmlElement = tipiClassDefMap.get(name);
 		if (xmlElement == null) {
@@ -40,35 +46,35 @@ public final class ClassManager implements Serializable {
 		return xmlElement;
 	}
 
-	public XMLElement getAssembledClassDef(String name) throws TipiException {
-		XMLElement classDef = getClassDef(name);
-		if (classDef == null) {
-			throw new TipiException("Error loading class def: " + name);
-		}
 
-		XMLElement result = null;
-		List<XMLElement> interfaces = getInterfacesForClassDef(classDef);
-		if (interfaces == null) {
-			result = classDef;
-		} else {
-			interfaces.add(classDef);
-			result = assembleClassDefs(interfaces, name);
-		}
-		return result;
-	}
-
+	/* (non-Javadoc)
+	 * @see com.dexels.navajo.tipi.classdef.IClassManager#getClassMap()
+	 */
+	@Override
 	public Map<String, XMLElement> getClassMap() {
 		return tipiClassDefMap;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.dexels.navajo.tipi.classdef.IClassManager#getFunctionDefMap()
+	 */
+	@Override
 	public Map<String, FunctionDefinition> getFunctionDefMap() {
 		return functionDefinitionMap;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.dexels.navajo.tipi.classdef.IClassManager#clearClassMap()
+	 */
+	@Override
 	public void clearClassMap() {
 		tipiClassDefMap.clear();
 	}
 
+	/* (non-Javadoc)
+	 * @see com.dexels.navajo.tipi.classdef.IClassManager#addTipiClassDefinition(com.dexels.navajo.tipi.tipixml.XMLElement, navajo.ExtensionDefinition)
+	 */
+	@Override
 	public final void addTipiClassDefinition(XMLElement xe,
 			ExtensionDefinition ed) {
 		String name = (String) xe.getAttribute("name");
@@ -94,13 +100,17 @@ public final class ClassManager implements Serializable {
 		tipiClassDefMap.put(name, xe);
 	}
 
+
+
+ // doesn't use the super at all
+	@Override
 	public Class<?> getTipiClass(XMLElement xe) {
 		Class<?> cc = null;
 		String pack = (String) xe.getAttribute("package");
 		String clas = (String) xe.getAttribute("class");
 		String name = (String) xe.getAttribute("name");
 		String fullDef = pack + "." + clas;
-		ExtensionDefinition ed = extensionMapper.get(name);
+		ExtensionDefinition ed = getExtension(name);
 		try {
 			if (ed != null) {
 				ClassLoader cl = ed.getClass().getClassLoader();
@@ -109,6 +119,7 @@ public final class ClassManager implements Serializable {
 			}
 			System.err
 					.println("FALLBACK: Loading class without Extension definition");
+			
 			cc = Class.forName(fullDef, true, myContext.getClassLoader());
 		} catch (ClassNotFoundException ex) {
 			System.err.println("Error loading class: " + fullDef);
@@ -121,46 +132,19 @@ public final class ClassManager implements Serializable {
 		return cc;
 	}
 
-	private List<XMLElement> getInterfacesForClassDef(XMLElement classDef)
-			throws TipiException {
-		String extending = classDef.getStringAttribute("implements");
-		if (extending != null) {
-			StringTokenizer st = new StringTokenizer(extending, ",");
-			LinkedList<XMLElement> isExtending = new LinkedList<XMLElement>();
-			while (st.hasMoreTokens()) {
-				String currentName = st.nextToken();
-				XMLElement element = tipiClassDefMap.get(currentName);
-				if (element == null) {
-					throw new TipiException("Error: ClassDef: "
-							+ classDef.getStringAttribute("name")
-							+ " has an unknown super interface: " + currentName);
-				}
-				isExtending.add(element);
-			}
-			return isExtending;
-		}
-		return null;
-	}
 
-	private XMLElement assembleClassDefs(List<XMLElement> interfaces,
-			String name) {
-		assert (interfaces != null);
-		assert (interfaces.size() > 0);
-		if (interfaces.size() == 1) {
-			// maybe copy?
-			return interfaces.get(0);
-		}
-		ClassModel cl = new ClassModel(name);
-		for (XMLElement element : interfaces) {
-			cl.addDefinition(element);
-		}
-		return cl.buildResult();
-	}
-
+	/* (non-Javadoc)
+	 * @see com.dexels.navajo.tipi.classdef.IClassManager#getClassNameSet()
+	 */
+	@Override
 	public Set<String> getClassNameSet() {
 		return tipiClassDefMap.keySet();
 	}
 
+	/* (non-Javadoc)
+	 * @see com.dexels.navajo.tipi.classdef.IClassManager#addFunctionDefinition(java.lang.String, com.dexels.navajo.functions.util.FunctionDefinition)
+	 */
+	@Override
 	public void addFunctionDefinition(String name, FunctionDefinition fd) {
 		functionDefinitionMap.put(name, fd);
 	}
