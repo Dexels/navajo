@@ -1,13 +1,18 @@
 package com.dexels.navajo.tipi.swing.svg;
 
-import java.awt.*;
-import java.net.*;
-import java.util.*;
+import java.awt.Dimension;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.types.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiComponentMethod;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 
 public class TipiSvgForm extends TipiSvgComponent implements
 		SvgMouseListener, SvgAnimationListener {

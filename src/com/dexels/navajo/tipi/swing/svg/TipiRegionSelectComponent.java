@@ -1,13 +1,17 @@
 package com.dexels.navajo.tipi.swing.svg;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.swing.*;
+import javax.swing.JComboBox;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.swing.svg.impl.*;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.swing.svg.impl.SvgBatikComponent;
 
 public class TipiRegionSelectComponent extends TipiSvgComponent {
 

@@ -1,9 +1,9 @@
 package com.dexels.navajo.tipi.swing.svg;
 
-import java.awt.*;
-import java.net.*;
+import java.awt.Dimension;
+import java.net.URL;
 
-import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.TipiException;
 
 public class TipiSvgButton extends TipiSvgComponent implements
 		SvgMouseListener, SvgAnimationListener {

@@ -1,14 +1,18 @@
 package com.dexels.navajo.tipi.swing.svg;
 
-import java.beans.*;
-import java.util.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Iterator;
+import java.util.List;
 
-import org.w3c.dom.svg.*;
+import org.w3c.dom.svg.SVGElement;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.internal.*;
-import com.dexels.navajo.tipi.swing.svg.impl.*;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.tipi.TipiEventListener;
+import com.dexels.navajo.tipi.internal.PropertyComponent;
+import com.dexels.navajo.tipi.swing.svg.impl.SvgBatikComponent;
 
 public class TipiSvgPropertyComponent extends TipiSvgComponent implements PropertyComponent, PropertyChangeListener {
 	private static final long serialVersionUID = 711068173062950509L;

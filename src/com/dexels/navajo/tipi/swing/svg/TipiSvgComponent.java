@@ -1,15 +1,19 @@
 package com.dexels.navajo.tipi.swing.svg;
 
-import java.net.*;
-import java.util.*;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.w3c.dom.svg.*;
+import org.w3c.dom.svg.SVGDocument;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.swingimpl.*;
-import com.dexels.navajo.tipi.internal.*;
-import com.dexels.navajo.tipi.swing.svg.impl.*;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiComponentMethod;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.components.swingimpl.TipiSwingDataComponentImpl;
+import com.dexels.navajo.tipi.internal.TipiEvent;
+import com.dexels.navajo.tipi.swing.svg.impl.SvgBaseComponent;
+import com.dexels.navajo.tipi.swing.svg.impl.SvgBatikComponent;
 
 public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 		SvgMouseListener, SvgAnimationListener {
