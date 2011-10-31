@@ -1,11 +1,19 @@
 package com.dexels.navajo.rich.components;
 
-import java.awt.*;
-import java.awt.image.*;
-import java.io.*;
-import java.net.*;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsEnvironment;
+import java.awt.RenderingHints;
+import java.awt.Transparency;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.Raster;
+import java.awt.image.WritableRaster;
+import java.io.IOException;
+import java.net.URL;
 
-import javax.imageio.*;
+import javax.imageio.ImageIO;
 
 /**
  * <p>

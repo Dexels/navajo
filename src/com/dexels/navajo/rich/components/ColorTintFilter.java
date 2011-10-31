@@ -34,8 +34,8 @@ package com.dexels.navajo.rich.components;
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.awt.*;
-import java.awt.image.*;
+import java.awt.Color;
+import java.awt.image.BufferedImage;
 
 /**
  * <p>

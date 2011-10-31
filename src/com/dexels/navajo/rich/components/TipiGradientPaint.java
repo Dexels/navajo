@@ -1,6 +1,8 @@
 package com.dexels.navajo.rich.components;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.GradientPaint;
+import java.awt.Rectangle;
 
 /**
  * <p>

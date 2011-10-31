@@ -1,9 +1,12 @@
 package com.dexels.navajo.rich.components;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
 
-import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.table.TableCellRenderer;
 
 public class RichTableCellRenderer implements TableCellRenderer {
 

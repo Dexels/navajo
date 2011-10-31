@@ -1,9 +1,11 @@
 package com.dexels.navajo.rich.components;
 
-import java.awt.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.util.ArrayList;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.RootPaneContainer;
 
 public class FlipPanel extends JPanel {
 	private static final long serialVersionUID = -9109133023641397033L;

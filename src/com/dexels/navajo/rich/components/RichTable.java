@@ -1,16 +1,19 @@
 package com.dexels.navajo.rich.components;
 
-import java.awt.*;
+import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.event.*;
+import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 
-import javax.swing.*;
+import javax.swing.JTable;
 
-import org.jdesktop.animation.timing.*;
-import org.jdesktop.animation.timing.interpolation.*;
+import org.jdesktop.animation.timing.Animator;
+import org.jdesktop.animation.timing.interpolation.PropertySetter;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.swingclient.components.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.tipi.swingclient.components.MessageTableModel;
 
 public class RichTable extends JTable {
 	private static final long serialVersionUID = 8410643859568166908L;

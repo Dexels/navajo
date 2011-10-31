@@ -1,10 +1,15 @@
 package com.dexels.navajo.rich.components;
 
-import java.awt.*;
-import java.awt.image.*;
-import java.io.*;
+import java.awt.AlphaComposite;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import java.awt.image.ConvolveOp;
+import java.awt.image.Kernel;
+import java.io.File;
+import java.io.FileInputStream;
 
-import javax.imageio.*;
+import javax.imageio.ImageIO;
 
 public class PerspectiveTransform {
 	private static int q_factor = 2;

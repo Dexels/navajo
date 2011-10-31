@@ -1,10 +1,21 @@
 package com.dexels.navajo.rich.components;
 
-import java.awt.*;
-import java.awt.geom.*;
-import java.awt.image.*;
+import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
+import java.awt.RadialGradientPaint;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.Transparency;
+import java.awt.geom.Point2D;
+import java.awt.geom.RoundRectangle2D;
+import java.awt.image.BufferedImage;
 
-import javax.swing.*;
+import javax.swing.JPanel;
 
 public class LushContainer extends JPanel {
 	private static final long serialVersionUID = 8026805875859172469L;

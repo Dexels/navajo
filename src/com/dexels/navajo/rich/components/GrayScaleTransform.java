@@ -1,11 +1,13 @@
 package com.dexels.navajo.rich.components;
 
-import java.awt.*;
-import java.awt.color.*;
-import java.awt.image.*;
-import java.io.*;
+import java.awt.AlphaComposite;
+import java.awt.Graphics2D;
+import java.awt.color.ColorSpace;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorConvertOp;
+import java.io.File;
 
-import javax.imageio.*;
+import javax.imageio.ImageIO;
 
 public class GrayScaleTransform {
 

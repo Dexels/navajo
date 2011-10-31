@@ -1,10 +1,14 @@
 package com.dexels.navajo.rich.components;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
-import javax.swing.*;
+import javax.swing.JComponent;
 
-import org.jdesktop.animation.transitions.*;
+import org.jdesktop.animation.transitions.ScreenTransition;
+import org.jdesktop.animation.transitions.TransitionTarget;
 
 public class DoubleSidedFrame extends JComponent {
 	private static final long serialVersionUID = 4291340054525975327L;

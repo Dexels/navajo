@@ -1,10 +1,13 @@
 package com.dexels.navajo.rich.components;
 
-import java.awt.*;
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.GradientPaint;
+import java.awt.Graphics2D;
 
-import org.jdesktop.animation.timing.*;
-import org.jdesktop.animation.timing.interpolation.*;
-import org.jdesktop.animation.transitions.*;
+import org.jdesktop.animation.timing.Animator;
+import org.jdesktop.animation.timing.interpolation.PropertySetter;
+import org.jdesktop.animation.transitions.Effect;
 
 public class FlipOut extends Effect {
 

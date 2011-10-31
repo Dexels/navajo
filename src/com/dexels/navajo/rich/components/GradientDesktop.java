@@ -1,11 +1,15 @@
 package com.dexels.navajo.rich.components;
 
-import java.awt.*;
-import java.awt.image.*;
-import java.io.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Paint;
+import java.awt.Point;
+import java.awt.image.BufferedImage;
+import java.io.File;
 
-import javax.imageio.*;
-import javax.swing.*;
+import javax.imageio.ImageIO;
+import javax.swing.JDesktopPane;
 
 public class GradientDesktop extends JDesktopPane {
 	private static final long serialVersionUID = -5417581376879157911L;

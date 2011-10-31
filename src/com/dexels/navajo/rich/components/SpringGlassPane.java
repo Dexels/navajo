@@ -1,11 +1,22 @@
 package com.dexels.navajo.rich.components;
 
-import java.awt.*;
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
 
-import org.jdesktop.animation.timing.*;
-import org.jdesktop.animation.timing.interpolation.*;
+import org.jdesktop.animation.timing.Animator;
+import org.jdesktop.animation.timing.TimingTargetAdapter;
+import org.jdesktop.animation.timing.interpolation.PropertySetter;
 
 /**
  * 

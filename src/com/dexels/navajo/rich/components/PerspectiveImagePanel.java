@@ -1,15 +1,21 @@
 package com.dexels.navajo.rich.components;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.*;
-import java.io.*;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.Transparency;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
 
-import javax.imageio.*;
-import javax.swing.*;
+import javax.imageio.ImageIO;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
 
-import org.jdesktop.animation.timing.*;
-import org.jdesktop.animation.timing.interpolation.*;
+import org.jdesktop.animation.timing.Animator;
+import org.jdesktop.animation.timing.TimingTargetAdapter;
+import org.jdesktop.animation.timing.interpolation.PropertySetter;
 
 public class PerspectiveImagePanel extends JPanel {
 	private static final long serialVersionUID = -7178013826296851126L;

@@ -1,9 +1,19 @@
 package com.dexels.navajo.rich.components;
 
-import java.awt.*;
-import java.awt.image.*;
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
 
 public class MacBar extends JPanel {
 	private static final long serialVersionUID = 7984666863325213478L;
