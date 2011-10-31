@@ -17,10 +17,7 @@ Export-Package: com.dexels.navajo.adapter,
  com.dexels.navajo.adapter.soapmap,
  com.dexels.navajo.adapter.sqlmap,
  com.dexels.navajo.adapter.xmlmap,
- com.dexels.navajo.datasource,
- com.dexels.navajo.functions,
- navajoadapters,
- org.dexels.grus
+ navajoadapters
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.listeners,
  com.dexels.navajo.core,
