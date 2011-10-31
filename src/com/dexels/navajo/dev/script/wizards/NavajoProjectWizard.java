@@ -1,10 +1,10 @@
 package com.dexels.navajo.dev.script.wizards;
 
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.*;
+import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 
 /**

@@ -22,7 +22,6 @@ import java.util.StringTokenizer;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
@@ -44,7 +43,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.osgi.framework.BundleContext;
 
 import com.dexels.navajo.client.ClientInterface;
@@ -54,7 +52,6 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
-import com.dexels.navajo.mapping.compiler.TslCompileException;
 import com.dexels.navajo.mapping.compiler.meta.TslMetaDataHandler;
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 import com.dexels.navajo.studio.eclipse.INavajoActivityListener;
