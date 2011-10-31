@@ -6,7 +6,8 @@ Bundle-Version: 1.0.2.qualifier
 Bundle-ClassPath: .,
  lib/jstl.jar,
  lib/standard.jar
-Export-Package: com.dexels.navajo.jsp.tags
+Export-Package: com.dexels.navajo.jsp.tags,
+ navajojsp
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.document,
  com.dexels.navajo.client;bundle-version="1.0.0",
