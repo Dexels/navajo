@@ -1,16 +1,16 @@
 package com.dexels.navajo.adapter.sqlmap;
 
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import com.dexels.navajo.adapter.SQLMap;
 import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.UserException;
-import com.dexels.navajo.mapping.MappableException;
-import java.util.ArrayList;
-import java.sql.ResultSet;
-import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
-import com.dexels.navajo.adapter.SQLMap;
-import com.dexels.navajo.server.Dispatcher;
-import java.sql.Connection;
 
 /**
  * <p>Title: </p>

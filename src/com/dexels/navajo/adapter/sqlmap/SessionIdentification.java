@@ -1,12 +1,9 @@
 package com.dexels.navajo.adapter.sqlmap;
 
-import com.dexels.navajo.adapter.*;
 import java.sql.Connection;
-import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.DispatcherFactory;
 
-import java.sql.*;
-import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.adapter.SQLMap;
+import com.dexels.navajo.server.Access;
 
 /**
  * <p>Title: </p>

@@ -1,36 +1,22 @@
 package com.dexels.navajo.adapter.sqlmap;
 
-import com.dexels.navajo.adapter.SQLMap;
-import com.dexels.navajo.adapter.sqlmap.DatabaseInfo;
-
-
-/**
- * <p>Title: Connection Broker Manager
- * <p>Description: helps out the SQLMap with managing brokers, specifically it keeps
- * independent brokers based on both the data source name and the user
- * which can be set on the fly in a NavaScript</p>
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: </p>
- * @author Matthew Eichler <meichler@dexels.com>
- * @version $Id$
- */
-
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.Set;
 
-import com.dexels.navajo.mapping.MappableException;
-import com.dexels.navajo.server.UserException;
+import org.dexels.grus.DbConnectionBroker;
+
+import com.dexels.navajo.adapter.SQLMap;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.server.resource.ResourceManager;
 import com.dexels.navajo.server.resource.ServiceAvailability;
-
-import org.dexels.grus.DbConnectionBroker;
-import java.sql.*;
 
 
 public class ConnectionBrokerManager extends Object implements ResourceManager, ConnectionBrokerManagerMBean {

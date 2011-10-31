@@ -30,16 +30,15 @@ package com.dexels.navajo.adapter.sqlmap;
  */
 
 import java.sql.Connection;
-import java.util.StringTokenizer;
-import java.sql.SQLException;
 import java.sql.PreparedStatement;
-import java.util.ArrayList;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.SQLWarning;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.sql.ResultSet;
-import java.sql.SQLWarning;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
-import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.Percentage;

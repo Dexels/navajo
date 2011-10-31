@@ -1,11 +1,14 @@
 package com.dexels.navajo.adapter.sqlmap;
 
-import com.dexels.navajo.document.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-import com.dexels.navajo.mapping.*;
-import com.dexels.navajo.server.*;
-import java.util.*;
+import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.UserException;
 
 
 /**
