@@ -1,4 +1,4 @@
-package com.dexels.navajo.tipi.internal.cache.impl;
+package com.dexels.navajo.tipi.internal.swing.cache.impl;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
