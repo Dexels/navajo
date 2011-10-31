@@ -11,7 +11,7 @@ import com.dexels.navajo.server.resource.ResourceManager;
 import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.adapter.navajomap.MessageMap;
-import com.dexels.navajo.adapter.navajomap.NavajoMapManager;
+import com.dexels.navajo.adapter.navajomap.manager.NavajoMapManager;
 import com.dexels.navajo.client.*;
 
 import java.io.FileNotFoundException;
