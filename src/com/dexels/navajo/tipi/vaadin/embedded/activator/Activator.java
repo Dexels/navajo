@@ -25,8 +25,8 @@ public class Activator implements BundleActivator {
 	 */
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
-		URL u = bundleContext.getBundle().getResource("VAADIN/themes/base/styles.css");
-		System.err.println("u: "+u);
+//		URL u = bundleContext.getBundle().getResource("VAADIN/themes/base/styles.css");
+//		System.err.println("u: "+u);
 
 		String portString = System.getProperty("tipi.vaadin.embedded.port");
 		int port;
