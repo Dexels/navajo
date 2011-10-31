@@ -36,7 +36,6 @@ import com.dexels.navajo.tipi.TipiEventListener;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiExecutable;
 import com.dexels.navajo.tipi.TipiHelper;
-import com.dexels.navajo.tipi.TipiLink;
 import com.dexels.navajo.tipi.TipiSuspendException;
 import com.dexels.navajo.tipi.TipiValue;
 import com.dexels.navajo.tipi.components.core.adapter.BaseAdapter;
@@ -47,6 +46,7 @@ import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.internal.TipiLayout;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
+import com.dexels.navajo.tipilink.TipiLink;
 
 public abstract class TipiComponentImpl implements TipiEventListener,
 		TipiComponent, TipiLink, Serializable {

@@ -13,6 +13,7 @@ import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.internal.TipiLayout;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
+import com.dexels.navajo.tipilink.TipiLink;
 
 /**
  * <p>
