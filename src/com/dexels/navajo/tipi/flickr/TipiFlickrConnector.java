@@ -1,14 +1,24 @@
 package com.dexels.navajo.tipi.flickr;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.StringTokenizer;
 
-import com.aetrion.flickr.people.*;
-import com.aetrion.flickr.photos.*;
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.types.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.connectors.*;
+import com.aetrion.flickr.people.User;
+import com.aetrion.flickr.photos.GeoData;
+import com.aetrion.flickr.photos.Photo;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Method;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.connectors.TipiBaseConnector;
 
 public class TipiFlickrConnector extends TipiBaseConnector {
 
