@@ -668,6 +668,7 @@
       <methods />
    </tipiclass>
 
+<!-- 
    <tipiclass addtocontainer="false" class="TipiPopupMenu" module="menu" name="popupmenu" layoutmanager="false" package="com.dexels.navajo.tipi.vaadin.components"
       propertycomponent="false" studio-icon="popupmenu.gif" childcount="*" type="component">
       <events>
@@ -684,7 +685,7 @@
       </values>
       <methods />
    </tipiclass>
-
+-->
    <tipiclass addtocontainer="true" class="TipiProgressBar" module="component" name="progressbar" childcount="0" layoutmanager="false"
       package="com.dexels.navajo.tipi.vaadin.components" propertycomponent="false" studio-icon="progressbar.gif" type="component">
       <events>

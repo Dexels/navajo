@@ -37,6 +37,8 @@ import com.dexels.navajo.client.systeminfo.SystemInfoProvider;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.actionmanager.OSGiActionManager;
+import com.dexels.navajo.tipi.classdef.OSGiClassManager;
 import com.dexels.navajo.tipi.vaadin.VaadinTipiContext;
 import com.dexels.navajo.tipi.vaadin.application.eval.EvalHandler;
 import com.dexels.navajo.tipi.vaadin.components.io.BufferedInputStreamSource;
@@ -258,12 +260,15 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 		}
 
 		VaadinTipiContext va;
+		System.err.println("Extensionlist: "+extensionRegistry);
 		try {
 			va = new VaadinTipiContext(this, extensionRegistry.getExtensionList());
 		} catch (Throwable e2) {
 			e2.printStackTrace();
 			return null;
 		}
+		va.setClassManager(new OSGiClassManager(TipiVaadinExtension.getInstance().getBundleContext(), va));
+		va.setActionManager(new OSGiActionManager(TipiVaadinExtension.getInstance().getBundleContext()));
 		logger.debug("VaadinTipiContext created. Cloudmode: "+isRunningInGae);
 		if (isRunningInGae) {
 			extensionRegistry.loadExtensions(va);
