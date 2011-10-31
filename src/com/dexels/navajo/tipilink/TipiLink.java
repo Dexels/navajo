@@ -1,4 +1,4 @@
-package com.dexels.navajo.tipi;
+package com.dexels.navajo.tipilink;
 
 /**
  * <p>Title: Navajo Product Project</p>

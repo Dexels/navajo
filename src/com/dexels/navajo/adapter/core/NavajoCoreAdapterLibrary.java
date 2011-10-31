@@ -1,4 +1,4 @@
-package com.dexels.navajo.adapter;
+package com.dexels.navajo.adapter.core;
 
 import java.io.InputStream;
 import java.util.List;
@@ -12,7 +12,7 @@ public class NavajoCoreAdapterLibrary implements ExtensionDefinition {
 	private transient ClassLoader extensionClassLoader = null;
 	
 	public InputStream getDefinitionAsStream() {
-		return getClass().getClassLoader().getResourceAsStream("com/dexels/navajo/adapter/coreadapters.xml");
+		return getClass().getClassLoader().getResourceAsStream("com/dexels/navajo/adapter/core/coreadapters.xml");
 	}
 
 	public String getConnectorId() {

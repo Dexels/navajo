@@ -22,7 +22,7 @@
  * SUCH DAMAGE.
  * ====================================================================
  */
-package com.dexels.navajo.server.statistics;
+package com.dexels.navajo.server.statistics.impl;
 
 import java.io.IOException;
 
