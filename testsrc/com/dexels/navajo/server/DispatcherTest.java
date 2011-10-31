@@ -1,14 +1,14 @@
 package com.dexels.navajo.server;
 
+import junit.framework.Assert;
+import junit.framework.TestCase;
+
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.server.test.TestNavajoConfig;
-
-import junit.framework.Assert;
-import junit.framework.TestCase;
 
 public class DispatcherTest extends TestCase {
 
