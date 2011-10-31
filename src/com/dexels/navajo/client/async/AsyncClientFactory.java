@@ -1,4 +1,4 @@
-package com.dexels.navajo.client;
+package com.dexels.navajo.client.async;
 
 
 public class AsyncClientFactory {
