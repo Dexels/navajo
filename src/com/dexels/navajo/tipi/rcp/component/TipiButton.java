@@ -3,7 +3,6 @@ package com.dexels.navajo.tipi.rcp.component;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Widget;
 
 import com.dexels.navajo.tipi.rcp.component.base.TipiSwtComponentImpl;
@@ -18,6 +17,4 @@ public class TipiButton extends TipiSwtComponentImpl {
 		l.setText("Traaalalala");
 		return l;
 	}
-
-
 }
