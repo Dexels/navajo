@@ -1,4 +1,4 @@
-package com.dexels.navajo.adapter.navajomap;
+package com.dexels.navajo.adapter.navajomap.manager;
 
 import com.dexels.navajo.server.resource.ResourceManager;
 
