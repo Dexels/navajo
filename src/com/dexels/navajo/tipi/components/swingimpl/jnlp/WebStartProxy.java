@@ -16,8 +16,8 @@ import javax.jnlp.UnavailableServiceException;
 import com.dexels.navajo.tipi.components.swingimpl.SwingTipiContext;
 import com.dexels.navajo.tipi.internal.HttpResourceLoader;
 import com.dexels.navajo.tipi.internal.TipiResourceLoader;
-import com.dexels.navajo.tipi.internal.cache.impl.CachedHttpJnlpResourceLoader;
 import com.dexels.navajo.tipi.internal.cookie.CookieManager;
+import com.dexels.navajo.tipi.internal.swing.cache.impl.CachedHttpJnlpResourceLoader;
 
 public class WebStartProxy {
 
