@@ -12,8 +12,8 @@ Require-Bundle: com.dexels.navajo.document,
  com.dexels.navajo.tipi.swing.swingx;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
- lib/filters.jar,
- lib/jxlayer.jar
+ lib/jxlayer.jar,
+ lib/filters.jar
 Bundle-Activator: tipi.TipiJxLayerExtension
 Import-Package: org.osgi.framework;version="1.5.0"
 Export-Package: com.dexels.navajo.tipi.jxlayer,
