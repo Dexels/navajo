@@ -124,7 +124,6 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 			 Dictionary<String, Object> props = new Hashtable<String, Object>();
 			 props.put("adapterName", adapterName);
 			 props.put("adapterClass", c.getName());
-			 props.put("functionDefinition", fd);
 
 			if(adapterClass!=null) {
 				context.registerService(Object.class.getName(), c, props);
