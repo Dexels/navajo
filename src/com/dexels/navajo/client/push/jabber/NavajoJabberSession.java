@@ -9,9 +9,9 @@ import org.jivesoftware.smack.XMPPException;
 
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.NavajoClientFactory;
+import com.dexels.navajo.client.jabber.JabberUtils;
 import com.dexels.navajo.client.push.NavajoPushSession;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.jabber.JabberUtils;
 
 
 public class NavajoJabberSession extends NavajoPushSession {
