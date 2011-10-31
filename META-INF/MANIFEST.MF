@@ -5,11 +5,9 @@ Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.8.qualifier
 Bundle-Activator: navajorhino.Version
 Include-Resource: lib
-Export-Package: com.dexels.navajo.adapter,
- com.dexels.navajo.rhino,
+Export-Package: com.dexels.navajo.rhino,
  com.dexels.navajo.rhino.flow,
  com.dexels.navajo.rhino.include,
- com.dexels.navajo.testmap,
  navajorhino
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.document;bundle-version="1.0.0",
