@@ -1,11 +1,16 @@
 package com.dexels.navajo.tipi.components.rich;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Component;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
-import javax.swing.*;
+import javax.swing.JLayeredPane;
 
-import com.dexels.navajo.tipi.components.swingimpl.*;
+import com.dexels.navajo.tipi.components.swingimpl.TipiPanel;
 
 public class TipiLayeredPanel extends TipiPanel {
 

@@ -1,9 +1,9 @@
 package com.dexels.navajo.tipi.components.rich;
 
-import com.dexels.navajo.rich.components.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.swingimpl.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
+import com.dexels.navajo.rich.components.MacLink;
+import com.dexels.navajo.tipi.TipiHelper;
+import com.dexels.navajo.tipi.components.swingimpl.TipiButton;
+import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
 
 public class TipiMacLink extends TipiButton {
 

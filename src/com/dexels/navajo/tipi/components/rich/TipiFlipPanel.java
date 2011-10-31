@@ -1,11 +1,12 @@
 package com.dexels.navajo.tipi.components.rich;
 
-import javax.swing.*;
+import javax.swing.JComponent;
 
-import com.dexels.navajo.rich.components.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.swingimpl.*;
-import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.rich.components.FlipPanel;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiComponentMethod;
+import com.dexels.navajo.tipi.components.swingimpl.TipiPanel;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 
 public class TipiFlipPanel extends TipiPanel {
 

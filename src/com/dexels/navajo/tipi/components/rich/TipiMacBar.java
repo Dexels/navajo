@@ -1,9 +1,9 @@
 package com.dexels.navajo.tipi.components.rich;
 
-import javax.swing.*;
+import javax.swing.JComponent;
 
-import com.dexels.navajo.rich.components.*;
-import com.dexels.navajo.tipi.components.swingimpl.*;
+import com.dexels.navajo.rich.components.MacBar;
+import com.dexels.navajo.tipi.components.swingimpl.TipiPanel;
 
 public class TipiMacBar extends TipiPanel {
 

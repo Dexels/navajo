@@ -1,11 +1,15 @@
 package com.dexels.navajo.tipi.components.rich;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.LayoutManager;
 
-import javax.swing.*;
+import javax.swing.JPanel;
 
-import com.dexels.navajo.rich.components.*;
-import com.dexels.navajo.tipi.components.swingimpl.*;
+import com.dexels.navajo.rich.components.LushContainer;
+import com.dexels.navajo.tipi.components.swingimpl.TipiPanel;
 
 public class TipiRichPanel extends TipiPanel {
 

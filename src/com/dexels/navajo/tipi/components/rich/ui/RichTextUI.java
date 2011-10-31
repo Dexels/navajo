@@ -1,11 +1,18 @@
 package com.dexels.navajo.tipi.components.rich.ui;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
 
-import javax.swing.*;
-import javax.swing.plaf.*;
-import javax.swing.text.*;
-import javax.swing.text.Position.*;
+import javax.swing.JComponent;
+import javax.swing.plaf.TextUI;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.EditorKit;
+import javax.swing.text.JTextComponent;
+import javax.swing.text.Position.Bias;
+import javax.swing.text.View;
 
 public class RichTextUI extends TextUI {
 
