@@ -43,7 +43,7 @@ import java.util.logging.Level;
 
 import navajo.Version;
 
-import com.dexels.navajo.adapter.navajomap.NavajoMapManager;
+import com.dexels.navajo.adapter.navajomap.manager.NavajoMapManager;
 import com.dexels.navajo.broadcast.BroadcastMessage;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;

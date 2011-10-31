@@ -5,7 +5,7 @@ import java.util.Hashtable;
 
 import org.osgi.framework.BundleContext;
 
-import com.dexels.navajo.adapter.NavajoCoreAdapterLibrary;
+import com.dexels.navajo.adapter.core.NavajoCoreAdapterLibrary;
 import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.FunctionFactoryInterface;

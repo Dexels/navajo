@@ -14,8 +14,7 @@ import com.dexels.navajo.document.*;
 //import com.dexels.navajo.util.*;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
-import com.dexels.navajo.tipi.*;
-//import com.jclark.xsl.expr.ParentPattern;
+import com.dexels.navajo.tipilink.*;
 
 public final class Expression {
 

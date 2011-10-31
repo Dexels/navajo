@@ -2,7 +2,7 @@
 package com.dexels.navajo.parser;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.mapping.*;
-import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipilink.*;
 
 public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLParserConstants {/*@bgen(jjtree)*/
   protected JJTTMLParserState jjtree = new JJTTMLParserState();
