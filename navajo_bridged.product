@@ -25,9 +25,6 @@
    </vm>
 
    <plugins>
-      <plugin id="ch.qos.logback.classic"/>
-      <plugin id="ch.qos.logback.core"/>
-      <plugin id="ch.qos.logback.slf4j" fragment="true"/>
       <plugin id="com.dexels.navajo.adapters"/>
       <plugin id="com.dexels.navajo.client"/>
       <plugin id="com.dexels.navajo.core"/>
@@ -57,8 +54,6 @@
    </plugins>
 
    <configurations>
-      <plugin id="ch.qos.logback.classic" autoStart="true" startLevel="0" />
-      <plugin id="ch.qos.logback.core" autoStart="true" startLevel="0" />
       <plugin id="com.dexels.navajo.adapters" autoStart="true" startLevel="5" />
       <plugin id="com.dexels.navajo.client" autoStart="true" startLevel="0" />
       <plugin id="com.dexels.navajo.core" autoStart="true" startLevel="0" />

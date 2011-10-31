@@ -2,8 +2,6 @@ package com.dexels.navajo.server.bridged;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
-import org.osgi.service.http.HttpService;
 
 public class Activator implements BundleActivator {
 
