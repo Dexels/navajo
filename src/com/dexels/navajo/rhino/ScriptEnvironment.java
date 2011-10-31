@@ -20,9 +20,9 @@ import org.mozilla.javascript.ScriptableObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.client.AsyncClient;
-import com.dexels.navajo.client.AsyncClientFactory;
-import com.dexels.navajo.client.NavajoResponseHandler;
+import com.dexels.navajo.client.async.AsyncClient;
+import com.dexels.navajo.client.async.AsyncClientFactory;
+import com.dexels.navajo.client.async.NavajoResponseHandler;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;

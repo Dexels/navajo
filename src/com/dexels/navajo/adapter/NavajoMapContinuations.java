@@ -2,7 +2,7 @@ package com.dexels.navajo.adapter;
 
 import java.io.IOException;
 
-import com.dexels.navajo.client.AsyncClient;
+import com.dexels.navajo.client.async.AsyncClient;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
