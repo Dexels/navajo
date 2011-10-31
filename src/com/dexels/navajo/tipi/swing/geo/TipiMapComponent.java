@@ -1,20 +1,32 @@
 package com.dexels.navajo.tipi.swing.geo;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.event.*;
-import java.awt.geom.*;
-import java.beans.*;
-import java.util.*;
+import java.awt.Rectangle;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.geom.Point2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
-import org.jdesktop.swingx.mapviewer.*;
+import org.jdesktop.swingx.mapviewer.GeoPosition;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.swingimpl.*;
-import com.dexels.navajo.tipi.swing.geo.impl.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.components.swingimpl.TipiSwingDataComponentImpl;
+import com.dexels.navajo.tipi.swing.geo.impl.TipiSwingMapImpl;
 
 public class TipiMapComponent extends TipiSwingDataComponentImpl {
 
