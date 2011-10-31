@@ -3,7 +3,9 @@ package com.dexels.navajo.functions.util;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.Vector;
 
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.parser.FunctionInterface;
@@ -105,4 +107,35 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 				return osgiResolution;
 			}
 	}	
+	
+	@Override
+	public void parseFunction(Map<String, FunctionDefinition> fuds,
+			ExtensionDefinition fd, XMLElement element) {
+		super.parseFunction(fuds, fd, element);
+		
+//		Vector<XMLElement> def = element.getChildren();
+//		String name = (String) element.getAttribute("name");
+//		String object = (String) element.getAttribute("class");
+//		String description = null;
+//		String inputParams = null;
+//		String resultParam = null;
+//		for (int j = 0; j < def.size(); j++) {
+//			// TODO Check tag name?
+//			if ( def.get(j).getName().equals("description")) {
+//				description =  def.get(j).getContent();
+//			}
+//			if ( def.get(j).getName().equals("input")) {
+//				inputParams =  def.get(j).getContent();
+//			}
+//			if ( def.get(j).getName().equals("result")) {
+//				resultParam =  def.get(j).getContent();
+//			}
+//		}
+//		if ( name != null ) {
+//			FunctionDefinition functionDefinition = new FunctionDefinition(object, description, inputParams, resultParam,fd);
+//			functionDefinition.setXmlElement(element);
+//			fuds.put(name, functionDefinition);
+//			
+//		}
+	}
 }
