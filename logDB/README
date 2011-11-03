@@ -12,10 +12,10 @@ stappen doorlopen te worden:
    de directory logDB de volgende scripts geladen te worden in het
    nieuwe gecreeerde schema <bond>NAVAJO:
 
-   createoraclestore.sql
-   alter.sql (niet meer nodig)
-   Alter-Table-NavajoAccess.sql
-   sp_processcleanupnavajolog.sql
+   ! Let op dat in de createoraclestore.sql de juiste tablespaces voor
+     de data en de indices gebruikt worden!
 
-   Let op dat in de createoraclestore.sql de juiste tablespaces voor
-   de data en de indices gebruikt worden!
+   createoraclestore.sql
+   sp_processcleanupnavajolog.sql
+   sp_insert_statistics.sql
+
