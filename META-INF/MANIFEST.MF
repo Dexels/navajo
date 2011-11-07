@@ -70,10 +70,10 @@ Export-Package: com.dexels.navajo.adapter.navajomap.manager;uses:="com.dexels.na
    com.dexels.navajo.document"
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.document,
- com.dexels.navajo.version
+ com.dexels.navajo.version,
+ org.junit;bundle-version="3.8.2"
 Import-Package: javax.imageio,
  javax.imageio.spi,
- junit.framework;resolution:=optional,
  org.osgi.framework;version="1.5.0",
  org.slf4j
 Bundle-ActivationPolicy: lazy
