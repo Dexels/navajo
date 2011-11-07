@@ -1,5 +1,6 @@
 package tipi;
 
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -16,7 +17,7 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 public class ServiceRegistration {
 	static void registerWhiteBoardExtension(TipiExtension extension,
-			BundleContext context) {
+			BundleContext context) throws FileNotFoundException {
 		Dictionary<String, Object> props = new Hashtable<String, Object>();
 //		System.err.println("Registering tipi extension: " + extension.getDescription() + "class: " + extension.getClass());
 		props.put("extensionId", extension.getId());
@@ -32,12 +33,14 @@ public class ServiceRegistration {
 
 	}
 	
-	private static final void readDefinitionFile(TipiExtension extension, String include, BundleContext context) {
+	private static final void readDefinitionFile(TipiExtension extension, String include, BundleContext context) throws FileNotFoundException {
 		// Read config file.
 		
 		InputStream is = extension.getClass().getClassLoader().getResourceAsStream(include);
 		CaseSensitiveXMLElement xml = new CaseSensitiveXMLElement();
-			
+		if(is==null) {
+			throw new FileNotFoundException("Can not load include: "+include+" for extension: "+extension);
+		}
 		try {
 			Reader r = new InputStreamReader(is);
 			xml.parseFromReader(r);
