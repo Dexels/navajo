@@ -38,15 +38,12 @@ public class VaadinTipiContext extends TipiContext {
 		
 		
 		File install = getVaadinApplication().getInstallationFolder();
-		logger.info("Using install: "+install.getAbsolutePath());
-		File tipi = new File(install,"tipi");
-		File resource = new File(install,"resource");
-		setTipiResourceLoader(new FileResourceLoader(tipi));
-		setGenericResourceLoader(new FileResourceLoader(resource));
+		setTipiInstallationFolder(install);
 		setCookieManager(new BrowserCookieManager());
 		TipiScreen ts = new TipiScreen(this);
 		setDefaultTopLevel(ts);
 	}
+
 
 
 
@@ -58,11 +55,8 @@ public class VaadinTipiContext extends TipiContext {
 		return 0;
 	}
 
-
-
 	@Override
 	public void exit() {
-		// TODO Auto-generated method stub
 		super.exit();
 		getVaadinApplication().close();
 	}
@@ -71,7 +65,6 @@ public class VaadinTipiContext extends TipiContext {
 
 	@Override
 	public void shutdown() {
-		// TODO Auto-generated method stub
 		super.shutdown();
 	}
 
@@ -116,7 +109,7 @@ public class VaadinTipiContext extends TipiContext {
 
 	@Override
 	public void setSplashInfo(String s) {
-//		logger.info("Splash {}",s);
+		logger.info("Splash {}",s);
 
 	}
 
