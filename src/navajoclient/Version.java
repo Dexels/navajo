@@ -24,6 +24,9 @@
  */
 package navajoclient;
 
+import org.osgi.framework.BundleContext;
+
+import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.client.sessiontoken.SessionTokenFactory;
 import com.dexels.navajo.client.systeminfo.SystemInfoFactory;
@@ -97,6 +100,14 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 		SessionTokenFactory.clearInstance();
 		SystemInfoFactory.clearInstance();
 		super.shutdown();
+	}
+	
+	@Override
+	public void start(BundleContext bc) throws Exception {
+		super.start(bc);
+		System.err.println("Good morning navajo client");
+		ClientInterface defaultClient = NavajoClientFactory.getClient();
+		bc.registerService(ClientInterface.class, defaultClient, null);
 	}
 	
 	
