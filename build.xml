@@ -151,7 +151,7 @@
 
 	
 	<target name="publish" depends="deploy">
-		<copy todir="/Library/apache-tomcat-7.0.16/webapps/" file="${distribution}/${deployname}.war"/>
+		<copy todir="/Library/apache-tomcat-7.0.16/webapps/" verbose="true" file="${distribution}/${deployname}.war"/>
  	</target>
 </project>
 <!-- EOF: $RCSfile$ -->
