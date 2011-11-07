@@ -222,6 +222,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		return extensionList;
 	}
 
+	
+	
 	private List<TipiExtension> listExtensions() {
 		List<TipiExtension> extensionList = new LinkedList<TipiExtension>();
 		try {
@@ -384,12 +386,18 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		allExtensions.addAll(optionalExtensionList);
 		checkExtensions(allExtensions);
 		appendIncludes(allExtensions);
-		// appendIncludes(coreExtensionList);
-		// appendIncludes(mainExtensionList);
-		// appendIncludes(optionalExtensionList);
-
 	}
 
+	public void setTipiInstallationFolder(File install) {
+		logger.info("Using install: "+install.getAbsolutePath());
+		File tipi = new File(install,"tipi");
+		File resource = new File(install,"resource");
+		setTipiResourceLoader(new FileResourceLoader(tipi));
+		setGenericResourceLoader(new FileResourceLoader(resource));
+	}
+
+
+	
 	public void addOptionalInclude(TipiExtension te) {
 		optionalExtensionList.add(te);
 		System.err.println("Adding optional include:" + te.getId()
