@@ -26,6 +26,6 @@ Require-Bundle: com.dexels.navajo.core,
  com.dexels.navajo.version;bundle-version="1.0.7"
 Import-Package: javax.servlet;version="[2.5.0,4.0.0)",
  javax.servlet.http;version="[2.5.0,4.0.0)",
- junit.framework;resolution:=optional,
+ junit.framework,
  org.osgi.framework;version="1.5.0"
 Bundle-ActivationPolicy: lazy
