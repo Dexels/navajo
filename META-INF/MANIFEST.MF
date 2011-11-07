@@ -73,7 +73,7 @@ Require-Bundle: com.dexels.navajo.document,
  com.dexels.navajo.version
 Import-Package: javax.imageio,
  javax.imageio.spi,
- junit.framework;version="[3.0.0,4.0.0)";resolution:=optional,
+ junit.framework;resolution:=optional,
  org.osgi.framework;version="1.5.0",
  org.slf4j
 Bundle-ActivationPolicy: lazy
