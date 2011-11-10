@@ -6,7 +6,6 @@
  */
 package com.dexels.navajo.tipi.vaadin.actions;
 
-import java.io.File;
 import java.io.OutputStream;
 
 import com.dexels.navajo.document.Operand;
@@ -19,9 +18,9 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.vaadin.actions.base.TipiVaadinActionImpl;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Upload;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.Upload.FailedEvent;
 import com.vaadin.ui.Upload.SucceededEvent;
+import com.vaadin.ui.Window;
 
 /**
  * @author Administrator
@@ -41,8 +40,6 @@ public class TipiBrowseBinary extends TipiVaadinActionImpl {
 	 */
 	
 	private Binary outputBinary = null;
-	private File f = null;
-	private int result = 0;
 
 	protected void execute(TipiEvent event) throws TipiBreakException,
 			TipiException {

@@ -15,7 +15,6 @@ import tipi.TipiExtension;
 
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiContext;
-import com.dexels.navajo.tipi.internal.FileResourceLoader;
 import com.dexels.navajo.tipi.vaadin.application.TipiVaadinApplication;
 import com.dexels.navajo.tipi.vaadin.cookie.BrowserCookieManager;
 import com.vaadin.ui.Window;

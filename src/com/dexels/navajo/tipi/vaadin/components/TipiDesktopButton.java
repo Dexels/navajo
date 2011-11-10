@@ -1,6 +1,5 @@
 package com.dexels.navajo.tipi.vaadin.components;
 
-import com.vaadin.ui.Button;
 
 public class TipiDesktopButton extends TipiButton {
 
@@ -8,7 +7,7 @@ public class TipiDesktopButton extends TipiButton {
 
 	public void setComponentValue(final String name, final Object object) {
 		    super.setComponentValue(name, object);
-			Button v = (Button) getVaadinContainer();
+//			Button v = (Button) getVaadinContainer();
 		        if (name.equals("textfont")) {
 //		          v.setCaption( (String) object);
 		        	//ignore

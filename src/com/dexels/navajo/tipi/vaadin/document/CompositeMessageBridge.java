@@ -10,14 +10,14 @@ import com.vaadin.data.Property;
 public class CompositeMessageBridge extends CompositeItem implements Item {
 
 	private static final long serialVersionUID = -8870100156134809791L;
-	private List<String> editableList = null;
+	//private List<String> editableList = null;
 	private final Message src;
 	
 //	private final Map<Object,PropertyItem> propertyMap = new HashMap<Object,PropertyItem>();
 	
 	public CompositeMessageBridge(Message src, List<String> editableList) {
 		super();
-		this.editableList = editableList;
+		//this.editableList = editableList;
 		this.src = src;
 		if(src==null) {
 			return;

@@ -14,7 +14,6 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.Select;
 
 public class TmlTableFieldFactory extends DefaultFieldFactory {
 	private static final long serialVersionUID = -7394569632662794450L;

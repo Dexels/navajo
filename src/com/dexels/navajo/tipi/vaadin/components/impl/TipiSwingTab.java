@@ -28,7 +28,6 @@ public class TipiSwingTab extends VerticalLayout implements TipiTabbable {
 	private static final long serialVersionUID = -1869629608167928815L;
 	private Resource tabIcon;
 	private int index;
-	private Object tabObject;
 
 
 

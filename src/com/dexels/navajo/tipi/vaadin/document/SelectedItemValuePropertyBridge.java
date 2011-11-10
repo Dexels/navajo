@@ -28,7 +28,7 @@ public class SelectedItemValuePropertyBridge implements Property, Property.Value
 		if(!com.dexels.navajo.document.Property.SELECTION_PROPERTY.equals(src.getType())) {
 			throw new UnsupportedOperationException("Can not create a SelectedItemValuePropertyBridge with a non selection property.");
 		}
-		Selection s= src.getSelected();
+//		Selection s= src.getSelected();
 
 		for (Selection sel : src.getAllSelections()) {
 			SelectionBridge sb = new SelectionBridge(src, sel);
