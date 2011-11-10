@@ -1,10 +1,5 @@
 package com.dexels.navajo.tipi.vaadin.components.impl;
 
-import java.io.IOException;
-import java.net.URL;
-
-
-import com.dexels.navajo.document.types.Binary;
 import com.vaadin.terminal.Resource;
 import com.vaadin.ui.VerticalLayout;
 
