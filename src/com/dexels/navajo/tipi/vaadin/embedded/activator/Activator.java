@@ -1,7 +1,5 @@
 package com.dexels.navajo.tipi.vaadin.embedded.activator;
 
-import java.net.URL;
-
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
