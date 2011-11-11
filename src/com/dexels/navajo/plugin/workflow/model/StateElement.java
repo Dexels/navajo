@@ -31,7 +31,6 @@ public class StateElement extends WorkflowModelElement {
 	private static final String HEIGHT_PROP = "Shape.Height";
 	/** Property ID to use when the location of this shape is modified. */
 	public static final String LOCATION_PROP = "Shape.Location";
-	private static final long serialVersionUID = 1;
 	/** Property ID to use then the size of this shape is modified. */
 	public static final String SIZE_PROP = "Shape.Size";
 	/** Property ID to use when the list of outgoing connections is modified. */
@@ -63,11 +62,11 @@ public class StateElement extends WorkflowModelElement {
 	/** Size of this shape. */
 	private Dimension size = new Dimension(100, 50);
 	/** List of outgoing Connections. */
-	private List sourceConnections = new ArrayList();
+	private List<TransitionElement> sourceConnections = new ArrayList<TransitionElement>();
 	/** List of incoming Connections. */
-	private List targetConnections = new ArrayList();
+	private List<TransitionElement> targetConnections = new ArrayList<TransitionElement>();
 
-	private List tasks = new ArrayList();
+	private List<TaskElement> tasks = new ArrayList<TaskElement>();
 
 	private XMLElement myElement;
 
@@ -212,15 +211,15 @@ public class StateElement extends WorkflowModelElement {
 	/**
 	 * Return a List of outgoing Connections.
 	 */
-	public List getSourceConnections() {
-		return new ArrayList(sourceConnections);
+	public List<TransitionElement> getSourceConnections() {
+		return new ArrayList<TransitionElement>(sourceConnections);
 	}
 
 	/**
 	 * Return a List of incoming Connections.
 	 */
-	public List getTargetConnections() {
-		return new ArrayList(targetConnections);
+	public List<TransitionElement> getTargetConnections() {
+		return new ArrayList<TransitionElement>(targetConnections);
 	}
 
 	/**
@@ -317,7 +316,7 @@ public class StateElement extends WorkflowModelElement {
 		if (myElement == null) {
 			return;
 		}
-		Vector transitions = myElement.getChildren();
+		Vector<XMLElement> transitions = myElement.getChildren();
 		for (int i = 0; i < transitions.size(); i++) {
 			XMLElement currentChild = (XMLElement) transitions.get(i);
 			if (currentChild.getName().equals("transition")) {
@@ -329,16 +328,13 @@ public class StateElement extends WorkflowModelElement {
 					s.load(currentChild);
 
 				} catch (Throwable e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				// addConnection(s);
 			} else {
 				if (currentChild.getName().equals("task")) {
 					TaskElement te = new TaskElement();
-					te.setRoot(root);
 					te.load(currentChild);
-					te.setState(this);
 					tasks.add(te);
 				}
 
@@ -366,12 +362,11 @@ public class StateElement extends WorkflowModelElement {
 		return id;
 	}
 
-	public List getChildren() {
+	public List<TransitionElement> getChildren() {
 		return sourceConnections;
 	}
 
-	public List getTasks() {
-		// TODO Auto-generated method stub
+	public List<TaskElement> getTasks() {
 		return tasks;
 	}
 

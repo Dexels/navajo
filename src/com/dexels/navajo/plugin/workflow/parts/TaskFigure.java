@@ -62,7 +62,6 @@ public class TaskFigure extends Figure {
 		super.paintFigure(graphics);
 		Rectangle bounds = getBounds().getCopy().resize(-9, -9).translate(4, 4);
 		final int round = 5;
-		final int sround = 30;
 
 		// Shadow / experimental
 		graphics.setBackgroundColor(shadowColor);

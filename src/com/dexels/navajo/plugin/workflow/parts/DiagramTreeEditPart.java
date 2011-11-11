@@ -20,6 +20,7 @@ import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.editparts.AbstractTreeEditPart;
 import org.eclipse.gef.editpolicies.RootComponentEditPolicy;
 
+import com.dexels.navajo.plugin.workflow.model.StateElement;
 import com.dexels.navajo.plugin.workflow.model.WorkflowElement;
 import com.dexels.navajo.plugin.workflow.model.WorkflowModelElement;
 
@@ -110,7 +111,7 @@ class DiagramTreeEditPart extends AbstractTreeEditPart implements
 	 * @see org.eclipse.gef.editparts.AbstractEditPart#getModelChildren()
 	 */
 	@Override
-	protected List getModelChildren() {
+	protected List<StateElement> getModelChildren() {
 		return getCastedModel().getChildren(); // a list of shapes
 	}
 

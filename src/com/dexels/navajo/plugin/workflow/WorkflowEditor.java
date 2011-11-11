@@ -137,6 +137,7 @@ public class WorkflowEditor extends GraphicalEditorWithFlyoutPalette {
 	 */
 	private TransferDropTargetListener createTransferDropTargetListener() {
 		return new TemplateTransferDropTargetListener(getGraphicalViewer()) {
+			@SuppressWarnings("rawtypes")
 			@Override
 			protected CreationFactory getFactory(Object template) {
 				return new SimpleFactory((Class) template);
@@ -144,6 +145,7 @@ public class WorkflowEditor extends GraphicalEditorWithFlyoutPalette {
 		};
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Object getAdapter(Class type) {
 		if (type.isAssignableFrom(ContentOutlinePage.class)) {

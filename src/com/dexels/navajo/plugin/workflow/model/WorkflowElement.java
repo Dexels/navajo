@@ -26,11 +26,10 @@ public class WorkflowElement extends WorkflowModelElement {
 	public static final String CHILD_ADDED_PROP = "ShapesDiagram.ChildAdded";
 	/** Property ID to use when a child is removed from this diagram. */
 	public static final String CHILD_REMOVED_PROP = "ShapesDiagram.ChildRemoved";
-	private List shapes = new ArrayList();
-	private Map shapeMap = new HashMap();
+	private List<StateElement> shapes = new ArrayList<StateElement>();
+	private Map<String,StateElement> shapeMap = new HashMap<String,StateElement>();
 
 	public void load(InputStream is) throws XMLParseException, IOException {
-		// TODO Auto-generated method stub
 		InputStreamReader isr = new InputStreamReader(is);
 		XMLElement e = new CaseSensitiveXMLElement();
 		e.parseFromReader(isr);
@@ -38,9 +37,9 @@ public class WorkflowElement extends WorkflowModelElement {
 	}
 
 	private void load(XMLElement e) {
-		Vector states = e.getChildren();
+		Vector<XMLElement> states = e.getChildren();
 		for (int i = 0; i < states.size(); i++) {
-			XMLElement state = (XMLElement) states.get(i);
+			XMLElement state = states.get(i);
 			StateElement s = new StateElement();
 			s.setRoot(this);
 			s.load(state);
@@ -53,9 +52,9 @@ public class WorkflowElement extends WorkflowModelElement {
 		nullState.load(null);
 		addChild(nullState);
 
-		List l = getChildren();
+		List<StateElement> l = getChildren();
 		for (int i = 0; i < l.size(); i++) {
-			StateElement s = (StateElement) l.get(i);
+			StateElement s =  l.get(i);
 			s.loadState();
 			Point old = s.getLocation();
 			Point locationForIndex = getLocationForIndex(i, l.size());
@@ -85,7 +84,7 @@ public class WorkflowElement extends WorkflowModelElement {
 	 * Return a List of Shapes in this diagram. The returned List should not be
 	 * modified.
 	 */
-	public List getChildren() {
+	public List<StateElement> getChildren() {
 		return shapes;
 	}
 
@@ -130,7 +129,6 @@ public class WorkflowElement extends WorkflowModelElement {
 			f.setContents(bais, IResource.KEEP_HISTORY, ip);
 
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();

@@ -42,7 +42,7 @@ public class ConnectionCreateCommand extends Command {
 	/** The connection instance. */
 	private TransitionElement connection;
 	/** The desired line style for the connection (dashed or solid). */
-	private final int lineStyle;
+//	private final int lineStyle;
 
 	/** Start endpoint for the connection. */
 	private final StateElement source;
@@ -67,7 +67,6 @@ public class ConnectionCreateCommand extends Command {
 		}
 		setLabel("connection creation");
 		this.source = source;
-		this.lineStyle = lineStyle;
 	}
 
 	/*
@@ -82,9 +81,9 @@ public class ConnectionCreateCommand extends Command {
 			return false;
 		}
 		// return false, if the source -> target connection exists already
-		for (Iterator iter = source.getSourceConnections().iterator(); iter
+		for (Iterator<TransitionElement> iter = source.getSourceConnections().iterator(); iter
 				.hasNext();) {
-			TransitionElement conn = (TransitionElement) iter.next();
+			TransitionElement conn =  iter.next();
 			if (conn.getTarget().equals(target)) {
 				return false;
 			}

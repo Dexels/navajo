@@ -54,8 +54,6 @@ public class TaskElement extends WorkflowModelElement {
 
 	private XMLElement myElement;
 
-	private WorkflowElement root = null;
-	private StateElement myState = null;
 
 	private String navajo = null;
 	private String service = null;
@@ -64,11 +62,6 @@ public class TaskElement extends WorkflowModelElement {
 		navajo = "request";
 		service = "InitPing";
 	}
-
-	public void setRoot(WorkflowElement root) {
-		this.root = root;
-	}
-
 	/*
 	 * Initializes the property descriptors array.
 	 * 
@@ -211,18 +204,11 @@ public class TaskElement extends WorkflowModelElement {
 		return navajo + "->" + service;
 	}
 
-	public void setState(StateElement stateElement) {
-		myState = stateElement;
-
-	}
-
 	public String getRequest() {
-		// TODO Auto-generated method stub
 		return navajo;
 	}
 
 	public String getService() {
-		// TODO Auto-generated method stub
 		return service;
 	}
 

@@ -117,9 +117,6 @@ class TaskEditPart extends AbstractGraphicalEditPart implements
 		}
 	}
 
-	private TaskElement getCastedModel() {
-		return (TaskElement) getModel();
-	}
 
 	protected ConnectionAnchor getConnectionAnchor() {
 		if (anchor == null) {

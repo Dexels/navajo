@@ -230,7 +230,7 @@ class StateEditPart extends AbstractGraphicalEditPart implements
 	 * ()
 	 */
 	@Override
-	protected List getModelSourceConnections() {
+	protected List<TransitionElement> getModelSourceConnections() {
 		return getCastedModel().getSourceConnections();
 	}
 
@@ -242,7 +242,7 @@ class StateEditPart extends AbstractGraphicalEditPart implements
 	 * ()
 	 */
 	@Override
-	protected List getModelTargetConnections() {
+	protected List<TransitionElement> getModelTargetConnections() {
 		return getCastedModel().getTargetConnections();
 	}
 

@@ -32,9 +32,9 @@ public class ShapeDeleteCommand extends Command {
 	/** ShapeDiagram to remove from. */
 	private final WorkflowElement parent;
 	/** Holds a copy of the outgoing connections of child. */
-	private List sourceConnections;
+	private List<TransitionElement> sourceConnections;
 	/** Holds a copy of the incoming connections of child. */
-	private List targetConnections;
+	private List<TransitionElement> targetConnections;
 	/** True, if child was removed from its parent. */
 	private boolean wasRemoved;
 
@@ -63,8 +63,8 @@ public class ShapeDeleteCommand extends Command {
 	 * @param connections
 	 *            a non-null List of connections
 	 */
-	private void addConnections(List connections) {
-		for (Iterator iter = connections.iterator(); iter.hasNext();) {
+	private void addConnections(List<TransitionElement> connections) {
+		for (Iterator<TransitionElement> iter = connections.iterator(); iter.hasNext();) {
 			TransitionElement conn = (TransitionElement) iter.next();
 			conn.reconnect();
 		}
@@ -114,8 +114,8 @@ public class ShapeDeleteCommand extends Command {
 	 * @param connections
 	 *            a non-null List of connections
 	 */
-	private void removeConnections(List connections) {
-		for (Iterator iter = connections.iterator(); iter.hasNext();) {
+	private void removeConnections(List<TransitionElement> connections) {
+		for (Iterator<TransitionElement> iter = connections.iterator(); iter.hasNext();) {
 			TransitionElement conn = (TransitionElement) iter.next();
 			conn.disconnect();
 		}

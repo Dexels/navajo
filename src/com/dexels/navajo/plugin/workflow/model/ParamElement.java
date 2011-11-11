@@ -29,7 +29,7 @@ public class ParamElement extends WorkflowModelElement {
 	private String name = null;
 	private String expression = null;
 
-	private TransitionElement myTransitionElement;
+//	private TransitionElement myTransitionElement;
 
 	public static final String NAME_PROP = "Name.name";
 	public static final String EXPRESSION_PROP = "Param.expression";
@@ -127,12 +127,10 @@ public class ParamElement extends WorkflowModelElement {
 	}
 
 	public String getName() {
-		// TODO Auto-generated method stub
 		return name;
 	}
 
 	public String getExpression() {
-		// TODO Auto-generated method stub
 		return expression;
 	}
 
@@ -151,10 +149,9 @@ public class ParamElement extends WorkflowModelElement {
 		return xe;
 	}
 
-	public void setTransition(TransitionElement transitionElement) {
-		// TODO Auto-generated method stub
-		myTransitionElement = transitionElement;
-
-	}
+//	public void setTransition(TransitionElement transitionElement) {
+//		myTransitionElement = transitionElement;
+//
+//	}
 
 }

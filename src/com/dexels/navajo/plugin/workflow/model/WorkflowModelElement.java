@@ -16,7 +16,6 @@ public abstract class WorkflowModelElement implements IPropertySource {
 	protected static final Image ELLIPSE_ICON = createImage("icons/ellipse16.gif");
 	protected static final Image RECTANGLE_ICON = createImage("icons/rectangle16.gif");
 
-	private static final long serialVersionUID = 1;
 	/** Delegate used to implemenent property-change-support. */
 	private transient PropertyChangeSupport pcsDelegate = new PropertyChangeSupport(
 			this);

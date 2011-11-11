@@ -36,8 +36,6 @@ public class TransitionElement extends WorkflowModelElement {
 
 	public static final String TRIGGER_PROPERTY = "Trigger";
 
-	private static final long serialVersionUID = 1;
-
 	/** True, if the connection is attached to its endpoints. */
 	private boolean isConnected;
 	/** Line drawing style for this connection. */
@@ -49,7 +47,7 @@ public class TransitionElement extends WorkflowModelElement {
 
 	private String trigger = null;
 
-	private List params = new ArrayList();
+	private List<ParamElement> params = new ArrayList<ParamElement>();
 
 	public Image getIcon() {
 		return ELLIPSE_ICON;
@@ -181,13 +179,13 @@ public class TransitionElement extends WorkflowModelElement {
 	public void load(XMLElement transitionElement) {
 
 		trigger = transitionElement.getStringAttribute("trigger");
-		Vector transitions = transitionElement.getChildren();
+		Vector<XMLElement> transitions = transitionElement.getChildren();
 		for (int i = 0; i < transitions.size(); i++) {
-			XMLElement currentChild = (XMLElement) transitions.get(i);
+			XMLElement currentChild = transitions.get(i);
 			if (currentChild.getName().equals("param")) {
 				ParamElement te = new ParamElement();
 				te.load(currentChild);
-				te.setTransition(this);
+//				te.setTransition(this);
 				params.add(te);
 			}
 

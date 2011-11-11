@@ -126,7 +126,7 @@ class DiagramEditPart extends AbstractGraphicalEditPart implements
 	 * @see org.eclipse.gef.editparts.AbstractEditPart#getModelChildren()
 	 */
 	@Override
-	protected List getModelChildren() {
+	protected List<StateElement> getModelChildren() {
 		return getCastedModel().getChildren(); // return a list of shapes
 	}
 

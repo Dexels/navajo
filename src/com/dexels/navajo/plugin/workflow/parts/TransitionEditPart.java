@@ -116,9 +116,8 @@ class TransitionEditPart extends AbstractConnectionEditPart implements
 	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
-		String property = event.getPropertyName();
 		if (TransitionElement.TRIGGER_PROPERTY.equals("property")) {
-			property = (String) event.getNewValue();
+//			property = (String) event.getNewValue();
 		}
 	}
 
