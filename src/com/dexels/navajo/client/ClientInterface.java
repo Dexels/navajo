@@ -10,9 +10,7 @@ package com.dexels.navajo.client;
  */
 import java.net.URL;
 
-import com.dexels.navajo.client.sessiontoken.SessionTokenFactory;
 import com.dexels.navajo.client.sessiontoken.SessionTokenProvider;
-import com.dexels.navajo.client.systeminfo.SystemInfoFactory;
 import com.dexels.navajo.client.systeminfo.SystemInfoProvider;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
