@@ -19,6 +19,10 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 @Deprecated
 public class TipiEmailLauncher extends TipiSwingDataComponentImpl {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8942278089469288268L;
 	private Message recipient = null;
 
 	protected void performComponentMethod(String name,

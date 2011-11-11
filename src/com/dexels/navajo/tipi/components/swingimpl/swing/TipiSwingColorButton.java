@@ -10,6 +10,7 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.components.swingimpl.formatters.ColorFormatter;
 
+@Deprecated
 public class TipiSwingColorButton extends JTextField {
 	/**
 	 * 

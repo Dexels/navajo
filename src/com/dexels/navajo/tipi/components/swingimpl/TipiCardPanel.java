@@ -34,6 +34,10 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
  */
 
 public class TipiCardPanel extends TipiSwingDataComponentImpl {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6348750707086562806L;
 	private final CardLayout myCardLayout = new CardLayout();
 	private final List<TipiComponent> myComponentList = new ArrayList<TipiComponent>();
 	private final Map<Object, TipiComponent> myComponentMap = new HashMap<Object, TipiComponent>();

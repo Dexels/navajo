@@ -27,6 +27,10 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingPanel;
  *
  */
 public class TipiQuestion extends TipiBaseQuestion {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4666897405672564798L;
 	private TipiSwingPanel myPanel;
 
 	public void setValid(boolean b, String msg) {

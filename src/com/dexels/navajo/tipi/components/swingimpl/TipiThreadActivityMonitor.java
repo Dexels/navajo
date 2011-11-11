@@ -12,6 +12,10 @@ import com.dexels.navajo.tipi.components.core.TipiThread;
 
 public class TipiThreadActivityMonitor extends TipiSwingComponentImpl {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5821858713666617528L;
 	private JPanel tja;
 	private JLabel queueCountElement;
 	private Map<TipiThread, JLabel> threadMap = null;
@@ -24,6 +28,11 @@ public class TipiThreadActivityMonitor extends TipiSwingComponentImpl {
 		queueCountElement = new JLabel();
 		tja.add(queueCountElement);
 		myContext.addThreadStateListener(new ThreadActivityListener() {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -5062528423592250484L;
 
 			public void threadActivity(
 					final Map<TipiThread, String> threadStateMap,

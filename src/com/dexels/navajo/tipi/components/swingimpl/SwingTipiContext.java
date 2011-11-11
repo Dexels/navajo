@@ -46,7 +46,6 @@ import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiExecutable;
 import com.dexels.navajo.tipi.animation.TipiAnimationManager;
-import com.dexels.navajo.tipi.classdef.OSGiClassManager;
 import com.dexels.navajo.tipi.components.swingimpl.cookie.impl.JnlpCookieManager;
 import com.dexels.navajo.tipi.components.swingimpl.formatters.PropertyAnimator;
 import com.dexels.navajo.tipi.components.swingimpl.jnlp.WebStartProxy;

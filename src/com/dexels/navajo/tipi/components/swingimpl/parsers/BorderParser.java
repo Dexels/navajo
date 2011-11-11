@@ -40,6 +40,11 @@ import com.dexels.navajo.tipi.swingclient.components.PropertyField;
  * @version 1.0
  */
 public class BorderParser extends TipiTypeParser {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3310054914723683160L;
+
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		return parseBorder(expression);
 	}

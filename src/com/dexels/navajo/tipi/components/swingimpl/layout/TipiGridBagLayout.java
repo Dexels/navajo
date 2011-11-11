@@ -26,6 +26,11 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingGridBagConstra
  * @version 1.0
  */
 public class TipiGridBagLayout extends TipiLayoutImpl {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3670255465500438693L;
+
 	// GridBagLayout layout = null;
 	protected void setValue(String name, TipiValue tv) {
 		/**

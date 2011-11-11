@@ -87,13 +87,13 @@ public class TipiSwingPropertyComponent extends GenericPropertyComponent
 			}
 		}
 		if (subtype.equals("color")) {
-			TipiSwingColorButton tscb = new TipiSwingColorButton(myComponent);
-			tscb.setProperty(p);
-			addPropertyComponent(tscb);
+//			TipiSwingColorButton tscb = new TipiSwingColorButton(myComponent);
+//			tscb.setProperty(p);
+//			addPropertyComponent(tscb);
 		} else if (subtype.equals("paint")) {
-			TipiSwingPaintEditor tscb = new TipiSwingPaintEditor(myComponent);
-			tscb.setProperty(p);
-			addPropertyComponent(tscb);
+//			TipiSwingPaintEditor tscb = new TipiSwingPaintEditor(myComponent);
+//			tscb.setProperty(p);
+//			addPropertyComponent(tscb);
 		} else {
 			Object oo = p.getTypedValue();
 			if (oo != null) {

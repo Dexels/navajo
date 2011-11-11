@@ -42,6 +42,10 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
  * @version 1.0
  */
 public class TipiFrame extends TipiSwingDataComponentImpl {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1945154266267368285L;
 	// private JFrame myFrame = null;
 	private boolean fullscreen = false;
 	private boolean visible = false;

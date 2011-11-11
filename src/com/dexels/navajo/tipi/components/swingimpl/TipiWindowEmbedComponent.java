@@ -22,6 +22,10 @@ import com.dexels.navajo.tipi.components.swingimpl.embed.TipiSwingStandaloneCont
 import com.dexels.navajo.tipi.components.swingimpl.swing.EmbeddedTipiFrame;
 
 public class TipiWindowEmbedComponent extends TipiEmbedComponent {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7354561201460963130L;
 	private JInternalFrame panel = null;
 
 	public Object createContainer() {

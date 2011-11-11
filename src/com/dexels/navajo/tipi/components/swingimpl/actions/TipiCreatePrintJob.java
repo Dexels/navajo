@@ -26,6 +26,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 
 public class TipiCreatePrintJob extends TipiAction {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2430232555995628924L;
+
 	public TipiCreatePrintJob() {
 	}
 

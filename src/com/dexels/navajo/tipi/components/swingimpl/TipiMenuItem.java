@@ -29,6 +29,11 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingMenuItem;
  * @version 1.0
  */
 public class TipiMenuItem extends TipiSwingComponentImpl {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6655528844459688735L;
+
 	private TipiSwingMenuItem myItem;
 
 	private boolean iAmEnabled = true;

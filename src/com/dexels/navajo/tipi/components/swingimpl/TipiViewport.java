@@ -35,6 +35,11 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 public class TipiViewport extends TipiSwingDataComponentImpl {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5736061458396880332L;
+
 	public TipiViewport() {
 	}
 

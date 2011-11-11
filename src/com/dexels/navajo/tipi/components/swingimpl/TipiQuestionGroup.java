@@ -31,6 +31,11 @@ import com.dexels.navajo.tipi.components.question.TipiBaseQuestionGroup;
 
 public class TipiQuestionGroup extends TipiBaseQuestionGroup {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1296232412976886388L;
+
 	public Object createContainer() {
 		JPanel j = new JPanel();
 		j.setLayout(new BorderLayout());

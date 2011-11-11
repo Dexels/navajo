@@ -45,6 +45,10 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  */
 public abstract class TipiSwingDataComponentImpl extends TipiDataComponentImpl
 		implements TipiSwingComponent {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 501099327239149734L;
 	protected TipiPopupMenu myPopupMenu = null;
 	protected TipiGradientPaint myPaint;
 	private int currentPage = -1;

@@ -26,6 +26,11 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingToolBar;
  * @version 1.0
  */
 public class TipiToolBar extends TipiSwingDataComponentImpl {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 135588077316182824L;
+
 	public Object createContainer() {
 		TipiSwingToolBar ts = new TipiSwingToolBar();
 		TipiHelper th = new TipiSwingHelper();

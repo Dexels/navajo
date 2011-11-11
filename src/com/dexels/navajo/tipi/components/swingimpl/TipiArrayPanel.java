@@ -27,6 +27,10 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
  */
 public class TipiArrayPanel extends TipiSwingDataComponentImpl {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6607929021126521895L;
 	private String messagePath = null;
 
 	public Object createContainer() {

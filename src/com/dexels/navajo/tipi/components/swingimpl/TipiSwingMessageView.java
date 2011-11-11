@@ -14,6 +14,11 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingPropertyCompon
 
 public class TipiSwingMessageView extends TipiSwingDataComponentImpl {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8647880449284812778L;
+
 	@Override
 	protected void setComponentValue(String name, final Object object) {
 		super.setComponentValue(name, object);

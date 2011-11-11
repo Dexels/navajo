@@ -20,6 +20,10 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingTab;
  * @version 1.0
  */
 public class TipiTab extends TipiSwingDataComponentImpl {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6335980072890167067L;
 	private TipiSwingTab myTab;
 
 	public Object createContainer() {

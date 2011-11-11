@@ -24,6 +24,10 @@ import com.dexels.navajo.tipi.TipiActivityListener;
  * @version 1.0
  */
 public class TipiActivityBar extends TipiLabel implements TipiActivityListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2210075056492345394L;
 	private boolean amIActive = false;
 	private ImageIcon busyIcon = null;
 	private ImageIcon freeIcon = null;

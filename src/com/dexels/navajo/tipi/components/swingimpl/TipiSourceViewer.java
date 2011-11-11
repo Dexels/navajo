@@ -30,6 +30,10 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  * @version 1.0
  */
 public class TipiSourceViewer extends TipiSwingComponentImpl {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 967187890066389401L;
 	private TipiSwingTextArea myTextArea;
 	private TipiDefinitionListener myTipiListener;
 
@@ -46,6 +50,8 @@ public class TipiSourceViewer extends TipiSwingComponentImpl {
 		JScrollPane jsp = new JScrollPane(myTextArea);
 		addHelper(th);
 		myTipiListener = new TipiDefinitionListener() {
+
+			private static final long serialVersionUID = -5461187048768338542L;
 
 			public void definitionLoaded(String definitionName,
 					XMLElement definition) {

@@ -38,6 +38,10 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 public final class TipiWindow
 // extends DefaultTipi {
 		extends TipiSwingDataComponentImpl {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4916285139918344888L;
 	private JInternalFrame myWindow;
 
 	private JInternalFrame constructWindow() {

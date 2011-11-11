@@ -29,6 +29,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public class TipiOpenBinary extends TipiAction {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 90381883062864115L;
+
 	/*
 	 * (non-Javadoc)
 	 * 

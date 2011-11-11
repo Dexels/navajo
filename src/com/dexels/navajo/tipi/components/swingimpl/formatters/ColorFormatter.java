@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import com.dexels.navajo.tipi.components.core.TipiFormatter;
 
+@Deprecated
 public class ColorFormatter extends TipiFormatter {
 
 	@Override

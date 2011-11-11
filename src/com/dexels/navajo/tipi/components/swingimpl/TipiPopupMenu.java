@@ -25,6 +25,11 @@ import javax.swing.UnsupportedLookAndFeelException;
 import com.dexels.navajo.tipi.TipiComponent;
 
 public class TipiPopupMenu extends TipiSwingDataComponentImpl {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3119612802393524077L;
+
 	// private JPopupMenu myMenu;
 	// public void removeFromContainer(Object c) {
 	// myMenu.remove( (Component) c);

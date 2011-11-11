@@ -31,6 +31,11 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingSplitPane;
 
 public class TipiSplitPane extends TipiSwingDataComponentImpl {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -401340753996634680L;
+
 	public TipiSplitPane() {
 	}
 

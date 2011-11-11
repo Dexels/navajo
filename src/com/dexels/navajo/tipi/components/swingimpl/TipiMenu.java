@@ -27,6 +27,10 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingMenuItem;
  * @version 1.0
  */
 public class TipiMenu extends TipiSwingComponentImpl {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -918633606782923037L;
 	private TipiSwingMenu myMenu = null;
 
 	public Object createContainer() {

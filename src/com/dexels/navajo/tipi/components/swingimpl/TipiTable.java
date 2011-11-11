@@ -62,6 +62,10 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 public class TipiTable extends TipiSwingDataComponentImpl implements
 		ChangeListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1181069408393438266L;
 	private String messagePath = "";
 	private MessageTablePanel mm;
 	private Map<String, ColumnAttribute> columnAttributes = new HashMap<String, ColumnAttribute>();

@@ -25,6 +25,11 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingPanel;
  */
 public class TipiPanel extends TipiSwingDataComponentImpl {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6190251046684031410L;
+
 	public Object createContainer() {
 		JPanel myPanel = new TipiSwingPanel();
 		TipiHelper th = new TipiSwingHelper();

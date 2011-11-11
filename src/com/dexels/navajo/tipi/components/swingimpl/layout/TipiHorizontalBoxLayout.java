@@ -27,6 +27,11 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingGridBagConstra
  */
 
 public class TipiHorizontalBoxLayout extends TipiLayoutImpl {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5623592074935290163L;
+
 	public TipiHorizontalBoxLayout() {
 	}
 

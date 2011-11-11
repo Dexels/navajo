@@ -23,6 +23,11 @@ import com.dexels.navajo.tipi.components.swingimpl.TipiSwingDataComponentImpl;
  */
 
 public class TipiQuestionGroup extends TipiSwingDataComponentImpl {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6010511790763393801L;
+
 	public TipiQuestionGroup() {
 	}
 

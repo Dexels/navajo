@@ -23,6 +23,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 
 public class TipiInjectJnlpCache extends TipiAction {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8336648238926896081L;
+
 	public TipiInjectJnlpCache() {
 	}
 

@@ -23,6 +23,10 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
  * @version 1.0
  */
 public class TipiMenuSeparator extends TipiSwingComponentImpl {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7684025385194079500L;
 	private JSeparator mySeparator = null;
 
 	public Object createContainer() {

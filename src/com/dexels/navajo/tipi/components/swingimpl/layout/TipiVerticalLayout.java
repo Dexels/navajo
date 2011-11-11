@@ -32,6 +32,11 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  * @version 1.0
  */
 public class TipiVerticalLayout extends TipiLayoutImpl {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -875883352618523091L;
+
 	@Override
 	// GridBagLayout layout = null;
 	protected void setValue(String name, TipiValue tv) {

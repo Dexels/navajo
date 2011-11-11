@@ -33,6 +33,11 @@ public abstract class TipiQuestionList extends TipiBaseQuestionList {
 	// private static final String MODE_TABS = "tabs";
 	// private static final String MODE_PANEL = "panel";
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4882260490569219046L;
+
 	// private String groupMode = MODE_PANEL;
 	public TipiQuestionList() {
 	}

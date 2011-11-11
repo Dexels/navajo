@@ -30,6 +30,10 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 public class TipiNavajoView extends TipiPanel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6895145174946001728L;
 	public Navajo myNavajo = null;
 
 	public Object createContainer() {

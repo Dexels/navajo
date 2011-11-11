@@ -12,7 +12,7 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.components.swingimpl.formatters.PaintFormatter;
 import com.dexels.navajo.tipi.components.swingimpl.parsers.TipiGradientPaint;
-
+@Deprecated
 public class TipiSwingPaintEditor extends JTextField {
 	/**
 	 * 

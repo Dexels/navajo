@@ -27,6 +27,10 @@ import com.dexels.navajo.tipi.components.question.TipiBaseQuestionList;
  *
  */
 public class TipiTabbedQuestionList extends TipiBaseQuestionList {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7291498630845123122L;
 	private Component lastSelectedTab = null;
 	private JTabbedPane tabbedPane;
 

@@ -29,6 +29,11 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
  */
 
 public class TipiCheckbox extends TipiSwingComponentImpl {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3134145236096740578L;
+
 	private JCheckBox myButton;
 
 	private boolean iAmEnabled = true;

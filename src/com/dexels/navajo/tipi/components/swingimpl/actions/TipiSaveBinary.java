@@ -33,6 +33,10 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public class TipiSaveBinary extends TipiAction {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6668690071553956247L;
 	/*
 	 * (non-Javadoc)
 	 * 

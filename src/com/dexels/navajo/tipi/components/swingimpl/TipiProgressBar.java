@@ -24,6 +24,10 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingProgressBar;
  * @version 1.0
  */
 public class TipiProgressBar extends TipiSwingComponentImpl {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3330147644343514894L;
 	private TipiSwingProgressBar myProgressBar = null;
 
 	public Object createContainer() {

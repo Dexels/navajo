@@ -30,6 +30,11 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingLabel;
  * @version 1.0
  */
 public class TipiLabel extends TipiSwingComponentImpl {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7871861091449007485L;
+
 	public Object createContainer() {
 		TipiSwingLabel myLabel = new TipiSwingLabel(this);
 		TipiHelper th = new TipiSwingHelper();

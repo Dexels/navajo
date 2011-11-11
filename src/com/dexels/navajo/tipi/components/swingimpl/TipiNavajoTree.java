@@ -22,6 +22,10 @@ import com.dexels.navajo.tipi.components.swingimpl.tree.TipiNavajoTreeModel;
 
 public class TipiNavajoTree extends TipiSwingDataComponentImpl {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3882394810767197190L;
 	private final Map<String, Boolean> expansionMap = new HashMap<String, Boolean>();
 	private TipiNavajoTreeModel navajoTreeModel;
 	private int lastSelectedRow = -1;

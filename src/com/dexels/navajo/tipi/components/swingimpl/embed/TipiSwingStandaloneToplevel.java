@@ -34,6 +34,10 @@ import com.dexels.navajo.tipi.internal.TipiLayout;
 public class TipiSwingStandaloneToplevel extends TipiPanel implements
 		RootPaneContainer {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4454167651998605776L;
 	private JComponent myPanel; // = new JPanel();
 	private final BorderLayout myLayout = new BorderLayout();
 

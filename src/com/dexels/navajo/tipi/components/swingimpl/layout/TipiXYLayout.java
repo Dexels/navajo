@@ -24,6 +24,11 @@ import com.dexels.navajo.tipi.components.core.TipiLayoutImpl;
  * @version 1.0
  */
 public class TipiXYLayout extends TipiLayoutImpl {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -9050648341678817519L;
+
 	public TipiXYLayout() {
 	}
 

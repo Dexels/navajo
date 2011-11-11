@@ -33,6 +33,10 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class TipiSlider extends TipiSwingComponentImpl {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8845463487710029071L;
 	private TipiSwingSlider mySlide;
 
 	public TipiSlider() {

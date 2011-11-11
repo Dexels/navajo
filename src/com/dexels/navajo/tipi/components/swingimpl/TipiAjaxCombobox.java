@@ -41,6 +41,11 @@ import com.dexels.navajo.tipi.swingclient.components.remotecombobox.RemoteRefres
  * @version 1.0
  */
 public class TipiAjaxCombobox extends TipiSwingDataComponentImpl {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8756127082376871184L;
+
 	private AjaxComboBox myCombo;
 
 	private String currentSelection = null;

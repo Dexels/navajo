@@ -16,6 +16,10 @@ import com.dexels.navajo.tipi.internal.MessageComponent;
 
 public class TipiMessagePanel extends TipiSwingDataComponentImpl implements
 		MessageComponent {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3361711528499588037L;
 	private String myMessageName = null;
 	private Message myMessage;
 

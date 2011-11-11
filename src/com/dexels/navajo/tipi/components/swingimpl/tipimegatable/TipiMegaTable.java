@@ -50,6 +50,11 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  */
 
 public class TipiMegaTable extends TipiSwingDataComponentImpl {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5292089261320457970L;
+
 	public TipiMegaTable() {
 	}
 

@@ -25,21 +25,9 @@
  */
 package navajoswingtipi;
 
-import java.io.IOException;
-
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.FrameworkEvent;
-import org.osgi.framework.FrameworkListener;
-
-import tipi.MainApplication;
-import tipi.SwingTipiApplicationInstance;
-import tipi.TipiSwingExtension;
-
-import com.dexels.navajo.tipi.TipiException;
-import com.dexels.navajo.tipi.tipixml.XMLParseException;
 
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 

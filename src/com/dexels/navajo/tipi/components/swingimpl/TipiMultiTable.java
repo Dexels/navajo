@@ -41,6 +41,10 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  */
 @Deprecated
 public class TipiMultiTable extends TipiSwingDataComponentImpl {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7851029301125017737L;
 	private JPanel myPanel = null;
 	private boolean useTabs = true;
 	private String outerMessageName = null;

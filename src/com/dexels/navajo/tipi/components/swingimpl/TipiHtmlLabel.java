@@ -31,6 +31,10 @@ import com.dexels.navajo.tipi.internal.PropertyComponent;
  */
 public class TipiHtmlLabel extends TipiSwingDataComponentImpl implements
 		PropertyComponent {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5497698668383090941L;
 	private JEditorPane myLabel;
 	private JScrollPane jsp;
 	private String myPropertyName;

@@ -19,6 +19,11 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingDesktop;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
 
 public class TipiDesktop extends TipiSwingDataComponentImpl {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2373703878682125710L;
+
 	public Object createContainer() {
 		TipiSwingDesktop jp = new TipiSwingDesktop();
 		SwingTipiContext c = (SwingTipiContext) myContext;

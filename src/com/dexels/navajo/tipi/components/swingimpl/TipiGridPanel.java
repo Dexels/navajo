@@ -42,6 +42,11 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 public class TipiGridPanel extends TipiPanel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8957107830563302282L;
+
 	private JPanel gridComponent;
 
 	private int currentx = 0;

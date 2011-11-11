@@ -36,6 +36,10 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingOffsetPanel;
  */
 public class TipiOffsetPanel extends TipiSwingDataComponentImpl {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5033222906501933602L;
 	private TipiSwingOffsetPanel myPanel;
 
 	@Override

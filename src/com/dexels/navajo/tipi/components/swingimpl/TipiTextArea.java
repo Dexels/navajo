@@ -34,6 +34,10 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class TipiTextArea extends TipiSwingComponentImpl {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2784561061508301662L;
 	private TipiSwingTextArea myTextArea;
 
 	public TipiTextArea() {

@@ -22,6 +22,11 @@ public class TipiColumn extends TipiPanel {
 	// <value direction="in" name="foreground" type="color" />
 	// <value direction="in" name="border" type="border" />
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2978470466062729297L;
+
 	public Object createContainer() {
 		Container container = (Container) super.createContainer();
 		container.setLayout(new GridBagLayout());

@@ -33,6 +33,10 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
  * @version 1.0
  */
 public class TipiFileChooser extends TipiSwingComponentImpl {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 811549739836564130L;
 	final JTextField fileNameField = new JTextField();
 	JButton selectButton = new JButton("Browse");
 

@@ -34,6 +34,10 @@ import com.dexels.navajo.tipi.internal.PropertyComponent;
  */
 public class TipiDescription extends TipiSwingComponentImpl implements
 		PropertyComponent {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2476219276411155608L;
 	private TipiSwingLabel myLabel;
 	private String myPropertyName;
 	private Property myProperty;

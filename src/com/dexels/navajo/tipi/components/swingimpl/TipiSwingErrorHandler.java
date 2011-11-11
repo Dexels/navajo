@@ -23,6 +23,11 @@ import com.dexels.navajo.tipi.internal.BaseTipiErrorHandler;
  */
 @Deprecated
 public class TipiSwingErrorHandler extends BaseTipiErrorHandler {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7477014764317028204L;
+
 	public TipiSwingErrorHandler() {
 		// setContainer(createContainer);
 	}

@@ -41,6 +41,10 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingExportSortingP
  * @version 1.0
  */
 public class TipiExportDialog extends TipiDialog {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3039921708891626474L;
 	// private JDialog d = null;
 	TipiSwingExportSortingPanel sp;
 	TipiSwingExportSeparatorPanel sep;

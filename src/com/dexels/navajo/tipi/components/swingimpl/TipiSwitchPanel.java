@@ -29,6 +29,10 @@ import com.dexels.navajo.tipi.TipiContext;
 
 public class TipiSwitchPanel extends TipiPanel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3444665263726659451L;
 	private CardLayout cardLayout;
 	private final Map<Object, String> componentMap = new HashMap<Object, String>();
 	private String selectedId;

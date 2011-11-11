@@ -31,6 +31,10 @@ import com.dexels.navajo.tipi.tipixml.XMLParseException;
  */
 
 public class SwingEmbeddedContext extends SwingTipiContext {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -9108175308764124437L;
 	TipiSwingStandaloneToplevel top = new TipiSwingStandaloneToplevel();
 
 	public SwingEmbeddedContext(SwingTipiApplicationInstance instance,

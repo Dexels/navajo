@@ -5,6 +5,7 @@ import java.awt.Color;
 import com.dexels.navajo.tipi.components.core.TipiFormatter;
 import com.dexels.navajo.tipi.components.swingimpl.parsers.TipiGradientPaint;
 
+@Deprecated
 public class PaintFormatter extends TipiFormatter {
 
 	// paint="{paint:/gradient-north-#FEED01-#FFFFFF}"

@@ -24,6 +24,10 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class PaintParser extends TipiTypeParser {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3869299878939316108L;
 	private String GRADIENT = "gradient";
 	private ColorParser cp = new ColorParser();
 

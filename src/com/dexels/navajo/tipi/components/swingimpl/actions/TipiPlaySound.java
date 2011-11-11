@@ -35,6 +35,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public class TipiPlaySound extends TipiAction {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4545861721012818582L;
+
 	/*
 	 * (non-Javadoc)
 	 * 

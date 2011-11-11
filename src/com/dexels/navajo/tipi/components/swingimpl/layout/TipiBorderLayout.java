@@ -23,6 +23,10 @@ import com.dexels.navajo.tipi.components.core.TipiLayoutImpl;
  * @version 1.0
  */
 public class TipiBorderLayout extends TipiLayoutImpl {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8754706361402823467L;
 	BorderLayout layout = new BorderLayout();
 
 	public TipiBorderLayout() {

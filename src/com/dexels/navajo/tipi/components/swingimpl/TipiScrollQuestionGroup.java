@@ -37,6 +37,10 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public class TipiScrollQuestionGroup extends TipiBaseQuestionGroup implements
 		TipiSwingComponent {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2198419400200145729L;
 	private JScrollPane jp;
 	private JPanel jpanel;
 

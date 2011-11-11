@@ -11,6 +11,11 @@ import com.dexels.navajo.tipi.tipixml.XMLParseException;
 
 public class TipiSwingExtension extends TipiAbstractXMLExtension implements
 		TipiExtension {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3083008630338044274L;
+
 	private static TipiSwingExtension instance = null;
 
 	private static final Logger logger = LoggerFactory.getLogger(TipiSwingExtension.class); 

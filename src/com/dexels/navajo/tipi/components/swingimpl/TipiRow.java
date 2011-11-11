@@ -12,6 +12,11 @@ import javax.swing.BoxLayout;
 
 public class TipiRow extends TipiPanel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5890186122934128136L;
+
 	public Object createContainer() {
 		Container container = (Container) super.createContainer();
 		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));

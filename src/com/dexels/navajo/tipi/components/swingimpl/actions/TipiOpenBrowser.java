@@ -26,6 +26,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public class TipiOpenBrowser extends TipiAction {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2652162769648210598L;
+
 	/*
 	 * (non-Javadoc)
 	 * 

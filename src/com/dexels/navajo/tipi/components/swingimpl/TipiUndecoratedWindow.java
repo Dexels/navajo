@@ -27,6 +27,10 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingPanel;
  * @version 1.0
  */
 public class TipiUndecoratedWindow extends TipiSwingDataComponentImpl {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7585699960529984365L;
 	TipiSwingPanel myPanel = null;
 	private Rectangle myBounds = new Rectangle();
 

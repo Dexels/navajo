@@ -19,7 +19,6 @@ import javax.swing.SwingUtilities;
 
 import org.osgi.framework.BundleContext;
 
-import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.application.InstallationPathResolver;
 import com.dexels.navajo.tipi.components.swingimpl.TipiApplet;

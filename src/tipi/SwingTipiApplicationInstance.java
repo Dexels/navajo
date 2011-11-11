@@ -24,7 +24,6 @@ import com.dexels.navajo.tipi.components.swingimpl.SwingTipiContext;
 import com.dexels.navajo.tipi.components.swingimpl.SwingTipiUserInterface;
 import com.dexels.navajo.tipi.components.swingimpl.TipiApplet;
 import com.dexels.navajo.tipi.components.swingimpl.TipiScreen;
-import com.dexels.navajo.tipi.internal.FileResourceLoader;
 import com.dexels.navajo.tipi.swingclient.SwingClient;
 import com.dexels.navajo.tipi.tipixml.XMLParseException;
 
@@ -37,12 +36,10 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance im
 	}
 
 	private String definitionPath;
-	private String applicationContext;
 	private List<String> args;
 	private TipiApplet appletRoot;
 	private RootPaneContainer otherRoot;
 	private BundleContext bundleContext;
-	private boolean osgiWhiteBoard = false;
 
 	private File tipiInstallationFolder = null;
 	private final Map<String,String> systemProperties = new HashMap<String, String>();
@@ -58,10 +55,10 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance im
 	}
 
 	public SwingTipiApplicationInstance(String applicationContext, BundleContext bc) {
-		this.applicationContext = applicationContext;
+//		this.applicationContext = applicationContext;
 		this.definition = "init";
 		this.definitionPath="start.xml";
-		osgiWhiteBoard = true;
+//		osgiWhiteBoard = true;
 		setBundleContext(bc);
 	}
 	
@@ -179,6 +176,10 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance im
 
 	public void setInstallationFolder(File installationFolder) {
 		this.tipiInstallationFolder = installationFolder;
+	}
+
+	public File getInstallationFolder() {
+		return this.tipiInstallationFolder;
 	}
 
 }

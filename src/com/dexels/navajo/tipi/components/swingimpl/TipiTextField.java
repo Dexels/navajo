@@ -37,6 +37,10 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class TipiTextField extends TipiSwingComponentImpl {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6379192303536111124L;
 	private TipiSwingTextField myField;
 
 	public TipiTextField() {

@@ -29,6 +29,10 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingScrollPane;
  * @version 1.0
  */
 public class TipiScroller extends TipiPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 157352588550461697L;
 	private JScrollPane jp;
 	private JPanel pp = null;
 

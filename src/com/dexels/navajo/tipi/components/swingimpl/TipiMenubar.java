@@ -22,6 +22,10 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingMenuBar;
  * @version 1.0
  */
 public class TipiMenubar extends TipiSwingComponentImpl {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6279031914998782201L;
 	private TipiSwingMenuBar myMenuBar;
 
 	public void removeFromContainer(final Object c) {

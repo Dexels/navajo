@@ -40,6 +40,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 
 public class TipiSlottedViewport extends TipiSwingDataComponentImpl {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8043914224991351974L;
+
 	public TipiSlottedViewport() {
 	}
 

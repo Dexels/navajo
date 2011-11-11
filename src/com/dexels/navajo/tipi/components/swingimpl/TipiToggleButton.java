@@ -29,6 +29,11 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
  */
 
 public class TipiToggleButton extends TipiSwingComponentImpl {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8661024473629453816L;
+
 	private JToggleButton myButton;
 
 	private boolean iAmEnabled = true;

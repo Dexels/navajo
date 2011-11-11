@@ -32,6 +32,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 
 public class TipiDropButton extends TipiSwingComponentImpl {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5794122848933548653L;
+
 	private boolean iAmEnabled = true;
 
 	private AbstractAction buttonAction;

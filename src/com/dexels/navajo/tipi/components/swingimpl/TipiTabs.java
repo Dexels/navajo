@@ -45,6 +45,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public class TipiTabs extends TipiSwingDataComponentImpl {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6765450974743393182L;
+
 	private Component lastSelectedTab = null;
 
 	private final Map<Component, Boolean> visibilityMap = new HashMap<Component, Boolean>();

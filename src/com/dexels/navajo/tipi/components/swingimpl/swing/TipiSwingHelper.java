@@ -43,6 +43,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class TipiSwingHelper implements TipiHelper {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1677532389917655637L;
+
 	private TipiSwingComponent myComponent = null;
 
 	private java.util.List<EventListener> myListeners = new ArrayList<EventListener>();

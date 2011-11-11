@@ -25,6 +25,10 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiEditorPane;
  */
 @Deprecated
 public class TipiBrowser extends TipiSwingComponentImpl {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7908348920868634250L;
 	private TipiEditorPane myItem;
 
 	public Object createContainer() {

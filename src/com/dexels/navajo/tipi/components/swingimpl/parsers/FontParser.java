@@ -25,6 +25,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class FontParser extends TipiTypeParser {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1017456764895180192L;
+
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		return parseFont(expression);
 	}

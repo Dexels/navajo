@@ -23,6 +23,11 @@ import com.dexels.navajo.tipi.components.core.TipiLayoutImpl;
  * @version 1.0
  */
 public class TipiFlowLayout extends TipiLayoutImpl {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4090756250087128602L;
+
 	public TipiFlowLayout() {
 	}
 
