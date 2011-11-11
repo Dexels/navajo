@@ -21,19 +21,20 @@ public class BasicClientTest extends TestCase {
 	/**
 	 * @throws java.lang.Exception
 	 */
-	public void setUp() throws Exception {
+	public void testSometing() throws Exception {
 		System.err.println("=============================== TEST SETUP ============================================");
 		myClient = NavajoClientFactory.getClient();
 		// Use manual load balancing in order to fully control scenario's to enable/disable servers.
 		myClient.setLoadBalancingMode(ClientInterface.LBMODE_MANUAL);
-		myClient.setServers(new String[]{"localhost:4444/aaap"});
-		myClient.setCurrentHost("localhost:4444/aaap");
+		myClient.setServers(new String[]{"atlas.dexels.com/sportlink/knvb/Postman"});
+		myClient.setForceGzip(true);
 		received = null;
 		finished = false;
 		System.err.println("=======================================================================================");
-		myClient.setUsername("bert");
-		myClient.setPassword("bert");
-		myClient.doSimpleSend("Tralalala");
+		myClient.setUsername("iphone");
+		myClient.setPassword("1phone");
+		Navajo reply = myClient.doSimpleSend("external/iphone/InitLogin");
+		reply.write(System.err);
 	}
 
 	protected void tearDown() throws Exception {
