@@ -1,7 +1,6 @@
 package com.dexels.navajo.listeners;
 
 import java.io.IOException;
-import java.util.concurrent.ThreadPoolExecutor;
 
 import com.dexels.navajo.document.Navajo;
 

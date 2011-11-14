@@ -1,12 +1,17 @@
 package com.dexels.navajo.server;
 
-import java.util.*;
+import java.util.Hashtable;
+import java.util.Properties;
 
-import javax.naming.*;
-import javax.naming.directory.*;
+import javax.naming.Context;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
+import javax.naming.directory.BasicAttribute;
+import javax.naming.directory.BasicAttributes;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.InitialDirContext;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.server.*;
+import com.dexels.navajo.document.Navajo;
 
 public class LdapRepository extends SimpleRepository {
 

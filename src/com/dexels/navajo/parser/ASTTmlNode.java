@@ -1,13 +1,16 @@
 package com.dexels.navajo.parser;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.util.Util;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.types.ClockTime;
-import com.dexels.navajo.document.types.Money;
-import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.document.types.Percentage;
-import com.dexels.navajo.document.types.StopwatchTime;
+import com.dexels.navajo.util.Util;
 
 /**
  *

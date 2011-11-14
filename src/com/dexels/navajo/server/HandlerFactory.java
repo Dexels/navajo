@@ -3,8 +3,6 @@ package com.dexels.navajo.server;
 import java.util.HashMap;
 import java.util.Map;
 
-import sun.reflect.generics.visitor.Reifier;
-
 public class HandlerFactory {
 
 	private final static Map<String,ServiceHandler> handlerRepository = new HashMap<String, ServiceHandler>();

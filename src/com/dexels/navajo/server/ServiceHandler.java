@@ -25,9 +25,11 @@ package com.dexels.navajo.server;
  * SUCH DAMAGE.
  * ====================================================================
  */
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.listeners.NavajoDoneException;
-import com.dexels.navajo.persistence.*;
+import com.dexels.navajo.persistence.Constructor;
+import com.dexels.navajo.persistence.Persistable;
 
 public abstract class ServiceHandler implements Constructor {
 

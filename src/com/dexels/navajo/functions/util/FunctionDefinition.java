@@ -3,9 +3,9 @@ package com.dexels.navajo.functions.util;
 
 import java.io.Serializable;
 
-import com.dexels.navajo.document.nanoimpl.XMLElement;
-
 import navajo.ExtensionDefinition;
+
+import com.dexels.navajo.document.nanoimpl.XMLElement;
 
 public final class FunctionDefinition implements Serializable {
 

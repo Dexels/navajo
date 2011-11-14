@@ -1,10 +1,15 @@
 package com.dexels.navajo.server;
 
 
-import java.util.*;
-import com.dexels.navajo.document.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-import com.dexels.navajo.util.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
 
 public class MaintainanceRequest extends Request {
 

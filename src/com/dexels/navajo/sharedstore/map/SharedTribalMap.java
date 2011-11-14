@@ -1,10 +1,8 @@
 package com.dexels.navajo.sharedstore.map;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 
-import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.sharedstore.SharedStoreFactory;

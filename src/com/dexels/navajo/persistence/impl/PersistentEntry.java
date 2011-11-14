@@ -2,8 +2,6 @@ package com.dexels.navajo.persistence.impl;
 
 import java.io.Serializable;
 
-import com.dexels.navajo.persistence.Persistable;
-
 public class PersistentEntry implements Serializable {
 
 	/**

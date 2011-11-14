@@ -10,7 +10,9 @@ package com.dexels.navajo.parser;
  * @version 1.0
  */
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.StringTokenizer;
 
 
 public final class DatePattern {

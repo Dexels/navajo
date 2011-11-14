@@ -1,20 +1,19 @@
 package com.dexels.navajo.functions.util;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.Vector;
+
+import navajo.ExtensionDefinition;
+
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceReference;
 
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.version.NavajoBundleManager;
-
-
-import navajo.ExtensionDefinition;
-import org.osgi.framework.*;
 
 public class OsgiFunctionFactory extends JarFunctionFactory {
 

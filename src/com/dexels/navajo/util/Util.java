@@ -8,13 +8,14 @@
  */
 package com.dexels.navajo.util;
 
-import com.dexels.navajo.document.*;
-
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
+import java.util.Random;
+import java.util.ResourceBundle;
+
+import com.dexels.navajo.document.Navajo;
 
 public final class Util {
 

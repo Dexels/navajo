@@ -9,22 +9,33 @@ package com.dexels.navajo.mapping;
  * @version $Id$
  */
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.server.*;
-import com.dexels.navajo.util.Util;
-import com.dexels.navajo.parser.*;
-
-import java.lang.reflect.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
 
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Memo;
 import com.dexels.navajo.document.types.Money;
-import com.dexels.navajo.document.types.ClockTime;
-import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.Percentage;
 import com.dexels.navajo.document.types.StopwatchTime;
+import com.dexels.navajo.parser.Condition;
+import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.DispatcherInterface;
+import com.dexels.navajo.server.SystemException;
+import com.dexels.navajo.server.UserException;
 
 @SuppressWarnings("unchecked")
 public final class MappingUtils {

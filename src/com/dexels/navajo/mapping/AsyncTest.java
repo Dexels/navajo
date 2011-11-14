@@ -9,8 +9,7 @@ package com.dexels.navajo.mapping;
  * @version 1.0
  */
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.server.*;
+import com.dexels.navajo.server.Access;
 
 public class AsyncTest extends AsyncMappable {
 

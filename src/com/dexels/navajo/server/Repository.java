@@ -1,8 +1,9 @@
 package com.dexels.navajo.server;
 
-import java.util.*;
+import java.util.Map;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
 
 /**
  * Title:        Navajo Product Project

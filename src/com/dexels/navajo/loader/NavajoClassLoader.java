@@ -38,12 +38,9 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.zip.ZipException;
 
 import org.dexels.utils.JarResources;
 import org.dexels.utils.MultiClassLoader;
-
-import com.dexels.navajo.server.NavajoConfig;
 
 import sun.misc.CompoundEnumeration;
 

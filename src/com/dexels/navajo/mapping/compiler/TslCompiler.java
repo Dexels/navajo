@@ -20,39 +20,52 @@ package com.dexels.navajo.mapping.compiler;
  *
  *
  */
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.jaxpimpl.xml.*;
-import com.dexels.navajo.mapping.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.lang.reflect.Constructor;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Stack;
+import java.util.StringTokenizer;
+
+import org.apache.jasper.compiler.EclipseCompiler;
+import org.apache.jasper.compiler.JavaCompiler;
+import org.apache.jasper.compiler.SunJavaCompiler;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
+import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
+import com.dexels.navajo.loader.NavajoClassLoader;
+import com.dexels.navajo.mapping.DependentResource;
+import com.dexels.navajo.mapping.GenericMultipleDependentResource;
+import com.dexels.navajo.mapping.HasDependentResources;
+import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.mapping.bean.DomainObjectMapper;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
 import com.dexels.navajo.mapping.compiler.meta.Dependency;
 import com.dexels.navajo.mapping.compiler.meta.ExpressionValueDependency;
 import com.dexels.navajo.mapping.compiler.meta.IncludeDependency;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
-import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.GenericHandler;
-import com.dexels.navajo.server.NavajoConfig;
-import com.dexels.navajo.server.UserException;
-import com.dexels.navajo.server.SystemException;
-
-import org.apache.jasper.compiler.*;
-
-import java.io.*;
-
-import org.w3c.dom.*;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Stack;
-import java.util.StringTokenizer;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.TMLExpressionException;
-
-import java.lang.reflect.Constructor;
-import java.net.*;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import com.dexels.navajo.loader.*;
+import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.GenericHandler;
+import com.dexels.navajo.server.SystemException;
+import com.dexels.navajo.server.UserException;
 
 public class TslCompiler {
 

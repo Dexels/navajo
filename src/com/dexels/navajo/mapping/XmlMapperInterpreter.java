@@ -10,7 +10,7 @@ package com.dexels.navajo.mapping;
  */
 
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Navajo;
 
 public final class XmlMapperInterpreter {
 

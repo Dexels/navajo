@@ -10,9 +10,15 @@
 package com.dexels.navajo.server;
 
 
-import java.io.*;
-import java.util.*;
-import com.dexels.navajo.document.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.HashMap;
+
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
 
 public class Request {
 

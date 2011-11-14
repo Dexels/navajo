@@ -9,10 +9,11 @@ package com.dexels.navajo.mapping;
  * @version 1.0
  */
 
+import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.io.Serializable;
-import java.lang.reflect.*;
+
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.UserException;

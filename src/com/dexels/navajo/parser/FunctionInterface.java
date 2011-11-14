@@ -9,9 +9,14 @@ package com.dexels.navajo.parser;
  * @author
  * @version 1.0
  */
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
 
 public abstract class FunctionInterface {
 

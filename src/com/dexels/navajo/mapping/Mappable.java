@@ -12,7 +12,8 @@
  */
 package com.dexels.navajo.mapping;
 
-import com.dexels.navajo.server.*;
+import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.UserException;
 
 public interface Mappable {
 

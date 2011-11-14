@@ -6,11 +6,10 @@
  */
 package org.apache.jasper.compiler;
 
-import java.io.*;
-import java.lang.reflect.*;
-import java.util.*;
-
-import org.apache.jasper.compiler.*;
+import java.io.OutputStream;
+import java.io.StringWriter;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 
 /**

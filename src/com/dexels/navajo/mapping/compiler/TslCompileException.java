@@ -6,9 +6,9 @@
  */
 package com.dexels.navajo.mapping.compiler;
 
-import java.util.*;
+import java.util.Map;
 
-import com.dexels.navajo.document.nanoimpl.*;
+import com.dexels.navajo.document.nanoimpl.XMLElement;
 
 /**
  * @author Administrator

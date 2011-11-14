@@ -8,9 +8,9 @@ package com.dexels.navajo.util;
 
 import java.util.logging.Level;
 
-
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.types.AuditLogEvent;
 import com.dexels.navajo.mapping.Mappable;

@@ -13,10 +13,10 @@ package com.dexels.navajo.parser;
 
 
 
-import com.dexels.navajo.document.*;
-
-import com.dexels.navajo.mapping.*;
-import com.dexels.navajo.server.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.mapping.MappableTreeNode;
+import com.dexels.navajo.server.SystemException;
 
 public final class Condition {
 

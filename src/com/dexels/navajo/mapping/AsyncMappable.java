@@ -1,8 +1,12 @@
 package com.dexels.navajo.mapping;
 
-import com.dexels.navajo.server.*;
+import com.dexels.navajo.document.Header;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.util.AuditLog;
-import com.dexels.navajo.document.*;
 
 /**
  * <p>Title: Navajo Product Project</p>

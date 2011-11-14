@@ -1,6 +1,11 @@
 package com.dexels.navajo.mapping;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.GenericThread;

@@ -61,9 +61,9 @@
 
 package org.apache.jasper.compiler;
 
-import java.io.*;
 import java.io.OutputStream;
-import java.util.*;
+import java.io.StringWriter;
+import java.util.ArrayList;
 
 /**
  * If you want to plugin your own Java compiler, you probably want to

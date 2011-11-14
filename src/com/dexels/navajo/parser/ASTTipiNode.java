@@ -2,7 +2,7 @@
 
 package com.dexels.navajo.parser;
 
-import com.dexels.navajo.tipilink.*;
+import com.dexels.navajo.tipilink.TipiLink;
 
 public final class ASTTipiNode extends SimpleNode {
 

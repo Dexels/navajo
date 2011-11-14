@@ -1,10 +1,12 @@
 package com.dexels.navajo.parser;
 
 
-import java.util.*;
-import com.dexels.navajo.document.types.Money;
+import java.util.ArrayList;
+import java.util.Date;
+
 import com.dexels.navajo.document.types.ClockTime;
-import com.dexels.navajo.document.types.*;
+import com.dexels.navajo.document.types.Money;
+import com.dexels.navajo.document.types.Percentage;
 
 
 public final class ASTGENode extends SimpleNode {

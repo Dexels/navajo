@@ -1,10 +1,11 @@
 package com.dexels.navajo.parser;
 
-import com.dexels.navajo.mapping.*;
+import java.util.Vector;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.server.*;
-import java.util.*;
+import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.UserException;
 
 
 /**

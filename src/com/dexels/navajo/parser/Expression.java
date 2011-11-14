@@ -8,13 +8,20 @@
  */
 package com.dexels.navajo.parser;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
-import com.dexels.navajo.document.*;
-//import com.dexels.navajo.util.*;
-import com.dexels.navajo.mapping.*;
-import com.dexels.navajo.server.*;
-import com.dexels.navajo.tipilink.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.mapping.MappableTreeNode;
+import com.dexels.navajo.mapping.MappingUtils;
+import com.dexels.navajo.server.SystemException;
+import com.dexels.navajo.tipilink.TipiLink;
 
 public final class Expression {
 

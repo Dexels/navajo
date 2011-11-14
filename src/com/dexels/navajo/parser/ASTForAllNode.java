@@ -3,8 +3,11 @@
 package com.dexels.navajo.parser;
 
 
-import java.util.*;
-import com.dexels.navajo.document.*;
+import java.util.ArrayList;
+
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.mapping.MappableTreeNode;
 
 public final class ASTForAllNode extends SimpleNode {

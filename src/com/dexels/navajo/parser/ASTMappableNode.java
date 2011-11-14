@@ -3,7 +3,7 @@
 package com.dexels.navajo.parser;
 
 
-import java.util.*;
+import java.util.ArrayList;
 
 import com.dexels.navajo.mapping.MappableTreeNode;
 import com.dexels.navajo.mapping.MappingUtils;

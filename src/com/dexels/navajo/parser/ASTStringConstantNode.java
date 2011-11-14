@@ -1,8 +1,12 @@
 package com.dexels.navajo.parser;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.StringWriter;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
 
 
 public final class ASTStringConstantNode extends SimpleNode {
