@@ -808,7 +808,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			return;
 		}
 		if (childName.equals("tipi-parser")) {
-			getClassManager().parseParser(child);
+			getClassManager().parseParser(child,ed);
 			return;
 		}
 

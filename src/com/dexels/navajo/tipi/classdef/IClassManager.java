@@ -3,11 +3,14 @@ package com.dexels.navajo.tipi.classdef;
 import java.util.Map;
 import java.util.Set;
 
+import tipi.TipiExtension;
+
 import navajo.ExtensionDefinition;
 
 import com.dexels.navajo.functions.util.FunctionDefinition;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.TipiTypeParser;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
@@ -38,7 +41,7 @@ public interface IClassManager {
 	public abstract void addFunctionDefinition(String name,
 			FunctionDefinition fd);
 
-	public void parseParser(XMLElement xe);
+	public TipiTypeParser parseParser(XMLElement xe, ExtensionDefinition ed);
 	public boolean isValidType(String name);
 	public Object parse(TipiComponent source, String name, String expression,
 			TipiEvent te);

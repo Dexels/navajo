@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import tipi.TipiExtension;
+
 import navajo.ExtensionDefinition;
 
 import com.dexels.navajo.tipi.TipiComponent;
@@ -130,7 +132,7 @@ public abstract class BaseClassManager implements IClassManager {
 
 	public Object parse(TipiComponent source, String name, String expression,
 			TipiEvent te) {
-		TipiTypeParser ttp = parserInstanceMap.get(name);
+		TipiTypeParser ttp = getParser(name);
 		if (ttp == null) {
 			System.err.println("Unknown type: " + name);
 			return null;
@@ -146,9 +148,16 @@ public abstract class BaseClassManager implements IClassManager {
 		return o;
 	}
 
+	public TipiTypeParser getParser(String name) {
+		TipiTypeParser ttp = parserInstanceMap.get(name);
+		return ttp;
+	}
+
+	
 
 	@SuppressWarnings("unchecked")
-	public void parseParser(XMLElement xe) {
+	@Override
+	public TipiTypeParser parseParser(XMLElement xe, ExtensionDefinition te) {
 		String name = xe.getStringAttribute("name");
 		String parserClass = xe.getStringAttribute("parser");
 		String classType = xe.getStringAttribute("type");
@@ -157,9 +166,8 @@ public abstract class BaseClassManager implements IClassManager {
 			pClass = (Class<TipiTypeParser>) Class.forName(parserClass, true,
 					myContext.getClassLoader());
 		} catch (ClassNotFoundException ex) {
-			System.err
-					.println("Error loading class for parser: " + parserClass);
-			return;
+			System.err.println("Error loading class for parser: " + parserClass);
+			return null;
 		}
 		TipiTypeParser ttp = null;
 		try {
@@ -168,12 +176,12 @@ public abstract class BaseClassManager implements IClassManager {
 			System.err.println("Error instantiating class for parser: "
 					+ parserClass);
 			ex1.printStackTrace();
-			return;
+			return null;
 		} catch (InstantiationException ex1) {
 			System.err.println("Error instantiating class for parser: "
 					+ parserClass);
 			ex1.printStackTrace();
-			return;
+			return null;
 		}
 		try {
 			Class<?> cc = Class.forName(classType, true, myContext.getClassLoader());
@@ -181,12 +189,11 @@ public abstract class BaseClassManager implements IClassManager {
 		} catch (ClassNotFoundException ex) {
 			System.err.println("Error verifying return type class for parser: "
 					+ classType);
-			return;
+			return null;
 		}
 		parserInstanceMap.put(name, ttp);
+		return ttp;
 	}
-
-
 
 	public boolean isValidType(String name) {
 		return parserInstanceMap.containsKey(name);

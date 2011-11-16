@@ -1,7 +1,10 @@
 package com.dexels.navajo.tipi.classdef;
 
 import java.util.Collection;
+import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
 
@@ -158,15 +161,22 @@ public class OSGiClassManager extends BaseClassManager implements IClassManager 
 		// TODO Auto-generated method stub
 
 	}
-	public void parseParser(XMLElement xe) {
-		System.err.println("Ignoring inline parser!");
+	@Override
+	public TipiTypeParser parseParser(XMLElement xe, ExtensionDefinition te) {
+		System.err.println("PAAAAAARSE: "+xe);
+		Dictionary<String, Object> props = new Hashtable<String, Object>();
+		ServiceRegistration.parseParser(myBundleContext,props,xe,(TipiExtension) te);
+		TipiTypeParser ttp = super.parseParser(xe,te);
+//		System.err.println("Ignoring inline parser!");
+		return ttp;
 	}
 	
-
-	public Object parse(TipiComponent source, String name, String expression,
-			TipiEvent te) {
-		TipiTypeParser ttp = null;
-
+	public TipiTypeParser getParser(String name) {
+		TipiTypeParser ttp = super.getParser(name);
+		if(ttp!=null) {
+			return ttp;
+		}
+		System.err.println("PARSINNNN: "+name);
 		Collection<ServiceReference<TipiTypeParser>> aa;
 		try {
 			aa = myBundleContext.getServiceReferences(TipiTypeParser.class,"(&(type=tipi-parser)(name="+name+"))");
@@ -175,9 +185,18 @@ public class OSGiClassManager extends BaseClassManager implements IClassManager 
 			}
 			ServiceReference<TipiTypeParser> xe = aa.iterator().next();
 			ttp = myBundleContext.getService(xe);
+			return ttp;
 		} catch (InvalidSyntaxException e) {
 			e.printStackTrace();
 		}
+		return null;
+	}
+
+	public Object parse(TipiComponent source, String name, String expression,
+			TipiEvent te) {
+		TipiTypeParser ttp = getParser(name);
+
+		
 
 		if (ttp == null) {
 			System.err.println("Unknown type: " + name);
@@ -195,6 +214,12 @@ public class OSGiClassManager extends BaseClassManager implements IClassManager 
 	}
 	
 	public boolean isValidType(String name) {
+		System.err.println("TSJEKKIN: "+name);
+		boolean isV = super.isValidType(name);
+		if(isV) {
+			return isV;
+		}
+		System.err.println("syserr not recognized by parents");
 		Collection<ServiceReference<TipiTypeParser>> aa;
 			try {
 				aa = myBundleContext.getServiceReferences(TipiTypeParser.class,"(&(type=tipi-parser)(name="+name+"))");

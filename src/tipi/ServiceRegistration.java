@@ -100,7 +100,7 @@ public class ServiceRegistration {
 
 
 	@SuppressWarnings("unchecked")
-	private static void parseParser(BundleContext bundleContext, Dictionary<String, Object> props, XMLElement xe, TipiExtension extension) {
+	public static void parseParser(BundleContext bundleContext, Dictionary<String, Object> props, XMLElement xe, TipiExtension extension) {
 //		String name = xe.getStringAttribute("name");
 		String parserClass = xe.getStringAttribute("parser");
 		String classType = xe.getStringAttribute("type");
