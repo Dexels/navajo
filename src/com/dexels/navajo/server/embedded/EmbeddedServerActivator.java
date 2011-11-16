@@ -1,103 +1,32 @@
 package com.dexels.navajo.server.embedded;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.eclipse.core.resources.IProject;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
-import com.dexels.navajo.client.context.NavajoContext;
-import com.dexels.navajo.dsl.expression.ui.contentassist.NavajoExpressionProposalProvider;
-import com.dexels.navajo.studio.script.plugin.ServerInstance;
+import com.dexels.navajo.client.ClientInterface;
+import com.dexels.navajo.client.NavajoClientFactory;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.server.embedded.impl.ServerInstanceImpl;
 
-/**
- * The activator class controls the plug-in life cycle
- */
-public class EmbeddedServerActivator extends AbstractUIPlugin {
+public class EmbeddedServerActivator implements BundleActivator {
 
-	// The plug-in ID
-	public static final String PLUGIN_ID = "com.dexels.navajo.server.embedded"; //$NON-NLS-1$
-
-	// The shared instance
-	private static EmbeddedServerActivator plugin;
-	protected Server jettyServer;
-	private NavajoContext currentContext = null;
-//	private ServletContextHandler webappContextHandler;
-	private NavajoExpressionProposalProvider navajoExpressionProvider;
-
-	private final Map<IProject,ServerInstance> projectMap = new HashMap<IProject, ServerInstance>();
-	
-	public NavajoContext getCurrentContext() {
-		return currentContext;
-	}
-
-	public void setCurrentContext(NavajoContext currentContext) {
-		this.currentContext = currentContext;
-	}
-
-	
-	public NavajoExpressionProposalProvider getNavajoExpressionProvider() {
-		return navajoExpressionProvider;
-	}
-
-	/**
-	 * The constructor
-	 */
-	public EmbeddedServerActivator() {
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
-	 */
+	@Override
 	public void start(BundleContext context) throws Exception {
-		super.start(context);
-//		context.installBundle("bla");
-		plugin = this;
-//		   getB	"com.dexels.navajo.dsl.expression.ui.contentassist.NavajoExpressionProposalProvider"
-		
+		System.err.println("Starting server activator");
+		ServerInstanceImpl sii = new ServerInstanceImpl(null);
+		int port = sii.startServer("/Users/frank/NavajoEnterprise_2_4_6/");
+		String ss = "localhost:"+port+"/Postman";
+		ClientInterface ci = NavajoClientFactory.getClient();
+		ci.setServerUrl(ss);
+		ci.setUsername("aap");
+		ci.setPassword("noor");
+		Navajo res = ci.doSimpleSend("InitNavajoDemo");
+		res.write(System.err);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
-	 */
+	@Override
 	public void stop(BundleContext context) throws Exception {
-		plugin = null;
-		super.stop(context);
+
 	}
 
-	/**
-	 * Returns the shared instance
-	 *
-	 * @return the shared instance
-	 */
-	public static EmbeddedServerActivator getDefault() {
-		return plugin;
-	}
-
-	public ServerInstance getServerInstanceForProject(IProject currentProject) {
-		return projectMap.get(currentProject);
-	}
-
-	public void registerServerInstance(IProject navajoProject,
-			ServerInstance serverInstanceImpl) {
-		projectMap.put(navajoProject, serverInstanceImpl);
-		
-	}
-
-	public void deregisterServerInstance(IProject project) {
-		projectMap.remove(project);
-	}
-
-	public Map<String,ServerInstance> getSelectorMap() {
-		Map<String,ServerInstance> result = new HashMap<String,ServerInstance>();
-		for (Map.Entry<IProject,ServerInstance> e : projectMap.entrySet()) {
-			String label = e.getKey().getProject().getName()+" @localhost:"+e.getValue().getPort();
-			result.put(label, e.getValue());
-		}
-		return result;
-	}
 }
