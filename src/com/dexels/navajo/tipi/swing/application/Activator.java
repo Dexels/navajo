@@ -24,22 +24,23 @@ public class Activator implements BundleActivator {
 	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
 	 */
 
-	public void start(BundleContext bc) throws Exception {
-		System.err.println("<<<<<<<<<<Starting swing tipi");
+	public void start(final BundleContext bc) throws Exception {
+		final String context = System.getProperty("tipi.context");
 		Activator.context = bc;
-
-		instance = TipiSwingWrapper.runApp(bc,"club");
-		SwingUtilities.invokeLater(new Runnable() {
+		
+		Thread t = new Thread() {
 
 			@Override
 			public void run() {
 				try {
+					instance = TipiSwingWrapper.runApp(bc,context);
 					instance.getCurrentContext().switchToDefinition(instance.getDefinition());
 				} catch (TipiException e) {
 					e.printStackTrace();
 				}
 			}
-		});
+		};
+		t.start();
 	}
 
 	/*
