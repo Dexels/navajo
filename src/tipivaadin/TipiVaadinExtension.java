@@ -64,7 +64,6 @@ public class TipiVaadinExtension extends TipiAbstractXMLExtension implements Tip
 			 Dictionary<String, Object> props = new Hashtable<String, Object>();
 			 props.put("functionName", functionName);
 			 props.put("functionDefinition", fd);
-			 System.err.println("Adding function name...: "+functionName);
 			context.registerService(FunctionInterface.class.getName(), fi.instantiateFunctionClass(fd,getClass().getClassLoader()), props);
 		}
 		
