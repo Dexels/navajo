@@ -274,7 +274,9 @@ public class MailMap implements MailMapInterface, Mappable, HasDependentResource
 		     Session session = Session.getDefaultInstance(props, auth);
 				return session;
 		} else {
-		     props.list(System.err);
+	    	 props.put("mail.smtp.port", "25");
+
+			props.list(System.err);
 			Session session = Session.getInstance(props);
 			return session;
 		}
