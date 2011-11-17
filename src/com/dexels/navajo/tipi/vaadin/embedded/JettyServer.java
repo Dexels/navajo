@@ -124,9 +124,9 @@ public class JettyServer {
 						e.printStackTrace();
 					}
 						if(ur!=null) {
-							System.err.println("Name: "+ur.getName()+" found: "+ur.exists());
-							System.err.println(":: "+ur.length()+" mod: "+ur.lastModified());
-							System.err.println("Resolved!!! returning...");
+//							System.err.println("Name: "+ur.getName()+" found: "+ur.exists());
+//							System.err.println(":: "+ur.length()+" mod: "+ur.lastModified());
+//							System.err.println("Resolved!!! returning...");
 							return ur;
 						}
 				}
