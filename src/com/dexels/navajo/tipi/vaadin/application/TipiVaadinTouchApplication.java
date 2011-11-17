@@ -40,7 +40,7 @@ import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-public class TipiVaadinApplication extends Application implements TipiApplicationInstance, HttpServletRequestListener,
+public class TipiVaadinTouchApplication extends Application implements TipiApplicationInstance, HttpServletRequestListener,
 		Serializable {
 
 	private static final long serialVersionUID = -5962249453869298788L;
@@ -58,7 +58,7 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 //	private transient Timer shutdownTimer = null;
 	private WindowCloseManager windowCloseManager;
 
-	private static final Logger logger = LoggerFactory.getLogger(TipiVaadinApplication.class);
+	private static final Logger logger = LoggerFactory.getLogger(TipiVaadinTouchApplication.class);
 
 	@Override
 	public void init() {
