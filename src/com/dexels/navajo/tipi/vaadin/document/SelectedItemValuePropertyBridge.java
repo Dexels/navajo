@@ -46,7 +46,10 @@ public class SelectedItemValuePropertyBridge implements Property, Property.Value
 		try {
 //			Selection selected = src.getSelected();
 //			return selected;
-			return selectionListBridge.getSelectionBridge();
+			if(selectionListBridge==null) {
+				selectionListBridge = new SelectionListBridge(src);
+			}
+			return selectionListBridge.getSelectionBridge().getItemProperty("name").getValue();
 		} catch (NavajoException e) {
 			e.printStackTrace();
 		}

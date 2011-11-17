@@ -21,7 +21,6 @@ import com.dexels.navajo.tipi.vaadin.components.impl.MessageTable;
 import com.dexels.navajo.tipi.vaadin.components.impl.TmlTableFieldFactory;
 import com.dexels.navajo.tipi.vaadin.document.CompositeArrayContainer;
 import com.dexels.navajo.tipi.vaadin.document.CompositeMessageBridge;
-import com.vaadin.data.Container;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.ui.Table;
@@ -37,7 +36,7 @@ public class TipiTable extends TipiVaadinComponentImpl {
 	private final Map<String,String> columnLabels = new HashMap<String,String>();
 //	private final Map<Object, Message> messageMap = new HashMap<Object, Message>();
 	private Object selectedId = null;
-	private Container messageBridge;
+	private CompositeArrayContainer messageBridge;
 	
 	private int selectedIndex = -1;
 
@@ -46,18 +45,14 @@ public class TipiTable extends TipiVaadinComponentImpl {
 	public Object createContainer() {
 		table = new MessageTable();
 		table.setStyleName("striped");
-//		table.setRowHeaderMode(Table.ROW_HEADER_MODE_ID);
 		table.setSelectable(true);
 		table.setImmediate(true);
 		
-//		table.setPageLength(5);
-//		table.setHeight("100px");
 		table.setSortDisabled(false);
 		table.setColumnReorderingAllowed(true);
 		table.setEditable(true);
 		table.setColumnCollapsingAllowed(true);
 		table.setTableFieldFactory(new TmlTableFieldFactory());
-		 //		table.setSizeFull();
 		table.addListener(new Table.ValueChangeListener() {
 
 			private static final long serialVersionUID = 1L;
@@ -110,7 +105,7 @@ public class TipiTable extends TipiVaadinComponentImpl {
 				}
 			}
 		});
-		
+
 		return table;
 	}
 
@@ -131,6 +126,9 @@ public class TipiTable extends TipiVaadinComponentImpl {
 	
 	@Override
 	public void loadData(Navajo n, String method) throws TipiException, TipiBreakException {
+		if(messagepath==null) {
+			throw new NullPointerException("message path in table is null, set it before loading!");
+		}
 		super.loadData(n, method);
 		Message m = n.getMessage(messagepath);
 
@@ -140,20 +138,7 @@ public class TipiTable extends TipiVaadinComponentImpl {
 		} else {
 			logger.error("Can not load null message: "+messagepath);
 		}
-//		table.setVisibleColumns(visibleColumns.toArray());
 	}
-
-//	private Message getModelMessage(Message m) {
-//		Message def = m.getDefinitionMessage();
-//		if (def == null) {
-//			if (m.getArraySize() == 0) {
-//				return null;
-//			} else {
-//				def = m.getAllMessages().get(0);
-//			}
-//		}
-//		return def;
-//	}
 
 	public void setComponentValue(final String name, final Object object) {
 		super.setComponentValue(name, object);
@@ -180,14 +165,14 @@ public class TipiTable extends TipiVaadinComponentImpl {
 	}
 
 	
-	private Container createMessageContainer(Message m) {
+	private CompositeArrayContainer createMessageContainer(Message m) {
 		if(m==null) {
 			return null;
 		}
-		System.err.println("COL: "+visibleColumns+" EDIT: "+editableColumns+" columnsizes: "+columnSizes);
+//		System.err.println("COL: "+visibleColumns+" EDIT: "+editableColumns+" columnsizes: "+columnSizes);
 		CompositeArrayContainer amb = new CompositeArrayContainer(m,visibleColumns,editableColumns,columnSizes);
 		int rows = amb.getItemIds().size();
-		System.err.println("ROWS: "+rows+" msgrows: "+m.getArraySize());
+//		System.err.println("ROWS: "+rows+" msgrows: "+m.getArraySize());
 
 		Message exa = amb.getExampleMessage();
 		if(exa==null) {
@@ -198,7 +183,7 @@ public class TipiTable extends TipiVaadinComponentImpl {
 			if(label==null) {
 				label = amb.getPropertyAspect(col+"@description");
 				if(label==null) {
-					System.err.println("No description checking name: "+col+"@name");
+//					System.err.println("No description checking name: "+col+"@name");
 					label = amb.getPropertyAspect(col+"@name");
 				}
 			}
@@ -209,8 +194,6 @@ public class TipiTable extends TipiVaadinComponentImpl {
 			if(type!=null && type.isAssignableFrom(Number.class)) {
 				alignment = Table.ALIGN_RIGHT;
 			}
-//			System.err.println("Adding container property: "+col);
-//			table.addContainerProperty(col+"@value",type,null, label, null,alignment);
 			table.setColumnAlignment(col+"@value", alignment);
 			int size = columnSizes.get(col);
 			if(size>=0) {
@@ -218,32 +201,8 @@ public class TipiTable extends TipiVaadinComponentImpl {
 			}
 			table.setColumnHeader(col+"@value", label);
 		}
-		//		debugContainer(amb);
 		return amb;
 	}
-
-
-//	private void debugContainer(Container amb) {
-//		System.err.println("DEBUGGING CONTAINER");
-//		Collection<?> idd = amb.getItemIds();
-//		for (Object object : idd) {
-//			System.err.println("ROW: "+idd);
-//			Item item = amb.getItem(object);
-//			debugItem(object,item);
-//		}
-//		System.err.println("FINISHED DEBUGGING CONTAINER");
-//	}
-//
-//	private void debugItem(Object id, Item item) {
-//		System.err.println("DEBUGGING ITEM: "+id);
-//		Collection<?> idd = item.getItemPropertyIds();
-//		for (Object object : idd) {
-//			Property p = item.getItemProperty(object);
-//			System.err.println("Property: "+object+" type: "+p.getType()+" value: "+p.getValue());
-//			
-//		}
-//	}
-
 
 	public void load(final XMLElement elm, final XMLElement instance, final TipiContext context)
 			throws com.dexels.navajo.tipi.TipiException {
@@ -258,7 +217,7 @@ public class TipiTable extends TipiVaadinComponentImpl {
 				}
 //				Table mm = table;
 
-				boolean editableColumnsFound = false;
+				boolean columnsFound = false;
 
 				List<XMLElement> children = elm.getChildren();
 				for (int i = 0; i < children.size(); i++) {
@@ -279,20 +238,16 @@ public class TipiTable extends TipiVaadinComponentImpl {
 						columnSizes.put(name,size);
 						String editableString = (String) child.getAttribute("editable");
 						boolean editable = "true".equals(editableString);
-//						colDefs = true;
 						visibleColumns.add(name);
 						if(editable) {
 							editableColumns.add(name);
 						}
-						//						mm.addColumn(name, label, editable, size);
-						editableColumnsFound = editableColumnsFound || editable;
+						columnsFound = true;
 					}
 					if (child.getName().equals("column-attribute")) {
-//						String name = (String) child.getAttribute("name");
-//						String type = (String) child.getAttribute("type");
 					}
 				}
-				if(!editableColumnsFound) {
+				if(!columnsFound) {
 					editableColumns.addAll(visibleColumns);
 				}
 			}

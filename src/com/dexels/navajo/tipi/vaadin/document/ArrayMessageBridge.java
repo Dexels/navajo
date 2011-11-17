@@ -8,11 +8,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import com.dexels.navajo.document.Message;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.data.util.IndexedContainer;
 
 public class ArrayMessageBridge implements Container, Container.Sortable {
 
@@ -41,13 +43,10 @@ public class ArrayMessageBridge implements Container, Container.Sortable {
 	public Integer getSizeForColumn(String name) {
 		String[] split = name.split("@");
 		String propertyName = split[0];
-//		System.err.println("Getting size for column: "+propertyName+" >>>>> "+columnSizes);
 		if(columnSizes==null) {
-//			System.err.println("but none found.");
 			return null;
 		}
 		Integer integer = columnSizes.get(propertyName);
-//		System.err.println("resolved to: "+integer);
 		return integer;
 	}
 	
@@ -93,24 +92,7 @@ public class ArrayMessageBridge implements Container, Container.Sortable {
 		visibleColumns.add(columnId);
 	}
 	
-	@Override
-	public Collection<?> getContainerPropertyIds() {
-		if(visibleColumns!=null) {
-			return visibleColumns;
-		}
-		// If no column names have been defined, try do generate a list based on the example message
-		Message m = getExampleMessage();
-		
-		HashSet<Object> propertyIds = new HashSet<Object>();
-		if(m==null) {
-			return propertyIds;
-		}
-		List<com.dexels.navajo.document.Property> props = m.getAllProperties();
-		for (com.dexels.navajo.document.Property property : props) {
-			propertyIds.add(property.getName());
-		}
-		return propertyIds;
-	}
+
 
 
 	/**
@@ -132,11 +114,6 @@ public class ArrayMessageBridge implements Container, Container.Sortable {
 		return sortedIndexes;
 	}
 
-	@Override
-	public Property getContainerProperty(Object itemId, Object propertyId) {
-		Item mb = getItem(itemId);
-		return mb.getItemProperty(propertyId);
-	}
 
 	@Override
 	public Class<?> getType(Object propertyId) {
@@ -187,9 +164,17 @@ public class ArrayMessageBridge implements Container, Container.Sortable {
 	}
 
 	@Override
+	public Property getContainerProperty(Object itemId, Object propertyId) {
+		System.err.println("GETTING CONTAINER PROPERTY: "+itemId +" propD: "+propertyId);
+		Item mb = getItem(itemId);
+		return mb.getItemProperty(propertyId);
+	}
+	
+	@Override
 	public boolean addContainerProperty(Object propertyId, Class<?> type, Object defaultValue)
 			throws UnsupportedOperationException {
 		Property p = new AdHocProperty(defaultValue, type);
+		System.err.println("AAAADING:  "+propertyId+" class: "+type+" >>> "+defaultValue);
 		containerProperties.put(propertyId, p);
 		return true;
 	}
@@ -199,7 +184,49 @@ public class ArrayMessageBridge implements Container, Container.Sortable {
 		Property res = containerProperties.remove(propertyId);
 		return res!=null;
 	}
+	
+	@Override
+	public Collection<?> getContainerPropertyIds() {
+		Collection<Object> parentCollection = containerProperties.keySet();
+		List<Object> columnHeaders = new ArrayList<Object>(parentCollection);
+		if(visibleColumns!=null) {
+			for (String column : visibleColumns) {
 
+				StringTokenizer st = new StringTokenizer(column,"@");
+				String propertyName = st.nextToken();
+
+				columnHeaders.add(propertyName+"@value");
+			}
+			return columnHeaders;
+		}
+		return columnHeaders;
+	}
+
+
+
+
+//	@Override
+//	public Collection<?> getContainerPropertyIds() {
+//		System.err.println("QQQQQ: "+containerProperties);
+//		if(visibleColumns!=null) {
+//			return visibleColumns;
+//		}
+//		// If no column names have been defined, try do generate a list based on the example message
+//		Message m = getExampleMessage();
+//		
+//		HashSet<Object> propertyIds = new HashSet<Object>();
+//		if(m==null) {
+//			return propertyIds;
+//		}
+//		List<com.dexels.navajo.document.Property> props = m.getAllProperties();
+//		for (com.dexels.navajo.document.Property property : props) {
+//			propertyIds.add(property.getName());
+//		}
+//		System.err.println("PPPPP: "+propertyIds);
+//		return propertyIds;
+//	}
+	
+	
 	@Override
 	public boolean removeAllItems() throws UnsupportedOperationException {
 		throw new UnsupportedOperationException("Can not remove all messages? Didn't implement it. ");

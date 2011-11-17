@@ -13,7 +13,7 @@ public class ValuePropertyBridge implements Property, Property.ValueChangeNotifi
 	private static final long serialVersionUID = -5696589046516267159L;
 	private final Map<ValueChangeListener,SerializablePropertyChangeListener> listenerMap = new HashMap<ValueChangeListener,SerializablePropertyChangeListener>();
 	private final com.dexels.navajo.document.Property src;
-	private boolean valueEditable;
+	private final boolean valueEditable;
 	
 	public ValuePropertyBridge(com.dexels.navajo.document.Property src, boolean editable) {
 //		System.err.println("Creating bridge with property: "+src.getFullPropertyName()+" path: "+editable);
@@ -61,7 +61,7 @@ public class ValuePropertyBridge implements Property, Property.ValueChangeNotifi
 	@Override
 	public void setReadOnly(boolean newStatus) {
 		System.err.println("Beware: changing readonly status?!");
-		valueEditable = !newStatus;
+//		valueEditable = !newStatus;
 		src.setDirection(newStatus?com.dexels.navajo.document.Property.DIR_OUT:com.dexels.navajo.document.Property.DIR_IN);
 	}
 	

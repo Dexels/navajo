@@ -115,6 +115,7 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 		if(name.equals("border")) {
 			String b = (String) object;
 			getActualVaadinComponent().setCaption(b);
+			getActualVaadinComponent().addStyleName("titled");
 		}
         if ("icon".equals(name)) {
         	getActualVaadinComponent().setIcon( getResource(object));

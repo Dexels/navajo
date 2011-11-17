@@ -15,21 +15,10 @@ public class CompositeArrayContainer extends ArrayMessageBridge {
 	private static final long serialVersionUID = -3613726223172237777L;
 	private CompositeMessageBridge definitionMessage;
 
-
 	public CompositeArrayContainer(Message m, List<String> visibleColumns, List<String> editableColumns, Map<String, Integer> columnSizes) {
 		super(m,visibleColumns,editableColumns,columnSizes);
 		definitionMessage = new CompositeMessageBridge(getExampleMessage(),editableColumns);
-
-		
-//		definitionMessage = new CompositeMessageBridge(getExampleMessage());
-
-//		for (String id : visibleColumns) {
-//			addVisibleColumn(id+"@value");
-//		}
-	
 	}
-	
-
 	
 	public String getPropertyAspect(String aspect) {
 		Property itemProperty = definitionMessage.getItemProperty(aspect);
@@ -46,24 +35,5 @@ public class CompositeArrayContainer extends ArrayMessageBridge {
 		return new CompositeMessageBridge(message,null);
 	}
 	
-	@Override
-	public Collection<?> getContainerPropertyIds() {
-		// If no column names have been defined, try do generate a list based on the example message
-		
-		List<Object> columnHeaders = new ArrayList<Object>();
-		
-		if(visibleColumns!=null) {
-			for (String column : visibleColumns) {
-
-				StringTokenizer st = new StringTokenizer(column,"@");
-				String propertyName = st.nextToken();
-
-				columnHeaders.add(propertyName+"@value");
-			}
-			return columnHeaders;
-		}
-		return columnHeaders;
-	}
-
 
 }

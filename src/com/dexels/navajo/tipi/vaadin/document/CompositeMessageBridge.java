@@ -30,10 +30,11 @@ public class CompositeMessageBridge extends CompositeItem implements Item {
 			if(editableList!=null) {
 				boolean edit = editableList.contains(property.getName());
 				
+				System.err.println("EDITABLE: "+property.getName()+" editable: "+edit);
 				PropertyItem pi = new PropertyItem(property,edit);
 				addItem(property.getName(),pi);
 			} else {
-				PropertyItem pi = new PropertyItem(property,true);
+				PropertyItem pi = new PropertyItem(property,false);
 				addItem(property.getName(),pi);
 			}
 		}
@@ -41,6 +42,7 @@ public class CompositeMessageBridge extends CompositeItem implements Item {
 	
 	@Override
 	public Property getItemProperty(Object id) {
+		System.err.println("Item: "+id);
 		StringTokenizer st = new StringTokenizer((String) id,"@");
 		String propertyName = st.nextToken();
 		String propertyAspect = st.nextToken();

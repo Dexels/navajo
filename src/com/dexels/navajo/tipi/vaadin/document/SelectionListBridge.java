@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Selection;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
@@ -126,7 +127,13 @@ public class SelectionListBridge implements Container {
 
 	@Override
 	public Item addItem(Object itemId) throws UnsupportedOperationException {
-		throw new UnsupportedOperationException("Can not edit properties to container using VAADIN data model!");
+		String name = (String)itemId;
+		Selection s = NavajoFactory.getInstance().createSelection(src.getRootDoc(), name, "unknown", false);
+		src.addSelection(s);
+		SelectionBridge sb = new SelectionBridge(src, s);
+		selectionMap.put(name, sb);
+//		throw new UnsupportedOperationException("Can not edit properties to container using VAADIN data model!");
+		return sb;
 	}
 
 	@Override
