@@ -189,8 +189,10 @@ cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.
 #Legacy
 #sportlink client
 #sportlink serv
-	cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.sportlink.client /home/cvs/sportlink-clnt-v2
-cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.sportlink.serv /home/cvs/sportlink-serv
+
+#cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.sportlink.serv /home/cvs/sportlink-serv
+
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.sportlink.client /home/cvs/sportlink-clnt-v2
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.sportlink.adapters /home/cvs/sportlink-adapters
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.sportlink.crystal /home/cvs/sportlink-serv-crystal
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.sportlink.aaa /home/cvs/sportlink-serv-AAA
