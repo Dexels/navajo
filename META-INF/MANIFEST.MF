@@ -13,8 +13,7 @@ Export-Package: com.dexels.navajo.dsl.model.expression,
  model
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
- com.dexels.navajo.document;bundle-version="1.0.4",
- com.google.inject;bundle-version="2.0.0"
+ com.dexels.navajo.document;bundle-version="1.0.4"
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: com.dexels.navajo.dsl.expression.ExpressionActivator
 Import-Package: org.eclipse.core.resources
