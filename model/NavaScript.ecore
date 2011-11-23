@@ -24,11 +24,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="endToken" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Element">
-    <eOperations name="calculateDepth" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="body" value="return ElementLogic.calculateDepth(this);"/>
-      </eAnnotations>
-    </eOperations>
+    <eOperations name="calculateDepth" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="children" upperBound="-1"
         eType="#//Element" containment="true" eOpposite="#//Element/parent"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//Element"
