@@ -285,6 +285,19 @@ public final static String VERSION = "$Id$";
       return false;
     }
   }
+  
+  public int getHours() {
+	  return calValue.get(Calendar.HOUR_OF_DAY);
+  }
+
+  public int getMinutes() {
+	  return calValue.get(Calendar.MINUTE);
+  }
+
+  public int getSeconds() {
+	  return calValue.get(Calendar.SECOND);
+  }
+
 
 public boolean isEmpty() {
     return calValue==null;
