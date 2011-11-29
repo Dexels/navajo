@@ -24,7 +24,7 @@ public class ServiceRegistration {
 		props.put("type", "tipiExtension");
 		props.put("extensionDescription", extension.getDescription());
 		props.put("extensionClass", extension.getClass().getName());
-		context.registerService(TipiExtension.class, extension, props);
+		context.registerService(TipiExtension.class.getName(), extension, props);
 		// getIncludes();
 		for (String include : extension.getIncludes()) {
 //			System.err.println("PARSING: " + include + " from ext: " + extension.getClass().getName());
@@ -94,7 +94,7 @@ public class ServiceRegistration {
 		
 //		Class<? extends TipiComponent> componentClass = (Class<? extends TipiComponent>) Class.forName(packageName+"."+className, true, extension.getClass().getClassLoader());
 //		TipiComponent tipiComponent = componentClass.newInstance();
-		context.registerService(XMLElement.class, element, props);
+		context.registerService(XMLElement.class.getName(), element, props);
 	}
 	
 
@@ -138,7 +138,7 @@ public class ServiceRegistration {
 					+ classType);
 			return;
 		}
-		bundleContext.registerService(TipiTypeParser.class, ttp, props);
+		bundleContext.registerService(TipiTypeParser.class.getName(), ttp, props);
 //		parserInstanceMap.put(name, ttp);
 	}
 	
@@ -151,6 +151,6 @@ public class ServiceRegistration {
 		props.put("class", packageName+"."+className);
 		TipiActionFactory taf = new TipiActionFactory();
 		taf.load(element,extension);
-		context.registerService(TipiActionFactory.class, taf, props);
+		context.registerService(TipiActionFactory.class.getName(), taf, props);
 	}
 }
