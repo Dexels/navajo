@@ -339,7 +339,6 @@ public class MessageMap implements Mappable {
 		ResultMessage [] result = mm.getResultMessage();
 		for (int i = 0; i < result.length; i++) {
 			result[i].load(a);
-			System.err.println(">>>>>>: " + result[i].getProperty("propje3"));
 			result[i].store();
 		}
 		a.setCurrentOutMessage(null);
