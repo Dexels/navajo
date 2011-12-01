@@ -6,6 +6,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.types.Money;
 
 import junit.framework.TestCase;
 
@@ -44,4 +45,10 @@ public class ExpressionTest  extends TestCase {
 		 assertEquals("hallo:aap2", o.value);
 		  
 	}
+
+	public void testExpressionMoney() throws Exception {
+		boolean eq = Utils.equals(new Money(), null);
+		assertTrue(eq);
+	}
+
 }
