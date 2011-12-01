@@ -34,6 +34,7 @@ import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
+import com.dexels.navajo.document.types.NavajoType;
 import com.dexels.navajo.document.types.Percentage;
 import com.dexels.navajo.document.types.StopwatchTime;
 
@@ -340,7 +341,36 @@ public final class Utils extends Exception {
             throw new TMLExpressionException("Addition: Unknown type");
     }
 
-    private final static boolean isEqual(Object a, Object b) throws TMLExpressionException {
+//    private final static boolean isEqualWithEmpty(Object a, Object b) throws TMLExpressionException {
+//    	Object valueA;
+//    	Object valueB;
+//    	getActualValue(a);
+//    }
+
+    /**
+     * Fix money==null issue
+     * @param a
+     * @return
+     */
+	private static Object getActualValue(Object a) {
+		if(a==null) {
+			return null;
+    	} else {
+    		if(a instanceof NavajoType) {
+    			NavajoType n = (NavajoType)a;
+    			if(n.isEmpty()) {
+    				return null;
+    			} else {
+    				return a;
+    			}
+    		}
+    	}
+		return a;
+	}
+    
+    private final static boolean isEqual(Object aval, Object bval) throws TMLExpressionException {
+    	Object a = getActualValue(aval);
+    	Object b = getActualValue(bval);
     	if ((a == null) && (b == null))
     		return true;
     	else if ((a == null) || (b == null))
