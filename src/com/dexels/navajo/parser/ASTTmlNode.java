@@ -10,6 +10,7 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.types.ClockTime;
+import com.dexels.navajo.document.types.NavajoType;
 import com.dexels.navajo.util.Util;
 
 /**
@@ -187,6 +188,16 @@ public final class ASTTmlNode extends SimpleNode {
               
             Object value = prop.getTypedValue();
 
+            /** 
+             * LEGACY MODE! 
+             */
+            if ( value instanceof NavajoType && ((NavajoType) value).isEmpty() ) {
+            	value = null;
+            }
+            /**
+             * END OF LEGACY MODE!
+             */
+            
             if (value == null && !type.equals(Property.SELECTION_PROPERTY)) {  // If value attribute does not exist AND property is not selection property assume null value
                resultList.add(null);
             } else
