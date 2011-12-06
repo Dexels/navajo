@@ -25,6 +25,7 @@ import com.dexels.navajo.util.*;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.document.types.NavajoType;
 import com.dexels.navajo.document.types.Percentage;
 
 import java.io.File;
@@ -325,7 +326,7 @@ private static Object semaphore = new Object();
 						  // If propery file exists create a static connectionbroker that can be accessed by multiple instances of
 						  // SQLMap!!!
 						  if (fixedBroker == null && datasourceName.equals("")) { // Only re-create entire HashMap at initialization!
-							  fixedBroker = new ConnectionBrokerManager(this.debug);
+							  fixedBroker = new ConnectionBrokerManager();
 						  }
 
 						  if (datasourceName.equals("")) {
@@ -943,7 +944,7 @@ private static Object semaphore = new Object();
         Object param = parameters.get(i);
 
         // System.err.println("parameter " + i + " = " + param);
-        if (param == null) {
+        if ( (param instanceof NavajoType && ((NavajoType) param).isEmpty() ) || (param == null) ) {
           statement.setNull(i + 1, Types.VARCHAR);
         }
         else if (param instanceof String) {
