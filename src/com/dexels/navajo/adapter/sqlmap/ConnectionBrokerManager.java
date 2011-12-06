@@ -23,7 +23,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 
   private Map<String,SQLMapBroker> brokerMap = Collections.synchronizedMap(new HashMap<String,SQLMapBroker>());
  
-  private boolean debug = true;
+  private boolean debug = false;
 
   private static Object semaphore = new Object();
   
@@ -35,7 +35,6 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
   public ConnectionBrokerManager(final boolean b) {
     super();
     JMXHelper.registerMXBean(this, JMXHelper.NAVAJO_DOMAIN, "ConnectionBrokerManager");
-    this.debug = b;
   }
 
   public void terminate() {
