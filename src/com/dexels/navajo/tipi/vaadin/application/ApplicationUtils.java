@@ -31,7 +31,7 @@ public class ApplicationUtils {
 	/**
 	 * Detect if we're in the App Engine
 	 */
-	static void detectGae() {
+	public static void detectGae() {
 		try {
 			Class.forName("com.google.appengine.api.LifecycleManager");
 			ApplicationUtils.isRunningInGae = true;
@@ -42,7 +42,7 @@ public class ApplicationUtils {
 	}
 
 
-	static void setupContext(final WebApplicationContext context) {
+	public static void setupContext(final WebApplicationContext context) {
 		SessionTokenFactory.setSessionTokenProvider(new SessionTokenProvider() {
 			@Override
 			public String getSessionToken() {

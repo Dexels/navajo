@@ -171,7 +171,7 @@ public class TipiTable extends TipiVaadinComponentImpl {
 		}
 //		System.err.println("COL: "+visibleColumns+" EDIT: "+editableColumns+" columnsizes: "+columnSizes);
 		CompositeArrayContainer amb = new CompositeArrayContainer(m,visibleColumns,editableColumns,columnSizes);
-		int rows = amb.getItemIds().size();
+//		int rows = amb.getItemIds().size();
 //		System.err.println("ROWS: "+rows+" msgrows: "+m.getArraySize());
 
 		Message exa = amb.getExampleMessage();

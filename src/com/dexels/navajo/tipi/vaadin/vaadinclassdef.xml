@@ -87,11 +87,106 @@
 		</values>
 	</tipiclass>
 	
-		<tipiclass addtocontainer="true" implements="basecomponent,datacomponent,vaadincomponent"  class="TipiTableTest" module="component"
-		name="tabletest" childcount="0" package="com.dexels.navajo.tipi.vaadin.components" propertycomponent="false" studio-icon="button.gif"
-		type="component">
+	<tipiclass addtocontainer="true"
+		implements="basecomponent,datacomponent,vaadincomponent" class="TipiCalendar"
+		module="component" name="calendar" childcount="0"
+		package="com.dexels.navajo.tipi.vaadin.components" propertycomponent="false"
+		studio-icon="button.gif" type="component">
+		<events>
+		</events>
+		<values>
+			<value direction="inout" name="messagePath" type="string" />
+			<value direction="string" name="definitionName" type="string" />
+		</values>
+	</tipiclass>
+
+   <tipiclass addtocontainer="true" childcount="*" implements="basecomponent,datacomponent,vaadincomponent" class="TipiMap" layoutmanager="false" module="container" name="map" package="com.dexels.navajo.tipi.vaadin.components"
+      studio-icon="tabs.gif" type="component">
+      <events>
+         <event name="onClear" />
+         <event name="onDataComponent">
+            <param name="message" type="message"/>
+         </event>
+      </events>
+      <values>
+         <value direction="in" name="lon" type="float" property="lon"/>
+         <value direction="in" name="lat" type="float" property="lat"/>
+         <value direction="in" name="factory" type="string" />
+         <value direction="in" name="messagePath" type="string" />
+         <value direction="in" name="zoom" type="integer"/>
+      </values>
+      <methods>
+      </methods>
+   </tipiclass>
+
+	<tipiclass addtocontainer="true"
+		implements="basecomponent,datacomponent,vaadincomponent" class="TipiCalendarEvent"
+		module="component" name="calendarevent" childcount="0"
+		package="com.dexels.navajo.tipi.vaadin.components" propertycomponent="false"
+		studio-icon="button.gif" type="component">
+		<events>
+			<event name="onActionPerformed">
+			</event>
+			<event name="onCalendarEvent">
+				<param name="message" type="message" />
+				<param name="navajo" type="navajo" />
+				<param name="messageIndex" type="integer" />
+			</event>
+		</events>
+		<values>
+			<value direction="string" name="definitionName" type="string" />
+			<value direction="out" name="message" type="message" />
+			<value direction="in" name="startTime" type="date" />
+			<value direction="in" name="endTime" type="date" />
+			<value direction="in" name="description" type="string" />
+			<value direction="in" name="style" type="string" />
+			<value direction="in" name="allDay" type="boolean" />
+		</values>
+	</tipiclass>
+			
+	<tipiclass addtocontainer="true"
+		implements="basecomponent,datacomponent,vaadincomponent" class="TipiDynamicTable"
+		module="component" name="dynamictable" childcount="0"
+		package="com.dexels.navajo.tipi.vaadin.components" propertycomponent="false"
+		studio-icon="button.gif" type="component">
+		<events>
+			<event name="onSelectionChanged">
+				<param name="selectedMessage" type="message" />
+				<param name="selectedIndex" type="integer" />
+			</event>
+		</events>
+		<values>
+			<value direction="inout" name="messagePath" type="string" />
+			<value direction="string" name="definitionName" type="string" />
+			<value direction="out" name="selectedMessage" type="message" />
+		</values>
 	</tipiclass>
 	
+
+	<tipiclass addtocontainer="true"
+		implements="basecomponent,datacomponent,vaadincomponent" class="TipiDynamicCell"
+		module="component" name="dynamiccell" childcount="0"
+		package="com.dexels.navajo.tipi.vaadin.components" propertycomponent="false"
+		studio-icon="button.gif" type="component">
+		<events>
+			<event name="onActionPerformed">
+			</event>
+			<event name="onRow">
+				<param name="message" type="message" />
+				<param name="navajo" type="navajo" />
+				<param name="messageIndex" type="integer" />
+			</event>
+		</events>
+		<values>
+			<value direction="string" name="definitionName" type="string" />
+			<value direction="out" name="message" type="message" />
+			<value direction="in" name="h1" type="string" />
+			<value direction="in" name="h2" type="string" />
+			<value direction="in" name="tag" type="string" />
+			<value direction="in" name="body" type="string" />
+			<value direction="in" name="stylePrefix" type="string" />
+		</values>
+	</tipiclass>
 	
 	
 	
@@ -227,6 +322,18 @@
 		<events>
 		</events>
 		<values>
+		</values>
+		<methods />
+	</tipiclass>
+
+	<!-- Identical to panel -->
+	<tipiclass class="TipiSplitPanel" name="splitpanel" implements="basecomponent,datacomponent,vaadincomponent"  package="com.dexels.navajo.tipi.vaadin.components"
+		type="tipi" childcount="*" layoutmanager="true" addtocontainer="true" toplevel="false">
+		<events>
+		</events>
+		<values>
+			<value direction="in" name="position" type="integer" />
+			<value direction="in" name="positionReverse" type="integer" />
 		</values>
 		<methods />
 	</tipiclass>

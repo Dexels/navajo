@@ -4,12 +4,13 @@ import org.vaadin.peter.contextmenu.ContextMenu;
 
 import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
 import com.dexels.navajo.tipi.vaadin.VaadinTipiContext;
-import com.dexels.navajo.tipi.vaadin.application.TipiVaadinApplication;
+import com.vaadin.Application;
 import com.vaadin.terminal.Resource;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.Window;
 
 public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 
@@ -160,12 +161,23 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 		return (Component) getActualComponent();
 	}
 
-	public TipiVaadinApplication getVaadinApplication() {
+	public Application getVaadinApplication() {
 		VaadinTipiContext c = (VaadinTipiContext) getContext();
-		return c.getVaadinApplication();
+		return c.getApplication();
+	}
+	public VaadinTipiContext getVaadinContext() {
+		if (myContext == null) {
+			throw new RuntimeException(
+					"TipiComponent without context. This is not allowed");
+		}
+		return (VaadinTipiContext) myContext;
+	}
+
+	public Window getMainWindow() {
+		return getVaadinApplication().getMainWindow();
 	}
 	
 	protected Resource getResource(Object any) {
-		return getVaadinApplication().getResource(any);
+		return getVaadinContext().getResource(any);
 	}
 }

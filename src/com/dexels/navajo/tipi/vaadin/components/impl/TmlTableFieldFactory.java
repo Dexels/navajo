@@ -8,14 +8,11 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.Select;
 
 public class TmlTableFieldFactory extends DefaultFieldFactory {
 	private static final long serialVersionUID = -7394569632662794450L;
@@ -30,7 +27,7 @@ public class TmlTableFieldFactory extends DefaultFieldFactory {
 	@Override
 	public Field createField(Container container, Object itemId,Object propertyId, Component uiContext) {
 		Item message = container.getItem(itemId);
-		MessageTable mt = (MessageTable) uiContext;
+//		MessageTable mt = (MessageTable) uiContext;
 		CompositeArrayContainer cac = (CompositeArrayContainer) container;
 		Integer size = cac.getSizeForColumn((String) propertyId);
 		Property property = message.getItemProperty(propertyId);
@@ -55,62 +52,15 @@ public class TmlTableFieldFactory extends DefaultFieldFactory {
 		return createdField;
 	}
 
-	private Field createDropdownBoxTmp(SelectedItemValuePropertyBridge cmb) {
-		IndexedContainer ic = new IndexedContainer();
-		ic.addItem("pim");
-		ic.addItem("pam");
-		ic.addItem("pet");
-		final AbstractSelect select = new NativeSelect();
-
-//		
-//		final AbstractSelect select = new NativeSelect() {
-//			private static final long serialVersionUID = -2068792059283327616L;
-//
-//			public Object getValue() {
-//				return super.getValue();
-//			}
-//			public void setValue(Object newValue)
-//					throws Property.ReadOnlyException,
-//					Property.ConversionException {
-////				if (newValue == getNullSelectionItemId()) {
-////					newValue = null;
-////				}
-////
-////				setValue(newValue, false);
-//				if (newValue==null) {
-//					System.err.println("Setring to null");
-//				} else {
-//					System.err.println("Setting to: "+newValue+" newValue: "+newValue.getClass()+" hash: "+newValue.hashCode());
-//				}
-//				super.setValue("aap");
-//			}
-//		};
-		select.setContainerDataSource(ic);
-		
-		select.setMultiSelect(false);
-		select.setImmediate(true);
-		select.setNewItemsAllowed(false);
-//		Object obj = select.addItem("aap");
-//		System.err.println("obj: " + obj + " hash: " + obj.hashCode());
-//		select.addItem("noot");
-		select.setValue("pam");
-//		select.commit();
-		select.setNullSelectionItemId("-");
-		Object val = select.getValue();
-//		System.err.println("Valll obj: " + val + " hash: " + val.hashCode());
-		
-		return select;
-
-	}
 
 	private Field createDropdownBox(final SelectedItemValuePropertyBridge cmb) {
 		final SelectionListBridge slb = cmb.createListBridge();
-		Object found = null;
+//		Object found = null;
 		for (Object ii : slb.getItemIds()) {
 			SelectionBridge iii = (SelectionBridge) slb.getItem(ii);
 			System.err.println("ii: " + iii.getClass());
 			if (iii.isSelectedBool()) {
-				found = iii;
+//				found = iii;
 			}
 
 		}

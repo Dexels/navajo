@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -14,7 +13,6 @@ import com.dexels.navajo.document.Message;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
-import com.vaadin.data.util.IndexedContainer;
 
 public class ArrayMessageBridge implements Container, Container.Sortable {
 
@@ -30,14 +28,12 @@ public class ArrayMessageBridge implements Container, Container.Sortable {
 	private final List<Integer> sortedIndexes = new ArrayList<Integer>();
 	private Map<String, Integer> columnSizes;
 	
-//	public ArrayMessageBridge(Message src) {
-//
-//		initialize(src);
-//		this.visibleColumns = null;
-//	}
-//	
 	public ArrayMessageBridge(Message m, List<String> visibleColumns, List<String> editableColumns, Map<String, Integer> columnSizes) {
 		initialize(m, visibleColumns, editableColumns,columnSizes);
+	}
+
+	public ArrayMessageBridge(Message m) {
+		initialize(m);
 	}
 
 	public Integer getSizeForColumn(String name) {
@@ -72,16 +68,20 @@ public class ArrayMessageBridge implements Container, Container.Sortable {
 		initialize(m);
 	}
 
-	protected Item createItemFromMessage(Message message, List<String> visibleColumns, List<String> editableColumns) {
+	protected Item createItemFromMessage(Message message, List<String> editableColumns) {
 		return new CompositeMessageBridge(message,editableColumns);
 	}
 	
+	protected Item createItemFromMessage(Message message) {
+		return new CompositeMessageBridge(message);
+	}
+
 	@Override
 	public Item getItem(Object itemId) {
 		Item item = messageMap.get(itemId);
 		Integer id = (Integer) itemId;
 		if(item==null) {
-			Item pb = createItemFromMessage(src.getMessage(id),visibleColumns,editableColumns);
+			Item pb = createItemFromMessage(src.getMessage(id),editableColumns);
 			messageMap.put(id, pb);
 			return pb;
 		}
@@ -91,9 +91,6 @@ public class ArrayMessageBridge implements Container, Container.Sortable {
 	protected void addVisibleColumn(String columnId) {
 		visibleColumns.add(columnId);
 	}
-	
-
-
 
 	/**
 	 * Get an example of what the message looks like. Ideally, a definition message. Otherwise, return the first.
@@ -144,7 +141,7 @@ public class ArrayMessageBridge implements Container, Container.Sortable {
 		}
 		Message itt = src.instantiateFromDefinition();
 		itt.setIndex((Integer)itemId);
-		Item messageBridge = createItemFromMessage(itt,visibleColumns,editableColumns);
+		Item messageBridge = createItemFromMessage(itt,editableColumns);
 		messageMap.put(itt.getIndex(), messageBridge);
 		return messageBridge;
 	}
@@ -152,7 +149,7 @@ public class ArrayMessageBridge implements Container, Container.Sortable {
 	@Override
 	public Object addItem() throws UnsupportedOperationException {
 		Message itt = src.instantiateFromDefinition();
-		Item messageBridge = createItemFromMessage(itt,visibleColumns,editableColumns);
+		Item messageBridge = createItemFromMessage(itt,editableColumns);
 		messageMap.put(itt.getIndex(), messageBridge);
 		return messageBridge;
 	}
@@ -187,6 +184,7 @@ public class ArrayMessageBridge implements Container, Container.Sortable {
 	
 	@Override
 	public Collection<?> getContainerPropertyIds() {
+		System.err.println("<><> containerpropertyIds:");
 		Collection<Object> parentCollection = containerProperties.keySet();
 		List<Object> columnHeaders = new ArrayList<Object>(parentCollection);
 		if(visibleColumns!=null) {

@@ -12,6 +12,7 @@ public class TipiLabel extends TipiVaadinComponentImpl {
 	@Override
 	public Object createContainer() {
 		label = new Label();
+		label.setSizeUndefined();
 		return label;
 	}
 

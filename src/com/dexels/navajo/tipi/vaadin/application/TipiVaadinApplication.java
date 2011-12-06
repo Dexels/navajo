@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.List;
-import java.util.Timer;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -23,18 +22,14 @@ import tipi.TipiCoreExtension;
 import tipipackage.TipiManualExtensionRegistry;
 import tipivaadin.TipiVaadinExtension;
 
-import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.actionmanager.OSGiActionManager;
 import com.dexels.navajo.tipi.classdef.OSGiClassManager;
 import com.dexels.navajo.tipi.vaadin.VaadinTipiContext;
 import com.dexels.navajo.tipi.vaadin.application.eval.EvalHandler;
-import com.dexels.navajo.tipi.vaadin.components.io.URLInputStreamSource;
 import com.dexels.navajo.tipi.vaadin.cookie.BrowserCookieManager;
 import com.vaadin.Application;
-import com.vaadin.terminal.StreamResource;
-import com.vaadin.terminal.StreamResource.StreamSource;
 import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.ui.VerticalLayout;
@@ -48,6 +43,8 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 	private transient ServletContext servletContext;
 	private transient HttpServletRequest request;
 	private transient HttpServletResponse response;
+	
+	private URL urlContext;
 	
 	// TODO: Refactor to URL
 	private File installationFolder;
@@ -136,11 +133,12 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 		VaadinTipiContext va;
 		System.err.println("Extensionlist: "+extensionRegistry);
 		try {
-			va = new VaadinTipiContext(this, extensionRegistry.getExtensionList());
+			va = new VaadinTipiContext(this,installationFolder, extensionRegistry.getExtensionList());
 		} catch (Throwable e2) {
 			e2.printStackTrace();
 			return null;
 		}
+//		va.setInstallationFolder(installationFolder);
 		va.setClassManager(new OSGiClassManager(TipiVaadinExtension.getInstance().getBundleContext(), va));
 		va.setActionManager(new OSGiActionManager(TipiVaadinExtension.getInstance().getBundleContext()));
 		logger.debug("VaadinTipiContext created. Cloudmode: "+ApplicationUtils.isRunningInGae());
@@ -155,7 +153,7 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 		}
 
 		String theme = va.getSystemProperty("tipi.vaadin.theme");
-		logger.debug("Theme resolved to: "+theme);
+		logger.info("Theme resolved to: "+theme);
 		setTheme(theme);
 
 		va.setMainWindow(getMainWindow());
@@ -207,7 +205,10 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 	}
 	
 	public void setEvalUrl(URL context, String relativeUri) {
-		((VaadinTipiContext)getCurrentContext()).setEvalUrl(context, relativeUri);
+		VaadinTipiContext vaadinTipiContext = (VaadinTipiContext)getCurrentContext();
+		if(vaadinTipiContext!=null) {
+			vaadinTipiContext.setEvalUrl(context, relativeUri);
+		}
 	}
 
 	@Override
@@ -263,7 +264,9 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 		}
 
 		if(!ApplicationUtils.isRunningInGae()) {
-			windowCloseManager.cancelShutdownTimer();
+			if(windowCloseManager!=null) {
+				windowCloseManager.cancelShutdownTimer();
+			}
 		}
 	}
 
@@ -277,40 +280,21 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 	}
 
 
-	
-	public  StreamResource getResource(Object u) {
-		if (u == null) {
-			return null;
-		}
-		String lastMimeType = null;
-		StreamSource is = null;
-		if (u instanceof URL) {
-			if (ApplicationUtils.isRunningInGae()) {
-				try {
-					is = resolve((URL) u);
-					
-				} catch (IOException e) {
-					e.printStackTrace();
-					return null;
-				}
-			} else {
-					is = new URLInputStreamSource((URL) u);
-			}
-		}
-		if (u instanceof Binary) {
-			lastMimeType = ((Binary)u).guessContentType();
-		}
-		if (is == null) {
-			return null;
-		}
-		
-		StreamResource sr = new StreamResource(is, ""+u,this);
-		sr.setMIMEType(lastMimeType);
-		return sr;
+
+	@Override
+	public void setContextUrl(URL contextUrl) {
+		urlContext = contextUrl;		
 	}
 
-	private StreamSource resolve(URL u) throws IOException {
-		return new URLInputStreamSource(u);
+
+
+	@Override
+	public URL getContextUrl() {
+		return urlContext;
 	}
-	
+
+
+
+
+
 }

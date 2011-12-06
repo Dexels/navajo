@@ -6,6 +6,7 @@ import java.util.StringTokenizer;
 import com.dexels.navajo.document.Message;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.data.util.ObjectProperty;
 
 public class CompositeMessageBridge extends CompositeItem implements Item {
 
@@ -14,6 +15,10 @@ public class CompositeMessageBridge extends CompositeItem implements Item {
 	private final Message src;
 	
 //	private final Map<Object,PropertyItem> propertyMap = new HashMap<Object,PropertyItem>();
+
+	public CompositeMessageBridge(Message src) {
+		this(src,null);
+	}
 	
 	public CompositeMessageBridge(Message src, List<String> editableList) {
 		super();
@@ -42,6 +47,10 @@ public class CompositeMessageBridge extends CompositeItem implements Item {
 	
 	@Override
 	public Property getItemProperty(Object id) {
+		if("message".equals(id)) {
+			ObjectProperty<Message> op = new ObjectProperty<Message>(src);
+			return op;
+		}
 		System.err.println("Item: "+id);
 		StringTokenizer st = new StringTokenizer((String) id,"@");
 		String propertyName = st.nextToken();

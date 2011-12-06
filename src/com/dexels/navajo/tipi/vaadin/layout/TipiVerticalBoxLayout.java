@@ -23,7 +23,7 @@ public class TipiVerticalBoxLayout
 
   public void createLayout() {
 	 layout =  new VerticalLayout();
-	  setLayout(layout);
+	 setLayout(layout);
   }
 
   protected void setValue(String name, TipiValue tv) {
@@ -32,5 +32,6 @@ public class TipiVerticalBoxLayout
   
 	public void addToLayout(Object component, Object constraints) {
 		layout.addComponent((Component) component);
+		layout.setExpandRatio((Component) component, 0);
 	}
 }

@@ -5,9 +5,10 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Map;
 
+import tipi.TipiApplicationInstance;
+
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.tipi.vaadin.application.TipiVaadinApplication;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.ParameterHandler;
 import com.vaadin.terminal.URIHandler;
@@ -16,9 +17,9 @@ public class EvalHandler implements URIHandler, ParameterHandler {
 
 	private static final long serialVersionUID = 2451838360127835405L;
 	private Map<String, String[]> parameters = null;
-	private final TipiVaadinApplication application;
+	private final TipiApplicationInstance application;
 
-	public EvalHandler(TipiVaadinApplication tai) {
+	public EvalHandler(TipiApplicationInstance tai) {
 		this.application = tai;
 	}
 
@@ -31,7 +32,7 @@ public class EvalHandler implements URIHandler, ParameterHandler {
 	@Override
 	public DownloadStream handleURI(URL context, String relativeUri) {
 		application.setEvalUrl(context,relativeUri);
-		
+		application.setContextUrl(context);
 		if (!relativeUri.startsWith("eval")) {
 			System.err.println("Not matching: " + relativeUri);
 		}
@@ -56,7 +57,6 @@ public class EvalHandler implements URIHandler, ParameterHandler {
 				if (o.value instanceof Binary) {
 					Binary b = (Binary) o.value;
 					String contentType = b.guessContentType();
-
 					InputStream is = b.getDataAsStream();
 					DownloadStream downloadStream = new DownloadStream(is, contentType, "file." + b.getExtension());
 					if (contentType != null && contentType.indexOf("html") == -1) {

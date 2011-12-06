@@ -78,43 +78,6 @@ public class TipiMessagePanel extends TipiVaadinComponentImpl implements
 		return super.getComponentValue(name);
 	}
 
-	// /**
-	// * @param n
-	// *
-	// * Overridden version! Uses message relative addressing
-	// */
-	// protected void loadProperties(Navajo n) {
-	// if(myMessage==null) {
-	// // No message has been set. Reverting to parent behavior.
-	// // super.loadProperties(n);
-	// return;
-	// }
-	// if(Message.MSG_TYPE_ARRAY.equals(myMessage.getType())) {
-	// return;
-	// }
-	// getRecursiveProperties();
-	// List<TipiComponent> props = getRecursiveProperties();
-	// for (int i = 0; i < props.size(); i++) {
-	// PropertyComponent current = (PropertyComponent) props.get(i);
-	// Property p = myMessage.getProperty(current.getPropertyName());
-	// if (p != null) {
-	// try {
-	// getContext().debugLog("data    ",
-	// "delivering property: " + p.getFullPropertyName() + " to tipi: " +
-	// ((TipiComponent) current).getId());
-	// } catch (NavajoException ex) {
-	// ex.printStackTrace();
-	// }
-	// } else {
-	// getContext().debugLog("data    ", "delivering null property to tipi: " +
-	// ((TipiComponent) current).getId());
-	// }
-	// if (p != null) {
-	// current.setProperty(p);
-	// }
-	// }
-	// }
-
 	public Object createContainer() {
 		VerticalLayout myPanel = new VerticalLayout();
 		return myPanel;

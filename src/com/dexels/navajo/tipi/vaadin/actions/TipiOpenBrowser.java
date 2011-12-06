@@ -13,6 +13,7 @@ import java.net.URL;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.internal.TipiEvent;
+import com.dexels.navajo.tipi.vaadin.VaadinTipiContext;
 import com.dexels.navajo.tipi.vaadin.actions.base.TipiVaadinActionImpl;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.FileResource;
@@ -36,15 +37,15 @@ public class TipiOpenBrowser extends TipiVaadinActionImpl {
         Object url  = getEvaluatedParameterValue("url", event);
         try {
 			URL u = new URL(""+url);
-			getVaadinApplication().getMainWindow().open(new ExternalResource(u),"_blank");
+			getApplication().getMainWindow().open(new ExternalResource(u),"_blank");
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 			// ... so u might be a file:
-			File base = getVaadinApplication().getInstallationFolder();
+			File base = ((VaadinTipiContext)getContext()).getInstallationFolder();
 			File fil = new File(base,""+url);
 			if(fil.exists()) {
-				final FileResource fr = new FileResource(fil,getVaadinApplication());
-				getVaadinApplication().getMainWindow().open(fr,"_blank");
+				final FileResource fr = new FileResource(fil,getApplication());
+				getApplication().getMainWindow().open(fr,"_blank");
 			}
 		}
     }

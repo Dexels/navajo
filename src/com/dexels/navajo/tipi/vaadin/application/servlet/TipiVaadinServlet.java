@@ -39,6 +39,8 @@ public class TipiVaadinServlet extends ApplicationServlet {
 	@Override
 	protected Application getNewApplication(HttpServletRequest request)
 			throws ServletException {
+//		String appInstance = getInitParameter("application");
+//		Class<? extends Application> appInstanceClass = Class.forName(appInstance);
 		TipiVaadinApplication tipiApplication = (TipiVaadinApplication) super.getNewApplication(request);
 		tipiApplication.setServletContext(getServletContext());
 

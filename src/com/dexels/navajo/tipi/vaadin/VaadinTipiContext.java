@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.vaadin;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -13,10 +14,15 @@ import org.slf4j.LoggerFactory;
 import tipi.TipiApplicationInstance;
 import tipi.TipiExtension;
 
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiContext;
-import com.dexels.navajo.tipi.vaadin.application.TipiVaadinApplication;
+import com.dexels.navajo.tipi.vaadin.application.ApplicationUtils;
+import com.dexels.navajo.tipi.vaadin.components.io.URLInputStreamSource;
 import com.dexels.navajo.tipi.vaadin.cookie.BrowserCookieManager;
+import com.vaadin.Application;
+import com.vaadin.terminal.StreamResource;
+import com.vaadin.terminal.StreamResource.StreamSource;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
 
@@ -25,18 +31,19 @@ public class VaadinTipiContext extends TipiContext {
 	private static final long serialVersionUID = -5277282822136332687L;
 
 	private static Logger logger = LoggerFactory.getLogger(VaadinTipiContext.class);
-	
+
+	private File installationFolder = null;
 	private Window mainWindow;
-	private URL evalUrl;
+//	private URL evalUrl;
 	private String contextName = null;
 	private final java.util.Random randomizer = new java.util.Random(System.currentTimeMillis());
 
 	
-	public VaadinTipiContext(TipiApplicationInstance myApplication, List<TipiExtension> extensionList) {
+	public VaadinTipiContext(TipiApplicationInstance myApplication, File install, List<TipiExtension> extensionList) {
 		super(myApplication, extensionList, null);
 		
 		
-		File install = getVaadinApplication().getInstallationFolder();
+//		File install = getInstallationFolder();
 		setTipiInstallationFolder(install);
 		setCookieManager(new BrowserCookieManager());
 		TipiScreen ts = new TipiScreen(this);
@@ -57,7 +64,8 @@ public class VaadinTipiContext extends TipiContext {
 	@Override
 	public void exit() {
 		super.exit();
-		getVaadinApplication().close();
+// TODO FIX
+//		getVaadinApplication().close();
 	}
 
 
@@ -128,16 +136,21 @@ public class VaadinTipiContext extends TipiContext {
 		this.mainWindow = mainWindow;
 	}
 
-	public TipiVaadinApplication getVaadinApplication() {
-		return (TipiVaadinApplication) this.getApplicationInstance();
+	public TipiApplicationInstance getVaadinApplication() {
+		return this.getApplicationInstance();
 	}
 
+	public Application getApplication() {
+		return (Application) this.getApplicationInstance();
+	}
 
 
 	public URL getEvalUrl(String expression) {
 		try {
 			String encoded = URLEncoder.encode(expression,"UTF-8");
-			URL eval = new URL(evalUrl,"eval");
+			URL contextUrl = getVaadinApplication().getContextUrl();
+			System.err.println("USING BASE EVAL URL: "+contextUrl);
+			URL eval = new URL(contextUrl ,"eval");
 			String s = eval.toString()+"?rdm="+randomizer.nextLong()+"&evaluate="+encoded;
 			return new URL(s);
 
@@ -150,11 +163,11 @@ public class VaadinTipiContext extends TipiContext {
 	}
 
 	public void setEvalUrl(URL context, String relativeUri) {
-		try {
-			evalUrl = new URL(context,relativeUri);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			evalUrl = new URL(context,relativeUri);
+//		} catch (MalformedURLException e) {
+//			e.printStackTrace();
+//		}
 		
 	}	
 	
@@ -162,4 +175,50 @@ public class VaadinTipiContext extends TipiContext {
 		return getEvalUrl(expression).toString();
 	}
 
+
+
+
+	public File getInstallationFolder() {
+		return installationFolder;
+	}
+
+	public void setInstallationFolder(File installationFolder) {
+		this.installationFolder = installationFolder;
+	}
+	
+	
+	public  StreamResource getResource(Object u) {
+		if (u == null) {
+			return null;
+		}
+		String lastMimeType = null;
+		StreamSource is = null;
+		if (u instanceof URL) {
+			if (ApplicationUtils.isRunningInGae()) {
+				try {
+					is = resolve((URL) u);
+					
+				} catch (IOException e) {
+					e.printStackTrace();
+					return null;
+				}
+			} else {
+					is = new URLInputStreamSource((URL) u);
+			}
+		}
+		if (u instanceof Binary) {
+			lastMimeType = ((Binary)u).guessContentType();
+		}
+		if (is == null) {
+			return null;
+		}
+		StreamResource sr = new StreamResource(is, ""+u,getApplication());
+		sr.setMIMEType(lastMimeType);
+		return sr;
+	}
+	
+	private StreamSource resolve(URL u) throws IOException {
+		return new URLInputStreamSource(u);
+	}
+	
 }

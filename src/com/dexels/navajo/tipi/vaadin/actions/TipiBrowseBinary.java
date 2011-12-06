@@ -84,7 +84,7 @@ public class TipiBrowseBinary extends TipiVaadinActionImpl {
 			public void uploadSucceeded(SucceededEvent event) {
 				try {
 					pp.setAnyValue(outputBinary);
-					getVaadinApplication().getMainWindow().removeWindow(w);
+					getApplication().getMainWindow().removeWindow(w);
 					continueAction(getEvent());
 				} catch (TipiBreakException e) {
 				} catch (TipiSuspendException e) {
@@ -105,7 +105,7 @@ public class TipiBrowseBinary extends TipiVaadinActionImpl {
 		});
 
 		w.addComponent(u);
-		getVaadinApplication().getMainWindow().addWindow(w);
+		getApplication().getMainWindow().addWindow(w);
 		suspend();
 	}
 }

@@ -63,8 +63,8 @@ public class TipiOpenBinary extends TipiVaadinActionImpl {
 				return b.getDataAsStream();
 			}
 		};
-		StreamResource sr = new StreamResource( ss, "aap."+b.getExtension(), getVaadinApplication());
-		getVaadinApplication().getMainWindow().open(sr,"_blank");
+		StreamResource sr = new StreamResource( ss, "aap."+b.getExtension(), getApplication());
+		getApplication().getMainWindow().open(sr,"_blank");
 
 	}
 }

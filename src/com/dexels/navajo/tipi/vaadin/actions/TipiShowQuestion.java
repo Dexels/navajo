@@ -31,7 +31,7 @@ public class TipiShowQuestion extends TipiVaadinActionImpl {
      */
     protected void execute(TipiEvent event) throws TipiBreakException, TipiException, TipiSuspendException {
         String text  = (String) getEvaluatedParameterValue("text", event);
-        ConfirmDialog.show(getVaadinApplication().getMainWindow(),text,new ConfirmDialog.Listener(){
+        ConfirmDialog.show(getApplication().getMainWindow(),text,new ConfirmDialog.Listener(){
 
 			@Override
 			public void onClose(ConfirmDialog dialog) {
