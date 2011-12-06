@@ -202,12 +202,15 @@ public final class DbConnectionBroker extends Object
 		}
 
 		// EDIT BY FRANK: Placed wait into a loop. Also added timeout to loop, to be sure
-		while(timeoutDays > 0 && available == 0 && current == conns.length ) {
+		if (timeoutDays > 0 && available == 0 && current == conns.length ) {
 			try {
 				wait(60000);
 			} catch(InterruptedException e) {
 				// dunno.
 				e.printStackTrace();
+			}
+			if ( available == 0 && current == conns.length ) {
+				return null;
 			}
 		}
 
