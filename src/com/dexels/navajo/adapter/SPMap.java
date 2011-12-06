@@ -190,7 +190,7 @@ public class SPMap extends SQLMap {
             }
             if (type == INPUT_PARAM) {
               spIndex++;
-              if ( (param instanceof NavajoType && ((NavajoType) param).isEmpty() ) || (param == null) ) {
+              if ( (param == null) || (param instanceof NavajoType && ((NavajoType) param).isEmpty() ) ) {
                 callStatement.setNull(i + 1, Types.VARCHAR );//getSpParameterType(spName, spIndex));
               }
               else

@@ -944,7 +944,7 @@ private static Object semaphore = new Object();
         Object param = parameters.get(i);
 
         // System.err.println("parameter " + i + " = " + param);
-        if ( (param instanceof NavajoType && ((NavajoType) param).isEmpty() ) || (param == null) ) {
+        if ( (param == null) || (param instanceof NavajoType && ((NavajoType) param).isEmpty() )  ) {
           statement.setNull(i + 1, Types.VARCHAR);
         }
         else if (param instanceof String) {
