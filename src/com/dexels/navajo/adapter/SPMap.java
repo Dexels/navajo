@@ -24,6 +24,7 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
+import com.dexels.navajo.document.types.NavajoType;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.document.types.Binary;
@@ -189,7 +190,7 @@ public class SPMap extends SQLMap {
             }
             if (type == INPUT_PARAM) {
               spIndex++;
-              if (param == null) {
+              if ( (param instanceof NavajoType && ((NavajoType) param).isEmpty() ) || (param == null) ) {
                 callStatement.setNull(i + 1, Types.VARCHAR );//getSpParameterType(spName, spIndex));
               }
               else
