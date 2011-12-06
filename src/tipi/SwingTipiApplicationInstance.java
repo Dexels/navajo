@@ -3,6 +3,7 @@ package tipi;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -182,6 +183,21 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance im
 
 	public File getInstallationFolder() {
 		return this.tipiInstallationFolder;
+	}
+
+	@Override
+	public void setEvalUrl(URL context, String relativeUri) {
+		
+	}
+
+	@Override
+	public void setContextUrl(URL contextUrl) {
+		throw new UnsupportedOperationException("Not implemented just yet");
+	}
+
+	@Override
+	public URL getContextUrl() {
+		throw new UnsupportedOperationException("Not implemented just yet");
 	}
 
 }

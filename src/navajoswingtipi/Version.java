@@ -89,7 +89,6 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 	public static void main(String[] args) {
 		JFrame mm = new JFrame("aaaa");
-		System.err.println("MM>>>>>M: " + mm);
 		mm.setBounds(100, 100, 200, 200);
 		mm.setVisible(true);
 	}

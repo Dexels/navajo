@@ -7,18 +7,18 @@ import org.osgi.framework.BundleContext;
 import tipi.MainApplication;
 import tipi.SwingTipiApplicationInstance;
 
-import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 
 public class TipiSwingWrapper {
-	public static SwingTipiApplicationInstance runApp(BundleContext bundle, String appInstance) throws TipiException {
+	public static SwingTipiApplicationInstance runApp(BundleContext bundle, String appInstance) {
 		try {
 			SwingTipiApplicationInstance applicationInstance = MainApplication.runApp(bundle, appInstance);
 			applicationInstance.setBundleContext(bundle);
-			TipiContext createContext = applicationInstance.createContext();
-			applicationInstance.setCurrentContext(createContext);
+			applicationInstance.setCurrentContext(applicationInstance.createContext());
 			return applicationInstance;
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (TipiException e) {
 			e.printStackTrace();
 		}
 		return null;
