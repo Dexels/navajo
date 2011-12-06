@@ -368,6 +368,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
     		}
 
     		// Get compilation class.
+    		// TODO refactor into intelligent discovery
     		compilationLanguage = ( body.getProperty("parameters/compilation_language") != null ? body.getProperty("parameters/compilation_language").getValue() : null );
 
     		
