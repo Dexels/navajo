@@ -232,17 +232,23 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 		NavajoCoreAdapterLibrary library = new NavajoCoreAdapterLibrary();
 		fi.injectExtension(library);
-		for(String adapterName: fi.getAdapterNames(library)) {
+		try {
+			for(String adapterName: fi.getAdapterNames(library)) {
 
-			String adapterClass = fi.getAdapterClass(adapterName,library);
-			Class<?> c = Class.forName(adapterClass);
+				String adapterClass = fi.getAdapterClass(adapterName,library);
+				Class<?> c = Class.forName(adapterClass);
 
-			 Dictionary<String, Object> props = new Hashtable<String, Object>();
-			 props.put("adapterName", adapterName);
-			 props.put("adapterClass", c.getName());
-			if(adapterClass!=null) {
-				context.registerService(Class.class.getName(), c, props);
+				 Dictionary<String, Object> props = new Hashtable<String, Object>();
+				 props.put("adapterName", adapterName);
+				 props.put("adapterClass", c.getName());
+				 System.err.println("registering: "+adapterName);
+				 if(adapterClass!=null) {
+					context.registerService(Class.class.getName(), c, props);
+				}
 			}
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 	}
