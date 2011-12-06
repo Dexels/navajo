@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import javax.servlet.Servlet;
+
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
@@ -40,6 +42,8 @@ public class JettyServer {
 
 		StatusPrinter.print(lc);
 	    
+		boolean useTouch = "true".equals( System.getProperty("tipi.vaadin.touch"));
+		
 	    try {
 	      JoranConfigurator configurator = new JoranConfigurator();
 	      configurator.setContext(lc);
@@ -57,7 +61,11 @@ public class JettyServer {
 		while (tokenizeContext.hasMoreTokens()) {
 			String context = tokenizeContext.nextToken();
 			contexts.add(context);
-			addVaadinContext(context, bundle, jettyServer, handlers);
+			try {
+				addVaadinContext(context, bundle, jettyServer, handlers,useTouch);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
 			
 		}
 
@@ -92,13 +100,35 @@ public class JettyServer {
 
 	}
 
-	private void addVaadinContext(final String contextPath, final Bundle bundle, Server jettyServer,
-			HandlerList handlers) {
+	private void addVaadinContext(final String contextPath, final Bundle bundle, Server jettyServer, HandlerList handlers, boolean useTouch) throws ClassNotFoundException {
 		ServletContextHandler webAppContext = new ServletContextHandler(jettyServer,contextPath,true,false);
 		webAppContext.setClassLoader(Thread.currentThread().getContextClassLoader());
-		TipiVaadinServlet vaadin = new TipiVaadinServlet();
+//		TipiVaadinTouchServlet vaadin = new TipiVaadinTouchServlet();
+		Class<? extends Servlet> cls;
+		Servlet vaadin = null;
+		if (useTouch) {
+			cls = (Class<? extends Servlet>) Class.forName("com.dexels.navajo.tipi.vaadin.touch.servlet.TipiVaadinTouchServlet");
+		} else {
+			cls = TipiVaadinServlet.class;
+		}
+		try {
+			vaadin = cls.newInstance();
+		} catch (InstantiationException e2) {
+			e2.printStackTrace();
+		} catch (IllegalAccessException e2) {
+			e2.printStackTrace();
+		}
+		
 		ServletHolder sh = new ServletHolder(vaadin);
-		sh.setInitParameter("application", "com.dexels.navajo.tipi.vaadin.application.TipiVaadinApplication");
+		System.err.println("Conf: "+vaadin.getServletConfig());
+		if (useTouch) {
+			sh.setInitParameter("application", "com.dexels.navajo.tipi.vaadin.touch.application.TipiVaadinTouchApplication");
+			sh.setInitParameter("widgetset", "com.example.vaadintest.widgetset.VaadintestWidgetset");
+		} else {
+			sh.setInitParameter("application", "com.dexels.navajo.tipi.vaadin.application.TipiVaadinApplication");
+			sh.setInitParameter("widgetset", "com.dexels.navajo.tipi.vaadin.widgetset.VaadintestWidgetset");
+		}
+
 		// Jetty style, OSGi style would be /app/
 		webAppContext.addServlet(sh,"/app/*");
 
