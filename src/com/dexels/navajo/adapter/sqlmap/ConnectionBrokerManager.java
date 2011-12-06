@@ -32,11 +32,6 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
     JMXHelper.registerMXBean(this, JMXHelper.NAVAJO_DOMAIN, "ConnectionBrokerManager");
   }
 
-  public ConnectionBrokerManager(final boolean b) {
-    super();
-    JMXHelper.registerMXBean(this, JMXHelper.NAVAJO_DOMAIN, "ConnectionBrokerManager");
-  }
-
   public void terminate() {
 	  try {
 		for (SQLMapBroker sq : brokerMap.values()) {
