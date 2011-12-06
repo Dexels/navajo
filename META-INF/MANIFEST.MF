@@ -5,6 +5,8 @@ Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Dexels
 Import-Package: javax.imageio,
+ javax.servlet;version="2.5.0",
+ javax.servlet.http;version="2.5.0",
  junit.framework;resolution:=optional,
  org.osgi.framework;version="1.5.0"
 Bundle-ActivationPolicy: lazy
@@ -20,3 +22,5 @@ Bundle-ClassPath: lib/milStd2525_png.jar,
  lib/omj3d.jar,
  lib/omsvg.jar,
  lib/openmap.jar
+Export-Package: com.dexels.geospatial,
+ com.dexels.navajo.geo
