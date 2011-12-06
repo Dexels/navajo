@@ -170,7 +170,6 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 
 	public void initContainer() {
 		if (getContainer() == null) {
-			System.err.println(">>>>> "+getParentContainer());
 			setContainer(createContainer());
 		}
 	}

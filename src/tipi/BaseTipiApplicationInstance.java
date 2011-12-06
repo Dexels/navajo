@@ -14,6 +14,9 @@ import java.util.NoSuchElementException;
 import java.util.PropertyResourceBundle;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import tipipackage.ITipiExtensionContainer;
 
 import com.dexels.navajo.tipi.TipiContext;
@@ -23,7 +26,7 @@ public abstract class BaseTipiApplicationInstance implements TipiApplicationInst
 
 	private TipiContext currentContext;
 	private File installationFolder = null;
-	
+	private static final Logger logger = LoggerFactory.getLogger(BaseTipiApplicationInstance.class);
 	public TipiContext getCurrentContext() {
 		return currentContext;
 	}
@@ -89,11 +92,20 @@ public abstract class BaseTipiApplicationInstance implements TipiApplicationInst
 //		return resolvedValues;
 	}
 
-	public static Map<String, String> getBundleMap(String path, File installationFolder) throws FileNotFoundException, IOException {
+	public static Map<String, String> getBundleMap(String path, File installationFolder)  {
 		File settings = new File(installationFolder,"settings");
-		FileReader argReader = new FileReader(new File(settings,path));
 		Map<String,String> bundleValues = new HashMap<String, String>();
-		PropertyResourceBundle prb = new PropertyResourceBundle(argReader);
+		PropertyResourceBundle prb;
+		try {
+			FileReader argReader = new FileReader(new File(settings,path));
+			prb = new PropertyResourceBundle(argReader);
+		} catch (IOException e) {
+			logger.info("Settings file: "+path+" not found in installationFolder: "+installationFolder.getAbsolutePath()+". continuing.");
+			return bundleValues;
+		}
+
+
+		
 		for (String key : prb.keySet()) {
 			bundleValues.put(key, prb.getString(key));
 		}

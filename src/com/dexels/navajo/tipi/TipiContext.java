@@ -965,7 +965,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 	public InputStream getTipiResourceStream(String location)
 			throws IOException {
-		logger.debug("Getting tipi file: "+location+" loader: "+tipiResourceLoader);
+		logger.info("Getting tipi file: "+location+" loader: "+tipiResourceLoader);
 		if (tipiResourceLoader != null) {
 			return tipiResourceLoader.getResourceStream(location);
 		} else {

@@ -116,7 +116,12 @@ public abstract class TipiAbstractOSGiExtension implements TipiExtension,
 		} catch (MalformedURLException e) {
 			logger.error("Bundle could not be loaded. Path invalid: "+library,e);
 		} catch (BundleException e) {
-			logger.error("Bundle with path: "+library+" could not be loaded.",e);
+			if(e.getType()==BundleException.DUPLICATE_BUNDLE_ERROR) {
+				logger.info("Bundle already present. Ignoring.");
+			} else {
+				logger.error("Bundle with path: "+library+" could not be loaded.",e);
+			}
+					
 		}
 		for (Bundle b : loaded) {
 			try {
