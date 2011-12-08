@@ -24,11 +24,34 @@
  */
 package navajoqueuemanager;
 
+import java.util.Dictionary;
+import java.util.Hashtable;
+
+import org.osgi.framework.BundleContext;
+
+import com.dexels.navajo.server.listener.http.SchedulerTools;
+import com.dexels.navajo.server.listener.http.TmlScheduler;
+import com.dexels.navajo.server.listener.http.schedulers.DummyScheduler;
+import com.dexels.navajo.server.listener.http.schedulers.priority.PriorityThreadPoolScheduler;
+
 
 
 
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 
+	
+	@Override
+	public void start(BundleContext bc) throws Exception {
+		super.start(bc);
+		if(bc!=null) {
+			PriorityThreadPoolScheduler ptps = new PriorityThreadPoolScheduler();
+			 Dictionary<String, Object> wb = new Hashtable<String, Object>();
+			 wb.put("schedulerClass", "com.dexels.navajo.server.listener.http.schedulers.priority.PriorityThreadPoolScheduler");
+			bc.registerService(TmlScheduler.class, ptps, wb);
+		
+		}
+	}
+	
 	
 
 }
