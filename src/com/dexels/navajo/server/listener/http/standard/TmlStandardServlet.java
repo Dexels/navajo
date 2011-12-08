@@ -33,8 +33,7 @@ public class TmlStandardServlet extends HttpServlet implements
 			return;
 		}
 		System.err.println("Precheck complete");
-		Navajo inputDoc = NavajoFactory.getInstance().createNavajo(
-				req.getInputStream());
+		Navajo inputDoc = NavajoFactory.getInstance().createNavajo(req.getInputStream());
 		req.getInputStream().close();
 
 		Object certObject = req
