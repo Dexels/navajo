@@ -24,7 +24,14 @@
  */
 package navajolisteners;
 
+import java.util.Dictionary;
+import java.util.Hashtable;
+
+import org.osgi.framework.BundleContext;
+
 import com.dexels.navajo.listeners.SchedulerRegistry;
+import com.dexels.navajo.server.listener.http.TmlScheduler;
+import com.dexels.navajo.server.listener.http.schedulers.DummyScheduler;
 
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 
@@ -33,7 +40,21 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	public Version() {
 		// javax.mail.Address a;
 		// setReleaseDate(RELEASEDATE);
+
 	}
+
+	
+	@Override
+	public void start(BundleContext bc) throws Exception {
+		super.start(bc);
+		if(bc!=null) {
+			DummyScheduler ds = new DummyScheduler();
+			 Dictionary<String, Object> wb = new Hashtable<String, Object>();
+			 wb.put("schedulerClass", "com.dexels.navajo.server.listener.http.schedulers.DummyScheduler");
+			bc.registerService(TmlScheduler.class, ds, wb);
+		}
+	}
+
 
 	@Override
 	public void shutdown() {
@@ -41,5 +62,8 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 		super.shutdown();
 		SchedulerRegistry.setScheduler(null);
 	}
+
+
+
 
 }
