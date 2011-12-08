@@ -77,11 +77,13 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 //	private long throttleTimestamp = 0;
 	
 	public PriorityThreadPoolScheduler() {
-		JMXHelper.registerMXBean(this, JMXHelper.NAVAJO_DOMAIN, "PriorityScheduler");
 	}
 
 	@Override
 	public void initialize(HttpServlet servlet) {
+		// This must be done later
+		JMXHelper.registerMXBean(this, JMXHelper.NAVAJO_DOMAIN, "PriorityScheduler");
+		// =====
 		System.err.println("Priority thread queue available. Setting up pools.");
 		int poolSize;
 		
