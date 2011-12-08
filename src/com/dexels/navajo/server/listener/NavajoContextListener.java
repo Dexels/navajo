@@ -14,6 +14,9 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.DispatcherInterface;
@@ -28,6 +31,7 @@ public class NavajoContextListener implements ServletContextListener {
 
 	public static final String DEFAULT_SERVER_XML = "config/server.xml";
 
+	private static final Logger logger = LoggerFactory.getLogger(NavajoContextListener.class);
 	@Override
 	public void contextDestroyed(ServletContextEvent sc) {
 		destroyContext(sc.getServletContext());
@@ -40,16 +44,12 @@ public class NavajoContextListener implements ServletContextListener {
 	}
 
 	public void init(ServletContext sc) {
-		System.err
-				.println("==========================================================");
-		System.err.println("INITIALIZING NAVAJO INSTANCE: "
-				+ sc.getContextPath());
-		System.err
-				.println("==========================================================");
+		logger.info("==========================================================");
+		logger.info("INITIALIZING NAVAJO INSTANCE: "+ sc.getContextPath());
+		logger.info("==========================================================");
 
 		if (!isValidInstallationForContext(sc)) {
-			System.err
-					.println("No valid installation found, abandoning Context initialization.");
+			logger.info("No valid installation found, abandoning further Context initialization.");
 			return;
 		}
 
@@ -57,6 +57,7 @@ public class NavajoContextListener implements ServletContextListener {
 	}
 
 	public static void destroyContext(ServletContext sc) {
+		logger.info("Destroying Navajo context");
 		AbstractVersion.shutdownNavajoExtension("navajo");
 		AbstractVersion.shutdownNavajoExtension("navajodocument");
 		AbstractVersion.shutdownNavajoExtension("navajoclient");
@@ -116,13 +117,10 @@ public class NavajoContextListener implements ServletContextListener {
 				|| !verified) {
 			rootPath = sc.getRealPath("");
 		}
-		// System.err.println("Resolved Configuration path: " +
-		// configurationPath);
-		// System.err.println("Resolved Root path: " + rootPath);
+		String servletContextRootPath = sc.getRealPath("");
 
-		// Startup Navajo instance.
 		try {
-			initDispatcher(sc, rootPath, configurationPath);
+			initDispatcher(servletContextRootPath, rootPath, configurationPath);
 		} catch (Exception e) {
 			e.printStackTrace(System.err);
 		}
@@ -136,10 +134,9 @@ public class NavajoContextListener implements ServletContextListener {
 	}
 
 	protected final static DispatcherInterface initDispatcher(
-			ServletContext sc, String rootPath, String configurationPath)
+			String servletContextRootPath, String rootPath, String configurationPath)
 			throws NavajoException {
 
-		String servletContextRootPath = sc.getRealPath("");
 		System.err.println("Context root path: " + servletContextRootPath);
 		if (configurationPath != null) {
 			// Old SKOOL. Path provided, notify the dispatcher by passing a null
@@ -241,7 +238,17 @@ public class NavajoContextListener implements ServletContextListener {
 			return force;
 		} else {
 			try {
-				String contextPath = context.getContextPath().substring(1);
+				String cp = context.getContextPath();
+				String contextPath;
+				if(cp == null || cp.isEmpty()) {
+					contextPath="/";
+				} else {
+					if(cp.startsWith("/")) {
+						contextPath = cp.substring(1);
+					} else {
+						contextPath = cp;
+					}
+				}
 				Map<String, String> systemContexts = loadSystemContexts();
 				return getInstallationPath(systemContexts, contextPath);
 			} catch (IOException e) {
