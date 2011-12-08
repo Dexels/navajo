@@ -105,7 +105,6 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	@Override
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
-		System.err.println("Good morning navajo client");
 		ClientInterface defaultClient = NavajoClientFactory.getClient();
 		bc.registerService(ClientInterface.class.getName(), defaultClient, null);
 	}
