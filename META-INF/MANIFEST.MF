@@ -12,12 +12,13 @@ Require-Bundle: com.dexels.navajo.client,
  com.dexels.navajo.version;bundle-version="1.0.4",
  com.dexels.navajo.listeners;bundle-version="3.1.2"
 Import-Package: javax.script,
- javax.servlet;version="[2.5.0,4.0.0)",
- javax.servlet.http;version="[2.5.0,4.0.0)",
+ javax.servlet,
+ javax.servlet.http,
  org.osgi.framework;version="1.5.0",
  org.slf4j;version="1.6.1"
 Export-Package: com.dexels.navajo.queuemanager,
  com.dexels.navajo.queuemanager.api,
+ com.dexels.navajo.server.listener.http.schedulers.priority,
  navajoqueuemanager
-Bundle-Activator: com.dexels.navajo.queuemanager.bundle.Bundle
+Bundle-Activator: navajoqueuemanager.Version
 Bundle-ActivationPolicy: lazy
