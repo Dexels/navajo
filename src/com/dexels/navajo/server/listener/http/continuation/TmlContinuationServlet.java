@@ -126,12 +126,12 @@ public class TmlContinuationServlet extends HttpServlet implements SchedulableSe
 		return myScheduler;
 	}
 
-	@Override
-	public void init() throws ServletException {
-		super.init();
-		setTmlScheduler(SchedulerTools.createScheduler(this));
-
-	}
+//	@Override
+//	public void init() throws ServletException {
+//		super.init();
+//		setTmlScheduler(SchedulerTools.createScheduler(this));
+//
+//	}
 
 
 	@Override
