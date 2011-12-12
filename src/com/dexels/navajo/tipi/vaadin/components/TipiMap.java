@@ -1,35 +1,22 @@
 package com.dexels.navajo.tipi.vaadin.components;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vaadin.vol.Bounds;
-import org.vaadin.vol.GoogleStreetMapLayer;
 import org.vaadin.vol.OpenLayersMap;
 import org.vaadin.vol.OpenStreetMapLayer;
 import org.vaadin.vol.Point;
 import org.vaadin.vol.Popup;
 
-import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
-import com.dexels.navajo.tipi.actions.TipiInstantiateTipi;
-import com.vaadin.addon.calendar.event.BasicEvent;
-import com.vaadin.addon.calendar.event.BasicEventProvider;
 import com.vaadin.addon.calendar.event.CalendarEvent;
-import com.vaadin.addon.calendar.event.CalendarEventProvider;
-import com.vaadin.addon.calendar.ui.Calendar;
-import com.vaadin.addon.calendar.ui.CalendarComponentEvents;
-import com.vaadin.addon.calendar.ui.CalendarComponentEvents.BackwardEvent;
-import com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventClick;
-import com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventClickHandler;
-import com.vaadin.addon.calendar.ui.CalendarComponentEvents.ForwardEvent;
-import com.vaadin.addon.calendar.ui.handler.BasicBackwardHandler;
-import com.vaadin.addon.calendar.ui.handler.BasicForwardHandler;
+import com.vaadin.ui.ComponentContainer.ComponentAttachEvent;
+import com.vaadin.ui.ComponentContainer.ComponentAttachListener;
 
 public class TipiMap extends TipiMessagePanel  {
 
@@ -41,7 +28,9 @@ public class TipiMap extends TipiMessagePanel  {
 	private String definitionName;
 	
 	private final static Logger logger = LoggerFactory.getLogger(TipiMap.class);
-
+	private double centerLat = 0;
+	private double centerLon = 0;
+	
 	@Override
 	public Object createContainer() {
 		map = new OpenLayersMap();
@@ -50,11 +39,24 @@ public class TipiMap extends TipiMessagePanel  {
 		map.addLayer(layer);
 //		map.setImmediate(true);
 		map.setSizeFull();
-		 map.setCenter(22.30083, 60.452541);
-		Popup p = new Popup(4.1, 51.3, "Shake it!");
-//		map.zoomToExtent(new Bounds(Point.valueOf("4 51"),Point.valueOf("5 52")));
-		map.setZoom(8);
-		map.addPopup(p);
+		map.addListener(new ComponentAttachListener() {
+			
+			@Override
+			public void componentAttachedToContainer(ComponentAttachEvent event) {
+				centerLat = 52.1;
+				centerLon = 99.1;
+				 map.setCenter(centerLat,centerLon);
+					Popup p = new Popup(4.1, 51.3, "Shake it!");
+//					map.zoomToExtent(new Bounds(Point.valueOf("4 51"),Point.valueOf("5 52")));
+//					 Point observer = new Point(90,53);
+//				        Bounds extent = new Bounds(observer, observer);
+				      
+//					map.zoomToExtent(extent);
+				        map.setZoom(5);
+				        map.addPopup(p);
+				        
+			}
+		}); 
 		return map;
 	}
 
@@ -63,9 +65,9 @@ public class TipiMap extends TipiMessagePanel  {
 	
 	@Override
 	public void loadData(Navajo n, String method) throws TipiException, TipiBreakException {
-		if(messagepath==null) {
-			throw new NullPointerException("message path in table is null, set it before loading!");
-		}
+//		if(messagepath==null) {
+//			throw new NullPointerException("message path in table is null, set it before loading!");
+//		}
 		super.loadData(n, method);
 //		componentMap.clear();
 //		Message m = n.getMessage(messagepath);
@@ -97,6 +99,7 @@ public class TipiMap extends TipiMessagePanel  {
 
 	@Override
 	protected void setComponentValue(String name, Object object) {
+		System.err.println("Set "+name+" object: "+object);
 		if (name.equals("definitionName")) {
 			definitionName = (String) object;
 			return;
@@ -105,6 +108,24 @@ public class TipiMap extends TipiMessagePanel  {
 			messagepath = (String) object;
 			return;
 		}
+		if (name.toLowerCase().equals("lat")) {
+			double lat = (Double)object;
+			centerLat = lat;
+			map.setCenter(centerLat,centerLon);
+			return;
+		}
+		if (name.toLowerCase().equals("lon")) {
+			double lon = (Double)object;
+			centerLon = lon;
+			map.setCenter(centerLat,centerLon);
+			return;
+		}
+		if (name.toLowerCase().equals("zoom")) {
+			int zoom = (Integer)object;
+			map.setZoom(zoom);
+			return;
+		}
+		
 		super.setComponentValue(name, object);
 	}
 	
