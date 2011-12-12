@@ -76,14 +76,12 @@ public class TableCell extends CssLayout {
 	@Override
 	public void attach() {
 		super.attach();
-		System.err.println("ATTACHED?");
 
 		addListener(new LayoutClickListener() {
 			private static final long serialVersionUID = -3200241305696535695L;
 
 			@Override
 			public void layoutClick(LayoutClickEvent event) {
-				System.err.println("CLICKCKCKCK!");
 				tipiParent.layoutClick(event);
 			}
 		});

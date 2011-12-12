@@ -24,11 +24,8 @@ public class TipiSplitPanel extends TipiVaadinComponentImpl {
 	  public void setComponentValue(final String name, final Object object) {
 		    super.setComponentValue(name, object);
 		    HorizontalSplitPanel v = (HorizontalSplitPanel) getVaadinContainer();
-		    	System.err.println(">>>> SIZIZIZIZZII: "+v.getWidth()+" :: "+v.getHeight());
 				v.setWidth(getMainWindow().getWidth(), getMainWindow().getWidthUnits());
 				v.setHeight(getMainWindow().getHeight(), getMainWindow().getHeightUnits());
-		    	System.err.println(">>>> SIZIZIZIZZI2: "+v.getWidth()+" :: "+v.getHeight());
-
 		    	if ("position".equals(name)) {
 		        	int value = (Integer)object;
 		        	v.setSplitPosition(value, Sizeable.UNITS_PIXELS);

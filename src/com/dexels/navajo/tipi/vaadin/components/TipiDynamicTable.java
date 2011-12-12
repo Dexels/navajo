@@ -113,9 +113,6 @@ public class TipiDynamicTable extends TipiMessagePanel  {
 
             		TipiDynamicCell tc;
 					try {
-						System.err.println("Item: "+itemId);
-						Message m = item.getSource();
-						m.write(System.err);
 						tc = (TipiDynamicCell)TipiInstantiateTipi.instantiateByDefinition(TipiDynamicTable.this, false, ""+itemId, definitionName, null, null);
 						tc.setTablePartner(TipiDynamicTable.this);
 						try {

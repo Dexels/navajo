@@ -15,7 +15,6 @@ public class TipiTab extends TipiVaadinComponentImpl {
 	}
 
 	protected void setComponentValue(String name, Object object) {
-		System.err.println("Setting: " + name + " to: " + object);
 		if (name.equals("tabIcon")) {
 			// Don't know why. The propertyChangeListener seems to miss it when
 			// the icon is being set to null.

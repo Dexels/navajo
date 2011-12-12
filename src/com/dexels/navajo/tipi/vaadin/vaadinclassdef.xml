@@ -1,72 +1,70 @@
 <tid>
-	<tipiclass implements="basecomponent,datacomponent,vaadincomponent"
-		addtocontainer="true" class="TipiButton" module="component" name="button"
-		childcount="0" package="com.dexels.navajo.tipi.vaadin.components"
-		propertycomponent="false" studio-icon="button.gif" type="component">
-		<events>
-			<event name="onActionPerformed" />
-		</events>
-		<values>
-			<value direction="inout" name="text" type="string" />
-			<value direction="in" name="icon" type="resource" />
-			<value direction="in" name="style" type="string" />
+<tipiclass implements="basecomponent,datacomponent,vaadincomponent"
+	addtocontainer="true" class="TipiButton" module="component" name="button"
+	childcount="0" package="com.dexels.navajo.tipi.vaadin.components"
+	propertycomponent="false" studio-icon="button.gif" type="component">
+	<events>
+		<event name="onActionPerformed" />
+	</events>
+	<values>
+		<value direction="inout" name="text" type="string" />
+		<value direction="in" name="icon" type="resource" />
+		<value direction="in" name="style" type="string" />
 
 
-			<value direction="in" name="visible" type="boolean" />
-			<value direction="in" name="enabled" type="boolean" />
-		</values>
-		<methods>
-			<method name="fireAction" />
-		</methods>
+		<value direction="in" name="visible" type="boolean" />
+		<value direction="in" name="enabled" type="boolean" />
+	</values>
+	<methods>
+		<method name="fireAction" />
+	</methods>
+</tipiclass>
+
+<tipiclass implements="basecomponent,datacomponent,vaadincomponent"
+	addtocontainer="true" class="TipiDesktopButton" module="component" name="desktopbutton"
+	childcount="0" package="com.dexels.navajo.tipi.vaadin.components"
+	propertycomponent="false" studio-icon="button.gif" type="component">
+	<events>
+		<event name="onActionPerformed" />
+	</events>
+	<values>
+		<value direction="inout" name="text" type="string" />
+		<value direction="inout" name="tooltiptext" type="string" />
+		<value direction="inout" name="textfont" type="object" />
+		<value direction="in" name="icon" type="resource" />
+	</values>
+	<methods>
+		<method name="fireAction" />
+	</methods>
 
 
-	</tipiclass>
-	
-		<tipiclass implements="basecomponent,datacomponent,vaadincomponent"
-		addtocontainer="true" class="TipiDesktopButton" module="component" name="desktopbutton"
-		childcount="0" package="com.dexels.navajo.tipi.vaadin.components"
-		propertycomponent="false" studio-icon="button.gif" type="component">
-		<events>
-			<event name="onActionPerformed" />
-		</events>
-		<values>
-			<value direction="inout" name="text" type="string" />
-			<value direction="inout" name="tooltiptext" type="string" />
-			<value direction="inout" name="textfont" type="object" />
-			<value direction="in" name="icon" type="resource" />
-		</values>
-		<methods>
-			<method name="fireAction" />
-		</methods>
+</tipiclass>
 
-
-	</tipiclass>
-
-   <tipiclass name="vaadincomponent" implements="basecomponent">
+  <tipiclass name="vaadincomponent" implements="basecomponent">
+	<description>
+		Standard getters and setters for vaadin based components.
+	</description>
+	<values>
+        <value direction="in" name="visible" type="boolean">
 		<description>
-			Standard getters and setters for vaadin based components.
+			Allows for hiding swing components without disposing them. All components are visible by default.
 		</description>
-		<values>
-         <value direction="in" name="visible" type="boolean">
-			<description>
-				Allows for hiding swing components without disposing them. All components are visible by default.
-			</description>
-		</value>
-         <value direction="in" name="enabled" type="boolean"  >
-			<description>
-			</description>
-		</value>
-         <value direction="in" name="border" type="string"  >
-			<description>
-			</description>
-		</value>
-         <value direction="in" name="style" type="string"  >
-			<description>
-				Maps to VAADIN style
-			</description>
-		</value>
-		</values>
-   </tipiclass>
+	</value>
+        <value direction="in" name="enabled" type="boolean"  >
+		<description>
+		</description>
+	</value>
+        <value direction="in" name="border" type="string"  >
+		<description>
+		</description>
+	</value>
+        <value direction="in" name="style" type="string"  >
+		<description>
+			Maps to VAADIN style
+		</description>
+	</value>
+	</values>
+  </tipiclass>
 
     <tipiclass class="TipiBrowser" name="browser" implements="basecomponent,datacomponent,vaadincomponent"  package="com.dexels.navajo.tipi.vaadin.components" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
         <events>
@@ -109,8 +107,8 @@
          </event>
       </events>
       <values>
-         <value direction="in" name="lon" type="float" property="lon"/>
-         <value direction="in" name="lat" type="float" property="lat"/>
+         <value direction="in" name="lon" type="float"/>
+         <value direction="in" name="lat" type="float"/>
          <value direction="in" name="factory" type="string" />
          <value direction="in" name="messagePath" type="string" />
          <value direction="in" name="zoom" type="integer"/>

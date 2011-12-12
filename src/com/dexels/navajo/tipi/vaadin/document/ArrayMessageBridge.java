@@ -162,7 +162,6 @@ public class ArrayMessageBridge implements Container, Container.Sortable {
 
 	@Override
 	public Property getContainerProperty(Object itemId, Object propertyId) {
-		System.err.println("GETTING CONTAINER PROPERTY: "+itemId +" propD: "+propertyId);
 		Item mb = getItem(itemId);
 		return mb.getItemProperty(propertyId);
 	}
@@ -171,7 +170,6 @@ public class ArrayMessageBridge implements Container, Container.Sortable {
 	public boolean addContainerProperty(Object propertyId, Class<?> type, Object defaultValue)
 			throws UnsupportedOperationException {
 		Property p = new AdHocProperty(defaultValue, type);
-		System.err.println("AAAADING:  "+propertyId+" class: "+type+" >>> "+defaultValue);
 		containerProperties.put(propertyId, p);
 		return true;
 	}
@@ -184,7 +182,6 @@ public class ArrayMessageBridge implements Container, Container.Sortable {
 	
 	@Override
 	public Collection<?> getContainerPropertyIds() {
-		System.err.println("<><> containerpropertyIds:");
 		Collection<Object> parentCollection = containerProperties.keySet();
 		List<Object> columnHeaders = new ArrayList<Object>(parentCollection);
 		if(visibleColumns!=null) {
@@ -301,7 +298,6 @@ public class ArrayMessageBridge implements Container, Container.Sortable {
 
 	@Override
 	public void sort(Object[] propertyId, boolean[] ascending) {
-		System.err.println("SORTING========");
 		for (Object b : propertyId) {
 			System.err.println("Sort: "+b);
 		}
@@ -309,7 +305,6 @@ public class ArrayMessageBridge implements Container, Container.Sortable {
 		final boolean firstIsAscending = ascending[0];
 		String[] parts = first.split("@");
 		final String propName = parts[0];
-		System.err.println("Sorting propName: "+propName);
 		
 		Comparator<Message> comparator = new Comparator<Message>() {
 
@@ -326,7 +321,6 @@ public class ArrayMessageBridge implements Container, Container.Sortable {
 				if(v1 instanceof Comparable<?>) {
 					Comparable<Object> c1 = (Comparable<Object>)v1;
 					int compared = c1.compareTo(v2);
-					System.err.println("Actually compared: "+compared);
 					if (firstIsAscending) {
 						compared = -compared;
 					}
