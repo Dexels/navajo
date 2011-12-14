@@ -64,7 +64,9 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 		} catch (NavajoException e) {
 			e.printStackTrace();
 		}
-		getRequestQueue().finished();
+		if ( getRequestQueue() != null ) { // Check whether there is a request queue available.
+			getRequestQueue().finished();
+		}
 		super.endTransaction();
 	}
 
