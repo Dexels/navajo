@@ -491,6 +491,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	// }
 
 	public void debugLog(String category, String event) {
+		logger.debug("category: "+category+" event: "+event);
 	}
 
 	public void handleException(Exception e) {
@@ -593,8 +594,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 	protected final void setSystemProperty(String name, String value,
 			boolean overwrite) {
-		System.err.println("Setting: " + name + " to: " + value
-				+ " overwrite: " + overwrite);
 		systemPropertyMap.put(name, value);
 
 		// no reason to actually change system properties, right?
