@@ -1,28 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product useFeatures="false" includeLaunchers="false">
+<product version="1.0.0.qualifier" useFeatures="false" includeLaunchers="true">
 
    <configIni use="default">
    </configIni>
 
    <launcherArgs>
       <programArgs>-consoleLog -console 2401</programArgs>
-      <vmArgs>-Dosgi.console=2401 -Declipse.ignoreApp=true -Dosgi.noShutdown=true -Dorg.osgi.service.http.port=8080</vmArgs>
+      <vmArgs> -Dosgi.console=2401 -Declipse.ignoreApp=true -Dosgi.noShutdown=true -Dorg.osgi.service.http.port=8080 -XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
    </launcherArgs>
-
-   <windowImages/>
-
-   <launcher>
-      <solaris/>
-      <win useIco="false">
-         <bmp/>
-      </win>
-   </launcher>
-
-   <vm>
-   </vm>
 
    <plugins>
       <plugin id="ch.qos.logback.classic"/>
@@ -47,5 +35,9 @@
       <plugin id="org.slf4j.api"/>
    </plugins>
 
+   <configurations>
+      <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="1" />
+      <plugin id="org.eclipse.osgi" autoStart="true" startLevel="-1" />
+   </configurations>
 
 </product>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?pde version="3.5"?>
+
+<product application="org.eclipse.ui.ide.workbench" useFeatures="false" includeLaunchers="true">
+
+   <configIni use="default">
+   </configIni>
+
+   <launcherArgs>
+      <programArgs>-consoleLog -console</programArgs>
+      <vmArgs>-Declipse.ignoreApp=true -Dosgi.noShutdown=true</vmArgs>
+      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
+   </launcherArgs>
+
+   <plugins>
+      <plugin id="ch.qos.logback.classic"/>
+      <plugin id="ch.qos.logback.core"/>
+      <plugin id="ch.qos.logback.slf4j" fragment="true"/>
+      <plugin id="com.dexels.navajo.adapters"/>
+      <plugin id="com.dexels.navajo.client"/>
+      <plugin id="com.dexels.navajo.client.async"/>
+      <plugin id="com.dexels.navajo.core"/>
+      <plugin id="com.dexels.navajo.document"/>
+      <plugin id="com.dexels.navajo.function"/>
+      <plugin id="com.dexels.navajo.listeners"/>
+      <plugin id="com.dexels.navajo.osgi.console"/>
+      <plugin id="com.dexels.navajo.rhino"/>
+      <plugin id="com.dexels.navajo.server.bridged"/>
+      <plugin id="com.dexels.navajo.version"/>
+      <plugin id="javax.activation"/>
+      <plugin id="javax.el"/>
+      <plugin id="javax.mail.glassfish"/>
+      <plugin id="javax.servlet"/>
+      <plugin id="javax.servlet.jsp"/>
+      <plugin id="javax.transaction" fragment="true"/>
+      <plugin id="org.apache.felix.http.api"/>
+      <plugin id="org.apache.felix.http.base"/>
+      <plugin id="org.apache.felix.http.bridge"/>
+      <plugin id="org.apache.felix.http.bundle"/>
+      <plugin id="org.apache.felix.http.jetty"/>
+      <plugin id="org.apache.felix.http.whiteboard"/>
+      <plugin id="org.eclipse.equinox.ds"/>
+      <plugin id="org.eclipse.equinox.servletbridge.extensionbundle" fragment="true"/>
+      <plugin id="org.eclipse.equinox.transforms.hook" fragment="true"/>
+      <plugin id="org.eclipse.equinox.util"/>
+      <plugin id="org.eclipse.equinox.weaving.hook" fragment="true"/>
+      <plugin id="org.eclipse.jetty.client"/>
+      <plugin id="org.eclipse.jetty.http"/>
+      <plugin id="org.eclipse.jetty.io"/>
+      <plugin id="org.eclipse.jetty.util"/>
+      <plugin id="org.eclipse.osgi"/>
+      <plugin id="org.eclipse.osgi.services"/>
+      <plugin id="org.hamcrest.core"/>
+      <plugin id="org.junit"/>
+      <plugin id="org.slf4j.api"/>
+   </plugins>
+
+   <configurations>
+      <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="1" />
+      <plugin id="org.eclipse.osgi" autoStart="true" startLevel="-1" />
+   </configurations>
+
+</product>
