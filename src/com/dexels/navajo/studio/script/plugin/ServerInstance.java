@@ -4,7 +4,11 @@ import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.context.NavajoContext;
 import com.dexels.navajo.document.Navajo;
 
-
+/**
+ * @deprecated USE THE ONE FROM NAVAJOCLUENT
+ * @author frank
+ *
+ */
 public interface ServerInstance {
 
 	public int getPort();
