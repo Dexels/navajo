@@ -1,0 +1,20 @@
+Bundle-Name: Navajo Server Deployment
+Bundle-SymbolicName: com.dexels.navajo.server.deploy
+Bundle-Description: A Hello World bundle
+Bundle-ManifestVersion: 2
+Bundle-Version: 2.4.6
+Include-Resource: lib
+Bundle-Vendor: Dexels
+Bundle-ClassPath: .
+Require-Bundle: com.dexels.navajo.adapters;bundle-version="1.0.5",
+ com.dexels.navajo.client;bundle-version="3.0.7",
+ com.dexels.navajo.client.async;bundle-version="1.0.5",
+ com.dexels.navajo.core;bundle-version="2.9.4",
+ com.dexels.navajo.document;bundle-version="2.0.1",
+ com.dexels.navajo.function;bundle-version="2.0.7",
+ com.dexels.navajo.jsp;bundle-version="1.0.2",
+ com.dexels.navajo.jsp.server;bundle-version="1.0.3",
+ com.dexels.navajo.listeners;bundle-version="3.1.6",
+ com.springsource.javax.servlet.jsp.jstl;bundle-version="1.2.0",
+ com.dexels.navajo.listeners.continuations;bundle-version="1.0.3",
+ com.dexels.navajo.rhino;bundle-version="1.0.8"

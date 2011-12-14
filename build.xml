@@ -123,7 +123,7 @@
 				<include name="**/*"/>
 		 	</fileset>
 		</war>
-		<war destfile="${distribution}/${deployname}_nojars.war">
+		<war destfile="${distribution}/${deployname}_nojars.war" manifest="${work}/META-INF/MANIFEST.MF">
 		 	<fileset dir="${work}">
 				<include name="**/*"/>
 		 		<exclude name="**/*.jar"/>
@@ -152,6 +152,7 @@
 	
 	<target name="publish" depends="deploy">
 		<copy todir="/Library/apache-tomcat-7.0.16/webapps/" verbose="true" file="${distribution}/${deployname}.war"/>
+		<copy tofile="/Library/virgo/repository/usr/com.dexels.navajo.server.deploy.jar"  verbose="true" file="${distribution}/${deployname}_nojars.war"/>
  	</target>
 </project>
 <!-- EOF: $RCSfile$ -->
