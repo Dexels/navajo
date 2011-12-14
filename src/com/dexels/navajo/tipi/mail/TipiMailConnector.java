@@ -40,7 +40,7 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 public class TipiMailConnector extends TipiBaseConnector implements TipiConnector {
 	
 	private static final long serialVersionUID = -2794376821756313135L;
-	private long disconnectTimeout = 20000;
+	private long disconnectTimeout = 40000;
 	private String host = "";
 	private String username = "";
 	private String password = "";
