@@ -7,6 +7,9 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.tipixml.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 import com.dexels.navajo.tipi.tipixml.XMLParseException;
@@ -23,7 +26,7 @@ public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension
 	private String description = null;
 	private String project = "";
 	
-//	private final static Logger logger = LoggerFactory.getLogger(TipiAbstractXMLExtension.class);
+	private final static Logger logger = LoggerFactory.getLogger(TipiAbstractXMLExtension.class);
 
 //	private transient ClassLoader extensionClassLoader;
 	private boolean isMain;
@@ -32,7 +35,7 @@ public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension
 	}
 
 	public final void loadDescriptor() {
-//		String xmlName = "tipi/" + getClass().getSimpleName() + ".xml";
+		String xmlName = "tipi/" + getClass().getSimpleName() + ".xml";
 //		logger.debug("Loading TipiExtension: "+xmlName);
 		loadXMLClass(getClass().getSimpleName() + ".xml");
 		// Added for Vaadin (OSGi, actually)
