@@ -26,11 +26,8 @@ package navajofunctions;
 
 import java.util.Dictionary;
 import java.util.Hashtable;
-import java.util.Properties;
 
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
-
 
 import com.dexels.navajo.functions.StandardFunctionDefinitions;
 import com.dexels.navajo.functions.util.FunctionDefinition;
@@ -91,7 +88,6 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 	@Override
 	public void stop(BundleContext arg0) throws Exception {
-		// TODO Auto-generated method stub
 		super.stop(arg0);
 	}
 
@@ -104,6 +100,5 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 		for (int i = 0; i < d.length; i++) {
 			System.err.println("\t"+d[i].toString());
 		}
-//		FunctionFactoryInterface. getInstance();
 	}
 }
