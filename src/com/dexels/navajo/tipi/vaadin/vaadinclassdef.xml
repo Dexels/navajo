@@ -114,6 +114,12 @@
          <value direction="in" name="zoom" type="integer"/>
       </values>
       <methods>
+		<method name="mark">
+			<param name="lat" type="float"/>
+			<param name="lon" type="float"/>
+			<param name="zoom" type="integer"/>
+			<param name="description" type="string"/>
+		</method>
       </methods>
    </tipiclass>
 

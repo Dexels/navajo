@@ -6,15 +6,32 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vaadin.vol.Bounds;
+import org.vaadin.vol.GoogleStreetMapLayer;
+import org.vaadin.vol.Marker;
+import org.vaadin.vol.MarkerLayer;
 import org.vaadin.vol.OpenLayersMap;
 import org.vaadin.vol.OpenStreetMapLayer;
 import org.vaadin.vol.Point;
 import org.vaadin.vol.Popup;
+import org.vaadin.vol.Popup.CloseEvent;
+import org.vaadin.vol.Popup.CloseListener;
+import org.vaadin.vol.Popup.PopupStyle;
+import org.vaadin.vol.WebMapServiceLayer;
 
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.vaadin.addon.calendar.event.CalendarEvent;
+import com.vaadin.event.MouseEvents.ClickEvent;
+import com.vaadin.event.MouseEvents.ClickListener;
+import com.vaadin.terminal.Paintable.RepaintRequestEvent;
+import com.vaadin.terminal.Paintable.RepaintRequestListener;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.ComponentContainer.ComponentAttachEvent;
 import com.vaadin.ui.ComponentContainer.ComponentAttachListener;
 
@@ -30,34 +47,57 @@ public class TipiMap extends TipiMessagePanel  {
 	private final static Logger logger = LoggerFactory.getLogger(TipiMap.class);
 	private double centerLat = 0;
 	private double centerLon = 0;
+	private MarkerLayer markers;
+
+	
 	
 	@Override
-	public Object createContainer() {
-		map = new OpenLayersMap();
-		OpenStreetMapLayer layer = new OpenStreetMapLayer();
+	public void addedToParentContainer(TipiComponent parentTipiComponent,
+			Object parentContainer, Object container, Object constriants) {
+		super.addedToParentContainer(parentTipiComponent, parentContainer, container,
+				constriants);
+//		centerLat = 52.1;
+//		centerLon = 4.1;
+//
+//		Point e = new Point(centerLon,centerLat);
+//		map.zoomToExtent(new Bounds(e));
+//		 map.setCenter(centerLat,centerLon);
+//		 map.setZoom(10);
+	}
 
-		map.addLayer(layer);
-//		map.setImmediate(true);
+	@Override
+	public Object createContainer() {
+		
+        map = new OpenLayersMap();
+//        OpenStreetMapLayer osm = new OpenStreetMapLayer();
+        GoogleStreetMapLayer googleStreets = new GoogleStreetMapLayer();
+        markers = new MarkerLayer();
+        
+//        map.addLayer(osm);
+        map.addLayer(googleStreets);
+        map.addLayer(markers);
+        map.setCenter(22.30083, 60.452541);
+
+		
+		
+		//		p.setPopupStyle(PopupStyle.DEFAULT);
+
+//		map.add
+//		markers.addMarker(m);
+//		p.setAnchor(m);
+		
+//		map.addPopup(p );
+		
+//		map = new OpenLayersMap();
+//		OpenStreetMapLayer layer = new OpenStreetMapLayer();
+//		GoogleStreetMapLayer gsml = new GoogleStreetMapLayer();
+//		map.addLayer(gsml);
+
 		map.setSizeFull();
-		map.addListener(new ComponentAttachListener() {
-			
-			@Override
-			public void componentAttachedToContainer(ComponentAttachEvent event) {
-				centerLat = 52.1;
-				centerLon = 99.1;
-				 map.setCenter(centerLat,centerLon);
-					Popup p = new Popup(4.1, 51.3, "Shake it!");
-//					map.zoomToExtent(new Bounds(Point.valueOf("4 51"),Point.valueOf("5 52")));
-//					 Point observer = new Point(90,53);
-//				        Bounds extent = new Bounds(observer, observer);
-				      
-//					map.zoomToExtent(extent);
-				        map.setZoom(5);
-				        map.addPopup(p);
-				        
-			}
-		}); 
+		System.err.println("Zoom: "+map.getZoom()+" api: "+map.getApiProjection());
 		return map;
+		
+//		 &lt;script src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"&gt;&lt;/script&gt;
 	}
 
 	public void addToContainer(Object c, Object constraints) {
@@ -65,13 +105,23 @@ public class TipiMap extends TipiMessagePanel  {
 	
 	@Override
 	public void loadData(Navajo n, String method) throws TipiException, TipiBreakException {
-//		if(messagepath==null) {
-//			throw new NullPointerException("message path in table is null, set it before loading!");
-//		}
+		if(messagepath==null) {
+			throw new NullPointerException("message path in table is null, set it before loading!");
+		}
+		doPerformOnLoad(method, n, true);
 		super.loadData(n, method);
-//		componentMap.clear();
-//		Message m = n.getMessage(messagepath);
-//		BasicEventProvider cep = new BasicEventProvider();
+		Message m = n.getMessage(messagepath);
+		if(m==null) {
+			throw new NullPointerException("message with name: "+ messagepath +" not found in Navajo object");
+		}
+//		if(true) return;
+//		Popup p = new Popup(4.1,51.3,"Aaaap aap aaap");
+//		map.addPopup(p);
+
+		
+		
+		//		map.addComponent(c)
+		//		BasicEventProvider cep = new BasicEventProvider();
 //		map.setEventProvider(cep);
 //		TipiCalendarEvent tc;
 //		int i = 0;
@@ -97,6 +147,63 @@ public class TipiMap extends TipiMessagePanel  {
 //		}
 	}
 
+	
+	
+	@Override
+	protected void performComponentMethod(String name,
+			TipiComponentMethod compMeth, TipiEvent event)
+			throws TipiBreakException {
+		if(name.equals("mark")) {
+			if(compMeth.getParameter("lat")==null) {
+				// ignore
+				return;
+			}
+			Double lat = (Double) compMeth.getEvaluatedParameterValue("lat", event);
+			Double lon = (Double) compMeth.getEvaluatedParameterValue("lon", event);
+			Integer zoom = (Integer) compMeth.getEvaluatedParameterValue("zoom", event);
+			String caption = (String) compMeth.getEvaluatedParameterValue("description", event);
+			if(lat==null || lon==null) {
+				return;
+			}
+
+			markLocation(lon,lat,zoom,caption);
+		}
+		super.performComponentMethod(name, compMeth, event);
+	}
+
+	private void markLocation(Double lon, Double lat, Integer zoom,
+			final String caption) {
+		centerLon = lon;
+		centerLat = lat;
+		map.setCenter(centerLon,centerLat);
+		map.setZoom(zoom);
+//		Popup p = new Popup(lon,lat,caption);
+//		Marker m = new Marker(lon,lat);
+//		map.add
+//		p.setAnchor(m);
+//		p.setPopupStyle(PopupStyle.FRAMED_CLOUD);
+//		map.addPopup(p );
+
+	
+		final Marker m = new Marker(lon,lat);
+		markers.addMarker(m);
+		
+//		Popup p = new Popup(22.30083, 60.452541,"monkey monkey");
+
+		
+		// Add some server side integration when clicking a marker
+		m.addClickListener(new ClickListener() {
+			private static final long serialVersionUID = -6806907718826334805L;
+
+			public void click(ClickEvent event) {
+				showPopup(caption, m);
+			}
+		});
+
+//		showPopup(caption, m);
+		
+	}
+
 	@Override
 	protected void setComponentValue(String name, Object object) {
 		System.err.println("Set "+name+" object: "+object);
@@ -111,13 +218,13 @@ public class TipiMap extends TipiMessagePanel  {
 		if (name.toLowerCase().equals("lat")) {
 			double lat = (Double)object;
 			centerLat = lat;
-			map.setCenter(centerLat,centerLon);
+			map.setCenter(centerLon,centerLat);
 			return;
 		}
 		if (name.toLowerCase().equals("lon")) {
 			double lon = (Double)object;
 			centerLon = lon;
-			map.setCenter(centerLat,centerLon);
+			map.setCenter(centerLon,centerLat);
 			return;
 		}
 		if (name.toLowerCase().equals("zoom")) {
@@ -131,6 +238,19 @@ public class TipiMap extends TipiMessagePanel  {
 	
 	public Object getComponentValue(String name) {
 		return super.getComponentValue(name);
+	}
+
+	private void showPopup(final String caption, final Marker m) {
+		final Popup popup = new Popup(m.getLon(), m.getLat(),
+				caption);
+		popup.setAnchor(m);
+		popup.setPopupStyle(PopupStyle.FRAMED_CLOUD);
+		popup.addListener(new CloseListener() {
+			public void onClose(CloseEvent event) {
+				map.removeComponent(popup);
+			}
+		});
+		map.addPopup(popup);
 	}
 
 
