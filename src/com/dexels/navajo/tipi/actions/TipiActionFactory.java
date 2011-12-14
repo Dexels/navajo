@@ -37,6 +37,11 @@ public class TipiActionFactory implements Serializable {
 	protected String myName = null;
 	protected Map<String, TipiValue> myDefinedParams = new HashMap<String, TipiValue>();
 	private Class<?> myActionClass = null;
+	private XMLElement xmlElement = null;
+	
+	public XMLElement getXmlElement() {
+		return xmlElement;
+	}
 
 	public TipiActionFactory() {
 	}
@@ -48,6 +53,8 @@ public class TipiActionFactory implements Serializable {
 	// }
 	public void load(XMLElement actionDef,
 			ExtensionDefinition ed) throws ClassNotFoundException {
+		
+		this.xmlElement = actionDef;
 		if (actionDef == null || !actionDef.getName().equals("tipiaction")) {
 			throw new IllegalArgumentException(
 					"Can not instantiate tipi action.");
