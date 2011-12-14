@@ -1,5 +1,7 @@
 package com.dexels.navajo.server.enterprise.statistics;
 
+import java.util.Map;
+
 import com.dexels.navajo.events.NavajoEvent;
 import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.NavajoListener;
@@ -53,6 +55,13 @@ public class DummyStatisticsRunner implements StatisticsRunnerInterface, NavajoL
 
 	public void setAuditLevel(int l) {
 		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void initialize(String storePath, Map parameters, String storeClass)
+			throws ClassNotFoundException, InstantiationException,
+			IllegalAccessException {
 		
 	}
 
