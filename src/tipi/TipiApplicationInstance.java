@@ -2,6 +2,7 @@ package tipi;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Locale;
 
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
@@ -26,5 +27,7 @@ public interface TipiApplicationInstance {
 	public void setContextUrl(URL contextUrl);
 
 	public URL getContextUrl();
+
+	public Locale getLocale();
 
 }
