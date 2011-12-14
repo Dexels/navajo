@@ -98,6 +98,9 @@ public class TipiInstantiateTipi extends TipiAction {
 		if (byClass) {
 			xe.setAttribute("class", className);
 		} else {
+			if(definitionName==null) {
+				throw new NullPointerException("Null definition name while instantiating tipi: "+className);
+			}
 			xe.setAttribute("name", definitionName);
 		}
 
