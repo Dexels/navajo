@@ -1219,12 +1219,21 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 					} catch (TipiBreakException e) {
 						// e.printStackTrace();
 						throw (e);
-					} catch (Exception e) {
+					} catch (NavajoException e) {
+//						getContext().showInternalError(
+//								"Error performing event: " + te.getEventName()
+//										+ " for component: "
+//										+ te.getComponent().getPath(), e);
+//						e.printStackTrace();
+						te.dumpStack(e.getMessage());
+						throw e;
+					} catch(Exception e) {
 						getContext().showInternalError(
 								"Error performing event: " + te.getEventName()
 										+ " for component: "
 										+ te.getComponent().getPath(), e);
 						e.printStackTrace();
+						te.dumpStack(e.getMessage());
 					} finally {
 						if (afterEvent != null) {
 							afterEvent.run();

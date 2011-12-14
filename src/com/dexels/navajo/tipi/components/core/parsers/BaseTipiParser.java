@@ -4,6 +4,8 @@ import java.util.StringTokenizer;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiDataComponent;
@@ -65,7 +67,7 @@ abstract class BaseTipiParser extends TipiTypeParser {
 		throw new TipiException("Illegal attribute path property: " + path);
 	}
 
-	protected Property getPropertyByPath(TipiComponent source, String path) {
+	protected Property getPropertyByPath(TipiComponent source, String path) throws NavajoException {
 		StringTokenizer counter = new StringTokenizer(path, ":");
 		int tokencount = counter.countTokens();
 		if (tokencount <= 2) {
@@ -80,12 +82,13 @@ abstract class BaseTipiParser extends TipiTypeParser {
 			if (n != null) {
 				return n.getProperty(propertyPath);
 			} else {
+				NavajoException navajoException = NavajoFactory.getInstance().createNavajoException("No navajo found, while looking for path: " + path
+						+ " Available: " + source.getContext().getNavajoNames());
 				source.getContext().showInternalError(
 						"No navajo found, while looking for path: " + path
 								+ " Available: " + source.getContext().getNavajoNames(),
-						new Exception("No navajo found, while looking for path: " + path
-								+ " Available: " + source.getContext().getNavajoNames()));
-				return null;
+						navajoException);
+				throw navajoException;
 			}
 		}
 		StringTokenizer st = new StringTokenizer(path, ":");
