@@ -176,7 +176,7 @@ public interface Element extends EObject {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @model annotation="http://www.eclipse.org/emf/2002/GenModel body='return ElementLogic.calculateDepth(this);'"
+	 * @model
 	 * @generated
 	 */
 	int calculateDepth();
