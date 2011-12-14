@@ -7,7 +7,7 @@ Export-Package: com.dexels.navajo.client.async,
  navajoasyncclient
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.document,
- com.dexels.navajo.client;bundle-version="1.0.0",
+ com.dexels.navajo.client;bundle-version="3.0.8",
  com.dexels.navajo.core;bundle-version="2.9.2",
  com.dexels.navajo.version
 Bundle-ClassPath: lib/jetty-client-7.0.2.v20100331.jar,
