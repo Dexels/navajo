@@ -14,7 +14,9 @@ import com.dexels.navajo.server.GenericHandler;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.enterprise.monitoring.AgentFactory;
+import com.dexels.navajo.server.enterprise.statistics.DummyStatisticsRunner;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerFactory;
+import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.server.enterprise.xmpp.JabberWorkerFactory;
 import com.dexels.navajo.server.jmx.JMXHelper;
@@ -250,6 +252,12 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		StatisticsRunnerInterface ptps = new DummyStatisticsRunner();
+		Dictionary<String, Object> wb = new Hashtable<String, Object>();
+		wb.put("threadClass","com.dexels.navajo.server.enterprise.statistics.DummyStatisticsRunner");
+		wb.put("name","dummy");
+		bc.registerService(StatisticsRunnerInterface.class, ptps, wb);		
+
 
 	}
 
