@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.vaadin.application.servlet;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -42,6 +43,8 @@ public class TipiVaadinServlet extends ApplicationServlet {
 //		String appInstance = getInitParameter("application");
 //		Class<? extends Application> appInstanceClass = Class.forName(appInstance);
 		TipiVaadinApplication tipiApplication = (TipiVaadinApplication) super.getNewApplication(request);
+		
+		tipiApplication.setLocale(new Locale("nl","NL"));
 		tipiApplication.setServletContext(getServletContext());
 
      	HttpSession hs = request.getSession();
