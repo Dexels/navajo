@@ -147,11 +147,9 @@ public class TipiThreadPool implements Serializable {
 		if (poolSize == 0) {
 			// For echo:
 			try {
-				System.err.println("Linear enqueue!");
 				if(exe.getEvent()!=null) {
 					exe.getEvent().performAction(exe.getEvent(), exe.getEvent(), 0);
 				} else {
-					System.err.println("New enqueue path");
 					exe.performAction(null, null, 0);
 				}
 				exe.performAction(null, null, 0);

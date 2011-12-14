@@ -163,7 +163,6 @@ public class OSGiClassManager extends BaseClassManager implements IClassManager 
 	}
 	@Override
 	public TipiTypeParser parseParser(XMLElement xe, ExtensionDefinition te) {
-		System.err.println("PAAAAAARSE: "+xe);
 		Dictionary<String, Object> props = new Hashtable<String, Object>();
 		ServiceRegistration.parseParser(myBundleContext,props,xe,(TipiExtension) te);
 		TipiTypeParser ttp = super.parseParser(xe,te);
@@ -176,7 +175,6 @@ public class OSGiClassManager extends BaseClassManager implements IClassManager 
 		if(ttp!=null) {
 			return ttp;
 		}
-		System.err.println("PARSINNNN: "+name);
 		Collection<ServiceReference<TipiTypeParser>> aa;
 		try {
 			aa = myBundleContext.getServiceReferences(TipiTypeParser.class,"(&(type=tipi-parser)(name="+name+"))");
@@ -214,12 +212,10 @@ public class OSGiClassManager extends BaseClassManager implements IClassManager 
 	}
 	
 	public boolean isValidType(String name) {
-		System.err.println("TSJEKKIN: "+name);
 		boolean isV = super.isValidType(name);
 		if(isV) {
 			return isV;
 		}
-		System.err.println("syserr not recognized by parents");
 		Collection<ServiceReference<TipiTypeParser>> aa;
 			try {
 				aa = myBundleContext.getServiceReferences(TipiTypeParser.class,"(&(type=tipi-parser)(name="+name+"))");
