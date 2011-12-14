@@ -11,8 +11,9 @@ import javax.swing.*;
 import org.jdesktop.swingx.*;
 
 import com.dexels.navajo.document.types.*;
-import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.components.swingimpl.*;
+import com.dexels.navajo.tipilink.*;
 
 public class TipiJXHyperlink extends TipiSwingDataComponentImpl {
 

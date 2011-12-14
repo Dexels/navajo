@@ -9,9 +9,11 @@ import org.jdesktop.swingx.*;
 import org.jdesktop.swingx.search.*;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.components.swingimpl.*;
 import com.dexels.navajo.tipi.swingclient.components.*;
+import com.dexels.navajo.tipilink.*;
 
 public class TipiExtendedTable extends TipiSwingDataComponentImpl {
 
