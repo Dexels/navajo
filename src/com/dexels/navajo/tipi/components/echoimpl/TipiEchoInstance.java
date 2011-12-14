@@ -245,4 +245,22 @@ public class TipiEchoInstance extends ApplicationInstance implements TipiApplica
 		return "startup";
 	}
 
+	@Override
+	public void setEvalUrl(URL context, String relativeUri) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("setEvalUrl (vaadin version) not implemented in echo"); 
+	}
+
+	@Override
+	public void setContextUrl(URL contextUrl) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public URL getContextUrl() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
