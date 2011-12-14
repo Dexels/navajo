@@ -1,0 +1,11 @@
+Library-Name: Navajo Core Library
+Library-SymbolicName: com.dexels.navajo.core.library
+Library-Description: A Hello World bundle
+Import-Bundle: com.dexels.navajo.adapters;bundle-version="1.0.5",
+ com.dexels.navajo.client;bundle-version="3.0.7",
+ com.dexels.navajo.client.async;bundle-version="1.0.5",
+ com.dexels.navajo.core;bundle-version="2.9.4",
+ com.dexels.navajo.document;bundle-version="2.0.1",
+ com.dexels.navajo.function;bundle-version="2.0.7",
+ com.dexels.navajo.version;bundle-version="1.0.10"
+ 
