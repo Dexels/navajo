@@ -269,15 +269,12 @@ public class MailMap implements MailMapInterface, Mappable, HasDependentResource
 		    	 props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 		    	 props.put("mail.smtp.socketFactory.fallback", "false");
 		     }
-		     props.list(System.err);
 		     Authenticator auth = new SMTPAuthenticator();
 		     Session session = Session.getDefaultInstance(props, auth);
 				return session;
 		} else {
 	    	 props.put("mail.smtp.port", "25");
-
-			props.list(System.err);
-			Session session = Session.getInstance(props);
+	    	 Session session = Session.getInstance(props);
 			return session;
 		}
 	}
