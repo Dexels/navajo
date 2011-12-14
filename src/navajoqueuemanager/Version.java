@@ -27,11 +27,12 @@ package navajoqueuemanager;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceFactory;
+import org.osgi.framework.ServiceRegistration;
 
-import com.dexels.navajo.server.listener.http.SchedulerTools;
 import com.dexels.navajo.server.listener.http.TmlScheduler;
-import com.dexels.navajo.server.listener.http.schedulers.DummyScheduler;
 import com.dexels.navajo.server.listener.http.schedulers.priority.PriorityThreadPoolScheduler;
 
 
@@ -44,11 +45,26 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
 		if(bc!=null) {
-			PriorityThreadPoolScheduler ptps = new PriorityThreadPoolScheduler();
-			 Dictionary<String, Object> wb = new Hashtable<String, Object>();
-			 wb.put("schedulerClass", "com.dexels.navajo.server.listener.http.schedulers.priority.PriorityThreadPoolScheduler");
-			bc.registerService(TmlScheduler.class, ptps, wb);
-		
+			Dictionary<String, Object> wb = new Hashtable<String, Object>();
+			wb.put("schedulerClass", "com.dexels.navajo.server.listener.http.schedulers.priority.PriorityThreadPoolScheduler");
+//			bc.registerService(TmlScheduler.class, ptps, wb);
+			bc.registerService(TmlScheduler.class.getName(), new ServiceFactory<TmlScheduler>() {
+
+				@Override
+				public TmlScheduler getService(Bundle bundle,
+						ServiceRegistration<TmlScheduler> registration) {
+					System.err.println(">>>>>>>> creating ptps for bundle: "+bundle.getSymbolicName());
+					PriorityThreadPoolScheduler ptps = new PriorityThreadPoolScheduler();
+					return ptps;
+				}
+
+				@Override
+				public void ungetService(Bundle bundle,
+						ServiceRegistration<TmlScheduler> registration,
+						TmlScheduler service) {
+					
+				}
+			},wb);
 		}
 	}
 	
