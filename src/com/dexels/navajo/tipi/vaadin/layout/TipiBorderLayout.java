@@ -104,19 +104,26 @@ public class TipiBorderLayout
   }
   
 public void addToLayout(Object component, Object constraints) {
-		BorderLayout.Constraint bc = (Constraint) constraints;
-		Integer size = sizeMap.get(constraints);
-		Component c = (Component)component;
-		if(size!=null) {
-			if (constraints==Constraint.WEST || constraints==Constraint.EAST) {
-				c.setWidth(""+size+"px");
-			} else {
-				c.setHeight(""+size+"px");
+		if(constraints instanceof Constraint) {
+			BorderLayout.Constraint bc = (Constraint) constraints;
+			Integer size = sizeMap.get(constraints);
+			Component c = (Component)component;
+			if(size!=null) {
+				if (constraints==Constraint.WEST || constraints==Constraint.EAST) {
+					c.setWidth(""+size+"px");
+				} else {
+					c.setHeight(""+size+"px");
+				}
 			}
+			if(bc==Constraint.CENTER) {
+				c.setSizeFull();
+			}
+			layout.addComponent((Component) component,bc);
+		} else {
+			// TODO: test, I have no clue if this is correct
+			Constraint bc = (Constraint) parseConstraint((String)constraints, sizeMap.size());
+			addToLayout(component, bc);
 		}
-		if(bc==Constraint.CENTER) {
-			c.setSizeFull();
-		}
-		layout.addComponent((Component) component,bc);
+
 	}
 }
