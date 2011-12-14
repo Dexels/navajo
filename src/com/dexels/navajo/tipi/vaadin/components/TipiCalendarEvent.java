@@ -29,6 +29,9 @@ public class TipiCalendarEvent extends TipiComponentImpl {
 		if (name.equals("description")) {
 			event.setDescription((String)object);
 		}
+		if (name.equals("caption")) {
+			event.setDescription((String)object);
+		}
 		if(name.equals("style")) {
 			event.setStyleName(""+object);
 		}
