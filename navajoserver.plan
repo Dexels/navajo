@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plan name="navajoserver.plan" version="1.0.0" scoped="false" atomic="false"
+        xmlns="http://www.eclipse.org/virgo/schema/plan"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="
+		        http://www.eclipse.org/virgo/schema/plan
+		        http://www.eclipse.org/virgo/schema/plan/eclipse-virgo-plan.xsd">
+   <artifact type="bundle" name="com.dexels.navajo.listeners" version="3.1.6"/>
+   <artifact type="bundle" name="com.dexels.navajo.listeners.continuations" version="1.0.3"/>
+   <artifact type="bundle" name="com.dexels.navajo.adapters" version="1.0.3"/>
+   <artifact type="bundle" name="com.dexels.navajo.jsp" version="1.0.2"/>
+   <artifact type="bundle" name="com.dexels.navajo.jsp.server" version="1.0.3"/>
+   <artifact type="bundle" name="com.dexels.navajo.rhino" version="1.0.8"/>
+</plan>
+
