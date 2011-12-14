@@ -1,7 +1,9 @@
 package com.dexels.navajo.tipi.rcp.application;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import org.eclipse.swt.widgets.Composite;
 
@@ -36,6 +38,30 @@ public class RcpViewApplicationInstance extends BaseTipiApplicationInstance impl
 
 	@Override
 	public String getDefinition() {
+		return null;
+	}
+
+	@Override
+	public void setEvalUrl(URL context, String relativeUri) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setContextUrl(URL contextUrl) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public URL getContextUrl() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Locale getLocale() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
