@@ -1,9 +1,11 @@
 package com.dexels.navajo.adapter.csvmap;
 
-import com.dexels.navajo.mapping.*;
-import com.dexels.navajo.server.*;
-import com.dexels.navajo.document.*;
-import java.util.*;
+import java.util.HashMap;
+
+import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.UserException;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -26,12 +28,12 @@ public class CSVEntryMap implements Mappable {
   public int column;
   public String [] entries;
 
-  private HashMap newEntries;
+  private HashMap<Integer,String> newEntries;
   private int max = -1;
   private boolean update = false;
 
   public void load(Access access) throws MappableException, UserException {
-    newEntries = new HashMap();
+    newEntries = new HashMap<Integer,String>();
   }
 
   public String getEntry() {
@@ -64,7 +66,7 @@ public class CSVEntryMap implements Mappable {
       if (update) {
           entries = new String[max+1];
           for (int i = 0; i < max+1; i++) {
-            String value = (String) newEntries.get(new Integer(i));
+            String value = newEntries.get(new Integer(i));
             if (value == null)
               value = "";
             entries[i] = value;
