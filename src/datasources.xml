@@ -1,0 +1,45 @@
+<tml>
+    <message name="datasources">
+
+<!-- url,initialPoolSize,user,password,maxIdleTime,maxPoolSize,maxStatements,minPoolSize 
+
+
+-->
+
+        <message name="mysql_swingstreet">
+            <property name="url" value="jdbc:mysql://localhost/swingstreet"/>
+            <property name="type" value="mysql"/>
+            <property name="user" value="root"/>
+            <property name="password" value="root"/>
+		</message>
+        <message name="navajostore">
+            <property name="type" value="mongodb"/>
+            <property name="host" value="127.0.0.1"/>
+            <property name="database" value="navajostore"/>
+		</message>
+
+<!-- 
+        <message name="default">
+            <property name="driver" value="org.apache.derby.jdbc.EmbeddedDriver"/>
+            <property name="url" value="jdbc:derby:default;create=true"/>
+            <property name="username" value=""/>
+            <property name="password" value=""/>
+            <property name="logfile" value="derbylog"/>
+            <property name="refresh" type="float" value="0.00001"/>
+            <property name="min_connections" type="integer" value="1"/>
+            <property name="max_connections" type="integer" value="10"/>
+        </message>
+        <message name="navajostore">
+            <property name="driver" value="org.apache.derby.jdbc.EmbeddedDriver"/>
+            <property name="url" value="jdbc:derby:default;create=true"/>
+            <property name="username" value=""/>
+            <property name="password" value=""/>
+            <property name="logfile" value="derbylog"/>
+            <property name="refresh" type="float" value="0.00001"/>
+            <property name="min_connections" type="integer" value="1"/>
+            <property name="max_connections" type="integer" value="10"/>
+        </message>
+        
+         -->
+     </message>
+</tml>
