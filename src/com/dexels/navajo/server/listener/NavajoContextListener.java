@@ -7,19 +7,25 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Dictionary;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.DispatcherInterface;
+import com.dexels.navajo.server.api.NavajoServerContext;
+import com.dexels.navajo.server.api.impl.NavajoServerInstance;
 import com.dexels.navajo.version.AbstractVersion;
 
 public class NavajoContextListener implements ServletContextListener {
@@ -28,10 +34,11 @@ public class NavajoContextListener implements ServletContextListener {
 	public static final String NANO = "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl";
 	public static final String JAXP = "com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl";
 	public static final String QDSAX = "com.dexels.navajo.document.base.BaseNavajoFactoryImpl";
-
 	public static final String DEFAULT_SERVER_XML = "config/server.xml";
-
 	private static final Logger logger = LoggerFactory.getLogger(NavajoContextListener.class);
+	private static ServiceRegistration<NavajoServerContext> navajoServerInstance;
+
+	
 	@Override
 	public void contextDestroyed(ServletContextEvent sc) {
 		destroyContext(sc.getServletContext());
@@ -57,7 +64,9 @@ public class NavajoContextListener implements ServletContextListener {
 	}
 
 	public static void destroyContext(ServletContext sc) {
-		logger.info("Destroying Navajo context");
+		logger.info("Destroying Navajo instance");
+		unregisterInstanceOSGi();
+		logger.warn("Destroying Navajo extensions. I'm not sure if this is wise in OSGi.");
 		AbstractVersion.shutdownNavajoExtension("navajo");
 		AbstractVersion.shutdownNavajoExtension("navajodocument");
 		AbstractVersion.shutdownNavajoExtension("navajoclient");
@@ -76,11 +85,12 @@ public class NavajoContextListener implements ServletContextListener {
 	 * @param sc
 	 * @param force
 	 *            Use this to force the path
+	 * @return 
 	 */
 
 	// Should be called after installation, so the context will still be
 	// initialized.
-	public static void initializeContext(ServletContext sc, String force) {
+	public static DispatcherInterface initializeContext(ServletContext sc, String force) {
 		String configurationPath = null;
 		String rootPath = null;
 
@@ -109,7 +119,7 @@ public class NavajoContextListener implements ServletContextListener {
 				try {
 					is.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error("IO Error",e);
 				}
 			}
 		}
@@ -120,12 +130,41 @@ public class NavajoContextListener implements ServletContextListener {
 		String servletContextRootPath = sc.getRealPath("");
 
 		try {
-			initDispatcher(servletContextRootPath, rootPath, configurationPath);
+			DispatcherInterface dispatcher = initDispatcher(servletContextRootPath, rootPath, configurationPath);
+			NavajoServerInstance nsi = new NavajoServerInstance(path, dispatcher, sc);
+			registerInstanceOSGi(nsi);
+			return dispatcher;
 		} catch (Exception e) {
-			e.printStackTrace(System.err);
+			logger.error("Error initializing dispatcher", e);
 		}
+		return null;
 	}
 
+	private static void registerInstanceOSGi(NavajoServerInstance nsi) {
+		BundleContext bc = navajolisteners.Version.getDefaultBundleContext();
+		if(bc==null) {
+			logger.warn("No OSGi environment found. Are we in J2EE mode?");
+			return;
+		}
+        Dictionary<String, Object> properties = new Hashtable<String, Object>();
+        properties.put("navajoContextPath", nsi.getServletContext().getContextPath());
+        properties.put("installationPath", nsi.getInstallationPath());
+        properties.put("serverId", nsi.getDispatcher().getServerId());
+        navajoServerInstance = bc.registerService(NavajoServerContext.class, nsi,properties);
+		logger.info("Service registration complete!");
+	}
+
+	private static void unregisterInstanceOSGi() {
+		BundleContext bc = navajolisteners.Version.getDefaultBundleContext();
+		if(bc==null) {
+			logger.warn("No OSGi environment found. Are we in J2EE mode?");
+			return;
+		}
+		if(navajoServerInstance!=null) {
+			navajoServerInstance.unregister();
+		}
+	}
+		
 	public static DispatcherInterface initializeContext(String rootPath,
 			String servletPath) throws NavajoException {
 		return DispatcherFactory.getInstance(rootPath, DEFAULT_SERVER_XML,
@@ -137,7 +176,6 @@ public class NavajoContextListener implements ServletContextListener {
 			String servletContextRootPath, String rootPath, String configurationPath)
 			throws NavajoException {
 
-		System.err.println("Context root path: " + servletContextRootPath);
 		if (configurationPath != null) {
 			// Old SKOOL. Path provided, notify the dispatcher by passing a null
 			// DEFAULT_SERVER_XML
@@ -150,63 +188,6 @@ public class NavajoContextListener implements ServletContextListener {
 		}
 
 	}
-
-	// private String setupConfigurationPath(ServletContext context) throws
-	// IOException {
-	// String navajoPath = getSystemPath(context);
-	// return navajoPath;
-	// }
-
-	// private String getSystemPath(ServletContext context) throws IOException {
-	// String name = context.getContextPath().substring(1);
-	//
-	// String force = context.getInitParameter("forcedNavajoPath");
-	// System.err.println("Force: "+force);
-	// if(force!=null) {
-	// //
-	// System.err.println("Using the force! navajo.properties will be ignored!");
-	// return force;
-	// }
-	// Map<String,String> systemContexts = new HashMap<String, String>();
-	// File home = new File(System.getProperty("user.home"));
-	// File navajo = new File(home,"navajo.properties");
-	// System.err.println("Assuming navajo path: "+navajo.getAbsolutePath());
-	// if(!navajo.exists()) {
-	// return null;
-	// }
-	//
-	// BufferedReader br = new BufferedReader(new FileReader(navajo));
-	// while(true) {
-	// String line = br.readLine();
-	// if(line==null) {
-	// break;
-	// }
-	// String[] r = line.split("=");
-	// systemContexts.put(r[0], r[1]);
-	// }
-	// br.close();
-	// System.err.println("Maps: "+systemContexts);
-	// // So the path is not forced, and the navajo.properties file exists.
-	// // check the com.dexels.navajo.server.EngineInstance property
-	//
-	// String engineInstance =
-	// System.getProperty("com.dexels.navajo.server.EngineInstance");
-	// if(engineInstance!=null) {
-	// String engineQualifiedContext =
-	// systemContexts.get(engineInstance+"/"+name);
-	// if(engineQualifiedContext==null) {
-	// System.err.println("Warning: com.dexels.navajo.server.EngineInstance set (to: "+engineInstance+"), but no such context found.");
-	// System.err.println("Available contexts: "+systemContexts);
-	// // ignore engineInstance
-	// } else {
-	// return engineQualifiedContext;
-	// }
-	//
-	// }
-	// return systemContexts.get(name);
-	// }
-	//
-	//
 
 	public static boolean isValidInstallationForContext(ServletContext context) {
 		String installPath = getInstallationPath(context, null);
