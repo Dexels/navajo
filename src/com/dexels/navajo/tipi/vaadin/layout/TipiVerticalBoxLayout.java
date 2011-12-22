@@ -23,6 +23,7 @@ public class TipiVerticalBoxLayout
 
   public void createLayout() {
 	 layout =  new VerticalLayout();
+	 layout.setSizeFull();
 	 setLayout(layout);
   }
 

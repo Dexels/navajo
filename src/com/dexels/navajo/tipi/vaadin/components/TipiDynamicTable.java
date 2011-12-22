@@ -99,6 +99,7 @@ public class TipiDynamicTable extends TipiMessagePanel  {
 		} else {
 			logger.error("Can not load null message: "+messagepath);
 		}
+		table.removeGeneratedColumn("message");
         table.addGeneratedColumn("message", new Table.ColumnGenerator() {
             private static final long serialVersionUID = 1L;
 
@@ -155,6 +156,10 @@ public class TipiDynamicTable extends TipiMessagePanel  {
 		if (name.toLowerCase().equals("messagepath")) {
 			messagepath = (String) object;
 			return;
+		}
+		if (name.equals("selectedIndex")) {
+			 selectedId = object;
+			 table.select(selectedId);
 		}
 		super.setComponentValue(name, object);
 	}

@@ -120,6 +120,8 @@
 			<param name="zoom" type="integer"/>
 			<param name="description" type="string"/>
 		</method>
+		<method name="openMarker">
+		</method>
       </methods>
    </tipiclass>
 
@@ -140,11 +142,13 @@
 		<values>
 			<value direction="string" name="definitionName" type="string" />
 			<value direction="out" name="message" type="message" />
-			<value direction="in" name="startTime" type="date" />
-			<value direction="in" name="endTime" type="date" />
-			<value direction="in" name="description" type="string" />
-			<value direction="in" name="style" type="string" />
-			<value direction="in" name="allDay" type="boolean" />
+			<value direction="inout" name="startTime" type="date" />
+			<value direction="inout" name="endTime" type="date" />
+			<value direction="inout" name="description" type="string" />
+			<value direction="inout" name="caption" type="string" />
+			<value direction="inout" name="style" type="string" />
+			<value direction="inout" name="allDay" type="boolean" />
+			<value direction="inout" name="index" type="integer" />
 		</values>
 	</tipiclass>
 			
@@ -163,6 +167,7 @@
 			<value direction="inout" name="messagePath" type="string" />
 			<value direction="string" name="definitionName" type="string" />
 			<value direction="out" name="selectedMessage" type="message" />
+			<value direction="inout" name="selectedIndex" type="message" />
 		</values>
 	</tipiclass>
 	

@@ -33,7 +33,6 @@ public class TipiTabs extends TipiVaadinComponentImpl {
 //		accordion.addTab(l1, "Saved actions", null);
 //		accordion.addTab(l2, "Notes", null);
 //		accordion.addTab(l3, "Issues", null);
-		
 		tabSheet.addListener(new SelectedTabChangeListener() {
 			
 			private static final long serialVersionUID = 1L;
@@ -116,7 +115,8 @@ public class TipiTabs extends TipiVaadinComponentImpl {
 		tabSheet.addComponent(component);
 		component.setSizeFull();
 		tabSheet.addTab(component, ""+constraints, null);
-//		component.setCaption(""+constraints);
+		tabSheet.setSelectedTab(component);
+		//		component.setCaption(""+constraints);
 	}
 
 	

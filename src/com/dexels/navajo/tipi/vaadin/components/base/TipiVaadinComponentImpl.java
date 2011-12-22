@@ -64,7 +64,7 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 	@Override
 	public void addToContainer(Object c, Object constraints) {
 		if(c instanceof ContextMenu) {
-			System.err.println("Register context");
+			System.err.println("Register context. Not working yet.");
 		}
 		if(!(c instanceof Component)) {
 			throw new IllegalArgumentException("Can not add non-vaadin component to component: "+c);

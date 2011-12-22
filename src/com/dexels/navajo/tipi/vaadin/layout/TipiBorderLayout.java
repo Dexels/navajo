@@ -28,6 +28,7 @@ public class TipiBorderLayout
 
   public void createLayout() {
 	 layout =  new BorderLayout();
+	 layout.setSizeFull();
 	  setLayout(layout);
   }
 

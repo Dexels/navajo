@@ -48,6 +48,8 @@ public class TipiMap extends TipiMessagePanel  {
 	private double centerLat = 0;
 	private double centerLon = 0;
 	private MarkerLayer markers;
+	private Marker marker;
+	private String currentCaption;
 
 	
 	
@@ -92,8 +94,9 @@ public class TipiMap extends TipiMessagePanel  {
 //		OpenStreetMapLayer layer = new OpenStreetMapLayer();
 //		GoogleStreetMapLayer gsml = new GoogleStreetMapLayer();
 //		map.addLayer(gsml);
-
 		map.setSizeFull();
+        map.setHeight("200px");
+//		map.set
 		System.err.println("Zoom: "+map.getZoom()+" api: "+map.getApiProjection());
 		return map;
 		
@@ -168,7 +171,10 @@ public class TipiMap extends TipiMessagePanel  {
 
 			markLocation(lon,lat,zoom,caption);
 		}
-		super.performComponentMethod(name, compMeth, event);
+		if(name.equals("openMarker")) {
+			showPopup(currentCaption, marker);
+		}
+			super.performComponentMethod(name, compMeth, event);
 	}
 
 	private void markLocation(Double lon, Double lat, Integer zoom,
@@ -177,30 +183,17 @@ public class TipiMap extends TipiMessagePanel  {
 		centerLat = lat;
 		map.setCenter(centerLon,centerLat);
 		map.setZoom(zoom);
-//		Popup p = new Popup(lon,lat,caption);
-//		Marker m = new Marker(lon,lat);
-//		map.add
-//		p.setAnchor(m);
-//		p.setPopupStyle(PopupStyle.FRAMED_CLOUD);
-//		map.addPopup(p );
-
-	
-		final Marker m = new Marker(lon,lat);
-		markers.addMarker(m);
-		
-//		Popup p = new Popup(22.30083, 60.452541,"monkey monkey");
-
-		
-		// Add some server side integration when clicking a marker
-		m.addClickListener(new ClickListener() {
+		marker = new Marker(lon,lat);
+		this.currentCaption = caption;
+		markers.addMarker(marker);
+		marker.addClickListener(new ClickListener() {
 			private static final long serialVersionUID = -6806907718826334805L;
 
 			public void click(ClickEvent event) {
-				showPopup(caption, m);
+				showPopup(caption, marker);
 			}
 		});
 
-//		showPopup(caption, m);
 		
 	}
 

@@ -20,6 +20,8 @@ import com.vaadin.addon.calendar.event.BasicEventProvider;
 import com.vaadin.addon.calendar.event.CalendarEvent;
 import com.vaadin.addon.calendar.ui.Calendar;
 import com.vaadin.addon.calendar.ui.Calendar.TimeFormat;
+import com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventClick;
+import com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventClickHandler;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -124,8 +126,23 @@ public class TipiCalendar extends TipiMessagePanel  {
 
         vl.addComponent(calendarComponent);
         vl.setExpandRatio(calendarComponent, 1);
-		
-		
+		calendarComponent.setHandler(new EventClickHandler() {
+			
+			private static final long serialVersionUID = -5074871951736420122L;
+
+			@Override
+			public void eventClick(EventClick event) {
+				CalendarEvent ce = event.getCalendarEvent();
+				TipiCalendarEvent te = componentMap.get(ce);
+				if(te==null) {
+					logger.error("Unbound event found? ");
+				} else {
+					te.onClick();
+
+				}
+			}
+		});
+        
 		return vl;
 		
 		
