@@ -4,9 +4,7 @@ Bundle-Description: Continuations
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.3.qualifier
 Bundle-Activator: navajolistenerscontinuations.Version
-Bundle-ClassPath: .,
- lib/jetty-continuation-8.0.0.M2.jar,
- compilelib/servlet-api.jar
+Bundle-ClassPath: .
 Include-Resource: lib
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.client,
