@@ -31,19 +31,21 @@ public class TmlContinuationServlet extends HttpServlet implements SchedulableSe
 	public static final String COMPRESS_JZLIB = "jzlib";
 	public static final String COMPRESS_NONE = "";
 
+	private boolean jmxRegistered = false;
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-
+		performInitialization();
+		
 	}
 	
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		System.err.println("In ContinuationServlet init()");
-		setTmlScheduler(SchedulerTools.createScheduler(this));
-		JMXHelper.registerMXBean(this, JMXHelper.NAVAJO_DOMAIN, "TmlCometServlet");
+		// TOO EARLY check performInitialization
+		//		JMXHelper.registerMXBean(this, JMXHelper.NAVAJO_DOMAIN, "TmlCometServlet");
 	}
 
 
@@ -51,6 +53,7 @@ public class TmlContinuationServlet extends HttpServlet implements SchedulableSe
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+		performInitialization();
 		TmlContinuationRunner tmlRunner = (TmlContinuationRunner) req.getAttribute("tmlRunner");
 		if(tmlRunner!=null) {
 //			tmlRunner.setResponse(resp);
@@ -83,6 +86,17 @@ public class TmlContinuationServlet extends HttpServlet implements SchedulableSe
 		
 		tr.suspendContinuation();
 		getTmlScheduler().submit(tr,false);
+	}
+
+	private void performInitialization() {
+		// Not nice. Not thread safe on hot startup. TODO Move it someplace else. 
+		// I can not do this in the servlet init because it requires the Navajo context to be up, and
+		// that is not really the case.
+		if(!jmxRegistered) {
+			JMXHelper.registerMXBean(this, JMXHelper.NAVAJO_DOMAIN, "TmlCometServlet");
+			setTmlScheduler(SchedulerTools.createScheduler(this));
+			jmxRegistered = true;
+		}
 	}
 
 	
