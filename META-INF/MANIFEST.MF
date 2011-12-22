@@ -3,19 +3,20 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Navajo Bridged Server
 Bundle-SymbolicName: com.dexels.navajo.server.bridged
 Bundle-Version: 0.1.0.qualifier
-Bundle-Vendor: DEXELS
+Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: javax.servlet;version="2.5.0",
  javax.servlet.http;version="2.5.0",
  org.osgi.framework;version="1.5.0",
  org.osgi.service.http;version="1.2.1",
- org.osgi.util.tracker
-Service-Component: META-INF/component.xml
+ org.osgi.util.tracker,
+ org.slf4j;version="1.6.1"
+Service-Component: OSGI-INF/component.xml
 Require-Bundle: com.dexels.navajo.listeners;bundle-version="3.1.5",
  org.eclipse.equinox.ds;bundle-version="1.2.1",
  org.eclipse.equinox.util;bundle-version="1.0.200",
  com.dexels.navajo.document;bundle-version="1.0.5",
  com.dexels.navajo.version;bundle-version="1.0.10",
  com.dexels.navajo.core;bundle-version="2.9.4",
- com.dexels.navajo.listeners.continuations;bundle-version="1.0.3"
-Bundle-Activator: com.dexels.navajo.server.bridged.Activator
+ com.dexels.navajo.listeners.continuations;bundle-version="1.0.3",
+ org.eclipse.osgi.services;bundle-version="3.3.0"
