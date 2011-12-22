@@ -87,9 +87,13 @@ public final class ASTTmlNode extends SimpleNode {
         try {
             if (parentMsg == null && !isParam) {
                 if (val.indexOf(Navajo.MESSAGE_SEPARATOR) != -1) {
-                    match = doc.getProperties(val);
-                    if (match.size() > 1)
+                	if(doc==null) {
+                		throw new NullPointerException("Can't evaluate TML node: No parent message and no document found.");
+                	}
+                	match = doc.getProperties(val);
+                    if (match.size() > 1) {
                       singleMatch = false;
+                    }
                 }
                 else {
                    throw new TMLExpressionException("No parent message present for property: " + val);
