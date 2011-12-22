@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="com.dexels.navajo.resource.manager">
+   <implementation class="com.dexels.navajo.resource.manager.ResourceManager"/>
+   <reference bind="addResource" cardinality="0..n" interface="com.dexels.navajo.resource.ResourceConfig" name="ResourceConfig" policy="dynamic" unbind="removeResource"/>
+   <service>
+      <provide interface="com.dexels.navajo.resource.manager.ResourceManager"/>
+   </service>
+
+</scr:component>
