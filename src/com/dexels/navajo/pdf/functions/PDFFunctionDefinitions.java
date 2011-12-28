@@ -8,6 +8,7 @@ import navajo.ExtensionDefinition;
 
 public class PDFFunctionDefinitions implements ExtensionDefinition {
 
+	private static final long serialVersionUID = 2973100174588822113L;
 	private ClassLoader extensionClassLoader = null;
 
 	public InputStream getDefinitionAsStream() {
