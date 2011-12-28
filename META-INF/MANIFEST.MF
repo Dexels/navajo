@@ -1,14 +1,9 @@
-Bundle-Name: Navajo Functions
-Bundle-SymbolicName: com.dexels.navajo.functions.pdf
+Bundle-Name: Navajo Functions PDF
+Bundle-SymbolicName: com.dexels.navajo.function.pdf
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 0.1.0.qualifier
+Bundle-Version: 0.1.1.qualifier
 Bundle-Activator: navajofunctionspdf.Version
-Export-Package: com.dexels.navajo.functions,
- com.dexels.navajo.functions.scale,
- com.dexels.navajo.functions.test,
- dexels,
- navajofunctionspdf
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.document;bundle-version="1.0.0",
  com.dexels.navajo.core;bundle-version="2.9.0",
