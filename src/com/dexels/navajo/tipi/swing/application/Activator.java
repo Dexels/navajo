@@ -1,7 +1,5 @@
 package com.dexels.navajo.tipi.swing.application;
 
-import javax.swing.SwingUtilities;
-
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
