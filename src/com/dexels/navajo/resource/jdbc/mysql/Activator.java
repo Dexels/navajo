@@ -19,8 +19,8 @@ public class Activator implements BundleActivator {
 	private static BundleContext context;
 	private ServiceRegistration<DataSourceFactory> service;
 	private ServiceRegistration<ResourceConfig> configService;
-	private static DataSourceFactory dataSourceFactory;
 	private static final Logger logger = LoggerFactory.getLogger(Activator.class);
+	private static DataSourceFactory dataSourceFactory;
 	
 	public static DataSourceFactory getDataSourceFactory() {
 		return dataSourceFactory;
