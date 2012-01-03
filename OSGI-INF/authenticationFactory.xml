@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" immediate="true" name="com.dexels.navajo.authentication.authenticationFactory">
+   <implementation class="com.dexels.navajo.authentication.impl.AAAFactory"/> 
+   <reference bind="addAuthenticationModule" cardinality="1..n" interface="com.dexels.navajo.authentication.api.AAAInterface" name="AAAInterface" policy="dynamic" unbind="removeAuthenticationModule"/>
+   <service>
+      <provide interface="com.dexels.navajo.authentication.api.AuthenticationFactory"/>
+   </service>
+</scr:component>
