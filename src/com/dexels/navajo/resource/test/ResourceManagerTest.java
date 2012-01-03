@@ -17,12 +17,10 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.adapter.JDBCMap;
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
-import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.resource.ResourceInstance;
 import com.dexels.navajo.resource.manager.ResourceManager;
 import com.dexels.navajo.resource.manager.ResourceReference;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.UserException;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 
@@ -59,10 +57,10 @@ public class ResourceManagerTest {
 	}
 
 	private void testResourceManager() throws Exception {
-		logger.info("Starting test");
-		testNonExisting();
-		testH2();
-		testMysql();
+//		logger.info("Starting test");
+//		testNonExisting();
+//		testH2();
+//		testMysql();
 		
 	}
 
@@ -136,6 +134,32 @@ public void testMysql() throws Exception, SQLException {
 		  }
 		connection.close();
 	}
+
+public void testOracle() throws Exception, SQLException {
+	ResourceReference rr;
+	Map<String, Object> settings = new HashMap<String, Object>(); 
+	rr = new ResourceReference("oracle_develop", "oracle",settings);
+	settings.put("url", "jdbc:oracle:thin:@10.0.0.1:1521:aardnoot");
+	settings.put("user", "knvbkern");
+	settings.put("password", "knvb");
+	resourceManager.addResourceReference(rr);
+	if(rr.isActive()) {
+		logger.info("Good, Oracle exists");
+	} else {
+		logger.warn("Bad: Oracle not found");
+		return;
+	}
+//	resourceManager.getResourceInstance("")
+	DataSource d = (DataSource) rr.getInstance().getSource();
+	Connection connection = d.getConnection();
+	PreparedStatement s2 = connection.prepareStatement("select * from sport");
+	ResultSet ts = s2.executeQuery();
+	  while (ts.next()) {
+            String title = ts.getString("sportid");
+            logger.info("title: "+title);
+	  }
+	connection.close();
+}
 public void testLoadedMysql() throws Exception, SQLException {
 	ResourceInstance rr = resourceManager.getResourceInstance("mysql_swingstreet");
 	DataSource d = (DataSource) rr.getSource();
@@ -149,43 +173,55 @@ public void testLoadedMysql() throws Exception, SQLException {
 	connection.close();
 }
 
-	private Map<String, Object> testNonExisting() throws Exception {
-		Map<String,Object> settings = new HashMap<String, Object>();
-		ResourceReference rr = new ResourceReference("unknowndatabase", "monkey",settings);
-		resourceManager.addResourceReference(rr);
-		if(!rr.isActive()) {
-			logger.info("Good, no 'monkey' database exists");
-		}
-		return settings;
-	}
+
+//	private Map<String, Object> testNonExisting() throws Exception {
+//		Map<String,Object> settings = new HashMap<String, Object>();
+//		ResourceReference rr = new ResourceReference("unknowndatabase", "monkey",settings);
+//		resourceManager.addResourceReference(rr);
+//		if(!rr.isActive()) {
+//			logger.info("Good, no 'monkey' database exists");
+//		}
+//		return settings;
+//	}
+//	
+
 	
-	public void testJDBCMap() throws MappableException, UserException {
+	public void testJDBCMap2() throws Exception {
+		Map<String,Object> settings = new HashMap<String, Object>();
+		ResourceReference rr = new ResourceReference("mysqldatabase", "mysql",settings);
+		settings.put("url", "jdbc:mysql://localhost/swingstreet");
+		settings.put("user", "root");
+		settings.put("password", "root");
+		resourceManager.addResourceReference(rr);
+
+		
 		JDBCMap jm = new JDBCMap();
+		jm.setDebug(true);
 		Access a = new Access(1,2,"demo","rpcname","agent","ip","host",null);
 		jm.load(a);
-		jm.setDatasource("mysql_swingstreet");
+		jm.setDatasource("mysqldatabase");
 		jm.setQuery("select name from jos_components");
-//		Binary b = jm.getRecords();
-//		String res = new String(b.getData());
-//		logger.info("result: {}",res);
+
 		ResultSetMap[] rsm = jm.getResultSet();
 		for (ResultSetMap resultSetMap : rsm) {
 			logger.info("result: {}",resultSetMap.getColumnValue("name"));
 		}
-	}
-	
-	public void testJDBCMap2() throws MappableException, UserException {
-		JDBCMap jm = new JDBCMap();
-		Access a = new Access(1,2,"demo","rpcname","agent","ip","host",null);
-		jm.load(a);
-		jm.setDatasource("test");
-		jm.setQuery("select * from person");
-//		Binary b = jm.getRecords();
+		
+		int trans = jm.getTransactionContext();
+		logger.info("Transaction: {}",trans);
+		
+		JDBCMap jm2 = new JDBCMap();
+		jm2.setDebug(true);
+		jm2.load(a);
+		jm2.setTransactionContext(trans);
+		jm2.setQuery("select name from jos_components");
+		
+		//		Binary b = jm.getRecords();
 //		String res = new String(b.getData());
 //		logger.info("result: {}",res);
-		ResultSetMap[] rsm = jm.getResultSet();
-		for (ResultSetMap resultSetMap : rsm) {
-			logger.info("result: {}",resultSetMap.getColumnValue("lastname"));
+		ResultSetMap[] rsm2 = jm2.getResultSet();
+		for (ResultSetMap resultSetMap : rsm2) {
+			logger.info("result2: {}",resultSetMap.getColumnValue("name"));
 		}
 	}
 	

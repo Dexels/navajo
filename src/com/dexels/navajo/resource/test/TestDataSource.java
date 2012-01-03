@@ -20,6 +20,8 @@ public class TestDataSource implements CommandProvider {
 				ResourceManagerTest.getInstance().testH2();
 			} else if("mysql".equals(next)) {
 				ResourceManagerTest.getInstance().testMysql();
+			} else if("oracle".equals(next)) {
+				ResourceManagerTest.getInstance().testOracle();
 			} else if("mongo".equals(next)) {
 				ResourceManagerTest.getInstance().testMongo();
 			} else if("load".equals(next)) {
