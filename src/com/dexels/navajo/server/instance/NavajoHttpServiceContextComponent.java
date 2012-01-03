@@ -6,14 +6,11 @@ import java.util.Hashtable;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
-import org.osgi.service.component.ComponentContext;
 import org.osgi.service.http.HttpContext;
 import org.osgi.service.http.HttpService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.server.DispatcherInterface;
-import com.dexels.navajo.server.api.NavajoServerContext;
 import com.dexels.navajo.server.listener.NavajoContextListener;
 import com.dexels.navajo.server.listener.http.TmlHttpServlet;
 import com.dexels.navajo.server.listener.http.continuation.TmlContinuationServlet;
