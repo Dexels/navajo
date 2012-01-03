@@ -1,22 +1,15 @@
 package com.dexels.navajo.tipi.vaadin.components;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vaadin.vol.Bounds;
 import org.vaadin.vol.GoogleStreetMapLayer;
 import org.vaadin.vol.Marker;
 import org.vaadin.vol.MarkerLayer;
 import org.vaadin.vol.OpenLayersMap;
-import org.vaadin.vol.OpenStreetMapLayer;
-import org.vaadin.vol.Point;
 import org.vaadin.vol.Popup;
 import org.vaadin.vol.Popup.CloseEvent;
 import org.vaadin.vol.Popup.CloseListener;
 import org.vaadin.vol.Popup.PopupStyle;
-import org.vaadin.vol.WebMapServiceLayer;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -24,25 +17,18 @@ import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiException;
-import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
 import com.dexels.navajo.tipi.internal.TipiEvent;
-import com.vaadin.addon.calendar.event.CalendarEvent;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
-import com.vaadin.terminal.Paintable.RepaintRequestEvent;
-import com.vaadin.terminal.Paintable.RepaintRequestListener;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.ComponentContainer.ComponentAttachEvent;
-import com.vaadin.ui.ComponentContainer.ComponentAttachListener;
 
 public class TipiMap extends TipiMessagePanel  {
 
 	private static final long serialVersionUID = 1440706945170166712L;
 	private OpenLayersMap map;
 	private String messagepath;
-	private Map<CalendarEvent,TipiCalendarEvent> componentMap = new HashMap<CalendarEvent, TipiCalendarEvent>();
+//	private Map<CalendarEvent,TipiCalendarEvent> componentMap = new HashMap<CalendarEvent, TipiCalendarEvent>();
 	
-	private String definitionName;
+//	private String definitionName;
 	
 	private final static Logger logger = LoggerFactory.getLogger(TipiMap.class);
 	private double centerLat = 0;
@@ -69,7 +55,7 @@ public class TipiMap extends TipiMessagePanel  {
 
 	@Override
 	public Object createContainer() {
-		
+		logger.info("Creating map container");
         map = new OpenLayersMap();
 //        OpenStreetMapLayer osm = new OpenStreetMapLayer();
         GoogleStreetMapLayer googleStreets = new GoogleStreetMapLayer();
@@ -199,11 +185,11 @@ public class TipiMap extends TipiMessagePanel  {
 
 	@Override
 	protected void setComponentValue(String name, Object object) {
-		System.err.println("Set "+name+" object: "+object);
-		if (name.equals("definitionName")) {
-			definitionName = (String) object;
-			return;
-		}
+//		System.err.println("Set "+name+" object: "+object);
+//		if (name.equals("definitionName")) {
+//			definitionName = (String) object;
+//			return;
+//		}
 		if (name.toLowerCase().equals("messagepath")) {
 			messagepath = (String) object;
 			return;

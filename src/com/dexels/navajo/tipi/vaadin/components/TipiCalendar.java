@@ -4,7 +4,6 @@ import java.text.DateFormatSymbols;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -15,7 +14,6 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.actions.TipiInstantiateTipi;
-import com.vaadin.addon.calendar.event.BasicEvent;
 import com.vaadin.addon.calendar.event.BasicEventProvider;
 import com.vaadin.addon.calendar.event.CalendarEvent;
 import com.vaadin.addon.calendar.ui.Calendar;
@@ -220,7 +218,7 @@ public class TipiCalendar extends TipiMessagePanel  {
 				} catch (TipiBreakException e) {
 				}
 				cep.addEvent(tc.getCalendarEvent());
-				tc.setCalendar(this);
+//				tc.setCalendar(this);
 				componentMap.put(tc.getCalendarEvent(),tc);
 			} catch (TipiException e) {
 				e.printStackTrace();
@@ -266,13 +264,13 @@ public class TipiCalendar extends TipiMessagePanel  {
 //
 //		return result;
 //	}
-
-
-	private BasicEvent createEvent(Message current) {
-		BasicEvent be = new BasicEvent();
-		
-		return be;
-	}
+//
+//
+//	private BasicEvent createEvent(Message current) {
+//		BasicEvent be = new BasicEvent();
+//		
+//		return be;
+//	}
 
 
 }

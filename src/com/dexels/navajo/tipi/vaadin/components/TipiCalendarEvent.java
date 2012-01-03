@@ -12,7 +12,7 @@ public class TipiCalendarEvent extends TipiComponentImpl {
 	private static final long serialVersionUID = 1561760767992331660L;
 	
 	private BasicEvent event;
-	private TipiCalendar myCalendar = null;
+//	private TipiCalendar myCalendar = null;
 
 	private Integer index;
 	
@@ -81,10 +81,10 @@ public class TipiCalendarEvent extends TipiComponentImpl {
 	}
 
 
-	public void setCalendar(TipiCalendar tipiCalendar) {
-		myCalendar = tipiCalendar;
-	}
-
+//	public void setCalendar(TipiCalendar tipiCalendar) {
+//		myCalendar = tipiCalendar;
+//	}
+//
 
 	public void onClick() {
 		try {
