@@ -138,11 +138,12 @@ public class DispatcherFactory {
 				
 				// Create NavajoConfig object.
 				 InputStream is = null; 
-				 NavajoConfig nc = null;
+				 NavajoConfigInterface nc = null;
 				  try {
 					  // Read configuration file.
 					  is = configurationUrl.openStream();
 					  nc = new NavajoConfig(fileInputStreamReader, null, is, rootPath,servletContextRootPath); 
+					  navajo.Version.registerNavajoConfig(nc);
 				  }
 				  catch (Exception se) {
 					  se.printStackTrace(System.err);
@@ -158,6 +159,7 @@ public class DispatcherFactory {
 				  }
 				  
 				instance = new Dispatcher(nc);
+				navajo.Version.registerDispatcher(instance);
 				((Dispatcher) instance).init();
 				JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, "Dispatcher");
 				NavajoFactory.getInstance().setTempDir(instance.getTempDir());

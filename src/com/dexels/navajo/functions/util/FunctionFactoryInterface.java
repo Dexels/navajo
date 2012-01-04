@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import navajo.ExtensionDefinition;
 
 import com.dexels.navajo.document.nanoimpl.XMLElement;
@@ -24,6 +27,7 @@ public abstract class FunctionFactoryInterface {
 	private static Object semaphore = new Object();
 	private boolean initializing = false;
 	
+	private static final Logger logger = LoggerFactory.getLogger(FunctionFactoryInterface.class);
 	public abstract void init();
 
 	
@@ -67,7 +71,7 @@ public abstract class FunctionFactoryInterface {
 				try {
 					semaphore.wait(1000);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					logger.error("Caught exception. ",e);
 				}
 			}
 		}
@@ -81,7 +85,12 @@ public abstract class FunctionFactoryInterface {
 	}
 	
 	public  String getAdapterClass(String name, ExtensionDefinition ed)  {
-		return getAdapterConfig(ed).get(name).getObject();
+		FunctionDefinition functionDefinition = getAdapterConfig(ed).get(name);
+		if(functionDefinition==null) {
+			logger.info("No function definition found for: {}, assuming class name.",name);
+			return name;
+		}
+		return functionDefinition.getObject();
 	}
 
 	public  FunctionDefinition getAdapterDefinition(String name, ExtensionDefinition ed)  {
@@ -101,12 +110,12 @@ public abstract class FunctionFactoryInterface {
 			}
 			return c.newInstance();
 		} catch (InstantiationException e) {
-			e.printStackTrace();
+			logger.error("Caught exception. ",e);
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			logger.error("Caught exception. ",e);
 		} catch (ClassNotFoundException e) {
 			// old skool class fail, unreachable in injected OSGi mode
-			e.printStackTrace();
+			logger.error("Caught exception. ",e);
 		}
 		return null;
 	}
@@ -133,7 +142,7 @@ public abstract class FunctionFactoryInterface {
 			Class<?> c = Class.forName(getAdapterClass(name,ed),true,cl);
 			return c;
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			logger.error("Caught exception. ",e);
 		}
 		return null;
 	}
@@ -234,14 +243,15 @@ public abstract class FunctionFactoryInterface {
 	@SuppressWarnings("unchecked")
 	public FunctionInterface instantiateFunctionClass(FunctionDefinition fd, ClassLoader classLoader) {
 		try {
+			logger.debug("Instantiating function: {}",fd.getObject());
 			Class<? extends FunctionInterface> clz = (Class<? extends FunctionInterface>) Class.forName(fd.getObject(),true,classLoader);
 			return clz.newInstance();
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			logger.error("Caught exception. ",e);
 		} catch (InstantiationException e) {
-			e.printStackTrace();
+			logger.error("Caught exception. ",e);
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			logger.error("Caught exception. ",e);
 		}
 		return null;
 	}

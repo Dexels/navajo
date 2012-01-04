@@ -24,13 +24,13 @@ public class StatisticsRunnerFactory {
 	
 	@SuppressWarnings("unchecked")
 	public static final StatisticsRunnerInterface getInstance(String storePath, Map parameters, String storeClass) {
-
 		if ( instance != null ) {
 			return instance;
 		} else {
 			synchronized (semaphore) {
 				
 				if ( instance == null ) {
+					logger.info("Getting statistics runner interface with storePath: {} and parameters: {}",storeClass,parameters);
 					try {
 						instance = getStatisticsRunnerInstanceOSGi(storePath, parameters, storeClass);
 						if(instance!=null) {

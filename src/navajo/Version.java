@@ -4,15 +4,18 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
 
 import com.dexels.navajo.adapter.core.NavajoCoreAdapterLibrary;
 import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.FunctionFactoryInterface;
 import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.GenericHandler;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.NavajoConfig;
+import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.enterprise.monitoring.AgentFactory;
 import com.dexels.navajo.server.enterprise.statistics.DummyStatisticsRunner;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerFactory;
@@ -216,6 +219,8 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
 	public static final String RELEASEDATE = "2010-08-26";
+	private static ServiceRegistration<NavajoConfigInterface> navajoConfig;
+	private static ServiceRegistration<DispatcherInterface> dispatcherRegistration;
 	
 	
 	public static String getDescription() {
@@ -249,8 +254,7 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 				}
 			}
 		} catch (Throwable e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error starting navajo core bundle.",e);
 		}
 		StatisticsRunnerInterface ptps = new DummyStatisticsRunner();
 		Dictionary<String, Object> wb = new Hashtable<String, Object>();
@@ -277,6 +281,9 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	@Override
 	public void shutdown() {
 		super.shutdown();
+		
+		 navajoConfig.unregister();
+		 dispatcherRegistration.unregister();
 		  // Stop JMX.
 		  JMXHelper.destroy();
 			ResourceCheckerManager.clearInstance();
@@ -311,6 +318,28 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 		  JabberWorkerFactory.shutdown();
 		  DispatcherFactory.shutdown();
 	
+	}
+
+
+
+	public static void registerNavajoConfig(NavajoConfigInterface nc) {
+        Dictionary<String, Object> properties = new Hashtable<String, Object>();
+        properties.put("rootPath", nc.getRootPath());
+        properties.put("instanceName", nc.getInstanceName());
+        properties.put("instanceGroup", nc.getInstanceGroup());
+        navajoConfig = getDefaultBundleContext().registerService(NavajoConfigInterface.class, nc, properties);
+		
+	}
+
+
+
+	public static void registerDispatcher(DispatcherInterface instance) {
+        Dictionary<String, Object> properties = new Hashtable<String, Object>();
+        properties.put("edition", instance.getEdition());
+        properties.put("product", instance.getProduct());
+        properties.put("applicationId", instance.getApplicationId());
+        properties.put("serverId", instance.getServerId());
+        dispatcherRegistration = getDefaultBundleContext().registerService(DispatcherInterface.class, instance, properties);
 	}
 	
 

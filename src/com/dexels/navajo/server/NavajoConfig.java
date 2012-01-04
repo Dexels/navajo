@@ -580,7 +580,13 @@ public final class NavajoConfig implements NavajoConfigInterface {
 
     	synchronized (instance) {
     		if ( repository == null ) {
-    			repository = RepositoryFactory.getRepository(repositoryClass, this);
+    			RepositoryFactory r = RepositoryFactoryImpl.getInstance();
+    			if(r==null) {
+    				// no instance, means no OSGi, so go legacy:
+        			repository = RepositoryFactoryImpl.getRepository(repositoryClass, this);
+        			return repository;
+    			}
+    			this.repository = r.getRepository(repositoryClass);
     		} 
     	}
 

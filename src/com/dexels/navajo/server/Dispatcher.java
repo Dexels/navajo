@@ -125,7 +125,6 @@ public final class Dispatcher implements Mappable, DispatcherMXBean, DispatcherI
 
   public  boolean useAuthorisation = true;
   private  final String defaultDispatcher = "com.dexels.navajo.server.GenericHandler";
-  private static final String defaultNavajoDispatcher = "com.dexels.navajo.server.MaintainanceHandler";
   public static java.util.Date startTime = new java.util.Date();
 
   public  long requestCount = 0;
@@ -304,22 +303,24 @@ public final class Dispatcher implements Mappable, DispatcherMXBean, DispatcherI
    * @param repositoryClass the fully specified classname of the repository.
    *
    * @throws java.lang.ClassNotFoundException
+   * deprecated! This will never work in OSGi (although you can easily do it in OSGi)
+   * I also seriously doubt if it ever worked well in J2EE
    */
-  public synchronized  final void updateRepository(String repositoryClass) throws
-      java.lang.ClassNotFoundException {
-    doClearCache();
-    Repository newRepository = RepositoryFactory.getRepository( (
-        NavajoClassLoader) navajoConfig.
-        getClassloader(), repositoryClass, navajoConfig);
-    System.err.println("New repository = " + newRepository);
-    if (newRepository == null) {
-      throw new ClassNotFoundException("Could not find repository class: " +
-                                       repositoryClass);
-    }
-    else {
-      navajoConfig.setRepository(newRepository);
-    }
-  }
+//  public synchronized  final void updateRepository(String repositoryClass) throws
+//      java.lang.ClassNotFoundException {
+//    doClearCache();
+//    Repository newRepository = RepositoryFactoryImpl.getRepository( (
+//        NavajoClassLoader) navajoConfig.
+//        getClassloader(), repositoryClass, navajoConfig);
+//    System.err.println("New repository = " + newRepository);
+//    if (newRepository == null) {
+//      throw new ClassNotFoundException("Could not find repository class: " +
+//                                       repositoryClass);
+//    }
+//    else {
+//      navajoConfig.setRepository(newRepository);
+//    }
+//  }
 
   /*
    * Get the (singleton) NavajoConfig object reference.
@@ -941,7 +942,7 @@ private ServiceHandler createHandler(String handler, Access access)
       } 
       else {  
     	// Use SimpleRepository authorisation is skipped.
-    	access = RepositoryFactory.getRepository("com.dexels.navajo.server.SimpleRepository", navajoConfig)
+    	access = RepositoryFactoryImpl.getRepository("com.dexels.navajo.server.SimpleRepository", navajoConfig)
     				.authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, null);
       }
       
@@ -1059,24 +1060,7 @@ private ServiceHandler createHandler(String handler, Access access)
     			}
         	}
         	else {
-        		if (rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_HELLO) ||
-        			rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_LOGON) ||
-        			rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_LOGON_SEND) ||
-        			rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_TEST) ||
-        			rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_PING) ) 
-        	    {
-        			outMessage = dispatch(defaultNavajoDispatcher, access);
-        		}
-        		else {
-        			if ( useProxy == null ) {
-        				// Actually do something.
-        				System.err.println("Dispatchine...");
-        				outMessage = dispatch(defaultDispatcher, access);
-        			} else {
-        				rpcName = access.rpcName;
-        				outMessage = useProxy;
-        			}
-        		}
+        		throw new UnsupportedOperationException("I've removed this code because I assumed it wasn't used any more");
         	}
         }
         

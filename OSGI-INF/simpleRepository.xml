@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" immediate="true" name="com.dexels.navajo.SimpleRepository">
+   <implementation class="com.dexels.navajo.server.SimpleRepository"/>
+   <reference bind="setNavajoConfig" cardinality="1..1" interface="com.dexels.navajo.server.NavajoConfigInterface" name="NavajoConfigInterface" policy="dynamic" unbind="clearNavajoConfig"/>
+   <service>
+      <provide interface="com.dexels.navajo.server.Repository"/>
+   </service>
+</scr:component>

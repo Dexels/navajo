@@ -82,3 +82,4 @@ Import-Package: javax.imageio,
  org.slf4j
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Service-Component: OSGI-INF/simpleRepository.xml, OSGI-INF/repositoryFactory.xml

@@ -28,7 +28,7 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 
-public class SimpleRepository implements Repository {
+public class SimpleRepository implements Repository, GlobalManager {
 
 	public NavajoConfigInterface config;
 
@@ -39,11 +39,20 @@ public class SimpleRepository implements Repository {
 	
 	public SimpleRepository() {
 	}
+	
+	public void activate() {
+		logger.info("Activating SimpleRepository");
+	}
 
 	public void setNavajoConfig(NavajoConfigInterface config) {
 		this.config = config;
 	}
 
+	public void clearNavajoConfig(NavajoConfigInterface config) {
+		this.config = null;
+	}
+
+	
 	/**
 	 * @see Repository
 	 */
@@ -72,6 +81,7 @@ public class SimpleRepository implements Repository {
 	 */
 	public void initGlobals(String method, String username, Navajo inMessage, Map<String,String> extraParams) throws NavajoException {
 //		config.getRootPath();
+		// TODO I think this is pretty inefficient. Redo this.
 		try {
 			ResourceBundle rb = ResourceBundle.getBundle("application");
 			parseBundle(method, username, inMessage, extraParams, rb);
@@ -142,35 +152,12 @@ public class SimpleRepository implements Repository {
 		}
 	}
 
-	public Parameter[] getParameters(Access access) throws SystemException {
-		return null;
-	}
-
-	public void logTiming(Access access, int part, long timespent)
-			throws SystemException {
-	}
-
-	public void logAction(Access access, int level, String comment)
-			throws SystemException {
-	}
-
 	public String getServlet(Access access) throws SystemException {
 		String compLanguage = DispatcherFactory.getInstance().getNavajoConfig().getCompilationLanguage();
-//		System.err.println("=================================\nGetting compilation language from navajoconfig: "+compLanguage);
-//		System.err.println("=================================");
 		if("javascript".equals(compLanguage)) {
 			return "com.dexels.navajo.rhino.RhinoHandler";
 		}
-		if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_LOGON) || 
-			access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_LOGON_SEND) ||
-			access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_PING)  
-		)
-			return "com.dexels.navajo.server.MaintainanceHandler";
-		else
 			return "com.dexels.navajo.server.GenericHandler";
 	}
 
-	public String[] getServices(Access access) throws SystemException {
-		return null;
-	}
 }

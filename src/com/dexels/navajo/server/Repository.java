@@ -1,9 +1,6 @@
 package com.dexels.navajo.server;
 
-import java.util.Map;
-
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 
 /**
  * Title:        Navajo Product Project
@@ -48,24 +45,6 @@ public interface Repository {
      */
     public Access authorizeUser(String username, String password, String service, Navajo inMessage, Object certificate) throws SystemException, AuthorizationException;
 
-    /**
-     * Retrieve user/service specific parameters from the repository. The parameters are returned in an array of
-     * ParameterData.
-     */
-    @Deprecated
-    public Parameter[] getParameters(Access access) throws SystemException;
-
-    /**
-     * This method is used to log timing information.
-     */
-    @Deprecated
-    public void logTiming(Access access, int part, long timespent) throws SystemException;
-
-    /**
-     * This method is used to log certain actions.
-     */
-    @Deprecated
-    public void logAction(Access access, int level, String comment)throws SystemException;
 
     /**
      * Get the dispatcher class from the repository using the Access object.
@@ -73,21 +52,6 @@ public interface Repository {
      */
     public String getServlet(Access access) throws SystemException;
 
-    /**
-     * Return all (registered) Navajo services.
-     */
-    public String[] getServices(Access access) throws SystemException;
-
-    /**
-     * Sets up the global parameters for this service
-     * 
-     * @param username
-     * @param inMessage
-     * @param region
-     * @param userRoleString
-     * @throws NavajoException
-     */
-    public void initGlobals(String method, String username, Navajo inMessage, Map<String,String> extraParams) throws NavajoException;
 
     /**
      * Legacy date mode will truncate dates to day level (so time is discarded)
