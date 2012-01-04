@@ -41,7 +41,7 @@ public class NqlServlet extends HttpServlet {
 		System.err.println("getContextPath: " + req.getContextPath());
 		NQLContext nc = new NQLContext();
 		nc.setupClient(server, username, password, req.getServerName(),
-				req.getServerPort(), req.getContextPath());
+				req.getServerPort(), req.getContextPath(),"/PostmanLegacy");
 
 		nc.setCallback(new OutputCallback() {
 
