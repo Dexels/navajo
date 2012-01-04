@@ -8,6 +8,9 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.context.NavajoContext;
 import com.dexels.navajo.client.nql.command.CallCommand;
@@ -30,7 +33,10 @@ public class NQLContext {
 //	private Writer outputWriter = null;
 	private String mimeType = null;
 	private OutputCallback callback = null;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(NQLContext.class);
+	
 	public String getMimeType() {
 		if(content!=null && (content instanceof Property)) {
 			Property p = (Property)content;
@@ -75,8 +81,8 @@ public class NQLContext {
 	 * @param requestServerPort
 	 * @param requestContextPath
 	 */
-	public void setupClient(String server, String username, String password,String requestServerName,int requestServerPort, String requestContextPath) {
-		context.setupClient(server, username, password,requestServerName,requestServerPort,requestContextPath, false);
+	public void setupClient(String server, String username, String password,String requestServerName,int requestServerPort, String requestContextPath,String postmanPath) {
+		context.setupClient(server, username, password,requestServerName,requestServerPort,requestContextPath,postmanPath, false);
 	}
 
 
@@ -86,13 +92,13 @@ public class NQLContext {
 		}
 		Message m = current.getMessage(path);
 		if(m!=null) {
-			System.err.println("Message found");
+			logger.info("Message found");
 			content = m;
 			return;
 		}
 		Property p = current.getProperty(path);
 		if(p!=null) {
-			System.err.println("Property found");
+			logger.info("Property found");
 			content = p.getTypedValue();
 			return;
 		}
@@ -108,8 +114,15 @@ public class NQLContext {
 		if(content==null) {
 			content = current;
 		}
-		System.err.println("Type: "+type);
+		logger.info("Type: "+type);
+		if(type==null) {
+			type="tml";
+		}
+
+
 		if("json".equals(type)) {
+			setMimeType("application/json");
+			
 			writeJSON();
 			return;
 		}
@@ -124,12 +137,12 @@ public class NQLContext {
 			return;
 		}
 		if("btml".equals(type)) {
-			setMimeType("text/plain");
+			setMimeType("text/xml");
 			writeBTML(callback.getOutputStream());
 			return;
 		}
 		if("tml".equals(type)) {
-			setMimeType("text/plain");
+			setMimeType("text/xml");
 			writeTML(callback.getOutputStream());
 			return;
 		}
@@ -137,7 +150,6 @@ public class NQLContext {
 			writeBinary(callback.getOutputStream());
 			return;
 		}
-
 	}
 
 	public void setMimeType(String mime) {
@@ -304,11 +316,11 @@ public class NQLContext {
 			}
 
 			public void setOutputType(String mime) {
-				System.err.println("Output detected: "+mime);
+				logger.info("Output detected: "+mime);
 			}
 			
 			public void setContentLength(long l) {
-				System.err.println("Content length detected: "+l);
+				logger.info("Content length detected: "+l);
 			}
 		});
 		
@@ -320,9 +332,9 @@ public class NQLContext {
 		
 		String nql2 = "service:club/InitUpdateClub|Club/ClubIdentifier:BBFW63X|call:club/ProcessQueryClub|output:ClubData/Logo|format:binary";
 		nq.executeCommand(nql2);
-		System.err.println("TYPE: "+nq.mimeType);
-		System.err.println("Bytes written: "+baos.size());
-//		System.err.println(sw.toString());
+		logger.info("TYPE: "+nq.mimeType);
+		logger.info("Bytes written: "+baos.size());
+//		logger.info(sw.toString());
 		//	nq.getNavajo().write(System.err);
 	}
 
