@@ -16,6 +16,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import navajolisteners.Version;
+
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
@@ -67,6 +69,10 @@ public class NavajoContextListener implements ServletContextListener {
 		logger.info("Destroying Navajo instance");
 		unregisterInstanceOSGi();
 		logger.warn("Destroying Navajo extensions. I'm not sure if this is wise in OSGi.");
+		if(Version.getDefaultBundleContext()!=null) {
+			logger.info("Prevending extension shutdown. OSGi detected, they can fend for themselves.");
+			return;
+		}
 		AbstractVersion.shutdownNavajoExtension("navajo");
 		AbstractVersion.shutdownNavajoExtension("navajodocument");
 		AbstractVersion.shutdownNavajoExtension("navajoclient");
