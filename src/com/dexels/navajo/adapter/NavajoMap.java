@@ -545,7 +545,7 @@ private Object waitForResult = new Object();
 		  }
 		  
 		  if (server != null) { // External request.
-			  NavajoClient nc = new NavajoClient();
+			  ClientInterface nc = NavajoClientFactory.createClient();
 //			  if (keyStore != null) {
 //				  nc.setSecure(keyStore, keyPassword, true);
 //			  }

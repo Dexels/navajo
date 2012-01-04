@@ -533,7 +533,7 @@ public boolean isBlock() {
 		  prepareSend(method);
 
 		  if (server != null && forceInline) { // External request.
-			  NavajoClient nc = new NavajoClient();
+			  ClientInterface nc = NavajoClientFactory.createClient();
 //			  if (keyStore != null) {
 //				  nc.setSecure(keyStore, keyPassword, true);
 //			  }
