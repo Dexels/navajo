@@ -2,16 +2,20 @@ package com.dexels.navajo.client;
 
 import junit.framework.Assert;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
-import com.dexels.navajo.document.NavajoFactory;
 
 /**
  * @author arjen
  *
  */
-public class BasicNavajoServerTests extends BasicClientTest implements ServerAsyncListener  {
+public class BasicNavajoServerTests extends BasicClientTest {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BasicNavajoServerTests.class);
 
 	public void testAlive() throws Exception {
 		Navajo n = myClient.doSimpleSend("navajo_ping");
@@ -24,30 +28,12 @@ public class BasicNavajoServerTests extends BasicClientTest implements ServerAsy
 	}
 	
 	public void testAsyncService() throws Exception {
-		Navajo in = myClient.doSimpleSend("tests/InitAsync");
-		myClient.doServerAsyncSend(in, "tests/ProcessAsyncTest", this, "test-client", 1000);
-		while (!finished) {
-			synchronized (myClient) {
-		
-			myClient.wait();
-			}
-		}
-		Assert.assertNotNull(received.getMessage("Finished"));
+		logger.warn("Async deprecated");
+
 	}
 	
 	public void testAsyncServiceWithSuddenlyUnavailableTribalMember() throws Exception {
-		Navajo in = myClient.doSimpleSend("tests/InitAsync");
-		myClient.doServerAsyncSend(in, "tests/ProcessAsyncTest", this, "test-client", 1000);
-		
-		// Switch to other server.
-		myClient.setCurrentHost("localhost:8080/NavajoServer2/Postman");
-		
-		while (!finished) {
-			synchronized (myClient) {
-			myClient.wait();
-			}
-		}
-		Assert.assertNotNull(received.getMessage("Finished"));
+		logger.warn("Async deprecated");
 	}
 	
 	public void testDisabledServer() throws Exception {
@@ -70,7 +56,7 @@ public class BasicNavajoServerTests extends BasicClientTest implements ServerAsy
 	
 	public void testDisabledServerWithStaticLoadBalancing() throws Exception {
 		// Disable server first....
-		myClient.setLoadBalancingMode(NavajoClient.LBMODE_STATIC_MINLOAD);
+		myClient.setLoadBalancingMode(ClientInterface.LBMODE_STATIC_MINLOAD);
 		myClient.setCurrentHost("localhost:8080/NavajoServer/Postman");
 		myClient.setRetryAttempts(2);
 		myClient.doSimpleSend("navajo/InitDisableServer");
@@ -91,7 +77,7 @@ public class BasicNavajoServerTests extends BasicClientTest implements ServerAsy
 	
 	public void testDisabledServerWithDynamicLoadBalancing() throws Exception {
 		// Disable server first....
-		myClient.setLoadBalancingMode(NavajoClient.LBMODE_DYNAMIC_MINLOAD);
+		myClient.setLoadBalancingMode(ClientInterface.LBMODE_DYNAMIC_MINLOAD);
 		myClient.setCurrentHost("localhost:8080/NavajoServer/Postman");
 		myClient.setRetryAttempts(2);
 		myClient.doSimpleSend("navajo/InitDisableServer");
@@ -112,7 +98,7 @@ public class BasicNavajoServerTests extends BasicClientTest implements ServerAsy
 	
 	public void testDisabledServerWithManualLoadBalancing() throws Exception {
 		// Disable server first....
-		myClient.setLoadBalancingMode(NavajoClient.LBMODE_MANUAL);
+		myClient.setLoadBalancingMode(ClientInterface.LBMODE_MANUAL);
 		myClient.setCurrentHost("localhost:8080/NavajoServer/Postman");
 		myClient.setRetryAttempts(2);
 		myClient.doSimpleSend("navajo/InitDisableServer");
@@ -140,13 +126,14 @@ public class BasicNavajoServerTests extends BasicClientTest implements ServerAsy
 	
 	public void testShutdown() throws Exception {
 		// Async start sleep service to test proper termination...
-		myClient.doAsyncSend(NavajoFactory.getInstance().createNavajo(), "tests/InitSleep", null, (ConditionErrorHandler) null);
-		myClient.doSimpleSend("navajo/InitShutdownServer");
-		// Call service.
-		Navajo n = myClient.doSimpleSend("tests/InitUnit");
-		Assert.assertNotNull(n.getMessage("ConditionErrors"));
-		Assert.assertNotNull(n.getProperty("ConditionErrors@0/Id"));
-		Assert.assertEquals(n.getProperty("ConditionErrors@0/Id").getValue(), "4444");
+		logger.warn("Async is deprecated");
+//		myClient.doAsyncSend(NavajoFactory.getInstance().createNavajo(), "tests/InitSleep", null, (ConditionErrorHandler) null);
+//		myClient.doSimpleSend("navajo/InitShutdownServer");
+//		// Call service.
+//		Navajo n = myClient.doSimpleSend("tests/InitUnit");
+//		Assert.assertNotNull(n.getMessage("ConditionErrors"));
+//		Assert.assertNotNull(n.getProperty("ConditionErrors@0/Id"));
+//		Assert.assertEquals(n.getProperty("ConditionErrors@0/Id").getValue(), "4444");
 	}
 	
 	public void handleException(Exception e) {
@@ -154,22 +141,6 @@ public class BasicNavajoServerTests extends BasicClientTest implements ServerAsy
 		
 	}
 
-	public void receiveServerAsync(Navajo n, String method, String serverId,
-			String clientId) {
-		System.err.println("Receive server async: " + method + ", serverId = " + serverId + ", clientId = " + clientId);
-		try {
-			n.write(System.err);
-		} catch (NavajoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		received = n;
-		synchronized (myClient) {
-			finished = true;
-			myClient.notifyAll();
-		}
-		
-	}
 
 	public void serviceStarted(String id) {
 		System.err.println("Service started: " + id);

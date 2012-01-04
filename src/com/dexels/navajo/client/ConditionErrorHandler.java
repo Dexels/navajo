@@ -8,6 +8,7 @@ import com.dexels.navajo.document.Message;
  * <p>Company: Dexels.com</p>
  * @author unascribed
  * @version 1.0
+ * @deprecated, can be removed when Tipi no longer uses it.
  */
 
 public interface ConditionErrorHandler {

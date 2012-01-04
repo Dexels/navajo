@@ -6,6 +6,8 @@ import java.util.Set;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.NavajoClientFactory;
@@ -15,7 +17,9 @@ import com.dexels.navajo.document.Navajo;
 
 
 public class NavajoJabberSession extends NavajoPushSession {
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(NavajoJabberSession.class);
 	private XMPPConnection connection = null;
 //	private MultiUserChat muc = null;
 	
@@ -34,13 +38,13 @@ public class NavajoJabberSession extends NavajoPushSession {
 			connection.connect();
 			connection.loginAnonymously();
 		} catch (XMPPException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		Set<String> occupants = new HashSet<String>();
 		try {
 			JabberUtils.joinRoom(connection, chatService, room, nickname, occupants);
 		} catch (XMPPException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		NavajoClientFactory.getClient().doSimpleSend(n, "navajo/ProcessClientSession");
 		

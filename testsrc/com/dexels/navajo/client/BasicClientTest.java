@@ -14,9 +14,7 @@ public class BasicClientTest extends TestCase {
 
 	protected ClientInterface myClient;
 
-	protected boolean finished = false;
 
-	protected Navajo received = null;
 
 	/**
 	 * @throws java.lang.Exception
@@ -28,8 +26,6 @@ public class BasicClientTest extends TestCase {
 		myClient.setLoadBalancingMode(ClientInterface.LBMODE_MANUAL);
 		myClient.setServers(new String[]{"atlas.dexels.com/sportlink/knvb/Postman"});
 		myClient.setForceGzip(true);
-		received = null;
-		finished = false;
 		System.err.println("=======================================================================================");
 		myClient.setUsername("iphone");
 		myClient.setPassword("1phone");

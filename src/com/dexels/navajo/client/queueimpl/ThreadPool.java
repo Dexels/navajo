@@ -7,6 +7,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -23,13 +26,11 @@ public final class ThreadPool {
   private final List<Runnable> myWaitingQueue = Collections.synchronizedList(new ArrayList<Runnable>());
   private Set<Thread> activeThreadSet = Collections.synchronizedSet(new HashSet<Thread>());
   private List<PoolThread> myThreadCollection = Collections.synchronizedList(new ArrayList<PoolThread>());
-  private final ClientQueueImpl client;
-  private long startTime = 0;
-  private
-  ThreadGroup tg = new ThreadGroup("navajo");
-
+  private ThreadGroup tg = new ThreadGroup("navajo");
+  
+  private final static Logger logger = LoggerFactory.getLogger(ThreadPool.class);
+  
   public ThreadPool(final ClientQueueImpl client) {
-    this.client = client;
      for (int i = 0; i < THREAD_COUNT; i++) {
       PoolThread p = new PoolThread("navajoThread_" + i, tg, this);
       myThreadCollection.add(p);
@@ -54,28 +55,21 @@ public final class ThreadPool {
           activeThreadSet.remove(Thread.currentThread());
 
           if(getQueueSize() == 0 && getActiveThreads() ==0){
-            long end = System.currentTimeMillis();
-            long millis = end - startTime;
-            client.fireActivityChanged(false, null, getQueueSize(), getActiveThreads(), millis);
           }
           wait();
         }
         catch (InterruptedException ex) {
-          System.err.println("interrupted");
+          logger.info("interrupted");
         }
       }
       else {
         activeThreadSet.add(Thread.currentThread());
-//        System.err.println("Threads: "+activeThreadSet.toString());
         return te;
       }
     }
   }
 
   public synchronized void enqueueExecutable(Runnable te, String method) {
-    if(getQueueSize() == 0 && getActiveThreads() ==0){
-      startTime = System.currentTimeMillis();
-    }
     myWaitingQueue.add(te);
     notify();
   }

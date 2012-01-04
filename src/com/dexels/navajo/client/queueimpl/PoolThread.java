@@ -1,5 +1,8 @@
 package com.dexels.navajo.client.queueimpl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -13,6 +16,8 @@ public class PoolThread
     extends Thread {
   private final ThreadPool myPool;
   
+  private final static Logger logger = LoggerFactory.getLogger(PoolThread.class);
+
   boolean running = true;
   public PoolThread(String name, ThreadGroup group, ThreadPool tp) {
     super(group, name);
@@ -30,12 +35,12 @@ public class PoolThread
         }
       }
       catch (Throwable t) {
-        System.err.println("Caught uncaught exception in thread:");
-        t.printStackTrace();
-        System.err.println("Reviving dying thread...");
+        logger.info("Caught uncaught exception in thread:");
+        logger.error("Error: ", t);
+        logger.info("Reviving dying thread...");
       }
     }
-    System.err.println("Thread: " + getName()+" is dying! Goodbye!!!!!");
+    logger.info("Thread: " + getName()+" is dying! Goodbye!!!!!");
   }
   
   public void stopPoolThread() {

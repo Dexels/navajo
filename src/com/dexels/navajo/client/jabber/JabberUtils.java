@@ -20,6 +20,8 @@ import org.jivesoftware.smackx.FormField;
 import org.jivesoftware.smackx.muc.HostedRoom;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.jivesoftware.smackx.muc.Occupant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -28,19 +30,22 @@ import com.dexels.navajo.document.Property;
 
 public class JabberUtils {
 	
+	private final static Logger logger = LoggerFactory
+			.getLogger(JabberUtils.class);
+	
 	private static MultiUserChat createRoom(String roomName, String nickName,
 			String conferenceName, XMPPConnection connection)
 			throws XMPPException {
 		String roomJid = roomName + "@" + conferenceName;
 
-		System.err.println("roomJid = " + roomJid);
+		logger.info("roomJid = " + roomJid);
 		MultiUserChat muc = new MultiUserChat(connection, roomJid);
 
 		// Create the room
 		muc.create(roomJid);
 
 		Form form = muc.getConfigurationForm();
-		System.err.println("Form: " + form.getDataFormToSend().toXML());
+		logger.info("Form: " + form.getDataFormToSend().toXML());
 		// Create a new form to submit based on the original form
 		Form submitForm = form.createAnswerForm();
 
@@ -51,18 +56,18 @@ public class JabberUtils {
 
 				submitForm.setAnswer(field.getVariable(), true);
 
-				System.err.println("Current field: " + field.getVariable());
-				System.err.println("type: " + field.getType());
+				logger.info("Current field: " + field.getVariable());
+				logger.info("type: " + field.getType());
 
 				Iterator<String> values = field.getValues();
 				while (values.hasNext()) {
 					String val = values.next();
-					System.err.println("value: " + val);
+					logger.info("value: " + val);
 				}
 
 			} else if ("muc#roomconfig_maxusers".equals(field.getVariable())) {
-				System.err.println("Current field: " + field.getVariable());
-				System.err.println("type: " + field.getType());
+				logger.info("Current field: " + field.getVariable());
+				logger.info("type: " + field.getType());
 				List<String> l = new ArrayList<String>();
 				l.add("20");
 				submitForm.setAnswer(field.getVariable(), l);
@@ -70,12 +75,12 @@ public class JabberUtils {
 						.getValues();
 				while (it.hasNext()) {
 					String string = it.next();
-					System.err.println("String>>>   >" + string + "<");
+					logger.info("String>>>   >" + string + "<");
 
 				}
 			} else if ("muc#roomconfig_persistentroom".equals(field
 					.getVariable())) {
-				System.err.println("muc#roomconfig_persistentroom: type: "
+				logger.info("muc#roomconfig_persistentroom: type: "
 						+ field.getType());
 
 				submitForm.setAnswer(field.getVariable(), true);
@@ -83,7 +88,7 @@ public class JabberUtils {
 
 		}
 
-		System.err.println(submitForm.getDataFormToSend().toXML());
+		logger.info(submitForm.getDataFormToSend().toXML());
 
 		muc.sendConfigurationForm(submitForm);
 
@@ -101,12 +106,12 @@ public class JabberUtils {
 			Collection<String> services = MultiUserChat
 					.getServiceNames(connection);
 			for (String string : services) {
-				System.err.println("Service: " + string);
+				logger.info("Service: " + string);
 			}
 			Collection<HostedRoom> aa = MultiUserChat.getHostedRooms(
 					connection, conferenceName);
 			for (HostedRoom hostedRoom : aa) {
-				System.err.println("DESCRIPTION: " + hostedRoom.getName()
+				logger.info("DESCRIPTION: " + hostedRoom.getName()
 						+ " # of occupants: " + hostedRoom.getJid()
 						+ " conference name: " + conferenceName);
 				com.dexels.navajo.document.Message e = NavajoFactory
@@ -129,9 +134,9 @@ public class JabberUtils {
 			}
 			return n;
 		} catch (NavajoException e1) {
-			e1.printStackTrace();
+			logger.error("Error: ", e1);
 		} catch (XMPPException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		return null;
 	}
@@ -148,7 +153,7 @@ public class JabberUtils {
 			Collection<HostedRoom> aa = MultiUserChat.getHostedRooms(
 					connection, conferenceName);
 			for (HostedRoom hostedRoom : aa) {
-				System.err.println("DESCRIPTION: " + hostedRoom.getName()
+				logger.info("DESCRIPTION: " + hostedRoom.getName()
 						+ " # of occupants: " + hostedRoom.getJid());
 				com.dexels.navajo.document.Message e = NavajoFactory
 						.getInstance()
@@ -174,13 +179,10 @@ public class JabberUtils {
 			}
 			n.write(System.err);
 			return n;
-			// getContext().loadNavajo(n, "JabberRoomMembers");
 		} catch (NavajoException e1) {
-			e1.printStackTrace();
-			// } catch (TipiBreakException e) {
-			// e.printStackTrace();
+			logger.error("Error: ", e1);
 		} catch (XMPPException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		return null;
 	}
@@ -191,30 +193,30 @@ public class JabberUtils {
 
 		if (connection == null || !connection.isConnected()
 				|| !connection.isAuthenticated()) {
-			System.err.println("Can not join room: not connected");
+			logger.info("Can not join room: not connected");
 			return null;
 		}
-		System.err.println("Room join: " + conferenceName);
+		logger.info("Room join: " + conferenceName);
 
 		Collection<HostedRoom> aa = MultiUserChat.getHostedRooms(connection, conferenceName);
 
 		boolean found = false;
 		for (HostedRoom hostedRoom : aa) {
-			System.err.println("Checking room: " + hostedRoom.getName()
+			logger.info("Checking room: " + hostedRoom.getName()
 					+ " looking for: " + roomName);
 			if (roomName.toLowerCase().equals(
 					hostedRoom.getName().toLowerCase())) {
 				MultiUserChat myMultiuserChat = new MultiUserChat(connection,
 						hostedRoom.getJid());
-				System.err.println("JID: " + hostedRoom.getJid());
+				logger.info("JID: " + hostedRoom.getJid());
 				occupants.clear();
 				//registerRoomListeners(nickName, myMultiuserChat, occupants);
-				System.err.println("Joining");
-				System.err.println("Before Join: People in the room: "
+				logger.info("Joining");
+				logger.info("Before Join: People in the room: "
 						+ myMultiuserChat.getOccupantsCount());
 
 				nickName = join(nickName, myMultiuserChat, 0);
-				System.err.println("People in the room: "
+				logger.info("People in the room: "
 						+ myMultiuserChat.getOccupantsCount());
 				// This odd construction is necessary. We need to release this
 				// thread before the
@@ -222,10 +224,10 @@ public class JabberUtils {
 				new Thread() {
 					public void run() {
 						try {
-							System.err.println("Joined, waiting");
+							logger.info("Joined, waiting");
 							Thread.sleep(500);
 						} catch (InterruptedException e) {
-							e.printStackTrace();
+							logger.error("Error: ", e);
 						}
 
 					}
@@ -265,8 +267,8 @@ public class JabberUtils {
 				myMultiuserChat.join(nickName);
 			}
 		} catch (XMPPException e) {
-			System.err.println(e.getMessage());
-			System.err.println("Nick taken: " + nickName);
+			logger.info(e.getMessage());
+			logger.info("Nick taken: " + nickName);
 			return join(nickName, myMultiuserChat, count + 1);
 		}
 		return nickName;
@@ -285,8 +287,8 @@ public class JabberUtils {
 //			}
 //
 //			public void joined(String j) {
-//				System.err.println("JOINED: " + j);
-//				System.err.println("occupants: " + occupants);
+//				logger.info("JOINED: " + j);
+//				logger.info("occupants: " + occupants);
 //				occupants.add(j);
 //				Navajo n = postRoomUpdate(occupants);
 //			}
@@ -295,14 +297,14 @@ public class JabberUtils {
 //			}
 //
 //			public void left(String j) {
-//				System.err.println("LEFT:" + j);
+//				logger.info("LEFT:" + j);
 //				occupants.remove(j);
 //				Navajo n = postRoomUpdate(occupants);
 //
 //			}
 //
 //			public void membershipGranted(String membershipGranted) {
-//				System.err.println("membershipGranted: " + membershipGranted);
+//				logger.info("membershipGranted: " + membershipGranted);
 //			}
 //
 //			public void membershipRevoked(String membershipRevoked) {
@@ -347,7 +349,7 @@ public class JabberUtils {
 			// }
 			return n;
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		return null;
 
@@ -389,13 +391,13 @@ public class JabberUtils {
 		connection.connect();
 		// connection.getAccountManager().createAccount("harrie", "xxxxxx");
 		connection.login("harrie", "xxxxxx");
-		System.err.println("servicename = " + connection.getServiceName());
+		logger.info("servicename = " + connection.getServiceName());
 
 		Collection<HostedRoom> c = MultiUserChat.getHostedRooms(connection,
 				"conference.dexels.nl");
 
 		for (HostedRoom hostedRoom : c) {
-			System.err.println("room =" + hostedRoom.getName());
+			logger.info("room =" + hostedRoom.getName());
 //			RoomInfo info = MultiUserChat.getRoomInfo(connection, hostedRoom.getJid());
 
 			MultiUserChat myMultiuserChat = new MultiUserChat(connection,
@@ -407,18 +409,18 @@ public class JabberUtils {
 			myMultiuserChat.addParticipantListener(new PacketListener() {
 
 				public void processPacket(Packet arg0) {
-					System.err.println("IN addParticipantListener: "
+					logger.info("IN addParticipantListener: "
 							+ arg0.getClass().getName());
 					Presence pres = (Presence) arg0;
-					System.err.println("WHO: "
+					logger.info("WHO: "
 							+ pres.getFrom().substring(
 									pres.getFrom().indexOf("/") + 1));
-					System.err.println(pres.toXML());
+					logger.info(pres.toXML());
 				}
 			});
 			// Thread.sleep(1000);
 
-			System.err.println("occupants: "
+			logger.info("occupants: "
 					+ myMultiuserChat.getOccupantsCount());
 
 			occupants = myMultiuserChat.getOccupants();
@@ -426,20 +428,20 @@ public class JabberUtils {
 			while (occupants.hasNext()) {
 				String okkie = occupants.next();
 				Occupant occu = myMultiuserChat.getOccupant(okkie);
-				System.err.println("occupant: " + occu.getNick());
+				logger.info("occupant: " + occu.getNick());
 				if (!occu.getNick().equals("dashboard")) {
 					Chat chat = myMultiuserChat.createPrivateChat(okkie,
 							new MessageListener() {
 
 								public void processMessage(Chat arg0,
 										Message arg1) {
-									System.err.println("IN processMessage..");
-									System.err.println(arg1.getBody());
+									logger.info("IN processMessage..");
+									logger.info(arg1.getBody());
 
 								}
 							});
 
-					System.err.println("Sending message..."
+					logger.info("Sending message..."
 							+ chat.getThreadID());
 					chat.sendMessage("postman");
 				}
@@ -454,7 +456,7 @@ public class JabberUtils {
 		// "MyNavajoGroup@conference.dexels.nl");
 		// myMultiuserChat.join("MyNavajoServer2");
 		// myMultiuserChat.sendMessage("apenoot");
-		// System.err.println("joined = " + myMultiuserChat.isJoined());
+		// logger.info("joined = " + myMultiuserChat.isJoined());
 		//		
 		while (true) {
 			Thread.sleep(10000);

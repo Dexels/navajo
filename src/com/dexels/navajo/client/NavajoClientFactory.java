@@ -1,5 +1,8 @@
 package com.dexels.navajo.client;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.client.impl.BaseNavajoClientLogger;
 import com.dexels.navajo.client.logger.ClientLogger;
 
@@ -11,7 +14,9 @@ public class NavajoClientFactory {
   private static ClientInterface myClient = null;
 
   private static ClientLogger clientLoggerInstance;
-
+  
+	private final static Logger logger = LoggerFactory
+			.getLogger(NavajoClientFactory.class);
 
   /**
    * Create a Client with a given class and configuration
@@ -26,13 +31,13 @@ public class NavajoClientFactory {
       client = (ClientInterface) clientClass.newInstance();
     }
     catch (ClassNotFoundException ex) {
-      ex.printStackTrace();
+      logger.error("Error: ", ex);
     }
     catch (IllegalAccessException ex) {
-      ex.printStackTrace();
+    	logger.error("Error: ", ex);
     }
     catch (InstantiationException ex) {
-      ex.printStackTrace();
+    	logger.error("Error: ", ex);
     }
     if ( client == null ) {
     	return null;
@@ -41,7 +46,7 @@ public class NavajoClientFactory {
       client.init(rootPath, serverXmlRelativePath);
     }
     catch (ClientException ex1) {
-      ex1.printStackTrace();
+    	logger.error("Error: ", ex1);
     }
     if (myClient==null) {
       myClient = client;
@@ -56,7 +61,7 @@ public class NavajoClientFactory {
 	     if (servers!=null && servers.length>0) {
 	 		String serv = servers[0];
 	 		if (serv.indexOf('/')==-1) {
-	 			System.err.println("Socket implementation found!");
+	 			logger.info("Socket implementation found!");
 	 			NavajoClientFactory.resetClient();
 	 			NavajoClientFactory.createSocketClient();
 	 		} else {
@@ -78,6 +83,10 @@ public class NavajoClientFactory {
     
   }
 
+  public static ClientInterface createClient() {
+	  return new NavajoClient();
+  }
+  
   /**
    * Create a default client (queue)
    * @return ClientInterface

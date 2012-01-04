@@ -15,7 +15,6 @@ public class MessageAccessMap implements Map<String, Message> {
 		this.context = n;
 	}
 	public void clear() {
-		// TODO Auto-generated method stub
 		
 	}
 

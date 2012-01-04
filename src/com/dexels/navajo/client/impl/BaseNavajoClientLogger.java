@@ -6,20 +6,25 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.client.logger.ClientLogger;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 
 public class BaseNavajoClientLogger implements ClientLogger {
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BaseNavajoClientLogger.class);
 	private File log;
 	public BaseNavajoClientLogger() {
 		File tmp = new File(System.getProperty("java.io.tmpdir"));
 		log = new File(tmp,"NavajoLog");
 		log.delete();
 		log.mkdirs();
-		System.err.println("Logger: "+log.getAbsolutePath());
+		logger.info("Logger: "+log.getAbsolutePath());
 	}
 	
 	public void logInput(String service, Navajo in) {
@@ -40,11 +45,9 @@ public class BaseNavajoClientLogger implements ClientLogger {
 			fw.close();
 			fw.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		} catch (NavajoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 
@@ -95,8 +98,8 @@ public class BaseNavajoClientLogger implements ClientLogger {
 		String formatted = formatter.format(d);
 		
 		BaseNavajoClientLogger instance = new BaseNavajoClientLogger();
-		System.err.println(instance.convertServiceName(service));
-		System.err.println(">> "+formatted);
+		logger.info(instance.convertServiceName(service));
+		logger.info(">> "+formatted);
 		Navajo n = NavajoFactory.getInstance().createNavajo();
 		instance.logInput("club/InitAap", n);
 		

@@ -22,22 +22,20 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.client.push.NavajoPushSession;
-import com.dexels.navajo.client.serverasync.ServerAsyncRunner;
 import com.dexels.navajo.client.sessiontoken.SessionTokenFactory;
 import com.dexels.navajo.client.sessiontoken.SessionTokenProvider;
 import com.dexels.navajo.client.systeminfo.SystemInfoFactory;
@@ -53,18 +51,6 @@ import com.dexels.navajo.document.types.Binary;
 import com.jcraft.jzlib.JZlib;
 import com.jcraft.jzlib.ZInputStream;
 import com.jcraft.jzlib.ZOutputStream;
-
-//class MyX509TrustManager implements X509TrustManager {
-//  public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-//    return null;
-//  }
-//
-//  public final void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {
-//  }
-//
-//  public final void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {
-//  }
-//}
 
 public class NavajoClient implements ClientInterface, Serializable {
 
@@ -83,19 +69,10 @@ public static final int DIRECT_PROTOCOL = 0;
   private double[] serverLoads;
   
   private final Random randomize = new Random(System.currentTimeMillis());
-  // Threadsafe collections:
-  private final Map<String,Message> globalMessages = new HashMap<String,Message>();
-  private final Map<String,Navajo> serviceCache = new HashMap<String,Navajo>();
 
-  // use something serializable
-  private final Object serviceCacheMutex = new LinkedList<String>();
-  
-  private final Set<String> cachedServiceNameMap = new HashSet<String>();
-  private final Map<String,ServerAsyncRunner> asyncRunnerMap = Collections.synchronizedMap(new HashMap<String,ServerAsyncRunner>());
-  private final List<ActivityListener> myActivityListeners = Collections.synchronizedList(new ArrayList<ActivityListener>());
-  private final List<BroadcastListener> broadcastListeners = Collections.synchronizedList(new ArrayList<BroadcastListener>());
-  
-//  private NavajoPushSession pushSession = null;
+  private final static Logger logger = LoggerFactory
+			.getLogger(NavajoClient.class);
+	//  private NavajoPushSession pushSession = null;
   
   protected int protocol = HTTP_PROTOCOL;
   private boolean setSecure = false;
@@ -111,9 +88,6 @@ public static final int DIRECT_PROTOCOL = 0;
   //private static int instances = 0;
   
   // Warning: Not thread safe!
-  private final HashMap<String,Navajo> storedNavajoComparisonMap = new HashMap<String,Navajo>();
-  private final HashMap<String,String> comparedServicesQueryToUpdateMap = new HashMap<String,String>();
-  private final HashMap<String,String> comparedServicesUpdateToQueryMap = new HashMap<String,String>();
   private final Set<Map<String,String>> piggyBackData = new HashSet<Map<String,String>>();
   private final Map<String,Long> disabledServers = new HashMap<String,Long>();
 
@@ -139,54 +113,10 @@ public static final int DIRECT_PROTOCOL = 0;
   /**
    * Initialize a NavajoClient object with an empty XML message buffer.
    */
-  public NavajoClient(String dtdFile) {
+  protected NavajoClient(String dtdFile) {
 	  this();
   }
 
-  public void addComparedServices(String serviceQuery, String serviceUpdate) {
-    //single query support!!
-    //System.err.println("Added comparedservices: " + serviceQuery + ".." + serviceUpdate);
-    comparedServicesQueryToUpdateMap.put(serviceQuery, serviceUpdate);
-    comparedServicesUpdateToQueryMap.put(serviceUpdate, serviceQuery);
-  }
-
-  private final void checkForComparedServices(final String queryService, final Navajo n) {
-    try {
-      String s = comparedServicesQueryToUpdateMap.get(queryService);
-      if (s != null) {
-        //System.err.println("Storing Navajo object for service: " + queryService);
-        storedNavajoComparisonMap.put(s, n.copy());
-      }
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-
-  private final boolean hasComparedServiceChanged(final String updateService, final Navajo n) {
-    try {
-      Navajo orig = storedNavajoComparisonMap.get(updateService);
-      if (orig != null) {
-        Navajo clone = n.copy();
-        Iterator<Entry<String,Message>> entries = globalMessages.entrySet().iterator();
-        while (entries.hasNext()) {
-          Map.Entry<String,Message> entry = entries.next();
-          Message global = entry.getValue();
-          try {
-            clone.removeMessage(global.getName());
-          }
-          catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Could not remove globals, proceeding");
-          }
-        }
-        return!clone.isEqual(orig);
-      }
-    }catch (Exception e) {
-      e.printStackTrace();
-    }
-    return true;
-  }
 
   /**
    * Returns "http"
@@ -196,16 +126,13 @@ public static final int DIRECT_PROTOCOL = 0;
     return "http";
   }
 
-  /**
-   * Default constructor
-   */
-  public NavajoClient() {
+  protected NavajoClient() {
 
-	}
+   }
 
 	
 	  //instances++;
-	  //System.err.println("NavajoClient instances: " + instances);
+	  //logger.info("NavajoClient instances: " + instances);
 
   /**
    * Construct a NavajoClient with a given protocol
@@ -239,7 +166,7 @@ public static final int DIRECT_PROTOCOL = 0;
    * @return String
    */
   public final String getPassword() {
-//    System.err.println("Getting password: "+password);
+//    logger.info("Getting password: "+password);
     return password;
   }
 
@@ -294,85 +221,6 @@ public static final int DIRECT_PROTOCOL = 0;
     retryAttempts = attempts;
   }
 
-  /**
-	 * Add a webservice (by name) to the NavajoClient cache mechanism. This
-	 * provides a way to store frequenly used webservices in the NavajoClient
-	 * and thus preventing a server roundtrip.
-	 * 
-	 * @param service
-	 *            String
-	 */
-	public final void addCachedService(String service) {
-		cachedServiceNameMap.add(service);
-	}
-
-	/**
-	 * Remove (by name) a specific webservice from the NavajoClient's cache
-	 * mechanism
-	 * 
-	 * @param service
-	 *            String
-	 */
-	public final void removeCachedService(String service) {
-		synchronized (serviceCacheMutex) {
-			cachedServiceNameMap.remove(service);
-			serviceCache.remove(service);
-		}
-	}
-
-	/**
-	 * Remove all webservices from the NavajoClient's cache
-	 */
-	public final void clearCache() {
-		synchronized (serviceCacheMutex) {
-			serviceCache.clear();
-		}
-	}
-
-	/**
-	 * This method removes the cached instance of the given webservice, but will
-	 * continue to cache it when this service is called upon again.
-	 * 
-	 * @param service
-	 *            String
-	 */
-	public final void clearCache(String service) {
-		synchronized (serviceCacheMutex) {
-			serviceCache.remove(service);
-		}
-	}
-
-	/**
-	 * Add a global message to this NavajoClient. Global messages are messages
-	 * that will ALWAYS be put in ALL requests made by the NavajoClient
-	 * instance. This way we can provide global information we want to use for
-	 * every webservice.
-	 * 
-	 * @param m
-	 *            Message
-	 */
-  public final void addGlobalMessage(Message m) {
-    globalMessages.remove(m.getName());
-    globalMessages.put(m.getName(), m);
-  }
-
-  /**
-   * Remove a specific global message from the NavajoClient
-   * @param m Message
-   * @return boolean
-   */
-  public final boolean removeGlobalMessage(Message m) {
-    return globalMessages.remove(m.getName()) != null;
-  }
-
-  /***
-   * Returns a global message, addressed by name
-   * @param name
-   * @return
-   */
-  public final Message getGlobalMessage(String name) {
-	  return globalMessages.get(name);
-  }
   
   /**
    * Perform a synchronous webservice call
@@ -444,7 +292,7 @@ public static final int DIRECT_PROTOCOL = 0;
 //    else {
 //      url = new URL("http://" + name);
 //    }
-    //System.err.println("in doTransaction: opening url: " + url.toString());
+    //logger.info("in doTransaction: opening url: " + url.toString());
 	  HttpURLConnection con = null;
       con = (HttpURLConnection) url.openConnection();
     con.setDoOutput(true);
@@ -490,15 +338,14 @@ public static final int DIRECT_PROTOCOL = 0;
 			  copyResource(bos, es);
 			  bos.close();
 //			  String error = new String(bos.toByteArray());
-			  System.err.println("Responsecode: " + respCode);
-			  //System.err.println("Responsemessage: " + myCon.getResponseMessage());
-			  //System.err.println("Got error from server: " + error);
+			  logger.info("Responsecode: " + respCode);
+			  //logger.info("Responsemessage: " + myCon.getResponseMessage());
+			  //logger.info("Got error from server: " + error);
 			  // close the errorstream
 			  es.close();
 			  return "HTTP Status error " + respCode;
 		  }
 	  } catch (IOException ioe) {
-		  //ioe.printStackTrace(System.err);
 	  }
 	  return null;
   }
@@ -552,8 +399,8 @@ public static final int DIRECT_PROTOCOL = 0;
     	}
     } catch (SecurityException e) {
     } catch (Throwable e) {
-    	e.printStackTrace();
-     	System.err.println("setChunkedStreamingMode does not exist, upgrade to java 1.5+");
+    	logger.error("Error: ", e);
+    	logger.warn("setChunkedStreamingMode does not exist, upgrade to java 1.5+");
     }
     if (useCompression) {
     	con.setRequestProperty("Accept-Encoding", "jzlib");
@@ -570,7 +417,7 @@ public static final int DIRECT_PROTOCOL = 0;
     				//out.flush();
     				out.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error("Error: ", e);
 				}
     		}
     	}
@@ -579,7 +426,7 @@ public static final int DIRECT_PROTOCOL = 0;
     	con.setRequestProperty("noCompression", "true");
     	BufferedWriter os = null;
     	try {
-//    		System.err.println("Using no compression!");
+//    		logger.info("Using no compression!");
     		if(forceGzip) {
     	    	con.setRequestProperty("Accept-Encoding", "gzip");
         		os = new BufferedWriter(new OutputStreamWriter(new GZIPOutputStream(con.getOutputStream()), "UTF-8"));
@@ -597,14 +444,14 @@ public static final int DIRECT_PROTOCOL = 0;
     				os.flush();
     				os.close();
     			} catch (IOException e) {
-    				e.printStackTrace();
+    				logger.error("Error: ", e);
     			}
     		}
     	}
     }
 
 //    String contentEncoding = con.getContentEncoding();
-    //System.err.println("Content encoding: "+contentEncoding);
+    //logger.info("Content encoding: "+contentEncoding);
 
     
     // Check for errors.
@@ -684,7 +531,7 @@ public static final int DIRECT_PROTOCOL = 0;
       conditionErrorElt.addProperty(p4);
     }
     catch (NavajoException ex) {
-      ex.printStackTrace(System.err);
+    	logger.error("Error: ", ex);
     }
   }
 
@@ -710,35 +557,10 @@ public static final int DIRECT_PROTOCOL = 0;
 	   * Make sure that same Navajo is not used simultaneously.
 	   */
 	  synchronized (out) {
-		  if (!hasComparedServiceChanged(method, out)) {
-			  try {
-				  System.err.println("-------------------------------------------------->> Ignoring incoming request! <------------------------");
-				  NavajoFactory nf = NavajoFactory.getInstance();
-				  Navajo n = nf.createNavajo();
-				  Message m = nf.createMessage(n, "Info");
-				  Property p = nf.createProperty(n, "Message", "string", "Ignored unchanged input", 50, "", "out");
-				  m.addProperty(p);
-				  n.addMessage(m);
-				  return n;
-			  }
-			  catch (Exception e) {
-				  e.printStackTrace();
-			  }
-		  }
 
 		  //====================================================
 
-		  String cacheKey = "";
 
-		  if (cachedServiceNameMap.contains(method)) {
-			  cacheKey = method + out.persistenceKey();
-			  if (serviceCache.get(cacheKey) != null) {
-				  //System.err.println("---------------------------------------------> Returning cached WS");
-				  Navajo cached = serviceCache.get(cacheKey);
-				  return cached.copy();
-			  }
-		  }
-		  fireActivityChanged(true, method, getQueueSize(), getActiveThreads(), 0);
 		  Header header = out.getHeader();
 		  String callingService = null;
 		  if (header == null) {
@@ -757,18 +579,6 @@ public static final int DIRECT_PROTOCOL = 0;
 		header.setHeaderAttribute("clientToken", sessionToken);
 		  header.setHeaderAttribute("clientInfo", getSystemInfoProvider().toString());
 		  // ========= Adding globalMessages
-		  Iterator<Entry<String,Message>> entries = globalMessages.entrySet().iterator();
-		  while (entries.hasNext()) {
-			  Entry<String,Message> entry = entries.next();
-			  Message global = entry.getValue();
-			  try {
-				  out.addMessage(global);
-			  }
-			  catch (Exception e) {
-				  e.printStackTrace();
-				  System.err.println("Could not add globals, proceeding");
-			  }
-		  }
 
 		  long clientTime = 0;
 		  try {
@@ -798,7 +608,7 @@ public static final int DIRECT_PROTOCOL = 0;
 
 				  try {	
 					  n = doTransaction(server, out, useCompression, allowPreparseProxy);
-//					  System.err.println("SENT TO SERVER: ");
+//					  logger.info("SENT TO SERVER: ");
 //					  out.write(System.err);
 
 					  if ( n == null ) {
@@ -821,7 +631,7 @@ public static final int DIRECT_PROTOCOL = 0;
 					  n = retryTransaction(server, out, useCompression, allowPreparseProxy, retryAttempts, retryInterval, n2); // lees uit resource
 					  if (n != null) {
 
-						  //System.err.println("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getHeaderAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
+						  //logger.info("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getHeaderAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
 						  if(callingService!=null) {
 							  n.getHeader().setHeaderAttribute("sourceScript", callingService);							  
 						  }
@@ -830,16 +640,14 @@ public static final int DIRECT_PROTOCOL = 0;
 					  }
 				  }
 				  catch (IOException uhe) {
-					  //uhe.printStackTrace();
-					  //readErrorStream(myCon);
 					  if ( retryAttempts <= 0 ) {
 						  throw uhe;
 					  }
-					  System.err.println("Generic IOException: "+uhe.getMessage()+". Retrying without compression...");
+					  logger.info("Generic IOException: "+uhe.getMessage()+". Retrying without compression...");
 					  Navajo n2 = NavajoFactory.getInstance().createNavajo();
 					  n = retryTransaction(server, out, false, allowPreparseProxy, retryAttempts, retryInterval, n2); // lees uit resourc
 					  if (n != null) {
-						  //System.err.println("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getHeaderAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
+						  //logger.info("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getHeaderAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
 						  if(callingService!=null) {
 							  n.getHeader().setHeaderAttribute("sourceScript", callingService);
 						  }
@@ -847,7 +655,7 @@ public static final int DIRECT_PROTOCOL = 0;
 						  n = n2;
 					  }
 				  } catch(Throwable r) {
-					  r.printStackTrace();
+					  logger.error("Error: ", r);
 				  }
 				  finally {
 					  if ( n != null && n.getHeader()!=null) {
@@ -880,23 +688,11 @@ public static final int DIRECT_PROTOCOL = 0;
 						  synchronized (piggyBackData) {
 							  piggyBackData.add(pbd);
 						  }
-						  //                 System.err.println(method+": totaltime = " + ( clientTime / 1000.0 )+ ", servertime = " + ( totalTime / 1000.0 )+" transfertime = "+((clientTime-totalTime)/1000)+" piggybackdata: "+piggyBackData.size()); 
+						  //                 logger.info(method+": totaltime = " + ( clientTime / 1000.0 )+ ", servertime = " + ( totalTime / 1000.0 )+" transfertime = "+((clientTime-totalTime)/1000)+" piggybackdata: "+piggyBackData.size()); 
 					  } else {
-						  System.err.println("Null header in input message");
+						  logger.info("Null header in input message");
 					  }
 				  }
-
-
-				  fireActivityChanged(false, method, getQueueSize(), getActiveThreads(), 0);
-
-				  if (cachedServiceNameMap.contains(method)) {
-					  serviceCache.put(cacheKey, n);
-				  }
-				  checkForComparedServices(method, n);
-
-				  // Process broadcasts
-				  fireBroadcastEvents(n);
-
 				  return n;
 			  }
 			  else {
@@ -904,8 +700,7 @@ public static final int DIRECT_PROTOCOL = 0;
 			  }
 		  }
 		  catch (Exception e) {
-			  e.printStackTrace();
-			  fireActivityChanged(false, method, getQueueSize(), getActiveThreads(), 0);
+			  logger.error("Error: ", e);
 			  throw new ClientException( -1, -1, e.getMessage());
 		  }
 	  }
@@ -915,39 +710,6 @@ public static final int DIRECT_PROTOCOL = 0;
 	  return true;
   }
 
-
-  @Deprecated
-  private final void fireBroadcastEvents(final Navajo n) {
-	  
-	  if (n==null) {
-			// no navajo, don't know why. So no broadcasting.
-		  return;
-	  }
-
-	  Header h = n.getHeader();
-	  
-	  
-	  if (h==null) {
-			// no headers, don't know why. So no broadcasting.
-		  return;
-	  }
-	  Set<Map<String, String>> s = h.getPiggybackData();
-	  if (s==null) {
-		return;
-	}
-	  for (Iterator<Map<String, String>> iter = s.iterator(); iter.hasNext();) {
-		Map<String, String> element = iter.next();
-		if ("broadcast".equals(element.get("type"))) {
-			String message = element.get("message");
-			for (int i = 0; i < broadcastListeners.size(); i++) {
-				      BroadcastListener current = broadcastListeners.get(i);
-				      current.broadcast(message,element);
-			   }
-		}
-		
-	}
-	
-}
 
 /**
    * Add piggyback data to header.
@@ -972,15 +734,15 @@ private final Navajo retryTransaction(String server, Navajo out, boolean useComp
 	InputStream in = null;
     
     globalRetryCounter++;
-    System.err.println("------------> retrying transaction: " + server + ", attempts left: " + attemptsLeft+" total retries: "+globalRetryCounter);
+    logger.info("------------> retrying transaction: " + server + ", attempts left: " + attemptsLeft+" total retries: "+globalRetryCounter);
     
     int pastAttempts = retryAttempts-attemptsLeft;
-    System.err.println("Past retries: "+pastAttempts);
+    logger.info("Past retries: "+pastAttempts);
     // only switch if there is more than one server
     if (pastAttempts>=(switchServerAfterRetries-1) && serverUrls.length>1) {
-    	System.err.println("Did: "+pastAttempts+" retries. Switching server");
+    	logger.info("Did: "+pastAttempts+" retries. Switching server");
     	disabledServers.put(getCurrentHost(), new Long(System.currentTimeMillis()));
-    	System.err.println("Disabled server: "+getCurrentHost()+" for "+serverDisableTimeout+" millis." );
+    	logger.info("Disabled server: "+getCurrentHost()+" for "+serverDisableTimeout+" millis." );
     	switchServer(true);
     	server = getCurrentHost();
 	}
@@ -989,10 +751,10 @@ private final Navajo retryTransaction(String server, Navajo out, boolean useComp
     	try {
     		Thread.sleep(interval);
     	} catch (InterruptedException e) {
-    		e.printStackTrace();
+    		logger.error("Error: ", e);
     	}
     	Navajo doc = doTransaction(server, out, useCompression, allowPreparseProxy);
-    	System.err.println("It worked!  the inputstream is: " + in);
+    	logger.info("It worked!  the inputstream is: " + in);
     	return doc;
     }
     catch (java.net.UnknownHostException uhe) {
@@ -1005,7 +767,7 @@ private final Navajo retryTransaction(String server, Navajo out, boolean useComp
     	attemptsLeft--;
     	if (attemptsLeft <= 0) {
     		disabledServers.put(getCurrentHost(), new Long(System.currentTimeMillis()));
-    		System.err.println("Disabled server: "+getCurrentHost()+" for "+serverDisableTimeout+" millis." );
+    		logger.info("Disabled server: "+getCurrentHost()+" for "+serverDisableTimeout+" millis." );
     		switchServer(true);
     		generateConnectionError(n, 4444, "Could not connect to server (network problem?) " + uhe.getMessage());
     	}
@@ -1015,103 +777,21 @@ private final Navajo retryTransaction(String server, Navajo out, boolean useComp
     }
     catch (IOException uhe) {
     	//readErrorStream(myCon);
-    	System.err.println(uhe.getMessage());
+    	logger.info(uhe.getMessage());
     	if (attemptsLeft <= 0) {
     		disabledServers.put(getCurrentHost(), new Long(System.currentTimeMillis()));
-    		System.err.println("Disabled server: "+getCurrentHost()+" for "+serverDisableTimeout+" millis." );
+    		logger.info("Disabled server: "+getCurrentHost()+" for "+serverDisableTimeout+" millis." );
     		switchServer(true);
     		generateConnectionError(n, 4444, "Could not connect to server (network problem?) " + uhe.getMessage());
     	}
     	else {
     		attemptsLeft--;
-//    		System.err.println("Sending: ");
+//    		logger.info("Sending: ");
 //    		out.write(System.err);
     		return retryTransaction(server, out, false, allowPreparseProxy, attemptsLeft, interval, n);
     	}
     }
     return null;
-  }
-
-
-  /**
-   * Perform an asyncronous webservice call, the webservice will be started and when it's finished
-   * the receive() method of the ResponseListener will be called with the result of the webservice.
-   * During these operations the NavajoClient can continue to handle incoming requests
-   * @param in Navajo
-   * @param method String
-   * @param response ResponseListener
-   * @param responseId String
-   * @throws ClientException
-   */
-  public void doAsyncSend(final Navajo in, final String method, final ResponseListener response, final String responseId) throws ClientException {
-    doAsyncSend(in, method, response, responseId, null);
-  }
-
-  /**
-   * Perform an asynchronous webservice call. For a brief explanation look for another implementation of this function
-   * @param in Navajo
-   * @param method String
-   * @param response ResponseListener
-   * @param v ConditionErrorHandler
-   * @throws ClientException
-   */
-  public void doAsyncSend(final Navajo in, final String method, final ResponseListener response, final ConditionErrorHandler v) throws ClientException {
-    doAsyncSend(in, method, response, "", v);
-  }
-
-  /**
-   * Perform an asynchronous webservice call. For a brief explanation look for another implementation of this function
-   * @param in Navajo
-   * @param method String
-   * @param response ResponseListener
-   * @param responseId String
-   * @param v ConditionErrorHandler
-   * @throws ClientException
-   */
-  public void doAsyncSend(final Navajo in, final String method, final ResponseListener response, final String responseId, final ConditionErrorHandler v) throws ClientException {
-	  
-	  Thread t = new Thread(new Runnable() {
-		  
-		  final Navajo nc = in;
-		  final ResponseListener rc = response;
-		  final String mc = method;
-		  final String ic = responseId;
-		  
-		  public final void run() {
-			  
-			  try {
-				  final Navajo n;
-				  if (v == null) {
-					  n = doSimpleSend(nc, mc);
-				  }
-				  else {
-					  n = doSimpleSend(nc, mc, v);
-				  }
-				  
-				  if (response != null) {
-					  rc.receive(n, mc, ic);
-				  }
-			  }
-			  catch (Throwable ex) {
-				  ex.printStackTrace();
-				  if (rc != null) {
-					  rc.setWaiting(false);
-					  rc.handleException( (Exception) ex);
-				  }
-			  }
-		  }
-	  });
-	
-	  t.start();
-  }
-
-  /**
-   * Dummy function, will return 0
-   * @return int
-   */
-  public final int getPending() {
-    System.err.println("getPending Dummy. This client has no asynchronous calls, so it will always return 0  ");
-    return 0;
   }
 
 
@@ -1186,159 +866,12 @@ private final Navajo retryTransaction(String server, Navajo out, boolean useComp
 
 
 
-  /**
-   * Add activitylistener
-   * @param al ActivityListener
-   */
-  public final void addActivityListener(ActivityListener al) {
-    myActivityListeners.add(al);
-  }
-
-  /**
-   * Remove activitylistener
-   * @param al ActivityListener
-   */
-  public final void removeActivityListener(ActivityListener al) {
-    myActivityListeners.remove(al);
-  }
-
-
-  
-  /**
-   * Fires an activitychange event to all listeners
-   * @param b boolean
-   * @param service String
-   * @param queueSize int
-   * @param activeThreads int
-   * @param millis long
-   */
-  public void fireActivityChanged(boolean b, String service, int queueSize, int activeThreads, long millis) {
-    for (int i = 0; i < myActivityListeners.size(); i++) {
-      ActivityListener current = myActivityListeners.get(i);
-      current.setWaiting(b, service, queueSize, activeThreads, millis);
-    }
-  }
-
-  /**
-   * Add broadcastlistener
-   * @param al ActivityListener
-   * @deprecated
-   */
-  public final void addBroadcastListener(BroadcastListener al) {
-    broadcastListeners.add(al);
-  }
-
-  /**
-   * Remove broadcastlistener
-   * @param al ActivityListener
-   * @deprecated
-   */
-  public final void removeBroadcastListener(BroadcastListener al) {
-	  
-	  broadcastListeners.remove(al);
-  }
-
-
-
-  
-  
-  /**
-   * Performs an asynchronous serverside webservice call. These services will be polled by the Started ServerAsyncRunner
-   * and pass the status on to the given ServerAsyncListener. This method can be used for large time consuming webservices
-   * @param in Navajo
-   * @param method String
-   * @param listener ServerAsyncListener
-   * @param clientId String
-   * @param pollingInterval int
-   * @throws ClientException
-   */
-  public final void doServerAsyncSend(Navajo in, String method, ServerAsyncListener listener, String clientId, int pollingInterval) throws ClientException {
-    ServerAsyncRunner sar = new ServerAsyncRunner(this, in, method, listener, clientId, pollingInterval);
-    String serverId = sar.startAsync();
-    registerAsyncRunner(serverId, sar);
-
-  }
-
-  private final void registerAsyncRunner(String id, ServerAsyncRunner sar) {
-    asyncRunnerMap.put(id, sar);
-  }
-
-  /**
-   * Deregister asyncrunner
-   * @param id String
-   */
-  public final void deRegisterAsyncRunner(String id) {
-    asyncRunnerMap.remove(id);
-  }
-
-  private final ServerAsyncRunner getAsyncRunner(String id) {
-    return asyncRunnerMap.get(id);
-  }
-
   public int getQueueSize() {
     return 0;
   }
 
   public int getActiveThreads() {
     return -1;
-  }
-
-  /**
-   * Finalize all asyncrunners
-   */
-  public final void finalizeAsyncRunners() {
-    try {
-      System.err.println("------------------------------------------>> Finalizing asyncrunners....");
-      Iterator<String> it = asyncRunnerMap.keySet().iterator();
-      while (it.hasNext()) {
-        String id = it.next();
-        ServerAsyncRunner sar = getAsyncRunner(id);
-        sar.killServerAsyncSend();
-      }
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-
-  /**
-   * Kill an asynchronous server process
-   * @param serverId String
-   * @throws ClientException
-   */
-  public final void killServerAsyncSend(String serverId) throws ClientException {
-    ServerAsyncRunner sar = getAsyncRunner(serverId);
-    System.err.println("Looking for asyncRunner: " + serverId);
-    if (sar != null) {
-      sar.killServerAsyncSend();
-    }
-    else {
-      System.err.println("Not found!");
-    }
-  }
-
-  /**
-   * Pause an asynchronous server process
-   * @param serverId String
-   * @throws ClientException
-   */
-  public final void pauseServerAsyncSend(String serverId) throws ClientException {
-    ServerAsyncRunner sar = getAsyncRunner(serverId);
-    if (sar != null) {
-      sar.resumeServerAsyncSend();
-    }
-  }
-
-  /**
-   * Resume an asynchronous server process
-   * @param serverId String
-   * @throws ClientException
-   */
-  public final void resumeServerAsyncSend(String serverId) throws ClientException {
-    ServerAsyncRunner sar = getAsyncRunner(serverId);
-    if (sar != null) {
-      sar.resumeServerAsyncSend();
-    }
   }
 
   public void setCondensed(boolean b) {
@@ -1360,9 +893,9 @@ public void setServers(String[] servers) {
 	serverLoads = new double[serverUrls.length];
 	if (servers.length>0) {
 		currentServerIndex = randomize.nextInt(servers.length);
-//		System.err.println("Starting at server # "+currentServerIndex);
+//		logger.info("Starting at server # "+currentServerIndex);
 	}
-//	System.err.println("servers = " + servers[0] + ", loadBalancingMode = " + loadBalancingMode);
+//	logger.info("servers = " + servers[0] + ", loadBalancingMode = " + loadBalancingMode);
 //	if ( loadBalancingMode != LBMODE_MANUAL ) {
 //		determineServerLoadsAndSetCurrentServer(true);
 //		ping();
@@ -1380,7 +913,7 @@ public void setCurrentHost(String host) {
 	for (int i = 0; i < serverUrls.length; i++) {
 		if ( serverUrls[i].equals(host) ) {
 			currentServerIndex = i;
-			System.err.println("SET CURRENT SERVER TO: " + host + "(" + currentServerIndex + ")");
+			logger.info("SET CURRENT SERVER TO: " + host + "(" + currentServerIndex + ")");
 			break;
 		}
 	}
@@ -1428,7 +961,7 @@ public final void switchServer(boolean force) {
 		currentServerIndex = candidate;
 	}
 	
-	System.err.println("currentServer = " + serverUrls[currentServerIndex] + " with load: " + serverLoads[currentServerIndex]);
+	logger.info("currentServer = " + serverUrls[currentServerIndex] + " with load: " + serverLoads[currentServerIndex]);
 	
 }
 
@@ -1441,7 +974,7 @@ public final void switchServer(boolean force) {
 //	  
 //	  Navajo aap = nc.doSimpleSend(out, "ficus:3000/sportlink/knvb/servlet/Postman", "InitBM", "ROOT", "", -1);
 //	  //out.write(System.err);
-//	  //System.err.println("RESPONSE:");
+//	  //logger.info("RESPONSE:");
 //	  //aap.write(System.err);
 //	  
 //	  Navajo dummy = NavajoFactory.getInstance().createNavajo();
@@ -1476,14 +1009,14 @@ public final void switchServer(boolean force) {
 					try {
 						Thread.sleep(5000);
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						logger.error("Error: ", e);
 					}
 					while (keepAliveDelay>0) {
 						try {
 							checkKeepalive();
 							Thread.sleep(keepAliveDelay);
 						} catch(Throwable t) {
-							t.printStackTrace();
+							logger.error("Error: ", t);
 						}
 					
 					}
@@ -1506,20 +1039,9 @@ public final void switchServer(boolean force) {
 			      throw new ClientException(1, 1, "No host set!");
 			    }
 
-			    //System.err.println("------> Calling service: " + method);
-
-//			    try {
-//			      out.write(System.err);
-//			    }
-//			    catch (NavajoException ex) {
-//			      ex.printStackTrace();
-//			    }
 			    return doSimpleSend(out, getCurrentHost(serverIndex), method, username, password, -1, allowCompression, true);
 		}
 
-	public int getAsyncServerIndex() {
-		return currentServerIndex;
-	}
 
 
 	public void setLocaleCode(String locale) {
@@ -1695,7 +1217,7 @@ public final void switchServer(boolean force) {
 			Property p = NavajoFactory.getInstance().createProperty(init, "ApplicationId", Property.STRING_PROPERTY, agentId, 0, "aap", Property.DIR_IN);
 			m.addProperty(p);
 		} catch (NavajoException e1) {
-			e1.printStackTrace();
+			logger.error("Error: ", e1);
 		}
 		Navajo n = null;
 		try {
@@ -1720,7 +1242,7 @@ public final void switchServer(boolean force) {
 		try {
 			n.write(System.err);
 		} catch (NavajoException e1) {
-			e1.printStackTrace();
+			logger.error("Error: ", e1);
 		}
 		String pushImpl = (String) n.getProperty("SessionParameters/PushbackHandler").getTypedValue();
 		try {
@@ -1728,8 +1250,8 @@ public final void switchServer(boolean force) {
 			NavajoPushSession nps =  c.newInstance();
 			nps.load(n,agentId);
 		} catch (Exception e) {
-			e.printStackTrace();
-			System.err.println("Error loading push implementation. Disabling push");
+			logger.error("Error: ", e);
+			logger.info("Error loading push implementation. Disabling push");
 		}
 		
 	}
@@ -1769,7 +1291,7 @@ public final void switchServer(boolean force) {
 	}
  
 	public static void main(String [] args) throws Exception {
-		NavajoClient nc = new NavajoClient();
+		ClientInterface nc = NavajoClientFactory.createClient();
 //		nc.setServerUrl("penelope1.dexels.com/sportlink/knvb/servlet/Postman");
 //		nc.doTransaction("penelope1.dexels.com/sportlink/knvb/servlet/Postman", NavajoFactory.getInstance().createNavajo(), false, false);
 		nc.setUsername("ROOT");

@@ -87,10 +87,10 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 	public static void main(String [] args) {
 		Version v = new Version();
-		System.err.println(v.toString());
+		logger.info(v.toString());
 		com.dexels.navajo.version.AbstractVersion [] d = v.getIncludePackages();
 		for (int i = 0; i < d.length; i++) {
-			System.err.println("\t"+d[i].toString());
+			logger.info("\t"+d[i].toString());
 		}
 	}
 

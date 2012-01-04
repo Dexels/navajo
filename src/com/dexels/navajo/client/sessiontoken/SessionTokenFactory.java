@@ -1,9 +1,15 @@
 package com.dexels.navajo.client.sessiontoken;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class SessionTokenFactory  {
 
 	private volatile static SessionTokenProvider instance = null;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(SessionTokenFactory.class);
+	
 	private SessionTokenFactory() {
 		
 	}
@@ -24,7 +30,7 @@ public class SessionTokenFactory  {
 	
 	public static void main(String [] args) {
 		SessionTokenProvider info = SessionTokenFactory.getSessionTokenProvider();
-		System.err.println(info);
+		logger.info(""+info);
 	}
 	
 	public static void clearInstance() {

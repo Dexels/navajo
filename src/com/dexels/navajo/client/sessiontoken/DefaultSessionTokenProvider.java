@@ -2,8 +2,13 @@ package com.dexels.navajo.client.sessiontoken;
 
 import java.net.InetAddress;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class DefaultSessionTokenProvider implements SessionTokenProvider {
 
+	
+	private final static Logger logger = LoggerFactory.getLogger(DefaultSessionTokenProvider.class);
 	
 	DefaultSessionTokenProvider() {
 		
@@ -38,8 +43,8 @@ public class DefaultSessionTokenProvider implements SessionTokenProvider {
 					+ "|" + (InetAddress.getLocalHost().getHostName()) + "|"
 					+ (System.currentTimeMillis());
 		} catch (Throwable e) {
-//			e.printStackTrace();
-			System.err.println("Session failed!");
+			logger.error("Error: ", e);
+			logger.info("Session failed!");
 			fabricatedToken="unknown session";
 		}
 		return fabricatedToken;	

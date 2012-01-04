@@ -8,8 +8,6 @@ package com.dexels.navajo.client;
  * @author not attributable
  * @version 1.0
  */
-import java.net.URL;
-
 import com.dexels.navajo.client.sessiontoken.SessionTokenProvider;
 import com.dexels.navajo.client.systeminfo.SystemInfoProvider;
 import com.dexels.navajo.document.Message;
@@ -33,7 +31,7 @@ public interface ClientInterface {
 
 //  public URLConnection createUrlConnection(URL url) throws IOException;
 
-  public void addComparedServices(String serviceQuery, String serviceUpdate);
+//  public void addComparedServices(String serviceQuery, String serviceUpdate);
 
   public Navajo doSimpleSend(Navajo out, String server, String method, String user, String password, long expirationInterval) throws ClientException;
 
@@ -45,11 +43,8 @@ public interface ClientInterface {
 
   public Message doSimpleSend(Navajo out, String method, String messagePath) throws ClientException;
 
-  public Message doSimpleSend(String method, String messagePath) throws ClientException;
 
   public Navajo doSimpleSend(String method) throws ClientException;
-
-  public Navajo doSimpleSend(String method, long expirationInterval) throws ClientException;
 
   public Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v, long expirationInterval) throws ClientException;
 
@@ -57,25 +52,6 @@ public interface ClientInterface {
 
   public Navajo doScheduledSend(Navajo out, String method, String schedule, String description, String clientId) throws ClientException;
 
-  public void doAsyncSend(Navajo in, String method, ResponseListener response, String responseId) throws ClientException;
-
-  public void doAsyncSend(Navajo in, String method, ResponseListener response, ConditionErrorHandler v) throws ClientException;
-
-  public void doAsyncSend(Navajo in, String method, ResponseListener response, String responseId, ConditionErrorHandler v) throws ClientException;
-  /*
- * @deprecated
- * @param config
- * @throws ClientException
- */
-  @Deprecated
-public void init(URL config) throws ClientException;
-
-  /**
-   * For direct clients. 
-   * @param rootPath
-   * @param serverXmlPath
-   * @throws ClientException
-   */
   public void init(String rootPath, String serverXmlPath) throws ClientException;
 
   public void setLoadBalancingMode(int i);
@@ -94,52 +70,19 @@ public void init(URL config) throws ClientException;
 
   public void setServerUrl(String url);
 
-  public void addGlobalMessage(Message m);
-  
-  /***
-   * Returns a global message, addressed by name
-   * @param name
-   * @return
-   */
-  public Message getGlobalMessage(String name);
-  
+   
   public void setRetryAttempts(int noOfAttempts);
 
   public void setRetryInterval(long interval);
 
-  public boolean removeGlobalMessage(Message m);
 
-  public int getPending();
-
-  public void addActivityListener(ActivityListener al);
-
-  public void removeActivityListener(ActivityListener al);
-
-  public void addCachedService(String service);
-
-  public void removeCachedService(String service);
-
-  public void clearCache();
-
-  public void clearCache(String service);
 
   public int getQueueSize();
 
   public int getActiveThreads();
 
-  public void doServerAsyncSend(Navajo in, String method, ServerAsyncListener listener, String clientId, int pollingInterval) throws ClientException;
 
-  public void killServerAsyncSend(String serverId) throws ClientException;
 
-  public void pauseServerAsyncSend(String serverId) throws ClientException;
-
-  public void resumeServerAsyncSend(String serverId) throws ClientException;
-
-  public void deRegisterAsyncRunner(String id);
-
-  public void finalizeAsyncRunners();
-
-  public void setCondensed(boolean b);
 
 public void destroy();
 
@@ -154,18 +97,6 @@ public Binary getArrayMessageReport(Message m, String[] propertyNames, String[] 
 	public void setSessionTokenProvider(SessionTokenProvider stp);
 
 
-/**
- * Add broadcastlistener
- * @param al ActivityListener
- */
-public void addBroadcastListener(BroadcastListener al);
-
-/**
- * Remove broadcastlistener
- * @param al ActivityListener
- */
-public void removeBroadcastListener(BroadcastListener al);
-
 public void setKeepAlive(int millis) throws ClientException;
 
 /*
@@ -173,7 +104,6 @@ public void setKeepAlive(int millis) throws ClientException;
  */
 public Navajo doSpecificSend(Navajo out, String method, int serverIndex)  throws ClientException;
 
-public int getAsyncServerIndex();
 
 /*
  * sets the locale for the client, it will be appended to the header
