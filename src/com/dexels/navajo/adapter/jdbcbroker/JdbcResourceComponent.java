@@ -1,12 +1,15 @@
 package com.dexels.navajo.adapter.jdbcbroker;
 
 import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.adapter.JDBCMap;
 import com.dexels.navajo.resource.JdbcResourceInstance;
 import com.dexels.navajo.resource.ResourceInstance;
 import com.dexels.navajo.resource.manager.ResourceManager;
@@ -15,7 +18,7 @@ public class JdbcResourceComponent {
 	private ResourceManager manager;
 	private static JdbcResourceComponent instance = null;
 	private static final Logger logger = LoggerFactory.getLogger(JdbcResourceComponent.class);
-	
+	private final Map<Integer,Connection> transactionMap = new HashMap<Integer, Connection>();
 	
 	public void setup() {
 		instance =  this;
@@ -30,6 +33,7 @@ public class JdbcResourceComponent {
 		logger.info("Removing Resource Manager, uninstantiating JdbcResourceComponent");
 		manager = null;
 		instance = null;
+		transactionMap.clear();
 	}
 	
 	public static JdbcResourceComponent getInstance() {
@@ -50,7 +54,15 @@ public class JdbcResourceComponent {
 //		testConnection = new Mongo();
 	}
 
-	public static Connection getJdbc(int transactionContext) {
-		throw new UnsupportedOperationException("getJDBC not (yet) implemented with transaction context"); 
+	public Connection getJdbc(int transactionContext) {
+		return getInstance().transactionMap.get(transactionContext);
 	}
+	public void registerTransaction(int transactionContext, Connection con) {
+		transactionMap.put(transactionContext, con);
+	}
+	public void deregisterTransaction(int transactionContext) {
+		logger.info("Deregistring context {}",transactionContext);
+		transactionMap.remove(transactionContext);
+	}
+
 }
