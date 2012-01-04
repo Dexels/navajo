@@ -43,7 +43,7 @@ public class ClientTag extends BaseNavajoTag {
 		int requestServerPort = request.getServerPort();
 		String requestContextPath = request.getContextPath();
 
-		nc.setupClient(server,username,password,requestServerName,requestServerPort,requestContextPath);
+		nc.setupClient(server,username,password,requestServerName,requestServerPort,requestContextPath,"/Postman");
 		//		getPageContext().setAttribute("Aap", "Noot");
 		return EVAL_BODY_INCLUDE;
 	}
