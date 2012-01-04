@@ -1282,29 +1282,24 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 	public final Property copy(Navajo n) {
 		BasePropertyImpl cp;
-		try {
-			if (getType() == null || "".equals(getType())) {
-				throw new IllegalStateException("Can not copy property without type: " + getFullPropertyName());
-			}
-			if (SELECTION_PROPERTY.equals(getType())) {
+		if (getType() == null || "".equals(getType())) {
+			throw new IllegalStateException("Can not copy property without type: " + getFullPropertyName());
+		}
+		if (SELECTION_PROPERTY.equals(getType())) {
 
-				cp = (BasePropertyImpl) NavajoFactory.getInstance().createProperty(n, getName(), getCardinality(), getDescription(),
-						getDirection());
+			cp = (BasePropertyImpl) NavajoFactory.getInstance().createProperty(n, getName(), getCardinality(), getDescription(),
+					getDirection());
+		} else {
+
+			cp = (BasePropertyImpl) NavajoFactory.getInstance().createProperty(n, getName(), getType(), null, getLength(),
+					getDescription(), getDirection(), getSubType());
+			if(EXPRESSION_PROPERTY.equals(getType())) {
+				cp.setType(EXPRESSION_PROPERTY);
 			} else {
-
-				cp = (BasePropertyImpl) NavajoFactory.getInstance().createProperty(n, getName(), getType(), null, getLength(),
-						getDescription(), getDirection(), getSubType());
-				if(EXPRESSION_PROPERTY.equals(getType())) {
-					cp.setType(EXPRESSION_PROPERTY);
-				} else {
-					Object value = getTypedValue();
-					cp.setAnyValue(value);
-				}
-				cp.setType(getType());
+				Object value = getTypedValue();
+				cp.setAnyValue(value);
 			}
-		} catch (NavajoException ex) {
-			ex.printStackTrace();
-			throw new RuntimeException(ex.toString());
+			cp.setType(getType());
 		}
 		cp.setRootDoc(n);
 		ArrayList<Selection> mySel = getAllSelections();
