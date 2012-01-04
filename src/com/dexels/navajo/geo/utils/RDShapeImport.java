@@ -16,6 +16,7 @@ import com.bbn.openmap.layer.shape.ESRIRecord;
 import com.bbn.openmap.layer.shape.ShapeFile;
 import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.types.Binary;
 
 public class RDShapeImport {
@@ -105,8 +106,8 @@ public class RDShapeImport {
 	private void storeBinaryShapeRecord(String shapeId, File recordFile){
 		try{
 			Binary data = new Binary(recordFile);
-			
-			Message params = NavajoClientFactory.getClient().doSimpleSend("geospatial/InitInsertCBSPolyPoint", "Parameters");
+			Navajo pms = NavajoClientFactory.getClient().doSimpleSend("geospatial/InitInsertCBSPolyPoint");
+			Message params =pms.getMessage("Parameters");
 			if(params != null){
 				params.getProperty("ShapeId").setValue(shapeId);
 				params.getProperty("ShapeData").setValue(data);
@@ -132,7 +133,8 @@ public class RDShapeImport {
 		try {
 			System.err.println(shapeId + ",  BBOX: " + min_lat + ", " + min_lon + " - " + max_lat + ", " + max_lon);
 
-			Message params = NavajoClientFactory.getClient().doSimpleSend("geospatial/InitUpdateCBSBoundingBox", "Parameters");
+			Navajo pms = NavajoClientFactory.getClient().doSimpleSend("geospatial/InitUpdateCBSBoundingBox");
+			Message params = pms.getMessage( "Parameters");
 			if(params != null){				
 				params.getProperty("ShapeId").setValue(shapeId);
 				params.getProperty("MinLat").setValue(min_lat);
