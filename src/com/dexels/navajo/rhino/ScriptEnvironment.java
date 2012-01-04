@@ -460,6 +460,10 @@ public abstract class ScriptEnvironment implements Serializable {
 	public Object createMappable(String className, Navajo input, Navajo output,
 			Message currentOutMessage) throws ClassNotFoundException {
 		try {
+			if("com.dexels.navajo.adapter.SQLMap".equals(className)) {
+				System.err.println("REPLACE!");
+				className = "com.dexels.navajo.adapter.JDBCMap";
+			}
 			ClassLoader cl = DispatcherFactory.getInstance().getNavajoConfig()
 					.getClassloader();
 			// Note, the ClassLoader is not actually used by OSGi

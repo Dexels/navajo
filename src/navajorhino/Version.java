@@ -9,10 +9,7 @@ import com.dexels.navajo.adapter.RhinoAdapterLibrary;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.FunctionFactoryInterface;
 import com.dexels.navajo.rhino.RhinoHandler;
-import com.dexels.navajo.rhino.RhinoRepository;
 import com.dexels.navajo.server.HandlerFactory;
-import com.dexels.navajo.server.Repository;
-import com.dexels.navajo.server.RepositoryFactory;
 import com.dexels.navajo.server.ServiceHandler;
 
 public class Version extends com.dexels.navajo.version.AbstractVersion {
@@ -22,21 +19,20 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 		super.start(bc);
 		System.err.println("Starting Navajo Rhino");
 		FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
-		RhinoRepository rp = new RhinoRepository();
-		RepositoryFactory.registerRepository(
-				"com.dexels.navajo.rhino.RhinoRepository", rp);
+//		RhinoRepository rp = new RhinoRepository();
+//		RepositoryFactory.registerRepository(
+//				"com.dexels.navajo.rhino.RhinoRepository", rp);
 		RhinoHandler rhinoHandler = new RhinoHandler();
 		HandlerFactory.registerHandler("com.dexels.navajo.rhino.RhinoHandler",
 				rhinoHandler);
-		System.err.println("Registered rhino repository: " + rp);
 		
 		 Dictionary<String, Object> wb = new Hashtable<String, Object>();
 		 wb.put("handlerName", "com.dexels.navajo.rhino.RhinoHandler");
 		context.registerService(ServiceHandler.class ,rhinoHandler, wb);
 
-		 Dictionary<String, Object> wb2 = new Hashtable<String, Object>();
-		 wb2.put("repositoryName", "com.dexels.navajo.rhino.RhinoRepository");
-		context.registerService(Repository.class,rp, wb);
+//		 Dictionary<String, Object> wb2 = new Hashtable<String, Object>();
+//		 wb2.put("repositoryName", "com.dexels.navajo.rhino.RhinoRepository");
+//		context.registerService(Repository.class,rp, wb);
 		
 		
 		RhinoAdapterLibrary library = new RhinoAdapterLibrary();

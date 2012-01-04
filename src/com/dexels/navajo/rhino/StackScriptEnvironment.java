@@ -158,6 +158,7 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 				if (params.length == 1) {
 					// log("Single parameter. Looking good.");
 					// method.invoke(map, value);
+					System.err.println("SETTING: "+value+" setter: "+fieldSetter+" mapclass: "+mapClass);
 					Class<?> prm = params[0];
 					if (value == null) {
 						// no further detective work possible
@@ -417,6 +418,11 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 
 	}
 
+	public void popElement() {
+	
+		myElementStack.pop();
+
+	}
 	public void pushNavajo(Navajo m) {
 		System.err.println("pushnavajo");
 
@@ -465,10 +471,8 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 
 	public void popMessage() {
 		myElementStack.pop();
-		// System.err.println("top after pop message: "+getMessage().getFullMessageName());
-
 	}
-
+	
 	// no stack activity
 	public Message getInputMessage(String path) throws NavajoException {
 		String path2 = path.replaceAll("@", Message.MSG_PARAMETERS_BLOCK + "/");
@@ -491,10 +495,13 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		}
 	}
 
-	private void pushElement(Object item) {
-//		if (item instanceof Message) {
-//			Message mm = (Message) item;
-//		}
+	public void pushProperty(Property p) {
+		if (p != null) {
+			pushElement(p);
+		}
+	}
+	
+	public void pushElement(Object item) {
 		myElementStack.push(item);
 	}
 

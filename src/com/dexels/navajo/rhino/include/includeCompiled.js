@@ -97,6 +97,45 @@ function callReferenceMap(field,filter,callback){
 }
     
 
+
+function callReferenceMapSelection(field,filter,callback){
+	//ref = env.pushMapReference(field);
+	if(callback==undefined) {
+		callback=filter;
+		filter=null;
+	}
+	isArr = env.isArrayMapRef(field);
+	if(isArr) {
+		//env.log('it is an array');
+		ref = env.createMapRef(field);
+		//env.log('Found ref: '+ref+' is array? '+isArr);
+		//env.log("Elements: "+ref.length);
+		for(a in ref) {
+			env.log('Entering loop');
+			//env.log('Element: '+ref[a]);
+//			env.addElement();
+			env.pushMappableTreeNode(ref[a]);
+			if((filter==null || filter==undefined) || evaluateNavajo(filter)==true) {
+				callback(ref[a]);
+			} else {
+				env.log("FILTER FAILED!");
+			}
+
+			env.popMappableTreeNode();
+			//env.log('Should be poppin the element now:');
+//			env.popMessage();
+		}
+	} else {
+		//env.log('it is not an array');
+		ref = env.createMapRef(field);
+			//env.pushMappableTreeNode(ref);
+			callback(ref);
+			//env.popMappableTreeNode();
+	}
+	env.popMappableTreeNode();
+}
+    
+
 function forEachSubMap(field,callback) {
 	isArr = env.isArrayMapRef(field);
 	if(isArr) {
@@ -197,20 +236,36 @@ function forEachParamMessage(path,filter,callback) {
 
 
 
-function addParam(propertyName,value, attributes) {
+function addParam(propertyName,value, attributes,callback) {
 	// not sure if this still is necessary
 	map = new java.util.HashMap();
-	if(attributes!=undefined && attributes!=null) {
-		for(i in attributes) {
-			object[i] = attributes[i];
-		}
-	}
+//	if(attributes!=undefined && attributes!=null) {
+//		for(i in attributes) {
+//			object[i] = attributes[i];
+//		}
+//	}
 	p = env.addParam(propertyName,value,map);
+	env.pushElement(p);
 	//TODO
 //	addAttributes(p,attributes);
+	if(callback!=undefined && callback!=null) {
+		callback();
+	}
+	env.popElement();
 
 	return p;
 }
+
+function addProperty(propertyName, value, attributes,callback) {
+	p = env.addProperty(propertyName,value);
+	env.pushProperty(p);
+	addAttributes(p,attributes);
+	if(callback!=undefined && callback!=null) {
+		callback();
+	}
+	env.popProperty();
+	return result;
+}	
 
 
 // only used for 'expression-style' fields
@@ -238,13 +293,33 @@ function addProperty(propertyName,value, attributes) {
 	return p;
 }
 
+function addProperty(propertyName,value, attributes) {
+	p = env.addProperty(propertyName,value);
+	addAttributes(p,attributes);
+	return p;
+}
+function addProperty(propertyName, value, attributes,callback) {
+	p = env.addProperty(propertyName,value);
+	env.pushProperty(p);
+	addAttributes(p,attributes);
+	if(callback!=undefined && callback!=null) {
+		callback();
+	}
+	env.popProperty();
+	return result;
+}	
 
-	
+
+
 function addSelection(property, name,value, selected) {
 	p = env.addSelection(property,name,value,selected);
 	return p;
 }
 
+function addSelection(name,value, selected) {
+	p = env.addSelection(name,value,selected);
+	return p;
+}
 
 function addAttributes(object, attributes) {
 //	if(attributes == undefined) {

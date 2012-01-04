@@ -584,6 +584,8 @@ public class BasicScriptCompiler implements ScriptCompiler {
 			throws IOException {
 		String name = current.getStringAttribute("name");
 		List<XMLElement> expressions = findExpressions(current);
+		List<XMLElement> refs = findMapRefs(current);
+
 		String attributeObject = createAttributeObject(attributes);
 
 		List<XMLElement> selections = findSelections(current);
@@ -615,6 +617,59 @@ public class BasicScriptCompiler implements ScriptCompiler {
 		if (selections.size() > 0) {
 			os.writeln("prop = null;");
 		}
+//   	 callReferenceMapSelection("regions",null,function() {
+//         addSelection(evaluateNavajo("SingleValueQuery('sportlinkkernel: SELECT name FROM organization WHERE organizationid = ?', $regionName)"),evaluateNavajo("$regionName"),0);
+//     })
+
+		if(refs.size()>0) {
+			processPropertyMapRefs(current,os,refs);
+		}
+	}
+
+	private void processPropertyMapRefs(XMLElement current, IndentWriter os,
+			List<XMLElement> refs) throws IOException {
+		if(refs.size()>1) {
+			os.write("// Suspicious: Multiple refs? Does that even work?\n");
+		}
+
+		for (XMLElement xmlElement : refs) {
+			String field = xmlElement.getStringAttribute("ref");
+			String name = locateNamePropertyExpression(xmlElement);
+			String value = locateValuePropertyExpression(xmlElement);
+			String selected = locateSelectedPropertyExpression(xmlElement);
+			os.writeln("callReferenceMapSelection(\"" + field + "\",null,function() {");
+			os.in();
+			os.writeln("addSelection(\"" + name + "\",\""+ value + "\","+selected+");");
+			os.out();
+			os.write("});");
+		}
+	}
+
+	private String locateSelectedPropertyExpression(XMLElement xmlElement) {
+		String sel = locateElementPropertyExpression("selected",xmlElement,null);
+		if(sel==null) {
+			return "0";
+		}
+		return sel;
+	}
+
+	private String locateValuePropertyExpression(XMLElement xmlElement) {
+		return locateElementPropertyExpression("value",xmlElement,"\"unknown\"");
+	}
+
+	private String locateNamePropertyExpression(XMLElement xmlElement) {
+		return locateElementPropertyExpression("name",xmlElement,"\"unknown\"");
+	}
+	
+	private String locateElementPropertyExpression(String propertyName,XMLElement xml,String defaultValue) {
+		List<XMLElement> xe = xml.getChildrenByTagName("property");
+		for (XMLElement xmlElement : xe) {
+			if(propertyName.equals(xmlElement.getStringAttribute("name"))) {
+				// found.
+				return xmlElement.getChildByTagName("expression").getStringAttribute("value");
+			}
+		}
+		return defaultValue;
 	}
 
 	private void processSelection(XMLElement s, IndentWriter os)
@@ -709,6 +764,16 @@ public class BasicScriptCompiler implements ScriptCompiler {
 		return result;
 	}
 
+	private List<XMLElement> findMapRefs(XMLElement current) {
+		List<XMLElement> result = new ArrayList<XMLElement>();
+		for (XMLElement xmlElement : current.getChildren()) {
+			if (xmlElement.getName().equals("map")) {
+				result.add(xmlElement);
+			}
+		}
+		return result;
+	}
+	
 	private List<XMLElement> findSelections(XMLElement current) {
 		List<XMLElement> result = new ArrayList<XMLElement>();
 		for (XMLElement xmlElement : current.getChildren()) {
