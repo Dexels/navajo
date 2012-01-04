@@ -110,7 +110,7 @@ public class NavajoServerContext {
 	public void setupClient() throws IOException {
 		Map<String,String> settings = getClientSettings();
 		
-		getNavajoContext().setupClient(settings.get("server") , settings.get("username")  , settings.get("password"), settings.get("requestServerName"), Integer.parseInt(settings.get("requestServerPort")), settings.get("requestContextPath"),true);
+		getNavajoContext().setupClient(settings.get("server") , settings.get("username")  , settings.get("password"), settings.get("requestServerName"), Integer.parseInt(settings.get("requestServerPort")), settings.get("requestContextPath"),"/Postman",true);
 	}
 
 	public Map<String,String> getClientSettings() throws IOException {
