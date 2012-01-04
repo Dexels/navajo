@@ -1,5 +1,8 @@
 package com.dexels.navajo.persistence;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * Title:        Navajo Product Project
@@ -14,6 +17,9 @@ public class PersistenceManagerFactory {
 
 	static volatile PersistenceManager instance;
 	final static Object object = new Object();
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(PersistenceManagerFactory.class);
 	
 	public static void clearInstance() {
 		instance = null;
@@ -40,7 +46,7 @@ public class PersistenceManagerFactory {
 					instance = (PersistenceManager) Class.forName(className).newInstance();
 
 				} catch (Exception e) {
-					System.err.println("Could NOT FIND PersistenceManager: " + className + ", trying SimplePersistenceManagerImpl..");
+					logger.info("Could NOT FIND PersistenceManager: " + className + ", trying SimplePersistenceManagerImpl..");
 					try {
 						instance = (PersistenceManager) Class.forName("com.dexels.navajo.persistence.SimplePersistenceManagerImpl").newInstance();
 					} catch (Exception  e1) {

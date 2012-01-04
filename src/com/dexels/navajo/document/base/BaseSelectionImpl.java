@@ -2,6 +2,9 @@ package com.dexels.navajo.document.base;
 
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.*;
 
 /**
@@ -16,7 +19,9 @@ import com.dexels.navajo.document.*;
  */
 public class BaseSelectionImpl extends BaseNode implements Selection{
 
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BaseSelectionImpl.class);
 	private static final long serialVersionUID = 1548716501966033367L;
 protected String name ="";
   protected String value ="-1";
@@ -56,7 +61,7 @@ protected String name ="";
   }
 
   public final String toString() {
-    //System.err.println("toString(): " + getName().trim());
+    //logger.info("toString(): " + getName().trim());
     if (getName() != null)
       return getName().trim();
     else
@@ -82,8 +87,8 @@ protected String name ="";
         return myProperty.getFullPropertyName() + "/" + getName();
       }
       catch (NavajoException ex) {
-        ex.printStackTrace();
-        return null;
+    	  logger.error("Error: ", ex);
+    	  return null;
       }
     } else {
       return "/"+getName();

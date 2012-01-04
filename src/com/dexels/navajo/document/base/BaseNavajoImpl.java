@@ -3,6 +3,9 @@ import java.beans.*;
 import java.io.*;
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.*;
 
 /**
@@ -29,6 +32,9 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
   private List<PropertyChangeListener> myPropertyDataListeners;
   private final NavajoFactory myFactory;
   
+private final static Logger logger = LoggerFactory
+		.getLogger(BaseNavajoImpl.class);
+
   public BaseNavajoImpl(NavajoFactory nf) {
 	  myFactory = nf;
 	  rootMessage = (BaseMessageImpl)nf.createMessage(this,"");
@@ -54,29 +60,8 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
   public void setExpiration(int i) {
     expiration = i;
 /** @todo Verify this */
-//    myHeader.setExpirationInterval(i);
   }
 
-//  public Navajo copyFlat() throws NavajoException {
-//	  try {
-//		  
-//	  File tmp = File.createTempFile("navajoCopy", ".xml");
-//	  Writer fw = new FileWriter(tmp);
-//	  write(fw);
-//	  fw.flush();
-//	  fw.close();
-//	  Reader fr = new FileReader(tmp);
-//	  Navajo n = NavajoFactory.getInstance().createNavajo(fr);
-//	  fr.close();
-//	  tmp.delete();
-//	  return n;
-//	  } catch(IOException oe) {
-//		  oe.printStackTrace();
-//		  throw new NavajoExceptionImpl(oe);
-//	  }
-//	  
-//	  }
-//  
 
   public Navajo copy() {
     Navajo ni = NavajoFactory.getInstance().createNavajo();
@@ -123,7 +108,7 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
 	 if(m==null) {
 		 throw new NullPointerException("Can not add null message to Navajo object");
 	 }
-//      System.err.println("ADDING MESSAGE");
+//      logger.info("ADDING MESSAGE");
     rootMessage.addMessage(m);
     return m;
   }
@@ -160,7 +145,7 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
     if (regexp.startsWith(MESSAGE_SEPARATOR)) {
       return rootMessage.getMessages(regexp.substring(1));
     }
-//    System.err.println("Getmessages, in Navajo. looking for messagE: "+regexp);
+//    logger.info("Getmessages, in Navajo. looking for messagE: "+regexp);
     return rootMessage.getMessages(regexp);
   }
 
@@ -198,7 +183,7 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
       rootMessage.clearAllSelections();
     }
     catch (NavajoException ex) {
-      ex.printStackTrace();
+    	logger.error("Error: ", ex);
     }
   }
 
@@ -208,7 +193,7 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
 	  try {
 		this.write(sw);
 	} catch (NavajoException e) {
-		e.printStackTrace();
+		logger.error("Error: ", e);
 	}
 	  return sw.toString();
   }
@@ -220,7 +205,7 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
       try {
     	  copy.write(sw);
       } catch (NavajoException e) {
-    	  e.printStackTrace();
+    	  logger.error("Error: ", e);
       }
       return sw.toString().hashCode() + "";
   }
@@ -370,11 +355,11 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
       ArrayList<Message> otherMsgs = other.getAllMessages();
       ArrayList<Message> myMsgs = this.getAllMessages();
 
-//      System.err.println("-----------------");
+//      logger.info("-----------------");
 //      this.write(System.err);
-//      System.err.println("-----------------");
+//      logger.info("-----------------");
 //      o.write(System.err);
-//      System.err.println("-----------------");
+//      logger.info("-----------------");
 
 
       if (otherMsgs.size() != myMsgs.size()){
@@ -397,8 +382,8 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
       }
     }
     catch (Exception e) {
-      e.printStackTrace();
-      return false;
+    	logger.error("Error: ", e);
+    	return false;
     }
     return true;
   }
@@ -414,9 +399,8 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
         
       }
     catch (NavajoException ex) {
-      ex.printStackTrace();
-      System.err.println("Error refreshing navajo");
-      return null;
+    	logger.error("Error refreshing navajo: ", ex);
+    	return null;
     }
  
   }
@@ -531,13 +515,13 @@ public String getTagName() {
 
 
 public void firePropertyDataChanged(Property p,Object oldValue, Object newValue) {
-//	System.err.println("Navajo changed. ");
+//	logger.info("Navajo changed. ");
 	if (myPropertyDataListeners != null) {
 		for (int i = 0; i < myPropertyDataListeners.size(); i++) {
 			PropertyChangeListener c = myPropertyDataListeners.get(i);
 			c.propertyChange(new PropertyChangeEvent(p,"value",oldValue, newValue));
 
-//			System.err.println("Alpha: PROPERTY DATA CHANGE Fired: " + oldValue + " - " + newValue);
+//			logger.info("Alpha: PROPERTY DATA CHANGE Fired: " + oldValue + " - " + newValue);
 			// Thread.dumpStack();
 		}
 	}
@@ -549,7 +533,7 @@ public void addPropertyChangeListener(PropertyChangeListener p) {
 	}
 	myPropertyDataListeners.add(p);
 	if(myPropertyDataListeners.size()>1) {
-//		System.err.println("Multiple property listeners detected!" + myPropertyDataListeners.size());
+//		logger.info("Multiple property listeners detected!" + myPropertyDataListeners.size());
 	}
 }
 

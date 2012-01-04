@@ -87,7 +87,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
             try {
                 loadBinaryFromStream(is);
             } catch (Exception e) {
-                e.printStackTrace(System.err);
+            	logger.error("Error: ", e);
             }
             this.mimetype = guessContentType();
         }
@@ -118,8 +118,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
         try {
             return createTempFileOutputStream();
         } catch (IOException e) {
-            e.printStackTrace();
-            throw new IllegalStateException("Can not create tempfile?!");
+            throw new IllegalStateException("Can not create tempfile?!",e);
         }
     }
         
@@ -186,7 +185,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     				try {
 						super.close();
 					} catch (IOException e) {
-						e.printStackTrace();
+						logger.error("Error: ", e);
 					}
 	    			inMemory = toByteArray();
     			}
@@ -244,7 +243,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
                 fos.write(data);
                 fos.close();
             } catch (IOException e) {
-                e.printStackTrace(System.err);
+            	logger.error("Error: ", e);
             }
             this.mimetype = guessContentType();
          }
@@ -267,7 +266,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
             fos.write(data);
             fos.close();
         } catch (IOException e) {
-            e.printStackTrace(System.err);
+        	logger.error("Error: ", e);
         }
 
         this.mimetype = getSubType("mime");
@@ -328,11 +327,11 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 //            progress +=read;
             iterations++;
             if (iterations % 100 == 0) {
-//                System.err.println("Reading data. "+progress+"/"+expectedLength);
+//                logger.info("Reading data. "+progress+"/"+expectedLength);
                 NavajoFactory.getInstance().fireBinaryProgress("Reading data", progress, expectedLength);
             }
             int ii = getIndexOf(buffer, '<');
-//            System.err.println("Buffer size: "+buffer.length+" '<' index: "+ii+" read: "+read);
+//            logger.info("Buffer size: "+buffer.length+" '<' index: "+ii+" read: "+read);
             if (ii==-1) {
                 out.write(buffer,0,read);
                 progress+=read;
@@ -420,8 +419,8 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
                 	currentFormatDescription = metadata.FormatIdentification.identify(f);
             	}
             }
-//            System.err.println("Guessed: "+currentFormatDescription.getMimeType());
-//            System.err.println("Guessed: "+currentFormatDescription.getFileExtensions());
+//            logger.info("Guessed: "+currentFormatDescription.getMimeType());
+//            logger.info("Guessed: "+currentFormatDescription.getFileExtensions());
             if (currentFormatDescription == null) {
                 return "application/unknown";
             } else if (currentFormatDescription.getMimeType() != null) {
@@ -485,14 +484,14 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 				return data;
 			}
 		} catch (Exception e) {
-			e.printStackTrace(System.err);
+			logger.error("Error: ", e);
 		} finally {
 			try {
 				if (in != null) {
 					in.close();
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 		}
 		return null;
@@ -549,23 +548,23 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 //    		return bais;
 //    	} else {
     		if(inMemory!=null) {
-    			System.err.println("Binary: in memory detected bytes: "+inMemory.length);
+    			logger.info("Binary: in memory detected bytes: "+inMemory.length);
     			return new ByteArrayInputStream(inMemory);
     		}
 	        if (lazySourceFile != null) {
 	            try {
 	                return new FileInputStream(lazySourceFile);
 	            } catch (FileNotFoundException e) {
-	                e.printStackTrace(System.err);
-	                return null;
+	            	logger.error("Error: ", e);
+	            	return null;
 	            }
 	        }
 	        if (dataFile != null) {
 	            try {
 	                return new FileInputStream(dataFile);
 	            } catch (FileNotFoundException e) {
-	                e.printStackTrace(System.err);
-	                return null;
+	            	logger.error("Error: ", e);
+	            	return null;
 	            }
 	        } else {
 	            return null;
@@ -599,16 +598,16 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
         	return false;
     	} 
     	Binary b = (Binary)o;
-    	System.err.println("Comparing binary sizes: "+b.getLength()+" with "+getLength());
+    	logger.info("Comparing binary sizes: "+b.getLength()+" with "+getLength());
     	if(b.getLength()!=getLength()) {
     		return false;
     	}
-    	System.err.println("Comparing binary mime: "+b.getMimeType()+" with "+getMimeType());
+    	logger.info("Comparing binary mime: "+b.getMimeType()+" with "+getMimeType());
     	if(!(getMimeType().equals(b.getMimeType()))) {
     		return false;
     	}
     	// TODO REALLY implement this 
-    	System.err.println("DUBIOUS EQUALITY IN BINARY!");
+    	logger.info("DUBIOUS EQUALITY IN BINARY!");
      	Thread.dumpStack();
     	return true;
     	
@@ -649,7 +648,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 	            try {
 	                dataFile.delete();
 	            } catch (Throwable t) {
-	                t.printStackTrace();
+	            	logger.error("Error: ", t);
 	            }
 	        }
 		}
@@ -677,7 +676,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 			 os.close();
 			 dataAsStream.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
          return sw.toString();
 
@@ -702,7 +701,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
         if (dataInStream!=null) {
         	copyResource("Writing data",os, dataInStream,getLength());
 		}
-//        System.err.println("Copied to stream");
+//        logger.info("Copied to stream");
         os.close();
 
     }
@@ -733,7 +732,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     }	
     
     public void removeRef() {
-    	System.err.println("In removeRef(), myRef = " + myRef);
+    	logger.info("In removeRef(), myRef = " + myRef);
     	if ( myRef != null ) {
     		persistedBinaries.remove(myRef);
     	}
@@ -801,7 +800,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     		return true;
     		
     	} catch (Exception e) {
-    		e.printStackTrace(System.err);
+    		logger.error("Error: ", e);
     		return false;
     	} finally {
     		if ( otherFile != null ) {
@@ -871,14 +870,14 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 //    	Binary b2 = (Binary) ois.readObject();
 //    	ois.close();
     	
-//    	System.err.println(b2.getMimeType());
+//    	logger.info(b2.getMimeType());
     	
     	FileInputStream fis = new FileInputStream(new File("/home/arjen/a"));
     	Navajo doc2 = NavajoFactory.getInstance().createNavajo(fis);
     	fis.close();
     	
     	Binary b2 = (Binary) doc2.getProperty("/Test/Bin").getTypedValue();
-    	System.err.println(b2.getMimeType());
+    	logger.info(b2.getMimeType());
     	
     }
 

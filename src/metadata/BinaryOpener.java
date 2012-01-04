@@ -5,11 +5,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import metadata.FormatDescription;
 
 import com.dexels.navajo.document.types.Binary;
 
-//TODO move and promote
 
 public class BinaryOpener {
 
@@ -19,6 +21,9 @@ public class BinaryOpener {
 
 	private static final String MAC_PATH = "open";
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BinaryOpener.class);
 	// private static final String UNIX_PATH = "netscape";
 	// private static final String UNIX_FLAG = "-remote openURL";
 
@@ -38,14 +43,14 @@ public class BinaryOpener {
 		try {
 			if (windows) {
 				cmd = WIN_PATH + " " + WIN_FLAG + " " + url;
-				System.err.println("Executing Windows command: " + cmd);
+				logger.info("Executing Windows command: " + cmd);
 				Runtime.getRuntime().exec(cmd);
 			} else {
 				String lcOSName = System.getProperty("os.name").toLowerCase();
 				boolean MAC_OS_X = lcOSName.startsWith("mac os x");
 				if (MAC_OS_X) {
 					cmd = MAC_PATH +" " + url;
-					System.err.println("Executing MAC command: " + cmd);
+					logger.info("Executing MAC command: " + cmd);
 					Runtime.getRuntime().exec(cmd);
 					return result;
 				} else {
@@ -53,7 +58,7 @@ public class BinaryOpener {
 				}
 				
 				if (url.indexOf(' ') != -1) {
-					System.err.println("Warning, spaces in URL, might fail");
+					logger.info("Warning, spaces in URL, might fail");
 				}
 				if (url.toLowerCase().endsWith(".doc") || url.toLowerCase().endsWith(".xls") || url.toLowerCase().endsWith(".ppt")
 						|| url.toLowerCase().endsWith(".txt") || url.toLowerCase().endsWith(".rtf")) {
@@ -70,15 +75,15 @@ public class BinaryOpener {
 				else { // we don't have a clue..
 					cmd = "mozilla " + url;
 				}
-				System.err.println("EXECUTING COMMAND:   " + cmd);
+				logger.info("EXECUTING COMMAND:   " + cmd);
 				Runtime.getRuntime().exec(cmd);
 
 			}
 		} catch (java.io.IOException ex) {
 			result = false;
-			System.err.println("Could not invoke browser, command=" + cmd);
-			System.err.println("Caught: " + ex);
-			ex.printStackTrace();
+			logger.info("Could not invoke browser, command=" + cmd);
+			logger.info("Caught: " + ex);
+			logger.error("Error: ", ex);
 		}
 		return result;
 	}
@@ -105,7 +110,7 @@ public class BinaryOpener {
 					StringTokenizer st = new StringTokenizer(mime, "/");
 					String major = st.nextToken();
 					String minor = st.nextToken();
-					System.err.println("Binary type: " + major + " and minor: " + minor);
+					logger.info("Binary type: " + major + " and minor: " + minor);
 					if(ext!=null) {
 						extString = ext;
 					} else {
@@ -123,7 +128,7 @@ public class BinaryOpener {
 			BinaryOpener.displayURL(f.getAbsolutePath());
 			f.deleteOnExit();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 
 	}

@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
@@ -31,6 +34,9 @@ import com.dexels.navajo.document.types.Percentage;
 import com.dexels.navajo.document.types.StopwatchTime;
 
 public class TestProperty extends TestCase {
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TestProperty.class);
 	NavajoDocumentTestFicture navajodocumenttestfictureInst = new NavajoDocumentTestFicture(this);
 	private Navajo testDoc;
 
@@ -125,7 +131,7 @@ public class TestProperty extends TestCase {
 		StopwatchTime swt = new StopwatchTime(format);
 		p1.setAnyValue(swt);
 		assertEquals("stopwatchtime", p1.getType());
-		System.err.println("FORM: "+format+" val: "+p1.getValue());
+		logger.info("FORM: "+format+" val: "+p1.getValue());
 		assertEquals(format, p1.getValue());
 		assertTrue(p1.getTypedValue().equals(new StopwatchTime(format)));
 		
@@ -362,33 +368,6 @@ public class TestProperty extends TestCase {
 			Assert.assertEquals("mypropje", testProp.getName());
 	}
 
-//	public void testSetPoints() {
-//		try {
-//			Property p = NavajoFactory.getInstance().createProperty(testDoc, "mypoints", Property.POINTS_PROPERTY, "", 0, "", Property.DIR_OUT);
-//			Vector [] points = new Vector[5];
-//			for (int i = 0; i < points.length; i++) {
-//				Vector v = new Vector();
-//				v.add(new String(i+""));
-//				v.add(new String((i*i)+""));
-//				points[i] = v;
-//			}
-//			p.setPoints(points);
-//
-//			Vector [] result = p.getPoints();
-//			Assert.assertEquals(points.length, result.length);
-//			for (int i = 0; i < result.length; i++) {
-//				Vector rv = result[i];
-//				String rx1 = result[i].get(0).toString();
-//				String rx2 = result[i].get(1).toString();
-//				String x1 = points[i].get(0).toString();
-//				String x2 = points[i].get(1).toString();
-//				Assert.assertEquals(x1, rx1);
-//				Assert.assertEquals(x2, rx2);
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
 
 	public void testSetSelected() throws NavajoException {
 			Property testSelectionProp1 = NavajoFactory.getInstance().createProperty(testDoc, "testselectionproperty", "1", "mydesc", Property.DIR_IN);
@@ -607,8 +586,8 @@ public class TestProperty extends TestCase {
 		p1.addPropertyChangeListener(new PropertyChangeListener(){
 
 			public void propertyChange(PropertyChangeEvent e) {
-				System.err.println("Old: "+e.getOldValue());
-				System.err.println("New: "+e.getNewValue());
+				logger.info("Old: "+e.getOldValue());
+				logger.info("New: "+e.getNewValue());
 				// no real change. 
 				Assert.fail();
 			}});
@@ -618,8 +597,8 @@ public class TestProperty extends TestCase {
 	
 	public void testMoneyFormat(){
 	     Money m = new Money(10); 
-	     System.err.println("Country: "+Locale.getDefault().getCountry());
-	     System.err.println("m: "+m.toTmlString()+" :: "+m.editingString());
+	     logger.info("Country: "+Locale.getDefault().getCountry());
+	     logger.info("m: "+m.toTmlString()+" :: "+m.editingString());
 	     Assert.assertEquals(m.toTmlString(), "10.00");
 	     Assert.assertEquals(m.editingString(), "10");
 
@@ -649,7 +628,7 @@ public class TestProperty extends TestCase {
 //		n2.write(System.err);
 	     Money mon = (Money) p2.getTypedValue(); 
 
-	     System.err.println("m: "+mon.toTmlString()+" :: "+mon.editingString()+" :: "+mon.toString());
+	     logger.info("m: "+mon.toTmlString()+" :: "+mon.editingString()+" :: "+mon.toString());
 	     Assert.assertEquals(mon.toTmlString(), "10.30");
 	     Assert.assertEquals(mon.doubleValue(), 10.30d);
 
@@ -661,7 +640,7 @@ public class TestProperty extends TestCase {
 		double d = 10.30;
 		Money m = new Money("10.30");
 		// Strange test, but does no harm
-		System.err.println(":: "+m.doubleValue());
+		logger.info(":: "+m.doubleValue());
 		Assert.assertNotSame(d, m.doubleValue());
 
 	}
@@ -670,7 +649,7 @@ public class TestProperty extends TestCase {
 
 		double d = 1300.50;
 		Money m = new Money("1.300,50");
-		System.err.println(":: "+m.doubleValue());
+		logger.info(":: "+m.doubleValue());
 		assertEquals(d, m.doubleValue());
 
 	}

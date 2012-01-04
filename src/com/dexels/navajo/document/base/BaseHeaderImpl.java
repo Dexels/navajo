@@ -12,12 +12,18 @@ package com.dexels.navajo.document.base;
 
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.*;
 
 public class BaseHeaderImpl
     extends BaseNode
     implements Header {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BaseHeaderImpl.class);
 	private static final long serialVersionUID = 3426541418860665991L;
 //  protected String myName;
 //  protected String myPassword;
@@ -134,7 +140,7 @@ public final String getIPAddress() {
 //        "Method getCallBackInterupt() not yet implemented.");
 	
 	  if ( getCallback().getRef(object) == null ) {
-		  System.err.println("UNKNOWN CALLBACK OBJECT: " + object);
+		  logger.info("UNKNOWN CALLBACK OBJECT: " + object);
 		  return "";
 	  }
 	  return getCallback().getRef(object).getInterrupt();
@@ -252,10 +258,10 @@ public final void setCallBackInterrupt(String interrupt) {
 		  boi.setInterrupt(interrupt);
 	  }
 	  if (objects!=null && objects.size()>1) {
-		System.err.println("Warning: Multible references found. Ambiguous kill detected");
+		logger.info("Warning: Multible references found. Ambiguous kill detected");
   	}
 	  if (objects==null) {
-		System.err.println("Problem setting setCallBackInterrupt, no object found.");
+		logger.info("Problem setting setCallBackInterrupt, no object found.");
 	}
   }
   /**
@@ -272,12 +278,6 @@ public final String getUserAgent() {
 
   @Deprecated
 public final String getHostName() {
-//    try {
-//      InetAddress.getLocalHost().getHostName();
-//    }
-//    catch (UnknownHostException ex) {
-//      ex.printStackTrace();
-//    }
     return "localhost";
 
   }

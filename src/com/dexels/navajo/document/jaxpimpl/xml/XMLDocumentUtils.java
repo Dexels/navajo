@@ -7,6 +7,8 @@ import javax.xml.transform.*;
 import javax.xml.transform.dom.*;
 import javax.xml.transform.stream.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.*;
 
 import com.dexels.navajo.document.*;
@@ -18,7 +20,9 @@ public class XMLDocumentUtils {
 
     private static javax.xml.parsers.DocumentBuilderFactory builderFactory = null;
     private static javax.xml.transform.TransformerFactory transformerFactory = null;
-
+    
+	private final static Logger logger = LoggerFactory
+			.getLogger(XMLDocumentUtils.class);
     private static synchronized void createDocumentBuilderFactory() {
 
         if (builderFactory == null) {
@@ -180,7 +184,7 @@ public class XMLDocumentUtils {
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.transform(new DOMSource(document), result);
         } catch (Exception exception) {
-            exception.printStackTrace(System.err);
+        	logger.error("Error: ", exception);
             throw NavajoFactory.getInstance().createNavajoException(exception.getMessage());
         }
         return;
@@ -199,7 +203,7 @@ public class XMLDocumentUtils {
 
             return document;
         } catch (Exception exception) {
-            exception.printStackTrace(System.err);
+        	logger.error("Error: ", exception);
             return null;
         }
     }
@@ -211,7 +215,7 @@ public class XMLDocumentUtils {
         try {
             return createDocument(new FileInputStream(new File(source)), false);
         } catch (FileNotFoundException fnfex) {
-            fnfex.printStackTrace(System.err);
+        	logger.error("Error: ", fnfex);
             throw NavajoFactory.getInstance().createNavajoException(fnfex.getMessage());
         }
     }
@@ -229,7 +233,7 @@ public class XMLDocumentUtils {
             document.normalize();
             return document;
         } catch (Exception exception) {
-            exception.printStackTrace(System.err);
+        	logger.error("Error: ", exception);
             throw NavajoFactory.getInstance().createNavajoException(exception.getMessage());
         } finally {
            // ALWAY CLOSE STREAM!!
@@ -326,8 +330,7 @@ public class XMLDocumentUtils {
     		printElement ( d.getDocumentElement(), w );
     		w.flush();
     	} catch (IOException e) {
-    		// TODO Auto-generated catch block
-    		e.printStackTrace();
+    		logger.error("Error: ", e);
     	}
     }
 
@@ -337,8 +340,7 @@ public class XMLDocumentUtils {
         try {
 			printElement(n, sw);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
         return sw.toString();
     }
@@ -357,8 +359,7 @@ public class XMLDocumentUtils {
         try {
 			printElement(n, sw);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
         return sw.toString();
     }

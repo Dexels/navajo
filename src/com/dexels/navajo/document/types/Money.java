@@ -5,6 +5,9 @@ import java.text.*;
 import java.util.*;
 import java.util.regex.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.*;
 
 /**
@@ -22,6 +25,8 @@ public final class Money
 
 	private static final long serialVersionUID = -6669128119091978210L;
 private static final int INTERNAL_DECIMAL_PLACES = 4;
+
+private final static Logger logger = LoggerFactory.getLogger(Money.class);
 private Double value = null;
   private static DecimalFormat nf = new DecimalFormat("\u00A4 #,##0.00;\u00A4 -#,##0.00");
 //  private static DecimalFormat nf_euro = new DecimalFormat("\u20AC #,##0.00;\u20AC -#,##0.00"); //in case of the NOKBUG
@@ -209,7 +214,7 @@ private void setValue(Double d) {
       return "-";
     }
     if (customFormat != null) {
-      System.err.println("FOrmatting money with customformat: " +
+      logger.info("FOrmatting money with customformat: " +
                          customFormat.toPattern());
       return customFormat.format(value);
 
@@ -286,8 +291,8 @@ public String editingString() {
   public static void main(String[] args) {
      String aap = "-225.00";
      Money m = new Money(aap);
-     System.err.println("m = " + m.formattedString());
-     System.err.println("sa =" + m.doubleValue());
+     logger.info("m = " + m.formattedString());
+     logger.info("sa =" + m.doubleValue());
   } 
 
   /**

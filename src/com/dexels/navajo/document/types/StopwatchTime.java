@@ -2,6 +2,9 @@ package com.dexels.navajo.document.types;
 
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.*;
 
 /**
@@ -18,8 +21,10 @@ public final class StopwatchTime
     implements Comparable<StopwatchTime> {
 
 	private static final long serialVersionUID = -6257975668104174868L;
-
-long myMillis = 0;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(StopwatchTime.class);
+	long myMillis = 0;
 
   private static int HOURS_MILLIS = 3600000;
   private static int MINUTE_MILLIS = 60000;
@@ -145,7 +150,7 @@ long myMillis = 0;
 
     }
     catch (Throwable e1) {
-      e1.printStackTrace();
+    	logger.error("Error: ", e1);
     }
   }
 
@@ -193,10 +198,10 @@ long myMillis = 0;
     }
     StringTokenizer tok = new StringTokenizer(myFormat, delim);
 
-//    System.err.println("tokens: " + tok.countTokens());
+//    logger.info("tokens: " + tok.countTokens());
 
     if(",".equals(sep) && tok.countTokens() > 2){
-      System.err.println("WARNING: Invalid format subtype!");
+      logger.info("WARNING: Invalid format subtype!");
     }
     boolean firstToken = true;
     while(tok.hasMoreTokens()){
@@ -397,29 +402,29 @@ long myMillis = 0;
     // Tests.
 
 //    StopwatchTime ck = new StopwatchTime("00:01:44:400");
-//    System.err.println("ck = " + ck);
+//    logger.info("ck = " + ck);
 	    StopwatchTime ck = new StopwatchTime(60000);
 	    ck.myFormat = "mm:SS";
-System.err.println("Hoea: "+ck);
+logger.info("Hoea: "+ck);
 	  StopwatchTime ck2 = new StopwatchTime("01");
-    System.err.println("ck3 = " + ck2);
+    logger.info("ck3 = " + ck2);
     StopwatchTime ck3 = new StopwatchTime("01:999");
-    System.err.println("ck3 = " + ck3);
+    logger.info("ck3 = " + ck3);
     StopwatchTime ck4 = new StopwatchTime("01:100");
-    System.err.println("ck4 = " + ck4);
+    logger.info("ck4 = " + ck4);
     StopwatchTime ck5 = new StopwatchTime("00:67:345", "format=SS.MM");
-    System.err.println("ck5 = " + ck5);
+    logger.info("ck5 = " + ck5);
     StopwatchTime ck6 = new StopwatchTime("02:01:10");
-    System.err.println("ck6 = " + ck6);
+    logger.info("ck6 = " + ck6);
     StopwatchTime ck7 = new StopwatchTime(1100);
-    System.err.println("ck7 = " + ck7);
+    logger.info("ck7 = " + ck7);
 
     StopwatchTime sw1 = new StopwatchTime("12:30:00:000");
     StopwatchTime sw2 = new StopwatchTime("04:45:12:976");
 
     StopwatchTime result = sw1.subtract(sw2);
 
-    System.err.println("result = " + result);
+    logger.info("result = " + result);
   }
 
 public boolean isEmpty() {

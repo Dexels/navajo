@@ -10,8 +10,14 @@
  */
 package com.dexels.navajo.document;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class RequestHeader {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(RequestHeader.class);
     public static final String HTTP_AUTH_TYPE = "auth-type";
     public static final String HTTP_CHAR_ENCODING = "char-encoding";
     public static final String HTTP_CONTENT_TYPE = "content-type";
@@ -43,7 +49,7 @@ public class RequestHeader {
         String result = (String) m.invoke(requestHeader, new Object[]{});
         return result;
       } catch (Exception e) {
-        e.printStackTrace();
+    	  logger.error("Error: ", e);
         return "";
       }
     }

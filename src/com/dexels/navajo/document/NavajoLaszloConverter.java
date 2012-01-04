@@ -9,6 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -20,6 +22,10 @@ import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import com.dexels.navajo.document.types.ClockTime;
 
 public class NavajoLaszloConverter {
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(NavajoLaszloConverter.class);
+	
 	public static Navajo createNavajoFromLaszlo(BufferedInputStream is) {
 		Navajo n = null;
 		try {
@@ -48,7 +54,7 @@ public class NavajoLaszloConverter {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		return n;
 	}
@@ -120,7 +126,7 @@ public class NavajoLaszloConverter {
 			// System.err.println("Created doc: " +
 			// XMLDocumentUtils.toString(doc));
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		return doc;
 	}
@@ -139,7 +145,7 @@ public class NavajoLaszloConverter {
 				System.err.println("Message added!");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		return doc;
 	}
@@ -234,7 +240,7 @@ public class NavajoLaszloConverter {
 				e.appendChild(mes);
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error("Error: ", ex);
 		}
 	}
 
@@ -265,7 +271,7 @@ public class NavajoLaszloConverter {
 				msg.addMessage(m);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 
@@ -277,7 +283,7 @@ public class NavajoLaszloConverter {
 			Selection s = NavajoFactory.getInstance().createSelection(n, name, value, "true".equals(selected));
 			p.addSelection(s);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 
@@ -312,7 +318,7 @@ public class NavajoLaszloConverter {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 
@@ -351,7 +357,7 @@ public class NavajoLaszloConverter {
 			}
 			m.addMessage(row);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 
@@ -404,7 +410,7 @@ public class NavajoLaszloConverter {
 				e.appendChild(prop);
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error("Error: ", ex);
 		}
 	}
 

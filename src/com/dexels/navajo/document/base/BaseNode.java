@@ -107,7 +107,7 @@ protected Navajo myDocRoot;
 				  writeElement( sw, "=\"");
 				  writeElement( sw, sss);
 				  writeElement( sw, "\"");
-//				  System.err.println("||"+value+"||");
+//				  logger.info("||"+value+"||");
 			  }
 		 }
 	 }
@@ -184,7 +184,7 @@ protected Navajo myDocRoot;
 					if (iter.hasNext()) {
 						writeElement(sw, ", ");
 					}
-					// System.err.println("||"+value+"||");
+					// logger.info("||"+value+"||");
 				}
 			}
 		}

@@ -11,12 +11,17 @@ package com.dexels.navajo.document.filter;
 
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.*;
 
 public final class PropertyFilter {
   private String myPropertyName;
   private Property myValue;
   private String myOperator;
+  
+  private final static Logger logger = LoggerFactory.getLogger(PropertyFilter.class);
 
   public PropertyFilter(String propName, Property value, String operator) {
     myPropertyName = propName;
@@ -50,7 +55,7 @@ public final class PropertyFilter {
 
 private boolean checkProperty(Property p) throws NavajoException {
 	if (p == null) {
-      System.err.println("Property can not be found");
+      logger.info("Property can not be found");
       return true;
     }
     if ("==".equals(myOperator)) {

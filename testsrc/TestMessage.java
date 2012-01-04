@@ -2,6 +2,9 @@
 import java.io.StringWriter;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
@@ -15,6 +18,8 @@ public class TestMessage extends TestCase {
 
   NavajoDocumentTestFicture navajodocumenttestfictureInst = new NavajoDocumentTestFicture(this);
   private Navajo testDoc = null;
+  
+  private final static Logger logger = LoggerFactory.getLogger(TestMessage.class);
 
   public TestMessage(String s) {
     super(s);
@@ -384,7 +389,7 @@ public class TestMessage extends TestCase {
 	  Message m = NavajoFactory.getInstance().createMessage(testDoc, "MyTop");
 	  testDoc.addMessage(m);
 	  m.setName("MyOtherTop");
-	  System.err.println(">>>" + testDoc.getMessage("MyTop"));
+	  logger.info(">>>" + testDoc.getMessage("MyTop"));
 	  assertNull(testDoc.getMessage("MyTop"));
 	  assertNotNull(testDoc.getMessage("MyOtherTop"));
   }
@@ -424,7 +429,7 @@ public class TestMessage extends TestCase {
 	  
 	  testDoc.write(sw);
 	  
-	  System.err.println(sw.toString());
+	  logger.info(sw.toString());
 	  assertTrue(sw.toString().indexOf("AAPJES") == -1);
 	  assertTrue(sw.toString().indexOf("NOOTJES") == -1);
   }
@@ -500,7 +505,7 @@ public class TestMessage extends TestCase {
 	  Navajo n2 = NavajoFactory.getInstance().createNavajo();
 	  n2 = testDoc.copy();
 	   
-	  System.err.println("THIS IS N2");
+	  logger.info("THIS IS N2");
 	  n2.write(System.err);
 	  
 	  Message m1 = testDoc.getMessage("testmessage");

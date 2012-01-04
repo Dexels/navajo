@@ -11,6 +11,8 @@ package com.dexels.navajo.document.jaxpimpl.xml;
 import java.io.*;
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.*;
 
 import com.dexels.navajo.document.*;
@@ -18,8 +20,10 @@ import com.dexels.navajo.document.*;
 public class XMLutils {
 
     public final static String XML_ESCAPE_DELIMITERS = "&'<>\"";
+	private final static Logger logger = LoggerFactory
+			.getLogger(XMLutils.class);
     public static String getElementValue(Node node) {
-
+    	
 	return node.getNodeValue();
     }
 
@@ -312,6 +316,6 @@ public class XMLutils {
     public static void main(String [] args) throws Exception {
     	Document d = XMLDocumentUtils.createDocument(new FileInputStream("/home/arjen/soap.xml"), true);
     	Node h = XMLutils.findNode(d, "Header");
-    	System.err.println("header = " + h);
+    	logger.info("header = " + h);
     }
 }

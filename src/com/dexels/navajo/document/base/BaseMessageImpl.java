@@ -28,6 +28,9 @@ import java.util.TreeMap;
 import java.util.Vector;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.ExpressionChangedException;
 import com.dexels.navajo.document.ExpressionEvaluator;
 import com.dexels.navajo.document.Message;
@@ -74,6 +77,10 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 	// private List myDefinitionList = null;
 	// private Map myDefinitionMap = null;
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BaseMessageImpl.class);
+	
 	protected BaseMessageImpl definitionMessage = null;
 
 	public BaseMessageImpl(Navajo n) {
@@ -343,15 +350,15 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 //		for (Iterator<Property> iter = getArrayParentMessage().getDefinitionMessage().getAllProperties().iterator(); iter.hasNext();) {
 //			long ll = System.currentTimeMillis();
 //			Property element = iter.next();
-//			System.err.println("\n=========================\nGetting defprop: "+element.getName()+" : "+(System.currentTimeMillis()-ll));
+//			logger.info("\n=========================\nGetting defprop: "+element.getName()+" : "+(System.currentTimeMillis()-ll));
 //			if (element != null) {
 //				Property local = propertyMap.get(element.getName());
 //				if (local != null) {
 //					mergeProperty(local, element);
-//					System.err.println("Getting merge: "+(System.currentTimeMillis()-ll));
+//					logger.info("Getting merge: "+(System.currentTimeMillis()-ll));
 //				}
 //				resList.add(getProperty(element.getName()).copy(getRootDoc()));
-//				System.err.println("Getting add: "+(System.currentTimeMillis()-ll));
+//				logger.info("Getting add: "+(System.currentTimeMillis()-ll));
 //			}
 //		}
 //		
@@ -367,31 +374,31 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 //	private void mergeProperty(Property local, Property definition) {
 //		long ll = System.currentTimeMillis();
 //
-//		System.err.println("    \n=========================\n    MERGING defprop: "+local.getName()+" : "+(System.currentTimeMillis()-ll));
+//		logger.info("    \n=========================\n    MERGING defprop: "+local.getName()+" : "+(System.currentTimeMillis()-ll));
 //
 //		if (local.getDescription() == null) {
 //			local.setDescription(definition.getDescription());
 //		}
-//		System.err.println("    description: "+(System.currentTimeMillis()-ll));
+//		logger.info("    description: "+(System.currentTimeMillis()-ll));
 //		if (local.getCardinality() == null) {
 //			local.setCardinality(definition.getCardinality());
 //		}
-//		System.err.println("    cardinality: "+(System.currentTimeMillis()-ll));
+//		logger.info("    cardinality: "+(System.currentTimeMillis()-ll));
 //		if (local.getDirection() == null) {
 //			local.setDirection(definition.getDirection());
 //		}
-//		System.err.println("    direction: "+(System.currentTimeMillis()-ll));
+//		logger.info("    direction: "+(System.currentTimeMillis()-ll));
 //
 //		if (local.getType() == null) {
 //			local.setType(definition.getType());
 //		}
-//		System.err.println("    type: "+(System.currentTimeMillis()-ll));
+//		logger.info("    type: "+(System.currentTimeMillis()-ll));
 //
 //		if (local.getValue() == null || "".equals(local.getValue())) {
 //			local.setValue(definition.getValue());
 //		}
-//		System.err.println("    value: "+(System.currentTimeMillis()-ll));
-//		System.err.println("==== END of Merge ==== ");
+//		logger.info("    value: "+(System.currentTimeMillis()-ll));
+//		logger.info("==== END of Merge ==== ");
 //	}
 
 	public final ArrayList<Property> getProperties(String regularExpression) throws NavajoException {
@@ -515,7 +522,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 							try {
 								i = Integer.parseInt(index);
 							} catch (NumberFormatException ex) {
-								ex.printStackTrace();
+								logger.error("Error: ", ex);
 							}
 							return array.getMessage(i);
 						}
@@ -701,7 +708,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 			return null;
 		}
 		if (!m.getType().equals(Message.MSG_TYPE_ARRAY)) {
-			System.err.println("Found a non array message, when querying for an array element");
+			logger.info("Found a non array message, when querying for an array element");
 			return null;
 		}
 		return m.getMessage(index);
@@ -889,7 +896,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
 	public final void setParent(Message m) {
 		if (m == null) {
-			// System.err.println("==========================\nDeleting
+			// logger.info("==========================\nDeleting
 			// parent.... Bad idea\n\n\n");
 			return;
 		}
@@ -942,7 +949,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 				return null;
 			}
 			if (propertyList.size() != propertyMap.size()) {
-				System.err.println("Warning: Propertymap sizE: " + propertyMap.size() + " listsize: " + propertyList.size());
+				logger.info("Warning: Propertymap sizE: " + propertyMap.size() + " listsize: " + propertyList.size());
 			}
 
 			Property pp = propertyMap.get(path);
@@ -1129,7 +1136,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		}
 		n.addMessage(array);
 		ArrayList<Property> p = n.getProperties("/Arr[aA][yY]@0/Apenoot");
-		System.err.println("p = " + p.get(0).getValue());
+		logger.info("p = " + p.get(0).getValue());
 	}
 
 	public final boolean isEqual(Message o) {
@@ -1321,16 +1328,16 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 								Comparator c = null;
 								try {
 									Class<? extends Comparator> compareClass = null;
-									// System.err.println("Instantiating function " +
+									// logger.info("Instantiating function " +
 									// compareFunction);
 									ExpressionEvaluator ee = NavajoFactory.getInstance().getExpressionEvaluator();
 									ClassLoader cl = ee.getScriptClassLoader();
-									// System.err.println("Classloader is " + cl);
+									// logger.info("Classloader is " + cl);
 									compareClass = (Class<? extends Comparator>) Class.forName(compareFunction, true, cl);
 									c = compareClass.newInstance();
 									compare = c.compare(this, m);
 								} catch (Exception e) {
-									e.printStackTrace(System.err);
+									logger.error("Error: ",e);
 									compare = 0;
 								}
 
@@ -1338,18 +1345,18 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 								// Now we assume oV is an existing property in both
 								// messages
 
-								// System.err.println("Getting property compare: '" + oV
+								// logger.info("Getting property compare: '" + oV
 								// + "',  descending? " + desc );
 								Property myOvProp = getProperty(oV);
 								if (myOvProp == null) {
-									System.err.println("WARNING: error while sorting message. Could not sort property named: " + oV);
+									logger.info("WARNING: error while sorting message. Could not sort property named: " + oV);
 									return 0;
 								}
 								Property compOvProp = m.getProperty(oV);
 								compare = desc * compOvProp.compareTo(myOvProp);
 							}
 
-							// System.err.println("Compared value: " + compare);
+							// logger.info("Compared value: " + compare);
 						}
 						return compare;
 					}
@@ -1360,7 +1367,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 	}
 
 	public void firePropertyDataChanged(Property p, Object oldValue, Object newValue) {
-		// System.err.println("Message changed: "+getName()+" index: "+getIndex());
+		// logger.info("Message changed: "+getName()+" index: "+getIndex());
 		if (getArrayParentMessage() != null) {
 			getArrayParentMessage().firePropertyDataChanged(p, oldValue, newValue);
 		} else {
@@ -1371,7 +1378,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 				PropertyChangeListener c = myPropertyDataListeners.get(i);
 				c.propertyChange(new PropertyChangeEvent(p, "value", oldValue, newValue));
 
-				// System.err.println("Alpha: PROPERTY DATA CHANGE Fired: " +
+				// logger.info("Alpha: PROPERTY DATA CHANGE Fired: " +
 				// oldValue + " - " + newValue);
 				// Thread.dumpStack();
 			}
@@ -1384,7 +1391,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		}
 		myPropertyDataListeners.add(p);
 		if (myPropertyDataListeners.size() > 1) {
-			// System.err.println("Multiple property listeners detected!" +
+			// logger.info("Multiple property listeners detected!" +
 			// myPropertyDataListeners.size());
 		}
 	}
@@ -1427,7 +1434,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 	    	try{
 	    		this.printElement(w, 2);
 	    	}catch(Exception e){
-	    		e.printStackTrace();
+	    		logger.error("Error: ", e);
 	    	}
 	    }
 	    

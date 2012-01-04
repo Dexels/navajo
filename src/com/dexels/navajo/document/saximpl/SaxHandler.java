@@ -11,6 +11,9 @@ import java.io.*;
 import java.util.*;
 import java.util.Map.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.base.*;
 import com.dexels.navajo.document.saximpl.qdxml.*;
@@ -20,13 +23,12 @@ public final class SaxHandler implements DocHandler {
 
     private Navajo currentDocument=null;
     private final Stack<Message> messageStack = new Stack<Message>();
-//    private final ArrayList binaries = new ArrayList();
-//    private String currentTag = null;
     private BasePropertyImpl currentProperty = null;
     private BaseHeaderImpl currentHeader;
-//    private BaseCallbackImpl currentCallback = null;
     private Method currentMethod = null;
-
+    
+	private final static Logger logger = LoggerFactory
+			.getLogger(SaxHandler.class);
     public void reset() {
         currentDocument = null;
         messageStack.clear();
@@ -36,7 +38,7 @@ public final class SaxHandler implements DocHandler {
 
       
     public final void startElement(String tag, Hashtable<String,String> h) throws Exception {
-//        System.err.println("starting element: "+tag+" attrs: "+h);
+//        logger.info("starting element: "+tag+" attrs: "+h);
 //        currentTag = tag;
         
         // Unescape all the shit.
@@ -118,7 +120,7 @@ public final class SaxHandler implements DocHandler {
             return;
         }        
         
-        //System.err.println("Unknown tag: "+tag+" attrs: "+h);
+        //logger.info("Unknown tag: "+tag+" attrs: "+h);
                  
 //        throw new IllegalArgumentException("Unknown tag: "+tag+" attrs: "+h);
         
@@ -143,7 +145,7 @@ public final class SaxHandler implements DocHandler {
     		return;
     	}
     	
-    //	System.err.println(h);
+    //	logger.info(h);
     	
     	BaseObjectImpl baseObjectImpl = new BaseObjectImpl(currentDocument);
     	baseObjectImpl.setName(h.get("name"));
@@ -261,7 +263,7 @@ public final class SaxHandler implements DocHandler {
     }
 
     private final void parseProperty(Hashtable<String,String> h) throws NavajoException {
-//        System.err.println("NAME: "+(String)h.get("name"));
+//        logger.info("NAME: "+(String)h.get("name"));
         String sLength = null;
         String myName = h.get(Property.PROPERTY_NAME);
         String myValue = h.get(Property.PROPERTY_VALUE);
@@ -282,7 +284,7 @@ public final class SaxHandler implements DocHandler {
           }
         }
         catch (Exception e1) {
-//          System.err.println("ILLEGAL LENGTH IN PROPERTY " + myName + ": " +
+//          logger.info("ILLEGAL LENGTH IN PROPERTY " + myName + ": " +
 //                             sLength);
         }
         if(myName==null) {
@@ -298,17 +300,17 @@ public final class SaxHandler implements DocHandler {
         }
 
           Message current = messageStack.peek();
-//          System.err.println("Adding property: "+currentProperty.getName()+" to message: "+current.getFullMessageName());
+//          logger.info("Adding property: "+currentProperty.getName()+" to message: "+current.getFullMessageName());
           current.addProperty(currentProperty);
 
           definitionProperty = null;
 
           BaseMessageImpl arrayParent = (BaseMessageImpl) current.getArrayParentMessage();
-          //System.err.println("current = " + current.getName() + ", type = " + current.getType());
+          //logger.info("current = " + current.getName() + ", type = " + current.getType());
           if ( arrayParent != null && arrayParent.isArrayMessage() ) {
 
             definitionProperty = arrayParent.getPropertyDefinition(myName);
-            //System.err.println("definitionProperty = " + definitionProperty + ", for name: " + myName);
+            //logger.info("definitionProperty = " + definitionProperty + ", for name: " + myName);
             
             
             if (definitionProperty != null) {
@@ -358,7 +360,7 @@ public final class SaxHandler implements DocHandler {
           }
 
           if (type == null &&  current.isArrayMessage() ) {
-            System.err.println("Found undefined property: " + currentProperty.getName());
+            logger.info("Found undefined property: " + currentProperty.getName());
           }
 
           isListType = (type != null && type.equals(Property.SELECTION_PROPERTY));
@@ -375,7 +377,7 @@ public final class SaxHandler implements DocHandler {
         		  BaseSelectionImpl s1 = (BaseSelectionImpl) l.get(i);
         		  BaseSelectionImpl s2 = (BaseSelectionImpl) s1.copy(currentDocument);
         		  currentProperty.addSelection(s2);
-        		  //System.err.println("ADDING SELECTION: " + s2);
+        		  //logger.info("ADDING SELECTION: " + s2);
         	  }
           }
               currentProperty.setType(type);
@@ -403,7 +405,7 @@ public final class SaxHandler implements DocHandler {
           m.setOrderBy(orderby);
         }
         if (messageStack.isEmpty()) {
-//            System.err.println("Adding to root!");
+//            logger.info("Adding to root!");
             currentDocument.addMessage(m);
         } else {
         	// Don't add definition messages.
@@ -416,7 +418,7 @@ public final class SaxHandler implements DocHandler {
         	}
         }
           messageStack.push(m);
-//        System.err.println("Stack: "+messageStack);
+//        logger.info("Stack: "+messageStack);
     }
 
 
@@ -516,10 +518,10 @@ public final class SaxHandler implements DocHandler {
         while ((c = r.read()) != -1) {
             if (c==quoteCharacter) {
 //                String s = sb.toString();
-//                System.err.println(">> "+s);
+//                logger.info(">> "+s);
                 return attributeBuffer.toString();
             } else {
-//                System.err.println("parsing char:"+(char)c);
+//                logger.info("parsing char:"+(char)c);
             	attributeBuffer.append((char)c);
 //                return sb.toString();
             }

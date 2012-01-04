@@ -5,6 +5,9 @@ import java.text.*;
 import java.util.*;
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.*;
 
 /**
@@ -22,7 +25,9 @@ public final class ClockTime extends NavajoType implements Comparable<ClockTime>
 	 * 
 	 */
 	private static final long serialVersionUID = -1867359996556685730L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ClockTime.class);
 public final static String VERSION = "$Id$";
 	
   //Set the fixed year constants.
@@ -234,7 +239,7 @@ public final static String VERSION = "$Id$";
     // Tests.
 
   ClockTime ck = new ClockTime("12:00:33");
-  System.err.println("ck = " + ck);
+  logger.info("ck = " + ck);
   }
 
   public final int compareTo(ClockTime o) {

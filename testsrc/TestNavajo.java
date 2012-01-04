@@ -16,7 +16,7 @@ import com.dexels.navajo.document.Selection;
 public class TestNavajo extends TestCase {
   NavajoDocumentTestFicture navajodocumenttestfictureInst = new NavajoDocumentTestFicture(this);
   private Navajo testDoc = null;
-
+ 
   public TestNavajo(String s) {
     super(s);
   }

@@ -108,7 +108,7 @@ public abstract class NavajoFactory {
 					sbmode = true;
 				}
 			} catch (Throwable e1) {
-				e1.printStackTrace();
+				logger.error("Error: ", e1);
 			}
 			
 			  if (name == null) {
@@ -121,7 +121,7 @@ public abstract class NavajoFactory {
 					  impl.sandboxMode = sbmode;
 				  }
 				  catch (Exception e) {
-					  e.printStackTrace();
+					  logger.error("Error: ", e);
 				  }
 			  }
 			  
@@ -166,7 +166,7 @@ public abstract class NavajoFactory {
 			  return alt;
 		  }
 		  catch (Exception e) {
-			  e.printStackTrace();
+			  logger.error("Error: ", e);
 			  return null;
 		  }
 	  }
@@ -213,7 +213,7 @@ public abstract class NavajoFactory {
         m.put(key, value);
       }
       else {
-//        System.err.println("--> WARNING: found '" + next +
+//        logger.info("--> WARNING: found '" + next +
 //            "' subtype, this does not appear to be a key=value pair");
       }
     }
@@ -649,12 +649,6 @@ public void fireBinaryFinished(String message, long expectedLength) {
    
 }
 
-public File createStorageHandle() {
-	String handle = "storage_"+Math.random();
-	System.err.println("HANDLE: "+handle);
-	return new File(handle);
-}
-
 public void storeHandle(String name, byte[] data) {
 	binaryStorage.put(name,data);
 }
@@ -725,22 +719,22 @@ public static void main(String[] args){
 
 		n.addMessage(m2);
 
-		System.err.println("=================================== ORIGNAL TML ==============================");
+		logger.info("=================================== ORIGNAL TML ==============================");
 		n.write(System.err);
-		System.err.println("==============================================================================\n\n");
+		logger.info("==============================================================================\n\n");
 		StringWriter sw = new StringWriter();
 		n.writeJSONTypeless(sw);
 		String json = sw.getBuffer().toString();
 		// revert to navajo
-		System.err.println("================================== GENERATED JSON ============================");
-		System.err.println(json);
-//		System.err.println("==============================================================================\n\n");
+		logger.info("==============================logger.infoN ============================");
+		logger.info(json);
+//		logger.info("==============================================================================\n\n");
 //		Navajo x = NavajoFactory.getInstance().createNavajoJSON(new StringReader(json));
-//		System.err.println("================================= RECONSTRUCTED TML ==========================");
+//		logger.info("================================= RECONSTRUCTED TML ==========================");
 //		x.write(System.err);
-//		System.err.println("==============================================================================\n\n");
+//		logger.info("==============================================================================\n\n");
 	}catch(Exception e){
-		e.printStackTrace();
+		logger.error("Error: ", e);
 	}
 	
 }

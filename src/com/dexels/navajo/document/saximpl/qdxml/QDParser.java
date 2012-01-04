@@ -3,6 +3,9 @@ package com.dexels.navajo.document.saximpl.qdxml;
 import java.io.*;
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Quick and Dirty xml parser. This parser is, like the SAX parser, an event
  * based parser, but with much less functionality.
@@ -11,6 +14,9 @@ public class QDParser {
     
     public static final int PUSHBACK_SIZE = 2000;
     
+	private final static Logger logger = LoggerFactory
+			.getLogger(QDParser.class);
+	
     private static int popMode(Stack<Integer> st) {
         if (!st.empty())
             return st.pop().intValue();
@@ -99,7 +105,7 @@ public class QDParser {
             } else if (mode == CDATA) {
                 if (c == '>' && sb.toString().endsWith("]]")) {
                     sb.setLength(sb.length() - 2);
-                    System.err.println("Warning: ignoring cdata!");
+                    logger.info("Warning: ignoring cdata!");
                     // doc.text(sb.toString());
                     sb.setLength(0);
                     mode = popMode(st);
@@ -313,7 +319,7 @@ public class QDParser {
                     tagName = null;
                     attrs = new Hashtable<String,String>();
                     skipWhitespace(r);
-//                    System.err.println("Char: " + (char) nextChar(r));
+//                    logger.info("Char: " + (char) nextChar(r));
                     if (nextChar(r) != '<') {
                         doc.text(r);
 //                        r.unread('<');
@@ -386,7 +392,7 @@ public class QDParser {
 //        for (int i = 0; i < c.length; i++) {
 //            System.err.print(c[i]);
 //        }
-//        System.err.println("<\n");
+//        logger.info("<\n");
 //        r.unread(c);
 //    }
 

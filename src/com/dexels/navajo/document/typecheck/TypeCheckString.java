@@ -2,6 +2,9 @@ package com.dexels.navajo.document.typecheck;
 
 import java.util.regex.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.*;
 
 
@@ -15,6 +18,9 @@ import com.dexels.navajo.document.*;
  */
 
 public class TypeCheckString extends TypeChecker {
+  
+	private final static Logger logger = LoggerFactory
+		.getLogger(TypeCheckString.class);
   public TypeCheckString() {
   }
   public String getType() {
@@ -24,7 +30,7 @@ public class TypeCheckString extends TypeChecker {
   /** @todo check number of invokations... Still seems to be called too often */
 
   public String verify(Property p, String value) throws com.dexels.navajo.document.PropertyTypeException {
-//    System.err.println("Entering string checker: "+value);
+//    logger.info("Entering string checker: "+value);
     if (value==null || "".equals(value)) {
       return value;
     }
@@ -32,11 +38,11 @@ public class TypeCheckString extends TypeChecker {
     String regexp = p.getSubType("regexp");
     if (cap!=null) {
       if ("upper".equals(cap)) {
-//        System.err.println("Upper: "+value.toUpperCase());
+//        logger.info("Upper: "+value.toUpperCase());
         return value.toUpperCase();
       }
       if ("lower".equals(cap)) {
-//        System.err.println("Upper: "+value.toLowerCase());
+//        logger.info("Upper: "+value.toLowerCase());
         return value.toLowerCase();
       }
     }
@@ -64,10 +70,10 @@ public static void main(String[] args) {
 //        Pattern pat = Pattern.compile(regexp);
 //        Matcher mat = pat.matches(regexp, value);
         if (!Pattern.matches(regexp, value)) {
-            System.err.println("Regexp: "+regexp+" failed on: "+value+" with message: "+message+" with oldvalue: -");
+            logger.info("Regexp: "+regexp+" failed on: "+value+" with message: "+message+" with oldvalue: -");
 //            throw new PropertyTypeException(p,message);
         } else {
-            System.err.println("Regexp matches!");
+            logger.info("Regexp matches!");
         }
     }
 

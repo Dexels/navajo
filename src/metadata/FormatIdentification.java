@@ -3,6 +3,9 @@ package metadata;
 import java.io.*;
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Static helper class that tries to identify the file format
  * for a given file or byte array representing the first bytes of a file.
@@ -18,6 +21,9 @@ import java.util.*;
 public class FormatIdentification implements Serializable
 {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(FormatIdentification.class);
 	private static final long serialVersionUID = 7824735272127450235L;
 	private static List<FormatDescription> descriptions;
 	private static int minBufferSize;
@@ -78,7 +84,7 @@ public class FormatIdentification implements Serializable
 		}
 		catch (IOException ioe)
 		{
-			ioe.printStackTrace( System.err );
+			logger.error("Error: ", ioe);
 			return null;
 		}
 		finally
@@ -92,7 +98,7 @@ public class FormatIdentification implements Serializable
 			}
 			catch (IOException ioe)
 			{
-				ioe.printStackTrace( System.err );
+				logger.error("Error: ", ioe);
 			}
 		}
 		return identify(data);
@@ -126,7 +132,7 @@ public class FormatIdentification implements Serializable
 		}
 		catch (Exception e)
 		{
-                  e.printStackTrace(System.err);
+			logger.error("Error: ", e);
 		}
 	}
 
@@ -134,10 +140,10 @@ public class FormatIdentification implements Serializable
 	public static void main(String[] args) {
 		FormatIdentification.init();
 		FormatDescription sd = FormatIdentification.identify(new File("birtreport.xml"));
-		System.err.println("Result: "+sd);
+		logger.info("Result: "+sd);
 		 sd = FormatIdentification.identify(new File("aap.xml"));
-		System.err.println("Result: "+sd);
+		logger.info("Result: "+sd);
 		 sd = FormatIdentification.identify(new File("birtexcel.xml"));
-			System.err.println("Result: "+sd);
+			logger.info("Result: "+sd);
 	}
 }

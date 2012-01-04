@@ -1,4 +1,7 @@
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
@@ -8,7 +11,7 @@ import com.dexels.navajo.document.types.Binary;
 public class NavajoDocumentTestFicture extends java.lang.Object {
 
   public Navajo testDoc;
-
+  private final static Logger logger = LoggerFactory.getLogger(NavajoDocumentTestFicture.class);
   public NavajoDocumentTestFicture(Object obj) {
   }
 
@@ -78,7 +81,7 @@ public class NavajoDocumentTestFicture extends java.lang.Object {
       testDoc.addMessage(msg3);
 
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("Error: ", e);
     }
   }
 

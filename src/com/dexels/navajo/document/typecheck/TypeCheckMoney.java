@@ -1,5 +1,8 @@
 package com.dexels.navajo.document.typecheck;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.*;
 
 /**
@@ -12,6 +15,10 @@ import com.dexels.navajo.document.*;
  */
 
 public class TypeCheckMoney extends TypeChecker {
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TypeCheckMoney.class);
+	
   public TypeCheckMoney() {
   }
   public String getType() {
@@ -51,7 +58,7 @@ public class TypeCheckMoney extends TypeChecker {
       if (p.getSubType()!=null) {
         throw new PropertyTypeException(ex,p,"Not a valid money property!");
       } else {
-        System.err.println("Warning. Ignoring invalid money: "+value+" for property: "+p.getName());
+        logger.info("Warning. Ignoring invalid money: "+value+" for property: "+p.getName());
       }
     }
 

@@ -266,7 +266,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	@SuppressWarnings("deprecation")
 	public final String getValue() {
 		if (myBinary != null) {
-			System.err.println("Do you REALLY want this binary as a string? You really shouldn't..");
+			logger.info("Do you REALLY want this binary as a string? You really shouldn't..");
 			Thread.dumpStack();
 			return myBinary.getBase64();
 		}
@@ -384,7 +384,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		
 		Object first = list.get(0);
 		if(first==null) {
-			System.err.println("Cannot process null values in list or selection");
+			logger.info("Cannot process null values in list or selection");
 			return;
 		}
 		if(first instanceof Selection) {
@@ -409,14 +409,14 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		try {
 			setSelected(values);
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		setType(Property.SELECTION_PROPERTY);
 	
 	}
 	
 	public final Object getEvaluatedValue()  {
-		// System.err.println("Evaluating property: "+getValue());
+		// logger.info("Evaluating property: "+getValue());
 		Operand o;
 		// No evaluator present.
 		if (NavajoFactory.getInstance().getExpressionEvaluator() == null) {
@@ -432,18 +432,12 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 					evaluatedType = o.type;
 					return o.value;
 				} catch (Throwable e) {
-					System.err.println("Exception while evaluating property: " + getFullPropertyName() + " expression: " + getValue());
-
-					// throw(e);
-					 //e.printStackTrace();
+					logger.info("Exception while evaluating property: " + getFullPropertyName() + " expression: " + getValue());
 					return null;
 				}
 
 			} catch (NavajoException ex) {
-				// System.err.println("value problem: "+ex.getMessage());
-
-				ex.printStackTrace();
-				// The expression could not be evaluated. This happens
+				logger.error("Error: ", ex);
 				// sometimes, but
 				// some ui components still want to know the type. This
 				// elaborate construction
@@ -537,7 +531,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		// if (myValue == null && !SELECTION_PROPERTY.equals(getType())) {
 		// return null;
 		// }
-		// System.err.println("MYVALUE: "+myValue);
+		// logger.info("MYVALUE: "+myValue);
 		if (getType().equals(EXPRESSION_PROPERTY)) {
 				if (evaluatedValue == null) {
 					evaluatedValue = getEvaluatedValue();
@@ -570,7 +564,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 				return new Money((Double) null, getSubType());
 			}
 			String val = getValue();
-//			System.err.println("VALUEEEEEE: "+val);
+//			logger.info("VALUEEEEEE: "+val);
 //			String val2 = val.replace(".", "");
 //			String val3 = val2.replace(',', '.');
 			
@@ -580,7 +574,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			try {
 				parse = fn.parse(val);
 			} catch (ParseException e) {
-				//e.printStackTrace();
 				return null;
 			}
 			return new Money(parse.doubleValue(), getSubType());
@@ -591,13 +584,13 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			try {
 				return new ClockTime(getValue(), getSubType());
 			} catch (Exception e) {
-				e.printStackTrace(System.err);
+				logger.error("Error: ", e);
 			}
 		} else if (getType().equals(Property.STOPWATCHTIME_PROPERTY)) {
 			try {
 				return new StopwatchTime(getValue(), getSubType());
 			} catch (Exception e) {
-				e.printStackTrace(System.err);
+				logger.error("Error: ", e);
 			}
 		}
 
@@ -617,7 +610,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 					Date d = dateFormat2.parse(getValue());
 					return d;
 				} catch (Exception ex2) {
-					System.err.println("Sorry I really can't parse that date: " + getValue());
+					logger.info("Sorry I really can't parse that date: " + getValue());
 				}
 			}
 		} else if (getType().equals(Property.INTEGER_PROPERTY)) {
@@ -628,8 +621,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 				// Added a trim. Frank.
 				return new Integer(Integer.parseInt(getValue().trim()));
 			} catch (NumberFormatException ex3) {
-				System.err.println("Numberformat exception...:"+getValue().trim());
-				//ex3.printStackTrace();
+				logger.info("Numberformat exception...:"+getValue().trim());
 				return null;
 			}
 		} else if (getType().equals(Property.LONG_PROPERTY)) {
@@ -640,7 +632,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 				// Added a trim. Frank.
 				return new Long(Long.parseLong(getValue().trim()));
 			} catch (NumberFormatException ex3) {
-				System.err.println("Numberformat exception...");
+				logger.info("Numberformat exception...");
 				return null;
 			}
 		} else if (getType().equals(Property.FLOAT_PROPERTY)) {
@@ -657,7 +649,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			try {
 				d = new Double(Double.parseDouble(w));
 			} catch (NumberFormatException ex) {
-				System.err.println("Can not format double with: " + w);
+				logger.info("Can not format double with: " + w);
 				return null;
 			}
 			return d;
@@ -665,7 +657,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			try {
 				return myBinary;
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 		} else if (getType().equals(Property.SELECTION_PROPERTY)) {
 			List<Selection> all = getAllSelectedSelections();
@@ -742,10 +734,10 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 				in.close();
 				setValue(new Binary(data));
 			} else {
-				System.err.println("-------> setValue(URL) not supported for other property types than BINARY_PROPERTY");
+				logger.info("-------> setValue(URL) not supported for other property types than BINARY_PROPERTY");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		firePropertyChanged(PROPERTY_VALUE, old, getTypedValue());
 	}
@@ -890,7 +882,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	public final void setValue(String value) {
 		String old = getValue();
 		if (BINARY_PROPERTY.equals(getType())) {
-			//System.err.println("Warning: Very deprecated. use setValue(Binary) instead");
+			//logger.info("Warning: Very deprecated. use setValue(Binary) instead");
 			try {
 				if (value != null) {
 					myBinary = new Binary(new StringReader(value));
@@ -898,7 +890,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 					myBinary = null;
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 			return;
 		} 
@@ -959,7 +951,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		try {
 			this.removeAllSelections();
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		for (int i = 0; i < l.length; i++) {
 			this.addSelection(l[i]);
@@ -1003,7 +995,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 					}
 				}
 			}
-			System.err.println("Subtypes: " + sb.toString());
+			logger.info("Subtypes: " + sb.toString());
 			return sb.toString();
 		}
 
@@ -1013,7 +1005,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 		// if (EXPRESSION_PROPERTY.equals(getType())&&
 		// PROPERTY_DESCRIPTION.equals(getName())) {
-		// System.err.println("SETTING VALUE: "+value);
+		// logger.info("SETTING VALUE: "+value);
 		// Thread.dumpStack();
 		// }
 		String value = null;
@@ -1026,14 +1018,14 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		if (value != null) {
 			try {
 				if (getType().equals(SELECTION_PROPERTY)) {
-					// System.err.println("Setting value of selection
+					// logger.info("Setting value of selection
 					// property");
 					setSelectedByValue(value);
 				} else {
 					myValue = value;
 				}
 			} catch (NavajoException ex) {
-				ex.printStackTrace();
+				logger.error("Error: ", ex);
 			}
 		} else {
 			myValue = null;
@@ -1063,7 +1055,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			if (def != null) {
 				return def.getType();
 			} else {
-				// System.err.println("Warning: Property without type. Reverting
+				// logger.info("Warning: Property without type. Reverting
 				// to String type");
 				return STRING_PROPERTY;
 			}
@@ -1137,9 +1129,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		List<Selection> newValue = getAllSelectedSelections();
 
 		boolean isEqual = isEqual(old, newValue);
-//		System.err.println("OLD: "+old);
-//		System.err.println("NEW: "+newValue);
-//		System.err.println("isEqual: "+isEqual);
+//		logger.info("OLD: "+old);
+//		logger.info("NEW: "+newValue);
+//		logger.info("isEqual: "+isEqual);
 		if(!isEqual) { 
 			firePropertyChanged("selection", old,newValue);
 		}
@@ -1204,7 +1196,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		for (int i = 0; i < max; i++) {
 			Selection t = selectionList.get(i);
 			if (t.getName().equals(s.getName())) {
-				// System.err.println("REMOVING SELECTION!");
+				// logger.info("REMOVING SELECTION!");
 				selected = t.isSelected();
 				selectionList.remove(i);
 				max--;
@@ -1271,7 +1263,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		}
 		for (int i = 0; i < selectionList.size(); i++) {
 			Selection current = selectionList.get(i);
-			// System.err.println("CHECKING:::: "+current);
+			// logger.info("CHECKING:::: "+current);
 			if (current != null && current.isSelected()) {
 				return current;
 			}
@@ -1562,7 +1554,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		}
 
 		if ((this.getType() != null && p.getType() != null) && !this.getType().equals(p.getType())) {
-			System.err.println("isEqual() property, types are not equal");
+			logger.info("isEqual() property, types are not equal");
 			return false;
 		}
 
@@ -1615,7 +1607,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 				}
 				return true;
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 				return false;
 			}
 		} else if (p.getType().equals(Property.BINARY_PROPERTY)) {
@@ -1655,7 +1647,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 			boolean result = p.getValue().equals(this.getValue());
 			if (!result) {
-				System.err.println("isEqual() property, values are not equal");
+				logger.info("isEqual() property, values are not equal");
 			}
 			return result;
 		}
@@ -1766,20 +1758,20 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			myPropertyDataListeners = new ArrayList<PropertyChangeListener>();
 		}
 		if(myPropertyDataListeners.contains(p)) {
-			System.err.println("IDENTICAL LISTENER!!!\n"+getFullPropertyName());
+			logger.info("IDENTICAL LISTENER!!!\n"+getFullPropertyName());
 			return;
 		}
 		myPropertyDataListeners.add(p);
-//		System.err.println("Adding: "+p.getClass()+" to: "+getFullPropertyName());
+//		logger.info("Adding: "+p.getClass()+" to: "+getFullPropertyName());
 //		Thread.dumpStack();
 
 		if (myPropertyDataListeners.size() > 5) {
-			System.err.println("Multiple property listeners detected!" + myPropertyDataListeners.size()+" path: "+getFullPropertyName());
-			System.err.println(">>> "+myPropertyDataListeners);
+			logger.info("Multiple property listeners detected!" + myPropertyDataListeners.size()+" path: "+getFullPropertyName());
+			logger.info(">>> "+myPropertyDataListeners);
 		}
 		if (myPropertyDataListeners.size() > 5) {
 //			for (PropertyChangeListener xxp : myPropertyDataListeners) {
-//				System.err.println("Listener: "+xxp);
+//				logger.info("Listener: "+xxp);
 //			}
 		}
 
@@ -1811,7 +1803,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		p2.setType("string");
 		p2.setValue("CHGP12Y");
 
-		System.err.println(m.isEqual(m2));
 	}
 
 	public void setSelected(Selection s, boolean selected) throws NavajoException {
@@ -1838,7 +1829,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 				PropertyChangeListener c = myPropertyDataListeners.get(i);
 				
 				c.propertyChange(new PropertyChangeEvent(this, PROPERTY_VALUE, getTypedValue(), getTypedValue()));
-				// System.err.println("Alpha: PROPERTY DATA CHANGE Fired: " +
+				// logger.info("Alpha: PROPERTY DATA CHANGE Fired: " +
 				// oldValue + " - " +
 				// newValue);
 				// Thread.dumpStack();
