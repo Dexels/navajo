@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.client.NavajoClientFactory;
@@ -22,11 +25,9 @@ public class NavajoContext {
 	private final Map<Navajo, String> myInverseNavajoMap = new HashMap<Navajo, String>();
 	private final Stack<Object> myElementStack = new Stack<Object>();
 	private boolean debugAll;
-	
-//	private static final Logger logger = LoggerFactory.getLogger(NavajoContext.class);
+	private static final Logger logger = LoggerFactory.getLogger(NavajoContext.class);
 
 	public NavajoContext() {
-		//System.err.println("New navajo context");
 	}
 
 
@@ -60,7 +61,7 @@ public class NavajoContext {
 		if(myClient==null) {
 			throw new ClientException(1,-1,"No client has been set up!");
 		}
-		System.err.println("Calling to server: "+myClient.getServerUrl()+" username: "+myClient.getUsername()+" pass: "+myClient.getPassword()+" hash: "+myClient.hashCode());
+		logger.info("Calling to server: "+myClient.getServerUrl()+" username: "+myClient.getUsername()+" pass: "+myClient.getPassword()+" hash: "+myClient.hashCode());
 		if(input==null) {
 			input = NavajoFactory.getInstance().createNavajo();
 		}
@@ -70,15 +71,13 @@ public class NavajoContext {
 			input.addHeader(outHeader);
 		}
 		
-		// TODO Warning should use debugAll
-		System.err.println("BTW: debugAll = "+debugAll);
-		if(true) {
+		if(debugAll) {
 			outHeader.setHeaderAttribute("fullLog", "true");
 		}
 		
 		long time = System.currentTimeMillis();
 		Navajo n = myClient.doSimpleSend(input, service);
-		System.err.println("Send complete!");
+		logger.debug("Send complete!");
 		n.getHeader().setRPCName(service);
 		Navajo old = myNavajoMap.get(service);
 		if(old!=null) {
@@ -87,7 +86,7 @@ public class NavajoContext {
 		myNavajoMap.put(service, n);
 		myInverseNavajoMap.put(n, service);
 		long time2 = System.currentTimeMillis() - time;
-		System.err.println("Call took: "+time2+" millis!");
+		logger.debug("Call took: "+time2+" millis!");
 	}
 
 	public boolean hasNavajo(String name) {
@@ -113,28 +112,28 @@ public class NavajoContext {
 		Object o = myElementStack.peek();
 		if(o instanceof Navajo) {
 			Navajo n = (Navajo)o;
-			System.err.println("Navajo on top:");
+			logger.info("Navajo on top:");
 			try {
 				n.write(System.err);
 			} catch (NavajoException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 		} else
 		if(o instanceof Message) {
-			System.err.println("Message on top: "+((Message)o).getFullMessageName());
+			logger.info("Message on top: "+((Message)o).getFullMessageName());
 		} else
 		if(o instanceof Property) {
 			try {
-				System.err.println("Property on top: "+((Property)o).getFullPropertyName());
+				logger.info("Property on top: "+((Property)o).getFullPropertyName());
 			} catch (NavajoException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 			
 		} else {
 			if(o!=null) {
-				System.err.println("Other object:" + o.getClass());
+				logger.info("Other object:" + o.getClass());
 			} else {
-				System.err.println("Null object on stack!");
+				logger.info("Null object on stack!");
 			}
 		}
 		
@@ -244,12 +243,12 @@ public class NavajoContext {
 		if(property!=null) {
 			myElementStack.push(property);
 		} else {
-			System.err.println("Warning, attempted to push null property!");
+			logger.info("Warning, attempted to push null property!");
 		}
 	}
 	
 
-	public String getDefaultPostman(String serverName, int serverPort,String contextPath) {
+	public String getDefaultPostman(String serverName, int serverPort,String contextPath,String postmanPath) {
 		StringBuffer requestBuffer = new StringBuffer();
 		requestBuffer.append(serverName);
 		if (serverPort > 0) {
@@ -257,16 +256,16 @@ public class NavajoContext {
 			requestBuffer.append(serverPort);
 		}
 		requestBuffer.append(contextPath);
-		requestBuffer.append("/Postman");
+		requestBuffer.append(postmanPath);
 		return requestBuffer.toString();
 	}
-	public void setupClient(String server, String username, String password,String requestServerName,int requestServerPort, String requestContextPath) {
+	public void setupClient(String server, String username, String password,String requestServerName,int requestServerPort, String requestContextPath,String postmanPath) {
 
-		setupClient(server, username, password,requestServerName,requestServerPort,requestContextPath, false);
+		setupClient(server, username, password,requestServerName,requestServerPort,requestContextPath,postmanPath, false);
 	}
 
 	public void setupClient(String server, String username, String password) {
-		setupClient(server,username,password,null,-1,null);
+		setupClient(server,username,password,null,-1,"/Postman",null);
 	}
 	
 	/**
@@ -279,10 +278,10 @@ public class NavajoContext {
 	 * @param requestContextPath
 	 * @param debugAll
 	 */
-	public void setupClient(String server, String username, String password,String requestServerName,int requestServerPort, String requestContextPath,boolean debugAll) {
+	public void setupClient(String server, String username, String password,String requestServerName,int requestServerPort, String requestContextPath, String postmanPath, boolean debugAll) {
 
 		//		Thread.dumpStack();
-		System.err.println("Setupclient: "+server+" user: "+username+" pass: "+password);
+		logger.info("Setupclient: "+server+" user: "+username+" pass: "+password);
 		NavajoClientFactory.resetClient();
 //			NavajoClientFactory.createDefaultClient()
 		 myClient = NavajoClientFactory.getClient();
@@ -296,8 +295,8 @@ public class NavajoContext {
 		}
 		myClient.setPassword(password);
 		if (server == null) {
-			server = getDefaultPostman(requestServerName,requestServerPort,requestContextPath);
-			System.err.println("No server supplied. Creating default server url: "+server);
+			server = getDefaultPostman(requestServerName,requestServerPort,requestContextPath,postmanPath);
+			logger.info("No server supplied. Creating default server url: "+server);
 		}
 		myClient.setServerUrl(server);		
 		myClient.setRetryAttempts(0);
@@ -340,7 +339,7 @@ public class NavajoContext {
 			prop = p.getFullPropertyName();
 			return navajoName+":"+prop;
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 
 		return null;
