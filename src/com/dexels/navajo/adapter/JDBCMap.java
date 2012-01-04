@@ -25,12 +25,14 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.adapter.jdbcbroker.JdbcResourceComponent;
 import com.dexels.navajo.adapter.sqlmap.DatabaseInfo;
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
+import com.dexels.navajo.adapter.sqlmap.SQLBatchUpdateHelper;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Memo;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.NavajoType;
 import com.dexels.navajo.document.types.Percentage;
+import com.dexels.navajo.jdbc.JDBCMappable;
 import com.dexels.navajo.mapping.Debugable;
 import com.dexels.navajo.mapping.DependentResource;
 import com.dexels.navajo.mapping.GenericDependentResource;
@@ -47,7 +49,7 @@ import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.util.AuditLog;
 
 
-public class JDBCMap implements Mappable, HasDependentResources, Debugable {
+public class JDBCMap implements Mappable, HasDependentResources, Debugable, JDBCMappable {
 
   protected final String DEFAULTSRCNAME = "default";
 
@@ -71,15 +73,24 @@ public class JDBCMap implements Mappable, HasDependentResources, Debugable {
   private PreparedStatement statement = null;
   private ArrayList parameters = null;
   private final ArrayList binaryStreamList = new ArrayList();
+  private boolean batchMode = false;
+  private SQLBatchUpdateHelper helper = null;
   
   private String datasource = this.DEFAULTSRCNAME;
   private int connectionId = -1;
   protected Access myAccess;
   public int resultSetIndex = 0;
+  private boolean updateOnly;
+
+private boolean ownContext = false;
 
   
 
-  public Object getParameter(int index) {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#getParameter(int)
+ */
+@Override
+public Object getParameter(int index) {
 	  if(parameters==null) {
 		  return null;
 	  }
@@ -87,7 +98,11 @@ public class JDBCMap implements Mappable, HasDependentResources, Debugable {
   }
   
 
-  public void setDebug(boolean b) {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#setDebug(boolean)
+ */
+@Override
+public void setDebug(boolean b) {
     this.debug = b;
   }
   
@@ -106,28 +121,39 @@ public class JDBCMap implements Mappable, HasDependentResources, Debugable {
 
 
 
-  public void load(Access access) throws MappableException, UserException {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#load(com.dexels.navajo.server.Access)
+ */
+@Override
+public void load(Access access) throws MappableException, UserException {
     myAccess = access;
   }
 
-  public void setDatasource(String s) {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#setDatasource(java.lang.String)
+ */
+@Override
+public void setDatasource(String s) {
     datasource = s;
   }
 
-  /**
-   * Possibility to explictly rollback transactions, by calling kill setKill.
-   * 
-   * @param b
-   */
-  public void setKill(boolean b) {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#setKill(boolean)
+ */
+  @Override
+public void setKill(boolean b) {
 	  if ( b ) {
 		  kill();
 	  }
   }
   
-  public void kill() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#kill()
+ */
+@Override
+public void kill() {
 	  
-//	  try {
+	  try {
 //		  if (autoCommitMap.get(this.datasource) == null) {
 //			  return;
 //		  }
@@ -143,17 +169,24 @@ public class JDBCMap implements Mappable, HasDependentResources, Debugable {
 //	  catch (SQLException sqle) {
 //		  AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, (myAccess != null ? myAccess.accessID : "unknown access") );
 //		  sqle.printStackTrace(Access.getConsoleWriter(myAccess));
-//	  } finally {
-//		  try {
-//			store();
-//		} catch (MappableException e) {
-//		} catch (UserException e) {
-//		}
-//	  }
+	  } finally {
+		  try {
+			store();
+		} catch (MappableException e) {
+		} catch (UserException e) {
+		}
+	  }
   }
 
-  public void store() throws MappableException, UserException {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#store()
+ */
+@Override
+public void store() throws MappableException, UserException {
 	  cleanupBinaryStreams();
+	  if(transactionContext!=-1 && ownContext) {
+		  JdbcResourceComponent.getInstance().deregisterTransaction(transactionContext);
+	  }
   }
 
 //  public void setTransactionIsolationLevel(int j) {
@@ -161,35 +194,59 @@ public class JDBCMap implements Mappable, HasDependentResources, Debugable {
 //  }
 
 
-  public void setTransactionContext(int i) throws UserException {
-
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#setTransactionContext(int)
+ */
+@Override
+public void setTransactionContext(int i) throws UserException {
     if (debug) {
     	Access.writeToConsole(myAccess, "IN SETTRANSACTIONCONTEX(), I = " + i + "\n");
     }
     this.transactionContext = i;
- 
+    this.con = JdbcResourceComponent.getInstance().getJdbc(i);
   }
 
-  public void setRowCount(int i) {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#setRowCount(int)
+ */
+@Override
+public void setRowCount(int i) {
     this.rowCount = i;
   }
 
-  public int getRowCount() throws UserException {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#getRowCount()
+ */
+@Override
+public int getRowCount() throws UserException {
+	System.err.println("QUERY: "+getQuery());
     if (resultSet == null) {
-      getResultSet();
+      resultSet = getResultSet();
     }
     return this.rowCount;
   }
 
-  public void setUpdateCount(int i) {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#setUpdateCount(int)
+ */
+@Override
+public void setUpdateCount(int i) {
     this.updateCount = 0;
   }
 
-  public int getUpdateCount() throws UserException {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#getUpdateCount()
+ */
+@Override
+public int getUpdateCount() throws UserException {
     return (this.updateCount);
   }
 
-  public void setUpdate(final String newUpdate) throws UserException {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#setUpdate(java.lang.String)
+ */
+@Override
+public void setUpdate(final String newUpdate) throws UserException {
     update = newUpdate;
     
     if (debug) {
@@ -202,11 +259,19 @@ public class JDBCMap implements Mappable, HasDependentResources, Debugable {
     parameters = new ArrayList();
   }
 
-  public final void setDoUpdate(final boolean doit) throws UserException {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#setDoUpdate(boolean)
+ */
+@Override
+public final void setDoUpdate(final boolean doit) throws UserException {
     this.getResultSet(true);
   }
 
-  public final Object getColumnName(final Integer index) throws UserException {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#getColumnName(java.lang.Integer)
+ */
+@Override
+public final Object getColumnName(final Integer index) throws UserException {
 
     if (resultSet == null) {
       getResultSet();
@@ -220,13 +285,17 @@ public class JDBCMap implements Mappable, HasDependentResources, Debugable {
 
   }
 
-  public Object getColumnValue(final Integer index) throws UserException {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#getColumnValue(java.lang.Integer)
+ */
+@Override
+public Object getColumnValue(final Integer index) throws UserException {
 
     if (resultSet == null) {
       getResultSet();
     }
     if ( (resultSet == null) || (resultSet.length == 0)) {
-      throw new UserException( -1, "No records found");
+      throw new UserException( -1, "No records found for query: "+getQuery());
     }
 
     ResultSetMap rm = resultSet[resultSetIndex];
@@ -234,7 +303,11 @@ public class JDBCMap implements Mappable, HasDependentResources, Debugable {
 
   }
 
-  public Object getColumnValue(final String columnName) throws UserException {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#getColumnValue(java.lang.String)
+ */
+@Override
+public Object getColumnValue(final String columnName) throws UserException {
     if (resultSet == null) {
       getResultSet();
 
@@ -248,18 +321,21 @@ public class JDBCMap implements Mappable, HasDependentResources, Debugable {
     return rm.getColumnValue(columnName);
   }
   
-  public void setBinaryQuery(Binary b) throws UserException {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#setBinaryQuery(com.dexels.navajo.document.types.Binary)
+ */
+@Override
+public void setBinaryQuery(Binary b) throws UserException {
 	  String query = new String(b.getData());
 	  setQuery(query);
   }
   
 
-  /**
-   * Use this method to define a new query.
-   * All parameters used by a previous query are removed.
-   * replace " characters with ' characters.
-   */
-  public void setQuery(final String newQuery) throws UserException {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#setQuery(java.lang.String)
+ */
+  @Override
+public void setQuery(final String newQuery) throws UserException {
 	  
 	if ( newQuery.indexOf(";") != -1 ) {
 		throw new UserException(-1, "Use of semicolon in query fields is not allowed, maybe you meant to use an update field?");
@@ -275,12 +351,11 @@ public class JDBCMap implements Mappable, HasDependentResources, Debugable {
     parameters = new ArrayList();
   }
 
-  /**
-   * Set multiple parameter using a single string. Parameters MUST be seperated by semicolons (;).
-   *
-   * @param param contains the parameter(s). Multiple parameters are support for string types.
-   */
-  public final void setMultipleParameters(final Object param) {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#setMultipleParameters(java.lang.Object)
+ */
+  @Override
+public final void setMultipleParameters(final Object param) {
     if (debug) {
     	Access.writeToConsole(myAccess, "in setParameters(), param = " + param + " (" +
                          ( (param != null) ? param.getClass().getName() : "") +
@@ -303,12 +378,11 @@ public class JDBCMap implements Mappable, HasDependentResources, Debugable {
     }
   }
 
-  /**
-   * Setting (a single) parameter of a SQL query.
-   *
-   * @param param the parameter.
-   */
-  public void setParameter(final Object param) {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#setParameter(java.lang.Object)
+ */
+  @Override
+public void setParameter(final Object param) {
     if (debug) {
     	Access.writeToConsole(myAccess, "in setParameter(), param = " + param + " (" +
                          ( (param != null) ? param.getClass().getName() : "") +
@@ -387,7 +461,11 @@ public class JDBCMap implements Mappable, HasDependentResources, Debugable {
     }
   }
 
-  public void setKillConnection() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#setKillConnection()
+ */
+@Override
+public void setKillConnection() {
 	  if (con != null) {
 		  try {
 			  // ?
@@ -408,10 +486,11 @@ public class JDBCMap implements Mappable, HasDependentResources, Debugable {
 
 	  if ( transactionContext != -1 ) {
 		 
-    	  con = JdbcResourceComponent.getJdbc(transactionContext);
+    	  con = JdbcResourceComponent.getInstance().getJdbc(transactionContext);
     	   if (con == null) {
     	    	throw new UserException( -1, "Invalid transaction context set: " + transactionContext);
     	    }
+
     	   // Make sure to set connection id.  
     	   this.connectionId = transactionContext;
       }
@@ -423,8 +502,11 @@ public class JDBCMap implements Mappable, HasDependentResources, Debugable {
       }
 
       con = JdbcResourceComponent.getJdbc(datasource).getConnection();
+      this.transactionContext = con.hashCode();
+      this.ownContext  =true;
 //      con = pooledConnection.getConnection();
-     
+      JdbcResourceComponent.getInstance().registerTransaction(con.hashCode(),con);
+	   
       
       if (con == null) {
     		  AuditLog.log("SQLMap",  "Could (still) not connect to database: " + datasource +
@@ -557,11 +639,11 @@ private boolean isLegacyMode() {
 	  }
   }
 
-  /**
-   * NOTE: DO NOT USE THIS METHOD ON LARGE RESULTSETS WITHOUT SETTING ENDINDEX.
-   *
-   */
-  public final ResultSet getDBResultSet(boolean updateOnly) throws SQLException,
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#getDBResultSet(boolean)
+ */
+  @Override
+public final ResultSet getDBResultSet(boolean updateOnly) throws SQLException,
       UserException {
 
     createConnection();
@@ -579,21 +661,21 @@ private boolean isLegacyMode() {
     }
 
     // batch mode?
-//    this.batchMode = updateOnly &&
-//        ( (this.query == null) || (this.query.length() == 0)) && (this.update != null) &&
-//        (this.update.indexOf(SQLBatchUpdateHelper.DELIMITER) > 0);
-//    if (this.batchMode) {
-//      if (this.debug) {
-//    	  Access.writeToConsole(myAccess, this.getClass() +
-//                           ": detected batch mode, trying a batch update\n");
-//      }
-//      this.helper = new SQLBatchUpdateHelper(this.update,
-//                                             this.con, this.parameters,
-//                                             this.debug,this.updateOnly);
-//      this.updateCount = this.helper.getUpdateCount();
-//      this.batchMode = false;
-//      return (this.helper.getResultSet());
-//    }
+    this.batchMode = updateOnly &&
+        ( (this.query == null) || (this.query.length() == 0)) && (this.update != null) &&
+        (this.update.indexOf(SQLBatchUpdateHelper.DELIMITER) > 0);
+    if (this.batchMode) {
+      if (this.debug) {
+    	  Access.writeToConsole(myAccess, this.getClass() +
+                           ": detected batch mode, trying a batch update\n");
+      }
+      this.helper = new SQLBatchUpdateHelper(this.update,
+                                             this.con, this.parameters,
+                                             this.debug,this.updateOnly);
+      this.updateCount = this.helper.getUpdateCount();
+      this.batchMode = false;
+      return (this.helper.getResultSet());
+    }
 
     if (debug) { Access.writeToConsole(myAccess, "BEFORE PREPARESTATEMENT()\n"); }
     
@@ -638,7 +720,7 @@ private boolean isLegacyMode() {
         warning = warning.getNextWarning();
       }
     }
-
+   
     // Set row to startIndex value.
     //rs.setFetchDirection(ResultSet.TYPE_SCROLL_INSENSITIVE);
     //rs.absolute(startIndex);
@@ -647,7 +729,11 @@ private boolean isLegacyMode() {
   }
 
 
-  public ResultSetMap[] getResultSet() throws UserException {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#getResultSet()
+ */
+@Override
+public ResultSetMap[] getResultSet() throws UserException {
 
 	if (resultSet == null) {
       return getResultSet(false);
@@ -656,6 +742,18 @@ private boolean isLegacyMode() {
       return resultSet;
     }
   }
+/**
+ * I use this bugger for the batch updates.
+ * @return
+ */
+public boolean isUpdateOnly() {
+		return updateOnly;
+	}
+
+	public void setUpdateOnly(boolean updateOnly) {
+		this.updateOnly = updateOnly;
+	}
+
 
   protected ResultSetMap[] getResultSet(boolean updateOnly) throws
       UserException {
@@ -690,7 +788,7 @@ private boolean isLegacyMode() {
         try {
 
           while (rs.next()) {
-
+         	   
               ResultSetMap rm = new ResultSetMap();
 
               for (int i = 1; i < (columns + 1); i++) {
@@ -700,7 +798,8 @@ private boolean isLegacyMode() {
 
                 
                 Object value = null;
-                final String strVal = rs.getString(i);
+                final Object strVal = rs.getObject(i);
+//                final String strVal = rs.getString(i);
 
                 if ( (strVal != null && !rs.wasNull()) || type == Types.BLOB) {
                   switch (type) {
@@ -840,6 +939,7 @@ private boolean isLegacyMode() {
         	  Access.writeToConsole(myAccess, 
                 "batch mode did not provide a fully baked result set, sorry.\n");
         	  Access.writeToConsole(myAccess, "SQL exception is '" + e.toString() + "'\n");
+        	  e.printStackTrace();
           }
           if (rs != null) {
         	  rs.close();
@@ -849,10 +949,11 @@ private boolean isLegacyMode() {
 
         }
         if (debug) {
-        	Access.writeToConsole(myAccess, "GOT RESULTSET\n");
+        	Access.writeToConsole(myAccess, "GOT RESULTSET. Size: "+dummy.size()+" indexcounter says: "+index+"\n");
         }
         resultSet = new ResultSetMap[dummy.size()];
         resultSet = (ResultSetMap[]) dummy.toArray(resultSet);
+        rowCount = resultSet.length;
       }
     }
     catch (SQLException sqle) {
@@ -892,11 +993,19 @@ private boolean isLegacyMode() {
     }
   }
 
-  public void setReplaceQueryDoubleQuotes( boolean b ) {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#setReplaceQueryDoubleQuotes(boolean)
+ */
+@Override
+public void setReplaceQueryDoubleQuotes( boolean b ) {
     this.replaceQueryDoubleQuotes = b;
   }
 
-  public String getQuery() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#getQuery()
+ */
+@Override
+public String getQuery() {
     // replace parameters.
     String dbQuery = savedQuery;
     if (this.parameters != null) {
@@ -927,7 +1036,11 @@ private boolean isLegacyMode() {
     }
   }
 
-  public String getDatasource() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#getDatasource()
+ */
+@Override
+public String getDatasource() {
     if (transactionContext != -1) {
       return "See parent map";
     }
@@ -935,19 +1048,27 @@ private boolean isLegacyMode() {
     return datasource;
   }
 
-  public int getConnectionId() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#getConnectionId()
+ */
+@Override
+public int getConnectionId() {
     return connectionId;
   }
 
-  public boolean isAutoCommit() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#isAutoCommit()
+ */
+@Override
+public boolean isAutoCommit() {
     return autoCommit;
   }
   
-  /**
-   * Get all records from resultset as Binary object (x-separated file)
-   * @return
-   */
-  public Binary getRecords() throws UserException {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#getRecords()
+ */
+  @Override
+public Binary getRecords() throws UserException {
 
 	  java.io.File tempFile = null;
 	  ResultSet rs = null;
@@ -1026,32 +1147,72 @@ private boolean isLegacyMode() {
 	  }
   }
 
-  /**
-   * Sets the separator for the Binary CSV (see getRecords())
-   * 
-   * @param s
-   */
-  public void setSeparator(String s) {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#setSeparator(java.lang.String)
+ */
+  @Override
+public void setSeparator(String s) {
 	this.separator = s;  
   }
   
-  /**
-   * controls the inclusion of a header row in the Binary CSV (see getRecords())
-   * @param b
-   */
-  public void setShowHeader(boolean b) {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#setShowHeader(boolean)
+ */
+  @Override
+public void setShowHeader(boolean b) {
 	  this.showHeader = b;
   }
   
-  public DependentResource [] getDependentResourceFields() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#getDependentResourceFields()
+ */
+@Override
+public DependentResource [] getDependentResourceFields() {
 	  return new DependentResource[]{new GenericDependentResource("database", "datasource", AdapterFieldDependency.class), 
 			                         new GenericMultipleDependentResource("sql", "update", SQLFieldDependency.class), 
 			                         new GenericMultipleDependentResource("sql", "query", SQLFieldDependency.class)};
   }
 
-  public boolean getDebug() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.adapter.JDBCMappable#getDebug()
+ */
+@Override
+public boolean getDebug() {
 	  return this.debug;
   }
-  
+
+/**
+ * For interface-compatibility with SQLMap
+ */
+@Override
+public void setUsername(final String s) throws MappableException, UserException {
+	// ignore completely, used fo
+}
+
+// dummy for now
+public int getTransactionContext() {
+	if(con==null) {
+		try {
+			createConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (UserException e) {
+			e.printStackTrace();
+		}
+	}
+	return transactionContext;
+}
+
+
+@Override
+public void setEndIndex(int i) {
+	// TODO Auto-generated method stub
+	
+}
+
+
+public Connection getConnection() {
+	return con;
+}
  
 }

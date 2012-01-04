@@ -344,6 +344,18 @@
             <value name="level" required="false" direction="in"/>
         </values>
     </map>
+    
+    <map>
+        <tagname>access</tagname>
+        <object>com.dexels.navajo.adapter.NavajoAccess</object>
+        <values>
+            <value name="rpcUser" required="false" direction="out"/>
+            <value name="rpcName" required="false" direction="out"/>
+            <value name="rpcOwb" required="false" direction="out"/>
+        </values>
+    </map>
+    
+    
     <!-- Streaming XML adapter for large XML files-->
     <map>
         <tagname>xml</tagname>

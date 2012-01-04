@@ -16,6 +16,7 @@ import java.util.StringTokenizer;
 import org.dexels.grus.DbConnectionBroker;
 
 import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.jdbc.JDBCMappable;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
 import com.dexels.navajo.mapping.compiler.meta.SQLFieldDependency;
@@ -126,7 +127,7 @@ import com.dexels.navajo.events.types.AuditLogEvent;
  *
  */
 
-public class SQLMap implements Mappable, HasDependentResources, Debugable {
+public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, Debugable {
 
   protected final static int INFINITE = -1;
   protected final String USERPWDDELIMITER = "/";
@@ -215,6 +216,10 @@ public class SQLMap implements Mappable, HasDependentResources, Debugable {
 private static Object semaphore = new Object();
   private static boolean initialized = false;
   
+  
+  public SQLMap() {
+	  
+  }
   private void createDataSource(Message body, NavajoConfigInterface config) throws Throwable {
 
     String dataSourceName = body.getName();

@@ -2,8 +2,8 @@ package com.dexels.navajo.functions;
 
 import java.util.ArrayList;
 
-import com.dexels.navajo.adapter.SQLMap;
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
+import com.dexels.navajo.jdbc.JDBCMappable;
 import com.dexels.navajo.parser.TMLExpressionException;
 
 public final class MultipleValueQuery extends SingleValueQuery {
@@ -11,7 +11,7 @@ public final class MultipleValueQuery extends SingleValueQuery {
 	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 
 
-		SQLMap sql = evaluateQuery();
+		JDBCMappable sql = evaluateQuery();
 
 		ArrayList result = new ArrayList();
 		try {

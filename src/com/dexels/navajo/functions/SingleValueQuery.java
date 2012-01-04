@@ -1,6 +1,8 @@
 package com.dexels.navajo.functions;
 
+import com.dexels.navajo.jdbc.JDBCMappable;
 import com.dexels.navajo.parser.*;
+import com.dexels.navajo.adapter.JDBCMap;
 import com.dexels.navajo.adapter.SQLMap;
 import java.util.*;
 
@@ -20,10 +22,15 @@ public class SingleValueQuery extends FunctionInterface {
   public static final String DATASOURCEDELIMITER = ":";
   public static final String USERDELIMITER = "@";
 
-  protected final SQLMap evaluateQuery() throws com.dexels.navajo.parser.TMLExpressionException {
+  protected boolean useJDBCMap() {
+	  return true;
+  }
+  
+  protected final JDBCMappable evaluateQuery() throws com.dexels.navajo.parser.TMLExpressionException {
 
+	  
 	  String query = "";
-	  SQLMap sql = null;
+	  JDBCMappable sql = null;
 
 	  int transactionContext = -1;
 
@@ -49,8 +56,13 @@ public class SingleValueQuery extends FunctionInterface {
 	  int parameterCount = tokens.countTokens() - 1;
 	  if (query.endsWith("?"))
 		  parameterCount++;
+	  if (useJDBCMap()) {
+		  sql = new JDBCMap();
+		
+  	 } else {
+  		  sql = new SQLMap();
 
-	  sql = new SQLMap();
+  	 }
 	  String datasource = "";
 	  String user = "";
 
@@ -76,7 +88,7 @@ public class SingleValueQuery extends FunctionInterface {
 
 		  }
 		  if (transactionContext != -1) {
-			  //System.out.println("SINGLEVALUEQUERY: USING TRANSACTIONCONTEXT: " + transactionContext);
+			  System.out.println("SINGLEVALUEQUERY: USING TRANSACTIONCONTEXT: " + transactionContext);
 			  sql.setTransactionContext(transactionContext);
 		  }
 		  sql.setQuery(query);
@@ -97,8 +109,8 @@ public class SingleValueQuery extends FunctionInterface {
   public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 
 
-	  SQLMap sql = evaluateQuery();
-
+	  JDBCMappable sql = evaluateQuery();
+	  sql.setDebug(true);
 	  Object result = null;
 	  try {
 		  if (sql.getRowCount() > 0) {
