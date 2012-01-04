@@ -23,5 +23,6 @@
 		<module>../com.dexels.navajo.resource.jdbc.mysql</module>
 		<module>../com.dexels.navajo.resource.mongodb</module>
 		<module>../com.dexels.navajo.resource.test</module>
+		<module>../com.dexels.navajo.server.bridged</module>
 	</modules>
 </project>
