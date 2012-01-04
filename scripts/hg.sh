@@ -77,6 +77,17 @@ cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.other.feature /home/cvs/com.dexels.navajo.other.feature
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.other.utilities /home/cvs/NavajoUtilities
 
+#Resource
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.resource.feature /home/cvs/com.dexels.navajo.resource.feature
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.resource /home/cvs/com.dexels.navajo.resource
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.resource.jdbc.h2 /home/cvs/com.dexels.navajo.resource.jdbc.h2
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.resource.jdbc.mysql /home/cvs/com.dexels.navajo.resource.jdbc.mysql
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.resource.jdbc.oracle /home/cvs/com.dexels.navajo.resource.jdbc.oracle
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.resource.mongodb /home/cvs/com.dexels.navajo.resource.mongodb
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.resource.test /home/cvs/com.dexels.navajo.resource.test
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.resource.manager /home/cvs/com.dexels.navajo.resource.manager
+
+
 #Navajo Test
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.test.feature /home/cvs/com.dexels.navajo.test.feature
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.test.remote /home/cvs/NavajoRemoteTestLibrary
