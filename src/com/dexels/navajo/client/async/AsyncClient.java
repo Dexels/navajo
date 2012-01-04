@@ -7,6 +7,8 @@ import java.io.IOException;
 import org.eclipse.jetty.client.ContentExchange;
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.io.Buffer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.document.Header;
@@ -22,14 +24,11 @@ public class AsyncClient {
 
 	private HttpClient client;
 
-	// private final ThreadPoolExecutor executor = (ThreadPoolExecutor)
-	// Executors.newFixedThreadPool(5);
-
 	private String server;
 	private String username;
 	private String password;
 
-//	private NavajoThreadPool myThreadPool;
+	private final static Logger logger = LoggerFactory.getLogger(AsyncClient.class);
 	
 	private int actualCalls = 0;
 	private static AsyncClient instance;
@@ -41,7 +40,7 @@ public class AsyncClient {
 
 	public synchronized void setActualCalls(int actualCalls) {
 		this.actualCalls = actualCalls;
-		System.out.println("Calls now: "+this.actualCalls);
+		logger.debug("Calls now: "+this.actualCalls);
 	}
 
 
@@ -77,7 +76,7 @@ public class AsyncClient {
 		try {
 			client.start();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 
@@ -132,8 +131,7 @@ public class AsyncClient {
 						SchedulerRegistry.getScheduler().submit(onSuccess, false);
 					}
 				} catch (IOException e) {
-					e.printStackTrace();
-				} finally {
+					logger.error("Error: ", e);
 				}
 			}
 
@@ -145,7 +143,7 @@ public class AsyncClient {
 						SchedulerRegistry.getScheduler().submit(onFail, false);
 					}
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error("Error: ", e);
 				} finally {
 					setActualCalls(getActualCalls()-1);
 				}
@@ -203,7 +201,7 @@ public class AsyncClient {
 				try {
 					continuation.onFail(x);
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error("Error: ", e);
 				} finally {
 					setActualCalls(getActualCalls()-1);
 				}
