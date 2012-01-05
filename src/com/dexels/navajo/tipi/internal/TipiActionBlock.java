@@ -3,6 +3,9 @@ package com.dexels.navajo.tipi.internal;
 import java.util.Iterator;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiContext;
@@ -33,7 +36,7 @@ public class TipiActionBlock extends TipiAbstractExecutable {
 	 */
 	private static final long serialVersionUID = -744796253414327618L;
 	private boolean multithread = false;
-
+	private static final Logger logger = LoggerFactory.getLogger(TipiActionBlock.class);
 	public TipiActionBlock(TipiContext tc) {
 		super(tc);
 	}
@@ -64,13 +67,12 @@ public class TipiActionBlock extends TipiAbstractExecutable {
 			// not sure if this is wise
 			setEvent(null);
 		} catch (TipiBreakException ex) {
-			System.err.println("Break encountered!");
 			if (TipiBreakException.BREAK_EVENT == ex.getType()) {
 				throw ex;
 			}
 			return;
 		} catch (Throwable t) {
-			t.printStackTrace();
+			logger.error("Error performing action block",t);
 		}
 	}
 

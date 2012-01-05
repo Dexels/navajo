@@ -66,7 +66,6 @@ public class TipiComponentMethod implements Serializable {
 
 
 	public TipiValue getParameter(String name) {
-		System.err.println("My action: " + myTipiAction);
 		return myTipiAction.getParameter(name);
 	}
 
