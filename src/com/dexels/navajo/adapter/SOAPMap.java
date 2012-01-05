@@ -20,6 +20,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.dexels.utils.Base64;
+
 import com.dexels.navajo.adapter.soapmap.SoapAttachment;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.Mappable;
@@ -27,7 +29,6 @@ import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.util.AuditLog;
-import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 public class SOAPMap implements Mappable {
 

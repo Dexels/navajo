@@ -2,7 +2,6 @@ package com.dexels.navajo.jdbc;
 
 import com.dexels.navajo.adapter.JDBCMap;
 import com.dexels.navajo.adapter.SQLMap;
-import com.sun.corba.se.impl.util.Version;
 
 public class JDBCFactory {
 	
