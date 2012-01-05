@@ -19,7 +19,6 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
-import com.dexels.navajo.client.ResponseListener;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.tipi.swingclient.SwingClient;
@@ -44,8 +43,7 @@ import com.dexels.navajo.tipi.swingclient.SwingClient;
  * @deprecated
  */
 
-public class StandardDialog extends JDialog implements DialogConstants,
-		ResponseListener {
+public class StandardDialog extends JDialog implements DialogConstants {
 
 	private static final long serialVersionUID = 4560643968422875526L;
 
