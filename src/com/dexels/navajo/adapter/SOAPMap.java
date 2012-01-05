@@ -1,9 +1,6 @@
 package com.dexels.navajo.adapter;
 
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.StringWriter;
 import java.net.URL;
 import java.util.ArrayList;
@@ -23,8 +20,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import sun.misc.BASE64Encoder;
-
 import com.dexels.navajo.adapter.soapmap.SoapAttachment;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.Mappable;
@@ -32,6 +27,7 @@ import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.util.AuditLog;
+import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 public class SOAPMap implements Mappable {
 
@@ -164,7 +160,9 @@ public class SOAPMap implements Mappable {
 				
 				if ( username != null && password != null) {
 					MimeHeaders headers= msg.getMimeHeaders();
-					String authorization = new BASE64Encoder().encode( (username + ":" + password).getBytes());
+//					String authorization = new BASE64Encoder().encode( (username + ":" + password).getBytes());
+					String authorization = Base64.encode( (username + ":" + password).getBytes());
+					
 					headers.addHeader("Authorization", "Basic " + authorization);
 				}
 				
