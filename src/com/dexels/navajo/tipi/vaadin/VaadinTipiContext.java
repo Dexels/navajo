@@ -155,9 +155,9 @@ public class VaadinTipiContext extends TipiContext {
 			return new URL(s);
 
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			logger.error("I just don't know",e);
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			logger.error("I just don't know",e);
 		}
 		return null;
 	}
