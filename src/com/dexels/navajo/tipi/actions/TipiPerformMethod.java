@@ -95,10 +95,10 @@ public class TipiPerformMethod extends TipiAction {
 			expirationInterval = ((Integer) expiration.value).intValue();
 		}
 
-		Operand condense = getEvaluatedParameter("condense", event);
-		if (condense != null) {
-			condenseCheck = ((Boolean) condense.value).booleanValue();
-		}
+//		Operand condense = getEvaluatedParameter("condense", event);
+//		if (condense != null) {
+//			condenseCheck = ((Boolean) condense.value).booleanValue();
+//		}
 
 		// /** @todo REWRITE THIS STRANGE CONSTRUCTION. LOOKS OLD. SHOULD BE
 		// MUCH EASIER NOW */
@@ -110,7 +110,7 @@ public class TipiPerformMethod extends TipiAction {
 		if (tipi != null) {
 			evalTipi = (TipiDataComponent) tipi.value;
 		}
-		myContext.getClient().setCondensed(condenseCheck);
+//		myContext.getClient().setCondensed(condenseCheck);
 		if (method == null) {
 			throw new IllegalArgumentException(
 					"Error performing method. Method evaluated to null.");
