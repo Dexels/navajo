@@ -34,15 +34,12 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Collections;
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
 
 import org.dexels.utils.JarResources;
 import org.dexels.utils.MultiClassLoader;
 
-import sun.misc.CompoundEnumeration;
 
 /**
  * This class implements the Navajo Class Loader. It is used to implement re-loadable and hot-loadable Navajo adapter classes
@@ -83,7 +80,6 @@ public class NavajoClassLoader extends MultiClassLoader {
     
     private static int instances = 0;
     
-    @SuppressWarnings("unchecked")
 	private volatile Class myScriptClass = null;
     
     /**
@@ -479,61 +475,6 @@ public class NavajoClassLoader extends MultiClassLoader {
     	return this.getClass().getClassLoader().getResource(name);
     }
 
-    @Override
-    public Enumeration<URL> getResources(String name) throws IOException {
 
-
-    	HashSet<URL> s = new HashSet();
-
-    	if ( jarResources == null || betaJarResources == null ) {
-    		initializeJarResources();
-    	}
-
-    	if (jarResources == null) {
-    		return getParent().getResources(name);
-    	}
-
-    	// If beta classloader first try betaJarResources.
-    	if ( beta ) {
-    		Iterator<JarResources> allResources = betaJarResources.iterator();
-    		while (allResources.hasNext()) {
-
-    			JarResources d = allResources.next();
-
-    			try {
-
-    				URL resource = d.getPathURL(name);
-    				if (resource != null && d.hasResource(name)) {
-    					s.add(resource);
-    				}
-    			}
-    			catch (Exception e) {
-    			}
-    		}
-
-    		return this.getClass().getClassLoader().getResources(name);
-    	} else {
-
-    		Iterator<JarResources> allResources = jarResources.iterator();
-    		while (allResources.hasNext()) {
-
-    			JarResources d = allResources.next();
-
-    			try {
-
-    				URL resource = d.getPathURL(name);
-    				if (resource != null && d.hasResource(name)) {
-    					s.add(resource);
-    				}
-    			}
-    			catch (Exception e) {
-    			}
-    		}
-    	}
-
-    	return new CompoundEnumeration(new Enumeration[]{Collections.enumeration(s), 
-    			                       getClass().getClassLoader().getResources(name)});
-
-    }
 
 }
