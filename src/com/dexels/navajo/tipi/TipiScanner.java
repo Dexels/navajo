@@ -40,52 +40,54 @@ public class TipiScanner {
 	 * @throws FileNotFoundException
 	 */
 	public static void main(String[] args) throws Exception {
-
-		// bindPreload("cancel", "'Annuleren'");
-		// bindPreload("cancel", "'annuleren'");
-		// bindPreload("do_cancel", "'annuleer'");
-		// bindPreload("close_screen", "'sluit scherm'");
-		// bindPreload("change", "'wijzigen'");
-		// bindPreload("save", "'Opslaan'");
-		// bindPreload("save", "'opslaan'");
-		// bindPreload("close", "'sluiten'");
-		// bindPreload("add", "'voeg toe'");
-		// bindPreload("search", "'zoek'");
-		// bindPreload("export", "'exporteren'");
-		// bindPreload("help", "'Help'");
-		// bindPreload("dash", "'-'");
-		//
-		// bindPreload("ok", "'Ok'");
-		// bindPreload("ok", "'ok'");
-
-		dumpCurrent("c:/tipi_preload", "nl", ".properties");
-
-		// preloadSet.addAll(revResults.keySet());
+		File base = new File("../SportlinkClub/");
+		
+		 preloadSet.addAll(revResults.keySet());
 
 		System.err.println("preload: " + preloadSet);
 
 		boolean rewriteSource = false;
 
-		// File f = new
-		// File("c:/projects/SportlinkClubStudio/tipi/activityFrame.xml");
-		File folder = new File("c:/projecten/SportlinkClubStudio/tipi");
+		File folder = new File(base,"tipi");
 		scanFolder(folder, rewriteSource);
-		// scanFile(f);
-
-		// for (Iterator iter = results.keySet().iterator(); iter.hasNext();) {
-		// String element = (String) iter.next();
-		// System.err.println("Result: "+element+" results:
-		// "+results.get(element));
-		// }
 
 		System.err.println("Size: " + results.size() + " conflicts: "
 				+ conflictcount);
-		dumpCurrent("c:/projecten/SportlinkClubStudio/lang/tipi_lang", "nl", "");
+		String outputFile = "lang/tipi_lang";
+		dumpCurrent(base,outputFile, "nl", "");
 	}
 
-	private static void dumpCurrent(String filename, String locale,
+	private static void createPreload(File base) throws IOException {
+		bindPreload("cancel", "'Annuleren'");
+		 bindPreload("cancel", "'annuleren'");
+		 bindPreload("do_cancel", "'annuleer'");
+		 bindPreload("close_screen", "'sluit scherm'");
+		 bindPreload("change", "'wijzigen'");
+		 bindPreload("save", "'Opslaan'");
+		 bindPreload("save", "'opslaan'");
+		 bindPreload("close", "'sluiten'");
+		 bindPreload("add", "'voeg toe'");
+		 bindPreload("search", "'zoek'");
+		 bindPreload("export", "'exporteren'");
+		 bindPreload("help", "'Help'");
+		 bindPreload("dash", "'-'");
+		
+		 bindPreload("ok", "'Ok'");
+		 bindPreload("ok", "'ok'");
+
+			File dest = new File(base,"lang/");
+			if(!dest.exists()) {
+				dest.mkdirs();
+			}
+
+		 
+		dumpCurrent(base,"lang/tipi_preload", "nl", ".properties");
+	}
+
+	private static void dumpCurrent(File base, String filename, String locale,
 			String extension) throws IOException {
-		FileWriter fw = new FileWriter(filename + "_" + locale + ".properties");
+		File output = new File(base,filename + "_" + locale + ".properties");
+		FileWriter fw = new FileWriter(output);
 		Set<String> s = results.keySet();
 		SortedSet<String> ss = new TreeSet<String>(s);
 		for (Iterator<String> iter = ss.iterator(); iter.hasNext();) {
@@ -98,7 +100,8 @@ public class TipiScanner {
 		fw.flush();
 		fw.close();
 
-		fw = new FileWriter(filename + "_usage_" + locale + ".csv");
+		File usageFile = new File(base,filename + "_usage_" + locale + ".csv");
+		fw = new FileWriter(usageFile);
 		s = usageMap.keySet();
 		ss = new TreeSet<String>(s);
 		System.err.println("Writing: " + ss.size());
@@ -106,7 +109,7 @@ public class TipiScanner {
 
 			String element = iter.next();
 			String label = revResults.get(element);
-			fw.write(label + "\t" + element.substring(1, element.length() - 1)
+			fw.write(label + "\t" + stripQuotes(element)
 					+ "\t" + writeList(usageMap.get(element)) + "\n");
 			System.err.println("Result: " + element + " results: "
 					+ results.get(element));
@@ -114,34 +117,44 @@ public class TipiScanner {
 		fw.flush();
 		fw.close();
 
-		fw = new FileWriter(filename + "_all_" + locale + ".properties");
+		File allFile = new File(base,filename + "_all_" + locale + ".properties");
+
+		fw = new FileWriter(allFile);
 		// s = all.keySet();
 		Collections.sort(totalStrings);
 		for (Iterator<String> iter = totalStrings.iterator(); iter.hasNext();) {
 
 			String element = iter.next();
 			// strip quotes
-			fw.write(element.substring(1, element.length() - 1) + "\n");
+			fw.write(stripQuotes(element) + "\n");
 		}
 		fw.flush();
 		fw.close();
 
-		//
-		//
-		// fw = new FileWriter(filename + "_" + locale + ".sql");
-		// for (Iterator<String> iter = ss.iterator(); iter.hasNext();) {
-		//
-		// String element = iter.next();
-		// String line =
-		// "INSERT INTO propertydescription (descriptionid,locale,name,objectid,objecttype,description,lastupdate,updateby,context,sublocale) VALUES ( propertydescription_seq.nextval, 'nl', '"
-		// + element + "', null, null, " + results.get(element) +
-		// ", sysdate, 'SLCASPUSER','tipi','club' );";
-		// fw.write(line + "\n");
-		//
-		// }
-		// fw.flush();
-		// fw.close();
+		
+		
+		 File sqlFile = new File(base,filename + "_" + locale + ".sql");
+		fw = new FileWriter(sqlFile);
+		 for (Iterator<String> iter = ss.iterator(); iter.hasNext();) {
+		
+		 String element = iter.next();
+		 String line =
+		 "INSERT INTO propertydescription (descriptionid,locale,name,objectid,objecttype,description,lastupdate,updateby,context,sublocale) VALUES ( propertydescription_seq.nextval, 'nl', '"
+		 + element + "', null, null, " + results.get(element) +
+		 ", sysdate, 'SLCASPUSER','tipi','club' );";
+		 fw.write(line + "\n");
+		
+		 }
+		 fw.flush();
+		 fw.close();
 
+	}
+
+	private static String stripQuotes(String element) {
+		if(element.startsWith("'")) {
+			return element.substring(1, element.length() - 1);
+		}
+		return element;
 	}
 
 	private static String writeList(List<String> list) {
@@ -247,7 +260,9 @@ public class TipiScanner {
 				if (revResults.containsKey(value) || preloadSet.contains(value)) {
 					System.err.println("Already found: " + value);
 					usageMap.get(value).add(filename);
-					xe.setAttribute(key, "{label:/" + revResults.get(value)
+					String revRes = revResults.get(value);
+
+					xe.setAttribute(key, "{label:/" + revRes
 							+ "}");
 				} else {
 					ArrayList<String> usageList = new ArrayList<String>();
