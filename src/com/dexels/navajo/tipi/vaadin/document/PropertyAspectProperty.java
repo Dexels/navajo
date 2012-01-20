@@ -5,6 +5,7 @@ import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.notifier.SerializablePropertyChangeListener;
 import com.vaadin.data.Property;
 
@@ -74,6 +75,17 @@ public class PropertyAspectProperty implements Property, Property.ValueChangeNot
 
 	@Override
 	public Class<?> getType() {
+		if(com.dexels.navajo.document.Property.PROPERTY_VALUE.equals(propertyAspect)) {
+			if(src.getType()==null) {
+				return String.class;
+			}
+			Class<?> javaType = NavajoFactory.getInstance().getJavaType(src.getType());
+			if(javaType==null) {
+				return String.class;
+			}
+			return javaType;
+		}
+
 		return String.class;
 	}
 
