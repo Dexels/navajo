@@ -40,7 +40,7 @@ public class TmlTableFieldFactory extends DefaultFieldFactory {
 		// ShirtNumber
 		Field createdField = super.createField(container, itemId, propertyId,
 				uiContext);
-		createdField.setWidth(null);
+		createdField.setWidth("250px");
 		createdField.setCaption("");
 		if (size != null) {
 			// System.err.println("Setting size: "+size);
