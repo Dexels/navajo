@@ -21,10 +21,22 @@ AS
       FROM   navajoaccess
       WHERE  TRUNC( created ) < TRUNC( SYSDATE - 7 )
       ;
+   
+   CURSOR asynclog_cur
+   IS SELECT access_id, ref_id
+      FROM   navajoasync
+      WHERE  TRUNC( created ) < TRUNC( SYSDATE - 7 );
+
+   TYPE navajoasync_rec IS RECORD (
+      access_id navajoasync.access_id%TYPE;
+      ref_id navajoasync.access_id%TYPE;
+   );
 
    TYPE accessidlist_type IS TABLE OF navajoaccess.access_id%TYPE;
+   TYPE navajoasynclist_type IS TABLE OF navajoasync_rec;
 
    accessid_list   accessidlist_type;
+   navajoasync_list navajoasynclist_type;
 
    l_count   NUMBER    := 0;
    i         NUMBER    := 0;
@@ -38,6 +50,11 @@ BEGIN
    BULK COLLECT INTO accessid_list;
 
    CLOSE accessid_cur;
+
+   OPEN asynclog_cur;
+   FETCH asynclog_cur
+   BULK COLLECT INTO navajoasync_list;
+   CLOSE asynclog_cur;
 
    IF ( accessid_list.FIRST IS NULL ) THEN
      deletecount := 0;
@@ -85,10 +102,10 @@ BEGIN
    -- empty the navajoasync table
    l_count := 0;
 
-   FOR i IN accessid_list.FIRST .. accessid_list.LAST LOOP
+   FOR i IN navajoasync_list.FIRST .. navajoasync_list.LAST LOOP
 
      DELETE FROM navajoasync
-     WHERE       access_id = accessid_list(i)
+     WHERE       access_id = navajoasync_list(i).access_id AND ref_id = navajoasync_list(i).ref_id
      ;
 
      l_count := l_count + 1;
