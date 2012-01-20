@@ -20,7 +20,7 @@ public class GlobalReference extends FunctionInterface {
 	}
 
 	public String usage() {
-		return "GlobalReference('name')";
+		return "GlobalReference(context,'name')";
 	}
 
 	public Object evaluate() throws TMLExpressionException {
