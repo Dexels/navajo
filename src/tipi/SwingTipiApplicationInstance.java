@@ -15,6 +15,8 @@ import javax.swing.JFrame;
 import javax.swing.RootPaneContainer;
 
 import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import tipipackage.ITipiExtensionContainer;
 
@@ -46,6 +48,8 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance im
 
 	private File tipiInstallationFolder = null;
 	private final Map<String,String> systemProperties = new HashMap<String, String>();
+	
+	private final static Logger logger = LoggerFactory.getLogger(SwingTipiApplicationInstance.class);
 	
 	public SwingTipiApplicationInstance(String definition,
 			String definitionPath, List<String> args, TipiApplet appletRoot,
@@ -205,6 +209,11 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance im
 	public Locale getLocale() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void close() {
+		logger.warn("Close requested in SwingTipiApplication instance. (but ignored");
 	}
 
 }
