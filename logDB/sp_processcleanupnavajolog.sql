@@ -1,15 +1,3 @@
-/*==============================================================*/
-/* Database name:  sportlink22					*/
-/* DBMS name:	   ORACLE Version 9i				*/
-/* Created on:	   2004/03/12					*/
-/* Description:	   Cleans up navajolog (everything older than 1 week) */
-/*		   DOES NOT INCLUDE KNVB-DISTRICT-BETAALD	*/
-/*==============================================================*/
-
---
--- $Id$
---
-
 SET SERVEROUTPUT ON
 
 CREATE OR REPLACE PROCEDURE sp_processcleanupnavajolog(
@@ -19,8 +7,7 @@ AS
    CURSOR accessid_cur
    IS SELECT access_id
       FROM   navajoaccess
-      WHERE  TRUNC( created ) < TRUNC( SYSDATE - 7 )
-      ;
+      WHERE  TRUNC( created ) < TRUNC( SYSDATE - 7 );
    
    CURSOR asynclog_cur
    IS SELECT access_id, ref_id
@@ -28,14 +15,16 @@ AS
       WHERE  TRUNC( created ) < TRUNC( SYSDATE - 7 );
 
    TYPE navajoasync_rec IS RECORD (
-      access_id navajoasync.access_id%TYPE;
-      ref_id navajoasync.access_id%TYPE;
+      access_id VARCHAR2(128),
+      ref_id    VARCHAR2(128)
    );
 
    TYPE accessidlist_type IS TABLE OF navajoaccess.access_id%TYPE;
+   
    TYPE navajoasynclist_type IS TABLE OF navajoasync_rec;
 
    accessid_list   accessidlist_type;
+   
    navajoasync_list navajoasynclist_type;
 
    l_count   NUMBER    := 0;
