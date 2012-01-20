@@ -16,7 +16,7 @@
 			</fileset>
 		</copy>
 		<copy todir="WEB-INF/lib" overwrite="true">
-			<fileset dir="${exportPath}eclipse/plugins">
+			<fileset dir="servletbridge">
 				<include name="org.eclipse.equinox.servletbridge_*" />
 			</fileset>
 		</copy>
@@ -45,11 +45,11 @@
 
 	<target name="publish" depends="archive">
 		<copy file="TipiVaadin.war" tofile="${deployPath}/knvb#test#oao.war" />
-		<copy file="TipiVaadin.war" tofile="${deployPath}/knhb#test#oao.war" />
+		<!--			<copy file="TipiVaadin.war" tofile="${deployPath}/knhb#test#oao.war" />
 		<copy file="TipiVaadin.war" tofile="${deployPath}/knkv#test#oao.war" />
 		<copy file="TipiVaadin.war" tofile="${deployPath}/nhvdwf.war" />
 
-		<!--		<delete verbose="true" dir="/Users/frank/Desktop/dump8/eclipse">
+			<delete verbose="true" dir="/Users/frank/Desktop/dump8/eclipse">
 		</delete>-->
 	</target>
 

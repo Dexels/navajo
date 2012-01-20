@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Tipi Vaadin" uid="com.dexels.navajo.tipi.vaadin" application="org.eclipse.ui.ide.workbench" version="1.0.1" useFeatures="false" includeLaunchers="false">
+<product name="Tipi Vaadin" uid="com.dexels.navajo.tipi.vaadin" application="org.eclipse.ui.ide.workbench" version="1.1.0" useFeatures="false" includeLaunchers="false">
 
    <configIni use="default">
    </configIni>
@@ -71,7 +71,7 @@
       <plugin id="com.dexels.navajo.function" autoStart="true" startLevel="4" />
       <plugin id="com.dexels.navajo.tipi" autoStart="true" startLevel="4" />
       <plugin id="com.dexels.navajo.tipi.vaadin" autoStart="true" startLevel="4" />
-      <plugin id="com.dexels.navajo.tipi.vaadin.bridged" autoStart="true" startLevel="4" />
+      <plugin id="com.dexels.navajo.tipi.vaadin.bridged" autoStart="false" startLevel="0" />
       <plugin id="com.dexels.navajo.version" autoStart="true" startLevel="3" />
       <plugin id="com.vaadin" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="3" />
