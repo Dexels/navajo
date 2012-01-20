@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import navajo.ExtensionDefinition;
 
 import com.dexels.navajo.tipi.TipiComponent;
@@ -30,7 +33,10 @@ public class TipiActionManager implements Serializable, IActionManager {
 	
 	private static final long serialVersionUID = -1280464136835192795L;
 	private final Map<String, TipiActionFactory> actionFactoryMap = new HashMap<String, TipiActionFactory>();
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiActionManager.class);
+	
 	public TipiActionManager() {
 	}
 
@@ -49,6 +55,7 @@ public class TipiActionManager implements Serializable, IActionManager {
 	 */
 	@Override
 	public TipiActionFactory getActionFactory(String name) throws TipiException {
+		logger.info("Looking for action: {}",name);
 		TipiActionFactory taf = actionFactoryMap.get(name);
 		if (taf == null) {
 			throw new TipiException("No action defined with name: " + name);
@@ -67,6 +74,9 @@ public class TipiActionManager implements Serializable, IActionManager {
 			name = instance.getName();
 		}
 		TipiActionFactory taf = getActionFactory(name);
+		if(taf==null) {
+			logger.warn("Missing action factory for action: {}",name);
+		}
 		return taf.instantateAction(instance, tc, parentExe);
 	}
 
