@@ -2,6 +2,10 @@ package com.dexels.navajo.tipi.vaadin.components;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Selection;
@@ -54,7 +58,8 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 	private int memoColumnCount = 40;
 	private int memoRowCount = 5;
 	private ValuePropertyBridge currentDataSource;
-	
+    private final List<TipiEventListener> myListeners = new ArrayList<TipiEventListener>();
+
 	@Override
 	public Object createContainer() {
 		container = new HorizontalLayout();
@@ -72,7 +77,9 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 
 	@Override
 	public void addTipiEventListener(TipiEventListener listener) {
-		
+        if (listener == null) {
+        }
+        myListeners.add(listener);
 	}
 
 	@Override
@@ -108,9 +115,44 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 		if(this.width!=null) {
 			value.setWidth(this.width, Sizeable.UNITS_PIXELS);
 		}
-
+		value.addStyleName("tipi-property-direction-"+p.getDirection());
+		value.addStyleName("tipi-property-type-"+p.getType());
 			//		value.setCaption("Caption: "+p.getDescription());
 	}
+	
+//	public final void firePropertyEvents(Property p, String eventType) {
+//		for (int i = 0; i < myPropertyEventListeners.size(); i++) {
+//			PropertyEventListener current = myPropertyEventListeners.get(i);
+//			current.propertyEventFired(p, eventType);
+//		}
+//	}
+    public void propertyEventFired(com.dexels.navajo.document.Property p, String eventType) {
+        try {
+            Map m = new HashMap();
+            m.put("propertyName", property.getFullPropertyName());
+            m.put("propertyValue", property.getTypedValue());
+            m.put("propertyType", property.getType());
+            m.put("propertyLength", new Integer(property.getLength()));
+            for (int i = 0; i < myListeners.size(); i++) {
+                TipiEventListener tel = (TipiEventListener) myListeners.get(i);
+                tel.performTipiEvent(eventType, m, false);
+            }
+            if (p == null) {
+                return;
+            }
+            if (p != property) {
+                System.err.println("Mysterious anomaly: Property of event is not the loaded property");
+                return;
+            }
+            System.err.println("PRoperty event firing: "+eventType+" prop: "+p.getFullPropertyName());
+            performTipiEvent(eventType, m, false);
+            // }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+	
 	protected void refreshPropertyValue() {
 		if(this.property==null) {
 			clearPropertyValue();
@@ -130,7 +172,9 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 		if(com.dexels.navajo.document.Property.SELECTION_PROPERTY.equals(property.getType())) {
 			// create selection property
 			try {
-				createSelectionProperty();
+				createSelectionProperty();		
+				value.addStyleName("tipi-property-cardinality-"+this.property.getCardinality());
+
 			} catch (NavajoException e) {
 				e.printStackTrace();
 			}
@@ -163,6 +207,17 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 		DateField df = new DateField(currentDataSource);
 		df.setDateFormat("dd-MM-yyyy");
 		df.setImmediate(true);
+		df.addListener(new Property.ValueChangeListener() {
+			
+			private static final long serialVersionUID = 855107266996731677L;
+
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				propertyEventFired(property, "onValueChanged");
+				
+			}
+		});
+
 		value = df;
 		addPropertyComponent(df);
 		container.addComponent(df);
@@ -172,6 +227,16 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 		CheckBox df = new CheckBox("",currentDataSource);
 		df.setImmediate(true);
 		value = df;
+		df.addListener(new Property.ValueChangeListener() {
+			
+			private static final long serialVersionUID = 855107266996731677L;
+
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				propertyEventFired(property, "onValueChanged");
+				
+			}
+		});
 		addPropertyComponent(df);
 		container.addComponent(df);
 	}
@@ -209,6 +274,8 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 			@Override
 			public void containerPropertySetChange(PropertySetChangeEvent event) {
 				System.err.println("CHAAAANGE");
+				propertyEventFired(property, "onValueChanged");
+
 			}
 		});
 	}
@@ -232,6 +299,7 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 				public void propertyChange(PropertyChangeEvent pce) {
 					if(pce.getPropertyName().equals("selection")) {
 						System.err.println("Selection changed!");
+						propertyEventFired(property, "onValueChanged");
 					}
 				}
 			});
@@ -298,6 +366,7 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 			public void textChange(TextChangeEvent event) {
 				TipiProperty.this.property.setAnyValue(q.getValue());
 				System.err.println("Property value changed: " + q.getValue());
+				propertyEventFired(property, "onValueChanged");
 			}
 		});
 		addPropertyComponent(value);
