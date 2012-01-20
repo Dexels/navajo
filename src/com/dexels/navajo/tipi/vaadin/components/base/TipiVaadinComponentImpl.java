@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi.vaadin.components.base;
 import org.vaadin.peter.contextmenu.ContextMenu;
 
 import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
+import com.dexels.navajo.tipi.tipixml.XMLElement;
 import com.dexels.navajo.tipi.vaadin.VaadinTipiContext;
 import com.vaadin.Application;
 import com.vaadin.terminal.Resource;
@@ -18,8 +19,6 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 	private static final long serialVersionUID = -304628775000480212L;
 	protected ComponentContainer layoutComponent;
 	
-	
-	
 	@Override
 	public void setContainer(Object c) {
 		super.setContainer(c);
@@ -29,6 +28,18 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 		Component comp = getVaadinContainer();
 		comp.setDebugId(getPath());
 	}
+
+	
+	@Override
+	public void initBeforeBuildingChildren(XMLElement instance,
+			XMLElement classdef, XMLElement definition) {
+		super.initBeforeBuildingChildren(instance, classdef, definition);
+		Component comp = getVaadinContainer();
+		if(comp!=null) {
+			comp.addStyleName("tipi-"+getComponentType());
+		}
+	}
+
 
 	@Override
 	public void setContainerLayout(Object layout) {
@@ -154,7 +165,12 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 	}
 	
 	public Component getVaadinContainer() {
-		return (Component) getContainer();
+		Object o = getContainer();
+		if(o instanceof Component) {
+			return (Component) getContainer();
+		} else {
+			return null;
+		}
 	}
 
 	public Component getActualVaadinComponent() {
