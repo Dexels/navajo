@@ -6,41 +6,10 @@
 	
 	<property name="deployPath" value="/Library/apache-tomcat-7.0.16/webapps"/>
 	
-	<target name="downloadproduct" depends="clean">
-		<copy todir="work/" overwrite="true">
-			<fileset dir="../NavajoServer/sample/Server">
-				<include name="**/*" />
-			</fileset>
-		</copy>
-		<copy todir="work/WEB-INF" overwrite="true">
-			<fileset dir="/Users/frank/Desktop/dump9/">
-				<include name="eclipse/configuration/**" />
-				<include name="eclipse/plugins/**" />
-			</fileset>
-		</copy>
-		<copy todir="work/WEB-INF/lib" overwrite="true">
-			<fileset dir="nonosgi">
-				<include name="*.jar" />
-			</fileset>
-		</copy>
-
-		<copy todir="work/WEB-INF/eclipse" overwrite="true">
-			<fileset dir=".">
-				<include name="launch.ini" />
-			</fileset>
-		</copy>
-
-		<copy todir="work/WEB-INF" overwrite="true">
-			<fileset dir=".">
-				<include name="web.xml" />
-			</fileset>
-		</copy>
-	</target>
-
-	<target name="archive" description="description" depends="downloadproduct">
+	<target name="archive" description="description" >
 		<war destfile="NavajoOsgi.war">
-			<fileset dir="work">
-				<include name="**/*" />
+			<fileset dir=".">
+				<include name="WEB-INF/**" />
 			</fileset>
 		</war>
 
