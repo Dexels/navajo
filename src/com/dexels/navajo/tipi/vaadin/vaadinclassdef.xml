@@ -842,6 +842,7 @@
 			Make sure this expression is context insensitive.
     </description>
 		<param name="binary" type="binary" />
+		<param name="newWindow" type="boolean" />
 	</tipiaction>
 
 	<tipiaction name="openBrowser" class="TipiOpenBrowser" package="com.dexels.navajo.tipi.vaadin.actions">
@@ -849,6 +850,7 @@
 			Open a native browser with the supplied url.
 		</description>
 		<param name="url" type="string" required="true" />
+		<param name="newWindow" type="boolean" />
 	</tipiaction>
 
    <tipiaction name="showQuestion" class="TipiShowQuestion" package="com.dexels.navajo.tipi.vaadin.actions">
