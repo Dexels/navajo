@@ -35,9 +35,22 @@ public class TipiOpenBrowser extends TipiVaadinActionImpl {
      */
     protected void execute(TipiEvent event) throws TipiBreakException, TipiException {
         Object url  = getEvaluatedParameterValue("url", event);
-        try {
+		Object newWindow = getEvaluatedParameterValue("newWindow",
+				event);
+		boolean openNewWindow = true;
+
+		if(newWindow!=null && (newWindow instanceof Boolean)) {
+			openNewWindow =  ((Boolean)newWindow).booleanValue();
+			
+		}
+		try {
 			URL u = new URL(""+url);
-			getApplication().getMainWindow().open(new ExternalResource(u),"_blank");
+			if (openNewWindow) {
+				getApplication().getMainWindow().open(new ExternalResource(u),"_blank");
+			} else {
+				getApplication().getMainWindow().open(new ExternalResource(u));
+
+			}
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 			// ... so u might be a file:
@@ -45,7 +58,11 @@ public class TipiOpenBrowser extends TipiVaadinActionImpl {
 			File fil = new File(base,""+url);
 			if(fil.exists()) {
 				final FileResource fr = new FileResource(fil,getApplication());
-				getApplication().getMainWindow().open(fr,"_blank");
+				if (openNewWindow) {
+					getApplication().getMainWindow().open(fr,"_blank");
+				} else {
+					getApplication().getMainWindow().open(fr);
+				}
 			}
 		}
     }

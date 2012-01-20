@@ -33,6 +33,13 @@ public class TipiOpenBinary extends TipiVaadinActionImpl {
 			TipiException {
 		Object evaluatedParameterValue = getEvaluatedParameterValue("binary",
 				event);
+		Object newWindow = getEvaluatedParameterValue("newWindow",
+				event);
+		boolean openNewWindow = true;
+		if(newWindow!=null && (newWindow instanceof Boolean)) {
+			openNewWindow =  ((Boolean)newWindow).booleanValue();
+			
+		}
 		Binary bb = null;
 		if (evaluatedParameterValue instanceof Binary) {
 			bb = (Binary) evaluatedParameterValue;
@@ -64,7 +71,11 @@ public class TipiOpenBinary extends TipiVaadinActionImpl {
 			}
 		};
 		StreamResource sr = new StreamResource( ss, "file."+b.getExtension(), getApplication());
-		getApplication().getMainWindow().open(sr,"_blank");
+		if(openNewWindow) {
+			getApplication().getMainWindow().open(sr,"_blank");
+		} else {
+			getApplication().getMainWindow().open(sr);
+		}
 
 	}
 }
