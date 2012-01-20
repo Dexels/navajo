@@ -65,7 +65,7 @@ public class VaadinTipiContext extends TipiContext {
 	public void exit() {
 		super.exit();
 // TODO FIX
-//		getVaadinApplication().close();
+		getVaadinApplication().close();
 	}
 
 
