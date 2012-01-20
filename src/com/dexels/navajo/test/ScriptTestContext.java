@@ -9,7 +9,6 @@ import java.util.ResourceBundle;
 
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.ClientInterface;
-import com.dexels.navajo.client.NavajoClient;
 import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
@@ -63,7 +62,7 @@ public class ScriptTestContext  {
 		}
 		
 		ClientInterface c = NavajoClientFactory.getClient();
-		c.setLoadBalancingMode(NavajoClient.LBMODE_MANUAL);
+		c.setLoadBalancingMode(ClientInterface.LBMODE_MANUAL);
 		setupClient(c, altProfile);			  
 	//	Navajo result = c.doSimpleSend(input,"", script,"","",-1,false,false);
 		Navajo result = c.doSimpleSend(input,script);
