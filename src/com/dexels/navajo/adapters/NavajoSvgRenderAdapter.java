@@ -5,27 +5,17 @@ import java.io.*;
 import org.apache.batik.transcoder.*;
 import org.apache.batik.transcoder.image.*;
 import org.apache.fop.svg.PDFTranscoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 //import org.apache.fop.svg.*;
 
 import com.dexels.navajo.document.types.*;
 
 public class NavajoSvgRenderAdapter {
 
-	/**
-	 * @param args
-	 * @throws TranscoderException 
-	 * @throws IOException 
-	 */
-//	public static void main(String[] args) throws TranscoderException, IOException {
-//        FileInputStream fis = new FileInputStream("output.svg");
-//        OutputStream ostream = new FileOutputStream("out.png");
-//        renderPNG(fis, ostream,300,500);
-//        ostream.close();
-//        fis = new FileInputStream("output.svg");
-//        ostream = new FileOutputStream("out.pdf");
-//        renderPDF(fis, ostream,3000,5000);
-//        ostream.close();
-//}
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(NavajoSvgRenderAdapter.class);
 
 	public Binary renderSvg(Binary svg, double width, double height) throws IOException {
 		Binary b = new Binary();
@@ -46,7 +36,7 @@ public class NavajoSvgRenderAdapter {
         try {
 			t.transcode(input, output);
 		} catch (TranscoderException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 
         // Flush and close the stream.
@@ -67,7 +57,7 @@ public class NavajoSvgRenderAdapter {
         try {
 			t.transcode(input, output);
 		} catch (TranscoderException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 
         // Flush and close the stream.
