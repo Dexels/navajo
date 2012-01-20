@@ -29,5 +29,7 @@ public interface TipiApplicationInstance {
 	public URL getContextUrl();
 
 	public Locale getLocale();
+	
+	public void close();
 
 }
