@@ -62,10 +62,10 @@ public class VaadinFileServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		File f = new File(path);
 		File vaadin = new File(f,"VAADIN");
-		logger.debug("Path: "+vaadin.getAbsolutePath());
+//		logger.debug("Path: "+vaadin.getAbsolutePath());
 		String pathInf = req.getPathInfo();
 		File resolved = new File(vaadin,pathInf);
-		logger.debug("Path resolved to: "+resolved.getAbsolutePath());
+//		logger.debug("Path resolved to: "+resolved.getAbsolutePath());
 		if(!resolved.exists()) {
 			getFromClassPath(pathInf,resp);
 		} else {
@@ -79,7 +79,7 @@ public class VaadinFileServlet extends HttpServlet {
 
 	
 	  private void getFromClassPath(String pathInf, HttpServletResponse resp) throws IOException {
-		  logger.debug("Getting resource from cp: "+pathInf);
+//		  logger.debug("Getting resource from cp: "+pathInf);
 		  URL u = getClass().getClassLoader().getResource(pathInf);
 		  if(u==null) {
 			  if(pathInf.startsWith("/VAADIN")) {
