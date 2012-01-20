@@ -46,7 +46,7 @@ public class TipiScanner {
 
 		System.err.println("preload: " + preloadSet);
 
-		boolean rewriteSource = false;
+		boolean rewriteSource = true;
 
 		File folder = new File(base,"tipi");
 		scanFolder(folder, rewriteSource);
