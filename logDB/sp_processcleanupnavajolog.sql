@@ -127,7 +127,7 @@ BEGIN
    COMMIT;
 
    -- empty the auditlog table
-   DELETE FROM auditlog WHERE created < SYSDATE - 7;
+   DELETE FROM auditlog WHERE lastupdate < SYSDATE - 7;
 
    deletecount := l_count;
 
