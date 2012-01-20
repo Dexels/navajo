@@ -62,8 +62,8 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
 //        th.initHelper(this);
 //        addHelper(th);
 
-        validImage = new ThemeResource("validIcon.gif");
-        inValidImage = new ThemeResource("invalidIcon.gif");
+        validImage = new ThemeResource("../oao/validIcon.gif");
+        inValidImage = new ThemeResource("../oao/invalidIcon.gif");
 
 //        validStyle = Styles.DEFAULT_STYLE_SHEET.getStyle(ButtonEx.class, "ValidQuestionGroupTab");
 //        invalidStyle = Styles.DEFAULT_STYLE_SHEET.getStyle(ButtonEx.class, "InvalidQuestionGroupTab");
