@@ -36,6 +36,8 @@ public final static String VERSION = "$Id$";
   public static final int FIXED_DAY = 1;
   //private Date value;
   private Calendar calValue;
+  
+  private boolean shortFormat = false;
   // Not thread safe!
   // TODO fix that
   //private static final DateFormat df = SimpleDateFormat.getTimeInstance(DateFormat.MEDIUM, Locale.GERMAN);
@@ -210,12 +212,19 @@ public final static String VERSION = "$Id$";
   public final Calendar calendarValue() {
     return calValue;
   }
+  
+  public void setShortFormat(boolean b) {
+	  shortFormat = b;
+  }
 
   /**
    * Get the String representation of this ClockTime object
    * @return String
    */
   public final String toString() {
+	  if(shortFormat) {
+		  return toShortString();
+	  }
     if (calValue != null) {
       return SimpleDateFormat.getTimeInstance(DateFormat.MEDIUM, Locale.GERMAN).format(calValue.getTime());
     }
@@ -239,7 +248,8 @@ public final static String VERSION = "$Id$";
     // Tests.
 
   ClockTime ck = new ClockTime("12:00:33");
-  logger.info("ck = " + ck);
+  System.err.println("ck = " + ck.toString());
+  
   }
 
   public final int compareTo(ClockTime o) {
