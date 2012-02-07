@@ -66,18 +66,18 @@ public class Tools {
 	  lon2 = (lon2+3*Math.PI)%(2*Math.PI) - Math.PI;  // normalise to -180...+180
 
 //	  if (Math. isNaN(lat2) || isNaN(lon2)) return null;
-	  System.err.println(">>>>>Lat: "+Math.toDegrees(lat2)+" lon: "+Math.toDegrees(lon2) );
+	  //System.err.println(">>>>>Lat: "+Math.toDegrees(lat2)+" lon: "+Math.toDegrees(lon2) );
 	  return new double[]{Math.toDegrees(lat2), Math.toDegrees(lon2)};
 	}
 
-	public static  LatLon move(LatLon base, double dist, double brng) {
+	public LatLon move(LatLon base, double dist, double brng) {
 		brng = brng % 360.0;
 		System.err.println("Calculating: "+base.getCoordinates()+" distance: "+dist+" bearing: "+brng);
 		double[] arrayPos = go(base.getLat(),base.getLon(),dist,brng);
-		  System.err.println(">>>>>Lat: "+arrayPos[0]+" lon: "+arrayPos[1] );
-		
+		//System.err.println(">>>>>Lat: "+arrayPos[0]+" lon: "+arrayPos[1] );		
 		LatLon result = new LatLon(arrayPos);
 		System.err.println("Result: "+result.getCoordinates());
+//		Thread.dumpStack();
 		return result;
 	}
 	

@@ -39,17 +39,26 @@ public class FacilityMarker {
 		}
 	}
 	
+	public void setQuarterfield(boolean b){
+		if(currentField != null){
+			currentField.setIsQuarterField(b);
+			System.err.println("Querter field set: "  + currentField.getId());
+		}
+	}
+	
 	public int getIndex() {
 		return index;
 	}
 
 	public void setIndex(int index) {
+		System.err.println("Set index called with index: " + index + ", doing magic ======================================");
 		this.index = index;
 		double bearing = (double)getIndex() / (double)getMaxCount() * 360+1;
 		currentSubfacility = current.moveTo( getDistance(), bearing);
+		System.err.println("MoveTo done, creating field object");
 		currentField = new Field(currentSubfacility,bearing);
 		currentField.setId(getId()+"/"+index);
-		System.err.println("Set index: " + index + " pos: " + currentSubfacility.getCoordinates());
+		System.err.println("Set index: " + index + " pos: " + currentSubfacility.getCoordinates() + ", done ===============");
 	}
 
 

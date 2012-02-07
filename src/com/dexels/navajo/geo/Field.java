@@ -8,6 +8,7 @@ public class Field {
 	private double bearing;
 	private String id;
 	private boolean isHalfField = false;
+	private boolean isQuarterField = false;
 	
 	public Field(LatLon center, double bearing) {
 		this.bearing = bearing;
@@ -21,6 +22,10 @@ public class Field {
 
 	public void setIsHalfField(boolean b){
 		this.isHalfField = b;
+	}
+	
+	public void setIsQuarterField(boolean b){
+		this.isQuarterField = b;
 	}
 	
 	public LatLon[] getCorners() {
@@ -48,6 +53,9 @@ public class Field {
 		int divider = 2;
 		if(isHalfField){
 			divider = 4;
+		}
+		if(isQuarterField){
+			divider = 8;
 		}
 		double lengthpos = LENGTH/divider;
 		return center.moveTo(lengthpos, bearing);

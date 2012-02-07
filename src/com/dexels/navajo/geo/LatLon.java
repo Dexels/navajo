@@ -1,6 +1,7 @@
 package com.dexels.navajo.geo;
 
 public class LatLon {
+	private Tools tools = new Tools();
 
 	private double lat = Double.NaN;
 	private double lon = Double.NaN;
@@ -54,6 +55,6 @@ public class LatLon {
 	}
 
 	public LatLon moveTo(double distance, double bearing) {
-		return Tools.move(this, distance, bearing);
+		return tools.move(this, distance, bearing);
 	}
 }
