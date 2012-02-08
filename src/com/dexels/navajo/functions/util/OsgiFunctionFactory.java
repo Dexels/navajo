@@ -9,6 +9,8 @@ import navajo.ExtensionDefinition;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.parser.FunctionInterface;
@@ -17,6 +19,9 @@ import com.dexels.navajo.version.NavajoBundleManager;
 
 public class OsgiFunctionFactory extends JarFunctionFactory {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(OsgiFunctionFactory.class);
 
 	public FunctionInterface getInstance(final ClassLoader cl, final String functionName) throws TMLExpressionException  {
 		FunctionInterface osgiResolution = (FunctionInterface) getComponent(functionName, "functionName", FunctionInterface.class);
@@ -83,6 +88,7 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 	public Object getComponent( final String name, String serviceKey, Class interfaceClass)  {
 		BundleContext context = NavajoBundleManager.getInstance().getBundleContext();
 		try {
+			logger.info("Resolving service: "+interfaceClass.getName()+" filter: "+"("+serviceKey+"="+name+")");
 			ServiceReference[] refs = context.getServiceReferences(interfaceClass.getName(), "("+serviceKey+"="+name+")");
 			if(refs==null) {
 				System.err.println("Service resolution failed: Query: "+"("+serviceKey+"="+name+")"+" class: "+interfaceClass.getName());
@@ -98,7 +104,7 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 	
 	@Override
 	public  Class<?> getAdapterClass(String adapterClassName, ClassLoader cl) throws ClassNotFoundException {
-			Class osgiResolution = (Class) getComponent(adapterClassName, "adapterClass", Object.class);
+			Class osgiResolution = (Class) getComponent(adapterClassName, "adapterClass", Class.class);
 			if (osgiResolution==null) {
 				System.err.println("OSGi failed. Going old skool");
 				return super.getAdapterClass(adapterClassName, cl);

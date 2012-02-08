@@ -228,6 +228,9 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	}
 	
 	
+	public static boolean osgiActive() {
+		return getDefaultBundleContext()!=null;
+	}
 	
 	@Override
 	public void start(BundleContext bc) throws Exception {
