@@ -1,13 +1,19 @@
 package com.dexels.navajo.resource.manager;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
+import javax.sql.DataSource;
+
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceReference;
+import org.osgi.service.cm.Configuration;
+import org.osgi.service.cm.ConfigurationAdmin;
+import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,67 +21,16 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.resource.ResourceConfig;
-import com.dexels.navajo.resource.ResourceInstance;
 
 public class ResourceManager {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ResourceManager.class);
-	private final Map<String,ResourceConfig> resource = new HashMap<String, ResourceConfig>();
-	private final Map<String,ResourceReference> resourceReference = new HashMap<String, ResourceReference>();
+	private ConfigurationAdmin configAdmin;
 
-	public void addResource(ResourceConfig ri) {
-		System.err.println("Adding: "+ri.getClass());
-		System.err.println("config: "+ri.getConfigName());
-		List<String> accepts = ri.accepts();
-		for (String string : accepts) {
-			System.err.println("Accepts: "+string);
-		}
-		if(resource.containsKey(ri.getConfigName())) {
-			throw new IllegalStateException("Duplicate resource config name: "+ri.getConfigName());
-		}
-		resource.put(ri.getConfigName(),ri);
-		logger.debug("Added resource. Size now: "+resource.size());
-		
-		Collection<ResourceReference> refs = getReferencesForResource(ri);
-		for (ResourceReference resourceReference : refs) {
-			try {
-				resourceReference.instantiate(ri);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-	}
+	private BundleContext bundleContext = null;
 	
-	public ResourceInstance getResourceInstance(String name) {
-		ResourceReference rr = resourceReference.get(name);
-		if(rr==null) {
-			logger.info("Datasource {} not found. Available datasources: {}",name,resourceReference.keySet());
-			return null;
-		}
-		return rr.getInstance();
-	}
-
-	public void addResourceReference(ResourceReference r) throws Exception {
-		String name = r.getName();
-		ResourceReference old = resourceReference.get(name);
-		if(old!=null) {
-			// remove old:
-			removeResourceReference(old);
-		}
-		resourceReference.put(name, r);
-		
-		ResourceConfig rc = resource.get(r.getResourceConfigName());
-		if(rc!=null) {
-			link(r,rc);
-		} else {
-			logger.info("Not linking: "+r.getName()+" configname: "+r.getResourceConfigName()+" not found.");
-		}
-	}
-	
-	private void link(ResourceReference r, ResourceConfig rc) throws Exception {
-		r.instantiate(rc);
+	public void activate(ComponentContext cc) {
+		this.bundleContext = cc.getBundleContext();
 	}
 	
 	public void loadResourceTml(InputStream is) {
@@ -95,10 +50,11 @@ public class ResourceManager {
 		}
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void addDatasource(Message dataSource) throws Exception {
 		String name = dataSource.getName();
 		List<Property> props = dataSource.getAllProperties();
-		Map<String, Object> settings = new HashMap<String, Object>(); 
+		Dictionary settings = new Hashtable(); 
 		for (Property property : props) {
 			// skip type, it is not a 'real' connection setter
 			if(property.getName().equals("type")) {
@@ -106,36 +62,46 @@ public class ResourceManager {
 			}
 			settings.put(property.getName(), property.getTypedValue());
 		}
+		settings.put("name", "navajo.resource."+name);
+		String type = (String)dataSource.getProperty("type").getTypedValue();
+		Configuration cc = configAdmin.createFactoryConfiguration("navajo.resource."+type,null);
+		cc.update(settings);
 		logger.info("Data source settings for source: {} : {}",name,settings);
-		ResourceReference rr = new ResourceReference(name,(String)dataSource.getProperty("type").getTypedValue() ,settings);
-		addResourceReference(rr);
+//		ResourceReference rr = new ResourceReference(name,type ,settings);
+//		addResourceReference(rr);
 	}
 
-	public void removeResourceReference(ResourceReference rr) {
-		if(rr.isActive()) {
-			logger.info("Removing resource: {}",rr.getName());
-			rr.uninstantiate();
-		}
-		resourceReference.remove(rr.getName());
+	public DataSource getDataSource(String shortName) throws InvalidSyntaxException {
+		ServiceReference<DataSource> ss = getDataSourceReference(shortName);
+		return bundleContext.getService(ss);
 	}
-	public void removeResource(ResourceConfig ri) {
-		String configName = ri.getConfigName();
-		resource.remove(configName);
-		System.err.println("Removed resource. Size now: "+resource.size());
-		Collection<ResourceReference> refs = getReferencesForResource(ri);
-		for (ResourceReference resourceReference : refs) {
-			resourceReference.uninstantiate();
+	public ServiceReference<DataSource> getDataSourceReference(String shortName) throws InvalidSyntaxException {
+		Collection<ServiceReference<DataSource>> dlist = bundleContext.getServiceReferences(DataSource.class,"(name=navajo.resource."+shortName+")");
+		if(dlist.size()!=1) {
+			logger.info("Matched: {} datasources.",dlist.size());
 		}
+		ServiceReference<DataSource> dref = dlist.iterator().next();
+		return dref;
 	}
 
-	public Collection<ResourceReference> getReferencesForResource(ResourceConfig rc) {
-		Collection<ResourceReference> result = new ArrayList<ResourceReference>();
-		String rcName = rc.getConfigName();
-		for (Entry<String,ResourceReference> e : resourceReference.entrySet()) {
-			if(e.getValue().getResourceConfigName().equals(rcName)) {
-				result.add(e.getValue());
-			}
-		} 
-		return result;
+	public ServiceReference<Object> getResourceReference(String shortName) throws InvalidSyntaxException {
+		Collection<ServiceReference<Object>> dlist = bundleContext.getServiceReferences(Object.class,"(name=navajo.resource."+shortName+")");
+		if(dlist.size()!=1) {
+			logger.info("Matched: {} datasources.",dlist.size());
+		}
+		if(dlist.isEmpty()) {
+			logger.error("Can not find datasource: {}",shortName);
+		}
+		ServiceReference<Object> dref = dlist.iterator().next();
+		return dref;
+	}
+
+	public Object getResourceSource(String shortName) throws InvalidSyntaxException {
+		ServiceReference<Object> ss = getResourceReference(shortName);
+		return bundleContext.getService(ss);
+	}
+
+	public void setConfigAdmin(ConfigurationAdmin configAdmin) {
+		this.configAdmin = configAdmin;
 	}
 }
