@@ -109,6 +109,7 @@ public class WebStartProxy {
 					.lookup("javax.jnlp.BasicService");
 			return bs != null;
 		} catch (Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 	}
