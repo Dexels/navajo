@@ -126,7 +126,7 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 			 props.put("adapterClass", c.getName());
 
 			if(adapterClass!=null) {
-				context.registerService(Object.class.getName(), c, props);
+				context.registerService(Class.class.getName(), c, props);
 			}
 		}
 	}
