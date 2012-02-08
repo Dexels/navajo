@@ -48,21 +48,29 @@ public class NavajoContextListener implements ServletContextListener {
 
 	@Override
 	public void contextInitialized(ServletContextEvent sc) {
+		String contextPath = sc.getServletContext().getContextPath();
 
-		init(sc.getServletContext());
+		String installPath = getInstallationPath(contextPath);
+		String servletContextPath = sc.getServletContext().getRealPath("");
+
+		init(sc.getServletContext(),contextPath,servletContextPath,installPath);
 	}
 
-	public void init(ServletContext sc) {
+	public void init(ServletContext sc,String contextPath, String servletContextPath, String installPath) {
 		logger.info("==========================================================");
 		logger.info("INITIALIZING NAVAJO INSTANCE: "+ sc.getContextPath());
 		logger.info("==========================================================");
+//		String contextPath = sc.getContextPath();
+//
+//		String installPath = getInstallationPath(contextPath);
+//		String servletContextPath = sc.getRealPath("");
 
-		if (!isValidInstallationForContext(sc)) {
+		if (!isValidInstallationForContext(installPath)) {
 			logger.info("No valid installation found, abandoning further Context initialization.");
 			return;
 		}
 
-		initializeContext(sc, null);
+		initializeServletContext(contextPath,servletContextPath,installPath);
 	}
 
 	public static void destroyContext(ServletContext sc) {
@@ -94,66 +102,30 @@ public class NavajoContextListener implements ServletContextListener {
 	 * @return 
 	 */
 
-	// Should be called after installation, so the context will still be
+	// Should also be called after installation, so the context will still be
 	// initialized.
-	public static DispatcherInterface initializeContext(ServletContext sc, String force) {
-		String configurationPath = null;
-		String rootPath = null;
-
-		String path;
-		path = getInstallationPath(sc, force);
-		if (path != null) {
-			configurationPath = path;
-		}
-		// Check whether defined bootstrap webservice is present.
+	public static NavajoServerInstance initializeServletContext(String contextPath, String servletContextPath, String installationPath) {
 		System.setProperty(DOC_IMPL, QDSAX);
-		// System.err.println("Configuration path: " + configurationPath);
-
-		boolean verified = false;
-
-		URL configUrl;
-		InputStream is = null;
-		try {
-			configUrl = new URL(configurationPath);
-			is = configUrl.openStream();
-			verified = true;
-		} catch (MalformedURLException e) {
-			// e.printStackTrace(System.err);
-		} catch (IOException e) {
-		} finally {
-			if (is != null) {
-				try {
-					is.close();
-				} catch (IOException e) {
-					logger.error("IO Error",e);
-				}
-			}
-		}
-		if (configurationPath == null || "".equals(configurationPath)
-				|| !verified) {
-			rootPath = sc.getRealPath("");
-		}
-		String servletContextRootPath = sc.getRealPath("");
 
 		try {
-			DispatcherInterface dispatcher = initDispatcher(servletContextRootPath, rootPath, configurationPath);
-			NavajoServerInstance nsi = new NavajoServerInstance(path, dispatcher, sc);
-			registerInstanceOSGi(nsi);
-			return dispatcher;
+			DispatcherInterface dispatcher = initDispatcher(servletContextPath, servletContextPath, installationPath);
+			NavajoServerInstance nsi = new NavajoServerInstance(installationPath, dispatcher);
+			registerInstanceOSGi(nsi,contextPath);
+			return nsi;
 		} catch (Exception e) {
 			logger.error("Error initializing dispatcher", e);
 		}
 		return null;
 	}
 
-	private static void registerInstanceOSGi(NavajoServerInstance nsi) {
+	private static void registerInstanceOSGi(NavajoServerInstance nsi, String contextPath) {
 		BundleContext bc = navajolisteners.Version.getDefaultBundleContext();
 		if(bc==null) {
 			logger.warn("No OSGi environment found. Are we in J2EE mode?");
 			return;
 		}
         Dictionary<String, Object> properties = new Hashtable<String, Object>();
-        properties.put("navajoContextPath", nsi.getServletContext().getContextPath());
+        properties.put("navajoContextPath", contextPath);
         properties.put("installationPath", nsi.getInstallationPath());
         properties.put("serverId", nsi.getDispatcher().getServerId());
         navajoServerInstance = bc.registerService(NavajoServerContext.class, nsi,properties);
@@ -178,7 +150,7 @@ public class NavajoContextListener implements ServletContextListener {
 				servletPath);
 	}
 
-	protected final static DispatcherInterface initDispatcher(
+	public final static DispatcherInterface initDispatcher(
 			String servletContextRootPath, String rootPath, String configurationPath)
 			throws NavajoException {
 
@@ -195,8 +167,7 @@ public class NavajoContextListener implements ServletContextListener {
 
 	}
 
-	public static boolean isValidInstallationForContext(ServletContext context) {
-		String installPath = getInstallationPath(context, null);
+	public static boolean isValidInstallationForContext(String installPath) {
 
 		if (installPath == null) {
 			return false;
@@ -216,33 +187,24 @@ public class NavajoContextListener implements ServletContextListener {
 		return config != null;
 	}
 
-	public static String getInstallationPath(ServletContext context,
-			String force) {
-		if (force == null) {
-			force = context.getInitParameter("forcedNavajoPath");
-		}
-		if (force != null) {
-			return force;
-		} else {
+	public static String getInstallationPath(String contextPath) {
 			try {
-				String cp = context.getContextPath();
-				String contextPath;
-				if(cp == null || cp.isEmpty()) {
-					contextPath="/";
+				String canonicalContextPath;
+				if(contextPath == null || contextPath.isEmpty()) {
+					canonicalContextPath="/";
 				} else {
-					if(cp.startsWith("/")) {
-						contextPath = cp.substring(1);
+					if(contextPath.startsWith("/")) {
+						canonicalContextPath = contextPath.substring(1);
 					} else {
-						contextPath = cp;
+						canonicalContextPath = contextPath;
 					}
 				}
 				Map<String, String> systemContexts = loadSystemContexts();
-				return getInstallationPath(systemContexts, contextPath);
+				return getInstallationPath(systemContexts, canonicalContextPath);
 			} catch (IOException e) {
 				e.printStackTrace();
+				return null;
 			}
-		}
-		return null;
 	}
 
 	// private String initialize(String contextPath) throws IOException {
