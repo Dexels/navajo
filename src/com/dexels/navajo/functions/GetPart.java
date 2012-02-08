@@ -10,8 +10,6 @@ import javax.mail.internet.MimeMultipart;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.document.Operand;
-import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.functions.mail.impl.BinaryDataSource;
 import com.dexels.navajo.parser.FunctionInterface;
