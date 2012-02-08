@@ -264,22 +264,16 @@ public class RhinoRunner {
 			a.setOutputDoc(e.getConditionErrors());
 			return scriptEnvironment;
 		} catch (BreakError e) {
-			generateErrorMessage("Break Error detected: " + e.getMessage(), e,
-					a);
+			generateErrorMessage("Break Error detected: " + e.getMessage(), e,a);
 			logger.warn("Break error detected", e);
 			NavajoScopeManager.getInstance().releaseScope(globalScope);
 			return scriptEnvironment;
 		} catch (WrappedException e) {
-			generateErrorMessage("Wrapped error: " + e.getCause().getMessage(),
-					e.getCause(), a);
-			// logger.error("Wrapped error:", e);
-
+			generateErrorMessage("Wrapped error: " + e.getCause().getMessage(),e.getCause(), a);
 			NavajoScopeManager.getInstance().releaseScope(globalScope);
 			e.printStackTrace();
 			return scriptEnvironment;
-
 		} catch (Throwable e) {
-			System.err.println("THROWABLE!");
 			logger.error("Unknown error:", e);
 			generateErrorMessage("Unknown error:" + e.getMessage(), e, a);
 			NavajoScopeManager.getInstance().releaseScope(globalScope);

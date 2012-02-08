@@ -195,9 +195,15 @@ public class BasicScriptCompiler implements ScriptCompiler {
 		}
 
 		if (current.getName().equals("property")) {
-			processExpressionContainer("addProperty", current,
-					createAttributesFromElement(current, PROPERTY_ATTRIBUTES),
-					os);
+			List<XMLElement> xe = current.getChildrenByTagName("map");
+			if(xe.isEmpty()) {
+				processExpressionContainer("addProperty", current,
+						createAttributesFromElement(current, PROPERTY_ATTRIBUTES),
+						os);
+			} else {
+				String name = current.getStringAttribute("name");
+				processMapSelectionProperty(name,current, createAttributesFromElement(current, PROPERTY_ATTRIBUTES),os);
+			}
 			return;
 		}
 
@@ -374,6 +380,8 @@ public class BasicScriptCompiler implements ScriptCompiler {
 	private void processDebug(XMLElement current, IndentWriter os)
 			throws IOException {
 		String value = current.getStringAttribute("value");
+		value = value.replaceAll("\\n", " ");
+
 		os.writeln("debug(evaluateNavajo(\"" + value + "\"));");
 	}
 
@@ -427,8 +435,7 @@ public class BasicScriptCompiler implements ScriptCompiler {
 
 	private void processCheck(XMLElement current, IndentWriter os)
 			throws IOException {
-		String conditionExpression = current.getContent().trim()
-				.replaceAll("\n", "\\\\\n");
+		String conditionExpression = current.getContent().trim().replaceAll("\\n", " ").replaceAll("\n", "\\\\\n");
 		String unesc = XMLutils.XMLUnescape(conditionExpression);
 		int code = current.getIntAttribute("code");
 		String description = current.getStringAttribute("description");
@@ -522,7 +529,7 @@ public class BasicScriptCompiler implements ScriptCompiler {
 
 		if (mapClass.equals("com.dexels.navajo.adapter.NavajoMap")) {
 			System.err.println("Replaced old skool map: DISABLED");
-			// mapClass = "com.dexels.navajo.adapter.NavajoMapContinuations";
+//			 mapClass = "com.dexels.navajo.adapter.NavajoMapContinuations";
 		}
 
 		os.writeln("callMap(\"" + mapClass + "\",function() {");
@@ -584,7 +591,6 @@ public class BasicScriptCompiler implements ScriptCompiler {
 			throws IOException {
 		String name = current.getStringAttribute("name");
 		List<XMLElement> expressions = findExpressions(current);
-		List<XMLElement> refs = findMapRefs(current);
 
 		String attributeObject = createAttributeObject(attributes);
 
@@ -621,9 +627,69 @@ public class BasicScriptCompiler implements ScriptCompiler {
 //         addSelection(evaluateNavajo("SingleValueQuery('sportlinkkernel: SELECT name FROM organization WHERE organizationid = ?', $regionName)"),evaluateNavajo("$regionName"),0);
 //     })
 
+		List<XMLElement> refs = findMapRefs(current);
 		if(refs.size()>0) {
 			processPropertyMapRefs(current,os,refs);
 		}
+	}
+	
+	
+	private void processMapSelectionProperty(String propertyName, XMLElement current,
+			Map<String, String> attributes, IndentWriter os) throws IOException {
+		String attributeObject = createAttributeObject(attributes);
+		XMLElement map = current.getChildByTagName("map");
+		String refName = map.getStringAttribute("ref");
+		String selectionValue = null;
+		String selectionName = null;
+		String selectionSelected = null;
+		
+		List<XMLElement> props = map.getChildrenByTagName("property");
+		for (XMLElement currentProp : props) {
+			String name = currentProp.getStringAttribute("name");
+			if("value".equals(name)) {
+				XMLElement ex = currentProp.getChildByTagName("expression");
+				selectionValue = getExpression(ex);
+			}
+			if("name".equals(name)) {
+				XMLElement ex = currentProp.getChildByTagName("expression");
+				selectionName = getExpression(ex);
+			}
+			if("selected".equals(name)) {
+				XMLElement ex = currentProp.getChildByTagName("expression");
+				selectionSelected = getExpression(ex);
+			}
+		}
+		if(selectionSelected==null) {
+			selectionSelected = "0";
+		}
+		os.writeln("addProperty(\"" + propertyName + "\",null,"+ attributeObject + ",function() {");
+		os.in();
+		os.writeln("callReferenceMapSelection(\""+refName+"\",null,function() {");
+		os.in();
+		os.writeln("addSelection("+selectionName+","+selectionValue+","+selectionSelected+");");
+		os.out();
+		os.writeln("});");
+		os.out();
+		os.writeln( "});");
+
+		// process map property
+//        addProperty("Select",null,{direction:"in",type:"selection"},function() {
+//            callReferenceMapSelection("regions",null,function() {
+//                addSelection(evaluateNavajo("SingleValueQuery('sportlinkkernel: SELECT name FROM organization WHERE organizationid = ?', $regionName)"),"$regionName",0);
+//             });   
+//            	 
+//        });	
+				
+//	            <property name="Select" type="selection" direction="in">
+//                <map ref="regions">
+//                    <property name="value">
+//                        <expression value="$regionName"/>
+//                      </property>
+//                    <property name="name">
+//                        <expression value="SingleValueQuery('sportlinkkernel: SELECT name FROM organization WHERE organizationid = ?', $regionName)"/>
+//                    </property>
+//                </map>
+//            </property>				
 	}
 
 	private void processPropertyMapRefs(XMLElement current, IndentWriter os,
@@ -676,10 +742,10 @@ public class BasicScriptCompiler implements ScriptCompiler {
 			throws IOException {
 		String condition = s.getStringAttribute("condition");
 		if (condition != null && !condition.equals("")) {
-			os.writeln("if(evaluateNavajo(\"" + condition + "\")==true) {");
+			os.writeln("if(evaluateNavajo(\"" + condition.replaceAll("\\n", " ") + "\")==true) {");
 			os.in();
 		}
-		os.writeln("addSelection(prop,\"" + s.getStringAttribute("name")
+		os.writeln("addSelectionToProperty(prop,\"" + s.getStringAttribute("name")
 				+ "\",\"" + s.getStringAttribute("value") + "\","
 				+ s.getStringAttribute("selected") + ");");
 		if (condition != null && !condition.equals("")) {
@@ -696,6 +762,7 @@ public class BasicScriptCompiler implements ScriptCompiler {
 		for (XMLElement xmlElement : expressions) {
 			String condition = xmlElement.getStringAttribute("condition");
 			if (condition != null && !condition.equals("")) {
+				condition = condition.replaceAll("\\n", " ");
 				if (first) {
 					os.writeln("if(evaluateNavajo(\"" + condition
 							+ "\")==true) {");
@@ -737,6 +804,7 @@ public class BasicScriptCompiler implements ScriptCompiler {
 	private String getExpression(XMLElement expr) {
 		String val = expr.getStringAttribute("value");
 		if (val != null) {
+			val = val.replaceAll("\\n", " ");
 			return "evaluateNavajo(\"" + val + "\")";
 		}
 		Vector<XMLElement> children = expr.getChildren();
@@ -786,6 +854,7 @@ public class BasicScriptCompiler implements ScriptCompiler {
 
 	private void startCondition(XMLElement current, String condition,
 			IndentWriter os) throws IOException {
+		condition = condition.replaceAll("\\n", " ");
 		os.writeln("if(evaluateNavajo(\"" + condition + "\")==true) {");
 		current.removeAttribute("condition");
 		// not reentrant

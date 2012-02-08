@@ -110,8 +110,9 @@ function callReferenceMapSelection(field,filter,callback){
 		ref = env.createMapRef(field);
 		//env.log('Found ref: '+ref+' is array? '+isArr);
 		//env.log("Elements: "+ref.length);
+		ii = 0;
 		for(a in ref) {
-			env.log('Entering loop');
+			env.log('Entering loop: '+ii+' / '+ref.length);
 			//env.log('Element: '+ref[a]);
 //			env.addElement();
 			env.pushMappableTreeNode(ref[a]);
@@ -122,6 +123,7 @@ function callReferenceMapSelection(field,filter,callback){
 			}
 
 			env.popMappableTreeNode();
+			ii++;
 			//env.log('Should be poppin the element now:');
 //			env.popMessage();
 		}
@@ -256,16 +258,7 @@ function addParam(propertyName,value, attributes,callback) {
 	return p;
 }
 
-function addProperty(propertyName, value, attributes,callback) {
-	p = env.addProperty(propertyName,value);
-	env.pushProperty(p);
-	addAttributes(p,attributes);
-	if(callback!=undefined && callback!=null) {
-		callback();
-	}
-	env.popProperty();
-	return result;
-}	
+
 
 
 // only used for 'expression-style' fields
@@ -306,13 +299,14 @@ function addProperty(propertyName, value, attributes,callback) {
 		callback();
 	}
 	env.popProperty();
-	return result;
+	return p;
 }	
 
 
 
-function addSelection(property, name,value, selected) {
-	p = env.addSelection(property,name,value,selected);
+
+function addSelectionToProperty(property, name,value, selected) {
+	p = env.addSelectionToProperty(property,name,value,selected);
 	return p;
 }
 

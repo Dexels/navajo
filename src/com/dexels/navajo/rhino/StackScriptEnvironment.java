@@ -248,7 +248,7 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 				boolean isArray = method.getReturnType().isArray();
 				Object mapref = method.invoke(map, new Object[] {});
 				if (isArray) {
-					// log("Element# "+ ((Object[])mapref).length);
+					 log("Element# "+ ((Object[])mapref).length+" for getter: "+fieldGetter+" map: "+map);
 				}
 				pushMappableTreeNode(mapref, isArray);
 				return mapref;
@@ -590,7 +590,6 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 	}
 
 	public void popProperty() {
-		System.err.println("pop");
 		myElementStack.pop();
 
 	}
@@ -656,7 +655,6 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 				Message.MSG_TYPE_ARRAY);
 		params.addMessage(result);
 
-		System.err.println(">>>>>>>>>>>>>>>>>>>>>>>\n");
 		result.write(System.err);
 		currentParamMessage = result;
 		pushMessage(result);
@@ -744,7 +742,10 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 			throws NavajoException {
 		return super.addSelection(getProperty(), name, value, selected);
 	}
-
+	public Selection addSelectionToProperty(Property p, String name, Object value,
+			Integer selected) throws NavajoException {
+		return super.addSelection(p, name, value, selected);
+	}
 	public Method addMethod(String name) throws NavajoException {
 		// return super.addProperty(getMessage(), name, value);
 		Method m = NavajoFactory.getInstance().createMethod(
