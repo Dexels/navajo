@@ -227,9 +227,12 @@ public class ServerInstanceImpl implements ServerInstance {
 		connector.setPort(port);
 		jettyServer.addConnector(connector);
 		webappContextHandler = new ServletContextHandler(ServletContextHandler.NO_SECURITY | ServletContextHandler.NO_SESSIONS);
-		webappContextHandler.setContextPath("/");
-		
-		NavajoContextListener.initializeContext(webappContextHandler.getServletContext(),navajoPath);
+		String contextPath = "/";
+		webappContextHandler.setContextPath(contextPath);
+		String installationPath = NavajoContextListener.getInstallationPath(contextPath);
+
+		// TODO: This used the force parameter
+		NavajoContextListener.initializeServletContext(contextPath,webappContextHandler.getServletContext().getRealPath(""),installationPath);
 		webappContextHandler.addServlet(new ServletHolder(new TmlHttpServlet()),"/Postman");
 		webappContextHandler.addServlet(new ServletHolder(new NqlServlet()),"/Nql");
 //		JspConfig jspConfig = new JspConfig(webappContextHandler.getServletContext());
