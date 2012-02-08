@@ -33,6 +33,8 @@ import oracle.jdbc.pool.OracleDataSource;
 import oracle.jdbc.xa.client.OracleXADataSource;
 
 import org.osgi.service.jdbc.DataSourceFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Implementation of the OSGi {@link DataSourceFactory} for MySQL, no special
@@ -42,6 +44,9 @@ import org.osgi.service.jdbc.DataSourceFactory;
  */
 public class OracleJDBCDataSourceService implements DataSourceFactory {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(OracleJDBCDataSourceService.class);
     public void start() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         //Load driver if not already done...
         Class<?> clazz = Class.forName("oracle.jdbc.OracleDriver");
@@ -52,13 +57,15 @@ public class OracleJDBCDataSourceService implements DataSourceFactory {
 
     @Override
     public DataSource createDataSource(Properties props) throws SQLException {
-        OracleDataSource source = new OracleDataSource();
+    	logger.warn("Creating NON-pooled datasource. Pooling anyway");
+    	OracleConnectionPoolDataSource source = new OracleConnectionPoolDataSource();
         setup(source, props);
         return source;
     }
 
     @Override
     public ConnectionPoolDataSource createConnectionPoolDataSource(Properties props) throws SQLException {
+    	logger.warn("Creating NON-pooled datasource!");
     	OracleConnectionPoolDataSource source = new OracleConnectionPoolDataSource();
         setup(source, props);
         return source;
@@ -81,10 +88,11 @@ public class OracleJDBCDataSourceService implements DataSourceFactory {
     /**
      * Setups the basic properties for {@link DataSource}s
      */
-    private void setup(OracleDataSource source, Properties props) {
+    private void setup(OracleConnectionPoolDataSource source, Properties props) {
         if (props == null) {
             return;
         }
+        logger.info("Oracle settings: "+props);
         if (props.containsKey(JDBC_DATABASE_NAME)) {
             source.setDatabaseName(props.getProperty(JDBC_DATABASE_NAME));
         }
