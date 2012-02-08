@@ -115,7 +115,6 @@ public class SwingTipiContext extends TipiContext {
 
 		try {
 
-			// commented out!
 			if (WebStartProxy.hasJnlpContext()) {
 				// System.err.println("JNLP DETECTED.");
 				setCookieManager(new JnlpCookieManager());
