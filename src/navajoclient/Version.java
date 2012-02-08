@@ -24,10 +24,21 @@
  */
 package navajoclient;
 
-import org.osgi.framework.BundleContext;
+import java.util.Dictionary;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
 
-import com.dexels.navajo.client.ClientInterface;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.Constants;
+import org.osgi.framework.ServiceRegistration;
+import org.osgi.service.cm.ConfigurationException;
+import org.osgi.service.cm.ManagedServiceFactory;
+
 import com.dexels.navajo.client.NavajoClientFactory;
+import com.dexels.navajo.client.context.ClientContext;
+import com.dexels.navajo.client.context.NavajoContext;
 import com.dexels.navajo.client.sessiontoken.SessionTokenFactory;
 import com.dexels.navajo.client.systeminfo.SystemInfoFactory;
 
@@ -52,47 +63,10 @@ import com.dexels.navajo.client.systeminfo.SystemInfoFactory;
  * 2.2.3. Added support for piggybacking of data.
  * 2.2.4. Removed evil keep-alive
  */
-public class Version extends com.dexels.navajo.version.AbstractVersion {
+public class Version extends com.dexels.navajo.version.AbstractVersion implements ManagedServiceFactory {
 
-	public static final int MAJOR = 3;
-	public static final int MINOR = 0;
-	public static final int PATCHLEVEL = 0;
-	public static final String VENDOR = "Dexels";
-	public static final String PRODUCTNAME = "Navajo Client";
-	
-	
-	public Version() {
-		setReleaseDate("2006-10-20");
-	}
-	
-	public int getMajor() {
-		return MAJOR;
-	}
-
-	public int getMinor() {
-		return MINOR;
-	}
-
-	public int getPatchLevel() {
-		return PATCHLEVEL;
-	}
-
-	public String getVendor() {
-		return VENDOR;
-	}
-
-	public String getProductName() {
-		return PRODUCTNAME;
-	}
-
-	public static void main(String [] args) {
-		Version v = new Version();
-		logger.info(v.toString());
-		com.dexels.navajo.version.AbstractVersion [] d = v.getIncludePackages();
-		for (int i = 0; i < d.length; i++) {
-			logger.info("\t"+d[i].toString());
-		}
-	}
+	private final Map<String,NavajoContext> contextMap = new HashMap<String, NavajoContext>();
+	private final Map<String,ServiceRegistration<ClientContext>> registryMap = new HashMap<String,ServiceRegistration<ClientContext>>();
 
 	@Override
 	public void shutdown() {
@@ -105,8 +79,54 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	@Override
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
-		ClientInterface defaultClient = NavajoClientFactory.getClient();
-		bc.registerService(ClientInterface.class.getName(), defaultClient, null);
+		Dictionary<String,String> d = new Hashtable<String,String>();
+		d.put(Constants.SERVICE_PID, "navajo.client.Factory");
+		bc.registerService(ManagedServiceFactory.class.getName(), this, d);
+	}
+	
+	
+	@Override
+	public void deleted(String pid) {
+		logger.info("Shutting down instance: "+pid);
+		NavajoContext nc = contextMap.get(pid);
+		if(nc==null) {
+			logger.warn("Strange: Deleting, but already gone.");
+			return;
+		}
+		contextMap.remove(pid);
+		ServiceRegistration<ClientContext> reg = registryMap.get(pid);
+		reg.unregister();
+	}
+
+	@Override
+	public String getName() {
+		return "Navajo Client Factory";
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public void updated(String pid, Dictionary settings)
+			throws ConfigurationException {
+		logger.info("CONFIG CHANGE DETECTED:");
+		if(settings==null) {
+			logger.info("Disabling Navajo client configuration: "+pid);
+			return;
+		}
+		
+		Enumeration en = settings.keys();
+		while (en.hasMoreElements()) {
+			Object o = en.nextElement();
+			logger.info("Element: "+o+" : "+settings.get(o));
+		}
+		
+		NavajoContext nc = new NavajoContext();
+		nc.setupClient((String)settings.get("server"), (String)settings.get("username"), (String)settings.get("password"));
+		
+		ServiceRegistration reg = getBundleContext().registerService(ClientContext.class, nc, settings);
+
+		registryMap.put(pid, reg);
+		logger.info("Activating NavajoClient component: "+settings);
+		contextMap.put(pid, nc);
 	}
 	
 	

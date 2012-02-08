@@ -18,7 +18,7 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 
 
-public class NavajoContext {
+public class NavajoContext implements ClientContext {
 
 	private ClientInterface myClient;
 	private final Map<String, Navajo> myNavajoMap = new HashMap<String, Navajo>();
@@ -31,20 +31,36 @@ public class NavajoContext {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see com.dexels.navajo.client.context.ClientContext#reset()
+	 */
+	@Override
 	public void reset() {
 		myNavajoMap.clear();
 		myInverseNavajoMap.clear();
 		myElementStack.clear();
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.dexels.navajo.client.context.ClientContext#callService(java.lang.String)
+	 */
+	@Override
 	public void callService(String service) throws ClientException {
 		callService(service,null);
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.dexels.navajo.client.context.ClientContext#getNavajos()
+	 */
+	@Override
 	public Map<String,Navajo> getNavajos() {
 		return myNavajoMap;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.dexels.navajo.client.context.ClientContext#getServiceName(com.dexels.navajo.document.Navajo)
+	 */
+	@Override
 	public String getServiceName(Navajo n) {
 		return myInverseNavajoMap.get(n);
 	}
@@ -56,6 +72,10 @@ public class NavajoContext {
 		return instanceName;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.dexels.navajo.client.context.ClientContext#callService(java.lang.String, com.dexels.navajo.document.Navajo)
+	 */
+	@Override
 	public void callService(String service, Navajo input)
 			throws ClientException {
 		if(myClient==null) {
@@ -89,6 +109,10 @@ public class NavajoContext {
 		logger.debug("Call took: "+time2+" millis!");
 	}
 
+	/* (non-Javadoc)
+	 * @see com.dexels.navajo.client.context.ClientContext#hasNavajo(java.lang.String)
+	 */
+	@Override
 	public boolean hasNavajo(String name) {
 		return myNavajoMap.containsKey(name);
 	}
@@ -139,6 +163,10 @@ public class NavajoContext {
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.dexels.navajo.client.context.ClientContext#getNavajo(java.lang.String)
+	 */
+	@Override
 	public Navajo getNavajo(String name) {
 
 		Navajo navajo = myNavajoMap.get(name);
@@ -300,6 +328,7 @@ public class NavajoContext {
 		}
 		myClient.setServerUrl(server);		
 		myClient.setRetryAttempts(0);
+		logger.info("User: {} : {}",myClient.getUsername(),myClient.getPassword());
 		this.debugAll = debugAll;
 	}
 	
