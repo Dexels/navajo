@@ -19,7 +19,7 @@ public class TestDataSource implements CommandProvider {
 			if("h2".equals(next)) {
 				ResourceManagerTest.getInstance().testH2();
 			} else if("mysql".equals(next)) {
-				ResourceManagerTest.getInstance().testMysql();
+				ResourceManagerTest.getInstance().testMysqlService();
 			} else if("oracle".equals(next)) {
 				ResourceManagerTest.getInstance().testOracle();
 			} else if("mongo".equals(next)) {
@@ -28,8 +28,10 @@ public class TestDataSource implements CommandProvider {
 				ResourceManagerTest.getInstance().loadResources();
 			} else if("jdbcmap".equals(next)) {
 				ResourceManagerTest.getInstance().testJDBCMap2();
-			} else if("resource".equals(next)) {
-				ResourceManagerTest.getInstance().testLoadedMysql();
+			} else if("aaa".equals(next)) {
+				ResourceManagerTest.getInstance().testAAA();
+			} else if("client".equals(next)) {
+				ResourceManagerTest.getInstance().testClient();
 			} else {
 				
 				intp.println("\nUnknown.");
