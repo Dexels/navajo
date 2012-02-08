@@ -215,11 +215,15 @@ public final class NavajoConfig implements NavajoConfigInterface {
     		persistenceManager = PersistenceManagerFactory.getInstance("com.dexels.navajo.persistence.impl.PersistenceManagerImpl", configPath);
     		
     		if(adapterClassloader == null) {
-    			adapterClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, getClass().getClassLoader());
+    			if(!navajo.Version.osgiActive()) {
+        			adapterClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, getClass().getClassLoader());
+    			}
     		}
 
     		if(betaClassloader==null) {
-    			betaClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, true, getClass().getClassLoader());
+    			if(!navajo.Version.osgiActive()) {
+        			betaClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, true, getClass().getClassLoader());
+    			}
     		}
     		
     		// Read monitoring configuration options
