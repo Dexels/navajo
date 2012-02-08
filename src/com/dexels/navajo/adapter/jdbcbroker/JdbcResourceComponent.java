@@ -1,17 +1,19 @@
 package com.dexels.navajo.adapter.jdbcbroker;
 
 import java.sql.Connection;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceReference;
+import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.adapter.JDBCMap;
-import com.dexels.navajo.resource.JdbcResourceInstance;
-import com.dexels.navajo.resource.ResourceInstance;
 import com.dexels.navajo.resource.manager.ResourceManager;
 
 public class JdbcResourceComponent {
@@ -19,9 +21,11 @@ public class JdbcResourceComponent {
 	private static JdbcResourceComponent instance = null;
 	private static final Logger logger = LoggerFactory.getLogger(JdbcResourceComponent.class);
 	private final Map<Integer,Connection> transactionMap = new HashMap<Integer, Connection>();
+	private BundleContext bundleContext;
 	
-	public void setup() {
+	public void setup(ComponentContext context) {
 		instance =  this;
+		this.bundleContext = context.getBundleContext();
 	}
 	public void setResourceManager(ResourceManager r) {
 		logger.info("Adding Resource Manager, instantiating JdbcResourceComponent");
@@ -40,16 +44,23 @@ public class JdbcResourceComponent {
 		return instance;
 	}
 
-	private ResourceInstance getResourceInstance(String name) {
-		return manager.getResourceInstance(name);
-	}
-	
+
 	public static DataSource getJdbc(String name) {
-		logger.info("Looking for jdbc connection for resource: "+name);
-		JdbcResourceInstance ri = (JdbcResourceInstance) getInstance().getResourceInstance(name);
-		return  (DataSource) ri.getSource();
+		long time = System.currentTimeMillis();
+		
+		try {
+			long time2 = System.currentTimeMillis()-time;
+			DataSource dataSource = getInstance().manager.getDataSource(name);
+			System.err.println("GETJDBC: "+time2);
+			return dataSource;
+		} catch (InvalidSyntaxException e) {
+			logger.error("Can not resolve datasource{}",name,e);
+			return null;
+		}
 	}
 	
+	
+
 	public static void setTestConnection() {
 //		testConnection = new Mongo();
 	}
@@ -61,7 +72,7 @@ public class JdbcResourceComponent {
 		transactionMap.put(transactionContext, con);
 	}
 	public void deregisterTransaction(int transactionContext) {
-		logger.info("Deregistring context {}",transactionContext);
+//		logger.info("Deregistring context {}",transactionContext);
 		transactionMap.remove(transactionContext);
 	}
 

@@ -110,7 +110,7 @@ public class SingleValueQuery extends FunctionInterface {
 
 
 	  JDBCMappable sql = evaluateQuery();
-	  sql.setDebug(true);
+	  sql.setDebug(false);
 	  Object result = null;
 	  try {
 		  if (sql.getRowCount() > 0) {

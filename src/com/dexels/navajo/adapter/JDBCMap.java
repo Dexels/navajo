@@ -18,6 +18,10 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
+import javax.sql.ConnectionPoolDataSource;
+import javax.sql.DataSource;
+import javax.sql.PooledConnection;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,6 +87,8 @@ public class JDBCMap implements Mappable, HasDependentResources, Debugable, JDBC
   private boolean updateOnly;
 
 private boolean ownContext = false;
+
+private PooledConnection currentPooledConnection;
 
   
 
@@ -186,6 +192,13 @@ public void store() throws MappableException, UserException {
 	  cleanupBinaryStreams();
 	  if(transactionContext!=-1 && ownContext) {
 		  JdbcResourceComponent.getInstance().deregisterTransaction(transactionContext);
+	  }
+	  if(currentPooledConnection!=null) {
+//		  try {
+//			currentPooledConnection.close();
+//		} catch (SQLException e) {
+//			logger.error("Problem closing pooled connection",e);
+//		}
 	  }
   }
 
@@ -500,8 +513,19 @@ public void setKillConnection() {
       if (this.debug) {
     	  Access.writeToConsole(myAccess, "in createConnection() for datasource " + datasource);
       }
-
-      con = JdbcResourceComponent.getJdbc(datasource).getConnection();
+      
+      DataSource jdbc = JdbcResourceComponent.getJdbc(datasource);
+      if(jdbc instanceof ConnectionPoolDataSource) {
+    	  logger.info("USING POOL");
+    	  ConnectionPoolDataSource cpds = (ConnectionPoolDataSource)jdbc;
+    	  this.currentPooledConnection = cpds.getPooledConnection();
+    	  con = currentPooledConnection.getConnection();
+      } else {
+    	  logger.warn("*NOT* USING POOL");
+    		con = jdbc. getConnection();
+      }
+      
+      System.err.println("Conclass: "+con.getClass()+" hash: "+con.hashCode());
       this.transactionContext = con.hashCode();
       this.ownContext  =true;
 //      con = pooledConnection.getConnection();

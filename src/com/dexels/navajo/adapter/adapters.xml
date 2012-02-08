@@ -493,5 +493,11 @@ I think there is no problem now, as NavajoAdapters uses a filthy DynamicImport f
             </method>
         </methods>
     </map>
+    
+    <map>
+    	<tagname>com.dexels.navajo.adapter.AdminMap</tagname>
+    	<object>com.dexels.navajo.adapter.AdminMap</object>
+    </map>
+
 
 </adapterdef>
