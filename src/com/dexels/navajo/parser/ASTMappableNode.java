@@ -67,13 +67,8 @@ public final class ASTMappableNode extends SimpleNode {
               return oValue;
 
         } catch (Exception me) {
-            me.printStackTrace();
-            throw new TMLExpressionException(me.getMessage());
+            throw new TMLExpressionException(me.getMessage(),me);
         }
-    }
-
-    public static void main(String args[]) {
-      
     }
 }
 

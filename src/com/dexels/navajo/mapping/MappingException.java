@@ -23,4 +23,8 @@ public class MappingException extends Exception {
         super(s);
     }
 
+	public MappingException(String s, Throwable t) {
+        super(s,t);
+    }
+
 }

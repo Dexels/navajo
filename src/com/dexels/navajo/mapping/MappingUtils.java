@@ -758,13 +758,13 @@ public static final boolean isObjectMappable(String className) throws UserExcept
 				  o.myObject.getClass().getName());
 	  }
 	  catch (InvocationTargetException ite) {
-		  ite.printStackTrace();
+//		  ite.printStackTrace();
 		  Throwable t = ite.getTargetException();
 		  if (t instanceof com.dexels.navajo.server.UserException) {
 			  throw (com.dexels.navajo.server.UserException) t;
 		  }
 		  else {
-			  throw new MappingException("Illegal exception thrown: " + t.getMessage());
+			  throw new MappingException("Error getting attribute: "+name+" of object: "+o,t);
 		  }
 	  }
 	  return result;
