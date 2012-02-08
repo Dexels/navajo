@@ -3,6 +3,9 @@ package com.dexels.navajo.jsp.tags;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.client.context.NavajoContext;
 
 public class ClientTag extends BaseNavajoTag {
@@ -10,6 +13,10 @@ public class ClientTag extends BaseNavajoTag {
 	private String server;
 	private String username;
 	private String password;
+	private boolean debugAll = false;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ClientTag.class);
 	
 	public void setServer(String server) {
 		this.server = server;
@@ -21,6 +28,10 @@ public class ClientTag extends BaseNavajoTag {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public void setDebugAll(boolean debugAll) {
+		this.debugAll = debugAll;
 	}
 
 	
@@ -43,7 +54,8 @@ public class ClientTag extends BaseNavajoTag {
 		int requestServerPort = request.getServerPort();
 		String requestContextPath = request.getContextPath();
 
-		nc.setupClient(server,username,password,requestServerName,requestServerPort,requestContextPath,"/Postman");
+		nc.setupClient(server,username,password,requestServerName,requestServerPort,requestContextPath,"/Postman",debugAll);
+		logger.info("JSPClient setup. Debugall:  "+debugAll);
 		//		getPageContext().setAttribute("Aap", "Noot");
 		return EVAL_BODY_INCLUDE;
 	}

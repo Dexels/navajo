@@ -142,6 +142,10 @@
          <name>password</name>
          <required>false</required>
       </attribute>
+      <attribute>
+         <name>debugAll</name>
+         <required>false</required>
+      </attribute>
    </tag>
 
    <tag>
