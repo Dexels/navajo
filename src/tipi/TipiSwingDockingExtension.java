@@ -23,14 +23,12 @@ public class TipiSwingDockingExtension extends TipiAbstractXMLExtension implemen
 
 	@Override
 	public void start(BundleContext context) throws Exception {
-		
-		loadDescriptor();
+		registerTipiExtension(context);
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		// TODO Auto-generated method stub
-		
+		deregisterTipiExtension(context);
 	}
 
 	
