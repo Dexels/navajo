@@ -13,3 +13,7 @@ Require-Bundle: com.dexels.navajo.document,
  com.dexels.navajo.tipi.swing;bundle-version="1.0.43",
  com.dexels.navajo.tipi.swing.deps;bundle-version="1.0.0",
  com.dexels.navajo.tipi.swing.client;bundle-version="1.0.3"
+Import-Package: javax.imageio,
+ javax.swing,
+ javax.swing.table
+DynamicImport-Package: org.pushingpixels.*
