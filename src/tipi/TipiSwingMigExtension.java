@@ -25,6 +25,7 @@ import com.dexels.navajo.tipi.TipiContext;
 
 		@Override
 		public void stop(BundleContext context) throws Exception {
+			deregisterTipiExtension(context);
 		}
 
 
