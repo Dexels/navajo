@@ -19,6 +19,7 @@ public class TipiSwingEditorExtension extends TipiAbstractXMLExtension implement
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		deregisterTipiExtension(context);
 	}
 
 }
