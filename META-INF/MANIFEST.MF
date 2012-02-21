@@ -22,5 +22,5 @@ Import-Package: javax.swing,
  javax.swing.plaf.basic,
  javax.swing.table,
  javax.swing.text,
- org.osgi.framework;version="1.6.0",
+ org.osgi.framework;version="1.5.0",
  org.slf4j;version="1.6.1"
