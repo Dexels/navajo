@@ -79,6 +79,20 @@
 
 
 	</build>
-
-
+  <distributionManagement>
+    <repository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>dexels</id>
+      <name>Dexels Repository</name>
+      <url>scp://repo1/maven2</url>
+      <layout>default</layout>
+    </repository>
+    <snapshotRepository>
+      <uniqueVersion>true</uniqueVersion>
+      <id>snap</id>
+      <name>Dexels Snapshots</name>
+      <url>file:///var/www/html/maven</url>
+      <layout>legacy</layout>
+    </snapshotRepository>
+    </distributionManagement>
 </project>
