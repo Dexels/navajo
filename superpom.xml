@@ -84,7 +84,7 @@
       <uniqueVersion>false</uniqueVersion>
       <id>dexels</id>
       <name>Dexels Repository</name>
-      <url>scp://repo1/maven2</url>
+      <url>file:///var/www/html/maven_release</url>
       <layout>default</layout>
     </repository>
     <snapshotRepository>
