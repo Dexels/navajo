@@ -20,12 +20,12 @@ public class TipiSvgBatikExtension extends TipiAbstractXMLExtension implements T
 	@Override
 	public void start(BundleContext context) throws Exception {
 		// TODO Auto-generated method stub
-		
+		registerTipiExtension(context);
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		// TODO Auto-generated method stub
+		deregisterTipiExtension(context);
 		
 	}
 }
