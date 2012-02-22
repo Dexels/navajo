@@ -3,13 +3,14 @@ package com.dexels.navajo.tipi.swing.substance;
 import java.awt.Frame;
 
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
-import org.jvnet.substance.SubstanceLookAndFeel;
+import org.pushingpixels.substance.api.SubstanceLookAndFeel;
+import org.pushingpixels.substance.api.skin.SubstanceBusinessBlackSteelLookAndFeel;
 
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
-import com.dexels.navajo.tipi.components.swingimpl.SwingTipiContext;
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
@@ -28,12 +29,14 @@ public class TipiSetSkin extends TipiAction {
 					value = (String) valueOp.value;
 				}
 				System.err.println("Setting skin: "+value);
-				
+				UIManager.getLookAndFeelDefaults().put("ClassLoader", SubstanceBusinessBlackSteelLookAndFeel.class.getClassLoader());
+
 				if (value == null) {
 					setDefaultSkin();
 				} else {
 					setSubstanceSkin(value);
 				}
+
 			}});
 	
 	}
@@ -52,12 +55,12 @@ public class TipiSetSkin extends TipiAction {
 
 		Frame[] f = Frame.getFrames();
 
-		if (((SwingTipiContext) myContext).getAppletRoot() != null) {
-		} else {
+//		if (((SwingTipiContext) myContext).getAppletRoot() != null) {
+//		} else {
 			for (int i = 0; i < f.length; i++) {
 				SwingUtilities.updateComponentTreeUI(f[i]);
 			}
-		}
+//		}
 
 	}
 }

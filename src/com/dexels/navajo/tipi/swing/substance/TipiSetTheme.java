@@ -3,6 +3,8 @@ package com.dexels.navajo.tipi.swing.substance;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import org.pushingpixels.substance.api.skin.SubstanceBusinessBlackSteelLookAndFeel;
+
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
@@ -21,6 +23,8 @@ public class TipiSetTheme extends TipiAction {
 
 			public void run() {
 				try {
+					UIManager.getLookAndFeelDefaults().put("ClassLoader", SubstanceBusinessBlackSteelLookAndFeel.class.getClassLoader());
+
 					String value = null;
 					if (valueOp != null) {
 						value = (String) valueOp.value;

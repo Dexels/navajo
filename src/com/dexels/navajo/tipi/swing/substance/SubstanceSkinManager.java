@@ -2,8 +2,8 @@ package com.dexels.navajo.tipi.swing.substance;
 
 import java.util.*;
 
-import org.jvnet.substance.*;
-import org.jvnet.substance.skin.*;
+import org.pushingpixels.substance.api.SubstanceLookAndFeel;
+import org.pushingpixels.substance.api.skin.SkinInfo;
 
 import com.dexels.navajo.document.*;
 

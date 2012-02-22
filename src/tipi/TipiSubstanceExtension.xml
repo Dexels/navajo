@@ -7,7 +7,7 @@
 		<include path="com/dexels/navajo/tipi/swing/substance/substanceclassdef.xml"/>
 	</includes>
 	<jars>
-		<jar path="substance5_1.jar"/>
+		<jar path="substance-6.jar"/>
 		<jar path="TipiSubstance.jar"/>
 	</jars>
 	<other>
