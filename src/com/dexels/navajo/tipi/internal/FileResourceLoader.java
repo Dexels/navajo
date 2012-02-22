@@ -27,7 +27,7 @@ public class FileResourceLoader extends ClassPathResourceLoader {
 	}
 
 	public String toString() {
-		return "FILELOADER: " + baseFile.toString();
+		return "FILELOADER: " + baseFile.toString()+" full: "+baseFile.getAbsolutePath();
 
 	}
 

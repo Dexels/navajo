@@ -1,6 +1,11 @@
 package tests.eventinject;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import tipi.TipiCoreExtension;
+import tipi.TipiExtension;
 
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
@@ -13,7 +18,12 @@ public class EventInjectTipi extends AbstractTipiTest {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		setContext("init", new File("testsrc/tests/eventinject"));
+		List<TipiExtension> elist = new ArrayList<TipiExtension>();
+		TipiExtension ed = new TipiCoreExtension();
+		ed.loadDescriptor();
+		elist.add(ed);
+
+		setContext("init", new File("testsrc/tests/eventinject"),elist);
 	}
 
 	public void testTipi() throws TipiBreakException, TipiException {

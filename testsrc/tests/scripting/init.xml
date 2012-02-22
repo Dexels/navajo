@@ -16,7 +16,7 @@
 					for (a in tipiContext) {
 						 println(a);
 					}
-					var button = component.getTipiComponentByPath("button");
+					var button = component.getComponent("button");
 					println(button.getValue("enabled"));
 					]]>
 			</run>

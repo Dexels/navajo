@@ -1,6 +1,11 @@
 package tests.instantiateDispose;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import tipi.TipiCoreExtension;
+import tipi.TipiExtension;
 
 import com.dexels.navajo.tipi.testimpl.AbstractTipiTest;
 
@@ -11,7 +16,12 @@ public class InstantiateDisposeTipi extends AbstractTipiTest {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		setContext("init", new File("testsrc/tests/instantiateDispose"));
+		List<TipiExtension> elist = new ArrayList<TipiExtension>();
+		TipiExtension ed = new TipiCoreExtension();
+		ed.loadDescriptor();
+		elist.add(ed);
+
+		setContext("init", new File("testsrc/tests/instantiateDispose"),elist);
 	}
 
 	public void testTipi() throws InterruptedException {

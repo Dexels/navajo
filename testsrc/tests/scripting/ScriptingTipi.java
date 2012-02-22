@@ -1,6 +1,11 @@
 package tests.scripting;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import tipi.TipiCoreExtension;
+import tipi.TipiExtension;
 
 import com.dexels.navajo.tipi.testimpl.AbstractTipiTest;
 
@@ -11,8 +16,13 @@ public class ScriptingTipi extends AbstractTipiTest {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		setContext("init", new File("testsrc/tests/scripting"));
-		System.err.println("Setup complete");
+		List<TipiExtension> elist = new ArrayList<TipiExtension>();
+		TipiExtension ed = new TipiCoreExtension();
+		ed.loadDescriptor();
+		elist.add(ed);
+
+		setContext("init", new File("testsrc/tests/scripting"),elist);
+		System.err.println("Settup complete");
 	}
 
 	public void testTipi() {

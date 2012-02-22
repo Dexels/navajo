@@ -1,7 +1,11 @@
 package com.dexels.navajo.tipi.testimpl;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
+
+import tipi.TipiCoreExtension;
+import tipi.TipiExtension;
 
 import junit.framework.TestCase;
 
@@ -21,14 +25,15 @@ public class AbstractTipiTest extends TestCase {
 		super(name);
 	}
 
-	public void setContext(String definition, File tipiDir) throws Exception {
-		setContext(definition, tipiDir, new String[] {});
+	public void setContext(String definition, File tipiDir, List<TipiExtension> ed) throws Exception {
+		setContext(definition, tipiDir, new String[] {},ed);
 	}
 
-	public void setContext(String definition, File tipiDir, String[] properties)
+	public void setContext(String definition, File tipiDir, String[] properties, List<TipiExtension> ed)
 			throws Exception {
+		
 		myContext = (HeadlessTipiContext) HeadlessApplicationInstance
-				.initialize(definition, tipiDir, properties, null);
+				.initialize(definition, tipiDir, properties, ed);
 		System.err.println("Resource loader set: " + tipiDir.getAbsolutePath());
 	}
 

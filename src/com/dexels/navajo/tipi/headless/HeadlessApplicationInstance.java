@@ -23,44 +23,49 @@ public class HeadlessApplicationInstance {
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
+		List<TipiExtension> ll = new ArrayList<TipiExtension>();
+		ll.add(new TipiCoreExtension());
 		// Map<String, String> properties = parseProperties(args);
 		// initialize("init", "init.xml", properties);
-		initialize("init", new File("."), new TipiCoreExtension());
+		initialize("init", new File("."), ll );
 		Thread.sleep(2000);
 	}
 
 	public static TipiContext initialize(String definition, File tipiDir,
-			TipiExtension ed) throws Exception {
+			List<TipiExtension> ed) throws Exception {
 		return initialize(definition, definition + ".xml", tipiDir,
 				parseProperties(new String[] {}), ed);
 	}
 
 	public static TipiContext initialize(String definition, File tipiDir,
-			String[] args, TipiExtension ed) throws Exception {
+			String[] args, List<TipiExtension> ed) throws Exception {
 		return initialize(definition, definition + ".xml", tipiDir,
 				parseProperties(args), ed);
 	}
 
 	public static TipiContext initialize(String definition,
 			String definitionPath, File tipiDir,
-			Map<String, String> properties, TipiExtension ed) throws Exception {
+			Map<String, String> properties, List<TipiExtension> ed) throws Exception {
 		if (definitionPath == null) {
 			definitionPath = definition;
 		}
 		TipiContext context = null;
 		// System.setProperty("com.dexels.navajo.tipi.maxthreads","0");
-		context = new HeadlessTipiContext();
+		context = new HeadlessTipiContext(ed);
+//		for (TipiExtension tipiExtension : ed) {
+//			context.processRequiredIncludes(tipiExtension);
+//			tipiExtension.initialize(context);
+//		}
 		FileResourceLoader frl = new FileResourceLoader(tipiDir);
 		context.setTipiResourceLoader(frl);
 		context.setDefaultTopLevel(new TipiScreen(context));
 		context.processProperties(properties);
-		ed.initialize(context);
 		InputStream tipiResourceStream = context
 				.getTipiResourceStream(definitionPath);
 		if (tipiResourceStream == null) {
 			System.err.println("Error starting up: Can not load tipi");
 		} else {
-			context.parseStream(tipiResourceStream,ed);
+			context.parseStream(tipiResourceStream,null);
 			context.switchToDefinition(definition);
 		}
 		return context;

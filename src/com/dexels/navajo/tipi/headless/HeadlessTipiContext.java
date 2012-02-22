@@ -1,10 +1,14 @@
 package com.dexels.navajo.tipi.headless;
 
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+
+import tipi.TipiExtension;
 
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiContext;
@@ -21,8 +25,8 @@ public class HeadlessTipiContext extends TipiContext {
 
 	// private final Thread myInvokingThread;
 
-	public HeadlessTipiContext() {
-		super(null, null);
+	public HeadlessTipiContext(List<TipiExtension> ed) {
+		super(null, ed);
 		// myInvokingThread = Thread.currentThread();
 	}
 

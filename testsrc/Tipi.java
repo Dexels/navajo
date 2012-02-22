@@ -5,6 +5,7 @@ import tests.cascadinglisteners.NonCascadingListeners;
 import tests.core.CoreTipi;
 import tests.eventinject.EventInjectTipi;
 import tests.instantiateDispose.InstantiateDisposeTipi;
+import tests.scripting.ScriptingTipi;
 
 public class Tipi {
 
@@ -15,6 +16,7 @@ public class Tipi {
 		suite.addTest(new EventInjectTipi());
 		suite.addTest(new CascadingListeners());
 		suite.addTest(new NonCascadingListeners());
+		suite.addTest(new ScriptingTipi());
 		return suite;
 	}
 
