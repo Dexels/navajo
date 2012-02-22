@@ -19,7 +19,28 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</pluginRepository>
-	</pluginRepositories><!-- -->
+	</pluginRepositories>
+
+	<repositories>
+		<repository>
+			<releases>
+				<enabled>false</enabled>
+				<updatePolicy>always</updatePolicy>
+				<checksumPolicy>warn</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+				<checksumPolicy>fail</checksumPolicy>
+			</snapshots>
+			<id>spiritusSnapshot</id>
+			<name>Spiritus</name>
+			<url>http://spiritus.dexels.nl:41766/maven</url>
+			<layout>default</layout>
+		</repository>
+	</repositories>
+  
+	<!-- -->
 	<build>
 		<plugins>
 			<!-- -->
