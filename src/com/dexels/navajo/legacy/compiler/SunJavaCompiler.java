@@ -59,7 +59,7 @@
  *
  */
 
-package org.apache.jasper.compiler;
+package com.dexels.navajo.legacy.compiler;
 
 import java.io.OutputStream;
 import java.io.PrintWriter;

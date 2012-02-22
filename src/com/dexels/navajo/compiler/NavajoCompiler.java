@@ -32,9 +32,9 @@ import java.io.StringWriter;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
-import org.apache.jasper.compiler.SunJavaCompiler;
 
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.legacy.compiler.SunJavaCompiler;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfigInterface;
 
