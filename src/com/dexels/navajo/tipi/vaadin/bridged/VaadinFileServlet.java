@@ -65,7 +65,9 @@ public class VaadinFileServlet extends HttpServlet {
 //		logger.debug("Path: "+vaadin.getAbsolutePath());
 		String pathInf = req.getPathInfo();
 		File resolved = new File(vaadin,pathInf);
-//		logger.debug("Path resolved to: "+resolved.getAbsolutePath());
+		String mime = getServletContext().getMimeType(pathInf);
+		logger.debug("Path resolved to: "+resolved.getAbsolutePath()+" with mime: "+mime);
+		resp.setContentType(mime);
 		if(!resolved.exists()) {
 			getFromClassPath(pathInf,resp);
 		} else {
