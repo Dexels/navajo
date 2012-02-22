@@ -13,4 +13,10 @@
 		<module>../com.dexels.navajo.tipi.swing.swingx</module>
 		<module>../com.dexels.navajo.tipi.swing.jxlayer</module>
 	</modules>
+	<parent>
+		<groupId>com.dexels.navajo.core</groupId>
+		<artifactId>com.dexels.navajo.super</artifactId>
+		<version>1.0.0</version>
+		<relativePath>../com.dexels.repository/superpom.xml</relativePath>
+	</parent>
 </project>
