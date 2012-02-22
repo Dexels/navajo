@@ -21,10 +21,12 @@ public class TipiCoreExtension extends TipiAbstractXMLExtension implements Seria
 	@Override
 	public void start(BundleContext context) throws Exception {
 		registerTipiExtension(context);
+		// register as 'special service, so components can 'require' a core, as this is always the case.
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		deregisterTipiExtension(context);
 	}
 
 }

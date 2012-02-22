@@ -11,7 +11,8 @@
 		<include path="com/dexels/navajo/functions/functions.xml"/>
 	</includes>
 	<jars>
-		<jar path="osgi.jar"/>
+		<jar path="org.osgi.core-4.3.0.jar"/>
+		<jar path="org.eclipse.osgi.services_3.3.0.v20110513.jar"/>
 		<jar path="DexelsVersionControl.jar"/>
 		<jar path="NavajoClient.jar"/>
 		<jar path="NavajoDocument.jar"/>

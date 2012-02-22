@@ -14,7 +14,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 
-import tipi.ServiceRegistration;
+import tipi.ServiceRegistrationUtils;
 import tipi.TipiExtension;
 
 import com.dexels.navajo.functions.util.FunctionDefinition;
@@ -79,7 +79,7 @@ public class OSGiClassManager extends BaseClassManager implements IClassManager 
 		if(!(ed instanceof TipiExtension)) {
 			throw new UnsupportedOperationException("Can not append tipi element with non-tipi extension type");
 		}
-		ServiceRegistration.registerTipiElement(xe, (TipiExtension) ed, this.myBundleContext);
+		ServiceRegistrationUtils.registerTipiElement(xe, (TipiExtension) ed, this.myBundleContext);
 	}
 
 	@Override
@@ -164,7 +164,7 @@ public class OSGiClassManager extends BaseClassManager implements IClassManager 
 	@Override
 	public TipiTypeParser parseParser(XMLElement xe, ExtensionDefinition te) {
 		Dictionary<String, Object> props = new Hashtable<String, Object>();
-		ServiceRegistration.parseParser(myBundleContext,props,xe,(TipiExtension) te);
+		ServiceRegistrationUtils.parseParser(myBundleContext,props,xe,(TipiExtension) te);
 		TipiTypeParser ttp = super.parseParser(xe,te);
 //		System.err.println("Ignoring inline parser!");
 		return ttp;

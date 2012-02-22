@@ -11,6 +11,7 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.ServiceReference;
+import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +23,9 @@ public abstract class TipiAbstractOSGiExtension implements TipiExtension,
 
 	private static final long serialVersionUID = 7871411864902044319L;
 	private transient BundleContext context = null;
+	private ServiceRegistration<TipiMainExtension> mainExtensionReg;
+	private ServiceRegistration<TipiCoreExtension> coreExtensionReg;
+	private ServiceRegistration<TipiExtension> extensionReg;
 	private static final Logger logger = LoggerFactory.getLogger(TipiAbstractOSGiExtension.class); 
 
 	private static final ITipiExtensionRegistry nonOSGiRegistry = new TipiJarServiceExtensionProvider();
@@ -41,15 +45,13 @@ public abstract class TipiAbstractOSGiExtension implements TipiExtension,
 			reg = nonOSGiRegistry;
 			reg.registerTipiExtension(this);
 		} else {
-			ServiceRegistration.registerWhiteBoardExtension(this,context);
-			// Actually, only for non-whiteboard, but it still should work.
-			
-			/* DEPRECATED!
-			ServiceReference<? extends ITipiExtensionRegistry> refs = (ServiceReference<? extends ITipiExtensionRegistry>) context
-					.getServiceReference(ITipiExtensionRegistry.class.getName());
-			reg = (ITipiExtensionRegistry) context.getService(refs);
-			reg.registerTipiExtension(this);
-			*/
+			extensionReg = ServiceRegistrationUtils.registerWhiteBoardExtension(this,context);
+			if(this instanceof TipiMainExtension) {
+				mainExtensionReg = ServiceRegistrationUtils.registerMainExtension((TipiMainExtension) this, context);
+			}
+			if(this instanceof TipiCoreExtension) {
+				coreExtensionReg = ServiceRegistrationUtils.registerCoreExtension((TipiCoreExtension) this, context);
+			}
 		}
 	}
 
@@ -58,8 +60,19 @@ public abstract class TipiAbstractOSGiExtension implements TipiExtension,
 	
 	protected void deregisterTipiExtension(BundleContext context)
 			throws Exception {
-///		this.context = context;
-		// deregister
+		if(extensionReg!=null) {
+			extensionReg.unregister();
+			extensionReg = null;
+		}
+		if(coreExtensionReg!=null) {
+			coreExtensionReg.unregister();
+			coreExtensionReg = null;
+		}
+		if(mainExtensionReg!=null) {
+			mainExtensionReg.unregister();
+			mainExtensionReg = null;
+		}
+
 	}	
 	
 	@SuppressWarnings("unchecked")

@@ -22,13 +22,17 @@ public abstract class BaseClassManager implements IClassManager {
 	protected TipiContext myContext;
 	private final Map<String, TipiTypeParser> parserInstanceMap = new HashMap<String, TipiTypeParser>();
 
-	/* (non-Javadoc)
-	 * @see com.dexels.navajo.tipi.classdef.IClassManager#getTipiClass(com.dexels.navajo.tipi.tipixml.XMLElement)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.dexels.navajo.tipi.classdef.IClassManager#getTipiClass(com.dexels
+	 * .navajo.tipi.tipixml.XMLElement)
 	 */
 	public BaseClassManager(TipiContext context) {
 		this.myContext = context;
 	}
-	
+
 	public Class<?> getTipiClass(XMLElement xe) {
 		Class<?> cc = null;
 		String pack = (String) xe.getAttribute("package");
@@ -44,7 +48,7 @@ public abstract class BaseClassManager implements IClassManager {
 			}
 			System.err
 					.println("FALLBACK: Loading class without Extension definition");
-			
+
 			cc = Class.forName(fullDef, true, myContext.getClassLoader());
 		} catch (ClassNotFoundException ex) {
 			System.err.println("Error loading class: " + fullDef);
@@ -71,9 +75,13 @@ public abstract class BaseClassManager implements IClassManager {
 		}
 		return cl.buildResult();
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.dexels.navajo.tipi.classdef.IClassManager#getAssembledClassDef(java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.dexels.navajo.tipi.classdef.IClassManager#getAssembledClassDef(java
+	 * .lang.String)
 	 */
 	@Override
 	public XMLElement getAssembledClassDef(String name) throws TipiException {
@@ -81,10 +89,11 @@ public abstract class BaseClassManager implements IClassManager {
 		try {
 			classDef = getClassDef(name);
 		} catch (ClassNotFoundException e) {
-			throw new TipiException("Class loading problem: "+name, e);
+			throw new TipiException("Class loading problem: " + name, e);
 		}
 		if (classDef == null) {
-			throw new TipiException("Error loading class def: " + name);
+			throw new TipiException(
+					"Error loading classdef. Definition not found for: " + name);
 		}
 
 		Object classInstance = classDef.getObjectAttribute("classInstance");
@@ -97,7 +106,7 @@ public abstract class BaseClassManager implements IClassManager {
 			result = assembleClassDefs(interfaces, name);
 			result.setObjectAttribute("classInstance", classInstance);
 		}
-		
+
 		return result;
 	}
 
@@ -113,9 +122,11 @@ public abstract class BaseClassManager implements IClassManager {
 				try {
 					element = getClassDef(currentName);
 				} catch (ClassNotFoundException e) {
-					throw new TipiException("ClassLoadingError: ClassDef: "
-							+ classDef.getStringAttribute("name")
-							+ " has an unknown super interface: " + currentName,e);
+					throw new TipiException(
+							"ClassLoadingError: ClassDef: "
+									+ classDef.getStringAttribute("name")
+									+ " has an unknown super interface: "
+									+ currentName, e);
 				}
 				if (element == null) {
 					throw new TipiException("Error: ClassDef: "
@@ -128,7 +139,6 @@ public abstract class BaseClassManager implements IClassManager {
 		}
 		return null;
 	}
-	
 
 	public Object parse(TipiComponent source, String name, String expression,
 			TipiEvent te) {
@@ -153,8 +163,6 @@ public abstract class BaseClassManager implements IClassManager {
 		return ttp;
 	}
 
-	
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public TipiTypeParser parseParser(XMLElement xe, ExtensionDefinition te) {
@@ -166,7 +174,8 @@ public abstract class BaseClassManager implements IClassManager {
 			pClass = (Class<TipiTypeParser>) Class.forName(parserClass, true,
 					myContext.getClassLoader());
 		} catch (ClassNotFoundException ex) {
-			System.err.println("Error loading class for parser: " + parserClass);
+			System.err
+					.println("Error loading class for parser: " + parserClass);
 			return null;
 		}
 		TipiTypeParser ttp = null;
@@ -184,7 +193,8 @@ public abstract class BaseClassManager implements IClassManager {
 			return null;
 		}
 		try {
-			Class<?> cc = Class.forName(classType, true, myContext.getClassLoader());
+			Class<?> cc = Class.forName(classType, true,
+					myContext.getClassLoader());
 			ttp.setReturnType(cc);
 		} catch (ClassNotFoundException ex) {
 			System.err.println("Error verifying return type class for parser: "
@@ -198,7 +208,5 @@ public abstract class BaseClassManager implements IClassManager {
 	public boolean isValidType(String name) {
 		return parserInstanceMap.containsKey(name);
 	}
-
-
 
 }
