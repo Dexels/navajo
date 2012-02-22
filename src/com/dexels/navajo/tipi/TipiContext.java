@@ -216,6 +216,11 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		
 		initializeContext(myApplication, extensionList, parent);
 	}
+	
+	public TipiContext(TipiApplicationInstance myApplication, List<TipiExtension> extensionList) {
+		this.myApplication = myApplication;
+		initializeContext(myApplication, extensionList, null);
+	}
 
 	protected List<TipiExtension> getExtensionFromServiceEnumeration() {
 		List<TipiExtension> extensionList = listExtensions();
@@ -1059,11 +1064,12 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	}
 
 	public void processRequiredIncludes(TipiExtension tipiExtension) {
+		System.err.println("Adding extension: "+tipiExtension.getId());
 		List<String> includes = new LinkedList<String>();
 		String[] ss = tipiExtension.getIncludes();
 		if (ss == null || ss.length == 0) {
 			System.err.println("Warning: extension: " + tipiExtension.getId()
-					+ " - " + tipiExtension.getDescription()
+					+ " - " + tipiExtension.getDescription()+" class: ("+tipiExtension.getClass()+")"
 					+ " has no includes!");
 			return;
 		}
@@ -1324,12 +1330,12 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 								+ name);
 			}
 			tc = instantiateComponentByDefinition(xx, instance, event, parent);
-
 		} else {
 			// Class provided. Not instantiating from a definition, name is
 			// irrelevant.
 			tc = (TipiComponent) instantiateClass(clas, null, instance, parent);
 		}
+		tc.setClassName(clas);
 		// tc.setParent(parent);
 
 		if (t == null) {
@@ -1443,6 +1449,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			TipiComponent tc = (TipiComponent) o;
 			tc.setContext(this);
 			tc.setParent(parent);
+			tc.setClassName(defname);
 			if(parent!=null) {
 				tc.setParentContainer(parent.getContainer());
 			}
