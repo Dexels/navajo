@@ -20,6 +20,7 @@ public class TipiJxLayerExtension extends TipiAbstractXMLExtension implements Ti
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		deregisterTipiExtension(context);
 	}
 }
 
