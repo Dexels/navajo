@@ -23,5 +23,6 @@ public class TipiRssExtension extends TipiAbstractXMLExtension implements TipiEx
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		deregisterTipiExtension(context);
 	}
 }
