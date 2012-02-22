@@ -23,6 +23,7 @@ public class TipiCobraBrowserExtension extends TipiAbstractXMLExtension implemen
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		deregisterTipiExtension(context);
 	}
 }
 
