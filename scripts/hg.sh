@@ -146,9 +146,9 @@ cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.tipi.swing.substance /home/cvs/TipiSubstance
 
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.tipi.swing.geo.feature /home/cvs/com.dexels.navajo.tipi.swing.geo.feature
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.tipi.swing.geo /home/cvs/TipiGeoSwing
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.tipi.swing.swingx /home/cvs/TipiSwingX
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.tipi.swing.jxlayer /home/cvs/TipiJxLayer
-cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.tipi.swing.geo /home/cvs/TipiGeoSwing
 
 
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.tipi.swing.rich.feature /home/cvs/com.dexels.navajo.tipi.swing.rich.feature
