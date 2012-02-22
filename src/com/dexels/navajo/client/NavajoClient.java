@@ -1184,8 +1184,6 @@ public final void switchServer(boolean force) {
 			repDef.addProperty(orientationProperty);
 		}
 
-		n.getMessage("__ReportDefinition").write(System.err);
-		repDef.write(System.err);
 		try {
 			Navajo result = NavajoClientFactory.getClient().doSimpleSend(n, "ProcessPrintTableBirt");
 			Property data = result.getProperty("/Result/Data");
