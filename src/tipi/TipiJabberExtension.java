@@ -22,5 +22,6 @@ public class TipiJabberExtension extends TipiAbstractXMLExtension implements Tip
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		deregisterTipiExtension(context);
 	}
 }
