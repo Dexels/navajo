@@ -7,4 +7,4 @@
 <%@ page import="com.dexels.navajo.client.context.NavajoContext"%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <jsp:useBean id="navajoContext" class="com.dexels.navajo.client.context.NavajoContext" scope="session" />
-Navajo Tester 2.4.6 ${navajoContext.engineInstance}
+Navajo Tester 2.5.0 ${navajoContext.engineInstance}
