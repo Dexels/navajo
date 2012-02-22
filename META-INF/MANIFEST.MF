@@ -6,7 +6,6 @@ Bundle-Version: 1.0.1.qualifier
 Bundle-SymbolicName: com.dexels.navajo.dsl.expression; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext;bundle-version="1.0.1",
- org.eclipse.xtext.generator;resolution:=optional,
  org.apache.commons.logging;resolution:=optional,
  org.eclipse.emf.codegen.ecore;resolution:=optional,
  org.eclipse.emf.mwe.utils,
