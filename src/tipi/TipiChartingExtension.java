@@ -31,6 +31,7 @@ public class TipiChartingExtension extends TipiAbstractXMLExtension implements T
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		deregisterTipiExtension(context);
 	}
 
 	
