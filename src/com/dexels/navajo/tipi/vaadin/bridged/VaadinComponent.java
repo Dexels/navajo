@@ -44,8 +44,9 @@ public class VaadinComponent {
 		Hashtable<String,String> ht = new Hashtable<String,String>();
 		ht.put("application", "com.dexels.navajo.tipi.vaadin.application.TipiVaadinApplication");
 		VaadinFileServlet vfs = new VaadinFileServlet();
-		httpService.registerServlet(VAADIN_DIR_PREFIX, vfs, null, commonContext);
 		httpService.registerServlet(SERVLET_ALIAS, servlet, ht, commonContext);
+//		httpService.registerServlet(SERVLET_ALIAS+"eval", servlet, ht, commonContext);
+		httpService.registerServlet(VAADIN_DIR_PREFIX, vfs, null, commonContext);
 	} catch (ServletException e) {
 		e.printStackTrace();
 	} catch (NamespaceException e) {
