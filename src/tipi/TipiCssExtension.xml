@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<extension id="css" requiresMain="swing" project="com.dexels.navajo.tipi.css" version="0.9" title="Tipi CSS extended libraries" vendor="Dexels" homepage="http://www.dexels.com">
+	<description>
+		Tipi CSS extended libraries
+	</description>
+	<includes>
+		<include path="com/dexels/navajo/tipi/css/cssclassdef.xml"/>
+	</includes>
+	<jars>
+	</jars>
+	<other>
+		<link href="http://tk-ui.sourceforge.net/"/>
+	</other>
+</extension>
