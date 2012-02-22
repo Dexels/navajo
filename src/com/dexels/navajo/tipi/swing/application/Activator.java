@@ -2,17 +2,20 @@ package com.dexels.navajo.tipi.swing.application;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import tipi.TipiApplicationInstance;
-
-import com.dexels.navajo.tipi.TipiException;
-import com.dexels.navajo.tipi.components.swingimpl.TipiSwingWrapper;
 
 public class Activator implements BundleActivator {
 
 	private static BundleContext context;
 	private TipiApplicationInstance instance;
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(Activator.class);
+	
 	static BundleContext getContext() {
 		return context;
 	}
@@ -23,22 +26,8 @@ public class Activator implements BundleActivator {
 	 */
 
 	public void start(final BundleContext bc) throws Exception {
-		final String context = System.getProperty("tipi.context");
 		Activator.context = bc;
-		
-		Thread t = new Thread() {
 
-			@Override
-			public void run() {
-				try {
-					instance = TipiSwingWrapper.runApp(bc,context);
-					instance.getCurrentContext().switchToDefinition(instance.getDefinition());
-				} catch (TipiException e) {
-					e.printStackTrace();
-				}
-			}
-		};
-		t.start();
 	}
 
 	/*

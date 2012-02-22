@@ -20,28 +20,41 @@
       <plugin id="com.dexels.navajo.core"/>
       <plugin id="com.dexels.navajo.document"/>
       <plugin id="com.dexels.navajo.function"/>
+      <plugin id="com.dexels.navajo.swing.editor"/>
       <plugin id="com.dexels.navajo.tipi"/>
+      <plugin id="com.dexels.navajo.tipi.css"/>
+      <plugin id="com.dexels.navajo.tipi.css.tkui"/>
+      <plugin id="com.dexels.navajo.tipi.facilityoccupation"/>
       <plugin id="com.dexels.navajo.tipi.jabber"/>
+      <plugin id="com.dexels.navajo.tipi.jxlayer"/>
       <plugin id="com.dexels.navajo.tipi.mail"/>
       <plugin id="com.dexels.navajo.tipi.swing"/>
       <plugin id="com.dexels.navajo.tipi.swing.application"/>
       <plugin id="com.dexels.navajo.tipi.swing.client"/>
       <plugin id="com.dexels.navajo.tipi.swing.deps"/>
+      <plugin id="com.dexels.navajo.tipi.swing.editor"/>
+      <plugin id="com.dexels.navajo.tipi.swing.geo"/>
       <plugin id="com.dexels.navajo.tipi.swing.mig"/>
       <plugin id="com.dexels.navajo.tipi.swing.rich"/>
       <plugin id="com.dexels.navajo.tipi.swing.rich.client"/>
       <plugin id="com.dexels.navajo.tipi.swing.substance"/>
+      <plugin id="com.dexels.navajo.tipi.swing.swingx"/>
       <plugin id="com.dexels.navajo.version"/>
-      <plugin id="javax.transaction" fragment="true"/>
-      <plugin id="org.eclipse.equinox.servletbridge.extensionbundle" fragment="true"/>
-      <plugin id="org.eclipse.equinox.transforms.hook" fragment="true"/>
-      <plugin id="org.eclipse.equinox.weaving.hook" fragment="true"/>
+      <plugin id="javax.xml"/>
+      <plugin id="org.apache.commons.beanutils"/>
+      <plugin id="org.apache.commons.collections"/>
+      <plugin id="org.apache.commons.logging"/>
+      <plugin id="org.apache.xerces"/>
+      <plugin id="org.apache.xml.resolver"/>
+      <plugin id="org.apache.xml.serializer"/>
       <plugin id="org.eclipse.osgi"/>
       <plugin id="org.eclipse.osgi.services"/>
       <plugin id="org.eclipse.osgi.util"/>
       <plugin id="org.hamcrest.core"/>
       <plugin id="org.junit"/>
       <plugin id="org.slf4j.api"/>
+      <plugin id="org.slf4j.jcl"/>
+      <plugin id="org.w3c.css.sac"/>
    </plugins>
 
    <configurations>
