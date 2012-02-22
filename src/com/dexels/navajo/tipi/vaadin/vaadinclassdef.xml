@@ -47,7 +47,7 @@
 	<values>
         <value direction="in" name="visible" type="boolean">
 		<description>
-			Allows for hiding swing components without disposing them. All components are visible by default.
+			Allows for hiding ui components without disposing them. All components are visible by default.
 		</description>
 	</value>
         <value direction="in" name="enabled" type="boolean"  >
@@ -595,7 +595,7 @@
 			<value direction="inout" name="v" type="integer" />
 		</values>
 		<methods>
-			<method name="selectNext" />
+			<!-- <method name="selectNext" />
 			<method name="selectPrevious" />
 			<method name="selectFirst" />
 			<method name="selectLast" />
@@ -605,7 +605,7 @@
 			</method>
 			<method name="loadColumns">
 				<param name="filepath" type="string" />
-			</method>
+			</method>-->
 			<method name="printReport" />
 
 		</methods>
@@ -874,6 +874,7 @@
 	<tipiclass class="TipiVerticalBoxLayout" name="verticalbox" package="com.dexels.navajo.tipi.vaadin.layout" type="layout" />
 	<tipiclass class="TipiVerticalBoxLayout" name="mig" package="com.dexels.navajo.tipi.vaadin.layout" type="layout" />
 	<tipiclass class="TipiVerticalBoxLayout" name="gridbag" package="com.dexels.navajo.tipi.vaadin.layout" type="layout" />
+	<tipiclass class="TipiCssLayout" name="csslayout" package="com.dexels.navajo.tipi.vaadin.layout" type="layout" />
 
 
    <tipi-parser name="border" parser="com.dexels.navajo.tipi.vaadin.components.parsers.BorderParser" type="java.lang.String" />

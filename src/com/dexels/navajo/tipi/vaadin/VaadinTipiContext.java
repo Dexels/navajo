@@ -45,6 +45,7 @@ public class VaadinTipiContext extends TipiContext {
 		
 //		File install = getInstallationFolder();
 		setTipiInstallationFolder(install);
+		setInstallationFolder(install);
 		setCookieManager(new BrowserCookieManager());
 		TipiScreen ts = new TipiScreen(this);
 		setDefaultTopLevel(ts);
@@ -150,8 +151,8 @@ public class VaadinTipiContext extends TipiContext {
 			String encoded = URLEncoder.encode(expression,"UTF-8");
 			URL contextUrl = getVaadinApplication().getContextUrl();
 			System.err.println("USING BASE EVAL URL: "+contextUrl);
-			URL eval = new URL(contextUrl ,"eval");
-			String s = eval.toString()+"?rdm="+randomizer.nextLong()+"&evaluate="+encoded;
+//			URL eval = new URL(contextUrl ,"eval");
+			String s = contextUrl+"?rdm="+randomizer.nextLong()+"&evaluate="+encoded;
 			return new URL(s);
 
 		} catch (UnsupportedEncodingException e) {

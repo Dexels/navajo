@@ -1,5 +1,12 @@
 package com.dexels.navajo.tipi.vaadin.components.impl;
 
+import java.util.Date;
+import java.util.Locale;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.tipi.vaadin.document.CompositeArrayContainer;
 import com.dexels.navajo.tipi.vaadin.document.SelectedItemValuePropertyBridge;
 import com.dexels.navajo.tipi.vaadin.document.SelectionBridge;
@@ -10,12 +17,23 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.NativeSelect;
+import com.vaadin.ui.Table;
 
 public class TmlTableFieldFactory extends DefaultFieldFactory {
 	private static final long serialVersionUID = -7394569632662794450L;
+	private final Table myTable;
+	private final static Logger logger = LoggerFactory
+			.getLogger(TmlTableFieldFactory.class);
+	public TmlTableFieldFactory(Table tipiTable) {
+		// TODO Auto-generated constructor stub
+
+		this.myTable = tipiTable;
+		
+	}
 
 	@Override
 	public Field createField(Item item, Object propertyId, Component uiContext) {
@@ -37,11 +55,42 @@ public class TmlTableFieldFactory extends DefaultFieldFactory {
 				return createDropdownBox(cmb);
 			}
 		}
-		// ShirtNumber
+        Property containerProperty = container.getContainerProperty(itemId,
+                propertyId);
+        Class<?> type = containerProperty.getType();
+        if(type!=null && ClockTime.class.isAssignableFrom(type)) {
+        	ClockTime ct = (ClockTime)message.getItemProperty(propertyId).getValue();
+            ct.setShortFormat(true);
+            //            
+//            TextField tf = new TextField();
+//            tf.setPropertyDataSource(new PropertyFormatter(property) {
+//				private static final long serialVersionUID = 1L;
+//
+//				public String format(Object value) {
+//                    return "000000000";
+//                }
+//
+//                public Object parse(String formattedValue) throws Exception {
+//                    return 123;
+//                }
+
+//            });
+//            tf.setCaption("oempaloempa");
+//    		return tf;
+        }
+        
+        if (Date.class.isAssignableFrom(type)) {
+            final DateField df = new DateField();
+            df.setResolution(DateField.RESOLUTION_DAY);
+            df.setLocale(new Locale("nl","NL"));
+            df.setDateFormat("dd/MM/yy");
+            return df;
+        }
 		Field createdField = super.createField(container, itemId, propertyId,
 				uiContext);
-		createdField.setWidth("250px");
+		createdField.setWidth("600px");
 		createdField.setCaption("");
+		logger.info("Readonly: "+containerProperty.isReadOnly());
 		if (size != null) {
 			// System.err.println("Setting size: "+size);
 //			createdField.setWidth(mt.getColumnWidth(propertyId),
@@ -49,6 +98,8 @@ public class TmlTableFieldFactory extends DefaultFieldFactory {
 //			;
 
 		}
+//		Label l = new Label(containerProperty);
+//		return l;
 		return createdField;
 	}
 

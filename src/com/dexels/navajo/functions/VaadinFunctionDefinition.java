@@ -37,7 +37,7 @@ public class VaadinFunctionDefinition implements ExtensionDefinition {
 	}
 
 	public String[] getIncludes() {
-		return new String[]{"com/dexels/navajo/functions/vaadubfunctions.xml"};
+		return new String[]{"com/dexels/navajo/functions/vaadinfunctions.xml"};
 	}
 
 	public List<String> getLibraryJars() {

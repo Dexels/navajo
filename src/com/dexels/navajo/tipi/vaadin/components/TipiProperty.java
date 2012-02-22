@@ -17,6 +17,7 @@ import com.dexels.navajo.tipi.internal.PropertyComponent;
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
 import com.dexels.navajo.tipi.vaadin.document.SelectionBridge;
 import com.dexels.navajo.tipi.vaadin.document.SelectionListBridge;
+import com.dexels.navajo.tipi.vaadin.document.StaticTypeValuePropertyBridge;
 import com.dexels.navajo.tipi.vaadin.document.ValuePropertyBridge;
 import com.vaadin.data.Container.PropertySetChangeEvent;
 import com.vaadin.data.Container.PropertySetChangeListener;
@@ -95,22 +96,22 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 
 		}
 		this.property = p;
-
-		myChangeListener = new SerializablePropertyChangeListener() {
-			
-			private static final long serialVersionUID = -2164154865756231662L;
-
-			@Override
-			public void propertyChange(PropertyChangeEvent pce) {
-				if(!"selection".equals(pce.getPropertyName())) {
-					System.err.println("DIF: "+pce.getOldValue()+" new: "+pce.getNewValue());
-//					refreshPropertyValue();
-				}
-			}
-		};
-
-		this.property.addPropertyChangeListener(myChangeListener);
-		
+//
+//		myChangeListener = new SerializablePropertyChangeListener() {
+//			
+//			private static final long serialVersionUID = -2164154865756231662L;
+//
+//			@Override
+//			public void propertyChange(PropertyChangeEvent pce) {
+//				if(!"selection".equals(pce.getPropertyName())) {
+//					System.err.println("DIF: "+pce.getOldValue()+" new: "+pce.getNewValue());
+////					refreshPropertyValue();
+//				}
+//			}
+//		};
+//
+//		this.property.addPropertyChangeListener(myChangeListener);
+//		
 		this.refreshPropertyValue();
 		if(this.width!=null) {
 			value.setWidth(this.width, Sizeable.UNITS_PIXELS);
@@ -128,7 +129,7 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 //	}
     public void propertyEventFired(com.dexels.navajo.document.Property p, String eventType) {
         try {
-            Map m = new HashMap();
+            Map<String,Object> m = new HashMap<String,Object>();
             m.put("propertyName", property.getFullPropertyName());
             m.put("propertyValue", property.getTypedValue());
             m.put("propertyType", property.getType());
@@ -206,6 +207,7 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 		currentDataSource = new ValuePropertyBridge(property,!forceReadOnly);
 		DateField df = new DateField(currentDataSource);
 		df.setDateFormat("dd-MM-yyyy");
+		df.setResolution(DateField.RESOLUTION_DAY);
 		df.setImmediate(true);
 		df.addListener(new Property.ValueChangeListener() {
 			
@@ -341,7 +343,7 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 	private void createTextualProperty() {
 		AbstractTextField p = null;
 //		System.err.println("Forcereadonly: "+forceReadOnly);
-		currentDataSource = new ValuePropertyBridge(property,!forceReadOnly);
+		currentDataSource = new StaticTypeValuePropertyBridge(property,!forceReadOnly);
 		if(com.dexels.navajo.document.Property.PASSWORD_PROPERTY.equals(property.getType())) {
 			p = new PasswordField(currentDataSource);
 		} else {
@@ -364,7 +366,9 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 
 			@Override
 			public void textChange(TextChangeEvent event) {
-				TipiProperty.this.property.setAnyValue(q.getValue());
+				System.err.println("Old type: "+property.getType());
+				TipiProperty.this.property.setValue((String)q.getValue());
+				System.err.println("New type: "+property.getType());
 				System.err.println("Property value changed: " + q.getValue());
 				propertyEventFired(property, "onValueChanged");
 			}

@@ -75,7 +75,7 @@ public class TipiVaadinExtension extends TipiAbstractXMLExtension implements Tip
 	
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		
+		deregisterTipiExtension(context);
 	}
 	
 	public void initialize(TipiContext tc) {

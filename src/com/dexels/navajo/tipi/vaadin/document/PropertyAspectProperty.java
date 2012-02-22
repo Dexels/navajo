@@ -105,7 +105,6 @@ public class PropertyAspectProperty implements Property, Property.ValueChangeNot
 
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
-				System.err.println("VAADIN-side property change: "+evt.getOldValue()+" to "+evt.getNewValue()+" property-property: "+evt.getPropertyName());
 				if(evt.getPropertyName().equals(propertyAspect)) {
 					listener.valueChange(new ValueChangeEvent() {
 						

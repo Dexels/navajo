@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.vaadin.application.TipiVaadinApplication;
@@ -18,6 +21,9 @@ import com.vaadin.terminal.gwt.server.ApplicationServlet;
 
 public class TipiVaadinServlet extends ApplicationServlet {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiVaadinServlet.class);
 	/**
 	 * 
 	 */
@@ -53,14 +59,19 @@ public class TipiVaadinServlet extends ApplicationServlet {
 		return tipiApplication;
 	}
 
-
+//    protected void service(HttpServletRequest request,
+//            HttpServletResponse response) throws ServletException, IOException {
+//    			String eval = request.getParameter("evaluate");
+//    		System.err.println("wEVAAAAAAL: "+eval);
+//    }
+//	
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws IOException, ServletException {
-		
+    protected void service(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
 		String eval = request.getParameter("evaluate");
+    	
 		if(eval==null) {
-			super.doGet(request, response);
+			super.service(request, response);
 			return;
 		}
 		
@@ -78,6 +89,7 @@ public class TipiVaadinServlet extends ApplicationServlet {
 			if(o==null) {
 				response.getWriter().write("Evaluated to null");
 			} else {
+				logger.info("Serving: "+o.value);
 				if(o.value instanceof Binary) {
 					Binary b = (Binary)o.value;
 					String contentType = b.guessContentType();
@@ -89,7 +101,7 @@ public class TipiVaadinServlet extends ApplicationServlet {
 					}
 					b.write(outputStream);
 					outputStream.flush();
-				return;
+					return;
 				}
 				response.getWriter().write("Evaluated to: "+o.getClass()+"::::\n");
 				

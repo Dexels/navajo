@@ -15,16 +15,16 @@ import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.vaadin.VaadinTipiContext;
 
-public class CreateEchoMailUrl extends FunctionInterface {
+public class InjectMailNavajo extends FunctionInterface {
 
 	@Override
 	public Object evaluate() throws TMLExpressionException {
 		if (getOperands().size() != 3) {
-			throw new TMLExpressionException("CreateEchoUrl needs three parameters");
+			throw new TMLExpressionException("InjectMailNavajo needs three parameters");
 		}
 		Object oo = getOperand(0);
 		if(!(oo instanceof VaadinTipiContext)) {
-			throw new TMLExpressionException("CreateEchoUrl: param one should be an EchoTipiContext");
+			throw new TMLExpressionException("InjectMailNavajo: param one should be an EchoTipiContext");
 		}
 		VaadinTipiContext ee = (VaadinTipiContext)getOperand(0);
 //		String expression = (String)getOperand(1);
@@ -76,8 +76,6 @@ public class CreateEchoMailUrl extends FunctionInterface {
 				u = parkAlternative(ee,navajoName,emailNavajo);
 				
 			} else {
-				System.err.println("Writing navajo name: "+navajoName);
-				emailNavajo.write(System.err);
 				u = parkMultipart(ee,navajoName,emailNavajo);
 			}
 		}

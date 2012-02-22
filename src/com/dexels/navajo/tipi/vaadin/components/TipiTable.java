@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.vaadin.components;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,13 +9,18 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
 import com.dexels.navajo.tipi.vaadin.components.impl.MessageTable;
@@ -39,6 +45,7 @@ public class TipiTable extends TipiVaadinComponentImpl {
 	private CompositeArrayContainer messageBridge;
 	
 	private int selectedIndex = -1;
+	private Message currentMessage;
 
 	private final static Logger logger = LoggerFactory.getLogger(TipiTable.class);
 	@Override
@@ -50,9 +57,10 @@ public class TipiTable extends TipiVaadinComponentImpl {
 		
 		table.setSortDisabled(false);
 		table.setColumnReorderingAllowed(true);
-		table.setEditable(true);
-		table.setColumnCollapsingAllowed(true);
-		table.setTableFieldFactory(new TmlTableFieldFactory());
+		table.setEditable(false);
+//		table.setColumnCollapsingAllowed(true);
+		table.setTableFieldFactory(new TmlTableFieldFactory(table));
+//		table.set
 		table.addListener(new Table.ValueChangeListener() {
 
 			private static final long serialVersionUID = 1L;
@@ -131,7 +139,7 @@ public class TipiTable extends TipiVaadinComponentImpl {
 		}
 		super.loadData(n, method);
 		Message m = n.getMessage(messagepath);
-
+		currentMessage = m;
 		if (m != null) {
 			messageBridge = createMessageContainer(m);
 			table.setContainerDataSource(messageBridge);
@@ -254,4 +262,72 @@ public class TipiTable extends TipiVaadinComponentImpl {
 		});
 	}
 
+	protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) {
+		int count = this.table.getContainerDataSource().size();
+		if (count != 0) {
+	
+			if ("printReport".equals(name)) {
+				Binary b;
+				try {
+					getTableReport("pdf", "horizontal", new int[] { 10, 10, 10, 10 });
+				} catch (NavajoException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	private void printTable(Binary b) {
+		try {
+			Map<String, Object> param = new HashMap<String, Object>();
+			param.put("report", b);
+			performTipiEvent("onReport", param, true);
+		} catch (TipiException e) {
+			e.printStackTrace();
+		}
+	}
+
+
+	public void getTableReport(String format, String orientation,
+			int[] margins) throws NavajoException {
+
+		Collection<?> cids = table.getContainerDataSource().getContainerPropertyIds();
+		Message m = currentMessage.copy(NavajoFactory.getInstance().createNavajo()); // getMessageAsPresentedOnTheScreen(false);
+		if (m == null) {
+			throw NavajoFactory.getInstance().createNavajoException(
+					"No message loaded, can not get message!");
+		}
+		
+		int count = cids.size(); // getColumnModel().getColumnCount() - 1;
+
+		int[] widths = new int[count];
+		String[] namesarray = new String[count];
+		String[] titles = new String[count];
+		// ECHO SPECIFIC: SKIP THE FIRST COLUMN!!!
+		//
+		for (Object id : cids) {
+			System.err.println("ID: "+id);
+		}
+//		System.err.println("Column count: " + count + " names size: "
+//				+ names.size() + " idsize: " + ids.size());
+		int i = 0;
+		for (Object propertyId : cids) {
+			int j = i;
+			// TableColumn tt = getColumnModel().getColumn(j);
+			int width = table.getColumnWidth(propertyId);
+			String name = ((String)propertyId).split("@")[0]; // ids.get(j); // getColumnId(j);
+			String title = table.getColumnHeader(propertyId); // ""+tt.getHeaderValue();
+			widths[i] = width;
+			namesarray[i] = name.trim();
+			titles[i] = title;
+			System.err.println("Adding width: " + width);
+			System.err.println("Adding name: " + name.trim());
+			i++;
+		}
+
+		Binary result = NavajoClientFactory.getClient().getArrayMessageReport(
+				m, namesarray, titles, widths, format, orientation, margins);
+//		m.write(System.err);
+		printTable(result);
+	}
 }

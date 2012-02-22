@@ -10,6 +10,9 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.internal.TipiEvent;
@@ -27,7 +30,9 @@ import com.vaadin.terminal.FileResource;
 public class TipiOpenBrowser extends TipiVaadinActionImpl {
 
    private static final long serialVersionUID = -7235686945038762814L;
-
+   
+   private final static Logger logger = LoggerFactory
+		.getLogger(TipiOpenBrowser.class);
 	/*
      * (non-Javadoc)
      * 
@@ -52,10 +57,13 @@ public class TipiOpenBrowser extends TipiVaadinActionImpl {
 
 			}
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			logger.warn("Malformed URL: "+url +". Ok, try a file:");
 			// ... so u might be a file:
 			File base = ((VaadinTipiContext)getContext()).getInstallationFolder();
+			logger.debug("Base resolved to: "+base.getAbsolutePath());
 			File fil = new File(base,""+url);
+			logger.debug("File resolved to: "+fil.getAbsolutePath());
+			
 			if(fil.exists()) {
 				final FileResource fr = new FileResource(fil,getApplication());
 				if (openNewWindow) {

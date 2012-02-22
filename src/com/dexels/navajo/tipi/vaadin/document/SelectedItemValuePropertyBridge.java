@@ -97,7 +97,6 @@ public class SelectedItemValuePropertyBridge implements Property, Property.Value
 
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
-				System.err.println("VAADIN-side property change: "+evt.getOldValue()+" to "+evt.getNewValue()+" property-property: "+evt.getPropertyName());
 				listener.valueChange(new ValueChangeEvent() {
 					
 					private static final long serialVersionUID = 1L;

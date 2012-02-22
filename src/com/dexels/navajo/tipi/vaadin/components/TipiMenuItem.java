@@ -2,6 +2,9 @@ package com.dexels.navajo.tipi.vaadin.components;
 
 import java.net.URL;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiException;
@@ -16,6 +19,9 @@ import com.vaadin.ui.MenuBar.MenuItem;
  */
 public class TipiMenuItem extends TipiVaadinComponentImpl {
 	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiMenuItem.class);
 	/**
 	 * 
 	 */
@@ -77,6 +83,7 @@ public class TipiMenuItem extends TipiVaadinComponentImpl {
             }
         }
     	if ("visible".equals(name)) {
+    		logger.debug("SETTING VISIBLE: "+object+" for component: "+menuItem.getText());
             menuItem.setVisible((Boolean) object);
         }
     	if ("style".equals(name)) {

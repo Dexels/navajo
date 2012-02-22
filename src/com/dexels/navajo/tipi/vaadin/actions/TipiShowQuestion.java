@@ -31,7 +31,7 @@ public class TipiShowQuestion extends TipiVaadinActionImpl {
      */
     protected void execute(TipiEvent event) throws TipiBreakException, TipiException, TipiSuspendException {
         String text  = (String) getEvaluatedParameterValue("text", event);
-        ConfirmDialog.show(getApplication().getMainWindow(),text,new ConfirmDialog.Listener(){
+        ConfirmDialog.show(getApplication().getMainWindow(),"",text,"Bevestigen","Annuleren",new ConfirmDialog.Listener(){
 
 			@Override
 			public void onClose(ConfirmDialog dialog) {
@@ -46,7 +46,8 @@ public class TipiShowQuestion extends TipiVaadinActionImpl {
 					} catch (TipiSuspendException e) {
 					}
 				} else {
-					throw new TipiBreakException();
+					// shouldn't do this: Vaadin framework has no idea how to handle a tipibreak exception
+//					throw new TipiBreakException();
 				}
 			}});
         suspend();

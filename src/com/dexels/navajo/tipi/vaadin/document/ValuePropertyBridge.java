@@ -12,18 +12,21 @@ import com.vaadin.data.Property;
 public class ValuePropertyBridge implements Property, Property.ValueChangeNotifier {
 	private static final long serialVersionUID = -5696589046516267159L;
 	private final Map<ValueChangeListener,SerializablePropertyChangeListener> listenerMap = new HashMap<ValueChangeListener,SerializablePropertyChangeListener>();
-	private final com.dexels.navajo.document.Property src;
-	private final boolean valueEditable;
+	protected final com.dexels.navajo.document.Property src;
+	protected final boolean valueEditable;
+	protected Object value;
 	
 	public ValuePropertyBridge(com.dexels.navajo.document.Property src, boolean editable) {
 //		System.err.println("Creating bridge with property: "+src.getFullPropertyName()+" path: "+editable);
 		this.src = src;
+		this.value = src.getTypedValue();
 		this.valueEditable = editable;
 	}
 	
 	@Override
 	public Object getValue() {
-		return src.getTypedValue();
+		return value;
+//		return src.getTypedValue();
 	}
 
 	@Override
@@ -37,6 +40,8 @@ public class ValuePropertyBridge implements Property, Property.ValueChangeNotifi
 		if(!oldType.equals(newType)) {
 			System.err.println("TYPE CHANGED. BAD NEWS. OLD: "+oldType+" new: "+newType);
 		}
+		// refresh
+		this.value = src.getTypedValue();
 	}
 
 	@Override
@@ -70,9 +75,11 @@ public class ValuePropertyBridge implements Property, Property.ValueChangeNotifi
 		SerializablePropertyChangeListener pcl = new SerializablePropertyChangeListener() {
 			private static final long serialVersionUID = -2846215480574110535L;
 
+			
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
-				System.err.println("VAADIN-side property change: "+evt.getOldValue()+" to "+evt.getNewValue()+" property-property: "+evt.getPropertyName());
+				ValuePropertyBridge.this.value = evt.getNewValue();
+
 				listener.valueChange(new ValueChangeEvent() {
 					
 					private static final long serialVersionUID = 1L;
