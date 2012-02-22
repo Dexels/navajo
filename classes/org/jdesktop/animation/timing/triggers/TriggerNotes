@@ -1,0 +1,32 @@
+Trigger Notes
+
+
+Want the ability to start/stop animations based on events, something like:
+
+"When X happens, start Anim1"
+
+"When Y happens, stop Anim2"
+
+Also want to start/stop animations based on other animations:
+
+"When Anim3 stops, start Anim4"
+
+Also want ability to auto-stop animations based on opposite events,
+and auto-start opposite animations likewise:
+
+"When X happens, start Anim1, stop Anim.
+When inverse(X) happens, stop Anim1
+
+Auto-reverse might be handleable through the new setDirection() API
+in Animator
+
+One of the problems with the current API is all these subclasses with
+essentially similar constructors.  It seems like I should be able to
+have the main functionality of creating a Trigger in just the Trigger
+class itself, and then have the functionality of the event-specific
+actions and listeners embedded in some other structure.
+
+something like:
+
+Trigger myTrigger = new Trigger(myAnimator, ButtonAction.MOUSEOVER,
+    TriggerAction.START);

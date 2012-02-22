@@ -3,9 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: SwingTipi depenencies
 Bundle-SymbolicName: com.dexels.navajo.tipi.swing.deps
 Bundle-Version: 1.0.0.qualifier
-Bundle-ClassPath: javaws.jar,
- AnimatedTransitions.jar,
- TimingFramework.jar
+Bundle-ClassPath: classes/
 Bundle-Vendor: Dexels
 Export-Package: javax.jnlp,
  org.jdesktop.animation.timing,
@@ -14,3 +12,15 @@ Export-Package: javax.jnlp,
  org.jdesktop.animation.transitions,
  org.jdesktop.animation.transitions.effects
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: javax.swing,
+ javax.swing.border,
+ javax.swing.colorchooser,
+ javax.swing.event,
+ javax.swing.filechooser,
+ javax.swing.table,
+ javax.swing.text,
+ javax.swing.text.html,
+ javax.swing.text.html.parser,
+ javax.swing.text.rtf,
+ javax.swing.tree,
+ javax.swing.undo
