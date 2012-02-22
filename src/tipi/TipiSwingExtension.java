@@ -1,16 +1,33 @@
 package tipi;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Dictionary;
+import java.util.Hashtable;
+
+import javax.swing.LookAndFeel;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
+import navajo.ExtensionDefinition;
 
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.functions.TipiSwingFunctionDefinition;
+import com.dexels.navajo.functions.util.FunctionDefinition;
+import com.dexels.navajo.functions.util.FunctionFactoryFactory;
+import com.dexels.navajo.functions.util.FunctionFactoryInterface;
+import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.swing.laf.api.LookAndFeelWrapper;
 import com.dexels.navajo.tipi.tipixml.XMLParseException;
 
 public class TipiSwingExtension extends TipiAbstractXMLExtension implements
-		TipiExtension {
+		TipiExtension,TipiMainExtension {
 	/**
 	 * 
 	 */
@@ -30,11 +47,24 @@ public class TipiSwingExtension extends TipiAbstractXMLExtension implements
 		logger.info("Registering Swing ");
 		registerTipiExtension(context);
 		
+		FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
+		fi.init();
+		fi.clearFunctionNames();
+		ExtensionDefinition extensionDef = new TipiSwingFunctionDefinition();
+		fi.injectExtension(extensionDef);
+		for (String functionName : fi.getFunctionNames(extensionDef)) {
+			FunctionDefinition fd = fi.getDef(extensionDef,functionName);
+			 Dictionary<String, Object> props = new Hashtable<String, Object>();
+			 props.put("functionName", functionName);
+			 props.put("functionDefinition", fd);
+			context.registerService(FunctionInterface.class.getName(), fi.instantiateFunctionClass(fd,getClass().getClassLoader()), props);
+		}
+				
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		
+		deregisterTipiExtension(context);
 	}
 	
 	public static TipiSwingExtension getInstance() {
@@ -45,4 +75,33 @@ public class TipiSwingExtension extends TipiAbstractXMLExtension implements
 		// Do nothing
 
 	}
+
+	public LookAndFeelWrapper getLookAndFeel(String tipiLaf) {
+		try {
+			Collection<ServiceReference<LookAndFeelWrapper>> srl = getBundleContext().getServiceReferences(LookAndFeelWrapper.class, "(className="+tipiLaf+")");
+			if(srl.isEmpty()) {
+				return null;
+			}
+			ServiceReference<LookAndFeelWrapper> laf = srl.iterator().next();
+			return getBundleContext().getService(laf);
+		} catch (InvalidSyntaxException e) {
+			logger.error("Odd OSGi error:",e);
+		}
+		return null;
+	}
+
+	public void setLookAndFeel(String tipiLaf) {
+		try {
+			Collection<ServiceReference<LookAndFeelWrapper>> srl = getBundleContext().getServiceReferences(LookAndFeelWrapper.class, "(className="+tipiLaf+")");
+			if(srl.isEmpty()) {
+				return;
+			}
+			ServiceReference<LookAndFeelWrapper> laf = srl.iterator().next();
+			LookAndFeelWrapper lwd = getBundleContext().getService(laf);
+			lwd.loadLookAndFeel();
+		} catch (InvalidSyntaxException e) {
+			logger.error("Odd OSGi error:",e);
+		}
+	}
+
 }

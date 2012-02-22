@@ -16,6 +16,7 @@ import javax.swing.JInternalFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.RootPaneContainer;
+import javax.swing.UIManager;
 
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiHelper;
@@ -94,7 +95,10 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 			// return ec.getRootComponent();
 			// }
 		} else {
+
 			TipiSwingFrameImpl myFrame;
+			UIManager.getLookAndFeelDefaults().put("ClassLoader", getClass().getClassLoader());
+			UIManager.getDefaults();
 			myFrame = new TipiSwingFrameImpl(this);
 			myToplevel = myFrame;
 			mySuperPanel = new JPanel();
