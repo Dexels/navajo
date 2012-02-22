@@ -25,9 +25,11 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.LookAndFeel;
 import javax.swing.RootPaneContainer;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
@@ -38,6 +40,7 @@ import org.slf4j.LoggerFactory;
 
 import tipi.SwingTipiApplicationInstance;
 import tipi.TipiExtension;
+import tipi.TipiSwingExtension;
 
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.tipi.TipiActivityListener;
@@ -481,33 +484,41 @@ public class SwingTipiContext extends TipiContext {
 
 	@Override
 	public void showInfo(final String text, final String title) {
+		logger.info("ShowInfo: "+text+" title: "+title);
 		showInfo(text, title, JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	@Override
 	public void showError(final String text, final String title) {
+		logger.error("ShowError: "+text+" title: "+title);
 		showInfo(text, title, JOptionPane.ERROR_MESSAGE);
 	}
 
 	@Override
 	public void showWarning(final String text, final String title) {
+		logger.warn("ShowWarning: "+text+" title: "+title);
 		showInfo(text, title, JOptionPane.WARNING_MESSAGE);
 	}
 
+	// TODO refactor into more 
 	public void processProperties(Map<String, String> properties)
 			throws MalformedURLException {
 		appendJnlpCodeBase(properties);
 		super.processProperties(properties);
-		String tipiLaf = null;
+		String laf = null;
 
 		try {
-			tipiLaf = System.getProperty("tipilaf");
+			laf = System.getProperty("tipilaf");
 		} catch (SecurityException e) {
 
 		}
-		if (tipiLaf == null) {
-			tipiLaf = properties.get("tipilaf");
+		if (laf == null) {
+			laf = properties.get("tipilaf");
 		}
+		
+		final String tipiLaf = laf;
+
+		
 		try {
 			if (tipiLaf == null) {
 				// try nimbus first:
@@ -522,15 +533,23 @@ public class SwingTipiContext extends TipiContext {
 							.getSystemLookAndFeelClassName());
 
 				}
-
 				// UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 			} else {
-				UIManager.setLookAndFeel(tipiLaf);
+//				UIManager.setLookAndFeel(tipiLaf);
+				runSyncInEventThread(new Runnable() {
 
+					@Override
+					public void run() {
+						if(tipiLaf!=null) {
+							TipiSwingExtension.getInstance().setLookAndFeel(tipiLaf);
+//							SwingUtilities.updateComponentTreeUI(getTopLevel());
+						}
+					
+					}});
 			}
 		} catch (Exception e) {
-			System.err.println("Unable to load supplied look and feel: "
-					+ tipiLaf + " (" + e.getMessage() + ")");
+			logger.warn("Unable to load supplied look and feel: "+ tipiLaf,e);
+			
 		}
 	}
 
