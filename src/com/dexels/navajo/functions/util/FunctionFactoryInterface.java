@@ -76,7 +76,11 @@ public abstract class FunctionFactoryInterface {
 			}
 		}
 		
-		FunctionDefinition fd = functionConfig.get(ed).get(name);
+		Map<String, FunctionDefinition> map = functionConfig.get(ed);
+		if(map==null) {
+			logger.warn("Function definition not found: "+name+" for extensiondef: "+ed.getId()+" map: "+functionConfig);
+		}
+		FunctionDefinition fd = map.get(name);
 		if ( fd != null ) {
 			return fd;
 		} else {
@@ -183,7 +187,7 @@ public abstract class FunctionFactoryInterface {
 				}
 				return fi;
 			} catch (ClassNotFoundException e1) {
-				throw new TMLExpressionException("Could find class for function: " + getDef(functionName).getObject(),e1);
+				throw new TMLExpressionException("Could find class for function: " + getDef(functionName),e1);
 			} catch (IllegalAccessException e2) {
 				throw new TMLExpressionException("Could not instantiate class: " + getDef(functionName).getObject(),e2);
 			} catch (InstantiationException e3) {
@@ -243,7 +247,7 @@ public abstract class FunctionFactoryInterface {
 	@SuppressWarnings("unchecked")
 	public FunctionInterface instantiateFunctionClass(FunctionDefinition fd, ClassLoader classLoader) {
 		try {
-			logger.debug("Instantiating function: {}",fd.getObject());
+//			logger.debug("Instantiating function: {}",fd.getObject());
 			Class<? extends FunctionInterface> clz = (Class<? extends FunctionInterface>) Class.forName(fd.getObject(),true,classLoader);
 			return clz.newInstance();
 		} catch (ClassNotFoundException e) {

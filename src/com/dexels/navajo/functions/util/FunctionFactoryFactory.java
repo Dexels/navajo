@@ -3,6 +3,8 @@ package com.dexels.navajo.functions.util;
 
 import java.security.AccessControlException;
 
+import navajo.Version;
+
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.version.NavajoBundleManager;
 
@@ -37,9 +39,10 @@ public class FunctionFactoryFactory {
 				// can't read property. Whatever, func remains null.
 			}
 
-			if(NavajoBundleManager.getInstance()!=null) {
+			if(Version.getDefaultBundleContext()!=null) {
 				System.err.println("OSGi environment detected!");
 				func = "com.dexels.navajo.functions.util.OsgiFunctionFactory";
+				
 			}
 			
 			if ( func != null ) {
