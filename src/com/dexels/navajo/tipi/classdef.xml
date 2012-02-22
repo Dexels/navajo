@@ -10,8 +10,11 @@
    <tipiclass name="basecomponent">
 		<description>
 			Abstract component, used by all components.
-			
 		</description>
+		<values>
+           <value direction="in" name="cssClass" type="string" />
+           <value direction="in" name="cssStyle" type="string" />
+		</values>
       <events>
          <event name="onInstantiate">
 			<description>
@@ -24,7 +27,7 @@
       </events>
    </tipiclass>
 
-      <tipiclass name="datacomponent" layoutmanager="false" addtocontainer="false">
+      <tipiclass name="datacomponent" implements="basecomponent" layoutmanager="false" addtocontainer="false">
 		<description>
 			Abstract data component, used by most data aware tipi components.
 		</description>
@@ -50,21 +53,11 @@
    </tipiclass>
    
 
-     <tipiclass name="messagecomponent" layoutmanager="false" addtocontainer="false">
+     <tipiclass name="messagecomponent"  implements="datacomponent" layoutmanager="false" addtocontainer="false">
 		<description>
 			Abstract data component, used by most data aware tipi components that listen to a certain message.
 		</description>
       <events>
-  
-         <event name="onLoad">
-         	<description>
-				The onLoad event gets fired after this component gets loaded with a message\\
-				service: The name of the service that was loaded\\
-         		navajo: The contents of the service that was loaded\\
-         	</description>
-            <param name="service" type="string"/>
-            <param name="message" type="message"/>
-         </event>
       </events>
       <values>
            <value direction="in" name="messagePath" type="string" />
@@ -172,7 +165,7 @@
 
    
    
-   <tipiclass studio-icon="messagestore.gif" deprecated="true" module="abstract" class="TipiTimerImpl" name="timer" package="com.dexels.navajo.tipi.components.core" type="tipi"
+   <tipiclass studio-icon="messagestore.gif"  implements="basecomponent" deprecated="true" module="abstract" class="TipiTimerImpl" name="timer" package="com.dexels.navajo.tipi.components.core" type="tipi"
       childcount="0" layoutmanager="false" addtocontainer="false">
       <description>
       	Programatic timer. Usage:\\set the interval \\call start \\Wait for the onTimer event\\

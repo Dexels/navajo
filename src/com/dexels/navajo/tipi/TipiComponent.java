@@ -271,4 +271,7 @@ public interface TipiComponent extends TipiEventListener, TipiLink, Serializable
 
 	public TipiComponent findTipiComponentById(String id);
 
+	public void setClassName(String defname);
+
+	public String getClassName();
 }

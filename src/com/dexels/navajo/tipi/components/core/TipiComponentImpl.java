@@ -1465,6 +1465,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 	// This method actually implements the TipiLink interface
 
 	private TipiEvent lastEvent = null;
+	private String componentClassName;
 
 	public void setCurrentEvent(TipiEvent event) {
 		lastEvent = event;
@@ -1593,5 +1594,12 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		myParentContainer = c;
 	}
 
+	public void setClassName(String defname) {
+		this.componentClassName = defname;
+	}
+
+	public String getClassName() {
+		return componentClassName;
+	}
 	
 }
