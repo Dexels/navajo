@@ -65,4 +65,10 @@ public class RcpViewApplicationInstance extends BaseTipiApplicationInstance impl
 		return null;
 	}
 
+	@Override
+	public void close() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
