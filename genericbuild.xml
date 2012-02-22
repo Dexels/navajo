@@ -11,7 +11,7 @@
 	<taskdef name="for" classname="net.sf.antcontrib.logic.ForTask" onerror="ignore" />
 	<property name="tipiSvnUrl" value="http://spiritus.dexels.nl:41766/svn/repos" />
 	<property name="repository" value="http://spiritus.dexels.nl:41766/Tipi/" />
-	<property name="repositorySsh" value="navajo@spiritus.dexels.nl://var/www/html/Tipi/" />
+	<property name="repositorySsh" value="navajo@spiritus.dexels.nl:/var/www/html/Tipi/" />
 	<property name="documentationSsh" value="navajo@spiritus.dexels.nl:/var/www/html/Tipi/wiki/data/pages/tipidoc" />
 	<property file="../TipiBuild/sign.properties" />
 
@@ -146,7 +146,7 @@
 	
 	<target name="repackJars" depends="archiveBeans">
 
-		<p200ant repack="true" keepModificationTime="false" singleSegment="true">
+		<p200ant repack="true" keepModificationTime="false" singleSegment="false" >
 		<fileset dir=".">
 			<include name="${dist}/lib/*.jar" />
 		</fileset>
@@ -173,7 +173,7 @@
 	</target>
 	<target name="packJars" depends="sign">
 	<!-- Don't pack the unsigned jars, for now. -->
-	    <p200ant  singleSegment="true">
+	    <p200ant  singleSegment="false">
 			<fileset dir=".">
 				<include name="${dist}/lib/*.jar" />
 			</fileset>
@@ -189,7 +189,7 @@
 		
 	<target name="publish" depends="packJars">
 
-		<scp trust="true" sftp="true" verbose="true" todir="${repositorySsh}Extensions/">
+		<scp trust="true" sftp="true" todir="${repositorySsh}Extensions/">
 			<fileset dir="dist">
 				<include name="${ant.project.name}/${tipiComponentVersion}/lib/**" />
 				<include name="${ant.project.name}/${tipiComponentVersion}/unsigned/**" />
