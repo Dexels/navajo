@@ -7,7 +7,7 @@
 	<version>1.0.0</version>
 	<packaging>pom</packaging>
 	<properties>
-		<tycho-version>0.14.0-SNAPSHOT</tycho-version>
+		<tycho-version>0.14.0</tycho-version>
 		<tycho-groupid>org.eclipse.tycho</tycho-groupid>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -114,23 +114,41 @@
 					<id>archive-products</id> <goals> <goal>archive-products</goal> </goals> </execution> </executions> <configuration> <products> <product> 
 					<id>navajo</id> </product> </products> </configuration> -->
 			</plugin>
-		</plugins>
+				<plugin>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>2.5</version>
+					<dependencies>
+						<dependency>
+							<groupId>org.apache.maven.wagon</groupId>
+							<artifactId>wagon-ssh</artifactId>
+							<version>1.0-beta-7</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+			</plugins>
 
-
+    <extensions>
+      <!-- Enabling the use of FTP -->
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+         <artifactId>wagon-ssh-external</artifactId>
+         <version>2.2</version>
+      </extension>
+    </extensions>
 	</build>
 	<distributionManagement>
 		<repository>
 			<uniqueVersion>false</uniqueVersion>
 			<id>dexels</id>
 			<name>Dexels Repository</name>
-			<url>file:///var/www/html/maven_release</url>
+			<url>scp://navajo@spiritus.dexels.nl:/var/www/html/maven_release/</url>
 			<layout>default</layout>
 		</repository>
 		<snapshotRepository>
 			<uniqueVersion>true</uniqueVersion>
-			<id>snap</id>
+			<id>dexels_snap</id>
 			<name>Dexels Snapshots</name>
-			<url>file:///var/www/html/maven</url>
+			<url>scpexe://navajo@spiritus.dexels.nl:/var/www/html/maven/</url>
 			<layout>legacy</layout>
 		</snapshotRepository>
 	</distributionManagement>
