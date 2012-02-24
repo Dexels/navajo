@@ -39,7 +39,7 @@
 			<layout>default</layout>
 		</repository>
 	</repositories>
-  
+
 	<!-- -->
 	<build>
 		<plugins>
@@ -114,40 +114,51 @@
 					<id>archive-products</id> <goals> <goal>archive-products</goal> </goals> </execution> </executions> <configuration> <products> <product> 
 					<id>navajo</id> </product> </products> </configuration> -->
 			</plugin>
-				<plugin>
-					<artifactId>maven-deploy-plugin</artifactId>
-					<version>2.5</version>
-					<dependencies>
-						<dependency>
-							<groupId>org.apache.maven.wagon</groupId>
-							<artifactId>wagon-ssh</artifactId>
-							<version>1.0-beta-7</version>
-						</dependency>
-					</dependencies>
-				</plugin>
-				<plugin>				
+			<plugin>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.5</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven.wagon</groupId>
+						<artifactId>wagon-ssh</artifactId>
+						<version>1.0-beta-7</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
 				<version>2.3.7</version>
 				<extensions>true</extensions>
 				<configuration>
-				  <obrRepository>/var/www/html/maven/repository.xml</obrRepository>
-				  <instructions>
-				    <!-- bnd instructions -->
-				  </instructions>
-				</configuration>	
-				</plugin>			
-			</plugins>
+					    <supportedProjectTypes>
+					      <supportedProjectType>jar</supportedProjectType>
+					      <supportedProjectType>bundle</supportedProjectType>
+					      <supportedProjectType>eclipse-plugin</supportedProjectType>
+					    </supportedProjectTypes>				
+					<instructions>
+						<Bundle-Description>Navajo Suite</Bundle-Description>
+					</instructions>
 
-    <extensions>
-      <!-- Enabling the use of FTP -->
-      <extension>
-        <groupId>org.apache.maven.wagon</groupId>
-         <artifactId>wagon-ssh-external</artifactId>
-         <version>2.2</version>
-      </extension>
-    </extensions>
+					<!-- OBR -->
+					<remoteOBR>repo-rel</remoteOBR>
+					<prefixUrl>http://spiritus.dexels.nl:41766/maven</prefixUrl>
+					<ignoreLock>true</ignoreLock>
+				</configuration>
+			</plugin>
+		</plugins>
+
+		<extensions>
+			<!-- Enabling the use of FTP -->
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh</artifactId>
+				<version>2.2</version>
+			</extension>
+		</extensions>
 	</build>
+
+
 	<distributionManagement>
 		<repository>
 			<uniqueVersion>false</uniqueVersion>
@@ -160,7 +171,7 @@
 			<uniqueVersion>true</uniqueVersion>
 			<id>dexels_snap</id>
 			<name>Dexels Snapshots</name>
-			<url>scpexe://navajo@spiritus.dexels.nl:/var/www/html/maven/</url>
+			<url>scp://navajo@spiritus.dexels.nl:/var/www/html/maven/</url>
 			<layout>legacy</layout>
 		</snapshotRepository>
 	</distributionManagement>
