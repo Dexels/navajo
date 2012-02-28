@@ -1,11 +1,12 @@
 ######## ORIGINAL START
 
 #Global
+rm -rf /home/mercurial/com.dexels.repository /home/mercurial/com.dexels.target
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --fallback-encoding=ascii --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.target /home/cvs/com.dexels.target
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.repository /home/cvs/com.dexels.repository
 
 #Core
-
+rm -rf /home/mercurial/com.dexels.navajo.core.feature /home/mercurial/com.dexels.navajo.client.deps /home/mercurial/com.dexels.navajo.version  /home/mercurial/com.dexels.navajo.document /home/mercurial/com.dexels.navajo.client /home/mercurial/com.dexels.navajo.core /home/mercurial/com.dexels.navajo.function /home/mercurial/com.dexels.navajo.client.async
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.core.feature /home/cvs/com.dexels.navajo.core.feature
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.client.deps /home/cvs/com.dexels.navajo.client.deps
 
@@ -18,6 +19,7 @@ cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.
 
 
 # Server
+rm -rf /home/mercurial/com.dexels.navajo.server.feature /home/mercurial/com.dexels.navajo.server.embedded.feature /home/mercurial/com.dexels.navajo.queuemanager /home/mercurial/com.dexels.navajo.listeners /home/mercurial/com.dexels.navajo.listeners.continuations /home/mercurial/com.dexels.navajo.adapters /home/mercurial/com.dexels.navajo.rhino /home/mercurial/com.dexels.navajo.jsp /home/mercurial/com.dexels.navajo.jsp.server
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.server.feature /home/cvs/com.dexels.navajo.server.feature
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.server.embedded.feature /home/cvs/com.dexels.navajo.server.embedded.feature
 
