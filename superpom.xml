@@ -35,7 +35,7 @@
 			</snapshots>
 			<id>spiritusSnapshot</id>
 			<name>Spiritus</name>
-			<url>http://spiritus.dexels.nl:41766/maven</url>
+			<url>http://spiritus.dexels.nl:41766/nexus/content/repositories/navajo/</url>
 			<layout>default</layout>
 		</repository>
 	</repositories>
@@ -145,6 +145,15 @@
 					<prefixUrl>http://spiritus.dexels.nl:41766/maven</prefixUrl>
 					<ignoreLock>true</ignoreLock>
 				</configuration>
+				  <executions>
+				    <execution>
+				      <id>bundle-deploy</id>
+				      <phase>deploy</phase>
+				      <goals>    
+				        <goal>deploy</goal>
+				      </goals>   
+				    </execution>
+				  </executions>				
 			</plugin>
 		</plugins>
 
@@ -155,6 +164,11 @@
 				<artifactId>wagon-ssh</artifactId>
 				<version>2.2</version>
 			</extension>
+		  <extension> 
+            <groupId>org.apache.maven.wagon</groupId> 
+            <artifactId>wagon-webdav-jackrabbit</artifactId> 
+            <version>2.2</version> 
+         </extension> 
 		</extensions>
 	</build>
 
@@ -164,14 +178,15 @@
 			<uniqueVersion>false</uniqueVersion>
 			<id>dexels</id>
 			<name>Dexels Repository</name>
-			<url>scp://navajo@spiritus.dexels.nl:/var/www/html/maven_release/</url>
+<!-- 			<url>scp://navajo@spiritus.dexels.nl:/var/www/html/maven_release/</url> -->
+			<url>http://spiritus.dexels.nl:41766/nexus/content/repositories/navajo/</url>
 			<layout>default</layout>
 		</repository>
 		<snapshotRepository>
 			<uniqueVersion>true</uniqueVersion>
 			<id>dexels_snap</id>
 			<name>Dexels Snapshots</name>
-			<url>scp://navajo@spiritus.dexels.nl:/var/www/html/maven/</url>
+			<url>http://spiritus.dexels.nl:41766/nexus/content/repositories/navajo_snapshot</url>
 			<layout>legacy</layout>
 		</snapshotRepository>
 	</distributionManagement>
