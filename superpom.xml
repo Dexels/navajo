@@ -135,6 +135,7 @@
 					      <supportedProjectType>jar</supportedProjectType>
 					      <supportedProjectType>bundle</supportedProjectType>
 					      <supportedProjectType>eclipse-plugin</supportedProjectType>
+					      <supportedProjectType>eclipse-feature</supportedProjectType>
 					    </supportedProjectTypes>				
 					<instructions>
 						<Bundle-Description>Navajo Suite</Bundle-Description>
