@@ -143,7 +143,7 @@
 
 					<!-- OBR -->
 					<remoteOBR>repo-rel</remoteOBR>
-					<prefixUrl>http://spiritus.dexels.nl:41766/maven</prefixUrl>
+					<prefixUrl>http://spiritus.dexels.nl:41766/nexus/content/repositories/navajo_snapshot</prefixUrl>
 					<ignoreLock>true</ignoreLock>
 				</configuration>
 				  <executions>
