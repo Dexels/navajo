@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Vaadin
 Bundle-SymbolicName: com.dexels.navajo.tipi.vaadin
-Bundle-Version: 0.4.0.qualifier
-Bundle-Activator: tipivaadin.TipiVaadinExtension
+Bundle-Version: 1.0.2.qualifier
+Bundle-Activator: tipi.TipiVaadinExtension
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: javax.servlet;version="[2.5.0,4.0.0)";resolution:=optional,
@@ -28,7 +28,7 @@ Export-Package: com.dexels.navajo.tipi.vaadin,
  com.dexels.navajo.tipi.vaadin.components.impl,
  com.dexels.navajo.tipi.vaadin.components.io,
  com.dexels.navajo.tipi.vaadin.cookie,
- tipivaadin
+ tipi
 Bundle-ClassPath: lib/borderlayout-0.3.jar,
  lib/confirmdialog-1.1.1.jar,
  lib/ContextMenu3.1.0.jar,
