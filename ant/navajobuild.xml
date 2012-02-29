@@ -292,17 +292,8 @@
 			</then>
 		</if>
 	</target>
-	<!-- <target name="nano" depends="compile">
-	    <jar jarfile="${nano.archive}">
-	      <fileset dir="${build}">
-	        <include name="${document.base}/nanoimpl/**/*.class"/>
-	     </fileset>
-	      <fileset dir="${build}">
-	        <include name="navajodocument/*.class"/>
-	      </fileset>
-	      <fileset dir="${DexelsVersionControl.build}"/>
-	    </jar>
-	  </target>-->
+
+
 	<target name="archive" depends="compile,resource,test,buildjavadoc">
 		<jar jarfile="${archive}">
 			<fileset dir="${build}">
