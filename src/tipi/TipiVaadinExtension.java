@@ -1,4 +1,4 @@
-package tipivaadin;
+package tipi;
 
 import java.io.File;
 import java.util.Dictionary;
