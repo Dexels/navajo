@@ -55,7 +55,6 @@ public class TipiActionManager implements Serializable, IActionManager {
 	 */
 	@Override
 	public TipiActionFactory getActionFactory(String name) throws TipiException {
-		logger.info("Looking for action: {}",name);
 		TipiActionFactory taf = actionFactoryMap.get(name);
 		if (taf == null) {
 			throw new TipiException("No action defined with name: " + name);
