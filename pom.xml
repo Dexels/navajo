@@ -6,7 +6,10 @@
 	<artifactId>com.dexels.navajo.version</artifactId>
 	<version>1.0.12-SNAPSHOT</version>
 	<packaging>eclipse-plugin</packaging>
-
+	 <scm>  
+	    <connection>scm:cvs:pserver:frank@spiritus.dexels.nl:/home/cvs:DexelsVersionControl</connection>  
+	    <developerConnection>scm:cvs:pserver:frank@spiritus.dexels.nl:/home/cvs:DexelsVersionControl</developerConnection>  
+	  </scm>  
 	<parent>
 		<groupId>com.dexels.navajo.core</groupId>
 		<artifactId>com.dexels.navajo.super</artifactId>
