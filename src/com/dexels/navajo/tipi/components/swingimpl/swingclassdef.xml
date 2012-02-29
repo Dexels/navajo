@@ -810,7 +810,7 @@
 
    <!-- Use panel instead -->
    <!-- Identical to panel -->
-   <tipiclass addtocontainer="true" implements="basecomponent,datacomponent,swingcomponent" deprecated="true" childcount="*" class="TipiPanel" layoutmanager="true" module="container" name="tipi"
+   <tipiclass addtocontainer="true" implements="basecomponent,datacomponent,swingcomponent,dragdrop" deprecated="true" childcount="*" class="TipiPanel" layoutmanager="true" module="container" name="tipi"
       package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="tipi.gif" type="tipi">
       <description>
          Deprecated, use panel instead. They use the same java class

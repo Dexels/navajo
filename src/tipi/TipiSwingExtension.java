@@ -91,6 +91,21 @@ public class TipiSwingExtension extends TipiAbstractXMLExtension implements
 	}
 
 	public void setLookAndFeel(String tipiLaf) {
+		if(getBundleContext()==null) {
+			// not OSGi, go vintage:
+			try {
+				UIManager.setLookAndFeel(tipiLaf);
+			} catch (ClassNotFoundException e) {
+				logger.error("Error setting look and feel: "+tipiLaf,e);
+			} catch (InstantiationException e) {
+				logger.error("Error setting look and feel: "+tipiLaf,e);
+			} catch (IllegalAccessException e) {
+				logger.error("Error setting look and feel: "+tipiLaf,e);
+			} catch (UnsupportedLookAndFeelException e) {
+				logger.error("Error setting look and feel: "+tipiLaf,e);
+			}
+			return;
+		}
 		try {
 			Collection<ServiceReference<LookAndFeelWrapper>> srl = getBundleContext().getServiceReferences(LookAndFeelWrapper.class, "(className="+tipiLaf+")");
 			if(srl.isEmpty()) {
