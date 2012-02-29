@@ -32,7 +32,7 @@ public class VersionResolver {
 			ext = token;
 			List<String> versions = repDefinition.get(token);
 			if(versions==null) {
-				throw new IllegalArgumentException("Error building extension: No version found. Repository definition: "+repDefinition);
+				throw new IllegalArgumentException("Error building extension: No version found for token: "+token+"  Repository definition: "+repDefinition);
 			}
 			version=versions.get(versions.size()-1);
 		}
@@ -53,7 +53,12 @@ public class VersionResolver {
 	}
 	
 	public void setVersionToken(String token) {
-		currentToken = resultVersionPath(token);
+		try {
+			currentToken = resultVersionPath(token);
+		} catch (IllegalArgumentException e) {
+			currentToken = "Error resolving: "+token;
+			e.printStackTrace();
+		}
 	}
 
 }
