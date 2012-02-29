@@ -82,7 +82,6 @@ public class TridentConfig {
 		ClassLoader classLoader = Thread.currentThread()
 				.getContextClassLoader();
 		try {
-			System.err.println("LOADING CONFIG, cl: "+classLoader);
 			classLoader = getClass().getClassLoader();
 			Enumeration urls = classLoader
 					.getResources("META-INF/trident-plugin.properties");

@@ -9,6 +9,7 @@
 	<jars>
 		<jar path="substance-6.jar"/>
 		<jar path="TipiSubstance.jar"/>
+		<jar path="trident.jar"/>
 	</jars>
 	<other>
 		<link href="https://substance.dev.java.net/"/>
