@@ -37,7 +37,7 @@ public class NavajoBundleManager extends AbstractVersion implements INavajoBundl
 			
 			@Override
 			public void bundleChanged(BundleEvent event) {
-//				System.err.println("Bundle event: "+event.getType()+" bundle: "+event.getBundle().getSymbolicName()+" id: "+event.getBundle().getBundleId());
+//				logger.info("Bundle event: "+event.getType()+" bundle: "+event.getBundle().getSymbolicName()+" id: "+event.getBundle().getBundleId());
 			}
 		}
 		);
@@ -45,7 +45,7 @@ public class NavajoBundleManager extends AbstractVersion implements INavajoBundl
 			
 			@Override
 			public void frameworkEvent(FrameworkEvent event) {
-//				System.err.println("frameworkEvent: "+displayFrameworkEventType(event.getType())+" bundle: "+event.getBundle().getSymbolicName()+" id: "+event.getBundle().getBundleId());
+//				logger.info("frameworkEvent: "+displayFrameworkEventType(event.getType())+" bundle: "+event.getBundle().getSymbolicName()+" id: "+event.getBundle().getBundleId());
 			
 			}
 		});
@@ -143,7 +143,7 @@ public class NavajoBundleManager extends AbstractVersion implements INavajoBundl
 				try {
 					injectJar(file,myBundleContext);
 				} catch (BundleException e) {
-					e.printStackTrace();
+					logger.error("Error: ", e);
 				}
 			}
 		}
@@ -159,7 +159,7 @@ public class NavajoBundleManager extends AbstractVersion implements INavajoBundl
 				b.uninstall();
 				logger.debug("Uninstalled bundle: "+b.getBundleId()+" name: "+b.getSymbolicName()+" @ "+b.getLocation());
 			} catch (BundleException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 		}
 	}
@@ -170,12 +170,12 @@ public class NavajoBundleManager extends AbstractVersion implements INavajoBundl
 		
 			URL u = file.toURI().toURL();
 			// TODO uninstall optional existing bundles
-			System.err.println("Checking injection point: "+u);
+			logger.info("Checking injection point: "+u);
 			Bundle installed = bc.installBundle(u.toString());
 			installed.start();
 			bundleMap.put(u, installed);
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 

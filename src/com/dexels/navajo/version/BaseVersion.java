@@ -83,11 +83,11 @@ public abstract class BaseVersion implements Comparable<AbstractVersion> {
 //			System.err.print(this.getClass().getName() +
 //					": Checking if " + versionClass + " is already included...");
 			if (v.getClass().getName().equals(versionClass)) {
-				//System.err.println("...yes it is!");
+				//logger.info("...yes it is!");
 				return true;
 			}
 		}
-		//System.err.println("...no it isn't!");
+		//logger.info("...no it isn't!");
 		return false;
 		
 	}
@@ -98,11 +98,10 @@ public abstract class BaseVersion implements Comparable<AbstractVersion> {
 			AbstractVersion v = (AbstractVersion) c.newInstance();
 			// Check if v is not already included in chain.
 			if (!checkInclude(versionClass, null)) {
-				//System.err.println(this.getClass().getName() + ": Adding " + versionClass);
+				//logger.info(this.getClass().getName() + ": Adding " + versionClass);
 				includedPackages.add(v);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.warn("Could not find version class for: " + versionClass,e);
 		}
 	}
@@ -148,11 +147,11 @@ public abstract class BaseVersion implements Comparable<AbstractVersion> {
 	}
 	
 	protected void buildIncludeTree(Set<AbstractVersion> t) {
-		//System.err.println(this.getClass().getName() + ": in buildIncludeTree: " + t.size());
+		//logger.info(this.getClass().getName() + ": in buildIncludeTree: " + t.size());
 		for (int i = 0; i < includedPackages.size(); i++) {
 			AbstractVersion child = includedPackages.get(i);
 			if (!t.contains(child)) {
-				//System.err.println("Adding " + child.getClass().getName());
+				//logger.info("Adding " + child.getClass().getName());
 				t.add(child);
 			}
 		}

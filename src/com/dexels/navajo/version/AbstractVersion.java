@@ -11,6 +11,7 @@ public abstract class AbstractVersion extends BaseVersion implements BundleActiv
 	
 	protected BundleContext context = null;
 	protected static BundleContext defaultContext = null;
+	protected static AbstractVersion instance = null;
 	
 	public void start(BundleContext bc) throws Exception {
 		context = bc;
@@ -20,8 +21,12 @@ public abstract class AbstractVersion extends BaseVersion implements BundleActiv
 		} else {
 			logger.info("Bundle started: "+bc.getBundle().toString());
 		}
+		instance = this;
 	}
 
+	public AbstractVersion getActivatorInstance() {
+		return instance;
+	}
 	public BundleContext getBundleContext() {
 		return context;
 	}
