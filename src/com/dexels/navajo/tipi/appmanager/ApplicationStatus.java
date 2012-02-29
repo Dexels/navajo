@@ -332,6 +332,9 @@ public class ApplicationStatus {
 
 	public String getManagerUrl(String deploy) {
 		Map<String,String> element = deploymentData.get(deploy);
+		if(element==null) {
+			return null;
+		}
 		return element.get("managerUrl");
 	}
 	
