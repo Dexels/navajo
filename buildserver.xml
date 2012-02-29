@@ -108,7 +108,6 @@
 			</fileset>
 		</copy>
     	
-    	<eclipse.refreshLocal resource="/${ant.project.name}"/>
     	<war basedir="${basedir}/WebContent" destfile="${ant.project.name}.war">
 			<fileset dir="WebContent">
 				<include  name="**"/>
@@ -128,7 +127,7 @@
 <!--		<stopApplication />-->
     </target>
 	<target name="publish" depends="deploy">
-		<deploy  url="${tipiTomcatManager}" update="true" username="${tipiTomcatUsername}" password="${tipiTomcatPassword}" path="/${ant.project.name}" war="${basedir}/${ant.project.name}.war"/>
+		<deploy  url="${tipiTomcatManager}" update="true" username="${tipiTomcatUsername}" password="${tipiTomcatPassword}" path="/${deploy.path}" war="${basedir}/${ant.project.name}.war"/>
  
 	</target>
 	    

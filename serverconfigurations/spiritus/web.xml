@@ -42,7 +42,7 @@
 	<context-param>
 		<description></description>
 		<param-name>appFolder</param-name>
-		<param-value>/var/www/html/Tipi/AppStore/</param-value>
+		<param-value>/home/tipi_apps</param-value>
 	</context-param>
 
 

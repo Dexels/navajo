@@ -2,9 +2,12 @@
 <!-- $Id$ -->
 <project name="TipiServer" default="dobuild" basedir=".">
     <property name="tipiTomcatServer" value="http://spiritus.dexels.nl:8080/"/>
-    <property name="tipiTomcatManager" value="http://spiritus.dexels.nl:8080/manager"/>
-    <property name="tipiTomcatUsername" value="ad"/>
-    <property name="tipiTomcatPassword" value="pw"/>
+    <property name="tipiTomcatManager" value="http://spiritus.dexels.nl:8080/manager/text"/>
+    <property name="tipiTomcatUsername" value="navajo"/>
+    <property name="tipiTomcatPassword" value=""/>
+	
+	 <property name="deploy.path" value="TipiServer"/>
+
 	<target name="setuptarget">
 		<copy overwrite="true" todir="WebContent/WEB-INF/" file="serverconfigurations/spiritus/web.xml"/>
 	</target>
