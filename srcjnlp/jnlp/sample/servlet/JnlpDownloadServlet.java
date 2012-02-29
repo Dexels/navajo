@@ -301,13 +301,13 @@ public class JnlpDownloadServlet extends HttpServlet {
 	} 
 	
 	// Check if a JARDiff can be returned
-	if (dreq.getCurrentVersionId() != null && jnlpres.isJarFile()) {	    
-	    DownloadResponse response = _jarDiffHandler.getJarDiffEntry(_resourceCatalog, dreq, jnlpres);
-	    if (response != null) {
-		_log.addInformational("servlet.log.info.jardiff.response");
-		return response;	    
-	    }
-	}
+//	if (dreq.getCurrentVersionId() != null && jnlpres.isJarFile()) {	    
+//	    DownloadResponse response = _jarDiffHandler.getJarDiffEntry(_resourceCatalog, dreq, jnlpres);
+//	    if (response != null) {
+//		_log.addInformational("servlet.log.info.jardiff.response");
+//		return response;	    
+//	    }
+//	}
 
 	// check and see if we can use pack resource
 	JnlpResource jr =  new JnlpResource(getServletContext(), 
