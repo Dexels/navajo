@@ -153,18 +153,7 @@
 	</p200ant>
 	</target>
 	<target name="sign" depends="repackJars">
-		<!--
-		alias=sportlink
-		storepass=sp0rtl1nk
-		keystore=../TipiBuild/sportlink.ks
-		keypass=
-		-->
-		<!--
-		alias=dexels
-		storepass=dexels
-		keystore=../TipiBuild/dexels_dummy_key
-		keypass=dexels
-		-->
+	
 		<signjar keystore="${keystore}" verbose="false" storepass="${storepass}" keypass="${keypass}" alias="${alias}">
 			<fileset dir=".">
 				<include name="${dist}/lib/*.jar" />
