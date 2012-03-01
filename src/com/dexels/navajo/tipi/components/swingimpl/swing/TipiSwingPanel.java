@@ -11,7 +11,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Scrollable;
 
+import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.components.swingimpl.parsers.TipiGradientPaint;
+import com.dexels.navajo.tipi.swingimpl.dnd.TipiDndCapable;
+import com.dexels.navajo.tipi.swingimpl.dnd.TipiDndManager;
 
 /**
  * <p>
@@ -30,7 +33,7 @@ import com.dexels.navajo.tipi.components.swingimpl.parsers.TipiGradientPaint;
  * @author not attributable
  * @version 1.0
  */
-public class TipiSwingPanel extends JPanel implements Scrollable {
+public class TipiSwingPanel extends JPanel implements Scrollable, TipiDndCapable {
 	/**
 	 * 
 	 */
@@ -51,11 +54,13 @@ public class TipiSwingPanel extends JPanel implements Scrollable {
 	private final String SOUTHWEST = "southwest";
 
 	private String alignment = CENTER;
+	private TipiDndManager myDndManager;
 
 	// private String title = null;
 
-	public TipiSwingPanel() {
+	public TipiSwingPanel(TipiComponent source) {
 		// setBackground(new Color(0.0f,0.8f,0.0f,0.2f));
+		myDndManager = new TipiDndManager(this, source);
 	}
 
 	public void setAlignment(String al) {
@@ -189,13 +194,10 @@ public class TipiSwingPanel extends JPanel implements Scrollable {
 		return 20;
 	}
 
-	// public String getTitle() {
-	// return title;
-	// }
+	
+	public TipiDndManager getDndManager() {
+		return myDndManager;
+	}
 
-	// public void setTitle(String title) {
-	// this.title = title;
-	// setBorder(BorderFactory.createTitledBorder(title));
-	// }
 
 }

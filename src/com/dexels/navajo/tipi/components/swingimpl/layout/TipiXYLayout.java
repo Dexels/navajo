@@ -33,7 +33,7 @@ public class TipiXYLayout extends TipiLayoutImpl {
 	}
 
 	public void createLayout() {
-		setLayout(new NullLayout());
+		setLayout(new NullLayout(this,myComponent));
 	}
 
 	public Object createDefaultConstraint(int index) {

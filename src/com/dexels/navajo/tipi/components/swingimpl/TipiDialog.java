@@ -79,7 +79,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 		runSyncInEventThread(new Runnable() {
 
 			public void run() {
-				tp = new TipiSwingPanel();
+				tp = new TipiSwingPanel(TipiDialog.this);
 				TipiHelper th = new TipiSwingHelper();
 				th.initHelper(TipiDialog.this);
 				addHelper(th);

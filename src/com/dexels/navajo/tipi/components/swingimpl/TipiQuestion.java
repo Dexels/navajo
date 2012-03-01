@@ -47,7 +47,7 @@ public class TipiQuestion extends TipiBaseQuestion {
 
 	public Object createContainer() {
 
-		myPanel = new TipiSwingPanel();
+		myPanel = new TipiSwingPanel(TipiQuestion.this);
 		// TipiHelper th = new TipiSwingHelper();
 		// th.initHelper(this);
 		// addHelper(th);

@@ -837,8 +837,8 @@
    </tipiclass>
 
 
-   <!-- Identical to tipi, but old school -->
-   <tipiclass addtocontainer="true" deprecated="true" implements="datacomponent,swingcomponent" childcount="*" class="TipiPanel" layoutmanager="true" module="container" name="panel"
+   <!-- Identical to tipi, but new style -->
+   <tipiclass addtocontainer="true" deprecated="true" implements="datacomponent,swingcomponent,dragdrop" childcount="*" class="TipiPanel" layoutmanager="true" module="container" name="panel"
       package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="tipi.gif" type="tipi">
       <description>
       </description>

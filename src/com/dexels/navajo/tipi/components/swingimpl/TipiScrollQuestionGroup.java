@@ -48,7 +48,7 @@ public class TipiScrollQuestionGroup extends TipiBaseQuestionGroup implements
 		jp = new JScrollPane();
 		jp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		jp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		jpanel = new TipiSwingPanel();
+		jpanel = new TipiSwingPanel(TipiScrollQuestionGroup.this);
 
 		jpanel.setLayout(new BorderLayout());
 		jp.getViewport().add(jpanel);

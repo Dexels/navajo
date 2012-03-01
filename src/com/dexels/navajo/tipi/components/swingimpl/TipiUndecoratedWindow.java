@@ -38,7 +38,7 @@ public class TipiUndecoratedWindow extends TipiSwingDataComponentImpl {
 		runSyncInEventThread(new Runnable() {
 
 			public void run() {
-				myPanel = new TipiSwingPanel();
+				myPanel = new TipiSwingPanel(TipiUndecoratedWindow.this);
 				TipiHelper th = new TipiSwingHelper();
 				th.initHelper(TipiUndecoratedWindow.this);
 				addHelper(th);
