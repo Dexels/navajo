@@ -11,10 +11,15 @@ import java.util.Map;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
+import com.dexels.navajo.tipi.TipiComponent;
+
 public class NullLayout implements LayoutManager2 {
 
 	private Dimension mySize;
 	private Map<Component, Rectangle> components = new HashMap<Component, Rectangle>();
+
+	private TipiXYLayout myLayout;
+	private TipiComponent myComponent;
 
 	public NullLayout(Dimension size) {
 		mySize = size;
@@ -22,6 +27,12 @@ public class NullLayout implements LayoutManager2 {
 
 	public NullLayout() {
 		mySize = new Dimension(100, 100);
+	}
+
+	public NullLayout(TipiXYLayout tipiXYLayout, TipiComponent myComponent) {
+		this();
+		this.myComponent = myComponent;
+		this.myLayout = tipiXYLayout;
 	}
 
 	public void setWidth(int w) {
@@ -48,8 +59,8 @@ public class NullLayout implements LayoutManager2 {
 
 	}
 
-	public Dimension maximumLayoutSize(Container arg0) {
-		return null;
+	public Dimension maximumLayoutSize(Container parent) {
+		return parent.getMaximumSize();
 	}
 
 	public void layoutContainer(Container parent) {
@@ -60,11 +71,11 @@ public class NullLayout implements LayoutManager2 {
 	}
 
 	public Dimension minimumLayoutSize(Container parent) {
-		return null;
+		return parent.getMinimumSize();
 	}
 
 	public Dimension preferredLayoutSize(Container parent) {
-		return null;
+		return parent.getPreferredSize();
 	}
 
 	public void removeLayoutComponent(Component comp) {
@@ -78,11 +89,14 @@ public class NullLayout implements LayoutManager2 {
 	public static void main(String[] args) {
 		JFrame j = new JFrame();
 		j.setSize(new Dimension(400, 300));
-		j.getContentPane().setLayout(new NullLayout());
+		NullLayout nullLayout = new NullLayout();
+		j.getContentPane().setLayout(nullLayout);
 		j.getContentPane().add(new JButton("woepie"),
 				new Rectangle(10, 100, 50, 100));
-		j.getContentPane().add(new JButton("wappie"),
+		JButton wappie = new JButton("wappie");
+		j.getContentPane().add(wappie,
 				new Rectangle(10, 200, 50, 10));
+//		System.err.println("pref: "+nullLayout.preferredLayoutSize(parent));
 		j.setVisible(true);
 	}
 
