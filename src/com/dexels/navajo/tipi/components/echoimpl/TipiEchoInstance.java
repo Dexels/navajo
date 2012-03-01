@@ -263,4 +263,10 @@ public class TipiEchoInstance extends ApplicationInstance implements TipiApplica
 		return null;
 	}
 
+	@Override
+	public void close() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
