@@ -1,14 +1,7 @@
-######## ORIGINAL START
-
-#Global
-rm -rf /home/mercurial/com.dexels.repository /home/mercurial/com.dexels.target
-cvs2hg --encoding=utf_8 --fallback-encoding=ascii --fallback-encoding=ascii --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.target /home/cvs/com.dexels.target
-cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.repository /home/cvs/com.dexels.repository
-
 #Core
 rm -rf /home/mercurial/com.dexels.navajo.core.feature /home/mercurial/com.dexels.navajo.client.deps /home/mercurial/com.dexels.navajo.version  /home/mercurial/com.dexels.navajo.document /home/mercurial/com.dexels.navajo.client /home/mercurial/com.dexels.navajo.core /home/mercurial/com.dexels.navajo.function /home/mercurial/com.dexels.navajo.client.async
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.core.feature /home/cvs/com.dexels.navajo.core.feature
-cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.client.deps /home/cvs/com.dexels.navajo.client.deps
+#cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.client.deps /home/cvs/com.dexels.navajo.client.deps
 
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.version /home/cvs/DexelsVersionControl
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.document /home/cvs/NavajoDocument
@@ -36,6 +29,10 @@ cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.tipi.swt.client /home/cvs/com.dexels.navajo.tipi.swt.client
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.dev.feature /home/cvs/com.dexels.navajo.dev
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.dev.script /home/cvs/NavajoScriptPlugin
+
+
+
+
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.server.embedded /home/cvs/com.dexels.navajo.server.embedded
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.dsl.navajomanager /home/cvs/com.dexels.navajo.dsl.navajomanager
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.dsl.expression /home/cvs/com.dexels.navajo.dsl.expression
