@@ -1,0 +1,4 @@
+./cvsgit.sh DexelsVersionControl com.dexels.navajo.version
+./cvsgit.sh NavajoDocument com.dexels.navajo.document
+./cvsgit.sh NavajoClient com.dexels.navajo.client
+./cvsgit.sh com.dexels.navajo.core.feature com.dexels.navajo.core.feature 
