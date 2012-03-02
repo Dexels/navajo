@@ -33,9 +33,4 @@
 ./cvsgit.sh TipiRuby com.dexels.navajo.tipi.ruby
 ./cvsgit.sh com.dexels.navajo.tipi.rss.feature com.dexels.navajo.tipi.rss.feature
 ./cvsgit.sh TipiRss com.dexels.navajo.tipi.rss
-./cvsgit.sh 
-./cvsgit.sh 
-
-./cvsgit.sh 
-
 
