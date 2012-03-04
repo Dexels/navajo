@@ -5,6 +5,7 @@ mkdir $2
 cd $2 
 git init --bare
 cat ../$2.blob ../$2.dump | git fast-import
+git update-server-info
 cd ..
 rm -f $2.blob $2.dump
 echo "-------================--------========"
