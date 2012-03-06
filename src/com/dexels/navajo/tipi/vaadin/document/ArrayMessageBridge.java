@@ -318,6 +318,9 @@ public class ArrayMessageBridge implements Container, Container.Sortable {
 				}
 				Object v1 = p1.getTypedValue();
 				Object v2 = p2.getTypedValue();
+				if(v1 == null || v2 == null) {
+					return 0;
+				}
 				if(v1 instanceof Comparable<?>) {
 					Comparable<Object> c1 = (Comparable<Object>)v1;
 					int compared = c1.compareTo(v2);
