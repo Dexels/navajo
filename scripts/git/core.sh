@@ -4,4 +4,5 @@
 ./cvsgit.sh com.dexels.navajo.core.feature com.dexels.navajo.core.feature 
 ./cvsgit.sh Navajo com.dexels.navajo.core
 ./cvsgit.sh NavajoAsyncClient com.dexels.navajo.client.async
+./cvsgit.sh NavajoFunctions com.dexels.navajo.function
 
