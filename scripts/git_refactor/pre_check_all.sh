@@ -1,5 +1,5 @@
 shopt -s extglob
-export BASEPATH=/Users/frank/git/spiritus/git
+export BASEPATH=$1 #/Users/frank/git/spiritus/git
 export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 export PATH=$PATH:$DIR:.
 
