@@ -27,4 +27,4 @@
 ./cvsgit.sh com.dexels.navajo.geo.feature com.dexels.navajo.geo.feature
 ./cvsgit.sh com.dexels.navajo.workflow.editor com.dexels.navajo.workflow.editor
 ./cvsgit.sh com.dexels.navajo.workflow.editor.gmf com.dexels.navajo.workflow.editor.gmf
-./cvsgit.sh com.dexels.navajo.workflow.editor.feature com.dexels.navajo.workflow.editor.feature
+./cvsgit.sh com.dexels.navajo.editor.feature com.dexels.navajo.workflow.editor.feature
