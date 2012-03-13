@@ -73,12 +73,10 @@ public class ServiceRegistrationUtils {
 			xml.parseFromReader(r);
 			is.close();
 			List<XMLElement> children = xml.getChildren();
-			System.err.println("Registering elements for: "+extension.getId());
 			for (int i = 0; i < children.size(); i++) {
 				XMLElement element = children.get(i);
 				registerTipiElement(element, extension, context);
 			}
-			System.err.println("Done");
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
