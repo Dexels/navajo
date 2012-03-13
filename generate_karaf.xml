@@ -1,19 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>com.dexels.navajo.core.feature</artifactId>
 	<version>1.0.7-SNAPSHOT</version>
-	<packaging>eclipse-feature</packaging>
-
+	<groupId>com.dexels.navajo.core</groupId>
+	
 	<parent>
 		<groupId>com.dexels.navajo.core</groupId>
 		<artifactId>com.dexels.navajo.super</artifactId>
 		<version>1.0.0</version>
 		<relativePath></relativePath>
 	</parent>
-	
+
+
 	<build>
 		<plugins>
 			<plugin>
@@ -28,7 +26,7 @@
 							<goal>generate-features-xml</goal>
 						</goals>
 						<configuration>
-							<bundles>bundles.properties</bundles>
+							<bundles>src/main/resources/bundles.properties</bundles>
 							<kernelVersion>2.2.5</kernelVersion>
 							<outputFile>target/features.xml</outputFile>
 						</configuration>
