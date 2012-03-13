@@ -7,6 +7,7 @@ import java.awt.LayoutManager2;
 import java.awt.Rectangle;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -60,7 +61,7 @@ public class NullLayout implements LayoutManager2 {
 	}
 
 	public Dimension maximumLayoutSize(Container parent) {
-		return parent.getMaximumSize();
+		return new Dimension(Integer.MAX_VALUE,Integer.MAX_VALUE);
 	}
 
 	public void layoutContainer(Container parent) {
@@ -71,11 +72,29 @@ public class NullLayout implements LayoutManager2 {
 	}
 
 	public Dimension minimumLayoutSize(Container parent) {
-		return parent.getMinimumSize();
+		return new Dimension(0,0);
 	}
 
 	public Dimension preferredLayoutSize(Container parent) {
-		return parent.getPreferredSize();
+		Dimension d = calculateLayoutSize();
+		return d;
+	}
+
+	private Dimension calculateLayoutSize() {
+		int maxw = 0;
+		int maxh = 0;
+		for (Entry<Component, Rectangle> r : components.entrySet()) {
+			int w = r.getValue().x + r.getValue().width;
+			int h = r.getValue().y + r.getValue().height;
+			if(w>maxw) {
+				maxw = w;
+			}
+			if(h>maxh) {
+				maxh = h;
+			}
+		}
+		Dimension d = new Dimension(maxw,maxh);
+		return d;
 	}
 
 	public void removeLayoutComponent(Component comp) {

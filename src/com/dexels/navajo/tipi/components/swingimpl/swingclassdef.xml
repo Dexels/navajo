@@ -838,7 +838,7 @@
 
 
    <!-- Identical to tipi, but new style -->
-   <tipiclass addtocontainer="true" deprecated="true" implements="datacomponent,swingcomponent,dragdrop" childcount="*" class="TipiPanel" layoutmanager="true" module="container" name="panel"
+   <tipiclass addtocontainer="true" deprecated="true" implements="basecomponent,datacomponent,swingcomponent,dragdrop" childcount="*" class="TipiPanel" layoutmanager="true" module="container" name="panel"
       package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="tipi.gif" type="tipi">
       <description>
       </description>
@@ -939,7 +939,7 @@
 
 
 
-   <tipiclass addtocontainer="false"  implements="datacomponent" childcount="0" layoutmanager="false" class="TipiExportDialog" module="dialogs" name="exportdialog" package="com.dexels.navajo.tipi.components.swingimpl"
+   <tipiclass addtocontainer="false"  implements="basecomponent,datacomponent" childcount="0" layoutmanager="false" class="TipiExportDialog" module="dialogs" name="exportdialog" package="com.dexels.navajo.tipi.components.swingimpl"
       studio-icon="exportdialog.gif" toplevel="true" type="tipi">
       	<description>
 			
@@ -997,7 +997,7 @@
    </tipiclass>
 
 
-   <tipiclass addtocontainer="true" childcount="*"  implements="datacomponent,swingcomponent" class="TipiUndecoratedWindow" layoutmanager="true" module="container" name="undecoratedwindow"
+   <tipiclass addtocontainer="true" childcount="*"  implements="basecomponent,datacomponent,swingcomponent" class="TipiUndecoratedWindow" layoutmanager="true" module="container" name="undecoratedwindow"
       package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="window.gif" toplevel="true" type="tipi">
       <description>
          The undecorated window behaves like a regular window (JInternalFrame) only without the normal window controls.
@@ -1030,7 +1030,7 @@
    </tipiclass>
 
 
-   <tipiclass addtocontainer="false" implements="datacomponent" childcount="*" class="TipiScreen" layoutmanager="false" module="container" name="screen" package="com.dexels.navajo.tipi.components.swingimpl"
+   <tipiclass addtocontainer="false" implements="basecomponent,datacomponent" childcount="*" class="TipiScreen" layoutmanager="false" module="container" name="screen" package="com.dexels.navajo.tipi.components.swingimpl"
       studio-icon="screen.gif" type="tipi">
 	<description>
 		This component is used as 'virtual toplevel' although multiple frames are not supported yet.
@@ -1038,7 +1038,7 @@
 	</description>
    </tipiclass>
    
-   <tipiclass addtocontainer="true" implements="datacomponent,swingcomponent"  childcount="*" class="TipiDesktop" layoutmanager="false" module="container" name="desktop" package="com.dexels.navajo.tipi.components.swingimpl"
+   <tipiclass addtocontainer="true" implements="basecomponent,datacomponent,swingcomponent"  childcount="*" class="TipiDesktop" layoutmanager="false" module="container" name="desktop" package="com.dexels.navajo.tipi.components.swingimpl"
       studio-icon="desktop.gif" type="tipi">
       <description>
 		This component corresponds to the 'JDesktop' class in Swing. It is a parent for free floating children, typically windows or undecorated windows.
@@ -1072,7 +1072,7 @@
       <methods />
    </tipiclass>
 
-   <tipiclass addtocontainer="false" implements="datacomponent,swingcomponent"  childcount="*" class="TipiFrame" layoutmanager="true" module="container" name="frame" package="com.dexels.navajo.tipi.components.swingimpl"
+   <tipiclass addtocontainer="false" implements="basecomponent,datacomponent,swingcomponent"  childcount="*" class="TipiFrame" layoutmanager="true" module="container" name="frame" package="com.dexels.navajo.tipi.components.swingimpl"
       studio-icon="frame.gif" toplevel="true" type="tipi">
       <events>
          <event name="onWindowClosed" />
@@ -1110,7 +1110,7 @@
       </values>
       <methods />
    </tipiclass>
-   <tipiclass addtocontainer="true" childcount="*" class="TipiTabs" implements="datacomponent,swingcomponent"  layoutmanager="false" module="container" name="tabs" package="com.dexels.navajo.tipi.components.swingimpl"
+   <tipiclass addtocontainer="true" childcount="*" class="TipiTabs" implements="basecomponent,datacomponent,swingcomponent"  layoutmanager="false" module="container" name="tabs" package="com.dexels.navajo.tipi.components.swingimpl"
       studio-icon="tabs.gif" type="tipi">
       <events>
          <event name="onTabChanged" />
@@ -1142,7 +1142,7 @@
       </methods>
    </tipiclass>
 
-   <tipiclass addtocontainer="true" childcount="*" class="TipiTab" implements="datacomponent"  layoutmanager="true" module="container" name="tab" package="com.dexels.navajo.tipi.components.swingimpl"
+   <tipiclass addtocontainer="true" childcount="*" class="TipiTab" implements="basecomponent,datacomponent"  layoutmanager="true" module="container" name="tab" package="com.dexels.navajo.tipi.components.swingimpl"
       studio-icon="tabs.gif" type="tipi">
       <events>
       </events>
@@ -1160,7 +1160,7 @@
 
 
 
-   <tipiclass addtocontainer="true" childcount="*" class="TipiCardPanel" implements="datacomponent,swingcomponent" layoutmanager="false" module="container" name="cardpanel" package="com.dexels.navajo.tipi.components.swingimpl"
+   <tipiclass addtocontainer="true" childcount="*" class="TipiCardPanel" implements="basecomponent,datacomponent,swingcomponent" layoutmanager="false" module="container" name="cardpanel" package="com.dexels.navajo.tipi.components.swingimpl"
       studio-icon="tabs.gif" type="tipi">
       <events>
       </events>
@@ -1172,7 +1172,7 @@
    </tipiclass>
 
 
-   <tipiclass addtocontainer="true" childcount="2" class="TipiSplitPane" implements="datacomponent" layoutmanager="false" module="container" name="split" package="com.dexels.navajo.tipi.components.swingimpl"
+   <tipiclass addtocontainer="true" childcount="2" class="TipiSplitPane" implements="basecomponent,datacomponent" layoutmanager="false" module="container" name="split" package="com.dexels.navajo.tipi.components.swingimpl"
       studio-icon="hidden.gif" type="tipi">
       <events>
       </events>
@@ -1195,7 +1195,7 @@
    </tipiclass>
 
 
-   <tipiclass addtocontainer="true" childcount="2" class="TipiSlottedViewport" implements="datacomponent" layoutmanager="true" module="container" name="viewport" package="com.dexels.navajo.tipi.components.swingimpl"
+   <tipiclass addtocontainer="true" childcount="2" class="TipiSlottedViewport" implements="basecomponent,datacomponent" layoutmanager="true" module="container" name="viewport" package="com.dexels.navajo.tipi.components.swingimpl"
       studio-icon="hidden.gif" type="tipi">
       <events>
       </events>
@@ -1226,7 +1226,7 @@
    </tipiclass>
 
 
-   <tipiclass addtocontainer="false" childcount="*" implements="datacomponent" class="TipiDialog" layoutmanager="true" module="container" name="dialog" package="com.dexels.navajo.tipi.components.swingimpl"
+   <tipiclass addtocontainer="false" childcount="*" implements="basecomponent,datacomponent" class="TipiDialog" layoutmanager="true" module="container" name="dialog" package="com.dexels.navajo.tipi.components.swingimpl"
       studio-icon="dialog.gif" toplevel="true" type="tipi">
       <events>
          <event name="onWindowClosed" />
@@ -1846,7 +1846,7 @@
       <methods />
    </tipiclass>
 
-   <tipiclass studio-icon="tipitableprinter.gif" module="extensions" implements="datacomponent" class="TipiEmailLauncher" name="emaillauncher" childcount="0"
+   <tipiclass studio-icon="tipitableprinter.gif" module="extensions" implements="basecomponent,datacomponent" class="TipiEmailLauncher" name="emaillauncher" childcount="0"
       package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" addtocontainer="false" layoutmanager="false">
       <events>
       </events>
