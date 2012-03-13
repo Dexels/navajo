@@ -1,8 +1,14 @@
 package com.dexels.navajo.tipi.application;
 
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.osgi.service.cm.ConfigurationException;
+import org.osgi.service.cm.ManagedService;
 import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,23 +30,74 @@ public class ApplicationComponent {
 	private TipiApplicationInstance instance;
 
 	private ComponentContext componentContext;
-	private final List<TipiExtension> extensionList = new ArrayList<TipiExtension>();
+	private final Map<String,TipiExtension> extensionList = new HashMap<String,TipiExtension>();
 	private TipiMainExtension mainExtension;
 	private TipiCoreExtension coreExtension;
+
+	private String[] requireOptional = new String[]{
+			"tipi.TipiSwingMigExtension",
+			"tipi.TipiJabberExtension",
+			"tipi.TipiMailExtension",
+			"tipi.TipiRichExtension",
+			"tipi.TipiCssExtension",
+			"tipi.TipiSubstanceExtension"
+			};
+	
+	
+	private boolean isRunning = false;
+	private boolean isActive = false;
+	private Dictionary properties;
+	
 	public void activate(ComponentContext c) {
 		this.componentContext = c;
 		logger.info("Tipi Application Active");
-		bootApplication();
-		instance.close();
+		properties = c.getProperties();
+		Enumeration en = properties.keys();
+		while (en.hasMoreElements()) {
+			Object key = (Object) en.nextElement();
+			logger.info("Element: "+key+" : "+properties.get(key));
+		}
+		if(instance!=null) {
+			instance.close();
+		}
+		isActive = true;
+		if(verifyOptionalDeps()) {
+			bootApplication((String) properties.get("tipi.context"));
+		}
+
+	}
+
+	private boolean verifyOptionalDeps() {
+		if(isRunning) {
+			// already running
+			logger.warn("Already running, not booting.");
+			return false;
+		}
+		for(String te: requireOptional) {
+			if(! isPresent(te)) {
+				logger.warn("Aborting boot: missing extension: "+te);
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private boolean isPresent(String te) {
+		return extensionList.get(te)!=null;
 	}
 
 	public void deactivate() {
 		logger.info("Deactivating tipi Application");
+		isActive = false;
 	}
 
 	public void addTipiExtension(TipiExtension te) {
 		logger.info("Adding extension: "+te.getId()+" current size: "+extensionList.size());
-		extensionList.add(te);
+		extensionList.put(te.getClass().getCanonicalName(),te);
+		if(verifyOptionalDeps()) {
+			bootApplication((String) properties.get("tipi.context"));
+		}
+
 	}
 
 	public void removeTipiExtension(TipiExtension te) {
@@ -65,9 +122,9 @@ public class ApplicationComponent {
 		this.coreExtension = null;
 	}
 	
-	private void bootApplication() {
-		final String context = System.getProperty("tipi.context");
+	private void bootApplication(final String context) {
 		logger.info("====================\nStarting application\n====================\n context: "+context);
+		this.isRunning = true;
 		Thread t = new Thread() {
 
 
@@ -84,5 +141,7 @@ public class ApplicationComponent {
 		};
 		t.start();
 	}
+
+
 
 }
