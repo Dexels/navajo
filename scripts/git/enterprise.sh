@@ -11,7 +11,6 @@
 ./cvsgit.sh com.dexels.navajo.mongo com.dexels.navajo.mongo
 ./cvsgit.sh com.dexels.navajo.mongo.navajostore com.dexels.navajo.mongo.navajostore
 ./cvsgit.sh com.dexels.navajo.other.feature com.dexels.navajo.other.feature
-./cvsgit.sh NavajoUtilities com.dexels.navajo.other.utilities
 ./cvsgit.sh com.dexels.navajo.resource.feature com.dexels.navajo.resource.feature
 ./cvsgit.sh com.dexels.navajo.resource com.dexels.navajo.resource
 ./cvsgit.sh com.dexels.navajo.resource.jdbc.h2 com.dexels.navajo.resource.jdbc.h2

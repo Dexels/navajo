@@ -60,16 +60,17 @@ precheck.sh com.dexels.navajo.other.feature
 precheck.sh com.dexels.navajo.other.utilities
 precheck.sh com.dexels.navajo.test.feature
 precheck.sh com.dexels.navajo.test.remote
-
-export MODULEPATH=enterprise
-
+export MODULEPATH=server
+precheck.sh com.dexels.navajo.authentication.api
 precheck.sh com.dexels.navajo.birt.push 
 precheck.sh com.dexels.navajo.jsp.server 
 precheck.sh com.dexels.navajo.jsp 
+precheck.sh com.dexels.navajo.server.embedded
+export MODULEPATH=dev
+precheck.sh com.dexels.navajo.remotetest
 precheck.sh com.dexels.navajo.tipi.swt.client 
 precheck.sh com.dexels.navajo.dev.feature 
 precheck.sh com.dexels.navajo.dev.script 
-precheck.sh com.dexels.navajo.server.embedded
 precheck.sh com.dexels.navajo.dsl.navajomanager
 precheck.sh com.dexels.navajo.dsl.expression
 precheck.sh com.dexels.navajo.dsl.expression.model
@@ -79,7 +80,6 @@ precheck.sh com.dexels.navajo.dsl.tsl.model
 precheck.sh com.dexels.navajo.dsl.tsl.ui
 precheck.sh com.dexels.navajo.dsl.integration
 precheck.sh com.dexels.navajo.dsl.feature
-precheck.sh com.dexels.navajo.remotetest
 
 
 
