@@ -19,7 +19,7 @@ public class CreateEchoMailUrl extends FunctionInterface {
 	@Override
 	public Object evaluate() throws TMLExpressionException {
 		if (getOperands().size() != 3) {
-			throw new TMLExpressionException("CreateEchoUrl needs four parameters");
+			throw new TMLExpressionException("CreateEchoUrl needs three parameters");
 		}
 		Object oo = getOperand(0);
 		if(!(oo instanceof EchoTipiContext)) {
