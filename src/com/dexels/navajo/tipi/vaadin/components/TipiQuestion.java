@@ -13,7 +13,7 @@ public class TipiQuestion extends TipiBaseQuestion {
 	private static final long serialVersionUID = 7918566395000495935L;
 
     private VerticalLayout myColumn;
-
+    private boolean questionErrorMessageVisible = false;
 
 
     public TipiQuestion() {
@@ -24,6 +24,15 @@ public class TipiQuestion extends TipiBaseQuestion {
         return myColumn;
     }
 
+    
+  public void setComponentValue(final String name, final Object object) {
+	  if("showErrorMessage".equals(name)) {
+		  Boolean b = (Boolean)object;
+		  questionErrorMessageVisible = b;
+	  }
+      super.setComponentValue(name, object);
+
+  }
     public void addToContainer(Object c, Object constraints) {
         Component comp = (Component) c;
         myColumn.addComponent(comp);
@@ -40,13 +49,10 @@ public class TipiQuestion extends TipiBaseQuestion {
 
     }
 
-    public void setComponentValue(String name, Object object) {
-        super.setComponentValue(name, object);
-    }
 
     public void setValid(boolean b, String msg) {
     	System.err.println("Setting valid: "+b+" msg: "+msg);
-    	if(b) {
+    	if(b || !questionErrorMessageVisible) {
     		myColumn.setCaption("");
     	} else {
         	myColumn.setCaption(msg);
