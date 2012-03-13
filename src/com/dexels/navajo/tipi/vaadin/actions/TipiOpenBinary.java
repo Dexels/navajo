@@ -8,7 +8,9 @@ package com.dexels.navajo.tipi.vaadin.actions;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Random;
 
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.TipiBreakException;
@@ -54,6 +56,22 @@ public class TipiOpenBinary extends TipiVaadinActionImpl {
 				bb = null;
 			}
 		}
+		if (evaluatedParameterValue instanceof String) {
+			URL u;
+			try {
+				u = new URL((String) evaluatedParameterValue);
+				System.err.println("URL detected: " + u);
+				try {
+					bb = new Binary(u.openStream(), false);
+				} catch (IOException e) {
+					e.printStackTrace();
+					bb = null;
+				}
+			} catch (MalformedURLException e1) {
+				e1.printStackTrace();
+			}
+		}
+		
 		final Binary b = bb;
 
 		if (b == null) {
@@ -69,8 +87,16 @@ public class TipiOpenBinary extends TipiVaadinActionImpl {
 			public InputStream getStream() {
 				return b.getDataAsStream();
 			}
+			
+			
 		};
-		StreamResource sr = new StreamResource( ss, "file."+b.getExtension(), getApplication());
+		Random r = new Random(System.currentTimeMillis());
+		int rand = r.nextInt()%10000;
+		
+		StreamResource sr = new StreamResource( ss, "file"+rand+"."+b.getExtension(), getApplication());
+		sr.getStream().setParameter("Content-Disposition", "inline");
+	    sr.getStream().setParameter("Cache-Control","no-store, no-cache, no-transform, must-revalidate, private");
+
 		if(openNewWindow) {
 			getApplication().getMainWindow().open(sr,"_blank");
 		} else {
