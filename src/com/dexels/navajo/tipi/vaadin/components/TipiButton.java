@@ -5,6 +5,8 @@ import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
+import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.terminal.gwt.client.ui.Field;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -37,7 +39,7 @@ public class TipiButton extends TipiVaadinComponentImpl {
 
 	  public void setComponentValue(final String name, final Object object) {
 		    super.setComponentValue(name, object);
-			Component v = getVaadinContainer();
+		    Button v = (Button) getVaadinContainer();
 		        if (name.equals("text")) {
 		          v.setCaption( (String) object);
 		        }
@@ -47,6 +49,17 @@ public class TipiButton extends TipiVaadinComponentImpl {
 		        if ("style".equals(name)) {
 //		        	BaseTheme.BUTTON_LINK;
 	                v.setStyleName((String)object);
+		        }
+		        if ("defaultButton".equals(name)) {
+//		        	BaseTheme.BUTTON_LINK;
+	                Boolean b = (Boolean)object;
+	                if (b) {
+		                v.setClickShortcut(KeyCode.ENTER);
+					} else {
+		                v.removeClickShortcut();
+					}
+
+	                
 		        }
 	  }
 
