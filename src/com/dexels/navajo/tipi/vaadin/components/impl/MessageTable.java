@@ -37,7 +37,7 @@ public class MessageTable extends Table {
 	  protected String formatPropertyValue(Object rowId, Object colId,
               Property property) {
           Object v = property.getValue();
-          logger.warn("Formatting: "+rowId+" col: "+colId+" prop: "+property+" value: "+v);
+//          logger.warn("Formatting: "+rowId+" col: "+colId+" prop: "+property+" value: "+v);
           if (v instanceof Date) {
               Date dateValue = (Date) v;
               return dateFormat3.format(dateValue);
