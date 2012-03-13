@@ -4,13 +4,13 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>com.dexels.navajo.tipi.echo</artifactId>
-	<version>1.0.26.qualifier</version>
+	<version>1.0.26-SNAPSHOT</version>
 	<packaging>eclipse-plugin</packaging>
 
 	<parent>
 		<groupId>com.dexels.navajo.core</groupId>
 		<artifactId>com.dexels.navajo.super</artifactId>
 		<version>1.0.0</version>
-		<relativePath>../com.dexels.repository/superpom.xml</relativePath>
+		<relativePath></relativePath>
 	</parent>
 </project>
