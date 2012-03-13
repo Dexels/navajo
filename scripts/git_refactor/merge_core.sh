@@ -20,6 +20,9 @@ genmerge.sh com.dexels.navajo.function
 
 export MODULEPATH=server
 
+genmerge.sh com.dexels.navajo.jsp.server 
+genmerge.sh com.dexels.navajo.jsp 
+genmerge.sh com.dexels.navajo.server.embedded
 genmerge.sh com.dexels.navajo.server.feature
 genmerge.sh com.dexels.navajo.server.embedded.feature
 genmerge.sh com.dexels.navajo.queuemanager
@@ -57,15 +60,13 @@ genmerge.sh com.dexels.navajo.other.utilities
 genmerge.sh com.dexels.navajo.test.feature
 genmerge.sh com.dexels.navajo.test.remote
 
-export MODULEPATH=server
+
+export MODULEPATH=dev
 
 genmerge.sh com.dexels.navajo.birt.push 
-genmerge.sh com.dexels.navajo.jsp.server 
-genmerge.sh com.dexels.navajo.jsp 
-genmerge.sh com.dexels.navajo.tipi.swt.client 
 genmerge.sh com.dexels.navajo.dev.feature 
 genmerge.sh com.dexels.navajo.dev.script 
-genmerge.sh com.dexels.navajo.server.embedded
+genmerge.sh com.dexels.navajo.tipi.swt.client 
 genmerge.sh com.dexels.navajo.dsl.navajomanager
 genmerge.sh com.dexels.navajo.dsl.expression
 genmerge.sh com.dexels.navajo.dsl.expression.model
@@ -111,6 +112,9 @@ genmerge.sh tipi.lesson.three
 genmerge.sh tipi.lesson.four
 genmerge.sh tipi.lesson.five
 genmerge.sh tipi.lesson.six
+
+export MODULEPATH=optional
+
 genmerge.sh com.dexels.navajo.twitter
 genmerge.sh com.dexels.navajo.twitter.feature
 genmerge.sh com.dexels.navajo.svg
