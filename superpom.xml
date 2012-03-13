@@ -9,10 +9,19 @@
 	<properties>
 		<tycho-version>0.14.0</tycho-version>
 		<tycho-groupid>org.eclipse.tycho</tycho-groupid>
+<!-- 		<forceContextQualifier>20120229-1926</forceContextQualifier> -->
+
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<pluginRepositories>
 		<pluginRepository>
+			<id>tycho_spiritus</id>
+			<url>http://spiritus.dexels.nl:41766/nexus/content/repositories/tycho/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+				<pluginRepository>
 			<id>tycho</id>
 			<url>http://repository.sonatype.org/content/groups/sonatype-public-grid</url>
 			<snapshots>
@@ -21,7 +30,53 @@
 		</pluginRepository>
 	</pluginRepositories>
 
+
 	<repositories>
+		<repository>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>central</id>
+			<name>Central Spiritus</name>
+			<url>http://spiritus.dexels.nl:41766/nexus/content/repositories/central/</url>
+			<layout>default</layout>
+		</repository>
+
+		<repository>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+				<checksumPolicy>warn</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+				<updatePolicy>never</updatePolicy>
+				<checksumPolicy>fail</checksumPolicy>
+			</snapshots>
+			<id>karaf</id>
+			<name>Karaf</name>
+			<url>http://spiritus.dexels.nl:41766/nexus/content/repositories/karaf/</url>
+			<layout>default</layout>
+		</repository>
+		<repository>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+				<checksumPolicy>warn</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+				<updatePolicy>never</updatePolicy>
+				<checksumPolicy>fail</checksumPolicy>
+			</snapshots>
+			<id>spiritus</id>
+			<name>Spiritus</name>
+			<url>http://spiritus.dexels.nl:41766/nexus/content/repositories/navajo/</url>
+			<layout>default</layout>
+		</repository>
 		<repository>
 			<releases>
 				<enabled>false</enabled>
@@ -35,7 +90,7 @@
 			</snapshots>
 			<id>spiritusSnapshot</id>
 			<name>Spiritus</name>
-			<url>http://spiritus.dexels.nl:41766/nexus/content/repositories/navajo/</url>
+			<url>http://spiritus.dexels.nl:41766/nexus/content/repositories/navajo_snapshot/</url>
 			<layout>default</layout>
 		</repository>
 	</repositories>
@@ -131,12 +186,12 @@
 				<version>2.3.7</version>
 				<extensions>true</extensions>
 				<configuration>
-					    <supportedProjectTypes>
-					      <supportedProjectType>jar</supportedProjectType>
-					      <supportedProjectType>bundle</supportedProjectType>
-					      <supportedProjectType>eclipse-plugin</supportedProjectType>
-					      <supportedProjectType>eclipse-feature</supportedProjectType>
-					    </supportedProjectTypes>				
+					<supportedProjectTypes>
+						<supportedProjectType>jar</supportedProjectType>
+						<supportedProjectType>bundle</supportedProjectType>
+						<supportedProjectType>eclipse-plugin</supportedProjectType>
+						<supportedProjectType>eclipse-feature</supportedProjectType>
+					</supportedProjectTypes>
 					<instructions>
 						<Bundle-Description>Navajo Suite</Bundle-Description>
 					</instructions>
@@ -146,37 +201,37 @@
 					<prefixUrl>http://spiritus.dexels.nl:41766/nexus/content/repositories/navajo_snapshot</prefixUrl>
 					<ignoreLock>true</ignoreLock>
 				</configuration>
-				  <executions>
-				    <execution>
-				      <id>bundle-deploy</id>
-				      <phase>deploy</phase>
-				      <goals>    
-				        <goal>deploy</goal>
-				      </goals>   
-				    </execution>
-				  </executions>				
+				<executions>
+					<execution>
+						<id>bundle-deploy</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>deploy</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
-			
-			      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jarsigner-plugin</artifactId>
-        <version>1.2</version>
-        <executions>
-          <execution>
-            <id>sign</id>
-            <goals>
-              <goal>sign</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <keystore>~/.m2/sportlink.ks</keystore>
-          <alias>server</alias>
-          <storepass>sp0rtl1nk</storepass>
-          <keypass></keypass>
-        </configuration>
-      </plugin>
-			
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jarsigner-plugin</artifactId>
+				<version>1.2</version>
+				<executions>
+					<execution>
+						<id>sign</id>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<keystore>~/.m2/sportlink.ks</keystore>
+					<alias>server</alias>
+					<storepass>sp0rtl1nk</storepass>
+					<keypass></keypass>
+				</configuration>
+			</plugin>
+
 		</plugins>
 
 		<extensions>
@@ -186,11 +241,11 @@
 				<artifactId>wagon-ssh</artifactId>
 				<version>2.2</version>
 			</extension>
-		  <extension> 
-            <groupId>org.apache.maven.wagon</groupId> 
-            <artifactId>wagon-webdav-jackrabbit</artifactId> 
-            <version>2.2</version> 
-         </extension> 
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-webdav-jackrabbit</artifactId>
+				<version>2.2</version>
+			</extension>
 		</extensions>
 	</build>
 
@@ -200,15 +255,15 @@
 			<uniqueVersion>false</uniqueVersion>
 			<id>dexels</id>
 			<name>Dexels Repository</name>
-<!-- 			<url>scp://navajo@spiritus.dexels.nl:/var/www/html/maven_release/</url> -->
-			<url>http://spiritus.dexels.nl:41766/nexus/content/repositories/navajo/</url>
+			<!-- <url>scp://navajo@spiritus.dexels.nl:/var/www/html/maven_release/</url> -->
+			<url>https://source.dexels.com/nexus/content/repositories/navajo/</url>
 			<layout>default</layout>
 		</repository>
 		<snapshotRepository>
 			<uniqueVersion>true</uniqueVersion>
 			<id>dexels_snap</id>
 			<name>Dexels Snapshots</name>
-			<url>http://spiritus.dexels.nl:41766/nexus/content/repositories/navajo_snapshot</url>
+			<url>https://source.dexels.com/nexus/content/repositories/navajo_snapshot</url>
 			<layout>legacy</layout>
 		</snapshotRepository>
 	</distributionManagement>
