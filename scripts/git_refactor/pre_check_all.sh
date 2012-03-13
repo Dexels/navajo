@@ -21,6 +21,7 @@ precheck.sh com.dexels.navajo.core
 precheck.sh com.dexels.navajo.client 
 precheck.sh com.dexels.navajo.client.async 
 precheck.sh com.dexels.navajo.function 
+precheck.sh com.dexels.navajo.authentication.api
 
 export MODULEPATH=server
 
