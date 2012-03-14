@@ -15,7 +15,6 @@
 		<module>../com.dexels.navajo.core</module>
 		<module>../com.dexels.navajo.client.async</module>
 		<module>../com.dexels.navajo.function</module>
-		<module>../com.dexels.navajo.authentication.api</module>
 	</modules>
 	<parent>
 		<groupId>com.dexels.navajo.core</groupId>

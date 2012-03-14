@@ -15,7 +15,6 @@
 		<module>../Navajo</module>
 		<module>../NavajoAsyncClient</module>
 		<module>../NavajoFunctions</module>
-		<module>../com.dexels.navajo.authentication.api</module>
 
 	</modules>
         <parent>
