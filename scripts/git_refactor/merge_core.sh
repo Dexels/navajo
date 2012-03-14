@@ -17,7 +17,6 @@ genmerge.sh com.dexels.navajo.core
 genmerge.sh com.dexels.navajo.client 
 genmerge.sh com.dexels.navajo.client.async 
 genmerge.sh com.dexels.navajo.function 
-
 export MODULEPATH=server
 
 genmerge.sh com.dexels.navajo.jsp.server 
@@ -41,6 +40,7 @@ genmerge.sh com.dexels.navajo.resource.manager
 genmerge.sh com.dexels.navajo.server
 genmerge.sh com.dexels.navajo.server.bridged
 genmerge.sh com.dexels.navajo.server.bridged.deploy
+genmerge.sh com.dexels.navajo.authentication.api
 
 export MODULEPATH=enterprise
 

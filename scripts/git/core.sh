@@ -5,5 +5,4 @@
 ./cvsgit.sh Navajo com.dexels.navajo.core
 ./cvsgit.sh NavajoAsyncClient com.dexels.navajo.client.async
 ./cvsgit.sh NavajoFunctions com.dexels.navajo.function
-./cvsgit.sh com.dexels.navajo.authentication.api com.dexels.navajo.authentication.api 
-
+./cvsgit.sh com.dexels.navajo.authentication.api com.dexels.navajo.authentication.api
