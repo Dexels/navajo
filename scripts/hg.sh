@@ -246,5 +246,4 @@ cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.
 
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.authentication.api /home/cvs/com.dexels.navajo.authentication.api
 
-com.dexels.navajo.authentication.api
 
