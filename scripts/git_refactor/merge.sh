@@ -4,7 +4,7 @@ git remote add -f $1_remote $2
 git merge --log -s ours --no-commit $1_remote/master
 git read-tree --prefix=TEMP/ -u $1_remote/master
 mkdir -p $MODULEPATH/
-git mv TEMP/bundle/* $MODULEPATH/
+git mv TEMP/$MODULEPATH/* $MODULEPATH/
 rm -rf TEMP
 git commit -m "project merge"
 git remote rm $1_remote
