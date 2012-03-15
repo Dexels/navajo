@@ -1,3 +1,5 @@
+echo "PREPENDING PRECHECK!"
+pre_check.sh $1
 echo "genmerge: $BASEPATH/_$1"
 pwd
 cd $DIR/work

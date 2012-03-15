@@ -55,6 +55,9 @@ genmerge.sh com.dexels.navajo.enterprise.adapters.deps
 genmerge.sh com.dexels.navajo.mongo.feature
 genmerge.sh com.dexels.navajo.mongo
 genmerge.sh com.dexels.navajo.mongo.navajostore
+
+export MODULEPATH=other
+
 genmerge.sh com.dexels.navajo.other.feature
 genmerge.sh com.dexels.navajo.other.utilities
 genmerge.sh com.dexels.navajo.test.feature

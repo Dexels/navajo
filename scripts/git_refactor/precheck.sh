@@ -1,5 +1,4 @@
-#Hard code for now
-export MODULEPATH=bundle
+#export MODULEPATH=bundle
 shopt -s extglob
 cd $BASEPATH/
 rm -rf _$1
