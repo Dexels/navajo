@@ -1,19 +1,37 @@
 package com.dexels.navajo.tipi.rss;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.types.*;
+import com.dexels.navajo.document.Header;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Method;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiException;
-import com.dexels.navajo.tipi.connectors.*;
-import com.dexels.navajo.tipi.internal.*;
-import com.dexels.navajo.tipilink.*;
-import com.sun.cnpi.rss.elements.*;
-import com.sun.cnpi.rss.parser.*;
+import com.dexels.navajo.tipi.connectors.TipiBaseConnector;
+import com.dexels.navajo.tipi.connectors.TipiConnector;
+import com.dexels.navajo.tipi.internal.TipiEvent;
+import com.sun.cnpi.rss.elements.BasicElement;
+import com.sun.cnpi.rss.elements.Channel;
+import com.sun.cnpi.rss.elements.Image;
+import com.sun.cnpi.rss.elements.Item;
+import com.sun.cnpi.rss.elements.Rss;
+import com.sun.cnpi.rss.elements.Title;
+import com.sun.cnpi.rss.parser.RssParser;
+import com.sun.cnpi.rss.parser.RssParserException;
+import com.sun.cnpi.rss.parser.RssParserFactory;
 /**
  * 
  * @author Frank Lyaruu
