@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>NavajoScriptPlugin</name>
+	<name>com.dexels.navajo.dev.script</name>
 	<comment></comment>
-	<projects>
-		<project>Navajo</project>
-		<project>NavajoSwtClient</project>
-	</projects>
 	<buildSpec>
 		<buildCommand>
 			<name>org.eclipse.jdt.core.javabuilder</name>
@@ -22,17 +18,11 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
-		<buildCommand>
-			<name>javafx.eclipse.f3editor.builder.F3Builder</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
 	</buildSpec>
 	<natures>
 		<nature>org.eclipse.jem.workbench.JavaEMFNature</nature>
 		<nature>org.eclipse.pde.PluginNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.jem.beaninfo.BeanInfoNature</nature>
-		<nature>javafx.eclipse.f3editor.builder.F3Nature</nature>
 	</natures>
 </projectDescription>
