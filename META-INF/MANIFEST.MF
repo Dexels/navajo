@@ -21,6 +21,7 @@ Bundle-ClassPath: lib/milStd2525_png.jar,
  lib/omcorba.jar,
  lib/omj3d.jar,
  lib/omsvg.jar,
- lib/openmap.jar
+ lib/openmap.jar,
+ .
 Export-Package: com.dexels.geospatial,
  com.dexels.navajo.geo
