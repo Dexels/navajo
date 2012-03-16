@@ -1,21 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>NavajoAdapters</name>
+	<name>com.dexels.navajo.adapters</name>
 	<comment></comment>
 	<projects>
-		<project>Navajo</project>
-		<project>NavajoClient</project>
-		<project>NavajoDocument</project>
-		<project>NavajoLogger</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
 			<name>org.eclipse.jdt.core.javabuilder</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
-		<buildCommand>
-			<name>net.sourceforge.metrics.builder</name>
 			<arguments>
 			</arguments>
 		</buildCommand>
@@ -27,6 +18,5 @@
 	</buildSpec>
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
-		<nature>net.sourceforge.metrics.nature</nature>
 	</natures>
 </projectDescription>
