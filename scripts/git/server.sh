@@ -6,3 +6,4 @@
 ./cvsgit.sh NavajoAdapters com.dexels.navajo.adapters 
 ./cvsgit.sh NavajoRhino com.dexels.navajo.rhino
 ./cvsgit.sh com.dexels.navajo.authentication.api com.dexels.navajo.authentication.api
+./cvsgit.sh NavajoServer com.dexels.navajo.server.deploy

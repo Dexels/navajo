@@ -9,6 +9,12 @@
 ./cvsgit.sh sportlink-serv-crystal com.sportlink.crystal
 ./cvsgit.sh sportlink-serv-AAA com.sportlink.aaa
 ./cvsgit.sh sportlink-serv-comp com.sportlink.comp
+./cvsgit.sh sportlink-knvb-digitaalinschrijven com.sportlink.digitaalinschrijven
+./cvsgit.sh SportlinkDWF com.sportlink.dwf
+./cvsgit.sh SportlinkMatchForms com.sportlink.matchforms
+
+
+
 ./cvsgit.sh TensingOracle com.sportlink.tensing
 ./cvsgit.sh SportlinkClub tipi.sportlink.club
 ./cvsgit.sh SportlinkOfficialPortal tipi.sportlink.officialportal
@@ -28,3 +34,4 @@
 ./cvsgit.sh com.dexels.navajo.workflow.editor com.dexels.navajo.workflow.editor
 ./cvsgit.sh com.dexels.navajo.workflow.editor.gmf com.dexels.navajo.workflow.editor.gmf
 ./cvsgit.sh com.dexels.navajo.editor.feature com.dexels.navajo.workflow.editor.feature
+./cvsgit.sh NavajoPDF com.dexels.navajo.function.pdf

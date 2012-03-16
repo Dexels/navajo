@@ -44,6 +44,7 @@ genmerge.sh com.dexels.navajo.authentication.api
 
 export MODULEPATH=enterprise
 
+# this one isn't correct, the second arg is ignored
 genmerge.sh com.dexels.navajo.tools.wsdl com.dexels.navajo.wsdl
 genmerge.sh com.dexels.navajo.wsdl.feature
 genmerge.sh com.dexels.navajo.enterprise.feature
@@ -94,6 +95,9 @@ genmerge.sh com.sportlink.crystal
 genmerge.sh com.sportlink.aaa
 genmerge.sh com.sportlink.comp
 genmerge.sh com.sportlink.tensing
+genmerge.sh com.sportlink.dwf
+genmerge.sh com.sportlink.matchforms
+
 #customized, to change the names:
 merge.sh com.sportlink.club $BASEPATH/tipi.sportlink.club $MODULEPATH/com.sportlink.club/
 merge.sh com.sportlink.officialportal $BASEPATH/tipi.sportlink.officialportal $MODULEPATH/com.sportlink.officialportal/
@@ -127,6 +131,7 @@ genmerge.sh com.dexels.navajo.geo.feature
 genmerge.sh com.dexels.navajo.workflow.editor
 genmerge.sh com.dexels.navajo.workflow.editor.gmf
 genmerge.sh com.dexels.navajo.workflow.editor.feature
+genmerge.sh com.dexels.navajo.function.pdf
 
 
 export MODULEPATH=tipi

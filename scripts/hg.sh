@@ -31,6 +31,9 @@ cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.jsp /home/cvs/NavajoJsp
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.jsp.server /home/cvs/NavajoJspServer
 
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.server.deploy /home/cvs/NavajoServer
+
+
 #Dev
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.birt.push /home/cvs/NavajoBIRT
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/com.dexels.navajo.tipi.swt.client /home/cvs/com.dexels.navajo.tipi.swt.client
@@ -227,6 +230,7 @@ cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/tipi
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/tipi.lesson.four /home/cvs/TipiLessonFour
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/tipi.lesson.five /home/cvs/TipiLessonFive
 cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/tipi.lesson.six /home/cvs/TipiLessonSix
+cvs2hg --encoding=utf_8 --fallback-encoding=ascii --hgrepos /home/mercurial/tipi.lesson.seven /home/cvs/TipiLessonSeven
 
 
 #Navajo Twitter
