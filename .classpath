@@ -3,7 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="srcjnlp"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/TipiBuildLibrary"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/TipiBuildLibrary.jar"/>
 	<classpathentry kind="lib" path="compilelib/servlet-api.jar"/>
 	<classpathentry kind="lib" path="lib/ant-launcher.jar"/>
