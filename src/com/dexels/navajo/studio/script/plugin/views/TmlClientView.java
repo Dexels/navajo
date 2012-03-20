@@ -47,7 +47,7 @@ import com.dexels.navajo.studio.script.plugin.ServerInstance;
 import com.dexels.navajo.studio.script.plugin.editors.INavajoScriptListener;
 import com.dexels.navajo.studio.script.plugin.editors.TmlFormComposite;
 import com.google.inject.Injector;
-
+@Deprecated
 public class TmlClientView extends BaseNavajoView implements IServerEntryListener,INavajoActivityListener {
     private Navajo myCurrentNavajo = null;
     private TmlFormComposite formComposite;
