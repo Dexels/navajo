@@ -1,19 +1,22 @@
 package com.dexels.navajo.tipi.swingx;
 
-import java.util.*;
-import java.util.regex.*;
+import java.util.List;
+import java.util.regex.Pattern;
 
-import javax.swing.*;
+import javax.swing.JScrollPane;
 
-import org.jdesktop.swingx.*;
-import org.jdesktop.swingx.search.*;
+import org.jdesktop.swingx.JXTable;
+import org.jdesktop.swingx.search.Searchable;
 
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
-import com.dexels.navajo.tipi.components.swingimpl.*;
-import com.dexels.navajo.tipi.swingclient.components.*;
-import com.dexels.navajo.tipilink.*;
+import com.dexels.navajo.tipi.components.swingimpl.TipiSwingDataComponentImpl;
+import com.dexels.navajo.tipi.swingclient.components.MessageTableModel;
+import com.dexels.navajo.tipi.swingclient.components.PropertyCellEditor;
+import com.dexels.navajo.tipi.swingclient.components.PropertyCellRenderer;
 
 public class TipiExtendedTable extends TipiSwingDataComponentImpl {
 

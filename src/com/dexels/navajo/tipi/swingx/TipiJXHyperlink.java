@@ -1,19 +1,19 @@
 package com.dexels.navajo.tipi.swingx;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
-import java.net.*;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.URL;
 
-import javax.imageio.*;
-import javax.swing.*;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
-import org.jdesktop.swingx.*;
+import org.jdesktop.swingx.JXHyperlink;
 
-import com.dexels.navajo.document.types.*;
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.TipiException;
-import com.dexels.navajo.tipi.components.swingimpl.*;
-import com.dexels.navajo.tipilink.*;
+import com.dexels.navajo.tipi.components.swingimpl.TipiSwingDataComponentImpl;
 
 public class TipiJXHyperlink extends TipiSwingDataComponentImpl {
 
