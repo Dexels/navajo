@@ -38,6 +38,8 @@ import java.util.ArrayList;
  * 
  * @author Kirill Grouchnikov
  */
+@SuppressWarnings("rawtypes")
+
 public class Spline implements TimelineEase {
 	// private float easeAmount;
 

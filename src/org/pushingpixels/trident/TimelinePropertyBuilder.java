@@ -35,6 +35,9 @@ import java.lang.reflect.Modifier;
 import org.pushingpixels.trident.interpolator.KeyFrames;
 import org.pushingpixels.trident.interpolator.PropertyInterpolator;
 
+
+@SuppressWarnings("all")
+
 public class TimelinePropertyBuilder<T> {
 
 	/**

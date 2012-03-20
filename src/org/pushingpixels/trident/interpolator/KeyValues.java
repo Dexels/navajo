@@ -57,6 +57,8 @@ import org.pushingpixels.trident.TimelinePropertyBuilder.PropertySetter;
  * 
  * @author Chet
  */
+@SuppressWarnings("all")
+
 public class KeyValues<T> {
 
 	private final List<T> values = new ArrayList<T>();

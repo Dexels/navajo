@@ -4,8 +4,6 @@ import java.util.Collection;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
-import javax.swing.LookAndFeel;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -17,7 +15,7 @@ import org.pushingpixels.trident.TridentConfig;
 import org.pushingpixels.trident.interpolator.PropertyInterpolator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-//org.jvnet.substance.skin.SubstanceBusinessBlackSteelLookAndFeel
+
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.swing.laf.api.LookAndFeelWrapper;
 
@@ -41,6 +39,7 @@ public class TipiSubstanceExtension extends TipiAbstractXMLExtension implements 
  
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void start(BundleContext context) throws Exception {
 		registerTipiExtension(context);

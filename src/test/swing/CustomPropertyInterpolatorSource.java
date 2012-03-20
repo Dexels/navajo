@@ -12,7 +12,10 @@ import org.pushingpixels.trident.ease.Sine;
 import org.pushingpixels.trident.interpolator.PropertyInterpolator;
 import org.pushingpixels.trident.swing.SwingRepaintTimeline;
 
+@SuppressWarnings("rawtypes")
+
 public class CustomPropertyInterpolatorSource extends JFrame {
+	private static final long serialVersionUID = 297700999649792189L;
 	private Ellipse2D ellipse;
 
 	private static class Ellipse2DPropertyInterpolator implements
@@ -44,6 +47,8 @@ public class CustomPropertyInterpolatorSource extends JFrame {
 		Ellipse2D to = new Ellipse2D.Double(40, 40, 200, 120);
 		this.ellipse = (Ellipse2D) from.clone();
 		JPanel ellipsePanel = new JPanel() {
+			private static final long serialVersionUID = -3767943157951457165L;
+
 			@Override
 			protected void paintComponent(Graphics g) {
 				super.paintComponent(g);

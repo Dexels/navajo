@@ -42,6 +42,8 @@ import org.pushingpixels.trident.ease.TimelineEase;
  * 
  * @author Chet
  */
+@SuppressWarnings("rawtypes")
+
 public class KeyFrames<T> {
 
 	private KeyValues<T> keyValues;

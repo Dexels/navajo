@@ -97,7 +97,7 @@ class TimelineEngine {
 		 * {@link #mainObj}. For example, the tabbed pane uses this field to
 		 * make tab-specific animations.
 		 */
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings("rawtypes")
 		public Comparable subID;
 
 		/**
@@ -109,7 +109,7 @@ class TimelineEngine {
 		 *            ID to distinguish between different sub-components of
 		 *            <code>mainObj</code>. Can be <code>null</code>.
 		 */
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings("rawtypes")
 		public FullObjectID(Object mainObj, Comparable subID) {
 			this.mainObj = mainObj;
 			this.subID = subID;

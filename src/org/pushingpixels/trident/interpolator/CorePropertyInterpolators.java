@@ -30,6 +30,7 @@
 package org.pushingpixels.trident.interpolator;
 
 import java.util.*;
+@SuppressWarnings("rawtypes")
 
 public class CorePropertyInterpolators implements PropertyInterpolatorSource {
 	private Set<PropertyInterpolator> interpolators;

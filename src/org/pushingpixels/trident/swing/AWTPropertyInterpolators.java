@@ -40,6 +40,8 @@ import org.pushingpixels.trident.interpolator.PropertyInterpolatorSource;
  * 
  * @author Kirill Grouchnikov
  */
+@SuppressWarnings("rawtypes")
+
 public class AWTPropertyInterpolators implements PropertyInterpolatorSource {
 	private Set<PropertyInterpolator> interpolators;
 

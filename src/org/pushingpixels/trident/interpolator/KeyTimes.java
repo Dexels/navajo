@@ -74,7 +74,8 @@ public class KeyTimes {
         }
     }
     
-    ArrayList getTimes() {
+    @SuppressWarnings("rawtypes")
+	ArrayList getTimes() {
         return times;
     }
     

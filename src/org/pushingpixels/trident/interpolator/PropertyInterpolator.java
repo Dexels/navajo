@@ -30,6 +30,7 @@
 package org.pushingpixels.trident.interpolator;
 
 public interface PropertyInterpolator<T> {
+	@SuppressWarnings("rawtypes")
 	public Class getBasePropertyClass();
 
 	public T interpolate(T from, T to, float timelinePosition);

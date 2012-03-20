@@ -37,6 +37,7 @@ import org.pushingpixels.trident.TimelineEngine.TridentAnimationThread;
 import org.pushingpixels.trident.interpolator.PropertyInterpolator;
 import org.pushingpixels.trident.interpolator.PropertyInterpolatorSource;
 
+@SuppressWarnings("all")
 public class TridentConfig {
 	private static TridentConfig config;
 

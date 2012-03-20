@@ -28,6 +28,7 @@ import org.pushingpixels.trident.Timeline.RepeatBehavior;
 import org.pushingpixels.trident.callback.TimelineScenarioCallback;
 import org.pushingpixels.trident.ease.Spline;
 import org.pushingpixels.trident.swing.SwingRepaintTimeline;
+@SuppressWarnings("all")
 
 public final class Fireworks extends JFrame {
 	private Set<VolleyExplosion> volleys;

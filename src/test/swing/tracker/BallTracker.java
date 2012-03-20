@@ -14,6 +14,7 @@ import org.pushingpixels.trident.Timeline.TimelineState;
 import org.pushingpixels.trident.callback.TimelineCallbackAdapter;
 import org.pushingpixels.trident.ease.*;
 import org.pushingpixels.trident.swing.SwingRepaintTimeline;
+@SuppressWarnings("all")
 
 public class BallTracker extends JFrame {
 	Timeline timelineBallFalling;
