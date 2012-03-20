@@ -35,7 +35,9 @@ import com.dexels.navajo.datasource.BinaryDataSource;
 /**
  * This business object is used as a mail agent in Navajo Script files.
  */
-public class MailMapAlternative implements MailMapInterface, Mappable, HasDependentResources, com.dexels.navajo.server.enterprise.queue.Queuable {
+public class MailMapAlternative implements MailMapInterface, Mappable,
+		HasDependentResources,
+		com.dexels.navajo.server.enterprise.queue.Queuable {
 
 	/**
 	 * 
@@ -59,14 +61,14 @@ public class MailMapAlternative implements MailMapInterface, Mappable, HasDepend
 	public boolean ignoreFailures = false;
 
 	public boolean relatedMultipart = false;
-	private ArrayList attachments = null;
+	private List<AttachmentMapInterface> attachments = null;
 	private ArrayList<AttachmentMapInterface> bodyparts = null;
 	private String[] recipientArray = null;
 	private String[] ccArray = null;
 	private String[] bccArray = null;
 	private Navajo doc = null;
 	private String failure = "";
-	private static Object semaphore = new Object();
+	// private static Object semaphore = new Object();
 
 	public int retries = 0;
 	public int maxRetries = 100;
@@ -102,7 +104,8 @@ public class MailMapAlternative implements MailMapInterface, Mappable, HasDepend
 			try {
 				RequestResponseQueueFactory.getInstance().send(this, 100);
 			} catch (Exception e) {
-				AuditLog.log("MailMap", e.getMessage(), Level.WARNING, myAccess.accessID);
+				AuditLog.log("MailMap", e.getMessage(), Level.WARNING,
+						myAccess.accessID);
 				// e.printStackTrace(System.err);
 				// System.err.println(e.getMessage());
 			}
@@ -114,8 +117,9 @@ public class MailMapAlternative implements MailMapInterface, Mappable, HasDepend
 		try {
 			sendMail();
 		} catch (Exception e) {
-			 AuditLog.log("MailMap", e.getMessage(), Level.WARNING, myAccess.accessID);
-//			e.printStackTrace(System.err);
+			AuditLog.log("MailMap", e.getMessage(), Level.WARNING,
+					myAccess.accessID);
+			// e.printStackTrace(System.err);
 			if (myAccess != null) {
 				myAccess.setException(e);
 			}
@@ -183,7 +187,8 @@ public class MailMapAlternative implements MailMapInterface, Mappable, HasDepend
 				ByteArrayOutputStream bos = new ByteArrayOutputStream();
 				doc.write(bos);
 				bos.close();
-				ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+				ByteArrayInputStream bis = new ByteArrayInputStream(
+						bos.toByteArray());
 				Document doc = XMLDocumentUtils.createDocument(bis, false);
 				bis.close();
 				result = XMLDocumentUtils.transform(doc, xsl);
@@ -204,7 +209,8 @@ public class MailMapAlternative implements MailMapInterface, Mappable, HasDepend
 
 					// Put related bodyparts in related.
 					for (int i = 0; i < bodyparts.size(); i++) {
-						AttachmentMapInterface am = (AttachmentMapInterface) bodyparts.get(i);
+						AttachmentMapInterface am = (AttachmentMapInterface) bodyparts
+								.get(i);
 						String file = am.getAttachFile();
 						String userFileName = am.getAttachFileName();
 						Binary content = am.getAttachFileContent();
@@ -217,16 +223,19 @@ public class MailMapAlternative implements MailMapInterface, Mappable, HasDepend
 							if (userFileName == null) {
 								userFileName = file;
 							}
-							FileDataSource fileDatasource = new FileDataSource(file);
+							FileDataSource fileDatasource = new FileDataSource(
+									file);
 							bp.setDataHandler(new DataHandler(fileDatasource));
 						} else if (content != null) {
 
-							BinaryDataSource bds = new BinaryDataSource(content, "");
+							BinaryDataSource bds = new BinaryDataSource(
+									content, "");
 							DataHandler dh = new DataHandler(bds);
 							bp.setDataHandler(dh);
 
 							if (encoding != null) {
-								bp.setHeader("Content-Transfer-Encoding", encoding);
+								bp.setHeader("Content-Transfer-Encoding",
+										encoding);
 								encoding = null;
 							}
 						}
@@ -240,11 +249,12 @@ public class MailMapAlternative implements MailMapInterface, Mappable, HasDepend
 				MimeBodyPart bop = new MimeBodyPart();
 				bop.setContent(related);
 				multipart.addBodyPart(bop);
-				
+
 				if (attachments != null) {
 					for (int i = 0; i < attachments.size(); i++) {
 
-						AttachmentMapInterface am = (AttachmentMapInterface) attachments.get(i);
+						AttachmentMapInterface am = (AttachmentMapInterface) attachments
+								.get(i);
 						String file = am.getAttachFile();
 						String userFileName = am.getAttachFileName();
 						Binary content = am.getAttachFileContent();
@@ -257,16 +267,19 @@ public class MailMapAlternative implements MailMapInterface, Mappable, HasDepend
 							if (userFileName == null) {
 								userFileName = file;
 							}
-							FileDataSource fileDatasource = new FileDataSource(file);
+							FileDataSource fileDatasource = new FileDataSource(
+									file);
 							bp.setDataHandler(new DataHandler(fileDatasource));
 						} else if (content != null) {
 
-							BinaryDataSource bds = new BinaryDataSource(content, "");
+							BinaryDataSource bds = new BinaryDataSource(
+									content, "");
 							DataHandler dh = new DataHandler(bds);
 							bp.setDataHandler(dh);
 
 							if (encoding != null) {
-								bp.setHeader("Content-Transfer-Encoding", encoding);
+								bp.setHeader("Content-Transfer-Encoding",
+										encoding);
 								encoding = null;
 							}
 						}
@@ -284,13 +297,15 @@ public class MailMapAlternative implements MailMapInterface, Mappable, HasDepend
 
 		} catch (Exception e) {
 			if (ignoreFailures) {
-				AuditLog.log("MailMap", e.getMessage(), Level.WARNING, myAccess.accessID);
+				AuditLog.log("MailMap", e.getMessage(), Level.WARNING,
+						myAccess.accessID);
 				// System.err.println("MailMap: Failure logged: " +
 				// e.getMessage());
 				failure = e.getMessage();
 			} else {
-				 AuditLog.log("MailMap", e.getMessage(), Level.SEVERE, myAccess.accessID);
-//				e.printStackTrace();
+				AuditLog.log("MailMap", e.getMessage(), Level.SEVERE,
+						myAccess.accessID);
+				// e.printStackTrace();
 				throw new UserException(-1, e.getMessage());
 			}
 		}
@@ -368,14 +383,14 @@ public class MailMapAlternative implements MailMapInterface, Mappable, HasDepend
 	public void setMultipleAttachments(AttachmentMapInterface[] c) {
 
 		if (attachments == null) {
-			attachments = new ArrayList();
+			attachments = new ArrayList<AttachmentMapInterface>();
 		}
 
 		for (int i = 0; i < c.length; i++) {
 			attachments.add(c[i]);
 		}
 	}
-	
+
 	public void setMultipleRelatedBodyParts(AttachmentMapInterface[] c) {
 
 		if (bodyparts == null) {
@@ -393,7 +408,7 @@ public class MailMapAlternative implements MailMapInterface, Mappable, HasDepend
 
 	public void setAttachment(AttachmentMapInterface m) {
 		if (attachments == null) {
-			attachments = new ArrayList();
+			attachments = new ArrayList<AttachmentMapInterface>();
 		}
 		attachments.add(m);
 	}
@@ -454,11 +469,12 @@ public class MailMapAlternative implements MailMapInterface, Mappable, HasDepend
 	}
 
 	public void setMaxRunningInstances(int maxRunningInstances) {
-		this.maxRunningInstances = maxRunningInstances;
+		MailMapAlternative.maxRunningInstances = maxRunningInstances;
 	}
 
 	public DependentResource[] getDependentResourceFields() {
-		return new DependentResource[] { new GenericDependentResource("mailserver", "mailServer", AdapterFieldDependency.class) };
+		return new DependentResource[] { new GenericDependentResource(
+				"mailserver", "mailServer", AdapterFieldDependency.class) };
 	}
 
 	public static void main(String[] args) {
@@ -467,7 +483,6 @@ public class MailMapAlternative implements MailMapInterface, Mappable, HasDepend
 		mma.setSubject("Test");
 		mma.setSender("arnoud@dexels.com");
 		mma.setRecipients("arnoud@dexels.com");
-		
 
 		// mma.setRelatedMultipart(true);
 
@@ -484,7 +499,7 @@ public class MailMapAlternative implements MailMapInterface, Mappable, HasDepend
 		mma.setRelatedBodyPart(bm);
 		mma.setContentType("text/html");
 		mma.setText("<html><head> </head><body>Test<img src=\"cid:attach-nr-0\"></body></html>");
-		
+
 		mma.send();
 	}
 

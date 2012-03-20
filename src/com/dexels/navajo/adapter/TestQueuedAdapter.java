@@ -20,7 +20,6 @@ public class TestQueuedAdapter implements Mappable, Queuable {
 	public static int maxRunningInstances = -1;
 	
 	public void kill() {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -32,7 +31,6 @@ public class TestQueuedAdapter implements Mappable, Queuable {
 		try {
 			RequestResponseQueueFactory.getInstance().send(this, 100);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -42,7 +40,6 @@ public class TestQueuedAdapter implements Mappable, Queuable {
 	}
 
 	public int getMaxRetries() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -51,32 +48,26 @@ public class TestQueuedAdapter implements Mappable, Queuable {
 	}
 
 	public Navajo getNavajo() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public Binary getRequest() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public Binary getResponse() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public int getRetries() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	public long getWaitUntil() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	public void resetRetries() {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -85,7 +76,6 @@ public class TestQueuedAdapter implements Mappable, Queuable {
 		try {
 			Thread.sleep(3000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.err.println("....HE, HE, EINDELIJK KLAAR (" + this.hashCode() + ")");
@@ -93,21 +83,18 @@ public class TestQueuedAdapter implements Mappable, Queuable {
 	}
 
 	public void setMaxRetries(int r) {
-		// TODO Auto-generated method stub
 
 	}
 
 	public void setMaxRunningInstances(int maxRunningInstances) {
-		this.maxRunningInstances = maxRunningInstances;
+		TestQueuedAdapter.maxRunningInstances = maxRunningInstances;
 	}
 
 	public void setQueuedSend(boolean b) {
-		// TODO Auto-generated method stub
 
 	}
 
 	public void setWaitUntil(long w) {
-		// TODO Auto-generated method stub
 
 	}
 

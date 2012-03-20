@@ -23,7 +23,6 @@ import org.w3c.dom.Document;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.datasource.BinaryDataSource;
 
-
 /**
  * Title:        Thispas/Navajo Servlets
  * Description:
@@ -36,272 +35,287 @@ import com.dexels.navajo.datasource.BinaryDataSource;
 /**
  * This business object is used as a mail agent in Navajo Script files.
  */
-public class MailMap implements MailMapInterface, Mappable, HasDependentResources, com.dexels.navajo.server.enterprise.queue.Queuable {
+public class MailMap implements MailMapInterface, Mappable,
+		HasDependentResources,
+		com.dexels.navajo.server.enterprise.queue.Queuable {
 
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -6829674936474299750L;
-	
+
 	public String recipients = "";
-    public String mailServer = "";
-    public String sender = "";
-    public String subject = "";
-    public String cc = "";
-    public String bcc = "";
-    public String xslFile = "";
-    public String text = "";
-    public String contentType = "text/plain";
+	public String mailServer = "";
+	public String sender = "";
+	public String subject = "";
+	public String cc = "";
+	public String bcc = "";
+	public String xslFile = "";
+	public String text = "";
+	public String contentType = "text/plain";
 
-    public String smtpUser = "";
-    public String smtpPass = "";
+	public String smtpUser = "";
+	public String smtpPass = "";
 
-    
-    public AttachementMap [] multipleAttachments = null;
-    public AttachementMap attachment = null;
-    public boolean ignoreFailures = false;
+	public AttachementMap[] multipleAttachments = null;
+	public AttachementMap attachment = null;
+	public boolean ignoreFailures = false;
 
-    public boolean relatedMultipart = false;
-    private ArrayList attachments = null;
-    private String[] recipientArray = null;
-    private String[] ccArray = null;
-    private String[] bccArray = null;
-    private Navajo doc = null;
-    private String failure = "";
-    private static Object semaphore = new Object();
-    
-    public int retries = 0;
-    public int maxRetries = 100;
-    public boolean queuedSend = false;
+	public boolean relatedMultipart = false;
+	private List<AttachmentMapInterface> attachments = null;
+	private String[] recipientArray = null;
+	private String[] ccArray = null;
+	private String[] bccArray = null;
+	private Navajo doc = null;
+	private String failure = "";
+	// private static Object semaphore = new Object();
+
+	public int retries = 0;
+	public int maxRetries = 100;
+	public boolean queuedSend = false;
 	public long waitUntil = 0;
 	public static int maxRunningInstances = -1;
-	
+
 	private Navajo myNavajo;
 	private Access myAccess;
 
 	private boolean useEncryption = false;
-	
-    public MailMap() {}
 
-    public void kill() {}
+	public MailMap() {
+	}
 
-    public void load(Access access) throws MappableException {
-    	if ( access != null ) {
-    		doc = access.getInDoc();
-    		myNavajo = access.getInDoc();
-    		myAccess = access;
-    	}
-    }
+	public void kill() {
+	}
 
-    public Binary[] getAttachments(){
-    	Binary[] bins = new Binary[attachments.size()];
-    	bins = (Binary[])attachments.toArray(bins);
-    	return bins;
-    }
+	public void load(Access access) throws MappableException {
+		if (access != null) {
+			doc = access.getInDoc();
+			myNavajo = access.getInDoc();
+			myAccess = access;
+		}
+	}
 
-    public void store() throws MappableException, UserException {
-    	if ( !queuedSend ) {
-    		sendMail();
-    	} else {
-    		try {
-    			RequestResponseQueueFactory.getInstance().send( this, 100);
-    		} catch (Exception e) {
-    			AuditLog.log("MailMap", e.getMessage(), Level.WARNING, myAccess.accessID);
-    			//e.printStackTrace(System.err);
-    			//System.err.println(e.getMessage());
-    		}
-    	}
-    }
-    
-    public boolean send() {
-    	retries++;
-    	try {
-    		sendMail();
-    	} catch (Exception e) {
-    		AuditLog.log("MailMap", e.getMessage(), Level.WARNING, myAccess.accessID);
-    		//e.printStackTrace(System.err);
-    		if ( myAccess != null ) {
+	public Binary[] getAttachments() {
+		Binary[] bins = new Binary[attachments.size()];
+		bins = (Binary[]) attachments.toArray(bins);
+		return bins;
+	}
+
+	public void store() throws MappableException, UserException {
+		if (!queuedSend) {
+			sendMail();
+		} else {
+			try {
+				RequestResponseQueueFactory.getInstance().send(this, 100);
+			} catch (Exception e) {
+				AuditLog.log("MailMap", e.getMessage(), Level.WARNING,
+						myAccess.accessID);
+				// e.printStackTrace(System.err);
+				// System.err.println(e.getMessage());
+			}
+		}
+	}
+
+	public boolean send() {
+		retries++;
+		try {
+			sendMail();
+		} catch (Exception e) {
+			AuditLog.log("MailMap", e.getMessage(), Level.WARNING,
+					myAccess.accessID);
+			// e.printStackTrace(System.err);
+			if (myAccess != null) {
 				myAccess.setException(e);
 			}
-    		return false;
-    	} 
-    	return true;
-    }
-    
-    private final void sendMail() throws MappableException, UserException {
+			return false;
+		}
+		return true;
+	}
 
-    	retries++;
-    	
-    		try {
-    			String result = "";
+	private final void sendMail() throws MappableException, UserException {
 
-    			result = text;
+		retries++;
 
-    			Session session = createSession();
-    			javax.mail.Message msg = new MimeMessage(session);
+		try {
+			String result = "";
 
-    			//System.err.println("Created mime message: " + msg);
+			result = text;
 
-    			if(sender==null || "".equals(sender)) {
-    				throw new UserException(-1,"Error: Required sender address not set!");
-    			}
-    			msg.setFrom(new InternetAddress(sender));
+			Session session = createSession();
+			javax.mail.Message msg = new MimeMessage(session);
 
-    			InternetAddress[] addresses = new InternetAddress[this.recipientArray.length];
+			// System.err.println("Created mime message: " + msg);
 
-    			for (int i = 0; i < this.recipientArray.length; i++) {
-    				addresses[i] = new InternetAddress(this.recipientArray[i]);
-    				//System.err.println("Set recipient " + i + ": " + this.recipientArray[i]);
-    			}
+			if (sender == null || "".equals(sender)) {
+				throw new UserException(-1,
+						"Error: Required sender address not set!");
+			}
+			msg.setFrom(new InternetAddress(sender));
 
-    			msg.setRecipients(javax.mail.Message.RecipientType.TO, addresses);
+			InternetAddress[] addresses = new InternetAddress[this.recipientArray.length];
 
-    			if (ccArray != null) {
-    				InternetAddress[] extra = new InternetAddress[this.ccArray.length];
-    				for (int i = 0; i < this.ccArray.length; i++) {
-    					extra[i] = new InternetAddress(this.ccArray[i]);
-    					//System.err.println("Set cc " + i + ": " + this.ccArray[i]);
-    				}
-    				msg.setRecipients(javax.mail.Message.RecipientType.CC, extra);
-    			}
+			for (int i = 0; i < this.recipientArray.length; i++) {
+				addresses[i] = new InternetAddress(this.recipientArray[i]);
+				// System.err.println("Set recipient " + i + ": " +
+				// this.recipientArray[i]);
+			}
 
-    			if (bccArray != null) {
-    				InternetAddress[] extra = new InternetAddress[this.bccArray.length];
-    				for (int i = 0; i < this.bccArray.length; i++) {
-    					extra[i] = new InternetAddress(this.bccArray[i]);
-    					//System.err.println("Set cc " + i + ": " + this.bccArray[i]);
-    				}
-    				msg.setRecipients(javax.mail.Message.RecipientType.BCC, extra);
-    			}
+			msg.setRecipients(javax.mail.Message.RecipientType.TO, addresses);
 
-    			msg.setSubject(subject);
-    			msg.setSentDate(new java.util.Date());
+			if (ccArray != null) {
+				InternetAddress[] extra = new InternetAddress[this.ccArray.length];
+				for (int i = 0; i < this.ccArray.length; i++) {
+					extra[i] = new InternetAddress(this.ccArray[i]);
+					// System.err.println("Set cc " + i + ": " +
+					// this.ccArray[i]);
+				}
+				msg.setRecipients(javax.mail.Message.RecipientType.CC, extra);
+			}
 
-    			// Use stylesheet if specified.
-    			if (!xslFile.equals("")) {
-    				java.io.File xsl = new java.io.File(xslFile);
-    				ByteArrayOutputStream bos = new ByteArrayOutputStream();
-    				doc.write(bos);
-    				bos.close();
-    				ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
-    				Document doc = XMLDocumentUtils.createDocument(bis, false);
-    				bis.close();
-    				result = XMLDocumentUtils.transform(doc, xsl);
-    			}
+			if (bccArray != null) {
+				InternetAddress[] extra = new InternetAddress[this.bccArray.length];
+				for (int i = 0; i < this.bccArray.length; i++) {
+					extra[i] = new InternetAddress(this.bccArray[i]);
+					// System.err.println("Set cc " + i + ": " +
+					// this.bccArray[i]);
+				}
+				msg.setRecipients(javax.mail.Message.RecipientType.BCC, extra);
+			}
 
-    			if (attachments == null && contentType.equals("text/plain")) {
-    				msg.setText(result);
-    			}
-    			else {
-    				Multipart multipart = (relatedMultipart ? new MimeMultipart( "related") : new MimeMultipart() );
-    				BodyPart textBody = new MimeBodyPart();
-    				textBody.setContent(result, contentType);
+			msg.setSubject(subject);
+			msg.setSentDate(new java.util.Date());
 
-    				multipart.addBodyPart(textBody);
+			// Use stylesheet if specified.
+			if (!xslFile.equals("")) {
+				java.io.File xsl = new java.io.File(xslFile);
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				doc.write(bos);
+				bos.close();
+				ByteArrayInputStream bis = new ByteArrayInputStream(
+						bos.toByteArray());
+				Document doc = XMLDocumentUtils.createDocument(bis, false);
+				bis.close();
+				result = XMLDocumentUtils.transform(doc, xsl);
+			}
 
-    				if (attachments != null) {
-    					for (int i = 0; i < attachments.size(); i++) {
-    						AttachmentMapInterface am = (AttachmentMapInterface) attachments.get(i);
-    						String file = am.getAttachFile();
-    						String userFileName = am.getAttachFileName();
-    						Binary content = am.getAttachFileContent();
-    						String encoding = am.getEncoding();
-    						MimeBodyPart bp = new MimeBodyPart();
-    						
-    						if (file != null) {
-    							if ( userFileName  == null ) {
-    								userFileName = file;
-    							}
-    							FileDataSource fileDatasource = new FileDataSource(file);
-    							bp.setDataHandler(new DataHandler(fileDatasource));
-    						} else if ( content != null ) {
+			if (attachments == null && contentType.equals("text/plain")) {
+				msg.setText(result);
+			} else {
+				Multipart multipart = (relatedMultipart ? new MimeMultipart(
+						"related") : new MimeMultipart());
+				BodyPart textBody = new MimeBodyPart();
+				textBody.setContent(result, contentType);
 
-    							BinaryDataSource bds = new BinaryDataSource(content,"");
-    							DataHandler dh = new DataHandler(bds);
-    							bp.setDataHandler(dh);
+				multipart.addBodyPart(textBody);
 
-    							if ( encoding != null ) {
-    								bp.setHeader("Content-Transfer-Encoding", encoding);
-    								encoding = null;
-    							}
-    						}
+				if (attachments != null) {
+					for (int i = 0; i < attachments.size(); i++) {
+						AttachmentMapInterface am = (AttachmentMapInterface) attachments
+								.get(i);
+						String file = am.getAttachFile();
+						String userFileName = am.getAttachFileName();
+						Binary content = am.getAttachFileContent();
+						String encoding = am.getEncoding();
+						MimeBodyPart bp = new MimeBodyPart();
 
-    						bp.setFileName(userFileName);
-    						if (relatedMultipart) {
-    							bp.setHeader("Content-ID", "<attach-nr-"+i+">");
-    						}
-    						
-    						// iPhone headers
-    						bp.setDisposition("attachment");    					
-    						
-    						multipart.addBodyPart(bp);    						
-    					}
-    				}
-    				msg.setContent(multipart);
-    			}
-    			Transport.send(msg);
+						if (file != null) {
+							if (userFileName == null) {
+								userFileName = file;
+							}
+							FileDataSource fileDatasource = new FileDataSource(
+									file);
+							bp.setDataHandler(new DataHandler(fileDatasource));
+						} else if (content != null) {
 
-    		} catch (Exception e) {
-    			if(ignoreFailures){
-    				AuditLog.log("MailMap", e.getMessage(), Level.WARNING, myAccess.accessID);
-    				//System.err.println("MailMap: Failure logged: " + e.getMessage());
-    				failure = e.getMessage();
-    			}else{
-    				AuditLog.log("MailMap", e.getMessage(), Level.SEVERE, myAccess.accessID);
-    				//e.printStackTrace();
-    				throw new UserException( -1, e.getMessage(),e);
-    			}
-    		}    	
-    }
+							BinaryDataSource bds = new BinaryDataSource(
+									content, "");
+							DataHandler dh = new DataHandler(bds);
+							bp.setDataHandler(dh);
+
+							if (encoding != null) {
+								bp.setHeader("Content-Transfer-Encoding",
+										encoding);
+								encoding = null;
+							}
+						}
+
+						bp.setFileName(userFileName);
+						if (relatedMultipart) {
+							bp.setHeader("Content-ID", "<attach-nr-" + i + ">");
+						}
+
+						// iPhone headers
+						bp.setDisposition("attachment");
+
+						multipart.addBodyPart(bp);
+					}
+				}
+				msg.setContent(multipart);
+			}
+			Transport.send(msg);
+
+		} catch (Exception e) {
+			if (ignoreFailures) {
+				AuditLog.log("MailMap", e.getMessage(), Level.WARNING,
+						myAccess.accessID);
+				// System.err.println("MailMap: Failure logged: " +
+				// e.getMessage());
+				failure = e.getMessage();
+			} else {
+				AuditLog.log("MailMap", e.getMessage(), Level.SEVERE,
+						myAccess.accessID);
+				// e.printStackTrace();
+				throw new UserException(-1, e.getMessage(), e);
+			}
+		}
+	}
 
 	private Session createSession() {
 		Properties props = System.getProperties();
 		props.put("mail.smtp.host", mailServer);
-		
-		if(smtpUser!=null && !"".equals(smtpUser)) {
+
+		if (smtpUser != null && !"".equals(smtpUser)) {
 			// Use auth
-		     props.put("mail.smtp.auth", "true");
-		     props.put("mail.debug", "true");
-		     if(useEncryption ) {
-		    	 System.err.println("Using encrypt + auth. ");
-		    	 props.put("mail.smtp.port", "465");
-		    	 props.put("mail.smtp.socketFactory.port", "465");
-		    	 props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-		    	 props.put("mail.smtp.socketFactory.fallback", "false");
-		     }
-		     Authenticator auth = new SMTPAuthenticator();
-		     Session session = Session.getDefaultInstance(props, auth);
-				return session;
+			props.put("mail.smtp.auth", "true");
+			props.put("mail.debug", "true");
+			if (useEncryption) {
+				System.err.println("Using encrypt + auth. ");
+				props.put("mail.smtp.port", "465");
+				props.put("mail.smtp.socketFactory.port", "465");
+				props.put("mail.smtp.socketFactory.class",
+						"javax.net.ssl.SSLSocketFactory");
+				props.put("mail.smtp.socketFactory.fallback", "false");
+			}
+			Authenticator auth = new SMTPAuthenticator();
+			Session session = Session.getDefaultInstance(props, auth);
+			return session;
 		} else {
-	    	 props.put("mail.smtp.port", "25");
-	    	 Session session = Session.getInstance(props);
+			props.put("mail.smtp.port", "25");
+			Session session = Session.getInstance(props);
 			return session;
 		}
 	}
 
 	/**
-	* SimpleAuthenticator is used to do simple authentication
-	* when the SMTP server requires it.
-	*/
-	private class SMTPAuthenticator extends javax.mail.Authenticator
-	{
+	 * SimpleAuthenticator is used to do simple authentication when the SMTP
+	 * server requires it.
+	 */
+	private class SMTPAuthenticator extends javax.mail.Authenticator {
 
-	    public PasswordAuthentication getPasswordAuthentication()
-	    {
-	        return new PasswordAuthentication(smtpUser, smtpPass);
-	    }
+		public PasswordAuthentication getPasswordAuthentication() {
+			return new PasswordAuthentication(smtpUser, smtpPass);
+		}
 	}
 
-	
-    public String getFailure(){
-      return failure;
-    }
+	public String getFailure() {
+		return failure;
+	}
 
-    public void setIgnoreFailures(boolean b){
-      ignoreFailures = b;
-    }
+	public void setIgnoreFailures(boolean b) {
+		ignoreFailures = b;
+	}
 
-    public String getSmtpUser() {
+	public String getSmtpUser() {
 		return smtpUser;
 	}
 
@@ -319,151 +333,152 @@ public class MailMap implements MailMapInterface, Mappable, HasDependentResource
 
 	public void setRecipients(String s) {
 
-        java.util.StringTokenizer tok = new StringTokenizer(s, ",");
+		java.util.StringTokenizer tok = new StringTokenizer(s, ",");
 
-        this.recipientArray = new String[tok.countTokens()];
-        int index = 0;
+		this.recipientArray = new String[tok.countTokens()];
+		int index = 0;
 
-        while (tok.hasMoreTokens()) {
-            this.recipientArray[index++] = tok.nextToken();
-        }
-        this.recipients = s;
-    }
+		while (tok.hasMoreTokens()) {
+			this.recipientArray[index++] = tok.nextToken();
+		}
+		this.recipients = s;
+	}
 
-    public void setSender(String s) {
-        this.sender = s;
-    }
+	public void setSender(String s) {
+		this.sender = s;
+	}
 
-    public void setMailServer(String s) {
-        this.mailServer = s;
-    }
+	public void setMailServer(String s) {
+		this.mailServer = s;
+	}
 
-    public void setSubject(String s) {
-        this.subject = s;
-    }
+	public void setSubject(String s) {
+		this.subject = s;
+	}
 
-    public void setContentType(String s) {
-        this.contentType = s;
-    }
+	public void setContentType(String s) {
+		this.contentType = s;
+	}
 
-    public void setXslFile(String s) {
-        this.xslFile = s;
-    }
+	public void setXslFile(String s) {
+		this.xslFile = s;
+	}
 
-    public void setText(String s) {
-        this.text += s;
-    }
+	public void setText(String s) {
+		this.text += s;
+	}
 
-    public void setBcc(String bcc) {
-    this.bcc = bcc;
-    java.util.StringTokenizer tok = new StringTokenizer(bcc, ",");
+	public void setBcc(String bcc) {
+		this.bcc = bcc;
+		java.util.StringTokenizer tok = new StringTokenizer(bcc, ",");
 
-    this.bccArray = new String[tok.countTokens()];
-    int index = 0;
+		this.bccArray = new String[tok.countTokens()];
+		int index = 0;
 
-    while (tok.hasMoreTokens()) {
-      this.bccArray[index++] = tok.nextToken();
-   }
-  }
+		while (tok.hasMoreTokens()) {
+			this.bccArray[index++] = tok.nextToken();
+		}
+	}
 
-  public void setCc(String cc) {
-    this.cc = cc;
-    java.util.StringTokenizer tok = new StringTokenizer(cc, ",");
+	public void setCc(String cc) {
+		this.cc = cc;
+		java.util.StringTokenizer tok = new StringTokenizer(cc, ",");
 
-    this.ccArray = new String[tok.countTokens()];
-    int index = 0;
+		this.ccArray = new String[tok.countTokens()];
+		int index = 0;
 
-    while (tok.hasMoreTokens()) {
-        this.ccArray[index++] = tok.nextToken();
-    }
-  }
+		while (tok.hasMoreTokens()) {
+			this.ccArray[index++] = tok.nextToken();
+		}
+	}
 
-  public void setMultipleAttachments(AttachmentMapInterface [] c) {
+	public void setMultipleAttachments(AttachmentMapInterface[] c) {
 
-    if (attachments == null) {
-      attachments = new ArrayList();
-    }
+		if (attachments == null) {
+			attachments = new ArrayList<AttachmentMapInterface>();
+		}
 
-    for (int i = 0; i < c.length; i++) {
-       attachments.add(c[i]);
-     }
-  }
+		for (int i = 0; i < c.length; i++) {
+			attachments.add(c[i]);
+		}
+	}
 
-  public void setRelatedMultipart(boolean b) {
-  	this.relatedMultipart = b;
-  }
+	public void setRelatedMultipart(boolean b) {
+		this.relatedMultipart = b;
+	}
 
-  public void setAttachment(AttachmentMapInterface m) {
-	  //System.err.println(">>>>>>>>>>>>>>>>>>>>>> in setAttachment");
-	  //this.attachment = (AttachementMap) m;
-	  if (attachments == null) {
-		  attachments = new ArrayList();
-	  }
-	  attachments.add(m);
-  }
+	public void setAttachment(AttachmentMapInterface m) {
+		// System.err.println(">>>>>>>>>>>>>>>>>>>>>> in setAttachment");
+		// this.attachment = (AttachementMap) m;
+		if (attachments == null) {
+			attachments = new ArrayList<AttachmentMapInterface>();
+		}
+		attachments.add(m);
+	}
 
-  public int getMaxRetries() {
-	  return maxRetries;
-  }
+	public int getMaxRetries() {
+		return maxRetries;
+	}
 
-  public Binary getRequest() {
-	  return null;
-  }
+	public Binary getRequest() {
+		return null;
+	}
 
-  public boolean isUseEncryption() {
-	return useEncryption;
-}
+	public boolean isUseEncryption() {
+		return useEncryption;
+	}
 
-public void setUseEncryption(boolean useEncryption) {
-	this.useEncryption = useEncryption;
-}
+	public void setUseEncryption(boolean useEncryption) {
+		this.useEncryption = useEncryption;
+	}
 
-public Binary getResponse() {
-	  return null;
-  }
+	public Binary getResponse() {
+		return null;
+	}
 
-  public int getRetries() {
-	  return retries;
-  }
+	public int getRetries() {
+		return retries;
+	}
 
-  public long getWaitUntil() {
-	  return waitUntil;
-  }
+	public long getWaitUntil() {
+		return waitUntil;
+	}
 
-  public void resetRetries() {
-	  retries = 0;
-  }
+	public void resetRetries() {
+		retries = 0;
+	}
 
-  public void setMaxRetries(int r) {
-	  maxRetries = r;
-  }
+	public void setMaxRetries(int r) {
+		maxRetries = r;
+	}
 
-  public void setQueuedSend(boolean b) {
-	  queuedSend = b;
-  }
+	public void setQueuedSend(boolean b) {
+		queuedSend = b;
+	}
 
-  public void setWaitUntil(long w) {
-	  waitUntil = w;
-  }
-  
-  public Access getAccess() {
-	  return myAccess;
-  }
+	public void setWaitUntil(long w) {
+		waitUntil = w;
+	}
 
-  public Navajo getNavajo() {
-	  return myNavajo;
-  }
+	public Access getAccess() {
+		return myAccess;
+	}
 
-  public int getMaxRunningInstances() {
-	  return maxRunningInstances;
-  }
+	public Navajo getNavajo() {
+		return myNavajo;
+	}
 
-  public void setMaxRunningInstances(int maxRunningInstances) {
-	  this.maxRunningInstances = maxRunningInstances;
-  }
+	public int getMaxRunningInstances() {
+		return maxRunningInstances;
+	}
 
-  public DependentResource[] getDependentResourceFields() {
-	  return new DependentResource[]{new GenericDependentResource("mailserver", "mailServer", AdapterFieldDependency.class)};
-  }
+	public void setMaxRunningInstances(int maxRunningInstances) {
+		MailMap.maxRunningInstances = maxRunningInstances;
+	}
+
+	public DependentResource[] getDependentResourceFields() {
+		return new DependentResource[] { new GenericDependentResource(
+				"mailserver", "mailServer", AdapterFieldDependency.class) };
+	}
 
 }

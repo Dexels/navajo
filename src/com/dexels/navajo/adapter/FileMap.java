@@ -93,7 +93,6 @@ public class FileMap implements Mappable {
 					try {
 						bos.close();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -154,7 +153,6 @@ public class FileMap implements Mappable {
 
 			this.fileName = null;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

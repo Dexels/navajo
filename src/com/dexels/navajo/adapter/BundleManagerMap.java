@@ -20,7 +20,6 @@ public class BundleManagerMap implements Mappable {
 
 	@Override
 	public void load(Access access) throws MappableException, UserException {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -63,7 +62,6 @@ public class BundleManagerMap implements Mappable {
 			xe.write(out);
 			out.flush();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		Binary result = new Binary(baos.toByteArray());
@@ -74,13 +72,11 @@ public class BundleManagerMap implements Mappable {
 	
 	@Override
 	public void store() throws MappableException, UserException {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void kill() {
-		// TODO Auto-generated method stub
 
 	}
 

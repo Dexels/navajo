@@ -315,13 +315,7 @@ public boolean isBlock() {
 	  }
 	  
 	  
-	  System.err.println("Output after append::: ");
-	  try {
-		access.getOutputDoc().write(System.err);
-	} catch (NavajoException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
+
   }
   
   /**
@@ -341,21 +335,21 @@ public boolean isBlock() {
 				  access.getInDoc().getMessage("__parms__") :
 					  access.getCompiledScript().currentParamMsg);
 
-		  ArrayList list = null;
+		  List<Message> list = null;
 		  // If append message equals '/'.
 		  if ( messageOffset.equals(Navajo.MESSAGE_SEPARATOR) ) {
 			  list = inDoc.getAllMessages();
 		  } else if ( inDoc.getMessage(messageOffset) == null ) {
 			  return;
 		  } else if ( inDoc.getMessage(messageOffset).getType().equals(Message.MSG_TYPE_ARRAY) ) {
-			  list = new ArrayList();
+			  list = new ArrayList<Message>();
 			  list.add( inDoc.getMessage(messageOffset) );
 		  } else {
 			  list = inDoc.getMessages(messageOffset);
 		  }
 
 		  for (int i = 0; i < list.size(); i++) {
-			  Message inMsg = (Message) list.get(i);
+			  Message inMsg = list.get(i);
 			  // Clone message and append it to currentMsg if it exists, else directly under currentDoc.
 			  //currentDoc.importMessage(inMsg);
 			  Message clone = inDoc.copyMessage(inMsg, parm.getRootDoc());
@@ -580,7 +574,6 @@ protected void prepareSend(String method) {
 		  try {
 			  outDoc.addMessage(globals);
 		  } catch (NavajoException e) {
-			  // TODO Auto-generated catch block
 			  e.printStackTrace(Access.getConsoleWriter(access));
 		  }
 	  }
@@ -712,7 +705,7 @@ protected void prepareSend(String method) {
   /**
    * Determine whether a property or message object exists within the response document.
    * If messagePointer is set, search is relative from messagePointer.
-   *
+   * TODO THIS IS REEALY UGLY!
    * @param fullName
    * @return
    * @throws UserException
@@ -720,11 +713,11 @@ protected void prepareSend(String method) {
   public final boolean getExists(String fullName) throws UserException {
 
     try {
-      Property p = getPropertyObject(fullName);
+      getPropertyObject(fullName);
       return true;
     } catch (Exception e) {
       try {
-        Message msg = getMessage(fullName);
+         getMessage(fullName);
         return true;
       } catch (Exception e2) {
         return false;
@@ -806,7 +799,7 @@ protected void prepareSend(String method) {
 	  if (!msgPointer.isArrayMessage())
 		  throw new UserException(-1, "getMessages can only be used for array messages");
 	  try {
-		  ArrayList all = msgPointer.getAllMessages(); //inDoc.getMessages(messagePointer);
+		  List<Message> all = msgPointer.getAllMessages(); //inDoc.getMessages(messagePointer);
 		  if ((all == null))
 			  throw new UserException(-1, "Could not find messages: " + messagePointer + " in response document");
 		  messages = new MessageMap[all.size()];
@@ -845,7 +838,7 @@ protected void prepareSend(String method) {
 
     try {
       Message msg = MappingUtils.getMessageObject(currentFullName, null, false, outDoc, false, "", -1);
-      String propName = p.getName();
+//      String propName = p.getName();
       msg.addProperty(p);
     } catch (Exception e) {
       throw new UserException(-1, e.getMessage());
@@ -861,7 +854,7 @@ protected void prepareSend(String method) {
   public void setSendThrough(boolean b) throws UserException {
 
     try {
-      ArrayList all = inMessage.getAllMessages();
+      List<Message> all = inMessage.getAllMessages();
       for (int i = 0; i < all.size(); i++) {
         Message m = inMessage.copyMessage( (Message) all.get(i), outDoc);
         outDoc.addMessage(m);
@@ -1291,7 +1284,6 @@ protected void prepareSend(String method) {
   }
 
   public void onResponse(Navajo response) {
-	  // TODO Auto-generated method stub
 
   }
 
@@ -1300,32 +1292,26 @@ protected void prepareSend(String method) {
   }
 
   public void endTransaction() throws IOException {
-	  // TODO Auto-generated method stub
 
   }
 
   public Navajo getInputNavajo() throws IOException {
-	  // TODO Auto-generated method stub
 	  return null;
   }
 
   public Scheduler getTmlScheduler() {
-	  // TODO Auto-generated method stub
 	  return null;
   }
 
   public boolean isAborted() {
-	  // TODO Auto-generated method stub
 	  return false;
   }
 
   public boolean isCommitted() {
-	  // TODO Auto-generated method stub
 	  return false;
   }
 
   public void setCommitted(boolean b) {
-	  // TODO Auto-generated method stub
 
   }
 
@@ -1385,7 +1371,6 @@ public void setRequestQueue(RequestQueue myQueue) {
 
 @Override
 public Object getAttribute(String name) {
-	// TODO Auto-generated method stub
 	return null;
 }
 }

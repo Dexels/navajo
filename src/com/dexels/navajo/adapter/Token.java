@@ -9,17 +9,14 @@ public class Token implements Mappable {
   public String value;
 	
 	public void kill() {
-		// TODO Auto-generated method stub
 
 	}
 
 	public void load(Access access) throws MappableException, UserException {
-		// TODO Auto-generated method stub
 
 	}
 
 	public void store() throws MappableException, UserException {
-		// TODO Auto-generated method stub
 
 	}
 	

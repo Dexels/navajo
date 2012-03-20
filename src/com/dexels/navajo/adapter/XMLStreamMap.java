@@ -24,7 +24,6 @@ public class XMLStreamMap implements Mappable {
 
 	// @Override
 	public void kill() {
-		// TODO Auto-generated method stub
 	}
 
 	// @Override
@@ -110,7 +109,6 @@ public class XMLStreamMap implements Mappable {
 
 	// @Override
 	public void store() throws MappableException, UserException {
-		// TODO Auto-generated method stub
 
 	}
 

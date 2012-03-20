@@ -32,8 +32,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.logging.Level;
 
-import javax.net.ssl.HttpsURLConnection;
-
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.Mappable;
@@ -248,28 +246,6 @@ public class HTTPMap implements Mappable, Queuable {
 		queuedSend = b;
 	}
 	
-	public static void main(String [] args) throws Exception {
-		// 82.94.253.174/dexels_interface?method=pushKNVBData 
-		URL url = new URL("https://source.dexels.com");
-//		HttpsURLConnection conn = (HttpsURLConnection)url.openConnection();
-		
-		
-		HTTPMap hm = new HTTPMap();
-		hm.myAccess = new Access();
-//		hm.setUrl("ws.geonames.org/findNearByWeatherXML?lat=43&lng=22");
-		hm.setUrl("google.com/");
-		hm.setMethod("GET");
-		hm.setDoSend(true);
-		
-		String tr = hm.getTextResult();
-		System.err.println(tr);
-		Binary b = hm.getResult();
-		
-		FileOutputStream fos = new FileOutputStream("/Users/frank/testje");
-		b.write(fos);
-		fos.close();	
-		
-	}
 
 	public Binary getRequest() {
 		if ( textContent != null ) {
@@ -304,7 +280,6 @@ public class HTTPMap implements Mappable, Queuable {
 	}
 
 	public void setMaxInstances() {
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -321,7 +296,7 @@ public class HTTPMap implements Mappable, Queuable {
 	}
 
 	public void setMaxRunningInstances(int maxRunningInstances) {
-		this.maxRunningInstances = maxRunningInstances;
+		HTTPMap.maxRunningInstances = maxRunningInstances;
 	}
 
 	public void setMethod(String method) {

@@ -1,14 +1,22 @@
 package com.dexels.navajo.adapter;
 
-import com.dexels.navajo.mapping.*;
-import com.dexels.navajo.server.*;
-import com.dexels.navajo.adapter.csvmap.CSVEntryMap;
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.types.Binary;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+
+import com.dexels.navajo.adapter.csvmap.CSVEntryMap;
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.UserException;
 
 /**
  * <p>
@@ -43,7 +51,7 @@ public class CSVMap implements Mappable {
 	public boolean includeEmpty;
 
 	private boolean update = false;
-	private ArrayList draftEntries = null;
+	private List<CSVEntryMap> draftEntries = null;
 
 	public void load(Access access) throws MappableException, UserException {
 
@@ -51,7 +59,7 @@ public class CSVMap implements Mappable {
 
 	public void setEntry(CSVEntryMap newEntry) {
 		if (draftEntries == null)
-			draftEntries = new ArrayList();
+			draftEntries = new ArrayList<CSVEntryMap>();
 		draftEntries.add(newEntry);
 		update = true;
 	}
@@ -77,7 +85,7 @@ public class CSVMap implements Mappable {
 			if (f != null) {
 				BufferedReader buffer = new BufferedReader(f);
 				String line = "";
-				ArrayList entryList = new ArrayList();
+				List<CSVEntryMap> entryList = new ArrayList<CSVEntryMap>();
 				while ((line = buffer.readLine()) != null) {
 					if (includeEmpty) {
 						parseLineWithEmpty(line, entryList);
@@ -94,8 +102,7 @@ public class CSVMap implements Mappable {
 		return entries;
 	}
 
-	private void parseLineWithEmpty(String line, ArrayList entryList) {
-		// TODO Auto-generated method stub
+	private void parseLineWithEmpty(String line, List<CSVEntryMap> entryList) {
 		String sep = separator;
 		if (sep == null) {
 			sep = " ";
@@ -105,7 +112,7 @@ public class CSVMap implements Mappable {
 		}
 		char sepChar = sep.charAt(0);
 		int startindex = 0;
-		ArrayList currentLine = new ArrayList();
+		List<String> currentLine = new ArrayList<String>();
 		for (int i = 0; i < line.length(); i++) {
 			char c = line.charAt(i);
 			if (c == sepChar) {
@@ -140,7 +147,7 @@ public class CSVMap implements Mappable {
 		entryList.add(csvEntry);
 	}
 
-	private void parseLineDefault(String line, ArrayList entryList) {
+	private void parseLineDefault(String line, List<CSVEntryMap> entryList) {
 		StringTokenizer tokens = new StringTokenizer(line, separator);
 		CSVEntryMap csvEntry = new CSVEntryMap();
 		csvEntry.entries = new String[tokens.countTokens()];

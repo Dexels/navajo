@@ -30,6 +30,8 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -68,10 +70,10 @@ public class TagMap implements Mappable {
 
 	public int          indent     = DEFAULT_INDENT;
 
-	protected HashMap   tags       = null;
-	protected HashMap   attributes = null;
+	protected Map<String,TagMap>   tags       = null;
+	protected Map<String,String>   attributes = null;
 
-	protected ArrayList tagList    = null;
+	protected List<String> tagList    = null;
 
 	protected int tagsIndex = -1;
 	protected int tagListIndex = -1;
@@ -106,7 +108,7 @@ public class TagMap implements Mappable {
 
 		// create attributes if not already present
 		if ( child.attributes == null ) {
-			child.attributes = new HashMap ();
+			child.attributes = new HashMap<String,String> ();
 		}
 
 		child.attributes.put( child.attributeName, XMLutils.XMLEscape( t ) );
@@ -162,8 +164,8 @@ public class TagMap implements Mappable {
 
 	public void setChild(TagMap t) throws UserException {
 		if ( tags == null ) {
-			tags    = new HashMap();
-			tagList = new ArrayList();
+			tags    = new HashMap<String,TagMap>();
+			tagList = new ArrayList<String>();
 		}
 		t.parent = this;
 		tagsIndex = 1 + tags.size();
@@ -174,10 +176,10 @@ public class TagMap implements Mappable {
 
 	public boolean getExists(String name) {
 		if ( tags != null ) {
-			Iterator keys = tags.keySet().iterator();
+			Iterator<String> keys = tags.keySet().iterator();
 
 			while ( keys.hasNext() ) {
-				String key = (String) keys.next();
+				String key =  keys.next();
 
 				if ( name.equals( key.replaceFirst( this.PREFIX_PATTERN + this.PREFIX_SEPARATOR, "" ) ) ) {
 					return true;
@@ -214,10 +216,10 @@ public class TagMap implements Mappable {
 	protected TagMap getChildTag(String s, int index) {
 
 		if ( tags != null ) {
-			Iterator keys = tags.keySet().iterator();
+			Iterator<String> keys = tags.keySet().iterator();
 
 			while ( keys.hasNext() ) {
-				String key = (String) keys.next();
+				String key = keys.next();
 
 				Pattern pattern = Pattern.compile(s);
 				int count = 0;
@@ -341,11 +343,11 @@ public class TagMap implements Mappable {
 		sw.write(getSpaces(indent) + "<" + name);
 
 		if ( attributes != null ) {
-			Iterator attrib_keys = attributes.keySet().iterator();
+			Iterator<String> attrib_keys = attributes.keySet().iterator();
 
 			while ( attrib_keys.hasNext() ) {
-				String key = (String) attrib_keys.next();
-				String value = (String) attributes.get( key );
+				String key = attrib_keys.next();
+				String value = attributes.get( key );
 				sw.write( " " + key + "=\"" + value + "\"" );
 			}
 		}
@@ -387,15 +389,15 @@ public class TagMap implements Mappable {
 			String key = attrib_enum.next();
 			String value = e.getStringAttribute(key);
 			if ( t.attributes == null ) {
-				t.attributes = new HashMap ();
+				t.attributes = new HashMap<String,String> ();
 			}
 			t.attributes.put( key, value );
 		}
 
 		// parse children
-		Vector v = e.getChildren();
+		Vector<XMLElement> v = e.getChildren();
 		for (int i = 0; i < v.size(); i++) {
-			XMLElement child = (XMLElement) v.get(i);
+			XMLElement child = v.get(i);
 
 			TagMap childTag = parseXMLElement( child, compact );
 

@@ -3,7 +3,6 @@ package com.dexels.navajo.adapter;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.UserException;
 
@@ -14,7 +13,6 @@ public class BroadcastMap implements Mappable {
 	public String recipientExpression;
 	
 	public void kill() {
-		// TODO Auto-generated method stub
 
 	}
 

@@ -46,16 +46,16 @@ public class VersionedNavajoMap extends NavajoMap {
            System.err.println("Adding method: " + m.getName());
            Method a = NavajoFactory.getInstance().createMethod(currentOutDoc,
                m.getName(), "");
-           ArrayList required = m.getRequiredMessages();
+           List<String> required = m.getRequiredMessages();
            for (int j = 0; j < required.size(); j++) {
-             String name = (String) required.get(j);
+             String name = required.get(j);
               System.err.println("Adding required message: " + name);
              a.addRequired(name);
            }
            currentOutDoc.addMethod(a);
          }
 
-         ArrayList allMessages = inMessage.getAllMessages();
+         List<Message> allMessages = inMessage.getAllMessages();
          for (int i = 0; i < allMessages.size(); i++) {
 
            Message m = (Message) allMessages.get(i);

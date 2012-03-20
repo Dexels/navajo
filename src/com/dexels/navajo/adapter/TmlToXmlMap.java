@@ -67,7 +67,6 @@ public class TmlToXmlMap implements Mappable {
 	}
 
 	public void kill() {
-		// TODO Auto-generated method stub
 	}
 
 	public void load(Access access) throws MappableException, UserException {
@@ -75,7 +74,6 @@ public class TmlToXmlMap implements Mappable {
 	}
 
 	public void store() throws MappableException, UserException {
-		// TODO Auto-generated method stub
 	}
 
 	public void setBuildContent(boolean b) throws UserException {

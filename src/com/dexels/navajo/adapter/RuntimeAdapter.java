@@ -6,6 +6,7 @@ import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.mapping.MappableException;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 /**
@@ -69,9 +70,8 @@ public class RuntimeAdapter implements Mappable {
 
 			  while (tk.hasMoreTokens()) {
 
-				  ArrayList cmds = new ArrayList();
+				  List<String> cmds = new ArrayList<String>();
 				  String cmdString = tk.nextToken();
-				  System.err.println("cmdString = " + cmdString);
 				  StringTokenizer tk2 = new StringTokenizer(cmdString, " ");
 				  while (tk2.hasMoreTokens() ) {
 					  cmds.add(tk2.nextToken());

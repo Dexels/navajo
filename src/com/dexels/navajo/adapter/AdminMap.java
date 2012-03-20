@@ -16,6 +16,8 @@ import com.dexels.navajo.mapping.MappableException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.List;
+
 import com.dexels.navajo.mapping.AsyncMappable;
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 
@@ -79,7 +81,6 @@ public class AdminMap implements Mappable {
   // RequestRate windowSize
   public int requestRateWindowSize;
 
-  private NavajoConfigInterface myConfig = null;
   private Access myAccess = null;
 
   public void load(Access access) throws MappableException, UserException {
@@ -100,7 +101,6 @@ public class AdminMap implements Mappable {
     storeLocation = nc.getDbPath();
     serverId = DispatcherFactory.getInstance().getApplicationId();
     
-    myConfig = DispatcherFactory.getInstance().getNavajoConfig();
     myAccess = access;
     
     instanceName = nc.getInstanceName();
@@ -194,12 +194,13 @@ public class AdminMap implements Mappable {
      return (int) com.dexels.navajo.server.DispatcherFactory.getInstance().getRequestCount();
    }
 
-   public AsyncProxy [] getAsyncThreads() {
+   @SuppressWarnings("rawtypes")
+public AsyncProxy [] getAsyncThreads() {
 
      //System.err.println("IN GETASYNCTHREADS()......");
      Map all = com.dexels.navajo.mapping.AsyncStore.getInstance().objectStore;
      Iterator iter = all.values().iterator();
-     ArrayList l = new ArrayList();
+	 List<AsyncProxy> l = new ArrayList<AsyncProxy>();
      while (iter.hasNext()) {
        AsyncMappable am = (AsyncMappable) iter.next();
        Access ac = (Access) com.dexels.navajo.mapping.AsyncStore.getInstance().accessStore.get(am.pointer);
@@ -231,10 +232,11 @@ public class AdminMap implements Mappable {
      return (AsyncProxy []) l.toArray(objects);
    }
 
+
    public AccessMap [] getUsers() {
-	   Set all = new HashSet(com.dexels.navajo.server.DispatcherFactory.getInstance().getAccessSet());
-	   Iterator iter = all.iterator();
-	   ArrayList d = new ArrayList();
+	   Set<Access> all = new HashSet<Access>(com.dexels.navajo.server.DispatcherFactory.getInstance().getAccessSet());
+	   Iterator<Access> iter = all.iterator();
+	   List<AccessMap> d = new ArrayList<AccessMap>();
 	   while (iter.hasNext()) {
 		   Access a = (Access) iter.next();
 		   d.add(new AccessMap(a));

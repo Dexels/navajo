@@ -1,11 +1,14 @@
 package com.dexels.navajo.adapter;
 
 
-import com.dexels.navajo.mapping.*;
-import com.dexels.navajo.server.*;
-import com.dexels.navajo.document.*;
+import java.io.File;
 
-import java.io.*;
+import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.NavajoConfigInterface;
+import com.dexels.navajo.server.UserException;
 
 /**
  * <p>Title: Navajo Product Project</p>

@@ -117,6 +117,7 @@ public class SOAPMap implements Mappable {
 		this.requestBody = new Binary( sb.toString().getBytes() );		
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void setDoSend(boolean b) throws UserException {
 		
 		SOAPConnection connection = null;
@@ -190,8 +191,6 @@ public class SOAPMap implements Mappable {
 			}
 
 			catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace(System.err);
 				throw new UserException(-1, e.getMessage(), e);
 			} finally {
 				if ( connection != null ) {

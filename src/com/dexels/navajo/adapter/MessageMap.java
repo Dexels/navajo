@@ -147,7 +147,7 @@ public class MessageMap implements Mappable {
 	
 	public ResultMessage [] getResultMessage() throws UserException, NavajoException {
 		
-		HashSet<String> messageHash = new HashSet<String>();
+//		HashSet<String> messageHash = new HashSet<String>();
 		
 		ArrayList<ResultMessage> resultingMessage = new ArrayList<ResultMessage>();
 		

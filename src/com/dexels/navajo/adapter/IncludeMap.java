@@ -10,6 +10,7 @@ import com.dexels.navajo.document.NavajoFactory;
 import java.io.FileInputStream;
 import com.dexels.navajo.document.Message;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>Title: </p>
@@ -39,10 +40,10 @@ public class IncludeMap implements Mappable {
                     NavajoFactory.getInstance().createNavaScript(new FileInputStream(f)) :
                     NavajoFactory.getInstance().createNavajo(new FileInputStream(f)) );
         Message current = access.getCurrentOutMessage();
-        ArrayList msgList = n.getAllMessages();
+        List<Message> msgList = n.getAllMessages();
         for (int i = 0; i < msgList.size(); i++) {
-          Message tbc = (Message) msgList.get(i);
-          Message copy = (Message) tbc.copy(access.getOutputDoc());
+          Message tbc = msgList.get(i);
+          Message copy = tbc.copy(access.getOutputDoc());
           if (current != null) {
             current.addMessage(copy);
           }

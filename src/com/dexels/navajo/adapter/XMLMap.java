@@ -97,15 +97,15 @@ public class XMLMap extends TagMap implements Mappable {
 			String key = attrib_enum.next();
 			String value = e.getStringAttribute(key);
 			if ( this.attributes == null ) {
-				this.attributes = new HashMap ();
+				this.attributes = new HashMap<String,String> ();
 			}
 			this.attributes.put( key, value );
 		}
 
 		// parse children.
-		Vector v = e.getChildren();
+		Vector<XMLElement> v = e.getChildren();
 		for (int i = 0; i < v.size(); i++) {
-			XMLElement child = (XMLElement) v.get(i);
+			XMLElement child = v.get(i);
 
 			TagMap childTag = TagMap.parseXMLElement(child, this.compact );
             childTag.setCompact( this.compact );

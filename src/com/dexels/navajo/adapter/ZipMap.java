@@ -36,7 +36,6 @@ import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.FileInputStreamReader;
 import com.dexels.navajo.server.UserException;
 
 public class ZipMap implements Mappable {
@@ -59,7 +58,6 @@ public class ZipMap implements Mappable {
 		try {
 			zo.putNextEntry(entry);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -67,11 +65,9 @@ public class ZipMap implements Mappable {
 	public void setContent(Binary b) {
 		this.content = b;
 		try {
-			//zo.write( content.getData() );
 			content.write( zo );
 			zo.closeEntry();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -91,12 +87,10 @@ public class ZipMap implements Mappable {
 	}
 
 	public void store() throws MappableException, UserException {
-		// TODO Auto-generated method stub
 
 	}
 
 	public void kill() {
-		// TODO Auto-generated method stub
 
 	}
 

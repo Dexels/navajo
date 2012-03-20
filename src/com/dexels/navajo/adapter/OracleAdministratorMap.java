@@ -14,6 +14,7 @@ package com.dexels.navajo.adapter;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
@@ -49,7 +50,7 @@ public class OracleAdministratorMap extends SQLMap {
 		"SELECT " + "DISTINCT username FROM user_users";
 
 	private ResultSetMap[] rsMap = null;
-	private ArrayList tableListArray = new ArrayList();
+	private List<String> tableListArray = new ArrayList<String>();
 
 	public String schemaOwner = null;
 	public String tableList = null;
@@ -158,9 +159,9 @@ public class OracleAdministratorMap extends SQLMap {
 
 	private String formatTableList() {
 		final StringBuffer tableBuf = new StringBuffer();
-		final Iterator iter = this.tableListArray.iterator();
+		final Iterator<String> iter = this.tableListArray.iterator();
 		while (iter.hasNext()) {
-			final String t = (String) iter.next();
+			final String t = iter.next();
 			tableBuf.append("'" + t + "'");
 			if (iter.hasNext()) {
 				tableBuf.append(",");

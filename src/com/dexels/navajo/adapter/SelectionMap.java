@@ -12,6 +12,9 @@ package com.dexels.navajo.adapter;
  * $Id$
  *
  * $Log$
+ * Revision 1.4  2012/03/20 10:43:16  frank
+ * code improvements / cleaning
+ *
  * Revision 1.3  2008/09/29 10:33:28  arjen
  * Several changes for Navajo Refactor (The NavaUnitTest Version)
  *
@@ -42,23 +45,23 @@ package com.dexels.navajo.adapter;
  *
  */
 
-import com.dexels.navajo.mapping.Mappable;
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.server.Access;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.*;
+import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.server.Access;
 
 
 public class SelectionMap implements Mappable {
 
-    private ArrayList optionsList = null;
+    private List<OptionMap> optionsList = null;
     public String option;
     public OptionMap[]  options;
 
     public SelectionMap() {}
 
     public void load(Access parm4) throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {
-        optionsList = new ArrayList();
+        optionsList = new ArrayList<OptionMap>();
     }
 
     public void store() throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {}

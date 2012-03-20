@@ -8,22 +8,18 @@ public class DummyAttachmentMap implements AttachmentMapInterface {
 	private String attachFile;
 	
 	public String getAttachFile() {
-		// TODO Auto-generated method stub
 		return this.attachFile;
 	}
 
 	public Binary getAttachFileContent() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public String getAttachFileName() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public String getEncoding() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

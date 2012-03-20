@@ -7,7 +7,6 @@ import com.dexels.navajo.adapter.mailmap.AttachmentMapInterface;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.UserException;
 
@@ -88,12 +87,10 @@ public class DummyMailMap implements MailMapInterface, Mappable {
 	}
 
 	public void kill() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	public void load(Access access) throws MappableException, UserException {
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -104,7 +101,6 @@ public class DummyMailMap implements MailMapInterface, Mappable {
 			fw.write(this.sender + "," + this.recipients + "," + this.cc + "," + this.bcc + "," + this.subject + "," + this.text + "\n");
 			fw.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

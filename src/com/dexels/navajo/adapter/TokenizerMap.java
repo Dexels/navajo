@@ -1,6 +1,7 @@
 package com.dexels.navajo.adapter;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import com.dexels.navajo.mapping.Mappable;
@@ -16,7 +17,7 @@ public class TokenizerMap implements Mappable{
   
 	public Token[] getTokens(){
 		StringTokenizer tok = new StringTokenizer(value, delimiter);
-		ArrayList toks = new ArrayList();
+		List<Token> toks = new ArrayList<Token>();
 		while(tok.hasMoreTokens()){
 			Token t = new Token();
 			t.value = tok.nextToken();
@@ -28,17 +29,14 @@ public class TokenizerMap implements Mappable{
 	}
 	
 	public void kill() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	public void load(Access access) throws MappableException, UserException {
-		// TODO Auto-generated method stub
 		
 	}
 
 	public void store() throws MappableException, UserException {
-		// TODO Auto-generated method stub
 		
 	}
 	

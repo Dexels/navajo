@@ -11,6 +11,9 @@ package com.dexels.navajo.adapter;
  * $Id$
  *
  * $Log$
+ * Revision 1.4  2012/03/20 10:43:15  frank
+ * code improvements / cleaning
+ *
  * Revision 1.3  2008/09/29 10:33:28  arjen
  * Several changes for Navajo Refactor (The NavaUnitTest Version)
  *
@@ -37,9 +40,8 @@ package com.dexels.navajo.adapter;
  */
 
 
-import com.dexels.navajo.mapping.*;
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.server.*;
+import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.server.Access;
 
 
 public class OptionMap implements Mappable {

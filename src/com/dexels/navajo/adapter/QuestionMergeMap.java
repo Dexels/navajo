@@ -129,7 +129,7 @@ public class QuestionMergeMap
     for (int i = 0; i < dataMessage.getArraySize(); i++) {
       Message m = (Message) dataMessage.getMessage(i);
       Property id = m.getProperty("Id");
-      Property value = m.getProperty("Value");
+//      Property value = m.getProperty("Value");
       System.err.println("Looking for question: "+id.getValue());
 
       StringTokenizer idTok = new StringTokenizer( (String) id.getTypedValue());

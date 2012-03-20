@@ -34,7 +34,7 @@ public class NavajoFileListAdapter
   // a dummy, actually
   public String column = null;
 
-  private final ArrayList columns = new ArrayList();
+  private final List<String> columns = new ArrayList<String>();
 
   public NavajoFileListAdapter() {
   }
@@ -128,19 +128,6 @@ public class NavajoFileListAdapter
       }
     }
     access.setOutputDoc(n);
-  }
-
-  private final void copyResource(OutputStream out, InputStream in) throws IOException{
-      BufferedInputStream bin = new BufferedInputStream(in);
-      BufferedOutputStream bout = new BufferedOutputStream(out);
-      byte[] buffer = new byte[1024];
-      int read;
-      while ((read = bin.read(buffer)) > -1) {
-        bout.write(buffer,0,read);
-      }
-      bin.close();
-      bout.flush();
-      bout.close();
   }
 
 

@@ -1,15 +1,12 @@
 package com.dexels.navajo.adapter.jdbcbroker;
 
 import java.sql.Connection;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
-import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,11 +18,11 @@ public class JdbcResourceComponent {
 	private static JdbcResourceComponent instance = null;
 	private static final Logger logger = LoggerFactory.getLogger(JdbcResourceComponent.class);
 	private final Map<Integer,Connection> transactionMap = new HashMap<Integer, Connection>();
-	private BundleContext bundleContext;
+//	private BundleContext bundleContext;
 	
 	public void setup(ComponentContext context) {
 		instance =  this;
-		this.bundleContext = context.getBundleContext();
+//		this.bundleContext = context.getBundleContext();
 	}
 	public void setResourceManager(ResourceManager r) {
 		logger.info("Adding Resource Manager, instantiating JdbcResourceComponent");

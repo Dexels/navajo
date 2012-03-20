@@ -15,6 +15,9 @@ import com.dexels.navajo.server.UserException;
  * @author arjen
  * 
  */
+
+@SuppressWarnings({"unchecked","rawtypes"})
+
 public class FileLineMap implements Mappable {
 
 	public String line;
