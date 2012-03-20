@@ -27,6 +27,7 @@ public class Activator implements BundleActivator {
 
 	public void start(final BundleContext bc) throws Exception {
 		Activator.context = bc;
+		
 
 	}
 
@@ -35,7 +36,7 @@ public class Activator implements BundleActivator {
 	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext bundleContext) throws Exception {
-		System.err.println("Stopping bundle");
+		logger.info("Stopping swing application bundle");
 		if(instance!=null) {
 			instance.getCurrentContext().shutdown();
 			

@@ -1,26 +1,23 @@
 package com.dexels.navajo.tipi.application;
 
-import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import org.osgi.service.cm.ConfigurationException;
-import org.osgi.service.cm.ManagedService;
 import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.dexels.navajo.tipi.TipiException;
-import com.dexels.navajo.tipi.components.swingimpl.TipiSwingWrapper;
 
 import tipi.TipiApplicationInstance;
 import tipi.TipiCoreExtension;
 import tipi.TipiExtension;
 import tipi.TipiMainExtension;
 
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.components.swingimpl.TipiSwingWrapper;
+
+@SuppressWarnings({"rawtypes","unused"})
 
 public class ApplicationComponent {
 	
