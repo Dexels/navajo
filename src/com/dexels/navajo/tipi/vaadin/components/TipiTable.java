@@ -59,7 +59,7 @@ public class TipiTable extends TipiVaadinComponentImpl {
 		table.setColumnReorderingAllowed(true);
 		table.setEditable(false);
 //		table.setColumnCollapsingAllowed(true);
-		table.setTableFieldFactory(new TmlTableFieldFactory(table));
+		table.setTableFieldFactory(new TmlTableFieldFactory());
 //		table.set
 		table.addListener(new Table.ValueChangeListener() {
 
@@ -267,7 +267,6 @@ public class TipiTable extends TipiVaadinComponentImpl {
 		if (count != 0) {
 	
 			if ("printReport".equals(name)) {
-				Binary b;
 				try {
 					getTableReport("pdf", "horizontal", new int[] { 10, 10, 10, 10 });
 				} catch (NavajoException e) {
@@ -312,7 +311,6 @@ public class TipiTable extends TipiVaadinComponentImpl {
 //				+ names.size() + " idsize: " + ids.size());
 		int i = 0;
 		for (Object propertyId : cids) {
-			int j = i;
 			// TableColumn tt = getColumnModel().getColumn(j);
 			int width = table.getColumnWidth(propertyId);
 			String name = ((String)propertyId).split("@")[0]; // ids.get(j); // getColumnId(j);

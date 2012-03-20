@@ -5,7 +5,6 @@ import com.dexels.navajo.tipi.TipiValue;
 import com.dexels.navajo.tipi.components.core.TipiLayoutImpl;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.HorizontalLayout;
 
 /**
  * <p>Title: </p>

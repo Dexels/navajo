@@ -15,6 +15,7 @@ public class MessageTable extends Table {
 	private static final long serialVersionUID = 9005864145330315869L;
 	private static final SimpleDateFormat dateFormat3 = new SimpleDateFormat( com.dexels.navajo.document.Property.DATE_FORMAT3 );
 	
+	@SuppressWarnings("unused")
 	private final static Logger logger = LoggerFactory
 			.getLogger(MessageTable.class);
 	//

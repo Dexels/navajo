@@ -78,17 +78,20 @@ public class ValuePropertyBridge implements Property, Property.ValueChangeNotifi
 			
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
-				ValuePropertyBridge.this.value = evt.getNewValue();
-
-				listener.valueChange(new ValueChangeEvent() {
+				if(com.dexels.navajo.document.Property.PROPERTY_VALUE.equals(evt.getPropertyName())) {
 					
-					private static final long serialVersionUID = 1L;
+					ValuePropertyBridge.this.value = evt.getNewValue();
 
-					@Override
-					public Property getProperty() {
-						return ValuePropertyBridge.this;
-					}
-				});
+					listener.valueChange(new ValueChangeEvent() {
+						
+						private static final long serialVersionUID = 1L;
+
+						@Override
+						public Property getProperty() {
+							return ValuePropertyBridge.this;
+						}
+					});
+				}
 			}
 		};
 		listenerMap.put(listener, pcl);

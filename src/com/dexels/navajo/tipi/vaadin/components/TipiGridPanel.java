@@ -46,11 +46,14 @@ public class TipiGridPanel extends TipiVaadinComponentImpl {
 	protected void addToVaadinContainer(ComponentContainer currentContainer,Component component, Object constraints) {
 		GridLayoutData myData = parseGridConstraints((String)constraints);
 		if(myData==null) {
-			super.addToVaadinContainer(currentContainer, component, constraints);
-	        updateAvailability(currentx, currenty, currentx +1, currenty + 1);
-
-			advance();
-			return;
+			myData = new GridLayoutData();
+			myData.setColumnSpan(1);
+			myData.setRowSpan(1);
+//			super.addToVaadinContainer(currentContainer, component, constraints);
+//	        updateAvailability(currentx, currenty, currentx +1, currenty + 1);
+//
+//			advance();
+//			return;
 		} 
         updateAvailability(currentx, currenty, currentx + myData.getColumnSpan(), currenty + myData.getRowSpan());
 		int endcolumn = myData.getColumnSpan()-1+currentx;
@@ -61,6 +64,7 @@ public class TipiGridPanel extends TipiVaadinComponentImpl {
 		gridLayout.addComponent(component, currentx, currenty,endcolumn,endrow);
 		gridLayout.setComponentAlignment(component, myData.getAlignment());
 		int currentWidth = myWidths.get(currentx);
+		System.err.println("Adding component: "+currentx+" :: "+currenty+" >> "+myWidths.get(currentx));
 		component.setWidth(currentWidth,Sizeable.UNITS_PIXELS);
         advance();
 	}

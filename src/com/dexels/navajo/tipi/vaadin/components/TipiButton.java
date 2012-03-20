@@ -6,11 +6,9 @@ import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
 import com.vaadin.event.ShortcutAction.KeyCode;
-import com.vaadin.terminal.gwt.client.ui.Field;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Component;
 
 public class TipiButton extends TipiVaadinComponentImpl {
 

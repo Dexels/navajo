@@ -21,19 +21,11 @@ import com.vaadin.ui.DateField;
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.Table;
 
 public class TmlTableFieldFactory extends DefaultFieldFactory {
 	private static final long serialVersionUID = -7394569632662794450L;
-	private final Table myTable;
 	private final static Logger logger = LoggerFactory
 			.getLogger(TmlTableFieldFactory.class);
-	public TmlTableFieldFactory(Table tipiTable) {
-		// TODO Auto-generated constructor stub
-
-		this.myTable = tipiTable;
-		
-	}
 
 	@Override
 	public Field createField(Item item, Object propertyId, Component uiContext) {
