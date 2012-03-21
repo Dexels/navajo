@@ -54,6 +54,7 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 	private final TipiManualExtensionRegistry extensionRegistry = new TipiManualExtensionRegistry();
 //	private transient Timer shutdownTimer = null;
 	private WindowCloseManager windowCloseManager;
+private String referer;
 
 	private static final Logger logger = LoggerFactory.getLogger(TipiVaadinApplication.class);
 
@@ -291,6 +292,18 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 	@Override
 	public URL getContextUrl() {
 		return urlContext;
+	}
+
+
+
+	public void setReferer(String referer) {
+		this.referer = referer;
+	}
+
+
+
+	public String getReferer() {
+		return referer;
 	}
 
 

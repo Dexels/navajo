@@ -18,6 +18,7 @@ import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.vaadin.application.ApplicationUtils;
+import com.dexels.navajo.tipi.vaadin.application.TipiVaadinApplication;
 import com.dexels.navajo.tipi.vaadin.components.io.URLInputStreamSource;
 import com.dexels.navajo.tipi.vaadin.cookie.BrowserCookieManager;
 import com.vaadin.Application;
@@ -149,11 +150,23 @@ public class VaadinTipiContext extends TipiContext {
 	public URL getEvalUrl(String expression) {
 		try {
 			String encoded = URLEncoder.encode(expression,"UTF-8");
-			URL contextUrl = getVaadinApplication().getContextUrl();
-			System.err.println("USING BASE EVAL URL: "+contextUrl);
-//			URL eval = new URL(contextUrl ,"eval");
-			String s = contextUrl+"?rdm="+randomizer.nextLong()+"&evaluate="+encoded;
-			return new URL(s);
+			TipiVaadinApplication tva = (TipiVaadinApplication) getVaadinApplication();
+			System.err.println("Referer: "+tva.getReferer());
+			String referer = tva.getReferer();
+			if(referer!=null) {
+				URL contextUrl = getVaadinApplication().getContextUrl();
+				URL prot = new URL(contextUrl.getProtocol(),referer,contextUrl.getPath()+"?evaluate="+encoded);
+				System.err.println("USING PROXIED BASE EVAL URL: "+prot);
+//				String s = referer+"?rdm="+randomizer.nextLong()+"&evaluate="+encoded;
+				return  prot;
+			} else {
+				URL contextUrl = getVaadinApplication().getContextUrl();
+				
+				System.err.println("USING BASE EVAL URL: "+contextUrl);
+//				URL eval = new URL(contextUrl ,"eval");
+				String s = contextUrl+"?rdm="+randomizer.nextLong()+"&evaluate="+encoded;
+				return new URL(s);
+			}
 
 		} catch (UnsupportedEncodingException e) {
 			logger.error("I just don't know",e);
