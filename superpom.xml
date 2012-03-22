@@ -16,7 +16,7 @@
 	<pluginRepositories>
 		<pluginRepository>
 			<id>tycho_spiritus</id>
-			<url>http://spiritus.dexels.nl:41766/nexus/content/repositories/tycho/</url>
+			<url>https://source.dexels.com/nexus/content/repositories/tycho/</url>
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
@@ -41,7 +41,7 @@
 			</snapshots>
 			<id>central</id>
 			<name>Central Spiritus</name>
-			<url>http://spiritus.dexels.nl:41766/nexus/content/repositories/central/</url>
+			<url>https://source.dexels.com/nexus/content/repositories/central/</url>
 			<layout>default</layout>
 		</repository>
 
@@ -58,7 +58,7 @@
 			</snapshots>
 			<id>karaf</id>
 			<name>Karaf</name>
-			<url>http://spiritus.dexels.nl:41766/nexus/content/repositories/karaf/</url>
+			<url>https://source.dexels.com/nexus/content/repositories/karaf/</url>
 			<layout>default</layout>
 		</repository>
 		<repository>
@@ -74,7 +74,7 @@
 			</snapshots>
 			<id>spiritus</id>
 			<name>Spiritus</name>
-			<url>http://spiritus.dexels.nl:41766/nexus/content/repositories/navajo/</url>
+			<url>https://source.dexels.com/nexus/content/repositories/navajo/</url>
 			<layout>default</layout>
 		</repository>
 		<repository>
@@ -90,7 +90,7 @@
 			</snapshots>
 			<id>spiritusSnapshot</id>
 			<name>Spiritus</name>
-			<url>http://spiritus.dexels.nl:41766/nexus/content/repositories/navajo_snapshot/</url>
+			<url>https://source.dexels.com/nexus/content/repositories/navajo_snapshot/</url>
 			<layout>default</layout>
 		</repository>
 	</repositories>
@@ -110,7 +110,7 @@
 						<artifact>
 							<groupId>com.dexels.navajo.core</groupId>
 							<artifactId>targetplatform</artifactId>
-							<version>0.4.0-SNAPSHOT</version>
+							<version>0.5.0-SNAPSHOT</version>
 							<classifier>navajo_target</classifier>
 						</artifact>
 					</target>
