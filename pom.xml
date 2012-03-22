@@ -9,7 +9,7 @@
 	</parent>
 	
 	<artifactId>targetplatform</artifactId>
-	<version>0.4.0-SNAPSHOT</version>
+	<version>0.5.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Tycho build examples - Target platform</name>
 
@@ -29,7 +29,7 @@
 						<configuration>
 							<artifacts>
 								<artifact>
-									<file>sliced_tycho.target</file>
+									<file>navajo_spiritus.target</file>
 									<type>target</type>
 									<classifier>navajo_target</classifier>
 								</artifact>
