@@ -12,6 +12,7 @@
 ./cvsgit.sh sportlink-knvb-digitaalinschrijven com.sportlink.digitaalinschrijven
 ./cvsgit.sh SportlinkDWF com.sportlink.dwf
 ./cvsgit.sh SportlinkMatchForms com.sportlink.matchforms
+./cvsgit.sh GoogleEarthAccommodations com.sportlink.accommodations
 
 
 
