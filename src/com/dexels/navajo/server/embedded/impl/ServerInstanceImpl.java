@@ -36,6 +36,7 @@ public class ServerInstanceImpl implements ServerInstance {
 	private ServletContextHandler webappContextHandler;
 
 	private final List<LifeCycle.Listener> lifeCycleListeners = new ArrayList<LifeCycle.Listener>();
+	@SuppressWarnings("unused")
 	private final Appendable outputAppendable;
 
 	public ServerInstanceImpl(Appendable a) {
