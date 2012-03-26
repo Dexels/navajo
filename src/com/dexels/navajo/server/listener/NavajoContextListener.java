@@ -23,11 +23,13 @@ import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.client.LocalClient;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.api.NavajoServerContext;
 import com.dexels.navajo.server.api.impl.NavajoServerInstance;
+import com.dexels.navajo.server.listener.internal.LocalClientDispatcherWrapper;
 import com.dexels.navajo.version.AbstractVersion;
 
 public class NavajoContextListener implements ServletContextListener {
@@ -39,6 +41,7 @@ public class NavajoContextListener implements ServletContextListener {
 	public static final String DEFAULT_SERVER_XML = "config/server.xml";
 	private static final Logger logger = LoggerFactory.getLogger(NavajoContextListener.class);
 	private static ServiceRegistration<NavajoServerContext> navajoServerInstance;
+	private static ServiceRegistration<LocalClient> localClientInstance;
 
 	
 	@Override
@@ -111,12 +114,25 @@ public class NavajoContextListener implements ServletContextListener {
 			DispatcherInterface dispatcher = initDispatcher(servletContextPath, servletContextPath, installationPath);
 			NavajoServerInstance nsi = new NavajoServerInstance(installationPath, dispatcher);
 			registerInstanceOSGi(nsi,contextPath);
+			LocalClientDispatcherWrapper lcdw = new LocalClientDispatcherWrapper(dispatcher);
+			registerLocalClient(lcdw);
 			return nsi;
 		} catch (Exception e) {
 			logger.error("Error initializing dispatcher", e);
 		}
 		return null;
 	}
+
+	private static void registerLocalClient(LocalClientDispatcherWrapper lcdw) {
+		BundleContext bc = navajolisteners.Version.getDefaultBundleContext();
+		if(bc==null) {
+			logger.warn("No OSGi environment found. Are we in J2EE mode?");
+			return;
+		}		
+        Dictionary<String, Object> properties = new Hashtable<String, Object>();
+        localClientInstance = bc.registerService(LocalClient.class, lcdw,properties);
+		logger.info("Service registration complete!");
+		}
 
 	private static void registerInstanceOSGi(NavajoServerInstance nsi, String contextPath) {
 		BundleContext bc = navajolisteners.Version.getDefaultBundleContext();
@@ -140,6 +156,9 @@ public class NavajoContextListener implements ServletContextListener {
 		}
 		if(navajoServerInstance!=null) {
 			navajoServerInstance.unregister();
+		}
+		if(localClientInstance!=null) {
+			localClientInstance.unregister();			
 		}
 	}
 		
