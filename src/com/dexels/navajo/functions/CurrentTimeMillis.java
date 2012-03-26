@@ -1,7 +1,5 @@
 package com.dexels.navajo.functions;
 
-import com.dexels.navajo.document.Operand;
-import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.FunctionInterface;
 
 
@@ -17,10 +15,5 @@ public final class CurrentTimeMillis extends FunctionInterface {
    return "CurrentTimeMillis()";
   }
 
-  public static void main(String [] args) throws Exception {
-    com.dexels.navajo.parser.Expression expr = new com.dexels.navajo.parser.Expression();
-    Operand o = Expression.evaluate("CurrentTimeMillis()", null);
-    System.err.println("o.type = " + o.type);
-    System.err.println("o.value = " + o.value);
-  }
+
 }

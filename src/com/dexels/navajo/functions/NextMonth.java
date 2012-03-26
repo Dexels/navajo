@@ -38,8 +38,7 @@ public final class NextMonth extends FunctionInterface {
         int offset = arg.intValue();
         c.set(c.get(Calendar.YEAR) + offset, c.get(Calendar.MONTH) + 1, 1);
 
-        java.text.SimpleDateFormat formatter =
-                new java.text.SimpleDateFormat("yyyy-MM-dd");
+//        java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyy-MM-dd");
 
         // return formatter.format(c.getTime());
         return c.getTime();

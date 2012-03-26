@@ -29,6 +29,7 @@ import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.test.TestDispatcher;
 import com.dexels.navajo.server.test.TestNavajoConfig;
 
+@SuppressWarnings("unused")
 
 public class StandardFunctionsTest extends TestCase {
 
@@ -1857,14 +1858,14 @@ public class StandardFunctionsTest extends TestCase {
 		
 		// Empty list
 		fi.reset();
-		fi.insertOperand(new ArrayList());
+		fi.insertOperand(new ArrayList<Object>());
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(Boolean.TRUE, (Boolean) o);
 		
 		// Non Empty list.
 		fi.reset();
-		fi.insertOperand(new ArrayList().add(new String("noot")));
+		fi.insertOperand(new ArrayList<String>().add(new String("noot")));
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
 		assertEquals(Boolean.FALSE, (Boolean) o);

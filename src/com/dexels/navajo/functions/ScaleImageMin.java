@@ -39,7 +39,6 @@ public class ScaleImageMin extends FunctionInterface {
 	    if (getOperands().size()!=3) {
             throw new TMLExpressionException(this, "Three operands expected. ");
         }
-        Object o = getOperand(0);
         Binary b = (Binary)getOperand(0);
         Integer width = (Integer)getOperand(1);
         Integer height = (Integer)getOperand(2);
@@ -49,7 +48,6 @@ public class ScaleImageMin extends FunctionInterface {
             return res;
         } catch (IOException e) {
            e.printStackTrace();
-//           throw new TMLExpressionException(this, "Error scaling image!");
            return null;
         }
       

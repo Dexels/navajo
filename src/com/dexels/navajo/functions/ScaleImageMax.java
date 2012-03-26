@@ -39,7 +39,6 @@ public class ScaleImageMax extends FunctionInterface {
 	    if (getOperands().size()!=3) {
             throw new TMLExpressionException(this, "Three operands expected. ");
         }
-        Object o = getOperand(0);
         Binary b = (Binary)getOperand(0);
         Integer width = (Integer)getOperand(1);
         Integer height = (Integer)getOperand(2);
@@ -48,8 +47,6 @@ public class ScaleImageMax extends FunctionInterface {
             Binary res =ImageScaler.scaleToMax(b, width.intValue(), height.intValue(), DEFAULT_COMPRESSION);
             return res;
         } catch (IOException e) {
-   //        e.printStackTrace();
-  //         throw new TMLExpressionException(this, "Error scaling image!");
       	  return null;
         }
       

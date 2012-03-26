@@ -36,7 +36,8 @@ import com.dexels.navajo.parser.FunctionInterface;
 
 public final class ToString extends FunctionInterface {
 
-   public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+   @SuppressWarnings("unused")
+public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         Object s = this.getOperands().get(0);
 
         if (s == null) {

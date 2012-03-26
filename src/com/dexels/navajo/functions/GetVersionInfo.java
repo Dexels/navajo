@@ -27,8 +27,7 @@ package com.dexels.navajo.functions;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.server.DispatcherFactory;
-
-import com.dexels.navajo.version.*;;
+import com.dexels.navajo.version.AbstractVersion;
 
 public final class GetVersionInfo extends FunctionInterface {
 
@@ -40,15 +39,16 @@ public final class GetVersionInfo extends FunctionInterface {
 		return "GetVersionInfo([package name])";
 	}
 
+	@SuppressWarnings("unchecked")
 	public final Object evaluate() throws TMLExpressionException {
 		Object o = getOperand(0);
 		String packageName = o+"";
 		try {
 			
-			Class c = null;
+			Class<AbstractVersion> c = null;
 			if (DispatcherFactory.getInstance().getNavajoConfig().getClassloader() ==null) {
 				System.err.println("GetVersionInfo: Using system classloader");
-				c = Class.forName(packageName+".Version");
+				c = (Class<AbstractVersion>) Class.forName(packageName+".Version");
 			} else {
 				System.err.println("GetVersionInfo: Using Navajo classloader");
 				c = DispatcherFactory.getInstance().getNavajoConfig().getClassloader().getClass(packageName+".Version");

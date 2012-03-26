@@ -20,7 +20,8 @@ public final class Trim extends FunctionInterface {
   public Trim() {
   }
 
-  public final Object evaluate()
+  @SuppressWarnings("unused")
+public final Object evaluate()
     throws com.dexels.navajo.parser.TMLExpressionException {
 
     final Object op = this.getOperands().get( 0 );
@@ -38,7 +39,7 @@ public final class Trim extends FunctionInterface {
     if ( s != null ) {
       return s.trim();
     } else {
-      return s;
+      return null;
     }
   }
 

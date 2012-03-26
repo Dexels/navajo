@@ -11,6 +11,7 @@ package com.dexels.navajo.functions;
  */
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
@@ -27,7 +28,8 @@ public final class Sum extends FunctionInterface {
         return "Sum(ArrayList)";
     }
 
-    public final Object sumList(ArrayList list) throws TMLExpressionException {
+    @SuppressWarnings("rawtypes")
+	public final Object sumList(List<?> list) throws TMLExpressionException {
 
         Object sum = null;
 
@@ -35,7 +37,7 @@ public final class Sum extends FunctionInterface {
             Object b = list.get(i);
 
             if (b instanceof ArrayList) {
-                sum = Utils.add(sum, sumList((ArrayList) b));
+                sum = Utils.add(sum, sumList((List) b));
             } else {
                 sum = Utils.add(sum, b);
             }

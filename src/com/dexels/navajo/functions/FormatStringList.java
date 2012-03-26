@@ -2,6 +2,7 @@ package com.dexels.navajo.functions;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.parser.Expression;
@@ -22,7 +23,8 @@ public final class FormatStringList extends FunctionInterface {
 
     public FormatStringList() {}
 
-    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    @SuppressWarnings("rawtypes")
+	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         Object a = this.getOperands().get(0);
         Object b = this.getOperands().get(1);
 
@@ -32,7 +34,7 @@ public final class FormatStringList extends FunctionInterface {
             throw new TMLExpressionException("FormatStringList: invalid operand: " + a.getClass().getName());
         if (!(b instanceof String))
             throw new TMLExpressionException("FormatStringList: invalid operand: " + a.getClass().getName());
-        ArrayList strings = (ArrayList) a;
+        List strings = (List) a;
         String sep = (String) b;
         StringBuffer result = new StringBuffer(20 * strings.size());
 

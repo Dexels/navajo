@@ -4,7 +4,7 @@
  */
 package com.dexels.navajo.functions;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -68,7 +68,7 @@ public class SumExpressions extends FunctionInterface {
 		    Navajo doc = getNavajo();
 
 		    try {
-		      ArrayList arrayMsg = (parent != null ? parent.getMessages(messageName) :
+		      List<Message> arrayMsg = (parent != null ? parent.getMessages(messageName) :
 		                            doc.getMessages(messageName));
 		      if (arrayMsg == null) {
 		        throw new TMLExpressionException(this,

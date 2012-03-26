@@ -10,7 +10,7 @@ package com.dexels.navajo.functions;
  * @version $Id$
  */
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
@@ -28,7 +28,7 @@ public final class EqualsIgnoreCase  extends FunctionInterface {
 
     public final Object evaluate() throws TMLExpressionException {
 
-        ArrayList operands = this.getOperands();
+        List<?> operands = this.getOperands();
 
         if (operands.size() != 2)
             throw new TMLExpressionException("Invalid number of arguments for EqualsIgnoreCase()");

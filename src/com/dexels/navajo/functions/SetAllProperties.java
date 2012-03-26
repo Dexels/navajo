@@ -31,8 +31,8 @@ public class SetAllProperties extends FunctionInterface {
    
        Message source = (Message)a;
        String propertyName = (String)b;
-       for (Iterator iter = source.getAllMessages().iterator(); iter.hasNext();) {
-		Message element = (Message) iter.next();
+       for (Iterator<Message> iter = source.getAllMessages().iterator(); iter.hasNext();) {
+		Message element = iter.next();
 		Property p = element.getProperty(propertyName);
 		if (p!=null) {
 			p.setAnyValue(c);

@@ -47,6 +47,7 @@ public class GetSelectedValue extends FunctionInterface {
 		return "Gets the value of a selected property";
 	}
 
+	@SuppressWarnings("unchecked")
 	public Object evaluate()
 			throws com.dexels.navajo.parser.TMLExpressionException {
 		if (getOperands().size() != 1) {

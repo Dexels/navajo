@@ -3,7 +3,6 @@ package com.dexels.navajo.functions;
 
 import java.util.Locale;
 
-import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
@@ -57,10 +56,6 @@ public final class FormatDate extends FunctionInterface {
           final String loc = (String)this.getOperands().get(2);
           if (loc != null && loc.length() > 0) {
             final Locale l = new Locale(loc);
-            if (l == null) {
-              throw new TMLExpressionException(
-                  "FormatDate: unavailable or invalid locale: '" + loc + "'");
-            }
             formatter = new java.text.SimpleDateFormat(format, l);
           }
         }
@@ -77,7 +72,7 @@ public final class FormatDate extends FunctionInterface {
 
     public static void main(String args[]) throws Exception {
       
-    	NavajoFactory nf = NavajoFactory.getInstance();
+//    	NavajoFactory nf = NavajoFactory.getInstance();
     	
     	FormatDate fd = new FormatDate();
     	fd.reset();

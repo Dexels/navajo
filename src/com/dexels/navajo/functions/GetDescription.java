@@ -45,9 +45,6 @@ public class GetDescription extends FunctionInterface {
      throw new TMLExpressionException(this, "Property argument expected");
    }
    Property p = (Property) o ;
-   if (p == null) {
-     throw new TMLExpressionException(this, "Property not found");
-   }
    return p.getDescription();
   }
   public String usage() {

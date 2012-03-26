@@ -1,6 +1,7 @@
 package com.dexels.navajo.functions;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import com.dexels.navajo.document.Operand;
@@ -37,7 +38,7 @@ public class ParseStringList extends FunctionInterface {
       throw new TMLExpressionException("Expected valid delimeter");
     }
    StringTokenizer tokens = new StringTokenizer((String) o, (String) delim);
-   ArrayList result = new ArrayList();
+   List<String> result = new ArrayList<String>();
    while (tokens.hasMoreTokens()) {
      result.add(tokens.nextToken());
    }

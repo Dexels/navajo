@@ -10,7 +10,7 @@ package com.dexels.navajo.functions;
  * @version $Id$
  */
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
@@ -29,7 +29,7 @@ public String usage() {
 
     public final Object evaluate() throws TMLExpressionException {
 
-        ArrayList operands = this.getOperands();
+        List<?> operands = this.getOperands();
 
         if (operands.size() == 2) {
             Object a = operands.get(0);
@@ -46,9 +46,9 @@ public String usage() {
             // List as argument.
             Object a = operands.get(0);
 
-            if (!(a instanceof ArrayList))
+            if (!(a instanceof List))
                 throw new TMLExpressionException("Invalid number of arguments for Min()");
-            ArrayList list = (ArrayList) a;
+            List<?> list = (List<?>) a;
             double min = java.lang.Integer.MAX_VALUE;
             boolean dvalue = false;
 

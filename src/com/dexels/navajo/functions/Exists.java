@@ -1,6 +1,6 @@
 package com.dexels.navajo.functions;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -47,7 +47,7 @@ public class Exists extends FunctionInterface {
         
 		//try {
 		try {
-            ArrayList arrayMsg = null;
+            List<Message> arrayMsg = null;
             
             if (arrayMessage != null) {
                 arrayMsg = arrayMessage.getAllMessages();

@@ -2,6 +2,7 @@ package com.dexels.navajo.functions;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -28,7 +29,8 @@ public final class Size extends FunctionInterface {
 
     public Size() {}
 
-    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    @SuppressWarnings("rawtypes")
+	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     	if(this.getOperands().size()==0) {
     		return new Integer(0);
     	}
@@ -59,7 +61,7 @@ public final class Size extends FunctionInterface {
             throw new TMLExpressionException("Expected list argument for size() function.");
         }
         
-        ArrayList list = (ArrayList) arg;
+        List list = (List) arg;
 
         return new Integer(list.size());
     }

@@ -1,6 +1,6 @@
 package com.dexels.navajo.functions;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.dexels.navajo.parser.FunctionInterface;
 
@@ -23,7 +23,7 @@ public class RandomInt extends FunctionInterface {
   }
   public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 
-    ArrayList operands = this.getOperands();
+    List<?> operands = this.getOperands();
 
 //    java.util.Random r = new java.util.Random(System.currentTimeMillis());
     Integer min = (Integer)operands.get(0);

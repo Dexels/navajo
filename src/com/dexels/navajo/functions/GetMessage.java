@@ -62,14 +62,7 @@ public class GetMessage extends FunctionInterface {
    Message message = (Message)m;
    return message.getMessage(index.intValue());
   }
-  private Message getMessageFromCurrentMessage(String path) {
-	  Message cur = getCurrentMessage();
-	  if(cur==null) {
-		  System.err.println("No current message!");
-		  return null;
-	  }
-	  return cur.getMessage(path);
-}
+
 
   private Message getMessageFromNavajo(String path) {
 	  System.err.println("Looking for message in path: "+path);

@@ -27,7 +27,7 @@ public class IsEmpty extends FunctionInterface {
 		}
 		
 		if ( arg instanceof List ) {
-			return (((List) arg).size() == 0);
+			return (((List<?>) arg).size() == 0);
 		}
 		
 		return new Boolean(false);

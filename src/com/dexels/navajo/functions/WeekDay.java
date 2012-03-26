@@ -49,7 +49,7 @@ public final class WeekDay extends FunctionInterface {
       day = (java.util.Date) o;
     } else if (o instanceof String) {
       java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd");
-      java.util.Date date = null;
+//      java.util.Date date = null;
 
       try {
           day = format.parse((String) o);

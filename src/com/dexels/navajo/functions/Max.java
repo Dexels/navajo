@@ -10,7 +10,7 @@ package com.dexels.navajo.functions;
  * @version $Id$
  */
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
@@ -27,9 +27,10 @@ public final class Max extends FunctionInterface {
         return "Max(number, number), where number can be of type integer or double.";
     }
 
-    public final Object evaluate() throws TMLExpressionException {
+    @SuppressWarnings("rawtypes")
+	public final Object evaluate() throws TMLExpressionException {
 
-        ArrayList operands = this.getOperands();
+        List<?> operands = this.getOperands();
 
         if (operands.size() == 2) {
             Object a = operands.get(0);
@@ -46,9 +47,9 @@ public final class Max extends FunctionInterface {
             // List as argument.
             Object a = operands.get(0);
 
-            if (!(a instanceof ArrayList))
+            if (!(a instanceof List))
                 throw new TMLExpressionException("Invalid number of arguments for Max()");
-            ArrayList list = (ArrayList) a;
+            List list = (List) a;
             double max = 0.0;
             boolean dvalue = false;
 

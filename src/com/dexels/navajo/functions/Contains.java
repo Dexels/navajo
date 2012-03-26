@@ -11,6 +11,7 @@ package com.dexels.navajo.functions;
  */
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
@@ -23,7 +24,7 @@ public final class Contains extends FunctionInterface {
         return "Checks whether an arraylist contains a certain object";
     }
 
-    public final boolean contains(ArrayList list, Object o) throws TMLExpressionException {
+    public final boolean contains(List<?> list, Object o) throws TMLExpressionException {
 
         boolean result = false;
 
@@ -31,7 +32,7 @@ public final class Contains extends FunctionInterface {
             Object a = list.get(i);
 
             if (a instanceof ArrayList)
-                result = contains((ArrayList) a, o);
+                result = contains((List<?>) a, o);
             else
                 result = Utils.equals(a, o);
             if (result == true)
@@ -50,7 +51,7 @@ public final class Contains extends FunctionInterface {
             throw new TMLExpressionException("Contains(ArrayList, Object) expected");
         Object b = this.getOperands().get(1);
 
-        return new Boolean(contains((ArrayList) a, b));
+        return new Boolean(contains((List<?>) a, b));
     }
 
 }

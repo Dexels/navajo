@@ -4,7 +4,7 @@
  */
 package com.dexels.navajo.functions;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Property;
@@ -63,7 +63,7 @@ public class SumMessage extends FunctionInterface {
 		    
 		    Message parent = message;
 		 
-		      ArrayList arrayMsg = parent.getAllMessages();
+		      List<Message> arrayMsg = parent.getAllMessages();
 		      if (arrayMsg == null) {
 		        throw new TMLExpressionException(this,
 		            "Empty or non existing array message: " + message);

@@ -5,6 +5,8 @@ import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 
+@SuppressWarnings("unused")
+
 public class Switch extends AbstractFunction {
 
 	

@@ -1,7 +1,7 @@
 package com.dexels.navajo.functions;
 
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
@@ -18,7 +18,7 @@ import com.dexels.navajo.parser.TMLExpressionException;
 
 public final class CheckRange extends FunctionInterface {
 
-    public void prototype(ArrayList list, int a) {}
+    public void prototype(List<?> list, int a) {}
 
     public CheckRange() {}
 
@@ -31,7 +31,7 @@ public final class CheckRange extends FunctionInterface {
     }
 
     public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
-        ArrayList list = (ArrayList) this.getOperands().get(0);
+        List<?> list = (List<?>) this.getOperands().get(0);
         Integer a = (Integer) this.getOperands().get(1);
 
         for (int i = 0; i < list.size(); i++) {
