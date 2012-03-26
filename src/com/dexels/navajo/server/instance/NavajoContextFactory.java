@@ -156,6 +156,7 @@ public class NavajoContextFactory implements ManagedServiceFactory {
 	}
 
 	
+	// unused?
 	public NavajoServerInstance initializeServletContext(String contextPath, String servletContextPath, String installationPath) {
 		try {
 			DispatcherInterface dispatcher = NavajoContextListener.initDispatcher(servletContextPath, servletContextPath, installationPath);
