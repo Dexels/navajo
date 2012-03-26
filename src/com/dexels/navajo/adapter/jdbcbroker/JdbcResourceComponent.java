@@ -43,12 +43,8 @@ public class JdbcResourceComponent {
 
 
 	public static DataSource getJdbc(String name) {
-		long time = System.currentTimeMillis();
-		
 		try {
-			long time2 = System.currentTimeMillis()-time;
 			DataSource dataSource = getInstance().manager.getDataSource(name);
-			System.err.println("GETJDBC: "+time2);
 			return dataSource;
 		} catch (InvalidSyntaxException e) {
 			logger.error("Can not resolve datasource{}",name,e);
@@ -66,10 +62,11 @@ public class JdbcResourceComponent {
 		return getInstance().transactionMap.get(transactionContext);
 	}
 	public void registerTransaction(int transactionContext, Connection con) {
+		logger.info("Registring context {}",transactionContext);
 		transactionMap.put(transactionContext, con);
 	}
 	public void deregisterTransaction(int transactionContext) {
-//		logger.info("Deregistring context {}",transactionContext);
+		logger.info("Deregistring context {}",transactionContext);
 		transactionMap.remove(transactionContext);
 	}
 

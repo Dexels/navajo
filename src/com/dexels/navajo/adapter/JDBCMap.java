@@ -18,13 +18,10 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-import javax.sql.ConnectionPoolDataSource;
 import javax.sql.DataSource;
-import javax.sql.PooledConnection;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 import com.dexels.navajo.adapter.jdbcbroker.JdbcResourceComponent;
 import com.dexels.navajo.adapter.sqlmap.DatabaseInfo;
@@ -88,7 +85,6 @@ public class JDBCMap implements Mappable, HasDependentResources, Debugable, JDBC
 
 private boolean ownContext = false;
 
-private PooledConnection currentPooledConnection;
 
   
 
@@ -190,15 +186,17 @@ public void kill() {
 @Override
 public void store() throws MappableException, UserException {
 	  cleanupBinaryStreams();
+
 	  if(transactionContext!=-1 && ownContext) {
+	      logger.info(":::Creating transactioncontext: "+transactionContext);
 		  JdbcResourceComponent.getInstance().deregisterTransaction(transactionContext);
-	  }
-	  if(currentPooledConnection!=null) {
-//		  try {
-//			currentPooledConnection.close();
-//		} catch (SQLException e) {
-//			logger.error("Problem closing pooled connection",e);
-//		}
+		  if(con!=null) {
+			  try {
+				con.close();
+			} catch (SQLException e) {
+				logger.error("Problem closing pooled connection",e);
+			}
+		  }
 	  }
   }
 
@@ -232,7 +230,6 @@ public void setRowCount(int i) {
  */
 @Override
 public int getRowCount() throws UserException {
-	System.err.println("QUERY: "+getQuery());
     if (resultSet == null) {
       resultSet = getResultSet();
     }
@@ -515,18 +512,17 @@ public void setKillConnection() {
       }
       
       DataSource jdbc = JdbcResourceComponent.getJdbc(datasource);
-      if(jdbc instanceof ConnectionPoolDataSource) {
-    	  logger.info("USING POOL");
-    	  ConnectionPoolDataSource cpds = (ConnectionPoolDataSource)jdbc;
-    	  this.currentPooledConnection = cpds.getPooledConnection();
-    	  con = currentPooledConnection.getConnection();
-      } else {
-    	  logger.warn("*NOT* USING POOL");
-    		con = jdbc. getConnection();
-      }
+//      if(jdbc instanceof ConnectionPoolDataSource) {
+//    	  logger.info("USING POOL");
+//    	  ConnectionPoolDataSource cpds = (ConnectionPoolDataSource)jdbc;
+//    	  this.currentPooledConnection = cpds.getPooledConnection();
+//    	  con = currentPooledConnection.getConnection();
+//      } else {
+    		con = jdbc.getConnection();
+//      }
       
-      System.err.println("Conclass: "+con.getClass()+" hash: "+con.hashCode());
       this.transactionContext = con.hashCode();
+      logger.info(":::Creating transactioncontext: "+transactionContext);
       this.ownContext  =true;
 //      con = pooledConnection.getConnection();
       JdbcResourceComponent.getInstance().registerTransaction(con.hashCode(),con);
@@ -981,8 +977,6 @@ public boolean isUpdateOnly() {
       }
     }
     catch (SQLException sqle) {
-    	logger.error("SQL problem",sqle);
-//      sqle.printStackTrace(Access.getConsoleWriter(myAccess));
       AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, (myAccess != null ? (myAccess != null ? myAccess.accessID : "unknown access") : "unknown access") );
       throw new UserException( -1, sqle.getMessage(),sqle);
     }
