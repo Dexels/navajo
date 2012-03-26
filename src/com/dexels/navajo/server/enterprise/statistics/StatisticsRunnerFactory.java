@@ -6,13 +6,13 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.logging.Level;
 
+import navajo.Version;
+
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import navajo.Version;
 
 import com.dexels.navajo.util.AuditLog;
 

@@ -57,7 +57,6 @@ import com.dexels.navajo.events.types.NavajoExceptionEvent;
 import com.dexels.navajo.events.types.NavajoResponseEvent;
 import com.dexels.navajo.listeners.NavajoDoneException;
 import com.dexels.navajo.listeners.TmlRunnable;
-import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.lockguard.Lock;
 import com.dexels.navajo.lockguard.LockDefinition;

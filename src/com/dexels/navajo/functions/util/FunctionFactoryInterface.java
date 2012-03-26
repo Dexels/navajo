@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import navajo.ExtensionDefinition;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import navajo.ExtensionDefinition;
 
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.parser.FunctionInterface;
