@@ -8,6 +8,9 @@ import java.util.Vector;
 
 import javax.imageio.spi.ServiceRegistry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import navajo.ExtensionDefinition;
 
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
@@ -17,7 +20,11 @@ import com.dexels.navajo.server.DispatcherFactory;
 
 public class JarFunctionFactory extends FunctionFactoryInterface {
 
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(JarFunctionFactory.class);
+	
+	
 	@Override
 	public final void readDefinitionFile(Map<String, FunctionDefinition> fuds, ExtensionDefinition fd) {
 		// Read config file.
@@ -118,13 +125,14 @@ public class JarFunctionFactory extends FunctionFactoryInterface {
 		
 		
 		try {
+			// TODO Detect OSGi mode
 			Iterator iter = ServiceRegistry.lookupProviders(Class.forName("navajo.ExtensionDefinition", true, myClassLoader),myClassLoader);
 			while(iter.hasNext()) {
 				ExtensionDefinition ed = (ExtensionDefinition) iter.next();
 				readDefinitionFile(fuds, ed);
 			}
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.warn("ServiceLookup failed. Normal in OSGi environment");
 		}
 	}
 	

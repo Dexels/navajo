@@ -85,13 +85,13 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 	}
 	
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Object getComponent( final String name, String serviceKey, Class interfaceClass)  {
 		BundleContext context = NavajoBundleManager.getInstance().getBundleContext();
 		try {
-			logger.info("Resolving service: "+interfaceClass.getName()+" filter: "+"("+serviceKey+"="+name+")");
 			ServiceReference[] refs = context.getServiceReferences(interfaceClass.getName(), "("+serviceKey+"="+name+")");
 			if(refs==null) {
-				System.err.println("Service resolution failed: Query: "+"("+serviceKey+"="+name+")"+" class: "+interfaceClass.getName());
+				logger.error("Service resolution failed: Query: "+"("+serviceKey+"="+name+")"+" class: "+interfaceClass.getName());
 				return null;
 			}
 			return context.getService(refs[0]);
