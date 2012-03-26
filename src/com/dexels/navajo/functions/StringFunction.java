@@ -71,8 +71,7 @@ public final class StringFunction extends FunctionInterface {
         returnValue = m.invoke(object, (Object [])null);
 
     } catch (Exception e) {
-      e.printStackTrace();
-      throw new TMLExpressionException(e.getMessage());
+      throw new TMLExpressionException(e.getMessage(),e);
     }
 
     return returnValue;
