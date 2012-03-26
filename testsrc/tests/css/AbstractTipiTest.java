@@ -4,10 +4,8 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-import tipi.TipiCoreExtension;
-import tipi.TipiExtension;
-
 import junit.framework.TestCase;
+import tipi.TipiExtension;
 
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.headless.HeadlessApplicationInstance;
