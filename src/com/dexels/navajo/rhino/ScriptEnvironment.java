@@ -298,7 +298,19 @@ public abstract class ScriptEnvironment implements Serializable {
 
 	public void storeMap(Object map) throws MappableException, UserException {
 		if (map instanceof Mappable) {
+			logger.debug("Storing map:"+map);
 			((Mappable) map).store();
+		} else {
+			logger.debug("Not calling store: Not mappable: "+map.getClass()+" map: "+map);
+		}
+	}
+	
+	public void killMap(Object map) throws MappableException, UserException {
+		if (map instanceof Mappable) {
+			logger.debug("Killing map");
+			((Mappable) map).kill();
+		} else {
+			logger.debug("Not calling store: Not mappable");
 		}
 	}
 
@@ -443,6 +455,10 @@ public abstract class ScriptEnvironment implements Serializable {
 		logger.info(s);
 	}
 
+	public void dump(String message, Object s) {
+		logger.info("Object dump:"+message+" obj: "+s);
+	}
+
 	public Navajo getTml(String path) throws FileNotFoundException {
 		File f = new File(path);
 		if (!f.exists()) {
@@ -459,6 +475,7 @@ public abstract class ScriptEnvironment implements Serializable {
 
 	public Object createMappable(String className, Navajo input, Navajo output,
 			Message currentOutMessage) throws ClassNotFoundException {
+		logger.debug("Creating map for class: "+className);
 		try {
 			if("com.dexels.navajo.adapter.SQLMap".equals(className)) {
 				System.err.println("REPLACE!");
@@ -471,6 +488,7 @@ public abstract class ScriptEnvironment implements Serializable {
 					.getAdapterClass(className, cl);
 			// Class<?> mclass = Class.forName(className, true, cl);
 			Object obj = mclass.newInstance();
+			logger.debug("Returning instantiate map: "+obj);
 			return obj;
 		} catch (InstantiationException e) {
 			e.printStackTrace();

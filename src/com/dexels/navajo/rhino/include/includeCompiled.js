@@ -3,14 +3,18 @@
 //var conditionErrors = new Packages.com.dexels.navajo.rhino.flow.ConditionError();
 
 function callMap(mapClass, callback) {
-	map = env.createMappable(mapClass,input, output, env.getAccess().getCurrentOutMessage());
+	var map = env.createMappable(mapClass,input, output, env.getAccess().getCurrentOutMessage());
 	// push mappabletreenode
 	env.pushMappableTreeNode(map);
 	env.loadMap(map);
-	if(callback!=undefined && callback!=null) {
-		callback();
+	try {
+		if(callback!=undefined && callback!=null) {
+			callback();
+			env.storeMap(map);
+		}
+	} catch(e) {
+		env.killMap(map);
 	}
-	env.storeMap(map);
 	// TODO: Handle exceptions and call kill()
 	env.popMappableTreeNode();
 	// pop mappabletreenode
@@ -112,7 +116,7 @@ function callReferenceMapSelection(field,filter,callback){
 		//env.log("Elements: "+ref.length);
 		ii = 0;
 		for(a in ref) {
-			env.log('Entering loop: '+ii+' / '+ref.length);
+//			env.log('Entering loop: '+ii+' / '+ref.length);
 			//env.log('Element: '+ref[a]);
 //			env.addElement();
 			env.pushMappableTreeNode(ref[a]);
