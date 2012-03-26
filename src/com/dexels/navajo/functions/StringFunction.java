@@ -3,11 +3,18 @@ package com.dexels.navajo.functions;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 
 public final class StringFunction extends FunctionInterface {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(StringFunction.class);
+	
   public String remarks() {
     return "Perform a Java stringfunction on a given string.";
   }
@@ -19,7 +26,8 @@ public final class StringFunction extends FunctionInterface {
    * @return
    * @throws TMLExpressionException
    */
-  public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  @SuppressWarnings({ "rawtypes", "unchecked" })
+public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     String methodName = (String) getOperand(0);
     if (methodName == null) {
       throw new TMLExpressionException("Could not evaluate StringFunction because method name is null");
@@ -33,6 +41,8 @@ public final class StringFunction extends FunctionInterface {
     for (int i = 2; i < getOperands().size(); i++) {
       parameters.add(getOperand(i));
     }
+    logger.warn("String function: "+methodName+" object: "+object);
+    logger.warn("Params: "+parameters);
     //boolean containsInteger = false;
     Class [] classTypes = null;
     if (parameters.size() > 0) {
