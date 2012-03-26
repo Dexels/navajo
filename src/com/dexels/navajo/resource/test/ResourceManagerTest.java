@@ -21,8 +21,10 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.adapter.JDBCMap;
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
 import com.dexels.navajo.client.ClientException;
+import com.dexels.navajo.client.LocalClient;
 import com.dexels.navajo.client.context.ClientContext;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.resource.manager.ResourceManager;
 import com.dexels.navajo.server.Access;
 import com.mongodb.DB;
@@ -197,6 +199,7 @@ public void testOracle() throws Exception, SQLException {
             String title = ts.getString("sportid");
             logger.info("title: "+title);
 	  }
+	  logger.warn("Connection class: {}",connection);
 	connection.close();
 }
 
@@ -271,21 +274,22 @@ public void testOracle() throws Exception, SQLException {
 
 	}
 	public void testClient() throws InvalidSyntaxException, ClientException {
-		Collection<ServiceReference<ClientContext>> l = bundleContext.getServiceReferences(ClientContext.class,"(name=localclient)");
-		if(l.isEmpty()) {
-			// --?
-		}
-		ServiceReference<ClientContext> xx = l.iterator().next();
-		ClientContext cc = bundleContext.getService(xx);
+		ServiceReference<LocalClient> l = bundleContext.getServiceReference(LocalClient.class);
+		LocalClient cc = bundleContext.getService(l);
 		// do magic
 //		cc.callService("navajo/InitNavajoStatus");
 //		Navajo n = cc.getNavajo("navajo/InitNavajoStatus");
-		cc.callService("officialportal/InitGetOfficialMail");
-		Navajo n = cc.getNavajo("navajo/InitNavajoStatus");
-		cc.callService("officialprotal/ProcessGetOfficialMail",n);
-		Navajo m = cc.getNavajo("officialprotal/ProcessGetOfficialMail");
+		Navajo n = NavajoFactory.getInstance().createNavajo(getClass().getResourceAsStream("process.xml"));
+		Navajo response = null;
+		for (int i = 0; i < 10; i++) {
+			try {
+				response = cc.call(n);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		response.write(System.err);
 		
-		n.write(System.err);
-//		xx.
+		//		xx.
 	}
 }
