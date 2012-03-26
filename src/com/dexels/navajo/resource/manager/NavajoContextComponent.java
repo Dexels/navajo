@@ -27,11 +27,13 @@ public class NavajoContextComponent {
 	}
 
 	public void activate() {
-		System.err.println(">><<<>> "+navajoServerContext.getInstallationPath()); 
 		resourceManager.setConfigAdmin(configAdmin);
+		setupResources();
+	}
+
+	private void setupResources() {
 		FileInputStream fis;
 		try {
-
 			File install = new File(navajoServerContext.getInstallationPath(),"config/datasources.xml");
 			fis = new FileInputStream(install);
 			resourceManager.loadResourceTml(fis);
