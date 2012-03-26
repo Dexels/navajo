@@ -12,6 +12,7 @@ package com.dexels.navajo.parser;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.dexels.navajo.document.Message;
@@ -20,7 +21,7 @@ import com.dexels.navajo.document.NavajoFactory;
 
 public abstract class FunctionInterface {
 
-    private ArrayList operandList = null;
+    private List<Object> operandList = null;
     protected Navajo inMessage = null;
     protected Message currentMessage = null;
     
@@ -31,8 +32,11 @@ public abstract class FunctionInterface {
 	// Act as if these attributes are final, they can only be set once.
     private static Object semahore = new Object();
     private final static HashSet<Class<? extends FunctionInterface>> initialized = new HashSet<Class<? extends FunctionInterface>>();
-    private final static HashMap<Class<? extends FunctionInterface>, Class [][]> types = new HashMap<Class<? extends FunctionInterface>, Class[][]>();
-    private final static HashMap<Class<? extends FunctionInterface>, Class []> returnType = new HashMap<Class<? extends FunctionInterface>, Class[]>();
+
+    @SuppressWarnings("rawtypes")
+	private final static HashMap<Class<? extends FunctionInterface>, Class [][]> types = new HashMap<Class<? extends FunctionInterface>, Class[][]>();
+	@SuppressWarnings("rawtypes")
+	private final static HashMap<Class<? extends FunctionInterface>, Class []> returnType = new HashMap<Class<? extends FunctionInterface>, Class[]>();
     
     public abstract String remarks();
     
@@ -247,7 +251,7 @@ public abstract class FunctionInterface {
     
     public abstract Object evaluate() throws TMLExpressionException;
 
-    protected final ArrayList getOperands() {
+    protected final List<?> getOperands() {
         return operandList;
     }
 
