@@ -27,14 +27,13 @@ public class JdbcManagedResourceFactory implements ManagedServiceFactory {
 	private final BundleContext bundleContext;
 	
 	
-	private final Map<String,DataSource> contextMap = new HashMap<String, DataSource>();
+//	private final Map<String,DataSource> contextMap = new HashMap<String, DataSource>();
 	private final Map<String,ServiceRegistration<DataSource>> registryMap = new HashMap<String,ServiceRegistration<DataSource>>();
 
     private final DataSourceFactory factory;
 
 	
-	private final static Logger logger = LoggerFactory
-			.getLogger(JdbcManagedResourceFactory.class);
+	private final static Logger logger = LoggerFactory.getLogger(JdbcManagedResourceFactory.class);
 	private ServiceRegistration<ManagedServiceFactory> factoryRegistration;
 	
 	public JdbcManagedResourceFactory(BundleContext bc,DataSourceFactory factory, String pid, String name) {
@@ -52,12 +51,12 @@ public class JdbcManagedResourceFactory implements ManagedServiceFactory {
 	@Override
 	public void deleted(String pid) {
 		logger.info("Shutting down instance: "+pid);
-		DataSource nc = contextMap.get(pid);
-		if(nc==null) {
-			logger.warn("Strange: Deleting, but already gone.");
-			return;
-		}
-		contextMap.remove(pid);
+//		DataSource nc = contextMap.get(pid);
+//		if(nc==null) {
+//			logger.warn("Strange: Deleting, but already gone.");
+//			return;
+//		}
+//		contextMap.remove(pid);
 		ServiceRegistration<DataSource> reg = registryMap.get(pid);
 		reg.unregister();
 
@@ -77,12 +76,11 @@ public class JdbcManagedResourceFactory implements ManagedServiceFactory {
 			Object source = instantiate(bundleContext, pid,settings);
 			ServiceRegistration<DataSource> reg =  bundleContext.registerService(DataSource.class,(DataSource)source, settings);
 			registryMap.put(pid, reg);
-			contextMap.put(pid, (DataSource) source);
+//			contextMap.put(pid, (DataSource) source);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
 	
 	@SuppressWarnings({ "rawtypes" })
 	public Object instantiate(BundleContext bc, String pid, Dictionary settings) throws Exception {
@@ -106,15 +104,7 @@ public class JdbcManagedResourceFactory implements ManagedServiceFactory {
 		for (Entry<String,ServiceRegistration<DataSource>> s: registryMap.entrySet()) {
 			s.getValue().unregister();
 		}
-
-		for (Entry<String, DataSource> s: contextMap.entrySet()) {
-			// close individual datasources?
-		}
-
 		registryMap.clear();
-		contextMap.clear();
-		
 		factoryRegistration.unregister();
-		
 	}
 }
