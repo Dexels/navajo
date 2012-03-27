@@ -18,3 +18,6 @@
 ./cvsgit.sh NavajoRemoteTestLibrary com.dexels.navajo.remotetest
 
 
+./cvsgit.sh NavaDoc com.dexels.navajo.dev.navadoc 
+./cvsgit.sh NavaTest com.dexels.navajo.dev.navajo.test 
+

@@ -7,3 +7,8 @@
 ./cvsgit.sh NavajoRhino com.dexels.navajo.rhino
 ./cvsgit.sh com.dexels.navajo.authentication.api com.dexels.navajo.authentication.api
 ./cvsgit.sh NavajoServer com.dexels.navajo.server.deploy
+
+./cvsgit.sh NavajoAgents com.dexels.navajo.agents
+./cvsgit.sh NavajoDBReplicationService com.dexels.navajo.server.dbreplication
+
+./cvsgit.sh NavajoDashboardTwo com.dexels.navajo.dashboard

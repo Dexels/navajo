@@ -25,4 +25,6 @@
 ./cvsgit.sh com.dexels.navajo.server.bridged com.dexels.navajo.server.bridged
 ./cvsgit.sh com.dexels.navajo.server.bridged.deploy com.dexels.navajo.server.bridged.deploy
 
+./cvsgit.sh NavajoIdeal com.dexels.navajo.enterprise.ideal
+#NavajoIntegrationTest
 
