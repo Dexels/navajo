@@ -2,7 +2,7 @@ echo "PREPENDING PRECHECK: repo: $REPOSITORY"
 precheck.sh $1
 echo "genmerge: $BASEPATH/_$1"
 pwd
-cd $REPOSITORY/$DIR/work
+cd ${BASEPATH}/$REPOSITORY/$DIR/work
 echo "CD'd to: ${REPOSITORY}/${DIR}/work"
 git clone ${REPOSITORY}_bare ${REPOSITORY}/
 cd ${REPOSITORY}/
