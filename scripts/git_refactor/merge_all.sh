@@ -48,7 +48,7 @@ export MODULEPATH=enterprise
 export REPOSITORY=enterprise
 
 # this one isn't correct, the second arg is ignored
-genmerge.sh com.dexels.navajo.tools.wsdl com.dexels.navajo.wsdl
+#genmerge.sh com.dexels.navajo.tools.wsdl com.dexels.navajo.wsdl
 genmerge.sh com.dexels.navajo.wsdl.feature
 genmerge.sh com.dexels.navajo.enterprise.feature
 genmerge.sh com.dexels.navajo.enterprise.listeners
