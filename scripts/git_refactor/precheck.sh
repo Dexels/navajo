@@ -9,7 +9,6 @@ git clone ../$1 .
 #git clone $BASEPATH/$1
 echo "We are now here: $BASEPATH/_$1"
 pwd
-ls  *. *
 mkdir -p $MODULEPATH/$1
 #FILELIST=$(ls -ad )
 #echo "FILES: $FILELIST"
