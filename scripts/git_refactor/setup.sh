@@ -1,6 +1,4 @@
 echo "Making work dir: $1"
-mkdir work
-cd work
 mkdir $1_initial
 cd $1_initial
 git init

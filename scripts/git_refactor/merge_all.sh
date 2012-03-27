@@ -2,6 +2,8 @@ cd $1
 
 echo $BASEPATH
 echo $PATH
+mkdir work
+cd work
 
 export MODULEPATH=setup
 export REPOSITORY=navajo
