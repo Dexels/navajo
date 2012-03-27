@@ -7,7 +7,7 @@ git read-tree --prefix=TEMP/ -u $1_remote/master
 echo "Module: $MODULEPATH"
 pwd
 mkdir -p $MODULEPATH/
-git mv TEMP/$MODULEPATH/* $MODULEPATH/
+git mv TEMP/$MODULEPATH/$1 $MODULEPATH/$1
 rm -rf TEMP
 git commit -m "project merge"
 git remote rm $1_remote

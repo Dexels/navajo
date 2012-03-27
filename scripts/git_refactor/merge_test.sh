@@ -22,7 +22,7 @@ genmerge.sh com.dexels.navajo.server.bridged.deploy
 export MODULEPATH=enterprise
 export REPOSITORY=enterprise
 
-genmerge.sh com.dexels.navajo.tools.wsdl com.dexels.navajo.wsdl
+#genmerge.sh com.dexels.navajo.tools.wsdl com.dexels.navajo.wsdl
 genmerge.sh com.dexels.navajo.wsdl.feature
 genmerge.sh com.dexels.navajo.enterprise.feature
 genmerge.sh com.dexels.navajo.oda.feature

@@ -12,7 +12,7 @@ setup.sh navajo
 setup.sh sportlink
 setup.sh enterprise
 #merge_core.sh 
-#merge_all.sh 
-merge_test.sh
-echo "Pushing to $DIR/work/navajo"
-git clone $DIR/work/navajo_bare $DIR/work/navajo_deploy
+merge_all.sh 
+#merge_test.sh
+#echo "Pushing to $DIR/work/navajo"
+#git clone $DIR/work/navajo_bare $DIR/work/navajo_deploy
