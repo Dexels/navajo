@@ -1,3 +1,4 @@
+#!/bin/sh -ve
 cd $1
 
 echo $BASEPATH

@@ -1,3 +1,4 @@
+#!/bin/sh -ve
 echo "Making work dir: ${BASEPATH}/${1}"
 mkdir ${BASEPATH}/${1}_initial
 cd ${BASEPATH}/${1}_initial

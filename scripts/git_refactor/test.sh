@@ -1,3 +1,4 @@
+#!/bin/sh -ve
 export BASEPATH=$1
 #export BASEPATH=/Users/frank/git/spiritus/git
 export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"

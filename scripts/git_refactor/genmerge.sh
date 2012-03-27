@@ -1,3 +1,4 @@
+#!/bin/sh -ve
 echo "PREPENDING PRECHECK: repo: $REPOSITORY"
 precheck.sh $1
 echo "genmerge: $BASEPATH/_$1"

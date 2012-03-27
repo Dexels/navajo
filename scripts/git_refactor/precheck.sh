@@ -1,3 +1,4 @@
+#!/bin/sh -ve
 #export MODULEPATH=bundle
 shopt -s extglob
 cd $BASEPATH/

@@ -1,3 +1,4 @@
+#!/bin/sh -ve
 echo "MERGING project: $1 into branch: $1_remote with source: $2 and module name: $MODULEPATH"
 
 git remote add -f $1_remote $2
