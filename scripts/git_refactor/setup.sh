@@ -7,6 +7,9 @@ touch .gitignore
 git add .gitignore
 git commit -am "initial commit"
 echo "Creating initial repostitory"
+git config --global user.name "Dexels CVS migration"
+git config --global user.email info@dexels.com
+git commit --amend --reset-author
 cd ..
 git clone --bare -l ${BASEPATH}/${1}_initial ${BASEPATH}/${1}_bare
 echo "Converted to bare"
