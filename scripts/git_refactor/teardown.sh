@@ -1,2 +1,2 @@
 echo "Remove work dir"
-rm -rf work
+#rm -rf work

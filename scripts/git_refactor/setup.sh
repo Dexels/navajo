@@ -1,4 +1,4 @@
-echo "Making work dir"
+echo "Making work dir: $1"
 mkdir work
 cd work
 mkdir $1_initial
