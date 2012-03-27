@@ -46,7 +46,7 @@ genmerge.sh com.dexels.navajo.authentication.api
 
 export MODULEPATH=enterprise
 export REPOSITORY=enterprise
-s
+
 # this one isn't correct, the second arg is ignored
 genmerge.sh com.dexels.navajo.tools.wsdl com.dexels.navajo.wsdl
 genmerge.sh com.dexels.navajo.wsdl.feature
