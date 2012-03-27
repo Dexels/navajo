@@ -64,7 +64,7 @@ export MODULEPATH=other
 export REPOSITORY=enterprise
 
 genmerge.sh com.dexels.navajo.other.feature
-genmerge.sh com.dexels.navajo.other.utilities
+#genmerge.sh com.dexels.navajo.other.utilities
 genmerge.sh com.dexels.navajo.test.feature
 genmerge.sh com.dexels.navajo.test.remote
 
