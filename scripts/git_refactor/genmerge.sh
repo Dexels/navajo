@@ -9,7 +9,7 @@ cd $BASEPATH
 #echo "CD'd to: ${DIR}/work"
 #git clone ${BASEPATH}${REPOSITORY}_bare ${REPOSITORY}/
 cd ${BASEPATH}$REPOSITORY/
-merge.sh ${REPOSITORY}/$1 ${BASEPATH}/_$1 
+merge.sh $1 ${BASEPATH}/_$1 ${REPOSITORY}
 #cd ${DIR}/work/${REPOSITORY}/
 #git push
 #rm -rf ${DIR}/work/${REPOSITORY}/
