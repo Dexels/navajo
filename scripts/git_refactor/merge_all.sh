@@ -4,6 +4,7 @@ echo $BASEPATH
 echo $PATH
 
 export MODULEPATH=setup
+export REPOSITORY=navajo
 
 genmerge.sh com.dexels.repository 
 genmerge.sh com.dexels.target 
@@ -43,7 +44,8 @@ genmerge.sh com.dexels.navajo.server.bridged.deploy
 genmerge.sh com.dexels.navajo.authentication.api
 
 export MODULEPATH=enterprise
-
+export REPOSITORY=enterprise
+s
 # this one isn't correct, the second arg is ignored
 genmerge.sh com.dexels.navajo.tools.wsdl com.dexels.navajo.wsdl
 genmerge.sh com.dexels.navajo.wsdl.feature
@@ -58,6 +60,7 @@ genmerge.sh com.dexels.navajo.mongo
 genmerge.sh com.dexels.navajo.mongo.navajostore
 
 export MODULEPATH=other
+export REPOSITORY=enterprise
 
 genmerge.sh com.dexels.navajo.other.feature
 genmerge.sh com.dexels.navajo.other.utilities
@@ -66,6 +69,7 @@ genmerge.sh com.dexels.navajo.test.remote
 
 
 export MODULEPATH=dev
+export REPOSITORY=navajo
 
 genmerge.sh com.dexels.navajo.birt.push 
 genmerge.sh com.dexels.navajo.dev.feature 
@@ -85,6 +89,7 @@ genmerge.sh com.dexels.navajo.remotetest
 
 
 export MODULEPATH=sportlink
+export REPOSITORY=sportlink
 
 
 genmerge.sh com.sportlink.tipi.facilityoccupation
@@ -105,6 +110,7 @@ genmerge.sh tipi.sportlink.officialportal
 genmerge.sh com.sportlink.swing.client
 
 export MODULEPATH=other
+export REPOSITORY=navajo
 
 genmerge.sh com.dexels.navajo.utilities
 genmerge.sh com.dexels.navajo.oda.feature

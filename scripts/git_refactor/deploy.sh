@@ -8,8 +8,10 @@ export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 export PATH=$PATH:$DIR:.
 teardown.sh
 setup.sh navajo
+setup.sh sportlink
+setup.sh enterprise
 #merge_core.sh 
-merge_all.sh 
-#merge_test.sh
+#merge_all.sh 
+merge_test.sh
 echo "Pushing to $DIR/work/navajo"
 git clone $DIR/work/navajo_bare $DIR/work/navajo_deploy
