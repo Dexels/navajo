@@ -34,3 +34,13 @@
 ./cvsgit.sh com.dexels.navajo.tipi.rss.feature com.dexels.navajo.tipi.rss.feature
 ./cvsgit.sh TipiRss com.dexels.navajo.tipi.rss
 
+./cvsgit.sh NavajoReportingTipi com.dexels.navajo.tipi.reporting
+./cvsgit.sh TipiRDF com.dexels.tipi.swing.rdf
+./cvsgit.sh StadiumDesignTipi com.dexels.tipi.swing.stadiumdesign
+./cvsgit.sh Tipi3d com.dexels.tipi.swing.3d
+./cvsgit.sh TipiMonkey com.dexels.tipi.swing.monkeyengine
+./cvsgit.sh com.dexels.navajo.tipi.rcp com.dexels.navajo.tipi.rcp 
+
+
+
+

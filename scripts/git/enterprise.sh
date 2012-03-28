@@ -26,5 +26,9 @@
 ./cvsgit.sh com.dexels.navajo.server.bridged.deploy com.dexels.navajo.server.bridged.deploy
 
 ./cvsgit.sh NavajoIdeal com.dexels.navajo.enterprise.ideal
+./cvsgit.sh sportlink-ideal com.dexels.navajo.enterprise.ideal.sportlink
+./cvsgit.sh OpenfireNavajo com.dexels.navajo.enterprise.openfire
+./cvsgit.sh NavajoTomahawk com.dexels.navajo.enterprise.tomahawk
+
 #NavajoIntegrationTest
 
