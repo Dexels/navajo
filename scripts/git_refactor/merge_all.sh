@@ -185,7 +185,7 @@ genmerge.sh com.dexels.navajo.kml
 genmerge.sh com.dexels.navajo.geo.feature
 genmerge.sh com.dexels.navajo.workflow.editor
 genmerge.sh com.dexels.navajo.workflow.editor.gmf
-genmerge.sh com.dexels.navajo.workflow.editor.feature
+#genmerge.sh com.dexels.navajo.workflow.editor.feature
 genmerge.sh com.dexels.navajo.function.pdf
 genmerge.sh com.dexels.navajo.fileuploadservlet
 
