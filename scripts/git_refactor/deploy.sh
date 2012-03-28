@@ -6,11 +6,11 @@ export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 export PATH=$PATH:$DIR:.
 teardown.sh navajo
 teardown.sh sportlink
-teardown.sh enterprise
+teardown.sh internal
 echo "About to setup:"
 setup.sh navajo
 setup.sh sportlink
-setup.sh enterprise
+setup.sh internal
 #merge_core.sh 
 merge_all.sh 
 #merge_test.sh

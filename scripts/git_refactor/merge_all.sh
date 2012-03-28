@@ -45,7 +45,7 @@ genmerge.sh com.dexels.navajo.server.bridged.deploy
 genmerge.sh com.dexels.navajo.authentication.api
 
 export MODULEPATH=enterprise
-export REPOSITORY=enterprise
+export REPOSITORY=internal
 
 # this one isn't correct, the second arg is ignored
 #genmerge.sh com.dexels.navajo.tools.wsdl com.dexels.navajo.wsdl
@@ -61,12 +61,30 @@ genmerge.sh com.dexels.navajo.mongo
 genmerge.sh com.dexels.navajo.mongo.navajostore
 
 export MODULEPATH=other
-export REPOSITORY=enterprise
+export REPOSITORY=internal
 
 genmerge.sh com.dexels.navajo.other.feature
-#genmerge.sh com.dexels.navajo.other.utilities
 genmerge.sh com.dexels.navajo.test.feature
 genmerge.sh com.dexels.navajo.test.remote
+genmerge.sh com.dexels.geospatial.imageprovider
+com.dexels.utilities.smsgateway
+
+export MODULEPATH=demos
+genmerge.sh com.dexels.demos.rdfbrowser
+genmerge.sh com.dexels.demos.ticketing
+genmerge.sh com.dexels.demos.peelpage
+genmerge.sh com.dexels.demos.pinkroccade.adapters 
+genmerge.sh com.dexels.demos.pinkroccade.ei
+genmerge.sh com.dexels.demos.stadiumdesigner
+genmerge.sh com.dexels.demos.tipidashboard
+
+export MODULEPATH=papers
+com.dexels.documents
+com.dexels.papers
+com.dexels.documents.other
+com.dexels.documents.ticketing
+
+
 
 
 export MODULEPATH=dev
@@ -87,28 +105,36 @@ genmerge.sh com.dexels.navajo.dsl.integration
 genmerge.sh com.dexels.navajo.dsl.feature
 genmerge.sh com.dexels.navajo.remotetest
 
+export MODULEPATH=ios
+com.dexels.navajo.cocoa.client
+export MODULEPATH=php
+com.dexels.navajo.client.php
+com.dexels.navajo.client.php.library
+com.dexels.navajo.php.joomla
 
 
 export MODULEPATH=sportlink
-export REPOSITORY=sportlink
+export REPOSITORY=libraries
 
 
 genmerge.sh com.sportlink.tipi.facilityoccupation
-genmerge.sh com.sportlink.serv
 genmerge.sh com.sportlink.client
 genmerge.sh com.sportlink.adapters
 genmerge.sh com.sportlink.crystal
 genmerge.sh com.sportlink.aaa
 genmerge.sh com.sportlink.comp
 genmerge.sh com.sportlink.tensing
+genmerge.sh com.sportlink.swing.client
+
+export REPOSITORY=applications
+
+genmerge.sh com.sportlink.serv
 genmerge.sh com.sportlink.dwf
+genmerge.sh com.sportlink.club
 genmerge.sh com.sportlink.matchforms
+genmerge.sh com.sportlink.officialportal
 
 #customized, to change the names:
-merge.sh com.sportlink.club $BASEPATH/tipi.sportlink.club $MODULEPATH/com.sportlink.club/
-merge.sh com.sportlink.officialportal $BASEPATH/tipi.sportlink.officialportal $MODULEPATH/com.sportlink.officialportal/
-genmerge.sh tipi.sportlink.officialportal
-genmerge.sh com.sportlink.swing.client
 
 export MODULEPATH=other
 export REPOSITORY=navajo
@@ -118,7 +144,7 @@ genmerge.sh com.dexels.navajo.oda.feature
 genmerge.sh com.dexels.navajo.oda
 genmerge.sh com.dexels.navajo.oda.ui
 
-export MODULEPATH=tipilesson
+export MODULEPATH=demos
 
 genmerge.sh tipi.lesson.one
 genmerge.sh tipi.lesson.two
