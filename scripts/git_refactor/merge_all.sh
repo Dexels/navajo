@@ -41,6 +41,7 @@ genmerge.sh com.dexels.navajo.resource.test
 genmerge.sh com.dexels.navajo.resource.manager
 genmerge.sh com.dexels.navajo.server
 genmerge.sh com.dexels.navajo.server.bridged
+genmerge.sh com.dexels.navajo.server.deploy
 genmerge.sh com.dexels.navajo.server.bridged.deploy
 genmerge.sh com.dexels.navajo.authentication.api
 
@@ -48,7 +49,7 @@ export MODULEPATH=enterprise
 export REPOSITORY=internal
 
 # this one isn't correct, the second arg is ignored
-#genmerge.sh com.dexels.navajo.tools.wsdl com.dexels.navajo.wsdl
+genmerge.sh com.dexels.navajo.wsdl
 genmerge.sh com.dexels.navajo.wsdl.feature
 genmerge.sh com.dexels.navajo.enterprise.feature
 genmerge.sh com.dexels.navajo.enterprise.listeners
@@ -59,6 +60,11 @@ genmerge.sh com.dexels.navajo.enterprise.adapters.deps
 genmerge.sh com.dexels.navajo.mongo.feature
 genmerge.sh com.dexels.navajo.mongo
 genmerge.sh com.dexels.navajo.mongo.navajostore
+
+com.dexels.navajo.enterprise.ideal
+com.dexels.navajo.enterprise.ideal.sportlink
+com.dexels.navajo.enterprise.openfire
+com.dexels.navajo.enterprise.tomahawk
 
 export MODULEPATH=other
 export REPOSITORY=internal
@@ -77,6 +83,7 @@ genmerge.sh com.dexels.demos.pinkroccade.adapters
 genmerge.sh com.dexels.demos.pinkroccade.ei
 genmerge.sh com.dexels.demos.stadiumdesigner
 genmerge.sh com.dexels.demos.tipidashboard
+genmerge.sh com.dexels.navajo.dashboard
 
 export MODULEPATH=papers
 genmerge.sh com.dexels.documents
@@ -101,6 +108,8 @@ genmerge.sh com.dexels.navajo.dsl.tsl.ui
 genmerge.sh com.dexels.navajo.dsl.integration
 genmerge.sh com.dexels.navajo.dsl.feature
 genmerge.sh com.dexels.navajo.remotetest
+genmerge.sh com.dexels.navajo.dev.navadoc
+
 
 export MODULEPATH=ios
 genmerge.sh com.dexels.navajo.cocoa.client
@@ -111,8 +120,8 @@ genmerge.sh com.dexels.navajo.client.php.library
 genmerge.sh com.dexels.navajo.php.joomla
 
 
-export MODULEPATH=sportlink
-export REPOSITORY=libraries
+export REPOSITORY=sportlink
+export MODULEPATH=libraries
 
 
 genmerge.sh com.sportlink.tipi.facilityoccupation
@@ -127,7 +136,7 @@ genmerge.sh com.sportlink.nevobo.dps
 genmerge.sh com.sportlink.reports
 genmerge.sh com.sportlink.dba
 
-export REPOSITORY=applications
+export MODULEPATH=applications
 
 genmerge.sh com.sportlink.serv
 genmerge.sh com.sportlink.dwf.av
@@ -143,7 +152,8 @@ genmerge.sh com.sportlink.dashboard
 genmerge.sh com.sportlink.teamregistration
 genmerge.sh com.sportlink.webshop
 
-export REPOSITORY=documents
+export MODULEPATH=documents
+genmerge.sh com.sportlink.analysis
 
 
 #customized, to change the names:
@@ -177,6 +187,9 @@ genmerge.sh com.dexels.navajo.workflow.editor
 genmerge.sh com.dexels.navajo.workflow.editor.gmf
 genmerge.sh com.dexels.navajo.workflow.editor.feature
 genmerge.sh com.dexels.navajo.function.pdf
+genmerge.sh com.dexels.navajo.fileuploadservlet
+
+
 
 
 export MODULEPATH=tipi
