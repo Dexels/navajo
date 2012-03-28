@@ -67,7 +67,7 @@ genmerge.sh com.dexels.navajo.other.feature
 genmerge.sh com.dexels.navajo.test.feature
 genmerge.sh com.dexels.navajo.test.remote
 genmerge.sh com.dexels.geospatial.imageprovider
-com.dexels.utilities.smsgateway
+genmerge.sh com.dexels.utilities.smsgateway
 
 export MODULEPATH=demos
 genmerge.sh com.dexels.demos.rdfbrowser
@@ -79,13 +79,10 @@ genmerge.sh com.dexels.demos.stadiumdesigner
 genmerge.sh com.dexels.demos.tipidashboard
 
 export MODULEPATH=papers
-com.dexels.documents
-com.dexels.papers
-com.dexels.documents.other
-com.dexels.documents.ticketing
-
-
-
+genmerge.sh com.dexels.documents
+genmerge.sh com.dexels.papers
+genmerge.sh com.dexels.documents.other
+genmerge.sh com.dexels.documents.ticketing
 
 export MODULEPATH=dev
 export REPOSITORY=navajo
@@ -106,11 +103,12 @@ genmerge.sh com.dexels.navajo.dsl.feature
 genmerge.sh com.dexels.navajo.remotetest
 
 export MODULEPATH=ios
-com.dexels.navajo.cocoa.client
+genmerge.sh com.dexels.navajo.cocoa.client
+
 export MODULEPATH=php
-com.dexels.navajo.client.php
-com.dexels.navajo.client.php.library
-com.dexels.navajo.php.joomla
+genmerge.sh com.dexels.navajo.client.php
+genmerge.sh com.dexels.navajo.client.php.library
+genmerge.sh com.dexels.navajo.php.joomla
 
 
 export MODULEPATH=sportlink
@@ -125,14 +123,28 @@ genmerge.sh com.sportlink.aaa
 genmerge.sh com.sportlink.comp
 genmerge.sh com.sportlink.tensing
 genmerge.sh com.sportlink.swing.client
+genmerge.sh com.sportlink.nevobo.dps
+genmerge.sh com.sportlink.reports
+genmerge.sh com.sportlink.dba
 
 export REPOSITORY=applications
 
 genmerge.sh com.sportlink.serv
-genmerge.sh com.sportlink.dwf
-genmerge.sh com.sportlink.club
+genmerge.sh com.sportlink.dwf.av
+genmerge.sh com.sportlink.club 
 genmerge.sh com.sportlink.matchforms
 genmerge.sh com.sportlink.officialportal
+genmerge.sh com.sportlink.digitaalinschrijven
+genmerge.sh com.sportlink.backoffice
+genmerge.sh com.sportlink.accommodations
+genmerge.sh com.sportlink.cif
+genmerge.sh com.sportlink.dwf.dashboard
+genmerge.sh com.sportlink.dashboard
+genmerge.sh com.sportlink.teamregistration
+genmerge.sh com.sportlink.webshop
+
+export REPOSITORY=documents
+
 
 #customized, to change the names:
 
