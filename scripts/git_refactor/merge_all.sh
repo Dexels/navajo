@@ -61,10 +61,10 @@ genmerge.sh com.dexels.navajo.mongo.feature
 genmerge.sh com.dexels.navajo.mongo
 genmerge.sh com.dexels.navajo.mongo.navajostore
 
-com.dexels.navajo.enterprise.ideal
-com.dexels.navajo.enterprise.ideal.sportlink
-com.dexels.navajo.enterprise.openfire
-com.dexels.navajo.enterprise.tomahawk
+genmerge.sh com.dexels.navajo.enterprise.ideal
+genmerge.sh com.dexels.navajo.enterprise.ideal.sportlink
+genmerge.sh com.dexels.navajo.enterprise.openfire
+genmerge.sh com.dexels.navajo.enterprise.tomahawk
 
 export MODULEPATH=other
 export REPOSITORY=internal
