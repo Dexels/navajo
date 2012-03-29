@@ -1,3 +1,4 @@
+export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # Alter repository:
 
 echo "Altering Serv"

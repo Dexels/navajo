@@ -1,3 +1,4 @@
+export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ./cvsgit.sh com.dexels.navajo.tipi.swing.docking.feature com.dexels.navajo.tipi.swing.docking.feature
 ./cvsgit.sh TipiSwingDocking com.dexels.navajo.tipi.swing.docking
 ./cvsgit.sh com.dexels.navajo.tipi.swing.charting.feature com.dexels.navajo.tipi.swing.charting.feature

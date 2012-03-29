@@ -17,4 +17,4 @@ cd $2
 cd ..
 rm -rf /var/www/git/$2
 mv $2 /var/www/git/
-
+cp ${DIR}/_gitignore /var/www/git/$2/.gitignore

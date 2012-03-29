@@ -3,11 +3,11 @@ echo "Making work dir: ${BASEPATH}/${1}"
 mkdir ${BASEPATH}/${1}_initial
 cd ${BASEPATH}/${1}_initial
 git init
-touch .gitignore
+cp ${DIR}/_gitignore ./.gitignore
 git add .gitignore
 git config --global user.name "Dexels CVS migration"
 git config --global user.email info@dexels.com
-#git commit --reset-author -m "Migration"
+git commit -m -a "Migration " #--reset-author -m "Migration"
 cd ..
 git clone --bare -l ${BASEPATH}/${1}_initial ${BASEPATH}/${1}_bare
 echo "Converted to bare"

@@ -1,3 +1,4 @@
+export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ./cvsgit.sh NavajoUtilities com.dexels.navajo.utilities
 ./cvsgit.sh com.dexels.navajo.birt.oda.feature com.dexels.navajo.oda.feature
 ./cvsgit.sh com.dexels.navajo.oda com.dexels.navajo.oda
