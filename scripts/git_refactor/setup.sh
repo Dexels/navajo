@@ -7,7 +7,7 @@ cp ${DIR}/_gitignore ./.gitignore
 git add .gitignore
 git config --global user.name "Dexels CVS migration"
 git config --global user.email info@dexels.com
-git commit -a #--reset-author -m "Migration"
+git commit -a  -m "Migration" #--reset-author
 cd ..
 git clone --bare -l ${BASEPATH}/${1}_initial ${BASEPATH}/${1}_bare
 echo "Converted to bare"
