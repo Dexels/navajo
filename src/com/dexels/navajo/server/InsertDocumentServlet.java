@@ -17,6 +17,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.types.Binary;
 
 public class InsertDocumentServlet extends HttpServlet {
@@ -35,6 +36,7 @@ public class InsertDocumentServlet extends HttpServlet {
 		pw.close();
 	}
 
+	@SuppressWarnings("unchecked")
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
 //		PrintWriter pw = new PrintWriter(response.getWriter());
@@ -57,7 +59,7 @@ public class InsertDocumentServlet extends HttpServlet {
 				    	processFile(author, item);
 				    }				   
 				}
-				response.setStatus(response.SC_OK);
+				response.setStatus(HttpServletResponse.SC_OK);
 				
 				
 
@@ -70,7 +72,7 @@ public class InsertDocumentServlet extends HttpServlet {
 		}
 		
 		//response.setContentType("text/html");
-		response.setStatus(response.SC_OK);
+		response.setStatus(HttpServletResponse.SC_OK);
 //		pw.write("<html><head><script type=\"text/javascript\" src=\"js/fields.js\"></script><script type=\"text/javascript\">$(document).ready(function() { uploadReady(); }</script></head></html>");
 //		pw.close();
 	}
@@ -89,12 +91,14 @@ public class InsertDocumentServlet extends HttpServlet {
 		    InputStream is = item.getInputStream();
 		    Binary b = new Binary(is);	    
 		    
-		    Message insert = NavajoClientFactory.getClient().doSimpleSend("lucene/InitInsertDocument", "DocumentData");
+		    Navajo ins = NavajoClientFactory.getClient().doSimpleSend("lucene/InitInsertDocument");
+		    Message insert = ins.getMessage("DocumentData");
 		    insert.getProperty("AuthorName").setValue(author);
+
 		    insert.getProperty("Name").setValue(fileName);
 		    insert.getProperty("Data").setValue(b);
 		    
-		    NavajoClientFactory.getClient().doSimpleSend(insert.getRootDoc(), "lucene/ProcessInsertDocument");
+		    NavajoClientFactory.getClient().doSimpleSend(ins, "lucene/ProcessInsertDocument");
 		    
 		   
 		}catch(Exception e){

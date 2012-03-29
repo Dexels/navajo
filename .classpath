@@ -2,10 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/commons-fileupload-1.2.2.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/NavajoClient"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/NavajoDocument"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/NavajoListeners"/>
-	<classpathentry kind="lib" path="C:/workspace/NavajoListeners/compilelib/servlet-api.jar"/>
-	<classpathentry kind="output" path="classes"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,0 +1,17 @@
+Bundle-Name: Navajo File Upload
+Bundle-SymbolicName: com.dexels.navajo.fileuploadservlet
+Bundle-Description: Core version manager
+Bundle-ManifestVersion: 2
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Dexels
+Import-Package: javax.servlet;version="2.5.0",
+ javax.servlet.http;version="2.5.0",
+ junit.framework,
+ org.apache.commons.fileupload;version="1.2.0",
+ org.apache.commons.fileupload.disk;version="1.2.0",
+ org.apache.commons.fileupload.servlet;version="1.2.0",
+ org.osgi.framework;version="1.5.0"
+Bundle-ActivationPolicy: lazy
+Require-Bundle: com.dexels.navajo.client;bundle-version="3.1.1",
+ com.dexels.navajo.document;bundle-version="2.1.0",
+ com.dexels.navajo.version;bundle-version="1.0.14"
