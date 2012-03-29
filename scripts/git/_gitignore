@@ -1,12 +1,3 @@
 target/
 classes/
 bin/
-*.tmp
-*.bak
-*.swp
-*~.nib
-*~
-*.lock
-*.DS_Store
-*.swp
-*.out
