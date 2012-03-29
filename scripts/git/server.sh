@@ -9,7 +9,7 @@
 ./cvsgit.sh NavajoServer com.dexels.navajo.server.deploy
 
 ./cvsgit.sh NavajoAgents com.dexels.navajo.agents
-./cvsgit.sh NavajoDBReplicationService com.dexels.navajo.server.dbreplication
+./cvsgit.sh NavajoDBReplicationService com.dexels.navajo.enterprise.dbreplication
 ./cvsgit.sh NavajoJspDeploy com.dexels.navajo.jsp.deploy
 
 ./cvsgit.sh NavajoDashboardTwo com.dexels.navajo.dashboard

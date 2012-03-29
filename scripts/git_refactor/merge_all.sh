@@ -65,6 +65,7 @@ genmerge.sh com.dexels.navajo.enterprise.ideal
 genmerge.sh com.dexels.navajo.enterprise.ideal.sportlink
 genmerge.sh com.dexels.navajo.enterprise.openfire
 genmerge.sh com.dexels.navajo.enterprise.tomahawk
+genmerge.sh com.dexels.navajo.enterprise.dbreplication
 
 export MODULEPATH=other
 export REPOSITORY=internal
@@ -258,5 +259,4 @@ genmerge.sh com.dexels.navajo.tipi.build
 genmerge.sh com.dexels.navajo.tipi.server
 
 
-cd ../..
 
