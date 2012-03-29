@@ -158,7 +158,6 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 				if (params.length == 1) {
 					// log("Single parameter. Looking good.");
 					// method.invoke(map, value);
-					System.err.println("SETTING: "+value+" setter: "+fieldSetter+" mapclass: "+mapClass);
 					Class<?> prm = params[0];
 					if (value == null) {
 						// no further detective work possible
@@ -170,7 +169,7 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 
 						Object v;
 						if (prm.equals(Float.class)) {
-							System.err.println("Float conversion performed");
+//							System.err.println("Float conversion performed");
 							v = Float.valueOf(value.toString());
 						} else if (prm.equals(float.class)) {
 							v = Float.valueOf(value.toString()).floatValue();
