@@ -11,8 +11,4 @@ echo "About to setup:"
 setup.sh navajo
 setup.sh sportlink
 setup.sh internal
-#merge_core.sh 
 merge_all.sh 
-#merge_test.sh
-#echo "Pushing to $DIR/work/navajo"
-#git clone $DIR/work/navajo_bare $DIR/work/navajo_deploy
