@@ -118,7 +118,6 @@ private String referer;
 
 	@Override
 	public TipiContext createContext() throws IOException {
-
 		try {
 			logger.info("Entering file-based mode");
 			setupInstallationFolder();

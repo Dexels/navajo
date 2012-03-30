@@ -56,7 +56,9 @@ public class TipiVaadinServlet extends ApplicationServlet {
 		String referer = request.getHeader("x-forwarded-host");
 		System.err.println("Creating application. Referer: "+referer);
 		tipiApplication.setReferer(referer);
-
+		if(referer!=null) {
+			tipiApplication.setLogoutURL("http://"+referer+request.getContextPath());
+		}
      	HttpSession hs = request.getSession();
      	hs.setAttribute("tipiInstance",tipiApplication);
 		// add request data?
