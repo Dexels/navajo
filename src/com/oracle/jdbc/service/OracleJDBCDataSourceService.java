@@ -22,7 +22,6 @@ package com.oracle.jdbc.service;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.SQLException;
-import java.util.NoSuchElementException;
 import java.util.Properties;
 
 import javax.sql.ConnectionPoolDataSource;
@@ -37,7 +36,6 @@ import org.apache.commons.dbcp.ConnectionFactory;
 import org.apache.commons.dbcp.PoolableConnectionFactory;
 import org.apache.commons.dbcp.PoolingDataSource;
 import org.apache.commons.pool.ObjectPool;
-import org.apache.commons.pool.PoolableObjectFactory;
 import org.apache.commons.pool.impl.GenericObjectPool;
 import org.osgi.service.jdbc.DataSourceFactory;
 import org.slf4j.Logger;
@@ -50,6 +48,7 @@ public class OracleJDBCDataSourceService implements DataSourceFactory {
 	private final static Logger logger = LoggerFactory
 			.getLogger(OracleJDBCDataSourceService.class);
 	private ObjectPool pool;
+	@SuppressWarnings("unused")
 	private PoolableConnectionFactory poolableConnectionFactory;
     public void start() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         //Load driver if not already done...
