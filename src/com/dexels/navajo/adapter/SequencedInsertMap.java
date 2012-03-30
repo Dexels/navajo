@@ -18,7 +18,7 @@ import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class SequencedInsertMap extends SQLMap {
+public class SequencedInsertMap extends JDBCMap {
 
   public final static String ORACLEPRODUCTNAME = "Oracle";
   public final static String HSQLPRODUCTNAME = "HSQL Database Engine";
@@ -77,7 +77,7 @@ public class SequencedInsertMap extends SQLMap {
       final String qStr = formatter.format(args);
       try {
         this.createConnection();
-        final PreparedStatement prepared = this.con.prepareStatement(qStr);
+        final PreparedStatement prepared = this.getConnection().prepareStatement(qStr);
         final ResultSet rs = prepared.executeQuery();
         if (rs.next()) {
           this.identity = new Integer(rs.getInt(1));
@@ -91,7 +91,7 @@ public class SequencedInsertMap extends SQLMap {
         throw new UserException( -1, sqle.getMessage());
       }
 
-      if (this.debug && (this.identity != null)) {
+      if (this.getDebug() && (this.identity != null)) {
         System.out.println(this.getClass() +
                            ": " + this.databaseProduct +
                            ": generated new identifier '" + this.identity +
@@ -119,7 +119,7 @@ public class SequencedInsertMap extends SQLMap {
       try {
         this.createConnection();
         final PreparedStatement prepared = 
-        	this.con.prepareStatement(SequencedInsertMap.SELIDENTITYSQL);
+        	this.getConnection().prepareStatement(SequencedInsertMap.SELIDENTITYSQL);
         final ResultSet rs = prepared.executeQuery();
         if (rs.next()) {
           this.identity = new Integer(rs.getInt(1));
@@ -133,7 +133,7 @@ public class SequencedInsertMap extends SQLMap {
         throw new UserException( -1, sqle.getMessage());
       }
 
-      if (this.debug && (this.identity != null)) {
+      if (this.getDebug() && (this.identity != null)) {
         System.out.println(this.getClass() +
                            ": " + this.databaseProduct +
                            ": has generated new identifier '" + this.identity +

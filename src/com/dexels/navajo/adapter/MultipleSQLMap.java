@@ -35,6 +35,10 @@ public class MultipleSQLMap implements Mappable {
             this.sqlMap = sql;
     }
 
+    public SQLMap[] getSqlMap() {
+    	return this.sqlMap;
+    }
+     
     public void setMultiSqlMap(MultipleSQLMap[] sql) {
         if (sql != null)
             this.multiSqlMap = sql;

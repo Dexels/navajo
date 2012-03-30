@@ -159,18 +159,17 @@ public void kill() {
 //		  if (autoCommitMap.get(this.datasource) == null) {
 //			  return;
 //		  }
-//		  boolean ac = (this.overideAutoCommit) ? autoCommit :
-//			  ( (Boolean) autoCommitMap.get(datasource)).booleanValue();
+//		  boolean ac = (this.overideAutoCommit) ? autoCommit : ( (Boolean) autoCommitMap.get(datasource)).booleanValue();
 //		  if (!ac) {
-//			  if (con != null) {
+			  if (con != null) {
 //				  kill = true;
-//				  con.rollback();
-//			  }
+				  con.rollback();
+			  }
 //		  }
-//	  }
-//	  catch (SQLException sqle) {
-//		  AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, (myAccess != null ? myAccess.accessID : "unknown access") );
-//		  sqle.printStackTrace(Access.getConsoleWriter(myAccess));
+	  }
+	  catch (SQLException sqle) {
+		  AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, (myAccess != null ? myAccess.accessID : "unknown access") );
+		  sqle.printStackTrace(Access.getConsoleWriter(myAccess));
 	  } finally {
 		  try {
 			store();
@@ -192,6 +191,7 @@ public void store() throws MappableException, UserException {
 		  JdbcResourceComponent.getInstance().deregisterTransaction(transactionContext);
 		  if(con!=null) {
 			  try {
+				 con.commit();
 				con.close();
 			} catch (SQLException e) {
 				logger.error("Problem closing pooled connection",e);
@@ -789,7 +789,6 @@ public boolean isUpdateOnly() {
       if (debug) {
     	  Access.writeToConsole(myAccess, "SQLMAP, QUERY HAS BEEN EXECUTED, RETRIEVING RESULTSET\n");
       }
-
       if (rs != null) {
 
         int columns = 0;
