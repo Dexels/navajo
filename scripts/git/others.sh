@@ -70,7 +70,6 @@ export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ./cvsgit.sh SportlinkClub com.sportlink.club
 
 ./cvsgit.sh TensingOracle com.sportlink.tensing
-./cvsgit.sh SportlinkClub com.sportlink.club
 
 ./cvsgit.sh SportlinkOfficialPortal com.sportlink.officialportal
 ./cvsgit.sh NavajoSwingClient com.sportlink.swing.client
@@ -83,7 +82,6 @@ export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ./cvsgit.sh sportlink-serv-crystal com.sportlink.crystal
 ./cvsgit.sh sportlink-serv-AAA com.sportlink.aaa
 ./cvsgit.sh sportlink-serv-comp com.sportlink.comp
-./cvsgit.sh sportlink-knvb-digitaalinschrijven com.sportlink.digitaalinschrijven
 ./cvsgit.sh SportlinkMatchForms com.sportlink.matchforms
 ./cvsgit.sh SportlinkBackoffice com.sportlink.backoffice
 ./cvsgit.sh GoogleEarthAccommodations com.sportlink.accommodations
