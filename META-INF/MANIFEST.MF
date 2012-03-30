@@ -14,5 +14,5 @@ Import-Package: javax.management,
 Require-Bundle: com.dexels.navajo.resource;bundle-version="1.0.0",
  org.apache.commons.pool;bundle-version="1.4.0",
  org.apache.commons.dbcp;bundle-version="1.4.0",
- com.oracle.jdbc.driver;bundle-version="11.2.032"
+ com.oracle.jdbc.driver;bundle-version="11.2.0"
 Bundle-ClassPath: .
