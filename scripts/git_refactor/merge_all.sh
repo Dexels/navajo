@@ -169,12 +169,12 @@ genmerge.sh com.dexels.navajo.oda.ui
 
 export MODULEPATH=demos
 
-genmerge.sh tipi.lesson.one
-genmerge.sh tipi.lesson.two
-genmerge.sh tipi.lesson.three
-genmerge.sh tipi.lesson.four
-genmerge.sh tipi.lesson.five
-genmerge.sh tipi.lesson.six
+#genmerge.sh tipi.lesson.one
+#genmerge.sh tipi.lesson.two
+#genmerge.sh tipi.lesson.three
+#genmerge.sh tipi.lesson.four
+#genmerge.sh tipi.lesson.five
+#genmerge.sh tipi.lesson.six
 
 export MODULEPATH=optional
 
