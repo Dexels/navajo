@@ -1,0 +1,16 @@
+Bundle-Name: NavaDoc Core
+Bundle-SymbolicName: com.dexels.navajo.dev.navadoc
+Bundle-Description: A Hello World bundle
+Bundle-ManifestVersion: 2
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Dexels
+Require-Bundle: com.dexels.navajo.document,
+ com.dexels.navajo.version,
+ org.junit;bundle-version="3.8.2",
+ com.dexels.navajo.core;bundle-version="2.9.6"
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Service-Component: OSGI-INF/simpleRepository.xml, OSGI-INF/repositoryFactory.xml, OSGI-INF/statisticsRunner.xml
+Bundle-ClassPath: lib/xmlunit-1.3.jar
+Import-Package: javax.servlet;version="[2.5.0,4.0.0)",
+ javax.servlet.http;version="[2.5.0,4.0.0)"
