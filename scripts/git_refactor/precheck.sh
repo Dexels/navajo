@@ -5,7 +5,7 @@ cd $BASEPATH/
 rm -rf _$1
 mkdir _$1
 cd _$1
-git clone ../$1 .
+#git clone ../$1 .
 #git clone $BASEPATH/$1
 echo "We are now here: $BASEPATH/_$1"
 pwd
