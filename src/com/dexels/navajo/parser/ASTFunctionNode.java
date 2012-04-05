@@ -4,6 +4,9 @@ package com.dexels.navajo.parser;
 /**
  * $Id$
  * $Log$
+ * Revision 1.31  2012/04/05 14:59:57  frank
+ * remove odd static NavajoBundleManager.getInstance call
+ *
  * Revision 1.30  2011/04/15 14:17:32  frank
  * renamed 'Version' (the basic one) to 'AbstractVersion' it seems to confuse Tycho
  *
@@ -148,7 +151,6 @@ public final class ASTFunctionNode extends SimpleNode {
 			cl = DispatcherFactory.getInstance().getNavajoConfig().getBetaClassLoader();
 		}
 
-		NavajoBundleManager.getInstance();
 		
 		FunctionFactoryInterface fff = FunctionFactoryFactory.getInstance();
 		FunctionInterface  f = fff.getInstance(cl, functionName);
