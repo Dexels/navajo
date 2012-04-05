@@ -197,8 +197,9 @@
 					</instructions>
 
 					<!-- OBR -->
+					
 					<remoteOBR>repo-rel</remoteOBR>
-					<prefixUrl>http://spiritus.dexels.nl:41766/nexus/content/repositories/navajo_snapshot</prefixUrl>
+					<prefixUrl>https://source.dexels.com/nexus/content/repositories/navajo_snapshot</prefixUrl>
 					<ignoreLock>true</ignoreLock>
 				</configuration>
 				<executions>
