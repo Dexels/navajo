@@ -8,6 +8,7 @@ export MODULEPATH=setup
 
 genmerge.sh com.dexels.repository 
 genmerge.sh com.dexels.target 
+genmerge.sh com.dexels.thirdparty.feature
 
 export MODULEPATH=core
 
