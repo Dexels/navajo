@@ -18,6 +18,10 @@ Export-Package: com.dexels.navajo.document,
  metadata,
  navajodocument,
  org.dexels.utils
-Import-Package: junit.framework;resolution:=optional,
+Import-Package: junit.framework;version="4.0.0",
+ org.hamcrest.core;version="1.1.0",
+ org.junit;version="4.8.2",
+ org.junit.runner;version="4.8.2",
+ org.junit.runners;version="4.8.2",
  org.osgi.framework;version="1.5.0",
  org.slf4j

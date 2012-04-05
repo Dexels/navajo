@@ -1,4 +1,6 @@
 
+import org.junit.After;
+import org.junit.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +17,7 @@ public class NavajoDocumentTestFicture extends java.lang.Object {
   public NavajoDocumentTestFicture(Object obj) {
   }
 
+  @Before
   public void setUp() {
     try {
       testDoc = NavajoFactory.getInstance().createNavajo();
@@ -85,6 +88,7 @@ public class NavajoDocumentTestFicture extends java.lang.Object {
     }
   }
 
+  @After
   public void tearDown() {
   }
   

@@ -1,12 +1,21 @@
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.StringWriter;
 import java.util.List;
 
+import junit.framework.Assert;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -14,29 +23,29 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 
-public class TestMessage extends TestCase {
+public class TestMessage {
 
   NavajoDocumentTestFicture navajodocumenttestfictureInst = new NavajoDocumentTestFicture(this);
   private Navajo testDoc = null;
   
   private final static Logger logger = LoggerFactory.getLogger(TestMessage.class);
 
-  public TestMessage(String s) {
-    super(s);
-  }
 
-  protected void setUp() {
+  @Before
+  public void setUp() {
 	System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.base.BaseNavajoFactoryImpl");
 	//System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl");
 	    navajodocumenttestfictureInst.setUp();
     testDoc = navajodocumenttestfictureInst.testDoc;
   }
 
-  protected void tearDown() {
+  @After
+  public void tearDown() {
     navajodocumenttestfictureInst.tearDown();
     NavajoFactory.resetImplementation();
   }
 
+  @Test
   public void testAddMessage() {
     Message msg = NavajoFactory.getInstance().createMessage(testDoc, "testmsg");
     Message sub = NavajoFactory.getInstance().createMessage(testDoc, "submsg");
@@ -61,6 +70,7 @@ public class TestMessage extends TestCase {
     sub2.addMessage(null);
   }
 
+  @Test
   public void testAddMessage1() {
 
     // Same as before only now messages with name are not overwritten!
@@ -86,6 +96,7 @@ public class TestMessage extends TestCase {
 
   }
 
+  @Test
   public void testAddProperty() throws NavajoException {
       Message m = testDoc.getMessage("testmessage");
       Property p = NavajoFactory.getInstance().createProperty(testDoc, "testprop", Property.STRING_PROPERTY, "navajo rules", 120, "", Property.DIR_OUT);
@@ -106,6 +117,7 @@ public class TestMessage extends TestCase {
 	}
   }
 
+  @Test
   public void testContains() {
     Message m = testDoc.getMessage("testmessage");
     boolean b = m.contains("testprop1");
@@ -114,12 +126,14 @@ public class TestMessage extends TestCase {
     Assert.assertTrue(!b);
   }
 
+  @Test
   public void testCreate() {
     Message m = NavajoFactory.getInstance().createMessage(testDoc, "bliep");
     Assert.assertNotNull(m);
     Assert.assertEquals("bliep", m.getName());
   }
 
+  @Test
   public void testGetParentMessage() {
     Message m = testDoc.getMessage("testmessage/testmessage_sub1");
     Assert.assertEquals("testmessage_sub1", m.getName());
@@ -127,6 +141,7 @@ public class TestMessage extends TestCase {
     Assert.assertEquals("testmessage", p.getName());
   }
 
+  @Test
   public void testGetAllMessages() {
     Message m = testDoc.getMessage("testmessage");
     List<Message> all = m.getAllMessages();
@@ -140,6 +155,7 @@ public class TestMessage extends TestCase {
     Assert.assertEquals(0, all.size());
   }
 
+  @Test
   public void testGetAllProperties() {
     Message m = testDoc.getMessage("testmessage");
     List<Property> all = m.getAllProperties();
@@ -154,11 +170,13 @@ public class TestMessage extends TestCase {
     Assert.assertEquals(0, all.size());
   }
 
+  @Test
   public void testGetFullMessageName() {
     Message m = testDoc.getMessage("testmessage").getMessage("testmessage_sub1").getMessage("testmessage_sub1_sub1");
     Assert.assertEquals("/testmessage/testmessage_sub1/testmessage_sub1_sub1", m.getFullMessageName());
   }
 
+  @Test
   public void testGetMessage() {
     Message m = testDoc.getMessage("testmessage");
     Message m2 = m.getMessage("testmessage_sub1");
@@ -168,6 +186,7 @@ public class TestMessage extends TestCase {
     Assert.assertEquals("testmessage_sub2", m3.getName());
   }
   
+  @Test
   public void testGetMessageDot() {
 	  Message m = testDoc.getMessage("testmessage");
 	  Message m2 = m.getMessage(".");
@@ -175,6 +194,7 @@ public class TestMessage extends TestCase {
 	  Assert.assertEquals("testmessage", m2.getName());
   }
   
+  @Test
   public void testGetMessageDot2() {
 	  Message m = testDoc.getMessage("testmessage");
 	  Message m2 = m.getMessage("./"); // Bogus.
@@ -182,6 +202,7 @@ public class TestMessage extends TestCase {
 	  Assert.assertNull(m2);
   }
   
+  @Test
   public void testGetMessageDot3() {
 	  Message m = testDoc.getMessage("testmessage");
 	  Message m2 = m.getMessage("./testmessage_sub1");
@@ -189,6 +210,7 @@ public class TestMessage extends TestCase {
 	  Assert.assertEquals("testmessage_sub1", m2.getName());
   }
   
+  @Test
   public void testGetMessages() throws NavajoException {
 
     // Regular expression message name match testing.
@@ -259,11 +281,13 @@ public class TestMessage extends TestCase {
 
   }
 
+  @Test
   public void testGetName() {
     Message m = testDoc.getMessage("testmessage");
     Assert.assertEquals("testmessage", m.getName());
   }
 
+  @Test
   public void testGetProperties() throws NavajoException {
 
     System.out.println(testDoc);
@@ -296,6 +320,7 @@ public class TestMessage extends TestCase {
    
   }
 
+  @Test
   public void testGetProperty() {
     Message m = testDoc.getMessage("testmessage");
     Property p = m.getProperty("integerprop");
@@ -305,6 +330,7 @@ public class TestMessage extends TestCase {
     Assert.assertNull(p);
   }
 
+  @Test
   public void testRemoveMessage() {
     Message m = testDoc.getMessage("testmessage");
     Message m2 = m.getMessage("testmessage_sub2");
@@ -314,6 +340,7 @@ public class TestMessage extends TestCase {
     Assert.assertNull(m2);
   }
   
+  @Test
   public void testRemoveMessage2() throws Exception {
 	    Message m = testDoc.getMessage("testmessage/testmessage_sub1");
 	    Assert.assertNotNull(m);
@@ -324,6 +351,7 @@ public class TestMessage extends TestCase {
 	    Assert.assertNotNull(m3);
 	  }
 
+  @Test
   public void testRemoveProperty() {
      Message m = testDoc.getMessage("testmessage");
      Property p = m.getProperty("propfloat");
@@ -333,6 +361,7 @@ public class TestMessage extends TestCase {
      Assert.assertNull(p);
   }
 
+  @Test
   public void testArrayMessages() throws Exception {
 	 
 	  Message m = NavajoFactory.getInstance().createMessage(testDoc, "MyTop");
@@ -358,6 +387,7 @@ public class TestMessage extends TestCase {
 	  }
   }
   
+  @Test
   public void testArrayMessagesWithHash() throws Exception {
 		 
 	  Message m = NavajoFactory.getInstance().createMessage(testDoc, "MyTop");
@@ -385,6 +415,7 @@ public class TestMessage extends TestCase {
 	  
   }
   
+  @Test
   public void testSetName() throws Exception {
 	  Message m = NavajoFactory.getInstance().createMessage(testDoc, "MyTop");
 	  testDoc.addMessage(m);
@@ -394,6 +425,7 @@ public class TestMessage extends TestCase {
 	  assertNotNull(testDoc.getMessage("MyOtherTop"));
   }
 
+  @Test
   public void testAddIgnoreMessage() throws Exception {
 	  Message m = NavajoFactory.getInstance().createMessage(testDoc, "MyTop");
 	  testDoc.addMessage(m);
@@ -405,6 +437,7 @@ public class TestMessage extends TestCase {
 	  assertEquals(sw.toString().indexOf("MyIgnoredMessage"), -1);
   }
   
+  @Test
   public void testAddIgnoreArrayMessageElements() throws Exception {
 	  Message m = NavajoFactory.getInstance().createMessage(testDoc, "MyTop");
 	  testDoc.addMessage(m);
@@ -434,6 +467,7 @@ public class TestMessage extends TestCase {
 	  assertTrue(sw.toString().indexOf("NOOTJES") == -1);
   }
   
+  @Test
   public void testMergeMessage() throws Exception {
 	  
 	  Message m = NavajoFactory.getInstance().createMessage(testDoc, "MyTop");
@@ -454,6 +488,7 @@ public class TestMessage extends TestCase {
 	  
   }
   
+  @Test
   public void testMergeMessage2() throws Exception {
 
 	  Message m = NavajoFactory.getInstance().createMessage(testDoc, "MyTop");
@@ -476,6 +511,7 @@ public class TestMessage extends TestCase {
 
   }
   
+  @Test
   public void testMergeMessage3() throws Exception {
 
 	  Message m = NavajoFactory.getInstance().createMessage(testDoc, "MyTop");
@@ -500,7 +536,8 @@ public class TestMessage extends TestCase {
 
   }
 
-  public void testIsEqual() throws Exception {
+  @Test
+ public void testIsEqual() throws Exception {
 
 	  Navajo n2 = NavajoFactory.getInstance().createNavajo();
 	  n2 = testDoc.copy();
@@ -519,9 +556,5 @@ public class TestMessage extends TestCase {
 	  
   }
   
-  public static void main(String [] args) throws Exception {
-	  TestMessage tm = new TestMessage("aap");
-	  tm.setUp();
-	  tm.testMergeMessage();
-  }
+
 }

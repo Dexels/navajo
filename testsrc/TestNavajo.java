@@ -1,9 +1,10 @@
-
-
 import java.util.List;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Method;
@@ -13,23 +14,22 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 
-public class TestNavajo extends TestCase {
+public class TestNavajo {
   NavajoDocumentTestFicture navajodocumenttestfictureInst = new NavajoDocumentTestFicture(this);
   private Navajo testDoc = null;
  
-  public TestNavajo(String s) {
-    super(s);
-  }
-
-  protected void setUp() {
+  @Before
+  public void setUp() {
     navajodocumenttestfictureInst.setUp();
     testDoc = navajodocumenttestfictureInst.testDoc;
   }
 
-  protected void tearDown() {
+  @After
+  public void tearDown() {
     navajodocumenttestfictureInst.tearDown();
   }
 
+  @Test
   public void testAddMessage() throws NavajoException {
     Message msg = NavajoFactory.getInstance().createMessage(testDoc, "extramsg");
     testDoc.addMessage(msg);
@@ -38,10 +38,12 @@ public class TestNavajo extends TestCase {
     Assert.assertEquals(msg.getName(), result.getName());
   }
 
+  @Test
   public void testAddMessage1() {
     // NOT VERY IMPORTANT: OVERWRITING OF MESSAGES SHOULD ALWAYS BE ON.
   }
 
+  @Test
   public void testAddMethod() throws NavajoException {
     Method m = NavajoFactory.getInstance().createMethod(testDoc, "mymethod", "Postman");
     testDoc.addMethod(m);
@@ -51,6 +53,7 @@ public class TestNavajo extends TestCase {
     Assert.assertEquals("Postman", result.getServer());
   }
 
+  @Test
   public void testAppendDocBuffer() throws NavajoException, java.io.IOException {
     Navajo extra = NavajoFactory.getInstance().createNavajo();
     Message m = NavajoFactory.getInstance().createMessage(extra, "appendedmessage");
@@ -65,6 +68,7 @@ public class TestNavajo extends TestCase {
     Assert.assertEquals("appendedmessage", result.getName());
   }
 
+  @Test
   public void testMerge() throws NavajoException {
 	  // testmessage
 	  Navajo extra = NavajoFactory.getInstance().createNavajo();
@@ -101,6 +105,7 @@ public class TestNavajo extends TestCase {
 	    
   }
   
+  @Test
   public void testClearAllSelections() throws NavajoException {
     Property sel1 = NavajoFactory.getInstance().createProperty(testDoc, "sel1", "+", "", Property.DIR_IN);
     Property sel2 = NavajoFactory.getInstance().createProperty(testDoc, "sel2", "+", "", Property.DIR_IN);
@@ -131,74 +136,108 @@ public class TestNavajo extends TestCase {
     Assert.assertEquals(5, all.size());
   }
 
+  @Test
   public void testContains() {
   }
+  @Test
   public void testCopyMessage() {
   }
+  @Test
   public void testCopyMessage1() {
   }
+  @Test
   public void testCopyMethod() {
   }
+  @Test
   public void testCopyMethod1() {
   }
+  @Test
   public void testCreateDocBuffer() {
  }
+  @Test
   public void testCreateHeader() {
   }
+  @Test
   public void testGetAllMessages() {
   }
+  @Test
   public void testGetAllMessages1() {
   }
+  @Test
   public void testGetAllMethods() {
   }
+  @Test
   public void testGetAllMethods1() {
   }
+  @Test
   public void testGetCurrentActions() {
   }
+  @Test
   public void testGetCurrentMessages() {
   }
+  @Test
   public void testGetErrorDescription() {
   }
+  @Test
   public void testGetErrorNumber() {
   }
+  @Test
   public void testGetMessage() {
   }
+  @Test
   public void testGetMessage1() {
   }
+  @Test
   public void testGetMessage2() {
  }
+  @Test
   public void testGetMessage3() {
   }
+  @Test
   public void testGetMessageBuffer() {
  }
+  @Test
   public void testGetMessages() {
 
   }
+  @Test
   public void testGetMethod() {
   }
+  @Test
   public void testGetProperties() {
 
   }
+  @Test
   public void testGetProperty() {
   }
+  @Test
   public void testGetSelection() {
   }
+  @Test
   public void testMain() {
   }
+  @Test
   public void testPersistenceKey() {
   }
+  @Test
   public void testRemoveMessage() {
   }
+  @Test
   public void testRemoveMessage1() {
   }
+  @Test
   public void testSetErrorDescription() {
   }
+  @Test
   public void testSetErrorNumber() {
   }
+  @Test
   public void testToString() {
   }
+  @Test
   public void testWriteDocument() {
   }
+  @Test
   public void testWriteMessage() {
   }
 }
