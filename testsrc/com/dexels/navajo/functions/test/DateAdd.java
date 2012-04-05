@@ -3,13 +3,14 @@ package com.dexels.navajo.functions.test;
 
 import java.util.Date;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  * Generated code for the test suite <b>DateAdd</b> located at
  * <i>/NavajoFunctions/testsrc/DateAdd.testsuite</i>.
  */
-public class DateAdd extends TestCase {
+public class DateAdd  {
 	/**
 	 * Constructor for DateAdd.
 	 * @param name
@@ -17,27 +18,10 @@ public class DateAdd extends TestCase {
 	
 	com.dexels.navajo.functions.DateAdd da = new com.dexels.navajo.functions.DateAdd();
 	
-	
-	public DateAdd(String name) {
-		super(name);
-	}
 
-	/**
-	 * @see junit.framework.TestCase#setUp()
-	 */
-	protected void setUp() throws Exception {
-	}
 
-	/**
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	protected void tearDown() throws Exception {
-	}
 
-	/**
-	 * test 1
-	 * @throws Exception
-	 */
+@Test
 	public void testYear() throws Exception {
 		da.reset();
 		
@@ -57,6 +41,8 @@ public class DateAdd extends TestCase {
 		assertEquals(o2, d);
 	}
 	
+@Test
+
 	public void testWeek() throws Exception {
 		da.reset();
 		
@@ -84,6 +70,7 @@ public class DateAdd extends TestCase {
 		assertEquals(o3, o);
 	}
 	
+@Test
 	public void testMonth() throws Exception {
 		da.reset();
 		
@@ -103,6 +90,7 @@ public class DateAdd extends TestCase {
 		assertEquals(o2, d);
 	}
 	
+@Test
 	public void testDay() throws Exception {
 		da.reset();
 		

@@ -1,5 +1,7 @@
 package com.dexels.navajo.functions.test;
 
+import org.junit.Before;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
@@ -7,23 +9,17 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.FunctionFactoryInterface;
 
-import junit.framework.TestCase;
-
-public abstract class AbstractFunction extends TestCase {
+public abstract class AbstractFunction  {
 
 	protected FunctionFactoryInterface fff;
 	protected ClassLoader cl;
 	
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		fff = (FunctionFactoryInterface) FunctionFactoryFactory.getInstance();
 		cl = getClass().getClassLoader();
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-	
 	protected Navajo createTestNavajo() throws Exception {
 		Navajo doc = NavajoFactory.getInstance().createNavajo();
 		Message array = NavajoFactory.getInstance().createMessage(doc, "Aap");
