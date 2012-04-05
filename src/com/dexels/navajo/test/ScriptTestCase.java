@@ -1,10 +1,16 @@
 package com.dexels.navajo.test;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
+import static org.junit.Assert.*;
+
 
 public abstract class ScriptTestCase extends BareTestCase {
 	
@@ -27,7 +33,7 @@ public abstract class ScriptTestCase extends BareTestCase {
 		return getClass().getName().replaceAll("\\.", "/");
 	}
 		
-	@Override
+	@Before
 	protected void setUp() throws Exception {
 
 		if(skipAllTests) {
@@ -54,7 +60,6 @@ public abstract class ScriptTestCase extends BareTestCase {
 			result = ScriptTestContext.getInstance().callService(scriptName,input);	
 		}
 		
-		super.setUp();
 	}
 
 	/**
@@ -77,9 +82,8 @@ public abstract class ScriptTestCase extends BareTestCase {
 		
 	}
 
-	@Override
+	@After
 	protected void tearDown() throws Exception {
-		super.tearDown();
 	}
 
 	
@@ -92,7 +96,7 @@ public abstract class ScriptTestCase extends BareTestCase {
 //		testResult();
 //	}
 
-	
+	@Test
 	public void testError() {
 		if(skipAllTests) {
 			return;
@@ -110,10 +114,12 @@ public abstract class ScriptTestCase extends BareTestCase {
 		}
 		
 	}
+	@Test
 	protected final Navajo getResultNavajo() {
 		return ScriptTestContext.getInstance().getScriptResult(getScriptName());
 	}
 
+	@Test
 	public void testConditionErrors() {
 		if(skipAllTests) {
 			return;
@@ -134,6 +140,7 @@ public abstract class ScriptTestCase extends BareTestCase {
 //		assertNull(message);
 	}
 
+	@Test
 	public void testAuthorizationErrors() {
 		if(skipAllTests) {
 			return;

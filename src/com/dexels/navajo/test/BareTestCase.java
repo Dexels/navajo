@@ -1,6 +1,10 @@
 package com.dexels.navajo.test;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -8,7 +12,7 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 
-public abstract class BareTestCase extends TestCase {
+public abstract class BareTestCase  {
 	
 	/**
 	 * Asserts that a condition is true. If it isn't it throws
