@@ -1,21 +1,22 @@
 package tests.cascadinglisteners;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import tipi.TipiCoreExtension;
 import tipi.TipiExtension;
 
 import com.dexels.navajo.tipi.testimpl.AbstractTipiTest;
-
 public class CascadingListeners extends AbstractTipiTest {
-	public CascadingListeners() {
-		super("testTipi");
-	}
 
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		List<TipiExtension> elist = new ArrayList<TipiExtension>();
 		TipiExtension ed = new TipiCoreExtension();
 		ed.loadDescriptor();
@@ -24,6 +25,7 @@ public class CascadingListeners extends AbstractTipiTest {
 		setContext("init", new File("testsrc/tests/cascadinglisteners"),elist);
 	}
 
+	@Test
 	public void testTipi() {
 		// try {
 		// Thread.sleep(100);

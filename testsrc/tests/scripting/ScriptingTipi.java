@@ -4,18 +4,18 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
+import org.junit.Test;
+
 import tipi.TipiCoreExtension;
 import tipi.TipiExtension;
 
 import com.dexels.navajo.tipi.testimpl.AbstractTipiTest;
 
 public class ScriptingTipi extends AbstractTipiTest {
-	public ScriptingTipi() {
-		super("testTipi");
-	}
 
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		List<TipiExtension> elist = new ArrayList<TipiExtension>();
 		TipiExtension ed = new TipiCoreExtension();
 		ed.loadDescriptor();
@@ -25,6 +25,7 @@ public class ScriptingTipi extends AbstractTipiTest {
 		System.err.println("Settup complete");
 	}
 
+	@Test
 	public void testTipi() {
 		// try {
 		// Thread.sleep(100);

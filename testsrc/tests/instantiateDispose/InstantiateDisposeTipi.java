@@ -1,8 +1,12 @@
 package tests.instantiateDispose;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.Before;
 
 import tipi.TipiCoreExtension;
 import tipi.TipiExtension;
@@ -10,12 +14,9 @@ import tipi.TipiExtension;
 import com.dexels.navajo.tipi.testimpl.AbstractTipiTest;
 
 public class InstantiateDisposeTipi extends AbstractTipiTest {
-	public InstantiateDisposeTipi() {
-		super("testTipi");
-	}
 
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		List<TipiExtension> elist = new ArrayList<TipiExtension>();
 		TipiExtension ed = new TipiCoreExtension();
 		ed.loadDescriptor();

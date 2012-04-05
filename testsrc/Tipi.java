@@ -1,5 +1,6 @@
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+
 import tests.cascadinglisteners.CascadingListeners;
 import tests.cascadinglisteners.NonCascadingListeners;
 import tests.core.CoreTipi;
@@ -7,17 +8,18 @@ import tests.eventinject.EventInjectTipi;
 import tests.instantiateDispose.InstantiateDisposeTipi;
 import tests.scripting.ScriptingTipi;
 
+@RunWith(Suite.class)
+@Suite.SuiteClasses({
+	CoreTipi.class, 
+	InstantiateDisposeTipi.class,
+	EventInjectTipi.class,
+	InstantiateDisposeTipi.class,
+	CascadingListeners.class,
+	NonCascadingListeners.class,
+	ScriptingTipi.class
+	
+	})
 public class Tipi {
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite("All tipi tests");
-		suite.addTest(new CoreTipi());
-		suite.addTest(new InstantiateDisposeTipi());
-		suite.addTest(new EventInjectTipi());
-		suite.addTest(new CascadingListeners());
-		suite.addTest(new NonCascadingListeners());
-		suite.addTest(new ScriptingTipi());
-		return suite;
-	}
-
+	
 }

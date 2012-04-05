@@ -1,8 +1,13 @@
 package tests.eventinject;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import tipi.TipiCoreExtension;
 import tipi.TipiExtension;
@@ -12,12 +17,9 @@ import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.testimpl.AbstractTipiTest;
 
 public class EventInjectTipi extends AbstractTipiTest {
-	public EventInjectTipi() {
-		super("testTipi");
-	}
 
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		List<TipiExtension> elist = new ArrayList<TipiExtension>();
 		TipiExtension ed = new TipiCoreExtension();
 		ed.loadDescriptor();
@@ -26,6 +28,7 @@ public class EventInjectTipi extends AbstractTipiTest {
 		setContext("init", new File("testsrc/tests/eventinject"),elist);
 	}
 
+	@Test
 	public void testTipi() throws TipiBreakException, TipiException {
 		// Thread.sleep(500);
 		System.err.println("USERDIR: " + System.getProperty("user.dir"));

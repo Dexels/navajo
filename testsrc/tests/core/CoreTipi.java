@@ -1,8 +1,13 @@
 package tests.core;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import tipi.TipiCoreExtension;
 import tipi.TipiExtension;
@@ -10,12 +15,9 @@ import tipi.TipiExtension;
 import com.dexels.navajo.tipi.testimpl.AbstractTipiTest;
 
 public class CoreTipi extends AbstractTipiTest {
-	public CoreTipi() {
-		super("testTipi");
-	}
-
-	protected void setUp() throws Exception {
-		super.setUp();
+	
+	@Before
+	public void setUp() throws Exception {
 		List<TipiExtension> elist = new ArrayList<TipiExtension>();
 		TipiExtension ed = new TipiCoreExtension();
 		ed.loadDescriptor();
@@ -25,6 +27,7 @@ public class CoreTipi extends AbstractTipiTest {
 		System.err.println("Setup complete");
 	}
 
+	@Test
 	public void testTipi() {
 		// try {
 		// Thread.sleep(100);

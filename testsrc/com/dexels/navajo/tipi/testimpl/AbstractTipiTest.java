@@ -1,19 +1,17 @@
 package com.dexels.navajo.tipi.testimpl;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-import tipi.TipiCoreExtension;
 import tipi.TipiExtension;
-
-import junit.framework.TestCase;
 
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.headless.HeadlessApplicationInstance;
 import com.dexels.navajo.tipi.headless.HeadlessTipiContext;
-
-public class AbstractTipiTest extends TestCase {
+public class AbstractTipiTest  {
 
 	private HeadlessTipiContext myContext = null;
 
@@ -21,9 +19,7 @@ public class AbstractTipiTest extends TestCase {
 		return myContext;
 	}
 
-	public AbstractTipiTest(String name) {
-		super(name);
-	}
+
 
 	public void setContext(String definition, File tipiDir, List<TipiExtension> ed) throws Exception {
 		setContext(definition, tipiDir, new String[] {},ed);
