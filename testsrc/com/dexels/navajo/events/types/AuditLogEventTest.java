@@ -2,19 +2,22 @@ package com.dexels.navajo.events.types;
 
 import java.util.logging.Level;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-public class AuditLogEventTest extends TestCase {
+public class AuditLogEventTest {
 
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@After
+	public void tearDown() throws Exception {
 	}
-	
+
+	@Test
 	public void test() {
 		AuditLogEvent aul = new AuditLogEvent("subsystem", "msg", Level.INFO);
 		Assert.assertEquals(aul.getSubSystem(), "subsystem");

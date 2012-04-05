@@ -7,7 +7,7 @@ public class Relation {
 	private String id;
 	private String selection;
 	private List<String> multiple;
-	
+
 	public String getId() {
 		return id;
 	}
@@ -15,7 +15,7 @@ public class Relation {
 	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	public void setSelection(String s) {
 		this.selection = s;
 	}

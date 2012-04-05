@@ -1,17 +1,23 @@
 package com.dexels.navajo.mapping.bean;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
-public class ServiceMapperTest extends TestCase {
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-	protected void setUp() throws Exception {
-		super.setUp();
+public class ServiceMapperTest {
+
+	@Before
+	public void setUp() throws Exception {
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@After
+	public void tearDown() throws Exception {
 	}
 
+	@Test
 	public void testGetServiceObject() throws Exception {
 		ServiceMapper sm = new ServiceMapper();
 		sm.setServiceClass("com.dexels.navajo.mapping.bean.TestService");
@@ -20,6 +26,7 @@ public class ServiceMapperTest extends TestCase {
 		assertEquals(TestService.class, o.getClass());
 	}
 
+	@Test
 	public void testSetInvoke() throws Exception {
 		ServiceMapper sm = new ServiceMapper();
 		sm.setServiceClass("com.dexels.navajo.mapping.bean.TestService");
@@ -29,6 +36,7 @@ public class ServiceMapperTest extends TestCase {
 		sm.setInvoke(true);
 	}
 
+	@Test
 	public void testGetResult() throws Exception {
 		ServiceMapper sm = new ServiceMapper();
 		sm.setServiceClass("com.dexels.navajo.mapping.bean.TestService");
@@ -40,8 +48,9 @@ public class ServiceMapperTest extends TestCase {
 		assertEquals("Stupid-" + 2, o.toString());
 	}
 
+	@Test
 	public void testGetDomainObjectResult() throws Exception {
-		
+
 		ServiceMapper sm = new ServiceMapper();
 		sm.setServiceClass("com.dexels.navajo.mapping.bean.TestService");
 		sm.setServiceMethod("mergeBeans");
@@ -51,15 +60,19 @@ public class ServiceMapperTest extends TestCase {
 		DomainObjectMapper dom = sm.getDomainObjectResult();
 		assertNotNull(dom);
 		assertEquals(TestBean.class, dom.getMyObject().getClass());
-		
-		// Another method with the same name, but with different parameter signature.
+
+		// Another method with the same name, but with different parameter
+		// signature.
 		sm = new ServiceMapper();
 		sm.setServiceClass("com.dexels.navajo.mapping.bean.TestService");
 		sm.setServiceMethod("mergeBeans");
-		TestBean tb1 = new TestBean();tb1.setLastname("1");
-		TestBean tb2 = new TestBean();tb2.setLastname("2");
-		TestBean tb3 = new TestBean();tb3.setLastname("3");
-		
+		TestBean tb1 = new TestBean();
+		tb1.setLastname("1");
+		TestBean tb2 = new TestBean();
+		tb2.setLastname("2");
+		TestBean tb3 = new TestBean();
+		tb3.setLastname("3");
+
 		sm.setAddDomainObject(new DomainObjectMapper(tb1));
 		sm.setAddDomainObject(new DomainObjectMapper(tb2));
 		sm.setAddDomainObject(new DomainObjectMapper(tb3));
@@ -68,7 +81,7 @@ public class ServiceMapperTest extends TestCase {
 		assertNotNull(dom);
 		assertEquals(TestBean.class, dom.getMyObject().getClass());
 		assertEquals("123", ((TestBean) dom.getMyObject()).getLastname());
-		
+
 		// Check with empty domain object.
 		sm = new ServiceMapper();
 		sm.setServiceClass("com.dexels.navajo.mapping.bean.TestPOJO");
@@ -79,18 +92,21 @@ public class ServiceMapperTest extends TestCase {
 		assertEquals(Object.class, dom.getMyObject().getClass());
 	}
 
+	@Test
 	public void testGetDomainObjectResults() throws Exception {
-		
+
 		ServiceMapper sm = new ServiceMapper();
 		sm.setServiceClass("com.dexels.navajo.mapping.bean.TestService");
 		sm.setServiceMethod("getTestBeansAsList");
 		sm.setAddParameter(2);
 		sm.setInvoke(true);
-		DomainObjectMapper [] doms = sm.getDomainObjectResults();
+		DomainObjectMapper[] doms = sm.getDomainObjectResults();
 		assertEquals(2, doms.length);
-		assertEquals("Lastname "+0, ((TestBean) doms[0].getMyObject()).getLastname());
-		assertEquals("Lastname "+1, ((TestBean) doms[1].getMyObject()).getLastname());
-		
+		assertEquals("Lastname " + 0,
+				((TestBean) doms[0].getMyObject()).getLastname());
+		assertEquals("Lastname " + 1,
+				((TestBean) doms[1].getMyObject()).getLastname());
+
 		// Get test beans.
 		sm = new ServiceMapper();
 		sm.setServiceClass("com.dexels.navajo.mapping.bean.TestService");
@@ -99,8 +115,10 @@ public class ServiceMapperTest extends TestCase {
 		sm.setInvoke(true);
 		doms = sm.getDomainObjectResults();
 		assertEquals(2, doms.length);
-		assertEquals("Lastname "+0, ((TestBean) doms[0].getMyObject()).getLastname());
-		assertEquals("Lastname "+1, ((TestBean) doms[1].getMyObject()).getLastname());
+		assertEquals("Lastname " + 0,
+				((TestBean) doms[0].getMyObject()).getLastname());
+		assertEquals("Lastname " + 1,
+				((TestBean) doms[1].getMyObject()).getLastname());
 	}
 
 }

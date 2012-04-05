@@ -30,9 +30,14 @@ public class CompiledTestScript4 extends CompiledScript {
 
 	public ArrayList<Dependency> getDependentObjects() {
 		ArrayList<Dependency> deps = new ArrayList<Dependency>();
-		deps.add(new AdapterFieldDependency(-1, "com.dexels.navajo.server.resource.ResourceTestAdapter", "whatever", "'id5'"));
+		deps.add(new AdapterFieldDependency(-1,
+				"com.dexels.navajo.server.resource.ResourceTestAdapter",
+				"whatever", "'id5'"));
 		// Deliberately create circular dependency
-		deps.add(new AdapterFieldDependency(-1, "com.dexels.navajo.adapter.NavajoMap", GenericDependentResource.SERVICE_DEPENDENCY, "'CompiledTestScript3'"));
+		deps.add(new AdapterFieldDependency(-1,
+				"com.dexels.navajo.adapter.NavajoMap",
+				GenericDependentResource.SERVICE_DEPENDENCY,
+				"'CompiledTestScript3'"));
 		return deps;
 	}
 }

@@ -1,30 +1,39 @@
 package com.dexels.navajo.events.types;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
-public class CacheExpiryEventTest extends TestCase {
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-	protected void setUp() throws Exception {
-		super.setUp();
+public class CacheExpiryEventTest {
+
+	@Before
+	public void setUp() throws Exception {
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@After
+	public void tearDown() throws Exception {
 	}
-	
+
+	@Test
 	public void test() {
 		CacheExpiryEvent ncse = new CacheExpiryEvent("webservice", "apenoot");
 		assertEquals("webservice", ncse.getWebservice());
 		assertEquals("apenoot", ncse.getKey());
 		assertNotNull(ncse.getEventNavajo());
-		if ( ncse.getEventNavajo() != null ) {
+		if (ncse.getEventNavajo() != null) {
 			assertNotNull(ncse.getEventNavajo().getMessage("__event__"));
-			assertNotNull(ncse.getEventNavajo().getMessage("__event__").getProperty("Webservice"));
-			assertEquals(ncse.getEventNavajo().getMessage("__event__").getProperty("Webservice").getValue(), "webservice");
-			assertNotNull(ncse.getEventNavajo().getMessage("__event__").getProperty("Key"));
-			assertEquals(ncse.getEventNavajo().getMessage("__event__").getProperty("Key").getValue(), "apenoot");
+			assertNotNull(ncse.getEventNavajo().getMessage("__event__")
+					.getProperty("Webservice"));
+			assertEquals(ncse.getEventNavajo().getMessage("__event__")
+					.getProperty("Webservice").getValue(), "webservice");
+			assertNotNull(ncse.getEventNavajo().getMessage("__event__")
+					.getProperty("Key"));
+			assertEquals(ncse.getEventNavajo().getMessage("__event__")
+					.getProperty("Key").getValue(), "apenoot");
 		}
 	}
-	
+
 }

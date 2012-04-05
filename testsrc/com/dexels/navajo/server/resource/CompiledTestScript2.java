@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import com.dexels.navajo.mapping.CompiledScript;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
 import com.dexels.navajo.mapping.compiler.meta.Dependency;
-import com.dexels.navajo.mapping.compiler.meta.ExpressionValueDependency;
 import com.dexels.navajo.server.Access;
 
 public class CompiledTestScript2 extends CompiledScript {
@@ -30,7 +29,9 @@ public class CompiledTestScript2 extends CompiledScript {
 
 	public ArrayList<Dependency> getDependentObjects() {
 		ArrayList<Dependency> deps = new ArrayList<Dependency>();
-		deps.add(new AdapterFieldDependency(-1, "com.dexels.navajo.server.resource.ResourceTestAdapter3", "whatever", "id2"));
+		deps.add(new AdapterFieldDependency(-1,
+				"com.dexels.navajo.server.resource.ResourceTestAdapter3",
+				"whatever", "id2"));
 		return deps;
 	}
 }

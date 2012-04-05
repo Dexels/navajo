@@ -31,11 +31,20 @@ public class CompiledTestScript extends CompiledScript {
 	public ArrayList<Dependency> getDependentObjects() {
 		ArrayList<Dependency> deps = new ArrayList<Dependency>();
 		deps.add(new ExpressionValueDependency(1, "mies", "noot"));
-		deps.add(new AdapterFieldDependency(-1, "com.dexels.navajo.server.resource.ResourceTestAdapter", "whatever", "'id1'"));
-		deps.add(new AdapterFieldDependency(-1, "com.dexels.navajo.server.resource.ResourceTestAdapter", "whatever", "'id2'"));
-		deps.add(new AdapterFieldDependency(-1, "com.dexels.navajo.server.resource.ResourceTestDoesNotExistAdapter", "whatever", "'id3'"));
+		deps.add(new AdapterFieldDependency(-1,
+				"com.dexels.navajo.server.resource.ResourceTestAdapter",
+				"whatever", "'id1'"));
+		deps.add(new AdapterFieldDependency(-1,
+				"com.dexels.navajo.server.resource.ResourceTestAdapter",
+				"whatever", "'id2'"));
+		deps.add(new AdapterFieldDependency(
+				-1,
+				"com.dexels.navajo.server.resource.ResourceTestDoesNotExistAdapter",
+				"whatever", "'id3'"));
 		deps.add(new ExpressionValueDependency(1, "aap", "noot"));
-		deps.add(new AdapterFieldDependency(-1, "com.dexels.navajo.server.resource.ResourceTestAdapter2", "whatever", "'id4'"));
+		deps.add(new AdapterFieldDependency(-1,
+				"com.dexels.navajo.server.resource.ResourceTestAdapter2",
+				"whatever", "'id4'"));
 		return deps;
 	}
 }
