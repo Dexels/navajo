@@ -95,7 +95,9 @@ Require-Bundle: com.dexels.navajo.document,
  com.dexels.navajo.version
 Import-Package: javax.imageio.spi,
  javax.script,
- junit.framework;version="3.8.2",
+ org.junit;version="4.8.2",
+ org.junit.runner;version="4.8.2",
+ org.junit.runners;version="4.8.2",
  org.osgi.framework;version="1.5.0",
  org.slf4j;version="1.6.1"
 Bundle-ClassPath: beansclasses/,
