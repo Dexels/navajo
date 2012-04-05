@@ -45,7 +45,7 @@
 
 	<target name="publish" depends="archive">
 		<copy file="TipiVaadin.war" tofile="${deployPath}/knvb#test#oao.war" />
-		<scp verbose="true" file="TipiVaadin.war" todir="dexels@hermes2.dexels.com:" password="slexed"/>
+		<scp verbose="true" file="TipiVaadin.war" todir="dexels@hermes2.dexels.com:" password="${deploypass}"/>
 		<!--			<copy file="TipiVaadin.war" tofile="${deployPath}/knhb#test#oao.war" />
 		<copy file="TipiVaadin.war" tofile="${deployPath}/knkv#test#oao.war" />
 		<copy file="TipiVaadin.war" tofile="${deployPath}/nhvdwf.war" />
