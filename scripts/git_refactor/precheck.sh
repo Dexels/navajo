@@ -1,5 +1,6 @@
 #!/bin/sh -ve
 #export MODULEPATH=bundle
+echo "BasePath: ${BASEPATH}"
 shopt -s extglob
 cd $BASEPATH/
 rm -rf _$1
@@ -16,11 +17,6 @@ for i in `find . -maxdepth 1 ! -name $MODULEPATH ! -name '\.'`
 do
  git mv -k  $i  $MODULEPATH/$1
 done
-#git mv -k $FILELIST  $MODULEPATH/$1
-#git mv -k  .cvsignore  $MODULEPATH/$1
-#git mv -k  .project  $MODULEPATH/$1
-#git mv -k  .classpath  $MODULEPATH/$1
-#git mv -k  .settings  $MODULEPATH/$1
 git add .
 git commit -m "Prepare for move"
 echo "Cleaning filter branch"

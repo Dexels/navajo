@@ -1,5 +1,5 @@
 #!/bin/sh -ve
-cd $1
+#cd $1
 
 echo $BASEPATH
 echo $PATH
