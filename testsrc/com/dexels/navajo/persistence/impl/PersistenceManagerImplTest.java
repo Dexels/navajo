@@ -1,6 +1,10 @@
 package com.dexels.navajo.persistence.impl;
 
-import junit.framework.Assert;
+
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
@@ -53,8 +57,8 @@ class TestConstructor2 implements Constructor {
 
 public class PersistenceManagerImplTest extends CacheControllerTest {
 
-	
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		
 		super.setUp();
 		CacheController.getInstance().kill();
@@ -68,7 +72,8 @@ public class PersistenceManagerImplTest extends CacheControllerTest {
 		DispatcherFactory.getInstance().setUseAuthorisation(false);
 	}
 
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 		super.tearDown();
 		PersistenceManagerImpl pm =   (PersistenceManagerImpl) DispatcherFactory.getInstance().getNavajoConfig().getPersistenceManager();
 		pm.clearCache();
@@ -82,7 +87,7 @@ public class PersistenceManagerImplTest extends CacheControllerTest {
 		pt.tearDown();
 	}
 	
-	public void testGetConstructorStringStringLongBoolean() throws Exception {
+	@Test public void testGetConstructorStringStringLongBoolean() throws Exception {
 		
 		Navajo tp = createTestNavajo();
 		
@@ -115,7 +120,7 @@ public class PersistenceManagerImplTest extends CacheControllerTest {
 		
 	}
 
-	public void testWrite() throws Exception {
+	@Test public void testWrite() throws Exception {
 		int MAXTHREADS = 1000;
 		final PersistenceManagerImpl pm =  (PersistenceManagerImpl) DispatcherFactory.getInstance().getNavajoConfig().getPersistenceManager();
 		Thread [] threads = new Thread[MAXTHREADS];
@@ -151,7 +156,7 @@ public class PersistenceManagerImplTest extends CacheControllerTest {
 	
 	}
 	
-	public void testWriteMultipleKeys() throws Exception {
+	@Test public void testWriteMultipleKeys() throws Exception {
 		int MAXTHREADS = 1000;
 		final PersistenceManagerImpl pm =   (PersistenceManagerImpl) DispatcherFactory.getInstance().getNavajoConfig().getPersistenceManager();
 		Thread [] threads = new Thread[MAXTHREADS];
@@ -190,11 +195,11 @@ public class PersistenceManagerImplTest extends CacheControllerTest {
 	
 	}
 
-//	public void testSetConfiguration() {
+//	@Test public void testSetConfiguration() {
 //		fail("Not yet implemented");
 //	}
 //
-	public void testGetSetKey() {
+	@Test public void testGetSetKey() {
 		final PersistenceManagerImpl pm =  (PersistenceManagerImpl) DispatcherFactory.getInstance().getNavajoConfig().getPersistenceManager();
 		pm.setKey("aap");
 		Assert.assertEquals("aap", pm.getKey());
@@ -209,7 +214,7 @@ public class PersistenceManagerImplTest extends CacheControllerTest {
 	}
 
 	@SuppressWarnings("unused")
-	public void testIsCached() throws Exception {
+	@Test public void testIsCached() throws Exception {
 		
 		final PersistenceManagerImpl pm = (PersistenceManagerImpl) DispatcherFactory.getInstance().getNavajoConfig().getPersistenceManager();
 	
@@ -223,7 +228,7 @@ public class PersistenceManagerImplTest extends CacheControllerTest {
 	}
 
 	@SuppressWarnings("unused")
-	public void testSetDoClear() throws Exception {
+	@Test public void testSetDoClear() throws Exception {
 		final PersistenceManagerImpl pm =  (PersistenceManagerImpl) DispatcherFactory.getInstance().getNavajoConfig().getPersistenceManager();
 		
 		TestConstructor1 tc1 = new TestConstructor1(createTestNavajo());
@@ -236,19 +241,19 @@ public class PersistenceManagerImplTest extends CacheControllerTest {
 		
 	}
 
-//	public void testGetHitratio() {
+//	@Test public void testGetHitratio() {
 //		fail("Not yet implemented");
 //	}
 //
-//	public void testSetServiceKeyValues() {
+//	@Test public void testSetServiceKeyValues() {
 //		fail("Not yet implemented");
 //	}
 //
-//	public void testGetConstructorStringLongBoolean() {
+//	@Test public void testGetConstructorStringLongBoolean() {
 //		fail("Not yet implemented");
 //	}
 //
-//	public void testClearCache() {
+//	@Test public void testClearCache() {
 //		fail("Not yet implemented");
 //	}
 

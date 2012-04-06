@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -14,7 +16,7 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.server.test.TestDispatcher;
 import com.dexels.navajo.server.test.TestNavajoConfig;
 
-public class CacheControllerTest extends TestCase {
+public class CacheControllerTest  {
 
 	private String sampleConfig = 
 		"<tml>" + "" +
@@ -80,26 +82,25 @@ public class CacheControllerTest extends TestCase {
 			DispatcherFactory.getInstance().getNavajoConfig().writeConfig("cache.xml", config);
 			System.err.println("WROTE CACHE CONFIG.");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		new DispatcherFactory(new TestDispatcher(new TestNavajoConfig()));
 		// injected the dispatcher
 		DispatcherFactory.getInstance().setUseAuthorisation(false);
 		createCacheConfig();
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@After
+	public void tearDown() throws Exception {
 		CacheController.getInstance().kill();
 		new File("/tmp/cache.xml").delete();
 	}
 
-	public void testGetInstance() throws Exception {
+	@Test public void testGetInstance() throws Exception {
 		int MAXTHREADS = 100;
 
 		final CacheController [] instances = new CacheController[MAXTHREADS];
@@ -132,7 +133,7 @@ public class CacheControllerTest extends TestCase {
 		}
 	}
 
-	public void testGetCacheKey() throws Exception {
+	@Test public void testGetCacheKey() throws Exception {
 		CacheController cc = CacheController.getInstance();
 		Navajo n = createTestNavajo();
 		// standard cached service, not for specific user:
@@ -146,21 +147,21 @@ public class CacheControllerTest extends TestCase {
 		
 	}
 
-	public void testGetExpirationInterval() {
+	@Test public void testGetExpirationInterval() {
 		CacheController cc = CacheController.getInstance();
 		Assert.assertEquals(6000000, cc.getExpirationInterval("MyTestWebservice"));
 		// Not defined WS:
 		Assert.assertEquals(-1, cc.getExpirationInterval("MyTestWebservice6"));
 	}
 
-	public void testGetServiceKeys() {
+	@Test public void testGetServiceKeys() {
 		CacheController cc = CacheController.getInstance();
 		Assert.assertEquals("/Request/MyResultPropertyKey", cc.getServiceKeys("MyTestWebservice"));
 		// Not defined WS:
 		Assert.assertNull(cc.getServiceKeys("dsdss"));
 	}
 
-	public void testCachedEntries() {
+	@Test public void testCachedEntries() {
 		CacheController cc = CacheController.getInstance();
 		Assert.assertEquals(3, cc.cachedEntries());
 	}

@@ -8,15 +8,15 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoLaszloConverter;
 
 
-public class PostLaszlo extends TestCase {
+public class PostLaszlo  {
 
-	public void testLocal() throws IOException, NavajoException {
+	@Test public void testLocal() throws IOException, NavajoException {
 		System.err.println("Starting test");
 		FileInputStream fis = new FileInputStream("testdata/initgetcurrentmatches.xml");
 		BufferedInputStream bis = new BufferedInputStream(fis);
@@ -25,7 +25,7 @@ public class PostLaszlo extends TestCase {
 	}
 	
 	
-	public void testServer() throws IOException, NavajoException {
+	@Test public void testServer() throws IOException, NavajoException {
 		System.err.println("Starting test");
 		FileInputStream fis = new FileInputStream("testdata/dummygetcurrentmatches.xml");
 		

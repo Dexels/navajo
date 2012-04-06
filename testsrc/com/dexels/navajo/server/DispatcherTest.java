@@ -1,7 +1,11 @@
 package com.dexels.navajo.server;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
+
+import static org.junit.Assert.*;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
@@ -10,19 +14,14 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.server.test.TestNavajoConfig;
 
-public class DispatcherTest extends TestCase {
+public class DispatcherTest {
 
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before public void setUp() throws Exception {
 		TribeManagerFactory.useTestVersion();
 		new DispatcherFactory(new Dispatcher(new TestNavajoConfig()));
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-	
-	public void testHandle1() throws Exception {
+	@Test public void testHandle1() throws Exception {
 		Navajo doc = NavajoFactory.getInstance().createNavajo();
 		Header h = NavajoFactory.getInstance().createHeader(doc, "navajo_ping", "test", "test", -1);
 		doc.addHeader(h);
@@ -33,7 +32,7 @@ public class DispatcherTest extends TestCase {
 		
 	}
 	
-	public void testRemoveSpecialMessages() throws Exception {
+	@Test public void testRemoveSpecialMessages() throws Exception {
 		Navajo doc = NavajoFactory.getInstance().createNavajo();
 		Message globals = NavajoFactory.getInstance().createMessage(doc, "__globals__");
 		Message parms = NavajoFactory.getInstance().createMessage(doc, "__parms__");
