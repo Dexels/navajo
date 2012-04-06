@@ -10,6 +10,8 @@ import java.io.UnsupportedEncodingException;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContinuationPending;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
@@ -28,7 +30,10 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 	// private long scheduledAt;
 	private Access access;
 	private RequestQueue requestQueue;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ContinuationRunnable.class);
+	
 	public ContinuationRunnable(ScriptEnvironment se,
 			ContinuationPending pending) {
 		this.pending = pending;
@@ -55,17 +60,16 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 			oos.flush();
 			oos.close();
 			byte[] data = out.toByteArray();
-			System.err.println("Serialized continuation size: " + data.length);
+			logger.info("Serialized continuation size: " + data.length);
 			ObjectInputStream ois = new ObjectInputStream(
 					new ByteArrayInputStream(data));
 			Object oo = ois.readObject();
-			System.err.println("Reserialize successful!");
+			logger.info("Reserialize successful!");
 			return oo;
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		return c;
 	}
@@ -80,18 +84,18 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 		} catch (Throwable t) {
 			t.printStackTrace();
 		} finally {
-			System.err.println("exiting continuescript");
+			logger.info("exiting continuescript");
 		}
 	}
 
 	public void releaseCurrentThread() {
-		System.err.println(">>>>>>>>>>>>>>>>>>>Releasing current thread!!");
+		logger.info(">>>>>>>>>>>>>>>>>>>Releasing current thread!!");
 		throw pending;
 	}
 
 	@Override
 	public void endTransaction() throws IOException {
-		System.err.println("Finalizing access...");
+		logger.info("Finalizing access...");
 		Access access = environment.getAccess();
 		// TODO: Make pretty, remove stupid params
 		DispatcherFactory.getInstance().finalizeService(access.getInDoc(),
@@ -100,10 +104,10 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 
 		TmlRunnable originalRunnable = access.getOriginalRunnable();
 		if (originalRunnable != null) {
-			System.err.println("Relaying endTransaction to original: "
+			logger.info("Relaying endTransaction to original: "
 					+ originalRunnable.getClass());
 			try {
-				System.err.println("Writing to output! ");
+				logger.info("Writing to output! ");
 				originalRunnable.writeOutput(getAccess().getInDoc(),
 						getAccess().getOutputDoc());
 			} catch (NavajoException e) {
@@ -112,7 +116,7 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 			}
 			originalRunnable.endTransaction();
 		} else {
-			System.err.println("No original runnable");
+			logger.info("No original runnable");
 		}
 	}
 
@@ -141,11 +145,11 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 				// Context.exit();
 				reschedule(environment, e);
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				logger.info("Continuation: ", e1);
 			}
 			throw new NavajoDoneException(e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 			NavajoScopeManager.getInstance().releaseScope(
 					environment.getGlobalScope());
 		}
@@ -154,7 +158,7 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 	// if another continuation is captured.
 	private void reschedule(ScriptEnvironment env, ContinuationPending e)
 			throws IOException {
-		System.err.println("Multiple continuations:  " + e.hashCode());
+		logger.info("Multiple continuations:  " + e.hashCode());
 		// Thread.dumpStack();
 		// SchedulerRegistry.getScheduler().submit(new ContinuationRunnable(env,
 		// e.getContinuation()), false);

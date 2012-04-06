@@ -218,23 +218,35 @@ public class RhinoRunner {
 			ScriptableObject.putProperty(globalScope, "conditionErrors",
 					Context.javaToJS(conditionError, globalScope));
 
-			cx.setOptimizationLevel(-1); // must use interpreter mode
-			Script includeCompiledRun = cx.compileReader(includeCompiledReader,
-					"includeCompiled.js", 1, null);
-			Script includeRun = cx.compileReader(includeReader, "include.js",
-					1, null);
-			Script scriptrun = cx.compileReader(fileReader, a.getRpcName()
-					+ ".js", 1, null);
-			cx.executeScriptWithContinuations(includeRun, globalScope);
-			cx.executeScriptWithContinuations(includeCompiledRun, globalScope);
-
+			//cx.setOptimizationLevel(-1); // must use interpreter mode
+//			Script includeCompiledRun = cx.compileReader(includeCompiledReader,
+//					"includeCompiled.js", 1, null);
+//			Script includeRun = cx.compileReader(includeReader, "include.js",
+//					1, null);
+//			Script scriptrun = cx.compileReader(fileReader, a.getRpcName()
+//					+ ".js", 1, null);
+			
+			
+			
+//			cx.executeScriptWithContinuations(includeRun, globalScope);
+	
 			try {
-				cx.executeScriptWithContinuations(scriptrun, globalScope);
+				cx.evaluateReader(globalScope, includeCompiledReader, "includeCompiled.js", 1, null);
+				cx.evaluateReader(globalScope, includeReader, "include.js", 1, null);
+				cx.evaluateReader(globalScope, fileReader, a.getRpcName()+ ".js", 1, null);
+//			cx.executeScriptWithContinuations(scriptrun, globalScope);
 			} catch (JavaScriptException e) {
 				Object o = e.getValue();
-				o = Context.jsToJava(o, Object.class);
+				
+				;
+				logger.error("ScriptStack: \n{}",e.getScriptStackTrace());
+//				o = Context.jsToJava(o, Object.class);
 				System.err.println("o: " + o);
+				if(o instanceof Throwable) {
+					logger.error("Exception:", (Throwable)o);
+				}
 				logger.error("Other exception:", e);
+				
 				if (o instanceof RuntimeException) {
 					RuntimeException t = (RuntimeException) o;
 					throw t;

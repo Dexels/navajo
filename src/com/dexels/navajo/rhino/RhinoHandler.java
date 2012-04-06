@@ -5,6 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.listeners.NavajoDoneException;
@@ -18,6 +21,9 @@ import com.dexels.navajo.server.UserException;
 
 public class RhinoHandler extends ServiceHandler {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(RhinoHandler.class);
 	@Override
 	// Will always recompile, no big deal, it's pretty fast. TODO: Only
 	// recompile when needed.
@@ -33,7 +39,7 @@ public class RhinoHandler extends ServiceHandler {
 			return access.getOutputDoc();
 		} catch (NavajoDoneException e1) {
 			// e1.printStackTrace();
-			System.err.println("NavajoDone caught in handler. Rethrowing");
+			logger.info("NavajoDone caught in handler. Rethrowing");
 			throw e1;
 		} catch (Throwable e) {
 
@@ -55,7 +61,6 @@ public class RhinoHandler extends ServiceHandler {
 	public static CompiledScript compileScript(Access a,
 			StringBuffer compilerErrors) throws Exception {
 
-		// System.err.println("Rhino: compileScript");
 
 		// TODO reuse this bugger
 		BasicScriptCompiler compiler = new BasicScriptCompiler();
@@ -77,10 +82,10 @@ public class RhinoHandler extends ServiceHandler {
 		long scriptEdited = scriptPath.lastModified();
 		if (scriptEdited < lastCompiled) {
 			// nothing to compile
-			System.err.println("Skipping compile step!");
+			logger.info("Skipping compile step!");
 		} else {
 
-			System.err.println("Compiling: " + compiledPath.getAbsolutePath()
+			logger.info("Compiling: " + compiledPath.getAbsolutePath()
 					+ " to: " + scriptPath.getAbsolutePath()
 					+ " (actually the other way around)");
 
@@ -108,8 +113,7 @@ public class RhinoHandler extends ServiceHandler {
 			Class.forName("com.dexels.navajo.rhino.RhinoCompiledScript", true,
 					cl);
 		} catch (Throwable e) {
-			System.err
-					.println("Classloading error in Rhino Handler. This can be removed once OSGi is functional");
+			logger.info("Classloading error in Rhino Handler. This can be removed once OSGi is functional");
 		}
 		RhinoCompiledScript rcs = new RhinoCompiledScript(); // (CompiledScript)
 																// rcsClass.newInstance();

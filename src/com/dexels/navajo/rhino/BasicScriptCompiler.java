@@ -23,6 +23,9 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
@@ -40,6 +43,10 @@ public class BasicScriptCompiler implements ScriptCompiler {
 	private File includeBase = null;
 	private String scriptName = null;
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BasicScriptCompiler.class);
+	
 	private static int fails = 0;
 	private static int ignores = 0;
 	private static int successes = 0;
@@ -101,10 +108,6 @@ public class BasicScriptCompiler implements ScriptCompiler {
 			// hahaha
 			String escaped = def.getValue().replaceAll("\\$", "\\$");
 			escaped = escaped.trim();
-			System.err.println("Before: " + def.getValue() + " after: "
-					+ escaped);
-
-			System.err.println("Replacing: " + name + " with: " + escaped);
 			Pattern p = Pattern.compile(name);
 			Matcher m = p.matcher(sb);
 			sb = m.replaceAll(escaped);
@@ -120,7 +123,6 @@ public class BasicScriptCompiler implements ScriptCompiler {
 			return;
 		}
 		if (current.getName().equals("navascript")) {
-			System.err.println("Pre processing navascript: " + scriptName);
 			processNavaScript(current, os);
 			return;
 		}
@@ -345,7 +347,6 @@ public class BasicScriptCompiler implements ScriptCompiler {
 			StringReader sr = new StringReader(sw.toString());
 			XMLElement xx = new CaseSensitiveXMLElement();
 			xx.parseFromReader(sr);
-			// System.err.println("NAVASCRIPT:==================\n=============================\n"+current+"\n\nTSL========================\n==================="+xx);
 			process(xx, os);
 		} catch (MissingParameterException e) {
 			e.printStackTrace();
@@ -399,7 +400,6 @@ public class BasicScriptCompiler implements ScriptCompiler {
 			// function addErrorMessage(message, code, body) {
 			StringBuffer sb = new StringBuffer();
 			writeStacktrace(t, sb);
-			// System.err.println("sb::::: "+sb);
 			os.write(sb.toString());
 			os.writeln("addErrorMessage(\"" + message + "\"," + "-1,\""
 					+ t.getMessage() + "\");");
@@ -528,8 +528,8 @@ public class BasicScriptCompiler implements ScriptCompiler {
 		}
 
 		if (mapClass.equals("com.dexels.navajo.adapter.NavajoMap")) {
-			System.err.println("Replaced old skool map: DISABLED");
-//			 mapClass = "com.dexels.navajo.adapter.NavajoMapContinuations";
+			logger.info("Replaced old skool map: DISABLED");
+			mapClass = "com.dexels.navajo.adapter.NavajoMapContinuations";
 		}
 
 		os.writeln("callMap(\"" + mapClass + "\",function() {");
@@ -907,7 +907,7 @@ public class BasicScriptCompiler implements ScriptCompiler {
 		bsc.setIncludeBase(new File(
 				"/Users/frank/Documents/Spiritus/sportlink-serv/navajo-tester/auxilary/scripts/"));
 		massCompile(input, output, bsc);
-		System.err.println("total fails: " + (fails) + " ignores: " + ignores
+		logger.info("total fails: " + (fails) + " ignores: " + ignores
 				+ " successses: " + successes);
 	}
 
@@ -923,7 +923,7 @@ public class BasicScriptCompiler implements ScriptCompiler {
 					massCompile(file, newOutput, bsc);
 				}
 			} else {
-				System.err.println("Compiling: " + file.getAbsolutePath());
+				logger.info("Compiling: " + file.getAbsolutePath());
 				if (name.endsWith(".xml")) {
 					String currentScriptName = name.substring(0,
 							name.indexOf('.'));
@@ -939,17 +939,16 @@ public class BasicScriptCompiler implements ScriptCompiler {
 						fw.write(result);
 						successes++;
 					} catch (Throwable e) {
-						System.err.println("Compile failed. Script: " + file
+						logger.error("Compile failed. Script: " + file
 								+ " total fails: " + (fails++) + " ignores: "
-								+ ignores + " successses: " + successes);
-						e.printStackTrace();
+								+ ignores + " successses: " + successes,e);
 					}
 					fr.close();
 					fw.flush();
 					fw.close();
 				}
 			}
-			System.err.println("Funny tags: " + strangeTags);
+			logger.info("Funny tags: " + strangeTags);
 		}
 	}
 }

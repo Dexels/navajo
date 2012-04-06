@@ -10,10 +10,15 @@ function callMap(mapClass, callback) {
 	try {
 		if(callback!=undefined && callback!=null) {
 			callback();
+			env.log("After callback");
 			env.storeMap(map);
+			env.log("After store");
 		}
 	} catch(e) {
+		e.rhinoException.printStackTrace();
 		env.killMap(map);
+		env.logException("Map problem:",e.rhinoException);
+		throw (e.rhinoException);
 	}
 	// TODO: Handle exceptions and call kill()
 	env.popMappableTreeNode();
@@ -26,8 +31,8 @@ function mapOntoMessage(field,path,filter,callback) {
 		callback=filter;
 		filter = null;
 	}
-	isArr = env.isArrayMapRef(field);
-	mm = env.getInputMessage(path);
+	var isArr = env.isArrayMapRef(field);
+	var mm = env.getInputMessage(path);
 	
 	isArrMsg = mm.isArrayMessage();
 	if(isArr!=isArrMsg) {
@@ -97,7 +102,7 @@ function callReferenceMap(field,filter,callback){
 			callback(ref);
 			//env.popMappableTreeNode();
 	}
-	env.popMappableTreeNode();
+	//env.popMappableTreeNode();
 }
     
 
@@ -164,7 +169,11 @@ function evaluateNavajo(expression) {
 	if(expression==null) {
 		return null;
 	}
-	result = env.navajoEvaluate(expression);
+	try {
+		result = env.navajoEvaluate(expression);
+	} catch(e) {
+		throw (e);
+	}	
 	
 //	if(result==true) {
 //		env.log('result evaluated as true: '+result)

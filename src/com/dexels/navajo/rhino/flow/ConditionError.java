@@ -1,5 +1,8 @@
 package com.dexels.navajo.rhino.flow;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -13,7 +16,10 @@ public class ConditionError extends RuntimeException {
 	private static final long serialVersionUID = 5199659554341354411L;
 	private Navajo conditionNavajo;
 	private Message conditionMessage;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ConditionError.class);
+	
 	public ConditionError() {
 		conditionNavajo = NavajoFactory.getInstance().createNavajo();
 		conditionMessage = NavajoFactory.getInstance().createMessage(
@@ -43,12 +49,11 @@ public class ConditionError extends RuntimeException {
 							Property.DIR_OUT);
 			m.addProperty(codeProperty);
 			m.addProperty(descriptionProperty);
-			System.err.println("Current condition errors: ");
+			logger.info("Current condition errors: ");
 			conditionNavajo.write(System.err);
 
 		} catch (NavajoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 

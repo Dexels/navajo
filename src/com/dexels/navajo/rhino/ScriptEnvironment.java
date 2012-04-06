@@ -20,9 +20,6 @@ import org.mozilla.javascript.ScriptableObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.client.async.AsyncClient;
-import com.dexels.navajo.client.async.AsyncClientFactory;
-import com.dexels.navajo.client.async.NavajoResponseHandler;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -103,9 +100,7 @@ public abstract class ScriptEnvironment implements Serializable {
 		return globalScope;
 	}
 
-	public AsyncClient getClient() {
-		return AsyncClientFactory.getInstance();
-	}
+
 
 	// TODO Add length
 	public Property createProperty(String name, Object value,
@@ -320,36 +315,6 @@ public abstract class ScriptEnvironment implements Serializable {
 		}
 	}
 
-	public void callService(final String service, Navajo n) throws IOException,
-			NavajoException, ContinuationPending {
-
-		try {
-			Context context = Context.enter();
-			final ContinuationPending cp = context.captureContinuation();
-			final Object c = cp.getContinuation();
-
-			final Object continuation = c;// = reserialize(c);
-			NavajoResponseHandler nrh = new NavajoResponseHandler() {
-				@Override
-				public void onResponse(Navajo n) {
-					System.err.println("Result received");
-					callFinished(service, n);
-					continueScript(continuation, n);
-				}
-
-				@Override
-				public void onFail(Throwable t) throws IOException {
-					throw new IOException("Navajo failed.", t);
-				}
-			};
-			logger.info("Calling server: " + getClient().getServer());
-			getClient().callService(n, service, nrh);
-			// System.err.println("Freezing!");
-			throw (cp);
-		} finally {
-			Context.exit();
-		}
-	}
 
 	/*
 	 * Note that the ch runner will be called BEFORE the continuation!
@@ -381,7 +346,7 @@ public abstract class ScriptEnvironment implements Serializable {
 
 	}
 
-	protected void callFinished(String service, Navajo n) {
+	public void callFinished(String service, Navajo n) {
 
 	}
 
@@ -425,11 +390,6 @@ public abstract class ScriptEnvironment implements Serializable {
 		return c;
 	}
 
-	public void callService(String service) throws IOException,
-			NavajoException, ContinuationPending {
-		Navajo input = NavajoFactory.getInstance().createNavajo();
-		callService(service, input);
-	}
 
 	protected void finishRun() {
 		// Navajo response = getResponse();
@@ -455,6 +415,12 @@ public abstract class ScriptEnvironment implements Serializable {
 		logger.info(s);
 	}
 
+	public void logException(String s,Object e) {
+		Throwable t = (Throwable)e;
+		logger.error(s,t);
+	}
+	
+	
 	public void dump(String message, Object s) {
 		logger.info("Object dump:"+message+" obj: "+s);
 	}

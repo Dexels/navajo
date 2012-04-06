@@ -237,6 +237,7 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 	// includes a stack push!
 	public Object createMapRef(String fieldName) throws IllegalAccessException,
 			InvocationTargetException {
+		// It's also possible that there is no mapRef yet, and we need to create one!
 		String fieldGetter = "get" + fieldName.substring(0, 1).toUpperCase()
 				+ fieldName.substring(1);
 		Object map = getCurrentTreeNode().getMyMap();
@@ -244,12 +245,16 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		for (java.lang.reflect.Method method : methods) {
 			if (method.getName().equals(fieldGetter)) {
 //				int paramCount = method.getParameterTypes().length;
-				boolean isArray = method.getReturnType().isArray();
 				Object mapref = method.invoke(map, new Object[] {});
-				if (isArray) {
-					 log("Element# "+ ((Object[])mapref).length+" for getter: "+fieldGetter+" map: "+map);
+				boolean isArray = method.getReturnType().isArray();
+				if(mapref==null) {
+					// so: no 
+				} else {
+					if (isArray ) {
+						 log("Element# "+ ((Object[])mapref).length+" for getter: "+fieldGetter+" map: "+map);
+					}
+					pushMappableTreeNode(mapref, isArray);
 				}
-				pushMappableTreeNode(mapref, isArray);
 				return mapref;
 			}
 		}
@@ -277,7 +282,6 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		if (!treeNodeStack.isEmpty()) {
 			top = treeNodeStack.peek();
 		}
-		// TODO Add support for arrays!
 		MappableTreeNode mtn = new MappableTreeNode(getAccess(), top, o,
 				isArray);
 		treeNodeStack.push(mtn);
@@ -321,7 +325,7 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		return myInverseNavajoMap.get(n);
 	}
 
-	protected void callFinished(String service, Navajo n) {
+	public void callFinished(String service, Navajo n) {
 		myNavajoMap.put(service, n);
 		myInverseNavajoMap.put(n, service);
 		myElementStack.push(n);
