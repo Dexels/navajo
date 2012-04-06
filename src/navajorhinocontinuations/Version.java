@@ -8,9 +8,6 @@ import org.osgi.framework.BundleContext;
 import com.dexels.navajo.adapter.RhinoAdapterLibrary;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.FunctionFactoryInterface;
-import com.dexels.navajo.rhino.RhinoHandler;
-import com.dexels.navajo.server.HandlerFactory;
-import com.dexels.navajo.server.ServiceHandler;
 
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 
