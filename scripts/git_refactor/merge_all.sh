@@ -31,6 +31,7 @@ genmerge.sh com.dexels.navajo.listeners
 genmerge.sh com.dexels.navajo.listeners.continuations
 genmerge.sh com.dexels.navajo.adapters 
 genmerge.sh com.dexels.navajo.rhino
+genmerge.sh com.dexels.navajo.rhino.continuations
 genmerge.sh com.dexels.navajo.resource.feature
 genmerge.sh com.dexels.navajo.resource
 genmerge.sh com.dexels.navajo.resource.jdbc.h2
@@ -77,7 +78,7 @@ genmerge.sh com.dexels.geospatial.imageprovider
 genmerge.sh com.dexels.utilities.smsgateway
 
 export MODULEPATH=demos
-genmerge.sh com.dexels.demos.rdfbrowser
+#genmerge.sh com.dexels.demos.rdfbrowser
 genmerge.sh com.dexels.demos.ticketing
 genmerge.sh com.dexels.demos.peelpage
 genmerge.sh com.dexels.demos.pinkroccade.adapters 

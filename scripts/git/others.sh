@@ -6,7 +6,7 @@ export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 ./cvsgit.sh ImageProvider com.dexels.geospatial.imageprovider
 
-./cvsgit.sh RDFBrowser com.dexels.demos.rdfbrowser
+./cvsgit.sh RDFBrowser com.dexels.navajo.tipi.swing.rdf
 ./cvsgit.sh Ticketing com.dexels.demos.ticketing
 
 ./cvsgit.sh PeelPage com.dexels.demos.peelpage

@@ -6,6 +6,7 @@ export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ./cvsgit.sh NavajoListenersContinuations com.dexels.navajo.listeners.continuations
 ./cvsgit.sh NavajoAdapters com.dexels.navajo.adapters 
 ./cvsgit.sh NavajoRhino com.dexels.navajo.rhino
+./cvsgit.sh com.dexels.navajo.rhino.continuations com.dexels.navajo.rhino.continuations
 ./cvsgit.sh com.dexels.navajo.authentication.api com.dexels.navajo.authentication.api
 ./cvsgit.sh NavajoServer com.dexels.navajo.server.deploy
 
