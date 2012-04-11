@@ -1,6 +1,7 @@
 package com.dexels.navajo.client;
 
-import junit.framework.TestCase;
+
+import org.junit.Test;
 
 import com.dexels.navajo.document.Navajo;
 
@@ -10,7 +11,7 @@ import com.dexels.navajo.document.Navajo;
  * @author arjen
  *
  */
-public class BasicClientTest extends TestCase {
+public class BasicClientTest {
 
 	protected ClientInterface myClient;
 
@@ -19,6 +20,7 @@ public class BasicClientTest extends TestCase {
 	/**
 	 * @throws java.lang.Exception
 	 */
+	@Test
 	public void testSometing() throws Exception {
 		System.err.println("=============================== TEST SETUP ============================================");
 		myClient = NavajoClientFactory.getClient();
@@ -31,10 +33,6 @@ public class BasicClientTest extends TestCase {
 		myClient.setPassword("1phone");
 		Navajo reply = myClient.doSimpleSend("external/iphone/InitLogin");
 		reply.write(System.err);
-	}
-
-	protected void tearDown() throws Exception {
-		super.tearDown();
 	}
 
 }

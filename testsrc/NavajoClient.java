@@ -1,20 +1,17 @@
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+
+import com.dexels.navajo.client.BasicNavajoServerTests;
+import com.dexels.navajo.client.NavajoScriptingTests;
 
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
+@RunWith(Suite.class)
+@Suite.SuiteClasses({
+	NavajoScriptingTests.class, 
+	BasicNavajoServerTests.class})  
 public class NavajoClient {
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Integration tests for com.dexels.navajo");
-		//$JUnit-BEGIN$
 
-		System.err.println("Disabled, TOO SLOW!");
-//		suite.addTestSuite(NavajoScriptingTests.class);
-//		suite.addTestSuite(BasicNavajoServerTests.class);
-		
-		//$JUnit-END$
-		return suite;
-	}
 
 }
