@@ -18,14 +18,14 @@ public class Header implements Serializable {
     
 	public String toString() {
 		StringBuffer output = new StringBuffer();
-		output.append("** Start of Header object **" + '\n');
-		output.append("AccountOwnerName   : " + this.getAccountOwnerName() + '\n');
-		output.append("AccountName        : " + this.getAccountName() + '\n');
-		output.append("IBAN               : " + this.getIBAN() + '\n');
-		output.append("StatementNumber    : " + this.getStatementNumber() + '\n');
-		output.append("GenerationDateTime : " + this.getGenerationDateTime() + '\n');
-		output.append("OpeningBalance     : \n" + this.getOpeningBalance().toString() + '\n');
-		output.append("** End of Header object **");
+		output.append("\t** Start of Header object **" + '\n');
+		output.append("\t\tAccountOwnerName   : " + this.getAccountOwnerName() + '\n');
+		output.append("\t\tAccountName        : " + this.getAccountName() + '\n');
+		output.append("\t\tIBAN               : " + this.getIBAN() + '\n');
+		output.append("\t\tStatementNumber    : " + this.getStatementNumber() + '\n');
+		output.append("\t\tGenerationDateTime : " + this.getGenerationDateTime() + '\n');
+		output.append(this.getOpeningBalance().toString() + '\n');
+		output.append("\t** End of Header object **");
 		return output.toString();
 	}
     

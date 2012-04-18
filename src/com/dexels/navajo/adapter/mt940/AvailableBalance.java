@@ -15,12 +15,12 @@ public class AvailableBalance implements Serializable {
 	
 	public String toString() {
 		StringBuffer output = new StringBuffer();
-		output.append("\t** Start of AvailableBalance **" + '\n');
-		output.append("\tDebitCreditIndicator : " + this.getDebitCreditIndicator() + '\n');
-		output.append("\tDate                 : " + this.getDate() + '\n');
-		output.append("\tCurrency             : " + this.getCurrency() + '\n');
-		output.append("\tAmount               : " + this.getAmount() + '\n');
-		output.append("\t** End of AvailableBalance **");
+		output.append("\t\t** Start of AvailableBalance **" + '\n');
+		output.append("\t\t\tDebitCreditIndicator : " + this.getDebitCreditIndicator() + '\n');
+		output.append("\t\t\tDate                 : " + this.getDate() + '\n');
+		output.append("\t\t\tCurrency             : " + this.getCurrency() + '\n');
+		output.append("\t\t\tAmount               : " + this.getAmount() + '\n');
+		output.append("\t\t** End of AvailableBalance **");
 		return output.toString();
 	}
 	

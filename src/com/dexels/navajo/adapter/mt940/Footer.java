@@ -15,11 +15,11 @@ public class Footer implements Serializable {
     
 	public String toString() {
 		StringBuffer output = new StringBuffer();
-		output.append("** Start of Footer object **" + '\n');
-		output.append("AvailableBalance      : \n" + this.getAvailableBalance().toString() + '\n');
-		output.append("ClosingBalance        : \n" + this.getClosingBalance().toString() + '\n');
-		output.append("AdditionalInformation : " + this.getAdditionalInformation() + '\n');
-		output.append("** End of Footer object **");
+		output.append("\t** Start of Footer object **" + '\n');
+		output.append(this.getAvailableBalance().toString() + '\n');
+		output.append(this.getClosingBalance().toString() + '\n');
+		output.append("\t\tAdditionalInformation : " + this.getAdditionalInformation() + '\n');
+		output.append("\t** End of Footer object **");
 		return output.toString();
 	}
 	

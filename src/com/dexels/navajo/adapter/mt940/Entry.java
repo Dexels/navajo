@@ -25,14 +25,15 @@ class Entry implements Serializable {
 
 	public String toString() {
 		StringBuffer output = new StringBuffer();
-		output.append("**** Header ****\n" + this.getHeader().toString() + '\n');
-		output.append("**** Processing date = " + this.processingDate + " ****" + '\n');
+		output.append("\t**** Processing date = " + this.processingDate + " ****" + '\n');
+		output.append(this.getHeader().toString() + '\n');
+		output.append("\t*** Amount of transactions in this entry : " + this.getTransactions().size() + " ***" + '\n');
 		int i = 1;
 		for (Transaction transaction : this.getTransactions()) {
 			output.append("\t*** Transaction (" + i + ") ***\n" + transaction.toString() + '\n');
 			i++;
 		}
-		output.append("**** Footer ****\n" + this.getFooter().toString() + '\n');
+		output.append(this.getFooter().toString() + '\n');
 		return output.toString();
 	}
 
