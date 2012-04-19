@@ -28,26 +28,61 @@ import com.dexels.navajo.document.types.Binary;
 public class MT940 implements Serializable {
 	private static final long serialVersionUID = 922784734690300149L;
     private static final Logger logger = LoggerFactory.getLogger(MT940.class);
-    Binary fileContent;
-	List<Entry> entryList = new ArrayList<Entry>();
-	boolean printOutputToConsole = false; // this boolean is only used for testpurposes. Set to true to print to console too
-    
-    public MT940() {}
-    public MT940(Binary fileContent){
+    private MT940Layout mt940Layout;
+	private TransactionCodes transactionCodes;
+	private BookingKeys bookingKeys;
+	private CurrencyCodes currencyCodes;
+	private Binary fileContent;
+	private List<Entry> entryList = new ArrayList<Entry>();
+	private boolean printOutputToConsole = false; // this boolean is only used for testpurposes. Set to true to print to console too
+	private Calendar cal = Calendar.getInstance(Locale.getDefault());
+
+    public MT940() {
+    	 this.setTransactionCodes(new TransactionCodes());
+    	 this.setBookingKeys(new BookingKeys());
+    	 this.setCurrencyCodes(new CurrencyCodes());
+    }
+    public MT940(Binary fileContent) {
+    	this();
     	this.setFileContent(fileContent);
+    	// Set the layout values after trying to get the bank from the filecontent
+    	this.setMt940Layout();
     }
 
 	public static void main(String[] args) throws Exception {
     	// Read the file
 //		String fileName = "C:\\Temp\\ABN_MT940.sta";
 		String fileName = "C:\\Temp\\MT940_EXAMPLE.sta";
-    	MT940 mt940 = new MT940();
+//		String fileName = "C:\\Temp\\MT940_EXAMPLE2.sta";
+    	MT940 mt940 = new MT940(new Binary(new File(fileName)));
     	mt940.printOutputToConsole = true;
-    	mt940.setFileContent(new Binary(new File(fileName)));
+    	System.out.println("Selected bank: " + mt940.getMt940Layout().getSelectedBank());
     	mt940.importFile();
     	mt940.printEntries();
     }
 	
+	/**
+	 * Set the MT940 layout values.
+	 * Overrides the default setter
+	 */
+	private void setMt940Layout() {
+    	try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(this.getFileContent().getDataAsStream()));
+			this.setMt940Layout(new MT940Layout(MT940Utils.getBankNameFromFile(reader)));
+	    	reader.close();
+		} catch (Exception e) {
+        	String message = "Error reading file when getting bankname: " + e.getMessage();
+        	logger.error(message);
+	    	if (printOutputToConsole) {
+	    		System.out.println(message);
+	    	}
+		}
+	}
+	
+	/**
+	 * Print all the entries
+	 * @throws Exception
+	 */
 	public void printEntries() throws Exception {
 		if (this.getEntryList() != null && this.getEntryList().size() != 0) {
 			try {
@@ -72,14 +107,27 @@ public class MT940 implements Serializable {
 		}
 	}
     
+	/**
+	 * Starts the import of the file
+	 * @throws Exception
+	 */
 	public void importFile() throws Exception {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(this.getFileContent().getDataAsStream()));
             
-            boolean finished = false;
-            while (!finished) {
-                finished = importEntries(reader);
+            if (this.getMt940Layout() == null) {
+            	String message = "Error importing file: no MT940 layout found";
+            	logger.error(message);
+    	    	if (printOutputToConsole) {
+    	    		System.out.println(message);
+    	    	}
+            } else {
+	            boolean finished = false;
+	            while (!finished) {
+	                finished = importEntries(reader);
+	            }
             }
+        	reader.close();
         } catch (Exception e) {
         	String message = "Error importing file: " + e.getMessage();
         	logger.error(message);
@@ -102,14 +150,13 @@ public class MT940 implements Serializable {
 		try {
 			if (reader != null) {
 				String previousTag = ""; // this is needed to check where the 86 tag should go. Header or Transaction
-	        	Calendar cal = Calendar.getInstance(Locale.getDefault());
 				Entry entry = new Entry();
 				Transaction transaction = new Transaction();
 				boolean readNextLine = true; // used to make an inner loop to get all the tag 86 subfields
 				while (!finished) {
 					// Get the next line
 					if (readNextLine) {
-							line = reader.readLine();
+						line = reader.readLine();
 					} else {
 						// only skipping it ones
 						readNextLine = true;
@@ -158,27 +205,26 @@ public class MT940 implements Serializable {
 						            } else if (field.equals("60F")) {
 						            	// this tag is split into several seperate fields divided by position only. SUBSTRING it is
 						            	entry.getHeader().getOpeningBalance().setDebitCreditIndicator(value.substring(0, 1));
-						            	cal.set(Integer.parseInt(MT940Constants.getYear(value.substring(1, 3))), Integer.parseInt(value.substring(3, 5)), Integer.parseInt(value.substring(5, 7)));
-						            	entry.getHeader().getOpeningBalance().setDate(cal.getTime());
+						            	entry.getHeader().getOpeningBalance().setDate(MT940Utils.getDateFromTagString(cal, value.substring(1, 7)));
 						            	entry.getHeader().getOpeningBalance().setCurrency(value.substring(7, 10));
-						            	BigDecimal amount = MT940Constants.stringToBigDecimal(value.substring(10, value.length()), Locale.getDefault());
+						            	// If needed, get the country with the currencycode like this
+//						            	System.out.println("Currency code + country: " + entry.getHeader().getOpeningBalance().getCurrency() + " + " + this.getCurrencyCodes().getCurrencyCountry(entry.getHeader().getOpeningBalance().getCurrency()));
+						            	BigDecimal amount = MT940Utils.stringToBigDecimal(value.substring(10, value.length()), Locale.getDefault());
 						            	entry.getHeader().getOpeningBalance().setAmount(amount);
 						            
 						            // Transaction info
 						            } else if (field.equals("61")) {
-						            	// This is a special one, because it starts a new transaction within the entry
-						            	// Also pay attention to the fact that this tag needs to be split into seperate parts as well.
-						            	cal.set(Integer.parseInt(MT940Constants.getYear(value.substring(0, 2))), Integer.parseInt(value.substring(2, 4)), Integer.parseInt(value.substring(4, 6)));
-						            	transaction.setValueDate(cal.getTime());
+						            	// this tag is split into several seperate fields divided by position only. SUBSTRING it is
+						            	transaction.setValueDate(MT940Utils.getDateFromTagString(cal, value.substring(0, 6)));
 						            	transaction.setBookingDate(value.substring(6, 10));
 						            	transaction.setDebitCreditIndicator(value.substring(10, 11));
 						            	transaction.setThirdCharacterCurrencyCode(value.substring(11, 12));
 						            	int i = value.indexOf("NTRF");
-						            	BigDecimal amount = MT940Constants.stringToBigDecimal(value.substring(12, i), Locale.getDefault());
+						            	BigDecimal amount = MT940Utils.stringToBigDecimal(value.substring(12, i), Locale.getDefault());
 						            	transaction.setAmount(amount);
 						            	int j = value.indexOf("//");
 						            	transaction.setValueField(value.substring(i, (j + 2)));
-						            	transaction.setTransactionCodeDescription(value.substring((j + 2), value.length()));
+						            	transaction.setBookingKeyDescription(value.substring((j + 2), value.length()));
 	
 						            // This could be part of the transaction or the footer
 						            } else if (field.equals("86")) {
@@ -190,30 +236,31 @@ public class MT940 implements Serializable {
 						            		// Need an extra loop in order to get all the items in the transaction
 						            		boolean stopReading = false;
 						            		while (!stopReading) {
-						            			transaction.setTransactionCode(line.startsWith(":86:") ? Integer.parseInt(getTransactionSubfield(line, ":86:")) : transaction.getTransactionCode());
+						            			transaction.setTransactionCode(line.startsWith(":86:") ? Integer.parseInt(MT940Utils.getTransactionSubfield(line, ":86:")) : transaction.getTransactionCode());
+						            			transaction.setTransactionCodeDescription(this.getTransactionCodes().getTransactionCodeDescription(transaction.getTransactionCode()));
 							            		// looking for the subfields
-							            		transaction.setTransactionType(line.contains("<00") ? getTransactionSubfield(line, "<00") : transaction.getTransactionType());
-							            		transaction.setSequenceNumber(line.contains("<10") ? getTransactionSubfield(line, "<10") : transaction.getSequenceNumber());
-							            		transaction.setTransactionTitle(line.contains("<20") ? getTransactionSubfield(line, "<20") : transaction.getTransactionTitle());
-							            		transaction.setTransactionTitle(line.contains("<21") ? (transaction.getTransactionTitle() + getTransactionSubfield(line, "<21")) : transaction.getTransactionTitle());
-							            		transaction.setTransactionTitle(line.contains("<22") ? (transaction.getTransactionTitle() + getTransactionSubfield(line, "<22")) : transaction.getTransactionTitle());
-							            		transaction.setTransactionTitle(line.contains("<23") ? (transaction.getTransactionTitle() + getTransactionSubfield(line, "<23")) : transaction.getTransactionTitle());
-							            		transaction.setTransactionTitle(line.contains("<24") ? (transaction.getTransactionTitle() + getTransactionSubfield(line, "<24")) : transaction.getTransactionTitle());
-							            		transaction.setTransactionTitle(line.contains("<25") ? (transaction.getTransactionTitle() + getTransactionSubfield(line, "<25")) : transaction.getTransactionTitle());
-							            		transaction.setTransactionTitle(line.contains("<26") ? (transaction.getTransactionTitle() + getTransactionSubfield(line, "<26")) : transaction.getTransactionTitle());
-							            		transaction.setCounterPartyNameAndAddress(line.contains("<27") ? getTransactionSubfield(line, "<27") : transaction.getCounterPartyNameAndAddress());
-							            		transaction.setCounterPartyNameAndAddress(line.contains("<28") ? (transaction.getCounterPartyNameAndAddress() + getTransactionSubfield(line, "<28")) : transaction.getCounterPartyNameAndAddress());
-							            		transaction.setCounterPartyNameAndAddress(line.contains("<29") ? (transaction.getCounterPartyNameAndAddress() + getTransactionSubfield(line, "<29")) : transaction.getCounterPartyNameAndAddress());
-							            		transaction.setTechnicalField(line.contains("<30") ? getTransactionSubfield(line, "<30") : transaction.getTechnicalField());
-							            		transaction.setTechnicalField(line.contains("<31") ? (transaction.getTechnicalField() + getTransactionSubfield(line, "<31")) : transaction.getTechnicalField());
-							            		transaction.setTechnicalField(line.contains("<32") ? (transaction.getTechnicalField() + getTransactionSubfield(line, "<32")) : transaction.getTechnicalField());
-							            		transaction.setTechnicalField(line.contains("<33") ? (transaction.getTechnicalField() + getTransactionSubfield(line, "<33")) : transaction.getTechnicalField());
-							            		transaction.setCounterPartyAccount(line.contains("<38") ? getTransactionSubfield(line, "<38") : transaction.getCounterPartyAccount());
-							            		transaction.setCounterPartyNameAndAddress(line.contains("<60") ? (transaction.getCounterPartyNameAndAddress() + getTransactionSubfield(line, "<60")) : transaction.getCounterPartyNameAndAddress());
-							            		transaction.setReconciliationCode(line.contains("<61") ? getTransactionSubfield(line, "<61") : transaction.getReconciliationCode());
-							            		transaction.setReconciliationCode(line.contains("<62") ? (transaction.getReconciliationCode() + getTransactionSubfield(line, "<62")) : transaction.getReconciliationCode());
-							            		transaction.setReferenceNumber(line.contains("<63") ? getTransactionSubfield(line, "<63") : transaction.getReferenceNumber());
-							            		transaction.setReconciliationCode(line.contains("<64") ? (transaction.getReconciliationCode() + getTransactionSubfield(line, "<64")) : transaction.getReconciliationCode());
+							            		transaction.setTransactionType(line.contains(this.getMt940Layout().getTag86_subfieldStartingChar() + "00") ? MT940Utils.getTransactionSubfield(line, (this.getMt940Layout().getTag86_subfieldStartingChar() + "00")) : transaction.getTransactionType());
+							            		transaction.setSequenceNumber(line.contains(this.getMt940Layout().getTag86_subfieldStartingChar() + "10") ? MT940Utils.getTransactionSubfield(line, (this.getMt940Layout().getTag86_subfieldStartingChar() + "10")) : transaction.getSequenceNumber());
+							            		transaction.setTransactionTitle(line.contains(this.getMt940Layout().getTag86_subfieldStartingChar() + "20") ? MT940Utils.getTransactionSubfield(line, (this.getMt940Layout().getTag86_subfieldStartingChar() + "20")) : transaction.getTransactionTitle());
+							            		transaction.setTransactionTitle(line.contains(this.getMt940Layout().getTag86_subfieldStartingChar() + "21") ? (transaction.getTransactionTitle() + MT940Utils.getTransactionSubfield(line, (this.getMt940Layout().getTag86_subfieldStartingChar() + "21"))) : transaction.getTransactionTitle());
+							            		transaction.setTransactionTitle(line.contains(this.getMt940Layout().getTag86_subfieldStartingChar() + "22") ? (transaction.getTransactionTitle() + MT940Utils.getTransactionSubfield(line, (this.getMt940Layout().getTag86_subfieldStartingChar() + "22"))) : transaction.getTransactionTitle());
+							            		transaction.setTransactionTitle(line.contains(this.getMt940Layout().getTag86_subfieldStartingChar() + "23") ? (transaction.getTransactionTitle() + MT940Utils.getTransactionSubfield(line, (this.getMt940Layout().getTag86_subfieldStartingChar() + "23"))) : transaction.getTransactionTitle());
+							            		transaction.setTransactionTitle(line.contains(this.getMt940Layout().getTag86_subfieldStartingChar() + "24") ? (transaction.getTransactionTitle() + MT940Utils.getTransactionSubfield(line, (this.getMt940Layout().getTag86_subfieldStartingChar() + "24"))) : transaction.getTransactionTitle());
+							            		transaction.setTransactionTitle(line.contains(this.getMt940Layout().getTag86_subfieldStartingChar() + "25") ? (transaction.getTransactionTitle() + MT940Utils.getTransactionSubfield(line, (this.getMt940Layout().getTag86_subfieldStartingChar() + "25"))) : transaction.getTransactionTitle());
+							            		transaction.setTransactionTitle(line.contains(this.getMt940Layout().getTag86_subfieldStartingChar() + "26") ? (transaction.getTransactionTitle() + MT940Utils.getTransactionSubfield(line, (this.getMt940Layout().getTag86_subfieldStartingChar() + "26"))) : transaction.getTransactionTitle());
+							            		transaction.setCounterPartyNameAndAddress(line.contains(this.getMt940Layout().getTag86_subfieldStartingChar() + "27") ? MT940Utils.getTransactionSubfield(line, (this.getMt940Layout().getTag86_subfieldStartingChar() + "27")) : transaction.getCounterPartyNameAndAddress());
+							            		transaction.setCounterPartyNameAndAddress(line.contains(this.getMt940Layout().getTag86_subfieldStartingChar() + "28") ? (transaction.getCounterPartyNameAndAddress() + MT940Utils.getTransactionSubfield(line, (this.getMt940Layout().getTag86_subfieldStartingChar() + "28"))) : transaction.getCounterPartyNameAndAddress());
+							            		transaction.setCounterPartyNameAndAddress(line.contains(this.getMt940Layout().getTag86_subfieldStartingChar() + "29") ? (transaction.getCounterPartyNameAndAddress() + MT940Utils.getTransactionSubfield(line, (this.getMt940Layout().getTag86_subfieldStartingChar() + "29"))) : transaction.getCounterPartyNameAndAddress());
+							            		transaction.setTechnicalField(line.contains(this.getMt940Layout().getTag86_subfieldStartingChar() + "30") ? MT940Utils.getTransactionSubfield(line, (this.getMt940Layout().getTag86_subfieldStartingChar() + "30")) : transaction.getTechnicalField());
+							            		transaction.setTechnicalField(line.contains(this.getMt940Layout().getTag86_subfieldStartingChar() + "31") ? (transaction.getTechnicalField() + MT940Utils.getTransactionSubfield(line, (this.getMt940Layout().getTag86_subfieldStartingChar() + "31"))) : transaction.getTechnicalField());
+							            		transaction.setTechnicalField(line.contains(this.getMt940Layout().getTag86_subfieldStartingChar() + "32") ? (transaction.getTechnicalField() + MT940Utils.getTransactionSubfield(line, (this.getMt940Layout().getTag86_subfieldStartingChar() + "32"))) : transaction.getTechnicalField());
+							            		transaction.setTechnicalField(line.contains(this.getMt940Layout().getTag86_subfieldStartingChar() + "33") ? (transaction.getTechnicalField() + MT940Utils.getTransactionSubfield(line, (this.getMt940Layout().getTag86_subfieldStartingChar() + "33"))) : transaction.getTechnicalField());
+							            		transaction.setCounterPartyAccount(line.contains(this.getMt940Layout().getTag86_subfieldStartingChar() + "38") ? MT940Utils.getTransactionSubfield(line, (this.getMt940Layout().getTag86_subfieldStartingChar() + "38")) : transaction.getCounterPartyAccount());
+							            		transaction.setCounterPartyNameAndAddress(line.contains(this.getMt940Layout().getTag86_subfieldStartingChar() + "60") ? (transaction.getCounterPartyNameAndAddress() + MT940Utils.getTransactionSubfield(line, (this.getMt940Layout().getTag86_subfieldStartingChar() + "60"))) : transaction.getCounterPartyNameAndAddress());
+							            		transaction.setReconciliationCode(line.contains(this.getMt940Layout().getTag86_subfieldStartingChar() + "61") ? MT940Utils.getTransactionSubfield(line, (this.getMt940Layout().getTag86_subfieldStartingChar() + "61")) : transaction.getReconciliationCode());
+							            		transaction.setReconciliationCode(line.contains(this.getMt940Layout().getTag86_subfieldStartingChar() + "62") ? (transaction.getReconciliationCode() + MT940Utils.getTransactionSubfield(line, (this.getMt940Layout().getTag86_subfieldStartingChar() + "62"))) : transaction.getReconciliationCode());
+							            		transaction.setReferenceNumber(line.contains(this.getMt940Layout().getTag86_subfieldStartingChar() + "63") ? MT940Utils.getTransactionSubfield(line, (this.getMt940Layout().getTag86_subfieldStartingChar() + "63")) : transaction.getReferenceNumber());
+							            		transaction.setReconciliationCode(line.contains(this.getMt940Layout().getTag86_subfieldStartingChar() + "64") ? (transaction.getReconciliationCode() + MT940Utils.getTransactionSubfield(line, (this.getMt940Layout().getTag86_subfieldStartingChar() + "64"))) : transaction.getReconciliationCode());
 							            		// next line then
 							            		line = reader.readLine();
 							            		if (line.startsWith(":")) {
@@ -231,20 +278,18 @@ public class MT940 implements Serializable {
 						            } else if (field.equals("62F")) {
 						            	// this tag is split into several seperate fields divided by position only. SUBSTRING it is
 						            	entry.getFooter().getClosingBalance().setDebitCreditIndicator(value.substring(0, 1));
-						            	cal.set(Integer.parseInt(MT940Constants.getYear(value.substring(1, 3))), Integer.parseInt(value.substring(3, 5)), Integer.parseInt(value.substring(5, 7)));
-						            	entry.getFooter().getClosingBalance().setDate(cal.getTime());
+						            	entry.getFooter().getClosingBalance().setDate(MT940Utils.getDateFromTagString(cal, value.substring(1, 7)));
 						            	entry.getFooter().getClosingBalance().setCurrency(value.substring(7, 10));
-						            	BigDecimal amount = MT940Constants.stringToBigDecimal(value.substring(10, value.length()), Locale.getDefault());
+						            	BigDecimal amount = MT940Utils.stringToBigDecimal(value.substring(10, value.length()), Locale.getDefault());
 						            	entry.getFooter().getClosingBalance().setAmount(amount);
 						            	
 						            // Footer - Available balance
 						            } else if (field.equals("64")) {
 						            	// this tag is split into several seperate fields divided by position only. SUBSTRING it is
 						            	entry.getFooter().getAvailableBalance().setDebitCreditIndicator(value.substring(0, 1));
-						            	cal.set(Integer.parseInt(MT940Constants.getYear(value.substring(1, 3))), Integer.parseInt(value.substring(3, 5)), Integer.parseInt(value.substring(5, 7)));
-						            	entry.getFooter().getAvailableBalance().setDate(cal.getTime());
+						            	entry.getFooter().getAvailableBalance().setDate(MT940Utils.getDateFromTagString(cal, value.substring(1, 7)));
 						            	entry.getFooter().getAvailableBalance().setCurrency(value.substring(7, 10));
-						            	BigDecimal amount = MT940Constants.stringToBigDecimal(value.substring(10, value.length()), Locale.getDefault());
+						            	BigDecimal amount = MT940Utils.stringToBigDecimal(value.substring(10, value.length()), Locale.getDefault());
 						            	entry.getFooter().getAvailableBalance().setAmount(amount);
 						            	
 						            }	            
@@ -258,34 +303,13 @@ public class MT940 implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			String message = "Error when processing line: " + line + "\n" + "Errormessage: " + e.getMessage();
+			String message = "Error when processing line: " + line + " -> " + "Errormessage: " + e.getMessage();
 			logger.error(message);
 	    	if (printOutputToConsole) {
 				System.out.println(message);
 	    	}
 		}
 		return finished;
-	}
-	
-	/**
-	 * Methode to filter a subfield from a string
-	 * @param input
-	 * @param subfield
-	 * @return String
-	 */
-	private String getTransactionSubfield(String input, String subfield) {
-		String result = "";
-		
-		// assuming that the part ends at the next < entry or just read the rest of the line
-		if (input != null && subfield != null) {
-    		int i = input.indexOf(subfield);
-    		int j = input.indexOf("<", (i + 1));
-    		if (j == -1) { j = input.length(); }
-    		if (i != -1) {
-    			result = input.substring((i + subfield.length()), j);
-    		}
-		}
-		return result;
 	}
 
     /**
@@ -317,5 +341,33 @@ public class MT940 implements Serializable {
 	}
 	public void setEntryList(List<Entry> entryList) {
 		this.entryList = entryList;
+	}
+	
+	public MT940Layout getMt940Layout() {
+		return mt940Layout;
+	}
+	public void setMt940Layout(MT940Layout mt940Layout) {
+		this.mt940Layout = mt940Layout;
+	}
+	
+	public TransactionCodes getTransactionCodes() {
+		return transactionCodes;
+	}
+	public void setTransactionCodes(TransactionCodes transactionCodes) {
+		this.transactionCodes = transactionCodes;
+	}
+	
+	public BookingKeys getBookingKeys() {
+		return bookingKeys;
+	}
+	public void setBookingKeys(BookingKeys bookingKeys) {
+		this.bookingKeys = bookingKeys;
+	}
+	
+	public CurrencyCodes getCurrencyCodes() {
+		return currencyCodes;
+	}
+	public void setCurrencyCodes(CurrencyCodes currencyCodes) {
+		this.currencyCodes = currencyCodes;
 	}
 }

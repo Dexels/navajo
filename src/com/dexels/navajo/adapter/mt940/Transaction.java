@@ -13,11 +13,12 @@ public class Transaction implements Serializable {
 	private String thirdCharacterCurrencyCode;
 	private BigDecimal amount;
 	private String valueField;
-	private String transactionCodeDescription;
+	private String bookingKeyDescription;
 	// under tag 61 - NS tag
 	private String bookingTime;
 	// tag 86
 	private int transactionCode;
+	private String transactionCodeDescription; // get from TreeMap. Not given by the file
 	private String transactionType; // <00
 	private String sequenceNumber; // <10
 	private String transactionTitle; // <20 - <26
@@ -39,12 +40,13 @@ public class Transaction implements Serializable {
 		output.append("\t\t\tThirdCharacterCurrencyCode : " + this.getThirdCharacterCurrencyCode() + '\n');
 		output.append("\t\t\tAmount                     : " + this.getAmount() + '\n');
 		output.append("\t\t\tValueField                 : " + this.getValueField() + '\n');
-		output.append("\t\t\tTransactionCodeDescription : " + this.getTransactionCodeDescription() + '\n');
+		output.append("\t\t\tBookingKeyDescription      : " + this.getBookingKeyDescription() + '\n');
 		
 		output.append("\t\t*** Tag 61-NS ***" + '\n');
 		output.append("\t\t\tBookingTime                : " + this.getBookingTime() + '\n');
 		output.append("\t\t*** Tag 86 ***" + '\n');
 		output.append("\t\t\tTransactionCode            : " + this.getTransactionCode() + '\n');
+		output.append("\t\t\tTransactionCodeDescription : " + this.getTransactionCodeDescription() + '\n');
 		output.append("\t\t\tTransactionType            : " + this.getTransactionType() + '\n');
 		output.append("\t\t\tSequenceNumber             : " + this.getSequenceNumber() + '\n');
 		output.append("\t\t\tTransactionTitle           : " + this.getTransactionTitle() + '\n');
@@ -93,11 +95,11 @@ public class Transaction implements Serializable {
 	public void setValueField(String valueField) {
 		this.valueField = valueField;
 	}
-	public String getTransactionCodeDescription() {
-		return transactionCodeDescription;
+	public String getBookingKeyDescription() {
+		return bookingKeyDescription;
 	}
-	public void setTransactionCodeDescription(String transactionCodeDescription) {
-		this.transactionCodeDescription = transactionCodeDescription;
+	public void setBookingKeyDescription(String bookingKeyDescription) {
+		this.bookingKeyDescription = bookingKeyDescription;
 	}
 	public String getBookingTime() {
 		return bookingTime;
@@ -110,6 +112,12 @@ public class Transaction implements Serializable {
 	}
 	public void setTransactionCode(int transactionCode) {
 		this.transactionCode = transactionCode;
+	}
+	public String getTransactionCodeDescription() {
+		return transactionCodeDescription;
+	}
+	public void setTransactionCodeDescription(String transactionCodeDescription) {
+		this.transactionCodeDescription = transactionCodeDescription;
 	}
 	public String getTransactionType() {
 		return transactionType;
