@@ -9,14 +9,14 @@ import java.util.List;
  * Class to hold the entries
  * @author Erik Versteeg
  */
-class Entry implements Serializable {
+public class Entry implements Serializable {
 	private static final long serialVersionUID = 5225157750310265204L;
 	private Date processingDate;
 	private Header header;
 	private List<Transaction> transactions;
 	private Footer footer;
 
-	Entry() {
+	public Entry() {
 		this.processingDate = new Date();
 		this.setHeader(new Header());
 		this.setTransactions(new ArrayList<Transaction>());
