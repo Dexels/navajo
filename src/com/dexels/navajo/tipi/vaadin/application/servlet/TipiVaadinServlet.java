@@ -76,10 +76,10 @@ public class TipiVaadinServlet extends ApplicationServlet {
             HttpServletResponse response) throws ServletException, IOException {
 		String eval = request.getParameter("evaluate");
     	Enumeration<String> s = request.getHeaderNames();
-    	while (s.hasMoreElements()) {
-			String name = (String) s.nextElement();
-			System.err.println("Header: "+name+" value: "+request.getHeader(name));
-		}
+//    	while (s.hasMoreElements()) {
+//			String name = (String) s.nextElement();
+//			System.err.println("Header: "+name+" value: "+request.getHeader(name));
+//		}
     	
 		if(eval==null) {
 			super.service(request, response);
