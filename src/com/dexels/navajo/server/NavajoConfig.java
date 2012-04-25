@@ -194,8 +194,6 @@ public final class NavajoConfig implements NavajoConfigInterface {
     		if (resourceProperty!=null) {
         		resourcePath = properDir(rootPath +
         				resourceProperty.getValue());				
-			} else {
-				System.err.println("Warning: No resources defined.");
 			}
 
     		compiledScriptPath = (body.getProperty("paths/compiled-scripts") != null ?
