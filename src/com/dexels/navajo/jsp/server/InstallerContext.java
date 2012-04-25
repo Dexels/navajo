@@ -9,9 +9,14 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.jsp.PageContext;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 public class InstallerContext {
 	private PageContext pageContext;
 	
+	private final static Logger logger = LoggerFactory
+			.getLogger(InstallerContext.class);
 	/**
 	 * Returns if the location dictated by this context is plausible
 	 */
@@ -144,7 +149,7 @@ public class InstallerContext {
 				Map<String, String> systemContexts = loadSystemContexts();
 				return getInstallationPath(systemContexts, contextPath);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 		}
 		return null;

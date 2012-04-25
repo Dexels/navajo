@@ -10,6 +10,9 @@ import java.io.OutputStream;
 
 import javax.servlet.jsp.JspException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.jsp.tags.BaseNavajoTag;
@@ -19,7 +22,10 @@ import com.uwyn.jhighlight.tools.FileUtils;
 public class DumpFormattedTmlTag extends BaseNavajoTag  {
 
 	private String myService;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(DumpFormattedTmlTag.class);
+	
 	public void setService(String service) {
 		myService = service;
 	}
@@ -53,10 +59,9 @@ public class DumpFormattedTmlTag extends BaseNavajoTag  {
 //			getPageContext().getOut().write("Dumped: " + myService);
 			f.delete();
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 
 		return EVAL_BODY_INCLUDE;

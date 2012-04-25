@@ -16,8 +16,13 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AntRun {
+	
+	
+	private final static Logger logger = LoggerFactory.getLogger(AntRun.class);
 	
 	private static final void copyResource(OutputStream out, InputStream in) throws IOException {
 		BufferedInputStream bin = new BufferedInputStream(in);
@@ -79,7 +84,7 @@ public class AntRun {
 			}
 			p.fireBuildFinished(null);
 		} catch (BuildException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 			
 			p.fireBuildFinished(e);
 		}

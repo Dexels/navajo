@@ -115,7 +115,7 @@ public class NavajoJspServerContext {
 				setPath(path);
 			}
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 	
@@ -126,7 +126,7 @@ public class NavajoJspServerContext {
 			File navajoRoot = getNavajoRoot();
 			AntRun.callAnt(buildFile, navajoRoot, params, null);
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		
 	}
@@ -248,7 +248,7 @@ public class NavajoJspServerContext {
 			return relativePath;
 			
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		return null;
 	}
@@ -263,7 +263,7 @@ public class NavajoJspServerContext {
 				logger.warn("Ignored, leaving script folder.");
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 
@@ -414,9 +414,8 @@ public class NavajoJspServerContext {
 			ScriptStatus s = new ScriptStatusImpl(this,getScriptRoot(), getCompiledRoot(), path);
 			return s;
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
-		System.err.println("Fail?");
 		return null;
 	}
 	

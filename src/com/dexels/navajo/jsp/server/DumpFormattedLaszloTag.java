@@ -10,6 +10,9 @@ import java.io.OutputStream;
 
 import javax.servlet.jsp.JspException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoLaszloConverter;
 import com.dexels.navajo.jsp.tags.BaseNavajoTag;
@@ -19,7 +22,10 @@ import com.uwyn.jhighlight.tools.FileUtils;
 public class DumpFormattedLaszloTag extends BaseNavajoTag  {
 
 	private String myService;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(DumpFormattedLaszloTag.class);
+	
 	public void setService(String service) {
 		myService = service;
 	}
@@ -38,11 +44,6 @@ public class DumpFormattedLaszloTag extends BaseNavajoTag  {
 
 		getNavajoContext().getNavajo();
 		try {
-//			if (myService == null) {
-//				n.write(getPageContext().getOut());
-//			} else {
-//				n.write(getPageContext().getOut());
-//			}
 			File f= File.createTempFile("tmpTml", ".xml");
 			FileWriter fos = new FileWriter(f);
 			NavajoLaszloConverter.writeBirtXml(n, fos);
@@ -56,11 +57,9 @@ public class DumpFormattedLaszloTag extends BaseNavajoTag  {
 			String result = new String(baos.toByteArray(),"UTF-8");
 			getPageContext().getOut().write(result);
 			
-//			getPageContext().getOut().write("Dumped: " + myService);
 			f.delete();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 
 		return EVAL_BODY_INCLUDE;
