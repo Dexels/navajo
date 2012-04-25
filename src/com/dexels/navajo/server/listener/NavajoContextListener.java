@@ -128,7 +128,7 @@ public class NavajoContextListener implements ServletContextListener {
 		}		
         Dictionary<String, Object> properties = new Hashtable<String, Object>();
         localClientInstance = bc.registerService(LocalClient.class, lcdw,properties);
-		logger.info("Service registration complete!");
+		logger.info("Local client service registration complete!");
 		}
 
 	private static void registerInstanceOSGi(NavajoServerInstance nsi, String contextPath) {
