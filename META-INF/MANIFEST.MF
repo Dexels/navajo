@@ -16,8 +16,8 @@ Import-Package: javax.imageio,
  javax.imageio.plugins.jpeg,
  javax.imageio.stream,
  javax.swing,
- org.junit;version="4.8.2",
- org.junit.runners;version="4.8.2",
+ org.junit,
+ org.junit.runners,
  org.osgi.framework,
  org.slf4j;version="1.6.1"
 Bundle-ActivationPolicy: lazy
