@@ -6,6 +6,9 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Converts 4-digit zipcodes to gemeente nr.
  * @author Frank Lyaruu
@@ -14,6 +17,9 @@ import java.util.StringTokenizer;
 public class Postcode2Gemeente {
 
 	private static Map<String,String> zipMap = new HashMap<String,String>();
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(Postcode2Gemeente.class);
 	
 	/**
 	 * @param args
@@ -30,7 +36,7 @@ public class Postcode2Gemeente {
 				}
 				br.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 	

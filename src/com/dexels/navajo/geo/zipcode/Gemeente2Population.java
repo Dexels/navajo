@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * This class uses a cvs file to query the population data of a gemeente
  * 
@@ -17,6 +20,8 @@ public class Gemeente2Population {
 
 	private static Map<String,Integer> popMap = new HashMap<String,Integer>();
 	
+	private final static Logger logger = LoggerFactory
+			.getLogger(Gemeente2Population.class);
 	/**
 	 * @param args
 	 */
@@ -32,7 +37,7 @@ public class Gemeente2Population {
 				}
 				br.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 	

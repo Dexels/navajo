@@ -5,10 +5,11 @@ Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.1.qualifier
 Bundle-Vendor: Dexels
 Import-Package: javax.imageio,
- javax.servlet;version="2.5.0",
- javax.servlet.http;version="2.5.0",
- junit.framework;resolution:=optional,
- org.osgi.framework;version="1.5.0"
+ javax.servlet;version="[2.5.0,4.0.0)",
+ javax.servlet.http;version="[2.5.0,4.0.0)",
+ junit.framework,
+ org.osgi.framework;version="1.5.0",
+ org.slf4j;version="1.6.1"
 Bundle-ActivationPolicy: lazy
 Require-Bundle: com.dexels.navajo.adapters;bundle-version="1.0.5",
  com.dexels.navajo.core;bundle-version="2.9.4",

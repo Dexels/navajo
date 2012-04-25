@@ -4,9 +4,15 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.types.Binary;
 
 public class Shape {
+	
+	private final static Logger logger = LoggerFactory.getLogger(Shape.class);
+	
 	ArrayList<Polygon> polygons = new ArrayList<Polygon>();	
 	Binary data;
 	String id;
@@ -38,7 +44,7 @@ public class Shape {
 			br.close();
 			
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 	

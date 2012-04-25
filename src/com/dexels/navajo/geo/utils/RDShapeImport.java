@@ -5,6 +5,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.bbn.openmap.dataAccess.shape.DbfFile;
 import com.bbn.openmap.io.BinaryFile;
 import com.bbn.openmap.layer.shape.ESRIBoundingBox;
@@ -23,6 +26,9 @@ public class RDShapeImport {
 
 	private ShapeFile sf;
 	private DbfFile db;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(RDShapeImport.class);
 
 	public RDShapeImport(String prefix) {
 		try {
@@ -37,7 +43,7 @@ public class RDShapeImport {
 			db.readData();
 			sf = new ShapeFile(shapeFile);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 
@@ -99,7 +105,7 @@ public class RDShapeImport {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 	
@@ -114,7 +120,7 @@ public class RDShapeImport {
 				NavajoClientFactory.getClient().doSimpleSend(params.getRootDoc(), "geospatial/ProcessInsertCBSPolyPoint");
 			}
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 	
@@ -167,7 +173,7 @@ public class RDShapeImport {
 			NavajoClientFactory.getClient().doSimpleSend(params.getRootDoc(), "geospatial/ProcessUpdateCBSBoundingBox");
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 

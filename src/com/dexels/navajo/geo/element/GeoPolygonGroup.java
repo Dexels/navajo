@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 
@@ -22,7 +25,10 @@ public class GeoPolygonGroup extends GeoElement {
 	Map<GeoPoint, Set<GeoPolygon>> invOwnershipMap = new HashMap<GeoPoint, Set<GeoPolygon>>();
 
 	private int reverseStack = 0;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(GeoPolygonGroup.class);
+		
 	public GeoPolygonGroup(List<GeoPolygon> a, String name) throws GeoException {
 		myName = name;
 		myPolygons.addAll(a);
@@ -65,7 +71,7 @@ public class GeoPolygonGroup extends GeoElement {
 			}
 			return c;
 		} catch (GeoException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		return null;
 	}
@@ -168,7 +174,7 @@ public class GeoPolygonGroup extends GeoElement {
 								try {
 									gpp = join(g, h);
 								} catch (GeoException e) {
-									e.printStackTrace();
+									logger.info("Join failed ",e);
 									continue;
 								}
 								boolean resultClockwise = gpp.isClockwise();
@@ -223,7 +229,7 @@ public class GeoPolygonGroup extends GeoElement {
 		try {
 			writeElement(filename, kml);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 
@@ -270,8 +276,7 @@ public class GeoPolygonGroup extends GeoElement {
 				join = join(b, a, prohibited);
 			}
 			} catch(GeoException g) {
-				g.printStackTrace();
-				System.err.println("Geo exception: "+g.getMessage()+" continuing");
+				logger.error("Geo exception: "+g.getMessage()+" continuing",g);
 				return null;
 			}
 			
@@ -292,7 +297,7 @@ public class GeoPolygonGroup extends GeoElement {
 			join(null, a, b, ppp, prohibited);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		GeoPolygon gp = new GeoPolygon(ppp);
 

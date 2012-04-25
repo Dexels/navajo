@@ -8,6 +8,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -17,6 +20,9 @@ import com.dexels.navajo.geo.zipcode.Gemeente2Population;
 
 public class Test {
 
+	
+	private final static Logger logger = LoggerFactory.getLogger(Test.class);
+	
 	public static void main(String[] args) throws NavajoException, IOException {
 		Gemeente2Population.init();
 		Navajo n = new Test().createTestMessage();
@@ -49,8 +55,7 @@ public class Test {
 				br.close();
 				inStream.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 	

@@ -8,6 +8,9 @@ import java.io.OutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import metadata.FormatDescription;
 
 import com.dexels.navajo.adapters.NavajoSvgRenderAdapter;
@@ -33,7 +36,9 @@ public class KMLMap extends AbstractKMLMap implements Mappable {
 
 	public boolean pointFile = false;
 	public String messagePath = null;
-
+	
+	private final static Logger logger = LoggerFactory.getLogger(KMLMap.class);
+	
 	public void load( Access access) {
 		this.inMessage = access.getInDoc();
 	}
@@ -129,9 +134,9 @@ public class KMLMap extends AbstractKMLMap implements Mappable {
 				return myKmzData;
 			}
 		} catch (XMLParseException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		} 
 		return null;
 	}
@@ -214,7 +219,7 @@ public class KMLMap extends AbstractKMLMap implements Mappable {
 			
 			File xxx = hm.createPointKmlFile(hm.inMessage, "Clubs");
 			
-			System.err.println("Saved file: " + xxx.getAbsolutePath());
+			logger.info("Saved file: " + xxx.getAbsolutePath());
 			//File res = new File("c:/clubs.kml");
 //			FileWriter fw = new FileWriter(res);
 //			xxx.write(fw);
@@ -222,10 +227,10 @@ public class KMLMap extends AbstractKMLMap implements Mappable {
 //			fw.close();
 			//System.err.println("KML Run finished...: "+res); 
 			
-			} catch (XMLParseException e) {
-			e.printStackTrace();
+		} catch (XMLParseException e) {
+			logger.error("Error: ", e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 
 	}
