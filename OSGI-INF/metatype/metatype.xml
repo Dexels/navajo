@@ -5,7 +5,7 @@
     <AD name="password"  id="password" required="false" type="String" default="demo"/>
     <AD name="name"  id="name" required="false" type="String" default="navajo.resource.myjdbc"/>
   </OCD>
-  <Designate pid="navajo.resource.h2">
+  <Designate pid="navajo.resource.h2" factoryPid="navajo.resource.h2">
      <Object ocdref="navajo.resource.h2"/>
   </Designate>
 </metatype:MetaData>
