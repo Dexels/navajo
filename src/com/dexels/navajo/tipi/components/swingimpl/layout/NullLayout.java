@@ -19,8 +19,8 @@ public class NullLayout implements LayoutManager2 {
 	private Dimension mySize;
 	private Map<Component, Rectangle> components = new HashMap<Component, Rectangle>();
 
-	private TipiXYLayout myLayout;
-	private TipiComponent myComponent;
+//	private TipiXYLayout myLayout;
+//	private TipiComponent myComponent;
 
 	public NullLayout(Dimension size) {
 		mySize = size;
@@ -32,8 +32,8 @@ public class NullLayout implements LayoutManager2 {
 
 	public NullLayout(TipiXYLayout tipiXYLayout, TipiComponent myComponent) {
 		this();
-		this.myComponent = myComponent;
-		this.myLayout = tipiXYLayout;
+//		this.myComponent = myComponent;
+//		this.myLayout = tipiXYLayout;
 	}
 
 	public void setWidth(int w) {
