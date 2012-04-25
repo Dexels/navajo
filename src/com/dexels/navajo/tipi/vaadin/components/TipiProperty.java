@@ -3,9 +3,13 @@ package com.dexels.navajo.tipi.vaadin.components;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Selection;
@@ -60,7 +64,10 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 	private int memoRowCount = 5;
 	private ValuePropertyBridge currentDataSource;
     private final List<TipiEventListener> myListeners = new ArrayList<TipiEventListener>();
-
+    
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiProperty.class);
+    
 	@Override
 	public Object createContainer() {
 		container = new HorizontalLayout();
@@ -132,12 +139,15 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
             Map<String,Object> m = new HashMap<String,Object>();
             m.put("propertyName", property.getFullPropertyName());
             m.put("propertyValue", property.getTypedValue());
+            m.put("new", property.getTypedValue());
             m.put("propertyType", property.getType());
             m.put("propertyLength", new Integer(property.getLength()));
+            
             for (int i = 0; i < myListeners.size(); i++) {
                 TipiEventListener tel = (TipiEventListener) myListeners.get(i);
                 tel.performTipiEvent(eventType, m, false);
             }
+            logger.info("propertyEvent params: "+m);
             if (p == null) {
                 return;
             }
@@ -145,7 +155,7 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
                 System.err.println("Mysterious anomaly: Property of event is not the loaded property");
                 return;
             }
-            System.err.println("PRoperty event firing: "+eventType+" prop: "+p.getFullPropertyName());
+//            System.err.println("PRoperty event firing: "+eventType+" prop: "+p.getFullPropertyName());
             performTipiEvent(eventType, m, false);
             // }
         } catch (Exception ex) {
@@ -263,8 +273,20 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 				((OptionGroup)value).setMultiSelect(true);
 			}
 		}
+		final AbstractSelect t = (AbstractSelect)value;
+//		final ListSelect ls = (ListSelect)value;
+		t.setImmediate(true);
+		t.addListener(new Property.ValueChangeListener() {
+			
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				System.err.println("Value change!");
+				updateProperty(t,property);
+			}
+		});
 		addPropertyComponent(value);
-		AbstractSelect t = (AbstractSelect)value;
 		t.addListener(new PropertySetChangeListener() {
 			
 
@@ -284,6 +306,17 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 
 
 
+	protected void updateProperty(AbstractSelect t,
+			com.dexels.navajo.document.Property pp) {
+		Collection<?> ss = t.getItemIds();
+		for (Object object : ss) {
+			String id = (String)object;
+			Selection sel = pp.getSelection(id);
+			boolean selected = t.isSelected(object);
+			sel.setSelected(selected);
+		}
+	}
+
 	private void createSingleCardinality() {
 			SelectionListBridge selectionListBridge = new SelectionListBridge(property);
 			if("radio".equals(selectiontype)) {
@@ -292,7 +325,7 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 				value = new Select("",selectionListBridge);
 			}
 			final AbstractSelect t = (AbstractSelect)value;
-			
+			t.setNewItemsAllowed(false);
 			property.addPropertyChangeListener(new SerializablePropertyChangeListener() {
 				
 				private static final long serialVersionUID = 1L;

@@ -51,7 +51,6 @@ public class ValuePropertyBridge implements Property, Property.ValueChangeNotifi
 
 	@Override
 	public boolean isReadOnly() {
-//		System.err.println("READONLY: "+src.isDirOut()+" or not "+valueEditable+" :: "+(src.isDirOut() || !valueEditable));
 		return src.isDirOut() || !valueEditable;
 	}
 
@@ -66,7 +65,6 @@ public class ValuePropertyBridge implements Property, Property.ValueChangeNotifi
 	@Override
 	public void setReadOnly(boolean newStatus) {
 		System.err.println("Beware: changing readonly status?!");
-//		valueEditable = !newStatus;
 		src.setDirection(newStatus?com.dexels.navajo.document.Property.DIR_OUT:com.dexels.navajo.document.Property.DIR_IN);
 	}
 	
