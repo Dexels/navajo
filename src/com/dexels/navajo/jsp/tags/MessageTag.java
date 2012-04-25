@@ -2,6 +2,9 @@ package com.dexels.navajo.jsp.tags;
 
 import javax.servlet.jsp.JspException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -12,6 +15,9 @@ public class MessageTag extends BaseNavajoTag {
 	private Message message;
 	private int messageIndex = -1;
 	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(MessageTag.class);
 	
 	public int getMessageIndex() {
 		return messageIndex;
@@ -74,7 +80,7 @@ public class MessageTag extends BaseNavajoTag {
 			try {
 				message.write(System.err);
 			} catch (NavajoException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 		}
 		getNavajoContext().pushMessage(message);

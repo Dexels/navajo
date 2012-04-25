@@ -4,6 +4,9 @@ import java.io.IOException;
 
 import javax.servlet.jsp.JspException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 
@@ -11,6 +14,9 @@ public class DumpServiceTag extends BaseNavajoTag  {
 
 	private String myService;
 	private boolean log;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(DumpServiceTag.class);
 	
 	public boolean isLog() {
 		return log;
@@ -51,10 +57,9 @@ public class DumpServiceTag extends BaseNavajoTag  {
 			}
 			getPageContext().getOut().write("Dumped: " + myService);
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 
 		return EVAL_BODY_INCLUDE;

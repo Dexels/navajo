@@ -4,6 +4,9 @@ import java.io.StringWriter;
 
 import javax.servlet.jsp.JspException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -14,6 +17,10 @@ public class CallServiceTag extends BaseNavajoTag {
 	private String myService;
 	private String myNavajo;
 	private Navajo resultNavajo;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(CallServiceTag.class);
+	
 	@Override
 	public int doEndTag() throws JspException {
 		if(resultNavajo!=null) {
@@ -42,20 +49,9 @@ public class CallServiceTag extends BaseNavajoTag {
 				getNavajoContext().callService(myService);
 			} else {
 				Navajo navajo = getNavajoContext().getNavajo(myNavajo);
-//				if(navajo!=null) {
-//					System.err.println("Using input:");
-//					try {
-//						navajo.write(System.err);
-//					} catch (NavajoException e) {
-//						e.printStackTrace();
-//					}
-//				} else {
-//					System.err.println("Input requested: "+myNavajo+" but not found in context!!");
-//				}
 				getNavajoContext().callService(myService, navajo);
 			}
 		} catch (ClientException e) {
-			e.printStackTrace();
 			throw new JspException("Navajo service error while calling service: "+myService,e);
 		}
 		resultNavajo = getNavajoContext().getNavajo(myService);
@@ -70,21 +66,8 @@ public class CallServiceTag extends BaseNavajoTag {
 			try {
 				error.write(sw);
 			} catch (NavajoException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
-			// reset
-		//	resultNavajo = null;
-
-//			getNavajoContext().pushMessage(error);
-//			try {
-//				getPageContext().include("tml/writemessage.jsp");
-//			} catch (ServletException e) {
-//				e.printStackTrace();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//			getNavajoContext()
-//			throw new JspException("Server-side service error while calling service: "+myService+"\nProblem: "+sw);
 		}
 		error = resultNavajo.getMessage("ConditionErrors");
 		if(error!=null) { 
@@ -92,9 +75,8 @@ public class CallServiceTag extends BaseNavajoTag {
 			try {
 				error.write(sw);
 			} catch (NavajoException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
-//			throw new JspException("Server-side service condition while calling service: "+myService+"\nProblem: "+sw);
 			resultNavajo = null;
 		}
 		

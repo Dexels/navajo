@@ -4,6 +4,9 @@ import java.io.IOException;
 
 import javax.servlet.jsp.JspException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
 
@@ -11,7 +14,10 @@ public class DescriptionTag extends BaseNavajoTag  {
 
 	private String myProperty;
 	private String myService;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(DescriptionTag.class);
+	
 	public int doEndTag() throws JspException {
 		return EVAL_PAGE;
 	}
@@ -31,7 +37,7 @@ public class DescriptionTag extends BaseNavajoTag  {
 			Property p = n.getProperty(myProperty);
 			getPageContext().getOut().write(p.getDescription());
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		return EVAL_BODY_INCLUDE;
 	}
