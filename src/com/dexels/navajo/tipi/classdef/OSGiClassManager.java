@@ -2,7 +2,6 @@ package com.dexels.navajo.tipi.classdef;
 
 import java.util.Collection;
 import java.util.Dictionary;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Map;
@@ -104,13 +103,13 @@ public class OSGiClassManager extends BaseClassManager implements IClassManager 
 	 * 
 	 */
 	public Class<?> getTipiClass(XMLElement xe) {
-		String pack = (String) xe.getAttribute("package");
+//		String pack = (String) xe.getAttribute("package");
 		String clas = (String) xe.getAttribute("class");
 //		String name = (String) xe.getAttribute("name");
 		if(clas==null) {
 			return null;
 		}
-		String fullDef = pack + "." + clas;
+//		String fullDef = pack + "." + clas;
 //		ExtensionDefinition ed = getExtension(name);
 		Class<?> classInstance = (Class<?>) xe.getObjectAttribute("classInstance");
 		if(classInstance==null) {
@@ -158,7 +157,6 @@ public class OSGiClassManager extends BaseClassManager implements IClassManager 
 
 	@Override
 	public void addFunctionDefinition(String name, FunctionDefinition fd) {
-		// TODO Auto-generated method stub
 
 	}
 	@Override

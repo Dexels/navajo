@@ -2,7 +2,6 @@ package tipi;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,7 +24,7 @@ import com.dexels.navajo.tipi.TipiException;
 public abstract class BaseTipiApplicationInstance implements TipiApplicationInstance {
 
 	private TipiContext currentContext;
-	private File installationFolder = null;
+//	private File installationFolder = null;
 	private static final Logger logger = LoggerFactory.getLogger(BaseTipiApplicationInstance.class);
 	public TipiContext getCurrentContext() {
 		return currentContext;

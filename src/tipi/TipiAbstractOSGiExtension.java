@@ -32,7 +32,6 @@ public abstract class TipiAbstractOSGiExtension implements TipiExtension,
 	
 	
 	
-	@SuppressWarnings("unchecked")
 	protected void registerTipiExtension(BundleContext context)
 			throws Exception {
 		this.context = context;

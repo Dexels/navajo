@@ -45,7 +45,6 @@ public class TipiPerformMethod extends TipiAction {
 		String password = null;
 		String keystore = null;
 		String keypass = null;
-		boolean condenseCheck = true;
 		Operand brk = getEvaluatedParameter("breakOnError", event);
 		if (brk != null) {
 			breakOnError = ((Boolean) brk.value).booleanValue();

@@ -92,10 +92,17 @@ public class TipiAddPropertyToMessage extends TipiAction {
 				&& (!Property.DIR_OUT.equals(direction))) {
 			direction = Property.DIR_IN;
 		}
+		String description = null;
+		if(descriptionOperand==null || descriptionOperand.value==null) {
+			description = "";
+		} else {
+			description = (String) descriptionOperand.value;
+			
+		}
 		try {
 			Property q = NavajoFactory.getInstance().createProperty(
 					m.getRootDoc(), propertyName, Property.STRING_PROPERTY,
-					null, 0, (String) descriptionOperand.value, direction);
+					null, 0, description, direction);
 			q.setAnyValue(valueOperand.value);
 			parentMessage.addProperty(q);
 		} catch (NavajoException e) {

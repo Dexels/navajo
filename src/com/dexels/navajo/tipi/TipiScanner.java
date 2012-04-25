@@ -57,6 +57,7 @@ public class TipiScanner {
 		dumpCurrent(base,outputFile, "nl", "");
 	}
 
+	@SuppressWarnings("unused")
 	private static void createPreload(File base) throws IOException {
 		bindPreload("cancel", "'Annuleren'");
 		 bindPreload("cancel", "'annuleren'");

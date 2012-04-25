@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import tipi.TipiExtension;
-
 import navajo.ExtensionDefinition;
 
 import com.dexels.navajo.tipi.TipiComponent;
