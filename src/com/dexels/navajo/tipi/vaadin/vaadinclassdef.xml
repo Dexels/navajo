@@ -464,7 +464,21 @@
 	<tipiclass class="TipiProperty" name="property" implements="basecomponent,datacomponent,vaadincomponent"  package="com.dexels.navajo.tipi.vaadin.components"
 		propertycomponent="true" type="component" addtocontainer="true">
 		<events>
-			<event name="onValueChanged" />
+	        <event name="onValueChanged">
+	           <description>
+	              Fired when any value has been changed in the table.
+	              Use the event parameters to filter the exact changes you are interested in.
+	           </description>
+	           <param name="name" type="string" />
+	           <param name="old" type="string" />
+	           <param name="new" type="string" />
+	           <param name="propertyValue" type="object" />
+	           <param name="row" type="string" />
+	           <param name="column" type="string" />
+	           <param name="message" type="message" />
+	           <param name="property" type="property" />
+	           <param name="path" type="string" />
+	        </event>
 			<event name="onStateChanged" />
 			<event name="onFocusGained" />
 			<event name="onFocusLost" />
@@ -846,6 +860,7 @@
     </description>
 		<param name="binary" type="binary" />
 		<param name="newWindow" type="boolean" />
+		<param name="disposition" type="string" />
 	</tipiaction>
 
 	<tipiaction name="openBrowser" class="TipiOpenBrowser" package="com.dexels.navajo.tipi.vaadin.actions">
