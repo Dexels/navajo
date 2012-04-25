@@ -5,7 +5,10 @@ import java.io.FileFilter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 
-import com.dexels.navajo.jsp.server.NavajoServerContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.dexels.navajo.jsp.server.NavajoJspServerContext;
 import com.dexels.navajo.jsp.server.ScriptStatus;
 
 public class ScriptStatusImpl implements ScriptStatus {
@@ -17,10 +20,13 @@ public class ScriptStatusImpl implements ScriptStatus {
 	private final String path;
 	private final String extension;
 //	private final NavajoServerContext navajoServerContext;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ScriptStatusImpl.class);
+	
 	public final String[] acceptedCompileCode = new String[]{"java","js"};
 	
-	public ScriptStatusImpl(NavajoServerContext nsc, File scriptRoot, File currentFile, File compileRoot) throws IOException {
+	public ScriptStatusImpl(NavajoJspServerContext nsc, File scriptRoot, File currentFile, File compileRoot) throws IOException {
 //		this.navajoServerContext = nsc;
 		this.scriptRoot = scriptRoot;
 		this.currentFile = currentFile;
@@ -39,7 +45,7 @@ public class ScriptStatusImpl implements ScriptStatus {
 
 	}
 	
-	public ScriptStatusImpl(NavajoServerContext nsc, File scriptRoot, File compileRoot, String servicePath) throws IOException {
+	public ScriptStatusImpl(NavajoJspServerContext nsc, File scriptRoot, File compileRoot, String servicePath) throws IOException {
 //		this.navajoServerContext = nsc;
 		this.scriptRoot = scriptRoot;
 		this.compileRoot = compileRoot;
@@ -70,7 +76,7 @@ public class ScriptStatusImpl implements ScriptStatus {
 	public static void main(String[] aa) {
 		String a = "/Users/frank/Documents/Spiritus/NavajoExampleProject/scripts/InitNavajoDemo.xml";
 		String v =a.substring(a.lastIndexOf(".")+1);
-		System.err.println("Extension::: "+v);
+		logger.info("Extension::: "+v);
 		
 	}
 	
@@ -103,7 +109,7 @@ public class ScriptStatusImpl implements ScriptStatus {
 			}
 		});
 		if(files==null || files.length==0) {
-			System.err.println("No qualifying script found in folder: "+sourceDir.getAbsolutePath()+" with name like: "+serviceName+".*");
+			logger.error("No qualifying script found in folder: "+sourceDir.getAbsolutePath()+" with name like: "+serviceName+".*");
 			return null;
 		}
 		if(files.length>1) {
@@ -132,11 +138,7 @@ public class ScriptStatusImpl implements ScriptStatus {
 	}
 
 	public File getCompiledUnit() {
-//		System.err.println("DEBUG: \n"+this.toString());
-//		System.err.println("Compileroot: "+compileRoot+" - "+path);
-		 // fictional file, will never exist.
 		final File ff = new File(this.compileRoot,path);
-//		System.err.println("assuming dir: "+ff.getParentFile().getAbsolutePath()	);
 		File[] list = ff.getParentFile().listFiles(new FileFilter() {
 			
 			public boolean accept(File pathname) {
@@ -145,10 +147,6 @@ public class ScriptStatusImpl implements ScriptStatus {
 					return false;
 				}
 				for (String suffix : acceptedCompileCode) {
-//					String proposed = name+"."+suffix;
-//					System.err.println("Examining: "+proposed);
-//					File p = new File(ff.getParentFile(), proposed);
-//					System.err.println("Examining: "+p.getAbsolutePath());
 					if(pathname.getName().endsWith(suffix)) {
 						return true;
 					}
@@ -163,25 +161,10 @@ public class ScriptStatusImpl implements ScriptStatus {
 		if(list.length==0) {
 			return null;
 		}
-//		System.err.println("FIOLLLL: "+list[0].getAbsolutePath());
 		return list[0];
 	}
 
 
-	
-//	new FilenameFilter() {
-//		
-//		public boolean accept(File dir, String name) {
-//			for (String suffix : acceptedCompileCode) {
-//				String proposed = name+"."+suffix;
-//				File p = new File(dir, proposed);
-//				return 
-//			}
-//			return false;
-//		}
-//	}
-	
-	
 	public String getLanguage() {
 		if(extension.equals("rb")) {
 			return "Ruby";

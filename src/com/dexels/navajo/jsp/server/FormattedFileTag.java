@@ -10,6 +10,9 @@ import java.io.OutputStream;
 
 import javax.servlet.jsp.JspException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.jsp.tags.BaseNavajoTag;
 import com.uwyn.jhighlight.renderer.Renderer;
@@ -21,9 +24,13 @@ public class FormattedFileTag  extends BaseNavajoTag {
 	private String absoluteFilePath;
 	private String extension;
 	private String name;
-	private NavajoServerContext serverContext;
+	private NavajoJspServerContext serverContext;
 	private Object content;
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(FormattedFileTag.class);
+	
 	public synchronized Object getContent() {
 		return content;
 	}
@@ -57,11 +64,11 @@ public class FormattedFileTag  extends BaseNavajoTag {
 		this.absoluteFilePath = absoluteFilePath;
 	}
 	
-	public NavajoServerContext getServerContext() {
+	public NavajoJspServerContext getServerContext() {
 		return serverContext;
 	}
 
-	public void setServerContext(NavajoServerContext serverContext) {
+	public void setServerContext(NavajoJspServerContext serverContext) {
 		this.serverContext = serverContext;
 	}
 
@@ -131,7 +138,7 @@ public class FormattedFileTag  extends BaseNavajoTag {
 	}
 
 	public String resolveScriptPath(String path) throws IOException {
-		System.err.println("Resolving: "+path);
+		logger.info("Resolving: "+path);
 		if(serverContext==null) {
 			 return getPageContext().getServletContext().getRealPath(path);
 		} 

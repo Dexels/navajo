@@ -12,14 +12,20 @@ import java.util.Map;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.client.context.NavajoContext;
 import com.dexels.navajo.jsp.server.impl.ScriptStatusImpl;
 
-public class NavajoServerContext {
+public class NavajoJspServerContext {
 	private PageContext pageContext;
 	private File currentFolder;
 	private Map<String,Map<String,String>> cvsInfo = null;
@@ -28,9 +34,27 @@ public class NavajoServerContext {
 	private NavajoContext navajoContext;
 	private ScriptStatus scriptStatus;
 	private InstallerContext installerContext;
+	private ServletContext servletContext;
+	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(NavajoJspServerContext.class);
 	
 	public InstallerContext getInstallerContext() {
 		return installerContext;
+	}
+	
+	public NavajoJspServerContext() {
+	}
+	
+	public void setupOsgiLink() {
+		com.dexels.navajo.server.api.NavajoServerContext navajoServerContext;
+		logger.info("Hash of context: "+servletContext.hashCode());
+		BundleContext bc = (BundleContext) servletContext.getAttribute(BundleContext.class.getName());
+		ServiceReference sr = bc.getServiceReference("com.dexels.navajo.server.api.NavajoServerContext");
+		if(sr!=null) {
+			logger.info("ServerCONTEXT serverref found!");
+		}
 	}
 
 	public void setInstallerContext(InstallerContext installerContext) throws IOException {
@@ -236,7 +260,7 @@ public class NavajoServerContext {
 			if(newCurrent.getCanonicalPath().startsWith(getScriptRoot().getCanonicalPath())) {
 				setCurrentFolder(newCurrent);
 			} else {
-				System.err.println("Ignored!");
+				logger.warn("Ignored, leaving script folder.");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -245,6 +269,9 @@ public class NavajoServerContext {
 
 	public void setPageContext(PageContext pageContext) throws IOException {
 		this.pageContext = pageContext;
+		this.servletContext = pageContext.getServletContext();
+		setupOsgiLink();
+
 	}
 
 	public PageContext getPageContext() {
@@ -253,7 +280,7 @@ public class NavajoServerContext {
 	
 	public File getNavajoRoot() throws IOException {
 		if(getPageContext()==null) {
-			System.err.println("Returning custom root. Don't know what this implies...");
+			logger.warn("Returning custom root. Don't know what this implies...");
 			return customNavajoRoot;
 		}
 		
@@ -275,10 +302,12 @@ public class NavajoServerContext {
 		return new File(getNavajoRoot(),"config/");
 	}
 	
+	
+	// TODO: Rewrite to OSGi service / config retrieval
 	public ResourceBundle getClientSettingsBundle() throws IOException {
 		File props = new File(getConfigRoot(),"client.properties");
 		if(!props.exists()) {
-			System.err.println("Not found.");
+			logger.warn("Not found.");
 			return null;
 		}
 		FileReader fr = null;

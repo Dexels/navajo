@@ -2,7 +2,10 @@ package com.dexels.navajo.jsp.server.tags;
 
 import javax.servlet.jsp.JspException;
 
-import com.dexels.navajo.jsp.server.NavajoServerContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.dexels.navajo.jsp.server.NavajoJspServerContext;
 import com.dexels.navajo.jsp.tags.BaseNavajoTag;
 
 /**
@@ -13,19 +16,20 @@ import com.dexels.navajo.jsp.tags.BaseNavajoTag;
 public class LocalClientTag extends BaseNavajoTag {
 
 	
+	private final static Logger logger = LoggerFactory
+			.getLogger(LocalClientTag.class);
+	
 	public int doStartTag() throws JspException {
-		NavajoServerContext nc = (NavajoServerContext) getPageContext().findAttribute("serverContext");
+		NavajoJspServerContext nc = (NavajoJspServerContext) getPageContext().findAttribute("serverContext");
 		try {
 			if(nc!=null) {
 				nc.setupClient();
 			} else {
-				System.err.println("No serverContext found!s");
+				logger.error("No serverContext found!");
 			}
 		} catch (Throwable e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error configuring client tag: ",e);
 		}
-		//		getPageContext().setAttribute("Aap", "Noot");
 		return EVAL_BODY_INCLUDE;
 	}
 }

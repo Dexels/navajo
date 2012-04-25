@@ -7,9 +7,9 @@ import java.util.Set;
 public class ScriptInfoAccessMap implements Map<String, ScriptStatus> {
 
 	
-	private final NavajoServerContext context;
+	private final NavajoJspServerContext context;
 
-	public ScriptInfoAccessMap(NavajoServerContext n) {
+	public ScriptInfoAccessMap(NavajoJspServerContext n) {
 		this.context = n;
 	}
 	public void clear() {
