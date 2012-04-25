@@ -60,6 +60,16 @@
    <tipiaction name="showInfo" class="TipiShowInfo" package="com.dexels.navajo.tipi.actions">
       <param name="text" type="string" required="true" />
    </tipiaction>
+   
+   <tipiaction name="log" class="TipiLog" package="com.dexels.navajo.tipi.actions">
+	  <description>
+	  	text: The text to log, level: the logging level. Supported values: debug,info,warn and error.
+	  	If none is supplied, the level is info
+	  </description>
+      <param name="text" type="string" required="true" />
+      <param name="level" type="string" required="true" />
+   </tipiaction>
+   
    <tipiaction name="showError" class="TipiShowError" package="com.dexels.navajo.tipi.actions">
       <param name="text" type="string" required="true" />
    </tipiaction>
@@ -206,7 +216,15 @@
       <param name="path" type="string" required="true" />
       <param name="value" type="object" required="true" />
       <param name="message" type="message" required="true" />
+      <param name="direction" type="string" required="true" />
    </tipiaction>
+   <tipiaction name="copyProperty" class="TipiCopyProperty" package="com.dexels.navajo.tipi.actions">
+      <param name="message" type="message" required="true" />
+      <param name="property" type="property" required="true" />
+      <param name="propertyName" type="string" required="false" />
+   </tipiaction>
+   
+   
    <tipiaction name="insertMessage" class="TipiInsertMessage" package="com.dexels.navajo.tipi.actions">
       <param name="message" type="message" required="true" />
    </tipiaction>
