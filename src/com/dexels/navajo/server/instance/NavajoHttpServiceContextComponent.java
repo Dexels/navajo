@@ -31,15 +31,15 @@ public class NavajoHttpServiceContextComponent {
 		this.bundleContext = c.getBundleContext();
 		NavajoContextFactory ncf = new NavajoContextFactory(this.bundleContext,this.httpService);
 		this.factory = ncf;
-		try {
-			Configuration configuration = configurationAdmin.createFactoryConfiguration("navajo.server.context");
-			Dictionary<String,String> dict = new Hashtable<String,String>();
-			dict.put("contextPath", "/");
-			dict.put("installationPath", "/Users/frank/Documents/workspace-indigo/sportlink-serv/navajo-tester/auxilary");
-			configuration.update(dict);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			Configuration configuration = configurationAdmin.createFactoryConfiguration("navajo.server.context.factory");
+//			Dictionary<String,String> dict = new Hashtable<String,String>();
+//			dict.put("contextPath", "/");
+//			dict.put("installationPath", "/Users/frank/Documents/workspace-indigo/sportlink-serv/navajo-tester/auxilary");
+//			configuration.update(dict);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 		
 //		"navajo.server.context"
 		
