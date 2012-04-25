@@ -8,15 +8,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.server.listener.http.AsyncRequest;
 
 public abstract class BaseFileRequest implements AsyncRequest {
 
 	private OutputStream os = null; // = new ByteArrayOutputStream();
-	// private int readCount = 0;
 	private int contentLength;
 	private File tempFile;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BaseFileRequest.class);
+	
 	protected BaseFileRequest() {
 		try {
 			tempFile = File.createTempFile("navajoRequest_", ".xml");
@@ -24,10 +29,10 @@ public abstract class BaseFileRequest implements AsyncRequest {
 			System.err.println("Created tempfile: "
 					+ tempFile.getAbsolutePath());
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-
+			logger.error("Error: ", e);
+			
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 

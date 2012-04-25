@@ -8,6 +8,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.nql.NQLContext;
 import com.dexels.navajo.client.nql.OutputCallback;
@@ -19,7 +22,10 @@ public class NqlServlet extends HttpServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = -1365612001727053259L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(NqlServlet.class);
+	
 	@Override
 	protected void doGet(final HttpServletRequest req,
 			final HttpServletResponse resp) throws ServletException,
@@ -59,7 +65,7 @@ public class NqlServlet extends HttpServlet {
 				try {
 					return resp.getOutputStream();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error("Error: ", e);
 					return null;
 				}
 			}
@@ -67,9 +73,9 @@ public class NqlServlet extends HttpServlet {
 		try {
 			nc.executeCommand(query);
 		} catch (ClientException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		resp.getOutputStream().flush();
 		resp.getOutputStream().close();

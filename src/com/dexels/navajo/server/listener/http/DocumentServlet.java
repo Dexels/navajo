@@ -109,7 +109,6 @@ public class DocumentServlet extends TmlHttpServlet {
 				return;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new ServletException("Invalid request.");
 		}
 		// super.doGet(req, res);

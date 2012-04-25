@@ -16,6 +16,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -41,7 +44,10 @@ public abstract class BaseServiceRunner extends BaseInMemoryRequest implements
 	public static final String COMPRESS_GZIP = "gzip";
 	public static final String COMPRESS_JZLIB = "jzlib";
 	public static final String COMPRESS_NONE = "";
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BaseServiceRunner.class);
+	
 	protected HttpServletResponse response;
 
 	public void setResponse(HttpServletResponse response) {
@@ -184,26 +190,7 @@ public abstract class BaseServiceRunner extends BaseInMemoryRequest implements
 					endTransaction();
 				}
 
-				// } else if ( in.getHeader().getHeaderAttribute("fastflow") !=
-				// null ) {
-				//
-				// Runnable onFinish = new Runnable() {
-				//
-				// public void run() {
-				// try {
-				// tmlScheduler.removeTmlRunnable(request);
-				// endTransaction();
-				// } catch (IOException e) {
-				// // TODO Auto-generated catch block
-				// e.printStackTrace();
-				// }
-				// }
-				//
-				// };
-				//
-				// new FastDispatcher().handle(in, response.getOutputStream(),
-				// onFinish);
-				//
+			
 			} else {
 				boolean continuationFound = false;
 				try {
@@ -255,7 +242,6 @@ public abstract class BaseServiceRunner extends BaseInMemoryRequest implements
 		} catch (NavajoDoneException e) {
 			throw (e);
 		} catch (Throwable e) {
-			// e.printStackTrace(System.err);
 			if (e instanceof FatalException) {
 				FatalException fe = (FatalException) e;
 				if (fe.getMessage().equals("500.13")) {
@@ -448,14 +434,13 @@ public abstract class BaseServiceRunner extends BaseInMemoryRequest implements
 			this.startedAt = System.currentTimeMillis();
 			execute();
 		} catch (NavajoDoneException e) {
-			System.err
-					.println("NavajoDoneException caught. This thread fired a continuation. Another thread will finish it in the future.");
+			System.err.println("NavajoDoneException caught. This thread fired a continuation. Another thread will finish it in the future.");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 			try {
 				response.sendError(500, e.getMessage());
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				logger.error("Error: ", e1);
 			}
 		}
 	}
@@ -481,7 +466,7 @@ public abstract class BaseServiceRunner extends BaseInMemoryRequest implements
 					bout.write(buffer, 0, read);
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 			if (read <= -1) {
 				ready = true;
@@ -490,7 +475,7 @@ public abstract class BaseServiceRunner extends BaseInMemoryRequest implements
 		try {
 			bout.flush();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 

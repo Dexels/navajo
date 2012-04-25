@@ -12,6 +12,9 @@ import java.util.Enumeration;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.DispatcherInterface;
 
@@ -31,7 +34,9 @@ public abstract class BaseNavajoServlet extends HttpServlet {
 
 	public static final String COMPRESS_GZIP = "gzip";
 	public static final String COMPRESS_JZLIB = "jzlib";
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BaseNavajoServlet.class);
 	protected DispatcherInterface initDispatcher() {
 		return DispatcherFactory.getInstance();
 	}
@@ -61,7 +66,7 @@ public abstract class BaseNavajoServlet extends HttpServlet {
 					System.err.println(sb.toString());
 				}
 			} catch (IOException ioe) {
-				ioe.printStackTrace(System.err);
+				logger.error("Error: ", ioe);
 			}
 		} else {
 			System.err.println("EMPTY REQUEST OBJECT!!");

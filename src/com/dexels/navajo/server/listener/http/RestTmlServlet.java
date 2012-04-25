@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 import com.dexels.navajo.document.Header;
@@ -32,11 +34,13 @@ import com.dexels.navajo.server.FatalException;
  */
 public class RestTmlServlet extends HttpServlet implements Servlet {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 8550857560638790482L;
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(RestTmlServlet.class);
+	
+	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -104,9 +108,9 @@ public class RestTmlServlet extends HttpServlet implements Servlet {
 			out.close();
 
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		} catch (FatalException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 
 	}

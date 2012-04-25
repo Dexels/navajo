@@ -15,6 +15,8 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
@@ -22,10 +24,8 @@ import com.dexels.navajo.server.test.TestNavajoConfig;
 
 class SerializableObject implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 7806593130574518792L;
+
 	
 	private String field;
 
@@ -51,6 +51,10 @@ public class SharedStoreInterfaceTest {
 	boolean threadAssertFailed = false;
 	SharedStoreLock myssl;
 	int locks = 0;
+	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(SharedStoreInterfaceTest.class);
 	
 	@Before
 	public void setUp() throws Exception {
@@ -114,7 +118,7 @@ public class SharedStoreInterfaceTest {
 						si.store("myparent", "mystoredobject"+index, objects[index], false, true);
 						locks++;
 					} catch (SharedStoreException e) {
-						e.printStackTrace();
+						SharedStoreInterfaceTest.logger.error("Error: ", e);
 					}
 				}
 			};
@@ -167,7 +171,7 @@ public class SharedStoreInterfaceTest {
 						si.store("myparent", "mystoredobject"+index, objects[index], false, false);
 						locks++;
 					} catch (SharedStoreException e) {
-						e.printStackTrace();
+						logger.error("Error: ", e);
 					}
 				}
 			};
@@ -312,7 +316,7 @@ public class SharedStoreInterfaceTest {
 					try {
 						Thread.sleep(500);
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						logger.error("Error: ", e);
 					}
 					si.release(ssl);
 					System.err.println("RELEASED: " + ssl);
@@ -333,7 +337,7 @@ public class SharedStoreInterfaceTest {
 					try {
 						Thread.sleep(500);
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						logger.error("Error: ", e);
 					}
 					si.release(ssl);
 					System.err.println("RELEASED: " + ssl);
@@ -354,7 +358,7 @@ public class SharedStoreInterfaceTest {
 					try {
 						Thread.sleep(500);
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						logger.error("Error: ", e);
 					}
 					si.release(ssl);
 					System.err.println("RELEASED: " + ssl);

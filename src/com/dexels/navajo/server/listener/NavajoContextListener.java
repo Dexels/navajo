@@ -218,7 +218,7 @@ public class NavajoContextListener implements ServletContextListener {
 				Map<String, String> systemContexts = loadSystemContexts();
 				return getInstallationPath(systemContexts, canonicalContextPath);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 				return null;
 			}
 	}

@@ -6,6 +6,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.FatalException;
@@ -21,7 +24,10 @@ public class NavajoFilterServlet extends TmlStandardServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = 7843782840626326460L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(NavajoFilterServlet.class);
+	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -88,7 +94,7 @@ public class NavajoFilterServlet extends TmlStandardServlet {
 			processResponse(req, input, output, resp);
 
 		} catch (FatalException e1) {
-			e1.printStackTrace();
+			logger.error("Error: ", e1);
 		}
 	}
 
@@ -127,11 +133,11 @@ public class NavajoFilterServlet extends TmlStandardServlet {
 					.forName(inFilter);
 			return rwrapperClass.newInstance();
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		} catch (InstantiationException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		return null;
 	}
@@ -143,11 +149,11 @@ public class NavajoFilterServlet extends TmlStandardServlet {
 					.forName(outFilter);
 			return rwrapperClass.newInstance();
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		} catch (InstantiationException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		return null;
 	}

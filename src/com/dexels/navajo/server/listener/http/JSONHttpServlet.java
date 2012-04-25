@@ -22,6 +22,9 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -61,11 +64,11 @@ import com.jcraft.jzlib.ZOutputStream;
 @Deprecated
 public class JSONHttpServlet extends TmlHttpServlet {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 2834711637989589874L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(JSONHttpServlet.class);
+	
 	protected String configurationPath = "";
 	protected String rootPath = null;
 
@@ -277,8 +280,7 @@ public class JSONHttpServlet extends TmlHttpServlet {
 			}
 
 		} catch (Exception ce) {
-			ce.printStackTrace();
-			System.err.println(ce.getMessage());
+			logger.error("Error: ", ce);
 		} finally {
 			outputStream.close();
 			dis = null;
@@ -516,7 +518,7 @@ public class JSONHttpServlet extends TmlHttpServlet {
 			out = null;
 
 		} catch (Throwable e) {
-			e.printStackTrace(System.err);
+			logger.error("Error: ", e);
 			dumHttp(request, -1, null);
 			if (e instanceof FatalException) {
 				FatalException fe = (FatalException) e;

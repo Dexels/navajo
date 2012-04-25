@@ -20,6 +20,9 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -66,7 +69,9 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 	public static final String COMPRESS_NONE = "";
 
 	public static final String DEFAULT_SERVER_XML = "config/server.xml";
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TmlHttpServlet.class);
 	private static boolean streamingMode = true;
 	private static long logfileIndex = 0;
 	private static long bytesWritten = 0;
@@ -80,7 +85,7 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 		try {
 			super.finalize();
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 
@@ -283,8 +288,7 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 			}
 
 		} catch (Exception ce) {
-			ce.printStackTrace();
-			System.err.println(ce.getMessage());
+			logger.error("Error: ", ce);
 		} finally {
 			outputStream.close();
 			dis = null;
@@ -513,7 +517,7 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 			out = null;
 
 		} catch (Throwable e) {
-			e.printStackTrace(System.err);
+			logger.error("Error: ", e);
 			dumHttp(request, -1, null);
 			if (e instanceof FatalException) {
 				FatalException fe = (FatalException) e;

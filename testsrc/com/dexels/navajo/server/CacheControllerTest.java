@@ -8,6 +8,8 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -18,6 +20,9 @@ import com.dexels.navajo.server.test.TestNavajoConfig;
 
 public class CacheControllerTest  {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(CacheControllerTest.class);
 	private String sampleConfig = 
 		"<tml>" + "" +
 		"<message name=\"Cache\">" +
@@ -80,9 +85,8 @@ public class CacheControllerTest  {
 		Navajo config = NavajoFactory.getInstance().createNavajo(new StringReader(sampleConfig));
 		try {
 			DispatcherFactory.getInstance().getNavajoConfig().writeConfig("cache.xml", config);
-			System.err.println("WROTE CACHE CONFIG.");
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 	

@@ -7,6 +7,8 @@ import java.io.OutputStreamWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 import com.dexels.navajo.document.Navajo;
@@ -17,6 +19,10 @@ import com.dexels.navajo.server.listener.http.wrapper.NavajoResponseWrapper;
 
 public class IdentityResponseWrapper implements NavajoResponseWrapper {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(IdentityResponseWrapper.class);
+	
 	@Override
 	public void processResponse(HttpServletRequest originalRequest,
 			Navajo indoc, Navajo outDoc, HttpServletResponse originalResponse)
@@ -46,8 +52,7 @@ public class IdentityResponseWrapper implements NavajoResponseWrapper {
 			try {
 				outDoc.write(out);
 			} catch (NavajoException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 			out.close();
 		}

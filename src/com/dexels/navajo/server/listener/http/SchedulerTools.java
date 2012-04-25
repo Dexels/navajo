@@ -15,8 +15,6 @@ import com.dexels.navajo.server.listener.http.schedulers.DummyScheduler;
 
 public class SchedulerTools {
 
-//	private static final  Map<String,TmlScheduler> injectedSchedulers = new HashMap<String, TmlScheduler>();
-
 	private static final Logger logger = LoggerFactory.getLogger(SchedulerTools.class);
 	
 	@SuppressWarnings("unchecked")
@@ -39,13 +37,13 @@ public class SchedulerTools {
 				logger.info("Scheduler initialized.");
 				return scheduler;
 			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			} catch (InstantiationException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			} catch (IllegalAccessException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			} catch (InvalidSyntaxException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 		}
 		logger.info("Requested scheduler not found. Returning dummy scheduler.");

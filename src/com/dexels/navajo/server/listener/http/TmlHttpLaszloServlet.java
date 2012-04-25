@@ -11,8 +11,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
+import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
@@ -53,11 +56,12 @@ import com.dexels.navajo.server.DispatcherInterface;
 @Deprecated
 public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -6716143312109383514L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TmlHttpLaszloServlet.class);
+	
+	
 	public TmlHttpLaszloServlet() {
 	}
 
@@ -81,7 +85,7 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 		try {
 			out.write(sw.toString());
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		// XMLDocumentUtils.write(laszlo,out,false);
 	}
@@ -223,12 +227,11 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 				out.close();
 			}
 		} catch (Throwable e) {
-			e.printStackTrace();
 			throw new ServletException(e);
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ClientException, IOException {
 		System.setProperty("com.dexels.navajo.DocumentImplementation",
 				"com.dexels.navajo.document.base.BaseNavajoFactoryImpl");
 		NavajoFactory.getInstance().setExpressionEvaluator(
@@ -237,58 +240,30 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 				"penelope1.dexels.com/sportlink/test/knvb/Comet");
 		NavajoClientFactory.getClient().setUsername("ROOT");
 		NavajoClientFactory.getClient().setPassword("R20T");
-		try {
-			Navajo init = NavajoClientFactory.getClient().doSimpleSend(
-					"club/InitSearchClubs");
-			init.getProperty("ClubSearch/ClubName").setValue("veld");
-			NavajoLaszloConverter.dumpNavajoLaszloStyle(init, "kip.xml",
-					"club/InitSearchClubs");
+		Navajo init = NavajoClientFactory.getClient().doSimpleSend(
+				"club/InitSearchClubs");
+		init.getProperty("ClubSearch/ClubName").setValue("veld");
+		NavajoLaszloConverter.dumpNavajoLaszloStyle(init, "kip.xml",
+				"club/InitSearchClubs");
 
-			StringWriter sw = new StringWriter();
-			NavajoLaszloConverter.writeBirtXml(init.getMessage("ClubSearch"),
-					sw);
-			System.err.println(sw.toString());
+		StringWriter sw = new StringWriter();
+		NavajoLaszloConverter.writeBirtXml(init.getMessage("ClubSearch"), sw);
+		System.err.println(sw.toString());
 
-			Navajo n = NavajoClientFactory.getClient().doSimpleSend(init,
-					"club/ProcessSearchClubs");
-			NavajoLaszloConverter.dumpNavajoLaszloStyle(n, "aap.xml",
-					"club/ProcessSearchClubs");
+		Navajo n = NavajoClientFactory.getClient().doSimpleSend(init,
+				"club/ProcessSearchClubs");
+		NavajoLaszloConverter.dumpNavajoLaszloStyle(n, "aap.xml",
+				"club/ProcessSearchClubs");
 
-			init = NavajoClientFactory.getClient().doSimpleSend(
-					"club/InitUpdateClub");
-			init.getProperty("Club/ClubIdentifier").setValue("BBFW63X");
-			n = NavajoClientFactory.getClient().doSimpleSend(init,
-					"club/ProcessQueryClub");
-			NavajoLaszloConverter.dumpNavajoLaszloStyle(n, "noot.xml",
-					"club/ProcessQueryClub");
+		init = NavajoClientFactory.getClient().doSimpleSend(
+				"club/InitUpdateClub");
+		init.getProperty("Club/ClubIdentifier").setValue("BBFW63X");
+		n = NavajoClientFactory.getClient().doSimpleSend(init,
+				"club/ProcessQueryClub");
+		NavajoLaszloConverter.dumpNavajoLaszloStyle(n, "noot.xml",
+				"club/ProcessQueryClub");
 
-			// ----------------------------------------------
-
-			// Node root = d.getFirstChild();
-			// Navajo nav = NavajoFactory.getInstance().createNavajo();
-			// if (root != null) {
-			// String rpc_name = root.getNodeName();
-			// rpc_name = rpc_name.replaceAll("_", "/");
-			// Node tml = root.getFirstChild();
-			//
-			// String rpc_usr = ((Element) tml).getAttribute("rpc_usr");
-			// String rpc_pwd = ((Element) tml).getAttribute("rpc_pwd");
-			//
-			// Header h = NavajoFactory.getInstance().createHeader(nav,
-			// rpc_name, rpc_usr, rpc_pwd, -1);
-			// nav.addHeader(h);
-			//
-			// NodeList children = tml.getChildNodes();
-			// for (int i = 0; i < children.getLength(); i++) {
-			// Node noot = children.item(i);
-			// t.createMessageFromLaszlo(noot, nav, null);
-			// }
-			// }
-			// nav.write(System.err);
-			System.err.println("Ok, done");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		System.err.println("Ok, done");
 
 	}
 
