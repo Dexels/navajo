@@ -208,7 +208,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 	private transient ScriptEngineManager scriptManager;
 
-	private boolean osgiMode;
+//	private boolean osgiMode;
 
 	public TipiContext(TipiApplicationInstance myApplication, TipiContext parent) {
 		this.myApplication = myApplication;
@@ -3136,8 +3136,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	}
 
 
-	public void setOSGiMode(boolean b) {
-		this.osgiMode = b;
-	}
+//	public void setOSGiMode(boolean b) {
+//		this.osgiMode = b;
+//	}
 
 }
