@@ -35,6 +35,7 @@ import com.dexels.navajo.parser.TMLExpressionException;
 
 public class Zip extends FunctionInterface {
 
+	
 	public String remarks() {
 		return "Zips a binary property";
 	}
@@ -82,7 +83,7 @@ public class Zip extends FunctionInterface {
 			
 			return b;
 		} catch (Exception e) {
-			e.printStackTrace(System.err);
+			
 			throw new TMLExpressionException(this, e.getMessage());
 		} finally {
 			if ( tempFile != null ) {

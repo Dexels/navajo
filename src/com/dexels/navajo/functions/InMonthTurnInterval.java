@@ -1,5 +1,6 @@
 package com.dexels.navajo.functions;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -66,8 +67,7 @@ public class InMonthTurnInterval extends FunctionInterface {
 		return "Usage: InMonthTurnInterval([(Date)date], [(Integer)days], [(Boolean)first]) ";
 	}
 	
-	public static void main(String[] args){
-		try{
+	public static void main(String[] args) throws TMLExpressionException, ParseException{
 			InMonthTurnInterval function = new InMonthTurnInterval();
 			function.reset();
 			SimpleDateFormat sdf = new SimpleDateFormat("ddmmyyyy");
@@ -82,9 +82,6 @@ public class InMonthTurnInterval extends FunctionInterface {
 			if(result instanceof java.lang.Boolean){
 				System.err.println("Result: " + ((java.lang.Boolean)result).booleanValue());
 			}
-		}catch(Exception e){
-			e.printStackTrace();
-		}
 	}
 
 }

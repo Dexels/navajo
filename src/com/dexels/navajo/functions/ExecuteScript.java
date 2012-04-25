@@ -52,8 +52,7 @@ public class ExecuteScript extends FunctionInterface {
       return bbb;
       }
     catch (Exception ex) {
-      ex.printStackTrace();
-      throw new TMLExpressionException(this, "Error while trying to execute script: " + script);
+    	throw new TMLExpressionException(this, "Error while trying to execute script: " + script);
     }
   }
 

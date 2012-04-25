@@ -6,12 +6,19 @@ import java.io.FileOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 
 public class ZipArchive extends FunctionInterface {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ZipArchive.class);
+	
 	private final void addFiles(ZipOutputStream zo, String path, File f) throws Exception {
 		if ( f.isFile() ) {
 			ZipEntry entry = new ZipEntry(path + "/" + f.getName());
@@ -56,7 +63,7 @@ public class ZipArchive extends FunctionInterface {
 
 			return b;
 		} catch (Exception e) {
-			e.printStackTrace(System.err);
+			logger.error("Error: ", e);
 			return null;
 		}
 	}

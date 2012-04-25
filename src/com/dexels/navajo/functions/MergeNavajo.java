@@ -31,7 +31,6 @@ public final class MergeNavajo extends FunctionInterface {
         	
         	return result.merge(master);
         } catch (Exception e) {
-        	e.printStackTrace();
             throw new TMLExpressionException(this, "Illegal type specified in MergeNavajo() function: " + e.getMessage(),e);
         }
     }

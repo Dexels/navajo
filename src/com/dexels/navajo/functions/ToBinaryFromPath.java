@@ -31,11 +31,9 @@ public class ToBinaryFromPath extends FunctionInterface {
  		java.io.File u = new java.io.File(s);
 		Binary b = new Binary(u);
 		return b;
-	   } catch (MalformedURLException e) {
-		e.printStackTrace();
+	 } catch (MalformedURLException e) {
 		throw new TMLExpressionException("Bad url in function ToBinaryFromPath: "+s);
 	} catch (IOException e) {
-		e.printStackTrace();
 		throw new TMLExpressionException("Error opening url in function ToBinaryFromPath: "+s);
 	}
   }

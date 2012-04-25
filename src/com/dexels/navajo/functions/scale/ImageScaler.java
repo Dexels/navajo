@@ -71,7 +71,6 @@ public class ImageScaler {
         	ios = null;
         	return c;
         } catch (IOException e) {
-        	e.printStackTrace(System.err);
         	throw new IOException(e.getMessage());
         } finally {
         	if ( is != null ) {
@@ -235,7 +234,6 @@ public class ImageScaler {
 //            Float.parseFloat(args[5]));
 //    }
 //    catch(Exception e) {
-//      e.printStackTrace();
 //    }
   }
 }

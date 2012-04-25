@@ -33,10 +33,8 @@ public class ToBinaryFromUrl extends FunctionInterface {
 		Binary b = new Binary(u.openStream());
 		return b;
 	   } catch (MalformedURLException e) {
-		e.printStackTrace();
 		throw new TMLExpressionException("Bad url in function ToBinaryFromUrl: "+s);
 	} catch (IOException e) {
-		e.printStackTrace();
 		throw new TMLExpressionException("Error opening url in function ToBinaryFromUrl: "+s);
 	}
   }

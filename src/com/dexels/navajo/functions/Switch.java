@@ -24,7 +24,6 @@ public class Switch extends FunctionInterface {
 				}
 			}
 		} catch (Throwable t) {
-			t.printStackTrace(System.err);
 			throw new TMLExpressionException(this, "Not enough parameters for decode.");
 		}
 		

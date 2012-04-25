@@ -30,7 +30,6 @@ public class GetUrlMimeType extends GetUrlBase {
 		try {
 			u = new URL((String) a);
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
 			throw new TMLExpressionException("CheckUrl: bad url: " + a);
 		}
 

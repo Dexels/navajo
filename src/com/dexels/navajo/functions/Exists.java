@@ -2,6 +2,9 @@ package com.dexels.navajo.functions;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -23,6 +26,9 @@ import com.dexels.navajo.server.SystemException;
  */
 
 public class Exists extends FunctionInterface {
+	
+	private final static Logger logger = LoggerFactory.getLogger(Exists.class);
+	
 	public Exists() {
 	}
 	public String remarks() {
@@ -96,7 +102,7 @@ public class Exists extends FunctionInterface {
 						}
 					}
 				} catch (SystemException ex) {
-					ex.printStackTrace(System.err);
+					logger.error("Error: ", ex);
 				}
 			}
 		} catch (NavajoException ex) {

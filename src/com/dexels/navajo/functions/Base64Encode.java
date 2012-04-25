@@ -27,12 +27,19 @@ package com.dexels.navajo.functions;
 import java.io.IOException;
 import java.io.StringReader;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 
 public class Base64Encode extends FunctionInterface {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(Base64Encode.class);
+	
 	public String remarks() {
 		return "Get a Base64 representation of a given string or binary(deprecated).";
 	}
@@ -64,7 +71,7 @@ public class Base64Encode extends FunctionInterface {
 			b.setMimeType("application/octet-stream");
 			return b;
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 			return null;
 		}
 		

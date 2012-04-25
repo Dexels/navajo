@@ -57,7 +57,6 @@ public final class GetVersionInfo extends FunctionInterface {
 			AbstractVersion v = (AbstractVersion) c.newInstance();
 			return v.toString();
 		} catch (Exception e) {
-			e.printStackTrace(System.err);
 			throw new TMLExpressionException(this, "Could not find version object for package: " + packageName);
 		}
 	}

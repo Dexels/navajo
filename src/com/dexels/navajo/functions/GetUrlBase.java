@@ -6,6 +6,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.parser.FunctionInterface;
 
 /*
@@ -15,6 +18,8 @@ import com.dexels.navajo.parser.FunctionInterface;
 public abstract class GetUrlBase extends FunctionInterface {
 
 	
+	private final static Logger logger = LoggerFactory
+			.getLogger(GetUrlBase.class);
 	
     protected static Date getUrlDate(URL u) {
         InputStream os = null;
@@ -33,7 +38,7 @@ public abstract class GetUrlBase extends FunctionInterface {
                try {
                    os.close();
                } catch (IOException e) {
-                     e.printStackTrace();
+            	   logger.error("Error: ", e);
                }
            }
         }
@@ -56,7 +61,7 @@ public abstract class GetUrlBase extends FunctionInterface {
                try {
                    os.close();
                } catch (IOException e) {
-                     e.printStackTrace();
+            	   logger.error("Error: ", e);
                }
            }
         }
@@ -80,7 +85,7 @@ public abstract class GetUrlBase extends FunctionInterface {
                try {
                    os.close();
                } catch (IOException e) {
-                     e.printStackTrace();
+            	   logger.info("closing problem",e);
                }
            }
         }
@@ -103,7 +108,7 @@ public abstract class GetUrlBase extends FunctionInterface {
 				try {
 					os.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+	        	   logger.info("closing problem",e);
 				}
 			}
 		}

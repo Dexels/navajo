@@ -38,21 +38,17 @@ public final class CheckIBAN extends FunctionInterface {
         }
     }
 
-    public static void main(String [] args) {
+	public static void main(String[] args) throws TMLExpressionException {
 
-      String bad = "4511425"; // 4511425
-      CheckIBAN e = new CheckIBAN();
-      e.reset();
-      e.insertOperand(bad);
-      try {
+		String bad = "4511425"; // 4511425
+		CheckIBAN e = new CheckIBAN();
+		e.reset();
+		e.insertOperand(bad);
 		System.out.println("Good? " + e.evaluate());
-		
+
 		e.reset();
 		String good = "GB82WEST12345698765432";
 		e.insertOperand(good);
-	    System.out.println("Good? " + e.evaluate());
-	} catch (TMLExpressionException e1) {
-		e1.printStackTrace();
+		System.out.println("Good? " + e.evaluate());
 	}
-    }
 }

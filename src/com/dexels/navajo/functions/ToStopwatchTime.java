@@ -2,6 +2,7 @@ package com.dexels.navajo.functions;
 
 import com.dexels.navajo.document.types.StopwatchTime;
 import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.parser.TMLExpressionException;
 
 /**
  * <p>Title: </p>
@@ -42,25 +43,17 @@ public class ToStopwatchTime extends FunctionInterface{
 
 
 
-  public static void main(String[] args) {
-    ToStopwatchTime ts = new ToStopwatchTime();
-    ts.reset();
-    ts.insertOperand(new Integer(4965234)); // 09:45:08:234
-    try{
-      Object o = ts.evaluate();
-      System.err.println("StopwatchTime: " + ((StopwatchTime)o).toString());
-    }catch(Exception e){
-      e.printStackTrace();
-    }
-    ts.reset();
-    ts.insertOperand(new Integer(4920000)); // 09:45
-    try{
-      Object o = ts.evaluate();
-      System.err.println("StopwatchTime: " + ((StopwatchTime)o).toString());
-    }catch(Exception e){
-      e.printStackTrace();
-    }
+	public static void main(String[] args) throws TMLExpressionException {
+		ToStopwatchTime ts = new ToStopwatchTime();
+		ts.reset();
+		ts.insertOperand(new Integer(4965234)); // 09:45:08:234
+		Object o = ts.evaluate();
+		System.err.println("StopwatchTime: " + ((StopwatchTime) o).toString());
+		ts.reset();
+		ts.insertOperand(new Integer(4920000)); // 09:45
+		o = ts.evaluate();
+		System.err.println("StopwatchTime: " + ((StopwatchTime) o).toString());
 
-  }
+	}
 
 }

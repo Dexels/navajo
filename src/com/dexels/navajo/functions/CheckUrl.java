@@ -5,11 +5,18 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 
 public final class CheckUrl extends FunctionInterface {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(CheckUrl.class);
+	
 	public String remarks() {
 		return "This function will check whether it returns a valid stream. It will throw an exception when the the URL is malformed, it returns false when the string is null";
 	}
@@ -34,7 +41,6 @@ public final class CheckUrl extends FunctionInterface {
 		try {
 			u = new URL((String)a);
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
 			throw new TMLExpressionException("CheckUrl: bad url: "+a);
 		}
 
@@ -53,7 +59,7 @@ public final class CheckUrl extends FunctionInterface {
                try {
                    os.close();
                } catch (IOException e) {
-                     e.printStackTrace();
+            	   logger.info("Closing problem: ",e);
                }
            }
         }

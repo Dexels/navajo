@@ -30,7 +30,6 @@ public final class GetUrlSize extends GetUrlBase {
 		try {
 			u = new URL((String)a);
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
 			throw new TMLExpressionException("GetUrlSize: bad url: "+a);
 		}
 

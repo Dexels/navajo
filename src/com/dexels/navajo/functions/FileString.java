@@ -3,6 +3,9 @@ package com.dexels.navajo.functions;
 import java.io.BufferedReader;
 import java.io.FileReader;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.server.DispatcherFactory;
 
@@ -18,6 +21,10 @@ import com.dexels.navajo.server.DispatcherFactory;
 
 public class FileString extends FunctionInterface {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(FileString.class);
+	
   public FileString() {
   }
 
@@ -47,7 +54,7 @@ public class FileString extends FunctionInterface {
       fis.close();
       return sb.toString();
     } catch (Exception e) {
-    	e.printStackTrace();
+    	logger.error("Error: ", e);
     	return null;
     }
   }

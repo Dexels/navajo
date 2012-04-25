@@ -1,5 +1,8 @@
 package com.dexels.navajo.functions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Operand;
@@ -21,6 +24,10 @@ import com.dexels.navajo.server.SystemException;
 
 public final class EvaluateExpression extends FunctionInterface {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(EvaluateExpression.class);
+	
   public String remarks() {
     return "Evaluate a Navajo expression";
   }
@@ -45,10 +52,10 @@ public final class EvaluateExpression extends FunctionInterface {
         result = Expression.evaluate(expression, currentNavajo, null, currentMessage);
       }
       catch (SystemException ex) {
-        ex.printStackTrace(System.err);
+    	  logger.error("Error: ", ex);
       }
       catch (TMLExpressionException ex) {
-        ex.printStackTrace(System.err);
+    	  logger.error("Error: ",ex);
       }
     } else {
        String condition = (String) getOperand(0);
@@ -63,12 +70,12 @@ public final class EvaluateExpression extends FunctionInterface {
         }
       }
       catch (SystemException ex1) {
-        ex1.printStackTrace(System.err);
-        throw new TMLExpressionException(this, ex1.getMessage());
+    	  logger.error("Error: ", ex1);
+    	  throw new TMLExpressionException(this, ex1.getMessage());
       }
       catch (TMLExpressionException ex1) {
-        ex1.printStackTrace(System.err);
-        throw new TMLExpressionException(this, ex1.getMessage());
+    	  logger.error("Error: ", ex1);
+    	  throw new TMLExpressionException(this, ex1.getMessage());
       }
     }
 

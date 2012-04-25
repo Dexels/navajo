@@ -12,6 +12,9 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.parser.Expression;
@@ -33,8 +36,10 @@ public class ToSecureImage extends FunctionInterface{
   private String str;
 //  Component observer = new Label();
   Random rnd = new Random();
-
-
+  
+private final static Logger logger = LoggerFactory
+		.getLogger(ToSecureImage.class);
+  
   public ToSecureImage() {
   }
 
@@ -117,7 +122,7 @@ public class ToSecureImage extends FunctionInterface{
 
       return b;
     }catch(Exception e){
-      e.printStackTrace();
+    	logger.error("Error: ", e);
     }
     return null;
   }
@@ -150,8 +155,8 @@ public class ToSecureImage extends FunctionInterface{
 
 
      }catch(Exception e){
-      e.printStackTrace();
-    }
+    	 logger.error("Error: ", e);
+     }
 
   }
 

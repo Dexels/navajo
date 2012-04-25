@@ -2,6 +2,9 @@ package com.dexels.navajo.functions;
 
 import java.io.FileInputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.parser.Expression;
@@ -19,6 +22,9 @@ import com.dexels.navajo.parser.FunctionInterface;
 
 public class File extends FunctionInterface {
 
+	
+	private final static Logger logger = LoggerFactory.getLogger(File.class);
+	
   public File() {
   }
 
@@ -43,8 +49,7 @@ public class File extends FunctionInterface {
       fis.close();
       return new Binary(data);
     } catch (Exception e) {
-      //e.printStackTrace();
-      //throw new TMLExpressionException("Could not read file: " + fileName);
+    	logger.error("Error: ", e);
       return null;
     }
   }

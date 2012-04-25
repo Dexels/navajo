@@ -1,10 +1,16 @@
 package com.dexels.navajo.functions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 
 public final class Wait extends FunctionInterface {
 
+	
+	private final static Logger logger = LoggerFactory.getLogger(Wait.class);
+	
 	public final Object evaluate() throws TMLExpressionException {
 		if ( getOperands().size() == 0) {
 			throw new TMLExpressionException(this, "Missing argument");
@@ -14,8 +20,7 @@ public final class Wait extends FunctionInterface {
 			try {
 				Thread.sleep(((Integer) w).intValue());
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 		} else {
 			throw new TMLExpressionException(this, "Expected integer argument");
