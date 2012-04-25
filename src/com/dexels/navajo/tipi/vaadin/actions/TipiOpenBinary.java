@@ -37,6 +37,7 @@ public class TipiOpenBinary extends TipiVaadinActionImpl {
 				event);
 		Object newWindow = getEvaluatedParameterValue("newWindow",
 				event);
+		String disposition = (String) getEvaluatedParameterValue("disposition",event);
 		boolean openNewWindow = true;
 		if(newWindow!=null && (newWindow instanceof Boolean)) {
 			openNewWindow =  ((Boolean)newWindow).booleanValue();
@@ -94,7 +95,10 @@ public class TipiOpenBinary extends TipiVaadinActionImpl {
 		int rand = r.nextInt()%10000;
 		
 		StreamResource sr = new StreamResource( ss, "file"+rand+"."+b.getExtension(), getApplication());
-		sr.getStream().setParameter("Content-Disposition", "inline");
+		if(disposition==null) {
+			disposition = "inline";
+		}
+		sr.getStream().setParameter("Content-Disposition", disposition);
 	    sr.getStream().setParameter("Cache-Control","no-store, no-cache, no-transform, must-revalidate, private");
 
 		if(openNewWindow) {
