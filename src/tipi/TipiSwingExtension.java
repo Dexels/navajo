@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
-import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 

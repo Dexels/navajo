@@ -28,7 +28,6 @@ import com.dexels.navajo.tipi.components.swingimpl.SwingTipiContext;
 import com.dexels.navajo.tipi.components.swingimpl.SwingTipiUserInterface;
 import com.dexels.navajo.tipi.components.swingimpl.TipiApplet;
 import com.dexels.navajo.tipi.components.swingimpl.TipiScreen;
-import com.dexels.navajo.tipi.internal.FileResourceLoader;
 import com.dexels.navajo.tipi.swingclient.SwingClient;
 import com.dexels.navajo.tipi.tipixml.XMLParseException;
 
@@ -95,7 +94,7 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance im
 //		context.setBundleContext(this.bundleContext);
 		// assuming OSGi mode, I guess?
 		if(this.bundleContext!=null) {
-			context.setOSGiMode(true);
+//			context.setOSGiMode(true);
 			context.setClassManager(new OSGiClassManager(this.bundleContext, context));
 			context.setActionManager(new OSGiActionManager(this.bundleContext));
 		}
@@ -207,7 +206,6 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance im
 
 	@Override
 	public Locale getLocale() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
