@@ -5,7 +5,7 @@
     <AD name="username"  id="username" required="false" type="String" default="ROOT"/>
     <AD name="password"  id="password" required="false" type="String" default="R20T"/>
   </OCD>
-  <Designate pid="navajo.client.Factory">
+  <Designate factoryPid="navajo.client.Factory" pid="navajo.client.Factory">
      <Object ocdref="navajo.client.Factory"/>
   </Designate>
 </metatype:MetaData>
