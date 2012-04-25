@@ -339,6 +339,7 @@
             <description>
                Fired when any value has been changed in the table.
                Use the event parameters to filter the exact changes you are interested in.
+				NOTE THIS IS INCONSISTENT with java code
             </description>
             <param name="name" type="string" />
             <param name="old" type="string" />
