@@ -17,5 +17,4 @@ Service-Component: OSGI-INF/component.xml
 Require-Bundle: com.dexels.navajo.listeners;bundle-version="3.1.5",
  com.dexels.navajo.document;bundle-version="1.0.5",
  com.dexels.navajo.version;bundle-version="1.0.10",
- com.dexels.navajo.core;bundle-version="2.9.4",
- com.dexels.navajo.listeners.continuations;bundle-version="1.0.3"
+ com.dexels.navajo.core;bundle-version="2.9.4"
