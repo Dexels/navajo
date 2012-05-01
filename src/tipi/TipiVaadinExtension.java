@@ -2,11 +2,14 @@ package tipi;
 
 import java.io.File;
 import java.util.Dictionary;
+import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Set;
 
 import navajo.ExtensionDefinition;
 
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +34,9 @@ public class TipiVaadinExtension extends TipiAbstractXMLExtension implements Tip
 	private transient BundleContext context;
 	
 	private File installationFolder = null;
+	
+	private final Set<ServiceRegistration> adapterRegs = new HashSet<ServiceRegistration>();
+
 		
 	public void initialializeExtension(File installationFolder) {
 		// This method will be called multiple times. It should only be done one for every extension directory.
@@ -64,7 +70,8 @@ public class TipiVaadinExtension extends TipiAbstractXMLExtension implements Tip
 			 Dictionary<String, Object> props = new Hashtable<String, Object>();
 			 props.put("functionName", functionName);
 			 props.put("functionDefinition", fd);
-			context.registerService(FunctionInterface.class.getName(), fi.instantiateFunctionClass(fd,getClass().getClassLoader()), props);
+			 ServiceRegistration sr = context.registerService(FunctionInterface.class.getName(), fi.instantiateFunctionClass(fd,getClass().getClassLoader()), props);
+			 adapterRegs.add(sr);
 		}
 		
 //	        props.put("Language", "English");
@@ -76,6 +83,9 @@ public class TipiVaadinExtension extends TipiAbstractXMLExtension implements Tip
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		deregisterTipiExtension(context);
+		for (ServiceRegistration s : adapterRegs) {
+			s.unregister();
+		}
 	}
 	
 	public void initialize(TipiContext tc) {
