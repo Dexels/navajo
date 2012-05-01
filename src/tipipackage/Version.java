@@ -25,11 +25,13 @@
 package tipipackage;
 
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
 
 import tipi.TipiCoreExtension;
 
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 
+	private ServiceRegistration registration = null;
 	// Included packages.
 	public Version() {
 		// addIncludes(includes);
@@ -38,13 +40,21 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
 		ITipiExtensionRegistry ter = new TipiOSGiWhiteboardExtensionProvider(bc);
-		context.registerService(ITipiExtensionRegistry.class.getName(), ter,
+		// TODO save and deregister
+		registration = context.registerService(ITipiExtensionRegistry.class.getName(), ter,
 				null);
-
 		TipiCoreExtension tce = new TipiCoreExtension();
-		// special case for TipiCoreExtension, as it is not the bundle activator
-		// TODO Maybe refactor
 		tce.start(bc);
 	}
+
+	@Override
+	public void stop(BundleContext bc) throws Exception {
+		if(registration!=null) {
+			registration.unregister();
+		}
+		super.stop(bc);
+	}
+	
+	
 
 }
