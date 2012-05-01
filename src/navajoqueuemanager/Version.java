@@ -41,31 +41,44 @@ import com.dexels.navajo.server.listener.http.schedulers.priority.PriorityThread
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 	
+	private ServiceRegistration registration;
+
 	@Override
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
-		if(bc!=null) {
-			Dictionary<String, Object> wb = new Hashtable<String, Object>();
-			wb.put("schedulerClass", "com.dexels.navajo.server.listener.http.schedulers.priority.PriorityThreadPoolScheduler");
-//			bc.registerService(TmlScheduler.class, ptps, wb);
-			bc.registerService(TmlScheduler.class.getName(), new ServiceFactory<TmlScheduler>() {
+		try {
+			if(bc!=null) {
+				Dictionary<String, Object> wb = new Hashtable<String, Object>();
+				wb.put("schedulerClass", "com.dexels.navajo.server.listener.http.schedulers.priority.PriorityThreadPoolScheduler");
+				registration = bc.registerService(TmlScheduler.class.getName(), new ServiceFactory<TmlScheduler>() {
 
-				@Override
-				public TmlScheduler getService(Bundle bundle,
-						ServiceRegistration<TmlScheduler> registration) {
-					System.err.println(">>>>>>>> creating ptps for bundle: "+bundle.getSymbolicName());
-					PriorityThreadPoolScheduler ptps = new PriorityThreadPoolScheduler();
-					return ptps;
-				}
+					@Override
+					public TmlScheduler getService(Bundle bundle,
+							ServiceRegistration<TmlScheduler> registration) {
+						PriorityThreadPoolScheduler ptps = new PriorityThreadPoolScheduler();
+						return ptps;
+					}
 
-				@Override
-				public void ungetService(Bundle bundle,
-						ServiceRegistration<TmlScheduler> registration,
-						TmlScheduler service) {
-					
-				}
-			},wb);
+					@Override
+					public void ungetService(Bundle bundle,
+							ServiceRegistration<TmlScheduler> registration,
+							TmlScheduler service) {
+						
+					}
+				},wb);
+			}
+		} catch (Throwable e) {
+			logger.error("Activation start failed: ",e);
 		}
+
+	}
+
+	@Override
+	public void stop(BundleContext arg0) throws Exception {
+		if(registration!=null) {
+			registration.unregister();
+		}
+		super.stop(arg0);
 	}
 	
 	
