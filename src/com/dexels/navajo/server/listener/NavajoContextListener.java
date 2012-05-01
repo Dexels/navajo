@@ -37,8 +37,10 @@ public class NavajoContextListener implements ServletContextListener {
 	public static final String QDSAX = "com.dexels.navajo.document.base.BaseNavajoFactoryImpl";
 	public static final String DEFAULT_SERVER_XML = "config/server.xml";
 	private static final Logger logger = LoggerFactory.getLogger(NavajoContextListener.class);
-	private static ServiceRegistration<NavajoServerContext> navajoServerInstance;
-	private static ServiceRegistration<LocalClient> localClientInstance;
+	@SuppressWarnings("rawtypes")
+	private static ServiceRegistration navajoServerInstance;
+	@SuppressWarnings("rawtypes")
+	private static ServiceRegistration localClientInstance;
 
 	
 	@Override
@@ -113,6 +115,8 @@ public class NavajoContextListener implements ServletContextListener {
 			registerInstanceOSGi(nsi,contextPath);
 			LocalClientDispatcherWrapper lcdw = new LocalClientDispatcherWrapper(dispatcher);
 			registerLocalClient(lcdw);
+			// TODO Add dereg code
+	
 			return nsi;
 		} catch (Exception e) {
 			logger.error("Error initializing dispatcher", e);
@@ -127,7 +131,7 @@ public class NavajoContextListener implements ServletContextListener {
 			return;
 		}		
         Dictionary<String, Object> properties = new Hashtable<String, Object>();
-        localClientInstance = bc.registerService(LocalClient.class, lcdw,properties);
+        localClientInstance = bc.registerService(LocalClient.class.getName(), lcdw,properties);
 		logger.info("Local client service registration complete!");
 		}
 
@@ -141,7 +145,7 @@ public class NavajoContextListener implements ServletContextListener {
         properties.put("navajoContextPath", contextPath);
         properties.put("installationPath", nsi.getInstallationPath());
         properties.put("serverId", nsi.getDispatcher().getServerId());
-        navajoServerInstance = bc.registerService(NavajoServerContext.class, nsi,properties);
+        navajoServerInstance = bc.registerService(NavajoServerContext.class.getName(), nsi,properties);
 		logger.info("Service registration complete!");
 	}
 

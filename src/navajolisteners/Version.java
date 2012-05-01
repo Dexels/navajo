@@ -28,6 +28,8 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+import org.osgi.framework.ServiceRegistration;
 
 import com.dexels.navajo.listeners.SchedulerRegistry;
 import com.dexels.navajo.server.listener.http.TmlScheduler;
@@ -36,6 +38,9 @@ import com.dexels.navajo.server.listener.http.schedulers.DummyScheduler;
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 	// Included packages.
+
+	private ServiceRegistration reference;
+
 
 	public Version() {
 		// javax.mail.Address a;
@@ -51,11 +56,17 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 			DummyScheduler ds = new DummyScheduler();
 			 Dictionary<String, Object> wb = new Hashtable<String, Object>();
 			 wb.put("schedulerClass", "com.dexels.navajo.server.listener.http.schedulers.DummyScheduler");
-			bc.registerService(TmlScheduler.class, ds, wb);
+			reference = bc.registerService(TmlScheduler.class.getName(), ds, wb);
 		}
 	}
 
 
+	public void stop(BundleContext bc) throws Exception {
+		if(reference!=null) {
+			reference.unregister();
+		}
+	}
+	
 	@Override
 	public void shutdown() {
 
