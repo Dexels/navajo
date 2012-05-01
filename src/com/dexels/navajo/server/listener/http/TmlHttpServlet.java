@@ -523,7 +523,7 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 				FatalException fe = (FatalException) e;
 				if (fe.getMessage().equals("500.13")) {
 					// Server too busy.
-					throw new ServletException("500.13");
+					throw new ServletException("500.13",e);
 				}
 			}
 			throw new ServletException(e);
