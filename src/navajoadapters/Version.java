@@ -94,40 +94,45 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	@Override
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
-		FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
-		fi.init();
-		
-		fi.clearFunctionNames();
-
-		StandardAdapterFunctionLibrary extensionDef = new StandardAdapterFunctionLibrary();
-		fi.injectExtension(extensionDef);
-		//		System.err.println("Detected functions: "+fi.getFunctionNames());
-		for (String functionName : fi.getFunctionNames(extensionDef)) {
-			FunctionDefinition fd = fi.getDef(extensionDef, functionName);
-			 Dictionary<String, Object> props = new Hashtable<String, Object>();
-			props.put("functionName", functionName);
-			props.put("functionDefinition", fd);
-			context.registerService(FunctionInterface.class.getName(), fi
-					.instantiateFunctionClass(fd, getClass().getClassLoader()),
-					props);
-		}
-		StandardAdapterLibrary library = new StandardAdapterLibrary();
-		fi.injectExtension(library);
-		for(String adapterName: fi.getAdapterNames(library)) {
-//			FunctionDefinition fd = fi.getAdapterDefinition(adapterName,extensionDef);
-			FunctionDefinition fd = fi.getAdapterConfig(library).get(adapterName);
-//			FunctionDefinition fd = fi.getDef(extensionDef, adapterName);
+		try {
+			FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
+			fi.init();
 			
-			String adapterClass = fi.getAdapterClass(adapterName,library);
-			Class<?> c = Class.forName(adapterClass);
-			
-			 Dictionary<String, Object> props = new Hashtable<String, Object>();
-			 props.put("adapterName", adapterName);
-			 props.put("adapterClass", c.getName());
+			fi.clearFunctionNames();
 
-			if(adapterClass!=null) {
-				context.registerService(Class.class.getName(), c, props);
+			StandardAdapterFunctionLibrary extensionDef = new StandardAdapterFunctionLibrary();
+			fi.injectExtension(extensionDef);
+			//		System.err.println("Detected functions: "+fi.getFunctionNames());
+			for (String functionName : fi.getFunctionNames(extensionDef)) {
+				FunctionDefinition fd = fi.getDef(extensionDef, functionName);
+				 Dictionary<String, Object> props = new Hashtable<String, Object>();
+				props.put("functionName", functionName);
+				props.put("functionDefinition", fd);
+				context.registerService(FunctionInterface.class.getName(), fi
+						.instantiateFunctionClass(fd, getClass().getClassLoader()),
+						props);
 			}
+			StandardAdapterLibrary library = new StandardAdapterLibrary();
+			fi.injectExtension(library);
+			for(String adapterName: fi.getAdapterNames(library)) {
+//			FunctionDefinition fd = fi.getAdapterDefinition(adapterName,extensionDef);
+				FunctionDefinition fd = fi.getAdapterConfig(library).get(adapterName);
+//			FunctionDefinition fd = fi.getDef(extensionDef, adapterName);
+				
+				String adapterClass = fi.getAdapterClass(adapterName,library);
+				Class<?> c = Class.forName(adapterClass);
+				
+				 Dictionary<String, Object> props = new Hashtable<String, Object>();
+				 props.put("adapterName", adapterName);
+				 props.put("adapterClass", c.getName());
+
+				if(adapterClass!=null) {
+					context.registerService(Class.class.getName(), c, props);
+				}
+			}
+		} catch (Throwable e) {
+			logger.error("Trouble starting NavajoAdapters bundle",e);
+			e.printStackTrace();
 		}
 	}
 	
