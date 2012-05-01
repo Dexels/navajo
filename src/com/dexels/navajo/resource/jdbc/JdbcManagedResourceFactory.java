@@ -34,7 +34,7 @@ public class JdbcManagedResourceFactory implements ManagedServiceFactory {
 
 	
 	private final static Logger logger = LoggerFactory.getLogger(JdbcManagedResourceFactory.class);
-	private ServiceRegistration<ManagedServiceFactory> factoryRegistration;
+	private ServiceRegistration factoryRegistration;
 	
 	public JdbcManagedResourceFactory(BundleContext bc,DataSourceFactory factory, String pid, String name) {
 		this.bundleContext = bc;
@@ -44,7 +44,7 @@ public class JdbcManagedResourceFactory implements ManagedServiceFactory {
 		
         Dictionary<String, Object> managedProperties = new Hashtable<String, Object>();
         managedProperties.put(Constants.SERVICE_PID, this.pid);
-        factoryRegistration = bundleContext.registerService(ManagedServiceFactory.class, this, managedProperties);
+        factoryRegistration = bundleContext.registerService(ManagedServiceFactory.class.getName(), this, managedProperties);
 
 	}
 	

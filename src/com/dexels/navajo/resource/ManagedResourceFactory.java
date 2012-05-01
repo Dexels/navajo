@@ -27,7 +27,7 @@ public abstract class ManagedResourceFactory<T> implements ManagedServiceFactory
 	private final Map<String,ServiceRegistration<T>> registryMap = new HashMap<String,ServiceRegistration<T>>();
 
 	private final static Logger logger = LoggerFactory.getLogger(ManagedResourceFactory.class);
-	private ServiceRegistration<ManagedServiceFactory> factoryRegistration;
+	private ServiceRegistration factoryRegistration;
 	private Class<?> serviceClass;
 	
 	public ManagedResourceFactory(Class<?> serviceClass, BundleContext bc,String pid, String name) {
@@ -38,7 +38,7 @@ public abstract class ManagedResourceFactory<T> implements ManagedServiceFactory
 		
         Dictionary<String, Object> managedProperties = new Hashtable<String, Object>();
         managedProperties.put(Constants.SERVICE_PID, this.pid);
-        factoryRegistration = bundleContext.registerService(ManagedServiceFactory.class, this, managedProperties);
+        factoryRegistration = bundleContext.registerService(ManagedServiceFactory.class.getName(), this, managedProperties);
         logger.info("Registering resource service: "+serviceClass.getName()+" - "+pid);
 	}
 
