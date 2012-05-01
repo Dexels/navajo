@@ -553,8 +553,7 @@ private ServiceHandler createHandler(String handler, Access access)
       return out;
     }
     catch (Exception ne) {
-      ne.printStackTrace();
-      throw new FatalException(ne.getMessage());
+      throw new FatalException(ne.getMessage(),ne);
     }
   }
 
