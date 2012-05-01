@@ -4,6 +4,7 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
 
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.FunctionFactoryInterface;
@@ -12,6 +13,8 @@ import com.dexels.navajo.server.HandlerFactory;
 import com.dexels.navajo.server.ServiceHandler;
 
 public class Version extends com.dexels.navajo.version.AbstractVersion {
+
+	private ServiceRegistration handler;
 
 	@Override
 	public void start(BundleContext bc) throws Exception {
@@ -27,14 +30,19 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 		
 		 Dictionary<String, Object> wb = new Hashtable<String, Object>();
 		 wb.put("handlerName", "com.dexels.navajo.rhino.RhinoHandler");
-		context.registerService(ServiceHandler.class ,rhinoHandler, wb);
+		 handler = context.registerService(ServiceHandler.class.getName() ,rhinoHandler, wb);
 
 //		 Dictionary<String, Object> wb2 = new Hashtable<String, Object>();
 //		 wb2.put("repositoryName", "com.dexels.navajo.rhino.RhinoRepository");
 //		context.registerService(Repository.class,rp, wb);
-		
-		
-
-	
 	}
+	
+	@Override
+	public void stop(BundleContext arg0) throws Exception {
+		super.stop(arg0);
+		if(handler!=null) {
+			handler.unregister();
+		}
+	}
+	
 }
