@@ -3,7 +3,10 @@ package tipi;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Dictionary;
+import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Set;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -13,6 +16,7 @@ import navajo.ExtensionDefinition;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
+import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,9 +31,8 @@ import com.dexels.navajo.tipi.tipixml.XMLParseException;
 
 public class TipiSwingExtension extends TipiAbstractXMLExtension implements
 		TipiExtension,TipiMainExtension {
-	/**
-	 * 
-	 */
+
+	private final Set<ServiceRegistration> adapterRegs = new HashSet<ServiceRegistration>();
 	private static final long serialVersionUID = 3083008630338044274L;
 
 	private static TipiSwingExtension instance = null;
@@ -56,7 +59,8 @@ public class TipiSwingExtension extends TipiAbstractXMLExtension implements
 			 Dictionary<String, Object> props = new Hashtable<String, Object>();
 			 props.put("functionName", functionName);
 			 props.put("functionDefinition", fd);
-			context.registerService(FunctionInterface.class.getName(), fi.instantiateFunctionClass(fd,getClass().getClassLoader()), props);
+			 ServiceRegistration sr = context.registerService(FunctionInterface.class.getName(), fi.instantiateFunctionClass(fd,getClass().getClassLoader()), props);
+			 adapterRegs.add(sr);
 		}
 				
 	}
@@ -64,6 +68,9 @@ public class TipiSwingExtension extends TipiAbstractXMLExtension implements
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		deregisterTipiExtension(context);
+		for (ServiceRegistration sr : adapterRegs) {
+			sr.unregister();
+		}
 	}
 	
 	public static TipiSwingExtension getInstance() {
