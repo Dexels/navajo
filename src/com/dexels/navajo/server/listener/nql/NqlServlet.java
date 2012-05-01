@@ -42,9 +42,6 @@ public class NqlServlet extends HttpServlet {
 			}
 			return;
 		}
-		System.err.println("ServerName: " + req.getServerName());
-		System.err.println("getServerPort: " + req.getServerPort());
-		System.err.println("getContextPath: " + req.getContextPath());
 		NQLContext nc = new NQLContext();
 		nc.setupClient(server, username, password, req.getServerName(),
 				req.getServerPort(), req.getContextPath(),"/PostmanLegacy");
