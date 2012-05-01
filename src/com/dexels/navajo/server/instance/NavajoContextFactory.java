@@ -26,14 +26,14 @@ import com.dexels.navajo.server.api.NavajoServerContext;
 import com.dexels.navajo.server.api.impl.NavajoServerInstance;
 import com.dexels.navajo.server.listener.NavajoContextListener;
 import com.dexels.navajo.server.listener.http.TmlHttpServlet;
-import com.dexels.navajo.server.listener.http.continuation.TmlContinuationServlet;
 import com.dexels.navajo.server.listener.nql.NqlServlet;
 
 public class NavajoContextFactory implements ManagedServiceFactory {
 
+	private static final String NQL_SERVLET_ALIAS = "/Nql";
 	private final Map<String,NavajoServerContext> contextMap = new HashMap<String, NavajoServerContext>();
-	private final Map<String,ServiceRegistration<NavajoServerContext>> registryMap = new HashMap<String,ServiceRegistration<NavajoServerContext>>();
-	private final ServiceRegistration<ManagedServiceFactory> factoryRegistration;
+	private final Map<String,ServiceRegistration> registryMap = new HashMap<String,ServiceRegistration>();
+	private final ServiceRegistration factoryRegistration;
 	private final BundleContext bundleContext;
 	private final String pid;
 
@@ -46,14 +46,16 @@ public class NavajoContextFactory implements ManagedServiceFactory {
 	private HttpService httpService;
 
 	private final static Logger logger = LoggerFactory.getLogger(NavajoContextFactory.class);
+	private TmlHttpServlet legacyServlet;
+	private NqlServlet nqlServlet;
 	
 	public NavajoContextFactory(BundleContext bc, HttpService httpService) {
 		this.bundleContext = bc;
-		this.pid = "navajo.server.context";
+		this.pid = "navajo.server.context.factory";
 		this.httpService = httpService;
         Dictionary<String, Object> managedProperties = new Hashtable<String, Object>();
         managedProperties.put(Constants.SERVICE_PID, this.pid);
-        factoryRegistration = bundleContext.registerService(ManagedServiceFactory.class, this, managedProperties);
+        factoryRegistration = bundleContext.registerService(ManagedServiceFactory.class.getName(), this, managedProperties);
 
 	}
 
@@ -71,7 +73,10 @@ public class NavajoContextFactory implements ManagedServiceFactory {
 			logger.warn("Strange: Deleting, but already gone.");
 			return;
 		}
-		contextMap.remove(pid);
+		httpService.unregister(NQL_SERVLET_ALIAS);
+		httpService.unregister(LEGACY_SERVLET_ALIAS);
+		httpService.unregister(SERVLET_ALIAS);
+			contextMap.remove(pid);
 		ServiceRegistration<NavajoServerContext> reg = registryMap.get(pid);
 		reg.unregister();
 
@@ -89,7 +94,12 @@ public class NavajoContextFactory implements ManagedServiceFactory {
 		logger.info("Configuration received, pid: "+pid);
 		try {
 			NavajoServerContext source = instantiate(bundleContext, pid,settings);
-			logger.info("Activating Navajo Service service: "+settings);
+			logger.info("Activating Navajo Service service: "+pid);
+			Enumeration e = settings.keys();
+			while (e.hasMoreElements()) {
+				Object object = (Object) e.nextElement();
+				System.err.println("Key: "+object+" value: "+settings.get(object));
+			}
 			contextMap.put(pid, (NavajoServerContext) source);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -99,6 +109,7 @@ public class NavajoContextFactory implements ManagedServiceFactory {
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public NavajoServerContext instantiate(BundleContext bc, String pid, Dictionary settings) throws Exception {
+		logger.info("Instantiating with pid: "+pid);
 		Properties prop = new Properties(); 
 		Enumeration en = settings.keys();
 		while (en.hasMoreElements()) {
@@ -109,9 +120,9 @@ public class NavajoContextFactory implements ManagedServiceFactory {
 		String contextPath = (String)settings.get("contextPath");
 		String servletContextPath = (String)settings.get("servletContextPath");
 		String installPath = (String)settings.get("installationPath");
-		
+		logger.info("Instantiate server: "+contextPath+" installpath: "+installPath);
 		NavajoServerContext nsi = createContext(this.httpService,contextPath,servletContextPath,installPath);
-		ServiceRegistration<NavajoServerContext> reg =  bundleContext.registerService(NavajoServerContext.class,nsi , settings);
+		ServiceRegistration reg =  bundleContext.registerService(NavajoServerContext.class.getName(),nsi , settings);
 		registryMap.put(pid, reg);
 		return nsi;
 	}
@@ -119,25 +130,24 @@ public class NavajoContextFactory implements ManagedServiceFactory {
 	private NavajoServerContext createContext(HttpService httpService, String contextPath, String servletPath, String installPath) {
 		try {
 			httpContext = httpService.createDefaultHttpContext();
-			
-			NqlServlet ns = new NqlServlet();
-			httpService.registerServlet("/Nql", ns, null, httpContext);
-			TmlHttpServlet servlet = new TmlHttpServlet();
-			httpService.registerServlet(LEGACY_SERVLET_ALIAS, servlet, null, httpContext);
+			nqlServlet = new NqlServlet();
+			httpService.registerServlet(NQL_SERVLET_ALIAS, nqlServlet, null, httpContext);
+			legacyServlet = new TmlHttpServlet();
+			httpService.registerServlet(LEGACY_SERVLET_ALIAS, legacyServlet, null, httpContext);
 			
 			Dictionary<String, Object> wb = new Hashtable<String, Object>();
 			wb.put("schedulerClass","com.dexels.navajo.server.listener.http.schedulers.priority.PriorityThreadPoolScheduler");
 			wb.put("priorityPoolSize", "15");
 			wb.put("normalPoolSize", "20");
 			wb.put("systemPoolSize", "2");
-			TmlContinuationServlet tcs = new TmlContinuationServlet();
-			httpService.registerServlet(SERVLET_ALIAS, tcs, wb, httpContext);
+//			TmlContinuationServlet tcs = new TmlContinuationServlet();
+//			httpService.registerServlet(SERVLET_ALIAS, tcs, wb, httpContext);
 		
 			
 			NavajoContextListener ncl = new NavajoContextListener();
-			ncl.init(ns.getServletContext(),contextPath,servletPath,installPath);
+			ncl.init(nqlServlet.getServletContext(),contextPath,servletPath,installPath);
 	
-			servletContext = servlet.getServletContext();
+			servletContext = legacyServlet.getServletContext();
 //			String contextPath = servletContext.getContextPath();
 //			String servletContextPath = servletContext.getRealPath("");
 //			String installationPath = NavajoContextListener.getInstallationPath(contextPath);
@@ -170,7 +180,7 @@ public class NavajoContextFactory implements ManagedServiceFactory {
 
 	
 	public void close() {
-		for (Entry<String,ServiceRegistration<NavajoServerContext>> s: registryMap.entrySet()) {
+		for (Entry<String,ServiceRegistration> s: registryMap.entrySet()) {
 			s.getValue().unregister();
 		}
 
