@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.vaadin.components;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiException;
@@ -13,7 +16,10 @@ import com.vaadin.ui.Button.ClickListener;
 public class TipiButton extends TipiVaadinComponentImpl {
 
 	private static final long serialVersionUID = -6229336672215273524L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiButton.class);
+	
 	@Override
 	public Object createContainer() {
 		Button button = new Button();
@@ -26,9 +32,10 @@ public class TipiButton extends TipiVaadinComponentImpl {
 				try {
 					performTipiEvent("onActionPerformed", null, true);
 				} catch (TipiBreakException e) {
+					logger.debug("Break in button event.",e);
 					e.printStackTrace();
 				} catch (TipiException e) {
-					e.printStackTrace();
+					logger.error("Error in button event.",e);
 				}
 			}
 		});
