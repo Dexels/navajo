@@ -69,11 +69,11 @@ public class StatisticsRunnerFactory {
 		if(bc==null) {
 			return null;
 		}
-		Collection<ServiceReference<StatisticsRunnerInterface>> c = bc.getServiceReferences(StatisticsRunnerInterface.class, "(threadClass=com.dexels.navajo.server.statistics.StatisticsRunner)");
-		if(c.isEmpty()) {
+		ServiceReference[] c = bc.getServiceReferences(StatisticsRunnerInterface.class.getName(), "(threadClass=com.dexels.navajo.server.statistics.StatisticsRunner)");
+		if(c.length==0) {
 			return null;
 		}
-		ServiceReference<StatisticsRunnerInterface> srir = c.iterator().next();
+		ServiceReference srir = c[0];
 		StatisticsRunnerInterface sri = bc.getService(srir);
 		if(sri==null) {
 			return null;

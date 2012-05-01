@@ -219,8 +219,9 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
 	public static final String RELEASEDATE = "2010-08-26";
-	private static ServiceRegistration<NavajoConfigInterface> navajoConfig;
-	private static ServiceRegistration<DispatcherInterface> dispatcherRegistration;
+	private static ServiceRegistration navajoConfig;
+	private static ServiceRegistration dispatcherRegistration;
+	private ServiceRegistration dummyStats;
 	
 	
 	public static String getDescription() {
@@ -234,36 +235,41 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	
 	@Override
 	public void start(BundleContext bc) throws Exception {
-		super.start(bc);
-		FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
-		fi.init();
-		
-		fi.clearFunctionNames();
-
-		NavajoCoreAdapterLibrary library = new NavajoCoreAdapterLibrary();
-		fi.injectExtension(library);
 		try {
-			for(String adapterName: fi.getAdapterNames(library)) {
+			super.start(bc);
+			FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
+			fi.init();
+			
+			fi.clearFunctionNames();
 
-				String adapterClass = fi.getAdapterClass(adapterName,library);
-				Class<?> c = Class.forName(adapterClass);
+			NavajoCoreAdapterLibrary library = new NavajoCoreAdapterLibrary();
+			fi.injectExtension(library);
+			try {
+				for(String adapterName: fi.getAdapterNames(library)) {
 
-				 Dictionary<String, Object> props = new Hashtable<String, Object>();
-				 props.put("adapterName", adapterName);
-				 props.put("adapterClass", c.getName());
-				 System.err.println("registering: "+adapterName);
-				 if(adapterClass!=null) {
-					context.registerService(Class.class.getName(), c, props);
+					String adapterClass = fi.getAdapterClass(adapterName,library);
+					Class<?> c = Class.forName(adapterClass);
+
+					 Dictionary<String, Object> props = new Hashtable<String, Object>();
+					 props.put("adapterName", adapterName);
+					 props.put("adapterClass", c.getName());
+					 System.err.println("registering: "+adapterName);
+					 if(adapterClass!=null) {
+						context.registerService(Class.class.getName(), c, props);
+					}
 				}
+			} catch (Throwable e) {
+				logger.error("Error starting navajo core bundle.",e);
 			}
+			StatisticsRunnerInterface ptps = new DummyStatisticsRunner();
+			Dictionary<String, Object> wb = new Hashtable<String, Object>();
+			wb.put("threadClass","com.dexels.navajo.server.enterprise.statistics.DummyStatisticsRunner");
+			wb.put("name","dummy");
+			dummyStats = bc.registerService(StatisticsRunnerInterface.class.getName(), ptps, wb);
 		} catch (Throwable e) {
-			logger.error("Error starting navajo core bundle.",e);
-		}
-		StatisticsRunnerInterface ptps = new DummyStatisticsRunner();
-		Dictionary<String, Object> wb = new Hashtable<String, Object>();
-		wb.put("threadClass","com.dexels.navajo.server.enterprise.statistics.DummyStatisticsRunner");
-		wb.put("name","dummy");
-		bc.registerService(StatisticsRunnerInterface.class, ptps, wb);		
+			// TODO Should remove this, but it's an experiment
+			e.printStackTrace();
+		}		
 
 
 	}
@@ -284,7 +290,9 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	@Override
 	public void shutdown() {
 		super.shutdown();
-		
+		 if(dummyStats!=null) {
+			 dummyStats.unregister();
+		 }
 		 navajoConfig.unregister();
 		 dispatcherRegistration.unregister();
 		  // Stop JMX.
@@ -330,7 +338,7 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
         properties.put("rootPath", nc.getRootPath());
         properties.put("instanceName", nc.getInstanceName());
         properties.put("instanceGroup", nc.getInstanceGroup());
-        navajoConfig = getDefaultBundleContext().registerService(NavajoConfigInterface.class, nc, properties);
+        navajoConfig = getDefaultBundleContext().registerService(NavajoConfigInterface.class.getName(), nc, properties);
 		
 	}
 
@@ -342,7 +350,7 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
         properties.put("product", instance.getProduct());
         properties.put("applicationId", instance.getApplicationId());
         properties.put("serverId", instance.getServerId());
-        dispatcherRegistration = getDefaultBundleContext().registerService(DispatcherInterface.class, instance, properties);
+        dispatcherRegistration = getDefaultBundleContext().registerService(DispatcherInterface.class.getName(), instance, properties);
 	}
 	
 
