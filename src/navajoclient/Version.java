@@ -122,7 +122,7 @@ public class Version extends com.dexels.navajo.version.AbstractVersion implement
 		NavajoContext nc = new NavajoContext();
 		nc.setupClient((String)settings.get("server"), (String)settings.get("username"), (String)settings.get("password"));
 		
-		ServiceRegistration reg = getBundleContext().registerService(ClientContext.class, nc, settings);
+		ServiceRegistration reg = getBundleContext().registerService(ClientContext.class.getName(), nc, settings);
 
 		registryMap.put(pid, reg);
 		logger.info("Activating NavajoClient component: "+settings);
