@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.resource.jdbc.JdbcManagedResourceFactory;
-import com.oracle.jdbc.service.OracleJDBCDataSourceService;
+import com.oracle.jdbc.service.impl.OracleJDBCDataSourceService;
 
 
 public class Activator implements BundleActivator {
@@ -16,6 +16,8 @@ public class Activator implements BundleActivator {
 	private static DataSourceFactory dataSourceFactory;
 	private static final Logger logger = LoggerFactory.getLogger(Activator.class);
 	
+	private javax.management.InstanceAlreadyExistsException inst;	
+
 	public static DataSourceFactory getDataSourceFactory() {
 		return dataSourceFactory;
 	}

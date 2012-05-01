@@ -17,7 +17,7 @@
   Floor, Boston, MA 02110-1301  USA
 
 */
-package com.oracle.jdbc.service;
+package com.oracle.jdbc.service.impl;
 
 import java.sql.Connection;
 import java.sql.Driver;
