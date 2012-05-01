@@ -13,6 +13,7 @@ import org.osgi.framework.BundleException;
 import org.osgi.framework.BundleListener;
 import org.osgi.framework.FrameworkEvent;
 import org.osgi.framework.FrameworkListener;
+import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +26,8 @@ public class NavajoBundleManager extends AbstractVersion implements INavajoBundl
 	private BundleContext myBundleContext = null;
 	private Map<URL,Bundle> bundleMap = new HashMap<URL,Bundle>();
 	final static Logger logger = LoggerFactory.getLogger("com.dexels.navajo.version");
+
+	private ServiceRegistration registration;
 
 	
 	@Override
@@ -49,8 +52,9 @@ public class NavajoBundleManager extends AbstractVersion implements INavajoBundl
 			
 			}
 		});
+		// TODO Service should be deregistered
 		NavajoBundleManagerFactory.initialize(bc);
-		bc.registerService(INavajoBundleManager.class.getName(), this, null);
+		registration = bc.registerService(INavajoBundleManager.class.getName(), this, null);
 		logger.debug("NavajoBundleManager... registered");
 	}
 
@@ -126,6 +130,9 @@ public class NavajoBundleManager extends AbstractVersion implements INavajoBundl
 	public void stop(BundleContext arg0) throws Exception {
 		super.stop(arg0);
 		instance = null;
+		if(registration!=null) {
+			registration.unregister();
+		}
 	}
 	
 	/* (non-Javadoc)
