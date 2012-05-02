@@ -28,7 +28,16 @@ public class ApplyCss extends TipiAction {
 	public org.akrogen.tkui.css.tipi.engine.CSSTipiEngineImpl aap;
 	public org.w3c.dom.css.DocumentCSS noot;
 	protected void execute(final TipiEvent event) throws TipiBreakException, TipiException {
+		getContext().runSyncInEventThread(new Runnable(){
+
+			@Override
+			public void run() {
+				doExecute(event);
+			}});
+
 		
+	}
+	private void doExecute(final TipiEvent event) {
 		String styleString = (String) getEvaluatedParameterValue("style", event);
 		TipiComponent component = (TipiComponent) getEvaluatedParameterValue("component", event);
 		URL styleResource = (URL) getEvaluatedParameterValue("styleSheet", event);
@@ -71,8 +80,6 @@ public class ApplyCss extends TipiAction {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		
 	}
 
 
