@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -2035,6 +2036,15 @@ public class GenericPropertyComponent extends JPanel {
 		if (currentComponent != null) {
 			currentComponent.setToolTipText(toolTipText);
 		}
+	}
+
+	public void setLabelColor(Color c) {
+		JLabel ll = getLabel();
+		ll.setForeground(c);
+	}
+	public void setLabelFont(Font f) {
+		JLabel ll = getLabel();
+		ll.setFont(f);
 	}
 
 }
