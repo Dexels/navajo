@@ -10,6 +10,11 @@
 		<jar path="TipiRichClient.jar"/>
 		<jar path="TipiRich.jar"/>
 	</jars>
+	<requires>
+		<require path="Tipi" id="Tipi"/>
+		<require path="TipiSwing" id="TipiSwing"/>
+	</requires>
+	
 	<other>
 		<link href="https://timingframework.dev.java.net/"/>
 		<link href="https://animatedtransitions.dev.java.net/"/>
