@@ -23,7 +23,7 @@ import com.dexels.navajo.sharedstore.SharedStoreInterfaceTest;
 	SharedStoreInterfaceTest.class, 
 	DomainObjectMapperTest.class, 
 	ServiceMapperTest.class, 
-	SQLFieldDependencyTest.class,
+	SQLFieldDependencyTest.class
 	})  
 public class Navajo {
 
