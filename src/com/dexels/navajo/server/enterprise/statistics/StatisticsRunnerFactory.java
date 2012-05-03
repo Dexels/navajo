@@ -74,7 +74,7 @@ public class StatisticsRunnerFactory {
 			return null;
 		}
 		ServiceReference srir = c[0];
-		StatisticsRunnerInterface sri = bc.getService(srir);
+		StatisticsRunnerInterface sri = (StatisticsRunnerInterface)bc.getService(srir);
 		if(sri==null) {
 			return null;
 		}
