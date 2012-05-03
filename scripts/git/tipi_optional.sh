@@ -41,6 +41,9 @@ export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ./cvsgit.sh Tipi3d com.dexels.tipi.swing.3d
 ./cvsgit.sh TipiMonkey com.dexels.tipi.swing.monkeyengine
 ./cvsgit.sh com.dexels.navajo.tipi.rcp com.dexels.navajo.tipi.rcp 
+./cvsgit.sh com.dexels.navajo.tipi.css com.dexels.navajo.tipi.css
+./cvsgit.sh com.dexels.navajo.tipi.css.tkui com.dexels.navajo.tipi.css.tkui
+./cvsgit.sh com.dexels.navajo.tipi.css.feature com.dexels.navajo.tipi.css.feature
 
 
 
