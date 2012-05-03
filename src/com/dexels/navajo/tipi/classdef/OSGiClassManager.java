@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.classdef;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Dictionary;
 import java.util.HashSet;
@@ -23,9 +24,10 @@ import com.dexels.navajo.tipi.TipiTypeParser;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
-public class OSGiClassManager extends BaseClassManager implements IClassManager {
+public class OSGiClassManager extends BaseClassManager implements IClassManager, Serializable {
 
-	private final BundleContext myBundleContext;
+	private static final long serialVersionUID = 6641134165918021831L;
+	private transient final BundleContext myBundleContext;
 
 	public OSGiClassManager(BundleContext bc, TipiContext tc) {
 		super(tc);

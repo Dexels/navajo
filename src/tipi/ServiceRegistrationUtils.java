@@ -19,7 +19,7 @@ import com.dexels.navajo.tipi.tipixml.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 public class ServiceRegistrationUtils {
-	static ServiceRegistration<TipiExtension> registerWhiteBoardExtension(TipiExtension extension,
+	static ServiceRegistration registerWhiteBoardExtension(TipiExtension extension,
 			BundleContext context) throws FileNotFoundException {
 		Dictionary<String, Object> props = new Hashtable<String, Object>();
 //		System.err.println("Registering tipi extension: " + extension.getDescription() + "class: " + extension.getClass());
@@ -32,12 +32,12 @@ public class ServiceRegistrationUtils {
 //			System.err.println("PARSING: " + include + " from ext: " + extension.getClass().getName());
 			readDefinitionFile(extension, include,context);
 		}
-		return context.registerService(TipiExtension.class, extension, props);
+		return context.registerService(TipiExtension.class.getName(), extension, props);
 
 	}
 	
 	
-	static ServiceRegistration<TipiCoreExtension> registerCoreExtension(TipiCoreExtension extension,
+	static ServiceRegistration registerCoreExtension(TipiCoreExtension extension,
 			BundleContext context) throws FileNotFoundException {
 		Dictionary<String, Object> props = new Hashtable<String, Object>();
 //		System.err.println("Registering tipi extension: " + extension.getDescription() + "class: " + extension.getClass());
@@ -45,10 +45,10 @@ public class ServiceRegistrationUtils {
 		props.put("type", "tipiExtension");
 		props.put("extensionDescription", extension.getDescription());
 		props.put("extensionClass", extension.getClass().getName());
-		return context.registerService(TipiCoreExtension.class, extension, props);
+		return context.registerService(TipiCoreExtension.class.getName(), extension, props);
 	}
 	
-	public static ServiceRegistration<TipiMainExtension> registerMainExtension(TipiMainExtension extension,
+	public static ServiceRegistration registerMainExtension(TipiMainExtension extension,
 			BundleContext context) throws FileNotFoundException {
 		Dictionary<String, Object> props = new Hashtable<String, Object>();
 //		System.err.println("Registering tipi extension: " + extension.getDescription() + "class: " + extension.getClass());
@@ -56,7 +56,7 @@ public class ServiceRegistrationUtils {
 		props.put("type", "tipiExtension");
 		props.put("extensionDescription", extension.getDescription());
 		props.put("extensionClass", extension.getClass().getName());
-		return context.registerService(TipiMainExtension.class, extension, props);
+		return context.registerService(TipiMainExtension.class.getName(), extension, props);
 	}
 	
 	
