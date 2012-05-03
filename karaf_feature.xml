@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<features name="Navajo Source"  xmlns="http://karaf.apache.org/xmlns/features/v1.0.0">
+    <feature name="navajo" version="0.9.1" >
+<!--     	<feature>http</feature> -->
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.version</bundle>
+<!-- 		<bundle>mvn:org.slf4j/slf4j-api</bundle> -->
+<!-- 		<bundle>mvn:org.slf4j/slf4j-simple</bundle> -->
+		<bundle>mvn:org.junit/org.junit</bundle>
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.document</bundle>
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.client</bundle>
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.client.async</bundle>
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.core</bundle>
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.function</bundle>
+	</feature>
+	<feature name="navajo_server" version="1.2.3">		
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.listeners</bundle>
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.rhino</bundle>
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.resource</bundle>
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.resource.manager</bundle>
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.resource.mongodb</bundle>
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.resource.jdbc.oracle</bundle>
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.resource.jdbc.mysql</bundle>
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.resource.jdbc.h2</bundle>
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.adapters</bundle>
+		<bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.authentication.api</bundle> 
+		<bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.server.bridged</bundle> 
+
+
+    <!-- 
+        <bundle>https://source.dexels.com/nexus/service/local/repo_groups/public/content/com/dexels/navajo/core/com.dexels.navajo.document/2.1.0-SNAPSHOT/com.dexels.navajo.document-2.1.0-20120427.080724-49.jar</bundle>
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.version/1.0.15_SNAPSHOT</bundle>
+    --> </feature>
+	<feature name="navajo_enterprise" version="1.2.3">		
+        <bundle>mvn:org.jgroups/org.jgroups</bundle>
+        <bundle>mvn:org.kjkoster/org.kjkoster.zapcat/1.2.0</bundle>
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.queuemanager</bundle>
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.enterprise.adapters.deps</bundle>
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.enterprise.listeners.deps</bundle>
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.enterprise.listeners</bundle>
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.enterprise.adapters</bundle>
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.enterprise</bundle>
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.mongo</bundle>
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.mongo.navajostore</bundle>
+	</feature>
+	<feature name="sportlink" version="0.8.8">
+        <bundle>mvn:com.dexels.navajo.core/com.sportlink.tensing</bundle>
+        <bundle>mvn:com.dexels.navajo.core/com.sportlink.adapters</bundle>
+        <bundle>mvn:com.dexels.navajo.core/com.sportlink.aaa</bundle>
+	</feature>
+	<feature name="tipi" version="1.1.13">
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.tipi</bundle>
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.tipi.jabber</bundle>
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.tipi.mail</bundle>
+
+	</feature>
+	<feature name="tipi_swing" version="1.1.13">
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.tipi.swing.client</bundle>
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.tipi.swing.deps</bundle>
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.tipi.swing</bundle>
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.tipi.swing.rich.client</bundle>
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.tipi.swing.rich</bundle>
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.tipi.swing.application</bundle>
+       <!--  <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.tipi.swing.substance</bundle>-->
+        <bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.tipi.swing.mig</bundle>
+		<bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.tipi.facilityoccupation</bundle>
+		<bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.tipi.swing.cobra</bundle>
+		<bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.swing.editor</bundle>
+		<bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.tipi.swing.editor</bundle>
+		<bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.tipi.swing.swingx</bundle>
+		<bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.tipi.jxlayer</bundle>
+		<bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.tipi.charting</bundle>
+		
+		</feature>
+		
+	<feature name="tipi_css" version="1.1.13">
+		<bundle>mvn:org.apache.commons/beanutils</bundle>
+		<bundle>mvn:org.apache.commons/logging</bundle>
+		<bundle>mvn:org.apache.commons/collections</bundle>
+		<bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.tipi.css.tkui</bundle>
+		<bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.tipi.css</bundle>
+	</feature>
+
+	<feature name="tipi_other" version="1.1.13">
+		<bundle>mvn:com.dexels.navajo.core/com.dexels.navajo.tipi.swing.geo</bundle>
+	</feature>
+</features>
