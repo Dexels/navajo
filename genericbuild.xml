@@ -9,10 +9,10 @@
 	<taskdef name="p200ant" classname="de.matthiasmann.p200ant.P200AntTask" classpath="p200ant.jar"/>
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
 	<taskdef name="for" classname="net.sf.antcontrib.logic.ForTask" onerror="ignore" />
-	<property name="tipiSvnUrl" value="http://spiritus.dexels.nl:41766/svn/repos" />
-	<property name="repository" value="http://spiritus.dexels.nl:41766/Tipi/" />
-	<property name="repositorySsh" value="navajo@spiritus.dexels.nl:/var/www/html/Tipi/" />
-	<property name="documentationSsh" value="navajo@spiritus.dexels.nl:/var/www/html/Tipi/wiki/data/pages/tipidoc" />
+	<property name="tipiSvnUrl" value="https://source.dexels.com/svn/repos" />
+	<property name="repository" value="https://source.dexels.com/Tipi/" />
+	<property name="repositorySsh" value="navajo@source.dexels.com:/var/www/html/Tipi/" />
+	<property name="documentationSsh" value="navajo@source.dexels.com:/var/www/html/Tipi/wiki/data/pages/tipidoc" />
 	<property file="../TipiBuild/sign.properties" />
 
 	<path id="projectlibs">
@@ -177,8 +177,8 @@
 	</target>
 		
 	<target name="publish" depends="packJars">
-
-		<scp trust="true" sftp="true" todir="${repositorySsh}Extensions/">
+		<echo message="Destination: ${repositorySsh}Extensions/ and keyfile: ${user.home}/.ssh/id_rsa"></echo>
+		<scp trust="true" verbose="true" sftp="true" todir="${repositorySsh}Extensions/"  keyfile="${user.home}/.ssh/id_rsa">
 			<fileset dir="dist">
 				<include name="${ant.project.name}/${tipiComponentVersion}/lib/**" />
 				<include name="${ant.project.name}/${tipiComponentVersion}/unsigned/**" />
@@ -206,7 +206,7 @@
 		<!--		</scp>-->
 		<echo message="Deploying documentation to: ${documentationSsh}" />
 		<echo message="Deploying documentation from: ./${dist}/wikidoc/" />
-		<scp trust="true" sftp="true" verbose="false" todir="${documentationSsh}/" file="${dist}/wikidoc/tipi.txt">
+		<scp trust="true" sftp="true" verbose="false" todir="${documentationSsh}/" file="${dist}/wikidoc/tipi.txt"  keyfile="${user.home}/.ssh/id_rsa">
 			<fileset dir="dist/${ant.project.name}/${tipiComponentVersion}/wikidoc">
 				<include name="**" />
 
@@ -215,7 +215,7 @@
 		<echo message="Documentation deploy completed at repository: ${repositorySsh}Extensions/" />
 		<echo message="from: ${dist}" />
 
-		<scp trust="true" sftp="true" todir="${repositorySsh}Extensions/">
+		<scp trust="true" sftp="true" todir="${repositorySsh}Extensions/"  keyfile="${user.home}/.ssh/id_rsa">
 			<fileset dir="${dist}">
 				<include name="extensions.xml" />
 				<include name="typemap.xml" />
