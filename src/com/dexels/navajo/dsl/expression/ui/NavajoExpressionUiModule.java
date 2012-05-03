@@ -20,7 +20,6 @@ public class NavajoExpressionUiModule extends com.dexels.navajo.dsl.expression.u
 		super(plugin);
 //		myPlugin = plugin;
 		NavajoExpressionUiModule.instance = this;
-		System.err.println("Registering UI module!");
 		registerToOSGi(plugin);
 	}
 	
@@ -31,7 +30,6 @@ public class NavajoExpressionUiModule extends com.dexels.navajo.dsl.expression.u
 	private void registerToOSGi(AbstractUIPlugin plug) {
 		BundleContext bc = plug.getBundle().getBundleContext();
 		bc.registerService("com.dexels.navajo.dsl.expression.ui.AbstractNavajoExpressionUiModule", this, null);
-		System.err.println("<<<<<<<< Registered ui module!");
 	}
 
 	@Override
