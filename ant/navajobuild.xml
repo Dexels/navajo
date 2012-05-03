@@ -211,7 +211,7 @@
 				<exclude name="CVS" />
 			</fileset>
 		</copy>
-		<javac srcdir="${testsrc}" destdir="${testbuild}" debug="true" debuglevel="lines,vars,source">
+		<javac target="1.6"  srcdir="${testsrc}" destdir="${testbuild}"  debug="true" debuglevel="lines,vars,source">
 			<classpath refid="projectlibs" />
 			<classpath refid="dependencylibs" />
 			<classpath path="${build}"/>
