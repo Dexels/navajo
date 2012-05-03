@@ -120,7 +120,13 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 //			FunctionDefinition fd = fi.getDef(extensionDef, adapterName);
 				
 				String adapterClass = fi.getAdapterClass(adapterName,library);
-				Class<?> c = Class.forName(adapterClass);
+				Class<?> c = null;
+				
+				try {
+					c = Class.forName(adapterClass);
+				} catch (Exception e) {
+					logger.error("Error loading class for adapterClass: "+adapterClass,e);
+				}
 				
 				 Dictionary<String, Object> props = new Hashtable<String, Object>();
 				 props.put("adapterName", adapterName);
