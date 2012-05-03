@@ -14,8 +14,6 @@
 	
     <property name="tipiTomcatServer" value="http://localhost:8080/"/>
     <property name="tipiTomcatManager" value="http://localhost:8080/manager"/>
-    <property name="tipiTomcatUsername" value="ad"/>
-    <property name="tipiTomcatPassword" value="pw"/>
 
 	<!--
 
@@ -114,8 +112,6 @@
 				
 			</fileset>
 		</war>
-    	<echo message="WAR Complete!"/>
-    	
    <!--	<scp file="TipiServer.jar" todir="sportlink:sp0rtl1nk@hermes1.dexels.com:/usr/local/apache-tomcat-6.0.20/webapps/TipiAppStore/WEB-INF/lib"></scp>
     	  <scp file="WebContent/WEB-INF/lib/TipiServer.jar" todir="sportlink:sp0rtl1nk@hermes1.dexels.com:/usr/local/apache-tomcat-6.0.20/webapps/TipiAppStore/WEB-INF/lib"></scp>
   	  <scp todir="sportlink:sp0rtl1nk@hermes1.dexels.com:/usr/local/apache-tomcat-6.0.20/webapps/TipiAppStore/">

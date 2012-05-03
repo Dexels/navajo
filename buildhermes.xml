@@ -5,8 +5,6 @@
     <property name="tipiTomcatServer" value="http://hermes1.dexels.com:8080/"/>
     <property name="tipiTomcatManager" value="http://hermes1.dexels.com:8080/manager/text"/>
     <property name="tipiTomcatUsername" value="navajo"/>
-<!--    <property name="tipiTomcatPassword" value="xxxxxx"/>
--->
 	
     <property name="deploy.path" value="NewServer"/>
 

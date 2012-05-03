@@ -5,7 +5,6 @@
     <property name="tipiTomcatServer" value="http://localhost:9080/"/>
     <property name="tipiTomcatManager" value="http://localhost:9080/manager/text"/>
     <property name="tipiTomcatUsername" value="navajo"/>
-    <property name="tipiTomcatPassword" value=""/>
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
 
 	
