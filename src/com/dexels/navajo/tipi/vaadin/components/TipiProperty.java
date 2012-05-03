@@ -147,7 +147,7 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
                 TipiEventListener tel = (TipiEventListener) myListeners.get(i);
                 tel.performTipiEvent(eventType, m, false);
             }
-            logger.info("propertyEvent params: "+m);
+//            logger.info("propertyEvent params: "+m, new Exception());
             if (p == null) {
                 return;
             }
@@ -392,17 +392,18 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 		}
 		p.setImmediate(true);
 		value = p;
-		final AbstractTextField q = p;
 		p.addListener(new TextChangeListener() {
 
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void textChange(TextChangeEvent event) {
-				System.err.println("Old type: "+property.getType());
-				TipiProperty.this.property.setValue((String)q.getValue());
-				System.err.println("New type: "+property.getType());
-				System.err.println("Property value changed: " + q.getValue());
+				
+//				System.err.println("Old type: "+property.getType()+" event val: "+event.getText());
+				logger.info("New: "+event.getText()+" old value: "+property.getTypedValue()+" eventval: "+event.getText());
+				TipiProperty.this.property.setValue(event.getText());
+//				System.err.println("New type: "+property.getType());
+//				System.err.println("Property value changed: " + event.getText());
 				propertyEventFired(property, "onValueChanged");
 			}
 		});
