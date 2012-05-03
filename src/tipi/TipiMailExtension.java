@@ -1,11 +1,14 @@
 package tipi;
 
 import java.util.Dictionary;
+import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Set;
 
 import navajo.ExtensionDefinition;
 
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +24,8 @@ public class TipiMailExtension extends TipiAbstractXMLExtension implements TipiE
 
 	private static final long serialVersionUID = -8495583222148257940L;
 	private static TipiMailExtension instance = null;
-	
+	private final Set<ServiceRegistration> registrations = new HashSet<ServiceRegistration>();
+
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiMailExtension.class);
 	
@@ -50,7 +54,8 @@ public class TipiMailExtension extends TipiAbstractXMLExtension implements TipiE
 			 Dictionary<String, Object> props = new Hashtable<String, Object>();
 			 props.put("functionName", functionName);
 			 props.put("functionDefinition", fd);
-			context.registerService(FunctionInterface.class.getName(), fi.instantiateFunctionClass(fd,getClass().getClassLoader()), props);
+			 ServiceRegistration sr  = context.registerService(FunctionInterface.class.getName(), fi.instantiateFunctionClass(fd,getClass().getClassLoader()), props);
+			 registrations.add(sr);
 		}
 		
 	}
@@ -58,6 +63,9 @@ public class TipiMailExtension extends TipiAbstractXMLExtension implements TipiE
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		deregisterTipiExtension(context);
+		for (ServiceRegistration sr : registrations) {
+			sr.unregister();
+		}
 	}
 
 
