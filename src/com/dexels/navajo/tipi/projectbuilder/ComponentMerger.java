@@ -10,7 +10,8 @@ import java.util.StringTokenizer;
 import com.dexels.navajo.tipi.util.XMLElement;
 
 public class ComponentMerger {
-//	public static XMLElement mergeComponents(XMLElement base, XMLElement descendant) {
+	
+	//	public static XMLElement mergeComponents(XMLElement base, XMLElement descendant) {
 //		XMLElement result = base.copy();
 //		
 //		return result;
@@ -61,6 +62,9 @@ public class ComponentMerger {
 			while(st.hasMoreTokens()) {
 				String currentName = st.nextToken();
 				XMLElement element = allComponents.get(currentName);
+				if(element==null) {
+					System.err.println("WARNING: missing component: "+currentName);
+				}
 				appendInterfacesToClassdef(isExtending, allComponents, element);
 				if(element==null) {
 					throw new IOException("Error: ClassDef: "+classDef.getStringAttribute("name")+" has an unknown super interface: "+currentName);

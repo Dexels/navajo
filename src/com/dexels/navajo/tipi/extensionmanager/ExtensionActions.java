@@ -114,7 +114,7 @@ public class ExtensionActions {
  */
 
 	public static Map<String,List<XMLElement>> getAllClassDefs(String currentProject, String remoteRepository, URL repository, List<String> projects) throws IOException {
-		System.err.println("Getting classdefs from rep: "+repository);
+		System.err.println("Getting classdefs from rep: "+repository+" projects: "+projects);
 		List<String> toBeresolved = new LinkedList<String>();
 		List<String> resolved = new LinkedList<String>();
 		toBeresolved.addAll(projects);
