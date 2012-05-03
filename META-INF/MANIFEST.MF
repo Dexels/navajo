@@ -19,5 +19,17 @@ Export-Package: com.dexels.navajo.tipi.swingx,
  org.jdesktop.swingx.painter,
  tipi
 Bundle-Activator: tipi.TipiSwingXExtension
-Import-Package: org.osgi.framework;version="1.5.0"
+Import-Package: javax.swing,
+ javax.swing.border,
+ javax.swing.colorchooser,
+ javax.swing.event,
+ javax.swing.filechooser,
+ javax.swing.table,
+ javax.swing.text,
+ javax.swing.text.html,
+ javax.swing.text.html.parser,
+ javax.swing.text.rtf,
+ javax.swing.tree,
+ javax.swing.undo,
+ org.osgi.framework;version="1.5.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
