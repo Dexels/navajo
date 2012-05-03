@@ -81,6 +81,7 @@ public abstract class TipiAbstractOSGiExtension implements TipiExtension,
 		}
 		ServiceReference<? extends ITipiExtensionRegistry> refs = (ServiceReference<? extends ITipiExtensionRegistry>) context
 				.getServiceReference(ITipiExtensionRegistry.class.getName());
+		// TODO Sometimes this value is null, just af
 		ITipiExtensionRegistry reg = (ITipiExtensionRegistry) context
 				.getService(refs);
 		return reg;
