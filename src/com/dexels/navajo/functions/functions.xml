@@ -642,5 +642,10 @@
         <input>any,any,any,any,...</input>
         <result>any</result>
     </function>
+    <function name="IfElse" class="com.dexels.navajo.functions.IfElse">
+        <description>IfElse(boolean,any,any)</description>
+        <input>boolean,any,any</input>
+        <result>any</result>
+    </function>
     
 </functiondef>
