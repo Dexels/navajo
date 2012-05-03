@@ -1,0 +1,31 @@
+<project default="publish" name="TipiVaadinDeploy" basedir=".">
+
+	<target name="clean">
+		<delete dir="work/" />
+	</target>
+	
+	<property name="deployPath" value="/Library/apache-tomcat-7.0.16/webapps"/>
+	
+	<target name="archive" description="description" >
+		<war destfile="NavajoOsgi.war">
+			<fileset dir=".">
+				<include name="WEB-INF/**" />
+			</fileset>
+		</war>
+
+	</target>
+
+	<target name="publish" depends="archive">
+
+		<copy file="NavajoOsgi.war" tofile="${deployPath}/NavajoOsgi.war" />
+		
+		<!--	<copy file="TipiVaadin.war" tofile="${deployPath}/knvb#test#oao.war" />
+		<copy file="TipiVaadin.war" tofile="${deployPath}/knhb#test#oao.war" />
+		<copy file="TipiVaadin.war" tofile="${deployPath}/knkv#test#oao.war" />
+
+				<delete verbose="true" dir="/Users/frank/Desktop/dump8/eclipse">
+		</delete>-->
+	</target>
+
+
+</project>
