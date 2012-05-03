@@ -25,9 +25,12 @@
 package navajofunctionspdf;
 
 import java.util.Dictionary;
+import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Set;
 
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
 
 import com.dexels.navajo.functions.util.FunctionDefinition;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
@@ -50,8 +53,9 @@ import com.dexels.navajo.pdf.functions.PDFFunctionDefinitions;
  */
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 
-
+	private final Set<ServiceRegistration> registrations = new HashSet<ServiceRegistration>();
 	//Included packages.
+	private ServiceRegistration registration;
 	
 	public Version() {
 		setReleaseDate(RELEASEDATE);
@@ -75,8 +79,8 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 			 props.put("functionName", functionName);
 			 props.put("functionDefinition", fd);
 			 props.put("type", "function");
-//			 System.err.println("Registering function...: "+functionName);
-			context.registerService(FunctionInterface.class.getName(), fi.instantiateFunctionClass(fd,getClass().getClassLoader()), props);
+			 registration = context.registerService(FunctionInterface.class.getName(), fi.instantiateFunctionClass(fd,getClass().getClassLoader()), props);
+			 registrations.add(registration);
 		}
 		
 //	        props.put("Language", "English");
@@ -89,6 +93,9 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	@Override
 	public void stop(BundleContext arg0) throws Exception {
 		super.stop(arg0);
+		if(registration!=null) {
+			registration.unregister();
+		}
 	}
 
 
